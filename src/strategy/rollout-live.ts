@@ -110,18 +110,6 @@ export type MonsterMoves = Record<
 /** Moves whose hit grows with each use (EnemyMove.growth; the step from monster-db moveBaseDamages). */
 export const GROWING_DAMAGE_MOVES: Record<string, string[]> = { WATERFALL_GIANT: ["PRESSURE_GUN_MOVE"] };
 
-/**
- * B4 (docs/boss-sim.md §13): the base hit of moves the monster DB only has as shown (every logged turn had our
- * Vulnerable 99 and the enemy's Strength in it), solved from the logged A7-A8 Queen fights turn by turn: shown =
- * floor((base + Strength) x 1.5 for our Vulnerable x 0.75 when it is Weak), every observation the same base (Beam 24 of
- * 24, Tackle 3 16, Tackle 4 14, Off With Your Head 11, Execution 5; A7 the same). Whole fights only (EnemyMove.fightDamage):
- * the 5-turn rollout keeps the shown hit.
- */
-export const SHOWN_MOVE_BASES: Record<string, Record<string, number>> = {
-  TORCH_HEAD_AMALGAM: { BEAM_MOVE: 8, TACKLE_3_MOVE: 14, TACKLE_4_MOVE: 14 },
-  QUEEN: { OFF_WITH_YOUR_HEAD_MOVE: 3, EXECUTION_MOVE: 15 },
-};
-
 /** Stun-threshold powers (Shriek, Plow) an enemy gets after its first turn (EnemyTable.shriekFrom). */
 const LATER_SHRIEK_POWERS = ["PLOW_POWER", "SHRIEK_POWER"];
 
@@ -263,14 +251,12 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
     const shown = logged ? null : shownDamageAt(db, id, move, asc);
     const hits = logged?.hits ?? shown?.hits ?? 1;
     const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
-    const measured = shown ? SHOWN_MOVE_BASES[id]?.[move] : undefined;
     const sandpit = selfGainAt(entry, "SANDPIT_POWER", asc);
     table.moves[move] = {
       damage: logged?.perHit ?? shown?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
       ...(shown ? { shown: true } : {}),
-      // B4, read by whole fights only: a shown move's measured base, a Surrounded move's faced hit, a Sandpit it starts.
-      ...(measured !== undefined ? { fightDamage: measured } : {}),
+      // B4, read by whole fights only: a Surrounded move's faced hit, a Sandpit it starts.
       ...(logged?.backAttackShare !== undefined && logged.base !== undefined ? { faceDamage: logged.base } : {}),
       ...(sandpit ? { sandpit } : {}),
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.

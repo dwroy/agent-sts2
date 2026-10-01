@@ -437,6 +437,13 @@ export interface SolverInput {
    */
   hpScale?: number;
   /**
+   * Whole boss fights only (the simulator's one-turn lookahead, rollout policyLookahead; B5, docs/boss-sim.md §14), never
+   * set by the live planner: each enemy's expected attack on its next turn after this one (move model), the block a
+   * fresh hand is counted to make against it (ERUPTION_NEXT_BLOCK), and how much more HP counts when this turn's loss
+   * ends us below what that next hit takes through such a hand (NEXT_HIT rule in evaluate).
+   */
+  nextHit?: { attacks: { index: number; damage: number }[]; handBlock: number; weight: number };
+  /**
    * The card (by key) every line starts with: a random potion's Monte Carlo sample is "drink it now, then
    * the rest of the turn" (potion-mc.ts). Unset: any first play.
    */
@@ -1881,6 +1888,20 @@ export const BOMB_SURE = 0.8;
 export const ERUPTION_NEXT_BLOCK = 12;
 /** Damage weight multiplier while racing the Waterfall Giant's eruption (raceEruption). */
 export const ERUPTION_RACE_DAMAGE = 1.5;
+
+/**
+ * The part of this turn's HP loss that ends us below the next hit's reach (SolverInput.nextHit, whole boss fights only):
+ * the enemies still alive after the line attack next turn for their forecast hit (x0.75 while a Weak still lasts then),
+ * a fresh hand blocks `handBlock` of it; HP left under what gets through is HP the next turn needs.
+ */
+export function nextHitShortfall(next: NonNullable<SolverInput["nextHit"]>, living: Pick<EnemySim, "index" | "weak">[], hpAfter: number, hpLoss: number): number {
+  const incoming = next.attacks.reduce((sum, attack) => {
+    const enemy = living.find((e) => e.index === attack.index);
+    return enemy ? sum + attack.damage * (enemy.weak > 1 ? 0.75 : 1) : sum;
+  }, 0);
+  const reach = incoming - next.handBlock;
+  return Math.max(0, Math.min(hpLoss, reach - hpAfter));
+}
 /** HP weight multiplier against a phase boss: its next phase starts at full HP (Test Subject, 600 HP). */
 export const NEXT_PHASE_HP = 1.25;
 
@@ -2214,6 +2235,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     else score -= weights.hp * -(margin + ERUPTION_NEXT_BLOCK);
   }
   score -= weights.hp * hpLoss;
+  // Whole boss fights (nextHit, never live): the enemies' next attacks are known a turn ahead from the move model (the
+  // Rocket's Laser after Charge Up, the Torch Head's Beam). HP lost now that leaves us below what the next hit takes
+  // through a fresh hand's block is HP the next turn cannot spare, as the Giant's eruption rule below counts it.
+  if (input.nextHit && !winsFight && !dies && hpLoss > 0) score -= weights.hp * input.nextHit.weight * nextHitShortfall(input.nextHit, living, hpAfter, hpLoss);
   // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a
   // hallway potion's lasting part counted 25% (a guessed number); since then potions were free; now the table's value.
   score -= weights.hp * sim.potionCost;

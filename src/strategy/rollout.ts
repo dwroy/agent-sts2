@@ -51,7 +51,7 @@ import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -380,12 +380,6 @@ export interface EnemyMove {
    */
   shown?: boolean;
   /**
-   * Whole fights only (simulateFight; B4, docs/boss-sim.md §13): the hit before Strength and our Vulnerable of a `shown`
-   * move, measured from the logged fights (rollout-live SHOWN_MOVE_BASES: the Torch Head Amalgam's Beam 8x3, the
-   * Queen's Off With Your Head 3x5). The whole fight adds Strength and Vulnerable to it as for any other move.
-   */
-  fightDamage?: number;
-  /**
    * Whole fights only (B4): a Surrounded move's hit when we face it (monster-db moveDamageAt `base`); `damage` is the
    * average over the logged facings, which the whole fight must not scale by the back attack's 1.5 again.
    */
@@ -483,6 +477,16 @@ export interface RolloutOptions {
    * a turn whose hit is large against the HP left blocks more, as the logged boss fights did. Unset: 0.
    */
   policyThreat?: number;
+  /**
+   * The whole-fight policy only (B5, docs/boss-sim.md §14; never set by the live planner or the rollout): a one-turn
+   * lookahead. Each policy turn the enemies' attacks on their next turn are forecast from the move model along their
+   * scripts (nextAttacks) and given to the solver as the live planner gives its own (nextIncoming), and:
+   *  - lethal: HP lost now that ends us below what the next hit takes through a fresh hand counts this much more
+   *    (SolverInput.nextHit);
+   *  - threat: the HP weight also times (1 + threat x the next turn's forecast attack / our HP).
+   * Unset (or both 0): no lookahead, the turns as before.
+   */
+  policyLookahead?: { lethal: number; threat: number };
   /**
    * The whole-fight simulator's pre-fight start only (simulateFight with no line; boss-sim syntheticStart): cards drawn
    * from the shuffled draw pile into the hand before the policy plays the first turn. Unset: 0 (the hand as given).
@@ -1134,9 +1138,8 @@ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string
   // A whole fight's growing move (Multi Claw): a hit more for each earlier use in this phase; the Pressure Gun's hit grows.
   const hits = Math.max(1, m.hits) + (move === GROWING_HITS[enemy.id] ? enemy.extraHits ?? 0 : 0);
   const grown = m.growth && move ? m.growth * (enemy.uses?.[move] ?? 0) : 0;
-  // B4, whole fights: a shown move's measured base takes Strength and Vulnerable like any move (the Amalgam's Strength
-  // grows every Burn Bright For Me); a Surrounded move is its faced hit once the facing is tracked (x1.5 behind us).
-  const own = fight.fullFight && m.fightDamage !== undefined ? m.fightDamage : fight.faced && m.faceDamage !== undefined ? m.faceDamage : null;
+  // B4, whole fights: a Surrounded move is its faced hit once the facing is tracked (x1.5 behind us).
+  const own = fight.faced && m.faceDamage !== undefined ? m.faceDamage : null;
   if (m.shown && own === null) return [{ damage: Math.max(0, Math.floor((m.damage + grown + enemy.vigor) * (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1))), hits }];
   return [{ damage: Math.max(0, Math.floor(((own ?? m.damage) + grown + enemy.strength + enemy.vigor) * scale)), hits }];
 }
@@ -1198,15 +1201,6 @@ export const PHASE_MOVES: Record<string, readonly (readonly string[])[]> = {
 export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_MOVE" };
 
 /**
- * B4 (docs/boss-sim.md §13), measured on the logged A7-A8 Queen fights (29 of them, every turn's Strength read off the
- * state): each Burn Bright For Me gives the living Torch Head Amalgam 1 Strength (its Strength after its turns 3+: +1 in
- * 36 of 41; 0 on turns 1-2, when the Queen casts Puppet Strings and You Are Mine), and the Amalgam's death gives the
- * Queen 2 (9 of 11).
- */
-export const ALLY_STRENGTH_MOVES: Record<string, { ally: string; amount: number }> = { BURN_BRIGHT_FOR_ME_MOVE: { ally: "TORCH_HEAD_AMALGAM", amount: 1 } };
-export const AMALGAM_DEATH_STRENGTH = 2;
-
-/**
  * The Knowledge Demon's Curse of Knowledge: 3 uses a fight (logged on turns 1, 5 and 9 only, 132 uses in 52 fights; after
  * the third, Ponder is followed by Slap: turns 13, 16). The move model's Ponder -> Curse 91% gave long fights a 4th and
  * 5th curse.
@@ -1232,11 +1226,7 @@ export const STATUS_INTO_DRAW: Record<string, number> = { LIQUIFY_GROUND_MOVE: 3
  */
 function fightNextMove(e: SimEnemy, table: EnemyTable | undefined, random: () => number, enemies: SimEnemy[], exclude?: string): string | null {
   if (e.id === "CEREMONIAL_BEAST" && e.move === "PLOW_MOVE" && e.shriekArmed) return "PLOW_MOVE";
-  const amalgam = enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM");
-  if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") return amalgam ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
-  // B4: the Amalgam dead before Burn Bright ever came (killed by You Are Mine's turn): Off With Your Head straight away
-  // (logged 5GKAR00L5AYV F22: T2 You Are Mine, T3 Off With Your Head).
-  if (e.id === "QUEEN" && e.move === "YOU_ARE_MINE_MOVE" && !amalgam) return "OFF_WITH_YOUR_HEAD_MOVE";
+  if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") return enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM") ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
   // B4: no fourth curse; the move model's Ponder -> Slap is what the logged fights do after the third.
   if (e.id === "KNOWLEDGE_DEMON" && (e.curses ?? 0) >= KNOWLEDGE_CURSES) {
     const next = nextMove(table, e.move, random, exclude, (m) => m !== "CURSE_OF_KNOWLEDGE_MOVE");
@@ -1384,8 +1374,6 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     }
   } else {
     e.alive = false;
-    // B4, whole fights: the Queen takes 2 Strength when her Torch Head Amalgam dies (ALLY_STRENGTH_MOVES' note).
-    if (fullFight && e.id === "TORCH_HEAD_AMALGAM") for (const x of enemies) if (x.alive && x.id === "QUEEN") x.strength += AMALGAM_DEATH_STRENGTH;
     // An on-death spawn (Phrog Parasite, Gremlin Merc): its spawns join the fight (the rollout called the
     // Phrog's death a win: "over within 5 turns" 0.95 vs 0.47 in the logs, 4LC3YKCZV218 F9 T3 forecast 0,
     // actual 23).
@@ -1879,9 +1867,7 @@ function applyPlan(
           if (card) addToPile(piles, card, status.count - intoDraw, status.pile, random);
         }
         if (fullFight) {
-          // B4 whole-fight scripts: Burn Bright's Strength for the Amalgam, the Sandpit Liquify Ground starts, the curses used.
-          const ally = e.move ? ALLY_STRENGTH_MOVES[e.move] : undefined;
-          if (ally) for (const x of enemies) if (x.alive && x.id === ally.ally) x.strength += ally.amount;
+          // B4 whole-fight scripts: the Sandpit Liquify Ground starts, the curses used.
           if (m?.sandpit) e.base = { ...e.base, sandpit: m.sandpit };
           if (e.id === "KNOWLEDGE_DEMON" && e.move === "CURSE_OF_KNOWLEDGE_MOVE") e.curses = (e.curses ?? 0) + 1;
         }
@@ -2226,7 +2212,9 @@ function simulate(
     firstBase = [...bases, ...potions.map(() => null)];
     firstKnown = drawing?.known;
     const { drawPile: _d, ...rest } = s;
-    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input) } } : {}), ...policyWeights(opts, s.player, s.enemies), hand: firstHand, maxNodes: policyNodes });
+    // B5: the one-turn lookahead (whole fights, when set) replaces the decision's nextIncoming with the sim's own forecast.
+    const ahead = fullFight ? lookaheadOf(opts, enemies, input, player, s.player.hp) : null;
+    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     first = solved.plans[0] ?? null;
@@ -2392,7 +2380,8 @@ function simulate(
     const target = aim?.target;
     const focus = target === undefined ? {} : { focusIndex: target, focusWeight: opts.orderFocusBonus ?? ORDER_FOCUS_BONUS };
     const wither = s.wither ? { wither: { ...s.wither, played: witherPlayed } } : {};
-    const scale = policyWeights(opts, pSim, sims);
+    // B5: the one-turn lookahead (whole fights, when set): the next turn's forecast attacks.
+    const scale = withLookahead(policyWeights(opts, pSim, sims), fullFight ? lookaheadOf(opts, enemies, input, player, pSim.hp) : null);
     // A whole fight: the draw cards draw known cards (knownDraws), which the line can play.
     const drawing = fullFight ? knownDraws(hand, piles, player, targets) : null;
     const played = drawing?.hand ?? hand;
@@ -2424,6 +2413,59 @@ export function policyWeights(opts: RolloutOptions, player: Pick<PlayerSim, "hp"
   const incoming = enemies.reduce((sum, e) => sum + (e.hp > 0 ? e.attacks.reduce((s, a) => s + a.damage * a.hits, 0) : 0), 0);
   out.hpScale = (opts.policyHpScale ?? 1) * (1 + (threat * incoming) / Math.max(1, player.hp));
   return out;
+}
+
+/** Evenly spaced draws of an enemy's next move for the lookahead's expectation (nextAttacks). */
+const LOOKAHEAD_DRAWS = 8;
+
+/**
+ * B5 (docs/boss-sim.md §14), whole fights only: each living enemy's expected attack on its next turn after the coming
+ * one, the one-turn lookahead of the policy (RolloutOptions.policyLookahead). Its next move is drawn as its turn draws
+ * it (fightNextMove: the move model's successors of its intent through the fight's scripts, on a copy), at
+ * LOOKAHEAD_DRAWS evenly spaced points instead of its own random stream: the forecast a player reading the move model
+ * makes (the live planner's nextIncoming), never the sample's own next move. The hit is at its Strength after the coming
+ * move (Charge Up, Adapt, growth) and our Vulnerable then; its own Weak is left to the solver (the Weak still up after
+ * the line); a Surrounded hit is its average over the facings (the facing then is not known yet).
+ */
+function nextAttacks(enemies: SimEnemy[], input: RolloutInput, playerVulnerable: boolean): { index: number; damage: number }[] {
+  const out: { index: number; damage: number }[] = [];
+  for (const e of enemies) {
+    if (!e.alive || e.explodeAt !== undefined) continue;
+    const table = input.tables[e.id];
+    const now = e.move && table ? table.moves[e.move] : undefined;
+    const strength = e.strength + (now?.strength ?? 0) + e.growth;
+    let total = 0;
+    for (let k = 0; k < LOOKAHEAD_DRAWS; k += 1) {
+      const u = (k + 0.5) / LOOKAHEAD_DRAWS;
+      const copy: SimEnemy = { ...e };
+      const move = fightNextMove(copy, table, () => u, enemies);
+      total += moveAttack({ ...copy, move, strength, weak: 0, shrink: 0 }, table, move, playerVulnerable, { fullFight: true, faced: false }).reduce((sum, a) => sum + a.damage * a.hits, 0);
+    }
+    out.push({ index: e.index, damage: total / LOOKAHEAD_DRAWS });
+  }
+  return out;
+}
+
+/**
+ * A policy turn's one-turn lookahead (RolloutOptions.policyLookahead), whole fights only: the solver fields (the next
+ * turn's forecast attack as nextIncoming, and nextHit when `lethal` is on) and the HP weight's factor from `threat`;
+ * null without the option.
+ */
+function lookaheadOf(opts: RolloutOptions, enemies: SimEnemy[], input: RolloutInput, player: SimPlayer, hp: number): { fields: Pick<SolverInput, "nextIncoming" | "nextHit">; hpFactor: number } | null {
+  const look = opts.policyLookahead;
+  if (!look || (look.lethal === 0 && look.threat === 0)) return null;
+  const attacks = nextAttacks(enemies, input, player.vulnTurns > 1);
+  const next = attacks.reduce((sum, a) => sum + a.damage, 0);
+  return {
+    fields: { ...(next > 0 ? { nextIncoming: next } : {}), ...(look.lethal > 0 ? { nextHit: { attacks, handBlock: ERUPTION_NEXT_BLOCK, weight: look.lethal } } : {}) },
+    hpFactor: 1 + (look.threat * next) / Math.max(1, hp),
+  };
+}
+
+/** The solver input fields of a lookahead (lookaheadOf) over the policy's weights. */
+function withLookahead(scale: { damageScale?: number; hpScale?: number }, ahead: ReturnType<typeof lookaheadOf>): Partial<SolverInput> {
+  if (!ahead) return scale;
+  return { ...scale, ...ahead.fields, ...(ahead.hpFactor !== 1 ? { hpScale: (scale.hpScale ?? 1) * ahead.hpFactor } : {}) };
 }
 
 /**

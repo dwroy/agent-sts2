@@ -54,6 +54,16 @@ export const BOSS_SIM_THREAT = 0;
  */
 export const BOSS_POLICY_THREAT: Record<string, number> = {};
 
+/**
+ * B5 (docs/boss-sim.md §14): the policy's one-turn lookahead (rollout policyLookahead) in every whole fight: the enemies'
+ * next attacks forecast from the move model, HP below the next hit's reach counting `lethal` more, the HP weight times
+ * (1 + threat x next attack / HP). Chosen on the tune fights as the grid setting whose play matched the logged turns
+ * best (HP through block on the Kaiser Crab, Queen, Insatiable and Waterfall Giant; out-of-fold Brier within 0.01 of
+ * none), then checked on the validation fights: forecasts the same within noise, the leak 1.15 -> 1.08. Mutable so the
+ * backtest can try values (tools/boss-sim/backtest.ts --lookahead); both 0: off.
+ */
+export const BOSS_SIM_LOOKAHEAD: { lethal: number; threat: number } = { lethal: 1, threat: 1 };
+
 /** The boss's own threat term (BOSS_POLICY_THREAT) for a fight's enemies, 0 when none is set. */
 export function bossPolicyThreat(input: Pick<RolloutInput, "enemies">): number {
   for (const e of input.enemies) {
@@ -242,6 +252,7 @@ export function slimInput(
       ...(damageScale !== 1 ? { policyDamageScale: damageScale } : {}),
       ...(hpScale !== 1 ? { policyHpScale: hpScale } : {}),
       ...(policyThreat !== 0 ? { policyThreat } : {}),
+      ...(BOSS_SIM_LOOKAHEAD.lethal !== 0 || BOSS_SIM_LOOKAHEAD.threat !== 0 ? { policyLookahead: { ...BOSS_SIM_LOOKAHEAD } } : {}),
       ...(handSize !== undefined ? { handSize } : {}),
       ...(drawFirst !== undefined ? { drawFirst } : {}),
     },
