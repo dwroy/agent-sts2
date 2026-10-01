@@ -19,7 +19,8 @@
  *
  * Usage: npx tsx tools/boss-sim/backtest.ts [--in experiments/boss-sim/raw/fights.jsonl] [--out-dir experiments/boss-sim/raw]
  *          [--shard I --shards N] [--samples 100] [--seed 1] [--starts t1,t5,pre] [--limit N] [--no-rollout] [--no-scripts] [--no-orders]
- *          [--damage-scale D] [--hp-scale H] [--threat T] [--potion-hold K] [--start-line policy|plan1] [--no-best-order] [--set tune|val (experiments/boss-sim/split.json)]
+ *          [--damage-scale D] [--hp-scale H] [--threat T] [--potion-hold K] [--start-line policy|plan1] [--no-best-order] [--set tune|val|val_ext (experiments/boss-sim/split.json)]
+ *          [--enc CRUSHER,QUEEN (B4: only these encounters)] [--boss-threat CRUSHER=2 (B4: a boss's own policy threat; "" none)]
  * --start-line: the start turn played by the sim's policy (default, B1.5) or the live solver's best line (B1).
  * B2: the random potions held are in the sim (sampled each turn as potion-mc does; --no-random-potions leaves them out),
  * and the turn relics B2 added (Orichalcum, Ripple Basin, Sturdy Clamp, Pendulum, Ice Cream) and the Kaiser Crab's facing.
@@ -30,7 +31,7 @@ import { join } from "node:path";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
 import { parseGameState, type GameState } from "../../src/mod/schema.js";
-import { BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
+import { BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
 import { bossClock } from "../../src/strategy/boss-clock.js";
 import { loadFightValueModel } from "../../src/strategy/fight-value.js";
 import { loadFightValueGates, rolloutDecision, type KillOrder, type MoveModelData, type RolloutInput } from "../../src/strategy/rollout.js";
@@ -65,6 +66,16 @@ const orders = !flag("no-orders");
 // Every line's best kill order (runBestOrder), as the rollout and B2 do; --no-best-order: the Queen's order only (B1).
 const bestOrder = !flag("no-best-order");
 const set = arg("set", "");
+// --enc A,B (B4): only the fights whose encounter contains one of these (per-boss runs).
+const encs = arg("enc", "").split(",").filter((x) => x !== "");
+// --boss-threat CRUSHER=2,QUEEN=1 (B4): a boss's own policy threat term (BOSS_POLICY_THREAT), replacing the committed ones.
+if (process.argv.includes("--boss-threat")) {
+  for (const key of Object.keys(BOSS_POLICY_THREAT)) delete BOSS_POLICY_THREAT[key];
+  for (const pair of arg("boss-threat", "").split(",").filter((x) => x !== "")) {
+    const [id, value] = pair.split("=");
+    if (id && value !== undefined && Number(value) !== 0) BOSS_POLICY_THREAT[id] = Number(value);
+  }
+}
 const keep: Set<string> | null = set ? new Set((JSON.parse(readFileSync("experiments/boss-sim/split.json", "utf8")) as Record<string, string[]>)[set]) : null;
 
 interface FightRow {
@@ -107,7 +118,12 @@ function simFacts(line: BossSimLineResult) {
     deathTurns: line.deathTurns,
     potions: line.potions,
     enemyHpLeftUnwon: line.enemyHpLeftUnwon,
-    perTurn: line.perTurn.slice(0, 12).map((t) => [t.fighting, t.loss, t.dmg, t.incoming, t.enemyLoss]),
+    // B4: + the mean enemy HP left and block gained at the end of the turn (samples still fighting it).
+    perTurn: line.perTurn.slice(0, 16).map((t, k) => {
+      const fighting = line.outcomes.filter((o) => o.turns > k);
+      const mean = (f: (o: (typeof fighting)[number]) => number) => r2(fighting.reduce((sum, o) => sum + f(o), 0) / Math.max(1, fighting.length));
+      return [t.fighting, t.loss, t.dmg, t.incoming, t.enemyLoss, mean((o) => o.enemyHpByTurn?.[k] ?? 0), mean((o) => o.blockByTurn?.[k] ?? 0)];
+    }),
     policyTurns: line.policyTurns,
     policyNodes: line.policyNodes,
     // Per sample (won, turns, HP lost), compact: for re-scoring without re-running.
@@ -132,6 +148,7 @@ async function main(): Promise<void> {
     if (limit && done >= limit) break;
     const row = JSON.parse(rows[index]!) as FightRow;
     if (keep && !keep.has(row.key)) continue;
+    if (encs.length > 0 && !encs.some((e) => row.encounter.includes(e))) continue;
     for (const start of starts) {
       const point = start === "t5" ? row.t5 : row.t1;
       if (!point) continue;
