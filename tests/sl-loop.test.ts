@@ -115,7 +115,7 @@ describe("SL in the play loop", () => {
     expect(JSON.stringify(asked["previous_attempts"])).toContain("certain death at the end of T3");
 
     const runConfig = readRows(cfg.log.runConfigLog!);
-    expect(runConfig[0]?.["sl"]).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1 });
+    expect(runConfig[0]?.["sl"]).toMatchObject({ enabled: true, boss_retries: 5, elite_retries: 3 });
   });
 
   it("SL off: the same game gets end_turn, and nothing of SL is in the logs or the question", async () => {

@@ -40,9 +40,9 @@ export interface EnricherConfig {
 export interface SlConfig {
   /** SL_ENABLED (default off). */
   enabled: boolean;
-  /** SL_BOSS_RETRIES (default 3): a boss fight gets at most 1 + this many attempts. */
+  /** SL_BOSS_RETRIES (default 5, Dai 2026-10-02): a boss fight gets at most 1 + this many attempts. */
   bossRetries: number;
-  /** SL_ELITE_RETRIES (default 1): the same for the hard elites listed in src/sl/sl-elites.json. */
+  /** SL_ELITE_RETRIES (default 3, Dai 2026-10-02): the same for the hard fights listed in src/sl/sl-elites.json (any room, not only elites). */
   eliteRetries: number;
   /** SL_RETRY_SHOW_SIM (default on): a retried boss fight's questions show the whole-fight simulation even for a low-trust boss, labelled. */
   retryShowSim: boolean;
@@ -630,8 +630,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
     enabled: parseOnOff(readEnv(env, "SL_ENABLED"), "SL_ENABLED", problems) ?? false,
-    bossRetries: parseInteger(readEnv(env, "SL_BOSS_RETRIES") ?? "3", "SL_BOSS_RETRIES", problems, { min: 0, max: 20 }),
-    eliteRetries: parseInteger(readEnv(env, "SL_ELITE_RETRIES") ?? "1", "SL_ELITE_RETRIES", problems, { min: 0, max: 20 }),
+    bossRetries: parseInteger(readEnv(env, "SL_BOSS_RETRIES") ?? "5", "SL_BOSS_RETRIES", problems, { min: 0, max: 20 }),
+    eliteRetries: parseInteger(readEnv(env, "SL_ELITE_RETRIES") ?? "3", "SL_ELITE_RETRIES", problems, { min: 0, max: 20 }),
     retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),

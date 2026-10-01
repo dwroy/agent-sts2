@@ -132,13 +132,15 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
 });
 
 describe("the hard elite list (src/sl/sl-elites.json)", () => {
-  it("lists the top 5 by A8-A9 death rate with their enemy ids, source and date", () => {
+  it("lists the hardest 5 non-boss fights by A8-A9 deaths (any room) with their enemy ids, source and date", () => {
     const list = loadSlElites();
-    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Three Knights", "Mecha Knight", "Entomancer", "Infested Prism"]);
+    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism"]);
     expect(list.date).toBe("2026-10-02");
     expect(list.source).toMatch(/A8-A9/);
     expect(listedElite(["DECIMILLIPEDE_SEGMENT_MIDDLE"], list)?.name).toBe("Decimillipede");
-    expect(listedElite(["FLAIL_KNIGHT", "MAGI_KNIGHT", "SPECTRAL_KNIGHT"], list)?.name).toBe("Three Knights");
+    expect(listedElite(["BOWLBUG_ROCK", "BOWLBUG_SILK", "SLUMBERING_BEETLE"], list)?.name).toBe("Slumbering Beetle + Bowlbugs");
+    expect(listedElite(["BOWLBUG_NECTAR", "BOWLBUG_ROCK", "BOWLBUG_SILK"], list)).toBeNull();
+    expect(listedElite(["FLAIL_KNIGHT", "MAGI_KNIGHT", "SPECTRAL_KNIGHT"], list)).toBeNull();
     expect(listedElite(["BYGONE_EFFIGY"], list)).toBeNull();
   });
 });
@@ -347,7 +349,7 @@ describe("SlController", () => {
 
   it("describe() is what run-config records", () => {
     const t = setup("/nowhere/sl.jsonl");
-    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, retry_show_sim: true, elites: ["Decimillipede", "Three Knights", "Mecha Knight", "Entomancer", "Infested Prism"] });
+    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism"] });
   });
 });
 
@@ -378,7 +380,7 @@ describe("previousAttemptsJson", () => {
 describe("configuration", () => {
   it("SL is off by default, with retries 3 / 1, the sim shown on retries, the log next to the decision log", () => {
     const config = loadConfig({ DECISION_LOG: "/tmp/x/decisions.jsonl" } as NodeJS.ProcessEnv);
-    expect(config.sl).toEqual({ enabled: false, bossRetries: 3, eliteRetries: 1, retryShowSim: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
+    expect(config.sl).toEqual({ enabled: false, bossRetries: 5, eliteRetries: 3, retryShowSim: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
     const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_RETRY_SHOW_SIM: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
     expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, retryShowSim: false, log: null });
     expect(() => loadConfig({ SL_BOSS_RETRIES: "-1" } as NodeJS.ProcessEnv)).toThrow(/SL_BOSS_RETRIES/);
