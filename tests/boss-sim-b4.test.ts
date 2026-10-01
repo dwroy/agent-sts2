@@ -1,12 +1,14 @@
 /**
  * B4's boss mechanics (docs/boss-sim.md §13), on synthetic boards (tests/boss-sim-fixture.ts; no knowledge data, no
- * model call, nothing written): the Knowledge Demon's three curses, the Insatiable's Sandpit and Frantic Escapes (the
- * Kaiser Crab's and the Queen's fixes wait on branch v4-sim-crabqueen). All whole-fight only: the 5-turn rollout reads
- * none of it (checked here), and tests/boss-sim.test.ts pins the live solver's and rollout's numbers.
+ * model call, nothing written): the Kaiser Crab's faced hit (B5), the Knowledge Demon's three curses, the Insatiable's
+ * Sandpit and Frantic Escapes. The Queen's fixes stay on branch v4-sim-crabqueen (B5 validation, docs/boss-sim.md §14).
+ * All whole-fight only: the 5-turn rollout reads none of it (checked here), and tests/boss-sim.test.ts pins the live
+ * solver's and rollout's numbers.
  */
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import type { CardModel } from "../src/strategy/card-model.js";
 import { KNOWLEDGE_CURSES, rolloutDecision, simulateFight, STATUS_INTO_DRAW, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
 import { solveTap, solveTurn, type EnemySim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { board, card } from "./boss-sim-fixture.js";
@@ -38,6 +40,29 @@ const enemy = (index: number, name: string, hp: number, attacks: { damage: numbe
 
 afterEach(() => {
   solveTap.onSolve = null;
+});
+
+describe("B4 Kaiser Crab: the faced hit", () => {
+  it("a Surrounded move's later hit is its faced hit, x1.5 behind us (not the logged average x1.5 again)", () => {
+    const both = (c: CardModel) => ({ ...c, validTargets: [0, 1] });
+    const base = board();
+    const input = { ...base, solver: { ...base.solver, hand: base.solver.hand.map((c) => (c.target === "single" ? both(c) : c)) } };
+    const solver: SolverInput = { ...input.solver, enemies: [enemy(0, "Claw0", 90, [{ damage: 10, hits: 1 }]), enemy(1, "Claw1", 90, [{ damage: 10, hits: 1 }])], player: { ...input.solver.player, surrounded: true, facing: 0 } };
+    // The table's 12 is the average over the logged facings; faced it is 10.
+    const table: EnemyTable = { moves: { HIT: { damage: 12, hits: 1, faceDamage: 10, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const two: RolloutInput = { ...input, solver, enemies: [0, 1].map((index) => ({ index, id: "CLAW", move: "HIT", strength: 0, powers: {} })), tables: { CLAW: table } };
+    const plan = solveTurn(solver).plans.find((p) => p.steps.some((s) => s.target === 1) && p.steps.every((s) => s.target === undefined || s.target === 1))!;
+    const turn2 = solves(two, plan, 2)[0]!;
+    expect(turn2.player.facing).toBe(1);
+    expect(turn2.enemies.find((e) => e.index === 1)!.attacks[0]!.damage).toBe(10);
+    expect(turn2.enemies.find((e) => e.index === 0)!.attacks[0]!.damage).toBe(15);
+    // Not Surrounded: the table's own number, as before.
+    const flat = solves({ ...two, solver: { ...solver, player: { ...solver.player, surrounded: false } } }, plan, 2)[0]!;
+    expect(flat.enemies.map((e) => e.attacks[0]!.damage)).toEqual([12, 12]);
+    // The 5-turn rollout never reads the faced hit.
+    const rollout = rolloutSolves({ ...two, plans: [plan] });
+    expect(rollout[0]!.enemies.map((e) => e.attacks[0]!.damage)).toEqual([12, 12]);
+  });
 });
 
 describe("B4 the Knowledge Demon's curses", () => {

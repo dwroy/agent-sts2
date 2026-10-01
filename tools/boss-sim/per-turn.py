@@ -12,7 +12,7 @@ and the sim still had samples fighting, the mean of
 Each fight counts once per turn (the sim's number is its mean over the samples still fighting).
 
 Usage: python3 tools/boss-sim/per-turn.py --results 'experiments/boss-sim/raw/NAME/results-*.jsonl' [--set val_ext]
-         [--start t1] [--enc CRUSHER] [--turns experiments/boss-sim/raw/turns-1001.jsonl] [--max-turn 12] [--json out.json]
+         [--start t1] [--enc CRUSHER] [--turns experiments/boss-sim/raw/turns-1002.jsonl] [--max-turn 12] [--json out.json]
 """
 
 import argparse
@@ -73,7 +73,7 @@ def main():
     parser.add_argument("--start", default="t1")
     parser.add_argument("--enc", default="")
     parser.add_argument("--split", default=os.path.join(ROOT, "experiments", "boss-sim", "split.json"))
-    parser.add_argument("--turns", default=os.path.join(ROOT, "experiments", "boss-sim", "raw", "turns-1001.jsonl"))
+    parser.add_argument("--turns", default=os.path.join(ROOT, "experiments", "boss-sim", "raw", "turns-1002.jsonl"))
     parser.add_argument("--max-turn", type=int, default=12)
     parser.add_argument("--json")
     args = parser.parse_args()

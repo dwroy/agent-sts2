@@ -256,7 +256,8 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       damage: logged?.perHit ?? shown?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
       ...(shown ? { shown: true } : {}),
-      // B4, read by whole fights only: the Sandpit the move starts (the Insatiable's Liquify Ground).
+      // B4, read by whole fights only: a Surrounded move's faced hit, a Sandpit it starts.
+      ...(logged?.backAttackShare !== undefined && logged.base !== undefined ? { faceDamage: logged.base } : {}),
       ...(sandpit ? { sandpit } : {}),
       // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
       strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
