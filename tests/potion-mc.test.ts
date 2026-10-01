@@ -171,10 +171,11 @@ describe("determinism and the time budget", () => {
     expect(seedOf("run:F1:T2:SWIFT")).not.toBe(seedOf("run:F1:T3:SWIFT"));
   });
 
-  it("a slow clock cuts the samples, never below MC_MIN_SAMPLES, and says so", () => {
+  it("a slow clock cuts the samples, never below MC_MIN_SAMPLES (one), and says so", () => {
     let t = 0;
     potionMcOptions.now = () => (t += 100);
     const mc = runPotionMc(input([]), source, null, 1, 50);
+    expect(MC_MIN_SAMPLES).toBe(1);
     expect(mc.samples).toBe(MC_MIN_SAMPLES);
     expect(mc.degraded).toBe(true);
   });

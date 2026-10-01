@@ -511,6 +511,8 @@ export type LiveRollout =
        * base line it is the same as (its own rollout drinks no potion later either). Null when none was asked for.
        */
       noPotion: { line: Plan; base: Plan; merged: boolean } | null;
+      /** Wall clock the random potions' Monte Carlo took out of this decision's budget before the rollout (spentMs). */
+      spentMs: number;
       elapsedMs: number;
     };
 
@@ -824,6 +826,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       lossCap,
       ordersDropped: args.ordersDropped ?? 0,
       noPotion,
+      spentMs: args.spentMs ?? 0,
       elapsedMs: elapsed(),
     };
   } catch (error) {
@@ -857,7 +860,9 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
   // forecast: the estimate is capped at our HP, so a cap reached says nothing of the line dying.
   const fallback = r.result.degraded.includes(FALLBACK_TAG);
   const capped = line.hpLoss >= r.lossCap - SATURATED_HP;
-  const fallbackText = `no rollout (it ran past its time budget; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
+  // The budget is shared with the random potions' Monte Carlo, run first: say when it took a share (DT1H1URTUAD8 F42).
+  const mcShare = r.spentMs >= 1 ? `, ${Math.round(r.spentMs)} ms of it taken by the random potions' Monte Carlo` : "";
+  const fallbackText = `no rollout (it ran past its time budget${mcShare}; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~${round1(line.hpLoss)}${capped ? " (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)" : ""}`;
   const cut = r.result.degraded.length > 0 ? ` [cut to fit the time budget: ${r.result.degraded.join(", ")}]` : "";
   const head = horizon > 1 ? `${horizon}-turn rollout (${samples} sample${samples === 1 ? "" : "s"})` : "1-turn estimate (no rollout)";
   // The later turns drink a potion still held only when the turn gains more than its cost (potion-cost.ts); the

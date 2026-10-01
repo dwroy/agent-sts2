@@ -11,7 +11,7 @@
  *
  * Every sample's line starts with the drink (SolverInput.firstKey): the option is "drink now, then re-plan
  * with the real cards". Samples are seeded per board (deterministic); other potions are not combined in
- * them (cost). A time budget cuts the samples (never below MC_MIN_SAMPLES).
+ * them (cost). A time budget cuts the samples (never below MC_MIN_SAMPLES: one).
  */
 
 import type { JsonValue } from "../util/json.js";
@@ -20,8 +20,12 @@ import { effectiveLoss, hpText, lastingHpPerPoint, solveTap, solveTurn, type Pla
 
 /** Samples per random potion (fewer when the time budget runs out). */
 export const MC_SAMPLES = 12;
-/** Samples kept whatever the clock says. */
-export const MC_MIN_SAMPLES = 4;
+/**
+ * Samples kept whatever the clock says: one, the option's example line. Every later sample starts only while the budget
+ * lasts (fix-queue-v4 #5: the minimum used to be 4 run blind, DT1H1URTUAD8 F42 knights T1 took 1795 + 1023 ms of a 400 ms
+ * budget, and the rollout, whose budget is what is left of 1500 ms, fell back to 1 turn).
+ */
+export const MC_MIN_SAMPLES = 1;
 /** Node cap of one sample's solve (the drink is forced first, so it searches one subtree). */
 export const MC_NODES = 8000;
 /** Node cap floor when slow samples cut it (the rollout's fast policy uses the same). */
@@ -230,8 +234,10 @@ export function runPotionMc(input: SolverInput, source: PotionMcSource, dryBest:
     // Snecko Oil's 10 cards, Gambler's Brew's discard sets), down to MC_MIN_NODES.
     let nodes = MC_NODES;
     const share = budgetMs / Math.max(1, requested);
+    let lastTook = 0;
     for (let i = 0; i < requested; i += 1) {
-      if (i >= MC_MIN_SAMPLES && now() - start > budgetMs) {
+      // Past the minimum, a sample starts only when it fits: the time so far and the last sample's again within the budget.
+      if (i >= MC_MIN_SAMPLES && now() - start + lastTook > budgetMs) {
         degraded = true;
         break;
       }
@@ -239,6 +245,7 @@ export function runPotionMc(input: SolverInput, source: PotionMcSource, dryBest:
       const began = now();
       const solved = solveTurn({ ...input, hand: [...hand, potion], firstKey: potion.key, maxNodes: nodes });
       const took = now() - began;
+      lastTook = took;
       if (took > share && nodes > MC_MIN_NODES) {
         nodes = Math.max(MC_MIN_NODES, Math.floor((nodes * share) / took));
         degraded = true;

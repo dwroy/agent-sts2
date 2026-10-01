@@ -3,11 +3,11 @@
  * numbers of the question written into the test, never the refreshing knowledge files; no LLM, nothing written to logs/.
  */
 
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { hpGuardNote, hpGuardReplacement, hpGuardSlack } from "../src/screens/combat-plan.js";
 import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-model.js";
-import { beatsDryLine, potionMcCriteria, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
+import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
@@ -199,5 +199,31 @@ describe("4. A random potion's Power counts past this turn (fix-queue-v4 potion-
     expect(mc.vsDry!.lastingGained).toBeCloseTo(8, 5);
     const won = { ...mc.median!, outcome: { ...mc.median!.outcome, winsFight: true } } as Plan;
     expect(beatsDryLine(won, dry, 1)).toBe(true);
+  });
+});
+
+describe("5. The random potions' Monte Carlo keeps its budget before the minimum samples too (fix-queue-v4 potion-mc:219)", () => {
+  afterEach(() => {
+    potionMcOptions.now = null;
+  });
+  const strike = card(0, "STRIKE_IRONCLAD", { name: "Strike", damage: 6 });
+  const input: SolverInput = { hand: [strike], player: player({ energy: 1 }), enemies: [enemy({ attacks: [{ damage: 10, hits: 1 }] })], fightKind: "elite", turn: 1 };
+  const source: PotionMcSource = { potionId: "ATTACK_POTION", name: "Attack Potion", slot: 0, text: "", kind: "choice", pools: { Attack: [card(0, "CLEAVE", { name: "Cleave", cost: 0, damage: 8 })] }, poolName: "ironclad" };
+
+  it("DT1H1URTUAD8 F42 T1: samples slower than the whole budget stop after the first, not after four", () => {
+    let t = 0;
+    potionMcOptions.now = () => (t += 250);
+    const mc = runPotionMc(input, source, null, 3, MC_BUDGET_MS);
+    expect(mc.samples).toBe(1);
+    expect(mc.degraded).toBe(true);
+    expect(mc.median).not.toBeNull();
+  });
+
+  it("fast samples: all of them, within the budget", () => {
+    let t = 0;
+    potionMcOptions.now = () => (t += 5);
+    const mc = runPotionMc(input, source, null, 3, MC_BUDGET_MS);
+    expect(mc.samples).toBe(MC_SAMPLES);
+    expect(mc.ms).toBeLessThanOrEqual(MC_BUDGET_MS);
   });
 });
