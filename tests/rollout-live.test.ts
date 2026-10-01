@@ -333,7 +333,7 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
     expect(pickRolloutBest([tieA, same], 62).best).toBe(tieA);
   });
 
-  it("logged saturated boards: every line reads its deaths, this turn's loss and the enemy HP left; a tagged best has the fewest deaths, then the least loss", () => {
+  it("logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left", () => {
     rolloutLiveOptions.budgetMs = 1e9;
     for (const name of ["8v0h-f17-t2-saturated", "heac-f17-t2-saturated", "heac-f17-t6-saturated"]) {
       const decision = plan(name, true) as AskDecision;
@@ -344,10 +344,10 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
       const keys = new Map<string, { dead: number; loss: number; left: number }>();
       for (const key of Object.keys(criteria)) {
         const text = String(facts(criteria, key)["rollout"] ?? "");
-        const m = /fewest dead within \d turns \(this line (\d+)\/\d+\), then least HP lost this turn \(this line (gains )?(\d+)\), then .*enemy HP left ~(\d+) \(at T\d or at our death\)/.exec(text);
+        const m = /fewest dead within \d turns \(this line (\d+)\/\d+\), then the fight's progress: .*least enemy HP left \(this line ~(\d+), at T\d or at our death\), then most turns alive \(this line ~[\d.]+\), then least HP lost this turn \(this line (gains )?(\d+)\)/.exec(text);
         if (/^not rolled out/.test(text)) continue;
         expect(m, `${name} ${key}: ${text}`).not.toBeNull();
-        keys.set(key, { dead: Number(m![1]), loss: (m![2] ? -1 : 1) * Number(m![3]), left: Number(m![4]) });
+        keys.set(key, { dead: Number(m![1]), loss: (m![3] ? -1 : 1) * Number(m![4]), left: Number(m![2]) });
       }
       const tagged = [...keys.keys()].filter((key) => facts(criteria, key)["rollout_best"] === true);
       expect(tagged.length, name).toBeLessThanOrEqual(1);
@@ -355,9 +355,8 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
         const best = keys.get(tagged[0]!)!;
         const all = [...keys.values()];
         expect(best.dead, name).toBe(Math.min(...all.map((k) => k.dead)));
-        expect(best.loss, name).toBe(Math.min(...all.filter((k) => k.dead === best.dead).map((k) => k.loss)));
-        const same = all.filter((k) => k.dead === best.dead && k.loss === best.loss);
-        expect(best.left - Math.min(...same.map((k) => k.left)), name).toBeLessThanOrEqual(1);
+        // Shown rounded: the tie is within ROLLOUT_ENEMY_HP_TIE of the least, unrounded.
+        expect(best.left - Math.min(...all.filter((k) => k.dead === best.dead).map((k) => k.left)), name).toBeLessThanOrEqual(1);
       }
     }
   }, 30_000);
