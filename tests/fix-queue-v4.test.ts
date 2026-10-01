@@ -7,6 +7,12 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { hpGuardNote, hpGuardReplacement, hpGuardSlack } from "../src/screens/combat-plan.js";
 import { createScreenMemory } from "../src/project/types.js";
+import { DeepSeekEngine } from "../src/brain/engines/deepseek.js";
+import { BrainRouter, errorUsage, withUsage, type BrainLogRow } from "../src/brain/router.js";
+import { pickSpec } from "../src/brain/specs.js";
+import type { BrainAnswer, BrainEngine, BrainRequest } from "../src/brain/types.js";
+import { loadConfig } from "../src/config.js";
+import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { ask, board, decide, env as oneshotEnv, optionsOf, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-model.js";
 import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
@@ -285,5 +291,61 @@ describe("7. Smith and removal name only the cards the selection screen lists, t
     expect(memory.pendingPick).toBeUndefined();
     const situation = ask(decision).state["situation"] as Record<string, unknown>;
     expect(String(situation["named_card_not_offered"])).toMatch(/^Inferno, named for this upgrade with the choice before, is not on this screen/);
+  });
+});
+
+describe("8. A failed brain call is logged with its real time and known tokens (fix-queue-v4 router:446-447)", () => {
+  const options = { a: JSON.stringify({ option: "heal" }), b: JSON.stringify({ option: "smith" }) };
+  const request: BrainRequest = { label: "event/act-plan", system: "SYSTEM", question: "Which?", options, payload: {}, spec: pickSpec("event/act-plan", options, {}) };
+  const routerWith = (deepseek: BrainEngine, clock: { now: number }, env: Record<string, string> = {}) => {
+    const rows: BrainLogRow[] = [];
+    const router = new BrainRouter({ config: loadConfig(env as unknown as NodeJS.ProcessEnv).brain, engine: () => deepseek, log: (row) => rows.push(row), now: () => clock.now });
+    return { router, rows };
+  };
+
+  it("RUDHQ1KJ49P8 F11: a non-JSON answer that used 1,787 output tokens over 41 s is logged so, not 0/0", async () => {
+    const clock = { now: 1000 };
+    const failing: BrainEngine = {
+      name: "deepseek",
+      model: "deepseek-flash",
+      async decide(): Promise<BrainAnswer> {
+        clock.now += 41_000;
+        const error = Object.assign(new Error("DeepSeek returned non-JSON"), { answerFailure: true });
+        throw withUsage(error, { inputTokens: 130_000, cacheHitTokens: 120_000, outputTokens: 1787, reasoningTokens: 1500 });
+      },
+    };
+    const { router, rows } = routerWith(failing, clock);
+    await expect(router.decide(request)).rejects.toThrow(/non-JSON/);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.latency_ms).toBe(41_000);
+    expect(rows[0]!.usage).toMatchObject({ inputTokens: 130_000, outputTokens: 1787 });
+  });
+
+  it("41VAUAM2EFY7 F34: a timeout is logged with the time it took (no tokens known)", async () => {
+    const clock = { now: 0 };
+    const hangs: BrainEngine = {
+      name: "deepseek",
+      model: "deepseek-flash",
+      async decide(_req, signal): Promise<BrainAnswer> {
+        clock.now += 30;
+        return new Promise((_, reject) => signal?.addEventListener("abort", () => reject(new Error("aborted"))));
+      },
+    };
+    const { router, rows } = routerWith(hangs, clock);
+    await expect(router.decide({ ...request, timeoutMs: 20 })).rejects.toThrow(/timed out/);
+    expect(rows[0]!.latency_ms).toBe(30);
+    expect(rows[0]!.usage).toEqual({ inputTokens: 0, outputTokens: 0 });
+  });
+
+  it("the DeepSeek engine hands an unusable answer's tokens on with its error", async () => {
+    class Unusable extends DeepSeekClient {
+      override async choose(): Promise<never> {
+        throw new DeepSeekAnswerError("DeepSeek returned non-JSON", { choice: "", reason: "", reasoning: "", content: "{} Wait" }, { latencyMs: 900, inputTokens: 50_000, outputTokens: 1042, cacheHitTokens: 45_000 });
+      }
+    }
+    const engine = new DeepSeekEngine(new Unusable({ apiKey: "test", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 }));
+    const error = await engine.decide({ ...request, system: engine["client"].systemPrompt }).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(DeepSeekAnswerError);
+    expect(errorUsage(error)).toMatchObject({ inputTokens: 50_000, outputTokens: 1042, cacheHitTokens: 45_000 });
   });
 });

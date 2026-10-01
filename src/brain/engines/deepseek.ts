@@ -11,7 +11,8 @@
  *   recorded, and the loop ends on a reply without tool calls.
  * - The router's re-ask: the same conversation with the previous answer and the problems as a new user turn.
  */
-import { DeepSeekClient, embeddedJsonObjects, type DeepSeekAnswer } from "../../llm/deepseek.js";
+import { DeepSeekAnswerError, DeepSeekClient, embeddedJsonObjects, type DeepSeekAnswer } from "../../llm/deepseek.js";
+import { withUsage } from "../router.js";
 import type { JsonValue } from "../../util/json.js";
 import { ToolHost } from "../../tools/mcp-server.js";
 import { normalisePick, parseAnswerText, reaskMessage, TOOLS_NOTE, userMessage } from "../message.js";
@@ -84,9 +85,15 @@ export class DeepSeekEngine implements BrainEngine {
   }
 
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {
-    if (req.tools && req.tools.length > 0) return this.withTools(req, signal);
-    if (req.reask) return this.reasked(req, signal);
-    return this.v3(req);
+    try {
+      if (req.tools && req.tools.length > 0) return await this.withTools(req, signal);
+      if (req.reask) return await this.reasked(req, signal);
+      return await this.v3(req);
+    } catch (error) {
+      // An unusable answer still cost its tokens: the router logs them (errorUsage; fix-queue-v4 #8).
+      if (error instanceof DeepSeekAnswerError) throw withUsage(error, usageOf(error.meta));
+      throw error;
+    }
   }
 
   /** The v3 call, exactly as the loop made it before V4. */
