@@ -10,7 +10,7 @@ import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-
 import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
 import type { LineEstimate } from "../src/strategy/rollout.js";
 import { pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { distinctPlans, dominates, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
 const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
 const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
@@ -225,5 +225,29 @@ describe("5. The random potions' Monte Carlo keeps its budget before the minimum
     const mc = runPotionMc(input, source, null, 3, MC_BUDGET_MS);
     expect(mc.samples).toBe(MC_SAMPLES);
     expect(mc.ms).toBeLessThanOrEqual(MC_BUDGET_MS);
+  });
+});
+
+describe("6. A line that gives the enemy Strength never dominates one that does not (fix-queue-v4 turn-solver:2748 vector)", () => {
+  it("9FVEQKJ0Y1YQ F33 T6 (the Insatiable, bite 28 + Strength): Fight Me! does not make \"Blood Wall, Defend\" disappear", () => {
+    // The logged hand: Blood Wall at 0 this fight, Blood Wall, Fight Me!, Defend; 3 energy, 28 HP, the enemy at 20 incoming.
+    const hand = [
+      card(0, "BLOOD_WALL", { name: "Blood Wall", type: "Skill", cost: 0, target: "self", validTargets: [], block: 16, hpLoss: 2 }),
+      card(1, "BLOOD_WALL", { name: "Blood Wall", type: "Skill", cost: 2, target: "self", validTargets: [], block: 16, hpLoss: 2 }),
+      card(2, "FIGHT_ME", { name: "Fight Me!", cost: 2, damage: 5, hits: 2, strength: 2, enemyStrength: 1 }),
+      card(3, "DEFEND_IRONCLAD", { name: "Defend", type: "Skill", target: "self", validTargets: [], block: 5 }),
+    ];
+    const solved = solveTurn({ hand, player: player({ hp: 28, maxHp: 92, energy: 3 }), enemies: [enemy({ name: "Insatiable", hp: 160, maxHp: 341, attacks: [{ damage: 20, hits: 1 }] })], fightKind: "boss", turn: 6 });
+    const ids = (plan: Plan) => plan.steps.map((step) => step.cardId).sort().join(",");
+    const fightMe = solved.plans.find((plan) => ids(plan) === "BLOOD_WALL,DEFEND_IRONCLAD,FIGHT_ME")!;
+    const quiet = solved.plans.find((plan) => ids(plan) === "BLOOD_WALL,DEFEND_IRONCLAD")!;
+    expect(fightMe.outcome.hpLoss).toBe(quiet.outcome.hpLoss);
+    expect(fightMe.outcome.damageDealt).toBeGreaterThan(quiet.outcome.damageDealt);
+    expect(fightMe.outcome.enemyHpAfter[0]!.strengthGained).toBe(1);
+    expect(dominates(fightMe, quiet)).toBe(false);
+    // Code's options keep a line that leaves the enemy as it was.
+    const shown = distinctPlans(solved.plans, 10);
+    expect(shown.some((plan) => (plan.outcome.enemyHpAfter[0]!.strengthGained ?? 0) === 0)).toBe(true);
+    expect(shown.length).toBeGreaterThanOrEqual(2);
   });
 });

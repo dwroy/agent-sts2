@@ -2776,6 +2776,16 @@ export function effectiveLoss(plan: Pick<Plan, "outcome">): number {
   return plan.outcome.hpLoss + (plan.outcome.potionCost ?? 0);
 }
 
+/**
+ * The Strength the living enemies gain for good from a line (Fight Me!, Enrage, Crab Rage: enemyHpAfter strengthGained;
+ * a loss counts negative). It raises every later hit: a dominance axis of its own (fix-queue-v4 #6, 9FVEQKJ0Y1YQ F33 T6:
+ * "Blood Wall, Fight Me!, Defend" -2 dominated "Blood Wall, Defend" -2 on our Strength and damage, code played it as
+ * the only distinct line, and the Insatiable's +1 made T7's bite exactly lethal).
+ */
+export function enemyStrengthGained(outcome: Pick<Outcome, "enemyHpAfter">): number {
+  return outcome.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + (enemy.strengthGained ?? 0), 0);
+}
+
 function vector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
@@ -2794,7 +2804,8 @@ function vector(plan: Plan): number[] {
   // into a blast we cannot take on this turn's numbers never dominates a line that does not kill (9Q7V F17 T14:
   // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
   const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0];
+  // The enemies' Strength gained is an axis too (enemyStrengthGained): a line feeding it never dominates one that does not.
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0, o.winsFight ? 0 : -enemyStrengthGained(o)];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
@@ -2827,6 +2838,7 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
         Math.abs(other.outcome.damageDealt - plan.outcome.damageDealt) <= 3 &&
         other.outcome.kills.length === plan.outcome.kills.length &&
         other.outcome.strengthGained === plan.outcome.strengthGained &&
+        enemyStrengthGained(other.outcome) === enemyStrengthGained(plan.outcome) &&
         other.outcome.sandpitAfter === plan.outcome.sandpitAfter &&
         (other.outcome.nextTurnEnergy ?? 0) === (plan.outcome.nextTurnEnergy ?? 0),
     );
