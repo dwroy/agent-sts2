@@ -98,6 +98,8 @@ export const bossLinesOptions: {
   seed: number;
   serial: boolean;
   now: (() => number) | null;
+  /** Called with every question's result (tools/boss-sim/b2-lines.ts reads the lines' samples). */
+  onSim: ((sim: BossLineSim) => void) | null;
   /** The potions' held value for the sim policy's hold (default: the potion table, boss-sim tableHoldHp). */
   holdHp: ((potionId: string, input: RolloutInput) => number | null) | null;
 } = {
@@ -110,6 +112,7 @@ export const bossLinesOptions: {
   seed: BOSS_LINES_SEED,
   serial: false,
   now: null,
+  onSim: null,
   holdHp: null,
 };
 
@@ -405,15 +408,18 @@ export interface LinesRank {
   winTied: boolean[];
 }
 
-/** B2's ranking (Dai): the whole-fight win rate first, ties within `tieSe` standard errors, then the least HP lost when won (wonLoss). */
-export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true): LinesRank {
+/**
+ * B2's ranking (Dai): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
+ * (wonLoss, the HP lost when won; the acceptance tool also ranks by the pre-V4.2 mean HP lost to compare).
+ */
+export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss): LinesRank {
   const idx = lines.map((_, i) => i).filter(eligible);
   if (idx.length === 0) return { best: -1, tied: [], vsBest: lines.map(() => null), winTied: lines.map(() => false) };
   let top = idx[0]!;
   for (const i of idx) {
     const a = lines[i]!;
     const b = lines[top]!;
-    if (a.winProb > b.winProb || (a.winProb === b.winProb && wonLoss(a) < wonLoss(b))) top = i;
+    if (a.winProb > b.winProb || (a.winProb === b.winProb && second(a) < second(b))) top = i;
   }
   const winTied = lines.map((line, i) => {
     if (!idx.includes(i)) return false;
@@ -426,9 +432,9 @@ export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE,
     if (!winTied[i]) continue;
     const a = lines[i]!;
     const b = lines[best]!;
-    if (wonLoss(a) < wonLoss(b) || (wonLoss(a) === wonLoss(b) && a.winProb > b.winProb)) best = i;
+    if (second(a) < second(b) || (second(a) === second(b) && a.winProb > b.winProb)) best = i;
   }
-  const shown = (line: BossSimLineResult) => `${Math.round(line.winProb * 1000)}|${line.hpLossWon ? Math.round(line.hpLossWon.median * 10) : "-"}`;
+  const shown = (line: BossSimLineResult) => `${Math.round(line.winProb * 1000)}|${Math.round(second(line) * 10)}`;
   const tied = idx.filter((i) => winTied[i] && shown(lines[i]!) === shown(lines[best]!));
   return { best, tied: tied.length >= 2 ? tied : [], vsBest: lines.map((line, i) => (i === best ? null : compareLines(line, lines[best]!))), winTied };
 }
@@ -620,7 +626,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const order = run.lines.map((_, i) => i).sort((a, b) => cmp(key(a)[0], key(b)[0]) || cmp(key(a)[1], key(b)[1]) || cmp(key(a)[2], key(b)[2]) || a - b).map((i) => args.lines[i]!);
     const showPlan = args.turn === null || args.turn <= 1 || (args.turn - 1) % BOSS_LINES_PLAN_EVERY === 0;
     const plan = showPlan && rank.best >= 0 ? fightPlanText(input, run.lines[rank.best]!, turnNow) : null;
-    return {
+    const sim: BossLineSim = {
       available: true,
       byPlan,
       best: lowTrust || rank.best < 0 || rank.tied.length > 0 ? null : args.lines[rank.best]!,
@@ -632,6 +638,8 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       plan,
       order,
     };
+    bossLinesOptions.onSim?.(sim);
+    return sim;
   } catch (error) {
     return { available: false, reason: `error: ${String(error).slice(0, 160)}`, ms: ms() };
   }

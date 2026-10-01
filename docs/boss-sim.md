@@ -21,6 +21,7 @@
 - **先补模拟器的缺口**：随机药水按 potion-mc 的做法进模拟，Orichalcum、Ripple Basin、Sturdy Clamp、Pendulum、Ice Cream 按日志量的数建了，帝王蟹的朝向（背后攻击）也建了。模拟每场喝药 1.25 瓶，实际 1.25（B1.5 是 0.92）。验证集上重跑、Platt 在调参集上重拟合后，校准 Brier 第 1 回合起 0.147 → 0.146、第 5 回合起 0.094 → 0.088、战前 0.146 → 0.144，都没有变差。
 - **接进 boss 战的题面**（`BOSS_SIM_LINES`，默认开）：每回合把 Jev 看到的每条线（包括药水线）按整场打下去，同一组种子，给校准胜率、和最好那条线的配对差 ± 标准误、赢局掉血中位、还要几回合、输的样本最常死在第几回合、样本数。`rollout_best` 改为先看整场胜率（2 个标准误内算并列）、再看赢局掉血中位（V4.2 前是全部样本的平均掉血）；5 回合推演的数字保留作参考；HP 护栏和代码回退线按同一个排序。帝王蟹、实验体、女王、知识恶魔、永恒镜、贪得无厌者是低可信 boss：排序仍按推演，V4.2 起题面不给整场数字和计划（只进决策日志）。开场和之后每 3 回合给一句从最优线赢的样本里提炼的整场计划，只作信息。
 - **验收**（30 个 boss 战中途局面，不调模型）：整场模拟每回合中位 1.5 秒、最慢 25 秒（截止时间）；可信 boss 的 15 个局面里，最优线和原来的推演不同的有 9 个；Jev 实际选的线 27 个里有 12 个排第 1，23 个和最优线在 2 个标准误以内。
+- **V4.2**（2026-10-01，Dai）：低可信 boss 题面不给整场数字和计划（只进日志）；并列后按赢局掉血中位排；boss 战 20 个 worker，和 B3 的池不同时占着 worker；整场计划的大招回合只写来袭。30 个局面重跑：每回合中位 1.8 秒、最慢 25 秒（机器负载 16–38）；可信 boss 的 15 个局面里最优线因新的第二标准改变的 4 个（§11.6）。
 - 关掉时题面和排序与之前逐字节相同，非 boss 战不变，都有测试锁住。
 
 **B3 结论**（§12；汇总在 experiments/boss-sim-build/summary.md）：构筑题（选牌、商店、休息点、选牌屏、事件）里 DeepSeek 看到的每个选项多一行「打本幕 boss 的模拟」，facts.act_boss_sim 代替 boss 时钟（`BOSS_SIM_BUILD=on`，默认开；off 时题面逐字节不变）。
@@ -695,6 +696,18 @@ tools/boss-sim/b2-lines.ts，结果在 experiments/boss-sim-lines/（report.md�
 - **Jev 实际选的线在新数字下排第几**（27 个）：第 1 名 12 次、第 2 名 5 次、第 3 名 8 次、第 4 名 1 次、第 6 名 1 次；和最优线在 2 个标准误以内的 23 个。可信 boss 的局面里，Jev 选的正好是新最优线的 5 个。
 - **整场计划样例**：同族第 4 回合「T5, T7 the enemies hit hardest (~19, ~15): the samples block ~0, ~0 on them; kill 同族信徒 #2 ~T4, then 同族信徒 #1 ~T6, then 同族神官 ~T10; the boss dies ~T10 (median of 590 winning samples)」；族母第 4 回合「T6 play 铁蒺藜, 势不可当; T8, T9 the enemies hit hardest (~21, ~21): the samples block ~2, ~3 on them; the boss dies ~T12 (median of 577 winning samples)」。
 
+**V4.2 重跑**（2026-10-01，同样 30 个局面，20 个 worker，其余同上；experiments/boss-sim-lines/v42/，原始输出 experiments/boss-sim/raw/v42-lines.jsonl 不提交）。跑的时候另一个 agent 在跑 boss 模拟（约 18 个 nice 15 的进程），负载 16–38；这台是 16 核 32 线程，所以和上面 12 个 worker、负载 8–13 的那次不能直接比速度。
+
+- **耗时**（每题 = 每回合一次整场模拟）：中位 1.8 秒，p90 19.6 秒，最慢 25.0 秒（截止时间）；整个出题中位 2.1 秒、最慢 26.1 秒。到截止时间的 3 个：同族第 2 回合（75/600 个样本，上次 12 个 worker 时 150/600）、帝王蟹 FYQUP0GVWNUU 第 2 回合（434/600，上次 593）、实验体第 4 回合（595/600）。前 9 个局面（负载还低时）比上次快（例如同族第 4 回合 9.8 → 8.0 秒、女王第 3 回合 9.7 → 6.5 秒），后面负载升到 30 以上后变慢。20 个 worker 在机器空闲时的效果要等没有别的模拟时再量。
+- **第 2 条（赢局掉血中位）改变的最优线**：可信 boss 的 15 个局面里 4 个（同样的样本、同样的每条线击杀顺序，只换第二标准）：
+  - 瀑布巨兽 7MDJ256RY2UU:7 第 8 回合、8V0HD9Y207WY:9 第 7 回合：各线赢局掉血中位相同（71；55），于是胜率高的那条当选（plan1 → plan3；原来并列 → plan3）；
+  - 灵魂鱼 0QSB9YV3UFCL:10 第 3 回合：plan1 胜率 79%、赢局中位 40，plan3 75%、39；两条在 2 个标准误内并列，中位少 1 点的 plan3 当选，而原来平均掉血（41.0 对 41.5）选 plan1；
+  - 灵魂鱼 RLCNBC0L2QUC:7 第 8 回合：三条线都是 100%，plan1 和 plan3 赢局中位都是 11，变成并列、没有单一最优（原来平均掉血 13.5 对 13.9 选 plan1）。
+  - 低可信 boss 的 15 个局面按两种口径算最优线不同的 2 个，但它们本来就按推演排序，不影响题面。
+- **第 1 条**：15 个低可信 boss 局面的题面里都没有整场数字和计划，15 个可信 boss 的都有。
+- **第 4 条**的计划样例（同族第 4 回合）：「T5, T7 the enemies hit hardest (incoming ~19, ~15); kill 同族信徒 #2 ~T4, then 同族信徒 #1 ~T6, then 同族神官 ~T10; the boss dies ~T10 (median of 590 winning samples)」。
+- 其余：可信 boss 局面里最优线和推演不同的 8 个（上次 9 个），新排序没有单一最优的 2 个；Jev 选的线 27 个里排第 1 的 12 个、和最优线在 2 个标准误内的 24 个。
+
 复现：
 
 ```bash
@@ -702,6 +715,8 @@ for i in $(seq 0 11); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --shard $
 python3 tools/boss-sim/calib.py --results 'experiments/boss-sim/raw/b2/results-*.jsonl' --set val [--platt]   # §11.1 的表和新 Platt 参数
 nice -n 5 npx tsx tools/boss-sim/b2-lines.ts --n 30 --samples 600 --deadline 25000 --workers 12             # raw/b2-lines.jsonl
 python3 tools/boss-sim/b2-lines-report.py                                                                     # experiments/boss-sim-lines/
+nice -n 5 npx tsx tools/boss-sim/b2-lines.ts --n 30 --samples 600 --deadline 25000 --workers 20 --out experiments/boss-sim/raw/v42-lines.jsonl   # V4.2
+python3 tools/boss-sim/b2-lines-report.py --in experiments/boss-sim/raw/v42-lines.jsonl --out-dir experiments/boss-sim-lines/v42 --workers 20
 ```
 
 ### 11.7 测试
@@ -709,12 +724,14 @@ python3 tools/boss-sim/b2-lines-report.py                                       
 新增 21 个，都不依赖每局刷新的知识数据，不调用 LLM，不写 logs 或 .cache：
 
 - tests/boss-sim-gaps.test.ts（8 个，合成盘面）：`fightRelicsOf` 的新遗物和 Pendulum 的回合；solver 的 Orichalcum / Ripple Basin；整场模拟里 Pendulum 多一张、Ice Cream 能量结转、Orichalcum 进 solver；Sturdy Clamp 留格挡（有上限）；帝王蟹背对的钳子 ×1.5、面对的不变；选牌药水每回合新的 3 张且同一样本各线相同；纯抽牌药水抽已知牌；样本的逐回合记录。
-- tests/boss-lines.test.ts（8 个，合成盘面）：同一条线两遍逐样本相同、再跑一遍相同（CRN、确定性），worker 池和串行逐样本相同；截止时间只用所有线都跑完的同一批样本、题面写样本数、池马上能接下一题、串行也按时停；排序（2 个标准误内并列再看掉血、数字相同算并列、只在可选的线里排）；HP 护栏不换进胜率低 2 个标准误的线；低可信 boss 的识别和文字；整场计划的提炼（逐字核对一个样例）。
+- tests/boss-lines.test.ts（8 个 + V4.2 的 3 个，合成盘面）：同一条线两遍逐样本相同、再跑一遍相同（CRN、确定性），worker 池和串行逐样本相同；截止时间只用所有线都跑完的同一批样本、题面写样本数、池马上能接下一题、串行也按时停；排序（2 个标准误内并列再看掉血、数字相同算并列、只在可选的线里排）；HP 护栏不换进胜率低 2 个标准误的线；低可信 boss 的识别和文字；整场计划的提炼（逐字核对一个样例；V4.2：大招回合只写来袭、不出现「block ~」）。V4.2 新增：并列组里按赢局掉血中位而不是平均掉血（平均掉血选 B、赢局中位选 A 的一对线；回退线的不喝药排序同口径；没有赢局的线排最后）；默认 20 个 worker；B2 和 B3 的池互相释放（构筑池跑完 → boss 池起 worker 时构筑池的 worker 为 0 → 构筑池再跑时 boss 池为 0，两边都照常出结果）。
 - tests/boss-lines-planner.test.ts（5 个，日志盘面 + 固定的裁剪知识数据）：off 时 5 个 boss 盘面（Jev 视图开 / 关）逐字节同接入前；非 boss 盘面开着也逐字节相同；可信 boss（同族第 5 回合）每个选项有整场数字、`rollout_best` 就是模拟的最优、日志、回退线；低可信 boss（女王，V4.2）题面、Jev 视图和每个答案的处理与 off 逐字节相同、题面里没有 whole_fight，日志里有 `boss_sim`（`low_trust: true`、每条线的数字）；第 1 回合有整场计划。
 - tests/rollout.test.ts 的引用边界改成：src 里只有 combat-plan.ts 引用 src/sim/，而且只经 boss-lines.ts。
 - tests/setup-boss-lines.ts：测试里默认关（设环境变量，不提前加载模块），B2 的测试自己打开。
 
 ### 11.8 遗留和要 Dai 定的事
+
+V4.2（2026-10-01，Dai 按下面 1、2、3、5 定）：1 低可信 boss 题面不给整场数字和计划、只进日志（§11.3）；2 第二标准改成赢局掉血中位（§11.3）；3 worker 加到 20（§11.2，截止时间不变），并且 B2 / B3 的池不同时占着 worker；5 整场计划的大招回合只写来袭（§11.4）。原文留着备查：
 
 1. **低可信 boss 占了一半**（验收 30 个局面里 15 个）：帝王蟹补了朝向之后 Brier 反而变差（0.108 → 0.130），根子是模拟的策略挡得少；实验体、永恒镜场次太少；贪得无厌者偏乐观。要不要对这几个 boss 干脆不给整场数字，还是像现在这样给数字、标低可信、排序不用？
 2. **「再看掉血」用的是全部样本的平均掉血（死了算全部血）**。胜率并列时它基本反映赢局掉血，也会稍微偏向胜率高一点的线。也可以改成「赢局掉血中位」，请 Dai 定。
@@ -723,6 +740,8 @@ python3 tools/boss-sim/b2-lines-report.py                                       
 5. **整场计划里会出现「block ~0」**：那是模拟策略自己的打法（B1.5 说过它在大招回合挡得比实际少），Jev 可能把它当成建议。现在写的是「information, not an order」；要不要大招回合只写来袭、不写样本格挡？
 6. 还没建的按回合遗物见 §11.1；随机药水里 Snecko Oil、Gambler's Brew 等仍按期望值。
 7. 全量测试里有两个按真实时钟计时的老测试（batch-k 的 DHGT 盘面、rollout-live 的「推演不超预算」），机器负载高（别的进程占 13 个核）时会超时；单独跑都通过，和 B2 无关。
+8. **（V4.2）赢局掉血中位是整数，比较粗**：验收里 1 个局面因为中位少 1 点，选了胜率低 3.7 个百分点（仍在 2 个标准误内）的线；1 个局面两条线 100% 胜率、中位相同，变成并列没有单一最优（原来平均掉血能分开）。要不要在中位相同时再看平均掉血、或者中位差不到 2 点算相同再看胜率，请 Dai 定。
+9. **（V4.2）20 个 worker 的速度还没在空闲机器上量过**：这次重跑时另一个 agent 占着约 18 个线程，最难的同族第 2 回合只跑完 75/600 个样本（12 个 worker、负载 8–13 时 150/600）。§11.8 第 3 条说的多敌人早期回合碰截止时间仍在。
 
 ## 12. B3：构筑题给每个选项「打本幕 boss 的模拟结果」
 

@@ -4,7 +4,10 @@
 Per logged boss turn: the whole-fight lines' time, whether the best line changed (the 5-turn rollout's before, the
 simulation's ranking after; low-trust bosses keep the rollout's), why, and where Jev's actual line ranks.
 
-Usage: python3 tools/boss-sim/b2-lines-report.py [--in experiments/boss-sim/raw/b2-lines.jsonl] [--out-dir experiments/boss-sim-lines]
+V4.2 (rows with mean_best / won_best): where ranking the tie group by the median HP lost when won instead of the mean
+HP lost over every sample changes the best line, and whether a low-trust boss's question shows any whole-fight number.
+
+Usage: python3 tools/boss-sim/b2-lines-report.py [--in experiments/boss-sim/raw/b2-lines.jsonl] [--out-dir experiments/boss-sim-lines] [--workers 12]
 """
 
 import argparse
@@ -40,6 +43,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="inp", default="experiments/boss-sim/raw/b2-lines.jsonl")
     ap.add_argument("--out-dir", default="experiments/boss-sim-lines")
+    ap.add_argument("--workers", default="12")
     args = ap.parse_args()
     rows = [json.loads(l) for l in open(args.inp) if l.strip()]
     os.makedirs(args.out_dir, exist_ok=True)
@@ -69,15 +73,25 @@ def main():
         "jev_chose_new_best_trusted": sum(1 for r in jev_trusted if r["jev"] in r["new_best"]),
         "jev_chose_old_best_trusted": sum(1 for r in jev_trusted if r["jev"] in (r["old_best"] or []) or (r.get("old_line") and r["jev"] == r["old_line"]["key"])),
     }
+    v42 = [r for r in rows if "mean_best" in r]
+    if v42:
+        crit = [r for r in v42 if not r["low_trust"] and r["crit_differs"]]
+        summary["v42"] = {
+            "criterion_differs_trusted": len(crit),
+            "criterion_differs_low_trust": sum(1 for r in v42 if r["low_trust"] and r["crit_differs"]),
+            "criterion_differs": [f"{r['key']} T{r['turn']}: {r['mean_best']} -> {r['won_best']}" for r in crit],
+            "low_trust_question_with_sim": sum(1 for r in v42 if r["low_trust"] and r["question_has_sim"]),
+            "trusted_question_with_sim": sum(1 for r in v42 if not r["low_trust"] and r["question_has_sim"]),
+        }
     json.dump(summary, open(os.path.join(args.out_dir, "summary.json"), "w"), ensure_ascii=False, indent=1)
-    keep = ["key", "enc", "turn", "options", "sim_ms", "plan_ms", "samples", "requested", "timed_out", "orders", "low_trust", "old_best", "new_best", "differs", "sim_best", "jev", "jev_rank", "jev_tied", "ranked", "old_line", "new_line", "jev_line", "plan"]
+    keep = ["key", "enc", "turn", "options", "sim_ms", "plan_ms", "samples", "requested", "timed_out", "orders", "low_trust", "old_best", "new_best", "differs", "sim_best", "jev", "jev_rank", "jev_tied", "ranked", "old_line", "new_line", "jev_line", "plan", "mean_best", "won_best", "crit_differs", "question_has_sim"]
     with open(os.path.join(args.out_dir, "states.jsonl"), "w") as f:
         for r in rows:
             f.write(json.dumps({k: r.get(k) for k in keep}, ensure_ascii=False) + "\n")
     md = [
         "# B2 验收：30 个 boss 战中途局面（docs/boss-sim.md §11.6）",
         "",
-        "tools/boss-sim/b2-lines.ts：验证集的 boss 战，第 2–8 回合，每场一个回合，按 boss 轮流取；每个局面让实盘规划器各出一次题，BOSS_SIM_LINES 关 / 开（worker 池 12 个、每条线 600 样本、截止 25 秒）。不调用 Jev 或 DeepSeek，Jev 的选择取自日志，按出牌文字对到新题面的选项。原始输出 experiments/boss-sim/raw/b2-lines.jsonl（gitignore），每个局面的要点在 states.jsonl。",
+        f"tools/boss-sim/b2-lines.ts：验证集的 boss 战，第 2–8 回合，每场一个回合，按 boss 轮流取；每个局面让实盘规划器各出一次题，BOSS_SIM_LINES 关 / 开（worker 池 {args.workers} 个、每条线 600 样本、截止 25 秒）。不调用 Jev 或 DeepSeek，Jev 的选择取自日志，按出牌文字对到新题面的选项。原始输出 {args.inp}（gitignore），每个局面的要点在 states.jsonl。",
         "",
         f"- 局面 {len(rows)} 个，boss：{'、'.join(summary['bosses'])}。其中可信 boss {len(trusted)} 个，低可信 {len(low)} 个（排序仍按 5 回合推演）。",
         f"- 整场模拟每回合耗时：中位 {summary['sim_ms']['median'] / 1000:.1f} 秒，p90 {summary['sim_ms']['p90'] / 1000:.1f} 秒，最慢 {summary['sim_ms']['max'] / 1000:.1f} 秒；到截止时间的 {summary['timed_out']} 个。整个出题（含推演、药水蒙特卡洛）中位 {summary['plan_ms']['median'] / 1000:.1f} 秒，最慢 {summary['plan_ms']['max'] / 1000:.1f} 秒。每条线实际样本数中位 {summary['samples_median']}。",
@@ -92,6 +106,14 @@ def main():
     for r in rows:
         tag = "（低可信）" if r["low_trust"] else ""
         md.append(f"| {r['key']} | {boss(r['enc'])}{tag} | T{r['turn']} | {r['options']} | {r['sim_ms'] / 1000:.1f} | {r['samples']}/{r['requested']} | {','.join(r['old_best']) or '并列'} → {','.join(r['new_best']) or '并列'}{' **变**' if r['differs'] and not r['low_trust'] else ''} | {r['jev'] or '—'} | {r['jev_rank'] or '—'}/{len(r['ranked'] or [])} | {'是' if r['jev_tied'] else '否' if r['jev_tied'] is not None else '—'} |")
+    if v42:
+        at = md.index("## 每个局面") - 1
+        md[at:at] = [
+            f"- V4.2 第二标准（并列组里按赢局掉血中位，原来是全部样本平均掉血）：可信 boss 的 {len(trusted)} 个局面里最优线因此改变的 {summary['v42']['criterion_differs_trusted']} 个"
+            + (f"（{'；'.join(summary['v42']['criterion_differs'])}）" if summary['v42']['criterion_differs'] else "")
+            + f"；低可信 boss 的局面（不用模拟排序）按两种口径算最优线不同的 {summary['v42']['criterion_differs_low_trust']} 个。",
+            f"- 低可信 boss 的题面里带整场数字或计划的 {summary['v42']['low_trust_question_with_sim']} 个（应为 0）；可信 boss 带的 {summary['v42']['trusted_question_with_sim']} 个。",
+        ]
     md += ["", "## 最优线变了的局面（可信 boss）", ""]
     for r in differs:
         md += [f"**{r['key']} {boss(r['enc'])} T{r['turn']}**", "", f"- 原最优（推演）：{line_text(r['old_line'])}", f"- 新最优（整场模拟）：{line_text(r['new_line'])}", f"- Jev 选：{line_text(r['jev_line'])}", ""]

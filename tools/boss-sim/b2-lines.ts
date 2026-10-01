@@ -4,10 +4,13 @@
  * each re-planned by the live planner twice, with BOSS_SIM_LINES off and on (the worker pool, `--samples` per line, the
  * live deadline): the time the whole-fight lines took, the best line before (the 5-turn rollout's) and after (the
  * simulation's ranking; the rollout's for a low-trust boss), and where the line Jev actually chose (found by its text)
- * ranks by the new numbers. No model call (Jev's logged choice is only read); logs/states.jsonl read by offset
- * (read-only); writes --out only.
+ * ranks by the new numbers. V4.2: the same lines also ranked by the pre-V4.2 second criterion (the mean HP lost over
+ * every sample, rankLines with hpLoss.mean) to count where the median HP lost when won changes the best line (each
+ * line's kill order is the one V4.2 picked for both); and whether a low-trust boss's question still shows any
+ * whole-fight number. No model call (Jev's logged choice is only read); logs/states.jsonl read by offset (read-only);
+ * writes --out only.
  *
- * Usage: npx tsx tools/boss-sim/b2-lines.ts [--n 30] [--set val] [--samples 600] [--deadline 25000] [--workers 12]
+ * Usage: npx tsx tools/boss-sim/b2-lines.ts [--n 30] [--set val] [--samples 600] [--deadline 25000] [--workers 20]
  *          [--out experiments/boss-sim/raw/b2-lines.jsonl]
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -19,7 +22,7 @@ import { buildRunBrief } from "../../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../../src/project/types.js";
 import type { AnswerSet } from "../../src/jev/answers.js";
 import { planCombatTurn } from "../../src/screens/combat-plan.js";
-import { bossLinesOptions, releaseBossLinesPool } from "../../src/sim/boss-lines.js";
+import { bossLinesOptions, BOSS_LINES_TIE_SE, rankLines, releaseBossLinesPool, type BossLineSim } from "../../src/sim/boss-lines.js";
 import { readAt } from "./backtest-board.js";
 
 function arg(name: string, fallback: string): string {
@@ -32,7 +35,11 @@ const set = arg("set", "val");
 const outPath = arg("out", "experiments/boss-sim/raw/b2-lines.jsonl");
 bossLinesOptions.samples = Number(arg("samples", "600"));
 bossLinesOptions.deadlineMs = Number(arg("deadline", "25000"));
-bossLinesOptions.workers = Number(arg("workers", "12"));
+bossLinesOptions.workers = Number(arg("workers", "20"));
+let captured: BossLineSim | null = null;
+bossLinesOptions.onSim = (sim) => {
+  captured = sim;
+};
 
 interface ChoiceRow {
   key: string;
@@ -101,6 +108,7 @@ async function main(): Promise<void> {
     bossLinesOptions.enabled = false;
     const off = planCombatTurn(env());
     bossLinesOptions.enabled = true;
+    captured = null;
     const started = performance.now();
     const on = planCombatTurn(env());
     const planMs = Math.round(performance.now() - started);
@@ -118,6 +126,17 @@ async function main(): Promise<void> {
     const newPlays = newBest.map((k) => playsOf(cOn, k));
     const lineOf = (k: string | null | undefined) => (k && sim.lines?.[k] ? { key: k, plays: playsOf(cOn, k), ...sim.lines[k], rollout: rolloutLoss(cOn[k]?.["rollout"]), turn_loss: cOn[k]?.["hp_lost"] ?? null, damage: cOn[k]?.["damage_dealt"] ?? null } : null);
     const oldKeyOn = oldPlays[0] ? (Object.keys(cOn).find((k) => cOn[k]!["plays"] === oldPlays[0]) ?? null) : null;
+    // The same lines by the pre-V4.2 second criterion (mean HP lost over every sample) and by V4.2's: the best line's key
+    // ("tied" when the best lines' numbers are the same), plans matched to keys through the log's ranking.
+    const got = captured as BossLineSim | null;
+    let crit: { mean_best: string | null; won_best: string | null } | null = null;
+    if (got?.available) {
+      const keyOfPlan = new Map(got.order.map((plan, i) => [plan, sim.ranked[i] ?? "?"]));
+      const plans = [...got.byPlan.keys()];
+      const bestKey = (r: ReturnType<typeof rankLines>) => (r.best < 0 ? null : r.tied.length > 0 ? "tied" : (keyOfPlan.get(plans[r.best]!) ?? "?"));
+      crit = { mean_best: bestKey(rankLines(got.run.lines, BOSS_LINES_TIE_SE, () => true, (l) => l.hpLoss.mean)), won_best: bestKey(rankLines(got.run.lines)) };
+    }
+    const shownOn = JSON.stringify({ state: (on as AskDecision).state, questions: (on as AskDecision).questions });
     const record = {
       key: row.key,
       enc: row.enc,
@@ -146,10 +165,14 @@ async function main(): Promise<void> {
       ranked: sim.ranked,
       lines: Object.fromEntries(Object.entries(sim.lines ?? {}).map(([k, v]) => [k, { ...v, plays: playsOf(cOn, k) }])),
       plan: sim.plan ?? (on as AskDecision).state["whole_fight_plan"] ?? null,
+      mean_best: crit?.mean_best ?? null,
+      won_best: crit?.won_best ?? null,
+      crit_differs: crit !== null && crit.mean_best !== crit.won_best,
+      question_has_sim: shownOn.includes("whole_fight"),
     };
     out.push(JSON.stringify(record));
     done += 1;
-    console.error(`${done}/${n} ${row.key} T${row.turn} ${row.enc}: sim ${sim.ms} ms (${sim.samples}/${sim.requested}) best ${JSON.stringify(oldBest)} -> ${JSON.stringify(newBest)}${record.differs ? " DIFFERS" : ""}; jev ${jevKey} rank ${record.jev_rank}/${sim.ranked?.length}${sim.low_trust ? " [low trust]" : ""}`);
+    console.error(`${done}/${n} ${row.key} T${row.turn} ${row.enc}: sim ${sim.ms} ms (${sim.samples}/${sim.requested}) best ${JSON.stringify(oldBest)} -> ${JSON.stringify(newBest)}${record.differs ? " DIFFERS" : ""}; jev ${jevKey} rank ${record.jev_rank}/${sim.ranked?.length}${sim.low_trust ? " [low trust]" : ""}; by mean ${crit?.mean_best} by won ${crit?.won_best}`);
   }
   releaseBossLinesPool();
   writeFileSync(outPath, out.join("\n") + "\n");
