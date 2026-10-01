@@ -380,6 +380,11 @@ export interface EnemyMove {
    */
   shown?: boolean;
   /**
+   * Whole fights only (simulateFight; B4, docs/boss-sim.md §13): the Sandpit count the move starts on its user (the
+   * Insatiable's Liquify Ground: 4).
+   */
+  sandpit?: number;
+  /**
    * Powers the move gives its user besides Strength, Block, Burrowed and Vigor (monster DB self_powers_gained
    * at this ascension): Ritual (Cultists' Incantation: Strength at the end of each of its later turns),
    * Intangible (Soul Fysh's Fade: our next turn's hits deal 1), Thorns (Spiny Toad, Toadpole) and Soar (Owl
@@ -925,6 +930,8 @@ interface SimEnemy {
   extraHits?: number;
   /** Uses of each growing move so far (EnemyMove.growth). */
   uses?: Record<string, number>;
+  /** The Knowledge Demon's Curse of Knowledge uses so far (whole fights: KNOWLEDGE_CURSES at most). */
+  curses?: number;
   /**
    * Whole fights: this enemy's own random stream for its moves (seeded by the sample and its board index), so two
    * lines compared on the same sample see the same enemy moves however differently they drew and played.
@@ -1180,6 +1187,20 @@ export const PHASE_MOVES: Record<string, readonly (readonly string[])[]> = {
 export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_MOVE" };
 
 /**
+ * B4 (docs/boss-sim.md §13): the Knowledge Demon's Curse of Knowledge, 3 uses a fight (logged on turns 1, 5 and 9 only,
+ * 132 uses in 52 fights; after the third, Ponder is followed by Slap: turns 13, 16). The move model's Ponder -> Curse 91%
+ * gave long fights a 4th and 5th curse.
+ */
+export const KNOWLEDGE_CURSES = 3;
+
+/**
+ * Status cards a move shuffles into the draw pile, of the ones it adds (the rest go to the move's pile): the Insatiable's
+ * Liquify Ground, 6 Frantic Escapes, 3 into the draw pile and 3 into the discard pile (46 of 46 logged fights at turn 2:
+ * draw + hand 3, discard 3; the monster DB records the discard pile only).
+ */
+export const STATUS_INTO_DRAW: Record<string, number> = { LIQUIFY_GROUND_MOVE: 3 };
+
+/**
  * The next move in a whole fight: the move model's successors, but where the game's script depends on the fight's
  * state and not on the last move alone (logged A8 move sequences, 2026-09-30):
  *  - Ceremonial Beast: Plow again until the stun at its Plow threshold (then STUNNED > Beast Cry, applyPlan's shriek);
@@ -1192,6 +1213,11 @@ export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_
 function fightNextMove(e: SimEnemy, table: EnemyTable | undefined, random: () => number, enemies: SimEnemy[], exclude?: string): string | null {
   if (e.id === "CEREMONIAL_BEAST" && e.move === "PLOW_MOVE" && e.shriekArmed) return "PLOW_MOVE";
   if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") return enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM") ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
+  // B4: no fourth curse; the move model's Ponder -> Slap is what the logged fights do after the third.
+  if (e.id === "KNOWLEDGE_DEMON" && (e.curses ?? 0) >= KNOWLEDGE_CURSES) {
+    const next = nextMove(table, e.move, random, exclude, (m) => m !== "CURSE_OF_KNOWLEDGE_MOVE");
+    return next === "CURSE_OF_KNOWLEDGE_MOVE" ? "SLAP_MOVE" : next;
+  }
   if (e.asleep !== undefined && e.asleep > 0) {
     e.asleep = e.hurt ? 0 : e.asleep - 1;
     if (e.asleep > 0) return e.move;
@@ -1819,10 +1845,17 @@ function applyPlan(
         if (gained.STEAM_ERUPTION_POWER) e.base = { ...e.base, eruption: (e.base.eruption ?? 0) + gained.STEAM_ERUPTION_POWER };
         if (m?.heal) e.hp = Math.min(e.maxHp, e.hp + m.heal);
         // Status cards into our piles (no code added any: Beckons, Wounds, Toxic, Dazed … only cycled when
-        // already there; ~800 logged fights had them added).
+        // already there; ~800 logged fights had them added). B4, whole fights: some of them into the draw pile.
         for (const status of m?.statusCards ?? []) {
           const card = input.statusCards?.[status.cardId ?? UNKNOWN_STATUS] ?? input.statusCards?.[UNKNOWN_STATUS];
-          if (card) addToPile(piles, card, status.count, status.pile, random);
+          const intoDraw = fullFight && e.move ? Math.min(status.count, STATUS_INTO_DRAW[e.move] ?? 0) : 0;
+          if (card && intoDraw > 0) addToPile(piles, card, intoDraw, "draw", random);
+          if (card) addToPile(piles, card, status.count - intoDraw, status.pile, random);
+        }
+        if (fullFight) {
+          // B4 whole-fight scripts: the Sandpit Liquify Ground starts, the curses used.
+          if (m?.sandpit) e.base = { ...e.base, sandpit: m.sandpit };
+          if (e.id === "KNOWLEDGE_DEMON" && e.move === "CURSE_OF_KNOWLEDGE_MOVE") e.curses = (e.curses ?? 0) + 1;
         }
         if (m?.playerPowers) applied.push(m);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
@@ -2365,8 +2398,11 @@ export function policyWeights(opts: RolloutOptions, player: Pick<PlayerSim, "hp"
   return out;
 }
 
-/** A whole fight's per-enemy state at the decision (simulate's fullFight): Asleep, phase, the growing move's hits. */
-function fullFightState(info: RolloutEnemy | undefined, e: EnemySim, input: RolloutInput): Pick<SimEnemy, "asleep" | "phase" | "extraHits"> {
+/**
+ * A whole fight's per-enemy state at the decision (simulate's fullFight): Asleep, phase, the growing move's hits, the
+ * Knowledge Demon's curses used (B4: one per curse we hold; a Disintegration taken twice counts once).
+ */
+function fullFightState(info: RolloutEnemy | undefined, e: EnemySim, input: RolloutInput): Pick<SimEnemy, "asleep" | "phase" | "extraHits" | "curses"> {
   const id = info?.id ?? e.name;
   const phases = PHASE_MOVES[id];
   const asleep = info?.powers?.["ASLEEP_POWER"] ?? e.asleep ?? 0;
@@ -2379,8 +2415,12 @@ function fullFightState(info: RolloutEnemy | undefined, e: EnemySim, input: Roll
     ...(asleep > 0 ? { asleep } : {}),
     ...(phases ? { phase: Math.max(0, phases.length - 1 - laterPhaseHps(e.maxHp, input.meta.asc).length) } : {}),
     ...(growing ? { extraHits: Math.max(0, shownHits - baseHits) } : {}),
+    ...(id === "KNOWLEDGE_DEMON" ? { curses: KNOWLEDGE_CURSE_POWERS.filter((power) => (input.playerPowers[power] ?? 0) > 0).length } : {}),
   };
 }
+
+/** The Knowledge Demon's curses (Curse of Knowledge puts one of them on us a use). */
+const KNOWLEDGE_CURSE_POWERS = ["SLOTH_POWER", "MIND_ROT_POWER", "WASTE_AWAY_POWER", "DISINTEGRATION_POWER"];
 
 /** A whole-fight sample (simulateFight): the per-turn records and the policy's work. */
 export interface FightTrajectory {

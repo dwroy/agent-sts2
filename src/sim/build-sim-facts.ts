@@ -34,6 +34,7 @@ import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../util
 import { FIGHT_START_RELICS, bossKey, syntheticBossStart, type SyntheticStart } from "./boss-start.js";
 import { BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
+import { LOW_CONFIDENCE_B3 } from "./boss-trust.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -45,17 +46,11 @@ export const BUILD_SIM_LABELS = new Set([
 export const TRANSFORM_DRAWS = 6;
 
 /**
- * Bosses whose simulated fights are known to be off (docs/boss-sim.md §5.4, §6.5; B1.5 validation): said on every line
- * and why in facts.act_boss_sim.
+ * Bosses whose simulated fights are low confidence, and why (said on every line, the reason in facts.act_boss_sim): B4's
+ * criteria on each boss's validation numbers from the pre-fight start (docs/boss-sim.md §13), the data file
+ * src/sim/boss-trust.json that tools/boss-sim/trust.py writes (boss-trust.ts LOW_CONFIDENCE_B3).
  */
-export const LOW_CONFIDENCE: Record<string, string> = {
-  KAISER_CRAB: "模拟挡得比实际少：第 2–7 回合被打穿的血是实际的 1.6 倍（背后攻击没建模），胜率偏悲观",
-  TEST_SUBJECT: "日志只有 9 场；第二阶段模拟被打穿的血是实际的 2.5 倍",
-  QUEEN: "模拟打出的伤害比实际低、被打穿的血偏多（验证集只有 7 场）",
-  KNOWLEDGE_DEMON: "Ponder 回血和诅咒的次数上限没建模，模拟的伤害偏低",
-  AEONGLASS: "日志只有 9 场，数据太少",
-  THE_INSATIABLE: "验证集上模拟偏乐观：校准后预测胜率 0.76，实际 0.39",
-};
+export const LOW_CONFIDENCE: Record<string, string> = LOW_CONFIDENCE_B3;
 
 /** What the question's instructions add when the options carry the simulation (English, as the instructions are). */
 export const BOSS_SIM_NOTE =

@@ -47,6 +47,22 @@ export const BOSS_SIM_DAMAGE_SCALE = 0.5;
 export const BOSS_SIM_HP_SCALE = 1;
 export const BOSS_SIM_THREAT = 0;
 /**
+ * B4 (docs/boss-sim.md §13.6): a boss's own threat term, added to the one passed (slimInput), keyed by an enemy id of the
+ * boss; mutable so the backtest can try values (tools/boss-sim/backtest.ts --boss-threat). Empty: 1, 2 and 4 on the
+ * Kaiser Crab and the Queen (with their fixes, branch v4-sim-crabqueen) matched the logged turns better but forecast
+ * worse on the tune fights, so none is set.
+ */
+export const BOSS_POLICY_THREAT: Record<string, number> = {};
+
+/** The boss's own threat term (BOSS_POLICY_THREAT) for a fight's enemies, 0 when none is set. */
+export function bossPolicyThreat(input: Pick<RolloutInput, "enemies">): number {
+  for (const e of input.enemies) {
+    const own = BOSS_POLICY_THREAT[e.id];
+    if (own !== undefined) return own;
+  }
+  return 0;
+}
+/**
  * The policy's potion hold share (BossSimOptions.potionHold; 0 = drink whenever it helps): with 0 the policy drank ~80%
  * of its potions on the start turn (the logged fights 40%). On the tune fights 0.5 and 1 both beat 0 (Brier from turn 1
  * 0.160 / 0.161 against 0.164).
@@ -117,6 +133,8 @@ export interface FightSampleResult {
   dmgByTurn: number[];
   incomingByTurn: number[];
   enemyLossByTurn: number[];
+  /** The living enemies' HP left at the end of each of our turns (B4's per-turn comparison with the log). */
+  enemyHpByTurn?: number[];
   /**
    * B2's fight plan: block gained per turn; [turn, id] of each Power played and potion drunk, [turn, id, board index] of
    * each enemy killed (1 = the start turn).
@@ -205,6 +223,7 @@ export function slimInput(
   holdHp: (potionId: string, input: RolloutInput) => number | null = tableHoldHp,
 ): RolloutInput {
   const { handSize, drawFirst } = input.options ?? {};
+  const policyThreat = threat + bossPolicyThreat(input);
   // The held potions' cost to the policy: potionHold x their held value (the start line given is played as it is).
   const hand = potionHold > 0 ? input.solver.hand.map((card) => {
     const id = card.type === "Potion" ? potionIdOf(card.cardId) : null;
@@ -222,7 +241,7 @@ export function slimInput(
       policyNodes,
       ...(damageScale !== 1 ? { policyDamageScale: damageScale } : {}),
       ...(hpScale !== 1 ? { policyHpScale: hpScale } : {}),
-      ...(threat !== 0 ? { policyThreat: threat } : {}),
+      ...(policyThreat !== 0 ? { policyThreat } : {}),
       ...(handSize !== undefined ? { handSize } : {}),
       ...(drawFirst !== undefined ? { drawFirst } : {}),
     },
@@ -259,6 +278,7 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
     dmgByTurn: records.map((r) => Math.round(r.dmg * 10) / 10),
     incomingByTurn: records.map((r) => r.snap.E.reduce((sum, e) => sum + (e[5] ? e[7] : 0), 0)),
     enemyLossByTurn: records.map((r) => Math.round(r.enemyPart * 10) / 10),
+    enemyHpByTurn: records.map((r) => (r.hpLeft ? Object.values(r.hpLeft).reduce((sum, hp) => sum + hp, 0) : r.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0))),
     blockByTurn: records.map((r) => Math.round(r.blockGained ?? 0)),
     powers: records.flatMap((r, t) => (r.powers ?? []).map((id): [number, string] => [t + 1, id])),
     drinks: records.flatMap((r, t) => (r.drunk ?? []).map((id): [number, string] => [t + 1, id])),
@@ -391,11 +411,13 @@ export function summarizeLine(line: number, outcomes: FightSampleResult[]): Boss
  * differences (compareLines) come from the raw samples.
  */
 export const BOSS_SIM_PLATT: Record<"start" | "mid" | "pre", { a: number; b: number }> = {
-  // Refitted after B2's simulator gaps (random potions, turn relics, the Crab's facing; docs/boss-sim.md §11.1), on the
-  // same tune fights. B1.5's: start (0.7295, 0.498), mid (0.7482, 0.8635), pre (0.7084, 0.5189).
-  start: { a: 0.5534, b: 0.5036 },
-  mid: { a: 0.5624, b: 0.8224 },
-  pre: { a: 0.5236, b: 0.5219 },
+  // Refitted after B4's fixes that went in (the Insatiable's Sandpit, the Knowledge Demon's three curses; docs/boss-sim.md
+  // §13), on the same tune fights. With the Crab's and the Queen's too (branch v4-sim-crabqueen): start (0.6695, 0.602),
+  // mid (0.4478, 0.8537), pre (0.6425, 0.6369). B2's: start (0.5534, 0.5036), mid (0.5624, 0.8224), pre (0.5236, 0.5219);
+  // B1.5's: start (0.7295, 0.498), mid (0.7482, 0.8635), pre (0.7084, 0.5189).
+  start: { a: 0.7875, b: 0.5587 },
+  mid: { a: 0.5682, b: 0.8221 },
+  pre: { a: 0.7573, b: 0.5783 },
 };
 
 /** A line's calibrated win rate (BOSS_SIM_PLATT), its raw rate clipped to half a sample from 0 and 1 first. */
