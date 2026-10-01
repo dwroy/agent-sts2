@@ -312,6 +312,21 @@ export class RunJournal {
     return floor !== null && JSON.stringify(this.floors.get(floor) ?? null) !== mark ? "mark" : "none";
   }
 
+  /**
+   * A deep copy of everything the journal holds but its knowledge reference. SL (src/sl/controller.ts) takes one when
+   * a fight it may retry begins and restores it when the game reloads that fight, so the failed attempt's fight
+   * record, potions and resource changes are gone with it.
+   */
+  snapshot(): unknown {
+    const { knowledge: _knowledge, ...data } = this as unknown as Record<string, unknown>;
+    return structuredClone(data);
+  }
+
+  /** Back to a snapshot() of this journal (the knowledge reference is kept). */
+  restore(snapshot: unknown): void {
+    Object.assign(this, structuredClone(snapshot));
+  }
+
   /** Items made so far this run (grows with every decision, fight, change and plan the journal files). */
   get itemCount(): number {
     return this.seq;

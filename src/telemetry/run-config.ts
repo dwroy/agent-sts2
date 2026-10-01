@@ -39,7 +39,7 @@ import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../config.js";
 import { DEFAULT_CLAUDE_MODEL } from "../config.js";
 import { isMenuRunId } from "../project/journal-replay.js";
-import { str } from "../util/json.js";
+import { str, type JsonValue } from "../util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
 
 /** The repository this module runs from (src/telemetry -> the checkout's root). */
@@ -156,6 +156,8 @@ export interface RunConfigRow {
   arm: string | null;
   /** When the configuration asks Claude: the program the brain runs and its start-up check (Brain.preflight). */
   claude_check?: { bin: string; ok: boolean; version?: string; error?: string };
+  /** SL's configuration (SL_ENABLED on only). */
+  sl?: Record<string, JsonValue>;
   /** What the run was warned about at its start (a configured engine that cannot run, an oversized prefix). */
   warnings?: string[];
   /** Hash of the configuration part (code, brain, knowledge, DeepSeek, Jev, loop, target, arm): equal = same setup. */
@@ -180,6 +182,8 @@ export interface RunConfigOptions {
   code?: () => CodeInfo;
   now?: () => Date;
   note?: (message: string) => void;
+  /** SL's configuration (src/sl/controller.ts describe()), only when SL_ENABLED is on: the row then has an `sl` field. */
+  sl?: Record<string, JsonValue>;
 }
 
 function sha(text: string): string {
@@ -361,7 +365,7 @@ export function secretIn(text: string, config: AppConfig, env: NodeJS.ProcessEnv
  * false here (set by the writer).
  */
 export function runConfigRow(
-  opts: Pick<RunConfigOptions, "config" | "brain" | "jevEnabled" | "mode" | "knowledgeDir"> & { env: NodeJS.ProcessEnv; code: CodeInfo; processStarted: string },
+  opts: Pick<RunConfigOptions, "config" | "brain" | "jevEnabled" | "mode" | "knowledgeDir" | "sl"> & { env: NodeJS.ProcessEnv; code: CodeInfo; processStarted: string },
   run: { runId: string; ascension: number | null; character: string | null; floor: number | null },
   now: Date,
 ): RunConfigRow {
@@ -416,6 +420,8 @@ export function runConfigRow(
     },
     target_ascension: targetAscension(env["TARGET_ASCENSION"]),
     arm: str(env["ARM"]) || null,
+    // SL_ENABLED only (docs/sl.md): with SL off the row is exactly as before.
+    ...(opts.sl ? { sl: opts.sl } : {}),
   };
   const { knowledge } = setup;
   const prefixWarning = knowledge.prefix_chars === null ? null : prefixSizeWarning(knowledge.prefix_chars);

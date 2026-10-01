@@ -34,6 +34,7 @@ import { rememberChosenNode, rememberMap } from "./screens/rest.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
 import { askJevLogged, createJevPromptLog, resolveJevPromptLog, type JevPromptMeta } from "./telemetry/jev-prompt-log.js";
 import { createRunConfigLog } from "./telemetry/run-config.js";
+import { SlController } from "./sl/controller.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
 import { withBossSim, type BuildSimSetup } from "./sim/build-sim-facts.js";
@@ -86,6 +87,8 @@ export interface LoopOptions {
    * decides (src/sim/build-sim-facts.ts); absent or null: the questions as they were.
    */
   buildSim?: BuildSimSetup | null;
+  /** SL (SL_ENABLED): the reload's poll interval (default 500 ms; tests make it short). */
+  slPollMs?: number;
 }
 
 export interface LoopStats {
@@ -343,7 +346,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   // Before play: a configured engine that cannot run is said once, loudly, and rested for the process (Brain.preflight).
   for (const problem of brain ? await brain.preflight() : []) onEvent({ type: "note", message: `ERROR: ${problem}` });
   // One row per run with the configuration it is played with (logs/run-config.jsonl; tools/eval metrics --group-by config).
-  const runConfigLog = createRunConfigLog({ config, brain, jevEnabled: jev !== null, mode, note: (message) => onEvent({ type: "note", message }) });
+  // SL (docs/sl.md): null when SL_ENABLED is off, and then nothing below differs from a loop without it.
+  const sl = config.sl?.enabled
+    ? new SlController({ config: config.sl, knowledge, client, note: (message) => onEvent({ type: "note", message }), ...(options.slPollMs === undefined ? {} : { pollMs: options.slPollMs }) })
+    : null;
+  const runConfigLog = createRunConfigLog({ config, brain, jevEnabled: jev !== null, mode, note: (message) => onEvent({ type: "note", message }), ...(sl ? { sl: sl.describe() } : {}) });
   const deepseekBudgetLeft = (): boolean => stats.deepseekCalls < (config.deepseek?.maxCalls ?? 0);
   /**
    * Whether the brain may take a question with this label. An engine other than DeepSeek (BRAIN_ENGINE_*) has its own
@@ -481,6 +488,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let planned: ReturnType<typeof planDecision> | null = null;
 
     if (runEnded) {
+      // SL: the fight being tracked ends with the run (the loop may stop before the per-state call below).
+      sl?.observe(state, { journal, screenMemory });
       const gameOver = asRecord(state.raw["game_over"]);
       const victory = bool(gameOver["is_victory"]);
       const outcome = victory ? "victory" : state.screen === "GAME_OVER" ? "defeat" : "run ended";
@@ -549,23 +558,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const brief = buildRunBrief(state, knowledge, notes);
     noteScreenChange(screenMemory, state);
     // Per-fight combat records outlive in-combat screen changes (card choices), not the fight.
-    if (!state.in_combat) {
-      screenMemory.hpGuard = undefined;
-      screenMemory.potionTurn = undefined;
-      screenMemory.facing = undefined;
-      screenMemory.facingFight = undefined;
-      screenMemory.fightCards = undefined;
-      screenMemory.planBeforeSelection = undefined;
-      screenMemory.gambleDiscards = undefined;
-      screenMemory.potionTake = undefined;
-      screenMemory.takeWaitSince = undefined;
-      screenMemory.plannedAfter = undefined;
-      screenMemory.paelsEyeFight = undefined;
-      screenMemory.fightStart = undefined;
-      screenMemory.demonTongueTurn = undefined;
-      screenMemory.fightPlan = undefined;
-      screenMemory.fightPlanFailed = undefined;
-    }
+    if (!state.in_combat) resetFightMemory(screenMemory);
     if (state.screen === "SHOP" && bool(asRecord(state.raw["shop"])["is_open"])) {
       screenMemory.shopOpened = true;
     }
@@ -620,8 +613,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
     // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come.
     trackLizardTail(screenMemory, state);
+    sl?.observe(state, { journal, screenMemory });
     // What the brain's tools read for this state (only used when an engine gets tools).
     brain?.setToolContext(toolContextOf(state, state.run ? actOf(state) : undefined, dirname(config.log.decisionLog)));
+    const slEnv = sl?.envFor(state);
     const env: DecisionEnv = {
       state,
       knowledge,
@@ -641,6 +636,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // BUILD_DECIDER=deepseek needs a DeepSeek client; without one the screens make the baseline decision.
       buildDecider: config.buildDecider === "deepseek" && deepseekClient ? "deepseek" : "jev",
       oneshot: config.buildOneshot,
+      ...(slEnv ? { sl: slEnv } : {}),
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
@@ -1246,6 +1242,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(resolved.log ?? {}),
       // A route review that rode on this question (card reward, rest site): its answer and outcome; a change is its own row.
       ...(resolved.routeReview ? { route_review: routeReviewLog(resolved.routeReview) } : {}),
+      // SL (docs/sl.md): the attempt at the fight being played and the reloads so far this run (SL_ENABLED only).
+      ...(sl ? sl.decisionFields() : {}),
     } satisfies Omit<DecisionRecord, "result">);
 
     /**
@@ -1421,6 +1419,36 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       await refuse(atDispatch, "dispatch", fresh);
       continue;
     }
+    // SL (docs/sl.md): an end of turn the enemy turn certainly kills us after, in a fight with a retry left: the fight
+    // is reloaded instead (or, when the reload fails, SL stops for the run and the loop plays on).
+    if (sl && intent.action === "end_turn") {
+      const slOutcome = await sl.beforeEndTurn(fresh, { label: decision.label, screenMemory, journal });
+      if (slOutcome.handled) {
+        const reload = slOutcome.outcome;
+        const record: DecisionRecord = {
+          ...baseRecord,
+          ...replayFields,
+          result: (reload.ok
+            ? `not dispatched: SL reloaded the fight (certain death foreseen; back on T${reload.resumedTurn ?? "?"} after ${Math.round(reload.ms / 1000)} s)`
+            : `not dispatched: SL reload failed at ${reload.step}: ${reload.reason}`).slice(0, 300),
+        };
+        log.write(record);
+        logState(state, stateFingerprint, record.ts);
+        onEvent({ type: "decision", record, totals: totals() });
+        answerMemo = null;
+        deepseekMemo = null;
+        screenMemory.combatPlan = null;
+        gateRejections = 0;
+        gateRejectedFp = null;
+        clearStall();
+        if (reload.ok) {
+          // What the loop would have done on the main menu it never read: the screen and the fight start over.
+          noteScreenChange(screenMemory, reload.menu);
+          resetFightMemory(screenMemory);
+        }
+        continue;
+      }
+    }
 
     const actionStarted = Date.now();
     // The action goes out: the gate's refusal count and the stall clock start over.
@@ -1464,6 +1492,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // The resolution's memory effects (combat plan commitment, HP-guard record), once, for the action played.
     const routePlan = applyResolved();
     journal.record(state, journalEntry);
+    sl?.noteAction(state, resolved.intent);
     // The node a map move chose: the REWARD and REST screens after it carry no map position.
     rememberChosenNode(screenMemory, state, resolved.intent);
     // Surrounded: every targeted action that went through turns us (the per-card fallback's plays too).
@@ -1514,6 +1543,25 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   stats.elapsedMs = Date.now() - startedAt;
   log.close();
   return stats;
+}
+
+/** The per-fight records, dropped out of combat (and when SL reloads a fight: the loop never sees its main menu). */
+export function resetFightMemory(screenMemory: ScreenMemory): void {
+  screenMemory.hpGuard = undefined;
+  screenMemory.potionTurn = undefined;
+  screenMemory.facing = undefined;
+  screenMemory.facingFight = undefined;
+  screenMemory.fightCards = undefined;
+  screenMemory.planBeforeSelection = undefined;
+  screenMemory.gambleDiscards = undefined;
+  screenMemory.potionTake = undefined;
+  screenMemory.takeWaitSince = undefined;
+  screenMemory.plannedAfter = undefined;
+  screenMemory.paelsEyeFight = undefined;
+  screenMemory.fightStart = undefined;
+  screenMemory.demonTongueTurn = undefined;
+  screenMemory.fightPlan = undefined;
+  screenMemory.fightPlanFailed = undefined;
 }
 
 /**

@@ -270,6 +270,8 @@ export function planCombat(env: DecisionEnv): Decision | null {
     hand: hand.map(handCardJson),
     potions: potions.map((potion) => ({ key: potion.key, name: potion.name, text: potion.text, can_use: potion.can_use })),
     note: "Each option below already states its computed effect. Do not recompute it.",
+    // SL (docs/sl.md): how the earlier attempts at this fight went (a retried fight only).
+    ...(env.sl ? { previous_attempts: env.sl.previousAttempts } : {}),
   };
 
   const best = (pool: Candidate[]): Candidate => pool.reduce((a, b) => (b.score > a.score ? b : a));
