@@ -150,7 +150,23 @@ def died_before_first_rest(floors, final_floor, victory, act=2):
     return True, bool(died_here and (rest is None or final_floor < rest))
 
 
-def run_metrics(run, fights, floors, boss_entry, calls, sets):
+def first_attempt(sl_rows, final_floor, victory, passed, boss_floor):
+    """The run as its first attempts played it (docs/sl.md §5). SL reloads a fight when its attempt foresees a certain
+    death, so the first such row (an attempt 1: no reload came before it) is where the first-attempt run died: its
+    floor is the first-attempt final floor, no win, and an act's boss counts as passed only when it lies below that
+    floor. A run without such a row (SL off, or no reload) is its own first attempt. `passed`: {act: passed (final)}."""
+    predicted = [r for r in sl_rows if r.get("result") == "predicted_death"]
+    reloads = sum(1 for r in predicted if r.get("reload_ok"))
+    if not predicted:
+        return {"sl_rows": len(sl_rows), "reloads": 0, "death_floor": None, "floor": final_floor, "victory": bool(victory),
+                "passed_act1": passed[1], "passed_act2": passed[2]}
+    death = predicted[0].get("floor")
+    below = lambda act: bool(passed[act]) and boss_floor.get(act) is not None and death is not None and boss_floor[act] < death  # noqa: E731
+    return {"sl_rows": len(sl_rows), "reloads": reloads, "death_floor": death, "floor": death, "victory": False,
+            "passed_act1": below(1), "passed_act2": below(2)}
+
+
+def run_metrics(run, fights, floors, boss_entry, calls, sets, sl_rows=()):
     """One run's metrics from its runs row, fights, floors, act-boss entry states ({act: {deck, relics,
     start_strength, max_strength}}) and model calls ([{engine, calls, with_usage, input, cache_hit, output, latency_ms}])."""
     victory = bool(run.get("victory"))
@@ -171,6 +187,7 @@ def run_metrics(run, fights, floors, boss_entry, calls, sets):
         for key in into:
             into[key] += row.get(key) or 0
     total = {key: sum(e[key] for e in engines.values()) for key in ("calls", "with_usage", "input", "cache_hit", "output", "latency_ms")}
+    passed = {act: passed_boss(act, max_act, victory, bosses) for act in (1, 2)}
     return {
         "run_id": run["run_id"],
         "ascension": run.get("ascension"),
@@ -185,8 +202,8 @@ def run_metrics(run, fights, floors, boss_entry, calls, sets):
         "floor": run.get("floor"),
         "max_act": max_act,
         "victory": victory,
-        "passed_act1": passed_boss(1, max_act, victory, bosses),
-        "passed_act2": passed_boss(2, max_act, victory, bosses),
+        "passed_act1": passed[1],
+        "passed_act2": passed[2],
         "boss_floor": {act: b["floor"] for act, b in sorted(bosses.items())},
         "boss_inferred": sorted(act for act, b in bosses.items() if b["inferred"]),
         "boss_potions": {act: b.get("potions_in") for act, b in sorted(bosses.items())},
@@ -201,6 +218,8 @@ def run_metrics(run, fights, floors, boss_entry, calls, sets):
         "died_before_act2_rest": died2,
         "llm": total,
         "llm_by_engine": engines,
+        # SL (docs/sl.md §5): the first attempts' run next to the final one above.
+        "first_attempt": first_attempt(list(sl_rows), run.get("floor"), victory, passed, {act: b["floor"] for act, b in bosses.items()}),
     }
 
 
@@ -271,6 +290,15 @@ def summarize(rows):
     out["cache_hit_rate"] = sum(r["llm"]["cache_hit"] for r in full) / tin if tin else None
     out["llm_minutes"] = mean_stats([r["llm"]["latency_ms"] / 60000 for r in rows])
     out.update(calibration_summary(rows))
+    # SL: only when a run of the group has SL rows (else the summary, and its text, are as before SL).
+    if any(r.get("first_attempt", {}).get("sl_rows") for r in rows):
+        fa = [r["first_attempt"] for r in rows]
+        out["sl_runs"] = sum(1 for f in fa if f["sl_rows"])
+        out["sl_reloads"] = mean_stats([f["reloads"] for f in fa])
+        out["fa_floor"] = mean_stats([f["floor"] for f in fa])
+        out["fa_passed_act1"] = wilson(sum(bool(f["passed_act1"]) for f in fa), n)
+        out["fa_passed_act2"] = wilson(sum(bool(f["passed_act2"]) for f in fa), n)
+        out["fa_win"] = wilson(sum(f["victory"] for f in fa), n)
     calls = sum(r["llm"]["calls"] for r in rows)
     out["llm_seconds_per_call"] = sum(r["llm"]["latency_ms"] for r in rows) / 1000 / calls if calls else None
     engines = sorted({e for r in rows for e in r["llm_by_engine"]})
@@ -475,6 +503,8 @@ SELECT run_id, act, arg_min(deck, off) AS deck, arg_min(relics, off) AS relics, 
        max(strength) AS max_strength
 FROM f GROUP BY run_id, act
 """
+# SL attempts (docs/sl.md §5): one row per attempt at a boss or listed-elite fight, in log order.
+SL_SQL = "SELECT run_id, off, floor, attempt, result, reload_ok FROM sl_attempts WHERE list_contains(?, run_id) ORDER BY off"
 CALLS_SQL = """
 SELECT run_id, coalesce(engine, '?') AS engine, count(*) AS calls, count(input_tokens) AS with_usage,
        coalesce(sum(input_tokens), 0) AS input, coalesce(sum(cache_hit_tokens), 0) AS cache_hit,
@@ -503,7 +533,7 @@ def load_runs(con, sets, ascensions=None, since=None, until=None):
     runs = [r for r in dicts(con.execute(RUNS_SQL))
             if (not ascensions or r["ascension"] in ascensions) and (since is None or r["started"] >= since) and (until is None or r["started"] < until)]
     ids = [r["run_id"] for r in runs]
-    by = {rid: {"fights": [], "floors": [], "entry": {}, "calls": []} for rid in ids}
+    by = {rid: {"fights": [], "floors": [], "entry": {}, "calls": [], "sl": []} for rid in ids}
     if ids:
         for row in dicts(con.execute(FIGHTS_SQL, [ids])):
             by[row["run_id"]]["fights"].append(row)
@@ -511,6 +541,8 @@ def load_runs(con, sets, ascensions=None, since=None, until=None):
             by[row["run_id"]]["floors"].append(row)
         for row in dicts(con.execute(CALLS_SQL, [ids])):
             by[row["run_id"]]["calls"].append(row)
+        for row in sl_rows(con, ids):
+            by[row["run_id"]]["sl"].append(row)
         spans = []
         for run in runs:
             for act, boss in boss_fights(by[run["run_id"]]["fights"], run["max_act"], run["victory"]).items():
@@ -519,8 +551,18 @@ def load_runs(con, sets, ascensions=None, since=None, until=None):
             cols = [list(c) for c in zip(*spans)]
             for row in dicts(con.execute(ENTRY_SQL, cols)):
                 by[row["run_id"]]["entry"][row["act"]] = row
-    return [run_metrics(run, by[run["run_id"]]["fights"], by[run["run_id"]]["floors"], by[run["run_id"]]["entry"], by[run["run_id"]]["calls"], sets)
+    return [run_metrics(run, by[run["run_id"]]["fights"], by[run["run_id"]]["floors"], by[run["run_id"]]["entry"], by[run["run_id"]]["calls"], sets, by[run["run_id"]]["sl"])
             for run in runs]
+
+
+def sl_rows(con, ids):
+    """The SL attempt rows of these runs; none when the database has no sl_attempts view yet (synced before SL)."""
+    try:
+        return dicts(con.execute(SL_SQL, [ids]))
+    except Exception as error:  # duckdb.CatalogException: a database whose views predate SL
+        if "sl_attempts" in str(error):
+            return []
+        raise
 
 
 # ---------------------------------------------------------------- grouping and output
@@ -623,6 +665,14 @@ def metric_lines(summary, min_n):
         lines.append((f"  {engine}：输入 / 命中 / 输出（千 token / 局）",
                       f"{num(e['input']['mean'], 0)} / {num(e['cache_hit']['mean'], 0)} / {num(e['output']['mean'], 1)}（n={e['input']['n']}）"))
         lines.append((f"  {engine}：耗时 / 局（分钟）", fmt_mean(e["minutes"], min_n, 1)))
+    if summary.get("sl_runs"):
+        # SL (docs/sl.md §5): the rows above are the final results (after reloads); these are the first attempts'.
+        lines.append(("SL：有 SL 记录的局", f"{summary['sl_runs']}/{summary['runs']}"))
+        lines.append(("SL：重打次数 / 局", fmt_mean(summary["sl_reloads"], min_n, 2)))
+        lines.append(("第一次尝试：终层", fmt_mean(summary["fa_floor"], min_n, 1)))
+        lines.append(("第一次尝试：过一幕 boss", fmt_rate(summary["fa_passed_act1"], min_n)))
+        lines.append(("第一次尝试：过二幕 boss", fmt_rate(summary["fa_passed_act2"], min_n)))
+        lines.append(("第一次尝试：胜局", fmt_rate(summary["fa_win"], min_n)))
     # Calibration (tools/eval/calibration.py): pooled over the group's turns, route nodes and boss fights.
     turn = summary.get("cal_turn_within")
     lines.append(("校准：推演本回合掉血 ±2 内（回合）", "—" if not turn or not turn["n"] else f"{turn['p'] * 100:.0f}%（{turn['k']}/{turn['n']} 回合）"))
@@ -674,6 +724,12 @@ def render_runs(rows, markdown):
                      "/".join(f"F{v}" for v in r["boss_floor"].values()) + ("（推断 " + ",".join(map(str, r["boss_inferred"])) + "）" if r["boss_inferred"] else ""),
                      strength, f"{r['act1_elites_low']}/{r['act1_elites']}", rest, str(llm["calls"]), tokens, f"{llm['latency_ms'] / 60000:.1f}",
                      config_label(r)])
+    # SL (docs/sl.md §5): one more column when a run has SL rows: the reloads and the first attempts' final floor.
+    if any(r.get("first_attempt", {}).get("sl_rows") for r in rows):
+        head.append("SL 重打 / 第一次尝试终层")
+        for r, row in zip(rows, body):
+            fa = r["first_attempt"]
+            row.append("—" if not fa["sl_rows"] else f"{fa['reloads']} / F{fa['floor']}" + ("（胜）" if fa["victory"] else ""))
     if markdown:
         return "\n".join(["| " + " | ".join(head) + " |", "|" + "---|" * len(head)] + ["| " + " | ".join(row) + " |" for row in body]) + "\n"
     return "\n".join(["\t".join(head)] + ["\t".join(row) for row in body]) + "\n"

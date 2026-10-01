@@ -17,6 +17,8 @@ CREATE OR REPLACE VIEW run_plans AS SELECT * FROM read_parquet('${DB}/run_plans/
 -- One row per logs/run-config.jsonl line: the configuration a run was played with (src/telemetry/run-config.ts; a
 -- second row for a run only when a restarted process ran it with another configuration).
 CREATE OR REPLACE VIEW run_config AS SELECT * FROM read_parquet('${DB}/run_config/*.parquet', union_by_name = true);
+-- One row per logs/sl-attempts.jsonl line: one SL attempt at a boss or listed-elite fight (src/sl/attempts.ts, docs/sl.md).
+CREATE OR REPLACE VIEW sl_attempts AS SELECT * FROM read_parquet('${DB}/sl_attempts/*.parquet', union_by_name = true);
 
 -- Where each raw state is in logs/states.jsonl (query.py --raw states <off>).
 CREATE OR REPLACE VIEW state_index AS

@@ -34,7 +34,7 @@ DEFAULT_MAX_ROWS = 200
 DEFAULT_TIMEOUT = 30.0
 CELL_CAP = 300
 # The views a query is expected to use, in the order --schema prints them (helpers follow).
-MAIN_VIEWS = ["runs", "floors", "fights", "turns", "decisions", "llm_calls", "run_plans", "run_config", "state_index", "frames"]
+MAIN_VIEWS = ["runs", "floors", "fights", "turns", "decisions", "llm_calls", "run_plans", "run_config", "sl_attempts", "state_index", "frames"]
 ALLOWED = {"SELECT", "EXPLAIN"}
 
 

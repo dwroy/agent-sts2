@@ -11,7 +11,8 @@
                 hallway, died.
 Model calls: two DeepSeek calls in run C (the router's brain.jsonl row repeats one: a duplicate), one Claude
 brain call in run D. Configuration (run-config.jsonl): run D started with DeepSeek plus Claude Opus for rest
-questions and the full knowledge prefix; run C has none (a run from before that log).
+questions and the full knowledge prefix; run C has none (a run from before that log). SL (sl-attempts.jsonl): run
+D's act-1 boss was reloaded once (a certain death foreseen on attempt 1, won on attempt 2).
 
 Run it again after changing it: python3 tests/eval-data/make-fixture.py
 """
@@ -143,6 +144,21 @@ def main():
     config = fx.run_config("2026-09-21T11:00:00.001Z", d, 9, 1, "0c93138+dirty", {"REST": "claude"}, "full", "dddd77778888", claude=opus)
     with open(os.path.join(HERE, "run-config.jsonl"), "w", encoding="utf8") as out:
         out.write(json.dumps(config, ensure_ascii=False) + "\n")
+    # SL (docs/sl.md §5): run D's act-1 boss (F3) foresaw a certain death on attempt 1, was reloaded and won on attempt 2,
+    # so its first attempts' run ends at F3 without passing act 1.
+    def sl_row(ts, attempt, result, **extra):
+        row = {"ts": ts, "run_id": d, "act": "1", "floor": 3, "encounter": "TEST_SUBJECT", "enemies": ["Test Subject"], "fight_kind": "boss",
+               "elite": None, "attempt": attempt, "max_attempts": 4,
+               "from": "first play of the fight" if attempt == 1 else "reloaded from the game's room-entry save of F3 (save_and_quit, continue_run)",
+               "started_at": ts, "ended_at": ts, "result": result, "turns": 5, "end_hp": None, "end_block": None, "incoming": None,
+               "judge": None, "reload": None, "give_up_reason": None, "summary": {"turns": [], "potions": [], "killers": []}}
+        row.update(extra)
+        return row
+    sl = [sl_row("2026-09-21T11:00:20.000Z", 1, "predicted_death", end_hp=4, end_block=0, incoming=20,
+                 judge={"tier": "rules", "reason": "nothing left to play or drink"}, reload={"ok": True, "ms": 20000, "resumed_turn": 1}),
+          sl_row("2026-09-21T11:00:30.000Z", 2, "won", end_hp=30)]
+    with open(os.path.join(HERE, "sl-attempts.jsonl"), "w", encoding="utf8") as out:
+        out.write("\n".join(json.dumps(x, ensure_ascii=False) for x in sl) + "\n")
     with open(os.path.join(HERE, "strength-sets.json"), "w", encoding="utf8") as out:
         out.write(json.dumps({"cards": ["FIGHT_ME", "INFLAME"], "relics": ["GIRYA", "VAJRA"]}) + "\n")
 

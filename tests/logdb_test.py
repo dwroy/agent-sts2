@@ -167,6 +167,26 @@ class RunConfigExtractTest(unittest.TestCase):
         self.assertNotIn("abcdefghijklmnop", got["config"])
 
 
+class SlAttemptExtractTest(unittest.TestCase):
+    def test_sl_attempt_row(self):
+        first, second = [extract.sl_attempt_row(raw, 0) for raw in lines("sl-attempts.jsonl")]
+        self.assertEqual(sorted(first), sorted(name for name, _ in extract.TABLES["sl_attempts"]))
+        self.assertEqual((first["run_id"], first["floor"], first["encounter"], first["fight_kind"], first["attempt"], first["max_attempts"], first["result"]),
+                         ("RUNA00000001", 17, "TEST_SUBJECT", "boss", 1, 4, "predicted_death"))
+        self.assertEqual((first["judge_tier"], first["reload_ok"], first["reload_ms"], first["resumed_turn"], first["end_hp"], first["incoming"]),
+                         ("rules", True, 21000, 1, 9, 31))
+        self.assertEqual((first["potions"], first["killers"], first["from_point"]), (["T4 Block Potion"], ["Test Subject (Attack 31)"], "first play of the fight"))
+        self.assertIn("Bash -> Test Subject", first["summary"])
+        self.assertEqual((second["attempt"], second["result"], second["judge_tier"], second["reload_ok"], second["end_hp"]), (2, "won", None, None, 22))
+
+    def test_decision_sl_fields(self):
+        row = json.loads(lines("decisions.jsonl")[0])
+        self.assertEqual((extract.decision_row(json.dumps(row).encode(), 0)["sl_attempt"], extract.decision_row(json.dumps(row).encode(), 0)["sl_reloads"]), (None, None))
+        row.update({"sl_attempt": 2, "sl_reloads": 1})
+        got = extract.decision_row(json.dumps(row).encode(), 0)
+        self.assertEqual((got["sl_attempt"], got["sl_reloads"]), (2, 1))
+
+
 class Workspace(unittest.TestCase):
     """A copy of the fixture logs and an empty database directory per test."""
 
@@ -213,6 +233,7 @@ class SyncTest(Workspace):
         self.assertEqual(self.count("llm_calls_raw"), (5, 5))
         self.assertEqual(self.count("run_plans"), (1, 1))
         self.assertEqual(self.count("run_config"), (3, 3))
+        self.assertEqual(self.count("sl_attempts"), (2, 2))
         manifest = self.manifest()
         for key, rec in manifest["sources"].items():
             self.assertEqual(rec["offset"], os.path.getsize(os.path.join(self.logs, rec["file"])), key)

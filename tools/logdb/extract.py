@@ -13,7 +13,7 @@ import json
 import re
 
 # Bumped per source when its extractor or columns change: sync.py rebuilds that source's shards.
-VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1, "run-config": 1}
+VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1, "run-config": 1, "sl-attempts": 1}
 
 KEY_RE = re.compile(r"(sk-(?:ant-)?[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._~+/-]{16,}|(?:api[_-]?key|x-api-key)[\"']?\s*[:=]\s*[\"']?[A-Za-z0-9._-]{12,})", re.I)
 AGENT_VIEW = b',"agent_view":'
@@ -56,6 +56,8 @@ TABLES = {
         ("ds_choice", "VARCHAR"), ("ds_effort", "VARCHAR"), ("ds_latency_ms", "INTEGER"), ("ds_tokens", "INTEGER"),
         ("jev_context", "VARCHAR"), ("jev_hints", "VARCHAR[]"), ("route_review", "VARCHAR"),
         ("rationale", "VARCHAR"), ("result", "VARCHAR"),
+        # SL (docs/sl.md; SL_ENABLED runs only, else NULL): the attempt at the fight, the reloads so far in the run.
+        ("sl_attempt", "INTEGER"), ("sl_reloads", "INTEGER"),
     ],
     "runs_raw": [
         ("off", "BIGINT"), ("len", "INTEGER"), ("run_id", "VARCHAR"), ("ended", "TIMESTAMP"), ("victory", "BOOLEAN"), ("floor", "INTEGER"),
@@ -95,6 +97,15 @@ TABLES = {
         ("jev_enabled", "BOOLEAN"), ("jev_model", "VARCHAR"), ("jev_context", "VARCHAR"),
         ("loop_mode", "VARCHAR"), ("build_decider", "VARCHAR"), ("build_oneshot", "VARCHAR"), ("run_plan", "VARCHAR"), ("fight_plan", "VARCHAR"),
         ("target_ascension", "INTEGER"), ("arm", "VARCHAR"), ("config_sha", "VARCHAR"), ("config", "VARCHAR"),
+    ],
+    "sl_attempts": [
+        ("off", "BIGINT"), ("len", "INTEGER"), ("ts", "TIMESTAMP"), ("run_id", "VARCHAR"), ("act", "VARCHAR"), ("floor", "INTEGER"),
+        ("encounter", "VARCHAR"), ("enemies", "VARCHAR[]"), ("fight_kind", "VARCHAR"), ("elite", "VARCHAR"),
+        ("attempt", "INTEGER"), ("max_attempts", "INTEGER"), ("from_point", "VARCHAR"), ("started_at", "TIMESTAMP"), ("ended_at", "TIMESTAMP"),
+        ("result", "VARCHAR"), ("turns", "INTEGER"), ("end_hp", "INTEGER"), ("end_block", "INTEGER"), ("incoming", "INTEGER"),
+        ("judge_tier", "VARCHAR"), ("judge_reason", "VARCHAR"),
+        ("reload_ok", "BOOLEAN"), ("reload_ms", "INTEGER"), ("reload_step", "VARCHAR"), ("reload_reason", "VARCHAR"), ("resumed_turn", "INTEGER"),
+        ("give_up_reason", "VARCHAR"), ("potions", "VARCHAR[]"), ("killers", "VARCHAR[]"), ("summary", "VARCHAR"),
     ],
 }
 
@@ -392,6 +403,8 @@ def decision_row(raw, off):
         "route_review": to_str((record.get("route_review") or {}).get("outcome")) if isinstance(record.get("route_review"), dict) else None,
         "rationale": scrub(record.get("rationale")),
         "result": scrub(record.get("result"), 500),
+        "sl_attempt": to_int(record.get("sl_attempt")),
+        "sl_reloads": to_int(record.get("sl_reloads")),
     }
     if rollout is not None:
         tied = rollout.get("tied")
@@ -700,6 +713,54 @@ def run_config_row(raw, off):
     }
 
 
+# ---------------------------------------------------------------- sl-attempts.jsonl -> sl_attempts
+
+
+def str_list(value):
+    return [v for v in value if isinstance(v, str)] if isinstance(value, list) else None
+
+
+def sl_attempt_row(raw, off):
+    """One SL attempt (src/sl/attempts.ts SlAttemptRow): a boss or listed-elite fight's attempt, how it ended, the reload."""
+    record = json.loads(raw)
+    judge = as_dict(record.get("judge"))
+    reload = record.get("reload") if isinstance(record.get("reload"), dict) else None
+    summary = as_dict(record.get("summary"))
+    return {
+        "off": off,
+        "len": len(raw),
+        "ts": to_ts(record.get("ts")),
+        "run_id": run_id_of(record.get("run_id")),
+        "act": to_str(record.get("act")),
+        "floor": to_int(record.get("floor")),
+        "encounter": to_str(record.get("encounter")),
+        "enemies": str_list(record.get("enemies")),
+        "fight_kind": to_str(record.get("fight_kind")),
+        "elite": to_str(record.get("elite")),
+        "attempt": to_int(record.get("attempt")),
+        "max_attempts": to_int(record.get("max_attempts")),
+        "from_point": to_str(record.get("from")),
+        "started_at": to_ts(record.get("started_at")),
+        "ended_at": to_ts(record.get("ended_at")),
+        "result": to_str(record.get("result")),
+        "turns": to_int(record.get("turns")),
+        "end_hp": to_int(record.get("end_hp")),
+        "end_block": to_int(record.get("end_block")),
+        "incoming": to_int(record.get("incoming")),
+        "judge_tier": to_str(judge.get("tier")),
+        "judge_reason": scrub(judge.get("reason"), 500) if judge.get("reason") is not None else None,
+        "reload_ok": to_bool(reload.get("ok")) if reload else None,
+        "reload_ms": to_int(reload.get("ms")) if reload else None,
+        "reload_step": to_str(reload.get("step")) if reload else None,
+        "reload_reason": scrub(reload.get("reason"), 500) if reload and reload.get("reason") is not None else None,
+        "resumed_turn": to_int(reload.get("resumed_turn")) if reload else None,
+        "give_up_reason": scrub(record.get("give_up_reason"), 500) if record.get("give_up_reason") is not None else None,
+        "potions": str_list(summary.get("potions")),
+        "killers": str_list(summary.get("killers")),
+        "summary": scrub(json.dumps(summary, ensure_ascii=False), 8000) if summary else None,
+    }
+
+
 # source key -> (file name in logs/, table, extractor)
 SOURCES = {
     "states": ("states.jsonl", "frames", frame_row),
@@ -709,4 +770,5 @@ SOURCES = {
     "brain": ("brain.jsonl", "llm_calls_raw", brain_call_row),
     "run-plans": ("run-plans.jsonl", "run_plans", run_plan_row),
     "run-config": ("run-config.jsonl", "run_config", run_config_row),
+    "sl-attempts": ("sl-attempts.jsonl", "sl_attempts", sl_attempt_row),
 }
