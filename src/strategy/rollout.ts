@@ -47,6 +47,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
+import { withAddedAtRandom } from "../sl/draws.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
@@ -533,6 +534,12 @@ export interface RolloutInput {
      * the rest of the pile is shuffled. Absent: the whole pile shuffled, as before.
      */
     drawTop?: number[];
+    /**
+     * SL_RETRY_KNOWN_INSERTS (docs/sl.md §10): cards added to the draw pile at random places (a status, Metamorphosis's
+     * attacks), as indices into `draw`: each sample puts them at random places among the known top and the rest. Only
+     * with `drawTop`; absent: none.
+     */
+    drawAdded?: number[];
   };
   meta: FightMeta;
   playerPowers: Record<string, number>;
@@ -823,6 +830,14 @@ export function sampledDrawPile(piles: RolloutInput["piles"], random: () => numb
   const valid = top.every((at, i) => Number.isInteger(at) && at >= 0 && at < piles.draw.length && top.indexOf(at) === i);
   if (!valid) return shuffle(piles.draw, random);
   const known = new Set(top);
+  // SL_RETRY_KNOWN_INSERTS: the added cards at random places among all of them (indices that do not name other distinct
+  // cards of the pile: the known order as before, the added cards shuffled with the rest).
+  const added = piles.drawAdded;
+  if (added && added.length > 0 && added.every((at, i) => Number.isInteger(at) && at >= 0 && at < piles.draw.length && !known.has(at) && added.indexOf(at) === i)) {
+    const out = new Set(added);
+    const rest = piles.draw.filter((_, i) => !known.has(i) && !out.has(i));
+    return withAddedAtRandom([...top.map((at) => piles.draw[at]!), ...shuffle(rest, random)], added.map((at) => piles.draw[at]!), random).reverse();
+  }
   const rest = piles.draw.filter((_, i) => !known.has(i));
   return [...shuffle(rest, random), ...[...top].reverse().map((at) => piles.draw[at]!)];
 }

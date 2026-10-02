@@ -50,6 +50,7 @@ import type { RunPlan } from "../strategy/run-plan.js";
 import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 import { knownTopIndices } from "../sl/draws.js";
+import type { LeastLossFacts } from "../sl/judge.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -1776,6 +1777,88 @@ export function withSlRetryFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv
   }
 }
 
+/**
+ * The SL judge's facts about a least-loss decision (docs/sl.md §2, src/sl/judge.ts LeastLossFacts), by the decision object
+ * this planner returned. Kept beside the decision, not on it: the decision (its log row, the pinned digests) is as before.
+ */
+const leastLossFacts = new WeakMap<Decision, LeastLossFacts>();
+
+/** The facts of a least-loss decision this planner returned (undefined: none, or they could not be worked out). */
+export function leastLossFactsOf(decision: Decision | null | undefined): LeastLossFacts | undefined {
+  return decision ? leastLossFacts.get(decision) : undefined;
+}
+
+/** Records a least-loss decision's facts; an error records none (the judge then decides as without them). */
+function noteLeastLoss(decision: Decision, facts: () => LeastLossFacts): void {
+  try {
+    leastLossFacts.set(decision, facts());
+  } catch {
+    // no facts: the judge's vetoes stand
+  }
+}
+
+/** Specials whose outcome is a draw of chance (potions' samples, Thrash's pick among several Attacks). */
+const RANDOM_SPECIALS = new Set(["thrash", "gamble", "chaos", "snecko", "glowwater", "bottled"]);
+/** Card text that draws or touches the draw pile (the judge's own DRAWS), and text about the draw pile itself. */
+const DRAW_TEXT = /抽|draw/i;
+const PILE_TEXT = /抽牌堆|draw pile/i;
+
+/** What about a card the lines may play leaves the turn to chance or to what the planner does not model (null: nothing). */
+function cardChance(card: CardModel): string | null {
+  if (!card.known) return `${card.name} is not modelled`;
+  if (card.target === "random" || card.randomExhaust === true || RANDOM_SPECIALS.has(card.special ?? "") || /随机|random/i.test(card.text)) return `${card.name} has a random effect`;
+  if ((card.playsTop ?? 0) > 0 || card.generates !== undefined || card.choices !== undefined || card.adds !== undefined) return `${card.name} plays or makes a card nobody knows`;
+  if (card.drawsUntil === true) return `${card.name} draws an unknown number of cards`;
+  return null;
+}
+
+/**
+ * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Dai 2026-10-02: certain death, never
+ * a prediction, so anything left to chance this turn keeps the end_turn judgment):
+ * - drawsKnown (SL_JUDGE_KNOWN_DRAWS): every card any simulated line could draw is exactly known: the solver drew the
+ *   retry's known cards and none past them or past their exact part (none resting on the added-cards model), its search
+ *   not cut short; every playable card whose text draws is a plain draw (a count, nothing about the draw pile itself:
+ *   not Headbutt, Havoc, Metamorphosis); no potion in the solve and no random potion draws.
+ * - chance (SL_RELOAD_EARLY): the first thing that leaves the all-lines-die verdict to chance: a random potion (its Monte
+ *   Carlo), a draw not exactly known, a playable card (hand, modelled potion, known draw) with a random effect, an
+ *   unmodelled one, Juggernaut's, Kusarigama's or Hellraiser's random hits.
+ */
+function leastLossFactsFor(
+  line: Plan,
+  solved: { truncated: boolean; drewUnknown?: true; knownDepth?: number; drew?: true },
+  input: SolverInput | null,
+  knownTop: { cards: CardModel[]; added: number[] } | null,
+  exact: number | undefined,
+  hand: CardModel[],
+  player: PlayerSim,
+  randomPotions: readonly PotionMcSource[],
+): LeastLossFacts {
+  const solverHand = input?.hand ?? hand;
+  const knownUsed = knownTop !== null && knownTop.added.length === 0 && input?.knownTop !== undefined ? knownTop.cards.length : 0;
+  const exactUsed = Math.min(knownUsed, exact ?? knownUsed);
+  const depth = solved.knownDepth ?? 0;
+  const drawnKnown = knownTop?.cards.slice(0, Math.min(depth, knownUsed)) ?? [];
+  const playable = [...solverHand.filter((card) => card.playable || card.type === "Potion"), ...drawnKnown];
+  const pileCard = playable.find((card) => card.type !== "Potion" && DRAW_TEXT.test(card.text) && (card.draw <= 0 || card.drawsUntil === true || PILE_TEXT.test(card.text)));
+  const potionDraws = solverHand.some((card) => card.type === "Potion" && (card.draw > 0 || card.drawsUntil === true || card.generates !== undefined || RANDOM_SPECIALS.has(card.special ?? "")));
+  const drawsKnown =
+    exactUsed > 0 && !solved.truncated && solved.drewUnknown !== true && depth <= exactUsed && pileCard === undefined && !potionDraws && !randomPotions.some((source) => source.kind === "draw");
+  const draws = solved.drew === true;
+  let chance: string | null = null;
+  if (randomPotions.length > 0) chance = `a random potion (${randomPotions.map((source) => source.name).join(", ")}): its samples`;
+  else if (draws && !drawsKnown) chance = "a line draws cards not exactly known";
+  else {
+    for (const card of playable) {
+      chance = cardChance(card);
+      if (chance) break;
+    }
+  }
+  if (chance === null && (player.juggernaut ?? 0) > 0) chance = "Juggernaut hits a random enemy";
+  if (chance === null && player.kusarigama && playable.some((card) => card.type === "Attack")) chance = "Kusarigama hits a random enemy";
+  if (chance === null && player.hellraiser === true && draws) chance = "Hellraiser plays a drawn Strike at a random enemy";
+  return { knownDraws: exactUsed, drawsKnown, draws, line: line.steps.map(stepText), chance };
+}
+
 /** The solver index of the first known draw (SL_RETRY_KNOWN_DRAWS): past the hand, potions' samples, Music Box copies and the whole fight's own known draws (600). */
 export const SL_KNOWN_DRAW_INDEX = 700;
 
@@ -1785,15 +1868,22 @@ export const SL_KNOWN_DRAW_INDEX = 700;
  * cards; indices from SL_KNOWN_DRAW_INDEX). Null without known draws, or when the pile does not hold them all (never
  * expected: the controller checked the pile), or on any error (the decision as without them).
  */
-function slKnownTop(env: DecisionEnv, state: GameState, ctx: { enemyTargets: number[]; strength: number; weak: boolean }): { indices: number[]; cards: CardModel[]; names: string[]; attempts: number[] } | null {
+function slKnownTop(
+  env: DecisionEnv,
+  state: GameState,
+  ctx: { enemyTargets: number[]; strength: number; weak: boolean },
+): { indices: number[]; cards: CardModel[]; names: string[]; attempts: number[]; added: number[]; addedNames: string[] } | null {
   const known = env.sl?.knownDraws;
   if (!known || known.cards.length === 0) return null;
   try {
     const pile = pileCardModels(state, env.knowledge, "draw", ctx);
-    const indices = knownTopIndices(known.cards, pile);
-    if (!indices) return null;
+    // SL_RETRY_KNOWN_INSERTS: the cards added at random places, as other cards of the same listing.
+    const addedKeys = known.added?.cards ?? [];
+    const all = knownTopIndices([...known.cards, ...addedKeys], pile);
+    if (!all) return null;
+    const indices = all.slice(0, known.cards.length);
     const cards = indices.map((at, k): CardModel => ({ ...pile[at]!, index: SL_KNOWN_DRAW_INDEX + k, key: `known${k}` }));
-    return { indices, cards, names: known.names.slice(0, indices.length), attempts: [...known.attempts] };
+    return { indices, cards, names: known.names.slice(0, indices.length), attempts: [...known.attempts], added: all.slice(known.cards.length), addedNames: (known.added?.names ?? []).slice(0, addedKeys.length) };
   } catch {
     return null;
   }
@@ -1802,9 +1892,18 @@ function slKnownTop(env: DecisionEnv, state: GameState, ctx: { enemyTargets: num
 /** Known cards the question names (the next two hands): the line stays short; the planner uses them all. */
 export const KNOWN_DRAWS_NAMED = 10;
 
-/** The question's one fact line about the known draws (SL_RETRY_KNOWN_DRAWS). */
-export function knownDrawsFact(names: readonly string[], attempts: readonly number[]): string {
+/**
+ * The question's one fact line about the known draws (SL_RETRY_KNOWN_DRAWS). With cards added to the pile at random places
+ * (SL_RETRY_KNOWN_INSERTS, `added`): they come somewhere among the known ones, so only the rollout uses the order.
+ */
+export function knownDrawsFact(names: readonly string[], attempts: readonly number[], added: readonly string[] = []): string {
   const named = names.slice(0, KNOWN_DRAWS_NAMED).join(", ") + (names.length > KNOWN_DRAWS_NAMED ? ", ..." : "");
+  if (added.length > 0) {
+    const counts = new Map<string, number>();
+    for (const name of added) counts.set(name, (counts.get(name) ?? 0) + 1);
+    const addedText = [...counts].map(([name, n]) => (n > 1 ? `${name} x${n}` : name)).join(", ");
+    return `SL retry: the next ${names.length} card${names.length === 1 ? "" : "s"} of the draw pile's own, in the order they come (the next first), are known from attempt ${attempts.join(", ")}: ${named}; ${addedText} added to the pile ${added.length === 1 ? "is" : "are"} at random places among them. The rollout draws them so; this turn's options and past them the draws are random.`;
+  }
   return `SL retry: the next ${names.length} card${names.length === 1 ? "" : "s"} of the draw pile, in the order they come (the next first), are known from attempt ${attempts.join(", ")}: ${named}. The options' numbers and the rollout draw these first; past them the draws are random.`;
 }
 
@@ -2159,8 +2258,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const mcSources = new Map<number, PotionMcSource>();
   for (const potion of potionsAll) {
     const plainSource = randomPotionSource(potion, state, env.knowledge, pileContext, noDraw);
-    // SL_RETRY_KNOWN_DRAWS: a draw potion's samples draw the known cards first.
-    const source = plainSource && knownTop && plainSource.kind === "draw" ? { ...plainSource, knownTop: knownTop.indices } : plainSource;
+    // SL_RETRY_KNOWN_DRAWS: a draw potion's samples draw the known cards first (SL_RETRY_KNOWN_INSERTS: the added cards at random places among them).
+    const source = plainSource && knownTop && plainSource.kind === "draw" ? { ...plainSource, knownTop: knownTop.indices, ...(knownTop.added.length > 0 ? { knownAdded: knownTop.added } : {}) } : plainSource;
     const cost = costs.get(potion.potion_id)?.hp ?? 0;
     if (source) mcSources.set(potion.slot, cost > 0 ? { ...source, cost } : source);
   }
@@ -2196,7 +2295,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // Distinct payoff cards, not copies (VHLZ F21: two Bully doubled Bash+'s weight, 16.5 vs 7.5).
       vulnerablePayoffs: new Set(asArray(asRecord(state.run?.raw)["deck"]).map((card) => str(asRecord(card)["card_id"])).filter((id) => VULNERABLE_PAYOFFS.has(id))).size,
       drawPile,
-      ...(knownTop ? { knownTop: knownTop.cards } : {}),
+      // SL_RETRY_KNOWN_INSERTS: with cards added at random places the next draws are not certain: the solver draws as before.
+      ...(knownTop && knownTop.added.length === 0 ? { knownTop: knownTop.cards } : {}),
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
       ...(laterIncoming ? { laterIncoming } : {}),
     }));
@@ -2256,7 +2356,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
     const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
     commit(env, state.turn, leastLoss, hand, "code");
-    return {
+    const decision: Decision = {
       kind: "act",
       label: "combat/least-loss",
       intent: firstIntent(leastLoss, hand, env),
@@ -2264,6 +2364,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         ? `every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg ${leastLoss.outcome.damageDealt}): ${leastLoss.steps.map(stepText).join(", ")}`
         : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
     };
+    noteLeastLoss(decision, () => leastLossFactsFor(leastLoss, solved, solvedInput, knownTop, env.sl?.knownDraws?.exact, hand, playerSim, [...mcSources.values()]));
+    return decision;
   }
 
   const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: notBlunting(potionId) });
@@ -2565,7 +2667,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         plans: surviving,
         shown: [...options, ...mcMedians, ...(noPotionCopy ? [noPotionCopy] : [])],
         piles: rolloutPiles(state, env.knowledge, enemyTargets),
-        ...(knownTop ? { drawTop: knownTop.indices } : {}),
+        ...(knownTop ? { drawTop: knownTop.indices, ...(knownTop.added.length > 0 ? { drawAdded: knownTop.added } : {}) } : {}),
         ...(slCompute ? { samples: slCompute.rolloutSamples, budgetMs: retryBudgetMs } : {}),
         spentMs: mcShown.reduce((sum, mc) => sum + mc.ms, 0),
         orders: kill.orders,
@@ -2646,7 +2748,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             knowledge: env.knowledge,
             memory: env.screenMemory,
             solver: rolloutSolver,
-            piles: knownTop ? { ...bossPiles, drawTop: knownTop.indices } : bossPiles,
+            piles: knownTop ? { ...bossPiles, drawTop: knownTop.indices, ...(knownTop.added.length > 0 ? { drawAdded: knownTop.added } : {}) } : bossPiles,
             randomPotions: [...mcSources.values()],
             lines: [...shown, ...mcMedians],
             turn: state.turn ?? null,
@@ -2810,7 +2912,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // SL (docs/sl.md): how the earlier attempts at this fight went (a retried fight only).
     ...(env.sl ? { previous_attempts: env.sl.previousAttempts } : {}),
     // SL_RETRY_KNOWN_DRAWS: the next cards of the draw pile, known from the earlier attempt (one fact line).
-    ...(knownTop ? { known_draws: knownDrawsFact(knownTop.names, knownTop.attempts) } : {}),
+    ...(knownTop ? { known_draws: knownDrawsFact(knownTop.names, knownTop.attempts, knownTop.addedNames) } : {}),
     // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
     knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),
@@ -3052,7 +3154,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...(thiefRecord ? { thief: thiefRecord } : {}),
           ...(mechRecord ? { mech: mechRecord } : {}),
           // SL_RETRY_KNOWN_DRAWS / SL_RETRY_COMPUTE on this question (docs/sl.md §10).
-          ...(knownTop || slCompute ? { sl_retry: { known_draws: knownTop ? knownTop.names.length : 0, ...(slCompute ? { compute: { rollout_samples: slCompute.rolloutSamples, rollout_budget_ms: retryBudgetMs, turn_spent_ms: Math.round(retrySpent), mc_samples: slCompute.mcSamples, boss_sim_samples: slCompute.bossSimSamples } } : {}) } } : {}),
+          ...(knownTop || slCompute ? { sl_retry: { known_draws: knownTop ? knownTop.names.length : 0, ...(knownTop && knownTop.added.length > 0 ? { added: knownTop.added.length } : {}), ...(slCompute ? { compute: { rollout_samples: slCompute.rolloutSamples, rollout_budget_ms: retryBudgetMs, turn_spent_ms: Math.round(retrySpent), mc_samples: slCompute.mcSamples, boss_sim_samples: slCompute.bossSimSamples } } : {}) } } : {}),
           // With the 5-turn rollout's own best (or ties), which rollout.best no longer is where the simulation ranks.
           ...(bossSim
             ? {

@@ -54,6 +54,24 @@ export interface SlConfig {
   retryKnownDraws: boolean;
   /** SL_RETRY_COMPUTE (default on, Dai 2026-10-02): attempts after the first get more rollout samples and time (docs/sl.md §10). */
   retryCompute: boolean;
+  /**
+   * SL_JUDGE_KNOWN_DRAWS (default on, Dai 2026-10-02): the certain-death judge's least-loss tier is not vetoed by a playable
+   * card that draws when every draw the planner's lines could make is exactly known from an earlier attempt (docs/sl.md §2.1).
+   */
+  judgeKnownDraws: boolean;
+  /**
+   * SL_RELOAD_EARLY (default on, Dai 2026-10-02: "知道必死了就sl", a certain death and never a prediction): the fight is
+   * reloaded at the planner's least-loss verdict, before its line is played card by card, when the judge is certain on that
+   * board and nothing this turn is left to chance or to what the planner does not model (docs/sl.md §2.2); otherwise at
+   * end_turn as before.
+   */
+  reloadEarly: boolean;
+  /**
+   * SL_RETRY_KNOWN_INSERTS (default on, Dai 2026-10-02): cards added to the draw pile at random places (a status,
+   * Metamorphosis) keep the known draw order; the samples put them at random places among the known cards (docs/sl.md §10).
+   * Planning only: the certain-death judge never uses an order resting on it.
+   */
+  retryKnownInserts: boolean;
   /** SL_LOG: sl-attempts.jsonl (default next to the decision log; off: not written). */
   log: string | null;
   /** SL_STEP_TIMEOUT_MS (default 60000): each reload step's wait (the main menu, then the fight). */
@@ -691,6 +709,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
     retryKnownDraws: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_DRAWS"), "SL_RETRY_KNOWN_DRAWS", problems) ?? true,
     retryCompute: parseOnOff(readEnv(env, "SL_RETRY_COMPUTE"), "SL_RETRY_COMPUTE", problems) ?? true,
+    judgeKnownDraws: parseOnOff(readEnv(env, "SL_JUDGE_KNOWN_DRAWS"), "SL_JUDGE_KNOWN_DRAWS", problems) ?? true,
+    reloadEarly: parseOnOff(readEnv(env, "SL_RELOAD_EARLY"), "SL_RELOAD_EARLY", problems) ?? true,
+    retryKnownInserts: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_INSERTS"), "SL_RETRY_KNOWN_INSERTS", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
   };

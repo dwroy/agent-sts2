@@ -16,6 +16,21 @@
  *   coming into the hand (played from the top, discarded, exhausted, or past the 10-card hand): where it was is unknown.
  * So the known order is an earlier attempt's draws up to its first such event (`clean`), and this attempt uses it only
  * while its own draws so far are exactly that order and nothing broke it here either.
+ *
+ * SL_RETRY_KNOWN_INSERTS (Dai 2026-10-02; DrawTracker `inserts`): new cards added to the draw pile (the Insatiable's
+ * Frantic Escape, the Entomancer's Dazed, the Soul Fysh's Beckon, Metamorphosis's attacks) go in at random places and
+ * leave the rest of the pile in its order, so the known order goes on through them: the order records the pile's own
+ * cards only, the added ones are skipped (and listed in `inserted`), and a retry's known draws carry the added cards still
+ * in the pile, which the samples place at random. The logs (notes/sl-retry-report.md §9, 2026-10-02):
+ * - random places: over every draw while added cards were in the pile, the chance the next card is one of them under a
+ *   uniform random place, I/(I+O), predicts 148.1 of the Insatiable's 149 drawn (1026 draws), 388.4 of the Entomancer's
+ *   396 (1348), 62.3 of the Soul Fysh's 72 (542; some Beckons go straight to the hand); not the top, not the bottom;
+ * - the rest keeps its order: 12 of 12 times a card Headbutt put on top was still the first pile card drawn after cards
+ *   were added (piles of 8-22: a shuffle would keep it first about once in 12), e.g. XSPHCB4GUSEU F25 T7 (Shrug It Off,
+ *   then 3 added), H14TDJAE4JB9 F25 T6 (Blood Wall, then 4 Dazed).
+ * A card moved onto the pile from the discard pile or the hand (Headbutt, Thinking Ahead: on top) still ends the order,
+ * as do a reshuffle and a card leaving the pile other than into the hand; so does drawing a card that may be either an
+ * added copy or the pile's own (Metamorphosis adding a card the deck has).
  */
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, bool, str } from "../util/json.js";
@@ -35,7 +50,20 @@ export interface SlDraws {
   clean: number;
   /** Why the clean part ended ("T5: reshuffle (the discard pile shuffled into the draw pile)"), null when it did not. */
   broke: string | null;
+  /**
+   * SL_RETRY_KNOWN_INSERTS: new cards added to the draw pile at random places (not in `order`): the turn, how many entries
+   * `order` had then, their keys still in the pile (`cards`), and statuses that came into the hand not off the pile in that
+   * step (`drawn`: added and drawn at once, most likely). Absent when none, and always with the switch off.
+   */
+  inserted?: { turn: number; at: number; cards: string[]; drawn?: string[] }[];
 }
+
+/**
+ * Status cards enemies add to our draw pile (the logs: the Entomancer's Dazed, the Insatiable's Frantic Escape, the Soul
+ * Fysh's Beckon; and the usual others): one in the hand that did not come off the pile was most likely added and drawn in
+ * the same step (SL_RETRY_KNOWN_INSERTS: recorded as added, `drawn`, so the attempt's draws are no longer exactly known).
+ */
+const ADDED_STATUSES = new Set(["DAZED", "FRANTIC_ESCAPE", "BECKON", "SLIMED", "WOUND", "BURN", "VOID"]);
 
 /** The card's key: its id, and "+" when upgraded (the pile listing tells upgrades by the "+" after the name). */
 export function cardKey(cardId: string, upgraded: boolean): string {
@@ -54,6 +82,10 @@ interface Snapshot {
   draw: Map<string, number>;
   /** Cards in the discard pile. */
   discard: number;
+  /** The discard pile as a multiset of card keys (empty when the state does not list it). */
+  discardCards: Map<string, number>;
+  /** The draw pile's card names by key (the listing's line), for the added cards' names. */
+  drawNames: Map<string, string>;
 }
 
 /** "打击+*3 [1费]：…": the count after "*", 1 without one. */
@@ -64,6 +96,25 @@ function lineCount(line: string): number {
 /** The upgrade mark "+" right after the name (before any "*N" and the cost), as combat-plan pileCardModels reads it. */
 function lineUpgraded(line: string): boolean {
   return /^[^[*：:]*?\+\s*(?:\*\d+\s*)?\[/.test(line);
+}
+
+/** The card's name in a pile line ("狂乱逃离*2 [1费]：…" -> 狂乱逃离, "打击+ [1费]" -> 打击+), or null. */
+function lineName(line: string): string | null {
+  return /^([^[*：:]*?)\s*(?:\*\d+\s*)?\[/.exec(line)?.[1]?.trim() || null;
+}
+
+/** The names of a pile's cards by key (agent_view.combat's lines). */
+function pileNames(state: GameState, pile: "draw" | "discard"): Map<string, string> {
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  const out = new Map<string, string>();
+  for (const raw of asArray(view[pile])) {
+    const entry = asRecord(raw);
+    const cardId = str(asArray(entry["card_ids"])[0]);
+    const line = str(entry["line"]);
+    const name = lineName(line);
+    if (cardId && name) out.set(cardKey(cardId, lineUpgraded(line)), name);
+  }
+  return out;
 }
 
 /** A pile of agent_view.combat as a multiset of card keys, or null when the state does not list it. */
@@ -112,7 +163,20 @@ function snapshotOf(state: GameState): Snapshot | null {
     const cardId = str(card["card_id"]);
     return { key: cardKey(cardId, bool(card["upgraded"])), name: str(card["name"], cardId) };
   });
-  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard) };
+  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard), discardCards: discard ?? new Map(), drawNames: pileNames(state, "draw") };
+}
+
+function countOf(cards: HandCard[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const card of cards) out.set(card.key, (out.get(card.key) ?? 0) + 1);
+  return out;
+}
+
+/** Card keys counted by the card itself (the upgrade mark dropped). */
+function byBase(keys: string[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const key of keys) out.set(baseKey(key), (out.get(baseKey(key)) ?? 0) + 1);
+  return out;
 }
 
 /** The cards of `now` not in `before` by count, in hand order (a card played and drawn again is new). */
@@ -160,10 +224,32 @@ function matchDrawn(candidates: HandCard[], left: Map<string, number>): HandCard
   return taken.filter((card): card is HandCard => card !== null);
 }
 
+export interface DrawTrackerOptions {
+  /** SL_RETRY_KNOWN_INSERTS: new cards added to the draw pile at random places keep the order (default: they end it, as before). */
+  inserts?: boolean;
+}
+
 /** One attempt's draws, from every state the loop reads during it (DrawTracker.observe). */
 export class DrawTracker {
   private prev: Snapshot | null = null;
   readonly record: SlDraws = { order: [], names: [], turns: [], clean: 0, broke: null };
+  private readonly inserts: boolean;
+  /** SL_RETRY_KNOWN_INSERTS: the fight's own pile cards still in the draw pile (the rest of the pile are added cards). */
+  private own: Map<string, number> | null = null;
+  /** A status came into the hand not off the pile (ADDED_STATUSES): added to the pile and drawn at once, most likely. */
+  private strayed = false;
+
+  constructor(options: DrawTrackerOptions = {}) {
+    this.inserts = options.inserts === true;
+  }
+
+  /**
+   * Whether a card was added to the draw pile in this attempt (SL_RETRY_KNOWN_INSERTS: an `inserted` event; without it: the
+   * order broke on a card put into the pile): then its draws hold chance (Dai 2026-10-02: no early reload).
+   */
+  get addedToPile(): boolean {
+    return this.strayed || (this.record.inserted?.length ?? 0) > 0 || /put into the draw pile/.test(this.record.broke ?? "");
+  }
 
   /** Whether the draws so far are all the fight's starting pile order (nothing broke it). */
   get intact(): boolean {
@@ -173,6 +259,16 @@ export class DrawTracker {
   /** The draw pile now (the last state with the piles listed), or null. */
   get drawPile(): Map<string, number> | null {
     return this.prev?.draw ?? null;
+  }
+
+  /**
+   * SL_RETRY_KNOWN_INSERTS: the added cards still in the draw pile (at random places among the known ones), with their
+   * names; empty without the switch.
+   */
+  get added(): { keys: string[]; names: string[] } {
+    if (!this.inserts || !this.prev || !this.own) return { keys: [], names: [] };
+    const keys = [...minus(this.prev.draw, this.own)].flatMap(([key, n]) => Array.from({ length: n }, () => key));
+    return { keys, names: keys.map((key) => this.prev!.drawNames.get(key) ?? key) };
   }
 
   /** The turn of the last state read. */
@@ -192,6 +288,15 @@ export class DrawTracker {
       // nothing of the earlier draws.
       if (now.turn !== 1 || now.discard > 0) this.breakAt(now.turn, `tracking began after the fight's start (T${now.turn}, ${now.discard} card(s) in the discard pile): the earlier draws are not known`);
       this.take(now.hand, now.turn, this.intact);
+      if (this.inserts) this.own = new Map(now.draw);
+      return;
+    }
+    // Either mode (the record untouched): a status in the hand that did not come off the pile.
+    const stepDrawn = now.turn !== before.turn ? now.hand : newCards(before.hand, now.hand);
+    const fromPile = matchDrawn(stepDrawn, minus(before.draw, now.draw));
+    if ([...minus(byBase(stepDrawn.map((card) => card.key)), byBase(fromPile.map((card) => card.key)))].some(([key]) => ADDED_STATUSES.has(key))) this.strayed = true;
+    if (this.inserts) {
+      this.observeInserts(before, now);
       return;
     }
     const left = minus(before.draw, now.draw);
@@ -228,6 +333,82 @@ export class DrawTracker {
     this.take(matchDrawn(candidates, left), now.turn, false);
   }
 
+  /**
+   * SL_RETRY_KNOWN_INSERTS: observe() with added cards kept apart. The pile's own cards still in it (`own`) are what the
+   * order is about; the rest of the draw pile are cards added at random places, skipped when drawn.
+   */
+  private observeInserts(before: Snapshot, now: Snapshot): void {
+    const own = this.own ?? new Map(before.draw);
+    this.own = own;
+    // The added cards in the pile before this step (the pile less its own cards).
+    const added = minus(before.draw, own);
+    const left = minus(before.draw, now.draw);
+    const grew = minus(now.draw, before.draw);
+    const candidates = now.turn !== before.turn ? now.hand : newCards(before.hand, now.hand);
+    if (size(grew) > 0 && ((before.discard > 0 && now.discard < before.discard) || candidates.length > size(before.draw))) {
+      // A reshuffle, as observe() reads it: the old pile drawn to its end first, its own cards still the order.
+      const old = size(before.draw);
+      const first = candidates.slice(0, old);
+      const firstSet = new Map<string, number>();
+      for (const card of first) firstSet.set(baseKey(card.key), (firstSet.get(baseKey(card.key)) ?? 0) + 1);
+      const oldSet = new Map<string, number>();
+      for (const [key, n] of before.draw) oldSet.set(baseKey(key), (oldSet.get(baseKey(key)) ?? 0) + n);
+      const whole = first.length === old && size(minus(firstSet, oldSet)) === 0 && size(minus(oldSet, firstSet)) === 0;
+      if (whole) this.takeOwn(matchDrawn(first, new Map(before.draw)), own, added, now.turn);
+      this.breakAt(now.turn, "reshuffle (the discard pile shuffled into the draw pile)");
+      this.take(whole ? candidates.slice(old) : candidates, now.turn, false);
+      return;
+    }
+    // New cards in the pile: moved in from the discard pile or the hand (Headbutt, Thinking Ahead: on top) ends the order;
+    // anything else was added at a random place.
+    const fresh = new Map<string, number>();
+    if (size(grew) > 0) {
+      const fromDiscard = minus(before.discardCards, now.discardCards);
+      const fromHand = minus(countOf(before.hand), countOf(now.hand));
+      const moved = new Map<string, number>();
+      for (const [key, n] of grew) {
+        const m = Math.min(n, (fromDiscard.get(key) ?? 0) + (fromHand.get(key) ?? 0));
+        if (m > 0) moved.set(key, m);
+        if (n - m > 0) fresh.set(key, n - m);
+      }
+      if (size(moved) > 0) this.breakAt(now.turn, `${listOf(moved)} moved onto the draw pile from the discard pile or the hand (Headbutt-like: on top)`);
+    }
+    const drawn = matchDrawn(candidates, left);
+    // A status that came into the hand not off the pile: added and drawn at once (or put straight into the hand).
+    const strays = [...minus(byBase(candidates.map((card) => card.key)), byBase(drawn.map((card) => card.key)))].filter(([key]) => ADDED_STATUSES.has(key)).flatMap(([key, n]) => Array.from({ length: n }, () => key));
+    if (size(fresh) > 0 || strays.length > 0) {
+      (this.record.inserted ??= []).push({ turn: now.turn, at: this.record.order.length, cards: [...fresh].flatMap(([key, n]) => Array.from({ length: n }, () => key)), ...(strays.length > 0 ? { drawn: strays } : {}) });
+    }
+    if (size(left) > 0) this.breakAt(now.turn, `${listOf(left)} left the draw pile without coming into the hand (played from the top, discarded, exhausted, or past the 10-card hand)`);
+    // A card added and drawn in the same step never shows in the pile (not in `left`): when the pile's own cards hold the
+    // same card, which of the two came is unknown.
+    if (size(fresh) > 0) {
+      const unmatched = minus(byBase(candidates.map((card) => card.key)), byBase(drawn.map((card) => card.key)));
+      const freshBase = byBase([...fresh].flatMap(([key, n]) => Array.from({ length: n }, () => key)));
+      const ownBase = byBase([...own].flatMap(([key, n]) => Array.from({ length: n }, () => key)));
+      const doubt = [...unmatched.keys()].find((key) => freshBase.has(key) && ownBase.has(key));
+      if (doubt) this.breakAt(now.turn, `drew ${doubt} as cards like it were added to the draw pile: the added one or the pile's own`);
+    }
+    this.takeOwn(drawn, own, added, now.turn);
+  }
+
+  /**
+   * SL_RETRY_KNOWN_INSERTS: drawn cards (pile keys, hand order) into the order when they are the pile's own; added ones
+   * (`added`: the added cards that were in the pile) skipped. One that may be either ends the clean order.
+   */
+  private takeOwn(drawn: HandCard[], own: Map<string, number>, added: Map<string, number>, turn: number): void {
+    for (const card of drawn) {
+      const mine = own.get(card.key) ?? 0;
+      const theirs = added.get(card.key) ?? 0;
+      if (mine > 0 && theirs > 0) this.breakAt(turn, `drew ${card.name}, which may be the one added to the draw pile or the pile's own`);
+      if (mine > 0) {
+        own.set(card.key, mine - 1);
+        this.take([card], turn, this.intact);
+      } else if (theirs > 0) added.set(card.key, theirs - 1);
+      else this.take([card], turn, this.intact);
+    }
+  }
+
   private take(cards: HandCard[], turn: number, clean: boolean): void {
     for (const card of cards) {
       this.record.order.push(card.key);
@@ -247,6 +428,18 @@ export interface KnownOrder {
   keys: string[];
   names: string[];
   attempts: number[];
+  /**
+   * SL_RETRY_KNOWN_INSERTS: how many leading `keys` were drawn before any card was added to the pile at a random place in
+   * the attempt that saw them: those are known exactly; past them the order rests on the logs' model (added cards leave the
+   * rest in order), good for planning, never for the certain-death judge (Dai 2026-10-02). Absent: all exact.
+   */
+  exact?: number;
+}
+
+/** A record's clean prefix drawn before its first added card (all of it without any). */
+function exactLength(draws: SlDraws): number {
+  const first = draws.inserted?.[0];
+  return first ? Math.min(draws.clean, first.at) : draws.clean;
 }
 
 /**
@@ -256,11 +449,16 @@ export interface KnownOrder {
  */
 export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws | null }[]): { known: KnownOrder | null; reason: string | null } {
   let known: KnownOrder | null = null;
+  // SL_RETRY_KNOWN_INSERTS: the longest exact prefix of any of them (rows written without the switch have no `inserted`).
+  let exact: number | null = null;
+  let modelled = false;
   for (const row of [...rows].sort((a, b) => a.attempt - b.attempt)) {
     const draws = row.draws;
     if (!draws || !Array.isArray(draws.order) || !(draws.clean > 0)) continue;
     const keys = draws.order.slice(0, draws.clean);
     const names = (draws.names ?? []).slice(0, draws.clean);
+    if (Array.isArray(draws.inserted) && draws.inserted.length > 0) modelled = true;
+    exact = Math.max(exact ?? 0, exactLength(draws));
     if (!known) {
       known = { keys, names, attempts: [row.attempt] };
       continue;
@@ -272,10 +470,24 @@ export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws |
     if (keys.length > known.keys.length) known = { keys, names: names.length === keys.length ? names : [...known.names, ...keys.slice(known.keys.length)], attempts: [...known.attempts, row.attempt] };
     else known = { ...known, attempts: [...known.attempts, row.attempt] };
   }
+  if (known && modelled && exact !== null && exact < known.keys.length) known = { ...known, exact };
   return { known, reason: known ? null : "no earlier attempt recorded its draws" };
 }
 
-export type KnownCheck = { ok: true; keys: string[]; names: string[] } | { ok: false; reason: string };
+export type KnownCheck =
+  | {
+      ok: true;
+      keys: string[];
+      names: string[];
+      /** SL_RETRY_KNOWN_INSERTS: cards added to the draw pile, at random places among `keys` (absent: none). */
+      inserted?: { keys: string[]; names: string[] };
+      /**
+       * SL_RETRY_KNOWN_INSERTS: how many leading `keys` are known exactly (not resting on the added-cards model: none once a
+       * card was added to the pile in this attempt). Absent: all of them.
+       */
+      exact?: number;
+    }
+  | { ok: false; reason: string };
 
 /**
  * This attempt against the known order: every card it drew so far is the known one at that place (nothing broke it),
@@ -293,6 +505,7 @@ export function checkKnown(known: KnownOrder, tracker: DrawTracker): KnownCheck 
   }
   if (drawn.order.length >= known.keys.length) return { ok: true, keys: [], names: [] };
   const keys = known.keys.slice(drawn.order.length);
+  const added = tracker.added;
   // By the card itself (an upgrade on the way to the hand aside).
   const need = new Map<string, number>();
   for (const key of keys) need.set(baseKey(key), (need.get(baseKey(key)) ?? 0) + 1);
@@ -300,7 +513,9 @@ export function checkKnown(known: KnownOrder, tracker: DrawTracker): KnownCheck 
   for (const [key, n] of pile) held.set(baseKey(key), (held.get(baseKey(key)) ?? 0) + n);
   const missing = minus(need, held);
   if (size(missing) > 0) return { ok: false, reason: `the draw pile does not hold the known next cards (${listOf(missing)} missing)` };
-  return { ok: true, keys, names: known.names.slice(drawn.order.length) };
+  // Exactly known: none once this attempt saw a card added to its pile; else the earlier attempts' exact part left.
+  const exact = tracker.addedToPile ? 0 : known.exact !== undefined ? Math.max(0, Math.min(keys.length, known.exact - drawn.order.length)) : keys.length;
+  return { ok: true, keys, names: known.names.slice(drawn.order.length), ...(added.keys.length > 0 ? { inserted: added } : {}), ...(exact < keys.length ? { exact } : {}) };
 }
 
 /**
@@ -319,5 +534,16 @@ export function knownTopIndices(keys: readonly string[], pile: readonly { cardId
     used.add(at);
     out.push(at);
   }
+  return out;
+}
+
+/**
+ * SL_RETRY_KNOWN_INSERTS: a sample's draw order, the next card first: `order` (the known cards in their order, then the
+ * rest of the pile shuffled) with each added card put at a uniformly random place among them, as the game adds them
+ * (module comment). Placing them one after another at uniform places gives every interleaving the same chance.
+ */
+export function withAddedAtRandom<T>(order: readonly T[], added: readonly T[], random: () => number): T[] {
+  const out = order.slice();
+  for (const card of added) out.splice(Math.floor(random() * (out.length + 1)), 0, card);
   return out;
 }

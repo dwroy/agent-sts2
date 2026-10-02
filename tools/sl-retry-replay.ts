@@ -19,9 +19,12 @@
  * live budgets (the timing runs). --b2 off leaves B2 out (it is then the rollout's ranking for every boss); B2 on runs its
  * pool with --workers threads (default 8: a live game shares the machine).
  *
+ * --inserts on (SL_RETRY_KNOWN_INSERTS): the draw tracker keeps the known order through cards added to the pile at random
+ *   places, and the known draws carry the added cards (the samples place them at random); off (default): as before.
+ *
  * Usage: npx tsx tools/sl-retry-replay.ts --mode deaths|retries [--out experiments/sl-retry] [--turns 3] [--b2 on|off]
  *          [--clock frozen|real] [--variants off,draws,compute,both] [--shard i/n] [--limit N] [--workers 8]
- *          [--since 2026-09-30] [--rooms boss,elite,hallway] [--tag name]   (deaths: fights from that date / in those rooms)
+ *          [--since 2026-09-30] [--rooms boss,elite,hallway] [--tag name] [--inserts on|off]   (deaths: fights from that date / in those rooms)
  * Output: <out>/<mode>[-<shard>].jsonl, one row per decision; a line per decision on stdout.
  */
 import { execFileSync } from "node:child_process";
@@ -60,6 +63,9 @@ const workers = Number(arg("workers", "8"));
 /** --mode deaths: only fights from this date on (ISO, e.g. 2026-09-30); --rooms boss,elite,...: only these rooms. */
 const since = arg("since", "");
 const roomsOnly = arg("rooms", "");
+/** SL_RETRY_KNOWN_INSERTS for the tracker (the record and the check). */
+const inserts = arg("inserts", "off") === "on";
+const newTracker = (): DrawTracker => (inserts ? new DrawTracker({ inserts: true }) : new DrawTracker());
 const STATES = "logs/states.jsonl";
 const PY = ".cache/logdb-venv/bin/python";
 /** Labels of a fresh plan of the turn (not a committed line's next step). */
@@ -252,7 +258,7 @@ function attemptsOf(run: string, floor: number): { frames: Row[]; decisions: Row
 }
 
 function recordOf(frames: Row[]): SlDraws {
-  const tracker = new DrawTracker();
+  const tracker = newTracker();
   for (const row of frames) tracker.observe(stateAt(Number(row["off"]), Number(row["len"])));
   return tracker.record;
 }
@@ -270,7 +276,7 @@ interface Target {
 }
 
 function evaluate(target: Target, out: string): void {
-  const tracker = new DrawTracker();
+  const tracker = newTracker();
   const firsts = new Map<number, Row>();
   for (const decision of target.decisions) {
     const turn = Number(decision["turn"]);
@@ -285,7 +291,10 @@ function evaluate(target: Target, out: string): void {
     if (!decision) continue;
     pending.delete(String(row["ts"]));
     const check = target.known ? checkKnown(target.known, tracker) : null;
-    const known = check?.ok && check.keys.length > 0 ? { cards: check.keys, names: check.names, attempts: [...target.known!.attempts] } : undefined;
+    const known =
+      check?.ok && check.keys.length > 0
+        ? { cards: check.keys, names: check.names, attempts: [...target.known!.attempts], ...(check.inserted ? { added: { cards: check.inserted.keys, names: check.inserted.names } } : {}), ...(check.exact !== undefined ? { exact: check.exact } : {}) }
+        : undefined;
     const previous = target.rows.filter((r) => r.floor === target.floor && r.attempt < target.attempt);
     const prevOf = (knownNote: boolean) =>
       previous.length > 0
@@ -317,7 +326,8 @@ function evaluate(target: Target, out: string): void {
       attempt: target.attempt,
       turn: Number(decision["turn"]),
       logged: { label: String(decision["label"]), decider: String(decision["decider"]), rationale: String(decision["rationale"] ?? "").slice(0, 300), played: playedOf(String(decision["rationale"] ?? "")) },
-      known: check ? (check.ok ? { ok: true, next: check.keys.length, names: check.names.slice(0, 12) } : { ok: false, reason: check.reason }) : null,
+      known: check ? (check.ok ? { ok: true, next: check.keys.length, names: check.names.slice(0, 12), ...(check.inserted ? { added: check.inserted.keys.length } : {}) } : { ok: false, reason: check.reason }) : null,
+      inserts,
       drawn: tracker.record.order.length,
       clock,
       b2,
