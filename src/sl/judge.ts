@@ -28,6 +28,10 @@
  *   verdict already used the real cards; never the order resting on the added-cards model, draws.ts) and nothing
  *   changes the pile or draws mid-turn unseen.
  *
+ * SL_JUDGE_ANY_DRAW (Dai 2026-10-03; docs/sl.md §2.3): the draw veto is also lifted when the death holds for every draw the
+ * turn could make (anyDrawJudged on the planner's DrawBound): nothing can be drawn, the drawing card's own HP cost kills us
+ * before it draws (R764HJWMJQ3V F33 T10, Offering at 5 HP), or every line dies with the whole draw pile in the hand.
+ *
  * SL_RELOAD_EARLY (Dai 2026-10-02: "知道必死了就sl", and "我说的是必死 不是推演": a certain death, never a prediction):
  * the same least-loss verdict taken at the decision that finds it, before its line is played card by card
  * (judgeLeastLossNow), only when nothing this turn is left to chance or to what the planner does not model. Otherwise
@@ -90,6 +94,11 @@ export interface JudgeContext {
    * draws or changes the pile mid-turn: midTurnRisks), so a playable card that draws does not veto it. Absent: it does.
    */
   drawsKnown?: boolean;
+  /**
+   * SL_JUDGE_ANY_DRAW: the planner's bound over every draw (combat-plan drawBoundOf), asked only when a playable card that
+   * draws would veto the least-loss tier. Absent (the switch off): the veto as before.
+   */
+  drawBound?: () => DrawBound | null;
   /** Game data for the powers' text (the held cards' guards: a power acting by chance or at the end of the turn). */
   knowledge?: Pick<Knowledge, "power" | "relic">;
   /**
@@ -291,6 +300,54 @@ export interface LeastLossFacts {
   chance: string | null;
 }
 
+/**
+ * SL_JUDGE_ANY_DRAW (docs/sl.md §2.3; combat-plan anyDrawBound): what the turn planner found about this turn's draws for
+ * every draw it could make, on the board of a least-loss verdict. The order of the draw pile is not known, its cards are
+ * (the state lists them), so:
+ * - `fatal`: every drawing card's own HP cost (card-model hpLoss, the card's resolved amount) reaches our HP, coming
+ *   before its draw, and no simulated line has HP left right after playing one (the solver's loseHp: Buffer, Demon
+ *   Tongue; lines with nothing else that heals or shields first): its play is our death before a card is drawn.
+ * - `superset`: the board re-solved with the drawing cards putting every card of the draw pile into the hand at once (each
+ *   at its cost, the hand limit lifted; their other effects and every other limit as they were). Any real draw is a
+ *   part of that hand, so if every line dies there, every line dies with any draw.
+ */
+export interface DrawBound {
+  /** The playable cards and modelled potions that draw (or whose text speaks of drawing), by name. */
+  drawing: string[];
+  /** Why no bound could be made (null: one was worked out). */
+  refused: string | null;
+  /** Fiddle or No Draw: nothing can be drawn this turn, the planner's verdict drew nothing. */
+  noDraw?: string;
+  /** Every drawing card's play is our death before it draws (see above): name, own HP cost, our HP. */
+  fatal?: { name: string; hpLoss: number }[];
+  superset?: {
+    /** Cards put into the hand by the first draw: the draw pile's, less `excluded`. */
+    cards: number;
+    /** Cards in the draw pile (the state's listing). */
+    drawPile: number;
+    /** Cards of the pile left out: statuses and curses that only hurt when drawn (Burn, Beckon, ...), by name. */
+    excluded: string[];
+    /**
+     * What the superset board cannot simulate exactly after a draw (an unmodelled or random card, a card reading the
+     * hand or the draw pile, an enchantment, a draw that may reach the reshuffle): the bound then holds only when no
+     * line has HP left after a draw (`aliveAfterDraw` empty).
+     */
+    inexact: string[];
+    /** Every line on the superset board dies. */
+    allDie: boolean;
+    /** The drawing cards after whose play some line still has HP left (by name). */
+    aliveAfterDraw: string[];
+    /** The search was cut short (node limit or `timedOut`): no bound. */
+    truncated: boolean;
+    timedOut: boolean;
+    nodes: number;
+  };
+  /** What else leaves the verdict to chance (LeastLossFacts.chance without the draws; SL_RELOAD_EARLY), null: nothing. */
+  chance: string | null;
+  /** Time spent on the bound (both solves). */
+  ms: number;
+}
+
 /** The planner label whose end_turn means "every simulated line dies; ending the turn keeps the most HP". */
 export const LEAST_LOSS_LABEL = "combat/least-loss";
 const SPECIAL_ENEMY_HP = 1_000_000;
@@ -332,6 +389,65 @@ function startGuard(state: GameState, living: Record<string, unknown>[], inferno
   }
   if (inferno > 0 && living.every((enemy) => num(enemy["current_hp"]) + num(enemy["block"]) <= inferno)) return `Inferno's ${inferno} at that loss may kill every enemy`;
   return null;
+}
+
+/** Time the any-draw bound may take (both solves); over it, no bound (SL_JUDGE_ANY_DRAW). */
+export const ANY_DRAW_BUDGET_MS = 2_000;
+
+/**
+ * SL_JUDGE_ANY_DRAW (docs/sl.md §2.3): whether the least-loss verdict's death holds for every draw this turn could make,
+ * from the planner's bound (DrawBound) and what this judge knows of the board. Certain when:
+ * - nothing can be drawn (Fiddle, No Draw); or
+ * - `fatal`: every drawing card's own HP cost kills us before it draws, on every simulated line; or
+ * - `superset`: every line dies with the whole draw pile in hand, the search not cut short, no relic or power drawing or
+ *   changing the pile mid-turn (midTurnRisks.draws); and when anything there is not simulated exactly (the bound's
+ *   `inexact`, a relic or power acting mid-turn without the planner or by chance, something hitting the enemies at the end
+ *   of the turn, an enemy's poison), no line has HP left after a draw (the pile never comes into play).
+ * Any error, or no bound: not certain.
+ */
+function anyDrawJudged(
+  state: GameState,
+  context: Pick<JudgeContext, "drawBound" | "knowledge">,
+  board: { hp: number; hand: Record<string, unknown>[]; etherealHeld: number },
+): { certain: boolean; why: string; chance: string | null } {
+  let bound: DrawBound | null;
+  try {
+    bound = context.drawBound?.() ?? null;
+  } catch (error) {
+    return { certain: false, why: `the bound failed (${error instanceof Error ? error.message : String(error)})`, chance: null };
+  }
+  if (!bound) return { certain: false, why: "no bound (the planner's facts are missing)", chance: null };
+  const names = bound.drawing.join(", ") || "a card";
+  const no = (why: string) => ({ certain: false, why, chance: bound!.chance });
+  const yes = (why: string) => ({ certain: true, why: `${names} ${bound!.drawing.length > 1 ? "draw" : "draws"}, but dies with any draw: ${why}`, chance: bound!.chance });
+  if (bound.refused) return no(bound.refused);
+  if (bound.noDraw) return yes(`nothing can be drawn this turn (${bound.noDraw})`);
+  if (bound.fatal && bound.fatal.length > 0) {
+    return yes(`${bound.fatal.map((card) => `${card.name}'s own cost (lose ${card.hpLoss} HP)`).join(", ")} kills us at ${board.hp} HP before a card is drawn; every line that plays it dies there (${bound.ms} ms)`);
+  }
+  const superset = bound.superset;
+  if (!superset) return no("no superset board");
+  const risks = midTurnRisks(state, context.knowledge);
+  if (risks.draws.length > 0) return no(`drawing or changing the draw pile mid-turn: ${risks.draws.join(", ")}`);
+  const size = `the hand + ${superset.cards} card(s) of the draw pile${superset.excluded.length > 0 ? ` (left out, only hurting when drawn: ${superset.excluded.join(", ")})` : ""}`;
+  if (superset.truncated) return no(`the superset board's search was cut short (${superset.timedOut ? `over ${ANY_DRAW_BUDGET_MS} ms` : `${superset.nodes} positions`}; ${size})`);
+  if (!superset.allDie) return no(`a line lives on the superset board (${size}): some draw may save us`);
+  // What the superset board does not simulate exactly beyond the cards: unmodelled relics and powers acting mid-turn or by
+  // chance, what hits the enemies at the end of the turn (an attacker it kills does not attack), an enemy's poison.
+  const ends = endOfTurnHits(state, board.hand, board.etherealHeld, context.knowledge);
+  const poisoned = asArray(asRecord(state.raw["combat"])["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false && powerAmount(enemy, "POISON_POWER") > 0)
+    .map((enemy) => `${str(enemy["name"], str(enemy["enemy_id"]))}'s poison`);
+  const inexact = [
+    ...superset.inexact,
+    ...new Set([...risks.any, ...risks.chance, ...risks.endOfTurn, ...ends.sources.map((source) => source.name), ...(ends.refuse ? [ends.refuse] : []), ...poisoned]),
+  ];
+  if (inexact.length > 0 && superset.aliveAfterDraw.length > 0) {
+    return no(`${inexact.slice(0, 3).join("; ")}${inexact.length > 3 ? ` (+${inexact.length - 3})` : ""} not simulated exactly, and a line has HP left after ${superset.aliveAfterDraw.join(", ")}`);
+  }
+  const exactness = inexact.length > 0 ? `; no line has HP left after the draw (not exact: ${inexact.slice(0, 2).join("; ")}${inexact.length > 2 ? ` (+${inexact.length - 2})` : ""})` : "";
+  return yes(`every line dies on the superset board, ${size}${exactness} (${superset.nodes} positions, ${bound.ms} ms)`);
 }
 
 export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerdict {
@@ -484,7 +600,14 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
     const drawing = playable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
-    if (drawing && context.drawsKnown !== true) return verdict(false, null, `the planner sees every line die, but ${str(drawing["name"], str(drawing["card_id"]))} draws (unknown cards)`);
+    if (drawing && context.drawsKnown !== true) {
+      const vetoed = `the planner sees every line die, but ${str(drawing["name"], str(drawing["card_id"]))} draws (unknown cards)`;
+      // SL_JUDGE_ANY_DRAW: certain only when the death holds for every draw (anyDrawJudged); absent, the veto as before.
+      if (!context.drawBound) return verdict(false, null, vetoed);
+      const any = anyDrawJudged(state, context, { hp, hand, etherealHeld });
+      if (!any.certain) return verdict(false, null, `${vetoed}; not with any draw: ${any.why}`);
+      return verdict(true, "least-loss", `the turn planner: every simulated line dies and ending the turn keeps the most HP; ${lethal}; ${any.why}`);
+    }
     const known = drawing ? `; ${str(drawing["name"], str(drawing["card_id"]))} draws, but every draw the lines made is a known card (SL retry)` : "";
     return verdict(true, "least-loss", `the turn planner: every simulated line dies and ending the turn keeps the most HP; ${lethal}${known}`);
   }
@@ -500,7 +623,7 @@ const MODELLED_RELICS = new Set(["DEMON_TONGUE", "INTIMIDATING_HELMET", "KUSARIG
  * Player powers the turn planner reads (combat-plan's PlayerSim, turn-solver). Juggernaut's random hit and Dark Embrace's
  * draws are the planner's own facts; Hellraiser plays a drawn Strike at a random enemy: not here.
  */
-const MODELLED_POWERS = new Set([
+export const MODELLED_POWERS = new Set([
   "BARRICADE_POWER", "BLUR_POWER", "BUFFER_POWER", "COLOSSUS_POWER", "CONSTRICT_POWER", "CRIMSON_MANTLE_POWER", "DARK_EMBRACE_POWER", "DEXTERITY_POWER",
   "DISINTEGRATION_POWER", "DUPLICATION_POWER", "FEEL_NO_PAIN_POWER", "FLAME_BARRIER_POWER", "FREE_ATTACK_POWER", "INFERNO_POWER", "INTANGIBLE_POWER",
   "JUGGERNAUT_POWER", "METALLICIZE_POWER", "NO_BLOCK_POWER", "NO_DRAW_POWER", "ONE_TWO_PUNCH_POWER", "PLATING_POWER", "PLATED_ARMOR_POWER", "RAGE_POWER",
@@ -612,7 +735,7 @@ export function intentNotShown(state: GameState): string | null {
   return null;
 }
 
-export interface LeastLossNowContext extends Omit<JudgeContext, "label" | "drawsKnown" | "knowledge"> {
+export interface LeastLossNowContext extends Omit<JudgeContext, "label" | "drawsKnown" | "knowledge" | "drawBound"> {
   /** The planner's facts about its least-loss verdict (combat-plan leastLossFactsOf); absent: no early reload. */
   facts: LeastLossFacts | undefined;
   /** SL_JUDGE_KNOWN_DRAWS is on (exactly known draws lift the draw veto). */
@@ -620,6 +743,8 @@ export interface LeastLossNowContext extends Omit<JudgeContext, "label" | "draws
   /** A card was added to the draw pile at a random place in this attempt (the draw tracker): chance in the pile. */
   addedToPile: boolean;
   knowledge?: Pick<Knowledge, "power" | "relic">;
+  /** SL_JUDGE_ANY_DRAW: the planner's bound over every draw (JudgeContext.drawBound); absent, the draws veto as before. */
+  drawBound?: () => DrawBound | null;
 }
 
 /**
@@ -650,19 +775,31 @@ export function judgeLeastLossNow(state: GameState, context: LeastLossNowContext
     ...(context.knowledge ? { knowledge: context.knowledge } : {}),
     ...(context.lostSoFar !== undefined ? { lostSoFar: context.lostSoFar } : {}),
     ...(drawsKnown ? { drawsKnown: true } : {}),
+    ...(context.drawBound ? { drawBound: context.drawBound } : {}),
   });
   if (!verdict.certain) return verdict;
   const notYet = (why: string): DeathVerdict => ({ ...verdict, certain: false, tier: null, reason: `not before the line is played: ${why}` });
   if (!facts) return notYet("the planner's facts about its verdict are missing");
-  if (facts.chance !== null) return notYet(`chance in the verdict (${facts.chance})`);
-  if (facts.draws && !drawsKnown) return notYet("a line draws cards not exactly known");
+  // SL_JUDGE_ANY_DRAW: draws the lines made that are not exactly known are no chance when the death holds for every draw;
+  // then only what else the verdict leaves to chance counts (DrawBound.chance).
+  const unknownDraws = facts.draws && !drawsKnown;
+  let anyDraw: { certain: boolean; why: string; chance: string | null } | null = null;
+  if (unknownDraws && context.drawBound) {
+    const hand = asArray(asRecord(state.raw["combat"])["hand"]).map(asRecord);
+    const etherealHeld = hand.filter((card) => (context.ethereal ?? ((held) => heldCardEthereal(held)))(card)).length;
+    anyDraw = anyDrawJudged(state, { drawBound: context.drawBound, ...(context.knowledge ? { knowledge: context.knowledge } : {}) }, { hp: verdict.hp, hand, etherealHeld });
+  }
+  const chance = anyDraw?.certain ? anyDraw.chance : facts.chance;
+  if (chance !== null) return notYet(`chance in the verdict (${chance})`);
+  if (unknownDraws && !anyDraw?.certain) return notYet(`a line draws cards not exactly known${anyDraw ? ` (not with any draw: ${anyDraw.why})` : ""}`);
   if (context.addedToPile) return notYet("cards were added to the draw pile at random places this attempt");
   const hidden = intentNotShown(state);
   if (hidden) return notYet(hidden);
   if (risks.chance.length > 0) return notYet(`acting by chance: ${risks.chance.join(", ")}`);
   if (risks.any.length > 0) return notYet(`acting mid-turn without the planner: ${risks.any.join(", ")}`);
   if (risks.endOfTurn.length > 0) return notYet(`hitting the enemies at the end of the turn: ${risks.endOfTurn.join(", ")}`);
-  return { ...verdict, early: true, reason: `at the least-loss verdict, before its line (${facts.line.join(", ") || "end turn"}): ${verdict.reason}` };
+  const anyText = anyDraw?.certain && !verdict.reason.includes("dies with any draw") ? `; ${anyDraw.why}` : "";
+  return { ...verdict, early: true, reason: `at the least-loss verdict, before its line (${facts.line.join(", ") || "end turn"}): ${verdict.reason}${anyText}` };
 }
 
 /** SL_JUDGE_KNOWN_DRAWS at end_turn: every draw the lines could make is exactly known, and nothing draws or changes the pile unseen. */

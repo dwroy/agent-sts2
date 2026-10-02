@@ -60,6 +60,12 @@ export interface SlConfig {
    */
   judgeKnownDraws: boolean;
   /**
+   * SL_JUDGE_ANY_DRAW (default on, Dai 2026-10-03): the least-loss tier's draw veto is lifted when the death holds for every
+   * draw the turn could make: a drawing card whose own HP cost kills before it draws, or every line dying with the whole
+   * draw pile in the hand (the superset board, docs/sl.md §2.3). Off: the veto as before.
+   */
+  judgeAnyDraw: boolean;
+  /**
    * SL_RELOAD_EARLY (default on, Dai 2026-10-02: "知道必死了就sl", a certain death and never a prediction): the fight is
    * reloaded at the planner's least-loss verdict, before its line is played card by card, when the judge is certain on that
    * board and nothing this turn is left to chance or to what the planner does not model (docs/sl.md §2.2); otherwise at
@@ -764,6 +770,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryKnownDraws: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_DRAWS"), "SL_RETRY_KNOWN_DRAWS", problems) ?? true,
     retryCompute: parseOnOff(readEnv(env, "SL_RETRY_COMPUTE"), "SL_RETRY_COMPUTE", problems) ?? true,
     judgeKnownDraws: parseOnOff(readEnv(env, "SL_JUDGE_KNOWN_DRAWS"), "SL_JUDGE_KNOWN_DRAWS", problems) ?? true,
+    judgeAnyDraw: parseOnOff(readEnv(env, "SL_JUDGE_ANY_DRAW"), "SL_JUDGE_ANY_DRAW", problems) ?? true,
     reloadEarly: parseOnOff(readEnv(env, "SL_RELOAD_EARLY"), "SL_RELOAD_EARLY", problems) ?? true,
     retryKnownInserts: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_INSERTS"), "SL_RETRY_KNOWN_INSERTS", problems) ?? true,
     retryKnownTop: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_TOP"), "SL_RETRY_KNOWN_TOP", problems) ?? true,
