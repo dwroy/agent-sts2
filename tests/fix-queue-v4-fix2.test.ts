@@ -209,3 +209,20 @@ describe("4. a card a power's hook locks is not playable for want of energy (car
     expect(modelHandCard(entry, 1, loggedKnowledge).playable).toBe(true);
   });
 });
+
+describe("8. an X-cost Attack hitting X times hits X times (Skewer at 0 energy after Unrelenting+)", () => {
+  it("ZRYR5WLG6E9K F39 T1: Skewer is X hits; the logged line deals 58 as it did (planned 70: one 8 x1.5 hit at X = 0)", () => {
+    const raw = fixture("zryr-f39-t1-skewer", "t1");
+    const skewer = ((raw["combat"] as Raw)["hand"] as Raw[]).find((entry) => entry["card_id"] === "SKEWER")!;
+    const model = modelHandCard(skewer, 5, loggedKnowledge);
+    expect([model.xCost, model.special, model.hits, model.damage]).toEqual([true, "whirlwind", 0, 8]);
+    const { result } = solvedBoard(raw);
+    // Unrelenting+ 20, Bash+ 10 (free), Molten Fist 10 x1.5, Strike 9 x1.5: 58, Skewer at 0 energy adding nothing; no
+    // line from that start reads more (the logged plan with Skewer read 70).
+    expect(result.plans.find((plan) => steps(plan) === "UNRELENTING>0,BASH>0,MOLTEN_FIST>0,STRIKE_IRONCLAD>0")?.outcome.damageDealt).toBe(58);
+    expect(Math.max(...result.plans.filter((plan) => steps(plan).startsWith("UNRELENTING>0,BASH>0,MOLTEN_FIST>0")).map((plan) => plan.outcome.damageDealt))).toBe(58);
+    // Skewer with energy left is X hits: at 3 energy alone, 3 x 8.
+    const alone = solveTurn({ hand: [model], player: player(), enemies: [dummy()], fightKind: "monster" }).plans.find((plan) => steps(plan) === "SKEWER>0");
+    expect(alone?.outcome.damageDealt).toBe(24);
+  });
+});

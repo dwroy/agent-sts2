@@ -524,7 +524,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   let strengthPerVulnerable = 0;
   const enemyStrength = dyn(card, "EnemyStrength") ?? 0;
   const enemyTempStrengthLoss = dyn(card, "StrengthLoss") ?? 0;
-  const special = SPECIAL[cardId] ?? null;
+  // An X-cost Attack hitting X times (Skewer 「造成{Damage}点伤害X次」, Eradicate, Heavenly Drill) is Whirlwind's
+  // single-target kin: X hits at play time. Without it Skewer was one hit whatever X was (ZRYR5WLG6E9K F39 T1: played
+  // at 0 energy after Unrelenting+, counted 8 x1.5 into Vulnerable; planned 70, dealt 58).
+  const special = SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
 
   // Ambiguous or conditional vars, by id.
   switch (cardId) {
