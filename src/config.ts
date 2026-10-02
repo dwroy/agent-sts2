@@ -83,6 +83,38 @@ export interface SlConfig {
    * no failed attempt played there; every other board plays as usual (src/sl/explore.ts, docs/sl.md §11). Off: as before.
    */
   retryExplore: boolean;
+  /**
+   * SL_RETRY_EXPLORE_B2 (default on, Dai 2026-10-02; with SL_RETRY_EXPLORE): on a boss B2 is trusted on, B2's win rate gates
+   * the replacement ("not worse": within 2 paired standard errors of the line replaced, B2's tie rule) instead of the
+   * rollout's share of samples dead; low-trust bosses and the listed elites keep the rollout's (docs/sl.md §11.3). Off: as before.
+   */
+  retryExploreB2: boolean;
+  /**
+   * SL_RETRY_EXPLORE_BOSS_POTIONS (default on, Dai 2026-10-02; with SL_RETRY_EXPLORE): in a boss fight (potions cost 0
+   * there, and the line replaced is known to lose) the replacement may drink a potion the line it replaces does not: the
+   * shown potion lines and the random potions' Monte Carlo lines are untried lines like the dry ones. A listed elite keeps
+   * "no added drink" (docs/sl.md §11.3). Off: as before.
+   */
+  retryExploreBossPotions: boolean;
+  /**
+   * SL_RETRY_EXPLORE_ORDER (default on, 2026-10-03, R1QJUBVBSSB2 F33; with SL_RETRY_EXPLORE): the deviation points where
+   * every line loses in every sample (the rollout's share dead 1; B2's share won 0 on a boss it is trusted on) come after
+   * every other point; among the rest, the latest first, the least deviated first, as before (docs/sl.md §11.2). Off: as before.
+   */
+  retryExploreOrder: boolean;
+  /**
+   * SL_RETRY_EXPLORE_REPLAY (default on, 2026-10-03, R1QJUBVBSSB2 F33; with SL_RETRY_EXPLORE): before the deviation point
+   * the attempt plays the reference attempt's line on each of its boards, instead of the answer (never instead of a winning
+   * line, nor where that line dies this turn and the answer does not), so that it reaches the point; a board off the path
+   * stops it (docs/sl.md §11.2). Off: as before.
+   */
+  retryExploreReplay: boolean;
+  /**
+   * SL_RETRY_KNOWN_PICKS (default on, 2026-10-03, R1QJUBVBSSB2 F33; with SL_RETRY_KNOWN_INSERTS): a card taken out of the
+   * draw pile by a selection (Seeker Strike) leaves the rest of the pile in its order: it is taken out of the known order,
+   * which goes on (docs/sl.md §10.2). Off: the order ends there, as before.
+   */
+  retryKnownPicks: boolean;
   /** SL_LOG: sl-attempts.jsonl (default next to the decision log; off: not written). */
   log: string | null;
   /** SL_STEP_TIMEOUT_MS (default 60000): each reload step's wait (the main menu, then the fight). */
@@ -736,6 +768,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryKnownInserts: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_INSERTS"), "SL_RETRY_KNOWN_INSERTS", problems) ?? true,
     retryKnownTop: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_TOP"), "SL_RETRY_KNOWN_TOP", problems) ?? true,
     retryExplore: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE"), "SL_RETRY_EXPLORE", problems) ?? true,
+    retryExploreB2: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_B2"), "SL_RETRY_EXPLORE_B2", problems) ?? true,
+    retryExploreBossPotions: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_BOSS_POTIONS"), "SL_RETRY_EXPLORE_BOSS_POTIONS", problems) ?? true,
+    retryExploreOrder: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_ORDER"), "SL_RETRY_EXPLORE_ORDER", problems) ?? true,
+    retryExploreReplay: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY"), "SL_RETRY_EXPLORE_REPLAY", problems) ?? true,
+    retryKnownPicks: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_PICKS"), "SL_RETRY_KNOWN_PICKS", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
   };

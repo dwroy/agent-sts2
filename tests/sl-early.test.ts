@@ -324,6 +324,79 @@ describe("DrawTracker with SL_RETRY_KNOWN_INSERTS: added cards keep the order an
     expect(t.record.clean).toBe(2);
   });
 
+  /** A to-hand selection screen (Seeker Strike: 1 of 3 random pile cards into the hand). */
+  const seeker = (board: Raw): Raw => {
+    board["screen"] = "CARD_SELECTION";
+    board["selection"] = { kind: "deck_card_select", prompt: "选择一张牌加入你的手牌" };
+    return board;
+  };
+  /** One attempt: the opening hand A B from A..F, B played, Seeker Strike takes `pick` (or nothing), then T2 draws three. */
+  const attempt = (pick: string | null, t2: string[], left: string[]): DrawTracker => {
+    const t = new DrawTracker({ inserts: true, tops: true, picks: true });
+    t.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E", "F", "G"])));
+    t.observe(state(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"])));
+    if (pick) {
+      t.observe(state(seeker(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"]))));
+      t.observe(state(turnBoard(1, ["A", pick], ["C", "D", "E", "F", "G"].filter((key) => key !== pick), ["B"])));
+    }
+    t.observe(state(turnBoard(2, t2, left, ["A", "B", ...(pick ? [pick] : [])])));
+    return t;
+  };
+
+  it("SL_RETRY_KNOWN_PICKS: a card a selection takes out of the pile goes out of the order, which goes on (R1QJUBVBSSB2 F33 T2)", () => {
+    // The pile C D E F G; Seeker Strike takes D; T2 draws C E F: the order A B C E F, D picked.
+    const t = attempt("D", ["C", "E", "F"], ["G"]);
+    expect(t.record).toMatchObject({ order: ["A", "B", "C", "E", "F"], clean: 5, broke: null, picked: [{ turn: 1, at: 2, cards: ["D"], names: ["D"] }] });
+    expect(t.addedToPile).toBe(false);
+    // The rows carry the picks into the known order.
+    expect(knownOrderOf([{ attempt: 1, draws: t.record }]).known).toEqual({ keys: ["A", "B", "C", "E", "F"], names: ["A", "B", "C", "E", "F"], attempts: [1], picked: [{ at: 2, keys: ["D"], names: ["D"] }] });
+    // Without the switch the order ends at the pick (as before).
+    const off = new DrawTracker({ inserts: true, tops: true });
+    off.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E", "F", "G"])));
+    off.observe(state(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"])));
+    off.observe(state(seeker(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"]))));
+    off.observe(state(turnBoard(1, ["A", "D"], ["C", "E", "F", "G"], ["B"])));
+    expect(off.record).toMatchObject({ clean: 2, broke: "T1: D taken from the draw pile by choice (选择一张牌加入你的手牌)" });
+    expect(off.record.picked).toBeUndefined();
+  });
+
+  it("SL_RETRY_KNOWN_PICKS on a retry: the same pick keeps the known order exact; a pick the earlier attempt did not make takes the card out of it", () => {
+    const first = attempt("D", ["C", "E", "F"], ["G"]);
+    const known = knownOrderOf([{ attempt: 1, draws: first.record }]).known!;
+    // The same pick: after it the next cards are C E F G-less known part, exact.
+    const same = new DrawTracker({ inserts: true, tops: true, picks: true });
+    same.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E", "F", "G"])));
+    same.observe(state(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"])));
+    same.observe(state(seeker(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"]))));
+    same.observe(state(turnBoard(1, ["A", "D"], ["C", "E", "F", "G"], ["B"])));
+    expect(checkKnown(known, same)).toEqual({ ok: true, keys: ["C", "E", "F"], names: ["C", "E", "F"] });
+    // The earlier attempt drew D at its place (no pick); this one picks E: E out of the known order.
+    const plain = attempt(null, ["C", "D", "E"], ["F", "G"]);
+    const knownPlain = knownOrderOf([{ attempt: 1, draws: plain.record }]).known!;
+    const picksE = new DrawTracker({ inserts: true, tops: true, picks: true });
+    picksE.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E", "F", "G"])));
+    picksE.observe(state(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"])));
+    picksE.observe(state(seeker(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"]))));
+    picksE.observe(state(turnBoard(1, ["A", "E"], ["C", "D", "F", "G"], ["B"])));
+    expect(checkKnown(knownPlain, picksE)).toEqual({ ok: true, keys: ["C", "D"], names: ["C", "D"] });
+  });
+
+  it("SL_RETRY_KNOWN_PICKS on a retry: a pick the earlier attempt made and this one has not: not exact past it; once drawn past, the card is somewhere in the pile", () => {
+    const first = attempt("D", ["C", "E", "F"], ["G"]);
+    const known = knownOrderOf([{ attempt: 1, draws: first.record }]).known!;
+    // Before the moment (2 drawn, no pick yet): the keys as the earlier attempt drew them, none exact past the pick.
+    const now = new DrawTracker({ inserts: true, tops: true, picks: true });
+    now.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E", "F", "G"])));
+    expect(checkKnown(known, now)).toEqual({ ok: true, keys: ["C", "E", "F"], names: ["C", "E", "F"], exact: 0 });
+    // T2 without the pick draws C D E: D is the picked card (skipped against the known order); the known order goes on.
+    now.observe(state(turnBoard(1, ["A"], ["C", "D", "E", "F", "G"], ["B"])));
+    now.observe(state(turnBoard(2, ["C", "D", "E"], ["F", "G"], ["A", "B"])));
+    expect(checkKnown(known, now)).toEqual({ ok: true, keys: ["F"], names: ["F"] });
+    // T2 drawing C E F without the pick: D is still in the pile at an unknown place (added at random), nothing exact.
+    const other = attempt(null, ["C", "E", "F"], ["D", "G"]);
+    expect(checkKnown({ ...known, keys: [...known.keys, "G"], names: [...known.names, "G"] }, other)).toEqual({ ok: true, keys: ["G"], names: ["G"], inserted: { keys: ["D"], names: ["D"] }, exact: 0 });
+  });
+
   it("SL_RETRY_KNOWN_TOP: a status that seems moved from the discard pile is added at a random place (Soul Fysh's Beckon)", () => {
     const t = new DrawTracker({ inserts: true, tops: true });
     t.observe(state(turnBoard(1, ["A", "BECKON"], ["C", "D"])));
@@ -441,7 +514,7 @@ function rows(path: string): SlAttemptRow[] {
   return readFileSync(path, "utf8").trim().split("\n").map((line) => JSON.parse(line) as SlAttemptRow);
 }
 function slConfig(log: string | null, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 function setup(log: string, overrides: Partial<SlConfig> = {}) {

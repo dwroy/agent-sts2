@@ -17,12 +17,18 @@
  *   shown line was never played on that board by any failed attempt. The point deviated at the fewest times, and among
  *   those the latest: attempt 3 changes the question closest to the death, attempt 4 the one before it, and so on back;
  *   once every point had its turn, the latest with a line still untried again. Only Jev's questions: code's own turns
- *   (the only line, a dominating line, a lethal, every line dying) have no line it would play instead.
+ *   (the only line, a dominating line, a lethal, every line dying) have no line it would play instead. SL_RETRY_EXPLORE_ORDER:
+ *   points where every line loses in every sample come after all others (R1QJUBVBSSB2 F33: T5 on, all 24/24 dead).
+ * - SL_RETRY_EXPLORE_REPLAY: before the deviation point the attempt plays the reference attempt's line on each board of its
+ *   path (replayPath, replayChoice), so that it reaches the point (R1QJ F33 attempt 3: Jev answered T5 otherwise and the
+ *   fight died before its T8 point); a board off the path stops it.
  * - On that board only, the line about to be played, when a failed attempt played it there, is replaced after Jev's answer
  *   (exploreReplacement): by the shown line the question's ranking (B2's where it ranks, its ties the rollout's; else the rollout's) puts first
- *   among those no failed attempt played there, preferring the ones the rollout does not see dying more often, never one
- *   dying this turn while one survives, never one drinking a potion the pick does not drink. Every other board plays as
- *   usual. The decision row says so (`sl_explore`).
+ *   among those no failed attempt played there, preferring the ones not worse than it (the gate: on a boss B2 is trusted on,
+ *   B2's win rate within 2 paired standard errors, SL_RETRY_EXPLORE_B2; else the rollout's share of samples dead), never
+ *   one dying this turn while one survives, never one drinking a potion the pick does not drink (but in a boss fight,
+ *   SL_RETRY_EXPLORE_BOSS_POTIONS: potions cost nothing there, so the shown potion lines and the random potions' Monte
+ *   Carlo lines count like the dry ones). Every other board plays as usual. The decision row says so (`sl_explore`).
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
@@ -46,6 +52,14 @@ export interface SlPoint {
    * ran. exploreTarget passes over a point whose untried lines all die more often than the one played while another does not.
    */
   dead?: Record<string, number>;
+  /**
+   * SL_RETRY_EXPLORE_B2, a question on a boss B2 is trusted on: B2's calibrated win rate by line (the one played and its
+   * alternatives), the alternatives B2 rates no worse than the one played (the replacement's gate), and B2's raw share of
+   * samples won (`won`). exploreTarget weighs "worse" by `dead` (B2 rates every untried line of every point on 63WBEEF2JVM5
+   * F33's path worse, so by B2 no point would be passed over, the Blood Wall one included; notes/sl-explore.md), and with
+   * SL_RETRY_EXPLORE_ORDER "every line loses" by `won` (else `dead`).
+   */
+  b2?: { win: Record<string, number>; notWorse: string[]; won?: Record<string, number> };
   /** The line is this attempt's deviation (it replaced a line a failed attempt played here). */
   explored?: true;
 }
@@ -84,11 +98,37 @@ export interface SlExploreRecord {
   target: SlTarget | null;
   why?: string;
   deviation?: SlDeviation;
+  /**
+   * SL_RETRY_EXPLORE_REPLAY: the reference attempt's path played before the deviation point: the boards where its line was
+   * played (`replayed`; `overridden`: of them, where it replaced the answer), and why the replay stopped (a board not on the
+   * path, its line not played there; null: it did not).
+   */
+  replay?: { replayed: number; overridden: number; stopped: string | null };
 }
 
 /** The planner's part (env.sl.explore): record the lines; on the deviation point's board, `deviate`. */
 export interface SlExploreEnv {
-  deviate?: { point: string; excluded: string[]; attempts: number[] };
+  /** On the deviation point's board: the lines failed attempts played there, and (SL_RETRY_EXPLORE_REPLAY) the boards replayed before it. */
+  deviate?: { point: string; excluded: string[]; attempts: number[]; replayed?: number };
+  /**
+   * SL_RETRY_EXPLORE_REPLAY (2026-10-03): before the deviation point, on a board of the reference attempt's path, the line it
+   * played there: played instead of the answer (never instead of a winning line, nor where it dies this turn and the
+   * answer does not), so that the attempt reaches the point (R1QJUBVBSSB2 F33 attempt 3: Jev answered T5 otherwise, 0.52
+   * against 0.44, and the fight died on T7 before its T8 point).
+   */
+  replay?: { line: string; reference: number; point: string };
+  /**
+   * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
+   * replaced": ExploreB2.notWorse) instead of the rollout's share of samples dead, in the replacement and the record (the
+   * deviation point is still chosen by the rollout's: exploreTarget).
+   */
+  b2Gate?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_BOSS_POTIONS (Dai 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an
+   * alternative too (potions cost 0 there, and the line replaced is known to lose): the shown potion lines and the random
+   * potions' Monte Carlo lines. Out of a boss fight never (a listed elite's potion costs HP-equivalents).
+   */
+  bossPotions?: boolean;
 }
 
 /** The steps of a line, as the options and the decision rows write them ("A -> X, B"; "end turn"). */
@@ -190,10 +230,34 @@ const ordinal = (n: number): string => (n === 1 ? "latest" : `${n}${n === 2 ? "n
  * the question closest to the death, attempt 4 the one before it, and so on back, then round again (docs/sl.md §11.2).
  * Among those, a point with an untried line the rollout does not see dying more often than the one played comes before one
  * whose untried lines all do (`dead`; the offline evaluation, 63WBEEF2JVM5 F33 T5: the only other line, Blood Wall, dead in
- * 24 of 24 samples against 20, B2 0% won against 11%: a retry spent on it). A deviation counts when its board came up
- * (`deviation.reached`). Null (with why) when there is no such point.
+ * 24 of 24 samples against 20, B2 0% won against 11%: a retry spent on it), by the rollout's numbers also where B2 gates the
+ * replacement (`b2` is not read here: B2 rates every untried line of every point on that path worse, Blood Wall's included).
+ * A deviation counts when its board came up (`deviation.reached`). Null (with why) when there is no such point.
  */
-export function exploreTarget(rows: readonly ExploreRow[], attempt: number): { target: SlTarget | null; why: string } {
+export interface ExploreTargetOptions {
+  /**
+   * SL_RETRY_EXPLORE_ORDER (2026-10-03, R1QJUBVBSSB2 F33): points where every line of the record loses in every sample (the
+   * rollout's share dead 1; B2's share won 0 where it weighed the point) come after every other point: changing one there
+   * is a coin flip in a fight already lost. Among the rest, as before.
+   */
+  aliveFirst?: boolean;
+}
+
+/**
+ * Every line of a question's record (the one played and its alternatives) with numbers loses in every sample: B2's share won
+ * 0 where B2 weighed the point, else the rollout's share dead 1. A line without numbers (a potion option played: no line of
+ * its own) is left out; none with numbers: not known to be lost.
+ */
+export function pointLost(point: SlPoint): boolean {
+  const lines = [point.line, ...(point.alternatives ?? [])];
+  const won = point.b2?.won;
+  const share = (line: string): number | undefined => (won ? won[line] : point.dead?.[line]);
+  const known = lines.filter((line) => share(line) !== undefined);
+  if (known.length === 0) return false;
+  return won ? known.every((line) => share(line)! <= 0) : known.every((line) => share(line)! >= 1 - 1e-9);
+}
+
+export function exploreTarget(rows: readonly ExploreRow[], attempt: number, options: ExploreTargetOptions = {}): { target: SlTarget | null; why: string } {
   if (attempt < 3) return { target: null, why: "attempt 2 plays as usual: it is the first attempt that knows the draws" };
   // A row left unfinished (the session ended in the attempt, a restart went on with it) after the attempt's finished one.
   const failed = rows
@@ -218,7 +282,7 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number): { t
   }
   const points = reference.explore!.points;
   // Each question of the path with a line untried on its board, counted back from the death (1: the latest).
-  const open: { point: SlPoint; back: number; untried: string[]; worse: boolean }[] = [];
+  const open: { point: SlPoint; back: number; untried: string[]; worse: boolean; lost: boolean }[] = [];
   const seen = new Set<string>();
   let back = 0;
   for (let i = points.length - 1; i >= 0; i -= 1) {
@@ -233,12 +297,21 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number): { t
     // Every untried line dies more often in the rollout than the one played (no numbers: not known to be worse).
     const own = point.dead?.[point.line];
     const worse = own !== undefined && untried.every((line) => (point.dead?.[line] ?? -1) > own + 1e-9);
-    if (untried.length > 0) open.push({ point, back, untried, worse });
+    if (untried.length > 0) open.push({ point, back, untried, worse, lost: options.aliveFirst === true && pointLost(point) });
   }
   if (open.length === 0) return { target: null, why: `no question on attempt ${reference.attempt}'s path has a line no failed attempt played` };
-  const fewest = Math.min(...open.map((entry) => uses.get(entry.point.board) ?? 0));
-  const least = open.filter((entry) => (uses.get(entry.point.board) ?? 0) === fewest);
+  // SL_RETRY_EXPLORE_ORDER: the points where some line does not lose in every sample first (without it, none is lost).
+  const alive = open.some((entry) => !entry.lost) ? open.filter((entry) => !entry.lost) : open;
+  const fewest = Math.min(...alive.map((entry) => uses.get(entry.point.board) ?? 0));
+  const least = alive.filter((entry) => (uses.get(entry.point.board) ?? 0) === fewest);
   const chosen = least.find((entry) => !entry.worse) ?? least[0]!;
+  const lostPassed = alive === open ? [] : open.filter((entry) => entry.lost && entry.back < chosen.back);
+  const lostWhy =
+    lostPassed.length > 0
+      ? `; passed over ${lostPassed.map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, where every line loses in every sample`
+      : chosen.lost
+        ? "; every line loses in every sample here, as on every point left"
+        : "";
   const entry = played.get(chosen.point.board)!;
   const round = uses.get(chosen.point.board) ?? 0;
   const point = `T${chosen.point.turn ?? "?"}, the ${ordinal(chosen.back)} question before attempt ${reference.attempt}'s death on T${reference.turns}${round > 0 ? ` (deviated at ${round} time${round === 1 ? "" : "s"} before: another untried line)` : ""}`;
@@ -253,13 +326,44 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number): { t
       attempts: [...entry.attempts].sort((a, b) => a - b),
       point,
     },
-    why: `${chosen.untried.length} line${chosen.untried.length === 1 ? "" : "s"} shown there never played on that board${chosen.worse ? "; all dying more often in the rollout than the one played, as on every other point left" : ""}${least.some((entry) => entry.worse && entry.back < chosen.back) ? `; passed over ${least.filter((entry) => entry.worse && entry.back < chosen.back).map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, whose untried lines all die more often in the rollout` : ""}`,
+    why: `${chosen.untried.length} line${chosen.untried.length === 1 ? "" : "s"} shown there never played on that board${chosen.worse ? "; all dying more often in the rollout than the one played, as on every other point left" : ""}${least.some((entry) => entry.worse && entry.back < chosen.back) ? `; passed over ${least.filter((entry) => entry.worse && entry.back < chosen.back).map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, whose untried lines all die more often in the rollout` : ""}${lostWhy}`,
   };
+}
+
+/**
+ * SL_RETRY_EXPLORE_REPLAY: the reference attempt's lines on the boards before the deviation point (its path up to the
+ * target's board, the latest line where a board came twice), by board.
+ */
+export function replayPath(rows: readonly ExploreRow[], target: SlTarget): Map<string, string> {
+  const reference = rows.find((row) => row.attempt === target.reference && row.explore && Array.isArray(row.explore.points));
+  const points = reference?.explore?.points ?? [];
+  let end = -1;
+  for (let i = points.length - 1; i >= 0; i -= 1) if (points[i]!.board === target.board) { end = i; break; }
+  const out = new Map<string, string>();
+  for (const point of points.slice(0, Math.max(0, end))) if (point.board !== target.board) out.set(point.board, point.line);
+  return out;
+}
+
+/**
+ * SL_RETRY_EXPLORE_REPLAY: on a board of the reference attempt's path before the deviation point, the line to play instead
+ * of the answer (`pick`): the reference attempt's line there (`replay.line`, among `shown`: the shown lines and every random
+ * potion's), unless the answer is that line already, wins the fight this turn (never changed), or survives this turn where
+ * that line dies (`pickDies`); null when it is not shown (the attempt then plays the answer, and the replay stops).
+ */
+export function replayChoice<P>(pick: ExplorePick<P>, pickDies: boolean, shown: readonly ExploreLine<P>[], replay: { line: string; reference: number; point: string }): { line: ExploreLine<P> | null; reason: string } {
+  const at = replay.point.split(",")[0];
+  if (pick.text === replay.line) return { line: null, reason: `the answer is attempt ${replay.reference}'s line` };
+  if (pick.wins) return { line: null, reason: "the answer wins the fight this turn: never changed" };
+  const ref = shown.find((line) => line.text === replay.line);
+  if (!ref) return { line: null, reason: `attempt ${replay.reference}'s line is not among the options` };
+  if (ref.dies && !pickDies) return { line: null, reason: `attempt ${replay.reference}'s line dies this turn, the answer does not` };
+  return { line: ref, reason: `attempt ${replay.reference}'s line on this board, replayed to reach ${at}` };
 }
 
 /** A shown line, as exploreReplacement weighs it. */
 export interface ExploreLine<P> {
   plan: P;
+  /** The line as the options write it; a random potion's Monte Carlo line: its option ("drink X, then re-plan"). */
   text: string;
   /** The solver: it dies this turn / wins the fight this turn. */
   dies: boolean;
@@ -274,35 +378,96 @@ export interface ExplorePick<P> {
   text: string;
   potions: string[];
   wins: boolean;
+  /** A random potion's option (plan null): its Monte Carlo line, the line B2 rated for it (SL_RETRY_EXPLORE_B2). */
+  rated?: P | null;
+}
+
+/**
+ * SL_RETRY_EXPLORE_B2 on a boss B2 is trusted on: B2's numbers for the gate. `notWorse`: B2 rates `plan` no worse than
+ * `than` (B2's own tie rule: its win rate at most `rule`, "2 paired standard errors", below; null: no numbers for one of
+ * them); `win`: a line's calibrated win rate (null: no numbers).
+ */
+export interface ExploreB2<P> {
+  notWorse: (plan: P, than: P) => boolean | null;
+  win: (plan: P) => number | null;
+  rule: string;
+  /** A line's raw share of samples won (null: no numbers); recorded for SL_RETRY_EXPLORE_ORDER. */
+  won?: (plan: P) => number | null;
 }
 
 /**
  * The shown lines that could replace `pick` (whatever was played before): another line, drinking no potion the pick does not
- * (code never adds a drink of its own: the HP guard's rule), surviving this turn when one does. In the question's order,
- * one per text.
+ * (code never adds a drink of its own: the HP guard's rule; `drinks`, SL_RETRY_EXPLORE_BOSS_POTIONS in a boss fight: any
+ * line, potions cost nothing there), surviving this turn when one does. In the question's order, one per text.
  */
-export function exploreAlternatives<P>(pick: ExplorePick<P>, shown: readonly ExploreLine<P>[]): ExploreLine<P>[] {
+export function exploreAlternatives<P>(pick: ExplorePick<P>, shown: readonly ExploreLine<P>[], drinks = false): ExploreLine<P>[] {
   const seen = new Set<string>([pick.text]);
   const out: ExploreLine<P>[] = [];
   for (const line of shown) {
-    if (seen.has(line.text) || !line.potions.every((id) => pick.potions.includes(id))) continue;
+    if (seen.has(line.text) || (!drinks && !line.potions.every((id) => pick.potions.includes(id)))) continue;
     seen.add(line.text);
     out.push(line);
   }
   return out.some((line) => !line.dies) ? out.filter((line) => !line.dies) : out;
 }
 
+/**
+ * The record of a question's point (SlPoint's line, alternatives, dead and b2) for `line`, the line played there: the
+ * shown lines that could replace it (exploreAlternatives), the rollout's share of samples dead for it and each of them
+ * (`deathShare`, rounded; null: no estimate), and with `b2` where B2 has numbers for the line, B2's calibrated win rates
+ * and the alternatives it rates no worse. The planner's record and tools/sl-explore-replay.ts's.
+ */
+export function explorePoint<P>(line: ExplorePick<P>, shown: readonly ExploreLine<P>[], opts: { drinks?: boolean; deathShare: (plan: P) => number | null; b2?: ExploreB2<P> | null }): Pick<SlPoint, "line" | "alternatives" | "dead" | "b2"> {
+  const alternatives = exploreAlternatives(line, shown, opts.drinks === true);
+  const round = (x: number) => Math.round(x * 1000) / 1000;
+  const dead = Object.fromEntries(
+    [...(line.plan ? [{ text: line.text, plan: line.plan }] : []), ...alternatives].flatMap((entry) => {
+      const share = opts.deathShare(entry.plan);
+      return share !== null ? [[entry.text, round(share)]] : [];
+    }),
+  );
+  const rated = line.plan ?? line.rated ?? null;
+  const b2 = opts.b2 && rated !== null && opts.b2.win(rated) !== null ? opts.b2 : null;
+  const b2Record = b2
+    ? {
+        win: Object.fromEntries(
+          [{ text: line.text, plan: rated! }, ...alternatives].flatMap((entry) => {
+            const win = b2.win(entry.plan);
+            return win !== null ? [[entry.text, round(win)]] : [];
+          }),
+        ),
+        notWorse: alternatives.filter((entry) => b2.notWorse(entry.plan, rated!) === true).map((entry) => entry.text),
+        ...(b2.won
+          ? {
+              won: Object.fromEntries(
+                [{ text: line.text, plan: rated! }, ...alternatives].flatMap((entry) => {
+                  const won = b2.won!(entry.plan);
+                  return won !== null ? [[entry.text, round(won)]] : [];
+                }),
+              ),
+            }
+          : {}),
+      }
+    : null;
+  return { line: line.text, alternatives: alternatives.map((entry) => entry.text), ...(Object.keys(dead).length > 0 ? { dead } : {}), ...(b2Record ? { b2: b2Record } : {}) };
+}
+
 export interface ExploreChoice<P> {
   replacement: ExploreLine<P> | null;
   reason: string;
+  /** What weighed "not worse" (null: nothing was weighed, no replacement looked for). */
+  gate: "b2" | "rollout" | null;
 }
 
 /**
  * The line played instead of `pick` on the deviation point's board (docs/sl.md §11.3): none when the pick wins the fight
- * this turn or was not played there before; else, among the alternatives no failed attempt played there, those the rollout
- * does not see dying more often than the pick (deathShare; all of them when none is), the first by the question's ranking
- * (`rank`: B2's where it ranks, else the rollout's; null: the question's order). Every alternative dying in every sample
- * still gives one: the pick is known to fail.
+ * this turn or was not played there before; else, among the alternatives no failed attempt played there, those not worse
+ * than the pick (all of them when none is), the first by the question's ranking (`rank`: B2's where it ranks, else the
+ * rollout's; null: the question's order). Not worse: with `b2` (SL_RETRY_EXPLORE_B2 on a boss B2 is trusted on) and B2's
+ * numbers for the pick, B2 rates it no worse (63WBEEF2JVM5 F33: B2 rated several of the rollout's replacements far below
+ * the pick, T2 21.9% against 6.3%); else the rollout does not see it dying more often (deathShare). `drinks`
+ * (SL_RETRY_EXPLORE_BOSS_POTIONS in a boss fight): the lines drinking a potion the pick does not are alternatives too.
+ * Every alternative dying in every sample still gives one: the pick is known to fail.
  */
 export function exploreReplacement<P>(args: {
   pick: ExplorePick<P>;
@@ -310,13 +475,28 @@ export function exploreReplacement<P>(args: {
   excluded: readonly string[];
   deathShare: (plan: P) => number | null;
   rank: (plans: P[]) => P | null;
+  drinks?: boolean;
+  b2?: ExploreB2<P> | null;
 }): ExploreChoice<P> {
   const { pick } = args;
-  if (pick.wins) return { replacement: null, reason: "the line wins the fight this turn: never changed" };
+  if (pick.wins) return { replacement: null, reason: "the line wins the fight this turn: never changed", gate: null };
   const excluded = new Set(args.excluded);
-  if (!excluded.has(pick.text)) return { replacement: null, reason: "the pick was not played on this board before: played as answered" };
-  const untried = exploreAlternatives(pick, args.shown).filter((line) => !excluded.has(line.text));
-  if (untried.length === 0) return { replacement: null, reason: "no shown line left that no failed attempt played here" };
+  if (!excluded.has(pick.text)) return { replacement: null, reason: "the pick was not played on this board before: played as answered", gate: null };
+  const untried = exploreAlternatives(pick, args.shown, args.drinks === true).filter((line) => !excluded.has(line.text));
+  if (untried.length === 0) return { replacement: null, reason: "no shown line left that no failed attempt played here", gate: null };
+  const rated = pick.plan ?? pick.rated ?? null;
+  const b2 = args.b2 && rated !== null && args.b2.win(rated) !== null ? args.b2 : null;
+  if (b2) {
+    const notWorse = untried.filter((line) => b2.notWorse(line.plan, rated!) === true);
+    const pool = notWorse.length > 0 ? notWorse : untried;
+    const ranked = args.rank(pool.map((line) => line.plan));
+    const replacement = pool.find((line) => line.plan === ranked) ?? pool[0]!;
+    const why =
+      notWorse.length > 0
+        ? `the best untried line by the question's ranking, among those B2 rates no worse (win rate at most ${b2.rule} below the pick's)`
+        : `the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than ${b2.rule} below the pick's; the pick is known to fail)`;
+    return { replacement, reason: why, gate: "b2" };
+  }
   const own = pick.plan === null ? null : args.deathShare(pick.plan);
   const notWorse = own === null ? [] : untried.filter((line) => {
     const share = args.deathShare(line.plan);
@@ -331,7 +511,7 @@ export function exploreReplacement<P>(args: {
       : own === null
         ? "the best untried line by the question's ranking"
         : "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)";
-  return { replacement, reason: why };
+  return { replacement, reason: why, gate: "rollout" };
 }
 
 /**
