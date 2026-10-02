@@ -60,7 +60,7 @@ const { createScreenMemory } = await import("../src/project/types.js");
 const { leastLossFactsOf, planCombatTurn } = await import("../src/screens/combat-plan.js");
 const { rolloutLiveOptions } = await import("../src/strategy/rollout-live.js");
 const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
-const { judgeLeastLossNow } = await import("../src/sl/judge.js");
+const { judgeEndTurn, judgeLeastLossNow } = await import("../src/sl/judge.js");
 type AnswerSet = import("../src/jev/answers.js").AnswerSet;
 type AskDecision = import("../src/project/types.js").AskDecision;
 type DecisionEnv = import("../src/project/types.js").DecisionEnv;
@@ -182,4 +182,38 @@ describe("SL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at rando
       rolloutLiveOptions.enabled = true;
     }
   }, 300_000);
+});
+
+describe("the judge counts held cards' end-of-turn damage (TMNFVW6DRQ20 F48 T8, the end_turn it missed with 5 retries left)", () => {
+  type Raw = Record<string, unknown>;
+  const tmnf = () => structuredClone(board("tmnf-f48-t8-wither").state) as Raw;
+  const judge = (raw: Raw) => judgeEndTurn(parseGameState(raw), { label: "combat/least-loss", revives: [], knowledge });
+
+  it("15 HP + 28 block against the Aeonglass's 19x2 and a held Wither+'s 9: the mod does not flag it, our count does: certain", () => {
+    const raw = tmnf();
+    expect((raw["combat"] as Raw)["end_turn_will_kill_player"]).toBe(false);
+    const verdict = judge(raw);
+    expect(verdict).toMatchObject({ certain: true, tier: "rules", hp: 15, block: 28, incoming: 38, held: { damage: 9, loss: 0 }, ownCountDies: true });
+    expect(verdict.reason).toBe("nothing left to play or drink; 38 incoming + held 凋萎+2: 9 damage (the mod does not count them) vs 15 HP + 28 block + 0 end-of-turn block");
+  });
+
+  it("without the held card: the mod's veto, as before", () => {
+    const raw = tmnf();
+    const combat = raw["combat"] as Raw;
+    combat["hand"] = (combat["hand"] as Raw[]).filter((card) => card["card_id"] !== "WITHER");
+    expect(judge(raw)).toMatchObject({ certain: false, reason: "the mod does not flag ending the turn as lethal" });
+  });
+
+  it("only the held cards make it lethal: anything that could cut the loss or kill an attacker first keeps it uncertain", () => {
+    const thorns = tmnf();
+    ((((thorns["combat"] as Raw)["player"] as Raw)["powers"]) as Raw[]).push({ index: 9, power_id: "THORNS_POWER", name: "荆棘", amount: 3, is_debuff: false });
+    expect(judge(thorns)).toMatchObject({ certain: false, ownCountDies: true, reason: "only the held cards make it lethal (held 凋萎+2: 9 damage), and THORNS_POWER: an attacker may die before its last hit" });
+    const rod = tmnf();
+    ((rod["run"] as Raw)["relics"] as Raw[]).push({ index: 99, relic_id: "TUNGSTEN_ROD", name: "钨合金棍", description: "你每次失去生命时，减少失去的生命值[blue]1[/blue]点。" });
+    expect(judge(rod).reason).toMatch(/and TUNGSTEN_ROD cuts or caps the HP lost$/);
+    const vague = tmnf();
+    const wither = ((vague["combat"] as Raw)["hand"] as Raw[]).find((card) => card["card_id"] === "WITHER")!;
+    wither["resolved_rules_text"] = "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命。";
+    expect(judge(vague)).toMatchObject({ certain: false, reason: "the mod does not flag ending the turn as lethal" });
+  });
 });

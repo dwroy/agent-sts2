@@ -127,6 +127,44 @@ describe("judgeLeastLossNow: the least-loss verdict taken before its line, only 
   });
 });
 
+describe("held cards' end-of-turn damage in the judge's count (damage through block, the end-of-turn block first; HP loss past it)", () => {
+  const held = (key: string, text: string): Raw => ({ index: 7, card_id: key, name: key, upgraded: false, energy_cost: -1, playable: false, rules_text: text, resolved_rules_text: text });
+  const burn = held("BURN", "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到3点伤害。");
+  const beckon = held("BECKON", "在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。");
+  const withHeld = (options: Parameters<typeof bossBoard>[0], card: Raw): Raw => {
+    const raw = bossBoard(options);
+    ((raw["combat"] as Raw)["hand"] as Raw[]).push(card);
+    return raw;
+  };
+
+  it("Burn after Plating's block: 12 + 3 against 0 + 5 block takes 10 of 10 HP; the plain count (7) survives: certain only with the held card", () => {
+    const raw = withHeld({ hp: 10, damage: 12, lethal: false, playerPowers: [{ power_id: "PLATING_POWER", amount: 5 }] }, burn);
+    const verdict = judgeEndTurn(state(raw), { label: "combat/end_turn", revives: [] });
+    expect(verdict).toMatchObject({ certain: true, tier: "rules", held: { damage: 3, loss: 0, from: ["BURN"] }, ownCountDies: true });
+    expect(verdict.reason).toBe("nothing left to play or drink; 12 incoming + held BURN: 3 damage (the mod does not count them) vs 10 HP + 0 block + 5 end-of-turn block");
+    // 11 HP: 10 lost, alive: the count survives (its text names the held card).
+    expect(judgeEndTurn(state(withHeld({ hp: 11, damage: 12, lethal: false, playerPowers: [{ power_id: "PLATING_POWER", amount: 5 }] }, burn)), { label: "combat/end_turn", revives: [] })).toMatchObject({ certain: false, reason: "the mod does not flag ending the turn as lethal" });
+  });
+
+  it("Beckon's HP loss goes past block: 5 HP behind 20 block against 10 dies to it", () => {
+    const verdict = judgeEndTurn(state(withHeld({ hp: 5, block: 20, damage: 10, lethal: false }, beckon)), { label: "combat/end_turn", revives: [] });
+    expect(verdict).toMatchObject({ certain: true, held: { damage: 0, loss: 6 } });
+  });
+
+  it("the plain count's reason is the one before the held cards when none is held", () => {
+    expect(judgeEndTurn(state(bossBoard({ hp: 40 })), { label: "combat/end_turn", revives: [] }).reason).toBe("own count survives: 30 incoming - 0 block - 0 end-of-turn block - 0 Regen < 40 HP");
+    expect(judgeEndTurn(state(withHeld({ hp: 40 }, burn)), { label: "combat/end_turn", revives: [] }).reason).toBe("own count survives: 30 incoming - 0 block - 0 end-of-turn block - 0 Regen < 40 HP (with held BURN: 3 damage)");
+  });
+
+  it("the controller says when its own count, held cards included, sees a death the mod does not flag and the judge cannot call certain", async () => {
+    const log = tempLog();
+    const t = setup(log);
+    const raw = withHeld({ turn: 2, hp: 10, damage: 12, lethal: false, playerPowers: [{ power_id: "PLATING_POWER", amount: 5 }, { power_id: "THORNS_POWER", amount: 3 }] }, burn);
+    expect(await t.sl.beforeEndTurn(state(raw), { label: "combat/end_turn", screenMemory: t.memory.screenMemory, journal: t.memory.journal })).toEqual({ handled: false });
+    expect(t.notes.at(-1)).toBe("SL: ending the turn may be lethal (F17 T2 attempt 1/4), not certain: only the held cards make it lethal (held BURN: 3 damage), and THORNS_POWER: an attacker may die before its last hit");
+  });
+});
+
 describe("SL_JUDGE_KNOWN_DRAWS: the end_turn draw veto lifted only by exactly known draws", () => {
   const board = () => {
     const raw = lethalBoard();

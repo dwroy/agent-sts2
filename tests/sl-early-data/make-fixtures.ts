@@ -1,6 +1,7 @@
 /**
  * Fixtures for tests/sl-early-planner.test.ts (SL_RELOAD_EARLY, SL_JUDGE_KNOWN_DRAWS, SL_RETRY_KNOWN_INSERTS; docs/sl.md §2,
- * §10): logged boards where the turn planner finds every line dying (or, for the insertions, a retry board).
+ * §10): logged boards where the turn planner finds every line dying (or, for the insertions, a retry board; and the end_turn
+ * board of TMNFVW6DRQ20 F48 T8 for the judge's held-card count).
  *
  * For each board below: the state behind that logged decision (logs/states.jsonl, found through the log DB), and with
  * `known` the draws the fight's own frames show up to it (src/sl/draws.ts's tracker, SL_RETRY_KNOWN_INSERTS on, the fight
@@ -24,6 +25,7 @@ const BOARDS: { name: string; run: string; floor: number; ts: string; known?: bo
   { name: "z7d7-f28-t6-gamblers-brew", run: "Z7D7J1RUUJ61", floor: 28, ts: "2026-09-27T13:56:30.883000", why: "a random potion (Gambler's Brew) held" },
   { name: "5bxm-f31-t6-pommel", run: "5BXMTT63VBBA", floor: 31, ts: "2026-09-26T21:51:10.841000", known: true, why: "Pommel Strike draws: unknown on the first attempt, the fight's own draws known on a retry" },
   { name: "ejxc-f33-t2-frantic", run: "EJXCAQ56PWLK", floor: 33, ts: "", known: true, why: "the Insatiable's Frantic Escape added to the pile: the known order kept, the added cards at random places" },
+  { name: "tmnf-f48-t8-wither", run: "TMNFVW6DRQ20", floor: 48, ts: "2026-10-02T09:55:36.889000", why: "the end_turn the judge missed: a held Wither+'s 9 the mod does not count (15 HP + 28 block against 19x2)" },
 ];
 type Row = Record<string, unknown>;
 

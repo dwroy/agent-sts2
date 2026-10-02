@@ -200,8 +200,8 @@ function main(): void {
           ? judgeLeastLossNow(state, { revives, ethereal, facts, knownDrawsJudge: true, addedToPile: tracker.addedToPile, knowledge })
           : null;
         const drawsKnown = label === LEAST_LOSS_LABEL && facts ? drawsKnownAt(state, facts, knowledge) : false;
-        const endTurn = judgeEndTurn(state, { label, revives, ethereal, ...(drawsKnown ? { drawsKnown: true } : {}) });
-        const endTurnOld = judgeEndTurn(state, { label, revives, ethereal });
+        const endTurn = judgeEndTurn(state, { label, revives, ethereal, knowledge, ...(drawsKnown ? { drawsKnown: true } : {}) });
+        const endTurnOld = judgeEndTurn(state, { label, revives, ethereal, knowledge });
         const outcome = turn < lastTurn ? "survived" : !lastAttempt || reloaded ? "died" : String(fight["outcome"]) === "won" ? "won" : "died";
         const row = {
           run, floor, room, asc: Number(fight["ascension"]), listed, attempt: k + 1, attempts: attempts.length, turn, ts: String(decision["ts"]),

@@ -11,6 +11,10 @@
  * - our own count agrees: the attack intents (damage x hits) minus the block up now, the block that comes at the end
  *   of the turn (Plating / Plated Armor / Metallicize, Cloak Clasp for each card held, Feel No Pain for each Ethereal
  *   card held, Orichalcum when no block is left) and Regen reach our HP.
+ * - Held cards' end-of-turn damage (Burn, Wither; through block) and HP loss (Beckon; past it) count too (2026-10-02,
+ *   TMNFVW6DRQ20 F48 T8). When only they make the turn lethal, the death rests on them: certain even without the mod's
+ *   flag (it does not count them), but only with every amount given and nothing that could cut the loss or kill an
+ *   attacker first (heldGuard).
  * Then one of two tiers:
  * - "rules": no playable card in hand and no potion that can be drunk;
  * - "least-loss": the turn planner's own verdict on this board, combat/least-loss ending the turn: every simulated
@@ -35,7 +39,7 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { distinctNames } from "../screens/combat-plan.js";
-import { heldCardEthereal } from "../strategy/card-model.js";
+import { heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
 
 export type JudgeTier = "rules" | "least-loss";
@@ -53,6 +57,12 @@ export interface DeathVerdict {
   endBlock: number;
   /** The attack intents, damage x hits, over the living enemies. */
   incoming: number;
+  /**
+   * Held cards' end-of-turn damage (Burn, Wither: through block) and HP loss (Beckon, Bad Luck: past it), when any; and
+   * whether our own count with them says the turn kills us (`ownCountDies`; the controller says so when the mod does not).
+   */
+  held?: { damage: number; loss: number; from: string[] };
+  ownCountDies?: true;
   /** "name (intent)" for each living enemy that attacks. */
   killers: string[];
 }
@@ -72,6 +82,77 @@ export interface JudgeContext {
    * draws or changes the pile mid-turn: midTurnRisks), so a playable card that draws does not veto it. Absent: it does.
    */
   drawsKnown?: boolean;
+  /** Game data for the powers' text (the held cards' guards: a power acting by chance or at the end of the turn). */
+  knowledge?: Pick<Knowledge, "power" | "relic">;
+}
+
+/** A held card's end-of-turn clause about our HP whose amount the text does not give (Regret: 「失去相当于手牌数量的生命」). */
+const HELD_CLAUSE = /回合结束时[^。]*手牌中[^。]*(?:受到|失去)[^。]*(?:伤害|生命)|at the end of your turn[^.]*in your hand[^.]*(?:take|lose)[^.]*(?:damage|hp)/i;
+
+/**
+ * Held cards' end-of-turn damage and HP loss (card-model heldPenaltyOf: 「受到N点伤害」 meets block, 「失去N点生命」 does not),
+ * and the held cards whose clause gives no exact amount.
+ */
+function heldEndOfTurn(hand: Record<string, unknown>[]): { damage: number; loss: number; from: string[]; inexact: string[] } {
+  let damage = 0;
+  let loss = 0;
+  const from: string[] = [];
+  const inexact: string[] = [];
+  for (const card of hand) {
+    const text = str(card["resolved_rules_text"]) || str(card["rules_text"]);
+    const { heldPenalty, heldHpLoss } = heldPenaltyOf(text);
+    const name = str(card["name"], str(card["card_id"]));
+    if (heldPenalty > 0) {
+      damage += heldPenalty - heldHpLoss;
+      loss += heldHpLoss;
+      from.push(name);
+    } else if (HELD_CLAUSE.test(text)) inexact.push(name);
+  }
+  return { damage, loss, from, inexact };
+}
+
+/** Relics that cut or cap the HP we lose (the count would say a death that does not come). */
+const HP_LOSS_LIMITS = ["TUNGSTEN_ROD", "BEATING_REMNANT"];
+/** Powers that hit an attacker back while it attacks (a multi-hit attacker may die before its last hit). */
+const RETALIATION = ["THORNS_POWER", "FLAME_BARRIER_POWER"];
+/** Powers that hit the enemies when we lose HP on our turn (a held card's damage past our block). */
+const ON_OWN_HP_LOSS = /失去生命时[^。]*敌人|lose hp[^.]*enem/i;
+
+/**
+ * Why the held cards' end-of-turn damage cannot make the death certain on this board (null: it can): an amount the text
+ * does not give; a relic cutting or capping HP loss (Tungsten Rod, Beating Remnant); retaliation (Thorns, Flame Barrier);
+ * a power hitting the enemies when that damage gets past our block (Inferno); an attacker its poison kills first; a relic
+ * or power acting by chance or hitting the enemies at the end of the turn (midTurnRisks).
+ */
+function heldGuard(
+  state: GameState,
+  held: { damage: number; loss: number; inexact: string[] },
+  block: number,
+  endBlock: number,
+  knowledge: Pick<Knowledge, "power" | "relic"> | undefined,
+): string | null {
+  if (held.inexact.length > 0) return `${held.inexact.join(", ")}: the end-of-turn amount is not given`;
+  const run = asRecord(state.raw["run"]);
+  const relics = asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const limit = relics.find((id) => HP_LOSS_LIMITS.includes(id));
+  if (limit) return `${limit} cuts or caps the HP lost`;
+  const combat = asRecord(state.raw["combat"]);
+  const player = asRecord(combat["player"]);
+  const powers = asArray(player["powers"]).map(asRecord);
+  const retaliation = powers.find((power) => RETALIATION.includes(str(power["power_id"])) && num(power["amount"]) > 0);
+  if (retaliation) return `${str(retaliation["power_id"])}: an attacker may die before its last hit`;
+  if (held.loss > 0 || held.damage > block + endBlock) {
+    const onLoss = powers.find((power) => str(power["power_id"]) === "INFERNO_POWER" || ON_OWN_HP_LOSS.test(knowledge?.power(str(power["power_id"]))?.description ?? ""));
+    if (onLoss) return `${str(onLoss["power_id"])} hits the enemies when the held cards take HP on our turn`;
+  }
+  const poisoned = asArray(combat["enemies"])
+    .map(asRecord)
+    .find((enemy) => enemy["is_alive"] !== false && asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "POISON_POWER" && num(asRecord(power)["amount"]) >= num(enemy["current_hp"])));
+  if (poisoned) return `${str(poisoned["name"], str(poisoned["enemy_id"]))} may die to its poison before it attacks`;
+  const risks = midTurnRisks(state, knowledge);
+  if (risks.endOfTurn.length > 0) return `hitting the enemies at the end of the turn: ${risks.endOfTurn.join(", ")}`;
+  if (risks.chance.length > 0) return `acting by chance: ${risks.chance.join(", ")}`;
+  return null;
 }
 
 /** What the turn planner knew when it found every line dying (combat-plan leastLossFactsOf). */
@@ -139,10 +220,22 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   endBlock += powerAmount(player, "FEEL_NO_PAIN_POWER") * etherealHeld;
   if (relics.has("ORICHALCUM") && block + endBlock <= 0) endBlock += ORICHALCUM_BLOCK;
   const regen = powerAmount(player, "REGEN_POWER");
-  const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({ certain, tier, reason, hp, block, endBlock, incoming, killers });
+  // Held cards (Burn, Wither, Beckon): their end-of-turn damage meets block, the end-of-turn block included (it comes first:
+  // 11 of 11 logged turns where the order showed, e.g. ZANMLV9UU31K F42 T3, Burn 8 against Plating 5 took 3), and their HP
+  // loss does not. Neither the mod's flag nor the plain count sees them (TMNFVW6DRQ20 F48 T8: 15 HP + 28 block against the
+  // Aeonglass's 19x2 and a held Wither+'s 9, the mod did not flag it, it died with 5 retries left).
+  const held = heldEndOfTurn(hand);
+  const plainDies = incoming - block - endBlock - regen >= hp;
+  const heldDies = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen >= hp;
+  // The held cards make the difference: the death rests on them (and on heldGuard).
+  const byHeld = !plainDies && heldDies && held.damage + held.loss > 0;
+  const heldNote = held.damage + held.loss > 0 ? { held: { damage: held.damage, loss: held.loss, from: held.from } } : {};
+  const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({
+    certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(plainDies || heldDies ? { ownCountDies: true as const } : {}),
+  });
 
   if (state.screen !== "COMBAT" || !state.in_combat) return verdict(false, null, "not in combat");
-  if (combat["end_turn_will_kill_player"] !== true) return verdict(false, null, "the mod does not flag ending the turn as lethal");
+  if (combat["end_turn_will_kill_player"] !== true && !byHeld) return verdict(false, null, "the mod does not flag ending the turn as lethal");
   if (context.revives.length > 0) return verdict(false, null, `a revive is left (${context.revives.join(", ")})`);
   const saving = SAVING_POWERS.filter((id) => powerAmount(player, id) > 0);
   if (saving.length > 0) return verdict(false, null, `${saving.join(", ")} up`);
@@ -151,12 +244,17 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     (enemy) => num(enemy["max_hp"]) >= SPECIAL_ENEMY_HP || asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "DeathBlow"),
   );
   if (special) return verdict(false, null, `${str(special["name"], str(special["enemy_id"]))} is in a special phase (DeathBlow or a million HP)`);
-  if (incoming - block - endBlock - regen < hp) {
-    return verdict(false, null, `own count survives: ${incoming} incoming - ${block} block - ${endBlock} end-of-turn block - ${regen} Regen < ${hp} HP`);
+  const heldText = `held ${held.from.join(", ")}: ${held.damage} damage${held.loss > 0 ? ` + ${held.loss} HP loss` : ""}`;
+  if (!plainDies && !byHeld) {
+    return verdict(false, null, `own count survives: ${incoming} incoming - ${block} block - ${endBlock} end-of-turn block - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
+  }
+  if (byHeld) {
+    const guard = heldGuard(state, held, block, endBlock, context.knowledge);
+    if (guard) return verdict(false, null, `only the held cards make it lethal (${heldText}), and ${guard}`);
   }
   const playable = hand.filter((card) => card["playable"] === true);
   const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
-  const lethal = `${incoming} incoming vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}`;
+  const lethal = `${incoming} incoming${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
     const drawing = playable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
@@ -313,7 +411,13 @@ export function judgeLeastLossNow(state: GameState, context: LeastLossNowContext
   const facts = context.facts;
   const risks = midTurnRisks(state, context.knowledge);
   const drawsKnown = context.knownDrawsJudge && facts?.drawsKnown === true && risks.draws.length === 0;
-  const verdict = judgeEndTurn(state, { label: LEAST_LOSS_LABEL, revives: context.revives, ...(context.ethereal ? { ethereal: context.ethereal } : {}), ...(drawsKnown ? { drawsKnown: true } : {}) });
+  const verdict = judgeEndTurn(state, {
+    label: LEAST_LOSS_LABEL,
+    revives: context.revives,
+    ...(context.ethereal ? { ethereal: context.ethereal } : {}),
+    ...(context.knowledge ? { knowledge: context.knowledge } : {}),
+    ...(drawsKnown ? { drawsKnown: true } : {}),
+  });
   if (!verdict.certain) return verdict;
   const notYet = (why: string): DeathVerdict => ({ ...verdict, certain: false, tier: null, reason: `not before the line is played: ${why}` });
   if (!facts) return notYet("the planner's facts about its verdict are missing");

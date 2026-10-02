@@ -308,12 +308,13 @@ export class SlController {
         drawsKnown = false;
       }
     }
-    const verdict = judgeEndTurn(state, { label: context.label, revives, ethereal: (card) => heldCardEthereal(card, this.knowledge), ...(drawsKnown ? { drawsKnown: true } : {}) });
+    const verdict = judgeEndTurn(state, { label: context.label, revives, ethereal: (card) => heldCardEthereal(card, this.knowledge), knowledge: this.knowledge, ...(drawsKnown ? { drawsKnown: true } : {}) });
     fight.verdict = verdict;
     const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
     if (!verdict.certain) {
-      // Said only when the mod itself calls the end of turn lethal: the deaths SL let through, and why.
-      if (asRecord(state.raw["combat"])["end_turn_will_kill_player"] === true) this.options.note(`SL: ending the turn may be lethal (${where}), not certain: ${verdict.reason}`);
+      // Said when the mod itself calls the end of turn lethal, or our own count (held cards included) does: the deaths SL
+      // let through, and why (TMNFVW6DRQ20 F48 T8: the mod did not flag it, the held Wither+ did it, and nothing was said).
+      if (asRecord(state.raw["combat"])["end_turn_will_kill_player"] === true || verdict.ownCountDies === true) this.options.note(`SL: ending the turn may be lethal (${where}), not certain: ${verdict.reason}`);
       return { handled: false };
     }
     return this.reloadOn(fight, state, verdict, where, context);
