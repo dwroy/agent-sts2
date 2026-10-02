@@ -58,3 +58,8 @@
 - **SL reload 误判失败**：回到 F48 T1 后第一屏是回合开始弃牌 CARD_SELECTION（actions: select_deck_card, confirm_selection），SL 的 back_in_fight 只认 COMBAT，60 s 超时 → reload.ok=false、give_up 停用本局 SL。实际读档成功、主循环处理弃牌后从 T1 重打并通关。sl-attempts.jsonl 2026-10-02T04:02:32Z 那行；控制台 20261002-110526 第 2138–2160 行。
 - 超时后主循环先执行了 T10 遗留的 least-loss end_turn（12:02:32，"action came back pending"），之后才是弃牌和 T1 计划；需确认 end_turn 没有作用在重载后的 T1 上。
 - **已修（2026-10-02 12:32 确认）**：SL back_in_fight 现在接受战斗内带本场决策的画面（T1 CARD_SELECTION 算回到战斗）——v4 0660f99，合入 v4-live 14ad753（12:31，开发会话按 Dai「这类修复直接上线」合入），下一局起生效。遗留 end_turn 经开发会话核对未发出（decision log 04:01:27Z 记 "not dispatched: SL reload failed…"；"came back pending" 属于随后的弃牌动作），重载后的 T1 未受影响。
+
+### V4.3 第 4–6 局复盘补充（2026-10-02 13:04）
+- **SL previous_attempts 敌人只写名字、不分节**：src/sl/controller.ts:175、:263，出牌目标和敌人列表只写「残杀千足虫」，同题选项是「残杀千足虫 (MIDDLE)」。VNKN F25 赢的关键恰是打后节不打中节，Jev 看不出之前打的是哪一节。不阻塞。
+- JW92 F46 DeepSeek 返回 JSON 多一个「]」，逐步重问恢复，多 97 s（模型输出错误）。
+- 已知项复发：build-sim-facts.ts:387（5DFX、VNKN 被引用后选中）；B3 小样本（5DFX F27–F29 仅 24 样本）；mod 超时约 10 s 自愈（5DFX 5、JW92 3）；帝王蟹可信后整场模拟每场 98–142 s，多题撞 25 s 上限。gate_reject 0，无泄漏。
