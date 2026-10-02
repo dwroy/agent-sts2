@@ -290,6 +290,31 @@ describe("SlController", () => {
     expect(block).toContain("the draws and the enemy moves are the same");
   });
 
+  it("enemies sharing a name are named as the options name them (VNKN F25: the Decimillipede's segments)", async () => {
+    const log = tempLog();
+    // A second enemy with the boss's name and another id, as the Decimillipede's segments share 「残杀千足虫」 (the
+    // options name each by the part of its id the other does not share: combat-plan distinctNames).
+    const twin = (board: Raw): Raw => {
+      for (const enemy of (board["combat"] as Raw)["enemies"] as Raw[]) enemy["name"] = "残杀千足虫";
+      return board;
+    };
+    const ids = { enemyIds: ["TEST_SUBJECT", "TEST_SUBJECT_MIDDLE"] };
+    const lethal = twin(bossBoard({ turn: 3, hp: 10, ...ids }));
+    const game = reloadingGame(lethal, twin(bossBoard({ turn: 1, hp: 60, lethal: false, ...ids })));
+    const sl = new SlController({ config: slConfig(log), knowledge: testKnowledge, client: game.client, note: () => undefined, sleep: game.sleep, now: game.now });
+    const memory = { journal: new RunJournal(), screenMemory: createScreenMemory() };
+    const t1 = twin(bossBoard({ turn: 1, hp: 60, lethal: false, playable: true, ...ids }));
+    sl.observe(state(t1), memory);
+    sl.noteAction(state(t1), { action: "play_card", card_index: 0, target_index: 1 });
+    sl.observe(state(lethal), memory);
+    await sl.beforeEndTurn(state(lethal), { label: "combat/end_turn", screenMemory: memory.screenMemory, journal: memory.journal });
+    const [row] = rows(log);
+    expect(row!.enemies).toEqual(["残杀千足虫 (SUBJECT)", "残杀千足虫 (SUBJECT_MIDDLE)"]);
+    expect(row!.summary.turns[0]!.plays).toEqual(["STRIKE_R -> 残杀千足虫 (SUBJECT_MIDDLE)"]);
+    expect(row!.summary.turns[0]!.enemies).toBe("残杀千足虫 (SUBJECT) 80/100, 残杀千足虫 (SUBJECT_MIDDLE) 80/100");
+    expect(row!.summary.killers).toEqual(["残杀千足虫 (SUBJECT) (Attack 30)"]);
+  });
+
   it("the second attempt's row says where it came from; a win closes it", async () => {
     const log = tempLog();
     const t = setup(log);

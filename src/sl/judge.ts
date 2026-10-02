@@ -22,6 +22,7 @@
  * F27 T7) had Feel No Pain block from exhausted Ethereal cards, now counted for every card held.
  */
 import type { GameState } from "../mod/schema.js";
+import { distinctNames } from "../screens/combat-plan.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
 
 export type JudgeTier = "rules" | "least-loss";
@@ -75,7 +76,9 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const living = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
   let incoming = 0;
   const killers: string[] = [];
-  for (const enemy of living) {
+  // Named as the combat options name them (「残杀千足虫 (MIDDLE)」, controller livingNames).
+  const names = distinctNames(living.map((enemy) => ({ name: str(enemy["name"], str(enemy["enemy_id"], "?")), id: str(enemy["enemy_id"]) })));
+  for (const [i, enemy] of living.entries()) {
     let own = 0;
     const labels: string[] = [];
     for (const intent of asArray(enemy["intents"]).map(asRecord)) {
@@ -86,7 +89,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
       labels.push(`${str(intent["intent_type"], "Attack")} ${hits > 1 ? `${damage}x${hits}` : damage}`);
     }
     incoming += own;
-    if (own > 0) killers.push(`${str(enemy["name"], str(enemy["enemy_id"], "?"))} (${labels.join(", ")})`);
+    if (own > 0) killers.push(`${names[i]} (${labels.join(", ")})`);
   }
   let endBlock = END_BLOCK_POWERS.reduce((sum, id) => sum + powerAmount(player, id), 0);
   if (relics.has("CLOAK_CLASP")) endBlock += hand.length;
