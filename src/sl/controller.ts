@@ -21,7 +21,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { RunJournal } from "../project/run-journal.js";
 import type { ScreenMemory, SlEnv } from "../project/types.js";
 import { isMenuRunId } from "../project/journal-replay.js";
-import { revivesOf } from "../screens/combat-plan.js";
+import { distinctNames, revivesOf } from "../screens/combat-plan.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { listedElite, loadSlElites, type SlEliteList } from "./elites.js";
@@ -72,6 +72,15 @@ export type EndTurnOutcome =
 
 function livingEnemies(state: GameState): Record<string, unknown>[] {
   return asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
+}
+
+/**
+ * The living enemies' names as the combat options write them (combat-plan distinctNames: 「残杀千足虫 (MIDDLE)」), in
+ * board order. VNKN F25: the earlier attempts read 「残杀千足虫」 for all three segments while the options named each,
+ * and the fight turned on which segment was hit (attempt 3 won by not killing the middle one early).
+ */
+export function livingNames(living: Record<string, unknown>[]): string[] {
+  return distinctNames(living.map((enemy) => ({ name: str(enemy["name"], str(enemy["enemy_id"], "?")), id: str(enemy["enemy_id"]) })));
 }
 
 function inCombat(state: GameState): boolean {
@@ -167,12 +176,13 @@ export class SlController {
     if (intent.action === "play_card") {
       const hand = asArray(combat["hand"]).map(asRecord);
       const card = hand.find((entry) => num(entry["index"], -1) === intent.card_index) ?? hand[intent.card_index ?? -1];
-      const target =
-        intent.target_index === undefined
-          ? null
-          : asArray(combat["enemies"]).map(asRecord).find((enemy) => num(enemy["index"], -1) === intent.target_index) ?? null;
+      // The target as the options named it (livingNames), else as the game does.
+      const living = livingEnemies(state);
+      const at = intent.target_index === undefined ? -1 : living.findIndex((enemy) => num(enemy["index"], -1) === intent.target_index);
+      const target = intent.target_index === undefined ? null : asArray(combat["enemies"]).map(asRecord).find((enemy) => num(enemy["index"], -1) === intent.target_index) ?? null;
+      const targetName = at >= 0 ? livingNames(living)[at]! : target ? str(target["name"], str(target["enemy_id"], "?")) : null;
       const name = card ? str(card["name"], str(card["card_id"], "?")) : `card ${intent.card_index ?? "?"}`;
-      turn.plays.push(target ? `${name} -> ${str(target["name"], str(target["enemy_id"], "?"))}` : name);
+      turn.plays.push(targetName ? `${name} -> ${targetName}` : name);
     } else if (intent.action === "use_potion") {
       const slot = asArray(asRecord(state.raw["run"])["potions"]).map(asRecord).find((entry) => num(entry["index"], -1) === intent.option_index);
       const name = slot ? str(slot["name"], str(slot["potion_id"], "?")) : `potion ${intent.option_index ?? "?"}`;
@@ -260,7 +270,7 @@ export class SlController {
       act: state.run?.act_id ?? null,
       floor,
       encounter,
-      enemies: living.map((enemy) => str(enemy["name"], str(enemy["enemy_id"]))),
+      enemies: livingNames(living),
       kind: boss ? "boss" : "elite",
       elite: elite?.name ?? null,
       attempt: done + 1,
@@ -284,13 +294,13 @@ export class SlController {
     if (last && last.turn === turnNo) return last;
     if (state.combat?.can_use_combat_actions === false) return last ?? null;
     const player = asRecord(asRecord(state.raw["combat"])["player"]);
+    const living = livingEnemies(state);
+    const names = livingNames(living);
     const turn: SlTurn = {
       turn: turnNo,
       hp: numOrNull(player["current_hp"]),
       block: numOrNull(player["block"]),
-      enemies: livingEnemies(state)
-        .map((enemy) => `${str(enemy["name"], str(enemy["enemy_id"], "?"))} ${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`)
-        .join(", "),
+      enemies: living.map((enemy, i) => `${names[i]} ${num(enemy["current_hp"])}/${num(enemy["max_hp"])}`).join(", "),
       plays: [],
     };
     fight.turns.push(turn);
