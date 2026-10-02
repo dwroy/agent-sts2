@@ -156,6 +156,28 @@ describe("reloadFight", () => {
     expect(game.actions).toEqual(["save_and_quit", "continue_run"]);
   });
 
+  it("a turn-start choice in the fight (CARD_SELECTION on T1) is back in the fight", async () => {
+    // JW925EDF9ZTQ F48: Continue landed on T1's turn-start discard; waiting for COMBAT timed out and stopped SL.
+    const start = bossBoard();
+    const choice = bossBoard({ turn: 1, hp: 60, lethal: false, ready: false });
+    choice["screen"] = "CARD_SELECTION";
+    choice["available_actions"] = ["save_and_quit", "select_deck_card", "confirm_selection", "discard_potion"];
+    const game = reloadingGame(start, choice);
+    const outcome = await reloadFight(target(start), state(start), { client: game.client, stepTimeoutMs: 5_000, sleep: game.sleep, now: game.now });
+    expect(outcome).toMatchObject({ ok: true, resumedTurn: 1 });
+    if (outcome.ok) expect(outcome.state.screen).toBe("CARD_SELECTION");
+  });
+
+  it("in the fight with nothing but leaving to do is not ready yet (times out at back_in_fight)", async () => {
+    const start = bossBoard();
+    const loading = bossBoard({ turn: 1, ready: false });
+    loading["screen"] = "CARD_SELECTION";
+    loading["available_actions"] = ["save_and_quit", "discard_potion"];
+    const game = reloadingGame(start, loading);
+    const outcome = await reloadFight(target(start), state(start), { client: game.client, stepTimeoutMs: 5_000, sleep: game.sleep, now: game.now });
+    expect(outcome).toMatchObject({ ok: false, step: "back_in_fight" });
+  });
+
   it("gives up without acting when save_and_quit is not legal", async () => {
     const start = bossBoard();
     start["available_actions"] = ["end_turn"];
