@@ -33,7 +33,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -51,7 +51,7 @@ import { BOSS_LINES_TIE_SE, bossLineSim, bossLinesOptions, lowTrustOfState, rele
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 import { knownTopIndices } from "../sl/draws.js";
 import { explorePoint, exploreReplacement, lineText, rankByOrder, replayChoice, type ExploreB2, type ExploreLine, type SlPoint } from "../sl/explore.js";
-import type { LeastLossFacts } from "../sl/judge.js";
+import { ANY_DRAW_BUDGET_MS, MODELLED_POWERS, type DrawBound, type LeastLossFacts } from "../sl/judge.js";
 import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
 
 /**
@@ -1439,9 +1439,27 @@ export function deckDrawPool(state: GameState, knowledge: Knowledge, ctx: { enem
 }
 
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
+  return pileEntries(state, knowledge, pile, ctx).flatMap((entry) => Array.from({ length: entry.count }, () => entry.card));
+}
+
+/** One agent_view pile line as pileCardModels models it: the card, its copies, the line itself and its mods (enchantments). */
+export interface PileEntry {
+  card: CardModel;
+  /** The card as modelled before the board's Strength, Weak and targets (the deck entry's numbers). */
+  raw: CardModel;
+  count: number;
+  line: string;
+  mods: string[];
+  /** The cost the line shows ("[1费]"), when a number. */
+  lineCost: number | null;
+  /** A number of the card worked out in play from the board (a "Calculated…" value: Perfected Strike's Strikes, Body Slam's block). */
+  calculated: boolean;
+}
+
+export function pileEntries(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): PileEntry[] {
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
-  return asArray(view[pile]).flatMap((raw, position) => {
+  return asArray(view[pile]).flatMap((raw, position): PileEntry[] => {
     const entry = asRecord(raw);
     const cardId = str(asArray(entry["card_ids"])[0]);
     if (!cardId) return [];
@@ -1458,7 +1476,8 @@ export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "di
     };
     // "剑柄打击*2 [1费]": one line per card id, with its count (drawPileCards reads it the same way).
     const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
-    return Array.from({ length: Math.max(1, count) }, () => card);
+    const vars = own ? asArray(own["dynamic_values"]).map((value) => str(asRecord(value)["name"])) : (knowledge.card(cardId)?.vars ?? []).map((value) => str(asRecord(value)["name"]));
+    return [{ card, raw: model, count: Math.max(1, count), line, mods: asArray(entry["mods"]).map((mod) => str(mod)), lineCost: lineCost !== undefined ? Number(lineCost) : null, calculated: vars.some((name) => name.startsWith("Calculated")) }];
   });
 }
 
@@ -1841,10 +1860,27 @@ export function leastLossFactsOf(decision: Decision | null | undefined): LeastLo
   return decision ? leastLossFacts.get(decision) : undefined;
 }
 
-/** Records a least-loss decision's facts; an error records none (the judge then decides as without them). */
-function noteLeastLoss(decision: Decision, facts: () => LeastLossFacts): void {
+/**
+ * SL_JUDGE_ANY_DRAW (docs/sl.md §2.3): the bound over every draw of a least-loss decision, by its facts (beside them, as the
+ * facts beside the decision). Worked out once, and only when the judge asks for it (a playable card's draws would veto the
+ * verdict, the switch on): otherwise it costs nothing.
+ */
+const drawBounds = new WeakMap<LeastLossFacts, () => DrawBound>();
+
+/** The any-draw bound of a least-loss decision's facts (undefined: none recorded). Its solves run once, on the first call. */
+export function drawBoundOf(facts: LeastLossFacts | undefined): (() => DrawBound) | undefined {
+  return facts ? drawBounds.get(facts) : undefined;
+}
+
+/** Records a least-loss decision's facts (and its any-draw bound, lazily); an error records none (the judge then decides as without them). */
+function noteLeastLoss(decision: Decision, facts: () => LeastLossFacts, bound?: () => DrawBound): void {
   try {
-    leastLossFacts.set(decision, facts());
+    const noted = facts();
+    leastLossFacts.set(decision, noted);
+    if (bound) {
+      let memo: DrawBound | undefined;
+      drawBounds.set(noted, () => (memo ??= bound()));
+    }
   } catch {
     // no facts: the judge's vetoes stand
   }
@@ -1918,6 +1954,341 @@ function leastLossFactsFor(
   if (chance === null && several && player.kusarigama && playable.some((card) => card.type === "Attack")) chance = "Kusarigama hits a random enemy";
   if (chance === null && several && player.hellraiser === true && draws) chance = "Hellraiser plays a drawn Strike at a random enemy";
   return { knownDraws: exactUsed, drawsKnown, draws, line: line.steps.map(stepText), chance };
+}
+
+/** The solver index of the first card of the superset board's draw pile (SL_JUDGE_ANY_DRAW): past the known draws (700) and the piles (900+). */
+export const ANY_DRAW_INDEX = 2_000;
+/**
+ * The any-draw bound's limits (tests and offline tools may change them): each solve's node limit, and the time both solves
+ * may take together (ANY_DRAW_BUDGET_MS live). Over either: no bound.
+ */
+export const anyDrawOptions = { maxNodes: 150_000, budgetMs: ANY_DRAW_BUDGET_MS };
+/** A card's text about the hand (reading it, changing it, putting cards into it). */
+const HAND_TEXT = /手牌|your hand|in hand|into hand/i;
+/** A card's or power's text acting when a card is drawn (Kingly Punch, Speedster, Void, Corrosive Wave). */
+const ON_DRAW_TEXT = /抽到|when (?:this card is )?drawn|whenever you draw|draw a card/i;
+/** Text that may heal us or keep an HP loss off before a card's own cost lands (an unmodelled one keeps a death open). */
+const HP_SAVE_TEXT = /回复|恢复|治疗|heal|缓冲|buffer|无实体|intangible|最大生命|max hp/i;
+/** Specials whose effect reads the whole hand or picks from it (more cards in it change what they do). */
+const HAND_SPECIALS = new Set(["thrash", "fiend_fire", "second_wind", "primal_force", "free_card", "gamble", "snecko", "glowwater", "bottled", "ashwater", "chaos"]);
+/** Powers acting on draws that the superset board may leave out without harm: Hellraiser's Strikes (the solver plays them), Chains of Binding (only takes). */
+const ON_DRAW_KNOWN = new Set(["HELLRAISER_POWER", "CHAINS_OF_BINDING_POWER"]);
+
+/**
+ * Why a card the lines may play once the draw pile is in the hand is not simulated exactly there (null: it is): an unmodelled
+ * or random one, one making or playing cards, one reading or changing the hand or the draw pile (more cards in the hand
+ * change what it does), one acting when drawn. A random enemy with one enemy to hit is no chance (cardChance).
+ */
+export function anyDrawInexact(card: CardModel, targets: number): string | null {
+  if (!card.known) return `${card.name} is not modelled`;
+  const randomText = /随机|random/i.test(card.text);
+  const loneTarget = targets <= 1 && (!randomText || randomTargetOnly(card.text));
+  if ((card.target === "random" && !loneTarget) || card.randomExhaust === true || RANDOM_SPECIALS.has(card.special ?? "") || (randomText && !loneTarget)) return `${card.name} has a random effect`;
+  if ((card.playsTop ?? 0) > 0 || card.generates !== undefined || card.choices !== undefined || card.adds !== undefined) return `${card.name} plays or makes a card`;
+  if (HAND_TEXT.test(card.text) || HAND_SPECIALS.has(card.special ?? "") || SOLVER_EXHAUST_PICKERS.has(card.cardId) || EXHAUST_HAND.has(card.cardId) || card.discards !== undefined) return `${card.name} reads or changes the hand`;
+  if (PILE_TEXT.test(card.text) || card.putsOnTop === true) return `${card.name} touches the draw pile`;
+  if (ON_DRAW_TEXT.test(card.text)) return `${card.name} acts on draws`;
+  // A heal, max HP or Buffer the solver does not simulate (its own: Blood Potion's heal, Lucky Tonic's Buffer).
+  if (HP_SAVE_TEXT.test(card.text) && card.special !== "heal" && card.special !== "buffer") return `${card.name} may heal or shield us beyond the planner's model`;
+  return null;
+}
+
+/** What else than the draws leaves a least-loss verdict to chance (leastLossFactsFor's `chance` without its draw clauses). */
+function chanceBesidesDraws(playable: CardModel[], player: PlayerSim, randomPotions: readonly PotionMcSource[], targets: number): string | null {
+  if (randomPotions.length > 0) return `a random potion (${randomPotions.map((source) => source.name).join(", ")}): its samples`;
+  for (const card of playable) {
+    const chance = cardChance({ ...card, drawsUntil: false }, targets);
+    if (chance) return chance;
+  }
+  const several = targets > 1;
+  if (several && (player.juggernaut ?? 0) > 0) return "Juggernaut hits a random enemy";
+  if (several && player.kusarigama && playable.some((card) => card.type === "Attack")) return "Kusarigama hits a random enemy";
+  return null;
+}
+
+/** The numbers of a card text (its rules after the name and cost), as a sorted list. */
+function textNumbers(text: string): number[] {
+  return [...text.matchAll(/\d+/g)].map((match) => Number(match[0])).sort((a, b) => a - b);
+}
+
+/**
+ * A draw pile card as it is now (the line's numbers: a card's own growth, Perfected Strike's Strikes, a Defend's permanent
+ * block, which the deck entry need not show; NJSZDS6U5X9G F25 T9: Perfected Strike 6 in the deck, 18 in the pile, killed
+ * the Beetle), on the board (Strength and Weak as the hand cards, Dexterity added to its block). Each number the higher
+ * of the two (a bound may only help a line); `differs` when the line has other numbers than the deck's text.
+ */
+export function pileCardNow(entry: PileEntry, ctx: { strength: number; weak: boolean; dexterity: number }): { card: CardModel; differs: boolean } {
+  const body = entry.line.replace(/^[^：:]*[：:]/, "");
+  const raw = entry.raw;
+  const damage = /造成(\d+)点伤害|deal (\d+) damage/i.exec(body);
+  const hits = /造成\d+点伤害(\d+)次|deal \d+ damage (\d+) times/i.exec(body);
+  const block = /获得(\d+)点格挡|gain (\d+) block/i.exec(body);
+  const lineDamage = damage ? Number(damage[1] ?? damage[2]) : null;
+  const lineHits = hits ? Number(hits[1] ?? hits[2]) : null;
+  const lineBlock = block ? Number(block[1] ?? block[2]) : null;
+  const rawDamage = raw.damage === null ? lineDamage : Math.max(raw.damage, lineDamage ?? 0);
+  const card: CardModel = {
+    ...entry.card,
+    damage: rawDamage === null ? null : Math.floor((rawDamage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
+    hits: Math.max(entry.card.hits, lineHits ?? 0),
+    block: Math.max(raw.block, lineBlock ?? 0) + (Math.max(raw.block, lineBlock ?? 0) > 0 ? Math.max(0, ctx.dexterity) : 0),
+  };
+  // Other numbers (Vulnerable, Strength, a draw count, an HP cost) the line shows differently from the deck's text.
+  const drop = (numbers: number[], ...gone: (number | null)[]) => {
+    const left = [...numbers];
+    for (const value of gone) {
+      if (value === null) continue;
+      const at = left.indexOf(value);
+      if (at >= 0) left.splice(at, 1);
+    }
+    return left.join(",");
+  };
+  const deckText = raw.text;
+  const deckDamage = /造成(\d+)点伤害|deal (\d+) damage/i.exec(deckText);
+  const deckHits = /造成\d+点伤害(\d+)次|deal \d+ damage (\d+) times/i.exec(deckText);
+  const deckBlock = /获得(\d+)点格挡|gain (\d+) block/i.exec(deckText);
+  const numOf = (match: RegExpExecArray | null) => (match ? Number(match[1] ?? match[2]) : null);
+  const differs = drop(textNumbers(body), lineDamage, lineHits, lineBlock) !== drop(textNumbers(deckText), numOf(deckDamage), numOf(deckHits), numOf(deckBlock));
+  return { card, differs };
+}
+
+/**
+ * Why a draw pile card is not simulated exactly on the superset board (null: it is): anyDrawInexact's reasons, an
+ * enchantment, numbers in the pile other than the deck entry's (beyond the damage, hits and block pileCardNow takes the
+ * higher of), a number worked out in play (Perfected Strike; Body Slam's the solver works out), a relic changing it.
+ */
+export function pileCardInexact(entry: PileEntry, current: { differs: boolean }, targets: number, relicIds: readonly string[], knowledge?: Pick<Knowledge, "card">): string | null {
+  const card = entry.card;
+  const relic = relicIds.find((id) => CARD_NUMBER_RELICS[id]?.(card) === true);
+  return (
+    anyDrawInexact(card, targets) ??
+    // A card whose effect is set per copy (Mad Science: 「？？？？？？」 in the game data, its numbers for every mode).
+    (/？？|\?\?\?/.test(knowledge?.card(card.cardId)?.description ?? "") ? `${card.name}'s effect is set per card` : null) ??
+    (entry.mods.some((mod) => /enchant/i.test(mod)) ? `${card.name} is enchanted` : null) ??
+    (current.differs ? `${card.name}'s numbers in the pile differ from the deck's` : null) ??
+    (entry.calculated && card.special !== "body_slam" ? `${card.name}'s number is worked out in play` : null) ??
+    (relic ? `${relic} changes ${card.name}` : null)
+  );
+}
+
+/**
+ * A draw pile card's cost for the superset board: the lowest of the line's (the card in the pile now), the deck entry's and
+ * the game data's (a cost grown in the fight, Frantic Escape's, may be lower once drawn; a bound may only help a line).
+ */
+export function pileCardCost(entry: PileEntry, knowledge: Knowledge, relicIds: readonly string[] = []): number {
+  const card = entry.card;
+  if (card.xCost) return card.cost;
+  // Jeweled Mask: a Power it took into the hand at the fight's start stays free for the fight (back in the pile after a
+  // discard, its line still shows its cost; 8L29N792FA45, GWGTNXPWS7PE): any Power may be that one.
+  if (relicIds.includes("JEWELED_MASK") && card.type === "Power") return 0;
+  const base = knowledge.card(card.cardId)?.cost;
+  return Math.min(card.cost, entry.lineCost ?? card.cost, typeof base === "number" && base >= 0 ? base : card.cost);
+}
+
+/** Player powers that only lower the cards' numbers in the hand (Frail's block): the pile's higher ones can only help a line. */
+const NUMBER_LOWERING_POWERS = new Set(["FRAIL_POWER"]);
+
+/**
+ * Relics that change what some cards do in ways neither the pile's models nor the solver count (the hand may show them):
+ * which cards. With one held, such a card in the pile is not simulated exactly on the superset board.
+ */
+const CARD_NUMBER_RELICS: Record<string, (card: CardModel) => boolean> = {
+  STRIKE_DUMMY: (card) => isStrikeCard(card),
+  FAKE_STRIKE_DUMMY: (card) => isStrikeCard(card),
+  MINIATURE_CANNON: (card) => card.type === "Attack" && card.upgraded,
+  MYSTIC_LIGHTER: (card) => card.type === "Attack",
+  CHEMICAL_X: (card) => card.xCost,
+  // Pael's Legion doubles one card's Block; Vitruvian Minion doubles the Minion cards; Paper Krane makes Weak take 40%.
+  PAELS_LEGION: (card) => card.block > 0,
+  VITRUVIAN_MINION: (card) => card.name.includes("仆从") || /minion/i.test(card.name),
+  PAPER_KRANE: (card) => card.weak > 0,
+  // Ghost Seed makes Strikes and Defends Ethereal: Feel No Pain's block for them when held.
+  GHOST_SEED: (card) => isStrikeCard(card) || /DEFEND/.test(card.cardId),
+  // Reptile Trinket: Strength when a potion is drunk (a line drinking one after the draw).
+  REPTILE_TRINKET: () => true,
+};
+
+interface AnyDrawContext {
+  /** The solver input behind the least-loss verdict (the hand with the modelled potions, the player, the enemies). */
+  input: SolverInput;
+  state: GameState;
+  knowledge: Knowledge;
+  pileContext: { enemyTargets: number[]; strength: number; weak: boolean };
+  /** Living enemies a random target can land on (random-target.ts). */
+  targets: number;
+  /** Fiddle or No Draw: the planner zeroed every draw. */
+  noDraw: boolean;
+  relicIds: string[];
+  /** The random potions (their Monte Carlo is not redone on the superset board). */
+  randomPotions: readonly PotionMcSource[];
+}
+
+/**
+ * SL_JUDGE_ANY_DRAW (docs/sl.md §2.3; the judge: src/sl/judge.ts anyDrawJudged): whether the least-loss verdict's death
+ * holds for every draw this turn could make. The draw pile's order is unknown, its cards are not (the state lists them):
+ * 1. Nothing to draw (Fiddle, No Draw): the planner's lines drew nothing.
+ * 2. `fatal` (ops 2026-10-03, R764HJWMJQ3V F33 T10: 5 HP, Offering's 6 in hand, vetoed as "draws"): every drawing card's own
+ *    HP cost (card-model hpLoss, its resolved amount) comes before its draw and reaches our HP (Tungsten Rod's 1 off), no
+ *    other playable card or potion has text that may heal or shield us first beyond what the solver models, Beating
+ *    Remnant not held, and the board solved again with those cards watched finds no line with HP left right after one
+ *    (the solver's loseHp: Buffer, Demon Tongue; lines ended by our death not extended).
+ * 3. `superset`: the board solved again with the drawing cards (and the modelled potions that draw) putting every card of
+ *    the draw pile into the hand on their play, each at its cost (the line's), the hand limit lifted, their draw counts 0,
+ *    every other effect and limit as they were. Any real draw is a part of that hand after the same play, so every line
+ *    dying there means every line dies with any draw. Statuses and curses that only hurt when drawn (a held penalty, an
+ *    energy loss) are left out, unless Feel No Pain or Cloak Clasp could turn them into block (no bound). No bound with a
+ *    random potion, Dark Embrace, Tungsten Rod or Beating Remnant (the solver's own HP losses are not exact then), a card
+ *    that may give Intangible, a power acting on draws, a pile not listed. What the superset board does not simulate
+ *    exactly (anyDrawInexact; a draw that may reach the reshuffle) is listed in `inexact`: the judge then also needs no line
+ *    with HP left after a draw.
+ * Each solve: lines ended by our own death are not extended, a node limit and a shared time limit (ANY_DRAW_BUDGET_MS).
+ */
+export function anyDrawBound(ctx: AnyDrawContext): DrawBound {
+  const started = Date.now();
+  const deadline = started + anyDrawOptions.budgetMs;
+  const { input } = ctx;
+  const playable = input.hand.filter((card) => card.playable || card.type === "Potion");
+  const drawers = playable.filter((card) => drawsCards(card) || DRAW_TEXT.test(card.text));
+  const chance = chanceBesidesDraws(playable, input.player, ctx.randomPotions, ctx.targets);
+  const base = { drawing: drawers.map((card) => card.name), chance };
+  const done = (bound: Omit<DrawBound, "drawing" | "chance" | "ms">): DrawBound => ({ ...base, ...bound, ms: Date.now() - started });
+  if (drawers.length === 0) return done({ refused: "no playable card or potion that draws in the planner's hand" });
+  if (ctx.noDraw) {
+    // Only draws are stopped: a card taking from a pile, or acting on what it draws, is not a plain draw.
+    const notPlain = drawers.find((card) => PILE_TEXT.test(card.text) || HAND_TEXT.test(card.text) || ON_DRAW_TEXT.test(card.text));
+    if (notPlain) return done({ refused: `${notPlain.name} is not a plain draw (No Draw may not stop it)` });
+    return done({ refused: null, noDraw: ctx.relicIds.includes("FIDDLE") ? "Fiddle" : "No Draw" });
+  }
+  const player = asRecord(asRecord(ctx.state.raw["combat"])["player"]);
+  const hp = input.player.hp;
+  const rod = ctx.relicIds.includes("TUNGSTEN_ROD");
+  if (ctx.relicIds.includes("BEATING_REMNANT")) return done({ refused: "Beating Remnant caps the HP lost this turn: the solver's own-turn losses are not exact" });
+  const intangible = [...playable].find((card) => card.special === "intangible");
+  if (intangible) return done({ refused: `${intangible.name} may give Intangible (the solver does not cap an HP loss with it)` });
+
+  // 2. Every drawing card's own cost kills before it draws.
+  const watch = new Set(drawers.map((card) => card.index));
+  const solveWith = (extra: Partial<SolverInput>) => solveTurn({ ...input, stopAtOwnDeath: true, stopOnLive: true, watch, deadline, maxNodes: anyDrawOptions.maxNodes, ...extra });
+  const others = playable.filter((card) => !watch.has(card.index));
+  // Blood Potion's heal and Lucky Tonic's Buffer are the solver's; Feed's max HP (and its heal) is not.
+  const saver = others.find((card) => HP_SAVE_TEXT.test(card.text) && card.special !== "heal" && card.special !== "buffer");
+  const costFirst = (card: CardModel) => {
+    const loss = /失去\d+点生命|lose \d+ hp/i.exec(card.text);
+    const draw = /抽|draw/i.exec(card.text);
+    return loss !== null && (draw === null || loss.index < draw.index);
+  };
+  const ownKill = drawers.every((card) => card.type !== "Potion" && card.hpLoss - (rod ? 1 : 0) >= hp && costFirst(card));
+  if (ownKill && !saver) {
+    const solved = solveWith({});
+    if (!solved.truncated && solved.lives !== true && solved.plans.every((plan) => plan.outcome.dies) && (solved.watchedAlive ?? []).length === 0) {
+      return done({ refused: null, fatal: drawers.map((card) => ({ name: card.name, hpLoss: card.hpLoss })) });
+    }
+  }
+
+  // 3. The superset board.
+  if (ctx.randomPotions.length > 0) return done({ refused: `a random potion (${ctx.randomPotions.map((source) => source.name).join(", ")}): its samples are not redone with every draw` });
+  if (rod) return done({ refused: "Tungsten Rod takes 1 off each HP loss: the solver's own-turn losses are not exact" });
+  if ((input.player.darkEmbrace ?? 0) > 0 || playable.some((card) => card.cardId === "DARK_EMBRACE")) return done({ refused: "Dark Embrace draws on exhausts (not through the drawing cards)" });
+  for (const power of asArray(player["powers"]).map(asRecord)) {
+    const id = str(power["power_id"]);
+    if (!ON_DRAW_KNOWN.has(id) && ON_DRAW_TEXT.test(ctx.knowledge.power(id)?.description ?? "")) return done({ refused: `${str(power["name"], id)} acts when a card is drawn` });
+  }
+  const view = asRecord(asRecord(ctx.state.raw["agent_view"])["combat"]);
+  if (!Array.isArray(view["draw"])) return done({ refused: "the draw pile is not listed" });
+  const blockWhenHeld = (input.player.feelNoPain ?? 0) > 0 || (input.player.blockPerHeldCard ?? 0) > 0 || playable.some((card) => (card.feelNoPain ?? 0) > 0);
+  const now = { strength: ctx.pileContext.strength, weak: ctx.pileContext.weak, dexterity: asArray(player["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === "DEXTERITY_POWER").reduce((sum, power) => sum + num(power["amount"]), 0) };
+  // A player power the planner does not read may change the cards' numbers in the hand (and not in the pile's models).
+  const numberPowers = asArray(player["powers"])
+    .map(asRecord)
+    .filter((power) => !MODELLED_POWERS.has(str(power["power_id"])) && !NUMBER_LOWERING_POWERS.has(str(power["power_id"])))
+    .filter((power) => {
+      const text = ctx.knowledge.power(str(power["power_id"]))?.description ?? "";
+      return text === "" || /伤害|格挡|耗能|damage|block|cost/i.test(text);
+    })
+    .map((power) => str(power["name"], str(power["power_id"])));
+  const entries = pileEntries(ctx.state, ctx.knowledge, "draw", ctx.pileContext);
+  const drawPile = entries.reduce((sum, entry) => sum + entry.count, 0);
+  const inexact: string[] = [];
+  const excluded: string[] = [];
+  const pool: CardModel[] = [];
+  // The most cards this turn's draws could take: past the draw pile, a reshuffle brings back cards the pool does not hold.
+  const drawCount = (card: CardModel) => (card.drawsUntil === true || card.draw <= 0 ? HAND_LIMIT : card.draw);
+  let maxDraws = drawers.reduce((sum, card) => sum + drawCount(card), 0);
+  for (const entry of entries) {
+    const card = entry.card;
+    const unplayable = !card.playable || card.type === "Status" || card.type === "Curse";
+    if (unplayable) {
+      const hurts = card.heldPenalty > 0 || (card.heldHpLoss ?? 0) > 0 || HAND_TEXT.test(card.text) || ON_DRAW_TEXT.test(card.text);
+      if (hurts && ON_DRAW_TEXT.test(card.text) && !/失去|lose/i.test(card.text)) return done({ refused: `${card.name} in the draw pile acts when drawn` });
+      if (hurts && blockWhenHeld) return done({ refused: `${card.name} in the draw pile hurts when drawn, but Feel No Pain or Cloak Clasp may give block for it` });
+      if (hurts) {
+        // Drawing it can only cost us (a held penalty, an energy loss; a playable one, Beckon, is only got rid of by playing it).
+        excluded.push(`${card.name}${entry.count > 1 ? ` x${entry.count}` : ""}`);
+        continue;
+      }
+    }
+    const current = pileCardNow(entry, now);
+    // A playable status or curse that does not hurt (Slimed) is a card the lines may play like any other.
+    const why = card.playable ? pileCardInexact(entry, current, ctx.targets, ctx.relicIds, ctx.knowledge) : null;
+    if (why) inexact.push(why);
+    if (!unplayable && drawsCards(card)) maxDraws += drawCount(card) * entry.count;
+    if (!unplayable && card.draw <= 0 && !card.drawsUntil && DRAW_TEXT.test(card.text) && !PILE_TEXT.test(card.text)) maxDraws += HAND_LIMIT * entry.count;
+    const cost = pileCardCost(entry, ctx.knowledge, ctx.relicIds);
+    // Unmovable or Vambrace armed: the solver takes every Block card's number as the hand shows it then, doubled (the
+    // first one played keeps it, the later ones are halved back): the pile's cards the same way.
+    const shown = !unplayable && input.player.unmovableArmed === true && current.card.block > 0 ? { ...current.card, block: current.card.block * 2 } : current.card;
+    for (let copy = 0; copy < entry.count; copy += 1) {
+      const k = pool.length;
+      pool.push({ ...(unplayable ? card : shown), cost, index: ANY_DRAW_INDEX + k, key: `anydraw${k}`, draw: 0, drawsUntil: false });
+    }
+  }
+  if (maxDraws > drawPile) inexact.push(`a draw may reach the reshuffle (up to ${maxDraws} draws, ${drawPile} in the draw pile)`);
+  if (numberPowers.length > 0 && pool.length > 0) inexact.push(`${numberPowers.join(", ")} may change the pile cards' numbers`);
+  // A random enemy hit with several to hit: the solver takes the worst one (the bound may only help a line).
+  const several = ctx.targets > 1;
+  if (several && (input.player.hellraiser === true || playable.some((card) => card.cardId === "HELLRAISER"))) inexact.push("Hellraiser plays drawn Strikes at a random enemy");
+  if (several && (input.player.juggernaut ?? 0) > 0) inexact.push("Juggernaut hits a random enemy");
+  if (several && input.player.kusarigama) inexact.push("Kusarigama hits a random enemy");
+  // Vambrace held but not seen armed (no Block card in the hand to show it), Unmovable up with some block already (the
+  // planner's proxy for its use): their doubling of the next card Block may be left out.
+  const unmovable = asArray(player["powers"]).some((power) => str(asRecord(power)["power_id"]) === "UNMOVABLE_POWER");
+  const doubler = ctx.relicIds.includes("VAMBRACE") ? "Vambrace" : unmovable ? "Unmovable" : null;
+  // Both up: each may double the same card Block (SMNJTGSHFMME F30 T2: Defend 6 shown as 24), past the solver's one doubling.
+  if (doubler && (input.player.unmovableArmed !== true || (unmovable && ctx.relicIds.includes("VAMBRACE"))) && pool.some((card) => card.block > 0)) {
+    inexact.push(`${unmovable && ctx.relicIds.includes("VAMBRACE") ? "Vambrace and Unmovable" : doubler} may double the first card Block`);
+  }
+  for (const card of playable) {
+    const why = anyDrawInexact(card, ctx.targets);
+    // The drawing cards' own draws are what the superset covers (Pillage's unknown count, a text-only draw).
+    if (why && !(watch.has(card.index) && why === `${card.name} draws an unknown number of cards`)) inexact.push(why);
+  }
+  const hand = input.hand.map((card) => (watch.has(card.index) ? { ...card, draw: 0, drawsUntil: false, drawn: pool } : card));
+  const solved = solveTurn({
+    ...input,
+    hand,
+    player: { ...input.player, drawable: pool.length, handLimit: Number.MAX_SAFE_INTEGER },
+    knownTop: undefined,
+    stopAtOwnDeath: true,
+    stopOnLive: true,
+    watch,
+    deadline,
+    maxNodes: anyDrawOptions.maxNodes,
+  });
+  const aliveAfter = new Set(solved.watchedAlive ?? []);
+  return done({
+    refused: null,
+    superset: {
+      cards: pool.length,
+      drawPile,
+      excluded,
+      inexact: [...new Set(inexact)],
+      allDie: solved.lives !== true && solved.plans.every((plan) => plan.outcome.dies),
+      aliveAfterDraw: [...new Set(drawers.filter((card) => aliveAfter.has(card.index)).map((card) => card.name))],
+      truncated: solved.truncated,
+      timedOut: solved.timedOut === true,
+      nodes: solved.nodes,
+    },
+  });
 }
 
 /** The solver index of the first known draw (SL_RETRY_KNOWN_DRAWS): past the hand, potions' samples, Music Box copies and the whole fight's own known draws (600). */
@@ -2429,7 +2800,14 @@ function planTurn(env: DecisionEnv): Decision | null {
         ? `every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg ${leastLoss.outcome.damageDealt}): ${leastLoss.steps.map(stepText).join(", ")}`
         : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
     };
-    noteLeastLoss(decision, () => leastLossFactsFor(leastLoss, solved, solvedInput, knownTop, env.sl?.knownDraws?.exact, hand, playerSim, [...mcSources.values()], randomTargets(state)));
+    const boundInput = solvedInput as SolverInput | null;
+    noteLeastLoss(
+      decision,
+      () => leastLossFactsFor(leastLoss, solved, solvedInput, knownTop, env.sl?.knownDraws?.exact, hand, playerSim, [...mcSources.values()], randomTargets(state)),
+      boundInput
+        ? () => anyDrawBound({ input: boundInput, state, knowledge: env.knowledge, pileContext, targets: randomTargets(state), noDraw, relicIds, randomPotions: [...mcSources.values()] })
+        : undefined,
+    );
     return decision;
   }
 

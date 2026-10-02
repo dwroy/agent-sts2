@@ -390,6 +390,11 @@ export interface PlayerSim {
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
+   * The hand's card limit (unset: HAND_LIMIT). SL judge only (SL_JUDGE_ANY_DRAW): the draw pile's every card put in the hand
+   * at once (the superset board) fits; more cards than the game allows can only help a line.
+   */
+  handLimit?: number;
+  /**
    * Red Skull (「当你的生命值低于或等于50%时，你额外获得3点力量」): the Strength it gives while HP is at or below half
    * of max (RED_SKULL_STRENGTH). Already in the Strength shown when it is on; an HP loss on our turn that takes us
    * to half or below adds it for the rest of the turn, a heal back above half takes it off.
@@ -540,6 +545,23 @@ export interface SolverInput {
    */
   laterIncoming?: number[];
   maxNodes?: number;
+  /**
+   * SL judge only (SL_JUDGE_ANY_DRAW, docs/sl.md §2.3; never set by the live planner): a line whose HP reaches 0 on our own
+   * turn, no revive held, is not extended (the game ends it there; its later plays cannot save it).
+   */
+  stopAtOwnDeath?: boolean;
+  /** SL judge only: a Date.now() time past which the search stops, cut short (SolveResult.truncated and timedOut). */
+  deadline?: number;
+  /**
+   * SL judge only: the search stops at the first line that does not die (SolveResult.lives): the judge only asks whether
+   * every line dies. The plans found so far are returned as they are.
+   */
+  stopOnLive?: boolean;
+  /**
+   * SL judge only: card indices (the drawing cards) to watch. SolveResult.watchedAlive lists those after whose play some
+   * line still had HP left (sim.hp > 0 right after the card resolved).
+   */
+  watch?: ReadonlySet<number>;
   /**
    * The damage weight times this (unset: 1): the whole boss fight simulator's policy knob (src/sim/boss-sim.ts,
    * docs/boss-sim.md), never set by the live planner.
@@ -1411,7 +1433,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
     const room = bottled ? Number.POSITIVE_INFINITY : (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn;
-    const count = Math.max(0, Math.min(bottled ? BOTTLED_DRAW : GLOWWATER_DRAW, HAND_LIMIT, room));
+    const count = Math.max(0, Math.min(bottled ? BOTTLED_DRAW : GLOWWATER_DRAW, player.handLimit ?? HAND_LIMIT, room));
     const draw = card.generates;
     if (card.drawn) drawCards(next, card.drawn.slice(0, count), player, bottled);
     else if (draw) {
@@ -1461,7 +1483,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   ];
   // Music Box: this turn's first Attack card comes back as an Ethereal copy (PlayerSim.musicBox), a card of the hand
   // like any other: playing it costs its energy and counts as a card played (Withering Presence, Sloth).
-  if (card.type === "Attack" && player.musicBox && player.musicBox.count + sim.attacksPlayed === 0) addToHand(next, [musicBoxCopy(card)]);
+  if (card.type === "Attack" && player.musicBox && player.musicBox.count + sim.attacksPlayed === 0) addToHand(next, [musicBoxCopy(card)], player.handLimit);
   return next;
 }
 
@@ -1568,7 +1590,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.plating += card.plating ?? 0;
   }
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
-  if (card.adds) addToHand(next, card.adds);
+  if (card.adds) addToHand(next, card.adds, player.handLimit);
   if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
   // costs; else the expected SNECKO_COST).
@@ -1759,7 +1781,7 @@ function drawExpected(next: Sim, count: number, player: PlayerSim): void {
   if (next.known !== null && count > 0) next.drewUnknown = true;
   // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
   const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
-  const handSpace = Math.max(0, HAND_LIMIT - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
+  const handSpace = Math.max(0, (player.handLimit ?? HAND_LIMIT) - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
   next.drawnInHand += Math.min(count, room, handSpace);
   next.cardsDrawn += count;
   next.draws = [...next.draws];
@@ -1849,9 +1871,9 @@ export function hellraised(card: CardModel): CardModel {
   return { ...card, cost: 0, xCost: false, playable: true, ...(card.target === "single" ? { target: "random" as const, validTargets: [] } : {}) };
 }
 
-/** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past HAND_LIMIT. */
-function addToHand(sim: Sim, cards: CardModel[]): void {
-  const space = Math.max(0, HAND_LIMIT - sim.hand.filter((entry) => entry.type !== "Potion").length - sim.held.length - sim.drawnInHand);
+/** Cards put into the hand (not drawn): playable ones to the hand, the rest held; none past the hand limit (HAND_LIMIT). */
+function addToHand(sim: Sim, cards: CardModel[], limit = HAND_LIMIT): void {
+  const space = Math.max(0, limit - sim.hand.filter((entry) => entry.type !== "Potion").length - sim.held.length - sim.drawnInHand);
   const fits = cards.slice(0, space);
   sim.hand = [...sim.hand, ...fits.filter((card) => card.playable)];
   sim.held = [...sim.held, ...fits.filter((card) => !card.playable)];
@@ -1866,7 +1888,7 @@ function drawCards(sim: Sim, cards: CardModel[], player: PlayerSim, reshuffled =
   const room = reshuffled ? cards.length : Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - sim.cardsDrawn);
   // Hellraiser: a Strike drawn plays itself, free, at a random enemy (the rollout's hellraised card, a4f3795).
   const taken = cards.slice(0, Math.min(cards.length, room)).map((card) => (sim.hellraiser && isStrikeCard(card) ? hellraised(card) : card));
-  addToHand(sim, taken);
+  addToHand(sim, taken, player.handLimit);
   sim.cardsDrawn += taken.length;
   sim.pileDrawn += taken.length;
 }
@@ -2805,6 +2827,12 @@ export interface SolveResult {
   knownDepth?: number;
   /** Some line it simulated drew a card (SL judge, SL_RELOAD_EARLY: a verdict without draws). Absent otherwise. */
   drew?: true;
+  /** SolverInput.deadline passed: the search was cut short by time (truncated is set too). Absent otherwise. */
+  timedOut?: true;
+  /** With SolverInput.watch: the watched cards after whose play some line still had HP left (SL judge). Absent otherwise. */
+  watchedAlive?: number[];
+  /** With SolverInput.stopOnLive: a line that does not die was found (and the search stopped there). Absent otherwise. */
+  lives?: true;
 }
 
 /**
@@ -2968,6 +2996,11 @@ export function solveTurn(input: SolverInput): SolveResult {
   let drewUnknown = false;
   let knownDepth = 0;
   let drew = false;
+  // SL judge only (SL_JUDGE_ANY_DRAW): a time limit, the watched cards, a line ended by our death on our own turn.
+  let timedOut = false;
+  let lives = false;
+  const watchedAlive = new Set<number>();
+  const ownDeathEnds = input.stopAtOwnDeath === true && (input.player.revives ?? []).length === 0;
 
   const visit = (sim: Sim): void => {
     nodes += 1;
@@ -2975,6 +3008,10 @@ export function solveTurn(input: SolverInput): SolveResult {
     if (sim.drewUnknown) drewUnknown = true;
     if (sim.known !== null && sim.pileDrawn > knownDepth) knownDepth = sim.pileDrawn;
     if (sim.cardsDrawn > 0) drew = true;
+    if (input.watch !== undefined && sim.hp > 0 && sim.steps.length > 0) {
+      const last = sim.steps[sim.steps.length - 1]!.cardIndex;
+      if (input.watch.has(last)) watchedAlive.add(last);
+    }
     const plan = evaluate(sim, input, weights);
     const o = plan.outcome;
     const potionSteps = sim.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.cardId);
@@ -2994,11 +3031,21 @@ export function solveTurn(input: SolverInput): SolveResult {
     if (!existing || plan.score > existing.score + 1e-9 || fewerPotions || (samePotions && plan.steps.length < existing.steps.length)) {
       byOutcome.set(signature, plan);
     }
+    if (input.stopOnLive === true && !o.dies) {
+      lives = true;
+      return;
+    }
     if (nodes >= maxNodes) {
       truncated = true;
       return;
     }
+    if (input.deadline !== undefined && nodes % 64 === 0 && Date.now() > input.deadline) {
+      truncated = true;
+      timedOut = true;
+      return;
+    }
     if (sim.enemies.every((enemy) => !enemy.alive) || plan.outcome.winsFight) return;
+    if (ownDeathEnds && sim.hp <= 0) return;
 
     const tried = new Set<string>();
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
@@ -3020,7 +3067,7 @@ export function solveTurn(input: SolverInput): SolveResult {
         if (seen.has(key)) continue;
         seen.add(key);
         visit(next);
-        if (truncated) return;
+        if (truncated || lives) return;
       }
     }
   };
@@ -3034,6 +3081,9 @@ export function solveTurn(input: SolverInput): SolveResult {
     ...(drewUnknown ? { drewUnknown: true as const } : {}),
     ...(root.known !== null ? { knownDepth } : {}),
     ...(drew ? { drew: true as const } : {}),
+    ...(timedOut ? { timedOut: true as const } : {}),
+    ...(lives ? { lives: true as const } : {}),
+    ...(input.watch !== undefined ? { watchedAlive: [...watchedAlive].sort((a, b) => a - b) } : {}),
   };
   solveTap.onSolve?.(input, result);
   return result;
