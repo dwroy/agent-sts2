@@ -327,7 +327,8 @@ export interface PlayerSim {
   /**
    * MECH_MOVE_RULES (class C, the Kaiser Crab): Surrounded's back attack needs two living enemies. Once one claw is dead
    * the other's attack shows and lands without the x1.5 whatever we face (152 of 152 logged one-claw attack intents; on
-   * the 26 logged deaths the survivor's intent lost it at once: TQX5JJX3UD39 F33 T4 Laser 49 -> 39, with Crab Rage's +6).
+   * 27 logged deaths, each of the 10 survivors shown from behind lost it at once: TQX5JJX3UD39 F33 T4 Laser 49 -> 39 = 31
+   * + 8, Crab Rage's +6 in it).
    * Absent: the back attack as before (backAttack on the facing alone).
    */
   backAttackPair?: boolean;

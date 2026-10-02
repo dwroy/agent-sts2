@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-02T05:39:44.852Z",
+ "generated": "2026-10-02T07:22:56.275Z",
  "db": {
-  "fights": 6073,
+  "fights": 6112,
   "first_seen": "2026-09-24T04:08:00.849Z",
-  "last_seen": "2026-10-02T04:44:20.056Z",
+  "last_seen": "2026-10-02T06:09:46.712Z",
   "fights_by_asc": {
    "0": 737,
    "1": 22,
@@ -13,22 +13,24 @@
    "5": 256,
    "6": 65,
    "7": 550,
-   "8": 3227,
+   "8": 3266,
    "9": 582
   }
  },
- "turns": 28512,
- "usable": 27716,
- "unmatched": 517,
- "no_actual": 279,
+ "turns": 28646,
+ "usable": 27847,
+ "unmatched": 519,
+ "no_actual": 280,
  "min_n": 20,
  "all": {
-  "n": 27716,
-  "biasOn": -0.15586664742387069,
-  "biasOff": -0.1576345793043729,
-  "maeOn": 0.26237552316351564,
-  "maeOff": 0.26414345504401787,
-  "fights": 6061,
+  "n": 27847,
+  "biasOn": -0.12252666355442238,
+  "biasOff": -0.12428627859374439,
+  "maeOn": 0.22444069379107265,
+  "maeOff": 0.22620030883039466,
+  "biasMove": -0.1224907530434158,
+  "maeMove": 0.2232556469278558,
+  "fights": 6088,
   "worst": [
    "LXB3B2WT9E0W F33 T5 (81 vs 0)",
    "S780Y1W7AQZL F17 T5 (79 vs 4)",
@@ -41,6 +43,8 @@
   "biasOff": -3.6875,
   "maeOn": 0.625,
   "maeOff": 3.6875,
+  "biasMove": -0.625,
+  "maeMove": 0.625,
   "fights": 16,
   "worst": [
    "Q97BWZJ011BB F19 T4 (0 vs 10)",
@@ -48,14 +52,215 @@
    "MCK9SMSK40ZY F19 T4 (0 vs 0)"
   ]
  },
+ "move_rules": {
+  "crab": {
+   "n": 537,
+   "biasOn": -0.4171322160148976,
+   "biasOff": -0.4171322160148976,
+   "maeOn": 0.5139664804469274,
+   "maeOff": 0.5139664804469274,
+   "biasMove": -0.41527001862197394,
+   "maeMove": 0.45251396648044695,
+   "fights": 78,
+   "worst": [
+    "GGF8C3G76C7B F33 T14 (0 vs 55)",
+    "HME0FA7VA0J6 F33 T6 (-14 vs 10)",
+    "8L29N792FA45 F33 T4 (2 vs 19)"
+   ]
+  },
+  "crab_both": {
+   "n": 475,
+   "biasOn": -0.26105263157894737,
+   "biasOff": -0.26105263157894737,
+   "maeOn": 0.30736842105263157,
+   "maeOff": 0.30736842105263157,
+   "biasMove": -0.26105263157894737,
+   "maeMove": 0.29473684210526313,
+   "fights": 78,
+   "worst": [
+    "HME0FA7VA0J6 F33 T6 (-14 vs 10)",
+    "RRMYC7MCSYX8 F33 T3 (1 vs 13)",
+    "0QSB9YV3UFCL F33 T3 (0 vs 8)"
+   ]
+  },
+  "crab_death": {
+   "n": 16,
+   "biasOn": -7.0625,
+   "biasOff": -7.0625,
+   "maeOn": 7.0625,
+   "maeOff": 7.0625,
+   "biasMove": -6.1875,
+   "maeMove": 6.1875,
+   "fights": 16,
+   "worst": [
+    "GGF8C3G76C7B F33 T14 (0 vs 55)",
+    "8L29N792FA45 F33 T4 (2 vs 19)",
+    "WLM6YKJ0ASNE F33 T7 (8 vs 24)"
+   ]
+  },
+  "crab_one": {
+   "n": 46,
+   "biasOn": 0.2826086956521739,
+   "biasOff": 0.2826086956521739,
+   "maeOn": 0.3695652173913043,
+   "maeOff": 0.3695652173913043,
+   "biasMove": 0,
+   "maeMove": 0.08695652173913043,
+   "fights": 26,
+   "worst": [
+    "8L29N792FA45 F33 T5 (11 vs 5)",
+    "NWVLG96EE54U F33 T8 (5 vs 1)",
+    "NX48MBG3SPRJ F33 T8 (5 vs 2)"
+   ]
+  },
+  "move_on": {
+   "n": 21,
+   "biasOn": -0.14285714285714285,
+   "biasOff": -0.14285714285714285,
+   "maeOn": 0.14285714285714285,
+   "maeOff": 0.14285714285714285,
+   "biasMove": -0.14285714285714285,
+   "maeMove": 0.14285714285714285,
+   "fights": 15,
+   "worst": [
+    "W80JV2YVC8UZ F45 T2 (-3 vs 0)",
+    "P4ZDR744B9JC F37 T2 (2 vs 2)",
+    "P4ZDR744B9JC F37 T6 (0 vs 0)"
+   ]
+  },
+  "axebot": {
+   "n": 160,
+   "biasOn": -0.125,
+   "biasOff": -0.125,
+   "maeOn": 0.225,
+   "maeOff": 0.225,
+   "biasMove": -0.125,
+   "maeMove": 0.225,
+   "fights": 27,
+   "worst": [
+    "JR66CJ9T8H7W F45 T6 (0 vs 9)",
+    "H14TDJAE4JB9 F38 T6 (15 vs 21)",
+    "S1MURCR8DGPT F46 T6 (0 vs 6)"
+   ]
+  },
+  "axebot_revive": {
+   "n": 21,
+   "biasOn": -0.14285714285714285,
+   "biasOff": -0.14285714285714285,
+   "maeOn": 0.14285714285714285,
+   "maeOff": 0.14285714285714285,
+   "biasMove": -0.14285714285714285,
+   "maeMove": 0.14285714285714285,
+   "fights": 15,
+   "worst": [
+    "W80JV2YVC8UZ F45 T2 (-3 vs 0)",
+    "P4ZDR744B9JC F37 T2 (2 vs 2)",
+    "P4ZDR744B9JC F37 T6 (0 vs 0)"
+   ]
+  },
+  "changed": {
+   "n": 11,
+   "biasOn": -0.45454545454545453,
+   "biasOff": -0.45454545454545453,
+   "maeOn": 3.3636363636363638,
+   "maeOff": 3.3636363636363638,
+   "biasMove": -0.36363636363636365,
+   "maeMove": 0.36363636363636365,
+   "fights": 9,
+   "worst": [
+    "NX48MBG3SPRJ F33 T7 (3 vs 10)",
+    "8L29N792FA45 F33 T5 (11 vs 5)",
+    "NWVLG96EE54U F33 T8 (5 vs 1)"
+   ]
+  },
+  "changed_turns": [
+   {
+    "turn": "JR66CJ9T8H7W F33 T7",
+    "actual": 7,
+    "predOn": 10,
+    "predMove": 7,
+    "moveOn": []
+   },
+   {
+    "turn": "TEK4MLSEGC4P F33 T7",
+    "actual": 1,
+    "predOn": 3,
+    "predMove": 1,
+    "moveOn": []
+   },
+   {
+    "turn": "NWVLG96EE54U F33 T6",
+    "actual": 8,
+    "predOn": 5,
+    "predMove": 8,
+    "moveOn": []
+   },
+   {
+    "turn": "NWVLG96EE54U F33 T8",
+    "actual": 5,
+    "predOn": 1,
+    "predMove": 5,
+    "moveOn": []
+   },
+   {
+    "turn": "NX48MBG3SPRJ F33 T7",
+    "actual": 3,
+    "predOn": 10,
+    "predMove": 7,
+    "moveOn": []
+   },
+   {
+    "turn": "NX48MBG3SPRJ F33 T8",
+    "actual": 5,
+    "predOn": 2,
+    "predMove": 5,
+    "moveOn": []
+   },
+   {
+    "turn": "5DFXQLAMFUB2 F33 T6",
+    "actual": 0,
+    "predOn": 1,
+    "predMove": 0,
+    "moveOn": []
+   },
+   {
+    "turn": "M75JX3KS80NB F33 T7",
+    "actual": 5,
+    "predOn": 8,
+    "predMove": 5,
+    "moveOn": []
+   },
+   {
+    "turn": "1LJFBKUF51PE F33 T6",
+    "actual": 11,
+    "predOn": 13,
+    "predMove": 11,
+    "moveOn": []
+   },
+   {
+    "turn": "8L29N792FA45 F33 T5",
+    "actual": 11,
+    "predOn": 5,
+    "predMove": 11,
+    "moveOn": []
+   },
+   {
+    "turn": "HME0FA7VA0J6 F33 T7",
+    "actual": 3,
+    "predOn": 6,
+    "predMove": 3,
+    "moveOn": []
+   }
+  ]
+ },
  "stun_false": [],
  "stun_missed": [
   "Q97BWZJ011BB F19 T4"
  ],
  "from": [
-  22377,
-  4318,
-  1021
+  22488,
+  4334,
+  1025
  ],
  "deaths": 372,
  "largest": [
@@ -247,17 +452,6 @@
    "stripped": []
   },
   {
-   "turn": "GWGTNXPWS7PE F17 T7",
-   "actual": 0,
-   "predOn": 28,
-   "predOff": 28,
-   "from": 0,
-   "enemies": [
-    "VANTOM"
-   ],
-   "stripped": []
-  },
-  {
    "turn": "FSPKJAYY3ET6 F27 T3",
    "actual": 2,
    "predOn": 29,
@@ -265,30 +459,6 @@
    "from": 0,
    "enemies": [
     "MYTE"
-   ],
-   "stripped": []
-  },
-  {
-   "turn": "7DFB21JE2DTK F33 T4",
-   "actual": 44,
-   "predOn": 70,
-   "predOff": 70,
-   "from": 0,
-   "enemies": [
-    "CRUSHER",
-    "ROCKET"
-   ],
-   "stripped": []
-  },
-  {
-   "turn": "HME0FA7VA0J6 F33 T6",
-   "actual": -14,
-   "predOn": 12,
-   "predOff": 12,
-   "from": 0,
-   "enemies": [
-    "CRUSHER",
-    "ROCKET"
    ],
    "stripped": []
   },
@@ -304,24 +474,6 @@
    "stripped": []
   },
   {
-   "turn": "WLM6YKJ0ASNE F33 T7",
-   "actual": 8,
-   "predOn": 33,
-   "predOff": 33,
-   "from": 0,
-   "enemies": [
-    "CRUSHER",
-    "ROCKET"
-   ],
-   "stripped": [
-    {
-     "id": "CRUSHER",
-     "power": "CRAB_RAGE_POWER",
-     "stunned": false
-    }
-   ]
-  },
-  {
    "turn": "FA82FQHSJG2F F27 T8",
    "actual": 1,
    "predOn": 25,
@@ -330,6 +482,18 @@
    "enemies": [
     "PARAFRIGHT",
     "THE_OBSCURA"
+   ],
+   "stripped": []
+  },
+  {
+   "turn": "HME0FA7VA0J6 F33 T6",
+   "actual": -14,
+   "predOn": 10,
+   "predOff": 10,
+   "from": 0,
+   "enemies": [
+    "CRUSHER",
+    "ROCKET"
    ],
    "stripped": []
   },
@@ -354,6 +518,41 @@
     "FROG_KNIGHT"
    ],
    "stripped": []
+  },
+  {
+   "turn": "SK1USHSB1U7U F37 T4",
+   "actual": 2,
+   "predOn": 26,
+   "predOff": 26,
+   "from": 1,
+   "enemies": [
+    "DEVOTED_SCULPTOR"
+   ],
+   "stripped": []
+  },
+  {
+   "turn": "V3UPVVLVMEJZ F33 T10",
+   "actual": -14,
+   "predOn": 10,
+   "predOff": 10,
+   "from": 0,
+   "enemies": [
+    "KNOWLEDGE_DEMON"
+   ],
+   "stripped": []
+  },
+  {
+   "turn": "VTREB5A9XWS7 F23 T2",
+   "actual": -7,
+   "predOn": 17,
+   "predOff": 17,
+   "from": 0,
+   "enemies": [
+    "BOWLBUG_ROCK",
+    "BOWLBUG_SILK",
+    "SLUMBERING_BEETLE"
+   ],
+   "stripped": []
   }
  ],
  "by_power": {
@@ -363,6 +562,8 @@
    "biasOff": -0.9528301886792453,
    "maeOn": 1.0660377358490567,
    "maeOff": 1.0660377358490567,
+   "biasMove": -0.9528301886792453,
+   "maeMove": 1.0660377358490567,
    "fights": 20,
    "worst": [
     "2WUMK6PK5QHD F48 T7 (-20 vs 15)",
@@ -371,12 +572,14 @@
    ]
   },
   "ARTIFACT_POWER": {
-   "n": 1086,
-   "biasOn": -0.10313075506445672,
-   "biasOff": -0.10313075506445672,
-   "maeOn": 0.40515653775322286,
-   "maeOff": 0.40515653775322286,
-   "fights": 276,
+   "n": 1090,
+   "biasOn": -0.10275229357798166,
+   "biasOff": -0.10275229357798166,
+   "maeOn": 0.4036697247706422,
+   "maeOff": 0.4036697247706422,
+   "biasMove": -0.10275229357798166,
+   "maeMove": 0.4036697247706422,
+   "fights": 277,
    "worst": [
     "JR66CJ9T8H7W F48 T8 (-10 vs 34)",
     "ZRYR5WLG6E9K F22 T1 (0 vs 18)",
@@ -384,12 +587,14 @@
    ]
   },
   "ASLEEP_POWER": {
-   "n": 155,
-   "biasOn": -0.012903225806451613,
-   "biasOff": -0.012903225806451613,
-   "maeOn": 0.025806451612903226,
-   "maeOff": 0.025806451612903226,
-   "fights": 62,
+   "n": 158,
+   "biasOn": -0.012658227848101266,
+   "biasOff": -0.012658227848101266,
+   "maeOn": 0.02531645569620253,
+   "maeOff": 0.02531645569620253,
+   "biasMove": -0.012658227848101266,
+   "maeMove": 0.02531645569620253,
+   "fights": 63,
    "worst": [
     "W5PTC48C3B1H F17 T1 (0 vs 1)",
     "W5PTC48C3B1H F17 T2 (0 vs 1)",
@@ -398,28 +603,32 @@
   },
   "BACK_ATTACK_LEFT_POWER": {
    "n": 526,
-   "biasOn": -2.150190114068441,
-   "biasOff": -2.150190114068441,
-   "maeOn": 2.511406844106464,
-   "maeOff": 2.511406844106464,
+   "biasOn": -0.42585551330798477,
+   "biasOff": -0.42585551330798477,
+   "maeOn": 0.5247148288973384,
+   "maeOff": 0.5247148288973384,
+   "biasMove": -0.42395437262357416,
+   "maeMove": 0.4619771863117871,
    "fights": 78,
    "worst": [
     "GGF8C3G76C7B F33 T14 (0 vs 55)",
-    "7DFB21JE2DTK F33 T4 (44 vs 70)",
-    "HME0FA7VA0J6 F33 T6 (-14 vs 12)"
+    "HME0FA7VA0J6 F33 T6 (-14 vs 10)",
+    "8L29N792FA45 F33 T4 (2 vs 19)"
    ]
   },
   "BACK_ATTACK_RIGHT_POWER": {
    "n": 502,
-   "biasOn": -2.252988047808765,
-   "biasOff": -2.252988047808765,
-   "maeOn": 2.6235059760956174,
-   "maeOff": 2.6235059760956174,
+   "biasOn": -0.4721115537848606,
+   "biasOff": -0.4721115537848606,
+   "maeOn": 0.5159362549800797,
+   "maeOff": 0.5159362549800797,
+   "biasMove": -0.4442231075697211,
+   "maeMove": 0.4760956175298805,
    "fights": 78,
    "worst": [
     "GGF8C3G76C7B F33 T14 (0 vs 55)",
-    "7DFB21JE2DTK F33 T4 (44 vs 70)",
-    "HME0FA7VA0J6 F33 T6 (-14 vs 12)"
+    "HME0FA7VA0J6 F33 T6 (-14 vs 10)",
+    "8L29N792FA45 F33 T4 (2 vs 19)"
    ]
   },
   "BATTLEWORN_DUMMY_TIME_LIMIT_POWER": {
@@ -428,6 +637,8 @@
    "biasOff": -0.08333333333333333,
    "maeOn": 0.08333333333333333,
    "maeOff": 0.08333333333333333,
+   "biasMove": -0.08333333333333333,
+   "maeMove": 0.08333333333333333,
    "fights": 17,
    "worst": [
     "G1Z0X3WBH4XQ F36 T1 (1 vs 2)",
@@ -436,12 +647,14 @@
    ]
   },
   "BURROWED_POWER": {
-   "n": 250,
-   "biasOn": -0.128,
-   "biasOff": -0.128,
-   "maeOn": 0.16,
-   "maeOff": 0.16,
-   "fights": 129,
+   "n": 253,
+   "biasOn": -0.12648221343873517,
+   "biasOff": -0.12648221343873517,
+   "maeOn": 0.15810276679841898,
+   "maeOff": 0.15810276679841898,
+   "biasMove": -0.12648221343873517,
+   "maeMove": 0.15810276679841898,
+   "fights": 131,
    "worst": [
     "VHLZ531VC9RE F19 T4 (1 vs 12)",
     "NJSZDS6U5X9G F21 T4 (1 vs 7)",
@@ -449,16 +662,18 @@
    ]
   },
   "CRAB_RAGE_POWER": {
-   "n": 490,
-   "biasOn": -2.3081632653061224,
-   "biasOff": -2.3081632653061224,
-   "maeOn": 2.6877551020408164,
-   "maeOff": 2.6877551020408164,
+   "n": 491,
+   "biasOn": -0.48268839103869654,
+   "biasOff": -0.48268839103869654,
+   "maeOn": 0.5274949083503055,
+   "maeOff": 0.5274949083503055,
+   "biasMove": -0.45417515274949083,
+   "maeMove": 0.48676171079429736,
    "fights": 78,
    "worst": [
     "GGF8C3G76C7B F33 T14 (0 vs 55)",
-    "7DFB21JE2DTK F33 T4 (44 vs 70)",
-    "HME0FA7VA0J6 F33 T6 (-14 vs 12)"
+    "HME0FA7VA0J6 F33 T6 (-14 vs 10)",
+    "8L29N792FA45 F33 T4 (2 vs 19)"
    ]
   },
   "CURL_UP_POWER": {
@@ -467,6 +682,8 @@
    "biasOff": -0.17105263157894737,
    "maeOn": 0.17105263157894737,
    "maeOff": 0.17105263157894737,
+   "biasMove": -0.17105263157894737,
+   "maeMove": 0.17105263157894737,
    "fights": 70,
    "worst": [
     "842N6N604DVX F31 T1 (3 vs 9)",
@@ -480,6 +697,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 4,
    "worst": [
     "9V09G0TKK5EQ F2 T1 (0 vs 0)",
@@ -493,6 +712,8 @@
    "biasOff": -0.07142857142857142,
    "maeOn": 0.09523809523809523,
    "maeOff": 0.09523809523809523,
+   "biasMove": -0.07142857142857142,
+   "maeMove": 0.09523809523809523,
    "fights": 30,
    "worst": [
     "KXG79NARS0LT F48 T2 (5 vs 9)",
@@ -501,12 +722,14 @@
    ]
   },
   "DEXTERITY_POWER": {
-   "n": 75,
-   "biasOn": -0.37333333333333335,
-   "biasOff": -0.37333333333333335,
-   "maeOn": 0.48,
-   "maeOff": 0.48,
-   "fights": 20,
+   "n": 78,
+   "biasOn": -0.38461538461538464,
+   "biasOff": -0.38461538461538464,
+   "maeOn": 0.48717948717948717,
+   "maeOff": 0.48717948717948717,
+   "biasMove": -0.38461538461538464,
+   "maeMove": 0.48717948717948717,
+   "fights": 21,
    "worst": [
     "Q8XR6EXAF6QV F37 T4 (0 vs 16)",
     "YN4ETG9Z8ERN F38 T4 (0 vs 9)",
@@ -519,6 +742,8 @@
    "biasOff": -0.5111111111111111,
    "maeOn": 0.7777777777777778,
    "maeOff": 0.7777777777777778,
+   "biasMove": -0.5111111111111111,
+   "maeMove": 0.7777777777777778,
    "fights": 20,
    "worst": [
     "1HF7GR4PZAPC F48 T1 (1 vs 14)",
@@ -532,6 +757,8 @@
    "biasOff": -0.2148014440433213,
    "maeOn": 0.1624548736462094,
    "maeOff": 0.2509025270758123,
+   "biasMove": -0.1263537906137184,
+   "maeMove": 0.1624548736462094,
    "fights": 154,
    "worst": [
     "M8123JA75Y1G F19 T4 (0 vs 16)",
@@ -545,6 +772,8 @@
    "biasOff": -0.4745762711864407,
    "maeOn": 0.3432203389830508,
    "maeOff": 0.5508474576271186,
+   "biasMove": -0.2669491525423729,
+   "maeMove": 0.3432203389830508,
    "fights": 126,
    "worst": [
     "M8123JA75Y1G F19 T4 (0 vs 16)",
@@ -558,6 +787,8 @@
    "biasOff": 1.042857142857143,
    "maeOn": 2.0142857142857142,
    "maeOff": 2.0142857142857142,
+   "biasMove": 1.042857142857143,
+   "maeMove": 2.0142857142857142,
    "fights": 22,
    "worst": [
     "YVYZ6QHA85FN F46 T4 (0 vs 16)",
@@ -566,12 +797,14 @@
    ]
   },
   "HARDENED_SHELL_POWER": {
-   "n": 408,
-   "biasOn": 0.16666666666666666,
-   "biasOff": 0.16666666666666666,
-   "maeOn": 0.22058823529411764,
-   "maeOff": 0.22058823529411764,
-   "fights": 81,
+   "n": 413,
+   "biasOn": 0.16464891041162227,
+   "biasOff": 0.16464891041162227,
+   "maeOn": 0.2179176755447942,
+   "maeOff": 0.2179176755447942,
+   "biasMove": 0.16464891041162227,
+   "maeMove": 0.2179176755447942,
+   "fights": 82,
    "worst": [
     "92MWCWJCFDAE F7 T4 (19 vs 0)",
     "CY8UG7ABBSAS F15 T4 (17 vs 0)",
@@ -579,12 +812,14 @@
    ]
   },
   "HARD_TO_KILL_POWER": {
-   "n": 883,
-   "biasOn": -0.2876557191392978,
-   "biasOff": -0.2876557191392978,
-   "maeOn": 0.3714609286523216,
-   "maeOff": 0.3714609286523216,
-   "fights": 249,
+   "n": 886,
+   "biasOn": -0.2866817155756208,
+   "biasOff": -0.2866817155756208,
+   "maeOn": 0.37020316027088035,
+   "maeOff": 0.37020316027088035,
+   "biasMove": -0.2866817155756208,
+   "maeMove": 0.37020316027088035,
+   "fights": 250,
    "worst": [
     "GG0Y0TJ2JXAR F20 T4 (0 vs 12)",
     "06S86JU88EG5 F20 T4 (0 vs 12)",
@@ -592,12 +827,14 @@
    ]
   },
   "HATCH_POWER": {
-   "n": 107,
-   "biasOn": -0.411214953271028,
-   "biasOff": -0.411214953271028,
-   "maeOn": 0.42990654205607476,
-   "maeOff": 0.42990654205607476,
-   "fights": 84,
+   "n": 109,
+   "biasOn": -0.4036697247706422,
+   "biasOff": -0.4036697247706422,
+   "maeOn": 0.42201834862385323,
+   "maeOff": 0.42201834862385323,
+   "biasMove": -0.4036697247706422,
+   "maeMove": 0.42201834862385323,
+   "fights": 85,
    "worst": [
     "WM2XPDZ02BNF F25 T8 (0 vs 16)",
     "TQX5JJX3UD39 F25 T2 (0 vs 8)",
@@ -610,6 +847,8 @@
    "biasOff": -0.1323529411764706,
    "maeOn": 0.1323529411764706,
    "maeOff": 0.1323529411764706,
+   "biasMove": -0.1323529411764706,
+   "maeMove": 0.1323529411764706,
    "fights": 54,
    "worst": [
     "KY3YZ0DMRY0G F15 T3 (-3 vs 0)",
@@ -623,6 +862,8 @@
    "biasOff": -0.5,
    "maeOn": 0.625,
    "maeOff": 0.625,
+   "biasMove": -0.5,
+   "maeMove": 0.625,
    "fights": 19,
    "worst": [
     "JR66CJ9T8H7W F39 T4 (7 vs 25)",
@@ -636,6 +877,8 @@
    "biasOff": -0.30327868852459017,
    "maeOn": 0.4918032786885246,
    "maeOff": 0.4918032786885246,
+   "biasMove": -0.30327868852459017,
+   "maeMove": 0.4918032786885246,
    "fights": 152,
    "worst": [
     "FA82FQHSJG2F F27 T8 (1 vs 25)",
@@ -644,12 +887,14 @@
    ]
   },
   "IMBALANCED_POWER": {
-   "n": 783,
-   "biasOn": -0.23116219667943805,
-   "biasOff": -0.23116219667943805,
-   "maeOn": 0.3001277139208174,
-   "maeOff": 0.3001277139208174,
-   "fights": 307,
+   "n": 785,
+   "biasOn": -0.23057324840764332,
+   "biasOff": -0.23057324840764332,
+   "maeOn": 0.29936305732484075,
+   "maeOff": 0.29936305732484075,
+   "biasMove": -0.23057324840764332,
+   "maeMove": 0.29936305732484075,
+   "fights": 308,
    "worst": [
     "VTREB5A9XWS7 F23 T2 (-7 vs 17)",
     "L34T7HND7EL8 F27 T1 (4 vs 19)",
@@ -662,6 +907,8 @@
    "biasOff": -0.11956521739130435,
    "maeOn": 0.15217391304347827,
    "maeOff": 0.15217391304347827,
+   "biasMove": -0.11956521739130435,
+   "maeMove": 0.15217391304347827,
    "fights": 73,
    "worst": [
     "THMGB35RGDSD F12 T2 (3 vs 14)",
@@ -675,6 +922,8 @@
    "biasOff": -0.06622516556291391,
    "maeOn": 0.23841059602649006,
    "maeOff": 0.23841059602649006,
+   "biasMove": -0.06622516556291391,
+   "maeMove": 0.23841059602649006,
    "fights": 93,
    "worst": [
     "XPA49DEKREQ1 F17 T10 (14 vs 8)",
@@ -688,18 +937,22 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "JJ75S331VUKX F43 T4 (0 vs 0)"
    ]
   },
   "MINION_POWER": {
-   "n": 1359,
-   "biasOn": -0.2913907284768212,
-   "biasOff": -0.2913907284768212,
-   "maeOn": 0.4326710816777042,
-   "maeOff": 0.4326710816777042,
-   "fights": 405,
+   "n": 1362,
+   "biasOn": -0.2936857562408223,
+   "biasOff": -0.2936857562408223,
+   "maeOn": 0.434654919236417,
+   "maeOff": 0.434654919236417,
+   "biasMove": -0.2936857562408223,
+   "maeMove": 0.434654919236417,
+   "fights": 406,
    "worst": [
     "H7W047ZCEBSA F29 T5 (0 vs 31)",
     "FA82FQHSJG2F F27 T8 (1 vs 25)",
@@ -712,6 +965,8 @@
    "biasOff": 0.05555555555555555,
    "maeOn": 0.5555555555555556,
    "maeOff": 0.5555555555555556,
+   "biasMove": 0.05555555555555555,
+   "maeMove": 0.5555555555555556,
    "fights": 14,
    "worst": [
     "CRRPX9MWJZGM F48 T8 (15 vs 5)",
@@ -725,6 +980,8 @@
    "biasOff": -1.278688524590164,
    "maeOn": 1.278688524590164,
    "maeOff": 1.278688524590164,
+   "biasMove": -1.278688524590164,
+   "maeMove": 1.278688524590164,
    "fights": 19,
    "worst": [
     "2WUMK6PK5QHD F48 T7 (-20 vs 15)",
@@ -733,12 +990,14 @@
    ]
   },
   "PAPER_CUTS_POWER": {
-   "n": 195,
-   "biasOn": -0.37435897435897436,
-   "biasOff": -0.37435897435897436,
-   "maeOn": 0.6512820512820513,
-   "maeOff": 0.6512820512820513,
-   "fights": 78,
+   "n": 198,
+   "biasOn": -0.35353535353535354,
+   "biasOff": -0.35353535353535354,
+   "maeOn": 0.6868686868686869,
+   "maeOff": 0.6868686868686869,
+   "biasMove": -0.35353535353535354,
+   "maeMove": 0.6868686868686869,
+   "fights": 79,
    "worst": [
     "FSPKJAYY3ET6 F35 T1 (12 vs 27)",
     "GMT2Q5L6BVL0 F36 T2 (2 vs 16)",
@@ -746,12 +1005,14 @@
    ]
   },
   "PERSONAL_HIVE_POWER": {
-   "n": 373,
-   "biasOn": -0.128686327077748,
-   "biasOff": -0.128686327077748,
-   "maeOn": 0.23056300268096513,
-   "maeOff": 0.23056300268096513,
-   "fights": 73,
+   "n": 387,
+   "biasOn": -0.13178294573643412,
+   "biasOff": -0.13178294573643412,
+   "maeOn": 0.22997416020671835,
+   "maeOff": 0.22997416020671835,
+   "biasMove": -0.13178294573643412,
+   "maeMove": 0.22997416020671835,
+   "fights": 75,
    "worst": [
     "YQL8D59999AX F31 T4 (-1 vs 25)",
     "V1MF91VL7A2G F27 T4 (0 vs 23)",
@@ -759,12 +1020,14 @@
    ]
   },
   "PLATING_POWER": {
-   "n": 814,
-   "biasOn": -0.16093366093366093,
-   "biasOff": -0.16093366093366093,
-   "maeOn": 0.1977886977886978,
-   "maeOff": 0.1977886977886978,
-   "fights": 247,
+   "n": 822,
+   "biasOn": -0.15936739659367397,
+   "biasOff": -0.15936739659367397,
+   "maeOn": 0.19586374695863748,
+   "maeOff": 0.19586374695863748,
+   "biasMove": -0.15936739659367397,
+   "maeMove": 0.19586374695863748,
+   "fights": 249,
    "worst": [
     "NWVLG96EE54U F46 T4 (0 vs 24)",
     "VTREB5A9XWS7 F23 T2 (-7 vs 17)",
@@ -777,6 +1040,8 @@
    "biasOff": -0.043478260869565216,
    "maeOn": 0.043478260869565216,
    "maeOff": 0.043478260869565216,
+   "biasMove": -0.043478260869565216,
+   "maeMove": 0.043478260869565216,
    "fights": 51,
    "worst": [
     "P4ZDR744B9JC F17 T4 (0 vs 6)",
@@ -785,12 +1050,14 @@
    ]
   },
   "POSSESS_SPEED_POWER": {
-   "n": 97,
-   "biasOn": -0.27835051546391754,
-   "biasOff": -0.27835051546391754,
-   "maeOn": 0.4020618556701031,
-   "maeOff": 0.4020618556701031,
-   "fights": 22,
+   "n": 101,
+   "biasOn": -0.2871287128712871,
+   "biasOff": -0.2871287128712871,
+   "maeOn": 0.40594059405940597,
+   "maeOff": 0.40594059405940597,
+   "biasMove": -0.2871287128712871,
+   "maeMove": 0.40594059405940597,
+   "fights": 23,
    "worst": [
     "Q8XR6EXAF6QV F37 T4 (0 vs 16)",
     "YN4ETG9Z8ERN F38 T4 (0 vs 9)",
@@ -798,12 +1065,14 @@
    ]
   },
   "POSSESS_STRENGTH_POWER": {
-   "n": 67,
-   "biasOn": -0.40298507462686567,
-   "biasOff": -0.40298507462686567,
-   "maeOn": 0.4626865671641791,
-   "maeOff": 0.4626865671641791,
-   "fights": 21,
+   "n": 70,
+   "biasOn": -0.4142857142857143,
+   "biasOff": -0.4142857142857143,
+   "maeOn": 0.4714285714285714,
+   "maeOff": 0.4714285714285714,
+   "biasMove": -0.4142857142857143,
+   "maeMove": 0.4714285714285714,
+   "fights": 22,
    "worst": [
     "Q8XR6EXAF6QV F37 T4 (0 vs 16)",
     "YN4ETG9Z8ERN F38 T4 (0 vs 9)",
@@ -816,6 +1085,8 @@
    "biasOff": -0.3050847457627119,
    "maeOn": 0.8305084745762712,
    "maeOff": 0.8305084745762712,
+   "biasMove": -0.3050847457627119,
+   "maeMove": 0.8305084745762712,
    "fights": 61,
    "worst": [
     "8L29N792FA45 F35 T2 (16 vs 1)",
@@ -824,12 +1095,14 @@
    ]
   },
   "RAVENOUS_POWER": {
-   "n": 969,
-   "biasOn": -0.029927760577915376,
-   "biasOff": -0.029927760577915376,
-   "maeOn": 0.04437564499484004,
-   "maeOff": 0.04437564499484004,
-   "fights": 246,
+   "n": 974,
+   "biasOn": -0.029774127310061602,
+   "biasOff": -0.029774127310061602,
+   "maeOn": 0.044147843942505136,
+   "maeOff": 0.044147843942505136,
+   "biasMove": -0.029774127310061602,
+   "maeMove": 0.044147843942505136,
+   "fights": 247,
    "worst": [
     "GSG0Q5KP9AAU F15 T1 (0 vs 10)",
     "RBJ402TKQZ6F F15 T3 (2 vs 10)",
@@ -842,6 +1115,8 @@
    "biasOff": -0.3010033444816054,
    "maeOn": 0.45484949832775917,
    "maeOff": 0.45484949832775917,
+   "biasMove": -0.3010033444816054,
+   "maeMove": 0.45484949832775917,
    "fights": 69,
    "worst": [
     "1WSHZ8ML4EVF F27 T6 (0 vs 16)",
@@ -850,12 +1125,14 @@
    ]
   },
   "RITUAL_POWER": {
-   "n": 555,
-   "biasOn": -0.13693693693693693,
-   "biasOff": -0.13693693693693693,
-   "maeOn": 0.20540540540540542,
-   "maeOff": 0.20540540540540542,
-   "fights": 203,
+   "n": 557,
+   "biasOn": -0.13824057450628366,
+   "biasOff": -0.13824057450628366,
+   "maeOn": 0.20646319569120286,
+   "maeOff": 0.20646319569120286,
+   "biasMove": -0.13824057450628366,
+   "maeMove": 0.20646319569120286,
+   "fights": 204,
    "worst": [
     "SK1USHSB1U7U F37 T4 (2 vs 26)",
     "RRMYC7MCSYX8 F15 T3 (11 vs 0)",
@@ -868,6 +1145,8 @@
    "biasOff": 0.2867132867132867,
    "maeOn": 0.682983682983683,
    "maeOff": 0.682983682983683,
+   "biasMove": 0.2867132867132867,
+   "maeMove": 0.682983682983683,
    "fights": 70,
    "worst": [
     "LXB3B2WT9E0W F33 T5 (81 vs 0)",
@@ -881,6 +1160,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 5,
    "worst": [
     "2Q370C5EW0EU F27 T5 (13 vs 13)",
@@ -894,6 +1175,8 @@
    "biasOff": -0.03529411764705882,
    "maeOn": 0.03529411764705882,
    "maeOff": 0.03529411764705882,
+   "biasMove": -0.03529411764705882,
+   "maeMove": 0.03529411764705882,
    "fights": 94,
    "worst": [
     "Z7D7J1RUUJ61 F8 T2 (2 vs 9)",
@@ -902,12 +1185,14 @@
    ]
   },
   "SHRINK_POWER": {
-   "n": 41,
-   "biasOn": 0.12195121951219512,
-   "biasOff": 0.12195121951219512,
-   "maeOn": 0.21951219512195122,
-   "maeOff": 0.21951219512195122,
-   "fights": 17,
+   "n": 43,
+   "biasOn": 0.11627906976744186,
+   "biasOff": 0.11627906976744186,
+   "maeOn": 0.20930232558139536,
+   "maeOff": 0.20930232558139536,
+   "biasMove": 0.11627906976744186,
+   "maeMove": 0.20930232558139536,
+   "fights": 18,
    "worst": [
     "PU21Z67J65NE F17 T4 (6 vs 0)",
     "SUUKNZNT3KDF F17 T6 (0 vs 1)",
@@ -915,12 +1200,14 @@
    ]
   },
   "SKITTISH_POWER": {
-   "n": 436,
-   "biasOn": -0.1536697247706422,
-   "biasOff": -0.1536697247706422,
-   "maeOn": 0.1811926605504587,
-   "maeOff": 0.1811926605504587,
-   "fights": 89,
+   "n": 441,
+   "biasOn": -0.15192743764172337,
+   "biasOff": -0.15192743764172337,
+   "maeOn": 0.17913832199546487,
+   "maeOff": 0.17913832199546487,
+   "biasMove": -0.15192743764172337,
+   "maeMove": 0.17913832199546487,
+   "fights": 90,
    "worst": [
     "62PMHB7T80Y8 F8 T1 (0 vs 12)",
     "VG7HWJRX44RQ F13 T9 (0 vs 11)",
@@ -933,6 +1220,8 @@
    "biasOff": -0.06735751295336788,
    "maeOn": 0.06735751295336788,
    "maeOff": 0.06735751295336788,
+   "biasMove": -0.06735751295336788,
+   "maeMove": 0.06735751295336788,
    "fights": 133,
    "worst": [
     "2XWM27TZ7T12 F7 T2 (4 vs 15)",
@@ -946,6 +1235,8 @@
    "biasOff": -0.06516290726817042,
    "maeOn": 0.06516290726817042,
    "maeOff": 0.06516290726817042,
+   "biasMove": -0.06516290726817042,
+   "maeMove": 0.06516290726817042,
    "fights": 81,
    "worst": [
     "9FVEQKJ0Y1YQ F12 T6 (-9 vs 0)",
@@ -959,6 +1250,8 @@
    "biasOff": -0.30303030303030304,
    "maeOn": 0.4069264069264069,
    "maeOff": 0.4069264069264069,
+   "biasMove": -0.30303030303030304,
+   "maeMove": 0.4069264069264069,
    "fights": 87,
    "worst": [
     "VTREB5A9XWS7 F23 T2 (-7 vs 17)",
@@ -972,6 +1265,8 @@
    "biasOff": -0.3333333333333333,
    "maeOn": 0.3333333333333333,
    "maeOff": 0.3333333333333333,
+   "biasMove": -0.3333333333333333,
+   "maeMove": 0.3333333333333333,
    "fights": 20,
    "worst": [
     "4JGPCH3WX6JV F39 T4 (18 vs 22)",
@@ -985,6 +1280,8 @@
    "biasOff": -0.09943977591036414,
    "maeOn": 0.10784313725490197,
    "maeOff": 0.10784313725490197,
+   "biasMove": -0.09943977591036414,
+   "maeMove": 0.10784313725490197,
    "fights": 79,
    "worst": [
     "7MDJ256RY2UU F17 T16 (-28 vs 2)",
@@ -998,6 +1295,8 @@
    "biasOff": -0.07017543859649122,
    "maeOn": 0.19298245614035087,
    "maeOff": 0.19298245614035087,
+   "biasMove": -0.07017543859649122,
+   "maeMove": 0.19298245614035087,
    "fights": 27,
    "worst": [
     "JR66CJ9T8H7W F45 T6 (0 vs 9)",
@@ -1006,12 +1305,14 @@
    ]
   },
   "STRENGTH_POWER": {
-   "n": 9243,
-   "biasOn": -0.23260846045656172,
-   "biasOff": -0.23260846045656172,
-   "maeOn": 0.4119874499621335,
-   "maeOff": 0.4119874499621335,
-   "fights": 3360,
+   "n": 9283,
+   "biasOn": -0.16309382742647852,
+   "biasOff": -0.16309382742647852,
+   "maeOn": 0.3335128729936443,
+   "maeOff": 0.3335128729936443,
+   "biasMove": -0.16298610363029192,
+   "maeMove": 0.32995798771948726,
+   "fights": 3376,
    "worst": [
     "LXB3B2WT9E0W F33 T5 (81 vs 0)",
     "S780Y1W7AQZL F17 T5 (79 vs 4)",
@@ -1019,12 +1320,14 @@
    ]
   },
   "SUCK_POWER": {
-   "n": 244,
-   "biasOn": 0.004098360655737705,
-   "biasOff": 0.004098360655737705,
-   "maeOn": 0.06147540983606557,
-   "maeOff": 0.06147540983606557,
-   "fights": 77,
+   "n": 247,
+   "biasOn": 0.004048582995951417,
+   "biasOff": 0.004048582995951417,
+   "maeOn": 0.06072874493927125,
+   "maeOff": 0.06072874493927125,
+   "biasMove": 0.004048582995951417,
+   "maeMove": 0.06072874493927125,
+   "fights": 78,
    "worst": [
     "5HHLMV2DZ5AZ F14 T2 (8 vs 0)",
     "0YG4ETM3MLHS F11 T2 (6 vs 12)",
@@ -1037,6 +1340,8 @@
    "biasOff": 0.05069124423963134,
    "maeOn": 0.05069124423963134,
    "maeOff": 0.05069124423963134,
+   "biasMove": 0.05069124423963134,
+   "maeMove": 0.05069124423963134,
    "fights": 76,
    "worst": [
     "NWVLG96EE54U F15 T2 (11 vs 0)",
@@ -1050,6 +1355,8 @@
    "biasOff": -0.27586206896551724,
    "maeOn": 0.19950738916256158,
    "maeOff": 0.32019704433497537,
+   "biasMove": -0.15517241379310345,
+   "maeMove": 0.19950738916256158,
    "fights": 153,
    "worst": [
     "M8123JA75Y1G F19 T4 (0 vs 16)",
@@ -1063,6 +1370,8 @@
    "biasOff": 0.010273972602739725,
    "maeOn": 0.09246575342465753,
    "maeOff": 0.09246575342465753,
+   "biasMove": 0.010273972602739725,
+   "maeMove": 0.09246575342465753,
    "fights": 74,
    "worst": [
     "0H1X9QMAAQ8V F14 T4 (15 vs 0)",
@@ -1076,6 +1385,8 @@
    "biasOff": 0.05069124423963134,
    "maeOn": 0.05069124423963134,
    "maeOff": 0.05069124423963134,
+   "biasMove": 0.05069124423963134,
+   "maeMove": 0.05069124423963134,
    "fights": 76,
    "worst": [
     "NWVLG96EE54U F15 T2 (11 vs 0)",
@@ -1084,12 +1395,14 @@
    ]
   },
   "THORNS_POWER": {
-   "n": 379,
-   "biasOn": -1.0659630606860158,
-   "biasOff": -1.0659630606860158,
-   "maeOn": 1.108179419525066,
-   "maeOff": 1.108179419525066,
-   "fights": 257,
+   "n": 383,
+   "biasOn": -1.0678851174934725,
+   "biasOff": -1.0678851174934725,
+   "maeOn": 1.1096605744125327,
+   "maeOff": 1.1096605744125327,
+   "biasMove": -1.0678851174934725,
+   "maeMove": 1.1096605744125327,
+   "fights": 260,
    "worst": [
     "0NG27W8QBNYX F24 T2 (-18 vs 17)",
     "UNRLW0W3XWLD F31 T2 (16 vs 26)",
@@ -1102,6 +1415,8 @@
    "biasOff": -0.00909090909090909,
    "maeOn": 0.00909090909090909,
    "maeOff": 0.00909090909090909,
+   "biasMove": -0.00909090909090909,
+   "maeMove": 0.00909090909090909,
    "fights": 86,
    "worst": [
     "RUUBXYZV5064 F15 T5 (0 vs 2)",
@@ -1115,6 +1430,8 @@
    "biasOff": -0.14102564102564102,
    "maeOn": 0.20512820512820512,
    "maeOff": 0.20512820512820512,
+   "biasMove": -0.14102564102564102,
+   "maeMove": 0.20512820512820512,
    "fights": 59,
    "worst": [
     "4JVP9LTXYY9D F31 T3 (0 vs 15)",
@@ -1123,12 +1440,14 @@
    ]
   },
   "VULNERABLE_POWER": {
-   "n": 6629,
-   "biasOn": -0.22703273495248152,
-   "biasOff": -0.22899381505506108,
-   "maeOn": 0.310604917785488,
-   "maeOff": 0.3125659978880676,
-   "fights": 3545,
+   "n": 6668,
+   "biasOn": -0.17726454709058187,
+   "biasOff": -0.17921415716856628,
+   "maeOn": 0.2513497300539892,
+   "maeOff": 0.2532993401319736,
+   "biasMove": -0.1768146370725855,
+   "maeMove": 0.25,
+   "fights": 3563,
    "worst": [
     "V5S6QVVQYL37 F17 T11 (-33 vs 7)",
     "2WUMK6PK5QHD F48 T7 (-20 vs 15)",
@@ -1136,16 +1455,18 @@
    ]
   },
   "WEAK_POWER": {
-   "n": 702,
-   "biasOn": -0.10113960113960115,
-   "biasOff": -0.10113960113960115,
-   "maeOn": 0.2948717948717949,
-   "maeOff": 0.2948717948717949,
-   "fights": 519,
+   "n": 708,
+   "biasOn": -0.03531073446327684,
+   "biasOff": -0.03531073446327684,
+   "maeOn": 0.21610169491525424,
+   "maeOff": 0.21610169491525424,
+   "biasMove": -0.03531073446327684,
+   "maeMove": 0.21610169491525424,
+   "fights": 522,
    "worst": [
-    "4JGPCH3WX6JV F33 T4 (16 vs 33)",
-    "NWVLG96EE54U F33 T4 (9 vs 22)",
-    "RRMYC7MCSYX8 F15 T3 (11 vs 0)"
+    "RRMYC7MCSYX8 F15 T3 (11 vs 0)",
+    "981WMX8MQ7DK F13 T2 (10 vs 0)",
+    "R6V3T4KSDABE F38 T1 (10 vs 0)"
    ]
   },
   "WITHERING_PRESENCE_POWER": {
@@ -1154,6 +1475,8 @@
    "biasOff": 0.1696969696969697,
    "maeOn": 1.8666666666666667,
    "maeOff": 1.8666666666666667,
+   "biasMove": 0.1696969696969697,
+   "maeMove": 1.8666666666666667,
    "fights": 21,
    "worst": [
     "JR66CJ9T8H7W F48 T8 (-10 vs 34)",
@@ -1169,6 +1492,8 @@
    "biasOff": 0.1,
    "maeOn": 0.4,
    "maeOff": 0.4,
+   "biasMove": 0.1,
+   "maeMove": 0.4,
    "fights": 91,
    "worst": [
     "VG7HWJRX44RQ F8 T2 (21 vs 13)",
@@ -1177,12 +1502,14 @@
    ]
   },
   "ASLEEP_POWER": {
-   "n": 46,
-   "biasOn": -0.021739130434782608,
-   "biasOff": -0.021739130434782608,
-   "maeOn": 0.021739130434782608,
-   "maeOff": 0.021739130434782608,
-   "fights": 46,
+   "n": 47,
+   "biasOn": -0.02127659574468085,
+   "biasOff": -0.02127659574468085,
+   "maeOn": 0.02127659574468085,
+   "maeOff": 0.02127659574468085,
+   "biasMove": -0.02127659574468085,
+   "maeMove": 0.02127659574468085,
+   "fights": 47,
    "worst": [
     "W5PTC48C3B1H F17 T3 (0 vs 1)",
     "BFVATR4WANS6 F17 T3 (0 vs 0)",
@@ -1190,12 +1517,14 @@
    ]
   },
   "BURROWED_POWER": {
-   "n": 81,
-   "biasOn": -0.012345679012345678,
-   "biasOff": -0.012345679012345678,
-   "maeOn": 0.012345679012345678,
-   "maeOff": 0.012345679012345678,
-   "fights": 81,
+   "n": 83,
+   "biasOn": -0.012048192771084338,
+   "biasOff": -0.012048192771084338,
+   "maeOn": 0.012048192771084338,
+   "maeOff": 0.012048192771084338,
+   "biasMove": -0.012048192771084338,
+   "maeMove": 0.012048192771084338,
+   "fights": 83,
    "worst": [
     "G1Z0X3WBH4XQ F21 T3 (1 vs 2)",
     "VE975EGP2G3V F20 T5 (1 vs 1)",
@@ -1203,16 +1532,18 @@
    ]
   },
   "CRAB_RAGE_POWER": {
-   "n": 17,
-   "biasOn": -7.0588235294117645,
-   "biasOff": -7.0588235294117645,
-   "maeOn": 7.529411764705882,
-   "maeOff": 7.529411764705882,
-   "fights": 17,
+   "n": 16,
+   "biasOn": -7.0625,
+   "biasOff": -7.0625,
+   "maeOn": 7.0625,
+   "maeOff": 7.0625,
+   "biasMove": -6.1875,
+   "maeMove": 6.1875,
+   "fights": 16,
    "worst": [
     "GGF8C3G76C7B F33 T14 (0 vs 55)",
-    "WLM6YKJ0ASNE F33 T7 (8 vs 33)",
-    "8L29N792FA45 F33 T4 (2 vs 19)"
+    "8L29N792FA45 F33 T4 (2 vs 19)",
+    "WLM6YKJ0ASNE F33 T7 (8 vs 24)"
    ]
   },
   "CURL_UP_POWER": {
@@ -1221,6 +1552,8 @@
    "biasOff": -0.18571428571428572,
    "maeOn": 0.18571428571428572,
    "maeOff": 0.18571428571428572,
+   "biasMove": -0.18571428571428572,
+   "maeMove": 0.18571428571428572,
    "fights": 70,
    "worst": [
     "842N6N604DVX F31 T1 (3 vs 9)",
@@ -1234,6 +1567,8 @@
    "biasOff": -3.6875,
    "maeOn": 0.625,
    "maeOff": 3.6875,
+   "biasMove": -0.625,
+   "maeMove": 0.625,
    "fights": 16,
    "worst": [
     "Q97BWZJ011BB F19 T4 (0 vs 10)",
@@ -1242,12 +1577,14 @@
    ]
   },
   "PLATING_POWER": {
-   "n": 46,
-   "biasOn": -0.021739130434782608,
-   "biasOff": -0.021739130434782608,
-   "maeOn": 0.021739130434782608,
-   "maeOff": 0.021739130434782608,
-   "fights": 46,
+   "n": 47,
+   "biasOn": -0.02127659574468085,
+   "biasOff": -0.02127659574468085,
+   "maeOn": 0.02127659574468085,
+   "maeOff": 0.02127659574468085,
+   "biasMove": -0.02127659574468085,
+   "maeMove": 0.02127659574468085,
+   "fights": 47,
    "worst": [
     "W5PTC48C3B1H F17 T3 (0 vs 1)",
     "BFVATR4WANS6 F17 T3 (0 vs 0)",
@@ -1260,6 +1597,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 38,
    "worst": [
     "94FPBTS15SQT F17 T5 (0 vs 0)",
@@ -1273,11 +1612,26 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 77,
    "worst": [
     "4JVP9LTXYY9D F9 T3 (1 vs 1)",
     "5FMUSNUXEHGY F8 T3 (0 vs 0)",
     "GL2UHZGJ7P8M F15 T2 (0 vs 0)"
+   ]
+  },
+  "SHRINK_POWER": {
+   "n": 1,
+   "biasOn": 0,
+   "biasOff": 0,
+   "maeOn": 0,
+   "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
+   "fights": 1,
+   "worst": [
+    "XSPHCB4GUSEU F15 T3 (3 vs 3)"
    ]
   },
   "SLIPPERY_POWER": {
@@ -1286,6 +1640,8 @@
    "biasOff": -0.017241379310344827,
    "maeOn": 0.017241379310344827,
    "maeOff": 0.017241379310344827,
+   "biasMove": -0.017241379310344827,
+   "maeMove": 0.017241379310344827,
    "fights": 106,
    "worst": [
     "G1Z0X3WBH4XQ F17 T3 (26 vs 28)",
@@ -1299,6 +1655,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 4,
    "worst": [
     "AMA2B58E2ZMA F25 T3 (3 vs 3)",
@@ -1312,6 +1670,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 10,
    "worst": [
     "P4ZDR744B9JC F37 T6 (0 vs 0)",
@@ -1320,12 +1680,14 @@
    ]
   },
   "STRENGTH_POWER": {
-   "n": 192,
-   "biasOn": -0.328125,
-   "biasOff": -0.328125,
-   "maeOn": 0.4635416666666667,
-   "maeOff": 0.4635416666666667,
-   "fights": 184,
+   "n": 193,
+   "biasOn": -0.32642487046632124,
+   "biasOff": -0.32642487046632124,
+   "maeOn": 0.46113989637305697,
+   "maeOff": 0.46113989637305697,
+   "biasMove": -0.32642487046632124,
+   "maeMove": 0.46113989637305697,
+   "fights": 185,
    "worst": [
     "GMT2Q5L6BVL0 F36 T2 (2 vs 16)",
     "123ZSH58F5FS F37 T2 (2 vs 13)",
@@ -1333,12 +1695,14 @@
    ]
   },
   "THORNS_POWER": {
-   "n": 61,
+   "n": 62,
    "biasOn": 0,
    "biasOff": 0,
-   "maeOn": 0.06557377049180328,
-   "maeOff": 0.06557377049180328,
-   "fights": 61,
+   "maeOn": 0.06451612903225806,
+   "maeOff": 0.06451612903225806,
+   "biasMove": 0,
+   "maeMove": 0.06451612903225806,
+   "fights": 62,
    "worst": [
     "WQ67U1UY1D8V F5 T2 (0 vs 2)",
     "5LRZ7HJ7YGSY F3 T2 (6 vs 4)",
@@ -1351,6 +1715,8 @@
    "biasOff": -0.31958762886597936,
    "maeOn": 0.31958762886597936,
    "maeOff": 0.31958762886597936,
+   "biasMove": -0.31958762886597936,
+   "maeMove": 0.31958762886597936,
    "fights": 95,
    "worst": [
     "GG0Y0TJ2JXAR F20 T4 (0 vs 12)",
@@ -1364,6 +1730,8 @@
    "biasOff": -0.5,
    "maeOn": 0.5,
    "maeOff": 0.5,
+   "biasMove": -0.5,
+   "maeMove": 0.5,
    "fights": 6,
    "worst": [
     "W80JV2YVC8UZ F45 T2 (-3 vs 0)",
@@ -1379,6 +1747,8 @@
    "biasOff": 0.1696969696969697,
    "maeOn": 1.8666666666666667,
    "maeOff": 1.8666666666666667,
+   "biasMove": 0.1696969696969697,
+   "maeMove": 1.8666666666666667,
    "fights": 21,
    "worst": [
     "JR66CJ9T8H7W F48 T8 (-10 vs 34)",
@@ -1392,6 +1762,8 @@
    "biasOff": -0.3137254901960784,
    "maeOn": 0.35294117647058826,
    "maeOff": 0.35294117647058826,
+   "biasMove": -0.3137254901960784,
+   "maeMove": 0.35294117647058826,
    "fights": 32,
    "worst": [
     "Y3XT9EBS7U8B F13 T3 (8 vs 18)",
@@ -1405,6 +1777,8 @@
    "biasOff": -0.125,
    "maeOn": 0.225,
    "maeOff": 0.225,
+   "biasMove": -0.125,
+   "maeMove": 0.225,
    "fights": 27,
    "worst": [
     "JR66CJ9T8H7W F45 T6 (0 vs 9)",
@@ -1418,6 +1792,8 @@
    "biasOff": -0.08791208791208792,
    "maeOn": 0.3516483516483517,
    "maeOff": 0.3516483516483517,
+   "biasMove": -0.08791208791208792,
+   "maeMove": 0.3516483516483517,
    "fights": 32,
    "worst": [
     "75P1G37W7CB3 F5 T3 (12 vs 0)",
@@ -1431,6 +1807,8 @@
    "biasOff": -0.11764705882352941,
    "maeOn": 0.11764705882352941,
    "maeOff": 0.11764705882352941,
+   "biasMove": -0.11764705882352941,
+   "maeMove": 0.11764705882352941,
    "fights": 8,
    "worst": [
     "7DFB21JE2DTK F38 T1 (0 vs 1)",
@@ -1444,6 +1822,8 @@
    "biasOff": -0.05263157894736842,
    "maeOn": 0.05263157894736842,
    "maeOff": 0.05263157894736842,
+   "biasMove": -0.05263157894736842,
+   "maeMove": 0.05263157894736842,
    "fights": 9,
    "worst": [
     "G1Z0X3WBH4XQ F36 T1 (1 vs 2)",
@@ -1452,12 +1832,14 @@
    ]
   },
   "BOWLBUG_EGG": {
-   "n": 220,
-   "biasOn": -0.22272727272727272,
-   "biasOff": -0.22272727272727272,
-   "maeOn": 0.22272727272727272,
-   "maeOff": 0.22272727272727272,
-   "fights": 110,
+   "n": 223,
+   "biasOn": -0.21973094170403587,
+   "biasOff": -0.21973094170403587,
+   "maeOn": 0.21973094170403587,
+   "maeOff": 0.21973094170403587,
+   "biasMove": -0.21973094170403587,
+   "maeMove": 0.21973094170403587,
+   "fights": 111,
    "worst": [
     "XJWF15R19UXF F20 T1 (11 vs 18)",
     "SCBC3F0QT8BC F20 T3 (12 vs 17)",
@@ -1470,6 +1852,8 @@
    "biasOff": -0.2648809523809524,
    "maeOn": 0.3541666666666667,
    "maeOff": 0.3541666666666667,
+   "biasMove": -0.2648809523809524,
+   "maeMove": 0.3541666666666667,
    "fights": 128,
    "worst": [
     "L34T7HND7EL8 F27 T3 (0 vs 19)",
@@ -1478,12 +1862,14 @@
    ]
   },
   "BOWLBUG_ROCK": {
-   "n": 783,
-   "biasOn": -0.23116219667943805,
-   "biasOff": -0.23116219667943805,
-   "maeOn": 0.3001277139208174,
-   "maeOff": 0.3001277139208174,
-   "fights": 307,
+   "n": 785,
+   "biasOn": -0.23057324840764332,
+   "biasOff": -0.23057324840764332,
+   "maeOn": 0.29936305732484075,
+   "maeOff": 0.29936305732484075,
+   "biasMove": -0.23057324840764332,
+   "maeMove": 0.29936305732484075,
+   "fights": 308,
    "worst": [
     "VTREB5A9XWS7 F23 T2 (-7 vs 17)",
     "L34T7HND7EL8 F27 T1 (4 vs 19)",
@@ -1496,6 +1882,8 @@
    "biasOff": -0.3556910569105691,
    "maeOn": 0.49796747967479676,
    "maeOff": 0.49796747967479676,
+   "biasMove": -0.3556910569105691,
+   "maeMove": 0.49796747967479676,
    "fights": 137,
    "worst": [
     "VTREB5A9XWS7 F23 T4 (-21 vs 19)",
@@ -1509,6 +1897,8 @@
    "biasOff": -0.2247191011235955,
    "maeOn": 0.24719101123595505,
    "maeOff": 0.24719101123595505,
+   "biasMove": -0.2247191011235955,
+   "maeMove": 0.24719101123595505,
    "fights": 29,
    "worst": [
     "Y3XT9EBS7U8B F13 T3 (8 vs 18)",
@@ -1522,6 +1912,8 @@
    "biasOff": -0.06516290726817042,
    "maeOn": 0.06516290726817042,
    "maeOff": 0.06516290726817042,
+   "biasMove": -0.06516290726817042,
+   "maeMove": 0.06516290726817042,
    "fights": 81,
    "worst": [
     "9FVEQKJ0Y1YQ F12 T6 (-9 vs 0)",
@@ -1535,6 +1927,8 @@
    "biasOff": 0.010273972602739725,
    "maeOn": 0.09246575342465753,
    "maeOff": 0.09246575342465753,
+   "biasMove": 0.010273972602739725,
+   "maeMove": 0.09246575342465753,
    "fights": 74,
    "worst": [
     "0H1X9QMAAQ8V F14 T4 (15 vs 0)",
@@ -1548,6 +1942,8 @@
    "biasOff": -0.018633540372670808,
    "maeOn": 0.08695652173913043,
    "maeOff": 0.08695652173913043,
+   "biasMove": -0.018633540372670808,
+   "maeMove": 0.08695652173913043,
    "fights": 151,
    "worst": [
     "RRMYC7MCSYX8 F15 T3 (11 vs 0)",
@@ -1561,6 +1957,8 @@
    "biasOff": -0.1913978494623656,
    "maeOn": 0.1913978494623656,
    "maeOff": 0.1913978494623656,
+   "biasMove": -0.1913978494623656,
+   "maeMove": 0.1913978494623656,
    "fights": 51,
    "worst": [
     "V5S6QVVQYL37 F17 T11 (-33 vs 7)",
@@ -1574,6 +1972,8 @@
    "biasOff": -0.27058823529411763,
    "maeOn": 0.2847058823529412,
    "maeOff": 0.2847058823529412,
+   "biasMove": -0.27058823529411763,
+   "maeMove": 0.2847058823529412,
    "fights": 96,
    "worst": [
     "ZRYR5WLG6E9K F22 T1 (0 vs 18)",
@@ -1582,12 +1982,14 @@
    ]
   },
   "CORPSE_SLUG": {
-   "n": 969,
-   "biasOn": -0.029927760577915376,
-   "biasOff": -0.029927760577915376,
-   "maeOn": 0.04437564499484004,
-   "maeOff": 0.04437564499484004,
-   "fights": 246,
+   "n": 974,
+   "biasOn": -0.029774127310061602,
+   "biasOff": -0.029774127310061602,
+   "maeOn": 0.044147843942505136,
+   "maeOff": 0.044147843942505136,
+   "biasMove": -0.029774127310061602,
+   "maeMove": 0.044147843942505136,
+   "fights": 247,
    "worst": [
     "GSG0Q5KP9AAU F15 T1 (0 vs 10)",
     "RBJ402TKQZ6F F15 T3 (2 vs 10)",
@@ -1600,6 +2002,8 @@
    "biasOff": 0.03076923076923077,
    "maeOn": 0.27692307692307694,
    "maeOff": 0.27692307692307694,
+   "biasMove": 0.03076923076923077,
+   "maeMove": 0.27692307692307694,
    "fights": 27,
    "worst": [
     "981WMX8MQ7DK F13 T2 (10 vs 0)",
@@ -1609,15 +2013,17 @@
   },
   "CRUSHER": {
    "n": 526,
-   "biasOn": -2.150190114068441,
-   "biasOff": -2.150190114068441,
-   "maeOn": 2.511406844106464,
-   "maeOff": 2.511406844106464,
+   "biasOn": -0.42585551330798477,
+   "biasOff": -0.42585551330798477,
+   "maeOn": 0.5247148288973384,
+   "maeOff": 0.5247148288973384,
+   "biasMove": -0.42395437262357416,
+   "maeMove": 0.4619771863117871,
    "fights": 78,
    "worst": [
     "GGF8C3G76C7B F33 T14 (0 vs 55)",
-    "7DFB21JE2DTK F33 T4 (44 vs 70)",
-    "HME0FA7VA0J6 F33 T6 (-14 vs 12)"
+    "HME0FA7VA0J6 F33 T6 (-14 vs 10)",
+    "8L29N792FA45 F33 T4 (2 vs 19)"
    ]
   },
   "CUBEX_CONSTRUCT": {
@@ -1626,6 +2032,8 @@
    "biasOff": -0.08223684210526316,
    "maeOn": 0.1875,
    "maeOff": 0.1875,
+   "biasMove": -0.08223684210526316,
+   "maeMove": 0.1875,
    "fights": 83,
    "worst": [
     "W80JV2YVC8UZ F46 T2 (35 vs 24)",
@@ -1639,6 +2047,8 @@
    "biasOff": -0.04201680672268908,
    "maeOn": 0.04201680672268908,
    "maeOff": 0.04201680672268908,
+   "biasMove": -0.04201680672268908,
+   "maeMove": 0.04201680672268908,
    "fights": 82,
    "worst": [
     "HEACJRY5LEVD F13 T7 (-6 vs 0)",
@@ -1652,6 +2062,8 @@
    "biasOff": -0.29343629343629346,
    "maeOn": 0.47104247104247104,
    "maeOff": 0.47104247104247104,
+   "biasMove": -0.29343629343629346,
+   "maeMove": 0.47104247104247104,
    "fights": 69,
    "worst": [
     "1WSHZ8ML4EVF F27 T6 (0 vs 16)",
@@ -1665,6 +2077,8 @@
    "biasOff": -0.2885375494071146,
    "maeOn": 0.4624505928853755,
    "maeOff": 0.4624505928853755,
+   "biasMove": -0.2885375494071146,
+   "maeMove": 0.4624505928853755,
    "fights": 69,
    "worst": [
     "1WSHZ8ML4EVF F27 T6 (0 vs 16)",
@@ -1678,6 +2092,8 @@
    "biasOff": -0.30078125,
    "maeOn": 0.48046875,
    "maeOff": 0.48046875,
+   "biasMove": -0.30078125,
+   "maeMove": 0.48046875,
    "fights": 69,
    "worst": [
     "1WSHZ8ML4EVF F27 T6 (0 vs 16)",
@@ -1686,12 +2102,14 @@
    ]
   },
   "DEVOTED_SCULPTOR": {
-   "n": 253,
-   "biasOn": -0.2490118577075099,
-   "biasOff": -0.2490118577075099,
-   "maeOn": 0.31225296442687744,
-   "maeOff": 0.31225296442687744,
-   "fights": 65,
+   "n": 256,
+   "biasOn": -0.25,
+   "biasOff": -0.25,
+   "maeOn": 0.3125,
+   "maeOff": 0.3125,
+   "biasMove": -0.25,
+   "maeMove": 0.3125,
+   "fights": 66,
    "worst": [
     "SK1USHSB1U7U F37 T4 (2 vs 26)",
     "7DFB21JE2DTK F36 T3 (8 vs 18)",
@@ -1699,12 +2117,14 @@
    ]
   },
   "ENTOMANCER": {
-   "n": 373,
-   "biasOn": -0.128686327077748,
-   "biasOff": -0.128686327077748,
-   "maeOn": 0.23056300268096513,
-   "maeOff": 0.23056300268096513,
-   "fights": 73,
+   "n": 387,
+   "biasOn": -0.13178294573643412,
+   "biasOff": -0.13178294573643412,
+   "maeOn": 0.22997416020671835,
+   "maeOff": 0.22997416020671835,
+   "biasMove": -0.13178294573643412,
+   "maeMove": 0.22997416020671835,
+   "fights": 75,
    "worst": [
     "YQL8D59999AX F31 T4 (-1 vs 25)",
     "V1MF91VL7A2G F27 T4 (0 vs 23)",
@@ -1712,12 +2132,14 @@
    ]
   },
   "EXOSKELETON": {
-   "n": 883,
-   "biasOn": -0.2876557191392978,
-   "biasOff": -0.2876557191392978,
-   "maeOn": 0.3714609286523216,
-   "maeOff": 0.3714609286523216,
-   "fights": 249,
+   "n": 886,
+   "biasOn": -0.2866817155756208,
+   "biasOff": -0.2866817155756208,
+   "maeOn": 0.37020316027088035,
+   "maeOff": 0.37020316027088035,
+   "biasMove": -0.2866817155756208,
+   "maeMove": 0.37020316027088035,
+   "fights": 250,
    "worst": [
     "GG0Y0TJ2JXAR F20 T4 (0 vs 12)",
     "06S86JU88EG5 F20 T4 (0 vs 12)",
@@ -1730,6 +2152,8 @@
    "biasOff": 0.08888888888888889,
    "maeOn": 0.13333333333333333,
    "maeOff": 0.13333333333333333,
+   "biasMove": 0.08888888888888889,
+   "maeMove": 0.13333333333333333,
    "fights": 55,
    "worst": [
     "N95WHBGC4CG9 F15 T3 (15 vs 0)",
@@ -1743,6 +2167,8 @@
    "biasOff": -0.21296296296296297,
    "maeOn": 0.49074074074074076,
    "maeOff": 0.49074074074074076,
+   "biasMove": -0.21296296296296297,
+   "maeMove": 0.49074074074074076,
    "fights": 29,
    "worst": [
     "JR66CJ9T8H7W F39 T4 (7 vs 25)",
@@ -1756,6 +2182,8 @@
    "biasOff": -0.13043478260869565,
    "maeOn": 0.13043478260869565,
    "maeOff": 0.13043478260869565,
+   "biasMove": -0.13043478260869565,
+   "maeMove": 0.13043478260869565,
    "fights": 55,
    "worst": [
     "KY3YZ0DMRY0G F15 T3 (-3 vs 0)",
@@ -1769,6 +2197,8 @@
    "biasOff": -0.10294117647058823,
    "maeOn": 0.19117647058823528,
    "maeOff": 0.19117647058823528,
+   "biasMove": -0.10294117647058823,
+   "maeMove": 0.19117647058823528,
    "fights": 24,
    "worst": [
     "YFG53EZ372D7 F42 T2 (16 vs 20)",
@@ -1782,6 +2212,8 @@
    "biasOff": -0.09014084507042254,
    "maeOn": 0.09577464788732394,
    "maeOff": 0.09577464788732394,
+   "biasMove": -0.09014084507042254,
+   "maeMove": 0.09577464788732394,
    "fights": 92,
    "worst": [
     "24DPW2ED71QM F13 T3 (7 vs 18)",
@@ -1795,6 +2227,8 @@
    "biasOff": 0.04926108374384237,
    "maeOn": 0.09852216748768473,
    "maeOff": 0.09852216748768473,
+   "biasMove": 0.04926108374384237,
+   "maeMove": 0.09852216748768473,
    "fights": 57,
    "worst": [
     "N95WHBGC4CG9 F15 T3 (15 vs 0)",
@@ -1803,12 +2237,14 @@
    ]
   },
   "FOSSIL_STALKER": {
-   "n": 244,
-   "biasOn": 0.004098360655737705,
-   "biasOff": 0.004098360655737705,
-   "maeOn": 0.06147540983606557,
-   "maeOff": 0.06147540983606557,
-   "fights": 77,
+   "n": 247,
+   "biasOn": 0.004048582995951417,
+   "biasOff": 0.004048582995951417,
+   "maeOn": 0.06072874493927125,
+   "maeOff": 0.06072874493927125,
+   "biasMove": 0.004048582995951417,
+   "maeMove": 0.06072874493927125,
+   "fights": 78,
    "worst": [
     "5HHLMV2DZ5AZ F14 T2 (8 vs 0)",
     "0YG4ETM3MLHS F11 T2 (6 vs 12)",
@@ -1821,6 +2257,8 @@
    "biasOff": -0.5135135135135135,
    "maeOn": 0.5135135135135135,
    "maeOff": 0.5135135135135135,
+   "biasMove": -0.5135135135135135,
+   "maeMove": 0.5135135135135135,
    "fights": 23,
    "worst": [
     "NWVLG96EE54U F46 T4 (0 vs 24)",
@@ -1834,6 +2272,8 @@
    "biasOff": -0.054570259208731244,
    "maeOn": 0.0572987721691678,
    "maeOff": 0.0572987721691678,
+   "biasMove": -0.054570259208731244,
+   "maeMove": 0.0572987721691678,
    "fights": 195,
    "worst": [
     "0NG27W8QBNYX F15 T6 (0 vs 18)",
@@ -1847,6 +2287,8 @@
    "biasOff": -0.05714285714285714,
    "maeOn": 0.05714285714285714,
    "maeOff": 0.05714285714285714,
+   "biasMove": -0.05714285714285714,
+   "maeMove": 0.05714285714285714,
    "fights": 53,
    "worst": [
     "5LRZ7HJ7YGSY F11 T3 (0 vs 1)",
@@ -1860,6 +2302,8 @@
    "biasOff": 1.042857142857143,
    "maeOn": 2.0142857142857142,
    "maeOff": 2.0142857142857142,
+   "biasMove": 1.042857142857143,
+   "maeMove": 2.0142857142857142,
    "fights": 22,
    "worst": [
     "YVYZ6QHA85FN F46 T4 (0 vs 16)",
@@ -1873,6 +2317,8 @@
    "biasOff": 0.05069124423963134,
    "maeOn": 0.05069124423963134,
    "maeOff": 0.05069124423963134,
+   "biasMove": 0.05069124423963134,
+   "maeMove": 0.05069124423963134,
    "fights": 76,
    "worst": [
     "NWVLG96EE54U F15 T2 (11 vs 0)",
@@ -1886,6 +2332,8 @@
    "biasOff": -0.782608695652174,
    "maeOn": 1.7391304347826086,
    "maeOff": 1.7391304347826086,
+   "biasMove": -0.782608695652174,
+   "maeMove": 1.7391304347826086,
    "fights": 11,
    "worst": [
     "JR66CJ9T8H7W F39 T4 (7 vs 25)",
@@ -1894,12 +2342,14 @@
    ]
   },
   "HAUNTED_SHIP": {
-   "n": 320,
-   "biasOn": -0.034375,
-   "biasOff": -0.034375,
-   "maeOn": 0.034375,
-   "maeOff": 0.034375,
-   "fights": 79,
+   "n": 326,
+   "biasOn": -0.03374233128834356,
+   "biasOff": -0.03374233128834356,
+   "maeOn": 0.03374233128834356,
+   "maeOff": 0.03374233128834356,
+   "biasMove": -0.03374233128834356,
+   "maeMove": 0.03374233128834356,
+   "fights": 80,
    "worst": [
     "AMA2B58E2ZMA F12 T2 (7 vs 13)",
     "WCC7RMRLWLZK F11 T4 (-2 vs 0)",
@@ -1907,12 +2357,14 @@
    ]
   },
   "HUNTER_KILLER": {
-   "n": 436,
-   "biasOn": -0.17660550458715596,
-   "biasOff": -0.17660550458715596,
-   "maeOn": 0.21788990825688073,
-   "maeOff": 0.21788990825688073,
-   "fights": 102,
+   "n": 439,
+   "biasOn": -0.16173120728929385,
+   "biasOff": -0.16173120728929385,
+   "maeOn": 0.23006833712984054,
+   "maeOff": 0.23006833712984054,
+   "biasMove": -0.16173120728929385,
+   "maeMove": 0.23006833712984054,
+   "fights": 103,
    "worst": [
     "92MWCWJCFDAE F30 T3 (0 vs 18)",
     "X8HF0SB0XGJ1 F28 T4 (0 vs 11)",
@@ -1925,6 +2377,8 @@
    "biasOff": -0.14102564102564102,
    "maeOn": 0.20512820512820512,
    "maeOff": 0.20512820512820512,
+   "biasMove": -0.14102564102564102,
+   "maeMove": 0.20512820512820512,
    "fights": 59,
    "worst": [
     "4JVP9LTXYY9D F31 T3 (0 vs 15)",
@@ -1938,6 +2392,8 @@
    "biasOff": -0.15763546798029557,
    "maeOn": 0.15763546798029557,
    "maeOff": 0.15763546798029557,
+   "biasMove": -0.15763546798029557,
+   "maeMove": 0.15763546798029557,
    "fights": 66,
    "worst": [
     "2XWM27TZ7T12 F7 T2 (4 vs 15)",
@@ -1951,6 +2407,8 @@
    "biasOff": -0.1340782122905028,
    "maeOn": 0.17318435754189945,
    "maeOff": 0.17318435754189945,
+   "biasMove": -0.1340782122905028,
+   "maeMove": 0.17318435754189945,
    "fights": 62,
    "worst": [
     "ZW9SQYC7KBC3 F17 T1 (7 vs 13)",
@@ -1964,6 +2422,8 @@
    "biasOff": -0.12797074954296161,
    "maeOn": 0.16087751371115175,
    "maeOff": 0.16087751371115175,
+   "biasMove": -0.12797074954296161,
+   "maeMove": 0.16087751371115175,
    "fights": 62,
    "worst": [
     "ZW9SQYC7KBC3 F17 T1 (7 vs 13)",
@@ -1972,12 +2432,14 @@
    ]
   },
   "KNOWLEDGE_DEMON": {
-   "n": 590,
-   "biasOn": -0.17457627118644067,
-   "biasOff": -0.17457627118644067,
-   "maeOn": 0.2288135593220339,
-   "maeOff": 0.2288135593220339,
-   "fights": 66,
+   "n": 604,
+   "biasOn": -0.18874172185430463,
+   "biasOff": -0.18874172185430463,
+   "maeOn": 0.24172185430463577,
+   "maeOff": 0.24172185430463577,
+   "biasMove": -0.18874172185430463,
+   "maeMove": 0.24172185430463577,
+   "fights": 68,
    "worst": [
     "PU21Z67J65NE F33 T11 (-26 vs 18)",
     "V3UPVVLVMEJZ F33 T10 (-14 vs 10)",
@@ -1985,12 +2447,14 @@
    ]
   },
   "LAGAVULIN_MATRIARCH": {
-   "n": 608,
-   "biasOn": -0.04111842105263158,
-   "biasOff": -0.04111842105263158,
-   "maeOn": 0.06085526315789474,
-   "maeOff": 0.06085526315789474,
-   "fights": 63,
+   "n": 617,
+   "biasOn": -0.04051863857374392,
+   "biasOff": -0.04051863857374392,
+   "maeOn": 0.059967585089141004,
+   "maeOff": 0.059967585089141004,
+   "biasMove": -0.04051863857374392,
+   "maeMove": 0.059967585089141004,
+   "fights": 64,
    "worst": [
     "H5MZ6BKA1HVS F17 T4 (0 vs 7)",
     "N28LRAMJ9SST F17 T6 (1 vs 5)",
@@ -2003,6 +2467,8 @@
    "biasOff": -0.10278745644599303,
    "maeOn": 0.10278745644599303,
    "maeOff": 0.10278745644599303,
+   "biasMove": -0.10278745644599303,
+   "maeMove": 0.10278745644599303,
    "fights": 151,
    "worst": [
     "YN4ETG9Z8ERN F13 T2 (2 vs 13)",
@@ -2016,6 +2482,8 @@
    "biasOff": -0.13541666666666666,
    "maeOn": 0.17291666666666666,
    "maeOff": 0.17291666666666666,
+   "biasMove": -0.13541666666666666,
+   "maeMove": 0.17291666666666666,
    "fights": 194,
    "worst": [
     "YN4ETG9Z8ERN F13 T2 (2 vs 13)",
@@ -2029,6 +2497,8 @@
    "biasOff": -0.023178807947019868,
    "maeOn": 0.023178807947019868,
    "maeOff": 0.023178807947019868,
+   "biasMove": -0.023178807947019868,
+   "maeMove": 0.023178807947019868,
    "fights": 66,
    "worst": [
     "VSRG9P80R1ZB F8 T4 (3 vs 6)",
@@ -2042,6 +2512,8 @@
    "biasOff": -0.3050847457627119,
    "maeOn": 0.8305084745762712,
    "maeOff": 0.8305084745762712,
+   "biasMove": -0.3050847457627119,
+   "maeMove": 0.8305084745762712,
    "fights": 61,
    "worst": [
     "8L29N792FA45 F35 T2 (16 vs 1)",
@@ -2055,6 +2527,8 @@
    "biasOff": -0.1607565011820331,
    "maeOn": 0.1938534278959811,
    "maeOff": 0.1938534278959811,
+   "biasMove": -0.1607565011820331,
+   "maeMove": 0.1938534278959811,
    "fights": 92,
    "worst": [
     "2XWM27TZ7T12 F28 T4 (0 vs 13)",
@@ -2068,6 +2542,8 @@
    "biasOff": -0.11578947368421053,
    "maeOn": 0.17894736842105263,
    "maeOff": 0.17894736842105263,
+   "biasMove": -0.11578947368421053,
+   "maeMove": 0.17894736842105263,
    "fights": 24,
    "worst": [
     "YFG53EZ372D7 F42 T2 (16 vs 20)",
@@ -2081,6 +2557,8 @@
    "biasOff": -0.014634146341463415,
    "maeOn": 0.014634146341463415,
    "maeOff": 0.014634146341463415,
+   "biasMove": -0.014634146341463415,
+   "maeMove": 0.014634146341463415,
    "fights": 55,
    "worst": [
     "YVWAWAPXJXGV F13 T3 (0 vs 2)",
@@ -2094,6 +2572,8 @@
    "biasOff": -0.2119205298013245,
    "maeOn": 0.2913907284768212,
    "maeOff": 0.2913907284768212,
+   "biasMove": -0.2119205298013245,
+   "maeMove": 0.2913907284768212,
    "fights": 24,
    "worst": [
     "KXG79NARS0LT F44 T5 (0 vs 6)",
@@ -2107,6 +2587,8 @@
    "biasOff": 0.09090909090909091,
    "maeOn": 0.09090909090909091,
    "maeOff": 0.09090909090909091,
+   "biasMove": 0.09090909090909091,
+   "maeMove": 0.09090909090909091,
    "fights": 5,
    "worst": [
     "4V5TA3ZG6MJS F23 T4 (2 vs 0)",
@@ -2120,6 +2602,8 @@
    "biasOff": -0.27488151658767773,
    "maeOn": 0.35545023696682465,
    "maeOff": 0.35545023696682465,
+   "biasMove": -0.27488151658767773,
+   "maeMove": 0.35545023696682465,
    "fights": 99,
    "worst": [
     "FSPKJAYY3ET6 F27 T3 (2 vs 29)",
@@ -2133,6 +2617,8 @@
    "biasOff": -0.04306864064602961,
    "maeOn": 0.04306864064602961,
    "maeOff": 0.04306864064602961,
+   "biasMove": -0.04306864064602961,
+   "maeMove": 0.04306864064602961,
    "fights": 199,
    "worst": [
     "K39JRY3WW4VM F14 T2 (0 vs 14)",
@@ -2146,6 +2632,8 @@
    "biasOff": 0.08333333333333333,
    "maeOn": 0.08333333333333333,
    "maeOff": 0.08333333333333333,
+   "biasMove": 0.08333333333333333,
+   "maeMove": 0.08333333333333333,
    "fights": 15,
    "worst": [
     "JW925EDF9ZTQ F39 T3 (3 vs 1)",
@@ -2154,12 +2642,14 @@
    ]
   },
   "OVICOPTER": {
-   "n": 371,
-   "biasOn": -0.3908355795148248,
-   "biasOff": -0.3908355795148248,
-   "maeOn": 0.4609164420485175,
-   "maeOff": 0.4609164420485175,
-   "fights": 88,
+   "n": 376,
+   "biasOn": -0.3962765957446808,
+   "biasOff": -0.3962765957446808,
+   "maeOn": 0.4654255319148936,
+   "maeOff": 0.4654255319148936,
+   "biasMove": -0.3962765957446808,
+   "maeMove": 0.4654255319148936,
+   "fights": 89,
    "worst": [
     "H7W047ZCEBSA F29 T5 (0 vs 31)",
     "WM2XPDZ02BNF F25 T8 (0 vs 16)",
@@ -2172,6 +2662,8 @@
    "biasOff": -0.28703703703703703,
    "maeOn": 0.3425925925925926,
    "maeOff": 0.3425925925925926,
+   "biasMove": -0.28703703703703703,
+   "maeMove": 0.3425925925925926,
    "fights": 23,
    "worst": [
     "ZPPVDTSFJXJM F39 T1 (6 vs 16)",
@@ -2185,6 +2677,8 @@
    "biasOff": -0.45325779036827196,
    "maeOn": 0.6288951841359773,
    "maeOff": 0.6288951841359773,
+   "biasMove": -0.45325779036827196,
+   "maeMove": 0.6288951841359773,
    "fights": 97,
    "worst": [
     "FA82FQHSJG2F F27 T8 (1 vs 25)",
@@ -2193,12 +2687,14 @@
    ]
   },
   "PHANTASMAL_GARDENER": {
-   "n": 436,
-   "biasOn": -0.1536697247706422,
-   "biasOff": -0.1536697247706422,
-   "maeOn": 0.1811926605504587,
-   "maeOff": 0.1811926605504587,
-   "fights": 89,
+   "n": 441,
+   "biasOn": -0.15192743764172337,
+   "biasOff": -0.15192743764172337,
+   "maeOn": 0.17913832199546487,
+   "maeOff": 0.17913832199546487,
+   "biasMove": -0.15192743764172337,
+   "maeMove": 0.17913832199546487,
+   "fights": 90,
    "worst": [
     "62PMHB7T80Y8 F8 T1 (0 vs 12)",
     "VG7HWJRX44RQ F13 T9 (0 vs 11)",
@@ -2211,6 +2707,8 @@
    "biasOff": -0.11956521739130435,
    "maeOn": 0.15217391304347827,
    "maeOff": 0.15217391304347827,
+   "biasMove": -0.11956521739130435,
+   "maeMove": 0.15217391304347827,
    "fights": 73,
    "worst": [
     "THMGB35RGDSD F12 T2 (3 vs 14)",
@@ -2219,12 +2717,14 @@
    ]
   },
   "PUNCH_CONSTRUCT": {
-   "n": 405,
-   "biasOn": -0.05185185185185185,
-   "biasOff": -0.05185185185185185,
-   "maeOn": 0.1506172839506173,
-   "maeOff": 0.1506172839506173,
-   "fights": 98,
+   "n": 409,
+   "biasOn": -0.05134474327628362,
+   "biasOff": -0.05134474327628362,
+   "maeOn": 0.1491442542787286,
+   "maeOff": 0.1491442542787286,
+   "biasMove": -0.05134474327628362,
+   "maeMove": 0.1491442542787286,
+   "fights": 99,
    "worst": [
     "W80JV2YVC8UZ F46 T2 (35 vs 24)",
     "VG7HWJRX44RQ F8 T2 (21 vs 13)",
@@ -2237,6 +2737,8 @@
    "biasOff": -0.225,
    "maeOn": 0.425,
    "maeOff": 0.425,
+   "biasMove": -0.225,
+   "maeMove": 0.425,
    "fights": 29,
    "worst": [
     "H5MZ6BKA1HVS F48 T9 (21 vs 29)",
@@ -2246,24 +2748,28 @@
   },
   "ROCKET": {
    "n": 502,
-   "biasOn": -2.252988047808765,
-   "biasOff": -2.252988047808765,
-   "maeOn": 2.6235059760956174,
-   "maeOff": 2.6235059760956174,
+   "biasOn": -0.4721115537848606,
+   "biasOff": -0.4721115537848606,
+   "maeOn": 0.5159362549800797,
+   "maeOff": 0.5159362549800797,
+   "biasMove": -0.4442231075697211,
+   "maeMove": 0.4760956175298805,
    "fights": 78,
    "worst": [
     "GGF8C3G76C7B F33 T14 (0 vs 55)",
-    "7DFB21JE2DTK F33 T4 (44 vs 70)",
-    "HME0FA7VA0J6 F33 T6 (-14 vs 12)"
+    "HME0FA7VA0J6 F33 T6 (-14 vs 10)",
+    "8L29N792FA45 F33 T4 (2 vs 19)"
    ]
   },
   "SCROLL_OF_BITING": {
-   "n": 195,
-   "biasOn": -0.37435897435897436,
-   "biasOff": -0.37435897435897436,
-   "maeOn": 0.6512820512820513,
-   "maeOff": 0.6512820512820513,
-   "fights": 78,
+   "n": 198,
+   "biasOn": -0.35353535353535354,
+   "biasOff": -0.35353535353535354,
+   "maeOn": 0.6868686868686869,
+   "maeOff": 0.6868686868686869,
+   "biasMove": -0.35353535353535354,
+   "maeMove": 0.6868686868686869,
+   "fights": 79,
    "worst": [
     "FSPKJAYY3ET6 F35 T1 (12 vs 27)",
     "GMT2Q5L6BVL0 F36 T2 (2 vs 16)",
@@ -2276,6 +2782,8 @@
    "biasOff": -0.01925254813137033,
    "maeOn": 0.044167610419026046,
    "maeOff": 0.044167610419026046,
+   "biasMove": -0.01925254813137033,
+   "maeMove": 0.044167610419026046,
    "fights": 243,
    "worst": [
     "RRMYC7MCSYX8 F15 T3 (11 vs 0)",
@@ -2284,12 +2792,14 @@
    ]
   },
   "SEWER_CLAM": {
-   "n": 294,
-   "biasOn": -0.01020408163265306,
-   "biasOff": -0.01020408163265306,
-   "maeOn": 0.01020408163265306,
-   "maeOff": 0.01020408163265306,
-   "fights": 70,
+   "n": 299,
+   "biasOn": -0.010033444816053512,
+   "biasOff": -0.010033444816053512,
+   "maeOn": 0.010033444816053512,
+   "maeOff": 0.010033444816053512,
+   "biasMove": -0.010033444816053512,
+   "maeMove": 0.010033444816053512,
+   "fights": 71,
    "worst": [
     "YG3HAFACLMAR F9 T4 (0 vs 2)",
     "FSPKJAYY3ET6 F15 T3 (1 vs 2)",
@@ -2302,6 +2812,8 @@
    "biasOff": 0.0016638935108153079,
    "maeOn": 0.06156405990016639,
    "maeOff": 0.06156405990016639,
+   "biasMove": 0.0016638935108153079,
+   "maeMove": 0.06156405990016639,
    "fights": 179,
    "worst": [
     "2AX48ZA9H9DM F5 T3 (13 vs 0)",
@@ -2310,12 +2822,14 @@
    ]
   },
   "SKULKING_COLONY": {
-   "n": 408,
-   "biasOn": 0.16666666666666666,
-   "biasOff": 0.16666666666666666,
-   "maeOn": 0.22058823529411764,
-   "maeOff": 0.22058823529411764,
-   "fights": 81,
+   "n": 413,
+   "biasOn": 0.16464891041162227,
+   "biasOff": 0.16464891041162227,
+   "maeOn": 0.2179176755447942,
+   "maeOff": 0.2179176755447942,
+   "biasMove": 0.16464891041162227,
+   "maeMove": 0.2179176755447942,
+   "fights": 82,
    "worst": [
     "92MWCWJCFDAE F7 T4 (19 vs 0)",
     "CY8UG7ABBSAS F15 T4 (17 vs 0)",
@@ -2323,12 +2837,14 @@
    ]
   },
   "SLIMED_BERSERKER": {
-   "n": 136,
-   "biasOn": -0.11764705882352941,
-   "biasOff": -0.11764705882352941,
-   "maeOn": 0.2647058823529412,
-   "maeOff": 0.2647058823529412,
-   "fights": 25,
+   "n": 141,
+   "biasOn": -0.1276595744680851,
+   "biasOff": -0.1276595744680851,
+   "maeOn": 0.2695035460992908,
+   "maeOff": 0.2695035460992908,
+   "biasMove": -0.1276595744680851,
+   "maeMove": 0.2695035460992908,
+   "fights": 26,
    "worst": [
     "0YG4ETM3MLHS F37 T2 (10 vs 16)",
     "F4K88F267RCX F39 T4 (7 vs 1)",
@@ -2341,6 +2857,8 @@
    "biasOff": -0.1092896174863388,
    "maeOn": 0.1092896174863388,
    "maeOff": 0.1092896174863388,
+   "biasMove": -0.1092896174863388,
+   "maeMove": 0.1092896174863388,
    "fights": 50,
    "worst": [
     "L34T7HND7EL8 F15 T2 (0 vs 10)",
@@ -2349,12 +2867,14 @@
    ]
   },
   "SLUDGE_SPINNER": {
-   "n": 606,
-   "biasOn": -0.0297029702970297,
-   "biasOff": -0.0297029702970297,
-   "maeOn": 0.0297029702970297,
-   "maeOff": 0.0297029702970297,
-   "fights": 177,
+   "n": 611,
+   "biasOn": -0.029459901800327332,
+   "biasOff": -0.029459901800327332,
+   "maeOn": 0.029459901800327332,
+   "maeOff": 0.029459901800327332,
+   "biasMove": -0.029459901800327332,
+   "maeMove": 0.029459901800327332,
+   "fights": 178,
    "worst": [
     "Z7D7J1RUUJ61 F2 T2 (0 vs 6)",
     "V1Y4D9Y9GMVK F5 T3 (-6 vs 0)",
@@ -2367,6 +2887,8 @@
    "biasOff": -0.4259634888438134,
    "maeOn": 0.5192697768762677,
    "maeOff": 0.5192697768762677,
+   "biasMove": -0.4259634888438134,
+   "maeMove": 0.5192697768762677,
    "fights": 89,
    "worst": [
     "VTREB5A9XWS7 F23 T4 (-21 vs 19)",
@@ -2380,6 +2902,8 @@
    "biasOff": -0.09523809523809523,
    "maeOn": 0.10884353741496598,
    "maeOff": 0.10884353741496598,
+   "biasMove": -0.09523809523809523,
+   "maeMove": 0.10884353741496598,
    "fights": 73,
    "worst": [
     "7NMP7ZZ0ME28 F5 T3 (0 vs 7)",
@@ -2393,6 +2917,8 @@
    "biasOff": -0.07936507936507936,
    "maeOn": 0.07936507936507936,
    "maeOff": 0.07936507936507936,
+   "biasMove": -0.07936507936507936,
+   "maeMove": 0.07936507936507936,
    "fights": 50,
    "worst": [
     "KY3YZ0DMRY0G F15 T3 (-3 vs 0)",
@@ -2406,6 +2932,8 @@
    "biasOff": -0.0785276073619632,
    "maeOn": 0.2969325153374233,
    "maeOff": 0.2969325153374233,
+   "biasMove": -0.0785276073619632,
+   "maeMove": 0.2969325153374233,
    "fights": 80,
    "worst": [
     "SK1USHSB1U7U F17 T7 (0 vs 34)",
@@ -2414,12 +2942,14 @@
    ]
   },
   "SOUL_NEXUS": {
-   "n": 76,
-   "biasOn": -0.07894736842105263,
-   "biasOff": -0.07894736842105263,
-   "maeOn": 0.3157894736842105,
-   "maeOff": 0.3157894736842105,
-   "fights": 15,
+   "n": 81,
+   "biasOn": -0.1728395061728395,
+   "biasOff": -0.1728395061728395,
+   "maeOn": 0.3950617283950617,
+   "maeOff": 0.3950617283950617,
+   "biasMove": -0.1728395061728395,
+   "maeMove": 0.3950617283950617,
+   "fights": 16,
    "worst": [
     "CRRPX9MWJZGM F45 T1 (23 vs 29)",
     "Q8XR6EXAF6QV F43 T5 (8 vs 3)",
@@ -2432,6 +2962,8 @@
    "biasOff": -0.11494252873563218,
    "maeOn": 0.1839080459770115,
    "maeOff": 0.1839080459770115,
+   "biasMove": -0.11494252873563218,
+   "maeMove": 0.1839080459770115,
    "fights": 24,
    "worst": [
     "YFG53EZ372D7 F42 T2 (16 vs 20)",
@@ -2440,12 +2972,14 @@
    ]
   },
   "SPINY_TOAD": {
-   "n": 373,
-   "biasOn": -0.5522788203753352,
-   "biasOff": -0.5522788203753352,
-   "maeOn": 0.5898123324396782,
-   "maeOff": 0.5898123324396782,
-   "fights": 95,
+   "n": 379,
+   "biasOn": -0.5567282321899736,
+   "biasOff": -0.5567282321899736,
+   "maeOn": 0.5936675461741425,
+   "maeOff": 0.5936675461741425,
+   "biasMove": -0.5567282321899736,
+   "maeMove": 0.5936675461741425,
+   "fights": 97,
    "worst": [
     "0NG27W8QBNYX F24 T2 (-18 vs 17)",
     "UNRLW0W3XWLD F31 T2 (16 vs 26)",
@@ -2458,6 +2992,8 @@
    "biasOff": -0.6666666666666666,
    "maeOn": 1.4814814814814814,
    "maeOff": 1.4814814814814814,
+   "biasMove": -0.6666666666666666,
+   "maeMove": 1.4814814814814814,
    "fights": 17,
    "worst": [
     "JR66CJ9T8H7W F39 T4 (7 vs 25)",
@@ -2471,6 +3007,8 @@
    "biasOff": -0.027777777777777776,
    "maeOn": 0.027777777777777776,
    "maeOff": 0.027777777777777776,
+   "biasMove": -0.027777777777777776,
+   "maeMove": 0.027777777777777776,
    "fights": 94,
    "worst": [
     "Z7D7J1RUUJ61 F8 T2 (2 vs 9)",
@@ -2484,6 +3022,8 @@
    "biasOff": -0.6971830985915493,
    "maeOn": 0.9366197183098591,
    "maeOff": 0.9366197183098591,
+   "biasMove": -0.6971830985915493,
+   "maeMove": 0.9366197183098591,
    "fights": 20,
    "worst": [
     "2WUMK6PK5QHD F48 T7 (-20 vs 15)",
@@ -2492,12 +3032,14 @@
    ]
   },
   "THE_FORGOTTEN": {
-   "n": 97,
-   "biasOn": -0.27835051546391754,
-   "biasOff": -0.27835051546391754,
-   "maeOn": 0.4020618556701031,
-   "maeOff": 0.4020618556701031,
-   "fights": 22,
+   "n": 101,
+   "biasOn": -0.2871287128712871,
+   "biasOff": -0.2871287128712871,
+   "maeOn": 0.40594059405940597,
+   "maeOff": 0.40594059405940597,
+   "biasMove": -0.2871287128712871,
+   "maeMove": 0.40594059405940597,
+   "fights": 23,
    "worst": [
     "Q8XR6EXAF6QV F37 T4 (0 vs 16)",
     "YN4ETG9Z8ERN F38 T4 (0 vs 9)",
@@ -2510,6 +3052,8 @@
    "biasOff": 0.24646464646464647,
    "maeOn": 0.593939393939394,
    "maeOff": 0.593939393939394,
+   "biasMove": 0.24646464646464647,
+   "maeMove": 0.593939393939394,
    "fights": 70,
    "worst": [
     "LXB3B2WT9E0W F33 T5 (81 vs 0)",
@@ -2518,12 +3062,14 @@
    ]
   },
   "THE_LOST": {
-   "n": 67,
-   "biasOn": -0.40298507462686567,
-   "biasOff": -0.40298507462686567,
-   "maeOn": 0.4626865671641791,
-   "maeOff": 0.4626865671641791,
-   "fights": 21,
+   "n": 70,
+   "biasOn": -0.4142857142857143,
+   "biasOff": -0.4142857142857143,
+   "maeOn": 0.4714285714285714,
+   "maeOff": 0.4714285714285714,
+   "biasMove": -0.4142857142857143,
+   "maeMove": 0.4714285714285714,
+   "fights": 22,
    "worst": [
     "Q8XR6EXAF6QV F37 T4 (0 vs 16)",
     "YN4ETG9Z8ERN F38 T4 (0 vs 9)",
@@ -2536,6 +3082,8 @@
    "biasOff": -0.33962264150943394,
    "maeOn": 0.469601677148847,
    "maeOff": 0.469601677148847,
+   "biasMove": -0.33962264150943394,
+   "maeMove": 0.469601677148847,
    "fights": 98,
    "worst": [
     "FA82FQHSJG2F F27 T8 (1 vs 25)",
@@ -2549,6 +3097,8 @@
    "biasOff": -0.2148014440433213,
    "maeOn": 0.1624548736462094,
    "maeOff": 0.2509025270758123,
+   "biasMove": -0.1263537906137184,
+   "maeMove": 0.1624548736462094,
    "fights": 154,
    "worst": [
     "M8123JA75Y1G F19 T4 (0 vs 16)",
@@ -2557,12 +3107,14 @@
    ]
   },
   "TOADPOLE": {
-   "n": 596,
-   "biasOn": -0.3624161073825503,
-   "biasOff": -0.3624161073825503,
-   "maeOn": 0.37583892617449666,
-   "maeOff": 0.37583892617449666,
-   "fights": 177,
+   "n": 601,
+   "biasOn": -0.3594009983361065,
+   "biasOff": -0.3594009983361065,
+   "maeOn": 0.37271214642262895,
+   "maeOff": 0.37271214642262895,
+   "biasMove": -0.3594009983361065,
+   "maeMove": 0.37271214642262895,
+   "fights": 178,
    "worst": [
     "H7W047ZCEBSA F6 T3 (4 vs 10)",
     "HEACJRY5LEVD F7 T4 (-6 vs 0)",
@@ -2575,6 +3127,8 @@
    "biasOff": -0.24305555555555555,
    "maeOn": 0.4791666666666667,
    "maeOff": 0.4791666666666667,
+   "biasMove": -0.24305555555555555,
+   "maeMove": 0.4791666666666667,
    "fights": 29,
    "worst": [
     "EZ2LP1P5VRPT F48 T1 (4 vs 12)",
@@ -2583,12 +3137,14 @@
    ]
   },
   "TOUGH_EGG": {
-   "n": 234,
-   "biasOn": -0.6196581196581197,
-   "biasOff": -0.6196581196581197,
-   "maeOn": 0.7307692307692307,
-   "maeOff": 0.7307692307692307,
-   "fights": 84,
+   "n": 237,
+   "biasOn": -0.6286919831223629,
+   "biasOff": -0.6286919831223629,
+   "maeOn": 0.7383966244725738,
+   "maeOff": 0.7383966244725738,
+   "biasMove": -0.6286919831223629,
+   "maeMove": 0.7383966244725738,
+   "fights": 85,
    "worst": [
     "H7W047ZCEBSA F29 T5 (0 vs 31)",
     "WM2XPDZ02BNF F25 T8 (0 vs 16)",
@@ -2601,6 +3157,8 @@
    "biasOff": -0.07317073170731707,
    "maeOn": 0.6341463414634146,
    "maeOff": 0.6341463414634146,
+   "biasMove": -0.07317073170731707,
+   "maeMove": 0.6341463414634146,
    "fights": 33,
    "worst": [
     "75P1G37W7CB3 F5 T3 (12 vs 0)",
@@ -2609,12 +3167,14 @@
    ]
   },
   "TUNNELER": {
-   "n": 685,
-   "biasOn": -0.10802919708029197,
-   "biasOff": -0.10802919708029197,
-   "maeOn": 0.11970802919708029,
-   "maeOff": 0.11970802919708029,
-   "fights": 153,
+   "n": 694,
+   "biasOn": -0.10662824207492795,
+   "biasOff": -0.10662824207492795,
+   "maeOn": 0.11815561959654179,
+   "maeOff": 0.11815561959654179,
+   "biasMove": -0.10662824207492795,
+   "maeMove": 0.11815561959654179,
+   "fights": 155,
    "worst": [
     "EHJZSGVU0VQ9 F22 T5 (0 vs 14)",
     "VHLZ531VC9RE F19 T4 (1 vs 12)",
@@ -2627,6 +3187,8 @@
    "biasOff": -0.21428571428571427,
    "maeOn": 0.554945054945055,
    "maeOff": 0.554945054945055,
+   "biasMove": -0.21428571428571427,
+   "maeMove": 0.554945054945055,
    "fights": 64,
    "worst": [
     "8L29N792FA45 F35 T2 (16 vs 1)",
@@ -2640,6 +3202,8 @@
    "biasOff": -0.08611111111111111,
    "maeOn": 0.1361111111111111,
    "maeOff": 0.1361111111111111,
+   "biasMove": -0.08611111111111111,
+   "maeMove": 0.1361111111111111,
    "fights": 146,
    "worst": [
     "YN4ETG9Z8ERN F13 T2 (2 vs 13)",
@@ -2653,6 +3217,8 @@
    "biasOff": -0.148,
    "maeOn": 0.148,
    "maeOff": 0.148,
+   "biasMove": -0.148,
+   "maeMove": 0.148,
    "fights": 180,
    "worst": [
     "BDAKNTSWKU5F F15 T1 (0 vs 4)",
@@ -2666,6 +3232,8 @@
    "biasOff": -0.02564102564102564,
    "maeOn": 0.23076923076923078,
    "maeOff": 0.23076923076923078,
+   "biasMove": -0.02564102564102564,
+   "maeMove": 0.23076923076923078,
    "fights": 70,
    "worst": [
     "H5MZ6BKA1HVS F13 T2 (0 vs 8)",
@@ -2674,16 +3242,18 @@
    ]
   },
   "VANTOM": {
-   "n": 578,
-   "biasOn": 0.025951557093425604,
-   "biasOff": 0.025951557093425604,
-   "maeOn": 0.2508650519031142,
-   "maeOff": 0.2508650519031142,
+   "n": 581,
+   "biasOn": 0.07401032702237521,
+   "biasOff": 0.07401032702237521,
+   "maeOn": 0.20137693631669534,
+   "maeOff": 0.20137693631669534,
+   "biasMove": 0.07401032702237521,
+   "maeMove": 0.20137693631669534,
    "fights": 71,
    "worst": [
     "S780Y1W7AQZL F17 T5 (79 vs 4)",
-    "GWGTNXPWS7PE F17 T7 (0 vs 28)",
-    "842N6N604DVX F17 T6 (11 vs 17)"
+    "842N6N604DVX F17 T6 (11 vs 17)",
+    "3SBPKG9603WD F17 T6 (13 vs 19)"
    ]
   },
   "VINE_SHAMBLER": {
@@ -2692,6 +3262,8 @@
    "biasOff": -0.07960199004975124,
    "maeOn": 0.07960199004975124,
    "maeOff": 0.07960199004975124,
+   "biasMove": -0.07960199004975124,
+   "maeMove": 0.07960199004975124,
    "fights": 51,
    "worst": [
     "842N6N604DVX F15 T1 (6 vs 12)",
@@ -2705,6 +3277,8 @@
    "biasOff": -0.08722358722358722,
    "maeOn": 0.0945945945945946,
    "maeOff": 0.0945945945945946,
+   "biasMove": -0.08722358722358722,
+   "maeMove": 0.0945945945945946,
    "fights": 79,
    "worst": [
     "7MDJ256RY2UU F17 T16 (-28 vs 2)",
@@ -2718,6 +3292,8 @@
    "biasOff": 0.0030120481927710845,
    "maeOn": 0.24397590361445784,
    "maeOff": 0.24397590361445784,
+   "biasMove": 0.0030120481927710845,
+   "maeMove": 0.24397590361445784,
    "fights": 85,
    "worst": [
     "5TQX4PBBB9ZU F11 T6 (8 vs 0)",
@@ -2731,6 +3307,8 @@
    "biasOff": -0.5,
    "maeOn": 0.625,
    "maeOff": 0.625,
+   "biasMove": -0.5,
+   "maeMove": 0.625,
    "fights": 19,
    "worst": [
     "JR66CJ9T8H7W F39 T4 (7 vs 25)",
@@ -2746,6 +3324,8 @@
    "biasOff": 1,
    "maeOn": 2.111111111111111,
    "maeOff": 2.111111111111111,
+   "biasMove": 1,
+   "maeMove": 2.111111111111111,
    "fights": 9,
    "worst": [
     "NWVLG96EE54U F48 T7 (11 vs 5)",
@@ -2759,6 +3339,8 @@
    "biasOff": 5,
    "maeOn": 5,
    "maeOff": 5,
+   "biasMove": 5,
+   "maeMove": 5,
    "fights": 1,
    "worst": [
     "JJ75S331VUKX F48 T5 (5 vs 0)"
@@ -2770,6 +3352,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 10,
    "worst": [
     "P4ZDR744B9JC F37 T6 (0 vs 0)",
@@ -2783,6 +3367,8 @@
    "biasOff": -0.23076923076923078,
    "maeOn": 0.23076923076923078,
    "maeOff": 0.23076923076923078,
+   "biasMove": -0.23076923076923078,
+   "maeMove": 0.23076923076923078,
    "fights": 11,
    "worst": [
     "W80JV2YVC8UZ F45 T2 (-3 vs 0)",
@@ -2796,6 +3382,8 @@
    "biasOff": -0.375,
    "maeOn": 0.375,
    "maeOff": 0.375,
+   "biasMove": -0.375,
+   "maeMove": 0.375,
    "fights": 7,
    "worst": [
     "W80JV2YVC8UZ F45 T2 (-3 vs 0)",
@@ -2809,6 +3397,8 @@
    "biasOff": -0.6,
    "maeOn": 0.6,
    "maeOff": 0.6,
+   "biasMove": -0.6,
+   "maeMove": 0.6,
    "fights": 5,
    "worst": [
     "W80JV2YVC8UZ F45 T2 (-3 vs 0)",
@@ -2822,6 +3412,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "3MDJW1UAD5M6 F8 T4 (7 vs 7)"
@@ -2833,6 +3425,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "69HWH6MD1S34 F8 T4 (1 vs 1)"
@@ -2844,6 +3438,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 38,
    "worst": [
     "94FPBTS15SQT F17 T5 (0 vs 0)",
@@ -2857,6 +3453,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 37,
    "worst": [
     "94FPBTS15SQT F17 T5 (0 vs 0)",
@@ -2870,6 +3468,8 @@
    "biasOff": -0.045454545454545456,
    "maeOn": 0.045454545454545456,
    "maeOff": 0.045454545454545456,
+   "biasMove": -0.045454545454545456,
+   "maeMove": 0.045454545454545456,
    "fights": 16,
    "worst": [
     "GG0Y0TJ2JXAR F27 T2 (10 vs 11)",
@@ -2883,6 +3483,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "8YR0D8NMJ1XS F22 T3 (0 vs 0)"
@@ -2894,6 +3496,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 3,
    "worst": [
     "24DPW2ED71QM F30 T3 (1 vs 1)",
@@ -2907,6 +3511,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 20,
    "worst": [
     "MX8KZU7ABQBQ F2 T3 (0 vs 0)",
@@ -2915,16 +3521,18 @@
    ]
   },
   "CRUSHER × CRAB_RAGE_POWER": {
-   "n": 17,
-   "biasOn": -7.0588235294117645,
-   "biasOff": -7.0588235294117645,
-   "maeOn": 7.529411764705882,
-   "maeOff": 7.529411764705882,
-   "fights": 17,
+   "n": 16,
+   "biasOn": -7.0625,
+   "biasOff": -7.0625,
+   "maeOn": 7.0625,
+   "maeOff": 7.0625,
+   "biasMove": -6.1875,
+   "maeMove": 6.1875,
+   "fights": 16,
    "worst": [
     "GGF8C3G76C7B F33 T14 (0 vs 55)",
-    "WLM6YKJ0ASNE F33 T7 (8 vs 33)",
-    "8L29N792FA45 F33 T4 (2 vs 19)"
+    "8L29N792FA45 F33 T4 (2 vs 19)",
+    "WLM6YKJ0ASNE F33 T7 (8 vs 24)"
    ]
   },
   "CUBEX_CONSTRUCT × ARTIFACT_POWER": {
@@ -2933,6 +3541,8 @@
    "biasOff": 0.03225806451612903,
    "maeOn": 0.16129032258064516,
    "maeOff": 0.16129032258064516,
+   "biasMove": 0.03225806451612903,
+   "maeMove": 0.16129032258064516,
    "fights": 31,
    "worst": [
     "2XWM27TZ7T12 F14 T2 (5 vs 2)",
@@ -2946,6 +3556,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "X4QRH94TSFG2 F7 T3 (2 vs 2)"
@@ -2957,6 +3569,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "H5MZ6BKA1HVS F38 T3 (12 vs 12)"
@@ -2968,6 +3582,8 @@
    "biasOff": -0.16666666666666666,
    "maeOn": 0.16666666666666666,
    "maeOff": 0.16666666666666666,
+   "biasMove": -0.16666666666666666,
+   "maeMove": 0.16666666666666666,
    "fights": 31,
    "worst": [
     "92MWCWJCFDAE F31 T2 (5 vs 8)",
@@ -2981,6 +3597,8 @@
    "biasOff": -1,
    "maeOn": 1,
    "maeOff": 1,
+   "biasMove": -1,
+   "maeMove": 1,
    "fights": 12,
    "worst": [
     "GG0Y0TJ2JXAR F20 T4 (0 vs 12)",
@@ -2994,6 +3612,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "PHMVUY73R0D7 F4 T3 (2 vs 2)"
@@ -3005,6 +3625,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 45,
    "worst": [
     "MGJ8W6C8L1DG F12 T1 (2 vs 2)",
@@ -3018,6 +3640,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "JR66CJ9T8H7W F8 T4 (0 vs 0)"
@@ -3029,6 +3653,8 @@
    "biasOff": 0.07692307692307693,
    "maeOn": 0.07692307692307693,
    "maeOff": 0.07692307692307693,
+   "biasMove": 0.07692307692307693,
+   "maeMove": 0.07692307692307693,
    "fights": 13,
    "worst": [
     "JGJS7QE62GLD F17 T3 (6 vs 5)",
@@ -3042,6 +3668,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 2,
    "worst": [
     "M6P7KAWMF6BC F17 T2 (7 vs 7)",
@@ -3049,12 +3677,14 @@
    ]
   },
   "LAGAVULIN_MATRIARCH × ASLEEP_POWER（眩晕）": {
-   "n": 46,
-   "biasOn": -0.021739130434782608,
-   "biasOff": -0.021739130434782608,
-   "maeOn": 0.021739130434782608,
-   "maeOff": 0.021739130434782608,
-   "fights": 46,
+   "n": 47,
+   "biasOn": -0.02127659574468085,
+   "biasOff": -0.02127659574468085,
+   "maeOn": 0.02127659574468085,
+   "maeOff": 0.02127659574468085,
+   "biasMove": -0.02127659574468085,
+   "maeMove": 0.02127659574468085,
+   "fights": 47,
    "worst": [
     "W5PTC48C3B1H F17 T3 (0 vs 1)",
     "BFVATR4WANS6 F17 T3 (0 vs 0)",
@@ -3062,12 +3692,14 @@
    ]
   },
   "LAGAVULIN_MATRIARCH × PLATING_POWER（眩晕）": {
-   "n": 46,
-   "biasOn": -0.021739130434782608,
-   "biasOff": -0.021739130434782608,
-   "maeOn": 0.021739130434782608,
-   "maeOff": 0.021739130434782608,
-   "fights": 46,
+   "n": 47,
+   "biasOn": -0.02127659574468085,
+   "biasOff": -0.02127659574468085,
+   "maeOn": 0.02127659574468085,
+   "maeOff": 0.02127659574468085,
+   "biasMove": -0.02127659574468085,
+   "maeMove": 0.02127659574468085,
+   "fights": 47,
    "worst": [
     "W5PTC48C3B1H F17 T3 (0 vs 1)",
     "BFVATR4WANS6 F17 T3 (0 vs 0)",
@@ -3080,6 +3712,8 @@
    "biasOff": -0.18571428571428572,
    "maeOn": 0.18571428571428572,
    "maeOff": 0.18571428571428572,
+   "biasMove": -0.18571428571428572,
+   "maeMove": 0.18571428571428572,
    "fights": 70,
    "worst": [
     "842N6N604DVX F31 T1 (3 vs 9)",
@@ -3093,6 +3727,8 @@
    "biasOff": 0.5,
    "maeOn": 0.5,
    "maeOff": 0.5,
+   "biasMove": 0.5,
+   "maeMove": 0.5,
    "fights": 2,
    "worst": [
     "D4JGCNEL40VL F30 T3 (2 vs 1)",
@@ -3105,6 +3741,8 @@
    "biasOff": -0.5,
    "maeOn": 0.5,
    "maeOff": 0.5,
+   "biasMove": -0.5,
+   "maeMove": 0.5,
    "fights": 6,
    "worst": [
     "YFG53EZ372D7 F44 T3 (1 vs 4)",
@@ -3118,6 +3756,8 @@
    "biasOff": -0.2,
    "maeOn": 0.2,
    "maeOff": 0.2,
+   "biasMove": -0.2,
+   "maeMove": 0.2,
    "fights": 5,
    "worst": [
     "3MDJW1UAD5M6 F31 T4 (0 vs 1)",
@@ -3131,19 +3771,36 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 2,
    "worst": [
     "NSWFREAAWMXQ F8 T3 (8 vs 8)",
     "377JPY9LPG1L F6 T3 (8 vs 8)"
    ]
   },
+  "PHANTASMAL_GARDENER × SHRINK_POWER": {
+   "n": 1,
+   "biasOn": 0,
+   "biasOff": 0,
+   "maeOn": 0,
+   "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
+   "fights": 1,
+   "worst": [
+    "XSPHCB4GUSEU F15 T3 (3 vs 3)"
+   ]
+  },
   "PHANTASMAL_GARDENER × STRENGTH_POWER": {
-   "n": 34,
-   "biasOn": -0.6176470588235294,
-   "biasOff": -0.6176470588235294,
-   "maeOn": 0.6176470588235294,
-   "maeOff": 0.6176470588235294,
-   "fights": 34,
+   "n": 35,
+   "biasOn": -0.6,
+   "biasOff": -0.6,
+   "maeOn": 0.6,
+   "maeOff": 0.6,
+   "biasMove": -0.6,
+   "maeMove": 0.6,
+   "fights": 35,
    "worst": [
     "G3MU2NADPEDU F14 T3 (3 vs 12)",
     "VCM94LZR1DTA F7 T4 (4 vs 11)",
@@ -3156,6 +3813,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 12,
    "worst": [
     "G6YVT0ALVQ65 F9 T2 (10 vs 10)",
@@ -3169,6 +3828,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "FEY65PFTP8BH F13 T3 (0 vs 0)"
@@ -3180,6 +3841,8 @@
    "biasOff": 0.11428571428571428,
    "maeOn": 0.34285714285714286,
    "maeOff": 0.34285714285714286,
+   "biasMove": 0.11428571428571428,
+   "maeMove": 0.34285714285714286,
    "fights": 34,
    "worst": [
     "VG7HWJRX44RQ F8 T2 (21 vs 13)",
@@ -3193,6 +3856,8 @@
    "biasOff": -2,
    "maeOn": 2,
    "maeOff": 2,
+   "biasMove": -2,
+   "maeMove": 2,
    "fights": 15,
    "worst": [
     "GMT2Q5L6BVL0 F36 T2 (2 vs 16)",
@@ -3206,6 +3871,8 @@
    "biasOff": -4.333333333333333,
    "maeOn": 4.333333333333333,
    "maeOff": 4.333333333333333,
+   "biasMove": -4.333333333333333,
+   "maeMove": 4.333333333333333,
    "fights": 3,
    "worst": [
     "W6F4YXF3MT7A F46 T1 (0 vs 8)",
@@ -3219,6 +3886,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 4,
    "worst": [
     "AMA2B58E2ZMA F25 T3 (3 vs 3)",
@@ -3232,6 +3901,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 77,
    "worst": [
     "4JVP9LTXYY9D F9 T3 (1 vs 1)",
@@ -3245,6 +3916,8 @@
    "biasOff": -3,
    "maeOn": 3,
    "maeOff": 3,
+   "biasMove": -3,
+   "maeMove": 3,
    "fights": 2,
    "worst": [
     "0YG4ETM3MLHS F33 T7 (14 vs 20)",
@@ -3257,6 +3930,8 @@
    "biasOff": -3.6875,
    "maeOn": 0.625,
    "maeOff": 3.6875,
+   "biasMove": -0.625,
+   "maeMove": 0.625,
    "fights": 16,
    "worst": [
     "Q97BWZJ011BB F19 T4 (0 vs 10)",
@@ -3270,18 +3945,22 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "Y36HXZ80A8LL F5 T2 (2 vs 2)"
    ]
   },
   "TOADPOLE × THORNS_POWER": {
-   "n": 61,
+   "n": 62,
    "biasOn": 0,
    "biasOff": 0,
-   "maeOn": 0.06557377049180328,
-   "maeOff": 0.06557377049180328,
-   "fights": 61,
+   "maeOn": 0.06451612903225806,
+   "maeOff": 0.06451612903225806,
+   "biasMove": 0,
+   "maeMove": 0.06451612903225806,
+   "fights": 62,
    "worst": [
     "WQ67U1UY1D8V F5 T2 (0 vs 2)",
     "5LRZ7HJ7YGSY F3 T2 (6 vs 4)",
@@ -3294,6 +3973,8 @@
    "biasOff": -0.3333333333333333,
    "maeOn": 0.3333333333333333,
    "maeOff": 0.3333333333333333,
+   "biasMove": -0.3333333333333333,
+   "maeMove": 0.3333333333333333,
    "fights": 6,
    "worst": [
     "WQ67U1UY1D8V F5 T2 (0 vs 2)",
@@ -3307,18 +3988,22 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "MD3FLLNB7Q2W F25 T3 (2 vs 2)"
    ]
   },
   "TUNNELER × BURROWED_POWER（眩晕）": {
-   "n": 81,
-   "biasOn": -0.012345679012345678,
-   "biasOff": -0.012345679012345678,
-   "maeOn": 0.012345679012345678,
-   "maeOff": 0.012345679012345678,
-   "fights": 81,
+   "n": 83,
+   "biasOn": -0.012048192771084338,
+   "biasOff": -0.012048192771084338,
+   "maeOn": 0.012048192771084338,
+   "maeOff": 0.012048192771084338,
+   "biasMove": -0.012048192771084338,
+   "maeMove": 0.012048192771084338,
+   "fights": 83,
    "worst": [
     "G1Z0X3WBH4XQ F21 T3 (1 vs 2)",
     "VE975EGP2G3V F20 T5 (1 vs 1)",
@@ -3331,6 +4016,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 2,
    "worst": [
     "FN0HCB4DVKZK F7 T4 (0 vs 0)",
@@ -3343,6 +4030,8 @@
    "biasOff": -0.03278688524590164,
    "maeOn": 0.03278688524590164,
    "maeOff": 0.03278688524590164,
+   "biasMove": -0.03278688524590164,
+   "maeMove": 0.03278688524590164,
    "fights": 61,
    "worst": [
     "G1Z0X3WBH4XQ F17 T3 (26 vs 28)",
@@ -3356,6 +4045,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 7,
    "worst": [
     "RBJ402TKQZ6F F17 T6 (0 vs 0)",
@@ -3369,6 +4060,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 14,
    "worst": [
     "R6V3T4KSDABE F17 T5 (3 vs 3)",
@@ -3382,6 +4075,8 @@
    "biasOff": -0.08333333333333333,
    "maeOn": 0.5833333333333334,
    "maeOff": 0.5833333333333334,
+   "biasMove": -0.08333333333333333,
+   "maeMove": 0.5833333333333334,
    "fights": 24,
    "worst": [
     "M9PL14MGKZCN F7 T6 (6 vs 14)",
@@ -3395,6 +4090,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 4,
    "worst": [
     "VUV4MSZUA34L F13 T2 (8 vs 8)",
@@ -3408,6 +4105,8 @@
    "biasOff": 0,
    "maeOn": 0,
    "maeOff": 0,
+   "biasMove": 0,
+   "maeMove": 0,
    "fights": 1,
    "worst": [
     "JJ75S331VUKX F44 T2 (0 vs 0)"
