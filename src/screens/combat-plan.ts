@@ -49,6 +49,7 @@ import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
+import { knownTopIndices } from "../sl/draws.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -1703,7 +1704,55 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
 }
 
 export function planCombatTurn(env: DecisionEnv): Decision | null {
-  return withMechFallback(env, (planEnv) => guardSandpit(planEnv, planTurn(planEnv)));
+  return withMechFallback(env, (mechEnv) => withSlRetryFallback(mechEnv, (planEnv) => guardSandpit(planEnv, planTurn(planEnv))));
+}
+
+/**
+ * SL_RETRY_KNOWN_DRAWS / SL_RETRY_COMPUTE fail safe (docs/sl.md §10): `plan` with the retry's known draws and compute, and
+ * when that throws, again without them (the decision as with both switches off; an error of something else throws there
+ * again, as it did before them). Neither on this board: `plan` once, as it was.
+ */
+export function withSlRetryFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) => T): T {
+  const sl = env.sl;
+  if (!sl || (sl.knownDraws === undefined && sl.compute === undefined)) return plan(env);
+  try {
+    return plan(env);
+  } catch {
+    const { knownDraws: _known, compute: _compute, ...plain } = sl;
+    return plan({ ...env, sl: plain });
+  }
+}
+
+/** The solver index of the first known draw (SL_RETRY_KNOWN_DRAWS): past the hand, potions' samples, Music Box copies and the whole fight's own known draws (600). */
+export const SL_KNOWN_DRAW_INDEX = 700;
+
+/**
+ * SL_RETRY_KNOWN_DRAWS: env.sl.knownDraws as this board's pile cards: indices into the draw pile's listing
+ * (pileCardModels' order) and the solver's known cards (the board's Strength and Weak in, as the random potions' pile
+ * cards; indices from SL_KNOWN_DRAW_INDEX). Null without known draws, or when the pile does not hold them all (never
+ * expected: the controller checked the pile), or on any error (the decision as without them).
+ */
+function slKnownTop(env: DecisionEnv, state: GameState, ctx: { enemyTargets: number[]; strength: number; weak: boolean }): { indices: number[]; cards: CardModel[]; names: string[]; attempts: number[] } | null {
+  const known = env.sl?.knownDraws;
+  if (!known || known.cards.length === 0) return null;
+  try {
+    const pile = pileCardModels(state, env.knowledge, "draw", ctx);
+    const indices = knownTopIndices(known.cards, pile);
+    if (!indices) return null;
+    const cards = indices.map((at, k): CardModel => ({ ...pile[at]!, index: SL_KNOWN_DRAW_INDEX + k, key: `known${k}` }));
+    return { indices, cards, names: known.names.slice(0, indices.length), attempts: [...known.attempts] };
+  } catch {
+    return null;
+  }
+}
+
+/** Known cards the question names (the next two hands): the line stays short; the planner uses them all. */
+export const KNOWN_DRAWS_NAMED = 10;
+
+/** The question's one fact line about the known draws (SL_RETRY_KNOWN_DRAWS). */
+export function knownDrawsFact(names: readonly string[], attempts: readonly number[]): string {
+  const named = names.slice(0, KNOWN_DRAWS_NAMED).join(", ") + (names.length > KNOWN_DRAWS_NAMED ? ", ..." : "");
+  return `SL retry: the next ${names.length} card${names.length === 1 ? "" : "s"} of the draw pile, in the order they come (the next first), are known from attempt ${attempts.join(", ")}: ${named}. The options' numbers and the rollout draw these first; past them the draws are random.`;
 }
 
 /**
@@ -2012,6 +2061,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // rule, thisTurnScore), and the draw pile's expected card (Gambler's Brew, Glowwater, Distilled Chaos).
   const enemyTargets = enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index);
   const pileContext = { enemyTargets, strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
+  // SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the draw pile's next cards in order, known from an earlier attempt at this fight,
+  // as indices into the pile's listing (pileCardModels' order: the rollout's, the random potions' and B2's piles come from
+  // the same listing) and as the solver's known cards. A card the pile does not hold: none, the draws random as before.
+  const knownTop = slKnownTop(env, state, pileContext);
   const beltIds = new Set(potionsAll.map((potion) => potion.potion_id));
   const pickFrom = (pile: "discard" | "draw", free: boolean) =>
     pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free, {
@@ -2045,7 +2098,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // (potion-mc.ts) and offered as "drink now, then re-plan": never a line of this solve.
   const mcSources = new Map<number, PotionMcSource>();
   for (const potion of potionsAll) {
-    const source = randomPotionSource(potion, state, env.knowledge, pileContext, noDraw);
+    const plainSource = randomPotionSource(potion, state, env.knowledge, pileContext, noDraw);
+    // SL_RETRY_KNOWN_DRAWS: a draw potion's samples draw the known cards first.
+    const source = plainSource && knownTop && plainSource.kind === "draw" ? { ...plainSource, knownTop: knownTop.indices } : plainSource;
     const cost = costs.get(potion.potion_id)?.hp ?? 0;
     if (source) mcSources.set(potion.slot, cost > 0 ? { ...source, cost } : source);
   }
@@ -2081,6 +2136,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       // Distinct payoff cards, not copies (VHLZ F21: two Bully doubled Bash+'s weight, 16.5 vs 7.5).
       vulnerablePayoffs: new Set(asArray(asRecord(state.run?.raw)["deck"]).map((card) => str(asRecord(card)["card_id"])).filter((id) => VULNERABLE_PAYOFFS.has(id))).size,
       drawPile,
+      ...(knownTop ? { knownTop: knownTop.cards } : {}),
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
       ...(laterIncoming ? { laterIncoming } : {}),
     }));
@@ -2090,7 +2146,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // The random potions' Monte Carlo, run once when a decision needs it (every question does).
   const dryBest = solved.plans.find((plan) => !drinksPotion(plan) && !plan.outcome.dies) ?? solved.plans.find((plan) => !drinksPotion(plan)) ?? null;
   let mcResults: PotionMc[] | null = null;
-  const randomPotions = (): PotionMc[] => (mcResults ??= runRandomPotions([...mcSources.values()], solvedInput, dryBest, `${fightKey(state)}:${state.turn ?? "?"}:${handSignature(hand)}`));
+  // SL_RETRY_COMPUTE: a retried fight's samples and time.
+  const slCompute = env.sl?.compute;
+  const randomPotions = (): PotionMc[] =>
+    (mcResults ??= runRandomPotions([...mcSources.values()], solvedInput, dryBest, `${fightKey(state)}:${state.turn ?? "?"}:${handSignature(hand)}`, slCompute ? { samples: slCompute.mcSamples, budgetMs: slCompute.mcBudgetMs } : {}));
   // A turn that costs a lot of HP whatever is played (7Q5G/MD3F: hallway fights at -16..-46 HP with a
   // potion kept in the belt): even the line that keeps the most HP loses >= 30% of current HP, or
   // leaves HP below 25% of max. Unmodelled potions are offered then.
@@ -2426,6 +2485,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // potion in its later turns either, as an option beside the others. Its own copy of the Plan; when the option's
   // own rollout drinks nothing later either, the two are one line (rollout-live merges them) and the option is tagged.
   // Part of the potion costs: POTION_COST=off leaves it out with them.
+  // SL_RETRY_COMPUTE: this question's rollout budget, at most what is left of the turn's (this attempt's: the key has it).
+  const retryTurn = slCompute ? `${fightKey(state)}:${env.sl?.attempt ?? "?"}:${state.turn ?? "?"}` : null;
+  const retrySpent = retryTurn !== null && env.screenMemory.slRetryCompute?.turn === retryTurn ? env.screenMemory.slRetryCompute.spentMs : 0;
+  const retryBudgetMs = slCompute ? Math.max(rolloutLiveOptions.budgetMs, Math.min(slCompute.rolloutBudgetMs, slCompute.turnBudgetMs - retrySpent)) : rolloutLiveOptions.budgetMs;
   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
@@ -2439,6 +2502,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         plans: surviving,
         shown: [...options, ...mcMedians, ...(noPotionCopy ? [noPotionCopy] : [])],
         piles: rolloutPiles(state, env.knowledge, enemyTargets),
+        ...(knownTop ? { drawTop: knownTop.indices } : {}),
+        ...(slCompute ? { samples: slCompute.rolloutSamples, budgetMs: retryBudgetMs } : {}),
         spentMs: mcShown.reduce((sum, mc) => sum + mc.ms, 0),
         orders: kill.orders,
         ordersDropped: kill.dropped,
@@ -2448,6 +2513,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       })
     : null;
   let rollout = runRollout(thiefOn && !thiefFailed);
+  // SL_RETRY_COMPUTE: the turn's spent time (the random potions' and the rollout's), for the next question of the turn.
+  if (retryTurn !== null) env.screenMemory.slRetryCompute = { turn: retryTurn, spentMs: retrySpent + mcShown.reduce((sum, mc) => sum + mc.ms, 0) + (rollout?.elapsedMs ?? 0) };
   // THIEF_FACTS fail safe: a rollout that failed with the escapes in it runs again as before, the thief facts dropped.
   if (thiefOn && !thiefFailed && rollout !== null && !rollout.available && rollout.reason.startsWith("error")) {
     thieves = [];
@@ -2511,7 +2578,18 @@ function planTurn(env: DecisionEnv): Decision | null {
   const bossSim: BossLineSim | null =
     kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null
       ? bossPiles
-        ? bossLineSim({ state, knowledge: env.knowledge, memory: env.screenMemory, solver: rolloutSolver, piles: bossPiles, randomPotions: [...mcSources.values()], lines: [...shown, ...mcMedians], turn: state.turn ?? null, drinks: drinksPotion })
+        ? bossLineSim({
+            state,
+            knowledge: env.knowledge,
+            memory: env.screenMemory,
+            solver: rolloutSolver,
+            piles: knownTop ? { ...bossPiles, drawTop: knownTop.indices } : bossPiles,
+            randomPotions: [...mcSources.values()],
+            lines: [...shown, ...mcMedians],
+            turn: state.turn ?? null,
+            drinks: drinksPotion,
+            ...(slCompute ? { samples: slCompute.bossSimSamples } : {}),
+          })
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
   const simRanks = bossSim?.available && !bossSim.lowTrust ? bossSim : null;
@@ -2668,6 +2746,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       : {}),
     // SL (docs/sl.md): how the earlier attempts at this fight went (a retried fight only).
     ...(env.sl ? { previous_attempts: env.sl.previousAttempts } : {}),
+    // SL_RETRY_KNOWN_DRAWS: the next cards of the draw pile, known from the earlier attempt (one fact line).
+    ...(knownTop ? { known_draws: knownDrawsFact(knownTop.names, knownTop.attempts) } : {}),
     // Heads the advice below (run plan, lessons, fight plan, fight hints): the data wins over hand-written advice.
     knowledge_rule: JEV_DATA_OVER_GUIDES,
     ...(deepseekPlan ? { deepseek_plan: deepseekPlan } : {}),
@@ -2908,6 +2988,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...(focusOf.size > 0 ? { focus: Object.fromEntries([...byKey.entries()].filter(([, entry]) => entry.plan && focusOf.has(entry.plan)).map(([key, entry]) => [key, focusOf.get(entry.plan!)!.join(", ")])) } : {}),
           ...(thiefRecord ? { thief: thiefRecord } : {}),
           ...(mechRecord ? { mech: mechRecord } : {}),
+          // SL_RETRY_KNOWN_DRAWS / SL_RETRY_COMPUTE on this question (docs/sl.md §10).
+          ...(knownTop || slCompute ? { sl_retry: { known_draws: knownTop ? knownTop.names.length : 0, ...(slCompute ? { compute: { rollout_samples: slCompute.rolloutSamples, rollout_budget_ms: retryBudgetMs, turn_spent_ms: Math.round(retrySpent), mc_samples: slCompute.mcSamples, boss_sim_samples: slCompute.bossSimSamples } } : {}) } } : {}),
           // With the 5-turn rollout's own best (or ties), which rollout.best no longer is where the simulation ranks.
           ...(bossSim
             ? {
@@ -3010,14 +3092,16 @@ export function randomPotionSource(potion: PotionView, state: GameState, knowled
  * Every random potion's Monte Carlo for one decision, sharing potionMcOptions.budgetMs (each gets an equal
  * share of what is left). `solver` is the turn's solver input; its potions are left out of the samples.
  */
-export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput | null, dryBest: Plan | null, boardKey: string): PotionMc[] {
+export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput | null, dryBest: Plan | null, boardKey: string, opts: { samples?: number; budgetMs?: number } = {}): PotionMc[] {
   if (solver === null || sources.length === 0) return [];
   const dry: SolverInput = { ...solver, hand: solver.hand.filter((card) => card.type !== "Potion") };
   const out: PotionMc[] = [];
   let spent = 0;
+  // SL_RETRY_COMPUTE: a retried fight's budget and samples (potionMcOptions' otherwise).
+  const total = opts.budgetMs ?? potionMcOptions.budgetMs;
   sources.forEach((source, index) => {
-    const budget = Math.max(0, (potionMcOptions.budgetMs - spent) / (sources.length - index));
-    const mc = runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
+    const budget = Math.max(0, (total - spent) / (sources.length - index));
+    const mc = opts.samples !== undefined ? runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget, opts.samples) : runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
     spent += mc.ms;
     out.push(mc);
   });

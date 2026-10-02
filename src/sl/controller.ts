@@ -9,7 +9,10 @@
  *   same floor and fight checked), the attempt's row is written (predicted_death) and the next attempt begins. A
  *   reload that fails, or lands anywhere but this fight, stops SL for the rest of the run (logged) and the loop
  *   plays on normally. Retries used up: the turn ends as usual and the death is the run's.
- * - envFor(): on attempts after the first, the combat questions' "previous attempts" block and SL_RETRY_SHOW_SIM.
+ * - envFor(): on attempts after the first, the combat questions' "previous attempts" block and SL_RETRY_SHOW_SIM; with
+ *   SL_RETRY_KNOWN_DRAWS the draw pile's next cards as the earlier attempts drew them (draws.ts: checked against this
+ *   attempt's own draws on every state, dropped for the rest of the attempt once they differ, logged); with
+ *   SL_RETRY_COMPUTE more rollout samples and time (RETRY_COMPUTE).
  * - decisionFields(): sl_attempt / sl_reloads on every decision row.
  *
  * Nothing here touches a save file: the game restarts the fight from the save it wrote on entering the room.
@@ -19,12 +22,13 @@ import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { RunJournal } from "../project/run-journal.js";
-import type { ScreenMemory, SlEnv } from "../project/types.js";
+import type { ScreenMemory, SlCompute, SlEnv } from "../project/types.js";
 import { isMenuRunId } from "../project/journal-replay.js";
 import { distinctNames, revivesOf } from "../screens/combat-plan.js";
 import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
+import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlEliteList } from "./elites.js";
 import { judgeEndTurn, type DeathVerdict } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
@@ -32,6 +36,16 @@ import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from ".
 export type { SlConfig };
 
 export type { SlEnv };
+
+/**
+ * SL_RETRY_COMPUTE (docs/sl.md §10.3, Dai 2026-10-02: "compute more on retries"; +20-30 s a boss turn accepted earlier): the
+ * rollout x3 samples with up to 20 s a question and 30 s a turn (notes/sl-retry-report.md §7, the real clock on 607 logged
+ * A8+ boss and listed-fight death questions with a live game running: median 1.1 s, p90 9.9 s, 93% reach 24 samples x 5
+ * turns against 70% reaching 8 x 5 on the usual 1.5 s; VNKN9952ZNA0 F25's Decimillipede 16-24 samples in 9-20 s against 1-4
+ * samples at 3 turns), the random potions' Monte Carlo x3 samples and time, B2 x2 samples (600 take 0.02-3 s on 20 workers,
+ * XSPHCB4GUSEU F48 T1 11 s; its own 25 s a question and 30 s a turn still bound it).
+ */
+export const RETRY_COMPUTE: SlCompute = { rolloutSamples: 24, rolloutBudgetMs: 20_000, turnBudgetMs: 30_000, mcSamples: 36, mcBudgetMs: 1_200, bossSimSamples: 1_200 };
 
 interface FightTrack {
   runId: string;
@@ -51,6 +65,11 @@ interface FightTrack {
   lizardTail: ScreenMemory["lizardTail"];
   /** The certain-death verdict of the last end_turn (kept for the row when no retry was left). */
   verdict: DeathVerdict | null;
+  /** The order cards come off the draw pile in this attempt (draws.ts), kept in the attempt's row. */
+  draws: DrawTracker;
+  /** Attempts after the first: the draw order the earlier attempts saw (null: none known), and why it is off for this attempt. */
+  known: KnownOrder | null;
+  knownOff: string | null;
 }
 
 export interface SlControllerOptions {
@@ -116,6 +135,8 @@ export class SlController {
       boss_retries: this.config.bossRetries,
       elite_retries: this.config.eliteRetries,
       retry_show_sim: this.config.retryShowSim,
+      retry_known_draws: this.config.retryKnownDraws,
+      retry_compute: this.config.retryCompute ? { rollout_samples: RETRY_COMPUTE.rolloutSamples, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_budget_ms: RETRY_COMPUTE.turnBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } : false,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
       elites: this.elites.elites.map((elite) => elite.name),
@@ -151,6 +172,7 @@ export class SlController {
       this.open(state, living, memory);
     }
     this.noteTurn(state);
+    this.noteDraws(state);
   }
 
   /** decisions.jsonl: the attempt at the fight being played (null outside one) and the reloads so far this run. */
@@ -164,7 +186,67 @@ export class SlController {
     if (!fight || fight.attempt <= 1 || !inCombat(state) || (state.run?.floor ?? null) !== fight.floor) return undefined;
     const previous = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < fight.attempt);
     if (previous.length === 0) return undefined;
-    return { attempt: fight.attempt, maxAttempts: fight.maxAttempts, previousAttempts: previousAttemptsJson(previous, fight.attempt, fight.maxAttempts), showSim: this.config.retryShowSim };
+    const knownOn = this.config.retryKnownDraws;
+    const env: SlEnv = {
+      attempt: fight.attempt,
+      maxAttempts: fight.maxAttempts,
+      previousAttempts: previousAttemptsJson(previous, fight.attempt, fight.maxAttempts, knownOn ? { knownDraws: true } : {}),
+      showSim: this.config.retryShowSim,
+    };
+    if (knownOn) {
+      const known = this.knownDraws(fight, state);
+      if (known) env.knownDraws = known;
+    }
+    if (this.config.retryCompute) env.compute = { ...RETRY_COMPUTE };
+    return env;
+  }
+
+  /**
+   * SL_RETRY_KNOWN_DRAWS: the draw pile's next cards as the earlier attempts drew them, while this attempt's draws match
+   * them (draws.ts checkKnown). Once they do not (a reshuffle, a card put into the pile, another card drawn) the order is
+   * off for the rest of the attempt, said once on the console. Never throws: an error is the same as no known order.
+   */
+  private knownDraws(fight: FightTrack, state: GameState): SlEnv["knownDraws"] | null {
+    if (!fight.known || fight.knownOff !== null) return null;
+    try {
+      const check = checkKnown(fight.known, fight.draws);
+      if (!check.ok) {
+        fight.knownOff = check.reason;
+        this.options.note(`SL: the draws left the order attempt ${fight.known.attempts.join(", ")} saw (F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}): ${check.reason}; random draws from here`);
+        return null;
+      }
+      return check.keys.length > 0 ? { cards: check.keys, names: check.names, attempts: [...fight.known.attempts] } : null;
+    } catch (error) {
+      fight.knownOff = `error: ${error instanceof Error ? error.message : String(error)}`;
+      this.options.note(`SL: known draws off for this attempt (${fight.knownOff})`);
+      return null;
+    }
+  }
+
+  /** The draws of this state (the attempt's DrawTracker); an error only stops the tracking of this attempt. */
+  private noteDraws(state: GameState): void {
+    const fight = this.fight;
+    if (!fight) return;
+    try {
+      fight.draws.observe(state);
+    } catch (error) {
+      fight.knownOff ??= `error: ${error instanceof Error ? error.message : String(error)}`;
+    }
+  }
+
+  /** The known draw order of `attempt` at the fight: the earlier attempts' rows (null on the first attempt). */
+  private knownFor(fight: Pick<FightTrack, "floor" | "encounter">, attempt: number): KnownOrder | null {
+    if (attempt <= 1) return null;
+    try {
+      const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
+      const { known, reason } = knownOrderOf(earlier);
+      if (this.config.retryKnownDraws) {
+        this.options.note(known ? `SL: attempt ${attempt} knows the first ${known.keys.length} draws of the fight (attempt ${known.attempts.join(", ")})` : `SL: attempt ${attempt} has no known draws (${reason})`);
+      }
+      return known;
+    } catch {
+      return null;
+    }
   }
 
   /** An action that went out (the loop calls it after a successful dispatch, with the state it was decided on). */
@@ -238,9 +320,13 @@ export class SlController {
     fight.turns = [];
     fight.potions = [];
     fight.verdict = null;
+    fight.draws = new DrawTracker();
+    fight.known = this.knownFor(fight, fight.attempt);
+    fight.knownOff = null;
     if (fight.journal !== undefined) context.journal.restore(fight.journal);
     context.screenMemory.lizardTail = fight.lizardTail === undefined ? undefined : structuredClone(fight.lizardTail);
     this.noteTurn(outcome.state);
+    this.noteDraws(outcome.state);
     this.options.note(
       `SL: back in the fight at F${outcome.state.run?.floor ?? "?"} T${outcome.resumedTurn ?? "?"} (${Math.round(outcome.ms / 1000)} s); attempt ${fight.attempt}/${fight.maxAttempts} begins, Jev is told how the earlier attempt(s) went`,
     );
@@ -282,6 +368,9 @@ export class SlController {
       journal: memory.journal.snapshot(),
       lizardTail: memory.screenMemory.lizardTail === undefined ? undefined : structuredClone(memory.screenMemory.lizardTail),
       verdict: null,
+      draws: new DrawTracker(),
+      known: this.knownFor({ floor, encounter }, done + 1),
+      knownOff: null,
     };
     if (retries > 0) this.options.note(`SL: tracking ${boss ? "boss" : `listed elite (${elite?.name})`} fight F${floor ?? "?"} ${encounter}: attempt ${done + 1} of at most ${1 + retries}`);
   }
@@ -344,6 +433,7 @@ export class SlController {
       reload: extra.reload,
       give_up_reason: extra.giveUp,
       summary: { turns: fight.turns, potions: fight.potions, killers: predicted || result === "died" ? (verdict?.killers ?? []) : [] },
+      draws: { ...fight.draws.record, order: [...fight.draws.record.order], names: [...fight.draws.record.names], turns: [...fight.draws.record.turns] },
     };
     this.rows.push(row);
     this.log.write(row);
