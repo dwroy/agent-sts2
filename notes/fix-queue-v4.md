@@ -128,3 +128,8 @@
 - 观察：重放每次都走到换线点（deviation.reached 全 true）；known_draws 每局保持到首次洗牌（25/26/28/35 张），洗牌后打法相同时抽牌也相同；SL_JUDGE_ANY_DRAW 0 次触发、0 误判；run_plan_merge 全 stored；gate_reject 0。
 - JSA5 自杀线已修（566ae3e，见上）。
 - **已修（2026-10-03 06:22 确认）**：SL_RETRY_EXPLORE_CANON（第 1 次也记为已试；按卡 id/药/目标的无序键比较）、SL_RETRY_EXPLORE_TURN（换线点后本回合不得以失败尝试的出牌收尾，抽牌牌换线不再被重规划冲掉）。v4-live cab3c3f（06:22），下一局起生效。两条关闭。已知局限：相差 1 血的局面不算同一局面（9V7K F45 a4、JSA5 F33 a6），复盘留意近似重复。
+
+### V4.4 A9 第 13–15 局复盘补充（2026-10-03 06:26）
+- **我方被缩小时伤害算高**（不阻塞，一幕缩小甲虫常见，建议优先）：src/strategy/turn-solver.ts:1662（HEAD :1663）`perHit = shown + next.strength * weakFactor`，本回合新加力量没乘 0.7；且 src/screens/combat-plan.ts:2454 `shrunk: powerAmount(player,"SHRINK_POWER") > 0`，玩家身上该值恒为 −1（1432 帧、156 局），turn-solver.ts:1209 的 ×0.7 从未生效。mod 显示数值已含缩小（打击 6→4）。证据 XC4T F9 T3：预测打 16 掉 9，实际打 14 掉 24。修法同虚弱：shrunk 改 ≠0，印出数值不再乘，只对新加力量乘 0.7。
+- 设计缺口：src/screens/map.ts:468-504 只在下一节点不可达时重规划路线，血量骤降不复核（XC4T F8 精英后 36 血仍照计划走普通战）。
+- 观察：「抽什么都会死」判定 4 次全为真死；规划器判全死但 SL 未触发的两处（XC4T F11、8RB3 F46）都是非名单走廊，按设计。巨斧机器人复活规则（Stock → BOOT_UP）生效；A9 启动回合格挡被低估（库 4/10，实际 15），不影响结局。B3PJ 换线被耸肩无视冲掉（79ef4eb，cab3c3f 已修）。run_plan_merge 全 stored，gate_reject 0。
