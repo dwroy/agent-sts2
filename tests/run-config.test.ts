@@ -170,7 +170,7 @@ describe("the row", () => {
       knowledge: { prefix: "full", ascension: 9, experience_version: "fixture-1" },
       deepseek: { model: "deepseek-flash", max_calls: 300, reasoning_effort: "off", effort_by_label: null },
       jev: { enabled: true, model: "jev-latest", context: "v1", strict: true },
-      loop: { mode: "play", build_decider: "deepseek", build_oneshot: "on", run_plan: "v1", fight_plan: "off" },
+      loop: { mode: "play", build_decider: "deepseek", build_oneshot: "on", run_plan: "v1", fight_plan: "off", mech_rules: true },
       target_ascension: 9,
       arm: null,
     });

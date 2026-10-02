@@ -62,6 +62,7 @@ npx tsx learner/run.ts --engine claude --task postmortem --set runs=A,B,C --cwd 
 | experience-update | `runs` | `base_branch`（v3）、`merge`（no）、`merge_dir`（jev-sts2-v3） | 全部 | jev-sts2-exp | 本分支的 experience.json 和提交；变更记录追加一节；merge=v3 时合入 |
 | fix-batch | — | `items`（fix-queue.md 里没划掉的纯 bug）、`base_branch`、`merge`、`merge_dir` | 全部 | jev-sts2-step | 本分支的代码、测试和提交；merge=v3 时合入 |
 | smoke | `run` | — | Read Grep Glob | 任意 | 什么都不改（端到端自检用） |
+| mechanics-audit | — | `report`（notes/mechanics-residuals.md）、`summary`、`monster_db`、`out`（notes/mechanics-proposals.md）、`min_n`（20） | Read Grep Glob Bash Write | 怪物数据库带 `observed` 的工作树 | 只写提案文件 `out`（docs/mechanics-learning.md §5；从不自动应用） |
 
 三个正式任务都照运维会话现有的做法写（ops/ops-session-prompt.md 的复盘、修 bug、经验库三段，经验库方法照 paper/materials/experience-changelog.md 最后两节），另外：
 - experience-update 加了 v4-dev-brief 第 5 项的**机制推理**（每条机制结论要有推理、证据局数、典型案例；只用 v3 切片认识的 scope；不许写喝药规则）；

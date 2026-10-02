@@ -20,6 +20,7 @@ import {
   type MoveEntry,
   type Threat,
 } from "../monster-db.js";
+import { STUN_MOVE, isStripStun, type ObservedMonster } from "../mechanics.js";
 import { KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
 import { cmp, countsText, numericKeys, pct, round1, signedValue, sortedCounts, statText, total } from "./format.js";
 
@@ -305,7 +306,86 @@ function mechanicsLines(data: KnowledgeData, id: string, monster: MonsterEntry, 
   return lines;
 }
 
-function monsterBlock(data: KnowledgeData, id: string, asc: number): string {
+/* ---- observed mechanics (monster-db.json `observed`; knowledge/mechanics.ts, docs/mechanics-learning.md) ------- */
+
+/** An observed Escape move shows from this many settled turns (it left, or stayed into the next turn). */
+const OBSERVED_ESCAPE_MIN = 5;
+/** Mid-turn stuns show from this many, when a trigger came with this share of them and no stripped power line says it. */
+const OBSERVED_STUNS_MIN = 5;
+const OBSERVED_TRIGGER_SHARE = 0.8;
+/** A strip paired with another power's on this share of its frames says so. */
+const CO_REMOVED_SHARE = 0.8;
+
+const TRIGGER_ZH: Record<string, string> = { ally_died: "有其他敌人死亡", block_broken: "格挡被打光" };
+
+function triggerText(data: KnowledgeData, trigger: string): string {
+  if (trigger.startsWith("power_removed:")) return `${powerName(data, trigger.slice("power_removed:".length))} 被去掉`;
+  if (trigger.startsWith("power_down:")) return `${powerName(data, trigger.slice("power_down:".length))} 层数下降`;
+  return TRIGGER_ZH[trigger] ?? trigger;
+}
+
+/** The text of a reward key ("SpecialCard:取回你被偷走的牌。" -> its text, numbers shown as N). */
+function rewardText(key: string): string {
+  const at = key.indexOf(":");
+  return at >= 0 ? key.slice(at + 1) : key;
+}
+
+/**
+ * One short line per notable observation about this monster, from the logs (what the game's text does not say): a power
+ * whose strip to 0 stunned it (notable when the power's pooled counts make it a stun rule, knowledge/mechanics.ts), an
+ * Escape move's outcome, the rewards that come only with killing it, and mid-turn stuns no such line explains.
+ */
+export function observedLines(data: KnowledgeData, monster: MonsterEntry): string[] {
+  const observed: ObservedMonster | undefined = monster.observed;
+  if (!observed) return [];
+  const pooled = data.monsterDb.observed?.powers_stripped ?? {};
+  const lines: string[] = [];
+  const explained = new Set<string>();
+  for (const powerId of Object.keys(observed.powers_stripped ?? {}).sort(cmp)) {
+    if (!isStripStun(pooled[powerId])) continue;
+    const own = observed.powers_stripped![powerId]!;
+    const stunned = own.move_after?.[STUN_MOVE] ?? 0;
+    explained.add(`power_removed:${powerId}`);
+    const cancelled = (own.attack_before ?? 0) > 0 ? `；当回合有攻击的 ${own.attack_cancelled ?? 0}/${own.attack_before} 次攻击取消` : "";
+    const paired = sortedCounts(own.co_removed).filter(([, n]) => n >= CO_REMOVED_SHARE * own.n).map(([other, n]) => `${n} 次和 ${powerName(data, other)} 同时去掉`);
+    const pairedText = paired.length > 0 ? `；${paired.join("，")}` : "";
+    lines.push(`- ${powerName(data, powerId)}：观察到在我方回合被打到 0 层（去掉）时它立即眩晕、本回合行动取消（${own.fights} 场 ${stunned}/${own.n} 次${cancelled}${pairedText}）`);
+  }
+  for (const moveId of Object.keys(observed.escape_moves ?? {}).sort(cmp)) {
+    const escape = observed.escape_moves![moveId]!;
+    if (escape.gone + escape.stayed < OBSERVED_ESCAPE_MIN) continue;
+    const name = monster.moves?.[moveId]?.name || moveId;
+    const goneStunned = escape.gone_stunned ?? 0;
+    const stayedStunned = escape.stayed_stunned ?? 0;
+    const free = { gone: escape.gone - goneStunned, stayed: escape.stayed - stayedStunned };
+    const parts = [`我方回合结束时它活着且未眩晕的 ${free.gone}/${free.gone + free.stayed} 次在敌方回合后离场（不算击杀）`];
+    if (stayedStunned + goneStunned > 0) {
+      const next = sortedCounts(escape.next_after_stay)[0];
+      parts.push(`被眩晕的 ${stayedStunned}/${stayedStunned + goneStunned} 次留下${next ? `，下回合是 ${monster.moves?.[next[0]]?.name || next[0]} ${next[1]} 次` : ""}`);
+    }
+    lines.push(`- ${name}（意图逃跑）：${parts.join("；")}`);
+  }
+  const rewards = (observed.kill_rewards ?? []).map((reward) => {
+    const left = reward.left[1] > 0 ? `，它离场的 ${reward.left[0]}/${reward.left[1]} 场` : "";
+    const elsewhere = reward.exclusive ? `，没有它的战斗 ${reward.elsewhere[0]} 场` : "";
+    return `${rewardText(reward.reward)}（击杀它的 ${reward.killed[0]}/${reward.killed[1]} 场${left}${elsewhere}）`;
+  });
+  if (rewards.length > 0) lines.push(`- 击杀才有的奖励：${rewards.join("；")}`);
+  const stuns = observed.mid_turn_stuns;
+  if (stuns && stuns.n >= OBSERVED_STUNS_MIN) {
+    const triggers = sortedCounts(stuns.triggers).filter(([trigger, n]) => trigger !== "hp_lost" && n >= OBSERVED_TRIGGER_SHARE * stuns.n);
+    if (!triggers.some(([trigger]) => explained.has(trigger))) {
+      const why = triggers.length > 0 ? `，同时${triggers.map(([trigger, n]) => `${triggerText(data, trigger)} ${n} 次`).join("、")}` : "，没有共同的触发";
+      lines.push(`- 我方回合中眩晕（本回合行动取消）：${stuns.fights} 场 ${stuns.n} 次${why}`);
+    }
+  }
+  return lines;
+}
+
+/** The header of a monster block's observed lines. */
+export const OBSERVED_HEADER = "观察到的机制（日志统计，能力描述里没写；n 为次数）:";
+
+function monsterBlock(data: KnowledgeData, id: string, asc: number, mechanics = true): string {
   const monster = data.monsterDb.monsters[id]!;
   const fights = total(monster.encounters);
   const lines = [`### ${monsterNameOf(data, id)} ${id}〔${KIND_ZH[monster.kind ?? ""] ?? monster.kind ?? "?"}｜${actsText(monster.acts)}｜记录 ${fights} 场〕`, hpLine(data, id, asc)];
@@ -318,8 +398,11 @@ function monsterBlock(data: KnowledgeData, id: string, asc: number): string {
     lines.push("招式:");
     for (const [moveId, move] of moves) lines.push(moveLine(data, id, monster, moveId, move, asc));
   }
-  const mechanics = mechanicsLines(data, id, monster, asc);
-  if (mechanics.length > 0) lines.push("能力/机制:", ...mechanics);
+  const powers = mechanicsLines(data, id, monster, asc);
+  if (powers.length > 0) lines.push("能力/机制:", ...powers);
+  // MECH_RULES: the observed mechanics (off: the block as before them).
+  const observed = mechanics ? observedLines(data, monster) : [];
+  if (observed.length > 0) lines.push(OBSERVED_HEADER, ...observed);
   return lines.join("\n");
 }
 
@@ -337,7 +420,7 @@ export const MONSTER_LEGEND =
 /** Every monster in the DB at the context's ascension, by act, kind and id. */
 export function renderMonsters(ctx: RenderContext): string {
   const data = loadKnowledgeData(ctx.knowledgeDir);
-  return [MONSTER_LEGEND, ...monsterOrder(data).map((id) => monsterBlock(data, id, ctx.ascension))].join("\n\n");
+  return [MONSTER_LEGEND, ...monsterOrder(data).map((id) => monsterBlock(data, id, ctx.ascension, ctx.mechanics !== false))].join("\n\n");
 }
 
 /** One monster (by id or Chinese name) with the encounters it is in; throws KnowledgeLookupError when not one. */
@@ -350,7 +433,7 @@ export function renderMonster(idOrName: string, ctx: RenderContext): string {
   const encounters = encountersWith(data, id).map((key) => encounterLine(data, key, data.monsterDb.encounters[key]!));
   const bosses = bossesWith(data, id).map((bossId) => bossLine(data, bossId));
   const records = [...bosses, ...encounters];
-  return [monsterBlock(data, id, ctx.ascension), ...(records.length > 0 ? ["所在遭遇的战绩:", ...records] : [])].join("\n");
+  return [monsterBlock(data, id, ctx.ascension, ctx.mechanics !== false), ...(records.length > 0 ? ["所在遭遇的战绩:", ...records] : [])].join("\n");
 }
 
 /* ---- encounters and bosses -------------------------------------------------------------------- */

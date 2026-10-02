@@ -129,6 +129,15 @@ export interface AppConfig {
    * gold rate (potion-equivalents.json meta.gold_hp). off: questions, options and choices exactly as with THIEF_FACTS alone.
    */
   thiefCost: boolean;
+  /**
+   * MECH_RULES (default on; docs/mechanics-learning.md, src/knowledge/mechanics.ts): the mechanics learned from the logs
+   * (monster-db.json `observed`, refreshed with the DB) in use. A line stripping an enemy power whose strip to 0 stunned
+   * that enemy in the logs (the Thieving Hopper's Flutter) cancels its move this turn in the turn solver and the rollout,
+   * and the option says so; the combat question's enemy powers carry the observation; the knowledge prefix renders the
+   * notable observations. off: the combat question and the knowledge prefix exactly as before. Without the data (a DB
+   * built before it), as off.
+   */
+  mechRules: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -649,6 +658,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const thiefCostProblems: ConfigProblem[] = [];
   const thiefCost = parseOnOff(readEnv(env, "THIEF_COST"), "THIEF_COST", thiefCostProblems) ?? true;
   for (const problem of thiefCostProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // An unreadable MECH_RULES is a warning too: the default (on) applies.
+  const mechRulesProblems: ConfigProblem[] = [];
+  const mechRules = parseOnOff(readEnv(env, "MECH_RULES"), "MECH_RULES", mechRulesProblems) ?? true;
+  for (const problem of mechRulesProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -745,6 +758,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     combatDeepseek,
     thiefFacts,
     thiefCost,
+    mechRules,
     sl,
     brain,
     deepseek,
