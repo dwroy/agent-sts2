@@ -421,6 +421,7 @@ export function runConfigRow(
       mech_move_rules: config.mechMoveRules,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
+      run_plan_merge: config.runPlanMerge,
       escalation: [...config.escalation.chain],
       confidence: { act: config.thresholds.act, strong: config.thresholds.strong },
       run_start: config.run.start,

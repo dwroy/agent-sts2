@@ -11,7 +11,7 @@
  *   for the free-form plans: the run plan is accepted when it is a plan at all (isRunPlanReply, as v3 did), and
  *   the loop's parsers drop unknown ids as before.
  */
-import { isRunPlanReply } from "../strategy/run-plan.js";
+import { isRunPlanReply, RUN_PLAN_TASK_KEY } from "../strategy/run-plan.js";
 import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../strategy/route-map.js";
 import type { JsonSchema } from "../tools/types.js";
 import type { AnswerSpec } from "./types.js";
@@ -111,6 +111,9 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
     properties["discard"] = { type: "array", description: 'potion slot numbers a "discard potion(s), then …" option (key ending ":discard") discards first; [] otherwise', items: { type: "integer" } };
     required.push("discard");
   }
+  // A due run plan riding on the question (RUN_PLAN_MERGE): its field, never a problem (a missing or unusable plan stays
+  // due for the next question; strategy/run-plan-merge.ts).
+  if (carriesRunPlan(st)) properties["run_plan"] = RUN_PLAN_FIELD;
   return {
     label,
     kind: "pick",
@@ -221,7 +224,7 @@ export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; 
  * already. spec.validate still checks the question's own keys and fields.
  */
 export function stableSchema(spec: AnswerSpec): JsonSchema {
-  if (spec.kind === "pick") return STABLE_PICK_SCHEMA;
+  if (spec.kind === "pick") return spec.schema.properties?.["run_plan"] ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
   const plan = spec.schema.properties?.["plan"];
   if (plan?.items?.enum) {
     return { ...spec.schema, properties: { ...spec.schema.properties, plan: { ...plan, items: { type: "string" } } } };
@@ -242,6 +245,9 @@ const STABLE_PICK_SCHEMA: JsonSchema = {
   required: ["choice", "reason"],
   additionalProperties: false,
 };
+
+/** The stable pick shape of a question a run plan rides on (RUN_PLAN_MERGE): the same plus the optional run_plan. */
+const STABLE_PICK_SCHEMA_WITH_RUN_PLAN: JsonSchema = { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: { ...runPlanSchema(), description: "only when state.run_plan_task is given: the run plan it asks for" } } };
 
 /** A shop visit as one ordered shopping list (screens/shop.ts parseShopPlan is the final judge). */
 export function shopPlanSpec(label: string, options: Record<string, string | null>, state: unknown): AnswerSpec {
@@ -303,27 +309,48 @@ export function shopPlanSpec(label: string, options: Record<string, string | nul
   };
 }
 
+/** The run plan's answer object (RUN_PLAN_TASK's format). */
+function runPlanSchema(): JsonSchema {
+  return {
+    type: "object",
+    properties: {
+      archetype: { type: "string", description: "the deck direction, max 12 words" },
+      want: { type: "array", description: "card ids to pick when offered, most important first, max 6", items: { type: "string" } },
+      avoid: { type: "array", description: "card ids not to take, max 6", items: { type: "string" } },
+      remove: { type: "array", description: "card ids in the deck to remove first, max 3", items: { type: "string" } },
+      block_target: { type: "integer", description: "number of block cards the deck should hold by the act boss (0-20)" },
+      elites: { type: "string", enum: ["seek", "normal", "avoid"] },
+      rest: { type: "string", enum: ["heal", "smith", "auto"] },
+      boss_prep: { type: "string", description: "max 30 words: what to have ready for the act boss" },
+      summary: { type: "string", description: "max 40 words: the plan in plain words" },
+    },
+    required: ["archetype", "want", "avoid", "remove", "block_target", "elites", "rest", "boss_prep", "summary"],
+    additionalProperties: false,
+  };
+}
+
+/** The run_plan field of a question a due run plan rides on (RUN_PLAN_MERGE). */
+const RUN_PLAN_FIELD: JsonSchema = { ...runPlanSchema(), description: "the run plan state.run_plan_task asks for (RUN_PLAN_TASK's fields)" };
+
+/** Whether a question's state carries a due run plan (RUN_PLAN_MERGE: state.run_plan_task). */
+export function carriesRunPlan(state: unknown): boolean {
+  return isObject(state) && isObject(state[RUN_PLAN_TASK_KEY]);
+}
+
+/**
+ * A plan question (a shop list, a route) a due run plan rides on (RUN_PLAN_MERGE): its schema gains the optional
+ * run_plan field; its checks are its own (a missing or unusable run plan is never a problem: it stays due).
+ */
+export function withRunPlanField(spec: AnswerSpec): AnswerSpec {
+  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: RUN_PLAN_FIELD } } };
+}
+
 /** The run plan (strategy/run-plan.ts RUN_PLAN_TASK); accepted when it is a plan at all, as v3 did. */
 export function runPlanSpec(label = "run-plan"): AnswerSpec {
   return {
     label,
     kind: "plan",
-    schema: {
-      type: "object",
-      properties: {
-        archetype: { type: "string", description: "the deck direction, max 12 words" },
-        want: { type: "array", description: "card ids to pick when offered, most important first, max 6", items: { type: "string" } },
-        avoid: { type: "array", description: "card ids not to take, max 6", items: { type: "string" } },
-        remove: { type: "array", description: "card ids in the deck to remove first, max 3", items: { type: "string" } },
-        block_target: { type: "integer", description: "number of block cards the deck should hold by the act boss (0-20)" },
-        elites: { type: "string", enum: ["seek", "normal", "avoid"] },
-        rest: { type: "string", enum: ["heal", "smith", "auto"] },
-        boss_prep: { type: "string", description: "max 30 words: what to have ready for the act boss" },
-        summary: { type: "string", description: "max 40 words: the plan in plain words" },
-      },
-      required: ["archetype", "want", "avoid", "remove", "block_target", "elites", "rest", "boss_prep", "summary"],
-      additionalProperties: false,
-    },
+    schema: runPlanSchema(),
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
       return isRunPlanReply(answer) ? [] : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];

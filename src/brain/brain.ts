@@ -28,7 +28,7 @@ import { DeepSeekEngine } from "./engines/deepseek.js";
 import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
 import { frozenFacts } from "../knowledge/render/facts.js";
 import { BrainRouter, type BrainLogRow, type FallbackBudget } from "./router.js";
-import { fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec } from "./specs.js";
+import { carriesRunPlan, fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "./specs.js";
 import { routeAnswerText } from "../strategy/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 
@@ -276,11 +276,23 @@ export class Brain {
   /** An answer that stayed unusable: the loop's "answered but unusable" error, with what the model did say. */
   private static unusable(result: BrainAnswer, brain: BrainMeta | undefined): DeepSeekAnswerError {
     const first = isObject(result.answer) ? result.answer : {};
+    const runPlan = Brain.runPlanOf(result);
     return new DeepSeekAnswerError(
       `${result.engine} answer unusable: ${result.problems.join("; ").slice(0, 300)}`,
-      { choice: typeof first["choice"] === "string" ? first["choice"] : "", reason: typeof first["reason"] === "string" ? first["reason"] : "", reasoning: result.reasoning ?? "", content: result.raw ?? "" },
+      { choice: typeof first["choice"] === "string" ? first["choice"] : "", reason: typeof first["reason"] === "string" ? first["reason"] : "", reasoning: result.reasoning ?? "", content: result.raw ?? "", ...(runPlan ? { runPlan } : {}) },
       Brain.usage(result, brain),
     );
+  }
+
+  /**
+   * The run plan riding on a question (RUN_PLAN_MERGE): the answer's run_plan, else the first answer's when the router
+   * re-asked (a route problem) and the re-asked answer left it out; it does not depend on the rest of the answer.
+   */
+  private static runPlanOf(result: BrainAnswer): Record<string, unknown> | null {
+    const answer = isObject(result.answer) ? result.answer : {};
+    if (isObject(answer["run_plan"])) return answer["run_plan"];
+    const first = (result as BrainAnswer & { first?: { answer: unknown } }).first?.answer;
+    return isObject(first) && isObject(first["run_plan"]) ? first["run_plan"] : null;
   }
 
   /** v3 DeepSeekClient.choose: one option key (with the question's extra fields). */
@@ -298,6 +310,7 @@ export class Brain {
     // A route is "keep" or node ids; a list of ids is read as the same ids in one string.
     const route = routeAnswerText(answer["route"]);
     const routeReason = typeof answer["route_reason"] === "string" && answer["route_reason"].trim() ? answer["route_reason"].trim() : "";
+    const runPlan = Brain.runPlanOf(result);
     return {
       ...Brain.usage(result, brain),
       choice: answer["choice"],
@@ -305,6 +318,7 @@ export class Brain {
       ...(cards.length > 0 ? { cards } : {}),
       ...(route ? { route, ...(routeReason ? { routeReason } : {}) } : {}),
       ...(discard.length > 0 ? { discard } : {}),
+      ...(runPlan ? { runPlan } : {}),
     };
   }
 
@@ -321,14 +335,18 @@ export class Brain {
     accept?: (json: Record<string, unknown>) => boolean,
   ): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }> {
     const label = typeof context["label"] === "string" ? context["label"] : "";
-    const base = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : label === "map/route-plan" || label === "map/route-review" ? routePlanSpec(label, state) : freeSpec(label, { type: "object" });
+    const kind = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : label === "map/route-plan" || label === "map/route-review" ? routePlanSpec(label, state) : freeSpec(label, { type: "object" });
+    // A due run plan riding on the question (RUN_PLAN_MERGE): its field joins the schema; the checks stay the question's.
+    const base = carriesRunPlan(state) ? withRunPlanField(kind) : kind;
     const spec = withAccept(base, accept, "the screen does not accept this plan (a step it cannot take now)");
     const result = await this.decide(this.request(label, instructions, context["memory"], state, spec, criteria));
     const brain = Brain.meta(result);
     const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;
     if (!isObject(result.answer)) throw Brain.unusable(result, brain);
-    return { json: result.answer, meta: Brain.usage(result, brain) };
+    const runPlan = Brain.runPlanOf(result);
+    const json = runPlan && !isObject(result.answer["run_plan"]) ? { ...result.answer, run_plan: runPlan } : result.answer;
+    return { json, meta: Brain.usage(result, brain) };
   }
 
   /** v3 DeepSeekClient.askJson: a free-form task (run plan, fight plan); `accept` is the caller's format check. */

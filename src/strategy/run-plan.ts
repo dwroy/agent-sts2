@@ -9,6 +9,11 @@
  * Why: most losses since the fight plan came in were cross-fight decisions no single fight plan
  * sees (entering elites or bosses with empty potion slots, a 3-block-card deck at the Queen, the
  * card a boss needs never bought, rest sites all spent healing).
+ *
+ * Who asks for it (RUN_PLAN_MERGE, default on; strategy/run-plan-merge.ts, notes/run-plan-merge.md): the checkpoints stay
+ * runPlanTrigger's, but a due plan rides on the next DeepSeek question (the act-start Ancient, a card reward, a rest site,
+ * a shop...) instead of its own call at the map; its own call only when no question carried it within two floors or the
+ * act boss is next. RUN_PLAN_MERGE=off: the call at the map, as before.
  */
 
 import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";
@@ -83,8 +88,8 @@ export function runPlanTrigger(plan: RunPlan | null | undefined, state: GameStat
   return null;
 }
 
-export const RUN_PLAN_TASK = [
-  "TASK: run plan (not an option choice; ignore the {choice, reason} reply format for this one).",
+/** What the run plan is for and how to make it: the separate call's task and the merged question's note share it. */
+export const RUN_PLAN_BRIEF = [
   "You set the STRATEGY for the rest of this act and run; code and a small model will apply it to card rewards, shops,",
   "removals, map routes and rest sites, and will play every card themselves. Look at the deck, relics, HP, gold, potions,",
   "the act boss and the map ahead (memory.lookahead). Name what this deck needs to beat the act boss and survive the act.",
@@ -94,7 +99,11 @@ export const RUN_PLAN_TASK = [
   "counted). If gap_per_turn > 0, closing it comes first: want Strength/scaling and high-damage cards (AoE for two-part",
   "bosses), remove Strikes/Defends that dilute them, smith attacks; state the gap in the summary. A gap of 0 is not a reason",
   "to stop adding damage: the estimate's typical error is ~25%.",
-  'Reply with JSON only: {"archetype": "<the deck direction, max 12 words>",',
+].join(" ");
+
+/** The run plan's JSON object. */
+export const RUN_PLAN_FORMAT = [
+  '{"archetype": "<the deck direction, max 12 words>",',
   '"want": [card ids to pick when offered, most important first, max 6],',
   '"avoid": [card ids not to take, max 6], "remove": [card ids in the deck to remove first, max 3],',
   '"block_target": <number of block cards the deck should hold by the act boss>,',
@@ -102,6 +111,19 @@ export const RUN_PLAN_TASK = [
   '"boss_prep": "<max 30 words: what to have ready for the act boss>",',
   '"summary": "<max 40 words: the plan in plain words>"}',
 ].join(" ");
+
+/** The separate run-plan call's task (byte for byte what it was before RUN_PLAN_MERGE; tests/run-plan-merge.test.ts). */
+export const RUN_PLAN_TASK = [
+  "TASK: run plan (not an option choice; ignore the {choice, reason} reply format for this one).",
+  RUN_PLAN_BRIEF,
+  `Reply with JSON only: ${RUN_PLAN_FORMAT}`,
+].join(" ");
+
+/**
+ * The state key of a run plan riding on a DeepSeek question (RUN_PLAN_MERGE, strategy/run-plan-merge.ts): the brain's
+ * specs add the answer's `run_plan` field and the DeepSeek client its effort when a question's state carries it.
+ */
+export const RUN_PLAN_TASK_KEY = "run_plan_task";
 
 /** What DeepSeek is shown: the deck grouped, relics, potions, HP/gold, act boss and the trigger. */
 export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger, deckLines: string[], relics: string[], potions: string[]): Record<string, JsonValue> {
