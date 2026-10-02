@@ -33,14 +33,14 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { RunJournal } from "../project/run-journal.js";
 import type { Decision, ResolvedAction, ScreenMemory, SlCompute, SlEnv } from "../project/types.js";
 import { isMenuRunId } from "../project/journal-replay.js";
-import { distinctNames, revivesOf, slPointOf, type SlPointInfo } from "../screens/combat-plan.js";
+import { distinctNames, drawBoundOf, revivesOf, slPointOf, type SlPointInfo } from "../screens/combat-plan.js";
 import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlEliteList } from "./elites.js";
 import { exploreTarget, replayPath, slBoardKey, type SlExploreRecord, type SlPoint, type SlTarget } from "./explore.js";
-import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type LeastLossFacts } from "./judge.js";
+import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type DrawBound, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
 
 export type { SlConfig };
@@ -161,6 +161,7 @@ export class SlController {
       retry_known_draws: this.config.retryKnownDraws,
       retry_compute: this.config.retryCompute ? { rollout_samples: RETRY_COMPUTE.rolloutSamples, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_budget_ms: RETRY_COMPUTE.turnBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } : false,
       judge_known_draws: this.config.judgeKnownDraws === true,
+      judge_any_draw: this.config.judgeAnyDraw === true,
       reload_early: this.config.reloadEarly === true,
       retry_known_inserts: this.config.retryKnownInserts === true,
       retry_known_top: this.config.retryKnownTop === true,
@@ -484,6 +485,7 @@ export class SlController {
       }
     }
     const lostSoFar = this.lostSoFar(fight, state);
+    const drawBound = this.drawBound(context.label, context.facts);
     const verdict = judgeEndTurn(state, {
       label: context.label,
       revives,
@@ -491,6 +493,7 @@ export class SlController {
       knowledge: this.knowledge,
       ...(lostSoFar !== undefined ? { lostSoFar } : {}),
       ...(drawsKnown ? { drawsKnown: true } : {}),
+      ...(drawBound ? { drawBound } : {}),
     });
     fight.verdict = verdict;
     const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
@@ -501,6 +504,24 @@ export class SlController {
       return { handled: false };
     }
     return this.reloadOn(fight, state, verdict, where, context);
+  }
+
+  /**
+   * SL_JUDGE_ANY_DRAW: the planner's bound over every draw for a least-loss verdict (combat-plan drawBoundOf), for the judge
+   * to ask when a drawing card would veto it. The switch off, another label or no facts: none (the veto as before). Never
+   * throws: an error is no bound.
+   */
+  private drawBound(label: string, facts: LeastLossFacts | undefined): (() => DrawBound | null) | undefined {
+    if (this.config.judgeAnyDraw !== true || label !== LEAST_LOSS_LABEL || !facts) return undefined;
+    const bound = drawBoundOf(facts);
+    if (!bound) return undefined;
+    return () => {
+      try {
+        return bound();
+      } catch {
+        return null;
+      }
+    };
   }
 
   /**
@@ -525,6 +546,7 @@ export class SlController {
         addedToPile: fight.draws.addedToPile,
         knowledge: this.knowledge,
         ...(this.lostSoFar(fight, state) !== undefined ? { lostSoFar: this.lostSoFar(fight, state)! } : {}),
+        ...(this.drawBound(context.label, context.facts) ? { drawBound: this.drawBound(context.label, context.facts)! } : {}),
       });
     } catch (error) {
       this.options.note(`SL: early reload check failed (${error instanceof Error ? error.message : String(error)}); end_turn decides`);
