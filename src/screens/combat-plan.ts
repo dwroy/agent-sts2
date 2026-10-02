@@ -50,7 +50,7 @@ import type { RunPlan } from "../strategy/run-plan.js";
 import { BOSS_LINES_TIE_SE, bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simCompare, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 import { knownTopIndices } from "../sl/draws.js";
-import { explorePoint, exploreReplacement, lineText, rankByOrder, type ExploreB2, type ExploreLine, type SlPoint } from "../sl/explore.js";
+import { explorePoint, exploreReplacement, lineText, rankByOrder, replayChoice, type ExploreB2, type ExploreLine, type SlPoint } from "../sl/explore.js";
 import type { LeastLossFacts } from "../sl/judge.js";
 import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
 
@@ -1800,6 +1800,8 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
 export type SlPointInfo = Pick<SlPoint, "kind" | "label" | "line" | "alternatives" | "dead" | "b2" | "explored"> & {
   /** On the deviation point's board: what came of it (the line about to be played, its replacement, why). */
   deviation?: { original: string; replacement: string | null; reason: string };
+  /** SL_RETRY_EXPLORE_REPLAY, a board before the deviation point: whether the reference line replaced the answer, and why (not). */
+  replay?: { overridden: boolean; reason: string };
 };
 const slPoints = new WeakMap<object, SlPointInfo>();
 /** The line the last commit() made (planCombatTurn reads it for code's own decision). */
@@ -3098,12 +3100,45 @@ function planTurn(env: DecisionEnv): Decision | null {
               notWorse: (plan, than) => (simOf(plan) && simOf(than) ? !simWinsLess(simRanks, plan, than) : null),
               win: (plan) => simOf(plan)?.calibrated ?? null,
               rule: `${BOSS_LINES_TIE_SE} paired standard errors`,
+              won: (plan) => simOf(plan)?.result.winProb ?? null,
             }
           : null;
       /** The line played there and the lines that could replace it, as the attempt's record keeps them (the rollout's deaths, B2's numbers). */
       const pointOf = (line: { plan: Plan | null; text: string; potions: string[]; wins: boolean; rated?: Plan | null }) => explorePoint(line, lines, { drinks, deathShare, b2 });
       const info: SlPointInfo = { kind: "question", label, ...pointOf(pick) };
+      /** `line` played instead of the resolution (a random potion's line: its option, drink then re-plan), its rationale added. */
+      const playInstead = (line: ExploreLine<Plan>, mc: PotionMc | undefined, why: string): ResolvedAction => {
+        const { guard: _guard, ...rest } = resolved;
+        const rationale = `${resolved.rationale}; ${why}`;
+        return mc
+          ? { ...rest, intent: { action: "use_potion", option_index: mc.source.slot }, rationale, apply: () => void (env.screenMemory.combatPlan = null) }
+          : {
+              ...rest,
+              intent: firstIntent(line.plan, hand, env),
+              rationale,
+              apply: () => {
+                commit(env, state.turn, line.plan, hand, pick.via);
+                if (pick.guardExtra) recordHpGuard(env, state.turn, pick.guardExtra(line.plan));
+              },
+            };
+      };
       const deviate = explore.deviate;
+      // SL_RETRY_EXPLORE_REPLAY: a board of the reference attempt's path before the deviation point plays its line there.
+      const replay = explore.replay;
+      if (!deviate && replay) {
+        // Its line among every shown line and random potion (it drank what it drank).
+        const mcAll = new Map<Plan, PotionMc>(mcShown.flatMap((mc) => (mc.median ? [[mc.median, mc] as const] : [])));
+        const all: ExploreLine<Plan>[] = [
+          ...shown.map((plan) => ({ plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan) })),
+          ...[...mcAll].map(([plan, mc]) => ({ plan, text: `drink ${mc.source.name}, then re-plan`, dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: [mc.source.potionId] })),
+        ];
+        const { line: ref, reason } = replayChoice(pick, (pick.plan ?? pick.rated ?? null)?.outcome.dies ?? false, all, replay);
+        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason } };
+        if (!ref) return { resolved, log, info: { ...info, replay: { overridden: false, reason } } };
+        const mc = mcAll.get(ref.plan);
+        const out = playInstead(ref, mc, `SL explore: replaying attempt ${replay.reference}'s ${ref.text} instead of ${pick.text} before ${replay.point.split(",")[0]}`);
+        return { resolved: out, log, info: { kind: "question", label, ...pointOf({ plan: mc ? null : ref.plan, text: ref.text, potions: ref.potions, wins: ref.wins, rated: mc ? ref.plan : null }), replay: { overridden: true, reason } } };
+      }
       if (!deviate) return { resolved, log: null, info };
       const choice = exploreReplacement({
         pick,
@@ -3161,33 +3196,15 @@ function planTurn(env: DecisionEnv): Decision | null {
         replacement: rep?.text ?? null,
         reason: choice.reason,
         played_in: deviate.attempts,
+        ...(deviate.replayed !== undefined ? { replayed: deviate.replayed } : {}),
         ...(rep ? { numbers: { original: numbers(Object.keys(gateLog).length > 0 ? rated : pick.plan), replacement: numbers(rep.plan) } } : {}),
         ...gateLog,
       };
       const deviation = { original: pick.text, replacement: rep?.text ?? null, reason: choice.reason };
       if (!rep) return { resolved, log, info: { ...info, deviation } };
-      const { guard: _guard, ...rest } = resolved;
-      const note = `${resolved.rationale}; SL explore (${deviate.point}): playing ${rep.text} instead of ${pick.text}, played on this board in attempt${deviate.attempts.length === 1 ? "" : "s"} ${deviate.attempts.join(", ")} (${choice.reason})`;
       // A random potion's line (SL_RETRY_EXPLORE_BOSS_POTIONS): its option as Jev's pick of it plays it, drink then re-plan.
       const mc = mcOf.get(rep.plan);
-      const out: ResolvedAction = mc
-        ? {
-            ...rest,
-            intent: { action: "use_potion", option_index: mc.source.slot },
-            rationale: note,
-            apply: () => {
-              env.screenMemory.combatPlan = null;
-            },
-          }
-        : {
-            ...rest,
-            intent: firstIntent(rep.plan, hand, env),
-            rationale: note,
-            apply: () => {
-              commit(env, state.turn, rep.plan, hand, pick.via);
-              if (pick.guardExtra) recordHpGuard(env, state.turn, pick.guardExtra(rep.plan));
-            },
-          };
+      const out = playInstead(rep, mc, `SL explore (${deviate.point}): playing ${rep.text} instead of ${pick.text}, played on this board in attempt${deviate.attempts.length === 1 ? "" : "s"} ${deviate.attempts.join(", ")} (${choice.reason})`);
       return { resolved: out, log, info: { kind: "question", label, ...pointOf({ plan: mc ? null : rep.plan, text: rep.text, potions: rep.potions, wins: rep.wins, rated: mc ? rep.plan : null }), explored: true, deviation } };
     } catch {
       // Any error: the resolution as without the switch.

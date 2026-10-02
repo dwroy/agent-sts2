@@ -37,6 +37,15 @@
  * Knowledge Demon's and Kin Priest's fights were the next pile card drawn; the 6 others were a Beckon added at random and
  * counted as moved, two Headbutts stacking, a hand kept by Stable Serum). So the order goes on: the moved cards are drawn
  * next (`topped`, not in `order`), then the pile's own. Their place is certain: the known draws stay exact.
+ *
+ * SL_RETRY_KNOWN_PICKS (2026-10-03; DrawTracker `picks`, with `inserts`): a card a selection takes out of the draw pile into
+ * the hand (Seeker Strike: 1 of 3 random pile cards) is not a draw; the game takes only that card and the rest of the pile
+ * keeps its order (R1QJUBVBSSB2 F33: every one of 6 attempts drew the same 35 cards in the same order around the T2 pick,
+ * the known draws ending at 10 each time). So the card goes out of the order (`picked`, not in `order`) and the order goes on.
+ * On a retry the earlier attempts' picks and this attempt's are matched by card: a card this attempt took that they did not
+ * comes out of the known order (its first place from the pick on); one they took and this attempt has not (yet): the known
+ * order past that moment is not exact, and once this attempt drew past it, the card is in the pile at an unknown place
+ * (added at random, as SL_RETRY_KNOWN_INSERTS models it). Without the switch a pick ends the order (as before).
  */
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, bool, str } from "../util/json.js";
@@ -68,6 +77,12 @@ export interface SlDraws {
    * none, and always with the switch off.
    */
   topped?: { turn: number; at: number; cards: string[] }[];
+  /**
+   * SL_RETRY_KNOWN_PICKS: cards taken out of the draw pile into the hand by a selection (Seeker Strike): the turn, how many
+   * entries `order` had then, the cards and their names (not in `order`: the rest of the pile kept its order). Absent when
+   * none, and always with the switch off.
+   */
+  picked?: { turn: number; at: number; cards: string[]; names: string[] }[];
 }
 
 /**
@@ -271,6 +286,8 @@ export interface DrawTrackerOptions {
   inserts?: boolean;
   /** SL_RETRY_KNOWN_TOP (with `inserts`): a card moved onto the pile (Headbutt) is the next one drawn (default: it ends the order). */
   tops?: boolean;
+  /** SL_RETRY_KNOWN_PICKS (with `inserts`): a card a selection takes out of the pile (Seeker Strike) leaves the order going on (default: it ends it). */
+  picks?: boolean;
 }
 
 /** One attempt's draws, from every state the loop reads during it (DrawTracker.observe). */
@@ -286,9 +303,12 @@ export class DrawTracker {
   /** SL_RETRY_KNOWN_TOP: cards moved onto the pile, still on it (the last one on top). */
   private topStack: HandCard[] = [];
 
+  private readonly picks: boolean;
+
   constructor(options: DrawTrackerOptions = {}) {
     this.inserts = options.inserts === true;
     this.tops = this.inserts && options.tops === true;
+    this.picks = this.inserts && options.picks === true;
   }
 
   /** SL_RETRY_KNOWN_TOP: the cards moved onto the pile still on it, the next one drawn first; empty without the switch. */
@@ -445,8 +465,10 @@ export class DrawTracker {
       }
     }
     const drawn = matchDrawn(candidates, left);
-    // A card taken out of the pile by choice (the step after a to-hand selection): where it was is unknown, the order ends.
-    if (drawn.length > 0 && TO_HAND_SELECTION.test(before.selection)) this.breakAt(now.turn, `${drawn.map((card) => card.name).join(", ")} taken from the draw pile by choice (${before.selection})`);
+    // A card taken out of the pile by choice (the step after a to-hand selection): not a draw. SL_RETRY_KNOWN_PICKS: out of
+    // the pile, the rest in its order; without it, where it was is unknown and the order ends.
+    const picked = drawn.length > 0 && TO_HAND_SELECTION.test(before.selection);
+    if (picked && !this.picks) this.breakAt(now.turn, `${drawn.map((card) => card.name).join(", ")} taken from the draw pile by choice (${before.selection})`);
     // A status that came into the hand not off the pile: added and drawn at once (or put straight into the hand).
     const strays = [...minus(byBase(candidates.map((card) => card.key)), byBase(drawn.map((card) => card.key)))].filter(([key]) => ADDED_STATUSES.has(key)).flatMap(([key, n]) => Array.from({ length: n }, () => key));
     if (size(fresh) > 0 || strays.length > 0) {
@@ -462,8 +484,30 @@ export class DrawTracker {
       const doubt = [...unmatched.keys()].find((key) => freshBase.has(key) && ownBase.has(key));
       if (doubt) this.breakAt(now.turn, `drew ${doubt} as cards like it were added to the draw pile: the added one or the pile's own`);
     }
-    this.takeOwn(drawn, own, added, now.turn);
+    if (picked && this.picks) this.takePicked(drawn, own, added, now.turn);
+    else this.takeOwn(drawn, own, added, now.turn);
     this.topStack.push(...movedOnTop);
+  }
+
+  /**
+   * SL_RETRY_KNOWN_PICKS: cards a selection took out of the pile into the hand: out of the pile's own cards (or off the top
+   * stack, or an added one), recorded apart (`picked`), the order going on. One that may be either an added copy or the
+   * pile's own ends the clean order (which of them is left in the pile is unknown).
+   */
+  private takePicked(cards: HandCard[], own: Map<string, number>, added: Map<string, number>, turn: number): void {
+    for (const card of cards) {
+      const onTop = this.topStack.findIndex((top) => baseKey(top.key) === baseKey(card.key));
+      if (onTop >= 0) {
+        this.topStack.splice(onTop, 1);
+        continue;
+      }
+      const mine = own.get(card.key) ?? 0;
+      const theirs = added.get(card.key) ?? 0;
+      if (mine > 0 && theirs > 0) this.breakAt(turn, `picked ${card.name}, which may be the one added to the draw pile or the pile's own`);
+      if (mine > 0) own.set(card.key, mine - 1);
+      else if (theirs > 0) added.set(card.key, theirs - 1);
+    }
+    (this.record.picked ??= []).push({ turn, at: this.record.order.length, cards: cards.map((card) => card.key), names: cards.map((card) => card.name) });
   }
 
   /**
@@ -518,6 +562,11 @@ export interface KnownOrder {
    * rest in order), good for planning, never for the certain-death judge (Dai 2026-10-02). Absent: all exact.
    */
   exact?: number;
+  /**
+   * SL_RETRY_KNOWN_PICKS: the cards the attempt the order comes from took out of the pile by a selection, and how many of
+   * `keys` were drawn before each (not in `keys`). Absent: none.
+   */
+  picked?: { at: number; keys: string[]; names: string[] }[];
 }
 
 /** A record's clean prefix drawn before its first added card (all of it without any). */
@@ -547,8 +596,11 @@ export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws |
     const names = (draws.names ?? []).slice(0, Math.min(draws.clean, cap));
     if (Array.isArray(draws.inserted) && draws.inserted.length > 0) modelled = true;
     exact = Math.max(exact ?? 0, exactLength(draws));
+    // SL_RETRY_KNOWN_PICKS: the picks within the kept part (none in rows written without the switch).
+    const picksOf = (length: number) => (draws.picked ?? []).filter((pick) => pick.at < length).map((pick) => ({ at: pick.at, keys: [...pick.cards], names: [...(pick.names ?? pick.cards)] }));
     if (!known) {
-      known = { keys, names, attempts: [row.attempt] };
+      const picked = picksOf(keys.length);
+      known = { keys, names, attempts: [row.attempt], ...(picked.length > 0 ? { picked } : {}) };
       continue;
     }
     const overlap = Math.min(known.keys.length, keys.length);
@@ -556,11 +608,15 @@ export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws |
     if (differ !== undefined) {
       cut ??= `attempts ${known.attempts.join(", ")} and ${row.attempt} drew differently at draw ${differ + 1} (${known.keys[differ]} vs ${keys[differ]})`;
       cap = differ;
-      known = { keys: known.keys.slice(0, cap), names: known.names.slice(0, cap), attempts: [...known.attempts, row.attempt] };
+      const before: KnownOrder = known;
+      const kept = (before.picked ?? []).filter((pick) => pick.at < cap);
+      known = { keys: before.keys.slice(0, cap), names: before.names.slice(0, cap), attempts: [...before.attempts, row.attempt], ...(kept.length > 0 ? { picked: kept } : {}) };
       continue;
     }
-    if (keys.length > known.keys.length) known = { keys, names: names.length === keys.length ? names : [...known.names, ...keys.slice(known.keys.length)], attempts: [...known.attempts, row.attempt] };
-    else known = { ...known, attempts: [...known.attempts, row.attempt] };
+    if (keys.length > known.keys.length) {
+      const picked = picksOf(keys.length);
+      known = { keys, names: names.length === keys.length ? names : [...known.names, ...keys.slice(known.keys.length)], attempts: [...known.attempts, row.attempt], ...(picked.length > 0 ? { picked } : {}) };
+    } else known = { ...known, attempts: [...known.attempts, row.attempt] };
   }
   if (known && known.keys.length === 0) return { known: null, reason: cut ?? "no earlier attempt recorded its draws" };
   if (known && modelled && exact !== null && exact < known.keys.length) known = { ...known, exact };
@@ -589,20 +645,27 @@ export type KnownCheck =
  * once past the known part).
  */
 export function checkKnown(known: KnownOrder, tracker: DrawTracker): KnownCheck {
-  const drawn = tracker.record;
-  if (!tracker.intact) return { ok: false, reason: drawn.broke ?? "the draws broke the order" };
+  const record = tracker.record;
+  if (!tracker.intact) return { ok: false, reason: record.broke ?? "the draws broke the order" };
   const pile = tracker.drawPile;
   if (pile === null) return { ok: false, reason: "the state does not list the draw pile" };
-  const upto = Math.min(drawn.order.length, known.keys.length);
+  // SL_RETRY_KNOWN_PICKS: the known order and this attempt's draws with the selections' picks accounted for (as they were
+  // without any pick on either side).
+  const picks = record.picked !== undefined || known.picked !== undefined ? withPicks(known, record) : null;
+  const knownKeys = picks?.keys ?? known.keys;
+  const knownNames = picks?.names ?? known.names;
+  const drawn = picks ? { ...record, order: picks.order, names: picks.orderNames, turns: picks.turns } : record;
+  const upto = Math.min(drawn.order.length, knownKeys.length);
   for (let i = 0; i < upto; i += 1) {
-    if (baseKey(drawn.order[i]!) !== baseKey(known.keys[i]!)) return { ok: false, reason: `T${drawn.turns[i] ?? "?"}: drew ${drawn.names[i] ?? drawn.order[i]} where the earlier attempt drew ${known.names[i] ?? known.keys[i]} (draw ${i + 1})` };
+    if (baseKey(drawn.order[i]!) !== baseKey(knownKeys[i]!)) return { ok: false, reason: `T${drawn.turns[i] ?? "?"}: drew ${drawn.names[i] ?? drawn.order[i]} where the earlier attempt drew ${knownNames[i] ?? knownKeys[i]} (draw ${i + 1})` };
   }
   // SL_RETRY_KNOWN_TOP: the cards moved on top come before the known ones.
   const topped = tracker.topped;
-  if (drawn.order.length >= known.keys.length && topped.keys.length === 0) return { ok: true, keys: [], names: [] };
-  const ownKeys = known.keys.slice(drawn.order.length);
+  if (drawn.order.length >= knownKeys.length && topped.keys.length === 0 && (picks?.inPile.length ?? 0) === 0) return { ok: true, keys: [], names: [] };
+  const ownKeys = knownKeys.slice(drawn.order.length);
   const keys = [...topped.keys, ...ownKeys];
-  const added = tracker.added;
+  // A card an earlier attempt picked that this one has not, past that moment: in the pile at an unknown place.
+  const added = picks && picks.inPile.length > 0 ? { keys: [...tracker.added.keys, ...picks.inPile.map((card) => card.key)], names: [...tracker.added.names, ...picks.inPile.map((card) => card.name)] } : tracker.added;
   // By the card itself (an upgrade on the way to the hand aside).
   const need = new Map<string, number>();
   for (const key of keys) need.set(baseKey(key), (need.get(baseKey(key)) ?? 0) + 1);
@@ -611,10 +674,58 @@ export function checkKnown(known: KnownOrder, tracker: DrawTracker): KnownCheck 
   const missing = minus(need, held);
   if (size(missing) > 0) return { ok: false, reason: `the draw pile does not hold the known next cards (${listOf(missing)} missing)` };
   // Exactly known: none once this attempt saw a card added to its pile; else the cards on top and the earlier attempts'
-  // exact part left.
-  const exact = tracker.addedToPile ? 0 : topped.keys.length + (known.exact !== undefined ? Math.max(0, Math.min(ownKeys.length, known.exact - drawn.order.length)) : ownKeys.length);
-  const names = [...topped.names, ...known.names.slice(drawn.order.length)];
+  // exact part left (SL_RETRY_KNOWN_PICKS: up to an earlier attempt's pick this one has not made yet; none past one it did
+  // not make).
+  const ownExact = known.exact !== undefined ? Math.max(0, Math.min(ownKeys.length, known.exact - drawn.order.length)) : ownKeys.length;
+  const exact = tracker.addedToPile || (picks?.inPile.length ?? 0) > 0 ? 0 : topped.keys.length + Math.min(ownExact, picks?.exactAhead ?? Infinity);
+  const names = [...topped.names, ...knownNames.slice(drawn.order.length)];
   return { ok: true, keys, names, ...(added.keys.length > 0 ? { inserted: added } : {}), ...(exact < keys.length ? { exact } : {}) };
+}
+
+/**
+ * SL_RETRY_KNOWN_PICKS: the known order and this attempt's draws with the selections' picks accounted for. The picks on both
+ * sides are matched by card. A card this attempt took that the earlier ones did not comes out of the known order (its first
+ * place from the pick on: the rest of the pile kept its order). One the earlier attempt took that this one has not: before
+ * that moment the order is exact only up to it (`exactAhead`: of the keys still to come); past it the card is in this
+ * attempt's pile at an unknown place (`inPile`, modelled as added at random), and if this attempt drew it, that draw is
+ * skipped against the known order.
+ */
+function withPicks(known: KnownOrder, record: SlDraws): { keys: string[]; names: string[]; order: string[]; orderNames: string[]; turns: number[]; inPile: { key: string; name: string }[]; exactAhead: number } {
+  const theirs = (known.picked ?? []).flatMap((pick) => pick.keys.map((key, i) => ({ at: pick.at, key, name: pick.names[i] ?? key })));
+  const mine = (record.picked ?? []).flatMap((pick) => pick.cards.map((key, i) => ({ at: pick.at, key, name: pick.names[i] ?? key })));
+  const unmatchedTheirs: typeof theirs = [];
+  for (const pick of theirs) {
+    const i = mine.findIndex((other) => baseKey(other.key) === baseKey(pick.key));
+    if (i >= 0) mine.splice(i, 1);
+    else unmatchedTheirs.push(pick);
+  }
+  const keys = [...known.keys];
+  const names = [...known.names];
+  for (const pick of [...mine].sort((a, b) => a.at - b.at)) {
+    const j = keys.findIndex((key, index) => index >= pick.at && baseKey(key) === baseKey(pick.key));
+    if (j >= 0) {
+      keys.splice(j, 1);
+      names.splice(j, 1);
+    }
+  }
+  const order = [...record.order];
+  const orderNames = [...record.names];
+  const turns = [...record.turns];
+  const inPile: { key: string; name: string }[] = [];
+  let exactAhead = Infinity;
+  for (const pick of unmatchedTheirs) {
+    if (record.order.length <= pick.at) {
+      exactAhead = Math.min(exactAhead, pick.at - record.order.length);
+      continue;
+    }
+    const j = order.findIndex((key, index) => index >= pick.at && baseKey(key) === baseKey(pick.key));
+    if (j >= 0) {
+      order.splice(j, 1);
+      orderNames.splice(j, 1);
+      turns.splice(j, 1);
+    } else inPile.push({ key: pick.key, name: pick.name });
+  }
+  return { keys, names, order, orderNames, turns, inPile, exactAhead };
 }
 
 /**

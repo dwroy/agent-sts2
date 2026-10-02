@@ -7,8 +7,8 @@
  * - exploreReplacement: the best untried line by the question's ranking, preferring those not worse than the pick (the
  *   rollout's share of samples dead; SL_RETRY_EXPLORE_B2: B2's win rate where B2 has the pick's numbers, picking another
  *   line than the rollout's gate would); never a line dying this turn while one survives, never a winning pick, never a
- *   drink the pick does not drink (SL_RETRY_EXPLORE_BOSS_POTIONS in a boss fight: drinking lines too). exploreTarget weighs
- *   a point B2 weighed by B2's numbers.
+ *   drink the pick does not drink (SL_RETRY_EXPLORE_BOSS_POTIONS in a boss fight: drinking lines too). exploreTarget keeps
+ *   the rollout's numbers where B2 gates the replacement.
  * - The planner on logged SL retry boards (tests/sl-retry-data, pinned knowledge as tests/sl-retry-planner.test.ts): with
  *   the switch recording (env.sl.explore without a deviation) every decision is v4 3488dc5's byte for byte (the same golden
  *   digests); on the deviation point's board Jev's line played in a failed attempt gives way to the rollout's best untried
@@ -74,7 +74,7 @@ const { planCombatTurn, slPointOf } = await import("../src/screens/combat-plan.j
 const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
 const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
 const { previousAttemptsJson } = await import("../src/sl/attempts.js");
-const { explorePoint, exploreReplacement, exploreTarget, rankByOrder, slBoardKey } = await import("../src/sl/explore.js");
+const { explorePoint, exploreReplacement, exploreTarget, pointLost, rankByOrder, replayChoice, replayPath, slBoardKey } = await import("../src/sl/explore.js");
 const { SlController } = await import("../src/sl/controller.js");
 const { RunJournal } = await import("../src/project/run-journal.js");
 const { combatPayload, testKnowledge } = await import("./scenarios.js");
@@ -169,24 +169,62 @@ describe("exploreTarget: one decision point per attempt, backtracking from the d
     expect(last.why).toMatch(/all dying more often in the rollout than the one played, as on every other point left/);
   });
 
-  it("a point B2 weighed (SL_RETRY_EXPLORE_B2) is passed over by B2's numbers, not the rollout's", () => {
-    // T3: the rollout sees its only other line dying no more often, B2 rates it worse: passed over. T2: the rollout sees both
-    // untried lines dying more often, B2 rates one no worse: T2 goes first.
+  it("the deviation point is chosen by the rollout's numbers also where B2 gates the replacement (its record is not read)", () => {
+    // 63WBEEF2JVM5 F33 with 1200 B2 samples: B2 rates every untried line of every point worse than the one played, so by B2
+    // no point would be passed over (Blood Wall's T5 included). T3: the rollout sees its other line dying no more often, B2
+    // rates it worse: chosen. T2: the rollout sees both untried lines dying more often, B2 one no worse: passed over.
     const path: SlPoint[] = [
       q("b1", 1, "A1", ["B1"]),
       { ...q("b2", 2, "A2", ["B2", "C2"]), dead: { A2: 0.5, B2: 0.6, C2: 0.7 }, b2: { win: { A2: 0.3, B2: 0.28, C2: 0.1 }, notWorse: ["B2"] } },
       { ...q("b3", 3, "A3", ["B3"]), dead: { A3: 0.8, B3: 0.8 }, b2: { win: { A3: 0.36, B3: 0.06 }, notWorse: [] } },
     ];
-    const first = exploreTarget([row(2, path)], 3);
-    expect(first.target).toMatchObject({ board: "b2", back: 2 });
-    expect(first.why).toBe("2 lines shown there never played on that board; passed over T3 (B2 rates every untried line worse)");
-    // Once T2 and T1 had their turn, T3: B2 rates all of its untried lines worse, as on every point left.
-    const rows: ExploreRow[] = [row(2, path), row(3, path, { target: first.target, deviation: { reached: true, original: "A2", replacement: "B2", reason: "test" } })];
-    rows.push(row(4, path, { target: exploreTarget(rows, 4).target, deviation: { reached: true, original: "A1", replacement: "B1", reason: "test" } }));
-    expect(rows[2]!.explore!.target).toMatchObject({ board: "b1" });
-    const last = exploreTarget(rows, 5);
-    expect(last.target).toMatchObject({ board: "b3" });
-    expect(last.why).toMatch(/B2 rates all of them worse than the one played, as on every other point left/);
+    const plain = path.map(({ b2: _b2, ...point }) => point);
+    for (const rows of [[row(2, path)], [row(2, plain)]]) {
+      const first = exploreTarget(rows, 3);
+      expect(first.target).toMatchObject({ board: "b3", back: 1 });
+      const next = [...rows, row(3, rows[0]!.explore!.points, { target: first.target, deviation: { reached: true, original: "A3", replacement: "B3", reason: "test" } })];
+      expect(exploreTarget(next, 4)).toMatchObject({ target: { board: "b1" }, why: expect.stringMatching(/passed over T2, whose untried lines all die more often in the rollout/) });
+    }
+  });
+
+  it("SL_RETRY_EXPLORE_ORDER: points where every line loses in every sample come last (R1QJUBVBSSB2 F33: T5 on all dead)", () => {
+    // T1 and T2 alive (some line dies in under every sample), T3 and T4 every line dead in every sample.
+    const path: SlPoint[] = [
+      { ...q("b1", 1, "A1", ["B1"]), dead: { A1: 0.33, B1: 0.5 } },
+      { ...q("b2", 2, "A2", ["B2"]), dead: { A2: 0.71, B2: 0.71 } },
+      { ...q("b3", 3, "A3", ["B3"]), dead: { A3: 1, B3: 1 } },
+      { ...q("b4", 4, "A4", ["B4"]), dead: { A4: 1, B4: 1 } },
+    ];
+    // Off: the latest first, as before.
+    expect(exploreTarget([row(2, path)], 3).target).toMatchObject({ board: "b4" });
+    const order = { aliveFirst: true };
+    const first = exploreTarget([row(2, path)], 3, order);
+    expect(first.target).toMatchObject({ board: "b2", back: 3 });
+    expect(first.why).toBe("1 line shown there never played on that board; passed over T4, T3, where every line loses in every sample");
+    const playing = (board: string, line: string) => path.map((point) => (point.board === board ? { ...point, line, explored: true as const } : point));
+    const rows: ExploreRow[] = [row(2, path), row(3, playing("b2", "B2"), { target: first.target, deviation: { reached: true, original: "A2", replacement: "B2", reason: "test" } })];
+    const second = exploreTarget(rows, 4, order);
+    expect(second.target).toMatchObject({ board: "b1" });
+    rows.push(row(4, playing("b1", "B1"), { target: second.target, deviation: { reached: true, original: "A1", replacement: "B1", reason: "test" } }));
+    // Every line of T1 and T2 played: the lost points, the latest first.
+    const third = exploreTarget(rows, 5, order);
+    expect(third.target).toMatchObject({ board: "b4" });
+    expect(third.why).toMatch(/every line loses in every sample here, as on every point left/);
+    // Where B2 weighed the point, its share won decides: a line B2 sees winning is alive though the rollout sees it dead.
+    const b2Path: SlPoint[] = [path[0]!, { ...path[3]!, b2: { win: { A4: 0.05, B4: 0.02 }, notWorse: [], won: { A4: 0.01, B4: 0 } } }];
+    expect(exploreTarget([row(2, b2Path)], 3, order).target).toMatchObject({ board: "b4" });
+    expect(pointLost(b2Path[1]!)).toBe(false);
+    expect(pointLost({ ...path[3]!, b2: { win: {}, notWorse: [], won: { A4: 0, B4: 0 } } })).toBe(true);
+    // No numbers: not known to be lost.
+    expect(pointLost(q("x", 1, "A", ["B"]))).toBe(false);
+  });
+
+  it("SL_RETRY_EXPLORE_REPLAY: replayPath is the reference attempt's lines before the point, by board", () => {
+    const { target } = exploreTarget([row(2, PATH)], 3);
+    expect(target).toMatchObject({ board: "b3" });
+    expect([...replayPath([row(2, PATH)], target!)]).toEqual([["b1", "A1"], ["b1x", "end turn"], ["b2", "A2"]]);
+    // Another attempt's rows are not read.
+    expect([...replayPath([row(3, PATH)], target!)]).toEqual([]);
   });
 
   it("a deviation whose board never came up does not count: the next attempt aims at the same point", () => {
@@ -290,6 +328,19 @@ describe("exploreReplacement: the best untried line", () => {
       dead: { A: 0.75, B: 0.8, C: 0.5 },
       b2: { win: { A: 0.3, B: 0.29, C: 0.06 }, notWorse: ["C"] },
     });
+  });
+
+  it("SL_RETRY_EXPLORE_REPLAY: the reference line instead of the answer, except a winning answer, a line not shown, or one dying where the answer does not", () => {
+    const replay = { line: "C", reference: 2, point: "T4, the latest question before attempt 2's death on T5" };
+    const shown = [line("A"), line("C"), line("D", { dies: true })];
+    const answer = (over: Partial<{ text: string; wins: boolean }> = {}) => ({ plan: over.text ?? "A", text: over.text ?? "A", potions: [], wins: over.wins ?? false });
+    expect(replayChoice(answer(), false, shown, replay)).toMatchObject({ line: { text: "C" }, reason: "attempt 2's line on this board, replayed to reach T4" });
+    expect(replayChoice(answer({ text: "C" }), false, shown, replay)).toEqual({ line: null, reason: "the answer is attempt 2's line" });
+    expect(replayChoice(answer({ wins: true }), false, shown, replay)).toMatchObject({ line: null, reason: expect.stringMatching(/wins the fight/) });
+    expect(replayChoice(answer(), false, shown, { ...replay, line: "Z" })).toMatchObject({ line: null, reason: "attempt 2's line is not among the options" });
+    // The reference line dies this turn: kept only where the answer does not.
+    expect(replayChoice(answer(), false, shown, { ...replay, line: "D" })).toMatchObject({ line: null, reason: "attempt 2's line dies this turn, the answer does not" });
+    expect(replayChoice(answer(), true, shown, { ...replay, line: "D" })).toMatchObject({ line: { text: "D" } });
   });
 
   it("a winning pick is never changed; a pick no failed attempt played there is played as answered; nothing left: none", () => {
@@ -551,6 +602,26 @@ describe("the sub-switches on: a listed elite as before (no added drink); a boss
     expect([...touched]).toEqual([]);
   }, 300_000);
 
+  it("SL_RETRY_EXPLORE_REPLAY on the Decimillipede T1: attempt 2's line is played instead of Jev's answer, as if Jev had picked it", () => {
+    frozen();
+    const plain = planCombatTurn(envOf("vnkn-f25-a2-t1", "off", { explore: {} })) as AskDecision;
+    const options = optionsOf(plain);
+    const reference = playsOf(options["plan3"]!);
+    const replay = { line: reference, reference: 2, point: "T6, the latest question before attempt 2's death on T7" };
+    const ask = planCombatTurn(envOf("vnkn-f25-a2-t1", "off", { explore: { ...ON, replay } })) as AskDecision;
+    const resolved = ask.resolve(pick("plan1"));
+    expect(resolved.intent).toEqual(plain.resolve(pick("plan3")).intent);
+    expect(resolved.rationale).toMatch(/SL explore: replaying attempt 2's .* instead of .* before T6$/);
+    expect((resolved.log as Raw)["sl_explore"]).toEqual({ replay: { ...replay, original: playsOf(options["plan1"]!), overridden: true, reason: "attempt 2's line on this board, replayed to reach T6" } });
+    expect(slPointOf(ask, resolved)).toMatchObject({ line: reference, replay: { overridden: true } });
+    // Jev's answer is the reference line: played as answered, counted.
+    const same = ask.resolve(pick("plan3"));
+    expect(same.intent).toEqual(plain.resolve(pick("plan3")).intent);
+    expect(same.rationale).toBe(plain.resolve(pick("plan3")).rationale);
+    expect(slPointOf(ask, same)).toMatchObject({ line: reference, replay: { overridden: false, reason: "the answer is attempt 2's line" } });
+    expect([...touched]).toEqual([]);
+  }, 300_000);
+
   it("the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion", () => {
     frozen();
     const plain = planCombatTurn(envOf("jw92-f48-a2-t3-offering", "off", { explore: {} })) as AskDecision;
@@ -606,7 +677,7 @@ const Q2 = (hp = 45): Raw => bossBoard({ turn: 2, hp, playable: true, lethal: fa
 const DEATH = (): Raw => bossBoard({ turn: 3, hp: 10 });
 
 function slConfig(log: string, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 function tempLog(): string {
@@ -644,17 +715,18 @@ interface Played {
  * One attempt as the loop plays it: each board observed, planned (env.sl from the controller), Jev picks plan1, dispatched;
  * then the certain death, reloaded (`last`: no retry left, the turn ends).
  */
-async function playAttempt(t: ReturnType<typeof controller>, boards: Raw[], last = false): Promise<Played[]> {
+async function playAttempt(t: ReturnType<typeof controller>, boards: Raw[], last = false, keys: string[] = []): Promise<Played[]> {
   const played: Played[] = [];
-  for (const raw of boards) {
+  for (const [i, raw] of boards.entries()) {
     const state: GameState = parseGameState(raw);
     t.sl.observe(state, t.memory);
     const decision = planCombatTurn(scenarioEnv(raw, t.sl.envFor(state))) as AskDecision;
     expect(decision.kind).toBe("ask");
-    const resolved = decision.resolve(pick("plan1"));
+    const key = keys[i] ?? "plan1";
+    const resolved = decision.resolve(pick(key));
     t.sl.noteAction(state, resolved.intent!);
     t.sl.notePoint(state, decision, resolved);
-    played.push({ turn: state.turn, label: decision.label, line: playsOf(optionsOf(decision)["plan1"]!), intent: resolved.intent, explore: (resolved.log as Raw | undefined)?.["sl_explore"] ?? null });
+    played.push({ turn: state.turn, label: decision.label, line: playsOf(optionsOf(decision)[key]!), intent: resolved.intent, explore: (resolved.log as Raw | undefined)?.["sl_explore"] ?? null });
   }
   const death = parseGameState(DEATH());
   t.sl.observe(death, t.memory);
@@ -682,10 +754,12 @@ describe("the controller: attempts record their lines, attempt 3 changes the lat
     const a3 = await playAttempt(t, [Q1(), Q2()]);
     expect(t.notes.join("\n")).toMatch(/SL: attempt 3 deviates at T2, the latest question before attempt 2's death on T3/);
     expect(a3[0]!.intent).toEqual(a2[0]!.intent);
-    expect(a3[0]!.explore).toBeNull();
+    // SL_RETRY_EXPLORE_REPLAY: T1 is on attempt 2's path before the point; Jev's answer is its line already.
+    expect(a3[0]!.explore).toEqual({ replay: { point: "T2, the latest question before attempt 2's death on T3", reference: 2, line: a2[0]!.line, original: a2[0]!.line, overridden: false, reason: "the answer is attempt 2's line" } });
     expect(a3[1]!.intent).not.toEqual(a2[1]!.intent);
-    expect(a3[1]!.explore).toMatchObject({ original: a2[1]!.line, played_in: [2] });
+    expect(a3[1]!.explore).toMatchObject({ original: a2[1]!.line, played_in: [2], replayed: 1 });
     const row3 = logRows(log)[2]!;
+    expect(row3.explore!.replay).toEqual({ replayed: 1, overridden: 0, stopped: null });
     expect(row3.explore!.target).toMatchObject({ turn: 2, back: 1, excluded: [a2[1]!.line], attempts: [2] });
     expect(row3.explore!.deviation).toMatchObject({ reached: true, original: a2[1]!.line, replacement: (a3[1]!.explore as Raw)["replacement"] });
     expect(row3.explore!.points[1]).toMatchObject({ turn: 2, explored: true, line: (a3[1]!.explore as Raw)["replacement"] });
@@ -693,9 +767,35 @@ describe("the controller: attempts record their lines, attempt 3 changes the lat
     // Attempt 4: the question one back (T1) changed; T2, where attempt 3 deviated, played as answered.
     const a4 = await playAttempt(t, [Q1(), Q2()], true);
     expect(a4[0]!.intent).not.toEqual(a2[0]!.intent);
-    expect(a4[0]!.explore).toMatchObject({ point: "T1, the 2nd latest question before attempt 2's death on T3", original: a2[0]!.line });
+    expect(a4[0]!.explore).toMatchObject({ point: "T1, the 2nd latest question before attempt 2's death on T3", original: a2[0]!.line, replayed: 0 });
     expect(a4[1]!.intent).toEqual(a2[1]!.intent);
     expect(a4[1]!.explore).toBeNull();
+  }, 300_000);
+
+  it("SL_RETRY_EXPLORE_REPLAY: Jev answers T1 otherwise in attempt 3 (R1QJUBVBSSB2 F33); attempt 2's line is played there, so the attempt reaches its T2 point", async () => {
+    const log = tempLog();
+    const t = controller(log);
+    await playAttempt(t, [Q1(), Q2()]);
+    const a2 = await playAttempt(t, [Q1(), Q2()]);
+    const a3 = await playAttempt(t, [Q1(), Q2()], false, ["plan2", "plan1"]);
+    expect(a3[0]!.intent).toEqual(a2[0]!.intent);
+    expect(a3[0]!.explore).toMatchObject({ replay: { reference: 2, line: a2[0]!.line, overridden: true, reason: "attempt 2's line on this board, replayed to reach T2" } });
+    expect((a3[0]!.explore as { replay: { original: string } }).replay.original).not.toBe(a2[0]!.line);
+    expect(a3[1]!.explore).toMatchObject({ original: a2[1]!.line, replayed: 1 });
+    const row3 = logRows(log)[2]!;
+    expect(row3.explore!.replay).toEqual({ replayed: 1, overridden: 1, stopped: null });
+    // The record keeps the line played (attempt 2's).
+    expect(row3.explore!.points[0]!.line).toBe(a2[0]!.line);
+    // Off: Jev's answer is played on T1.
+    const offLog = tempLog();
+    const off = controller(offLog, { retryExploreReplay: false });
+    await playAttempt(off, [Q1(), Q2()]);
+    const b2 = await playAttempt(off, [Q1(), Q2()]);
+    const b3 = await playAttempt(off, [Q1(), Q2()], false, ["plan2", "plan1"]);
+    expect(b3[0]!.intent).not.toEqual(b2[0]!.intent);
+    expect(b3[0]!.explore).toBeNull();
+    expect(b3[1]!.explore).not.toHaveProperty("replayed");
+    expect(logRows(offLog)[2]!.explore).not.toHaveProperty("replay");
   }, 300_000);
 
   it("no deviation when the board differs from the failed attempts': played as answered, the point kept for the next attempt", async () => {
@@ -705,8 +805,12 @@ describe("the controller: attempts record their lines, attempt 3 changes the lat
     const a2 = await playAttempt(t, [Q1(), Q2()]);
     const a3 = await playAttempt(t, [Q1(), Q2(44)]);
     expect(a3.map((p) => p.intent)).toEqual(a2.map((p) => p.intent));
-    expect(a3.every((p) => p.explore === null)).toBe(true);
+    // T1 on attempt 2's path (replayed, the same answer); T2 at 44 HP is not: the replay stops, no deviation.
+    expect(a3[0]!.explore).toMatchObject({ replay: { overridden: false } });
+    expect(a3[1]!.explore).toBeNull();
     expect(logRows(log)[2]!.explore!.deviation).toBeUndefined();
+    expect(logRows(log)[2]!.explore!.replay).toMatchObject({ replayed: 1, stopped: expect.stringMatching(/^T2: the board is not on attempt 2's path/) });
+    expect(t.notes.join("\n")).toMatch(/SL: attempt 3 stops replaying attempt 2's path before T2: T2: the board is not on attempt 2's path; played as usual/);
     // Not reached: attempt 4 aims at the same point.
     const a4 = await playAttempt(t, [Q1(), Q2()], true);
     expect(a4[1]!.explore).toMatchObject({ point: expect.stringMatching(/^T2, the latest question/) });
@@ -724,7 +828,7 @@ describe("the controller: attempts record their lines, attempt 3 changes the lat
     again.sl.observe(q1, again.memory);
     expect(again.sl.decisionFields()).toEqual({ sl_attempt: 4, sl_reloads: 3 });
     const env = again.sl.envFor(q1)!;
-    expect(env.explore).toEqual({ deviate: { point: "T1, the 2nd latest question before attempt 2's death on T3", excluded: [a2[0]!.line], attempts: [2, 3] }, b2Gate: true, bossPotions: true });
+    expect(env.explore).toEqual({ deviate: { point: "T1, the 2nd latest question before attempt 2's death on T3", excluded: [a2[0]!.line], attempts: [2, 3], replayed: 0 }, b2Gate: true, bossPotions: true });
     expect(again.notes.join("\n")).toMatch(/SL: attempt 4 deviates at T1/);
   }, 300_000);
 
@@ -732,11 +836,11 @@ describe("the controller: attempts record their lines, attempt 3 changes the lat
     const on = controller(tempLog());
     await playAttempt(on, [Q1(), Q2()]);
     expect(on.sl.envFor(parseGameState(Q1()))!.explore).toEqual({ b2Gate: true, bossPotions: true });
-    expect(on.sl.describe()).toMatchObject({ retry_explore: true, retry_explore_b2: true, retry_explore_boss_potions: true });
-    const off = controller(tempLog(), { retryExploreB2: false, retryExploreBossPotions: false });
+    expect(on.sl.describe()).toMatchObject({ retry_explore: true, retry_explore_b2: true, retry_explore_boss_potions: true, retry_explore_order: true, retry_explore_replay: true, retry_known_picks: true });
+    const off = controller(tempLog(), { retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false });
     await playAttempt(off, [Q1(), Q2()]);
     expect(off.sl.envFor(parseGameState(Q1()))!.explore).toEqual({});
-    expect(off.sl.describe()).toMatchObject({ retry_explore: true, retry_explore_b2: false, retry_explore_boss_potions: false });
+    expect(off.sl.describe()).toMatchObject({ retry_explore: true, retry_explore_b2: false, retry_explore_boss_potions: false, retry_explore_order: false, retry_explore_replay: false });
   }, 300_000);
 
   it("switch off: nothing recorded, no env.sl.explore, the same plays in every attempt (as before the switch)", async () => {

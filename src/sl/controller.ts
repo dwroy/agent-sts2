@@ -31,13 +31,13 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { RunJournal } from "../project/run-journal.js";
 import type { Decision, ResolvedAction, ScreenMemory, SlCompute, SlEnv } from "../project/types.js";
 import { isMenuRunId } from "../project/journal-replay.js";
-import { distinctNames, revivesOf, slPointOf } from "../screens/combat-plan.js";
+import { distinctNames, revivesOf, slPointOf, type SlPointInfo } from "../screens/combat-plan.js";
 import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlEliteList } from "./elites.js";
-import { exploreTarget, slBoardKey, type SlExploreRecord, type SlPoint } from "./explore.js";
+import { exploreTarget, replayPath, slBoardKey, type SlExploreRecord, type SlPoint, type SlTarget } from "./explore.js";
 import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
 
@@ -165,6 +165,9 @@ export class SlController {
       retry_explore: this.config.retryExplore === true,
       retry_explore_b2: this.config.retryExplore === true && this.config.retryExploreB2 === true,
       retry_explore_boss_potions: this.config.retryExplore === true && this.config.retryExploreBossPotions === true,
+      retry_explore_order: this.config.retryExplore === true && this.config.retryExploreOrder === true,
+      retry_explore_replay: this.config.retryExplore === true && this.config.retryExploreReplay === true,
+      retry_known_picks: this.config.retryKnownPicks === true,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
       elites: this.elites.elites.map((elite) => elite.name),
@@ -276,8 +279,12 @@ export class SlController {
       // The sub-switches (SL_RETRY_EXPLORE_B2, SL_RETRY_EXPLORE_BOSS_POTIONS): absent when off, as before them.
       const flags = { ...(this.config.retryExploreB2 === true ? { b2Gate: true } : {}), ...(this.config.retryExploreBossPotions === true ? { bossPotions: true } : {}) };
       const target = explore.target;
-      if (!target || explore.deviation?.reached || slBoardKey(state) !== target.board) return { ...flags };
-      return { deviate: { point: target.point, excluded: [...target.excluded], attempts: [...target.attempts] }, ...flags };
+      if (!target || explore.deviation?.reached) return { ...flags };
+      const board = slBoardKey(state);
+      if (board === target.board) return { deviate: { point: target.point, excluded: [...target.excluded], attempts: [...target.attempts], ...(explore.replay ? { replayed: explore.replay.replayed } : {}) }, ...flags };
+      // SL_RETRY_EXPLORE_REPLAY: on a board of the reference attempt's path before the point, its line there.
+      const line = explore.replay && explore.replay.stopped === null ? this.replayLines(fight, target).get(board) : undefined;
+      return line !== undefined ? { ...flags, replay: { line, reference: target.reference, point: target.point } } : { ...flags };
     } catch (error) {
       fight.explore = null;
       this.options.note(`SL: explore off for this attempt (${error instanceof Error ? error.message : String(error)}); played as usual`);
@@ -303,7 +310,11 @@ export class SlController {
       if (explore.points.at(-1)?.board === board) explore.points[explore.points.length - 1] = point;
       else explore.points.push(point);
       const target = explore.target;
-      if (!target || board !== target.board || explore.deviation?.reached) return;
+      if (!target || explore.deviation?.reached) return;
+      if (board !== target.board) {
+        this.noteReplay(fight, explore, state, board, info);
+        return;
+      }
       explore.deviation = info.deviation ? { reached: true, ...info.deviation } : { reached: true, original: info.line, replacement: null, reason: "decided on the board without the deviation" };
       const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
       this.options.note(
@@ -316,6 +327,34 @@ export class SlController {
     }
   }
 
+  /** SL_RETRY_EXPLORE_REPLAY: the reference attempt's lines before the deviation point, by board (cached per target). */
+  private replayCache: { target: SlTarget; lines: Map<string, string> } | null = null;
+  private replayLines(fight: Pick<FightTrack, "floor" | "encounter">, target: SlTarget): Map<string, string> {
+    if (this.replayCache?.target !== target) this.replayCache = { target, lines: replayPath(this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter), target) };
+    return this.replayCache.lines;
+  }
+
+  /**
+   * SL_RETRY_EXPLORE_REPLAY: a decision point before the deviation point: its board on the reference attempt's path and its
+   * line played there, counted; otherwise (a board not on the path, another line played) the replay stops for the attempt
+   * and the rest is played as usual (it should not happen: the same boards, the known draws).
+   */
+  private noteReplay(fight: FightTrack, explore: SlExploreRecord, state: GameState, board: string, info: SlPointInfo): void {
+    const replay = explore.replay;
+    const target = explore.target;
+    if (!replay || replay.stopped !== null || !target) return;
+    const line = this.replayLines(fight, target).get(board);
+    const where = `T${state.turn ?? "?"}`;
+    if (line === undefined) replay.stopped = `${where}: the board is not on attempt ${target.reference}'s path`;
+    else if (info.line !== line) replay.stopped = `${where}: ${info.line} played where attempt ${target.reference} played ${line}${info.replay ? ` (${info.replay.reason})` : ""}`;
+    else {
+      replay.replayed += 1;
+      if (info.replay?.overridden) replay.overridden += 1;
+      return;
+    }
+    this.options.note(`SL: attempt ${fight.attempt} stops replaying attempt ${target.reference}'s path before ${target.point.split(",")[0]}: ${replay.stopped}; played as usual`);
+  }
+
   /**
    * SL_RETRY_EXPLORE: a new attempt's record, with its deviation point (attempts 3+, exploreTarget over this fight's earlier
    * rows). Null with the switch off, on the first attempt, or on an error (the attempt plays as without the switch).
@@ -325,13 +364,13 @@ export class SlController {
     try {
       if (attempt < 3) return { points: [], target: null };
       const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
-      const { target, why } = exploreTarget(earlier, attempt);
+      const { target, why } = exploreTarget(earlier, attempt, { aliveFirst: this.config.retryExploreOrder === true });
       this.options.note(
         target
           ? `SL: attempt ${attempt} deviates at ${target.point}: not ${target.excluded.join(" / ")} again there (${why})`
           : `SL: attempt ${attempt} has no deviation point (${why}); it plays as usual`,
       );
-      return target ? { points: [], target } : { points: [], target: null, why };
+      return target ? { points: [], target, ...(this.config.retryExploreReplay === true ? { replay: { replayed: 0, overridden: 0, stopped: null } } : {}) } : { points: [], target: null, why };
     } catch (error) {
       this.options.note(`SL: explore off for attempt ${attempt} (${error instanceof Error ? error.message : String(error)}); it plays as usual`);
       return null;
@@ -376,11 +415,12 @@ export class SlController {
 
   /**
    * An attempt's draw tracker (SL_RETRY_KNOWN_INSERTS: cards added to the pile at random places keep the order;
-   * SL_RETRY_KNOWN_TOP: so do cards moved on top).
+   * SL_RETRY_KNOWN_TOP: so do cards moved on top; SL_RETRY_KNOWN_PICKS: so do cards a selection takes out of the pile).
    */
   private newTracker(): DrawTracker {
     if (this.config.retryKnownInserts !== true) return new DrawTracker();
-    return this.config.retryKnownTop === true ? new DrawTracker({ inserts: true, tops: true }) : new DrawTracker({ inserts: true });
+    const picks = this.config.retryKnownPicks === true ? { picks: true } : {};
+    return this.config.retryKnownTop === true ? new DrawTracker({ inserts: true, tops: true, ...picks }) : new DrawTracker({ inserts: true, ...picks });
   }
 
   /** The known draw order of `attempt` at the fight: the earlier attempts' rows (null on the first attempt). */
