@@ -582,6 +582,18 @@ export interface RolloutInput {
    * 抽牌堆」; logged CMUX F19/F20/F22: one Soot in the new draw pile after each shuffle), or absent.
    */
   onShuffle?: CardModel;
+  /**
+   * THIEF_FACTS (src/strategy/thief.ts escapeInput; absent: before it, nobody leaves): enemies that leave the fight.
+   * `moves`: by enemy id, the moves whose resolution takes it out of the fight (the monster DB's Escape intent: the
+   * Thieving Hopper's ESCAPE_MOVE, the Fat Gremlin's FLEE_MOVE), unless it is stunned (a Hopper whose last Flutter the
+   * turn stripped: its Escape is cancelled, XMY29WWQDC1Y F19 T5 -> T6). Gone, it is no kill and spawns nothing, and the
+   * fight is over when nobody is left (RPC6X61N9FQ0 F20 T5: the reward screen next). Before, the move model kept it
+   * there doing nothing (Escape -> Escape 0 damage; Flee with no successor) until the policy killed it.
+   * `carriers`: the board index of each enemy carrying our card or gold now, and its tag; `heirs`: by enemy id, the
+   * spawn that takes the tag over when it dies (Gremlin Merc -> Fat Gremlin). Each turn record then says, per tag, whether
+   * the loot is back (every holder killed), gone (a holder left) or still open.
+   */
+  escapes?: { moves: Record<string, string[]>; carriers: Record<number, string>; heirs: Record<string, string> };
 }
 
 /** One enemy an on-death spawn brings (RolloutInput.spawns). */
@@ -625,6 +637,8 @@ export interface OrderEstimate {
   potionCost: number;
   /** Samples (of `samples`) whose later turns drink each potion (by id). */
   laterDrinks: Record<string, number>;
+  /** RolloutInput.escapes: per carrier tag, the samples in which its loot is back by the horizon (killed) or gone (it left). */
+  thieves?: Record<string, { back: number; gone: number }>;
 }
 
 export interface LineEstimate {
@@ -682,6 +696,11 @@ export interface LineEstimate {
   noPotionFight?: boolean;
   /** Samples that spent a revive (Fairy in a Bottle, Lizard Tail) within the horizon; absent when none. */
   revived?: number;
+  /**
+   * RolloutInput.escapes: per carrier tag, the samples (of `samples`) in which the loot is back by the horizon (every
+   * holder killed before it left) or gone (a holder left with it); the rest are still open (or died). Absent without.
+   */
+  thieves?: Record<string, { back: number; gone: number }>;
   value: number;
   /** The same trajectories with the ungated model as terminal (w = 1), for comparison. */
   valueModelTerminal: number | null;
@@ -950,6 +969,10 @@ interface SimEnemy {
    */
   random?: () => number;
   powers: Record<string, number>;
+  /** RolloutInput.escapes: the tag of the loot it carries (its own, or a dying carrier's: the Fat Gremlin's from the Merc). */
+  carrier?: string;
+  /** It left the fight (its Escape / Flee resolved): not alive, no kill. */
+  gone?: boolean;
   base: EnemySim;
   /** Fallback attack when the move model does not know the enemy: the intents shown at the decision. */
   shown: { damage: number; hits: number }[];
@@ -1128,6 +1151,9 @@ export interface TurnRecord {
   /** Whole fights only (simulateFight): the Power cards played this turn (ids) and the block the line gained. */
   powers?: string[];
   blockGained?: number;
+  /** RolloutInput.escapes: each carrier tag's loot by the end of this turn, and the board indices gone by then (they left). */
+  thieves?: Record<string, "back" | "gone" | "open">;
+  gone?: number[];
 }
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean, fight: { fullFight: boolean; faced: boolean } = { fullFight: false, faced: false }): { damage: number; hits: number }[] {
@@ -1379,7 +1405,15 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     // actual 23).
     const spawns = e.base.spawnsOnDeath ? input.spawns?.[e.id] ?? [] : [];
     let next = Math.max(...enemies.map((x) => x.index)) + 1;
-    for (const template of spawns) for (let k = 0; k < template.count; k += 1) enemies.push(spawnedEnemy(template, next++));
+    // THIEF_FACTS: a dying carrier's loot goes with its heir (the Merc's gold with the Fat Gremlin, as its HEIST_POWER).
+    const heir = e.carrier !== undefined ? input.escapes?.heirs[e.id] : undefined;
+    for (const template of spawns) {
+      for (let k = 0; k < template.count; k += 1) {
+        const spawn = spawnedEnemy(template, next++);
+        if (heir !== undefined && template.id === heir) spawn.carrier = e.carrier;
+        enemies.push(spawn);
+      }
+    }
   }
 }
 
@@ -1744,6 +1778,8 @@ function applyPlan(
     // Stunned by the line itself (a Corpse Slug eating a corpse), on any turn.
     if (a?.stunned && a.hp > 0) shrieked.add(e.index);
   }
+  // THIEF_FACTS: Flutter before the line; a line that strips the last stack stuns the enemy (its move cancelled).
+  const flutterBefore = input.escapes ? new Map(enemies.map((e) => [e.index, e.flutter])) : null;
   // Retaliation (Flame Barrier, Thorns) on the enemy turn, by attacker: off its HP too.
   const retaliated = new Map((o.retaliated ?? []).map((r) => [r.index, r.amount]));
   // Slippery stacks the retaliation took (a stack per hit it hurt).
@@ -1828,6 +1864,15 @@ function applyPlan(
       // Burrowed with all its block gone this turn: stunned, the move is lost (the solver already left its
       // hit out) and it surfaces; after the stun it goes on as the move model saw it (Tunneler: Bite).
       const stunned = (e.burrowed && e.block <= 0) || shrieked.has(e.index);
+      // THIEF_FACTS: an Escape / Flee that resolves takes it out of the fight (no kill, nothing comes back). Stunned
+      // by its last Flutter stripped this turn, the Escape is cancelled and comes again next turn (XMY29WWQDC1Y F19:
+      // STUNNED on T5, Escape on T6; the move model's Escape -> Escape).
+      const fluttered = flutterBefore !== null && (flutterBefore.get(e.index) ?? 0) > 0 && e.flutter <= 0;
+      if (e.move !== null && input.escapes?.moves[e.id]?.includes(e.move) && !stunned && !fluttered) {
+        e.alive = false;
+        e.gone = true;
+        continue;
+      }
       if (stunned) e.burrowed = false;
       else {
         // An attack spends the Vigor it had (its hits carried it); the move's own Vigor is for the next one.
@@ -1974,6 +2019,8 @@ function applyPlan(
   }
   // The potions this turn drinks and their cost (the solver's outcome: potion-cost.ts), for the line's effective loss.
   const drunk = plan.steps.filter(isPotion).map((step) => step.cardId.split(":")[1] ?? "");
+  const thieves = input.escapes && Object.keys(input.escapes.carriers).length > 0 ? thiefStatus(enemies) : null;
+  const gone = input.escapes ? enemies.filter((e) => e.gone).map((e) => e.index) : [];
   return {
     loss: startHp - player.hp + (o.revived?.reviveHp ?? 0),
     enemyPart: o.incomingAfterBlock,
@@ -1984,6 +2031,8 @@ function applyPlan(
     ...(o.revived ? { revived: o.revived.sources.length } : {}),
     hpLeft,
     ...(drunk.length > 0 ? { drunk, potionCost: o.potionCost ?? 0 } : {}),
+    ...(thieves ? { thieves } : {}),
+    ...(gone.length > 0 ? { gone } : {}),
     // Whole fights (B2's fight plan): the Powers played and the block gained this turn.
     ...(fullFight
       ? {
@@ -1992,6 +2041,19 @@ function applyPlan(
         }
       : {}),
   };
+}
+
+/**
+ * Each carrier tag's loot after a turn (RolloutInput.escapes): open while a holder lives, gone once one left with it,
+ * else back (every holder killed: a Merc and the Fat Gremlin it spawned both dead).
+ */
+function thiefStatus(enemies: SimEnemy[]): Record<string, "back" | "gone" | "open"> {
+  const out: Record<string, "back" | "gone" | "open"> = {};
+  for (const tag of new Set(enemies.map((e) => e.carrier).filter((tag): tag is string => tag !== undefined))) {
+    const holders = enemies.filter((e) => e.carrier === tag);
+    out[tag] = holders.some((e) => e.alive && !e.gone) ? "open" : holders.some((e) => e.gone) ? "gone" : "back";
+  }
+  return out;
 }
 
 /** `count` copies of a card into the discard pile, or shuffled into the draw pile at random places. */
@@ -2163,6 +2225,7 @@ function simulate(
         soar: (info?.powers?.["SOAR_POWER"] ?? 0) > 0 && gainsSelf(input.tables[info?.id ?? ""], "SOAR_POWER"),
       },
       powers: info?.powers ?? {},
+      ...(input.escapes?.carriers[e.index] !== undefined ? { carrier: input.escapes.carriers[e.index] } : {}),
       base: e,
       shown: e.attacks,
       shownScale: (e.weak > 0 ? 0.75 : 1) * ((e.shrink ?? 0) > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (base.vulnerable ? 1.5 : 1),
@@ -2532,6 +2595,20 @@ function costOf(records: TurnRecord[], n: number): number {
   return cost;
 }
 
+/** Per carrier tag, the samples whose loot is back or gone at their last record (RolloutInput.escapes), or null without. */
+function thiefCounts(lasts: TurnRecord[]): Record<string, { back: number; gone: number }> | null {
+  if (!lasts.some((record) => record.thieves)) return null;
+  const out: Record<string, { back: number; gone: number }> = {};
+  for (const record of lasts) {
+    for (const [tag, status] of Object.entries(record.thieves ?? {})) {
+      const entry = (out[tag] ??= { back: 0, gone: 0 });
+      if (status === "back") entry.back += 1;
+      else if (status === "gone") entry.gone += 1;
+    }
+  }
+  return out;
+}
+
 /** The living enemies' HP in a snapshot (a won fight: 0). */
 function enemyHpOf(record: TurnRecord): number {
   if (record.won) return 0;
@@ -2815,6 +2892,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       enemyHpLeft: enemyHpOf(records[0]!),
       leaderHpLeft: boardLeader ? groupHpOf(records[0]!, boardLeader) : null,
       survived: v.died ? v.turns : 1,
+      thieves: thiefCounts([records[0]!]),
     };
   });
 
@@ -2919,10 +2997,13 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const estimate = (runs: TurnRecord[][], order: KillOrder | null) => {
     const kept = runs.slice(0, samples);
     const first = order?.groups[0] ?? [];
+    // An enemy that left (RolloutInput.escapes) is not dead: the order's first group gone is no kill.
     const firstDown = order?.firstRevives
       ? null
       : kept.filter((records) => {
           const last = records[Math.min(horizon, records.length) - 1]!;
+          const gone = new Set(last.gone ?? []);
+          if (first.some((index) => gone.has(index))) return false;
           return last.won || first.every((index) => last.snap.E.every((e) => e[0] !== index || !e[5]));
         }).length;
     const wins = kept.filter((records) => records.slice(0, horizon).some((r) => r.won)).length;
@@ -2950,9 +3031,11 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       const ids = new Set(records.slice(1, horizon).flatMap((record) => record.drunk ?? []));
       for (const id of ids) laterDrinks[id] = (laterDrinks[id] ?? 0) + 1;
     }
+    const thieves = thiefCounts(kept.map((records) => records[Math.min(horizon, records.length) - 1]!));
     return {
       potionCost: cost,
       laterDrinks,
+      ...(thieves ? { thieves } : {}),
       hpLoss: loss,
       turnsToWin: alive.length > 0 ? mean(alive.map((v) => v.turns)) : null,
       deaths: dead.length,
@@ -2995,6 +3078,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         ...(plan.outcome.revived ? { revived: 1 } : {}),
         order: null,
         orders: [],
+        ...(o.thieves ? { thieves: o.thieves } : {}),
         hpLoss: o.hpLoss,
         potionCost: o.cost,
         laterDrinks: {},
@@ -3028,6 +3112,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       hpLoss: best.hpLoss,
       potionCost: best.potionCost,
       laterDrinks: best.laterDrinks,
+      ...(best.thieves ? { thieves: best.thieves } : {}),
       enemyHpLeft: best.enemyHpLeft,
       leaderHpLeft: best.leaderHpLeft,
       turnsSurvived: best.turnsSurvived,
