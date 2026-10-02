@@ -171,6 +171,28 @@ describe("1. Fairy in a Bottle and Lizard Tail are revives (JR66CJ9T8H7W F48, YQ
     expect(memory.lizardTail?.used).toBe(true);
   });
 
+  it("trackLizardTail: the enemy turn's reads in between do not hide the trigger (LTKW24N3R9PG F37: T4 7 HP vs 20, T5 at 37 of 74)", () => {
+    const board = (turn: number, hp: number, intent: number, actionable: boolean): ReturnType<typeof parseGameState> => {
+      const fx = logged("en55-f8-t9");
+      (fx.state["run"] as Raw)["relics"] = [{ index: 0, relic_id: "LIZARD_TAIL", name: "蜥蜴尾巴", stack: null }];
+      fx.state["turn"] = turn;
+      const combat = fx.state["combat"] as Raw;
+      combat["end_turn_will_kill_player"] = false;
+      (combat["action_readiness"] as Raw)["can_use_combat_actions"] = actionable;
+      (combat["player"] as Raw)["current_hp"] = hp;
+      (combat["player"] as Raw)["max_hp"] = 74;
+      (combat["player"] as Raw)["block"] = 0;
+      ((combat["enemies"] as Raw[])[0]!["intents"] as Raw[])[0]!["damage"] = intent;
+      return parseGameState(fx.state);
+    };
+    const memory = createScreenMemory("COMBAT");
+    trackLizardTail(memory, board(4, 7, 20, true));
+    // The enemy turn: revived to 37, the next intents (14) not lethal, the turn number still 4.
+    trackLizardTail(memory, board(4, 37, 14, false));
+    trackLizardTail(memory, board(5, 37, 14, true));
+    expect(memory.lizardTail?.used).toBe(true);
+  });
+
   it("the planner: with a Fairy in the belt the all-dying board is no least-loss auto-play; the lines say the revive is spent", () => {
     potionMcOptions.now = () => 0;
     rolloutLiveOptions.enabled = false;
