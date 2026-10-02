@@ -1089,9 +1089,10 @@ export const BLOOD_POTION_HEAL = 0.2;
 export const REGEN_LATER_SHARE = 0.5;
 
 /**
- * HP the player loses on their own turn (a card's cost, Thorns, Reflect). Demon Tongue heals the
- * first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end turn, -9"; played, it costs
- * nothing and gives 2 energy for a Defend).
+ * HP the player loses on their own turn (a card's cost, Reflect, and what gets past block of Thorns and a card's damage
+ * to us: damagePlayer). Demon Tongue heals the first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end
+ * turn, -9"; played, it costs nothing and gives 2 energy for a Defend). Only a real loss comes here, so only it sets off
+ * Rupture, Inferno, Demon Tongue and Red Skull.
  */
 function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
   if (amount <= 0) return false;
@@ -1105,6 +1106,14 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
   sim.hpLostThisTurn = true;
   sim.hpLossEvents += 1;
   redSkullCheck(sim, player);
+  // Rupture (「每当你在自身回合失去生命时，获得1点力量」): every HP loss on our turn, not only a card's own cost. Logged:
+  // Thorns past block, R6V3T4KSDABE F31 T2 (Rupture 1, block 0): Breakthrough's 1 and the Toad's 5 took Strength 0 -> 2,
+  // the next two Thorns hits 2 -> 3 -> 4; Galvanic's 6, XSPHCB4GUSEU F38 T4 (Rupture 1): Inflame's +3 came out +4. The
+  // solver had it on a card's own HP cost only.
+  if (sim.rupture > 0) {
+    sim.strength += sim.rupture;
+    sim.permStrength += sim.rupture;
+  }
   // Inferno: every HP loss on our turn hits every enemy (9XZX: "每当你在你的回合内失去生命时，对所有
   // 敌人造成6点伤害"). One sweep: two crabs dying to it die together.
   if (sim.inferno > 0) {
@@ -1191,7 +1200,13 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     enemy.lostThisTurn += loss;
     dealt += loss;
     if (loss > 0) wake(enemy);
-    if ((enemy.thorns ?? 0) > 0) loseHp(sim, enemy.thorns ?? 0, player);
+    // Thorns (Spiny Toad, Toadpole: 「当被攻击命中时，反击造成伤害」) is damage: our block takes it first, Intangible caps it
+    // at 1, only the rest is HP lost (and only that sets off Rupture, Inferno, Demon Tongue). Logged (thorns2.py), one
+    // Thorns enemy hit between two decision frames with block up: 65 of 66 took it from block first (59 HP unchanged:
+    // 24HMNKB4N32V F25 T2 Thorns 5, block 5 -> 0, HP 91 -> 91; 5 more past the block into HP); the other gained block from the
+    // same card. With Inferno up and the Thorns blocked, Inferno did not fire (JR66CJ9T8H7W F29 T2 block 16 -> 11, the
+    // Toad 90 -> 79, the Strike's 11 only; XMY29WWQDC1Y F22 T2). The solver took it straight off HP.
+    if ((enemy.thorns ?? 0) > 0) damagePlayer(sim, enemy.thorns ?? 0, player);
     if (amount > 0 && (enemy.curlUp ?? 0) > 0) {
       enemy.block += enemy.curlUp ?? 0;
       enemy.curlUp = 0;
@@ -1465,13 +1480,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
 
-  if (card.hpLoss > 0 && loseHp(next, card.hpLoss, player)) {
-    if (next.rupture > 0) {
-      next.strength += next.rupture;
-      next.permStrength += next.rupture;
-    }
-  }
-  if (card.special === "rupture") next.rupture += 1;
+  if (card.hpLoss > 0) loseHp(next, card.hpLoss, player);
+  // Rupture's amount (Rupture+ 2: 8L29N792FA45 F37 T2, played at block 0 under Galvanic, its own 6 gave +2 Strength), as the
+  // rollout's later turns take it (POWER_EFFECTS); it was +1 whatever the card.
+  if (card.special === "rupture") next.rupture += card.powerAmount ?? 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
   if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
   // Vital Spark (Infested Prism): every Skill gives us Tainted, and every attack hit this turn grows by it

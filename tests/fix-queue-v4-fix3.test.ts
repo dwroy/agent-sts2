@@ -141,3 +141,42 @@ describe("2. Galvanic (Globe Head): a Power's 「受到6点伤害」 is damage t
     expect(solve({ block: 0, intangible: true })).toBe(1);
   });
 });
+
+describe("3. Thorns through block; Rupture on every HP loss of our turn (proposal §1)", () => {
+  it("24HMNKB4N32V F25 T2 (block 5, the Toad's Thorns 5): Strike's Thorns takes the block (logged 5 -> 0, HP 91 -> 91), not HP", () => {
+    const { input, result } = solvedBoard(fixture("24hm-f25-t2-thorns-block", "t2_after_defend"));
+    expect(input.player).toMatchObject({ hp: 91, block: 5 });
+    expect(input.enemies[0]).toMatchObject({ thorns: 5 });
+    // The Toad's 23 against Plating 3 and no block left: 20, all of it in the enemy turn (was 5 off HP now, 15 after).
+    expect(line(result, "STRIKE_IRONCLAD>0").outcome).toMatchObject({ hpLoss: 20, incomingAfterBlock: 20 });
+    expect(line(result, "STRIKE_IRONCLAD>0,TRUE_GRIT").outcome).toMatchObject({ hpLoss: 13, incomingAfterBlock: 13 });
+  });
+
+  it("R6V3T4KSDABE F31 T2 (Rupture 1, block 0): Breakthrough's 1 and each Thorns hit past block is a Strength (logged 0 -> 2 -> 3 -> 4)", () => {
+    const { input, result } = solvedBoard(fixture("r6v3-f31-t2-thorns-rupture", "t2"));
+    expect(input.player).toMatchObject({ block: 0, rupture: 1 });
+    expect(line(result, "BREAKTHROUGH").outcome.strengthGained).toBe(2);
+    expect(line(result, "BREAKTHROUGH,STRIKE_IRONCLAD>0,UNRELENTING>0").outcome.strengthGained).toBe(4);
+  });
+
+  it("8L29N792FA45 F37 T2 (Rupture+ under Galvanic): played at block 0 its own 6 gives +2 (logged 1 -> 3); after Shrug It Off's block, nothing", () => {
+    const raw = fixture("8l29-f37-t2-galvanic-rupture", "t2");
+    expect(handCard(raw, "RUPTURE")).toMatchObject({ selfDamage: 6, powerAmount: 2 });
+    const { result } = solvedBoard(raw);
+    expect(line(result, "RUPTURE").outcome.strengthGained).toBe(2);
+    expect(line(result, "SHRUG_IT_OFF,RUPTURE").outcome.strengthGained).toBe(0);
+  });
+
+  it("in the solver: blocked Thorns is no HP loss and sets off nothing (Inferno, Rupture); Intangible caps it at 1", () => {
+    const strike: CardModel = { index: 0, key: "c0", cardId: "STRIKE_IRONCLAD", name: "Strike", type: "Attack", upgraded: false, cost: 1, xCost: false, playable: true, target: "single", validTargets: [0], damage: 6, hits: 1, block: 0, vulnerable: 0, weak: 0, strength: 0, tempStrength: 0, enemyStrength: 0, enemyTempStrengthLoss: 0, hpLoss: 0, energyGain: 0, draw: 0, exhausts: false, special: null, known: true, flatValue: 0, heldPenalty: 0, text: "" };
+    const solve = (over: Partial<PlayerSim>) => line(solveTurn({ hand: [strike], enemies: [dummy({ hp: 50, maxHp: 50, thorns: 5 })], fightKind: "monster", player: player({ inferno: 6, rupture: 1, ...over }) }), "STRIKE_IRONCLAD>0").outcome;
+    // Blocked: no HP lost, the Toad takes the Strike's 6 only (Inferno did not fire: JR66CJ9T8H7W F29 T2), no Strength.
+    expect(solve({ block: 10 })).toMatchObject({ hpLoss: 0, strengthGained: 0 });
+    expect(solve({ block: 10 }).enemyHpAfter[0]!.hp).toBe(44);
+    // Past block: 5 off HP, Inferno's 6 into the Toad, Rupture's Strength.
+    expect(solve({ block: 0 })).toMatchObject({ hpLoss: 5, strengthGained: 1 });
+    expect(solve({ block: 0 }).enemyHpAfter[0]!.hp).toBe(38);
+    expect(solve({ block: 3 })).toMatchObject({ hpLoss: 2, strengthGained: 1 });
+    expect(solve({ block: 0, intangible: true }).hpLoss).toBe(1);
+  });
+});
