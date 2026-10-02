@@ -138,6 +138,14 @@ export interface AppConfig {
    * built before it), as off.
    */
   mechRules: boolean;
+  /**
+   * MECH_MOVE_RULES (default on; docs/mechanics-learning.md §8, Dai 2026-10-02), with MECH_RULES on: the second learned
+   * class, "a power removed or lowered -> the enemy's move changes" (an Axebot's Stock taken on its revive: Boot Up, no
+   * attack), in the solver, the rollout, the option's fact, the enemy powers' note and the knowledge prefix; and the Kaiser
+   * Crab's back attack needing both claws alive (Surrounded's x1.5 is gone once one claw dies: 152 of 152 logged one-claw
+   * attack intents unmultiplied). off (or MECH_RULES off): the combat question and the prefix exactly as before them.
+   */
+  mechMoveRules: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -662,6 +670,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const mechRulesProblems: ConfigProblem[] = [];
   const mechRules = parseOnOff(readEnv(env, "MECH_RULES"), "MECH_RULES", mechRulesProblems) ?? true;
   for (const problem of mechRulesProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // MECH_MOVE_RULES likewise (on by default; it needs MECH_RULES on to do anything).
+  const mechMoveRulesProblems: ConfigProblem[] = [];
+  const mechMoveRules = parseOnOff(readEnv(env, "MECH_MOVE_RULES"), "MECH_MOVE_RULES", mechMoveRulesProblems) ?? true;
+  for (const problem of mechMoveRulesProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -759,6 +771,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     thiefFacts,
     thiefCost,
     mechRules,
+    mechMoveRules,
     sl,
     brain,
     deepseek,

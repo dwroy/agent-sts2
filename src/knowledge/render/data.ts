@@ -24,7 +24,7 @@ import type { FactFiller } from "./facts.js";
  * the monster blocks carry the observed mechanics (monster-db.json `observed`; MECH_RULES, docs/mechanics-learning.md);
  * absent means yes, false renders the blocks exactly as before them.
  */
-export type RenderContext = Pick<ToolContext, "ascension" | "knowledgeDir"> & Partial<Pick<ToolContext, "act" | "logsDir">> & { facts?: FactFiller; mechanics?: boolean };
+export type RenderContext = Pick<ToolContext, "ascension" | "knowledgeDir"> & Partial<Pick<ToolContext, "act" | "logsDir">> & { facts?: FactFiller; mechanics?: boolean; moveRules?: boolean };
 
 export class KnowledgeLoadError extends Error {
   constructor(message: string) {

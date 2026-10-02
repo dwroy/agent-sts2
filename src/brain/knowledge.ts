@@ -114,6 +114,8 @@ export interface KnowledgePromptOptions {
   facts?: FactFiller;
   /** MECH_RULES: the monster blocks carry the observed mechanics (default yes; false: the prefix as before them). */
   mechanics?: boolean;
+  /** MECH_MOVE_RULES: with `mechanics`, the learned move changes too (default yes; false: the prefix as with MECH_RULES alone). */
+  moveRules?: boolean;
 }
 
 /** The full-knowledge system prompt per ascension and knowledge directory, rendered once and kept while the data holds. */
@@ -136,7 +138,7 @@ export class KnowledgePrompt {
     if (hit && hit.key === key && hit.data === data && hit.potions === potions && hit.postmortems === postmortems) return hit;
     const render = this.opts.render ?? ((c: RenderContext, p: Postmortems) => renderKnowledgePrefix(c, p));
     // The guides' and lessons' data facts ({GIANT_BLOCK_RECORD}) are filled by the renderer, through `facts`.
-    const prefix = render({ ascension: ctx.ascension, knowledgeDir: ctx.knowledgeDir, ...(this.opts.facts ? { facts: this.opts.facts } : {}), ...(this.opts.mechanics === false ? { mechanics: false } : {}) }, postmortems);
+    const prefix = render({ ascension: ctx.ascension, knowledgeDir: ctx.knowledgeDir, ...(this.opts.facts ? { facts: this.opts.facts } : {}), ...(this.opts.mechanics === false ? { mechanics: false } : {}), ...(this.opts.moveRules === false ? { moveRules: false } : {}) }, postmortems);
     const system = fullSystemPrompt(prefix);
     this.renders += 1;
     const note: KnowledgeNote = { mode: "full", ascension: ctx.ascension, prefix_sha: sha(prefix), prefix_chars: prefix.length };

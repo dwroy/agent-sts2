@@ -251,6 +251,7 @@ def main():
     out.extend(next_rows)
     w("")
     observed_section(db, w)
+    move_rules_section(db, w)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf8") as handle:
         handle.write("\n".join(out) + "\n")
@@ -277,6 +278,34 @@ def observed_section(db, w):
         co = ", ".join(f"{p} {k}" for p, k in (t.get("co_removed") or {}).items())
         mons = ", ".join(f"{m} {k}" for m, k in list((t.get("monsters") or {}).items())[:3])
         w(f"| {pid} | {n} ({t.get('fights', 0)}) | {moves} | {stunned} | {cancelled}/{before} | {check.get('landed', 0)}/{check.get('n', 0)} | {co or '-'} | {'**yes**' if rule else 'no'} | {mons} |")
+    w("")
+
+
+def move_rules_section(db, w):
+    """(e) The class-B move changes (MECH_MOVE_RULES; docs/mechanics-learning.md §8): per monster and power, the strips (and
+    lowerings) whose own frame showed another move, with the thresholds of src/knowledge/mechanics.ts moveChangeOf (n >= 5,
+    >= 80% changed, >= 80% to one move other than STUNNED). Only the (monster, power) pairs that changed it at least once."""
+    w("## (e) move changes on a power's removal (`move_changed`, class B)\n")
+    rows = []
+    for eid, monster in sorted((db.get("monsters") or {}).items()):
+        observed = monster.get("observed") or {}
+        for how, table in (("removed", observed.get("powers_stripped") or {}), ("lowered", observed.get("powers_lowered") or {})):
+            for pid, t in sorted(table.items()):
+                n, changed = t.get("n", 0), t.get("move_changed", 0)
+                if not changed:
+                    continue
+                targets = sorted(((m, k) for m, k in (t.get("changed_to") or {}).items() if m != "STUNNED"), key=lambda mk: -mk[1])
+                rule = n >= 5 and changed >= 0.8 * n and bool(targets) and targets[0][1] >= 0.8 * n
+                to = ", ".join(f"{m} {k}" for m, k in (t.get("changed_to") or {}).items())
+                nxt = ", ".join(f"{m} {k}" for m, k in list((t.get("changed_next") or {}).items())[:2])
+                rows.append(f"| {eid} | {pid} | {how} | {changed}/{n} | {to} | {nxt or '-'} | {t.get('revived', 0)} | {'**yes**' if rule else 'no'} |")
+    if not rows:
+        w("No move change recorded (a DB built before the class-B counters, or none happened).\n")
+        return
+    w("| monster | power | how | changed / n | to | next (after a change) | revived | move rule |")
+    w("|---|---|---|---|---|---|---|---|")
+    for row in rows:
+        w(row)
     w("")
 
 

@@ -7,14 +7,17 @@
  * report (learner/tasks/mechanics-audit.md). No model is called; logs/ and the log DB are only read.
  *
  * Each turn: the first planning decision's state (as tools/thief-facts-replay.ts picks it), planned by the current code
- * twice, MECH_RULES off and on (the rollout and the boss simulation off: only the solver's lines are needed); the line
+ * three times, MECH_RULES off, on, and on with MECH_MOVE_RULES (the rollout and the boss simulation off: only the solver's
+ * lines are needed), with the Surrounded facing the live loop had then (the last enemy targeted earlier in the fight,
+ * combat-plan noteFacing; a fresh process's startFacing misread the Kaiser Crab: -4.4 HP a turn on the 242 turns where it
+ * differed, 2026-10-02); the line
  * played is the turn's plays and drinks from that decision to its end-turn, matched to a solver line by card ids and
  * targets (a turn that played a card drawn after the decision has no such line: unmatched). Actual = our HP at the
  * decision's frame less our HP at the next turn's first frame (the fight's last frame when it was won on our turn, 0 when
  * we died). A turn whose fight ended in the enemy turn without our death is left out (no frame after it).
  *
  * Usage (from the repo root):
- *   npx tsx tools/mechanics-residuals.ts run [--shards 8] [--work experiments/mechanics] [--limit N] [--min-asc 0] [--monster-db PATH]
+ *   npx tsx tools/mechanics-residuals.ts run [--shards 8] [--work experiments/mechanics] [--limit N] [--min-asc 0] [--monster-db PATH] [--only CRUSHER,AXEBOT]
  *   npx tsx tools/mechanics-residuals.ts report [--work experiments/mechanics] [--out notes/mechanics-residuals.md] [--min-n 20] [--monster-db PATH]
  * --monster-db: the monster DB the planner and the report read (default src/knowledge/monster-db.json; a freshly built one
  * with `observed` for MECH_RULES on: python3 tools/build-monster-db.py --out PATH).
@@ -32,7 +35,7 @@ import { isStripStun, STUN_MOVE, type StrippedPower } from "../src/knowledge/mec
 import { parseGameState } from "../src/mod/schema.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { facingFightOf, planCombatTurn } from "../src/screens/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -86,8 +89,16 @@ export interface TurnRow {
   actual: number | null;
   predOff: number | null;
   predOn: number | null;
+  /** MECH_RULES and MECH_MOVE_RULES on. */
+  predMove?: number | null;
   /** The matched line sets off a learned strip-stun (MECH_RULES on). */
   stunOn: boolean;
+  /** The matched line sets off a learned move change (MECH_MOVE_RULES on): the enemy id, power and new move. */
+  moveOn?: string[];
+  /** The Surrounded facing given to the planner (the last target before the decision; null: none yet, startFacing). */
+  facing?: number | null;
+  /** Enemies the line kills this turn (MECH_MOVE_RULES on; names). */
+  kills?: string[];
 }
 
 // ---------------------------------------------------------------- shard
@@ -126,7 +137,10 @@ function shard(): void {
   setMonsterDbForTests(JSON.parse(readFileSync(MONSTER_DB, "utf8")) as MonsterDb);
   const knowledge = makeKnowledge((JSON.parse(readFileSync(".cache/game-data.json", "utf8")) as { collections: Record<string, unknown[]> }).collections, "cache");
   const config = loadConfig({} as NodeJS.ProcessEnv);
-  const fights = query(`SELECT run_id, floor, fight_no, ascension, encounter, outcome, first_off, last_off FROM fights WHERE ascension >= ${minAsc} ORDER BY first_ts`);
+  // --only: the fights with any of these enemy ids (a quick look at one group).
+  const only = arg("only", "").split(",").filter(Boolean);
+  const onlySql = only.length > 0 ? ` AND (${only.map((id) => `list_contains(monsters, '${id.replace(/'/g, "")}')`).join(" OR ")})` : "";
+  const fights = query(`SELECT run_id, floor, fight_no, ascension, encounter, outcome, first_off, last_off, first_ts FROM fights WHERE ascension >= ${minAsc}${onlySql} ORDER BY first_ts`);
   const frames = query("SELECT run_id, floor, turn, ts, off, len, observed, player_hp FROM frames WHERE screen = 'COMBAT' ORDER BY off");
   const decisions = query(
     "SELECT run_id, floor, turn, ts, label, decider, action, card_index, card_id, target_index, potion_id FROM decisions WHERE screen = 'COMBAT' AND action IN ('play_card', 'use_potion', 'end_turn') ORDER BY ts",
@@ -139,6 +153,14 @@ function shard(): void {
   }
   const decisionsAt = new Map<string, Row>();
   for (const decision of decisions) decisionsAt.set(`${decision["run_id"]}|${decision["ts"]}`, decision);
+  // Targeted plays and drinks by run, in order: the Surrounded facing the live loop noted (combat-plan noteFacing).
+  const targetedByRun = new Map<string, Row[]>();
+  for (const decision of decisions) {
+    if (decision["action"] === "end_turn" || decision["target_index"] === null || decision["target_index"] === undefined) continue;
+    const list = targetedByRun.get(String(decision["run_id"])) ?? [];
+    list.push(decision);
+    targetedByRun.set(String(decision["run_id"]), list);
+  }
   const fd = openSync(STATES, "r");
   const stateAt = (off: number, len: number): Record<string, unknown> => {
     const buffer = Buffer.alloc(len);
@@ -188,10 +210,14 @@ function shard(): void {
         const raw = stateAt(Number(startFrame["off"]), Number(startFrame["len"]));
         const state = parseGameState(raw);
         const brief = buildRunBrief(state, knowledge);
-        const plan = (mech: boolean): Plan | null => {
+        // The facing the live loop had: the last targeted play or drink of this fight before the decision.
+        const startTs = String(first["ts"]);
+        const earlier = (targetedByRun.get(run) ?? []).filter((decision) => Number(decision["floor"]) === Number(fight["floor"]) && String(decision["ts"]) >= String(fight["first_ts"]) && String(decision["ts"]) < startTs);
+        const facing = earlier.length > 0 ? Number(earlier[earlier.length - 1]!["target_index"]) : null;
+        const plan = (mech: boolean, move = false): Plan | null => {
           const env: DecisionEnv = {
-            state, knowledge, brief, screenMemory: createScreenMemory("COMBAT"), thresholds: config.thresholds, runStart: "auto",
-            characterPreference: null, allowFtueModals: false, strictJev: true, combatPlanner: "turn", shopDiscardPotions: [], jevContext: "v1", buildDecider: "deepseek", mechRules: mech,
+            state, knowledge, brief, screenMemory: { ...createScreenMemory("COMBAT"), ...(facing !== null ? { facing, facingFight: facingFightOf(state) } : {}) }, thresholds: config.thresholds, runStart: "auto",
+            characterPreference: null, allowFtueModals: false, strictJev: true, combatPlanner: "turn", shopDiscardPotions: [], jevContext: "v1", buildDecider: "deepseek", mechRules: mech, mechMoveRules: move,
           };
           // Only the planner's main solve is needed (its every line): taken at the first solveTurn, the rest of the planner
           // cut short (a 12-card hand's 26,915 lines took minutes after it: JRN33CL7EB50 F28 T1). MECH_RULES on: the fail
@@ -214,6 +240,7 @@ function shard(): void {
         const off = plan(false);
         if (off === null && attempt < starts.length - 1) continue;
         const on = off === null ? null : plan(true);
+        const moved = off === null ? null : plan(true, true);
         const living = ((raw["combat"] as Row | undefined)?.["enemies"] as Row[] | undefined ?? []).filter((enemy) => enemy["is_alive"] !== false);
         const stripped: TurnRow["stripped"] = [];
         if (endFrame) {
@@ -232,10 +259,12 @@ function shard(): void {
         row = {
           run, floor: Number(fight["floor"]), turn, asc: Number(fight["ascension"]), encounter: String(fight["encounter"]), label: String(first["label"]),
           decider: String(first["decider"] ?? ""), from: attempt, enemies: living.map((enemy) => ({ id: String(enemy["enemy_id"]), powers: powersOf(enemy) })), stripped,
-          played: playedKey, matched: off !== null && on !== null, wonTurn, died: died && next === null,
+          played: playedKey, matched: off !== null && on !== null && moved !== null, wonTurn, died: died && next === null,
           actual: next === null && !died && !wonTurn ? null : actual,
-          predOff: off?.outcome.hpLoss ?? null, predOn: on?.outcome.hpLoss ?? null,
+          predOff: off?.outcome.hpLoss ?? null, predOn: on?.outcome.hpLoss ?? null, predMove: moved?.outcome.hpLoss ?? null,
           stunOn: on?.outcome.enemyHpAfter.some((enemy) => enemy.strippedStun !== undefined && enemy.hp > 0) ?? false,
+          moveOn: (moved?.outcome.enemyHpAfter ?? []).filter((enemy) => enemy.movedTo).map((enemy) => `${enemy.name}:${enemy.movedTo!.power}:${enemy.movedTo!.how}>${enemy.movedTo!.move}`),
+          facing, kills: moved?.outcome.kills ?? [],
         };
         break;
       }
@@ -258,6 +287,9 @@ interface Group {
   biasOff: number;
   maeOn: number;
   maeOff: number;
+  /** MECH_MOVE_RULES on too. */
+  biasMove: number;
+  maeMove: number;
   /** Turns from at least this many fights (run:floor). */
   fights: number;
   /** The biggest |residual| turns (run F T: actual vs predicted on). */
@@ -267,13 +299,17 @@ interface Group {
 function group(rows: TurnRow[]): Group {
   const on = rows.map((row) => row.actual! - row.predOn!);
   const off = rows.map((row) => row.actual! - row.predOff!);
+  const move = rows.map((row) => row.actual! - (row.predMove ?? row.predOn!));
   const mean = (xs: number[]) => (xs.length > 0 ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
   const worst = rows
     .map((row, i) => ({ row, r: on[i]! }))
     .sort((a, b) => Math.abs(b.r) - Math.abs(a.r))
     .slice(0, 3)
     .map(({ row }) => `${row.run} F${row.floor} T${row.turn} (${row.actual} vs ${row.predOn})`);
-  return { n: rows.length, biasOn: mean(on), biasOff: mean(off), maeOn: mean(on.map(Math.abs)), maeOff: mean(off.map(Math.abs)), fights: new Set(rows.map((row) => `${row.run}:${row.floor}`)).size, worst };
+  return {
+    n: rows.length, biasOn: mean(on), biasOff: mean(off), maeOn: mean(on.map(Math.abs)), maeOff: mean(off.map(Math.abs)), biasMove: mean(move), maeMove: mean(move.map(Math.abs)),
+    fights: new Set(rows.map((row) => `${row.run}:${row.floor}`)).size, worst,
+  };
 }
 
 function groupBy(rows: TurnRow[], keys: (row: TurnRow) => string[]): Map<string, Group> {
@@ -314,7 +350,7 @@ function report(): void {
   // Head 80, 70 predicted after block, 17 HP), so it is capped there.
   const usable = rows
     .filter((row) => row.matched && row.actual !== null && row.predOn !== null && row.predOff !== null)
-    .map((row) => (row.died ? { ...row, predOn: Math.min(row.predOn!, row.actual!), predOff: Math.min(row.predOff!, row.actual!) } : row));
+    .map((row) => (row.died ? { ...row, predOn: Math.min(row.predOn!, row.actual!), predOff: Math.min(row.predOff!, row.actual!), predMove: Math.min(row.predMove ?? row.predOn!, row.actual!) } : row));
   const all = group(usable);
   const byPower = groupBy(usable, (row) => row.enemies.flatMap((enemy) => Object.keys(enemy.powers)));
   const byStripped = groupBy(usable, (row) => row.stripped.map((entry) => entry.power));
@@ -323,10 +359,10 @@ function report(): void {
   const ranked = (groups: Map<string, Group>, by: (g: Group) => number, n = 15) =>
     [...groups].filter(([, g]) => g.n >= minN).sort((a, b) => by(b[1]) - by(a[1]) || (a[0] < b[0] ? -1 : 1)).slice(0, n);
   const table = (title: string, groups: [string, Group][], power: boolean) => {
-    const lines = [`### ${title}`, "", `| ${power ? "能力 | 名称 | 描述 | 观察到的 |" : "组 |"} n | 场 | 偏差 on | 偏差 off | |误差| on | |误差| off | 最大的回合 |`, `|${power ? "---|---|---|---|" : "---|"}---|---|---|---|---|---|---|`];
+    const lines = [`### ${title}`, "", `| ${power ? "能力 | 名称 | 描述 | 观察到的 |" : "组 |"} n | 场 | 偏差 off | 偏差 on | 偏差 move | |误差| off | |误差| on | |误差| move | 最大的回合 |`, `|${power ? "---|---|---|---|" : "---|"}---|---|---|---|---|---|---|---|---|`];
     for (const [key, g] of groups) {
       const info = power ? powerInfo(key.split(" × ").pop()!.replace(/（眩晕）$/, "")) : null;
-      lines.push(`| ${power ? `${key} | ${info!.name} | ${info!.description.slice(0, 40)} | ${observedText(key)} |` : `${key} |`} ${g.n} | ${g.fights} | ${f1(g.biasOn)} | ${f1(g.biasOff)} | ${f1(g.maeOn)} | ${f1(g.maeOff)} | ${g.worst.slice(0, 2).join("; ")} |`);
+      lines.push(`| ${power ? `${key} | ${info!.name} | ${info!.description.slice(0, 40)} | ${observedText(key)} |` : `${key} |`} ${g.n} | ${g.fights} | ${f1(g.biasOff)} | ${f1(g.biasOn)} | ${f1(g.biasMove)} | ${f1(g.maeOff)} | ${f1(g.maeOn)} | ${f1(g.maeMove)} | ${g.worst.slice(0, 2).join("; ")} |`);
     }
     return lines.join("\n");
   };
@@ -341,7 +377,23 @@ function report(): void {
   const missedStun = usable.filter((row) => !row.stunOn && row.stripped.some((entry) => entry.stunned && entry.power === "FLUTTER_POWER"));
   const where = (row: TurnRow) => `${row.run} F${row.floor} T${row.turn}`;
   // The largest single residuals (rule on): what the learner reads first.
-  const largest = [...usable].sort((a, b) => Math.abs(b.actual! - b.predOn!) - Math.abs(a.actual! - a.predOn!) || (where(a) < where(b) ? -1 : 1)).slice(0, 25);
+  const largest = [...usable].sort((a, b) => Math.abs(b.actual! - (b.predMove ?? b.predOn!)) - Math.abs(a.actual! - (a.predMove ?? a.predOn!)) || (where(a) < where(b) ? -1 : 1)).slice(0, 25);
+  // MECH_MOVE_RULES checks. The Kaiser Crab (class C): both claws alive at the decision and still at the turn's end, one
+  // of them dying on the turn (in the game: stripped Crab Rage on the survivor), one claw left; the Axebot's revives.
+  const crabIds = new Set(["CRUSHER", "ROCKET"]);
+  const claws = (row: TurnRow) => row.enemies.filter((enemy) => crabIds.has(enemy.id)).length;
+  const crabRows = usable.filter((row) => claws(row) > 0);
+  const crabDeath = crabRows.filter((row) => claws(row) === 2 && row.stripped.some((entry) => entry.power === "CRAB_RAGE_POWER"));
+  const crabBoth = crabRows.filter((row) => claws(row) === 2 && !crabDeath.includes(row));
+  const crabOne = crabRows.filter((row) => claws(row) === 1);
+  const moveRows = usable.filter((row) => (row.moveOn ?? []).length > 0);
+  const axebot = usable.filter((row) => row.enemies.some((enemy) => enemy.id === "AXEBOT"));
+  const axebotRevive = axebot.filter((row) => row.stripped.some((entry) => entry.id === "AXEBOT" && entry.power === "STOCK_POWER") || (row.moveOn ?? []).some((entry) => entry.includes("STOCK_POWER")));
+  const changed = usable.filter((row) => (row.predMove ?? row.predOn) !== row.predOn);
+  const checkLine = (title: string, rows: TurnRow[]) => {
+    const g = group(rows);
+    return `| ${title} | ${g.n} | ${g.fights} | ${f1(g.biasOff)} | ${f1(g.biasOn)} | ${f1(g.biasMove)} | ${f1(g.maeOff)} | ${f1(g.maeOn)} | ${f1(g.maeMove)} | ${g.worst.slice(0, 2).join("; ")} |`;
+  };
   const fromCounts = [0, 1, 2].map((k) => usable.filter((row) => row.from === k).length);
   const deaths = usable.filter((row) => row.died);
   const unmatched = rows.filter((row) => !row.matched).length;
@@ -356,6 +408,11 @@ function report(): void {
     min_n: minN,
     all,
     flutter_stripped_stunned: flutterG,
+    move_rules: {
+      crab: group(crabRows), crab_both: group(crabBoth), crab_death: group(crabDeath), crab_one: group(crabOne),
+      move_on: group(moveRows), axebot: group(axebot), axebot_revive: group(axebotRevive), changed: group(changed),
+      changed_turns: changed.map((row) => ({ turn: where(row), actual: row.actual, predOn: row.predOn, predMove: row.predMove, moveOn: row.moveOn ?? [] })),
+    },
     stun_false: falseStun.map(where),
     stun_missed: missedStun.map(where),
     from: fromCounts,
@@ -377,7 +434,23 @@ function report(): void {
     "",
     `回合 ${rows.length}：能对上实际打出的线且有实际掉血的 ${usable.length}，对不上的 ${unmatched}（打了决策之后抽到的牌、旧代码的线现在不再生成等），战斗在敌方回合结束（没有之后的帧）的 ${noActual}。`,
     `比较的是这回合第一个规划决策的 ${fromCounts[0]} 个，第二、第三个的 ${fromCounts[1]} / ${fromCounts[2]} 个（第一个之后抽到的牌打出了，就用之后重新规划的那个决策；它离回合结束更近，误差自然更小）。其中我们死了的 ${deaths.length} 个（实际 = 全部血量，预测高于它的按它算；求解器的 hp_lost 不算沙坑等「直接死亡」，早期日志里也有放弃的局记成死亡）。`,
-    `全部：偏差 on ${f1(all.biasOn)} / off ${f1(all.biasOff)}，|误差| on ${f1(all.maeOn)} / off ${f1(all.maeOff)}（n=${all.n}）。`,
+    "三种：off = MECH_RULES 关；on = MECH_RULES 开（v4 3488dc5 的实盘）；move = 再开 MECH_MOVE_RULES（学到的换招 + 凯撒蟹背后攻击要两只钳子都活着）。Surrounded 的朝向按实盘当时记的给（这场战斗里这个决策之前最后一次指定目标的出牌或喝药；之前一次都没有才按 startFacing）。",
+    `全部：偏差 off ${f1(all.biasOff)} / on ${f1(all.biasOn)} / move ${f1(all.biasMove)}，|误差| off ${f1(all.maeOff)} / on ${f1(all.maeOn)} / move ${f1(all.maeMove)}（n=${all.n}）。`,
+    "",
+    "## MECH_MOVE_RULES 核对",
+    "",
+    "| 组 | n | 场 | 偏差 off | 偏差 on | 偏差 move | |误差| off | |误差| on | |误差| move | 最大的回合 |",
+    "|---|---|---|---|---|---|---|---|---|---|",
+    checkLine("凯撒蟹：全部回合", crabRows),
+    checkLine("凯撒蟹：两只钳子都活着、本回合没死", crabBoth),
+    checkLine("凯撒蟹：本回合一只钳子死了（另一只的蟹之怒被去掉）", crabDeath),
+    checkLine("凯撒蟹：只剩一只钳子", crabOne),
+    checkLine("巨斧机器人：全部回合", axebot),
+    checkLine("巨斧机器人：本回合复活（库存被拿掉）", axebotRevive),
+    checkLine("打出的线触发了学到的换招", moveRows),
+    checkLine("move 和 on 的预测不同的回合", changed),
+    "",
+    `预测变了的回合（move ≠ on）${changed.length} 个：${changed.slice(0, 12).map((row) => `${where(row)}（实际 ${row.actual}，on ${row.predOn} → move ${row.predMove}）`).join("；") || "—"}${changed.length > 12 ? " …" : ""}`,
     "",
     "## 振翅核对",
     "",
@@ -385,33 +458,33 @@ function report(): void {
     `例：${flutterG.worst.join("；") || "—"}`,
     `规则自己的核对（打出的线）：求解器说眩晕而游戏里没有 ${falseStun.length} 次${falseStun.length > 0 ? `（${falseStun.slice(0, 5).map(where).join("、")}）` : ""}；游戏里振翅打光眩晕了而求解器的线没打光 ${missedStun.length} 次${missedStun.length > 0 ? `（${missedStun.slice(0, 5).map(where).join("、")}：求解器对这条线的命中数和游戏不同）` : ""}。`,
     "",
-    "## 单个回合残差最大的 25 个（on）",
+    "## 单个回合残差最大的 25 个（move）",
     "",
-    "| 回合 | 实际 | 预测 on | 预测 off | 比较的决策 | 敌人 | 本回合被去掉 |",
-    "|---|---|---|---|---|---|---|",
-    ...largest.map((row) => `| ${where(row)} | ${row.actual} | ${row.predOn} | ${row.predOff} | 第 ${row.from + 1} 个 | ${row.enemies.map((enemy) => enemy.id).join(", ")} | ${row.stripped.map((entry) => `${entry.id}:${entry.power}${entry.stunned ? "（眩晕）" : ""}`).join(", ") || "—"} |`),
+    "| 回合 | 实际 | 预测 move | 预测 on | 预测 off | 比较的决策 | 敌人 | 本回合被去掉 |",
+    "|---|---|---|---|---|---|---|---|",
+    ...largest.map((row) => `| ${where(row)} | ${row.actual} | ${row.predMove ?? "—"} | ${row.predOn} | ${row.predOff} | 第 ${row.from + 1} 个 | ${row.enemies.map((enemy) => enemy.id).join(", ")} | ${row.stripped.map((entry) => `${entry.id}:${entry.power}${entry.stunned ? "（眩晕）" : ""}`).join(", ") || "—"} |`),
     "",
     "## 按场上的敌人能力（决策时）",
     "",
-    table("偏差最负（求解器高估掉血）", ranked(byPower, (g) => -g.biasOn), true),
+    table("偏差最负（求解器高估掉血）", ranked(byPower, (g) => -g.biasMove), true),
     "",
-    table("偏差最正（求解器低估掉血）", ranked(byPower, (g) => g.biasOn), true),
+    table("偏差最正（求解器低估掉血）", ranked(byPower, (g) => g.biasMove), true),
     "",
-    table("|误差| 最大", ranked(byPower, (g) => g.maeOn), true),
+    table("|误差| 最大", ranked(byPower, (g) => g.maeMove), true),
     "",
     "## 按本回合被去掉的敌人能力",
     "",
-    table(`n ≥ ${Math.min(minN, 5)}，按偏差`, [...byStripped].filter(([, g]) => g.n >= Math.min(minN, 5)).sort((a, b) => a[1].biasOn - b[1].biasOn), true),
+    table(`n ≥ ${Math.min(minN, 5)}，按偏差`, [...byStripped].filter(([, g]) => g.n >= Math.min(minN, 5)).sort((a, b) => a[1].biasMove - b[1].biasMove), true),
     "",
-    table("怪物 × 被去掉的能力", [...byEnemyStripped].filter(([, g]) => g.n >= Math.min(minN, 5)).sort((a, b) => a[1].biasOn - b[1].biasOn), true),
+    table("怪物 × 被去掉的能力", [...byEnemyStripped].filter(([, g]) => g.n >= Math.min(minN, 5)).sort((a, b) => a[1].biasMove - b[1].biasMove), true),
     "",
     "## 按敌人",
     "",
-    table("偏差最负", ranked(byEnemy, (g) => -g.biasOn), false),
+    table("偏差最负", ranked(byEnemy, (g) => -g.biasMove), false),
     "",
-    table("偏差最正", ranked(byEnemy, (g) => g.biasOn), false),
+    table("偏差最正", ranked(byEnemy, (g) => g.biasMove), false),
     "",
-    table("|误差| 最大", ranked(byEnemy, (g) => g.maeOn), false),
+    table("|误差| 最大", ranked(byEnemy, (g) => g.maeMove), false),
     "",
   ].join("\n");
   writeFileSync(outPath, md);
@@ -423,8 +496,8 @@ function report(): void {
 async function runAll(): Promise<void> {
   const shards = Number(arg("shards", "8"));
   mkdirSync(work, { recursive: true });
-  if (!existsSync(join(work, ".gitignore"))) writeFileSync(join(work, ".gitignore"), "rows-*.jsonl\nreplay-*.jsonl\n");
-  const pass = ["work", "limit", "min-asc", "monster-db"].flatMap((name) => (process.argv.includes(`--${name}`) ? [`--${name}`, arg(name, "")] : []));
+  if (!existsSync(join(work, ".gitignore"))) writeFileSync(join(work, ".gitignore"), "rows-*.jsonl\nreplay-*.jsonl\nmove-replay-*.jsonl\n");
+  const pass = ["work", "limit", "min-asc", "monster-db", "only"].flatMap((name) => (process.argv.includes(`--${name}`) ? [`--${name}`, arg(name, "")] : []));
   await Promise.all(
     Array.from({ length: shards }, (_, i) =>
       new Promise<void>((resolve, reject) => {
