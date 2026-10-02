@@ -189,14 +189,14 @@ function damageText(data: KnowledgeData, monsterId: string, moveId: string, move
 }
 
 /**
- * Counts from another ascension say so; with `estimate` (monster-db amountAt), also the estimate at this ascension the
- * rollout and the boss sim use and how it was reached.
+ * Counts from another ascension say so; with `estimate` (monster-db amountAt) moved off the logged amount, also the
+ * estimate at this ascension the rollout and the boss sim use and how it was reached.
  */
 function labelled(text: string | null, at: { asc: number | null; exact: boolean }, asc: number, estimate?: AmountAt | null, format: (value: string) => string = (value) => value): string | null {
   if (text === null) return null;
   if (at.asc === null) return `${text}（各进阶合并）`;
   if (at.exact) return text;
-  const note = estimate?.estimated ? amountEstimateNote(estimate, asc) : "";
+  const note = estimate?.estimated && estimate.value !== estimate.logged ? amountEstimateNote(estimate, asc) : "";
   return `${text}（A${at.asc}，非 A${asc}${note ? `；${note}，估 ${format(String(estimate!.value))}` : ""}）`;
 }
 

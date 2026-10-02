@@ -998,9 +998,9 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
     const unmeasured = damage.ratioTo !== undefined && damage.ratioTo !== asc ? `，A${damage.ratioTo}→A${asc} 未测按 ×1` : "";
     parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)}${unmeasured})` : text);
   } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
-  // Not logged at this ascension: the nearest logged one's gain moved by the measured change, said so.
+  // Not logged at this ascension: the nearest logged one's gain moved by the measured change, said so when it moved.
   const gain = regularEffect(move, move.self_powers_gained?.["STRENGTH_POWER"]) ? moveAmountAt(load().monsters, monsterId, move, "self", "STRENGTH_POWER", asc) : null;
-  if (gain?.value) parts.push(`+${gain.value}力${gain.estimated ? ` (${amountEstimateNote(gain, asc)})` : ""}`);
+  if (gain?.value) parts.push(`+${gain.value}力${gain.estimated && gain.value !== gain.logged ? ` (${amountEstimateNote(gain, asc)})` : ""}`);
   const status = mode(move.status_cards);
   if (status) parts.push(`塞${status}张状态牌`);
   return parts.join(" ");
