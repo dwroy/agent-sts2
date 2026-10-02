@@ -21,10 +21,11 @@
  *
  * --inserts on (SL_RETRY_KNOWN_INSERTS): the draw tracker keeps the known order through cards added to the pile at random
  *   places, and the known draws carry the added cards (the samples place them at random); off (default): as before.
+ *   --tops on (SL_RETRY_KNOWN_TOP, with --inserts on): and through cards moved on top (Headbutt), drawn next.
  *
  * Usage: npx tsx tools/sl-retry-replay.ts --mode deaths|retries [--out experiments/sl-retry] [--turns 3] [--b2 on|off]
  *          [--clock frozen|real] [--variants off,draws,compute,both] [--shard i/n] [--limit N] [--workers 8]
- *          [--since 2026-09-30] [--rooms boss,elite,hallway] [--tag name] [--inserts on|off]   (deaths: fights from that date / in those rooms)
+ *          [--since 2026-09-30] [--rooms boss,elite,hallway] [--tag name] [--inserts on|off] [--tops on|off]   (deaths: fights from that date / in those rooms)
  * Output: <out>/<mode>[-<shard>].jsonl, one row per decision; a line per decision on stdout.
  */
 import { execFileSync } from "node:child_process";
@@ -65,7 +66,9 @@ const since = arg("since", "");
 const roomsOnly = arg("rooms", "");
 /** SL_RETRY_KNOWN_INSERTS for the tracker (the record and the check). */
 const inserts = arg("inserts", "off") === "on";
-const newTracker = (): DrawTracker => (inserts ? new DrawTracker({ inserts: true }) : new DrawTracker());
+/** SL_RETRY_KNOWN_TOP (with --inserts on): a card moved onto the pile is the next one drawn. */
+const tops = inserts && arg("tops", "off") === "on";
+const newTracker = (): DrawTracker => (inserts ? new DrawTracker({ inserts: true, tops }) : new DrawTracker());
 const STATES = "logs/states.jsonl";
 const PY = ".cache/logdb-venv/bin/python";
 /** Labels of a fresh plan of the turn (not a committed line's next step). */
@@ -328,6 +331,7 @@ function evaluate(target: Target, out: string): void {
       logged: { label: String(decision["label"]), decider: String(decision["decider"]), rationale: String(decision["rationale"] ?? "").slice(0, 300), played: playedOf(String(decision["rationale"] ?? "")) },
       known: check ? (check.ok ? { ok: true, next: check.keys.length, names: check.names.slice(0, 12), ...(check.inserted ? { added: check.inserted.keys.length } : {}) } : { ok: false, reason: check.reason }) : null,
       inserts,
+      tops,
       drawn: tracker.record.order.length,
       clock,
       b2,

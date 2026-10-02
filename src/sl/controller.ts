@@ -73,7 +73,16 @@ interface FightTrack {
   /** Attempts after the first: the draw order the earlier attempts saw (null: none known), and why it is off for this attempt. */
   known: KnownOrder | null;
   knownOff: string | null;
+  /**
+   * This turn's HP as the states showed it (Beating Remnant's cap in the judge needs the HP lost so far this turn): the
+   * first state's, the last one's, whether it ever rose, and whether something costs HP as a turn starts.
+   */
+  hpTurn: { turn: number; start: number; last: number; rose: boolean; startLoss: boolean } | null;
 }
+
+/** HP lost as our turn starts, before its first state (Inferno, Crimson Mantle, poison on us; a power's or relic's text). */
+const START_LOSS_POWERS = ["INFERNO_POWER", "CRIMSON_MANTLE_POWER", "POISON_POWER"];
+const START_LOSS_TEXT = /回合开始时[^。]*(?:失去|受到)|start of your turn[^.]*(?:lose|take)/i;
 
 export interface SlControllerOptions {
   config: SlConfig;
@@ -145,6 +154,7 @@ export class SlController {
       judge_known_draws: this.config.judgeKnownDraws === true,
       reload_early: this.config.reloadEarly === true,
       retry_known_inserts: this.config.retryKnownInserts === true,
+      retry_known_top: this.config.retryKnownTop === true,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
       elites: this.elites.elites.map((elite) => elite.name),
@@ -181,6 +191,40 @@ export class SlController {
     }
     this.noteTurn(state);
     this.noteDraws(state);
+    this.noteHp(state);
+  }
+
+  /** This turn's HP from state to state (FightTrack.hpTurn); an error only drops it. */
+  private noteHp(state: GameState): void {
+    const fight = this.fight;
+    if (!fight || state.turn === null) return;
+    try {
+      const player = asRecord(asRecord(state.raw["combat"])["player"]);
+      const hp = numOrNull(player["current_hp"]);
+      if (hp === null) return;
+      const track = fight.hpTurn;
+      if (!track || track.turn !== state.turn) {
+        const powers = asArray(player["powers"]).map(asRecord);
+        const relics = asArray(asRecord(state.raw["run"])["relics"]).map(asRecord);
+        const startLoss =
+          powers.some((power) => START_LOSS_POWERS.includes(str(power["power_id"])) || START_LOSS_TEXT.test(this.knowledge.power(str(power["power_id"]))?.description ?? "")) ||
+          relics.some((relic) => START_LOSS_TEXT.test(str(relic["description"])));
+        fight.hpTurn = { turn: state.turn, start: hp, last: hp, rose: false, startLoss };
+        return;
+      }
+      if (hp > track.last) track.rose = true;
+      track.last = hp;
+    } catch {
+      fight.hpTurn = null;
+    }
+  }
+
+  /** The HP lost so far this turn, exactly, or undefined (it rose, something costs HP as the turn starts, not tracked). */
+  private lostSoFar(fight: FightTrack, state: GameState): number | undefined {
+    const track = fight.hpTurn;
+    const hp = numOrNull(asRecord(asRecord(state.raw["combat"])["player"])["current_hp"]);
+    if (!track || track.turn !== state.turn || track.rose || track.startLoss || hp === null || hp > track.last) return undefined;
+    return Math.max(0, track.start - hp);
   }
 
   /** decisions.jsonl: the attempt at the fight being played (null outside one) and the reloads so far this run. */
@@ -245,9 +289,13 @@ export class SlController {
     }
   }
 
-  /** An attempt's draw tracker (SL_RETRY_KNOWN_INSERTS: cards added to the pile at random places keep the order). */
+  /**
+   * An attempt's draw tracker (SL_RETRY_KNOWN_INSERTS: cards added to the pile at random places keep the order;
+   * SL_RETRY_KNOWN_TOP: so do cards moved on top).
+   */
   private newTracker(): DrawTracker {
-    return this.config.retryKnownInserts === true ? new DrawTracker({ inserts: true }) : new DrawTracker();
+    if (this.config.retryKnownInserts !== true) return new DrawTracker();
+    return this.config.retryKnownTop === true ? new DrawTracker({ inserts: true, tops: true }) : new DrawTracker({ inserts: true });
   }
 
   /** The known draw order of `attempt` at the fight: the earlier attempts' rows (null on the first attempt). */
@@ -308,7 +356,15 @@ export class SlController {
         drawsKnown = false;
       }
     }
-    const verdict = judgeEndTurn(state, { label: context.label, revives, ethereal: (card) => heldCardEthereal(card, this.knowledge), knowledge: this.knowledge, ...(drawsKnown ? { drawsKnown: true } : {}) });
+    const lostSoFar = this.lostSoFar(fight, state);
+    const verdict = judgeEndTurn(state, {
+      label: context.label,
+      revives,
+      ethereal: (card) => heldCardEthereal(card, this.knowledge),
+      knowledge: this.knowledge,
+      ...(lostSoFar !== undefined ? { lostSoFar } : {}),
+      ...(drawsKnown ? { drawsKnown: true } : {}),
+    });
     fight.verdict = verdict;
     const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
     if (!verdict.certain) {
@@ -341,6 +397,7 @@ export class SlController {
         knownDrawsJudge: this.config.judgeKnownDraws === true,
         addedToPile: fight.draws.addedToPile,
         knowledge: this.knowledge,
+        ...(this.lostSoFar(fight, state) !== undefined ? { lostSoFar: this.lostSoFar(fight, state)! } : {}),
       });
     } catch (error) {
       this.options.note(`SL: early reload check failed (${error instanceof Error ? error.message : String(error)}); end_turn decides`);
@@ -394,10 +451,12 @@ export class SlController {
     fight.draws = this.newTracker();
     fight.known = this.knownFor(fight, fight.attempt);
     fight.knownOff = null;
+    fight.hpTurn = null;
     if (fight.journal !== undefined) context.journal.restore(fight.journal);
     context.screenMemory.lizardTail = fight.lizardTail === undefined ? undefined : structuredClone(fight.lizardTail);
     this.noteTurn(outcome.state);
     this.noteDraws(outcome.state);
+    this.noteHp(outcome.state);
     this.options.note(
       `SL: back in the fight at F${outcome.state.run?.floor ?? "?"} T${outcome.resumedTurn ?? "?"} (${Math.round(outcome.ms / 1000)} s); attempt ${fight.attempt}/${fight.maxAttempts} begins, Jev is told how the earlier attempt(s) went`,
     );
@@ -442,6 +501,7 @@ export class SlController {
       draws: this.newTracker(),
       known: this.knownFor({ floor, encounter }, done + 1),
       knownOff: null,
+      hpTurn: null,
     };
     if (retries > 0) this.options.note(`SL: tracking ${boss ? "boss" : `listed elite (${elite?.name})`} fight F${floor ?? "?"} ${encounter}: attempt ${done + 1} of at most ${1 + retries}`);
   }

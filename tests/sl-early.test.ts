@@ -103,7 +103,8 @@ describe("judgeLeastLossNow: the least-loss verdict taken before its line, only 
   it("relics and powers: acting by chance, or mid-turn without the planner, keep the end_turn timing", () => {
     const soul = lethalBoard();
     ((soul["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "FORGOTTEN_SOUL", name: "遗忘之魂", description: "每当你[gold]消耗[/gold]一张牌，随机对一名敌人造成[blue]{Damage}[/blue]点伤害。" });
-    expect(now(soul, clean()).reason).toMatch(/^not before the line is played: acting by chance: 遗忘之魂 \(relic\)/);
+    // (Its held cards count as Ethereal, having no text: the end-of-turn exhaust triggers it, which the judge itself refuses.)
+    expect(now(soul, clean())).toMatchObject({ certain: false, reason: "the enemies may be hit before they act: 遗忘之魂 hits the enemies when the held Ethereal cards are exhausted at the end of the turn" });
     const fan = lethalBoard();
     ((fan["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "ORNAMENTAL_FAN", name: "精致折扇", description: "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]。" });
     expect(now(fan, clean()).reason).toBe("not before the line is played: acting mid-turn without the planner: 精致折扇 (relic)");
@@ -159,9 +160,10 @@ describe("held cards' end-of-turn damage in the judge's count (damage through bl
   it("the controller says when its own count, held cards included, sees a death the mod does not flag and the judge cannot call certain", async () => {
     const log = tempLog();
     const t = setup(log);
-    const raw = withHeld({ turn: 2, hp: 10, damage: 12, lethal: false, playerPowers: [{ power_id: "PLATING_POWER", amount: 5 }, { power_id: "THORNS_POWER", amount: 3 }] }, burn);
+    const raw = withHeld({ turn: 2, hp: 10, damage: 12, lethal: false, playerPowers: [{ power_id: "PLATING_POWER", amount: 5 }] }, burn);
+    ((raw["combat"] as Raw)["hand"] as Raw[]).push(held("REGRET", "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命。"));
     expect(await t.sl.beforeEndTurn(state(raw), { label: "combat/end_turn", screenMemory: t.memory.screenMemory, journal: t.memory.journal })).toEqual({ handled: false });
-    expect(t.notes.at(-1)).toBe("SL: ending the turn may be lethal (F17 T2 attempt 1/4), not certain: only the held cards make it lethal (held BURN: 3 damage), and THORNS_POWER: an attacker may die before its last hit");
+    expect(t.notes.at(-1)).toBe("SL: ending the turn may be lethal (F17 T2 attempt 1/4), not certain: only the held cards make it lethal (held BURN: 3 damage), and REGRET: the end-of-turn amount is not given");
   });
 });
 
@@ -245,6 +247,61 @@ describe("DrawTracker with SL_RETRY_KNOWN_INSERTS: added cards keep the order an
     t.observe(state(turnBoard(1, [], ["A", "C", "D"], ["B"])));
     expect(t.record.broke).toBe("T1: A moved onto the draw pile from the discard pile or the hand (Headbutt-like: on top)");
     expect(t.addedToPile).toBe(false);
+  });
+
+  it("SL_RETRY_KNOWN_TOP: a card moved on top (Headbutt) is drawn next, the order goes on, and it stays exact", () => {
+    const known: KnownOrder = { keys: ["A", "B", "C", "D", "E"], names: ["a", "b", "c", "d", "e"], attempts: [1] };
+    const t = new DrawTracker({ inserts: true, tops: true });
+    t.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E"])));
+    t.observe(state(turnBoard(1, ["B"], ["C", "D", "E"], ["A"])));
+    // B played (Headbutt): to the discard pile, then (the selection screen, a step of its own) A onto the pile.
+    t.observe(state(turnBoard(1, [], ["C", "D", "E"], ["A", "B"])));
+    t.observe(state(turnBoard(1, [], ["A", "C", "D", "E"], ["B"])));
+    expect(t.record).toMatchObject({ order: ["A", "B"], clean: 2, broke: null, topped: [{ turn: 1, at: 2, cards: ["A"] }] });
+    expect(t.topped).toEqual({ keys: ["A"], names: ["A"] });
+    expect(t.addedToPile).toBe(false);
+    expect(checkKnown(known, t)).toEqual({ ok: true, keys: ["A", "C", "D", "E"], names: ["A", "c", "d", "e"] });
+    // T2 draws A (the top), C, D: the order goes on with the pile's own C, D.
+    t.observe(state(turnBoard(2, ["A", "C", "D"], ["E"], ["B"])));
+    expect(t.record).toMatchObject({ order: ["A", "B", "C", "D"], clean: 4, broke: null });
+    expect(checkKnown(known, t)).toEqual({ ok: true, keys: ["E"], names: ["e"] });
+  });
+
+  it("SL_RETRY_KNOWN_TOP: the next draw not the card on top ends the order; Thinking Ahead puts one back after its draws", () => {
+    const t = new DrawTracker({ inserts: true, tops: true });
+    t.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E"])));
+    t.observe(state(turnBoard(1, ["B"], ["C", "D", "E"], ["A"])));
+    t.observe(state(turnBoard(1, [], ["A", "C", "D", "E"], ["B"])));
+    t.observe(state(turnBoard(2, ["C", "D"], ["A", "E"], ["B"])));
+    expect(t.record.broke).toBe("T2: drew C where A, moved on top, was next");
+    // Thinking Ahead-like: draws C and D, then puts B from the hand on top.
+    const ahead = new DrawTracker({ inserts: true, tops: true });
+    ahead.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E"])));
+    ahead.observe(state(turnBoard(1, ["A", "C", "D"], ["B", "E"], [])));
+    expect(ahead.record).toMatchObject({ order: ["A", "B", "C", "D"], broke: null, topped: [{ cards: ["B"] }] });
+    expect(ahead.topped.keys).toEqual(["B"]);
+  });
+
+  it("a card taken out of the draw pile by choice (Seeker Strike) is not a draw: the order ends (RTF3KZLZPV2L F42 T1)", () => {
+    const t = new DrawTracker({ inserts: true, tops: true });
+    t.observe(state(turnBoard(1, ["A", "B"], ["C", "D", "E"])));
+    const selection = turnBoard(1, ["A"], ["C", "D", "E"], ["B"]);
+    selection["screen"] = "CARD_SELECTION";
+    selection["selection"] = { kind: "deck_card_select", prompt: "选择一张牌加入你的手牌" };
+    t.observe(state(selection));
+    t.observe(state(turnBoard(1, ["A", "D"], ["C", "E"], ["B"])));
+    expect(t.record.broke).toBe("T1: D taken from the draw pile by choice (选择一张牌加入你的手牌)");
+    expect(t.record.clean).toBe(2);
+  });
+
+  it("SL_RETRY_KNOWN_TOP: a status that seems moved from the discard pile is added at a random place (Soul Fysh's Beckon)", () => {
+    const t = new DrawTracker({ inserts: true, tops: true });
+    t.observe(state(turnBoard(1, ["A", "BECKON"], ["C", "D"])));
+    t.observe(state(turnBoard(1, ["A"], ["C", "D"], ["BECKON"])));
+    t.observe(state(turnBoard(1, ["A"], ["BECKON", "C", "D"], [])));
+    expect(t.record.inserted).toEqual([{ turn: 1, at: 2, cards: ["BECKON"] }]);
+    expect(t.topped.keys).toEqual([]);
+    expect(t.addedToPile).toBe(true);
   });
 
   it("an added copy of a card the pile has: drawing that card ends the order (the added one or the pile's own)", () => {
@@ -354,7 +411,7 @@ function rows(path: string): SlAttemptRow[] {
   return readFileSync(path, "utf8").trim().split("\n").map((line) => JSON.parse(line) as SlAttemptRow);
 }
 function slConfig(log: string | null, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 function setup(log: string, overrides: Partial<SlConfig> = {}) {
@@ -433,6 +490,27 @@ describe("SlController.beforeLeastLoss (SL_RELOAD_EARLY)", () => {
   it("describe(): the three switches", () => {
     expect(setup(tempLog()).sl.describe()).toMatchObject({ judge_known_draws: true, reload_early: true, retry_known_inserts: true });
     expect(setup(tempLog(), { judgeKnownDraws: false, reloadEarly: false, retryKnownInserts: false }).sl.describe()).toMatchObject({ judge_known_draws: false, reload_early: false, retry_known_inserts: false });
+  });
+});
+
+describe("SlController: the HP lost so far this turn for Beating Remnant's cap", () => {
+  const remnant = (raw: Raw, hp: number): Raw => {
+    ((raw["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "BEATING_REMNANT", name: "律动残余", description: "你在一回合内失去的生命值不会超过[blue]20[/blue]点。" });
+    for (const entry of (raw["combat"] as Raw)["hand"] as Raw[]) entry["playable"] = false;
+    ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = hp;
+    return raw;
+  };
+  it("nothing lost this turn (its first state at 10 HP): at most 20 more, 30 incoming: certain; an HP that rose in the turn: not exact", async () => {
+    const t = setup(tempLog());
+    const lethal = remnant(turnBoard(2, ["C", "D", "E"], [], ["A", "B"], { lethal: true, hp: 10 }), 10);
+    t.sl.observe(state(lethal), t.memory);
+    expect(await t.sl.beforeEndTurn(state(lethal), { label: "combat/end_turn", screenMemory: t.memory.screenMemory, journal: t.memory.journal })).toMatchObject({ handled: true, ok: true });
+    const rose = setup(tempLog());
+    rose.sl.observe(state(remnant(turnBoard(2, ["C", "D", "E"], [], ["A", "B"], { lethal: true, hp: 10 }), 8)), rose.memory);
+    const later = remnant(turnBoard(2, ["C", "D", "E"], [], ["A", "B"], { lethal: true, hp: 10 }), 10);
+    rose.sl.observe(state(later), rose.memory);
+    expect(await rose.sl.beforeEndTurn(state(later), { label: "combat/end_turn", screenMemory: rose.memory.screenMemory, journal: rose.memory.journal })).toEqual({ handled: false });
+    expect(rose.notes.at(-1)).toBe("SL: ending the turn may be lethal (F17 T2 attempt 1/4), not certain: own count not exact: Beating Remnant caps the HP lost this turn at 20 and the HP lost so far this turn is not known exactly");
   });
 });
 

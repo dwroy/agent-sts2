@@ -2,7 +2,8 @@
  * Offline evaluation of SL_RELOAD_EARLY and SL_JUDGE_KNOWN_DRAWS (docs/sl.md §2, notes/sl-retry-report.md §9). No model is
  * called and nothing is written outside --out. Every logged fight with a decision on a board the mod flags as lethal
  * (end_turn_will_kill_player: the judge's first condition) is walked frame by frame (logs/states.jsonl through the log DB's
- * state_index offsets, read-only): a draw tracker per attempt as the live controller keeps it (SL_RETRY_KNOWN_INSERTS on),
+ * state_index offsets, read-only): a draw tracker per attempt as the live controller keeps it (SL_RETRY_KNOWN_INSERTS and
+ * SL_RETRY_KNOWN_TOP on),
  * and every logged decision on a flagged board planned again by the current code (the 5-turn rollout and B2 off: the
  * least-loss verdict comes before them; the random potions' Monte Carlo on a frozen clock, its whole schedule). On each:
  * the planner's label and its least-loss facts (combat-plan leastLossFactsOf), judgeLeastLossNow (the early reload) and
@@ -128,7 +129,7 @@ function main(): void {
     if (scope === "sl" && !(listed && Number(fight["ascension"]) >= 8)) return;
     const attempts = attemptsOf(run, floor);
     const records = attempts.map((attempt) => {
-      const tracker = new DrawTracker({ inserts: true });
+      const tracker = new DrawTracker({ inserts: true, tops: true });
       for (const row of attempt.frames) tracker.observe(stateAt(Number(row["off"]), Number(row["len"])));
       return tracker.record;
     });
@@ -139,7 +140,7 @@ function main(): void {
         const own = records[k]!;
         known = own.clean > 0 ? knownOrderOf([{ attempt: 1, draws: own }]).known : null;
       } else if (k > 0) known = knownOrderOf(records.slice(0, k).map((draws, i) => ({ attempt: i + 1, draws }))).known;
-      const tracker = new DrawTracker({ inserts: true });
+      const tracker = new DrawTracker({ inserts: true, tops: true });
       // What the live loop remembers across the fight's decisions and the planner reads: the facing (Surrounded: the enemy
       // last targeted; without it the planner starts from startFacing, PLC/TXLH F33's Rocket 49 vs 33) and Lizard Tail.
       const fightMemory = createScreenMemory("COMBAT");
