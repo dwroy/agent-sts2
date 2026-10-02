@@ -11,10 +11,18 @@
  * lines are needed), with the Surrounded facing the live loop had then (the last enemy targeted earlier in the fight,
  * combat-plan noteFacing; a fresh process's startFacing misread the Kaiser Crab: -4.4 HP a turn on the 242 turns where it
  * differed, 2026-10-02); the line
- * played is the turn's plays and drinks from that decision to its end-turn, matched to a solver line by card ids and
- * targets (a turn that played a card drawn after the decision has no such line: unmatched). Actual = our HP at the
- * decision's frame less our HP at the next turn's first frame (the fight's last frame when it was won on our turn, 0 when
- * we died). A turn whose fight ended in the enemy turn without our death is left out (no frame after it).
+ * played is the turn's plays and drinks from that decision to its end-turn, matched to a solver line by card ids (with
+ * the upgrade mark of the card in hand when it was played) and targets (a turn that played a card drawn after the
+ * decision has no such line: unmatched). A target is the game's index at that moment: an enemy's death compacts the list
+ * (H7W047ZCEBSA F29 T5: the Fight Me kill made the Ovicopter [2], not [3]), so it is mapped back through the frames to
+ * the decision's index, which the solver's lines use. Actual = our HP at the decision's frame less our HP at the next
+ * turn's first frame (the fight's last frame when it was won on our turn, all of it when we died). A turn a revive
+ * caught (a Fairy in a Bottle gone, or Lizard Tail's heal over the enemy turn) is a death: its HP back is not a
+ * negative loss (2WUMK6PK5QHD F48 T7: 10 -> 30, -35 against the solver). A line the Sandpit ends (sandpitAfter <= 0)
+ * predicts all our HP: the solver's hp_lost leaves that death out. A turn whose fight ended in the enemy turn without
+ * our death is left out (no frame after it). A turn won on our turn is a group of its own, out of the bias: its
+ * last frame is before the killing card, so that card's Thorns or HP cost is not in the actual (UNRLW0W3XWLD F31 T2:
+ * 16 vs 26, the killing Whirlwind's 10 Thorns came after the last frame).
  *
  * Usage (from the repo root):
  *   npx tsx tools/mechanics-residuals.ts run [--shards 8] [--work experiments/mechanics] [--limit N] [--min-asc 0] [--monster-db PATH] [--only CRUSHER,AXEBOT]
@@ -40,6 +48,7 @@ import { bossLinesOptions } from "../src/sim/boss-lines.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { solveTap, type Plan } from "../src/strategy/turn-solver.js";
+import { enemyIndexMaps, type FrameEnemy } from "./mechanics-align.js";
 
 function arg(name: string, fallback: string): string {
   const at = process.argv.indexOf(`--${name}`);
@@ -86,6 +95,14 @@ export interface TurnRow {
   matched: boolean;
   wonTurn: boolean;
   died: boolean;
+  /** Our HP at the compared decision. */
+  hp0?: number;
+  /** A revive caught us in the enemy turn (counted as a death: actual = hp0). */
+  revived?: "fairy" | "lizard" | null;
+  /** A target was mapped to the decision's index (an enemy died earlier in the turn and the game compacted the list). */
+  remapped?: boolean;
+  /** The matched line (MECH_RULES on) ends in the Sandpit: its prediction is all our HP. */
+  sandpitDeath?: boolean;
   actual: number | null;
   predOff: number | null;
   predOn: number | null;
@@ -103,14 +120,37 @@ export interface TurnRow {
 
 // ---------------------------------------------------------------- shard
 
-function stepKey(cardId: string, target: number | null): string {
-  const id = cardId.startsWith("POTION:") ? cardId.split(":").slice(0, 2).join(":") : cardId.replace(/\+$/, "");
+/**
+ * A play as "ID>target", "ID+>target" for an upgraded card: the decisions log the id without the mark, and a drawn
+ * Strike+ played read as the hand's plain Strike, so the first decision's line matched a play it never had
+ * (SK1USHSB1U7U F17 T7: 0 vs 34, Burning Pact drew the Strike+ that killed the Soul Fysh).
+ */
+function stepKey(cardId: string, target: number | string | null, upgraded = false): string {
+  const id = cardId.startsWith("POTION:") ? cardId.split(":").slice(0, 2).join(":") : `${cardId.replace(/\+$/, "")}${upgraded ? "+" : ""}`;
   return `${id}>${target ?? "-"}`;
 }
 
-/** A plan's plays as the decisions log them: card id (potions POTION:<id>) and target, in order. */
+/** A plan's plays as the decisions log them: card id (potions POTION:<id>), upgrade mark and target, in order. */
 function planKey(plan: Plan): string {
-  return plan.steps.map((step) => stepKey(step.cardId, step.target)).join(",");
+  return plan.steps.map((step) => stepKey(step.cardId, step.target, !step.cardId.startsWith("POTION:") && step.upgraded)).join(",");
+}
+
+/** Fairy in a Bottle gone, or Lizard Tail's heal: HP up by this much over the enemy turn (and to 40% of max HP or more). */
+const REVIVE_RISE = 8;
+const LIZARD_SHARE = 0.4;
+
+/** The line ends in the Sandpit (its count at 0 after the enemy turn): the solver's hp_lost leaves that death out. */
+function sandpitDeath(plan: Plan): boolean {
+  return plan.outcome.sandpitAfter !== null && plan.outcome.sandpitAfter <= 0;
+}
+
+/**
+ * A line's predicted HP loss this turn: its hp_lost, or all our HP when the Sandpit ends it (LXB3B2WT9E0W F33 T5: 81
+ * lost, 0 predicted; 29 death turns against the Insatiable read +206 before).
+ */
+function predicted(plan: Plan | null, hp0: number): number | null {
+  if (plan === null) return null;
+  return sandpitDeath(plan) ? Math.max(plan.outcome.hpLoss, hp0) : plan.outcome.hpLoss;
 }
 
 /** A plan's card indexes at the moment each was played (a play takes its card out; the later ones shift down). */
@@ -141,7 +181,11 @@ function shard(): void {
   const only = arg("only", "").split(",").filter(Boolean);
   const onlySql = only.length > 0 ? ` AND (${only.map((id) => `list_contains(monsters, '${id.replace(/'/g, "")}')`).join(" OR ")})` : "";
   const fights = query(`SELECT run_id, floor, fight_no, ascension, encounter, outcome, first_off, last_off, first_ts FROM fights WHERE ascension >= ${minAsc}${onlySql} ORDER BY first_ts`);
-  const frames = query("SELECT run_id, floor, turn, ts, off, len, observed, player_hp FROM frames WHERE screen = 'COMBAT' ORDER BY off");
+  // Each frame's enemies (the game's indexes then: a death compacts them), Fairies in the belt and Lizard Tail (revives).
+  const frames = query(
+    "SELECT run_id, floor, turn, ts, off, len, observed, player_hp, max_hp, list_transform(enemies, e -> struct_pack(idx := e.idx, id := e.id, hp := e.hp, max_hp := e.max_hp)) AS enemies, " +
+      "len(list_filter(potions, x -> x = 'FAIRY_IN_A_BOTTLE')) AS fairies, list_contains(relics, 'LIZARD_TAIL') AS lizard FROM frames WHERE screen = 'COMBAT' ORDER BY off",
+  );
   const decisions = query(
     "SELECT run_id, floor, turn, ts, label, decider, action, card_index, card_id, target_index, potion_id FROM decisions WHERE screen = 'COMBAT' AND action IN ('play_card', 'use_potion', 'end_turn') ORDER BY ts",
   );
@@ -193,18 +237,45 @@ function shard(): void {
       for (const [attempt, at] of starts.entries()) {
         const first = withDecision[at]!.decision!;
         const startFrame = withDecision[at]!.frame;
-        const actions = withDecision.slice(at).map((entry) => entry.decision).filter((decision): decision is Row => decision !== null);
-        const endAt = actions.findIndex((decision) => decision["action"] === "end_turn");
-        const plays = (endAt >= 0 ? actions.slice(0, endAt) : actions).filter((decision) => decision["action"] !== "end_turn");
+        const tail = withDecision.slice(at);
+        const actions = tail.flatMap((entry, k) => (entry.decision !== null ? [{ frame: entry.frame, decision: entry.decision, k }] : []));
+        const endAt = actions.findIndex((entry) => entry.decision["action"] === "end_turn");
+        const plays = (endAt >= 0 ? actions.slice(0, endAt) : actions).filter((entry) => entry.decision["action"] !== "end_turn");
+        // Each play's target as the decision frame's index (the solver's): mapped back through the frames when an enemy
+        // died earlier in the turn; a target with no such enemy is "?" (no line has it).
+        const targetOf = (decision: Row): number | null => (decision["target_index"] === null || decision["target_index"] === undefined ? null : Number(decision["target_index"]));
+        const indexMaps = enemyIndexMaps(
+          tail.map((entry) => (entry.frame["enemies"] as FrameEnemy[] | null) ?? []),
+          tail.map((entry) => (entry.decision !== null && entry.decision["action"] !== "end_turn" ? targetOf(entry.decision) : null)),
+        );
+        let remapped = false;
         const playedKey = plays
-          .map((decision) => stepKey(decision["action"] === "use_potion" ? `POTION:${String(decision["potion_id"])}` : String(decision["card_id"]), decision["target_index"] === null ? null : Number(decision["target_index"])))
+          .map((entry) => {
+            const decision = entry.decision;
+            const target = targetOf(decision);
+            const mapped = target === null ? null : indexMaps[entry.k]?.get(target) ?? null;
+            if (target !== null && mapped !== target) remapped = true;
+            if (decision["action"] === "use_potion") return stepKey(`POTION:${String(decision["potion_id"])}`, target === null ? null : mapped ?? "?");
+            // The card in hand when it was played: its upgrade mark (the decisions log the id alone).
+            const hand = ((stateAt(Number(entry.frame["off"]), Number(entry.frame["len"]))["combat"] as Row | undefined)?.["hand"] as Row[] | undefined) ?? [];
+            const card = hand.find((held) => Number(held["index"]) === Number(decision["card_index"]));
+            return stepKey(String(decision["card_id"]), target === null ? null : mapped ?? "?", card?.["upgraded"] === true);
+          })
           .join(",");
-        const playedIndexes = plays.map((decision) => (decision["action"] === "use_potion" ? -1 : Number(decision["card_index"])));
-        const endFrame = endAt >= 0 ? turnFrames.find((frame) => frame["ts"] === actions[endAt]!["ts"]) ?? null : null;
+        const playedIndexes = plays.map((entry) => (entry.decision["action"] === "use_potion" ? -1 : Number(entry.decision["card_index"])));
+        const endFrame = endAt >= 0 ? actions[endAt]!.frame : null;
         const hp0 = Number(startFrame["player_hp"]);
         const wonTurn = endAt < 0 && next === null && !died;
+        // A revive in the enemy turn: a Fairy in a Bottle gone (never drunk by hand: 0 logged), or Lizard Tail held and our HP
+        // up 8+ over the enemy turn to 40%+ of max (it heals to 50%; the relic shows no used state). Over the logs: 11 Fairy
+        // turns, 4 Lizard Tail turns (0NG27W8QBNYX F24 T2 17 -> 35 of 71), no other enemy-turn rise of 8+ with Lizard Tail held.
+        const endHp = Number((endFrame ?? turnFrames[turnFrames.length - 1]!)["player_hp"]);
+        let revived: TurnRow["revived"] = null;
+        if (next && Number(next["fairies"] ?? 0) < Number(startFrame["fairies"] ?? 0)) revived = "fairy";
+        else if (next && startFrame["lizard"] === true && next["lizard"] === true && Number(next["player_hp"]) - endHp >= REVIVE_RISE && Number(next["player_hp"]) >= LIZARD_SHARE * Number(next["max_hp"])) revived = "lizard";
         let actual: number | null = null;
-        if (next) actual = hp0 - Number(next["player_hp"]);
+        if (revived) actual = hp0;
+        else if (next) actual = hp0 - Number(next["player_hp"]);
         else if (died) actual = hp0;
         else if (wonTurn) actual = hp0 - Number(inFight[inFight.length - 1]!["player_hp"]);
         const raw = stateAt(Number(startFrame["off"]), Number(startFrame["len"]));
@@ -259,9 +330,10 @@ function shard(): void {
         row = {
           run, floor: Number(fight["floor"]), turn, asc: Number(fight["ascension"]), encounter: String(fight["encounter"]), label: String(first["label"]),
           decider: String(first["decider"] ?? ""), from: attempt, enemies: living.map((enemy) => ({ id: String(enemy["enemy_id"]), powers: powersOf(enemy) })), stripped,
-          played: playedKey, matched: off !== null && on !== null && moved !== null, wonTurn, died: died && next === null,
+          played: playedKey, matched: off !== null && on !== null && moved !== null, wonTurn, died: (died && next === null) || revived !== null, hp0, revived, remapped,
+          sandpitDeath: on !== null && sandpitDeath(on),
           actual: next === null && !died && !wonTurn ? null : actual,
-          predOff: off?.outcome.hpLoss ?? null, predOn: on?.outcome.hpLoss ?? null, predMove: moved?.outcome.hpLoss ?? null,
+          predOff: predicted(off, hp0), predOn: predicted(on, hp0), predMove: predicted(moved, hp0),
           stunOn: on?.outcome.enemyHpAfter.some((enemy) => enemy.strippedStun !== undefined && enemy.hp > 0) ?? false,
           moveOn: (moved?.outcome.enemyHpAfter ?? []).filter((enemy) => enemy.movedTo).map((enemy) => `${enemy.name}:${enemy.movedTo!.power}:${enemy.movedTo!.how}>${enemy.movedTo!.move}`),
           facing, kills: moved?.outcome.kills ?? [],
@@ -348,9 +420,13 @@ function report(): void {
   };
   // A turn we died on lost all our HP (actual): a prediction above it is the same death (W80JV2YVC8UZ F48 T6: Off With Your
   // Head 80, 70 predicted after block, 17 HP), so it is capped there.
-  const usable = rows
+  const scored = rows
     .filter((row) => row.matched && row.actual !== null && row.predOn !== null && row.predOff !== null)
     .map((row) => (row.died ? { ...row, predOn: Math.min(row.predOn!, row.actual!), predOff: Math.min(row.predOff!, row.actual!), predMove: Math.min(row.predMove ?? row.predOn!, row.actual!) } : row));
+  // Won on our turn: a group of its own, out of every other group and the bias (the last frame is before the killing
+  // card, whose Thorns or HP cost the solver counts: Thorns n=383 read -1.07, -339 of it on its 113 won turns).
+  const won = scored.filter((row) => row.wonTurn);
+  const usable = scored.filter((row) => !row.wonTurn);
   const all = group(usable);
   const byPower = groupBy(usable, (row) => row.enemies.flatMap((enemy) => Object.keys(enemy.powers)));
   const byStripped = groupBy(usable, (row) => row.stripped.map((entry) => entry.power));
@@ -396,6 +472,10 @@ function report(): void {
   };
   const fromCounts = [0, 1, 2].map((k) => usable.filter((row) => row.from === k).length);
   const deaths = usable.filter((row) => row.died);
+  const revived = usable.filter((row) => row.revived);
+  const sandpitDeaths = usable.filter((row) => row.sandpitDeath);
+  const remapped = usable.filter((row) => row.remapped);
+  const wonG = group(won);
   const unmatched = rows.filter((row) => !row.matched).length;
   const noActual = rows.filter((row) => row.matched && row.actual === null).length;
   const summary = {
@@ -403,6 +483,7 @@ function report(): void {
     db: db.meta?.generated_from ?? null,
     turns: rows.length,
     usable: usable.length,
+    won: wonG,
     unmatched,
     no_actual: noActual,
     min_n: minN,
@@ -417,6 +498,9 @@ function report(): void {
     stun_missed: missedStun.map(where),
     from: fromCounts,
     deaths: deaths.length,
+    revived: { n: revived.length, fairy: revived.filter((row) => row.revived === "fairy").map(where), lizard: revived.filter((row) => row.revived === "lizard").map(where) },
+    sandpit_deaths: group(sandpitDeaths),
+    remapped: group(remapped),
     largest: largest.map((row) => ({ turn: where(row), actual: row.actual, predOn: row.predOn, predOff: row.predOff, from: row.from, enemies: row.enemies.map((enemy) => enemy.id), stripped: row.stripped })),
     by_power: Object.fromEntries([...byPower].sort()),
     by_stripped: Object.fromEntries([...byStripped].sort()),
@@ -432,8 +516,9 @@ function report(): void {
     "它预测的本回合掉血 hp_lost 对比实际掉血（这一帧的血量 − 下回合第一帧的血量；当回合打赢取战斗最后一帧，死了是全部）。残差 = 实际 − 预测：**负数 = 求解器高估了掉血**。",
     "「被去掉」= 决策时敌人身上有、结束回合那一帧（敌人还活着）没有或降到 0 的能力。分组里一个回合可以同时在多个组。docs/mechanics-learning.md 有口径和学习者任务。",
     "",
-    `回合 ${rows.length}：能对上实际打出的线且有实际掉血的 ${usable.length}，对不上的 ${unmatched}（打了决策之后抽到的牌、旧代码的线现在不再生成等），战斗在敌方回合结束（没有之后的帧）的 ${noActual}。`,
-    `比较的是这回合第一个规划决策的 ${fromCounts[0]} 个，第二、第三个的 ${fromCounts[1]} / ${fromCounts[2]} 个（第一个之后抽到的牌打出了，就用之后重新规划的那个决策；它离回合结束更近，误差自然更小）。其中我们死了的 ${deaths.length} 个（实际 = 全部血量，预测高于它的按它算；求解器的 hp_lost 不算沙坑等「直接死亡」，早期日志里也有放弃的局记成死亡）。`,
+    `回合 ${rows.length}：能对上实际打出的线且有实际掉血的 ${scored.length}，其中当回合打赢的 ${won.length} 个单列（不进下面任何分组和偏差：最后一帧在致死那张牌之前，那张牌的荆棘反伤、失去生命不在实际里；偏差 on ${f1(wonG.biasOn)} / move ${f1(wonG.biasMove)}，|误差| move ${f1(wonG.maeMove)}），下面的分组用其余 ${usable.length} 个；对不上的 ${unmatched}（打了决策之后抽到的牌、旧代码的线现在不再生成等），战斗在敌方回合结束（没有之后的帧）的 ${noActual}。`,
+    `比较的是这回合第一个规划决策的 ${fromCounts[0]} 个，第二、第三个的 ${fromCounts[1]} / ${fromCounts[2]} 个（第一个之后抽到的牌打出了，就用之后重新规划的那个决策；它离回合结束更近，误差自然更小）。其中我们死了的 ${deaths.length} 个（实际 = 全部血量，预测高于它的按它算；早期日志里也有放弃的局记成死亡），含敌方回合被复活接住的 ${revived.length} 个（仙女瓶少了一瓶 ${revived.filter((row) => row.revived === "fairy").length}、蜥蜴尾巴回血 ${revived.filter((row) => row.revived === "lizard").length}：按死亡算，回的血不是负的掉血）。线的沙坑在敌方回合后到 0（求解器的 hp_lost 不算这种直接死亡）的，预测按全部血量算：${sandpitDeaths.length} 个。`,
+    `出牌的目标按当时的敌人列表换算成决策时的序号（敌人死了游戏会把序号往前挪；求解器的线用决策时的序号）：换算过的回合 ${remapped.length} 个（偏差 move ${f1(group(remapped).biasMove)}）。卡牌按出牌时手里那张牌的升级标记比对（决策日志的卡 id 不带「+」）。`,
     "三种：off = MECH_RULES 关；on = MECH_RULES 开（v4 3488dc5 的实盘）；move = 再开 MECH_MOVE_RULES（学到的换招 + 凯撒蟹背后攻击要两只钳子都活着）。Surrounded 的朝向按实盘当时记的给（这场战斗里这个决策之前最后一次指定目标的出牌或喝药；之前一次都没有才按 startFacing）。",
     `全部：偏差 off ${f1(all.biasOff)} / on ${f1(all.biasOn)} / move ${f1(all.biasMove)}，|误差| off ${f1(all.maeOff)} / on ${f1(all.maeOn)} / move ${f1(all.maeMove)}（n=${all.n}）。`,
     "",
