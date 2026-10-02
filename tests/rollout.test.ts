@@ -1162,6 +1162,9 @@ describe("Waterfall Giant and Knowledge Demon in the later turns: the eruption g
   it("the heal comes from the monster DB at this ascension, the boss clock's numbers without it", async () => {
     const { healOf } = await import("../src/strategy/rollout-live.js");
     expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", { heal_by_asc: { "8": { "15": 6 }, "9": { "18": 2 } } }, 9)).toBe(18);
+    // A tie goes to the larger amount (a heal near full HP gives less): the Knowledge Demon's A9 Ponder, 12/24/30 once each.
+    expect(healOf("KNOWLEDGE_DEMON", "PONDER_MOVE", { heal_by_asc: { "8": { "27": 8, "30": 46 }, "9": { "12": 1, "24": 1, "30": 1 } } }, 9)).toBe(30);
+    expect(healOf("KNOWLEDGE_DEMON", "PONDER_MOVE", { heal_by_asc: { "9": { "12": 2, "30": 1 } } }, 9)).toBe(12);
     expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", {}, 8)).toBe(15);
     expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", {}, 5)).toBe(10);
     expect(healOf("KNOWLEDGE_DEMON", "PONDER_MOVE", undefined, 8)).toBe(30);

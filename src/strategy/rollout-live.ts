@@ -214,10 +214,16 @@ export function selfPowersOf(entry: MoveEntry, asc: number, where?: AmountWhere)
 /**
  * HP a Heal move gives its user at this ascension: the monster DB's heal_by_asc (the nearest logged
  * ascension), else the boss clock's logged numbers for the two bosses that heal (Siphon 10, 15 from A8;
- * Ponder 30), else none.
+ * Ponder 30), else none. The most common amount, a tie going to the larger: a heal is logged as the HP it
+ * gave back, less near full HP (the Knowledge Demon's Ponder at A9: 12, 24 and 30 once each read 12, A8's 30 on
+ * 46 of 73).
  */
 export function healOf(id: string, move: string, entry: MoveEntry | undefined, asc: number): number {
-  const logged = mode(countsAt(entry?.heal_by_asc, undefined, asc));
+  const counts = countsAt(entry?.heal_by_asc, undefined, asc);
+  const logged = Object.entries(counts ?? {})
+    .map(([amount, n]) => [Number(amount), n] as const)
+    .filter(([amount]) => Number.isFinite(amount))
+    .sort((a, b) => b[1] - a[1] || b[0] - a[0])[0]?.[0];
   if (logged) return logged;
   if (id === "WATERFALL_GIANT" && move === "SIPHON_MOVE") return asc >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base;
   if (id === "KNOWLEDGE_DEMON" && move === "PONDER_MOVE") return PONDER_HEAL;
