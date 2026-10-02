@@ -43,6 +43,9 @@ export const BUILD_SIM_LABELS = new Set([
   "selection/upgrade", "selection/remove", "selection/transform", "selection/add", "event/plan", "event/choose",
 ]);
 
+/** Fewer samples than this (cut short by the time budget) and the options' numbers are not shown (Dai 2026-10-02). */
+export const BUILD_SIM_MIN_SHOWN = 300;
+
 /** A transform's outcome: this many random cards of the character, each on 1/n of the samples. */
 export const TRANSFORM_DRAWS = 6;
 
@@ -444,6 +447,11 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
     const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}) });
     if (result.samples === 0) return fail(`${Math.round(now() - started)} ms 内没有跑完一个样本`);
+    // Too few samples to tell the options apart (Dai 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
+    // deltas in front of the brain, which quoted them. Cut short by the clock under BUILD_SIM_MIN_SHOWN (or under what was
+    // asked for, when less), no numbers, as a failed simulation.
+    const minShown = Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
+    if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`);
     const sims = new Map(result.options.map((sim) => [sim.key, sim]));
     const key = bossKey(bossId);
     const low = LOW_CONFIDENCE[key];

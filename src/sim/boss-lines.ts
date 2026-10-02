@@ -91,6 +91,13 @@ function envWorkers(): number | null {
 /** The switch (BOSS_SIM_LINES=off) and test hooks. `serial`: run the samples in this thread (tests; no deadline inside a sample). */
 export const bossLinesOptions: {
   enabled: boolean;
+  /**
+   * BOSS_SIM_LOW_TRUST: when a low-trust boss's fight is simulated. "retry" (default, Dai 2026-10-02): only on an SL retry,
+   * where SL_RETRY_SHOW_SIM shows its numbers; on a first attempt its numbers only went to the decision log, at up to 25 s
+   * a question and most of the machine's cores (Kaiser Crab 80-150 s a fight before it was trusted), which cut the same
+   * question's rollout. "always": as before (simulated for the log on every question).
+   */
+  lowTrust: "retry" | "always";
   samples: number;
   deadlineMs: number;
   turnBudgetMs: number;
@@ -105,6 +112,7 @@ export const bossLinesOptions: {
   holdHp: ((potionId: string, input: RolloutInput) => number | null) | null;
 } = {
   enabled: process.env["BOSS_SIM_LINES"] !== "off",
+  lowTrust: process.env["BOSS_SIM_LOW_TRUST"] === "always" ? "always" : "retry",
   samples: BOSS_LINES_SAMPLES,
   deadlineMs: BOSS_LINES_DEADLINE_MS,
   turnBudgetMs: BOSS_LINES_TURN_BUDGET_MS,

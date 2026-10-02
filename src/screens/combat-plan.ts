@@ -2645,10 +2645,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   // ties, the HP guard, code's fallback) and shows its numbers; a low-trust boss's numbers and plan only go to the
   // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.
   if (kind !== "boss") releaseBossLinesPool();
-  const bossPiles = kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
+  // BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss is simulated only on an SL retry, where its numbers are shown; on
+  // a first attempt they only went to the log, and the sim's cores cut this question's rollout. The question is the same.
+  const lowTrustSkipped = bossLinesOptions.lowTrust === "retry" && kind === "boss" && env.sl?.showSim !== true && lowTrustOfState(state) !== null;
+  const bossPiles = kind === "boss" && bossLinesOptions.enabled && !lowTrustSkipped && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
   const bossSim: BossLineSim | null =
     kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null
-      ? bossPiles
+      ? lowTrustSkipped
+        ? { available: false, reason: `low-trust boss (${lowTrustOfState(state)}): simulated on SL retries only (BOSS_SIM_LOW_TRUST=retry)`, ms: 0 }
+        : bossPiles
         ? bossLineSim({
             state,
             knowledge: env.knowledge,
