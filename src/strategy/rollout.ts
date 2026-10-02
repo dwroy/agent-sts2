@@ -1775,7 +1775,8 @@ function applyPlan(
     const threshold = e.base.shriek ?? 0;
     if (e.shriekArmed && a && e.alive && threshold > 0 && e.hp > threshold && a.hp <= threshold && a.hp > 0) shrieked.add(e.index);
     if (a && a.hp <= threshold) e.shriekArmed = false;
-    // Stunned by the line itself (a Corpse Slug eating a corpse), on any turn.
+    // Stunned by the line itself (a Corpse Slug eating a corpse; MECH_RULES: a learned strip-stun, the Hopper's last
+    // Flutter), on any turn.
     if (a?.stunned && a.hp > 0) shrieked.add(e.index);
   }
   // THIEF_FACTS: Flutter before the line; a line that strips the last stack stuns the enemy (its move cancelled).
@@ -1867,7 +1868,10 @@ function applyPlan(
       // THIEF_FACTS: an Escape / Flee that resolves takes it out of the fight (no kill, nothing comes back). Stunned
       // by its last Flutter stripped this turn, the Escape is cancelled and comes again next turn (XMY29WWQDC1Y F19:
       // STUNNED on T5, Escape on T6; the move model's Escape -> Escape).
-      const fluttered = flutterBefore !== null && (flutterBefore.get(e.index) ?? 0) > 0 && e.flutter <= 0;
+      // MECH_RULES generalises this: a learned strip-stun rule on the enemy (EnemySim.stunOnStrip, any power) is the
+      // solver's own stun (`stunned`: its move lost, the Escape too), so this hand check of Flutter stands down for it.
+      const learned = e.base.stunOnStrip?.some((rule) => rule.power === "FLUTTER_POWER") === true;
+      const fluttered = flutterBefore !== null && !learned && (flutterBefore.get(e.index) ?? 0) > 0 && e.flutter <= 0;
       if (e.move !== null && input.escapes?.moves[e.id]?.includes(e.move) && !stunned && !fluttered) {
         e.alive = false;
         e.gone = true;

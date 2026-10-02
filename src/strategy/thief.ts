@@ -242,7 +242,7 @@ export function thiefContextJson(thieves: Thief[], turn: number | null, heirName
 }
 
 /** The enemy a line leaves at `index` (none: not in the outcome). */
-function afterOf(plan: Plan, index: number): { hp: number; flutter?: number } | undefined {
+function afterOf(plan: Plan, index: number): { hp: number; flutter?: number; strippedStun?: unknown } | undefined {
   return plan.outcome.enemyHpAfter.find((entry) => entry.index === index);
 }
 
@@ -304,7 +304,9 @@ export function thiefFact(plan: Plan, thieves: Thief[], samplesOf: (thief: Thief
       const left = thief.turnsLeft === null ? null : stunned && thief.turnsLeft === 1 ? 2 : thief.turnsLeft;
       const leaves = left === null ? `it keeps the ${lootText(thief)}` : `${thief.id === "FAT_GREMLIN" ? "flees" : "leaves"} ${leavesText(left, turn)}${left === 1 ? ` with ${lootText(thief)}` : ""}`;
       now = `${thief.name} left at ${hp} HP, ${leaves}`;
-      if (stunned) now += `; its last Flutter stripped: stunned, this turn's move cancelled${thief.turnsLeft === 1 ? " (its Escape: one more turn)" : " (hp_lost above still counts its attack)"}`;
+      // MECH_RULES: with the learned strip-stun applied (the solver's strippedStun) hp_lost already leaves the attack out.
+      const counted = afterOf(plan, thief.index)?.strippedStun === undefined;
+      if (stunned) now += `; its last Flutter stripped: stunned, this turn's move cancelled${thief.turnsLeft === 1 ? " (its Escape: one more turn)" : counted ? " (hp_lost above still counts its attack)" : " (hp_lost above leaves its attack out)"}`;
     }
     const samples = samplesOf(thief);
     if (samples && !(killsThief(plan, thief) && thief.id !== "GREMLIN_MERC")) {

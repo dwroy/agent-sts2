@@ -84,6 +84,11 @@ export interface DecisionRecord {
    * and whether the chosen line kills one this turn.
    */
   thief?: JsonValue;
+  /**
+   * Combat plan choice with a learned strip-stun rule on the board (MECH_RULES, docs/mechanics-learning.md): the rules
+   * ({enemy, power, n}), the keys of the shown lines that set one off this turn, and whether the chosen line does.
+   */
+  mech?: JsonValue;
   /** The run the decision was made in (the state's run_id), so a restart can find its rows. */
   run_id?: string;
   /** When the loop read the state this decision was made on (orders the replay; see journal-replay.ts). */

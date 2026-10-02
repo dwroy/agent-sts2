@@ -33,7 +33,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, musicBoxCopy, solveTurn, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, musicBoxCopy, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -43,7 +43,8 @@ import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFact
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { heldPotionWorth } from "../knowledge/potion-equivalents.js";
 import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPotionCost, type PotionCost } from "../strategy/potion-cost.js";
-import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/monster-db.js";
+import { actThreatIds, bossOnBoard, moveTurns, observedMechanics, spawnsAt } from "../knowledge/monster-db.js";
+import { stripStunRules, type StripStunRule } from "../knowledge/mechanics.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
@@ -669,6 +670,53 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
 }
 
 /**
+ * MECH_RULES (docs/mechanics-learning.md, knowledge/mechanics.ts): the learned "stunned when a power is stripped to 0"
+ * rules by power id, from monster-db.json `observed`. Empty with the switch off, without the data (a DB built before it),
+ * or when reading it fails: the decision is then the one with the switch off.
+ */
+export function learnedStunRules(env: Pick<DecisionEnv, "mechRules">): Map<string, StripStunRule> {
+  if (env.mechRules === false) return new Map();
+  try {
+    return stripStunRules(observedMechanics());
+  } catch {
+    return new Map();
+  }
+}
+
+/**
+ * The learned strip-stun rules onto the board's enemies (EnemySim.stunOnStrip): each power of the rules the enemy has up
+ * (amount > 0) and the solver counts down (STRIP_COUNTERS: Flutter, Slippery, Curl Up, Artifact). Enemies are matched as
+ * enemySims indexes them; one without such a power is left as it was.
+ */
+export function applyStripStuns(enemies: EnemySim[], combat: Record<string, unknown>, rules: Map<string, StripStunRule>): void {
+  if (rules.size === 0) return;
+  const living = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false);
+  const byIndex = new Map(living.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, enemy]));
+  for (const enemy of enemies) {
+    const source = byIndex.get(enemy.index);
+    if (!source) continue;
+    const stuns = new Map<string, string>();
+    for (const power of asArray(source["powers"]).map(asRecord)) {
+      const id = str(power["power_id"]);
+      if (rules.has(id) && id in STRIP_COUNTERS && num(power["amount"]) > 0 && !stuns.has(id)) stuns.set(id, str(power["name"]) || id);
+    }
+    if (stuns.size > 0) enemy.stunOnStrip = [...stuns].map(([power, name]) => ({ power, name }));
+  }
+}
+
+/**
+ * The learned strip-stun note on an enemy power in the combat question (MECH_RULES): what the logs show the game's text
+ * does not say, and that the options already count it. Only for a rule the solver applies to this enemy.
+ */
+function stripStunNote(enemy: EnemySim | undefined, powerId: string, rules: Map<string, StripStunRule>): string {
+  const rule = rules.get(powerId);
+  if (!rule || !enemy?.stunOnStrip?.some((stun) => stun.power === powerId)) return "";
+  return ` (observed in the logs, not in its text: when its last stack is stripped on my turn it is stunned at once and its move this turn is cancelled, ${rule.stunned} of ${rule.n} strips in ${rule.fights} fights; the options' numbers already count it)`;
+}
+
+/**
  * Hardened Shell (「每回合失去的生命值不会超过20点」): the cap is per turn, and a re-plan mid-turn (a draw, a card
  * screen, Jev's question) read the full 20 again (3RWJX25LB2CD F14 T3: the colony 45 -> 25, "Twin Strike ->
  * colony, dmg 14", really 0). Each capped enemy's HP at the turn's first decision is kept (memory.turnStartHp,
@@ -821,6 +869,16 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   // the score of this turn does not count it, so it is said (a fact, not a weight).
   if (!o.winsFight && (o.freeAttacksLeft ?? 0) > 0) summary["free_attacks_kept"] = `${o.freeAttacksLeft} free Attack${o.freeAttacksLeft === 1 ? "" : "s"} (Unrelenting) left unused: ${o.freeAttacksLeft === 1 ? "it stays" : "they stay"} up into next turn (the next Attack played costs 0)`;
   if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
+  // MECH_RULES: a learned strip-stun this line sets off (the Hopper's last Flutter): its move this turn is cancelled.
+  const stripped = o.winsFight ? [] : o.enemyHpAfter.filter((enemy) => enemy.strippedStun && enemy.hp > 0);
+  if (stripped.length > 0) {
+    summary["stripped_stun"] = stripped
+      .map((enemy) => {
+        const stun = enemy.strippedStun!;
+        return `stuns ${enemy.name} (its last ${stun.name} stripped): ${stun.attack > 0 ? `its attack this turn (${stun.attack}) is cancelled, already left out of hp_lost` : "its move this turn is cancelled"}`;
+      })
+      .join("; ");
+  }
   if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
@@ -1536,7 +1594,20 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
 }
 
 export function planCombatTurn(env: DecisionEnv): Decision | null {
-  return guardSandpit(env, planTurn(env));
+  return withMechFallback(env, (planEnv) => guardSandpit(planEnv, planTurn(planEnv)));
+}
+
+/**
+ * MECH_RULES fail safe (live play): `plan` with the learned rules on, and when that throws, again as with them off (an
+ * error of something else throws there again, as it did before them). The switch off: `plan` once, as it was.
+ */
+export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) => T): T {
+  if (env.mechRules === false) return plan(env);
+  try {
+    return plan(env);
+  } catch {
+    return plan({ ...env, mechRules: false });
+  }
 }
 
 /** How long a line waits, after its Liquid Memories, for the screen that puts the taken card into the hand. */
@@ -1578,6 +1649,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
   const ascension = state.run?.ascension ?? 0;
   const enemies = enemySims(combat, ascension);
+  // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
+  // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
+  const mechRules = learnedStunRules(env);
+  applyStripStuns(enemies, combat, mechRules);
   carryHpLossCaps(env.screenMemory, `${fightKey(state)}:${state.turn ?? "?"}`, enemies);
   if (enemies.length === 0) {
     // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
@@ -2434,7 +2509,9 @@ function planTurn(env: DecisionEnv): Decision | null {
         // id), then code's note where the id alone misleads (POWER_NOTES).
         powers: asArray(enemy["powers"]).map((entry) => {
           const power = asRecord(entry);
-          return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}`;
+          // MECH_RULES: a learned strip-stun on this power, as the logs show it (none with the switch off).
+          const sim = enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i));
+          return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}${stripStunNote(sim, str(power["power_id"]), mechRules)}`;
         }),
         // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
         ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
@@ -2618,9 +2695,20 @@ function planTurn(env: DecisionEnv): Decision | null {
         mcShown.length > 0 || potions.length > 0
           ? { random: mcShown.map(potionMcLog), unsimulated_offered: potions.map((potion) => potion.potion_id), fight_plan_now: planPotionNow }
           : null;
-      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0) return resolved;
+      const ruled = enemies.filter((enemy) => (enemy.stunOnStrip ?? []).length > 0);
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
+      // MECH_RULES: the learned strip-stun rules on the board, the shown lines setting one off, and the chosen line's.
+      const setsOff = (plan: Plan): boolean => plan.outcome.enemyHpAfter.some((enemy) => enemy.strippedStun !== undefined && enemy.hp > 0);
+      const mechRecord: JsonValue | null =
+        ruled.length > 0
+          ? {
+              rules: ruled.flatMap((enemy) => enemy.stunOnStrip!.map((stun) => ({ enemy: enemy.name, power: stun.power, n: mechRules.get(stun.power)?.n ?? null }))),
+              stuns_now: [...shown, ...mcMedians].filter(setsOff).map(keyOfShown),
+              chosen_stuns: pick?.plan ? setsOff(pick.plan) : null,
+            }
+          : null;
       // THIEF_FACTS: the thieves, the shown lines killing one this turn, the line kept for a kill before it leaves.
       const thiefRecord = ((): JsonValue | null => {
         if (thieves.length === 0) return null;
@@ -2648,6 +2736,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...(potionsRecord ? { potions: potionsRecord } : {}),
           ...(focusOf.size > 0 ? { focus: Object.fromEntries([...byKey.entries()].filter(([, entry]) => entry.plan && focusOf.has(entry.plan)).map(([key, entry]) => [key, focusOf.get(entry.plan!)!.join(", ")])) } : {}),
           ...(thiefRecord ? { thief: thiefRecord } : {}),
+          ...(mechRecord ? { mech: mechRecord } : {}),
           // With the 5-turn rollout's own best (or ties), which rollout.best no longer is where the simulation ranks.
           ...(bossSim
             ? {

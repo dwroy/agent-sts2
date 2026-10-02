@@ -414,6 +414,7 @@ export function runConfigRow(
       boss_sim_build: config.bossSimBuild,
       combat_deepseek: config.combatDeepseek,
       thief_facts: config.thiefFacts,
+      mech_rules: config.mechRules,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
       escalation: [...config.escalation.chain],

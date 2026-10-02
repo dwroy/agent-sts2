@@ -243,7 +243,7 @@ def snapshot(combat, tracked, piles=None):
             "statuses": status_counts(combat, piles)}
 
 
-def observe_combat(fight, state, ts, piles=None):
+def observe_combat(fight, state, ts, piles=None, observed=False):
     combat = state.get("combat") or {}
     turn = state.get("turn")
     fight.last_ts = ts
@@ -284,6 +284,7 @@ def observe_combat(fight, state, ts, piles=None):
         # The move of a turn: the first logged state that shows one (the move-model's rule).
         if serial not in first["enemies"] and enemy["move"]:
             first["enemies"][serial] = enemy
+    MECHANICS.frame(fight, turn, snap, ts, observed)
     fight.turn_last[turn] = snap
 
 
@@ -389,12 +390,15 @@ class Builder:
                     self.close(self.open[other], None, None)
                 fight = Fight(run_id, run, state, ts)
                 self.open[run_id] = fight
-            observe_combat(fight, state, ts, entry.get("_piles"))
+            observe_combat(fight, state, ts, entry.get("_piles"), bool(entry.get("observed")))
             return
         fight = self.open.get(run_id)
         if fight is not None and (screen == "GAME_OVER" or not state.get("in_combat")):
             game_over = state.get("game_over") if screen == "GAME_OVER" else None
             self.close(fight, run, game_over)
+        # The reward screen after a fight (before the next map frame commits it): what the fight gave.
+        if screen == "REWARD" and self.await_map.get(run_id):
+            MECHANICS.reward(self.await_map[run_id][-1], state.get("reward"))
         if screen == "MAP" and self.await_map.get(run_id):
             self.assign_rooms(run_id, state)
 
@@ -520,6 +524,7 @@ class Builder:
             for (index, eid), inst in sorted(fight.instances.items(), key=lambda kv: (kv[0][0] if isinstance(kv[0][0], int) else 99)):
                 parts[eid].append({"hp": inst["hp"], "spawned": inst["spawned"], "minion": inst["minion"]})
             self.bosses[boss_key][asc].append({**result, "parts": dict(parts), "start_hp": start_hp, "ids": sorted(ids_in_fight)})
+        MECHANICS.commit(fight, ids_in_fight)
 
     def moves_of(self, fight, asc):
         turns = sorted(fight.turn_first)
@@ -624,6 +629,381 @@ def status_delta(last, nxt, first):
     return movers[0], added, piles
 
 
+# ---------------------------------------------------------------- observed mechanics
+#
+# Rules the game text does not state, mined generically from the logged frames (Dai 2026-10-02: learned from the logs,
+# written into the DB, used by the solver through data-driven rules; docs/mechanics-learning.md). The Thieving Hopper's
+# Flutter says only 「从攻击牌中受到的伤害减少50%」, yet stripping its last stack stuns it and cancels that turn's move
+# (MCK9SMSK40ZY F19 T4: Nab 14 dealt nothing). Nothing below names an enemy or a power: every power, Escape move and
+# reward goes through the same counting. A failure anywhere in it drops the `observed` fields and nothing else.
+
+STUN_MOVE = "STUNNED"
+# Evidence run ids kept per pattern.
+EVIDENCE = 3
+# A reward differs between killed and left when it was on this share of the kill fights and on none of the leaves.
+REWARD_KILLED_SHARE = 0.5
+# A reward belongs to a monster when at most this share of the fights without it had it.
+REWARD_ELSEWHERE_SHARE = 0.02
+# Rewards seen fewer times than this are not compared at all (a random relic, a rare potion).
+REWARD_MIN_N = 3
+
+
+def reward_key(reward):
+    """A reward screen item as a key: its type and its text with the numbers taken out (「25金币（偷回）」 -> 「N金币（偷回）」)."""
+    return f"{reward.get('reward_type') or '?'}:{re.sub(r'[0-9]+', 'N', str(reward.get('description') or ''))}"
+
+
+def where(fight, turn):
+    return f"{fight.run_id} F{fight.floor} T{turn}"
+
+
+def living(enemy):
+    return bool(enemy["alive"]) and (enemy["hp"] or 0) > 0
+
+
+# (run id, ts) of the decision frames that ended our turn (decisions.jsonl, chosen action end_turn); None without the file.
+END_TURNS = None
+END_TURN_RE = re.compile(rb'^\{"ts":"([^"]+)"')
+
+
+def load_end_turns(path):
+    """The (run id, frame ts) of every end-turn decision: the frame a decision was made on has the decision's ts."""
+    if not path or not os.path.exists(path):
+        return None
+    out = set()
+    with open(path, "rb") as handle:
+        for raw in handle:
+            if b'"chosen":{"action":"end_turn"' not in raw:
+                continue
+            ts = END_TURN_RE.match(raw)
+            # The run id, else (the first days' rows) the fingerprint's run.
+            run = re.search(rb'"run_id":"([A-Za-z0-9_]+)"', raw) or re.search(rb'\\"run\\":\\"([A-Za-z0-9_]+)\\"', raw)
+            if ts and run:
+                out.add((run.group(1).decode(), ts.group(1).decode()))
+    return out
+
+
+def _evidence(lst, item):
+    if len(lst) < EVIDENCE and item not in lst:
+        lst.append(item)
+
+
+class Mechanics:
+    """The observed-mechanics counters of one build (frames -> per-fight events -> per-monster tallies)."""
+
+    def __init__(self, quiet=False):
+        self.ok = True
+        self.error = None
+        self.quiet = quiet
+        # (monster, power) -> tallies of the power stripped to 0 on our turn while the enemy lived
+        self.strips = collections.defaultdict(lambda: {"n": 0, "fights": set(), "amount_before": collections.Counter(), "move_after": collections.Counter(),
+                                                      "co_removed": collections.Counter(), "died_same_turn": 0, "end_unclear": 0,
+                                                      "alive_end": 0, "stunned_end": 0, "attack_before": 0, "attack_cancelled": 0,
+                                                      "hp_check": 0, "hp_landed": 0, "evidence": []})
+        # (monster, move) -> tallies of the enemy turns after an Escape intent
+        self.escapes = collections.defaultdict(lambda: {"n": 0, "gone": 0, "gone_stunned": 0, "stayed": 0, "stayed_stunned": 0, "killed_first": 0,
+                                                       "killed_last_card": 0, "we_died": 0, "unclear": 0,
+                                                       "next_after_stay": collections.Counter(), "gone_evidence": [], "stay_evidence": []})
+        # monster -> tallies of its move turning STUNNED mid-turn, with what changed on that frame
+        self.stuns = collections.defaultdict(lambda: {"n": 0, "fights": set(), "triggers": collections.Counter(), "unexplained": 0, "evidence": []})
+        # rewards: monster -> status (killed / left) -> fights, and -> reward key -> fights; reward key -> fights it was in
+        self.reward_fights = collections.defaultdict(collections.Counter)
+        self.reward_with = collections.defaultdict(lambda: collections.defaultdict(collections.Counter))
+        self.reward_evidence = collections.defaultdict(list)
+        self.reward_total = collections.Counter()
+        self.rewarded_fights = 0
+        self.monster_reward_fights = collections.Counter()
+
+    def fail(self, error):
+        if self.ok:
+            self.ok = False
+            self.error = f"{type(error).__name__}: {error}"
+            if not self.quiet:
+                    print(f"build-monster-db: observed-mechanics mining failed, `observed` skipped: {self.error}", file=sys.stderr)
+
+    # -- frames (observe_combat). Only decision frames: an `observed` frame can be one taken in the enemy turn, still
+    # labelled with our turn (MCK9SMSK40ZY F19 T1: block 28 -> 11 and SWIPE_POWER up after the end-turn decision).
+    def frame(self, fight, turn, snap, ts, observed):
+        if not self.ok or observed or not isinstance(turn, int):
+            return
+        try:
+            mech = fight.__dict__.setdefault("_mech", {"strips": [], "first": {}, "last": {}, "last_ts": {}})
+            prev = mech["last"].get(turn)
+            mech["first"].setdefault(turn, snap)
+            mech["last"][turn] = snap
+            mech["last_ts"][turn] = ts
+            if prev is not None:
+                self._frame(fight, turn, prev, snap, mech)
+        except Exception as error:  # noqa: BLE001 - the mining never breaks the DB build
+            self.fail(error)
+
+    def _frame(self, fight, turn, prev, snap, mech):
+        alive_before = {s for s, e in prev["enemies"].items() if living(e)}
+        for serial, enemy in snap["enemies"].items():
+            before = prev["enemies"].get(serial)
+            if before is None or before["id"] != enemy["id"] or not living(enemy):
+                continue
+            removed, lowered = [], []
+            for pid, amount in before["powers"].items():
+                if amount < 0:
+                    continue
+                now = enemy["powers"].get(pid)
+                # Stripped: gone from the list, or a positive amount down to 0 (a flag power at 0 only by going away).
+                if now is None or (amount > 0 and now <= 0):
+                    removed.append((pid, amount))
+                elif now < amount:
+                    lowered.append(pid)
+            for pid, amount in removed:
+                mech["strips"].append({"turn": turn, "serial": serial, "id": enemy["id"], "pid": pid, "amount": amount,
+                                       "move_after": enemy["move"], "attack_before": intent_total(before["intents"]),
+                                       "with": [other for other, _ in removed if other != pid]})
+            if enemy["move"] == STUN_MOVE and before["move"] != STUN_MOVE:
+                triggers = [f"power_removed:{pid}" for pid, _ in removed] + [f"power_down:{pid}" for pid in lowered]
+                if before["block"] > 0 and enemy["block"] <= 0:
+                    triggers.append("block_broken")
+                if any(s not in snap["enemies"] or not living(snap["enemies"][s]) for s in alive_before - {serial}):
+                    triggers.append("ally_died")
+                explained = bool(triggers)
+                if isinstance(enemy["hp"], int) and isinstance(before["hp"], int) and enemy["hp"] < before["hp"]:
+                    triggers.append("hp_lost")
+                tally = self.stuns[enemy["id"]]
+                tally["n"] += 1
+                tally["fights"].add(fight.key)
+                tally["triggers"].update(triggers)
+                if not explained:
+                    tally["unexplained"] += 1
+                _evidence(tally["evidence"], where(fight, turn))
+
+    # -- the reward screen after the fight
+    def reward(self, fight, reward):
+        if not self.ok or fight is None:
+            return
+        try:
+            if getattr(fight, "_rewards", None) is None and isinstance(reward, dict):
+                fight._rewards = sorted({reward_key(r) for r in reward.get("rewards") or [] if isinstance(r, dict)})
+        except Exception as error:  # noqa: BLE001
+            self.fail(error)
+
+    # -- one fight into the tallies (Builder.commit)
+    def commit(self, fight, ids_in_fight):
+        if not self.ok:
+            return
+        try:
+            self._commit(fight, ids_in_fight)
+        except Exception as error:  # noqa: BLE001
+            self.fail(error)
+
+    def ended(self, fight, mech, turn):
+        """Whether turn's last decision frame is where we ended the turn: its enemies were alive into the enemy turn (a
+        card that killed the last enemy leaves no frame after it, so a frame before it would read as the turn's end).
+        Without decisions.jsonl the last decision frame is taken as the end."""
+        if END_TURNS is None:
+            return True
+        return (fight.run_id, mech["last_ts"].get(turn)) in END_TURNS
+
+    def _commit(self, fight, ids_in_fight):
+        mech = fight.__dict__.get("_mech")
+        if mech is None:
+            mech = {"strips": [], "first": {}, "last": {}, "last_ts": {}}
+        died = fight.outcome == "died"
+        for event in mech["strips"]:
+            turn, serial = event["turn"], event["serial"]
+            tally = self.strips[(event["id"], event["pid"])]
+            tally["n"] += 1
+            tally["fights"].add(fight.key)
+            tally["amount_before"][event["amount"]] += 1
+            tally["move_after"][event["move_after"] or "?"] += 1
+            tally["co_removed"].update(event["with"])
+            last = mech["last"].get(turn)
+            end = (last or {"enemies": {}})["enemies"].get(serial)
+            if end is None or not living(end):
+                tally["died_same_turn"] += 1
+                continue
+            if not self.ended(fight, mech, turn):
+                # The turn's last frame is not where we ended it: a card after it ended the fight (a kill) or the frame is missing.
+                tally["died_same_turn" if turn + 1 not in mech["first"] and not died else "end_unclear"] += 1
+                continue
+            tally["alive_end"] += 1
+            stunned = end["move"] == STUN_MOVE
+            tally["stunned_end"] += stunned
+            if event["attack_before"] > 0:
+                tally["attack_before"] += 1
+                tally["attack_cancelled"] += intent_total(end["intents"]) <= 0
+                # Did the attack it showed before the strip take HP on the enemy turn? Only when it was the one attacker
+                # left and would have got past our block: our HP from the turn's end to the next turn's first frame. Landed:
+                # at least half of what it would have taken (a Crimson Mantle's 1 HP at the turn's start is no hit:
+                # XMY29WWQDC1Y F19 T5 45 -> 44, the Hopper's Escape cancelled).
+                nxt = mech["first"].get(turn + 1)
+                others = any(intent_total(e["intents"]) > 0 for s, e in last["enemies"].items() if s != serial and living(e))
+                hp_l = last["player"]["hp"]
+                hp_n = nxt["player"]["hp"] if nxt else None
+                expected = event["attack_before"] - (last["player"]["block"] or 0)
+                if not others and expected > 0 and isinstance(hp_l, int):
+                    if isinstance(hp_n, int):
+                        tally["hp_check"] += 1
+                        tally["hp_landed"] += hp_l - hp_n >= expected / 2
+                    elif died:
+                        tally["hp_check"] += 1
+                        tally["hp_landed"] += 1
+            if stunned:
+                _evidence(tally["evidence"], where(fight, turn))
+        # Escape intents (at the turn's first decision frame): is it still there at the next turn's first frame?
+        left_ids = set()
+        for turn in sorted(mech["first"]):
+            for serial, enemy in mech["first"][turn]["enemies"].items():
+                if not living(enemy) or not any(i.get("intent_type") == "Escape" for i in enemy["intents"]):
+                    continue
+                tally = self.escapes[(enemy["id"], enemy["move"])]
+                tally["n"] += 1
+                end = (mech["last"].get(turn) or {"enemies": {}})["enemies"].get(serial)
+                if end is None or not living(end):
+                    tally["killed_first"] += 1
+                    continue
+                nxt = mech["first"].get(turn + 1)
+                if not self.ended(fight, mech, turn):
+                    # No end-turn decision on its last frame: a card after it won the fight (the kill leaves no frame), or unclear.
+                    tally["killed_last_card" if nxt is None and fight.outcome == "won" else "unclear"] += 1
+                    continue
+                if nxt is not None:
+                    after = nxt["enemies"].get(serial)
+                    if after is not None and after["id"] == enemy["id"] and living(after):
+                        tally["stayed"] += 1
+                        tally["stayed_stunned"] += end["move"] == STUN_MOVE
+                        tally["next_after_stay"][after["move"] or "?"] += 1
+                        _evidence(tally["stay_evidence"], where(fight, turn))
+                        continue
+                elif died:
+                    tally["we_died"] += 1
+                    continue
+                tally["gone"] += 1
+                tally["gone_stunned"] += end["move"] == STUN_MOVE
+                left_ids.add(enemy["id"])
+                _evidence(tally["gone_evidence"], where(fight, turn))
+        # Rewards: which monsters of a won fight were killed and which left.
+        rewards = getattr(fight, "_rewards", None)
+        if rewards is None or fight.outcome != "won":
+            return
+        self.rewarded_fights += 1
+        self.reward_total.update(rewards)
+        for eid in ids_in_fight:
+            status = "left" if eid in left_ids else "killed"
+            self.monster_reward_fights[eid] += 1
+            self.reward_fights[eid][status] += 1
+            for key in rewards:
+                self.reward_with[eid][status][key] += 1
+                if status == "killed":
+                    _evidence(self.reward_evidence[(eid, key)], f"{fight.run_id} F{fight.floor}")
+
+    # -- output
+    def monster(self, eid):
+        """The `observed` entry of one monster, or None when it has nothing notable."""
+        out = {}
+        strips = {pid: self.strip_obj(tally) for (mid, pid), tally in sorted(self.strips.items()) if mid == eid}
+        if strips:
+            out["powers_stripped"] = strips
+        escapes = {}
+        for (mid, move), t in sorted(self.escapes.items(), key=lambda kv: (kv[0][0], str(kv[0][1]))):
+            if mid != eid:
+                continue
+            settled = t["gone"] + t["stayed"]
+            escapes[move or "?"] = {"n": t["n"], "gone": t["gone"], "gone_stunned": t["gone_stunned"], "stayed": t["stayed"], "stayed_stunned": t["stayed_stunned"],
+                                    "killed_first": t["killed_first"], "killed_last_card": t["killed_last_card"], "we_died": t["we_died"], "unclear": t["unclear"],
+                                    "gone_share": round(t["gone"] / settled, 3) if settled else None,
+                                    "next_after_stay": dict(t["next_after_stay"].most_common()),
+                                    "evidence_gone": t["gone_evidence"], "evidence_stayed": t["stay_evidence"]}
+        if escapes:
+            out["escape_moves"] = escapes
+        rewards = self.rewards_of(eid)
+        if rewards:
+            out["kill_rewards"] = rewards
+        stun = self.stuns.get(eid)
+        if stun and stun["n"]:
+            out["mid_turn_stuns"] = {"n": stun["n"], "fights": len(stun["fights"]), "triggers": dict(stun["triggers"].most_common()),
+                                     "unexplained": stun["unexplained"], "evidence": stun["evidence"]}
+        return out or None
+
+    @staticmethod
+    def strip_obj(t):
+        stunned = t["move_after"].get(STUN_MOVE, 0)
+        return {"n": t["n"], "fights": len(t["fights"]) if isinstance(t["fights"], set) else t["fights"],
+                "amount_before": counter_obj(t["amount_before"]), "move_after": dict(t["move_after"].most_common()),
+                "stunned_share": round(stunned / t["n"], 3) if t["n"] else None,
+                # Other powers gone on the same frame (the Matriarch's Plating with its Asleep): a strip always paired
+                # with another may be that one's doing.
+                "co_removed": dict(t["co_removed"].most_common()),
+                "died_same_turn": t["died_same_turn"], "turn_end_unclear": t["end_unclear"],
+                "alive_at_turn_end": t["alive_end"], "stunned_at_turn_end": t["stunned_end"],
+                "attack_before": t["attack_before"], "attack_cancelled": t["attack_cancelled"],
+                "hp_check": {"n": t["hp_check"], "landed": t["hp_landed"]}, "evidence": t["evidence"]}
+
+    def rewards_of(self, eid):
+        """Reward items that come with killing this monster: on the kill fights' reward screens and never when it left,
+        or (it never left) rare in the fights without it."""
+        fights = self.reward_fights.get(eid)
+        if not fights:
+            return []
+        killed, left = fights["killed"], fights["left"]
+        without = self.rewarded_fights - self.monster_reward_fights[eid]
+        out = []
+        for key, total in sorted(self.reward_total.items()):
+            if total < REWARD_MIN_N:
+                continue
+            with_killed = self.reward_with[eid]["killed"][key]
+            with_left = self.reward_with[eid]["left"][key]
+            elsewhere = total - with_killed - with_left
+            if not killed or with_killed / killed < REWARD_KILLED_SHARE:
+                continue
+            exclusive = without > 0 and elsewhere / without <= REWARD_ELSEWHERE_SHARE
+            only_killed = left >= 1 and with_left == 0
+            if not (exclusive or only_killed):
+                continue
+            out.append({"reward": key, "killed": [with_killed, killed], "left": [with_left, left], "elsewhere": [elsewhere, without],
+                        "only_when_killed": only_killed, "exclusive": exclusive, "evidence": self.reward_evidence[(eid, key)]})
+        return out
+
+    def pooled(self):
+        """Top-level `observed`: each stripped power over every monster that carried it (the rule is the power's)."""
+        powers = {}
+        for (eid, pid), t in self.strips.items():
+            pool = powers.setdefault(pid, {"n": 0, "fights": 0, "amount_before": collections.Counter(), "move_after": collections.Counter(),
+                                          "co_removed": collections.Counter(), "died_same_turn": 0, "end_unclear": 0, "alive_end": 0, "stunned_end": 0, "attack_before": 0, "attack_cancelled": 0,
+                                          "hp_check": 0, "hp_landed": 0, "evidence": [], "monsters": collections.Counter()})
+            for key in ("n", "died_same_turn", "end_unclear", "alive_end", "stunned_end", "attack_before", "attack_cancelled", "hp_check", "hp_landed"):
+                pool[key] += t[key]
+            pool["fights"] += len(t["fights"])
+            pool["amount_before"].update(t["amount_before"])
+            pool["move_after"].update(t["move_after"])
+            pool["co_removed"].update(t["co_removed"])
+            pool["monsters"][eid] += t["n"]
+            for item in t["evidence"]:
+                _evidence(pool["evidence"], item)
+        out = {}
+        for pid in sorted(powers):
+            pool = powers[pid]
+            out[pid] = {**self.strip_obj(pool), "monsters": dict(pool["monsters"].most_common())}
+        return {"powers_stripped": out}
+
+
+MECHANICS = Mechanics()
+
+OBSERVED_NOTE = (
+    "Mined from the logged frames (build-monster-db.py, observed mechanics; docs/mechanics-learning.md). Decision frames only (an "
+    "`observed` frame can be one taken in the enemy turn). powers_stripped: an enemy power going from present (amount >= 0) to gone, "
+    "or from > 0 to <= 0, between two decision frames of our turn while the enemy lives; move_after = its move on the frame right "
+    "after (STUNNED = stunned), stunned_share = STUNNED / n, co_removed = other powers gone on that same frame; alive_at_turn_end / stunned_at_turn_end / attack_before / "
+    "attack_cancelled: of the strips whose enemy lived to the turn's end-turn decision, the ones still STUNNED there, the ones "
+    "that showed an attack before the strip and showed none at the turn's end; hp_check: the ones where it was the only attacker "
+    "and its attack would have got past our block, and those in which we lost at least half of that over the enemy turn (landed). escape_moves: the turns "
+    "an enemy showed an Escape intent at our turn's start: gone = alive when we ended the turn and not on the next turn's first "
+    "frame (or the fight over), stayed = still there (*_stunned: STUNNED at our turn's end), killed_first / killed_last_card = "
+    "killed on our turn (seen dead, or the fight won on a card after the turn's last frame). kill_rewards: reward "
+    "screen items (numbers as N) on at least half of the won fights in which the monster was killed and on none in which it "
+    "left (only_when_killed), or on at most 2% of the fights without it (exclusive). mid_turn_stuns: its move turning STUNNED "
+    "between two decision frames, with what changed on that frame (powers removed / down, block broken, an ally died, HP lost). "
+    "The top-level powers_stripped pools every monster carrying the power."
+)
+
+
 # ---------------------------------------------------------------- output
 
 
@@ -697,6 +1077,7 @@ def threat_obj(results):
 
 
 def build_output(builder, game):
+    per_monster, pooled = observed_output(sorted(builder.monsters))
     monsters_game = {m["id"]: m for m in game.get("monsters") or []}
     powers_game = {p["id"]: p for p in game.get("powers") or []}
     out = {}
@@ -798,6 +1179,8 @@ def build_output(builder, game):
         }
         if mon["phases"]:
             entry["phases_by_asc"] = {str(asc): {" > ".join(map(str, k)): n for k, n in c.most_common()} for asc, c in sorted(mon["phases"].items())}
+        if per_monster.get(eid):
+            entry["observed"] = per_monster[eid]
         out[eid] = entry
     bosses = {}
     for boss_key in sorted(builder.bosses):
@@ -858,7 +1241,24 @@ def build_output(builder, game):
         "generated_from": {"fights": builder.fights, "first_seen": builder.first_ts, "last_seen": builder.last_ts,
                            "fights_by_asc": {str(k): v for k, v in sorted(builder.asc_seen.items())}},
     }
-    return {"meta": meta, "bosses": bosses, "encounters": encounters, "monsters": out}
+    result = {"meta": meta, "bosses": bosses, "encounters": encounters, "monsters": out}
+    if pooled is not None:
+        result["observed"] = pooled
+    return result
+
+
+def observed_output(ids):
+    """({monster: its `observed` entry}, the top-level `observed` block), or ({}, None) when the mining failed anywhere:
+    then no `observed` field is written at all, and the rest of the DB is as before."""
+    if not MECHANICS.ok:
+        return {}, None
+    try:
+        per_monster = {eid: MECHANICS.monster(eid) for eid in ids}
+        pooled = {"note": OBSERVED_NOTE, "end_turn_check": END_TURNS is not None, **MECHANICS.pooled()}
+        return {eid: entry for eid, entry in per_monster.items() if entry}, pooled
+    except Exception as error:  # noqa: BLE001 - the mining never breaks the DB build
+        MECHANICS.fail(error)
+        return {}, None
 
 
 def move_model_view(db):
@@ -929,7 +1329,14 @@ def load_runs(path):
     return runs
 
 
-def build(states, runs_path, game_path):
+def build(states, runs_path, game_path, decisions_path=None):
+    global MECHANICS, END_TURNS
+    MECHANICS = Mechanics()
+    try:
+        END_TURNS = load_end_turns(decisions_path)
+    except Exception as error:  # noqa: BLE001 - the mining never breaks the DB build
+        END_TURNS = None
+        MECHANICS.fail(error)
     game = {}
     if game_path and os.path.exists(game_path):
         raw = json.load(open(game_path, encoding="utf8"))
@@ -954,6 +1361,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--states", default=os.path.join(logs, "states.jsonl"))
     parser.add_argument("--runs", default=os.path.join(logs, "runs.jsonl"))
+    # The end-turn decisions (observed mechanics: which turn ends were real ends); optional.
+    parser.add_argument("--decisions", default=os.path.join(logs, "decisions.jsonl"))
     parser.add_argument("--game-data", default=os.path.join(ROOT, ".cache/game-data.json"))
     parser.add_argument("--out", default=os.path.join(ROOT, "src/knowledge/monster-db.json"))
     parser.add_argument("--move-model-out", default=None)
@@ -963,7 +1372,7 @@ def main(argv=None):
     if args.self_test:
         return self_test()
     start = time.time()
-    db = build(args.states, args.runs, args.game_data)
+    db = build(args.states, args.runs, args.game_data, args.decisions)
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(db, handle, ensure_ascii=False, indent=1, sort_keys=False)
@@ -982,21 +1391,26 @@ def main(argv=None):
 # ---------------------------------------------------------------- self-test
 
 
-def _synthetic_lines():
-    """A two-fight run: a hallway fight won at A8, then an elite fight we die in."""
-    def state(screen, run_id, turn, floor, hp, enemies=None, in_combat=False, map_=None, game_over=None, player_powers=None, piles=None, hand=None):
+def _synthetic_lines(end_turns=None):
+    """A two-fight run: a hallway fight won at A8, then an elite fight we die in. Then more runs, one per feature below.
+    `end_turns` gets the (run, ts) of the frames marked as end-turn decisions (the decisions.jsonl rows)."""
+    def state(screen, run_id, turn, floor, hp, enemies=None, in_combat=False, map_=None, game_over=None, player_powers=None, piles=None, hand=None,
+              block=0, reward=None, observed=False, end_turn=False):
         run = {"ascension": 8, "act_id": "0", "floor": floor, "current_hp": hp, "max_hp": 80, "boss_id": "VANTOM_BOSS",
                "relics": [{"relic_id": "BURNING_BLOOD"}]}
         combat = None
         if enemies is not None:
-            combat = {"player": {"current_hp": hp, "powers": player_powers or []}, "enemies": enemies, "hand": [{"card_id": c} for c in hand or []]}
+            combat = {"player": {"current_hp": hp, "block": block, "powers": player_powers or []}, "enemies": enemies, "hand": [{"card_id": c} for c in hand or []]}
+        ts = f"2026-09-28T00:00:{len(lines):02d}Z"
+        if end_turn and end_turns is not None:
+            end_turns.append((run_id, ts))
         view = {"big": "x" * 10}
         if piles is not None:
             line = lambda card_id, n: {"line": f"{card_id}{'*' + str(n) if n > 1 else ''} [1费]：…", "card_ids": [card_id], "keywords": [], "mods": []}
             view = {"combat": {"hand": [], **{name: [line(c, n) for c, n in piles.get(name, {}).items()] for name in ("draw", "discard", "exhaust")}, "enemies": []}}
         s = {"run_id": run_id, "screen": screen, "turn": turn, "in_combat": in_combat, "combat": combat, "run": run,
-             "map": map_, "game_over": game_over, "agent_view": view}
-        return json.dumps({"ts": f"2026-09-28T00:00:{len(lines):02d}Z", "fingerprint": "{\"screen\":\"X\"}", "screen": screen, "state": s},
+             "map": map_, "game_over": game_over, "reward": reward, "agent_view": view}
+        return json.dumps({"ts": ts, **({"observed": True} if observed else {}), "fingerprint": "{\"screen\":\"X\"}", "screen": screen, "state": s},
                           separators=(",", ":"), ensure_ascii=False)
 
     def enemy(index, eid, hp, max_hp, move, dmg=None, hits=None, powers=None, block=0, types=("Attack",), status_cards=None):
@@ -1068,6 +1482,27 @@ def _synthetic_lines():
     lines.append(state("COMBAT", "R9", 1, 4, 80, [enemy(0, "SHRINKER", 40, 40, "SHRINK_MOVE", types=("DebuffStrong",))], True))
     lines.append(state("COMBAT", "R9", 2, 4, 80, [enemy(0, "SHRINKER", 40, 40, "CHOMP_MOVE", 7, 1)], True,
                        player_powers=[{"power_id": "SHRINK_POWER", "amount": -1}]))
+    # Observed mechanics. Run R10, floor 19: T4 a Hopper's last Flutter stripped stuns it (Nab 14 cancelled: no HP lost
+    # over the enemy turn); an observed frame taken in the enemy turn is ignored. T5 its Escape resolves: gone, the
+    # reward screen without the card.
+    hop = lambda hp, move, powers, types=("Attack",), dmg=None: enemy(0, "HOPPER", hp, 84, move, dmg, 1 if dmg else None, powers, types=types)
+    lines.append(state("COMBAT", "R10", 4, 19, 50, [hop(40, "NAB_MOVE", {"ESCAPE_ARTIST_POWER": 2, "FLUTTER_POWER": 1}, dmg=14)], True))
+    lines.append(state("COMBAT", "R10", 4, 19, 50, [hop(35, "STUNNED", {"ESCAPE_ARTIST_POWER": 2}, types=("Stun",))], True, end_turn=True))
+    lines.append(state("COMBAT", "R10", 4, 19, 50, [hop(35, "STUNNED", {"ESCAPE_ARTIST_POWER": 2, "FLUTTER_POWER": 3}, types=("Stun",))], True, observed=True, block=9))
+    lines.append(state("COMBAT", "R10", 5, 19, 50, [hop(35, "ESCAPE_MOVE", {"ESCAPE_ARTIST_POWER": 1}, types=("Escape",))], True))
+    lines.append(state("COMBAT", "R10", 5, 19, 50, [hop(35, "ESCAPE_MOVE", {"ESCAPE_ARTIST_POWER": 1}, types=("Escape",))], True, end_turn=True))
+    lines.append(state("REWARD", "R10", 5, 19, 50, reward={"rewards": [{"reward_type": "Potion", "description": "火焰药水"}, {"reward_type": "Card", "description": "将一张牌添加到你的牌组。"}]}))
+    lines.append(state("MAP", "R10", None, 19, 50, map_=node_map(1, 1, "Monster")))
+    # Run R11, floor 19: on the Escape turn its last Flutter goes (2 -> 1 -> gone): stunned, it stays and escapes again
+    # on T6, where a card after the turn's last frame kills it (no end-turn decision there): the card comes back.
+    lines.append(state("COMBAT", "R11", 5, 19, 60, [hop(10, "ESCAPE_MOVE", {"ESCAPE_ARTIST_POWER": 1, "FLUTTER_POWER": 2}, types=("Escape",))], True))
+    lines.append(state("COMBAT", "R11", 5, 19, 60, [hop(5, "ESCAPE_MOVE", {"ESCAPE_ARTIST_POWER": 1, "FLUTTER_POWER": 1}, types=("Escape",))], True))
+    lines.append(state("COMBAT", "R11", 5, 19, 60, [hop(2, "STUNNED", {"ESCAPE_ARTIST_POWER": 1}, types=("Stun",))], True, end_turn=True))
+    lines.append(state("COMBAT", "R11", 6, 19, 60, [hop(2, "ESCAPE_MOVE", {"ESCAPE_ARTIST_POWER": 1}, types=("Escape",))], True))
+    lines.append(state("REWARD", "R11", 6, 19, 60, reward={"rewards": [{"reward_type": "Gold", "description": "20金币"},
+                                                                       {"reward_type": "SpecialCard", "description": "取回你被偷走的牌。"},
+                                                                       {"reward_type": "Card", "description": "将一张牌添加到你的牌组。"}]}))
+    lines.append(state("MAP", "R11", None, 19, 60, map_=node_map(1, 1, "Monster")))
     return lines
 
 
@@ -1075,8 +1510,13 @@ def self_test():
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         states = os.path.join(tmp, "states.jsonl")
+        end_turns = []
         with open(states, "w", encoding="utf8") as handle:
-            handle.write("\n".join(_synthetic_lines()) + "\n")
+            handle.write("\n".join(_synthetic_lines(end_turns)) + "\n")
+        decisions = os.path.join(tmp, "decisions.jsonl")
+        with open(decisions, "w", encoding="utf8") as handle:
+            for run_id, ts in end_turns:
+                handle.write(json.dumps({"ts": ts, "screen": "COMBAT", "label": "combat/plan", "run_id": run_id, "chosen": {"action": "end_turn"}}, separators=(",", ":")) + "\n")
         game = os.path.join(tmp, "game.json")
         with open(game, "w", encoding="utf8") as handle:
             json.dump({"collections": {
@@ -1088,7 +1528,13 @@ def self_test():
                            {"id": "WEAK_POWER", "name": "虚弱", "description": "-25%", "type": "Debuff"},
                            {"id": "SHRINK_POWER", "name": "缩小", "description": "-30%", "type": "Debuff"}],
                 "cards": [{"id": "SLIMED", "type": "Status"}, {"id": "DAZED", "type": "Status"}, {"id": "STRIKE", "type": "Attack"}]}}, handle)
-        db = build(states, None, game)
+        # One fight with a reward is enough here (the live floor is REWARD_MIN_N).
+        min_n = globals()["REWARD_MIN_N"]
+        globals()["REWARD_MIN_N"] = 1
+        try:
+            db = build(states, None, game, decisions)
+        finally:
+            globals()["REWARD_MIN_N"] = min_n
     slime = db["monsters"]["SLIME"]
     assert slime["kind"] == "hallway", slime["kind"]
     assert slime["hp_by_asc"]["8"] == {"min": 40, "median": 40, "max": 40, "n": 1}, slime["hp_by_asc"]
@@ -1154,6 +1600,36 @@ def self_test():
     # A debuff that appears at -1 (lasts the fight) is the move's, at -1.
     shrink = db["monsters"]["SHRINKER"]["moves"]["SHRINK_MOVE"]
     assert shrink["player_powers_applied"] == {"SHRINK_POWER": {"-1": 1}}, shrink
+    # Observed mechanics: Flutter stripped twice (R10 T4, R11 T5), stunned both times; the T4 Nab cancelled, no HP lost.
+    flutter = db["observed"]["powers_stripped"]["FLUTTER_POWER"]
+    assert flutter["n"] == 2 and flutter["move_after"] == {"STUNNED": 2} and flutter["stunned_share"] == 1.0, flutter
+    assert flutter["alive_at_turn_end"] == 2 and flutter["stunned_at_turn_end"] == 2, flutter
+    assert flutter["attack_before"] == 1 and flutter["attack_cancelled"] == 1 and flutter["hp_check"] == {"n": 1, "landed": 0}, flutter
+    assert flutter["monsters"] == {"HOPPER": 2} and flutter["evidence"] == ["R10 F19 T4", "R11 F19 T5"], flutter
+    # The observed frame of the enemy turn (Flutter 3 again, our block 9) is no strip and no frame of ours.
+    assert "ESCAPE_ARTIST_POWER" not in db["observed"]["powers_stripped"], db["observed"]["powers_stripped"]
+    hopper = db["monsters"]["HOPPER"]["observed"]
+    escape = hopper["escape_moves"]["ESCAPE_MOVE"]
+    assert (escape["n"], escape["gone"], escape["stayed"], escape["stayed_stunned"], escape["killed_last_card"]) == (3, 1, 1, 1, 1), escape
+    assert escape["next_after_stay"] == {"ESCAPE_MOVE": 1} and escape["evidence_gone"] == ["R10 F19 T5"], escape
+    rewards = {r["reward"]: r for r in hopper["kill_rewards"]}
+    assert sorted(rewards) == ["Gold:N金币", "SpecialCard:取回你被偷走的牌。"], rewards
+    assert rewards["SpecialCard:取回你被偷走的牌。"]["killed"] == [1, 1] and rewards["SpecialCard:取回你被偷走的牌。"]["left"] == [0, 1], rewards
+    assert rewards["SpecialCard:取回你被偷走的牌。"]["only_when_killed"] is True, rewards
+    stuns = hopper["mid_turn_stuns"]
+    assert stuns["n"] == 2 and stuns["unexplained"] == 0 and stuns["triggers"]["power_removed:FLUTTER_POWER"] == 2, stuns
+    # A slime without anything notable has no `observed` entry.
+    assert "observed" not in slime, slime.get("observed")
+    # A failure in the mining drops every `observed` field and nothing else.
+    failing = Mechanics(quiet=True)
+    failing.fail(RuntimeError("test"))
+    global MECHANICS
+    saved = MECHANICS
+    MECHANICS = failing
+    try:
+        assert observed_output(["HOPPER"]) == ({}, None)
+    finally:
+        MECHANICS = saved
     print("self-test ok")
     return 0
 

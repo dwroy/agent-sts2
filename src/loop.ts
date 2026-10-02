@@ -643,6 +643,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       oneshot: config.buildOneshot,
       ...(slEnv ? { sl: slEnv } : {}),
       thiefFacts: config.thiefFacts,
+      mechRules: config.mechRules,
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
