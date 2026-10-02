@@ -1976,6 +1976,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
     ...(relicIds.includes("PAPER_PHROG") ? { vulnerableFactor: PAPER_PHROG_VULNERABLE } : {}),
     ...(relicIds.includes("LOST_WISP") ? { lostWisp: LOST_WISP_DAMAGE } : {}),
+    // Throwing Axe: the fight's first card is played twice (FSPKJAYY3ET6 F39 T1: Inflame, Strength +6 and Galvanic's 6
+    // twice). Known only on turn 1 with no card played yet: the relic shows no used state and the state has no count of
+    // the fight's plays (a fight whose turn 1 played nothing is left out).
+    ...(relicIds.includes("THROWING_AXE") && state.turn === 1 && num(player["cards_played_this_turn"]) === 0 ? { firstCardReplay: true } : {}),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue

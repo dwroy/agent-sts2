@@ -260,6 +260,12 @@ export interface PlayerSim {
    */
   strikeReplay?: number;
   /**
+   * Throwing Axe (「你在每场战斗中打出的第一张牌会多打出一次」) and no card played yet this fight: the first card this line
+   * plays is played once more, energy paid once, as a Replay (FSPKJAYY3ET6 F39 T1: Inflame under Galvanic, Strength 2 -> 8,
+   * HP 69 -> 57; the solver had it once).
+   */
+  firstCardReplay?: boolean;
+  /**
    * Buffer already up (BUFFER_POWER, from a Lucky Tonic drunk earlier): each stack prevents the next HP
    * loss, our own included (99X7 F9 T3: Breakthrough's 1 HP ate the Buffer drunk for the enemy turn, -17).
    */
@@ -843,6 +849,8 @@ interface Sim {
   regen: number;
   /** Soldier's Stew: extra plays of every Strike card from now on this turn. */
   strikeReplay: number;
+  /** Throwing Axe: the next card played is the fight's first, played once more (PlayerSim.firstCardReplay). */
+  axeReplay: boolean;
   /** Plating gained this turn (Stone Armor, a Plating potion: Heart of Iron). */
   plating: number;
   unknown: string[];
@@ -1308,8 +1316,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (twice) next.duplicate -= 1;
   const twiceAttack = card.type === "Attack" && next.duplicateAttacks > 0;
   if (twiceAttack) next.duplicateAttacks -= 1;
-  // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike), energy paid once.
-  const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0);
+  // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike, Throwing Axe on the fight's first card),
+  // energy paid once.
+  const axe = card.type !== "Potion" && next.axeReplay;
+  if (axe) next.axeReplay = false;
+  const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0) + (axe ? 1 : 0);
   // Every play of an Attack (a duplicate, a replay) is one for the attack-counting relics, each after its own play
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
@@ -2777,7 +2788,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}`;
 }
 
 export interface SolveResult {
@@ -2890,6 +2901,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     regen: input.player.regen ?? 0,
     plating: 0,
     strikeReplay: input.player.strikeReplay ?? 0,
+    axeReplay: input.player.firstCardReplay === true,
     unknown: [],
     feedKills: 0,
     dazedAdded: 0,

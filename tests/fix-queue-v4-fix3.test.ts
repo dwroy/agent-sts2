@@ -180,3 +180,37 @@ describe("3. Thorns through block; Rupture on every HP loss of our turn (proposa
     expect(solve({ block: 0, intangible: true }).hpLoss).toBe(1);
   });
 });
+
+describe("4. Throwing Axe: the fight's first card is played twice (proposal §4, Dai's question)", () => {
+  it("FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2)", () => {
+    const { input, result } = solvedBoard(fixture("fspk-f39-t1-galvanic-axe", "t1"));
+    expect(input.player.firstCardReplay).toBe(true);
+    // The line played: 12 on our turn, the Globe Head's 14 after (69 -> 43 logged).
+    expect(line(result, "INFLAME,BASH>0").outcome).toMatchObject({ hpLoss: 26, incomingAfterBlock: 14, strengthGained: 6 });
+    // Only the first card: Bash first is played twice (12, then 18 into its own Vulnerable), Inflame after it once.
+    expect(line(result, "BASH>0").outcome.damageDealt).toBe(30);
+    expect(line(result, "BASH>0,INFLAME").outcome).toMatchObject({ hpLoss: 20, strengthGained: 3, damageDealt: 30 });
+  });
+
+  it("not after a card was played this turn, nor on a later turn, nor without the relic", () => {
+    const played = fixture("fspk-f39-t1-galvanic-axe", "t1");
+    ((played["combat"] as Raw)["player"] as Raw)["cards_played_this_turn"] = 1;
+    expect(solvedBoard(played).input.player.firstCardReplay).toBeUndefined();
+    const later = fixture("fspk-f39-t1-galvanic-axe", "t1");
+    later["turn"] = 2;
+    expect(solvedBoard(later).input.player.firstCardReplay).toBeUndefined();
+    const none = fixture("fspk-f39-t1-galvanic-axe", "t1");
+    const run = none["run"] as Raw;
+    run["relics"] = (run["relics"] as Raw[]).filter((relic) => relic["relic_id"] !== "THROWING_AXE");
+    expect(solvedBoard(none).input.player.firstCardReplay).toBeUndefined();
+  });
+
+  it("in the solver: a potion first does not take it, the first card does, energy paid once", () => {
+    const inflame = handCard(fixture("fspk-f39-t1-galvanic-axe", "t1"), "INFLAME");
+    const potion: CardModel = { ...inflame, index: 900, key: "p0", cardId: "POTION:BLOCK_POTION:0", name: "Block Potion", type: "Potion", cost: 0, target: "self", block: 12, strength: 0, selfDamage: 0, flatValue: 0 };
+    const solved = solveTurn({ hand: [inflame, potion], enemies: [dummy()], fightKind: "monster", player: player({ energy: 1, firstCardReplay: true }) });
+    expect(line(solved, "INFLAME").outcome).toMatchObject({ hpLoss: 12, strengthGained: 6, energyLeft: 0 });
+    // The potion's 12 block takes both 6s; Inflame after it is still the first card.
+    expect(line(solved, "POTION:BLOCK_POTION:0,INFLAME").outcome).toMatchObject({ hpLoss: 0, strengthGained: 6 });
+  });
+});

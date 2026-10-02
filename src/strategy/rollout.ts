@@ -2501,6 +2501,8 @@ function simulate(
       ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
       // Music Box: a new turn, its first Attack card makes a copy again.
       ...(base.musicBox ? { musicBox: { count: 0 } } : {}),
+      // Throwing Axe: the fight's first card was the decision turn's.
+      firstCardReplay: false,
     };
     // Radiance: this turn's extra energy is in pSim; one turn of it used. Ringing and Tangled were this turn's.
     player.radiance = Math.max(0, player.radiance - 1);
