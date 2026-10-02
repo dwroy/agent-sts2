@@ -105,6 +105,29 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
     expect(judge(deathBlow).certain).toBe(false);
   });
 
+  it("our own HP loss at the next turn's start (Inferno) makes it certain when the enemy turn leaves us at it (610BBERH4SPP F33 T3)", () => {
+    // 1 HP + 12 block against 10: the enemy turn takes nothing, Inferno's 1 at T4's start kills; the mod does not flag it.
+    const inferno = (extra: Partial<Parameters<typeof bossBoard>[0]> = {}) =>
+      bossBoard({ hp: 1, block: 12, damage: 10, lethal: false, playerPowers: [{ power_id: "INFERNO_POWER", amount: 9 }], ...extra });
+    const v = judge(inferno());
+    expect(v).toMatchObject({ certain: true, tier: "rules", startLoss: 1, ownCountDies: true });
+    expect(v.reason).toMatch(/next turn's start \(Inferno\)/);
+    // 2 HP: the start's 1 leaves 1.
+    expect(judge(inferno({ hp: 2 })).certain).toBe(false);
+    // Tungsten Rod would take the 1 to 0.
+    expect(judge(inferno({ relics: ["TUNGSTEN_ROD"] })).certain).toBe(false);
+    // Inferno's own sweep at that loss could kill every enemy: not certain.
+    const weak = inferno();
+    ((weak["combat"] as Raw)["enemies"] as Raw[])[0]!["current_hp"] = 9;
+    expect(judge(weak).reason).toMatch(/may kill every enemy/);
+    // A relic healing at the turn's start acts first: not certain.
+    const healed = inferno({ relics: ["SOME_RELIC"] });
+    ((healed["run"] as Raw)["relics"] as Raw[])[0]!["description"] = "在你的回合开始时，回复2点生命。";
+    expect(judge(healed).reason).toMatch(/acts at the turn's start/);
+    // Without Inferno the same board is not lethal at all.
+    expect(judge(bossBoard({ hp: 1, block: 12, damage: 10, lethal: false })).certain).toBe(false);
+  });
+
   it("our own count includes the block that comes at the end of the turn and Regen", () => {
     // 30 incoming vs 10 HP: certain; with 21 Plating, or 20 block + Cloak Clasp's 1 for the card held, not.
     expect(judge(bossBoard({ playerPowers: [{ power_id: "PLATING_POWER", amount: 21 }] })).certain).toBe(false);

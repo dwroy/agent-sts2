@@ -15,6 +15,10 @@
  *   TMNFVW6DRQ20 F48 T8). When only they make the turn lethal, the death rests on them: certain even without the mod's
  *   flag (it does not count them), but only with every amount given and nothing that could cut the loss or kill an
  *   attacker first (heldGuard).
+ * - So does our own HP loss at the next turn's start (Inferno's 1, Crimson Mantle's cost; 2026-10-02, 610BBERH4SPP F33
+ *   T3): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain without the mod's
+ *   flag too, but not with Tungsten Rod or Beating Remnant, a relic or power acting at the turn's start that may heal or
+ *   shield us, or Inferno's sweep at that loss able to kill every enemy (startGuard).
  * Then one of two tiers:
  * - "rules": no playable card in hand and no potion that can be drunk;
  * - "least-loss": the turn planner's own verdict on this board, combat/least-loss ending the turn: every simulated
@@ -40,6 +44,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { BEATING_REMNANT_CAP, distinctNames } from "../screens/combat-plan.js";
 import { heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
+import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
 import { randomTargetOnly, randomTargets } from "./random-target.js";
 
@@ -63,6 +68,8 @@ export interface DeathVerdict {
    * whether our own count with them says the turn kills us (`ownCountDies`; the controller says so when the mod does not).
    */
   held?: { damage: number; loss: number; from: string[] };
+  /** Our own HP loss at the next turn's start (Inferno, Crimson Mantle) when the death rests on it. */
+  startLoss?: number;
   ownCountDies?: true;
   /** "name (intent)" for each living enemy that attacks. */
   killers: string[];
@@ -300,6 +307,33 @@ function powerAmount(entity: Record<string, unknown>, id: string): number {
     .reduce((sum, power) => sum + num(power["amount"]), 0);
 }
 
+/** A start-of-turn clause that heals us or adds block-free HP, or that we cannot read (the next turn's opening). */
+const START_OF_TURN = /回合开始时|at the start of (your|each) turn/i;
+const START_SAVES = /回复|恢复|治疗|heal|缓冲|buffer|无实体|intangible|最大生命/i;
+
+/**
+ * Why our own HP loss at the next turn's start cannot make the death certain on this board (null: it can): anything of
+ * ours that acts at the turn's start and heals or shields us first (a relic's or power's text), and Inferno's own sweep
+ * at that loss killing every enemy (the fight could end with it).
+ */
+function startGuard(state: GameState, living: Record<string, unknown>[], inferno: number, knowledge?: Pick<Knowledge, "power" | "relic">): string | null {
+  const run = asRecord(state.raw["run"]);
+  for (const relic of asArray(run["relics"]).map(asRecord)) {
+    const id = str(relic["relic_id"]);
+    const text = str(relic["description"]) || (knowledge?.relic(id)?.description ?? "");
+    if (START_OF_TURN.test(text) && START_SAVES.test(text)) return `${str(relic["name"], id)} (relic) acts at the turn's start`;
+  }
+  for (const power of asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).map(asRecord)) {
+    const id = str(power["power_id"]);
+    if (id === "INFERNO_POWER" || id === "CRIMSON_MANTLE_POWER") continue;
+    const text = knowledge?.power(id)?.description ?? "";
+    if (!text) return `${str(power["name"], id)} (power): its text unknown`;
+    if (START_OF_TURN.test(text) && START_SAVES.test(text)) return `${str(power["name"], id)} (power) acts at the turn's start`;
+  }
+  if (inferno > 0 && living.every((enemy) => num(enemy["current_hp"]) + num(enemy["block"]) <= inferno)) return `Inferno's ${inferno} at that loss may kill every enemy`;
+  return null;
+}
+
 export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerdict {
   const combat = asRecord(state.raw["combat"]);
   const player = asRecord(combat["player"]);
@@ -354,13 +388,20 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const heldDies = heldOwn ? !heldOwn.unknown && heldOwn.loss - regen >= hp : Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen >= hp;
   // The held cards make the difference: the death rests on them (and on heldGuard).
   const byHeld = !plainDies && heldDies && held.damage + held.loss > 0;
+  // Our own HP loss at the start of the next turn (Inferno's 1, Crimson Mantle's cost: the planner's startTurnHpLoss): the
+  // enemy turn leaves us at it or under, and the next turn opens with our death (610BBERH4SPP F33 T3: 1 HP + 12 block
+  // against the Crusher's 5x2, Inferno up; the planner saw every line die, the mod's flag and our count did not, and the
+  // run ended at T4's start with 6 attempts unused). Not counted with Tungsten Rod or Beating Remnant (each changes it).
+  const startLoss = (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0) + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"));
+  const lossAfterHeld = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
+  const byStart = !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
   const heldNote = held.damage + held.loss > 0 ? { held: { damage: held.damage, loss: held.loss, from: held.from } } : {};
   const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({
-    certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(plainDies || heldDies ? { ownCountDies: true as const } : {}),
+    certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(byStart ? { startLoss } : {}), ...(plainDies || heldDies || byStart ? { ownCountDies: true as const } : {}),
   });
 
   if (state.screen !== "COMBAT" || !state.in_combat) return verdict(false, null, "not in combat");
-  if (combat["end_turn_will_kill_player"] !== true && !byHeld) return verdict(false, null, "the mod does not flag ending the turn as lethal");
+  if (combat["end_turn_will_kill_player"] !== true && !byHeld && !byStart) return verdict(false, null, "the mod does not flag ending the turn as lethal");
   if (context.revives.length > 0) return verdict(false, null, `a revive is left (${context.revives.join(", ")})`);
   const saving = SAVING_POWERS.filter((id) => powerAmount(player, id) > 0);
   if (saving.length > 0) return verdict(false, null, `${saving.join(", ")} up`);
@@ -372,13 +413,18 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const heldText = `held ${held.from.join(", ")}: ${held.damage} damage${held.loss > 0 ? ` + ${held.loss} HP loss` : ""}`;
   const relicText = [rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${context.lostSoFar !== undefined ? `, ${context.lostSoFar} lost so far` : ""}` : ""].filter(Boolean).join("; ");
   if (countUnknown) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
-  if (!plainDies && !byHeld) {
+  if (!plainDies && !byHeld && !byStart) {
     if (exactly) return verdict(false, null, `own count survives: ${heldOwn!.loss} HP lost (${relicText}) - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
     return verdict(false, null, `own count survives: ${incoming} incoming - ${block} block - ${endBlock} end-of-turn block - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
   }
   if (byHeld) {
     const guard = heldGuard(state, held, block, endBlock, context.knowledge);
     if (guard) return verdict(false, null, `only the held cards make it lethal (${heldText}), and ${guard}`);
+  }
+  const startText = `then ${startLoss} HP lost at the next turn's start (${[powerAmount(player, "INFERNO_POWER") > 0 ? "Inferno" : "", powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? "Crimson Mantle" : ""].filter(Boolean).join(" + ")})`;
+  if (byStart) {
+    const guard = startGuard(state, living, powerAmount(player, "INFERNO_POWER"), context.knowledge);
+    if (guard) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), and ${guard}`);
   }
   // What hits the enemies after we end the turn and before they act (Stone Calendar, The Bomb, Parrying Shield, poison):
   // an attacker it may kill does not attack. Certain only if we die even without every enemy it may kill (and, when one
@@ -423,7 +469,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const keptHits = living.map((_, i) => i).filter((i) => !gone.has(i)).flatMap((i) => landing(i));
     const kept = keptHits.reduce((sum, hit) => sum + hit, 0);
     const keptOwn = exactly ? lossWith(keptHits, true) : null;
-    const stillDies = keptOwn ? !keptOwn.unknown && keptOwn.loss - regen >= hp : Math.max(0, kept + held.damage - block - endBlock) + held.loss - regen >= hp;
+    const keptLoss = Math.max(0, kept + held.damage - block - endBlock) + held.loss - regen;
+    const stillDies = keptOwn ? !keptOwn.unknown && keptOwn.loss - regen >= hp : keptLoss >= hp || (byStart && hp - keptLoss <= startLoss);
     const who = [
       ...mayDie.map((entry) => `${names[entry.i]} (${entry.why}) may die first`),
       ...cut.filter((i) => !gone.has(i)).map((i) => `${names[i]} may die to our retaliation (${retaliation} a hit) after ${landing(i).length} of its ${hitsOf[i]!.length} hits`),
@@ -433,7 +480,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   }
   const playable = hand.filter((card) => card["playable"] === true);
   const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
-  const lethal = `${incoming} incoming${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${endNote}`;
+  const lethal = `${incoming} incoming${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${endNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
     const drawing = playable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
