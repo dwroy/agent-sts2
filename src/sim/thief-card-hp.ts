@@ -6,6 +6,12 @@
 
 /** Samples per deck (B3's count: a paired standard error of about 1-1.5 points on a win rate difference). */
 export const THIEF_CARD_SAMPLES = 1000;
+/**
+ * Fewer samples for a boss whose fights run long in the simulator, so the three decks finish inside the time budget
+ * rather than being cut at whatever count the clock allows (offline, 12 of the 14 card values cut by the 15 s budget
+ * were the Kaiser Crab's, some at 144 samples: notes/thief-cost-report.md; Dai 2026-10-02: 500).
+ */
+export const THIEF_CARD_SAMPLES_BY_BOSS: Record<string, number> = { KAISER_CRAB: 500 };
 /** Seed of the samples (the same for the three decks: common random numbers). */
 export const THIEF_CARD_SEED = 11;
 /** The entry HP taken off for the win rate an HP buys (Dai: "entry HP vs entry HP − 10"). */

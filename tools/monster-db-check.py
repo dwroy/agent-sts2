@@ -250,10 +250,34 @@ def main():
     w(f"\nSuccessors in move-model never seen per fight in the DB ({len(next_rows)}; mostly index-shift or cross-fight artefacts):\n")
     out.extend(next_rows)
     w("")
+    observed_section(db, w)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf8") as handle:
         handle.write("\n".join(out) + "\n")
     print(f"-> {args.out}")
+
+
+def observed_section(db, w):
+    """(d) The observed mechanics (build-monster-db.py `observed`; docs/mechanics-learning.md): each stripped power pooled,
+    with the stun-rule thresholds of src/knowledge/mechanics.ts (n >= 5, >= 80% stunned, attacks cancelled and not landing)."""
+    pooled = (db.get("observed") or {}).get("powers_stripped")
+    w("## (d) observed mechanics (`observed`)\n")
+    if pooled is None:
+        w("No `observed` block (a DB built before the mining, or the mining failed: see the build's stderr).\n")
+        return
+    w("| power | strips (fights) | move after | stunned | attack cancelled | attack landed | co-removed | stun rule | monsters |")
+    w("|---|---|---|---|---|---|---|---|---|")
+    for pid, t in sorted(pooled.items(), key=lambda kv: -kv[1].get("n", 0)):
+        n = t.get("n", 0)
+        stunned = (t.get("move_after") or {}).get("STUNNED", 0)
+        before, cancelled = t.get("attack_before", 0), t.get("attack_cancelled", 0)
+        check = t.get("hp_check") or {}
+        rule = n >= 5 and stunned >= 0.8 * n and (before < 3 or cancelled >= 0.8 * before) and (check.get("n", 0) < 3 or check.get("landed", 0) <= 0.2 * check.get("n", 0))
+        moves = ", ".join(f"{m} {k}" for m, k in list((t.get("move_after") or {}).items())[:3])
+        co = ", ".join(f"{p} {k}" for p, k in (t.get("co_removed") or {}).items())
+        mons = ", ".join(f"{m} {k}" for m, k in list((t.get("monsters") or {}).items())[:3])
+        w(f"| {pid} | {n} ({t.get('fights', 0)}) | {moves} | {stunned} | {cancelled}/{before} | {check.get('landed', 0)}/{check.get('n', 0)} | {co or '-'} | {'**yes**' if rule else 'no'} | {mons} |")
+    w("")
 
 
 if __name__ == "__main__":

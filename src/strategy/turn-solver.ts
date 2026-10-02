@@ -14,6 +14,25 @@ import { applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, thisTurnScore,
 /** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
 export const SHRINK_DAMAGE_FACTOR = 0.7;
 
+/**
+ * The enemy powers the solver counts down during our turn, and the EnemySim field each lives in: the ones a learned
+ * "stunned when stripped to 0" rule (EnemySim.stunOnStrip) can see stripped. A power the logs show stunning on its strip
+ * but without a counter here needs code first (the learner's mechanics audit says so); Shriek, Plow, Burrowed, Asleep and
+ * Slumber are stuns the solver already models by hand (shriek, burrowed, asleep / slumber).
+ */
+export const STRIP_COUNTERS = { FLUTTER_POWER: "flutter", SLIPPERY_POWER: "slippery", CURL_UP_POWER: "curlUp", ARTIFACT_POWER: "artifact" } as const satisfies Record<string, keyof EnemySim>;
+
+/** The learned strip-stun of an enemy this line set off: the first power of its rules that was up and is at 0 now. */
+export function strippedStun(enemy: EnemySim, start: EnemySim | undefined): { power: string; name: string } | null {
+  if (!enemy.stunOnStrip || !start) return null;
+  for (const rule of enemy.stunOnStrip) {
+    const field = STRIP_COUNTERS[rule.power as keyof typeof STRIP_COUNTERS];
+    if (field === undefined) continue;
+    if (((start[field] as number | undefined) ?? 0) > 0 && ((enemy[field] as number | undefined) ?? 0) <= 0) return rule;
+  }
+  return null;
+}
+
 export interface EnemySim {
   index: number;
   name: string;
@@ -146,6 +165,13 @@ export interface EnemySim {
    * Fat and a Sneaky Gremlin), as shown to Jev: killing it is a kill, not the fight won.
    */
   spawnsOnDeath?: string;
+  /**
+   * MECH_RULES (knowledge/mechanics.ts, docs/mechanics-learning.md): its powers whose strip to 0 on our turn stuns it and
+   * cancels this turn's move, learned from the logs, not hand-coded per enemy (the Thieving Hopper's Flutter: 41 of 41
+   * logged strips stunned it; MCK9SMSK40ZY F19 T4, Nab 14 dealt nothing). Only powers with a counter the solver tracks
+   * (STRIP_COUNTERS); `name` is the game's, for the option's fact. Absent: no such rule (MECH_RULES off, no data).
+   */
+  stunOnStrip?: { power: string; name: string }[];
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -554,8 +580,13 @@ export interface Outcome {
     shrink?: number;
     /** Demise on it (Powdered Demise's 9): HP it loses at the end of each of its turns until it dies. */
     demise?: number;
-    /** Stunned by the line (Ravenous eating a corpse): its move this enemy turn is lost. */
+    /** Stunned by the line (Ravenous eating a corpse, a learned strip-stun): its move this enemy turn is lost. */
     stunned?: boolean;
+    /**
+     * MECH_RULES: the learned strip-stun this line set off (EnemySim.stunOnStrip): the power stripped (id and game name)
+     * and the attack this turn it cancels (the shown intents' total; 0 for a move without one, an Escape).
+     */
+    strippedStun?: { power: string; name: string; attack: number };
     /** A Waterfall Giant husk (999,999,999 max HP): its HP is not there to take off, it explodes. */
     husk?: boolean;
   }[];
@@ -1760,6 +1791,16 @@ export function backAttack(shown: number, enemyIndex: number, facingBefore: numb
   return shown;
 }
 
+/** A living enemy's learned strip-stun for the outcome (stunned, with what it cancels), or nothing. */
+function stripStunOf(enemy: Sim["enemies"][number], input: SolverInput): { stunned?: true; strippedStun?: { power: string; name: string; attack: number } } {
+  if (!enemy.alive) return {};
+  const start = input.enemies.find((entry) => entry.index === enemy.index);
+  const stun = strippedStun(enemy, start);
+  if (!stun) return {};
+  const attack = (start?.attacks ?? []).reduce((sum, hit) => sum + hit.damage * hit.hits, 0);
+  return { stunned: true, strippedStun: { power: stun.power, name: stun.name, attack } };
+}
+
 interface IncomingHit {
   enemy: number;
   amount: number;
@@ -1781,6 +1822,8 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     if (enemy.burrowed && (start?.block ?? 0) > 0 && enemy.block <= 0) continue;
     // Ravenous: stunned by eating a corpse this turn, its move is lost.
     if (enemy.ravenousStunned) continue;
+    // MECH_RULES: a learned strip-stun (its last Flutter stripped this turn): stunned, its move is lost.
+    if (strippedStun(enemy, start)) continue;
     // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
     // already halved, except for enemies that only became Vulnerable this turn.
     const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);
@@ -2480,6 +2523,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           shrink: enemy.shrink ?? 0,
           ...((enemy.demise ?? 0) > 0 ? { demise: enemy.demise } : {}),
           ...(enemy.ravenousStunned ? { stunned: true } : {}),
+          ...stripStunOf(enemy, input),
           ...(enemy.maxHp >= 1_000_000 ? { husk: true } : {}),
         })),
       incomingAfterBlock,

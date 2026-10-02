@@ -4,7 +4,7 @@ Dai 2026-10-01/02 定：目标改为让模型快速学习、看能摸到多高�
 boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.json，不限精英），在「这回合一结束就必死」时不结束回合，回主菜单再「继续」，
 游戏从进房间时的存档把这场战斗从第 1 回合重新开始，换打法再打；赢了接着往下打。不做构筑分叉、不做 boss 实验室，
 **不读、不写、不复制任何存档文件**（Dai 10-02），不改随机种子。架构不变：Jev 出牌，DeepSeek 做构筑、路线和战斗计划。
-`SL_ENABLED` 默认关；关的时候对局循环、题面和日志与没有 SL 时逐字节相同（tests/sl-loop.test.ts、boss-lines-planner 的 golden）。
+`SL_ENABLED` 默认开（Dai 2026-10-02：SL 做成开关、默认开；原先默认关）；关的时候对局循环、题面和日志与没有 SL 时逐字节相同（tests/sl-loop.test.ts、boss-lines-planner 的 golden）。
 
 ## 1. 机制：确认了什么、推测了什么
 
@@ -114,7 +114,7 @@ boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.j
 
 | 变量 | 默认 | 含义 |
 |---|---|---|
-| `SL_ENABLED` | off | 总开关 |
+| `SL_ENABLED` | on（2026-10-02 起） | 总开关 |
 | `SL_BOSS_RETRIES` | 5 | boss 战最多 1 + 5 次（Dai 2026-10-02） |
 | `SL_ELITE_RETRIES` | 3 | 名单里的难打战斗最多 1 + 3 次（Dai 2026-10-02） |
 | `SL_RETRY_SHOW_SIM` | on | 重打时低可信 boss 也给整场模拟（标低可信） |

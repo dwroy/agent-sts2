@@ -20,9 +20,11 @@ import type { FactFiller } from "./facts.js";
 
 /**
  * What a renderer reads from the context. `facts`: how the hand-written texts' data placeholders are filled (fresh
- * when absent; the brain's KNOWLEDGE_PREFIX=full prompt freezes them for the day, render/facts.ts).
+ * when absent; the brain's KNOWLEDGE_PREFIX=full prompt freezes them for the day, render/facts.ts). `mechanics`: whether
+ * the monster blocks carry the observed mechanics (monster-db.json `observed`; MECH_RULES, docs/mechanics-learning.md);
+ * absent means yes, false renders the blocks exactly as before them.
  */
-export type RenderContext = Pick<ToolContext, "ascension" | "knowledgeDir"> & Partial<Pick<ToolContext, "act" | "logsDir">> & { facts?: FactFiller };
+export type RenderContext = Pick<ToolContext, "ascension" | "knowledgeDir"> & Partial<Pick<ToolContext, "act" | "logsDir">> & { facts?: FactFiller; mechanics?: boolean };
 
 export class KnowledgeLoadError extends Error {
   constructor(message: string) {

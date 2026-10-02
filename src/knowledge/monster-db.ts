@@ -11,6 +11,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import type { ObservedDb, ObservedMonster } from "./mechanics.js";
+
 export interface Stat {
   median?: number;
   p75?: number;
@@ -75,6 +77,8 @@ export interface MonsterEntry {
   hp_by_asc?: Record<string, Range>;
   /** asc -> {"phase1 > phase2 > ...": fights}: max HP of each phase of a multi-phase enemy. */
   phases_by_asc?: Record<string, Record<string, number>>;
+  /** Mechanics mined from the logs that the game's text does not state (knowledge/mechanics.ts). */
+  observed?: ObservedMonster;
 }
 
 export interface Threat {
@@ -103,6 +107,8 @@ export interface MonsterDb {
   bosses: Record<string, Record<string, Threat>>;
   encounters: Record<string, EncounterEntry>;
   monsters: Record<string, MonsterEntry>;
+  /** The observed mechanics pooled per power (knowledge/mechanics.ts); absent in a DB built before them. */
+  observed?: ObservedDb;
 }
 
 let cached: MonsterDb | null = null;
@@ -112,7 +118,7 @@ function load(): MonsterDb {
   try {
     const path = join(dirname(fileURLToPath(import.meta.url)), "monster-db.json");
     const parsed = JSON.parse(readFileSync(path, "utf8")) as Partial<MonsterDb>;
-    cached = { bosses: parsed.bosses ?? {}, encounters: parsed.encounters ?? {}, monsters: parsed.monsters ?? {} };
+    cached = { bosses: parsed.bosses ?? {}, encounters: parsed.encounters ?? {}, monsters: parsed.monsters ?? {}, ...(parsed.observed ? { observed: parsed.observed } : {}) };
   } catch {
     cached = { bosses: {}, encounters: {}, monsters: {} };
   }
@@ -122,6 +128,11 @@ function load(): MonsterDb {
 /** The monsters part of the loaded DB (moves by id), for moveDamageAt and the like. */
 export function monsterMoves(): Record<string, MonsterEntry> {
   return load().monsters;
+}
+
+/** The loaded DB's top-level `observed` block (undefined in a DB built before it, or when the file did not load). */
+export function observedMechanics(): ObservedDb | undefined {
+  return load().observed;
 }
 
 /** For tests: use this DB instead of the file (null reloads the file). */

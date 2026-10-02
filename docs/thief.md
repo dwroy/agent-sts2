@@ -4,7 +4,7 @@ Dai 2026-10-02 定：**第一步——事实 + 选项覆盖，排序不加代价
 全部改动在一个开关 `THIEF_FACTS` 后面（src/config.ts，默认开，.env.example 有说明）；关掉时战斗题面、选项、每个答案的处理和
 接入前逐字节相同（tests/thief.test.ts 的 golden，和 420 个日志回合的离线对比，§5）。奖励屏的修复（§4）不在开关后面，是 bug 修复。
 
-**第二步（§7，同日 Dai 定）：被偷的牌和金币折成血，像药水代价一样进排序**，开关 `THIEF_COST`（默认关，Dai 看了数再开）；
+**第二步（§7，同日 Dai 定）：被偷的牌和金币折成血，像药水代价一样进排序**，开关 `THIEF_COST`（Dai 看了数后同日定：默认开；帝王蟹那幕模拟降到 500 样本）；
 关掉时和只开 THIEF_FACTS 时逐字节相同（tests/thief-cost.test.ts）。离线的数在 notes/thief-cost-report.md。
 
 代码：src/strategy/thief.ts（谁带着什么、还剩几回合、事实文字、末回合击杀线），src/strategy/rollout-live.ts（推演里每条线
@@ -94,10 +94,10 @@ tools/thief-facts-replay.ts：98 场草蜢 + 46 场佣兵里，每个有小偷�
    出牌，所以没放进这次的开关。
 3. 逃跑模型对推演排序几乎没有影响（§5）；要不要在第二步之前就让它影响 rollout_best，还是先只用于事实？现在是一起开。
 
-## 7. 第二步：赃物折血进排序（THIEF_COST，默认关）
+## 7. 第二步：赃物折血进排序（THIEF_COST，默认开）
 
 Dai 2026-10-02 定：被偷的牌、被带走的金币折成血，像药水代价一样进推演排序（死亡数永远第一）。开关 `THIEF_COST`（src/config.ts、
-.env.example、run-config 记录；要 THIEF_FACTS 开着才起作用），**默认关**：Dai 看了 notes/thief-cost-report.md 的数再开。
+.env.example、run-config 记录；要 THIEF_FACTS 开着才起作用），**默认开**：Dai 看了 notes/thief-cost-report.md 的数后于 2026-10-02 打开（上限 30 血、2 倍标准误不变、佣兵以后的偷钱不计、帝王蟹 500 样本：THIEF_CARD_SAMPLES_BY_BOSS）。
 关掉时题面、选项、每个答案的处理和只开 THIEF_FACTS 时（ffed0d4）逐字节相同：tests/thief-cost.test.ts 钉住 9 个日志局面 ×
 JEV_CONTEXT off/v1 = 18 个摘要（在 ffed0d4 上算的），离线 420 个日志回合同样对过（报告 §1）。
 

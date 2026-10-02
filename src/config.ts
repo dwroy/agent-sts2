@@ -38,7 +38,7 @@ export interface EnricherConfig {
 
 /** SL (docs/sl.md, src/sl/controller.ts). */
 export interface SlConfig {
-  /** SL_ENABLED (default off). */
+  /** SL_ENABLED (default on: Dai 2026-10-02, "SL is a switch, on by default"; off: no SL at all). */
   enabled: boolean;
   /** SL_BOSS_RETRIES (default 5, Dai 2026-10-02): a boss fight gets at most 1 + this many attempts. */
   bossRetries: number;
@@ -123,13 +123,22 @@ export interface AppConfig {
    */
   thiefFacts: boolean;
   /**
-   * THIEF_COST (default off; Dai 2026-10-02, docs/thief.md §7): with THIEF_FACTS on, the loot a thief may take away is
-   * HP in the rollout's ranking, like a potion's cost: the Hopper's stolen card at its act-boss simulated worth
-   * (src/sim/thief-card-value.ts, once per fight), the Merc's / Fat Gremlin's gold at the potion table's gold rate
-   * (potion-equivalents.json meta.gold_hp). off: questions, options and choices exactly as with THIEF_FACTS alone.
+   * THIEF_COST (default on: Dai 2026-10-02, after the offline numbers; docs/thief.md §7): with THIEF_FACTS on, the loot
+   * a thief may take away is HP in the rollout's ranking, like a potion's cost: the Hopper's stolen card at its act-boss
+   * simulated worth (src/sim/thief-card-value.ts, once per fight), the Merc's / Fat Gremlin's gold at the potion table's
+   * gold rate (potion-equivalents.json meta.gold_hp). off: questions, options and choices exactly as with THIEF_FACTS alone.
    */
   thiefCost: boolean;
-  /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; off by default). */
+  /**
+   * MECH_RULES (default on; docs/mechanics-learning.md, src/knowledge/mechanics.ts): the mechanics learned from the logs
+   * (monster-db.json `observed`, refreshed with the DB) in use. A line stripping an enemy power whose strip to 0 stunned
+   * that enemy in the logs (the Thieving Hopper's Flutter) cancels its move this turn in the turn solver and the rollout,
+   * and the option says so; the combat question's enemy powers carry the observation; the knowledge prefix renders the
+   * notable observations. off: the combat question and the knowledge prefix exactly as before. Without the data (a DB
+   * built before it), as off.
+   */
+  mechRules: boolean;
+  /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
   brain: BrainConfig;
@@ -644,14 +653,19 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const thiefFactsProblems: ConfigProblem[] = [];
   const thiefFacts = parseOnOff(readEnv(env, "THIEF_FACTS"), "THIEF_FACTS", thiefFactsProblems) ?? true;
   for (const problem of thiefFactsProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
-  // THIEF_COST likewise: an unreadable value warns and stays off (the default: Dai turns it on after the numbers).
+  // THIEF_COST likewise: an unreadable value warns and the default applies (on: Dai 2026-10-02, after the offline numbers in
+  // notes/thief-cost-report.md).
   const thiefCostProblems: ConfigProblem[] = [];
-  const thiefCost = parseOnOff(readEnv(env, "THIEF_COST"), "THIEF_COST", thiefCostProblems) ?? false;
-  for (const problem of thiefCostProblems) warnings.push(`${problem.field}: ${problem.message}; using off`);
+  const thiefCost = parseOnOff(readEnv(env, "THIEF_COST"), "THIEF_COST", thiefCostProblems) ?? true;
+  for (const problem of thiefCostProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // An unreadable MECH_RULES is a warning too: the default (on) applies.
+  const mechRulesProblems: ConfigProblem[] = [];
+  const mechRules = parseOnOff(readEnv(env, "MECH_RULES"), "MECH_RULES", mechRulesProblems) ?? true;
+  for (const problem of mechRulesProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
-    enabled: parseOnOff(readEnv(env, "SL_ENABLED"), "SL_ENABLED", problems) ?? false,
+    enabled: parseOnOff(readEnv(env, "SL_ENABLED"), "SL_ENABLED", problems) ?? true,
     bossRetries: parseInteger(readEnv(env, "SL_BOSS_RETRIES") ?? "5", "SL_BOSS_RETRIES", problems, { min: 0, max: 20 }),
     eliteRetries: parseInteger(readEnv(env, "SL_ELITE_RETRIES") ?? "3", "SL_ELITE_RETRIES", problems, { min: 0, max: 20 }),
     retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
@@ -744,6 +758,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     combatDeepseek,
     thiefFacts,
     thiefCost,
+    mechRules,
     sl,
     brain,
     deepseek,
