@@ -25,15 +25,15 @@ import type { ActionExpect } from "../act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
-import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
+import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -531,6 +531,31 @@ export function guardKeepsPick(pick: Plan, plan: Plan, enemies: EnemySim[], deat
   const mine = deathsOf(pick);
   const theirs = deathsOf(plan);
   return mine === null || theirs === null || theirs <= mine;
+}
+
+/**
+ * The HP guard's setup exception (planTurn guardKeepsSetup, besides the boss race): the pick is kept when it plays more
+ * setup cards than the replacement and its HP after the enemy turn clears the next hit with room: boss fights max(20%
+ * max HP, next hit + 5) (5BXM F33 T4/T6: Demon Form+ swapped twice at 22-33 HP before a no-attack curse turn, never
+ * played; boss left at 152), other fights max(35% max HP, next hit) (JF99 F33 T4/T7: Crimson Mantle traded twice for 6
+ * HP and never played).
+ * A big-hit turn (this turn's attack through the block up at least max(12, 25% HP)) is the turn to block when that hit
+ * is what kills (0YG4 F43 T4: Dark Embrace + Blood Wall at -26 kept over a 29-block line at -13 into the Heavy Cleave):
+ * there the setup line is kept only when the rollout, where it covers both, sees it die no more often than the
+ * replacement. The big hit cancelled the exception outright before (f8b1f2f), setup lines that live included:
+ * GTU27C946ERT F33 T1, 21 incoming against a bar of 20 at 80/80, Demon Form+ (-17, 63 after; the rollout at 1 sample
+ * had every line tied) swapped for an attack line at -13; the whole-fight sim ranked Demon Form+ first (44.9% against
+ * 5.3%) and it was not drawn again that fight.
+ */
+export function setupKept(
+  picked: { setups: number; hpAfter: number; deaths: number | null },
+  replacement: { setups: number; deaths: number | null },
+  ctx: { kind: SolverInput["fightKind"]; maxHp: number; nextIncoming: number; bigHit: boolean },
+): boolean {
+  if (picked.setups <= replacement.setups) return false;
+  const room = ctx.kind === "boss" ? Math.max(ctx.maxHp * 0.2, ctx.nextIncoming + 5) : Math.max(ctx.maxHp * 0.35, ctx.nextIncoming);
+  if (picked.hpAfter < room) return false;
+  return !ctx.bigHit || picked.deaths === null || replacement.deaths === null || picked.deaths <= replacement.deaths;
 }
 
 /**
@@ -1144,6 +1169,32 @@ export function facingFightOf(state: GameState): string {
   return `${str(state.raw["run_id"])}:${fightKey(state)}`;
 }
 
+/** The longest a new turn waits for Rolling Boulder's +5 (logged ~1 s after the turn's first ready frame). */
+export const BOULDER_SETTLE_MS = 2500;
+
+/**
+ * Whether to wait for the turn start to settle: Rolling Boulder's turn-start hook deals its damage, then grows by 5
+ * about a second later, after the mod already reads the turn as settled (actions_settled, snapshot_stable): 46 of 53
+ * logged turn starts holding it showed the last turn's amount first, the +5 a frame later (Plating's -1, whose hook
+ * runs after it, with it). Planned on that frame, the board changed under the question: JJ75S331VUKX asked Jev 8 times
+ * on it, the pre-dispatch re-read saw 5 -> 10 (F25 T2: 01:39:17.8 -> 18.9) and asked again (fix-queue-v4, V4.3 runs
+ * 1-3; 15 of the 25 logged "state changed while deciding" combat re-asks). The stale amount is also the next turn-start
+ * hit the solver counts (turnStartAoe). A new turn (no card played yet) whose boulder reads no more than it did on the
+ * fight's last turn waits for it, at most BOULDER_SETTLE_MS; `memory.boulder` keeps the last amount seen.
+ */
+export function boulderSettling(memory: ScreenMemory, fight: string, turn: number | null, amount: number, cardsPlayed: number, now: number): boolean {
+  const seen = memory.boulder;
+  if (turn !== null && amount > 0 && seen && seen.fight === fight && turn > seen.turn && cardsPlayed === 0 && amount <= seen.amount) {
+    if (seen.waitTurn !== turn) {
+      seen.waitTurn = turn;
+      seen.since = now;
+    }
+    if (now - (seen.since ?? now) < BOULDER_SETTLE_MS) return true;
+  }
+  memory.boulder = turn !== null && amount > 0 ? { fight, turn, amount } : undefined;
+  return false;
+}
+
 /** What an action we send changes for later plans: the facing (Surrounded), a spent Demon Tongue. */
 function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | undefined): void {
   noteFacing(env.screenMemory, env.state, intent);
@@ -1186,6 +1237,8 @@ export const MERCURY_HOURGLASS_DAMAGE = 3;
  */
 export const SHURIKEN_ATTACKS = 3;
 export const SHURIKEN_STRENGTH = 1;
+/** Lost Wisp: damage to every enemy per Power card played (turn-solver PlayerSim.lostWisp; logged 8 every time). */
+export const LOST_WISP_DAMAGE = 8;
 
 /**
  * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), Inferno
@@ -1790,6 +1843,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (!state.available_actions.includes("play_card") && !state.available_actions.includes("end_turn")) return null;
 
   const player = asRecord(combat["player"]);
+  if (boulderSettling(env.screenMemory, fightKey(state), state.turn ?? null, powerAmount(player, "ROLLING_BOULDER_POWER"), num(player["cards_played_this_turn"]), Date.now())) return null;
   // Free Attack (Unrelenting): the game shows every attack at 0, but only the next N are free. The
   // solver pays the real cost and gets N free attacks (NEVM F23 T2: an unaffordable Uppercut planned).
   const freeAttacks = powerAmount(player, "FREE_ATTACK_POWER");
@@ -1811,6 +1865,10 @@ function planTurn(env: DecisionEnv): Decision | null {
       card.drawsUntil = false;
     }
   }
+  // Pen Nib at 9 doubles every Attack's shown damage but only the next one played (GSG0 F33 T2: 86 planned, 53 dealt);
+  // the solver doubles the 10th Attack play from its count. Taken off before Vigor: the doubled number carries it too.
+  const penNib = relicIds.includes("PEN_NIB") ? relicStack(state.run?.raw, "PEN_NIB") % PEN_NIB_EVERY : undefined;
+  stripPenNib(hand, penNib === PEN_NIB_EVERY - 1);
   // Vigor is in every Attack's shown damage but spent by the first one (KFP1 F17 T1: 54 planned, 18 dealt).
   const vigor = powerAmount(player, "VIGOR_POWER");
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
@@ -1906,12 +1964,14 @@ function planTurn(env: DecisionEnv): Decision | null {
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
+    ...(penNib !== undefined ? { penNib } : {}),
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
     exhaustedThisTurn,
     // Fairy in a Bottle and Lizard Tail: a line that reaches 0 HP goes on at their HP (JR66CJ9T8H7W F48).
     revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
     ...(relicIds.includes("PAPER_PHROG") ? { vulnerableFactor: PAPER_PHROG_VULNERABLE } : {}),
+    ...(relicIds.includes("LOST_WISP") ? { lostWisp: LOST_WISP_DAMAGE } : {}),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -2269,14 +2329,18 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Molten Fist only sets up into Vulnerable (CWMP F7 T1: played as "setup" into a target with none).
   // An attack is setup only when it debuffs (Bash, Molten Fist): Howl from Beyond+ at 19 HP for 19
   // damage passed the guard as "planned setup" (MK1N F33 T2).
+  // FIGHT_PLAN=off (every run since 2026-09-30) has no setup list, and the HP guard's setup exception never applied:
+  // there a Power card played in an elite or boss fight is the setup (GTU27C946ERT F33 T1: Demon Form+ counted as no
+  // setup, swapped for an attack line). Hallway fights still none (MX1Q F23 T2: Inflame lines pulled in as setup).
   const setupStep = (step: Step) =>
-    fightPlan !== null &&
-    fightPlan.setup.includes(step.cardId) &&
-    !((() => {
-      const model = cardFor(step, hand);
-      return model !== undefined && model !== null && model.type === "Attack" && model.vulnerable === 0 && model.weak === 0 && step.cardId !== "MOLTEN_FIST" && step.cardId !== "DOMINATE";
-    })()) &&
-    !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
+    fightPlan === null
+      ? (kind === "elite" || kind === "boss") && cardFor(step, hand)?.type === "Power"
+      : fightPlan.setup.includes(step.cardId) &&
+        !((() => {
+          const model = cardFor(step, hand);
+          return model !== undefined && model !== null && model.type === "Attack" && model.vulnerable === 0 && model.weak === 0 && step.cardId !== "MOLTEN_FIST" && step.cardId !== "DOMINATE";
+        })()) &&
+        !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
   // Hallway HP guard from act 2 on (or ascension 5+) below 60% HP: a line may lose at most
   // max(8, 20% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
   // F22 room at 17/80 with no potions).
@@ -2311,16 +2375,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     const extraDamage = illusionFight ? realDamage(picked) - realDamage(replacement) : picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
   };
-  // Not on a big-hit turn: that is the turn to block (0YG4 F43 T4: Dark Embrace + Blood Wall, -26,
-  // kept over a 29-block line at -13 into the Heavy Cleave).
-  const guardKeepsSetup = (picked: Plan, replacement: Plan | null): boolean =>
+  // The setup exception (setupKept); `deathsOf`: the rollout's deaths, when it ran (Jev's pick).
+  const guardKeepsSetup = (picked: Plan, replacement: Plan | null, deathsOf: (plan: Plan) => number | null = () => null): boolean =>
     winsRace(picked, replacement) ||
-    !bigHit &&
-    replacement !== null &&
-    setupCount(picked) > setupCount(replacement) &&
-    // Boss fights: a setup power is kept while HP clears the next hit with room (5BXM F33 T4/T6: Demon
-    // Form+ swapped twice at 22-33 HP before a no-attack curse turn, never played; boss left at 152).
-    picked.outcome.hpAfter >= (kind === "boss" ? Math.max(playerSim.maxHp * 0.2, nextIncoming + 5) : Math.max(playerSim.maxHp * 0.35, nextIncoming));
+    (replacement !== null &&
+      setupKept(
+        { setups: setupCount(picked), hpAfter: picked.outcome.hpAfter, deaths: deathsOf(picked) },
+        { setups: setupCount(replacement), deaths: deathsOf(replacement) },
+        { kind, maxHp: playerSim.maxHp, nextIncoming, bigHit },
+      ));
   // The setup window is the fight's first turns, not a new boss phase's (YFG5 F48 T3: Test Subject's
   // phase 2 began on T3, Pyre+ for 4 damage over a 58-damage line at the same HP).
   const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
@@ -2890,7 +2953,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           : null
         : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack, keepsPick);
       const raceKept = proposed !== null && winsRace(picked, proposed);
-      const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
+      const replacement = proposed && (guardKeepsSetup(picked, proposed, rolloutDeaths) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, guardLoss(plan) - Math.min(...guardOptions.map(guardLoss)));
       const rank = shown.indexOf(plan) + 1;

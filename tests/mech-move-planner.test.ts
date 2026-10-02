@@ -116,16 +116,20 @@ function digest(view: unknown): string {
 
 const BOARDS = ["nx48-f33-t7-crab-death", "8l29-f33-t5-crab-alone", "y3xt-f45-t5-axebot-stock1", "8l29-f39-t3-axebot-stock2"] as const;
 
-/** Digests of v4 3488dc5's planner on the boards above (JEV_CONTEXT off and v1), MECH_RULES on (its default). */
+/**
+ * Digests of v4 3488dc5's planner on the boards above (JEV_CONTEXT off and v1), MECH_RULES on (its default). The 8L29
+ * run held Lost Wisp, which the solver models since (fix-queue-v4 fix2: 8 to every enemy per Power): its two boards
+ * are 3488dc5's plus that (with the relic's lines off they read 3488dc5's bc13d834…, f69d22f6…, 21324a53…, e1f0817c…).
+ */
 const GOLDEN_ON: Record<string, string> = {
   "nx48-f33-t7-crab-death:off": "cd5581f4910af21308ff7890df28817f",
   "nx48-f33-t7-crab-death:v1": "c9ad08821b2fced0b5feaa23e416070d",
-  "8l29-f33-t5-crab-alone:off": "bc13d8346f1ec44c3af6f5594eef89f3",
-  "8l29-f33-t5-crab-alone:v1": "f69d22f64e9bee75416cf2f98e5efbc4",
+  "8l29-f33-t5-crab-alone:off": "a6482fb703a125444cffba8d7bc30b0c",
+  "8l29-f33-t5-crab-alone:v1": "bbd558bf7556801bad0f7002bacd40c0",
   "y3xt-f45-t5-axebot-stock1:off": "40399a49c414cf8c9768f1802bcbfbd6",
   "y3xt-f45-t5-axebot-stock1:v1": "55148044f38ebd91f93c25280b10de6a",
-  "8l29-f39-t3-axebot-stock2:off": "21324a531cd6cfb16dcc2692a2bc41f9",
-  "8l29-f39-t3-axebot-stock2:v1": "e1f0817c18572e766fce79f3319e3c0a",
+  "8l29-f39-t3-axebot-stock2:off": "71009ab06986ebeb3cd29453338e4d5b",
+  "8l29-f39-t3-axebot-stock2:v1": "a380b127cfa146a26d0daea1e34d4119",
 };
 /** ... and MECH_RULES off: the same there (no Flutter on these boards). */
 const GOLDEN_OFF: Record<string, string> = { ...GOLDEN_ON };

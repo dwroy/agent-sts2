@@ -97,14 +97,15 @@ export const FIGHT_START_RELICS: Record<string, (stack: number | null) => FightS
 
 /**
  * Relics the fight already models elsewhere: the energy relics (rollout relicEnergy, and turn 1 here), the turn relics
- * (rollout-live fightRelicsOf, relicBlockOf), the ones the solver reads from the run (combat-plan planTurn: Shuriken,
+ * (rollout-live fightRelicsOf, relicBlockOf: Captain's Wheel, Sai), the ones the solver reads from the run (combat-plan planTurn: Shuriken,
  * Music Box, Cloak Clasp, Pael's Tears, Red Skull, Self-Forming Clay, Demon Tongue, Intimidating Helmet, Beating
- * Remnant, Paper Phrog, Toasty Mittens, Fiddle, Kusarigama, Vambrace, Mercury Hourglass, Lizard Tail) and Biiig Hug.
+ * Remnant, Paper Phrog, Toasty Mittens, Fiddle, Kusarigama, Vambrace, Mercury Hourglass, Lizard Tail, Pen Nib, Lost
+ * Wisp) and Biiig Hug.
  */
 const MODELLED_ELSEWHERE = new Set([
   ...ENERGY_RELICS, "CAPTAINS_WHEEL", "CANDELABRA", "CHANDELIER", "HORN_CLEAT", "SHURIKEN", "MUSIC_BOX", "CLOAK_CLASP",
   "PAELS_TEARS", "RED_SKULL", "SELF_FORMING_CLAY", "DEMON_TONGUE", "INTIMIDATING_HELMET", "BEATING_REMNANT", "PAPER_PHROG", "FIDDLE",
-  "KUSARIGAMA", "VAMBRACE", "MERCURY_HOURGLASS", "LIZARD_TAIL", "BIIIG_HUG",
+  "KUSARIGAMA", "VAMBRACE", "MERCURY_HOURGLASS", "LIZARD_TAIL", "BIIIG_HUG", "PEN_NIB", "SAI", "LOST_WISP",
 ]);
 /** A relic text that acts in fights (the ones outside FIGHT_START_RELICS and MODELLED_ELSEWHERE are listed as not modelled). */
 const FIGHT_TEXT = /战斗开始时|战斗中|回合开始时|回合结束时|每回合|每当|第\s*\d+\s*回合|打出|格挡|力量|敏捷|能量|抽|伤害|at the start of|each turn|whenever|combat/i;
