@@ -3956,12 +3956,18 @@ export function pickNote(shown: Plan[], chosen: Plan, picked: Plan): string {
  * luck. Otherwise, the line that keeps the most HP.
  */
 export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+  // A line that kills us on our own turn (a card's HP cost) never goes first while one reaches the end of the turn:
+  // the death comes either way, but only at the end of the turn can SL reload, and the enemy turn may still go
+  // otherwise than simulated (JSA5K8YZ9RXV F48 T6: 2 HP, every line dead to the Queen's 12x5; least-loss played Blood
+  // Wall, its 2 HP cost killed us mid-turn, and the fight was lost with 6 attempts unused).
+  const reachEnd = allPlans.filter((plan) => !plan.outcome.diesOwnTurn);
+  const pool = reachEnd.length > 0 ? reachEnd : allPlans;
   // The Sandpit's deadline (it reaches 0 at the enemy turn): only a Frantic Escape played this turn keeps the
   // pit from taking us whatever our HP, so when a line plays one, only such lines, the Escape first (KY3Y
   // F33 T9: Sandpit 1, least-loss drew first with Burning Pact, which exhausted the 1-cost Escape).
   const pitSafe = (plan: Plan) => plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter > 0;
-  const deadline = allPlans.some(pitSafe) && allPlans.some((plan) => !pitSafe(plan));
-  const plans = deadline ? allPlans.filter(pitSafe) : allPlans;
+  const deadline = pool.some(pitSafe) && pool.some((plan) => !pitSafe(plan));
+  const plans = deadline ? pool.filter(pitSafe) : pool;
   const picked = leastLossOf(plans, hand, hp);
   const escape = deadline ? picked.steps.findIndex((step) => step.cardId === "FRANTIC_ESCAPE") : -1;
   return escape > 0 ? { ...picked, steps: [picked.steps[escape]!, ...picked.steps.slice(0, escape), ...picked.steps.slice(escape + 1)] } : picked;
