@@ -1844,7 +1844,7 @@ const PILE_TEXT = /抽牌堆|draw pile/i;
 
 /**
  * What about a card the lines may play leaves the turn to chance or to what the planner does not model (null: nothing). A
- * random enemy is no chance with one enemy to hit (`targets`; judge.ts randomTargetOnly: Sword Boomerang against a lone boss).
+ * random enemy is no chance with one enemy to hit (`targets`; sl/random-target.ts: Sword Boomerang against a lone boss).
  */
 function cardChance(card: CardModel, targets: number): string | null {
   if (!card.known) return `${card.name} is not modelled`;
