@@ -12,15 +12,17 @@ import { fileURLToPath } from "node:url";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+import { BOSSES, bossLossPerTurn, SAI_BLOCK, turnBlockOf } from "../src/strategy/boss-clock.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { calibratedWinProb, type FightSampleResult } from "../src/sim/boss-sim.js";
+import { bossOpening, syntheticBossState } from "../src/sim/boss-start.js";
 import { BUILD_SIM_CALIBRATION_SAMPLES } from "../src/sim/build-sim.js";
 import { actBossDefeated, calibratedFloor, withBossSim } from "../src/sim/build-sim-facts.js";
 import type { DeckRunRequest, DeckRunResult } from "../src/sim/build-sim-pool.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { relicBlockOf, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { solveTap, solveTurn, type EnemySim, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
 import type { JsonValue } from "../src/util/json.js";
 import { loggedEnv, loggedKnowledge } from "./logged.js";
@@ -224,5 +226,70 @@ describe("8. an X-cost Attack hitting X times hits X times (Skewer at 0 energy a
     // Skewer with energy left is X hits: at 3 energy alone, 3 x 8.
     const alone = solveTurn({ hand: [model], player: player(), enemies: [dummy()], fightKind: "monster" }).plans.find((plan) => steps(plan) === "SKEWER>0");
     expect(alone?.outcome.damageDealt).toBe(24);
+  });
+});
+
+describe("6. Sai's 7 block every turn in the rollout, the boss sim and the boss clock (rollout-live relicBlockOf)", () => {
+  const run = (): Raw => fixture("8d8d-f48-t1-sai", "t1")["run"] as Raw;
+  const relicIds = (raw: Raw) => (raw["relics"] as Raw[]).map((relic) => String(relic["relic_id"]));
+
+  it("8D8DZ9K680C2 F48 (the Queen): Sai's block on every turn from the logged relics; Captain's Wheel's turn 3 as before", () => {
+    const block = relicBlockOf(run());
+    expect(block.filter((b) => b.turn === 1)).toEqual([{ amount: SAI_BLOCK, turn: 1 }]);
+    expect(block.filter((b) => b.amount === SAI_BLOCK).map((b) => b.turn)).toEqual(Array.from({ length: 40 }, (_, i) => i + 1));
+    const wheel = { relics: [{ relic_id: "CAPTAINS_WHEEL" }] };
+    expect(relicBlockOf(wheel)).toEqual([{ amount: 18, turn: 3 }]);
+    expect(turnBlockOf(relicIds(run()))).toBe(7);
+  });
+
+  it("the whole-fight boss sim's turn 1 has it, and it is no longer listed as a relic the fight does not model", () => {
+    const state = parseGameState(fixture("8d8d-f48-t1-sai", "t1"));
+    // A boss the fixture monster DB has; the run's relics are the logged ones (no Anchor or other turn-1 block).
+    const opening = bossOpening("SOUL_FYSH_BOSS", 8, FIXTURE_DB)!;
+    const synth = syntheticBossState(state, loggedKnowledge, opening, 80, FIXTURE_DB, FIXTURE_MM);
+    expect(((synth.state.raw["combat"] as Raw)["player"] as Raw)["block"]).toBe(SAI_BLOCK);
+    expect(synth.relics.unmodelled).not.toContain("钗");
+  });
+
+  it("the rollout's later turns start with it: an enemy hitting 10 a turn costs 3 a turn, not 10", () => {
+    const table: EnemyTable = { moves: { HIT: { damage: 10, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
+    const meta: FightMeta = { act: 3, t: 1, asc: 8, kind: "boss", enc: "TEST_DUMMY", deck: { n: 1, atk: 0, skl: 1, pow: 0, junk: 0, dmg: 0, blk: 0, up: 0 }, relics: 0, max_en: 3 };
+    const solver: SolverInput = { hand: [], player: player({ hp: 60, block: 7 }), enemies: [dummy({ hp: 500, maxHp: 500, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "boss", turn: 1 };
+    const lossWith = (relicBlock: { amount: number; turn: number }[]) =>
+      rolloutDecision({
+        solver,
+        plans: solveTurn(solver).plans,
+        enemies: [{ index: 0, id: "TEST_DUMMY", move: "HIT", strength: 0, powers: {} }],
+        tables: { TEST_DUMMY: table },
+        piles: { draw: [], discard: [], handBase: [] },
+        meta,
+        playerPowers: {},
+        potions: 0,
+        mm: {},
+        model: null,
+        gates: null,
+        ...(relicBlock.length > 0 ? { relicBlock } : {}),
+        options: { budgetMs: 1e9, seed: 3, horizon: 3, samples: 2, now: (() => { let t = 0; return () => (t += 0.01); })() },
+      }).lines[0]!;
+    // The decision turn has its 7 already (the state's block): 3 lost; each later turn another 3 with Sai, 10 without.
+    const withSai = lossWith(relicBlockOf(run()));
+    const without = lossWith([]);
+    expect(withSai.perTurn.map((t) => t.loss.mean)).toEqual([3, 3]);
+    expect(without.perTurn.map((t) => t.loss.mean)).toEqual([10, 10]);
+  });
+
+  it("the boss clock's HP loss a turn takes Sai's block off each attacking turn", () => {
+    setMonsterDbForTests(FIXTURE_DB);
+    try {
+      const fysh = { ...BOSSES["SOUL_FYSH"]!, id: "SOUL_FYSH" };
+      const plain = bossLossPerTurn(fysh, 8);
+      const sai = bossLossPerTurn(fysh, 8, SAI_BLOCK);
+      expect(sai.value).toBeLessThan(plain.value);
+      expect(sai.value).toBeGreaterThanOrEqual(Math.max(0, plain.value - SAI_BLOCK) - 0.1);
+      expect(sai.source).toMatch(/less 7 block a turn from Sai/);
+      expect(bossLossPerTurn(fysh, 8, 0)).toEqual(plain);
+    } finally {
+      setMonsterDbForTests(null);
+    }
   });
 });
