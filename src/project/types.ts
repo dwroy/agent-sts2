@@ -5,6 +5,7 @@ import type { QuestionSet } from "../jev/questions.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
+import type { SlExploreEnv } from "../sl/explore.js";
 import type { JsonValue } from "../util/json.js";
 import type { RunBrief } from "./run-brief.js";
 
@@ -94,6 +95,12 @@ export interface SlEnv {
   knownDraws?: SlKnownDraws;
   /** SL_RETRY_COMPUTE (docs/sl.md §10): more samples and time on a retried fight's rollout, random potions and B2. */
   compute?: SlCompute;
+  /**
+   * SL_RETRY_EXPLORE (docs/sl.md §11, src/sl/explore.ts): present on attempts from the 2nd, the combat planner then notes the
+   * line each decision chose (slPointOf); `deviate` on the deviation point's board only: the lines failed attempts played
+   * there, which the planner does not play again (exploreReplacement), and the point as the decision row says it.
+   */
+  explore?: SlExploreEnv;
 }
 
 export interface SlKnownDraws {
@@ -409,7 +416,7 @@ export interface ResolvedAction {
    * Extra decision-log fields (combat: the rollout facts' timing, whether Jev picked the rollout's best line,
    * the kill order behind the chosen line's rollout numbers, and the per-target options' focus by key).
    */
-  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue; thief?: JsonValue; mech?: JsonValue };
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue; thief?: JsonValue; mech?: JsonValue; sl_explore?: JsonValue };
   /**
    * A DeepSeek one-shot plan this decision made (BUILD_ONESHOT): its reference and steps, logged in the
    * row's `deepseek` record (plan_id, plan, plan_step 1); the later steps are their own rows.

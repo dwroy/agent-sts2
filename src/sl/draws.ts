@@ -247,6 +247,25 @@ function matchDrawn(candidates: HandCard[], left: Map<string, number>): HandCard
   return taken.filter((card): card is HandCard => card !== null);
 }
 
+/**
+ * The first state's hand cards that came off the draw pile, in hand order: those the deck less the pile now accounts for
+ * (matchDrawn, as a later state's pile difference is read). A card made into the hand is not one: X7BX5DYHFZ3N F48 (ops,
+ * 2026-10-02) attempt 2's first state after the reload, T1, held 血墙, 铁斩波+, 预备打击, 愤怒+, 打击 and Crossbow's 怨恨
+ * (states off 5327571715); taking the whole hand recorded 怨恨 as draw 6, attempt 1 (its first state's hand empty, the
+ * draw read from the pile) had 愤怒 there, and the known draws were off for attempts 2-6 ("drew 怨恨 where the earlier
+ * attempt drew 愤怒 (draw 6)"). A state without the deck listed: the whole hand, as before.
+ */
+function openingDraws(state: GameState, now: Snapshot): HandCard[] {
+  const deck = asArray(asRecord(state.raw["run"])["deck"]).map(asRecord);
+  if (deck.length === 0) return now.hand;
+  const cards = new Map<string, number>();
+  for (const card of deck) {
+    const key = cardKey(str(card["card_id"]), bool(card["upgraded"]));
+    if (key) cards.set(key, (cards.get(key) ?? 0) + 1);
+  }
+  return matchDrawn(now.hand, minus(cards, now.draw));
+}
+
 export interface DrawTrackerOptions {
   /** SL_RETRY_KNOWN_INSERTS: new cards added to the draw pile at random places keep the order (default: they end it, as before). */
   inserts?: boolean;
@@ -322,7 +341,7 @@ export class DrawTracker {
       // starts later (a restarted process: the fight is open on a later turn, or cards were played already) knows
       // nothing of the earlier draws.
       if (now.turn !== 1 || now.discard > 0) this.breakAt(now.turn, `tracking began after the fight's start (T${now.turn}, ${now.discard} card(s) in the discard pile): the earlier draws are not known`);
-      this.take(now.hand, now.turn, this.intact);
+      this.take(openingDraws(state, now), now.turn, this.intact);
       if (this.inserts) this.own = new Map(now.draw);
       return;
     }
@@ -509,19 +528,23 @@ function exactLength(draws: SlDraws): number {
 
 /**
  * The draw order the earlier attempts' rows agree on: each attempt's clean part, the longest one where the others
- * agree with it on their overlap. Attempts that disagree (the order was not the same: something in the fight is not
- * what the logs showed) leave no known order at all: null, with the reason.
+ * agree with it on their overlap. Attempts that disagree keep the draws before the first disagreement, all of them agreeing
+ * there, and nothing from it on (with the reason); disagreeing on the first draw, no known order (null). Before 2026-10-02
+ * any disagreement dropped the whole order: X7BX5DYHFZ3N F48 lost its 5 agreed draws to one card counted wrongly at draw 6.
  */
 export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws | null }[]): { known: KnownOrder | null; reason: string | null } {
   let known: KnownOrder | null = null;
   // SL_RETRY_KNOWN_INSERTS: the longest exact prefix of any of them (rows written without the switch have no `inserted`).
   let exact: number | null = null;
   let modelled = false;
+  /** The first disagreement: nothing from this draw on is known (Infinity: none), and why. */
+  let cap = Infinity;
+  let cut: string | null = null;
   for (const row of [...rows].sort((a, b) => a.attempt - b.attempt)) {
     const draws = row.draws;
     if (!draws || !Array.isArray(draws.order) || !(draws.clean > 0)) continue;
-    const keys = draws.order.slice(0, draws.clean);
-    const names = (draws.names ?? []).slice(0, draws.clean);
+    const keys = draws.order.slice(0, Math.min(draws.clean, cap));
+    const names = (draws.names ?? []).slice(0, Math.min(draws.clean, cap));
     if (Array.isArray(draws.inserted) && draws.inserted.length > 0) modelled = true;
     exact = Math.max(exact ?? 0, exactLength(draws));
     if (!known) {
@@ -529,14 +552,20 @@ export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws |
       continue;
     }
     const overlap = Math.min(known.keys.length, keys.length);
-    for (let i = 0; i < overlap; i += 1) {
-      if (baseKey(known.keys[i]!) !== baseKey(keys[i]!)) return { known: null, reason: `attempts ${known.attempts.join(", ")} and ${row.attempt} drew differently at draw ${i + 1} (${known.keys[i]} vs ${keys[i]})` };
+    const differ = Array.from({ length: overlap }, (_, i) => i).find((i) => baseKey(known!.keys[i]!) !== baseKey(keys[i]!));
+    if (differ !== undefined) {
+      cut ??= `attempts ${known.attempts.join(", ")} and ${row.attempt} drew differently at draw ${differ + 1} (${known.keys[differ]} vs ${keys[differ]})`;
+      cap = differ;
+      known = { keys: known.keys.slice(0, cap), names: known.names.slice(0, cap), attempts: [...known.attempts, row.attempt] };
+      continue;
     }
     if (keys.length > known.keys.length) known = { keys, names: names.length === keys.length ? names : [...known.names, ...keys.slice(known.keys.length)], attempts: [...known.attempts, row.attempt] };
     else known = { ...known, attempts: [...known.attempts, row.attempt] };
   }
+  if (known && known.keys.length === 0) return { known: null, reason: cut ?? "no earlier attempt recorded its draws" };
   if (known && modelled && exact !== null && exact < known.keys.length) known = { ...known, exact };
-  return { known, reason: known ? null : "no earlier attempt recorded its draws" };
+  if (!known) return { known: null, reason: "no earlier attempt recorded its draws" };
+  return { known, reason: cut ? `${cut}: the ${known.keys.length} draw${known.keys.length === 1 ? "" : "s"} before it kept` : null };
 }
 
 export type KnownCheck =

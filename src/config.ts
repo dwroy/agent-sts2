@@ -77,6 +77,12 @@ export interface SlConfig {
    * Thinking Ahead) goes on top and is the next one drawn: the known order goes on through it, exactly (docs/sl.md §10).
    */
   retryKnownTop: boolean;
+  /**
+   * SL_RETRY_EXPLORE (default on, Dai 2026-10-02: "retries must try different play"): attempts 3 and later change the line
+   * at one decision point a failed attempt played (the latest first, then one further back each attempt) to the best line
+   * no failed attempt played there; every other board plays as usual (src/sl/explore.ts, docs/sl.md §11). Off: as before.
+   */
+  retryExplore: boolean;
   /** SL_LOG: sl-attempts.jsonl (default next to the decision log; off: not written). */
   log: string | null;
   /** SL_STEP_TIMEOUT_MS (default 60000): each reload step's wait (the main menu, then the fight). */
@@ -729,6 +735,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     reloadEarly: parseOnOff(readEnv(env, "SL_RELOAD_EARLY"), "SL_RELOAD_EARLY", problems) ?? true,
     retryKnownInserts: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_INSERTS"), "SL_RETRY_KNOWN_INSERTS", problems) ?? true,
     retryKnownTop: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_TOP"), "SL_RETRY_KNOWN_TOP", problems) ?? true,
+    retryExplore: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE"), "SL_RETRY_EXPLORE", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
   };

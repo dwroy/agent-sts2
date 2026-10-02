@@ -184,6 +184,49 @@ describe("SL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at rando
   }, 300_000);
 });
 
+describe("a random enemy with one enemy to hit is certain (ops 2026-10-02, X7BX5DYHFZ3N F48: Juggernaut against the lone Aeonglass)", () => {
+  type Raw = Record<string, unknown>;
+  /** A logged board's least-loss facts and early verdict with Juggernaut or Kusarigama added. */
+  const factsWith = (raw: Raw, add: "juggernaut" | "kusarigama") => {
+    if (add === "juggernaut") ((((raw["combat"] as Raw)["player"] as Raw)["powers"]) as Raw[]).push({ index: 9, power_id: "JUGGERNAUT_POWER", name: "势不可当", amount: 6, is_debuff: false });
+    else ((raw["run"] as Raw)["relics"] as Raw[]).push({ index: 99, relic_id: "KUSARIGAMA", name: "锁镰", description: "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，就随机对一名敌人造成[blue]{Damage}[/blue]点伤害。", stack: 0 });
+    const state = parseGameState(raw);
+    const env = { ...envOf("tmnf-f48-t8-wither"), state, brief: buildRunBrief(state, knowledge), screenMemory: createScreenMemory(state.screen) } as DecisionEnv;
+    const decision = planCombatTurn(env);
+    const facts = leastLossFactsOf(decision);
+    return { decision, facts, early: judgeLeastLossNow(state, { revives: [], facts, knownDrawsJudge: true, addedToPile: false, knowledge }) };
+  };
+  /** TMNF F48 T8 (the Aeonglass alone, every line dying) with 2 energy and Bash playable: a line plays an Attack. */
+  const lone = (): Raw => {
+    const raw = structuredClone(board("tmnf-f48-t8-wither").state) as Raw;
+    const combat = raw["combat"] as Raw;
+    (combat["player"] as Raw)["energy"] = 2;
+    const bash = (combat["hand"] as Raw[]).find((card) => card["card_id"] === "BASH")!;
+    Object.assign(bash, { playable: true, can_play_result: true, unplayable_reason: null });
+    raw["available_actions"] = [...(raw["available_actions"] as string[]), "play_card"];
+    return raw;
+  };
+
+  it("one enemy: Juggernaut's and Kusarigama's hits are certain, nothing left to chance, the judge reloads early", () => {
+    frozen();
+    for (const add of ["juggernaut", "kusarigama"] as const) {
+      const { decision, facts, early } = factsWith(lone(), add);
+      expect(decision?.label).toBe("combat/least-loss");
+      expect(facts?.line).toEqual(["痛击+ -> 永世沙漏"]);
+      expect(facts?.chance, add).toBeNull();
+      expect(early).toMatchObject({ certain: true, early: true });
+    }
+  }, 120_000);
+
+  it("two enemies (P57H F22 T5, the Obscura and its Parafright): the same hits are chance, not early", () => {
+    frozen();
+    expect(factsWith(structuredClone(board("p57h-f22-t5-certain").state) as Raw, "juggernaut").facts?.chance).toBe("Juggernaut hits a random enemy");
+    const { facts, early } = factsWith(structuredClone(board("p57h-f22-t5-certain").state) as Raw, "kusarigama");
+    expect(facts?.chance).toBe("Kusarigama hits a random enemy");
+    expect(early.reason).toBe("not before the line is played: chance in the verdict (Kusarigama hits a random enemy)");
+  }, 120_000);
+});
+
 describe("the judge counts held cards' end-of-turn damage (TMNFVW6DRQ20 F48 T8, the end_turn it missed with 5 retries left)", () => {
   type Raw = Record<string, unknown>;
   const tmnf = () => structuredClone(board("tmnf-f48-t8-wither").state) as Raw;

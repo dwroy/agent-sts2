@@ -1631,6 +1631,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const routePlan = applyResolved();
     journal.record(state, journalEntry);
     sl?.noteAction(state, resolved.intent);
+    // SL_RETRY_EXPLORE: the decision point's board and the line it chose, for the attempt's record (docs/sl.md §11).
+    sl?.notePoint(state, decision, resolved);
     // The node a map move chose: the REWARD and REST screens after it carry no map position.
     rememberChosenNode(screenMemory, state, resolved.intent);
     // Surrounded: every targeted action that went through turns us (the per-card fallback's plays too).

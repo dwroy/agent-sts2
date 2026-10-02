@@ -17,6 +17,9 @@
  *   attempt's own draws on every state, dropped for the rest of the attempt once they differ, logged); with
  *   SL_RETRY_COMPUTE more rollout samples and time (RETRY_COMPUTE).
  * - decisionFields(): sl_attempt / sl_reloads on every decision row.
+ * - SL_RETRY_EXPLORE (explore.ts, docs/sl.md §11): from attempt 2 notePoint() records each decision point's board and line
+ *   (in the attempt's row); attempts 3+ pick a deviation point from the earlier rows (exploreTarget) and envFor() tells the
+ *   planner, on that board only, which lines not to play again there.
  *
  * Nothing here touches a save file: the game restarts the fight from the save it wrote on entering the room.
  */
@@ -25,14 +28,15 @@ import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { RunJournal } from "../project/run-journal.js";
-import type { ScreenMemory, SlCompute, SlEnv } from "../project/types.js";
+import type { Decision, ResolvedAction, ScreenMemory, SlCompute, SlEnv } from "../project/types.js";
 import { isMenuRunId } from "../project/journal-replay.js";
-import { distinctNames, revivesOf } from "../screens/combat-plan.js";
+import { distinctNames, revivesOf, slPointOf } from "../screens/combat-plan.js";
 import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlEliteList } from "./elites.js";
+import { exploreTarget, slBoardKey, type SlExploreRecord, type SlPoint } from "./explore.js";
 import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
 
@@ -78,6 +82,8 @@ interface FightTrack {
    * first state's, the last one's, whether it ever rose, and whether something costs HP as a turn starts.
    */
   hpTurn: { turn: number; start: number; last: number; rose: boolean; startLoss: boolean } | null;
+  /** SL_RETRY_EXPLORE, attempts from the 2nd: this attempt's decision points, its deviation point and what came of it (null: off). */
+  explore: SlExploreRecord | null;
 }
 
 /** HP lost as our turn starts, before its first state (Inferno, Crimson Mantle, poison on us; a power's or relic's text). */
@@ -155,6 +161,7 @@ export class SlController {
       reload_early: this.config.reloadEarly === true,
       retry_known_inserts: this.config.retryKnownInserts === true,
       retry_known_top: this.config.retryKnownTop === true,
+      retry_explore: this.config.retryExplore === true,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
       elites: this.elites.elites.map((elite) => elite.name),
@@ -250,7 +257,80 @@ export class SlController {
       if (known) env.knownDraws = known;
     }
     if (this.config.retryCompute) env.compute = { ...RETRY_COMPUTE };
+    const explore = this.exploreEnv(fight, state);
+    if (explore) env.explore = explore;
     return env;
+  }
+
+  /**
+   * SL_RETRY_EXPLORE: the planner's part on `state` (recording; on the deviation point's board, the lines not to play again
+   * there). Never throws: an error leaves it out (the attempt then plays as without the switch).
+   */
+  private exploreEnv(fight: FightTrack, state: GameState): SlEnv["explore"] | undefined {
+    const explore = fight.explore;
+    if (!explore) return undefined;
+    try {
+      const target = explore.target;
+      if (!target || explore.deviation?.reached || slBoardKey(state) !== target.board) return {};
+      return { deviate: { point: target.point, excluded: [...target.excluded], attempts: [...target.attempts] } };
+    } catch (error) {
+      fight.explore = null;
+      this.options.note(`SL: explore off for this attempt (${error instanceof Error ? error.message : String(error)}); played as usual`);
+      return undefined;
+    }
+  }
+
+  /**
+   * SL_RETRY_EXPLORE: a decision that went out (the loop calls it after a successful dispatch, with the state it was decided
+   * on): its board and the line it chose (the planner's note, slPointOf; plan-continue steps have none) go into the attempt's
+   * record. On the deviation point's board, what came of it. An error only loses the point.
+   */
+  notePoint(state: GameState, decision: Decision, resolved: ResolvedAction): void {
+    const fight = this.fight;
+    const explore = fight?.explore;
+    if (!fight || !explore || !inCombat(state)) return;
+    try {
+      const info = slPointOf(decision, resolved);
+      if (!info) return;
+      const board = slBoardKey(state);
+      const point: SlPoint = { board, turn: state.turn, kind: info.kind, label: info.label, line: info.line, ...(info.alternatives ? { alternatives: info.alternatives } : {}), ...(info.dead ? { dead: info.dead } : {}), ...(info.explored ? { explored: true as const } : {}) };
+      // The same board again (a re-plan before anything changed): the line played is the last one.
+      if (explore.points.at(-1)?.board === board) explore.points[explore.points.length - 1] = point;
+      else explore.points.push(point);
+      const target = explore.target;
+      if (!target || board !== target.board || explore.deviation?.reached) return;
+      explore.deviation = info.deviation ? { reached: true, ...info.deviation } : { reached: true, original: info.line, replacement: null, reason: "decided on the board without the deviation" };
+      const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
+      this.options.note(
+        explore.deviation.replacement !== null
+          ? `SL: explored at ${where}: ${explore.deviation.replacement} instead of ${explore.deviation.original} (${explore.deviation.reason})`
+          : `SL: the deviation point came up at ${where}: ${explore.deviation.original} played (${explore.deviation.reason})`,
+      );
+    } catch {
+      // the record misses this point
+    }
+  }
+
+  /**
+   * SL_RETRY_EXPLORE: a new attempt's record, with its deviation point (attempts 3+, exploreTarget over this fight's earlier
+   * rows). Null with the switch off, on the first attempt, or on an error (the attempt plays as without the switch).
+   */
+  private newExplore(fight: Pick<FightTrack, "floor" | "encounter">, attempt: number): SlExploreRecord | null {
+    if (this.config.retryExplore !== true || attempt < 2) return null;
+    try {
+      if (attempt < 3) return { points: [], target: null };
+      const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
+      const { target, why } = exploreTarget(earlier, attempt);
+      this.options.note(
+        target
+          ? `SL: attempt ${attempt} deviates at ${target.point}: not ${target.excluded.join(" / ")} again there (${why})`
+          : `SL: attempt ${attempt} has no deviation point (${why}); it plays as usual`,
+      );
+      return target ? { points: [], target } : { points: [], target: null, why };
+    } catch (error) {
+      this.options.note(`SL: explore off for attempt ${attempt} (${error instanceof Error ? error.message : String(error)}); it plays as usual`);
+      return null;
+    }
   }
 
   /**
@@ -305,7 +385,7 @@ export class SlController {
       const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
       const { known, reason } = knownOrderOf(earlier);
       if (this.config.retryKnownDraws) {
-        this.options.note(known ? `SL: attempt ${attempt} knows the first ${known.keys.length} draws of the fight (attempt ${known.attempts.join(", ")})` : `SL: attempt ${attempt} has no known draws (${reason})`);
+        this.options.note(known ? `SL: attempt ${attempt} knows the first ${known.keys.length} draws of the fight (attempt ${known.attempts.join(", ")}${reason ? `; ${reason}` : ""})` : `SL: attempt ${attempt} has no known draws (${reason})`);
       }
       return known;
     } catch {
@@ -452,6 +532,7 @@ export class SlController {
     fight.known = this.knownFor(fight, fight.attempt);
     fight.knownOff = null;
     fight.hpTurn = null;
+    fight.explore = this.newExplore(fight, fight.attempt);
     if (fight.journal !== undefined) context.journal.restore(fight.journal);
     context.screenMemory.lizardTail = fight.lizardTail === undefined ? undefined : structuredClone(fight.lizardTail);
     this.noteTurn(outcome.state);
@@ -502,6 +583,7 @@ export class SlController {
       known: this.knownFor({ floor, encounter }, done + 1),
       knownOff: null,
       hpTurn: null,
+      explore: this.newExplore({ floor, encounter }, done + 1),
     };
     if (retries > 0) this.options.note(`SL: tracking ${boss ? "boss" : `listed elite (${elite?.name})`} fight F${floor ?? "?"} ${encounter}: attempt ${done + 1} of at most ${1 + retries}`);
   }
@@ -565,6 +647,7 @@ export class SlController {
       give_up_reason: extra.giveUp,
       summary: { turns: fight.turns, potions: fight.potions, killers: predicted || result === "died" ? (verdict?.killers ?? []) : [] },
       draws: { ...fight.draws.record, order: [...fight.draws.record.order], names: [...fight.draws.record.names], turns: [...fight.draws.record.turns] },
+      ...(fight.explore ? { explore: structuredClone(fight.explore) } : {}),
     };
     this.rows.push(row);
     this.log.write(row);

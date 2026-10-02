@@ -41,6 +41,7 @@ import type { GameState } from "../mod/schema.js";
 import { BEATING_REMNANT_CAP, distinctNames } from "../screens/combat-plan.js";
 import { heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
+import { randomTargetOnly, randomTargets } from "./random-target.js";
 
 export type JudgeTier = "rules" | "least-loss";
 
@@ -493,7 +494,8 @@ const HITS_ENEMIES = /(敌人|enem)[^。.]*(伤害|damage|失去)|(伤害|damage
  * What on this board acts during the turn without the planner, or by chance: a relic or a player power whose text triggers
  * on something done mid-turn (MID_TURN, not NOT_MID_TURN) and that the planner does not model (MODELLED_RELICS,
  * MODELLED_POWERS); a player power with no text known (counted, to be safe); an enemy power that changes our draw pile;
- * and any relic or power whose text says random (CHANCE) about this turn, its end included.
+ * and any relic or power whose text says random (CHANCE) about this turn, its end included, unless its only chance is the
+ * enemy it hits and one enemy can be hit (random-target.ts).
  */
 export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "power" | "relic">): MidTurnRisks {
   const draws: string[] = [];
@@ -501,12 +503,15 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
   const chance: string[] = [];
   const endOfTurn: string[] = [];
   const run = asRecord(state.raw["run"]);
+  // A random enemy is no chance with one enemy to hit (randomTargetOnly).
+  const lone = randomTargets(state) <= 1;
+  const byChance = (text: string): boolean => CHANCE.test(text) && !(lone && randomTargetOnly(text));
   for (const relic of asArray(run["relics"]).map(asRecord)) {
     const id = str(relic["relic_id"]);
     if (!id) continue;
     const text = str(relic["description"]) || (knowledge?.relic(id)?.description ?? "");
     const name = `${str(relic["name"], id)} (relic)`;
-    if (CHANCE.test(text) && !NOT_THIS_TURN.test(text) && id !== "KUSARIGAMA") chance.push(name);
+    if (byChance(text) && !NOT_THIS_TURN.test(text) && id !== "KUSARIGAMA") chance.push(name);
     if (END_OF_TURN_HIT.test(text) && HITS_ENEMIES.test(text)) endOfTurn.push(name);
     if (MODELLED_RELICS.has(id) || !MID_TURN.test(text) || NOT_MID_TURN.test(text)) continue;
     any.push(name);
@@ -518,7 +523,7 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
     if (!id) continue;
     const text = knowledge?.power(id)?.description ?? "";
     const name = `${str(power["name"], id)} (power)`;
-    if (CHANCE.test(text) && id !== "JUGGERNAUT_POWER" && id !== "HELLRAISER_POWER") chance.push(name);
+    if (byChance(text) && id !== "JUGGERNAUT_POWER" && id !== "HELLRAISER_POWER") chance.push(name);
     if (END_OF_TURN_HIT.test(text) && HITS_ENEMIES.test(text)) endOfTurn.push(name);
     if (MODELLED_POWERS.has(id)) continue;
     if (!text) {
@@ -578,9 +583,11 @@ export interface LeastLossNowContext extends Omit<JudgeContext, "label" | "draws
  *    tier (every simulated line dies; no unmodelled potion) with its draw veto (lifted only by exactly known draws).
  * 2. Nothing in the verdict left to chance (LeastLossFacts.chance): no random potion; no line drawing a card that is not
  *    exactly known; no playable card (hand, modelled potion, known draw) with a random target, a random exhaust, a random
- *    card made or a top card played, nor an unmodelled one; no Juggernaut, Kusarigama or Hellraiser random hit.
+ *    card made or a top card played, nor an unmodelled one; no Juggernaut, Kusarigama or Hellraiser random hit. A random
+ *    enemy with one enemy to hit is no chance (random-target.ts; ops 2026-10-02, X7BX5DYHFZ3N F48: the lone Aeonglass).
  * 3. No card added to the draw pile at a random place in this attempt (`addedToPile`).
- * 4. The enemies' intents as shown (intentNotShown), and no relic or power acting by chance this turn (midTurnRisks.chance).
+ * 4. The enemies' intents as shown (intentNotShown), and no relic or power acting by chance this turn (midTurnRisks.chance;
+ *    a random enemy hit with one enemy to hit is none).
  * 5. No relic or power acting mid-turn that the planner does not model (midTurnRisks.any): its block, HP, damage, energy
  *    or draws would only show on the board at end_turn; and none hitting the enemies at the end of our turn
  *    (midTurnRisks.endOfTurn: Stone Calendar, Screaming Flagon, The Bomb), which neither the mod's flag nor our count sees.
