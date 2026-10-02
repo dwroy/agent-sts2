@@ -53,3 +53,8 @@
 - 事件完成后事件屏仍显示旧选项，重问 DeepSeek 一次（JJ75 F31 熔合打击，20.3 s、约 13.7 万输入 token）。不阻塞。
 - 帝王蟹转可信后整场模拟偏悲观（KMB1：T1「胜率 6%、100% 死在 T4」，25 s 仅 177 样本；实际 T6 胜），Jev 选线与模拟一致、未造成错误动作；仅 1 局样本，待观察。
 - 已知项复发：build-sim-facts.ts:387（三局都中，GBBB F17 引用 +5.8 选恶魔形态）；小样本 B3 被引用；mod 超时约 10 s 自愈；可信 boss 同族 T1 两题超时；低可信沙漏/沙虫满时模拟。gate_reject 0，无泄漏。
+
+### V4.3 SL 首次触发（2026-10-02 12:24，JW92 F48 实验体）
+- **SL reload 误判失败**：回到 F48 T1 后第一屏是回合开始弃牌 CARD_SELECTION（actions: select_deck_card, confirm_selection），SL 的 back_in_fight 只认 COMBAT，60 s 超时 → reload.ok=false、give_up 停用本局 SL。实际读档成功、主循环处理弃牌后从 T1 重打并通关。sl-attempts.jsonl 2026-10-02T04:02:32Z 那行；控制台 20261002-110526 第 2138–2160 行。
+- 超时后主循环先执行了 T10 遗留的 least-loss end_turn（12:02:32，"action came back pending"），之后才是弃牌和 T1 计划；需确认 end_turn 没有作用在重载后的 T1 上。
+- **已修（2026-10-02 12:32 确认）**：SL back_in_fight 现在接受战斗内带本场决策的画面（T1 CARD_SELECTION 算回到战斗）——v4 0660f99，合入 v4-live 14ad753（12:31，开发会话按 Dai「这类修复直接上线」合入），下一局起生效。遗留 end_turn 经开发会话核对未发出（decision log 04:01:27Z 记 "not dispatched: SL reload failed…"；"came back pending" 属于随后的弃牌动作），重载后的 T1 未受影响。
