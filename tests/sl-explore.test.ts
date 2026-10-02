@@ -678,8 +678,12 @@ const Q1 = (): Raw => bossBoard({ turn: 1, hp: 60, playable: true, lethal: false
 const Q2 = (hp = 45): Raw => bossBoard({ turn: 2, hp, playable: true, lethal: false });
 const DEATH = (): Raw => bossBoard({ turn: 3, hp: 10 });
 
+/**
+ * SL_RETRY_EXPLORE_CANON and _TURN off here: these tests pin the record and the deviation as before them (08ec8f9); with
+ * them on (the default), tests/sl-explore-canon.test.ts.
+ */
 function slConfig(log: string, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: false, retryExploreTurn: false, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 function tempLog(): string {

@@ -239,7 +239,7 @@ describe("SlController with SL_JUDGE_ANY_DRAW on and off (R764 F33 T10, no retry
   const slConfig = (judgeAnyDraw: boolean): SlConfig => ({
     enabled: true, bossRetries: 0, eliteRetries: 0, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, judgeAnyDraw, reloadEarly: true,
     retryKnownInserts: true, retryKnownTop: true, retryExplore: false, retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false,
-    retryKnownPicks: true, log: null, stepTimeoutMs: 5_000,
+    retryExploreCanon: false, retryExploreTurn: false, retryKnownPicks: true, log: null, stepTimeoutMs: 5_000,
   });
   const run = async (judgeAnyDraw: boolean) => {
     const raw = board("r764-f33-t10-offering");
