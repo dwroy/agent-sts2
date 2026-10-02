@@ -63,3 +63,4 @@
 - **SL previous_attempts 敌人只写名字、不分节**：src/sl/controller.ts:175、:263，出牌目标和敌人列表只写「残杀千足虫」，同题选项是「残杀千足虫 (MIDDLE)」。VNKN F25 赢的关键恰是打后节不打中节，Jev 看不出之前打的是哪一节。不阻塞。
 - JW92 F46 DeepSeek 返回 JSON 多一个「]」，逐步重问恢复，多 97 s（模型输出错误）。
 - 已知项复发：build-sim-facts.ts:387（5DFX、VNKN 被引用后选中）；B3 小样本（5DFX F27–F29 仅 24 样本）；mod 超时约 10 s 自愈（5DFX 5、JW92 3）；帝王蟹可信后整场模拟每场 98–142 s，多题撞 25 s 上限。gate_reject 0，无泄漏。
+- **已修（2026-10-02 13:10 确认）**：SL previous_attempts 敌人名与战斗选项一致（distinctNames，如「残杀千足虫 (MIDDLE)」），v4 7564be3 → v4-live d5dd04f（13:09），下一局起生效。
