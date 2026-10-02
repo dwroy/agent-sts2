@@ -438,6 +438,12 @@ export interface SolverInput {
    */
   drawPile?: DrawPileCard[];
   /**
+   * SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the top of the draw pile in draw order (the first card drawn first), as an
+   * earlier attempt at this fight saw it come off. The line's draws take these cards first, as known cards it can play
+   * (the cards past them are the pile's expected ones). Absent: every draw an expected value, as before.
+   */
+  knownTop?: CardModel[];
+  /**
    * Expected damage of the enemies' next attack after this turn (move model), when known. On a turn
    * with nothing incoming, a plan that ends within NEXT_HIT_MARGIN of it weighs self-damage
    * QUIET_SELF_DAMAGE_WEIGHT times (JGJS F24 T1: Offering for -6 on the Spiny Toad's buff turn,
@@ -805,6 +811,8 @@ interface Sim {
   pile: PileValue | null;
   /** Cards drawn from that pile so far this turn (past its size the draws are a reshuffle: flat values). */
   pileDrawn: number;
+  /** SolverInput.knownTop: the pile's top cards in draw order, taken by the draws before any expected one (null: none). */
+  known: CardModel[] | null;
   /**
    * Cards exhausted from the hand by this turn's plays (Burning Pact's pick, Stoke's whole hand): their
    * value is lost for the fight (6A36 F3: six Burning Pacts took the Strikes and Defends for free).
@@ -1616,6 +1624,14 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
 
 /** `count` cards drawn from the pile as expected values (what they are is not known). */
 function drawExpected(next: Sim, count: number, player: PlayerSim): void {
+  // SL_RETRY_KNOWN_DRAWS: the pile's known top cards come first, as the cards themselves (VNKN9952ZNA0 F25: the three
+  // attempts drew the same 25 cards in the same order whatever was played); only the draws past them are expected values.
+  if (next.known !== null && next.pileDrawn < next.known.length && count > 0) {
+    const taken = next.known.slice(next.pileDrawn, next.pileDrawn + count);
+    drawCards(next, taken, player);
+    count -= taken.length;
+    if (count <= 0) return;
+  }
   // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
   const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
   const handSpace = Math.max(0, HAND_LIMIT - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
@@ -2744,6 +2760,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     gigantic: 0,
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),
     pileDrawn: 0,
+    known: input.knownTop && input.knownTop.length > 0 ? input.knownTop : null,
     exhausted: [],
     drawnExhausted: 0,
     randomExhausts: 0,

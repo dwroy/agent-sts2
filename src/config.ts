@@ -46,6 +46,14 @@ export interface SlConfig {
   eliteRetries: number;
   /** SL_RETRY_SHOW_SIM (default on): a retried boss fight's questions show the whole-fight simulation even for a low-trust boss, labelled. */
   retryShowSim: boolean;
+  /**
+   * SL_RETRY_KNOWN_DRAWS (default on, Dai 2026-10-02): on a retry the draw pile's next cards are the order an earlier
+   * attempt saw (the solver, the rollout, the random potions and B2 take them first; Jev is told), until this attempt's
+   * draws leave that order (a reshuffle, a card put into the pile, a different card drawn). docs/sl.md §10.
+   */
+  retryKnownDraws: boolean;
+  /** SL_RETRY_COMPUTE (default on, Dai 2026-10-02): attempts after the first get more rollout samples and time (docs/sl.md §10). */
+  retryCompute: boolean;
   /** SL_LOG: sl-attempts.jsonl (default next to the decision log; off: not written). */
   log: string | null;
   /** SL_STEP_TIMEOUT_MS (default 60000): each reload step's wait (the main menu, then the fight). */
@@ -669,6 +677,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     bossRetries: parseInteger(readEnv(env, "SL_BOSS_RETRIES") ?? "5", "SL_BOSS_RETRIES", problems, { min: 0, max: 20 }),
     eliteRetries: parseInteger(readEnv(env, "SL_ELITE_RETRIES") ?? "3", "SL_ELITE_RETRIES", problems, { min: 0, max: 20 }),
     retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
+    retryKnownDraws: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_DRAWS"), "SL_RETRY_KNOWN_DRAWS", problems) ?? true,
+    retryCompute: parseOnOff(readEnv(env, "SL_RETRY_COMPUTE"), "SL_RETRY_COMPUTE", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
   };

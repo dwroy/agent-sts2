@@ -81,6 +81,33 @@ export interface SlEnv {
   previousAttempts: JsonValue;
   /** SL_RETRY_SHOW_SIM: show the whole-fight simulation even for a low-trust boss, labelled. */
   showSim: boolean;
+  /**
+   * SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the draw pile's next cards in draw order (the next one first), as the earlier
+   * attempt(s) at this fight drew them, while this attempt's draws have matched that order. Absent: the draws are random.
+   */
+  knownDraws?: SlKnownDraws;
+  /** SL_RETRY_COMPUTE (docs/sl.md §10): more samples and time on a retried fight's rollout, random potions and B2. */
+  compute?: SlCompute;
+}
+
+export interface SlKnownDraws {
+  /** Card keys ("STRIKE_IRONCLAD+": id, "+" when upgraded), the next card drawn first. */
+  cards: string[];
+  /** Their names as the hand showed them. */
+  names: string[];
+  /** The attempts the order was seen in. */
+  attempts: number[];
+}
+
+export interface SlCompute {
+  /** The rollout's samples (ROLLOUT_SAMPLES otherwise) and its time budget a decision (ROLLOUT_BUDGET_MS otherwise). */
+  rolloutSamples: number;
+  rolloutBudgetMs: number;
+  /** The random potions' Monte Carlo: samples a potion (MC_SAMPLES otherwise) and the budget of them all (MC_BUDGET_MS). */
+  mcSamples: number;
+  mcBudgetMs: number;
+  /** B2's whole-fight samples per line (BOSS_LINES_SAMPLES otherwise). */
+  bossSimSamples: number;
 }
 
 export interface ScreenMemory {

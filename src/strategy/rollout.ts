@@ -523,7 +523,17 @@ export interface RolloutInput {
    * Base cards (before our Strength and Weak): the draw pile (null when unknown), the discard pile, and
    * the base version of each hand card by solver hand position (null: keep the hand card as it is).
    */
-  piles: { draw: CardModel[]; discard: CardModel[]; handBase: (CardModel | null)[] };
+  piles: {
+    draw: CardModel[];
+    discard: CardModel[];
+    handBase: (CardModel | null)[];
+    /**
+     * SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the draw pile's top cards in draw order, as indices into `draw` (the first
+     * one drawn first), known from an earlier attempt at this fight. Every sample draws them first, in this order; only
+     * the rest of the pile is shuffled. Absent: the whole pile shuffled, as before.
+     */
+    drawTop?: number[];
+  };
   meta: FightMeta;
   playerPowers: Record<string, number>;
   potions: number;
@@ -800,6 +810,21 @@ function shuffle<T>(items: T[], random: () => number): T[] {
     [out[i], out[j]] = [out[j]!, out[i]!];
   }
   return out;
+}
+
+/**
+ * A sample's draw pile (drawn from the end): the whole pile shuffled, or with SL_RETRY_KNOWN_DRAWS (piles.drawTop) the
+ * known top cards on top in their order and only the rest shuffled under them. Indices that do not name distinct cards of
+ * the pile leave the pile shuffled as before (the caller built them from this pile; never expected).
+ */
+export function sampledDrawPile(piles: RolloutInput["piles"], random: () => number): CardModel[] {
+  const top = piles.drawTop;
+  if (!top || top.length === 0) return shuffle(piles.draw, random);
+  const valid = top.every((at, i) => Number.isInteger(at) && at >= 0 && at < piles.draw.length && top.indexOf(at) === i);
+  if (!valid) return shuffle(piles.draw, random);
+  const known = new Set(top);
+  const rest = piles.draw.filter((_, i) => !known.has(i));
+  return [...shuffle(rest, random), ...[...top].reverse().map((at) => piles.draw[at]!)];
 }
 
 const isPotion = (step: { cardId: string }): boolean => step.cardId.startsWith("POTION:");
@@ -2255,7 +2280,7 @@ function simulate(
       ...(fullFight ? { ...fullFightState(info, e, input), random: rng((Math.imul(seed, 0x9e3779b1) ^ Math.imul(e.index + 1, 0x85ebca6b)) >>> 0) } : {}),
     };
   });
-  const piles: Piles = { draw: shuffle(input.piles.draw, random), discard: input.piles.discard.slice(), ...(input.onShuffle ? { onShuffle: input.onShuffle } : {}) };
+  const piles: Piles = { draw: sampledDrawPile(input.piles, random), discard: input.piles.discard.slice(), ...(input.onShuffle ? { onShuffle: input.onShuffle } : {}) };
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
   // Modelled potions still held in this sample: 0-energy cards that exist once (drunk: gone), each carrying its cost
@@ -2293,7 +2318,8 @@ function simulate(
     firstHand = [...(drawing?.hand ?? cards), ...potions];
     firstBase = [...bases, ...potions.map(() => null)];
     firstKnown = drawing?.known;
-    const { drawPile: _d, ...rest } = s;
+    // The decision turn's known pile top (SL_RETRY_KNOWN_DRAWS) is not this turn's: its draws come off the sample's pile.
+    const { drawPile: _d, knownTop: _k, ...rest } = s;
     // B5: the one-turn lookahead (whole fights, when set) replaces the decision's nextIncoming with the sim's own forecast.
     const ahead = fullFight ? lookaheadOf(opts, enemies, input, player, s.player.hp) : null;
     const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
@@ -2453,7 +2479,7 @@ function simulate(
     player.ringingNext = false;
     player.tangledNext = 0;
     const started = budget.now();
-    const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, laterIncoming: _l, ...rest } = s;
+    const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, laterIncoming: _l, knownTop: _k, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
     // A kill order: this turn's target is the first of its groups with a member alive (the lowest-HP
     // member of it); none left, or none given, and the solver's own score picks.
@@ -3006,7 +3032,12 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     // The schedule at the asked sizes: each step clamped to maxHorizon x maxSamples (asking for fewer than 8
     // samples, or fewer than 3 turns, used to drop every step above it: 6 samples ran at 3 turns, 2 turns at 1);
     // after a shrunk first wave, no step longer than it (plus its one sample, which always fits).
-    const schedule = (orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE)
+    // SL_RETRY_COMPUTE asks for more samples than the schedule's top step: steps at the full horizon with those samples
+    // (and 2/3, 1/2 of them) come first, then the schedule as before (unchanged at 8 samples or fewer).
+    const base = orders.length > 1 ? ORDER_SCHEDULE : SCHEDULE;
+    const topSamples = base[0]!.samples;
+    const more = maxSamples > topSamples ? [...new Set([maxSamples, Math.round((maxSamples * 2) / 3), Math.round(maxSamples / 2)])].filter((m) => m > topSamples).map((m) => ({ horizon: maxHorizon, samples: m })) : [];
+    const schedule = [...more, ...base]
       .map((s) => ({ horizon: Math.min(s.horizon, firstHorizon), samples: Math.min(s.samples, maxSamples) }))
       .concat(firstHorizon < maxHorizon ? [{ horizon: firstHorizon, samples: 1 }] : [])
       .filter((s, i, all) => all.findIndex((t) => t.horizon === s.horizon && t.samples === s.samples) === i);
