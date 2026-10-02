@@ -47,8 +47,16 @@ function inRun(state: GameState): boolean {
   return state.session.phase === "run" && state.run !== null;
 }
 
+/** Leaving the run or the belt: legal on every in-run screen, never a decision of the fight's own. */
+const NOT_A_FIGHT_DECISION = new Set(["save_and_quit", "discard_potion"]);
+
 function fightReady(state: GameState): boolean {
-  return inRun(state) && state.in_combat && state.screen === "COMBAT" && state.combat?.can_use_combat_actions === true && state.turn !== null;
+  if (!inRun(state) || !state.in_combat || state.turn === null) return false;
+  if (state.screen === "COMBAT") return state.combat?.can_use_combat_actions === true;
+  // A choice the fight's first turn opens is the fight too (JW925EDF9ZTQ F48: Continue landed on T1's turn-start discard,
+  // CARD_SELECTION with select_deck_card / confirm_selection; waiting for COMBAT timed out at 60 s and stopped SL for the
+  // run, though the reload had worked). The loop answers the choice as on any turn.
+  return state.available_actions.some((action) => !NOT_A_FIGHT_DECISION.has(action));
 }
 
 export async function reloadFight(target: ReloadTarget, start: GameState, deps: ReloadDeps): Promise<ReloadOutcome> {
