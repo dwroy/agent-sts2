@@ -1,0 +1,349 @@
+R1QJUBVBSSB2 F33 (low-trust boss: validation fights from turn 1 (21)): attempt 2's path, 20 decision points planned in 9 s (B2 off); the known draws along it: current 5 (0 exact) 5 (0 exact) none none none none none none none none none none none none none none none none none none | new 29 (0 exact) 29 (0 exact) 24 (0 exact) +3 at random 24 (0 exact) +3 at random 24 (0 exact) +3 at random 19 (0 exact) +3 at random 16 (0 exact) +3 at random 16 (0 exact) +3 at random 12 (0 exact) +2 at random 12 (0 exact) +2 at random 8 (0 exact) +1 at random 8 (0 exact) +1 at random 4 (0 exact) none none none none none none none
+  path (current): T1 Q(0 alt, 0 rollout not worse, dead 33%+) · T1 Q(0 alt, 0 rollout not worse, dead 33%+) · T2 Q(9 alt, 1 rollout not worse, dead 71%+) · T2 Q(2 alt, 0 rollout not worse, dead 71%+) · T2 Q(0 alt, 0 rollout not worse, dead 71%+) · T3 Q(9 alt, 9 rollout not worse, dead 100%+) · T3 Q(9 alt, 9 rollout not worse, dead 100%+) · T3 plan · T4 Q(1 alt, 0 rollout not worse, dead 71%+) · T4 plan · T5 Q(2 alt, 2 rollout not worse, dead 100%+) · T5 plan · T6 plan · T7 least-loss · T7 plan · T8 Q(1 alt, 1 rollout not worse, dead 100%+) · T8 plan · T9 least-loss · T9 least-loss · T9 least-loss
+  path (new): T1 Q(2 alt, 0 rollout not worse, dead 0%+) · T1 Q(1 alt, 0 rollout not worse, dead 0%+) · T2 Q(9 alt, 5 rollout not worse, dead 33%+) · T2 Q(6 alt, 0 rollout not worse, dead 17%+) · T2 Q(1 alt, 0 rollout not worse, dead 17%+) · T3 Q(9 alt, 9 rollout not worse, dead 92%+) · T3 Q(9 alt, 3 rollout not worse, dead 92%+) · T3 plan · T4 Q(1 alt, 1 rollout not worse, dead 100%+, lost) · T4 plan · T5 Q(3 alt, 3 rollout not worse, dead 100%+, lost) · T5 plan · T6 plan · T7 least-loss · T7 plan · T8 Q(1 alt, 1 rollout not worse, dead 100%+, lost) · T8 plan · T9 least-loss · T9 least-loss · T9 least-loss
+  a3:
+    current: T8 (back 1, every line lost) 打击 -> 无厌沙虫, 狂乱逃离, 愤怒 -> 无厌沙虫, 拆卸 -> 无厌沙虫  ->  狂乱逃离, 狂乱逃离, 愤怒 -> 无厌沙虫
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 1, win ~0%; this turn hp -0, dmg 23
+        replacement: rollout dead 24/24, further loss 1, win ~0%; this turn hp -0, dmg 7
+        why: 1 line shown there never played on that board
+    new: T3 (back 4) 撕裂, 防御, 战栗 -> 无厌沙虫, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水  ->  撕裂, 战栗 -> 无厌沙虫, 预备打击 -> 无厌沙虫, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水
+        replay: 6 boards before it (6 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 22/24, further loss 35, win ~1%; this turn hp -11, dmg 0
+        replacement: rollout dead 22/24, further loss 35, win ~0%; this turn hp -16, dmg 10
+        why: 9 lines shown there never played on that board; passed over T8, T5, T4, where every line loses in every sample
+    live: aimed at T8, the latest question before attempt 2's death on T9; not reached, left attempt 2's path at T5 (board 12); no deviation; predicted_death on T7
+  a4:
+    current: T5 (back 2, every line lost) 杀灭, 防御, 狂乱逃离  ->  狱火, 防御, 狂乱逃离
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 24, win ~0%; this turn hp -8, dmg 16
+        replacement: rollout dead 24/24, further loss 24, win ~0%; this turn hp -9, dmg 0
+        why: 2 lines shown there never played on that board
+    new: T3 (back 5) 战斗专注, 撕裂, 防御, 闪电霹雳, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水  ->  战斗专注, 闪电霹雳, 痛击 -> 无厌沙虫, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水
+        replay: 5 boards before it (5 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 24/24, further loss 35, win ~0%; this turn hp -11, dmg 4
+        replacement: rollout dead 22/24, further loss 35, win ~0%; this turn hp -16, dmg 16
+        why: 9 lines shown there never played on that board; passed over T8, T5, T4, where every line loses in every sample
+    live: aimed at T8, the latest question before attempt 2's death on T9; reached; 打击 -> 无厌沙虫, 狂乱逃离, 愤怒 -> 无厌沙虫, 拆卸 -> 无厌沙虫 -> 狂乱逃离, 狂乱逃离, 愤怒 -> 无厌沙虫; predicted_death on T9
+  a5:
+    current: T3 (back 4, every line lost) 撕裂, 防御, 战栗 -> 无厌沙虫, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水  ->  撕裂, 战栗 -> 无厌沙虫, 突破, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 35, win ~0%; this turn hp -11, dmg 0
+        replacement: rollout dead 24/24, further loss 35, win ~0%; this turn hp -17, dmg 15
+        why: 9 lines shown there never played on that board; passed over T4, whose untried lines all die more often in the rollout
+    new: T2 (back 8) 探寻打击 -> 无厌沙虫, 打击 -> 无厌沙虫, 防御, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水  ->  探寻打击 -> 无厌沙虫, 防御, 突破
+        replay: 2 boards before it (2 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 21/24, further loss 41, win ~0%; this turn hp -0, dmg 15
+        replacement: rollout dead 8/24, further loss 41, win ~0%; this turn hp -10, dmg 27
+        why: 9 lines shown there never played on that board; passed over T2, T2, whose untried lines all die more often in the rollout; passed over T8, T5, T4, where every line loses in every sample
+    live: aimed at T5, the 2nd latest question before attempt 2's death on T9; reached; 杀灭, 防御, 狂乱逃离 -> 狱火, 杀灭, 狂乱逃离; predicted_death on T7
+  a6:
+    current: T3 (back 5, every line lost) 战斗专注, 撕裂, 防御, 闪电霹雳, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水  ->  战斗专注, 撕裂, 痛击 -> 无厌沙虫, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 35, win ~0%; this turn hp -11, dmg 4
+        replacement: rollout dead 24/24, further loss 35, win ~0%; this turn hp -16, dmg 8
+        why: 9 lines shown there never played on that board; passed over T4, whose untried lines all die more often in the rollout
+    new: T2 (back 6) end turn  ->  potion 虚弱药水 -> 无厌沙虫, potion 铁心药水
+        replay: 4 boards before it (4 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail) [gate rollout]
+        original: rollout dead 4/24, further loss 41, win ~0%; this turn hp -6, dmg 0
+        replacement: rollout dead 5/24, further loss 41, win ~0%; this turn hp -0, dmg 0
+        why: 1 line shown there never played on that board; all dying more often in the rollout than the one played, as on every other point left; passed over T8, T5, T4, where every line loses in every sample
+    live: aimed at T3, the 4th latest question before attempt 2's death on T9; reached; 撕裂, 防御, 战栗 -> 无厌沙虫, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水 -> 撕裂, 战栗 -> 无厌沙虫, 突破, potion 虚弱药水 -> 无厌沙虫, potion 铁心药水; died on T7
+63WBEEF2JVM5 F33: attempt 2's path, 15 decision points planned in 87 s (B2 ranked it, 1200 samples a line); the known draws along it: current 23 22 22 17 16 16 11 11 3 3 none none none none none | new 23 22 22 17 16 16 11 11 3 3 none none none none none
+  path (current): T1 Q(3 alt, 1 rollout not worse, dead 0%+) · T1 Q(3 alt, 1 rollout not worse, dead 0%+) · T1 Q(2 alt, 0 rollout not worse, dead 0%+) · T2 Q(5 alt, 5 rollout not worse, dead 13%+) · T2 Q(1 alt, 1 rollout not worse, dead 13%+) · T2 plan · T3 Q(3 alt, 0 rollout not worse, dead 83%+) · T3 plan · T4 Q(9 alt, 1 rollout not worse, dead 83%+) · T4 plan · T5 Q(1 alt, 0 rollout not worse, dead 83%+) · T5 plan · T6 Q(3 alt, 1 rollout not worse, dead 75%+) · T7 least-loss · T7 least-loss
+  path (new): T1 Q(3 alt, 0 B2 (B2 56%, best other 17%) not worse, dead 0%+) · T1 Q(3 alt, 0 B2 (B2 57%, best other 15%) not worse, dead 0%+) · T1 Q(2 alt, 0 B2 (B2 57%, best other 15%) not worse, dead 0%+) · T2 Q(5 alt, 0 B2 (B2 39%, best other 27%) not worse, dead 13%+) · T2 Q(1 alt, 0 B2 (B2 39%, best other 16%) not worse, dead 13%+) · T2 plan · T3 Q(3 alt, 0 B2 (B2 16%, best other 6%) not worse, dead 83%+) · T3 plan · T4 Q(9 alt, 0 B2 (B2 26%, best other 20%) not worse, dead 83%+) · T4 plan · T5 Q(1 alt, 0 B2 (B2 24%, best other 0%) not worse, dead 83%+) · T5 plan · T6 Q(3 alt, 0 B2 (B2 54%, best other 41%) not worse, dead 75%+) · T7 least-loss · T7 least-loss
+  a3:
+    current: T6 (back 1) 痛击 -> 知识恶魔, 欺凌 -> 知识恶魔, 耸肩无视  ->  耸肩无视, 祭品, 痛击 -> 知识恶魔
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 19/24, further loss 15.8, win ~21%; whole-fight sim win 35.7%; this turn hp -8, dmg 59
+        replacement: rollout dead 18/24, further loss 16.7, win ~25%; whole-fight sim win 23.2%; this turn hp -14, dmg 39
+        why: 3 lines shown there never played on that board
+    new: T6 (back 1) 痛击 -> 知识恶魔, 欺凌 -> 知识恶魔, 耸肩无视  ->  耸肩无视, 祭品, 痛击 -> 知识恶魔
+        replay: 12 boards before it (8 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail) [gate b2]
+        original: rollout dead 19/24, further loss 15.8, win ~21%; whole-fight sim win 35.7%; this turn hp -8, dmg 59
+        replacement: rollout dead 18/24, further loss 16.7, win ~25%; whole-fight sim win 23.2%; this turn hp -14, dmg 39
+        B2 calibrated 0.537 -> 0.408 (paired -0.125 ± 0.0184)
+        why: 3 lines shown there never played on that board
+  a4:
+    current: T4 (back 3) 战栗 -> 知识恶魔, 撕裂, 突破  ->  耸肩无视, 熔融之拳 -> 知识恶魔, 飞剑回旋镖
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 22/24, further loss 27.5, win ~8%; whole-fight sim win 11.9%; this turn hp -9, dmg 30
+        replacement: rollout dead 20/24, further loss 27.9, win ~3%; whole-fight sim win 3.1%; this turn hp -2, dmg 35
+        why: 9 lines shown there never played on that board; passed over T5, whose untried lines all die more often in the rollout
+    new: T4 (back 3) 战栗 -> 知识恶魔, 撕裂, 突破  ->  耸肩无视, 战栗 -> 知识恶魔, 飞剑回旋镖
+        replay: 8 boards before it (6 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail) [gate b2]
+        original: rollout dead 22/24, further loss 27.5, win ~8%; whole-fight sim win 11.9%; this turn hp -9, dmg 30
+        replacement: rollout dead 23/24, further loss 28, win ~1%; whole-fight sim win 8.1%; this turn hp -2, dmg 30
+        B2 calibrated 0.259 -> 0.195 (paired -0.0383 ± 0.0119)
+        why: 9 lines shown there never played on that board; passed over T5, whose untried lines all die more often in the rollout
+  a5:
+    current: T2 (back 5) 挑衅 -> 知识恶魔  ->  御血术 -> 知识恶魔
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 3/24, further loss 52, win ~3%; whole-fight sim win 21.4%; this turn hp -0, dmg 0
+        replacement: rollout dead 3/24, further loss 52, win ~2%; whole-fight sim win 6.3%; this turn hp -7, dmg 17
+        why: 1 line shown there never played on that board; passed over T5, T3, whose untried lines all die more often in the rollout
+    new: T2 (back 5) 挑衅 -> 知识恶魔  ->  御血术 -> 知识恶魔
+        replay: 4 boards before it (4 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail) [gate b2]
+        original: rollout dead 3/24, further loss 52, win ~3%; whole-fight sim win 21.4%; this turn hp -0, dmg 0
+        replacement: rollout dead 3/24, further loss 52, win ~2%; whole-fight sim win 6.3%; this turn hp -7, dmg 17
+        B2 calibrated 0.388 -> 0.162 (paired -0.1508 ± 0.0132)
+        why: 1 line shown there never played on that board; passed over T5, T3, whose untried lines all die more often in the rollout
+  a6:
+    current: T2 (back 6) 防御, 耸肩无视, 挑衅 -> 知识恶魔  ->  耸肩无视, 挑衅 -> 知识恶魔, 御血术 -> 知识恶魔
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 3/24, further loss 52, win ~3%; whole-fight sim win 21.7%; this turn hp -0, dmg 0
+        replacement: rollout dead 3/24, further loss 52, win ~2%; whole-fight sim win 12.4%; this turn hp -6, dmg 25
+        why: 5 lines shown there never played on that board; passed over T5, T3, whose untried lines all die more often in the rollout
+    new: T2 (back 6) 防御, 耸肩无视, 挑衅 -> 知识恶魔  ->  耸肩无视, 挑衅 -> 知识恶魔, 御血术 -> 知识恶魔
+        replay: 3 boards before it (3 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail) [gate b2]
+        original: rollout dead 3/24, further loss 52, win ~3%; whole-fight sim win 21.7%; this turn hp -0, dmg 0
+        replacement: rollout dead 3/24, further loss 52, win ~2%; whole-fight sim win 12.4%; this turn hp -6, dmg 25
+        B2 calibrated 0.391 -> 0.266 (paired -0.0925 ± 0.0136)
+        why: 5 lines shown there never played on that board; passed over T5, T3, whose untried lines all die more often in the rollout
+1YXMHF6FSPK4 F33: attempt 2's path, 12 decision points planned in 148 s (B2 ranked it, 1200 samples a line); the known draws along it: current 23 23 18 18 13 13 8 8 3 3 none none | new 23 23 18 18 13 13 8 8 3 3 none none
+  path (current): T1 Q(2 alt, 2 rollout not worse, dead 100%+) · T1 plan · T2 Q(2 alt, 2 rollout not worse, dead 100%+) · T2 plan · T3 Q(3 alt, 3 rollout not worse, dead 100%+) · T3 plan · T4 Q(4 alt, 4 rollout not worse, dead 100%+) · T4 plan · T5 Q(2 alt, 2 rollout not worse, dead 100%+) · T5 plan · T6 least-loss · T6 least-loss
+  path (new): T1 Q(2 alt, 2 B2 (B2 2%, best other 2%) not worse, dead 100%+, lost) · T1 plan · T2 Q(2 alt, 2 B2 (B2 0%, best other 0%) not worse, dead 100%+, lost) · T2 plan · T3 Q(3 alt, 3 B2 (B2 0%, best other 0%) not worse, dead 100%+, lost) · T3 plan · T4 Q(4 alt, 4 B2 (B2 0%, best other 0%) not worse, dead 100%+, lost) · T4 plan · T5 Q(2 alt, 2 B2 (B2 0%, best other 0%) not worse, dead 100%+, lost) · T5 plan · T6 least-loss · T6 least-loss
+  a3:
+    current: T5 (back 1, every line lost) 血墙, 铁斩波 -> 碾碎爪  ->  狱火+, 血墙+
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 13, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 9
+        replacement: rollout dead 24/24, further loss 13, win ~0%; whole-fight sim win 0%; this turn hp -9, dmg 18
+        why: 2 lines shown there never played on that board
+    new: T5 (back 1, every line lost) 血墙, 铁斩波 -> 碾碎爪  ->  狱火+, 血墙+
+        replay: 8 boards before it (4 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 13, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 9
+        replacement: rollout dead 24/24, further loss 13, win ~0%; whole-fight sim win 0%; this turn hp -9, dmg 18
+        B2 calibrated 0.003 -> 0.003 (paired 0 ± 0)
+        why: 2 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a4:
+    current: T4 (back 2, every line lost) 防御, 痛击 -> 火箭  ->  痛击 -> 火箭, 双重打击 -> 火箭
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 44, win ~0%; whole-fight sim win 0%; this turn hp -31, dmg 10
+        replacement: rollout dead 24/24, further loss 44, win ~0%; whole-fight sim win 0%; this turn hp -34, dmg 40
+        why: 4 lines shown there never played on that board
+    new: T4 (back 2, every line lost) 防御, 痛击 -> 火箭  ->  痛击 -> 火箭, 双重打击 -> 火箭
+        replay: 6 boards before it (3 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 44, win ~0%; whole-fight sim win 0%; this turn hp -31, dmg 10
+        replacement: rollout dead 24/24, further loss 44, win ~0%; whole-fight sim win 0%; this turn hp -34, dmg 40
+        B2 calibrated 0.003 -> 0.003 (paired 0 ± 0)
+        why: 4 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a5:
+    current: T3 (back 3, every line lost) 燃烧, 火焰屏障  ->  打击 -> 碾碎爪, 火焰屏障
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 48, win ~0%; whole-fight sim win 0%; this turn hp -4, dmg 0
+        replacement: rollout dead 24/24, further loss 48, win ~0%; whole-fight sim win 0%; this turn hp -0, dmg 9
+        why: 3 lines shown there never played on that board
+    new: T3 (back 3, every line lost) 燃烧, 火焰屏障  ->  打击 -> 碾碎爪, 火焰屏障
+        replay: 4 boards before it (2 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 48, win ~0%; whole-fight sim win 0%; this turn hp -4, dmg 0
+        replacement: rollout dead 24/24, further loss 48, win ~0%; whole-fight sim win 0%; this turn hp -0, dmg 9
+        B2 calibrated 0.003 -> 0.003 (paired 0 ± 0)
+        why: 3 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a6:
+    current: T2 (back 4, every line lost) 上勾拳 -> 火箭, 被遗忘的仪式, 重锤 -> 火箭  ->  上勾拳 -> 碾碎爪, 被遗忘的仪式, 重锤 -> 碾碎爪
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 61, win ~0%; whole-fight sim win 0%; this turn hp -18, dmg 74
+        replacement: rollout dead 24/24, further loss 61, win ~0%; whole-fight sim win 0%; this turn hp -39, dmg 74
+        why: 2 lines shown there never played on that board
+    new: T2 (back 4, every line lost) 上勾拳 -> 火箭, 被遗忘的仪式, 重锤 -> 火箭  ->  上勾拳 -> 碾碎爪, 被遗忘的仪式, 重锤 -> 碾碎爪
+        replay: 2 boards before it (1 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 61, win ~0%; whole-fight sim win 0%; this turn hp -18, dmg 74
+        replacement: rollout dead 24/24, further loss 61, win ~0%; whole-fight sim win 0%; this turn hp -39, dmg 74
+        B2 calibrated 0.003 -> 0.003 (paired 0 ± 0)
+        why: 2 lines shown there never played on that board; every line loses in every sample here, as on every point left
+XSPHCB4GUSEU F48 (low-trust boss: validation fights from turn 1 (14)): attempt 2's path, 13 decision points planned in 5 s (B2 off); the known draws along it: current 23 23 23 18 17 16 16 11 11 6 1 none none | new 23 23 23 18 17 16 16 11 11 6 1 none none
+  path (current): T1 Q(2 alt, ? not worse, dead 100%+, logged line not shown now) · T1 Q(2 alt, 2 rollout not worse, dead 100%+) · T1 plan · T2 Q(7 alt, ? not worse, dead 100%+, logged line not shown now) · T2 Q(1 alt, 1 rollout not worse, dead 100%+) · T2 Q(1 alt, 1 rollout not worse, dead 100%+) · T2 end_turn · T3 Q(3 alt, 3 rollout not worse, dead 100%+) · T3 end_turn · T4 Q(2 alt, 2 rollout not worse, dead 100%+) · T5 least-loss · T5 least-loss · T5 least-loss
+  path (new): T1 Q(9 alt, ? not worse, dead 100%+, lost, logged line not shown now) · T1 Q(2 alt, 2 rollout not worse, dead 100%+, lost) · T1 plan · T2 Q(7 alt, ? not worse, dead 100%+, lost, logged line not shown now) · T2 Q(1 alt, 1 rollout not worse, dead 100%+, lost) · T2 Q(1 alt, 1 rollout not worse, dead 100%+, lost) · T2 end_turn · T3 Q(3 alt, 3 rollout not worse, dead 100%+, lost) · T3 end_turn · T4 Q(2 alt, 2 rollout not worse, dead 100%+, lost) · T5 least-loss · T5 least-loss · T5 least-loss
+  a3:
+    current: T4 (back 1, every line lost) 防御+, 杀灭, 打击 -> 火炬头聚合体  ->  飞剑回旋镖, 杀灭, 打击 -> 火炬头聚合体
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 23, win ~0%; this turn hp -14, dmg 32
+        replacement: rollout dead 24/24, further loss 23, win ~0%; this turn hp -20, dmg 36
+        why: 2 lines shown there never played on that board
+    new: T4 (back 1, every line lost) 防御+, 杀灭, 打击 -> 火炬头聚合体  ->  飞剑回旋镖, 杀灭, 打击 -> 火炬头聚合体
+        replay: 9 boards before it (6 questions), breaks at T1: attempt 2's line is not among the options now
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 24/24, further loss 23, win ~0%; this turn hp -14, dmg 32
+        replacement: rollout dead 24/24, further loss 23, win ~0%; this turn hp -20, dmg 36
+        why: 2 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a4:
+    current: T3 (back 2, every line lost) 痛击+ -> 火炬头聚合体, 突破, 打击 -> 火炬头聚合体  ->  燃烧+, 痛击+ -> 女王, 打击 -> 女王
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 57, win ~0%; this turn hp -34, dmg 36
+        replacement: rollout dead 24/24, further loss 57, win ~0%; this turn hp -33, dmg 23
+        why: 3 lines shown there never played on that board
+    new: T3 (back 2, every line lost) 痛击+ -> 火炬头聚合体, 突破, 打击 -> 火炬头聚合体  ->  燃烧+, 痛击+ -> 女王, 打击 -> 女王
+        replay: 7 boards before it (5 questions), breaks at T1: attempt 2's line is not among the options now
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 24/24, further loss 57, win ~0%; this turn hp -34, dmg 36
+        replacement: rollout dead 24/24, further loss 57, win ~0%; this turn hp -33, dmg 23
+        why: 3 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a5:
+    current: T2 (back 3, every line lost) 打击 -> 火炬头聚合体, 完美打击 -> 火炬头聚合体  ->  打击 -> 女王, 完美打击 -> 女王
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 32
+        replacement: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 32
+        why: 1 line shown there never played on that board
+    new: T2 (back 3, every line lost) 打击 -> 火炬头聚合体, 完美打击 -> 火炬头聚合体  ->  打击 -> 女王, 完美打击 -> 女王
+        replay: 5 boards before it (4 questions), breaks at T1: attempt 2's line is not among the options now
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 32
+        replacement: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 32
+        why: 1 line shown there never played on that board; every line loses in every sample here, as on every point left
+  a6:
+    current: T2 (back 4, every line lost) 愤怒 -> 火炬头聚合体, 岩石铠甲, 打击 -> 火炬头聚合体  ->  愤怒 -> 女王, 岩石铠甲, 打击 -> 女王
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 15
+        replacement: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 15
+        why: 1 line shown there never played on that board
+    new: T2 (back 4, every line lost) 愤怒 -> 火炬头聚合体, 岩石铠甲, 打击 -> 火炬头聚合体  ->  愤怒 -> 女王, 岩石铠甲, 打击 -> 女王
+        replay: 4 boards before it (3 questions), breaks at T1: attempt 2's line is not among the options now
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 15
+        replacement: rollout dead 24/24, further loss 57, win ~0%; this turn hp -0, dmg 15
+        why: 1 line shown there never played on that board; every line loses in every sample here, as on every point left
+VNKN9952ZNA0 F25: attempt 2's path, 16 decision points planned in 62 s (B2 off); the known draws along it: current 20 20 15 15 10 10 10 5 5 none none none none none none none | new 20 20 15 15 10 10 10 5 5 none none none none none none none
+  path (current): T1 Q(3 alt, 3 rollout not worse, dead 4%+) · T1 plan · T2 Q(4 alt, 1 rollout not worse, dead 33%+) · T2 plan · T3 Q(7 alt, 4 rollout not worse, dead 88%+) · T3 Q(3 alt, 1 rollout not worse, dead 4%+) · T3 plan · T4 Q(4 alt, 2 rollout not worse, dead 0%+) · T4 plan · T5 Q(6 alt, 0 rollout not worse, dead 8%+) · T5 Q(3 alt, 1 rollout not worse, dead 8%+) · T5 plan · T6 Q(2 alt, 1 rollout not worse, dead 42%+) · T6 plan · T7 least-loss · T7 least-loss
+  path (new): T1 Q(3 alt, 3 rollout not worse, dead 4%+) · T1 plan · T2 Q(4 alt, 1 rollout not worse, dead 33%+) · T2 plan · T3 Q(7 alt, 4 rollout not worse, dead 88%+) · T3 Q(3 alt, 1 rollout not worse, dead 4%+) · T3 plan · T4 Q(4 alt, 2 rollout not worse, dead 0%+) · T4 plan · T5 Q(6 alt, 0 rollout not worse, dead 8%+) · T5 Q(3 alt, 1 rollout not worse, dead 8%+) · T5 plan · T6 Q(2 alt, 1 rollout not worse, dead 42%+) · T6 plan · T7 least-loss · T7 least-loss
+  a3:
+    current: T6 (back 1) 防御, 防御+, 防御, 双重打击 -> 残杀千足虫 (BACK)  ->  打击+ -> 残杀千足虫 (FRONT), 防御, 防御+, 双重打击 -> 残杀千足虫 (FRONT)
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 11/24, further loss 13.3, win ~54%; this turn hp -8, dmg 10
+        replacement: rollout dead 10/24, further loss 14.9, win ~58%; this turn hp -13, dmg 19
+        why: 2 lines shown there never played on that board
+    new: T6 (back 1) 防御, 防御+, 防御, 双重打击 -> 残杀千足虫 (BACK)  ->  打击+ -> 残杀千足虫 (FRONT), 防御, 防御+, 双重打击 -> 残杀千足虫 (FRONT)
+        replay: 12 boards before it (7 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 11/24, further loss 13.3, win ~54%; this turn hp -8, dmg 10
+        replacement: rollout dead 10/24, further loss 14.9, win ~58%; this turn hp -13, dmg 19
+        why: 2 lines shown there never played on that board
+  a4:
+    current: T5 (back 2) 重锤 -> 残杀千足虫 (MIDDLE), 愤怒 -> 残杀千足虫 (MIDDLE)  ->  重锤 -> 残杀千足虫 (BACK), 愤怒 -> 残杀千足虫 (BACK)
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 2/24, further loss 8.2, win ~90%; this turn hp -0, dmg 25
+        replacement: rollout dead 2/24, further loss 10.9, win ~92%; this turn hp -6, dmg 28
+        why: 3 lines shown there never played on that board
+    new: T5 (back 2) 重锤 -> 残杀千足虫 (MIDDLE), 愤怒 -> 残杀千足虫 (MIDDLE)  ->  重锤 -> 残杀千足虫 (BACK), 愤怒 -> 残杀千足虫 (BACK)
+        replay: 10 boards before it (6 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 2/24, further loss 8.2, win ~90%; this turn hp -0, dmg 25
+        replacement: rollout dead 2/24, further loss 10.9, win ~92%; this turn hp -6, dmg 28
+        why: 3 lines shown there never played on that board
+VNKN9952ZNA0 F33: attempt 2's path, 10 decision points planned in 1947 s (B2 ranked it, 1200 samples a line); the known draws along it: current 20 20 15 15 10 10 5 5 none none | new 20 20 15 15 10 10 5 5 none none
+  path (current): T1 Q(8 alt, 8 rollout not worse, dead 100%+) · T1 plan · T2 Q(1 alt, 1 rollout not worse, dead 100%+) · T2 plan · T3 Q(3 alt, 3 rollout not worse, dead 100%+) · T3 plan · T4 plan [logged: question] · T4 plan · T5 least-loss · T5 least-loss
+  path (new): T1 Q(9 alt, 9 B2 (B2 2%, best other 2%) not worse, dead 100%+, lost) · T1 plan · T2 Q(2 alt, 2 B2 (B2 0%, best other 0%) not worse, dead 100%+, lost) · T2 plan · T3 Q(3 alt, 3 B2 (B2 0%, best other 0%) not worse, dead 100%+, lost) · T3 plan · T4 plan [logged: question] · T4 plan · T5 least-loss · T5 least-loss
+  a3:
+    current: T3 (back 1, every line lost) 双重打击 -> 火箭, 防御, 熔融之拳 -> 火箭, 打击 -> 碾碎爪  ->  双重打击 -> 火箭, 打击 -> 火箭, 熔融之拳 -> 火箭, 打击 -> 碾碎爪
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -3, dmg 26
+        replacement: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -8, dmg 32
+        why: 3 lines shown there never played on that board
+    new: T3 (back 1, every line lost) 双重打击 -> 火箭, 防御, 熔融之拳 -> 火箭, 打击 -> 碾碎爪  ->  双重打击 -> 火箭, 打击 -> 火箭, 熔融之拳 -> 火箭, 打击 -> 碾碎爪
+        replay: 4 boards before it (2 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -3, dmg 26
+        replacement: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -8, dmg 32
+        B2 calibrated 0.003 -> 0.003 (paired 0 ± 0)
+        why: 3 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a4:
+    current: T2 (back 2, every line lost) 防御, 防御, 杀灭  ->  防御, 飞剑回旋镖, 杀灭
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 58, win ~0%; whole-fight sim win 0%; this turn hp -21, dmg 24
+        replacement: rollout dead 24/24, further loss 58, win ~0%; whole-fight sim win 0%; this turn hp -26, dmg 33
+        why: 1 line shown there never played on that board
+    new: T2 (back 2, every line lost) 防御, 防御, 杀灭  ->  防御, 飞剑回旋镖, 杀灭
+        replay: 2 boards before it (1 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 58, win ~0%; whole-fight sim win 0%; this turn hp -21, dmg 24
+        replacement: rollout dead 24/24, further loss 58, win ~0%; whole-fight sim win 0%; this turn hp -26, dmg 33
+        B2 calibrated 0.003 -> 0.003 (paired 0 ± 0)
+        why: 2 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a5:
+    current: T1 (back 3, every line lost) 预备打击+ -> 碾碎爪, potion 火焰药水 -> 火箭, 完美打击+ -> 碾碎爪  ->  预备打击+ -> 碾碎爪, 完美打击+ -> 碾碎爪
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 74, win ~0%; whole-fight sim win 0%; this turn hp -16, dmg 70
+        replacement: rollout dead 24/24, further loss 74, win ~0%; whole-fight sim win 0%; this turn hp -16, dmg 46
+        why: 8 lines shown there never played on that board
+    new: T1 (back 3, every line lost) 预备打击+ -> 碾碎爪, potion 火焰药水 -> 火箭, 完美打击+ -> 碾碎爪  ->  预备打击+ -> 碾碎爪, 完美打击+ -> 碾碎爪
+        replay: 0 boards before it (0 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 74, win ~0%; whole-fight sim win 0%; this turn hp -16, dmg 70
+        replacement: rollout dead 24/24, further loss 74, win ~0%; whole-fight sim win 0%; this turn hp -16, dmg 46
+        B2 calibrated 0.02 -> 0.02 (paired 0 ± 0)
+        why: 9 lines shown there never played on that board; every line loses in every sample here, as on every point left
+  a6:
+    current: T3 (back 1, round 1, every line lost) 双重打击 -> 火箭, 防御, 熔融之拳 -> 火箭, 打击 -> 碾碎爪  ->  双重打击 -> 碾碎爪, 打击 -> 碾碎爪, 打击 -> 碾碎爪, 熔融之拳 -> 碾碎爪
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -3, dmg 26
+        replacement: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -8, dmg 32
+        why: 2 lines shown there never played on that board
+    new: T3 (back 1, round 1, every line lost) 双重打击 -> 火箭, 防御, 熔融之拳 -> 火箭, 打击 -> 碾碎爪  ->  双重打击 -> 碾碎爪, 打击 -> 碾碎爪, 打击 -> 碾碎爪, 熔融之拳 -> 碾碎爪
+        replay: 4 boards before it (2 questions), every question shows attempt 2's line
+        the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's) [gate b2]
+        original: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -3, dmg 26
+        replacement: rollout dead 24/24, further loss 37, win ~0%; whole-fight sim win 0%; this turn hp -8, dmg 32
+        B2 calibrated 0.003 -> 0.003 (paired 0 ± 0)
+        why: 2 lines shown there never played on that board; every line loses in every sample here, as on every point left
+JW925EDF9ZTQ F48 (low-trust boss: validation fights from turn 1 (6)): attempt 2's path, 15 decision points planned in 12 s (B2 off); the known draws along it: current 30 30 25 20 17 16 11 11 6 1 1 none none none none | new 30 30 25 20 17 16 11 11 6 1 1 none none none none
+  path (current): T1 Q(1 alt, ? not worse, dead 88%+, logged line not shown now) · T1 Q(1 alt, 1 rollout not worse, dead 0%+) · T2 Q(1 alt, 1 rollout not worse, dead 4%+) · T3 Q(2 alt, ? not worse, dead 4%+, logged line not shown now) · T3 Q(2 alt, 1 rollout not worse, dead 8%+) · T3 Q(1 alt, ? not worse, dead 4%+, logged line not shown now) · T4 Q(2 alt, 1 rollout not worse, dead 0%+) · T4 Q(0 alt, 0 rollout not worse, dead 4%+) · T5 Q(3 alt, 2 rollout not worse, dead 0%+) · T6 Q(3 alt, 1 rollout not worse, dead 42%+) · T6 Q(1 alt, 1 rollout not worse, dead 42%+) · T7 plan · T8 Q(3 alt, ? not worse, dead 33%+, logged line not shown now) · T8 plan · T9 lethal
+  path (new): T1 Q(10 alt, ? not worse, dead 0%+, logged line not shown now) · T1 Q(2 alt, 2 rollout not worse, dead 0%+) · T2 Q(2 alt, 2 rollout not worse, dead 4%+) · T3 Q(8 alt, ? not worse, dead 4%+, logged line not shown now) · T3 Q(2 alt, 1 rollout not worse, dead 8%+) · T3 Q(2 alt, ? not worse, dead 4%+, logged line not shown now) · T4 Q(5 alt, 1 rollout not worse, dead 0%+) · T4 Q(1 alt, 0 rollout not worse, dead 4%+) · T5 Q(5 alt, 2 rollout not worse, dead 0%+) · T6 Q(3 alt, 1 rollout not worse, dead 42%+) · T6 Q(1 alt, 1 rollout not worse, dead 42%+) · T7 plan · T8 Q(3 alt, ? not worse, dead 33%+, logged line not shown now) · T8 plan · T9 lethal
+  a3:
+    current: T8 (back 1) 耸肩无视+, 打击 -> 实验体 #C40  ->  (none) [Jev's pick assumed]
+        the pick was not played on this board before: played as answered
+        original: -
+        replacement: -
+        why: 3 lines shown there never played on that board
+    new: T8 (back 1) 耸肩无视+, 打击 -> 实验体 #C40  ->  (none) [Jev's pick assumed]
+        replay: 12 boards before it (11 questions), breaks at T1: attempt 2's line is not among the options now
+        the pick was not played on this board before: played as answered
+        original: -
+        replacement: -
+        why: 3 lines shown there never played on that board
+  a4:
+    current: T6 (back 2) end turn  ->  放血, 打击 -> 实验体 #C40
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 12/24, further loss 46.8, win ~40%; this turn hp -4, dmg 0
+        replacement: rollout dead 10/24, further loss 45.1, win ~45%; this turn hp -7, dmg 2
+        why: 1 line shown there never played on that board
+    new: T6 (back 2) end turn  ->  放血, 打击 -> 实验体 #C40
+        replay: 10 boards before it (10 questions), breaks at T1: attempt 2's line is not among the options now
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 12/24, further loss 46.8, win ~40%; this turn hp -4, dmg 0
+        replacement: rollout dead 10/24, further loss 45.1, win ~45%; this turn hp -7, dmg 2
+        why: 1 line shown there never played on that board
+  a5:
+    current: T6 (back 3) 重锤 -> 实验体 #C40, 防御, 万向斩 -> 实验体 #C40, potion 虚弱药水 -> 实验体 #C40  ->  放血, 重锤 -> 实验体 #C40, 防御, 万向斩 -> 实验体 #C40, 打击 -> 实验体 #C40, potion 虚弱药水 -> 实验体 #C40
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 10/24, further loss 41.8, win ~57%; this turn hp -4, dmg 2
+        replacement: rollout dead 10/24, further loss 44.6, win ~56%; this turn hp -7, dmg 4
+        why: 3 lines shown there never played on that board
+    new: T6 (back 3) 重锤 -> 实验体 #C40, 防御, 万向斩 -> 实验体 #C40, potion 虚弱药水 -> 实验体 #C40  ->  放血, 重锤 -> 实验体 #C40, 防御, 万向斩 -> 实验体 #C40, 打击 -> 实验体 #C40, potion 虚弱药水 -> 实验体 #C40
+        replay: 9 boards before it (9 questions), breaks at T1: attempt 2's line is not among the options now
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 10/24, further loss 41.8, win ~57%; this turn hp -4, dmg 2
+        replacement: rollout dead 10/24, further loss 44.6, win ~56%; this turn hp -7, dmg 4
+        why: 3 lines shown there never played on that board
+  a6:
+    current: T5 (back 4) 熔融之拳 -> 实验体 #C40, 飞剑回旋镖+  ->  熔融之拳 -> 实验体 #C40, 熔融之拳 -> 实验体 #C40, 双重打击+ -> 实验体 #C40
+        the best untried line by the question's ranking, among those the rollout does not see dying more often
+        original: rollout dead 3/24, further loss 41.1, win ~54%; this turn hp -1, dmg 97
+        replacement: rollout dead 0/24, further loss 36.8, win ~79%; this turn hp -3, dmg 97
+        why: 3 lines shown there never played on that board
+    new: T5 (back 4) 熔融之拳 -> 实验体 #C40, 飞剑回旋镖+  ->  熔融之拳 -> 实验体 #C40, 熔融之拳 -> 实验体 #C40, 双重打击+ -> 实验体 #C40
+        replay: 8 boards before it (8 questions), breaks at T1: attempt 2's line is not among the options now
+        the best untried line by the question's ranking, among those the rollout does not see dying more often [gate rollout]
+        original: rollout dead 3/24, further loss 41.1, win ~54%; this turn hp -1, dmg 97
+        replacement: rollout dead 0/24, further loss 36.8, win ~79%; this turn hp -3, dmg 97
+        why: 5 lines shown there never played on that board

@@ -75,7 +75,7 @@ function reloadingGame(start: Raw, firstTurn: Raw) {
 }
 
 function slConfig(log: string | null, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 describe("judgeEndTurn: certain death only when nothing can be ruled out", () => {
@@ -459,9 +459,9 @@ describe("previousAttemptsJson", () => {
 describe("configuration", () => {
   it("SL is on by default (Dai 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log", () => {
     const config = loadConfig({ DECISION_LOG: "/tmp/x/decisions.jsonl" } as NodeJS.ProcessEnv);
-    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
-    const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_RETRY_SHOW_SIM: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_RELOAD_EARLY: "off", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
-    expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, retryShowSim: false, retryKnownDraws: false, retryCompute: false, judgeKnownDraws: false, reloadEarly: false, retryKnownInserts: false, retryKnownTop: false, retryExplore: false, log: null });
+    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryKnownPicks: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
+    const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_RETRY_SHOW_SIM: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_RELOAD_EARLY: "off", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_RETRY_EXPLORE_B2: "off", SL_RETRY_EXPLORE_BOSS_POTIONS: "off", SL_RETRY_EXPLORE_ORDER: "off", SL_RETRY_EXPLORE_REPLAY: "off", SL_RETRY_KNOWN_PICKS: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
+    expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, retryShowSim: false, retryKnownDraws: false, retryCompute: false, judgeKnownDraws: false, reloadEarly: false, retryKnownInserts: false, retryKnownTop: false, retryExplore: false, retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false, retryKnownPicks: false, log: null });
     expect(() => loadConfig({ SL_BOSS_RETRIES: "-1" } as NodeJS.ProcessEnv)).toThrow(/SL_BOSS_RETRIES/);
     expect(loadConfig({ SL_ENABLED: "off" } as NodeJS.ProcessEnv).sl.enabled).toBe(false);
   });
