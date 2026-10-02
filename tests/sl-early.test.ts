@@ -19,6 +19,7 @@ import { previousAttemptsJson, type SlAttemptRow } from "../src/sl/attempts.js";
 import { SlController } from "../src/sl/controller.js";
 import { checkKnown, DrawTracker, knownOrderOf, withAddedAtRandom, type KnownOrder } from "../src/sl/draws.js";
 import { drawsKnownAt, intentNotShown, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, midTurnRisks, type LeastLossFacts } from "../src/sl/judge.js";
+import { randomTargetOnly } from "../src/sl/random-target.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { samplePotion, type PotionMcSource } from "../src/strategy/potion-mc.js";
 import { rng, sampledDrawPile } from "../src/strategy/rollout.js";
@@ -116,11 +117,38 @@ describe("judgeLeastLossNow: the least-loss verdict taken before its line, only 
     const blood = lethalBoard();
     ((blood["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "BURNING_BLOOD", name: "燃烧之血", description: "在战斗结束时，回复[green]{Heal}[/green]点生命。" });
     expect(now(blood, clean()).certain).toBe(true);
-    const serpent = lethalBoard({ playerPowers: [{ power_id: "SERPENT_FORM_POWER", name: "群蛇形态", amount: 4 }] });
+    // Two enemies to hit: which one is chance.
+    const serpent = lethalBoard({ playerPowers: [{ power_id: "SERPENT_FORM_POWER", name: "群蛇形态", amount: 4 }], enemyIds: ["TEST_SUBJECT", "JAW_WORM"] });
+    (((serpent["combat"] as Raw)["enemies"] as Raw[])[1]!)["intents"] = [{ index: 0, intent_type: "Buff", label: null, damage: null, hits: null, total_damage: null, status_card_count: null }];
     const knowledge = knowledgeWith({ SERPENT_FORM_POWER: "你每打出一张牌，就对随机一名敌人造成[blue]4[/blue]点伤害。" });
     expect(now(serpent, clean(), { knowledge }).reason).toMatch(/^not before the line is played: acting by chance: 群蛇形态 \(power\)/);
     // A power with no text known counts, to be safe.
     expect(now(lethalBoard({ playerPowers: [{ power_id: "MYSTERY_POWER", name: "?", amount: 1 }] }), clean(), { knowledge }).reason).toMatch(/its text unknown/);
+  });
+
+  it("a random enemy with one enemy to hit is no chance; with two it is, and other chance stays (ops, X7BX5DYHFZ3N F48)", () => {
+    // The texts whose only chance is the enemy hit (the game's wording varies), and those with more.
+    for (const text of ["每当你获得格挡时，对随机敌人造成6点伤害。", "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，就随机对一名敌人造成[blue]{Damage}[/blue]点伤害。", "你每在你的回合丢弃一张牌，就对一名随机敌人造成[blue]{Damage}[/blue]点伤害。", "随机对敌人造成3点伤害3次。", "你每打出一张牌，就对随机一名敌人造成4点伤害。", "Deal 3 damage to a random enemy 3 times."]) expect(randomTargetOnly(text), text).toBe(true);
+    for (const text of ["在你的回合结束时，随机打出你手牌中的1张攻击牌攻击随机敌人。", "获得7点格挡。 随机消耗1张牌。", "将一张随机攻击牌加入你的手牌。", "造成10点伤害。"]) expect(randomTargetOnly(text), text).toBe(false);
+    const tingsha = (enemyIds: string[]): Raw => {
+      const raw = lethalBoard({ enemyIds });
+      ((raw["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "TINGSHA", name: "铜钹", description: "你每在你的回合丢弃一张牌，就对一名随机敌人造成[blue]{Damage}[/blue]点伤害。" });
+      return raw;
+    };
+    expect(midTurnRisks(state(tingsha(["TEST_SUBJECT"]))).chance).toEqual([]);
+    expect(midTurnRisks(state(tingsha(["TEST_SUBJECT", "JAW_WORM"]))).chance).toEqual(["铜钹 (relic)"]);
+    // A dead enemy is no target.
+    const dead = tingsha(["TEST_SUBJECT", "JAW_WORM"]);
+    (((dead["combat"] as Raw)["enemies"] as Raw[])[1]!)["is_alive"] = false;
+    expect(midTurnRisks(state(dead)).chance).toEqual([]);
+    // Serpent Form against the lone boss: no chance; it still acts mid-turn without the planner (not early for that).
+    const serpent = lethalBoard({ playerPowers: [{ power_id: "SERPENT_FORM_POWER", name: "群蛇形态", amount: 4 }] });
+    const knowledge = knowledgeWith({ SERPENT_FORM_POWER: "你每打出一张牌，就对随机一名敌人造成[blue]4[/blue]点伤害。", STAMPEDE_POWER: "在你的回合结束时，随机打出你手牌中的1张攻击牌攻击随机敌人。" });
+    expect(midTurnRisks(state(serpent), knowledge).chance).toEqual([]);
+    expect(now(serpent, clean(), { knowledge }).reason).toBe("not before the line is played: acting mid-turn without the planner: 群蛇形态 (power)");
+    // Stampede plays a random Attack from the hand: chance whatever the enemies.
+    const stampede = lethalBoard({ playerPowers: [{ power_id: "STAMPEDE_POWER", name: "惊逃", amount: 1 }] });
+    expect(midTurnRisks(state(stampede), knowledge).chance).toEqual(["惊逃 (power)"]);
   });
 
   it("no facts from the planner: not early", () => {

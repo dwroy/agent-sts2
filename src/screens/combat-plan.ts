@@ -52,6 +52,7 @@ import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, th
 import { knownTopIndices } from "../sl/draws.js";
 import { exploreAlternatives, exploreReplacement, lineText, type ExploreLine, type SlPoint } from "../sl/explore.js";
 import type { LeastLossFacts } from "../sl/judge.js";
+import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -1841,10 +1842,15 @@ const RANDOM_SPECIALS = new Set(["thrash", "gamble", "chaos", "snecko", "glowwat
 const DRAW_TEXT = /抽|draw/i;
 const PILE_TEXT = /抽牌堆|draw pile/i;
 
-/** What about a card the lines may play leaves the turn to chance or to what the planner does not model (null: nothing). */
-function cardChance(card: CardModel): string | null {
+/**
+ * What about a card the lines may play leaves the turn to chance or to what the planner does not model (null: nothing). A
+ * random enemy is no chance with one enemy to hit (`targets`; judge.ts randomTargetOnly: Sword Boomerang against a lone boss).
+ */
+function cardChance(card: CardModel, targets: number): string | null {
   if (!card.known) return `${card.name} is not modelled`;
-  if (card.target === "random" || card.randomExhaust === true || RANDOM_SPECIALS.has(card.special ?? "") || /随机|random/i.test(card.text)) return `${card.name} has a random effect`;
+  const randomText = /随机|random/i.test(card.text);
+  const loneTarget = targets <= 1 && (!randomText || randomTargetOnly(card.text));
+  if ((card.target === "random" && !loneTarget) || card.randomExhaust === true || RANDOM_SPECIALS.has(card.special ?? "") || (randomText && !loneTarget)) return `${card.name} has a random effect`;
   if ((card.playsTop ?? 0) > 0 || card.generates !== undefined || card.choices !== undefined || card.adds !== undefined) return `${card.name} plays or makes a card nobody knows`;
   if (card.drawsUntil === true) return `${card.name} draws an unknown number of cards`;
   return null;
@@ -1859,7 +1865,8 @@ function cardChance(card: CardModel): string | null {
  *   not Headbutt, Havoc, Metamorphosis); no potion in the solve and no random potion draws.
  * - chance (SL_RELOAD_EARLY): the first thing that leaves the all-lines-die verdict to chance: a random potion (its Monte
  *   Carlo), a draw not exactly known, a playable card (hand, modelled potion, known draw) with a random effect, an
- *   unmodelled one, Juggernaut's, Kusarigama's or Hellraiser's random hits.
+ *   unmodelled one, Juggernaut's, Kusarigama's or Hellraiser's random hits. A random enemy with `targets` 1 (one living
+ *   enemy to hit) is certain (ops 2026-10-02, X7BX5DYHFZ3N F48: Juggernaut against the lone boss kept the early reload off).
  */
 function leastLossFactsFor(
   line: Plan,
@@ -1870,6 +1877,7 @@ function leastLossFactsFor(
   hand: CardModel[],
   player: PlayerSim,
   randomPotions: readonly PotionMcSource[],
+  targets: number,
 ): LeastLossFacts {
   const solverHand = input?.hand ?? hand;
   const knownUsed = knownTop !== null && knownTop.added.length === 0 && input?.knownTop !== undefined ? knownTop.cards.length : 0;
@@ -1887,13 +1895,14 @@ function leastLossFactsFor(
   else if (draws && !drawsKnown) chance = "a line draws cards not exactly known";
   else {
     for (const card of playable) {
-      chance = cardChance(card);
+      chance = cardChance(card, targets);
       if (chance) break;
     }
   }
-  if (chance === null && (player.juggernaut ?? 0) > 0) chance = "Juggernaut hits a random enemy";
-  if (chance === null && player.kusarigama && playable.some((card) => card.type === "Attack")) chance = "Kusarigama hits a random enemy";
-  if (chance === null && player.hellraiser === true && draws) chance = "Hellraiser plays a drawn Strike at a random enemy";
+  const several = targets > 1;
+  if (chance === null && several && (player.juggernaut ?? 0) > 0) chance = "Juggernaut hits a random enemy";
+  if (chance === null && several && player.kusarigama && playable.some((card) => card.type === "Attack")) chance = "Kusarigama hits a random enemy";
+  if (chance === null && several && player.hellraiser === true && draws) chance = "Hellraiser plays a drawn Strike at a random enemy";
   return { knownDraws: exactUsed, drawsKnown, draws, line: line.steps.map(stepText), chance };
 }
 
@@ -2406,7 +2415,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         ? `every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg ${leastLoss.outcome.damageDealt}): ${leastLoss.steps.map(stepText).join(", ")}`
         : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
     };
-    noteLeastLoss(decision, () => leastLossFactsFor(leastLoss, solved, solvedInput, knownTop, env.sl?.knownDraws?.exact, hand, playerSim, [...mcSources.values()]));
+    noteLeastLoss(decision, () => leastLossFactsFor(leastLoss, solved, solvedInput, knownTop, env.sl?.knownDraws?.exact, hand, playerSim, [...mcSources.values()], randomTargets(state)));
     return decision;
   }
 
