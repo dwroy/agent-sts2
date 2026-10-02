@@ -22,6 +22,7 @@ import type { RunJournal } from "../project/run-journal.js";
 import type { ScreenMemory, SlEnv } from "../project/types.js";
 import { isMenuRunId } from "../project/journal-replay.js";
 import { distinctNames, revivesOf } from "../screens/combat-plan.js";
+import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { listedElite, loadSlElites, type SlEliteList } from "./elites.js";
@@ -200,7 +201,7 @@ export class SlController {
     if (!fight || this.stopped !== null || (state.run?.floor ?? null) !== fight.floor) return { handled: false };
     const maxHp = num(asRecord(asRecord(state.raw["combat"])["player"])["max_hp"], state.run?.max_hp ?? 0);
     const revives = revivesOf(state, context.screenMemory, maxHp).map((revive) => revive.source);
-    const verdict = judgeEndTurn(state, { label: context.label, revives });
+    const verdict = judgeEndTurn(state, { label: context.label, revives, ethereal: (card) => heldCardEthereal(card, this.knowledge) });
     fight.verdict = verdict;
     const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
     if (!verdict.certain) {
@@ -338,7 +339,8 @@ export class SlController {
       end_hp: predicted ? numOrNull(player["current_hp"]) : result === "won" ? (state.run?.current_hp ?? null) : 0,
       end_block: predicted ? numOrNull(player["block"]) : null,
       incoming: verdict?.incoming ?? null,
-      judge: verdict && (predicted || (result === "died" && verdict.certain)) ? { tier: verdict.tier, reason: verdict.reason } : null,
+      // A death keeps the last end_turn's verdict, certain or not (7PWU F48: a death the judge let through left no trace).
+      judge: verdict && (predicted || result === "died") ? { tier: verdict.certain ? verdict.tier : null, reason: verdict.certain ? verdict.reason : `not certain: ${verdict.reason}` } : null,
       reload: extra.reload,
       give_up_reason: extra.giveUp,
       summary: { turns: fight.turns, potions: fight.potions, killers: predicted || result === "died" ? (verdict?.killers ?? []) : [] },

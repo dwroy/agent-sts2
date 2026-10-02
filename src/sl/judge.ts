@@ -9,8 +9,8 @@
  * - no Buffer or Intangible on us, no Ripple Basin with no attack played (its block is not modelled here);
  * - no enemy in a special phase (max HP at or above a million: the Waterfall Giant's eruption; a DeathBlow intent);
  * - our own count agrees: the attack intents (damage x hits) minus the block up now, the block that comes at the end
- *   of the turn (Plating / Plated Armor / Metallicize, Cloak Clasp for each card held, Feel No Pain for each card
- *   held as if all were Ethereal, Orichalcum when no block is left) and Regen reach our HP.
+ *   of the turn (Plating / Plated Armor / Metallicize, Cloak Clasp for each card held, Feel No Pain for each Ethereal
+ *   card held, Orichalcum when no block is left) and Regen reach our HP.
  * Then one of two tiers:
  * - "rules": no playable card in hand and no potion that can be drunk;
  * - "least-loss": the turn planner's own verdict on this board, combat/least-loss ending the turn: every simulated
@@ -19,10 +19,14 @@
  *
  * Calibration on the logged A8+ boss and listed-elite turn ends (states.jsonl up to 2026-10-02, 4557 turn ends,
  * 201 deaths): "rules" fired 121 times, all deaths; both tiers 140 times, 139 deaths; the one survivor (7KDMKN16GD6B
- * F27 T7) had Feel No Pain block from exhausted Ethereal cards, now counted for every card held.
+ * F27 T7) had Feel No Pain block from exhausted Ethereal cards. That block was then counted for every card held, which
+ * let a certain death through: 7PWU F48 (Queen) attempt 2 T6, "35 incoming - 0 block - 32 end-of-turn block < 14 HP"
+ * with Feel No Pain 8 and four held cards none Ethereal (重振精神+, 薪火之源+, 御血术+, 突破+): no block came, it died
+ * with four retries left. Only Ethereal cards are exhausted at the end of the turn (context.ethereal, card-model).
  */
 import type { GameState } from "../mod/schema.js";
 import { distinctNames } from "../screens/combat-plan.js";
+import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
 
 export type JudgeTier = "rules" | "least-loss";
@@ -47,6 +51,11 @@ export interface JudgeContext {
   label: string;
   /** What can still revive us ("FAIRY_IN_A_BOTTLE", "LIZARD_TAIL"). */
   revives: readonly string[];
+  /**
+   * Whether a held card is Ethereal (exhausted at the end of the turn, so Feel No Pain blocks for it). Default: its
+   * rendered text (card-model heldCardEthereal without game data; a card with no text counts as Ethereal).
+   */
+  ethereal?: (card: Record<string, unknown>) => boolean;
 }
 
 /** The planner label whose end_turn means "every simulated line dies; ending the turn keeps the most HP". */
@@ -93,7 +102,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   }
   let endBlock = END_BLOCK_POWERS.reduce((sum, id) => sum + powerAmount(player, id), 0);
   if (relics.has("CLOAK_CLASP")) endBlock += hand.length;
-  endBlock += powerAmount(player, "FEEL_NO_PAIN_POWER") * hand.length;
+  const etherealHeld = hand.filter((card) => (context.ethereal ?? ((held) => heldCardEthereal(held)))(card)).length;
+  endBlock += powerAmount(player, "FEEL_NO_PAIN_POWER") * etherealHeld;
   if (relics.has("ORICHALCUM") && block + endBlock <= 0) endBlock += ORICHALCUM_BLOCK;
   const regen = powerAmount(player, "REGEN_POWER");
   const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({ certain, tier, reason, hp, block, endBlock, incoming, killers });

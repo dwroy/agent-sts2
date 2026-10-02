@@ -113,8 +113,16 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
     expect(judge(bossBoard({ hp: 25, relics: ["ORICHALCUM"] })).certain).toBe(false);
     expect(judge(bossBoard({ hp: 24, relics: ["ORICHALCUM"] })).certain).toBe(true);
     expect(judge(bossBoard({ hp: 20, playerPowers: [{ power_id: "REGEN_POWER", amount: 11 }] })).certain).toBe(false);
-    // Feel No Pain: counted for every card held (as if all were Ethereal).
-    expect(judge(bossBoard({ hp: 20, playerPowers: [{ power_id: "FEEL_NO_PAIN_POWER", amount: 11 }] })).certain).toBe(false);
+    // Feel No Pain: counted for each Ethereal card held, and for a card with no text (unknown: the side of caution); not
+    // for the others (7PWU F48 attempt 2 T6: 32 block counted for four non-Ethereal cards, none came, it died).
+    const fnp = (text: string) => {
+      const board = bossBoard({ hp: 20, playerPowers: [{ power_id: "FEEL_NO_PAIN_POWER", amount: 11 }] });
+      (((board["combat"] as Raw)["hand"] as Raw[])[0]!)["resolved_rules_text"] = text;
+      return judge(board);
+    };
+    expect(fnp("").certain).toBe(false);
+    expect(fnp("无法被打出。 虚无。").certain).toBe(false);
+    expect(fnp("造成6点伤害。").certain).toBe(true);
     expect(judge(bossBoard({ relics: ["RIPPLE_BASIN"] })).reason).toMatch(/Ripple Basin/);
   });
 
