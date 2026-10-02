@@ -63,8 +63,15 @@ export interface CardModel {
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
   feelNoPain?: number;
-  /** The card's printed base damage (dynamic Damage base_value): with Weak, the solver rounds once from it. */
+  /** The card's printed base damage (dynamic Damage base_value): with Weak or Shrink, the solver rounds once from it. */
   damageBase?: number;
+  /**
+   * `damage` already carries our Shrink (SHRINK_POWER on us): the hand as the game shows it while we are Shrunk (Strike
+   * 6 -> 4, Setup Strike 7 -> 4, Fight Me 5 -> 3: floor(x × 0.7), 3109 of 3114 logged hand numbers). A model built from
+   * the printed number (a pile or deck card, a generated one) does not: the solver shrinks that once, and un-shrinks this
+   * one once the Shrink is gone (its beetle killed mid-turn).
+   */
+  shownShrunk?: boolean;
   /** Dominate: Strength gained per Vulnerable on the target (after the card's own Vulnerable). */
   strengthPerVulnerable?: number;
   /** Strength the target enemy gains (Fight Me). */
@@ -210,15 +217,28 @@ function dyn(card: Record<string, unknown>, name: string): number | null {
 }
 
 /**
+ * Our attack damage before Vulnerable, unrounded: Weak takes 25% off and Shrink (SHRINK_POWER on us, the Shrinker Beetle's)
+ * 30%, both multiplied, then Vulnerable, and the game rounds down once. Logged while Shrunk: every hand number is
+ * floor((base + Strength) × 0.7); into Vulnerable all 32 single-hit plays where the two differ took floor(base × 0.7 × 1.5), not
+ * floor(shown × 1.5) (Bash 8 shown 5 dealt 8, not 7; Strike 6 + Strength 2 shown 5 dealt 8); Weak and Shrink together
+ * (on an enemy, the same rule): the Magi Knight's 6 shown 3 = floor(6 × 0.75 × 0.7), not 2. The 0.7 is ×7/10: 90 × 0.7 is
+ * 62.99999999999999 in floating point.
+ */
+export function ourAttackScaled(amount: number, weak: boolean, shrunk: boolean): number {
+  const weakened = weak ? amount * 0.75 : amount;
+  return shrunk ? (weakened * 7) / 10 : weakened;
+}
+
+/**
  * Vigor (VIGOR_POWER, Akabeko 8): the mod adds it to every Attack's shown damage, per hit (Strike 14,
  * Sword Boomerang 11x3), but the game spends it on the first Attack played (KFP1 F17 T1: Bash+ and
  * Sword Boomerang predicted 54 into the sleeping Matriarch, dealt 18, and the waking line won). Taken
  * off every Attack here; the solver adds it back once (PlayerSim.vigor). Under Weak the shown number
- * carries it at 0.75.
+ * carries it at 0.75, under Shrink at 0.7 too (ourAttackScaled).
  */
-export function stripVigor(hand: CardModel[], vigor: number, weak: boolean): void {
+export function stripVigor(hand: CardModel[], vigor: number, weak: boolean, shrunk = false): void {
   if (vigor <= 0) return;
-  const shown = Math.floor(vigor * (weak ? 0.75 : 1));
+  const shown = Math.floor(ourAttackScaled(vigor, weak, shrunk));
   for (const card of hand) {
     if (card.type === "Attack" && card.damage !== null) card.damage = Math.max(0, card.damage - shown);
   }
@@ -716,12 +736,15 @@ export const GIANT_ROCK = { cost: 1, damage: 20, damageUpgraded: 24 };
 
 /**
  * The Giant Rock an Attack in hand becomes (Primal Force): its hand slot and key, 1 energy, the rock's damage
- * shown the way the hand shows it (this turn's Strength, our Weak).
+ * shown the way the hand shows it (this turn's Strength, our Weak and Shrink, rounded once).
  */
-export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow: number, weak: boolean): CardModel {
+export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow: number, weak: boolean, shrunk = false): CardModel {
   const base = upgraded ? GIANT_ROCK.damageUpgraded : GIANT_ROCK.damage;
+  // The rock's number is its own: whether the attack's showed our Shrink does not carry over.
+  const { shownShrunk: _attackShrunk, ...rest } = attack;
   return {
-    ...attack,
+    ...rest,
+    ...(shrunk ? { shownShrunk: true } : {}),
     key: `${attack.key}>rock`,
     cardId: "GIANT_ROCK",
     name: upgraded ? "巨石+" : "巨石",
@@ -731,7 +754,7 @@ export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow:
     xCost: false,
     playable: true,
     target: "single",
-    damage: Math.floor((base + strengthNow) * (weak ? 0.75 : 1)),
+    damage: Math.floor(ourAttackScaled(base + strengthNow, weak, shrunk)),
     damageBase: base,
     hits: 1,
     block: 0,

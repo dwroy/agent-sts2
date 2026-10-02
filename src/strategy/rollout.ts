@@ -52,7 +52,7 @@ import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -2490,11 +2490,13 @@ function simulate(
       maxSkills: player.smoggy ? 1 : null,
       revives: player.revives,
       // This turn's own state, by the game's rules, not the decision's (`...base`): Sloth's cap per turn
-      // (Ringing was the decision turn's only), Intangible/Blur/Shrink for the turns they last, Constrict
-      // while its Strangler lives.
+      // (Ringing was the decision turn's only), Intangible/Blur for the turns they last, Constrict while its
+      // Strangler lives, a Shrink of -1 for the fight but, in a fight with the Shrinker Beetle, only while it lives
+      // (another's for its turns). The hand's cards (withStrength) carry Strength and Weak, not Shrink: the solver shrinks
+      // them once (a decision hand card kept or put back unbased carries its own: CardModel.shownShrunk).
       maxPlays: player.ringingNext ? Math.min(player.playCap ?? Infinity, 1) : player.playCap,
       intangible: player.intangibleTurns > h,
-      shrunk: player.shrinkTurns > 0,
+      shrunk: player.shrinkTurns > 0 && (player.shrinkTurns !== Infinity || !enemies.some((e) => e.id === SHRINKER) || enemies.some((e) => e.alive && e.id === SHRINKER)),
       endTurnHpLoss: player.disintegration + (player.constrict > 0 && enemies.some((e) => e.alive && e.id === CONSTRICTOR) ? player.constrict : 0),
       keepsBlock: player.keepsBlock || player.blurTurns > h,
       endTurnBlock: player.endTurnBlock + player.plating,
