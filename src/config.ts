@@ -115,6 +115,13 @@ export interface AppConfig {
    * (default): combat, potions and in-combat card picks stay with code and Jev.
    */
   combatDeepseek: "off" | "on";
+  /**
+   * THIEF_FACTS (default on; docs/thief.md, src/strategy/thief.ts): while a Thieving Hopper or a Gremlin Merc / Fat
+   * Gremlin carries a stolen card or gold, the combat question gets thief_context and a `thief` fact on each option,
+   * the rollout lets an enemy whose Escape resolves leave the fight, and a line that kills it before it leaves is kept
+   * among the options. off: the combat question exactly as before.
+   */
+  thiefFacts: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; off by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -626,6 +633,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     problems.push({ field: "COMBAT_DEEPSEEK", message: `expected off or on, got "${combatDeepseekRaw}"` });
   }
   const combatDeepseek: "off" | "on" = combatDeepseekRaw === "on" ? "on" : "off";
+  // An unreadable THIEF_FACTS is a warning, not a start-up error: the default (on) applies.
+  const thiefFactsProblems: ConfigProblem[] = [];
+  const thiefFacts = parseOnOff(readEnv(env, "THIEF_FACTS"), "THIEF_FACTS", thiefFactsProblems) ?? true;
+  for (const problem of thiefFactsProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -720,6 +731,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     buildOneshot,
     bossSimBuild,
     combatDeepseek,
+    thiefFacts,
     sl,
     brain,
     deepseek,

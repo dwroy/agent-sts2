@@ -27,6 +27,7 @@ import type { ActionRequest, ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
+import { noteFightStart, thiefFightOf } from "./strategy/thief.js";
 import { compact, describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type RouteReviewResult, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
@@ -583,6 +584,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
           // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
+          // A restart mid-fight: the fight's first logged frame, the deck before a Thieving Hopper's theft (thief.ts).
+          if (replay.thiefStart && replay.thiefStart.fight === thiefFightOf(state) && screenMemory.thiefStart?.fight !== replay.thiefStart.fight) screenMemory.thiefStart = replay.thiefStart;
           // A restart mid-fight: the Surrounded facing of this fight's last targeted action (else startFacing, stale).
           if (replay.facing && screenMemory.facing === undefined && replay.facing.fight === facingFightOf(state)) {
             screenMemory.facing = replay.facing.index;
@@ -613,6 +616,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
     // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come.
     trackLizardTail(screenMemory, state);
+    // The deck and gold at the fight's first frame: a thief's take is that less the run now (strategy/thief.ts).
+    noteFightStart(screenMemory, state);
     sl?.observe(state, { journal, screenMemory });
     // What the brain's tools read for this state (only used when an engine gets tools).
     brain?.setToolContext(toolContextOf(state, state.run ? actOf(state) : undefined, dirname(config.log.decisionLog)));
@@ -637,6 +642,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       buildDecider: config.buildDecider === "deepseek" && deepseekClient ? "deepseek" : "jev",
       oneshot: config.buildOneshot,
       ...(slEnv ? { sl: slEnv } : {}),
+      thiefFacts: config.thiefFacts,
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
@@ -1559,6 +1565,7 @@ export function resetFightMemory(screenMemory: ScreenMemory): void {
   screenMemory.plannedAfter = undefined;
   screenMemory.paelsEyeFight = undefined;
   screenMemory.fightStart = undefined;
+  screenMemory.thiefStart = undefined;
   screenMemory.demonTongueTurn = undefined;
   screenMemory.fightPlan = undefined;
   screenMemory.fightPlanFailed = undefined;

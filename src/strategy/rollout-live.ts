@@ -61,6 +61,7 @@ import {
   type RolloutResult,
   type SpawnTemplate,
 } from "./rollout.js";
+import { backShare, escapeInput, thiefTag, type Thief, type ThiefSamples } from "./thief.js";
 import { hpText, type EnemySim, type Plan, type SolverInput } from "./turn-solver.js";
 
 /** Kill orders come from here too: decision code reaches rollout.ts only through this module. */
@@ -471,6 +472,12 @@ export interface LiveRolloutArgs {
    * two are the same line: the copy is dropped (merged) and the base line is the no-potion line.
    */
   noPotion?: { line: Plan; base: Plan };
+  /**
+   * THIEF_FACTS (thief.ts): the thieves carrying our card or gold now. Given (an empty list included), an enemy whose
+   * Escape / Flee resolves leaves the rollout's fight, and each line's samples count the loot back or gone
+   * (RolloutInput.escapes); absent, the rollout as before (the enemy stays, doing nothing).
+   */
+  thieves?: Thief[];
   /** Overrides (tests): the model, the gates. */
   model?: FightValueModel | null;
   gates?: FightValueGates | null;
@@ -777,6 +784,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const { handBase, ...boardInput } = board;
     const result = rolloutDecision({
       ...boardInput,
+      ...(args.thieves ? { escapes: escapeInput(args.thieves, monsterMoves()) } : {}),
       plans: args.plans,
       piles: { draw: args.piles.draw, discard: args.piles.discard, handBase },
       meta,
@@ -997,4 +1005,42 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
         }
       : {}),
   };
+}
+
+// ---------------------------------------------------------------- thieves (THIEF_FACTS, thief.ts)
+
+/**
+ * A line's rollout numbers for a thief (RolloutInput.escapes: the samples whose loot is back or gone by the horizon,
+ * under the line's best kill order), with the order whose later turns get it back most often when that is another
+ * one; null without a rollout of the line.
+ */
+export function thiefSamples(line: LineEstimate | null | undefined, thief: Thief): ThiefSamples | null {
+  const tag = thiefTag(thief);
+  const counts = line?.thieves?.[tag];
+  if (!line || !counts) return null;
+  const others = line.orders.filter((entry) => entry.order !== line.order && (entry.thieves?.[tag]?.back ?? 0) > counts.back);
+  const most = others.reduce<(typeof others)[number] | null>((a, b) => (a === null || (b.thieves?.[tag]?.back ?? 0) > (a.thieves?.[tag]?.back ?? 0) ? b : a), null);
+  return { ...counts, samples: line.samples, ...(most ? { order: { label: most.order.label, back: most.thieves![tag]!.back } } : {}) };
+}
+
+/**
+ * The rollout's line most often getting a thief's loot back before it leaves, under any of its kill orders (thief.ts
+ * backShare; ties: the higher rollout value, then code's order), among the lines it may show (`eligible`), for a thief
+ * that does not leave this turn (that one is thief.ts lastTurnKillLine's). A line in `shown` at that count is the one
+ * (kept, not replaced); null when no sample of any line gets it back.
+ */
+export function rolloutKillLine(lines: LineEstimate[], eligible: (line: LineEstimate) => boolean, shown: Plan[], thieves: Thief[]): Plan | null {
+  for (const thief of thieves) {
+    if (thief.turnsLeft === 1) continue;
+    const pool = lines.filter((line) => eligible(line) && thiefSamples(line, thief) !== null);
+    if (pool.length === 0) continue;
+    const back = (line: LineEstimate) => backShare(thiefSamples(line, thief)!);
+    const most = Math.max(...pool.map(back));
+    if (most <= 0) continue;
+    const top = pool.filter((line) => back(line) === most);
+    const inShown = shown.find((plan) => top.some((line) => line.plan === plan));
+    if (inShown) return inShown;
+    return [...top].sort((a, b) => b.value - a.value)[0]!.plan;
+  }
+  return null;
 }

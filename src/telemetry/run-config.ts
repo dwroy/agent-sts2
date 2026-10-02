@@ -143,6 +143,8 @@ export interface RunConfigRow {
     /** B3: the act boss simulated for each option of a deck-building question (BOSS_SIM_BUILD). */
     boss_sim_build: string;
     combat_deepseek: string;
+    /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
+    thief_facts: boolean;
     fight_plan: string;
     run_plan: string;
     escalation: string[];
@@ -411,6 +413,7 @@ export function runConfigRow(
       build_oneshot: config.buildOneshot,
       boss_sim_build: config.bossSimBuild,
       combat_deepseek: config.combatDeepseek,
+      thief_facts: config.thiefFacts,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
       escalation: [...config.escalation.chain],

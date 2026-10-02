@@ -39,7 +39,7 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
-import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutLiveOptions, rolloutLog, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
+import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFacts, rolloutKillLine, rolloutLiveOptions, rolloutLog, thiefSamples, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { heldPotionWorth } from "../knowledge/potion-equivalents.js";
 import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPotionCost, type PotionCost } from "../strategy/potion-cost.js";
@@ -47,6 +47,7 @@ import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/mon
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
+import { killsThief, lastTurnKillLine, lootText, shownKillLine, thiefContextJson, thiefFact, thievesOf, type Thief } from "../strategy/thief.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -216,6 +217,15 @@ export function dryFirst(plans: Plan[]): Plan | undefined {
 
 /** Test hook: per-target options and kill-order rollouts off (the question as before them). */
 export const targetOptions: { enabled: boolean } = { enabled: true };
+
+/**
+ * Tool hook (tools/thief-facts-replay.ts): with `enabled`, each combat question leaves its lines here (the surviving
+ * lines, the shown ones, the rollout, the thieves and the lines kept for a kill before one leaves). Never read by play.
+ */
+export const thiefTrace: {
+  enabled: boolean;
+  last: { plans: Plan[]; surviving: Plan[]; shown: Plan[]; rollout: LiveRollout | null; thieves: Thief[]; lastTurnLine: Plan | null; rolloutLine: Plan | null } | null;
+} = { enabled: false, last: null };
 
 /**
  * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not
@@ -1877,6 +1887,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...(laterIncoming ? { laterIncoming } : {}),
     }));
   const solved = solve();
+  // Tool hook: every line the solver found, also when code decides on its own below (a lethal, a dominating line).
+  if (thiefTrace.enabled) thiefTrace.last = { plans: solved.plans, surviving: [], shown: [], rollout: null, thieves: [], lastTurnLine: null, rolloutLine: null };
   // The random potions' Monte Carlo, run once when a decision needs it (every question does).
   const dryBest = solved.plans.find((plan) => !drinksPotion(plan) && !plan.outcome.dies) ?? solved.plans.find((plan) => !drinksPotion(plan)) ?? null;
   let mcResults: PotionMc[] | null = null;
@@ -2074,6 +2086,26 @@ function planTurn(env: DecisionEnv): Decision | null {
   // ending the turn, the line's own end, among the options.
   const stopLine = lineEnded !== null && top.steps.length > 0 && endNow !== undefined && surviving.includes(endNow) ? endNow : null;
   if (stopLine && !options.includes(stopLine)) options.push(stopLine);
+  // THIEF_FACTS (docs/thief.md, strategy/thief.ts): the enemies carrying our card or gold (a Thieving Hopper's stolen card,
+  // a Gremlin Merc's or Fat Gremlin's gold). On a thief's last turn, a line that kills it is among the options (the
+  // 7 escapes of 98 A8+ Hopper fights lost a build card each: RPC6X61N9FQ0 F20 岩石铠甲, 8V0HD9Y207WY F19, ...).
+  // Fail safe (live play): an error in any thief step drops the thief facts of this decision, which goes on as before.
+  const thiefOn = env.thiefFacts !== false;
+  let thieves: Thief[] = [];
+  let thiefKill: Plan | null = null;
+  // Set when a thief step threw: the decision then goes on exactly as with THIEF_FACTS off (no escape in the rollout either).
+  let thiefFailed = false;
+  if (thiefOn && allDie === null) {
+    try {
+      thieves = thievesOf(state, env.screenMemory, new Map(enemies.map((enemy) => [enemy.index, enemy.name])));
+      thiefKill = thieves.length > 0 ? lastTurnKillLine(surviving, options, thieves, drinksPotion) : null;
+    } catch {
+      thieves = [];
+      thiefKill = null;
+      thiefFailed = true;
+    }
+  }
+  if (thiefKill && !options.includes(thiefKill)) options.push(thiefKill);
   const second = options.find((plan) => plan !== top);
   // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
   // into each kind is shown, labelled "focus: <enemy>". The score's tactical weights (minion chip,
@@ -2185,7 +2217,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
-  const rollout: LiveRollout | null = rolloutLiveOptions.enabled && rolloutSolver !== null
+  const runRollout = (escapes: boolean): LiveRollout | null =>
+    rolloutLiveOptions.enabled && rolloutSolver !== null
     ? liveRollout({
         state,
         knowledge: env.knowledge,
@@ -2198,8 +2231,48 @@ function planTurn(env: DecisionEnv): Decision | null {
         orders: kill.orders,
         ordersDropped: kill.dropped,
         ...(noPotionBase && noPotionCopy ? { noPotion: { line: noPotionCopy, base: noPotionBase } } : {}),
+        // THIEF_FACTS: an enemy whose Escape / Flee resolves leaves the rollout's fight; the loot back or gone per sample.
+        ...(escapes ? { thieves } : {}),
       })
     : null;
+  let rollout = runRollout(thiefOn && !thiefFailed);
+  // THIEF_FACTS fail safe: a rollout that failed with the escapes in it runs again as before, the thief facts dropped.
+  if (thiefOn && !thiefFailed && rollout !== null && !rollout.available && rollout.reason.startsWith("error")) {
+    thieves = [];
+    thiefFailed = true;
+    rollout = runRollout(false);
+  }
+  // THIEF_FACTS: a thief that leaves later (or the Merc, whose gold goes to the Fat Gremlin): the rollout's line most
+  // often getting the loot back before it leaves is among the options, kept through the trim like the killing line of
+  // a thief's last turn (rollout-live.ts rolloutKillLine, thief.ts shownKillLine). A line Jev picks among them is still
+  // the HP guard's to bound like any pick (the Hopper alone: killing it wins the fight, which the guard never swaps).
+  // Each option's thief fact (this turn exact, then the rollout's samples) and thief_context are made here too, for
+  // every line that can be shown: an error in any of it drops them all and the rollout runs again as before (fail safe).
+  let thiefRollout: Plan | null = null;
+  let thiefKept: Plan[] = [];
+  let thiefFacts = new Map<Plan, string>();
+  let thiefContext: Record<string, JsonValue> | null = null;
+  if (thieves.length > 0) {
+    try {
+      const rolled = rollout?.available ? rollout : null;
+      thiefRollout = rolled ? rolloutKillLine(rolled.result.lines, (line) => line.plan !== noPotionCopy && (options.includes(line.plan) || !drinksPotion(line.plan)), options, thieves) : null;
+      thiefKept = [shownKillLine(thiefRollout && !options.includes(thiefRollout) ? [...options, thiefRollout] : options, thieves), thiefRollout].filter((plan): plan is Plan => plan !== null);
+      for (const plan of new Set([...options, ...(thiefRollout ? [thiefRollout] : []), ...mcMedians, ...(rolled ? rolled.result.lines.map((line) => line.plan) : [])])) {
+        thiefFacts.set(plan, thiefFact(plan, thieves, (thief) => thiefSamples(rolled?.byPlan.get(plan), thief), state.turn ?? null));
+      }
+      thiefContext = thiefContextJson(thieves, state.turn ?? null);
+    } catch {
+      thieves = [];
+      thiefFailed = true;
+      thiefRollout = null;
+      thiefKept = [];
+      thiefFacts = new Map();
+      thiefContext = null;
+      rollout = runRollout(false);
+    }
+  }
+  const thiefRolloutAdded = thiefRollout !== null && !options.includes(thiefRollout);
+  if (thiefRollout && thiefRolloutAdded) options.push(thiefRollout);
   // The no-potion line as its own option (not merged), or the option it is (merged, or no rollout: the base line).
   const noPotionRolled = rollout?.available ? rollout.noPotion : null;
   const noPotionOwn = noPotionRolled && !noPotionRolled.merged ? noPotionRolled.line : null;
@@ -2210,7 +2283,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const offerPotions = potions.length > 0;
   const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;
   // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room.
-  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys(), ...(noPotionBase ? [noPotionBase] : [])]);
+  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys(), ...(noPotionBase ? [noPotionBase] : []), ...thiefKept]);
   const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys + (noPotionOwn ? 1 : 0), keep);
   options.splice(0, options.length, ...planOptions);
   const shown = [...options, ...(noPotionOwn ? [noPotionOwn] : []), ...(rolloutBest && !rolloutBestIsPotion && !options.includes(rolloutBest) && rolloutBest !== noPotionOwn ? [rolloutBest] : [])];
@@ -2238,6 +2311,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board.
   const costNote = (plan: Plan): Record<string, JsonValue> =>
     costsOn ? { potion_cost: potionCostFact(plan, rollout?.available ? (rollout.byPlan.get(plan) ?? null) : null, costs) } : {};
+  // THIEF_FACTS: each option's thief fact, made with the coverage after the rollout (fail safe there).
+  const thiefNote = (plan: Plan): Record<string, JsonValue> => (thiefFacts.has(plan) ? { thief: thiefFacts.get(plan)! } : {});
   const noPotionNote = (plan: Plan): Record<string, JsonValue> => {
     if (noPotionOwn && plan === noPotionOwn) {
       const base = noPotionRolled!.base;
@@ -2274,7 +2349,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
   shown.forEach((plan, index) => {
     const key = `plan${index + 1}`;
-    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...noPotionNote(plan), ...fitOf(plan), ...factsOf(plan), ...costNote(plan) });
+    criteria[key] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...noPotionNote(plan), ...fitOf(plan), ...factsOf(plan), ...costNote(plan), ...thiefNote(plan) });
     byKey.set(key, { plan, label: `${focusOf.has(plan) ? `focus: ${focusOf.get(plan)!.join(", ")} — ` : ""}${plan.steps.map(stepText).join(", ") || "end turn"}${plan === noPotionOwn ? " — no potion this fight" : ""}` });
   });
   const rolloutRecord = rollout
@@ -2295,7 +2370,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       : mc.median
       ? { potion_cost: potionCostFact(mc.median, rollout?.available ? (rollout.byPlan.get(mc.median) ?? null) : null, costs) }
       : { potion_cost: `drinking it costs ${costs.get(mc.source.potionId) ? potionCostText(costs.get(mc.source.potionId)!) : "0 (no conversion value in the potion table)"}` };
-    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts, ...mcCost });
+    criteria[key] = JSON.stringify({ ...potionMcCriteria(mc, dryBest, lineLabel, othersHeld), ...facts, ...mcCost, ...(mc.median ? thiefNote(mc.median) : {}) });
     byKey.set(key, { potion: { action: "use_potion", option_index: mc.source.slot }, label: `drink ${mc.source.name}, then re-plan` });
   }
   // Unsimulated potions: always an option, with no invented numbers.
@@ -2367,6 +2442,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
+    // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
+    ...(thiefContext ? { thief_context: thiefContext } : {}),
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
     ...(bossSim && simShown ? { whole_fight_sim: simNote(bossSim), ...(bossSim.available && bossSim.plan ? { whole_fight_plan: `the simulation's best line, from its samples (information, not an order): ${bossSim.plan}` } : {}) } : {}),
     ...(slLowTrustSim !== null
@@ -2411,7 +2488,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     };
     const jevCriteria: Record<string, string | null> = { ...criteria };
     shown.forEach((plan, index) => {
-      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...noPotionNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan), ...costNote(plan) });
+      jevCriteria[`plan${index + 1}`] = JSON.stringify({ ...focusNote(plan), ...describePlan(plan, playerSim.maxHp), ...potionLethalNote(plan), ...noEffectNote(plan, surviving), ...noPotionNote(plan), ...planFacts(plan, ctx), ...fitOf(plan), ...factsOf(plan), ...costNote(plan), ...thiefNote(plan) });
     });
     const actRaw = state.run?.act_id;
     const hints = selectHints({
@@ -2527,6 +2604,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   };
 
+  if (thiefTrace.enabled) thiefTrace.last = { plans: solved.plans, surviving, shown, rollout, thieves, lastTurnLine: thiefKill, rolloutLine: thiefRollout };
   return {
     kind: "ask",
     label: potionLethal.length > 0 ? "combat/plan-choice+potion-lethal" : offerPotions || mcShown.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice",
@@ -2540,9 +2618,24 @@ function planTurn(env: DecisionEnv): Decision | null {
         mcShown.length > 0 || potions.length > 0
           ? { random: mcShown.map(potionMcLog), unsimulated_offered: potions.map((potion) => potion.potion_id), fight_plan_now: planPotionNow }
           : null;
-      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim) return resolved;
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
+      // THIEF_FACTS: the thieves, the shown lines killing one this turn, the line kept for a kill before it leaves.
+      const thiefRecord = ((): JsonValue | null => {
+        if (thieves.length === 0) return null;
+        try {
+          return {
+            thieves: thieves.map((thief) => ({ name: thief.name, id: thief.id, carries: lootText(thief), turns_left: thief.turnsLeft })),
+            kills_now: shown.filter((plan) => thieves.some((thief) => killsThief(plan, thief))).map(keyOfShown),
+            ...(thiefKill && shown.includes(thiefKill) ? { last_turn_line: keyOfShown(thiefKill) } : {}),
+            ...(thiefRollout && shown.includes(thiefRollout) ? { rollout_line: keyOfShown(thiefRollout), rollout_line_added: thiefRolloutAdded } : {}),
+            chosen_kills: pick?.plan ? thieves.some((thief) => killsThief(pick.plan!, thief)) : null,
+          };
+        } catch {
+          return null;
+        }
+      })();
       // The rollout's best chosen: its one best, or any of the options tied for it.
       const bestKeys = tiedKeys.length > 0 ? tiedKeys : bestShown !== null ? [keyOfShown(bestShown)] : [];
       const rolloutBestChosen = bestKeys.length === 0 || pick === undefined || answer?.type !== "choice" ? null : bestKeys.includes(answer.choice);
@@ -2554,6 +2647,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...(rolloutRecord ? { rollout: rolloutRecord, rollout_best_chosen: rolloutBestChosen, ...(chosenOrder ? { chosen_order: chosenOrder } : {}) } : {}),
           ...(potionsRecord ? { potions: potionsRecord } : {}),
           ...(focusOf.size > 0 ? { focus: Object.fromEntries([...byKey.entries()].filter(([, entry]) => entry.plan && focusOf.has(entry.plan)).map(([key, entry]) => [key, focusOf.get(entry.plan!)!.join(", ")])) } : {}),
+          ...(thiefRecord ? { thief: thiefRecord } : {}),
           // With the 5-turn rollout's own best (or ties), which rollout.best no longer is where the simulation ranks.
           ...(bossSim
             ? {
