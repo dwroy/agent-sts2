@@ -25,7 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
-import { appliedPowerIds, countsAt, moveBaseDamages, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, type MoveEntry } from "../knowledge/monster-db.js";
+import { appliedPowerIds, countsAt, moveAmountAt, moveBaseDamages, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, startAmountAt, type AmountWhere, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
@@ -106,6 +106,8 @@ export type MonsterMoves = Record<
     name?: { zh?: string };
     hp_by_asc?: Record<string, { median?: number }>;
     powers?: Record<string, { amount_at_first_sight_by_asc?: Record<string, Record<string, number>>; turn_at_first_sight_by_asc?: Record<string, Record<string, number>> }>;
+    /** Fights by map room (boss, elite, hallway): the amount estimates measure a boss's change on the bosses' (monster-db amountAt). */
+    rooms?: Record<string, number>;
   }
 >;
 
@@ -117,14 +119,15 @@ const LATER_SHRIEK_POWERS = ["PLOW_POWER", "SHRIEK_POWER"];
 
 /**
  * A Shriek / Plow threshold first seen after turn 1 (the Ceremonial Beast's Plow: 150 at A8, 160 at A9, on turn 2): the
- * amount and turn most often first seen at this ascension (the nearest logged one else), or undefined.
+ * amount and turn most often first seen at this ascension (the nearest logged one else, its amount moved by the measured
+ * change: monster-db startAmountAt), or undefined.
  */
 export function shriekFromOf(id: string, asc: number, db: MonsterMoves): { amount: number; turn: number } | undefined {
   for (const power of LATER_SHRIEK_POWERS) {
     const entry = db[id]?.powers?.[power];
     const found = nearestAscension(entry?.amount_at_first_sight_by_asc, asc);
     if (!entry || !found) continue;
-    const amount = mode(entry.amount_at_first_sight_by_asc?.[found.key]);
+    const amount = startAmountAt(db, id, power, asc)?.value ?? null;
     const turn = mode(entry.turn_at_first_sight_by_asc?.[found.key]);
     if (amount !== null && amount > 0 && turn !== null && turn > 1) return { amount, turn };
   }
@@ -168,15 +171,17 @@ function mode(counts: Record<string, number> | undefined): number | null {
 
 /**
  * The powers a move puts on us (rollout.ts PLAYER_DEBUFFS): the most common amount of each in the monster
- * DB's player_powers_applied at this ascension, the nearest logged one else, the pooled counts when the
+ * DB's player_powers_applied at this ascension, the nearest logged one else (with `where`, its amount moved by the
+ * measured change: monster-db moveAmountAt; A8 -> A9 changed none of 32 logged pairs), the pooled counts when the
  * DB has no per-ascension split (Terror Eel's Terror: Vulnerable 99 at every ascension).
  */
-export function playerPowersOf(entry: MoveEntry, asc: number): Pick<EnemyMove, "playerPowers" | "playerPowerChoice"> {
+export function playerPowersOf(entry: MoveEntry, asc: number, where?: AmountWhere): Pick<EnemyMove, "playerPowers" | "playerPowerChoice"> {
   const found = nearestAscension(entry.player_powers_applied_by_asc, asc);
   const counts = found ? entry.player_powers_applied_by_asc![found.key]! : entry.player_powers_applied ?? {};
   const all: Partial<Record<PlayerDebuff, number>> = {};
   for (const id of PLAYER_DEBUFFS) {
-    const amount = mode(counts[id]);
+    const logged = mode(counts[id]);
+    const amount = logged && where && found && !found.exact ? (moveAmountAt(where.monsters, where.monsterId, entry, "applied", id, asc)?.value ?? logged) : logged;
     if (amount) all[id] = amount;
   }
   if (Object.keys(all).length === 0) return {};
@@ -193,11 +198,14 @@ export function playerPowersOf(entry: MoveEntry, asc: number): Pick<EnemyMove, "
   return { playerPowers: out, playerPowerChoice: order };
 }
 
-/** The rollout's other self-buffs of a move (rollout.ts ENEMY_SELF_POWERS) at this ascension (selfGainAt). */
-export function selfPowersOf(entry: MoveEntry, asc: number): { selfPowers?: Partial<Record<EnemySelfPower, number>> } {
+/**
+ * The rollout's other self-buffs of a move (rollout.ts ENEMY_SELF_POWERS) at this ascension (selfGainAt; with `where`,
+ * one not logged here is the nearest logged one's moved by the measured change).
+ */
+export function selfPowersOf(entry: MoveEntry, asc: number, where?: AmountWhere): { selfPowers?: Partial<Record<EnemySelfPower, number>> } {
   const out: Partial<Record<EnemySelfPower, number>> = {};
   for (const id of ENEMY_SELF_POWERS) {
-    const amount = selfGainAt(entry, id, asc);
+    const amount = selfGainAt(entry, id, asc, where);
     if (amount) out[id] = amount;
   }
   return Object.keys(out).length > 0 ? { selfPowers: out } : {};
@@ -206,10 +214,16 @@ export function selfPowersOf(entry: MoveEntry, asc: number): { selfPowers?: Part
 /**
  * HP a Heal move gives its user at this ascension: the monster DB's heal_by_asc (the nearest logged
  * ascension), else the boss clock's logged numbers for the two bosses that heal (Siphon 10, 15 from A8;
- * Ponder 30), else none.
+ * Ponder 30), else none. The most common amount, a tie going to the larger: a heal is logged as the HP it
+ * gave back, less near full HP (the Knowledge Demon's Ponder at A9: 12, 24 and 30 once each read 12, A8's 30 on
+ * 46 of 73).
  */
 export function healOf(id: string, move: string, entry: MoveEntry | undefined, asc: number): number {
-  const logged = mode(countsAt(entry?.heal_by_asc, undefined, asc));
+  const counts = countsAt(entry?.heal_by_asc, undefined, asc);
+  const logged = Object.entries(counts ?? {})
+    .map(([amount, n]) => [Number(amount), n] as const)
+    .filter(([amount]) => Number.isFinite(amount))
+    .sort((a, b) => b[1] - a[1] || b[0] - a[0])[0]?.[0];
   if (logged) return logged;
   if (id === "WATERFALL_GIANT" && move === "SIPHON_MOVE") return asc >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base;
   if (id === "KNOWLEDGE_DEMON" && move === "PONDER_MOVE") return PONDER_HEAL;
@@ -243,6 +257,9 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
   const learned = mm[id];
   if (!moves && !learned) return undefined;
   const table: EnemyTable = { moves: {}, next: {} };
+  // Buffs, block and debuffs not logged at this ascension: the nearest logged one's moved by the measured change
+  // (monster-db amountAt: A8 -> A9 +1 Strength on 8 of 11 boss buff moves; a boss never fought at A9 reads +3, not A8's +2).
+  const where: AmountWhere = { monsters: db, monsterId: id };
   for (const [move, entry] of Object.entries(moves ?? {})) {
     // At this ascension when logged there; else the nearest logged one's scaled by the measured ratio
     // (A9 hits harder than A8: 110 of 122 moves), marked estimated. A move whose base was never measured
@@ -253,7 +270,10 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
     const shown = logged ? null : shownDamageAt(db, id, move, asc);
     const hits = logged?.hits ?? shown?.hits ?? 1;
     const avg = learned?.damage[move] ?? entry.avg_total_shown ?? 0;
-    const sandpit = selfGainAt(entry, "SANDPIT_POWER", asc);
+    const sandpit = selfGainAt(entry, "SANDPIT_POWER", asc, where);
+    const block = regularEffect(entry, entry.block_gained) ? moveAmountAt(db, id, entry, "block", "BLOCK", asc) : null;
+    const strength = regularEffect(entry, entry.self_powers_gained?.["STRENGTH_POWER"]) ? moveAmountAt(db, id, entry, "self", "STRENGTH_POWER", asc) : null;
+    const vigor = selfGainAt(entry, "VIGOR_POWER", asc, where);
     table.moves[move] = {
       damage: logged?.perHit ?? shown?.perHit ?? (avg > 0 ? avg / hits : 0),
       hits,
@@ -261,16 +281,17 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
       // B4, read by whole fights only: a Surrounded move's faced hit, a Sandpit it starts.
       ...(logged?.backAttackShare !== undefined && logged.base !== undefined ? { faceDamage: logged.base } : {}),
       ...(sandpit ? { sandpit } : {}),
-      // Buffs at this ascension (nearest logged; A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled.
-      strength: selfGainAt(entry, "STRENGTH_POWER", asc) ?? 0,
-      block: regularEffect(entry, entry.block_gained) ? (mode(countsAt(entry.block_gained_by_asc, entry.block_gained, asc)) ?? 0) : 0,
+      // Buffs at this ascension (A9 Ritual/Charge Up/Salivate +3 where A8 is +2), not pooled; not logged here, the
+      // nearest logged one's moved by the measured change, the move marked estimated.
+      strength: strength?.value ?? 0,
+      block: block?.value ?? 0,
       ...(entry.self_powers_gained?.["BURROWED_POWER"] ? { burrows: true } : {}),
-      ...(selfGainAt(entry, "VIGOR_POWER", asc) ? { vigor: selfGainAt(entry, "VIGOR_POWER", asc)! } : {}),
-      ...selfPowersOf(entry, asc),
+      ...(vigor ? { vigor } : {}),
+      ...selfPowersOf(entry, asc, where),
       ...(healOf(id, move, entry, asc) > 0 ? { heal: healOf(id, move, entry, asc) } : {}),
       ...statusCardsOf(entry),
-      ...playerPowersOf(entry, asc),
-      ...(logged?.estimated || shown?.estimated ? { estimated: true } : {}),
+      ...playerPowersOf(entry, asc, where),
+      ...(logged?.estimated || shown?.estimated || strength?.estimated || block?.estimated ? { estimated: true } : {}),
       ...(growthOf(id, move, asc) > 0 ? { growth: growthOf(id, move, asc) } : {}),
     };
   }

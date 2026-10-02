@@ -1,20 +1,25 @@
 /**
  * Monster and encounter knowledge text (docs/v4-architecture.md §3), rendered from monster-db.json at the run's
  * ascension. The numbers come from monster-db.ts's lookups (monsterHpAt, moveDamageAt, shownDamageAt, countsAt,
- * regularEffect, appliedPowerIds), so the brain reads the same facts the rollout and the boss clock use; a number
- * not logged at this ascension is scaled from the nearest one along the measured ratio chain and marked 「估」.
+ * amountAt, regularEffect, appliedPowerIds), so the brain reads the same facts the rollout and the boss clock use; a
+ * number not logged at this ascension is scaled from the nearest one along the measured ratio chain and marked 「估」
+ * (buffs, debuffs and block: the nearest one's counts, labelled, and the estimate the rollout uses).
  * Every number carries its n. Encounters list our record at every logged ascension.
  */
 
 import { stripMarkup } from "../../util/json.js";
 import {
   ON_DEATH_SPAWNS,
+  amountEstimateNote,
   appliedPowerIds,
   countsAtAscension,
   monsterHpAt,
+  moveAmountAt,
   moveDamageAt,
   regularEffect,
   shownDamageAt,
+  startAmountAt,
+  type AmountAt,
   type EncounterEntry,
   type MonsterEntry,
   type MoveEntry,
@@ -183,27 +188,34 @@ function damageText(data: KnowledgeData, monsterId: string, moveId: string, move
   return text;
 }
 
-function labelled(text: string | null, at: { asc: number | null; exact: boolean }, asc: number): string | null {
+/**
+ * Counts from another ascension say so; with `estimate` (monster-db amountAt) moved off the logged amount, also the
+ * estimate at this ascension the rollout and the boss sim use and how it was reached.
+ */
+function labelled(text: string | null, at: { asc: number | null; exact: boolean }, asc: number, estimate?: AmountAt | null, format: (value: string) => string = (value) => value): string | null {
   if (text === null) return null;
   if (at.asc === null) return `${text}（各进阶合并）`;
-  return at.exact ? text : `${text}（A${at.asc}，非 A${asc}）`;
+  if (at.exact) return text;
+  const note = estimate?.estimated && estimate.value !== estimate.logged ? amountEstimateNote(estimate, asc) : "";
+  return `${text}（A${at.asc}，非 A${asc}${note ? `；${note}，估 ${format(String(estimate!.value))}` : ""}）`;
 }
 
-function selfGainsText(data: KnowledgeData, move: MoveEntry, asc: number): string | null {
+function selfGainsText(data: KnowledgeData, monsterId: string, move: MoveEntry, asc: number): string | null {
   const parts = Object.keys(move.self_powers_gained ?? {})
     .sort(cmp)
     .filter((id) => regularEffect(move, move.self_powers_gained![id]))
     .map((id) => {
       const byAsc = Object.fromEntries(Object.entries(move.self_powers_gained_by_asc ?? {}).map(([key, powers]) => [key, powers[id]]));
       const at = countsAtAscension(byAsc, move.self_powers_gained![id], asc);
-      const text = labelled(countsText(at.counts, signedValue), at, asc);
+      const estimate = at.exact ? null : moveAmountAt(data.monsterDb.monsters, monsterId, move, "self", id, asc);
+      const text = labelled(countsText(at.counts, signedValue), at, asc, estimate, signedValue);
       return text === null ? null : `${powerName(data, id)} ${text}`;
     })
     .filter((part): part is string => part !== null);
   return parts.length > 0 ? `给自己加 ${parts.join("，")}` : null;
 }
 
-function playerPowersText(data: KnowledgeData, move: MoveEntry, asc: number): string | null {
+function playerPowersText(data: KnowledgeData, monsterId: string, move: MoveEntry, asc: number): string | null {
   const candidates = Object.keys(move.player_powers_applied ?? {}).sort(cmp);
   if (candidates.length === 0) return null;
   const { ids, choice } = appliedPowerIds(move, candidates);
@@ -211,7 +223,8 @@ function playerPowersText(data: KnowledgeData, move: MoveEntry, asc: number): st
     .map((id) => {
       const byAsc = Object.fromEntries(Object.entries(move.player_powers_applied_by_asc ?? {}).map(([key, powers]) => [key, powers[id]]));
       const at = countsAtAscension(byAsc, move.player_powers_applied![id], asc);
-      const text = labelled(countsText(at.counts), at, asc);
+      const estimate = at.exact ? null : moveAmountAt(data.monsterDb.monsters, monsterId, move, "applied", id, asc);
+      const text = labelled(countsText(at.counts), at, asc, estimate);
       return text === null ? null : `${powerName(data, id)} ${text}`;
     })
     .filter((part): part is string => part !== null);
@@ -219,11 +232,12 @@ function playerPowersText(data: KnowledgeData, move: MoveEntry, asc: number): st
   return choice ? `给我们上（每次其一）${parts.join(" 或 ")}` : `给我们上 ${parts.join("，")}`;
 }
 
-function blockText(move: MoveEntry, asc: number): string | null {
+function blockText(data: KnowledgeData, monsterId: string, move: MoveEntry, asc: number): string | null {
   if (!move.block_gained || !regularEffect(move, move.block_gained)) return null;
   const at = countsAtAscension(move.block_gained_by_asc, move.block_gained, asc);
   const text = countsText(at.counts);
-  return text ? labelled(`格挡 ${text}`, at, asc) : null;
+  const estimate = at.exact ? null : moveAmountAt(data.monsterDb.monsters, monsterId, move, "block", "BLOCK", asc);
+  return text ? labelled(`格挡 ${text}`, at, asc, estimate) : null;
 }
 
 function healText(move: MoveEntry, asc: number): string | null {
@@ -264,9 +278,9 @@ function firstTurn(move: MoveEntry): number {
 function moveLine(data: KnowledgeData, monsterId: string, monster: MonsterEntry, moveId: string, move: MoveEntry, asc: number): string {
   const parts = [
     damageText(data, monsterId, moveId, move, asc),
-    selfGainsText(data, move, asc),
-    playerPowersText(data, move, asc),
-    blockText(move, asc),
+    selfGainsText(data, monsterId, move, asc),
+    playerPowersText(data, monsterId, move, asc),
+    blockText(data, monsterId, move, asc),
     healText(move, asc),
     statusCardText(move),
     turnsText(move),
@@ -295,7 +309,8 @@ function mechanicsLines(data: KnowledgeData, id: string, monster: MonsterEntry, 
     const firstTurn = sortedCounts(turn.counts)[0]?.[0];
     if (powerId === INNATE_STRENGTH && firstTurn !== "1") continue;
     const amount = countsAtAscension(power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc);
-    const amountText = labelled(countsText(amount.counts), amount, asc);
+    const estimate = amount.exact ? null : startAmountAt(data.monsterDb.monsters, id, powerId, asc);
+    const amountText = labelled(countsText(amount.counts), amount, asc, estimate);
     const when = firstTurn && firstTurn !== "1" ? `，多在第 ${firstTurn} 回合首次出现` : "";
     const description = stripMarkup(power.description ?? "");
     const said = description && description !== "TODO" ? `：${description}` : "";

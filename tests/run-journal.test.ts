@@ -415,16 +415,18 @@ describe("boss notes carry the monster DB's numbers at this ascension, and every
     withDb(() => {
       const beast = bossNote("CEREMONIAL_BEAST_BOSS", 9)!;
       expect(beast).toContain("262 血");
-      expect(beast).toContain("首次跌破 150 血被击晕一回合");
+      // Plow and Plating logged at A8 only (nothing here measures an A8 -> A9 change): A8's, marked estimated.
+      expect(beast).toContain("首次跌破 ≈150 血被击晕一回合");
+      expect(bossNote("CEREMONIAL_BEAST_BOSS", 8)).toContain("首次跌破 150 血被击晕一回合");
       const matriarch = bossNote("LAGAVULIN_MATRIARCH_BOSS", 9)!;
       expect(matriarch).toContain("掉 1 血就醒");
-      expect(matriarch).toContain("233 血，开场沉睡 + 12 覆甲");
+      expect(matriarch).toContain("233 血，开场沉睡 + ≈12 覆甲");
       // A9's hits, not the A0/A8 "19、9×2".
       expect(matriarch).toContain("醒后 21、10×2");
       expect(bossNote("LAGAVULIN_MATRIARCH_BOSS", 8)).toContain("醒后 19、9×2");
       // The lookahead DeepSeek reads carries the same note.
       const state = parseGameState(baseState("SHOP", { run: runPayload({ floor: 5, act_id: "0", ascension: 9, boss_id: "CEREMONIAL_BEAST_BOSS" }) }));
-      expect(renderLookahead(state, undefined, null)).toContain("首次跌破 150 血被击晕一回合");
+      expect(renderLookahead(state, undefined, null)).toContain("首次跌破 ≈150 血被击晕一回合");
     });
   });
 
