@@ -3508,6 +3508,11 @@ export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: Game
     tail.last = undefined;
     return;
   }
+  // Only our own turn's states set the turn's last word: the enemy turn reads in between with the turn number unchanged
+  // (the revive lands there, and the next intents against the revived HP read "not lethal"), and overwrote it, so the
+  // next turn's opening at 50% was not recognised (LTKW24N3R9PG F37: T4 7 HP + 5 block against 20, T5 opened at 37 of 74;
+  // the solver kept counting on the tail at F43-F44, every F44 T1 line "spends 蜥蜴尾巴").
+  if (state.combat?.can_use_combat_actions === false) return;
   const incoming = asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
