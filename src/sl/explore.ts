@@ -29,6 +29,15 @@
  *   one dying this turn while one survives, never one drinking a potion the pick does not drink (but in a boss fight,
  *   SL_RETRY_EXPLORE_BOSS_POTIONS: potions cost nothing there, so the shown potion lines and the random potions' Monte
  *   Carlo lines count like the dry ones). Every other board plays as usual. The decision row says so (`sl_explore`).
+ * - SL_RETRY_EXPLORE_CANON (2026-10-03, A9 runs 10-12): a line is "tried" on a board by the turn's plays, not by its text:
+ *   the multiset of card id (with "+") and target (the options' distinctNames name), potions included (turnCanon), the
+ *   cards already played that turn counted in. Attempt 1 is recorded too (its turns: each action's board and play), so its
+ *   plays count as tried where it was (UK7R9A0NMCXL F33 attempt 5 replayed attempt 1, which the record did not have;
+ *   63WBEEF2JVM5 F33 T1: attempt 1's "打击, 剑柄打击, potion" then 欺凌 after the draw is attempt 2's one line). Rows from
+ *   before it (no turns) are rebuilt from their summary where their history is the reference's (legacyTried).
+ * - SL_RETRY_EXPLORE_TURN (2026-10-03, UK7R F33 attempt 4): the deviation holds for the rest of its turn: every later
+ *   decision of that turn avoids a line that would end the turn with the plays a failed attempt's turn had through the
+ *   deviation point's board (Shrug It Off drew, the re-plan's answer was Defend, Defend: attempt 2's turn in another order).
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
@@ -62,6 +71,30 @@ export interface SlPoint {
   b2?: { win: Record<string, number>; notWorse: string[]; won?: Record<string, number> };
   /** The line is this attempt's deviation (it replaced a line a failed attempt played here). */
   explored?: true;
+  /**
+   * SL_RETRY_EXPLORE_CANON / _TURN: by line (the one played and its alternatives), the turn's plays if it is played to its
+   * end (turnCanon: the cards already played this turn and the line's). Absent with both off and on rows from before them.
+   */
+  canon?: Record<string, string>;
+}
+
+/**
+ * SL_RETRY_EXPLORE_CANON / _TURN: one turn of an attempt as its actions went out: the plays (playKey) in order and the
+ * boards they were decided on, each with how many of the plays came before it (an end of turn: its board, no play).
+ */
+export interface SlTurnPlays {
+  turn: number;
+  plays: string[];
+  boards: { board: string; at: number }[];
+}
+
+/** What failed attempts played on one board, as the turn's plays: exact (turnCanon) and from rows before the record (looseCanon). */
+export interface SlTried {
+  canon: string[];
+  /** Rows without a turn record (from before SL_RETRY_EXPLORE_CANON), rebuilt from their summary (looseCanon). */
+  loose: string[];
+  /** Attempts whose plays on the board could not be read (a play logged without its card): not known to be untried. */
+  unknown?: number[];
 }
 
 /** Where an attempt deviates (exploreTarget), as its row records it. */
@@ -79,6 +112,11 @@ export interface SlTarget {
   attempts: number[];
   /** The point as the console and the decision row say it. */
   point: string;
+  /**
+   * SL_RETRY_EXPLORE_CANON / _TURN: the turns' plays failed attempts had through this board (SlTried): never again the
+   * deviation's turn (the replacement there, and with _TURN every later decision of that turn). Absent with both off.
+   */
+  tried?: SlTried;
 }
 
 /** What came of an attempt's deviation point. */
@@ -89,6 +127,13 @@ export interface SlDeviation {
   original: string | null;
   replacement: string | null;
   reason: string;
+  /**
+   * SL_RETRY_EXPLORE_CANON / _TURN: the deviation's turn, its plays when the turn was over (turnCanon), and whether they
+   * differ from every failed attempt's turn through the point's board (target.tried). Written with the attempt's row.
+   */
+  turn?: number | null;
+  plays?: string;
+  differs?: boolean;
 }
 
 /** The attempt row's `explore` (SL_RETRY_EXPLORE on, attempts from the 2nd). */
@@ -104,19 +149,36 @@ export interface SlExploreRecord {
    * path, its line not played there; null: it did not).
    */
   replay?: { replayed: number; overridden: number; stopped: string | null };
+  /** SL_RETRY_EXPLORE_CANON (attempts from the 1st) / _TURN (from the 2nd): each turn's plays and boards. */
+  turns?: SlTurnPlays[];
 }
 
 /** The planner's part (env.sl.explore): record the lines; on the deviation point's board, `deviate`. */
 export interface SlExploreEnv {
-  /** On the deviation point's board: the lines failed attempts played there, and (SL_RETRY_EXPLORE_REPLAY) the boards replayed before it. */
-  deviate?: { point: string; excluded: string[]; attempts: number[]; replayed?: number };
+  /**
+   * On the deviation point's board: the lines failed attempts played there, and (SL_RETRY_EXPLORE_REPLAY) the boards
+   * replayed before it; SL_RETRY_EXPLORE_CANON / _TURN: the turns' plays they had through it (`tried`, by turnCanon).
+   */
+  deviate?: { point: string; excluded: string[]; attempts: number[]; replayed?: number; tried?: SlTried };
+  /**
+   * SL_RETRY_EXPLORE_CANON / _TURN: the plays already made this turn (playKey; `text`: as the attempt's summary writes
+   * them, for rows rebuilt from it), which every line's turn (turnCanon) counts in. Present: the points record `canon`.
+   */
+  played?: { canon: string[]; text: string[] };
+  /**
+   * SL_RETRY_EXPLORE_TURN (2026-10-03, UK7R9A0NMCXL F33 attempt 4): later in the deviation's turn (a re-plan after a draw,
+   * code's next line), the turns failed attempts had through the point's board: a line ending the turn with one of them
+   * gives way to the best one that does not (exploreReplacement's guards: never over a winning line, never one dying this
+   * turn while one survives).
+   */
+  avoid?: { point: string; tried: SlTried; attempts: number[] };
   /**
    * SL_RETRY_EXPLORE_REPLAY (2026-10-03): before the deviation point, on a board of the reference attempt's path, the line it
    * played there: played instead of the answer (never instead of a winning line, nor where it dies this turn and the
    * answer does not), so that the attempt reaches the point (R1QJUBVBSSB2 F33 attempt 3: Jev answered T5 otherwise, 0.52
    * against 0.44, and the fight died on T7 before its T8 point).
    */
-  replay?: { line: string; reference: number; point: string };
+  replay?: { line: string; reference: number; point: string; canon?: string };
   /**
    * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
    * replaced": ExploreB2.notWorse) instead of the rollout's share of samples dead, in the replacement and the record (the
@@ -135,6 +197,50 @@ export interface SlExploreEnv {
 export function lineText(steps: readonly { name: string; targetName?: string | null | undefined }[]): string {
   return steps.map((step) => (step.targetName ? `${step.name} -> ${step.targetName}` : step.name)).join(", ") || "end turn";
 }
+
+/**
+ * SL_RETRY_EXPLORE_CANON: one play as the turn's canonical form writes it: a card by its id, "+" when upgraded; a potion as
+ * "potion:<id>"; then ">" and the enemy it aims at, by the options' distinctNames name (the same enemies read the same on
+ * the same board in every attempt: 「残杀千足虫 (MIDDLE)」, 「寄生信徒 #2」; a line is re-planned when an enemy dies, so a
+ * play's name is its decision board's). The same cards on another enemy are another play.
+ */
+export function playKey(play: { card: string; upgraded: boolean } | { potion: string }, target: string | null | undefined): string {
+  const what = "potion" in play ? `potion:${play.potion}` : `${play.card}${play.upgraded ? "+" : ""}`;
+  return target ? `${what}>${target}` : what;
+}
+
+/**
+ * A turn's plays as one key whatever their order (SL_RETRY_EXPLORE_CANON): sorted, joined with ", "; "nothing" for none.
+ * The same over playKey (the record) and over the summary's play texts (looseCanon's rows from before the record).
+ */
+export function turnCanon(plays: readonly string[]): string {
+  return plays.length === 0 ? "nothing" : [...plays].sort().join(", ");
+}
+
+/**
+ * A play as the attempt's summary writes it (controller noteAction: "name -> target", a potion "potion name" without its
+ * target): what rows from before SL_RETRY_EXPLORE_CANON have of their turns. A line's step: its name (a potion step's is
+ * "potion <name>") and target, a potion's left out.
+ */
+export function summaryPlay(step: { name: string; targetName?: string | null | undefined; potion?: boolean }): string {
+  return step.targetName && !step.potion ? `${step.name} -> ${step.targetName}` : step.name;
+}
+
+/** A line or a pick as the tried check reads it: its text, its turn's plays (turnCanon), and those as the summary has them. */
+export interface TriedKey {
+  text: string;
+  canon?: string | undefined;
+  loose?: string | undefined;
+}
+
+/** `line`'s turn is one a failed attempt had on the board (`tried`): its plays exactly, or as a rebuilt row has them. */
+export function triedHas(tried: SlTried | null | undefined, line: TriedKey): boolean {
+  if (!tried) return false;
+  return (line.canon !== undefined && tried.canon.includes(line.canon)) || (line.loose !== undefined && tried.loose.includes(line.loose));
+}
+
+/** A play the summary logged without its card ("card 3 -> X", "potion potion 1": not found in the hand or the belt). */
+const UNREAD_PLAY = /^(?:card (?:\d+|\?)(?: -> .*)?|potion potion (?:\d+|\?))$/;
 
 /** "id:amount" of each power, sorted (the board's powers, whatever order the mod lists them in). */
 function powersOf(holder: Record<string, unknown>): string[] {
@@ -216,6 +322,144 @@ export interface ExploreRow {
   turns: number;
   result: string;
   explore?: SlExploreRecord | null;
+  /** The attempt's turns as its summary has them (attempts.ts SlTurn): rows without a turn record are rebuilt from it. */
+  summary?: { turns: readonly { turn: number; hp: number | null; block: number | null; enemies: string; plays: readonly string[] }[] };
+}
+
+/** What failed attempts played on each board, gathered (triedByBoard). */
+interface TriedEntry {
+  canon: Set<string>;
+  loose: Set<string>;
+  unknown: Set<number>;
+  attempts: Set<number>;
+}
+
+/**
+ * The boards of the reference's turns with how many plays came before each: its turn record's; a row from before it, its
+ * points', each turn's first at 0 and each next one after the steps of the line before it that its summary shows played
+ * next (at least one: a board changes only with an action; a potion's target is not in the summary). A line cut short by a
+ * draw whose re-plan played its next step after all reads one play long: the board then reads later than it was.
+ */
+function boardsByTurn(reference: ExploreRow): Map<number, { board: string; at: number }[]> {
+  const out = new Map<number, { board: string; at: number }[]>();
+  const turns = reference.explore?.turns;
+  if (turns) {
+    for (const turn of turns) out.set(turn.turn, [...turn.boards]);
+    return out;
+  }
+  const plays = new Map((reference.summary?.turns ?? []).map((turn) => [turn.turn, turn.plays]));
+  /** A line's step as the summary writes it: "name -> target", a potion's without its target. */
+  const asPlayed = (step: string) => (step.startsWith("potion ") ? step.split(" -> ")[0]! : step);
+  let last: { turn: number; at: number; line: string } | null = null;
+  for (const point of reference.explore?.points ?? []) {
+    if (point.turn === null) continue;
+    const list = out.get(point.turn) ?? [];
+    let at = 0;
+    if (last && last.turn === point.turn) {
+      const done = plays.get(point.turn) ?? [];
+      const steps = last.line === "end turn" ? [] : last.line.split(", ").map(asPlayed);
+      let n = 0;
+      while (n < steps.length && last.at + n < done.length && done[last.at + n] === steps[n]) n += 1;
+      at = Math.min(done.length, last.at + Math.max(1, n));
+    }
+    if (list.at(-1)?.board !== point.board) list.push({ board: point.board, at });
+    out.set(point.turn, list);
+    last = { turn: point.turn, at, line: point.line };
+  }
+  return out;
+}
+
+/**
+ * SL_RETRY_EXPLORE_CANON, a row without a turn record (written before it: attempt 1 was not recorded, nor an attempt's
+ * turns): its turns from its summary, on the reference's boards where its history is the reference's (each turn before
+ * began at the same HP, block and enemies and played the same cards, the same draws then; within the turn, the same
+ * plays before the board). The plays as the summary writes them (looseCanon: a potion's target is not there); a turn with
+ * a play logged without its card is unknown there. A turn played otherwise ends the match: the next starts elsewhere.
+ */
+export function legacyTried(row: ExploreRow, reference: ExploreRow): { board: string; loose: string | null }[] {
+  const mine = row.summary?.turns ?? [];
+  const theirs = reference.summary?.turns ?? [];
+  const boards = boardsByTurn(reference);
+  const out: { board: string; loose: string | null }[] = [];
+  for (let i = 0; i < mine.length && i < theirs.length; i += 1) {
+    const a = mine[i]!;
+    const b = theirs[i]!;
+    if (a.turn !== b.turn || a.hp !== b.hp || a.block !== b.block || a.enemies !== b.enemies) break;
+    const readable = a.plays.every((play) => !UNREAD_PLAY.test(play));
+    for (const { board, at } of boards.get(a.turn) ?? []) {
+      if (at > a.plays.length || at > b.plays.length || turnCanon(a.plays.slice(0, at)) !== turnCanon(b.plays.slice(0, at))) continue;
+      out.push({ board, loose: readable ? turnCanon(a.plays) : null });
+    }
+    if (turnCanon(a.plays) !== turnCanon(b.plays)) break;
+  }
+  return out;
+}
+
+/**
+ * The turns failed attempts had through each board: the turn record's (every board an action of the turn was decided
+ * on gets the whole turn's plays), each point's line as planned there (point.canon), and with `legacy` (SL_RETRY_EXPLORE_CANON)
+ * the rows without a turn record rebuilt from their summary (legacyTried).
+ */
+function triedByBoard(rows: readonly ExploreRow[], reference: ExploreRow, legacy: boolean): Map<string, TriedEntry> {
+  const out = new Map<string, TriedEntry>();
+  const at = (board: string): TriedEntry => {
+    let entry = out.get(board);
+    if (!entry) out.set(board, (entry = { canon: new Set(), loose: new Set(), unknown: new Set(), attempts: new Set() }));
+    return entry;
+  };
+  for (const row of rows) {
+    for (const point of row.explore?.points ?? []) {
+      const canon = point.canon?.[point.line];
+      if (canon === undefined) continue;
+      const entry = at(point.board);
+      entry.canon.add(canon);
+      entry.attempts.add(row.attempt);
+    }
+    const turns = row.explore?.turns;
+    if (turns) {
+      for (const turn of turns) {
+        const canon = turnCanon(turn.plays);
+        for (const { board } of turn.boards) {
+          const entry = at(board);
+          entry.canon.add(canon);
+          entry.attempts.add(row.attempt);
+        }
+      }
+    } else if (legacy) {
+      for (const { board, loose } of legacyTried(row, reference)) {
+        const entry = at(board);
+        if (loose === null) entry.unknown.add(row.attempt);
+        else entry.loose.add(loose);
+        entry.attempts.add(row.attempt);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * The turns failed attempts had through `board` (SlTried) and the attempts they came from, as exploreTarget gathers them
+ * for its target (`canon`, SL_RETRY_EXPLORE_CANON: attempt 1 and the rows from before the record too; else the rows from
+ * the 2nd with a record). The reference for rebuilt rows: the first failed attempt from the 2nd with points.
+ */
+export function exploreTried(rows: readonly ExploreRow[], attempt: number, board: string, options: { canon?: boolean } = {}): { tried: SlTried; attempts: number[] } {
+  const failed = failedRows(rows, attempt, 2);
+  const reference = failed.find((row) => row.explore && Array.isArray(row.explore.points));
+  if (!reference) return { tried: { canon: [], loose: [] }, attempts: [] };
+  const entry = triedByBoard(options.canon === true ? failedRows(rows, attempt, 1) : failed.filter((row) => row.explore), reference, options.canon === true).get(board);
+  return { tried: triedOf(entry), attempts: [...(entry?.attempts ?? [])].sort((a, b) => a - b) };
+}
+
+/** The failed attempts before `attempt` from `from` on, by attempt (an unfinished row after its attempt's finished one). */
+function failedRows(rows: readonly ExploreRow[], attempt: number, from: number): ExploreRow[] {
+  return rows
+    .filter((row) => row.attempt >= from && row.attempt < attempt && row.result !== "won")
+    .sort((a, b) => a.attempt - b.attempt || Number(a.result === "unfinished") - Number(b.result === "unfinished"));
+}
+
+function triedOf(entry: TriedEntry | undefined): SlTried {
+  const unknown = entry ? [...entry.unknown].sort((a, b) => a - b) : [];
+  return { canon: entry ? [...entry.canon] : [], loose: entry ? [...entry.loose] : [], ...(unknown.length > 0 ? { unknown } : {}) };
 }
 
 const ordinal = (n: number): string => (n === 1 ? "latest" : `${n}${n === 2 ? "nd" : n === 3 ? "rd" : "th"} latest`);
@@ -224,9 +468,10 @@ const ordinal = (n: number): string => (n === 1 ? "latest" : `${n}${n === 2 ? "n
  * The deviation point of `attempt` (3 or later) from the earlier attempts' rows at the fight (all failed: the fight is being
  * retried). The path is the first attempt from the 2nd that recorded its points (attempt 2 is the first that knows the draws:
  * it plays as usual; every later attempt plays its path until its own deviation). A point qualifies when it is a question
- * and some line shown there was never played on that board by a failed attempt (attempt 1 does not count: it did not know
- * the draws, so the same board's lines read differently, 63WBEEF2JVM5 F33 T1 "打击, 剑柄打击, potion" against attempt 2's
- * "..., 欺凌" for the same plays). The point deviated at the fewest times so far comes first, the latest of those: attempt 3
+ * and some line shown there was never played on that board by a failed attempt (by text, attempt 1 does not count: it did
+ * not know the draws, so the same board's lines read differently, 63WBEEF2JVM5 F33 T1 "打击, 剑柄打击, potion" against
+ * attempt 2's "..., 欺凌" for the same plays; SL_RETRY_EXPLORE_CANON compares the turn's plays instead, and attempt 1's
+ * count). The point deviated at the fewest times so far comes first, the latest of those: attempt 3
  * the question closest to the death, attempt 4 the one before it, and so on back, then round again (docs/sl.md §11.2).
  * Among those, a point with an untried line the rollout does not see dying more often than the one played comes before one
  * whose untried lines all do (`dead`; the offline evaluation, 63WBEEF2JVM5 F33 T5: the only other line, Blood Wall, dead in
@@ -241,6 +486,17 @@ export interface ExploreTargetOptions {
    * is a coin flip in a fight already lost. Among the rest, as before.
    */
   aliveFirst?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_CANON (2026-10-03): a line is tried on a board by its turn's plays (point.canon against the turns the
+   * failed attempts had through the board: triedByBoard), attempt 1 among them (its turn record; a row from before it,
+   * rebuilt from its summary). The target carries them (`tried`). Off: by text, from the 2nd, as before.
+   */
+  canon?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_TURN without _CANON: the target carries the turns the failed attempts from the 2nd had through its
+   * board (`tried`, from their records); the point is chosen as before.
+   */
+  tried?: boolean;
 }
 
 /**
@@ -265,6 +521,11 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     .sort((a, b) => a.attempt - b.attempt || Number(a.result === "unfinished") - Number(b.result === "unfinished"));
   const reference = failed[0];
   if (!reference || reference.explore!.points.length === 0) return { target: null, why: "no earlier attempt from the 2nd recorded its decision points" };
+  // SL_RETRY_EXPLORE_CANON / _TURN: the turns the failed attempts had through each board (with _CANON attempt 1 too, and
+  // the rows from before the record rebuilt from their summary).
+  const canonOn = options.canon === true;
+  const allFailed = canonOn ? failedRows(rows, attempt, 1) : failed;
+  const tried = canonOn || options.tried === true ? triedByBoard(allFailed, reference, canonOn) : null;
   // The lines played on each board by the failed attempts, and in which attempts.
   const played = new Map<string, { lines: Set<string>; attempts: Set<number> }>();
   for (const row of failed) {
@@ -292,8 +553,10 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     if (seen.has(point.board)) continue;
     seen.add(point.board);
     back += 1;
-    const tried = played.get(point.board)?.lines ?? new Set<string>();
-    const untried = point.alternatives.filter((line) => !tried.has(line));
+    const texts = played.get(point.board)?.lines ?? new Set<string>();
+    // SL_RETRY_EXPLORE_CANON: nor a line whose turn a failed attempt had through this board (another order, attempt 1's).
+    const turnsThere = canonOn ? tried?.get(point.board) : undefined;
+    const untried = point.alternatives.filter((line) => !texts.has(line) && !(turnsThere && point.canon?.[line] !== undefined && turnsThere.canon.has(point.canon[line])));
     // Every untried line dies more often in the rollout than the one played (no numbers: not known to be worse).
     const own = point.dead?.[point.line];
     const worse = own !== undefined && untried.every((line) => (point.dead?.[line] ?? -1) > own + 1e-9);
@@ -315,6 +578,9 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
   const entry = played.get(chosen.point.board)!;
   const round = uses.get(chosen.point.board) ?? 0;
   const point = `T${chosen.point.turn ?? "?"}, the ${ordinal(chosen.back)} question before attempt ${reference.attempt}'s death on T${reference.turns}${round > 0 ? ` (deviated at ${round} time${round === 1 ? "" : "s"} before: another untried line)` : ""}`;
+  const turnsThere = tried?.get(chosen.point.board);
+  // SL_RETRY_EXPLORE_CANON: the attempts whose turns came through the board count among those that played there.
+  const attempts = new Set([...entry.attempts, ...(canonOn && turnsThere ? turnsThere.attempts : [])]);
   return {
     target: {
       board: chosen.point.board,
@@ -323,8 +589,9 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
       back: chosen.back,
       round,
       excluded: [...entry.lines],
-      attempts: [...entry.attempts].sort((a, b) => a - b),
+      attempts: [...attempts].sort((a, b) => a - b),
       point,
+      ...(tried ? { tried: triedOf(turnsThere) } : {}),
     },
     why: `${chosen.untried.length} line${chosen.untried.length === 1 ? "" : "s"} shown there never played on that board${chosen.worse ? "; all dying more often in the rollout than the one played, as on every other point left" : ""}${least.some((entry) => entry.worse && entry.back < chosen.back) ? `; passed over ${least.filter((entry) => entry.worse && entry.back < chosen.back).map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, whose untried lines all die more often in the rollout` : ""}${lostWhy}`,
   };
@@ -335,12 +602,17 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
  * target's board, the latest line where a board came twice), by board.
  */
 export function replayPath(rows: readonly ExploreRow[], target: SlTarget): Map<string, string> {
+  return new Map([...replayPoints(rows, target)].map(([board, point]) => [board, point.line]));
+}
+
+/** The reference attempt's points before the deviation point (replayPath's boards), by board: their lines and canon. */
+export function replayPoints(rows: readonly ExploreRow[], target: SlTarget): Map<string, SlPoint> {
   const reference = rows.find((row) => row.attempt === target.reference && row.explore && Array.isArray(row.explore.points));
   const points = reference?.explore?.points ?? [];
   let end = -1;
   for (let i = points.length - 1; i >= 0; i -= 1) if (points[i]!.board === target.board) { end = i; break; }
-  const out = new Map<string, string>();
-  for (const point of points.slice(0, Math.max(0, end))) if (point.board !== target.board) out.set(point.board, point.line);
+  const out = new Map<string, SlPoint>();
+  for (const point of points.slice(0, Math.max(0, end))) if (point.board !== target.board) out.set(point.board, point);
   return out;
 }
 
@@ -349,12 +621,17 @@ export function replayPath(rows: readonly ExploreRow[], target: SlTarget): Map<s
  * of the answer (`pick`): the reference attempt's line there (`replay.line`, among `shown`: the shown lines and every random
  * potion's), unless the answer is that line already, wins the fight this turn (never changed), or survives this turn where
  * that line dies (`pickDies`); null when it is not shown (the attempt then plays the answer, and the replay stops).
+ * SL_RETRY_EXPLORE_CANON (`replay.canon`, the lines' canon): the same text first; else the same turn's plays are the
+ * reference's line (the answer kept when it has them, else the first shown line that has them).
  */
-export function replayChoice<P>(pick: ExplorePick<P>, pickDies: boolean, shown: readonly ExploreLine<P>[], replay: { line: string; reference: number; point: string }): { line: ExploreLine<P> | null; reason: string } {
+export function replayChoice<P>(pick: ExplorePick<P>, pickDies: boolean, shown: readonly ExploreLine<P>[], replay: { line: string; reference: number; point: string; canon?: string }): { line: ExploreLine<P> | null; reason: string } {
   const at = replay.point.split(",")[0];
   if (pick.text === replay.line) return { line: null, reason: `the answer is attempt ${replay.reference}'s line` };
   if (pick.wins) return { line: null, reason: "the answer wins the fight this turn: never changed" };
-  const ref = shown.find((line) => line.text === replay.line);
+  const sameText = shown.find((line) => line.text === replay.line);
+  const canon = replay.canon;
+  if (!sameText && canon !== undefined && pick.canon === canon) return { line: null, reason: `the answer plays attempt ${replay.reference}'s turn here (its cards and targets, in another order or text)` };
+  const ref = sameText ?? (canon !== undefined ? shown.find((line) => line.canon === canon) : undefined);
   if (!ref) return { line: null, reason: `attempt ${replay.reference}'s line is not among the options` };
   if (ref.dies && !pickDies) return { line: null, reason: `attempt ${replay.reference}'s line dies this turn, the answer does not` };
   return { line: ref, reason: `attempt ${replay.reference}'s line on this board, replayed to reach ${at}` };
@@ -370,6 +647,9 @@ export interface ExploreLine<P> {
   wins: boolean;
   /** The potion ids it drinks. */
   potions: string[];
+  /** SL_RETRY_EXPLORE_CANON / _TURN: the turn's plays if it is played (turnCanon), and as the summary writes them (looseCanon). */
+  canon?: string;
+  loose?: string;
 }
 
 /** The pick about to be played: its line (null: a potion option, drink then re-plan), text and potions. */
@@ -380,6 +660,9 @@ export interface ExplorePick<P> {
   wins: boolean;
   /** A random potion's option (plan null): its Monte Carlo line, the line B2 rated for it (SL_RETRY_EXPLORE_B2). */
   rated?: P | null;
+  /** As ExploreLine's. */
+  canon?: string;
+  loose?: string;
 }
 
 /**
@@ -417,7 +700,7 @@ export function exploreAlternatives<P>(pick: ExplorePick<P>, shown: readonly Exp
  * (`deathShare`, rounded; null: no estimate), and with `b2` where B2 has numbers for the line, B2's calibrated win rates
  * and the alternatives it rates no worse. The planner's record and tools/sl-explore-replay.ts's.
  */
-export function explorePoint<P>(line: ExplorePick<P>, shown: readonly ExploreLine<P>[], opts: { drinks?: boolean; deathShare: (plan: P) => number | null; b2?: ExploreB2<P> | null }): Pick<SlPoint, "line" | "alternatives" | "dead" | "b2"> {
+export function explorePoint<P>(line: ExplorePick<P>, shown: readonly ExploreLine<P>[], opts: { drinks?: boolean; deathShare: (plan: P) => number | null; b2?: ExploreB2<P> | null }): Pick<SlPoint, "line" | "alternatives" | "dead" | "b2" | "canon"> {
   const alternatives = exploreAlternatives(line, shown, opts.drinks === true);
   const round = (x: number) => Math.round(x * 1000) / 1000;
   const dead = Object.fromEntries(
@@ -449,7 +732,9 @@ export function explorePoint<P>(line: ExplorePick<P>, shown: readonly ExploreLin
           : {}),
       }
     : null;
-  return { line: line.text, alternatives: alternatives.map((entry) => entry.text), ...(Object.keys(dead).length > 0 ? { dead } : {}), ...(b2Record ? { b2: b2Record } : {}) };
+  // SL_RETRY_EXPLORE_CANON / _TURN: each line's turn (the pick has one when they are on).
+  const canon = line.canon !== undefined ? Object.fromEntries([line, ...alternatives].flatMap((entry) => (entry.canon !== undefined ? [[entry.text, entry.canon]] : []))) : null;
+  return { line: line.text, alternatives: alternatives.map((entry) => entry.text), ...(Object.keys(dead).length > 0 ? { dead } : {}), ...(b2Record ? { b2: b2Record } : {}), ...(canon ? { canon } : {}) };
 }
 
 export interface ExploreChoice<P> {
@@ -477,13 +762,34 @@ export function exploreReplacement<P>(args: {
   rank: (plans: P[]) => P | null;
   drinks?: boolean;
   b2?: ExploreB2<P> | null;
+  /**
+   * SL_RETRY_EXPLORE_CANON / _TURN: the turns failed attempts had through the board (by the lines' canon / loose): a line
+   * ending the turn with one of them is tried too. With `avoid` (SL_RETRY_EXPLORE_TURN, later in the deviation's turn):
+   * only these count (no text played on this board).
+   */
+  tried?: SlTried | null;
+  avoid?: boolean;
 }): ExploreChoice<P> {
   const { pick } = args;
   if (pick.wins) return { replacement: null, reason: "the line wins the fight this turn: never changed", gate: null };
   const excluded = new Set(args.excluded);
-  if (!excluded.has(pick.text)) return { replacement: null, reason: "the pick was not played on this board before: played as answered", gate: null };
-  const untried = exploreAlternatives(pick, args.shown, args.drinks === true).filter((line) => !excluded.has(line.text));
-  if (untried.length === 0) return { replacement: null, reason: "no shown line left that no failed attempt played here", gate: null };
+  const tried = args.tried ?? null;
+  const isTried = (line: TriedKey): boolean => excluded.has(line.text) || triedHas(tried, line);
+  // An attempt whose plays on this board could not be read may have played the pick here: not known to be untried.
+  const unknown = !isTried(pick) && (tried?.unknown?.length ?? 0) > 0 ? tried!.unknown! : null;
+  if (!isTried(pick) && !unknown) {
+    return { replacement: null, reason: args.avoid ? "the pick does not end the turn as a failed attempt's did through the deviation point: played as answered" : "the pick was not played on this board before: played as answered", gate: null };
+  }
+  const untried = exploreAlternatives(pick, args.shown, args.drinks === true).filter((line) => !isTried(line));
+  if (untried.length === 0) return { replacement: null, reason: args.avoid ? "no shown line left that ends the turn otherwise than a failed attempt's" : "no shown line left that no failed attempt played here", gate: null };
+  const known = unknown ? `; attempt${unknown.length === 1 ? "" : "s"} ${unknown.join(", ")} may have played the pick here (plays logged without their card)` : "";
+  const choice = replacementAmong(args, untried);
+  return { ...choice, reason: `${choice.reason}${known}` };
+}
+
+/** exploreReplacement's ranking among the untried lines, with its gate (B2's on a trusted boss, else the rollout's). */
+function replacementAmong<P>(args: { pick: ExplorePick<P>; deathShare: (plan: P) => number | null; rank: (plans: P[]) => P | null; b2?: ExploreB2<P> | null }, untried: ExploreLine<P>[]): ExploreChoice<P> {
+  const { pick } = args;
   const rated = pick.plan ?? pick.rated ?? null;
   const b2 = args.b2 && rated !== null && args.b2.win(rated) !== null ? args.b2 : null;
   if (b2) {
