@@ -104,6 +104,8 @@ export interface DecisionRecord {
   route_plan?: JsonValue;
   /** A route review that rode on this question (card reward, rest site): {answer, outcome, reason, invalid?, plan_ref?, plan_step?}. */
   route_review?: JsonValue;
+  /** RUN_PLAN_MERGE: the run plan that rode on this question ({trigger, outcome: stored | missing | error | no_answer, why}). */
+  run_plan_merge?: JsonValue;
   /** SL (SL_ENABLED only, docs/sl.md): the attempt at the boss / listed-elite fight being played (null outside one). */
   sl_attempt?: number | null;
   /** SL: the fights reloaded so far this run (0: everything so far is the first attempt's play). */

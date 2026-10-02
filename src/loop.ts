@@ -21,7 +21,8 @@ import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMet
 import { moveModel } from "./knowledge/move-model.js";
 import { facingFightOf, fightKind, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
-import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
+import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger, type RunPlanTrigger } from "./strategy/run-plan.js";
+import { currentRunPlan, ridingPlanOf, runPlanAtMap, runPlanDueAtQuestion, runPlanTaskState, withRunPlanTask } from "./strategy/run-plan-merge.js";
 import type { Knowledge } from "./knowledge/index.js";
 import type { ActionRequest, ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -371,6 +372,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const engine = brain.engineFor(label);
     return (engine !== "deepseek" && brain.router.budgetLeft(engine)) || deepseekBudgetLeft();
   };
+  /**
+   * RUN_PLAN_MERGE (strategy/run-plan-merge.ts): a due run plan rides on the next DeepSeek question, when there are such
+   * questions (BUILD_DECIDER=deepseek with a DeepSeek client) and the run plan has no engine of its own
+   * (BRAIN_ENGINE_RUN_PLAN other than BRAIN_ENGINE keeps its own call at the map, as before).
+   */
+  const runPlanMerges = (): boolean =>
+    config.runPlan === "v1" && config.runPlanMerge && config.buildDecider === "deepseek" && deepseekClient !== null && (!brain || brain.engineFor("run-plan") === config.brain.engine);
   /** Whether DeepSeek is asked first for this label (its call is counted up front, as v3 did). */
   const deepseekFirst = (label: string): boolean => !brain || brain.engineFor(label) === "deepseek";
   /** The router's re-ask on a question DeepSeek was asked first (a route checked by its AnswerSpec: M2): its calls. */
@@ -664,7 +672,21 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       const deepseek = brain;
       if (deepseek && brainBudgetLeft("run-plan")) {
         const items = journal.itemCount;
-        await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, countPlan("run-plan"));
+        const runId = str(state.raw["run_id"]);
+        if (!runPlanMerges()) {
+          await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, countPlan("run-plan"));
+        } else if (runId) {
+          // RUN_PLAN_MERGE: a due plan rides on the next DeepSeek question; asked here only when none carried it in time
+          // or the act boss is next (strategy/run-plan-merge.ts).
+          const step = runPlanAtMap(screenMemory, state, currentRunPlan(screenMemory, config.runPlanLog, runId));
+          if (step.action === "wait" && step.fresh) onEvent({ type: "note", message: `run plan due (${step.trigger}, floor ${state.run?.floor ?? "?"}): it rides on the next DeepSeek question` });
+          // A call that failed on this floor is not retried on it (ensureRunPlan): nothing to say on every poll of the map.
+          if (step.action === "ask" && screenMemory.runPlanFailed !== `${runId}:${state.run?.floor ?? "?"}`) {
+            onEvent({ type: "note", message: `run plan (${step.trigger}) asked on its own: ${step.why}` });
+            await ensureRunPlan(env, deepseek, journal, config.runPlanLog, observedTs, onEvent, countPlan("run-plan"));
+            if (!runPlanTrigger(screenMemory.runPlan, state)) screenMemory.runPlanPending = undefined;
+          }
+        }
         if (journal.itemCount !== items) observedStates.touched(state, observedFp, observedTs);
       }
     }
@@ -756,6 +778,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let deepseekConsistency: JsonValue | undefined;
     /** B3: the act boss simulation added to this DeepSeek question (its numbers and timing), for the log. */
     let bossSimRecord: JsonValue | undefined;
+    /** RUN_PLAN_MERGE: the due run plan riding on this DeepSeek question (its trigger), and what came of it (the row's run_plan_merge). */
+    let runPlanRide: { trigger: RunPlanTrigger } | null = null;
+    let runPlanRideLog: JsonValue | undefined;
     if (decision.kind === "ask" && decision.deepseek && !codeBaseline) {
       const spec = decision.deepseek;
       let question = decision.questions[spec.question];
@@ -790,10 +815,76 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           }
         }
         if (question?.type !== "choice" || decision.kind !== "ask") throw new Error("unreachable: the boss simulation keeps the question");
+        // RUN_PLAN_MERGE: a due run plan rides on this question (state.run_plan_task and the answer's run_plan) instead of
+        // its own call. Anything wrong in building it: the question goes as without it, the plan stays due.
+        if (runPlanMerges() && !state.in_combat && brain.engineFor(decision.label) === brain.engineFor("run-plan")) {
+          try {
+            const runId = str(state.raw["run_id"]);
+            const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId) : null;
+            const trigger = runId ? runPlanDueAtQuestion(screenMemory, state, plan) : null;
+            if (trigger) {
+              const carried = withRunPlanTask({ ...decision, deepseek: spec }, runPlanTaskState(state, knowledge, trigger, plan, decision.state));
+              const carriedQuestion = carried.questions[spec.question];
+              if (carriedQuestion?.type === "choice") {
+                decision = carried;
+                question = carriedQuestion;
+                runPlanRide = { trigger };
+                onEvent({ type: "note", message: `the run plan (${trigger}) rides on ${decision.label}` });
+              }
+            }
+          } catch (error) {
+            onEvent({ type: "note", message: `the run plan could not ride on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}): asked without it, still due` });
+          }
+        }
         // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
         const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}), ...(OUTCOME_BASIS_KEY in asRecord(decision.state["facts"]) ? { statsCovered: true } : {}) });
         onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         const ask = decision;
+        /**
+         * RUN_PLAN_MERGE: the run plan in the answer (its run_plan), stored and logged as the run plan's own call stored it
+         * (screen memory, run-plans.jsonl with its trigger, the journal), the call being this question's (its usage under
+         * `question`, not counted again). None or not a plan: logged, and still due (the next question carries it).
+         */
+        const takeRunPlan = (value: unknown, usage: { latencyMs: number; inputTokens: number; outputTokens: number; reasoningTokens?: number; effort?: string }): void => {
+          const ride = runPlanRide;
+          if (!ride || runPlanRideLog !== undefined) return;
+          const runId = str(state.raw["run_id"]);
+          const floor = state.run?.floor ?? null;
+          const call = { label: ask.label, latency_ms: usage.latencyMs, input_tokens: usage.inputTokens, output_tokens: usage.outputTokens, reasoning_tokens: usage.reasoningTokens ?? 0, effort: usage.effort ?? "" };
+          const found = ridingPlanOf(value);
+          const fail = (outcome: string, why: string): void => {
+            runPlanRideLog = { trigger: ride.trigger, outcome, why: why.slice(0, 200) };
+            logRunPlan(config.runPlanLog, { run: runId, floor, trigger: ride.trigger, merged_into: ask.label, decision_id: decisionId, error: why.slice(0, 200), question: call });
+            const since = screenMemory.runPlanPending?.floor;
+            onEvent({ type: "note", message: `${ask.label}: no usable run plan in the answer (${why.slice(0, 120)}); still due${since === undefined ? "" : ` since floor ${since}`}, the next question carries it` });
+          };
+          if ("missing" in found) return fail("missing", found.missing);
+          try {
+            const plan = parseRunPlan(found.plan, state, knowledge, ride.trigger);
+            screenMemory.runPlan = plan;
+            screenMemory.runPlanPending = undefined;
+            const items = journal.itemCount;
+            journal.noteRunPlan(state, ride.trigger, runPlanLine(plan));
+            if (journal.itemCount !== items) observedStates.touched(state, observedFp, observedTs);
+            logRunPlan(config.runPlanLog, {
+              run: runId,
+              floor,
+              trigger: ride.trigger,
+              // The state the plan was made on (the journal filed it there; journal-replay.ts).
+              observed_ts: observedTs,
+              merged_into: ask.label,
+              decision_id: decisionId,
+              plan: toJsonValue(plan),
+              raw: toJsonValue(found.plan),
+              question: call,
+              memory_chars: memoryChars(memory),
+            });
+            runPlanRideLog = { trigger: ride.trigger, outcome: "stored" };
+            onEvent({ type: "note", message: `run plan (rode on ${ask.label}, ${ride.trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
+          } catch (error) {
+            fail("error", `run plan not parsed: ${error instanceof Error ? error.message : String(error)}`);
+          }
+        };
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
         const accept = (answer: BrainChoice, recovered: { line: string } | null): boolean => {
           const picked = ask.resolve({
@@ -851,6 +942,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               return !("invalid" in out) && Boolean(out.intent);
             };
             const { json, meta, recovered, note } = await brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } }, valid);
+            takeRunPlan(json["run_plan"], meta);
             stats.deepseekCalls += reaskCalls(decision.label, meta.brain);
             stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
             deepseekLatency = meta.latencyMs;
@@ -894,6 +986,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             }
           } else {
             const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            takeRunPlan(answer.runPlan, answer);
             stats.deepseekCalls += reaskCalls(decision.label, answer.brain);
             stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
             deepseekLatency = answer.latencyMs;
@@ -918,6 +1011,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           }
           onEvent({ type: "note", message: `DeepSeek failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)})` });
           if (error instanceof DeepSeekAnswerError) {
+            // A run plan riding on it does not depend on the choice: taken when the answer gave one.
+            takeRunPlan(error.detail.runPlan, error.meta);
             // Its answer was unusable, but its reasoning may still name one option (WXMB F11: reasoned
             // "heal", answer unparsed, Jev smithed at 0.05): act on that before handing the question on.
             stats.deepseekTokens += error.meta.inputTokens + error.meta.outputTokens;
@@ -970,6 +1065,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           ...(deepseekRecord === undefined ? {} : { deepseek: deepseekRecord }),
           deepseek_fallback: `one-shot answer unusable: ${deepseekAnswerUnusable}; step-by-step questions`,
           ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
+          ...runPlanMergeField(runPlanRide, runPlanRideLog),
           ...(runId ? { run_id: runId } : {}),
           observed_ts: observedTs,
           result: "not dispatched: one-shot answer unusable, re-planned step by step",
@@ -1267,6 +1363,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
       ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
       ...(bossSimRecord === undefined ? {} : { boss_sim: bossSimRecord }),
+      // RUN_PLAN_MERGE: the run plan that rode on this question and what came of it (the plan itself is in run-plans.jsonl).
+      ...runPlanMergeField(runPlanRide, runPlanRideLog),
       // THIEF_COST: the stolen card's value computed before this decision (a restart takes it back from here).
       ...(thiefValueToLog ? { thief_card_value: toJsonValue(thiefValueToLog) } : {}),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
@@ -1829,6 +1927,12 @@ export function withAdvisorNote(decision: AskDecision, note: Record<string, stri
 function deepseekUsage(record: Record<string, JsonValue>): { input_tokens: number; output_tokens: number; cache_hit_tokens: number; reasoning_tokens: number } {
   const n = (key: string): number => (typeof record[key] === "number" ? (record[key] as number) : 0);
   return { input_tokens: n("input_tokens"), output_tokens: n("output_tokens"), cache_hit_tokens: n("cache_hit_tokens"), reasoning_tokens: n("reasoning_tokens") };
+}
+
+/** A decision row's run_plan_merge field (RUN_PLAN_MERGE): the run plan that rode on its question, and what came of it. */
+function runPlanMergeField(ride: { trigger: RunPlanTrigger } | null, log: JsonValue | undefined): { run_plan_merge?: JsonValue } {
+  if (!ride) return {};
+  return { run_plan_merge: log ?? { trigger: ride.trigger, outcome: "no_answer" } };
 }
 
 /** A route review's log fields in the decision's row (a change's paths and plan are in its own row). */

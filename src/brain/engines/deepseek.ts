@@ -62,6 +62,7 @@ export function pickAnswerOf(answer: DeepSeekAnswer): Record<string, unknown> {
     ...(answer.route ? { route: answer.route } : {}),
     ...(answer.routeReason ? { route_reason: answer.routeReason } : {}),
     ...(answer.discard ? { discard: answer.discard } : {}),
+    ...(answer.runPlan ? { run_plan: answer.runPlan } : {}),
   };
 }
 

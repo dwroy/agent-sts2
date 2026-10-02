@@ -15,6 +15,7 @@ import { checkConsistency, reaskFields, reaskMessage, recoverChoice, type Conclu
 import { choiceMessage, taskMessage } from "./deepseek-message.js";
 import { discardSlotsOf } from "../screens/potion-discard.js";
 import { fillGuideFacts } from "../strategy/boss-clock.js";
+import { RUN_PLAN_TASK_KEY } from "../strategy/run-plan.js";
 import type { Escalator } from "./file-escalation.js";
 
 export interface DeepSeekConfig {
@@ -83,6 +84,11 @@ export interface DeepSeekAnswer {
   routeReason?: string;
   /** The answer's `discard` list: the potion slots a "discard, then …" option discards (screens/potion-discard.ts). */
   discard?: number[];
+  /**
+   * The answer's `run_plan` object, when it gave one (RUN_PLAN_MERGE: a due run plan riding on the question,
+   * state.run_plan_task; strategy/run-plan-merge.ts). Read as given; the loop checks and parses it.
+   */
+  runPlan?: Record<string, unknown>;
 }
 
 /** One answer as seen by the consistency guard (JSON-safe, for decisions.jsonl). */
@@ -129,7 +135,7 @@ export class DeepSeekAnswerError extends Error {
 
   constructor(
     message: string,
-    readonly detail: { choice: string; reason: string; reasoning: string; content: string; route?: string; routeReason?: string; discard?: number[] },
+    readonly detail: { choice: string; reason: string; reasoning: string; content: string; route?: string; routeReason?: string; discard?: number[]; runPlan?: Record<string, unknown> },
     readonly meta: Omit<DeepSeekAnswer, "choice" | "reason">,
   ) {
     super(message);
@@ -143,17 +149,19 @@ export class DeepSeekAnswerError extends Error {
 
   /**
    * The answer to act on with the option its reasoning concluded on (recoverFrom): the fields that do not depend
-   * on the option key go with it, the route and route_reason (a route review, the act route) and the potion slots
-   * a "discard, then …" option discards (without them a recovered discard option was judged invalid).
+   * on the option key go with it, the route and route_reason (a route review, the act route), the potion slots
+   * a "discard, then …" option discards (without them a recovered discard option was judged invalid) and a run plan
+   * riding on the question (RUN_PLAN_MERGE).
    */
   answerFrom(recovered: Conclusion): DeepSeekAnswer {
-    const { route, routeReason, discard } = this.detail;
+    const { route, routeReason, discard, runPlan } = this.detail;
     return {
       ...this.meta,
       choice: recovered.option,
       reason: this.detail.reason || `reasoning concluded ${recovered.option}`,
       ...(route ? { route, ...(routeReason ? { routeReason } : {}) } : {}),
       ...(discard && discard.length > 0 ? { discard } : {}),
+      ...(runPlan ? { runPlan } : {}),
     };
   }
 }
@@ -353,12 +361,41 @@ export function pickJsonObject(content: string): Record<string, unknown> {
     if (lead) return lead;
     throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
   }
-  const objects = values.filter((value): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value));
-  if (objects.length === 0) throw new Error("DeepSeek returned a non-object");
-  if (objects.length === 1) return objects[0]!;
+  const all = values.filter((value): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value));
+  if (all.length === 0) throw new Error("DeepSeek returned a non-object");
+  if (all.length === 1) return all[0]!;
+  // A run plan riding on the question (RUN_PLAN_MERGE) sent as its own {"run_plan": …} object after the answer: it joins
+  // the answer instead of being taken for it (a reply that never carried a run plan has no such object: as before).
+  const ridden = all.filter(isRunPlanOnly);
+  const objects = all.filter((o) => !isRunPlanOnly(o));
+  if (objects.length === 0) return all[all.length - 1]!;
   const echo = (o: Record<string, unknown>) => Object.keys(o).length > 0 && Object.keys(o).every((key) => key === "choice" || key === "reason");
   const answers = objects.filter((o) => !echo(o));
-  return answers[answers.length - 1] ?? objects[objects.length - 1]!;
+  const picked = answers[answers.length - 1] ?? objects[objects.length - 1]!;
+  const runPlan = ridden[ridden.length - 1]?.["run_plan"];
+  return runPlan !== undefined && picked["run_plan"] === undefined ? { ...picked, run_plan: runPlan } : picked;
+}
+
+/** An object that is nothing but a run plan riding on a question ({"run_plan": {...}}). */
+function isRunPlanOnly(value: Record<string, unknown>): boolean {
+  const keys = Object.keys(value);
+  return keys.length === 1 && keys[0] === "run_plan" && isPlainObject(value["run_plan"]);
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * The run plan riding on a question's reply (RUN_PLAN_MERGE): the answer object's `run_plan`, else one sent as its own
+ * {"run_plan": …} object next to the answer (the answer itself is read as before: parseChoice takes the first object).
+ */
+function ridingRunPlan(answer: Record<string, unknown>, content: string): Record<string, unknown> | null {
+  if (isPlainObject(answer["run_plan"])) return answer["run_plan"];
+  const values = jsonValues(content.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "")) ?? [];
+  const found = values.filter((value): value is Record<string, unknown> => isPlainObject(value) && isPlainObject(value["run_plan"]));
+  const last = found[found.length - 1];
+  return last ? (last["run_plan"] as Record<string, unknown>) : null;
 }
 
 /**
@@ -469,6 +506,20 @@ export function effortFor(label: string, config: Pick<DeepSeekConfig, "reasoning
   if (base === "off") return base;
   const tier = parseEffortTiers(config.effortByLabel ?? DEFAULT_EFFORT_BY_LABEL).find(([prefix]) => name.startsWith(prefix));
   return tier?.[1] ?? base;
+}
+
+const EFFORT_RANK: Record<string, number> = { off: 0, low: 1, high: 2, max: 3 };
+
+/**
+ * The thinking effort of a question: its label's, raised to the run plan's when a due run plan rides on it
+ * (RUN_PLAN_MERGE: state.run_plan_task). The run plan kept the default effort (max) when the card and rest picks went
+ * to "high" (Dai 2026-09-28); riding on a card reward it would otherwise be thought out at "high".
+ */
+export function questionEffort(label: string, state: Record<string, unknown>, config: Pick<DeepSeekConfig, "reasoningEffort" | "combatReasoningEffort" | "effortByLabel">): string {
+  const own = effortFor(label, config);
+  if (!(RUN_PLAN_TASK_KEY in state)) return own;
+  const plan = effortFor("run-plan", config);
+  return (EFFORT_RANK[plan] ?? 0) > (EFFORT_RANK[own] ?? 0) ? plan : own;
 }
 
 export class DeepSeekClient implements Escalator {
@@ -582,7 +633,8 @@ export class DeepSeekClient implements Escalator {
     // Memory first (act block, append-only history, then the volatile parts), then this question: see deepseek-message.ts.
     const user = choiceMessage(state, instructions, criteria, memory);
     const messages: ChatMessage[] = [{ role: "user", content: user }];
-    const done = await this.complete(messages, label);
+    const effort = questionEffort(label, state, this.config);
+    const done = await this.complete(messages, label, effort);
     let first: ReturnType<DeepSeekClient["parseChoice"]>;
     try {
       first = this.parseChoice(done.content);
@@ -612,7 +664,7 @@ export class DeepSeekClient implements Escalator {
     if (firstKey === null) {
       // The route (a route review's keep/change, the act route) does not depend on the option key: it rides along,
       // so a choice recovered from the reasoning keeps it.
-      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content, ...routeOf(first), ...(first.discard && first.discard.length > 0 ? { discard: first.discard } : {}) };
+      const detail = { choice: first.choice, reason: first.reason, reasoning: done.reasoning, content: done.content, ...routeOf(first), ...(first.discard && first.discard.length > 0 ? { discard: first.discard } : {}), ...planOf(first) };
       throw new DeepSeekAnswerError(`DeepSeek chose unknown option "${first.choice}"`, detail, done.meta);
     }
     first.choice = firstKey;
@@ -637,6 +689,7 @@ export class DeepSeekClient implements Escalator {
       const again = await this.complete(
         [...messages, { role: "assistant", content: done.content }, { role: "user", content: reask }],
         label,
+        effort,
       );
       meta = sumMeta(done.meta, again.meta);
       let parsed: ReturnType<DeepSeekClient["parseChoice"]>;
@@ -650,7 +703,8 @@ export class DeepSeekClient implements Escalator {
       parsed.choice = resolveOptionKey(parsed.choice, criteria) ?? parsed.choice;
       secondChoice = parsed.choice;
       secondReason = parsed.reason;
-      secondExtras = parsed.route ? parsed : { ...parsed, ...routeOf(first) };
+      // A run plan riding on the question is not asked for again: the first answer's stands unless the second gives one.
+      secondExtras = { ...(parsed.route ? parsed : { ...parsed, ...routeOf(first) }), ...(parsed.runPlan ? {} : planOf(first)) };
       secondCheck = checkConsistency(parsed.choice, parsed.reason, again.reasoning, criteria);
       if (!(parsed.choice in criteria)) secondCheck = { ...secondCheck, ok: false, issues: [...secondCheck.issues, `unknown option "${parsed.choice}"`] };
       second = consistencyAnswer(secondChoice, secondReason, secondCheck);
@@ -667,7 +721,7 @@ export class DeepSeekClient implements Escalator {
     const conflicting = conclusions.some((c) => c.unambiguous && target !== null && c.option !== target.option);
     if (target && !conflicting) {
       const reason = `reasoning concluded ${target.option}: ${target.line}`.slice(0, 200);
-      const extras = target.option === secondChoice ? secondExtras : target.option === first.choice ? first : routeOf(first);
+      const extras = target.option === secondChoice ? secondExtras : target.option === first.choice ? first : { ...routeOf(first), ...planOf(first) };
       return { ...meta, choice: target.option, reason, ...extrasOf(extras), consistency: { first: firstRecord, second, resolution: "conclusion", choice: target.option } };
     }
     throw new DeepSeekInconsistentError(
@@ -687,6 +741,7 @@ export class DeepSeekClient implements Escalator {
       if (!cut) throw new Error(`DeepSeek returned non-JSON: ${content.slice(0, 120)}`);
       parsed = cut;
     }
+    const runPlan = ridingRunPlan(parsed as Record<string, unknown>, content);
     return {
       // A list ({"choice": ["card2", "card1"]}) reads as the keys it names, in order (severalOptionKeys).
       choice: typeof parsed.choice === "string" ? parsed.choice.trim() : Array.isArray(parsed.choice) ? parsed.choice.filter((key): key is string => typeof key === "string").join(",") : "",
@@ -701,6 +756,7 @@ export class DeepSeekClient implements Escalator {
           : {}),
       ...(typeof parsed.route_reason === "string" && parsed.route_reason.trim() ? { routeReason: parsed.route_reason.trim() } : {}),
       ...(discardSlotsOf(parsed.discard) ? { discard: discardSlotsOf(parsed.discard)! } : {}),
+      ...(runPlan ? { runPlan } : {}),
     };
   }
 
@@ -723,7 +779,8 @@ export class DeepSeekClient implements Escalator {
     const memory = context["memory"];
     const messages: ChatMessage[] = [{ role: "user", content: choiceMessage(state, instructions, criteria, memory) }];
     const planRow = (json: Record<string, unknown>): [string, unknown] => [JSON.stringify(json["plan"] ?? null), json["reason"] ?? ""];
-    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label), accept, { question: instructions, criteria, memory, row: planRow });
+    const effort = questionEffort(label, state, this.config);
+    const first = await this.emptyReplyRetry(messages, label, await this.complete(messages, label, effort), accept, { question: instructions, criteria, memory, row: planRow }, effort);
     if ("recovered" in first) return { json: first.recovered, meta: first.meta, recovered: true, note: first.note };
     const { done, meta } = first;
     const noted = first.note ? { note: first.note } : {};
@@ -803,6 +860,7 @@ export class DeepSeekClient implements Escalator {
     first: CompletedCall,
     accept: ((json: Record<string, unknown>) => boolean) | undefined,
     log: { question: string; criteria: Record<string, string | null>; memory: JsonValue | undefined; row: (json: Record<string, unknown>) => [string, unknown] },
+    effort?: string,
   ): Promise<{ done: CompletedCall; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note?: string } | { recovered: Record<string, unknown>; meta: Omit<DeepSeekAnswer, "choice" | "reason">; note: string }> {
     let done = first;
     let spent: Omit<DeepSeekAnswer, "choice" | "reason"> | null = null;
@@ -825,7 +883,7 @@ export class DeepSeekClient implements Escalator {
       }
       this.logReasoning(label, done, log.question, log.criteria, "", "", log.memory, undefined, `${why}, no answer drafted in its reasoning: asked once more`);
       spent = done.meta;
-      done = await this.complete(messages, label);
+      done = await this.complete(messages, label, effort);
       note = `first ${why}: asked once more`;
     }
     return { done, meta: spent ? sumMeta(spent, done.meta) : done.meta, ...(note ? { note } : {}) };
@@ -834,9 +892,9 @@ export class DeepSeekClient implements Escalator {
   private async complete(
     messages: ChatMessage[],
     label: string,
+    effort: string = effortFor(label, this.config),
   ): Promise<CompletedCall> {
     const started = Date.now();
-    const effort = effortFor(label, this.config);
     const thinking = effort !== "off";
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.config.timeoutMs);
@@ -936,7 +994,7 @@ function emptyReplyText(call: CompletedCall): string {
 }
 
 /** The fields of an answer beyond {choice, reason}. */
-type Extras = { cards?: string[]; route?: string; routeReason?: string; discard?: number[] };
+type Extras = { cards?: string[]; route?: string; routeReason?: string; discard?: number[]; runPlan?: Record<string, unknown> };
 
 /**
  * The route keys a question offers: its route review's routes (keep and the others), else the act's routes. V4's
@@ -998,14 +1056,20 @@ export function recoverRoute(texts: string[], keys: string[]): { route: string; 
   return null;
 }
 
-/** `{cards, route, routeReason, discard}` as far as the answer gave them, else nothing (the answer object stays as before). */
+/** `{cards, route, routeReason, discard, runPlan}` as far as the answer gave them, else nothing (the answer object stays as before). */
 function extrasOf(answer: Extras): Extras {
   return {
     ...(answer.cards && answer.cards.length > 0 ? { cards: answer.cards } : {}),
     ...(answer.route ? { route: answer.route } : {}),
     ...(answer.routeReason ? { routeReason: answer.routeReason } : {}),
     ...(answer.discard && answer.discard.length > 0 ? { discard: answer.discard } : {}),
+    ...(answer.runPlan ? { runPlan: answer.runPlan } : {}),
   };
+}
+
+/** An answer's run plan only (RUN_PLAN_MERGE: like the route, it does not depend on which option key was answered). */
+function planOf(answer: { runPlan?: Record<string, unknown> }): { runPlan?: Record<string, unknown> } {
+  return answer.runPlan ? { runPlan: answer.runPlan } : {};
 }
 
 /** An answer's route and route_reason only (the route does not depend on which option key was answered). */
