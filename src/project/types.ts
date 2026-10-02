@@ -100,9 +100,13 @@ export interface SlKnownDraws {
 }
 
 export interface SlCompute {
-  /** The rollout's samples (ROLLOUT_SAMPLES otherwise) and its time budget a decision (ROLLOUT_BUDGET_MS otherwise). */
+  /**
+   * The rollout's samples (ROLLOUT_SAMPLES otherwise) and its time budget a decision (ROLLOUT_BUDGET_MS otherwise), at most
+   * what is left of the turn's `turnBudgetMs` over its questions (a re-plan after a draw asks again), never below the usual.
+   */
   rolloutSamples: number;
   rolloutBudgetMs: number;
+  turnBudgetMs: number;
   /** The random potions' Monte Carlo: samples a potion (MC_SAMPLES otherwise) and the budget of them all (MC_BUDGET_MS). */
   mcSamples: number;
   mcBudgetMs: number;
@@ -161,6 +165,8 @@ export interface ScreenMemory {
   rolloutEncounter?: { fight: string; enc: string };
   /** B2 (src/sim/boss-lines.ts): the whole-fight simulation's wall clock spent this boss turn (its budget over re-plans). */
   bossLines?: { turn: string; spentMs: number };
+  /** SL_RETRY_COMPUTE (docs/sl.md §10.3): the rollout's wall clock spent this turn of this attempt (its turn budget over re-plans). */
+  slRetryCompute?: { turn: string; spentMs: number };
   /**
    * The steps still planned after the card being played, kept even when combatPlan is dropped because
    * that card draws (4V5T F24 T4: Burning Pact drew, the plan was dropped, and its exhaust took the True

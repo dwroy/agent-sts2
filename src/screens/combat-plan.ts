@@ -1647,9 +1647,13 @@ function slKnownTop(env: DecisionEnv, state: GameState, ctx: { enemyTargets: num
   }
 }
 
+/** Known cards the question names (the next two hands): the line stays short; the planner uses them all. */
+export const KNOWN_DRAWS_NAMED = 10;
+
 /** The question's one fact line about the known draws (SL_RETRY_KNOWN_DRAWS). */
 export function knownDrawsFact(names: readonly string[], attempts: readonly number[]): string {
-  return `SL retry: the next ${names.length} card${names.length === 1 ? "" : "s"} of the draw pile, in the order they come (the next first), are known from attempt ${attempts.join(", ")}: ${names.join(", ")}. The options' numbers and the rollout draw these first; past them the draws are random.`;
+  const named = names.slice(0, KNOWN_DRAWS_NAMED).join(", ") + (names.length > KNOWN_DRAWS_NAMED ? ", ..." : "");
+  return `SL retry: the next ${names.length} card${names.length === 1 ? "" : "s"} of the draw pile, in the order they come (the next first), are known from attempt ${attempts.join(", ")}: ${named}. The options' numbers and the rollout draw these first; past them the draws are random.`;
 }
 
 /**
@@ -2368,6 +2372,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // potion in its later turns either, as an option beside the others. Its own copy of the Plan; when the option's
   // own rollout drinks nothing later either, the two are one line (rollout-live merges them) and the option is tagged.
   // Part of the potion costs: POTION_COST=off leaves it out with them.
+  // SL_RETRY_COMPUTE: this question's rollout budget, at most what is left of the turn's (this attempt's: the key has it).
+  const retryTurn = slCompute ? `${fightKey(state)}:${env.sl?.attempt ?? "?"}:${state.turn ?? "?"}` : null;
+  const retrySpent = retryTurn !== null && env.screenMemory.slRetryCompute?.turn === retryTurn ? env.screenMemory.slRetryCompute.spentMs : 0;
+  const retryBudgetMs = slCompute ? Math.max(rolloutLiveOptions.budgetMs, Math.min(slCompute.rolloutBudgetMs, slCompute.turnBudgetMs - retrySpent)) : rolloutLiveOptions.budgetMs;
   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
@@ -2382,7 +2390,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         shown: [...options, ...mcMedians, ...(noPotionCopy ? [noPotionCopy] : [])],
         piles: rolloutPiles(state, env.knowledge, enemyTargets),
         ...(knownTop ? { drawTop: knownTop.indices } : {}),
-        ...(slCompute ? { samples: slCompute.rolloutSamples, budgetMs: slCompute.rolloutBudgetMs } : {}),
+        ...(slCompute ? { samples: slCompute.rolloutSamples, budgetMs: retryBudgetMs } : {}),
         spentMs: mcShown.reduce((sum, mc) => sum + mc.ms, 0),
         orders: kill.orders,
         ordersDropped: kill.dropped,
@@ -2392,6 +2400,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       })
     : null;
   let rollout = runRollout(thiefOn && !thiefFailed);
+  // SL_RETRY_COMPUTE: the turn's spent time (the random potions' and the rollout's), for the next question of the turn.
+  if (retryTurn !== null) env.screenMemory.slRetryCompute = { turn: retryTurn, spentMs: retrySpent + mcShown.reduce((sum, mc) => sum + mc.ms, 0) + (rollout?.elapsedMs ?? 0) };
   // THIEF_FACTS fail safe: a rollout that failed with the escapes in it runs again as before, the thief facts dropped.
   if (thiefOn && !thiefFailed && rollout !== null && !rollout.available && rollout.reason.startsWith("error")) {
     thieves = [];
@@ -2852,7 +2862,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...(thiefRecord ? { thief: thiefRecord } : {}),
           ...(mechRecord ? { mech: mechRecord } : {}),
           // SL_RETRY_KNOWN_DRAWS / SL_RETRY_COMPUTE on this question (docs/sl.md §10).
-          ...(knownTop || slCompute ? { sl_retry: { known_draws: knownTop ? knownTop.names.length : 0, ...(slCompute ? { compute: { rollout_samples: slCompute.rolloutSamples, rollout_budget_ms: slCompute.rolloutBudgetMs, mc_samples: slCompute.mcSamples, boss_sim_samples: slCompute.bossSimSamples } } : {}) } } : {}),
+          ...(knownTop || slCompute ? { sl_retry: { known_draws: knownTop ? knownTop.names.length : 0, ...(slCompute ? { compute: { rollout_samples: slCompute.rolloutSamples, rollout_budget_ms: retryBudgetMs, turn_spent_ms: Math.round(retrySpent), mc_samples: slCompute.mcSamples, boss_sim_samples: slCompute.bossSimSamples } } : {}) } } : {}),
           // With the 5-turn rollout's own best (or ties), which rollout.best no longer is where the simulation ranks.
           ...(bossSim
             ? {

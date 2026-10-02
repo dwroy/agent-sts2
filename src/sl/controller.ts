@@ -42,7 +42,7 @@ export type { SlEnv };
  * need ~3-15 s for 24 samples at 5 turns: notes/sl-retry-report.md), the random potions' Monte Carlo x3 samples and time,
  * B2 x2 samples (600 take 0.1-3 s on 20 workers; its own 25 s a question and 30 s a turn still bound it).
  */
-export const RETRY_COMPUTE: SlCompute = { rolloutSamples: 24, rolloutBudgetMs: 20_000, mcSamples: 36, mcBudgetMs: 1_200, bossSimSamples: 1_200 };
+export const RETRY_COMPUTE: SlCompute = { rolloutSamples: 24, rolloutBudgetMs: 20_000, turnBudgetMs: 30_000, mcSamples: 36, mcBudgetMs: 1_200, bossSimSamples: 1_200 };
 
 interface FightTrack {
   runId: string;
@@ -133,7 +133,7 @@ export class SlController {
       elite_retries: this.config.eliteRetries,
       retry_show_sim: this.config.retryShowSim,
       retry_known_draws: this.config.retryKnownDraws,
-      retry_compute: this.config.retryCompute ? { rollout_samples: RETRY_COMPUTE.rolloutSamples, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } : false,
+      retry_compute: this.config.retryCompute ? { rollout_samples: RETRY_COMPUTE.rolloutSamples, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_budget_ms: RETRY_COMPUTE.turnBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } : false,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
       elites: this.elites.elites.map((elite) => elite.name),

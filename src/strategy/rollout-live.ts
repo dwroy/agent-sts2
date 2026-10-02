@@ -80,10 +80,11 @@ export const ROLLOUT_SAMPLES = 8;
 export const HISTORY_MAE: Record<FightKindName, number> = { hallway: 5.5, elite: 11.0, boss: 9.9 };
 
 /**
- * Test hooks: the clock, the budget, a switch (ROLLOUT_FACTS=off turns the facts off), and the kill-order
- * policy's focus weight (measurements; rollout.ts ORDER_FOCUS_BONUS when unset).
+ * Test hooks: the clock, the budget, a switch (ROLLOUT_FACTS=off turns the facts off), the kill-order
+ * policy's focus weight (measurements; rollout.ts ORDER_FOCUS_BONUS when unset), and a salt for the samples' seed
+ * (tools/sl-retry-replay.ts: the same board on other random numbers, the sampling noise; unset: the board's own seed).
  */
-export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number; orderFocusBonus?: number } = {
+export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number; orderFocusBonus?: number; seedSalt?: string } = {
   enabled: process.env["ROLLOUT_FACTS"] !== "off",
   now: null,
   budgetMs: ROLLOUT_BUDGET_MS,
@@ -812,7 +813,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
         horizon: ROLLOUT_HORIZON,
         samples: args.samples ?? ROLLOUT_SAMPLES,
         budgetMs,
-        seed: seedOf(`${fightId(state)}:${state.turn ?? "?"}`),
+        seed: seedOf(`${fightId(state)}:${state.turn ?? "?"}${rolloutLiveOptions.seedSalt ?? ""}`),
         now,
         include: args.shown,
         ...(args.orders && args.orders.length >= 2 ? { orders: args.orders } : {}),

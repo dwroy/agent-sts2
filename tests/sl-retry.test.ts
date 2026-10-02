@@ -308,6 +308,6 @@ describe("SlController with SL_RETRY_KNOWN_DRAWS and SL_RETRY_COMPUTE", () => {
 
   it("describe(): the switches and the compute for run-config", () => {
     const t = setup("/nowhere/sl.jsonl");
-    expect(t.sl.describe()).toMatchObject({ retry_known_draws: true, retry_compute: { rollout_samples: 24, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, mc_samples: 36, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } });
+    expect(t.sl.describe()).toMatchObject({ retry_known_draws: true, retry_compute: { rollout_samples: 24, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_budget_ms: 30_000, mc_samples: 36, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } });
   });
 });

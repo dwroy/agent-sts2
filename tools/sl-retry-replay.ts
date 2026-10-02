@@ -21,6 +21,7 @@
  *
  * Usage: npx tsx tools/sl-retry-replay.ts --mode deaths|retries [--out experiments/sl-retry] [--turns 3] [--b2 on|off]
  *          [--clock frozen|real] [--variants off,draws,compute,both] [--shard i/n] [--limit N] [--workers 8]
+ *          [--since 2026-09-30] [--rooms boss,elite,hallway] [--tag name]   (deaths: fights from that date / in those rooms)
  * Output: <out>/<mode>[-<shard>].jsonl, one row per decision; a line per decision on stdout.
  */
 import { execFileSync } from "node:child_process";
@@ -56,6 +57,9 @@ const variants = arg("variants", "off,draws,compute,both").split(",") as Variant
 const [shardAt, shardOf] = arg("shard", "0/1").split("/").map(Number) as [number, number];
 const limit = Number(arg("limit", "100000"));
 const workers = Number(arg("workers", "8"));
+/** --mode deaths: only fights from this date on (ISO, e.g. 2026-09-30); --rooms boss,elite,...: only these rooms. */
+const since = arg("since", "");
+const roomsOnly = arg("rooms", "");
 const STATES = "logs/states.jsonl";
 const PY = ".cache/logdb-venv/bin/python";
 /** Labels of a fresh plan of the turn (not a committed line's next step). */
@@ -65,9 +69,15 @@ const RETRIES: { run: string; floor: number }[] = [
   { run: "VNKN9952ZNA0", floor: 25 },
   { run: "JW925EDF9ZTQ", floor: 48 },
   { run: "VNKN9952ZNA0", floor: 33 },
+  // The Queen and the Torchhead Amalgam: all six attempts played the same line and died on T5 (V4.3 live, 2026-10-02).
+  { run: "XSPHCB4GUSEU", floor: 48 },
 ];
+/** --fights RUN:FLOOR,...: only these fights; --attempts N: retries mode, attempts 2..N only. */
+const fightsOnly = arg("fights", "");
+const maxAttempt = Number(arg("attempts", "99"));
 
-type Variant = "off" | "draws" | "compute" | "both";
+/** off2 / draws2 / compute2 / both2: the same on other random numbers (the rollout's seed salted): the sampling noise of a choice. */
+type Variant = "off" | "draws" | "compute" | "both" | "off2" | "draws2" | "compute2" | "both2";
 type Row = Record<string, unknown>;
 
 function query(sql: string): Row[] {
@@ -113,8 +123,9 @@ interface Arm {
   label: string;
   /** The question's rollout_best option (B2's best where B2 ranks): its plays; null when tied or none. */
   best: string | null;
-  /** The rollout's own best line and its numbers. */
+  /** The rollout's own best line and its numbers; the shown lines tied for the best (then no best). */
   rolloutBest: string | null;
+  tied: string[];
   firstStep: string | null;
   hpLoss: number | null;
   deaths: number | null;
@@ -124,14 +135,16 @@ interface Arm {
   /** The question's best line's rollout numbers (the same as the rollout's best unless B2 ranks). */
   bestHpLoss: number | null;
   bestDeaths: number | null;
-  /** Shown lines no sample dies on (within the horizon), and how many lines were shown. */
+  /** Shown lines no sample dies on (within the horizon), and how many lines were shown; their plays, in order. */
   surviving: number;
   shown: number;
+  shownPlays: string[];
   /** Every shown line's rollout numbers by plays. */
   lines: Record<string, { hpLoss: number; deaths: number; samples: number; win: number }>;
   degraded: string[];
   rolloutMs: number | null;
-  b2: { best: string | null; samples: number; ms: number; lowTrust: boolean } | null;
+  /** B2's question: its best, samples, and the highest raw / calibrated win rate of any line (a low-trust boss: shown, not ranked). */
+  b2: { best: string | null; samples: number; ms: number; lowTrust: boolean; maxWin: number; maxCalibrated: number } | null;
   knownUsed: number;
   ms: number;
   error?: string;
@@ -178,6 +191,7 @@ function arm(state: GameState, sl: SlEnv): Arm {
     label: decision?.label ?? "",
     best: bestPlays,
     rolloutBest: rollout?.best ? playsOf(rollout.best) : null,
+    tied: rollout ? rollout.tied.map(playsOf) : [],
     firstStep: decision?.kind === "act" ? `${decision.intent.action}:${decision.intent.card_index ?? decision.intent.option_index ?? ""}` : bestPlan ? playsOf({ ...bestPlan, steps: bestPlan.steps.slice(0, 1) }) : null,
     hpLoss: rb ? Math.round(rb.hpLoss * 10) / 10 : null,
     deaths: rb?.deaths ?? null,
@@ -188,14 +202,33 @@ function arm(state: GameState, sl: SlEnv): Arm {
     bestDeaths: bl?.deaths ?? null,
     surviving: shown.filter((plan) => (lineOf(plan)?.deaths ?? 1) === 0).length,
     shown: shown.length,
+    shownPlays: criteriaOf(decision).filter(([key]) => /^plan\d+$/.test(key)).map(([, row]) => normal(row["plays"])),
     lines,
     degraded: rollout?.result.degraded ?? [],
     rolloutMs: rollout ? Math.round(rollout.elapsedMs) : null,
-    b2: simDone && simDone.available ? { best: simDone.best ? playsOf(simDone.best) : null, samples: simDone.run.samples, ms: simDone.run.elapsedMs, lowTrust: simDone.lowTrust !== null } : null,
+    b2:
+      simDone && simDone.available
+        ? {
+            best: simDone.best ? playsOf(simDone.best) : null,
+            samples: simDone.run.samples,
+            ms: simDone.run.elapsedMs,
+            lowTrust: simDone.lowTrust !== null,
+            maxWin: Math.max(0, ...[...simDone.byPlan.values()].map((line) => line.result.winProb)),
+            maxCalibrated: Math.max(0, ...[...simDone.byPlan.values()].map((line) => line.calibrated)),
+          }
+        : null,
     knownUsed: sl.knownDraws?.cards.length ?? 0,
     ms,
     ...(error ? { error } : {}),
   };
+}
+
+/** The line a logged decision played: the rationale's plan text (tools/thief-facts-replay.ts playedOf). */
+function playedOf(rationale: string): string | null {
+  const jev = /chose plan \d+\/\d+ \((.*?)\)(?: with confidence|; plan)/.exec(rationale);
+  if (jev) return jev[1]!;
+  const code = /^(?:code plan \([^)]*\)|lethal|every simulated line dies; [^:]*|mod says ending the turn is lethal, solver disagrees; not ending it|code plan [^;]*is over the HP guard bound; playing) ?:? ?(.*?)(?:; hp [-+]| \(| \[|$)/.exec(rationale);
+  return code ? code[1]!.trim() : null;
 }
 
 /** A fight's frames split into attempts (the turn going back), with each attempt's planning decisions. */
@@ -259,14 +292,23 @@ function evaluate(target: Target, out: string): void {
         ? previousAttemptsJson(previous, target.attempt, previous[0]!.max_attempts, knownNote ? { knownDraws: true } : {})
         : { note: "offline evaluation (tools/sl-retry-replay.ts): the fight's own logged draws taken as attempt 1's" };
     const base: SlEnv = { attempt: target.attempt, maxAttempts: previous[0]?.max_attempts ?? 4, previousAttempts: prevOf(false), showSim: false };
+    const draws: SlEnv = { ...base, previousAttempts: prevOf(true), ...(known ? { knownDraws: known } : {}) };
     const envs: Record<Variant, SlEnv> = {
       off: base,
-      draws: { ...base, previousAttempts: prevOf(true), ...(known ? { knownDraws: known } : {}) },
+      draws,
       compute: { ...base, compute: { ...RETRY_COMPUTE } },
-      both: { ...base, previousAttempts: prevOf(true), ...(known ? { knownDraws: known } : {}), compute: { ...RETRY_COMPUTE } },
+      both: { ...draws, compute: { ...RETRY_COMPUTE } },
+      off2: base,
+      draws2: draws,
+      compute2: { ...base, compute: { ...RETRY_COMPUTE } },
+      both2: { ...draws, compute: { ...RETRY_COMPUTE } },
     };
     const arms: Partial<Record<Variant, Arm>> = {};
-    for (const variant of variants) arms[variant] = arm(state, envs[variant]);
+    for (const variant of variants) {
+      rolloutLiveOptions.seedSalt = variant.endsWith("2") ? ":noise" : undefined;
+      arms[variant] = arm(state, envs[variant]);
+    }
+    rolloutLiveOptions.seedSalt = undefined;
     const result = {
       run: target.run,
       floor: target.floor,
@@ -274,7 +316,7 @@ function evaluate(target: Target, out: string): void {
       room: target.room,
       attempt: target.attempt,
       turn: Number(decision["turn"]),
-      logged: { label: String(decision["label"]), decider: String(decision["decider"]), rationale: String(decision["rationale"] ?? "").slice(0, 300) },
+      logged: { label: String(decision["label"]), decider: String(decision["decider"]), rationale: String(decision["rationale"] ?? "").slice(0, 300), played: playedOf(String(decision["rationale"] ?? "")) },
       known: check ? (check.ok ? { ok: true, next: check.keys.length, names: check.names.slice(0, 12) } : { ok: false, reason: check.reason }) : null,
       drawn: tracker.record.order.length,
       clock,
@@ -300,7 +342,8 @@ function main(): void {
   }
   bossLinesOptions.enabled = b2;
   bossLinesOptions.workers = workers;
-  const out = join(outDir, `${mode}${shardOf > 1 ? `-${shardAt}` : ""}${clock === "real" ? "-real" : ""}${b2 ? "-b2" : ""}.jsonl`);
+  const tag = arg("tag", "");
+  const out = join(outDir, `${mode}${tag ? `-${tag}` : ""}${shardOf > 1 ? `-${shardAt}` : ""}${clock === "real" ? "-real" : ""}${b2 ? "-b2" : ""}.jsonl`);
   writeFileSync(out, "");
   const slRows = createSlLog("logs/sl-attempts.jsonl");
   const elites = loadSlElites();
@@ -309,11 +352,12 @@ function main(): void {
     mode === "retries"
       ? RETRIES.map((fight) => ({ ...fight, encounter: "", room: "" }))
       : query(
-          `SELECT run_id, floor, encounter, room FROM fights WHERE ascension >= 8 AND outcome = 'died' AND (room = 'boss' OR list_has_any(monsters, [${ids.map((id) => `'${id}'`).join(", ")}])) ORDER BY first_ts`,
+          `SELECT run_id, floor, encounter, room FROM fights WHERE ascension >= 8 AND outcome = 'died' AND (room = 'boss' OR list_has_any(monsters, [${ids.map((id) => `'${id}'`).join(", ")}]))${since ? ` AND first_ts >= '${since}'` : ""}${roomsOnly ? ` AND room IN (${roomsOnly.split(",").map((room) => `'${room}'`).join(", ")})` : ""} ORDER BY first_ts`,
         ).map((row) => ({ run: String(row["run_id"]), floor: Number(row["floor"]), encounter: String(row["encounter"]), room: String(row["room"]) }));
   let n = 0;
   fights.forEach((fight, index) => {
     if (index % shardOf !== shardAt || n >= limit) return;
+    if (fightsOnly && !fightsOnly.split(",").includes(`${fight.run}:${fight.floor}`)) return;
     n += 1;
     const attempts = attemptsOf(fight.run, fight.floor);
     if (attempts.length === 0) return;
@@ -328,7 +372,7 @@ function main(): void {
       evaluate({ run: fight.run, floor: fight.floor, encounter, room, attempt: 2, known, frames: attempts[0]!.frames, decisions: attempts[0]!.decisions, rows: [] }, out);
       return;
     }
-    for (let k = 1; k < attempts.length; k += 1) {
+    for (let k = 1; k < Math.min(attempts.length, maxAttempt); k += 1) {
       const { known } = knownOrderOf(records.slice(0, k).map((draws, i) => ({ attempt: i + 1, draws })));
       evaluate({ run: fight.run, floor: fight.floor, encounter, room, attempt: k + 1, known, frames: attempts[k]!.frames, decisions: attempts[k]!.decisions, rows }, out);
     }

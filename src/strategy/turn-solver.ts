@@ -2872,7 +2872,18 @@ export function enemyStrengthGained(outcome: Pick<Outcome, "enemyHpAfter">): num
   return outcome.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + (enemy.strengthGained ?? 0), 0);
 }
 
+/** vector() per plan: a pure function of the plan, asked for twice per pair by the dominance filter (distinctPlans). */
+const vectors = new WeakMap<Plan, number[]>();
+
 function vector(plan: Plan): number[] {
+  const known = vectors.get(plan);
+  if (known) return known;
+  const out = outcomeVector(plan);
+  vectors.set(plan, out);
+  return out;
+}
+
+function outcomeVector(plan: Plan): number[] {
   const o = plan.outcome;
   const debuffs = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).reduce((sum, enemy) => sum + Math.min(enemy.vulnerable, 3) + Math.min(enemy.weak, 3), 0);
   const living = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).length;
@@ -2908,12 +2919,38 @@ export function dominates(a: Plan, b: Plan): boolean {
 }
 
 /**
+ * The plans no other plan dominates, in their own order: the same set as testing every pair, in O(n log n + n x front).
+ * A plan's vector is lexicographically above every plan it dominates (at least as good on every axis, better on one), so
+ * in descending lexicographic order a plan's dominators all come before it; and dominance is transitive, so a plan
+ * dominated by a dominated plan is dominated by a front member too: checking the front found so far is enough. Known
+ * draws (SL_RETRY_KNOWN_DRAWS, docs/sl.md §10) make the solver's plans many more (JW925EDF9ZTQ F48 T1 with Battle Trance
+ * drawing three known cards: 60000 nodes, the pairwise filter 108 s).
+ */
+function paretoFront(plans: Plan[]): Plan[] {
+  const order = plans.map((plan, index) => ({ plan, index, v: vector(plan) }));
+  // The order argument needs comparable numbers: anything else is tested pair by pair, as before.
+  if (order.some((entry) => entry.v.some((x) => !Number.isFinite(x)))) return plans.filter((plan) => !plans.some((other) => other !== plan && dominates(other, plan)));
+  order.sort((a, b) => {
+    for (let k = 0; k < a.v.length; k += 1) if (a.v[k] !== b.v[k]) return b.v[k]! - a.v[k]!;
+    return a.index - b.index;
+  });
+  const front: Plan[] = [];
+  const kept = new Set<Plan>();
+  for (const { plan } of order) {
+    if (front.some((other) => dominates(other, plan))) continue;
+    front.push(plan);
+    kept.add(plan);
+  }
+  return plans.filter((plan) => kept.has(plan));
+}
+
+/**
  * Plans whose outcomes a human would call different strategies (not just a reordering), with
  * dominated plans removed: "Strike" beats "do nothing" when nothing else differs, so the model is
  * never asked about it.
  */
 export function distinctPlans(plans: Plan[], limit: number): Plan[] {
-  const front = plans.filter((plan) => !plans.some((other) => other !== plan && dominates(other, plan)));
+  const front = paretoFront(plans);
   const picked: Plan[] = [];
   for (const plan of front) {
     if (picked.length >= limit) break;

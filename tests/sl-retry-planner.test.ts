@@ -237,6 +237,9 @@ describe("SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt 
     const plays = Object.values(optionsOf(on)).map((option) => String(option["plays"] ?? ""));
     expect(plays.some((text) => /祭品.*then (防御|耸肩无视\+)/.test(text))).toBe(true);
     expect(String(on.state["known_draws"])).toMatch(/^SL retry: the next 20 cards of the draw pile, in the order they come \(the next first\), are known from attempt 1: 防御, 双重打击, 耸肩无视\+, /);
+    // The line names the next 10 (two hands) only; the planner uses all 20.
+    expect(/attempt 1: (.*)\. The options/.exec(String(on.state["known_draws"]))![1]!.split(", ")).toHaveLength(11);
+    expect(String(on.state["known_draws"])).toContain(", .... The options' numbers");
   }, 120_000);
 
   it("known draws the pile does not hold: none used, the decision as with the switch off", () => {
@@ -255,7 +258,27 @@ describe("SL_RETRY_COMPUTE on: more samples on a retry", () => {
     expect(Object.values(options).filter((option) => /^5-turn rollout \(24 samples\)/.test(String(option["rollout"] ?? ""))).length).toBeGreaterThan(0);
     const log = on.resolve(pick("plan1")).log as { rollout: { samples: number; horizon: number }; sl_retry: unknown };
     expect(log.rollout).toMatchObject({ samples: 24, horizon: 5 });
-    expect(log.sl_retry).toEqual({ known_draws: 0, compute: { rollout_samples: 24, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } });
+    expect(log.sl_retry).toEqual({ known_draws: 0, compute: { rollout_samples: 24, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_spent_ms: 0, mc_samples: RETRY_COMPUTE.mcSamples, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } });
+  }, 300_000);
+
+  it("a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual", async () => {
+    frozen();
+    const { RETRY_COMPUTE } = await import("../src/sl/controller.js");
+    const { fightKey } = await import("../src/strategy/fight-plan.js");
+    const budgetWith = (spentMs: number, attempt = 2): number => {
+      const env = envOf("vnkn-f25-a2-t3-pact", "off", { compute: { ...RETRY_COMPUTE, rolloutSamples: 8 } });
+      env.screenMemory.slRetryCompute = { turn: `${fightKey(env.state)}:${attempt}:${env.state.turn}`, spentMs };
+      const ask = planCombatTurn(env) as AskDecision;
+      const log = ask.resolve(pick("plan1")).log as { sl_retry: { compute: { rollout_budget_ms: number; turn_spent_ms: number } } };
+      // The frozen clock spends nothing: the turn's record stays where it was.
+      expect(env.screenMemory.slRetryCompute?.spentMs).toBe(attempt === 2 ? spentMs : 0);
+      return log.sl_retry.compute.rollout_budget_ms;
+    };
+    expect(budgetWith(0)).toBe(20_000);
+    expect(budgetWith(25_000)).toBe(5_000);
+    expect(budgetWith(29_500)).toBe(ROLLOUT_BUDGET_MS);
+    // Another attempt's record of the same turn is not this attempt's.
+    expect(budgetWith(25_000, 1)).toBe(20_000);
   }, 300_000);
 
   it("B2 on a retried boss fight runs the compute's samples a line", async () => {
