@@ -471,7 +471,7 @@ export function laserT4Text(): string {
   const monsters = monsterMoves();
   return RECORD_ASCENSIONS.map((asc) => {
     const laser = moveDamageAt(monsters, "ROCKET", "LASER_MOVE", asc);
-    const gain = selfGainAt(monsters["ROCKET"]?.moves?.["CHARGE_UP_MOVE"], "STRENGTH_POWER", asc) ?? 0;
+    const gain = selfGainAt(monsters["ROCKET"]?.moves?.["CHARGE_UP_MOVE"], "STRENGTH_POWER", asc, { monsters, monsterId: "ROCKET" }) ?? 0;
     if (!laser) return `A${asc} ?`;
     const front = (laser.base ?? laser.perHit) + gain;
     return `A${asc} ${front}（背后 ${Math.floor(front * 1.5)}）`;
@@ -653,7 +653,7 @@ export function giantKillText(rows: GiantKillRow[], level: number, lang: "zh" | 
 export function kinBeamT11(ascension: number): number | null {
   const monsters = monsterMoves();
   const beam = moveDamageAt(monsters, "KIN_PRIEST", "BEAM_MOVE", ascension);
-  const ritual = selfGainAt(monsters["KIN_PRIEST"]?.moves?.["RITUAL_MOVE"], "STRENGTH_POWER", ascension);
+  const ritual = selfGainAt(monsters["KIN_PRIEST"]?.moves?.["RITUAL_MOVE"], "STRENGTH_POWER", ascension, { monsters, monsterId: "KIN_PRIEST" });
   if (!beam || ritual === null) return null;
   return beam.hits * ((beam.base ?? beam.perHit) + 2 * ritual);
 }
@@ -1102,12 +1102,14 @@ export interface EruptionSchedule {
 /**
  * The Waterfall Giant's Steam Eruption at this ascension from the monster DB (powerScheduleAt: first seen
  * on T2 at 15 up to A8, 20 at A9, +3 a turn at both; 1VX145UJM8RZ A9: 20 on T2, 47 on T11), the nearest
- * logged ascension when this one is not; the logged A8 numbers only when the DB has none.
+ * logged ascension's moved by the measured change when this one is not; the logged A8 numbers only when the DB has none.
  */
 export function eruptionSchedule(ascension: number): EruptionSchedule {
   const db = powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", ascension);
   if (!db) return { ...ERUPTION_FALLBACK, source: "logged A8 (no DB numbers)" };
-  return { first: db.first, firstTurn: db.firstTurn, perTurn: db.perTurn, source: db.exact ? `A${db.asc}, n=${db.n}` : `A${ascension} not logged: A${db.asc}'s, n=${db.n}` };
+  // Not logged at this ascension: A{nearest}'s moved by the measured change (monster-db amountAt), said how.
+  const estimate = db.note ? ` moved by the measured change (${db.note})` : "";
+  return { first: db.first, firstTurn: db.firstTurn, perTurn: db.perTurn, source: db.exact ? `A${db.asc}, n=${db.n}` : `A${ascension} not logged: A${db.asc}'s, n=${db.n}${estimate}` };
 }
 
 /** Steam Eruption stacks on our turn T at this ascension: what it explodes for when killed on turn T. */

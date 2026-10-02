@@ -22,7 +22,7 @@ import { fileURLToPath } from "node:url";
 
 import { loadConfig } from "../config.js";
 import type { Knowledge } from "../knowledge/index.js";
-import { moveDamageAt, nearestAscension, type MonsterDb, type MonsterEntry } from "../knowledge/monster-db.js";
+import { amountEstimateNote, moveDamageAt, nearestAscension, startAmountAt, type MonsterDb, type MonsterEntry } from "../knowledge/monster-db.js";
 import { parseGameState, type GameState } from "../mod/schema.js";
 import { buildRunBrief } from "../project/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../project/types.js";
@@ -128,6 +128,11 @@ export interface BossPart {
   /** The move it opens with (the move logged on turn 1), null when none was logged. */
   move: string | null;
   powers: Record<string, number>;
+  /**
+   * The powers whose amount was not logged at the run's ascension: the nearest logged one's moved by the measured change
+   * (monster-db startAmountAt), each with how (amountEstimateNote: "A9估: A8 15，A8→A9 ×1.33（全体 1 例）").
+   */
+  estimated?: Record<string, string>;
 }
 
 export interface BossOpening {
@@ -188,7 +193,9 @@ function nameOf(id: string, db: MonsterDb, knowledge?: Knowledge): string {
 
 /**
  * The boss's opening at `asc` from the monster DB: its parts in board order, each one's median max HP at this
- * ascension (the nearest logged one when not logged), first move and starting powers. null when the DB has no parts.
+ * ascension (the nearest logged one when not logged), first move and starting powers (their amounts at this ascension;
+ * not logged here, the nearest logged one's moved by the measured change, listed in `estimated`). null when the DB has
+ * no parts.
  */
 export function bossOpening(bossId: string, asc: number, db: MonsterDb, knowledge?: Knowledge): BossOpening | null {
   const key = bossKey(bossId);
@@ -221,17 +228,21 @@ export function bossOpening(bossId: string, asc: number, db: MonsterDb, knowledg
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
       .map(([move]) => move);
     const powers: Record<string, number> = {};
+    const estimated: Record<string, string> = {};
     for (const [powerId, power] of Object.entries(mon?.powers ?? {})) {
       if (OUR_DEBUFFS.has(powerId)) continue;
       const byTurn = Object.entries(power.turn_at_first_sight_by_asc ?? {}).filter(([key]) => fightsAt(key) > 0);
       const onTurn1 = byTurn.reduce((sum, [, turns]) => sum + (turns["1"] ?? 0), 0);
       const fights = byTurn.reduce((sum, [key]) => sum + fightsAt(key), 0);
       if (fights === 0 || onTurn1 < INNATE_POWER_SHARE * fights) continue;
-      const amountAt = nearestAscension(power.amount_at_first_sight_by_asc, Number(found.key));
-      const amount = Number(modeKey(amountAt ? power.amount_at_first_sight_by_asc![amountAt.key] : power.amount_at_first_sight) ?? 1);
+      // At the run's ascension: as logged there, else the nearest logged one's moved by the measured change.
+      const at = startAmountAt(db.monsters, id, powerId, asc);
+      const amount = at?.value ?? Number(modeKey(power.amount_at_first_sight) ?? 1);
       powers[powerId] = Number.isFinite(amount) ? amount : 1;
+      if (at?.estimated) estimated[powerId] = amountEstimateNote(at, asc);
     }
-    return { index, id, name: nameOf(id, db, knowledge), hp, move: firsts.length > 0 ? firsts[nth % firsts.length]! : null, powers };
+    const move = firsts.length > 0 ? firsts[nth % firsts.length]! : null;
+    return { index, id, name: nameOf(id, db, knowledge), hp, move, powers, ...(Object.keys(estimated).length > 0 ? { estimated } : {}) };
   });
   return { key, name: BOSS_NAMES[key] ?? nameOf(key, db, knowledge), asc: Number(found.key), exact: found.exact, parts };
 }

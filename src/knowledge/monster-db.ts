@@ -275,15 +275,267 @@ export function regularEffect(move: MoveEntry | undefined, counts: Record<string
 }
 
 /**
- * The most common amount of a power a move gives its user at `asc` (self_powers_gained_by_asc, nearest
- * logged ascension, pooled only without a split): Kin Priest's Ritual +2 up to A8, +3 at A9. null when
- * the move never gave it, or only as a rare leak (regularEffect).
+ * The most common amount of a power a move gives its user at `asc` (self_powers_gained_by_asc, pooled only without a
+ * split): Kin Priest's Ritual +2 up to A8, +3 at A9. Not logged at `asc`: with `where` (the monster and the DB), the
+ * nearest logged ascension's amount moved by the measured change (moveAmountAt: A8's +2 Ritual of a boss never fought
+ * at A9 is +3 there); without it, the nearest logged one's as logged. null when the move never gave it, or only as a
+ * rare leak (regularEffect).
  */
-export function selfGainAt(move: MoveEntry | undefined, powerId: string, asc: number): number | null {
+export function selfGainAt(move: MoveEntry | undefined, powerId: string, asc: number, where?: AmountWhere): number | null {
   if (!regularEffect(move, move?.self_powers_gained?.[powerId])) return null;
-  const byAsc = Object.fromEntries(Object.entries(move?.self_powers_gained_by_asc ?? {}).map(([key, powers]) => [key, powers[powerId]]));
-  const value = mode(countsAt(byAsc, move?.self_powers_gained?.[powerId], asc));
+  if (where) return moveAmountAt(where.monsters, where.monsterId, move, "self", powerId, asc)?.value ?? null;
+  const value = mode(countsAt(moveAmountByAsc(move, "self", powerId), move?.self_powers_gained?.[powerId], asc));
   return value === null ? null : Number(value);
+}
+
+/* ---- buffs, debuffs and block at an ascension no fight logged them at --------------------------------------------- */
+
+/**
+ * The per-ascension amounts estimated below (ascension review 2026-10-02: A9 brought +1 Strength to most bosses' buff
+ * moves, the Queen has no A9 fight and read A8's):
+ *   self    a move's gain of a power on its user (self_powers_gained_by_asc);
+ *   applied a power a move puts on us (player_powers_applied_by_asc);
+ *   block   the block a move gives (block_gained_by_asc; the power id is ignored);
+ *   start   the amount a monster's power is first seen with (powers amount_at_first_sight_by_asc).
+ */
+export type AmountKind = "self" | "applied" | "block" | "start";
+
+/** The monsters as the amount estimates read them: the DB entries (the rollout's slimmer MonsterMoves fits). */
+export type MonsterAmountData = Record<string, { moves?: Record<string, MoveEntry>; powers?: MonsterEntry["powers"]; rooms?: Record<string, number> }>;
+
+/** The monster an amount belongs to, and the DB its change is measured on. */
+export interface AmountWhere {
+  monsters: MonsterAmountData;
+  monsterId: string;
+}
+
+/**
+ * The switch (ASC_AMOUNTS=off: the nearest logged ascension's amount as logged, the reads before 2026-10-02), for
+ * comparisons; damage and HP are scaled either way.
+ */
+export const ascAmountOptions: { enabled: boolean } = { enabled: process.env["ASC_AMOUNTS"] !== "off" };
+
+/** A room kind needs this many pairs before its own change is used (else every monster's). */
+export const ROOM_MIN_PAIRS = 3;
+
+/** One measured step of an amount's change between two logged ascensions (ascensionAmountChange). */
+export interface AmountStep {
+  from: number;
+  to: number;
+  /**
+   * add: to = from + delta (Strength: +1 on a 2 and on a 15); scale: to = from x ratio. The model with the smaller
+   * error on every monster's pairs of this power and step (additive on a tie, and whenever an amount on either side is
+   * 0 or below).
+   */
+  model: "add" | "scale";
+  /** Mean change and summed ratio over the pairs used (`basis`). */
+  delta: number;
+  ratio: number;
+  n: number;
+  /** Whose pairs: the monster's own (its other moves with this power), its room kind's (`room`), or every monster's. */
+  basis: "own" | "room" | "all";
+  room?: string;
+}
+
+/** An amount at an ascension (amountAt). */
+export interface AmountAt {
+  value: number;
+  /** Not logged at this ascension: the logged one's amount moved by the measured steps (none measured: as logged), rounded. */
+  estimated: boolean;
+  /** The logged ascension the amount comes from; null for pooled counts (a DB without the per-ascension split). */
+  from: number | null;
+  /** The most common amount logged there, and the samples behind it. */
+  logged: number;
+  n: number;
+  /** Estimated only: the measured steps applied, and the ascension they reach (short of `asc` when none is logged on the way yet). */
+  steps?: AmountStep[];
+  reached?: number;
+}
+
+type AmountCounts = Record<string, Record<string, number> | undefined>;
+
+/** A move's per-ascension counts of one amount (undefined when the move has no such split). */
+export function moveAmountByAsc(move: MoveEntry | undefined, kind: Exclude<AmountKind, "start">, powerId: string): AmountCounts | undefined {
+  if (!move) return undefined;
+  if (kind === "block") return move.block_gained_by_asc;
+  const split = kind === "self" ? move.self_powers_gained_by_asc : move.player_powers_applied_by_asc;
+  return split ? Object.fromEntries(Object.entries(split).map(([key, powers]) => [key, powers?.[powerId]])) : undefined;
+}
+
+function movePooledAmount(move: MoveEntry | undefined, kind: Exclude<AmountKind, "start">, powerId: string): Record<string, number> | undefined {
+  if (kind === "block") return move?.block_gained;
+  return kind === "self" ? move?.self_powers_gained?.[powerId] : move?.player_powers_applied?.[powerId];
+}
+
+function modeNumber(counts: Record<string, number> | undefined): number | null {
+  const value = mode(counts);
+  return value === null || !Number.isFinite(Number(value)) ? null : Number(value);
+}
+
+/** A monster's room kind: where it was fought most (boss, elite, hallway; the Kin's followers and the Amalgam: boss). */
+function roomOf(monster: MonsterAmountData[string] | undefined): string | null {
+  return mode(monster?.rooms);
+}
+
+const amountSeriesCache = new WeakMap<object, Map<string, { monsterId: string; byAsc: AmountCounts }[]>>();
+
+/** Every monster's per-ascension counts of an amount (each move's, rare leaks left out: regularEffect). */
+function amountSeries(monsters: MonsterAmountData, kind: AmountKind, powerId: string): { monsterId: string; byAsc: AmountCounts }[] {
+  let cache = amountSeriesCache.get(monsters);
+  if (!cache) amountSeriesCache.set(monsters, (cache = new Map()));
+  const key = `${kind}:${powerId}`;
+  const cached = cache.get(key);
+  if (cached) return cached;
+  const out: { monsterId: string; byAsc: AmountCounts }[] = [];
+  const logged = (byAsc: AmountCounts | undefined): byAsc is AmountCounts => Object.values(byAsc ?? {}).some((counts) => counts && Object.keys(counts).length > 0);
+  for (const [monsterId, monster] of Object.entries(monsters)) {
+    if (kind === "start") {
+      const byAsc = monster.powers?.[powerId]?.amount_at_first_sight_by_asc;
+      if (logged(byAsc)) out.push({ monsterId, byAsc });
+      continue;
+    }
+    for (const move of Object.values(monster.moves ?? {})) {
+      const byAsc = moveAmountByAsc(move, kind, powerId);
+      if (logged(byAsc) && regularEffect(move, movePooledAmount(move, kind, powerId))) out.push({ monsterId, byAsc });
+    }
+  }
+  cache.set(key, out);
+  return out;
+}
+
+/**
+ * How an amount changes from `from` to `to`, measured on the amounts logged at both (each one's most common value):
+ * the monster's own when it has any (its other moves giving this power), else its room kind's when they are
+ * ROOM_MIN_PAIRS or more, else every monster's (A8 -> A9 Strength a move gives itself: 16 of 45 moves +1 or +2, +0.4 on
+ * average; the bosses' 8 of 11, +0.7). Additive or proportional as every monster's pairs fit better (AmountStep.model).
+ * null when no amount is logged at both.
+ */
+export function ascensionAmountChange(monsters: MonsterAmountData, monsterId: string, kind: AmountKind, powerId: string, from: number, to: number): AmountStep | null {
+  const pairs = amountSeries(monsters, kind, powerId).flatMap(({ monsterId: id, byAsc }) => {
+    const a = modeNumber(byAsc[String(from)]);
+    const b = modeNumber(byAsc[String(to)]);
+    return a === null || b === null ? [] : [{ id, a, b }];
+  });
+  if (pairs.length === 0) return null;
+  const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
+  const fit = (used: typeof pairs) => {
+    const delta = sum(used.map((pair) => pair.b - pair.a)) / used.length;
+    const atFrom = sum(used.map((pair) => pair.a));
+    return { delta, ratio: atFrom > 0 ? sum(used.map((pair) => pair.b)) / atFrom : 1 };
+  };
+  const all = fit(pairs);
+  const errAdd = sum(pairs.map((pair) => Math.abs(pair.a + all.delta - pair.b)));
+  const errScale = sum(pairs.map((pair) => Math.abs(pair.a * all.ratio - pair.b)));
+  const model = pairs.every((pair) => pair.a > 0 && pair.b > 0) && errScale < errAdd - 1e-9 ? "scale" : "add";
+  const own = pairs.filter((pair) => pair.id === monsterId);
+  const room = roomOf(monsters[monsterId]);
+  const sameRoom = room === null ? [] : pairs.filter((pair) => roomOf(monsters[pair.id]) === room);
+  const [used, basis] = own.length > 0 ? ([own, "own"] as const) : sameRoom.length >= ROOM_MIN_PAIRS ? ([sameRoom, "room"] as const) : ([pairs, "all"] as const);
+  const measured = used === pairs ? all : fit(used);
+  return { from, to, model, delta: measured.delta, ratio: measured.ratio, n: used.length, basis, ...(basis === "room" ? { room: room! } : {}) };
+}
+
+const amountAscensionsCache = new WeakMap<object, Map<string, number[]>>();
+
+function loggedAmountAscensions(monsters: MonsterAmountData, kind: AmountKind, powerId: string): number[] {
+  let cache = amountAscensionsCache.get(monsters);
+  if (!cache) amountAscensionsCache.set(monsters, (cache = new Map()));
+  const key = `${kind}:${powerId}`;
+  const cached = cache.get(key);
+  if (cached) return cached;
+  const seen = new Set<number>();
+  for (const { byAsc } of amountSeries(monsters, kind, powerId)) {
+    for (const [asc, counts] of Object.entries(byAsc)) if (/^\d+$/.test(asc) && modeNumber(counts) !== null) seen.add(Number(asc));
+  }
+  const out = [...seen].sort((a, b) => a - b);
+  cache.set(key, out);
+  return out;
+}
+
+/**
+ * The measured steps of an amount's change from `from` to `to` (as chainedDamageRatio): one step when some amount is
+ * logged at both, else one step for each ascension logged on the way; an ascension nothing is logged at yet adds
+ * nothing (`reached` stops short of `to`: A10 before any A10 run is A8 moved by A8 -> A9). null when no step is measured.
+ */
+export function chainedAmountChange(monsters: MonsterAmountData, monsterId: string, kind: AmountKind, powerId: string, from: number, to: number): { steps: AmountStep[]; reached: number } | null {
+  const direct = ascensionAmountChange(monsters, monsterId, kind, powerId, from, to);
+  if (direct) return { steps: [direct], reached: to };
+  const up = to > from;
+  const onTheWay = loggedAmountAscensions(monsters, kind, powerId)
+    .filter((asc) => (up ? asc > from && asc <= to : asc < from && asc >= to))
+    .sort((a, b) => (up ? a - b : b - a));
+  let at = from;
+  const steps: AmountStep[] = [];
+  for (const next of onTheWay) {
+    const step = ascensionAmountChange(monsters, monsterId, kind, powerId, at, next);
+    if (!step) continue;
+    steps.push(step);
+    at = next;
+  }
+  return at === from ? null : { steps, reached: at };
+}
+
+/** An amount moved by one measured step (a ratio leaves an amount of 0 or below as it is). */
+export function applyAmountStep(value: number, step: AmountStep): number {
+  if (step.model === "add") return value + step.delta;
+  return value > 0 ? value * step.ratio : value;
+}
+
+/**
+ * An amount at `asc` from its per-ascension counts (`byAsc`; `pooled` only without a split): as logged there, else the
+ * nearest logged ascension's most common amount moved by the measured change (chainedAmountChange), rounded and marked
+ * estimated (as moveDamageAt does for damage). A logged amount is never changed. null when nothing is logged.
+ */
+export function amountAt(
+  monsters: MonsterAmountData,
+  monsterId: string,
+  kind: AmountKind,
+  powerId: string,
+  byAsc: AmountCounts | undefined,
+  pooled: Record<string, number> | undefined,
+  asc: number,
+): AmountAt | null {
+  const at = countsAtAscension(byAsc, pooled, asc);
+  const logged = modeNumber(at.counts);
+  if (logged === null) return null;
+  const n = countTotal(at.counts);
+  if (at.asc === null || at.exact) return { value: logged, estimated: false, from: at.asc, logged, n };
+  const chain = ascAmountOptions.enabled ? chainedAmountChange(monsters, monsterId, kind, powerId, at.asc, asc) : null;
+  if (!chain) return { value: logged, estimated: true, from: at.asc, logged, n, steps: [], reached: at.asc };
+  return { value: Math.round(chain.steps.reduce(applyAmountStep, logged)), estimated: true, from: at.asc, logged, n, steps: chain.steps, reached: chain.reached };
+}
+
+/** A move's amount at `asc` (amountAt): its self gain or the power it applies (`powerId`), or its block. */
+export function moveAmountAt(monsters: MonsterAmountData, monsterId: string, move: MoveEntry | undefined, kind: Exclude<AmountKind, "start">, powerId: string, asc: number): AmountAt | null {
+  if (!move) return null;
+  return amountAt(monsters, monsterId, kind, powerId, moveAmountByAsc(move, kind, powerId), movePooledAmount(move, kind, powerId), asc);
+}
+
+/** The amount a monster's power is first seen with at `asc` (amountAt): Steam Eruption 15 up to A8, 20 at A9. */
+export function startAmountAt(monsters: MonsterAmountData, monsterId: string, powerId: string, asc: number): AmountAt | null {
+  const power = monsters[monsterId]?.powers?.[powerId];
+  if (!power) return null;
+  return amountAt(monsters, monsterId, "start", powerId, power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc);
+}
+
+const ROOM_ZH: Record<string, string> = { boss: "boss", elite: "精英", hallway: "走廊", unknown_room: "问号房" };
+
+function signed(value: number): string {
+  const rounded = Math.round(value * 10) / 10;
+  return `${rounded >= 0 ? "+" : ""}${rounded}`;
+}
+
+/**
+ * How an estimated amount was reached, for the texts: "A9估: A8 2，A8→A9 +0.7（同类 boss 11 例）"; the chain stopping
+ * short says so ("，A9→A10 未测按不变"), as the damage estimates do. "" for an amount logged at `asc`.
+ */
+export function amountEstimateNote(at: AmountAt, asc: number): string {
+  if (!at.estimated || at.from === null) return "";
+  const basis = (step: AmountStep) => (step.basis === "own" ? "本怪" : step.basis === "room" ? `同类${ROOM_ZH[step.room ?? ""] ?? step.room}` : "全体");
+  const steps = (at.steps ?? []).map((step) => `A${step.from}→A${step.to} ${step.model === "add" ? signed(step.delta) : `×${step.ratio.toFixed(2)}`}（${basis(step)} ${step.n} 例）`);
+  const reached = at.reached ?? at.from;
+  const short = reached !== asc ? `，A${reached}→A${asc} 未测按不变` : "";
+  return `A${asc}估: A${at.from} ${at.logged}${steps.length > 0 ? `，${steps.join("，")}` : ""}${short}`;
 }
 
 /** Picks an alternative needs to be one (appliedPowerIds). */
@@ -552,9 +804,9 @@ export function monsterHpAt(monsters: Record<string, MonsterEntry>, monsterId: s
  * logged (turns_seen), then its logged successors (next; a move with none, the Waterfall Giant's death
  * Explode, is not a turn of the fight), each move's damage per hit at this ascension (moveDamageAt:
  * scaled from the nearest ascension when unseen here; the shown hit when no base was ever measured) plus
- * the Strength its earlier moves gained (selfGainAt: at this ascension, A9's Ritual +3 not the pooled +2),
- * times its hits. `estimated`: some move's
- * damage was scaled. null without logged moves.
+ * the Strength its earlier moves gained (selfGainAt: at this ascension, A9's Ritual +3 not the pooled +2; not logged
+ * here, the nearest logged one's moved by the measured change), times its hits. `estimated`: some move's damage or
+ * Strength gain was not logged at this ascension. null without logged moves.
  */
 export function monsterDamageByTurn(monsterId: string, asc: number, turns: number, monsters: MonsterMoveData = load().monsters): { perTurn: number[]; estimated: boolean } | null {
   const moves = monsters[monsterId]?.moves;
@@ -571,7 +823,15 @@ export function monsterDamageByTurn(monsterId: string, asc: number, turns: numbe
       return [id, base ?? (shown ? { ...shown, shown: true } : null)];
     }),
   );
-  const strengthOf = (id: string) => selfGainAt(moves[id], "STRENGTH_POWER", asc) ?? 0;
+  // At this ascension; a gain not logged here is the nearest logged one's moved by the measured change (estimated).
+  const gains = new Map(
+    Object.keys(moves).map((id) => {
+      const move = moves[id];
+      const gain = regularEffect(move, move?.self_powers_gained?.["STRENGTH_POWER"]) ? moveAmountAt(monsters, monsterId, move, "self", "STRENGTH_POWER", asc) : null;
+      return [id, gain] as const;
+    }),
+  );
+  const strengthOf = (id: string) => gains.get(id)?.value ?? 0;
   let strength = 0;
   let estimated = false;
   const perTurn: number[] = [];
@@ -594,7 +854,10 @@ export function monsterDamageByTurn(monsterId: string, asc: number, turns: numbe
       expected += p * (hit.perHit + (hit.shown ? 0 : strength)) * hit.hits;
     }
     perTurn.push(expected);
-    for (const [id, p] of dist) strength += p * strengthOf(id);
+    for (const [id, p] of dist) {
+      strength += p * strengthOf(id);
+      if (p > 0 && gains.get(id)?.estimated) estimated = true;
+    }
   }
   return { perTurn, estimated };
 }
@@ -653,11 +916,14 @@ export function bossHpAt(bossId: string, asc: number, only?: string[]): { hp: nu
  *   {BEHIND:ID:MOVE}     a Surrounded move's hit from behind (base × 1.5);
  *   {GAIN:ID:MOVE:POWER} what the move gives its user of a power (selfGainAt);
  *   {POWER:ID:POWER}     the amount the enemy is first seen with (amount_at_first_sight_by_asc);
- *   {BLOCK:ID:MOVE}      the block the move gives (block_gained_by_asc).
+ *   {BLOCK:ID:MOVE}      the block the move gives (block_gained_by_asc);
+ *   {APPLIES:ID:MOVE:POWER} the power the move puts on us (player_powers_applied_by_asc);
+ * the last four not logged here are the nearest logged ascension's moved by the measured change (amountAt), "≈" in front.
  * One the DB cannot fill becomes "?", never a hand-set number from another ascension. `db`: the monsters to read
  * (the loaded DB by default; the knowledge renderer passes the one it loaded from its knowledge directory).
  */
 export function fillDbNumbers(text: string, asc: number, db: Record<string, MonsterEntry> = load().monsters): string {
+  const amountText = (at: AmountAt | null): string | null => (at ? `${at.estimated ? "≈" : ""}${at.value}` : null);
   const fill = (kind: string, id: string, a?: string, b?: string): string | null => {
     const monster = db[id];
     const move = a ? monster?.moves?.[a] : undefined;
@@ -679,20 +945,16 @@ export function fillDbNumbers(text: string, asc: number, db: Record<string, Mons
         return `${mark}${perHit}${hit.hits > 1 ? `×${hit.hits}` : ""}`;
       }
       case "GAIN": {
-        const gain = a && b ? selfGainAt(move, b, asc) : null;
-        return gain === null ? null : String(gain);
+        const gain = a && b && regularEffect(move, move?.self_powers_gained?.[b]) ? moveAmountAt(db, id, move, "self", b, asc) : null;
+        return amountText(gain);
       }
-      case "POWER": {
-        const power = a ? monster?.powers?.[a] : undefined;
-        return power ? mode(countsAt(power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc)) : null;
-      }
+      case "POWER":
+        return a ? amountText(startAmountAt(db, id, a, asc)) : null;
       case "BLOCK":
-        return move ? mode(countsAt(move.block_gained_by_asc, move.block_gained, asc)) : null;
-      case "APPLIES": {
+        return amountText(moveAmountAt(db, id, move, "block", "BLOCK", asc));
+      case "APPLIES":
         // The power a move puts on us, its usual amount at this ascension (player_powers_applied).
-        const byAsc = Object.fromEntries(Object.entries(move?.player_powers_applied_by_asc ?? {}).map(([key, powers]) => [key, b ? powers?.[b] : undefined]));
-        return b ? mode(countsAt(byAsc, move?.player_powers_applied?.[b], asc)) : null;
-      }
+        return b ? amountText(moveAmountAt(db, id, move, "applied", b, asc)) : null;
       default:
         return null;
     }
@@ -736,8 +998,9 @@ function moveText(move: MoveEntry, id: string, asc: number, monsterId: string): 
     const unmeasured = damage.ratioTo !== undefined && damage.ratioTo !== asc ? `，A${damage.ratioTo}→A${asc} 未测按 ×1` : "";
     parts.push(damage.estimated ? `${text} (A${asc}估: A${damage.from}×${damage.ratio.toFixed(2)}${unmeasured})` : text);
   } else if (move.intents) parts.push(`(${Object.keys(move.intents).join("/")})`);
-  const strength = selfGainAt(move, "STRENGTH_POWER", asc);
-  if (strength) parts.push(`+${strength}力`);
+  // Not logged at this ascension: the nearest logged one's gain moved by the measured change, said so when it moved.
+  const gain = regularEffect(move, move.self_powers_gained?.["STRENGTH_POWER"]) ? moveAmountAt(load().monsters, monsterId, move, "self", "STRENGTH_POWER", asc) : null;
+  if (gain?.value) parts.push(`+${gain.value}力${gain.estimated && gain.value !== gain.logged ? ` (${amountEstimateNote(gain, asc)})` : ""}`);
   const status = mode(move.status_cards);
   if (status) parts.push(`塞${status}张状态牌`);
   return parts.join(" ");
@@ -754,6 +1017,12 @@ export interface PowerSchedule {
   asc: number;
   exact: boolean;
   n: number;
+  /**
+   * Not logged at the ascension asked for: `first` and `perTurn` are the logged ones moved by the measured change
+   * (amountAt), and how (amountEstimateNote of `first`; "" when logged).
+   */
+  estimated?: boolean;
+  note?: string;
 }
 
 /**
@@ -761,29 +1030,39 @@ export interface PowerSchedule {
  * at 15 up to A8 and 20 at A9, +3 with every move after) at `asc`: the amount it is first seen with and
  * the turn that is on (amount/turn_at_first_sight_by_asc), and the most common gain its later moves put
  * on it (self_powers_gained_by_asc; the move that first gives it, seen only before that turn, left out).
- * This ascension's logs, else the nearest logged one's. null when the DB has no per-ascension numbers.
+ * This ascension's logs, else the nearest logged one's moved by the measured change (startAmountAt, moveAmountAt;
+ * marked estimated). null when the DB has no per-ascension numbers.
  */
 export function powerScheduleAt(monsterId: string, powerId: string, asc: number, monsters: Record<string, MonsterEntry> = load().monsters): PowerSchedule | null {
   const monster = monsters[monsterId];
   const power = monster?.powers?.[powerId];
   const found = nearestAscension(power?.amount_at_first_sight_by_asc, asc);
   if (!power || !found) return null;
-  const firstCounts = power.amount_at_first_sight_by_asc![found.key]!;
-  const first = Number(mode(firstCounts));
+  const firstAt = startAmountAt(monsters, monsterId, powerId, asc);
   const firstTurn = Number(mode(power.turn_at_first_sight_by_asc?.[found.key]) ?? NaN);
-  if (!Number.isFinite(first) || !Number.isFinite(firstTurn)) return null;
+  if (!firstAt || !Number.isFinite(firstTurn)) return null;
   const gains: Record<string, number> = {};
+  let estimated = firstAt.estimated;
   for (const move of Object.values(monster.moves ?? {})) {
     const seen = Object.keys(move.turns_seen ?? {}).filter((key) => /^\d+$/.test(key)).map(Number);
     if (seen.length > 0 && seen.every((turn) => turn < firstTurn)) continue;
-    const byAsc = move.self_powers_gained_by_asc;
-    const at = nearestAscension(Object.fromEntries(Object.entries(byAsc ?? {}).filter(([, powers]) => powers[powerId])), Number(found.key));
-    for (const [delta, n] of Object.entries(at ? byAsc![at.key]![powerId]! : {})) gains[delta] = (gains[delta] ?? 0) + n;
+    // Each later move's gain at this ascension (else moved from the nearest logged one), weighted by its logged uses.
+    const gain = moveAmountAt(monsters, monsterId, move, "self", powerId, asc);
+    if (!gain) continue;
+    if (gain.estimated) estimated = true;
+    gains[String(gain.value)] = (gains[String(gain.value)] ?? 0) + gain.n;
   }
   const perTurn = Number(mode(gains) ?? NaN);
   if (!Number.isFinite(perTurn)) return null;
-  const n = Object.values(firstCounts).reduce((sum, count) => sum + count, 0);
-  return { first, firstTurn, perTurn, asc: Number(found.key), exact: found.exact, n };
+  return {
+    first: firstAt.value,
+    firstTurn,
+    perTurn,
+    asc: Number(found.key),
+    exact: found.exact,
+    n: firstAt.n,
+    ...(estimated ? { estimated: true, note: amountEstimateNote(firstAt, asc) } : {}),
+  };
 }
 
 /**
@@ -862,13 +1141,14 @@ export function moveCycle(id: string, asc: number, maxMoves = 6): string {
 
 function powersText(id: string, fights: number, asc: number): string {
   const powers = load().monsters[id]?.powers ?? {};
-  const common = Object.values(powers)
+  const common = Object.entries(powers)
     // Its own buffs only: Vulnerable, Weak and the like on it are what we applied.
-    .filter((power) => power.type !== "Debuff" && (power.n_fights ?? 0) >= Math.max(2, fights * 0.3))
-    .map((power) => {
-      // At this ascension (the Waterfall Giant's Steam Eruption: 15 up to A8, 20 at A9), not pooled.
-      const amount = mode(countsAt(power.amount_at_first_sight_by_asc, power.amount_at_first_sight, asc));
-      return `${power.name ?? "?"}${amount && amount !== "1" ? ` ${amount}` : ""}`;
+    .filter(([, power]) => power.type !== "Debuff" && (power.n_fights ?? 0) >= Math.max(2, fights * 0.3))
+    .map(([powerId, power]) => {
+      // At this ascension (the Waterfall Giant's Steam Eruption: 15 up to A8, 20 at A9), not pooled; not logged here,
+      // the nearest logged one's moved by the measured change ("≈").
+      const amount = startAmountAt(load().monsters, id, powerId, asc);
+      return `${power.name ?? "?"}${amount && amount.value !== 1 ? ` ${amount.estimated ? "≈" : ""}${amount.value}` : ""}`;
     });
   return common.join(", ");
 }

@@ -483,7 +483,9 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const b = result.base;
     const ms = Math.round(now() - started);
     const simFacts: Record<string, JsonValue> = {
-      boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有日志，数值取最近的 A${start.boss.asc}）`}`,
+      // Not logged at this ascension: HP from the nearest one; damage, buffs and block moved by the measured change
+      // between ascensions (monster-db moveDamageAt, amountAt), not the nearest one's as logged.
+      boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,
       entry_hp: `${start.entryHp}/${start.maxHp}：${entry.source}${projected < 1 ? "（中位投影在 boss 前血量耗尽，按 1 血算）" : ""}`,
       current_deck: `胜率 ${pct(b.winCal)}（校准后；原始 ${pct(b.win)}），赢局掉血中位 ${b.hpLossWon ?? "—"}，赢局约 ${b.turns ?? "—"} 回合${b.deathTurn !== null ? `，输的样本中位死在第 ${b.deathTurn} 回合` : ""}`,
       samples: `每个选项 ${result.samples} 次${result.samples < result.requested ? `（目标 ${result.requested}，到时间只跑完这些）` : ""}；所有选项同一组随机种子，按样本配对比较；用时 ${(ms / 1000).toFixed(1)} 秒`,
