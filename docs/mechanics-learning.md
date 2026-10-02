@@ -116,7 +116,7 @@ npx tsx learner/run.ts --engine claude --task mechanics-audit --cwd ~/Projects/s
 # 参数（--set）：report、summary、monster_db、out（默认 notes/mechanics-proposals.md）、min_n（默认 20）
 ```
 
-本分支只做了 `--dry-run`（提示和命令行正确）；真跑是一次最长 2 小时的 Opus 会话，留给主会话 / Dai 决定什么时候跑。
+本分支只做了 `--dry-run`（提示和命令行正确）；真跑是一次 Opus 会话；Dai 2026-10-02 定：上限 45 分钟、最多 8 个候选（任务头 timeout_min 45、max_turns 200），等手上的开发 agent 做完再跑。
 
 ## 6. 离线回放（tools/mech-rules-replay.ts，notes/mech-rules-replay.md）
 
