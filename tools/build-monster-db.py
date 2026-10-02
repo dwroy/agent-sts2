@@ -237,6 +237,7 @@ def snapshot(combat, tracked, piles=None):
             "powers": powers_of(enemy),
             "block": enemy.get("block") or 0,
             "hp": enemy.get("current_hp"),
+            "max_hp": enemy.get("max_hp"),
             "alive": enemy.get("is_alive", True),
         }
     return {"player": {"powers": powers_of(player), "hp": player.get("current_hp"), "block": player.get("block") or 0}, "enemies": enemies,
@@ -688,6 +689,21 @@ def _evidence(lst, item):
         lst.append(item)
 
 
+def move_change_tally():
+    """The class-B counters of a stripped power (MECH_MOVE_RULES; docs/mechanics-learning.md §8): the enemy's move on the
+    frame before the strip and on its own frame, what it shows at our turn's end and at the next turn's first frame."""
+    return {"move_before": collections.Counter(), "move_changed": 0, "changed_to": collections.Counter(), "changed_evidence": [],
+            "end_move": collections.Counter(), "next_move": collections.Counter(), "changed_next": collections.Counter(), "revived": 0}
+
+
+def move_change_obj(t):
+    return {"move_before": dict(t["move_before"].most_common()), "move_changed": t["move_changed"],
+            "move_changed_share": round(t["move_changed"] / t["n"], 3) if t["n"] else None,
+            "changed_to": dict(t["changed_to"].most_common()), "changed_evidence": t["changed_evidence"],
+            "end_move": dict(t["end_move"].most_common()), "next_move": dict(t["next_move"].most_common()),
+            "changed_next": dict(t["changed_next"].most_common()), "revived": t["revived"]}
+
+
 class Mechanics:
     """The observed-mechanics counters of one build (frames -> per-fight events -> per-monster tallies)."""
 
@@ -699,7 +715,10 @@ class Mechanics:
         self.strips = collections.defaultdict(lambda: {"n": 0, "fights": set(), "amount_before": collections.Counter(), "move_after": collections.Counter(),
                                                       "co_removed": collections.Counter(), "died_same_turn": 0, "end_unclear": 0,
                                                       "alive_end": 0, "stunned_end": 0, "attack_before": 0, "attack_cancelled": 0,
-                                                      "hp_check": 0, "hp_landed": 0, "evidence": []})
+                                                      "hp_check": 0, "hp_landed": 0, "evidence": [], **move_change_tally()})
+        # (monster, power) -> the class-B counters of the power lowered (still > 0) on our turn while the enemy lived (an
+        # Axebot's Stock 2 -> 1 on its first revive: TQX5JJX3UD39 F37 T1, HAMMER_UPPERCUT -> BOOT_UP)
+        self.lowers = collections.defaultdict(lambda: {"n": 0, "fights": set(), **move_change_tally()})
         # (monster, move) -> tallies of the enemy turns after an Escape intent
         self.escapes = collections.defaultdict(lambda: {"n": 0, "gone": 0, "gone_stunned": 0, "stayed": 0, "stayed_stunned": 0, "killed_first": 0,
                                                        "killed_last_card": 0, "we_died": 0, "unclear": 0,
@@ -727,7 +746,7 @@ class Mechanics:
         if not self.ok or observed or not isinstance(turn, int):
             return
         try:
-            mech = fight.__dict__.setdefault("_mech", {"strips": [], "first": {}, "last": {}, "last_ts": {}})
+            mech = fight.__dict__.setdefault("_mech", {"strips": [], "lowers": [], "first": {}, "last": {}, "last_ts": {}})
             prev = mech["last"].get(turn)
             mech["first"].setdefault(turn, snap)
             mech["last"][turn] = snap
@@ -753,10 +772,16 @@ class Mechanics:
                     removed.append((pid, amount))
                 elif now < amount:
                     lowered.append(pid)
+            # Revived or transformed on this frame: its max HP changed, or its HP went up (an Axebot back from 0 with more
+            # max HP, a Waterfall Giant turned husk; HP does not go up on our turn otherwise).
+            revived = (before.get("max_hp") != enemy.get("max_hp")) or (isinstance(enemy["hp"], int) and isinstance(before["hp"], int) and enemy["hp"] > before["hp"])
             for pid, amount in removed:
                 mech["strips"].append({"turn": turn, "serial": serial, "id": enemy["id"], "pid": pid, "amount": amount,
-                                       "move_after": enemy["move"], "attack_before": intent_total(before["intents"]),
-                                       "with": [other for other, _ in removed if other != pid]})
+                                       "move_before": before["move"], "move_after": enemy["move"], "attack_before": intent_total(before["intents"]),
+                                       "with": [other for other, _ in removed if other != pid], "revived": revived})
+            for pid in lowered:
+                mech["lowers"].append({"turn": turn, "serial": serial, "id": enemy["id"], "pid": pid, "move_before": before["move"],
+                                       "move_after": enemy["move"], "revived": revived})
             if enemy["move"] == STUN_MOVE and before["move"] != STUN_MOVE:
                 triggers = [f"power_removed:{pid}" for pid, _ in removed] + [f"power_down:{pid}" for pid in lowered]
                 if before["block"] > 0 and enemy["block"] <= 0:
@@ -804,7 +829,7 @@ class Mechanics:
     def _commit(self, fight, ids_in_fight):
         mech = fight.__dict__.get("_mech")
         if mech is None:
-            mech = {"strips": [], "first": {}, "last": {}, "last_ts": {}}
+            mech = {"strips": [], "lowers": [], "first": {}, "last": {}, "last_ts": {}}
         died = fight.outcome == "died"
         for event in mech["strips"]:
             turn, serial = event["turn"], event["serial"]
@@ -814,6 +839,8 @@ class Mechanics:
             tally["amount_before"][event["amount"]] += 1
             tally["move_after"][event["move_after"] or "?"] += 1
             tally["co_removed"].update(event["with"])
+            # Class B (MECH_MOVE_RULES): did its move change on the strip's own frame (move_change)?
+            moved = self.move_change(tally, event, fight, turn)
             last = mech["last"].get(turn)
             end = (last or {"enemies": {}})["enemies"].get(serial)
             if end is None or not living(end):
@@ -826,6 +853,7 @@ class Mechanics:
             tally["alive_end"] += 1
             stunned = end["move"] == STUN_MOVE
             tally["stunned_end"] += stunned
+            self.move_after_turn(tally, event, mech, end, moved)
             if event["attack_before"] > 0:
                 tally["attack_before"] += 1
                 tally["attack_cancelled"] += intent_total(end["intents"]) <= 0
@@ -847,6 +875,16 @@ class Mechanics:
                         tally["hp_landed"] += 1
             if stunned:
                 _evidence(tally["evidence"], where(fight, turn))
+        # Powers lowered (not to 0): the same class-B counters.
+        for event in mech["lowers"]:
+            turn, serial = event["turn"], event["serial"]
+            tally = self.lowers[(event["id"], event["pid"])]
+            tally["n"] += 1
+            tally["fights"].add(fight.key)
+            moved = self.move_change(tally, event, fight, turn)
+            end = (mech["last"].get(turn) or {"enemies": {}})["enemies"].get(serial)
+            if end is not None and living(end) and self.ended(fight, mech, turn):
+                self.move_after_turn(tally, event, mech, end, moved)
         # Escape intents (at the turn's first decision frame): is it still there at the next turn's first frame?
         left_ids = set()
         for turn in sorted(mech["first"]):
@@ -894,6 +932,30 @@ class Mechanics:
                 if status == "killed":
                     _evidence(self.reward_evidence[(eid, key)], f"{fight.run_id} F{fight.floor}")
 
+    @staticmethod
+    def move_change(tally, event, fight, turn):
+        """Class B (MECH_MOVE_RULES): the move on the event's own frame against the one just before it. Enemies do not
+        advance their moves during our turn, so a change on that frame is the event's doing, or the one behind it (an
+        Axebot's Stock taken on its revive: HAMMER_UPPERCUT -> BOOT_UP, TQX5JJX3UD39 F37 T5). Returns whether it changed."""
+        moved = bool(event["move_before"] and event["move_after"] and event["move_after"] != event["move_before"])
+        tally["move_before"][event["move_before"] or "?"] += 1
+        tally["revived"] += bool(event.get("revived"))
+        if moved:
+            tally["move_changed"] += 1
+            tally["changed_to"][event["move_after"]] += 1
+            _evidence(tally["changed_evidence"], where(fight, turn))
+        return moved
+
+    @staticmethod
+    def move_after_turn(tally, event, mech, end, moved):
+        """... and what it shows at our turn's end (`end`, the end-turn frame) and on the next turn's first frame."""
+        tally["end_move"][end["move"] or "?"] += 1
+        following = (mech["first"].get(event["turn"] + 1) or {"enemies": {}})["enemies"].get(event["serial"])
+        if following is not None and following["id"] == event["id"] and living(following):
+            tally["next_move"][following["move"] or "?"] += 1
+            if moved:
+                tally["changed_next"][following["move"] or "?"] += 1
+
     # -- output
     def monster(self, eid):
         """The `observed` entry of one monster, or None when it has nothing notable."""
@@ -901,6 +963,9 @@ class Mechanics:
         strips = {pid: self.strip_obj(tally) for (mid, pid), tally in sorted(self.strips.items()) if mid == eid}
         if strips:
             out["powers_stripped"] = strips
+        lowers = {pid: {"n": t["n"], "fights": len(t["fights"]), **move_change_obj(t)} for (mid, pid), t in sorted(self.lowers.items()) if mid == eid}
+        if lowers:
+            out["powers_lowered"] = lowers
         escapes = {}
         for (mid, move), t in sorted(self.escapes.items(), key=lambda kv: (kv[0][0], str(kv[0][1]))):
             if mid != eid:
@@ -934,7 +999,8 @@ class Mechanics:
                 "died_same_turn": t["died_same_turn"], "turn_end_unclear": t["end_unclear"],
                 "alive_at_turn_end": t["alive_end"], "stunned_at_turn_end": t["stunned_end"],
                 "attack_before": t["attack_before"], "attack_cancelled": t["attack_cancelled"],
-                "hp_check": {"n": t["hp_check"], "landed": t["hp_landed"]}, "evidence": t["evidence"]}
+                "hp_check": {"n": t["hp_check"], "landed": t["hp_landed"]}, "evidence": t["evidence"],
+                **move_change_obj(t)}
 
     def rewards_of(self, eid):
         """Reward items that come with killing this monster: on the kill fights' reward screens and never when it left,
@@ -967,16 +1033,17 @@ class Mechanics:
         for (eid, pid), t in self.strips.items():
             pool = powers.setdefault(pid, {"n": 0, "fights": 0, "amount_before": collections.Counter(), "move_after": collections.Counter(),
                                           "co_removed": collections.Counter(), "died_same_turn": 0, "end_unclear": 0, "alive_end": 0, "stunned_end": 0, "attack_before": 0, "attack_cancelled": 0,
-                                          "hp_check": 0, "hp_landed": 0, "evidence": [], "monsters": collections.Counter()})
-            for key in ("n", "died_same_turn", "end_unclear", "alive_end", "stunned_end", "attack_before", "attack_cancelled", "hp_check", "hp_landed"):
+                                          "hp_check": 0, "hp_landed": 0, "evidence": [], "monsters": collections.Counter(), **move_change_tally()})
+            for key in ("n", "died_same_turn", "end_unclear", "alive_end", "stunned_end", "attack_before", "attack_cancelled", "hp_check", "hp_landed", "move_changed", "revived"):
                 pool[key] += t[key]
             pool["fights"] += len(t["fights"])
-            pool["amount_before"].update(t["amount_before"])
-            pool["move_after"].update(t["move_after"])
-            pool["co_removed"].update(t["co_removed"])
+            for key in ("amount_before", "move_after", "co_removed", "move_before", "changed_to", "end_move", "next_move", "changed_next"):
+                pool[key].update(t[key])
             pool["monsters"][eid] += t["n"]
             for item in t["evidence"]:
                 _evidence(pool["evidence"], item)
+            for item in t["changed_evidence"]:
+                _evidence(pool["changed_evidence"], item)
         out = {}
         for pid in sorted(powers):
             pool = powers[pid]
@@ -993,7 +1060,11 @@ OBSERVED_NOTE = (
     "after (STUNNED = stunned), stunned_share = STUNNED / n, co_removed = other powers gone on that same frame; alive_at_turn_end / stunned_at_turn_end / attack_before / "
     "attack_cancelled: of the strips whose enemy lived to the turn's end-turn decision, the ones still STUNNED there, the ones "
     "that showed an attack before the strip and showed none at the turn's end; hp_check: the ones where it was the only attacker "
-    "and its attack would have got past our block, and those in which we lost at least half of that over the enemy turn (landed). escape_moves: the turns "
+    "and its attack would have got past our block, and those in which we lost at least half of that over the enemy turn (landed); "
+    "move_before = its move on the frame before the strip, move_changed / changed_to = the strips whose own frame shows another move "
+    "(STUNNED included) and which, end_move / next_move = its move at our turn's end-turn decision and at the next turn's first frame "
+    "(changed_next: of the changed ones), revived = the ones whose frame shows its max HP changed or its HP up (a revive, a husk). "
+    "powers_lowered (per monster): the same move counters for a power down but still > 0. escape_moves: the turns "
     "an enemy showed an Escape intent at our turn's start: gone = alive when we ended the turn and not on the next turn's first "
     "frame (or the fight over), stayed = still there (*_stunned: STUNNED at our turn's end), killed_first / killed_last_card = "
     "killed on our turn (seen dead, or the fight won on a card after the turn's last frame). kill_rewards: reward "
@@ -1503,6 +1574,15 @@ def _synthetic_lines(end_turns=None):
                                                                        {"reward_type": "SpecialCard", "description": "取回你被偷走的牌。"},
                                                                        {"reward_type": "Card", "description": "将一张牌添加到你的牌组。"}]}))
     lines.append(state("MAP", "R11", None, 19, 60, map_=node_map(1, 1, "Monster")))
+    # Run R12, floor 37 (class B): a bot with Stock 2 is killed twice. T1: back at more max HP with Stock 1 and its move
+    # Boot Up (lowered); T2 Hammer; T3 killed again: Stock and Strength gone, Boot Up (stripped); T4 Hammer again.
+    bot = lambda hp, max_hp, move, powers, dmg=None, types=("Attack",): enemy(0, "BOT", hp, max_hp, move, dmg, 1 if dmg else None, powers, types=types)
+    lines.append(state("COMBAT", "R12", 1, 37, 70, [bot(13, 73, "HAMMER_MOVE", {"STOCK_POWER": 2}, dmg=14)], True))
+    lines.append(state("COMBAT", "R12", 1, 37, 70, [bot(81, 81, "BOOT_MOVE", {"STOCK_POWER": 1}, types=("Buff", "Defend"))], True, end_turn=True))
+    lines.append(state("COMBAT", "R12", 2, 37, 70, [bot(81, 81, "HAMMER_MOVE", {"STOCK_POWER": 1, "STRENGTH_POWER": 3}, dmg=17)], True, end_turn=True))
+    lines.append(state("COMBAT", "R12", 3, 37, 55, [bot(5, 81, "ONE_TWO_MOVE", {"STOCK_POWER": 1, "STRENGTH_POWER": 3}, dmg=13)], True))
+    lines.append(state("COMBAT", "R12", 3, 37, 55, [bot(90, 90, "BOOT_MOVE", {}, types=("Buff", "Defend"))], True, end_turn=True))
+    lines.append(state("COMBAT", "R12", 4, 37, 55, [bot(90, 90, "HAMMER_MOVE", {"STRENGTH_POWER": 3}, dmg=17)], True))
     return lines
 
 
@@ -1618,6 +1698,18 @@ def self_test():
     assert rewards["SpecialCard:取回你被偷走的牌。"]["only_when_killed"] is True, rewards
     stuns = hopper["mid_turn_stuns"]
     assert stuns["n"] == 2 and stuns["unexplained"] == 0 and stuns["triggers"]["power_removed:FLUTTER_POWER"] == 2, stuns
+    # Class B: the bot's Stock lowered on its first revive and stripped on its second, Boot Up both times, Hammer next.
+    bot = db["monsters"]["BOT"]["observed"]
+    stock = bot["powers_stripped"]["STOCK_POWER"]
+    assert (stock["n"], stock["move_changed"], stock["changed_to"], stock["revived"]) == (1, 1, {"BOOT_MOVE": 1}, 1), stock
+    assert stock["move_before"] == {"ONE_TWO_MOVE": 1} and stock["changed_next"] == {"HAMMER_MOVE": 1} and stock["end_move"] == {"BOOT_MOVE": 1}, stock
+    assert stock["changed_evidence"] == ["R12 F37 T3"] and stock["co_removed"] == {"STRENGTH_POWER": 1}, stock
+    lowered = bot["powers_lowered"]["STOCK_POWER"]
+    assert (lowered["n"], lowered["move_changed"], lowered["changed_to"], lowered["changed_next"], lowered["revived"]) == (1, 1, {"BOOT_MOVE": 1}, {"HAMMER_MOVE": 1}, 1), lowered
+    pooled_stock = db["observed"]["powers_stripped"]["STOCK_POWER"]
+    assert pooled_stock["move_changed"] == 1 and pooled_stock["changed_to"] == {"BOOT_MOVE": 1} and pooled_stock["monsters"] == {"BOT": 1}, pooled_stock
+    # The Hopper's Flutter strips changed its move to STUNNED (counted here too) and never revived it.
+    assert flutter["move_changed"] == 2 and flutter["changed_to"] == {"STUNNED": 2} and flutter["revived"] == 0, flutter
     # A slime without anything notable has no `observed` entry.
     assert "observed" not in slime, slime.get("observed")
     # A failure in the mining drops every `observed` field and nothing else.

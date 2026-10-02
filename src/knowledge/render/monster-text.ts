@@ -20,7 +20,7 @@ import {
   type MoveEntry,
   type Threat,
 } from "../monster-db.js";
-import { STUN_MOVE, isStripStun, type ObservedMonster } from "../mechanics.js";
+import { STUN_MOVE, isStripStun, moveRules, type MoveRule, type ObservedMonster } from "../mechanics.js";
 import { KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
 import { cmp, countsText, numericKeys, pct, round1, signedValue, sortedCounts, statText, total } from "./format.js";
 
@@ -330,12 +330,43 @@ function rewardText(key: string): string {
   return at >= 0 ? key.slice(at + 1) : key;
 }
 
+/** A move rule's group shows its revive when at least this share of its changes came on a frame showing one. */
+const MOVE_REVIVED_SHARE = 0.8;
+
+/**
+ * MECH_MOVE_RULES: one short line per move a power's removal (or lowering) changes this monster's move to (the class-B
+ * rules, knowledge/mechanics.ts moveRules): the powers, the counts, the move after it, and a revive when the frames show one.
+ */
+function moveRuleLines(data: KnowledgeData, id: string, monster: MonsterEntry): string[] {
+  const rules = moveRules({ [id]: monster }).get(id) ?? [];
+  const byMove = new Map<string, MoveRule[]>();
+  for (const rule of rules) byMove.set(rule.move, [...(byMove.get(rule.move) ?? []), rule]);
+  const lines: string[] = [];
+  for (const move of [...byMove.keys()].sort(cmp)) {
+    const group = byMove.get(move)!;
+    const moveName = (target: string) => monster.moves?.[target]?.name || target;
+    const attacks = Object.keys(monster.moves?.[move]?.damage_by_asc ?? {}).length > 0 ? "有攻击" : "无攻击";
+    const counts = group.map((rule) => `${powerName(data, rule.power)}${rule.how === "lowered" ? "少一层" : "去掉"} ${rule.changed}/${rule.n}`).join("、");
+    const next = sortedCounts(group.reduce<Record<string, number>>((all, rule) => {
+      for (const [target, n] of Object.entries(rule.next)) all[target] = (all[target] ?? 0) + n;
+      return all;
+    }, {}))[0];
+    const changed = group.reduce((sum, rule) => sum + rule.changed, 0);
+    const revived = group.reduce((sum, rule) => sum + rule.revived, 0) >= MOVE_REVIVED_SHARE * changed ? "；那一帧它的最大生命值变了（被打到 0 后复活或变形）" : "";
+    const ids = [...new Set(group.map((rule) => rule.power))];
+    const powers = ids.map((power) => `${powerName(data, power)}${group.some((rule) => rule.power === power && rule.how === "lowered") ? "（或少一层）" : ""}`).join("、");
+    lines.push(`- ${powers} 在我方回合被去掉时：它的招式立即变成 ${moveName(move)}（${attacks}；${counts} 次）${next ? `，下回合 ${moveName(next[0])}` : ""}${revived}`);
+  }
+  return lines;
+}
+
 /**
  * One short line per notable observation about this monster, from the logs (what the game's text does not say): a power
  * whose strip to 0 stunned it (notable when the power's pooled counts make it a stun rule, knowledge/mechanics.ts), an
- * Escape move's outcome, the rewards that come only with killing it, and mid-turn stuns no such line explains.
+ * Escape move's outcome, the rewards that come only with killing it, and mid-turn stuns no such line explains; with
+ * MECH_MOVE_RULES (`moves`), a power whose removal changes its move.
  */
-export function observedLines(data: KnowledgeData, monster: MonsterEntry): string[] {
+export function observedLines(data: KnowledgeData, monster: MonsterEntry, moves = false, id = ""): string[] {
   const observed: ObservedMonster | undefined = monster.observed;
   if (!observed) return [];
   const pooled = data.monsterDb.observed?.powers_stripped ?? {};
@@ -351,6 +382,7 @@ export function observedLines(data: KnowledgeData, monster: MonsterEntry): strin
     const pairedText = paired.length > 0 ? `；${paired.join("，")}` : "";
     lines.push(`- ${powerName(data, powerId)}：观察到在我方回合被打到 0 层（去掉）时它立即眩晕、本回合行动取消（${own.fights} 场 ${stunned}/${own.n} 次${cancelled}${pairedText}）`);
   }
+  if (moves) lines.push(...moveRuleLines(data, id, monster));
   for (const moveId of Object.keys(observed.escape_moves ?? {}).sort(cmp)) {
     const escape = observed.escape_moves![moveId]!;
     if (escape.gone + escape.stayed < OBSERVED_ESCAPE_MIN) continue;
@@ -385,7 +417,7 @@ export function observedLines(data: KnowledgeData, monster: MonsterEntry): strin
 /** The header of a monster block's observed lines. */
 export const OBSERVED_HEADER = "观察到的机制（日志统计，能力描述里没写；n 为次数）:";
 
-function monsterBlock(data: KnowledgeData, id: string, asc: number, mechanics = true): string {
+function monsterBlock(data: KnowledgeData, id: string, asc: number, mechanics = true, moveRulesOn = true): string {
   const monster = data.monsterDb.monsters[id]!;
   const fights = total(monster.encounters);
   const lines = [`### ${monsterNameOf(data, id)} ${id}〔${KIND_ZH[monster.kind ?? ""] ?? monster.kind ?? "?"}｜${actsText(monster.acts)}｜记录 ${fights} 场〕`, hpLine(data, id, asc)];
@@ -401,7 +433,8 @@ function monsterBlock(data: KnowledgeData, id: string, asc: number, mechanics = 
   const powers = mechanicsLines(data, id, monster, asc);
   if (powers.length > 0) lines.push("能力/机制:", ...powers);
   // MECH_RULES: the observed mechanics (off: the block as before them).
-  const observed = mechanics ? observedLines(data, monster) : [];
+  // MECH_MOVE_RULES: with them, the learned move changes (off: as with MECH_RULES alone).
+  const observed = mechanics ? observedLines(data, monster, moveRulesOn, id) : [];
   if (observed.length > 0) lines.push(OBSERVED_HEADER, ...observed);
   return lines.join("\n");
 }
@@ -420,7 +453,7 @@ export const MONSTER_LEGEND =
 /** Every monster in the DB at the context's ascension, by act, kind and id. */
 export function renderMonsters(ctx: RenderContext): string {
   const data = loadKnowledgeData(ctx.knowledgeDir);
-  return [MONSTER_LEGEND, ...monsterOrder(data).map((id) => monsterBlock(data, id, ctx.ascension, ctx.mechanics !== false))].join("\n\n");
+  return [MONSTER_LEGEND, ...monsterOrder(data).map((id) => monsterBlock(data, id, ctx.ascension, ctx.mechanics !== false, ctx.moveRules !== false))].join("\n\n");
 }
 
 /** One monster (by id or Chinese name) with the encounters it is in; throws KnowledgeLookupError when not one. */
@@ -433,7 +466,7 @@ export function renderMonster(idOrName: string, ctx: RenderContext): string {
   const encounters = encountersWith(data, id).map((key) => encounterLine(data, key, data.monsterDb.encounters[key]!));
   const bosses = bossesWith(data, id).map((bossId) => bossLine(data, bossId));
   const records = [...bosses, ...encounters];
-  return [monsterBlock(data, id, ctx.ascension, ctx.mechanics !== false), ...(records.length > 0 ? ["所在遭遇的战绩:", ...records] : [])].join("\n");
+  return [monsterBlock(data, id, ctx.ascension, ctx.mechanics !== false, ctx.moveRules !== false), ...(records.length > 0 ? ["所在遭遇的战绩:", ...records] : [])].join("\n");
 }
 
 /* ---- encounters and bosses -------------------------------------------------------------------- */

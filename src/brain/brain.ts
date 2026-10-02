@@ -97,8 +97,9 @@ export function brainUses(brain: AppConfig["brain"], engine: EngineName): boolea
 /** The loop's brain; `fallbackBudget` is the loop's DEEPSEEK_MAX_CALLS for DeepSeek asked as the fallback. */
 export function createBrain(config: AppConfig, deepseek: DeepSeekClient, options: { fallbackBudget?: FallbackBudget } = {}): Brain {
   // KNOWLEDGE_PREFIX=full: the prefix's data facts frozen for the day in the directory v3 keeps its guide snapshots in.
-  // MECH_RULES=off: the prefix's monster blocks without the observed mechanics (as before them).
-  return new Brain(createRouter(config, deepseek, options), deepseek, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules }));
+  // MECH_RULES=off: the prefix's monster blocks without the observed mechanics (as before them); MECH_MOVE_RULES=off: without
+  // the learned move changes (as with MECH_RULES alone).
+  return new Brain(createRouter(config, deepseek, options), deepseek, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
 }
 
 /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */

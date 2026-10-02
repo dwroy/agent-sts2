@@ -22,6 +22,53 @@ export const SHRINK_DAMAGE_FACTOR = 0.7;
  */
 export const STRIP_COUNTERS = { FLUTTER_POWER: "flutter", SLIPPERY_POWER: "slippery", CURL_UP_POWER: "curlUp", ARTIFACT_POWER: "artifact" } as const satisfies Record<string, keyof EnemySim>;
 
+/**
+ * MECH_MOVE_RULES (class B, knowledge/mechanics.ts moveRules): the enemy powers whose removal or lowering the solver can
+ * see a line make, beyond the STRIP_COUNTERS: an Axebot's Stock (taken by a kill: it comes straight back, Stock - 1) and
+ * Crab Rage (spent when a partner dies). A learned move rule on any other power needs code here first.
+ */
+export const MOVE_RULE_POWERS: ReadonlySet<string> = new Set([...Object.keys(STRIP_COUNTERS), "STOCK_POWER", "CRAB_RAGE_POWER"]);
+
+/** One learned move change on an enemy (EnemySim.moveOnStrip): its power going this way changes its move this turn. */
+export interface MoveOnStrip {
+  power: string;
+  /** The power's and the new move's game names, for the option's fact. */
+  name: string;
+  how: "removed" | "lowered";
+  move: string;
+  moveName: string;
+  /** The new move's attack this turn: the move table at this ascension, with its Strength and Weak and our Vulnerable. */
+  attacks: { damage: number; hits: number }[];
+  /** The logged counts behind it: strips (or lowerings), and those that showed the move. */
+  n: number;
+  changed: number;
+  /** The powers that go with the change (knowledge/mechanics.ts clearedWith: an Axebot's revive clears its Strength). */
+  clears?: string[];
+}
+
+/** How a line took one of an enemy's powers: to 0 (removed), down and still up (lowered), or not at all (null). */
+function powerWent(power: string, enemy: EnemySim & { alive?: boolean }, start: EnemySim): "removed" | "lowered" | null {
+  if (power === "STOCK_POWER") {
+    const stock = start.stock ?? 0;
+    // A kill with Stock left is the revive (rollout enemyDown): Stock - 1, gone at 0.
+    return stock > 0 && enemy.alive === false ? (stock <= 1 ? "removed" : "lowered") : null;
+  }
+  if (power === "CRAB_RAGE_POWER") return start.crabRage === true && enemy.crabRage !== true ? "removed" : null;
+  const field = STRIP_COUNTERS[power as keyof typeof STRIP_COUNTERS];
+  if (field === undefined) return null;
+  const before = (start[field] as number | undefined) ?? 0;
+  const after = (enemy[field] as number | undefined) ?? 0;
+  if (before <= 0) return null;
+  return after <= 0 ? "removed" : after < before ? "lowered" : null;
+}
+
+/** The learned move change of an enemy this line set off (MECH_MOVE_RULES): the first of its rules whose power went that way. */
+export function ruledMove(enemy: EnemySim & { alive?: boolean }, start: EnemySim | undefined): MoveOnStrip | null {
+  if (!enemy.moveOnStrip || !start) return null;
+  for (const rule of enemy.moveOnStrip) if (powerWent(rule.power, enemy, start) === rule.how) return rule;
+  return null;
+}
+
 /** The learned strip-stun of an enemy this line set off: the first power of its rules that was up and is at 0 now. */
 export function strippedStun(enemy: EnemySim, start: EnemySim | undefined): { power: string; name: string } | null {
   if (!enemy.stunOnStrip || !start) return null;
@@ -172,6 +219,14 @@ export interface EnemySim {
    * (STRIP_COUNTERS); `name` is the game's, for the option's fact. Absent: no such rule (MECH_RULES off, no data).
    */
   stunOnStrip?: { power: string; name: string }[];
+  /**
+   * MECH_MOVE_RULES (knowledge/mechanics.ts moveRules, docs/mechanics-learning.md §8): its powers whose removal (or
+   * lowering) on our turn changes its move at once, learned from the logs per monster (an Axebot killed with Stock left
+   * comes back in Boot Up, no attack: 22 of 23 last-Stock strips, 22 of 22 first revives). Only powers the solver sees go
+   * (MOVE_RULE_POWERS). A line setting one off counts the new move's attack in hp_lost instead of the shown one. Absent: no
+   * such rule (the switch off, no data).
+   */
+  moveOnStrip?: MoveOnStrip[];
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -269,6 +324,14 @@ export interface PlayerSim {
   surrounded?: boolean;
   /** Index of the enemy we currently face (last targeted), when known. */
   facing?: number | null;
+  /**
+   * MECH_MOVE_RULES (class C, the Kaiser Crab): Surrounded's back attack needs two living enemies. Once one claw is dead
+   * the other's attack shows and lands without the x1.5 whatever we face (152 of 152 logged one-claw attack intents; on
+   * 27 logged deaths, each of the 10 survivors shown from behind lost it at once: TQX5JJX3UD39 F33 T4 Laser 49 -> 39 = 31
+   * + 8, Crab Rage's +6 in it).
+   * Absent: the back attack as before (backAttack on the facing alone).
+   */
+  backAttackPair?: boolean;
   /**
    * Colossus already up (COLOSSUS_POWER). The mod's intents already show the halved damage for
    * enemies that were Vulnerable, so only enemies made Vulnerable this turn are halved again.
@@ -587,6 +650,12 @@ export interface Outcome {
      * and the attack this turn it cancels (the shown intents' total; 0 for a move without one, an Escape).
      */
     strippedStun?: { power: string; name: string; attack: number };
+    /**
+     * MECH_MOVE_RULES: the learned move change this line set off (EnemySim.moveOnStrip): the power and how it went, the
+     * new move (id and game name) and its attack this turn (counted in hp_lost), the shown attack it replaces, and the
+     * logged counts (an Axebot killed with Stock left: Boot Up, 0 for the 14 its Hammer Uppercut showed).
+     */
+    movedTo?: { power: string; name: string; how: "removed" | "lowered"; move: string; moveName: string; attack: number; before: number; n: number; changed: number };
     /** A Waterfall Giant husk (999,999,999 max HP): its HP is not there to take off, it explodes. */
     husk?: boolean;
   }[];
@@ -1801,6 +1870,32 @@ function stripStunOf(enemy: Sim["enemies"][number], input: SolverInput): { stunn
   return { stunned: true, strippedStun: { power: stun.power, name: stun.name, attack } };
 }
 
+/** A line's learned move change on an enemy, for the outcome (MECH_MOVE_RULES), or nothing. */
+function moveRuleOf(enemy: Sim["enemies"][number], input: SolverInput): { movedTo?: NonNullable<Outcome["enemyHpAfter"][number]["movedTo"]> } {
+  const start = input.enemies.find((entry) => entry.index === enemy.index);
+  const rule = ruledMove(enemy, start);
+  if (!rule) return {};
+  const total = (attacks: { damage: number; hits: number }[]) => attacks.reduce((sum, hit) => sum + hit.damage * hit.hits, 0);
+  return { movedTo: { power: rule.power, name: rule.name, how: rule.how, move: rule.move, moveName: rule.moveName, attack: total(rule.attacks), before: total(start?.attacks ?? []), n: rule.n, changed: rule.changed } };
+}
+
+/**
+ * MECH_MOVE_RULES (class C): an attack's number before this line's facing, with Surrounded's back attack needing two
+ * living enemies (PlayerSim.backAttackPair). One enemy at the start: shown without the x1.5, whatever we turn to. Its
+ * partner dead by the line's end: the x1.5 it showed from behind (the start's facing) is gone. Otherwise backAttack.
+ */
+function shownAttack(damage: number, enemyIndex: number, player: PlayerSim, sim: Sim, input: SolverInput): number {
+  if (!player.surrounded) return damage;
+  if (player.backAttackPair === true) {
+    if (input.enemies.filter((enemy) => enemy.hp > 0).length < 2) return damage;
+    if (sim.enemies.filter((enemy) => enemy.alive).length < 2) {
+      const facing = player.facing ?? null;
+      return facing !== null && facing !== enemyIndex ? Math.ceil(damage / 1.5) : damage;
+    }
+  }
+  return backAttack(damage, enemyIndex, player.facing ?? null, sim.facing);
+}
+
 interface IncomingHit {
   enemy: number;
   amount: number;
@@ -1815,24 +1910,27 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
   const player = input.player;
   const hits: IncomingHit[] = [];
   for (const enemy of sim.enemies) {
-    if (!enemy.alive) continue;
+    // MECH_MOVE_RULES: a learned move change this line set off (an Axebot killed with Stock left is back at once in Boot
+    // Up): the new move's attack, not the shown one; a revived enemy attacks at its full HP.
+    const moved = enemy.moveOnStrip ? ruledMove(enemy, input.enemies.find((entry) => entry.index === enemy.index)) : null;
+    if (!enemy.alive && !moved) continue;
     const start = input.enemies.find((entry) => entry.index === enemy.index);
     // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
-    if ((enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
-    if (enemy.burrowed && (start?.block ?? 0) > 0 && enemy.block <= 0) continue;
+    if (enemy.alive && (enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
+    if (enemy.alive && enemy.burrowed && (start?.block ?? 0) > 0 && enemy.block <= 0) continue;
     // Ravenous: stunned by eating a corpse this turn, its move is lost.
-    if (enemy.ravenousStunned) continue;
+    if (enemy.alive && enemy.ravenousStunned) continue;
     // MECH_RULES: a learned strip-stun (its last Flutter stripped this turn): stunned, its move is lost.
-    if (strippedStun(enemy, start)) continue;
+    if (enemy.alive && strippedStun(enemy, start)) continue;
     // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
     // already halved, except for enemies that only became Vulnerable this turn.
     const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);
     const retaliation = enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate;
-    let attackerHp = enemy.hp;
-    for (const attack of enemy.attacks) {
+    let attackerHp = enemy.alive ? enemy.hp : enemy.maxHp;
+    for (const attack of moved ? moved.attacks : enemy.attacks) {
       for (let hit = 0; hit < attack.hits; hit += 1) {
         if (retaliation > 0 && attackerHp <= 0) break;
-        const shown = player.surrounded ? backAttack(attack.damage, enemy.index, player.facing ?? null, sim.facing) : attack.damage;
+        const shown = shownAttack(attack.damage, enemy.index, player, sim, input);
         // The shown intent already includes our Vulnerable (MAWLER 14 -> 21, SOUL_FYSH 16 -> 24 in
         // states.jsonl); only Strength changes made this turn still need the ×1.5.
         const strengthChange = (enemy.strengthDelta - (enemy.tempStrengthLoss ?? 0)) * (player.vulnerable ? 1.5 : 1);
@@ -2524,6 +2622,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           ...((enemy.demise ?? 0) > 0 ? { demise: enemy.demise } : {}),
           ...(enemy.ravenousStunned ? { stunned: true } : {}),
           ...stripStunOf(enemy, input),
+          ...(enemy.moveOnStrip ? moveRuleOf(enemy, input) : {}),
           ...(enemy.maxHp >= 1_000_000 ? { husk: true } : {}),
         })),
       incomingAfterBlock,

@@ -33,7 +33,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, musicBoxCopy, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -43,8 +43,8 @@ import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, rolloutFact
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { heldPotionWorth } from "../knowledge/potion-equivalents.js";
 import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPotionCost, type PotionCost } from "../strategy/potion-cost.js";
-import { actThreatIds, bossOnBoard, moveTurns, observedMechanics, spawnsAt } from "../knowledge/monster-db.js";
-import { stripStunRules, type StripStunRule } from "../knowledge/mechanics.js";
+import { actThreatIds, bossOnBoard, monsterMoves, moveDamageAt, moveTurns, observedMechanics, shownDamageAt, spawnsAt } from "../knowledge/monster-db.js";
+import { clearedWith, moveRulesOf, stripStunRules, type MoveRule, type StripStunRule } from "../knowledge/mechanics.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
@@ -716,6 +716,93 @@ export function applyStripStuns(enemies: EnemySim[], combat: Record<string, unkn
   }
 }
 
+/** MECH_MOVE_RULES in use: the switch on, and MECH_RULES on (it is the second class of the learned rules). */
+export function mechMoveOn(env: Pick<DecisionEnv, "mechRules" | "mechMoveRules">): boolean {
+  return env.mechRules !== false && env.mechMoveRules !== false;
+}
+
+/**
+ * MECH_MOVE_RULES (docs/mechanics-learning.md §8, knowledge/mechanics.ts moveRules): the learned "a power removed or
+ * lowered -> the enemy's move changes" rules by monster id, from the monster DB's `observed` blocks. Empty with either
+ * switch off or without the data. A failure reading them throws: planCombatTurn's fail safe (withMechFallback) then plans
+ * the turn with the switch off, the Crab's back attack included.
+ */
+export function learnedMoveRules(env: Pick<DecisionEnv, "mechRules" | "mechMoveRules">): Map<string, MoveRule[]> {
+  if (!mechMoveOn(env)) return new Map();
+  return moveRulesOf({ monsters: monsterMoves() });
+}
+
+/**
+ * A learned move's attack this turn (MoveOnStrip.attacks): its base at this ascension (monster DB moveDamageAt; the faced
+ * hit of a back-attack move; a move never measured, its most common shown hit), with the enemy's Strength and Weak unless
+ * the change clears them (an Axebot's revive: clearedWith), and our Vulnerable. A move without damage (Boot Up): none.
+ */
+function ruleMoveAttacks(monster: string, move: string, asc: number, enemy: Record<string, unknown>, player: Record<string, unknown>, cleared: readonly string[]): { damage: number; hits: number }[] {
+  const db = monsterMoves();
+  const logged = moveDamageAt(db, monster, move, asc);
+  if (logged) {
+    if (logged.perHit <= 0) return [];
+    const base = logged.base ?? logged.perHit;
+    const strength = cleared.includes("STRENGTH_POWER") ? 0 : powerAmount(enemy, "STRENGTH_POWER");
+    const weak = !cleared.includes("WEAK_POWER") && powerAmount(enemy, "WEAK_POWER") > 0;
+    const damage = Math.max(0, Math.floor((base + strength) * (weak ? 0.75 : 1) * (powerAmount(player, "VULNERABLE_POWER") > 0 ? 1.5 : 1)));
+    return [{ damage, hits: Math.max(1, logged.hits) }];
+  }
+  const shown = shownDamageAt(db, monster, move, asc);
+  return shown && shown.perHit > 0 ? [{ damage: Math.round(shown.perHit), hits: Math.max(1, shown.hits) }] : [];
+}
+
+/**
+ * The learned move rules onto the board's enemies (EnemySim.moveOnStrip): each rule of the enemy's monster whose power it
+ * has up (amount > 0) and the solver sees go (MOVE_RULE_POWERS: an Axebot's Stock, the STRIP_COUNTERS, Crab Rage). Enemies
+ * are matched as enemySims indexes them; one without such a power is left as it was.
+ */
+export function applyMoveRules(enemies: EnemySim[], combat: Record<string, unknown>, rules: Map<string, MoveRule[]>, asc: number): void {
+  if (rules.size === 0) return;
+  const living = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false);
+  const byIndex = new Map(living.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, enemy]));
+  const player = asRecord(combat["player"]);
+  for (const enemy of enemies) {
+    const source = byIndex.get(enemy.index);
+    if (!source) continue;
+    const monster = str(source["enemy_id"]);
+    const own = rules.get(monster) ?? [];
+    const moved: MoveOnStrip[] = [];
+    for (const rule of own) {
+      if (!MOVE_RULE_POWERS.has(rule.power) || powerAmount(source, rule.power) <= 0) continue;
+      const power = asArray(source["powers"]).map(asRecord).find((entry) => str(entry["power_id"]) === rule.power);
+      moved.push({
+        power: rule.power, name: str(power?.["name"]) || rule.power, how: rule.how, move: rule.move,
+        moveName: monsterMoves()[monster]?.moves?.[rule.move]?.name || rule.move,
+        attacks: ruleMoveAttacks(monster, rule.move, asc, source, player, clearedWith(rule, own)), n: rule.n, changed: rule.changed,
+        ...(clearedWith(rule, own).length > 0 ? { clears: clearedWith(rule, own) } : {}),
+      });
+    }
+    if (moved.length > 0) enemy.moveOnStrip = moved;
+  }
+}
+
+/**
+ * MECH_MOVE_RULES (class C): the Kaiser Crab's back attack needs both claws (turn-solver PlayerSim.backAttackPair), said on
+ * the claws' powers: on Crab Rage while both live, on the survivor's back-attack power once one is dead.
+ */
+function backAttackPairNote(env: DecisionEnv, powerId: string, living: number): string {
+  if (!mechMoveOn(env)) return "";
+  if (powerId === "CRAB_RAGE_POWER" && living >= 2) return " (observed in the logs: once its partner is dead its attacks no longer get the +50% from behind, whatever you face; the options' numbers already count it)";
+  if (/^BACK_ATTACK_(LEFT|RIGHT)_POWER$/.test(powerId) && living < 2) return " (its partner is dead: no back attack any more, whatever you face; the intent shown is what lands: 152 of 152 logged one-claw intents)";
+  return "";
+}
+
+/** The learned move-rule note on an enemy power in the combat question (MECH_MOVE_RULES), for the rules on this enemy. */
+function moveRuleNote(enemy: EnemySim | undefined, powerId: string): string {
+  const own = (enemy?.moveOnStrip ?? []).filter((rule) => rule.power === powerId);
+  if (own.length === 0) return "";
+  const parts = own.map((rule) => `${rule.how === "removed" ? "when it is removed" : "when a stack of it is taken"} on my turn its move changes at once to ${rule.moveName} (${rule.move}, ${rule.attacks.length > 0 ? `attack ${rule.attacks.reduce((sum, hit) => sum + hit.damage * hit.hits, 0)}` : "no attack"}), ${rule.changed} of ${rule.n} times`);
+  return ` (observed in the logs, not in its text: ${parts.join("; ")}; the options' numbers already count it)`;
+}
+
 /**
  * The learned strip-stun note on an enemy power in the combat question (MECH_RULES): what the logs show the game's text
  * does not say, and that the options already count it. Only for a rule the solver applies to this enemy.
@@ -886,6 +973,18 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
       .map((enemy) => {
         const stun = enemy.strippedStun!;
         return `stuns ${enemy.name} (its last ${stun.name} stripped): ${stun.attack > 0 ? `its attack this turn (${stun.attack}) is cancelled, already left out of hp_lost` : "its move this turn is cancelled"}`;
+      })
+      .join("; ");
+  }
+  // MECH_MOVE_RULES: a learned move change this line sets off (an Axebot killed with Stock left: back in Boot Up).
+  const moved = o.winsFight ? [] : o.enemyHpAfter.filter((enemy) => enemy.movedTo);
+  if (moved.length > 0) {
+    summary["move_change"] = moved
+      .map((enemy) => {
+        const change = enemy.movedTo!;
+        const attack = change.attack > 0 ? `attack ${change.attack}` : "no attack";
+        const instead = change.before !== change.attack ? ` instead of the ${change.before > 0 ? `${change.before} shown` : "move shown"}` : "";
+        return `${change.how === "removed" ? "removes" : "takes a stack of"} ${enemy.name}'s ${change.name}: its move becomes ${change.moveName} (${change.move}, ${attack} this turn${instead}; ${change.changed} of ${change.n} logged), already in hp_lost`;
       })
       .join("; ");
   }
@@ -1609,13 +1708,22 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
 
 /**
  * MECH_RULES fail safe (live play): `plan` with the learned rules on, and when that throws, again as with them off (an
- * error of something else throws there again, as it did before them). The switch off: `plan` once, as it was.
+ * error of something else throws there again, as it did before them). The switch off: `plan` once, as it was. With
+ * MECH_MOVE_RULES on too, the first retry is with that one off (the move rules and the crab's back attack out, the stun
+ * rules kept), then with both off.
  */
 export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) => T): T {
   if (env.mechRules === false) return plan(env);
   try {
     return plan(env);
   } catch {
+    if (env.mechMoveRules !== false) {
+      try {
+        return plan({ ...env, mechMoveRules: false });
+      } catch {
+        // as with both off, below
+      }
+    }
     return plan({ ...env, mechRules: false });
   }
 }
@@ -1663,6 +1771,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
   const mechRules = learnedStunRules(env);
   applyStripStuns(enemies, combat, mechRules);
+  // MECH_MOVE_RULES (docs/mechanics-learning.md §8): the learned move changes (an Axebot killed with Stock left comes back
+  // in Boot Up, no attack) on the enemies carrying such a power, for the solver, the rollout and the option's fact.
+  applyMoveRules(enemies, combat, learnedMoveRules(env), ascension);
   carryHpLossCaps(env.screenMemory, `${fightKey(state)}:${state.turn ?? "?"}`, enemies);
   if (enemies.length === 0) {
     // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
@@ -1721,6 +1832,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     endTurnHpLoss: powerAmount(player, "DISINTEGRATION_POWER") + powerAmount(player, "CONSTRICT_POWER"),
     surrounded: powerAmount(player, "SURROUNDED_POWER") > 0,
     facing: env.screenMemory.facing ?? startFacing(combat),
+    // MECH_MOVE_RULES (class C): the back attack only while both claws live (turn-solver PlayerSim.backAttackPair).
+    ...(powerAmount(player, "SURROUNDED_POWER") > 0 && mechMoveOn(env) ? { backAttackPair: true } : {}),
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
     // Inferno takes 1 HP at the start of each turn (and that loss is what makes it hit every enemy).
     startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")) + (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0),
@@ -2538,7 +2651,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           const power = asRecord(entry);
           // MECH_RULES: a learned strip-stun on this power, as the logs show it (none with the switch off).
           const sim = enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i));
-          return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}${stripStunNote(sim, str(power["power_id"]), mechRules)}`;
+          return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}${stripStunNote(sim, str(power["power_id"]), mechRules)}${moveRuleNote(sim, str(power["power_id"]))}${backAttackPairNote(env, str(power["power_id"]), living.length)}`;
         }),
         // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
         ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
@@ -2733,17 +2846,31 @@ function planTurn(env: DecisionEnv): Decision | null {
           ? { random: mcShown.map(potionMcLog), unsimulated_offered: potions.map((potion) => potion.potion_id), fight_plan_now: planPotionNow }
           : null;
       const ruled = enemies.filter((enemy) => (enemy.stunOnStrip ?? []).length > 0);
-      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0) return resolved;
+      const moveRuled = enemies.filter((enemy) => (enemy.moveOnStrip ?? []).length > 0);
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0 && moveRuled.length === 0) return resolved;
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
       // MECH_RULES: the learned strip-stun rules on the board, the shown lines setting one off, and the chosen line's.
       const setsOff = (plan: Plan): boolean => plan.outcome.enemyHpAfter.some((enemy) => enemy.strippedStun !== undefined && enemy.hp > 0);
+      // MECH_MOVE_RULES: the learned move rules on the board, the shown lines setting one off, and the chosen line's.
+      const movesOff = (plan: Plan): boolean => plan.outcome.enemyHpAfter.some((enemy) => enemy.movedTo !== undefined);
       const mechRecord: JsonValue | null =
-        ruled.length > 0
+        ruled.length > 0 || moveRuled.length > 0
           ? {
-              rules: ruled.flatMap((enemy) => enemy.stunOnStrip!.map((stun) => ({ enemy: enemy.name, power: stun.power, n: mechRules.get(stun.power)?.n ?? null }))),
-              stuns_now: [...shown, ...mcMedians].filter(setsOff).map(keyOfShown),
-              chosen_stuns: pick?.plan ? setsOff(pick.plan) : null,
+              ...(ruled.length > 0
+                ? {
+                    rules: ruled.flatMap((enemy) => enemy.stunOnStrip!.map((stun) => ({ enemy: enemy.name, power: stun.power, n: mechRules.get(stun.power)?.n ?? null }))),
+                    stuns_now: [...shown, ...mcMedians].filter(setsOff).map(keyOfShown),
+                    chosen_stuns: pick?.plan ? setsOff(pick.plan) : null,
+                  }
+                : {}),
+              ...(moveRuled.length > 0
+                ? {
+                    move_rules: moveRuled.flatMap((enemy) => enemy.moveOnStrip!.map((rule) => ({ enemy: enemy.name, power: rule.power, how: rule.how, move: rule.move, n: rule.n }))),
+                    moves_now: [...shown, ...mcMedians].filter(movesOff).map(keyOfShown),
+                    chosen_moves: pick?.plan ? movesOff(pick.plan) : null,
+                  }
+                : {}),
             }
           : null;
       // THIEF_FACTS: the thieves, the shown lines killing one this turn, the line kept for a kill before it leaves.
