@@ -51,7 +51,7 @@ import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -1067,6 +1067,8 @@ interface SimPlayer {
   hellraiser: boolean;
   /** Unrelenting's free Attacks left at the end of the last turn (FREE_ATTACK_POWER stays up into the next). */
   freeAttacks: number;
+  /** Pen Nib held: its Attack count (mod PEN_NIB_EVERY) going into this turn, on by each turn's attackPlays. */
+  penNib?: number;
   /** Pael's Tear's extra energy for this turn: the last turn ended with energy unspent (Outcome.nextTurnEnergy). */
   paelsNext: number;
   /**
@@ -1786,6 +1788,7 @@ function applyPlan(
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
   player.freeAttacks = o.freeAttacksLeft ?? 0;
+  if (player.penNib !== undefined) player.penNib = (player.penNib + (o.attackPlays ?? 0)) % PEN_NIB_EVERY;
   // Pael's Tear: this turn's unspent energy gives the next turn its extra energy.
   player.paelsNext = o.nextTurnEnergy ?? 0;
   // Self-Forming Clay: this turn's HP losses give the next turn's block.
@@ -2183,6 +2186,7 @@ function simulate(
     boulder: input.playerPowers["ROLLING_BOULDER_POWER"] ?? 0,
     hellraiser: (input.playerPowers["HELLRAISER_POWER"] ?? 0) > 0,
     freeAttacks: 0,
+    ...(base.penNib !== undefined ? { penNib: base.penNib } : {}),
     paelsNext: 0,
     darkEmbrace: input.playerPowers["DARK_EMBRACE_POWER"] ?? 0,
     otherStartLoss: 0,
@@ -2422,6 +2426,8 @@ function simulate(
       strengthNow: player.strength,
       // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
       freeAttacks: player.freeAttacks,
+      // Pen Nib: the count as the turns before left it (the decision's is `base`'s).
+      ...(player.penNib !== undefined ? { penNib: player.penNib } : {}),
       // Self-Forming Clay: what the last turn owed is in this turn's block already; this turn's start losses (Crimson
       // Mantle's, Inferno's) owe the next turn's (2VW5 F17: SELF_FORMING_CLAY_POWER 3 at every turn start with the
       // Mantle up, 7 + 3 block at the next).

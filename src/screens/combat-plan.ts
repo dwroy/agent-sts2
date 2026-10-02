@@ -27,13 +27,13 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -1762,6 +1762,10 @@ function planTurn(env: DecisionEnv): Decision | null {
       card.drawsUntil = false;
     }
   }
+  // Pen Nib at 9 doubles every Attack's shown damage but only the next one played (GSG0 F33 T2: 86 planned, 53 dealt);
+  // the solver doubles the 10th Attack play from its count. Taken off before Vigor: the doubled number carries it too.
+  const penNib = relicIds.includes("PEN_NIB") ? relicStack(state.run?.raw, "PEN_NIB") % PEN_NIB_EVERY : undefined;
+  stripPenNib(hand, penNib === PEN_NIB_EVERY - 1);
   // Vigor is in every Attack's shown damage but spent by the first one (KFP1 F17 T1: 54 planned, 18 dealt).
   const vigor = powerAmount(player, "VIGOR_POWER");
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
@@ -1857,6 +1861,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
     vigor,
+    ...(penNib !== undefined ? { penNib } : {}),
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
     exhaustedThisTurn,

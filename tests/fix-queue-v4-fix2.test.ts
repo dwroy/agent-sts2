@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { parseGameState } from "../src/mod/schema.js";
@@ -17,7 +17,13 @@ import { calibratedWinProb, type FightSampleResult } from "../src/sim/boss-sim.j
 import { BUILD_SIM_CALIBRATION_SAMPLES } from "../src/sim/build-sim.js";
 import { actBossDefeated, calibratedFloor, withBossSim } from "../src/sim/build-sim-facts.js";
 import type { DeckRunRequest, DeckRunResult } from "../src/sim/build-sim-pool.js";
+import { planCombatTurn } from "../src/screens/combat-plan.js";
+import type { CardModel } from "../src/strategy/card-model.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
+import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { solveTap, solveTurn, type EnemySim, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
 import type { JsonValue } from "../src/util/json.js";
+import { loggedEnv } from "./logged.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
 import { ask, decide, env, setupOneshotTests, type Raw } from "./oneshot-support.js";
 
@@ -31,6 +37,31 @@ const fixture = (file: string, key: string): Raw => {
 };
 
 setupOneshotTests();
+afterEach(() => {
+  rolloutLiveOptions.enabled = true;
+  solveTap.onSolve = null;
+});
+
+/** The solver's input and result for a logged combat board (the live planner, its rollout off). */
+function solvedBoard(raw: Raw): { input: SolverInput; result: SolveResult } {
+  let captured: { input: SolverInput; result: SolveResult } | null = null;
+  solveTap.onSolve = (input, result) => {
+    captured ??= { input, result };
+  };
+  rolloutLiveOptions.enabled = false;
+  planCombatTurn(loggedEnv({ source: "", decision: { label: "", decider: "", chosen: null, rationale: "" }, state: raw }));
+  if (!captured) throw new Error("the planner did not solve the board");
+  return captured;
+}
+
+/** A plan's plays as "CARD>target,…" (no target: the card alone). */
+const steps = (plan: { steps: { cardId: string; target: number | null }[] }) => plan.steps.map((step) => `${step.cardId}${step.target !== null ? `>${step.target}` : ""}`).join(",");
+
+function card(index: number, cardId: string, over: Partial<CardModel> = {}): CardModel {
+  return { index, key: `c${index}`, cardId, name: cardId, type: "Attack", upgraded: false, cost: 1, xCost: false, playable: true, target: "single", validTargets: [0], damage: 6, hits: 1, block: 0, vulnerable: 0, weak: 0, strength: 0, tempStrength: 0, enemyStrength: 0, enemyTempStrengthLoss: 0, hpLoss: 0, energyGain: 0, draw: 0, exhausts: false, special: null, known: true, flatValue: 0, heldPenalty: 0, text: "", ...over };
+}
+const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
+const dummy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });
 
 describe("1. B3 right after an act boss: no simulation against the boss just killed (build-sim-facts:387)", () => {
   beforeAll(() => setMonsterDbForTests(FIXTURE_DB));
@@ -101,5 +132,59 @@ describe("2. the low-win-rate note's floor is the calibration's, not a written n
     expect(String(sim["low_win_rate"])).not.toContain("约 8%");
     // What the options read at 0 wins is that same floor.
     expect((record as Record<string, Record<string, number>>)["base"]!["win_cal"]).toBeCloseTo(calibratedFloor(), 4);
+  });
+});
+
+describe("3. Pen Nib doubles the next Attack only, not every Attack shown (card-model dyn :182-190)", () => {
+  it("GSG0Q5KP9AAU F33 T2 (stack 9, hand shown doubled): halved in the hand, the logged line deals 53, not 86", () => {
+    const { input, result } = solvedBoard(fixture("gsg0-f33-t2-pen-nib", "t2"));
+    expect(input.player.penNib).toBe(9);
+    // Shown 20 / 22 / 40 / 40 / 22 (Strength 2, Strike Dummy +3, doubled): the game's single numbers.
+    const shown = Object.fromEntries(input.hand.filter((c) => c.type === "Attack").map((c) => [c.cardId, c.damage]));
+    expect(shown).toEqual({ DISMANTLE: 10, STRIKE_IRONCLAD: 11, CINDER: 20, HOWL_FROM_BEYOND: 20, BREAKTHROUGH: 11 });
+    // Jev's logged pick, the Rocket at index 1: Dismantle 20 (the 10th, doubled), Strike 11, Breakthrough 11 to each.
+    const line = result.plans.find((plan) => steps(plan) === "DISMANTLE>1,STRIKE_IRONCLAD>1,BREAKTHROUGH");
+    expect(line?.outcome.damageDealt).toBe(53);
+    expect(line?.outcome.attackPlays).toBe(3);
+  });
+
+  it("the doubled play is the one the count reaches: at 7 the third Attack this turn (the mod shows no doubling yet)", () => {
+    const hand = [card(0, "STRIKE_A"), card(1, "STRIKE_B"), card(2, "BIG", { damage: 20 })];
+    const solved = solveTurn({ hand, player: player({ penNib: 7 }), enemies: [dummy()], fightKind: "monster" });
+    const big = (order: string) => solved.plans.find((plan) => steps(plan) === order)?.outcome.damageDealt;
+    // Strike, Strike, Big: Big is the 10th (6 + 6 + 40); Big first: the second Strike is (20 + 6 + 12).
+    expect(big("STRIKE_A>0,STRIKE_B>0,BIG>0") ?? big("STRIKE_B>0,STRIKE_A>0,BIG>0")).toBe(52);
+    expect(solved.plans[0]!.outcome.damageDealt).toBe(52);
+    // No Pen Nib: no doubling.
+    expect(solveTurn({ hand, player: player(), enemies: [dummy()], fightKind: "monster" }).plans[0]!.outcome.damageDealt).toBe(32);
+  });
+
+  it("the rollout carries the count into the next turn (a Strike the 9th now, the next turn's the 10th)", () => {
+    const strike = card(0, "STRIKE_IRONCLAD", { damageBase: 6 });
+    const solver: SolverInput = { hand: [strike], player: player({ energy: 1, penNib: 8 }), enemies: [dummy({ hp: 18, maxHp: 18 })], fightKind: "monster", turn: 1 };
+    const table: EnemyTable = { moves: { WAIT: { damage: 0, hits: 1, strength: 0, block: 0 } }, next: { WAIT: { WAIT: 1 } } };
+    const meta: FightMeta = { act: 1, t: 1, asc: 8, kind: "hallway", enc: "TEST_DUMMY", deck: { n: 2, atk: 2, skl: 0, pow: 0, junk: 0, dmg: 10, blk: 0, up: 0 }, relics: 0, max_en: 1 };
+    const run = (penNib: number) => {
+      const input = { ...solver, player: player({ energy: 1, penNib }) };
+      const result = rolloutDecision({
+        solver: input,
+        plans: solveTurn(input).plans,
+        enemies: [{ index: 0, id: "TEST_DUMMY", move: "WAIT", strength: 0, powers: {} }],
+        tables: { TEST_DUMMY: table },
+        piles: { draw: [card(1, "STRIKE_IRONCLAD", { damageBase: 6 })], discard: [], handBase: [strike] },
+        meta,
+        playerPowers: {},
+        potions: 0,
+        mm: {},
+        model: null,
+        gates: null,
+        options: { budgetMs: 1e9, seed: 3, horizon: 3, samples: 2, now: (() => { let t = 0; return () => (t += 0.01); })() },
+      });
+      return result.lines.find((entry) => steps(entry.plan) === "STRIKE_IRONCLAD>0");
+    };
+    // 6 now, 12 next turn: 18, dead on turn 2 (counted from 8 again next turn, the count not carried, it lives at 6
+    // and the third Strike kills it). From 7 the 10th is the third Strike: turn 3 too.
+    expect(run(8)?.turnsToWin).toBe(2);
+    expect(run(7)?.turnsToWin).toBe(3);
   });
 });

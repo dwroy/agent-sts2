@@ -206,6 +206,20 @@ export function stripVigor(hand: CardModel[], vigor: number, weak: boolean): voi
 }
 
 /**
+ * Pen Nib (PEN_NIB, 「你每打出的第10张攻击牌将会造成双倍伤害」): when the next Attack is the 10th (its stack at 9), the
+ * mod shows every Attack in hand at double damage, but the game doubles only the one played next (GSG0Q5KP9AAU F33 T2:
+ * stack 9, Dismantle 20, Strike 22, Breakthrough 22 to all; planned 86, dealt 20 + 11 + 11 x2 = 53). Halved here
+ * (rounding down gives back the undoubled number, Weak or not), before stripVigor (the shown number doubles the Vigor
+ * too); the solver doubles the Attack the counter reaches (PlayerSim.penNib).
+ */
+export function stripPenNib(hand: CardModel[], ready: boolean): void {
+  if (!ready) return;
+  for (const card of hand) {
+    if (card.type === "Attack" && card.damage !== null) card.damage = Math.floor(card.damage / 2);
+  }
+}
+
+/**
  * Rough value of a Power card's lasting effect, in "HP-equivalent" points, for a fight of average
  * length. Only used to rank it against immediate damage/block; tuned from run logs.
  */
