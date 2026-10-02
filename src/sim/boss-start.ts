@@ -278,6 +278,16 @@ function powerList(powers: Record<string, number>): Record<string, unknown>[] {
 export function syntheticBossState(state: GameState, knowledge: Knowledge, opening: BossOpening, entryHp: number, db: MonsterDb, mm: MoveModelData): { state: GameState; draw: number; relics: ReturnType<typeof fightStartRelics> } {
   const raw = JSON.parse(JSON.stringify(state.raw)) as Record<string, unknown>;
   const run = asRecord(raw["run"]);
+  // Fruit Juice is drunk at the first combat turn it is held in (combat-plan: combat/potion-now, before any board is
+  // solved), so it is gone by the boss; held on the synthetic frame, the planner drank it instead of building the board
+  // and the start threw (GWGT F22-F27 six build questions, 5DFX one: no simulated numbers; ops 2026-10-02). Its +5 max HP
+  // is left out: the same for every option compared.
+  if (Array.isArray(run["potions"])) {
+    run["potions"] = (run["potions"] as unknown[]).map((slot) => {
+      const entry = asRecord(slot);
+      return str(entry["potion_id"]) === "FRUIT_JUICE" ? { ...entry, potion_id: null, name: null, occupied: false, can_use: false } : slot;
+    });
+  }
   const maxHp = typeof run["max_hp"] === "number" ? (run["max_hp"] as number) : entryHp;
   const hp = Math.max(1, Math.min(maxHp, Math.round(entryHp)));
   run["current_hp"] = hp;

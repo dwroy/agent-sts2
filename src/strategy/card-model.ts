@@ -15,6 +15,22 @@ import { cardUpgrade } from "../knowledge/card-upgrades.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup } from "../util/json.js";
 
+/** Ethereal (「虚无」) by the card's keywords or its rendered text: exhausted at the end of the turn while held. */
+export function etherealText(keywords: readonly string[] | undefined, rendered: string): boolean {
+  return (keywords ?? []).some((keyword) => /ethereal/i.test(keyword)) || /(^|\s)虚无(\s|。|$)|\bEthereal\b/.test(rendered);
+}
+
+/**
+ * A held card of the state is Ethereal (etherealText on its game data and rendered text). A card with neither text nor
+ * game data counts as Ethereal: the SL judge's side of caution (Feel No Pain's end-of-turn block, judge.ts).
+ */
+export function heldCardEthereal(card: Record<string, unknown>, knowledge?: Knowledge): boolean {
+  const info = knowledge?.card(str(card["card_id"]));
+  const rendered = str(card["resolved_rules_text"]) || str(card["rules_text"]) || info?.description || "";
+  if (!rendered && !info) return true;
+  return etherealText(info?.keywords, rendered);
+}
+
 export type TargetMode = "single" | "all" | "random" | "self" | "none";
 
 export interface CardModel {
@@ -627,7 +643,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(POWER_AMOUNT_VARS[cardId] && dyn(card, POWER_AMOUNT_VARS[cardId]!) !== null ? { powerAmount: dyn(card, POWER_AMOUNT_VARS[cardId]!)! } : {}),
     ...(replayOf(rendered) > 0 ? { replay: replayOf(rendered) } : {}),
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
-    ...((info?.keywords ?? []).some((keyword) => /ethereal/i.test(keyword)) || /(^|\s)虚无(\s|。|$)|\bEthereal\b/.test(rendered) ? { ethereal: true } : {}),
+    ...(etherealText(info?.keywords, rendered) ? { ethereal: true } : {}),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),
     // Thrash's random exhaust takes an Attack and adds its damage (special "thrash", solver), not any card
