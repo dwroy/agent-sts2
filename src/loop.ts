@@ -39,6 +39,7 @@ import { SlController } from "./sl/controller.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
 import { withBossSim, type BuildSimSetup } from "./sim/build-sim-facts.js";
+import { ensureThiefCardValue, type ThiefCardSetup, type ThiefCardValue } from "./sim/thief-card-value.js";
 
 export type LoopMode = "shadow" | "play";
 
@@ -88,6 +89,11 @@ export interface LoopOptions {
    * decides (src/sim/build-sim-facts.ts); absent or null: the questions as they were.
    */
   buildSim?: BuildSimSetup | null;
+  /**
+   * THIEF_COST=on (docs/thief.md §7): the runner that simulates the act boss with and without a Thieving Hopper's stolen
+   * card (src/sim/thief-card-value.ts, once per fight before its next question); absent or null: no card value (no cost).
+   */
+  thiefSim?: ThiefCardSetup | null;
   /** SL (SL_ENABLED): the reload's poll interval (default 500 ms; tests make it short). */
   slPollMs?: number;
 }
@@ -327,6 +333,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const journal = new RunJournal();
   /** The run whose logs were replayed into the journal (once per run id and process). */
   let restoredRun = "";
+  /** THIEF_COST: a stolen card's value computed since the last logged decision (logged with the next one: thief_card_value). */
+  let thiefValueToLog: ThiefCardValue | null = null;
   /** The DeepSeek client among the escalators (run plan, fight plan, BUILD_DECIDER=deepseek), if any. */
   const deepseekClient = (options.escalators ?? []).find((escalator): escalator is DeepSeekClient => escalator instanceof DeepSeekClient) ?? null;
   /**
@@ -586,6 +594,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
           // A restart mid-fight: the fight's first logged frame, the deck before a Thieving Hopper's theft (thief.ts).
           if (replay.thiefStart && replay.thiefStart.fight === thiefFightOf(state) && screenMemory.thiefStart?.fight !== replay.thiefStart.fight) screenMemory.thiefStart = replay.thiefStart;
+          // ... and the stolen card's value already computed in it (THIEF_COST: its logged thief_card_value), not again.
+          if (replay.thiefCardValue && replay.thiefCardValue.fight === thiefFightOf(state) && screenMemory.thiefCardValue?.fight !== replay.thiefCardValue.fight) screenMemory.thiefCardValue = replay.thiefCardValue;
           // A restart mid-fight: the Surrounded facing of this fight's last targeted action (else startFacing, stale).
           if (replay.facing && screenMemory.facing === undefined && replay.facing.fight === facingFightOf(state)) {
             screenMemory.facing = replay.facing.index;
@@ -643,6 +653,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       oneshot: config.buildOneshot,
       ...(slEnv ? { sl: slEnv } : {}),
       thiefFacts: config.thiefFacts,
+      // THIEF_COST: only with THIEF_FACTS (the cost reads the thieves the facts find).
+      thiefCost: config.thiefFacts && config.thiefCost,
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
@@ -663,6 +675,16 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       const deepseek = brain;
       if (deepseek && brainBudgetLeft("fight-plan")) {
         await ensureFightPlan(env, deepseek, journal, config.fightPlanLog, onEvent, countPlan("fight-plan"));
+      }
+    }
+    // THIEF_COST (docs/thief.md §7): a Thieving Hopper's stolen card, worth in HP by the act boss simulation, once per
+    // fight before the question that needs it (up to ~15 s, Dai 2026-10-02); kept in screen memory. Never throws: no
+    // value, no cost.
+    if (!planned && config.thiefFacts && config.thiefCost && options.thiefSim && state.in_combat) {
+      const value = await ensureThiefCardValue(env, options.thiefSim);
+      if (value) {
+        thiefValueToLog = value;
+        onEvent({ type: "note", message: `thief card value: ${value.card} ${value.hp === null ? "no HP value" : `≈ ${value.hp} HP`} (${value.status}${value.route ? `, ${value.route}` : ""}; ${value.samples} samples, ${value.ms} ms)` });
       }
     }
     if (!planned) {
@@ -1243,6 +1265,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(deepseekFallback === undefined ? {} : { deepseek_fallback: deepseekFallback }),
       ...(deepseekConsistency === undefined ? {} : { deepseek_consistency: deepseekConsistency }),
       ...(bossSimRecord === undefined ? {} : { boss_sim: bossSimRecord }),
+      // THIEF_COST: the stolen card's value computed before this decision (a restart takes it back from here).
+      ...(thiefValueToLog ? { thief_card_value: toJsonValue(thiefValueToLog) } : {}),
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
       // Combat: the rollout facts' timing and whether Jev picked the rollout's best line (rollout-live.ts).
       ...(resolved.log ?? {}),
@@ -1303,6 +1327,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // is sent (the re-read before sending may still refuse it).
 
     const baseRecord = recordBase();
+    // The stolen card's value rides on this row (thief_card_value): logged once.
+    thiefValueToLog = null;
     const journalEntry = {
       label: decision.label,
       by: baseRecord.decider,

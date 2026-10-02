@@ -122,6 +122,13 @@ export interface AppConfig {
    * among the options. off: the combat question exactly as before.
    */
   thiefFacts: boolean;
+  /**
+   * THIEF_COST (default off; Dai 2026-10-02, docs/thief.md §7): with THIEF_FACTS on, the loot a thief may take away is
+   * HP in the rollout's ranking, like a potion's cost: the Hopper's stolen card at its act-boss simulated worth
+   * (src/sim/thief-card-value.ts, once per fight), the Merc's / Fat Gremlin's gold at the potion table's gold rate
+   * (potion-equivalents.json meta.gold_hp). off: questions, options and choices exactly as with THIEF_FACTS alone.
+   */
+  thiefCost: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; off by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -637,6 +644,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const thiefFactsProblems: ConfigProblem[] = [];
   const thiefFacts = parseOnOff(readEnv(env, "THIEF_FACTS"), "THIEF_FACTS", thiefFactsProblems) ?? true;
   for (const problem of thiefFactsProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // THIEF_COST likewise: an unreadable value warns and stays off (the default: Dai turns it on after the numbers).
+  const thiefCostProblems: ConfigProblem[] = [];
+  const thiefCost = parseOnOff(readEnv(env, "THIEF_COST"), "THIEF_COST", thiefCostProblems) ?? false;
+  for (const problem of thiefCostProblems) warnings.push(`${problem.field}: ${problem.message}; using off`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -732,6 +743,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     bossSimBuild,
     combatDeepseek,
     thiefFacts,
+    thiefCost,
     sl,
     brain,
     deepseek,
