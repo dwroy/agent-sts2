@@ -1,37 +1,42 @@
 ## rows
 
-4231 decisions on flagged boards, errors 0
+4286 decisions on flagged boards, errors 0
 
 ## least-loss boards (a card or potion first)
 
-- all fights: 1192 boards, early-certain 179; SL fights (A8+ boss and listed): 644 boards, early-certain 108
+- all fights: 1210 boards, early-certain 179; SL fights (A8+ boss and listed): 679 boards, early-certain 108
 - outcome of the turn after an early-certain board: {'died': 179}
 
 what kept the early reload from the other least-loss boards (all fights / SL fights):
 
 | reason | all | SL |
 |---|---|---|
-| judge: a playable card draws | 415 | 204 |
-| early only: a relic or power the planner does not model | 146 | 83 |
-| early only: a random card | 127 | 63 |
-| early only: cards added to the pile | 107 | 61 |
+| judge: a playable card draws | 401 | 204 |
+| early only: a relic or power the planner does not model | 142 | 83 |
+| early only: a random card | 122 | 58 |
+| early only: cards added to the pile | 105 | 64 |
 | judge: special phase | 57 | 45 |
-| early only: a random potion | 36 | 23 |
-| early only: a relic or power acting by chance | 33 | 19 |
-| early only: Kusarigama | 31 | 12 |
+| early only: Kusarigama | 43 | 24 |
+| early only: a random potion | 36 | 27 |
+| early only: a relic or power acting by chance | 32 | 22 |
 | judge: Ripple Basin | 25 | 13 |
-| early only: an unmodelled card | 15 | 6 |
+| judge: own count not exact: Beating Remnant caps the HP l | 21 | 10 |
+| early only: an unmodelled card | 15 | 7 |
 | early only: Juggernaut | 8 | 4 |
-| early only: end-of-turn damage relic or power | 4 | 0 |
+| judge: the enemies may be hit before they act: 惊逃 in hand | 6 | 6 |
 | judge: own count survives | 4 | 1 |
+| judge: the enemies may be hit before they act: 惊逃 plays a | 3 | 0 |
+| judge: the enemies may be hit before they act: 寄生惧魔 (历石 ( | 3 | 0 |
 | early only: a line draws unknown cards | 3 | 0 |
 | early only: a card played from the top / made | 2 | 2 |
+| early only: end-of-turn damage relic or power | 2 | 0 |
+| judge: the enemies may be hit before they act: 无厌沙虫 (招架盾  | 1 | 1 |
 
 ## SL death turns (A8+ boss and listed fights; the attempt ended in that turn with a death or an SL reload)
 
-215 turns with a flagged board
-- end_turn judge certain: 178
-- no early reload: 174
+225 turns with a flagged board
+- end_turn judge certain: 183
+- no early reload: 184
 - early reload: 41
 - early reload, end_turn judge not certain (a new catch): 2
 
@@ -87,5 +92,5 @@ per caught death turn: actions skipped and seconds from the early decision to th
 
 end_turn verdicts the known draws make certain: 0; outcomes {}
 
-the SL fights as their own retries (--known self): 230 end_turn boards flagged lethal; the draw veto lifted on 0, outcomes {}
+the SL fights as their own retries (--known self): 234 end_turn boards flagged lethal; the draw veto lifted on 0, outcomes {}
 - early-certain boards as retries: 110, outcomes {'died': 110}
