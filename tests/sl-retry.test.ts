@@ -216,7 +216,7 @@ function rows(path: string): SlAttemptRow[] {
   return readFileSync(path, "utf8").trim().split("\n").map((line) => JSON.parse(line) as SlAttemptRow);
 }
 function slConfig(log: string | null, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 /** The deck of these fights: 8 cards; the first attempt draws A..E on T1, F, G, H on T2. */
@@ -285,7 +285,8 @@ describe("SlController with SL_RETRY_KNOWN_DRAWS and SL_RETRY_COMPUTE", () => {
 
   it("both switches off: the retry's env as before (no known draws, no compute, the block's note unchanged)", async () => {
     const log = tempLog();
-    const t = setup(log, { retryKnownDraws: false, retryCompute: false });
+    // SL_RETRY_EXPLORE off too: its env.sl.explore is the only other key a retry's env gets.
+    const t = setup(log, { retryKnownDraws: false, retryCompute: false, retryExplore: false });
     await firstAttempt(t);
     const env = t.sl.envFor(state(t1()))!;
     expect(Object.keys(env).sort()).toEqual(["attempt", "maxAttempts", "previousAttempts", "showSim"]);

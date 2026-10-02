@@ -7,6 +7,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 import type { JsonValue } from "../util/json.js";
 import type { SlDraws } from "./draws.js";
+import type { SlExploreRecord } from "./explore.js";
 import type { JudgeTier } from "./judge.js";
 
 /** One turn of an attempt: our HP and block and the enemies' HP when the turn began, and what we played. */
@@ -73,6 +74,12 @@ export interface SlAttemptRow {
    * come from, kept here so a restarted process has it. Absent on rows written before 2026-10-02's SL_RETRY_KNOWN_DRAWS.
    */
   draws?: SlDraws | null;
+  /**
+   * SL_RETRY_EXPLORE (explore.ts; docs/sl.md §11), attempts from the 2nd: each decision point's board and the line chosen
+   * there, the deviation point this attempt aimed at (3+) and what came of it. What later attempts pick their deviation
+   * point from, kept here so a restarted process has it. Absent with the switch off and on rows written before it.
+   */
+  explore?: SlExploreRecord;
 }
 
 export interface SlLog {
