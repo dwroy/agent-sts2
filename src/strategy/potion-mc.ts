@@ -103,6 +103,12 @@ export interface PotionMcSource {
   poolName?: string;
   /** Draw potions: the known piles as hand cards (Strength and Weak in). */
   piles?: { draw: CardModel[]; discard: CardModel[] };
+  /**
+   * SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the draw pile's top cards in draw order, as indices into `piles.draw`, known
+   * from an earlier attempt at this fight: every sample draws them first, then the rest of the pile shuffled. Absent: the
+   * whole pile shuffled, as before.
+   */
+  knownTop?: number[];
   /** Fiddle / No Draw: nothing is drawn (Distilled Chaos still plays its top cards). */
   noDraw?: boolean;
   /**
@@ -171,6 +177,16 @@ export function seedOf(text: string): number {
 }
 
 /**
+ * The draw pile split into its known top (indices, top first: PotionMcSource.knownTop) and the rest, or null when the
+ * indices do not name distinct cards of the pile (then the pile is shuffled as before).
+ */
+function knownTopOf(draw: CardModel[], top: number[]): { known: CardModel[]; rest: CardModel[] } | null {
+  if (!top.every((at, i) => Number.isInteger(at) && at >= 0 && at < draw.length && top.indexOf(at) === i)) return null;
+  const known = new Set(top);
+  return { known: top.map((at) => draw[at]!), rest: draw.filter((_, i) => !known.has(i)) };
+}
+
+/**
  * One sample of the potion: its drink as a solver card with the sample's real cards (`choices`, `adds`,
  * `drawn`, `sneckoCosts`). `hand` is the hand at the drink (Bottled Potential shuffles it in; Snecko Oil
  * re-costs it).
@@ -194,10 +210,13 @@ export function samplePotion(source: PotionMcSource, hand: CardModel[], random: 
   const count = DRAW_POTIONS[source.potionId]?.cards ?? 0;
   const piles = source.piles ?? { draw: [], discard: [] };
   const handCards = hand.filter((card) => card.type !== "Potion");
+  const top = source.knownTop && source.knownTop.length > 0 && source.potionId !== "BOTTLED_POTENTIAL" ? knownTopOf(piles.draw, source.knownTop) : null;
   const order =
     source.potionId === "BOTTLED_POTENTIAL"
       ? shuffled([...handCards, ...piles.draw, ...piles.discard], random)
-      : [...shuffled(piles.draw, random), ...shuffled(piles.discard, random)];
+      : top
+        ? [...top.known, ...shuffled(top.rest, random), ...shuffled(piles.discard, random)]
+        : [...shuffled(piles.draw, random), ...shuffled(piles.discard, random)];
   const drawn = source.noDraw && source.potionId !== "DISTILLED_CHAOS" ? [] : order.slice(0, count).map((card, i) => own(card, i, "d", 300 + source.slot * 20));
   const sample: CardModel = { ...shell, drawn };
   if (source.potionId === "SNECKO_OIL") {

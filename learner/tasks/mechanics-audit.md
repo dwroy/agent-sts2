@@ -1,8 +1,8 @@
 ---
 title: 机制审计（只出提案）
 tools: Read, Grep, Glob, Bash, Write
-timeout_min: 120
-max_turns: 400
+timeout_min: 45
+max_turns: 200
 model: opus
 default.report: {{worktree}}/notes/mechanics-residuals.md
 default.summary: {{worktree}}/experiments/mechanics/summary.json
@@ -24,7 +24,7 @@ default.min_n: 20
 
 ## 做法
 1. 先跑 `date`。读 docs/mechanics-learning.md 和残差报告。
-2. 挑候选：报告里 n ≥ {{min_n}} 且 |偏差| ≥ 1 的组（能力、被去掉的能力、敌人），和「单个回合残差最大」的回合。已经由规则或手写代码处理、偏差接近 0 的跳过。
+2. 挑候选：报告里 n ≥ {{min_n}} 且 |偏差| ≥ 1 的组（能力、被去掉的能力、敌人），和「单个回合残差最大」的回合。已经由规则或手写代码处理、偏差接近 0 的跳过。**最多 8 个候选**（Dai 2026-10-02：上限 45 分钟、只看偏差最大的前 8 组）：按 |偏差| × n 排序取前 8，其余在提案末尾列一行「未看」。时间不够时先把已看完的候选写进提案，不要留空。
 3. 每个候选：
    - 按报告里的例子回合去日志库查：那一回合前后的帧（敌人的 move_id、intents、powers、血量和格挡，我们的血量和格挡）、出的牌、下回合第一帧。弄清实际发生了什么：招式中途变了？伤害和意图不一样？回了血？死亡机制？日志本身的问题（帧缺失、SL 重来、观察帧）？
    - 提出一个机制假设，**用更多回合检验**：数出符合 n 和例外，例外要解释或列出。只看一两个回合的不算结论。

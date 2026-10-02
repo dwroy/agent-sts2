@@ -6,6 +6,7 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 import type { JsonValue } from "../util/json.js";
+import type { SlDraws } from "./draws.js";
 import type { JudgeTier } from "./judge.js";
 
 /** One turn of an attempt: our HP and block and the enemies' HP when the turn began, and what we played. */
@@ -64,6 +65,11 @@ export interface SlAttemptRow {
   /** Set when SL stopped for the rest of this run, and why (a failed reload, the wrong fight after Continue). */
   give_up_reason: string | null;
   summary: { turns: SlTurn[]; potions: string[]; killers: string[] };
+  /**
+   * The order cards came off the draw pile in this attempt (draws.ts; docs/sl.md §10): what a later attempt's known draws
+   * come from, kept here so a restarted process has it. Absent on rows written before 2026-10-02's SL_RETRY_KNOWN_DRAWS.
+   */
+  draws?: SlDraws | null;
 }
 
 export interface SlLog {
@@ -138,13 +144,17 @@ function endLine(row: SlAttemptRow): string {
  * The combat questions' `previous_attempts` on a retried fight: information, not an order (the ranking and the
  * options are unchanged; Jev still chooses).
  */
-export function previousAttemptsJson(rows: readonly SlAttemptRow[], attempt: number, maxAttempts: number): JsonValue {
+export function previousAttemptsJson(rows: readonly SlAttemptRow[], attempt: number, maxAttempts: number, options: { knownDraws?: boolean } = {}): JsonValue {
   return {
     note:
       "SL retry: this fight was reloaded from its start (the game's save from entering the room) because the earlier attempt(s) below " +
       "reached a certain death. The deck, the draws and the enemy moves are the same as long as the plays are the same, so playing " +
       "the same way loses the same way: look for a different line (when to block, which enemy to kill first, when to drink which potion, " +
-      "which cards to set up). Information, not an order: the options and their numbers are unchanged and you still choose.",
+      "which cards to set up). Information, not an order: the options and their numbers are unchanged and you still choose." +
+      // SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the logs show the draw pile's order holding whatever is played, until a reshuffle.
+      (options.knownDraws
+        ? " The draw pile comes in the same order whatever you play (a card drawn earlier just arrives earlier), until the discard pile is reshuffled: known_draws lists the next cards when they are known."
+        : ""),
     this_attempt: `attempt ${attempt} of at most ${maxAttempts}`,
     attempts: rows.map((row) => {
       const turns = row.summary.turns.slice(0, MAX_TURN_LINES).map(turnLine);

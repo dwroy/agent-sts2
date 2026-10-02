@@ -80,10 +80,11 @@ export const ROLLOUT_SAMPLES = 8;
 export const HISTORY_MAE: Record<FightKindName, number> = { hallway: 5.5, elite: 11.0, boss: 9.9 };
 
 /**
- * Test hooks: the clock, the budget, a switch (ROLLOUT_FACTS=off turns the facts off), and the kill-order
- * policy's focus weight (measurements; rollout.ts ORDER_FOCUS_BONUS when unset).
+ * Test hooks: the clock, the budget, a switch (ROLLOUT_FACTS=off turns the facts off), the kill-order
+ * policy's focus weight (measurements; rollout.ts ORDER_FOCUS_BONUS when unset), and a salt for the samples' seed
+ * (tools/sl-retry-replay.ts: the same board on other random numbers, the sampling noise; unset: the board's own seed).
  */
-export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number; orderFocusBonus?: number } = {
+export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number; orderFocusBonus?: number; seedSalt?: string } = {
   enabled: process.env["ROLLOUT_FACTS"] !== "off",
   now: null,
   budgetMs: ROLLOUT_BUDGET_MS,
@@ -461,6 +462,17 @@ export interface LiveRolloutArgs {
   shown: Plan[];
   /** Base draw and discard piles from the state, or null when the state has none. */
   piles: { draw: CardModel[]; discard: CardModel[] } | null;
+  /**
+   * SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the draw pile's top cards in draw order, as indices into `piles.draw`, known
+   * from an earlier attempt at this fight (RolloutInput.piles.drawTop). Absent: the pile shuffled, as before.
+   */
+  drawTop?: number[];
+  /**
+   * SL_RETRY_COMPUTE (docs/sl.md §10): the samples and the time budget of a retried fight's rollout (default
+   * ROLLOUT_SAMPLES and rolloutLiveOptions.budgetMs).
+   */
+  samples?: number;
+  budgetMs?: number;
   /** Wall clock already spent on this decision's budget (the random potions' Monte Carlo). */
   spentMs?: number;
   /** Kill orders for the later turns (rollout.ts killOrders; two or more distinct enemies), and how many were left out. */
@@ -785,23 +797,23 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const board = boardRolloutInput(state, knowledge, args.solver, meta.asc);
     const model = args.model !== undefined ? args.model : loadFightValueModel();
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
-    const budgetMs = Math.max(0, rolloutLiveOptions.budgetMs - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
+    const budgetMs = Math.max(0, (args.budgetMs ?? rolloutLiveOptions.budgetMs) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
     const { handBase, ...boardInput } = board;
     const result = rolloutDecision({
       ...boardInput,
       // THIEF_COST: each thief's loot HP (thief.loot, set only with the switch on) is a cost in the value.
       ...(args.thieves ? { escapes: { ...escapeInput(args.thieves, monsterMoves()), ...(Object.keys(lootHpOf(args.thieves)).length > 0 ? { lootHp: lootHpOf(args.thieves) } : {}) } } : {}),
       plans: args.plans,
-      piles: { draw: args.piles.draw, discard: args.piles.discard, handBase },
+      piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.drawTop && args.drawTop.length > 0 ? { drawTop: args.drawTop } : {}) },
       meta,
       mm: moveModelData(),
       model,
       gates,
       options: {
         horizon: ROLLOUT_HORIZON,
-        samples: ROLLOUT_SAMPLES,
+        samples: args.samples ?? ROLLOUT_SAMPLES,
         budgetMs,
-        seed: seedOf(`${fightId(state)}:${state.turn ?? "?"}`),
+        seed: seedOf(`${fightId(state)}:${state.turn ?? "?"}${rolloutLiveOptions.seedSalt ?? ""}`),
         now,
         include: args.shown,
         ...(args.orders && args.orders.length >= 2 ? { orders: args.orders } : {}),

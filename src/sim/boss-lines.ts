@@ -150,8 +150,11 @@ export interface BossSimInputArgs {
   memory: ScreenMemory;
   /** This turn's solver input as the rollout gets it (the random potions' expected-value cards in the hand). */
   solver: SolverInput;
-  /** Base draw and discard piles (rollout-live's). */
-  piles: { draw: CardModel[]; discard: CardModel[] };
+  /**
+   * Base draw and discard piles (rollout-live's); `drawTop` (SL_RETRY_KNOWN_DRAWS): the pile's known top cards in draw order,
+   * as indices into `draw` (RolloutInput.piles.drawTop: every sample draws them first).
+   */
+  piles: { draw: CardModel[]; discard: CardModel[]; drawTop?: number[] };
   /** The random potions held (potion-mc sources): sampled anew each later turn. */
   randomPotions: PotionMcSource[];
 }
@@ -164,7 +167,7 @@ export function bossSimInput(args: BossSimInputArgs): RolloutInput {
   return {
     ...board,
     plans: [],
-    piles: { draw: args.piles.draw, discard: args.piles.discard, handBase },
+    piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.piles.drawTop && args.piles.drawTop.length > 0 ? { drawTop: args.piles.drawTop } : {}) },
     meta: { ...meta, kind: "boss" },
     mm: {},
     model: null,
@@ -560,6 +563,8 @@ export interface BossLineSimArgs extends BossSimInputArgs {
   eligible?: (plan: Plan) => boolean;
   turn: number | null;
   drinks: (plan: Plan) => boolean;
+  /** SL_RETRY_COMPUTE (docs/sl.md §10): the samples per line on a retried fight's question (default bossLinesOptions.samples). */
+  samples?: number;
 }
 
 /**
@@ -588,7 +593,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const lowTrust = boss ? (LOW_TRUST_BOSSES[boss] ?? null) : null;
     let run: LinesResult;
     try {
-      run = runLines(input, args.lines, { samples: bossLinesOptions.samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now });
+      run = runLines(input, args.lines, { samples: args.samples ?? bossLinesOptions.samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now });
     } catch (error) {
       // A worker's error: the next question starts a new pool.
       releaseBossLinesPool();
