@@ -533,6 +533,31 @@ export function guardKeepsPick(pick: Plan, plan: Plan, enemies: EnemySim[], deat
 }
 
 /**
+ * The HP guard's setup exception (planTurn guardKeepsSetup, besides the boss race): the pick is kept when it plays more
+ * setup cards than the replacement and its HP after the enemy turn clears the next hit with room: boss fights max(20%
+ * max HP, next hit + 5) (5BXM F33 T4/T6: Demon Form+ swapped twice at 22-33 HP before a no-attack curse turn, never
+ * played; boss left at 152), other fights max(35% max HP, next hit) (JF99 F33 T4/T7: Crimson Mantle traded twice for 6
+ * HP and never played).
+ * A big-hit turn (this turn's attack through the block up at least max(12, 25% HP)) is the turn to block when that hit
+ * is what kills (0YG4 F43 T4: Dark Embrace + Blood Wall at -26 kept over a 29-block line at -13 into the Heavy Cleave):
+ * there the setup line is kept only when the rollout, where it covers both, sees it die no more often than the
+ * replacement. The big hit cancelled the exception outright before (f8b1f2f), setup lines that live included:
+ * GTU27C946ERT F33 T1, 21 incoming against a bar of 20 at 80/80, Demon Form+ (-17, 63 after; the rollout at 1 sample
+ * had every line tied) swapped for an attack line at -13; the whole-fight sim ranked Demon Form+ first (44.9% against
+ * 5.3%) and it was not drawn again that fight.
+ */
+export function setupKept(
+  picked: { setups: number; hpAfter: number; deaths: number | null },
+  replacement: { setups: number; deaths: number | null },
+  ctx: { kind: SolverInput["fightKind"]; maxHp: number; nextIncoming: number; bigHit: boolean },
+): boolean {
+  if (picked.setups <= replacement.setups) return false;
+  const room = ctx.kind === "boss" ? Math.max(ctx.maxHp * 0.2, ctx.nextIncoming + 5) : Math.max(ctx.maxHp * 0.35, ctx.nextIncoming);
+  if (picked.hpAfter < room) return false;
+  return !ctx.bigHit || picked.deaths === null || replacement.deaths === null || picked.deaths <= replacement.deaths;
+}
+
+/**
  * THIEF_COST (docs/thief.md §7): the HP guard may swap `pick` for `plan` only when the loot `plan` loses more than the
  * pick (lootOf: the rollout's expected loot cost, or this turn's certain one) is no more than the HP the swap saves this
  * turn: by the cost's own measure the swap must not be worse. The guard still compares HP alone (guardLoss).
@@ -2218,14 +2243,18 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Molten Fist only sets up into Vulnerable (CWMP F7 T1: played as "setup" into a target with none).
   // An attack is setup only when it debuffs (Bash, Molten Fist): Howl from Beyond+ at 19 HP for 19
   // damage passed the guard as "planned setup" (MK1N F33 T2).
+  // FIGHT_PLAN=off (every run since 2026-09-30) has no setup list, and the HP guard's setup exception never applied:
+  // there a Power card played in an elite or boss fight is the setup (GTU27C946ERT F33 T1: Demon Form+ counted as no
+  // setup, swapped for an attack line). Hallway fights still none (MX1Q F23 T2: Inflame lines pulled in as setup).
   const setupStep = (step: Step) =>
-    fightPlan !== null &&
-    fightPlan.setup.includes(step.cardId) &&
-    !((() => {
-      const model = cardFor(step, hand);
-      return model !== undefined && model !== null && model.type === "Attack" && model.vulnerable === 0 && model.weak === 0 && step.cardId !== "MOLTEN_FIST" && step.cardId !== "DOMINATE";
-    })()) &&
-    !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
+    fightPlan === null
+      ? (kind === "elite" || kind === "boss") && cardFor(step, hand)?.type === "Power"
+      : fightPlan.setup.includes(step.cardId) &&
+        !((() => {
+          const model = cardFor(step, hand);
+          return model !== undefined && model !== null && model.type === "Attack" && model.vulnerable === 0 && model.weak === 0 && step.cardId !== "MOLTEN_FIST" && step.cardId !== "DOMINATE";
+        })()) &&
+        !((step.cardId === "MOLTEN_FIST" || step.cardId === "DOMINATE") && (enemies.find((enemy) => enemy.index === step.target)?.vulnerable ?? 0) === 0);
   // Hallway HP guard from act 2 on (or ascension 5+) below 60% HP: a line may lose at most
   // max(8, 20% HP) more than the cheapest (VHLZ F21: -18 over a -10 line, then -25 over -15, into the
   // F22 room at 17/80 with no potions).
@@ -2260,16 +2289,15 @@ function planTurn(env: DecisionEnv): Decision | null {
     const extraDamage = illusionFight ? realDamage(picked) - realDamage(replacement) : picked.outcome.damageDealt - replacement.outcome.damageDealt;
     return extraLoss > 0 && extraDamage > 0 && extraDamage / extraLoss >= bossHpLeft / Math.max(1, playerSim.hp) && picked.outcome.hpAfter >= nextIncoming + 5;
   };
-  // Not on a big-hit turn: that is the turn to block (0YG4 F43 T4: Dark Embrace + Blood Wall, -26,
-  // kept over a 29-block line at -13 into the Heavy Cleave).
-  const guardKeepsSetup = (picked: Plan, replacement: Plan | null): boolean =>
+  // The setup exception (setupKept); `deathsOf`: the rollout's deaths, when it ran (Jev's pick).
+  const guardKeepsSetup = (picked: Plan, replacement: Plan | null, deathsOf: (plan: Plan) => number | null = () => null): boolean =>
     winsRace(picked, replacement) ||
-    !bigHit &&
-    replacement !== null &&
-    setupCount(picked) > setupCount(replacement) &&
-    // Boss fights: a setup power is kept while HP clears the next hit with room (5BXM F33 T4/T6: Demon
-    // Form+ swapped twice at 22-33 HP before a no-attack curse turn, never played; boss left at 152).
-    picked.outcome.hpAfter >= (kind === "boss" ? Math.max(playerSim.maxHp * 0.2, nextIncoming + 5) : Math.max(playerSim.maxHp * 0.35, nextIncoming));
+    (replacement !== null &&
+      setupKept(
+        { setups: setupCount(picked), hpAfter: picked.outcome.hpAfter, deaths: deathsOf(picked) },
+        { setups: setupCount(replacement), deaths: deathsOf(replacement) },
+        { kind, maxHp: playerSim.maxHp, nextIncoming, bigHit },
+      ));
   // The setup window is the fight's first turns, not a new boss phase's (YFG5 F48 T3: Test Subject's
   // phase 2 began on T3, Pyre+ for 4 damage over a 58-damage line at the same HP).
   const maxHpNow = enemies.filter((enemy) => !enemy.minion && enemy.hp > 0).reduce((sum, enemy) => sum + enemy.maxHp, 0);
@@ -2818,7 +2846,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           : null
         : hpGuardReplacement(picked, guardOptions, playerSim.hp, slack, keepsPick);
       const raceKept = proposed !== null && winsRace(picked, proposed);
-      const replacement = proposed && (guardKeepsSetup(picked, proposed) || raceEruption) ? null : proposed;
+      const replacement = proposed && (guardKeepsSetup(picked, proposed, rolloutDeaths) || raceEruption) ? null : proposed;
       const plan = replacement ?? picked;
       const extra = plan.outcome.winsFight ? 0 : Math.max(0, guardLoss(plan) - Math.min(...guardOptions.map(guardLoss)));
       const rank = shown.indexOf(plan) + 1;

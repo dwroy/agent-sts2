@@ -19,7 +19,9 @@ import { bossOpening, syntheticBossStart, syntheticBossState } from "../src/sim/
 import { BUILD_SIM_CALIBRATION_SAMPLES } from "../src/sim/build-sim.js";
 import { actBossDefeated, calibratedFloor, withBossSim } from "../src/sim/build-sim-facts.js";
 import type { DeckRunRequest, DeckRunResult } from "../src/sim/build-sim-pool.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { planCombatTurn, setupKept } from "../src/screens/combat-plan.js";
+import type { AnswerSet } from "../src/jev/answers.js";
+import type { AskDecision } from "../src/project/types.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { relicBlockOf, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -325,5 +327,41 @@ describe("7. Lost Wisp: 8 to every enemy per Power played, in the solver and so 
     expect(none.outcome.damageDealt).toBe(0);
     const skill = solveTurn({ hand: [card(0, "SKILL", { type: "Skill", damage: null, block: 5, target: "self", validTargets: [], flatValue: 3 })], player: player({ lostWisp: 8 }), enemies, fightKind: "monster" }).plans.find((plan) => plan.steps.length === 1)!;
     expect(skill.outcome.damageDealt).toBe(0);
+  });
+});
+
+describe("5. the HP guard keeps a setup line that does not die (combat-plan guardKeepsSetup :1783, :2047-2054)", () => {
+  // GTU27C946ERT F33 T1 as logged: Demon Form+ (-17, 63/80 after) against Unrelenting+, Bash, Breakthrough (-13); the next
+  // hit 29; 21 incoming through 0 block against the big-hit bar max(12, 20); the 1-sample rollout tied every line.
+  const ctx = { kind: "boss" as const, maxHp: 80, nextIncoming: 29, bigHit: true };
+
+  it("a big-hit turn keeps it when the rollout sees it die no more often than the replacement (or did not run)", () => {
+    expect(setupKept({ setups: 1, hpAfter: 63, deaths: 1 }, { setups: 0, deaths: 1 }, ctx)).toBe(true);
+    expect(setupKept({ setups: 1, hpAfter: 63, deaths: null }, { setups: 0, deaths: null }, ctx)).toBe(true);
+    // The death check: more deaths than the replacement on the turn of the big hit (0YG4 F43 T4's case) swaps it.
+    expect(setupKept({ setups: 1, hpAfter: 63, deaths: 5 }, { setups: 0, deaths: 2 }, ctx)).toBe(false);
+    // The HP bar as before: boss max(20% max HP, next hit + 5) = 34.
+    expect(setupKept({ setups: 1, hpAfter: 33, deaths: null }, { setups: 0, deaths: null }, ctx)).toBe(false);
+    expect(setupKept({ setups: 1, hpAfter: 63, deaths: null }, { setups: 1, deaths: null }, ctx)).toBe(false);
+    // Not a big-hit turn: the rollout's deaths are not asked, as before.
+    expect(setupKept({ setups: 1, hpAfter: 63, deaths: 5 }, { setups: 0, deaths: 2 }, { ...ctx, bigHit: false })).toBe(true);
+    // Elsewhere the bar is max(35% max HP, next hit).
+    expect(setupKept({ setups: 1, hpAfter: 27, deaths: null }, { setups: 0, deaths: null }, { ...ctx, kind: "elite" })).toBe(false);
+  });
+
+  it("the logged GTU2 F33 T1 board (FIGHT_PLAN off, as live): Jev's Demon Form+ is played, not swapped for the attack line", () => {
+    rolloutLiveOptions.enabled = false;
+    const raw = fixture("gtu2-f33-t1-demon-form", "t1");
+    const decision = planCombatTurn(loggedEnv({ source: "", decision: { label: "", decider: "", chosen: null, rationale: "" }, state: raw }, { fightPlan: "off" })) as AskDecision;
+    expect(decision.kind).toBe("ask");
+    const criteria = (decision.questions["plan"] as { criteria: Record<string, string> }).criteria;
+    const key = Object.keys(criteria).find((k) => (JSON.parse(criteria[k]!) as { plays: string }).plays === "恶魔形态+")!;
+    expect(key).toBeDefined();
+    const resolved = decision.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.51 }, confidence: 0.51, raw: {} } } as AnswerSet);
+    expect(resolved.rationale).not.toContain("HP guard");
+    const hand = (raw["combat"] as Raw)["hand"] as Raw[];
+    const intent = (resolved as { intent: { action: string; card_index?: number } }).intent;
+    expect(intent.action).toBe("play_card");
+    expect(hand.find((card) => card["index"] === intent.card_index)?.["card_id"]).toBe("DEMON_FORM");
   });
 });
