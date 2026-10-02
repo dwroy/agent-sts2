@@ -83,6 +83,12 @@ describe("B3 synthetic boss opening", () => {
     const start = syntheticBossStart(parseGameState(withRelics(REWARD(), [], "SWIFT_POTION")), loggedKnowledge, "SOUL_FYSH_BOSS", 50, deps);
     expect(start.input.solver.hand).toEqual([]);
   });
+
+  it("Fruit Juice held: gone by the boss (drunk at the first combat turn), the start builds (GWGT F22-F27 threw)", () => {
+    const start = syntheticBossStart(parseGameState(withRelics(REWARD(), [], "FRUIT_JUICE")), loggedKnowledge, "SOUL_FYSH_BOSS", 50, deps);
+    expect(start.input.solver.hand.some((card) => card.cardId.includes("FRUIT_JUICE"))).toBe(false);
+    expect(start.input.piles.draw.length).toBeGreaterThan(0);
+  });
 });
 
 describe("B3 option comparison", () => {
