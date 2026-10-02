@@ -905,6 +905,8 @@ interface Sim {
   pileDrawn: number;
   /** SolverInput.knownTop: the pile's top cards in draw order, taken by the draws before any expected one (null: none). */
   known: CardModel[] | null;
+  /** With SolverInput.knownTop: this line drew past the known cards (an expected-value draw). Absent otherwise. */
+  drewUnknown?: true;
   /**
    * Cards exhausted from the hand by this turn's plays (Burning Pact's pick, Stoke's whole hand): their
    * value is lost for the fight (6A36 F3: six Burning Pacts took the Strikes and Defends for free).
@@ -1753,6 +1755,8 @@ function drawExpected(next: Sim, count: number, player: PlayerSim): void {
     count -= taken.length;
     if (count <= 0) return;
   }
+  // SL judge (docs/sl.md §2, SL_JUDGE_KNOWN_DRAWS): a line that drew a card nobody knows.
+  if (next.known !== null && count > 0) next.drewUnknown = true;
   // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
   const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
   const handSpace = Math.max(0, HAND_LIMIT - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
@@ -2795,6 +2799,12 @@ export interface SolveResult {
   plans: Plan[];
   nodes: number;
   truncated: boolean;
+  /** With SolverInput.knownTop: some line it simulated drew past the known cards (SL judge, SL_JUDGE_KNOWN_DRAWS). Absent otherwise. */
+  drewUnknown?: true;
+  /** With SolverInput.knownTop: the most pile cards any line it simulated drew (SL judge: within the exactly known ones?). */
+  knownDepth?: number;
+  /** Some line it simulated drew a card (SL judge, SL_RELOAD_EARLY: a verdict without draws). Absent otherwise. */
+  drew?: true;
 }
 
 /**
@@ -2955,9 +2965,16 @@ export function solveTurn(input: SolverInput): SolveResult {
   const byOutcome = new Map<string, Plan>();
   let nodes = 0;
   let truncated = false;
+  let drewUnknown = false;
+  let knownDepth = 0;
+  let drew = false;
 
   const visit = (sim: Sim): void => {
     nodes += 1;
+    // SL judge (docs/sl.md §2): what the simulated lines drew.
+    if (sim.drewUnknown) drewUnknown = true;
+    if (sim.known !== null && sim.pileDrawn > knownDepth) knownDepth = sim.pileDrawn;
+    if (sim.cardsDrawn > 0) drew = true;
     const plan = evaluate(sim, input, weights);
     const o = plan.outcome;
     const potionSteps = sim.steps.filter((step) => step.cardId.startsWith("POTION:")).map((step) => step.cardId);
@@ -3010,7 +3027,14 @@ export function solveTurn(input: SolverInput): SolveResult {
 
   visit(root);
   const plans = [...byOutcome.values()].map((plan) => drawFirst(plan, input, weights)).sort((a, b) => b.score - a.score);
-  const result = { plans, nodes, truncated };
+  const result: SolveResult = {
+    plans,
+    nodes,
+    truncated,
+    ...(drewUnknown ? { drewUnknown: true as const } : {}),
+    ...(root.known !== null ? { knownDepth } : {}),
+    ...(drew ? { drew: true as const } : {}),
+  };
   solveTap.onSolve?.(input, result);
   return result;
 }

@@ -14,6 +14,7 @@
  * them (cost). A time budget cuts the samples (never below MC_MIN_SAMPLES: one).
  */
 
+import { withAddedAtRandom } from "../sl/draws.js";
 import type { JsonValue } from "../util/json.js";
 import { CHOICE_POTIONS, DRAW_POTIONS, potionEffect, potionShell, type CardModel } from "./card-model.js";
 import { effectiveLoss, hpText, lastingHpPerPoint, solveTap, solveTurn, type Plan, type SolverInput } from "./turn-solver.js";
@@ -109,6 +110,11 @@ export interface PotionMcSource {
    * whole pile shuffled, as before.
    */
   knownTop?: number[];
+  /**
+   * SL_RETRY_KNOWN_INSERTS (docs/sl.md §10): cards added to the draw pile at random places, as indices into `piles.draw`:
+   * each sample puts them at random places among the known top and the rest. Only with `knownTop`; absent: none.
+   */
+  knownAdded?: number[];
   /** Fiddle / No Draw: nothing is drawn (Distilled Chaos still plays its top cards). */
   noDraw?: boolean;
   /**
@@ -180,10 +186,15 @@ export function seedOf(text: string): number {
  * The draw pile split into its known top (indices, top first: PotionMcSource.knownTop) and the rest, or null when the
  * indices do not name distinct cards of the pile (then the pile is shuffled as before).
  */
-function knownTopOf(draw: CardModel[], top: number[]): { known: CardModel[]; rest: CardModel[] } | null {
+function knownTopOf(draw: CardModel[], top: number[], addedAt?: number[]): { known: CardModel[]; rest: CardModel[]; added: CardModel[] } | null {
   if (!top.every((at, i) => Number.isInteger(at) && at >= 0 && at < draw.length && top.indexOf(at) === i)) return null;
   const known = new Set(top);
-  return { known: top.map((at) => draw[at]!), rest: draw.filter((_, i) => !known.has(i)) };
+  // SL_RETRY_KNOWN_INSERTS: the added cards apart (indices that do not name other distinct cards: shuffled with the rest).
+  if (addedAt && addedAt.length > 0 && addedAt.every((at, i) => Number.isInteger(at) && at >= 0 && at < draw.length && !known.has(at) && addedAt.indexOf(at) === i)) {
+    const out = new Set(addedAt);
+    return { known: top.map((at) => draw[at]!), rest: draw.filter((_, i) => !known.has(i) && !out.has(i)), added: addedAt.map((at) => draw[at]!) };
+  }
+  return { known: top.map((at) => draw[at]!), rest: draw.filter((_, i) => !known.has(i)), added: [] };
 }
 
 /**
@@ -210,12 +221,14 @@ export function samplePotion(source: PotionMcSource, hand: CardModel[], random: 
   const count = DRAW_POTIONS[source.potionId]?.cards ?? 0;
   const piles = source.piles ?? { draw: [], discard: [] };
   const handCards = hand.filter((card) => card.type !== "Potion");
-  const top = source.knownTop && source.knownTop.length > 0 && source.potionId !== "BOTTLED_POTENTIAL" ? knownTopOf(piles.draw, source.knownTop) : null;
+  const top = source.knownTop && source.knownTop.length > 0 && source.potionId !== "BOTTLED_POTENTIAL" ? knownTopOf(piles.draw, source.knownTop, source.knownAdded) : null;
   const order =
     source.potionId === "BOTTLED_POTENTIAL"
       ? shuffled([...handCards, ...piles.draw, ...piles.discard], random)
       : top
-        ? [...top.known, ...shuffled(top.rest, random), ...shuffled(piles.discard, random)]
+        ? top.added.length > 0
+          ? [...withAddedAtRandom([...top.known, ...shuffled(top.rest, random)], top.added, random), ...shuffled(piles.discard, random)]
+          : [...top.known, ...shuffled(top.rest, random), ...shuffled(piles.discard, random)]
         : [...shuffled(piles.draw, random), ...shuffled(piles.discard, random)];
   const drawn = source.noDraw && source.potionId !== "DISTILLED_CHAOS" ? [] : order.slice(0, count).map((card, i) => own(card, i, "d", 300 + source.slot * 20));
   const sample: CardModel = { ...shell, drawn };

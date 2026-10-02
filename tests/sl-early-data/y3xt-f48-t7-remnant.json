@@ -1,0 +1,3597 @@
+{
+ "source": "Y3XT9EBS7U8B F48 2026-09-28T19:39:33.092000Z combat/plan: Beating Remnant: 55 HP, 33 on the plain count, 18 lost (2 lost earlier in the turn)",
+ "decision": {
+  "label": "combat/plan",
+  "decider": "code",
+  "rationale": "code plan (only line): end turn; hp -20, dmg 0"
+ },
+ "state": {
+  "state_version": 16,
+  "native_profile_id": 1,
+  "run_id": "Y3XT9EBS7U8B",
+  "screen": "COMBAT",
+  "session": {
+   "mode": "singleplayer",
+   "phase": "run",
+   "control_scope": "local_player"
+  },
+  "in_combat": true,
+  "turn": 7,
+  "available_actions": [
+   "end_turn",
+   "save_and_quit",
+   "use_potion",
+   "discard_potion"
+  ],
+  "combat": {
+   "action_readiness": {
+    "can_use_combat_actions": true,
+    "reason": "ready",
+    "actions_settled": true,
+    "running_action_type": null,
+    "ready_action_type": null,
+    "modal_open": false,
+    "modal_type": null,
+    "player_actions_disabled": false,
+    "is_paused": false,
+    "local_ready_to_end_turn": false,
+    "all_players_ready_to_end_turn": true,
+    "ending_turn_phase_one": false,
+    "ending_turn_phase_two": false,
+    "end_turn_kick": "",
+    "combat_in_progress": true,
+    "combat_over_or_ending": false,
+    "combat_room_mode": "ActiveCombat",
+    "hand_in_card_play": false,
+    "hand_in_card_selection": false,
+    "hand_mode": "Play",
+    "local_turn_ready": true,
+    "snapshot_stable": true,
+    "player_action_phase": true
+   },
+   "player": {
+    "current_hp": 55,
+    "max_hp": 80,
+    "block": 0,
+    "energy": 0,
+    "stars": 0,
+    "focus": 0,
+    "powers": [
+     {
+      "index": 0,
+      "power_id": "STRENGTH_POWER",
+      "name": "力量",
+      "amount": 4,
+      "is_debuff": false
+     },
+     {
+      "index": 1,
+      "power_id": "JUGGLING_POWER",
+      "name": "杂耍",
+      "amount": 1,
+      "is_debuff": false
+     },
+     {
+      "index": 2,
+      "power_id": "RADIANCE_POWER",
+      "name": "明耀",
+      "amount": 3,
+      "is_debuff": false
+     }
+    ],
+    "base_orb_slots": 0,
+    "orb_capacity": 0,
+    "empty_orb_slots": 0,
+    "orbs": [],
+    "pets": [],
+    "pet_missing": false,
+    "cards_played_this_turn": 4,
+    "attacks_played_this_turn": 3,
+    "skills_played_this_turn": 1
+   },
+   "players": [
+    {
+     "player_id": "1",
+     "slot_index": 0,
+     "is_local": true,
+     "is_connected": true,
+     "character_id": "IRONCLAD",
+     "character_name": "铁甲战士",
+     "current_hp": 55,
+     "max_hp": 80,
+     "block": 0,
+     "energy": 0,
+     "stars": 0,
+     "focus": 0,
+     "is_alive": true
+    }
+   ],
+   "hand": [
+    {
+     "index": 0,
+     "card_id": "INFLAME",
+     "name": "燃烧+",
+     "upgraded": true,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "获得3点力量。",
+     "dynamic_values": [
+      {
+       "name": "StrengthPower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": false,
+     "can_play_result": false,
+     "unplayable_reason": "not_enough_energy",
+     "unplayable_reason_raw": "EnergyCostTooHigh",
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 1,
+     "card_id": "MAD_SCIENCE",
+     "name": "疯狂科学",
+     "upgraded": false,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+     "resolved_rules_text": "获得2点力量。 获得2点敏捷。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ChokingDamage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "CuriousReduction",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 12,
+       "current_value": 16,
+       "enchanted_value": 12,
+       "is_modified": true,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "EnergizedEnergy",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExpertiseDexterity",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExpertiseStrength",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "SappingVulnerable",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "SappingWeak",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ViolenceHits",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "WisdomCards",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": false,
+     "can_play_result": false,
+     "unplayable_reason": "not_enough_energy",
+     "unplayable_reason_raw": "EnergyCostTooHigh",
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 2,
+     "card_id": "TWIN_STRIKE",
+     "name": "双重打击",
+     "upgraded": false,
+     "target_type": "AnyEnemy",
+     "requires_target": true,
+     "target_index_space": "enemies",
+     "valid_target_indices": [
+      0
+     ],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害两次。",
+     "resolved_rules_text": "造成9点伤害两次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 5,
+       "current_value": 9,
+       "enchanted_value": 5,
+       "is_modified": true,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": false,
+     "can_play_result": false,
+     "unplayable_reason": "not_enough_energy",
+     "unplayable_reason_raw": "EnergyCostTooHigh",
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 3,
+     "card_id": "WITHER",
+     "name": "凋萎+2",
+     "upgraded": false,
+     "target_type": "None",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": -1,
+     "star_cost": 0,
+     "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
+     "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到9点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": true
+      }
+     ],
+     "playable": false,
+     "can_play_result": false,
+     "unplayable_reason": "unplayable",
+     "unplayable_reason_raw": "HasUnplayableKeyword",
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    }
+   ],
+   "enemies": [
+    {
+     "index": 0,
+     "enemy_id": "AEONGLASS",
+     "name": "永世沙漏",
+     "current_hp": 372,
+     "max_hp": 535,
+     "base_max_hp": 535,
+     "block": 0,
+     "is_alive": true,
+     "is_hittable": true,
+     "powers": [
+      {
+       "index": 0,
+       "power_id": "WITHERING_PRESENCE_POWER",
+       "name": "凋萎存在",
+       "amount": 6,
+       "is_debuff": false
+      },
+      {
+       "index": 1,
+       "power_id": "ARTIFACT_POWER",
+       "name": "人工制品",
+       "amount": 2,
+       "is_debuff": false
+      },
+      {
+       "index": 2,
+       "power_id": "STRENGTH_POWER",
+       "name": "力量",
+       "amount": 8,
+       "is_debuff": false
+      }
+     ],
+     "intent": "EBB_MOVE",
+     "move_id": "EBB_MOVE",
+     "intents": [
+      {
+       "index": 0,
+       "intent_type": "Attack",
+       "label": "30",
+       "damage": 30,
+       "hits": 1,
+       "total_damage": 30,
+       "status_card_count": null
+      },
+      {
+       "index": 1,
+       "intent_type": "Defend",
+       "label": null,
+       "damage": null,
+       "hits": null,
+       "total_damage": null,
+       "status_card_count": null
+      }
+     ]
+    }
+   ],
+   "end_turn_will_kill_player": false,
+   "lethal_risks": []
+  },
+  "run": {
+   "character_id": "IRONCLAD",
+   "character_name": "铁甲战士",
+   "ascension": 8,
+   "ascension_effects": [
+    {
+     "id": "LEVEL_01",
+     "name": "精英蜂拥",
+     "description": "[gold]精英[/gold]敌人出现更加频繁。"
+    },
+    {
+     "id": "LEVEL_02",
+     "name": "旅途劳顿",
+     "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
+    },
+    {
+     "id": "LEVEL_03",
+     "name": "贫穷",
+     "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
+    },
+    {
+     "id": "LEVEL_04",
+     "name": "收紧腰带",
+     "description": "游戏开始时药水栏位减少1。"
+    },
+    {
+     "id": "LEVEL_05",
+     "name": "进阶之灾",
+     "description": "游戏开始时被[red]诅咒[/red]。"
+    },
+    {
+     "id": "LEVEL_06",
+     "name": "通货膨胀",
+     "description": "商人的卡牌移除服务价格提升。"
+    },
+    {
+     "id": "LEVEL_07",
+     "name": "稀缺",
+     "description": "稀有和已升级卡牌更少出现。"
+    },
+    {
+     "id": "LEVEL_08",
+     "name": "强韧敌人",
+     "description": "所有的敌人变得更难杀死。"
+    }
+   ],
+   "floor": 48,
+   "current_hp": 55,
+   "max_hp": 80,
+   "gold": 167,
+   "max_energy": 3,
+   "base_orb_slots": 0,
+   "act_id": "2",
+   "boss_id": "AEONGLASS_BOSS",
+   "deck": [
+    {
+     "index": 0,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 1,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 2,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 3,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 4,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 5,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 6,
+     "card_id": "BASH",
+     "name": "痛击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 给予{VulnerablePower:diff()}层易伤。",
+     "resolved_rules_text": "造成10点伤害。 给予3层易伤。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "VulnerablePower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 7,
+     "card_id": "ASCENDERS_BANE",
+     "name": "进阶之灾",
+     "upgraded": false,
+     "card_type": "Curse",
+     "rarity": "Curse",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": -1,
+     "star_cost": 0,
+     "rules_text": "",
+     "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+     "dynamic_values": []
+    },
+    {
+     "index": 8,
+     "card_id": "INFLAME",
+     "name": "燃烧+",
+     "upgraded": true,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "获得3点力量。",
+     "dynamic_values": [
+      {
+       "name": "StrengthPower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 9,
+     "card_id": "BLOOD_WALL",
+     "name": "血墙",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "失去2点生命。 获得16点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 16,
+       "current_value": 16,
+       "enchanted_value": 16,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 10,
+     "card_id": "SHRUG_IT_OFF",
+     "name": "耸肩无视",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "获得8点格挡。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 11,
+     "card_id": "STONE_ARMOR",
+     "name": "岩石铠甲+",
+     "upgraded": true,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+     "resolved_rules_text": "获得6层覆甲。",
+     "dynamic_values": [
+      {
+       "name": "PlatingPower",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 12,
+     "card_id": "SETUP_STRIKE",
+     "name": "预备打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 在本回合内获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "造成7点伤害。 在本回合内获得3点力量。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 7,
+       "current_value": 7,
+       "enchanted_value": 7,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "StrengthPower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 13,
+     "card_id": "POMMEL_STRIKE",
+     "name": "剑柄打击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "造成10点伤害。 抽2张牌。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 14,
+     "card_id": "FORGOTTEN_RITUAL",
+     "name": "被遗忘的仪式",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Energy:energyIcons()}。",
+     "resolved_rules_text": "获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Energy",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 15,
+     "card_id": "BREAKTHROUGH",
+     "name": "突破",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 对所有敌人造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "失去1点生命。 对所有敌人造成9点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 16,
+     "card_id": "HEMOKINESIS",
+     "name": "御血术",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "失去2点生命。 造成15点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 15,
+       "current_value": 15,
+       "enchanted_value": 15,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 17,
+     "card_id": "HELLRAISER",
+     "name": "地狱狂徒",
+     "upgraded": false,
+     "card_type": "Power",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+     "resolved_rules_text": "每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+     "dynamic_values": []
+    },
+    {
+     "index": 18,
+     "card_id": "PERFECTED_STRIKE",
+     "name": "完美打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你每有一张名字中含有“打击”的牌，伤害+{ExtraDamage:diff()}。",
+     "resolved_rules_text": "造成6点伤害。 你每有一张名字中含有“打击”的牌，伤害+2。",
+     "dynamic_values": [
+      {
+       "name": "CalculatedDamage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "CalculationBase",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExtraDamage",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 19,
+     "card_id": "TWIN_STRIKE",
+     "name": "双重打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害两次。",
+     "resolved_rules_text": "造成5点伤害两次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 20,
+     "card_id": "POMMEL_STRIKE",
+     "name": "剑柄打击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "造成10点伤害。 抽2张牌。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 21,
+     "card_id": "HEMOKINESIS",
+     "name": "御血术",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "失去2点生命。 造成15点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 15,
+       "current_value": 15,
+       "enchanted_value": 15,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 22,
+     "card_id": "IMPERVIOUS",
+     "name": "岿然不动",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得30点格挡。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 30,
+       "current_value": 30,
+       "enchanted_value": 30,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 23,
+     "card_id": "SHRUG_IT_OFF",
+     "name": "耸肩无视",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "获得8点格挡。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 24,
+     "card_id": "PERFECTED_STRIKE",
+     "name": "完美打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你每有一张名字中含有“打击”的牌，伤害+{ExtraDamage:diff()}。",
+     "resolved_rules_text": "造成6点伤害。 你每有一张名字中含有“打击”的牌，伤害+2。",
+     "dynamic_values": [
+      {
+       "name": "CalculatedDamage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "CalculationBase",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExtraDamage",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 25,
+     "card_id": "HEADBUTT",
+     "name": "头槌",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+     "resolved_rules_text": "造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 26,
+     "card_id": "SETUP_STRIKE",
+     "name": "预备打击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 在本回合内获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "造成9点伤害。 在本回合内获得4点力量。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "StrengthPower",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 27,
+     "card_id": "UPPERCUT",
+     "name": "上勾拳+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 给予{Power:diff()}层虚弱。 给予{Power:diff()}层易伤。",
+     "resolved_rules_text": "造成13点伤害。 给予2层虚弱。 给予2层易伤。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 13,
+       "current_value": 13,
+       "enchanted_value": 13,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Power",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 28,
+     "card_id": "SHRUG_IT_OFF",
+     "name": "耸肩无视",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "获得8点格挡。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 29,
+     "card_id": "THRASH",
+     "name": "痛殴",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害两次。 消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。",
+     "resolved_rules_text": "造成4点伤害两次。 消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 30,
+     "card_id": "POMMEL_STRIKE",
+     "name": "剑柄打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "造成9点伤害。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 31,
+     "card_id": "BULLY",
+     "name": "欺凌",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{CalculatedDamage:diff()}点伤害。 该敌人身上每有一层易伤就额外造成{ExtraDamage:diff()}点伤害。",
+     "resolved_rules_text": "造成4点伤害。 该敌人身上每有一层易伤就额外造成2点伤害。",
+     "dynamic_values": [
+      {
+       "name": "CalculatedDamage",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "CalculationBase",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExtraDamage",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 32,
+     "card_id": "FIGHT_ME",
+     "name": "与我一战！",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害两次。 获得{StrengthPower:diff()}点力量。 该敌人获得{EnemyStrength:diff()}点力量。",
+     "resolved_rules_text": "造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "EnemyStrength",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Repeat",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "StrengthPower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 33,
+     "card_id": "TRUE_GRIT",
+     "name": "坚毅",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 {IfUpgraded:show:| 随机}消耗1张牌。",
+     "resolved_rules_text": "获得7点格挡。 随机消耗1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 7,
+       "current_value": 7,
+       "enchanted_value": 7,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 34,
+     "card_id": "FORGOTTEN_RITUAL",
+     "name": "被遗忘的仪式",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Energy:energyIcons()}。",
+     "resolved_rules_text": "获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Energy",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 35,
+     "card_id": "INFERNO",
+     "name": "狱火",
+     "upgraded": false,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成{InfernoPower:diff()}点伤害。",
+     "resolved_rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "InfernoPower",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 36,
+     "card_id": "THINKING_AHEAD",
+     "name": "深谋远虑",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "抽{Cards:diff()}张牌。 将手牌中的一张牌放到你的抽牌堆的顶端。",
+     "resolved_rules_text": "抽2张牌。 将手牌中的一张牌放到你的抽牌堆的顶端。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 37,
+     "card_id": "SECRET_WEAPON",
+     "name": "秘密武器",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "从抽牌堆中选择一张攻击牌放入你的手牌。",
+     "resolved_rules_text": "从抽牌堆中选择一张攻击牌放入你的手牌。 消耗。",
+     "dynamic_values": []
+    },
+    {
+     "index": 38,
+     "card_id": "FIEND_FIRE",
+     "name": "恶魔之焰+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "消耗所有手牌。 每张被消耗的牌造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "消耗所有手牌。 每张被消耗的牌造成10点伤害。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 39,
+     "card_id": "MAD_SCIENCE",
+     "name": "疯狂科学",
+     "upgraded": false,
+     "card_type": "Power",
+     "rarity": "Event",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+     "resolved_rules_text": "获得2点力量。 获得2点敏捷。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ChokingDamage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "CuriousReduction",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 12,
+       "current_value": 12,
+       "enchanted_value": 12,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "EnergizedEnergy",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExpertiseDexterity",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExpertiseStrength",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "SappingVulnerable",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "SappingWeak",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ViolenceHits",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "WisdomCards",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 40,
+     "card_id": "UPPERCUT",
+     "name": "上勾拳",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 给予{Power:diff()}层虚弱。 给予{Power:diff()}层易伤。",
+     "resolved_rules_text": "造成13点伤害。 给予1层虚弱。 给予1层易伤。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 13,
+       "current_value": 13,
+       "enchanted_value": 13,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Power",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 41,
+     "card_id": "BURNING_PACT",
+     "name": "燃烧契约",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "消耗1张牌。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "消耗1张牌。 抽2张牌。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 42,
+     "card_id": "SWORD_BOOMERANG",
+     "name": "飞剑回旋镖",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+     "resolved_rules_text": "随机对敌人造成3点伤害3次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Repeat",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 43,
+     "card_id": "PILLAGE",
+     "name": "劫掠",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 抽牌直到你抽到一张非攻击牌。",
+     "resolved_rules_text": "造成6点伤害。 抽牌直到你抽到一张非攻击牌。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 44,
+     "card_id": "TWIN_STRIKE",
+     "name": "双重打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害两次。",
+     "resolved_rules_text": "造成5点伤害两次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 45,
+     "card_id": "BLOOD_WALL",
+     "name": "血墙",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "失去2点生命。 获得16点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 16,
+       "current_value": 16,
+       "enchanted_value": 16,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 46,
+     "card_id": "HAVOC",
+     "name": "破灭",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "打出抽牌堆顶部的牌并将其消耗。",
+     "resolved_rules_text": "打出抽牌堆顶部的牌并将其消耗。",
+     "dynamic_values": []
+    },
+    {
+     "index": 47,
+     "card_id": "JUGGLING",
+     "name": "杂耍",
+     "upgraded": false,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "将你在每回合打出的第三张攻击牌的复制品加入你的手牌。",
+     "resolved_rules_text": "将你在每回合打出的第三张攻击牌的复制品加入你的手牌。",
+     "dynamic_values": []
+    },
+    {
+     "index": 48,
+     "card_id": "FLASH_OF_STEEL",
+     "name": "亮剑",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 抽1张牌。",
+     "resolved_rules_text": "造成5点伤害。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 49,
+     "card_id": "SECRET_WEAPON",
+     "name": "秘密武器",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "从抽牌堆中选择一张攻击牌放入你的手牌。",
+     "resolved_rules_text": "从抽牌堆中选择一张攻击牌放入你的手牌。 消耗。",
+     "dynamic_values": []
+    }
+   ],
+   "relics": [
+    {
+     "index": 0,
+     "relic_id": "BURNING_BLOOD",
+     "name": "燃烧之血",
+     "description": "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 1,
+     "relic_id": "GOLDEN_PEARL",
+     "name": "金色珍珠",
+     "description": "拾起时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 2,
+     "relic_id": "VAJRA",
+     "name": "金刚杵",
+     "description": "在每场战斗开始时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 3,
+     "relic_id": "MEAL_TICKET",
+     "name": "餐券",
+     "description": "每当你进入商店房间时，回复[green]{Heal}[/green]点生命。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 4,
+     "relic_id": "BELLOWS",
+     "name": "风箱",
+     "description": "你在每场战斗开始时的[gold]手牌[/gold]，将被[gold]升级[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 5,
+     "relic_id": "PAELS_BLOOD",
+     "name": "佩尔之血",
+     "description": "在你的回合开始时，额外抽[blue]{Cards}[/blue]张牌",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 6,
+     "relic_id": "RAZOR_TOOTH",
+     "name": "剃刀牙",
+     "description": "你打出攻击牌和技能牌时，将其在本场战斗内[gold]升级[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 7,
+     "relic_id": "LORDS_PARASOL",
+     "name": "领主阳伞",
+     "description": "当你遇见[gold]商人[/gold]时，立刻获得他所出售的[red]所有[/red]物品。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 8,
+     "relic_id": "BEATING_REMNANT",
+     "name": "律动残余",
+     "description": "你在一回合内失去的生命值不会超过[blue]20[/blue]点。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 9,
+     "relic_id": "REGAL_PILLOW",
+     "name": "皇家枕头",
+     "description": "在[gold]休息[/gold]时，额外回复[blue]{Heal}[/blue]点生命。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 10,
+     "relic_id": "MYSTIC_LIGHTER",
+     "name": "神秘打火机",
+     "description": "有[gold]附魔[/gold]的攻击牌额外造成[blue]{Damage}[/blue]点伤害。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 11,
+     "relic_id": "ORICHALCUM",
+     "name": "奥利哈钢",
+     "description": "如果你在回合结束时没有任何[gold]格挡[/gold]，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 12,
+     "relic_id": "PAPER_PHROG",
+     "name": "纸蛙",
+     "description": "有[gold]易伤[/gold]状态的敌人受到的伤害增加[blue]75%[/blue]而非[blue]50%[/blue]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 13,
+     "relic_id": "BLOOD_VIAL",
+     "name": "小血瓶",
+     "description": "在每场战斗开始时，回复[green]{Heal}[/green]点生命。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 14,
+     "relic_id": "BURNING_STICKS",
+     "name": "燃烧木棍",
+     "description": "每场战斗中你第一次[gold]消耗[/gold]技能牌时，将那张牌的复制品加入你的[gold]手牌[/gold]",
+     "stack": null,
+     "is_melted": false
+    }
+   ],
+   "players": [
+    {
+     "player_id": "1",
+     "slot_index": 0,
+     "is_local": true,
+     "is_connected": true,
+     "character_id": "IRONCLAD",
+     "character_name": "铁甲战士",
+     "current_hp": 55,
+     "max_hp": 80,
+     "gold": 167,
+     "is_alive": true
+    }
+   ],
+   "potions": [
+    {
+     "index": 0,
+     "potion_id": null,
+     "name": null,
+     "description": null,
+     "rarity": null,
+     "occupied": false,
+     "usage": null,
+     "target_type": null,
+     "is_queued": false,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "can_use": false,
+     "can_discard": false
+    },
+    {
+     "index": 1,
+     "potion_id": "WEAK_POTION",
+     "name": "虚弱药水",
+     "description": "给予[blue]{WeakPower}[/blue]层[gold]虚弱[/gold]。",
+     "rarity": "Common",
+     "occupied": true,
+     "usage": "CombatOnly",
+     "target_type": "AnyEnemy",
+     "is_queued": false,
+     "requires_target": true,
+     "target_index_space": "enemies",
+     "valid_target_indices": [
+      0
+     ],
+     "can_use": true,
+     "can_discard": true
+    }
+   ]
+  },
+  "multiplayer": null,
+  "multiplayer_lobby": null,
+  "map": null,
+  "selection": null,
+  "character_select": null,
+  "timeline": null,
+  "unlock": null,
+  "chest": null,
+  "event": null,
+  "crystal_sphere": null,
+  "shop": null,
+  "rest": null,
+  "reward": null,
+  "bundles": null,
+  "capstone": null,
+  "modal": null,
+  "game_over": null,
+  "agent_view": {
+   "version": 11,
+   "screen": "COMBAT",
+   "native_profile_id": 1,
+   "run_id": "Y3XT9EBS7U8B",
+   "session": {
+    "mode": "singleplayer",
+    "phase": "run",
+    "control_scope": "local_player"
+   },
+   "turn": 7,
+   "available_actions": [
+    "end_turn",
+    "save_and_quit",
+    "use_potion",
+    "discard_potion"
+   ],
+   "combat": {
+    "action_readiness": {
+     "can_use_combat_actions": true,
+     "reason": "ready",
+     "actions_settled": true,
+     "running_action_type": null,
+     "ready_action_type": null,
+     "modal_open": false,
+     "modal_type": null,
+     "player_actions_disabled": false,
+     "is_paused": false,
+     "local_ready_to_end_turn": false,
+     "all_players_ready_to_end_turn": true,
+     "ending_turn_phase_one": false,
+     "ending_turn_phase_two": false,
+     "end_turn_kick": "",
+     "combat_in_progress": true,
+     "combat_over_or_ending": false,
+     "combat_room_mode": "ActiveCombat",
+     "hand_in_card_play": false,
+     "hand_in_card_selection": false,
+     "hand_mode": "Play",
+     "local_turn_ready": true,
+     "snapshot_stable": true,
+     "player_action_phase": true
+    },
+    "player": {
+     "hp": "55/80",
+     "block": 0,
+     "energy": 0,
+     "stars": 0,
+     "focus": 0,
+     "orbs": [],
+     "pets": [],
+     "pet_missing": false,
+     "cards_played_this_turn": 4,
+     "attacks_played_this_turn": 3,
+     "skills_played_this_turn": 1,
+     "powers": [
+      "STRENGTH_POWER 4",
+      "JUGGLING_POWER 1",
+      "RADIANCE_POWER 3"
+     ]
+    },
+    "players": [
+     {
+      "player_id": "1",
+      "slot_index": 0,
+      "is_local": true,
+      "is_connected": true,
+      "character_id": "IRONCLAD",
+      "character_name": "铁甲战士",
+      "current_hp": 55,
+      "max_hp": 80,
+      "block": 0,
+      "energy": 0,
+      "stars": 0,
+      "focus": 0,
+      "is_alive": true
+     }
+    ],
+    "end_turn_will_kill_player": false,
+    "lethal_risks": [],
+    "hand": [
+     {
+      "i": 0,
+      "card_id": "INFLAME",
+      "line": "燃烧+ [1费]：获得3点力量。",
+      "upgraded": true,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": false,
+      "can_play_result": false,
+      "target": null,
+      "targets": [],
+      "why": "not_enough_energy",
+      "unplayable_reason": "not_enough_energy",
+      "unplayable_reason_raw": "EnergyCostTooHigh",
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "i": 1,
+      "card_id": "MAD_SCIENCE",
+      "line": "疯狂科学 [1费]：获得2点力量。 获得2点敏捷。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": false,
+      "can_play_result": false,
+      "target": null,
+      "targets": [],
+      "why": "not_enough_energy",
+      "unplayable_reason": "not_enough_energy",
+      "unplayable_reason_raw": "EnergyCostTooHigh",
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "力量",
+       "敏捷"
+      ],
+      "mods": []
+     },
+     {
+      "i": 2,
+      "card_id": "TWIN_STRIKE",
+      "line": "双重打击 [1费]：造成9点伤害两次。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": false,
+      "can_play_result": false,
+      "target": "enemies",
+      "targets": [
+       0
+      ],
+      "why": "not_enough_energy",
+      "unplayable_reason": "not_enough_energy",
+      "unplayable_reason_raw": "EnergyCostTooHigh",
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "i": 3,
+      "card_id": "WITHER",
+      "line": "凋萎+2 [0费]：不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到9点伤害。",
+      "upgraded": false,
+      "energy_cost": -1,
+      "star_cost": 0,
+      "playable": false,
+      "can_play_result": false,
+      "target": null,
+      "targets": [],
+      "why": "unplayable",
+      "unplayable_reason": "unplayable",
+      "unplayable_reason_raw": "HasUnplayableKeyword",
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [],
+      "mods": [
+       "Unplayable"
+      ]
+     }
+    ],
+    "draw": [],
+    "discard": [
+     {
+      "line": "上勾拳+*2 [2费]：造成13点伤害。 给予2层虚弱。 给予2层易伤。",
+      "card_ids": [
+       "UPPERCUT"
+      ],
+      "keywords": [
+       "易伤",
+       "虚弱"
+      ],
+      "mods": []
+     },
+     {
+      "line": "与我一战！+ [2费]：造成6点伤害两次。 获得4点力量。 该敌人获得1点力量。",
+      "card_ids": [
+       "FIGHT_ME"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "亮剑+ [0费]：造成8点伤害。 抽1张牌。",
+      "card_ids": [
+       "FLASH_OF_STEEL"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "凋萎+2*5 [0费]：不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到9点伤害。",
+      "card_ids": [
+       "WITHER"
+      ],
+      "keywords": [],
+      "mods": [
+       "Unplayable"
+      ]
+     },
+     {
+      "line": "剑柄打击+*3 [1费]：造成10点伤害。 抽2张牌。",
+      "card_ids": [
+       "POMMEL_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "劫掠+ [1费]：造成9点伤害。 抽牌直到你抽到一张非攻击牌。",
+      "card_ids": [
+       "PILLAGE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "双重打击+*2 [1费]：造成7点伤害两次。",
+      "card_ids": [
+       "TWIN_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "地狱狂徒 [2费]：每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+      "card_ids": [
+       "HELLRAISER"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "坚毅 [1费]：获得7点格挡。 随机消耗1张牌。",
+      "card_ids": [
+       "TRUE_GRIT"
+      ],
+      "keywords": [
+       "格挡",
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "头槌 [1费]：造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+      "card_ids": [
+       "HEADBUTT"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "完美打击 [2费]：造成30点伤害。 你每有一张名字中含有“打击”的牌，伤害+2。",
+      "card_ids": [
+       "PERFECTED_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "完美打击+ [2费]：造成42点伤害。 你每有一张名字中含有“打击”的牌，伤害+3。",
+      "card_ids": [
+       "PERFECTED_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "御血术 [1费]：失去2点生命。 造成15点伤害。",
+      "card_ids": [
+       "HEMOKINESIS"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "御血术+ [1费]：失去2点生命。 造成20点伤害。",
+      "card_ids": [
+       "HEMOKINESIS"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "恶魔之焰+ [2费]：消耗所有手牌。 每张被消耗的牌造成10点伤害。 消耗。",
+      "card_ids": [
+       "FIEND_FIRE"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "打击 [1费]：造成6点伤害。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "打击+ [1费]：造成9点伤害。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "欺凌+ [0费]：造成4点伤害。 该敌人身上每有一层易伤就额外造成3点伤害。",
+      "card_ids": [
+       "BULLY"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "深谋远虑 [0费]：抽2张牌。 将手牌中的一张牌放到你的抽牌堆的顶端。 消耗。",
+      "card_ids": [
+       "THINKING_AHEAD"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "燃烧契约 [1费]：消耗1张牌。 抽2张牌。",
+      "card_ids": [
+       "BURNING_PACT"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "狱火+ [1费]：在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+      "card_ids": [
+       "INFERNO"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "痛击+ [2费]：造成10点伤害。 给予3层易伤。",
+      "card_ids": [
+       "BASH"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "痛殴+ [1费]：造成6点伤害两次。 消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。",
+      "card_ids": [
+       "THRASH"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "破灭 [1费]：打出抽牌堆顶部的牌并将其消耗。",
+      "card_ids": [
+       "HAVOC"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "秘密武器+ [0费]：从抽牌堆中选择一张攻击牌放入你的手牌。",
+      "card_ids": [
+       "SECRET_WEAPON"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "突破 [1费]：失去1点生命。 对所有敌人造成9点伤害。",
+      "card_ids": [
+       "BREAKTHROUGH"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "耸肩无视 [1费]：获得8点格挡。 抽1张牌。",
+      "card_ids": [
+       "SHRUG_IT_OFF"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "耸肩无视+*2 [1费]：获得11点格挡。 抽1张牌。",
+      "card_ids": [
+       "SHRUG_IT_OFF"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "血墙 [2费]：失去2点生命。 获得16点格挡。",
+      "card_ids": [
+       "BLOOD_WALL"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "血墙+ [2费]：失去2点生命。 获得20点格挡。",
+      "card_ids": [
+       "BLOOD_WALL"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "被遗忘的仪式 [1费]：获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 消耗。",
+      "card_ids": [
+       "FORGOTTEN_RITUAL"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "防御*3 [1费]：获得5点格挡。",
+      "card_ids": [
+       "DEFEND_IRONCLAD"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "防御+ [1费]：获得8点格挡。",
+      "card_ids": [
+       "DEFEND_IRONCLAD"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "预备打击 [1费]：造成7点伤害。 在本回合内获得3点力量。",
+      "card_ids": [
+       "SETUP_STRIKE"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "预备打击+ [1费]：造成9点伤害。 在本回合内获得4点力量。",
+      "card_ids": [
+       "SETUP_STRIKE"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "飞剑回旋镖+ [1费]：随机对敌人造成3点伤害4次。",
+      "card_ids": [
+       "SWORD_BOOMERANG"
+      ],
+      "keywords": [],
+      "mods": []
+     }
+    ],
+    "exhaust": [
+     {
+      "line": "岿然不动+ [2费]：获得40点格挡。 消耗。",
+      "card_ids": [
+       "IMPERVIOUS"
+      ],
+      "keywords": [
+       "格挡",
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "秘密武器+ [0费]：从抽牌堆中选择一张攻击牌放入你的手牌。",
+      "card_ids": [
+       "SECRET_WEAPON"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "被遗忘的仪式+*2 [1费]：获得4res://images/packed/sprite_fonts/ironclad_energy_icon.png。 消耗。",
+      "card_ids": [
+       "FORGOTTEN_RITUAL"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
+      "card_ids": [
+       "ASCENDERS_BANE"
+      ],
+      "keywords": [],
+      "mods": [
+       "Eternal",
+       "Ethereal",
+       "Unplayable"
+      ]
+     }
+    ],
+    "enemies": [
+     {
+      "i": 0,
+      "enemy_id": "AEONGLASS",
+      "name": "永世沙漏",
+      "hp": "372/535",
+      "base_max_hp": 535,
+      "block": 0,
+      "intent": "EBB_MOVE",
+      "move_id": "EBB_MOVE",
+      "powers": [
+       "WITHERING_PRESENCE_POWER 6",
+       "ARTIFACT_POWER 2",
+       "STRENGTH_POWER 8"
+      ],
+      "intents": [
+       {
+        "i": 0,
+        "intent_type": "Attack",
+        "label": "30",
+        "damage": 30,
+        "hits": 1,
+        "total_damage": 30,
+        "status_card_count": null
+       },
+       {
+        "i": 1,
+        "intent_type": "Defend",
+        "label": null,
+        "damage": null,
+        "hits": null,
+        "total_damage": null,
+        "status_card_count": null
+       }
+      ],
+      "alive": true,
+      "hittable": true
+     }
+    ]
+   },
+   "run": {
+    "character": "铁甲战士",
+    "ascension": 8,
+    "ascension_effects": [
+     {
+      "id": "LEVEL_01",
+      "name": "精英蜂拥",
+      "description": "[gold]精英[/gold]敌人出现更加频繁。"
+     },
+     {
+      "id": "LEVEL_02",
+      "name": "旅途劳顿",
+      "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
+     },
+     {
+      "id": "LEVEL_03",
+      "name": "贫穷",
+      "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
+     },
+     {
+      "id": "LEVEL_04",
+      "name": "收紧腰带",
+      "description": "游戏开始时药水栏位减少1。"
+     },
+     {
+      "id": "LEVEL_05",
+      "name": "进阶之灾",
+      "description": "游戏开始时被[red]诅咒[/red]。"
+     },
+     {
+      "id": "LEVEL_06",
+      "name": "通货膨胀",
+      "description": "商人的卡牌移除服务价格提升。"
+     },
+     {
+      "id": "LEVEL_07",
+      "name": "稀缺",
+      "description": "稀有和已升级卡牌更少出现。"
+     },
+     {
+      "id": "LEVEL_08",
+      "name": "强韧敌人",
+      "description": "所有的敌人变得更难杀死。"
+     }
+    ],
+    "floor": 48,
+    "act_id": "2",
+    "boss_id": "AEONGLASS_BOSS",
+    "hp": "55/80",
+    "gold": 167,
+    "max_energy": 3,
+    "base_orb_slots": 0,
+    "deck": [
+     {
+      "line": "上勾拳 [2费]：造成13点伤害。 给予1层虚弱。 给予1层易伤。",
+      "card_ids": [
+       "UPPERCUT"
+      ],
+      "keywords": [
+       "易伤",
+       "虚弱"
+      ],
+      "mods": []
+     },
+     {
+      "line": "上勾拳+ [2费]：造成13点伤害。 给予2层虚弱。 给予2层易伤。",
+      "card_ids": [
+       "UPPERCUT"
+      ],
+      "keywords": [
+       "易伤",
+       "虚弱"
+      ],
+      "mods": []
+     },
+     {
+      "line": "与我一战！ [2费]：造成5点伤害两次。 获得3点力量。 该敌人获得1点力量。",
+      "card_ids": [
+       "FIGHT_ME"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "亮剑 [0费]：造成5点伤害。 抽1张牌。",
+      "card_ids": [
+       "FLASH_OF_STEEL"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "剑柄打击 [1费]：造成9点伤害。 抽1张牌。",
+      "card_ids": [
+       "POMMEL_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "剑柄打击+*2 [1费]：造成10点伤害。 抽2张牌。",
+      "card_ids": [
+       "POMMEL_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "劫掠 [1费]：造成6点伤害。 抽牌直到你抽到一张非攻击牌。",
+      "card_ids": [
+       "PILLAGE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "双重打击*2 [1费]：造成5点伤害两次。",
+      "card_ids": [
+       "TWIN_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "地狱狂徒 [2费]：每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+      "card_ids": [
+       "HELLRAISER"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "坚毅 [1费]：获得7点格挡。 随机消耗1张牌。",
+      "card_ids": [
+       "TRUE_GRIT"
+      ],
+      "keywords": [
+       "格挡",
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "头槌 [1费]：造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+      "card_ids": [
+       "HEADBUTT"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "完美打击*2 [2费]：造成6点伤害。 你每有一张名字中含有“打击”的牌，伤害+2。",
+      "card_ids": [
+       "PERFECTED_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "岩石铠甲+ [1费]：获得6层覆甲。",
+      "card_ids": [
+       "STONE_ARMOR"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "岿然不动 [2费]：获得30点格挡。 消耗。",
+      "card_ids": [
+       "IMPERVIOUS"
+      ],
+      "keywords": [
+       "格挡",
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "御血术*2 [1费]：失去2点生命。 造成15点伤害。",
+      "card_ids": [
+       "HEMOKINESIS"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "恶魔之焰+ [2费]：消耗所有手牌。 每张被消耗的牌造成10点伤害。 消耗。",
+      "card_ids": [
+       "FIEND_FIRE"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "打击*2 [1费]：造成6点伤害。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "杂耍 [1费]：将你在每回合打出的第三张攻击牌的复制品加入你的手牌。",
+      "card_ids": [
+       "JUGGLING"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "欺凌 [0费]：造成4点伤害。 该敌人身上每有一层易伤就额外造成2点伤害。",
+      "card_ids": [
+       "BULLY"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "深谋远虑 [0费]：抽2张牌。 将手牌中的一张牌放到你的抽牌堆的顶端。 消耗。",
+      "card_ids": [
+       "THINKING_AHEAD"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "燃烧+ [1费]：获得3点力量。",
+      "card_ids": [
+       "INFLAME"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "燃烧契约 [1费]：消耗1张牌。 抽2张牌。",
+      "card_ids": [
+       "BURNING_PACT"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "狱火 [1费]：在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成6点伤害。",
+      "card_ids": [
+       "INFERNO"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "疯狂科学 [1费]：获得2点力量。 获得2点敏捷。",
+      "card_ids": [
+       "MAD_SCIENCE"
+      ],
+      "keywords": [
+       "力量",
+       "敏捷"
+      ],
+      "mods": []
+     },
+     {
+      "line": "痛击+ [2费]：造成10点伤害。 给予3层易伤。",
+      "card_ids": [
+       "BASH"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "痛殴 [1费]：造成4点伤害两次。 消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。",
+      "card_ids": [
+       "THRASH"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "破灭 [1费]：打出抽牌堆顶部的牌并将其消耗。",
+      "card_ids": [
+       "HAVOC"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "秘密武器*2 [0费]：从抽牌堆中选择一张攻击牌放入你的手牌。 消耗。",
+      "card_ids": [
+       "SECRET_WEAPON"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "突破 [1费]：失去1点生命。 对所有敌人造成9点伤害。",
+      "card_ids": [
+       "BREAKTHROUGH"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "耸肩无视*3 [1费]：获得8点格挡。 抽1张牌。",
+      "card_ids": [
+       "SHRUG_IT_OFF"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "血墙*2 [2费]：失去2点生命。 获得16点格挡。",
+      "card_ids": [
+       "BLOOD_WALL"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "被遗忘的仪式*2 [1费]：获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 消耗。",
+      "card_ids": [
+       "FORGOTTEN_RITUAL"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
+      "card_ids": [
+       "ASCENDERS_BANE"
+      ],
+      "keywords": [],
+      "mods": [
+       "Eternal",
+       "Ethereal",
+       "Unplayable"
+      ]
+     },
+     {
+      "line": "防御*4 [1费]：获得5点格挡。",
+      "card_ids": [
+       "DEFEND_IRONCLAD"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "预备打击 [1费]：造成7点伤害。 在本回合内获得3点力量。",
+      "card_ids": [
+       "SETUP_STRIKE"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "预备打击+ [1费]：造成9点伤害。 在本回合内获得4点力量。",
+      "card_ids": [
+       "SETUP_STRIKE"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "飞剑回旋镖 [1费]：随机对敌人造成3点伤害3次。",
+      "card_ids": [
+       "SWORD_BOOMERANG"
+      ],
+      "keywords": [],
+      "mods": []
+     }
+    ],
+    "relics": [
+     "燃烧之血",
+     "金色珍珠",
+     "金刚杵",
+     "餐券",
+     "风箱",
+     "佩尔之血",
+     "剃刀牙",
+     "领主阳伞",
+     "律动残余",
+     "皇家枕头",
+     "神秘打火机",
+     "奥利哈钢",
+     "纸蛙",
+     "小血瓶",
+     "燃烧木棍"
+    ],
+    "relic_ids": [
+     "BURNING_BLOOD",
+     "GOLDEN_PEARL",
+     "VAJRA",
+     "MEAL_TICKET",
+     "BELLOWS",
+     "PAELS_BLOOD",
+     "RAZOR_TOOTH",
+     "LORDS_PARASOL",
+     "BEATING_REMNANT",
+     "REGAL_PILLOW",
+     "MYSTIC_LIGHTER",
+     "ORICHALCUM",
+     "PAPER_PHROG",
+     "BLOOD_VIAL",
+     "BURNING_STICKS"
+    ],
+    "relic_stacks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "relic_descriptions": [
+     "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+     "拾起时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+     "在每场战斗开始时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+     "每当你进入商店房间时，回复[green]{Heal}[/green]点生命。",
+     "你在每场战斗开始时的[gold]手牌[/gold]，将被[gold]升级[/gold]。",
+     "在你的回合开始时，额外抽[blue]{Cards}[/blue]张牌",
+     "你打出攻击牌和技能牌时，将其在本场战斗内[gold]升级[/gold]。",
+     "当你遇见[gold]商人[/gold]时，立刻获得他所出售的[red]所有[/red]物品。",
+     "你在一回合内失去的生命值不会超过[blue]20[/blue]点。",
+     "在[gold]休息[/gold]时，额外回复[blue]{Heal}[/blue]点生命。",
+     "有[gold]附魔[/gold]的攻击牌额外造成[blue]{Damage}[/blue]点伤害。",
+     "如果你在回合结束时没有任何[gold]格挡[/gold]，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+     "有[gold]易伤[/gold]状态的敌人受到的伤害增加[blue]75%[/blue]而非[blue]50%[/blue]。",
+     "在每场战斗开始时，回复[green]{Heal}[/green]点生命。",
+     "每场战斗中你第一次[gold]消耗[/gold]技能牌时，将那张牌的复制品加入你的[gold]手牌[/gold]"
+    ],
+    "players": [
+     {
+      "player_id": "1",
+      "slot_index": 0,
+      "is_local": true,
+      "is_connected": true,
+      "character_id": "IRONCLAD",
+      "character_name": "铁甲战士",
+      "current_hp": 55,
+      "max_hp": 80,
+      "gold": 167,
+      "is_alive": true
+     }
+    ],
+    "potions": [
+     {
+      "i": 0,
+      "potion_id": null,
+      "line": "0: 空",
+      "description": null,
+      "usable": false,
+      "discard": false,
+      "target": null,
+      "targets": []
+     },
+     {
+      "i": 1,
+      "potion_id": "WEAK_POTION",
+      "line": "1: 虚弱药水：CombatOnly",
+      "description": "给予[blue]{WeakPower}[/blue]层[gold]虚弱[/gold]。",
+      "usable": true,
+      "discard": true,
+      "target": "enemy",
+      "targets": [
+       0
+      ]
+     }
+    ],
+    "piles": {
+     "draw": [],
+     "discard": [
+      {
+       "line": "上勾拳+*2 [2费]：造成13点伤害。 给予2层虚弱。 给予2层易伤。",
+       "card_ids": [
+        "UPPERCUT"
+       ],
+       "keywords": [
+        "易伤",
+        "虚弱"
+       ],
+       "mods": []
+      },
+      {
+       "line": "与我一战！+ [2费]：造成6点伤害两次。 获得4点力量。 该敌人获得1点力量。",
+       "card_ids": [
+        "FIGHT_ME"
+       ],
+       "keywords": [
+        "力量"
+       ],
+       "mods": []
+      },
+      {
+       "line": "亮剑+ [0费]：造成8点伤害。 抽1张牌。",
+       "card_ids": [
+        "FLASH_OF_STEEL"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "凋萎+2*5 [0费]：不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到9点伤害。",
+       "card_ids": [
+        "WITHER"
+       ],
+       "keywords": [],
+       "mods": [
+        "Unplayable"
+       ]
+      },
+      {
+       "line": "剑柄打击+*3 [1费]：造成10点伤害。 抽2张牌。",
+       "card_ids": [
+        "POMMEL_STRIKE"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "劫掠+ [1费]：造成9点伤害。 抽牌直到你抽到一张非攻击牌。",
+       "card_ids": [
+        "PILLAGE"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "双重打击+*2 [1费]：造成7点伤害两次。",
+       "card_ids": [
+        "TWIN_STRIKE"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "地狱狂徒 [2费]：每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+       "card_ids": [
+        "HELLRAISER"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "坚毅 [1费]：获得7点格挡。 随机消耗1张牌。",
+       "card_ids": [
+        "TRUE_GRIT"
+       ],
+       "keywords": [
+        "格挡",
+        "消耗"
+       ],
+       "mods": []
+      },
+      {
+       "line": "头槌 [1费]：造成9点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+       "card_ids": [
+        "HEADBUTT"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "完美打击 [2费]：造成30点伤害。 你每有一张名字中含有“打击”的牌，伤害+2。",
+       "card_ids": [
+        "PERFECTED_STRIKE"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "完美打击+ [2费]：造成42点伤害。 你每有一张名字中含有“打击”的牌，伤害+3。",
+       "card_ids": [
+        "PERFECTED_STRIKE"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "御血术 [1费]：失去2点生命。 造成15点伤害。",
+       "card_ids": [
+        "HEMOKINESIS"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "御血术+ [1费]：失去2点生命。 造成20点伤害。",
+       "card_ids": [
+        "HEMOKINESIS"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "恶魔之焰+ [2费]：消耗所有手牌。 每张被消耗的牌造成10点伤害。 消耗。",
+       "card_ids": [
+        "FIEND_FIRE"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      },
+      {
+       "line": "打击 [1费]：造成6点伤害。",
+       "card_ids": [
+        "STRIKE_IRONCLAD"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "打击+ [1费]：造成9点伤害。",
+       "card_ids": [
+        "STRIKE_IRONCLAD"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "欺凌+ [0费]：造成4点伤害。 该敌人身上每有一层易伤就额外造成3点伤害。",
+       "card_ids": [
+        "BULLY"
+       ],
+       "keywords": [
+        "易伤"
+       ],
+       "mods": []
+      },
+      {
+       "line": "深谋远虑 [0费]：抽2张牌。 将手牌中的一张牌放到你的抽牌堆的顶端。 消耗。",
+       "card_ids": [
+        "THINKING_AHEAD"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      },
+      {
+       "line": "燃烧契约 [1费]：消耗1张牌。 抽2张牌。",
+       "card_ids": [
+        "BURNING_PACT"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": []
+      },
+      {
+       "line": "狱火+ [1费]：在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+       "card_ids": [
+        "INFERNO"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "痛击+ [2费]：造成10点伤害。 给予3层易伤。",
+       "card_ids": [
+        "BASH"
+       ],
+       "keywords": [
+        "易伤"
+       ],
+       "mods": []
+      },
+      {
+       "line": "痛殴+ [1费]：造成6点伤害两次。 消耗你的手牌中随机一张攻击牌，并将它的伤害添加给这张牌。",
+       "card_ids": [
+        "THRASH"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": []
+      },
+      {
+       "line": "破灭 [1费]：打出抽牌堆顶部的牌并将其消耗。",
+       "card_ids": [
+        "HAVOC"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": []
+      },
+      {
+       "line": "秘密武器+ [0费]：从抽牌堆中选择一张攻击牌放入你的手牌。",
+       "card_ids": [
+        "SECRET_WEAPON"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "突破 [1费]：失去1点生命。 对所有敌人造成9点伤害。",
+       "card_ids": [
+        "BREAKTHROUGH"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "耸肩无视 [1费]：获得8点格挡。 抽1张牌。",
+       "card_ids": [
+        "SHRUG_IT_OFF"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "耸肩无视+*2 [1费]：获得11点格挡。 抽1张牌。",
+       "card_ids": [
+        "SHRUG_IT_OFF"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "血墙 [2费]：失去2点生命。 获得16点格挡。",
+       "card_ids": [
+        "BLOOD_WALL"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "血墙+ [2费]：失去2点生命。 获得20点格挡。",
+       "card_ids": [
+        "BLOOD_WALL"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "被遗忘的仪式 [1费]：获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 消耗。",
+       "card_ids": [
+        "FORGOTTEN_RITUAL"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      },
+      {
+       "line": "防御*3 [1费]：获得5点格挡。",
+       "card_ids": [
+        "DEFEND_IRONCLAD"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "防御+ [1费]：获得8点格挡。",
+       "card_ids": [
+        "DEFEND_IRONCLAD"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "预备打击 [1费]：造成7点伤害。 在本回合内获得3点力量。",
+       "card_ids": [
+        "SETUP_STRIKE"
+       ],
+       "keywords": [
+        "力量"
+       ],
+       "mods": []
+      },
+      {
+       "line": "预备打击+ [1费]：造成9点伤害。 在本回合内获得4点力量。",
+       "card_ids": [
+        "SETUP_STRIKE"
+       ],
+       "keywords": [
+        "力量"
+       ],
+       "mods": []
+      },
+      {
+       "line": "飞剑回旋镖+ [1费]：随机对敌人造成3点伤害4次。",
+       "card_ids": [
+        "SWORD_BOOMERANG"
+       ],
+       "keywords": [],
+       "mods": []
+      }
+     ],
+     "exhaust": [
+      {
+       "line": "岿然不动+ [2费]：获得40点格挡。 消耗。",
+       "card_ids": [
+        "IMPERVIOUS"
+       ],
+       "keywords": [
+        "格挡",
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      },
+      {
+       "line": "秘密武器+ [0费]：从抽牌堆中选择一张攻击牌放入你的手牌。",
+       "card_ids": [
+        "SECRET_WEAPON"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "被遗忘的仪式+*2 [1费]：获得4res://images/packed/sprite_fonts/ironclad_energy_icon.png。 消耗。",
+       "card_ids": [
+        "FORGOTTEN_RITUAL"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      },
+      {
+       "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
+       "card_ids": [
+        "ASCENDERS_BANE"
+       ],
+       "keywords": [],
+       "mods": [
+        "Eternal",
+        "Ethereal",
+        "Unplayable"
+       ]
+      }
+     ]
+    }
+   },
+   "multiplayer": null,
+   "multiplayer_lobby": null,
+   "map": null,
+   "selection": null,
+   "character_select": null,
+   "timeline": null,
+   "chest": null,
+   "event": null,
+   "crystal_sphere": null,
+   "shop": null,
+   "rest": null,
+   "reward": null,
+   "bundles": null,
+   "capstone": null,
+   "unlock": null,
+   "modal": null,
+   "game_over": null,
+   "glossary": {
+    "力量": "每层力量通常使攻击额外造成 1 点伤害。",
+    "敏捷": "每层敏捷通常使获得的格挡额外增加 1。",
+    "易伤": "易伤单位会承受更多攻击伤害。",
+    "虚弱": "虚弱单位造成的攻击伤害会降低。",
+    "格挡": "格挡会优先抵消即将受到的伤害。",
+    "消耗": "消耗牌打出后会移出本场战斗。"
+   }
+  }
+ },
+ "knownDraws": null
+}

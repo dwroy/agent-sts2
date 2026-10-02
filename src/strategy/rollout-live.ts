@@ -474,6 +474,8 @@ export interface LiveRolloutArgs {
    * from an earlier attempt at this fight (RolloutInput.piles.drawTop). Absent: the pile shuffled, as before.
    */
   drawTop?: number[];
+  /** SL_RETRY_KNOWN_INSERTS: cards added to the draw pile at random places, as indices into `piles.draw` (RolloutInput.piles.drawAdded). */
+  drawAdded?: number[];
   /**
    * SL_RETRY_COMPUTE (docs/sl.md §10): the samples and the time budget of a retried fight's rollout (default
    * ROLLOUT_SAMPLES and rolloutLiveOptions.budgetMs).
@@ -811,7 +813,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       // THIEF_COST: each thief's loot HP (thief.loot, set only with the switch on) is a cost in the value.
       ...(args.thieves ? { escapes: { ...escapeInput(args.thieves, monsterMoves()), ...(Object.keys(lootHpOf(args.thieves)).length > 0 ? { lootHp: lootHpOf(args.thieves) } : {}) } } : {}),
       plans: args.plans,
-      piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.drawTop && args.drawTop.length > 0 ? { drawTop: args.drawTop } : {}) },
+      piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.drawTop && args.drawTop.length > 0 ? { drawTop: args.drawTop, ...(args.drawAdded && args.drawAdded.length > 0 ? { drawAdded: args.drawAdded } : {}) } : {}) },
       meta,
       mm: moveModelData(),
       model,
