@@ -473,7 +473,17 @@ describe("Waterfall Giant eruption at the run's ascension (1VX145UJM8RZ: A9 20 s
         },
       },
     };
-    expect(powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", 9, monsters)).toEqual({ first: 15, firstTurn: 2, perTurn: 3, asc: 7, exact: false, n: 3 });
+    // Marked estimated; nothing logged at A8 or A9 measures a change, so A7's numbers as logged.
+    expect(powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", 9, monsters)).toEqual({
+      first: 15,
+      firstTurn: 2,
+      perTurn: 3,
+      asc: 7,
+      exact: false,
+      n: 3,
+      estimated: true,
+      note: "A9估: A7 15，A7→A9 未测按不变",
+    });
     // Without per-ascension numbers there is nothing to read.
     expect(powerScheduleAt("WATERFALL_GIANT", "STEAM_ERUPTION_POWER", 9, { WATERFALL_GIANT: { powers: { STEAM_ERUPTION_POWER: { amount_at_first_sight: { "15": 3 } } } } })).toBeNull();
   });

@@ -372,7 +372,10 @@ export interface EnemyMove {
    * do not hold yet is the one applied.
    */
   playerPowerChoice?: PlayerDebuff[];
-  /** Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt). */
+  /**
+   * Not logged at this ascension: the nearest ascension's damage scaled by the measured ratio (monster-db moveDamageAt),
+   * or its Strength / block moved by the measured change (monster-db amountAt).
+   */
   estimated?: boolean;
   /**
    * `damage` is the move's shown hit (monster-db shownDamageAt: no base was ever measured), Strength and our
