@@ -17,7 +17,11 @@
  *   shown line was never played on that board by any failed attempt. The point deviated at the fewest times, and among
  *   those the latest: attempt 3 changes the question closest to the death, attempt 4 the one before it, and so on back;
  *   once every point had its turn, the latest with a line still untried again. Only Jev's questions: code's own turns
- *   (the only line, a dominating line, a lethal, every line dying) have no line it would play instead.
+ *   (the only line, a dominating line, a lethal, every line dying) have no line it would play instead. SL_RETRY_EXPLORE_ORDER:
+ *   points where every line loses in every sample come after all others (R1QJUBVBSSB2 F33: T5 on, all 24/24 dead).
+ * - SL_RETRY_EXPLORE_REPLAY: before the deviation point the attempt plays the reference attempt's line on each board of its
+ *   path (replayPath, replayChoice), so that it reaches the point (R1QJ F33 attempt 3: Jev answered T5 otherwise and the
+ *   fight died before its T8 point); a board off the path stops it.
  * - On that board only, the line about to be played, when a failed attempt played it there, is replaced after Jev's answer
  *   (exploreReplacement): by the shown line the question's ranking (B2's where it ranks, its ties the rollout's; else the rollout's) puts first
  *   among those no failed attempt played there, preferring the ones not worse than it (the gate: on a boss B2 is trusted on,
@@ -239,12 +243,18 @@ export interface ExploreTargetOptions {
   aliveFirst?: boolean;
 }
 
-/** Every line of a question's record (the one played and its alternatives) loses in every sample (unknown: false). */
+/**
+ * Every line of a question's record (the one played and its alternatives) with numbers loses in every sample: B2's share won
+ * 0 where B2 weighed the point, else the rollout's share dead 1. A line without numbers (a potion option played: no line of
+ * its own) is left out; none with numbers: not known to be lost.
+ */
 export function pointLost(point: SlPoint): boolean {
   const lines = [point.line, ...(point.alternatives ?? [])];
   const won = point.b2?.won;
-  if (won) return lines.every((line) => won[line] !== undefined && won[line]! <= 0);
-  return lines.every((line) => point.dead?.[line] !== undefined && point.dead[line]! >= 1 - 1e-9);
+  const share = (line: string): number | undefined => (won ? won[line] : point.dead?.[line]);
+  const known = lines.filter((line) => share(line) !== undefined);
+  if (known.length === 0) return false;
+  return won ? known.every((line) => share(line)! <= 0) : known.every((line) => share(line)! >= 1 - 1e-9);
 }
 
 export function exploreTarget(rows: readonly ExploreRow[], attempt: number, options: ExploreTargetOptions = {}): { target: SlTarget | null; why: string } {

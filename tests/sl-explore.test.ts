@@ -215,8 +215,10 @@ describe("exploreTarget: one decision point per attempt, backtracking from the d
     expect(exploreTarget([row(2, b2Path)], 3, order).target).toMatchObject({ board: "b4" });
     expect(pointLost(b2Path[1]!)).toBe(false);
     expect(pointLost({ ...path[3]!, b2: { win: {}, notWorse: [], won: { A4: 0, B4: 0 } } })).toBe(true);
-    // No numbers: not known to be lost.
+    // No numbers: not known to be lost; a line without numbers (a potion option played) is left out.
     expect(pointLost(q("x", 1, "A", ["B"]))).toBe(false);
+    expect(pointLost({ ...q("x", 1, "drink X", ["B", "C"]), dead: { B: 1, C: 1 } })).toBe(true);
+    expect(pointLost({ ...q("x", 1, "drink X", ["B", "C"]), dead: { B: 1, C: 0.9 } })).toBe(false);
   });
 
   it("SL_RETRY_EXPLORE_REPLAY: replayPath is the reference attempt's lines before the point, by board", () => {

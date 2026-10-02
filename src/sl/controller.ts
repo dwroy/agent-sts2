@@ -20,7 +20,9 @@
  * - SL_RETRY_EXPLORE (explore.ts, docs/sl.md §11): from attempt 2 notePoint() records each decision point's board and line
  *   (in the attempt's row); attempts 3+ pick a deviation point from the earlier rows (exploreTarget) and envFor() tells the
  *   planner, on that board only, which lines not to play again there (and the sub-switches SL_RETRY_EXPLORE_B2 and
- *   SL_RETRY_EXPLORE_BOSS_POTIONS on every board, which the record and the replacement follow).
+ *   SL_RETRY_EXPLORE_BOSS_POTIONS on every board, which the record and the replacement follow). SL_RETRY_EXPLORE_ORDER: the
+ *   points where every line loses come last; SL_RETRY_EXPLORE_REPLAY: on the reference path's boards before the point,
+ *   envFor() gives its line there (the planner plays it) and notePoint() counts them or stops the replay (noteReplay).
  *
  * Nothing here touches a save file: the game restarts the fight from the save it wrote on entering the room.
  */
