@@ -33,7 +33,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, SHRINKER, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -695,6 +695,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       reflect: powerAmount(enemy, "REFLECT_POWER") > 0,
       demise: powerAmount(enemy, "DEMISE_POWER"),
       shrink: powerAmount(enemy, "SHRINK_POWER"),
+      ...(str(enemy["enemy_id"]) === SHRINKER ? { shrinksUs: true } : {}),
       punishesUnblocked: (powerAmount(enemy, "SUCK_POWER") > 0 ? 4 : 0) + (powerAmount(enemy, "PAPER_CUTS_POWER") > 0 ? 5 : 0),
       woundsPerHit: powerAmount(enemy, "PAINFUL_STABS_POWER"),
       enrage: powerAmount(enemy, "ENRAGE_POWER"),
@@ -2403,8 +2404,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Free Attack (Unrelenting): the game shows every attack at 0, but only the next N are free. The
   // solver pays the real cost and gets N free attacks (NEVM F23 T2: an unaffordable Uppercut planned).
   const freeAttacks = powerAmount(player, "FREE_ATTACK_POWER");
+  // Shrink on us (the Shrinker Beetle's: always -1, 1448 logged frames): the hand's numbers already carry it.
+  const shrunk = powerAmount(player, "SHRINK_POWER") !== 0;
   const hand = asArray(combat["hand"]).map((entry, index) => {
-    const model = modelHandCard(entry, index, env.knowledge);
+    const modelled = modelHandCard(entry, index, env.knowledge);
+    const model = shrunk && modelled.damage !== null ? { ...modelled, shownShrunk: true } : modelled;
     const base = env.knowledge.card(model.cardId)?.cost ?? null;
     return freeAttacks > 0 && model.type === "Attack" && model.cost === 0 && base !== null && base > 0 ? { ...model, cost: base } : model;
   });
@@ -2427,7 +2431,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   stripPenNib(hand, penNib === PEN_NIB_EVERY - 1);
   // Vigor is in every Attack's shown damage but spent by the first one (KFP1 F17 T1: 54 planned, 18 dealt).
   const vigor = powerAmount(player, "VIGOR_POWER");
-  stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0);
+  stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0, shrunk);
   const ascension = state.run?.ascension ?? 0;
   const enemies = enemySims(combat, ascension);
   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
@@ -2476,7 +2480,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     weak: powerAmount(player, "WEAK_POWER") > 0,
     vulnerable: powerAmount(player, "VULNERABLE_POWER") > 0,
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
-    shrunk: powerAmount(player, "SHRINK_POWER") > 0,
+    // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
+    shrunk,
     juggernaut: powerAmount(player, "JUGGERNAUT_POWER"),
     kusarigama: kusarigamaOf(state.run?.raw),
     ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
