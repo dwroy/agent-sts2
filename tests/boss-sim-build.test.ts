@@ -203,6 +203,18 @@ describe("B3 boss simulation on the questions", () => {
     expect(Object.keys(after).filter((k) => k.startsWith("o1:")).every((k) => String(after[k]!["boss_sim"]).includes("选这个"))).toBe(true);
   }, 60_000);
 
+  it("cut short by the clock under 300 samples (of 1000 asked): no numbers, as a failed simulation (Dai 2026-10-02)", async () => {
+    const e = env(REWARD());
+    const before = decide(e);
+    let t = 0;
+    const clock = () => (t += 400);
+    const { decision, record } = await withBossSim(before, e, { ...setup, samples: 1000, now: clock });
+    const facts = ask(decision).state["facts"] as Record<string, JsonValue>;
+    expect(String(facts["act_boss_sim"])).toMatch(/不足 300 次/);
+    expect(criteria(decision)).toEqual(criteria(before));
+    expect(record).toMatchObject({ error: expect.stringContaining("不足 300 次") });
+  });
+
   it("a failed simulation keeps the act boss clock and says so", async () => {
     const e = env(REWARD());
     const before = decide(e);
