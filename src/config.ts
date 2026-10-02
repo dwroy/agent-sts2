@@ -116,6 +116,21 @@ export interface SlConfig {
    */
   retryExploreReplay: boolean;
   /**
+   * SL_RETRY_EXPLORE_CANON (default on, 2026-10-03, A9 runs 10-12; with SL_RETRY_EXPLORE): a line counts as tried on a
+   * board by the turn's plays (the multiset of card id with "+" and target, potions included, the cards already played that
+   * turn counted in), not by its text: the same plays in another order or line text are the same line, the same cards on
+   * another enemy another. Attempt 1 is recorded too and counts; rows from before it are rebuilt from their summary
+   * (docs/sl.md §11.7). Off: as before.
+   */
+  retryExploreCanon: boolean;
+  /**
+   * SL_RETRY_EXPLORE_TURN (default on, 2026-10-03, UK7R9A0NMCXL F33 attempt 4; with SL_RETRY_EXPLORE): the deviation holds
+   * for the rest of its turn: the deviation point's replacement and every later decision of that turn (a re-plan after a
+   * draw, code's own next line) never end the turn with the plays a failed attempt's turn had through that board, while a
+   * line that does not survives this turn; a winning line is never changed (docs/sl.md §11.7). Off: as before.
+   */
+  retryExploreTurn: boolean;
+  /**
    * SL_RETRY_KNOWN_PICKS (default on, 2026-10-03, R1QJUBVBSSB2 F33; with SL_RETRY_KNOWN_INSERTS): a card taken out of the
    * draw pile by a selection (Seeker Strike) leaves the rest of the pile in its order: it is taken out of the known order,
    * which goes on (docs/sl.md §10.2). Off: the order ends there, as before.
@@ -779,6 +794,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryExploreBossPotions: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_BOSS_POTIONS"), "SL_RETRY_EXPLORE_BOSS_POTIONS", problems) ?? true,
     retryExploreOrder: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_ORDER"), "SL_RETRY_EXPLORE_ORDER", problems) ?? true,
     retryExploreReplay: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY"), "SL_RETRY_EXPLORE_REPLAY", problems) ?? true,
+    retryExploreCanon: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_CANON"), "SL_RETRY_EXPLORE_CANON", problems) ?? true,
+    retryExploreTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TURN"), "SL_RETRY_EXPLORE_TURN", problems) ?? true,
     retryKnownPicks: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_PICKS"), "SL_RETRY_KNOWN_PICKS", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
