@@ -147,11 +147,12 @@ describe("the fail safe", () => {
       if (env.mechRules !== false) throw new Error("rule step failed");
       return "off-decision";
     };
-    expect(withMechFallback({ mechRules: true } as DecisionEnv, plan)).toBe("off-decision");
+    // MECH_MOVE_RULES on (undefined: on) is tried off first, then both off.
+    expect(withMechFallback({ mechRules: true, mechMoveRules: false } as DecisionEnv, plan)).toBe("off-decision");
     expect(seen).toEqual([true, false]);
     seen.length = 0;
     expect(withMechFallback({} as DecisionEnv, plan)).toBe("off-decision");
-    expect(seen).toEqual([undefined, false]);
+    expect(seen).toEqual([undefined, undefined, false]);
     // An error of something else throws again, as before.
     expect(() => withMechFallback({ mechRules: true } as DecisionEnv, () => { throw new Error("other"); })).toThrow("other");
     seen.length = 0;

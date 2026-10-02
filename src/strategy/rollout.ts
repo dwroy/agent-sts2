@@ -1365,6 +1365,17 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
   };
 }
 
+/** A power a learned move change clears (MoveOnStrip.clears): the ones the rollout keeps apart, and the rest of its list. */
+function clearPower(e: SimEnemy, power: string): void {
+  if (power === "STRENGTH_POWER") e.strength = 0;
+  else if (power === "VULNERABLE_POWER") e.vulnerable = 0;
+  else if (power === "WEAK_POWER") e.weak = 0;
+  if (power in e.powers) {
+    const { [power]: _gone, ...rest } = e.powers;
+    e.powers = rest;
+  }
+}
+
 /** An enemy at 0 HP: a husk to explode, restocked, back at full (illusion), its next phase, or dead (with its spawns). */
 function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimEnemy[], fullFight = false): void {
   if ((e.base.eruption ?? 0) > 0 && e.maxHp < HUSK_HP && e.explodeAt === undefined) {
@@ -1820,6 +1831,14 @@ function applyPlan(
     if (a.block !== undefined) e.block = a.block;
     else if (hit) e.block = 0;
     if (e.hp <= 0) enemyDown(e, turn, input, enemies, fullFight);
+    // MECH_MOVE_RULES: a learned move change the line set off (an Axebot killed with Stock left is back at once in Boot
+    // Up: TQX5JJX3UD39 F37 T1 and T5): this enemy turn is that move (its block and Strength, then its successor in the
+    // move model, Hammer Uppercut), and the powers that go with the change are gone (the revive's Strength, Vulnerable, Weak).
+    if (a.movedTo && e.alive) {
+      e.move = a.movedTo.move;
+      const rule = e.base.moveOnStrip?.find((entry) => entry.power === a.movedTo!.power && entry.how === a.movedTo!.how);
+      for (const power of rule?.clears ?? []) clearPower(e, power);
+    }
   }
   // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
   // already calls a line that ends it at 0 a death. The rollout kept the starting count every turn, so in
@@ -2347,8 +2366,11 @@ function simulate(
     }
     // Surrounded (whole fights, B2): an enemy we do not face hits for +50%, as the game shows it (turn-solver backAttack
     // takes it off when the line turns to it); the rollout keeps every later hit as the move model's.
+    // MECH_MOVE_RULES (class C): with one claw left there is no back attack at all, whatever we face; its hit is the faced
+    // one (152 of 152 logged one-claw attack intents; turn-solver PlayerSim.backAttackPair).
+    const single = base.backAttackPair === true && base.surrounded === true && enemies.filter((e) => e.alive).length < 2;
     const behind = (index: number, attacks: { damage: number; hits: number }[]) =>
-      fullFight && base.surrounded && facing !== null && index !== facing ? attacks.map((a) => ({ ...a, damage: Math.floor(a.damage * 1.5) })) : attacks;
+      fullFight && base.surrounded && !single && facing !== null && index !== facing ? attacks.map((a) => ({ ...a, damage: Math.floor(a.damage * 1.5) })) : attacks;
     const sims: EnemySim[] = enemies
       .filter((e) => e.alive)
       .map((e) => ({
@@ -2378,7 +2400,7 @@ function simulate(
         // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
-        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : behind(e.index, moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0, { fullFight, faced: fullFight && base.surrounded === true && facing !== null })),
+        attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : behind(e.index, moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0, { fullFight, faced: (fullFight && base.surrounded === true && facing !== null) || single })),
       }))
       // Imbalanced on this simulated turn too (laterTurnSim drops the decision's): a hit fully blocked stuns it,
       // its next hit (about this one) saved.

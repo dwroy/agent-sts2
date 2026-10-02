@@ -57,6 +57,8 @@ export function boardOf(state: GameState, knowledge: Knowledge, encounter: strin
     shopDiscardPotions: [],
     jevContext: "off",
     fightPlan: "off",
+    // MECH_MOVE_RULES as configured (MECH_MOVE_RULES=off in the environment: the backtest as before it).
+    mechMoveRules: config.mechRules && config.mechMoveRules,
   };
   // The board only: no whole-fight lines inside the planner (B2).
   bossLinesOptions.enabled = false;

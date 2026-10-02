@@ -418,6 +418,7 @@ export function runConfigRow(
       thief_facts: config.thiefFacts,
       thief_cost: config.thiefCost,
       mech_rules: config.mechRules,
+      mech_move_rules: config.mechMoveRules,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
       escalation: [...config.escalation.chain],

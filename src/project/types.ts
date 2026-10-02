@@ -71,6 +71,12 @@ export interface DecisionEnv {
    * as before.
    */
   mechRules?: boolean;
+  /**
+   * MECH_MOVE_RULES (config; docs/mechanics-learning.md §8): with MECH_RULES on, the learned "a power removed -> the enemy's
+   * move changes" rules and the Kaiser Crab's back attack needing both claws. Undefined means on; false (or MECH_RULES
+   * false): the combat question exactly as with MECH_RULES alone.
+   */
+  mechMoveRules?: boolean;
 }
 
 /** A retried fight, as the combat planners see it (src/sl/controller.ts envFor). */
