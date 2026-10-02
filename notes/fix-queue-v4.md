@@ -64,3 +64,9 @@
 - JW92 F46 DeepSeek 返回 JSON 多一个「]」，逐步重问恢复，多 97 s（模型输出错误）。
 - 已知项复发：build-sim-facts.ts:387（5DFX、VNKN 被引用后选中）；B3 小样本（5DFX F27–F29 仅 24 样本）；mod 超时约 10 s 自愈（5DFX 5、JW92 3）；帝王蟹可信后整场模拟每场 98–142 s，多题撞 25 s 上限。gate_reject 0，无泄漏。
 - **已修（2026-10-02 13:10 确认）**：SL previous_attempts 敌人名与战斗选项一致（distinctNames，如「残杀千足虫 (MIDDLE)」），v4 7564be3 → v4-live d5dd04f（13:09），下一局起生效。
+
+### V4.3 第 7–9 局复盘补充（2026-10-02 15:36）
+- **SL 判官高估无惧疼痛格挡**：src/sl/judge.ts:96 `endBlock += powerAmount(player,"FEEL_NO_PAIN_POWER") * hand.length`，把手里所有牌都算成回合末会被消耗；实际只有虚无牌会（card-model.ts:630 已能识别）。7PWU F48 T6：判「35 来袭 − 32 回合末格挡 < 14 血」不必死，实为 0 格挡，T6 直接死，浪费剩余 4 次重打。judge=null 是因 controller.ts:341 只在必死时写。不阻塞跑局，但带无惧疼痛的牌组基本用不上 SL——**建议优先修**。
+- **持有果汁时构筑模拟报错**：src/screens/combat-plan.ts:1853-1856 持 FRUIT_JUICE 直接返回 combat/potion-now 不调求解器，src/sim/boss-start.ts:435 抛「the planner built no board for the synthetic boss frame」。GWGT F22–F27 6 题、5DFX 1 题，大脑没拿到模拟数字。不阻塞。
+- 观察：7PWU F47 火堆两次「state changed while deciding」，各弹出 CARDS_VIEW 被关掉，多 47 s、两次 DeepSeek（各约 14.4 万输入 token）。根因未定位。
+- 已知项复发：build-sim-facts.ts:387（三局都中）；B3 小样本；mod 超时自愈。gate_reject 0，无泄漏，无小偷战斗，mech 字段 0 次（未遇适用敌人）。
