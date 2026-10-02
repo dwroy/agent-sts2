@@ -171,6 +171,17 @@ describe("1. Fairy in a Bottle and Lizard Tail are revives (JR66CJ9T8H7W F48, YQ
     expect(memory.lizardTail?.used).toBe(true);
   });
 
+  it("least-loss never opens with a line that kills us on our own turn while one reaches the end of the turn (JSA5K8YZ9RXV F48 T6: Blood Wall at 2 HP)", () => {
+    const fx = logged("jsa5-f48-t6-blood-wall");
+    const decision = planCombatTurn(loggedEnv(fx));
+    expect(decision?.kind).toBe("act");
+    const act = decision as Extract<Decision, { kind: "act" }>;
+    expect(act.label).toBe("combat/least-loss");
+    // Not Blood Wall (its 2 HP cost kills us at 2 HP) and not Brand (1 HP of 2 is not lethal, but check what was chosen).
+    expect(act.rationale).not.toMatch(/^every simulated line dies; playing the one that keeps the most HP \([^)]*\): 血墙/);
+    expect(act.rationale).not.toContain("血墙");
+  });
+
   it("trackLizardTail: the enemy turn's reads in between do not hide the trigger (LTKW24N3R9PG F37: T4 7 HP vs 20, T5 at 37 of 74)", () => {
     const board = (turn: number, hp: number, intent: number, actionable: boolean): ReturnType<typeof parseGameState> => {
       const fx = logged("en55-f8-t9");

@@ -656,6 +656,11 @@ export interface Outcome {
   hpAfter: number;
   dies: boolean;
   /**
+   * The line kills us during our own turn (a card's HP cost, Thorns past our block), before the enemy acts. Every line
+   * dying, the least-loss pick prefers one that reaches the end of the turn, where SL can still reload.
+   */
+  diesOwnTurn?: true;
+  /**
    * The revives this line spends (PlayerSim.revives): their names, their HP together, the HP we end the
    * turn with, and our own-turn HP loss before the enemy turn (the rollout's end-of-turn snapshot).
    */
@@ -2702,6 +2707,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       hpLoss,
       hpAfter,
       dies,
+      // Dead on our own turn, by our own cards (Blood Wall's cost at 2 HP: JSA5K8YZ9RXV F48 T6), before the enemy acts.
+      ...(dies && !winsFight && sim.hp <= 0 ? { diesOwnTurn: true as const } : {}),
       ...(revived ? { revived } : {}),
       blockGained: sim.blockGained + etherealBlock,
       // Damage into a Giant husk is worth nothing (scored so above) and is not shown as dealt either (YQL8D59999AX
