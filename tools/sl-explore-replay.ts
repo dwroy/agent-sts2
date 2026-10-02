@@ -616,7 +616,7 @@ async function main(): Promise<void> {
         const now = asRow(entry["new"]);
         return `\n      later in that turn (T${String(entry["turn"])}): logged ${String(entry["logged_line"] ?? "?")} [${String(entry["label"])}]; new: ${now["kind"] === "question" ? `Jev's ${String(now["answer"])} -> ${String(now["replacement"] ?? "(kept)")} (${String(now["reason"] ?? "")})` : `${String(now["label"] ?? now["kind"])} ${String(now["line"] ?? "")}`}`;
       }).join("");
-      const liveText = l ? `\n    live: aimed at ${String(l["target"] ?? "-")}; ${l["reached"] ? "reached" : "not reached"}${l["left_path_at"] ? `, left attempt 2's path at ${String(l["left_path_at"])}` : ""}; ${String(l["deviation"] ?? "no deviation")}; its turn there ${(l["turn_same_as"] as number[]).length > 0 ? `= attempt ${(l["turn_same_as"] as number[]).join(", ")}'s` : "differs from every failed attempt's"} (${String(l["turn"])}); ${String(l["result"])} on T${String(l["turns"])}${replans}` : "";
+      const liveText = l ? `\n    live: aimed at ${String(l["target"] ?? "-")}; ${l["reached"] ? "reached" : "not reached"}${l["left_path_at"] ? `, left attempt 2's path at ${String(l["left_path_at"])}` : ""}; ${String(l["deviation"] ?? "no deviation")}; ${l["turn"] === null ? "no turn through the point" : `its turn there ${(l["turn_same_as"] as number[]).length > 0 ? `= attempt ${(l["turn_same_as"] as number[]).join(", ")}'s` : "differs from every failed attempt's"} (${String(l["turn"])})`}; ${String(l["result"])} on T${String(l["turns"])}${replans}` : "";
       console.log(`  a${attempt}:\n${lines.join("\n")}${liveText}`);
     }
   }
