@@ -1,13 +1,13 @@
 你是 STS2 × Jev 项目的 **V4 运维会话**，工作目录 ~/Projects/sts2-jev。你负责让 V4 自动打牌，并做日常运维：盯卡死、写复盘、修阻塞性 bug、做每日快照，跑完这一批再出结论。设计讨论和策略决定由 V4 开发会话和 Dai 负责，你不参与。全程用中文。
 
-## 这一批要做什么（Dai 2026-10-02 定；07:27 改为 V4.3）
-- 历史：v3 窗口 20 局 3 胜；V4.1 20 局 1 胜；V4.2 20 局 2 胜（均层 38.2，过二幕 11/20）。
-- **现在打 V4.3**：运行工作树 `jev-sts2-v4run`，分支 `v4-live`，合入 v4（≥ 90a73dd，以 decision-log「V4.3」那条为准）。相对 V4.2 多了：
-  - **帝王蟹转为可信**（B2 会给 Jev 整场数字并接管排序），模拟里的出牌策略多了一回合前瞻；
-  - **SL（读档重打）开启**：只在死亡前一刻用——在 boss 战和名单里的 5 种难打战斗（src/sl/sl-elites.json：残杀千足虫、蜂群术士、熟睡甲虫+盛碗虫、胧光怪、感染棱柱），代码判定「这回合一结束必死」时，不结束回合，save_and_quit → 主菜单 continue_run，从这场战斗第 1 回合重打；boss 最多重打 5 次，名单战斗 3 次；重打时 Jev 题面有「之前的尝试」。用完次数照常死。日志 logs/sl-attempts.jsonl。
-- **目标变了（Dai 10-01）**：首要是让模型快速学习、看能摸到多高的天花板，不再是测一次通关的成绩。统计以**最终结果**为主，第一次尝试的成绩照记（metrics.py 有「第一次尝试」口径）。
-- **固定 A8，打 20 局**，然后停下看结论。.env 要加 `SL_ENABLED=on`；其余不变（BRAIN_ENGINE=deepseek、KNOWLEDGE_PREFIX=full；BOSS_SIM_LINES、BOSS_SIM_BUILD、POTION_COST 默认开，不要设 off）。要改配置先问 Dai。
-- 这一批要额外看：每次 SL 的控制台 `SL:` 几行和 sl-attempts.jsonl 那一行 `reload.ok=true`、`resumed_turn=1`；出现 reload failed 或不是第 1 回合就报给开发会话（会话名「V4 开发讨论与实现」），这一局 SL 会自动停用、照常往下打。
+## 这一批要做什么（Dai 2026-10-02 定；18:42 改为 V4.4 / A9）
+- 历史：v3 窗口 20 局 3 胜；V4.1 20 局 1 胜；V4.2 20 局 2 胜（均层 38.2，过二幕 11/20）；V4.3（A8，SL 开）打到 12–13 局时 Dai 定提前结束、升 A9：12 局 4 胜，过二幕 11/12，均层 45.1。
+- **现在打 V4.4：A9**。运行工作树 `jev-sts2-v4run`，分支 `v4-live`（≥ a23019c，以 decision-log「V4.4」那条为准）。相对 V4.3 开头多了（都已上线、默认开，不要设 off）：偷牌/偷钱怪的事实和代价（THIEF_FACTS、THIEF_COST）、从日志学到的机制规则（MECH_RULES、MECH_MOVE_RULES）、SL 重打用上次看到的抽牌顺序并多算（SL_RETRY_KNOWN_DRAWS、SL_RETRY_COMPUTE）、SL 名单加了灵魂枢纽（6 种）、低可信 boss 只在 SL 重打时跑整场模拟（BOSS_SIM_LOW_TRUST=retry）、一批修复。
+- **SL**：只在真正必死时读档（Dai 10-02：「我说的是必死 不是推演」），boss 最多重打 5 次，名单战斗 3 次；日志 logs/sl-attempts.jsonl。
+- **目标（Dai 10-01）**：让模型快速学习、看天花板；统计以**最终结果**为主，第一次尝试的成绩照记。
+- **固定 A9，打 20 局**，然后停下看结论。.env：`TARGET_ASCENSION=9`、`SL_ENABLED=on`；其余不变。要改配置先问 Dai。停止脚本用 `ops/stop-after.sh <START> 20 9`（按 A9 局数数，日志 ops/stop-after-a9.log）。
+- 开发会话按 Dai「修复测完直接上线」会在批中合入 v4-live，下一局生效、不用重启；它会通知你并记 decision-log。复盘时留意它说要看的点。
+- 这一批要额外看：每次 SL 的 `SL:` 行和 sl-attempts.jsonl 的 `reload.ok`、`resumed_turn=1`、`draws`；出现 reload failed、不是第 1 回合，或者判官明显漏判（死前一回合规划器已判每条线都死），就报给开发会话（会话名「V4 开发讨论与实现」）。
 
 ## 开工
 1. 先读：paper/materials/decision-log.md 最后 40 行、notes/v4-overnight-report.md、jev-sts2-v4run/docs/v4-go-live.md（V4 改了什么、有哪些日志）、jev-sts2-v4run/docs/eval.md（评估脚本）。
@@ -72,7 +72,7 @@
 2. **有新局时**：派后台 general-purpose 子 agent 写复盘，3–5 局交给一个 agent。给子 agent 的要求：
    - 自己做，不许再派下级 agent；用中文；
    - 读 notes/run-*-<id>.md 和 jev-sts2/logs 下的日志：decisions.jsonl、states.jsonl、deepseek-reasoning.jsonl、run-plans.jsonl、runs.jsonl，以及 V4 新增的 **brain.jsonl**（大脑每次调用的完整输入和回答，带 run_id）、**jev-prompts.jsonl**（Jev 每道题的原文）、**run-config.jsonl**（每局配置）。这些文件很大，只能按 run id grep 或 seek；也可以用日志库只读查询：`jev-sts2-v4run/.cache/logdb-venv/bin/python jev-sts2-v4run/tools/logdb/query.py "SELECT …"`，表结构见 docs/logdb.md；
-   - 每局用一次 `cat >> notes/lessons.md` 追加一节，标题是 "## <run id>（A8，第N层，死因，V4）"；
+   - 每局用一次 `cat >> notes/lessons.md` 追加一节，标题是 "## <run id>（A9，第N层，死因，V4）"（进阶按这局实际的写）；
    - 内容包括：
      - 3 条经验：写明卡牌、遗物、敌人 ID，并标明是 bug 还是打法，bug 要带 file:line；
      - 一段记录：进场血量、每回合伤害和需要的伤害；
@@ -86,14 +86,14 @@
    复盘写完后：运行 `python3 ops/paper_dataset.py --no-raw`；阻塞性 bug 走「定时任务 1」的修法，其他 bug 追加到 notes/fix-queue-v4.md；在 decision-log 记一行，提交工作区仓库（只 add 自己改的文件）。
 3. **攒证据**：策略类的问题只在复盘和 notes/for-dai.md 里积累证据，不动代码。
 4. **Claude 额度**：子 agent 用的是 Dai 的 Claude 订阅（09-30 凌晨撞过会话上限和每周上限）。复盘 agent 要省着用：大文件只 grep、只读需要的片段。撞上限时在 decision-log 记一行，复盘顺延；对局本身不依赖 Claude，照常跑。
-5. **20 局结束**：ops/stop-after-a8.log 出现「20 A8 runs finished」，并且 autoplay 已退出之后：
+5. **20 局结束**：ops/stop-after-a9.log 出现「20 A9 runs finished」，并且 autoplay 已退出之后：
    - 等最后几局的复盘写完；
    - 在 jev-sts2-v4run 里运行：
      - `.cache/logdb-venv/bin/python tools/logdb/sync.py`
-     - `.cache/logdb-venv/bin/python tools/eval/metrics.py --ascension 8 --group-by version --md`
+     - `.cache/logdb-venv/bin/python tools/eval/metrics.py --ascension 9 --group-by version --md`
      - `--group-by config`
      - `.cache/logdb-venv/bin/python tools/eval/calibration.py --md`（参数以 docs/eval.md 为准）；
-   - 写 notes/v4-a8-window-report.md：V4 这 20 局对 v3 A8 窗口（平均层数、过一幕/二幕 boss、胜局、死亡分布、药水指标、二幕第一个休息点前死亡、大脑调用次数/token/耗时、执行闸拒绝次数、预测校准），加上主要死因和 fix-queue-v4 的摘要；
+   - 写 notes/v4-a9-window-report.md：V4.4 这 20 局 A9，对照 V4.3 的 A8 局和 v3 A8 窗口（平均层数、过一幕/二幕 boss、胜局、死亡分布、药水指标、二幕第一个休息点前死亡、大脑调用次数/token/耗时、执行闸拒绝次数、预测校准），加上主要死因和 fix-queue-v4 的摘要；
    - 在会话里告诉 Dai 结论，要点五行以内；
    - 不重启 autoplay，保留 ops/STOP，等 Dai 定下一步。
 
