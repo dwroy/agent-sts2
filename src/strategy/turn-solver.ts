@@ -9,10 +9,17 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, thisTurnScore, type CardModel } from "./card-model.js";
+import { applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, ourAttackScaled, thisTurnScore, type CardModel } from "./card-model.js";
 
 /** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
 export const SHRINK_DAMAGE_FACTOR = 0.7;
+
+/**
+ * The Shrinker Beetle: its Shrink on us (SHRINK_POWER -1, put on at its first move) lasts while it lives and is gone the
+ * moment it dies. Logged (A1-A9, 156 runs): 1448 frames with our Shrink, a living beetle in every one; XC4TNGZU4KT9 F9 T4:
+ * Anger killed it at 2 HP, the two Strikes after it hit the Wurm 58 -> 49 -> 40 (6 + 3 Strength, no Shrink).
+ */
+export const SHRINKER = "SHRINKER_BEETLE";
 
 /**
  * The enemy powers the solver counts down during our turn, and the EnemySim field each lives in: the ones a learned
@@ -172,6 +179,8 @@ export interface EnemySim {
   demise?: number;
   /** Shrink N (Beetle Juice): its attacks deal 30% less for N turns; a Shrink already up is in its intents. */
   shrink?: number;
+  /** Our Shrink is this enemy's (the Shrinker Beetle, SHRINKER): it is gone once no such enemy lives (Sim.shrunk). */
+  shrinksUs?: boolean;
   /** Unblocked damage from this enemy has an extra lasting cost (Suck, Paper Cuts). */
   punishesUnblocked?: number;
   /** Personal Hive N (Entomancer): every attack hit on it adds N Dazed to our draw pile (M812 F28). */
@@ -282,7 +291,13 @@ export interface PlayerSim {
   vulnerable: boolean;
   /** Takes 50% less from enemy attacks? (Intangible etc. — not modelled beyond this flag.) */
   intangible: boolean;
-  /** Shrink: the player's attacks deal 30% less. */
+  /**
+   * Shrink on us (SHRINK_POWER, the Shrinker Beetle's -1: while it lives): our attacks deal 30% less, rounded once with
+   * Weak and Vulnerable (card-model ourAttackScaled). The hand's numbers carry it already (CardModel.shownShrunk); this
+   * turn's Strength, Body Slam's block, Vigor and the cards a line draws or makes do not. Potions, Inferno, Juggernaut,
+   * Thorns, Flame Barrier and the relics' damage are not attacks (logged under Shrink: Inferno 9 hit for 9, Flame
+   * Barrier 4 for 4, Thorns 3 for 3, Letter Opener 5 for 5).
+   */
   shrunk?: boolean;
   /**
    * Kusarigama: every 3rd attack in a turn deals 6 to a random enemy (counted as the lowest-HP one). The
@@ -836,6 +851,8 @@ interface Sim {
   /** HP losses on our turn so far (Self-Forming Clay's block per loss). */
   hpLossEvents: number;
   enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean })[];
+  /** Shrink still on us (PlayerSim.shrunk): gone once the last enemy that shrinksUs dies, for the cards played after. */
+  shrunk: boolean;
   steps: Step[];
   blockGained: number;
   damageDealt: number;
@@ -1202,11 +1219,33 @@ function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" 
   return amount;
 }
 
+/**
+ * An attack card's damage per hit while our Shrink is in play (on us now, or in the card's shown number), unrounded, with
+ * this turn's Strength (sim.strength): null when it is not (no Shrink: the caller's own number), or for a potion (not an
+ * attack). From the card's printed base when that gives back its shown number (base + Strength at the decision, Weak
+ * and Shrink as shown), so the game's one rounding is kept; `pre` is that number before Weak and Shrink (the caller adds
+ * Vigor or Bully's bonus to it). Otherwise from the shown number: shrunk once when it is not and we are, un-shrunk
+ * (the least whole number that shrinks to it) when it is and we no longer are (the beetle killed earlier in the line).
+ * XC4TNGZU4KT9 F9 T3: Setup Strike's +3 then Fight Me (5, shown 3) hit 2 x floor(8 x 0.7) = 2 x 5, not 2 x (3 + 3).
+ */
+function attackShrunk(card: CardModel, sim: Sim, player: PlayerSim): { perHit: number; pre: number | null } | null {
+  const carried = card.shownShrunk === true;
+  if (card.type === "Potion" || (!sim.shrunk && !carried)) return null;
+  const shown = card.damage ?? 0;
+  const strengthNow = player.strengthNow ?? 0;
+  if (card.damageBase !== undefined && card.special !== "body_slam" && Math.floor(ourAttackScaled(card.damageBase + strengthNow, player.weak, carried)) === shown) {
+    const pre = card.damageBase + strengthNow;
+    return { perHit: ourAttackScaled(pre + sim.strength, player.weak, sim.shrunk), pre };
+  }
+  const now = carried === sim.shrunk ? shown : carried ? Math.ceil((shown * 10) / 7) : (shown * 7) / 10;
+  return { perHit: now + ourAttackScaled(sim.strength, player.weak, sim.shrunk), pre: null };
+}
+
 function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, hits: number, player: PlayerSim, potion = false): number {
   let dealt = 0;
   for (let hit = 0; hit < hits && enemy.alive; hit += 1) {
+    // Our Shrink is in perHitBase already (attackShrunk), unrounded: rounded once with Vulnerable, as the game does.
     let amount = perHitBase;
-    if (player.shrunk) amount = Math.floor(amount * 0.7);
     // Potion damage ignores Vulnerable (6X8F F25 T1: Fire Potion into a Vulnerable Entomancer did 20).
     if (enemy.vulnerable > 0 && !potion) amount = Math.floor(amount * (player.vulnerableFactor ?? 1.5));
     // Slow: +10% per card played before this one (sim.played is bumped once the card has resolved).
@@ -1282,6 +1321,9 @@ export const CRAB_RAGE_STRENGTH = 6;
 
 function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
   enemy.alive = false;
+  // The Shrinker Beetle dead, our Shrink goes with it: the cards played after this one hit in full (a card's own hits
+  // keep the number it had when played: TYZH5GB5N2UL F15 T3, Breakthrough killed the beetle and hit the Wurm for 8, shrunk).
+  if (enemy.shrinksUs && sim.shrunk && !sim.enemies.some((other) => other.alive && other.shrinksUs)) sim.shrunk = false;
   // Ravenous (Corpse Slug): a living one eats the corpse: stunned this turn, +N Strength for the fight.
   for (const other of sim.enemies) {
     if (other === enemy || !other.alive || (other.ravenous ?? 0) <= 0) continue;
@@ -1577,7 +1619,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   // Primal Force: every Attack left in hand becomes a Giant Rock (1 energy, 20 damage; upgraded 24).
   if (card.special === "primal_force") {
-    next.hand = next.hand.map((entry) => (entry.type === "Attack" ? giantRockFrom(entry, card.upgraded, player.strengthNow ?? 0, player.weak) : entry));
+    next.hand = next.hand.map((entry) => (entry.type === "Attack" ? giantRockFrom(entry, card.upgraded, player.strengthNow ?? 0, player.weak, next.shrunk) : entry));
   }
   // Blessing of the Forge: every card left in hand upgraded (its logged upgrade numbers added).
   if (card.special === "forge" && card.upgrades) {
@@ -1659,10 +1701,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       const exact = (card.damageBase + (player.strengthNow ?? 0)) * 0.75;
       if (Math.floor(exact) === shown) shown = exact;
     }
+    // Our Shrink in play (on us, or in the shown number): the per-hit number from attackShrunk, Shrink once, unrounded.
+    const shrunkHit = attackShrunk(card, next, player);
+    const shrinkNow = next.shrunk && card.type !== "Potion";
     // Thrash hits for its printed number (3SBP: all 12 plays); what it absorbs is for its later plays.
-    let perHit = shown + next.strength * weakFactor;
+    let perHit = shrunkHit ? shrunkHit.perHit : shown + next.strength * weakFactor;
     let hits = card.hits;
-    if (card.special === "body_slam") perHit = Math.floor((next.block + next.strength) * weakFactor);
+    if (card.special === "body_slam") perHit = shrinkNow ? ourAttackScaled(next.block + next.strength, player.weak, true) : Math.floor((next.block + next.strength) * weakFactor);
     // Pact's End hits only with 3+ cards in the exhaust pile (H1FA F17 T9: counted as a 17 AoE kill on
     // an empty pile, dealt 0, died by 1 HP). An unknown pile counts as empty.
     if (card.cardId === "PACTS_END" && (player.exhaustPile ?? 0) + next.exhausted.length < PACTS_END_EXHAUST) perHit = 0;
@@ -1672,11 +1717,20 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length + next.drawnInHand;
     if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
-    if (card.special === "bully" && targetEnemy) perHit += 2 * targetEnemy.vulnerable;
+    // Bully's bonus and Vigor are not in the shown number: under Shrink they shrink with it, rounded once (from `pre`).
+    let bonus = 0;
+    if (card.special === "bully" && targetEnemy) {
+      bonus = 2 * targetEnemy.vulnerable;
+      if (!shrunkHit) perHit += bonus;
+      else if (shrunkHit.pre !== null && perHit !== 0) perHit = ourAttackScaled(shrunkHit.pre + next.strength + bonus, player.weak, shrinkNow);
+      else perHit += ourAttackScaled(bonus, player.weak, shrinkNow);
+    }
     // Vigor: spent by the first Attack, on its first hit (KFP1 F17 T1).
     let firstHit = perHit;
     if (card.type === "Attack" && next.vigor > 0) {
-      firstHit += Math.floor(next.vigor * weakFactor);
+      if (!shrunkHit) firstHit += Math.floor(next.vigor * weakFactor);
+      else if (shrunkHit.pre !== null && perHit !== 0 && card.special !== "body_slam") firstHit = ourAttackScaled(shrunkHit.pre + next.strength + bonus + next.vigor, player.weak, shrinkNow);
+      else firstHit += ourAttackScaled(next.vigor, player.weak, shrinkNow);
       next.vigor = 0;
     }
     if (next.gigantic > 0 && card.type === "Attack") {
@@ -2306,7 +2360,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   if (howls.length > 0 && sim.enemies.some((enemy) => enemy.alive)) {
     sim = clone(sim);
     for (const howl of howls) {
-      const perHit = (howl.damage ?? 0) + sim.strength * (input.player.weak ? 0.75 : 1);
+      const perHit = attackShrunk(howl, sim, input.player)?.perHit ?? (howl.damage ?? 0) + sim.strength * (input.player.weak ? 0.75 : 1);
       for (const enemy of sim.enemies) if (enemy.alive) hitEnemy(sim, enemy, perHit, 1, input.player);
     }
   }
@@ -2922,6 +2976,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     skullUp: (input.player.redSkull ?? 0) > 0 && input.player.hp * 2 <= input.player.maxHp,
     hpLossEvents: 0,
     enemies: input.enemies.map((enemy) => ({ ...enemy, alive: enemy.hp > 0, newlyWeak: false, strengthDelta: 0, lostThisTurn: 0 })),
+    shrunk: input.player.shrunk === true,
     steps: [],
     blockGained: 0,
     damageDealt: 0,
@@ -2989,6 +3044,11 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
  * No decision code sets it; null is a no-op.
  */
 export const solveTap: { onSolve: ((input: SolverInput, result: SolveResult) => void) | null } = { onSolve: null };
+
+/** Offline tools only (tools/shrink-replay.ts): these exact plays on the solver input, scored as the solver scores a line; null when one cannot be played. */
+export function replaySteps(input: SolverInput, steps: Step[]): Plan | null {
+  return replay(input, weightsFor(input), steps);
+}
 
 /** Returns every distinct end-of-turn outcome's best plan, best first. */
 export function solveTurn(input: SolverInput): SolveResult {
