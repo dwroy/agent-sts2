@@ -19,9 +19,9 @@ import { bossOpening, syntheticBossStart, syntheticBossState } from "../src/sim/
 import { BUILD_SIM_CALIBRATION_SAMPLES } from "../src/sim/build-sim.js";
 import { actBossDefeated, calibratedFloor, withBossSim } from "../src/sim/build-sim-facts.js";
 import type { DeckRunRequest, DeckRunResult } from "../src/sim/build-sim-pool.js";
-import { planCombatTurn, setupKept } from "../src/screens/combat-plan.js";
+import { BOULDER_SETTLE_MS, boulderSettling, planCombatTurn, setupKept } from "../src/screens/combat-plan.js";
 import type { AnswerSet } from "../src/jev/answers.js";
-import type { AskDecision } from "../src/project/types.js";
+import { createScreenMemory, type AskDecision } from "../src/project/types.js";
 import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { relicBlockOf, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -363,5 +363,40 @@ describe("5. the HP guard keeps a setup line that does not die (combat-plan guar
     const intent = (resolved as { intent: { action: string; card_index?: number } }).intent;
     expect(intent.action).toBe("play_card");
     expect(hand.find((card) => card["index"] === intent.card_index)?.["card_id"]).toBe("DEMON_FORM");
+  });
+});
+
+describe("9. a new turn waits for Rolling Boulder's +5 before the question (loop.ts:1409-1413 re-asks)", () => {
+  const board = (key: string) => loggedEnv({ source: "", decision: { label: "", decider: "", chosen: null, rationale: "" }, state: fixture("jj75-f25-t2-boulder", key) }, { screenMemory: memory });
+  let memory = createScreenMemory("COMBAT");
+
+  it("JJ75S331VUKX F25: T1 ends at 5; T2's first ready frame still 5 (mod settled) waits; the frame with 10 is planned", () => {
+    memory = createScreenMemory("COMBAT");
+    rolloutLiveOptions.enabled = false;
+    planCombatTurn(board("t1_end"));
+    expect(memory.boulder).toMatchObject({ turn: 1, amount: 5 });
+    expect(planCombatTurn(board("t2_first"))).toBeNull();
+    expect(planCombatTurn(board("t2_first"))).toBeNull();
+    const settled = planCombatTurn(board("t2_settled"));
+    expect(settled).not.toBeNull();
+    expect(memory.boulder).toMatchObject({ turn: 2, amount: 10 });
+  });
+
+  it("at most BOULDER_SETTLE_MS; no wait without a last turn seen, after a card is played, or once it has grown", () => {
+    const m = createScreenMemory("COMBAT");
+    expect(boulderSettling(m, "1:25", 1, 5, 1, 0)).toBe(false);
+    expect(boulderSettling(m, "1:25", 2, 5, 0, 1000)).toBe(true);
+    expect(boulderSettling(m, "1:25", 2, 5, 0, 1000 + BOULDER_SETTLE_MS - 1)).toBe(true);
+    // The cap: planned on the stale amount, as before the fix.
+    expect(boulderSettling(m, "1:25", 2, 5, 0, 1000 + BOULDER_SETTLE_MS)).toBe(false);
+    expect(boulderSettling(m, "1:25", 2, 10, 0, 5000)).toBe(false);
+    expect(boulderSettling(m, "1:25", 3, 15, 0, 6000)).toBe(false);
+    // A fresh process (nothing seen), another fight, a card already played this turn, an SL reload back to T1: no wait.
+    expect(boulderSettling(createScreenMemory("COMBAT"), "1:25", 4, 15, 0, 7000)).toBe(false);
+    expect(boulderSettling(m, "2:33", 4, 15, 0, 7000)).toBe(false);
+    const n = createScreenMemory("COMBAT");
+    boulderSettling(n, "1:25", 3, 15, 2, 0);
+    expect(boulderSettling(n, "1:25", 4, 15, 1, 100)).toBe(false);
+    expect(boulderSettling(n, "1:25", 1, 5, 0, 200)).toBe(false);
   });
 });

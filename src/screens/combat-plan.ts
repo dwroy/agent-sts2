@@ -25,7 +25,7 @@ import type { ActionExpect } from "../act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../project/narrow.js";
 import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
-import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
+import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
 import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
@@ -1168,6 +1168,32 @@ export function facingFightOf(state: GameState): string {
   return `${str(state.raw["run_id"])}:${fightKey(state)}`;
 }
 
+/** The longest a new turn waits for Rolling Boulder's +5 (logged ~1 s after the turn's first ready frame). */
+export const BOULDER_SETTLE_MS = 2500;
+
+/**
+ * Whether to wait for the turn start to settle: Rolling Boulder's turn-start hook deals its damage, then grows by 5
+ * about a second later, after the mod already reads the turn as settled (actions_settled, snapshot_stable): 46 of 53
+ * logged turn starts holding it showed the last turn's amount first, the +5 a frame later (Plating's -1, whose hook
+ * runs after it, with it). Planned on that frame, the board changed under the question: JJ75S331VUKX asked Jev 8 times
+ * on it, the pre-dispatch re-read saw 5 -> 10 (F25 T2: 01:39:17.8 -> 18.9) and asked again (fix-queue-v4, V4.3 runs
+ * 1-3; 15 of the 25 logged "state changed while deciding" combat re-asks). The stale amount is also the next turn-start
+ * hit the solver counts (turnStartAoe). A new turn (no card played yet) whose boulder reads no more than it did on the
+ * fight's last turn waits for it, at most BOULDER_SETTLE_MS; `memory.boulder` keeps the last amount seen.
+ */
+export function boulderSettling(memory: ScreenMemory, fight: string, turn: number | null, amount: number, cardsPlayed: number, now: number): boolean {
+  const seen = memory.boulder;
+  if (turn !== null && amount > 0 && seen && seen.fight === fight && turn > seen.turn && cardsPlayed === 0 && amount <= seen.amount) {
+    if (seen.waitTurn !== turn) {
+      seen.waitTurn = turn;
+      seen.since = now;
+    }
+    if (now - (seen.since ?? now) < BOULDER_SETTLE_MS) return true;
+  }
+  memory.boulder = turn !== null && amount > 0 ? { fight, turn, amount } : undefined;
+  return false;
+}
+
 /** What an action we send changes for later plans: the facing (Surrounded), a spent Demon Tongue. */
 function noteIntent(env: DecisionEnv, intent: ActionRequest, card: CardModel | undefined): void {
   noteFacing(env.screenMemory, env.state, intent);
@@ -1768,6 +1794,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (!state.available_actions.includes("play_card") && !state.available_actions.includes("end_turn")) return null;
 
   const player = asRecord(combat["player"]);
+  if (boulderSettling(env.screenMemory, fightKey(state), state.turn ?? null, powerAmount(player, "ROLLING_BOULDER_POWER"), num(player["cards_played_this_turn"]), Date.now())) return null;
   // Free Attack (Unrelenting): the game shows every attack at 0, but only the next N are free. The
   // solver pays the real cost and gets N free attacks (NEVM F23 T2: an unaffordable Uppercut planned).
   const freeAttacks = powerAmount(player, "FREE_ATTACK_POWER");
