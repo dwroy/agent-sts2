@@ -27,6 +27,7 @@ import type { RoutePlan } from "../screens/map.js";
 import { noteFacing, noteTurnStartExhaust, trackLizardTail } from "../screens/combat-plan.js";
 import { rememberChosenNode, rememberMap } from "../screens/rest.js";
 import { runPlanLine, type RunPlan } from "../strategy/run-plan.js";
+import { noteFightStart } from "../strategy/thief.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
 import { describeChoice, RunJournal, type JournalChange, type JournalEntry } from "./run-journal.js";
 import { createScreenMemory, type AskDecision, type Decision, type RememberedMap, type ScreenMemory } from "./types.js";
@@ -213,6 +214,8 @@ export interface ReplayResult {
   lizardTail: ScreenMemory["lizardTail"] | null;
   /** The exhaust pile at the first logged frame of the last combat turn (combat-plan noteTurnStartExhaust). */
   turnStartExhaust: ScreenMemory["turnStartExhaust"] | null;
+  /** The deck and gold at the last fight's first logged frame (thief.ts noteFightStart); null when none was in combat. */
+  thiefStart: ScreenMemory["thiefStart"] | null;
   /**
    * The enemy the last fight's last executed targeted action faced (Surrounded; combat-plan noteFacing) and that
    * fight ("<run id>:<act>:<floor>"); null when the logs end out of combat or no targeted action was logged in it.
@@ -268,6 +271,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     journal.observe(state, { knowledge, screenMemory: memory });
     trackLizardTail(memory, state);
     noteTurnStartExhaust(memory, state);
+    noteFightStart(memory, state);
     // As the live loop: the facing is a fight's, cleared out of combat.
     if (!state.in_combat) {
       memory.facing = undefined;
@@ -307,7 +311,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     }
   }
   const facing = typeof memory.facing === "number" && memory.facingFight ? { fight: memory.facingFight, index: memory.facing } : null;
-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, facing, counts };
+  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, thiefStart: memory.thiefStart ?? null, facing, counts };
 }
 
 /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */

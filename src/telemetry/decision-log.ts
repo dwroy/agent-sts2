@@ -78,6 +78,12 @@ export interface DecisionRecord {
    * src/sim/build-sim-facts.ts): the act boss simulation the options carried (numbers and timing). One decision has one.
    */
   boss_sim?: JsonValue;
+  /**
+   * Combat plan choice with a carrying thief alive (THIEF_FACTS, docs/thief.md): the thieves ({name, carries, turns_left}),
+   * the keys of the shown lines that kill one this turn, the line kept or added for a kill before it leaves (and why),
+   * and whether the chosen line kills one this turn.
+   */
+  thief?: JsonValue;
   /** The run the decision was made in (the state's run_id), so a restart can find its rows. */
   run_id?: string;
   /** When the loop read the state this decision was made on (orders the replay; see journal-replay.ts). */

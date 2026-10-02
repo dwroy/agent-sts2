@@ -55,6 +55,11 @@ export interface DecisionEnv {
    * questions are exactly as without SL.
    */
   sl?: SlEnv;
+  /**
+   * THIEF_FACTS (config; docs/thief.md): the thieves' facts, their escape in the rollout and a kill line kept among the
+   * options. Undefined means on; false: the combat question exactly as before.
+   */
+  thiefFacts?: boolean;
 }
 
 /** A retried fight, as the combat planners see it (src/sl/controller.ts envFor). */
@@ -102,6 +107,12 @@ export interface ScreenMemory {
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */
   fightStart?: { fight: string; maxHp: number };
+  /**
+   * The run deck ("CARD_ID[+]|name" per card) and gold at the fight's first combat frame (`fight` = "<run id>:<act>:
+   * <floor>"): a thief's take is that less what the run has now (strategy/thief.ts noteFightStart; the state never says
+   * which card the Thieving Hopper stole). Noted on every state read, rebuilt from the logged frames after a restart.
+   */
+  thiefStart?: { fight: string; deck: string[]; gold: number | null };
   /** The fight's encounter (first enemy ids seen, sorted, "+"-joined) for the rollout facts (rollout-live.ts). */
   rolloutEncounter?: { fight: string; enc: string };
   /** B2 (src/sim/boss-lines.ts): the whole-fight simulation's wall clock spent this boss turn (its budget over re-plans). */
@@ -320,7 +331,7 @@ export interface ResolvedAction {
    * Extra decision-log fields (combat: the rollout facts' timing, whether Jev picked the rollout's best line,
    * the kill order behind the chosen line's rollout numbers, and the per-target options' focus by key).
    */
-  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue };
+  log?: { rollout?: JsonValue; rollout_best_chosen?: boolean | null; chosen_order?: string; potions?: JsonValue; focus?: Record<string, string>; boss_sim?: JsonValue; thief?: JsonValue };
   /**
    * A DeepSeek one-shot plan this decision made (BUILD_ONESHOT): its reference and steps, logged in the
    * row's `deepseek` record (plan_id, plan, plan_step 1); the later steps are their own rows.
