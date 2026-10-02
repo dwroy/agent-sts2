@@ -84,6 +84,11 @@ export interface DecisionRecord {
    * and whether the chosen line kills one this turn.
    */
   thief?: JsonValue;
+  /**
+   * THIEF_COST (docs/thief.md §7): the HP value of a Thieving Hopper's stolen card (src/sim/thief-card-value.ts
+   * ThiefCardValue), computed before this decision; a restart takes it back from here (journal-replay.ts).
+   */
+  thief_card_value?: JsonValue;
   /** The run the decision was made in (the state's run_id), so a restart can find its rows. */
   run_id?: string;
   /** When the loop read the state this decision was made on (orders the replay; see journal-replay.ts). */

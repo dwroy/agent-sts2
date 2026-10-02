@@ -113,8 +113,19 @@ export interface ConversionRates {
   from_asc: number;
 }
 
+/**
+ * The gold rate (THIEF_COST, docs/thief.md §7; tools/build-potion-equivalents.py gold_rates): HP a gold coin is worth =
+ * the median held value of the shop-offered potions in an act at an ascension ÷ the median shop potion price (A8+).
+ */
+export interface GoldRates {
+  price: { median: number; n: number; visits: number; min_asc: number; by_rarity?: Record<string, { median: number; n: number }> };
+  by_asc: Record<string, Record<string, { per_gold: number; hold_hp: number; n: number; formula: string }>>;
+  formula?: string;
+  note?: string;
+}
+
 export interface PotionEquivalentsFile {
-  meta: { generated: string; generator?: string; min_n: number; ascensions: number[]; logs?: { boss_fights?: number; last_fight?: string }; note?: string; constants?: Record<string, number> };
+  meta: { generated: string; generator?: string; min_n: number; ascensions: number[]; logs?: { boss_fights?: number; last_fight?: string }; note?: string; constants?: Record<string, number>; gold_hp?: GoldRates };
   rates: Record<string, Record<string, ConversionRates>>;
   potions: Record<string, PotionEntry>;
 }
@@ -159,7 +170,16 @@ export function parsePotionEquivalents(text: string, path: string): PotionEquiva
       }
     }
   }
+  // The gold rate is optional (a table built before it has none: no gold value, said in the facts); a malformed one is
+  // dropped, never a load error for the potion values.
+  const gold = (meta as Record<string, unknown>)["gold_hp"];
+  if (gold !== undefined && !goldRatesOk(gold)) delete (meta as Record<string, unknown>)["gold_hp"];
   return parsed as unknown as PotionEquivalentsFile;
+}
+
+function goldRatesOk(value: unknown): value is GoldRates {
+  if (!isRecord(value) || !isRecord(value["price"]) || !isNum(value["price"]["median"]) || value["price"]["median"] <= 0 || !isRecord(value["by_asc"])) return false;
+  return Object.values(value["by_asc"]).every((acts) => isRecord(acts) && Object.values(acts).every((cell) => isRecord(cell) && isNum(cell["per_gold"]) && isNum(cell["hold_hp"])));
 }
 
 const cache = new Map<string, { stamp: string; file: PotionEquivalentsFile }>();

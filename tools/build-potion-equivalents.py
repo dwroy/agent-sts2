@@ -26,6 +26,10 @@ The conversion (per ascension, per act; n = boss fights):
              this-turn gain is a second check column, not adopted
 Hold value = max(0, HP): a potion is never worth less than not drinking it.
 
+Gold (meta.gold_hp; Dai 2026-10-02, THIEF_COST, docs/thief.md §7): what a gold coin is worth in HP, for the gold a Gremlin
+Merc / Fat Gremlin takes away: gold ÷ the median shop potion price at A8+ (the logged shop screens' potion offers) × the
+act's median held value of those offered potions at this ascension.
+
 Usage:
   .cache/logdb-venv/bin/python tools/build-potion-equivalents.py [--out PATH] [--no-sync] [--markdown]
   python3 tools/build-potion-equivalents.py --self-test      (formulas on a fixed sample; no DuckDB needed)
@@ -48,6 +52,10 @@ CARD_MODEL_TS = os.path.join(ROOT, "src", "strategy", "card-model.ts")
 
 ASCENSIONS = (8, 9)
 ACTS = (1, 2, 3)
+# The shop potion prices for the gold rate (meta.gold_hp): the logged shop screens from this ascension up.
+GOLD_PRICE_MIN_ASC = 8
+# Shop frames read per visit to find its potion offers (the first frames of a visit can be the shop before it opens).
+SHOP_FRAMES_PER_VISIT = 6
 # Inputs of an (ascension, act) with fewer boss fights are borrowed from the nearest ascension that has enough.
 MIN_N = 5
 
@@ -653,6 +661,60 @@ def read_raw(handle, off):
     return json.loads(handle.readline())
 
 
+def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC):
+    """The potion offers of the logged shop visits from `min_asc` up: [{id, rarity, price, act, asc}], one visit's offers
+    from the first of its SHOP frames (up to SHOP_FRAMES_PER_VISIT) that lists priced potions; and the visits read."""
+    visits = fetch(con, f"""
+        SELECT si.run_id, si.floor, any_value(si.act) AS act, any_value(r.ascension) AS asc,
+               list(si.off ORDER BY si.off) AS offs, list(si.len ORDER BY si.off) AS lens
+        FROM state_index si JOIN runs r ON r.run_id = si.run_id
+        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)} GROUP BY 1, 2 ORDER BY 1, 2""")
+    offers = []
+    seen = 0
+    for visit in visits:
+        for off, length in list(zip(visit["offs"], visit["lens"]))[:SHOP_FRAMES_PER_VISIT]:
+            states_handle.seek(off)
+            state = (json.loads(states_handle.read(length)) or {}).get("state") or {}
+            potions = [p for p in ((state.get("shop") or {}).get("potions") or []) if isinstance(p.get("price"), (int, float)) and p.get("potion_id")]
+            if potions:
+                seen += 1
+                offers.extend({"id": p["potion_id"], "rarity": p.get("rarity"), "price": p["price"], "act": visit["act"], "asc": visit["asc"]} for p in potions)
+                break
+    return offers, seen
+
+
+def gold_rates(offers, visits, entry, ascensions):
+    """meta.gold_hp: HP a gold coin is worth per ascension and act = the median held value (hold_hp) of the offered
+    potions in that act ÷ the median offer price (A8+ pooled). None without offers."""
+    prices = [o["price"] for o in offers]
+    if not prices:
+        return None
+    price = median(prices)
+    by_rarity = collections.defaultdict(list)
+    for o in offers:
+        by_rarity[o["rarity"] or "?"].append(o["price"])
+    out = {
+        "price": {"median": price, "n": len(prices), "visits": visits, "min_asc": GOLD_PRICE_MIN_ASC, "by_rarity": {k: {"median": median(v), "n": len(v)} for k, v in sorted(by_rarity.items())}},
+        "by_asc": {},
+        "formula": "gold × hold_hp ÷ price: hold_hp = the median held value (血) of the shop-offered potions in this act at this ascension, price = the median shop potion price (A8+)",
+        "note": "金币的血量价值（Dai 2026-10-02，THIEF_COST，docs/thief.md §7）：金币 ÷ A8+ 商店药水价格中位 × 本幕本进阶商店药水持有价值中位。小偷（地精佣兵 / 胖地精）带走的金币按它折血。",
+    }
+    for asc in ascensions:
+        for act in ACTS:
+            values = [((entry.get(o["id"]) or {}).get("by_asc") or {}).get(str(asc), {}).get(str(act), {}).get("hold_hp") for o in offers]
+            values = [v for v in values if v is not None]
+            if not values:
+                continue
+            hold = median(values)
+            out["by_asc"].setdefault(str(asc), {})[str(act)] = {
+                "per_gold": round(hold / price, 4),
+                "hold_hp": round(hold, 2),
+                "n": len(values),
+                "formula": f"{round(hold, 2):g} 血（商店药水持有价值中位，n={len(values)}）÷ {price:g} 金币（A8+ 商店药水价格中位）",
+            }
+    return out
+
+
 def mc_summaries(questions, handle):
     """{asc: {potion: {hp, dmg, n}}}: mean hp_saved_mean / dmg_gained_mean of the logged Monte Carlo runs
     (every combat question of that ascension: the boss fights alone have too few)."""
@@ -894,6 +956,14 @@ def main(argv=None):
         mc = mc_summaries(logs["questions"], handle)
         checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
     rates, entry = build(logs, potions, cards, values, solver, ascensions, mc, checks)
+    # The gold rate (THIEF_COST): the logged shop visits' potion offers (states.jsonl by offset, read-only).
+    with logsync.read_lock(db, shared=True):
+        con = logquery.connect(db, threads=2)
+        with open(os.path.join(logs_dir, "states.jsonl"), "rb") as handle:
+            offers, shop_visits = load_shop_offers(con, handle)
+    gold = gold_rates(offers, shop_visits, entry, ascensions)
+    if gold is None:
+        print("warning: no shop potion offers in the logs: no gold rate (meta.gold_hp)", file=sys.stderr)
     # Potion ids the logs hold or drink that the game data does not list (none on 2026-09-30).
     unknown = sorted((set(logs["seen"]) | set(logs["drinks"])) - set(entry))
     if unknown:
@@ -909,6 +979,7 @@ def main(argv=None):
             "ascensions": list(ascensions),
             "min_n": MIN_N,
             "constants": {"DRAW_PLAY_SHARE": DRAW_PLAY_SHARE, "HAND_SIZE": HAND_SIZE, "HAND_LIMIT": HAND_LIMIT, "ENEMY_HITS": ENEMY_HITS, "POWER_LASTING_STRENGTH": POWER_LASTING_STRENGTH, "FORGE_UPGRADE_GAIN": FORGE_UPGRADE_GAIN, "EXPENSIVE_CARD_COST": EXPENSIVE_CARD_COST, "WEAK_FACTOR": WEAK_FACTOR, "VULN_FACTOR": VULN_FACTOR},
+            **({"gold_hp": gold} if gold else {}),
             "note": "每瓶药在本幕 boss 战里值多少：hp = 省下（或回复）的血，damage = hp ÷ r，block = hp（1:1）；hold_hp = max(0, hp) 是持有价值。source 公式 = 日志输入代公式，估 = 公式里有估计常数（meta.constants）；n = 输入用到的 boss 战场数；inputs_asc = 输入借自另一进阶。check = boss 战喝这瓶时「喝」和「不喝」两条推演线整场掉血之差（不喝的线后面几回合仍可能喝它，所以量的是时机，不是持有价值），mc = 随机药水的蒙特卡洛本回合平均增益（拿着它的每一问都算），两者只作校验，不采用。",
         },
         "rates": {str(asc): {str(act): public_rates(rates[(asc, act)]) for act in ACTS if (asc, act) in rates} for asc in ascensions},
@@ -921,6 +992,8 @@ def main(argv=None):
     os.replace(tmp, args.out)
     n_checks = sum(len(deltas) for deltas in checks.values())
     print(f"wrote {args.out}: {len(entry)} potions, rates for {len(out['rates'])} ascensions, {len(logs['fights'])} boss fights, {n_checks} boss drinks with rollout numbers ({len(logs['boss_drink_rows'])} boss drinks)")
+    if gold:
+        print(f"gold rate: potion price {gold['price']['median']:g} (n={gold['price']['n']}, {shop_visits} shop visits); " + ", ".join(f"A{asc} act {act} {cell['per_gold']:.3f} HP/gold" for asc, acts in gold["by_asc"].items() for act, cell in acts.items()))
     if args.markdown:
         print(rates_table(rates))
         print()
@@ -1008,6 +1081,17 @@ def self_test():
     check("delta", drink_delta(crit, "plan1", "FIRE_POTION", names), 26 - 20.5)
     if drink_delta(crit, "plan2", "FIRE_POTION", names) is not None:
         failures.append("a dry pick has no delta")
+    # The gold rate: median held value of the offered potions in the act ÷ the median price.
+    offers = [{"id": "FIRE_POTION", "rarity": "Common", "price": 50, "act": 1, "asc": 8}, {"id": "FIRE_POTION", "rarity": "Common", "price": 48, "act": 2, "asc": 8}, {"id": "BLOCK_POTION", "rarity": "Common", "price": 52, "act": 1, "asc": 8}, {"id": "REGEN_POTION", "rarity": "Uncommon", "price": 75, "act": 1, "asc": 9}]
+    table = {"FIRE_POTION": {"by_asc": {"8": {"1": {"hold_hp": 4.0}}}}, "BLOCK_POTION": {"by_asc": {"8": {"1": {"hold_hp": 8.0}}}}, "REGEN_POTION": {"by_asc": {"8": {"1": {"hold_hp": 15.0}}}}}
+    gold = gold_rates(offers, 4, table, (8,))
+    check("gold price", gold["price"]["median"], 51)
+    check("gold hold", gold["by_asc"]["8"]["1"]["hold_hp"], 6.0)  # median of 4, 4, 8, 15
+    check("gold per gold", gold["by_asc"]["8"]["1"]["per_gold"], 6.0 / 51, tol=0.0001)
+    if "2" in gold["by_asc"]["8"]:
+        failures.append("no act 2 values: no act 2 rate")
+    if gold_rates([], 0, table, (8,)) is not None:
+        failures.append("no offers: no gold rate")
     if failures:
         print("self-test FAILED:\n  " + "\n  ".join(failures))
         return 1

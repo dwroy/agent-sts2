@@ -109,7 +109,7 @@ export function routeEntry(env: DecisionEnv): { project: (hp: number, max: numbe
 }
 
 /** A deck entry upgraded as card-upgrades.json logs it (card-model upgradeDelta's numbers), or null when not logged. */
-function upgradedEntry(card: Record<string, unknown>): Record<string, unknown> | null {
+export function upgradedEntry(card: Record<string, unknown>): Record<string, unknown> | null {
   const upgrade = cardUpgrade(str(card["card_id"]));
   if (!upgrade) return null;
   const moved = (value: unknown, delta: number): unknown => (typeof value === "number" ? value + delta : value);

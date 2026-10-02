@@ -226,3 +226,45 @@ describe("kill orders with an enemy that leaves", () => {
     expect(sneakyFirst.firstDown).toBe(2);
   });
 });
+
+describe("THIEF_COST: the loot as a cost in the rollout's value (escapes.lootHp)", () => {
+  const TAG = "THIEVING_HOPPER@0";
+  const withLoot = (input: RolloutInput, hp: number): RolloutInput => ({ ...input, escapes: { ...input.escapes!, lootHp: { [TAG]: hp } } });
+
+  it("each line pays the loot's HP in the samples it is lost in; every other number as without the cost", () => {
+    const base = hopperBoard([strike(0), defend(1), defend(2)], 40, "NAB_MOVE", { escapes: true });
+    const plain = rolloutDecision(base);
+    const costed = rolloutDecision(withLoot(base, 12));
+    expect(plain.lines.every((line) => line.thiefCost === undefined && line.thiefLost === undefined)).toBe(true);
+    costed.lines.forEach((line, i) => {
+      const was = plain.lines[i]!;
+      expect(line.plan).toBe(was.plan);
+      expect([line.hpLoss, line.wins, line.deaths, line.potionCost]).toEqual([was.hpLoss, was.wins, was.deaths, was.potionCost]);
+      // Over within the horizon (the Escape on T5): lost = gone, the rest came back.
+      expect(line.thiefLost![TAG]).toBe(line.thieves![TAG]!.gone);
+      expect(line.thiefCost).toBeCloseTo((12 * line.thieves![TAG]!.gone) / line.samples, 9);
+      expect(line.value).toBeCloseTo(was.value - line.thiefCost!, 9);
+    });
+  });
+
+  it("a 1-turn estimate: only an escape this turn pays (a thief with turns left is not lost yet)", () => {
+    const oneTurn = (input: RolloutInput): RolloutInput => withLoot({ ...input, options: { ...input.options, horizon: 1 } }, 12);
+    const nab = rolloutDecision(oneTurn(hopperBoard([strike(0), defend(1), defend(2)], 40, "NAB_MOVE", { escapes: true })));
+    expect(nab.lines.every((line) => line.thiefCost === 0)).toBe(true);
+    const escape = rolloutDecision(oneTurn(hopperBoard([strike(0), defend(1), defend(2)], 40, "ESCAPE_MOVE", { escapes: true })));
+    expect(escape.lines.every((line) => line.thiefCost === 12 && line.thiefLost![TAG] === 1)).toBe(true);
+  });
+
+  it("a sample that dies pays nothing for the loot (no later for it), as for a potion", () => {
+    // Its Hat Trick 21 into 5 HP and no block in hand: every line dies this turn.
+    const board = hopperBoard([strike(0), strike(1)], 60, "HAT_TRICK_MOVE", { escapes: true });
+    const solver = { ...board.solver, player: { ...PLAYER, hp: 5 }, enemies: board.solver.enemies.map((enemy) => ({ ...enemy, attacks: [{ damage: 21, hits: 1 }] })) };
+    const dying = withLoot({ ...board, solver, plans: solveTurn(solver).plans }, 12);
+    const result = rolloutDecision(dying);
+    expect(result.lines.length).toBeGreaterThan(0);
+    for (const line of result.lines) {
+      expect(line.deaths).toBe(line.samples);
+      expect(line.thiefCost).toBe(0);
+    }
+  });
+});

@@ -317,6 +317,9 @@ async function main(argv: string[]): Promise<number> {
             `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
         );
         const buildSim = config.bossSimBuild === "on" && config.buildDecider === "deepseek" ? new BuildSimPool() : null;
+        // THIEF_COST: the Hopper's stolen card simulated against the act boss (thief-card-value.ts): B3's pool when it
+        // runs, else one of its own (its workers start on the first Hopper fight).
+        const thiefPool = config.thiefFacts && config.thiefCost ? (buildSim ?? new BuildSimPool()) : null;
         const stats = await runLoop({
           config,
           mode,
@@ -339,8 +342,10 @@ async function main(argv: string[]): Promise<number> {
           onEvent: (event) => reporter.handle(event),
           // B3: one worker pool for the whole session (its threads start on the first deck-building question).
           buildSim: buildSim ? { runner: buildSim } : null,
+          thiefSim: thiefPool ? { runner: thiefPool } : null,
         });
         await buildSim?.close();
+        if (thiefPool && thiefPool !== buildSim) await thiefPool.close();
         reporter.summary(stats);
         return stats.errors > 0 && stats.acts === 0 ? 1 : 0;
       } finally {

@@ -47,7 +47,7 @@ import { actThreatIds, bossOnBoard, moveTurns, spawnsAt } from "../knowledge/mon
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
-import { killsThief, lastTurnKillLine, lootText, shownKillLine, thiefContextJson, thiefFact, thievesOf, type Thief } from "../strategy/thief.js";
+import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 
 /**
  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
@@ -529,6 +529,16 @@ export function guardKeepsPick(pick: Plan, plan: Plan, enemies: EnemySim[], deat
   const mine = deathsOf(pick);
   const theirs = deathsOf(plan);
   return mine === null || theirs === null || theirs <= mine;
+}
+
+/**
+ * THIEF_COST (docs/thief.md §7): the HP guard may swap `pick` for `plan` only when the loot `plan` loses more than the
+ * pick (lootOf: the rollout's expected loot cost, or this turn's certain one) is no more than the HP the swap saves this
+ * turn: by the cost's own measure the swap must not be worse. The guard still compares HP alone (guardLoss).
+ */
+export function lootSwapOk(pick: Plan, plan: Plan, lootOf: (plan: Plan) => number): boolean {
+  const extraLoot = lootOf(plan) - lootOf(pick);
+  return extraLoot <= 0 || extraLoot <= guardLoss(pick) - guardLoss(plan);
 }
 
 /** This fight's HP-guard record (screenMemory.hpGuard), read-only: the extra HP accepted so far. */
@@ -2105,6 +2115,18 @@ function planTurn(env: DecisionEnv): Decision | null {
       thiefFailed = true;
     }
   }
+  // THIEF_COST (docs/thief.md §7, default off): each thief's loot in HP (the Hopper's card from the loop's simulation in
+  // screen memory, the gold at the potion table's rate), a cost in the rollout's ranking and in code's own choices below.
+  // Fail safe: an error here leaves the thieves without a value, the decision as with the switch off.
+  if (env.thiefCost === true && thieves.length > 0) {
+    try {
+      thieves = withLoot(thieves, state, env.screenMemory.thiefCardValue);
+    } catch {
+      thieves = thieves.map(({ loot: _loot, ...thief }) => thief);
+    }
+  }
+  /** THIEF_COST in play: some thief's loot has an HP value above 0 (never with the switch off). */
+  const lootOn = (): boolean => thieves.some((thief) => (thief.loot?.hp ?? 0) > 0);
   if (thiefKill && !options.includes(thiefKill)) options.push(thiefKill);
   const second = options.find((plan) => plan !== top);
   // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
@@ -2141,11 +2163,13 @@ function planTurn(env: DecisionEnv): Decision | null {
     // extra HP a model chose to accept.
     // The guard picks among potion-free lines while one survives (code never drinks on its own).
     const autoGuardLines = surviving.filter((plan) => !drinksKeptPotion(plan) && (!drySurvives || !drinksPotion(plan)));
+    // THIEF_COST: no swap that loses more loot this turn than the HP it saves (no rollout here: a thief's last turn only).
+    const autoLootOk = (plan: Plan) => !lootOn() || lootSwapOk(top, plan, (line) => lastTurnLoot(line, thieves));
     let guarded =
       (kind === "elite" || kind === "boss") && !top.outcome.winsFight
-        ? hpGuardReplacement(top, autoGuardLines, playerSim.hp, hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env)))
+        ? hpGuardReplacement(top, autoGuardLines, playerSim.hp, hpGuardSlack(playerSim.hp, kind, hpGuardExtra(env)), autoLootOk)
         : hallwayGuard && !top.outcome.winsFight
-          ? hpGuardReplacement(top, autoGuardLines, playerSim.hp, hallwayGuardSlack)
+          ? hpGuardReplacement(top, autoGuardLines, playerSim.hp, hallwayGuardSlack, autoLootOk)
           : null;
     if (guarded && guardKeepsSetup(top, guarded)) guarded = null;
     // Racing the Waterfall Giant's eruption, damage is the defence (KG0E F17: the guard swapped four
@@ -2258,7 +2282,10 @@ function planTurn(env: DecisionEnv): Decision | null {
       thiefRollout = rolled ? rolloutKillLine(rolled.result.lines, (line) => line.plan !== noPotionCopy && (options.includes(line.plan) || !drinksPotion(line.plan)), options, thieves) : null;
       thiefKept = [shownKillLine(thiefRollout && !options.includes(thiefRollout) ? [...options, thiefRollout] : options, thieves), thiefRollout].filter((plan): plan is Plan => plan !== null);
       for (const plan of new Set([...options, ...(thiefRollout ? [thiefRollout] : []), ...mcMedians, ...(rolled ? rolled.result.lines.map((line) => line.plan) : [])])) {
-        thiefFacts.set(plan, thiefFact(plan, thieves, (thief) => thiefSamples(rolled?.byPlan.get(plan), thief), state.turn ?? null));
+        // THIEF_COST: the samples of the line losing each thief's loot (rollout.ts thiefLost), for its loot cost.
+        const line = rolled?.byPlan.get(plan);
+        const lostOf = (thief: Thief) => (line?.thiefLost && line.thiefLost[thiefTag(thief)] !== undefined ? { lost: line.thiefLost[thiefTag(thief)]!, samples: line.samples } : null);
+        thiefFacts.set(plan, thiefFact(plan, thieves, (thief) => thiefSamples(line, thief), state.turn ?? null, undefined, lostOf));
       }
       thiefContext = thiefContextJson(thieves, state.turn ?? null);
     } catch {
@@ -2520,10 +2547,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   // After a finished chosen line (stopLine), no answer keeps its end: the turn ends.
   // B2: in a boss fight the simulator is trusted on, its best potion-free line (the same ranking as rollout_best).
   const simFallback = simRanks?.bestDry ?? null;
-  const autoTop = stopLine ?? simFallback ?? (drinksPotion(top) ? (dryFirst(options) ?? top) : top);
+  // THIEF_COST: code's rank has no loot in it; the rollout's ranking has. With a loot cost in play, the fallback is the
+  // rollout's best when it is a shown line drinking no potion (else as before).
+  const lootFallback = lootOn() && rollout?.available && rollout.result.lines.some((line) => (line.thiefCost ?? 0) > 0) && bestShown !== null && options.includes(bestShown) && !drinksPotion(bestShown) ? bestShown : null;
+  const autoTop = stopLine ?? simFallback ?? lootFallback ?? (drinksPotion(top) ? (dryFirst(options) ?? top) : top);
   const fallback = (why: string, line: Plan = autoTop): ResolvedAction => ({
     intent: firstIntent(line, hand, env),
-    rationale: `${why}; ${line === stopLine ? "ending the turn where the chosen line ended" : simFallback !== null && line === simFallback ? "using the whole-fight simulation's best potion-free plan" : `using the code-best ${line === top ? "plan" : "potion-free plan"}`}`,
+    rationale: `${why}; ${line === stopLine ? "ending the turn where the chosen line ended" : simFallback !== null && line === simFallback ? "using the whole-fight simulation's best potion-free plan" : lootFallback !== null && line === lootFallback ? "using the rollout's best plan (its ranking counts the thief's loot)" : `using the code-best ${line === top ? "plan" : "potion-free plan"}`}`,
     confidence: null,
     fallback: true,
     apply: () => commit(env, state.turn, line, hand, "code"),
@@ -2560,7 +2590,13 @@ function planTurn(env: DecisionEnv): Decision | null {
       const noNewDrink = (plan: Plan) => potionIdsOf(plan).every((id) => chosenPotions.includes(id));
       // Only into a line that puts at least as much damage into every enemy: which enemy to hit is Jev's call.
       const coversTargets = (plan: Plan) => groups.length < 2 || groups.every((group) => group.indices.every((index) => damageInto(plan, [index], enemies) >= damageInto(chosen.plan!, [index], enemies)));
-      const dominator = !hallway && fromJev && answer.confidence < 0.4 ? options.find((plan) => plan !== chosen.plan && noNewDrink(plan) && dominates(plan, chosen.plan!) && coversTargets(plan)) : undefined;
+      // THIEF_COST: nor into a line that loses more loot than the pick (the loot is not a dominance axis).
+      const lootOf = (plan: Plan): number => {
+        const line = rollout?.available ? rollout.byPlan.get(plan) : undefined;
+        return line?.thiefCost !== undefined ? line.thiefCost : lastTurnLoot(plan, thieves);
+      };
+      const keepsLoot = (plan: Plan) => !lootOn() || lootOf(plan) <= lootOf(chosen.plan!);
+      const dominator = !hallway && fromJev && answer.confidence < 0.4 ? options.find((plan) => plan !== chosen.plan && noNewDrink(plan) && dominates(plan, chosen.plan!) && coversTargets(plan) && keepsLoot(plan)) : undefined;
       const picked = dominator ?? chosen.plan!;
       // Boss/elite/dangerous choices: the guard, with a per-fight budget for the extra HP accepted.
       // This turn's own earlier entry (a re-plan) is replaced, so it does not count against this choice.
@@ -2576,7 +2612,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       // Nor off Jev's focus target, nor into a line the rollout sees dying more often (guardKeepsPick).
       const rolloutDeaths = (plan: Plan): number | null => (rollout?.available ? (rollout.byPlan.get(plan)?.deaths ?? null) : null);
       // B2: nor into a line the whole-fight simulation (a boss it is trusted on) sees winning less, beyond 2 standard errors.
-      const keepsPick = (plan: Plan) => guardKeepsPick(picked, plan, enemies, rolloutDeaths) && !simWinsLess(simRanks, plan, picked);
+      // THIEF_COST: nor into a line losing more loot than the HP it saves (the rollout's loot cost, else this turn's).
+      const keepsPick = (plan: Plan) => guardKeepsPick(picked, plan, enemies, rolloutDeaths) && !simWinsLess(simRanks, plan, picked) && (!lootOn() || lootSwapOk(picked, plan, lootOf));
       const proposed = hallway
         ? hallwayGuard && !picked.outcome.winsFight
           ? hpGuardReplacement(picked, guardOptions, playerSim.hp, hallwayGuardSlack, keepsPick)
@@ -2626,11 +2663,18 @@ function planTurn(env: DecisionEnv): Decision | null {
         if (thieves.length === 0) return null;
         try {
           return {
-            thieves: thieves.map((thief) => ({ name: thief.name, id: thief.id, carries: lootText(thief), turns_left: thief.turnsLeft })),
+            thieves: thieves.map((thief) => ({ name: thief.name, id: thief.id, carries: lootText(thief), turns_left: thief.turnsLeft, ...(thief.loot ? { loot_hp: thief.loot.hp } : {}) })),
             kills_now: shown.filter((plan) => thieves.some((thief) => killsThief(plan, thief))).map(keyOfShown),
             ...(thiefKill && shown.includes(thiefKill) ? { last_turn_line: keyOfShown(thiefKill) } : {}),
             ...(thiefRollout && shown.includes(thiefRollout) ? { rollout_line: keyOfShown(thiefRollout), rollout_line_added: thiefRolloutAdded } : {}),
             chosen_kills: pick?.plan ? thieves.some((thief) => killsThief(pick.plan!, thief)) : null,
+            // THIEF_COST: each shown line's expected loot cost (HP) and the chosen line's.
+            ...(lootOn() && rollout?.available
+              ? {
+                  loot_cost: Object.fromEntries(shown.flatMap((plan) => (rollout.byPlan.get(plan)?.thiefCost !== undefined ? [[keyOfShown(plan), Math.round(rollout.byPlan.get(plan)!.thiefCost! * 10) / 10]] : []))),
+                  chosen_loot_cost: pick?.plan ? (rollout.byPlan.get(pick.plan)?.thiefCost ?? null) : null,
+                }
+              : {}),
           };
         } catch {
           return null;

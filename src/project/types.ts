@@ -60,6 +60,11 @@ export interface DecisionEnv {
    * options. Undefined means on; false: the combat question exactly as before.
    */
   thiefFacts?: boolean;
+  /**
+   * THIEF_COST (config; docs/thief.md §7): the thieves' loot as HP in the rollout's ranking (with THIEF_FACTS on).
+   * Undefined or false: off, the question and every choice as with THIEF_FACTS alone.
+   */
+  thiefCost?: boolean;
 }
 
 /** A retried fight, as the combat planners see it (src/sl/controller.ts envFor). */
@@ -113,6 +118,12 @@ export interface ScreenMemory {
    * which card the Thieving Hopper stole). Noted on every state read, rebuilt from the logged frames after a restart.
    */
   thiefStart?: { fight: string; deck: string[]; gold: number | null };
+  /**
+   * THIEF_COST: the HP the Thieving Hopper's stolen card is worth in this act's boss fight (src/sim/thief-card-value.ts),
+   * computed once per fight as soon as the card is known; `fight` as thiefStart's. Logged with the next decision
+   * (thief_card_value) and taken back from there after a restart (journal-replay.ts).
+   */
+  thiefCardValue?: import("../sim/thief-card-hp.js").ThiefCardValue;
   /** The fight's encounter (first enemy ids seen, sorted, "+"-joined) for the rollout facts (rollout-live.ts). */
   rolloutEncounter?: { fight: string; enc: string };
   /** B2 (src/sim/boss-lines.ts): the whole-fight simulation's wall clock spent this boss turn (its budget over re-plans). */

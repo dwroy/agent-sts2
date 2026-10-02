@@ -145,6 +145,8 @@ export interface RunConfigRow {
     combat_deepseek: string;
     /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
     thief_facts: boolean;
+    /** THIEF_COST (docs/thief.md §7): the thieves' loot as HP in the combat ranking (default off). */
+    thief_cost: boolean;
     fight_plan: string;
     run_plan: string;
     escalation: string[];
@@ -414,6 +416,7 @@ export function runConfigRow(
       boss_sim_build: config.bossSimBuild,
       combat_deepseek: config.combatDeepseek,
       thief_facts: config.thiefFacts,
+      thief_cost: config.thiefCost,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
       escalation: [...config.escalation.chain],

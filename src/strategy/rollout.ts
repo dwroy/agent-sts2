@@ -592,8 +592,13 @@ export interface RolloutInput {
    * `carriers`: the board index of each enemy carrying our card or gold now, and its tag; `heirs`: by enemy id, the
    * spawn that takes the tag over when it dies (Gremlin Merc -> Fat Gremlin). Each turn record then says, per tag, whether
    * the loot is back (every holder killed), gone (a holder left) or still open.
+   * `lootHp` (THIEF_COST, docs/thief.md §7; absent: no cost, the value as before): by tag, the HP the loot is worth. A
+   * sample pays it when the loot is gone at its end, or still open (a holder in the fight at the horizon's end: the Merc
+   * keeps taking gold and its Fat Gremlin flees two turns after it dies; the gold came back in 12 of 44 logged A8+ Merc
+   * fights), and not when it is back or the sample dies (no later for it, as a potion's cost). Off the value like a
+   * potion's cost: `thiefCost` is the line's mean.
    */
-  escapes?: { moves: Record<string, string[]>; carriers: Record<number, string>; heirs: Record<string, string> };
+  escapes?: { moves: Record<string, string[]>; carriers: Record<number, string>; heirs: Record<string, string>; lootHp?: Record<string, number> };
 }
 
 /** One enemy an on-death spawn brings (RolloutInput.spawns). */
@@ -639,6 +644,9 @@ export interface OrderEstimate {
   laterDrinks: Record<string, number>;
   /** RolloutInput.escapes: per carrier tag, the samples in which its loot is back by the horizon (killed) or gone (it left). */
   thieves?: Record<string, { back: number; gone: number }>;
+  /** THIEF_COST (escapes.lootHp): the expected loot lost, in HP (in `value` already), and per tag the samples charged. */
+  thiefCost?: number;
+  thiefLost?: Record<string, number>;
 }
 
 export interface LineEstimate {
@@ -701,6 +709,13 @@ export interface LineEstimate {
    * holder killed before it left) or gone (a holder left with it); the rest are still open (or died). Absent without.
    */
   thieves?: Record<string, { back: number; gone: number }>;
+  /**
+   * THIEF_COST (RolloutInput.escapes.lootHp): the expected HP of the loot lost (a sample pays a thief's loot HP when it
+   * is gone at its end or still open; not when back or when the sample dies); `value` has it taken off. Per tag, the
+   * samples charged. Absent without lootHp.
+   */
+  thiefCost?: number;
+  thiefLost?: Record<string, number>;
   value: number;
   /** The same trajectories with the ungated model as terminal (w = 1), for comparison. */
   valueModelTerminal: number | null;
@@ -2586,6 +2601,9 @@ interface SampleValue {
   winModel: number | null;
   /** The potions the sample drank up to the fight's end or the horizon, their cost in HP (potion-cost.ts). */
   cost: number;
+  /** THIEF_COST: the loot this sample loses, in HP (RolloutInput.escapes.lootHp), and the tags it pays for. */
+  loot: number;
+  lost: string[];
 }
 
 /** The potion cost of the first `n` records of a sample (potion-cost.ts; 0 without drinks). */
@@ -2593,6 +2611,25 @@ function costOf(records: TurnRecord[], n: number): number {
   let cost = 0;
   for (let i = 0; i < Math.min(n, records.length); i += 1) cost += records[i]!.potionCost ?? 0;
   return cost;
+}
+
+/**
+ * THIEF_COST: the loot a sample loses at its last record (RolloutInput.escapes.lootHp): each tag gone, or still open
+ * when later turns were rolled out (`open`: a 1-turn estimate simulates no later turn, so only an escape this turn
+ * counts), at its HP. A sample that dies pays nothing (valueAt).
+ */
+function lootOf(last: TurnRecord, lootHp: Record<string, number> | undefined, open: boolean): { loot: number; lost: string[] } {
+  if (!lootHp) return { loot: 0, lost: [] };
+  let loot = 0;
+  const lost: string[] = [];
+  for (const [tag, hp] of Object.entries(lootHp)) {
+    const status = last.thieves?.[tag];
+    if (status === "gone" || (open && status === "open")) {
+      loot += hp;
+      lost.push(tag);
+    }
+  }
+  return { loot, lost };
 }
 
 /** Per carrier tag, the samples whose loot is back or gone at their last record (RolloutInput.escapes), or null without. */
@@ -2650,21 +2687,21 @@ function remainingHp(e: SimEnemy, input: RolloutInput): number {
  * `cost`: the potions drunk on the way, apart (the loss stays HP: capped at lossCap, shown as HP); 0 in a sample that
  * dies (a potion is HP paid later, and there is no later).
  */
-function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, lossCap: number): SampleValue & { n: number } {
+function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: number, lossCap: number, lootHp?: Record<string, number>): SampleValue & { n: number } {
   let loss = 0;
   const upto = Math.min(h, records.length);
   for (let i = 0; i < upto; i += 1) {
     const r = records[i]!;
-    // A sample that dies pays nothing for its potions: there is no later for them (the run is over).
-    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0, cost: 0 };
+    // A sample that dies pays nothing for its potions (nor its loot): there is no later for them (the run is over).
+    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0, cost: 0, loot: 0, lost: [] };
     if (r.won) {
       loss += r.loss;
-      return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0, cost: costOf(records, i + 1) };
+      return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0, cost: costOf(records, i + 1), ...lootOf(r, lootHp, h > 1) };
     }
     // Out of time (Battleworn Dummy): the fight is over, not won, and costs nothing more.
     if (r.timeUp) {
       loss += r.loss;
-      return { loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0, cost: costOf(records, i + 1) };
+      return { loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0, cost: costOf(records, i + 1), ...lootOf(r, lootHp, h > 1) };
     }
     if (i < upto - 1) loss += r.loss;
   }
@@ -2682,6 +2719,7 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
     winModel: term.model ? term.model.winProb : null,
     n: term.n,
     cost: costOf(records, upto),
+    ...lootOf(last, lootHp, h > 1),
   };
 }
 
@@ -2870,17 +2908,28 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
   const lossCap = startHp + (input.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
   const hpWeight = solverHpWeight(startHp, input.solver.player.maxHp);
   const degraded: string[] = [];
+  // THIEF_COST: the HP of each thief's loot (absent: no loot cost, the value as before).
+  const lootHp = input.escapes?.lootHp && Object.keys(input.escapes.lootHp).length > 0 ? input.escapes.lootHp : undefined;
+  /** Per tag, the samples paying for it (THIEF_COST). */
+  const lostCounts = (vals: { lost: string[] }[]): Record<string, number> => {
+    const out: Record<string, number> = Object.fromEntries(Object.keys(lootHp ?? {}).map((tag) => [tag, 0]));
+    for (const v of vals) for (const tag of v.lost) out[tag] = (out[tag] ?? 0) + 1;
+    return out;
+  };
 
   // (ii) one turn: the line's own outcome + terminal of its end-of-turn state (no simulation of later turns).
   const one = candidates.map(({ plan }) => {
     const records = simulate(input, plan, 1, seed, budget)!;
-    const v = valueAt(records, 1, ctx, t0, lossCap);
-    const vm = valueAt(records, 1, ctxModel, t0, lossCap);
-    // The drink's cost: in the solver's score already (current), taken off the model's value here.
-    const modelValue = vm.lossModel === null ? null : -vm.lossModel - v.cost - DEATH_HP * (1 - (vm.winModel ?? 0));
+    const v = valueAt(records, 1, ctx, t0, lossCap, lootHp);
+    const vm = valueAt(records, 1, ctxModel, t0, lossCap, lootHp);
+    // The drink's cost: in the solver's score already (current), taken off the model's value here; the loot's too
+    // (THIEF_COST: not in the solver's score, so off the model's value only).
+    const modelValue = vm.lossModel === null ? null : -vm.lossModel - v.cost - v.loot - DEATH_HP * (1 - (vm.winModel ?? 0));
     const current = plan.score / hpWeight;
     return {
       cost: v.cost,
+      loot: v.loot,
+      lost: v.lost,
       hpLoss: v.loss,
       winProb: v.win,
       turns: v.turns,
@@ -3014,8 +3063,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const leader = leaderLeft ? { hpLeft: mean(leaderLeft), dead: leaderLeft.filter((hp) => hp <= 0).length } : null;
     // The board's leader, for every line (one rolled out with the solver's own later turns has no order).
     const leaderHpLeft = boardLeader ? mean(kept.map((records) => groupHpOf(records[Math.min(horizon, records.length) - 1]!, boardLeader))) : null;
-    const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, lossCap));
-    const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, lossCap));
+    const vals = kept.map((records) => valueAt(records, horizon, ctx, t0, lossCap, lootHp));
+    const valsM = kept.map((records) => valueAt(records, horizon, ctxModel, t0, lossCap, lootHp));
     const loss = mean(vals.map((v) => v.loss));
     const win = mean(vals.map((v) => v.win));
     // A dying sample's turn count is when we die, not when we win (69HW F33: "turns to win ~2" at 0/8).
@@ -3026,6 +3075,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
     const model = valsM.every((v) => v.lossModel !== null) ? { hpLoss: mean(valsM.map((v) => v.lossModel!)), winProb: mean(valsM.map((v) => v.winModel!)) } : null;
     // The potions drunk (this turn and later, up to the fight's end or the horizon), at their cost: off the value.
     const cost = mean(vals.map((v) => v.cost));
+    // THIEF_COST: the loot lost, off the value like the potions' cost (0 without lootHp).
+    const loot = lootHp ? mean(vals.map((v) => v.loot)) : 0;
     const laterDrinks: Record<string, number> = {};
     for (const records of kept) {
       const ids = new Set(records.slice(1, horizon).flatMap((record) => record.drunk ?? []));
@@ -3036,6 +3087,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       potionCost: cost,
       laterDrinks,
       ...(thieves ? { thieves } : {}),
+      ...(lootHp ? { thiefCost: loot, thiefLost: lostCounts(vals) } : {}),
       hpLoss: loss,
       turnsToWin: alive.length > 0 ? mean(alive.map((v) => v.turns)) : null,
       deaths: dead.length,
@@ -3043,8 +3095,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       winProb: win,
       wins,
       timeUps,
-      value: -loss - cost - DEATH_HP * (1 - win),
-      valueModelTerminal: model === null ? null : -model.hpLoss - cost - DEATH_HP * (1 - model.winProb),
+      value: -loss - cost - loot - DEATH_HP * (1 - win),
+      valueModelTerminal: model === null ? null : -model.hpLoss - cost - loot - DEATH_HP * (1 - model.winProb),
       modelForecast: model,
       perTurn: turnSpreads(kept, horizon),
       firstDown,
@@ -3079,6 +3131,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         order: null,
         orders: [],
         ...(o.thieves ? { thieves: o.thieves } : {}),
+        ...(lootHp ? { thiefCost: o.loot, thiefLost: lostCounts([o]) } : {}),
         hpLoss: o.hpLoss,
         potionCost: o.cost,
         laterDrinks: {},
@@ -3090,8 +3143,8 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
         turnsToDeath: null,
         winProb: o.winProb,
         wins,
-        value: -o.hpLoss - o.cost - DEATH_HP * (1 - o.winProb),
-        valueModelTerminal: o.lossModel === null ? null : -o.lossModel - o.cost - DEATH_HP * (1 - (o.winModel ?? 0)),
+        value: -o.hpLoss - o.cost - o.loot - DEATH_HP * (1 - o.winProb),
+        valueModelTerminal: o.lossModel === null ? null : -o.lossModel - o.cost - o.loot - DEATH_HP * (1 - (o.winModel ?? 0)),
         modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 } },
         perTurn: [],
       };
@@ -3113,6 +3166,7 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       potionCost: best.potionCost,
       laterDrinks: best.laterDrinks,
       ...(best.thieves ? { thieves: best.thieves } : {}),
+      ...(best.thiefCost !== undefined ? { thiefCost: best.thiefCost, thiefLost: best.thiefLost } : {}),
       enemyHpLeft: best.enemyHpLeft,
       leaderHpLeft: best.leaderHpLeft,
       turnsSurvived: best.turnsSurvived,
