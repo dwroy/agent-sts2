@@ -19,6 +19,27 @@ import { cardOutcome } from "../knowledge/outcome-facts.js";
 import { CARD_REWARD_ROOMS } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
 
+/**
+ * Special card rewards that put their card straight into the deck, with no choice to make: the stolen card's return
+ * after the Thieving Hopper is killed (「取回你被偷走的牌。」, 141 claims logged to 2026-10-02) and the Lantern Key
+ * (「将灯火钥匙加入你的牌组。」, 5). Every one of those 146 claims was followed by the next reward's claim, never by a card
+ * choice. They are claimed before a reward that opens one (Card, LinkedRewardSet, another SpecialCard) and still after
+ * a skipped card reward: the skip's filter below took every SpecialCard with it, so a card reward skipped before the
+ * return was claimed would have left the stolen card behind (never logged: the return was listed before the Card
+ * reward every time, index 2 of 3).
+ */
+export const NO_CHOICE_SPECIAL_CARD = /被偷走|灯火钥匙|stolen|lantern key/i;
+
+/** A reward that adds its card without opening a choice (NO_CHOICE_SPECIAL_CARD). */
+export function noChoiceSpecialCard(entry: Record<string, unknown>): boolean {
+  return str(entry["reward_type"]) === "SpecialCard" && NO_CHOICE_SPECIAL_CARD.test(str(entry["description"]));
+}
+
+/** Rewards whose claim may open a card choice (a skipped one stays claimable: cardRewardSkipped). */
+function opensCardChoice(entry: Record<string, unknown>): boolean {
+  return ["Card", "SpecialCard", "LinkedRewardSet"].includes(str(entry["reward_type"])) && !noChoiceSpecialCard(entry);
+}
+
 export function planReward(env: DecisionEnv): Decision | null {
   const { state, knowledge } = env;
   const reward = asRecord(state.raw["reward"]);
@@ -140,13 +161,12 @@ export function planReward(env: DecisionEnv): Decision | null {
     .filter((entry) => bool(entry["claimable"], true))
     .filter((entry) => !(potionSlotsFull && str(entry["reward_type"]) === "Potion"))
     // A skipped card reward stays claimable in the state (the mod documents this). Claiming it again
-    // reopens the card choice, which is how a live run ended up skipping in a loop.
-    .filter(
-      (entry) =>
-        !env.screenMemory.cardRewardSkipped ||
-        !["Card", "SpecialCard", "LinkedRewardSet"].includes(str(entry["reward_type"])),
-    );
-  const next = claimable[0];
+    // reopens the card choice, which is how a live run ended up skipping in a loop. A special card that opens
+    // no choice (the stolen card's return) is not one of them: it is still claimed.
+    .filter((entry) => !env.screenMemory.cardRewardSkipped || !opensCardChoice(entry));
+  // In the screen's order, except that a special card opening no choice goes before a reward that opens one.
+  const first = claimable[0];
+  const next = first && opensCardChoice(first) ? (claimable.find(noChoiceSpecialCard) ?? first) : first;
   if (next) {
     const index = numOrNull(next["index"]) ?? 0;
     return {
