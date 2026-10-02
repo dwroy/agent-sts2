@@ -216,6 +216,8 @@ export interface ReplayResult {
   turnStartExhaust: ScreenMemory["turnStartExhaust"] | null;
   /** The deck and gold at the last fight's first logged frame (thief.ts noteFightStart); null when none was in combat. */
   thiefStart: ScreenMemory["thiefStart"] | null;
+  /** The last stolen card value logged (THIEF_COST: a decision row's thief_card_value); null when none was. */
+  thiefCardValue: ScreenMemory["thiefCardValue"] | null;
   /**
    * The enemy the last fight's last executed targeted action faced (Surrounded; combat-plan noteFacing) and that
    * fight ("<run id>:<act>:<floor>"); null when the logs end out of combat or no targeted action was logged in it.
@@ -293,6 +295,9 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     byState.delete(key);
     for (const decision of decisions) {
       counts.decisions += 1;
+      // THIEF_COST: the stolen card's value rides on the first row logged after it was computed (whatever its result).
+      const cardValue = decision["thief_card_value"];
+      if (cardValue && typeof cardValue === "object" && !Array.isArray(cardValue) && typeof (cardValue as Record<string, unknown>)["fight"] === "string") memory.thiefCardValue = cardValue as unknown as NonNullable<ScreenMemory["thiefCardValue"]>;
       // Only an executed decision is recorded (a failed action, or a paid decision the board moved past
       // before it was sent, "not dispatched", is logged, not recorded).
       if (/^(failed|not dispatched)/.test(str(decision["result"]))) continue;
@@ -311,7 +316,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     }
   }
   const facing = typeof memory.facing === "number" && memory.facingFight ? { fight: memory.facingFight, index: memory.facing } : null;
-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, thiefStart: memory.thiefStart ?? null, facing, counts };
+  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
 }
 
 /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */

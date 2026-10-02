@@ -13,7 +13,16 @@
  * digest (the test's: question, Jev's view, every answer's resolution) goes to <out>/digests.json for the identity
  * check against the pre-change planner (scratch script, notes/thief-facts-report.md).
  *
+ * THIEF_COST (--cost, docs/thief.md §7, notes/thief-cost-report.md): the two questions are THIEF_FACTS on with
+ * THIEF_COST off and on instead, the stolen card's value from tools/thief-card-values.ts (<cards>, its numbers read again
+ * by the current cardHpOf) in screen memory as the loop leaves it, the gold at the potion table's rate. Per turn: the
+ * rollout's best line off and on, its chance of the loot back, its HP this turn and later, its loot cost, auto-play vs
+ * ask; the off question's digest (THIEF_FACTS on) for the identity check against ffed0d4. Output <out>/cost-results.jsonl,
+ * <out>/cost-digests.json, <out>/cost-frames.json.
+ *
  * Usage: npx tsx tools/thief-facts-replay.ts [--out experiments/thief-facts] [--limit N]   (limit: fights)
+ *        npx tsx tools/thief-facts-replay.ts --cost [--out experiments/thief-cost] [--cards experiments/thief-cost/card-values.jsonl]
+ *          [--potion-dir DIR]   (a potion table with the gold rate, when src/knowledge's has none yet)
  * Output: <out>/results.jsonl (one row a turn), <out>/digests.json (the off questions' digests), <out>/frames.json (the
  * frames replayed and their first-frame memory: the identity check runs the pre-change planner on them, e.g. a git
  * archive of 894f245 with this tree's knowledge data, and compares digests), and a line a turn on stdout;
@@ -32,8 +41,10 @@ import { buildRunBrief } from "../src/project/run-brief.js";
 import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
 import { planCombatTurn, thiefTrace } from "../src/screens/combat-plan.js";
 import { potionMcOptions } from "../src/strategy/potion-mc.js";
+import { potionWorthSource } from "../src/knowledge/potion-equivalents.js";
 import { rolloutLiveOptions, thiefSamples } from "../src/strategy/rollout-live.js";
-import { backShare, killsThief, noteFightStart, thievesOf, type Thief } from "../src/strategy/thief.js";
+import { backShare, killsThief, noteFightStart, thiefTag, thievesOf, type Thief } from "../src/strategy/thief.js";
+import { cardHpOf, type ThiefCardValue } from "../src/sim/thief-card-hp.js";
 import type { Plan } from "../src/strategy/turn-solver.js";
 
 function arg(name: string, fallback: string): string {
@@ -41,7 +52,11 @@ function arg(name: string, fallback: string): string {
   return at >= 0 && process.argv[at + 1] !== undefined ? process.argv[at + 1]! : fallback;
 }
 
-const outDir = arg("out", "experiments/thief-facts");
+const costMode = process.argv.includes("--cost");
+const outDir = arg("out", costMode ? "experiments/thief-cost" : "experiments/thief-facts");
+const cardsPath = arg("cards", "experiments/thief-cost/card-values.jsonl");
+/** --cost: the directory of the potion table the questions read (the gold rate; default src/knowledge). */
+const potionDir = arg("potion-dir", "");
 const limit = Number(arg("limit", "100000"));
 const STATES = "logs/states.jsonl";
 const PY = ".cache/logdb-venv/bin/python";
@@ -72,11 +87,29 @@ function traced(): typeof thiefTrace.last {
   return thiefTrace.last;
 }
 
-function envOf(state: GameState, memory: ScreenMemory, thiefFacts: boolean): DecisionEnv {
+function envOf(state: GameState, memory: ScreenMemory, thiefFacts: boolean, thiefCost?: boolean): DecisionEnv {
   return {
     state, knowledge, brief: buildRunBrief(state, knowledge), screenMemory: memory, thresholds: config.thresholds, runStart: "auto", characterPreference: null,
     allowFtueModals: false, strictJev: true, combatPlanner: "turn", shopDiscardPotions: [], jevContext: "v1", buildDecider: "deepseek", thiefFacts,
+    ...(thiefCost !== undefined ? { thiefCost } : {}),
   };
+}
+
+/** The stolen cards' values of tools/thief-card-values.ts by "<run>:<floor>", their HP read again by the current rules. */
+function cardValues(): Map<string, ThiefCardValue> {
+  const out = new Map<string, ThiefCardValue>();
+  let text = "";
+  try {
+    text = readFileSync(cardsPath, "utf8");
+  } catch {
+    return out;
+  }
+  for (const line of text.split("\n").filter(Boolean)) {
+    const row = JSON.parse(line) as ThiefCardValue & { run: string; floor: number };
+    const value: ThiefCardValue = row.measures ? { ...row, ...cardHpOf(row.measures) } : row;
+    out.set(`${row.run}:${row.floor}`, value);
+  }
+  return out;
 }
 
 /** The test's digest of a whole decision (tests/thief.test.ts viewOf). */
@@ -162,7 +195,145 @@ interface Result {
   ms: number;
 }
 
+/** One turn of the --cost replay. */
+interface CostResult {
+  run: string;
+  floor: number;
+  turn: number;
+  fight: string;
+  escaped: boolean;
+  thieves: { name: string; id: string; carries: string; turnsLeft: number | null; hp: number; lootHp: number | null; loot: string | null }[];
+  logged: { label: string; decider: string; played: string | null };
+  /** Per arm: the decision kind, label, the rollout's best (plays, null: tied or none), its chance of the loot back, its HP this turn, further, loot cost; the act's line. */
+  off: CostArm;
+  on: CostArm;
+  /** The played line's chance of the loot back and loot cost (on rollout). */
+  playedBack: number | null;
+  playedLoot: number | null;
+  ms: number;
+}
+
+interface CostArm {
+  kind: string;
+  label: string;
+  digest: string;
+  rationale: string | null;
+  best: string | null;
+  bestBack: number | null;
+  bestHpLoss: number | null;
+  bestFurther: number | null;
+  bestLoot: number | null;
+  bestDeaths: number | null;
+  tied: number;
+}
+
+function costMain(): void {
+  mkdirSync(outDir, { recursive: true });
+  rolloutLiveOptions.enabled = true;
+  rolloutLiveOptions.now = () => 0;
+  potionMcOptions.now = () => 0;
+  thiefTrace.enabled = true;
+  if (potionDir) potionWorthSource.dir = potionDir;
+  const values = cardValues();
+  const fights = query(
+    "SELECT run_id, floor, fight_no, encounter, turns, outcome FROM fights WHERE ascension >= 8 AND (list_contains(monsters, 'THIEVING_HOPPER') OR list_contains(monsters, 'GREMLIN_MERC')) ORDER BY first_ts",
+  );
+  const escapes = new Set(
+    query(
+      "SELECT f.run_id, f.floor FROM fights f WHERE f.ascension >= 8 AND list_contains(f.monsters, 'THIEVING_HOPPER') AND f.turns >= 2 AND NOT EXISTS (SELECT 1 FROM decisions d WHERE d.run_id = f.run_id AND d.floor = f.floor AND d.rationale LIKE 'claiming SpecialCard (取回%')",
+    ).map((row) => `${String(row["run_id"])}:${String(row["floor"])}`),
+  );
+  console.log(`${fights.length} fights, ${values.size} card values`);
+  const out = join(outDir, "cost-results.jsonl");
+  writeFileSync(out, "");
+  const digests: Record<string, string> = {};
+  const frames: { key: string; off: number; len: number; thiefStart: ScreenMemory["thiefStart"] }[] = [];
+  let n = 0;
+  for (const fight of fights) {
+    if (n >= limit) break;
+    n += 1;
+    const run = String(fight["run_id"]);
+    const floor = Number(fight["floor"]);
+    const states = query(`SELECT off, len, ts, turn, screen, observed FROM state_index WHERE run_id = '${run}' AND floor = ${floor} ORDER BY off`);
+    const decisions = query(`SELECT ts, turn, label, decider, rationale FROM decisions WHERE run_id = '${run}' AND floor = ${floor} ORDER BY ts`);
+    const memory = createScreenMemory("COMBAT");
+    const first = states.find((row) => row["screen"] === "COMBAT");
+    if (!first) continue;
+    noteFightStart(memory, parseGameState(stateAt(Number(first["off"]), Number(first["len"]))["state"] as Record<string, unknown>));
+    const value = values.get(`${run}:${floor}`);
+    const seenTurns = new Set<number>();
+    for (const decision of decisions) {
+      const label = String(decision["label"]);
+      const turn = Number(decision["turn"]);
+      if (!PLANNING.test(label) || seenTurns.has(turn)) continue;
+      const row = states.find((entry) => entry["ts"] === decision["ts"] && entry["observed"] !== true);
+      if (!row) continue;
+      const state = parseGameState(stateAt(Number(row["off"]), Number(row["len"]))["state"] as Record<string, unknown>);
+      const thieves = thievesOf(state, memory);
+      if (thieves.length === 0) continue;
+      seenTurns.add(turn);
+      const t0 = Date.now();
+      const key = `${run}:${floor}:${turn}`;
+      frames.push({ key, off: Number(row["off"]), len: Number(row["len"]), thiefStart: memory.thiefStart });
+      const memoryOf = () => ({ ...createScreenMemory("COMBAT"), thiefStart: memory.thiefStart!, ...(value ? { thiefCardValue: value } : {}) });
+      const arm = (cost: boolean): { arm: CostArm; trace: typeof thiefTrace.last } => {
+        thiefTrace.last = null;
+        const decision = planCombatTurn(envOf(state, memoryOf(), true, cost));
+        const trace = traced();
+        const lines = trace?.rollout?.available ? trace.rollout.result.lines : [];
+        const bestPlan = trace?.rollout?.available ? trace.rollout.best : null;
+        const bestLine = bestPlan ? lines.find((line) => line.plan === bestPlan) ?? null : null;
+        const back = bestLine ? Math.max(0, ...thieves.map((thief) => backShare(thiefSamples(bestLine, thief) ?? { back: 0, gone: 0, samples: 1 }))) : null;
+        return {
+          trace,
+          arm: {
+            kind: decision?.kind ?? "none",
+            label: decision?.label ?? "",
+            digest: digestOf(decision),
+            rationale: decision?.kind === "act" ? decision.rationale : null,
+            best: bestPlan ? playsOf(bestPlan) : null,
+            bestBack: back,
+            bestHpLoss: bestPlan?.outcome.hpLoss ?? null,
+            bestFurther: bestLine ? Math.round(bestLine.hpLoss * 10) / 10 : null,
+            bestLoot: bestLine?.thiefCost !== undefined ? Math.round(bestLine.thiefCost * 10) / 10 : null,
+            bestDeaths: bestLine?.deaths ?? null,
+            tied: trace?.rollout?.available ? trace.rollout.tied.length : 0,
+          },
+        };
+      };
+      const off = arm(false);
+      const on = arm(true);
+      digests[key] = off.arm.digest;
+      const played = playedOf(String(decision["rationale"] ?? ""));
+      const onLines = on.trace?.rollout?.available ? on.trace.rollout.result.lines : [];
+      const playedLine = played ? onLines.find((line) => playsOf(line.plan) === played) ?? null : null;
+      const withLoot = on.trace?.thieves ?? [];
+      const result: CostResult = {
+        run, floor, turn, fight: String(fight["encounter"]), escaped: escapes.has(`${run}:${floor}`),
+        thieves: thieves.map((thief) => {
+          const loot = withLoot.find((other) => thiefTag(other) === thiefTag(thief))?.loot;
+          return { name: thief.name, id: thief.id, carries: thief.cards !== undefined ? (thief.cards ?? ["?"]).join("/") : `${thief.gold ?? "?"} gold`, turnsLeft: thief.turnsLeft, hp: thief.hp, lootHp: loot?.hp ?? null, loot: loot?.text ?? null };
+        }),
+        logged: { label, decider: String(decision["decider"]), played },
+        off: off.arm,
+        on: on.arm,
+        playedBack: playedLine ? Math.max(0, ...thieves.map((thief) => backShare(thiefSamples(playedLine, thief) ?? { back: 0, gone: 0, samples: 1 }))) : null,
+        playedLoot: playedLine?.thiefCost !== undefined ? Math.round(playedLine.thiefCost * 10) / 10 : null,
+        ms: Date.now() - t0,
+      };
+      writeFileSync(out, `${JSON.stringify(result)}\n`, { flag: "a" });
+      const changed = result.off.best !== result.on.best || result.off.kind !== result.on.kind;
+      console.log(`${key} ${result.fight} ${result.thieves.map((t) => `${t.name}[${t.carries}, ${t.turnsLeft ?? "-"}, ${t.lootHp ?? "-"} HP]`).join(" ")} ${changed ? "CHANGED " : ""}off ${result.off.kind} best ${result.off.best} (back ${result.off.bestBack}) on ${result.on.kind} best ${result.on.best} (back ${result.on.bestBack}, loot ${result.on.bestLoot}) (${result.ms} ms)`);
+    }
+  }
+  closeSync(fd);
+  writeFileSync(join(outDir, "cost-digests.json"), `${JSON.stringify(digests, null, 1)}\n`);
+  writeFileSync(join(outDir, "cost-frames.json"), `${JSON.stringify(frames)}\n`);
+  console.log(`wrote ${out}`);
+}
+
 function main(): void {
+  if (costMode) return costMain();
   mkdirSync(outDir, { recursive: true });
   rolloutLiveOptions.enabled = true;
   rolloutLiveOptions.now = () => 0;

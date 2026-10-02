@@ -29,11 +29,18 @@
  * after a restart: journal-replay.ts).
  *
  * Code gives facts, Jev decides: thief_context and each option's `thief` fact (combat-plan.ts), the escape in the
- * rollout (rollout.ts RolloutInput.escapes), and a kill line kept among the options. No HP value is put on a lost card
- * or gold (step 2, Dai's conversion pending). THIEF_FACTS=off: the question as before (tests/thief.test.ts).
+ * rollout (rollout.ts RolloutInput.escapes), and a kill line kept among the options. THIEF_FACTS=off: the question as
+ * before (tests/thief.test.ts).
+ *
+ * THIEF_COST (step 2, Dai 2026-10-02, default off; docs/thief.md §7): the loot is HP in the rollout's ranking, like a
+ * potion's cost (deaths first): each thief's loot HP (thiefLoot: the Hopper's card at its act-boss simulated worth,
+ * src/sim/thief-card-value.ts, computed once per fight by the loop; the gold at the potion table's gold rate, meta.gold_hp)
+ * times the line's samples losing it. Off: every question and choice as with THIEF_FACTS alone (tests/thief-cost.test.ts).
  */
 
+import { loadPotionEquivalents, potionWorthSource, tableAct, tableAscension, type PotionEquivalentsFile } from "../knowledge/potion-equivalents.js";
 import type { GameState } from "../mod/schema.js";
+import { cardValueText, type ThiefCardValue } from "../sim/thief-card-hp.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { fightKey } from "./fight-plan.js";
@@ -106,6 +113,33 @@ export function missingCards(memory: ScreenMemory, state: GameState): string[] |
   return missing;
 }
 
+/** A card of the fight's first frame missing now, as the deck keys it: its id, upgrade and the game's name. */
+export interface MissingCard {
+  id: string;
+  upgraded: boolean;
+  name: string;
+}
+
+/**
+ * missingCards with each card's id and upgrade (THIEF_COST: the stolen card's model for the boss simulation,
+ * thief-card-value.ts); null: the start was not seen.
+ */
+export function missingCardKeys(memory: ScreenMemory, state: GameState): MissingCard[] | null {
+  const start = memory.thiefStart;
+  if (!start || start.fight !== thiefFightOf(state)) return null;
+  const now = deckOf(state).map((card) => `${card.id}|${card.name}`);
+  const missing: MissingCard[] = [];
+  for (const key of start.deck) {
+    const at = now.indexOf(key);
+    if (at >= 0) now.splice(at, 1);
+    else {
+      const id = key.slice(0, key.indexOf("|"));
+      missing.push({ id: id.replace(/\+$/, ""), upgraded: id.endsWith("+"), name: key.slice(key.indexOf("|") + 1) });
+    }
+  }
+  return missing;
+}
+
 /** Gold taken since the fight's first frame (the Merc's so far), or null when the start was not seen. */
 export function goldTaken(memory: ScreenMemory, state: GameState): number | null {
   const start = memory.thiefStart;
@@ -134,6 +168,18 @@ export interface Thief {
   flutter: number;
   /** The Merc's gold a move (THIEVERY_POWER). */
   stealsPerAttack?: number;
+  /** THIEF_COST: what the loot is worth in HP (thiefLoot); absent with the switch off. */
+  loot?: LootValue;
+}
+
+/** THIEF_COST: a thief's loot in HP, and how it was read. */
+export interface LootValue {
+  /** HP the cost counts (>= 0); null: no value, no cost (`text` says why). */
+  hp: number | null;
+  /** The value and its derivation, for thief_context ("38 gold ≈ 4.2 HP: ..."). */
+  text: string;
+  /** Its derivation in a few numbers, for each option's fact ("boss win 46% → 38% without it, 1 HP ≈ 0.7 points"). */
+  short: string;
 }
 
 function powerOf(enemy: Record<string, unknown>, id: string): number {
@@ -195,6 +241,87 @@ export function thievesOf(state: GameState, memory: ScreenMemory, names: Map<num
   return out;
 }
 
+// ---------------------------------------------------------------- loot values (THIEF_COST)
+
+const round1 = (value: number): number => Math.round(value * 10) / 10;
+
+/** The act number of a state (1-based; the potion table clamps it to 1-3). */
+function actOf(state: GameState): number {
+  const id = state.run?.act_id;
+  return id != null && /^\d+$/.test(id) ? Number(id) + 1 : 1;
+}
+
+/**
+ * Gold in HP (Dai 2026-10-02): gold ÷ the median shop potion price × this act's median held value of the offered
+ * potions at this ascension (potion-equivalents.json meta.gold_hp, tools/build-potion-equivalents.py). A table without
+ * the rate (one built before it) or unknown gold: no value.
+ */
+export function goldLoot(gold: number | null | undefined, act: number, ascension: number, file: PotionEquivalentsFile | null, error?: string): LootValue {
+  if (gold === null || gold === undefined) return { hp: null, text: "no HP value: how much gold it carries is unknown (the fight's start was not seen)", short: "gold unknown" };
+  if (!file) return { hp: null, text: `no HP value: the potion table did not load${error ? ` (${error})` : ""}`, short: "no potion table" };
+  const rates = file.meta.gold_hp;
+  const asc = tableAscension(file, ascension);
+  const cell = rates && asc !== null ? rates.by_asc[String(asc)]?.[String(tableAct(act))] : undefined;
+  if (!rates || !cell) return { hp: null, text: "no HP value: the potion table has no gold rate (meta.gold_hp: rebuild it with tools/build-potion-equivalents.py)", short: "no gold rate" };
+  const hp = round1(gold * cell.per_gold);
+  const how = `${rates.price.median} gold a potion (median shop price, A${rates.price.min_asc}+ n=${rates.price.n}), a potion's held value ${cell.hold_hp} HP in act ${tableAct(act)} (A${asc})`;
+  return { hp, text: `${gold} gold ≈ ${hp} HP: ${gold} ÷ ${how}`, short: `${gold} gold ÷ ${rates.price.median} a potion × ${cell.hold_hp} HP` };
+}
+
+/**
+ * The Hopper's card in HP (src/sim/thief-card-value.ts, computed by the loop once per fight and kept in screen memory):
+ * the value's own text; not computed yet (or for another fight): no value.
+ */
+export function cardLoot(value: ThiefCardValue | undefined, fight: string): LootValue {
+  if (!value || value.fight !== fight) return { hp: null, text: "no HP value: the stolen card's worth has not been computed for this fight", short: "not computed" };
+  const text = cardValueText(value);
+  const m = value.measures;
+  const pct = (p: number) => `${Math.round(p * 100)}%`;
+  const short =
+    !m || value.route === null
+      ? value.status
+      : value.route === "progress"
+        ? `boss HP left +${round1(m.bossLeft.card.value)} without it, 1 HP ≈ ${round1(m.bossLeft.perHp.value)} boss HP`
+        : value.route === "hp"
+          ? `boss fight HP lost +${round1(m.hpLost.card.value)} without it`
+          : `boss win ${pct(m.win.with)} → ${pct(m.win.without)} without it, 1 HP ≈ ${round1(m.perHp.value * 100)} points`;
+  return { hp: value.hp, text, short: `${short}${value.partial ? ", effect partly modelled" : ""}${value.lowTrust ? ", low trust" : ""}` };
+}
+
+/**
+ * Each thief with its loot's HP (THIEF_COST): the Hopper's card from `cardValue` (screen memory), the gold at the potion
+ * table's rate (the table Jev's facts read). Throws nothing it can avoid: the table's error is said in the value.
+ */
+export function withLoot(thieves: Thief[], state: GameState, cardValue: ThiefCardValue | undefined): Thief[] {
+  let file: PotionEquivalentsFile | null = null;
+  let error: string | undefined;
+  if (thieves.some((thief) => thief.cards === undefined)) {
+    try {
+      file = loadPotionEquivalents(potionWorthSource.dir);
+    } catch (caught) {
+      error = (caught instanceof Error ? caught.message : String(caught)).slice(0, 160);
+    }
+  }
+  const fight = thiefFightOf(state);
+  return thieves.map((thief) => ({
+    ...thief,
+    loot: thief.cards !== undefined ? cardLoot(cardValue, fight) : goldLoot(thief.gold, actOf(state), state.run?.ascension ?? 0, file, error),
+  }));
+}
+
+/** The loot HP each thief's tag counts in the rollout (RolloutInput.escapes.lootHp): those with a value above 0. */
+export function lootHpOf(thieves: Thief[]): Record<string, number> {
+  return Object.fromEntries(thieves.filter((thief) => (thief.loot?.hp ?? 0) > 0).map((thief) => [thiefTag(thief), thief.loot!.hp!]));
+}
+
+/**
+ * The loot a line loses this turn for certain: a thief on its last turn that the line neither kills nor stuns (a stun
+ * cancels its Escape) leaves with it at the end of this turn. What code's own choices count without a rollout.
+ */
+export function lastTurnLoot(plan: Plan, thieves: Thief[]): number {
+  return thieves.reduce((sum, thief) => (thief.turnsLeft === 1 && (thief.loot?.hp ?? 0) > 0 && !killsThief(plan, thief) && !stunsThief(plan, thief) ? sum + thief.loot!.hp! : sum), 0);
+}
+
 // ---------------------------------------------------------------- facts
 
 /** What a thief carries, as the facts say it. */
@@ -235,9 +362,14 @@ export function thiefContextJson(thieves: Thief[], turn: number | null, heirName
       entry["turns_left"] = thief.turnsLeft === 1 ? `1: this turn is the last, ${flee} at the end of this turn` : `${thief.turnsLeft}, this one included: ${flee} ${leavesText(thief.turnsLeft, turn)}`;
     }
     if (thief.flutter > 0) entry["flutter"] = `${thief.flutter}: each attack hit removes one; at 0 it is stunned and this turn's move is cancelled${thief.turnsLeft === 1 ? " (its Escape too: it leaves a turn later)" : ""}`;
+    if (thief.loot) entry["loot_hp"] = thief.loot.text;
     out[thief.name] = entry;
   }
   out["rollout"] = "the rollout plays the escape: an enemy whose Escape/Flee resolves is gone (no kill, nothing comes back), and with no enemy left the fight is over (its 'fight over' counts that end too)";
+  if (thieves.some((thief) => thief.loot)) {
+    out["loot_cost"] =
+      "the rollout's ranking counts the loot like a potion's cost (deaths first, then further HP loss + potion cost + loot cost): a sample that ends with the thief gone, or still in the fight at the horizon's end, pays the loot's HP (loot_hp); one that gets it back or dies pays nothing; each option's thief fact gives its loot cost";
+  }
   return out;
 }
 
@@ -287,7 +419,7 @@ export function backShare(samples: ThiefSamples): number {
  * leaves, a stun from its last Flutter), then the rollout's samples in which the loot came back before it left
  * (`samplesOf`: rollout-live thiefSamples of the line's rollout, null without one).
  */
-export function thiefFact(plan: Plan, thieves: Thief[], samplesOf: (thief: Thief) => ThiefSamples | null, turn: number | null, heirName = "胖地精"): string {
+export function thiefFact(plan: Plan, thieves: Thief[], samplesOf: (thief: Thief) => ThiefSamples | null, turn: number | null, heirName = "胖地精", lostOf: (thief: Thief) => { lost: number; samples: number } | null = () => null): string {
   const parts: string[] = [];
   for (const thief of thieves) {
     let now: string;
@@ -311,9 +443,23 @@ export function thiefFact(plan: Plan, thieves: Thief[], samplesOf: (thief: Thief
       const what = thief.id === "GREMLIN_MERC" ? `its gold back (the ${heirName} killed before it flees)` : "killed before it leaves";
       now += `; rollout: ${what} in ${samples.back}/${samples.samples} samples, left with it in ${samples.gone}/${samples.samples}${samples.order ? ` (its best order; with the later turns aiming ${samples.order.label}: ${samples.order.back}/${samples.samples})` : ""}`;
     }
+    if (thief.loot) now += `; ${lootCostText(plan, thief, lostOf(thief))}`;
     parts.push(now);
   }
   return parts.join("; ");
+}
+
+/**
+ * One option's loot cost (THIEF_COST): 「loot cost 4.5 HP: 拆卸 ≈ 12 HP (boss win 46% → 38% without it, 1 HP ≈ 0.7
+ * points) × lost in 3/8 samples」; without a rollout of the line, this turn's certain loss (its last turn) or 0.
+ */
+export function lootCostText(plan: Plan, thief: Thief, lost: { lost: number; samples: number } | null): string {
+  const loot = thief.loot!;
+  if (loot.hp === null) return `loot cost 0 (${loot.text})`;
+  const what = `${thief.cards !== undefined ? lootText(thief) : `${thief.gold ?? "?"} gold`} ≈ ${round1(loot.hp)} HP (${loot.short})`;
+  if (lost) return `loot cost ${round1((loot.hp * lost.lost) / Math.max(1, lost.samples))} HP: ${what} × lost in ${lost.lost}/${lost.samples} samples`;
+  const now = lastTurnLoot(plan, [thief]);
+  return `loot cost ${round1(now)} HP: ${what}${thief.turnsLeft === 1 ? (now > 0 ? ", lost at the end of this turn" : ", kept from leaving this turn") : ", no rollout of the later turns"}`;
 }
 
 // ---------------------------------------------------------------- option coverage

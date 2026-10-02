@@ -61,7 +61,7 @@ import {
   type RolloutResult,
   type SpawnTemplate,
 } from "./rollout.js";
-import { backShare, escapeInput, thiefTag, type Thief, type ThiefSamples } from "./thief.js";
+import { backShare, escapeInput, lootHpOf, thiefTag, type Thief, type ThiefSamples } from "./thief.js";
 import { hpText, type EnemySim, type Plan, type SolverInput } from "./turn-solver.js";
 
 /** Kill orders come from here too: decision code reaches rollout.ts only through this module. */
@@ -606,6 +606,8 @@ const turnLoss = (line: LineEstimate): number => (line.plan.outcome?.hpLoss ?? 0
  * line pays one, the fewest deaths within the horizon come first, then the value (a cost never picks a line that dies
  * more often). A saturated board (every line loses all our HP) ranks without costs: a potion kept there has no
  * later. A sample that dies pays no cost either (rollout.ts valueAt). No cost (a boss fight, no potion): as before.
+ * The thieves' loot (THIEF_COST, docs/thief.md §7) is a cost the same way: in the value, and deaths first when some
+ * line pays it.
  */
 export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best: LineEstimate | null; saturated: boolean; tied?: LineEstimate[] } {
   if (lines.length === 0) return { best: null, saturated: false };
@@ -613,7 +615,7 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
   // With potion costs in play (some line pays for a drink: potion-cost.ts, never in a boss fight) deaths come first,
   // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai
   // 2026-09-30: a drink that keeps us alive is drunk whatever it costs). Without costs, the value alone, as before.
-  const costs = lines.some((line) => (line.potionCost ?? 0) > 0);
+  const costs = lines.some((line) => (line.potionCost ?? 0) > 0 || (line.thiefCost ?? 0) > 0);
   const fewestDead = Math.min(...lines.map((line) => line.deaths));
   const pool = costs && !saturated ? lines.filter((line) => line.deaths === fewestDead) : lines;
   const top = Math.max(...pool.map((line) => line.value));
@@ -635,7 +637,7 @@ export function pickRolloutBest(lines: LineEstimate[], startHp: number): { best:
 }
 
 /**
- * Two lines read the same to Jev: the expected further HP loss with the potions' cost (the total shown, one decimal),
+ * Two lines read the same to Jev: the expected further HP loss with the potions' (and the loot's) cost (the total shown, one decimal),
  * the share of samples dead, and the win chance the ranking counts (shown in whole percent: rankingNote).
  */
 export function sameShownResult(a: LineEstimate, b: LineEstimate): boolean {
@@ -654,12 +656,15 @@ const winPercent = (line: Pick<LineEstimate, "winProb">): number => Math.round((
  */
 export function rankingNote(line: LineEstimate, deathsFirst = false): string {
   const cost = line.potionCost ?? 0;
-  return `; ranked on ${deathsFirst ? "fewest dead first (some line pays a potion cost), then " : ""}-(further loss${cost > 0 ? " + potion cost" : ""}) - ${DEATH_HP} x (1 - win chance): win chance ~${winPercent(line)}% (fights won in the samples, the others by the end-of-horizon estimate), value ${round1(line.value)}`;
+  // THIEF_COST: the loot's cost in the value (absent with the switch off: the note as before).
+  const loot = line.thiefCost !== undefined ? ` + loot cost ${round1(line.thiefCost)}` : "";
+  const why = line.thiefCost !== undefined ? "some line pays a potion or loot cost" : "some line pays a potion cost";
+  return `; ranked on ${deathsFirst ? `fewest dead first (${why}), then ` : ""}-(further loss${cost > 0 ? " + potion cost" : ""}${loot}) - ${DEATH_HP} x (1 - win chance): win chance ~${winPercent(line)}% (fights won in the samples, the others by the end-of-horizon estimate), value ${round1(line.value)}`;
 }
 
-/** A line's expected HP lost to the fight's end plus the potions it drinks at their cost (potion-cost.ts). */
-export function effectiveFightLoss(line: Pick<LineEstimate, "hpLoss" | "potionCost">): number {
-  return line.hpLoss + (line.potionCost ?? 0);
+/** A line's expected HP lost to the fight's end plus the potions it drinks at their cost (potion-cost.ts) and the loot it loses (THIEF_COST). */
+export function effectiveFightLoss(line: Pick<LineEstimate, "hpLoss" | "potionCost" | "thiefCost">): number {
+  return line.hpLoss + (line.potionCost ?? 0) + (line.thiefCost ?? 0);
 }
 
 /**
@@ -784,7 +789,8 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const { handBase, ...boardInput } = board;
     const result = rolloutDecision({
       ...boardInput,
-      ...(args.thieves ? { escapes: escapeInput(args.thieves, monsterMoves()) } : {}),
+      // THIEF_COST: each thief's loot HP (thief.loot, set only with the switch on) is a cost in the value.
+      ...(args.thieves ? { escapes: { ...escapeInput(args.thieves, monsterMoves()), ...(Object.keys(lootHpOf(args.thieves)).length > 0 ? { lootHp: lootHpOf(args.thieves) } : {}) } } : {}),
       plans: args.plans,
       piles: { draw: args.piles.draw, discard: args.piles.discard, handBase },
       meta,
@@ -903,7 +909,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
         : " (later turns may use the potions still held)"
       : "";
   const facts: Record<string, JsonValue> = {
-    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${r.saturated ? saturatedNote(line, r) : rankingNote(line, r.result.lines.some((other) => (other.potionCost ?? 0) > 0))}${cut}`,
+    rollout: fallback ? fallbackText : `${head}${potions}: expected further HP loss ${round1(line.hpLoss)}, fight over within ${horizon} turn${horizon === 1 ? "" : "s"} in ${line.wins}/${samples}${line.turnsToWin === null ? "" : `, expected turns to the end (surviving samples) ~${round1(line.turnsToWin)}`}${line.deaths > 0 ? `, dead within ${horizon} turns in ${line.deaths}/${samples} (~turn ${round1(line.turnsToDeath ?? 0)})` : ""}${line.timeUps ? `, out of time (the turn limit ended it unwon) in ${line.timeUps}/${samples}` : ""}${line.revived ? `, spends ${r.revives.join(" / ") || "a revive"} (back from 0 HP) in ${line.revived}/${samples} (the loss then counts all our HP now, and after the revive only what it loses)` : ""}${r.saturated ? saturatedNote(line, r) : rankingNote(line, r.result.lines.some((other) => (other.potionCost ?? 0) > 0 || (other.thiefCost ?? 0) > 0))}${cut}`,
     rollout_turns: turnsText(plan, line, samples),
   };
   if (line.order && !fallback) {

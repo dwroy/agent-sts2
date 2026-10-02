@@ -51,6 +51,8 @@ export interface OptionSim {
   diff: { raw: number; se: number; cal: number; calSe: number; hpLoss: number; hpLossSe: number; bossLeft: number; bossLeftSe: number } | null;
   /** The boss's mean HP left at the fight's end (0 in a won sample). */
   bossLeft: number;
+  /** Mean HP lost over every sample (a death: all of it; THIEF_COST reads it where the boss is mostly won). */
+  hpLossMean: number;
   hpLossWon: number | null;
   /** Median turns of the won samples (of all samples when none was won). */
   turns: number | null;
@@ -169,6 +171,7 @@ export async function compareOptions(
       winCal: r4(calibratedWinProb(line.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre")),
       diff: d ? { raw: d.winDiff, se: d.winSe, ...calibratedDiff(line.winProb, baseLine.winProb, d.winSe, BUILD_SIM_CALIBRATION_SAMPLES), hpLoss: d.hpLossDiff, hpLossSe: d.hpLossSe, ...bossLeftDiff(line, baseLine) } : null,
       bossLeft: r4(mean(line.outcomes.map((o) => o.enemyHpLeft))),
+      hpLossMean: r4(line.hpLoss.mean),
       hpLossWon: line.hpLossWon ? line.hpLossWon.median : null,
       turns: line.turnsWon ? line.turnsWon.median : n > 0 ? line.turns.median : null,
       deathTurn: line.deathTurn ? line.deathTurn.median : null,
