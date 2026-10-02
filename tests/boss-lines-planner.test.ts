@@ -172,6 +172,7 @@ describe("B2 on: the boss question", () => {
     bossLinesOptions.serial = false;
     bossLinesOptions.samples = BOSS_LINES_SAMPLES;
     bossLinesOptions.holdHp = null;
+    bossLinesOptions.lowTrust = "retry";
   });
 
   function ask(name: string, enabled: boolean, over: Partial<import("../src/project/types.js").DecisionEnv> = {}): { decision: AskDecision; criteria: Record<string, Record<string, unknown>> } {
@@ -206,7 +207,22 @@ describe("B2 on: the boss question", () => {
     expect(decision.resolve({} as AnswerSet).rationale).toContain("using the whole-fight simulation's best potion-free plan");
   }, 120_000);
 
-  it("a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers", () => {
+  it("BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why", () => {
+    const off = ask("ez2l-f48-t2", false);
+    const on = ask("ez2l-f48-t2", true);
+    const asked = (d: AskDecision) => JSON.stringify({ label: d.label, state: d.state, questions: d.questions, jevView: d.jevView ?? null });
+    expect(asked(on.decision)).toBe(asked(off.decision));
+    for (const answers of [...Object.keys(on.criteria).map(pick), {} as AnswerSet]) {
+      const a = on.decision.resolve(answers);
+      const b = off.decision.resolve(answers);
+      const { boss_sim: sim, ...log } = (a.log ?? {}) as Record<string, unknown>;
+      expect({ ...a, apply: null, log }).toEqual({ ...b, apply: null, log: b.log ?? {} });
+      expect(JSON.stringify(sim ?? null)).toMatch(/SL retries only/);
+    }
+  }, 120_000);
+
+  it("BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers", () => {
+    bossLinesOptions.lowTrust = "always";
     const off = ask("ez2l-f48-t2", false);
     const on = ask("ez2l-f48-t2", true);
     const asked = (d: AskDecision) => JSON.stringify({ label: d.label, state: d.state, questions: d.questions, jevView: d.jevView ?? null });
