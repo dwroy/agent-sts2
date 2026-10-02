@@ -140,11 +140,12 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
 });
 
 describe("the hard elite list (src/sl/sl-elites.json)", () => {
-  it("lists the hardest 5 non-boss fights by A8-A9 deaths (any room) with their enemy ids, source and date", () => {
+  it("lists the hardest non-boss fights by A8+ deaths (any room), plus Soul Nexus by rate, with their enemy ids, source and date", () => {
     const list = loadSlElites();
-    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism"]);
+    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus"]);
     expect(list.date).toBe("2026-10-02");
-    expect(list.source).toMatch(/A8-A9/);
+    expect(list.source).toMatch(/A8\+/);
+    expect(listedElite(["SOUL_NEXUS"], list)?.name).toBe("Soul Nexus");
     expect(listedElite(["DECIMILLIPEDE_SEGMENT_MIDDLE"], list)?.name).toBe("Decimillipede");
     expect(listedElite(["BOWLBUG_ROCK", "BOWLBUG_SILK", "SLUMBERING_BEETLE"], list)?.name).toBe("Slumbering Beetle + Bowlbugs");
     expect(listedElite(["BOWLBUG_NECTAR", "BOWLBUG_ROCK", "BOWLBUG_SILK"], list)).toBeNull();
@@ -404,7 +405,7 @@ describe("SlController", () => {
 
   it("describe() is what run-config records", () => {
     const t = setup("/nowhere/sl.jsonl");
-    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism"] });
+    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus"] });
   });
 });
 

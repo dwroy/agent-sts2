@@ -260,6 +260,12 @@ export interface PlayerSim {
    */
   strikeReplay?: number;
   /**
+   * Throwing Axe (「你在每场战斗中打出的第一张牌会多打出一次」) and no card played yet this fight: the first card this line
+   * plays is played once more, energy paid once, as a Replay (FSPKJAYY3ET6 F39 T1: Inflame under Galvanic, Strength 2 -> 8,
+   * HP 69 -> 57; the solver had it once).
+   */
+  firstCardReplay?: boolean;
+  /**
    * Buffer already up (BUFFER_POWER, from a Lucky Tonic drunk earlier): each stack prevents the next HP
    * loss, our own included (99X7 F9 T3: Breakthrough's 1 HP ate the Buffer drunk for the enemy turn, -17).
    */
@@ -843,6 +849,8 @@ interface Sim {
   regen: number;
   /** Soldier's Stew: extra plays of every Strike card from now on this turn. */
   strikeReplay: number;
+  /** Throwing Axe: the next card played is the fight's first, played once more (PlayerSim.firstCardReplay). */
+  axeReplay: boolean;
   /** Plating gained this turn (Stone Armor, a Plating potion: Heart of Iron). */
   plating: number;
   unknown: string[];
@@ -1091,9 +1099,10 @@ export const BLOOD_POTION_HEAL = 0.2;
 export const REGEN_LATER_SHARE = 0.5;
 
 /**
- * HP the player loses on their own turn (a card's cost, Thorns, Reflect). Demon Tongue heals the
- * first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end turn, -9"; played, it costs
- * nothing and gives 2 energy for a Defend).
+ * HP the player loses on their own turn (a card's cost, Reflect, and what gets past block of Thorns and a card's damage
+ * to us: damagePlayer). Demon Tongue heals the first loss of the turn back (TQX5 T1: Offering+ with 0 energy was "end
+ * turn, -9"; played, it costs nothing and gives 2 energy for a Defend). Only a real loss comes here, so only it sets off
+ * Rupture, Inferno, Demon Tongue and Red Skull.
  */
 function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
   if (amount <= 0) return false;
@@ -1107,6 +1116,14 @@ function loseHp(sim: Sim, amount: number, player: PlayerSim): boolean {
   sim.hpLostThisTurn = true;
   sim.hpLossEvents += 1;
   redSkullCheck(sim, player);
+  // Rupture (「每当你在自身回合失去生命时，获得1点力量」): every HP loss on our turn, not only a card's own cost. Logged:
+  // Thorns past block, R6V3T4KSDABE F31 T2 (Rupture 1, block 0): Breakthrough's 1 and the Toad's 5 took Strength 0 -> 2,
+  // the next two Thorns hits 2 -> 3 -> 4; Galvanic's 6, XSPHCB4GUSEU F38 T4 (Rupture 1): Inflame's +3 came out +4. The
+  // solver had it on a card's own HP cost only.
+  if (sim.rupture > 0) {
+    sim.strength += sim.rupture;
+    sim.permStrength += sim.rupture;
+  }
   // Inferno: every HP loss on our turn hits every enemy (9XZX: "每当你在你的回合内失去生命时，对所有
   // 敌人造成6点伤害"). One sweep: two crabs dying to it die together.
   if (sim.inferno > 0) {
@@ -1193,7 +1210,13 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     enemy.lostThisTurn += loss;
     dealt += loss;
     if (loss > 0) wake(enemy);
-    if ((enemy.thorns ?? 0) > 0) loseHp(sim, enemy.thorns ?? 0, player);
+    // Thorns (Spiny Toad, Toadpole: 「当被攻击命中时，反击造成伤害」) is damage: our block takes it first, Intangible caps it
+    // at 1, only the rest is HP lost (and only that sets off Rupture, Inferno, Demon Tongue). Logged (thorns2.py), one
+    // Thorns enemy hit between two decision frames with block up: 65 of 66 took it from block first (59 HP unchanged:
+    // 24HMNKB4N32V F25 T2 Thorns 5, block 5 -> 0, HP 91 -> 91; 5 more past the block into HP); the other gained block from the
+    // same card. With Inferno up and the Thorns blocked, Inferno did not fire (JR66CJ9T8H7W F29 T2 block 16 -> 11, the
+    // Toad 90 -> 79, the Strike's 11 only; XMY29WWQDC1Y F22 T2). The solver took it straight off HP.
+    if ((enemy.thorns ?? 0) > 0) damagePlayer(sim, enemy.thorns ?? 0, player);
     if (amount > 0 && (enemy.curlUp ?? 0) > 0) {
       enemy.block += enemy.curlUp ?? 0;
       enemy.curlUp = 0;
@@ -1295,8 +1318,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (twice) next.duplicate -= 1;
   const twiceAttack = card.type === "Attack" && next.duplicateAttacks > 0;
   if (twiceAttack) next.duplicateAttacks -= 1;
-  // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike), energy paid once.
-  const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0);
+  // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike, Throwing Axe on the fight's first card),
+  // energy paid once.
+  const axe = card.type !== "Potion" && next.axeReplay;
+  if (axe) next.axeReplay = false;
+  const replays = card.type === "Potion" ? 0 : (card.replay ?? 0) + (isStrikeCard(card) ? next.strikeReplay : 0) + (axe ? 1 : 0);
   // Every play of an Attack (a duplicate, a replay) is one for the attack-counting relics, each after its own play
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
@@ -1467,20 +1493,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
 
-  if (card.hpLoss > 0 && loseHp(next, card.hpLoss, player)) {
-    if (next.rupture > 0) {
-      next.strength += next.rupture;
-      next.permStrength += next.rupture;
-    }
-  }
-  // Damage to us (Foul Potion): like an enemy hit, block first, Intangible caps it at 1, the rest is HP lost.
-  if ((card.selfDamage ?? 0) > 0) {
-    const amount = player.intangible || next.intangible ? Math.min(1, card.selfDamage ?? 0) : card.selfDamage ?? 0;
-    const blocked = Math.min(next.block, amount);
-    next.block -= blocked;
-    loseHp(next, amount - blocked, player);
-  }
-  if (card.special === "rupture") next.rupture += 1;
+  if (card.hpLoss > 0) loseHp(next, card.hpLoss, player);
+  // Rupture's amount (Rupture+ 2: 8L29N792FA45 F37 T2, played at block 0 under Galvanic, its own 6 gave +2 Strength), as the
+  // rollout's later turns take it (POWER_EFFECTS); it was +1 whatever the card.
+  if (card.special === "rupture") next.rupture += card.powerAmount ?? 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
   if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
   // Vital Spark (Infested Prism): every Skill gives us Tainted, and every attack hit this turn grows by it
@@ -1715,6 +1731,18 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.type === "Potion") next.potionCost += card.potionCost ?? 0;
   else next.flat += card.flatValue;
   if (card.draw > 0) drawExpected(next, card.draw, player);
+  // Damage to us (Foul Potion, Galvanic's 「受到6点伤害」): like an enemy hit, block first, Intangible caps it at 1, the
+  // rest is HP lost. Last, as the card text puts it: a Power played under Galvanic is up when its 6 lands (8L29N792FA45
+  // F37 T2: Rupture+ played at block 0, its own 6 gave +2 Strength).
+  if ((card.selfDamage ?? 0) > 0) damagePlayer(next, card.selfDamage ?? 0, player);
+}
+
+/** Damage to us on our own turn: block first, Intangible caps it at 1, only the rest is HP lost (loseHp). */
+function damagePlayer(sim: Sim, amount: number, player: PlayerSim): void {
+  const capped = player.intangible || sim.intangible ? Math.min(1, amount) : amount;
+  const blocked = Math.min(sim.block, capped);
+  sim.block -= blocked;
+  loseHp(sim, capped - blocked, player);
 }
 
 /** `count` cards drawn from the pile as expected values (what they are is not known). */
@@ -2764,7 +2792,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}`;
 }
 
 export interface SolveResult {
@@ -2883,6 +2911,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     regen: input.player.regen ?? 0,
     plating: 0,
     strikeReplay: input.player.strikeReplay ?? 0,
+    axeReplay: input.player.firstCardReplay === true,
     unknown: [],
     feedKills: 0,
     dazedAdded: 0,

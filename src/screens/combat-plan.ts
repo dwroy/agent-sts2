@@ -96,9 +96,13 @@ const MODELLED_ENEMY_POWERS = new Set([
   "RAVENOUS_POWER",
   // No number of this turn's fight in them: gold stolen and given back (Gremlin Merc, Fat Gremlin), the Tough
   // Egg's hatch countdown (its moves after it are the move model's), our Strength/Dexterity given back on
-  // death (The Lost, The Forgotten; its stolen Dexterity is its block, not our damage), our Power cards
-  // turned to Galvanic (Globe Head).
-  "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_STRENGTH_POWER", "POSSESS_SPEED_POWER", "DEXTERITY_POWER", "GALVANIC_POWER",
+  // death (The Lost, The Forgotten; its stolen Dexterity is its block, not our damage).
+  "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_STRENGTH_POWER", "POSSESS_SPEED_POWER", "DEXTERITY_POWER",
+  // Galvanic (Globe Head): not a number-free power after all. Its 「受到6点伤害」 is in every Power's own text in hand, and
+  // the solver now takes it from there (card-model playSelfDamageOf -> selfDamage, through our block). It was read as
+  // nothing: playing Powers under it read free, +1.04 a turn on 70 logged turns (+1.68 on those not won), 30 of 31
+  // plays lost 6 of HP + block (notes/mechanics-proposals.md §4).
+  "GALVANIC_POWER",
   // Our temporary Strength loss on it (Mangle, Dark Shackles, Shackling Potion, Piercing Wail): already in its
   // STRENGTH_POWER and intents, and the rollout gives it back after the turn.
   "MANGLE_POWER", "DARK_SHACKLES_POWER", "SHACKLING_POTION_POWER", "PIERCING_WAIL_POWER",
@@ -2071,6 +2075,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
     ...(relicIds.includes("PAPER_PHROG") ? { vulnerableFactor: PAPER_PHROG_VULNERABLE } : {}),
     ...(relicIds.includes("LOST_WISP") ? { lostWisp: LOST_WISP_DAMAGE } : {}),
+    // Throwing Axe: the fight's first card is played twice (FSPKJAYY3ET6 F39 T1: Inflame, Strength +6 and Galvanic's 6
+    // twice). Known only on turn 1 with no card played yet: the relic shows no used state and the state has no count of
+    // the fight's plays (a fight whose turn 1 played nothing is left out).
+    ...(relicIds.includes("THROWING_AXE") && state.turn === 1 && num(player["cards_played_this_turn"]) === 0 ? { firstCardReplay: true } : {}),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
@@ -2739,10 +2747,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   // ties, the HP guard, code's fallback) and shows its numbers; a low-trust boss's numbers and plan only go to the
   // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.
   if (kind !== "boss") releaseBossLinesPool();
-  const bossPiles = kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
+  // BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss is simulated only on an SL retry, where its numbers are shown; on
+  // a first attempt they only went to the log, and the sim's cores cut this question's rollout. The question is the same.
+  const lowTrustSkipped = bossLinesOptions.lowTrust === "retry" && kind === "boss" && env.sl?.showSim !== true && lowTrustOfState(state) !== null;
+  const bossPiles = kind === "boss" && bossLinesOptions.enabled && !lowTrustSkipped && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
   const bossSim: BossLineSim | null =
     kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null
-      ? bossPiles
+      ? lowTrustSkipped
+        ? { available: false, reason: `low-trust boss (${lowTrustOfState(state)}): simulated on SL retries only (BOSS_SIM_LOW_TRUST=retry)`, ms: 0 }
+        : bossPiles
         ? bossLineSim({
             state,
             knowledge: env.knowledge,
@@ -3597,6 +3610,11 @@ export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: Game
     tail.last = undefined;
     return;
   }
+  // Only our own turn's states set the turn's last word: the enemy turn reads in between with the turn number unchanged
+  // (the revive lands there, and the next intents against the revived HP read "not lethal"), and overwrote it, so the
+  // next turn's opening at 50% was not recognised (LTKW24N3R9PG F37: T4 7 HP + 5 block against 20, T5 opened at 37 of 74;
+  // the solver kept counting on the tail at F43-F44, every F44 T1 line "spends 蜥蜴尾巴").
+  if (state.combat?.can_use_combat_actions === false) return;
   const incoming = asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false)
