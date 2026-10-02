@@ -47,10 +47,10 @@ import { actThreatIds, bossOnBoard, monsterMoves, moveDamageAt, moveTurns, obser
 import { clearedWith, moveRulesOf, stripStunRules, type MoveRule, type StripStunRule } from "../knowledge/mechanics.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
-import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
+import { BOSS_LINES_TIE_SE, bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simCompare, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 import { knownTopIndices } from "../sl/draws.js";
-import { exploreAlternatives, exploreReplacement, lineText, rankByOrder, type ExploreLine, type SlPoint } from "../sl/explore.js";
+import { explorePoint, exploreReplacement, lineText, rankByOrder, type ExploreB2, type ExploreLine, type SlPoint } from "../sl/explore.js";
 import type { LeastLossFacts } from "../sl/judge.js";
 import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
 
@@ -233,7 +233,19 @@ export const targetOptions: { enabled: boolean } = { enabled: true };
  */
 export const thiefTrace: {
   enabled: boolean;
-  last: { plans: Plan[]; surviving: Plan[]; shown: Plan[]; rollout: LiveRollout | null; thieves: Thief[]; lastTurnLine: Plan | null; rolloutLine: Plan | null } | null;
+  last: {
+    plans: Plan[];
+    surviving: Plan[];
+    shown: Plan[];
+    rollout: LiveRollout | null;
+    thieves: Thief[];
+    lastTurnLine: Plan | null;
+    rolloutLine: Plan | null;
+    /** tools/sl-explore-replay.ts: the fight's kind, the random potions shown and B2 where it ranks (a trusted boss). */
+    kind?: string;
+    mcShown?: PotionMc[];
+    simRanks?: BossLineSim | null;
+  } | null;
 } = { enabled: false, last: null };
 
 /**
@@ -1785,7 +1797,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
  * attempt (slPointOf), by the decision object (code's own line) or the resolution it played (a question's). Kept beside
  * them, not on them: the decision and its log row are as before. Only on an SL retry with the switch on (env.sl.explore).
  */
-export type SlPointInfo = Pick<SlPoint, "kind" | "label" | "line" | "alternatives" | "dead" | "explored"> & {
+export type SlPointInfo = Pick<SlPoint, "kind" | "label" | "line" | "alternatives" | "dead" | "b2" | "explored"> & {
   /** On the deviation point's board: what came of it (the line about to be played, its replacement, why). */
   deviation?: { original: string; replacement: string | null; reason: string };
 };
@@ -3045,7 +3057,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // SL_RETRY_EXPLORE (docs/sl.md §11, src/sl/explore.ts), on an SL retry: the line each resolution plays, noted for the
   // attempt's record (notePick); on the deviation point's board, a line a failed attempt played there gives way to the shown
   // line the question's ranking puts first among those none played (explored, in resolve). Nothing runs without env.sl.explore.
-  type PickedLine = { plan: Plan | null; text: string; potions: string[]; wins: boolean; via: CombatPlanMemo["via"]; guardExtra?: (line: Plan) => number };
+  type PickedLine = { plan: Plan | null; text: string; potions: string[]; wins: boolean; via: CombatPlanMemo["via"]; guardExtra?: (line: Plan) => number; rated?: Plan | null };
   const explore = env.sl?.explore;
   const picks = new WeakMap<ResolvedAction, PickedLine>();
   const notePick = (resolved: ResolvedAction, pick: PickedLine): ResolvedAction => {
@@ -3065,19 +3077,31 @@ function planTurn(env: DecisionEnv): Decision | null {
     const pick = explore ? picks.get(resolved) : undefined;
     if (!explore || !pick) return { resolved, log: null, info: null };
     try {
-      const lines: ExploreLine<Plan>[] = shown.map((plan) => ({ plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan) }));
+      // SL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight (potions cost 0 there) the lines drinking a potion the pick does not
+      // are alternatives too, the random potions' Monte Carlo lines among them (their option: drink it, then re-plan).
+      const drinks = explore.bossPotions === true && kind === "boss";
+      const mcOf = new Map<Plan, PotionMc>(drinks ? mcShown.flatMap((mc) => (mc.median ? [[mc.median, mc] as const] : [])) : []);
+      const lines: ExploreLine<Plan>[] = [
+        ...shown.map((plan) => ({ plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan) })),
+        ...[...mcOf].map(([plan, mc]) => ({ plan, text: `drink ${mc.source.name}, then re-plan`, dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: [...new Set([mc.source.potionId, ...potionIdsOf(plan)])] })),
+      ];
       const estimate = (plan: Plan) => (rollout?.available ? rollout.byPlan.get(plan) : undefined);
-      /** The line played there and the lines that could replace it, as the attempt's record keeps them (the rollout's deaths too). */
-      const pointOf = (line: { plan: Plan | null; text: string; potions: string[]; wins: boolean }): Pick<SlPointInfo, "line" | "alternatives" | "dead"> => {
-        const alternatives = exploreAlternatives(line, lines);
-        const dead = Object.fromEntries(
-          [...(line.plan ? [{ text: line.text, plan: line.plan }] : []), ...alternatives].flatMap((entry) => {
-            const estimated = estimate(entry.plan);
-            return estimated && estimated.samples > 0 ? [[entry.text, Math.round((estimated.deaths / estimated.samples) * 1000) / 1000]] : [];
-          }),
-        );
-        return { line: line.text, alternatives: alternatives.map((entry) => entry.text), ...(Object.keys(dead).length > 0 ? { dead } : {}) };
+      const deathShare = (plan: Plan): number | null => {
+        const line = estimate(plan);
+        return line && line.samples > 0 ? line.deaths / line.samples : null;
       };
+      // SL_RETRY_EXPLORE_B2: on a boss B2 is trusted on (simRanks), B2's win rate is the gate, by its own tie rule.
+      const simOf = (plan: Plan) => simRanks?.byPlan.get(plan);
+      const b2: ExploreB2<Plan> | null =
+        explore.b2Gate === true && simRanks
+          ? {
+              notWorse: (plan, than) => (simOf(plan) && simOf(than) ? !simWinsLess(simRanks, plan, than) : null),
+              win: (plan) => simOf(plan)?.calibrated ?? null,
+              rule: `${BOSS_LINES_TIE_SE} paired standard errors`,
+            }
+          : null;
+      /** The line played there and the lines that could replace it, as the attempt's record keeps them (the rollout's deaths, B2's numbers). */
+      const pointOf = (line: { plan: Plan | null; text: string; potions: string[]; wins: boolean; rated?: Plan | null }) => explorePoint(line, lines, { drinks, deathShare, b2 });
       const info: SlPointInfo = { kind: "question", label, ...pointOf(pick) };
       const deviate = explore.deviate;
       if (!deviate) return { resolved, log: null, info };
@@ -3085,10 +3109,9 @@ function planTurn(env: DecisionEnv): Decision | null {
         pick,
         shown: lines,
         excluded: deviate.excluded,
-        deathShare: (plan) => {
-          const line = estimate(plan);
-          return line && line.samples > 0 ? line.deaths / line.samples : null;
-        },
+        deathShare,
+        drinks,
+        b2,
         // The question's ranking: B2's where it ranks this boss (the lines it ties, the rollout's), else the rollout's (its
         // ties: the question's order).
         rank: (plans) => {
@@ -3118,27 +3141,54 @@ function planTurn(env: DecisionEnv): Decision | null {
         return parts.join("; ");
       };
       const rep = choice.replacement;
+      // A boss fight with a sub-switch on: what weighed "not worse", and B2's numbers of the two lines when it did
+      // (calibrated win rates, the replacement's paired difference to the pick ± its standard error). Off, or out of a boss
+      // fight (where neither changes anything): the row as before them.
+      const rated = pick.plan ?? pick.rated ?? null;
+      const versus = rep && rated ? simCompare(simRanks, rep.plan, rated) : null;
+      const gateLog: Record<string, JsonValue> =
+        kind === "boss" && (explore.b2Gate === true || explore.bossPotions === true)
+          ? {
+              gate: choice.gate,
+              ...(choice.gate === "b2" && rep && rated
+                ? { b2: { original: Math.round((simOf(rated)?.calibrated ?? 0) * 1000) / 1000, replacement: Math.round((simOf(rep.plan)?.calibrated ?? 0) * 1000) / 1000, ...(versus ? { diff: versus.winDiff, se: versus.winSe } : {}) } }
+                : {}),
+            }
+          : {};
       const log: JsonValue = {
         point: deviate.point,
         original: pick.text,
         replacement: rep?.text ?? null,
         reason: choice.reason,
         played_in: deviate.attempts,
-        ...(rep ? { numbers: { original: numbers(pick.plan), replacement: numbers(rep.plan) } } : {}),
+        ...(rep ? { numbers: { original: numbers(Object.keys(gateLog).length > 0 ? rated : pick.plan), replacement: numbers(rep.plan) } } : {}),
+        ...gateLog,
       };
       const deviation = { original: pick.text, replacement: rep?.text ?? null, reason: choice.reason };
       if (!rep) return { resolved, log, info: { ...info, deviation } };
       const { guard: _guard, ...rest } = resolved;
-      const out: ResolvedAction = {
-        ...rest,
-        intent: firstIntent(rep.plan, hand, env),
-        rationale: `${resolved.rationale}; SL explore (${deviate.point}): playing ${rep.text} instead of ${pick.text}, played on this board in attempt${deviate.attempts.length === 1 ? "" : "s"} ${deviate.attempts.join(", ")} (${choice.reason})`,
-        apply: () => {
-          commit(env, state.turn, rep.plan, hand, pick.via);
-          if (pick.guardExtra) recordHpGuard(env, state.turn, pick.guardExtra(rep.plan));
-        },
-      };
-      return { resolved: out, log, info: { kind: "question", label, ...pointOf({ ...pick, plan: rep.plan, text: rep.text, potions: rep.potions, wins: rep.wins }), explored: true, deviation } };
+      const note = `${resolved.rationale}; SL explore (${deviate.point}): playing ${rep.text} instead of ${pick.text}, played on this board in attempt${deviate.attempts.length === 1 ? "" : "s"} ${deviate.attempts.join(", ")} (${choice.reason})`;
+      // A random potion's line (SL_RETRY_EXPLORE_BOSS_POTIONS): its option as Jev's pick of it plays it, drink then re-plan.
+      const mc = mcOf.get(rep.plan);
+      const out: ResolvedAction = mc
+        ? {
+            ...rest,
+            intent: { action: "use_potion", option_index: mc.source.slot },
+            rationale: note,
+            apply: () => {
+              env.screenMemory.combatPlan = null;
+            },
+          }
+        : {
+            ...rest,
+            intent: firstIntent(rep.plan, hand, env),
+            rationale: note,
+            apply: () => {
+              commit(env, state.turn, rep.plan, hand, pick.via);
+              if (pick.guardExtra) recordHpGuard(env, state.turn, pick.guardExtra(rep.plan));
+            },
+          };
+      return { resolved: out, log, info: { kind: "question", label, ...pointOf({ plan: mc ? null : rep.plan, text: rep.text, potions: rep.potions, wins: rep.wins, rated: mc ? rep.plan : null }), explored: true, deviation } };
     } catch {
       // Any error: the resolution as without the switch.
       return { resolved, log: null, info: null };
@@ -3166,7 +3216,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           apply: () => {
             env.screenMemory.combatPlan = null;
           },
-        }, { plan: null, text: chosen.label, potions: potionsAll.filter((potion) => potion.slot === drink.option_index).map((potion) => potion.potion_id), wins: false, via: escalatedBy ?? "jev" });
+        }, { plan: null, text: chosen.label, potions: potionsAll.filter((potion) => potion.slot === drink.option_index).map((potion) => potion.potion_id), wins: false, via: escalatedBy ?? "jev", rated: mcShown.find((mc) => mc.source.slot === drink.option_index)?.median ?? null });
       }
       // A near-guess from Jev in an elite/boss fight (DeepSeek no longer re-asks) never plays a line
       // another option beats on every axis (SVN2 F17 T3: a 0-damage line at 0.36 over one with the same
@@ -3228,7 +3278,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   };
 
-  if (thiefTrace.enabled) thiefTrace.last = { plans: solved.plans, surviving, shown, rollout, thieves, lastTurnLine: thiefKill, rolloutLine: thiefRollout };
+  if (thiefTrace.enabled) thiefTrace.last = { plans: solved.plans, surviving, shown, rollout, thieves, lastTurnLine: thiefKill, rolloutLine: thiefRollout, kind, mcShown, simRanks };
   const questionLabel = potionLethal.length > 0 ? "combat/plan-choice+potion-lethal" : offerPotions || mcShown.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice";
   return {
     kind: "ask",

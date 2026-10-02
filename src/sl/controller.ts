@@ -19,7 +19,8 @@
  * - decisionFields(): sl_attempt / sl_reloads on every decision row.
  * - SL_RETRY_EXPLORE (explore.ts, docs/sl.md §11): from attempt 2 notePoint() records each decision point's board and line
  *   (in the attempt's row); attempts 3+ pick a deviation point from the earlier rows (exploreTarget) and envFor() tells the
- *   planner, on that board only, which lines not to play again there.
+ *   planner, on that board only, which lines not to play again there (and the sub-switches SL_RETRY_EXPLORE_B2 and
+ *   SL_RETRY_EXPLORE_BOSS_POTIONS on every board, which the record and the replacement follow).
  *
  * Nothing here touches a save file: the game restarts the fight from the save it wrote on entering the room.
  */
@@ -162,6 +163,8 @@ export class SlController {
       retry_known_inserts: this.config.retryKnownInserts === true,
       retry_known_top: this.config.retryKnownTop === true,
       retry_explore: this.config.retryExplore === true,
+      retry_explore_b2: this.config.retryExplore === true && this.config.retryExploreB2 === true,
+      retry_explore_boss_potions: this.config.retryExplore === true && this.config.retryExploreBossPotions === true,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
       elites: this.elites.elites.map((elite) => elite.name),
@@ -270,9 +273,11 @@ export class SlController {
     const explore = fight.explore;
     if (!explore) return undefined;
     try {
+      // The sub-switches (SL_RETRY_EXPLORE_B2, SL_RETRY_EXPLORE_BOSS_POTIONS): absent when off, as before them.
+      const flags = { ...(this.config.retryExploreB2 === true ? { b2Gate: true } : {}), ...(this.config.retryExploreBossPotions === true ? { bossPotions: true } : {}) };
       const target = explore.target;
-      if (!target || explore.deviation?.reached || slBoardKey(state) !== target.board) return {};
-      return { deviate: { point: target.point, excluded: [...target.excluded], attempts: [...target.attempts] } };
+      if (!target || explore.deviation?.reached || slBoardKey(state) !== target.board) return { ...flags };
+      return { deviate: { point: target.point, excluded: [...target.excluded], attempts: [...target.attempts] }, ...flags };
     } catch (error) {
       fight.explore = null;
       this.options.note(`SL: explore off for this attempt (${error instanceof Error ? error.message : String(error)}); played as usual`);
@@ -293,7 +298,7 @@ export class SlController {
       const info = slPointOf(decision, resolved);
       if (!info) return;
       const board = slBoardKey(state);
-      const point: SlPoint = { board, turn: state.turn, kind: info.kind, label: info.label, line: info.line, ...(info.alternatives ? { alternatives: info.alternatives } : {}), ...(info.dead ? { dead: info.dead } : {}), ...(info.explored ? { explored: true as const } : {}) };
+      const point: SlPoint = { board, turn: state.turn, kind: info.kind, label: info.label, line: info.line, ...(info.alternatives ? { alternatives: info.alternatives } : {}), ...(info.dead ? { dead: info.dead } : {}), ...(info.b2 ? { b2: info.b2 } : {}), ...(info.explored ? { explored: true as const } : {}) };
       // The same board again (a re-plan before anything changed): the line played is the last one.
       if (explore.points.at(-1)?.board === board) explore.points[explore.points.length - 1] = point;
       else explore.points.push(point);

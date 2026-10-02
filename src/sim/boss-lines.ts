@@ -653,6 +653,13 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
   }
 }
 
+/** `plan` against `than` on the simulation's samples (paired; null: no numbers for one of them). SL_RETRY_EXPLORE_B2's row. */
+export function simCompare(sim: BossLineSim | null, plan: Plan, than: Plan): LineComparison | null {
+  const a = sim?.available ? sim.byPlan.get(plan) : undefined;
+  const b = sim?.available ? sim.byPlan.get(than) : undefined;
+  return a && b ? compareLines(a.result, b.result) : null;
+}
+
 /** The HP guard's check (B2): `plan` wins less than `pick` in the simulation, beyond BOSS_LINES_TIE_SE standard errors. */
 export function simWinsLess(sim: BossLineSim | null, plan: Plan, pick: Plan): boolean {
   const a = sim?.available ? sim.byPlan.get(plan) : undefined;
