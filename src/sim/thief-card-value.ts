@@ -32,7 +32,7 @@ import { LOW_CONFIDENCE_B3 } from "./boss-trust.js";
 import { compareOptions, type DeckOption } from "./build-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
 import { routeEntry, upgradedEntry } from "./build-sim-facts.js";
-import { cardHpOf, THIEF_CARD_BUDGET_MS, THIEF_CARD_HP_STEP, THIEF_CARD_SAMPLES, THIEF_CARD_SEED, type Paired, type ThiefCardMeasures, type ThiefCardValue } from "./thief-card-hp.js";
+import { cardHpOf, THIEF_CARD_BUDGET_MS, THIEF_CARD_HP_STEP, THIEF_CARD_SAMPLES, THIEF_CARD_SAMPLES_BY_BOSS, THIEF_CARD_SEED, type Paired, type ThiefCardMeasures, type ThiefCardValue } from "./thief-card-hp.js";
 
 export * from "./thief-card-hp.js";
 
@@ -79,6 +79,7 @@ export async function thiefCardValue(env: DecisionEnv, card: MissingCard, setup:
   const run = asRecord(state.run?.raw);
   const bossId = str(run["boss_id"]) || state.run?.boss_id || "";
   const key = bossKey(bossId);
+  const samples = setup.samples ?? THIEF_CARD_SAMPLES_BY_BOSS[key] ?? THIEF_CARD_SAMPLES;
   const base: ThiefCardValue = {
     fight: thiefFightOf(state),
     card: card.name,
@@ -91,7 +92,7 @@ export async function thiefCardValue(env: DecisionEnv, card: MissingCard, setup:
     entrySource: "",
     step: THIEF_CARD_HP_STEP,
     samples: 0,
-    requested: setup.samples ?? THIEF_CARD_SAMPLES,
+    requested: samples,
     timedOut: false,
     ms: 0,
     measures: null,
@@ -128,7 +129,7 @@ export async function thiefCardValue(env: DecisionEnv, card: MissingCard, setup:
       { key: "lower", change: { solver: { ...withCard.solver, player: { ...withCard.solver.player, hp: start.entryHp - step } } } },
     ];
     const budget = (setup.budgetMs ?? THIEF_CARD_BUDGET_MS) - (now() - started);
-    const result = await compareOptions(setup.runner, withCard, options, { samples: setup.samples ?? THIEF_CARD_SAMPLES, seed: setup.seed ?? THIEF_CARD_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}) });
+    const result = await compareOptions(setup.runner, withCard, options, { samples, seed: setup.seed ?? THIEF_CARD_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}) });
     const run2 = { ...named, samples: result.samples, requested: result.requested, timedOut: result.timedOut };
     if (result.samples === 0) return done({ ...run2, status: "no_samples", why: "no sample finished within the time budget" });
     const without = result.options.find((o) => o.key === "without")!;

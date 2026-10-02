@@ -425,11 +425,19 @@ describe("previousAttemptsJson", () => {
 });
 
 describe("configuration", () => {
-  it("SL is off by default, with retries 3 / 1, the sim shown on retries, the log next to the decision log", () => {
+  it("SL is on by default (Dai 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log", () => {
     const config = loadConfig({ DECISION_LOG: "/tmp/x/decisions.jsonl" } as NodeJS.ProcessEnv);
-    expect(config.sl).toEqual({ enabled: false, bossRetries: 5, eliteRetries: 3, retryShowSim: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
+    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, retryShowSim: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
     const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_RETRY_SHOW_SIM: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
     expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, retryShowSim: false, log: null });
     expect(() => loadConfig({ SL_BOSS_RETRIES: "-1" } as NodeJS.ProcessEnv)).toThrow(/SL_BOSS_RETRIES/);
+    expect(loadConfig({ SL_ENABLED: "off" } as NodeJS.ProcessEnv).sl.enabled).toBe(false);
+  });
+
+  it("THIEF_FACTS and THIEF_COST are on by default (Dai 2026-10-02); off turns each off", () => {
+    const config = loadConfig({} as NodeJS.ProcessEnv);
+    expect([config.thiefFacts, config.thiefCost]).toEqual([true, true]);
+    const off = loadConfig({ THIEF_FACTS: "off", THIEF_COST: "off" } as NodeJS.ProcessEnv);
+    expect([off.thiefFacts, off.thiefCost]).toEqual([false, false]);
   });
 });

@@ -140,7 +140,7 @@ describe("THIEF_COST: the loop computes the card's value before the question, on
     expect(logged).toHaveLength(1);
     expect(logged[0]!["thief_card_value"]).toMatchObject({ fight: "RPC6X61N9FQ0:1:20", card: "岩石铠甲", boss: "SOUL_FYSH", samples: 8 });
     expect(on.notes.filter((note) => note.startsWith("thief card value: 岩石铠甲"))).toHaveLength(1);
-    const off = await play(frames(), new FakeDeepSeek(() => "skip"), {}, { thiefSim });
+    const off = await play(frames(), new FakeDeepSeek(() => "skip"), { thiefCost: false }, { thiefSim });
     expect(off.records.some((record) => record["thief_card_value"])).toBe(false);
   }, 120_000);
 });
