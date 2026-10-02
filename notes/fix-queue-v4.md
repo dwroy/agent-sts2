@@ -111,3 +111,8 @@
 - **已知抽牌被白丢**（小）：src/sl/draws.ts:448-449 探寻打击从抽牌堆选走一张后整个丢弃已知顺序；R1QJ 6 次 T2 都丢，known_draws 只剩 10 张，而 6 次实际 35 张抽牌顺序完全相同。不阻塞。
 - 已知项复发：为 boss 留的药路上被喝（XPDA F28、610B F31）。run_plan_merge 全 stored，gate_reject 0；漏判只有 610B（已修）。
 - **已修（2026-10-03 01:16 确认）**：SL 换线顺序（所有线全死的点排最后，SL_RETRY_EXPLORE_ORDER）+ 换线点前按第 2 次路径重放（SL_RETRY_EXPLORE_REPLAY）；探寻打击从抽牌堆选牌不再丢已知顺序（SL_RETRY_KNOWN_PICKS，R1QJ T1 已知 5→29 张）。另加 SL_RETRY_EXPLORE_B2（可信 boss 用 B2 胜率把关）、SL_RETRY_EXPLORE_BOSS_POTIONS（boss 战换线可喝药，Dai 定）。v4-live 914515c（01:16），下一局起生效。两条关闭。
+
+### V4.4 A9 第 7–9 局复盘补充（2026-10-03 02:23）
+- **SL 判官「有抽牌就不确定」忽略抽牌牌的自身失血**（阻塞 SL）：914515c src/sl/judge.ts:486-487（DRAWS 定义 :301 /抽|draw/i）只要可打牌文字含「抽」就判 not certain，不看该牌自身失血（祭品 HpLoss 6）是否 ≥ 当前血量。证据 R764 F33 知识恶魔 T10：5 血 + 3 格挡、1 能量、手牌只有祭品，恶魔 3/399，来袭 24（控制台 20261003-014109-914515c+dirty.log:1187；states 18:12:43）；实际 T10 开局即必死（最多 64 伤需 67），5 次重打未用。提前读档 :658 facts.draws 一并检查。
+- 观察：三幕普通怪 monster DB 样本少（史莱姆狂战士 n=1；巨斧机器人 n=1、HP 82、未写复活），求解器自己认识复活（turn-solver.ts:51），问题在大脑看到的文字。
+- 已知项复发：SMNJ 换线落在 100% 死的回合（1b4453f，914515c 已修）；为 boss 留的药路上被喝（三局都有）；知识恶魔诅咒屏 mod 超时 2 次。run_plan_merge 全 stored，gate_reject 0。
