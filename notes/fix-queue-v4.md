@@ -127,3 +127,4 @@
 - 设计缺口：**第 1 次尝试不算「已试」**——src/sl/explore.ts:264 排除，:484 回落「played as answered」；UK7R 第 5 次完全重放第 1 次，9V7K F45 第 4 次回落第 1 次的 T3 线并早死一回合。不阻塞。
 - 观察：重放每次都走到换线点（deviation.reached 全 true）；known_draws 每局保持到首次洗牌（25/26/28/35 张），洗牌后打法相同时抽牌也相同；SL_JUDGE_ANY_DRAW 0 次触发、0 误判；run_plan_merge 全 stored；gate_reject 0。
 - JSA5 自杀线已修（566ae3e，见上）。
+- **已修（2026-10-03 06:22 确认）**：SL_RETRY_EXPLORE_CANON（第 1 次也记为已试；按卡 id/药/目标的无序键比较）、SL_RETRY_EXPLORE_TURN（换线点后本回合不得以失败尝试的出牌收尾，抽牌牌换线不再被重规划冲掉）。v4-live cab3c3f（06:22），下一局起生效。两条关闭。已知局限：相差 1 血的局面不算同一局面（9V7K F45 a4、JSA5 F33 a6），复盘留意近似重复。
