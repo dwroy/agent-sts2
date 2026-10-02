@@ -47,10 +47,10 @@ import { actThreatIds, bossOnBoard, monsterMoves, moveDamageAt, moveTurns, obser
 import { clearedWith, moveRulesOf, stripStunRules, type MoveRule, type StripStunRule } from "../knowledge/mechanics.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
-import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, type BossLineSim } from "../sim/boss-lines.js";
+import { bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 import { knownTopIndices } from "../sl/draws.js";
-import { exploreAlternatives, exploreReplacement, lineText, type ExploreLine, type SlPoint } from "../sl/explore.js";
+import { exploreAlternatives, exploreReplacement, lineText, rankByOrder, type ExploreLine, type SlPoint } from "../sl/explore.js";
 import type { LeastLossFacts } from "../sl/judge.js";
 import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
 
@@ -1785,7 +1785,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
  * attempt (slPointOf), by the decision object (code's own line) or the resolution it played (a question's). Kept beside
  * them, not on them: the decision and its log row are as before. Only on an SL retry with the switch on (env.sl.explore).
  */
-export type SlPointInfo = Pick<SlPoint, "kind" | "label" | "line" | "alternatives" | "explored"> & {
+export type SlPointInfo = Pick<SlPoint, "kind" | "label" | "line" | "alternatives" | "dead" | "explored"> & {
   /** On the deviation point's board: what came of it (the line about to be played, its replacement, why). */
   deviation?: { original: string; replacement: string | null; reason: string };
 };
@@ -3045,10 +3045,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // SL_RETRY_EXPLORE (docs/sl.md §11, src/sl/explore.ts), on an SL retry: the line each resolution plays, noted for the
   // attempt's record (notePick); on the deviation point's board, a line a failed attempt played there gives way to the shown
   // line the question's ranking puts first among those none played (explored, in resolve). Nothing runs without env.sl.explore.
-  type Pick = { plan: Plan | null; text: string; potions: string[]; wins: boolean; via: CombatPlanMemo["via"]; guardExtra?: (line: Plan) => number };
+  type PickedLine = { plan: Plan | null; text: string; potions: string[]; wins: boolean; via: CombatPlanMemo["via"]; guardExtra?: (line: Plan) => number };
   const explore = env.sl?.explore;
-  const picks = new WeakMap<ResolvedAction, Pick>();
-  const notePick = (resolved: ResolvedAction, pick: Pick): ResolvedAction => {
+  const picks = new WeakMap<ResolvedAction, PickedLine>();
+  const notePick = (resolved: ResolvedAction, pick: PickedLine): ResolvedAction => {
     if (explore) picks.set(resolved, pick);
     return resolved;
   };
@@ -3066,10 +3066,21 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (!explore || !pick) return { resolved, log: null, info: null };
     try {
       const lines: ExploreLine<Plan>[] = shown.map((plan) => ({ plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan) }));
-      const info: SlPointInfo = { kind: "question", label, line: pick.text, alternatives: exploreAlternatives(pick, lines).map((line) => line.text) };
+      const estimate = (plan: Plan) => (rollout?.available ? rollout.byPlan.get(plan) : undefined);
+      /** The line played there and the lines that could replace it, as the attempt's record keeps them (the rollout's deaths too). */
+      const pointOf = (line: { plan: Plan | null; text: string; potions: string[]; wins: boolean }): Pick<SlPointInfo, "line" | "alternatives" | "dead"> => {
+        const alternatives = exploreAlternatives(line, lines);
+        const dead = Object.fromEntries(
+          [...(line.plan ? [{ text: line.text, plan: line.plan }] : []), ...alternatives].flatMap((entry) => {
+            const estimated = estimate(entry.plan);
+            return estimated && estimated.samples > 0 ? [[entry.text, Math.round((estimated.deaths / estimated.samples) * 1000) / 1000]] : [];
+          }),
+        );
+        return { line: line.text, alternatives: alternatives.map((entry) => entry.text), ...(Object.keys(dead).length > 0 ? { dead } : {}) };
+      };
+      const info: SlPointInfo = { kind: "question", label, ...pointOf(pick) };
       const deviate = explore.deviate;
       if (!deviate) return { resolved, log: null, info };
-      const estimate = (plan: Plan) => (rollout?.available ? rollout.byPlan.get(plan) : undefined);
       const choice = exploreReplacement({
         pick,
         shown: lines,
@@ -3078,13 +3089,21 @@ function planTurn(env: DecisionEnv): Decision | null {
           const line = estimate(plan);
           return line && line.samples > 0 ? line.deaths / line.samples : null;
         },
-        // The question's ranking: B2's where it ranks this boss, else the rollout's (its ties: the question's order).
+        // The question's ranking: B2's where it ranks this boss (the lines it ties, the rollout's), else the rollout's (its
+        // ties: the question's order).
         rank: (plans) => {
-          if (simRanks) return simRanks.order.find((plan) => plans.includes(plan)) ?? null;
-          const estimates = plans.map(estimate).filter((line): line is NonNullable<ReturnType<typeof estimate>> => line !== undefined);
-          if (!rollout?.available || estimates.length === 0) return null;
-          const best = pickRolloutBest(estimates, rollout.lossCap);
-          return best.best?.plan ?? plans.find((plan) => (best.tied ?? []).some((line) => line.plan === plan)) ?? null;
+          const byRollout = (among: Plan[]): Plan | null => {
+            const estimates = among.map(estimate).filter((line): line is NonNullable<ReturnType<typeof estimate>> => line !== undefined);
+            if (!rollout?.available || estimates.length === 0) return null;
+            const best = pickRolloutBest(estimates, rollout.lossCap);
+            return best.best?.plan ?? among.find((plan) => (best.tied ?? []).some((line) => line.plan === plan)) ?? null;
+          };
+          if (!simRanks) return byRollout(plans);
+          const simKey = (plan: Plan): string | null => {
+            const line = simRanks.byPlan.get(plan)?.result;
+            return line ? `${Math.round(line.winProb * 1000)}|${Math.round(wonLoss(line) * 10)}` : null;
+          };
+          return rankByOrder(plans, simRanks.order, simKey, byRollout);
         },
       });
       const numbers = (plan: Plan | null): string | null => {
@@ -3119,7 +3138,7 @@ function planTurn(env: DecisionEnv): Decision | null {
           if (pick.guardExtra) recordHpGuard(env, state.turn, pick.guardExtra(rep.plan));
         },
       };
-      return { resolved: out, log, info: { kind: "question", label, line: rep.text, alternatives: exploreAlternatives({ ...pick, plan: rep.plan, text: rep.text }, lines).map((line) => line.text), explored: true, deviation } };
+      return { resolved: out, log, info: { kind: "question", label, ...pointOf({ ...pick, plan: rep.plan, text: rep.text, potions: rep.potions, wins: rep.wins }), explored: true, deviation } };
     } catch {
       // Any error: the resolution as without the switch.
       return { resolved, log: null, info: null };

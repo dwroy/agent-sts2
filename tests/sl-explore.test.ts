@@ -69,7 +69,7 @@ const { planCombatTurn, slPointOf } = await import("../src/screens/combat-plan.j
 const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
 const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
 const { previousAttemptsJson } = await import("../src/sl/attempts.js");
-const { exploreReplacement, exploreTarget, lineText, slBoardKey } = await import("../src/sl/explore.js");
+const { exploreReplacement, exploreTarget, rankByOrder, slBoardKey } = await import("../src/sl/explore.js");
 const { SlController } = await import("../src/sl/controller.js");
 const { RunJournal } = await import("../src/project/run-journal.js");
 const { combatPayload, testKnowledge } = await import("./scenarios.js");
@@ -149,6 +149,21 @@ describe("exploreTarget: one decision point per attempt, backtracking from the d
     expect(target!.point).toMatch(/deviated at 1 time before: another untried line/);
   });
 
+  it("a point whose untried lines all die more often in the rollout is passed over while another is not (63WB F33 T5)", () => {
+    // T3's only other line dies in 24 of 24 samples against the played one's 20: T2 (no worse) goes first, T3 after it.
+    const path: SlPoint[] = [q("b1", 1, "A1", ["B1"]), { ...q("b2", 2, "A2", ["B2", "C2"]), dead: { A2: 0.5, B2: 0.6, C2: 0.5 } }, { ...q("b3", 3, "A3", ["B3"]), dead: { A3: 0.83, B3: 1 } }];
+    const first = exploreTarget([row(2, path)], 3);
+    expect(first.target).toMatchObject({ board: "b2", back: 2 });
+    expect(first.why).toMatch(/passed over T3, whose untried lines all die more often in the rollout/);
+    const rows: ExploreRow[] = [row(2, path), row(3, path, { target: first.target, deviation: { reached: true, original: "A2", replacement: "C2", reason: "test" } })];
+    // Then T1 (no numbers: not known to be worse), and only then T3.
+    expect(exploreTarget(rows, 4).target).toMatchObject({ board: "b1" });
+    rows.push(row(4, path, { target: exploreTarget(rows, 4).target, deviation: { reached: true, original: "A1", replacement: "B1", reason: "test" } }));
+    const last = exploreTarget(rows, 5);
+    expect(last.target).toMatchObject({ board: "b3", round: 0 });
+    expect(last.why).toMatch(/all dying more often in the rollout than the one played, as on every other point left/);
+  });
+
   it("a deviation whose board never came up does not count: the next attempt aims at the same point", () => {
     const rows: ExploreRow[] = [row(2, PATH)];
     const { target } = exploreTarget(rows, 3);
@@ -200,6 +215,18 @@ describe("exploreReplacement: the best untried line", () => {
     expect(choose([line("A"), line("C")], ["A"], "A", { wins: true })).toMatchObject({ replacement: null, reason: expect.stringMatching(/wins the fight/) });
     expect(choose([line("A"), line("C")], ["C"])).toMatchObject({ replacement: null, reason: expect.stringMatching(/not played on this board before/) });
     expect(choose([line("A"), line("C")], ["A", "C"])).toMatchObject({ replacement: null, reason: expect.stringMatching(/no shown line left/) });
+  });
+});
+
+describe("rankByOrder: B2's order where it ranks the boss, the lines it cannot tell apart by the rollout", () => {
+  const b2: Record<string, string> = { A: "357|90", B: "232|160", C: "232|160", D: "20|170" };
+  const byRollout = (plans: string[]) => [...plans].sort().reverse()[0] ?? null;
+  it("B2's first among the candidates; a tie on its numbers goes to the rollout", () => {
+    expect(rankByOrder(["B", "D"], ["A", "B", "C", "D"], (plan) => b2[plan] ?? null, byRollout)).toBe("B");
+    // B and C read the same in B2 (1YXM F33: every line 0% won): the rollout's pick between them.
+    expect(rankByOrder(["B", "C", "D"], ["A", "B", "C", "D"], (plan) => b2[plan] ?? null, byRollout)).toBe("C");
+    // No B2 numbers for any of them: the rollout's.
+    expect(rankByOrder(["X", "Y"], ["A"], () => null, byRollout)).toBe("Y");
   });
 });
 
@@ -322,6 +349,8 @@ describe("the planner: the switch recording changes nothing; on the deviation po
     const played = plain.resolve(pick("plan1"));
     const point = slPointOf(plain, played)!;
     expect(point).toMatchObject({ kind: "question", label: plain.label, line: playsOf(options["plan1"]!) });
+    // The rollout's share of samples dead, for the line played and each alternative.
+    expect(Object.keys(point.dead ?? {}).sort()).toEqual([point.line, ...point.alternatives!].sort());
     expect(point.alternatives!.length).toBeGreaterThan(0);
     expect(point.alternatives).not.toContain(point.line);
 

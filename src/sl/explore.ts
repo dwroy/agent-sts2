@@ -19,7 +19,7 @@
  *   once every point had its turn, the latest with a line still untried again. Only Jev's questions: code's own turns
  *   (the only line, a dominating line, a lethal, every line dying) have no line it would play instead.
  * - On that board only, the line about to be played, when a failed attempt played it there, is replaced after Jev's answer
- *   (exploreReplacement): by the shown line the question's ranking (B2's where it ranks, else the rollout's) puts first
+ *   (exploreReplacement): by the shown line the question's ranking (B2's where it ranks, its ties the rollout's; else the rollout's) puts first
  *   among those no failed attempt played there, preferring the ones the rollout does not see dying more often, never one
  *   dying this turn while one survives, never one drinking a potion the pick does not drink. Every other board plays as
  *   usual. The decision row says so (`sl_explore`).
@@ -41,6 +41,11 @@ export interface SlPoint {
   line: string;
   /** A question: the shown lines that could replace it (exploreAlternatives), by their steps. Absent for code's lines. */
   alternatives?: string[];
+  /**
+   * A question: the rollout's share of samples dead within its horizon, by line (the one played and its alternatives), when it
+   * ran. exploreTarget passes over a point whose untried lines all die more often than the one played while another does not.
+   */
+  dead?: Record<string, number>;
   /** The line is this attempt's deviation (it replaced a line a failed attempt played here). */
   explored?: true;
 }
@@ -183,7 +188,10 @@ const ordinal = (n: number): string => (n === 1 ? "latest" : `${n}${n === 2 ? "n
  * the draws, so the same board's lines read differently, 63WBEEF2JVM5 F33 T1 "打击, 剑柄打击, potion" against attempt 2's
  * "..., 欺凌" for the same plays). The point deviated at the fewest times so far comes first, the latest of those: attempt 3
  * the question closest to the death, attempt 4 the one before it, and so on back, then round again (docs/sl.md §11.2).
- * A deviation counts when its board came up (`deviation.reached`). Null (with why) when there is no such point.
+ * Among those, a point with an untried line the rollout does not see dying more often than the one played comes before one
+ * whose untried lines all do (`dead`; the offline evaluation, 63WBEEF2JVM5 F33 T5: the only other line, Blood Wall, dead in
+ * 24 of 24 samples against 20, B2 0% won against 11%: a retry spent on it). A deviation counts when its board came up
+ * (`deviation.reached`). Null (with why) when there is no such point.
  */
 export function exploreTarget(rows: readonly ExploreRow[], attempt: number): { target: SlTarget | null; why: string } {
   if (attempt < 3) return { target: null, why: "attempt 2 plays as usual: it is the first attempt that knows the draws" };
@@ -210,21 +218,27 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number): { t
   }
   const points = reference.explore!.points;
   // Each question of the path with a line untried on its board, counted back from the death (1: the latest).
-  const open: { point: SlPoint; back: number; untried: string[] }[] = [];
+  const open: { point: SlPoint; back: number; untried: string[]; worse: boolean }[] = [];
+  const seen = new Set<string>();
   let back = 0;
   for (let i = points.length - 1; i >= 0; i -= 1) {
     const point = points[i]!;
     if (point.kind !== "question" || !point.alternatives) continue;
     // A board seen twice on the path (a re-plan): its latest record only.
-    if (open.some((entry) => entry.point.board === point.board)) continue;
+    if (seen.has(point.board)) continue;
+    seen.add(point.board);
     back += 1;
     const tried = played.get(point.board)?.lines ?? new Set<string>();
     const untried = point.alternatives.filter((line) => !tried.has(line));
-    if (untried.length > 0) open.push({ point, back, untried });
+    // Every untried line dies more often in the rollout than the one played (no numbers: not known to be worse).
+    const own = point.dead?.[point.line];
+    const worse = own !== undefined && untried.every((line) => (point.dead?.[line] ?? -1) > own + 1e-9);
+    if (untried.length > 0) open.push({ point, back, untried, worse });
   }
   if (open.length === 0) return { target: null, why: `no question on attempt ${reference.attempt}'s path has a line no failed attempt played` };
   const fewest = Math.min(...open.map((entry) => uses.get(entry.point.board) ?? 0));
-  const chosen = open.find((entry) => (uses.get(entry.point.board) ?? 0) === fewest)!;
+  const least = open.filter((entry) => (uses.get(entry.point.board) ?? 0) === fewest);
+  const chosen = least.find((entry) => !entry.worse) ?? least[0]!;
   const entry = played.get(chosen.point.board)!;
   const round = uses.get(chosen.point.board) ?? 0;
   const point = `T${chosen.point.turn ?? "?"}, the ${ordinal(chosen.back)} question before attempt ${reference.attempt}'s death on T${reference.turns}${round > 0 ? ` (deviated at ${round} time${round === 1 ? "" : "s"} before: another untried line)` : ""}`;
@@ -239,7 +253,7 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number): { t
       attempts: [...entry.attempts].sort((a, b) => a - b),
       point,
     },
-    why: `${chosen.untried.length} line${chosen.untried.length === 1 ? "" : "s"} shown there never played on that board`,
+    why: `${chosen.untried.length} line${chosen.untried.length === 1 ? "" : "s"} shown there never played on that board${chosen.worse ? "; all dying more often in the rollout than the one played, as on every other point left" : ""}${least.some((entry) => entry.worse && entry.back < chosen.back) ? `; passed over ${least.filter((entry) => entry.worse && entry.back < chosen.back).map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, whose untried lines all die more often in the rollout` : ""}`,
   };
 }
 
@@ -318,4 +332,17 @@ export function exploreReplacement<P>(args: {
         ? "the best untried line by the question's ranking"
         : "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)";
   return { replacement, reason: why };
+}
+
+/**
+ * The question's ranking among `plans` where B2 ranks the boss (combat-plan simRanks): B2's first of them by its `order`;
+ * those B2 cannot tell from it (`keyOf`: the same win rate and HP lost when won, as the question shows them) go to `byRollout`.
+ * 1YXMHF6FSPK4 F33: every line 0% won in B2, its order only the question's; the rollout still tells them apart.
+ */
+export function rankByOrder<P>(plans: readonly P[], order: readonly P[], keyOf: (plan: P) => string | null, byRollout: (plans: P[]) => P | null): P | null {
+  const first = order.find((plan) => plans.includes(plan));
+  if (first === undefined) return byRollout([...plans]);
+  const key = keyOf(first);
+  const tied = key === null ? [] : plans.filter((plan) => keyOf(plan) === key);
+  return tied.length >= 2 ? (byRollout(tied) ?? first) : first;
 }

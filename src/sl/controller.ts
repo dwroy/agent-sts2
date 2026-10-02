@@ -293,7 +293,7 @@ export class SlController {
       const info = slPointOf(decision, resolved);
       if (!info) return;
       const board = slBoardKey(state);
-      const point: SlPoint = { board, turn: state.turn, kind: info.kind, label: info.label, line: info.line, ...(info.alternatives ? { alternatives: info.alternatives } : {}), ...(info.explored ? { explored: true as const } : {}) };
+      const point: SlPoint = { board, turn: state.turn, kind: info.kind, label: info.label, line: info.line, ...(info.alternatives ? { alternatives: info.alternatives } : {}), ...(info.dead ? { dead: info.dead } : {}), ...(info.explored ? { explored: true as const } : {}) };
       // The same board again (a re-plan before anything changed): the line played is the last one.
       if (explore.points.at(-1)?.board === board) explore.points[explore.points.length - 1] = point;
       else explore.points.push(point);
