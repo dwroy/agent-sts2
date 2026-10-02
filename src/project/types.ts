@@ -259,6 +259,12 @@ export interface ScreenMemory {
   runPlan?: import("../strategy/run-plan.js").RunPlan | null;
   /** "runId:floor" of a failed run-plan request: not retried on the same floor. */
   runPlanFailed?: string;
+  /**
+   * RUN_PLAN_MERGE: a run plan that is due and rides on the next DeepSeek question (strategy/run-plan-merge.ts): the
+   * trigger and the floor it became due on (the map asks for it separately RUN_PLAN_MERGE_FLOORS floors later).
+   * Cleared when a plan is stored.
+   */
+  runPlanPending?: import("../strategy/run-plan-merge.js").RunPlanPending;
   /** The brain's route for the current act (BUILD_DECIDER=deepseek); code follows it node by node. */
   routePlan?: import("../screens/route-plan.js").RoutePlan;
   /** "runId:act:floor" whose route-plan question failed: that floor's map moves use code's greedy baseline. */

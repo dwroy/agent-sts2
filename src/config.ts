@@ -121,6 +121,13 @@ export interface AppConfig {
   runPlan: "off" | "v1";
   runPlanLog: string;
   /**
+   * RUN_PLAN_MERGE (default on; Dai 2026-10-02, strategy/run-plan-merge.ts): with RUN_PLAN=v1 and BUILD_DECIDER=deepseek,
+   * a due run plan rides on the next DeepSeek question (the act-start Ancient, a card reward, a rest site, a shop, an
+   * event) instead of its own call at the map; its own call only when no question carried it within
+   * RUN_PLAN_MERGE_FLOORS floors, or the act boss is next. off: the run plan's own call at the map, exactly as before.
+   */
+  runPlanMerge: boolean;
+  /**
    * Who decides deck building (card rewards, shop, removals/upgrades/transforms, events, relics, bundles),
    * the route and rest sites. `deepseek` (default): DeepSeek directly, code's values given as facts; the
    * route is planned once per act and followed by code. Jev, then code, when DeepSeek fails or is out of
@@ -668,6 +675,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   }
   const runPlan: "off" | "v1" = runPlanRaw === "v1" ? "v1" : "off";
   const runPlanLog = readEnv(env, "RUN_PLAN_LOG") ?? "logs/run-plans.jsonl";
+  // An unreadable RUN_PLAN_MERGE is a warning, not a start-up error: the default (on) applies.
+  const runPlanMergeProblems: ConfigProblem[] = [];
+  const runPlanMerge = parseOnOff(readEnv(env, "RUN_PLAN_MERGE"), "RUN_PLAN_MERGE", runPlanMergeProblems) ?? true;
+  for (const problem of runPlanMergeProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const buildDeciderRaw = (readEnv(env, "BUILD_DECIDER") ?? "deepseek").toLowerCase();
   if (buildDeciderRaw !== "deepseek" && buildDeciderRaw !== "jev") {
     problems.push({ field: "BUILD_DECIDER", message: `expected deepseek or jev, got "${buildDeciderRaw}"` });
@@ -801,6 +812,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     fightPlanLog,
     runPlan,
     runPlanLog,
+    runPlanMerge,
     buildDecider,
     buildOneshot,
     bossSimBuild,

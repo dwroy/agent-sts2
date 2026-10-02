@@ -54,6 +54,21 @@
 
 题面带统计时，memory.knowledge 不再重复统计行（run-journal `statsCovered`）；经验条目照旧。
 
+### 整局计划搭车：`state.run_plan_task`（RUN_PLAN_MERGE，默认开；notes/run-plan-merge.md）
+
+RUN_PLAN=v1 的整局计划（strategy/run-plan.ts）什么时候到期没变：地图上按 runPlanTrigger（开局、新一幕、掉血 30%、每 8 层）。变的是谁来问：
+到期后不再在地图上单独调用一次，而是由下一道大脑直接决策的题带上（任何 decision.deepseek 题：古神 act-plan、选牌、休息、商店、事件、
+路线、一次性计划）；开局的计划在本局第一道题（涅奥）就带上。
+
+- 题面多两样：`state.run_plan_task`（`trigger`、`due_because`、当前计划在哪：内容就是 `facts.your_run_plan`，这里写它在第几幕第几层、
+  当时 HP、为什么做的）；题目说明末尾加单独那次的任务说明和格式（run-plan-merge.ts `RUN_PLAN_MERGE_NOTE`），要求在同一个 JSON 里多答
+  `"run_plan"`。牌组、遗物、药水、HP、金币、boss 时钟只在 facts 里出现一次。
+- 本题自己的答案照原样解析；`run_plan` 是计划就存（screenMemory.runPlan、run-plans.jsonl 带 `merged_into`、journal），不是就仍待做，
+  下一道题再带。带计划的题思考档位取本题和 run-plan 的较高者（选牌、休息从 high 升到 max）。
+- 仍单独问（和以前同一个调用）：待做满 2 层没有题带走；下一个房间就是本幕 boss；BUILD_DECIDER=jev；BRAIN_ENGINE_RUN_PLAN 单独指定了引擎。
+- 没有到期计划的题，和关掉开关（`RUN_PLAN_MERGE=off`）时一样，逐字节不变。决策行的 `run_plan_merge` 记搭车结果（stored / missing /
+  error / no_answer）。
+
 ### 选牌 `reward/card`
 
 | 选项字段 | 含义 | 来源 |
