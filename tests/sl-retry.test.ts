@@ -43,6 +43,8 @@ function withCards(board: Raw, hand: string[], draw: string[], discard: string[]
       .map(([key, n]) => ({ line: `${key}${n > 1 ? `*${n}` : ""} [1费]：text`, card_ids: [key.replace(/\+$/, "")] }));
   };
   board["agent_view"] = { combat: { draw: lines(draw), discard: lines(discard), exhaust: [] } };
+  // The run's deck: the fight's own cards (the draw tracker's first state reads the hand's draws off it).
+  (board["run"] as Raw)["deck"] = [...hand, ...draw, ...discard].map((key, index) => ({ index, card_id: key.replace(/\+$/, ""), name: key, upgraded: key.endsWith("+") }));
   return board;
 }
 
@@ -101,6 +103,34 @@ describe("DrawTracker: the order cards come off the draw pile", () => {
     expect(top.record.broke).toMatch(/^T1: B left the draw pile without coming into the hand/);
   });
 
+  it("the first state after a reload: only the hand's cards that came off the pile, never one made into the hand (X7BX F48)", () => {
+    // X7BX5DYHFZ3N F48 (ops 2026-10-02): attempt 2's first state, T1, held five drawn cards and Crossbow's Spite (怨恨, made
+    // into the hand at the turn's start, not in the deck); attempt 1's first state had an empty hand and read its draws off
+    // the pile. Both now record the same order, and the next turn's draws follow it.
+    const deck = ["BLOOD_WALL", "IRON_WAVE+", "SETUP_STRIKE", "ANGER+", "STRIKE", "ANGER", "JUGGERNAUT+", "STRIKE+"];
+    const reloaded = (raw: Raw): Raw => {
+      (raw["run"] as Raw)["deck"] = deck.map((key, index) => ({ index, card_id: key.replace(/\+$/, ""), name: key, upgraded: key.endsWith("+") }));
+      return raw;
+    };
+    const first = new DrawTracker({ inserts: true, tops: true });
+    first.observe(state(reloaded(turnBoard(1, [], deck))));
+    first.observe(state(reloaded(turnBoard(1, ["BLOOD_WALL", "IRON_WAVE+", "SETUP_STRIKE", "ANGER+", "STRIKE", "SPITE"], ["ANGER", "JUGGERNAUT+", "STRIKE+"]))));
+    const second = new DrawTracker({ inserts: true, tops: true });
+    second.observe(state(reloaded(turnBoard(1, ["BLOOD_WALL", "IRON_WAVE+", "SETUP_STRIKE", "ANGER+", "STRIKE", "SPITE"], ["ANGER", "JUGGERNAUT+", "STRIKE+"]))));
+    expect(second.record.order).toEqual(["BLOOD_WALL", "IRON_WAVE+", "SETUP_STRIKE", "ANGER+", "STRIKE"]);
+    expect(second.record.order).toEqual(first.record.order);
+    const known = knownOrderOf([{ attempt: 1, draws: { ...first.record, order: [...first.record.order, "ANGER"], names: [...first.record.names, "ANGER"], turns: [...first.record.turns, 2], clean: 6 } }]).known!;
+    second.observe(state(reloaded(turnBoard(2, ["ANGER", "SPITE"], ["JUGGERNAUT+", "STRIKE+"], ["BLOOD_WALL", "IRON_WAVE+", "SETUP_STRIKE", "ANGER+", "STRIKE"]))));
+    expect(second.record.order.at(-1)).toBe("ANGER");
+    expect(checkKnown(known, second)).toMatchObject({ ok: true });
+    // A state without the deck listed: the whole hand, as before.
+    const bare = turnBoard(1, ["A", "B"], ["C"]);
+    delete (bare["run"] as Raw)["deck"];
+    const old = new DrawTracker();
+    old.observe(state(bare));
+    expect(old.record.order).toEqual(["A", "B"]);
+  });
+
   it("tracking that starts after the fight's start (a restarted process) knows nothing", () => {
     const t = new DrawTracker();
     t.observe(state(turnBoard(3, ["A", "B"], ["C"], ["D"])));
@@ -112,9 +142,13 @@ describe("DrawTracker: the order cards come off the draw pile", () => {
 const draws = (order: string[], clean = order.length): SlDraws => ({ order, names: order.map((key) => key.toLowerCase()), turns: order.map(() => 1), clean, broke: clean < order.length ? "T2: reshuffle" : null });
 
 describe("knownOrderOf and checkKnown", () => {
-  it("the longest clean order the earlier attempts agree on; attempts that disagree leave none", () => {
+  it("the longest clean order the earlier attempts agree on; attempts that disagree keep the draws before it", () => {
     expect(knownOrderOf([{ attempt: 1, draws: draws(["A", "B", "C"], 2) }, { attempt: 2, draws: draws(["A", "B", "C", "D"]) }]).known).toEqual({ keys: ["A", "B", "C", "D"], names: ["a", "b", "c", "d"], attempts: [1, 2] });
-    expect(knownOrderOf([{ attempt: 1, draws: draws(["A", "B"]) }, { attempt: 2, draws: draws(["A", "C"]) }])).toEqual({ known: null, reason: "attempts 1 and 2 drew differently at draw 2 (B vs C)" });
+    // Ops 2026-10-02 (X7BX5DYHFZ3N F48: one card counted wrongly at draw 6 dropped the 5 agreed draws for attempts 3-6):
+    // the common part stays, nothing from the disagreement on, not even from a longer later row.
+    expect(knownOrderOf([{ attempt: 1, draws: draws(["A", "B"]) }, { attempt: 2, draws: draws(["A", "C"]) }])).toEqual({ known: { keys: ["A"], names: ["a"], attempts: [1, 2] }, reason: "attempts 1 and 2 drew differently at draw 2 (B vs C): the 1 draw before it kept" });
+    expect(knownOrderOf([{ attempt: 1, draws: draws(["A", "B", "C"]) }, { attempt: 2, draws: draws(["A", "B", "X", "D"]) }, { attempt: 3, draws: draws(["A", "B", "C", "D", "E"]) }]).known).toEqual({ keys: ["A", "B"], names: ["a", "b"], attempts: [1, 2, 3] });
+    expect(knownOrderOf([{ attempt: 1, draws: draws(["A", "B"]) }, { attempt: 2, draws: draws(["C", "B"]) }])).toEqual({ known: null, reason: "attempts 1 and 2 drew differently at draw 1 (A vs C)" });
     expect(knownOrderOf([{ attempt: 1 }, { attempt: 2, draws: null }]).known).toBeNull();
     // An upgrade on the way to the hand is the same card.
     expect(knownOrderOf([{ attempt: 1, draws: draws(["A+", "B"]) }, { attempt: 2, draws: draws(["A", "B"]) }]).known?.keys).toEqual(["A+", "B"]);

@@ -211,6 +211,8 @@ function withCards(board: Raw, hand: string[], draw: string[], discard: string[]
     return [...counts.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([key, n]) => ({ line: `${key}${n > 1 ? `*${n}` : ""} [1费]：text`, card_ids: [key.replace(/\+$/, "")] }));
   };
   board["agent_view"] = { combat: { draw: lines(draw), discard: lines(discard), exhaust: [] } };
+  // The run's deck: the fight's own cards (the draw tracker's first state reads the hand's draws off it).
+  (board["run"] as Raw)["deck"] = [...hand, ...draw, ...discard].map((key, index) => ({ index, card_id: key.replace(/\+$/, ""), name: key, upgraded: key.endsWith("+") }));
   return board;
 }
 const turnBoard = (turn: number, hand: string[], draw: string[], discard: string[] = [], options: { lethal?: boolean; hp?: number } = {}) =>

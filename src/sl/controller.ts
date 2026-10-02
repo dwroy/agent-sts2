@@ -385,7 +385,7 @@ export class SlController {
       const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
       const { known, reason } = knownOrderOf(earlier);
       if (this.config.retryKnownDraws) {
-        this.options.note(known ? `SL: attempt ${attempt} knows the first ${known.keys.length} draws of the fight (attempt ${known.attempts.join(", ")})` : `SL: attempt ${attempt} has no known draws (${reason})`);
+        this.options.note(known ? `SL: attempt ${attempt} knows the first ${known.keys.length} draws of the fight (attempt ${known.attempts.join(", ")}${reason ? `; ${reason}` : ""})` : `SL: attempt ${attempt} has no known draws (${reason})`);
       }
       return known;
     } catch {
