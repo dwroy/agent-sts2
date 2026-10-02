@@ -70,3 +70,4 @@
 - **持有果汁时构筑模拟报错**：src/screens/combat-plan.ts:1853-1856 持 FRUIT_JUICE 直接返回 combat/potion-now 不调求解器，src/sim/boss-start.ts:435 抛「the planner built no board for the synthetic boss frame」。GWGT F22–F27 6 题、5DFX 1 题，大脑没拿到模拟数字。不阻塞。
 - 观察：7PWU F47 火堆两次「state changed while deciding」，各弹出 CARDS_VIEW 被关掉，多 47 s、两次 DeepSeek（各约 14.4 万输入 token）。根因未定位。
 - 已知项复发：build-sim-facts.ts:387（三局都中）；B3 小样本；mod 超时自愈。gate_reject 0，无泄漏，无小偷战斗，mech 字段 0 次（未遇适用敌人）。
+- **已修（2026-10-02 15:43 确认）**：SL 判官无惧疼痛只计手里虚无牌（v4 a677f15），7PWU F48 第 2 次 T6 重放判必死；死亡行保留最后一次「not certain」判定。果汁时 B3 合成 boss 开局把果汁移出药栏（v4 7f4759d）。均合入 v4-live e7c1718（15:43），下一局起生效。两条关闭。
