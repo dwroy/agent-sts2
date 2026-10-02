@@ -206,6 +206,15 @@ export function stripVigor(hand: CardModel[], vigor: number, weak: boolean): voi
 }
 
 /**
+ * A hand card a power's hook keeps from being played (the mod's unplayable_preventer_id, or BlockedByHook in the raw
+ * reason; logged preventers: CHAINS_OF_BINDING_POWER, SLOTH_POWER, SMOGGY_POWER, RINGING_POWER). A card only short of
+ * energy has neither (6898 logged not_enough_energy cards with preventer null, raw EnergyCostTooHigh).
+ */
+function blockedByHook(card: Record<string, unknown>): boolean {
+  return str(card["unplayable_preventer_id"]) !== "" || /BlockedByHook/.test(str(card["unplayable_reason_raw"]));
+}
+
+/**
  * Pen Nib (PEN_NIB, 「你每打出的第10张攻击牌将会造成双倍伤害」): when the next Attack is the 10th (its stack at 9), the
  * mod shows every Attack in hand at double damage, but the game doubles only the one played next (GSG0Q5KP9AAU F33 T2:
  * stack 9, Dismantle 20, Strike 22, Breakthrough 22 to all; planned 86, dealt 20 + 11 + 11 x2 = 53). Halved here
@@ -606,7 +615,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     // The Gambit is never played: after it any unblocked hit is fatal (S780).
     // The Gambit is in the search now: the solver makes every later unblocked hit fatal and plays it
     // only when every other line dies (P78Z F17 T11: 3 HP, 17 block of 21, a 0-cost 50 block in hand).
-    playable: bool(card["playable"]) || str(card["unplayable_reason"]) === "not_enough_energy",
+    // But a card a power's hook locks reads not_enough_energy too when the energy is short as well, the hook named in
+    // unplayable_preventer_id (raw "BlockedByHook, EnergyCostTooHigh"): Chains of Binding once a Soulbound card is
+    // played, Sloth's and Ringing's card cap, Smoggy's one Skill. No energy unlocks it this turn (4JGPCH3WX6JV F48 T2: an
+    // Energy Potion drunk at 0 energy for a Soulbound Defend+, blocked_by_hook after it; the turn ended, 10 HP lost).
+    playable: bool(card["playable"]) || (str(card["unplayable_reason"]) === "not_enough_energy" && !blockedByHook(card)),
     target,
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,

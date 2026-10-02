@@ -18,12 +18,12 @@ import { BUILD_SIM_CALIBRATION_SAMPLES } from "../src/sim/build-sim.js";
 import { actBossDefeated, calibratedFloor, withBossSim } from "../src/sim/build-sim-facts.js";
 import type { DeckRunRequest, DeckRunResult } from "../src/sim/build-sim-pool.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
+import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
 import { solveTap, solveTurn, type EnemySim, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
 import type { JsonValue } from "../src/util/json.js";
-import { loggedEnv } from "./logged.js";
+import { loggedEnv, loggedKnowledge } from "./logged.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
 import { ask, decide, env, setupOneshotTests, type Raw } from "./oneshot-support.js";
 
@@ -186,5 +186,26 @@ describe("3. Pen Nib doubles the next Attack only, not every Attack shown (card-
     // and the third Strike kills it). From 7 the 10th is the third Strike: turn 3 too.
     expect(run(8)?.turnsToWin).toBe(2);
     expect(run(7)?.turnsToWin).toBe(3);
+  });
+});
+
+describe("4. a card a power's hook locks is not playable for want of energy (card-model :595, Chains of Binding)", () => {
+  it("4JGPCH3WX6JV F48 T2 at 0 energy: the Soulbound Rupture and Defend+ (preventer CHAINS_OF_BINDING_POWER) are locked; no Energy Potion for them", () => {
+    const raw = fixture("4jgp-f48-t2-chains", "t2_zero");
+    const hand = ((raw["combat"] as Raw)["hand"] as Raw[]).map((entry, i) => modelHandCard(entry, i, loggedKnowledge));
+    expect(hand.map((card) => [card.cardId, card.playable])).toEqual([["RUPTURE", false], ["DEFEND_IRONCLAD", false]]);
+    const { result } = solvedBoard(raw);
+    // Logged pick: "potion 能量药水, 防御+" (plan 2/3); after the drink both read blocked_by_hook and the turn ended.
+    expect(result.plans.some((plan) => plan.steps.some((step) => step.cardId === "DEFEND_IRONCLAD" || step.cardId === "RUPTURE"))).toBe(false);
+    expect(result.plans.some((plan) => plan.steps.length > 1 && plan.steps.some((step) => step.cardId.includes("ENERGY_POTION")))).toBe(false);
+    // After the drink the mod says so itself (blocked_by_hook): locked either way.
+    const after = ((fixture("4jgp-f48-t2-chains", "t2_after_drink")["combat"] as Raw)["hand"] as Raw[]).map((entry, i) => modelHandCard(entry, i, loggedKnowledge));
+    expect(after.every((card) => !card.playable)).toBe(true);
+  });
+
+  it("a card only short of energy stays in the search (energy gained this turn can pay for it)", () => {
+    const raw = fixture("4jgp-f48-t2-chains", "t2_zero");
+    const entry = { ...((raw["combat"] as Raw)["hand"] as Raw[])[1]!, unplayable_reason_raw: "EnergyCostTooHigh", unplayable_preventer_id: null, unplayable_preventer_type: null };
+    expect(modelHandCard(entry, 1, loggedKnowledge).playable).toBe(true);
   });
 });
