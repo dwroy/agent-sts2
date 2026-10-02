@@ -15,7 +15,7 @@ import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { BOSSES, bossLossPerTurn, SAI_BLOCK, turnBlockOf } from "../src/strategy/boss-clock.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { calibratedWinProb, type FightSampleResult } from "../src/sim/boss-sim.js";
-import { bossOpening, syntheticBossState } from "../src/sim/boss-start.js";
+import { bossOpening, syntheticBossStart, syntheticBossState } from "../src/sim/boss-start.js";
 import { BUILD_SIM_CALIBRATION_SAMPLES } from "../src/sim/build-sim.js";
 import { actBossDefeated, calibratedFloor, withBossSim } from "../src/sim/build-sim-facts.js";
 import type { DeckRunRequest, DeckRunResult } from "../src/sim/build-sim-pool.js";
@@ -291,5 +291,39 @@ describe("6. Sai's 7 block every turn in the rollout, the boss sim and the boss 
     } finally {
       setMonsterDbForTests(null);
     }
+  });
+});
+
+describe("7. Lost Wisp: 8 to every enemy per Power played, in the solver and so the rollout and the boss sim", () => {
+  it("8L29N792FA45 F33 T4 (the Kaiser Crab): Rupture's 8 kills the Rocket at 5 and enrages the Crusher (114 -> 106, 99 block)", () => {
+    const { input, result } = solvedBoard(fixture("8l29-f33-t4-lost-wisp", "t4"));
+    expect(input.player.lostWisp).toBe(8);
+    const rupture = result.plans.find((plan) => steps(plan) === "RUPTURE");
+    const after = Object.fromEntries((rupture?.outcome.enemyHpAfter ?? []).map((e) => [e.index, e.hp]));
+    // Logged after the play: Crusher 106 (99 block from the Rocket's death), the Rocket dead.
+    expect(after).toEqual({ 0: 106, 1: 0 });
+    expect(rupture?.outcome.damageDealt).toBe(13);
+  });
+
+  it("the whole-fight boss sim's solver has it (the rollout's later turns keep the decision's PlayerSim), not listed as unmodelled", () => {
+    setMonsterDbForTests(FIXTURE_DB);
+    try {
+      const start = syntheticBossStart(parseGameState(fixture("8l29-f33-t4-lost-wisp", "t4")), loggedKnowledge, "SOUL_FYSH_BOSS", 60, { db: FIXTURE_DB, mm: FIXTURE_MM });
+      expect(start.input.solver.player.lostWisp).toBe(8);
+      expect(start.relics.unmodelled).not.toContain("迷失鬼火");
+    } finally {
+      setMonsterDbForTests(null);
+    }
+  });
+
+  it("each Power played hits every enemy, through block; no Lost Wisp, no hit; a non-Power card none", () => {
+    const power = (i: number) => card(i, `POWER_${i}`, { type: "Power", damage: null, target: "self", validTargets: [], cost: 1, flatValue: 8 });
+    const enemies = [dummy({ index: 0, hp: 30, maxHp: 30 }), dummy({ index: 1, name: "Other", hp: 30, maxHp: 30, block: 5 })];
+    const two = solveTurn({ hand: [power(0), power(1)], player: player({ lostWisp: 8 }), enemies, fightKind: "monster" }).plans.find((plan) => plan.steps.length === 2)!;
+    expect(two.outcome.enemyHpAfter.map((e) => e.hp)).toEqual([14, 19]);
+    const none = solveTurn({ hand: [power(0), power(1)], player: player(), enemies, fightKind: "monster" }).plans.find((plan) => plan.steps.length === 2)!;
+    expect(none.outcome.damageDealt).toBe(0);
+    const skill = solveTurn({ hand: [card(0, "SKILL", { type: "Skill", damage: null, block: 5, target: "self", validTargets: [], flatValue: 3 })], player: player({ lostWisp: 8 }), enemies, fightKind: "monster" }).plans.find((plan) => plan.steps.length === 1)!;
+    expect(skill.outcome.damageDealt).toBe(0);
   });
 });

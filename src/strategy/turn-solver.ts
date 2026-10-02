@@ -413,6 +413,13 @@ export interface PlayerSim {
    */
   penNib?: number;
   /**
+   * Lost Wisp (「你每打出一张能力牌，就对所有敌人造成{Damage}点伤害」): this much to every enemy per Power played, through
+   * block, Strength and Vulnerable not counted (logged over the 7 runs holding it: 8 to each enemy at every Power, e.g.
+   * the Insatiable at Vulnerable 10 took 8; 8L29N792FA45 F33 T4: Rupture's 8 killed the Rocket at 5, the Crusher 114 -> 106
+   * then enraged).
+   */
+  lostWisp?: number;
+  /**
    * No Block (NO_BLOCK_POWER, from Panic Button: "no Block from cards for the next 2 turns"): block
    * cards give nothing (VP5F F48 T2: Flame Barrier+ in hand, Skull Bash took the full 15).
    */
@@ -1287,6 +1294,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   for (let play = 0; play < plays; play += 1) {
     resolveEffects(next, card, target, player, cost);
     if (card.type === "Attack") attackRelics(next, player);
+    if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
   }
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
@@ -1770,6 +1778,18 @@ function attackRelics(sim: Sim, player: PlayerSim): void {
   if (shuriken && shuriken.every > 0 && (shuriken.count + sim.relicAttacks) % shuriken.every === 0) {
     sim.strength += shuriken.strength;
     sim.permStrength += shuriken.strength;
+  }
+}
+
+/** Damage to every living enemy at once (Lost Wisp's): two crabs dying to it die together, as to Inferno's sweep. */
+function sweepRaw(sim: Sim, amount: number): void {
+  const outer = sim.sweeping === true;
+  sim.sweeping = true;
+  for (const enemy of sim.enemies) if (enemy.alive) hitEnemyRaw(sim, enemy, amount);
+  sim.sweeping = outer;
+  if (!outer && sim.pendingRage) {
+    sim.pendingRage = false;
+    crabRage(sim);
   }
 }
 

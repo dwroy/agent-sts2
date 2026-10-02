@@ -1185,6 +1185,8 @@ export const MERCURY_HOURGLASS_DAMAGE = 3;
  */
 export const SHURIKEN_ATTACKS = 3;
 export const SHURIKEN_STRENGTH = 1;
+/** Lost Wisp: damage to every enemy per Power card played (turn-solver PlayerSim.lostWisp; logged 8 every time). */
+export const LOST_WISP_DAMAGE = 8;
 
 /**
  * Damage to every enemy at the start of our next turn, all sources: Mercury Hourglass (3), Inferno
@@ -1868,6 +1870,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // Fairy in a Bottle and Lizard Tail: a line that reaches 0 HP goes on at their HP (JR66CJ9T8H7W F48).
     revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
     ...(relicIds.includes("PAPER_PHROG") ? { vulnerableFactor: PAPER_PHROG_VULNERABLE } : {}),
+    ...(relicIds.includes("LOST_WISP") ? { lostWisp: LOST_WISP_DAMAGE } : {}),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
