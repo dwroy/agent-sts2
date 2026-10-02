@@ -208,15 +208,21 @@ export function unblockedShare(bossKey: string): UnblockedShare | null {
  * of a boss's shown attack that got through our block in every logged fight against it (all ascensions:
  * that share is our play, not the monster). The hand-set A8 constant only when the DB has neither.
  */
-export function bossLossPerTurn(profile: BossProfile & { id: string }, ascension: number): { value: number; source: string; estimated: boolean } {
+export function bossLossPerTurn(profile: BossProfile & { id: string }, ascension: number, turnBlock = 0): { value: number; source: string; estimated: boolean } {
   const damage = bossDamageByTurn(profile.id, ascension, profile.scriptTurns);
   const share = unblockedShare(profile.id);
-  if (!damage || !share || damage.perTurn.length === 0) return { value: profile.lossPerTurn, source: "logged A8 HP loss a turn (no DB damage)", estimated: false };
+  // Block a relic gives every turn (Sai, turnBlockOf) on top of the logged fights' own: it takes up to that much off what
+  // got through each turn, nothing on a turn the boss does not attack (8D8DZ9K680C2 F48 with Sai: T1-T5 cost 11 HP).
+  const less = turnBlock > 0 ? ` less ${turnBlock} block a turn from Sai` : "";
+  if (!damage || !share || damage.perTurn.length === 0) return { value: Math.max(0, profile.lossPerTurn - turnBlock), source: `logged A8 HP loss a turn (no DB damage)${less}`, estimated: false };
   const mean = damage.perTurn.reduce((sum, value) => sum + value, 0) / damage.perTurn.length;
-  const value = Math.round(mean * share.unblocked_share * 10) / 10;
+  const value =
+    turnBlock > 0
+      ? Math.round((damage.perTurn.reduce((sum, hit) => sum + Math.max(0, hit * share.unblocked_share - turnBlock), 0) / damage.perTurn.length) * 10) / 10
+      : Math.round(mean * share.unblocked_share * 10) / 10;
   return {
     value,
-    source: `its attack ~${Math.round(mean)}/turn at A${ascension}${damage.estimated ? " (moves unseen at this ascension: the nearest logged one's, scaled by the measured ratio up to the highest logged ascension; estimated)" : ""} x ${Math.round(share.unblocked_share * 100)}% unblocked (${share.fights} logged fights)`,
+    source: `its attack ~${Math.round(mean)}/turn at A${ascension}${damage.estimated ? " (moves unseen at this ascension: the nearest logged one's, scaled by the measured ratio up to the highest logged ascension; estimated)" : ""} x ${Math.round(share.unblocked_share * 100)}% unblocked (${share.fights} logged fights)${less}`,
     estimated: damage.estimated,
   };
 }
@@ -679,6 +685,19 @@ export function giantNumbers(ascension: number): { hp: number; siphon: number; g
     siphon: ascension >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base,
     gun: [first, first + step, first + 2 * step],
   };
+}
+
+/**
+ * Sai: 「在你的回合开始时，获得{Block}点格挡」 — 7 at the start of every turn (logged over 14 runs holding it: turns 2-8
+ * began with 7 at the median and never less; 8D8DZ9K680C2 F48, the Queen: T2-T11 each began with exactly 7). Block on
+ * every one of our turns for the rollout (rollout-live relicBlockOf), the whole-fight boss sim and the boss clock (its
+ * HP loss a turn: turnBlockOf).
+ */
+export const SAI_BLOCK = 7;
+
+/** Block the relics give at the start of every turn of a fight (Sai). */
+export function turnBlockOf(relicIds: string[]): number {
+  return relicIds.filter((id) => id === "SAI").length * SAI_BLOCK;
 }
 
 /**
@@ -1249,7 +1268,7 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   const ascension = state.run?.ascension ?? 0;
   const deck = deckProfileForBoss(state, knowledge);
   const entryHp = entryHpOverride ?? expectedEntryHp(state);
-  const loss = bossLossPerTurn(profile, ascension);
+  const loss = bossLossPerTurn(profile, ascension, turnBlockOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))));
   const survive = survivableTurns(profile, entryHp, loss.value);
   const estimateAt = (turns: number): number => (deck ? deckEstimate(deck, bossId, turns) : 0);
   const base = {

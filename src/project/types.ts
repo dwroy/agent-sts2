@@ -127,6 +127,11 @@ export interface ScreenMemory {
   /** When combat was first seen with no living enemy (multi-phase boss between phases). */
   noEnemiesSince?: number;
   /**
+   * Rolling Boulder's amount as last seen in this fight and the turn it was seen on; the new turn waited on for its +5
+   * and since when (combat-plan boulderSettling).
+   */
+  boulder?: { fight: string; turn: number; amount: number; waitTurn?: number; since?: number };
+  /**
    * True once a card reward has been skipped on this screen. The mod documents that
    * `skip_reward_cards` "may leave the underlying reward item claimable", and a live run proved it:
    * the loop skipped, re-claimed the same card reward, and skipped again forever.

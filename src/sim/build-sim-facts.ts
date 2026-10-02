@@ -32,7 +32,8 @@ import { actFirstFloor } from "../strategy/route-map.js";
 import { projectPath, restedHp } from "../strategy/route-projection.js";
 import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../util/json.js";
 import { FIGHT_START_RELICS, bossKey, syntheticBossStart, type SyntheticStart } from "./boss-start.js";
-import { BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
+import { calibratedWinProb } from "./boss-sim.js";
+import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
 import { LOW_CONFIDENCE_B3 } from "./boss-trust.js";
 
@@ -329,7 +330,7 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
 
 /** Relics the fight models besides the fight-start table (boss-start MODELLED_ELSEWHERE, by what their ids name). */
 function knownRelic(id: string): boolean {
-  return /^(CAPTAINS_WHEEL|CANDELABRA|CHANDELIER|HORN_CLEAT|HAPPY_FLOWER|SHURIKEN|MUSIC_BOX|CLOAK_CLASP|PAELS_TEARS|RED_SKULL|SELF_FORMING_CLAY|DEMON_TONGUE|INTIMIDATING_HELMET|BEATING_REMNANT|PAPER_PHROG|FIDDLE|KUSARIGAMA|VAMBRACE|MERCURY_HOURGLASS|LIZARD_TAIL|BLESSED_ANTLER|BLOOD_SOAKED_ROSE|BREAD|ECTOPLASM|PAELS_FLESH|PHILOSOPHERS_STONE|PRISMATIC_GEM|PUMPKIN_CANDLE|SOZU|SPIKED_GAUNTLETS|VELVET_CHOKER|WHISPERING_EARRING)$/.test(id);
+  return /^(CAPTAINS_WHEEL|SAI|CANDELABRA|CHANDELIER|HORN_CLEAT|HAPPY_FLOWER|SHURIKEN|PEN_NIB|LOST_WISP|MUSIC_BOX|CLOAK_CLASP|PAELS_TEARS|RED_SKULL|SELF_FORMING_CLAY|DEMON_TONGUE|INTIMIDATING_HELMET|BEATING_REMNANT|PAPER_PHROG|FIDDLE|KUSARIGAMA|VAMBRACE|MERCURY_HOURGLASS|LIZARD_TAIL|BLESSED_ANTLER|BLOOD_SOAKED_ROSE|BREAD|ECTOPLASM|PAELS_FLESH|PHILOSOPHERS_STONE|PRISMATIC_GEM|PUMPKIN_CANDLE|SOZU|SPIKED_GAUNTLETS|VELVET_CHOKER|WHISPERING_EARRING)$/.test(id);
 }
 
 /** The line of one option. */
@@ -370,6 +371,28 @@ export interface BossSimOutcome {
 }
 
 /**
+ * The calibrated win rate a deck winning no sample reads (the "pre" Platt map at 0 wins, clipped at the fit's sample
+ * count): the floor of every boss_sim number. From the map itself, not written in the note (fix-queue-v4: the note said
+ * "约 8%" from B1.5's fit while the live floor was 6.24%; after the B5 refit 4.7%).
+ */
+export function calibratedFloor(): number {
+  return calibratedWinProb(0, BUILD_SIM_CALIBRATION_SAMPLES, "pre");
+}
+
+/** The act boss floors (boss-clock BOSS_FLOORS), by act (1-based). */
+const ACT_BOSS_FLOORS = [17, 33, 48];
+
+/**
+ * Whether the act's boss is already dead: its floor, out of combat (the reward, the next screens), still in its act.
+ * run.boss_id moves on only when the next act starts (GBBBMVCPA7R1 F17: THE_KIN_BOSS on the reward, act_id 0;
+ * THE_INSATIABLE_BOSS on the act 2 map, act_id 1), and the next act's boss is not in the state before that.
+ */
+export function actBossDefeated(state: GameState): boolean {
+  const floor = state.run?.floor ?? null;
+  return floor !== null && !state.in_combat && ACT_BOSS_FLOORS[mapActOf(state) - 1] === floor;
+}
+
+/**
  * The question with the boss simulation added (BOSS_SIM_BUILD=on): every option's `boss_sim` line, facts.act_boss_sim
  * in place of the clock, the instructions' note. A question of another kind, or without the screen's options, comes
  * back as it is. A failure keeps the clock and says so in facts.act_boss_sim. Never throws.
@@ -391,6 +414,16 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   });
   try {
     if (!bossId) return fail("不知道本幕 boss");
+    // Right after the boss fight boss_id is still the boss just killed (fix-queue-v4: the card reward after every act
+    // boss was simulated against it, 7PWU4CD3QCP3 F17 and 5DFX/VNKN/THR/GBBB F17; the brain quoted those deltas), and the
+    // next act's boss is not known before its act starts: no simulation. The clock stays (bossClockJson marks it stale).
+    if (actBossDefeated(state)) {
+      const note = "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
+      return {
+        decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
+        record: { skipped: "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
+      };
+    }
     const entry = routeEntry(env);
     const hpNow = state.run?.current_hp ?? 1;
     const maxNow = state.run?.max_hp ?? hpNow;
@@ -416,7 +449,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const low = LOW_CONFIDENCE[key];
     const boss = `${start.boss.name}，A${state.run?.ascension ?? start.boss.asc}`;
     const head = `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
-    // Mostly lost: the raw rate under 10% (the calibrated one never reads under ~8%: the map's floor at 0 wins).
+    // Mostly lost: the raw rate under 10% (the calibrated one never reads under the map's floor at 0 wins: calibratedFloor).
     const lowWin = result.base.win < 0.1;
     const criteria: Record<string, string | null> = {};
     for (const [k, v] of Object.entries(question.criteria)) {
@@ -455,7 +488,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(start.relics.applied.length > 0 ? { relics_at_start: `开场生效：${start.relics.applied.join("、")}` } : {}),
       ...(start.relics.unmodelled.length > 0 ? { relics_not_modelled: start.relics.unmodelled.join("、") } : {}),
       ...(low ? { low_confidence: low } : {}),
-      ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于约 8%）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
+      ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor() * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     const record: Record<string, JsonValue> = {
       boss: key,

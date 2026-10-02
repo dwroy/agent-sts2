@@ -29,7 +29,7 @@ import { appliedPowerIds, countsAt, moveBaseDamages, moveDamageAt, nearestAscens
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
-import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
+import { ENERGY_RELICS, PONDER_HEAL, SAI_BLOCK, SIPHON_HEAL } from "./boss-clock.js";
 import { offHandCardModel, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
@@ -318,12 +318,19 @@ export function relicEnergyOf(runRaw: Record<string, unknown>): { amount: number
 export const CAPTAINS_WHEEL_BLOCK = 18;
 export const CAPTAINS_WHEEL_TURN = 3;
 
-/** The relics that give block at the start of one fight turn, as the rollout's later turns get it (RolloutInput.relicBlock). */
-export function relicBlockOf(runRaw: Record<string, unknown>): { amount: number; turn: number }[] {
-  return asArray(runRaw["relics"])
-    .map(asRecord)
-    .filter((relic) => str(relic["relic_id"]) === "CAPTAINS_WHEEL")
-    .map(() => ({ amount: CAPTAINS_WHEEL_BLOCK, turn: CAPTAINS_WHEEL_TURN }));
+/**
+ * The relics that give block at the start of fight turns, as the rollout's later turns get it (RolloutInput.relicBlock):
+ * Captain's Wheel on turn 3, Sai on every turn up to `upto` (boss-clock SAI_BLOCK; 8D8DZ9K680C2 F48 T1: without it the
+ * rollout read every line dying against the Queen and the boss sim gave 16%, T1-T5 cost 11 HP and the fight was won).
+ */
+export function relicBlockOf(runRaw: Record<string, unknown>, upto = 40): { amount: number; turn: number }[] {
+  const out: { amount: number; turn: number }[] = [];
+  for (const relic of asArray(runRaw["relics"]).map(asRecord)) {
+    const id = str(relic["relic_id"]);
+    if (id === "CAPTAINS_WHEEL") out.push({ amount: CAPTAINS_WHEEL_BLOCK, turn: CAPTAINS_WHEEL_TURN });
+    else if (id === "SAI") for (let turn = 1; turn <= upto; turn += 1) out.push({ amount: SAI_BLOCK, turn });
+  }
+  return out;
 }
 
 /**

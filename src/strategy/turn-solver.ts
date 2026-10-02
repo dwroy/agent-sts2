@@ -407,6 +407,19 @@ export interface PlayerSim {
    */
   vigor?: number;
   /**
+   * Pen Nib held: the Attack plays it has counted (its stack mod PEN_NIB_EVERY). The play that brings the count to the
+   * 10th deals double damage, every hit (the hand's shown damage has the doubling taken off: card-model stripPenNib);
+   * a duplicate or a replay is a play of its own, as for the other attack-counting relics (attackRelics).
+   */
+  penNib?: number;
+  /**
+   * Lost Wisp (「你每打出一张能力牌，就对所有敌人造成{Damage}点伤害」): this much to every enemy per Power played, through
+   * block, Strength and Vulnerable not counted (logged over the 7 runs holding it: 8 to each enemy at every Power, e.g.
+   * the Insatiable at Vulnerable 10 took 8; 8L29N792FA45 F33 T4: Rupture's 8 killed the Rocket at 5, the Crusher 114 -> 106
+   * then enraged).
+   */
+  lostWisp?: number;
+  /**
    * No Block (NO_BLOCK_POWER, from Panic Button: "no Block from cards for the next 2 turns"): block
    * cards give nothing (VP5F F48 T2: Flame Barrier+ in hand, Skull Bash took the full 15).
    */
@@ -725,6 +738,8 @@ export interface Outcome {
    * 21TKTPL5D4A6 F3: Unrelenting the last Attack of T2, T3 began with FREE_ATTACK_POWER 1 and its Strike cost 0).
    */
   freeAttacksLeft?: number;
+  /** Attack plays this line makes (duplicates and replays each one; absent when none): Pen Nib's count goes on by them. */
+  attackPlays?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
   /**
@@ -1207,6 +1222,8 @@ function wake(enemy: Sim["enemies"][number]): void {
 export const CRAB_RAGE_BLOCK = 99;
 /** Intimidating Helmet triggers on cards that cost at least this much as paid. */
 export const HELMET_MIN_COST = 2;
+/** Pen Nib: every this many-th Attack played deals double damage (「你每打出的第10张攻击牌将会造成双倍伤害」). */
+export const PEN_NIB_EVERY = 10;
 /** Lasting value per energy of a card made free for the fight (Touch of Insanity), before fight length. */
 export const FREE_CARD_LASTING = 2;
 export const CRAB_RAGE_STRENGTH = 6;
@@ -1285,6 +1302,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   for (let play = 0; play < plays; play += 1) {
     resolveEffects(next, card, target, player, cost);
     if (card.type === "Attack") attackRelics(next, player);
+    if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
   }
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
@@ -1621,6 +1639,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       firstHit *= 3;
       next.gigantic -= 1;
     }
+    // Pen Nib: the play its counter reaches is the 10th, every hit doubled (GSG0Q5KP9AAU F33 T2); relicAttacks counts
+    // this turn's Attack plays before this one (attackRelics runs after it).
+    if (card.type === "Attack" && player.penNib !== undefined && (player.penNib + next.relicAttacks) % PEN_NIB_EVERY === PEN_NIB_EVERY - 1) {
+      perHit *= 2;
+      firstHit *= 2;
+    }
 
     if (card.target === "all") {
       // Hit by hit across every enemy, as the game resolves it: a death mid-card (Crab Rage) changes
@@ -1770,6 +1794,18 @@ function attackRelics(sim: Sim, player: PlayerSim): void {
   if (shuriken && shuriken.every > 0 && (shuriken.count + sim.relicAttacks) % shuriken.every === 0) {
     sim.strength += shuriken.strength;
     sim.permStrength += shuriken.strength;
+  }
+}
+
+/** Damage to every living enemy at once (Lost Wisp's): two crabs dying to it die together, as to Inferno's sweep. */
+function sweepRaw(sim: Sim, amount: number): void {
+  const outer = sim.sweeping === true;
+  sim.sweeping = true;
+  for (const enemy of sim.enemies) if (enemy.alive) hitEnemyRaw(sim, enemy, amount);
+  sim.sweeping = outer;
+  if (!outer && sim.pendingRage) {
+    sim.pendingRage = false;
+    crabRage(sim);
   }
 }
 
@@ -2667,6 +2703,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashGrowth.length > 0 ? { thrashGrowth: sim.thrashGrowth } : {}),
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
+      ...(sim.relicAttacks > 0 ? { attackPlays: sim.relicAttacks } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),

@@ -786,7 +786,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             question = decision.kind === "ask" ? decision.questions[spec.question] : question;
             bossSimRecord = simmed.record;
             const r = simmed.record;
-            onEvent({ type: "note", message: `boss sim on ${decision.label}: ${r["error"] ? `failed (${String(r["error"])}), clock kept` : `${String(r["samples"])} samples per option, ${String(r["ms"])} ms`}` });
+            onEvent({ type: "note", message: `boss sim on ${decision.label}: ${r["error"] ? `failed (${String(r["error"])}), clock kept` : r["skipped"] ? `not run (${String(r["skipped"])})` : `${String(r["samples"])} samples per option, ${String(r["ms"])} ms`}` });
           }
         }
         if (question?.type !== "choice" || decision.kind !== "ask") throw new Error("unreachable: the boss simulation keeps the question");

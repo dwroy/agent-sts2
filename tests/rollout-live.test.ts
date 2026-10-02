@@ -271,13 +271,16 @@ describe("rollout facts on Jev's combat question", () => {
           const { offered: _o2, ...restBefore } = facts(before, key);
           expect(rest, `${name} ${key}`).toEqual(restBefore);
           // And resolving it plays the same (the HP guard and potion rules see code's options only), but for
-          // the one designed dependence of the guard (guardKeepsPick): it does not swap into a line the rollout
-          // sees dying more often than the pick (XMK1 F33 T3 cut: plan 6 dies in more samples than plan 1).
+          // the designed dependences of the guard: it does not swap into a line the rollout sees dying more often
+          // than the pick (guardKeepsPick; XMK1 F33 T3 cut: plan 6 dies in more samples than plan 1), and on a
+          // big-hit turn it keeps a setup line only while the rollout sees it die no more often than the replacement
+          // (setupKept; the same board: plan 9's Inferno dies in 7/8, its replacement plan 4 in 6/8).
           const deaths = (option: string) => Number(/dead within \d+ turns in (\d+)\//.exec(String(facts(after, option)["rollout"]))?.[1] ?? 0);
           for (const confidence of [0.9, 0.3]) {
             const a = off.resolve(pick(key, confidence));
             const b = on.resolve(pick(key, confidence));
             if (a.guard && a.guard.choice !== b.guard?.choice && deaths(a.guard.choice) > deaths(key)) continue;
+            if (!a.guard && b.guard && deaths(key) > deaths(b.guard.choice)) continue;
             expect(b.intent, `${name} ${key}`).toEqual(a.intent);
             // The option count in "plan k/N" is what Jev saw (N + 1 with an added line); the rest is the same.
             const count = (text: string) => text.replace(/plan (\d+)\/\d+/, "plan $1/N");
