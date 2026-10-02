@@ -113,7 +113,10 @@ export interface CardModel {
   heldPenalty: number;
   /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
   heldHpLoss?: number;
-  /** Damage the card (Foul Potion) deals to us when played: our block takes it first, the rest is HP lost. */
+  /**
+   * Damage the card deals to us when played (Foul Potion; a Power under the Globe Head's Galvanic, playSelfDamageOf): our
+   * block takes it first, the rest is HP lost.
+   */
   selfDamage?: number;
   /** Flame Barrier: damage dealt back to the attacker per enemy hit this turn. */
   retaliate?: number;
@@ -376,6 +379,25 @@ export function playHpLossOf(rendered: string): number {
   return total;
 }
 
+/**
+ * Damage to us for playing the card, read from a standalone 「受到N点伤害。」 / "Take N damage." sentence: Galvanic (the
+ * Globe Head's GALVANIC_POWER, 「能力牌被侵蚀为流电」) adds one to every Power in the hand (FSPKJAYY3ET6 F39 T1 Inflame
+ * 「获得3点力量。 受到6点伤害。」). Damage, not HP loss: our block takes it first (logged 30 of 31 plays lost exactly 6 of HP
+ * + block, 13 of them from block: DT1H1URTUAD8 F37 T1 Inflame, block 7 -> 1, HP 87 -> 87; the other was played twice by
+ * Throwing Axe, 12). A held card's end-of-turn damage (Burn 「在你的回合结束时，如果这张牌在你的手牌中，你受到2点伤害」),
+ * Disintegration's 「在你的回合结束时，受到6点伤害」 and an enemy taking damage (「使其受到」, 「该敌人…受到」) are not a
+ * sentence of their own and do not match. Over the logs every card text with such a sentence was a Power under Galvanic.
+ */
+export function playSelfDamageOf(rendered: string): number {
+  if (heldPenaltyOf(rendered).heldPenalty > 0) return 0;
+  let total = 0;
+  for (const sentence of sentences(rendered)) {
+    const match = /^(?:你)?受到(\d+)点伤害$/.exec(sentence) ?? /^take (\d+) damage$/i.exec(sentence);
+    if (match) total += Number(match[1]);
+  }
+  return total;
+}
+
 /** Whether the card's Energy is only gained when it is exhausted (Drum of Battle), not on play. */
 export function energyOnExhaustOnly(template: string, rendered: string): boolean {
   const exhaustClause = /被消耗时|when (?:this card is )?exhausted/i;
@@ -614,6 +636,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const rendered = renderedText;
   const weakFirst = weak > 0 && vulnerable > 0 && debuffWeakFirst(rendered || template);
   const { heldPenalty, heldHpLoss } = heldPenaltyOf(rendered);
+  // Galvanic's 「受到6点伤害」 on a Power (turn-solver selfDamage: through block, after the card's own effects).
+  const selfDamage = playSelfDamageOf(rendered);
   if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {
     // Its Damage var is the self-damage, not an attack.
     damage = null;
@@ -667,6 +691,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     flatValue,
     heldPenalty,
     heldHpLoss,
+    ...(selfDamage > 0 ? { selfDamage } : {}),
     retaliate: dyn(card, "DamageBack") ?? 0,
     delayedDamage,
     inferno: cardId === "INFERNO" ? dyn(card, "InfernoPower") ?? 6 : 0,

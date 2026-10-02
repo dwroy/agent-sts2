@@ -1471,13 +1471,6 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       next.permStrength += next.rupture;
     }
   }
-  // Damage to us (Foul Potion): like an enemy hit, block first, Intangible caps it at 1, the rest is HP lost.
-  if ((card.selfDamage ?? 0) > 0) {
-    const amount = player.intangible || next.intangible ? Math.min(1, card.selfDamage ?? 0) : card.selfDamage ?? 0;
-    const blocked = Math.min(next.block, amount);
-    next.block -= blocked;
-    loseHp(next, amount - blocked, player);
-  }
   if (card.special === "rupture") next.rupture += 1;
   // Enrage (Test Subject): every Skill gives it Strength at once, so this turn's attack grows too.
   if (card.type === "Skill") for (const enemy of next.enemies) if (enemy.alive && (enemy.enrage ?? 0) > 0) enemy.strengthDelta += enemy.enrage ?? 0;
@@ -1713,6 +1706,18 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.type === "Potion") next.potionCost += card.potionCost ?? 0;
   else next.flat += card.flatValue;
   if (card.draw > 0) drawExpected(next, card.draw, player);
+  // Damage to us (Foul Potion, Galvanic's 「受到6点伤害」): like an enemy hit, block first, Intangible caps it at 1, the
+  // rest is HP lost. Last, as the card text puts it: a Power played under Galvanic is up when its 6 lands (8L29N792FA45
+  // F37 T2: Rupture+ played at block 0, its own 6 gave +2 Strength).
+  if ((card.selfDamage ?? 0) > 0) damagePlayer(next, card.selfDamage ?? 0, player);
+}
+
+/** Damage to us on our own turn: block first, Intangible caps it at 1, only the rest is HP lost (loseHp). */
+function damagePlayer(sim: Sim, amount: number, player: PlayerSim): void {
+  const capped = player.intangible || sim.intangible ? Math.min(1, amount) : amount;
+  const blocked = Math.min(sim.block, capped);
+  sim.block -= blocked;
+  loseHp(sim, capped - blocked, player);
 }
 
 /** `count` cards drawn from the pile as expected values (what they are is not known). */

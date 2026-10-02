@@ -95,9 +95,13 @@ const MODELLED_ENEMY_POWERS = new Set([
   "RAVENOUS_POWER",
   // No number of this turn's fight in them: gold stolen and given back (Gremlin Merc, Fat Gremlin), the Tough
   // Egg's hatch countdown (its moves after it are the move model's), our Strength/Dexterity given back on
-  // death (The Lost, The Forgotten; its stolen Dexterity is its block, not our damage), our Power cards
-  // turned to Galvanic (Globe Head).
-  "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_STRENGTH_POWER", "POSSESS_SPEED_POWER", "DEXTERITY_POWER", "GALVANIC_POWER",
+  // death (The Lost, The Forgotten; its stolen Dexterity is its block, not our damage).
+  "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_STRENGTH_POWER", "POSSESS_SPEED_POWER", "DEXTERITY_POWER",
+  // Galvanic (Globe Head): not a number-free power after all. Its 「受到6点伤害」 is in every Power's own text in hand, and
+  // the solver now takes it from there (card-model playSelfDamageOf -> selfDamage, through our block). It was read as
+  // nothing: playing Powers under it read free, +1.04 a turn on 70 logged turns (+1.68 on those not won), 30 of 31
+  // plays lost 6 of HP + block (notes/mechanics-proposals.md §4).
+  "GALVANIC_POWER",
   // Our temporary Strength loss on it (Mangle, Dark Shackles, Shackling Potion, Piercing Wail): already in its
   // STRENGTH_POWER and intents, and the rollout gives it back after the turn.
   "MANGLE_POWER", "DARK_SHACKLES_POWER", "SHACKLING_POTION_POWER", "PIERCING_WAIL_POWER",
