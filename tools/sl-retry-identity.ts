@@ -6,12 +6,13 @@
  * results (each fight's first planning decision of the turn, attempt 1's frames), found again in the log DB; frozen
  * clocks, B2 off (as the replay's main run). No model, nothing written outside --out.
  *
- * Usage: npx tsx tools/sl-retry-identity.ts --rows "experiments/sl-retry/deaths-*.jsonl" [--shard i/n] --out <file.json>
+ * Usage: npx tsx tools/sl-retry-identity.ts --rows experiments/sl-retry/deaths-0.jsonl,...,deaths-7.jsonl [--shard i/n] --out <file.json>
+ *        [--logs DIR --game-data FILE --python PY --query query.py]   (on a git archive: this tree's logs and log DB, read-only)
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { closeSync, openSync, readdirSync, readFileSync, readSync, writeFileSync } from "node:fs";
-import { basename, dirname, join } from "node:path";
+import { closeSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { loadConfig } from "../src/config.js";
 import type { AnswerSet } from "../src/jev/answers.js";
@@ -36,7 +37,8 @@ const QUERY = arg("query", "tools/logdb/query.py");
 
 function query(sql: string): Row[] {
   const out = execFileSync(PY, [QUERY, "--no-sync", "--json", "--max-rows", "100000", sql], { encoding: "utf8", maxBuffer: 1 << 28 });
-  const data = JSON.parse(out) as { columns: string[]; rows: unknown[][] };
+  const data = JSON.parse(out) as { columns: string[]; rows: unknown[][]; error?: string };
+  if (data.error) throw new Error(data.error);
   return data.rows.map((row) => Object.fromEntries(data.columns.map((column, i) => [column, row[i]])));
 }
 
@@ -73,11 +75,9 @@ function main(): void {
   rolloutLiveOptions.now = () => 0;
   potionMcOptions.now = () => 0;
   bossLinesOptions.enabled = false;
-  const pattern = arg("rows", "experiments/sl-retry/deaths-*.jsonl");
-  const dir = dirname(pattern);
-  const re = new RegExp(`^${basename(pattern).replace(/[.]/g, "\\.").replace(/\*/g, ".*")}$`);
-  const files = readdirSync(dir).filter((name) => re.test(name)).sort();
-  const boards = files.flatMap((name) => readFileSync(join(dir, name), "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line) as Row));
+  // Comma-separated files (no glob: npx hands its arguments to a shell, which would expand one).
+  const files = arg("rows", "").split(",").filter(Boolean);
+  const boards = files.flatMap((path) => readFileSync(path, "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line) as Row));
   boards.sort((a, b) => `${String(a["run"])}:${String(a["floor"])}:${String(a["turn"])}`.localeCompare(`${String(b["run"])}:${String(b["floor"])}:${String(b["turn"])}`));
   const [at, of] = arg("shard", "0/1").split("/").map(Number) as [number, number];
   const out: Record<string, string> = {};

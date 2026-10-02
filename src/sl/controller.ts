@@ -37,10 +37,12 @@ export type { SlConfig };
 export type { SlEnv };
 
 /**
- * SL_RETRY_COMPUTE (docs/sl.md §10, Dai 2026-10-02: "compute more on retries"; +20-30 s a boss turn accepted earlier): the
- * rollout x3 samples with up to 20 s a decision (the logged listed-elite and boss boards that ran out of the 1.5 s budget
- * need ~3-15 s for 24 samples at 5 turns: notes/sl-retry-report.md), the random potions' Monte Carlo x3 samples and time,
- * B2 x2 samples (600 take 0.1-3 s on 20 workers; its own 25 s a question and 30 s a turn still bound it).
+ * SL_RETRY_COMPUTE (docs/sl.md §10.3, Dai 2026-10-02: "compute more on retries"; +20-30 s a boss turn accepted earlier): the
+ * rollout x3 samples with up to 20 s a question and 30 s a turn (notes/sl-retry-report.md §7, the real clock on 607 logged
+ * A8+ boss and listed-fight death questions with a live game running: median 1.1 s, p90 9.9 s, 93% reach 24 samples x 5
+ * turns against 70% reaching 8 x 5 on the usual 1.5 s; VNKN9952ZNA0 F25's Decimillipede 16-24 samples in 9-20 s against 1-4
+ * samples at 3 turns), the random potions' Monte Carlo x3 samples and time, B2 x2 samples (600 take 0.02-3 s on 20 workers,
+ * XSPHCB4GUSEU F48 T1 11 s; its own 25 s a question and 30 s a turn still bound it).
  */
 export const RETRY_COMPUTE: SlCompute = { rolloutSamples: 24, rolloutBudgetMs: 20_000, turnBudgetMs: 30_000, mcSamples: 36, mcBudgetMs: 1_200, bossSimSamples: 1_200 };
 
