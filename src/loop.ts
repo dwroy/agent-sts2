@@ -19,7 +19,7 @@ import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
 import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "./brain/brain.js";
 import { moveModel } from "./knowledge/move-model.js";
-import { facingFightOf, fightKind, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
+import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger } from "./strategy/run-plan.js";
 import type { Knowledge } from "./knowledge/index.js";
@@ -36,6 +36,7 @@ import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } 
 import { askJevLogged, createJevPromptLog, resolveJevPromptLog, type JevPromptMeta } from "./telemetry/jev-prompt-log.js";
 import { createRunConfigLog } from "./telemetry/run-config.js";
 import { SlController } from "./sl/controller.js";
+import { LEAST_LOSS_LABEL } from "./sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
 import { withBossSim, type BuildSimSetup } from "./sim/build-sim-facts.js";
@@ -1454,16 +1455,21 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       continue;
     }
     // SL (docs/sl.md): an end of turn the enemy turn certainly kills us after, in a fight with a retry left: the fight
-    // is reloaded instead (or, when the reload fails, SL stops for the run and the loop plays on).
-    if (sl && intent.action === "end_turn") {
-      const slOutcome = await sl.beforeEndTurn(fresh, { label: decision.label, screenMemory, journal });
+    // is reloaded instead (or, when the reload fails, SL stops for the run and the loop plays on). SL_RELOAD_EARLY: the
+    // same at the first card of the planner's least-loss line, when that verdict is already certain there.
+    if (sl && (intent.action === "end_turn" || decision.label === LEAST_LOSS_LABEL)) {
+      const facts = leastLossFactsOf(decision);
+      const slOutcome =
+        intent.action === "end_turn"
+          ? await sl.beforeEndTurn(fresh, { label: decision.label, screenMemory, journal, facts })
+          : await sl.beforeLeastLoss(fresh, { label: decision.label, screenMemory, journal, facts });
       if (slOutcome.handled) {
         const reload = slOutcome.outcome;
         const record: DecisionRecord = {
           ...baseRecord,
           ...replayFields,
           result: (reload.ok
-            ? `not dispatched: SL reloaded the fight (certain death foreseen; back on T${reload.resumedTurn ?? "?"} after ${Math.round(reload.ms / 1000)} s)`
+            ? `not dispatched: SL reloaded the fight (certain death foreseen${intent.action === "end_turn" ? "" : " at the least-loss verdict, before its line"}; back on T${reload.resumedTurn ?? "?"} after ${Math.round(reload.ms / 1000)} s)`
             : `not dispatched: SL reload failed at ${reload.step}: ${reload.reason}`).slice(0, 300),
         };
         log.write(record);

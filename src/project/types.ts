@@ -103,6 +103,17 @@ export interface SlKnownDraws {
   names: string[];
   /** The attempts the order was seen in. */
   attempts: number[];
+  /**
+   * SL_RETRY_KNOWN_INSERTS: cards added to the draw pile at random places (a status, Metamorphosis's attacks), still in it:
+   * they come at random places among `cards` (the solver then draws as without known cards; the samples place them at
+   * random). Absent: none.
+   */
+  added?: { cards: string[]; names: string[] };
+  /**
+   * SL_RETRY_KNOWN_INSERTS: how many leading `cards` are known exactly; the rest rest on the model that cards added at random
+   * places leave the order (planning only: the certain-death judge never uses them, Dai 2026-10-02). Absent: all exact.
+   */
+  exact?: number;
 }
 
 export interface SlCompute {

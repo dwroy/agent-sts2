@@ -160,9 +160,10 @@ export interface BossSimInputArgs {
   solver: SolverInput;
   /**
    * Base draw and discard piles (rollout-live's); `drawTop` (SL_RETRY_KNOWN_DRAWS): the pile's known top cards in draw order,
-   * as indices into `draw` (RolloutInput.piles.drawTop: every sample draws them first).
+   * as indices into `draw` (RolloutInput.piles.drawTop: every sample draws them first); `drawAdded` (SL_RETRY_KNOWN_INSERTS):
+   * cards added to the pile at random places (RolloutInput.piles.drawAdded).
    */
-  piles: { draw: CardModel[]; discard: CardModel[]; drawTop?: number[] };
+  piles: { draw: CardModel[]; discard: CardModel[]; drawTop?: number[]; drawAdded?: number[] };
   /** The random potions held (potion-mc sources): sampled anew each later turn. */
   randomPotions: PotionMcSource[];
 }
@@ -175,7 +176,7 @@ export function bossSimInput(args: BossSimInputArgs): RolloutInput {
   return {
     ...board,
     plans: [],
-    piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.piles.drawTop && args.piles.drawTop.length > 0 ? { drawTop: args.piles.drawTop } : {}) },
+    piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.piles.drawTop && args.piles.drawTop.length > 0 ? { drawTop: args.piles.drawTop, ...(args.piles.drawAdded && args.piles.drawAdded.length > 0 ? { drawAdded: args.piles.drawAdded } : {}) } : {}) },
     meta: { ...meta, kind: "boss" },
     mm: {},
     model: null,

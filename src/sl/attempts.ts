@@ -59,8 +59,11 @@ export interface SlAttemptRow {
   end_block: number | null;
   /** The attack intents at the end (predicted_death). */
   incoming: number | null;
-  /** The certain-death verdict that ended the attempt (or that came with no retries left). */
-  judge: { tier: JudgeTier | null; reason: string } | null;
+  /**
+   * The certain-death verdict that ended the attempt (or that came with no retries left); `early` (SL_RELOAD_EARLY): taken
+   * at the least-loss decision, before its line was played.
+   */
+  judge: { tier: JudgeTier | null; reason: string; early?: true } | null;
   reload: SlReloadRecord | null;
   /** Set when SL stopped for the rest of this run, and why (a failed reload, the wrong fight after Continue). */
   give_up_reason: string | null;
@@ -130,6 +133,8 @@ function endLine(row: SlAttemptRow): string {
   const who = row.summary.killers.length > 0 ? ` from ${row.summary.killers.join(", ")}` : "";
   switch (row.result) {
     case "predicted_death":
+      // SL_RELOAD_EARLY: reloaded at the planner's least-loss verdict, before its line was played out.
+      if (row.judge?.early) return `certain death on ${at}${where}${who}: every line the planner simulated dies (the fight was reloaded before playing it out)`;
       return `certain death at the end of ${at}${where}${who} (the fight was reloaded before the enemy turn)`;
     case "died":
       return `died after ${at}${who}`;
