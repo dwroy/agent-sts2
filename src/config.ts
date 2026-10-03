@@ -386,6 +386,16 @@ export interface BrainConfig {
     summary: "auto" | "concise" | "detailed" | "none";
     /** BRAIN_CODEX_SERVICE_TIER: e.g. "priority" (Fast: about 2x speed at more usage); null (default) = the standard tier. */
     serviceTier: string | null;
+    /**
+     * BRAIN_CODEX_STALL_MS (default 120 s): after the first output token, a run whose stream is silent this long is
+     * killed and asked again (stallRetries times), then the question fails as a timeout (BRAIN_FALLBACK answers).
+     * null (off / 0): not watched (the router's BRAIN_CODEX_TIMEOUT_MS only).
+     */
+    stallMs: number | null;
+    /** BRAIN_CODEX_FIRST_TOKEN_MS: a run with no first output token this long after its start is stalled too; null (default): no limit. */
+    firstTokenMs: number | null;
+    /** BRAIN_CODEX_STALL_RETRIES: runs after a stalled one (default 1). */
+    stallRetries: number;
   };
 }
 
@@ -413,6 +423,13 @@ export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
 
 /** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
 export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
+
+/**
+ * BRAIN_CODEX_STALL_MS when unset: after the first output token, a stream silent this long is killed and asked again
+ * (engines/codex.ts). Measured 2026-10-03: a healthy answer streams in 2-25 s after its first token; the stalls in play
+ * sent nothing for 10 minutes after it.
+ */
+export const DEFAULT_CODEX_STALL_MS: number | null = 120_000;
 
 /** Engine names BRAIN_* may use; dsh is named but not implemented yet (the router says so). */
 const ENGINES: readonly EngineName[] = ["deepseek", "claude", "codex", "dsh"];
@@ -554,6 +571,12 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const summaryRaw = (readEnv(env, "BRAIN_CODEX_SUMMARY") ?? "auto").toLowerCase();
   if (!["auto", "concise", "detailed", "none"].includes(summaryRaw)) problems.push({ field: "BRAIN_CODEX_SUMMARY", message: `expected auto, concise, detailed or none, got "${summaryRaw}"` });
   const tierRaw = readEnv(env, "BRAIN_CODEX_SERVICE_TIER");
+  const stallRaw = readEnv(env, "BRAIN_CODEX_STALL_MS");
+  const stallMs = stallRaw === null ? DEFAULT_CODEX_STALL_MS : ["off", "none", "0"].includes(stallRaw.toLowerCase()) ? null : parseInteger(stallRaw, "BRAIN_CODEX_STALL_MS", problems, { min: 1_000, max: 3_600_000 });
+  const firstRaw = readEnv(env, "BRAIN_CODEX_FIRST_TOKEN_MS");
+  const firstTokenMs = firstRaw === null || ["off", "none", "0"].includes(firstRaw.toLowerCase()) ? null : parseInteger(firstRaw, "BRAIN_CODEX_FIRST_TOKEN_MS", problems, { min: 1_000, max: 3_600_000 });
+  const stallRetriesRaw = readEnv(env, "BRAIN_CODEX_STALL_RETRIES");
+  const stallRetries = stallRetriesRaw === null ? 1 : parseInteger(stallRetriesRaw, "BRAIN_CODEX_STALL_RETRIES", problems, { min: 0, max: 5 });
   const prefixRaw = (readEnv(env, "KNOWLEDGE_PREFIX") ?? "off").toLowerCase();
   if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
   const knowledgePrefix: KnowledgePrefixMode = prefixRaw === "full" ? "full" : "off";
@@ -577,6 +600,9 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       home: resolveCodexHome(env),
       summary: (["auto", "concise", "detailed", "none"].includes(summaryRaw) ? summaryRaw : "auto") as BrainConfig["codex"]["summary"],
       serviceTier: tierRaw && tierRaw.toLowerCase() !== "default" ? tierRaw : null,
+      stallMs,
+      firstTokenMs,
+      stallRetries: stallRetries ?? 1,
     },
   };
 }

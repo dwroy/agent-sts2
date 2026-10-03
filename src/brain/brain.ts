@@ -15,7 +15,7 @@
  *   router's re-ask is a DeepSeekAnswerError (the loop's "answered but unusable" path); an engine failure with no
  *   fallback left is thrown as it is (the loop's transport-failure path).
  */
-import { dirname, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { brainLogPath, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type AppConfig } from "../config.js";
@@ -66,11 +66,18 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
     case "claude":
       return new ClaudeEngine({ settings, claude: config.brain.claude, ...(options.claudeToolsModule ? { toolsModule: options.claudeToolsModule } : {}) });
     case "codex":
-      return new CodexEngine({ settings, codex: config.brain.codex });
+      // Each codex run's trace (its event timeline, retries, stderr tail; no prompt or answer) next to brain.jsonl.
+      return new CodexEngine({ settings, codex: config.brain.codex, traceFile: codexTracePath(config) });
     case "dsh":
       // Named in the contract, to come with the offline learner (Dai 2026-09-29).
       throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek, claude, codex)`);
   }
+}
+
+/** codex-calls.jsonl next to brain.jsonl (none when the brain log is off). */
+export function codexTracePath(config: AppConfig): string | null {
+  const log = brainLogPath(config);
+  return log ? join(dirname(log), "codex-calls.jsonl") : null;
 }
 
 /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
