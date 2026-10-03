@@ -182,4 +182,4 @@
 - SL 名单缺口：机甲骑士 MECHA_KNIGHT 不在 sl-elites.json（A8+ 2/13，3JHE 后约 3/14）；3JHE 92% 进场 T7 死、SL 没跟踪。建议三幕精英全跟踪或重排名单。
 - 观察：4719643 的 2000 字符 runaway（3JHE 8、C4F1 7）是 choice+reason 写完后的空白循环；6d2ce32 截断 + 311c740 accept-cut 应已覆盖，下一批核对 accepted_from_cut。
 - 小：RJZG decider 已记 codex，但 rationale/控制台仍写「DeepSeek changed the act's route」「DeepSeek decided」。 已修（10-04 确认，v4-live ed03f4c）
-- SL 漏判（最终 boss）：ET3V F48 永世沙漏 T13 判官「not certain: a revive is left (LIZARD_TAIL)」不读档，结束回合即阵亡，余 5 次（控制台 20261003-233142-554951d+dirty.log:2210）；尾巴是否早已用掉或复活后同回合再死待查。另：game over 后又挂了一行 F48 attempt 1 跟踪（sl-attempts 多一行，draws「tracking began after the fight's start (T13)」）。
+- SL 漏判（最终 boss）：ET3V F48 永世沙漏 T13 判官「not certain: a revive is left (LIZARD_TAIL)」不读档，结束回合即阵亡，余 5 次（控制台 20261003-233142-554951d+dirty.log:2210）；尾巴是否早已用掉或复活后同回合再死待查。另：game over 后又挂了一行 F48 attempt 1 跟踪（sl-attempts 多一行，draws「tracking began after the fight's start (T13)」）。 已修（10-04 确认，v4-live e32c8b7，V4.5.revive；尾巴 T10 开局已被凋萎+披风触发而追踪漏记，T13 死于凋萎回合末伤害；开关 SL_RELOAD_ON_REVIVE 默认关待 Dai）
