@@ -19,8 +19,8 @@ import { closeSync, openSync, readSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 
-import { restStart } from "../src/screens/route-review.js";
-import { checkRoute, floorOfRow, isKeep, nextRestFacts, nextRestStretches, nextRestVersus, routeFacts, routeIds, routeMapFromView, stretchOf, type Stretch } from "../src/strategy/route-map.js";
+import { restStart, ROUTE_REVIEW_NOTE } from "../src/screens/route-review.js";
+import { checkRoute, floorOfRow, isKeep, NEXT_REST_CLEAR, nextRestCompare, nextRestFacts, nextRestStretches, nextRestVersus, routeFacts, routeIds, routeMapFromView, stretchOf, type ClearMargin, type Stretch } from "../src/strategy/route-map.js";
 import type { RestHeal, RoomCostEntry, RoomCostModel } from "../src/strategy/route-projection.js";
 
 const { values } = parseArgs({
@@ -35,6 +35,8 @@ const { values } = parseArgs({
 
 type Row = Record<string, unknown>;
 const BRAIN = resolve("logs/brain.jsonl");
+/** The live margins, then the wider ones counted for Dai to compare (15% median / 20% p75). */
+const MARGINS: ClearMargin[] = [NEXT_REST_CLEAR, { median: 0.15, p75: 0.2 }, { median: 0.2, p75: 0.25 }];
 const PY = resolve(".cache/logdb-venv/bin/python");
 
 function query(sql: string): Row[] {
@@ -124,7 +126,11 @@ interface Case {
   /** The question's user message as logged (memory sections, question text, options, payload), chars. */
   message_chars: number;
   /** A change: the new route against the kept one, and whether the answer's stretch was one the facts listed. */
-  versus?: { text: string; worse: boolean } | null;
+  versus?: { text: string; worse: boolean; eliteWorse: boolean } | null;
+  /** The change's flags at the other margins (MARGINS[1]). */
+  versus_alt?: { worse: boolean; eliteWorse: boolean } | null;
+  /** Per margin (MARGINS): whether any switch line is clearly worse at the rest floor, at the elite floor, either. */
+  flags: { rest: boolean; elite: boolean }[];
   listed?: "keep" | "switch" | "other" | "same";
   /** Real HP on arriving at the kept / new stretch's end floor (floors.entry_hp of the run). */
   real?: string;
@@ -181,6 +187,10 @@ function replay(): { cases: Case[]; skipped: Record<string, number> } {
       const ids = isKeep(given) ? null : routeIds(given);
       const outcome: Case["outcome"] = given === undefined || given === null || given === "" ? "none" : isKeep(given) ? "keep" : !ids || checkRoute(map, ids).length > 0 ? "invalid" : ids.join(" ") === plan.join(" ") ? "keep" : "change";
       const added = nextRest ? JSON.stringify({ next_rest: nextRest }).length - 2 + 1 : 0;
+      const flags = MARGINS.map((clear) => {
+        const { switches } = nextRestCompare(map, plan, at?.start ?? start, costs, clear);
+        return { rest: switches.some((line) => line.rest?.worse === true), elite: switches.some((line) => line.elite?.worse === true) };
+      });
       const item: Case = {
         run: String(row["run_id"]),
         floor: Number(record(payload["facts"])["floor"] ?? record(payload["run_brief"])["floor"] ?? 0),
@@ -194,6 +204,7 @@ function replay(): { cases: Case[]; skipped: Record<string, number> } {
         reason: String(answer["route_reason"] ?? answer["reason"] ?? ""),
         next_rest: nextRest,
         added_chars: added,
+        flags,
         question_chars: Number(row["question_chars"] ?? 0),
         block_chars: JSON.stringify(block).length,
         message_chars:
@@ -206,6 +217,8 @@ function replay(): { cases: Case[]; skipped: Record<string, number> } {
         // The plan made from the answer starts at the HP the choice leaves; at a rest site the heal (its usual choice).
         const from = at?.start ?? start;
         item.versus = nextRestVersus(map, plan, ids, from, costs);
+        const alt = nextRestVersus(map, plan, ids, from, costs, MARGINS[1]);
+        item.versus_alt = alt ? { worse: alt.worse, eliteWorse: alt.eliteWorse } : null;
         // Listed: the answer's stretch is the kept one, or one of the switch lines up to its nodes' order (same first node,
         // end floor, rooms and so HP).
         const sig = (stretch: Stretch): string => `${stretch.ids[0]}|${stretch.row}|${stretch.monsters}|${stretch.elites}|${stretch.unknown}|${stretch.shops}`;
@@ -242,7 +255,14 @@ function replay(): { cases: Case[]; skipped: Record<string, number> } {
 function summary(cases: Case[], skipped: Record<string, number>): string {
   const sizes = cases.map((item) => item.added_chars).filter((n) => n > 0);
   const switchCounts = cases.map((item) => (Array.isArray(record(item.next_rest)["switch"]) ? (record(item.next_rest)["switch"] as string[]).length : 0));
-  const flagged = cases.filter((item) => ((record(item.next_rest)["switch"] as string[] | undefined) ?? []).some((line) => line.includes("明显比保留路线差")));
+  const pct = (n: number): string => `${n} (${((100 * n) / Math.max(1, cases.length)).toFixed(1)}%)`;
+  const flagLine = (at: number): string => {
+    const margin = MARGINS[at]!;
+    const rest = cases.filter((item) => item.flags[at]!.rest).length;
+    const elite = cases.filter((item) => item.flags[at]!.elite).length;
+    const any = cases.filter((item) => item.flags[at]!.rest || item.flags[at]!.elite).length;
+    return `at ${Math.round(margin.median * 100)}% median / ${Math.round(margin.p75 * 100)}% p75: any flag ${pct(any)}, rest floor ${pct(rest)}, elite floor ${pct(elite)}`;
+  };
   const changes = cases.filter((item) => item.outcome === "change");
   const lines = [
     "# Route review next_rest replay (tools/route-review-next-rest-replay.ts)",
@@ -250,15 +270,15 @@ function summary(cases: Case[], skipped: Record<string, number>): string {
     `Logged route reviews with a plan in logs/brain.jsonl (from 09-30): ${cases.length} rebuilt; skipped ${JSON.stringify(skipped)}.`,
     `Outcomes: ${["keep", "change", "invalid", "none"].map((outcome) => `${outcome} ${cases.filter((item) => item.outcome === outcome).length}`).join(", ")}.`,
     "",
-    `Added to the question (the next_rest field as JSON, chars): median ${medianOf(sizes)}, p90 ${[...sizes].sort((a, b) => a - b)[Math.floor(sizes.length * 0.9)] ?? 0}, max ${Math.max(0, ...sizes)}; the route_review block today: median ${medianOf(cases.map((item) => item.block_chars))}; plus ${"next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP：改线前比一比。".length} chars in the instructions.`,
+    `Added to the question (the next_rest field as JSON, chars): median ${medianOf(sizes)}, p90 ${[...sizes].sort((a, b) => a - b)[Math.floor(sizes.length * 0.9)] ?? 0}, max ${Math.max(0, ...sizes)}; the route_review block today: median ${medianOf(cases.map((item) => item.block_chars))}; plus ${ROUTE_REVIEW_NOTE.slice(ROUTE_REVIEW_NOTE.indexOf("next_rest")).length} chars in the instructions.`,
     `As a share of the question's user message (memory, question, options, state; median ${medianOf(cases.map((item) => item.message_chars))} chars): median ${(100 * medianOf(cases.filter((item) => item.added_chars > 0).map((item) => item.added_chars / item.message_chars))).toFixed(1)}%, max ${(100 * Math.max(0, ...cases.map((item) => item.added_chars / item.message_chars))).toFixed(1)}%.`,
-    `Switch lines per review: ${[0, 1, 2, 3, 4, 5, 6].map((n) => `${n}: ${switchCounts.filter((count) => count === n).length}`).join(", ")}. Reviews with a clearly worse switch line: ${flagged.length}.`,
+    `Switch lines per review: ${[0, 1, 2, 3, 4, 5, 6].map((n) => `${n}: ${switchCounts.filter((count) => count === n).length}`).join(", ")}. Reviews with at least one clearly worse switch line (same-floor rule), of ${cases.length}: ${MARGINS.map((_, at) => flagLine(at)).join("; ")}.`,
     "",
-    `Changes: ${changes.length}; the answer's stretch to its next rest site was the kept one ${changes.filter((item) => item.listed === "same").length}, a listed switch line ${changes.filter((item) => item.listed === "switch").length}, another one ${changes.filter((item) => item.listed === "other").length}; clearly worse than kept: ${changes.filter((item) => item.versus?.worse).length}.`,
+    `Changes: ${changes.length}; the answer's stretch to its next rest site was the kept one ${changes.filter((item) => item.listed === "same").length}, a listed switch line ${changes.filter((item) => item.listed === "switch").length}, another one ${changes.filter((item) => item.listed === "other").length}; clearly worse than kept at the rest floor ${changes.filter((item) => item.versus?.worse).length}, at the elite floor ${changes.filter((item) => item.versus?.eliteWorse).length} (at ${Math.round(MARGINS[1]!.median * 100)}%/${Math.round(MARGINS[1]!.p75 * 100)}%: ${changes.filter((item) => item.versus_alt?.worse).length} and ${changes.filter((item) => item.versus_alt?.eliteWorse).length}).`,
     "",
-    "| run | F | label | HP | new vs kept at the next rest site | worse | listed | real | route_reason |",
-    "|---|---|---|---|---|---|---|---|---|",
-    ...changes.map((item) => `| ${item.run} | ${item.floor} | ${item.label} | ${item.hp} | ${item.versus?.text ?? "same stretch"} | ${item.versus?.worse ? "yes" : ""} | ${item.listed} | ${item.real ?? ""} | ${item.reason} |`),
+    "| run | F | label | HP | new vs kept (same floor; next elites) | worse at rest | worse at elite | listed | real | route_reason |",
+    "|---|---|---|---|---|---|---|---|---|---|",
+    ...changes.map((item) => `| ${item.run} | ${item.floor} | ${item.label} | ${item.hp} | ${item.versus?.text ?? "same stretch and elite"} | ${item.versus?.worse ? "yes" : ""} | ${item.versus?.eliteWorse ? "yes" : ""} | ${item.listed} | ${item.real ?? ""} | ${item.reason} |`),
   ];
   return `${lines.join("\n")}\n`;
 }
@@ -278,7 +298,7 @@ function exampleText(item: Case): string {
     "```json",
     JSON.stringify({ next_rest: item.next_rest }, null, 1),
     "```",
-    ...(item.versus ? ["", `logged with the change: ${item.versus.text}${item.versus.worse ? " (clearly worse than the kept route)" : ""}; real: ${item.real}`] : []),
+    ...(item.versus ? ["", `logged with the change: ${item.versus.text}${item.versus.worse ? " (clearly worse than the kept route)" : ""}${item.versus.eliteWorse ? " (clearly lower at the next elite)" : ""}; real: ${item.real}`] : []),
     "",
   ].join("\n");
 }

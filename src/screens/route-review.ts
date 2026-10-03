@@ -8,8 +8,8 @@
  * median and p75; each rest site healed or smithed; the fights before the next rest site; the next elite and the
  * boss; at a rest site, what each of its options leaves), and next_rest (Dai 2026-10-03, experience
  * route-replan-on-drop): the kept route's stretch to its next rest site and the best stretch through each next node,
- * each with its fights, "?" rooms, shop and HP on arriving there, a clearly worse one saying so; a change logs the
- * same comparison for the route it took. The answer's `route` is "keep" (the default) or a new node
+ * each with its fights, "?" rooms, shop, HP on arriving there and HP on entering the route's next elite, one clearly
+ * worse on the same floor saying so; a change logs the same comparison for the route it took. The answer's `route` is "keep" (the default) or a new node
  * sequence from here to the boss, checked like map/route-plan's (the AnswerSpec re-asks once with the errors; a
  * route still illegal then keeps the plan and is logged). A change is stored as the act's route plan and logged as
  * its own map/route-change row: a step of this decision's plan (no call of its own). The choice itself is never
@@ -54,7 +54,7 @@ export const ROUTE_REVIEW_NOTE =
   "state.route_review 是本幕路线：完整地图（map，节点 id 规则见 map_legend）、你的位置和下一步可走的节点（next_nodes）、" +
   "你的路线计划（plan，代码按它逐个节点走）和按现在 HP 算的计划事实（plan_facts）。先定路线，再定本题：在同一个 JSON 里加 " +
   '"route"："keep"（默认，照计划走）或新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss，节点 id 用空格分隔），' +
-  '以及 "route_reason"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP：改线前比一比。';
+  '以及 "route_reason"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP：改线前比一比。';
 
 const REST_NOTE = "plan_facts.if_option 是本题每个选项之后的 HP 对应的下一只精英和 boss 前血量。";
 
@@ -186,7 +186,7 @@ export function withRouteReview(env: DecisionEnv, decision: Decision, block: Rou
         const from = routeText(block.map, block.remaining);
         return {
           ...result,
-          rationale: `${result.rationale}; route changed (${why}) to ${plan.summary}${nextRest ? `; next rest: ${nextRest.text}${nextRest.worse ? " (clearly worse than the kept route)" : ""}` : ""}`,
+          rationale: `${result.rationale}; route changed (${why}) to ${plan.summary}${nextRest ? `; next rest: ${nextRest.text}${nextRest.worse ? " (clearly worse than the kept route)" : ""}${nextRest.eliteWorse ? " (clearly lower at the next elite)" : ""}` : ""}`,
           plan: { id: ref, steps },
           apply: () => {
             result.apply?.();
