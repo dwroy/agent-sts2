@@ -140,3 +140,5 @@
 - **SL_RETRY_EXPLORE_TURN 在重规划只剩一条线时失效**（不阻塞）：src/screens/combat-plan.ts:3039-3051（43553c8；cab3c3f :3034-3046）avoidsTop 只在有别的不死线时起作用，求解器只给一条线时 avoid 无效且无日志；explore.ts:781 判「没打过」看的是抽牌前几张。证据 PW7Y F48：控制台 20261003-063835-cab3c3f+dirty.log:2039/:2047 第 3 次换线后打回「血墙, 剑柄打击+, 暴走, 踩踏」；:2152/:2157 第 4 次战斗专注+ 抽牌后打回第 2 次整回合（explore.differs=false），白费 2 次重打。
 - **疑似**（待核实）：0 能量喝能力药水，得到的恶魔形态 energy_cost 1、not_enough_energy 打不出被弃（A4PW F46 T1，states 00:30:12）；card-model.ts:1231-1233、potion-mc.ts:102/:334 按「本回合 0 费」建模，需核实游戏规则。
 - 确认正常：缩小修复后 A4PW F4 预测打 19 掉 6，实际一致；least-loss 无回合内自杀（A4PW T4 2 血未打血墙）；无「抽什么都会死」误判；run_plan_merge 全 stored；gate_reject 0。Z4UK 是 566ae3e，第 5/6 次近似重复属已修的「第 1 次不算已试」。三局都还是经验库 2026-09-30.1（43553c8 晚于 A4PW 结束）。
+- **已修（2026-10-03 10:03 确认）**：SL_RETRY_EXPLORE_WHOLE——换线判断整回合，抽牌后可能重复失败回合的替换会换成不会重复的线；avoid 检查所有存活线，代码自身线会重复时转给 Jev，无法执行时记 sl_explore.avoid_failed；differs=false 不再消耗换线点（PW7Y F48 第 3/4 次会不同）。
+- **更正/已处理（2026-10-03 10:03）**：「0 能量能力药水」不是 bug——549 次记录中药水给的牌本回合都是 0 费；A4PW 那次是尖刺护手（能力牌 +1 费）造成，现已建模。v4-live f4f4b0d（10:02），下一局起生效。两条关闭。
