@@ -178,8 +178,8 @@
 - 判官漏判：狱火多层开局扣血按 1 计（C4F1 F33 第 5 次 T7）。已修（10-03 确认，v4-live 3dfc2af，V4.5.inferno）
 - 规划器（求解器/rollout）狱火开局扣血按 1 计；地狱狂徒自动打出期间 mod 过早标 stable（C4F1 第 1 次 T7 按 4 血规划实为 2 血）。开发会话 v4-inferno-planner 修复中
 - SL 设计缺口：被跟踪的非 boss 战靠复活（瓶中精灵）活下来时判官只判「not certain: a revive is left」（6d2ce32 src/sl/judge.ts:604），不读档；RJZG F31 蜂群术士 47→4 烧掉两版计划都写「preserve Fairy」的精灵，boss 无复活（控制台 20261003-224649-6d2ce32+dirty.log:1253）。建议：还有次数时把「要靠复活/保留药才活」算读档条件。
-- SL 断序（原因待查）：RJZG F33 每次 T4 打剑柄打击（牌组 2 张、无地狱狂徒）报「POMMEL_STRIKE left the draw pile without coming into the hand」（src/sl/draws.ts:477），已知抽牌卡在 21 张。
+- SL 断序（原因待查）：RJZG F33 每次 T4 打剑柄打击（牌组 2 张、无地狱狂徒）报「POMMEL_STRIKE left the draw pile without coming into the hand」（src/sl/draws.ts:477），已知抽牌卡在 21 张。 已修（10-04 确认，v4-live ed03f4c）
 - SL 名单缺口：机甲骑士 MECHA_KNIGHT 不在 sl-elites.json（A8+ 2/13，3JHE 后约 3/14）；3JHE 92% 进场 T7 死、SL 没跟踪。建议三幕精英全跟踪或重排名单。
 - 观察：4719643 的 2000 字符 runaway（3JHE 8、C4F1 7）是 choice+reason 写完后的空白循环；6d2ce32 截断 + 311c740 accept-cut 应已覆盖，下一批核对 accepted_from_cut。
-- 小：RJZG decider 已记 codex，但 rationale/控制台仍写「DeepSeek changed the act's route」「DeepSeek decided」。
+- 小：RJZG decider 已记 codex，但 rationale/控制台仍写「DeepSeek changed the act's route」「DeepSeek decided」。 已修（10-04 确认，v4-live ed03f4c）
 - SL 漏判（最终 boss）：ET3V F48 永世沙漏 T13 判官「not certain: a revive is left (LIZARD_TAIL)」不读档，结束回合即阵亡，余 5 次（控制台 20261003-233142-554951d+dirty.log:2210）；尾巴是否早已用掉或复活后同回合再死待查。另：game over 后又挂了一行 F48 attempt 1 跟踪（sl-attempts 多一行，draws「tracking began after the fight's start (T13)」）。
