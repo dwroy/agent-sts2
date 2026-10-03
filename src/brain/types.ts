@@ -141,4 +141,9 @@ export interface BrainEngine {
   readonly model: string;
   /** One attempt (plus any repair loop the engine runs internally). The router validates and re-asks. */
   decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer>;
+  /**
+   * The engine's latest reading of its plan's limits (codex: the usage guard, engines/codex-usage.ts), for the
+   * brain.jsonl rows about it (`limits`); null or absent when there is none.
+   */
+  limits?(): object | null;
 }

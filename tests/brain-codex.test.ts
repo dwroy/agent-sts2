@@ -62,6 +62,16 @@ import { appendFileSync, existsSync, readFileSync, readdirSync } from "node:fs";
 const argv = process.argv.slice(2);
 if (argv[0] === "--version") { console.log("codex-cli 0.160.0"); process.exit(0); }
 if (argv[0] === "debug" && argv[1] === "models") { console.log(JSON.stringify(${JSON.stringify(opts.catalog ?? { models: [{ slug: "gpt-6-astra" }, SOL] })})); process.exit(0); }
+if (argv[0] === "app-server") {
+  // The usage guard's read (engines/codex-usage.ts): 1% of a 7-day window, 500 credits (tests/brain-codex-usage.test.ts covers it).
+  const { createInterface } = await import("node:readline");
+  for await (const line of createInterface({ input: process.stdin })) {
+    const msg = JSON.parse(line);
+    if (msg.method === "initialize") console.log(JSON.stringify({ id: msg.id, result: { userAgent: "fake" } }));
+    else if (msg.method === "account/rateLimits/read") console.log(JSON.stringify({ id: msg.id, result: { ordinaryUsageAllowed: true, rateLimits: { limitId: "codex", primary: { usedPercent: 1, windowDurationMins: 10080, resetsAt: 1791623197 }, secondary: null, credits: { hasCredits: true, unlimited: false, balance: "500" }, planType: "prolite", rateLimitReachedType: null, spendControlReached: false } } }));
+  }
+  process.exit(0);
+}
 let stdin = "";
 for await (const chunk of process.stdin) stdin += chunk;
 const settings = [];

@@ -360,7 +360,7 @@ describe("the controller with SL_RETRY_EXPLORE_WHERE", () => {
   const config = (overrides: Partial<SlConfig>): SlConfig => ({
     enabled: true, bossRetries: 5, eliteRetries: 3, act3LowHp: true, act3LowHpPct: 40, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true,
     retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: true, retryExploreTurn: true,
-    retryExploreWhole: true, retryExploreWhere: true, retryKnownPicks: true, log: null, stepTimeoutMs: 5_000, ...overrides,
+    retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: false, retryKnownPicks: true, log: null, stepTimeoutMs: 5_000, ...overrides,
   });
   function attempt3(overrides: Partial<SlConfig> = {}) {
     const notes: string[] = [];

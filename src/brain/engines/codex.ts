@@ -40,6 +40,10 @@
  *   the answer text), the stalled and timed-out runs included.
  * - Environment: only the basics a process needs (engines/process.ts agentEnv), CODEX_HOME for the login, the log
  *   filter, and the program's own directory first in PATH (the npm launcher is `#!/usr/bin/env node`).
+ * - Usage guard (engines/codex-usage.ts): the plan's windows and credits are read at process start (Brain.preflight)
+ *   and before a call every BRAIN_CODEX_USAGE_EVERY_CALLS calls or BRAIN_CODEX_USAGE_EVERY_MIN minutes; a window at
+ *   BRAIN_CODEX_USAGE_STOP_PCT or credits in use rest codex for the rest of the process (the used-up-plan path), so a
+ *   call never goes out past the stop. Each brain.jsonl row about codex carries the latest reading (`limits`).
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -51,6 +55,7 @@ import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
 import { stableSchema } from "../specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
+import { CodexUsageGuard, readCodexUsage, type CodexUsage, type UsageNote } from "./codex-usage.js";
 import { AgentAbortedError, AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
 
 type Json = Record<string, unknown>;
@@ -65,6 +70,11 @@ export interface CodexEngineOptions {
   stateDir?: string;
   /** One JSON row per codex run (codex-calls.jsonl next to brain.jsonl): its event timeline, retries, stderr tail; null: none. */
   traceFile?: string | null;
+  /** Where the engine says what the console should see (a usage read that failed); the router's note. */
+  note?: (message: string) => void;
+  /** The usage read (default: readCodexUsage through a short-lived app-server; tests), and the guard's clock. */
+  readUsage?: () => Promise<CodexUsage>;
+  now?: () => number;
 }
 
 /** A codex run's trace row (codex-calls.jsonl): no prompt and no answer text, only what happened when. */
@@ -541,7 +551,19 @@ export class CodexEngine implements BrainEngine {
   /** The model's catalog entry per model slug, read once per process (`codex debug models`). */
   private readonly catalogs = new Map<string, Promise<Json>>();
 
-  constructor(private readonly opts: CodexEngineOptions) {}
+  /** The plan's usage guard (engines/codex-usage.ts): read at process start (Brain.preflight) and before due calls. */
+  readonly usage: CodexUsageGuard;
+
+  constructor(private readonly opts: CodexEngineOptions) {
+    const { bin, home } = opts.codex;
+    const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
+    this.usage = new CodexUsageGuard(opts.codex.usage, read, { note: (message) => this.opts.note?.(message), ...(opts.now ? { now: opts.now } : {}) });
+  }
+
+  /** The latest usage reading, for brain.jsonl (router.ts: rows about codex). */
+  limits(): UsageNote | null {
+    return this.usage.note();
+  }
 
   get model(): string {
     return this.opts.settings.model ?? DEFAULT_CODEX_MODEL;
@@ -712,6 +734,8 @@ export class CodexEngine implements BrainEngine {
     const { bin, home, summary, serviceTier } = this.opts.codex;
     const agents = instructionFiles(home);
     if (agents.length > 0) throw new EngineFailure(`${agents.join(", ")} would be loaded into the brain call (codex reads it whatever the flags) [unavailable]`, "unavailable", CODEX_REST_MS.unavailable);
+    // The plan's usage, when a read is due: a window at the stop or credits in use rest codex for the process.
+    await this.usage.beforeCall();
     const model = this.modelFor(req.label);
     const effort = req.effort ?? this.opts.settings.effort ?? DEFAULT_CODEX_EFFORT;
     const env = codexEnv(bin, home);
@@ -733,10 +757,12 @@ export class CodexEngine implements BrainEngine {
       const args = codexArgs({ cwd, model, schemaFile, systemFile, catalogFile, stateDir: this.stateDir, effort, summary, serviceTier });
       const stdin = promptWithReask(req);
       let attempt = 1;
+      this.usage.noteCall();
       let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt });
       // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
       while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
         attempt += 1;
+        this.usage.noteCall();
         outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt });
       }
       if (outcome.kind === "stalled") throw new EngineFailure(`codex stalled [timeout]: ${outcome.why} (${attempt} run(s))`, "timeout");
