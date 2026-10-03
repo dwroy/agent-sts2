@@ -1,7 +1,7 @@
 # SL：boss 和难打精英的死亡重打（src/sl/）
 
 Dai 2026-10-01/02 定：目标改为让模型快速学习、看能摸到多高的天花板，允许 SL，但做最简单的版本——**只在死亡时用**：
-boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.json，不限精英），在「这回合一结束就必死」时不结束回合，回主菜单再「继续」，
+boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.json，不限精英），还有（`SL_ACT3_LOW_HP`，Dai 2026-10-03）低血进场的三幕非 boss 战斗，在「这回合一结束就必死」时不结束回合，回主菜单再「继续」，
 游戏从进房间时的存档把这场战斗从第 1 回合重新开始，换打法再打；赢了接着往下打。不做构筑分叉、不做 boss 实验室，
 **不读、不写、不复制任何存档文件**（Dai 10-02），不改随机种子。架构不变：Jev 出牌，DeepSeek 做构筑、路线和战斗计划。
 `SL_ENABLED` 默认开（Dai 2026-10-02：SL 做成开关、默认开；原先默认关）；关的时候对局循环、题面和日志与没有 SL 时逐字节相同（tests/sl-loop.test.ts、boss-lines-planner 的 golden）。
@@ -183,11 +183,21 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
 
 ## 3. 控制器（src/sl/controller.ts、reload.ts）
 
-- **认战斗**：每读一次状态都看一下。开场活着的敌人里有 boss（知识库 type = Boss），或有名单精英的敌人 id，就从这一帧开始记为
-  第 1 次尝试（进程重启时按 sl-attempts.jsonl 里这一局这一层这场的行数接着数）。每回合第一个能行动的帧记血量、格挡、敌人血量；
+- **认战斗**（controller.ts `slGate`，按顺序，第一条成立的就是这场的 `gate`）：每读一次状态都看一下。开场活着的敌人里有 boss
+  （知识库 type = Boss）→ `boss`；有名单精英的敌人 id → `hard-fight`；`SL_ACT3_LOW_HP` 开（默认开）、三幕（act_id 2；没有 act_id 时按层，
+  F34 起）、进场血量**严格低于** `SL_ACT3_LOW_HP_PCT`（默认 40）% 上限 → `act3-low-hp 31/88`（进场血 / 上限；32/80 正好 40%，不算）。
+  三条都不成立就不记。从这一帧开始记为第 1 次尝试（进程重启时按 sl-attempts.jsonl 里这一局这一层这场的行数接着数）。每回合第一个能行动的帧记血量、格挡、敌人血量；
   出牌、喝药在发出后记下（牌名 → 目标）。离开战斗（奖励画面、地图）记 won，GAME_OVER 记 died / won，局没了记 unfinished。
+  - 三幕低血的「进场血量」是这场战斗第一帧的血量和上限：对局记忆（RunJournal）里这一层还没结束的战斗记录（它看过第一帧；进程重启时从日志重放），
+    没有就用控制器看到的这场的第一帧。重打不重新判：同一场战斗的后几次尝试沿用第 1 次的 gate（读档把血量恢复成进场时的样子，本来也一样）；
+    进程重启时日志里这场已有 act3-low-hp 的行就沿用那一行的 gate，不看现在的血量。
+  - 这类战斗和名单战斗一样：`fight_kind` elite（`elite` 为 null）、最多 1 + `SL_ELITE_RETRIES` 次、只在必死时读档，其余 SL 开关照旧
+    （`SL_RETRY_EXPLORE_B2`、`SL_RETRY_EXPLORE_BOSS_POTIONS` 这些 boss 专用的只管 boss）。数据见 §3.1。
+  - 读档回到哪里：游戏从进房间的存档重开这场。走廊和 ? 房的读档上线前没有实盘记录（到 10-03 的 70 次读档、68 次成功，全在 boss 和精英房间；熟睡甲虫、胧光怪这两个走廊名单战都是第 1 次就赢）；
+    ? 房里由事件引出的战斗（三幕日志里只有「久经沙场的假人」BATTLEWORN_DUMMY，17 场 0 死）进房存档可能是事件画面，「继续」后若回到事件，
+    reload.ts 判「回错地方」，这局之后停用 SL（boss 也没有了），对局从事件接着打——仍好过它要替代的必死。
 - **重打**：发 `end_turn` 之前（发之前那次重读的状态上）判必死，或者（`SL_RELOAD_EARLY`，§2.2）规划器 least-loss 的第一张牌 / 药发出之前
-  `judgeLeastLossNow` 判必死，且还有次数（boss 最多 1 + `SL_BOSS_RETRIES` 次，名单精英 1 + `SL_ELITE_RETRIES` 次）：
+  `judgeLeastLossNow` 判必死，且还有次数（boss 最多 1 + `SL_BOSS_RETRIES` 次，名单精英和三幕低血战斗 1 + `SL_ELITE_RETRIES` 次）：
   1. 不发 end_turn；决策日志这一行写 `not dispatched: SL reloaded the fight (...)`；
   2. `save_and_quit` → 等到主菜单、不在局里、有 `continue_run`（每步最多 `SL_STEP_TIMEOUT_MS`，默认 60 秒；请求超时但其实生效了也算）；
   3. `continue_run` → 等到局里战斗、能行动；连续几次读到局里但不在战斗（地图、别的房间）就算回错地方；
@@ -201,10 +211,37 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
 - 对局进程只在这局真正结束（胜、死、局没了）时才打「stopped: run N ended」，所以 autoplay 不会把重打当成局结束。
 - 控制台每一步都有 `SL:` 开头的一行：跟踪哪场战斗、预判必死和原因、save_and_quit / continue_run 的结果、回到第几回合、第几次开始、失败原因。
 
+### 3.1 三幕低血（SL_ACT3_LOW_HP）的数据（2026-10-03，日志库 fights，`--no-sync`）
+
+V4.4 A9 窗口 20 负里 11 局进了三幕，7 局死在非 boss 战（notes/v4.4-a9-window-report.md）。三幕非 boss 战按进场血量 / 上限分档
+（「名单外」= 不在 sl-elites.json、原来没有 SL 的；死亡 = fights.outcome died）：
+
+| 进场血量 | V4.4 A9（20 局）：场 / 死 | 其中名单外：场 / 死 | V4 A8（V4–V4.3.*，62 局）：场 / 死 | 合计 82 局：场 / 死（死亡率） |
+|---|---|---|---|---|
+| <30% | 4 / 3 | 4 / 3 | 5 / 2 | 9 / 5（56%） |
+| 30–40% | 2 / 1 | 2 / 1 | 2 / 0 | 4 / 1（25%） |
+| 40–50% | 4 / 2 | 4 / 2 | 8 / 2 | 12 / 4（33%） |
+| 50–60% | 5 / 1 | 4 / 0 | 7 / 2 | 12 / 3（25%） |
+| ≥60% | 39 / 0 | 39 / 0 | 154 / 3 | 193 / 3（2%） |
+
+- **V4.4 A9 的 7 场三幕非 boss 死亡**（进场血）：XPDA F39 ? 猫头鹰法官 15/100（15%）、A4PW F46 ? 电球头 13/72（18%）、9175 F39 走廊咬人卷轴 ×4 16/80（20%）、
+  EQL9 F45 走廊史莱姆狂战士 28/80（35%）、8RB3 F46 走廊巨斧机器人 47/101（47%）、HYQW F38 走廊青蛙骑士 49/101（49%）、9V7K F45 灵魂枢纽 46/80（57%，名单内，原来就有 SL）。
+  线在 40：管到前 4 场；50：再加 8RB3、HYQW，名单外的 6 场全管到；60：同 50。
+- **会不会真读档**：tools/sl-early-replay.ts（规划器在记录的局面上重算，rollout / B2 关）重判这 6 场名单外死亡回合的 end_turn：6 场都判必死
+  （rules 3 场、least-loss 3 场）。A8+A9 合计 16 场三幕非 boss 死亡里 15 场判必死，LTKW F44 没判（重放只看这一场的帧，不知道蜥蜴尾巴 F37 已用掉，判「还有复活」；
+  实盘的记录在 10-02 8c93fa4 修过）。
+- **误判**：同一批 82 局里进场 <60% 而赢下的 24 场三幕非 boss 战，14 场出现过 mod 标「回合结束会死」的局面（61 个决策），end_turn 和提前 SL
+  都没有一次判必死。
+- **每局多几场 SL 战斗**（名单外、进场低于线）：线 40：V4.4 A9 每局 0.30 场（进三幕的局 0.55 场），82 局合计每局 0.15 场；线 50：0.50 / 0.91，合计 0.29；
+  线 60：0.70 / 1.27，合计 0.43。这些战斗里真会读档的只有判必死的（上面的死亡数），每次读档约 7 秒加重打这场的时间。
+- 这些战斗里 ? 房占：线 40 时 6 场里 3 场（V4.4），都不是事件战斗（三幕日志里的事件战斗只有假人，§3）。
+
 ## 4. 日志
 
 - **logs/sl-attempts.jsonl**（`SL_LOG`，默认在决策日志旁边）每次尝试一行：`run_id, act, floor, encounter`（开场敌人 id 排序用 + 连）、
-  `enemies, fight_kind`（boss / elite）、`elite`、`attempt`（第几次）、`max_attempts`、`from`（「first play of the fight」或
+  `enemies, fight_kind`（boss / elite：其余的 SL 战斗）、`elite`（名单名，否则 null）、`gate`（为什么 SL：`boss`、`hard-fight`、
+  `act3-low-hp 31/88`；2026-10-03 之前的行没有，那时只有前两种，看 fight_kind；日志库的 sl_attempts 还没有这一列，三幕低血的行是
+  `fight_kind = 'elite' AND elite IS NULL`）、`attempt`（第几次）、`max_attempts`、`from`（「first play of the fight」或
   「reloaded from the game's room-entry save of F17 (save_and_quit, continue_run)」）、`started_at, ended_at`、
   `result`（won / died / predicted_death / unfinished）、`turns, end_hp, end_block, incoming`、`judge`（tier、原因）、
   `reload`（ok、ms、resumed_turn 或失败的 step、reason）、`give_up_reason`、`summary`（每回合血量 / 格挡 / 敌人血量 / 出牌、喝的药、谁打死的）、
@@ -212,7 +249,7 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
   `SL_RETRY_KNOWN_INSERTS` 开时多 `inserted`：被随机插进抽牌堆的牌（回合、当时 `order` 有几张、还在牌堆里的牌 `cards`、同一步就抽到手里的状态牌 `drawn`），
   它们不进 `order`；§10）；提前 SL 的行 `judge.early = true`；`SL_RETRY_EXPLORE` 开时第 2 次起多 `explore`（每个决策点的局面键和打的线、
   第 3 次起的偏离点和结果，§11）。
-- **decisions.jsonl**：SL 开着时每行加 `sl_attempt`（正在打的 boss / 名单精英战是第几次，战外 null）和 `sl_reloads`（这局到此重打几次；
+- **decisions.jsonl**：SL 开着时每行加 `sl_attempt`（正在打的 boss / 名单精英战 / 三幕低血战是第几次，战外和不 SL 的战斗 null）和 `sl_reloads`（这局到此重打几次；
   0 就是「到此为止都是第一次尝试的打法」）。SL 关时没有这两个字段。重打的战斗题用了已知抽牌或加算力时，这题的 log 多 `sl_retry`
   （`known_draws`：已知的后面几张牌，`added`：其中随机插进去的牌的张数（§10.2），`compute`：采样数和预算；§10）。偏离点上的那道题多
   `sl_explore`（`point`、`original`、`replacement`、`reason`、`played_in`、两条线的 rollout 数字 `numbers`；§11）。
@@ -261,7 +298,9 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
 |---|---|---|
 | `SL_ENABLED` | on（2026-10-02 起） | 总开关 |
 | `SL_BOSS_RETRIES` | 5 | boss 战最多 1 + 5 次（Dai 2026-10-02） |
-| `SL_ELITE_RETRIES` | 3 | 名单里的难打战斗最多 1 + 3 次（Dai 2026-10-02） |
+| `SL_ELITE_RETRIES` | 3 | 名单里的难打战斗最多 1 + 3 次（Dai 2026-10-02）；三幕低血战斗同 |
+| `SL_ACT3_LOW_HP` | on（Dai 2026-10-03） | 三幕非 boss 战斗（走廊、精英、? 房）进场血量严格低于下一行的线时也 SL，和名单战斗一样（§3）；关：与之前相同 |
+| `SL_ACT3_LOW_HP_PCT` | 40 | 上一行的线，进场时上限的百分比（0–100，严格低于；Dai 的例子是 40，各条线的数据见 §3.1） |
 | `SL_RETRY_SHOW_SIM` | on | 重打时低可信 boss 也给整场模拟（标低可信） |
 | `SL_RETRY_KNOWN_DRAWS` | on（Dai 2026-10-02） | 重打时按前几次尝试看到的抽牌顺序算（§10）；关：抽牌照旧随机，题面和选择与 v4 3488dc5 逐字节相同 |
 | `SL_RETRY_COMPUTE` | on（Dai 2026-10-02） | 第 2 次起多算（§10.3：rollout 24 个样本、每题最多 20 秒、每回合最多 30 秒，随机药水 ×3，B2 ×2）；关：照旧 |

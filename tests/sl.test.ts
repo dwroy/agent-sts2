@@ -16,8 +16,8 @@ import { RunJournal } from "../src/project/run-journal.js";
 import { createScreenMemory } from "../src/project/types.js";
 import type { SlAttemptRow } from "../src/sl/attempts.js";
 import { previousAttemptsJson } from "../src/sl/attempts.js";
-import { SlController } from "../src/sl/controller.js";
-import { listedElite, loadSlElites } from "../src/sl/elites.js";
+import { ACT3_LOW_HP_GATE, actNumberOf, belowHpLine, SlController, slGate } from "../src/sl/controller.js";
+import { listedElite, loadSlElites, type SlEliteList } from "../src/sl/elites.js";
 import { judgeEndTurn, LEAST_LOSS_LABEL } from "../src/sl/judge.js";
 import { encounterOf, reloadFight } from "../src/sl/reload.js";
 import { testKnowledge } from "./scenarios.js";
@@ -75,7 +75,7 @@ function reloadingGame(start: Raw, firstTurn: Raw) {
 }
 
 function slConfig(log: string | null, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, act3LowHp: true, act3LowHpPct: 40, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 describe("judgeEndTurn: certain death only when nothing can be ruled out", () => {
@@ -297,6 +297,7 @@ describe("SlController", () => {
       encounter: "TEST_SUBJECT",
       fight_kind: "boss",
       elite: null,
+      gate: "boss",
       attempt: 1,
       max_attempts: 4,
       from: "first play of the fight",
@@ -428,7 +429,7 @@ describe("SlController", () => {
 
   it("describe() is what run-config records", () => {
     const t = setup("/nowhere/sl.jsonl");
-    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus"] });
+    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, act3_low_hp: true, act3_low_hp_pct: 40, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus"] });
   });
 });
 
@@ -459,10 +460,13 @@ describe("previousAttemptsJson", () => {
 describe("configuration", () => {
   it("SL is on by default (Dai 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log", () => {
     const config = loadConfig({ DECISION_LOG: "/tmp/x/decisions.jsonl" } as NodeJS.ProcessEnv);
-    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryKnownPicks: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
-    const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_RETRY_SHOW_SIM: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_JUDGE_ANY_DRAW: "off", SL_RELOAD_EARLY: "off", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_RETRY_EXPLORE_B2: "off", SL_RETRY_EXPLORE_BOSS_POTIONS: "off", SL_RETRY_EXPLORE_ORDER: "off", SL_RETRY_EXPLORE_REPLAY: "off", SL_RETRY_EXPLORE_CANON: "off", SL_RETRY_EXPLORE_TURN: "off", SL_RETRY_EXPLORE_WHOLE: "off", SL_RETRY_KNOWN_PICKS: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
-    expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, retryShowSim: false, retryKnownDraws: false, retryCompute: false, judgeKnownDraws: false, judgeAnyDraw: false, reloadEarly: false, retryKnownInserts: false, retryKnownTop: false, retryExplore: false, retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false, retryExploreCanon: false, retryExploreTurn: false, retryExploreWhole: false, retryKnownPicks: false, log: null });
+    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, act3LowHp: true, act3LowHpPct: 40, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryKnownPicks: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
+    const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_ACT3_LOW_HP: "off", SL_ACT3_LOW_HP_PCT: "55", SL_RETRY_SHOW_SIM: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_JUDGE_ANY_DRAW: "off", SL_RELOAD_EARLY: "off", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_RETRY_EXPLORE_B2: "off", SL_RETRY_EXPLORE_BOSS_POTIONS: "off", SL_RETRY_EXPLORE_ORDER: "off", SL_RETRY_EXPLORE_REPLAY: "off", SL_RETRY_EXPLORE_CANON: "off", SL_RETRY_EXPLORE_TURN: "off", SL_RETRY_EXPLORE_WHOLE: "off", SL_RETRY_KNOWN_PICKS: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
+    expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, act3LowHp: false, act3LowHpPct: 55, retryShowSim: false, retryKnownDraws: false, retryCompute: false, judgeKnownDraws: false, judgeAnyDraw: false, reloadEarly: false, retryKnownInserts: false, retryKnownTop: false, retryExplore: false, retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false, retryExploreCanon: false, retryExploreTurn: false, retryExploreWhole: false, retryKnownPicks: false, log: null });
     expect(() => loadConfig({ SL_BOSS_RETRIES: "-1" } as NodeJS.ProcessEnv)).toThrow(/SL_BOSS_RETRIES/);
+    expect(() => loadConfig({ SL_ACT3_LOW_HP_PCT: "101" } as NodeJS.ProcessEnv)).toThrow(/SL_ACT3_LOW_HP_PCT/);
+    expect(() => loadConfig({ SL_ACT3_LOW_HP_PCT: "40.5" } as NodeJS.ProcessEnv)).toThrow(/SL_ACT3_LOW_HP_PCT/);
+    expect(() => loadConfig({ SL_ACT3_LOW_HP: "maybe" } as NodeJS.ProcessEnv)).toThrow(/SL_ACT3_LOW_HP/);
     expect(loadConfig({ SL_ENABLED: "off" } as NodeJS.ProcessEnv).sl.enabled).toBe(false);
   });
 
@@ -471,5 +475,190 @@ describe("configuration", () => {
     expect([config.thiefFacts, config.thiefCost]).toEqual([true, true]);
     const off = loadConfig({ THIEF_FACTS: "off", THIEF_COST: "off" } as NodeJS.ProcessEnv);
     expect([off.thiefFacts, off.thiefCost]).toEqual([false, false]);
+  });
+});
+
+describe("SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered below the HP line", () => {
+  // Fixed data only: testKnowledge (TEST_SUBJECT the one Boss) and this list, not the live files.
+  const elites: SlEliteList = { source: "test", date: "2026-10-03", elites: [{ name: "Entomancer", zh: "蜂群术士", enemy_ids: ["ENTOMANCER"], deaths: 7, fights: 48 }] };
+  const HALLWAY = ["JAW_WORM", "CULTIST"];
+  /** An act-3 hallway fight board (act_id 2, F40, 80 max HP unless given). */
+  const hallway = (options: Parameters<typeof bossBoard>[0] = {}): Raw => bossBoard({ enemyIds: HALLWAY, actId: "2", floor: 40, ...options });
+  const on = { act3LowHp: true, act3LowHpPct: 40 };
+  const gateOf = (board: Raw, config: { act3LowHp: boolean; act3LowHpPct: number } = on, extra: { journal?: RunJournal; logged?: string | null; firstSeen?: { hp: number; maxHp: number } | null } = {}) => {
+    const s = state(board);
+    const ids = ((board["combat"] as Raw)["enemies"] as Raw[]).map((enemy) => String(enemy["enemy_id"]));
+    return slGate(s, ids, { knowledge: testKnowledge, elites, config, ...extra });
+  };
+
+  it("an act-3 fight with no boss entered below 40% of max HP is eligible; the reason carries its entry HP", () => {
+    expect(gateOf(hallway({ turn: 1, hp: 31, lethal: false }))).toEqual({ kind: "elite", elite: null, reason: "act3-low-hp 31/80" });
+    expect(gateOf(hallway({ turn: 1, hp: 10, lethal: false, maxHp: 101 }))?.reason).toBe(`${ACT3_LOW_HP_GATE} 10/101`);
+  });
+
+  it("the line is strict: exactly 40% is not eligible, just under is (integer arithmetic); the percent is configurable", () => {
+    expect(belowHpLine(32, 80, 40)).toBe(false);
+    expect(belowHpLine(31, 80, 40)).toBe(true);
+    expect(gateOf(hallway({ turn: 1, hp: 32, lethal: false }))).toBeNull();
+    expect(gateOf(hallway({ turn: 1, hp: 31, lethal: false }))).not.toBeNull();
+    // 40% of 88 is 35.2.
+    expect(gateOf(hallway({ turn: 1, hp: 35, maxHp: 88, lethal: false }))?.reason).toBe("act3-low-hp 35/88");
+    expect(gateOf(hallway({ turn: 1, hp: 36, maxHp: 88, lethal: false }))).toBeNull();
+    expect(gateOf(hallway({ turn: 1, hp: 39, lethal: false }), { act3LowHp: true, act3LowHpPct: 50 })?.reason).toBe("act3-low-hp 39/80");
+    expect(gateOf(hallway({ turn: 1, hp: 40, lethal: false }), { act3LowHp: true, act3LowHpPct: 50 })).toBeNull();
+    expect(gateOf(hallway({ turn: 1, hp: 1, lethal: false }), { act3LowHp: true, act3LowHpPct: 0 })).toBeNull();
+    expect(belowHpLine(10, 0, 40)).toBe(false);
+  });
+
+  it("act 3 only: acts 1, 2 (and anything after 3) are not; without an act_id the floor says it (F34 on)", () => {
+    for (const actId of ["0", "1", "3"]) expect(gateOf(hallway({ turn: 1, hp: 10, lethal: false, actId }))).toBeNull();
+    const noAct = (floor: number): Raw => {
+      const board = hallway({ turn: 1, hp: 10, lethal: false, floor });
+      (board["run"] as Raw)["act_id"] = null;
+      return board;
+    };
+    expect(actNumberOf(state(noAct(40)))).toBe(3);
+    expect(gateOf(noAct(40))?.reason).toBe("act3-low-hp 10/80");
+    expect(gateOf(noAct(34))).not.toBeNull();
+    expect(gateOf(noAct(33))).toBeNull();
+    expect(actNumberOf(state(hallway({ actId: "2", floor: 17 })))).toBe(3);
+  });
+
+  it("the switch off: not eligible, whatever the HP", () => {
+    expect(gateOf(hallway({ turn: 1, hp: 5, lethal: false }), { act3LowHp: false, act3LowHpPct: 40 })).toBeNull();
+    expect(gateOf(hallway({ turn: 1, hp: 5, lethal: false }), { act3LowHp: false, act3LowHpPct: 40 }, { logged: "act3-low-hp 5/80" })).toBeNull();
+  });
+
+  it("bosses and listed hard fights come first and are unchanged, with the switch on or off, at any HP and act", () => {
+    for (const config of [on, { act3LowHp: false, act3LowHpPct: 40 }]) {
+      expect(gateOf(hallway({ turn: 1, hp: 10, lethal: false, enemyIds: ["TEST_SUBJECT"] }), config)).toEqual({ kind: "boss", elite: null, reason: "boss" });
+      expect(gateOf(bossBoard({ turn: 1, hp: 80, lethal: false, actId: "0" }), config)).toEqual({ kind: "boss", elite: null, reason: "boss" });
+      expect(gateOf(hallway({ turn: 1, hp: 10, lethal: false, enemyIds: ["ENTOMANCER"] }), config)).toEqual({ kind: "elite", elite: elites.elites[0], reason: "hard-fight" });
+      expect(gateOf(bossBoard({ turn: 1, hp: 80, lethal: false, enemyIds: ["ENTOMANCER"], actId: "1" }), config)?.reason).toBe("hard-fight");
+    }
+  });
+
+  it("the entry HP is the fight's first state: the journal's record of it, else the first state seen, never a later one", () => {
+    // The journal saw T1 at 50/80 (62%): a later state at 10/80 does not make the fight eligible.
+    const journal = new RunJournal();
+    journal.observe(state(hallway({ turn: 1, hp: 50, lethal: false })));
+    expect(gateOf(hallway({ turn: 3, hp: 10 }), on, { journal })).toBeNull();
+    // It saw T1 at 30/80: eligible by that, though the state now shows more.
+    const low = new RunJournal();
+    low.observe(state(hallway({ turn: 1, hp: 30, lethal: false })));
+    expect(gateOf(hallway({ turn: 2, hp: 50, lethal: false }), on, { journal: low })?.reason).toBe("act3-low-hp 30/80");
+    // No journal record: the first state the controller saw.
+    expect(gateOf(hallway({ turn: 3, hp: 10 }), on, { firstSeen: { hp: 50, maxHp: 80 } })).toBeNull();
+    expect(gateOf(hallway({ turn: 3, hp: 10 }), on, { firstSeen: { hp: 30, maxHp: 80 } })?.reason).toBe("act3-low-hp 30/80");
+  });
+
+  it("an earlier attempt's logged act3-low-hp gate is kept (a restarted process), in act 3 with the switch on", () => {
+    expect(gateOf(hallway({ turn: 2, hp: 70, lethal: false }), on, { logged: "act3-low-hp 30/80" })?.reason).toBe("act3-low-hp 30/80");
+    expect(gateOf(hallway({ turn: 2, hp: 70, lethal: false, actId: "1" }), on, { logged: "act3-low-hp 30/80" })).toBeNull();
+    expect(gateOf(hallway({ turn: 2, hp: 70, lethal: false }), on, { logged: "boss" })).toBeNull();
+  });
+
+  function controller(log: string | null, start: Raw, firstTurn: Raw, overrides: Partial<SlConfig> = {}) {
+    const game = reloadingGame(start, firstTurn);
+    const notes: string[] = [];
+    const sl = new SlController({ config: slConfig(log, overrides), knowledge: testKnowledge, elites, client: game.client, note: (m) => notes.push(m), sleep: game.sleep, now: game.now });
+    return { sl, game, notes, memory: { journal: new RunJournal(), screenMemory: createScreenMemory() } };
+  }
+  const endTurn = (t: ReturnType<typeof controller>, board: Raw) => t.sl.beforeEndTurn(state(board), { label: "combat/end_turn", screenMemory: t.memory.screenMemory, journal: t.memory.journal });
+
+  it("an act-3 hallway entered at 30/80: tracked, reloaded on a certain death like a listed fight; every row carries the gate, the retry keeps it", async () => {
+    const log = tempLog();
+    const lethal = hallway({ turn: 3, hp: 10 });
+    const t1 = hallway({ turn: 1, hp: 30, lethal: false });
+    const t = controller(log, lethal, t1);
+    t.sl.observe(state(t1), t.memory);
+    expect(t.sl.decisionFields()).toEqual({ sl_attempt: 1, sl_reloads: 0 });
+    expect(t.notes.join("\n")).toMatch(/tracking act-3 low-HP \(30\/80 HP at entry, below 40%\) fight F40 CULTIST\+JAW_WORM: attempt 1 of at most 2/);
+    t.sl.observe(state(hallway({ turn: 2, hp: 20, lethal: false })), t.memory);
+    t.sl.observe(state(lethal), t.memory);
+    expect(await endTurn(t, lethal)).toMatchObject({ handled: true, ok: true });
+    expect(t.game.actions).toEqual(["save_and_quit", "continue_run"]);
+    // The game's room-entry save: the same first turn, the same entry HP.
+    t.sl.observe(state(t1), t.memory);
+    expect(t.sl.decisionFields()).toEqual({ sl_attempt: 2, sl_reloads: 1 });
+    expect(t.sl.envFor(state(t1))).toMatchObject({ attempt: 2, maxAttempts: 2 });
+    t.sl.observe(state(mapBoard(40)), t.memory);
+    const [first, second] = rows(log);
+    expect(first).toMatchObject({ act: "2", floor: 40, encounter: "CULTIST+JAW_WORM", fight_kind: "elite", elite: null, gate: "act3-low-hp 30/80", attempt: 1, max_attempts: 2, result: "predicted_death", judge: { tier: "rules" }, reload: { ok: true } });
+    expect(second).toMatchObject({ fight_kind: "elite", elite: null, gate: "act3-low-hp 30/80", attempt: 2, result: "won" });
+  });
+
+  it("the attempt cap is SL_ELITE_RETRIES: used up, the turn ends as usual", async () => {
+    const log = tempLog();
+    const lethal = hallway({ turn: 3, hp: 10 });
+    const t = controller(log, lethal, hallway({ turn: 1, hp: 30, lethal: false }), { eliteRetries: 0, bossRetries: 5 });
+    t.sl.observe(state(hallway({ turn: 1, hp: 30, lethal: false })), t.memory);
+    t.sl.observe(state(lethal), t.memory);
+    expect(await endTurn(t, lethal)).toEqual({ handled: false });
+    expect(t.game.actions).toEqual([]);
+    expect(t.notes.join("\n")).toMatch(/no retry left/);
+  });
+
+  it("entered at exactly 40% (32/80): not tracked, and HP falling below the line later does not make it so; a certain death is not intercepted", async () => {
+    const lethal = hallway({ turn: 3, hp: 10 });
+    const t = controller(tempLog(), lethal, hallway({ turn: 1, hp: 32, lethal: false }));
+    t.sl.observe(state(hallway({ turn: 1, hp: 32, lethal: false })), t.memory);
+    expect(t.sl.decisionFields().sl_attempt).toBeNull();
+    t.sl.observe(state(hallway({ turn: 2, hp: 20, lethal: false })), t.memory);
+    t.sl.observe(state(lethal), t.memory);
+    expect(t.sl.decisionFields().sl_attempt).toBeNull();
+    expect(await endTurn(t, lethal)).toEqual({ handled: false });
+    expect(t.game.actions).toEqual([]);
+  });
+
+  it("not act 3, or the switch off: a low-HP hallway is not tracked", async () => {
+    for (const [board, overrides] of [
+      [hallway({ turn: 1, hp: 10, lethal: false, actId: "1", floor: 30 }), {}],
+      [hallway({ turn: 1, hp: 10, lethal: false }), { act3LowHp: false }],
+    ] as const) {
+      const t = controller(tempLog(), board, board, overrides);
+      t.sl.observe(state(board), t.memory);
+      expect(t.sl.decisionFields().sl_attempt).toBeNull();
+      expect(await endTurn(t, { ...board, turn: 3 })).toEqual({ handled: false });
+    }
+  });
+
+  it("boss and listed rows carry gate boss / hard-fight, tracked the same with the switch on or off", () => {
+    for (const act3LowHp of [true, false]) {
+      const log = tempLog();
+      const listed = hallway({ turn: 1, hp: 10, lethal: false, enemyIds: ["ENTOMANCER"] });
+      const t = controller(log, listed, listed, { act3LowHp });
+      t.sl.observe(state(listed), t.memory);
+      expect(t.notes.join("\n")).toMatch(/listed elite \(Entomancer\).*at most 2/);
+      t.sl.observe(state(mapBoard(40)), t.memory);
+      const boss = hallway({ turn: 1, hp: 70, lethal: false, enemyIds: ["TEST_SUBJECT"], floor: 48 });
+      t.sl.observe(state(boss), t.memory);
+      t.sl.observe(state(mapBoard(48)), t.memory);
+      expect(rows(log).map((row) => [row.fight_kind, row.elite, row.gate, row.max_attempts])).toEqual([
+        ["elite", "Entomancer", "hard-fight", 2],
+        ["boss", null, "boss", 4],
+      ]);
+    }
+  });
+
+  it("a restarted process keeps the logged gate, whatever the HP it first sees; with no row yet, the journal's entry HP decides", async () => {
+    const log = tempLog();
+    const lethal = hallway({ turn: 3, hp: 10 });
+    const t1 = hallway({ turn: 1, hp: 30, lethal: false });
+    const t = controller(log, lethal, t1);
+    t.sl.observe(state(t1), t.memory);
+    t.sl.observe(state(lethal), t.memory);
+    await endTurn(t, lethal);
+    // Restarted mid-way through attempt 2, the state above the line: still the fight attempt 1 was, its gate kept.
+    const again = controller(log, lethal, t1);
+    again.sl.observe(state(hallway({ turn: 2, hp: 50, lethal: false })), again.memory);
+    expect(again.sl.decisionFields()).toEqual({ sl_attempt: 2, sl_reloads: 1 });
+    again.sl.observe(state(mapBoard(40)), again.memory);
+    expect(rows(log).at(-1)).toMatchObject({ attempt: 2, gate: "act3-low-hp 30/80", result: "won" });
+    // Restarted in attempt 1 (no row yet): the journal replayed from the logs saw T1 at 50/80, so 10/80 now is not the entry.
+    const fresh = controller(tempLog(), lethal, t1);
+    fresh.memory.journal.observe(state(hallway({ turn: 1, hp: 50, lethal: false })));
+    fresh.sl.observe(state(lethal), fresh.memory);
+    expect(fresh.sl.decisionFields().sl_attempt).toBeNull();
   });
 });

@@ -41,12 +41,19 @@ export interface SlAttemptRow {
   /** The enemies at the fight's start: sorted ids joined with "+". */
   encounter: string;
   enemies: string[];
+  /** boss; elite: any other SL fight (a listed hard fight in any room, or an SL_ACT3_LOW_HP fight). */
   fight_kind: "boss" | "elite";
-  /** The listed elite's name (sl-elites.json), null for a boss. */
+  /** The listed elite's name (sl-elites.json), null for a boss and an SL_ACT3_LOW_HP fight. */
   elite: string | null;
+  /**
+   * Why the fight gets SL (controller.ts slGate): "boss", "hard-fight" (sl-elites.json), or "act3-low-hp 31/88" (SL_ACT3_LOW_HP:
+   * an act-3 fight with no boss entered below the line, its entry HP / max HP). Absent on rows written before 2026-10-03's
+   * SL_ACT3_LOW_HP (those are boss or hard-fight, as fight_kind says).
+   */
+  gate?: string;
   /** 1 = the first play of the fight; k = the (k-1)th reload. */
   attempt: number;
-  /** 1 + the retries this kind of fight gets (SL_BOSS_RETRIES / SL_ELITE_RETRIES). */
+  /** 1 + the retries this kind of fight gets (SL_BOSS_RETRIES / SL_ELITE_RETRIES, the latter for hard-fight and act3-low-hp). */
   max_attempts: number;
   /** Where the attempt started: the first play, or the game's room-entry save after a reload. */
   from: string;

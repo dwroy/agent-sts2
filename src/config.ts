@@ -42,8 +42,17 @@ export interface SlConfig {
   enabled: boolean;
   /** SL_BOSS_RETRIES (default 5, Dai 2026-10-02): a boss fight gets at most 1 + this many attempts. */
   bossRetries: number;
-  /** SL_ELITE_RETRIES (default 3, Dai 2026-10-02): the same for the hard fights listed in src/sl/sl-elites.json (any room, not only elites). */
+  /** SL_ELITE_RETRIES (default 3, Dai 2026-10-02): the same for the hard fights listed in src/sl/sl-elites.json (any room, not only elites), and for SL_ACT3_LOW_HP's fights. */
   eliteRetries: number;
+  /**
+   * SL_ACT3_LOW_HP (default on, Dai 2026-10-03, option B after the V4.4 A9 window: 7 of the 11 runs that reached act 3 died
+   * in its hallways, ? rooms and elites, entering at 13-49 HP): an act-3 fight with no boss, entered with HP strictly below
+   * SL_ACT3_LOW_HP_PCT percent of max HP, gets SL like a listed hard fight (SL_ELITE_RETRIES, certain death only, every
+   * other SL switch as there). The entry HP is the fight's first state's (docs/sl.md §3). Off: as before.
+   */
+  act3LowHp: boolean;
+  /** SL_ACT3_LOW_HP_PCT (default 40, Dai 2026-10-03): SL_ACT3_LOW_HP's line, percent of max HP at the fight's entry (strictly below; 0..100). */
+  act3LowHpPct: number;
   /** SL_RETRY_SHOW_SIM (default on): a retried boss fight's questions show the whole-fight simulation even for a low-trust boss, labelled. */
   retryShowSim: boolean;
   /**
@@ -791,6 +800,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     enabled: parseOnOff(readEnv(env, "SL_ENABLED"), "SL_ENABLED", problems) ?? true,
     bossRetries: parseInteger(readEnv(env, "SL_BOSS_RETRIES") ?? "5", "SL_BOSS_RETRIES", problems, { min: 0, max: 20 }),
     eliteRetries: parseInteger(readEnv(env, "SL_ELITE_RETRIES") ?? "3", "SL_ELITE_RETRIES", problems, { min: 0, max: 20 }),
+    act3LowHp: parseOnOff(readEnv(env, "SL_ACT3_LOW_HP"), "SL_ACT3_LOW_HP", problems) ?? true,
+    act3LowHpPct: parseInteger(readEnv(env, "SL_ACT3_LOW_HP_PCT") ?? "40", "SL_ACT3_LOW_HP_PCT", problems, { min: 0, max: 100 }),
     retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
     retryKnownDraws: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_DRAWS"), "SL_RETRY_KNOWN_DRAWS", problems) ?? true,
     retryCompute: parseOnOff(readEnv(env, "SL_RETRY_COMPUTE"), "SL_RETRY_COMPUTE", problems) ?? true,
