@@ -99,7 +99,14 @@ interface FightTrack {
 
 /** HP lost as our turn starts, before its first state (Inferno, Crimson Mantle, poison on us; a power's or relic's text). */
 export const START_LOSS_POWERS = ["INFERNO_POWER", "CRIMSON_MANTLE_POWER", "POISON_POWER"];
-const START_LOSS_TEXT = /回合开始时[^。]*(?:失去|受到)|start of your turn[^.]*(?:lose|take)/i;
+/**
+ * A relic's or power's text that costs HP at the turn's start: 「回合开始时…失去…生命」 or 「…受到…伤害」. Not one that loses something
+ * else there (Bread's energy on turn 1: 「在你的第一个回合开始时，失去{LoseEnergy}」, Biased Cognition's Focus, Wraith Form's
+ * Dexterity) or that only reads damage taken before (Emotion Chip: 「如果你在之前回合受到过伤害」): those made the HP lost so far
+ * never exact (YNMB8X87UEH1 F17 T9, Bread held: 6 HP + 5 block against 11, nothing lost that turn, refused "own count not
+ * exact" with Beating Remnant, died).
+ */
+const START_LOSS_TEXT = /回合开始时[^。]*(?:失去[^。，]*?生命|受到(?!过)[^。，]*?伤害)|start of your turn[^.]*(?:lose[^.]*\bhp\b|take[^.]*damage)/i;
 /** The least damage one Inferno adds to INFERNO_POWER (Inferno 6, Inferno+ 9): its amount over this is the most copies up. */
 const INFERNO_LEAST_PER_COPY = 6;
 

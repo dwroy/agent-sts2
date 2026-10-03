@@ -114,12 +114,22 @@ describe("what keeps the Sandpit death uncertain", () => {
     expect(judge(hidden).reason).toBe(`only the Sandpit makes it lethal (${SANDPIT}), but 无厌沙虫 shows no intent`);
   });
 
-  it("a held card costing HP on our turn with Inferno up (it hits the enemies)", () => {
+  it("a held card costing HP on our turn with Inferno up: its sweep counted against the Insatiable before its turn", () => {
+    const inferno = { index: 9, power_id: "INFERNO_POWER", name: "地狱之炎", amount: 6, is_debuff: false };
+    // A Burn the block takes costs no HP: Inferno does not fire.
     const burnt = board("bvjt_t5_end");
     (combat(burnt)["hand"] as Raw[]).push({ index: 1, card_id: "BURN", name: "灼伤", playable: false, energy_cost: 0, rules_text: "回合结束时，如果这张牌在你的手牌中，受到2点伤害。", resolved_rules_text: "回合结束时，如果这张牌在你的手牌中，受到2点伤害。" });
     expect(judge(burnt).certain).toBe(true);
-    (player(burnt)["powers"] as Raw[]).push({ index: 9, power_id: "INFERNO_POWER", name: "地狱之炎", amount: 6, is_debuff: false });
-    expect(judge(burnt).reason).toBe(`only the Sandpit makes it lethal (${SANDPIT}), but 地狱之炎 hits the enemies when the held cards take HP on our turn`);
+    (player(burnt)["powers"] as Raw[]).push(inferno);
+    expect(judge(burnt).certain).toBe(true);
+    // Beckon's 6 is HP lost on our turn: Inferno's 6 to every enemy, and the Flame Barrier's 4 on each of its two hits: 14.
+    const beckoned = board("bvjt_t5_end");
+    (combat(beckoned)["hand"] as Raw[]).push({ index: 1, card_id: "BECKON", name: "呼唤", playable: false, energy_cost: 0, rules_text: "在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。", resolved_rules_text: "在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。" });
+    (player(beckoned)["powers"] as Raw[]).push(inferno);
+    worm(beckoned)["current_hp"] = 14;
+    expect(judge(beckoned).reason).toBe(`only the Sandpit makes it lethal (${SANDPIT}), but 无厌沙虫 (14 HP) may die before its turn: up to 14 from the end of the turn, its poison and our retaliation`);
+    worm(beckoned)["current_hp"] = 15;
+    expect(judge(beckoned).certain).toBe(true);
   });
 });
 

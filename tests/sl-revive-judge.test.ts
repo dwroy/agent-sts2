@@ -107,9 +107,11 @@ describe("ET3V5177HXSY F48 T13: Beating Remnant's cap at its lowest when the tur
     expect(verdict).toMatchObject({ certain: true, tier: "rules", hp: 7, block: 7, incoming: 36 });
     expect(verdict.reason).toBe("nothing left to play or drink; 36 incoming vs 7 HP + 7 block + 6 end-of-turn block (Beating Remnant: at most 20 lost this turn, at most 1 lost so far (the turn's start took HP))");
     // The cap at its lowest is 20 - 1 = 19 of the 68 that land: dead whichever way the start counts. At most 13 lost so far
-    // still leaves 7; at most 14 no longer kills.
+    // still leaves 7; at most 14 leaves 1, and the Mantle's 1 at the next turn's start (under that turn's own cap) takes it;
+    // at most 15 no longer kills.
     expect(judge(t13, { lostSoFarAtMost: 13 }).certain).toBe(true);
-    expect(judge(t13, { lostSoFarAtMost: 14 }).reason).toMatch(/^own count survives: 6 HP lost/);
+    expect(judge(t13, { lostSoFarAtMost: 14 })).toMatchObject({ certain: true, startLoss: 1 });
+    expect(judge(t13, { lostSoFarAtMost: 15 }).reason).toMatch(/^own count survives: 5 HP lost/);
   });
 
   it("the controller's most lost so far: Crimson Mantle's cost (and Inferno's copies) when nothing else took HP at the start", () => {
@@ -158,8 +160,14 @@ describe("a revive held is played out loss by loss (docs/sl.md §2.7)", () => {
     const verdict = judge(raw, { revives: ["LIZARD_TAIL"] });
     expect(verdict).toMatchObject({ certain: true, tier: "rules", revive: { held: ["LIZARD_TAIL"], used: ["LIZARD_TAIL"], backAt: [37], hpLeft: -14, saved: false } });
     expect(verdict.reason).toBe("nothing left to play or drink; 36 incoming vs 7 HP + 7 block + 6 end-of-turn block; back at 37 HP, the rest of the turn still kills (-14 left)");
-    // With Beating Remnant (as logged) the cap with a revive in the turn is not known: refused.
-    expect(judge(board("et3v_f48_t13_end"), { revives: ["LIZARD_TAIL"], lostSoFarAtMost: 1 }).reason).toBe("a revive is left (LIZARD_TAIL): Beating Remnant's cap (20 a turn) with a revive in the turn is not logged");
+    // With Beating Remnant (as logged) the cap is played out at the most it can save: 19 left (1 lost so far at most), the
+    // first Wither's 2 past the block and the second's 15 count against it, back at 37, the third Wither and the 36 take the
+    // last 2, the Mantle's 1 at the next turn's start: 34. The revive may save us: not certain.
+    expect(judge(board("et3v_f48_t13_end"), { revives: ["LIZARD_TAIL"], lostSoFarAtMost: 1 })).toMatchObject({
+      certain: false, reason: "a revive is left (LIZARD_TAIL): back at 37 HP, the rest of the turn leaves 34", revive: { used: ["LIZARD_TAIL"], backAt: [37], hpLeft: 34, saved: true },
+    });
+    // The HP lost so far not known: the cap's lowest is not known either (our own count's veto, before the revive's).
+    expect(judge(board("et3v_f48_t13_end"), { revives: ["LIZARD_TAIL"] }).reason).toBe("own count not exact: Beating Remnant caps the HP lost this turn at 20 and the HP lost so far this turn is not known exactly");
   });
 
   it("what is left after the revive decides: the hits after it, and our own loss at the next turn's start (refused)", () => {
