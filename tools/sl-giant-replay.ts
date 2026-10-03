@@ -12,10 +12,14 @@
  * Per row: the board (HP, block, the shown blast, the mod's flag), the verdicts, and the outcome: died (GAME_OVER after
  * the blast turn), won (REWARD after it), survived (the turn was not the last).
  *
+ * --boss insatiable (docs/sl.md §2.5; ops 2026-10-03, BVJT7HFW6X2S F33 T5: eaten by the Sandpit with HP left, the judge
+ * saying "the mod does not flag"): every logged Insatiable fight instead, every decision board in it, the Sandpit count
+ * as the phase ("sandpit N"; "-" before Liquify Ground).
+ *
  * Run it on the code before and after a change (--tag) and compare: tools/sl-giant-summary.py.
  *
- * Usage: npx tsx tools/sl-giant-replay.ts [--out experiments/sl-giant] [--tag after] [--fights RUN:FLOOR,...]
- * Output: <out>/giant[-<tag>].jsonl, one row per decision on a husk turn.
+ * Usage: npx tsx tools/sl-giant-replay.ts [--boss giant|insatiable] [--out experiments/sl-giant] [--tag after] [--fights RUN:FLOOR,...]
+ * Output: <out>/<boss>[-<tag>].jsonl, one row per decision on a husk turn (giant) or in the fight (insatiable).
  */
 import { execFileSync } from "node:child_process";
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
@@ -43,6 +47,7 @@ function arg(name: string, fallback: string): string {
 const outDir = arg("out", "experiments/sl-giant");
 const tag = arg("tag", "");
 const fightsOnly = arg("fights", "");
+const boss = arg("boss", "giant") as "giant" | "insatiable";
 const STATES = "logs/states.jsonl";
 const PY = ".cache/logdb-venv/bin/python";
 type Row = Record<string, unknown>;
@@ -82,6 +87,15 @@ function huskOf(state: GameState): { move: string; blast: number | null } | null
   return null;
 }
 
+/** The Insatiable's Sandpit count on this board (the lowest on a living enemy), or null. */
+function sandpitOf(state: GameState): number | null {
+  const counts = asArray(asRecord(state.raw["combat"])["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .flatMap((enemy) => asArray(enemy["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === "SANDPIT_POWER").map((power) => num(power["amount"])));
+  return counts.length > 0 ? Math.min(...counts) : null;
+}
+
 const verdictRow = (v: DeathVerdict | null) => (v ? { certain: v.certain, tier: v.tier, reason: v.reason.slice(0, 400), end_block: v.endBlock, incoming: v.incoming } : null);
 
 function main(): void {
@@ -89,10 +103,12 @@ function main(): void {
   rolloutLiveOptions.enabled = false;
   bossLinesOptions.enabled = false;
   potionMcOptions.now = () => 0;
-  const out = join(outDir, `giant${tag ? `-${tag}` : ""}.jsonl`);
+  const out = join(outDir, `${boss}${tag ? `-${tag}` : ""}.jsonl`);
   writeFileSync(out, "");
   const fights = query(
-    `WITH h AS (SELECT DISTINCT run_id, floor FROM (SELECT run_id, floor, unnest(enemies) e FROM frames WHERE in_combat) WHERE e.id = 'WATERFALL_GIANT' AND e.max_hp >= 1000000)
+    boss === "insatiable"
+      ? `SELECT run_id, floor, ascension, outcome FROM fights WHERE list_contains(monsters, 'THE_INSATIABLE') ORDER BY first_ts`
+      : `WITH h AS (SELECT DISTINCT run_id, floor FROM (SELECT run_id, floor, unnest(enemies) e FROM frames WHERE in_combat) WHERE e.id = 'WATERFALL_GIANT' AND e.max_hp >= 1000000)
      SELECT f.run_id, f.floor, f.ascension, f.outcome FROM h JOIN fights f USING (run_id, floor) ORDER BY f.first_ts`,
   );
   let total = 0;
@@ -134,8 +150,9 @@ function main(): void {
         const noteTarget = () => {
           if (typeof target === "number") noteFacing(memory, state, { action: "play_card", target_index: target });
         };
-        const husk = huskOf(state);
-        if (!husk) {
+        const husk = boss === "giant" ? huskOf(state) : null;
+        const sandpit = sandpitOf(state);
+        if (boss === "giant" ? !husk : asArray(asRecord(state.raw["combat"])["enemies"]).every((enemy) => asRecord(enemy)["is_alive"] === false)) {
           noteTarget();
           continue;
         }
@@ -175,8 +192,8 @@ function main(): void {
         const outcome = turn < lastTurn ? "survived" : end === "GAME_OVER" || end === "RELOADED" ? "died" : end === "REWARD" ? "won" : end;
         const row = {
           run, floor, asc: Number(fight["ascension"]), attempt: k + 1, attempts: attempts.length, turn, ts: String(decision["ts"]),
-          phase: husk.move === "EXPLODE_MOVE" ? "blast" : husk.move === "ABOUT_TO_BLOW_MOVE" ? "about" : husk.move,
-          hp: num(player["current_hp"]), block: num(player["block"]), energy: num(player["energy"]), blast: husk.blast,
+          phase: husk ? (husk.move === "EXPLODE_MOVE" ? "blast" : husk.move === "ABOUT_TO_BLOW_MOVE" ? "about" : husk.move) : `sandpit ${sandpit ?? "-"}`,
+          hp: num(player["current_hp"]), block: num(player["block"]), energy: num(player["energy"]), blast: husk?.blast ?? null, sandpit,
           flag: asRecord(state.raw["combat"])["end_turn_will_kill_player"] === true,
           logged: { label: loggedLabel, action: loggedAction },
           planned: { label: plannedLabel, action: plannedAction },

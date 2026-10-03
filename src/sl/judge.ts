@@ -24,6 +24,10 @@
  *   T3): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain without the mod's
  *   flag too, but not with Tungsten Rod or Beating Remnant, a relic or power acting at the turn's start that may heal or
  *   shield us, or Inferno's sweep at that loss able to kill every enemy (startGuard).
+ * - So does the Insatiable's Sandpit at 1 (docs/sl.md §2.5; 2026-10-03, BVJT7HFW6X2S F33 T5): the enemy turn takes it to 0
+ *   and eats us whatever the HP. Certain without the mod's flag, our count living, but only with the Insatiable alone, its
+ *   move shown, and nothing that may kill it before its turn; Frantic Escape (the one thing that puts the count back) is a
+ *   playable card like any other for the tiers below, and so is a draw that may bring one.
  * Then one of two tiers:
  * - "rules": no playable card in hand and no potion that can be drunk;
  * - "least-loss": the turn planner's own verdict on this board, combat/least-loss ending the turn: every simulated
@@ -79,6 +83,8 @@ export interface DeathVerdict {
   held?: { damage: number; loss: number; from: string[] };
   /** Our own HP loss at the next turn's start (Inferno, Crimson Mantle) when the death rests on it. */
   startLoss?: number;
+  /** The Insatiable's Sandpit count when the death rests on it (1: the enemy turn takes it to 0; docs/sl.md §2.5). */
+  sandpit?: number;
   ownCountDies?: true;
   /** "name (intent)" for each living enemy that attacks. */
   killers: string[];
@@ -500,6 +506,20 @@ function anyDrawJudged(
   return yes(`every line dies on the superset board, ${size}${exactness} (${superset.nodes} positions, ${bound.ms} ms)`);
 }
 
+/**
+ * The Insatiable's Sandpit on this board (docs/sl.md §2.5): SANDPIT_POWER on a living THE_INSATIABLE, its count, or null. From
+ * the logs (all 81 Insatiable fights to 2026-10-03): Liquify Ground (T1) starts it at 4 (91 of 91 attempts); every enemy turn
+ * takes 1 off whatever the move (402 of 402); each Frantic Escape played puts 1 back at once (the state's count is after the
+ * turn's plays: 237 of 237); nothing else moves it (no other card, relic or potion text names it). A turn ended at 1 was
+ * our death on the enemy turn whatever the HP and block, 15 of 15 (LXB3B2WT9E0W F33 T5 at 81 HP + 18 block against 18,
+ * BVJT7HFW6X2S F33 T5 at 21 + 12 against 24); a turn at 1 that the logs show won ended with the Insatiable killed in it.
+ */
+function sandpitOf(living: Record<string, unknown>[], names: string[]): { name: string; count: number; at: number } | null {
+  const at = living.findIndex((enemy) => str(enemy["enemy_id"]) === "THE_INSATIABLE" && asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "SANDPIT_POWER"));
+  if (at < 0) return null;
+  return { name: names[at] ?? str(living[at]!["name"], "THE_INSATIABLE"), count: powerAmount(living[at]!, "SANDPIT_POWER"), at };
+}
+
 export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerdict {
   const combat = asRecord(state.raw["combat"]);
   const player = asRecord(combat["player"]);
@@ -561,20 +581,26 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const heldDies = heldOwn ? !heldOwn.unknown && heldOwn.loss - regen >= hp : Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen >= hp;
   // The held cards make the difference: the death rests on them (and on heldGuard).
   const byHeld = !plainDies && heldDies && held.damage + held.loss > 0;
+  // The Insatiable's Sandpit at 1 (sandpitOf): the enemy turn takes it to 0 and eats us whatever the HP, which neither the
+  // mod's flag nor our count sees (BVJT7HFW6X2S F33 T5: 21 HP + 12 block against 24, the planner saw every line die at 9 HP
+  // left, the judge said "the mod does not flag", eaten with 6 retries unused). The death rests on it when our count lives.
+  const pit = sandpitOf(living, names);
+  const bySandpit = pit !== null && pit.count === 1 && !plainDies && !heldDies;
   // Our own HP loss at the start of the next turn (Inferno's 1, Crimson Mantle's cost: the planner's startTurnHpLoss): the
   // enemy turn leaves us at it or under, and the next turn opens with our death (610BBERH4SPP F33 T3: 1 HP + 12 block
   // against the Crusher's 5x2, Inferno up; the planner saw every line die, the mod's flag and our count did not, and the
   // run ended at T4's start with 6 attempts unused). Not counted with Tungsten Rod or Beating Remnant (each changes it).
   const startLoss = (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0) + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"));
   const lossAfterHeld = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
-  const byStart = !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
+  const byStart = !bySandpit && !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
   const heldNote = held.damage + held.loss > 0 ? { held: { damage: held.damage, loss: held.loss, from: held.from } } : {};
   const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({
-    certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(byStart ? { startLoss } : {}), ...(plainDies || heldDies || byStart ? { ownCountDies: true as const } : {}),
+    certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(byStart ? { startLoss } : {}), ...(bySandpit ? { sandpit: pit!.count } : {}),
+    ...(plainDies || heldDies || byStart || bySandpit ? { ownCountDies: true as const } : {}),
   });
 
   if (state.screen !== "COMBAT" || !state.in_combat) return verdict(false, null, "not in combat");
-  if (combat["end_turn_will_kill_player"] !== true && !byHeld && !byStart) return verdict(false, null, "the mod does not flag ending the turn as lethal");
+  if (combat["end_turn_will_kill_player"] !== true && !byHeld && !byStart && !bySandpit) return verdict(false, null, "the mod does not flag ending the turn as lethal");
   if (context.revives.length > 0) return verdict(false, null, `a revive is left (${context.revives.join(", ")})`);
   const saving = SAVING_POWERS.filter((id) => powerAmount(player, id) > 0);
   if (saving.length > 0) return verdict(false, null, `${saving.join(", ")} up`);
@@ -586,8 +612,9 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const blast = special?.blast ?? null;
   const heldText = `held ${held.from.join(", ")}: ${held.damage} damage${held.loss > 0 ? ` + ${held.loss} HP loss` : ""}`;
   const relicText = [rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${context.lostSoFar !== undefined ? `, ${context.lostSoFar} lost so far` : ""}` : ""].filter(Boolean).join("; ");
-  if (countUnknown) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
-  if (!plainDies && !byHeld && !byStart) {
+  // (The Sandpit eats us whatever the HP: our count need not be exact for it; Tungsten Rod and Beating Remnant are refused there.)
+  if (countUnknown && !bySandpit) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
+  if (!plainDies && !byHeld && !byStart && !bySandpit) {
     if (exactly) return verdict(false, null, `own count survives: ${heldOwn!.loss} HP lost (${relicText}) - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
     return verdict(false, null, `own count survives: ${incoming} incoming - ${block} block - ${endBlock} end-of-turn block - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
   }
@@ -606,6 +633,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // an attacker it may kill does not attack. Certain only if we die even without every enemy it may kill (and, when one
   // of them is not a minion, without the minions too: they may leave with it).
   const ends = endOfTurnHits(state, hand, etherealHeld, context.knowledge);
+  const sandpitText = pit ? `${pit.name}'s Sandpit at ${pit.count}: the enemy turn takes it to 0 and eats us whatever the HP` : "";
   if (ends.refuse) return verdict(false, null, `the enemies may be hit before they act: ${ends.refuse}`);
   const powersOf = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).map(asRecord);
   const cruelty = powerAmount(player, "CRUELTY_POWER");
@@ -626,6 +654,29 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     })
     .filter((entry) => entry.dies);
   let endNote = "";
+  // The Sandpit: the Insatiable alone (all 81 logged fights), no Tungsten Rod or Beating Remnant (none of the 15 logged
+  // deaths to it had one), its move shown, and nothing that may kill it before its turn (what hits it at the end of ours, its
+  // poison, our retaliation on each of its hits, a power hitting the enemies when our held cards cost us HP): killed first,
+  // the fight is won and the Sandpit eats nobody.
+  if (bySandpit) {
+    const insatiable = living[pit!.at]!;
+    const others = names.filter((_, i) => i !== pit!.at);
+    const hidden = intentNotShown(state);
+    const retaliationNow = powerAmount(player, "THORNS_POWER") + powerAmount(player, "FLAME_BARRIER_POWER");
+    const worst = before[pit!.at]!.hit + before[pit!.at]!.poison + retaliationNow * hitsOf[pit!.at]!.length;
+    const onLoss = held.damage + held.loss > 0
+      ? asArray(player["powers"]).map(asRecord).find((power) => str(power["power_id"]) === "INFERNO_POWER" || ON_OWN_HP_LOSS.test(context.knowledge?.power(str(power["power_id"]))?.description ?? ""))
+      : undefined;
+    const guard =
+      others.length > 0 ? `other enemies are alive (${others.join(", ")}): not a logged board`
+      // How the Sandpit kills (no HP left to see) is not in the logs: an HP loss cut or capped might live through it.
+      : exactly ? `${[rod ? "Tungsten Rod" : "", remnant ? "Beating Remnant" : ""].filter(Boolean).join(" and ")} may cut what it takes (never logged with the Sandpit)`
+      : hidden ? hidden
+      : worst >= num(insatiable["current_hp"]) ? `${pit!.name} (${num(insatiable["current_hp"])} HP) may die before its turn: up to ${worst} from the end of the turn, its poison and our retaliation`
+      : onLoss ? `${str(onLoss["name"], str(onLoss["power_id"]))} hits the enemies when the held cards take HP on our turn`
+      : null;
+    if (guard) return verdict(false, null, `only the Sandpit makes it lethal (${sandpitText}), but ${guard}`);
+  }
   // Retaliation (Thorns, Flame Barrier: each hit an attacker lands, it takes this much back, before its next hit): an attacker
   // may die before its last hits (2WUMK6PK5QHD F48 T8: 30 HP + 30 block against 80 with Flame Barrier 6, flagged lethal and
   // certain, lived). Its HP taken at the lowest it may be (less what may hit it at the end of the turn, its block ignored).
@@ -659,7 +710,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const reachable = [...playable, ...hand.filter((card) => card["playable"] !== true && afterPlayFirst(card))];
   const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
   const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
-  const lethal = `${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${endNote}`;
+  const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
     const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));

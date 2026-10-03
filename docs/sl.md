@@ -41,6 +41,7 @@ boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.j
   读档（同一场战斗回合数变小）把它恢复成这场战斗开始时的样子：这场里用掉的回来，之前的战斗用掉的不回来；
 - 身上没有缓冲（Buffer）、无实体（Intangible）；有涟漪盆（Ripple Basin）而本回合没打攻击牌时不判（它的格挡这里不算）；
 - 没有特殊阶段的敌人（最大血量 ≥ 100 万，或者意图是 DeathBlow）——**瀑布巨兽被击杀后、爆炸那一回合除外**（§2.4：按下面同样的规则判，爆炸当作一次攻击）；
+- **无厌沙虫的沙坑**：回合结束时沙坑是 1、沙虫活着，敌方回合就被吞（不管血量），mod 不报、自己数也不数——按 §2.5 判。
 - 我们自己数也死：Σ 攻击意图（伤害 × 段数）− 现有格挡 − 回合末格挡（镀层 / 多层护甲 / 金属化、斗篷扣每张留手牌 1 点、
   无痛按每张留手牌都当虚无算、山铜在牌给的格挡为 0 时 6 点）− 再生 ≥ 当前血量。
   山铜（2026-10-03 改）：镀层在身上并不挡掉山铜——A8ENYFR4ZWKG F48 T7（0 格挡、镀层 9，三段共 36 只掉 21，来了 15）、842N6N604DVX F31 T3
@@ -238,6 +239,50 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
 23 次爆炸死亡里 20 次现在会 SL（8 次在提前那一步，含 QLL4 T13 出第一张打击之前），没抓到的 3 次：7048QYLLYJLS（涟漪盆没打攻击，9 + 23 + 4 仍不够 39，
 但 §2 的涟漪盆规则照旧否决）、1VX145UJM8RZ（惊逃：回合末随机打出手里的攻击牌，照旧否决）、5NFGDU7BQPD3（头槌抽牌，任何抽法都死证明不了）。
 53 次活下来的爆炸回合 0 次判必死。测试：tests/sl-giant-judge.test.ts（tests/logged-states/giant-judge/husk.json 里的 10 个日志局面）。
+
+### 2.5 无厌沙虫的沙坑（2026-10-03）
+
+起因（运维 10-03）：BVJT7HFW6X2S（V4.5，A9，ebb3710）F33 无厌沙虫第 1 次 T5，沙坑 1，21 血 + 12 格挡对 12×2（火焰屏障 4），0 能量、双重打击打不出、
+没有药；规划器 least-loss「每条线都死，结束回合留 9 血」，判定却以「the mod does not flag ending the turn as lethal」不判，被吞，6 次重打没用
+（控制台 16:05:53 那一回合开头的提前 SL 也被「cards were added to the draw pile at random places this attempt」挡住）。
+mod 的 `end_turn_will_kill_player` 只看意图伤害，我们自己数也只数血，都不知道沙坑。
+
+**日志里的沙坑**（81 场无厌沙虫战、91 次尝试，states.jsonl 到 10-03，`--no-sync`；沙虫每场都是唯一的敌人）：
+- T1 的液化地面（`LIQUIFY_GROUND_MOVE`）之后沙坑 = 4（91 / 91）；之后每个敌方回合 −1，不管它出什么招（402 / 402）；
+  每打出一张狂乱逃离立刻 +1（状态里的数就是打完这些牌之后的：237 / 237；唯一对不上的 MAHAHJY541KJ T6 是第二张逃离之后没有再记帧）。
+  别的牌、遗物、药水的文字都没有提沙坑（游戏数据里只有狂乱逃离「将沙坑的计数加1」，它每打一次耗能 +1）。
+- **回合结束时沙坑是 1，这个敌方回合就被吞**：15 / 15 都是 GAME_OVER，跟血量无关——LXB3B2WT9E0W T5 81 血 + 18 格挡对 18、06S86JU88EG5 T7 42 血、
+  Y08TU00D9VLH T5 48 血、BVJT T5 21 + 12 对 24。日志里沙坑 1 的回合赢下来的，都是那一回合把沙虫打死了（最后一个动作是攻击，不是结束回合）。
+  （3MDJW1UAD5M6 T5 沙坑 1 结束回合之后日志就断了，不算。）
+- 规划器早就算了：turn-solver `sandpitAfter = 沙坑 + 本回合逃离数 − 1`，≤ 0 就是这条线死（`otherDeath`），逃离按牌建模（+1、耗能）；
+  rollout 把它带到后面的回合，B4 整场脚本从液化地面开始；BVJT T5 的 least-loss 就是这么来的。
+
+**现在的规则**（src/sl/judge.ts `sandpitOf`）：沙虫活着、沙坑正好是 1、自己数（含留手牌）不死时，死亡**落在沙坑上**：
+- 不要求 mod 报致死（和留手牌、回合开始扣血一样）；回合开始的扣血不再单独算（沙坑先到）。
+- §2 的共同条件照旧：没有复活（复活能不能救下被吞，日志里没有，按能算）、缓冲 / 无实体、涟漪盆、特殊阶段；回合末先打敌人的东西
+  （历石、招架盾、炸弹……照旧，算不准的照旧不判）。
+- 另外要全部满足，否则不判，理由 `only the Sandpit makes it lethal (无厌沙虫's Sandpit at 1: ...), but 原因`：沙虫是唯一活着的敌人（`other enemies are alive`）；
+  没有钨合金棍、搏动残片（被吞是怎么扣的看不到，15 次被吞都没带它们，减少 / 封顶失去的生命也许能活）；
+  它的意图照显示的来（`intentNotShown`）；它在自己的回合之前不会死——回合末可能打到它的伤害 + 它的中毒 + 我们的反击（荆棘、火焰屏障）× 它的段数 < 它的血
+  （`may die before its turn`：先打死它，战斗就赢了）；留手牌在我们回合扣血时没有狱火一类打敌人的能力。
+- 然后照旧是两层：**rules**（没有能打的牌、能喝的药——一张打得起的狂乱逃离就是能打的牌）或 **least-loss**（规划器每条线都死，它本来就数沙坑；
+  手里有抽牌牌照旧否决：可能抽到狂乱逃离，除非 §2.1 / §2.3 证明怎么抽都死——超集局面会把抽牌堆里的逃离也放进手里）。
+- 理由 `nothing left to play or drink; 无厌沙虫's Sandpit at 1: the enemy turn takes it to 0 and eats us whatever the HP (our count lives: 24 incoming vs 21 HP + 12 block + 0 end-of-turn block)`，
+  sl-attempts 行的 judge 里多 `sandpit: 1`；不判时控制台照样写 `SL: ending the turn may be lethal ...`（ownCountDies）。
+- 提前 SL（§2.2）不变：沙虫会把狂乱逃离随机塞进抽牌堆，第 3 条「这次尝试里有牌被随机插进抽牌堆」几乎总挡住它，所以沙坑的死亡在 end_turn 判。
+
+**重放**（tools/sl-giant-replay.ts `--boss insatiable`，81 场每个决策局面用现在的规划器重算，rollout / B2 关；改之前 / 改之后；
+experiments/sl-giant/summary-insatiable.md）：
+
+| 局面 | 个数 | 改之前判必死 | 改之后判必死 | 其中真死 | 误判 |
+|---|---|---|---|---|---|
+| end_turn、沙坑 1（记录的 label） | 16（死 15、日志断 1） | 5 | 13 | 13 | 0 |
+| end_turn、沙坑不是 1 | 586（活 556、赢 2、死 28） | 25 | 25 | 25 | 0 |
+| 提前 SL（least-loss 的出牌） | 145 | 0 | 0 | — | 0 |
+
+新判必死的 8 次（THMGB35RGDSD、M8123JA75Y1G、Y08TU00D9VLH、X8HF0SB0XGJ1、FN0HCB4DVKZK、LXB3、06S8、BVJT）都是被吞；沙坑 1 结束回合没判的 2 次死亡
+（TTVYCS2ADZRM T6、9V09G0TKK5EQ T5）手里还有能喝的药、label 不是 least-loss，照旧不判。理由变了的 31 个局面全在沙坑 1。
+测试：tests/sl-sandpit-judge.test.ts（tests/logged-states/sandpit-judge/insatiable.json 里的 6 个日志局面）。
 
 ## 3. 控制器（src/sl/controller.ts、reload.ts）
 
