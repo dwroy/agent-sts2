@@ -998,6 +998,16 @@ export function potionCardCost(card: { type: string; xCost: boolean; cost: numbe
 }
 
 /**
+ * The potions and cards whose card choice offers a card that is free this turn (game text 「这张牌在本回合可以免费打出」,
+ * 「本回合免费打出」): the Attack / Skill / Power / Colorless Potion (1 of 3 random cards), Liquid Memories (a discard pile
+ * card), Discovery, Abundance, Splash. The offer lists each card at its printed cost (Mangle 3, Bludgeon 3); the card is
+ * then free in hand (potionCardCost). Not free: Droplet of Precognition, Seeker Strike, Secret Weapon / Technique, Quasar.
+ */
+export const FREE_OFFER_SOURCES: ReadonlySet<string> = new Set([
+  "ATTACK_POTION", "SKILL_POTION", "POWER_POTION", "COLORLESS_POTION", "LIQUID_MEMORIES", "DISCOVERY", "ABUNDANCE", "SPLASH",
+]);
+
+/**
  * The expected card of a draw from these pile cards, as one hand card: the pile's mean damage, block,
  * Vulnerable and Weak (unplayable cards count as nothing), rounded, at its mean cost rounded. An
  * expected-value model: Gambler's Brew, Glowwater and Distilled Chaos draws are priced by it. null for

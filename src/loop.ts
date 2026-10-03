@@ -33,6 +33,7 @@ import { compact, describeChoice, memoryChars, memorySections, RunJournal } from
 import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type RouteReviewResult, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberChosenNode, rememberMap } from "./screens/rest.js";
+import { noteCardSource } from "./screens/selection.js";
 import { createDecisionLog, createStateLog, stateLogPath, type DecisionRecord } from "./telemetry/decision-log.js";
 import { askJevLogged, createJevPromptLog, resolveJevPromptLog, type JevPromptMeta } from "./telemetry/jev-prompt-log.js";
 import { createRunConfigLog } from "./telemetry/run-config.js";
@@ -1637,6 +1638,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     rememberChosenNode(screenMemory, state, resolved.intent);
     // Surrounded: every targeted action that went through turns us (the per-card fallback's plays too).
     noteFacing(screenMemory, state, resolved.intent);
+    // The potion or card a card choice that follows comes from (its offer may be free this turn).
+    noteCardSource(screenMemory, state, resolved.intent);
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
     deepseekMemo = null;
@@ -1696,6 +1699,7 @@ export function resetFightMemory(screenMemory: ScreenMemory): void {
   screenMemory.gambleDiscards = undefined;
   screenMemory.potionTake = undefined;
   screenMemory.takeWaitSince = undefined;
+  screenMemory.cardSource = undefined;
   screenMemory.plannedAfter = undefined;
   screenMemory.paelsEyeFight = undefined;
   screenMemory.fightStart = undefined;
