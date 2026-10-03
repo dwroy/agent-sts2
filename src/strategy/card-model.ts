@@ -181,6 +181,13 @@ export interface CardModel {
    */
   soulbound?: boolean;
   /**
+   * A "play me first" card (Enthralled, 执迷: 「如果这张牌在你的手牌中，你必须优先打出这张牌」, the Blood-Soaked Rose's
+   * 2-cost Eternal curse; isPlayFirst): while one is in the hand no other card can be played, potions can; once it is
+   * played the lock is gone (the solver's play). The cards it locks read blocked_by_hook with it as the preventer and are
+   * playable here (afterPlayFirst).
+   */
+  playFirst?: boolean;
+  /**
    * Puts a card on top of the draw pile (Headbutt: from the discard pile). A draw later in the same
    * turn takes that card back into hand (XPA4 T11: Headbutt put Shrug It Off+ on top for next turn, then
    * Pommel Strike drew it and it was discarded unplayed).
@@ -251,6 +258,34 @@ export function stripVigor(hand: CardModel[], vigor: number, weak: boolean, shru
  */
 function blockedByHook(card: Record<string, unknown>): boolean {
   return str(card["unplayable_preventer_id"]) !== "" || /BlockedByHook/.test(str(card["unplayable_reason_raw"]));
+}
+
+/**
+ * The "play me first" cards (CardModel.playFirst): Enthralled. Every logged frame with it in hand (10, runs YVWAWAPXJXGV,
+ * 0YG4ETM3MLHS, HYQW47E7CBSC) has every other hand card blocked_by_hook with unplayable_preventer_id ENTHRALLED and every
+ * potion usable; the frame after it is played has no lock left (energy down by its 2); it is discarded, not exhausted (it
+ * comes back later in the same fight). The other preventers logged (CHAINS_OF_BINDING_POWER, SLOTH_POWER, SMOGGY_POWER,
+ * RINGING_POWER, NORMALITY) are caps that no play lifts.
+ */
+export const PLAY_FIRST_CARDS: ReadonlySet<string> = new Set(["ENTHRALLED"]);
+const PLAY_FIRST_TEXT = /你必须优先打出这张牌|must play this card first/i;
+/** `enabled` off (tools only): no card is "play me first" and the cards it locks stay unplayable, as before. */
+export const playFirstOptions: { enabled: boolean } = { enabled: true };
+
+/** A hand or pile card that must be played before any other while it is in the hand (Enthralled; its id or its text). */
+export function isPlayFirst(cardId: string, text = ""): boolean {
+  return playFirstOptions.enabled && (PLAY_FIRST_CARDS.has(cardId) || PLAY_FIRST_TEXT.test(text));
+}
+
+/**
+ * A mod hand card locked only by a "play me first" card in the hand (preventer ENTHRALLED, raw "BlockedByHook" and at
+ * most "EnergyCostTooHigh" beside it): playable once that card is played, the solver keeping the order. One also
+ * Unplayable by its keyword (a Burn: "HasUnplayableKeyword, BlockedByHook") stays unplayable.
+ */
+export function afterPlayFirst(card: Record<string, unknown>): boolean {
+  if (!playFirstOptions.enabled || !PLAY_FIRST_CARDS.has(str(card["unplayable_preventer_id"]))) return false;
+  const reasons = str(card["unplayable_reason_raw"]).split(",").map((reason) => reason.trim()).filter((reason) => reason !== "");
+  return reasons.every((reason) => reason === "BlockedByHook" || reason === "EnergyCostTooHigh");
 }
 
 /**
@@ -651,6 +686,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     // Status: playing a Beckon is only worth its held penalty (VL2D F17 T9: +5 made it beat Burning Pact).
     flatValue = 3 + 2 * Math.max(0, num(card["energy_cost"]));
   }
+  // Enthralled does nothing when played but lift its lock, which the solver plays (CardModel.playFirst): modelled.
+  const playFirst = isPlayFirst(cardId, renderedText);
+  if (playFirst) known = true;
 
   // Status/curse cards that hurt at end of turn while held: read the number from the rendered text.
   const rendered = renderedText;
@@ -682,7 +720,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     // unplayable_preventer_id (raw "BlockedByHook, EnergyCostTooHigh"): Chains of Binding once a Soulbound card is
     // played, Sloth's and Ringing's card cap, Smoggy's one Skill. No energy unlocks it this turn (4JGPCH3WX6JV F48 T2: an
     // Energy Potion drunk at 0 energy for a Soulbound Defend+, blocked_by_hook after it; the turn ended, 10 HP lost).
-    playable: bool(card["playable"]) || (str(card["unplayable_reason"]) === "not_enough_energy" && !blockedByHook(card)),
+    // A card Enthralled locks (preventer ENTHRALLED) is playable once Enthralled is played: in the search, the solver plays
+    // Enthralled first (HYQW47E7CBSC F38 T4: 5 energy, Bludgeon, Evil Eye, Bash and Strike all blocked_by_hook by it; the
+    // only line was end turn, 13 HP lost).
+    playable: bool(card["playable"]) || (str(card["unplayable_reason"]) === "not_enough_energy" && !blockedByHook(card)) || afterPlayFirst(card),
     target,
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,
@@ -718,6 +759,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(POWER_AMOUNT_VARS[cardId] && dyn(card, POWER_AMOUNT_VARS[cardId]!) !== null ? { powerAmount: dyn(card, POWER_AMOUNT_VARS[cardId]!)! } : {}),
     ...(replayOf(rendered) > 0 ? { replay: replayOf(rendered) } : {}),
     soulbound: /(^|\s)魂缚(\s|。|$)|\bSoulbound\b/i.test(rendered),
+    ...(playFirst ? { playFirst: true } : {}),
     ...(etherealText(info?.keywords, rendered) ? { ethereal: true } : {}),
     putsOnTop: /放到(?:你的)?抽牌堆(?:的)?顶部?|on top of your draw pile/i.test(rendered),
     drawsUntil: /抽牌直到|draw cards? until/i.test(rendered),

@@ -47,7 +47,7 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { BEATING_REMNANT_CAP, distinctNames } from "../screens/combat-plan.js";
-import { heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
+import { afterPlayFirst, heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
 import { randomTargetOnly, randomTargets } from "./random-target.js";
@@ -595,11 +595,13 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     endNote = `; even if ${who}`;
   }
   const playable = hand.filter((card) => card["playable"] === true);
+  // The cards Enthralled locks (card-model afterPlayFirst) are played once it is: their draws veto as a playable card's.
+  const reachable = [...playable, ...hand.filter((card) => card["playable"] !== true && afterPlayFirst(card))];
   const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
   const lethal = `${incoming} incoming${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${endNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
-    const drawing = playable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
+    const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
     if (drawing && context.drawsKnown !== true) {
       const vetoed = `the planner sees every line die, but ${str(drawing["name"], str(drawing["card_id"]))} draws (unknown cards)`;
       // SL_JUDGE_ANY_DRAW: certain only when the death holds for every draw (anyDrawJudged); absent, the veto as before.
