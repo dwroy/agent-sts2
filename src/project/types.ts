@@ -462,8 +462,12 @@ export interface RouteReviewResult {
   /** The answer's `route_reason`. */
   reason: string;
   invalid?: string;
-  /** A change: the plan reference and step it is, the route key, the paths from here before and after, and the plan's why. */
-  change?: { ref: string; step: number; key: string; from: string; to: string; why: string };
+  /**
+   * A change: the plan reference and step it is, the route key, the paths from here before and after, and the plan's
+   * why; nextRest: the new route against the kept one at their next rest sites (absent when the stretch is the same),
+   * `worse` when the new one is clearly worse (strategy/route-map.ts clearlyWorse).
+   */
+  change?: { ref: string; step: number; key: string; from: string; to: string; why: string; nextRest?: { text: string; worse: boolean } };
 }
 
 export interface AskDecision {

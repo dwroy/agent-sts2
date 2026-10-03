@@ -1471,7 +1471,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         label: "map/route-change",
         decider: "deepseek",
         fingerprint: stateFingerprint,
-        rationale: `DeepSeek changed the act's route in ${decision.label} (${change.why}): ${change.from} => ${change.to}${reason ? ` — ${reason}` : ""}`,
+        rationale: `DeepSeek changed the act's route in ${decision.label} (${change.why}): ${change.from} => ${change.to}${reason ? ` — ${reason}` : ""}${change.nextRest ? `; next rest: ${change.nextRest.text}${change.nextRest.worse ? " (clearly worse than the kept route)" : ""}` : ""}`,
         confidence: null,
         fallback: false,
         reasked: false,
@@ -1480,7 +1480,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         request_ids: [],
         latency_ms: { plan: 0, jev: 0, action: 0 },
         usage: { input_tokens: 0, output_tokens: 0 },
-        deepseek: { by: "deepseek", direct: true, reused: true, plan_ref: change.ref, plan_step: change.step, choice: change.key, reason, from: change.from, to: change.to },
+        deepseek: { by: "deepseek", direct: true, reused: true, plan_ref: change.ref, plan_step: change.step, choice: change.key, reason, from: change.from, to: change.to, ...(change.nextRest ? { next_rest: change.nextRest.text, next_rest_worse: change.nextRest.worse } : {}) },
         ...(runId ? { run_id: runId } : {}),
         observed_ts: observedTs,
         journal: { choice: entry.choice, reason },
@@ -1956,5 +1956,7 @@ function routeReviewLog(review: RouteReviewResult): JsonValue {
     ...(review.reason ? { reason: review.reason } : {}),
     ...(review.invalid ? { invalid: review.invalid } : {}),
     ...(review.change ? { plan_ref: review.change.ref, plan_step: review.change.step } : {}),
+    // The new route against the kept one at their next rest sites (route-review.ts; facts, never a block).
+    ...(review.change?.nextRest ? { next_rest: review.change.nextRest.text, next_rest_worse: review.change.nextRest.worse } : {}),
   };
 }
