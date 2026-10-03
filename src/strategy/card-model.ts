@@ -784,7 +784,7 @@ export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow:
  * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
  * escaped the Insatiable's Sandpit nor cleared a Beckon).
  */
-export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null): CardModel {
+export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0): CardModel {
   const info = knowledge.card(cardId);
   const raw = own ?? {
     card_id: cardId,
@@ -798,7 +798,28 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
   };
   const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
-  return { ...model, playable: !unplayable && (model.xCost || model.cost >= 0) };
+  // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
+  const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;
+  return { ...relicCost, playable: !unplayable && (model.xCost || model.cost >= 0) };
+}
+
+/**
+ * Spiked Gauntlets (「能力牌的耗能增加1」) on the cards modelled off the hand. The hand's entries show it (Demon Form 4,
+ * Inflame 2), and so does every pile line, but the deck's entries do not: logged in all 6 runs holding it (2026-10-03,
+ * every combat frame), all 1,530 Power lines of the draw, discard and exhaust piles at the deck's cost + 1 (Cruelty
+ * [2费], Pyre+ [3费], Unmovable+ [2费]), the deck's 2,354 Power entries at their base. `relics` off (tools only): the
+ * deck's cost, as before.
+ */
+export const pileCostOptions: { relics: boolean } = { relics: true };
+
+/** What a Power off the hand (a pile's, the deck's) costs more with these relics than the deck says (Spiked Gauntlets: 1). */
+export function pilePowerExtraCost(relicIds: readonly string[]): number {
+  return pileCostOptions.relics && relicIds.includes("SPIKED_GAUNTLETS") ? 1 : 0;
+}
+
+/** A card at a relic's cost: a Power (not X, not unplayable) `powerExtraCost` more. */
+export function withPowerExtraCost<T extends { type: string; xCost: boolean; cost: number }>(card: T, powerExtraCost: number): T {
+  return powerExtraCost !== 0 && card.type === "Power" && !card.xCost && card.cost >= 0 ? { ...card, cost: card.cost + powerExtraCost } : card;
 }
 
 /**
