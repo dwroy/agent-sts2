@@ -55,6 +55,15 @@
  *   SlTried.cards). Attempt 3 drank one potion fewer on T2 (attempt 2 drank it there, attempt 3 on T3), attempt 4 one more
  *   on T1 (attempts 2-3 drank it on T2-T3): both played attempt 2's cards and all three ended at 1 HP + 24 block against
  *   44. A potion none of them drank from there on (held to the death) still makes the line new.
+ * - SL_RETRY_EXPLORE_REPLAY_PLAYS (2026-10-03, J4S28FRQKD7G F33 attempts 3, 4 and 6): a later attempt knows more draws, so on a
+ *   board of the path the reference's line may read otherwise and not be among the options (attempt 2's 「防御, 剑柄打击 -> 火箭,
+ *   怨恨 -> 火箭」 planned without knowing Pommel Strike's draw, 烙印+; with it known that line scored 1016th of 1290): its plays
+ *   from the board up to its next decision (its turn record, replayPlays) are played as a line when legal there (combat-plan
+ *   loggedLine), and the replay goes on.
+ * - SL_RETRY_EXPLORE_REPLAY_DEVIATE (2026-10-03, J4S28 F33 attempt 6 played attempt 4's fight again after both stopped
+ *   replaying on T2): where the replay cannot go on before the point (neither line nor plays), or once the attempt is off the
+ *   path, it deviates on the first board a failed attempt decided on (boardTried: their lines and turns there), not into a
+ *   failed attempt's fight; `explore.fallback`, not a use of the target's point.
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
@@ -192,7 +201,23 @@ export interface SlExploreRecord {
    * played (`replayed`; `overridden`: of them, where it replaced the answer), and why the replay stopped (a board not on the
    * path, its line not played there; null: it did not).
    */
-  replay?: { replayed: number; overridden: number; stopped: string | null };
+  replay?: {
+    replayed: number;
+    overridden: number;
+    stopped: string | null;
+    /**
+     * SL_RETRY_EXPLORE_REPLAY_PLAYS: of the boards replayed, where the reference's line was not among the options and its
+     * logged plays from there were played instead (absent: none, and always with the switch off).
+     */
+    logged?: number;
+  };
+  /**
+   * SL_RETRY_EXPLORE_REPLAY_DEVIATE: the replay stopped before the deviation point (its board did not come up): the attempt
+   * deviated where it was, on a board a failed attempt had decided on (the board, its turn and point, what was played there
+   * and instead), so that it does not play a failed attempt's fight again. Not a use of the target's point (exploreTarget
+   * counts `deviation` only). Absent: the replay did not stop, or no such board came up.
+   */
+  fallback?: SlDeviation & { board: string; point: string; attempts: number[]; tried?: SlTried };
   /** SL_RETRY_EXPLORE_CANON (attempts from the 1st) / _TURN (from the 2nd): each turn's plays and boards. */
   turns?: SlTurnPlays[];
 }
@@ -222,7 +247,25 @@ export interface SlExploreEnv {
    * answer does not), so that the attempt reaches the point (R1QJUBVBSSB2 F33 attempt 3: Jev answered T5 otherwise, 0.52
    * against 0.44, and the fight died on T7 before its T8 point).
    */
-  replay?: { line: string; reference: number; point: string; canon?: string };
+  replay?: {
+    line: string;
+    reference: number;
+    point: string;
+    canon?: string;
+    /**
+     * SL_RETRY_EXPLORE_REPLAY_PLAYS (J4S28FRQKD7G F33 attempts 3, 4 and 6): the reference attempt's plays from this board up to
+     * its next decision (its turn record, playKey), played as a line when its line is not among the options (the later
+     * attempts know more draws, so the lines read otherwise: attempt 2's 「防御, 剑柄打击 -> 火箭, 怨恨 -> 火箭」 came back as
+     * 「防御, 剑柄打击 -> 火箭, 烙印+, 怨恨 -> 火箭」 with the drawn 烙印+ in it).
+     */
+    plays?: string[];
+    /**
+     * SL_RETRY_EXPLORE_REPLAY_DEVIATE: where the replay cannot be played on this board (its line not among the options and
+     * its plays not legal here, or that line dies this turn where the answer does not), the deviation to make here instead:
+     * as `deviate` (the lines failed attempts played on this board and their turns through it).
+     */
+    fallback?: { point: string; excluded: string[]; attempts: number[]; tried?: SlTried };
+  };
   /**
    * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
    * replaced": ExploreB2.notWorse) instead of the rollout's share of samples dead, in the replacement and the record (the
@@ -977,6 +1020,58 @@ export function replayPoints(rows: readonly ExploreRow[], target: SlTarget): Map
   const out = new Map<string, SlPoint>();
   for (const point of points.slice(0, Math.max(0, end))) if (point.board !== target.board) out.set(point.board, point);
   return out;
+}
+
+/**
+ * SL_RETRY_EXPLORE_REPLAY_PLAYS: what the reference attempt played from `board` (a board of replayPoints) on: its turn
+ * record's plays from the board's place up to the place of its next decision point's board that turn, or to the turn's end
+ * (playKey, in order). Null without a turn record of it (a row from before SL_RETRY_EXPLORE_CANON), or when its next decision
+ * point's board is not in the record.
+ */
+export function replayPlays(rows: readonly ExploreRow[], target: SlTarget, board: string): string[] | null {
+  const reference = rows.find((row) => row.attempt === target.reference && row.explore && Array.isArray(row.explore.points));
+  const points = reference?.explore?.points ?? [];
+  const turns = reference?.explore?.turns;
+  if (!turns) return null;
+  let end = -1;
+  for (let i = points.length - 1; i >= 0; i -= 1) if (points[i]!.board === target.board) { end = i; break; }
+  let at = -1;
+  for (let i = end - 1; i >= 0; i -= 1) if (points[i]!.board === board) { at = i; break; }
+  if (at < 0) return null;
+  const point = points[at]!;
+  const record = turns.find((turn) => turn.turn === point.turn && turn.boards.some((entry) => entry.board === board));
+  if (!record) return null;
+  const start = record.boards.filter((entry) => entry.board === board).at(-1)!.at;
+  const next = points[at + 1];
+  let stop = record.plays.length;
+  if (next && next.turn === point.turn) {
+    const entry = record.boards.find((other) => other.board === next.board && other.at >= start);
+    if (!entry) return null;
+    stop = entry.at;
+  }
+  return record.plays.slice(start, stop);
+}
+
+/**
+ * SL_RETRY_EXPLORE_REPLAY_DEVIATE: on `board`, what the failed attempts before `attempt` played there, as exploreTarget's
+ * target carries it for its point: the lines of their decision points on the board, the attempts, and (`canon` / `potion`,
+ * SL_RETRY_EXPLORE_CANON / _POTION) the turns through it (exploreTried). Null when no failed attempt decided on the board.
+ */
+export function boardTried(rows: readonly ExploreRow[], attempt: number, board: string, options: { canon?: boolean; potion?: boolean } = {}): { excluded: string[]; attempts: number[]; tried?: SlTried } | null {
+  const failed = rows.filter((row) => row.attempt < attempt && row.result !== "won" && row.explore && Array.isArray(row.explore.points));
+  const lines = new Set<string>();
+  const attempts = new Set<number>();
+  for (const row of failed) {
+    for (const point of row.explore!.points) {
+      if (point.board !== board) continue;
+      lines.add(point.line);
+      attempts.add(row.attempt);
+    }
+  }
+  const turns = options.canon === true || options.potion === true ? exploreTried(rows, attempt, board, options) : null;
+  for (const a of turns?.attempts ?? []) attempts.add(a);
+  if (attempts.size === 0) return null;
+  return { excluded: [...lines], attempts: [...attempts].sort((a, b) => a - b), ...(turns ? { tried: turns.tried } : {}) };
 }
 
 /**

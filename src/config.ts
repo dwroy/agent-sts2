@@ -125,6 +125,20 @@ export interface SlConfig {
    */
   retryExploreReplay: boolean;
   /**
+   * SL_RETRY_EXPLORE_REPLAY_PLAYS (default on, 2026-10-03, J4S28FRQKD7G F33 attempts 3, 4 and 6; with SL_RETRY_EXPLORE_REPLAY):
+   * on a board of the reference path whose line is not among the options (a later attempt knows more draws, so the lines read
+   * otherwise), the reference attempt's logged plays from that board are played as a line when they are legal there, so that
+   * the replay goes on to the deviation point (docs/sl.md §11.2). Off: the replay stops there, as before.
+   */
+  retryExploreReplayPlays: boolean;
+  /**
+   * SL_RETRY_EXPLORE_REPLAY_DEVIATE (default on, 2026-10-03, J4S28FRQKD7G F33 attempt 6 played attempt 4's fight again; with
+   * SL_RETRY_EXPLORE_REPLAY): when the replay cannot go on before the deviation point, the attempt deviates where it is, on the
+   * first board a failed attempt decided on (a question with a line none of them played there), instead of playing on as
+   * usual into a failed attempt's fight; not a use of the target's point (docs/sl.md §11.2). Off: played as usual, as before.
+   */
+  retryExploreReplayDeviate: boolean;
+  /**
    * SL_RETRY_EXPLORE_CANON (default on, 2026-10-03, A9 runs 10-12; with SL_RETRY_EXPLORE): a line counts as tried on a
    * board by the turn's plays (the multiset of card id with "+" and target, potions included, the cards already played that
    * turn counted in), not by its text: the same plays in another order or line text are the same line, the same cards on
@@ -172,6 +186,19 @@ export interface SlConfig {
    * which goes on (docs/sl.md §10.2). Off: the order ends there, as before.
    */
   retryKnownPicks: boolean;
+  /**
+   * SL_RETRY_KNOWN_OFF_TOP (default on, 2026-10-03, RNTVAT76BPV0 F38; with SL_RETRY_KNOWN_INSERTS): cards played off the top
+   * of the draw pile (the potion Distilled Chaos, Havoc, Cascade) were its next cards: they are places of the known order and
+   * the rest of it goes on (several at once: their order among themselves is not known until an attempt draws them)
+   * (docs/sl.md §10.2). Off: the order ends there, as before.
+   */
+  retryKnownOffTop: boolean;
+  /**
+   * SL_RETRY_KNOWN_HAND_ORDER (default on, 2026-10-03; with SL_RETRY_KNOWN_INSERTS): a card drawn while a copy of it was
+   * played from the hand in the same step (Shrug It Off drawing Shrug It Off) is read by the hand's order, not taken for a
+   * card that left the pile without coming into the hand (docs/sl.md §10.2). Off: the order ends there, as before.
+   */
+  retryKnownHandOrder: boolean;
   /** SL_LOG: sl-attempts.jsonl (default next to the decision log; off: not written). */
   log: string | null;
   /** SL_STEP_TIMEOUT_MS (default 60000): each reload step's wait (the main menu, then the fight). */
@@ -1015,12 +1042,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryExploreBossPotions: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_BOSS_POTIONS"), "SL_RETRY_EXPLORE_BOSS_POTIONS", problems) ?? true,
     retryExploreOrder: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_ORDER"), "SL_RETRY_EXPLORE_ORDER", problems) ?? true,
     retryExploreReplay: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY"), "SL_RETRY_EXPLORE_REPLAY", problems) ?? true,
+    retryExploreReplayPlays: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_PLAYS"), "SL_RETRY_EXPLORE_REPLAY_PLAYS", problems) ?? true,
+    retryExploreReplayDeviate: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_DEVIATE"), "SL_RETRY_EXPLORE_REPLAY_DEVIATE", problems) ?? true,
     retryExploreCanon: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_CANON"), "SL_RETRY_EXPLORE_CANON", problems) ?? true,
     retryExploreTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TURN"), "SL_RETRY_EXPLORE_TURN", problems) ?? true,
     retryExploreWhole: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WHOLE"), "SL_RETRY_EXPLORE_WHOLE", problems) ?? true,
     retryExploreWhere: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WHERE"), "SL_RETRY_EXPLORE_WHERE", problems) ?? true,
     retryExplorePotion: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_POTION"), "SL_RETRY_EXPLORE_POTION", problems) ?? true,
     retryKnownPicks: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_PICKS"), "SL_RETRY_KNOWN_PICKS", problems) ?? true,
+    retryKnownOffTop: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_OFF_TOP"), "SL_RETRY_KNOWN_OFF_TOP", problems) ?? true,
+    retryKnownHandOrder: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_HAND_ORDER"), "SL_RETRY_KNOWN_HAND_ORDER", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
   };
