@@ -306,7 +306,8 @@ export interface AppConfig {
 /** Per-engine brain settings (BRAIN_<ENGINE>_*); null = the engine's or the router's default. */
 export interface BrainEngineSettings {
   /**
-   * BRAIN_<ENGINE>_MODEL (claude: an alias such as opus / sonnet, or a full id such as claude-opus-5). DeepSeek:
+   * BRAIN_<ENGINE>_MODEL (claude: an alias such as opus / sonnet, or a full id such as claude-opus-5; codex: a model
+   * slug, default DEFAULT_CODEX_MODEL). DeepSeek:
    * DEEPSEEK_MODEL governs (the v3 client); this is ignored for it.
    */
   model: string | null;
@@ -314,7 +315,7 @@ export interface BrainEngineSettings {
   modelByPrefix: Record<string, string>;
   /** BRAIN_<ENGINE>_TIMEOUT_MS: the router's limit on one engine call (null: none beyond the engine's own). */
   timeoutMs: number | null;
-  /** BRAIN_<ENGINE>_EFFORT (claude --effort, codex model_reasoning_effort, dsh reasoning effort). */
+  /** BRAIN_<ENGINE>_EFFORT (claude --effort, codex model_reasoning_effort (default xhigh), dsh reasoning effort). */
   effort: Effort | null;
   /** BRAIN_<ENGINE>_REASK=on|off: the router's one re-ask (default on; DeepSeek without tools: off, v3 repairs itself). */
   reask: boolean | null;
@@ -372,6 +373,20 @@ export interface BrainConfig {
      */
     schema: "kind" | "question";
   };
+  /** Codex runs under this machine's ChatGPT login (`codex login`, the subscription), isolated from its user setup. */
+  codex: {
+    /**
+     * BRAIN_CODEX_BIN, else the first executable `codex` on PATH, else ~/.local/node/bin/codex (the npm install), as an
+     * absolute path; "codex" when none is found (the start-up check reports it). resolveCodexBin.
+     */
+    bin: string;
+    /** Codex's home, where its login is (BRAIN_CODEX_HOME, else CODEX_HOME, else ~/.codex); its config is not loaded. */
+    home: string;
+    /** BRAIN_CODEX_SUMMARY: the reasoning summary codex asks for (default auto; logged, not shown to the model). */
+    summary: "auto" | "concise" | "detailed" | "none";
+    /** BRAIN_CODEX_SERVICE_TIER: e.g. "priority" (Fast: about 2x speed at more usage); null (default) = the standard tier. */
+    serviceTier: string | null;
+  };
 }
 
 /** The brain's default Claude model (claude-api skill, 2026-09: the current Sonnet; BRAIN_CLAUDE_MODEL=opus for Opus). */
@@ -389,9 +404,19 @@ export const DEFAULT_CLAUDE_TIMEOUT_MS = 120_000;
 /** The Claude engine's calls per process when BRAIN_CLAUDE_MAX_CALLS is unset (DEEPSEEK_MAX_CALLS is 300). */
 export const DEFAULT_CLAUDE_MAX_CALLS = 150;
 
-/** Engine names BRAIN_* may use; codex and dsh are named but not implemented yet (the router says so). */
+/**
+ * The brain's Codex model and effort when BRAIN_CODEX_MODEL / BRAIN_CODEX_EFFORT are unset (Dai 2026-10-03: "gpt6.1 sol
+ * extra high"). Always sent explicitly: the engine ignores ~/.codex/config.toml (engines/codex.ts).
+ */
+export const DEFAULT_CODEX_MODEL = "gpt-6.1-sol";
+export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
+
+/** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
+export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
+
+/** Engine names BRAIN_* may use; dsh is named but not implemented yet (the router says so). */
 const ENGINES: readonly EngineName[] = ["deepseek", "claude", "codex", "dsh"];
-const EFFORTS: readonly Effort[] = ["low", "medium", "high", "max"];
+const EFFORTS: readonly Effort[] = ["low", "medium", "high", "xhigh", "max"];
 
 function parseEngine(raw: string, field: string, problems: ConfigProblem[]): EngineName | null {
   const value = raw.toLowerCase();
@@ -440,11 +465,38 @@ export function resolveClaudeBin(env: NodeJS.ProcessEnv): string {
   return "claude";
 }
 
+/**
+ * The codex program the brain runs: BRAIN_CODEX_BIN as given; else the first executable `codex` in PATH's absolute
+ * directories; else HOME/.local/node/bin/codex (the npm install, @openai/codex); else "codex", which the start-up
+ * check (brain.ts preflight) reports as missing.
+ */
+export function resolveCodexBin(env: NodeJS.ProcessEnv): string {
+  const set = readEnv(env, "BRAIN_CODEX_BIN");
+  if (set !== null) return set;
+  for (const dir of (env["PATH"] ?? "").split(delimiter)) {
+    if (!dir || !isAbsolute(dir)) continue;
+    const candidate = join(dir, "codex");
+    if (isExecutableFile(candidate)) return candidate;
+  }
+  const home = env["HOME"];
+  if (home && isAbsolute(home)) {
+    const installed = join(home, ".local", "node", "bin", "codex");
+    if (isExecutableFile(installed)) return installed;
+  }
+  return "codex";
+}
+
+/** Codex's home (its login and settings): BRAIN_CODEX_HOME, else CODEX_HOME, else HOME/.codex (codex's own default). */
+export function resolveCodexHome(env: NodeJS.ProcessEnv): string {
+  return readEnv(env, "BRAIN_CODEX_HOME") ?? readEnv(env, "CODEX_HOME") ?? join(env["HOME"] ?? "", ".codex");
+}
+
 /** BRAIN_<ENGINE>_MAX_CALLS ("off" or "none": no limit); DeepSeek's budget stays DEEPSEEK_MAX_CALLS (the loop's). */
 function maxCallsOf(env: NodeJS.ProcessEnv, name: EngineName, problems: ConfigProblem[]): number | null {
   if (name === "deepseek") return null;
   const field = `BRAIN_${name.toUpperCase()}_MAX_CALLS`;
   const raw = readEnv(env, field);
+  // Codex: no limit by default (Dai 2026-10-03); a used-up subscription rests it for the process (engines/codex.ts).
   if (raw === null) return name === "claude" ? DEFAULT_CLAUDE_MAX_CALLS : null;
   if (["off", "none"].includes(raw.toLowerCase())) return null;
   return parseInteger(raw, field, problems, { min: 0, max: 1_000_000 });
@@ -468,14 +520,14 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
     const upper = name.toUpperCase();
     const timeoutRaw = readEnv(env, `BRAIN_${upper}_TIMEOUT_MS`);
     const effortRaw = readEnv(env, `BRAIN_${upper}_EFFORT`);
-    let effort: Effort | null = null;
+    let effort: Effort | null = name === "codex" ? DEFAULT_CODEX_EFFORT : null;
     if (effortRaw !== null) {
       if ((EFFORTS as readonly string[]).includes(effortRaw.toLowerCase())) effort = effortRaw.toLowerCase() as Effort;
       else problems.push({ field: `BRAIN_${upper}_EFFORT`, message: `expected one of ${EFFORTS.join(", ")}, got "${effortRaw}"` });
     }
     // Claude: 2 minutes (a question the loop waits on; two timeouts in a row rest it, router.ts TIMEOUT_REST_AFTER).
-    // The other CLI agents (tool calls, long thinking): 5 minutes, as DEEPSEEK_TIMEOUT_MS in the live .env.
-    const defaultTimeout = name === "deepseek" ? null : name === "claude" ? DEFAULT_CLAUDE_TIMEOUT_MS : 300_000;
+    // Codex: 10 minutes (xhigh reasoning on the long questions). dsh: 5 minutes, as DEEPSEEK_TIMEOUT_MS in the live .env.
+    const defaultTimeout = name === "deepseek" ? null : name === "claude" ? DEFAULT_CLAUDE_TIMEOUT_MS : name === "codex" ? DEFAULT_CODEX_TIMEOUT_MS : 300_000;
     const modelByPrefix: Record<string, string> = {};
     for (const key of Object.keys(env).sort()) {
       const m = new RegExp(`^BRAIN_${upper}_MODEL_([A-Z0-9_]+)$`).exec(key);
@@ -483,7 +535,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       if (m && raw !== null) modelByPrefix[m[1]!] = raw;
     }
     engines[name] = {
-      model: readEnv(env, `BRAIN_${upper}_MODEL`) ?? (name === "claude" ? DEFAULT_CLAUDE_MODEL : null),
+      model: readEnv(env, `BRAIN_${upper}_MODEL`) ?? (name === "claude" ? DEFAULT_CLAUDE_MODEL : name === "codex" ? DEFAULT_CODEX_MODEL : null),
       modelByPrefix,
       timeoutMs: timeoutRaw === null ? defaultTimeout : parseInteger(timeoutRaw, `BRAIN_${upper}_TIMEOUT_MS`, problems, { min: 1_000, max: 3_600_000 }),
       effort,
@@ -499,6 +551,9 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const schemaRaw = (readEnv(env, "BRAIN_CLAUDE_SCHEMA") ?? "kind").toLowerCase();
   if (schemaRaw !== "kind" && schemaRaw !== "question") problems.push({ field: "BRAIN_CLAUDE_SCHEMA", message: `expected kind or question, got "${schemaRaw}"` });
   const schemaMode: "kind" | "question" = schemaRaw === "question" ? "question" : "kind";
+  const summaryRaw = (readEnv(env, "BRAIN_CODEX_SUMMARY") ?? "auto").toLowerCase();
+  if (!["auto", "concise", "detailed", "none"].includes(summaryRaw)) problems.push({ field: "BRAIN_CODEX_SUMMARY", message: `expected auto, concise, detailed or none, got "${summaryRaw}"` });
+  const tierRaw = readEnv(env, "BRAIN_CODEX_SERVICE_TIER");
   const prefixRaw = (readEnv(env, "KNOWLEDGE_PREFIX") ?? "off").toLowerCase();
   if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
   const knowledgePrefix: KnowledgePrefixMode = prefixRaw === "full" ? "full" : "off";
@@ -516,6 +571,12 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       bin: resolveClaudeBin(env),
       schema: schemaMode,
       maxBudgetUsd: maxBudgetUsd !== null && Number.isFinite(maxBudgetUsd) && maxBudgetUsd > 0 ? maxBudgetUsd : null,
+    },
+    codex: {
+      bin: resolveCodexBin(env),
+      home: resolveCodexHome(env),
+      summary: (["auto", "concise", "detailed", "none"].includes(summaryRaw) ? summaryRaw : "auto") as BrainConfig["codex"]["summary"],
+      serviceTier: tierRaw && tierRaw.toLowerCase() !== "default" ? tierRaw : null,
     },
   };
 }

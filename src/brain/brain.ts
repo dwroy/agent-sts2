@@ -18,12 +18,13 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { brainLogPath, type AppConfig } from "../config.js";
+import { brainLogPath, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type AppConfig } from "../config.js";
 import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "../llm/deepseek.js";
 import { buildTools } from "../tools/registry.js";
 import type { ToolContext, ToolDef } from "../tools/types.js";
 import type { JsonValue } from "../util/json.js";
 import { checkClaudeBin, ClaudeEngine, type ClaudeCheck } from "./engines/claude.js";
+import { checkCodex, CodexEngine, type CodexCheck } from "./engines/codex.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
 import { frozenFacts } from "../knowledge/render/facts.js";
@@ -65,9 +66,10 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
     case "claude":
       return new ClaudeEngine({ settings, claude: config.brain.claude, ...(options.claudeToolsModule ? { toolsModule: options.claudeToolsModule } : {}) });
     case "codex":
+      return new CodexEngine({ settings, codex: config.brain.codex });
     case "dsh":
       // Named in the contract, to come with the offline learner (Dai 2026-09-29).
-      throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek, claude)`);
+      throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek, claude, codex)`);
   }
 }
 
@@ -136,6 +138,8 @@ export class Brain {
   private readonly v3Requests = new WeakMap<BrainRequest, BrainRequest>();
   /** The start-up check of the claude program (preflight), when the configuration uses Claude. */
   claudeCheck: ({ bin: string } & ClaudeCheck) | null = null;
+  /** The start-up check of codex (preflight: program, login file, no AGENTS.md, model and effort), when it is used. */
+  codexCheck: ({ bin: string } & CodexCheck) | null = null;
   /** What the run should be warned about (the console and run-config.jsonl's `warnings`). */
   readonly warnings: string[] = [];
 
@@ -155,6 +159,7 @@ export class Brain {
   /** Where the brain reports what the caller should see (a knowledge base that failed to load). */
   onNote(notify: (message: string) => void): void {
     this.notify = notify;
+    this.router.onNote(notify);
   }
 
   engineFor(label: string): EngineName {
@@ -163,22 +168,41 @@ export class Brain {
 
   /**
    * Before play: when the configuration asks Claude anywhere (BRAIN_ENGINE, BRAIN_ENGINE_<PREFIX>, BRAIN_FALLBACK),
-   * `claude --version` once. A failure is returned (and kept in `warnings`) for the console and run-config.jsonl,
-   * and Claude is marked unavailable for the process: its questions go to BRAIN_FALLBACK (or fail at once, then
-   * Jev/code), instead of each one failing on its own.
+   * `claude --version` once; when it asks codex, codex's check (engines/codex.ts checkCodex: the program, the login
+   * file, no AGENTS.md in its home, the model and effort in its catalog). A failure is returned (and kept in
+   * `warnings`) for the console and run-config.jsonl, and the engine is marked unavailable for the process: its
+   * questions go to BRAIN_FALLBACK (or fail at once, then Jev/code), instead of each one failing on its own.
    */
-  async preflight(check: (bin: string) => Promise<ClaudeCheck> = checkClaudeBin): Promise<string[]> {
+  async preflight(check: (bin: string) => Promise<ClaudeCheck> = checkClaudeBin, codexCheck: typeof checkCodex = checkCodex): Promise<string[]> {
     const config = this.router.config;
-    if (!brainUses(config, "claude")) return [];
-    const bin = config.claude.bin;
-    const result = await check(bin);
-    this.claudeCheck = { bin, ...result };
-    if (result.ok) return [];
-    const then = config.fallback && config.fallback !== "claude" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
-    const message = `claude is unavailable for this run: \`${bin} --version\` failed (${result.error}); ${then} (set BRAIN_CLAUDE_BIN to the program's absolute path)`;
-    this.router.markUnavailable("claude", `\`${bin} --version\` failed: ${result.error}`);
-    this.warnings.push(message);
-    return [message];
+    const problems: string[] = [];
+    if (brainUses(config, "claude")) {
+      const bin = config.claude.bin;
+      const result = await check(bin);
+      this.claudeCheck = { bin, ...result };
+      if (!result.ok) {
+        const then = config.fallback && config.fallback !== "claude" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
+        const message = `claude is unavailable for this run: \`${bin} --version\` failed (${result.error}); ${then} (set BRAIN_CLAUDE_BIN to the program's absolute path)`;
+        this.router.markUnavailable("claude", `\`${bin} --version\` failed: ${result.error}`);
+        this.warnings.push(message);
+        problems.push(message);
+      }
+    }
+    if (brainUses(config, "codex")) {
+      const settings = config.engines.codex;
+      const model = settings.model ?? DEFAULT_CODEX_MODEL;
+      const effort = settings.effort ?? DEFAULT_CODEX_EFFORT;
+      const result = await codexCheck(config.codex, model, effort);
+      this.codexCheck = { bin: config.codex.bin, ...result };
+      if (!result.ok) {
+        const then = config.fallback && config.fallback !== "codex" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
+        const message = `codex is unavailable for this run: ${result.error}; ${then} (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)`;
+        this.router.markUnavailable("codex", result.error);
+        this.warnings.push(message);
+        problems.push(message);
+      }
+    }
+    return problems;
   }
 
   /** The tools for a question, when its engine (or the fallback) gets tools and there is a context. */
