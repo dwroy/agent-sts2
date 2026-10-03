@@ -273,7 +273,11 @@ export interface ScreenMemory {
   lizardTail?: {
     runId: string;
     used: boolean;
-    last?: { fight: string; turn: number; hp: number; block?: number; lethal: boolean; fairies: number; hits?: number[]; ended?: boolean };
+    /**
+     * Our turn's last state of the fight: its HP, block, the enemy hits shown, and (combat-plan ownTurnEndLosses) the held
+     * cards' end-of-turn damage and HP loss and our HP loss at the next turn's start; `lethal`: they may reach our HP.
+     */
+    last?: { fight: string; turn: number; hp: number; block?: number; lethal: boolean; fairies: number; hits?: number[]; heldHits?: number[]; heldLoss?: number; startLoss?: number; ended?: boolean };
     fight?: { key: string; usedAtStart: boolean; turn: number };
     seen?: { fight: string; turn: number; how: string };
   };

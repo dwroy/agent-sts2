@@ -40,6 +40,7 @@ import type { Decision, ResolvedAction, ScreenMemory, SlCompute, SlEnv } from ".
 import { isMenuRunId } from "../project/journal-replay.js";
 import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type SlPointInfo } from "../screens/combat-plan.js";
 import { heldCardEthereal } from "../strategy/card-model.js";
+import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
@@ -91,14 +92,46 @@ interface FightTrack {
    * This turn's HP as the states showed it (Beating Remnant's cap in the judge needs the HP lost so far this turn): the
    * first state's, the last one's, whether it ever rose, and whether something costs HP as a turn starts.
    */
-  hpTurn: { turn: number; start: number; last: number; rose: boolean; startLoss: boolean } | null;
+  hpTurn: { turn: number; start: number; last: number; rose: boolean; startLoss: boolean; startLossMost: number | null } | null;
   /** SL_RETRY_EXPLORE, attempts from the 2nd: this attempt's decision points, its deviation point and what came of it (null: off). */
   explore: SlExploreRecord | null;
 }
 
 /** HP lost as our turn starts, before its first state (Inferno, Crimson Mantle, poison on us; a power's or relic's text). */
-const START_LOSS_POWERS = ["INFERNO_POWER", "CRIMSON_MANTLE_POWER", "POISON_POWER"];
+export const START_LOSS_POWERS = ["INFERNO_POWER", "CRIMSON_MANTLE_POWER", "POISON_POWER"];
 const START_LOSS_TEXT = /回合开始时[^。]*(?:失去|受到)|start of your turn[^.]*(?:lose|take)/i;
+/** The least damage one Inferno adds to INFERNO_POWER (Inferno 6, Inferno+ 9): its amount over this is the most copies up. */
+const INFERNO_LEAST_PER_COPY = 6;
+
+/**
+ * The most HP the turn's start can have taken, when only Inferno (1 for each copy, at most its amount over 6) and Crimson
+ * Mantle (its cost, turn-solver mantleHpCost) took it; null when anything else may have (poison, another power's or a
+ * relic's start-of-turn loss: its amount not read here).
+ */
+function startLossMostOf(powers: Record<string, unknown>[], relics: Record<string, unknown>[], knowledge: Pick<Knowledge, "power">): number | null {
+  let most = 0;
+  for (const power of powers) {
+    const id = str(power["power_id"]);
+    if (id === "INFERNO_POWER") most += Math.max(1, Math.floor(num(power["amount"]) / INFERNO_LEAST_PER_COPY));
+    else if (id === "CRIMSON_MANTLE_POWER") most += mantleHpCost(num(power["amount"]));
+    else if (START_LOSS_POWERS.includes(id) || START_LOSS_TEXT.test(knowledge.power(id)?.description ?? "")) return null;
+  }
+  return relics.some((relic) => START_LOSS_TEXT.test(str(relic["description"]))) ? null : most;
+}
+
+/**
+ * Whether something took HP as this turn started, before its first state (`startLoss`: the HP lost so far is then not
+ * exact), and the most it can have taken (`startLossMost`, startLossMostOf; null: not known; 0 when nothing did). Read on the
+ * turn's first state (tools/sl-revive-replay.ts reads the logs the same way).
+ */
+export function turnStartLoss(state: GameState, knowledge: Pick<Knowledge, "power">): { startLoss: boolean; startLossMost: number | null } {
+  const powers = asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).map(asRecord);
+  const relics = asArray(asRecord(state.raw["run"])["relics"]).map(asRecord);
+  const startLoss =
+    powers.some((power) => START_LOSS_POWERS.includes(str(power["power_id"])) || START_LOSS_TEXT.test(knowledge.power(str(power["power_id"]))?.description ?? "")) ||
+    relics.some((relic) => START_LOSS_TEXT.test(str(relic["description"])));
+  return { startLoss, startLossMost: startLoss ? startLossMostOf(powers, relics, knowledge) : 0 };
+}
 
 export interface SlControllerOptions {
   config: SlConfig;
@@ -313,6 +346,7 @@ export class SlController {
       judge_known_draws: this.config.judgeKnownDraws === true,
       judge_any_draw: this.config.judgeAnyDraw === true,
       reload_early: this.config.reloadEarly === true,
+      reload_on_revive: this.config.reloadOnRevive === true,
       retry_known_inserts: this.config.retryKnownInserts === true,
       retry_known_top: this.config.retryKnownTop === true,
       retry_explore: this.config.retryExplore === true,
@@ -340,8 +374,11 @@ export class SlController {
   /** Every state the loop reads (after the journal and the Lizard Tail record saw it). */
   observe(state: GameState, memory: { journal: RunJournal; screenMemory: ScreenMemory }): void {
     const runId = str(state.raw["run_id"]);
-    if (this.fight && state.screen === "GAME_OVER") {
-      this.close(asRecord(state.raw["game_over"])["is_victory"] === true ? "won" : "died", state);
+    // The run is over: the fight being tracked ends with it, and none begins on GAME_OVER (it still reads in combat, the
+    // enemies alive). ET3V5177HXSY F48 (ops 2026-10-03): the loop shows the GAME_OVER state twice (its run-end branch, then
+    // the per-state call); the second opened "attempt 1" again, and the next GAME_OVER state closed it as a second "died" row.
+    if (state.screen === "GAME_OVER") {
+      if (this.fight) this.close(asRecord(state.raw["game_over"])["is_victory"] === true ? "won" : "died", state);
       return;
     }
     if (isMenuRunId(runId)) {
@@ -384,12 +421,7 @@ export class SlController {
       if (hp === null) return;
       const track = fight.hpTurn;
       if (!track || track.turn !== state.turn) {
-        const powers = asArray(player["powers"]).map(asRecord);
-        const relics = asArray(asRecord(state.raw["run"])["relics"]).map(asRecord);
-        const startLoss =
-          powers.some((power) => START_LOSS_POWERS.includes(str(power["power_id"])) || START_LOSS_TEXT.test(this.knowledge.power(str(power["power_id"]))?.description ?? "")) ||
-          relics.some((relic) => START_LOSS_TEXT.test(str(relic["description"])));
-        fight.hpTurn = { turn: state.turn, start: hp, last: hp, rose: false, startLoss };
+        fight.hpTurn = { turn: state.turn, start: hp, last: hp, rose: false, ...turnStartLoss(state, this.knowledge) };
         return;
       }
       if (hp > track.last) track.rose = true;
@@ -405,6 +437,25 @@ export class SlController {
     const hp = numOrNull(asRecord(asRecord(state.raw["combat"])["player"])["current_hp"]);
     if (!track || track.turn !== state.turn || track.rose || track.startLoss || hp === null || hp > track.last) return undefined;
     return Math.max(0, track.start - hp);
+  }
+
+  /**
+   * When the turn's start took HP of a known most (Inferno, Crimson Mantle: startLossMostOf), the most lost so far this turn:
+   * what the states showed lost plus that most (the judge's Beating Remnant cap at its lowest); else undefined.
+   */
+  private lostSoFarAtMost(fight: FightTrack, state: GameState): number | undefined {
+    const track = fight.hpTurn;
+    const hp = numOrNull(asRecord(asRecord(state.raw["combat"])["player"])["current_hp"]);
+    if (!track || track.turn !== state.turn || track.rose || !track.startLoss || track.startLossMost === null || hp === null || hp > track.last) return undefined;
+    return Math.max(0, track.start - hp) + track.startLossMost;
+  }
+
+  /** The judge's HP lost so far this turn (lostSoFar), or the most it can be (lostSoFarAtMost), as JudgeContext fields. */
+  private lostFields(fight: FightTrack, state: GameState): { lostSoFar?: number; lostSoFarAtMost?: number } {
+    const lostSoFar = this.lostSoFar(fight, state);
+    if (lostSoFar !== undefined) return { lostSoFar };
+    const most = this.lostSoFarAtMost(fight, state);
+    return most !== undefined ? { lostSoFarAtMost: most } : {};
   }
 
   /** decisions.jsonl: the attempt at the fight being played (null outside one) and the reloads so far this run. */
@@ -781,14 +832,14 @@ export class SlController {
         drawsKnown = false;
       }
     }
-    const lostSoFar = this.lostSoFar(fight, state);
     const drawBound = this.drawBound(context.label, context.facts);
     const verdict = judgeEndTurn(state, {
       label: context.label,
       revives,
+      ...(this.config.reloadOnRevive === true ? { reloadOnRevive: true } : {}),
       ethereal: (card) => heldCardEthereal(card, this.knowledge),
       knowledge: this.knowledge,
-      ...(lostSoFar !== undefined ? { lostSoFar } : {}),
+      ...this.lostFields(fight, state),
       ...(drawsKnown ? { drawsKnown: true } : {}),
       ...(drawBound ? { drawBound } : {}),
     });
@@ -837,12 +888,13 @@ export class SlController {
       const revives = revivesOf(state, context.screenMemory, maxHp).map((revive) => revive.source);
       verdict = judgeLeastLossNow(state, {
         revives,
+        ...(this.config.reloadOnRevive === true ? { reloadOnRevive: true } : {}),
         ethereal: (card) => heldCardEthereal(card, this.knowledge),
         facts: context.facts,
         knownDrawsJudge: this.config.judgeKnownDraws === true,
         addedToPile: fight.draws.addedToPile,
         knowledge: this.knowledge,
-        ...(this.lostSoFar(fight, state) !== undefined ? { lostSoFar: this.lostSoFar(fight, state)! } : {}),
+        ...this.lostFields(fight, state),
         ...(this.drawBound(context.label, context.facts) ? { drawBound: this.drawBound(context.label, context.facts)! } : {}),
       });
     } catch (error) {

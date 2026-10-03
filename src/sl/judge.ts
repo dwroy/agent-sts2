@@ -5,7 +5,12 @@
  *
  * Common conditions:
  * - the mod's own flag, combat.end_turn_will_kill_player, is true (the intents against the block up now);
- * - nothing revives us: no Fairy in a Bottle held, no unspent Lizard Tail (`revives`, from combat-plan's revivesOf);
+ * - the revives held (Fairy in a Bottle, an unspent Lizard Tail: `revives`, from combat-plan's revivesOf) cannot stop it: the
+ *   end of the turn played out loss by loss with them, in every order the game's could be (throughRevives, reviveOutcome;
+ *   docs/sl.md §2.7), still ends at 0 (ops 2026-10-03, ET3V5177HXSY F48 T13: "a revive is left" was the answer whatever
+ *   the turn did after it). Refused with a revive: the Sandpit, Tungsten Rod, Beating Remnant, a death only at the next
+ *   turn's start after it; the least-loss tier only where the planner's one order of the revive is the only one.
+ *   SL_RELOAD_ON_REVIVE (default off): the revives not counted;
  * - no Buffer or Intangible on us, no Ripple Basin with no attack played (its block is not modelled here);
  * - no enemy in a special phase (max HP at or above a million, a DeathBlow intent: specialPhase), except the Waterfall
  *   Giant's husk on its blast turn, alone, its one DeathBlow intent giving the number (docs/sl.md §2.4; ops 2026-10-03,
@@ -58,7 +63,7 @@
  */
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { BEATING_REMNANT_CAP, distinctNames, MERCURY_HOURGLASS_DAMAGE } from "../screens/combat-plan.js";
+import { BEATING_REMNANT_CAP, distinctNames, FAIRY_REVIVE_SHARE, LIZARD_TAIL_REVIVE_SHARE, MERCURY_HOURGLASS_DAMAGE } from "../screens/combat-plan.js";
 import { afterPlayFirst, heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
@@ -89,6 +94,11 @@ export interface DeathVerdict {
   /** The Insatiable's Sandpit count when the death rests on it (1: the enemy turn takes it to 0; docs/sl.md §2.5). */
   sandpit?: number;
   ownCountDies?: true;
+  /**
+   * The revives held, played out through the end of the turn (throughRevives; docs/sl.md §2.7): the ones it used, the HP
+   * each brought us back to, and the HP left at the end (the most any order leaves); `saved`: above 0.
+   */
+  revive?: { held: string[]; used: string[]; backAt: number[]; hpLeft: number; saved: boolean };
   /** "name (intent)" for each living enemy that attacks. */
   killers: string[];
 }
@@ -96,8 +106,18 @@ export interface DeathVerdict {
 export interface JudgeContext {
   /** The label of the decision that chose end_turn (combat/least-loss is the planner's all-lines-die verdict). */
   label: string;
-  /** What can still revive us ("FAIRY_IN_A_BOTTLE", "LIZARD_TAIL"). */
+  /**
+   * What can still revive us ("FAIRY_IN_A_BOTTLE", "LIZARD_TAIL"), in the order they fire (combat-plan revivesOf). A revive
+   * keeps the death uncertain only when it may save us: the end of the turn is played out loss by loss with them
+   * (throughRevives), and a death the revives cannot stop is judged like any other (docs/sl.md §2.7).
+   */
   revives: readonly string[];
+  /**
+   * SL_RELOAD_ON_REVIVE (default off; Dai deciding): a board where only a revive would save us is judged as without it (the
+   * revive not counted), so a death with nothing else that saves us reloads instead of burning the revive. Absent or false:
+   * the revives are played out as above.
+   */
+  reloadOnRevive?: boolean;
   /**
    * Whether a held card is Ethereal (exhausted at the end of the turn, so Feel No Pain blocks for it). Default: its
    * rendered text (card-model heldCardEthereal without game data; a card with no text counts as Ethereal).
@@ -120,6 +140,11 @@ export interface JudgeContext {
    * nothing costs HP as the turn starts). Beating Remnant's cap needs it; absent: not known.
    */
   lostSoFar?: number;
+  /**
+   * When `lostSoFar` is not exact because the turn's start took HP of a known most (Crimson Mantle's cost, Inferno's 1 for each
+   * copy): what the states showed lost this turn plus that most. Beating Remnant's cap is then taken at its lowest (ownLoss).
+   */
+  lostSoFarAtMost?: number;
 }
 
 /** A held card's end-of-turn clause about our HP whose amount the text does not give (Regret: 「失去相当于手牌数量的生命」). */
@@ -129,13 +154,14 @@ const HELD_CLAUSE = /回合结束时[^。]*手牌中[^。]*(?:受到|失去)[^�
  * Held cards' end-of-turn damage and HP loss (card-model heldPenaltyOf: 「受到N点伤害」 meets block, 「失去N点生命」 does not),
  * and the held cards whose clause gives no exact amount.
  */
-function heldEndOfTurn(hand: Record<string, unknown>[]): { damage: number; loss: number; from: string[]; inexact: string[]; damages: number[]; losses: number[] } {
+function heldEndOfTurn(hand: Record<string, unknown>[]): { damage: number; loss: number; from: string[]; inexact: string[]; damages: number[]; losses: number[]; items: OwnLoss[] } {
   let damage = 0;
   let loss = 0;
   const from: string[] = [];
   const inexact: string[] = [];
   const damages: number[] = [];
   const losses: number[] = [];
+  const items: OwnLoss[] = [];
   for (const card of hand) {
     const text = str(card["resolved_rules_text"]) || str(card["rules_text"]);
     const { heldPenalty, heldHpLoss } = heldPenaltyOf(text);
@@ -145,10 +171,125 @@ function heldEndOfTurn(hand: Record<string, unknown>[]): { damage: number; loss:
       loss += heldHpLoss;
       if (heldPenalty - heldHpLoss > 0) damages.push(heldPenalty - heldHpLoss);
       if (heldHpLoss > 0) losses.push(heldHpLoss);
+      items.push(heldHpLoss > 0 ? { amount: heldHpLoss, blocked: false } : { amount: heldPenalty, blocked: true });
       from.push(name);
     } else if (HELD_CLAUSE.test(text)) inexact.push(name);
   }
-  return { damage, loss, from, inexact, damages, losses };
+  return { damage, loss, from, inexact, damages, losses, items };
+}
+
+/** One HP loss of the end of the turn: damage that meets block first (`blocked`), or HP lost past it. */
+interface OwnLoss {
+  amount: number;
+  blocked: boolean;
+}
+
+/** More orders than this (the held cards' losses times the enemies'): not all tried, the revive's outcome refused. */
+const REVIVE_ORDERS_MAX = 5_040;
+
+/**
+ * A revive held (JudgeContext.revives, in the order they fire) and the HP it brings us back to: max HP x its share (combat-plan,
+ * read inside: the two modules import each other), rounded down, at least 1. From the logs (docs/sl.md §2.7): Fairy in a
+ * Bottle 30%, Lizard Tail 50%.
+ */
+function reviveHps(sources: readonly string[], maxHp: number): { source: string; hp: number | null }[] {
+  const share = (source: string) => (source === "FAIRY_IN_A_BOTTLE" ? FAIRY_REVIVE_SHARE : source === "LIZARD_TAIL" ? LIZARD_TAIL_REVIVE_SHARE : null);
+  return sources.map((source) => {
+    const part = share(source);
+    return { source, hp: part === null || maxHp <= 0 ? null : Math.max(1, Math.floor(maxHp * part)) };
+  });
+}
+
+/** Every distinct order of `items` (equal items, by `key`, are one). */
+function distinctOrders<T>(items: T[], key: (item: T) => string): T[][] {
+  if (items.length <= 1) return [items];
+  const out: T[][] = [];
+  const seen = new Set<string>();
+  items.forEach((item, i) => {
+    const k = key(item);
+    if (seen.has(k)) return;
+    seen.add(k);
+    for (const rest of distinctOrders([...items.slice(0, i), ...items.slice(i + 1)], key)) out.push([item, ...rest]);
+  });
+  return out;
+}
+
+/** n! for the order counts (small n). */
+function factorial(n: number): number {
+  return n <= 1 ? 1 : n * factorial(n - 1);
+}
+
+type ReviveStage = "held" | "hits" | "start";
+
+/**
+ * The end of the turn played out loss by loss with the revives held (docs/sl.md §2.7), in one order: the end-of-turn block
+ * up first (`block`), then the held cards' damage (through what is left of it) and HP loss (past it) in `held`'s order,
+ * Regen's heal (`regenAt`: before the held cards or after them; never past max HP), the enemies' hits (each enemy's in its
+ * order, the enemies in `enemies`' order, each through what is left of the block), and our HP loss at the next turn's start.
+ * Each loss that takes us to 0 or below is caught by the next revive: HP set to its HP, the overflow lost, the block left
+ * kept (Y8E0KK4L7JBL F48: 14 HP against 12x3, 2 -> 0 -> 40 -> 28, the next turn opened at 28). Returns the HP left (<= 0:
+ * dead with every revive spent, and `diedAt` the stage of that loss), the revives used and the HP each brought us back to.
+ */
+function throughRevives(o: {
+  hp: number; maxHp: number; block: number; held: OwnLoss[]; regen: number; regenAt: "before" | "after"; enemies: number[][]; start: number[]; revives: { source: string; hp: number }[];
+}): { hp: number; used: string[]; backAt: number[]; diedAt: ReviveStage | null } {
+  let hp = o.hp;
+  let block = o.block;
+  let diedAt: ReviveStage | null = null;
+  const used: string[] = [];
+  const backAt: number[] = [];
+  const lose = (loss: OwnLoss, stage: ReviveStage) => {
+    if (loss.amount <= 0 || hp <= 0) return;
+    const through = loss.blocked ? Math.max(0, loss.amount - block) : loss.amount;
+    if (loss.blocked) block = Math.max(0, block - loss.amount);
+    if (through <= 0) return;
+    hp -= through;
+    if (hp > 0) return;
+    if (used.length < o.revives.length) {
+      const revive = o.revives[used.length]!;
+      hp = revive.hp;
+      used.push(revive.source);
+      backAt.push(revive.hp);
+    } else diedAt = stage;
+  };
+  const heal = () => {
+    if (hp > 0 && o.regen > 0) hp = Math.max(hp, Math.min(o.maxHp, hp + o.regen));
+  };
+  if (o.regenAt === "before") heal();
+  for (const loss of o.held) lose(loss, "held");
+  if (o.regenAt === "after") heal();
+  for (const hits of o.enemies) for (const hit of hits) lose({ amount: hit, blocked: true }, "hits");
+  for (const loss of o.start) lose({ amount: loss, blocked: false }, "start");
+  return { hp, used, backAt, diedAt };
+}
+
+/**
+ * Whether the revives held save us on this board (throughRevives), over every order the game's could be (the held cards'
+ * losses, the enemies' turns, Regen before or after the held cards: none of them checked in the logs with a revive in the
+ * turn): `saved` when some order ends above 0 HP, with the most HP any order leaves; else dead in every order. `refuse`:
+ * not worked out exactly (too many orders; a death only at the next turn's start after a revive, which an enemy dying in
+ * its turn would stop: not judged here).
+ */
+function reviveOutcome(o: {
+  hp: number; maxHp: number; block: number; held: OwnLoss[]; regen: number; enemies: number[][]; start: number[]; revives: { source: string; hp: number }[];
+}): { saved: boolean; hp: number; used: string[]; backAt: number[] } | { refuse: string } {
+  const attackers = o.enemies.filter((hits) => hits.length > 0);
+  if (factorial(o.held.length) * factorial(attackers.length) > REVIVE_ORDERS_MAX) {
+    return { refuse: `${o.held.length} held card(s) with an end-of-turn loss and ${attackers.length} attacker(s): their orders are not all tried` };
+  }
+  let best: { hp: number; used: string[]; backAt: number[]; diedAt: ReviveStage | null } | null = null;
+  let startDeath = false;
+  for (const held of distinctOrders(o.held, (loss) => `${loss.blocked ? "d" : "l"}${loss.amount}`)) {
+    for (const enemies of distinctOrders(attackers, (hits) => hits.join("+"))) {
+      for (const regenAt of o.regen > 0 ? (["before", "after"] as const) : (["before"] as const)) {
+        const run = throughRevives({ ...o, held, enemies, regenAt });
+        if (run.diedAt === "start" && run.used.length > 0) startDeath = true;
+        if (!best || run.hp > best.hp) best = run;
+      }
+    }
+  }
+  if (best!.hp <= 0 && startDeath) return { refuse: "after the revive only our own loss at the next turn's start would kill us, and an enemy dying in its turn would stop it: not judged with a revive" };
+  return { saved: best!.hp > 0, hp: best!.hp, used: best!.used, backAt: best!.backAt };
 }
 
 /**
@@ -162,10 +303,15 @@ function heldEndOfTurn(hand: Record<string, unknown>[]): { damage: number; loss:
  *   earlier in the turn, 33 on our count, 18 lost; T8, 4 earlier, 16; CCPRXV86HPLH F43 T3, 2 earlier, 18; BFVATR4WANS6 F30
  *   T3, 11 earlier, 9; 20 whenever nothing was lost earlier). So it needs the HP lost so far this turn exactly (`lostSoFar`,
  *   the controller's); above 20 HP no turn can kill us.
+ *   When the turn's start took HP (Crimson Mantle, Inferno) the HP lost so far is not exact: the controller then gives
+ *   `lostSoFarAtMost` (what the states showed lost this turn plus the most the start can have taken), and the count takes
+ *   the cap at its lowest: at least that much is lost whether the start counts in the cap or not (ops 2026-10-03,
+ *   ET3V5177HXSY F48 T13: 7 HP + 7 block, three held Wither+4 and the Aeonglass's 36, Crimson Mantle up; "own count not
+ *   exact" once the tail was known spent; at most 1 lost so far, so at least 19 of the 68 land on 7 HP).
  * `unknown`: the count cannot be exact (Beating Remnant at 20 HP or less with the HP lost so far not known).
  */
 function ownLoss(
-  o: { hits: number[]; heldDamages: number[]; heldLosses: number[]; block: number; endBlock: number; hp: number; rod: boolean; remnant: boolean; lostSoFar: number | undefined },
+  o: { hits: number[]; heldDamages: number[]; heldLosses: number[]; block: number; endBlock: number; hp: number; rod: boolean; remnant: boolean; lostSoFar: number | undefined; lostSoFarAtMost?: number | undefined },
 ): { loss: number; unknown: boolean } {
   const total = o.hits.reduce((sum, hit) => sum + hit, 0) + o.heldDamages.reduce((sum, hit) => sum + hit, 0);
   let loss: number;
@@ -181,8 +327,11 @@ function ownLoss(
   }
   if (!o.remnant) return { loss, unknown: false };
   if (o.hp > BEATING_REMNANT_CAP) return { loss: Math.min(loss, BEATING_REMNANT_CAP), unknown: false };
-  if (o.lostSoFar === undefined) return { loss, unknown: true };
-  return { loss: Math.min(loss, Math.max(0, BEATING_REMNANT_CAP - o.lostSoFar)), unknown: false };
+  // At most `lostSoFarAtMost` lost so far (the turn's start took a known amount that may or may not count in the cap): the
+  // cap at its lowest, so the loss at its least; a death on it holds whichever way the start counts.
+  const lost = o.lostSoFar ?? o.lostSoFarAtMost;
+  if (lost === undefined) return { loss, unknown: true };
+  return { loss: Math.min(loss, Math.max(0, BEATING_REMNANT_CAP - lost)), unknown: false };
 }
 
 /** Relics that hit the enemies at the end of our turn, known exactly from the logs: [all enemies, damage]. */
@@ -777,7 +926,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const remnant = relics.has("BEATING_REMNANT");
   const exactly = rod || remnant;
   const lossWith = (hits: number[], withHeld: boolean) =>
-    ownLoss({ hits, heldDamages: withHeld ? held.damages : [], heldLosses: withHeld ? held.losses : [], block, endBlock, hp, rod, remnant, lostSoFar: context.lostSoFar });
+    ownLoss({ hits, heldDamages: withHeld ? held.damages : [], heldLosses: withHeld ? held.losses : [], block, endBlock, hp, rod, remnant, lostSoFar: context.lostSoFar, lostSoFarAtMost: context.lostSoFarAtMost });
   const allHits = hitsOf.flat();
   const plainOwn = exactly ? lossWith(allHits, false) : null;
   const heldOwn = exactly ? lossWith(allHits, true) : null;
@@ -801,24 +950,66 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const lossAfterHeld = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
   const byStart = !bySandpit && !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
   const heldNote = held.damage + held.loss > 0 ? { held: { damage: held.damage, loss: held.loss, from: held.from } } : {};
+  // The revives played out (docs/sl.md §2.7), once worked out: on the verdict.
+  let reviveRecord: DeathVerdict["revive"] | undefined;
   const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({
     certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(byStart ? { startLoss } : {}), ...(bySandpit ? { sandpit: pit!.count } : {}),
     ...(plainDies || heldDies || byStart || bySandpit ? { ownCountDies: true as const } : {}),
+    ...(reviveRecord ? { revive: reviveRecord } : {}),
   });
 
   if (state.screen !== "COMBAT" || !state.in_combat) return verdict(false, null, "not in combat");
   if (combat["end_turn_will_kill_player"] !== true && !byHeld && !byStart && !bySandpit) return verdict(false, null, "the mod does not flag ending the turn as lethal");
-  if (context.revives.length > 0) return verdict(false, null, `a revive is left (${context.revives.join(", ")})`);
+  // A special phase is refused below, but for the Waterfall Giant's husk on its blast turn: the blast is an attack here like
+  // any other (docs/sl.md §2.4), the shown number what hits after the end-of-turn block, and the fight ends with it.
+  const special = specialPhase(living, names);
+  const blast = special && "blast" in special ? special.blast : null;
+  // The revives held (Fairy in a Bottle, Lizard Tail; docs/sl.md §2.7): the end of the turn played out loss by loss with them
+  // (throughRevives). One that may save us keeps the death uncertain; a death they cannot stop is judged like any other (ops
+  // 2026-10-03, ET3V5177HXSY F48 T13: had the tail been left, 7 HP + 7 block, three held Wither+4: 15 takes us to 0, back at
+  // 37, 15 + 15 leave 7, the Aeonglass's 36 kills; "a revive is left" was the answer whatever the turn did after it).
+  // First with every hit shown (the most that can land), again below with what may be killed or cut first taken out.
+  // SL_RELOAD_ON_REVIVE: the board judged as without them (only played out for the record).
+  const reviveNames = context.revives.join(", ");
+  const reviveList = reviveHps(context.revives, num(player["max_hp"], state.run?.max_hp ?? 0));
+  const startLosses = blast ? [] : [infernoLoss, mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"))].filter((loss) => loss > 0);
+  let reviveNote = context.reloadOnRevive === true && context.revives.length > 0 ? ` (SL_RELOAD_ON_REVIVE: ${reviveNames} not counted)` : "";
+  const reviveVeto = (hits: number[][], after: string): DeathVerdict | null => {
+    if (context.revives.length === 0) return null;
+    // Tungsten Rod's or Beating Remnant's own count lives without any revive: that count's veto says so below.
+    if ((rod || remnant) && !plainDies && !heldDies && !bySandpit) return null;
+    const unknownHp = reviveList.filter((revive) => revive.hp === null).map((revive) => revive.source);
+    const refuse =
+      bySandpit ? "the Sandpit eats us whatever the HP, and a revive against it is not logged"
+      : rod ? "Tungsten Rod's cut with a revive in the turn is not judged"
+      : remnant ? `Beating Remnant's cap (${BEATING_REMNANT_CAP} a turn) with a revive in the turn is not logged`
+      : unknownHp.length > 0 ? `${unknownHp.join(", ")}: the HP it brings us back to is not known`
+      : null;
+    const outcome = refuse ? null : reviveOutcome({ hp, maxHp: num(player["max_hp"], state.run?.max_hp ?? 0), block: block + endBlock, held: held.items, regen, enemies: hits, start: startLosses, revives: reviveList.map((revive) => ({ source: revive.source, hp: revive.hp! })) });
+    if (outcome && !("refuse" in outcome)) reviveRecord = { held: [...context.revives], used: outcome.used, backAt: outcome.backAt, hpLeft: outcome.hp, saved: outcome.saved };
+    if (context.reloadOnRevive === true) return null;
+    if (refuse) return verdict(false, null, `a revive is left (${reviveNames}): ${refuse}`);
+    if (!outcome) return verdict(false, null, `a revive is left (${reviveNames})`);
+    if ("refuse" in outcome) return verdict(false, null, `a revive is left (${reviveNames}): ${outcome.refuse}`);
+    // One revive held: "back at N"; more: each by name.
+    const back = outcome.used.map((source, i) => `${context.revives.length > 1 ? `${source} ` : ""}back at ${outcome.backAt[i]}`).join(", then ");
+    if (outcome.saved) {
+      return verdict(false, null, outcome.used.length > 0
+        ? `a revive is left (${reviveNames}): ${back} HP, the rest of the turn leaves ${outcome.hp}${after}`
+        : `a revive is left (${reviveNames}), and the end of the turn leaves ${outcome.hp} HP before any is used${after}`);
+    }
+    reviveNote = `; ${back} HP, the rest of the turn still kills (${outcome.hp} left)`;
+    return null;
+  };
+  const allSaved = reviveVeto(hitsOf, "");
+  if (allSaved) return allSaved;
   const saving = SAVING_POWERS.filter((id) => powerAmount(player, id) > 0);
   if (saving.length > 0) return verdict(false, null, `${saving.join(", ")} up`);
   if (relics.has("RIPPLE_BASIN") && num(player["attacks_played_this_turn"]) === 0) return verdict(false, null, "Ripple Basin (no attack played): its block is not counted here");
-  // A special phase is refused, but for the Waterfall Giant's husk on its blast turn: the blast is an attack here like any
-  // other (docs/sl.md §2.4), the shown number what hits after the end-of-turn block, and the fight ends with it.
-  const special = specialPhase(living, names);
   if (special && "refuse" in special) return verdict(false, null, special.refuse);
-  const blast = special?.blast ?? null;
   const heldText = `held ${held.from.join(", ")}: ${held.damage} damage${held.loss > 0 ? ` + ${held.loss} HP loss` : ""}`;
-  const relicText = [rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${context.lostSoFar !== undefined ? `, ${context.lostSoFar} lost so far` : ""}` : ""].filter(Boolean).join("; ");
+  const lostText = context.lostSoFar !== undefined ? `, ${context.lostSoFar} lost so far` : context.lostSoFarAtMost !== undefined ? `, at most ${context.lostSoFarAtMost} lost so far (the turn's start took HP)` : "";
+  const relicText = [rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${lostText}` : ""].filter(Boolean).join("; ");
   // (The Sandpit eats us whatever the HP: our count need not be exact for it; Tungsten Rod and Beating Remnant are refused there.)
   if (countUnknown && !bySandpit) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
   if (!plainDies && !byHeld && !byStart && !bySandpit) {
@@ -933,7 +1124,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const gone = new Set(mayDie.map((entry) => entry.i));
     if (leaderMayDie) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
     if (cut.some((i) => !minion(living[i]!))) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
-    const keptHits = living.map((_, i) => i).filter((i) => !gone.has(i)).flatMap((i) => landing(i));
+    const keptByEnemy = living.map((_, i) => i).filter((i) => !gone.has(i)).map((i) => landing(i));
+    const keptHits = keptByEnemy.flat();
     const kept = keptHits.reduce((sum, hit) => sum + hit, 0);
     const keptOwn = exactly ? lossWith(keptHits, true) : null;
     const keptLoss = Math.max(0, kept + held.damage - block - endBlock) + held.loss - regen;
@@ -943,6 +1135,9 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
       ...cut.filter((i) => !gone.has(i)).map((i) => `${names[i]} may die to our retaliation (${retaliation} a hit) after ${landing(i).length} of its ${hitsOf[i]!.length} hits`),
     ].join(", ");
     if (!stillDies) return verdict(false, null, `the enemies may be hit before they act: ${who}, and the rest's ${kept} does not kill`);
+    // The revives again, on what still lands for certain.
+    const keptSaved = reviveVeto(keptByEnemy, `, if ${who}`);
+    if (keptSaved) return keptSaved;
     endNote = `; even if ${who}`;
   }
   const playable = hand.filter((card) => card["playable"] === true);
@@ -950,9 +1145,19 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const reachable = [...playable, ...hand.filter((card) => card["playable"] !== true && afterPlayFirst(card))];
   const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
   const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
-  const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}`;
+  const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}${reviveNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
+    // A revive held: the planner's lines spend it in its one order of the losses (turn-solver reviveThrough: the held cards'
+    // HP loss, then their damage summed, then the hits). Its "every line dies" is taken only where that order is the only one
+    // the game can have (or sums what may come apart, which only leaves more HP): one attacker, the held cards' losses of
+    // one kind, no Regen. This judge's own count above tries every order, but only for ending the turn now.
+    if (context.revives.length > 0 && context.reloadOnRevive !== true) {
+      const attackers = living.filter((_, i) => hitsOf[i]!.length > 0).length;
+      const kinds = new Set(held.items.map((item) => item.blocked)).size;
+      const why = attackers > 1 ? `${attackers} enemies attack (the order of their turns with the revive)` : kinds > 1 ? "the held cards both damage us and take HP (their order with the revive)" : regen > 0 ? "Regen heals before or after the held cards" : null;
+      if (why) return verdict(false, null, `the planner sees every line die, but a revive is left (${reviveNames}) and its lines play it out in one order: ${why}`);
+    }
     const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
     if (drawing && context.drawsKnown !== true) {
       const vetoed = `the planner sees every line die, but ${str(drawing["name"], str(drawing["card_id"]))} draws (unknown cards)`;
@@ -1129,9 +1334,11 @@ export function judgeLeastLossNow(state: GameState, context: LeastLossNowContext
   const verdict = judgeEndTurn(state, {
     label: LEAST_LOSS_LABEL,
     revives: context.revives,
+    ...(context.reloadOnRevive === true ? { reloadOnRevive: true } : {}),
     ...(context.ethereal ? { ethereal: context.ethereal } : {}),
     ...(context.knowledge ? { knowledge: context.knowledge } : {}),
     ...(context.lostSoFar !== undefined ? { lostSoFar: context.lostSoFar } : {}),
+    ...(context.lostSoFarAtMost !== undefined ? { lostSoFarAtMost: context.lostSoFarAtMost } : {}),
     ...(drawsKnown ? { drawsKnown: true } : {}),
     ...(context.drawBound ? { drawBound: context.drawBound } : {}),
   });

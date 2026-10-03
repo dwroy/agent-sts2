@@ -82,6 +82,12 @@ export interface SlConfig {
    */
   reloadEarly: boolean;
   /**
+   * SL_RELOAD_ON_REVIVE (default off; Dai 2026-10-03, still deciding): a turn end where only a revive held (Fairy in a Bottle,
+   * Lizard Tail) would save us is judged as without it, so the fight reloads instead of burning the revive. Off: the judge
+   * plays the revives out (docs/sl.md §2.7) and reloads only when they cannot stop the death.
+   */
+  reloadOnRevive?: boolean;
+  /**
    * SL_RETRY_KNOWN_INSERTS (default on, Dai 2026-10-02): cards added to the draw pile at random places (a status,
    * Metamorphosis) keep the known draw order; the samples put them at random places among the known cards (docs/sl.md §10).
    * Planning only: the certain-death judge never uses an order resting on it.
@@ -1087,6 +1093,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     judgeKnownDraws: parseOnOff(readEnv(env, "SL_JUDGE_KNOWN_DRAWS"), "SL_JUDGE_KNOWN_DRAWS", problems) ?? true,
     judgeAnyDraw: parseOnOff(readEnv(env, "SL_JUDGE_ANY_DRAW"), "SL_JUDGE_ANY_DRAW", problems) ?? true,
     reloadEarly: parseOnOff(readEnv(env, "SL_RELOAD_EARLY"), "SL_RELOAD_EARLY", problems) ?? true,
+    reloadOnRevive: parseOnOff(readEnv(env, "SL_RELOAD_ON_REVIVE"), "SL_RELOAD_ON_REVIVE", problems) ?? false,
     retryKnownInserts: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_INSERTS"), "SL_RETRY_KNOWN_INSERTS", problems) ?? true,
     retryKnownTop: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_TOP"), "SL_RETRY_KNOWN_TOP", problems) ?? true,
     retryExplore: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE"), "SL_RETRY_EXPLORE", problems) ?? true,
