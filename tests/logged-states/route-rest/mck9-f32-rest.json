@@ -1,0 +1,2081 @@
+{
+ "source": "MCK9SMSK40ZY F32 2026-09-30T05:59:05.480Z rest/plan (A8; the map remembered from the F31 MAP state 2026-09-30T05:56:53.136Z, its move to r14c4)",
+ "decision": {
+  "label": "rest/plan",
+  "decider": "deepseek",
+  "chosen": "o1 SMITH (欺凌)",
+  "rationale": "DeepSeek decided o1:c17: Pantograph caps heal to +12 HP (77 vs 89 entry, both ≥80%); boss is a damage race — upgrade Bully"
+ },
+ "state": {
+  "state_version": 16,
+  "native_profile_id": 1,
+  "run_id": "MCK9SMSK40ZY",
+  "screen": "REST",
+  "session": {
+   "mode": "singleplayer",
+   "phase": "run",
+   "control_scope": "local_player"
+  },
+  "in_combat": false,
+  "turn": null,
+  "available_actions": [
+   "save_and_quit",
+   "choose_rest_option",
+   "discard_potion"
+  ],
+  "combat": null,
+  "run": {
+   "character_id": "IRONCLAD",
+   "character_name": "铁甲战士",
+   "ascension": 8,
+   "ascension_effects": [
+    {
+     "id": "LEVEL_01",
+     "name": "精英蜂拥",
+     "description": "[gold]精英[/gold]敌人出现更加频繁。"
+    },
+    {
+     "id": "LEVEL_02",
+     "name": "旅途劳顿",
+     "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
+    },
+    {
+     "id": "LEVEL_03",
+     "name": "贫穷",
+     "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
+    },
+    {
+     "id": "LEVEL_04",
+     "name": "收紧腰带",
+     "description": "游戏开始时药水栏位减少1。"
+    },
+    {
+     "id": "LEVEL_05",
+     "name": "进阶之灾",
+     "description": "游戏开始时被[red]诅咒[/red]。"
+    },
+    {
+     "id": "LEVEL_06",
+     "name": "通货膨胀",
+     "description": "商人的卡牌移除服务价格提升。"
+    },
+    {
+     "id": "LEVEL_07",
+     "name": "稀缺",
+     "description": "稀有和已升级卡牌更少出现。"
+    },
+    {
+     "id": "LEVEL_08",
+     "name": "强韧敌人",
+     "description": "所有的敌人变得更难杀死。"
+    }
+   ],
+   "floor": 32,
+   "current_hp": 52,
+   "max_hp": 89,
+   "gold": 31,
+   "max_energy": 3,
+   "base_orb_slots": 0,
+   "act_id": "1",
+   "boss_id": "THE_INSATIABLE_BOSS",
+   "deck": [
+    {
+     "index": 0,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 1,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 2,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 3,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 4,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御+",
+     "upgraded": true,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得8点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 5,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 6,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 7,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 8,
+     "card_id": "BASH",
+     "name": "痛击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 给予{VulnerablePower:diff()}层易伤。",
+     "resolved_rules_text": "造成10点伤害。 给予3层易伤。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "VulnerablePower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 9,
+     "card_id": "ASCENDERS_BANE",
+     "name": "进阶之灾",
+     "upgraded": false,
+     "card_type": "Curse",
+     "rarity": "Curse",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": -1,
+     "star_cost": 0,
+     "rules_text": "",
+     "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+     "dynamic_values": []
+    },
+    {
+     "index": 10,
+     "card_id": "SWORD_BOOMERANG",
+     "name": "飞剑回旋镖+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+     "resolved_rules_text": "随机对敌人造成3点伤害4次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Repeat",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 11,
+     "card_id": "BLOODLETTING",
+     "name": "放血+",
+     "upgraded": true,
+     "card_type": "Skill",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Energy:energyIcons()}。",
+     "resolved_rules_text": "失去3点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。",
+     "dynamic_values": [
+      {
+       "name": "Energy",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 12,
+     "card_id": "TWIN_STRIKE",
+     "name": "双重打击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害两次。",
+     "resolved_rules_text": "造成7点伤害两次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 7,
+       "current_value": 7,
+       "enchanted_value": 7,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 13,
+     "card_id": "WHIRLWIND",
+     "name": "旋风斩+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": true,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "对所有敌人造成{Damage:diff()}点伤害X次。",
+     "resolved_rules_text": "对所有敌人造成8点伤害X次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 14,
+     "card_id": "SHRUG_IT_OFF",
+     "name": "耸肩无视",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "获得8点格挡。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 15,
+     "card_id": "BLOOD_WALL",
+     "name": "血墙",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "失去2点生命。 获得16点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 16,
+       "current_value": 16,
+       "enchanted_value": 16,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 16,
+     "card_id": "SETUP_STRIKE",
+     "name": "预备打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 在本回合内获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "造成7点伤害。 在本回合内获得3点力量。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 7,
+       "current_value": 7,
+       "enchanted_value": 7,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "StrengthPower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 17,
+     "card_id": "BULLY",
+     "name": "欺凌",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{CalculatedDamage:diff()}点伤害。 该敌人身上每有一层易伤就额外造成{ExtraDamage:diff()}点伤害。",
+     "resolved_rules_text": "造成4点伤害。 该敌人身上每有一层易伤就额外造成2点伤害。",
+     "dynamic_values": [
+      {
+       "name": "CalculatedDamage",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "CalculationBase",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExtraDamage",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 18,
+     "card_id": "FEED",
+     "name": "狂宴",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 斩杀时，永久获得{MaxHp:diff()}点最大生命值。",
+     "resolved_rules_text": "造成10点伤害。 斩杀时，永久获得3点最大生命值。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "MaxHp",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 19,
+     "card_id": "POMMEL_STRIKE",
+     "name": "剑柄打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "造成9点伤害。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 20,
+     "card_id": "BULLY",
+     "name": "欺凌",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{CalculatedDamage:diff()}点伤害。 该敌人身上每有一层易伤就额外造成{ExtraDamage:diff()}点伤害。",
+     "resolved_rules_text": "造成4点伤害。 该敌人身上每有一层易伤就额外造成2点伤害。",
+     "dynamic_values": [
+      {
+       "name": "CalculatedDamage",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "CalculationBase",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "ExtraDamage",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 21,
+     "card_id": "HEADBUTT",
+     "name": "头槌+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+     "resolved_rules_text": "造成12点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 12,
+       "current_value": 12,
+       "enchanted_value": 12,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 22,
+     "card_id": "HEMOKINESIS",
+     "name": "御血术+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "失去2点生命。 造成20点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 20,
+       "current_value": 20,
+       "enchanted_value": 20,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 23,
+     "card_id": "RUPTURE",
+     "name": "撕裂+",
+     "upgraded": true,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "每当你在你的回合失去生命值时, 获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "每当你在你的回合失去生命值时, 获得2点力量。",
+     "dynamic_values": [
+      {
+       "name": "StrengthPower",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 24,
+     "card_id": "SETUP_STRIKE",
+     "name": "预备打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 在本回合内获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "造成7点伤害。 在本回合内获得3点力量。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 7,
+       "current_value": 7,
+       "enchanted_value": 7,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "StrengthPower",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    }
+   ],
+   "relics": [
+    {
+     "index": 0,
+     "relic_id": "BURNING_BLOOD",
+     "name": "燃烧之血",
+     "description": "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 1,
+     "relic_id": "GOLDEN_PEARL",
+     "name": "金色珍珠",
+     "description": "拾起时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 2,
+     "relic_id": "STONE_CRACKER",
+     "name": "碎石钻",
+     "description": "在每场战斗开始时，在本场战斗中随机[gold]升级[/gold]你[gold]抽牌堆[/gold]中的[blue]{Cards}[/blue]张牌。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 3,
+     "relic_id": "PANTOGRAPH",
+     "name": "缩放仪",
+     "description": "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 4,
+     "relic_id": "VERY_HOT_COCOA",
+     "name": "烫嘴可可",
+     "description": "在每场战斗的第一回合额外获得[blue]{Energy:energyIcons()}[/blue]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 5,
+     "relic_id": "BAG_OF_PREPARATION",
+     "name": "准备背包",
+     "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 6,
+     "relic_id": "PENDULUM",
+     "name": "摆动球",
+     "description": "每[blue]{Turns}[/blue]个回合，抽[blue]{Cards}[/blue]张牌",
+     "stack": 2,
+     "is_melted": false
+    }
+   ],
+   "players": [
+    {
+     "player_id": "1",
+     "slot_index": 0,
+     "is_local": true,
+     "is_connected": true,
+     "character_id": "IRONCLAD",
+     "character_name": "铁甲战士",
+     "current_hp": 52,
+     "max_hp": 89,
+     "gold": 31,
+     "is_alive": true
+    }
+   ],
+   "potions": [
+    {
+     "index": 0,
+     "potion_id": "FLEX_POTION",
+     "name": "肌肉药水",
+     "description": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。在你的这个回合结束时，失去[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+     "rarity": "Common",
+     "occupied": true,
+     "usage": "CombatOnly",
+     "target_type": "AnyPlayer",
+     "is_queued": false,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "can_use": false,
+     "can_discard": true
+    },
+    {
+     "index": 1,
+     "potion_id": null,
+     "name": null,
+     "description": null,
+     "rarity": null,
+     "occupied": false,
+     "usage": null,
+     "target_type": null,
+     "is_queued": false,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "can_use": false,
+     "can_discard": false
+    }
+   ]
+  },
+  "multiplayer": null,
+  "multiplayer_lobby": null,
+  "map": null,
+  "selection": null,
+  "character_select": null,
+  "timeline": null,
+  "unlock": null,
+  "chest": null,
+  "event": null,
+  "crystal_sphere": null,
+  "shop": null,
+  "rest": {
+   "options": [
+    {
+     "index": 0,
+     "option_id": "HEAL",
+     "title": "休息",
+     "description": "回复最大生命值的30%（26）。",
+     "is_enabled": true,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "valid_target_player_ids": []
+    },
+    {
+     "index": 1,
+     "option_id": "SMITH",
+     "title": "锻造",
+     "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+     "is_enabled": true,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "valid_target_player_ids": []
+    }
+   ]
+  },
+  "reward": null,
+  "bundles": null,
+  "capstone": null,
+  "modal": null,
+  "game_over": null,
+  "agent_view": {
+   "version": 11,
+   "screen": "REST",
+   "native_profile_id": 1,
+   "run_id": "MCK9SMSK40ZY",
+   "session": {
+    "mode": "singleplayer",
+    "phase": "run",
+    "control_scope": "local_player"
+   },
+   "turn": null,
+   "available_actions": [
+    "save_and_quit",
+    "choose_rest_option",
+    "discard_potion"
+   ],
+   "combat": null,
+   "run": {
+    "character": "铁甲战士",
+    "ascension": 8,
+    "ascension_effects": [
+     {
+      "id": "LEVEL_01",
+      "name": "精英蜂拥",
+      "description": "[gold]精英[/gold]敌人出现更加频繁。"
+     },
+     {
+      "id": "LEVEL_02",
+      "name": "旅途劳顿",
+      "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
+     },
+     {
+      "id": "LEVEL_03",
+      "name": "贫穷",
+      "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
+     },
+     {
+      "id": "LEVEL_04",
+      "name": "收紧腰带",
+      "description": "游戏开始时药水栏位减少1。"
+     },
+     {
+      "id": "LEVEL_05",
+      "name": "进阶之灾",
+      "description": "游戏开始时被[red]诅咒[/red]。"
+     },
+     {
+      "id": "LEVEL_06",
+      "name": "通货膨胀",
+      "description": "商人的卡牌移除服务价格提升。"
+     },
+     {
+      "id": "LEVEL_07",
+      "name": "稀缺",
+      "description": "稀有和已升级卡牌更少出现。"
+     },
+     {
+      "id": "LEVEL_08",
+      "name": "强韧敌人",
+      "description": "所有的敌人变得更难杀死。"
+     }
+    ],
+    "floor": 32,
+    "act_id": "1",
+    "boss_id": "THE_INSATIABLE_BOSS",
+    "hp": "52/89",
+    "gold": 31,
+    "max_energy": 3,
+    "base_orb_slots": 0,
+    "deck": [
+     {
+      "line": "剑柄打击 [1费]：造成9点伤害。 抽1张牌。",
+      "card_ids": [
+       "POMMEL_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "双重打击+ [1费]：造成7点伤害两次。",
+      "card_ids": [
+       "TWIN_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "头槌+ [1费]：造成12点伤害。 将你弃牌堆中的一张牌放到抽牌堆顶部。",
+      "card_ids": [
+       "HEADBUTT"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "御血术+ [1费]：失去2点生命。 造成20点伤害。",
+      "card_ids": [
+       "HEMOKINESIS"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "打击*4 [1费]：造成6点伤害。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "撕裂+ [1费]：每当你在你的回合失去生命值时, 获得2点力量。",
+      "card_ids": [
+       "RUPTURE"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "放血+ [0费]：失去3点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。",
+      "card_ids": [
+       "BLOODLETTING"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "旋风斩+ [X费]：对所有敌人造成8点伤害X次。",
+      "card_ids": [
+       "WHIRLWIND"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "欺凌*2 [0费]：造成4点伤害。 该敌人身上每有一层易伤就额外造成2点伤害。",
+      "card_ids": [
+       "BULLY"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "狂宴 [1费]：造成10点伤害。 斩杀时，永久获得3点最大生命值。 消耗。",
+      "card_ids": [
+       "FEED"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "痛击+ [2费]：造成10点伤害。 给予3层易伤。",
+      "card_ids": [
+       "BASH"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "耸肩无视 [1费]：获得8点格挡。 抽1张牌。",
+      "card_ids": [
+       "SHRUG_IT_OFF"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "血墙 [2费]：失去2点生命。 获得16点格挡。",
+      "card_ids": [
+       "BLOOD_WALL"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
+      "card_ids": [
+       "ASCENDERS_BANE"
+      ],
+      "keywords": [],
+      "mods": [
+       "Eternal",
+       "Ethereal",
+       "Unplayable"
+      ]
+     },
+     {
+      "line": "防御*3 [1费]：获得5点格挡。",
+      "card_ids": [
+       "DEFEND_IRONCLAD"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "防御+ [1费]：获得8点格挡。",
+      "card_ids": [
+       "DEFEND_IRONCLAD"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "预备打击*2 [1费]：造成7点伤害。 在本回合内获得3点力量。",
+      "card_ids": [
+       "SETUP_STRIKE"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "飞剑回旋镖+ [1费]：随机对敌人造成3点伤害4次。",
+      "card_ids": [
+       "SWORD_BOOMERANG"
+      ],
+      "keywords": [],
+      "mods": []
+     }
+    ],
+    "relics": [
+     "燃烧之血",
+     "金色珍珠",
+     "碎石钻",
+     "缩放仪",
+     "烫嘴可可",
+     "准备背包",
+     "摆动球"
+    ],
+    "relic_ids": [
+     "BURNING_BLOOD",
+     "GOLDEN_PEARL",
+     "STONE_CRACKER",
+     "PANTOGRAPH",
+     "VERY_HOT_COCOA",
+     "BAG_OF_PREPARATION",
+     "PENDULUM"
+    ],
+    "relic_stacks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     2
+    ],
+    "relic_descriptions": [
+     "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+     "拾起时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+     "在每场战斗开始时，在本场战斗中随机[gold]升级[/gold]你[gold]抽牌堆[/gold]中的[blue]{Cards}[/blue]张牌。",
+     "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
+     "在每场战斗的第一回合额外获得[blue]{Energy:energyIcons()}[/blue]。",
+     "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+     "每[blue]{Turns}[/blue]个回合，抽[blue]{Cards}[/blue]张牌"
+    ],
+    "players": [
+     {
+      "player_id": "1",
+      "slot_index": 0,
+      "is_local": true,
+      "is_connected": true,
+      "character_id": "IRONCLAD",
+      "character_name": "铁甲战士",
+      "current_hp": 52,
+      "max_hp": 89,
+      "gold": 31,
+      "is_alive": true
+     }
+    ],
+    "potions": [
+     {
+      "i": 0,
+      "potion_id": "FLEX_POTION",
+      "line": "0: 肌肉药水：CombatOnly",
+      "description": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。在你的这个回合结束时，失去[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+      "usable": false,
+      "discard": true,
+      "target": "player",
+      "targets": []
+     },
+     {
+      "i": 1,
+      "potion_id": null,
+      "line": "1: 空",
+      "description": null,
+      "usable": false,
+      "discard": false,
+      "target": null,
+      "targets": []
+     }
+    ],
+    "piles": {
+     "draw": [],
+     "discard": [],
+     "exhaust": []
+    }
+   },
+   "multiplayer": null,
+   "multiplayer_lobby": null,
+   "map": null,
+   "selection": null,
+   "character_select": null,
+   "timeline": null,
+   "chest": null,
+   "event": null,
+   "crystal_sphere": null,
+   "shop": null,
+   "rest": {
+    "options": [
+     {
+      "i": 0,
+      "option_id": "HEAL",
+      "line": "休息: 回复最大生命值的30%（26）。",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "enabled": true
+     },
+     {
+      "i": 1,
+      "option_id": "SMITH",
+      "line": "锻造: [gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "enabled": true
+     }
+    ]
+   },
+   "reward": null,
+   "bundles": null,
+   "capstone": null,
+   "unlock": null,
+   "modal": null,
+   "game_over": null,
+   "glossary": {
+    "力量": "每层力量通常使攻击额外造成 1 点伤害。",
+    "易伤": "易伤单位会承受更多攻击伤害。",
+    "格挡": "格挡会优先抵消即将受到的伤害。",
+    "消耗": "消耗牌打出后会移出本场战斗。"
+   }
+  }
+ },
+ "screenMemory": {
+  "lastMap": {
+   "runId": "MCK9SMSK40ZY",
+   "floor": 31,
+   "nodes": [
+    {
+     "row": 0,
+     "col": 3,
+     "type": "Ancient",
+     "children": [
+      {
+       "row": 1,
+       "col": 2
+      },
+      {
+       "row": 1,
+       "col": 3
+      },
+      {
+       "row": 1,
+       "col": 5
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 1,
+     "col": 2,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 2,
+       "col": 1
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "col": 3,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 2,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "col": 5,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 2,
+       "col": 5
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 2,
+     "col": 1,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 3,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 2,
+     "col": 3,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 3,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 2,
+     "col": 5,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 3,
+       "col": 4
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 3,
+     "col": 0,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 4,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 3,
+     "col": 4,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 4,
+       "col": 3
+      },
+      {
+       "row": 4,
+       "col": 5
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 4,
+     "col": 0,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 5,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 4,
+     "col": 3,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 5,
+       "col": 2
+      },
+      {
+       "row": 5,
+       "col": 4
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 4,
+     "col": 5,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 5,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 5,
+     "col": 0,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 6,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 5,
+     "col": 2,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 6,
+       "col": 2
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 5,
+     "col": 4,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 6,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 5,
+     "col": 6,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 6,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 6,
+     "col": 0,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 7,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 6,
+     "col": 2,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 7,
+       "col": 3
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 6,
+     "col": 4,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 7,
+       "col": 3
+      },
+      {
+       "row": 7,
+       "col": 4
+      },
+      {
+       "row": 7,
+       "col": 5
+      }
+     ]
+    },
+    {
+     "row": 6,
+     "col": 6,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 7,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 7,
+     "col": 0,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 8,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 7,
+     "col": 3,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 8,
+       "col": 2
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 7,
+     "col": 4,
+     "type": "Shop",
+     "children": [
+      {
+       "row": 8,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 7,
+     "col": 5,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 8,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 7,
+     "col": 6,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 8,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 8,
+     "col": 0,
+     "type": "Treasure",
+     "children": [
+      {
+       "row": 9,
+       "col": 1
+      }
+     ]
+    },
+    {
+     "row": 8,
+     "col": 2,
+     "type": "Treasure",
+     "children": [
+      {
+       "row": 9,
+       "col": 1
+      },
+      {
+       "row": 9,
+       "col": 2
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 8,
+     "col": 4,
+     "type": "Treasure",
+     "children": [
+      {
+       "row": 9,
+       "col": 4
+      },
+      {
+       "row": 9,
+       "col": 5
+      }
+     ]
+    },
+    {
+     "row": 8,
+     "col": 6,
+     "type": "Treasure",
+     "children": [
+      {
+       "row": 9,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 9,
+     "col": 1,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 10,
+       "col": 0
+      },
+      {
+       "row": 10,
+       "col": 2
+      }
+     ]
+    },
+    {
+     "row": 9,
+     "col": 2,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 10,
+       "col": 2
+      },
+      {
+       "row": 10,
+       "col": 3
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 9,
+     "col": 4,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 10,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 9,
+     "col": 5,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 10,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 9,
+     "col": 6,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 10,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 10,
+     "col": 0,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 11,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 10,
+     "col": 2,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 11,
+       "col": 2
+      },
+      {
+       "row": 11,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 10,
+     "col": 3,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 11,
+       "col": 4
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 10,
+     "col": 4,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 11,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 10,
+     "col": 6,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 11,
+       "col": 5
+      },
+      {
+       "row": 11,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 11,
+     "col": 0,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 12,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 11,
+     "col": 2,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 12,
+       "col": 2
+      }
+     ]
+    },
+    {
+     "row": 11,
+     "col": 3,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 12,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 11,
+     "col": 4,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 12,
+       "col": 3
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 11,
+     "col": 5,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 12,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 11,
+     "col": 6,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 12,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 12,
+     "col": 0,
+     "type": "Shop",
+     "children": [
+      {
+       "row": 13,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 12,
+     "col": 2,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 13,
+       "col": 1
+      }
+     ]
+    },
+    {
+     "row": 12,
+     "col": 3,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 13,
+       "col": 2
+      },
+      {
+       "row": 13,
+       "col": 3
+      },
+      {
+       "row": 13,
+       "col": 4
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 12,
+     "col": 4,
+     "type": "Unknown",
+     "children": [
+      {
+       "row": 13,
+       "col": 4
+      }
+     ]
+    },
+    {
+     "row": 12,
+     "col": 6,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 13,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 13,
+     "col": 0,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 14,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 13,
+     "col": 1,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 14,
+       "col": 0
+      }
+     ]
+    },
+    {
+     "row": 13,
+     "col": 2,
+     "type": "Monster",
+     "children": [
+      {
+       "row": 14,
+       "col": 1
+      }
+     ]
+    },
+    {
+     "row": 13,
+     "col": 3,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 14,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 13,
+     "col": 4,
+     "type": "Shop",
+     "children": [
+      {
+       "row": 14,
+       "col": 4
+      }
+     ],
+     "visited": true
+    },
+    {
+     "row": 13,
+     "col": 6,
+     "type": "Elite",
+     "children": [
+      {
+       "row": 14,
+       "col": 6
+      }
+     ]
+    },
+    {
+     "row": 14,
+     "col": 0,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 15,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 14,
+     "col": 1,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 15,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 14,
+     "col": 3,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 15,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 14,
+     "col": 4,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 15,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 14,
+     "col": 6,
+     "type": "RestSite",
+     "children": [
+      {
+       "row": 15,
+       "col": 3
+      }
+     ]
+    },
+    {
+     "row": 15,
+     "col": 3,
+     "type": "Boss",
+     "children": []
+    }
+   ],
+   "available": [
+    {
+     "row": 14,
+     "col": 4,
+     "type": "RestSite"
+    }
+   ],
+   "current": {
+    "row": 13,
+    "col": 4
+   },
+   "boss": {
+    "row": 15,
+    "col": 3
+   },
+   "bosses": [
+    {
+     "row": 15,
+     "col": 3
+    }
+   ],
+   "act": "1",
+   "fights": 0,
+   "chosen": {
+    "row": 14,
+    "col": 4,
+    "type": "RestSite"
+   }
+  }
+ }
+}

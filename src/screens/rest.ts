@@ -136,7 +136,7 @@ export function planRest(env: DecisionEnv): Decision | null {
       // Facts only (the code's heal score keeps its own beforeBoss rule): an Elite every path meets within
       // FORCED_ELITE_DEPTH nodes with no rest site or shop before it (7KDMKN16GD6B), and a boss-start heal.
       ...(forcedEliteWithin(env.screenMemory, state, REST_NODES, FORCED_ELITE_REST_DEPTH) ? { forced_elite_ahead: `every path meets an Elite within ${FORCED_ELITE_REST_DEPTH} nodes, with no rest site or shop before it` } : {}),
-      ...bossStartHealFacts(relicIdsOf(state), nextBoss - floor, healed, hpNow, maxNow),
+      ...bossStartHealFacts(relicIdsOf(state), bossIsNextFight(env.screenMemory, state), heal.total, healed, hpNow, maxNow),
       // Our runs' outcome statistics per rest action, by the HP band on arrival (V4 M2: facts, not code's heal/smith score).
       ...restOutcomeFacts(options.map((option) => str(rawByKey.get(option.key)?.["option_id"]).toUpperCase()), hpNow, maxNow),
     },
@@ -304,17 +304,71 @@ export const FORCED_ELITE_REST_DEPTH = 3;
 export { BOSS_START_HEAL };
 
 /**
- * The boss-start heal facts at the rest site before an act boss (the boss within 2 floors): what the relic heals
- * and the HP each choice would enter the boss with (5NFGDU7BQPD3 F16: the rest heal was weighed without it).
+ * The boss-start heal facts at the rest site whose next fight is the act boss (bossIsNextFight): what the relic heals,
+ * the HP each choice enters the boss with, and resting's real heal for the boss as a number (5NFGDU7BQPD3 F16: the
+ * rest heal was weighed without it; MCK9SMSK40ZY F32 A8: smithed at 52/89, the real heal of resting was 12, entered
+ * the Insatiable at 77/89 and lost by 1 HP). Pantograph heals 25 at the boss fight's start, up to max HP (logged boss
+ * fights with it, first combat frame vs the rest site's exit HP: the 11 entered at least 25 below max HP started 25
+ * higher, JRN33CL7EB50 F33 27 with Blood Vial's 2; 21 of the other 22 started at max HP), so resting adds min(heal,
+ * max HP - HP - 25) over not resting, nothing when that is <= 0. `heal`: what resting here heals (the HEAL option's
+ * own number with the rest relics); `healed`: HP and max HP after it.
  */
-export function bossStartHealFacts(relicIds: string[], floorsToBoss: number, healed: { hp: number; max: number }, hpNow: number, maxNow: number): Record<string, JsonValue> {
+export function bossStartHealFacts(relicIds: string[], bossNext: boolean, heal: number, healed: { hp: number; max: number }, hpNow: number, maxNow: number): Record<string, JsonValue> {
   const relics = relicIds.filter((id) => BOSS_START_HEAL[id] !== undefined);
-  if (relics.length === 0 || floorsToBoss > 2) return {};
+  if (relics.length === 0 || !bossNext) return {};
   const amount = relics.reduce((sum, id) => sum + BOSS_START_HEAL[id]!, 0);
-  const enter = (hp: number, max: number) => `${Math.min(max, hp + amount)}/${max}`;
+  const entry = (hp: number, max: number): number => Math.min(max, hp + amount);
+  const rested = entry(healed.hp, healed.max);
+  const smithed = entry(hpNow, maxNow);
+  const real = rested - smithed;
+  const name = relics.map((id) => (id === "PANTOGRAPH" ? "Pantograph (缩放仪)" : id)).join(", ");
+  // Without a max-HP gain (Stone Humidifier) the real heal is the formula; with one, the two entry HPs say it.
+  const room = maxNow - hpNow - amount;
+  const why =
+    healed.max !== maxNow
+      ? `${rested} - ${smithed} = ${real} HP`
+      : room > 0
+        ? `min(${heal}, ${maxNow} - ${hpNow} - ${amount}) = ${real} HP`
+        : `0 HP (${maxNow} - ${hpNow} - ${amount} <= 0: ${name} alone fills HP to max at the boss's start)`;
   return {
-    boss_start_heal: `${relics.map((id) => (id === "PANTOGRAPH" ? "Pantograph (缩放仪)" : id)).join(", ")} heals ${amount} HP when the boss fight starts: entering it at ${enter(healed.hp, healed.max)} after healing here, ${enter(hpNow, maxNow)} without (if no fight on the way)`,
+    boss_start_heal:
+      `${name} heals ${amount} HP when the boss fight starts (up to max HP), and the next fight after this rest site is the act boss: ` +
+      `resting here heals ${heal} (${healed.hp}/${healed.max}) and enters the boss at ${rested}/${healed.max}; smithing (or any option that does not heal) enters it at ${smithed}/${maxNow}. ` +
+      `Resting's real heal for the boss: ${why}.`,
   };
+}
+
+/** Rooms between a rest site and the boss that cost no HP: no fight can happen in them. */
+const NO_FIGHT_NODES = ["Shop", "Treasure"];
+
+/**
+ * Whether the next fight after this rest site is the act boss: every path from it reaches a boss node through shops
+ * and treasure rooms only, with no fight, "?" room or other rest site on the way. A "?" room may be a fight, so it
+ * counts as one (uncertain: not the boss next). The rest site's node: the one chosen from the map remembered one floor
+ * earlier, else every rest site available on that map (all of them must qualify). Without that map, the floor rule:
+ * the boss is the very next floor (the floor before each act boss is all rest sites on every logged map: A8/A9
+ * F16, F32 and F47 were a RestSite in 505 of 505 runs).
+ */
+export function bossIsNextFight(memory: ScreenMemory, state: GameState): boolean {
+  const floor = state.run?.floor ?? null;
+  if (floor === null) return false;
+  const nextBoss = [17, 33, 48].find((bossFloor) => bossFloor >= floor) ?? floor;
+  const map: RememberedMap | undefined = memory.lastMap;
+  if (!map || map.runId !== str(state.raw["run_id"]) || map.floor !== floor - 1) return nextBoss - floor === 1;
+  const nodeAt = (point: { row: number; col: number }) => map.nodes.find((node) => node.row === point.row && node.col === point.col);
+  const isBoss = (point: { row: number; col: number }): boolean => nodeAt(point)?.type === "Boss" || (map.bosses ?? [map.boss ?? null]).some((boss) => boss !== null && boss.row === point.row && boss.col === point.col);
+  const chosen = map.chosen && REST_NODES.includes(map.chosen.type) ? [map.chosen] : map.available.filter((node) => REST_NODES.includes(node.type));
+  const rooms = chosen.map(nodeAt);
+  if (rooms.length === 0 || rooms.some((room) => room === undefined)) return nextBoss - floor === 1;
+  const reaches = (node: RememberedMap["nodes"][number], depth: number): boolean =>
+    depth > 0 &&
+    node.children.length > 0 &&
+    node.children.every((child) => {
+      if (isBoss(child)) return true;
+      const next = nodeAt(child);
+      return next !== undefined && NO_FIGHT_NODES.includes(next.type) && reaches(next, depth - 1);
+    });
+  return rooms.every((room) => reaches(room!, 16));
 }
 
 /** Map node types a rest site shows as; events come from "Unknown" (and "Ancient") nodes. */
