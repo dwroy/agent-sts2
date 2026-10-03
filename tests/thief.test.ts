@@ -62,6 +62,10 @@ vi.resetModules();
 const { readFileSync } = await import("node:fs");
 const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
 potionCostOptions.enabled = true;
+// PASSIVE_PIECES (src/strategy/passive-pieces.ts) postdates these digests: off here, on the fresh module (the boards holding
+// Orichalcum, Ripple Basin or Ornamental Fan change with it on: tests/passive-pieces-planner.test.ts).
+const { passivePiecesOptions } = await import("../src/strategy/passive-pieces.js");
+passivePiecesOptions.enabled = false;
 const { makeKnowledge } = await import("../src/knowledge/index.js");
 const { loadConfig } = await import("../src/config.js");
 const { parseGameState } = await import("../src/mod/schema.js");

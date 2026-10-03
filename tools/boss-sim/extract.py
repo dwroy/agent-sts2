@@ -9,7 +9,7 @@ End HP (docs/eval.md 7.2): died = 0; otherwise min(last combat frame, first fram
 death blast only shows after the fight, a Burning Blood heal (higher) does not count. HP loss from a start point = its
 HP - end HP.
 
-Usage: .cache/logdb-venv/bin/python tools/boss-sim/extract.py [--ascension 7 8 9] [--out experiments/boss-sim/raw/fights.jsonl]
+Usage: .cache/logdb-venv/bin/python tools/boss-sim/extract.py [--ascension 7 8 9] [--room boss|elite] [--out experiments/boss-sim/raw/fights.jsonl]
        [--no-sync] [--db DIR] [--logs DIR]
 """
 
@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools", "logdb"))
 FIGHTS_SQL = """
 SELECT f.run_id, f.fight_no, f.ascension, f.act, f.floor, f.encounter, f.monsters, f.entry_hp, f.max_hp, f.last_hp,
        f.post_hp, f.turns, f.outcome, f.first_off, f.first_ts, f.potions_in, f.potions_used, f.deck_size
-FROM fights f WHERE f.room = 'boss' AND f.ascension IN (SELECT unnest(?::INTEGER[]))
+FROM fights f WHERE f.room = ? AND f.ascension IN (SELECT unnest(?::INTEGER[]))
 ORDER BY f.first_ts
 """
 
@@ -34,7 +34,7 @@ ORDER BY f.first_ts
 TURNS_SQL = """
 SELECT ff.run_id, ff.fight_no, ff.turn, min(ff.off) AS first_off, arg_min(ff.player_hp, ff.off) AS start_hp
 FROM fight_frames ff JOIN fights f USING (run_id, fight_no)
-WHERE f.room = 'boss' AND f.ascension IN (SELECT unnest(?::INTEGER[])) AND ff.is_combat AND NOT coalesce(ff.observed, false) AND ff.turn IN (1, 5)
+WHERE f.room = ? AND f.ascension IN (SELECT unnest(?::INTEGER[])) AND ff.is_combat AND NOT coalesce(ff.observed, false) AND ff.turn IN (1, 5)
 GROUP BY ALL
 """
 
@@ -44,7 +44,7 @@ LEN_SQL = "SELECT off, len, turn, screen FROM state_index WHERE off IN (SELECT u
 BY_TURN_SQL = """
 SELECT t.run_id, t.fight_no, t.turn, t.start_hp, t.enemy_hp, t.hp_lost, t.intent_damage, t.enemy_turn_hp_lost
 FROM turns t JOIN fights f USING (run_id, fight_no)
-WHERE f.room = 'boss' AND f.ascension IN (SELECT unnest(?::INTEGER[]))
+WHERE f.room = ? AND f.ascension IN (SELECT unnest(?::INTEGER[]))
 ORDER BY t.run_id, t.fight_no, t.turn
 """
 
@@ -74,6 +74,7 @@ def end_hp(fight):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--ascension", type=int, nargs="*", default=[7, 8, 9])
+    parser.add_argument("--room", default="boss", help="the fights view's room (boss; elite for the passive-pieces replay's control boards)")
     parser.add_argument("--out", default=os.path.join(ROOT, "experiments", "boss-sim", "raw", "fights.jsonl"))
     parser.add_argument("--turns-out", default=os.path.join(ROOT, "experiments", "boss-sim", "raw", "turns.jsonl"),
                         help="per fight, every turn's start HP, enemy HP and HP lost")
@@ -91,10 +92,10 @@ def main(argv=None):
         logsync.sync(logs, db, quiet=True, wait=True)
     with logsync.read_lock(db, shared=True):
         con = logquery.connect(db, threads=2)
-        fights = dicts(con.execute(FIGHTS_SQL, [args.ascension]))
-        turns = dicts(con.execute(TURNS_SQL, [args.ascension]))
+        fights = dicts(con.execute(FIGHTS_SQL, [args.room, args.ascension]))
+        turns = dicts(con.execute(TURNS_SQL, [args.room, args.ascension]))
         by_turn = {}
-        for t in dicts(con.execute(BY_TURN_SQL, [args.ascension])):
+        for t in dicts(con.execute(BY_TURN_SQL, [args.room, args.ascension])):
             by_turn.setdefault(f"{t['run_id']}:{t['fight_no']}", []).append([t["turn"], t["start_hp"], t["enemy_hp"], t["hp_lost"], t["intent_damage"], t["enemy_turn_hp_lost"]])
         t5 = {(t["run_id"], t["fight_no"]): t for t in turns if t["turn"] == 5}
         t1 = {(t["run_id"], t["fight_no"]): t for t in turns if t["turn"] == 1}
