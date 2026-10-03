@@ -154,7 +154,12 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
     expect(fnp("").certain).toBe(false);
     expect(fnp("无法被打出。 虚无。").certain).toBe(false);
     expect(fnp("造成6点伤害。").certain).toBe(true);
-    expect(judge(bossBoard({ relics: ["RIPPLE_BASIN"] })).reason).toMatch(/Ripple Basin/);
+    // Ripple Basin: 4 at the end of a turn with no Attack played (X80AD9MHAKZW F42 T6), none after one.
+    expect(judge(bossBoard({ relics: ["RIPPLE_BASIN"] }))).toMatchObject({ certain: true, endBlock: 4 });
+    expect(judge(bossBoard({ hp: 27, relics: ["RIPPLE_BASIN"] }))).toMatchObject({ certain: false, reason: "own count survives: 30 incoming - 0 block - 4 end-of-turn block - 0 Regen < 27 HP" });
+    const attacked = bossBoard({ hp: 27, relics: ["RIPPLE_BASIN"] });
+    ((attacked["combat"] as Raw)["player"] as Raw)["attacks_played_this_turn"] = 1;
+    expect(judge(attacked)).toMatchObject({ certain: true, endBlock: 0 });
   });
 
   it("a playable card or a drinkable potion vetoes, unless the planner's least-loss verdict ended the turn", () => {
