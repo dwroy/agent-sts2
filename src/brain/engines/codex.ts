@@ -130,6 +130,8 @@ export interface CodexTraceRow {
   answer_text?: string;
   /** Session mode: this cut turn's answer was taken (BRAIN_CODEX_ACCEPT_CUT): its prefix closed into a whole, valid answer. */
   accepted_from_cut?: boolean;
+  /** Session mode, BRAIN_CODEX_ACCEPT_CUT on: why this runaway cut's prefix was not taken (asked again instead). */
+  cut_rejected?: string;
   exit?: number | null;
   signal?: string | null;
   thread_id?: string | null;
@@ -1046,8 +1048,9 @@ export class CodexEngine implements BrainEngine {
       }
       spentMs += turn.ms;
       // A runaway cut whose prefix is already a whole answer (BRAIN_CODEX_ACCEPT_CUT): taken instead of asking again.
-      const cut = turn.status === "stalled" && acceptCut && turn.stall?.endsWith("(runaway)") ? this.fromCut(req, c, turn.answerText) : null;
-      this.writeTrace({ ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : {}) });
+      const judged = turn.status === "stalled" && acceptCut && turn.stall?.endsWith("(runaway)") ? this.fromCut(req, c, turn.answerText) : null;
+      const cut = judged && "text" in judged ? judged.text : null;
+      this.writeTrace({ ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : judged && "rejected" in judged ? { cut_rejected: judged.rejected } : {}) });
       if (cut) {
         const usage = turn.usage ?? {};
         return this.answer(req, c, {
@@ -1149,19 +1152,23 @@ export class CodexEngine implements BrainEngine {
   }
 
   /**
-   * A runaway cut's answer (BRAIN_CODEX_ACCEPT_CUT), as JSON text: its streamed prefix closed into an object
-   * (closeCutAnswer) that has every field the question requires (of those codex's schema has) and passes the question's
-   * checks (spec.validate). Null otherwise: the cut is a stall as before (asked again, then the fallback).
+   * A runaway cut's answer (BRAIN_CODEX_ACCEPT_CUT): its streamed prefix closed into an object (closeCutAnswer) with
+   * every field an answer of its kind must have (the kind schema's required: a pick's choice and reason) and passing the
+   * question's checks (spec.validate, and softValidate: an act route it lacks). A field the question needs only for some
+   * options (cards for an option with eligible_cards, discard for a ":discard" option) is the checks' to ask for, as for
+   * any answer; the per-question spec lists it as required whenever an option could need it (2026-10-03, ET3V5177HXSY
+   * F42 rest/plan: a whole "o1:c21" answer was refused for lacking "discard", which only o0:discard takes). Otherwise
+   * why not (the trace row's cut_rejected): the cut is a stall as before (asked again, then the fallback).
    */
-  private fromCut(req: BrainRequest, c: CodexCall, streamed: string): string | null {
+  private fromCut(req: BrainRequest, c: CodexCall, streamed: string): { text: string } | { rejected: string } {
     const closed = streamed ? closeCutAnswer(streamed) : null;
-    if (!closed) return null;
+    if (!closed) return { rejected: "the streamed prefix closes into no JSON object" };
     const answer = normalisePick(req, dropNulls(closed.json, c.kindSchema) as Json);
-    const fields = new Set(Object.keys(c.kindSchema.properties ?? {}));
-    const required = (req.spec.schema.required ?? []).filter((key) => fields.has(key));
-    if (required.some((key) => answer[key] === undefined || answer[key] === null)) return null;
-    if (req.spec.validate(answer).length > 0) return null;
-    return closed.text;
+    const missing = (c.kindSchema.required ?? []).filter((key) => answer[key] === undefined || answer[key] === null);
+    if (missing.length > 0) return { rejected: `missing ${missing.join(", ")}` };
+    const problems = [...req.spec.validate(answer), ...(req.spec.softValidate?.(answer) ?? [])];
+    if (problems.length > 0) return { rejected: problems.join("; ").slice(0, 200) };
+    return { text: closed.text };
   }
 
   /** The BrainAnswer of an answered call (both modes): the text read back, the strict schema's nulls dropped, codex's usage. */
