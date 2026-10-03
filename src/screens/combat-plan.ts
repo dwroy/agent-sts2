@@ -27,7 +27,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
@@ -2748,6 +2748,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // rule, thisTurnScore), and the draw pile's expected card (Gambler's Brew, Glowwater, Distilled Chaos).
   const enemyTargets = enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index);
   const pileContext = { enemyTargets, strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
+  // A card a potion adds is free this turn; a Power under Spiked Gauntlets costs 1 all the same (card-model potionCardCost).
+  const powerExtraCost = potionPowerExtraCost(relicIds);
   // SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the draw pile's next cards in order, known from an earlier attempt at this fight,
   // as indices into the pile's listing (pileCardModels' order: the rollout's, the random potions' and B2's piles come from
   // the same listing) and as the solver's known cards. A card the pile does not hold: none, the draws random as before.
@@ -2757,10 +2759,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free, {
       ...(exhaustPileSize(state.raw) === undefined ? {} : { exhaustReach: (exhaustPileSize(state.raw) ?? 0) + hand.filter((card) => card.exhausts).length }),
       vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
-    });
+    }, powerExtraCost);
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
     ...(beltIds.has("SOLDIERS_STEW")
       ? { strikePileDamage: [...pileCardModels(state, env.knowledge, "draw", pileContext), ...pileCardModels(state, env.knowledge, "discard", pileContext)].filter(isStrikeCard).reduce((sum, card) => sum + (card.damage ?? 0) * Math.max(1, card.hits), 0) }
@@ -3989,8 +3992,12 @@ export function trimForPotionOptions(options: Plan[], reserved: number, keep: Se
   return out;
 }
 
-/** A game-data card as a card a potion puts in the hand, free this turn (Strength and Weak in). */
-export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel {
+/**
+ * A game-data card as a card a potion puts in the hand, free this turn (Strength and Weak in); a Power under Spiked
+ * Gauntlets costs `ctx.powerExtraCost` (1) all the same (card-model potionCardCost; A4PWRULKG2JT F46 T1).
+ */
+export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean; powerExtraCost?: number }): CardModel {
+  const cost = potionCardCost({ type: info.type, xCost: info.xCost, cost: 0 }, ctx.powerExtraCost ?? 0);
   const raw = {
     card_id: info.id,
     name: info.name,
@@ -4000,7 +4007,7 @@ export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemy
     target_type: info.target,
     requires_target: info.target === "AnyEnemy",
     playable: true,
-    energy_cost: 0,
+    energy_cost: cost,
     costs_x: info.xCost,
     upgraded: false,
     index: 0,
@@ -4008,7 +4015,7 @@ export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemy
   const model = modelHandCard(raw, 0, knowledge);
   return {
     ...model,
-    cost: 0,
+    cost,
     playable: true,
     validTargets: model.target === "single" ? ctx.enemyTargets : [],
     damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
@@ -4029,12 +4036,15 @@ export function randomPotionSource(potion: PotionView, state: GameState, knowled
     const color = spec.pool === "colorless" ? "colorless" : character;
     if (!color) return null;
     const all = knowledge.cards();
+    // Spiked Gauntlets: the Powers it offers cost 1 this turn, not 0 (potionCardCost).
+    const powerExtraCost = potionPowerExtraCost(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
     const pools: Record<string, CardModel[]> = {};
     for (const type of spec.types) {
-      pools[type] = all.filter((card) => card.color === color && card.type === type && POOL_RARITIES.has(card.rarity)).map((card) => poolCardModel(card, knowledge, ctx));
+      pools[type] = all.filter((card) => card.color === color && card.type === type && POOL_RARITIES.has(card.rarity)).map((card) => poolCardModel(card, knowledge, { ...ctx, ...(powerExtraCost > 0 ? { powerExtraCost } : {}) }));
     }
     if (spec.types.some((type) => (pools[type] ?? []).length === 0)) return null;
-    return { ...base, pools, poolName: `${color} ${spec.types.join("/")}` };
+    const powersCost = powerExtraCost > 0 && spec.types.includes("Power") ? { powerExtraCost } : {};
+    return { ...base, pools, poolName: `${color} ${spec.types.join("/")}`, ...powersCost };
   }
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   if (!Array.isArray(view["draw"]) && !Array.isArray(view["discard"])) return null;

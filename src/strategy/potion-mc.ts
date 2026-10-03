@@ -4,7 +4,7 @@
  *
  *   - Card-choice potions (Attack/Skill/Power/Colorless Potion; Orobic Acid takes all three): each sample
  *     is one random offer of 3 cards from the real pool (card-model CHOICE_POTIONS); the solver tries each
- *     card taken (free this turn) and keeps the best line.
+ *     card taken (free this turn; a Power under Spiked Gauntlets at 1, card-model potionCardCost) and keeps the best line.
  *   - Draw potions (Swift Potion, Clarity, Cure All, Snecko Oil, Gambler's Brew, Glowwater, Distilled Chaos,
  *     Bottled Potential): each sample is one shuffled order of the known piles (the draw pile, then the
  *     discard pile reshuffled; Bottled Potential shuffles the hand in too), Snecko Oil's random costs too.
@@ -99,9 +99,14 @@ export interface PotionMcSource {
   /** The potion's game text (filled numbers). */
   text: string;
   kind: "choice" | "draw";
-  /** Card-choice potions: the pool per card type, as hand cards (free this turn: cost 0), and its name. */
+  /**
+   * Card-choice potions: the pool per card type, as hand cards (free this turn: cost 0; a Power under Spiked Gauntlets 1,
+   * card-model potionCardCost), and its name.
+   */
   pools?: Record<string, CardModel[]>;
   poolName?: string;
+  /** Card-choice potions offering Powers under Spiked Gauntlets: what those Powers cost this turn all the same (1). */
+  powerExtraCost?: number;
   /** Draw potions: the known piles as hand cards (Strength and Weak in). */
   piles?: { draw: CardModel[]; discard: CardModel[] };
   /**
@@ -329,14 +334,16 @@ function effectText(mc: PotionMc): { does: string; simulated: string } {
   if (source.kind === "choice") {
     const spec = CHOICE_POTIONS[source.potionId]!;
     const pool = spec.types.reduce((sum, type) => sum + (source.pools?.[type]?.length ?? 0), 0);
+    // Spiked Gauntlets: a Power it adds still costs 1 (A4PWRULKG2JT F46 T1: the Power Potion's Demon Form at 0 energy).
+    const free = (source.powerExtraCost ?? 0) > 0 ? `free this turn (a Power costs ${source.powerExtraCost}: Spiked Gauntlets)` : "free this turn";
     if (spec.takeAll) {
       return {
-        does: `adds a random ${spec.types.join(", a random ")} card, free this turn`,
+        does: `adds a random ${spec.types.join(", a random ")} card, ${free}`,
         simulated: `Monte Carlo, ${n}: one random card of each type from the ${source.poolName ?? "card"} pool (${pool} cards, uniform), the drink first`,
       };
     }
     return {
-      does: `offers ${CHOICE_OFFERED} random ${spec.types.join("/")} cards, take 1, free this turn`,
+      does: `offers ${CHOICE_OFFERED} random ${spec.types.join("/")} cards, take 1, ${free}`,
       simulated: `Monte Carlo, ${n}: ${CHOICE_OFFERED} random cards from the ${source.poolName ?? "card"} pool (${pool} cards, uniform), each solved with the best of the ${CHOICE_OFFERED} taken, the drink first`,
     };
   }
