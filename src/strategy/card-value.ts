@@ -18,8 +18,8 @@ const TIER: Record<string, number> = {
   // S
   OFFERING: 92, BREAK: 90, FEED: 86,
   // A
-  POMMEL_STRIKE: 76, SHRUG_IT_OFF: 76, BATTLE_TRANCE: 78, BLOODLETTING: 68, CORRUPTION: 78, DEMON_FORM: 80,
-  IMPERVIOUS: 74, UNMOVABLE: 76, HELLRAISER: 66, THRASH: 80, TEAR_ASUNDER: 68, STOMP: 72, FIEND_FIRE: 68,
+  POMMEL_STRIKE: 68, SHRUG_IT_OFF: 76, BATTLE_TRANCE: 78, BLOODLETTING: 68, CORRUPTION: 78, DEMON_FORM: 80,
+  IMPERVIOUS: 74, UNMOVABLE: 76, HELLRAISER: 66, THRASH: 80, TEAR_ASUNDER: 68, STOMP: 64, FIEND_FIRE: 68,
   CRIMSON_MANTLE: 72, DOMINATE: 66, BRAND: 66, STOKE: 64, COLOSSUS: 66,
   // B
   // Inflame 68 -> 74: permanent Strength in 50% of Act 1 wins, 27% of losses.
@@ -28,10 +28,16 @@ const TIER: Record<string, number> = {
   // agrees and no n >= 15 comparison points the other way): Anger 50 -> 58 (Act 1 0.88, n=16, vs 0.67, n=57; floor
   // 34.5 vs 26.4), Feel No Pain 54 -> 46 (Act 1 0.65, n=17, vs 0.87, n=15; floor 28.0 vs 31.0; its exhaust-payoff
   // +10 still applies with 3+ exhausting cards), Sword Boomerang 46 -> 54 below.
+  // 2026-10-03 experience update (outcome-stats A8 232 runs to LTKW, same rule; cards changed in the last two checks
+  // left alone): Pommel Strike 76 -> 68 (Act 1 0.74, n=117, vs 1.00, n=18; floor 31.2 vs 37.8), Stomp 72 -> 64 (Act 2
+  // 0.30, n=27, vs 0.73, n=15; floor 34.2 vs 41.7; Act 1 equal), Hemokinesis 64 -> 72 (Act 1 0.88, n=32, vs 0.67, n=18;
+  // floor 34.9 vs 28.4), Headbutt 62 -> 54 (Act 1 0.71, n=83, vs 0.85, n=47; Act 2 0.23, n=35, vs 0.48, n=27; A9 Act 1
+  // 0.33, n=18, vs 0.76, n=17). Spite (Act 1 0.95, n=19, vs 0.71, n=28) met the rule too but stays 52: the in-combat
+  // exhaust score reads this table and 60 would let Toasty Mittens exhaust Bludgeon before Spite (XWPV F48 T4 test).
   // Twin Strike 58 -> 64 (2026-09-29 knowledge check, outcome-stats.json A8, 151 runs): taken, the act's boss was
   // passed more often than when offered and not taken, in both acts with n >= 15 each way: Act 1 0.71 (n=55) vs
   // 0.62 (n=26), Act 2 0.35 (n=31) vs 0.19 (n=16); mean final floor +1.8 / +1.8. Multi-hit (Vantom's Slippery).
-  INFLAME: 74, UPPERCUT: 68, HEMOKINESIS: 64, FLAME_BARRIER: 66, BLUDGEON: 60, TWIN_STRIKE: 64, HEADBUTT: 62,
+  INFLAME: 74, UPPERCUT: 68, HEMOKINESIS: 72, FLAME_BARRIER: 66, BLUDGEON: 60, TWIN_STRIKE: 64, HEADBUTT: 54,
   SETUP_STRIKE: 62, BURNING_PACT: 64, FEEL_NO_PAIN: 46, DRUM_OF_BATTLE: 30, CONFLAGRATION: 62, BULLY: 56,
   DISMANTLE: 64, EXPECT_A_FIGHT: 56, MANGLE: 35, PYRE: 80, STONE_ARMOR: 60, UNRELENTING: 58, BLOOD_WALL: 54,
   ANGER: 58, PERFECTED_STRIKE: 50, RAMPAGE: 35, SPITE: 52, FORGOTTEN_RITUAL: 54, HOWL_FROM_BEYOND: 60,
