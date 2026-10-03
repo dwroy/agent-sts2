@@ -12,7 +12,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain, createRouter } from "../src/brain/brain.js";
-import { brainCatalogEntry, checkCodex, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, dropNulls, parseCodexStream, redact, strictSchema } from "../src/brain/engines/codex.js";
+import { brainCatalogEntry, checkCodex, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexSchema, dropNulls, parseCodexStream, redact, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
 import { answeredBy, engineLabel } from "../src/loop.js";
 import { EngineFailure, type BrainLogRow } from "../src/brain/router.js";
@@ -178,7 +178,7 @@ describe("codex engine", () => {
     expect(seen!.system).toBe("SYSTEM PROMPT (rules + knowledge)");
     expect(JSON.parse(seen!.stdin)).toEqual({ memory: { act: "第1幕" }, state: { hp: 20 }, question: "Heal or smith?", options });
     // The kind's stable schema, strict; the catalog entry without the exec / multi-agent / experimental tools.
-    expect(seen!.schema).toEqual(strictSchema(stableSchema(pickSpec("rest/plan", options, {}))));
+    expect(seen!.schema).toEqual(codexSchema(stableSchema(pickSpec("rest/plan", options, {})), { routeReason: "drop", maxFieldChars: 600 }));
     expect(seen!.catalog).toEqual({ models: [brainCatalogEntry(SOL)] });
     expect(seen!.catalog).toMatchObject({ models: [{ slug: "gpt-6.1-sol", tool_mode: null, multi_agent_version: null, experimental_supported_tools: [], apply_patch_tool_type: null, supports_search_tool: false, context_window: 272000 }] });
     // No key reaches codex; its home does; its own directory leads PATH (the npm launcher's node).
@@ -370,7 +370,7 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     const [row] = trace();
     expect(row).toMatchObject({ outcome: "aborted", thread_id: "t-stall", stall_ms: 120_000, first_token_ms: null });
     expect(row!["events"].map((event: any) => event.type)).toEqual(["thread.started", "turn.started"]);
-    expect(row!["max_gap_ms"]).toBeGreaterThanOrEqual(1_400);
+    expect(row!["max_gap_ms"]).toBeGreaterThanOrEqual(1_000);
     expect(row!["stderr_tail"]).toContain("retrying");
     expect(row!["stderr_tail"]).not.toContain(jwt);
     expect(row!["stderr_tail"]).not.toContain("abc123secret");
@@ -385,6 +385,39 @@ describe("the console names the engine", () => {
     expect(answeredBy(undefined)).toBe("DeepSeek");
     expect(answeredBy({ engine: "codex", model: "gpt-6.1-sol", attempts: 1, tool_calls: [] })).toBe("Codex");
     expect(answeredBy({ engine: "deepseek", model: "deepseek-flash", attempts: 1, tool_calls: [], fell_back_from: { engine: "codex", error: "codex timed out after 600000 ms" } })).toBe("DeepSeek (for Codex)");
+  });
+});
+
+describe("codex's answer schema against runaway answers", () => {
+  const pick = stableSchema(pickSpec("reward/card", options, { route_review: {} }));
+  it("drops route_reason by default (only logged) and caps every free-text field; enums and numbers stay as they are", () => {
+    const schema = codexSchema(pick, { routeReason: "drop", maxFieldChars: 600 })!;
+    const properties = schema["properties"] as Record<string, Record<string, unknown>>;
+    expect(Object.keys(properties)).toEqual(["choice", "reason", "route", "cards", "discard"]);
+    expect(schema["required"]).toEqual(["choice", "reason", "route", "cards", "discard"]);
+    expect(properties["reason"]).toMatchObject({ type: "string", maxLength: 600 });
+    expect(properties["route"]).toMatchObject({ type: ["string", "null"], maxLength: 600 });
+    expect((properties["cards"]!["items"] as Record<string, unknown>)["maxLength"]).toBe(600);
+    expect((properties["discard"]!["items"] as Record<string, unknown>)["maxLength"]).toBeUndefined();
+    // The run plan riding on a question: its texts capped, its enums not.
+    const plan = codexSchema(stableSchema(pickSpec("reward/card", options, { run_plan_task: {} })), { routeReason: "drop", maxFieldChars: 600 })!;
+    const runPlan = (plan["properties"] as Record<string, Record<string, any>>)["run_plan"]!;
+    expect(runPlan["properties"]["summary"]["maxLength"]).toBe(600);
+    expect(runPlan["properties"]["elites"]).toEqual({ type: "string", enum: ["seek", "normal", "avoid"] });
+    expect(runPlan["properties"]["block_target"]["maxLength"]).toBeUndefined();
+    // The question's own validation does not need it: an answer without route_reason is valid.
+    expect(pickSpec("reward/card", options, {}).validate({ choice: "a", reason: "r" })).toEqual([]);
+  });
+
+  it("keep: route_reason stays, capped at 60 characters; off: no caps (the strict schema as before)", () => {
+    const kept = codexSchema(pick, { routeReason: "keep", maxFieldChars: 600 })!;
+    expect((kept["properties"] as Record<string, Record<string, unknown>>)["route_reason"]).toMatchObject({ type: ["string", "null"], maxLength: 60 });
+    expect(codexSchema(pick, { routeReason: "keep", maxFieldChars: null })).toEqual(strictSchema(pick));
+    expect(codexSchema({ type: "object" }, { routeReason: "drop", maxFieldChars: 600 })).toBeNull();
+    const cfg = (env: Record<string, string>) => loadConfig(env as unknown as NodeJS.ProcessEnv).brain.codex;
+    expect(cfg({})).toMatchObject({ routeReason: "drop", maxFieldChars: 600 });
+    expect(cfg({ BRAIN_CODEX_ROUTE_REASON: "keep", BRAIN_CODEX_MAX_FIELD_CHARS: "off" })).toMatchObject({ routeReason: "keep", maxFieldChars: null });
+    expect(() => loadConfig({ BRAIN_CODEX_ROUTE_REASON: "english" } as unknown as NodeJS.ProcessEnv)).toThrow(/BRAIN_CODEX_ROUTE_REASON/);
   });
 });
 

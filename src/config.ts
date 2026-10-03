@@ -424,6 +424,13 @@ export interface BrainConfig {
      */
     maxAnswerChars: number | null;
     /**
+     * BRAIN_CODEX_ROUTE_REASON: "drop" (default) leaves route_reason out of codex's answer schema (only logged; the
+     * replayed runaways were all in it), "keep" keeps it capped at 60 characters (engines/codex.ts codexSchema).
+     */
+    routeReason: "drop" | "keep";
+    /** BRAIN_CODEX_MAX_FIELD_CHARS (default 600; off: none): the maxLength of every free-text field in codex's answer schema. */
+    maxFieldChars: number | null;
+    /**
      * The usage guard (engines/codex-usage.ts): the plan's windows and credits read at process start and before a
      * codex call every `everyCalls` calls (BRAIN_CODEX_USAGE_EVERY_CALLS, default 3) or `everyMin` minutes
      * (BRAIN_CODEX_USAGE_EVERY_MIN, default 10); codex is off for the rest of the process once a window is at
@@ -620,6 +627,10 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const stallMs = stallRaw === null ? DEFAULT_CODEX_STALL_MS : ["off", "none", "0"].includes(stallRaw.toLowerCase()) ? null : parseInteger(stallRaw, "BRAIN_CODEX_STALL_MS", problems, { min: 1_000, max: 3_600_000 });
   const maxAnswerRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_CHARS");
   const maxAnswerChars = maxAnswerRaw === null ? 2_000 : ["off", "none", "0"].includes(maxAnswerRaw.toLowerCase()) ? null : parseInteger(maxAnswerRaw, "BRAIN_CODEX_MAX_ANSWER_CHARS", problems, { min: 200, max: 1_000_000 });
+  const routeReasonRaw = (readEnv(env, "BRAIN_CODEX_ROUTE_REASON") ?? "drop").toLowerCase();
+  if (routeReasonRaw !== "drop" && routeReasonRaw !== "keep") problems.push({ field: "BRAIN_CODEX_ROUTE_REASON", message: `expected drop or keep, got "${routeReasonRaw}"` });
+  const fieldRaw = readEnv(env, "BRAIN_CODEX_MAX_FIELD_CHARS");
+  const maxFieldChars = fieldRaw === null ? 600 : ["off", "none", "0"].includes(fieldRaw.toLowerCase()) ? null : parseInteger(fieldRaw, "BRAIN_CODEX_MAX_FIELD_CHARS", problems, { min: 100, max: 100_000 });
   const modeRaw = (readEnv(env, "BRAIN_CODEX_MODE") ?? "exec").toLowerCase();
   if (modeRaw !== "exec" && modeRaw !== "session") problems.push({ field: "BRAIN_CODEX_MODE", message: `expected exec or session, got "${modeRaw}"` });
   const firstRaw = readEnv(env, "BRAIN_CODEX_FIRST_TOKEN_MS");
@@ -663,6 +674,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       firstTokenMs,
       mode: modeRaw === "session" ? "session" : "exec",
       maxAnswerChars,
+      routeReason: routeReasonRaw === "keep" ? "keep" : "drop",
+      maxFieldChars,
       stallRetries: stallRetries ?? 1,
       usage: codexUsage,
     },
