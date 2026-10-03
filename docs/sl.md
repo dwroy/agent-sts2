@@ -376,6 +376,25 @@ C4F14F3XPN0N F33 第 5 次 T6（15 HP、两张狱火+，拍击 21）：原来问
 测试：tests/inferno-planner.test.ts（tests/inferno-planner-data 的 4 个日志局面，知识数据钉在 02e2ca8）、turn-solver / rollout 的单元测试；
 tests/death-move-planner.test.ts 的 0U96 F48 T5 摘要重钉（抽牌堆里两张狱火，rollout 的数变了）。
 
+### 2.8 回合开头还没走完就出牌：loop 等一等再发（2026-10-04，v4-inferno-planner，src/act/turn-start.ts）
+
+**看到的**（tools/turn-start-settle.py，每回合（T2 起、每次尝试）第一个战斗决策的那一帧对下一帧，experiments/inferno-planner/turn-start-settle.md）：
+回合开头游戏一个接一个跑钩子：抽牌（地狱狂徒把抽到的打击打出去）、狱火的扣血和群伤、深红斗篷、烘焙手套的消耗、抱抱先生。一个钩子的动作（自动打出的打击、群伤）做完、
+下一个钩子还没开始的那一下，mod 的 readiness 全是「好了」：loop 第一次出手的 25327 帧里 `can_use_combat_actions`、`actions_settled`、`snapshot_stable` 全是 true，
+`running_action_type` 全是 null——提前的那些也一样，所以 mod 的标志分不出来。loop 只在 `can_use_combat_actions` 为 false 时等，出牌后只在结果不是 completed/stable 时等。
+那一帧之后局面还在动（还在抽牌、狱火的扣血还没来、接着是烘焙手套的选择）的：有狱火或地狱狂徒的回合开头，09-28 起 1142 个里 7 个（之前 1046 个里 55 个），
+两样都没有的 11264 个里 5 个。09-28 起记了读取时间的提前的那几个，从读到发都只有 1–3 ms（代码自己出的：least-loss、lethal、plan）；
+从读到发 500 ms 以上的 564 个一个都没提前（发之前的重读会看到变化、重新规划）。更早的 VC4LRL945UEF F17 T4（地狱狂徒 + 狱火，09-25）等 Jev 回答 646 ms 以上之后局面才动。
+C4F14F3XPN0N F33 第 1 次 T7：那一帧 4 HP、手里一张牌（地狱狂徒刚打出抽到的打击和预备打击），least-loss 的愤怒 3 ms 后发出，回来 "pending (unstable)"；
+之后又抽了两张、狱火扣 2（2 HP）、烘焙手套选牌。
+
+**现在**：一回合的第一个战斗动作（出牌、喝药、结束回合），身上有狱火或地狱狂徒时，要等它规划用的那一帧从读到现在站够（狱火 500 ms、地狱狂徒 1000 ms，两样都有取大的）
+才发：loop 睡掉剩下的时间，然后照常在发之前重读，变了就重新规划（日志 result 记 "not dispatched: state changed while deciding (turn start still settling: …)"），
+新的一帧再从头算。这一回合后面的动作、两样都没有的回合不等。滚石有它自己的等法（combat-plan `boulderSettling`），不在这里。
+代价（记了读取时间的 982 个有狱火或地狱狂徒的回合开头）：448 个要等，平均 0.51 s（全部平均 0.23 s，一场 0.7 s）；狱火 910 个平均 0.20 s，地狱狂徒 78 个平均 0.63 s；
+本来就想了 500 / 1000 ms 以上的（多数 plan-choice）不多等。
+测试：tests/turn-start-settle.test.ts（C4F1 F33 的日志局面上的等待时间；脚本 mod 上回合开头还在变的局面：有狱火时不在旧的一帧上发，没有时照旧立刻发）。
+
 ## 3. 控制器（src/sl/controller.ts、reload.ts）
 
 - **认战斗**（controller.ts `slGate`，按顺序，第一条成立的就是这场的 `gate`）：每读一次状态都看一下。开场活着的敌人里有 boss

@@ -11,6 +11,7 @@ import { dirname } from "node:path";
 
 import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate, type GateResult } from "./act/gate.js";
+import { noteTurnActed, settlePowersOf, turnStartSettleMs } from "./act/turn-start.js";
 import { wireIntent, withExpect } from "./act/identity.js";
 import type { AppConfig } from "./config.js";
 import type { AnswerSet } from "./jev/answers.js";
@@ -1572,6 +1573,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       onEvent({ type: "decision", record, totals: totals() });
     };
 
+    // The turn-start settle (act/turn-start.ts): the turn's first combat action with Inferno or Hellraiser up goes out only
+    // once the board it was planned on has stood TURN_START_SETTLE_MS since it was read; the re-read below re-plans on any
+    // later hook's change (C4F14F3XPN0N F33 T7: least-loss Anger sent 3 ms after a frame read mid-draw, before Inferno's 2).
+    const settleMs = turnStartSettleMs(state, intent, screenMemory, Date.parse(observedTs), Date.now());
+    if (settleMs > 0) await sleep(settleMs);
+
     // Re-read before touching the game: actions are not idempotent (PLAN.md §8.1).
     let fresh: GameState;
     try {
@@ -1583,8 +1590,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       continue;
     }
     if (fingerprint(fresh) !== stateFingerprint) {
-      onEvent({ type: "note", message: "state changed while deciding; re-planning" });
-      logUndispatched("state changed while deciding");
+      const settling = settleMs > 0 ? ` (turn start still settling: ${settlePowersOf(state).join(", ")} up)` : "";
+      onEvent({ type: "note", message: `state changed while deciding${settling}; re-planning` });
+      logUndispatched(`state changed while deciding${settling}`);
       continue;
     }
     // The gate once more on the state the action goes to: the fingerprint leaves out much of what the indices
@@ -1683,6 +1691,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     noteLizardTailEndTurn(screenMemory, state, resolved.intent);
     // The potion or card a card choice that follows comes from (its offer may be free this turn).
     noteCardSource(screenMemory, state, resolved.intent);
+    // A combat action went out on this turn: its later actions are not held for the turn-start settle.
+    noteTurnActed(screenMemory, state, resolved.intent);
     // The board is about to change (or should): never reuse an answer across an action.
     answerMemo = null;
     deepseekMemo = null;
@@ -1750,6 +1760,7 @@ export function resetFightMemory(screenMemory: ScreenMemory): void {
   screenMemory.demonTongueTurn = undefined;
   screenMemory.fightPlan = undefined;
   screenMemory.fightPlanFailed = undefined;
+  screenMemory.turnActed = undefined;
 }
 
 /**
