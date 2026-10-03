@@ -51,6 +51,7 @@ import { withAddedAtRandom } from "../sl/draws.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
+import type { SolverPieces } from "./passive-pieces.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
 import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
@@ -586,6 +587,13 @@ export interface RolloutInput {
     blockKeep?: number;
     iceCream?: boolean;
   };
+  /**
+   * PASSIVE_PIECES (src/strategy/passive-pieces.ts; rollout-live boardRolloutInput, absent with it off or none held): the
+   * relic pieces the later turns' solver plays with, the live rollout's and the whole-fight sim's alike: Orichalcum's and
+   * Ripple Basin's end-of-turn block (before, the whole-fight sim's alone: fightRelics), Letter Opener, Ornamental Fan,
+   * Parrying Shield. The decision turn is the live solver's line as scored (none of them).
+   */
+  passive?: SolverPieces;
   /**
    * Whole fights only (B2): the random potions held (potion-mc sources: card-choice potions' pools, draw potions). Each
    * later turn a held one is a new sample of it, as potion-mc draws them: a random offer of 3 cards from the pool, or
@@ -1609,6 +1617,22 @@ function endBlockRelics(input: RolloutInput): Pick<PlayerSim, "orichalcum" | "ri
   return { ...(relics?.orichalcum ? { orichalcum: relics.orichalcum } : {}), ...(relics?.rippleBasin ? { rippleBasin: relics.rippleBasin } : {}) };
 }
 
+/**
+ * PASSIVE_PIECES: the relic pieces for a later turn's solver (RolloutInput.passive), a new turn's counts at 0; the same
+ * Orichalcum / Ripple Basin numbers as endBlockRelics where both are set (the whole-fight sim), so nothing counts twice.
+ */
+function passiveSolverFields(input: RolloutInput): Pick<PlayerSim, "orichalcum" | "rippleBasin" | "letterOpener" | "ornamentalFan" | "parryingShield"> {
+  const p = input.passive;
+  if (!p) return {};
+  return {
+    ...(p.orichalcum ? { orichalcum: p.orichalcum } : {}),
+    ...(p.rippleBasin ? { rippleBasin: p.rippleBasin } : {}),
+    ...(p.letterOpener ? { letterOpener: { ...p.letterOpener, count: 0 } } : {}),
+    ...(p.ornamentalFan ? { ornamentalFan: { ...p.ornamentalFan, count: 0 } } : {}),
+    ...(p.parryingShield ? { parryingShield: { ...p.parryingShield } } : {}),
+  };
+}
+
 /** Whole fights (B2): Pendulum's extra draws on a fight turn. */
 function fightRelicDrawsAt(input: RolloutInput, turn: number): number {
   return (input.fightRelics?.draws ?? []).reduce((sum, relic) => sum + (relic.turn === turn ? relic.amount : 0), 0);
@@ -2429,7 +2453,7 @@ function simulate(
     const { drawPile: _d, knownTop: _k, ...rest } = s;
     // B5: the one-turn lookahead (whole fights, when set) replaces the decision's nextIncoming with the sim's own forecast.
     const ahead = fullFight ? lookaheadOf(opts, enemies, input, player, s.player.hp) : null;
-    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
+    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input), ...passiveSolverFields(input) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     first = solved.plans[0] ?? null;
@@ -2550,6 +2574,8 @@ function simulate(
       regen: player.regen,
       facing: fullFight ? facing : null,
       ...(fullFight ? endBlockRelics(input) : {}),
+      // PASSIVE_PIECES: Orichalcum, Ripple Basin, Letter Opener, Ornamental Fan, Parrying Shield (absent: none held, or off).
+      ...passiveSolverFields(input),
       unmovableArmed: player.unmovable,
       strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,

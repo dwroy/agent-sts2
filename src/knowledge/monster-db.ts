@@ -809,6 +809,15 @@ export function monsterHpAt(monsters: Record<string, MonsterEntry>, monsterId: s
  * Strength gain was not logged at this ascension. null without logged moves.
  */
 export function monsterDamageByTurn(monsterId: string, asc: number, turns: number, monsters: MonsterMoveData = load().monsters): { perTurn: number[]; estimated: boolean } | null {
+  const attack = monsterAttackByTurn(monsterId, asc, turns, monsters);
+  return attack ? { perTurn: attack.perTurn, estimated: attack.estimated } : null;
+}
+
+/**
+ * monsterDamageByTurn with the expected attack hits on each turn (`hits`: each attacking move's hits, weighted like its
+ * damage): what retaliation per hit lands (Thorns, Flame Barrier; passive-pieces.ts, the boss clock).
+ */
+export function monsterAttackByTurn(monsterId: string, asc: number, turns: number, monsters: MonsterMoveData = load().monsters): { perTurn: number[]; hits: number[]; estimated: boolean } | null {
   const moves = monsters[monsterId]?.moves;
   if (!moves || turns <= 0) return null;
   const firsts = Object.entries(moves).map(([id, move]) => [id, move.turns_seen?.["1"] ?? 0] as const).filter(([, n]) => n > 0);
@@ -835,6 +844,7 @@ export function monsterDamageByTurn(monsterId: string, asc: number, turns: numbe
   let strength = 0;
   let estimated = false;
   const perTurn: number[] = [];
+  const hits: number[] = [];
   for (let t = 1; t <= turns; t += 1) {
     if (t > 1) {
       const next = new Map<string, number>();
@@ -847,19 +857,46 @@ export function monsterDamageByTurn(monsterId: string, asc: number, turns: numbe
       dist = next;
     }
     let expected = 0;
+    let expectedHits = 0;
     for (const [id, p] of dist) {
       const hit = damage.get(id);
       if (!hit) continue;
       if (hit.estimated) estimated = true;
       expected += p * (hit.perHit + (hit.shown ? 0 : strength)) * hit.hits;
+      expectedHits += p * hit.hits;
     }
     perTurn.push(expected);
+    hits.push(expectedHits);
     for (const [id, p] of dist) {
       strength += p * strengthOf(id);
       if (p > 0 && gains.get(id)?.estimated) estimated = true;
     }
   }
-  return { perTurn, estimated };
+  return { perTurn, hits, estimated };
+}
+
+/**
+ * An act boss's expected attack hits on each of its first `turns` turns at `asc` (monsterAttackByTurn summed over its
+ * bodies, each times its count per fight), only the parts named when `only` is given: the hits retaliation lands on
+ * (the Queen's own Off With Your Head, not the Amalgam's Beam when the clock counts her HP alone). null as
+ * bossDamageByTurn.
+ */
+export function bossHitsByTurn(bossId: string, asc: number, turns: number, only?: string[]): number[] | null {
+  const id = bossId.toUpperCase().replace(/_BOSS$/, "");
+  const byAsc = load().bosses[id];
+  const found = nearestAscension(byAsc, asc);
+  if (!byAsc || !found) return null;
+  const hits = Array.from({ length: turns }, () => 0);
+  let used = 0;
+  for (const [part, range] of Object.entries(byAsc[found.key]!.parts ?? {})) {
+    if (only && !only.includes(part)) continue;
+    const own = monsterAttackByTurn(part, asc, turns);
+    if (!own) continue;
+    used += 1;
+    const count = range.count_per_fight ?? 1;
+    own.hits.forEach((value, t) => (hits[t]! += value * count));
+  }
+  return used > 0 ? hits : null;
 }
 
 /**

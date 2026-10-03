@@ -29,6 +29,7 @@ import { createScreenMemory, type DecisionEnv } from "../project/types.js";
 import { planCombatTurn } from "../screens/combat-plan.js";
 import { ENERGY_RELICS } from "../strategy/boss-clock.js";
 import { CHOICE_POTIONS, DRAW_POTIONS } from "../strategy/card-model.js";
+import { PASSIVE_SIM_RELICS, passivePiecesOptions } from "../strategy/passive-pieces.js";
 import { potionIdOf } from "../strategy/potion-cost.js";
 import type { MoveModelData, RolloutInput } from "../strategy/rollout.js";
 import { boardRolloutInput, deckModels, enemyTable, fightMetaOf, fightRelicsOf, relicBlockOf, relicEnergyOf, rolloutLiveOptions, type MonsterMoves } from "../strategy/rollout-live.js";
@@ -107,6 +108,14 @@ const MODELLED_ELSEWHERE = new Set([
   "PAELS_TEARS", "RED_SKULL", "SELF_FORMING_CLAY", "DEMON_TONGUE", "INTIMIDATING_HELMET", "BEATING_REMNANT", "PAPER_PHROG", "FIDDLE",
   "KUSARIGAMA", "VAMBRACE", "MERCURY_HOURGLASS", "LIZARD_TAIL", "BIIIG_HUG", "PEN_NIB", "SAI", "LOST_WISP",
 ]);
+/**
+ * PASSIVE_PIECES on: the relics its pieces put in the whole fight (passive-pieces PASSIVE_SIM_RELICS: Letter Opener,
+ * Ornamental Fan, Parrying Shield, and Orichalcum / Ripple Basin, which fightRelicsOf already gave it), not listed as
+ * not modelled.
+ */
+export function passiveSimRelic(id: string, enabled = passivePiecesOptions.enabled): boolean {
+  return enabled && (PASSIVE_SIM_RELICS as readonly string[]).includes(id);
+}
 /** A relic text that acts in fights (the ones outside FIGHT_START_RELICS and MODELLED_ELSEWHERE are listed as not modelled). */
 const FIGHT_TEXT = /战斗开始时|战斗中|回合开始时|回合结束时|每回合|每当|第\s*\d+\s*回合|打出|格挡|力量|敏捷|能量|抽|伤害|at the start of|each turn|whenever|combat/i;
 
@@ -264,7 +273,7 @@ export function fightStartRelics(runRaw: Record<string, unknown>, knowledge?: Kn
       }
       continue;
     }
-    if (MODELLED_ELSEWHERE.has(id)) continue;
+    if (MODELLED_ELSEWHERE.has(id) || passiveSimRelic(id)) continue;
     const text = knowledge?.relic(id)?.description ?? str(raw["description"]);
     if (FIGHT_TEXT.test(text)) unmodelled.push(name);
   }

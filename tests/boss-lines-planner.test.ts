@@ -66,6 +66,10 @@ vi.mock("node:fs", async (importOriginal) => {
 vi.resetModules();
 const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
 potionCostOptions.enabled = false;
+// PASSIVE_PIECES (src/strategy/passive-pieces.ts) postdates these digests: off here, on the fresh module (the boards holding
+// Orichalcum, Ripple Basin or Ornamental Fan change with it on: tests/passive-pieces-planner.test.ts).
+const { passivePiecesOptions } = await import("../src/strategy/passive-pieces.js");
+passivePiecesOptions.enabled = false;
 const { logged, loggedEnv } = await import("./logged.js");
 const { planCombatTurn } = await import("../src/screens/combat-plan.js");
 const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
