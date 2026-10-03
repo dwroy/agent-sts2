@@ -208,6 +208,20 @@ class SlAttemptExtractTest(unittest.TestCase):
         self.assertEqual((first["potions"], first["killers"], first["from_point"]), (["T4 Block Potion"], ["Test Subject (Attack 31)"], "first play of the fight"))
         self.assertIn("Bash -> Test Subject", first["summary"])
         self.assertEqual((second["attempt"], second["result"], second["judge_tier"], second["reload_ok"], second["end_hp"]), (2, "won", None, None, 22))
+        # A row without `gate` (before 2026-10-03): a boss's; sl_kind the earlier fight_kind.
+        self.assertEqual((first["gate"], first["sl_kind"]), ("boss", "boss"))
+
+    def test_sl_attempt_room(self):
+        """fight_kind is the room from 2026-10-04 (a hallway act-3 low-HP fight); sl_kind and gate as before it."""
+        row = json.loads(lines("sl-attempts.jsonl")[0])
+        row.update({"fight_kind": "hallway", "elite": None, "gate": "act3-low-hp 18/87", "encounter": "OWL_MAGISTRATE"})
+        got = extract.sl_attempt_row(json.dumps(row).encode(), 0)
+        self.assertEqual((got["fight_kind"], got["sl_kind"], got["gate"]), ("hallway", "elite", "act3-low-hp 18/87"))
+        old = json.loads(lines("sl-attempts.jsonl")[0])
+        old.update({"fight_kind": "elite", "elite": "Entomancer"})
+        old.pop("gate", None)
+        got = extract.sl_attempt_row(json.dumps(old).encode(), 0)
+        self.assertEqual((got["fight_kind"], got["sl_kind"], got["gate"]), ("elite", "elite", "hard-fight"))
 
     def test_decision_sl_fields(self):
         row = json.loads(lines("decisions.jsonl")[0])
