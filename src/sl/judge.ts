@@ -27,7 +27,7 @@
  *   attacker first (heldGuard).
  * - So does our own HP loss at the next turn's start (Inferno's 1 for each copy up, Crimson Mantle's cost; 2026-10-02,
  *   610BBERH4SPP F33 T3; 2026-10-03, C4F14F3XPN0N F33 attempt 5 T6: two Infernos took 2, the count had been 1 whatever the
- *   copies; infernoCopies): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain
+ *   copies; strategy/start-loss.ts infernoCopies): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain
  *   without the mod's flag too, but not with Tungsten Rod or Beating Remnant, a relic or power acting at the turn's start
  *   that may heal or shield us, Inferno's sweep at that loss able to kill every enemy (startGuard), or every enemy able to
  *   die before that loss comes: to what hits them at the end of our turn, their poison, our retaliation, and the next
@@ -65,6 +65,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { BEATING_REMNANT_CAP, distinctNames, FAIRY_REVIVE_SHARE, LIZARD_TAIL_REVIVE_SHARE, MERCURY_HOURGLASS_DAMAGE } from "../screens/combat-plan.js";
 import { afterPlayFirst, heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
+import { infernoCopies } from "../strategy/start-loss.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
 import { randomTargetOnly, randomTargets } from "./random-target.js";
@@ -576,39 +577,6 @@ function powerAmount(entity: Record<string, unknown>, id: string): number {
 const START_OF_TURN = /回合开始时|at the start of (your|each) turn/i;
 const START_SAVES = /回复|恢复|治疗|heal|缓冲|buffer|无实体|intangible|最大生命/i;
 
-/** The most damage one Inferno adds to INFERNO_POWER (Inferno 6, Inferno+ 9: the card's InfernoPower). */
-const INFERNO_MOST_PER_COPY = 9;
-
-/**
- * Inferno's own HP loss at the start of our turn: 1 for each copy up (the card, upgraded or not: 「在你的回合开始时，失去1点生命」),
- * one loss of that much (Inferno's sweep comes once). The power shows only the copies' damage summed (6, Inferno+ 9), so the
- * copies are counted at the fewest that sum can be: its amount over the most one copy adds (9, or a listed Inferno's
- * InfernoPower above it), rounded up; a count too low only makes fewer deaths certain. From the logs (states.jsonl to
- * 2026-10-03; each turn ended with no attack shown and no Crimson Mantle, Regen or poison on us, the HP at the next turn
- * before its first play): one copy (6, 9) lost 1 526 times (0 six times: Tungsten Rod, or a frame captured before the loss);
- * two (12, 15, 18) lost 2 42 times and 4 once, never less (B3PJGKHAQGK6, Inferno 12: the enemy 14 -> 2, one sweep). The
- * count was 1 whatever the copies: C4F14F3XPN0N F33 attempt 5 (A9, two Inferno+, 18), 14 HP + 9 block against the
- * Knowledge Demon's 21 at T6's end, "the mod does not flag"; the enemy turn left 2 HP and T7's start took them, the last
- * retry unused.
- */
-function infernoCopies(state: GameState, player: Record<string, unknown>): number {
-  const amount = powerAmount(player, "INFERNO_POWER");
-  if (amount <= 0) return 0;
-  let most = INFERNO_MOST_PER_COPY;
-  const cards = [...asArray(asRecord(state.raw["run"])["deck"]), ...asArray(asRecord(state.raw["combat"])["hand"])].map(asRecord);
-  for (const card of cards.filter((entry) => str(entry["card_id"]) === "INFERNO")) {
-    for (const value of asArray(card["dynamic_values"]).map(asRecord).filter((entry) => str(entry["name"]) === "InfernoPower")) {
-      most = Math.max(most, num(value["base_value"]), num(value["current_value"]), num(value["enchanted_value"]));
-    }
-  }
-  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
-  for (const entry of ["draw", "discard", "exhaust"].flatMap((pile) => asArray(view[pile]).map(asRecord))) {
-    if (!asArray(entry["card_ids"]).includes("INFERNO")) continue;
-    for (const hit of str(entry["line"]).matchAll(/造成(\d+)点伤害|deal (\d+) damage/gi)) most = Math.max(most, Number(hit[1] ?? hit[2]));
-  }
-  return Math.max(1, Math.ceil(amount / most));
-}
-
 /** A card Hellraiser plays when it is drawn (「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」). */
 const STRIKE_NAME = /打击|strike/i;
 /** A drawn Strike's text we cannot bound: damage scaling with something, X, or a heal. */
@@ -945,7 +913,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // against the Crusher's 5x2, Inferno up; the planner saw every line die, the mod's flag and our count did not, and the
   // run ended at T4's start with 6 attempts unused). Not counted with Tungsten Rod or Beating Remnant (each changes it).
   // Inferno loses 1 for each copy up (infernoCopies; C4F14F3XPN0N F33 attempt 5: two copies, 2 HP left, both taken).
-  const infernoLoss = infernoCopies(state, player);
+  const infernoLoss = infernoCopies(state, powerAmount(player, "INFERNO_POWER"));
   const startLoss = infernoLoss + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"));
   const lossAfterHeld = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
   const byStart = !bySandpit && !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;

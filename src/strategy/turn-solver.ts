@@ -411,7 +411,10 @@ export interface PlayerSim {
    * enemies that were Vulnerable, so only enemies made Vulnerable this turn are halved again.
    */
   colossus?: boolean;
-  /** HP lost at the start of next turn before block (Crimson Mantle: 1 per copy in play). */
+  /**
+   * HP lost at the start of next turn before block: Crimson Mantle's 1 per copy in play (mantleHpCost) and Inferno's 1 per
+   * copy up (infernoCopies); an Inferno or Mantle played this turn adds its own 1 on top (Sim.infernos, Sim.mantles).
+   */
   startTurnHpLoss?: number;
   /** Damage back per enemy attack hit already up (Flame Barrier power, Thorns). */
   retaliate?: number;
@@ -427,6 +430,12 @@ export interface PlayerSim {
   blockPerHeldCard?: number;
   /** Inferno already up (INFERNO_POWER amount): every HP loss on our turn deals this to every enemy. */
   inferno?: number;
+  /**
+   * Infernos already up, each losing 1 HP at the start of our turn (in startTurnHpLoss already): the power shows only the
+   * copies' damage summed, so combat-plan counts them at the fewest that sum can be (strategy/start-loss.ts infernoCopies). The
+   * rollout carries it into its later turns; absent, it is counted from `inferno` (infernoCopiesOf).
+   */
+  infernoCopies?: number;
   /** Unmovable up and not yet used this turn: shown Block values are doubled, only the first one is real. */
   unmovableArmed?: boolean;
   /** Strength at the start of the turn (STRENGTH_POWER), for rounding Weak damage once from the base. */
@@ -987,6 +996,8 @@ interface Sim {
   tainted: number;
   /** Inferno amount active (already up plus played this turn). */
   inferno: number;
+  /** Infernos played this turn (each loses 1 HP at the start of every later turn, as Crimson Mantle's `mantles`). */
+  infernos: number;
   feelNoPain: number;
   /** Hellraiser up (already, or played this turn): drawn Strikes play themselves. */
   hellraiser: boolean;
@@ -1661,7 +1672,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "colossus") next.colossus = true;
   if (card.special === "frantic_escape") next.escapes += 1;
   if (card.special === "crimson_mantle") next.mantles += 1;
-  if ((card.inferno ?? 0) > 0) next.inferno += card.inferno ?? 0;
+  if ((card.inferno ?? 0) > 0) {
+    next.inferno += card.inferno ?? 0;
+    next.infernos += 1;
+  }
   if (card.energyGain > 0) next.energy += card.energyGain;
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
@@ -2460,10 +2474,28 @@ export const CRAB_HIGH_HP = 60;
 
 /**
  * Crimson Mantle: each copy costs 1 HP at the start of our turn (and gives 7, or 10 upgraded, block).
- * The power only shows the block total, so the copies are counted from it.
+ * The power only shows the block total, so the copies are counted from it. Logged (turns ended with no attack shown,
+ * no Inferno, poison or Regen on us): CRIMSON_MANTLE_POWER 7 lost 1 at the next turn's start 160 times, 10 45 times,
+ * 14 (two copies) 2 six times.
  */
 export function mantleHpCost(amount: number): number {
   return amount > 0 ? Math.max(1, Math.floor(amount / 7)) : 0;
+}
+
+/** The most damage one Inferno adds to INFERNO_POWER (Inferno 6, Inferno+ 9: the card's InfernoPower). */
+export const INFERNO_MOST_PER_COPY = 9;
+
+/**
+ * Inferno: each copy up loses 1 HP at the start of our turn (「在你的回合开始时，失去1点生命」, upgraded or not), one loss of
+ * that much (its sweep comes once). The power shows only the copies' damage summed (6, Inferno+ 9), so the copies are
+ * counted at the fewest that sum can be: the amount over the most one copy adds, rounded up (strategy/start-loss.ts
+ * infernoCopies reads a larger InfernoPower off the state's Inferno cards). Logged (states.jsonl to 2026-10-03, turns
+ * ended with no attack shown and no Crimson Mantle, Regen or poison on us): one copy (6, 9) lost 1 526 times, two (12,
+ * 15, 18) lost 2 42 times and 4 once, never less. The planner had counted 1 whatever the copies (C4F14F3XPN0N F33
+ * attempt 5: two Inferno+ up, 2 HP left after the enemy turn, T7's start took them).
+ */
+export function infernoCopiesOf(amount: number, mostPerCopy: number = INFERNO_MOST_PER_COPY): number {
+  return amount > 0 ? Math.max(1, Math.ceil(amount / Math.max(1, mostPerCopy))) : 0;
 }
 
 /** Damage to every enemy at the start of our next turn, with an Inferno played this turn added. */
@@ -2587,9 +2619,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either. It is
   // part of this turn's HP loss, whether the Mantle is already up or played now (Y83U F30 T3: a
   // Mantle plan showed hp_lost 0).
-  // An Inferno played this turn (none up before) adds its own 1 HP at the start of every later turn.
-  const newInferno = (input.player.inferno ?? 0) === 0 && sim.inferno > 0 ? 1 : 0;
-  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + newInferno;
+  // Each Inferno played this turn adds its own 1 HP at the start of every later turn, a second one too (the copies up
+  // are in startTurnHpLoss: C4F14F3XPN0N F33, two Inferno+ took 2; a second Inferno had looked free).
+  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + sim.infernos;
   const turnLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
   // Self-Forming Clay: next turn's block, CLAY_BLOCK for each HP loss of this turn (ours so far, a held card's
   // HP loss, Disintegration past block, each held Burn or enemy hit past block and Buffer) on top of what is owed.
@@ -3013,7 +3045,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3145,6 +3177,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     dazedAdded: 0,
     escapes: 0,
     mantles: 0,
+    infernos: 0,
     enraged: 0,
     tainted: 0,
     inferno: input.player.inferno ?? 0,
