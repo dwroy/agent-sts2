@@ -51,7 +51,7 @@ import { withAddedAtRandom } from "../sl/draws.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
-import type { SolverPieces } from "./passive-pieces.js";
+import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
 import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
@@ -1618,19 +1618,12 @@ function endBlockRelics(input: RolloutInput): Pick<PlayerSim, "orichalcum" | "ri
 }
 
 /**
- * PASSIVE_PIECES: the relic pieces for a later turn's solver (RolloutInput.passive), a new turn's counts at 0; the same
+ * PASSIVE_PIECES: the relic pieces for a turn's solver (RolloutInput.passive): a later turn's counters at 0, the decision
+ * turn's (a whole fight's start turn the policy plays: `from`, the live planner's own fields) where it has them; the same
  * Orichalcum / Ripple Basin numbers as endBlockRelics where both are set (the whole-fight sim), so nothing counts twice.
  */
-function passiveSolverFields(input: RolloutInput): Pick<PlayerSim, "orichalcum" | "rippleBasin" | "letterOpener" | "ornamentalFan" | "parryingShield"> {
-  const p = input.passive;
-  if (!p) return {};
-  return {
-    ...(p.orichalcum ? { orichalcum: p.orichalcum } : {}),
-    ...(p.rippleBasin ? { rippleBasin: p.rippleBasin } : {}),
-    ...(p.letterOpener ? { letterOpener: { ...p.letterOpener, count: 0 } } : {}),
-    ...(p.ornamentalFan ? { ornamentalFan: { ...p.ornamentalFan, count: 0 } } : {}),
-    ...(p.parryingShield ? { parryingShield: { ...p.parryingShield } } : {}),
-  };
+function passiveSolverFields(input: RolloutInput, from?: PlayerSim): Pick<PlayerSim, "orichalcum" | "rippleBasin" | "letterOpener" | "ornamentalFan" | "parryingShield" | "orichalcumPlating"> {
+  return solverFieldsOf(input.passive, { letterOpener: from?.letterOpener?.count ?? 0, ornamentalFan: from?.ornamentalFan?.count ?? 0 });
 }
 
 /** Whole fights (B2): Pendulum's extra draws on a fight turn. */
@@ -2453,7 +2446,7 @@ function simulate(
     const { drawPile: _d, knownTop: _k, ...rest } = s;
     // B5: the one-turn lookahead (whole fights, when set) replaces the decision's nextIncoming with the sim's own forecast.
     const ahead = fullFight ? lookaheadOf(opts, enemies, input, player, s.player.hp) : null;
-    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input), ...passiveSolverFields(input) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
+    const solved = solveTurn({ ...rest, ...(fullFight ? { player: { ...s.player, ...endBlockRelics(input), ...passiveSolverFields(input, s.player) } } : {}), ...withLookahead(policyWeights(opts, s.player, s.enemies), ahead), hand: firstHand, maxNodes: policyNodes });
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
     first = solved.plans[0] ?? null;

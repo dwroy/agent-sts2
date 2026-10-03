@@ -19,6 +19,7 @@ import { deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js"
 import type { CardModel } from "../src/strategy/card-model.js";
 import { isFightPlanReply } from "../src/strategy/fight-plan.js";
 import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { passivePiecesOptions } from "../src/strategy/passive-pieces.js";
 import { rolloutDecision, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
 import { MUSIC_BOX_INDEX, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -207,6 +208,7 @@ describe("fight plan: askJson checks the reply is a fight plan (batch M left its
 describe("\"ending now kills\" note names the HP the held cards take straight off (5HHL F17 T7: two Beckons, 12 of the 37 unnamed)", () => {
   afterEach(() => {
     rolloutLiveOptions.enabled = true;
+    passivePiecesOptions.enabled = true;
   });
   const card = (index: number, cardId: string, name: string, overrides: Partial<CardModel> = {}): CardModel => ({
     index, key: `c${index}`, cardId, name, type: "Status", upgraded: false, cost: -1, xCost: false, playable: false, target: "none", validTargets: [],
@@ -218,6 +220,9 @@ describe("\"ending now kills\" note names the HP the held cards take straight of
 
   it("the logged board: \"37 HP lost in all, 25 of it the enemy hits after block, 12 HP lost to cards held (呼唤 ×2)\"", { timeout: 30_000 }, () => {
     rolloutLiveOptions.enabled = false;
+    // The logged numbers are the planner's without PASSIVE_PIECES: the run holds Ripple Basin, whose 4 block on a turn
+    // with no Attack now makes the Attack-free line 4 cheaper and the HP guard play it instead of Jev's pick.
+    passivePiecesOptions.enabled = false;
     const fx = logged("batch-n/5hhl-f17-t7-beckon");
     expect(fx.decision.rationale).toMatch(/37 HP lost in all, 25 of it the enemy hits after block\]/);
     const decision = planCombatTurn(loggedEnv(fx)) as unknown as { kind: string; resolve?: (answers: AnswerSet) => { rationale: string }; questions?: Record<string, { type: string; criteria: Record<string, string> }> };

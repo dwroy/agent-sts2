@@ -17,7 +17,7 @@ import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { passiveSimRelic } from "../src/sim/boss-start.js";
 import { bossClock, bossClockJson, BOSSES, bossLossPerTurn, deckEstimate, deckProfileForBoss, mechanicFactor, rawDeckDamage, setUnblockedSharesForTests } from "../src/strategy/boss-clock.js";
-import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, LETTER_OPENER, ORNAMENTAL_FAN, PARRYING_SHIELD, passivePiecesOptions, solverPiecesOf } from "../src/strategy/passive-pieces.js";
+import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, LETTER_OPENER, liveSolverFields, ORNAMENTAL_FAN, PARRYING_SHIELD, passivePiecesOptions, solverPiecesOf } from "../src/strategy/passive-pieces.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
 import { boardRolloutInput, fightRelicsOf, relicBlockOf, rolloutLiveOptions, type MonsterMoves } from "../src/strategy/rollout-live.js";
 import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
@@ -53,6 +53,11 @@ function solved(raw: Raw): { input: SolverInput; result: SolveResult } {
 }
 
 const steps = (plan: Plan) => plan.steps.map((step) => step.cardId).join(",");
+/** A solver input without the passive pieces' fields (the live planner sets them with PASSIVE_PIECES on). */
+const bare = (input: SolverInput): SolverInput => {
+  const { orichalcum: _o, rippleBasin: _r, letterOpener: _l, ornamentalFan: _f, parryingShield: _p, orichalcumPlating: _op, ...player } = input.player;
+  return { ...input, player };
+};
 const hpBlock = (plan: Plan, input: SolverInput) =>
   plan.outcome.enemyHpAfter.map((e) => e.hp + (e.block ?? input.enemies.find((x) => x.index === e.index)?.block ?? 0));
 
@@ -91,7 +96,7 @@ describe("the pieces as the later turns' solver and the B3 relic list read them"
 
 describe("the solver's new pieces (set only by the later turns; the live current turn leaves them unset)", () => {
   it("Letter Opener (7PWU4CD3QCP3 F48 T4, the Queen's Weak 98): the 3rd Skill deals 5 to every enemy, through block", () => {
-    const { input } = solved(board("7pwu-f48-t4"));
+    const input = bare(solved(board("7pwu-f48-t4")).input);
     // Three Defends (1 energy each): three Skills (Chains of Binding's Soulbound taken off: one of them locks the rest).
     const hand = input.hand.filter((card) => card.cardId === "DEFEND_IRONCLAD").slice(0, 3).map((card) => ({ ...card, soulbound: false }));
     expect(hand).toHaveLength(3);
@@ -108,7 +113,7 @@ describe("the solver's new pieces (set only by the later turns; the live current
   });
 
   it("Ornamental Fan (4JGPCH3WX6JV F48 T3, Frail 99): the 3rd Attack gives 4 block, not cut by Frail", () => {
-    const { input } = solved(board("4jgp-f48-t3"));
+    const input = bare(solved(board("4jgp-f48-t3")).input);
     // Chains of Binding's Soulbound taken off (one of them locks the rest).
     const attacks = input.hand.filter((card) => card.type === "Attack" && card.cost <= 1).slice(0, 3).map((card) => ({ ...card, soulbound: false }));
     expect(attacks).toHaveLength(3);
@@ -120,7 +125,7 @@ describe("the solver's new pieces (set only by the later turns; the live current
   });
 
   it("Parrying Shield (8D8DZ9K680C2 F48 T7): 10+ block at the end, Plating counted, hits a random enemy for 6 before it attacks", () => {
-    const { input } = solved(board("8d8d-f48-t7"));
+    const input = bare(solved(board("8d8d-f48-t7")).input);
     const shield = { ...PARRYING_SHIELD };
     const queen = (plan: Plan) => plan.outcome.enemyHpAfter[0]!.hp;
     // No card played: the block left is the state's (0) and nothing at the end: no hit.
@@ -131,10 +136,56 @@ describe("the solver's new pieces (set only by the later turns; the live current
     expect(queen(solveTurn(plated).plans[0]!) - queen(solveTurn({ ...plated, player: { ...plated.player, parryingShield: shield } }).plans[0]!)).toBe(PARRYING_SHIELD.damage);
   });
 
+  it("the live planner's current turn: the run's pieces with the relics' counters, 0 before the turn's first card; none off", () => {
+    // 7PWU4CD3QCP3 F48 T4: Letter Opener, no card played yet (its stack shows the last turn's count).
+    expect(solved(board("7pwu-f48-t4")).input.player.letterOpener).toEqual({ every: 3, damage: 5, count: 0 });
+    // 4JGPCH3WX6JV F48 T3: Ornamental Fan and Parrying Shield.
+    const fan = solved(board("4jgp-f48-t3")).input.player;
+    expect(fan.ornamentalFan).toEqual({ every: 3, block: 4, count: 0 });
+    expect(fan.parryingShield).toEqual({ block: 10, damage: 6 });
+    // A8ENYFR4ZWKG F48 T7: Orichalcum, with Plating not stopping it.
+    const ori = solved(board("a8en-f48-t7")).input.player;
+    expect(ori.orichalcum).toBe(6);
+    expect(ori.orichalcumPlating).toBe(true);
+    // Mid-turn: the relic's own counter mod 3 (2 Skills counted).
+    const mid = board("7pwu-f48-t4");
+    const combat = mid["combat"] as Raw;
+    (combat["player"] as Raw)["cards_played_this_turn"] = 2;
+    for (const relic of (mid["run"] as Raw)["relics"] as Raw[]) if (relic["relic_id"] === "LETTER_OPENER") relic["stack"] = 2;
+    expect(solved(mid).input.player.letterOpener?.count).toBe(2);
+    // Ripple Basin (the run's relics given here): on a fresh turn; not once an Attack was played this turn.
+    const basin = { relics: [{ relic_id: "RIPPLE_BASIN", stack: null }] };
+    expect(liveSolverFields(basin, 0, 0).rippleBasin).toBe(4);
+    expect(liveSolverFields(basin, 2, 1).rippleBasin).toBeUndefined();
+    expect(liveSolverFields(basin, 2, 0).rippleBasin).toBe(4);
+    // Off: none of the fields.
+    passivePiecesOptions.enabled = false;
+    for (const key of ["7pwu-f48-t4", "4jgp-f48-t3", "a8en-f48-t7"]) {
+      const player = solved(board(key)).input.player;
+      expect([player.letterOpener, player.ornamentalFan, player.parryingShield, player.orichalcum, player.rippleBasin, player.orichalcumPlating]).toEqual([undefined, undefined, undefined, undefined, undefined, undefined]);
+    }
+  });
+
+  it("Orichalcum (A8ENYFR4ZWKG F48 T7, Plating 9 up): Plating played this turn does not stop it either, with orichalcumPlating; before, it did", () => {
+    const input = bare(solved(board("a8en-f48-t7")).input);
+    // One card: a Plating card of the hand's model (Stone Armor-like: 4 Plating, no block), nothing else this turn.
+    const plating = { ...input.hand[0]!, cardId: "STONE_ARMOR", name: "Stone Armor", type: "Power", cost: 0, xCost: false, damage: null, hits: 0, block: 0, plating: 4, target: "self", validTargets: [], playable: true, special: "plating" } as SolverInput["hand"][number];
+    const one = { ...input, hand: [plating], player: { ...input.player, block: 0, energy: 1 } };
+    const played = (player: Partial<PlayerSim>) => solveTurn({ ...one, player: { ...one.player, ...player } }).plans.find((plan) => steps(plan) === "STONE_ARMOR")!;
+    const before = played({ orichalcum: 6 });
+    const after = played({ orichalcum: 6, orichalcumPlating: true });
+    const none = played({});
+    // Before: Plating played stopped Orichalcum (the same HP lost as without it); now its 6 comes on top.
+    expect(before.outcome.hpLoss).toBe(none.outcome.hpLoss);
+    expect(none.outcome.hpLoss - after.outcome.hpLoss).toBe(Math.min(6, none.outcome.incomingAfterBlock));
+  });
+
   it("unset, the solver is as before: the logged boards' plans are the same with the fields absent", () => {
+    passivePiecesOptions.enabled = false;
     for (const key of ["8d8d-f48-t7", "7pwu-f48-t4", "f4k8-f48-t3"]) {
       const { input, result } = solved(board(key));
       expect(JSON.stringify(solveTurn(input).plans)).toBe(JSON.stringify(result.plans));
+      expect(JSON.stringify(solveTurn(bare(input)).plans)).toBe(JSON.stringify(result.plans));
     }
   });
 });

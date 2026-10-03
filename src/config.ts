@@ -275,7 +275,8 @@ export interface AppConfig {
    * PASSIVE_PIECES (default on; src/strategy/passive-pieces.ts, Dai 2026-10-03): the passive damage and block pieces (Thorns,
    * Flame Barrier, Mercury Hourglass, Inferno, Sai, Crimson Mantle, Plating, Orichalcum, Ripple Basin, Horn Cleat, Letter
    * Opener, Ornamental Fan, Parrying Shield) in the rollout's later turns, the whole-fight boss sim and the boss clock, the
-   * clock's passive damage not cut by the Queen's Weak. off: those three exactly as before.
+   * clock's passive damage not cut by the Queen's Weak; the last five relics in the live solver's current turn too, and
+   * Plating no longer stopping Orichalcum. off: all of them exactly as before.
    */
   passivePieces: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
