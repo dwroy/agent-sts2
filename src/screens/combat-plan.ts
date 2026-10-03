@@ -4644,15 +4644,50 @@ function intentHits(combat: Record<string, unknown>): number[] {
     );
 }
 
+/** The least damage one Inferno adds to INFERNO_POWER (Inferno 6, Inferno+ 9): its amount over this is the most copies up. */
+const INFERNO_LEAST_PER_COPY = 6;
+
 /**
- * The HP the turn's hits leave with the tail's revive among them (block first, back at `revive` the first time HP reaches
- * 0), or null when the hits do not kill (no revive in the count).
+ * What the end of our turn takes besides the enemy hits, for the tail's lethal read (an over-count, never under): the held
+ * cards' end-of-turn damage in hand order (Burn, Wither: through block) and HP loss (Beckon: past it; card-model
+ * heldPenaltyOf), and our HP loss at the next turn's start (Inferno 1 for each copy at most, its amount over 6; Crimson
+ * Mantle's cost; poison on us, its amount). ET3V5177HXSY F48 T9 (ops 2026-10-03): 12 HP + 7 block, no attack shown, two held
+ * Wither+2 (9 each) and Crimson Mantle up: 18 - 7 left 1, the Mantle's 1 at T10's start took it, the tail fired and T10
+ * opened at 37 of 74; the read had counted the intents alone ("not lethal"), so the tail stayed "left" and the judge said
+ * "a revive is left" at T13, when it was gone (died with 5 retries unused).
  */
-function hitsThroughTail(hp: number, block: number, hits: number[], revive: number): number | null {
+function ownTurnEndLosses(combat: Record<string, unknown>): { heldHits: number[]; heldLoss: number; startLoss: number } {
+  const heldHits: number[] = [];
+  let heldLoss = 0;
+  for (const card of asArray(combat["hand"]).map(asRecord)) {
+    const { heldPenalty, heldHpLoss } = heldPenaltyOf(str(card["resolved_rules_text"]) || str(card["rules_text"]));
+    if (heldPenalty - heldHpLoss > 0) heldHits.push(heldPenalty - heldHpLoss);
+    heldLoss += heldHpLoss;
+  }
+  const player = asRecord(combat["player"]);
+  const inferno = powerAmount(player, "INFERNO_POWER");
+  const startLoss =
+    (inferno > 0 ? Math.max(1, Math.floor(inferno / INFERNO_LEAST_PER_COPY)) : 0) + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")) + Math.max(0, powerAmount(player, "POISON_POWER"));
+  return { heldHits, heldLoss, startLoss };
+}
+
+/**
+ * The HP the end of the turn leaves with the tail's revive among them, or null when it does not kill (no revive in the
+ * count): the held cards' damage, then the enemy hits, each through what is left of the block; the held cards' HP loss
+ * and the next turn's start loss past it; back at `revive` the first time HP reaches 0 (the overflow lost).
+ */
+function hitsThroughTail(hp: number, block: number, hits: number[], revive: number, own: { heldHits?: number[]; heldLoss?: number; startLoss?: number } = {}): number | null {
   let revived = false;
-  for (const hit of hits) {
-    const through = Math.max(0, hit - block);
-    block = Math.max(0, block - hit);
+  const losses: { amount: number; blocked: boolean }[] = [
+    ...(own.heldHits ?? []).map((amount) => ({ amount, blocked: true })),
+    { amount: own.heldLoss ?? 0, blocked: false },
+    ...hits.map((amount) => ({ amount, blocked: true })),
+    { amount: own.startLoss ?? 0, blocked: false },
+  ];
+  for (const { amount, blocked } of losses) {
+    if (amount <= 0) continue;
+    const through = blocked ? Math.max(0, amount - block) : amount;
+    if (blocked) block = Math.max(0, block - amount);
     hp -= through;
     if (hp <= 0) {
       if (revived) return hp;
@@ -4675,8 +4710,11 @@ function tailHpSays(last: TailLast, hp: number, revive: number): string | null {
   if (!(hp > 0 && hp <= revive)) return null;
   if (hp > last.hp) return `HP rose ${last.hp} -> ${hp} after a lethal read`;
   if (hp >= revive - LIZARD_TAIL_SLACK) return `HP ${hp} at the revive's ${revive}`;
-  const through = last.hits ? hitsThroughTail(last.hp, last.block ?? 0, last.hits, revive) : null;
-  if (through !== null && Math.abs(through - hp) <= LIZARD_TAIL_SLACK) return `HP ${hp}, the hits ${last.hits!.join("+")} through the revive leave ${through}`;
+  const through = last.hits ? hitsThroughTail(last.hp, last.block ?? 0, last.hits, revive, last) : null;
+  if (through !== null && Math.abs(through - hp) <= LIZARD_TAIL_SLACK) {
+    const own = [...(last.heldHits ?? []).map((hit) => `held ${hit}`), ...((last.heldLoss ?? 0) > 0 ? [`held loss ${last.heldLoss}`] : []), ...((last.startLoss ?? 0) > 0 ? [`next turn's start ${last.startLoss}`] : [])];
+    return `HP ${hp}, the hits ${[...last.hits!.map(String), ...own].join("+")} through the revive leave ${through}`;
+  }
   return null;
 }
 
@@ -4690,8 +4728,10 @@ function tailHpSays(last: TailLast, hp: number, revive: number): string | null {
  *   logged since 2026-09-28, when states that change the run journal began to be logged; no tail fight has an enemy-turn
  *   frame logged, so this is not seen in the logs, and the loop logs the state this rule marks for the replay);
  * - the next turn of the fight after our turn's last state read lethal (the mod's end_turn_will_kill_player, or the
- *   intents past our block at least our HP), no Fairy spent: tailHpSays (6 of the 6 next-turn triggers; the old rule, the
- *   window alone, read 5 and missed Y8E0 F48's 28: 14 HP against 12x3, 2 -> 0 -> 40 -> 28);
+ *   intents and the held cards' end-of-turn damage past our block, with the held cards' HP loss and our own loss at the
+ *   next turn's start, at least our HP: ownTurnEndLosses), no Fairy spent: tailHpSays (7 of the 7 next-turn triggers; the
+ *   old rule, the window alone, read 5 and missed Y8E0 F48's 28: 14 HP against 12x3, 2 -> 0 -> 40 -> 28; the intents
+ *   alone missed ET3V5177HXSY F48's T10, 12 HP + 7 block and no attack, two held Wither+2 and Crimson Mantle's 1: 37 of 74);
  * - a Fairy spent too: the next turn above the Fairy's 30% (it cannot leave more) and at most the tail's 50% after a
  *   lethal read (none logged; the 12 logged Fairy revives all opened at or under 30%);
  * - the fight won in the enemy turn after a lethal end of turn (end_turn sent: noteLizardTailEndTurn), no Fairy spent:
@@ -4762,8 +4802,14 @@ export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: Game
   if (state.combat?.can_use_combat_actions === false) return null;
   const hits = intentHits(combat);
   const block = num(player["block"]);
-  const lethal = bool(combat["end_turn_will_kill_player"]) || hits.reduce((sum, hit) => sum + hit, 0) - block >= hp;
-  tail.last = { fight, turn, hp, block, lethal, fairies, hits };
+  // The held cards and the next turn's start count too (ownTurnEndLosses; ET3V5177HXSY F48 T9).
+  const own = ownTurnEndLosses(combat);
+  const sum = (list: number[]) => list.reduce((total, hit) => total + hit, 0);
+  const lethal = bool(combat["end_turn_will_kill_player"]) || Math.max(0, sum(hits) + sum(own.heldHits) - block) + own.heldLoss + own.startLoss >= hp;
+  tail.last = {
+    fight, turn, hp, block, lethal, fairies, hits,
+    ...(own.heldHits.length > 0 ? { heldHits: own.heldHits } : {}), ...(own.heldLoss > 0 ? { heldLoss: own.heldLoss } : {}), ...(own.startLoss > 0 ? { startLoss: own.startLoss } : {}),
+  };
   return null;
 }
 

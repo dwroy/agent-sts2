@@ -69,7 +69,8 @@ describe("trackLizardTail reads the revive from our HP (Y8E0KK4L7JBL F48 and the
     const y = sequence("y8e0-f48");
     const state = parse(y["t6-end"]!);
     const ctx = { label: y["t6-end"]!.decision!.label, knowledge: loggedKnowledge };
-    expect(judgeEndTurn(state, { ...ctx, revives: ["LIZARD_TAIL"] })).toMatchObject({ certain: false, reason: "a revive is left (LIZARD_TAIL)" });
+    // 14 HP against 30: the tail brings us back at 40 and nothing hits after it (docs/sl.md §2.7).
+    expect(judgeEndTurn(state, { ...ctx, revives: ["LIZARD_TAIL"] })).toMatchObject({ certain: false, reason: "a revive is left (LIZARD_TAIL): back at 40 HP, the rest of the turn leaves 40", revive: { used: ["LIZARD_TAIL"], backAt: [40], hpLeft: 40, saved: true } });
     const memory = createScreenMemory("COMBAT");
     for (const name of ["t3-end", "t4-start", "t6-end"]) feed(memory, y[name]!);
     const verdict = judgeEndTurn(state, { ...ctx, revives: sources(memory, y["t6-end"]!) });
