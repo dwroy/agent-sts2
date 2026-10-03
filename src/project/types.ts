@@ -251,10 +251,19 @@ export interface ScreenMemory {
   turnStartExhaust?: { key: string; size: number };
   /**
    * Lizard Tail (once a run: back at 50% of max HP instead of dying) seen to trigger this run: the relic shows
-   * no used mark (logged `stack` null, `is_melted` false before and after). `last` is the last combat state
-   * read while it is held (combat-plan trackLizardTail). Kept across the run; rebuilt by the journal replay.
+   * no used mark (logged `stack` null, `is_melted` false before and after). `last` is our turn's last combat state
+   * read while it is held (its HP, block, whether it read lethal, the Fairies held, the intents' hits in order, and
+   * whether end_turn went out on it); `fight` the fight being read (act:floor), whether the tail was spent when it began
+   * (an SL reload restores that) and the turn reached; `seen` where and how the use was read (combat-plan
+   * trackLizardTail). Kept across the run; rebuilt by the journal replay.
    */
-  lizardTail?: { runId: string; used: boolean; last?: { fight: string; turn: number; hp: number; lethal: boolean; fairies: number } };
+  lizardTail?: {
+    runId: string;
+    used: boolean;
+    last?: { fight: string; turn: number; hp: number; block?: number; lethal: boolean; fairies: number; hits?: number[]; ended?: boolean };
+    fight?: { key: string; usedAtStart: boolean; turn: number };
+    seen?: { fight: string; turn: number; how: string };
+  };
   /**
    * Combat HP guard: extra HP (over the cheapest offered plan) accepted from Jev/escalator plan
    * choices in this fight (`fight` = act:floor), one entry per turn (the plan played that turn; a

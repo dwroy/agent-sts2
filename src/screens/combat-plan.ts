@@ -37,6 +37,7 @@ import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHA
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
+import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "./rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../strategy/boss-clock.js";
 import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, pickRolloutBest, rolloutFacts, rolloutKillLine, rolloutLiveOptions, rolloutLog, thiefSamples, type KillGroup, type LiveRollout } from "../strategy/rollout-live.js";
@@ -4521,11 +4522,18 @@ export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: nu
 export const FAIRY_REVIVE_SHARE = 0.3;
 /**
  * Lizard Tail: back at this share of max HP (the text's {Heal}% is unfilled in the game data; logged triggers:
- * 0NG27W8QBNYX F24 17 -> 35 of 71, PU21Z67J65NE F33 18 -> 44 of 89, V5S6QVVQYL37 F17 6 -> 39 of 80).
+ * 0NG27W8QBNYX F24 17 -> 35 of 71, PU21Z67J65NE F33 18 -> 44 of 89, V5S6QVVQYL37 F17 6 -> 39 of 80, Y8E0KK4L7JBL F48
+ * 14 -> 0 -> 40 -> 28 of 80 under the Torch Head's 12x3).
  */
 export const LIZARD_TAIL_REVIVE_SHARE = 0.5;
 /** A Lizard Tail trigger read up to this much under its HP (a start-of-turn loss after it: V5S6 39 of 80). */
 const LIZARD_TAIL_SLACK = 5;
+/**
+ * The heals at a fight's end, for a fight won in the enemy turn (trackLizardTail): Burning Blood 6 (relic-values) and
+ * Meat on the Bone 12 (logged 2026-10-03: 20 won fights below max HP holding both healed exactly 18). Black Blood is not
+ * measured (no logged fight): left out, so a fight end with it reads the tail as spent sooner, never later.
+ */
+const FIGHT_END_HEALS: Record<string, number> = { BURNING_BLOOD: RELIC_VALUES["BURNING_BLOOD"]?.["Heal"] ?? 6, MEAT_ON_THE_BONE: 12 };
 
 function fairiesHeld(runRaw: Record<string, unknown>): Record<string, unknown>[] {
   return asArray(runRaw["potions"]).map(asRecord).filter((slot) => bool(slot["occupied"]) && str(slot["potion_id"]) === "FAIRY_IN_A_BOTTLE");
@@ -4544,48 +4552,163 @@ export function revivesOf(state: GameState, memory: DecisionEnv["screenMemory"],
   return [...fairies, ...(tail && !spent ? [{ source: "LIZARD_TAIL", name: str(tail["name"], "Lizard Tail"), hp: Math.max(1, Math.floor(maxHp * LIZARD_TAIL_REVIVE_SHARE)) }] : [])];
 }
 
+type TailRecord = NonNullable<DecisionEnv["screenMemory"]["lizardTail"]>;
+type TailLast = NonNullable<TailRecord["last"]>;
+
+/** The attack hits of the living enemies' intents, in the order they land (each enemy's damage, `hits` times). */
+function intentHits(combat: Record<string, unknown>): number[] {
+  return asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false)
+    .flatMap((enemy) =>
+      asArray(enemy["intents"])
+        .map(asRecord)
+        .flatMap((intent) => {
+          const damage = numOrNull(intent["damage"]) ?? 0;
+          return damage > 0 ? Array<number>(Math.max(1, numOrNull(intent["hits"]) ?? 1)).fill(damage) : [];
+        }),
+    );
+}
+
 /**
- * Lizard Tail's one use this run, read from the states (called on every state the loop reads, and by the
- * journal replay after a restart): a combat turn that began at its HP (50% of max, up to LIZARD_TAIL_SLACK
- * under) right after a turn whose last state read lethal (the mod's end_turn_will_kill_player, or the
- * intents past our block at least our HP), with no Fairy spent in between.
+ * The HP the turn's hits leave with the tail's revive among them (block first, back at `revive` the first time HP reaches
+ * 0), or null when the hits do not kill (no revive in the count).
  */
-export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: GameState): void {
+function hitsThroughTail(hp: number, block: number, hits: number[], revive: number): number | null {
+  let revived = false;
+  for (const hit of hits) {
+    const through = Math.max(0, hit - block);
+    block = Math.max(0, block - hit);
+    hp -= through;
+    if (hp <= 0) {
+      if (revived) return hp;
+      hp = revive;
+      revived = true;
+    }
+  }
+  return revived ? hp : null;
+}
+
+/**
+ * After a lethal read at the end of our turn (`last`), whether HP `hp` (alive, no Fairy spent) says the tail fired: it
+ * is at most the revive HP and above what the turn ended at (6 of the 6 logged next-turn triggers; after a lethal read HP
+ * never rose without a revive: 0 of the 39 lethal reads survived without one, over 30,914 logged turn pairs of runs that
+ * never held the tail and 106 after it was spent; the 14 rises without a lethal read were heals), or within
+ * LIZARD_TAIL_SLACK under the revive HP (the old window: 5 of the 6, never wrong), or what the turn's hits leave with the
+ * revive among them (6 of the 6 within LIZARD_TAIL_SLACK, 5 exactly; none of the 39). The reason, or null.
+ */
+function tailHpSays(last: TailLast, hp: number, revive: number): string | null {
+  if (!(hp > 0 && hp <= revive)) return null;
+  if (hp > last.hp) return `HP rose ${last.hp} -> ${hp} after a lethal read`;
+  if (hp >= revive - LIZARD_TAIL_SLACK) return `HP ${hp} at the revive's ${revive}`;
+  const through = last.hits ? hitsThroughTail(last.hp, last.block ?? 0, last.hits, revive) : null;
+  if (through !== null && Math.abs(through - hp) <= LIZARD_TAIL_SLACK) return `HP ${hp}, the hits ${last.hits!.join("+")} through the revive leave ${through}`;
+  return null;
+}
+
+/**
+ * Lizard Tail's one use this run, read from the states (called on every state the loop reads, and by the journal replay
+ * after a restart). The relic shows nothing when it fires (logged stack null, is_melted false, the same text before and
+ * after: Y8E0KK4L7JBL F48 T3/T4/T6), so it is read from our HP; the logged triggers and how each rule reads them
+ * (2026-10-03, 7 runs held it, each fired it once: tools/lizard-tail-replay.ts):
+ * - an enemy-turn read (actions disabled) after our turn's last state of the fight showing our HP at 0 or under, with no
+ *   Fairy held now or then: the tail is firing (the Fairy, which goes first, left such a frame in 7 of the 7 Fairy revives
+ *   logged since 2026-09-28, when states that change the run journal began to be logged; no tail fight has an enemy-turn
+ *   frame logged, so this is not seen in the logs, and the loop logs the state this rule marks for the replay);
+ * - the next turn of the fight after our turn's last state read lethal (the mod's end_turn_will_kill_player, or the
+ *   intents past our block at least our HP), no Fairy spent: tailHpSays (6 of the 6 next-turn triggers; the old rule, the
+ *   window alone, read 5 and missed Y8E0 F48's 28: 14 HP against 12x3, 2 -> 0 -> 40 -> 28);
+ * - a Fairy spent too: the next turn above the Fairy's 30% (it cannot leave more) and at most the tail's 50% after a
+ *   lethal read (none logged; the 12 logged Fairy revives all opened at or under 30%);
+ * - the fight won in the enemy turn after a lethal end of turn (end_turn sent: noteLizardTailEndTurn), no Fairy spent:
+ *   tailHpSays on the HP after it less the fight-end heals (MZCG9T5G6TBZ F17: 17 HP + 10 block against the Waterfall
+ *   Giant's 30 explosion, out of the fight at 46 = 40 + Burning Blood's 6; missed before, the tail counted on to F33).
+ * An SL reload (the same fight from a lower turn: the save is the room's entry, every logged reload resumed at T1) puts
+ * the tail back as it was when the fight began; a tail spent in an earlier fight stays spent (the save holds it, as it
+ * holds the potions: a potion drunk in an attempt is there again on the retry). Returns the reason when this state marked
+ * the tail used, else null.
+ */
+export function trackLizardTail(memory: DecisionEnv["screenMemory"], state: GameState): string | null {
   const runId = str(state.raw["run_id"]);
-  if (!runId) return;
+  // The main menu (an SL reload, a restart) is no run: it neither resets the record nor reads anything.
+  if (!runId || runId === "run_unknown") return null;
   if (memory.lizardTail?.runId !== runId) memory.lizardTail = { runId, used: false };
   const tail = memory.lizardTail;
-  if (tail.used) return;
   const runRaw = asRecord(state.run?.raw);
   const combat = asRecord(state.raw["combat"]);
   const player = asRecord(combat["player"]);
   const held = asArray(runRaw["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "LIZARD_TAIL");
-  if (!held || !state.in_combat || numOrNull(player["current_hp"]) === null) {
+  const fairies = fairiesHeld(runRaw).length;
+  if (!state.in_combat) {
+    const last = tail.last;
     tail.last = undefined;
-    return;
+    tail.fight = undefined;
+    if (tail.used || !held || !last?.ended || !last.lethal || state.screen === "GAME_OVER" || fairies < last.fairies) return null;
+    const maxHp = state.run?.max_hp ?? 0;
+    const heal = Object.entries(FIGHT_END_HEALS).reduce((sum, [id, amount]) => sum + (asArray(runRaw["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === id) ? amount : 0), 0);
+    const says = state.run?.current_hp ? tailHpSays(last, state.run.current_hp - heal, Math.floor(maxHp * LIZARD_TAIL_REVIVE_SHARE)) : null;
+    return says ? markTail(tail, last.fight, last.turn, `the fight was won in the enemy turn after a lethal read: ${says} (less ${heal} healed at the fight's end)`) : null;
   }
+  if (numOrNull(player["current_hp"]) === null) return null;
   const hp = num(player["current_hp"]);
-  const revive = Math.floor(num(player["max_hp"]) * LIZARD_TAIL_REVIVE_SHARE);
   const fight = fightKey(state);
   const turn = state.turn ?? 0;
-  const fairies = fairiesHeld(runRaw).length;
-  const last = tail.last;
-  if (last && last.fight === fight && turn > last.turn && last.lethal && fairies >= last.fairies && hp > 0 && hp <= revive && hp >= revive - LIZARD_TAIL_SLACK) {
-    tail.used = true;
+  if (tail.fight?.key !== fight) tail.fight = { key: fight, usedAtStart: tail.used, turn };
+  else if (turn < tail.fight.turn) {
+    // An SL reload: the fight again from the room's save, the tail as it was then.
+    tail.used = tail.fight.usedAtStart;
+    if (!tail.used) tail.seen = undefined;
+    tail.fight.turn = turn;
     tail.last = undefined;
-    return;
+  } else tail.fight.turn = turn;
+  if (tail.used) return null;
+  if (!held) {
+    tail.last = undefined;
+    return null;
+  }
+  const last = tail.last && tail.last.fight === fight ? tail.last : undefined;
+  // At 0 or under in an enemy-turn read (actions disabled: all 7 logged 0 HP frames) after our turn's last state of this
+  // fight, with no Fairy held now or then (the Fairy goes first).
+  if (hp <= 0 && last && state.screen === "COMBAT" && state.combat?.can_use_combat_actions === false && fairies === 0 && last.fairies === 0) {
+    return markTail(tail, fight, turn, `HP ${hp} in combat with no Fairy held`);
+  }
+  const revive = Math.floor(num(player["max_hp"]) * LIZARD_TAIL_REVIVE_SHARE);
+  if (last && turn > last.turn && last.lethal) {
+    if (fairies >= last.fairies) {
+      const says = tailHpSays(last, hp, revive);
+      if (says) return markTail(tail, fight, turn, says);
+    } else if (hp > Math.floor(num(player["max_hp"]) * FAIRY_REVIVE_SHARE) && hp <= revive) {
+      return markTail(tail, fight, turn, `a Fairy spent and HP ${hp} above its ${Math.floor(num(player["max_hp"]) * FAIRY_REVIVE_SHARE)} after a lethal read`);
+    }
   }
   // Only our own turn's states set the turn's last word: the enemy turn reads in between with the turn number unchanged
   // (the revive lands there, and the next intents against the revived HP read "not lethal"), and overwrote it, so the
   // next turn's opening at 50% was not recognised (LTKW24N3R9PG F37: T4 7 HP + 5 block against 20, T5 opened at 37 of 74;
   // the solver kept counting on the tail at F43-F44, every F44 T1 line "spends 蜥蜴尾巴").
-  if (state.combat?.can_use_combat_actions === false) return;
-  const incoming = asArray(combat["enemies"])
-    .map(asRecord)
-    .filter((enemy) => enemy["is_alive"] !== false)
-    .reduce((sum, enemy) => sum + asArray(enemy["intents"]).map(asRecord).reduce((s, intent) => s + (numOrNull(intent["damage"]) ?? 0) * Math.max(1, numOrNull(intent["hits"]) ?? 1), 0), 0);
-  const lethal = bool(combat["end_turn_will_kill_player"]) || incoming - num(player["block"]) >= hp;
-  tail.last = { fight, turn, hp, lethal, fairies };
+  if (state.combat?.can_use_combat_actions === false) return null;
+  const hits = intentHits(combat);
+  const block = num(player["block"]);
+  const lethal = bool(combat["end_turn_will_kill_player"]) || hits.reduce((sum, hit) => sum + hit, 0) - block >= hp;
+  tail.last = { fight, turn, hp, block, lethal, fairies, hits };
+  return null;
+}
+
+function markTail(tail: TailRecord, fight: string, turn: number, how: string): string {
+  tail.used = true;
+  tail.last = undefined;
+  tail.seen = { fight, turn, how };
+  return how;
+}
+
+/**
+ * The loop sent end_turn on `state` (and the journal replay replays it): the turn's last state is an end of turn, so a
+ * fight won before our next turn was won in the enemy turn (trackLizardTail's fight-end rule; a fight won by our own
+ * last card, a heal on it included, is not: 15 logged lethal reads ended so with more HP than the read had).
+ */
+export function noteLizardTailEndTurn(memory: DecisionEnv["screenMemory"], state: GameState, intent: ActionRequest | null | undefined): void {
+  const last = memory.lizardTail?.last;
+  if (!last || intent?.action !== "end_turn" || memory.lizardTail?.runId !== str(state.raw["run_id"])) return;
+  if (last.fight === fightKey(state) && last.turn === (state.turn ?? 0)) last.ended = true;
 }
 
 /**

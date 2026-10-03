@@ -24,7 +24,7 @@ import { closeSync, existsSync, openSync, readSync, statSync } from "node:fs";
 import type { Knowledge } from "../knowledge/index.js";
 import { parseGameState, type GameState } from "../mod/schema.js";
 import type { RoutePlan } from "../screens/map.js";
-import { noteFacing, noteTurnStartExhaust, trackLizardTail } from "../screens/combat-plan.js";
+import { noteFacing, noteLizardTailEndTurn, noteTurnStartExhaust, trackLizardTail } from "../screens/combat-plan.js";
 import { rememberChosenNode, rememberMap } from "../screens/rest.js";
 import { runPlanLine, type RunPlan } from "../strategy/run-plan.js";
 import { noteFightStart } from "../strategy/thief.js";
@@ -307,6 +307,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
       // The node a logged map move chose (the rooms after it have no map position), as the live loop notes it.
       rememberChosenNode(memory, state, entry.intent);
       noteFacing(memory, state, entry.intent);
+      noteLizardTailEndTurn(memory, state, entry.intent);
       counts.recorded += 1;
       const plan = routePlanOf(decision, state, memory.routePlan);
       if (plan) {
