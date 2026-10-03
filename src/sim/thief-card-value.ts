@@ -23,10 +23,10 @@
 import { cardUpgrade } from "../knowledge/card-upgrades.js";
 import type { MonsterDb } from "../knowledge/monster-db.js";
 import type { DecisionEnv } from "../project/types.js";
-import { offHandCardModel } from "../strategy/card-model.js";
+import { offHandCardModel, pilePowerExtraCost } from "../strategy/card-model.js";
 import type { MoveModelData, RolloutInput } from "../strategy/rollout.js";
 import { missingCardKeys, thiefFightOf, thievesOf, type MissingCard } from "../strategy/thief.js";
-import { asRecord, str } from "../util/json.js";
+import { asArray, asRecord, str } from "../util/json.js";
 import { bossKey, syntheticBossStart } from "./boss-start.js";
 import { LOW_CONFIDENCE_B3 } from "./boss-trust.js";
 import { compareOptions, type DeckOption } from "./build-sim.js";
@@ -65,7 +65,9 @@ function stolenModel(env: DecisionEnv, card: MissingCard) {
     costs_x: info.xCost,
   };
   const own = card.upgraded && cardUpgrade(card.id) ? (upgradedEntry(raw) ?? raw) : raw;
-  return offHandCardModel(own, card.id, card.upgraded, 990, env.knowledge);
+  // Spiked Gauntlets: a Power 1 more, as the simulation's deck (rollout-live deckModels).
+  const powerExtraCost = pilePowerExtraCost(asArray(asRecord(env.state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
+  return offHandCardModel(own, card.id, card.upgraded, 990, env.knowledge, null, powerExtraCost);
 }
 
 /**

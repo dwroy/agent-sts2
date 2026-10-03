@@ -30,7 +30,7 @@ import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
 import { ENERGY_RELICS, PONDER_HEAL, SAI_BLOCK, SIPHON_HEAL } from "./boss-clock.js";
-import { offHandCardModel, type CardModel } from "./card-model.js";
+import { offHandCardModel, pilePowerExtraCost, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
 import {
   DEATH_HP,
@@ -432,11 +432,15 @@ export function deckSummary(runRaw: Record<string, unknown>): DeckSummary {
   return out;
 }
 
-/** The deck as base cards (no Strength/Weak), for the hand's base versions. */
+/**
+ * The deck as base cards (no Strength/Weak), for the hand's base versions (a hand card back in the piles) and the boss
+ * simulation's draw pile; a Power 1 more under Spiked Gauntlets (card-model pilePowerExtraCost: the deck's entries leave it out).
+ */
 export function deckModels(state: GameState, knowledge: Knowledge): CardModel[] {
+  const powerExtraCost = pilePowerExtraCost(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
   return asArray(asRecord(state.run?.raw)["deck"]).map((raw, i) => {
     const own = asRecord(raw);
-    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge);
+    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge, null, powerExtraCost);
   });
 }
 
