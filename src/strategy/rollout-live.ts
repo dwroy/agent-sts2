@@ -29,9 +29,10 @@ import { appliedPowerIds, countsAt, moveAmountAt, moveBaseDamages, moveDamageAt,
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../util/json.js";
-import { ENERGY_RELICS, PONDER_HEAL, SAI_BLOCK, SIPHON_HEAL } from "./boss-clock.js";
+import { ENERGY_RELICS, PONDER_HEAL, SIPHON_HEAL } from "./boss-clock.js";
 import { offHandCardModel, pilePowerExtraCost, type CardModel } from "./card-model.js";
 import { loadFightValueModel, type FightValueModel } from "./fight-value.js";
+import { CAPTAINS_WHEEL_BLOCK, CAPTAINS_WHEEL_TURN, HORN_CLEAT_BLOCK, HORN_CLEAT_TURN, ORICHALCUM_BLOCK, passivePiecesOptions, RIPPLE_BASIN_BLOCK, SAI_BLOCK, solverPiecesOf } from "./passive-pieces.js";
 import {
   DEATH_HP,
   gateFor,
@@ -334,22 +335,23 @@ export function relicEnergyOf(runRaw: Record<string, unknown>): { amount: number
 /**
  * Captain's Wheel: 「在你的第三回合开始时，获得{Block}点格挡」 — 18 (logged over 4 runs holding it: 19 of 20 third turns
  * began with 18 block before any card, 23 once with 5 from elsewhere; turns 1, 2, 4-12 with none). DHGT6Z3Q7VAP F33:
- * T3 began with the Wheel's 18; the rollouts from T1 and T2 had that turn at -9.6.
+ * T3 began with the Wheel's 18; the rollouts from T1 and T2 had that turn at -9.6. The number lives in passive-pieces.ts.
  */
-export const CAPTAINS_WHEEL_BLOCK = 18;
-export const CAPTAINS_WHEEL_TURN = 3;
+export { CAPTAINS_WHEEL_BLOCK, CAPTAINS_WHEEL_TURN };
 
 /**
  * The relics that give block at the start of fight turns, as the rollout's later turns get it (RolloutInput.relicBlock):
- * Captain's Wheel on turn 3, Sai on every turn up to `upto` (boss-clock SAI_BLOCK; 8D8DZ9K680C2 F48 T1: without it the
- * rollout read every line dying against the Queen and the boss sim gave 16%, T1-T5 cost 11 HP and the fight was won).
+ * Captain's Wheel on turn 3, Sai on every turn up to `upto` (passive-pieces SAI_BLOCK; 8D8DZ9K680C2 F48 T1: without it the
+ * rollout read every line dying against the Queen and the boss sim gave 16%, T1-T5 cost 11 HP and the fight was won),
+ * and with PASSIVE_PIECES on Horn Cleat on turn 2 (before, the whole-fight sim's alone: fightRelicsOf).
  */
-export function relicBlockOf(runRaw: Record<string, unknown>, upto = 40): { amount: number; turn: number }[] {
+export function relicBlockOf(runRaw: Record<string, unknown>, upto = 40, passive = passivePiecesOptions.enabled): { amount: number; turn: number }[] {
   const out: { amount: number; turn: number }[] = [];
   for (const relic of asArray(runRaw["relics"]).map(asRecord)) {
     const id = str(relic["relic_id"]);
     if (id === "CAPTAINS_WHEEL") out.push({ amount: CAPTAINS_WHEEL_BLOCK, turn: CAPTAINS_WHEEL_TURN });
     else if (id === "SAI") for (let turn = 1; turn <= upto; turn += 1) out.push({ amount: SAI_BLOCK, turn });
+    else if (id === "HORN_CLEAT" && passive) out.push({ amount: HORN_CLEAT_BLOCK, turn: HORN_CLEAT_TURN });
   }
   return out;
 }
@@ -357,10 +359,10 @@ export function relicBlockOf(runRaw: Record<string, unknown>, upto = 40): { amou
 /**
  * B2's turn relics for whole fights (fightRelicsOf), measured in the logs (logdb turns): Orichalcum's block when a turn
  * ends with none (13 of 18 enemy turns after a 0-block end took the intent less 6), Ripple Basin's when no Attack was
- * played (5 of 7: 4), Sturdy Clamp's block kept (turn-start block peaks at 10 without Barricade), Pendulum's card.
+ * played (5 of 7: 4), Sturdy Clamp's block kept (turn-start block peaks at 10 without Barricade), Pendulum's card. The
+ * first two live in passive-pieces.ts (PASSIVE_PIECES gives them to the 5-turn rollout's later turns too).
  */
-export const ORICHALCUM_BLOCK = 6;
-export const RIPPLE_BASIN_BLOCK = 4;
+export { ORICHALCUM_BLOCK, RIPPLE_BASIN_BLOCK };
 export const STURDY_CLAMP_BLOCK = 10;
 export const PENDULUM_DRAW = 1;
 
@@ -369,10 +371,11 @@ export const PENDULUM_DRAW = 1;
  * boss fight simulator only (RolloutInput.fightRelics; src/sim/boss-sim.ts, docs/boss-sim.md B1.5): the live planner and
  * the 5-turn rollout do not read them. Amounts as logged over the A7-A9 boss fights holding them (turn start energy /
  * block against the fights without): Candelabra 2 energy on turn 2 (22 fights: 5.2 against 3.1), Chandelier 3 on turn
- * 3 (15: 6.3), Horn Cleat 14 block on turn 2 (13: 14.5). Happy Flower: 1 energy every 3rd turn, its counter (stack) the
+ * 3 (15: 6.3), Horn Cleat 14 block on turn 2 (13: 14.5; with PASSIVE_PIECES on it is relicBlockOf's, for the 5-turn
+ * rollout too, and left out here so it counts once). Happy Flower: 1 energy every 3rd turn, its counter (stack) the
  * turns counted so far at `turn`, the decision's fight turn. Turns listed up to `upto`.
  */
-export function fightRelicsOf(runRaw: Record<string, unknown>, turn: number, upto = 40): NonNullable<RolloutInput["fightRelics"]> {
+export function fightRelicsOf(runRaw: Record<string, unknown>, turn: number, upto = 40, passive = passivePiecesOptions.enabled): NonNullable<RolloutInput["fightRelics"]> {
   const energy: { amount: number; turn: number }[] = [];
   const block: { amount: number; turn: number }[] = [];
   const draws: { amount: number; turn: number }[] = [];
@@ -384,7 +387,7 @@ export function fightRelicsOf(runRaw: Record<string, unknown>, turn: number, upt
     const id = str(relic["relic_id"]);
     if (id === "CANDELABRA") energy.push({ amount: 2, turn: 2 });
     else if (id === "CHANDELIER") energy.push({ amount: 3, turn: 3 });
-    else if (id === "HORN_CLEAT") block.push({ amount: 14, turn: 2 });
+    else if (id === "HORN_CLEAT" && !passive) block.push({ amount: HORN_CLEAT_BLOCK, turn: HORN_CLEAT_TURN });
     else if (id === "HAPPY_FLOWER") {
       const counted = typeof relic["stack"] === "number" ? Math.max(0, Math.min(2, relic["stack"] as number)) : 0;
       for (let t = turn + 3 - counted; t <= upto; t += 3) energy.push({ amount: 1, turn: t });
@@ -753,7 +756,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "playerPowers" | "potions" | "onShuffle"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "playerPowers" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -802,6 +805,8 @@ export function boardRolloutInput(
   if (hug) statusIds.add("SOOT");
   const statusCards = Object.fromEntries([...statusIds].map((id, k) => [id, statusCardModel(id, knowledge, 800 + k)]));
   const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
+  // PASSIVE_PIECES: the relic pieces the later turns' solver plays with (none held, or off: absent).
+  const passive = solverPiecesOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
   return {
     solver,
     enemies,
@@ -811,6 +816,7 @@ export function boardRolloutInput(
     ...(relicBlockOf(asRecord(state.run?.raw)).length > 0 ? { relicBlock: relicBlockOf(asRecord(state.run?.raw)) } : {}),
     ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
     ...(hug && statusCards["SOOT"] ? { onShuffle: statusCards["SOOT"] } : {}),
+    ...(passive ? { passive } : {}),
     playerPowers: powersOf(asRecord(combat["player"])),
     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),

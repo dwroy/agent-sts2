@@ -26,12 +26,13 @@ import { fileURLToPath } from "node:url";
 
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
 import type { Knowledge } from "../knowledge/index.js";
-import { bossDamageByTurn, bossHpAt, bossHpLoss, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
+import { bossDamageByTurn, bossHitsByTurn, bossHpAt, bossHpLoss, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
 import { measuredRoomExact } from "../knowledge/room-costs.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
+import { clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "./passive-pieces.js";
 import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
@@ -208,17 +209,31 @@ export function unblockedShare(bossKey: string): UnblockedShare | null {
  * of a boss's shown attack that got through our block in every logged fight against it (all ascensions:
  * that share is our play, not the monster). The hand-set A8 constant only when the DB has neither.
  */
-export function bossLossPerTurn(profile: BossProfile & { id: string }, ascension: number, turnBlock = 0): { value: number; source: string; estimated: boolean } {
+export function bossLossPerTurn(
+  profile: BossProfile & { id: string },
+  ascension: number,
+  turnBlock: number | { byTurn: number[]; names: string[] } = 0,
+): { value: number; source: string; estimated: boolean } {
   const damage = bossDamageByTurn(profile.id, ascension, profile.scriptTurns);
   const share = unblockedShare(profile.id);
   // Block a relic gives every turn (Sai, turnBlockOf) on top of the logged fights' own: it takes up to that much off what
   // got through each turn, nothing on a turn the boss does not attack (8D8DZ9K680C2 F48 with Sai: T1-T5 cost 11 HP).
-  const less = turnBlock > 0 ? ` less ${turnBlock} block a turn from Sai` : "";
-  if (!damage || !share || damage.perTurn.length === 0) return { value: Math.max(0, profile.lossPerTurn - turnBlock), source: `logged A8 HP loss a turn (no DB damage)${less}`, estimated: false };
+  // PASSIVE_PIECES: the passive block by fight turn (deckProfileForBoss turnBlock: Sai, Crimson Mantle, Plating, ...).
+  const blockAt = (t: number): number => (typeof turnBlock === "number" ? turnBlock : turnBlock.byTurn[t] ?? turnBlock.byTurn[turnBlock.byTurn.length - 1] ?? 0);
+  const turns = damage && damage.perTurn.length > 0 ? damage.perTurn.length : profile.scriptTurns;
+  const meanBlock = typeof turnBlock === "number" ? turnBlock : Array.from({ length: Math.max(1, turns) }, (_, t) => blockAt(t)).reduce((sum, b) => sum + b, 0) / Math.max(1, turns);
+  const less =
+    typeof turnBlock === "number"
+      ? turnBlock > 0 ? ` less ${turnBlock} block a turn from Sai` : ""
+      : meanBlock > 0 ? ` less ~${Math.round(meanBlock * 10) / 10} passive block a turn (${turnBlock.names.join(", ")}; not cut by Frail)` : "";
+  if (!damage || !share || damage.perTurn.length === 0) {
+    const value = typeof turnBlock === "number" ? Math.max(0, profile.lossPerTurn - turnBlock) : Math.max(0, Math.round((profile.lossPerTurn - meanBlock) * 10) / 10);
+    return { value, source: `logged A8 HP loss a turn (no DB damage)${less}`, estimated: false };
+  }
   const mean = damage.perTurn.reduce((sum, value) => sum + value, 0) / damage.perTurn.length;
   const value =
-    turnBlock > 0
-      ? Math.round((damage.perTurn.reduce((sum, hit) => sum + Math.max(0, hit * share.unblocked_share - turnBlock), 0) / damage.perTurn.length) * 10) / 10
+    meanBlock > 0
+      ? Math.round((damage.perTurn.reduce((sum, hit, t) => sum + Math.max(0, hit * share.unblocked_share - blockAt(t)), 0) / damage.perTurn.length) * 10) / 10
       : Math.round(mean * share.unblocked_share * 10) / 10;
   return {
     value,
@@ -691,9 +706,9 @@ export function giantNumbers(ascension: number): { hp: number; siphon: number; g
  * Sai: 「在你的回合开始时，获得{Block}点格挡」 — 7 at the start of every turn (logged over 14 runs holding it: turns 2-8
  * began with 7 at the median and never less; 8D8DZ9K680C2 F48, the Queen: T2-T11 each began with exactly 7). Block on
  * every one of our turns for the rollout (rollout-live relicBlockOf), the whole-fight boss sim and the boss clock (its
- * HP loss a turn: turnBlockOf).
+ * HP loss a turn: turnBlockOf). The number lives in passive-pieces.ts.
  */
-export const SAI_BLOCK = 7;
+export { SAI_BLOCK };
 
 /** Block the relics give at the start of every turn of a fight (Sai). */
 export function turnBlockOf(relicIds: string[]): number {
@@ -804,6 +819,22 @@ export interface DeckProfile {
   passiveAoe?: number;
   /** The passive damage sources named for the note. */
   passive?: string[];
+  /**
+   * PASSIVE_PIECES (passive-pieces.ts; absent with it off): the profile was built with the passive pieces, so deckEstimate
+   * keeps all passive damage out of the boss's mechanic cut (the Queen's Weak cuts the cards, not Inferno or Thorns).
+   */
+  passivePieces?: true;
+  /**
+   * PASSIVE_PIECES: passive damage a turn from turn 1, no Strength, no Vulnerable, no Weak: Mercury Hourglass, Letter
+   * Opener, Parrying Shield, and retaliation (Thorns, Flame Barrier) times the boss's expected attack hits a turn.
+   */
+  passiveStart?: number;
+  /** AoE part of `passiveStart` (Hourglass, Letter Opener). */
+  passiveStartAoe?: number;
+  /** PASSIVE_PIECES: passive block on each fight turn (index 0 = turn 1; Sai, Crimson Mantle, Plating, ...), not Frail-cut. */
+  turnBlock?: number[];
+  /** The passive block sources named for the note. */
+  passiveBlock?: string[];
   /** Turn a power drawn at random is played on average. */
   setupTurn: number;
   /** Strength-growth sources named for the note. */
@@ -853,6 +884,11 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   let inferno = 0;
   // Juggernaut: damage to a random enemy per block gained (6, Juggernaut+ 8).
   let juggernaut = 0;
+  // PASSIVE_PIECES: Flame Barrier's damage back per hit (summed over the copies, as they are drawn), Crimson Mantle's block
+  // a turn (its amount: 7, Mantle+ 10), Stone Armor's Plating (4, Stone Armor+ 6).
+  let flameBack = 0;
+  let mantleBlock = 0;
+  let stoneArmor = 0;
   let blockCards = 0;
   let vulnerable = 0;
   let lateEnergy = 0;
@@ -898,6 +934,9 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
       turnStartLoss.add("Crimson Mantle");
     } else if (card.hpLoss > 0) selfDamage += 1;
     if (card.cardId === "JUGGERNAUT") juggernaut += dynValue(entry, "JuggernautPower") ?? 6;
+    if (card.cardId === "FLAME_BARRIER") flameBack += dynValue(entry, "DamageBack") ?? 4;
+    if (card.cardId === "CRIMSON_MANTLE") mantleBlock += dynValue(entry, "CrimsonMantlePower") ?? 7;
+    if (card.cardId === "STONE_ARMOR") stoneArmor += dynValue(entry, "PlatingPower") ?? 4;
     if (card.block > 0) blockCards += 1;
     if (card.vulnerable > 0) vulnerable += 1;
   }
@@ -928,6 +967,13 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   const blockGains = blockCards * perCard + (turnStartLoss.has("Crimson Mantle") ? 1 : 0);
   const juggernautDamage = juggernaut * blockGains;
   if (juggernautDamage > 0) passive.push(`Juggernaut ${juggernaut} per block gain, ~${blockGains.toFixed(1)} gains a turn (~${juggernautDamage.toFixed(0)}/turn)`);
+  // A power is drawn on average halfway through the first shuffle.
+  const setupTurn = 1 + Math.round(n / (2 * HAND));
+  const pieces = passivePiecesOptions.enabled ? passiveOfDeck(state, relicIds, { flameBack: flameBack * perCard, mantleBlock, stoneArmor, setupTurn }) : null;
+  if (pieces) passive.push(...pieces.damageNames);
+  // PASSIVE_PIECES: any passive damage (Inferno and Juggernaut too: 24 of 24 logged Juggernaut hits under Weak exact,
+  // 5HHLMV2DZ5AZ F48 T5 against the Queen) stays out of the mechanic's cut.
+  const exempt = passivePiecesOptions.enabled && (pieces !== null || infernoDamage + juggernautDamage > 0);
   return {
     size: n,
     energy,
@@ -948,10 +994,50 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
     passiveDamage: infernoDamage + juggernautDamage,
     passiveAoe: infernoDamage,
     passive,
-    // A power is drawn on average halfway through the first shuffle.
-    setupTurn: 1 + Math.round(n / (2 * HAND)),
+    ...(exempt ? { passivePieces: true as const } : {}),
+    ...(pieces ? { passiveStart: pieces.damage, passiveStartAoe: pieces.aoe, turnBlock: pieces.turnBlock, passiveBlock: pieces.blockNames } : {}),
+    setupTurn,
     growth,
   };
+}
+
+/** Fight turns the clock's passive block is listed for (boss fights logged to 24 turns; bossLossPerTurn reads its script's). */
+const PASSIVE_BLOCK_TURNS = 30;
+
+/**
+ * PASSIVE_PIECES: the deck's and the relics' passive pieces for the clock (passive-pieces.ts clockRelicPieces and the
+ * cards': Flame Barrier's damage back per hit at its plays a turn, Crimson Mantle's block from the turn after the powers
+ * are played, Stone Armor's Plating from then, one less a turn). Retaliation is per hit of the boss's parts whose HP the
+ * clock counts (the Queen's own, not the Amalgam's), their expected hits a turn over its script (monster DB).
+ */
+function passiveOfDeck(
+  state: GameState,
+  relicIds: string[],
+  cards: { flameBack: number; mantleBlock: number; stoneArmor: number; setupTurn: number },
+): { damage: number; aoe: number; damageNames: string[]; turnBlock: number[]; blockNames: string[] } | null {
+  const relics = clockRelicPieces(relicIds);
+  const damage: ClockPiece[] = [...relics.damage];
+  const block: ClockPiece[] = [...relics.block];
+  if (cards.flameBack > 0) damage.push({ name: `Flame Barrier back per boss hit (~${cards.flameBack.toFixed(2)} a hit/turn)`, amount: cards.flameBack, from: 1, perHit: true });
+  if (cards.mantleBlock > 0) block.push({ name: `Crimson Mantle ${cards.mantleBlock} from T${cards.setupTurn + 1}`, amount: cards.mantleBlock, from: cards.setupTurn + 1 });
+  if (cards.stoneArmor > 0) block.push({ name: `Stone Armor Plating ${cards.stoneArmor} from T${cards.setupTurn}`, amount: cards.stoneArmor, from: cards.setupTurn, decays: true });
+  if (damage.length === 0 && block.length === 0) return null;
+  const bossId = str(asRecord(state.run?.raw)["boss_id"]);
+  const profile = bossProfile(bossId);
+  const hitsByTurn = profile && damage.some((piece) => piece.perHit) ? bossHitsByTurn(profile.id, state.run?.ascension ?? 0, profile.scriptTurns, profile.hpParts) : null;
+  const hitsPerTurn = hitsByTurn && hitsByTurn.length > 0 ? hitsByTurn.reduce((sum, h) => sum + h, 0) / hitsByTurn.length : 0;
+  let total = 0;
+  let aoe = 0;
+  const damageNames: string[] = [];
+  for (const piece of damage) {
+    const amount = piece.perHit ? piece.amount * hitsPerTurn : piece.amount;
+    if (amount <= 0) continue;
+    total += amount;
+    if (piece.aoe) aoe += amount;
+    damageNames.push(piece.perHit ? `${piece.name} x ~${hitsPerTurn.toFixed(1)} boss hits a turn (~${amount.toFixed(1)}/turn)` : piece.name);
+  }
+  const turnBlock = Array.from({ length: PASSIVE_BLOCK_TURNS }, (_, t) => block.reduce((sum, piece) => sum + clockBlockAt(piece, t + 1), 0));
+  return { damage: total, aoe, damageNames, turnBlock, blockNames: block.map((piece) => piece.name) };
 }
 
 /** Sum of a Strength ramp r, 2r, 3r, … that starts on turn `from` (inclusive), over turns 1..T, divided by T. */
@@ -990,15 +1076,35 @@ export function rawDeckDamage(deck: DeckProfile, bossId: string, turns: number):
   if (deck.vulnerableSources >= 2 && id !== "AEONGLASS") perTurn *= VULNERABLE_UPTIME;
   // Power damage (Inferno, Juggernaut) from the turn after the powers are played; no Strength, no Vulnerable,
   // not scaled by the energy powers. Inferno's AoE counts once per body into the crab.
-  const passive = (deck.passiveDamage ?? 0) + (deck.passiveAoe ?? 0) * (bodies - 1);
-  if (passive > 0 && turns > 0) perTurn += (passive * Math.max(0, turns - deck.setupTurn)) / turns;
-  return perTurn;
+  return perTurn + passiveDeckDamage(deck, bossId, turns);
 }
 
-/** Deck damage a turn in a T-turn fight against this boss: calibrated, and cut by the boss's mechanic. */
+/**
+ * The passive part of rawDeckDamage: power damage (Inferno, Juggernaut) from the turn after the powers are played, and
+ * with PASSIVE_PIECES the pieces from turn 1 (DeckProfile.passiveStart); no Strength, no Vulnerable, not scaled by the
+ * energy powers; AoE counted once per body into the crab.
+ */
+export function passiveDeckDamage(deck: DeckProfile, bossId: string, turns: number): number {
+  const bodies = bossProfile(bossId)?.id === "KAISER_CRAB" ? 2 : 1;
+  let out = 0;
+  const passive = (deck.passiveDamage ?? 0) + (deck.passiveAoe ?? 0) * (bodies - 1);
+  if (passive > 0 && turns > 0) out += (passive * Math.max(0, turns - deck.setupTurn)) / turns;
+  out += (deck.passiveStart ?? 0) + (deck.passiveStartAoe ?? 0) * (bodies - 1);
+  return out;
+}
+
+/**
+ * Deck damage a turn in a T-turn fight against this boss: calibrated, and cut by the boss's mechanic. PASSIVE_PIECES
+ * (a profile built with it): the mechanic cuts the cards' part only (calibrated as before); the passive part counts at
+ * the calibration's slope, uncut (the Queen's Weak: 8D8DZ9K680C2 F48 T7, Thorns + Flame Barrier 7 a hit of Off With Your
+ * Head under Weak 95, 35 for 35). Without the mechanic (factor 1) the two are the same number.
+ */
 export function deckEstimate(deck: DeckProfile, bossId: string, turns: number): number {
   const id = bossProfile(bossId)?.id ?? "";
-  return Math.round(calibrated(rawDeckDamage(deck, bossId, turns)) * mechanicFactor(id, deck, turns));
+  const raw = rawDeckDamage(deck, bossId, turns);
+  if (!deck.passivePieces || raw <= 0) return Math.round(calibrated(raw) * mechanicFactor(id, deck, turns));
+  const passive = passiveDeckDamage(deck, bossId, turns);
+  return Math.round((ESTIMATE_BASE + ESTIMATE_SLOPE * (raw - passive)) * mechanicFactor(id, deck, turns) + ESTIMATE_SLOPE * passive);
 }
 
 /** Ceremonial Beast Ringing turns in a T-turn fight: every third turn from T6 (02L4: T6, T9). */
@@ -1208,8 +1314,12 @@ export interface BossClock {
   mechanic: string;
   note: string;
   growth: string[];
-  /** Damage from powers (Inferno, Juggernaut) counted in `deck`, named for the note. */
+  /** Damage from powers (Inferno, Juggernaut) counted in `deck`, named for the note (PASSIVE_PIECES: the relics' and Flame Barrier's too). */
   passive?: string[];
+  /** PASSIVE_PIECES: the passive block in `lossPerTurn`, named for the note (absent with it off or none held). */
+  passiveBlock?: string[];
+  /** PASSIVE_PIECES: the deck profile was built with the passive pieces. */
+  passivePieces?: true;
   /** HP we lose a turn in this fight (bossLossPerTurn) and where it comes from. */
   lossPerTurn: number;
   lossNote: string;
@@ -1270,7 +1380,12 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   const ascension = state.run?.ascension ?? 0;
   const deck = deckProfileForBoss(state, knowledge);
   const entryHp = entryHpOverride ?? expectedEntryHp(state);
-  const loss = bossLossPerTurn(profile, ascension, turnBlockOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))));
+  // PASSIVE_PIECES: the passive block by turn (Sai with Crimson Mantle, Plating, Orichalcum, ...); off: Sai alone, as before.
+  const loss = bossLossPerTurn(
+    profile,
+    ascension,
+    deck?.turnBlock && deck.turnBlock.some((b) => b > 0) ? { byTurn: deck.turnBlock, names: deck.passiveBlock ?? [] } : turnBlockOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))),
+  );
   const survive = survivableTurns(profile, entryHp, loss.value);
   const estimateAt = (turns: number): number => (deck ? deckEstimate(deck, bossId, turns) : 0);
   const base = {
@@ -1282,6 +1397,8 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     note: bossNote(profile, ascension),
     growth: deck?.growth ?? [],
     passive: deck?.passive ?? [],
+    ...(deck?.passiveBlock && deck.passiveBlock.length > 0 ? { passiveBlock: deck.passiveBlock } : {}),
+    ...(deck?.passivePieces ? { passivePieces: true as const } : {}),
     lossPerTurn: loss.value,
     lossNote: loss.source,
   };
@@ -1423,10 +1540,13 @@ export function bossClockJson(state: GameState, knowledge: Knowledge): Record<st
     fight_turns_note: clock.turnsNote,
     need_damage_per_turn: clock.need,
     deck_damage_per_turn_estimate: clock.deck,
-    estimate_note: `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below`,
+    estimate_note: clock.passivePieces
+      ? `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, Vulnerable, and the boss mechanic below on the cards' part; passive damage (Inferno, Juggernaut, Thorns and Flame Barrier per boss hit, Mercury Hourglass, Letter Opener, Parrying Shield) at the same slope, not cut by the mechanic (Weak does not reduce it)`
+      : `calibrated on 215 logged A8 boss fights (${ESTIMATE_BASE} + ${ESTIMATE_SLOPE} x the card count; typical error ~25%): cards, energy, Strength growth averaged over the fight, power damage (Inferno, Juggernaut), Vulnerable, and the boss mechanic below`,
     gap_per_turn: clock.gap,
     ...(clock.growth.length > 0 ? { strength_growth: clock.growth.join("; ") } : {}),
     ...(clock.passive && clock.passive.length > 0 ? { power_damage: clock.passive.join("; ") } : {}),
+    ...(clock.passiveBlock && clock.passiveBlock.length > 0 ? { passive_block: `${clock.passiveBlock.join("; ")} (not cut by Frail; in hp_loss_per_turn)` } : {}),
     harder_because: clock.mechanic,
     ...(clock.phases ? { phases: clock.phases.map((phase) => ({ ...phase })) } : {}),
     boss_note: clock.note,

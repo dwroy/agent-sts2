@@ -31,7 +31,7 @@ import type { MoveModelData, RolloutInput } from "../strategy/rollout.js";
 import { actFirstFloor } from "../strategy/route-map.js";
 import { projectPath, restedHp } from "../strategy/route-projection.js";
 import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../util/json.js";
-import { FIGHT_START_RELICS, bossKey, syntheticBossStart, type SyntheticStart } from "./boss-start.js";
+import { FIGHT_START_RELICS, bossKey, passiveSimRelic, syntheticBossStart, type SyntheticStart } from "./boss-start.js";
 import { calibratedWinProb } from "./boss-sim.js";
 import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
@@ -335,6 +335,7 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
 
 /** Relics the fight models besides the fight-start table (boss-start MODELLED_ELSEWHERE, by what their ids name). */
 function knownRelic(id: string): boolean {
+  if (passiveSimRelic(id)) return true;
   return /^(CAPTAINS_WHEEL|SAI|CANDELABRA|CHANDELIER|HORN_CLEAT|HAPPY_FLOWER|SHURIKEN|PEN_NIB|LOST_WISP|MUSIC_BOX|CLOAK_CLASP|PAELS_TEARS|RED_SKULL|SELF_FORMING_CLAY|DEMON_TONGUE|INTIMIDATING_HELMET|BEATING_REMNANT|PAPER_PHROG|FIDDLE|KUSARIGAMA|VAMBRACE|MERCURY_HOURGLASS|LIZARD_TAIL|BLESSED_ANTLER|BLOOD_SOAKED_ROSE|BREAD|ECTOPLASM|PAELS_FLESH|PHILOSOPHERS_STONE|PRISMATIC_GEM|PUMPKIN_CANDLE|SOZU|SPIKED_GAUNTLETS|VELVET_CHOKER|WHISPERING_EARRING)$/.test(id);
 }
 

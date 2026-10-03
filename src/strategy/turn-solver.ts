@@ -455,6 +455,17 @@ export interface PlayerSim {
    */
   orichalcum?: number;
   rippleBasin?: number;
+  /**
+   * PASSIVE_PIECES (src/strategy/passive-pieces.ts; the rollout's later turns and the whole-fight sim set them, the live
+   * planner's current turn does not): Letter Opener (「你每在同一回合内打出3张技能牌，就对所有敌人造成5点伤害」: `damage` to
+   * every enemy, as non-attack damage, at each play that brings the turn's Skills, from `count`, to a multiple of
+   * `every`), Ornamental Fan (「你每在同一回合内打出3张攻击牌，就获得4点格挡」: `block`, not Frail-cut, at each Attack play
+   * likewise, counted as Kusarigama counts), Parrying Shield (「如果你在回合结束时拥有至少10点格挡，则对随机敌人造成6点伤害」:
+   * at the end of the turn, Plating's block counted, `damage` to the solver's worst random victim before the enemies act).
+   */
+  letterOpener?: { every: number; damage: number; count: number };
+  ornamentalFan?: { every: number; block: number; count: number };
+  parryingShield?: { block: number; damage: number };
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -993,6 +1004,8 @@ interface Sim {
   relicAttacks: number;
   /** Skills played in this plan (Smoggy's cap). */
   skillsPlayed: number;
+  /** PASSIVE_PIECES, with Letter Opener only (else 0): plays of Skills for it, every duplicate and replay too. */
+  relicSkills: number;
   /** Free attacks left this turn (Unrelenting). */
   freeAttacks: number;
   /** Delayed damage to every enemy played this turn (The Bomb: 40 after 3 turns). */
@@ -1467,6 +1480,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     resolveEffects(next, card, target, player, cost);
     if (card.type === "Attack") attackRelics(next, player);
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
+    if (card.type === "Skill" && player.letterOpener) skillRelics(next, player.letterOpener);
   }
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
@@ -1975,6 +1989,18 @@ function attackRelics(sim: Sim, player: PlayerSim): void {
     sim.strength += shuriken.strength;
     sim.permStrength += shuriken.strength;
   }
+  // PASSIVE_PIECES: Ornamental Fan's block on every 3rd Attack (the relic's block: no Frail, no Dexterity; Juggernaut hits).
+  const fan = player.ornamentalFan;
+  if (fan && fan.every > 0 && (fan.count + sim.relicAttacks) % fan.every === 0) gainBlock(sim, fan.block, player);
+}
+
+/**
+ * PASSIVE_PIECES: one play of a Skill for Letter Opener (PlayerSim.letterOpener), after the play: its damage to every
+ * enemy, as non-attack damage, at each play bringing the turn's Skills to a multiple of `every`.
+ */
+function skillRelics(sim: Sim, opener: NonNullable<PlayerSim["letterOpener"]>): void {
+  sim.relicSkills += 1;
+  if (opener.every > 0 && (opener.count + sim.relicSkills) % opener.every === 0) sweepRaw(sim, opener.damage);
 }
 
 /** Damage to every living enemy at once (Lost Wisp's): two crabs dying to it die together, as to Inferno's sweep. */
@@ -2439,6 +2465,27 @@ export function turnStartAoeAfter(sim: { inferno: number }, input: SolverInput):
   return (input.player.turnStartAoe ?? 0) + Math.max(0, sim.inferno - (input.player.inferno ?? 0));
 }
 
+/**
+ * The block a line ends its turn with, before the enemies act, and its parts: the cards' block left, Feel No Pain's for the
+ * Ethereal cards exhausted at the end (none after a won fight), Plating up and played this turn, Cloak Clasp's for the
+ * cards held, Orichalcum's and Ripple Basin's (whole-fight sim and, with PASSIVE_PIECES, the rollout's later turns).
+ */
+function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { etherealBlock: number; platingNow: number; claspBlock: number; blockAtEnd: number } {
+  const heldCards = [...sim.hand, ...sim.held];
+  // Ethereal cards still in hand are exhausted at the end of the turn: Feel No Pain's Block for each, before the
+  // enemies act (7KDMKN16GD6B: Dazed, Clumsy and Ascender's Bane never counted; HP forecasts 9-12 too low).
+  const etherealBlock = winsFight || sim.feelNoPain <= 0 ? 0 : sim.feelNoPain * heldCards.filter((card) => card.ethereal && card.type !== "Potion").length;
+  // Plating played this turn blocks at this turn's end too (SCBC F21 T2: Stone Armor, -18 predicted, -14).
+  const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
+  // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
+  const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
+  // Whole-fight simulator only (unset live): Orichalcum when the cards left no block, Ripple Basin when no Attack was played.
+  const relicEndBlock =
+    (sim.block + etherealBlock + platingNow + claspBlock <= 0 ? (input.player.orichalcum ?? 0) : 0) + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
+  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock + relicEndBlock;
+  return { etherealBlock, platingNow, claspBlock, blockAtEnd };
+}
+
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // A Howl from Beyond exhausted this turn plays itself at the end of the turn, before the enemies act.
   const howls = sim.exhausted.filter((card) => card.cardId === "HOWL_FROM_BEYOND");
@@ -2459,6 +2506,14 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       if (victim) hitEnemyRaw(sim, victim, input.player.juggernaut ?? 0);
     }
   }
+  // PASSIVE_PIECES: Parrying Shield at the turn's end (10+ block, Plating's end-of-turn block counted: Q8XR6EXAF6QV F11
+  // T4, 8 + Plating 2 fired) hits a random enemy, through its block, before the enemies act; one it kills does not attack.
+  const parry = input.player.parryingShield;
+  if (parry && sim.enemies.some((enemy) => enemy.alive) && endBlockParts(sim, input, false).blockAtEnd >= parry.block) {
+    sim = clone(sim);
+    const victim = randomVictim(sim);
+    if (victim) hitEnemyRaw(sim, victim, parry.damage);
+  }
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
@@ -2477,9 +2532,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...sim.held];
   const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
-  // Ethereal cards still in hand are exhausted at the end of the turn: Feel No Pain's Block for each, before the
-  // enemies act (7KDMKN16GD6B: Dazed, Clumsy and Ascender's Bane never counted; HP forecasts 9-12 too low).
-  const etherealBlock = winsFight || sim.feelNoPain <= 0 ? 0 : sim.feelNoPain * heldCards.filter((card) => card.ethereal && card.type !== "Potion").length;
   // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
   // -3, the 6th card added a Wither and the turn cost 9).
   const wither = input.wither;
@@ -2499,17 +2551,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
-  // Plating played this turn blocks at this turn's end too (SCBC F21 T2: Stone Armor, -18 predicted, -14).
   // Plating's later turns: the HP it can absorb (a potion's part like a card's).
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
   const platingValue = sim.plating > 0 ? weights.hp * platingHp : 0;
-  const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
-  // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
-  const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
-  // Whole-fight simulator only (unset live): Orichalcum when the cards left no block, Ripple Basin when no Attack was played.
-  const relicEndBlock =
-    (sim.block + etherealBlock + platingNow + claspBlock <= 0 ? (input.player.orichalcum ?? 0) : 0) + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
-  const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock + relicEndBlock;
+  const { etherealBlock, platingNow, claspBlock, blockAtEnd } = endBlockParts(sim, input, winsFight);
   // What the mod's lethal flag (the intents against the block up now) leaves out (Outcome.endTurnGuards).
   const endTurnGuards = winsFight
     ? []
@@ -2961,7 +3006,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3105,6 +3150,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     attacksPlayed: 0,
     relicAttacks: 0,
     skillsPlayed: 0,
+    relicSkills: 0,
     freeAttacks: input.player.freeAttacks ?? 0,
     unmovableSpent: false,
     bombs: 0,

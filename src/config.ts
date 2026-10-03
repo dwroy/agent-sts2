@@ -271,6 +271,13 @@ export interface AppConfig {
    * data: the combat question as before it.
    */
   mechDeathMove: boolean;
+  /**
+   * PASSIVE_PIECES (default on; src/strategy/passive-pieces.ts, Dai 2026-10-03): the passive damage and block pieces (Thorns,
+   * Flame Barrier, Mercury Hourglass, Inferno, Sai, Crimson Mantle, Plating, Orichalcum, Ripple Basin, Horn Cleat, Letter
+   * Opener, Ornamental Fan, Parrying Shield) in the rollout's later turns, the whole-fight boss sim and the boss clock, the
+   * clock's passive damage not cut by the Queen's Weak. off: those three exactly as before.
+   */
+  passivePieces: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -807,6 +814,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const mechDeathMoveProblems: ConfigProblem[] = [];
   const mechDeathMove = parseOnOff(readEnv(env, "MECH_DEATH_MOVE"), "MECH_DEATH_MOVE", mechDeathMoveProblems) ?? true;
   for (const problem of mechDeathMoveProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // PASSIVE_PIECES likewise (on by default).
+  const passivePiecesProblems: ConfigProblem[] = [];
+  const passivePieces = parseOnOff(readEnv(env, "PASSIVE_PIECES"), "PASSIVE_PIECES", passivePiecesProblems) ?? true;
+  for (const problem of passivePiecesProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -925,6 +936,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     mechRules,
     mechMoveRules,
     mechDeathMove,
+    passivePieces,
     sl,
     brain,
     deepseek,

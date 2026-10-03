@@ -420,6 +420,7 @@ export function runConfigRow(
       mech_rules: config.mechRules,
       mech_move_rules: config.mechMoveRules,
       mech_death_move: config.mechDeathMove,
+      passive_pieces: config.passivePieces,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
       run_plan_merge: config.runPlanMerge,

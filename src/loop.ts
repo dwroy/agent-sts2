@@ -42,6 +42,7 @@ import { LEAST_LOSS_LABEL } from "./sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "./util/json.js";
 import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
 import { withBossSim, type BuildSimSetup } from "./sim/build-sim-facts.js";
+import { passivePiecesOptions } from "./strategy/passive-pieces.js";
 import { ensureThiefCardValue, type ThiefCardSetup, type ThiefCardValue } from "./sim/thief-card-value.js";
 
 export type LoopMode = "shadow" | "play";
@@ -235,6 +236,8 @@ function noteForAction(state: GameState, resolved: ResolvedAction, label: string
 
 export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const { config, mode, client, knowledge } = options;
+  // PASSIVE_PIECES as configured (.env read after the modules loaded: their process.env default may predate it).
+  passivePiecesOptions.enabled = config.passivePieces;
   const jev = options.jev;
   const pollIntervalMs = options.pollIntervalMs ?? 400;
   const jevRetry = {

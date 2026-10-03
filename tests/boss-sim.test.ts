@@ -8,7 +8,7 @@
 import { describe, expect, it } from "vitest";
 
 import { BOSS_SIM_PLATT, BossSimPool, calibratedWinProb, compareLines, fightOrders, redealInput, runBestOrder, runBossSim, sampleSeed, slimInput } from "../src/sim/boss-sim.js";
-import { fightRelicsOf } from "../src/strategy/rollout-live.js";
+import { fightRelicsOf, relicBlockOf } from "../src/strategy/rollout-live.js";
 import { policyWeights, rolloutDecision, simulateFight, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
 import { solveTap, solveTurn, type EnemySim } from "../src/strategy/turn-solver.js";
 import { board, card, defend, liveDigest, strike } from "./boss-sim-fixture.js";
@@ -237,10 +237,15 @@ describe("boss sim B1.5: the policy knobs change the whole-fight sim only", () =
 
   it("turn relics: Candelabra 2 energy on turn 2, Chandelier 3 on turn 3, Horn Cleat 14 block on turn 2, Happy Flower every 3rd turn", () => {
     const relic = (id: string, stack: number | null = null) => ({ relic_id: id, stack });
-    expect(fightRelicsOf({ relics: [relic("CANDELABRA"), relic("CHANDELIER"), relic("HORN_CLEAT"), relic("HAPPY_FLOWER", 1), relic("ANCHOR")] }, 1, 10)).toEqual({
+    // PASSIVE_PIECES off: Horn Cleat is the whole fight's alone; on, it is relicBlockOf's (the 5-turn rollout's too) and
+    // left out here, so the whole fight's turn 2 gets it once.
+    expect(fightRelicsOf({ relics: [relic("CANDELABRA"), relic("CHANDELIER"), relic("HORN_CLEAT"), relic("HAPPY_FLOWER", 1), relic("ANCHOR")] }, 1, 10, false)).toEqual({
       energy: [{ amount: 2, turn: 2 }, { amount: 3, turn: 3 }, { amount: 1, turn: 3 }, { amount: 1, turn: 6 }, { amount: 1, turn: 9 }],
       block: [{ amount: 14, turn: 2 }],
     });
+    expect(fightRelicsOf({ relics: [relic("HORN_CLEAT")] }, 1, 10, true).block).toEqual([]);
+    expect(relicBlockOf({ relics: [relic("HORN_CLEAT")] }, 40, true)).toEqual([{ amount: 14, turn: 2 }]);
+    expect(relicBlockOf({ relics: [relic("HORN_CLEAT")] }, 40, false)).toEqual([]);
     expect(fightRelicsOf({ relics: [relic("HAPPY_FLOWER", 0)] }, 4, 10).energy.map((e) => e.turn)).toEqual([7, 10]);
     // The whole fight's turn 2 gets them; the rollout's turn 2 (the live planner's) does not.
     const input = { ...board(), fightRelics: { energy: [{ amount: 2, turn: 2 }], block: [{ amount: 14, turn: 2 }] } };
