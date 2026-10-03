@@ -20,10 +20,13 @@
  *   TMNFVW6DRQ20 F48 T8). When only they make the turn lethal, the death rests on them: certain even without the mod's
  *   flag (it does not count them), but only with every amount given and nothing that could cut the loss or kill an
  *   attacker first (heldGuard).
- * - So does our own HP loss at the next turn's start (Inferno's 1, Crimson Mantle's cost; 2026-10-02, 610BBERH4SPP F33
- *   T3): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain without the mod's
- *   flag too, but not with Tungsten Rod or Beating Remnant, a relic or power acting at the turn's start that may heal or
- *   shield us, or Inferno's sweep at that loss able to kill every enemy (startGuard).
+ * - So does our own HP loss at the next turn's start (Inferno's 1 for each copy up, Crimson Mantle's cost; 2026-10-02,
+ *   610BBERH4SPP F33 T3; 2026-10-03, C4F14F3XPN0N F33 attempt 5 T6: two Infernos took 2, the count had been 1 whatever the
+ *   copies; infernoCopies): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain
+ *   without the mod's flag too, but not with Tungsten Rod or Beating Remnant, a relic or power acting at the turn's start
+ *   that may heal or shield us, Inferno's sweep at that loss able to kill every enemy (startGuard), or every enemy able to
+ *   die before that loss comes: to what hits them at the end of our turn, their poison, our retaliation, and the next
+ *   turn's opening before the loss (Hellraiser's drawn Strikes, Inferno's sweep, Mr Struggles: startHitsBefore).
  * - So does the Insatiable's Sandpit at 1 (docs/sl.md §2.5; 2026-10-03, BVJT7HFW6X2S F33 T5): the enemy turn takes it to 0
  *   and eats us whatever the HP. Certain without the mod's flag, our count living, but only with the Insatiable alone, its
  *   move shown, and nothing that may kill it before its turn; Frantic Escape (the one thing that puts the count back) is a
@@ -55,7 +58,7 @@
  */
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { BEATING_REMNANT_CAP, distinctNames } from "../screens/combat-plan.js";
+import { BEATING_REMNANT_CAP, distinctNames, MERCURY_HOURGLASS_DAMAGE } from "../screens/combat-plan.js";
 import { afterPlayFirst, heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
@@ -81,7 +84,7 @@ export interface DeathVerdict {
    * whether our own count with them says the turn kills us (`ownCountDies`; the controller says so when the mod does not).
    */
   held?: { damage: number; loss: number; from: string[] };
-  /** Our own HP loss at the next turn's start (Inferno, Crimson Mantle) when the death rests on it. */
+  /** Our own HP loss at the next turn's start (Inferno, 1 for each copy; Crimson Mantle) when the death rests on it. */
   startLoss?: number;
   /** The Insatiable's Sandpit count when the death rests on it (1: the enemy turn takes it to 0; docs/sl.md §2.5). */
   sandpit?: number;
@@ -424,6 +427,208 @@ function powerAmount(entity: Record<string, unknown>, id: string): number {
 const START_OF_TURN = /回合开始时|at the start of (your|each) turn/i;
 const START_SAVES = /回复|恢复|治疗|heal|缓冲|buffer|无实体|intangible|最大生命/i;
 
+/** The most damage one Inferno adds to INFERNO_POWER (Inferno 6, Inferno+ 9: the card's InfernoPower). */
+const INFERNO_MOST_PER_COPY = 9;
+
+/**
+ * Inferno's own HP loss at the start of our turn: 1 for each copy up (the card, upgraded or not: 「在你的回合开始时，失去1点生命」),
+ * one loss of that much (Inferno's sweep comes once). The power shows only the copies' damage summed (6, Inferno+ 9), so the
+ * copies are counted at the fewest that sum can be: its amount over the most one copy adds (9, or a listed Inferno's
+ * InfernoPower above it), rounded up; a count too low only makes fewer deaths certain. From the logs (states.jsonl to
+ * 2026-10-03; each turn ended with no attack shown and no Crimson Mantle, Regen or poison on us, the HP at the next turn
+ * before its first play): one copy (6, 9) lost 1 526 times (0 six times: Tungsten Rod, or a frame captured before the loss);
+ * two (12, 15, 18) lost 2 42 times and 4 once, never less (B3PJGKHAQGK6, Inferno 12: the enemy 14 -> 2, one sweep). The
+ * count was 1 whatever the copies: C4F14F3XPN0N F33 attempt 5 (A9, two Inferno+, 18), 14 HP + 9 block against the
+ * Knowledge Demon's 21 at T6's end, "the mod does not flag"; the enemy turn left 2 HP and T7's start took them, the last
+ * retry unused.
+ */
+function infernoCopies(state: GameState, player: Record<string, unknown>): number {
+  const amount = powerAmount(player, "INFERNO_POWER");
+  if (amount <= 0) return 0;
+  let most = INFERNO_MOST_PER_COPY;
+  const cards = [...asArray(asRecord(state.raw["run"])["deck"]), ...asArray(asRecord(state.raw["combat"])["hand"])].map(asRecord);
+  for (const card of cards.filter((entry) => str(entry["card_id"]) === "INFERNO")) {
+    for (const value of asArray(card["dynamic_values"]).map(asRecord).filter((entry) => str(entry["name"]) === "InfernoPower")) {
+      most = Math.max(most, num(value["base_value"]), num(value["current_value"]), num(value["enchanted_value"]));
+    }
+  }
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  for (const entry of ["draw", "discard", "exhaust"].flatMap((pile) => asArray(view[pile]).map(asRecord))) {
+    if (!asArray(entry["card_ids"]).includes("INFERNO")) continue;
+    for (const hit of str(entry["line"]).matchAll(/造成(\d+)点伤害|deal (\d+) damage/gi)) most = Math.max(most, Number(hit[1] ?? hit[2]));
+  }
+  return Math.max(1, Math.ceil(amount / most));
+}
+
+/** A card Hellraiser plays when it is drawn (「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」). */
+const STRIKE_NAME = /打击|strike/i;
+/** A drawn Strike's text we cannot bound: damage scaling with something, X, or a heal. */
+const STRIKE_UNBOUNDED = /每|等同|等量|equal|for each|\bX\b|回复|恢复|治疗|heal|最大生命|max hp/i;
+/** Keywords a pile entry may carry that do not change a card's damage. */
+const PLAIN_MODS = new Set(["Exhaust", "Ethereal", "Retain", "Innate", "Eternal", "Unplayable"]);
+const HITS_WORD: Record<string, number> = { 两: 2, 二: 2, 三: 3, 四: 4, 五: 5 };
+/** Toasty Mittens' Strength each turn's start (logged +1 every time: C4F14F3XPN0N F33, 5 -> 6, 7 -> 8, 9 -> 10). */
+const TOASTY_MITTENS_STRENGTH = 1;
+/** Paper Phrog's Vulnerable (the most it can be); Cruelty adds its percent on top. */
+const VULNERABLE_MOST = 1.75;
+
+/**
+ * What may hit the enemies at the next turn's start before our own HP loss there (byStart): an enemy left alive is needed
+ * for that loss to come (the fight ends when every enemy dies first).
+ * - Hellraiser: the turn's draw comes before the loss, each Strike drawn played at a random enemy (C4F14F3XPN0N F33 attempt 1
+ *   T7: a Strike and Setup Strike played from the draw, 4 HP at that state, Inferno's 2 at the next). Bounded over every
+ *   Strike in the draw and discard piles (a reshuffle may bring the discard): its damage numbers plus the most Strength
+ *   (ours, the Strikes' own gains, a start-of-turn gain), times its hits; with Vigor; times 1.75 (with Cruelty's percent)
+ *   when an enemy is Vulnerable, 2 with Pen Nib or Double Damage. `single`: shared out over the enemies.
+ * - Every enemy: Inferno's sweep at each loss (Crimson Mantle's too), and at the end of our turn when held cards cost HP;
+ *   Mr Struggles (the turn's number); Mercury Hourglass (3); Rolling Boulder (its amount); a relic's 「回合开始时…造成N点伤害」
+ *   (one random enemy: `single`). Taken whatever their order (Mr Struggles came after Inferno's loss in C4F14F3XPN0N F33's
+ *   logs).
+ * `refuse`: what cannot be bounded: a Strike that heals or scales, a modifier of Strikes not counted, an amount not given, a
+ * relic playing a card at the turn's start (History Course), orbs, a power hitting the enemies whenever something the
+ * opening may do happens (a draw, block, a star, an HP loss: Fire Breathing, Juggernaut, Black Hole).
+ */
+function startHitsBefore(
+  state: GameState,
+  knowledge: Pick<Knowledge, "power" | "relic"> | undefined,
+  o: { inferno: number; lossEvents: number; heldLoss: boolean },
+): { all: number; single: number; from: string[]; refuse: string | null } {
+  const run = asRecord(state.raw["run"]);
+  const combat = asRecord(state.raw["combat"]);
+  const player = asRecord(combat["player"]);
+  const from: string[] = [];
+  let all = 0;
+  let single = 0;
+  if (o.inferno > 0) {
+    const sweeps = o.lossEvents + (o.heldLoss ? 1 : 0);
+    all += o.inferno * sweeps;
+    from.push(`Inferno's sweep ${o.inferno}${sweeps > 1 ? `x${sweeps}` : ""}`);
+  }
+  if (asArray(player["orbs"]).length > 0) return { all, single, from, refuse: "our orbs act at the turn's end and start (their hits not counted here)" };
+  const nextTurn = state.turn === null || state.turn === undefined ? null : state.turn + 1;
+  let startStrength = 0;
+  // Start-of-turn Strength whose amount the text does not give (Brimstone's {SelfStrength}): only Hellraiser's Strikes need it.
+  const strengthUnknown: string[] = [];
+  const relics = asArray(run["relics"]).map(asRecord);
+  for (const relic of relics) {
+    const id = str(relic["relic_id"]);
+    const name = str(relic["name"], id);
+    const text = str(relic["description"]) || (knowledge?.relic(id)?.description ?? "");
+    if (id === "TOASTY_MITTENS") {
+      startStrength += TOASTY_MITTENS_STRENGTH;
+      continue;
+    }
+    if (id === "MR_STRUGGLES") {
+      if (nextTurn === null) return { all, single, from, refuse: `${name} (relic) hits every enemy for the turn's number at its start, the turn not known` };
+      all += nextTurn;
+      from.push(`${name} ${nextTurn}`);
+      continue;
+    }
+    if (id === "MERCURY_HOURGLASS") {
+      all += MERCURY_HOURGLASS_DAMAGE;
+      from.push(`${name} ${MERCURY_HOURGLASS_DAMAGE}`);
+      continue;
+    }
+    if (!START_OF_TURN.test(text)) continue;
+    // A card played at the turn's start (History Course: the last Attack played, again): its damage not bounded here.
+    if (/打出一张|plays? (?:a|an|the) (?:copy|card)/i.test(text)) return { all, single, from, refuse: `${name} (relic) plays a card at the turn's start` };
+    if (/充能球|orb/i.test(text)) return { all, single, from, refuse: `${name} (relic) acts with orbs at the turn's start` };
+    if (HITS_ENEMIES.test(text)) {
+      const hit = /造成(?:\[[^\]]*\])?(\d+)(?:\[[^\]]*\])?点伤害|deal (\d+) damage/i.exec(text);
+      if (!hit) return { all, single, from, refuse: `${name} (relic) hits the enemies at the turn's start, its damage not given` };
+      const damage = Number(hit[1] ?? hit[2]);
+      if (CHANCE.test(text)) single += damage;
+      else all += damage;
+      from.push(`${name} ${damage}`);
+    } else if (/力量|strength/i.test(text)) {
+      const gain = /(\d+)(?:\[[^\]]*\])?点(?:\[[^\]]*\])?力量|gain (\d+) strength/i.exec(text);
+      if (gain) startStrength += Number(gain[1] ?? gain[2]);
+      else strengthUnknown.push(`${name} (relic)`);
+    }
+  }
+  const powers = asArray(player["powers"]).map(asRecord);
+  for (const power of powers) {
+    const id = str(power["power_id"]);
+    if (id === "INFERNO_POWER") continue;
+    const text = knowledge?.power(id)?.description ?? "";
+    // Hitting the enemies whenever something happens that the turn's opening may do before the loss: a draw (Fire
+    // Breathing-like; Hellraiser below), block gained (Juggernaut: Crimson Mantle's block), a star gained (Black Hole), an HP
+    // loss. A play triggers it only through Hellraiser's Strikes (checked with them below); retaliation is counted above.
+    if (id !== "HELLRAISER_POWER" && /每当|whenever/i.test(text) && HITS_ENEMIES.test(text) && !/受到|attacked/i.test(text) && !/打出|play/i.test(text)) {
+      return { all, single, from, refuse: `${str(power["name"], id)} (power) hits the enemies on what the turn's opening may do before the loss` };
+    }
+    if (id === "ROLLING_BOULDER_POWER") {
+      all += num(power["amount"]);
+      from.push(`Rolling Boulder ${num(power["amount"])}`);
+    } else if (START_OF_TURN.test(text) && HITS_ENEMIES.test(text)) {
+      return { all, single, from, refuse: `${str(power["name"], id)} (power) hits the enemies at the turn's start` };
+    } else if (START_OF_TURN.test(text) && /力量|strength/i.test(text) && power["is_debuff"] !== true) {
+      startStrength += Math.max(0, num(power["amount"]));
+    } else if (/失去生命[^。]*力量|lose hp[^.]*strength/i.test(text) && power["is_debuff"] !== true) {
+      // Rupture-like: Strength for each HP loss on our turn, a loss coming before the draw (Crimson Mantle's) included.
+      startStrength += Math.max(0, num(power["amount"])) * o.lossEvents;
+    }
+  }
+  if (powerAmount(player, "HELLRAISER_POWER") <= 0) return { all, single, from, refuse: null };
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  const strikes: { name: string; count: number; text: string; mods: string[] }[] = [];
+  for (const entry of ["draw", "discard"].flatMap((pile) => asArray(view[pile]).map(asRecord))) {
+    const line = str(entry["line"]);
+    const head = /^(.*?)(?:\*(\d+))?\s*\[/.exec(line);
+    const name = (head?.[1] ?? line.split(/[：:]/)[0] ?? "").trim();
+    if (!STRIKE_NAME.test(name)) continue;
+    strikes.push({ name, count: Math.max(1, Number(head?.[2] ?? 1)), text: line.slice(line.search(/[：:]/) + 1), mods: asArray(entry["mods"]).map((mod) => str(mod)) });
+  }
+  if (strikes.length === 0) return { all, single, from, refuse: null };
+  if (strengthUnknown.length > 0) return { all, single, from, refuse: `Hellraiser plays the Strikes drawn at the turn's start, and ${strengthUnknown.join(", ")} gives Strength then, its amount not given` };
+  // Anything of ours that adds to the Strikes Hellraiser plays and is not counted below.
+  for (const relic of relics) {
+    const id = str(relic["relic_id"]);
+    const text = str(relic["description"]) || (knowledge?.relic(id)?.description ?? "");
+    if (id === "PEN_NIB" || id === "TOASTY_MITTENS" || id === "MR_STRUGGLES") continue;
+    if (/打击|strike|(打出|play)[^。.]*(攻击|attack)|(攻击|attack)[^。.]*(伤害|damage)/i.test(text)) {
+      return { all, single, from, refuse: `Hellraiser plays the Strikes drawn at the turn's start, and ${str(relic["name"], id)} (relic) may add to them` };
+    }
+  }
+  const counted = new Set(["STRENGTH_POWER", "VIGOR_POWER", "DOUBLE_DAMAGE_POWER", "PEN_NIB_POWER", "HELLRAISER_POWER", "INFERNO_POWER", "ROLLING_BOULDER_POWER"]);
+  for (const power of powers) {
+    const id = str(power["power_id"]);
+    if (counted.has(id) || power["is_debuff"] === true) continue;
+    const text = knowledge?.power(id)?.description ?? "";
+    if (!text) return { all, single, from, refuse: `Hellraiser plays the Strikes drawn at the turn's start, and ${str(power["name"], id)} (power) has no text known` };
+    if (/受到|when (?:you are )?attacked|whenever you are attacked/i.test(text)) continue;
+    if (/(攻击|打击|attack|strike)[^。.]*(伤害|damage)|(伤害|damage)[^。.]*(攻击|打击|attack|strike)|(打出|play)[^。.]*(攻击|attack)/i.test(text) || (/打出|play/i.test(text) && HITS_ENEMIES.test(text))) {
+      return { all, single, from, refuse: `Hellraiser plays the Strikes drawn at the turn's start, and ${str(power["name"], id)} (power) may add to them` };
+    }
+  }
+  let strength = Math.max(0, powerAmount(player, "STRENGTH_POWER")) + startStrength;
+  for (const strike of strikes) {
+    const gain = /获得(\d+)点力量|gain (\d+) strength/i.exec(strike.text);
+    if (gain) strength += Number(gain[1] ?? gain[2]) * strike.count;
+  }
+  let raw = Math.max(0, powerAmount(player, "VIGOR_POWER"));
+  for (const strike of strikes) {
+    const odd = strike.mods.filter((mod) => !PLAIN_MODS.has(mod));
+    if (STRIKE_UNBOUNDED.test(strike.text) || odd.length > 0) {
+      return { all, single, from, refuse: `Hellraiser plays ${strike.name} when it is drawn at the turn's start, and its damage cannot be bounded (${odd.length > 0 ? odd.join(", ") : strike.text.slice(0, 40)})` };
+    }
+    const damages = [...strike.text.matchAll(/造成(\d+)点伤害|deal (\d+) damage/gi)].map((hit) => Number(hit[1] ?? hit[2]));
+    if (damages.length === 0) return { all, single, from, refuse: `Hellraiser plays ${strike.name} when it is drawn at the turn's start, its damage not given` };
+    const times = /([两二三四五]|\d+)次|(\d+) times/.exec(strike.text);
+    const hits = times ? (HITS_WORD[times[1] ?? ""] ?? Number(times[1] ?? times[2])) : 1;
+    raw += (damages.reduce((sum, damage) => sum + damage, 0) + strength * damages.length) * hits * strike.count;
+  }
+  const vulnerable = asArray(combat["enemies"]).map(asRecord).some((enemy) => enemy["is_alive"] !== false && powerAmount(enemy, "VULNERABLE_POWER") > 0)
+    || strikes.some((strike) => /易伤|vulnerable/i.test(strike.text));
+  const relicIds = new Set(relics.map((relic) => str(relic["relic_id"])));
+  const amp = (vulnerable ? VULNERABLE_MOST * (1 + Math.max(0, powerAmount(player, "CRUELTY_POWER")) / 100) : 1)
+    * (relicIds.has("PEN_NIB") || powerAmount(player, "DOUBLE_DAMAGE_POWER") > 0 || powerAmount(player, "PEN_NIB_POWER") > 0 ? 2 : 1);
+  const bound = Math.ceil(raw * amp);
+  single += bound;
+  from.push(`Hellraiser's drawn Strikes up to ${bound} (${strikes.reduce((sum, strike) => sum + strike.count, 0)} in the draw and discard piles)`);
+  return { all, single, from, refuse: null };
+}
+
 /**
  * Why our own HP loss at the next turn's start cannot make the death certain on this board (null: it can): anything of
  * ours that acts at the turn's start and heals or shields us first (a relic's or power's text), and Inferno's own sweep
@@ -590,7 +795,9 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // enemy turn leaves us at it or under, and the next turn opens with our death (610BBERH4SPP F33 T3: 1 HP + 12 block
   // against the Crusher's 5x2, Inferno up; the planner saw every line die, the mod's flag and our count did not, and the
   // run ended at T4's start with 6 attempts unused). Not counted with Tungsten Rod or Beating Remnant (each changes it).
-  const startLoss = (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0) + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"));
+  // Inferno loses 1 for each copy up (infernoCopies; C4F14F3XPN0N F33 attempt 5: two copies, 2 HP left, both taken).
+  const infernoLoss = infernoCopies(state, player);
+  const startLoss = infernoLoss + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"));
   const lossAfterHeld = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
   const byStart = !bySandpit && !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
   const heldNote = held.damage + held.loss > 0 ? { held: { damage: held.damage, loss: held.loss, from: held.from } } : {};
@@ -622,7 +829,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const guard = heldGuard(state, held, block, endBlock, context.knowledge);
     if (guard) return verdict(false, null, `only the held cards make it lethal (${heldText}), and ${guard}`);
   }
-  const startText = `then ${startLoss} HP lost at the next turn's start (${[powerAmount(player, "INFERNO_POWER") > 0 ? "Inferno" : "", powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? "Crimson Mantle" : ""].filter(Boolean).join(" + ")})`;
+  const startText = `then ${startLoss} HP lost at the next turn's start (${[infernoLoss > 1 ? `Inferno x${infernoLoss}` : infernoLoss > 0 ? "Inferno" : "", powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? "Crimson Mantle" : ""].filter(Boolean).join(" + ")})`;
   if (byStart) {
     // Lived through, the Giant's blast ends the fight (53 of 53 logged: the rewards came right after it): no next turn.
     if (blast) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), but the fight ends when we live through ${blast.name}'s blast (${blast.damage}): no next turn`);
@@ -653,6 +860,39 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
       return { i, enemy, dies: (hit > 0 && hit >= hpLeft) || (poison > 0 && poison >= hpLeft), why: poison > 0 && poison >= hpLeft ? `its poison (${poison})` : ends.sources.map((source) => source.name).join(" + ") };
     })
     .filter((entry) => entry.dies);
+  // Our loss at the next turn's start comes only if an enemy lives to see that turn's start: not if every enemy (every one
+  // but the minions, which may leave with them) may die first, to what hits them at the end of our turn, their poison, our
+  // retaliation on each of their hits, and the next turn's opening before the loss (startHitsBefore: Hellraiser's drawn
+  // Strikes, Inferno's sweep, Mr Struggles, ...); one escaping (its intent Escape) is gone. Their HP at the lowest it may be,
+  // block ignored.
+  if (byStart) {
+    const first = startHitsBefore(state, context.knowledge, {
+      inferno: powerAmount(player, "INFERNO_POWER"),
+      lossEvents: (infernoLoss > 0 ? 1 : 0) + (powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? 1 : 0),
+      heldLoss: held.loss > 0 || held.damage > block + endBlock,
+    });
+    if (first.refuse) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), and ${first.refuse}`);
+    const retaliationEach = powerAmount(player, "THORNS_POWER") + powerAmount(player, "FLAME_BARRIER_POWER");
+    const isMinion = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER");
+    const leaders = living.map((enemy, i) => ({ enemy, i })).filter((entry) => !isMinion(entry.enemy));
+    const needed = leaders.length > 0 ? leaders : living.map((enemy, i) => ({ enemy, i }));
+    // An enemy whose intent is to escape leaves on its turn (the fight ends when every enemy is gone).
+    const escapes = (enemy: Record<string, unknown>) => asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "Escape");
+    const left = needed.reduce((sum, { enemy, i }) => {
+      if (escapes(enemy)) return sum;
+      const lowest = before[i]!.hp - before[i]!.hit - before[i]!.poison - retaliationEach * hitsOf[i]!.length;
+      return sum + Math.max(0, Math.ceil(lowest) - first.all);
+    }, 0);
+    if (left <= first.single) {
+      const what = [
+        ...ends.sources.map((source) => source.name),
+        ...(before.some((entry) => entry.poison > 0) ? ["their poison"] : []),
+        ...(retaliationEach > 0 ? [`our retaliation ${retaliationEach} a hit`] : []),
+        ...first.from,
+      ].join(", ") || "nothing: their HP at 0";
+      return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), but every enemy may die before it (${what})`);
+    }
+  }
   let endNote = "";
   // The Sandpit: the Insatiable alone (all 81 logged fights), no Tungsten Rod or Beating Remnant (none of the 15 logged
   // deaths to it had one), its move shown, and nothing that may kill it before its turn (what hits it at the end of ours, its
