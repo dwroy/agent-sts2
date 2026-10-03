@@ -55,8 +55,14 @@
  * Horn Cleat, Letter Opener, Ornamental Fan and Parrying Shield (rollout-live boardRolloutInput: RolloutInput.passive);
  * the boss clock counts Thorns per boss hit, Flame Barrier, Mercury Hourglass, Letter Opener and Parrying Shield as
  * damage the Queen's Weak does not cut (with Inferno and Juggernaut), and Crimson Mantle, Plating, Orichalcum, Ornamental
- * Fan, Ripple Basin and the one-turn block relics with Sai as block a turn (at CLOCK_PASSIVE_BLOCK_SHARE). The live
- * solver's current turn is unchanged. off: everything exactly as before (the v4 base's clock on all 578 logged A7-A9 boss
+ * Fan, Ripple Basin and the one-turn block relics with Sai as block a turn (at CLOCK_PASSIVE_BLOCK_SHARE). Since the
+ * follow-up (2026-10-03, Dai via the dev session) the live solver's current turn has the five relic pieces too
+ * (liveSolverFields, combat-plan), and Plating no longer stops Orichalcum (orichalcumPlating). Replayed on the logged turns'
+ * first planning decisions (tools/passive-pieces-planner-replay.ts compare, v4 cd31bfe against this, the switch on both
+ * times; 113 A8+ boss/elite fights holding one of the five relics, 60 hallway ones, 40 holding none): the 238 turns holding
+ * none byte for byte the same; of the 1,124 holding one, 575 decisions change: code plays alone where it asked (or the
+ * other way) on 19, code's own play changes on 7 (a least-loss pick 4, a lethal found 1), the lines shown on 280, the same
+ * lines' numbers on 123, the rollout's best on 119, the line Jev's pick plays (the HP guard) on 76. off: everything exactly as before (the v4 base's clock on all 578 logged A7-A9 boss
  * fights, B2 on 68 control fight starts, the golden planner tests: byte for byte).
  *
  * Replayed 2026-10-03 (tools/passive-pieces-replay.ts, tools/boss-sim/pp-calib.py; off vs on in one process):
@@ -75,6 +81,8 @@
  *     2.30 -> 2.12. Deck damage at the real length against the damage realised into the clock's parts: median |log error|
  *     0.25 -> 0.24 (non-Queen), 0.56 -> 0.59 (the Queen: her realised damage leaves out the Amalgam's 211 HP).
  */
+
+import { asArray, asRecord, num, str } from "../util/json.js";
 
 /** PASSIVE_PIECES (config.passivePieces; the loop sets it at start, process.env before that). */
 export const passivePiecesOptions: { enabled: boolean } = { enabled: process.env["PASSIVE_PIECES"] !== "off" };
@@ -118,6 +126,66 @@ export interface SolverPieces {
   letterOpener?: { every: number; damage: number };
   ornamentalFan?: { every: number; block: number };
   parryingShield?: { block: number; damage: number };
+}
+
+/**
+ * The solver's own fields for the pieces (turn-solver PlayerSim): the counters of the turn so far and Orichalcum's rule. Kept
+ * as plain shapes here (this module is a leaf; turn-solver reads the same field names).
+ */
+export interface SolverPieceFields {
+  orichalcum?: number;
+  rippleBasin?: number;
+  letterOpener?: { every: number; damage: number; count: number };
+  ornamentalFan?: { every: number; block: number; count: number };
+  parryingShield?: { block: number; damage: number };
+  /**
+   * Plating's end-of-turn block (up, or played this turn) does not stop Orichalcum: the logs show it for Plating up
+   * (A8ENYFR4ZWKG F48 T7, 842N6N604DVX F31 T3: 0 card block with Plating 9 / 3, Orichalcum's 6 came too); no logged turn
+   * ended with Orichalcum, no card block and Plating played that turn, so Plating played is taken to act like Plating up
+   * (the same PLATING_POWER at the turn's end). Set with the pieces (PASSIVE_PIECES); unset, the solver's earlier rule.
+   */
+  orichalcumPlating?: true;
+}
+
+/**
+ * The pieces as one turn's solver fields: `counts` are the turn's Letter Opener / Ornamental Fan counters so far (a new
+ * turn: none). Orichalcum carries orichalcumPlating.
+ */
+export function solverFieldsOf(pieces: SolverPieces | null | undefined, counts: { letterOpener?: number; ornamentalFan?: number } = {}): SolverPieceFields {
+  if (!pieces) return {};
+  return {
+    ...(pieces.orichalcum ? { orichalcum: pieces.orichalcum, orichalcumPlating: true as const } : {}),
+    ...(pieces.rippleBasin ? { rippleBasin: pieces.rippleBasin } : {}),
+    ...(pieces.letterOpener ? { letterOpener: { ...pieces.letterOpener, count: counts.letterOpener ?? 0 } } : {}),
+    ...(pieces.ornamentalFan ? { ornamentalFan: { ...pieces.ornamentalFan, count: counts.ornamentalFan ?? 0 } } : {}),
+    ...(pieces.parryingShield ? { parryingShield: { ...pieces.parryingShield } } : {}),
+  };
+}
+
+/**
+ * The live planner's current turn (combat-plan): the run's pieces with this turn's counters, from the relics' own counters
+ * (their stack, as Kusarigama's: a duplicate, a replay, an autoplay count) mod `every`; 0 before the turn's first card,
+ * whatever the stack shows (logged: a turn's first frame shows the last turn's count, e.g. X8HF0SB0XGJ1 F33 T6 Letter
+ * Opener 2 with no card played, 0 after the first; in 1,739 of 1,745 logged Letter Opener frames and 1,911 of 1,953
+ * Ornamental Fan frames the stack mod 3 is the turn's Skills / Attacks mod 3, the rest turn-start frames like that one and,
+ * for the Fan, 10 mid-turn frames where it counted a replay). Ripple Basin is left out once an Attack was played this turn
+ * (`attacksPlayedThisTurn`: the solver counts its own line's Attacks only). Empty with PASSIVE_PIECES off or none held.
+ */
+export function liveSolverFields(runRaw: unknown, cardsPlayedThisTurn: number, attacksPlayedThisTurn = 0, enabled = passivePiecesOptions.enabled): SolverPieceFields {
+  const relics = asArray(asRecord(runRaw)["relics"]).map(asRecord);
+  const found = solverPiecesOf(relics.map((relic) => str(relic["relic_id"])), enabled);
+  if (!found) return {};
+  // Ripple Basin: an Attack already played this turn (a re-plan mid-turn) rules it out; the solver counts only its own.
+  const { rippleBasin: _basin, ...rest } = found;
+  const pieces: SolverPieces = attacksPlayedThisTurn > 0 ? rest : found;
+  const counter = (id: string, every: number): number => {
+    if (cardsPlayedThisTurn <= 0 || every <= 0) return 0;
+    return num(relics.find((relic) => str(relic["relic_id"]) === id)?.["stack"]) % every;
+  };
+  return solverFieldsOf(pieces, {
+    ...(pieces.letterOpener ? { letterOpener: counter("LETTER_OPENER", pieces.letterOpener.every) } : {}),
+    ...(pieces.ornamentalFan ? { ornamentalFan: counter("ORNAMENTAL_FAN", pieces.ornamentalFan.every) } : {}),
+  });
 }
 
 /** The run's relics as the later turns' solver pieces (null: none held, or PASSIVE_PIECES off). */

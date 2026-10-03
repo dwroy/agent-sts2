@@ -466,6 +466,12 @@ export interface PlayerSim {
   letterOpener?: { every: number; damage: number; count: number };
   ornamentalFan?: { every: number; block: number; count: number };
   parryingShield?: { block: number; damage: number };
+  /**
+   * PASSIVE_PIECES (passive-pieces SolverPieceFields.orichalcumPlating): Plating's end-of-turn block, up or played this
+   * turn, does not stop Orichalcum (logged for Plating up: A8ENYFR4ZWKG F48 T7, 842N6N604DVX F31 T3; no logged turn with
+   * Plating played). Unset: Plating played this turn stops it, as before.
+   */
+  orichalcumPlating?: boolean;
   /** Demon Tongue, not yet spent this turn: the first HP lost on our turn is healed back. */
   demonTongue?: boolean;
   /**
@@ -2468,7 +2474,7 @@ export function turnStartAoeAfter(sim: { inferno: number }, input: SolverInput):
 /**
  * The block a line ends its turn with, before the enemies act, and its parts: the cards' block left, Feel No Pain's for the
  * Ethereal cards exhausted at the end (none after a won fight), Plating up and played this turn, Cloak Clasp's for the
- * cards held, Orichalcum's and Ripple Basin's (whole-fight sim and, with PASSIVE_PIECES, the rollout's later turns).
+ * cards held, Orichalcum's and Ripple Basin's (the whole-fight sim; with PASSIVE_PIECES, every turn the solver plays).
  */
 function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { etherealBlock: number; platingNow: number; claspBlock: number; blockAtEnd: number } {
   const heldCards = [...sim.hand, ...sim.held];
@@ -2479,9 +2485,10 @@ function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { ethe
   const platingNow = sim.steps.reduce((sum, step) => sum + (input.hand.find((card) => card.index === step.cardIndex && card.cardId === step.cardId)?.plating ?? 0), 0);
   // Cloak Clasp: block for each card still in hand at the end of the turn (drawn ones too).
   const claspBlock = (input.player.blockPerHeldCard ?? 0) * (heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand);
-  // Whole-fight simulator only (unset live): Orichalcum when the cards left no block, Ripple Basin when no Attack was played.
-  const relicEndBlock =
-    (sim.block + etherealBlock + platingNow + claspBlock <= 0 ? (input.player.orichalcum ?? 0) : 0) + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
+  // Orichalcum when the cards left no block (PASSIVE_PIECES: Plating played this turn does not count, as Plating up never
+  // did), Ripple Basin when no Attack was played.
+  const beforeOrichalcum = sim.block + etherealBlock + (input.player.orichalcumPlating ? 0 : platingNow) + claspBlock;
+  const relicEndBlock = (beforeOrichalcum <= 0 ? (input.player.orichalcum ?? 0) : 0) + (sim.attacksPlayed === 0 ? (input.player.rippleBasin ?? 0) : 0);
   const blockAtEnd = sim.block + etherealBlock + (input.player.endTurnBlock ?? 0) + platingNow + claspBlock + relicEndBlock;
   return { etherealBlock, platingNow, claspBlock, blockAtEnd };
 }

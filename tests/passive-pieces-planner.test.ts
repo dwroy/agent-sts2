@@ -2,8 +2,8 @@
  * PASSIVE_PIECES on the combat planner (src/strategy/passive-pieces.ts): the death-move logged boards and their pinned
  * knowledge (tests/death-move-data, as tests/death-move-planner.test.ts reads them). On and off, the boards holding none
  * of the relic pieces get the same question, Jev's view and resolutions byte for byte; the Kaiser Crab board holding
- * Ornamental Fan differs only in the rollout's numbers (its later turns gain the Fan's block), never in the options code
- * offers or the solver's own figures. Off is the pre-change planner: the golden digests of the other planner tests run
+ * Ornamental Fan differs (this turn's solver and the rollout's later turns count the Fan's block: the options' numbers
+ * and possibly the options themselves). Off is the pre-change planner: the golden digests of the other planner tests run
  * with it off. Nothing under logs/ or .cache is read, nothing is written.
  */
 
@@ -157,7 +157,7 @@ function diffPaths(a: unknown, b: unknown, path = ""): string[] {
 }
 
 describe("PASSIVE_PIECES on the combat question", () => {
-  it("boards without any relic piece: the same question, view and resolutions on and off; the Fan board only in the rollout's numbers", () => {
+  it("boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan", () => {
     const off = views(false);
     const on = views(true);
     for (const name of BOARDS) {
@@ -170,8 +170,12 @@ describe("PASSIVE_PIECES on the combat question", () => {
         const paths = diffPaths(off[key], on[key]);
         if (process.env["CAPTURE"] === "1") console.log(key, paths);
         expect(paths.length).toBeGreaterThan(0);
-        // Every difference is a rollout figure (the per-option rollout facts, the rollout's best line), never code's own.
-        expect(paths.filter((p) => !/rollout|history_estimate/.test(p))).toEqual([]);
+        // Only the combat question's own content moves (its options and their facts, Jev's view of them, the resolutions):
+        // the label, the screen, the question's kind stay.
+        const offView = off[key] as { label: string; questions: Record<string, unknown> };
+        const onView = on[key] as { label: string; questions: Record<string, unknown> };
+        expect(onView.label).toBe(offView.label);
+        expect(Object.keys(onView.questions)).toEqual(Object.keys(offView.questions));
       }
     }
     expect([...touched]).toEqual([]);
