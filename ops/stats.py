@@ -3,12 +3,39 @@
 import collections
 import json
 import os
+import re
 
 ROOT = os.path.expanduser("~/Projects/sts2-jev/jev-sts2")
 DEC = os.path.join(ROOT, "logs/decisions.jsonl")
 STATES = os.path.join(ROOT, "logs/states.jsonl")
 JEV_PRICE = 0.042  # $/M tokens (handoff estimate)
 DS_HIT, DS_MISS, DS_OUT = 0.006, 0.3, 1.2  # deepseek-flash $/M, peak rates (off-peak is half)
+
+
+# A model's own decision: the brain engine that answered (deepseek, codex, claude; "deepseek (for codex)" when the router's
+# fallback did), or a v3 escalator. Before 2026-10-03 every brain answer was logged as "deepseek" (jev-sts2 loop.ts).
+BRAIN_DECIDER = re.compile(r"^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$")
+
+
+def is_brain(decider):
+    return bool(BRAIN_DECIDER.match(decider or ""))
+
+
+def brain_direct(r):
+    """The brain decided this screen itself (its tokens are the row's usage): any brain decider but a v3 Claude escalation."""
+    d = r.get("decider") or ""
+    return is_brain(d) and (d != "claude" or not r.get("escalation"))
+
+
+def brain_engine(r):
+    """The engine behind a row's brain call: its note (deepseek.brain / escalation.brain), else the decider's, else deepseek."""
+    for key in ("deepseek", "escalation"):
+        rec = r.get(key) if isinstance(r.get(key), dict) else {}
+        note = rec.get("brain") if isinstance(rec.get("brain"), dict) else {}
+        if note.get("engine"):
+            return note["engine"]
+    d = r.get("decider") or ""
+    return d.split(" (for ")[0] if is_brain(d) else "deepseek"
 
 
 def load(path):
@@ -91,14 +118,14 @@ wins = sum(1 for v in runs.values() if v.get("win"))
 print(f"完成 {len(finished)} 局，胜 {wins}；过第一幕 boss（≥18 层）{sum(1 for v in runs.values() if v['floor'] >= 18)} 局；到第二幕 boss（≥33 层）{sum(1 for v in runs.values() if v['floor'] >= 33)} 局")
 
 # ---- API requests
-jev_calls = sum(1 for r in recs if r["usage"]["input_tokens"] > 0 and decider(r) not in ("deepseek",) and not (r.get("escalation") or {}).get("by") == "deepseek")
+jev_calls = sum(1 for r in recs if r["usage"]["input_tokens"] > 0 and not brain_direct(r) and not (r.get("escalation") or {}).get("by") == "deepseek")
 def _jev_usage(r):
     """Jev's own tokens of a record. Since 09-28 `usage` also counts DeepSeek's tokens (then it carries
     cache_hit_tokens): all of them on a DeepSeek-decided screen, the escalation's on an escalated one."""
     u = r["usage"]
     if "cache_hit_tokens" not in u:
         return u["input_tokens"], u["output_tokens"]
-    if r.get("decider") == "deepseek":
+    if brain_direct(r):
         return 0, 0
     e = r.get("escalation") or {}
     if e.get("by", "deepseek") == "deepseek":
@@ -116,7 +143,7 @@ def _num(v):
     return v if isinstance(v, (int, float)) else 0
 
 
-ds_direct = [r for r in recs if not r.get("escalation") and (r.get("deepseek") or r.get("decider") == "deepseek")]
+ds_direct = [r for r in recs if not r.get("escalation") and (r.get("deepseek") or brain_direct(r))]
 cl = [r for r in esc if r["escalation"].get("by") == "claude"]
 print("\n## 接口请求")
 print(f"Jev 请求 {jev_calls} 次，token {jev_in:,} 入 / {jev_out:,} 出，约 ${(jev_in + jev_out) / 1e6 * JEV_PRICE:.3f}")
@@ -133,6 +160,10 @@ ds_reason = sum(_num(c.get("reasoning_tokens")) for c in ds_calls)
 ds_cost = ((ds_in - ds_hit) * DS_MISS + ds_hit * DS_HIT + ds_out * DS_OUT) / 1e6
 _ds_paid = [r for r in ds_direct if not (isinstance(r.get("deepseek"), dict) and r["deepseek"].get("reused"))]
 print(f"DeepSeek 兜底 {len(ds)} 次、直接决策 {len(_ds_paid)} 次（另有 {len(ds_direct) - len(_ds_paid)} 步沿用已有答案或一次性计划），token {ds_tokens:,}（输入 {ds_in:,}，其中缓存命中 {ds_hit:,}；输出 {ds_out:,}，其中思考 {ds_reason:,}），按高峰价约 ${ds_cost:.3f}")
+_by_engine = collections.Counter(brain_engine(r) for r in _ds_paid)
+if set(_by_engine) - {"deepseek"}:
+    # V4.5: the direct decisions above are the brain's, whichever engine answered (the cost line prices them all as DeepSeek).
+    print("  直接决策按答题引擎：" + "，".join(f"{k} {v}" for k, v in _by_engine.most_common()))
 # DeepSeek's prefix cache: hit tokens / input tokens over the recent runs (decisions, escalations and the
 # run/fight plans), when the logs carry the numbers.
 RECENT_RUNS = 5

@@ -7,6 +7,7 @@ Prints Markdown. Appends a one-line summary to logs/runs.jsonl (idempotent per r
 import collections
 import json
 import os
+import re
 import sys
 
 ROOT = os.path.expanduser("~/Projects/sts2-jev/jev-sts2")
@@ -14,6 +15,32 @@ DEC = os.path.join(ROOT, "logs/decisions.jsonl")
 STATES = os.path.join(ROOT, "logs/states.jsonl")
 RUNS = os.path.join(ROOT, "logs/runs.jsonl")
 PRICE_PER_M = 0.042  # $ per million tokens (in + out), handoff estimate
+
+
+# A model's own decision: the brain engine that answered (deepseek, codex, claude; "deepseek (for codex)" when the router's
+# fallback did), or a v3 escalator. Before 2026-10-03 every brain answer was logged as "deepseek" (jev-sts2 loop.ts).
+BRAIN_DECIDER = re.compile(r"^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$")
+
+
+def is_brain(decider):
+    return bool(BRAIN_DECIDER.match(decider or ""))
+
+
+def brain_direct(r):
+    """The brain decided this screen itself (its tokens are the row's usage): any brain decider but a v3 Claude escalation."""
+    d = r.get("decider") or ""
+    return is_brain(d) and (d != "claude" or not r.get("escalation"))
+
+
+def brain_engine(r):
+    """The engine behind a row's brain call: its note (deepseek.brain / escalation.brain), else the decider's, else deepseek."""
+    for key in ("deepseek", "escalation"):
+        rec = r.get(key) if isinstance(r.get(key), dict) else {}
+        note = rec.get("brain") if isinstance(rec.get("brain"), dict) else {}
+        if note.get("engine"):
+            return note["engine"]
+    d = r.get("decider") or ""
+    return d.split(" (for ")[0] if is_brain(d) else "deepseek"
 
 
 def load(path):
@@ -156,7 +183,16 @@ def selftest():
     # The run died in its last fight (no frame after it): 0, not the last decision's 61.
     assert fights_of(recs[:2], states, died=True)[0]["hp_end"] == 0
     assert fights_of(recs[:2], states)[0]["hp_end"] == 61
-    print("report.py selftest ok: DHGT F17 86->33 (reward 39 less Burning Blood 6); death fight ends at 0")
+    # The decider names the brain engine that answered (jev-sts2 2026-10-03): every one counts as a brain decision.
+    for d in ("deepseek", "codex", "deepseek (for codex)", "claude (for codex)"):
+        assert is_brain(d), d
+    for d in ("code", "jev", "code-fallback", "deepseek-plan", "jev-plan", ""):
+        assert not is_brain(d), d
+    assert brain_direct({"decider": "codex"}) and brain_direct({"decider": "claude"}) and not brain_direct({"decider": "claude", "escalation": {"by": "claude"}})
+    assert brain_engine({"decider": "deepseek", "deepseek": {"brain": {"engine": "codex"}}}) == "codex"  # logged before the fix
+    assert brain_engine({"decider": "deepseek (for codex)", "deepseek": {"reused": True}}) == "deepseek"
+    assert brain_engine({"decider": "codex", "deepseek": {"reused": True}}) == "codex" and brain_engine({"decider": "jev"}) == "deepseek"
+    print("report.py selftest ok: DHGT F17 86->33 (reward 39 less Burning Blood 6); death fight ends at 0; brain deciders")
 
 
 def decider(record):
@@ -243,12 +279,15 @@ def main():
     ds_in = sum(_ds(r, "input_tokens", True) for r in recs)
     ds_out = sum(_ds(r, "output_tokens", True) for r in recs)
     ds_hit = sum(_ds(r, "cache_hit_tokens", True) for r in recs)
-    jev_calls = sum(1 for r in recs if _jev(r, "input_tokens") > 0 and decider(r) != "deepseek")
+    jev_calls = sum(1 for r in recs if _jev(r, "input_tokens") > 0 and not brain_direct(r))
     # Escalations to DeepSeek plus its direct decisions (build/route/rest decider since 2026-09-28).
     # Paid DeepSeek calls only: one-shot plan steps and memo-reused answers carry `deepseek.reused` and made no call.
-    ds_calls = sum(1 for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek")
-                   or (isinstance(r.get("deepseek"), dict) and not r["deepseek"].get("reused"))
-                   or (r.get("decider") == "deepseek" and not isinstance(r.get("deepseek"), dict)))
+    paid = [r for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek")
+            or (isinstance(r.get("deepseek"), dict) and not r["deepseek"].get("reused"))
+            or (brain_direct(r) and r.get("decider") != "claude" and not isinstance(r.get("deepseek"), dict))]
+    ds_calls = len(paid)
+    # The brain's calls by the engine that made them (V4.5: codex answers, DeepSeek falls back).
+    by_engine = collections.Counter(brain_engine(r) for r in paid)
     cl_calls = sum(1 for r in recs if r.get("escalation") and r["escalation"].get("by") == "claude")
     elapsed = 0
     if recs:
@@ -274,7 +313,9 @@ def main():
     title = "胜利" if victory else ("阵亡" if ended else "未结束")
     out.append(f"## 复盘：run {run_id} — {title}，最高第 {top_floor} 层")
     out.append("")
-    out.append(f"- 决策 {len(recs)} 个；Jev 调用 {jev_calls} 次，Claude {cl_calls} 次，DeepSeek {ds_calls} 次；token {tokens_in:,} 入 / {tokens_out:,} 出，约 ${(tokens_in + tokens_out) / 1e6 * PRICE_PER_M:.4f}（Jev）；DeepSeek token {ds_in:,} 入（缓存命中 {ds_hit:,}，{(ds_hit / ds_in * 100 if ds_in else 0):.0f}%）/ {ds_out:,} 出；用时 {elapsed/60:.1f} 分钟")
+    brain_name = "DeepSeek" if set(by_engine) <= {"deepseek"} else "大脑"
+    brain_split = "" if brain_name == "DeepSeek" else "（" + "，".join(f"{k} {v}" for k, v in by_engine.most_common()) + "）"
+    out.append(f"- 决策 {len(recs)} 个；Jev 调用 {jev_calls} 次，Claude {cl_calls} 次，{brain_name} {ds_calls} 次{brain_split}；token {tokens_in:,} 入 / {tokens_out:,} 出，约 ${(tokens_in + tokens_out) / 1e6 * PRICE_PER_M:.4f}（Jev）；{brain_name} token {ds_in:,} 入（缓存命中 {ds_hit:,}，{(ds_hit / ds_in * 100 if ds_in else 0):.0f}%）/ {ds_out:,} 出；用时 {elapsed/60:.1f} 分钟")
     out.append(f"- 决策者：" + "，".join(f"{k} {v}" for k, v in by_decider.most_common()))
     out.append("")
     out.append("### 战斗掉血（按层）")

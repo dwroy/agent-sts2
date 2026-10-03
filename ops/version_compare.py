@@ -25,6 +25,8 @@ V3PRE = "Z6AMPPWHQ5CV VQKX9AD1YHKS".split()
 V3 = "VNWR16YEJASM 981WMX8MQ7DK 0B5YKJFM0E8B WXMBVL6ZJ000 RWWGRRYKD6LT WCC7RMRLWLZK RBJ402TKQZ6F 2CCM6XK4PB37 Y0CWCD0C03FL Y3XT9EBS7U8B".split()
 VERSIONS = [("V2", V2), ("V3", V3), ("V3-pre", V3PRE)]
 TARGET = set(V2 + V3 + V3PRE)
+# A model's own decision: the brain engine that answered ("codex", "deepseek (for codex)" since 2026-10-03), or a v3 escalator.
+BRAIN_DECIDER = re.compile(r"^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$")
 BOSS_FLOORS = (17, 33, 48)
 LOCAL = dt.timezone(dt.timedelta(hours=8))
 
@@ -196,7 +198,8 @@ with open(os.path.join(LOGS, "decisions.jsonl"), encoding="utf8") as fh:
         lat = d.get("latency_ms") or {}
         p["jev_ms"] += lat.get("jev") or 0
         u = d.get("usage") or {}
-        if decider != "deepseek":
+        # A brain decision's usage is the brain's tokens (whichever engine: "codex", "deepseek (for codex)" since 2026-10-03).
+        if not (BRAIN_DECIDER.match(decider or "") and (decider != "claude" or not d.get("escalation"))):
             p["jev_tok"] += (u.get("input_tokens") or 0) + (u.get("output_tokens") or 0)
 
 
