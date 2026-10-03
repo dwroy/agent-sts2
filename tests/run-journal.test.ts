@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 
 import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
-import { bossNote, describeChoice, memoryChars, memorySections, pathSpans, renderLookahead, routeText, RunJournal, UNVERIFIED_REASON_PREFIX, upgradedName, type JournalEntry } from "../src/project/run-journal.js";
+import { bossNote, describeChoice, isBrainDecider, journalTag, memoryChars, memorySections, pathSpans, renderLookahead, routeText, RunJournal, UNVERIFIED_REASON_PREFIX, upgradedName, type JournalEntry } from "../src/project/run-journal.js";
+import { brainDecider } from "../src/loop.js";
 import { runPlanLine } from "../src/strategy/run-plan.js";
 import type { RoutePlan } from "../src/screens/map.js";
 import type { AskDecision } from "../src/project/types.js";
@@ -444,5 +445,39 @@ describe("boss notes carry the monster DB's numbers at this ascension, and every
       // Nothing the DB lacks is filled with an old number.
       for (const id of ["VANTOM", "THE_KIN", "AEONGLASS"]) expect(bossNote(id, 9)).not.toMatch(/\{[A-Z]+:/);
     });
+  });
+});
+
+describe("the decider names the engine that answered (2026-10-03); the run memory reads as before", () => {
+  it("brainDecider: the engine, with the one it stood in for after a fallback; plain v3 DeepSeek is deepseek", () => {
+    expect(brainDecider(undefined)).toBe("deepseek");
+    expect(brainDecider({ engine: "codex" })).toBe("codex");
+    expect(brainDecider({ engine: "deepseek", fell_back_from: { engine: "codex", error: "codex timed out after 600000 ms" } })).toBe("deepseek (for codex)");
+    expect(brainDecider({ engine: "claude", fell_back_from: { engine: "codex", error: "x" } })).toBe("claude (for codex)");
+  });
+
+  it("every brain decider counts as a model's decision; code, jev and code-fallback do not", () => {
+    for (const by of ["deepseek", "codex", "claude", "dsh", "deepseek (for codex)", "claude (for codex)", "deepseek (for claude)"]) expect(isBrainDecider(by)).toBe(true);
+    for (const by of ["code", "jev", "code-fallback", "jev-plan", "deepseek-plan", "", "codex (for jev)", "deepseek (for codex"]) expect(isBrainDecider(by)).toBe(false);
+    expect(["deepseek", "codex", "deepseek (for codex)", "claude", "code", "jev"].map(journalTag)).toEqual(["DS", "DS", "DS", "claude", "code", "jev"]);
+  });
+
+  it("a codex or fallback decision is kept with its reason and tagged DS, exactly as a deepseek one was: the prompt does not change", () => {
+    const render = (by: (floor: number) => string): string => {
+      const journal = new RunJournal();
+      for (let floor = 1; floor <= 6; floor += 1) {
+        const state = at("EVENT", floor, { current_hp: 60 });
+        journal.observe(state);
+        // A non-key label too (map/route-change): only a model's decision keeps it.
+        journal.record(state, entry({ label: floor % 2 ? "event/choose" : "map/route-change", by: by(floor), choice: `pick-${floor}`, reason: `why-${floor}` }));
+      }
+      const memory = journal.render(at("MAP", 7, { current_hp: 60 }), testKnowledge, {});
+      return `${memory.history}\n${memory.this_floor}`;
+    };
+    const before = render(() => "deepseek");
+    expect(before).toContain(" map/route-change [DS]: pick-2 — 未核实理由: why-2");
+    expect(render((floor) => (floor % 3 === 0 ? "deepseek (for codex)" : "codex"))).toBe(before);
+    // Code's own pick of a non-key label is not kept (as before).
+    expect(render(() => "code")).not.toContain("map/route-change");
   });
 });

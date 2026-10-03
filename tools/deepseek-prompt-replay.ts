@@ -18,6 +18,7 @@ import { makeKnowledge } from "../src/knowledge/index.js";
 import { choiceMessage } from "../src/llm/deepseek-message.js";
 import type { GameState } from "../src/mod/schema.js";
 import { replayRun } from "../src/project/journal-replay.js";
+import { isBrainDecider } from "../src/project/run-journal.js";
 import { buildRunBrief } from "../src/project/run-brief.js";
 import type { AskDecision, DecisionEnv, ScreenMemory } from "../src/project/types.js";
 import { planReward } from "../src/screens/reward.js";
@@ -55,7 +56,8 @@ replayRun({ runId, states, decisions, runPlans: plans }, knowledge, {
   beforeRecord(state, row, journal, screenMemory) {
     const label = String(row["label"]);
     const ds = (row["deepseek"] ?? null) as Row | null;
-    if (row["decider"] !== "deepseek" || !ds || ds["reused"] === true) return;
+    // A brain decision, whichever engine answered it (the prompt is the same).
+    if (!isBrainDecider(String(row["decider"] ?? "")) || !ds || ds["reused"] === true) return;
     const questions = (row["questions"] ?? {}) as Record<string, { instructions?: string; criteria?: Record<string, string | null> }>;
     const question = questions["pick"] ?? Object.values(questions)[0];
     const criteria = question?.criteria ?? {};

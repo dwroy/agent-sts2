@@ -45,7 +45,8 @@ export interface BrainMeta {
   tool_calls: string[];
   cost_usd?: number;
   problems?: string[];
-  fell_back_from?: { engine: EngineName; error: string };
+  /** The engine that failed first, why, and how long its failed attempt took (ms; absent when it was resting, not tried). */
+  fell_back_from?: { engine: EngineName; error: string; ms?: number };
   /** Model calls the router's re-ask added (a route checked by its AnswerSpec: M2). */
   reask_calls?: number;
 }

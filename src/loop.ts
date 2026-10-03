@@ -18,6 +18,8 @@ import { withJevRetry, type JevClient } from "./jev/client.js";
 import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
 import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "./brain/brain.js";
+import { fallbackOf } from "./brain/router.js";
+import type { BrainDecider } from "./brain/types.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
@@ -29,7 +31,7 @@ import type { ActionResult, GameState } from "./mod/schema.js";
 import { addNote, buildRunBrief } from "./project/run-brief.js";
 import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun } from "./project/journal-replay.js";
 import { noteFightStart, thiefFightOf } from "./strategy/thief.js";
-import { compact, describeChoice, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
+import { compact, describeChoice, isBrainDecider, memoryChars, memorySections, RunJournal } from "./project/run-journal.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv, type ResolvedAction, type RouteReviewResult, type ScreenMemory } from "./project/types.js";
 import { planDecision } from "./screens/index.js";
 import { rememberChosenNode, rememberMap } from "./screens/rest.js";
@@ -404,6 +406,19 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
    */
   // Assigned inside a closure (the DeepSeek accept step): the cast keeps TS from narrowing it to null.
   let deepseekMemo = null as { key: string; resolved: ResolvedAction; record: Record<string, JsonValue> } | null;
+  /**
+   * Who made each one-shot plan (its plan_id -> the brain engine that answered), for the decider of the steps code plays
+   * from it; a plan not made in this process (a restart) is credited to the engine configured for the step's label.
+   */
+  const planDeciders = new Map<string, BrainDecider>();
+  const notePlanDecider = (id: string, by: BrainDecider): void => {
+    planDeciders.delete(id);
+    planDeciders.set(id, by);
+    for (const oldest of planDeciders.keys()) {
+      if (planDeciders.size <= 200) break;
+      planDeciders.delete(oldest);
+    }
+  };
   // A silent wait is indistinguishable from a hang. After ~10 s on an unchanged screen, say so.
   let stallKey: string | null = null;
   let stallCount = 0;
@@ -778,6 +793,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let deepseekLatency = 0;
     /** BUILD_DECIDER=deepseek: DeepSeek's own decision on this screen, and its log record. */
     let deepseekResolved: ResolvedAction | null = null;
+    /** The brain engine that answered this decision's question (the decider of its rows), once one did. */
+    let brainBy: BrainDecider = "deepseek";
     let deepseekRecord: Record<string, JsonValue> | undefined;
     let deepseekFailed = false;
     /** DeepSeek answered but the answer was unusable (not a transport failure): a one-shot question then goes step by step. */
@@ -909,7 +926,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             return false;
           }
           const how = recovered ? ` (recovered from reasoning: ${recovered.line})` : "";
-          deepseekResolved = { ...picked, decider: "deepseek", confidence: null, fallback: false, rationale: `DeepSeek decided ${answer.choice}${how}: ${answer.reason} | ${picked.rationale}` };
+          // The decider is the engine that answered (codex, or "deepseek (for codex)" after a fallback), not always deepseek.
+          const by = brainDecider(answer.brain);
+          if (picked.plan) notePlanDecider(picked.plan.id, by);
+          deepseekResolved = { ...picked, decider: by, confidence: null, fallback: false, rationale: `DeepSeek decided ${answer.choice}${how}: ${answer.reason} | ${picked.rationale}` };
           deepseekRecord = {
             by: "deepseek",
             direct: true,
@@ -954,6 +974,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               return !("invalid" in out) && Boolean(out.intent);
             };
             const { json, meta, recovered, note } = await brain.choosePlan(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } }, valid);
+            brainBy = brainDecider(meta.brain);
             takeRunPlan(json["run_plan"], meta);
             stats.deepseekCalls += reaskCalls(decision.label, meta.brain);
             stats.deepseekTokens += meta.inputTokens + meta.outputTokens;
@@ -983,7 +1004,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               deepseekRecord = { by: "deepseek", direct: true, choice: "", reason, answer: toJsonValue(json), invalid: why, ...usage };
               onEvent({ type: "note", message: `${answeredBy(meta.brain)}'s plan on ${decision.label} is invalid (${why})` });
             } else {
-              deepseekResolved = { ...out, decider: "deepseek", confidence: null, fallback: false, rationale: `DeepSeek planned: ${reason} | ${out.rationale}` };
+              if (out.plan) notePlanDecider(out.plan.id, brainBy);
+              deepseekResolved = { ...out, decider: brainBy, confidence: null, fallback: false, rationale: `DeepSeek planned: ${reason} | ${out.rationale}` };
               deepseekRecord = {
                 by: "deepseek",
                 direct: true,
@@ -998,6 +1020,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             }
           } else {
             const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
+            brainBy = brainDecider(answer.brain);
             takeRunPlan(answer.runPlan, answer);
             stats.deepseekCalls += reaskCalls(decision.label, answer.brain);
             stats.deepseekTokens += answer.inputTokens + answer.outputTokens;
@@ -1023,6 +1046,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           }
           onEvent({ type: "note", message: `${error instanceof DeepSeekAnswerError ? answeredBy((error.meta as { brain?: BrainMeta }).brain) : engineLabel(brain?.engineFor(decision.label))} failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)})` });
           if (error instanceof DeepSeekAnswerError) {
+            // The engine whose answer was unusable: its note, else the router's tag when the fallback raised it (v3 DeepSeek's own error).
+            const via = fallbackOf(error);
+            brainBy = brainDecider((error.meta as { brain?: BrainMeta }).brain ?? (via ? { engine: via.engine, fell_back_from: { engine: via.for, error: "" } } : undefined));
             // A run plan riding on it does not depend on the choice: taken when the answer gave one.
             takeRunPlan(error.detail.runPlan, error.meta);
             // Its answer was unusable, but its reasoning may still name one option (WXMB F11: reasoned
@@ -1062,7 +1088,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           floor: state.run?.floor ?? null,
           turn: state.turn,
           label: decision.label,
-          decider: "deepseek",
+          decider: brainBy,
           fingerprint: stateFingerprint,
           questions: toJsonValue(decision.questions) as Record<string, JsonValue>,
           rationale: `one-shot answer unusable (${deepseekAnswerUnusable}); asking step by step`,
@@ -1234,7 +1260,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               const who = escalator.name === "claude" ? "Claude" : "DeepSeek";
               resolved = {
                 ...override,
-                decider: escalator.name,
+                // The DeepSeek escalator is asked through the brain: the engine that answered (escalator.name otherwise).
+                decider: escalator.name === "claude" ? "claude" : brainDecider("brain" in answer ? (answer.brain as BrainMeta | undefined) : undefined),
                 confidence: jevAnswer.confidence,
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
@@ -1347,13 +1374,15 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       turn: state.turn,
       label: decision.label,
       decision_id: decisionId,
-      decider: deepseekResolved || (decision.kind === "act" && decision.plan)
-        ? ("deepseek" as const)
-        : decision.kind === "act"
-          ? ("code" as const)
-          : resolved.fallback || (!usedJev && !fromMemo)
-            ? ("code-fallback" as const)
-            : resolved.decider ?? ("jev" as const),
+      decider: deepseekResolved
+        ? (deepseekResolved.decider ?? "deepseek")
+        : decision.kind === "act" && decision.plan
+          ? (planDeciders.get(decision.plan.ref) ?? (brain ? brain.engineFor(decision.label) : "deepseek"))
+          : decision.kind === "act"
+            ? ("code" as const)
+            : resolved.fallback || (!usedJev && !fromMemo)
+              ? ("code-fallback" as const)
+              : resolved.decider ?? ("jev" as const),
       fingerprint: stateFingerprint,
       questions: asked,
       answers: rawAnswers,
@@ -1468,7 +1497,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       const change = resolved.routeReview?.change;
       if (!change || !screenMemory.routePlan) return;
       const reason = resolved.routeReview?.reason ?? "";
-      const entry = { label: "map/route-change", by: "deepseek", choice: compact(`route (${change.why}): ${change.to}`), reason, asked: true, intent: null };
+      // The route review rode on this decision's question: its decider is the engine that answered it.
+      const by: BrainDecider = baseRecord.decider !== undefined && isBrainDecider(baseRecord.decider) ? (baseRecord.decider as BrainDecider) : "deepseek";
+      const entry = { label: "map/route-change", by, choice: compact(`route (${change.why}): ${change.to}`), reason, asked: true, intent: null };
       journal.record(state, entry);
       const row: DecisionRecord = {
         ts,
@@ -1478,7 +1509,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         floor: state.run?.floor ?? null,
         turn: state.turn,
         label: "map/route-change",
-        decider: "deepseek",
+        decider: by,
         fingerprint: stateFingerprint,
         rationale: `DeepSeek changed the act's route in ${decision.label} (${change.why}): ${change.from} => ${change.to}${reason ? ` — ${reason}` : ""}${change.nextRest ? `; next rest: ${change.nextRest.text}${change.nextRest.worse ? " (clearly worse than the kept route)" : ""}${change.nextRest.eliteWorse ? " (clearly lower at the next elite)" : ""}` : ""}`,
         confidence: null,
@@ -1773,6 +1804,15 @@ const ALL_FIGHT_PLANS_FROM_FLOOR = 3;
 export function engineLabel(engine: string | undefined): string {
   const names: Record<string, string> = { deepseek: "DeepSeek", codex: "Codex", claude: "Claude", dsh: "dsh" };
   return names[engine ?? "deepseek"] ?? String(engine);
+}
+
+/**
+ * Who answered a brain question, for the decision log's decider: the engine ("codex"), with the one it stood in for when
+ * the router's fallback answered ("deepseek (for codex)"); "deepseek" when there is no note (plain v3 DeepSeek).
+ */
+export function brainDecider(brain: Pick<BrainMeta, "engine" | "fell_back_from"> | undefined): BrainDecider {
+  if (!brain) return "deepseek";
+  return brain.fell_back_from && brain.fell_back_from.engine !== brain.engine ? `${brain.engine} (for ${brain.fell_back_from.engine})` : brain.engine;
 }
 
 /** Who answered a brain question, for the console: the engine, and the one that failed first when the fallback answered. */

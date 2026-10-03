@@ -19,6 +19,8 @@
  *   and when the system prompt changes (its sha).
  * - Stalls: as exec mode, on the streamed notifications: no first delta within first_token_ms (when set), or, after
  *   it, no notification for stall_ms: the turn is interrupted (turn/interrupt) and reverted; the engine asks once more.
+ *   So is a runaway answer: longer than maxAnswerChars, or maxAnswerBlanks whitespace characters in a row between its
+ *   JSON tokens (2026-10-03: the runaways were whitespace without end after a complete reason; BlankRun).
  * - The server pushes the plan's rate limits after each turn (account/rateLimits/updated): handed to the usage guard.
  * - The process: stdio JSON-RPC (one JSON object per line), its own process group (killed on close), the agent
  *   environment (no keys), stdin open while it lives (app-server exits when stdin closes: it dies with us).
@@ -322,6 +324,13 @@ export interface SessionTurn {
   deltas: number;
   /** The streamed answer's length so far (agentMessage deltas). */
   answerChars: number;
+  /** The most whitespace characters in a row between the streamed answer's JSON tokens (outside its strings). */
+  maxBlankRun: number;
+  /**
+   * The streamed answer text (agentMessage deltas), its first ANSWER_TEXT_KEEP characters: the evidence of a turn cut
+   * before its answer (a runaway); the trace keeps it only then.
+   */
+  answerText: string;
   maxGapMs: number;
   ms: number;
   /** Why a stalled turn was given up on. */
@@ -368,6 +377,42 @@ function alive(pid: number): boolean {
 }
 
 const DELTAS = new Set(["item/agentMessage/delta", "item/reasoning/summaryTextDelta", "item/reasoning/textDelta"]);
+/**
+ * The whitespace runs between a streamed JSON answer's tokens: fed the deltas in order, it tracks whether the text is
+ * inside a string (and after a backslash there) and counts the whitespace in a row outside strings. feed() returns the
+ * longest run so far.
+ */
+export class BlankRun {
+  private inString = false;
+  private escaped = false;
+  private run = 0;
+  private longest = 0;
+
+  feed(delta: string): number {
+    for (const ch of delta) {
+      if (this.inString) {
+        if (this.escaped) this.escaped = false;
+        else if (ch === "\\") this.escaped = true;
+        else if (ch === '"') this.inString = false;
+        continue;
+      }
+      if (ch === " " || ch === "\n" || ch === "\t" || ch === "\r") {
+        this.run += 1;
+        if (this.run > this.longest) this.longest = this.run;
+        continue;
+      }
+      this.run = 0;
+      if (ch === '"') this.inString = true;
+    }
+    return this.longest;
+  }
+}
+
+/**
+ * How much of a turn's streamed answer is kept (SessionTurn.answerText). A runaway is cut at BRAIN_CODEX_MAX_ANSWER_CHARS
+ * (2000 by default; the cut ones seen were 2001-2329 characters): this keeps all of one, and bounds the trace row.
+ */
+export const ANSWER_TEXT_KEEP = 8_000;
 /** The trace keeps the first and the last notifications of a long turn (deltas are counted, not listed). */
 const KEEP_HEAD = 40;
 const KEEP_TAIL = 30;
@@ -507,12 +552,13 @@ export class CodexSession {
    * One question as a turn on the base thread, watched for stalls, then reverted to the base. The turn's outcome is
    * returned whatever it was; a transport failure (the server gone, a request unanswered) throws SessionError.
    */
-  async ask(q: { prompt: string; schema: unknown; effort: string; summary: string; model: string; signal?: AbortSignal; stallMs: number | null; firstTokenMs: number | null; maxAnswerChars?: number | null }): Promise<SessionTurn> {
+  async ask(q: { prompt: string; schema: unknown; effort: string; summary: string; model: string; signal?: AbortSignal; stallMs: number | null; firstTokenMs: number | null; maxAnswerChars?: number | null; maxAnswerBlanks?: number | null }): Promise<SessionTurn> {
     const server = await this.ensureServer();
     const threadId = this.thread?.id;
     if (!threadId) throw new SessionError("no thread to ask on", "transport");
     const started = Date.now();
-    const turn: SessionTurn = { status: "failed", turnId: null, threadId, text: "", reasoning: [], usage: null, error: null, retries: [], errors: [], firstDeltaMs: null, deltas: 0, answerChars: 0, maxGapMs: 0, ms: 0, events: [], reverted: false };
+    const turn: SessionTurn = { status: "failed", turnId: null, threadId, text: "", reasoning: [], usage: null, error: null, retries: [], errors: [], firstDeltaMs: null, deltas: 0, answerChars: 0, maxBlankRun: 0, answerText: "", maxGapMs: 0, ms: 0, events: [], reverted: false };
+    const blanks = new BlankRun();
     let last = started;
     let dropped = 0;
     let resolveDone: ((status: SessionTurn["status"]) => void) | null = null;
@@ -548,9 +594,16 @@ export class CodexSession {
         turn.deltas += 1;
         if (method === "item/agentMessage/delta" && typeof params["delta"] === "string") {
           turn.answerChars += params["delta"].length;
+          if (turn.answerText.length < ANSWER_TEXT_KEEP) turn.answerText = (turn.answerText + params["delta"]).slice(0, ANSWER_TEXT_KEEP);
+          turn.maxBlankRun = Math.max(turn.maxBlankRun, blanks.feed(params["delta"]));
           // A runaway answer (seen 2026-10-03: a reward answer streaming single characters for 10 minutes): given up on as stalled.
           if (q.maxAnswerChars && turn.answerChars > q.maxAnswerChars && !turn.stall) {
             turn.stall = `the answer ran past ${q.maxAnswerChars} characters (runaway)`;
+            settle("stalled");
+          }
+          // Its usual form (2026-10-03): whitespace without end between JSON tokens after a complete reason.
+          if (q.maxAnswerBlanks && turn.maxBlankRun >= q.maxAnswerBlanks && !turn.stall) {
+            turn.stall = `the answer ran ${turn.maxBlankRun} whitespace characters between its JSON tokens (runaway)`;
             settle("stalled");
           }
         }

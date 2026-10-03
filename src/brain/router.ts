@@ -31,6 +31,13 @@
  * - Keys never reach the log: rows hold the request, the answer, the usage and error texts only. A row about an
  *   engine that reads its plan's limits (codex's usage guard, engines/codex-usage.ts), as the one answering or the one
  *   fallen back from, carries its latest reading as `limits` (used %, window, reset time, credit balance).
+ * - Time: a row's latency_ms is its engine's time on the question (re-ask included). When the primary failed as an
+ *   engine (error, timeout, stall) and the fallback was asked, the primary has no row of its own: the fallback's row
+ *   carries the failed attempt's wall clock as primary_ms (and its known tokens as primary_usage), so the question's
+ *   time is latency_ms + primary_ms (2026-10-03: RNTVAT76BPV0's five 600 s codex timeouts were in no row). An answer
+ *   unusable after the re-ask has its own row (the primary's), so its fallback row has no primary_ms.
+ * - Every question gets an id (question_id; BrainRequest.questionId): its rows (primary and fallback) and the engine's
+ *   own trace rows (codex-calls.jsonl) carry it.
  */
 import { createHash } from "node:crypto";
 import { appendFileSync, mkdirSync } from "node:fs";
@@ -59,6 +66,18 @@ export function errorUsage(error: unknown): BrainUsage | undefined {
 /** Attaches a failed call's known usage to its error (errorUsage reads it back); the error, for a rethrow. */
 export function withUsage<T>(error: T, usage: BrainUsage): T {
   if (typeof error === "object" && error !== null) (error as { usage?: BrainUsage }).usage = usage;
+  return error;
+}
+
+/** Which engine threw an error the fallback raised, and for which engine it stood in (tagFallback); undefined otherwise. */
+export function fallbackOf(error: unknown): { engine: EngineName; for: EngineName } | undefined {
+  const note = typeof error === "object" && error !== null ? (error as { brainFallback?: unknown }).brainFallback : undefined;
+  return typeof note === "object" && note !== null ? (note as { engine: EngineName; for: EngineName }) : undefined;
+}
+
+/** Tags an error the fallback raised with both engines (fallbackOf reads it back: the decision log's decider); the error, for a rethrow. */
+function tagFallback<T>(error: T, engine: EngineName, primary: EngineName): T {
+  if (typeof error === "object" && error !== null) (error as { brainFallback?: unknown }).brainFallback = { engine, for: primary };
   return error;
 }
 
@@ -131,7 +150,15 @@ export interface BrainLogRow {
   latency_ms: number;
   usage: BrainAnswer["usage"];
   first?: { answer: unknown; problems: string[] };
-  fell_back_from?: BrainAnswer["fellBackFrom"] & { kind?: FailureKind };
+  /** The question's id (BrainRequest.questionId): shared by its primary and fallback rows and the engine's trace rows. */
+  question_id?: string;
+  fell_back_from?: { engine: EngineName; error: string; kind?: FailureKind };
+  /**
+   * The fallback's row after the primary failed as an engine (no row of its own): the failed attempt's wall clock (ms)
+   * and the tokens its error says it used. The question's time is latency_ms + primary_ms.
+   */
+  primary_ms?: number;
+  primary_usage?: BrainUsage;
   error?: string;
   error_kind?: FailureKind;
   raw?: string;
@@ -182,8 +209,17 @@ export class BrainRouter {
   private notify: ((message: string) => void) | null = null;
   /** Engines whose rest for the process was said already (once each). */
   private readonly saidResting = new Set<EngineName>();
+  /** Question ids: this router's prefix (start time, pid) and a counter. */
+  private readonly idPrefix = `${Date.now().toString(36)}-${process.pid}`;
+  private questions = 0;
 
   constructor(private readonly deps: RouterDeps) {}
+
+  /** A new question id (BrainRequest.questionId): unique across processes. */
+  private nextQuestionId(): string {
+    this.questions += 1;
+    return `${this.idPrefix}-${this.questions}`;
+  }
 
   /** Where to say that an engine is rested for the rest of the process (a used-up subscription): once per engine. */
   onNote(notify: (message: string) => void): void {
@@ -315,7 +351,8 @@ export class BrainRouter {
    * one re-ask, fallback on an engine failure. Throws when no engine produced an answer object (the last error), or
    * an answer failure as the engine threw it.
    */
-  async decide(req: BrainRequest): Promise<BrainAnswer> {
+  async decide(request: BrainRequest): Promise<BrainAnswer> {
+    const req: BrainRequest = request.questionId ? request : { ...request, questionId: this.nextQuestionId() };
     const primary = this.engineFor(req.label);
     const fallback = this.deps.config.fallback && this.deps.config.fallback !== primary ? this.deps.config.fallback : null;
     const rest = this.resting.get(primary);
@@ -329,7 +366,7 @@ export class BrainRouter {
         result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
       } catch (error) {
         this.write(fallback, req, null, error, { ...fellBackFrom, kind: rest.kind }, this.spent(error, began));
-        throw error;
+        throw tagFallback(error, fallback, primary);
       }
       this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind: rest.kind });
       return result;
@@ -350,19 +387,21 @@ export class BrainRouter {
       }
       const kind = failureKind(error);
       if (error instanceof EngineFailure && error.cooldownMs > 0) this.rest(primary, error, kind);
+      // The failed attempt's time and tokens: on its own row when nothing else is asked, else on the fallback's.
+      const failedPrimary = this.spent(error, began);
       if (!fallback || !this.canFallBackTo(fallback)) {
-        this.write(primary, req, null, error, undefined, this.spent(error, began));
+        this.write(primary, req, null, error, undefined, failedPrimary);
         throw error;
       }
       const fellBackFrom = { engine: primary, error: message(error).slice(0, 300) };
       const again = this.now();
       try {
-        result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
+        result = { ...(await this.attempt(fallback, req, true)), fellBackFrom: { ...fellBackFrom, ms: failedPrimary.latencyMs } };
       } catch (second) {
-        this.write(fallback, req, null, second, { ...fellBackFrom, kind }, this.spent(second, again));
-        throw second;
+        this.write(fallback, req, null, second, { ...fellBackFrom, kind }, this.spent(second, again), failedPrimary);
+        throw tagFallback(second, fallback, primary);
       }
-      this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind });
+      this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind }, undefined, failedPrimary);
       return result;
     }
     if (fallback && BrainRouter.unusable(req, result) && this.canFallBackTo(fallback)) return this.fallBackOnAnswer(primary, fallback, req, result);
@@ -381,15 +420,16 @@ export class BrainRouter {
    * caller then falls back to Jev/code); its answer failure is thrown as it is.
    */
   private async fallBackOnAnswer(primary: EngineName, fallback: EngineName, req: BrainRequest, first: Attempt): Promise<BrainAnswer> {
+    // The primary's own row holds its time; the fallback's row has no primary_ms.
     this.write(primary, req, first);
     const fellBackFrom = { engine: primary, error: `answer unusable after the re-ask: ${first.problems.join("; ") || "no answer"}`.slice(0, 300) };
     let result: Attempt;
     const began = this.now();
     try {
-      result = { ...(await this.attempt(fallback, req, true)), fellBackFrom };
+      result = { ...(await this.attempt(fallback, req, true)), fellBackFrom: { ...fellBackFrom, ms: first.latencyMs } };
     } catch (error) {
       this.write(fallback, req, null, error, { ...fellBackFrom, kind: "invalid" }, this.spent(error, began));
-      if (isAnswerFailure(error)) throw error;
+      if (isAnswerFailure(error)) throw tagFallback(error, fallback, primary);
       return first;
     }
     this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind: "invalid" });
@@ -497,9 +537,10 @@ export class BrainRouter {
 
   /**
    * One log row. A failed question (no result) has `failed`: its real wall clock and known usage (fix-queue-v4 #8:
-   * 41VAUAM2EFY7 F34's 300 s timeout was logged as 0 ms).
+   * 41VAUAM2EFY7 F34's 300 s timeout was logged as 0 ms). The fallback's row after the primary failed as an engine has
+   * `primary`: the failed attempt's wall clock and known usage (primary_ms, primary_usage).
    */
-  private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"], failed?: { latencyMs: number; usage?: BrainUsage }): void {
+  private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"], failed?: { latencyMs: number; usage?: BrainUsage }, primary?: { latencyMs: number; usage?: BrainUsage }): void {
     let model = result?.model ?? "";
     const effort = result ? result.effort : (req.effort ?? this.deps.config.engines[engine]?.effort ?? undefined);
     if (!result) {
@@ -532,7 +573,9 @@ export class BrainRouter {
       latency_ms: result?.latencyMs ?? failed?.latencyMs ?? 0,
       usage: result?.usage ?? failed?.usage ?? { inputTokens: 0, outputTokens: 0 },
       ...(result?.first ? { first: result.first } : {}),
+      ...(req.questionId ? { question_id: req.questionId } : {}),
       ...(fellBackFrom ? { fell_back_from: fellBackFrom } : {}),
+      ...(primary ? { primary_ms: primary.latencyMs, ...(primary.usage ? { primary_usage: primary.usage } : {}) } : {}),
       ...(error === undefined ? {} : { error: message(error).slice(0, 500), error_kind: failureKind(error) }),
       ...(result?.raw !== undefined && result.answer === null ? { raw: result.raw.slice(0, 4000) } : {}),
       ...(result?.reasoning ? { reasoning_chars: result.reasoning.length } : {}),
