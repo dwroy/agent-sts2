@@ -296,6 +296,12 @@ export interface AppConfig {
    * Plating no longer stopping Orichalcum. off: all of them exactly as before.
    */
   passivePieces: boolean;
+  /**
+   * SANDPIT_START (default on; rollout.ts RolloutOptions.sandpitStart, tests/insatiable-sandpit.test.ts): the Insatiable's turn-1
+   * Liquify Ground starts its Sandpit (4) in the 5-turn rollout's later turns too, its Frantic Escapes 3 into the draw pile, as
+   * the whole fights (B4) do. off: whole fights only, as before (a turn-1 rollout played the boss without its Sandpit).
+   */
+  sandpitStart: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -952,6 +958,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const passivePiecesProblems: ConfigProblem[] = [];
   const passivePieces = parseOnOff(readEnv(env, "PASSIVE_PIECES"), "PASSIVE_PIECES", passivePiecesProblems) ?? true;
   for (const problem of passivePiecesProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // SANDPIT_START likewise (on by default).
+  const sandpitStartProblems: ConfigProblem[] = [];
+  const sandpitStart = parseOnOff(readEnv(env, "SANDPIT_START"), "SANDPIT_START", sandpitStartProblems) ?? true;
+  for (const problem of sandpitStartProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -1073,6 +1083,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     mechMoveRules,
     mechDeathMove,
     passivePieces,
+    sandpitStart,
     sl,
     brain,
     deepseek,

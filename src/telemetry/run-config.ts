@@ -429,6 +429,7 @@ export function runConfigRow(
       mech_move_rules: config.mechMoveRules,
       mech_death_move: config.mechDeathMove,
       passive_pieces: config.passivePieces,
+      sandpit_start: config.sandpitStart,
       fight_plan: config.fightPlan,
       run_plan: config.runPlan,
       run_plan_merge: config.runPlanMerge,

@@ -515,6 +515,14 @@ export interface RolloutOptions {
    * one) rolled out with no potion in its later turns either. Tagged "offered" and "no-potion".
    */
   noPotionLine?: Plan;
+  /**
+   * SANDPIT_START (rollout-live rolloutLiveOptions.sandpitStart; default on): a move that starts a Sandpit (the Insatiable's
+   * Liquify Ground, its first move) starts it in the rollout's later turns too, and its Frantic Escapes go into the piles as
+   * logged (3 into the draw pile, STATUS_INTO_DRAW), as the whole fights (B4) do. Unset or false: whole fights only, as
+   * before: a turn-1 rollout played the Insatiable without its Sandpit (no Sandpit death in any later turn; the 6 Escapes
+   * dead cards in the discard pile).
+   */
+  sandpitStart?: boolean;
 }
 
 export interface RolloutInput {
@@ -2066,18 +2074,19 @@ function applyPlan(
         if (gained.STEAM_ERUPTION_POWER) e.base = { ...e.base, eruption: (e.base.eruption ?? 0) + gained.STEAM_ERUPTION_POWER };
         if (m?.heal) e.hp = Math.min(e.maxHp, e.hp + m.heal);
         // Status cards into our piles (no code added any: Beckons, Wounds, Toxic, Dazed … only cycled when
-        // already there; ~800 logged fights had them added). B4, whole fights: some of them into the draw pile.
+        // already there; ~800 logged fights had them added). B4, whole fights: some of them into the draw pile; with
+        // SANDPIT_START the rollout's later turns too (Liquify Ground's Escapes, the only such move).
+        const sandpitScripts = fullFight || input.options?.sandpitStart === true;
         for (const status of m?.statusCards ?? []) {
           const card = input.statusCards?.[status.cardId ?? UNKNOWN_STATUS] ?? input.statusCards?.[UNKNOWN_STATUS];
-          const intoDraw = fullFight && e.move ? Math.min(status.count, STATUS_INTO_DRAW[e.move] ?? 0) : 0;
+          const intoDraw = sandpitScripts && e.move ? Math.min(status.count, STATUS_INTO_DRAW[e.move] ?? 0) : 0;
           if (card && intoDraw > 0) addToPile(piles, card, intoDraw, "draw", random);
           if (card) addToPile(piles, card, status.count - intoDraw, status.pile, random);
         }
-        if (fullFight) {
-          // B4 whole-fight scripts: the Sandpit Liquify Ground starts, the curses used.
-          if (m?.sandpit) e.base = { ...e.base, sandpit: m.sandpit };
-          if (e.id === "KNOWLEDGE_DEMON" && e.move === "CURSE_OF_KNOWLEDGE_MOVE") e.curses = (e.curses ?? 0) + 1;
-        }
+        // B4 whole-fight scripts (and SANDPIT_START, the rollout's later turns): the Sandpit Liquify Ground starts.
+        if (sandpitScripts && m?.sandpit) e.base = { ...e.base, sandpit: m.sandpit };
+        // B4 whole-fight scripts: the curses used.
+        if (fullFight && e.id === "KNOWLEDGE_DEMON" && e.move === "CURSE_OF_KNOWLEDGE_MOVE") e.curses = (e.curses ?? 0) + 1;
         if (m?.playerPowers) applied.push(m);
         // Burrowed: the block is not removed at the start of its turn (RWWG F20: 32 block T6-T10, the
         // rollout dropped it after one simulated turn and read pure-block lines as "~2 turns to the end").

@@ -84,6 +84,12 @@ export interface DecisionEnv {
    * the combat question exactly as without them.
    */
   mechDeathMove?: boolean;
+  /**
+   * SANDPIT_START (config; rollout.ts RolloutOptions.sandpitStart): the Insatiable's turn-1 Liquify Ground starts its Sandpit in
+   * the 5-turn rollout's later turns too. Undefined: rollout-live's default (on unless SANDPIT_START=off in the environment);
+   * false: the rollout exactly as before (whole fights only).
+   */
+  sandpitStart?: boolean;
 }
 
 /** A retried fight, as the combat planners see it (src/sl/controller.ts envFor). */
