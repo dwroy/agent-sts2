@@ -42,10 +42,10 @@ import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type
 import { heldCardEthereal } from "../strategy/card-model.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
-import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
+import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
-import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, slBoardKey, triedHas, turnCanon, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays } from "./explore.js";
+import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays } from "./explore.js";
 import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type DrawBound, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
 
@@ -70,6 +70,8 @@ interface FightTrack {
   encounter: string;
   enemies: string[];
   kind: "boss" | "elite";
+  /** The room (the rows' fight_kind: boss, elite, hallway, event; slRoomOf). */
+  room: SlRoom;
   elite: string | null;
   /** Why the fight gets SL (SlGate.reason), as its rows say it. */
   gate: string;
@@ -266,6 +268,19 @@ export function slGate(
   return { kind: "elite", elite: null, reason: `${ACT3_LOW_HP_GATE} ${entry.hp}/${entry.maxHp}` };
 }
 
+/**
+ * An SL fight's room (the rows' fight_kind, 2026-10-04): a boss fight is boss; else the map node the run chose for the floor
+ * (Elite: elite, Monster: hallway, Unknown: event); without one (a restart that did not see the map), by the enemies: an
+ * elite enemy, elite; else hallway. The SL rules (retries, the gate) still go by SlGate.kind.
+ */
+export function slRoomOf(gate: Pick<SlGate, "kind">, enemyIds: readonly string[], node: string | null, knowledge: Pick<Knowledge, "monster">): SlRoom {
+  if (gate.kind === "boss" || node === "Boss") return "boss";
+  if (node === "Elite") return "elite";
+  if (node === "Monster") return "hallway";
+  if (node === "Unknown") return "event";
+  return enemyIds.some((id) => knowledge.monster(id)?.type === "Elite") ? "elite" : "hallway";
+}
+
 export class SlController {
   readonly config: SlConfig;
   private readonly knowledge: Knowledge;
@@ -322,6 +337,16 @@ export class SlController {
     return this.config.retryExplore === true && this.config.retryExplorePotion === true && (this.canonOn() || this.turnOn());
   }
 
+  /** SL_RETRY_EXPLORE_SECOND (with SL_RETRY_EXPLORE_CANON: attempt 1's turn record): attempt 2 deviates where it repeats attempt 1. */
+  private secondOn(): boolean {
+    return this.canonOn() && this.config.retryExploreSecond === true;
+  }
+
+  /** The board's key for the attempt's record (SL_RETRY_EXPLORE_KEY_COUNTERS: a relic counter at its count read as 0). */
+  private boardKey(state: GameState): string {
+    return slBoardKey(state, this.config.retryExploreKeyCounters === true ? { counters: true } : {});
+  }
+
   /** SL_RETRY_EXPLORE_REPLAY_PLAYS (with SL_RETRY_EXPLORE_REPLAY): a reference line not shown, its logged plays played. */
   private replayPlaysOn(): boolean {
     return this.config.retryExplore === true && this.config.retryExploreReplay === true && this.config.retryExploreReplayPlays === true;
@@ -356,6 +381,8 @@ export class SlController {
       retry_explore_replay: this.config.retryExplore === true && this.config.retryExploreReplay === true,
       retry_explore_replay_plays: this.replayPlaysOn(),
       retry_explore_replay_deviate: this.replayDeviateOn(),
+      retry_explore_key_counters: this.config.retryExplore === true && this.config.retryExploreKeyCounters === true,
+      retry_explore_second: this.secondOn(),
       retry_explore_canon: this.canonOn(),
       retry_explore_turn: this.turnOn(),
       retry_explore_whole: this.wholeOn(),
@@ -509,8 +536,22 @@ export class SlController {
       if (target && fallen?.reached && this.turnOn() && fallen.tried && fallen.turn !== undefined && fallen.turn === state.turn) {
         return { ...flags, avoid: { point: fallen.point, tried: structuredClone(fallen.tried), attempts: [...fallen.attempts] } };
       }
+      // SL_RETRY_EXPLORE_SECOND: attempt 2, on attempt 1's path from the turn attempt 1 lost the most HP: deviate here.
+      const second = explore.second;
+      if (second && !target && !deviation?.reached && state.turn !== null && state.turn >= second.turn && state.turn <= second.until) {
+        const board = this.boardKey(state);
+        if (this.onAttemptPath(fight, 1, board)) {
+          const spec = this.fallbackAt(fight, state, board, `attempt 2 still on attempt 1's path (from T${second.turn}, where attempt 1 lost the most HP)`);
+          // Only a pick that plays attempt 1's turn here gives way (not one that may come back to it after a draw: SL_RETRY_EXPLORE_WHOLE
+          // is left out on this board; the rest of the turn is still kept off attempt 1's by the avoid): an attempt 2 that already
+          // plays otherwise is left as it is (FP35WY2JXL4W F31 won at attempt 2 that way).
+          const { whole: _whole, ...rest } = flags;
+          if (spec) return { deviate: spec, ...rest };
+        }
+        return { ...flags };
+      }
       if (!target || deviation?.reached || fallen?.reached) return { ...flags };
-      const board = slBoardKey(state);
+      const board = this.boardKey(state);
       if (board === target.board) {
         const tried = target.tried && (this.canonOn() || this.turnOn()) ? { tried: structuredClone(target.tried) } : {};
         return { deviate: { point: target.point, excluded: [...target.excluded], attempts: [...target.attempts], ...(explore.replay ? { replayed: explore.replay.replayed } : {}), ...tried }, ...flags };
@@ -565,7 +606,7 @@ export class SlController {
         this.options.note(`SL: could not keep the deviation's turn off the failed ones at F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}: ${failed.line} ends it as attempt${attempts.length === 1 ? "" : "s"} ${attempts.join(", ")} had it (${failed.reason})`);
       }
       if (!info) return;
-      const board = slBoardKey(state);
+      const board = this.boardKey(state);
       const point: SlPoint = { board, turn: state.turn, kind: info.kind, label: info.label, line: info.line, ...(info.alternatives ? { alternatives: info.alternatives } : {}), ...(info.dead ? { dead: info.dead } : {}), ...(info.b2 ? { b2: info.b2 } : {}), ...(info.explored ? { explored: true as const } : {}), ...(info.canon ? { canon: info.canon } : {}) };
       // The same board again (a re-plan before anything changed): the line played is the last one.
       if (explore.points.at(-1)?.board === board) explore.points[explore.points.length - 1] = point;
@@ -574,6 +615,11 @@ export class SlController {
       // SL_RETRY_EXPLORE_TURN: a later decision of the deviation's turn whose line gave way (said once each).
       if (target && made && info.avoided?.replacement) {
         this.options.note(`SL: kept the deviation's turn at F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}: ${info.avoided.replacement} instead of ${info.avoided.original} (${info.avoided.reason})`);
+      }
+      // SL_RETRY_EXPLORE_SECOND: attempt 2 deviated on attempt 1's path: its target and deviation, as an attempt 3's.
+      if (!target && !made && explore.second && info.deviation) {
+        this.noteSecond(fight, explore, state, board, info);
+        return;
       }
       if (!target || made) return;
       if (board !== target.board) {
@@ -597,8 +643,13 @@ export class SlController {
 
   /** Whether `board` is one the reference attempt sent an action on (its turn record), its decision points' and the boards within its lines. */
   private onReferencePath(fight: Pick<FightTrack, "floor" | "encounter">, target: SlTarget, board: string): boolean {
-    const reference = this.fightRows(fight).find((row) => row.attempt === target.reference);
-    return (reference?.explore?.turns ?? []).some((turn) => turn.boards.some((entry) => entry.board === board));
+    return this.onAttemptPath(fight, target.reference, board);
+  }
+
+  /** Whether `board` is one attempt `attempt` sent an action on (its row's turn record). */
+  private onAttemptPath(fight: Pick<FightTrack, "floor" | "encounter">, attempt: number, board: string): boolean {
+    const row = this.fightRows(fight).find((other) => other.attempt === attempt);
+    return (row?.explore?.turns ?? []).some((turn) => turn.boards.some((entry) => entry.board === board));
   }
 
   /** This fight's earlier rows (the attempts so far, the reference among them). */
@@ -653,7 +704,7 @@ export class SlController {
     try {
       let record = turns.at(-1);
       if (!record || record.turn !== turnNo) turns.push((record = { turn: turnNo, plays: [], boards: [] }));
-      const board = slBoardKey(state);
+      const board = this.boardKey(state);
       if (record.boards.at(-1)?.board !== board) record.boards.push({ board, at: record.plays.length });
       if (play !== null) record.plays.push(play);
     } catch {
@@ -690,6 +741,29 @@ export class SlController {
   }
 
   /**
+   * SL_RETRY_EXPLORE_SECOND: attempt 2's decision on a board of attempt 1's path (fallbackSpec) that the planner deviated at:
+   * the attempt's target (reference 1) and deviation, so that the rest of the turn keeps off attempt 1's (the avoid), its row
+   * says what came of it, and later attempts count it as a use of that board. One that found no line left that attempt 1
+   * did not play there is not one: the next such board of the turns tries again.
+   */
+  private noteSecond(fight: FightTrack, explore: SlExploreRecord, state: GameState, board: string, info: SlPointInfo): void {
+    const spec = this.fallbackSpec;
+    if (!info.deviation || !spec || spec.board !== board) return;
+    const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
+    if (info.deviation.replacement === null && /^no shown line left/.test(info.deviation.reason)) {
+      this.options.note(`SL: could not deviate at ${where} (${spec.point}): ${info.deviation.reason}; the next board of attempt 1's path tries again`);
+      return;
+    }
+    explore.target = { board, turn: state.turn, reference: 1, back: 0, round: 0, excluded: [...spec.excluded], attempts: [...spec.attempts], point: spec.point, ...(spec.tried ? { tried: structuredClone(spec.tried) } : {}) };
+    explore.deviation = { reached: true, ...info.deviation, ...(explore.turns ? { turn: state.turn } : {}) };
+    this.options.note(
+      info.deviation.replacement !== null
+        ? `SL: explored at ${where} (${spec.point}): ${info.deviation.replacement} instead of ${info.deviation.original} (${info.deviation.reason})`
+        : `SL: the deviation came up at ${where} (${spec.point}): ${info.deviation.original} played (${info.deviation.reason})`,
+    );
+  }
+
+  /**
    * SL_RETRY_EXPLORE_REPLAY_DEVIATE: a decision on a board where the replay could not go on (or after it stopped), on a board
    * a failed attempt decided on (fallbackSpec), that the planner deviated at: the attempt's fallback, said once. A deviation
    * that found no line left that no failed attempt played there is not one: the next such board tries again.
@@ -721,7 +795,13 @@ export class SlController {
     try {
       // SL_RETRY_EXPLORE_CANON / _TURN: the attempt's turn record (each action's board and play).
       const turns = this.canonOn() || this.turnOn() ? { turns: [] as SlTurnPlays[] } : {};
-      if (attempt < 3) return { points: [], target: null, ...turns };
+      if (attempt < 3) {
+        // SL_RETRY_EXPLORE_SECOND: attempt 2 plays as usual with the known draws; where it is still on attempt 1's path on
+        // the turn attempt 1 lost the most HP (or later, to its last turn), it deviates there (exploreEnv, notePoint).
+        const second = attempt === 2 && this.secondOn() ? secondPlan(this.fightRows(fight).filter((row) => row.attempt < 2)) : null;
+        if (second) this.options.note(`SL: attempt 2 deviates if it is still on attempt 1's path from T${second.turn} (where attempt 1 lost the most HP: ${Object.entries(second.weights).map(([turn, weight]) => `${turn} ${weight}`).join(", ")}) to T${second.until}`);
+        return { points: [], target: null, ...turns, ...(second ? { second } : {}) };
+      }
       const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
       const { target, why } = exploreTarget(earlier, attempt, { aliveFirst: this.config.retryExploreOrder === true, ...(this.canonOn() ? { canon: true } : {}), ...(this.turnOn() ? { tried: true } : {}), ...(this.wholeOn() ? { whole: true } : {}), ...(this.whereOn() ? { where: true } : {}), ...(this.potionOn() ? { potion: true } : {}) });
       const turnsNote = target?.tried ? `; ${target.tried.canon.length + target.tried.loose.length} turn${target.tried.canon.length + target.tried.loose.length === 1 ? "" : "s"} through it not again` : "";
@@ -991,6 +1071,7 @@ export class SlController {
       encounter,
       enemies: livingNames(living),
       kind: gate.kind,
+      room: slRoomOf(gate, ids, memory.journal.roomOf(floor), this.knowledge),
       elite: elite?.name ?? null,
       gate: gate.reason,
       attempt: done + 1,
@@ -1075,7 +1156,7 @@ export class SlController {
       floor: fight.floor,
       encounter: fight.encounter,
       enemies: fight.enemies,
-      fight_kind: fight.kind,
+      fight_kind: fight.room,
       elite: fight.elite,
       gate: fight.gate,
       attempt: fight.attempt,

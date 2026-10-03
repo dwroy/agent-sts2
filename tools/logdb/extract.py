@@ -13,7 +13,7 @@ import json
 import re
 
 # Bumped per source when its extractor or columns change: sync.py rebuilds that source's shards.
-VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1, "run-config": 1, "sl-attempts": 1}
+VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1, "run-config": 1, "sl-attempts": 2}
 
 KEY_RE = re.compile(r"(sk-(?:ant-)?[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._~+/-]{16,}|(?:api[_-]?key|x-api-key)[\"']?\s*[:=]\s*[\"']?[A-Za-z0-9._-]{12,})", re.I)
 AGENT_VIEW = b',"agent_view":'
@@ -105,7 +105,7 @@ TABLES = {
     ],
     "sl_attempts": [
         ("off", "BIGINT"), ("len", "INTEGER"), ("ts", "TIMESTAMP"), ("run_id", "VARCHAR"), ("act", "VARCHAR"), ("floor", "INTEGER"),
-        ("encounter", "VARCHAR"), ("enemies", "VARCHAR[]"), ("fight_kind", "VARCHAR"), ("elite", "VARCHAR"),
+        ("encounter", "VARCHAR"), ("enemies", "VARCHAR[]"), ("fight_kind", "VARCHAR"), ("sl_kind", "VARCHAR"), ("gate", "VARCHAR"), ("elite", "VARCHAR"),
         ("attempt", "INTEGER"), ("max_attempts", "INTEGER"), ("from_point", "VARCHAR"), ("started_at", "TIMESTAMP"), ("ended_at", "TIMESTAMP"),
         ("result", "VARCHAR"), ("turns", "INTEGER"), ("end_hp", "INTEGER"), ("end_block", "INTEGER"), ("incoming", "INTEGER"),
         ("judge_tier", "VARCHAR"), ("judge_reason", "VARCHAR"),
@@ -734,8 +734,22 @@ def str_list(value):
     return [v for v in value if isinstance(v, str)] if isinstance(value, list) else None
 
 
+def sl_gate(record):
+    """Why the fight got SL: the row's `gate` (2026-10-03 on); earlier rows had only a boss or a listed hard fight."""
+    gate = to_str(record.get("gate"))
+    if gate is not None:
+        return gate
+    if record.get("fight_kind") == "boss":
+        return "boss"
+    return "hard-fight" if to_str(record.get("elite")) is not None else None
+
+
 def sl_attempt_row(raw, off):
-    """One SL attempt (src/sl/attempts.ts SlAttemptRow): a boss or listed-elite fight's attempt, how it ended, the reload."""
+    """One SL attempt (src/sl/attempts.ts SlAttemptRow): a boss or listed-elite fight's attempt, how it ended, the reload.
+
+    fight_kind as the row writes it: the room (boss / elite / hallway / event) from 2026-10-04, before that boss or elite
+    (every SL fight but a boss). sl_kind keeps the earlier meaning for every row (boss, else elite), gate why it got SL.
+    """
     record = json.loads(raw)
     judge = as_dict(record.get("judge"))
     reload = record.get("reload") if isinstance(record.get("reload"), dict) else None
@@ -750,6 +764,8 @@ def sl_attempt_row(raw, off):
         "encounter": to_str(record.get("encounter")),
         "enemies": str_list(record.get("enemies")),
         "fight_kind": to_str(record.get("fight_kind")),
+        "sl_kind": None if record.get("fight_kind") is None else ("boss" if record.get("fight_kind") == "boss" else "elite"),
+        "gate": sl_gate(record),
         "elite": to_str(record.get("elite")),
         "attempt": to_int(record.get("attempt")),
         "max_attempts": to_int(record.get("max_attempts")),

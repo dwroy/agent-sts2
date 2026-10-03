@@ -64,6 +64,12 @@
  *   replaying on T2): where the replay cannot go on before the point (neither line nor plays), or once the attempt is off the
  *   path, it deviates on the first board a failed attempt decided on (boardTried: their lines and turns there), not into a
  *   failed attempt's fight; `explore.fallback`, not a use of the target's point.
+ * - SL_RETRY_EXPLORE_KEY_COUNTERS (2026-10-04, 7TQFLQBKRE4S F33 attempt 3): in slBoardKey a relic counter that wraps to 0
+ *   shown at its count reads 0 (开心小花 3 on the turn's first frame, 0 a frame later, its energy already given: the replay
+ *   stopped "not on attempt 2's path" on the very board it aimed at).
+ * - SL_RETRY_EXPLORE_SECOND (2026-10-04, 7TQF F39): attempt 2 replans with the known draws, but still on attempt 1's path from
+ *   the turn attempt 1 lost the most HP (secondPlan) it deviates there (every logged attempt 2 on that path then had played
+ *   attempt 1's whole fight again).
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
@@ -218,6 +224,12 @@ export interface SlExploreRecord {
    * counts `deviation` only). Absent: the replay did not stop, or no such board came up.
    */
   fallback?: SlDeviation & { board: string; point: string; attempts: number[]; tried?: SlTried };
+  /**
+   * SL_RETRY_EXPLORE_SECOND, attempt 2: from turn `turn` (where attempt 1 lost the most HP, whereWeights) to `until` (attempt 1's
+   * last turn), the first question on a board of attempt 1's path (attempt 2 still on it: the same board, so far the same
+   * fight) deviates there; then `target` and `deviation` say where and what, as an attempt 3's do. `weights`: the turns'.
+   */
+  second?: { turn: number; until: number; weights: Record<string, number> };
   /** SL_RETRY_EXPLORE_CANON (attempts from the 1st) / _TURN (from the 2nd): each turn's plays and boards. */
   turns?: SlTurnPlays[];
 }
@@ -451,13 +463,34 @@ function pileOf(view: Record<string, unknown>, which: string): string[] {
 }
 
 /**
+ * SL_RETRY_EXPLORE_KEY_COUNTERS: relics whose counter goes back to 0 when it reaches its count, by that count. The state can
+ * show the count itself for a moment, the relic's effect already in the rest of the board (7TQFLQBKRE4S F33 attempt 3 T4:
+ * 开心小花 at 3 on the turn's first frame, energy 4; attempt 2's same board at 0, energy 4): read as 0. From the logged frames
+ * (the count is seen only that way: 55 of 2030 Happy Flower frames, all a turn's first; the next frame 0, or 1 after the next
+ * card): 开心小花 3, 苦无 / 手里剑 / 精致折扇 / 开信刀 / 锁镰 3, 双截棍 / 钢笔尖 / 音叉 10.
+ */
+export const RELIC_COUNTER_WRAPS: ReadonlyMap<string, number> = new Map([
+  ["HAPPY_FLOWER", 3],
+  ["KUNAI", 3],
+  ["SHURIKEN", 3],
+  ["ORNAMENTAL_FAN", 3],
+  ["LETTER_OPENER", 3],
+  ["KUSARIGAMA", 3],
+  ["NUNCHAKU", 10],
+  ["PEN_NIB", 10],
+  ["TUNING_FORK", 10],
+]);
+
+/**
  * The board a decision is made on, stable across the attempts at a fight (the same board in attempt 2 and attempt 5 is
  * the same key): the turn, the hand (id, upgrade, cost, playable; sorted), the draw, discard and exhaust piles, our HP,
  * block, energy, powers and the turn's plays so far, the potions by slot, the relics' counters, and each enemy's id, HP,
  * block, powers, move and intents. Nothing that changes from one attempt to the next on the same board (times, ids of
  * decisions, the run's gold or the map). A sha1, 16 hex digits.
+ * `counters` (SL_RETRY_EXPLORE_KEY_COUNTERS): a counter of RELIC_COUNTER_WRAPS shown at its count reads 0 (only such a
+ * board's key changes: two boards get one key only when everything else is the same, the effect included).
  */
-export function slBoardKey(state: GameState): string {
+export function slBoardKey(state: GameState, options: { counters?: boolean } = {}): string {
   const combat = asRecord(state.raw["combat"]);
   const player = asRecord(combat["player"]);
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
@@ -484,7 +517,11 @@ export function slBoardKey(state: GameState): string {
     relics: asArray(run["relics"])
       .map(asRecord)
       .filter((relic) => relic["stack"] !== null && relic["stack"] !== undefined)
-      .map((relic) => `${str(relic["relic_id"])}:${String(relic["stack"])}`)
+      .map((relic) => {
+        const id = str(relic["relic_id"]);
+        const wrap = options.counters === true ? RELIC_COUNTER_WRAPS.get(id) : undefined;
+        return `${id}:${wrap !== undefined && num(relic["stack"], -1) === wrap ? "0" : String(relic["stack"])}`;
+      })
       .sort(),
     enemies: asArray(combat["enemies"])
       .map(asRecord)
@@ -651,7 +688,8 @@ function triedByBoard(rows: readonly ExploreRow[], reference: ExploreRow, legacy
  */
 export function exploreTried(rows: readonly ExploreRow[], attempt: number, board: string, options: { canon?: boolean; potion?: boolean } = {}): { tried: SlTried; attempts: number[] } {
   const failed = failedRows(rows, attempt, 2);
-  const reference = failed.find((row) => row.explore && Array.isArray(row.explore.points));
+  // SL_RETRY_EXPLORE_SECOND (attempt 2: no failed row from the 2nd): attempt 1's own row, its turn record (no row to rebuild).
+  const reference = failed.find((row) => row.explore && Array.isArray(row.explore.points)) ?? (options.canon === true && failed.length === 0 ? failedRows(rows, attempt, 1).find((row) => row.explore?.turns) : undefined);
   const potion = options.potion === true;
   if (!reference) return { tried: { canon: [], loose: [], ...(potion ? { cards: [] } : {}) }, attempts: [] };
   const entry = triedByBoard(options.canon === true ? failedRows(rows, attempt, 1) : failed.filter((row) => row.explore), reference, options.canon === true, potion).get(board);
@@ -1072,6 +1110,21 @@ export function boardTried(rows: readonly ExploreRow[], attempt: number, board: 
   for (const a of turns?.attempts ?? []) attempts.add(a);
   if (attempts.size === 0) return null;
   return { excluded: [...lines], attempts: [...attempts].sort((a, b) => a - b), ...(turns ? { tried: turns.tried } : {}) };
+}
+
+/**
+ * SL_RETRY_EXPLORE_SECOND: attempt 2's plan from attempt 1's row (failed, its turn record there: SL_RETRY_EXPLORE_CANON):
+ * the turn where attempt 1 lost the most HP (whereWeights over its losses, the latest of the heaviest), up to attempt 1's
+ * last turn. Null without such a row or losses.
+ */
+export function secondPlan(rows: readonly ExploreRow[], decay = WHERE_DECAY): NonNullable<SlExploreRecord["second"]> | null {
+  const one = rows.find((row) => row.attempt === 1 && row.result !== "won" && row.result !== "unfinished");
+  if (!one || !one.explore?.turns || one.explore.turns.length === 0) return null;
+  const weights = whereWeights(hpLostByTurn([one], 2), decay);
+  if (weights.size === 0) return null;
+  const top = Math.max(...weights.values());
+  const turn = Math.max(...[...weights].filter(([, weight]) => weight >= top - 1e-9).map(([turnNo]) => turnNo));
+  return { turn, until: Math.max(turn, one.turns), weights: Object.fromEntries([...weights].sort((a, b) => a[0] - b[0]).map(([turnNo, weight]) => [`T${turnNo}`, tenth(weight)])) };
 }
 
 /**

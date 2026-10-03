@@ -468,9 +468,9 @@ describe("previousAttemptsJson", () => {
 describe("configuration", () => {
   it("SL is on by default (Dai 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log", () => {
     const config = loadConfig({ DECISION_LOG: "/tmp/x/decisions.jsonl" } as NodeJS.ProcessEnv);
-    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, act3LowHp: true, act3LowHpPct: 50, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, reloadOnRevive: false, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreReplayPlays: true, retryExploreReplayDeviate: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: true, retryKnownPicks: true, retryKnownOffTop: true, retryKnownHandOrder: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
-    const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_ACT3_LOW_HP: "off", SL_ACT3_LOW_HP_PCT: "55", SL_RETRY_SHOW_SIM: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_JUDGE_ANY_DRAW: "off", SL_RELOAD_EARLY: "off", SL_RELOAD_ON_REVIVE: "on", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_RETRY_EXPLORE_B2: "off", SL_RETRY_EXPLORE_BOSS_POTIONS: "off", SL_RETRY_EXPLORE_ORDER: "off", SL_RETRY_EXPLORE_REPLAY: "off", SL_RETRY_EXPLORE_CANON: "off", SL_RETRY_EXPLORE_TURN: "off", SL_RETRY_EXPLORE_WHOLE: "off", SL_RETRY_EXPLORE_WHERE: "off", SL_RETRY_EXPLORE_POTION: "off", SL_RETRY_KNOWN_PICKS: "off", SL_RETRY_EXPLORE_REPLAY_PLAYS: "off", SL_RETRY_EXPLORE_REPLAY_DEVIATE: "off", SL_RETRY_KNOWN_OFF_TOP: "off", SL_RETRY_KNOWN_HAND_ORDER: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
-    expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, act3LowHp: false, act3LowHpPct: 55, retryShowSim: false, retryKnownDraws: false, retryCompute: false, judgeKnownDraws: false, judgeAnyDraw: false, reloadEarly: false, reloadOnRevive: true, retryKnownInserts: false, retryKnownTop: false, retryExplore: false, retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false, retryExploreCanon: false, retryExploreTurn: false, retryExploreWhole: false, retryExploreWhere: false, retryExplorePotion: false, retryKnownPicks: false, retryExploreReplayPlays: false, retryExploreReplayDeviate: false, retryKnownOffTop: false, retryKnownHandOrder: false, log: null });
+    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, act3LowHp: true, act3LowHpPct: 50, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, reloadOnRevive: false, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreReplayPlays: true, retryExploreReplayDeviate: true, retryExploreKeyCounters: true, retryExploreSecond: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: true, retryKnownPicks: true, retryKnownOffTop: true, retryKnownHandOrder: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
+    const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_ACT3_LOW_HP: "off", SL_ACT3_LOW_HP_PCT: "55", SL_RETRY_SHOW_SIM: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_JUDGE_ANY_DRAW: "off", SL_RELOAD_EARLY: "off", SL_RELOAD_ON_REVIVE: "on", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_RETRY_EXPLORE_B2: "off", SL_RETRY_EXPLORE_BOSS_POTIONS: "off", SL_RETRY_EXPLORE_ORDER: "off", SL_RETRY_EXPLORE_REPLAY: "off", SL_RETRY_EXPLORE_CANON: "off", SL_RETRY_EXPLORE_TURN: "off", SL_RETRY_EXPLORE_WHOLE: "off", SL_RETRY_EXPLORE_WHERE: "off", SL_RETRY_EXPLORE_POTION: "off", SL_RETRY_KNOWN_PICKS: "off", SL_RETRY_EXPLORE_REPLAY_PLAYS: "off", SL_RETRY_EXPLORE_REPLAY_DEVIATE: "off", SL_RETRY_EXPLORE_KEY_COUNTERS: "off", SL_RETRY_EXPLORE_SECOND: "off", SL_RETRY_KNOWN_OFF_TOP: "off", SL_RETRY_KNOWN_HAND_ORDER: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
+    expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, act3LowHp: false, act3LowHpPct: 55, retryShowSim: false, retryKnownDraws: false, retryCompute: false, judgeKnownDraws: false, judgeAnyDraw: false, reloadEarly: false, reloadOnRevive: true, retryKnownInserts: false, retryKnownTop: false, retryExplore: false, retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false, retryExploreCanon: false, retryExploreTurn: false, retryExploreWhole: false, retryExploreWhere: false, retryExplorePotion: false, retryKnownPicks: false, retryExploreReplayPlays: false, retryExploreReplayDeviate: false, retryExploreKeyCounters: false, retryExploreSecond: false, retryKnownOffTop: false, retryKnownHandOrder: false, log: null });
     expect(() => loadConfig({ SL_BOSS_RETRIES: "-1" } as NodeJS.ProcessEnv)).toThrow(/SL_BOSS_RETRIES/);
     expect(() => loadConfig({ SL_ACT3_LOW_HP_PCT: "101" } as NodeJS.ProcessEnv)).toThrow(/SL_ACT3_LOW_HP_PCT/);
     expect(() => loadConfig({ SL_ACT3_LOW_HP_PCT: "40.5" } as NodeJS.ProcessEnv)).toThrow(/SL_ACT3_LOW_HP_PCT/);
@@ -566,6 +566,14 @@ describe("SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered be
     expect(gateOf(hallway({ turn: 2, hp: 70, lethal: false }), on, { logged: "boss" })).toBeNull();
   });
 
+  /** The run's map choice on `floor`: the next floor's room is `node` (RunJournal.roomOf). */
+  function chooseRoom(journal: RunJournal, floor: number, node: string): void {
+    const raw = mapBoard(floor);
+    raw["map"] = { ...((raw["map"] as Raw | undefined) ?? {}), available_nodes: [{ index: 0, row: 5, col: 1, node_type: node }] };
+    journal.record(state(raw), { label: "map/choose", by: "code", choice: node, reason: "", asked: false, intent: { action: "choose_map_node", option_index: 0 } });
+    expect(journal.roomOf(floor + 1)).toBe(node);
+  }
+
   function controller(log: string | null, start: Raw, firstTurn: Raw, overrides: Partial<SlConfig> = {}) {
     const game = reloadingGame(start, firstTurn);
     const notes: string[] = [];
@@ -592,8 +600,23 @@ describe("SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered be
     expect(t.sl.envFor(state(t1))).toMatchObject({ attempt: 2, maxAttempts: 2 });
     t.sl.observe(state(mapBoard(40)), t.memory);
     const [first, second] = rows(log);
-    expect(first).toMatchObject({ act: "2", floor: 40, encounter: "CULTIST+JAW_WORM", fight_kind: "elite", elite: null, gate: "act3-low-hp 30/80", attempt: 1, max_attempts: 2, result: "predicted_death", judge: { tier: "rules" }, reload: { ok: true } });
-    expect(second).toMatchObject({ fight_kind: "elite", elite: null, gate: "act3-low-hp 30/80", attempt: 2, result: "won" });
+    // fight_kind is the room (2026-10-04): no map choice seen, the enemies are hallway monsters.
+    expect(first).toMatchObject({ act: "2", floor: 40, encounter: "CULTIST+JAW_WORM", fight_kind: "hallway", elite: null, gate: "act3-low-hp 30/80", attempt: 1, max_attempts: 2, result: "predicted_death", judge: { tier: "rules" }, reload: { ok: true } });
+    expect(second).toMatchObject({ fight_kind: "hallway", elite: null, gate: "act3-low-hp 30/80", attempt: 2, result: "won" });
+  });
+
+  it("fight_kind is the room the run chose on the map: a ? room's fight is event, an elite room's elite (the gate as before)", async () => {
+    for (const [node, kind] of [["Unknown", "event"], ["Elite", "elite"], ["Monster", "hallway"]] as const) {
+      const log = tempLog();
+      const lethal = hallway({ turn: 3, hp: 10 });
+      const t1 = hallway({ turn: 1, hp: 30, lethal: false });
+      const t = controller(log, lethal, t1);
+      chooseRoom(t.memory.journal, 39, node);
+      t.sl.observe(state(t1), t.memory);
+      t.sl.observe(state(lethal), t.memory);
+      expect(await endTurn(t, lethal)).toMatchObject({ handled: true, ok: true });
+      expect(rows(log)[0]).toMatchObject({ fight_kind: kind, gate: "act3-low-hp 30/80", max_attempts: 2 });
+    }
   });
 
   it("the attempt cap is SL_ELITE_RETRIES: used up, the turn ends as usual", async () => {
@@ -636,6 +659,7 @@ describe("SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered be
       const log = tempLog();
       const listed = hallway({ turn: 1, hp: 10, lethal: false, enemyIds: ["ENTOMANCER"] });
       const t = controller(log, listed, listed, { act3LowHp });
+      chooseRoom(t.memory.journal, 39, "Elite");
       t.sl.observe(state(listed), t.memory);
       expect(t.notes.join("\n")).toMatch(/listed elite \(Entomancer\).*at most 2/);
       t.sl.observe(state(mapBoard(40)), t.memory);

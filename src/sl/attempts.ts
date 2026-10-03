@@ -33,6 +33,9 @@ export interface SlReloadRecord {
   resumed_turn?: number | null;
 }
 
+/** An SL fight's room, as the attempt rows write it (fight_kind). */
+export type SlRoom = "boss" | "elite" | "hallway" | "event";
+
 export interface SlAttemptRow {
   ts: string;
   run_id: string;
@@ -41,8 +44,13 @@ export interface SlAttemptRow {
   /** The enemies at the fight's start: sorted ids joined with "+". */
   encounter: string;
   enemies: string[];
-  /** boss; elite: any other SL fight (a listed hard fight in any room, or an SL_ACT3_LOW_HP fight). */
-  fight_kind: "boss" | "elite";
+  /**
+   * The room (2026-10-04): boss; elite (an elite room); hallway (a monster room); event (a ? room's fight). By the map node
+   * the run chose for the floor (RunJournal.roomOf), else by the enemies (an elite enemy: elite; else hallway). Rows written
+   * before it say "elite" for every SL fight but a boss (a listed hard fight in any room, an SL_ACT3_LOW_HP fight): `gate`
+   * says why the fight got SL, the log DB's fights view says the room of any row (`fights.room`).
+   */
+  fight_kind: SlRoom;
   /** The listed elite's name (sl-elites.json), null for a boss and an SL_ACT3_LOW_HP fight. */
   elite: string | null;
   /**
