@@ -85,11 +85,20 @@ export const HISTORY_MAE: Record<FightKindName, number> = { hallway: 5.5, elite:
  * policy's focus weight (measurements; rollout.ts ORDER_FOCUS_BONUS when unset), and a salt for the samples' seed
  * (tools/sl-retry-replay.ts: the same board on other random numbers, the sampling noise; unset: the board's own seed).
  */
-export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number; orderFocusBonus?: number; seedSalt?: string } = {
+export const rolloutLiveOptions: { enabled: boolean; now: (() => number) | null; budgetMs: number; orderFocusBonus?: number; seedSalt?: string; sandpitStart: boolean } = {
   enabled: process.env["ROLLOUT_FACTS"] !== "off",
   now: null,
   budgetMs: ROLLOUT_BUDGET_MS,
+  // SANDPIT_START's default when the decision's env does not say (DecisionEnv.sandpitStart: the loop passes config's; tests,
+  // tools): on unless SANDPIT_START=off. rollout.ts RolloutOptions.sandpitStart, tests/insatiable-sandpit.test.ts.
+  sandpitStart: process.env["SANDPIT_START"] !== "off",
 };
+
+/**
+ * Offline tools only (tools/insatiable-replay.ts reads each live rollout's input and result through it, to roll the same
+ * lines out again with more samples). No decision code sets it; null is a no-op.
+ */
+export const rolloutTap: { onRollout: ((input: RolloutInput, result: RolloutResult) => void) | null } = { onRollout: null };
 
 // ---------------------------------------------------------------- knowledge
 
@@ -527,6 +536,11 @@ export interface LiveRolloutArgs {
    * (RolloutInput.escapes); absent, the rollout as before (the enemy stays, doing nothing).
    */
   thieves?: Thief[];
+  /**
+   * SANDPIT_START (DecisionEnv.sandpitStart; rollout.ts RolloutOptions.sandpitStart): the Sandpit a move starts (the
+   * Insatiable's Liquify Ground) in the later turns too. Absent: rolloutLiveOptions.sandpitStart.
+   */
+  sandpitStart?: boolean;
   /** Overrides (tests): the model, the gates. */
   model?: FightValueModel | null;
   gates?: FightValueGates | null;
@@ -839,7 +853,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
     const budgetMs = Math.max(0, (args.budgetMs ?? rolloutLiveOptions.budgetMs) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
     const { handBase, ...boardInput } = board;
-    const result = rolloutDecision({
+    const input: RolloutInput = {
       ...boardInput,
       // THIEF_COST: each thief's loot HP (thief.loot, set only with the switch on) is a cost in the value.
       ...(args.thieves ? { escapes: { ...escapeInput(args.thieves, monsterMoves()), ...(Object.keys(lootHpOf(args.thieves)).length > 0 ? { lootHp: lootHpOf(args.thieves) } : {}) } } : {}),
@@ -859,8 +873,11 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
         ...(args.orders && args.orders.length >= 2 ? { orders: args.orders } : {}),
         ...(rolloutLiveOptions.orderFocusBonus !== undefined ? { orderFocusBonus: rolloutLiveOptions.orderFocusBonus } : {}),
         ...(args.noPotion ? { noPotionLine: args.noPotion.line } : {}),
+        ...((args.sandpitStart ?? rolloutLiveOptions.sandpitStart) ? { sandpitStart: true } : {}),
       },
-    });
+    };
+    const result = rolloutDecision(input);
+    rolloutTap.onRollout?.(input, result);
     // The no-potion line is the base line itself when the base's rollout drinks nothing in its later turns (and this
     // turn: it is potion-free): merged, the copy is dropped. Otherwise the copy stays, an option of its own.
     let noPotion: { line: Plan; base: Plan; merged: boolean } | null = null;
