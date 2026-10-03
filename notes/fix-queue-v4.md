@@ -171,7 +171,7 @@
 - **回退时失败引擎耗时不记**（小）：src/brain/router.ts:357–365（4719643）只写回退那一行；RNTV 5×600 s 共 50 分钟不在 brain.jsonl，brain-latency.py 少算；L3G5 少算约 2.2 分钟。
 - **exec 断流耗时算到下一题**（小）：25d86e9 src/brain/engines/codex.ts:705、:768、:697；J4S2 11:59:43 act-plan 记 315.7 s（=41.4+136.5+137.7）、12:09:26 shop 293.4 s。会话模式不漏。
 - **决策日志把 codex 回答记成 deepseek**（小，统计口径）：src/loop.ts:912 decider 写死 "deepseek"。
-- 设计缺口：**SL 重放走不到换线点**——src/sl/explore.ts:998、src/sl/controller.ts:568；J4S2 第 3/4/6 次 T2 报「line is not among the options」停止重放，第 6 次与第 4 次 8 回合出牌相同。
-- 设计缺口：精炼混沌「从牌堆顶打出」被算作断序，已知抽牌只保留 10 张（可推出 26 张）（RNTV F38）。
+- 设计缺口：**SL 重放走不到换线点**——src/sl/explore.ts:998、src/sl/controller.ts:568；J4S2 第 3/4/6 次 T2 报「line is not among the options」停止重放，第 6 次与第 4 次 8 回合出牌相同。 已修（10-03 确认，v4-live 554951d，V4.5.slreplay）
+- 设计缺口：精炼混沌「从牌堆顶打出」被算作断序，已知抽牌只保留 10 张（可推出 26 张）（RNTV F38）。 已修（10-03 确认，v4-live 554951d，V4.5.slreplay）
 - 观察：L3G5 会话模式 7 次 stalled 全是 runaway（>2000 字符，reward/card 4、rest/plan 3），每个文本字段已封顶 600（codex.ts:266/:284），具体哪个字段查不出（codex-calls 不存答案）。J4S2 实际 42 次运行、10 次 stalled（全是断流）。
 - **已修（2026-10-03 22:36 确认）**：大脑日志三项——回退行带 primary_ms（失败墙钟）和 question_id、brain-latency 计入失败耗时（RNTV 79.5 / J4S2 33.6 / L3G5 18.4 分钟）；exec 断流耗时不再算到下一题；decider 记实际引擎（codex / deepseek (for codex)），stats.py 不再把 codex token 算成 Jev。runaway 原因：严格格式要求补 route/cards/discard 空字段，GPT 在字段间吐空白；新增 BRAIN_CODEX_MAX_ANSWER_BLANKS=100（默认）连续空白即截断重问，截断时存已流出原文。v4-live 6d2ce32 + 父仓库 81de842，下一局起生效。三条关闭。
