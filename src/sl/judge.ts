@@ -7,10 +7,15 @@
  * - the mod's own flag, combat.end_turn_will_kill_player, is true (the intents against the block up now);
  * - nothing revives us: no Fairy in a Bottle held, no unspent Lizard Tail (`revives`, from combat-plan's revivesOf);
  * - no Buffer or Intangible on us, no Ripple Basin with no attack played (its block is not modelled here);
- * - no enemy in a special phase (max HP at or above a million: the Waterfall Giant's eruption; a DeathBlow intent);
+ * - no enemy in a special phase (max HP at or above a million, a DeathBlow intent: specialPhase), except the Waterfall
+ *   Giant's husk on its blast turn, alone, its one DeathBlow intent giving the number (docs/sl.md §2.4; ops 2026-10-03,
+ *   QLL4VM0WZKW3 F17 T13: 33 HP, no block, nothing to play or drink against the shown 50, refused, died with 6 retries
+ *   left). The blast is judged as an attack by the rules below: the shown number is what hits, after the end-of-turn
+ *   block (all 76 logged blast turns), and the fight ends with it; so our own loss at the next turn's start never makes
+ *   it certain there (that turn does not come when we live through the blast).
  * - our own count agrees: the attack intents (damage x hits) minus the block up now, the block that comes at the end
  *   of the turn (Plating / Plated Armor / Metallicize, Cloak Clasp for each card held, Feel No Pain for each Ethereal
- *   card held, Orichalcum when no block is left) and Regen reach our HP.
+ *   card held, Orichalcum when the cards left no block, whatever the other end-of-turn block) and Regen reach our HP.
  * - Held cards' end-of-turn damage (Burn, Wither; through block) and HP loss (Beckon; past it) count too (2026-10-02,
  *   TMNFVW6DRQ20 F48 T8). When only they make the turn lethal, the death rests on them: certain even without the mod's
  *   flag (it does not count them), but only with every amount given and nothing that could cut the loss or kill an
@@ -19,6 +24,10 @@
  *   T3): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain without the mod's
  *   flag too, but not with Tungsten Rod or Beating Remnant, a relic or power acting at the turn's start that may heal or
  *   shield us, or Inferno's sweep at that loss able to kill every enemy (startGuard).
+ * - So does the Insatiable's Sandpit at 1 (docs/sl.md §2.5; 2026-10-03, BVJT7HFW6X2S F33 T5): the enemy turn takes it to 0
+ *   and eats us whatever the HP. Certain without the mod's flag, our count living, but only with the Insatiable alone, its
+ *   move shown, and nothing that may kill it before its turn; Frantic Escape (the one thing that puts the count back) is a
+ *   playable card like any other for the tiers below, and so is a draw that may bring one.
  * Then one of two tiers:
  * - "rules": no playable card in hand and no potion that can be drunk;
  * - "least-loss": the turn planner's own verdict on this board, combat/least-loss ending the turn: every simulated
@@ -74,6 +83,8 @@ export interface DeathVerdict {
   held?: { damage: number; loss: number; from: string[] };
   /** Our own HP loss at the next turn's start (Inferno, Crimson Mantle) when the death rests on it. */
   startLoss?: number;
+  /** The Insatiable's Sandpit count when the death rests on it (1: the enemy turn takes it to 0; docs/sl.md §2.5). */
+  sandpit?: number;
   ownCountDies?: true;
   /** "name (intent)" for each living enemy that attacks. */
   killers: string[];
@@ -351,6 +362,51 @@ export interface DrawBound {
 /** The planner label whose end_turn means "every simulated line dies; ending the turn keeps the most HP". */
 export const LEAST_LOSS_LABEL = "combat/least-loss";
 const SPECIAL_ENEMY_HP = 1_000_000;
+const GIANT_ID = "WATERFALL_GIANT";
+/** The husk's moves: the Stun turn right after the kill, then the blast at the end of our next turn. */
+const GIANT_ABOUT_MOVE = "ABOUT_TO_BLOW_MOVE";
+const GIANT_BLAST_MOVE = "EXPLODE_MOVE";
+
+/**
+ * The Waterfall Giant's husk on its blast turn, in the one shape every logged one had (76 fights, states.jsonl to
+ * 2026-10-03): enemy WATERFALL_GIANT at max HP 999,999,999, move EXPLODE_MOVE, one intent, DeathBlow, its damage given
+ * (hits 1), the Steam Eruption power gone. Its damage is the eruption stacks at the kill (3T+9 for a kill on T, A0-A8;
+ * 3T+14 at A9) as the game shows them: with the husk's Strength (+1: 7Q5GTQNH1SZT 27 -> 28), Weak (x0.75: H7W047ZCEBSA
+ * 48 -> 36; LSWUK6D2EV89 51 -> 38 after an Uppercut this turn) and our Colossus on a Vulnerable husk (x0.5: FH3MZ3G0HECD
+ * 24 -> 12). Null: not that shape.
+ */
+function giantBlast(enemy: Record<string, unknown>): { damage: number } | null {
+  if (str(enemy["enemy_id"]) !== GIANT_ID || num(enemy["max_hp"]) < SPECIAL_ENEMY_HP || str(enemy["move_id"]) !== GIANT_BLAST_MOVE) return null;
+  const intents = asArray(enemy["intents"]).map(asRecord);
+  if (intents.length !== 1 || str(intents[0]!["intent_type"]) !== "DeathBlow") return null;
+  const damage = numOrNull(intents[0]!["damage"]);
+  if (damage === null || damage <= 0 || (numOrNull(intents[0]!["hits"]) ?? 1) !== 1) return null;
+  if (asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "STEAM_ERUPTION_POWER")) return null;
+  return { damage };
+}
+
+/**
+ * The special phase on this board (an enemy at max HP a million or more, or with a DeathBlow intent): null when none;
+ * `blast` when it is the Waterfall Giant's husk on its blast turn (giantBlast) and the only living enemy, judged by the
+ * common rules (docs/sl.md §2.4); otherwise `refuse`, saying what is not judged.
+ */
+function specialPhase(living: Record<string, unknown>[], names: string[]): { blast: { name: string; damage: number } } | { refuse: string } | null {
+  const at = living.findIndex((enemy) => num(enemy["max_hp"]) >= SPECIAL_ENEMY_HP || asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "DeathBlow"));
+  if (at < 0) return null;
+  const enemy = living[at]!;
+  const name = names[at] ?? str(enemy["name"], str(enemy["enemy_id"]));
+  const id = str(enemy["enemy_id"]);
+  const move = str(enemy["move_id"], "?");
+  const intents = asArray(enemy["intents"]).map(asRecord).map((intent) => `${str(intent["intent_type"], "?")}${numOrNull(intent["damage"]) !== null ? ` ${num(intent["damage"])}${(numOrNull(intent["hits"]) ?? 1) > 1 ? `x${num(intent["hits"])}` : ""}` : ""}`).join(", ") || "none";
+  if (id !== GIANT_ID) return { refuse: `${name} is in a special phase (${num(enemy["max_hp"]) >= SPECIAL_ENEMY_HP ? "a million HP" : "a DeathBlow intent"}; move ${move}, intent ${intents}): only the Waterfall Giant's blast is judged` };
+  if (num(enemy["max_hp"]) < SPECIAL_ENEMY_HP) return { refuse: `${name} shows a DeathBlow intent before it was killed (move ${move}, intent ${intents}): not a logged shape` };
+  if (move === GIANT_ABOUT_MOVE) return { refuse: `${name} is a husk on its Stun turn (${GIANT_ABOUT_MOVE}): it explodes at the end of our next turn, only that turn is judged` };
+  const blast = giantBlast(enemy);
+  if (!blast) return { refuse: `${name} is a husk, but not on a plain blast turn (move ${move}, intent ${intents}): not a logged shape` };
+  const others = names.filter((_, i) => i !== at);
+  if (others.length > 0) return { refuse: `${name}'s blast with other enemies alive (${others.join(", ")}): not a logged board` };
+  return { blast: { name, damage: blast.damage } };
+}
 const SAVING_POWERS = ["BUFFER_POWER", "INTANGIBLE_POWER"];
 const END_BLOCK_POWERS = ["PLATING_POWER", "PLATED_ARMOR_POWER", "METALLICIZE_POWER"];
 const ORICHALCUM_BLOCK = 6;
@@ -450,6 +506,20 @@ function anyDrawJudged(
   return yes(`every line dies on the superset board, ${size}${exactness} (${superset.nodes} positions, ${bound.ms} ms)`);
 }
 
+/**
+ * The Insatiable's Sandpit on this board (docs/sl.md §2.5): SANDPIT_POWER on a living THE_INSATIABLE, its count, or null. From
+ * the logs (all 81 Insatiable fights to 2026-10-03): Liquify Ground (T1) starts it at 4 (91 of 91 attempts); every enemy turn
+ * takes 1 off whatever the move (402 of 402); each Frantic Escape played puts 1 back at once (the state's count is after the
+ * turn's plays: 237 of 237); nothing else moves it (no other card, relic or potion text names it). A turn ended at 1 was
+ * our death on the enemy turn whatever the HP and block, 15 of 15 (LXB3B2WT9E0W F33 T5 at 81 HP + 18 block against 18,
+ * BVJT7HFW6X2S F33 T5 at 21 + 12 against 24); a turn at 1 that the logs show won ended with the Insatiable killed in it.
+ */
+function sandpitOf(living: Record<string, unknown>[], names: string[]): { name: string; count: number; at: number } | null {
+  const at = living.findIndex((enemy) => str(enemy["enemy_id"]) === "THE_INSATIABLE" && asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "SANDPIT_POWER"));
+  if (at < 0) return null;
+  return { name: names[at] ?? str(living[at]!["name"], "THE_INSATIABLE"), count: powerAmount(living[at]!, "SANDPIT_POWER"), at };
+}
+
 export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerdict {
   const combat = asRecord(state.raw["combat"]);
   const player = asRecord(combat["player"]);
@@ -483,13 +553,20 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   if (relics.has("CLOAK_CLASP")) endBlock += hand.length;
   const etherealHeld = hand.filter((card) => (context.ethereal ?? ((held) => heldCardEthereal(held)))(card)).length;
   endBlock += powerAmount(player, "FEEL_NO_PAIN_POWER") * etherealHeld;
-  if (relics.has("ORICHALCUM") && block + endBlock <= 0) endBlock += ORICHALCUM_BLOCK;
-  const regen = powerAmount(player, "REGEN_POWER");
   // Held cards (Burn, Wither, Beckon): their end-of-turn damage meets block, the end-of-turn block included (it comes first:
   // 11 of 11 logged turns where the order showed, e.g. ZANMLV9UU31K F42 T3, Burn 8 against Plating 5 took 3), and their HP
   // loss does not. Neither the mod's flag nor the plain count sees them (TMNFVW6DRQ20 F48 T8: 15 HP + 28 block against the
   // Aeonglass's 19x2 and a held Wither+'s 9, the mod did not flag it, it died with 5 retries left).
   const held = heldEndOfTurn(hand);
+  // Orichalcum (「如果你在回合结束时没有格挡，获得6点格挡」): counted whenever the turn ends with no block from the cards. Plating up
+  // does not stop it (A8ENYFR4ZWKG F48 T7: 0 block, Plating 9, 36 in three hits took 21, 15 came; 842N6N604DVX F31 T3:
+  // Plating 3, 19 took 10, 9 came; Y3XT9EBS7U8B F45 T4: Plating 4, 18 took 8, 10 came; each less Inferno's 1 at the next
+  // turn's start). The other end-of-turn block (Plated Armor, Metallicize, Cloak Clasp, Feel No Pain) never showed the order
+  // with Orichalcum in the logs: taken not to stop it either, and so the held cards' damage that may take our block first.
+  // Block counted that does not come only makes fewer deaths certain (Dai: certain only); the rule was "no block at all
+  // with the end-of-turn block", which could call a death certain that Orichalcum's 6 would have saved.
+  if (relics.has("ORICHALCUM") && (block <= 0 || held.damage >= block)) endBlock += ORICHALCUM_BLOCK;
+  const regen = powerAmount(player, "REGEN_POWER");
   // Tungsten Rod and Beating Remnant in our count (ownLoss); without them the count as before.
   const rod = relics.has("TUNGSTEN_ROD");
   const remnant = relics.has("BEATING_REMNANT");
@@ -504,32 +581,40 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const heldDies = heldOwn ? !heldOwn.unknown && heldOwn.loss - regen >= hp : Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen >= hp;
   // The held cards make the difference: the death rests on them (and on heldGuard).
   const byHeld = !plainDies && heldDies && held.damage + held.loss > 0;
+  // The Insatiable's Sandpit at 1 (sandpitOf): the enemy turn takes it to 0 and eats us whatever the HP, which neither the
+  // mod's flag nor our count sees (BVJT7HFW6X2S F33 T5: 21 HP + 12 block against 24, the planner saw every line die at 9 HP
+  // left, the judge said "the mod does not flag", eaten with 6 retries unused). The death rests on it when our count lives.
+  const pit = sandpitOf(living, names);
+  const bySandpit = pit !== null && pit.count === 1 && !plainDies && !heldDies;
   // Our own HP loss at the start of the next turn (Inferno's 1, Crimson Mantle's cost: the planner's startTurnHpLoss): the
   // enemy turn leaves us at it or under, and the next turn opens with our death (610BBERH4SPP F33 T3: 1 HP + 12 block
   // against the Crusher's 5x2, Inferno up; the planner saw every line die, the mod's flag and our count did not, and the
   // run ended at T4's start with 6 attempts unused). Not counted with Tungsten Rod or Beating Remnant (each changes it).
   const startLoss = (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0) + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"));
   const lossAfterHeld = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
-  const byStart = !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
+  const byStart = !bySandpit && !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
   const heldNote = held.damage + held.loss > 0 ? { held: { damage: held.damage, loss: held.loss, from: held.from } } : {};
   const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({
-    certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(byStart ? { startLoss } : {}), ...(plainDies || heldDies || byStart ? { ownCountDies: true as const } : {}),
+    certain, tier, reason, hp, block, endBlock, incoming, killers, ...heldNote, ...(byStart ? { startLoss } : {}), ...(bySandpit ? { sandpit: pit!.count } : {}),
+    ...(plainDies || heldDies || byStart || bySandpit ? { ownCountDies: true as const } : {}),
   });
 
   if (state.screen !== "COMBAT" || !state.in_combat) return verdict(false, null, "not in combat");
-  if (combat["end_turn_will_kill_player"] !== true && !byHeld && !byStart) return verdict(false, null, "the mod does not flag ending the turn as lethal");
+  if (combat["end_turn_will_kill_player"] !== true && !byHeld && !byStart && !bySandpit) return verdict(false, null, "the mod does not flag ending the turn as lethal");
   if (context.revives.length > 0) return verdict(false, null, `a revive is left (${context.revives.join(", ")})`);
   const saving = SAVING_POWERS.filter((id) => powerAmount(player, id) > 0);
   if (saving.length > 0) return verdict(false, null, `${saving.join(", ")} up`);
   if (relics.has("RIPPLE_BASIN") && num(player["attacks_played_this_turn"]) === 0) return verdict(false, null, "Ripple Basin (no attack played): its block is not counted here");
-  const special = living.find(
-    (enemy) => num(enemy["max_hp"]) >= SPECIAL_ENEMY_HP || asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "DeathBlow"),
-  );
-  if (special) return verdict(false, null, `${str(special["name"], str(special["enemy_id"]))} is in a special phase (DeathBlow or a million HP)`);
+  // A special phase is refused, but for the Waterfall Giant's husk on its blast turn: the blast is an attack here like any
+  // other (docs/sl.md §2.4), the shown number what hits after the end-of-turn block, and the fight ends with it.
+  const special = specialPhase(living, names);
+  if (special && "refuse" in special) return verdict(false, null, special.refuse);
+  const blast = special?.blast ?? null;
   const heldText = `held ${held.from.join(", ")}: ${held.damage} damage${held.loss > 0 ? ` + ${held.loss} HP loss` : ""}`;
   const relicText = [rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${context.lostSoFar !== undefined ? `, ${context.lostSoFar} lost so far` : ""}` : ""].filter(Boolean).join("; ");
-  if (countUnknown) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
-  if (!plainDies && !byHeld && !byStart) {
+  // (The Sandpit eats us whatever the HP: our count need not be exact for it; Tungsten Rod and Beating Remnant are refused there.)
+  if (countUnknown && !bySandpit) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
+  if (!plainDies && !byHeld && !byStart && !bySandpit) {
     if (exactly) return verdict(false, null, `own count survives: ${heldOwn!.loss} HP lost (${relicText}) - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
     return verdict(false, null, `own count survives: ${incoming} incoming - ${block} block - ${endBlock} end-of-turn block - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
   }
@@ -539,6 +624,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   }
   const startText = `then ${startLoss} HP lost at the next turn's start (${[powerAmount(player, "INFERNO_POWER") > 0 ? "Inferno" : "", powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? "Crimson Mantle" : ""].filter(Boolean).join(" + ")})`;
   if (byStart) {
+    // Lived through, the Giant's blast ends the fight (53 of 53 logged: the rewards came right after it): no next turn.
+    if (blast) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), but the fight ends when we live through ${blast.name}'s blast (${blast.damage}): no next turn`);
     const guard = startGuard(state, living, powerAmount(player, "INFERNO_POWER"), context.knowledge);
     if (guard) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), and ${guard}`);
   }
@@ -546,6 +633,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // an attacker it may kill does not attack. Certain only if we die even without every enemy it may kill (and, when one
   // of them is not a minion, without the minions too: they may leave with it).
   const ends = endOfTurnHits(state, hand, etherealHeld, context.knowledge);
+  const sandpitText = pit ? `${pit.name}'s Sandpit at ${pit.count}: the enemy turn takes it to 0 and eats us whatever the HP` : "";
   if (ends.refuse) return verdict(false, null, `the enemies may be hit before they act: ${ends.refuse}`);
   const powersOf = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).map(asRecord);
   const cruelty = powerAmount(player, "CRUELTY_POWER");
@@ -566,6 +654,29 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     })
     .filter((entry) => entry.dies);
   let endNote = "";
+  // The Sandpit: the Insatiable alone (all 81 logged fights), no Tungsten Rod or Beating Remnant (none of the 15 logged
+  // deaths to it had one), its move shown, and nothing that may kill it before its turn (what hits it at the end of ours, its
+  // poison, our retaliation on each of its hits, a power hitting the enemies when our held cards cost us HP): killed first,
+  // the fight is won and the Sandpit eats nobody.
+  if (bySandpit) {
+    const insatiable = living[pit!.at]!;
+    const others = names.filter((_, i) => i !== pit!.at);
+    const hidden = intentNotShown(state);
+    const retaliationNow = powerAmount(player, "THORNS_POWER") + powerAmount(player, "FLAME_BARRIER_POWER");
+    const worst = before[pit!.at]!.hit + before[pit!.at]!.poison + retaliationNow * hitsOf[pit!.at]!.length;
+    const onLoss = held.damage + held.loss > 0
+      ? asArray(player["powers"]).map(asRecord).find((power) => str(power["power_id"]) === "INFERNO_POWER" || ON_OWN_HP_LOSS.test(context.knowledge?.power(str(power["power_id"]))?.description ?? ""))
+      : undefined;
+    const guard =
+      others.length > 0 ? `other enemies are alive (${others.join(", ")}): not a logged board`
+      // How the Sandpit kills (no HP left to see) is not in the logs: an HP loss cut or capped might live through it.
+      : exactly ? `${[rod ? "Tungsten Rod" : "", remnant ? "Beating Remnant" : ""].filter(Boolean).join(" and ")} may cut what it takes (never logged with the Sandpit)`
+      : hidden ? hidden
+      : worst >= num(insatiable["current_hp"]) ? `${pit!.name} (${num(insatiable["current_hp"])} HP) may die before its turn: up to ${worst} from the end of the turn, its poison and our retaliation`
+      : onLoss ? `${str(onLoss["name"], str(onLoss["power_id"]))} hits the enemies when the held cards take HP on our turn`
+      : null;
+    if (guard) return verdict(false, null, `only the Sandpit makes it lethal (${sandpitText}), but ${guard}`);
+  }
   // Retaliation (Thorns, Flame Barrier: each hit an attacker lands, it takes this much back, before its next hit): an attacker
   // may die before its last hits (2WUMK6PK5QHD F48 T8: 30 HP + 30 block against 80 with Flame Barrier 6, flagged lethal and
   // certain, lived). Its HP taken at the lowest it may be (less what may hit it at the end of the turn, its block ignored).
@@ -598,7 +709,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // The cards Enthralled locks (card-model afterPlayFirst) are played once it is: their draws veto as a playable card's.
   const reachable = [...playable, ...hand.filter((card) => card["playable"] !== true && afterPlayFirst(card))];
   const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
-  const lethal = `${incoming} incoming${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${endNote}`;
+  const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
+  const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
     const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
@@ -725,12 +837,16 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
 /** The enemy intents the game shows (and the solver and the mod count): a living enemy with none, or an unknown kind, is not shown. */
 const SHOWN_INTENTS = new Set(["Attack", "Buff", "Debuff", "DebuffStrong", "Defend", "StatusCard", "CardDebuff", "Summon", "Stun", "Sleep", "Heal", "Escape"]);
 
-/** A living enemy whose intent is not shown (no intent, or a kind not in SHOWN_INTENTS), or null. */
+/**
+ * A living enemy whose intent is not shown (no intent, or a kind not in SHOWN_INTENTS), or null. The Waterfall Giant's husk
+ * on its blast turn shows its DeathBlow with the number that hits (giantBlast; docs/sl.md §2.4).
+ */
 export function intentNotShown(state: GameState): string | null {
   for (const enemy of asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((entry) => entry["is_alive"] !== false)) {
     const intents = asArray(enemy["intents"]).map(asRecord);
     const name = str(enemy["name"], str(enemy["enemy_id"], "?"));
     if (intents.length === 0) return `${name} shows no intent`;
+    if (giantBlast(enemy)) continue;
     const odd = intents.find((intent) => !SHOWN_INTENTS.has(str(intent["intent_type"])));
     if (odd) return `${name}'s intent ${str(odd["intent_type"], "?")} is not a plain one`;
   }
