@@ -14,10 +14,12 @@
  * room-costs.json).
  */
 
-import { readFileSync } from "node:fs";
+import { chmodSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { loadConfig } from "../src/config.js";
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
 import { recoverRoute, routeKeys } from "../src/llm/deepseek.js";
 import { parseGameState } from "../src/mod/schema.js";
@@ -398,6 +400,16 @@ function routePlanAnswer(file: string): (label: string) => Record<string, unknow
   };
 }
 
+/** A fake claude CLI that prints one result object (a version line for `--version`): an engine answering, no model. */
+function fakeClaude(name: string, answer: Record<string, unknown>): string {
+  const dir = mkdtempSync(join(tmpdir(), "route-review-claude-"));
+  const bin = join(dir, `${name}.mjs`);
+  const result = { type: "result", subtype: "success", is_error: false, result: JSON.stringify(answer), structured_output: answer, total_cost_usd: 0.01, usage: { input_tokens: 10, output_tokens: 20 }, modelUsage: { "claude-opus-5": {} } };
+  writeFileSync(bin, `#!${process.execPath}\nif (process.argv.includes("--version")) { process.stdout.write("9.9.9 (Claude Code)\\n"); process.exit(0); }\nfor await (const _ of process.stdin) {}\nprocess.stdout.write(${JSON.stringify(JSON.stringify(result))} + "\\n");\n`);
+  chmodSync(bin, 0o755);
+  return bin;
+}
+
 describe("rest site route review in the loop", () => {
   it("one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it", async () => {
     const bash = keyOf(board(REST, "rest"), "BASH");
@@ -427,6 +439,27 @@ describe("rest site route review in the loop", () => {
     expect(records.find((row) => row["label"] === "map/route-follow")).toMatchObject({ decider: "code" });
     // The route plan's own row carries the plan it made.
     expect(records.find((row) => row["label"] === "map/route-plan")).toMatchObject({ decider: "deepseek", route_plan: { floor: 6 } });
+    // Plain DeepSeek answered: the texts say so, as before.
+    expect(String(rest["rationale"])).toMatch(/^DeepSeek decided o1:/);
+    expect(String(change["rationale"])).toMatch(/^DeepSeek changed the act's route in rest\/plan \(rest-site review\): /);
+  });
+
+  it("answered by another engine (BRAIN_ENGINE_REST=claude): the rest row, its route change and their rationales name it, not DeepSeek", async () => {
+    const bash = keyOf(board(REST, "rest"), "BASH");
+    const planned = String(routePlanAnswer(REST)("map/route-plan")["route"]).split(" ").slice(1).join(" ");
+    const alternative = legalRoutes(blockOf(decide(env(board(REST, "rest"), memoryAt(REST))))!).map((ids) => ids.join(" ")).find((ids) => ids !== planned)!;
+    const bin = fakeClaude("rest-route", { choice: `o1:${bash}`, reason: "smith Bash", route: alternative, route_reason: "the other branch" });
+    const deepseek = new FakeDeepSeek(() => "o0", routePlanAnswer(REST));
+    const brain = loadConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_CLAUDE_BIN: bin, BRAIN_CLAUDE_MODEL: "opus" } as unknown as NodeJS.ProcessEnv).brain;
+    const { records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], deepseek, { brain });
+    expect(deepseek.calls.map((call) => call.label)).toEqual(["map/route-plan"]);
+    const rest = records.find((row) => row["label"] === "rest/plan")!;
+    expect(rest).toMatchObject({ decider: "claude", route_review: { outcome: "change" } });
+    expect(String(rest["rationale"])).toMatch(new RegExp(`^Claude decided o1:${bash}: smith Bash \\| Claude chose 锻造 \\(SMITH\\).*not shown to Claude\\)`));
+    const change = records.find((row) => row["label"] === "map/route-change")!;
+    expect(change).toMatchObject({ decider: "claude", journal: { reason: "the other branch" } });
+    expect(String(change["rationale"])).toMatch(/^Claude changed the act's route in rest\/plan \(rest-site review\): .* => .* — the other branch/);
+    for (const row of [rest, change]) expect(String(row["rationale"])).not.toContain("DeepSeek");
   });
 
   it("a change with another stretch to the next rest site: both rows log it against the kept route; next_rest rides in the question, not the system prefix", async () => {

@@ -4,7 +4,9 @@
  * (the turn and screen, the hand's cards in order, the piles' listing, the deck, the belt, a selection's prompt); and the
  * fight's rows of logs/sl-attempts.jsonl where it has them (their live `draws`). The maker checks that the cut frames give the
  * tracker the same record as the whole ones, under the old and the new options. Reads the logs once, run by hand from the
- * repo root: npx tsx tests/sl-draws-data/make-fixtures.ts. The tests read only the files it writes.
+ * repo root: npx tsx tests/sl-draws-data/make-fixtures.ts [name ...] (the names: only those fixtures). The tests read only the
+ * files it writes. Since 2026-10-04 a frame also keeps the cards played this turn and a selection's kind (SL_RETRY_KNOWN_HAND_ORDER's
+ * hand exits read them); the fixtures written before (rntvat-f38, p68p-f25, h1fa-f2, vtre-f2, c4f1-f33) do not have them.
  */
 import { execFileSync } from "node:child_process";
 import { closeSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
@@ -20,7 +22,12 @@ const FIGHTS: { name: string; run: string; floor: number; turns?: number; why: s
   { name: "h1fa-f2", run: "H1FAYT87VH2Q", floor: 2, turns: 3, why: "T2: Havoc (破灭) plays the top card (打击) and exhausts it" },
   { name: "vtre-f2", run: "VTREB5A9XWS7", floor: 2, turns: 2, why: "T1: Cascade (倾泻) plays the top 2 (打击, 进阶之灾)" },
   { name: "c4f1-f33", run: "C4F14F3XPN0N", floor: 33, turns: 6, why: "T4 in attempts 1-3 and 5: Hellraiser (地狱狂徒) plays a Strike as it is drawn, among T4's draws" },
+  { name: "rjzg-f33", run: "RJZGFGNYK56W", floor: 33, turns: 6, why: "T4 in attempts 1-4 and 6: Pommel Strike (剑柄打击) played from the hand drew the deck's other Pommel Strike (the hand's order shows it); 6 attempts" },
+  { name: "m6p7-f29", run: "M6P7KAWMF6BC", floor: 29, turns: 2, why: "T1: Pommel Strike played from the hand's end (旋风斩, 剑柄打击) drew the other Pommel Strike: the hand looks the same" },
+  { name: "vbhz-f20", run: "VBHZ77A3N496", floor: 20, turns: 1, why: "T1: Battle Trance played from the hand's end drew Battle Trance, One-Two Punch, Strike" },
+  { name: "jw92-f12", run: "JW925EDF9ZTQ", floor: 12, turns: 2, why: "T1: a hand selection replaced Strike and Defend (to the discard pile) and drew Defend, Omnislice" },
 ];
+const names = process.argv.slice(2);
 type Row = Record<string, unknown>;
 
 function query(sql: string): Row[] {
@@ -53,20 +60,22 @@ function cut(state: Row, first: boolean): Row {
     },
     combat: {
       hand: ((combat["hand"] ?? []) as Row[]).map((entry) => pick(entry, ["index", "card_id", "name", "upgraded"])),
-      player: { ...pick(asRow(combat["player"]), ["current_hp", "max_hp", "block", "energy"]), powers: ((asRow(combat["player"])["powers"] ?? []) as Row[]).map((entry) => pick(entry, ["power_id", "amount"])) },
+      player: { ...pick(asRow(combat["player"]), ["current_hp", "max_hp", "block", "energy", "cards_played_this_turn"]), powers: ((asRow(combat["player"])["powers"] ?? []) as Row[]).map((entry) => pick(entry, ["power_id", "amount"])) },
       enemies: ((combat["enemies"] ?? []) as Row[]).map((entry) => pick(entry, ["index", "enemy_id", "name", "current_hp", "is_alive"])),
     },
     agent_view: { combat: Object.fromEntries(["draw", "discard", "exhaust"].flatMap((name) => (pile(name) ? [[name, pile(name)!]] : []))) },
-    ...(state["selection"] ? { selection: pick(asRow(state["selection"]), ["prompt"]) } : {}),
+    ...(state["selection"] ? { selection: pick(asRow(state["selection"]), ["kind", "prompt"]) } : {}),
   };
 }
 
 const OPTIONS: DrawTrackerOptions[] = [
   { inserts: true, tops: true, picks: true },
   { inserts: true, tops: true, picks: true, offTop: true, handOrder: true },
+  { inserts: true, tops: true, picks: true, offTop: true, handOrder: true, handExits: false },
 ];
 const attemptsRows = readFileSync("logs/sl-attempts.jsonl", "utf8").trim().split("\n").map((line) => JSON.parse(line) as Row);
 for (const fight of FIGHTS) {
+  if (names.length > 0 && !names.includes(fight.name)) continue;
   const frames = query(`SELECT off, len, turn FROM state_index WHERE run_id = '${fight.run}' AND floor = ${fight.floor} AND screen IN ('COMBAT', 'CARD_SELECTION') AND turn IS NOT NULL ORDER BY off`);
   const attempts: Row[][] = [];
   const whole: Row[][] = [];

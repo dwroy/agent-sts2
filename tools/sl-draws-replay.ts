@@ -14,8 +14,17 @@
  * to the pile: what is next changed, not compared), `off` (why checkKnown stopped, if it did). Rows also say each attempt's live row (clean, broke) next to the old tracker's offline record, to show the
  * offline frames reproduce it.
  *
+ * A fifth tracker, "v4", is "new" without SL_RETRY_KNOWN_HAND_ORDER's hand exits (DrawTrackerOptions.handExits: false, the
+ * v4 tracker before 2026-10-04): a card played from the hand's end that drew its copy leaves the hand looking the same. Per
+ * attempt and tracker also `draw_steps` / `self_copy`: the predictions above on the steps where a card played from the hand
+ * (or a hand selection: Burning Pact) drew, and on those where it drew a copy of itself (Pommel Strike drawing Pommel Strike):
+ * {steps, checked, wrong}.
+ *
+ * --all: every logged fight (logdb state_index), not only those of sl-attempts.jsonl; the predictions where a fight has more
+ * than one attempt (the turn going back), the records' differences between trackers everywhere.
+ *
  * Usage: npx tsx tools/sl-draws-replay.ts [--attempts logs/sl-attempts.jsonl] [--states logs/states.jsonl]
- *          [--fights RUN:FLOOR,...] [--out experiments/sl-draws]
+ *          [--fights RUN:FLOOR,...] [--all] [--out experiments/sl-draws]
  * Output: <out>/draws.jsonl (one row per fight, attempt and tracker), <out>/events.jsonl (every step off the top or read by
  * the hand's order, with its frame), a summary on stdout.
  */
@@ -24,7 +33,8 @@ import { mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node
 import { join } from "node:path";
 
 import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { baseKey, checkKnown, DrawTracker, knownOrderOf, type DrawTrackerOptions, type SlDraws } from "../src/sl/draws.js";
+import { baseKey, cardKey, checkKnown, DrawTracker, knownOrderOf, pileMultiset, type DrawTrackerOptions, type SlDraws } from "../src/sl/draws.js";
+import { asArray, asRecord, bool, str } from "../src/util/json.js";
 
 function arg(name: string, fallback: string): string {
   const at = process.argv.indexOf(`--${name}`);
@@ -35,6 +45,7 @@ const ATTEMPTS = arg("attempts", "logs/sl-attempts.jsonl");
 const STATES = arg("states", "logs/states.jsonl");
 const outDir = arg("out", "experiments/sl-draws");
 const only = arg("fights", "");
+const ALL = process.argv.includes("--all");
 const PY = process.env["LOGDB_PYTHON"] ?? ".cache/logdb-venv/bin/python";
 type Row = Record<string, unknown>;
 
@@ -52,9 +63,19 @@ function stateAt(off: number, len: number): GameState {
   return parseGameState((JSON.parse(buffer.toString("utf8")) as Row)["state"] as Record<string, unknown>);
 }
 
+/** Every combat frame of the fights (RUN:FLOOR keys; all of them with --all), by fight, in log order: one query. */
+function frameIndex(keys: readonly string[] | null): Map<string, Row[]> {
+  const where = keys === null ? "" : `AND (run_id || ':' || floor) IN (${keys.map((key) => `'${key.replace(/'/g, "''")}'`).join(", ") || "''"})`;
+  const out = new Map<string, Row[]>();
+  for (const row of query(`SELECT run_id, floor, off, len, turn FROM state_index WHERE screen IN ('COMBAT', 'CARD_SELECTION') AND turn IS NOT NULL AND run_id IS NOT NULL ${where} ORDER BY run_id, floor, off`)) {
+    const key = `${String(row["run_id"])}:${Number(row["floor"])}`;
+    out.set(key, [...(out.get(key) ?? []), row]);
+  }
+  return out;
+}
+
 /** A fight's frames split into attempts (the turn going back: an SL reload or a restart). */
-function attemptsOf(run: string, floor: number): GameState[][] {
-  const frames = query(`SELECT off, len, turn FROM state_index WHERE run_id = '${run}' AND floor = ${floor} AND screen IN ('COMBAT', 'CARD_SELECTION') AND turn IS NOT NULL ORDER BY off`);
+function attemptsOf(frames: readonly Row[]): GameState[][] {
   const out: GameState[][] = [];
   let prev: number | null = null;
   for (const row of frames) {
@@ -71,7 +92,39 @@ const TRACKERS: { name: string; options: DrawTrackerOptions }[] = [
   { name: "offtop", options: { inserts: true, tops: true, picks: true, offTop: true } },
   { name: "hand", options: { inserts: true, tops: true, picks: true, handOrder: true } },
   { name: "new", options: { inserts: true, tops: true, picks: true, offTop: true, handOrder: true } },
+  { name: "v4", options: { inserts: true, tops: true, picks: true, offTop: true, handOrder: true, handExits: false } },
 ];
+
+/** A step's piles and hand, as the draw steps are told apart (raw state fields, as src/sl/draws.ts reads them). */
+function stepCards(state: GameState): { turn: number | null; hand: string[]; draw: Map<string, number>; out: Map<string, number>; played: number; handSelect: boolean } {
+  const combat = asRecord(state.raw["combat"]);
+  const out = new Map<string, number>();
+  for (const pile of ["discard", "exhaust"] as const) for (const [key, n] of pileMultiset(state, pile) ?? []) out.set(key, (out.get(key) ?? 0) + n);
+  const played = asRecord(combat["player"])["cards_played_this_turn"];
+  return {
+    turn: state.turn,
+    hand: asArray(combat["hand"]).map((raw) => cardKey(str(asRecord(raw)["card_id"]), bool(asRecord(raw)["upgraded"]))),
+    draw: pileMultiset(state, "draw") ?? new Map(),
+    out,
+    played: typeof played === "number" ? played : Number.NaN,
+    handSelect: state.screen === "CARD_SELECTION" && str(asRecord(state.raw["selection"])["kind"]) === "combat_hand_select",
+  };
+}
+
+/**
+ * Whether the step from one frame to the next (in a turn) drew on a card played from the hand (cards played this turn up) or
+ * a hand selection (Burning Pact), the pile losing cards; `selfCopy`: a card that went from the hand to the discard or exhaust
+ * pile and a copy of it off the pile (the hand holding it before and after: Pommel Strike drawing Pommel Strike).
+ */
+function drawStep(before: GameState, now: GameState): { selfCopy: boolean } | null {
+  const a = stepCards(before);
+  const b = stepCards(now);
+  if (a.turn === null || a.turn !== b.turn || !(b.played > a.played || a.handSelect)) return null;
+  const lost = [...a.draw].filter(([key, n]) => n > (b.draw.get(key) ?? 0)).map(([key]) => key);
+  if (lost.length === 0) return null;
+  const selfCopy = lost.some((key) => (b.out.get(key) ?? 0) > (a.out.get(key) ?? 0) && a.hand.includes(key) && b.hand.includes(key));
+  return { selfCopy };
+}
 
 function track(frames: GameState[], options: DrawTrackerOptions): SlDraws {
   const tracker = new DrawTracker(options);
@@ -88,12 +141,14 @@ function main(): void {
     if (only && !only.split(",").includes(key)) continue;
     fights.set(key, [...(fights.get(key) ?? []), row]);
   }
+  const index = frameIndex(ALL && !only ? null : only ? only.split(",") : [...fights.keys()]);
+  if (ALL) for (const key of index.keys()) if (!fights.has(key)) fights.set(key, []);
   const out: Row[] = [];
   const events: Row[] = [];
-  const totals = new Map<string, { attempts: number; known: number; covered: number; checked: number; wrong: number; skipped: number }>();
+  type Count = { steps: number; checked: number; wrong: number };
+  const totals = new Map<string, { attempts: number; known: number; covered: number; checked: number; wrong: number; skipped: number; draw: Count; copy: Count }>();
   for (const [key, live] of fights) {
-    const [run, floor] = [key.split(":")[0]!, Number(key.split(":")[1])];
-    const attempts = attemptsOf(run, floor);
+    const attempts = attemptsOf(index.get(key) ?? []);
     if (attempts.length === 0) continue;
     const records = new Map(TRACKERS.map((tracker) => [tracker.name, attempts.map((frames) => track(frames, tracker.options))]));
     // The steps the new rules read differently, with their frames (the new tracker's record says where).
@@ -126,8 +181,15 @@ function main(): void {
         let skipped = 0;
         const wrongs: Row[] = [];
         let off: string | null = null;
+        const draw: Count = { steps: 0, checked: 0, wrong: 0 };
+        const copy: Count = { steps: 0, checked: 0, wrong: 0 };
+        let last: GameState | null = null;
         for (const frame of frames) {
           tracker.observe(frame);
+          const step = last ? drawStep(last, frame) : null;
+          last = frame;
+          const counts = step ? [draw, ...(step.selfCopy ? [copy] : [])] : [];
+          for (const count of counts) count.steps += 1;
           const record = tracker.record;
           const picks = record.picked?.length ?? 0;
           const inserts = record.inserted?.length ?? 0;
@@ -141,6 +203,10 @@ function main(): void {
                 const block = (record.offTop ?? []).find((step) => step.cards.length > 1 && step.at <= at && at < step.at + step.cards.length);
                 const ok = block ? block.cards.some((card) => baseKey(card) === baseKey(predicted)) : baseKey(record.order[at]!) === baseKey(predicted);
                 checked += 1;
+                for (const count of counts) {
+                  count.checked += 1;
+                  if (!ok) count.wrong += 1;
+                }
                 if (!ok) {
                   wrong += 1;
                   if (wrongs.length < 5) wrongs.push({ turn: frame.turn, at, predicted, came: block ? block.cards : record.order[at] });
@@ -157,8 +223,13 @@ function main(): void {
           prev = { from: record.order.length, keys, picks, inserts };
         }
         const covered = checked - wrong;
-        out.push({ ...base, known: known?.keys.length ?? 0, ...(known?.unordered ? { unordered: known.unordered } : {}), known_reason: reason, covered, checked, wrong, skipped, ...(wrongs.length > 0 ? { wrongs } : {}), off });
-        const total = totals.get(name) ?? { attempts: 0, known: 0, covered: 0, checked: 0, wrong: 0, skipped: 0 };
+        out.push({ ...base, known: known?.keys.length ?? 0, ...(known?.unordered ? { unordered: known.unordered } : {}), known_reason: reason, covered, checked, wrong, skipped, draw_steps: draw, self_copy: copy, ...(wrongs.length > 0 ? { wrongs } : {}), off });
+        const total = totals.get(name) ?? { attempts: 0, known: 0, covered: 0, checked: 0, wrong: 0, skipped: 0, draw: { steps: 0, checked: 0, wrong: 0 }, copy: { steps: 0, checked: 0, wrong: 0 } };
+        for (const [sum, one] of [[total.draw, draw], [total.copy, copy]] as const) {
+          sum.steps += one.steps;
+          sum.checked += one.checked;
+          sum.wrong += one.wrong;
+        }
         total.attempts += 1;
         total.skipped += skipped;
         total.known += known?.keys.length ?? 0;
@@ -172,7 +243,20 @@ function main(): void {
   writeFileSync(join(outDir, "draws.jsonl"), out.map((row) => JSON.stringify(row)).join("\n") + "\n");
   writeFileSync(join(outDir, "events.jsonl"), events.map((row) => JSON.stringify(row)).join("\n") + (events.length > 0 ? "\n" : ""));
   process.stdout.write(`${fights.size} fights; attempts from the 2nd, per tracker: known (sum of the known order's length at each attempt's start), covered (draws predicted on the state before they came, and right), checked / wrong (predictions compared with the next step's draws), skipped (steps that also took a card by choice or added one)\n`);
-  for (const [name, total] of totals) process.stdout.write(`  ${name.padEnd(7)} attempts ${total.attempts}  known ${total.known}  covered ${total.covered}  checked ${total.checked}  wrong ${total.wrong}  skipped ${total.skipped}\n`);
+  for (const [name, total] of totals) process.stdout.write(`  ${name.padEnd(7)} attempts ${total.attempts}  known ${total.known}  covered ${total.covered}  checked ${total.checked}  wrong ${total.wrong}  skipped ${total.skipped}  | draw steps ${total.draw.steps} (checked ${total.draw.checked}, wrong ${total.draw.wrong}); self-copy ${total.copy.steps} (checked ${total.copy.checked}, wrong ${total.copy.wrong})\n`);
+  // Every attempt (the first included): the records v4 and new differ on (SL_RETRY_KNOWN_HAND_ORDER's hand exits).
+  const v4 = out.filter((row) => row["tracker"] === "v4");
+  const neu = new Map(out.filter((row) => row["tracker"] === "new").map((row) => [`${String(row["fight"])}#${Number(row["attempt"])}`, row]));
+  const differ = v4.filter((row) => {
+    const other = neu.get(`${String(row["fight"])}#${Number(row["attempt"])}`)!;
+    return other["clean"] !== row["clean"] || other["broke"] !== row["broke"];
+  });
+  const cleanSum = (list: Row[]) => list.reduce((n, row) => n + Number(row["clean"]), 0);
+  process.stdout.write(`v4 -> new (hand exits), every attempt: ${v4.length} attempts, ${differ.length} records differ; clean draws ${cleanSum(v4)} -> ${cleanSum([...neu.values()])}\n`);
+  for (const row of differ) {
+    const other = neu.get(`${String(row["fight"])}#${Number(row["attempt"])}`)!;
+    process.stdout.write(`  ${`${String(row["fight"])}#${Number(row["attempt"])}`.padEnd(18)} clean ${String(row["clean"])} -> ${String(other["clean"])}; known ${String(row["known"] ?? "-")} -> ${String(other["known"] ?? "-")}; wrong ${String(other["wrong"] ?? "-")}; v4 broke ${String(row["broke"])}\n`);
+  }
   // The attempts whose numbers differ between old and new.
   const byAttempt = new Map<string, Row[]>();
   for (const row of out) byAttempt.set(`${String(row["fight"])}#${Number(row["attempt"])}`, [...(byAttempt.get(`${String(row["fight"])}#${Number(row["attempt"])}`) ?? []), row]);

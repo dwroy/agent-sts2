@@ -348,6 +348,10 @@ describe("shop plans in the loop", () => {
     }
     // What ops/stats.py counts as calls: DeepSeek records that are not reused.
     expect(records.filter((row) => row["deepseek"] && !(row["deepseek"] as Raw)["reused"])).toHaveLength(1);
+    // Plain DeepSeek made the plan: its rows say so (another engine's: tests/brain-loop.test.ts).
+    expect(String(shopRows[0]?.["rationale"])).toMatch(/^DeepSeek planned: block and draw for the crab \| plan U6RUE7LBUFJF:F22:shop#1: /);
+    expect(String(shopRows[1]?.["rationale"])).toMatch(/^DeepSeek plan U6RUE7LBUFJF:F22:shop#1 step 2: buy /);
+    for (const row of shopRows.slice(1)) expect((row["journal"] as Raw)["choice"]).toBe(row["rationale"]);
   });
 
   it("shop: a price change under the plan re-asks once, with what was bought", async () => {

@@ -8,7 +8,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { AnswerSet } from "../src/jev/answers.js";
 import { setExperienceForTests, type ExperienceEntry } from "../src/knowledge/experience.js";
@@ -21,6 +21,10 @@ import type { RunPlan } from "../src/strategy/run-plan.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 import type { CardModel } from "../src/strategy/card-model.js";
 import { logged, loggedEnv } from "./logged.js";
+
+// The Queen + Amalgam boards plan with full rollouts (both kill orders, death-move and passive pieces): ~1–4 s each
+// alone, over 5 s at load ~10–20 while live play runs. A wider per-test limit keeps the suite from failing on load alone.
+vi.setConfig({ testTimeout: 20_000 });
 
 const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-states");
 const BOARDS = readdirSync(DIR)

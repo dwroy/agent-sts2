@@ -18,7 +18,7 @@ import { FREE_OFFER_SOURCES, freeCardPick, modelHandCard, potionCardCost, potion
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import { exhaustPileSize, facingFightOf, fightPlaysPerTurn } from "./combat-plan.js";
-import { SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
+import { planMakerOf, SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
 import { cardOutcome } from "../knowledge/outcome-facts.js";
 
 export function planSelection(env: DecisionEnv): Decision | null {
@@ -416,7 +416,9 @@ export function pendingPickStep(env: DecisionEnv, kind: string, prompt: string, 
     kind: "act",
     label: `selection/${pending.task}`,
     intent: { action: "select_deck_card", option_index: index },
-    rationale: `DeepSeek plan ${pending.ref} step ${pending.step}: ${pending.task} ${name} (named with the ${pending.source} choice)`,
+    rationale: `${planMakerOf(env, pending.ref, `selection/${pending.task}`)} plan ${pending.ref} step ${pending.step}: ${pending.task} ${name} (named with the ${pending.source} choice)`,
+    // The run memory (a prompt) keeps its words: "DeepSeek plan …" whichever engine made the plan.
+    journal: `DeepSeek plan ${pending.ref} step ${pending.step}: ${pending.task} ${name} (named with the ${pending.source} choice)`,
     plan: { ref: pending.ref, step: pending.step, choice: name },
     apply: () => {
       pending.cards.shift();
