@@ -1106,7 +1106,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // DeepSeek's own tokens (zero when the answer was reused from the memo: no call was made).
       if (deepseekRecord && deepseekRecord["reused"] !== true) usage = deepseekUsage(deepseekRecord);
     } else if (decision.kind === "act") {
-      resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}) };
+      resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}) };
       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
       if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
     } else if (!jev || codeBaseline) {
