@@ -19,7 +19,7 @@ import type { Escalator } from "./llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "./llm/deepseek.js";
 import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "./brain/brain.js";
 import { moveModel } from "./knowledge/move-model.js";
-import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, trackLizardTail } from "./screens/combat-plan.js";
+import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger, type RunPlanTrigger } from "./strategy/run-plan.js";
 import { currentRunPlan, ridingPlanOf, runPlanAtMap, runPlanDueAtQuestion, runPlanTaskState, withRunPlanTask } from "./strategy/run-plan-merge.js";
@@ -634,8 +634,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const endTurnInstead = gateStuck && state.screen === "COMBAT" && state.available_actions.includes("end_turn");
     const gateCodeBaseline = gateStuck && !endTurnInstead;
     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
-    // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come.
-    trackLizardTail(screenMemory, state);
+    // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come. The state that
+    // marks it is logged (an enemy-turn read is not otherwise), so the journal replay after a restart reads it too.
+    const tailSeen = trackLizardTail(screenMemory, state);
+    if (tailSeen) {
+      observedStates.touched(state, observedFp, observedTs);
+      onEvent({ type: "note", message: `Lizard Tail seen to fire at F${state.run?.floor ?? "?"} T${state.turn ?? "?"} (${tailSeen}): no longer counted as a revive this run` });
+    }
     // The deck and gold at the fight's first frame: a thief's take is that less the run now (strategy/thief.ts).
     noteFightStart(screenMemory, state);
     sl?.observe(state, { journal, screenMemory });
@@ -1639,6 +1644,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     rememberChosenNode(screenMemory, state, resolved.intent);
     // Surrounded: every targeted action that went through turns us (the per-card fallback's plays too).
     noteFacing(screenMemory, state, resolved.intent);
+    // Lizard Tail: a fight won before our next turn after this end of turn was won in the enemy turn.
+    noteLizardTailEndTurn(screenMemory, state, resolved.intent);
     // The potion or card a card choice that follows comes from (its offer may be free this turn).
     noteCardSource(screenMemory, state, resolved.intent);
     // The board is about to change (or should): never reuse an answer across an action.
