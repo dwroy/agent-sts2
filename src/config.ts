@@ -150,6 +150,15 @@ export interface SlConfig {
    */
   retryExploreWhole: boolean;
   /**
+   * SL_RETRY_EXPLORE_WHERE (default on, 2026-10-03, GQ5H73A1VCL8 F48, Dai: 「确实应该换」; with SL_RETRY_EXPLORE): the deviation
+   * point goes where the failed attempts lost their HP, a different turn each attempt: the turns deviated at the fewest times
+   * first, of them the one whose weight is the largest (the HP lost on the enemy turn after it, mean over the failed
+   * attempts, an attempt's last turn all its HP, plus the later turns' at half a turn each); within the turn its first
+   * question. "Every line loses in every sample" (SL_RETRY_EXPLORE_ORDER) only breaks ties: it is the rollout's 5-turn
+   * horizon (GQ5H's four deviations all went to T1, the HP lost on T4-T5) (docs/sl.md §11.9). Off: as before.
+   */
+  retryExploreWhere: boolean;
+  /**
    * SL_RETRY_KNOWN_PICKS (default on, 2026-10-03, R1QJUBVBSSB2 F33; with SL_RETRY_KNOWN_INSERTS): a card taken out of the
    * draw pile by a selection (Seeker Strike) leaves the rest of the pile in its order: it is taken out of the known order,
    * which goes on (docs/sl.md §10.2). Off: the order ends there, as before.
@@ -842,6 +851,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryExploreCanon: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_CANON"), "SL_RETRY_EXPLORE_CANON", problems) ?? true,
     retryExploreTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TURN"), "SL_RETRY_EXPLORE_TURN", problems) ?? true,
     retryExploreWhole: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WHOLE"), "SL_RETRY_EXPLORE_WHOLE", problems) ?? true,
+    retryExploreWhere: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WHERE"), "SL_RETRY_EXPLORE_WHERE", problems) ?? true,
     retryKnownPicks: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_PICKS"), "SL_RETRY_KNOWN_PICKS", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),
