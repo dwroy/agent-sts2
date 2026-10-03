@@ -772,6 +772,35 @@ describe("Crimson Mantle's start-of-turn HP cost", () => {
   });
 });
 
+describe("Inferno's start-of-turn HP cost: 1 for each copy (C4F14F3XPN0N F33: two Inferno+ up took 2 at T7's start)", () => {
+  const inferno = (index: number, amount = 6): CardModel => card(index, "INFERNO", { type: "Power", target: "self", validTargets: [], flatValue: 10, inferno: amount, powerAmount: amount });
+  const ends = (plans: ReturnType<typeof solveTurn>["plans"], ids: string[]) => plans.find((plan) => plan.steps.map((step) => step.cardId).join(",") === ids.join(","))!;
+  const dummy = () => enemy({ hp: 500, attacks: [{ damage: 10, hits: 1 }] });
+
+  it("two copies up (combat-plan's startTurnHpLoss 2) and a second one played on top of one up: each copy costs 1", () => {
+    // Two up: the copies' count is in startTurnHpLoss; ending the turn costs the hit and 2.
+    const twoUp = solveTurn({ hand: [strike(0)], player: player({ hp: 40, energy: 1, inferno: 18, infernoCopies: 2, startTurnHpLoss: 2, turnStartAoe: 18 }), enemies: [dummy()], fightKind: "boss" });
+    expect(ends(twoUp.plans, []).outcome.hpLoss).toBe(10 + 2);
+    // One up (1 in startTurnHpLoss) and a second played: 2 at the next turn's start, where it had looked free.
+    const oneUp = solveTurn({ hand: [inferno(0, 9)], player: player({ hp: 40, energy: 1, inferno: 9, infernoCopies: 1, startTurnHpLoss: 1, turnStartAoe: 9 }), enemies: [dummy()], fightKind: "boss" });
+    expect(ends(oneUp.plans, ["INFERNO"]).outcome.hpLoss).toBe(10 + 2);
+    expect(ends(oneUp.plans, []).outcome.hpLoss).toBe(10 + 1);
+  });
+
+  it("none up: one Inferno played costs 1 at the next turn's start, two cost 2", () => {
+    const result = solveTurn({ hand: [inferno(0), inferno(1)], player: player({ hp: 40, energy: 2 }), enemies: [dummy()], fightKind: "boss" });
+    expect(ends(result.plans, []).outcome.hpLoss).toBe(10);
+    expect(ends(result.plans, ["INFERNO"]).outcome.hpLoss).toBe(10 + 1);
+    expect(ends(result.plans, ["INFERNO", "INFERNO"]).outcome.hpLoss).toBe(10 + 2);
+  });
+
+  it("a second Inferno into 2 HP after the hit is death at the next turn's start", () => {
+    const result = solveTurn({ hand: [inferno(0, 9)], player: player({ hp: 12, energy: 1, inferno: 9, infernoCopies: 1, startTurnHpLoss: 1 }), enemies: [dummy()], fightKind: "boss" });
+    expect(ends(result.plans, []).outcome.dies).toBe(false);
+    expect(ends(result.plans, ["INFERNO"]).outcome.dies).toBe(true);
+  });
+});
+
 describe("sleeping enemies (Z2H3 F17 T1: Bash broke the Matriarch's Plating and woke it)", () => {
   const bash = (index: number): CardModel => card(index, "BASH", { cost: 2, damage: 8, vulnerable: 2 });
   const matriarch = (overrides: Partial<EnemySim> = {}): EnemySim =>

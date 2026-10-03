@@ -665,6 +665,44 @@ describe("powers played in the line stay up in later rollout turns (0B5Y F33 T1:
   });
 });
 
+describe("Inferno's start-of-turn loss in the later rollout turns: 1 for each copy (C4F14F3XPN0N F33, two Inferno+ took 2)", () => {
+  const player: PlayerSim = { hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+  const dummy: EnemySim = { index: 0, name: "Dummy", hp: 500, maxHp: 500, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const inferno = (i: number) => card(i, "INFERNO", { type: "Power", target: "self", validTargets: [], inferno: 6, powerAmount: 6, flatValue: 10 });
+  const run = (hand: CardModel[], ids: string[], up: Partial<PlayerSim> = {}, playerPowers: Record<string, number> = {}) => {
+    const solver: SolverInput = { hand, player: { ...player, ...up }, enemies: [dummy], fightKind: "boss", turn: 1 };
+    const plans = solveTurn(solver).plans;
+    const plan = plans.find((p) => p.steps.map((s) => s.cardId).join(",") === ids.join(","))!;
+    expect(plan).toBeDefined();
+    const draw = Array.from({ length: 10 }, (_, k) => strike(20 + k));
+    const result = rolloutDecision({
+      solver, plans, enemies: [{ index: 0, id: "DUMMY", move: null, strength: 0, powers: {} }], tables: {},
+      piles: { draw, discard: [], handBase: hand }, meta: { ...META, kind: "boss", enc: "DUMMY" }, playerPowers, potions: 0, mm: {},
+      model: null, gates: null, options: { budgetMs: 10_000, seed: 4, include: [plan], horizon: 3, samples: 2 },
+    });
+    return result.lines.find((entry) => entry.plan === plan)!;
+  };
+
+  it("two Infernos played on T1: 2 HP at each later turn's start, one sweep of 12 per loss", () => {
+    const line = run([inferno(0), inferno(1), strike(2)], ["INFERNO", "INFERNO", "STRIKE"]);
+    expect(line.perTurn[0]!.loss.mean).toBe(2);
+    expect(line.perTurn[1]!.loss.mean).toBe(2);
+    expect(line.perTurn[0]!.dmg.mean).toBe(18 + 12);
+  });
+
+  it("two copies up at the decision (INFERNO_POWER 12, combat-plan's count 2): 2 a later turn; one played on top of one up: 2", () => {
+    const up = run([strike(0)], ["STRIKE"], { inferno: 12, infernoCopies: 2, startTurnHpLoss: 2, turnStartAoe: 12 }, { INFERNO_POWER: 12 });
+    expect(up.perTurn[0]!.loss.mean).toBe(2);
+    expect(up.perTurn[1]!.loss.mean).toBe(2);
+    const onTop = run([inferno(0), strike(1)], ["INFERNO", "STRIKE"], { inferno: 6, infernoCopies: 1, startTurnHpLoss: 1, turnStartAoe: 6 }, { INFERNO_POWER: 6 });
+    expect(onTop.plan.outcome.hpLoss).toBe(2);
+    expect(onTop.perTurn[0]!.loss.mean).toBe(2);
+    // Without the decision's count (another solver input): from the amount, at the fewest copies (12 -> 2).
+    const counted = run([strike(0)], ["STRIKE"], { inferno: 12, startTurnHpLoss: 2, turnStartAoe: 12 }, { INFERNO_POWER: 12 });
+    expect(counted.perTurn[0]!.loss.mean).toBe(2);
+  });
+});
+
 describe("enemy Vigor (XLJQ6FPQAU7N F7: Thrash's Vigor 6 made Crash 18 + 6)", () => {
   const EEL: EnemyTable = {
     moves: {

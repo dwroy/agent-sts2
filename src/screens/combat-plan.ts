@@ -36,6 +36,7 @@ import type { GameState } from "../mod/schema.js";
 import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, replaySteps, SHRINKER, solveTurn, STRIP_COUNTERS, type DeathMove, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { liveSolverFields } from "../strategy/passive-pieces.js";
+import { infernoCopies, startTurnHpLossOf } from "../strategy/start-loss.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
@@ -2737,8 +2738,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     // MECH_MOVE_RULES (class C): the back attack only while both claws live (turn-solver PlayerSim.backAttackPair).
     ...(powerAmount(player, "SURROUNDED_POWER") > 0 && mechMoveOn(env) ? { backAttackPair: true } : {}),
     colossus: powerAmount(player, "COLOSSUS_POWER") > 0,
-    // Inferno takes 1 HP at the start of each turn (and that loss is what makes it hit every enemy).
-    startTurnHpLoss: mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER")) + (powerAmount(player, "INFERNO_POWER") > 0 ? 1 : 0),
+    // Inferno takes 1 HP for each copy up at the start of each turn (and that loss is what makes it hit every enemy; one
+    // sweep): two Inferno+ (18) took 2 (C4F14F3XPN0N F33), the planner had counted 1 whatever the copies.
+    startTurnHpLoss: startTurnHpLossOf(state, powerAmount(player, "INFERNO_POWER"), powerAmount(player, "CRIMSON_MANTLE_POWER")),
     retaliate: powerAmount(player, "FLAME_BARRIER_POWER") + powerAmount(player, "THORNS_POWER"),
     turnStartAoe: turnStartAoe(relicIds, player),
     ...(relicIds.includes("CLOAK_CLASP") ? { blockPerHeldCard: CLOAK_CLASP_BLOCK } : {}),
@@ -2746,6 +2748,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(relicIds.includes("RED_SKULL") ? { redSkull: RED_SKULL_STRENGTH } : {}),
     ...(relicIds.includes("SELF_FORMING_CLAY") ? { clayBlock: CLAY_BLOCK, clayPending: powerAmount(player, "SELF_FORMING_CLAY_POWER") } : {}),
     inferno: powerAmount(player, "INFERNO_POWER"),
+    infernoCopies: infernoCopies(state, powerAmount(player, "INFERNO_POWER")),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
     hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,
