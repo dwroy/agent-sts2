@@ -19,6 +19,7 @@ const FIGHTS: { name: string; run: string; floor: number; turns?: number; why: s
   { name: "p68p-f25", run: "P68P7CDJRDH3", floor: 25, turns: 2, why: "T1: Shrug It Off played from 防御, 挑衅, 耸肩无视, 打击 drew Shrug It Off (the hand 防御, 打击, 耸肩无视)" },
   { name: "h1fa-f2", run: "H1FAYT87VH2Q", floor: 2, turns: 3, why: "T2: Havoc (破灭) plays the top card (打击) and exhausts it" },
   { name: "vtre-f2", run: "VTREB5A9XWS7", floor: 2, turns: 2, why: "T1: Cascade (倾泻) plays the top 2 (打击, 进阶之灾)" },
+  { name: "c4f1-f33", run: "C4F14F3XPN0N", floor: 33, turns: 6, why: "T4 in attempts 1-3 and 5: Hellraiser (地狱狂徒) plays a Strike as it is drawn, among T4's draws" },
 ];
 type Row = Record<string, unknown>;
 
@@ -36,8 +37,8 @@ function raw(off: number, len: number): Row {
 const asRow = (value: unknown): Row => (value && typeof value === "object" && !Array.isArray(value) ? (value as Row) : {});
 const pick = (from: Row, keys: string[]): Row => Object.fromEntries(keys.filter((key) => key in from).map((key) => [key, from[key]]));
 
-/** A frame as the draw tracker reads it. */
-function cut(state: Row): Row {
+/** A frame as the draw tracker reads it (the deck: on an attempt's first frame only, the one the tracker reads it on). */
+function cut(state: Row, first: boolean): Row {
   const run = asRow(state["run"]);
   const combat = asRow(state["combat"]);
   const view = asRow(asRow(state["agent_view"])["combat"]);
@@ -48,11 +49,11 @@ function cut(state: Row): Row {
     run: {
       ...pick(run, ["floor", "act_id", "current_hp", "max_hp"]),
       potions: ((run["potions"] ?? []) as Row[]).map((entry) => pick(entry, ["index", "potion_id", "name"])),
-      deck: ((run["deck"] ?? []) as Row[]).map((entry) => pick(entry, ["card_id", "upgraded"])),
+      ...(first ? { deck: ((run["deck"] ?? []) as Row[]).map((entry) => pick(entry, ["card_id", "upgraded"])) } : {}),
     },
     combat: {
       hand: ((combat["hand"] ?? []) as Row[]).map((entry) => pick(entry, ["index", "card_id", "name", "upgraded"])),
-      player: pick(asRow(combat["player"]), ["current_hp", "max_hp", "block", "energy"]),
+      player: { ...pick(asRow(combat["player"]), ["current_hp", "max_hp", "block", "energy"]), powers: ((asRow(combat["player"])["powers"] ?? []) as Row[]).map((entry) => pick(entry, ["power_id", "amount"])) },
       enemies: ((combat["enemies"] ?? []) as Row[]).map((entry) => pick(entry, ["index", "enemy_id", "name", "current_hp", "is_alive"])),
     },
     agent_view: { combat: Object.fromEntries(["draw", "discard", "exhaust"].flatMap((name) => (pile(name) ? [[name, pile(name)!]] : []))) },
@@ -80,7 +81,7 @@ for (const fight of FIGHTS) {
     prev = turn;
     const state = raw(Number(row["off"]), Number(row["len"]));
     whole[whole.length - 1]!.push(state);
-    attempts[attempts.length - 1]!.push(cut(state));
+    attempts[attempts.length - 1]!.push(cut(state, attempts[attempts.length - 1]!.length === 0));
   }
   // The cut frames give the tracker what the whole ones do, under both options.
   attempts.forEach((cutFrames, i) => {

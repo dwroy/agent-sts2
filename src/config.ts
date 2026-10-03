@@ -189,7 +189,8 @@ export interface SlConfig {
   /**
    * SL_RETRY_KNOWN_OFF_TOP (default on, 2026-10-03, RNTVAT76BPV0 F38; with SL_RETRY_KNOWN_INSERTS): cards played off the top
    * of the draw pile (the potion Distilled Chaos, Havoc, Cascade) were its next cards: they are places of the known order and
-   * the rest of it goes on (several at once: their order among themselves is not known until an attempt draws them)
+   * the rest of it goes on (several at once: their order among themselves is not known until an attempt draws them); with
+   * Hellraiser on, the Strikes it plays as they are drawn make the step's draws such a span (C4F14F3XPN0N F33)
    * (docs/sl.md §10.2). Off: the order ends there, as before.
    */
   retryKnownOffTop: boolean;

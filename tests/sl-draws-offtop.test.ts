@@ -7,6 +7,9 @@
  *   Now the 3 are places of the order (their order among themselves not known until an attempt draws them), the order goes on.
  * - P68P7CDJRDH3 F25 T1: Shrug It Off played from the hand drew Shrug It Off (the hand's order shows it, counting does not).
  * - H1FAYT87VH2Q F2 T2 (Havoc, one card, then a reshuffle), VTREB5A9XWS7 F2 T1 (Cascade, two cards).
+ * - C4F14F3XPN0N F33 (5 attempts): Hellraiser (地狱狂徒) plays each Strike it draws at once, so on T4-T5 a Strike left the pile
+ *   among the turn's draws (where among them not known): the old order broke at T4 (18 known); now the turn's draws are a span
+ *   of unknown order and the order goes on (30), resolved by attempt 4 (no Hellraiser: its draws in order).
  * - Off (the options without them): the tracker's record is the live one (the rows' `draws`).
  * No logs/ or .cache, no model.
  */
@@ -135,6 +138,46 @@ describe("RNTVAT76BPV0 F38: Distilled Chaos plays the draw pile's top 3", () => 
     // Live: 10 known (the rows' order), lost at the potion.
     const live = knownOrderOf(fx.rows.slice(0, 2).map((row) => ({ attempt: row.attempt, draws: row.draws! }))).known!;
     expect(live.keys).toHaveLength(10);
+  });
+});
+
+describe("C4F14F3XPN0N F33: Hellraiser plays the Strikes it draws, among the turn's draws (T1-T6 of 5 attempts)", () => {
+  const fx = fixture("c4f1-f33");
+  const records = (options: DrawTrackerOptions) => fx.attempts.map((frames) => track(frames, options).record);
+
+  it("old: the order breaks at T4 (the Strike drawn and played at once); new: the turn's draws are a span of unknown order", () => {
+    const old = records(OLD);
+    for (const k of [0, 1, 2, 4]) expect(old[k]).toMatchObject({ clean: 18, broke: "T4: STRIKE_IRONCLAD left the draw pile without coming into the hand (played from the top, discarded, exhausted, or past the 10-card hand)" });
+    // Attempt 4 played no Hellraiser: its draws in order.
+    expect(old[3]).toMatchObject({ clean: 28, broke: null });
+    const neu = records(NEW);
+    expect(neu[0]!.offTop).toEqual([
+      { turn: 4, at: 18, cards: ["STRIKE_IRONCLAD", "TREMBLE", "BLUDGEON", "INFERNO+", "INFERNO+"], names: ["打击", "战栗", "重锤", "狱火+", "狱火+"], source: "Hellraiser" },
+      { turn: 5, at: 23, cards: ["STRIKE_IRONCLAD", "SETUP_STRIKE", "BLOOD_WALL", "BLOOD_WALL"], names: ["打击", "预备打击", "血墙", "血墙"], source: "Hellraiser" },
+    ]);
+    expect(neu[0]).toMatchObject({ clean: 30, broke: "T6: reshuffle (the discard pile shuffled into the draw pile)" });
+    expect(neu[3]).toEqual(old[3]);
+  });
+
+  it("attempts 2-3 know 30 places from attempt 1 (two spans of unknown order), attempt 5 all 30 in order (attempt 4's draws): every prediction right", () => {
+    const neu = records(NEW);
+    const fromOne = knownOrderOf([{ attempt: 1, draws: neu[0]! }]).known!;
+    expect(fromOne).toMatchObject({ unordered: [{ at: 18, n: 5 }, { at: 23, n: 4 }] });
+    expect(fromOne.keys).toHaveLength(30);
+    const oldKnown = knownOrderOf([{ attempt: 1, draws: records(OLD)[0]! }]).known!;
+    expect(oldKnown.keys).toHaveLength(18);
+    for (const k of [1, 2]) {
+      const now = predictions(fromOne, fx.attempts[k]!, NEW);
+      const before = predictions(oldKnown, fx.attempts[k]!, OLD);
+      // Known to the attempt's own T6 reshuffle (the old one: to its T4 Hellraiser).
+      expect(now).toMatchObject({ wrong: 0, off: "T6: reshuffle (the discard pile shuffled into the draw pile)" });
+      expect(before).toMatchObject({ wrong: 0, off: expect.stringMatching(/^T4: STRIKE_IRONCLAD left the draw pile/) });
+      expect(now.checked).toBeGreaterThan(before.checked);
+    }
+    const fromFour = knownOrderOf(neu.slice(0, 4).map((draws, i) => ({ attempt: i + 1, draws }))).known!;
+    expect(fromFour.keys).toHaveLength(30);
+    expect(fromFour.unordered).toBeUndefined();
+    expect(predictions(fromFour, fx.attempts[4]!, NEW)).toMatchObject({ wrong: 0, off: "T6: reshuffle (the discard pile shuffled into the draw pile)" });
   });
 });
 

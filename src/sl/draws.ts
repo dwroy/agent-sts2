@@ -51,6 +51,8 @@
  * Cascade play the pile's top cards without drawing them; they were its next cards, so they are places of the order (`offTop`)
  * and the rest of it goes on (attempts 1-4 there broke at the potion, 10 known; now 29). Several in one step: their order among
  * themselves is not known (one frame before, one after), a span of `KnownOrder.unordered` until an attempt drew them in order.
+ * With Hellraiser on, a Strike it plays as it is drawn leaves the pile among the step's draws (C4F14F3XPN0N F33 T4-T5): the
+ * step's draws are one such span (where the Strike was among them is not known), and the order goes on (18 known -> 30).
  *
  * SL_RETRY_KNOWN_HAND_ORDER (2026-10-03; DrawTracker `handOrder`, with `inserts`): a card played from the hand and a copy of it
  * drawn in the same step (Shrug It Off drawing Shrug It Off) shows by the hand's order, not its counts (appendedCards).
@@ -133,6 +135,8 @@ interface Snapshot {
   selection: string;
   /** The potions in the belt, by id (SL_RETRY_KNOWN_OFF_TOP: Distilled Chaos drunk). */
   potions: string[];
+  /** Our powers, by id (SL_RETRY_KNOWN_OFF_TOP: Hellraiser on). */
+  powers: string[];
 }
 
 /**
@@ -220,7 +224,16 @@ function snapshotOf(state: GameState): Snapshot | null {
   });
   const selection = state.screen === "CARD_SELECTION" ? str(asRecord(state.raw["selection"])["prompt"]) : "";
   const potions = asArray(asRecord(state.raw["run"])["potions"]).map((raw) => str(asRecord(raw)["potion_id"])).filter((id) => id !== "");
-  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard), discardCards: discard ?? new Map(), drawNames: pileNames(state, "draw"), selection, potions };
+  const powers = asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).map((raw) => str(asRecord(raw)["power_id"])).filter((id) => id !== "");
+  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard), discardCards: discard ?? new Map(), drawNames: pileNames(state, "draw"), selection, potions, powers };
+}
+
+/**
+ * SL_RETRY_KNOWN_OFF_TOP: Hellraiser (地狱狂徒, 「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」) plays a card it draws at once:
+ * a card whose name (or id) says Strike that left the pile while it is on.
+ */
+function strikeNamed(key: string, names: Map<string, string>): boolean {
+  return (names.get(key) ?? "").includes("打击") || /STRIKE/.test(baseKey(key));
 }
 
 /**
@@ -361,7 +374,8 @@ export interface DrawTrackerOptions {
   picks?: boolean;
   /**
    * SL_RETRY_KNOWN_OFF_TOP (with `inserts`): cards played off the top of the pile (Distilled Chaos, Havoc, Cascade) are the
-   * pile's next cards, in `order` (`offTop`), and the order goes on (default: it ends there).
+   * pile's next cards, in `order` (`offTop`), and the order goes on; with Hellraiser on, a step's draws with a Strike it played
+   * at once are a span of unknown order (default: it ends there).
    */
   offTop?: boolean;
   /**
@@ -580,7 +594,14 @@ export class DrawTracker {
       const source = offTopSource(before, now);
       if (source && (drawn.length === 0 || (source.one && size(left) === 1)) && (!source.one || size(left) === 1)) offTop = { cards: left, source: source.name };
     }
-    if (size(left) > 0 && !offTop) this.breakAt(now.turn, `${listOf(left)} left the draw pile without coming into the hand (played from the top, discarded, exhausted, or past the 10-card hand)`);
+    // SL_RETRY_KNOWN_OFF_TOP: with Hellraiser on, the Strikes that left the pile were drawn and played at once (C4F14F3XPN0N F33
+    // T4, every attempt): this step's draws, where among them they were not known, so all of them one span of unknown order.
+    let drawnAndPlayed: Map<string, number> | null = null;
+    if (this.offTop && !offTop && size(left) > 0 && size(grew) === 0 && !picked && (before.powers.includes("HELLRAISER_POWER") || now.powers.includes("HELLRAISER_POWER")) && [...left.keys()].every((key) => strikeNamed(key, before.drawNames))) {
+      drawnAndPlayed = new Map(left);
+      for (const card of drawn) drawnAndPlayed.set(card.key, (drawnAndPlayed.get(card.key) ?? 0) + 1);
+    }
+    if (size(left) > 0 && !offTop && !drawnAndPlayed) this.breakAt(now.turn, `${listOf(left)} left the draw pile without coming into the hand (played from the top, discarded, exhausted, or past the 10-card hand)`);
     // A card added and drawn in the same step never shows in the pile (not in `left`): when the pile's own cards hold the
     // same card, which of the two came is unknown.
     if (size(fresh) > 0) {
@@ -591,6 +612,7 @@ export class DrawTracker {
       if (doubt) this.breakAt(now.turn, `drew ${doubt} as cards like it were added to the draw pile: the added one or the pile's own`);
     }
     if (picked && this.picks) this.takePicked(drawn, own, added, now.turn);
+    else if (drawnAndPlayed) this.takeOffTop(before, drawnAndPlayed, own, added, now.turn, "Hellraiser");
     else {
       if (offTop) this.takeOffTop(before, offTop.cards, own, added, now.turn, offTop.source);
       this.takeOwn(drawn, own, added, now.turn);
