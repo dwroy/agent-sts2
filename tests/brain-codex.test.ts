@@ -12,13 +12,15 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain, createRouter } from "../src/brain/brain.js";
-import { brainCatalogEntry, checkCodex, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexSchema, dropNulls, parseCodexStream, redact, strictSchema } from "../src/brain/engines/codex.js";
+import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
 import { answeredBy, engineLabel } from "../src/loop.js";
 import { EngineFailure, type BrainLogRow } from "../src/brain/router.js";
 import { fightPlanSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { loadConfig } from "../src/config.js";
+import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
+import { input as routeInput } from "./route-fixture.js";
 import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
 import type { JsonValue } from "../src/util/json.js";
 
@@ -178,7 +180,7 @@ describe("codex engine", () => {
     expect(seen!.system).toBe("SYSTEM PROMPT (rules + knowledge)");
     expect(JSON.parse(seen!.stdin)).toEqual({ memory: { act: "第1幕" }, state: { hp: 20 }, question: "Heal or smith?", options });
     // The kind's stable schema, strict; the catalog entry without the exec / multi-agent / experimental tools.
-    expect(seen!.schema).toEqual(codexSchema(stableSchema(pickSpec("rest/plan", options, {})), { routeReason: "drop", maxFieldChars: 600 }));
+    expect(seen!.schema).toEqual(codexSchema(codexKindSchema(pickSpec("rest/plan", options, {}), { fields: "used", reasonLast: false }), { routeReason: "drop", maxFieldChars: 600 }));
     expect(seen!.catalog).toEqual({ models: [brainCatalogEntry(SOL)] });
     expect(seen!.catalog).toMatchObject({ models: [{ slug: "gpt-6.1-sol", tool_mode: null, multi_agent_version: null, experimental_supported_tools: [], apply_patch_tool_type: null, supports_search_tool: false, context_window: 272000 }] });
     // No key reaches codex; its home does; its own directory leads PATH (the npm launcher's node).
@@ -446,6 +448,59 @@ describe("codex's answer schema against runaway answers", () => {
     expect(cfg({})).toMatchObject({ routeReason: "drop", maxFieldChars: 600 });
     expect(cfg({ BRAIN_CODEX_ROUTE_REASON: "keep", BRAIN_CODEX_MAX_FIELD_CHARS: "off" })).toMatchObject({ routeReason: "keep", maxFieldChars: null });
     expect(() => loadConfig({ BRAIN_CODEX_ROUTE_REASON: "english" } as unknown as NodeJS.ProcessEnv)).toThrow(/BRAIN_CODEX_ROUTE_REASON/);
+  });
+});
+
+describe("codex's schema holds only the fields the question uses (BRAIN_CODEX_SCHEMA_FIELDS; the A/B of 2026-10-03)", () => {
+  const view = (): Record<string, unknown> => JSON.parse(JSON.stringify(routeView(buildRouteMap(routeInput())))) as Record<string, unknown>;
+  const keys = (schema: { properties?: object } | null): string[] => Object.keys(schema?.properties ?? {});
+  const used = { fields: "used", reasonLast: false } as const;
+
+  it("derived from the request: route with a route review or an act route, cards with eligible_cards, discard with a discard option, run_plan with a due run plan", () => {
+    expect(keys(codexKindSchema(pickSpec("reward/card", options, {}), used))).toEqual(["choice", "reason"]);
+    expect(keys(codexKindSchema(pickSpec("reward/card", options, { route_review: { ...view(), plan: "r1c2 …" } }), used))).toEqual(["choice", "reason", "route", "route_reason"]);
+    expect(keys(codexKindSchema(pickSpec("event/act-plan", options, { act_route: view() }), used))).toEqual(["choice", "reason", "route"]);
+    const removal = { o0: JSON.stringify({ option: "leave" }), o1: JSON.stringify({ option: "remove", eligible_cards: { c1: "Strike" }, cards_to_name: "[1 keys]" }) };
+    expect(keys(codexKindSchema(pickSpec("event/choose", removal, {}), used))).toEqual(["choice", "reason", "cards"]);
+    const discard = { o0: JSON.stringify({ option: "take" }), "o0:discard": JSON.stringify({ option: "discard, then take" }) };
+    expect(keys(codexKindSchema(pickSpec("event/choose", discard, {}), used))).toEqual(["choice", "reason", "discard"]);
+    expect(keys(codexKindSchema(pickSpec("reward/card", options, { run_plan_task: { task: "plan" } }), used))).toEqual(["choice", "reason", "run_plan"]);
+    // A plan kind already has only its own fields (shop: plan and reason).
+    const shop = shopPlanSpec("shop/plan", { card1: JSON.stringify({ price: 50 }) }, {});
+    expect(codexKindSchema(shop, used)).toEqual(stableSchema(shop));
+    // all: the kind's whole stable schema, as before.
+    expect(codexKindSchema(pickSpec("reward/card", options, {}), { fields: "all", reasonLast: false })).toEqual(stableSchema(pickSpec("reward/card", options, {})));
+  });
+
+  it("the strict schema codex gets for a pick with no optional field: choice and reason, both required; reason last moves reason to the end", () => {
+    const strict = codexSchema(codexKindSchema(pickSpec("rest/plan", options, {}), used), { routeReason: "drop", maxFieldChars: 600 })!;
+    expect(strict).toMatchObject({ type: "object", required: ["choice", "reason"], additionalProperties: false });
+    expect(keys(strict)).toEqual(["choice", "reason"]);
+    const last = codexKindSchema(pickSpec("reward/card", options, { route_review: { ...view(), plan: "r1c2 …" } }), { fields: "used", reasonLast: true });
+    expect(keys(last)).toEqual(["choice", "route", "route_reason", "reason"]);
+    expect(keys(codexSchema(last, { routeReason: "drop", maxFieldChars: 600 }))).toEqual(["choice", "route", "reason"]);
+  });
+
+  it("BRAIN_CODEX_SCHEMA_FIELDS used and BRAIN_CODEX_ACCEPT_CUT on by default, BRAIN_CODEX_REASON_LAST off; each can be switched", () => {
+    const codex = (env: Record<string, string>) => loadConfig(env as unknown as NodeJS.ProcessEnv).brain.codex;
+    expect(codex({})).toMatchObject({ schemaFields: "used", reasonLast: false, acceptCut: true });
+    expect(codex({ BRAIN_CODEX_SCHEMA_FIELDS: "all", BRAIN_CODEX_REASON_LAST: "on", BRAIN_CODEX_ACCEPT_CUT: "off" })).toMatchObject({ schemaFields: "all", reasonLast: true, acceptCut: false });
+    expect(() => codex({ BRAIN_CODEX_SCHEMA_FIELDS: "some" })).toThrow(/BRAIN_CODEX_SCHEMA_FIELDS/);
+    expect(() => codex({ BRAIN_CODEX_ACCEPT_CUT: "maybe" })).toThrow(/BRAIN_CODEX_ACCEPT_CUT/);
+  });
+
+  it("closeCutAnswer: a cut answer's prefix closed after its last complete member", () => {
+    // The replayed runaway (L3G50U6KX5ST F31): a whole answer, then whitespace.
+    const runaway = '{"choice":"card2","reason":"Rage supplies free defense while attacking." \n                        \n\n     \n          ';
+    expect(closeCutAnswer(runaway)).toEqual({ json: { choice: "card2", reason: "Rage supplies free defense while attacking." }, text: '{"choice":"card2","reason":"Rage supplies free defense while attacking."}' });
+    expect(closeCutAnswer('{"choice":"a","reason":"x",   \n ')?.json).toEqual({ choice: "a", reason: "x" });
+    expect(closeCutAnswer('{"choice":"a","reason":"x \\" , y"  \n')?.json).toEqual({ choice: "a", reason: 'x " , y' });
+    // A member cut half-way is left out (then the answer lacks it: not taken).
+    expect(closeCutAnswer('{"choice":"a","reason":"Rage sup')?.json).toEqual({ choice: "a" });
+    expect(closeCutAnswer('{"choice":"a","cards":["c1","c')?.json).toEqual({ choice: "a" });
+    expect(closeCutAnswer('{"choice":"a","run_plan":{"want":["x"]}  ')?.json).toEqual({ choice: "a", run_plan: { want: ["x"] } });
+    expect(closeCutAnswer("  ")).toBeNull();
+    expect(closeCutAnswer('note {"a":1}')).toBeNull();
   });
 });
 

@@ -59,7 +59,7 @@ import type { JsonSchema } from "../../tools/types.js";
 import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
 import { stableSchema } from "../specs.js";
-import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
+import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import { CodexSession, configProblems, RpcError, SessionError, type SessionOptions, type SessionTurn } from "./codex-session.js";
 import { CodexUsageGuard, readCodexUsage, type CodexUsage, type UsageNote } from "./codex-usage.js";
 import { AgentAbortedError, AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
@@ -128,6 +128,8 @@ export interface CodexTraceRow {
    * ANSWER_TEXT_KEEP characters). Answers are not secret.
    */
   answer_text?: string;
+  /** Session mode: this cut turn's answer was taken (BRAIN_CODEX_ACCEPT_CUT): its prefix closed into a whole, valid answer. */
+  accepted_from_cut?: boolean;
   exit?: number | null;
   signal?: string | null;
   thread_id?: string | null;
@@ -282,6 +284,73 @@ export function strictSchema(schema: JsonSchema): StrictSchema | null {
     return { ...node };
   };
   return walk(schema);
+}
+
+/**
+ * The schema codex's answer schema is made from for a question (before codexSchema): the kind's stable schema (specs.ts
+ * stableSchema), with
+ * - fields "all": every field the kind can have (an optional one the question does not use is answered null);
+ *   "used": only the fields the question's own spec has (spec.schema, built from the request: route with a route review
+ *   or an act route, cards when an option lists eligible_cards, discard with a discard option, run_plan with a due run
+ *   plan). 2026-10-03: all 22 session runaways of L3G5/3JHE/C4F1 were picks that used none of the optional fields (0 in
+ *   67 picks with a route): after `reason` the strict schema still wanted three nulls, and codex wrote whitespace.
+ * - reasonLast: `reason` moved to the end (codex writes the fields in this order).
+ * DeepSeek's and Claude's schemas stay as they are.
+ */
+export function codexKindSchema(spec: AnswerSpec, opts: { fields: "all" | "used"; reasonLast: boolean }): JsonSchema {
+  const schema = stableSchema(spec);
+  const props = schema.properties;
+  if (!props) return schema;
+  const all = Object.keys(props);
+  const own = spec.schema.properties ? new Set(Object.keys(spec.schema.properties)) : null;
+  let keys = opts.fields === "used" && own ? all.filter((key) => own.has(key)) : all;
+  if (opts.reasonLast && keys.includes("reason")) keys = [...keys.filter((key) => key !== "reason"), "reason"];
+  if (keys.length === all.length && keys.every((key, i) => key === all[i])) return schema;
+  return { ...schema, properties: Object.fromEntries(keys.map((key) => [key, props[key]!])), ...(schema.required ? { required: schema.required.filter((key) => keys.includes(key)) } : {}) };
+}
+
+/**
+ * The JSON object a cut answer's streamed prefix closes into: its top-level members up to the last complete one, closed
+ * with "}" (a member cut half-way is left out); null when no prefix closes into an object. A runaway cut (whitespace
+ * after a complete reason) closes into the whole answer it had written.
+ */
+export function closeCutAnswer(text: string): { json: Record<string, unknown>; text: string } | null {
+  const start = text.indexOf("{");
+  if (start < 0 || text.slice(0, start).trim()) return null;
+  // Where a top-level member may end: before each top-level comma, at the object's own end, at the text's end.
+  const ends = new Set<number>([text.length]);
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = start; i < text.length; i += 1) {
+    const ch = text[i]!;
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+    } else if (ch === '"') inString = true;
+    else if (ch === "{" || ch === "[") depth += 1;
+    else if (ch === "}" || ch === "]") {
+      depth -= 1;
+      if (depth === 0) {
+        ends.add(i + 1);
+        break;
+      }
+    } else if (ch === "," && depth === 1) ends.add(i);
+  }
+  for (const end of [...ends].sort((x, y) => y - x)) {
+    const body = text.slice(start, end).trimEnd();
+    const open = body.endsWith(",") ? body.slice(0, -1).trimEnd() : body;
+    for (const candidate of [body, `${open}}`]) {
+      try {
+        const value = JSON.parse(candidate) as unknown;
+        if (isObject(value)) return { json: value, text: candidate };
+      } catch {
+        // not an object yet: close it, or try an earlier member boundary
+      }
+    }
+  }
+  return null;
 }
 
 /**
@@ -900,7 +969,7 @@ export class CodexEngine implements BrainEngine {
     const env = codexEnv(bin, home);
     mkdirSync(this.stateDir, { recursive: true });
     const entry = await this.catalog(model, effort, env);
-    const kindSchema = stableSchema(req.spec);
+    const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
     const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars });
     const call = { model, effort, env, entry, kindSchema, schema };
     return this.mode === "session" ? this.decideSession(req, signal, call) : this.decideExec(req, signal, call);
@@ -944,7 +1013,7 @@ export class CodexEngine implements BrainEngine {
    * exec mode takes over; an isolation problem (config.toml, instruction sources) turns session mode off at once.
    */
   private async decideSession(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall): Promise<BrainAnswer> {
-    const { home, summary, stallMs, firstTokenMs, stallRetries, maxAnswerChars, maxAnswerBlanks } = this.opts.codex;
+    const { home, summary, stallMs, firstTokenMs, stallRetries, maxAnswerChars, maxAnswerBlanks, acceptCut } = this.opts.codex;
     const prompt = promptWithReask(req);
     let attempt = 1;
     let spentMs = 0;
@@ -976,7 +1045,21 @@ export class CodexEngine implements BrainEngine {
         continue;
       }
       spentMs += turn.ms;
-      this.writeTrace(sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }));
+      // A runaway cut whose prefix is already a whole answer (BRAIN_CODEX_ACCEPT_CUT): taken instead of asking again.
+      const cut = turn.status === "stalled" && acceptCut && turn.stall?.endsWith("(runaway)") ? this.fromCut(req, c, turn.answerText) : null;
+      this.writeTrace({ ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : {}) });
+      if (cut) {
+        const usage = turn.usage ?? {};
+        return this.answer(req, c, {
+          text: cut,
+          latencyMs: spentMs,
+          usage: { input_tokens: usage["inputTokens"], cached_input_tokens: usage["cachedInputTokens"], cache_write_input_tokens: usage["cacheWriteInputTokens"], output_tokens: usage["outputTokens"], reasoning_output_tokens: usage["reasoningOutputTokens"] },
+          reasoning: turn.reasoning,
+          toolCalls: [],
+          native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none", accepted_from_cut: turn.stall ?? "" },
+          notes: [`accepted from a cut answer (${turn.stall ?? "runaway"}): its streamed prefix closed into a whole answer`],
+        });
+      }
       if (turn.status === "completed" && turn.text) {
         if (!session.hasPath()) void session.refreshPath();
         const usage = turn.usage ?? {};
@@ -1065,8 +1148,24 @@ export class CodexEngine implements BrainEngine {
     }
   }
 
+  /**
+   * A runaway cut's answer (BRAIN_CODEX_ACCEPT_CUT), as JSON text: its streamed prefix closed into an object
+   * (closeCutAnswer) that has every field the question requires (of those codex's schema has) and passes the question's
+   * checks (spec.validate). Null otherwise: the cut is a stall as before (asked again, then the fallback).
+   */
+  private fromCut(req: BrainRequest, c: CodexCall, streamed: string): string | null {
+    const closed = streamed ? closeCutAnswer(streamed) : null;
+    if (!closed) return null;
+    const answer = normalisePick(req, dropNulls(closed.json, c.kindSchema) as Json);
+    const fields = new Set(Object.keys(c.kindSchema.properties ?? {}));
+    const required = (req.spec.schema.required ?? []).filter((key) => fields.has(key));
+    if (required.some((key) => answer[key] === undefined || answer[key] === null)) return null;
+    if (req.spec.validate(answer).length > 0) return null;
+    return closed.text;
+  }
+
   /** The BrainAnswer of an answered call (both modes): the text read back, the strict schema's nulls dropped, codex's usage. */
-  private answer(req: BrainRequest, c: CodexCall, r: { text: string; latencyMs: number; usage: Json; reasoning: string[]; toolCalls: ToolCallRecord[]; native: Json }): BrainAnswer {
+  private answer(req: BrainRequest, c: CodexCall, r: { text: string; latencyMs: number; usage: Json; reasoning: string[]; toolCalls: ToolCallRecord[]; native: Json; notes?: string[] }): BrainAnswer {
     const parsed = parseAnswerText(r.text);
     const answer = parsed ? (dropNulls(parsed, c.kindSchema) as Json) : null;
     return {
@@ -1088,6 +1187,7 @@ export class CodexEngine implements BrainEngine {
       ...(r.reasoning.length > 0 ? { reasoning: r.reasoning.join("\n\n") } : {}),
       raw: r.text,
       native: r.native,
+      ...(r.notes?.length ? { notes: r.notes } : {}),
     };
   }
 

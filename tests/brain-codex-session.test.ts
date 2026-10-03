@@ -11,10 +11,11 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
-import { CodexEngine, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
+import { CodexEngine, codexKindSchema, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
 import { pickSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { loadConfig } from "../src/config.js";
+import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-codex-session-"));
 
@@ -178,7 +179,9 @@ describe("codex session mode", () => {
     expect(start).toMatchObject({ model: "gpt-6.1-sol", approvalPolicy: "never", sandbox: "read-only", baseInstructions: "SYSTEM PROMPT v1", ephemeral: false, threadSource: "jev-brain" });
     expect(start["cwd"].startsWith(sessionCwdRoot(join(fake.state, "codex-state")))).toBe(true);
     const turns = reqs.filter((r) => r.method === "turn/start").map((r) => r.params);
-    expect(turns[0]).toMatchObject({ threadId: "thr-1", effort: "xhigh", summary: "auto", model: "gpt-6.1-sol", outputSchema: codexSchema(stableSchema(pickSpec("rest/plan", options, {})), { routeReason: "drop", maxFieldChars: 600 }) });
+    expect(turns[0]).toMatchObject({ threadId: "thr-1", effort: "xhigh", summary: "auto", model: "gpt-6.1-sol", outputSchema: codexSchema(codexKindSchema(pickSpec("rest/plan", options, {}), { fields: "used", reasonLast: false }), { routeReason: "drop", maxFieldChars: 600 }) });
+    // A pick that uses no optional field gets choice and reason only (BRAIN_CODEX_SCHEMA_FIELDS=used, the default).
+    expect(Object.keys((turns[0]!["outputSchema"] as { properties: object }).properties)).toEqual(["choice", "reason"]);
     expect(JSON.parse(turns[0]!["input"][0].text)).toEqual({ memory: { act: "第1幕" }, state: { hp: 20 }, question: "Heal or smith?", options });
     expect(turns[1]!["threadId"]).toBe("thr-1");
     expect(reqs.filter((r) => r.method === "thread/revert").map((r) => r.params)).toEqual([{ threadId: "thr-1", beforeTurnId: "turn-1" }, { threadId: "thr-1", beforeTurnId: "turn-2" }]);
@@ -285,6 +288,46 @@ describe("codex session mode", () => {
     expect((cut!["answer_text"] as string).startsWith('{"choice":"card2","reason":"Rage supplies free defense')).toBe(true);
     expect(ok).toMatchObject({ outcome: "answered", max_blank_run: 4 });
   }, 30_000);
+
+  /** A turn that writes `prefix` and then whitespace without end (the runaway of 2026-10-03). */
+  const blankRunaway = (prefix: string): Event[] => {
+    const turn: Event[] = [{ method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: prefix } }];
+    for (let i = 0; i < 200; i += 1) turn.push({ method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: "          \n" } }, { __sleep: 2 });
+    turn.push({ __sleep: 20_000 });
+    return turn;
+  };
+
+  it("BRAIN_CODEX_ACCEPT_CUT (default on): a cut whose prefix is a whole, valid answer is taken, not asked again; the trace and brain.jsonl say so", async () => {
+    const fake = fakeSession("accept-cut", { turns: [blankRunaway('{"choice":"b","reason":"Smith Bash: the boss hits in two turns."'), answering({ choice: "a", reason: "never asked" })] });
+    const { engine, trace } = sessionEngine(fake);
+    const rows: BrainLogRow[] = [];
+    const router = new BrainRouter({ config: loadConfig({ BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "none", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv).brain, engine: () => engine, log: (row) => rows.push(row) });
+    const answer = await router.decide(request());
+    expect(answer).toMatchObject({ engine: "codex", answer: { choice: "b", reason: "Smith Bash: the boss hits in two turns." }, problems: [], native: { runs: 1, accepted_from_cut: expect.stringMatching(/whitespace characters between its JSON tokens \(runaway\)$/) } });
+    expect(answer.raw).toBe('{"choice":"b","reason":"Smith Bash: the boss hits in two turns."}');
+    expect(fake.requests().filter((r) => r.method === "turn/start")).toHaveLength(1);
+    expect(trace()).toEqual([expect.objectContaining({ outcome: "stalled", accepted_from_cut: true, answer_text: expect.stringMatching(/^\{"choice":"b"/) })]);
+    expect(rows[0]).toMatchObject({ engine: "codex", answer: { choice: "b" }, notes: [expect.stringMatching(/^accepted from a cut answer \(the answer ran \d+ whitespace characters/)] });
+    expect(answer.latencyMs).toBe(trace()[0]!["ms"]);
+  }, 30_000);
+
+  it("a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off", async () => {
+    // reason cut half-way (the length cap inside the string): only choice closes.
+    const halfReason: Event[] = [{ method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: `{"choice":"b","reason":"${"稳。".repeat(150)}` } }, { __sleep: 20_000 }];
+    const cases: Array<[string, Event[], Record<string, string>]> = [
+      ["cut-half", halfReason, { BRAIN_CODEX_MAX_ANSWER_CHARS: "200" }],
+      ["cut-bad-choice", blankRunaway('{"choice":"zz","reason":"no such option"'), {}],
+      ["cut-off", blankRunaway('{"choice":"b","reason":"whole, but the switch is off"'), { BRAIN_CODEX_ACCEPT_CUT: "off" }],
+    ];
+    for (const [name, turn, env] of cases) {
+      const fake = fakeSession(name, { turns: [turn, answering({ choice: "a", reason: "asked again" })] });
+      const { engine, trace } = sessionEngine(fake, { env });
+      const answer = await engine.decide(request());
+      expect(answer, name).toMatchObject({ answer: { choice: "a", reason: "asked again" }, native: { runs: 2 } });
+      expect(answer.notes, name).toBeUndefined();
+      expect(trace().map((row) => [row["outcome"], row["accepted_from_cut"] ?? false]), name).toEqual([["stalled", false], ["answered", false]]);
+    }
+  }, 60_000);
 
   it("BlankRun counts whitespace between JSON tokens only: not inside strings (escaped quotes included), across deltas", () => {
     const run = new BlankRun();
