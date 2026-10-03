@@ -135,6 +135,14 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
     expect(judge(bossBoard({ block: 20 })).certain).toBe(true);
     expect(judge(bossBoard({ hp: 25, relics: ["ORICHALCUM"] })).certain).toBe(false);
     expect(judge(bossBoard({ hp: 24, relics: ["ORICHALCUM"] })).certain).toBe(true);
+    // Plating up does not stop Orichalcum (A8ENYFR4ZWKG F48 T7, 842N6N604DVX F31 T3, Y3XT9EBS7U8B F45 T4): 30 against 20 HP
+    // with Plating 5 and no card block leaves 1 (5 + 6); it was called certain on Plating's 5 alone.
+    const plated = (extra: Partial<Parameters<typeof bossBoard>[0]> = {}) => bossBoard({ hp: 20, relics: ["ORICHALCUM"], playerPowers: [{ power_id: "PLATING_POWER", amount: 5 }], ...extra });
+    expect(judge(plated())).toMatchObject({ certain: false, endBlock: 11, reason: "own count survives: 30 incoming - 0 block - 11 end-of-turn block - 0 Regen < 20 HP" });
+    // Card block left: no Orichalcum; 30 - 1 - 5 reaches 20.
+    expect(judge(plated({ block: 1 }))).toMatchObject({ certain: true, endBlock: 5 });
+    // The same for Metallicize (no logged order: taken alike, more block never a wrong certain).
+    expect(judge(bossBoard({ hp: 20, relics: ["ORICHALCUM"], playerPowers: [{ power_id: "METALLICIZE_POWER", amount: 5 }] })).endBlock).toBe(11);
     expect(judge(bossBoard({ hp: 20, playerPowers: [{ power_id: "REGEN_POWER", amount: 11 }] })).certain).toBe(false);
     // Feel No Pain: counted for each Ethereal card held, and for a card with no text (unknown: the side of caution); not
     // for the others (7PWU F48 attempt 2 T6: 32 block counted for four non-Ethereal cards, none came, it died).
