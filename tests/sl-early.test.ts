@@ -104,8 +104,10 @@ describe("judgeLeastLossNow: the least-loss verdict taken before its line, only 
   it("relics and powers: acting by chance, or mid-turn without the planner, keep the end_turn timing", () => {
     const soul = lethalBoard();
     ((soul["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "FORGOTTEN_SOUL", name: "遗忘之魂", description: "每当你[gold]消耗[/gold]一张牌，随机对一名敌人造成[blue]{Damage}[/blue]点伤害。" });
-    // (Its held cards count as Ethereal, having no text: the end-of-turn exhaust triggers it, which the judge itself refuses.)
-    expect(now(soul, clean())).toMatchObject({ certain: false, reason: "the enemies may be hit before they act: 遗忘之魂 hits the enemies when the held Ethereal cards are exhausted at the end of the turn" });
+    // (Its held cards count as Ethereal, having no text: the end-of-turn exhaust triggers it, 1 to a random enemy each, which
+    // the end_turn judge bounds; it still acts mid-turn without the planner, so not before the line.)
+    expect(judgeEndTurn(state(soul), { label: LEAST_LOSS_LABEL, revives: [] }).certain).toBe(true);
+    expect(now(soul, clean())).toMatchObject({ certain: false, reason: "not before the line is played: acting mid-turn without the planner: 遗忘之魂 (relic)" });
     const fan = lethalBoard();
     ((fan["run"] as Raw)["relics"] as Raw[]).push({ index: 9, relic_id: "ORNAMENTAL_FAN", name: "精致折扇", description: "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]。" });
     expect(now(fan, clean()).reason).toBe("not before the line is played: acting mid-turn without the planner: 精致折扇 (relic)");
@@ -189,9 +191,25 @@ describe("held cards' end-of-turn damage in the judge's count (damage through bl
     const log = tempLog();
     const t = setup(log);
     const raw = withHeld({ turn: 2, hp: 10, damage: 12, lethal: false, playerPowers: [{ power_id: "PLATING_POWER", amount: 5 }] }, burn);
-    ((raw["combat"] as Raw)["hand"] as Raw[]).push(held("REGRET", "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命。"));
+    ((raw["combat"] as Raw)["hand"] as Raw[]).push(held("VAGUE", "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去一些生命。"));
     expect(await t.sl.beforeEndTurn(state(raw), { label: "combat/end_turn", screenMemory: t.memory.screenMemory, journal: t.memory.journal })).toEqual({ handled: false });
-    expect(t.notes.at(-1)).toBe("SL: ending the turn may be lethal (F17 T2 attempt 1/4), not certain: only the held cards make it lethal (held BURN: 3 damage), and REGRET: the end-of-turn amount is not given");
+    expect(t.notes.at(-1)).toBe("SL: ending the turn may be lethal (F17 T2 attempt 1/4), not certain: only the held cards make it lethal (held BURN: 3 damage), and VAGUE: the end-of-turn amount is not given");
+  });
+
+  it("Regret's HP loss is the cards in hand (VQKX9AD1YHKS F48 T7: 2 HP, four cards, no attack shown): counted, not refused", () => {
+    const raw = withHeld({ turn: 2, hp: 3, damage: 0, lethal: false }, held("REGRET", "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命。"));
+    const hand = (raw["combat"] as Raw)["hand"] as Raw[];
+    for (const card of hand) if (card["card_id"] !== "REGRET") card["resolved_rules_text"] = card["rules_text"] = "造成6点伤害。";
+    const judgeAt = (hp: number) => {
+      ((raw["combat"] as Raw)["player"] as Raw)["current_hp"] = hp;
+      return judgeEndTurn(state(raw), { label: "combat/end_turn", revives: [] });
+    };
+    expect(judgeAt(hand.length)).toMatchObject({ certain: true, held: { damage: 0, loss: hand.length } });
+    expect(judgeAt(hand.length + 1).certain).toBe(false);
+    // An Ethereal card (or one with no text: taken as one) may be exhausted first: one card fewer.
+    hand[0]!["resolved_rules_text"] = hand[0]!["rules_text"] = "虚无。 造成6点伤害。";
+    expect(judgeAt(hand.length)).toMatchObject({ certain: false, held: { damage: 0, loss: hand.length - 1 } });
+    expect(judgeAt(hand.length - 1).certain).toBe(true);
   });
 });
 

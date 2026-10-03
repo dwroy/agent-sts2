@@ -8,10 +8,10 @@
  * - the revives held (Fairy in a Bottle, an unspent Lizard Tail: `revives`, from combat-plan's revivesOf) cannot stop it: the
  *   end of the turn played out loss by loss with them, in every order the game's could be (throughRevives, reviveOutcome;
  *   docs/sl.md §2.7), still ends at 0 (ops 2026-10-03, ET3V5177HXSY F48 T13: "a revive is left" was the answer whatever
- *   the turn did after it). Refused with a revive: the Sandpit, Tungsten Rod, Beating Remnant, a death only at the next
- *   turn's start after it; the least-loss tier only where the planner's one order of the revive is the only one.
- *   SL_RELOAD_ON_REVIVE (default off): the revives not counted;
- * - no Buffer or Intangible on us, no Ripple Basin with no attack played (its block is not modelled here);
+ *   the turn did after it). Tungsten Rod and Beating Remnant are played out with them at the most they can save (each
+ *   loss 1 less; the cap at its lowest, the whole loss counted against it). Refused with a revive: the Sandpit, Buffer or
+ *   Intangible, a death only at the next turn's start after it; the least-loss tier only where the planner's one order of
+ *   the revive is the only one. SL_RELOAD_ON_REVIVE (default off): the revives not counted;
  * - no enemy in a special phase (max HP at or above a million, a DeathBlow intent: specialPhase), except the Waterfall
  *   Giant's husk on its blast turn, alone, its one DeathBlow intent giving the number (docs/sl.md §2.4; ops 2026-10-03,
  *   QLL4VM0WZKW3 F17 T13: 33 HP, no block, nothing to play or drink against the shown 50, refused, died with 6 retries
@@ -20,18 +20,27 @@
  *   it certain there (that turn does not come when we live through the blast).
  * - our own count agrees: the attack intents (damage x hits) minus the block up now, the block that comes at the end
  *   of the turn (Plating / Plated Armor / Metallicize, Cloak Clasp for each card held, Feel No Pain for each Ethereal
- *   card held, Orichalcum when the cards left no block, whatever the other end-of-turn block) and Regen reach our HP.
+ *   card held, Orichalcum when the cards left no block, whatever the other end-of-turn block, Ripple Basin's 4 when no
+ *   Attack was played) and Regen reach our HP; with Tungsten Rod, Beating Remnant, Buffer and Intangible the count is
+ *   theirs (ownLoss: Buffer's N largest losses and Intangible's 1 a loss at the most they save).
+ *
+ * Every refusal below stands for something whose effect cannot be bounded from what the board shows (Dai 2026-10-04:
+ * "bound it, or say why it cannot be"); what can be is counted at the most it can save (the most block, the most it may
+ * hit the enemies for, the least damage it lets through), and the death judged at that bound
+ * (tools/sl-judge-bounds-replay.ts: every logged end_turn board, before and after).
  * - Held cards' end-of-turn damage (Burn, Wither; through block) and HP loss (Beckon; past it) count too (2026-10-02,
  *   TMNFVW6DRQ20 F48 T8). When only they make the turn lethal, the death rests on them: certain even without the mod's
- *   flag (it does not count them), but only with every amount given and nothing that could cut the loss or kill an
- *   attacker first (heldGuard).
+ *   flag (it does not count them), but only with every amount given (Regret's, the cards in hand, at its least) and
+ *   nothing acting by chance before that death (heldGuard).
  * - So does our own HP loss at the next turn's start (Inferno's 1 for each copy up, Crimson Mantle's cost; 2026-10-02,
  *   610BBERH4SPP F33 T3; 2026-10-03, C4F14F3XPN0N F33 attempt 5 T6: two Infernos took 2, the count had been 1 whatever the
- *   copies; strategy/start-loss.ts infernoCopies): when the enemy turn leaves us at that or under, the next turn opens with our death. Certain
- *   without the mod's flag too, but not with Tungsten Rod or Beating Remnant, a relic or power acting at the turn's start
- *   that may heal or shield us, Inferno's sweep at that loss able to kill every enemy (startGuard), or every enemy able to
- *   die before that loss comes: to what hits them at the end of our turn, their poison, our retaliation, and the next
- *   turn's opening before the loss (Hellraiser's drawn Strikes, Inferno's sweep, Mr Struggles: startHitsBefore).
+ *   copies; strategy/start-loss.ts infernoCopies): when the enemy turn leaves us at that or under, the next turn opens with
+ *   our death. Certain without the mod's flag too (Tungsten Rod: each part 1 less; Beating Remnant: this turn's loss
+ *   capped, the start's under the next turn's cap), but not with Buffer or Intangible, a relic or power acting at the turn's
+ *   start that may heal or shield us, Inferno's sweep at that loss able to kill every enemy (startGuard), or every enemy
+ *   able to die before that loss comes: to what hits them at the end of our turn, their poison, our retaliation, and the
+ *   next turn's opening before the loss (Hellraiser's drawn Strikes, Inferno's sweep, Mr Struggles, Juggernaut on the
+ *   opening's block: startHitsBefore).
  * - So does the Insatiable's Sandpit at 1 (docs/sl.md §2.5; 2026-10-03, BVJT7HFW6X2S F33 T5): the enemy turn takes it to 0
  *   and eats us whatever the HP. Certain without the mod's flag, our count living, but only with the Insatiable alone, its
  *   move shown, and nothing that may kill it before its turn; Frantic Escape (the one thing that puts the count back) is a
@@ -65,6 +74,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { BEATING_REMNANT_CAP, distinctNames, FAIRY_REVIVE_SHARE, LIZARD_TAIL_REVIVE_SHARE, MERCURY_HOURGLASS_DAMAGE } from "../screens/combat-plan.js";
 import { afterPlayFirst, heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
+import { CAPTAINS_WHEEL_TURN, HORN_CLEAT_TURN, PARRYING_SHIELD, RIPPLE_BASIN_BLOCK } from "../strategy/passive-pieces.js";
 import { infernoCopies } from "../strategy/start-loss.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
@@ -134,8 +144,11 @@ export interface JudgeContext {
    * draws would veto the least-loss tier. Absent (the switch off): the veto as before.
    */
   drawBound?: () => DrawBound | null;
-  /** Game data for the powers' text (the held cards' guards: a power acting by chance or at the end of the turn). */
-  knowledge?: Pick<Knowledge, "power" | "relic">;
+  /**
+   * Game data for the powers' text (the held cards' guards: a power acting by chance or at the end of the turn), and the
+   * cards' types when given (Stampede's Attacks in hand; absent: Stampede refused as before).
+   */
+  knowledge?: Pick<Knowledge, "power" | "relic"> & Partial<Pick<Knowledge, "card">>;
   /**
    * The HP lost so far this turn, exactly (the controller: HP at the turn's first state less now, when it never rose and
    * nothing costs HP as the turn starts). Beating Remnant's cap needs it; absent: not known.
@@ -148,14 +161,19 @@ export interface JudgeContext {
   lostSoFarAtMost?: number;
 }
 
-/** A held card's end-of-turn clause about our HP whose amount the text does not give (Regret: 「失去相当于手牌数量的生命」). */
+/** A held card's end-of-turn clause about our HP whose amount the text does not give. */
 const HELD_CLAUSE = /回合结束时[^。]*手牌中[^。]*(?:受到|失去)[^。]*(?:伤害|生命)|at the end of your turn[^.]*in your hand[^.]*(?:take|lose)[^.]*(?:damage|hp)/i;
+/** Regret (「在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命」): HP loss of the cards in hand. */
+const HAND_SIZE_LOSS = /失去相当于手牌数量的生命|lose hp equal to the number of cards in your hand/i;
 
 /**
  * Held cards' end-of-turn damage and HP loss (card-model heldPenaltyOf: 「受到N点伤害」 meets block, 「失去N点生命」 does not),
- * and the held cards whose clause gives no exact amount.
+ * and the held cards whose clause gives no exact amount. Regret's loss is the cards in hand as it acts, at least the hand
+ * less what may leave it first at the end of the turn (`leaveFirst`: the Ethereal cards exhausted, a held card exhausting
+ * itself after its own clause, as Toxic's 「消耗」): its only game-data card without a number (VQKX9AD1YHKS F48 T7, A8: 2 HP +
+ * 16 block, no attack shown, Regret with four cards in hand, left out of the count as "not given", died).
  */
-function heldEndOfTurn(hand: Record<string, unknown>[]): { damage: number; loss: number; from: string[]; inexact: string[]; damages: number[]; losses: number[]; items: OwnLoss[] } {
+function heldEndOfTurn(hand: Record<string, unknown>[], leaveFirst = 0): { damage: number; loss: number; from: string[]; inexact: string[]; damages: number[]; losses: number[]; items: OwnLoss[] } {
   let damage = 0;
   let loss = 0;
   const from: string[] = [];
@@ -163,11 +181,23 @@ function heldEndOfTurn(hand: Record<string, unknown>[]): { damage: number; loss:
   const damages: number[] = [];
   const losses: number[] = [];
   const items: OwnLoss[] = [];
+  const selfExhausting = hand.filter((card) => {
+    const text = str(card["resolved_rules_text"]) || str(card["rules_text"]);
+    return heldPenaltyOf(text).heldPenalty > 0 && /消耗|exhaust/i.test(text);
+  }).length;
+  const handLoss = Math.max(0, hand.length - leaveFirst - selfExhausting);
   for (const card of hand) {
     const text = str(card["resolved_rules_text"]) || str(card["rules_text"]);
     const { heldPenalty, heldHpLoss } = heldPenaltyOf(text);
     const name = str(card["name"], str(card["card_id"]));
-    if (heldPenalty > 0) {
+    if (heldPenalty <= 0 && HAND_SIZE_LOSS.test(text)) {
+      if (handLoss > 0) {
+        loss += handLoss;
+        losses.push(handLoss);
+        items.push({ amount: handLoss, blocked: false });
+        from.push(`${name} (${handLoss}: the cards in hand)`);
+      }
+    } else if (heldPenalty > 0) {
       damage += heldPenalty - heldHpLoss;
       loss += heldHpLoss;
       if (heldPenalty - heldHpLoss > 0) damages.push(heldPenalty - heldHpLoss);
@@ -230,19 +260,30 @@ type ReviveStage = "held" | "hits" | "start";
  * Each loss that takes us to 0 or below is caught by the next revive: HP set to its HP, the overflow lost, the block left
  * kept (Y8E0KK4L7JBL F48: 14 HP against 12x3, 2 -> 0 -> 40 -> 28, the next turn opened at 28). Returns the HP left (<= 0:
  * dead with every revive spent, and `diedAt` the stage of that loss), the revives used and the HP each brought us back to.
+ * With Tungsten Rod (`rod`) each loss past the block is 1 less, as ownLoss counts it; with Beating Remnant (`capLeft`: the
+ * most this turn may still take, at its lowest) each loss of the turn is cut to what the cap leaves, the whole loss (its
+ * overflow past 0 too) counted against it, the next turn's start under a fresh cap: the most either can save, so a death
+ * that holds here holds however the game counts them with a revive (never logged together).
  */
 function throughRevives(o: {
   hp: number; maxHp: number; block: number; held: OwnLoss[]; regen: number; regenAt: "before" | "after"; enemies: number[][]; start: number[]; revives: { source: string; hp: number }[];
+  rod?: boolean; capLeft?: number | null;
 }): { hp: number; used: string[]; backAt: number[]; diedAt: ReviveStage | null } {
   let hp = o.hp;
   let block = o.block;
   let diedAt: ReviveStage | null = null;
+  let capLeft = o.capLeft ?? null;
   const used: string[] = [];
   const backAt: number[] = [];
   const lose = (loss: OwnLoss, stage: ReviveStage) => {
     if (loss.amount <= 0 || hp <= 0) return;
-    const through = loss.blocked ? Math.max(0, loss.amount - block) : loss.amount;
+    let through = loss.blocked ? Math.max(0, loss.amount - block) : loss.amount;
     if (loss.blocked) block = Math.max(0, block - loss.amount);
+    if (o.rod) through = Math.max(0, through - 1);
+    if (capLeft !== null) {
+      through = Math.min(through, stage === "start" ? BEATING_REMNANT_CAP : capLeft);
+      if (stage !== "start") capLeft -= through;
+    }
     if (through <= 0) return;
     hp -= through;
     if (hp > 0) return;
@@ -273,6 +314,7 @@ function throughRevives(o: {
  */
 function reviveOutcome(o: {
   hp: number; maxHp: number; block: number; held: OwnLoss[]; regen: number; enemies: number[][]; start: number[]; revives: { source: string; hp: number }[];
+  rod?: boolean; capLeft?: number | null;
 }): { saved: boolean; hp: number; used: string[]; backAt: number[] } | { refuse: string } {
   const attackers = o.enemies.filter((hits) => hits.length > 0);
   if (factorial(o.held.length) * factorial(attackers.length) > REVIVE_ORDERS_MAX) {
@@ -309,22 +351,40 @@ function reviveOutcome(o: {
  *   the cap at its lowest: at least that much is lost whether the start counts in the cap or not (ops 2026-10-03,
  *   ET3V5177HXSY F48 T13: 7 HP + 7 block, three held Wither+4 and the Aeonglass's 36, Crimson Mantle up; "own count not
  *   exact" once the tail was known spent; at most 1 lost so far, so at least 19 of the 68 land on 7 HP).
+ * Buffer and Intangible (never on a logged lethal board; their text only), at the most they could save, so a death that holds
+ * with them holds however the game applies them:
+ * - Intangible (「将本回合受到的所有伤害和生命减少效果降低为1」): every loss taken as 1, before the block (the block then
+ *   takes the most of them);
+ * - Buffer N (「阻止下一次你受到的生命值损伤」): N losses prevented, taken as the N largest; a prevented loss saves at most
+ *   its own amount (what it took past the block, and the block it took that is left for the others), so the count less the
+ *   N largest amounts is the least loss.
  * `unknown`: the count cannot be exact (Beating Remnant at 20 HP or less with the HP lost so far not known).
  */
 function ownLoss(
-  o: { hits: number[]; heldDamages: number[]; heldLosses: number[]; block: number; endBlock: number; hp: number; rod: boolean; remnant: boolean; lostSoFar: number | undefined; lostSoFarAtMost?: number | undefined },
+  o: {
+    hits: number[]; heldDamages: number[]; heldLosses: number[]; block: number; endBlock: number; hp: number; rod: boolean; remnant: boolean; lostSoFar: number | undefined; lostSoFarAtMost?: number | undefined;
+    buffer?: number; intangible?: boolean;
+  },
 ): { loss: number; unknown: boolean } {
-  const total = o.hits.reduce((sum, hit) => sum + hit, 0) + o.heldDamages.reduce((sum, hit) => sum + hit, 0);
+  const cut = (amounts: number[]) => (o.intangible ? amounts.map((amount) => Math.min(amount, 1)) : amounts);
+  const hits = cut(o.hits);
+  const heldDamages = cut(o.heldDamages);
+  const heldLosses = cut(o.heldLosses);
+  const total = hits.reduce((sum, hit) => sum + hit, 0) + heldDamages.reduce((sum, hit) => sum + hit, 0);
   let loss: number;
-  if (!o.rod) loss = Math.max(0, total - o.block - o.endBlock) + o.heldLosses.reduce((sum, hit) => sum + hit, 0);
+  if (!o.rod) loss = Math.max(0, total - o.block - o.endBlock) + heldLosses.reduce((sum, hit) => sum + hit, 0);
   else {
     let left = o.block + o.endBlock;
-    loss = o.heldLosses.reduce((sum, hit) => sum + Math.max(0, hit - 1), 0);
-    for (const hit of [...o.heldDamages, ...o.hits]) {
+    loss = heldLosses.reduce((sum, hit) => sum + Math.max(0, hit - 1), 0);
+    for (const hit of [...heldDamages, ...hits]) {
       const absorbed = Math.min(left, hit);
       left -= absorbed;
       if (hit - absorbed > 0) loss += hit - absorbed - 1;
     }
+  }
+  if ((o.buffer ?? 0) > 0) {
+    const largest = [...hits, ...heldDamages, ...heldLosses].sort((a, b) => b - a).slice(0, o.buffer);
+    loss = Math.max(0, loss - largest.reduce((sum, amount) => sum + amount, 0));
   }
   if (!o.remnant) return { loss, unknown: false };
   if (o.hp > BEATING_REMNANT_CAP) return { loss: Math.min(loss, BEATING_REMNANT_CAP), unknown: false };
@@ -337,9 +397,104 @@ function ownLoss(
 
 /** Relics that hit the enemies at the end of our turn, known exactly from the logs: [all enemies, damage]. */
 const STONE_CALENDAR = { turn: 7, damage: 52 };
-const PARRYING_SHIELD_DAMAGE = 6;
 /** The Bomb: 40 to every enemy as its countdown ends (the card's text; 50 taken as the upgraded one's, to be safe). */
 const THE_BOMB_MAX = 50;
+/**
+ * Forgotten Soul (「每当你消耗一张牌，随机对一名敌人造成{Damage}点伤害」): 1 to one enemy for each card exhausted (21 of 21 logged
+ * plays that exhausted cards and dealt no damage of their own, 1 to 3 cards: 7PWU4CD3QCP3, RTF3KZLZPV2L, 4JGPCH3WX6JV; the one
+ * other, 7PWU F48 T4, was Letter Opener's 5 on top).
+ */
+const FORGOTTEN_SOUL_DAMAGE = 1;
+/** An exhaust that hits the enemies (Forgotten Soul; Charon's Ashes, never held in the logs: its damage not known). */
+const EXHAUST_HITS = /消耗[^。]*(?:伤害|失去)|exhaust[^.]*damage/i;
+/** A relic's or power's text that acts when an Attack is played (Stampede plays one at the end of the turn). */
+const ON_ATTACK_PLAY = /(?:打出|play)[^。.]*(?:攻击|attack)/i;
+/**
+ * Those that act on an Attack played but cannot save us at the end of the turn: energy or Strength / Dexterity for later
+ * (Art of War, Nunchaku, Shuriken, Kunai, Rainbow Ring; Ripple Basin's block, counted at its most, only goes), an upgrade
+ * (Razor Tooth), the next turn (History Course), the card back in hand (Feral), Pen Nib (its double counted).
+ */
+const ATTACK_PLAY_HARMLESS = new Set(["ART_OF_WAR", "NUNCHAKU", "RAZOR_TOOTH", "RIPPLE_BASIN", "SHURIKEN", "KUNAI", "RAINBOW_RING", "HISTORY_COURSE", "PEN_NIB", "FERAL_POWER", "STAMPEDE_POWER"]);
+/** An Attack's sentence that only deals damage: its number (the hand's resolved one) and its hits. */
+const DAMAGE_SENTENCE = /^(?:随机)?(?:对(?:所有|随机)?(?:一名)?敌人)?造成(\d+)点伤害(?:([两二三四五]|\d+)次)?$|^deal (\d+) damage(?: to (?:all|a random) enem(?:y|ies))?(?: (\d+) times)?$/i;
+/** An Attack's sentence that cannot save us when it is played at the end of the turn (Vulnerable, Anger's copy, Headbutt). */
+const HARMLESS_SENTENCE = /^给予\d+层易伤$|^将一张此牌的复制品加入你的弃牌堆$|^将你弃牌堆中的一张牌放到抽牌堆顶部$|^(?:虚无|保留|固有)$|^(?:ethereal|retain|innate)$/i;
+
+/**
+ * Stampede (STAMPEDE_POWER: 「在你的回合结束时，随机打出你手牌中的1张攻击牌攻击随机敌人」, its amount the Attacks played): the most
+ * it can deal to one enemy, every Attack in hand (the card types from the game data) taken as played at it: the largest
+ * `amount` of them summed, each its damage sentences' numbers (the hand's resolved ones) times their hits, Vigor on top,
+ * doubled with Pen Nib or Double Damage (the target's Vulnerable is the caller's, as for every attack). Refused: no card
+ * types known, a card of unknown type, an Attack with any other sentence (block, Weak, a heal, an exhaust, a draw, a
+ * number that scales ...: what it would do is not bounded here), a relic or power that acts on an Attack played (block,
+ * damage, cards: ATTACK_PLAY_HARMLESS aside), an enemy's Slow. 0: no Attack in hand.
+ */
+function stampedeBound(
+  state: GameState,
+  hand: Record<string, unknown>[],
+  plays: number,
+  knowledge: (Pick<Knowledge, "power" | "relic"> & Partial<Pick<Knowledge, "card">>) | undefined,
+): { damage: number; from: string[] } | { refuse: string } {
+  const player = asRecord(asRecord(state.raw["combat"])["player"]);
+  const each: { name: string; damage: number }[] = [];
+  for (const card of hand) {
+    const name = str(card["name"], str(card["card_id"]));
+    const text = (str(card["resolved_rules_text"]) || str(card["rules_text"])).replace(/\[[^\]]*\]/g, "");
+    if (!knowledge?.card) {
+      if (!text || /伤害|damage/i.test(text)) return { refuse: `${name}: the card types are not known` };
+      continue;
+    }
+    const info = knowledge.card(str(card["card_id"]));
+    if (!info) return { refuse: `${name}: its type is not known` };
+    if (info.type !== "Attack") continue;
+    if (!text) return { refuse: `${name} (an Attack in hand): its text is not known` };
+    let damage = 0;
+    for (const sentence of text.split(/[。.]/).map((part) => part.trim()).filter(Boolean)) {
+      const hit = DAMAGE_SENTENCE.exec(sentence);
+      if (hit) {
+        const times = hit[2] ?? hit[4];
+        damage += Number(hit[1] ?? hit[3]) * (times ? (HITS_WORD[times] ?? Number(times)) : 1);
+      } else if (!HARMLESS_SENTENCE.test(sentence)) return { refuse: `${name} (an Attack in hand) does more than damage (「${sentence.slice(0, 30)}」)` };
+    }
+    each.push({ name, damage });
+  }
+  if (each.length === 0 || !knowledge) return { damage: 0, from: [] };
+  const run = asRecord(state.raw["run"]);
+  const relics = asArray(run["relics"]).map(asRecord);
+  for (const owner of [...relics.map((relic) => ({ id: str(relic["relic_id"]), name: `${str(relic["name"], str(relic["relic_id"]))} (relic)`, text: str(relic["description"]) || (knowledge.relic(str(relic["relic_id"]))?.description ?? "") })),
+    ...asArray(player["powers"]).map(asRecord).map((power) => ({ id: str(power["power_id"]), name: `${str(power["name"], str(power["power_id"]))} (power)`, text: knowledge.power(str(power["power_id"]))?.description ?? "" }))]) {
+    if (!ATTACK_PLAY_HARMLESS.has(owner.id) && ON_ATTACK_PLAY.test(owner.text)) return { refuse: `${owner.name} acts on the Attack Stampede plays` };
+  }
+  const slowed = asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).find((enemy) => enemy["is_alive"] !== false && powerAmount(enemy, "SLOW_POWER") > 0);
+  if (slowed) return { refuse: `${str(slowed["name"], str(slowed["enemy_id"]))}'s Slow raises the Attack Stampede plays` };
+  const double = relics.some((relic) => str(relic["relic_id"]) === "PEN_NIB") || powerAmount(player, "DOUBLE_DAMAGE_POWER") > 0 || powerAmount(player, "PEN_NIB_POWER") > 0 ? 2 : 1;
+  const vigor = Math.max(0, powerAmount(player, "VIGOR_POWER"));
+  const top = [...each].sort((a, b) => b.damage - a.damage).slice(0, Math.max(1, plays));
+  return { damage: (top.reduce((sum, card) => sum + card.damage, 0) + vigor) * double, from: top.map((card) => `${card.name} ${card.damage}`) };
+}
+
+/**
+ * Block gained at the end of our turn, each one a Juggernaut hit: Plating, Plated Armor, Metallicize, Cloak Clasp (cards
+ * held), Feel No Pain for each Ethereal card exhausted, Orichalcum, Ripple Basin (no Attack played): at most this many.
+ */
+function endBlockGains(state: GameState, hand: Record<string, unknown>[], etherealHeld: number): number {
+  const player = asRecord(asRecord(state.raw["combat"])["player"]);
+  const relicIds = asArray(asRecord(state.raw["run"])["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  return END_BLOCK_POWERS.filter((id) => powerAmount(player, id) > 0).length
+    + (relicIds.includes("CLOAK_CLASP") && hand.length > 0 ? 1 : 0)
+    + (powerAmount(player, "FEEL_NO_PAIN_POWER") > 0 ? etherealHeld : 0)
+    + (relicIds.includes("ORICHALCUM") ? 1 : 0)
+    + (num(player["attacks_played_this_turn"]) === 0 ? relicIds.filter((id) => id === "RIPPLE_BASIN").length : 0);
+}
+
+/** One thing hitting the enemies at the end of our turn: `all` of them or one at random; `attack` (Vulnerable raises it); `debuff` (it may carry one: Stampede's Attack). */
+interface EndHit {
+  name: string;
+  all: boolean;
+  damage: number;
+  attack?: true;
+  debuff?: true;
+}
 
 /**
  * What hits the enemies after we end the turn and before they act (Dai 2026-10-02: an attacker it kills does not attack, so
@@ -347,23 +502,35 @@ const THE_BOMB_MAX = 50;
  * `refuse` when an effect's amount or target is not known. From the logs:
  * - Stone Calendar: 52 to every enemy at the end of turn 7 (its stack counts 1-6 on turns 1-6): W5PTC48C3B1H F33 163 -> 111,
  *   K7G9M8K4DWFW F17 134 -> 82 (Vulnerable 3: not more), VHLZ531VC9RE F17 146 -> 94; 7DXAW0ZBDFHP F23 T7 killed both enemies.
- * - Parrying Shield: 6 to one random enemy when we end the turn with at least 10 block (an enemy lost exactly 6 on 16 of 26
- *   turns ending at 10 block and 160 of 235 above, 0 of 14 at 9): taken as possible whatever our block, to be safe.
+ * - Parrying Shield: 6 to one random enemy when we end the turn with at least 10 block, the end-of-turn block counted
+ *   (passive-pieces: 93 of 108 such turns, the rest 6 into the enemy's block; 162 of 175 under 10 dealt none, the rest
+ *   other damage): so not with `endTotal` (the block now and the most the end of the turn adds) under 10; without it, as
+ *   possible whatever our block.
  * - The Bomb: its countdown is the power's amount (3, 2, 1), it goes off as a turn ends at 1.
+ * - Stampede: the most damage an Attack in hand can deal (stampedeBound) to a random enemy; refused where that is not bounded.
+ * - Forgotten Soul: 1 to a random enemy for each held Ethereal card exhausted.
+ * - Juggernaut (「每当你获得格挡时，对随机敌人造成N点伤害」, its amount): a random enemy hit for each end-of-turn block gained
+ *   (endBlockGains, at most).
+ * - Inferno's sweep (its amount to every enemy) for each held card that takes HP on our turn (`heldLossEvents`; without it,
+ *   every held card with an end-of-turn loss), and Rupture's Strength from those losses on Howl from Beyond below; another
+ *   power hitting the enemies on our HP loss: refused.
  * - Screaming Flagon (no cards in hand at the end of the turn), a card in the exhaust pile playing itself at the end of the
- *   turn (Howl from Beyond), Stampede (an Attack in hand played at a random enemy), a relic hitting the enemies when an
- *   Ethereal card is exhausted (Charon's Ashes, Forgotten Soul), anything else midTurnRisks.endOfTurn names: refused.
+ *   turn with no damage given (Howl from Beyond's is counted), Charon's Ashes or any other relic hitting the enemies when an
+ *   Ethereal card is exhausted, a held card whose own end-of-turn clause acts on the enemies, anything else
+ *   midTurnRisks.endOfTurn names: refused.
  * - Poison: an enemy loses its poison as its turn starts, before it attacks.
  */
 function endOfTurnHits(
   state: GameState,
   hand: Record<string, unknown>[],
   etherealHeld: number,
-  knowledge: Pick<Knowledge, "power" | "relic"> | undefined,
-): { sources: { name: string; all: boolean; damage: number; attack?: true }[]; refuse: string | null } {
-  const sources: { name: string; all: boolean; damage: number; attack?: true }[] = [];
+  knowledge: (Pick<Knowledge, "power" | "relic"> & Partial<Pick<Knowledge, "card">>) | undefined,
+  board: { endTotal?: number; heldLossEvents?: number } = {},
+): { sources: EndHit[]; refuse: string | null } {
+  const sources: EndHit[] = [];
   const run = asRecord(state.raw["run"]);
   const combat = asRecord(state.raw["combat"]);
+  const player = asRecord(combat["player"]);
   const handled = new Set<string>();
   for (const relic of asArray(run["relics"]).map(asRecord)) {
     const id = str(relic["relic_id"]);
@@ -375,15 +542,18 @@ function endOfTurnHits(
       if (state.turn === STONE_CALENDAR.turn) sources.push({ name: `${name} (${STONE_CALENDAR.damage} to every enemy at the end of T${STONE_CALENDAR.turn})`, all: true, damage: STONE_CALENDAR.damage });
     } else if (id === "PARRYING_SHIELD") {
       handled.add(`${name} (relic)`);
-      sources.push({ name: `${name} (${PARRYING_SHIELD_DAMAGE} to a random enemy)`, all: false, damage: PARRYING_SHIELD_DAMAGE });
+      if (board.endTotal === undefined || board.endTotal >= PARRYING_SHIELD.block) sources.push({ name: `${name} (${PARRYING_SHIELD.damage} to a random enemy)`, all: false, damage: PARRYING_SHIELD.damage });
     } else if (id === "SCREAMING_FLAGON") {
       handled.add(`${name} (relic)`);
       if (hand.length === 0) return { sources, refuse: `${name} hits every enemy when the turn ends with no cards in hand (its damage not known)` };
-    } else if (etherealHeld > 0 && /消耗[^。]*(?:伤害|失去)|exhaust[^.]*damage/i.test(str(relic["description"]) || (knowledge?.relic(id)?.description ?? ""))) {
-      return { sources, refuse: `${name} hits the enemies when the held Ethereal cards are exhausted at the end of the turn` };
+    } else if (etherealHeld > 0 && EXHAUST_HITS.test(str(relic["description"]) || (knowledge?.relic(id)?.description ?? ""))) {
+      if (id !== "FORGOTTEN_SOUL") return { sources, refuse: `${name} hits the enemies when the held Ethereal cards are exhausted at the end of the turn (its damage not logged)` };
+      sources.push({ name: `${name} (${FORGOTTEN_SOUL_DAMAGE} to a random enemy for each of the ${etherealHeld} Ethereal card(s) exhausted)`, all: false, damage: FORGOTTEN_SOUL_DAMAGE * etherealHeld });
     }
   }
-  for (const power of asArray(asRecord(combat["player"])["powers"]).map(asRecord)) {
+  const held = heldEndOfTurn(hand, etherealHeld);
+  const heldLossEvents = board.heldLossEvents ?? held.items.length;
+  for (const power of asArray(player["powers"]).map(asRecord)) {
     const id = str(power["power_id"]);
     const name = str(power["name"], id);
     if (id === "THE_BOMB_POWER") {
@@ -391,15 +561,22 @@ function endOfTurnHits(
       if (num(power["amount"]) <= 1) sources.push({ name: `${name} (at most ${THE_BOMB_MAX} to every enemy as it goes off)`, all: true, damage: THE_BOMB_MAX });
     } else if (id === "STAMPEDE_POWER") {
       handled.add(`${name} (power)`);
-      if (hand.some((card) => /造成\d+点伤害|deal \d+ damage/i.test(str(card["resolved_rules_text"]) || str(card["rules_text"])))) {
-        return { sources, refuse: `${name} plays an Attack in hand at a random enemy at the end of the turn` };
-      }
+      const bound = stampedeBound(state, hand, num(power["amount"], 1), knowledge);
+      if ("refuse" in bound) return { sources, refuse: `${name} plays an Attack in hand at a random enemy at the end of the turn, and ${bound.refuse}` };
+      if (bound.damage > 0) sources.push({ name: `${name} (an Attack in hand at a random enemy, at most ${bound.damage}: ${bound.from.join(", ")})`, all: false, damage: bound.damage, attack: true, debuff: true });
+    } else if (id === "JUGGERNAUT_POWER") {
+      const gains = endBlockGains(state, hand, etherealHeld);
+      if (gains > 0) sources.push({ name: `${name} (${num(power["amount"])} to a random enemy for each of at most ${gains} end-of-turn block gain(s))`, all: false, damage: num(power["amount"]) * gains });
+    } else if (heldLossEvents > 0 && (id === "INFERNO_POWER" || ON_OWN_HP_LOSS.test(knowledge?.power(id)?.description ?? ""))) {
+      if (id !== "INFERNO_POWER") return { sources, refuse: `${name} hits the enemies when the held cards take HP on our turn` };
+      sources.push({ name: `${name}'s sweep (${num(power["amount"])} to every enemy for each of the ${heldLossEvents} held card loss(es) on our turn)`, all: true, damage: num(power["amount"]) * heldLossEvents });
     }
   }
   // A card in the exhaust pile that plays itself at the end of the turn (Howl from Beyond: 「对所有敌人造成18点伤害。 在你的回合结束时，
-  // 如果这张牌在你的消耗牌堆中，则将其打出」): an attack on every enemy, its number plus our Strength each copy; anything else refused.
+  // 如果这张牌在你的消耗牌堆中，则将其打出」): an attack on every enemy, its number plus our Strength each copy (Rupture's from the
+  // held cards' losses on top); anything else refused.
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
-  const strength = Math.max(0, powerAmount(asRecord(combat["player"]), "STRENGTH_POWER"));
+  const strength = Math.max(0, powerAmount(player, "STRENGTH_POWER")) + Math.max(0, powerAmount(player, "RUPTURE_POWER")) * heldLossEvents;
   for (const entry of asArray(view["exhaust"]).map(asRecord)) {
     const line = str(entry["line"]);
     if (!/回合结束时[^。]*消耗牌堆中|end of your turn[^.]*exhaust pile/i.test(line)) continue;
@@ -409,7 +586,10 @@ function endOfTurnHits(
     const copies = Math.max(1, Number(/\*(\d+)\s*\[/.exec(line)?.[1] ?? 1));
     sources.push({ name: `${name}${copies > 1 ? ` x${copies}` : ""} (plays itself from the exhaust pile)`, all: true, damage: (Number(hit[1] ?? hit[2]) + strength) * copies, attack: true });
   }
-  const heldHit = hand.find((card) => /回合结束时[^。]*手牌中[^。]*敌人|end of your turn[^.]*in your hand[^.]*enem/i.test(str(card["resolved_rules_text"]) || str(card["rules_text"])));
+  // A held card whose own clause acts on the enemies at the end of the turn (「如果这张牌在你的手牌中」, as Burn's and Wither's on
+  // us). Not a card that only says what it does once played: a Stampede card held is a Power not played, it does nothing
+  // (LMTA6JC86RCC F17 T7, 0NZBAVFAT3JG F25 T4: refused for it, both died; no card in the game data has such a clause).
+  const heldHit = hand.find((card) => /回合结束时[^。]*这张牌在你的手牌中[^。]*敌人|end of your turn[^.]*this card is in your hand[^.]*enem/i.test(str(card["resolved_rules_text"]) || str(card["rules_text"])));
   if (heldHit) return { sources, refuse: `${str(heldHit["name"], str(heldHit["card_id"]))} in hand acts on the enemies at the end of the turn` };
   const other = midTurnRisks(state, knowledge).endOfTurn.filter((name) => !handled.has(name));
   if (other.length > 0) return { sources, refuse: `hitting the enemies at the end of the turn: ${other.join(", ")}` };
@@ -419,30 +599,54 @@ function endOfTurnHits(
 const ON_OWN_HP_LOSS = /失去生命时[^。]*敌人|lose hp[^.]*enem/i;
 
 /**
+ * When a relic's or power's random effect fires, from its text: `play` (on a card we play: Mummified Hand, Serpent Form,
+ * Calamity; `cardType` when it names one: 「能力牌」 Power, 「攻击牌」 Attack, 「技能牌」 Skill), `start` (only at a turn's start:
+ * Aggression, Crossbow, Countdown), or `other` (the end of the turn, an exhaust, an HP loss, a draw, a discard, ...).
+ */
+export function chanceTrigger(text: string): { when: "play" | "start" | "other"; cardType?: "Power" | "Attack" | "Skill" } {
+  const clean = text.replace(/\[[^\]]*\]/g, "");
+  const first = clean.split(/[，,。]/)[0] ?? "";
+  if (/回合结束|end of/i.test(clean)) return { when: "other" };
+  if (/^(?:在)?(?:你的|每)?(?:一个)?回合开始时|^at the start of (?:your|each) turn/i.test(first)) return { when: "start" };
+  if (/打出|play/i.test(first) && !/消耗|失去|受到|格挡|抽|丢弃|exhaust|lose|damage|block|draw|discard/i.test(first)) {
+    const cardType = /能力牌|\bpower\b/i.test(first) ? "Power" : /攻击牌|\battack\b/i.test(first) ? "Attack" : /技能牌|\bskill\b/i.test(first) ? "Skill" : undefined;
+    return cardType ? { when: "play", cardType } : { when: "play" };
+  }
+  return { when: "other" };
+}
+
+/**
  * Why the held cards' end-of-turn damage cannot make the death certain on this board (null: it can): an amount the text
- * does not give; a power hitting the enemies when that damage gets past our block (Inferno); a relic or power acting by
- * chance (midTurnRisks). Tungsten Rod and Beating Remnant (ownLoss), retaliation, poison and what hits the enemies at the
- * end of the turn (endOfTurnHits) are counted for every verdict.
+ * does not give; a relic or power acting by chance between the end of the turn and that death (midTurnRisks.chance, less
+ * what endOfTurnHits bounds: Parrying Shield, Forgotten Soul, Stampede; less what fires only at a turn's start, after that
+ * death, and what fires only on a card we play when no card that sets it off can be played and no potion drunk (the
+ * cards' types from the game data; one not known sets it off): BG4W9DSX99DA F17 T6, Aggression with two Beckons;
+ * G1Z0X3WBH4XQ F48 T9, Mummified Hand with nothing playable; L34T7HND7EL8 F48 T7, Mummified Hand (a Power played) with
+ * only Attacks to play: each refused, each died). Tungsten Rod and
+ * Beating Remnant (ownLoss), retaliation, poison and what hits the enemies at the end of the turn (endOfTurnHits: Inferno's
+ * sweep on the held cards' losses with it) are counted for every verdict.
  */
 function heldGuard(
   state: GameState,
   held: { damage: number; loss: number; inexact: string[] },
-  block: number,
-  endBlock: number,
-  knowledge: Pick<Knowledge, "power" | "relic"> | undefined,
+  knowledge: (Pick<Knowledge, "power" | "relic"> & Partial<Pick<Knowledge, "card">>) | undefined,
+  act: { cards: Record<string, unknown>[]; potions: number },
 ): string | null {
   if (held.inexact.length > 0) return `${held.inexact.join(", ")}: the end-of-turn amount is not given`;
-  const combat = asRecord(state.raw["combat"]);
-  const player = asRecord(combat["player"]);
-  const powers = asArray(player["powers"]).map(asRecord);
-  if (held.loss > 0 || held.damage > block + endBlock) {
-    const onLoss = powers.find((power) => str(power["power_id"]) === "INFERNO_POWER" || ON_OWN_HP_LOSS.test(knowledge?.power(str(power["power_id"]))?.description ?? ""));
-    if (onLoss) return `${str(onLoss["power_id"])} hits the enemies when the held cards take HP on our turn`;
-  }
-  // What hits the enemies at the end of the turn (and poison) is judged for every verdict (endOfTurnHits); anything else
-  // acting by chance this turn is not certain here.
-  const parrying = asArray(asRecord(state.raw["run"])["relics"]).map(asRecord).filter((relic) => str(relic["relic_id"]) === "PARRYING_SHIELD").map((relic) => `${str(relic["name"], "PARRYING_SHIELD")} (relic)`);
-  const chance = midTurnRisks(state, knowledge).chance.filter((name) => !parrying.includes(name));
+  const risks = midTurnRisks(state, knowledge);
+  const bounded = new Set(["PARRYING_SHIELD", "FORGOTTEN_SOUL", "STAMPEDE_POWER"]);
+  const setsOff = (cardType: string | undefined) =>
+    act.potions > 0 || act.cards.some((card) => {
+      if (!cardType || !knowledge?.card) return true;
+      const info = knowledge.card(str(card["card_id"]));
+      return !info || info.type === cardType;
+    });
+  const chance = risks.chance.filter((name) => {
+    const entry = risks.chanceOf[name];
+    if (entry && bounded.has(entry.id)) return false;
+    const trigger = chanceTrigger(entry?.text ?? "");
+    return !(trigger.when === "start" || (trigger.when === "play" && !setsOff(trigger.cardType)));
+  });
   if (chance.length > 0) return `acting by chance: ${chance.join(", ")}`;
   return null;
 }
@@ -560,7 +764,6 @@ function specialPhase(living: Record<string, unknown>[], names: string[]): { bla
   if (others.length > 0) return { refuse: `${name}'s blast with other enemies alive (${others.join(", ")}): not a logged board` };
   return { blast: { name, damage: blast.damage } };
 }
-const SAVING_POWERS = ["BUFFER_POWER", "INTANGIBLE_POWER"];
 const END_BLOCK_POWERS = ["PLATING_POWER", "PLATED_ARMOR_POWER", "METALLICIZE_POWER"];
 const ORICHALCUM_BLOCK = 6;
 /** Card text that draws (the game's Chinese text, or English). */
@@ -668,6 +871,17 @@ function startHitsBefore(
     const id = str(power["power_id"]);
     if (id === "INFERNO_POWER") continue;
     const text = knowledge?.power(id)?.description ?? "";
+    // Juggernaut (「每当你获得格挡时，对随机敌人造成N点伤害」, its amount): a random enemy hit for each block the opening may give
+    // before the loss (startBlockGains: Crimson Mantle's, Sai's, ...; Z3DFG85QDRCD F48 T8, Juggernaut 8 and the Mantle's 1 at
+    // 1 HP against the 311-HP Test Subject: refused, died). Its hits at the end of our turn are endOfTurnHits'.
+    if (id === "JUGGERNAUT_POWER") {
+      const gains = startBlockGains(state, knowledge, nextTurn);
+      if (gains > 0) {
+        single += num(power["amount"]) * gains;
+        from.push(`${str(power["name"], id)} ${num(power["amount"])}${gains > 1 ? `x${gains}` : ""} (block at the turn's start)`);
+      }
+      continue;
+    }
     // Hitting the enemies whenever something happens that the turn's opening may do before the loss: a draw (Fire
     // Breathing-like; Hellraiser below), block gained (Juggernaut: Crimson Mantle's block), a star gained (Black Hole), an HP
     // loss. A play triggers it only through Hellraiser's Strikes (checked with them below); retaliation is counted above.
@@ -746,6 +960,32 @@ function startHitsBefore(
   return { all, single, from, refuse: null };
 }
 
+/** A start-of-turn clause that gives block (Sai's 「在你的回合开始时，获得{Block}点格挡」; not Plating's 「覆甲会在你的回合开始时减少1层」). */
+const START_BLOCK = /(?:回合开始时)[^。]*(?:获得)[^。]*格挡|at the start of (?:your|each) turn[^.]*gain[^.]*block/i;
+
+/**
+ * The most block gains the next turn's opening may give before our loss there (each a Juggernaut hit): Crimson Mantle,
+ * Sai (a copy each), Horn Cleat on turn 2, Captain's Wheel on turn 3, and any other relic or power whose start-of-turn text
+ * gives block, taken as giving it.
+ */
+function startBlockGains(state: GameState, knowledge: Pick<Knowledge, "power" | "relic"> | undefined, nextTurn: number | null): number {
+  const player = asRecord(asRecord(state.raw["combat"])["player"]);
+  let gains = 0;
+  for (const relic of asArray(asRecord(state.raw["run"])["relics"]).map(asRecord)) {
+    const id = str(relic["relic_id"]);
+    const text = str(relic["description"]) || (knowledge?.relic(id)?.description ?? "");
+    if (id === "HORN_CLEAT") gains += nextTurn === null || nextTurn === HORN_CLEAT_TURN ? 1 : 0;
+    else if (id === "CAPTAINS_WHEEL") gains += nextTurn === null || nextTurn === CAPTAINS_WHEEL_TURN ? 1 : 0;
+    else if (START_BLOCK.test(text)) gains += 1;
+  }
+  for (const power of asArray(player["powers"]).map(asRecord)) {
+    const id = str(power["power_id"]);
+    const text = knowledge?.power(id)?.description ?? "";
+    if (id === "CRIMSON_MANTLE_POWER" || (power["is_debuff"] !== true && START_BLOCK.test(text))) gains += 1;
+  }
+  return gains;
+}
+
 /**
  * Why our own HP loss at the next turn's start cannot make the death certain on this board (null: it can): anything of
  * ours that acts at the turn's start and heals or shields us first (a relic's or power's text), and Inferno's own sweep
@@ -786,7 +1026,7 @@ export const ANY_DRAW_BUDGET_MS = 2_000;
 function anyDrawJudged(
   state: GameState,
   context: Pick<JudgeContext, "drawBound" | "knowledge">,
-  board: { hp: number; hand: Record<string, unknown>[]; etherealHeld: number },
+  board: { hp: number; hand: Record<string, unknown>[]; etherealHeld: number; endTotal?: number; heldLossEvents?: number },
 ): { certain: boolean; why: string; chance: string | null } {
   let bound: DrawBound | null;
   try {
@@ -812,7 +1052,9 @@ function anyDrawJudged(
   if (!superset.allDie) return no(`a line lives on the superset board (${size}): some draw may save us`);
   // What the superset board does not simulate exactly beyond the cards: unmodelled relics and powers acting mid-turn or by
   // chance, what hits the enemies at the end of the turn (an attacker it kills does not attack), an enemy's poison.
-  const ends = endOfTurnHits(state, board.hand, board.etherealHeld, context.knowledge);
+  const ends = endOfTurnHits(state, board.hand, board.etherealHeld, context.knowledge, {
+    ...(board.endTotal !== undefined ? { endTotal: board.endTotal } : {}), ...(board.heldLossEvents !== undefined ? { heldLossEvents: board.heldLossEvents } : {}),
+  });
   const poisoned = asArray(asRecord(state.raw["combat"])["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false && powerAmount(enemy, "POISON_POWER") > 0)
@@ -879,7 +1121,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // 11 of 11 logged turns where the order showed, e.g. ZANMLV9UU31K F42 T3, Burn 8 against Plating 5 took 3), and their HP
   // loss does not. Neither the mod's flag nor the plain count sees them (TMNFVW6DRQ20 F48 T8: 15 HP + 28 block against the
   // Aeonglass's 19x2 and a held Wither+'s 9, the mod did not flag it, it died with 5 retries left).
-  const held = heldEndOfTurn(hand);
+  const held = heldEndOfTurn(hand, etherealHeld);
   // Orichalcum (「如果你在回合结束时没有格挡，获得6点格挡」): counted whenever the turn ends with no block from the cards. Plating up
   // does not stop it (A8ENYFR4ZWKG F48 T7: 0 block, Plating 9, 36 in three hits took 21, 15 came; 842N6N604DVX F31 T3:
   // Plating 3, 19 took 10, 9 came; Y3XT9EBS7U8B F45 T4: Plating 4, 18 took 8, 10 came; each less Inferno's 1 at the next
@@ -888,13 +1130,27 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // Block counted that does not come only makes fewer deaths certain (Dai: certain only); the rule was "no block at all
   // with the end-of-turn block", which could call a death certain that Orichalcum's 6 would have saved.
   if (relics.has("ORICHALCUM") && (block <= 0 || held.damage >= block)) endBlock += ORICHALCUM_BLOCK;
+  // Ripple Basin (「如果你在本回合中没有打出过攻击牌，则获得{Block}点格挡」): 4 for each copy at the end of a turn with no Attack
+  // played (the mod's attacks_played_this_turn; absent, taken as none: the more block). The logged end_turn transitions
+  // holding it with no Attack played and nothing else in the loss (2026-10-04): 19 took exactly 4, with Dexterity 1, 3 and 5
+  // (3) and under Frail (2) as well; 3 took none; none more (passive-pieces RIPPLE_BASIN_BLOCK, the planner's number). Before,
+  // refused (ops 2026-10-04, X80AD9MHAKZW F42 T6, the Soul Nexus, A9: 1 HP + 25 block + Plating 4 + its 4 against 46, died
+  // with 3 retries left; its T4 and T5, 37 + Plating 6 against 46 and 1 + 12 + Plating 5 against 19, lived on its 4).
+  const basins = asArray(run["relics"]).filter((relic) => str(asRecord(relic)["relic_id"]) === "RIPPLE_BASIN").length;
+  if (basins > 0 && num(player["attacks_played_this_turn"]) === 0) endBlock += RIPPLE_BASIN_BLOCK * basins;
   const regen = powerAmount(player, "REGEN_POWER");
-  // Tungsten Rod and Beating Remnant in our count (ownLoss); without them the count as before.
+  // Tungsten Rod, Beating Remnant, Buffer and Intangible in our count (ownLoss, the last two at the most they may save);
+  // without them the count as before.
   const rod = relics.has("TUNGSTEN_ROD");
   const remnant = relics.has("BEATING_REMNANT");
-  const exactly = rod || remnant;
+  const buffer = Math.max(0, powerAmount(player, "BUFFER_POWER"));
+  const intangible = powerAmount(player, "INTANGIBLE_POWER") > 0;
+  const exactly = rod || remnant || buffer > 0 || intangible;
   const lossWith = (hits: number[], withHeld: boolean) =>
-    ownLoss({ hits, heldDamages: withHeld ? held.damages : [], heldLosses: withHeld ? held.losses : [], block, endBlock, hp, rod, remnant, lostSoFar: context.lostSoFar, lostSoFarAtMost: context.lostSoFarAtMost });
+    ownLoss({
+      hits, heldDamages: withHeld ? held.damages : [], heldLosses: withHeld ? held.losses : [], block, endBlock, hp, rod, remnant, lostSoFar: context.lostSoFar, lostSoFarAtMost: context.lostSoFarAtMost,
+      ...(buffer > 0 ? { buffer } : {}), ...(intangible ? { intangible } : {}),
+    });
   const allHits = hitsOf.flat();
   const plainOwn = exactly ? lossWith(allHits, false) : null;
   const heldOwn = exactly ? lossWith(allHits, true) : null;
@@ -911,13 +1167,24 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // Our own HP loss at the start of the next turn (Inferno's 1, Crimson Mantle's cost: the planner's startTurnHpLoss): the
   // enemy turn leaves us at it or under, and the next turn opens with our death (610BBERH4SPP F33 T3: 1 HP + 12 block
   // against the Crusher's 5x2, Inferno up; the planner saw every line die, the mod's flag and our count did not, and the
-  // run ended at T4's start with 6 attempts unused). Not counted with Tungsten Rod or Beating Remnant (each changes it).
-  // Inferno loses 1 for each copy up (infernoCopies; C4F14F3XPN0N F33 attempt 5: two copies, 2 HP left, both taken).
+  // run ended at T4's start with 6 attempts unused). Inferno loses 1 for each copy up (infernoCopies; C4F14F3XPN0N F33
+  // attempt 5: two copies, 2 HP left, both taken). With Tungsten Rod each part 1 less, as every loss; with Beating Remnant
+  // the end of this turn on its capped count (ownLoss) and the start's loss in full (the next turn's own cap of 20 is more
+  // than any of it; VC4LRL945UEF F23 T2: 17 HP against 8x2, Inferno up, 1 left, its 1 at T3's start took it, refused for the
+  // relic before). Not with Buffer or Intangible (either may stop it), nor with the HP lost so far not known.
   const infernoLoss = infernoCopies(state, powerAmount(player, "INFERNO_POWER"));
-  const startLoss = infernoLoss + mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"));
-  const lossAfterHeld = Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
-  const byStart = !bySandpit && !plainDies && !heldDies && !exactly && startLoss > 0 && hp - lossAfterHeld <= startLoss;
+  const startParts = [infernoLoss, mantleHpCost(powerAmount(player, "CRIMSON_MANTLE_POWER"))].filter((loss) => loss > 0);
+  const startLoss = startParts.reduce((sum, loss) => sum + (rod ? Math.max(0, loss - 1) : loss), 0);
+  const lossAfterHeld = heldOwn ? heldOwn.loss - regen : Math.max(0, incoming + held.damage - block - endBlock) + held.loss - regen;
+  const byStart = !bySandpit && !plainDies && !heldDies && buffer <= 0 && !intangible && !countUnknown && startLoss > 0 && hp - lossAfterHeld <= startLoss;
   const heldNote = held.damage + held.loss > 0 ? { held: { damage: held.damage, loss: held.loss, from: held.from } } : {};
+  // The held cards' losses that may take HP on our turn (Inferno's sweep on each: endOfTurnHits): every HP loss, and every
+  // damage when their damage may get past the block.
+  const heldLossEvents = held.items.filter((item) => !item.blocked).length + (held.damage > block + endBlock ? held.items.filter((item) => item.blocked).length : 0);
+  const playable = hand.filter((card) => card["playable"] === true);
+  // The cards Enthralled locks (card-model afterPlayFirst) are played once it is: their draws veto as a playable card's.
+  const reachable = [...playable, ...hand.filter((card) => card["playable"] !== true && afterPlayFirst(card))];
+  const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
   // The revives played out (docs/sl.md §2.7), once worked out: on the verdict.
   let reviveRecord: DeathVerdict["revive"] | undefined;
   const verdict = (certain: boolean, tier: JudgeTier | null, reason: string): DeathVerdict => ({
@@ -944,16 +1211,22 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   let reviveNote = context.reloadOnRevive === true && context.revives.length > 0 ? ` (SL_RELOAD_ON_REVIVE: ${reviveNames} not counted)` : "";
   const reviveVeto = (hits: number[][], after: string): DeathVerdict | null => {
     if (context.revives.length === 0) return null;
-    // Tungsten Rod's or Beating Remnant's own count lives without any revive: that count's veto says so below.
-    if ((rod || remnant) && !plainDies && !heldDies && !bySandpit) return null;
+    // Tungsten Rod's, Beating Remnant's, Buffer's or Intangible's own count lives without any revive: that count's veto says
+    // so below.
+    if (exactly && !plainDies && !heldDies && !bySandpit) return null;
     const unknownHp = reviveList.filter((revive) => revive.hp === null).map((revive) => revive.source);
+    // Beating Remnant: the cap this turn may still take, at its lowest (ownLoss's HP lost so far, exactly or at most).
+    const lost = context.lostSoFar ?? context.lostSoFarAtMost;
     const refuse =
       bySandpit ? "the Sandpit eats us whatever the HP, and a revive against it is not logged"
-      : rod ? "Tungsten Rod's cut with a revive in the turn is not judged"
-      : remnant ? `Beating Remnant's cap (${BEATING_REMNANT_CAP} a turn) with a revive in the turn is not logged`
+      : buffer > 0 || intangible ? `${[buffer > 0 ? "Buffer" : "", intangible ? "Intangible" : ""].filter(Boolean).join(" and ")} with a revive in the turn is not judged (never logged; which of them the game spends first is not known)`
+      : remnant && lost === undefined ? `Beating Remnant's cap (${BEATING_REMNANT_CAP} a turn) with the HP lost so far this turn not known exactly`
       : unknownHp.length > 0 ? `${unknownHp.join(", ")}: the HP it brings us back to is not known`
       : null;
-    const outcome = refuse ? null : reviveOutcome({ hp, maxHp: num(player["max_hp"], state.run?.max_hp ?? 0), block: block + endBlock, held: held.items, regen, enemies: hits, start: startLosses, revives: reviveList.map((revive) => ({ source: revive.source, hp: revive.hp! })) });
+    const outcome = refuse ? null : reviveOutcome({
+      hp, maxHp: num(player["max_hp"], state.run?.max_hp ?? 0), block: block + endBlock, held: held.items, regen, enemies: hits, start: startLosses, revives: reviveList.map((revive) => ({ source: revive.source, hp: revive.hp! })),
+      ...(rod ? { rod } : {}), ...(remnant ? { capLeft: Math.max(0, BEATING_REMNANT_CAP - lost!) } : {}),
+    });
     if (outcome && !("refuse" in outcome)) reviveRecord = { held: [...context.revives], used: outcome.used, backAt: outcome.backAt, hpLeft: outcome.hp, saved: outcome.saved };
     if (context.reloadOnRevive === true) return null;
     if (refuse) return verdict(false, null, `a revive is left (${reviveNames}): ${refuse}`);
@@ -971,13 +1244,13 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   };
   const allSaved = reviveVeto(hitsOf, "");
   if (allSaved) return allSaved;
-  const saving = SAVING_POWERS.filter((id) => powerAmount(player, id) > 0);
-  if (saving.length > 0) return verdict(false, null, `${saving.join(", ")} up`);
-  if (relics.has("RIPPLE_BASIN") && num(player["attacks_played_this_turn"]) === 0) return verdict(false, null, "Ripple Basin (no attack played): its block is not counted here");
   if (special && "refuse" in special) return verdict(false, null, special.refuse);
   const heldText = `held ${held.from.join(", ")}: ${held.damage} damage${held.loss > 0 ? ` + ${held.loss} HP loss` : ""}`;
   const lostText = context.lostSoFar !== undefined ? `, ${context.lostSoFar} lost so far` : context.lostSoFarAtMost !== undefined ? `, at most ${context.lostSoFarAtMost} lost so far (the turn's start took HP)` : "";
-  const relicText = [rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${lostText}` : ""].filter(Boolean).join("; ");
+  const relicText = [
+    rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${lostText}` : "",
+    buffer > 0 ? `Buffer ${buffer}: the ${buffer > 1 ? `${buffer} largest losses` : "largest loss"} taken as prevented` : "", intangible ? "Intangible: every loss taken as 1" : "",
+  ].filter(Boolean).join("; ");
   // (The Sandpit eats us whatever the HP: our count need not be exact for it; Tungsten Rod and Beating Remnant are refused there.)
   if (countUnknown && !bySandpit) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
   if (!plainDies && !byHeld && !byStart && !bySandpit) {
@@ -985,10 +1258,10 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     return verdict(false, null, `own count survives: ${incoming} incoming - ${block} block - ${endBlock} end-of-turn block - ${regen} Regen < ${hp} HP${held.damage + held.loss > 0 ? ` (with ${heldText})` : ""}`);
   }
   if (byHeld) {
-    const guard = heldGuard(state, held, block, endBlock, context.knowledge);
+    const guard = heldGuard(state, held, context.knowledge, { cards: reachable, potions: drinkable.length });
     if (guard) return verdict(false, null, `only the held cards make it lethal (${heldText}), and ${guard}`);
   }
-  const startText = `then ${startLoss} HP lost at the next turn's start (${[infernoLoss > 1 ? `Inferno x${infernoLoss}` : infernoLoss > 0 ? "Inferno" : "", powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? "Crimson Mantle" : ""].filter(Boolean).join(" + ")})`;
+  const startText = `then ${startLoss} HP lost at the next turn's start (${[infernoLoss > 1 ? `Inferno x${infernoLoss}` : infernoLoss > 0 ? "Inferno" : "", powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? "Crimson Mantle" : ""].filter(Boolean).join(" + ")}${rod ? ", each 1 less for Tungsten Rod" : ""})`;
   if (byStart) {
     // Lived through, the Giant's blast ends the fight (53 of 53 logged: the rewards came right after it): no next turn.
     if (blast) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), but the fight ends when we live through ${blast.name}'s blast (${blast.damage}): no next turn`);
@@ -998,7 +1271,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // What hits the enemies after we end the turn and before they act (Stone Calendar, The Bomb, Parrying Shield, poison):
   // an attacker it may kill does not attack. Certain only if we die even without every enemy it may kill (and, when one
   // of them is not a minion, without the minions too: they may leave with it).
-  const ends = endOfTurnHits(state, hand, etherealHeld, context.knowledge);
+  const ends = endOfTurnHits(state, hand, etherealHeld, context.knowledge, { endTotal: block + endBlock, heldLossEvents });
   const sandpitText = pit ? `${pit.name}'s Sandpit at ${pit.count}: the enemy turn takes it to 0 and eats us whatever the HP` : "";
   if (ends.refuse) return verdict(false, null, `the enemies may be hit before they act: ${ends.refuse}`);
   const powersOf = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).map(asRecord);
@@ -1013,6 +1286,20 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const poison = powersOf(enemy).filter((power) => str(power["power_id"]) === "POISON_POWER").reduce((sum, power) => sum + num(power["amount"]), 0);
     return { hit, poison, hp: num(enemy["current_hp"]) };
   });
+  // A hit before they act may stun an enemy without killing it: Shriek / Plow at their threshold (the Terror Eel at half HP;
+  // turn-solver `shriek`), a counter the learned stun-on-strip rules see go (Flutter, Slippery, Curl Up on any hit; Artifact
+  // on a debuff, which only Stampede's Attack may bring: turn-solver STRIP_COUNTERS). Its move is then lost: its hits taken
+  // out as a death's, without changing the others' (an ally's death does that, below).
+  const stunned = living
+    .map((enemy, i) => {
+      const { hit, hp: hpLeft } = before[i]!;
+      if (hit <= 0) return null;
+      const threshold = Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER"));
+      if (threshold > 0 && hpLeft > threshold && hpLeft - hit <= threshold) return { i, why: `its stun at ${threshold} HP` };
+      const counter = ["FLUTTER_POWER", "SLIPPERY_POWER", "CURL_UP_POWER", ...(ends.sources.some((source) => source.debuff) ? ["ARTIFACT_POWER"] : [])].find((id) => powerAmount(enemy, id) > 0);
+      return counter ? { i, why: `its ${counter} going may stun it` } : null;
+    })
+    .filter((entry): entry is { i: number; why: string } => entry !== null);
   const mayDie = living
     .map((enemy, i) => {
       const { hit, poison, hp: hpLeft } = before[i]!;
@@ -1063,16 +1350,12 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const hidden = intentNotShown(state);
     const retaliationNow = powerAmount(player, "THORNS_POWER") + powerAmount(player, "FLAME_BARRIER_POWER");
     const worst = before[pit!.at]!.hit + before[pit!.at]!.poison + retaliationNow * hitsOf[pit!.at]!.length;
-    const onLoss = held.damage + held.loss > 0
-      ? asArray(player["powers"]).map(asRecord).find((power) => str(power["power_id"]) === "INFERNO_POWER" || ON_OWN_HP_LOSS.test(context.knowledge?.power(str(power["power_id"]))?.description ?? ""))
-      : undefined;
     const guard =
       others.length > 0 ? `other enemies are alive (${others.join(", ")}): not a logged board`
       // How the Sandpit kills (no HP left to see) is not in the logs: an HP loss cut or capped might live through it.
-      : exactly ? `${[rod ? "Tungsten Rod" : "", remnant ? "Beating Remnant" : ""].filter(Boolean).join(" and ")} may cut what it takes (never logged with the Sandpit)`
+      : exactly ? `${[rod ? "Tungsten Rod" : "", remnant ? "Beating Remnant" : "", buffer > 0 ? "Buffer" : "", intangible ? "Intangible" : ""].filter(Boolean).join(" and ")} may cut what it takes (never logged with the Sandpit)`
       : hidden ? hidden
       : worst >= num(insatiable["current_hp"]) ? `${pit!.name} (${num(insatiable["current_hp"])} HP) may die before its turn: up to ${worst} from the end of the turn, its poison and our retaliation`
-      : onLoss ? `${str(onLoss["name"], str(onLoss["power_id"]))} hits the enemies when the held cards take HP on our turn`
       : null;
     if (guard) return verdict(false, null, `only the Sandpit makes it lethal (${sandpitText}), but ${guard}`);
   }
@@ -1086,21 +1369,31 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     return hitsOf[i]!.slice(0, Math.ceil(lowest / retaliation));
   };
   const cut = living.map((_, i) => i).filter((i) => landing(i).length < hitsOf[i]!.length);
-  if (mayDie.length > 0 || cut.length > 0) {
+  const stunnedOnly = stunned.filter((entry) => !mayDie.some((dead) => dead.i === entry.i));
+  if (mayDie.length > 0 || cut.length > 0 || stunnedOnly.length > 0) {
     const minion = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER");
     const leaderMayDie = mayDie.some((entry) => !minion(entry.enemy));
-    const gone = new Set(mayDie.map((entry) => entry.i));
+    const gone = new Set([...mayDie.map((entry) => entry.i), ...stunnedOnly.map((entry) => entry.i)]);
     if (leaderMayDie) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
     if (cut.some((i) => !minion(living[i]!))) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
-    const keptByEnemy = living.map((_, i) => i).filter((i) => !gone.has(i)).map((i) => landing(i));
+    // An ally's death may change a survivor's move before it attacks (its learned death move, MECH_DEATH_MOVE: the Queen's
+    // Enrage once the Amalgam is dead; Ravenous; Surrounded's back attack gone with its partner: D4JGCNEL40VL F33 T5, the
+    // Rocket killed by Howl from Beyond at the end of the turn, the Crusher's shown 21 landed as 20, Crab Rage's +6 in it,
+    // and we lived at 1 where this judge said certain). So with any enemy that may die before the enemy turn ends, an
+    // enemy's hits count only when no other one may: its own, up to its own death.
+    const dying = new Set([...mayDie.map((entry) => entry.i), ...cut]);
+    const changed = living.map((_, i) => i).filter((i) => !gone.has(i) && hitsOf[i]!.length > 0 && [...dying].some((j) => j !== i));
+    const keptByEnemy = living.map((_, i) => i).filter((i) => !gone.has(i)).map((i) => (changed.includes(i) ? [] : landing(i)));
     const keptHits = keptByEnemy.flat();
     const kept = keptHits.reduce((sum, hit) => sum + hit, 0);
     const keptOwn = exactly ? lossWith(keptHits, true) : null;
-    const keptLoss = Math.max(0, kept + held.damage - block - endBlock) + held.loss - regen;
-    const stillDies = keptOwn ? !keptOwn.unknown && keptOwn.loss - regen >= hp : keptLoss >= hp || (byStart && hp - keptLoss <= startLoss);
+    const keptLoss = keptOwn ? (keptOwn.unknown ? null : keptOwn.loss - regen) : Math.max(0, kept + held.damage - block - endBlock) + held.loss - regen;
+    const stillDies = keptLoss !== null && (keptLoss >= hp || (byStart && hp - keptLoss <= startLoss));
     const who = [
       ...mayDie.map((entry) => `${names[entry.i]} (${entry.why}) may die first`),
+      ...stunnedOnly.map((entry) => `${names[entry.i]} may be stunned first (${entry.why})`),
       ...cut.filter((i) => !gone.has(i)).map((i) => `${names[i]} may die to our retaliation (${retaliation} a hit) after ${landing(i).length} of its ${hitsOf[i]!.length} hits`),
+      ...(changed.length > 0 ? [`an ally's death may change the move of ${changed.map((i) => names[i]).join(", ")} (its hits not counted)`] : []),
     ].join(", ");
     if (!stillDies) return verdict(false, null, `the enemies may be hit before they act: ${who}, and the rest's ${kept} does not kill`);
     // The revives again, on what still lands for certain.
@@ -1108,10 +1401,6 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     if (keptSaved) return keptSaved;
     endNote = `; even if ${who}`;
   }
-  const playable = hand.filter((card) => card["playable"] === true);
-  // The cards Enthralled locks (card-model afterPlayFirst) are played once it is: their draws veto as a playable card's.
-  const reachable = [...playable, ...hand.filter((card) => card["playable"] !== true && afterPlayFirst(card))];
-  const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
   const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
   const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}${reviveNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
@@ -1131,7 +1420,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
       const vetoed = `the planner sees every line die, but ${str(drawing["name"], str(drawing["card_id"]))} draws (unknown cards)`;
       // SL_JUDGE_ANY_DRAW: certain only when the death holds for every draw (anyDrawJudged); absent, the veto as before.
       if (!context.drawBound) return verdict(false, null, vetoed);
-      const any = anyDrawJudged(state, context, { hp, hand, etherealHeld });
+      const any = anyDrawJudged(state, context, { hp, hand, etherealHeld, endTotal: block + endBlock, heldLossEvents });
       if (!any.certain) return verdict(false, null, `${vetoed}; not with any draw: ${any.why}`);
       return verdict(true, "least-loss", `the turn planner: every simulated line dies and ending the turn keeps the most HP; ${lethal}; ${any.why}`);
     }
@@ -1172,6 +1461,8 @@ export interface MidTurnRisks {
   any: string[];
   /** Those acting by chance this turn, its end included (Juggernaut-like powers, Stampede, Parrying Shield, Forgotten Soul). */
   chance: string[];
+  /** For each `chance` name, its id and text (heldGuard reads when it fires: chanceTrigger). */
+  chanceOf: Record<string, { id: string; text: string }>;
   /**
    * Those hitting the enemies at the end of our turn, before they act (Stone Calendar on its turn, Screaming Flagon, The
    * Bomb): an attacker they kill does not attack. Neither the mod's flag nor our count sees them (7DXAW0ZBDFHP F23 T7: 3 HP
@@ -1198,6 +1489,7 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
   const draws: string[] = [];
   const any: string[] = [];
   const chance: string[] = [];
+  const chanceOf: Record<string, { id: string; text: string }> = {};
   const endOfTurn: string[] = [];
   const run = asRecord(state.raw["run"]);
   // A random enemy is no chance with one enemy to hit (randomTargetOnly).
@@ -1208,7 +1500,10 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
     if (!id) continue;
     const text = str(relic["description"]) || (knowledge?.relic(id)?.description ?? "");
     const name = `${str(relic["name"], id)} (relic)`;
-    if (byChance(text) && !NOT_THIS_TURN.test(text) && id !== "KUSARIGAMA") chance.push(name);
+    if (byChance(text) && !NOT_THIS_TURN.test(text) && id !== "KUSARIGAMA") {
+      chance.push(name);
+      chanceOf[name] = { id, text };
+    }
     if (END_OF_TURN_HIT.test(text) && HITS_ENEMIES.test(text)) endOfTurn.push(name);
     if (MODELLED_RELICS.has(id) || !MID_TURN.test(text) || NOT_MID_TURN.test(text)) continue;
     any.push(name);
@@ -1220,7 +1515,10 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
     if (!id) continue;
     const text = knowledge?.power(id)?.description ?? "";
     const name = `${str(power["name"], id)} (power)`;
-    if (byChance(text) && id !== "JUGGERNAUT_POWER" && id !== "HELLRAISER_POWER") chance.push(name);
+    if (byChance(text) && id !== "JUGGERNAUT_POWER" && id !== "HELLRAISER_POWER") {
+      chance.push(name);
+      chanceOf[name] = { id, text };
+    }
     if (END_OF_TURN_HIT.test(text) && HITS_ENEMIES.test(text)) endOfTurn.push(name);
     if (MODELLED_POWERS.has(id)) continue;
     if (!text) {
@@ -1241,10 +1539,13 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
         draws.push(name);
         any.push(name);
       }
-      if (CHANCE.test(text)) chance.push(name);
+      if (CHANCE.test(text)) {
+        chance.push(name);
+        chanceOf[name] = { id, text };
+      }
     }
   }
-  return { draws, any, chance, endOfTurn };
+  return { draws, any, chance, chanceOf, endOfTurn };
 }
 
 /** The enemy intents the game shows (and the solver and the mod count): a living enemy with none, or an unknown kind, is not shown. */
@@ -1281,9 +1582,10 @@ export interface LeastLossNowContext extends Omit<JudgeContext, "label" | "draws
 /**
  * SL_RELOAD_EARLY (Dai 2026-10-02: certain death only, never a prediction): the least-loss verdict at the decision that
  * finds it, before its line is played. Certain only when every one of these holds; otherwise end_turn judges, unchanged:
- * 1. judgeEndTurn is certain on this board with the least-loss label: the mod's end_turn_will_kill_player, our own count,
- *    no revive, no Buffer or Intangible, no Ripple Basin without an attack played, no special phase, and the least-loss
- *    tier (every simulated line dies; no unmodelled potion) with its draw veto (lifted only by exactly known draws).
+ * 1. judgeEndTurn is certain on this board with the least-loss label: the mod's end_turn_will_kill_player, our own count
+ *    (Ripple Basin's 4 when no Attack has been played yet, Buffer and Intangible at the most they save: a line that plays
+ *    an Attack only loses that block), no revive that may save us, no special phase, and the least-loss tier (every
+ *    simulated line dies; no unmodelled potion) with its draw veto (lifted only by exactly known draws).
  * 2. Nothing in the verdict left to chance (LeastLossFacts.chance): no random potion; no line drawing a card that is not
  *    exactly known; no playable card (hand, modelled potion, known draw) with a random target, a random exhaust, a random
  *    card made or a top card played, nor an unmodelled one; no Juggernaut, Kusarigama or Hellraiser random hit. A random
@@ -1320,7 +1622,7 @@ export function judgeLeastLossNow(state: GameState, context: LeastLossNowContext
   if (unknownDraws && context.drawBound) {
     const hand = asArray(asRecord(state.raw["combat"])["hand"]).map(asRecord);
     const etherealHeld = hand.filter((card) => (context.ethereal ?? ((held) => heldCardEthereal(held)))(card)).length;
-    anyDraw = anyDrawJudged(state, { drawBound: context.drawBound, ...(context.knowledge ? { knowledge: context.knowledge } : {}) }, { hp: verdict.hp, hand, etherealHeld });
+    anyDraw = anyDrawJudged(state, { drawBound: context.drawBound, ...(context.knowledge ? { knowledge: context.knowledge } : {}) }, { hp: verdict.hp, hand, etherealHeld, endTotal: verdict.block + verdict.endBlock });
   }
   const chance = anyDraw?.certain ? anyDraw.chance : facts.chance;
   if (chance !== null) return notYet(`chance in the verdict (${chance})`);

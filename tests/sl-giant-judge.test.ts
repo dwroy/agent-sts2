@@ -97,10 +97,11 @@ describe("the blast turn, other logged boards", () => {
   });
 
   it("the boards flagged lethal that we lived through are not certain under any label: Ripple Basin, a Fairy, a Lizard Tail", () => {
-    // 8V0HD9Y207WY T13: 30 + 20 against 50; Ripple Basin's 4 block came (no attack played), won at 4.
+    // 8V0HD9Y207WY T13: 30 + 20 against 50; Ripple Basin's 4 block came (no attack played), won at 4: counted, our count
+    // leaves exactly that 4.
     // LSWUK6D2EV89 T15: 21 + 5 against 38, the Fairy revived us. MZCG9T5G6TBZ T8: 17 + 10 against 30, the Lizard Tail did.
     for (const [key, reason] of [
-      ["8v0h_t13_end", "Ripple Basin (no attack played): its block is not counted here"],
+      ["8v0h_t13_end", "own count survives: 50 incoming - 20 block - 4 end-of-turn block - 0 Regen < 30 HP"],
       // The revive played out (docs/sl.md §2.7): the blast is the turn's one hit, the revive's HP is what is left.
       ["lswu_t15_end", "a revive is left (FAIRY_IN_A_BOTTLE): back at 24 HP, the rest of the turn leaves 24"],
       ["mzcg_t8_end", "a revive is left (LIZARD_TAIL): back at 40 HP, the rest of the turn leaves 40"],
@@ -118,15 +119,19 @@ describe("the blast turn, other logged boards", () => {
     expect(judge(forced, LEAST_LOSS_LABEL).reason).toBe("own count survives: 36 incoming - 18 block - 0 end-of-turn block - 0 Regen < 23 HP");
   });
 
-  it("1VX145UJM8RZ T12: Stampede with an Attack in hand is still refused (it plays one at the end of the turn)", () => {
-    expect(judge(board("1vx1_t12_end"), LEAST_LOSS_LABEL).reason).toBe("the enemies may be hit before they act: 惊逃 plays an Attack in hand at a random enemy at the end of the turn");
+  it("1VX145UJM8RZ T12: Stampede's Attack is bounded (Headbutt's 9 at most), the husk cannot die to it: certain (it died)", () => {
+    expect(judge(board("1vx1_t12_end"), LEAST_LOSS_LABEL)).toMatchObject({ certain: true, tier: "least-loss" });
   });
 
-  it("the common vetoes still hold on the blast turn: Buffer, Intangible, a revive", () => {
-    for (const id of ["BUFFER_POWER", "INTANGIBLE_POWER"]) {
+  it("the common vetoes still hold on the blast turn: Buffer and Intangible at the most they save, a revive", () => {
+    // The blast is one hit: Buffer 1 takes all of it, Intangible leaves 1.
+    for (const [id, reason] of [
+      ["BUFFER_POWER", "own count survives: 0 HP lost (Buffer 1: the largest loss taken as prevented) - 0 Regen < 33 HP"],
+      ["INTANGIBLE_POWER", "own count survives: 1 HP lost (Intangible: every loss taken as 1) - 0 Regen < 33 HP"],
+    ] as const) {
       const raw = board("qll4_t13_end");
       (player(raw)["powers"] as Raw[]).push({ index: 9, power_id: id, name: id, amount: 1, is_debuff: false });
-      expect(judge(raw, LEAST_LOSS_LABEL)).toMatchObject({ certain: false, reason: `${id} up` });
+      expect(judge(raw, LEAST_LOSS_LABEL)).toMatchObject({ certain: false, reason });
     }
     expect(judgeEndTurn(parseGameState(board("qll4_t13_end")), { label: LEAST_LOSS_LABEL, revives: ["LIZARD_TAIL"], knowledge }).reason).toBe("a revive is left (LIZARD_TAIL): back at 43 HP, the rest of the turn leaves 43");
   });

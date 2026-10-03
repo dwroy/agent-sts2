@@ -255,18 +255,24 @@ describe("the judge counts held cards' end-of-turn damage (TMNFVW6DRQ20 F48 T8, 
     (((thorns["combat"] as Raw)["enemies"] as Raw[])[0]!)["current_hp"] = 3;
     expect(judge(thorns)).toMatchObject({ certain: false, ownCountDies: true, reason: "the enemies may be hit before they act: 永世沙漏 may die to our retaliation (3 a hit) after 1 of its 2 hits, and the rest's 19 does not kill" });
     // Tungsten Rod: the Wither's 9 and the first 19 into the 28 block, the second 19 through less 1: 18 lost, 15 HP's death;
-    // at 19 HP not.
+    // at 19 HP 1 is left, and the next turn's start takes it: the Mantle's 2 less 1 (Inferno's 1 less 1 is none); at 20 not.
     const rod = tmnf();
     ((rod["run"] as Raw)["relics"] as Raw[]).push({ index: 99, relic_id: "TUNGSTEN_ROD", name: "钨合金棍", description: "你每次失去生命时，减少失去的生命值[blue]1[/blue]点。" });
     expect(judge(rod)).toMatchObject({ certain: true, reason: expect.stringMatching(/\(Tungsten Rod: each HP loss 1 less\)$/) });
     (((rod["combat"] as Raw)["player"]) as Raw)["current_hp"] = 18;
     expect(judge(rod).certain).toBe(true);
     (((rod["combat"] as Raw)["player"]) as Raw)["current_hp"] = 19;
+    expect(judge(rod)).toMatchObject({ certain: true, startLoss: 1, reason: expect.stringMatching(/then 1 HP lost at the next turn's start \(Inferno \+ Crimson Mantle, each 1 less for Tungsten Rod\)$/) });
+    (((rod["combat"] as Raw)["player"]) as Raw)["current_hp"] = 20;
     expect(judge(rod)).toMatchObject({ certain: false, reason: "the mod does not flag ending the turn as lethal" });
+    // A held clause with no amount is left out of the count.
     const vague = tmnf();
     const wither = ((vague["combat"] as Raw)["hand"] as Raw[]).find((card) => card["card_id"] === "WITHER")!;
-    wither["resolved_rules_text"] = "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命。";
+    wither["resolved_rules_text"] = "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去一些生命。";
     expect(judge(vague)).toMatchObject({ certain: false, reason: "the mod does not flag ending the turn as lethal" });
+    // Regret's is the cards in hand (VQKX9AD1YHKS F48 T7): 2 here, 38 - 28 + 2 leaves 3, the next turn's start takes 3.
+    wither["resolved_rules_text"] = "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，失去相当于手牌数量的生命。";
+    expect(judge(vague)).toMatchObject({ certain: true, held: { damage: 0, loss: 2 }, startLoss: 3 });
   });
 });
 
