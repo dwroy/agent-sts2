@@ -53,6 +53,13 @@ export interface SlConfig {
   act3LowHp: boolean;
   /** SL_ACT3_LOW_HP_PCT (default 50, Dai 2026-10-03: 40 first, then 50): SL_ACT3_LOW_HP's line, percent of max HP at the fight's entry (strictly below; 0..100). */
   act3LowHpPct: number;
+  /**
+   * SL_ACT2_LOW_HP (default on, Dai 2026-10-04 after the V4.5 A9 window: PEGLM9PFY97U entered an act-2 hallway at 12/80
+   * and died untracked): the same rule as SL_ACT3_LOW_HP for an act-2 fight with no boss. Absent (older configs, tests): off.
+   */
+  act2LowHp?: boolean;
+  /** SL_ACT2_LOW_HP_PCT (default 50, as act 3): SL_ACT2_LOW_HP's line, percent of max HP at the fight's entry (strictly below). */
+  act2LowHpPct?: number;
   /** SL_RETRY_SHOW_SIM (default on): a retried boss fight's questions show the whole-fight simulation even for a low-trust boss, labelled. */
   retryShowSim: boolean;
   /**
@@ -1102,6 +1109,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     eliteRetries: parseInteger(readEnv(env, "SL_ELITE_RETRIES") ?? "3", "SL_ELITE_RETRIES", problems, { min: 0, max: 20 }),
     act3LowHp: parseOnOff(readEnv(env, "SL_ACT3_LOW_HP"), "SL_ACT3_LOW_HP", problems) ?? true,
     act3LowHpPct: parseInteger(readEnv(env, "SL_ACT3_LOW_HP_PCT") ?? "50", "SL_ACT3_LOW_HP_PCT", problems, { min: 0, max: 100 }),
+    act2LowHp: parseOnOff(readEnv(env, "SL_ACT2_LOW_HP"), "SL_ACT2_LOW_HP", problems) ?? true,
+    act2LowHpPct: parseInteger(readEnv(env, "SL_ACT2_LOW_HP_PCT") ?? "50", "SL_ACT2_LOW_HP_PCT", problems, { min: 0, max: 100 }),
     retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
     retryKnownDraws: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_DRAWS"), "SL_RETRY_KNOWN_DRAWS", problems) ?? true,
     retryCompute: parseOnOff(readEnv(env, "SL_RETRY_COMPUTE"), "SL_RETRY_COMPUTE", problems) ?? true,
