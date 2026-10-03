@@ -4,7 +4,9 @@
  * before the next rest, the next elite and the boss; at a rest site what each option leaves). The answer's `route`
  * keeps the plan (the default) or gives a new node sequence, which becomes the act's plan and is followed from the
  * next map. A missing, unreadable or illegal route keeps the plan and is logged; the card or rest choice is never
- * blocked by the route. No candidate routes, code values or ranks.
+ * blocked by the route. No code values or ranks; next_rest (Dai 2026-10-03) lists, for the plan and the stretches from
+ * each next node, the fights, "?" rooms, shop and HP on arriving at the next rest site (facts; tests/route-next-rest.test.ts),
+ * and a change logs the same comparison for the route it took.
  *
  * Boards: XLJQ6FPQAU7N F4 map -> F5 card reward -> F5 map (the F7 Terror Eel elite ahead at 54/91 against a
  * 69/91 projection) and W2TBR2YUMQ5Y F6 map -> F7 rest site -> F7 map (smithed at 67/77 where the plan
@@ -22,7 +24,7 @@ import { parseGameState } from "../src/mod/schema.js";
 import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
 import type { RoutePlan } from "../src/screens/map.js";
 import { rememberChosenNode, rememberMap, restHealHere } from "../src/screens/rest.js";
-import { checkRoute, routeMapFromView } from "../src/strategy/route-map.js";
+import { checkRoute, routeMapFromView, stretchOf } from "../src/strategy/route-map.js";
 import { baseRestHeal, projectPath, restHealOf, type RoomCostModel } from "../src/strategy/route-projection.js";
 import type { RunPlan } from "../src/strategy/run-plan.js";
 import type { JsonValue } from "../src/util/json.js";
@@ -66,9 +68,19 @@ function memoryAt(file: string, over: { map?: Raw; chosen?: boolean } = {}): Scr
 }
 
 type Facts = { arrival: string[]; rest_sites: string[]; fights_before_rest: string; next_elite: string; boss: string; if_option?: string[]; about: string };
-type Block = { map: string[]; position: string; next_nodes: string[]; winged_boots_left: number; boss: string; plan: string; plan_facts: Facts; room_costs: string; vs_plan: string; run_plan_hp?: string };
+type NextRest = { about: string; keep: string; switch: string[] };
+type Block = { map: string[]; position: string; next_nodes: string[]; winged_boots_left: number; boss: string; plan: string; plan_facts: Facts; next_rest: NextRest; room_costs: string; vs_plan: string; run_plan_hp?: string };
 const blockOf = (decision: ReturnType<typeof decide>): Block | undefined => (ask(decision).state["route_review"] as Block | undefined);
 const instructionsOf = (decision: ReturnType<typeof decide>): string => String(ask(decision).questions["pick"]?.instructions);
+
+/** The fixed A9 act-1 room costs the blocks here show (beforeAll), as the projection's model. */
+const resolvedCosts = (block: Block): RoomCostModel => ({
+  act: 1,
+  maxHp: Number(/最大生命 (\d+)/.exec(block.room_costs)![1]),
+  monster: { median: 2, p75: 7, source: "fixed" },
+  elite: { median: 26, p75: 36, source: "fixed" },
+  unknown: { median: 0, p75: 6, source: "fixed" },
+});
 
 /** The plan from here as ids (the block's plan text). */
 const planIds = (block: Block): string[] => block.plan.split(" → ").map((step) => step.split(" ")[0]!);
@@ -98,7 +110,18 @@ describe("card reward: the act's route rides on the same question", () => {
     expect(block.run_plan_hp).toContain("Elites only with high HP and a fire after;");
     expect(block.run_plan_hp).not.toContain("25% error");
     expect(block.room_costs).toMatch(/^第 1 幕每个房间掉血（中位数\/p75，最大生命 91）：普通战 2\/7（logged A9 act-1 Monster rooms, n=262）/);
-    // Facts only: no candidate paths, code values or ranks.
+    // The plan's stretch to the F9 rest and the best one from each next node to its nearest two rest floors (r5c5: F9
+    // and F11; r5c6: the plan's own F9 stretch, and its F11 one runs out, so not listed), from HP now, with the next
+    // elite's entry (the plan's: plan_facts.next_elite's numbers; the F11 stretch rejoins the plan, no elite after it).
+    expect(block.next_rest.keep).toBe("r5c6 问号 → r6c6 精英 → r7c6 普通战 → F9 r8c5 休息：普通战 1、精英 1、问号 1，没有商店；到达 26/91（p75 5）；下一只精英 F7 r6c6 进场 54/91（p75 48）");
+    expect(block.plan_facts.next_elite).toBe("F7 r6c6：到达 54/91（p75 48）");
+    expect(block.next_rest.switch).toEqual([
+      "r5c5 普通战 → r6c6 精英 → r7c6 普通战 → F9 r8c5 休息：普通战 2、精英 1、问号 0，没有商店；到达 24/91（p75 4）；下一只精英 F7 r6c6 进场 52/91（p75 47）",
+      "r5c5 普通战 → r6c4 问号 → r7c3 普通战 → r8c3 问号 → r9c4 宝箱 → F11 r10c5 休息：普通战 2、精英 0、问号 2，没有商店；到达 50/91（p75 28）",
+    ]);
+    expect(block.next_rest.about).toContain("从现在的 HP 54/91 起");
+    expect(instructionsOf(decision)).toContain("next_rest 是保留（keep，你的计划）和换线（switch");
+    // Facts only: no code values or ranks, and no named routes (routeKeys reads route_review.routes as v3's).
     for (const word of ["code_value", "code_rank", "routes", "p1", "hp_if_option"]) expect(JSON.stringify(block)).not.toContain(word);
     expect(instructionsOf(decision)).toContain('"route"："keep"（默认，照计划走）或新的节点序列');
     expect(instructionsOf(decision)).toContain('"route_reason"');
@@ -132,6 +155,20 @@ describe("card reward: the act's route rides on the same question", () => {
       reason: "skip the eel at 54/91",
       change: { ref: "XLJQ6FPQAU7N:F5:reward#1", step: 2, key: route, from: block.plan, to: expect.stringMatching(/Boss$/), why: "card-reward review" },
     });
+    // The new route against the kept one at their next rest sites, from HP now: logged with the change, never a block.
+    const map = routeMapFromView(block)!;
+    const keptEnd = stretchOf(map, planIds(block), { hp: 54, max: 91 }, resolvedCosts(block));
+    const newEnd = stretchOf(map, route.split(" "), { hp: 54, max: 91 }, resolvedCosts(block));
+    expect(newEnd.ids).not.toEqual(keptEnd.ids);
+    // The first route that skips the F7 Terror Eel meets no rest site before F13 (an F12 elite on the way, as many elites
+    // as the kept stretch), where the kept route has rested at F9 and F11: clearly lower on F13; its elite entered at 50
+    // (p75 22) against 54 (p75 48). Logged, not blocked.
+    expect(resolved.routeReview?.change?.nextRest).toEqual({
+      text: "到 F13 时新路线约 24/91，保留路线约 80/91（p75 耗尽 对 53）；下一只精英：新路线 F12 r11c2 进场 50/91（p75 22），保留路线 F7 r6c6 进场 54/91（p75 48）",
+      worse: true,
+      eliteWorse: true,
+    });
+    expect(resolved.rationale).toContain(`; next rest: ${resolved.routeReview!.change!.nextRest!.text} (clearly worse than the kept route) (clearly lower at the next elite)`);
     resolved.apply?.();
     expect(memory.routePlan).toMatchObject({ runId: "XLJQ6FPQAU7N", act: 1, floor: 5, why: "card-reward review" });
     expect(memory.routePlan!.path.map((step) => `r${step.row}c${step.col}`).join(" ")).toBe(route);
@@ -390,6 +427,36 @@ describe("rest site route review in the loop", () => {
     expect(records.find((row) => row["label"] === "map/route-follow")).toMatchObject({ decider: "code" });
     // The route plan's own row carries the plan it made.
     expect(records.find((row) => row["label"] === "map/route-plan")).toMatchObject({ decider: "deepseek", route_plan: { floor: 6 } });
+  });
+
+  it("a change with another stretch to the next rest site: both rows log it against the kept route; next_rest rides in the question, not the system prefix", async () => {
+    const route = String(routePlanAnswer(REST)("map/route-plan")["route"]);
+    const planned = route.split(" ").slice(1);
+    const restBlock = blockOf(decide(env(board(REST, "rest"), memoryAt(REST))))!;
+    const map = routeMapFromView(restBlock)!;
+    const stretch = (ids: string[]): string => stretchOf(map, ids, { hp: 77, max: 77 }, resolvedCosts(restBlock)).ids.join(" ");
+    const alternative = legalRoutes(restBlock).find((ids) => stretch(ids) !== stretch(planned))!.join(" ");
+    const { client, bodies } = await scriptedDeepSeek([
+      { content: JSON.stringify({ route, reason: "route" }), reasoning: "Plan." },
+      { content: JSON.stringify({ choice: "o0", route: alternative, route_reason: "the other branch", reason: "heal" }), reasoning: "Decisive: o0." },
+    ]);
+    const { records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], client);
+    const rest = records.find((row) => row["label"] === "rest/plan")!;
+    const review = rest["route_review"] as Record<string, unknown>;
+    // The first such route takes a second elite to the F16 rest: on F16 (the later rest floor) it runs out on the way,
+    // but with one elite more than the kept stretch that is in its counts: no flag. Both meet the same first elite (F9
+    // r8c2, the same entry): not repeated.
+    expect(review).toMatchObject({ outcome: "change", next_rest: "到 F16 时新路线约 0（血量耗尽），保留路线约 40/77（p75 耗尽 对 耗尽）", next_rest_worse: false, next_rest_elite_worse: false });
+    expect(String(rest["rationale"])).not.toContain("clearly");
+    const change = records.find((row) => row["label"] === "map/route-change")!;
+    expect(change["deepseek"]).toMatchObject({ next_rest: review["next_rest"], next_rest_worse: review["next_rest_worse"] });
+    expect(String(change["rationale"])).toContain(`; next rest: ${String(review["next_rest"])}`);
+    // The knowledge prefix (the system message) is unchanged: the facts are in the rest question's user message.
+    const messages = bodies[1]!["messages"] as { role: string; content: string }[];
+    expect(messages[0]!.role).toBe("system");
+    expect(messages[0]!.content).not.toContain("next_rest");
+    expect(messages[1]!.content).toContain('"next_rest"');
+    expect(messages[1]!.content).toContain("从本休息点 o0 HEAL 后的 HP 77/77 起");
   });
 
   it("the real client reads the route-plan answer and the rest answer's route and route_reason", async () => {

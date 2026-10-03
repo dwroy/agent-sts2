@@ -3,7 +3,10 @@
  * with its row, column, type and lines, where we stand, the nodes walked, the Winged Boots charges left and the
  * boss node(s) (A10: two). The brain plans any route on it and answers a node sequence; code checks the route
  * (lines, boots, boss, ids) and works out the chosen route's facts with the route projection (no scores, no
- * ranking; the projection itself is route-projection.ts, unchanged).
+ * ranking; the projection itself is route-projection.ts, unchanged). A route review also gets next_rest (Dai
+ * 2026-10-03): the plan's stretch to its next rest site and, from each next node, the stretch with the most HP on
+ * arriving at each of its nearest rest floors, each with its rooms, projected HP there and on entering the route's next
+ * elite, compared with the plan on the same floor (nextRestFacts below).
  *
  * The map is rendered as text lines ("F6 r5c2 精英 → r6c1 r6c3") and read back from them: the answer checker in
  * src/brain works from exactly what the brain was shown (the request's state), so the two cannot drift apart.
@@ -411,6 +414,404 @@ export function routeFacts(map: RouteMap, ids: string[], start: RouteStart, cost
     });
   }
   return facts;
+}
+
+/* ---- each route's stretch to the next rest site (Dai 2026-10-03) --------------------------------- */
+
+/*
+ * A route review weighed a new route without the numbers the kept one had (experience route-replan-on-drop:
+ * 9175DLPM2EFR A9 F37 at 49/80 swapped the shop for two hallways, "11金商店无用", and died at 16/80; the kept
+ * route's facts said F40 at 42/80, p75 33; the new one would have said 35, p75 17). The review now shows, for the
+ * kept route and for other stretches from each next node, the rooms to the next rest site and the HP the
+ * projection above (projectPath at the median and at p75Costs, unchanged) gives on arriving there and on entering
+ * the route's next elite (QWXKQVYQGGCJ F25 moved the elite after a hallway: projected 76/91, p75 66; entered at 64);
+ * an alternative clearly worse than the kept route on the same floor says so. Facts only: nothing is blocked,
+ * DeepSeek decides.
+ */
+
+/** A route's rooms from its first node to the next rest site (inclusive), or to the boss when none comes first. */
+export interface Stretch {
+  ids: string[];
+  /** The last node: a rest site, the boss, or the route's end. */
+  end: "rest" | "boss" | "end";
+  /** The last node's row. */
+  row: number;
+  monsters: number;
+  elites: number;
+  unknown: number;
+  shops: number;
+  /** HP on arrival at the last node (median and p75 projections; <= 0: ran out) and max HP there. */
+  median: number;
+  p75: number;
+  max: number;
+}
+
+/** The stretch of a route (node ids from its first node) to its next rest site, projected from `start`. */
+export function stretchOf(map: RouteMap, ids: string[], start: RouteStart, costs: RoomCostModel): Stretch {
+  const endAt = ids.findIndex((id) => isRestType(map.nodes.get(id)?.type ?? "") || map.bosses.includes(id));
+  const cut = endAt >= 0 ? ids.slice(0, endAt + 1) : ids;
+  const nodes = cut.map((id) => map.nodes.get(id)!);
+  const types = nodes.map((node) => node.type);
+  const median = projectPath(types, start.hp, costs, start.max);
+  const p75 = projectPath(types, start.hp, p75Costs(costs), start.max);
+  const last = nodes.length - 1;
+  const rooms = nodes.slice(0, last);
+  const count = (type: string): number => rooms.filter((node) => node.type === type).length;
+  return {
+    ids: cut,
+    end: endAt < 0 ? "end" : isRestType(nodes[last]!.type) ? "rest" : "boss",
+    row: nodes[last]!.row,
+    monsters: count("Monster"),
+    elites: count("Elite"),
+    unknown: count("Unknown"),
+    shops: count("Shop"),
+    median: median.arrival[last]!,
+    p75: p75.arrival[last]!,
+    max: median.maxArrival[last]!,
+  };
+}
+
+/** At most this many stretches are walked from one next node (a map has far fewer before its next rest row). */
+const STRETCH_WALK_CAP = 2000;
+
+/** Every stretch from `first` along the lines to the next rest site or the boss (no Winged Boots jumps after the first node). */
+export function stretchesFrom(map: RouteMap, first: string): string[][] {
+  const out: string[][] = [];
+  const walk = (path: string[]): void => {
+    if (out.length >= STRETCH_WALK_CAP) return;
+    const id = path[path.length - 1]!;
+    const node = map.nodes.get(id);
+    if (!node) return;
+    if (isRestType(node.type) || map.bosses.includes(id) || node.children.length === 0) {
+      out.push(path);
+      return;
+    }
+    for (const child of node.children) if (map.nodes.has(child)) walk([...path, child]);
+  };
+  walk([first]);
+  return out;
+}
+
+/** Higher HP at the stretch's end first (median, then p75), then fewer fights, fewer "?" rooms, a shop. */
+function betterStats(a: Stretch, b: Stretch): number {
+  return b.median - a.median || b.p75 - a.p75 || a.monsters + a.elites - (b.monsters + b.elites) || a.unknown - b.unknown || b.shops - a.shops;
+}
+
+/** betterStats, then the ids (a fixed order among equal stretches). */
+function betterStretch(a: Stretch, b: Stretch): number {
+  return betterStats(a, b) || a.ids.join(" ").localeCompare(b.ids.join(" "));
+}
+
+/**
+ * When an alternative is clearly worse than the kept route: the median lower by at least this share of max HP, or the
+ * p75 line lower by at least NEXT_REST_CLEAR_P75 (9175 F37: one hallway more, 7 and 16 of 80 lower), or it runs out
+ * where the kept route does not (Dai 2026-10-03). Compared at the later of the two routes' next rest floors, each
+ * route's HP on arriving there, and said only for a line with no more elites than the kept stretch (an extra elite's
+ * cost is already in its counts: 62% of the lines flagged without this rule); and, when both routes meet an elite
+ * before the boss, each one's own elite-entry HP (LTKW24N3R9PG F36: 41 against 41).
+ */
+export const NEXT_REST_CLEAR_MEDIAN = 0.1;
+export const NEXT_REST_CLEAR_P75 = 0.15;
+
+/** The margins of clearlyWorse (shares of max HP). */
+export interface ClearMargin {
+  median: number;
+  p75: number;
+}
+
+export const NEXT_REST_CLEAR: ClearMargin = { median: NEXT_REST_CLEAR_MEDIAN, p75: NEXT_REST_CLEAR_P75 };
+
+/**
+ * The alternatives listed: from each next node (the current node's lines first, then Winged Boots jumps) the best
+ * stretch to each of its NEXT_REST_FLOORS nearest rest floors (one that skips the nearest rest site is a different
+ * route: 0QSB9YV3UFCL F19 went on to F32 past the F28 rest; a farther floor only when the median projection reaches
+ * it alive), at most NEXT_REST_MAX_SWITCHES in all; in the kept route's own group (its first node and rest floor) only
+ * a stretch that beats it.
+ */
+export const NEXT_REST_FLOORS = 2;
+export const NEXT_REST_MAX_SWITCHES = 6;
+
+/** HP on arriving somewhere: median and p75 projections (<= 0: ran out) and max HP there. */
+export interface HpPoint {
+  median: number;
+  p75: number;
+  max: number;
+}
+
+/** Whether `other` is clearly worse than `kept` (both on the same floor): the margins, or a run-out kept does not have. */
+export function clearlyWorse(other: HpPoint, kept: HpPoint, clear: ClearMargin = NEXT_REST_CLEAR): boolean {
+  const scale = Math.max(1, kept.max);
+  if (kept.median > 0 && other.median <= 0) return true;
+  return (Math.max(0, kept.median) - Math.max(0, other.median)) / scale >= clear.median || (Math.max(0, kept.p75) - Math.max(0, other.p75)) / scale >= clear.p75;
+}
+
+const hpRound = (hp: number): string => (hp > 0 ? `${Math.round(hp)}` : "耗尽");
+
+/** "35/80（p75 17）". */
+const hpPair = (point: HpPoint): string => `${hpAt(point.median, point.max)}（p75 ${hpRound(point.p75)}）`;
+
+/** A route from its first node to the boss, projected from the start (rest sites on it heal): its HP on any floor and its next elite. */
+export interface WholeRoute {
+  ids: string[];
+  rows: number[];
+  median: PathProjection;
+  p75: PathProjection;
+}
+
+function wholeRoute(map: RouteMap, ids: string[], start: RouteStart, costs: RoomCostModel): WholeRoute {
+  const types = ids.map((id) => map.nodes.get(id)!.type);
+  return { ids, rows: ids.map((id) => map.nodes.get(id)!.row), median: projectPath(types, start.hp, costs, start.max), p75: projectPath(types, start.hp, p75Costs(costs), start.max) };
+}
+
+/** The route's HP on arriving at its node on `row`, or null when it has none there. */
+function pointAt(route: WholeRoute, row: number): HpPoint | null {
+  const at = route.rows.indexOf(row);
+  return at < 0 ? null : { median: route.median.arrival[at]!, p75: route.p75.arrival[at]!, max: route.median.maxArrival[at]! };
+}
+
+/** The route's next elite before the boss (its step), or -1. */
+function nextEliteStep(map: RouteMap, route: WholeRoute): number {
+  const bossAt = route.ids.findIndex((id) => map.bosses.includes(id));
+  const at = route.ids.findIndex((id) => map.nodes.get(id)?.type === "Elite");
+  return at >= 0 && (bossAt < 0 || at < bossAt) ? at : -1;
+}
+
+/**
+ * The way on after a switch stretch's end (its rest site), for the whole route the line stands for: the plan from
+ * there when the stretch ends on it; else stretch by stretch the one with the most HP at its end (the rule the switch
+ * lines are picked by, on the room costs alone), back on the plan as soon as it meets it.
+ */
+function wayOn(map: RouteMap, end: string, plan: string[], costs: RoomCostModel): string[] {
+  const out: string[] = [];
+  const nominal = { hp: 1e6, max: 1e6 };
+  const flat = { ...costs, bossStartHeal: 0 };
+  let at = end;
+  for (let guard = 0; guard < map.nodes.size && !map.bosses.includes(at); guard += 1) {
+    const onPlan = plan.indexOf(at);
+    if (onPlan >= 0) return [...out, ...plan.slice(onPlan + 1)];
+    const node = map.nodes.get(at);
+    if (!node || node.children.length === 0) break;
+    const best = node.children
+      .filter((child) => map.nodes.has(child))
+      .flatMap((child) => stretchesFrom(map, child))
+      .map((ids) => stretchOf(map, ids, nominal, flat))
+      .sort(betterStretch)[0];
+    if (!best) break;
+    // Back on the plan inside the stretch: the plan from there.
+    const joins = best.ids.findIndex((id) => plan.includes(id));
+    if (joins >= 0) return [...out, ...best.ids.slice(0, joins), ...plan.slice(plan.indexOf(best.ids[joins]!))];
+    out.push(...best.ids);
+    at = best.ids[best.ids.length - 1]!;
+  }
+  return out;
+}
+
+/** "；下一只精英 F29 r11c1 进场 76/91（p75 66）", or nothing when no elite comes before the boss. */
+function eliteText(map: RouteMap, route: WholeRoute): string {
+  const at = nextEliteStep(map, route);
+  if (at < 0) return "";
+  return `；下一只精英 F${floorOfRow(map, route.rows[at]!)} ${route.ids[at]} 进场 ${hpPair(pointAt(route, route.rows[at]!)!)}`;
+}
+
+/** Two routes on the same floor: each one's HP on arriving there, and whether `other` is clearly worse. */
+export interface SameFloor {
+  row: number;
+  other: HpPoint;
+  kept: HpPoint;
+  worse: boolean;
+}
+
+function sameFloor(other: WholeRoute, kept: WholeRoute, row: number, clear: ClearMargin): SameFloor | null {
+  const a = pointAt(other, row);
+  const b = pointAt(kept, row);
+  return a && b ? { row, other: a, kept: b, worse: clearlyWorse(a, b, clear) } : null;
+}
+
+/** At the later of the two routes' next rest floors (the boss when a stretch has no rest site). */
+function restVersus(other: Stretch, otherRoute: WholeRoute, kept: Stretch, keptRoute: WholeRoute, clear: ClearMargin): SameFloor | null {
+  return sameFloor(otherRoute, keptRoute, Math.max(other.row, kept.row), clear);
+}
+
+/** Two routes' next elites: each one's entry HP on its own floor, and whether `other`'s is clearly worse. */
+export interface EliteEntries {
+  otherRow: number;
+  keptRow: number;
+  other: HpPoint;
+  kept: HpPoint;
+  worse: boolean;
+}
+
+/**
+ * Each route's own next-elite entry, when both meet an elite before the boss (not on one floor: at the later elite's
+ * floor the earlier one is already fought, LTKW F36 8 against 41 for two entries at 41). With one elite there is no
+ * entry to compare (0QSB F19 skips the kept route's F29 elite).
+ */
+function eliteVersus(map: RouteMap, otherRoute: WholeRoute, keptRoute: WholeRoute, clear: ClearMargin): EliteEntries | null {
+  const other = nextEliteStep(map, otherRoute);
+  const kept = nextEliteStep(map, keptRoute);
+  if (other < 0 || kept < 0) return null;
+  const a = pointAt(otherRoute, otherRoute.rows[other]!)!;
+  const b = pointAt(keptRoute, keptRoute.rows[kept]!)!;
+  return { otherRow: otherRoute.rows[other]!, keptRow: keptRoute.rows[kept]!, other: a, kept: b, worse: clearlyWorse(a, b, clear) };
+}
+
+/** "下一只精英进场：这条 F42 约 33/74，保留路线 F43 约 41/74（p75 耗尽 对 27）". */
+function eliteEntriesText(map: RouteMap, versus: EliteEntries, which: string): string {
+  return `下一只精英进场：${which} F${floorOfRow(map, versus.otherRow)} 约 ${hpAt(versus.other.median, versus.other.max)}，保留路线 F${floorOfRow(map, versus.keptRow)} 约 ${hpAt(versus.kept.median, versus.kept.max)}（p75 ${hpRound(versus.other.p75)} 对 ${hpRound(versus.kept.p75)}）`;
+}
+
+/** "到 F40 时这条约 35/80，保留路线约 42/80（p75 17 对 33）". */
+function sameFloorText(map: RouteMap, versus: SameFloor, which: string): string {
+  return `到 F${floorOfRow(map, versus.row)} 时${which}约 ${hpAt(versus.other.median, versus.other.max)}，保留路线约 ${hpAt(versus.kept.median, versus.kept.max)}（p75 ${hpRound(versus.other.p75)} 对 ${hpRound(versus.kept.p75)}）`;
+}
+
+/**
+ * One stretch as a line: its rooms, the fights and "?" rooms before its end, whether it passes a shop, and the HP on
+ * arrival. `chain`: acts 2-3, the Monster/Elite rooms since the last rest site up to here (the stretch's total).
+ */
+function stretchLine(map: RouteMap, stretch: Stretch, chain: number): string {
+  const current = map.current ? map.nodes.get(map.current) : undefined;
+  const last = stretch.ids.length - 1;
+  const path = stretch.ids
+    .map((id, at) => `${at === last ? `F${floorOfRow(map, stretch.row)} ` : ""}${id} ${roomName(map.nodes.get(id)?.type ?? "?")}${at === 0 && current && !current.children.includes(id) ? "（飞行靴跳跃）" : ""}`)
+    .join(" → ");
+  const total = map.act >= 2 ? `（这一段共 ${chain + stretch.monsters + stretch.elites} 场）` : "";
+  const to = stretch.end === "rest" ? "" : stretch.end === "boss" ? "（boss 前没有休息点）" : "（路线到此为止）";
+  return `${path}${to}：普通战 ${stretch.monsters}、精英 ${stretch.elites}${total}、问号 ${stretch.unknown}，${stretch.shops > 0 ? "经过商店" : "没有商店"}；到达 ${hpPair(stretch)}`;
+}
+
+/** The kept route's stretch and the alternatives listed (NEXT_REST_FLOORS, NEXT_REST_MAX_SWITCHES), projected from `start`. */
+export function nextRestStretches(map: RouteMap, plan: string[], start: RouteStart, costs: RoomCostModel): { kept: Stretch; switches: Stretch[] } {
+  const kept = stretchOf(map, plan, start, costs);
+  const keptKey = kept.ids.join(" ");
+  const current = map.current ? map.nodes.get(map.current) : undefined;
+  const onLine = (id: string): boolean => !current || current.children.includes(id);
+  const perFirst = map.next
+    .filter((id) => map.nodes.has(id))
+    .map((first) => {
+      // The best stretch to each rest floor, the kept one among them (it holds its own group's place).
+      const byFloor = new Map<number, Stretch>();
+      for (const ids of stretchesFrom(map, first)) {
+        const stretch = stretchOf(map, ids, start, costs);
+        const best = byFloor.get(stretch.row);
+        if (!best || betterStretch(stretch, best) < 0) byFloor.set(stretch.row, stretch);
+      }
+      // The kept one holds its group unless another stretch there is better on the numbers (a tie keeps it; a plan that
+      // jumps with Winged Boots inside its stretch is not among the walked ones: compared as it is).
+      const own = first === kept.ids[0] ? byFloor.get(kept.row) : undefined;
+      if (first === kept.ids[0] && (!own || betterStats(kept, own) <= 0)) byFloor.set(kept.row, kept);
+      const floors = [...byFloor.entries()].sort((a, b) => a[0] - b[0]).map(([, stretch]) => stretch).slice(0, NEXT_REST_FLOORS);
+      const stretches = floors.filter((stretch, at) => {
+        // The kept route's own group (its first node, its rest floor) is the keep line; another stretch there only when
+        // it beats the kept one (a worse variant of the plan, such as the same stretch with an elite, was never an
+        // answer's route in the logs).
+        if (stretch.ids.join(" ") === keptKey) return false;
+        // A farther rest floor only when the median projection reaches it: one that runs out on the way is not a route
+        // anyone takes past a rest site (the logs' one such answer, 0QSB F19, arrived alive in the projection).
+        return at === 0 || stretch.median > 0;
+      });
+      return { first, stretches };
+    });
+  // The line children before the jumps; each next node's nearest rest floor before its farther one.
+  const ordered = [...perFirst.filter((entry) => onLine(entry.first)), ...perFirst.filter((entry) => !onLine(entry.first)).sort((a, b) => (a.stretches[0] && b.stretches[0] ? betterStretch(a.stretches[0], b.stretches[0]) : a.stretches[0] ? -1 : 1))];
+  const switches = [...ordered.map((entry) => entry.stretches[0]), ...ordered.map((entry) => entry.stretches[1])].filter((stretch): stretch is Stretch => stretch !== undefined).slice(0, NEXT_REST_MAX_SWITCHES);
+  // Shown grouped by next node, nearest rest floor first.
+  const rank = new Map(ordered.map((entry, at) => [entry.first, at]));
+  switches.sort((a, b) => rank.get(a.ids[0]!)! - rank.get(b.ids[0]!)! || a.row - b.row);
+  return { kept, switches };
+}
+
+/** A switch line's numbers: its stretch, the whole route it stands for, and the same-floor comparisons with the kept route. */
+export interface SwitchCompare {
+  stretch: Stretch;
+  /** The stretch and its way on to the boss (wayOn), projected. */
+  route: WholeRoute;
+  /** At the later of the two next rest floors. */
+  rest: SameFloor | null;
+  /** The two next elites' entries. */
+  elite: EliteEntries | null;
+  /** Said on the line: clearly lower on the rest floor with no more elites than the kept stretch; at the elite entry. */
+  restFlag: boolean;
+  eliteFlag: boolean;
+}
+
+/** The kept route's stretch and whole route, and each switch line's comparison with it (`clear`: the margins). */
+export function nextRestCompare(map: RouteMap, plan: string[], start: RouteStart, costs: RoomCostModel, clear: ClearMargin = NEXT_REST_CLEAR): { kept: Stretch; switches: SwitchCompare[] } {
+  const { kept, switches } = nextRestStretches(map, plan, start, costs);
+  const keptRoute = wholeRoute(map, plan, start, costs);
+  return {
+    kept,
+    switches: switches.map((stretch) => {
+      const route = wholeRoute(map, [...stretch.ids, ...wayOn(map, stretch.ids[stretch.ids.length - 1]!, plan, costs)], start, costs);
+      const rest = restVersus(stretch, route, kept, keptRoute, clear);
+      const elite = eliteVersus(map, route, keptRoute, clear);
+      return { stretch, route, rest, elite, restFlag: (rest?.worse ?? false) && stretch.elites <= kept.elites, eliteFlag: elite?.worse ?? false };
+    }),
+  };
+}
+
+export interface NextRestFacts {
+  about: string;
+  /** The plan's own stretch (the route the answer keeps). */
+  keep: string;
+  /** Other stretches from the next nodes (the routes the answer may switch to). */
+  switch: string[];
+}
+
+/**
+ * The kept route's stretch to its next rest site and, from each next node, the best stretch to each of its nearest
+ * rest floors (nextRestStretches) when it differs from the kept one; each with its fights, "?" rooms, shop, HP on
+ * arrival and HP on entering the route's next elite, a clearly worse one (on the same floor) saying so. Projected
+ * from `start` (HP now; at a rest site the HP its heal leaves, `startNote` says so) with the review's costs.
+ */
+export function nextRestFacts(map: RouteMap, plan: string[], start: RouteStart, costs: RoomCostModel, chain = 0, startNote?: string, clear: ClearMargin = NEXT_REST_CLEAR): NextRestFacts | null {
+  if (plan.length === 0 || plan.some((id) => !map.nodes.has(id))) return null;
+  const { kept, switches } = nextRestCompare(map, plan, start, costs, clear);
+  const keptRoute = wholeRoute(map, plan, start, costs);
+  const lines = switches.map(({ stretch, route, rest, elite, restFlag, eliteFlag }) => {
+    const flags = [...(restFlag && rest ? [`；比保留路线明显低：${sameFloorText(map, rest, "这条")}`] : []), ...(eliteFlag && elite ? [`；${eliteEntriesText(map, elite, "这条")}，明显低`] : [])];
+    return `${stretchLine(map, stretch, chain)}${eliteText(map, route)}${flags.join("")}`;
+  });
+  const pct = (share: number): string => `${Math.round(share * 100)}%`;
+  return {
+    about:
+      `从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（${startNote ?? `从现在的 HP ${hpAt(start.hp, start.max)} 起`}，中位数和 p75，同 plan_facts）。` +
+      `keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；` +
+      `和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥${pct(clear.median)} 最大生命、p75 低 ≥${pct(clear.p75)} 或耗尽）的写明。`,
+    keep: `${stretchLine(map, kept, chain)}${eliteText(map, keptRoute)}`,
+    switch: lines.length > 0 ? lines : ["没有别的路线：从下一步到下一个休息点只有计划这一段"],
+  };
+}
+
+/** The route's next elite for the change's log: "F29 r11c1 进场 76/91（p75 66）" or "boss 前没有精英". */
+function eliteLabel(map: RouteMap, route: WholeRoute): string {
+  const at = nextEliteStep(map, route);
+  return at < 0 ? "boss 前没有精英" : `F${floorOfRow(map, route.rows[at]!)} ${route.ids[at]} 进场 ${hpPair(pointAt(route, route.rows[at]!)!)}`;
+}
+
+/**
+ * A changed route against the kept one, for the change's log: both routes' HP on the later of their next rest floors,
+ * their next elites, and whether the new one is clearly worse as a switch line would say it (`worse`: the rest floor,
+ * with no more elites than the kept stretch; `eliteWorse`: the two elite entries). Null when the stretch to the next
+ * rest site and the next elite's entry are the same.
+ */
+export function nextRestVersus(map: RouteMap, kept: string[], changed: string[], start: RouteStart, costs: RoomCostModel, clear: ClearMargin = NEXT_REST_CLEAR): { text: string; worse: boolean; eliteWorse: boolean } | null {
+  if (kept.length === 0 || changed.length === 0 || [...kept, ...changed].some((id) => !map.nodes.has(id))) return null;
+  const before = stretchOf(map, kept, start, costs);
+  const after = stretchOf(map, changed, start, costs);
+  const keptRoute = wholeRoute(map, kept, start, costs);
+  const newRoute = wholeRoute(map, changed, start, costs);
+  const sameStretch = before.ids.join(" ") === after.ids.join(" ");
+  const keptElite = eliteLabel(map, keptRoute);
+  const newElite = eliteLabel(map, newRoute);
+  if (sameStretch && keptElite === newElite) return null;
+  const rest = sameStretch ? null : restVersus(after, newRoute, before, keptRoute, clear);
+  const elite = eliteVersus(map, newRoute, keptRoute, clear);
+  const parts = [
+    ...(rest ? [sameFloorText(map, rest, "新路线")] : []),
+    ...(keptElite === newElite ? [] : [`下一只精英：新路线 ${newElite}，保留路线 ${keptElite}`]),
+  ];
+  return { text: parts.join("；"), worse: (rest?.worse ?? false) && after.elites <= before.elites, eliteWorse: elite?.worse ?? false };
 }
 
 /** The room costs the facts use, with their sources and n (Chinese, one line). */

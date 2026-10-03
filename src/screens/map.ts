@@ -17,7 +17,7 @@ import type { ActDecision, AskDecision, Decision, DecisionEnv, RememberedMap, Re
 import { bestOption, buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { bossStartHealOf, NO_REST_RELICS, restedHp, restHealOf, roomCost, roomCostModel, type RestHeal, type RoomCostModel } from "../strategy/route-projection.js";
-import { checkRoute, floorOfRow, hasChoiceAhead, isKeep, nodeId, roomName, routeIds, type RouteMap } from "../strategy/route-map.js";
+import { checkRoute, floorOfRow, hasChoiceAhead, isKeep, nextRestVersus, nodeId, roomName, routeIds, type RouteMap } from "../strategy/route-map.js";
 import { actOfFloor, actPlan, makeRoutePlan, mapActOf, mapFromState, nextPlannedStep, remainingIds, routeBlockState, routeCosts, runSnapshot, snapshotChange, type RoutePlan } from "./route-plan.js";
 import { oneshotOn } from "./oneshot.js";
 import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardSlotsOf, discardVariant, DRINK_SUFFIX, drinkableSlots, drinkVariant } from "./potion-discard.js";
@@ -509,7 +509,7 @@ export const ROUTE_PLAN_TASK =
 /** The review after an act-start Ancient whose outcome was not known when the route was planned (map/route-review). */
 export const ROUTE_REVIEW_TASK =
   "本幕路线是和幕初远古的选项一起定的，当时还不知道选项的结果；结果见 state.route_map.revealed_outcome。" +
-  "state.route_map 有完整地图、你的路线计划（plan）和按现在 HP 算的计划事实（plan_facts）。保留原路线回答 \"keep\"；" +
+  "state.route_map 有完整地图、你的路线计划（plan）和按现在 HP 算的计划事实（plan_facts），next_rest 是计划（keep）和经每个下一步节点的另一条（switch）到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP。保留原路线回答 \"keep\"；" +
   "要换就给出新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss）。" +
   '只回答 JSON：{"route": "keep" 或 "<节点 id，用空格分隔>", "reason": "<30 字以内>"}';
 
@@ -758,9 +758,10 @@ function routeReviewQuestion(env: DecisionEnv, plan: RoutePlan, follow: ActDecis
           const first = available.find((node) => nodeId(node.row, node.col) === ids[0]);
           if (!first) return { invalid: `the route's first node ${ids[0]} is not an available map node` };
           const changed = makeRoutePlan(env, map, ids, start, costs, `review after the act-start Ancient (${review.why}): ${revealed}`);
+          const nextRest = nextRestVersus(map, kept, ids, start, costs);
           return {
             intent: { action: "choose_map_node", option_index: first.index },
-            rationale: `route review (${review.why}): changed to ${changed.summary}${reason ? ` — ${reason}` : ""}`,
+            rationale: `route review (${review.why}): changed to ${changed.summary}${reason ? ` — ${reason}` : ""}${nextRest ? `; next rest: ${nextRest.text}${nextRest.worse ? " (clearly worse than the kept route)" : ""}${nextRest.eliteWorse ? " (clearly lower at the next elite)" : ""}` : ""}`,
             confidence: null,
             fallback: false,
             decider: "deepseek",

@@ -462,8 +462,13 @@ export interface RouteReviewResult {
   /** The answer's `route_reason`. */
   reason: string;
   invalid?: string;
-  /** A change: the plan reference and step it is, the route key, the paths from here before and after, and the plan's why. */
-  change?: { ref: string; step: number; key: string; from: string; to: string; why: string };
+  /**
+   * A change: the plan reference and step it is, the route key, the paths from here before and after, and the plan's
+   * why; nextRest: the new route against the kept one on the later of their next rest floors and at their next elites
+   * (absent when both are the same), `worse` / `eliteWorse` when the new one is clearly worse on that floor
+   * (strategy/route-map.ts nextRestVersus, clearlyWorse).
+   */
+  change?: { ref: string; step: number; key: string; from: string; to: string; why: string; nextRest?: { text: string; worse: boolean; eliteWorse: boolean } };
 }
 
 export interface AskDecision {

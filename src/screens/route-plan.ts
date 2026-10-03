@@ -8,7 +8,7 @@
 import type { GameState } from "../mod/schema.js";
 import type { DecisionEnv, RememberedMap } from "../project/types.js";
 import { asArray, asRecord, bool, num, str, type JsonValue } from "../util/json.js";
-import { buildRouteMap, floorOfRow, nodeId, reachableNext, roomCostsLine, routeFacts, routeText, routeView, type RouteFacts, type RouteMap } from "../strategy/route-map.js";
+import { buildRouteMap, floorOfRow, nextRestFacts, nodeId, reachableNext, roomCostsLine, routeFacts, routeText, routeView, type RouteFacts, type RouteMap, type RouteStart } from "../strategy/route-map.js";
 import { bossStartHealOf, projectPath, restHealOf, roomCostModel, type RoomCostModel } from "../strategy/route-projection.js";
 
 export interface RoutePlanStep {
@@ -219,15 +219,26 @@ export interface RouteBlockInput {
   chain?: number;
   /** The HP each option of this question leaves (a rest site's options). */
   options?: { label: string; hp: number; max: number }[];
+  /**
+   * Where the stretches to the next rest site (next_rest: the plan's and each next node's) start, when not `start`:
+   * at a rest site the HP its heal leaves, with the note saying so.
+   */
+  nextRest?: { start: RouteStart; note: string };
 }
 
-/** The route block: the whole map, the plan and its facts at HP now, and the room costs they use. */
+/**
+ * The route block: the whole map, the plan and its facts at HP now, each route's stretch to the next rest site (the
+ * plan's and the best one through each next node: next_rest, a review only), and the room costs they use.
+ */
 export function routeBlockState(input: RouteBlockInput): Record<string, JsonValue> {
-  const facts: RouteFacts | null = input.plan && input.plan.length > 0 ? routeFacts(input.map, input.plan, input.start, input.costs, input.chain ?? 0, input.options ?? []) : null;
+  const planned = input.plan && input.plan.length > 0 ? input.plan : null;
+  const facts: RouteFacts | null = planned ? routeFacts(input.map, planned, input.start, input.costs, input.chain ?? 0, input.options ?? []) : null;
+  const nextRest = planned ? nextRestFacts(input.map, planned, input.nextRest?.start ?? input.start, input.costs, input.chain ?? 0, input.nextRest?.note) : null;
   return {
     ...(routeView(input.map) as unknown as Record<string, JsonValue>),
-    ...(input.plan && input.plan.length > 0 ? { plan: routeText(input.map, input.plan) } : {}),
+    ...(planned ? { plan: routeText(input.map, planned) } : {}),
     ...(facts ? { plan_facts: facts as unknown as JsonValue } : {}),
+    ...(nextRest ? { next_rest: nextRest as unknown as JsonValue } : {}),
     room_costs: roomCostsLine(input.costs),
   };
 }
