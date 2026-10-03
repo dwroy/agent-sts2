@@ -145,3 +145,7 @@
 
 ### V4.4 A9 第 19–20 局复盘补充（2026-10-03 10:14）
 - **执迷 ENTHRALLED 在手时规划器只给「结束回合」**（不阻塞）：mod 把其余手牌标 blocked_by_hook，src/strategy/card-model.ts:685 playable 照搬当帧标记，src/screens/combat-plan.ts:2176、:1963 只把可打牌交给求解器；单打执迷 2 费无效果，于是只剩结束回合。证据 HYQW F38 T4（5 能量一张未出、掉 13）：states 帧 5650853778，控制台 20261003-083119-b0e9618+dirty.log:1681。建议：手里有可打的执迷时，把被它锁的牌当成「打出执迷后可打」。
+
+### V4.5 第 1–4 局复盘补充（2026-10-03 14:03）
+- **蜥蜴尾巴触发后仍被当作可用（复活后同一敌方回合继续受伤）**（不卡对局，但让 boss SL 失效）：src/screens/combat-plan.ts trackLizardTail 只在下一回合开局血量落在 35–40（50% 减 LIZARD_TAIL_SLACK=5）时才记为已用（a6b09c1 :4423 / 当前 :4573；SLACK :4378 / 当前 :4528），遗物本身无已用标记（stack=null、is_melted=false），revivesOf 一直返回尾巴，src/sl/judge.ts:521 判「a revive is left」。证据 Y8E0 F48 女王：T3 敌方回合 14 血吃 12×3，归零复活到 40，第 3 段再掉 12，T4 开局 28/80，不在窗口；控制台 :1992（T6）误判，求解器 T6 选全攻线指望复活；6 次 SL 全未用。与第 94 行同函数，漏的是另一路径。
+- 已知项复发：为 boss 买的药路上被喝（Y8E0 能力药水 F46、WRXU 鲜血药水 F39）；mod 超时自愈（Y8E0 1、WRXU 4、FP35 6）。gate_reject 0，least-loss 无回合内自杀，「抽什么都会死」0 次。
