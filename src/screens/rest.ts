@@ -13,6 +13,7 @@ import { deckCards, deckFollowUp, selectableCards, nextPlanRef, oneshotFailedHer
 import { followUpTargetScore } from "./selection.js";
 import { fightChainAt } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
+import { mapActOf } from "./route-plan.js";
 import { baseRestHeal, BOSS_START_HEAL, restedHp, restHealOf, type RestHeal } from "../strategy/route-projection.js";
 import { continueAfterDiscard, DISCARD_ANSWER_NOTE, DISCARD_SUFFIX, discardableSlots, discardVariant, potionSlotsNeeded } from "./potion-discard.js";
 import { hpBandOf, restOutcome } from "../knowledge/outcome-facts.js";
@@ -265,7 +266,7 @@ export function rememberMap(memory: ScreenMemory, state: GameState): void {
       .filter((point): point is { row: number; col: number } => point !== null)
       .filter((point, at, all) => all.findIndex((other) => other.row === point.row && other.col === point.col) === at),
     act: state.run?.act_id ?? null,
-    fights: fightChainAt(map),
+    fights: fightChainAt(map, mapActOf(state)),
   };
   // A later frame of the same map screen (the travel animation) keeps the node already chosen from it.
   const previous = memory.lastMap;

@@ -441,12 +441,12 @@ describe("map", () => {
     expect(valueOf(raw)).toBeLessThan(valueOf(mapPayload()) - 1.4);
   });
 
-  it("charges the fight-chain penalty from the 3rd fight, more below 60% HP", async () => {
+  it("charges the fight-chain penalty from the 3rd fight in act 1, more below 60% HP (acts 2-3: tests/route-rest.test.ts)", async () => {
     const { fightChainPenalty } = await import("../src/screens/map.js");
-    expect(fightChainPenalty(1, 0.9)).toBe(0);
-    expect(fightChainPenalty(2, 0.9)).toBe(1.5);
-    expect(fightChainPenalty(4, 0.3)).toBe(3);
-    expect(fightChainPenalty(2, 0.45)).toBeCloseTo(2.25);
+    expect(fightChainPenalty(1, 0.9, 1)).toBe(0);
+    expect(fightChainPenalty(2, 0.9, 1)).toBe(1.5);
+    expect(fightChainPenalty(4, 0.3, 1)).toBe(3);
+    expect(fightChainPenalty(2, 0.45, 1)).toBeCloseTo(2.25);
   });
 
   it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
