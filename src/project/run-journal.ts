@@ -187,7 +187,7 @@ export const BOSS_NOTES: Record<string, string> = {
   THE_INSATIABLE: "{HP:THE_INSATIABLE} 血，沙坑每敌方回合 −1，归零即死：先比沙坑和 HP 哪条死线先到；沙坑先到时尽早打狂乱逃离（每张多一回合），不要等沙坑 ≤2；HP 先到时逃离不加回合，打格挡/伤害（{SANDPIT_DEATHS}；经验 insatiable-escape）。",
   KAISER_CRAB: "两只钳子：单体伤害集中打火箭（T4/T9 激光 {DMG:ROCKET:LASER_MOVE}，在背后 {BEHIND:ROCKET:LASER_MOVE}，再加力量）；群伤照打两只；先死一只时另一只 +99 格挡 +6 力，但格挡只挡一回合，那回合出格挡/能力牌（{CRAB_KILLS}；经验 crab-kill-order）。",
   KNOWLEDGE_DEMON: "{HP:KNOWLEDGE_DEMON} 血，第 1/5/9 回合选负面：懒惰 > 心灵腐化 > 瓦解 > 衰朽；每 4 回合回血加 {GAIN:KNOWLEDGE_DEMON:PONDER_MOVE:STRENGTH_POWER} 力，要力量成长速攻。",
-  QUEEN: "女王 {HP:QUEEN} + 聚合体 {HP:TORCH_HEAD_AMALGAM}：先杀聚合体，单体伤害从第 1 回合起就给它，女王只吃群伤（{QUEEN_AMALGAM}；经验 queen-plan）；第 2 回合起 99 层易伤/虚弱/脆弱，前两回合全力输出，魂缚牌每回合只打一张；聚合体一死，下一个敌方回合就是将头砍下 {DMG:QUEEN:OFF_WITH_YOUR_HEAD_MOVE}（每段再加女王的力量），打死它的那回合要留住 HP + 格挡 ≥ 这一下（聚合体死了的 11 场输局 6 场死在这第一下）。",
+  QUEEN: "女王 {HP:QUEEN} + 聚合体 {HP:TORCH_HEAD_AMALGAM}：先杀聚合体，单体伤害从第 1 回合起就给它，女王只吃群伤（{QUEEN_AMALGAM}；经验 queen-plan）；第 2 回合起 99 层易伤/虚弱/脆弱，前两回合全力输出，魂缚牌每回合只打一张；聚合体一死，女王那个敌方回合激怒（+2 力，不攻击），再下一个敌方回合就是将头砍下（基础 {DMG:QUEEN:OFF_WITH_YOUR_HEAD_MOVE}，我方 99 层易伤下每段 ×1.5 再加女王的力量，A8 首次显示 35）：打死它之后的那一回合要留住 HP + 格挡 ≥ 这一下（聚合体死了的 11 场输局 6 场死在这第一下）。",
   TEST_SUBJECT: "三阶段 HP {TS_PHASES}：一阶段少打技能；二阶段多段爪 {DMG:TEST_SUBJECT:MULTI_CLAW_MOVE} 起每回合多一段，要 3–4 回合打完，挡不满就全力输出；三阶段天罚每两回合给一次无实体：无实体回合打能力/格挡，开放回合全力输出（大伤害照样有效，「靠多段」是错的；经验 ts-phase3），进三阶段 HP 最好 ≥75（猛扑 {DMG:TEST_SUBJECT:BIG_POUNCE}）；复生回合做准备。",
   AEONGLASS: "{HP:AEONGLASS} 血，人工制品 {POWER:AEONGLASS:ARTIFACT_POWER} + 凋萎存在（每打 {POWER:AEONGLASS:WITHERING_PRESENCE_POWER} 张牌塞一张凋萎）：先用便宜减益剥人工制品，少打小牌，退潮 {BLOCK:AEONGLASS:EBB_MOVE} 格挡在我方第 2/5/8 回合，那几回合打能力；A8 赢局 6–10 回合打完，赢输每回合掉血相近，差在伤害。",
   DOORMAKER: "多阶段，需要 AOE + 可持续成长。",

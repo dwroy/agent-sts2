@@ -78,6 +78,12 @@ export interface DecisionEnv {
    * false): the combat question exactly as with MECH_RULES alone.
    */
   mechMoveRules?: boolean;
+  /**
+   * MECH_DEATH_MOVE (config; docs/mechanics-learning.md §9): with MECH_RULES on, the learned "an ally's death changes a
+   * survivor's move" rules (the Queen once the Torch Head Amalgam dies). Undefined means on; false (or MECH_RULES false):
+   * the combat question exactly as without them.
+   */
+  mechDeathMove?: boolean;
 }
 
 /** A retried fight, as the combat planners see it (src/sl/controller.ts envFor). */
