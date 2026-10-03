@@ -33,7 +33,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, SHRINKER, solveTurn, STRIP_COUNTERS, type DeathMove, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, replaySteps, SHRINKER, solveTurn, STRIP_COUNTERS, type DeathMove, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { liveSolverFields } from "../strategy/passive-pieces.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -1985,6 +1985,35 @@ export function stepPlay(step: Step): string {
 }
 
 /**
+ * SL_RETRY_EXPLORE_REPLAY_PLAYS: a reference attempt's logged plays (playKey: the card's id with "+", "potion:<id>", then ">"
+ * and the target by the options' name) as a line of this board: each play the solver input's card (or potion) of that id
+ * and upgrade not taken by an earlier play, aimed at the living enemy of that name, the whole played from the turn's start
+ * as the solver scores a line (replaySteps). Null when a play has no card or enemy here, cannot be played (energy, a target
+ * gone), or the line's plays come out otherwise; an empty list is ending the turn.
+ */
+export function loggedLine(input: SolverInput, plays: readonly string[]): Plan | null {
+  const used = new Set<number>();
+  const steps: Step[] = [];
+  for (const play of plays) {
+    const at = play.indexOf(">");
+    const what = at < 0 ? play : play.slice(0, at);
+    const targetName = at < 0 ? null : play.slice(at + 1);
+    const potion = what.startsWith("potion:") ? what.slice("potion:".length) : null;
+    const upgraded = potion === null && what.endsWith("+");
+    const id = potion ?? (upgraded ? what.slice(0, -1) : what);
+    const card = input.hand.find((entry) => !used.has(entry.index) && (potion !== null ? entry.type === "Potion" && entry.cardId.split(":")[1] === potion : entry.type !== "Potion" && entry.cardId === id && entry.upgraded === upgraded));
+    if (!card) return null;
+    const enemy = targetName === null ? null : input.enemies.find((other) => other.name === targetName);
+    if (targetName !== null && !enemy) return null;
+    used.add(card.index);
+    steps.push({ cardIndex: card.index, cardId: card.cardId, upgraded: card.upgraded, name: card.name, target: enemy?.index ?? null, targetName: enemy?.name ?? null });
+  }
+  const plan = replaySteps(input, steps);
+  if (!plan || plan.steps.length !== plays.length || plan.steps.some((step, i) => stepPlay(step) !== plays[i])) return null;
+  return plan;
+}
+
+/**
  * SL_RETRY_EXPLORE_CANON / _TURN: the turn a line ends with if it is played (the plays already made this turn, `played`, and
  * the line's): its canonical key (turnCanon over playKey) and the same as an attempt's summary writes it (rows from before
  * the record). None without `played` (both off).
@@ -2024,8 +2053,11 @@ export function turnOpen(played: SlExploreEnv["played"], steps: readonly Step[],
 export type SlPointInfo = Pick<SlPoint, "kind" | "label" | "line" | "alternatives" | "dead" | "b2" | "explored" | "canon"> & {
   /** On the deviation point's board: what came of it (the line about to be played, its replacement, why). */
   deviation?: { original: string; replacement: string | null; reason: string };
-  /** SL_RETRY_EXPLORE_REPLAY, a board before the deviation point: whether the reference line replaced the answer, and why (not). */
-  replay?: { overridden: boolean; reason: string };
+  /**
+   * SL_RETRY_EXPLORE_REPLAY, a board before the deviation point: whether the reference line replaced the answer, and why (not);
+   * `logged` (SL_RETRY_EXPLORE_REPLAY_PLAYS): the line played is the reference attempt's logged plays from this board.
+   */
+  replay?: { overridden: boolean; reason: string; logged?: true };
   /** SL_RETRY_EXPLORE_TURN, later in the deviation's turn: the answer, what replaced it (null: kept), why. */
   avoided?: { original: string; replacement: string | null; reason: string };
   /**
@@ -3813,7 +3845,9 @@ function planTurn(env: DecisionEnv): Decision | null {
               },
             };
       };
-      const deviate = explore.deviate;
+      let deviate = explore.deviate;
+      // SL_RETRY_EXPLORE_REPLAY_DEVIATE: why the replay could not go on here, when the deviation is made here instead.
+      let fellBack: string | null = null;
       // SL_RETRY_EXPLORE_REPLAY: a board of the reference attempt's path before the deviation point plays its line there.
       const replay = explore.replay;
       if (!deviate && replay) {
@@ -3823,13 +3857,46 @@ function planTurn(env: DecisionEnv): Decision | null {
           ...shown.map((plan) => ({ plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan), ...turnKeys(played, plan.steps) })),
           ...[...mcAll].map(([plan, mc]) => mcLine(plan, mc, [mc.source.potionId])),
         ];
-        const { line: ref, reason } = replayChoice(pick, (pick.plan ?? pick.rated ?? null)?.outcome.dies ?? false, all, replay);
-        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason } };
-        if (!ref) return { resolved, log, info: { ...info, replay: { overridden: false, reason } } };
-        const mc = mcAll.get(ref.plan);
-        const out = playInstead(ref, mc, `SL explore: replaying attempt ${replay.reference}'s ${ref.text} instead of ${pick.text} before ${replay.point.split(",")[0]}`);
-        return { resolved: out, log, info: { kind: "question", label, ...pointOf(asPick(ref, mc)), replay: { overridden: true, reason } } };
+        const pickDies = (pick.plan ?? pick.rated ?? null)?.outcome.dies ?? false;
+        const choiceNow = replayChoice(pick, pickDies, all, replay);
+        let ref = choiceNow.line;
+        let reason = choiceNow.reason;
+        const at = replay.point.split(",")[0];
+        const notShown = ref === null && reason === `attempt ${replay.reference}'s line is not among the options`;
+        // SL_RETRY_EXPLORE_REPLAY_PLAYS: its line is not among the options (a later attempt knows more draws, and the lines
+        // read otherwise): its logged plays from this board, as a line, when they can be played here.
+        let logged = false;
+        if (notShown && replay.plays && solvedInput) {
+          const plan = loggedLine(solvedInput, replay.plays);
+          const plays = replay.plays.length > 0 ? replay.plays.join(", ") : "end turn";
+          if (!plan) reason = `${reason}, and its plays from this board (${plays}) cannot be played here`;
+          else if (plan.outcome.dies && !pickDies) reason = `${reason}, and its plays from this board (${plays}) die this turn, the answer does not`;
+          else {
+            ref = { plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan), ...turnKeys(played, plan.steps) };
+            reason = `${reason}: its plays from this board (${plays}), replayed to reach ${at}`;
+            logged = true;
+          }
+        }
+        const loggedTag = logged ? { logged: true as const } : {};
+        const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!] } : {};
+        const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog } };
+        // SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played here (or they die this turn and the
+        // answer does not): the attempt leaves the path here, so it deviates here (the lines failed attempts played on this
+        // board), not into a failed attempt's fight.
+        const stuck = ref === null && (notShown || reason === `attempt ${replay.reference}'s line dies this turn, the answer does not`);
+        if (stuck && replay.fallback && !pick.wins) {
+          deviate = replay.fallback;
+          fellBack = reason;
+        } else {
+          if (!ref) return { resolved, log, info: { ...info, replay: { overridden: false, reason } } };
+          const mc = mcAll.get(ref.plan);
+          const out = playInstead(ref, mc, logged ? `SL explore: replaying attempt ${replay.reference}'s plays from this board, ${ref.text}, instead of ${pick.text} before ${at} (its line ${replay.line} is not among the options)` : `SL explore: replaying attempt ${replay.reference}'s ${ref.text} instead of ${pick.text} before ${at}`);
+          return { resolved: out, log, info: { kind: "question", label, ...pointOf(asPick(ref, mc)), replay: { overridden: true, reason, ...loggedTag } } };
+        }
       }
+      // SL_RETRY_EXPLORE_REPLAY_DEVIATE: the deviation made where the replay could not go on, said in the row and the info.
+      const fellBackLog: Record<string, JsonValue> = fellBack !== null ? { fallback: true, replay_stopped: fellBack } : {};
+      const fellBackInfo = fellBack !== null ? { replay: { overridden: false, reason: `${fellBack}: deviated here instead` } } : {};
       // SL_RETRY_EXPLORE_TURN: later in the deviation's turn, or its point's board.
       const avoid = deviate ? undefined : explore.avoid;
       if (!deviate && !avoid) return { resolved, log: null, info };
@@ -3913,13 +3980,14 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...numbersLog,
         ...gateLog,
         ...(point.tried && pick.canon !== undefined ? ({ turn: pick.canon, ...(rep?.canon !== undefined ? { turn_instead: rep.canon } : {}) } as Record<string, JsonValue>) : {}),
+        ...fellBackLog,
       };
       const deviation = { original: pick.text, replacement: rep?.text ?? null, reason: choice.reason };
-      if (!rep) return { resolved, log, info: { ...info, deviation } };
+      if (!rep) return { resolved, log, info: { ...info, deviation, ...fellBackInfo } };
       // SL_RETRY_EXPLORE_WHOLE: a pick not played here whose turn may still end as a failed one after its draw.
       const mayEnd = whole && choice.reason.startsWith(MAY_REPEAT);
       const out = playInstead(rep, mc, `SL explore (${point.point}): playing ${rep.text} instead of ${pick.text}, ${mayEnd ? "whose turn may end after its draw as it did on this board" : "played on this board"} in attempt${point.attempts.length === 1 ? "" : "s"} ${point.attempts.join(", ")} (${choice.reason})`);
-      return { resolved: out, log, info: { kind: "question", label, ...pointOf(asPick(rep, mc)), explored: true, deviation } };
+      return { resolved: out, log, info: { kind: "question", label, ...pointOf(asPick(rep, mc)), explored: true, deviation, ...fellBackInfo } };
     } catch {
       // Any error: the resolution as without the switch.
       return { resolved, log: null, info: null };

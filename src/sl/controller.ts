@@ -44,7 +44,7 @@ import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
-import { exploreTarget, playKey, replayPoints, slBoardKey, triedHas, turnCanon, type SlExploreRecord, type SlPoint, type SlTarget, type SlTurnPlays } from "./explore.js";
+import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, slBoardKey, triedHas, turnCanon, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays } from "./explore.js";
 import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type DrawBound, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
 
@@ -289,6 +289,16 @@ export class SlController {
     return this.config.retryExplore === true && this.config.retryExplorePotion === true && (this.canonOn() || this.turnOn());
   }
 
+  /** SL_RETRY_EXPLORE_REPLAY_PLAYS (with SL_RETRY_EXPLORE_REPLAY): a reference line not shown, its logged plays played. */
+  private replayPlaysOn(): boolean {
+    return this.config.retryExplore === true && this.config.retryExploreReplay === true && this.config.retryExploreReplayPlays === true;
+  }
+
+  /** SL_RETRY_EXPLORE_REPLAY_DEVIATE (with SL_RETRY_EXPLORE_REPLAY): a replay that cannot go on deviates where it is. */
+  private replayDeviateOn(): boolean {
+    return this.config.retryExplore === true && this.config.retryExploreReplay === true && this.config.retryExploreReplayDeviate === true;
+  }
+
   /** The configuration as run-config.jsonl records it. */
   describe(): Record<string, JsonValue> {
     return {
@@ -310,12 +320,16 @@ export class SlController {
       retry_explore_boss_potions: this.config.retryExplore === true && this.config.retryExploreBossPotions === true,
       retry_explore_order: this.config.retryExplore === true && this.config.retryExploreOrder === true,
       retry_explore_replay: this.config.retryExplore === true && this.config.retryExploreReplay === true,
+      retry_explore_replay_plays: this.replayPlaysOn(),
+      retry_explore_replay_deviate: this.replayDeviateOn(),
       retry_explore_canon: this.canonOn(),
       retry_explore_turn: this.turnOn(),
       retry_explore_whole: this.wholeOn(),
       retry_explore_where: this.whereOn(),
       retry_explore_potion: this.potionOn(),
       retry_known_picks: this.config.retryKnownPicks === true,
+      retry_known_off_top: this.config.retryKnownInserts === true && this.config.retryKnownOffTop === true,
+      retry_known_hand_order: this.config.retryKnownInserts === true && this.config.retryKnownHandOrder === true,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
       elites: this.elites.elites.map((elite) => elite.name),
@@ -439,7 +453,12 @@ export class SlController {
       if (target && deviation?.reached && this.turnOn() && target.tried && deviation.turn !== undefined && deviation.turn === state.turn) {
         return { ...flags, avoid: { point: target.point, tried: structuredClone(target.tried), attempts: [...target.attempts] } };
       }
-      if (!target || deviation?.reached) return { ...flags };
+      // SL_RETRY_EXPLORE_REPLAY_DEVIATE: the same later in the turn of the deviation made where the replay stopped.
+      const fallen = explore.fallback;
+      if (target && fallen?.reached && this.turnOn() && fallen.tried && fallen.turn !== undefined && fallen.turn === state.turn) {
+        return { ...flags, avoid: { point: fallen.point, tried: structuredClone(fallen.tried), attempts: [...fallen.attempts] } };
+      }
+      if (!target || deviation?.reached || fallen?.reached) return { ...flags };
       const board = slBoardKey(state);
       if (board === target.board) {
         const tried = target.tried && (this.canonOn() || this.turnOn()) ? { tried: structuredClone(target.tried) } : {};
@@ -449,7 +468,22 @@ export class SlController {
       // SL_RETRY_EXPLORE_CANON its turn's plays too: the same plays are its line).
       const ref = explore.replay && explore.replay.stopped === null ? this.replayLines(fight, target).get(board) : undefined;
       const canon = ref && this.canonOn() ? ref.canon?.[ref.line] : undefined;
-      return ref !== undefined ? { ...flags, replay: { line: ref.line, reference: target.reference, point: target.point, ...(canon !== undefined ? { canon } : {}) } } : { ...flags };
+      if (ref !== undefined) {
+        // SL_RETRY_EXPLORE_REPLAY_PLAYS: its logged plays from here (played when its line is not among the options);
+        // SL_RETRY_EXPLORE_REPLAY_DEVIATE: the deviation to make here when neither can be played.
+        const plays = this.replayPlaysOn() ? replayPlays(this.fightRows(fight), target, board) : null;
+        const fallback = this.replayDeviateOn() ? this.fallbackAt(fight, state, board, `where the replay of attempt ${target.reference}'s path could not go on`) : null;
+        return { ...flags, replay: { line: ref.line, reference: target.reference, point: target.point, ...(canon !== undefined ? { canon } : {}), ...(plays ? { plays } : {}), ...(fallback ? { fallback } : {}) } };
+      }
+      // SL_RETRY_EXPLORE_REPLAY_DEVIATE: off the reference path before the point (the replay stopped, or stops on this board;
+      // not a board within one of its lines, between its decisions): on a board a failed attempt decided on, the deviation is
+      // made here, so that the attempt does not play its fight again.
+      if (explore.replay && this.replayDeviateOn() && (explore.replay.stopped !== null || !this.onReferencePath(fight, target, board))) {
+        const why = explore.replay.stopped !== null ? `after the replay of attempt ${target.reference}'s path stopped (${explore.replay.stopped})` : `off attempt ${target.reference}'s path before ${target.point.split(",")[0]}`;
+        const fallback = this.fallbackAt(fight, state, board, why);
+        if (fallback) return { deviate: fallback, ...flags };
+      }
+      return { ...flags };
     } catch (error) {
       fight.explore = null;
       this.options.note(`SL: explore off for this attempt (${error instanceof Error ? error.message : String(error)}); played as usual`);
@@ -471,9 +505,11 @@ export class SlController {
       // SL_RETRY_EXPLORE_WHOLE: a decision of the deviation's turn whose line ends it as a failed attempt's, nothing could
       // change it: on the row's deviation, and said.
       const failed = slAvoidFailedOf(decision, resolved);
-      if (failed && explore.target && explore.deviation?.reached) {
-        const deviation = explore.deviation;
-        const attempts = explore.target.attempts;
+      // SL_RETRY_EXPLORE_REPLAY_DEVIATE: the deviation made where the replay stopped counts here as the target's does.
+      const made = explore.deviation?.reached ? explore.deviation : explore.fallback?.reached ? explore.fallback : undefined;
+      if (failed && explore.target && made) {
+        const deviation = made;
+        const attempts = explore.deviation?.reached ? explore.target.attempts : explore.fallback!.attempts;
         deviation.avoidFailed = [...(deviation.avoidFailed ?? []), { turn: state.turn, label: info?.label ?? decision.label, line: failed.line, reason: failed.reason }];
         this.options.note(`SL: could not keep the deviation's turn off the failed ones at F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}: ${failed.line} ends it as attempt${attempts.length === 1 ? "" : "s"} ${attempts.join(", ")} had it (${failed.reason})`);
       }
@@ -485,12 +521,13 @@ export class SlController {
       else explore.points.push(point);
       const target = explore.target;
       // SL_RETRY_EXPLORE_TURN: a later decision of the deviation's turn whose line gave way (said once each).
-      if (target && explore.deviation?.reached && info.avoided?.replacement) {
+      if (target && made && info.avoided?.replacement) {
         this.options.note(`SL: kept the deviation's turn at F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}: ${info.avoided.replacement} instead of ${info.avoided.original} (${info.avoided.reason})`);
       }
-      if (!target || explore.deviation?.reached) return;
+      if (!target || made) return;
       if (board !== target.board) {
         this.noteReplay(fight, explore, state, board, info);
+        this.noteFallback(fight, explore, state, board, info);
         return;
       }
       // SL_RETRY_EXPLORE_CANON / _TURN: the deviation's turn (its plays and whether they differ go into the row).
@@ -504,6 +541,36 @@ export class SlController {
       );
     } catch {
       // the record misses this point
+    }
+  }
+
+  /** Whether `board` is one the reference attempt sent an action on (its turn record), its decision points' and the boards within its lines. */
+  private onReferencePath(fight: Pick<FightTrack, "floor" | "encounter">, target: SlTarget, board: string): boolean {
+    const reference = this.fightRows(fight).find((row) => row.attempt === target.reference);
+    return (reference?.explore?.turns ?? []).some((turn) => turn.boards.some((entry) => entry.board === board));
+  }
+
+  /** This fight's earlier rows (the attempts so far, the reference among them). */
+  private fightRows(fight: Pick<FightTrack, "floor" | "encounter">): SlAttemptRow[] {
+    return this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter);
+  }
+
+  /**
+   * SL_RETRY_EXPLORE_REPLAY_DEVIATE: the deviation to make on `board` when the replay cannot go on (`why`, for its point):
+   * the lines the failed attempts played on the board and their turns through it (boardTried), kept for notePoint; null when
+   * none decided on it (the attempt is on a path of its own already). Never throws.
+   */
+  private fallbackSpec: { board: string; turn: number | null; point: string; excluded: string[]; attempts: number[]; tried?: SlTried } | null = null;
+  private fallbackAt(fight: FightTrack, state: GameState, board: string, why: string): { point: string; excluded: string[]; attempts: number[]; tried?: SlTried } | null {
+    try {
+      const found = boardTried(this.fightRows(fight), fight.attempt, board, { ...(this.canonOn() ? { canon: true } : {}), ...(this.potionOn() ? { potion: true } : {}) });
+      if (!found) return null;
+      const point = `T${state.turn ?? "?"}, ${why}`;
+      const tried = found.tried && (this.canonOn() || this.turnOn()) ? { tried: found.tried } : {};
+      this.fallbackSpec = { board, turn: state.turn, point, excluded: found.excluded, attempts: found.attempts, ...tried };
+      return { point, excluded: [...found.excluded], attempts: [...found.attempts], ...(found.tried && (this.canonOn() || this.turnOn()) ? { tried: structuredClone(found.tried) } : {}) };
+    } catch {
+      return null;
     }
   }
 
@@ -556,16 +623,40 @@ export class SlController {
     const line = ref?.line;
     // SL_RETRY_EXPLORE_CANON: the reference's turn played here is its line, whatever the order or text.
     const refCanon = ref && this.canonOn() ? ref.canon?.[ref.line] : undefined;
-    const same = info.line === line || (refCanon !== undefined && info.canon?.[info.line] === refCanon);
+    // SL_RETRY_EXPLORE_REPLAY_PLAYS: its logged plays from this board, played as a line, are its line here too.
+    const same = info.line === line || (refCanon !== undefined && info.canon?.[info.line] === refCanon) || (line !== undefined && info.replay?.logged === true);
     const where = `T${state.turn ?? "?"}`;
     if (line === undefined) replay.stopped = `${where}: the board is not on attempt ${target.reference}'s path`;
     else if (!same) replay.stopped = `${where}: ${info.line} played where attempt ${target.reference} played ${line}${info.replay ? ` (${info.replay.reason})` : ""}`;
     else {
       replay.replayed += 1;
       if (info.replay?.overridden) replay.overridden += 1;
+      if (info.replay?.logged === true) replay.logged = (replay.logged ?? 0) + 1;
       return;
     }
-    this.options.note(`SL: attempt ${fight.attempt} stops replaying attempt ${target.reference}'s path before ${target.point.split(",")[0]}: ${replay.stopped}; played as usual`);
+    const after = this.replayDeviateOn() ? (info.deviation && this.fallbackSpec?.board === board ? "; it deviates here instead" : "; it deviates on the first board a failed attempt decided on") : "; played as usual";
+    this.options.note(`SL: attempt ${fight.attempt} stops replaying attempt ${target.reference}'s path before ${target.point.split(",")[0]}: ${replay.stopped}${after}`);
+  }
+
+  /**
+   * SL_RETRY_EXPLORE_REPLAY_DEVIATE: a decision on a board where the replay could not go on (or after it stopped), on a board
+   * a failed attempt decided on (fallbackSpec), that the planner deviated at: the attempt's fallback, said once. A deviation
+   * that found no line left that no failed attempt played there is not one: the next such board tries again.
+   */
+  private noteFallback(fight: FightTrack, explore: SlExploreRecord, state: GameState, board: string, info: SlPointInfo): void {
+    const spec = this.fallbackSpec;
+    if (!this.replayDeviateOn() || !info.deviation || !spec || spec.board !== board || explore.fallback?.reached) return;
+    const where = `F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}`;
+    if (info.deviation.replacement === null && /^no shown line left/.test(info.deviation.reason)) {
+      this.options.note(`SL: could not deviate at ${where} (${spec.point}): ${info.deviation.reason}; the next board a failed attempt decided on tries again`);
+      return;
+    }
+    explore.fallback = { reached: true, board, point: spec.point, attempts: [...spec.attempts], ...(spec.tried ? { tried: structuredClone(spec.tried) } : {}), ...info.deviation, ...(explore.turns ? { turn: state.turn } : {}) };
+    this.options.note(
+      info.deviation.replacement !== null
+        ? `SL: explored at ${where} (${spec.point}): ${info.deviation.replacement} instead of ${info.deviation.original} (${info.deviation.reason})`
+        : `SL: deviated at ${where} (${spec.point}): ${info.deviation.original} played (${info.deviation.reason})`,
+    );
   }
 
   /**
@@ -573,6 +664,7 @@ export class SlController {
    * rows). Null with the switch off, on the first attempt, or on an error (the attempt plays as without the switch).
    */
   private newExplore(fight: Pick<FightTrack, "floor" | "encounter">, attempt: number): SlExploreRecord | null {
+    this.fallbackSpec = null;
     // SL_RETRY_EXPLORE_CANON: attempt 1 is recorded too (its turns: what later attempts count as tried).
     if (this.config.retryExplore !== true || attempt < (this.canonOn() ? 1 : 2)) return null;
     try {
@@ -636,8 +728,9 @@ export class SlController {
    */
   private newTracker(): DrawTracker {
     if (this.config.retryKnownInserts !== true) return new DrawTracker();
-    const picks = this.config.retryKnownPicks === true ? { picks: true } : {};
-    return this.config.retryKnownTop === true ? new DrawTracker({ inserts: true, tops: true, ...picks }) : new DrawTracker({ inserts: true, ...picks });
+    // SL_RETRY_KNOWN_OFF_TOP: cards played off the pile's top keep the order; SL_RETRY_KNOWN_HAND_ORDER: a played card's drawn copy is read by the hand's order.
+    const more = { ...(this.config.retryKnownPicks === true ? { picks: true } : {}), ...(this.config.retryKnownOffTop === true ? { offTop: true } : {}), ...(this.config.retryKnownHandOrder === true ? { handOrder: true } : {}) };
+    return this.config.retryKnownTop === true ? new DrawTracker({ inserts: true, tops: true, ...more }) : new DrawTracker({ inserts: true, ...more });
   }
 
   /** The known draw order of `attempt` at the fight: the earlier attempts' rows (null on the first attempt). */
@@ -901,18 +994,19 @@ export class SlController {
    */
   private exploreOut(fight: FightTrack, explore: SlExploreRecord): SlExploreRecord {
     const out = structuredClone(explore);
-    const deviation = out.deviation;
-    const tried = out.target?.tried;
-    if (!deviation || deviation.turn === undefined || deviation.turn === null || !tried || !out.turns) return out;
-    try {
-      const record = out.turns.find((turn) => turn.turn === deviation.turn);
-      const summary = fight.turns.find((turn) => turn.turn === deviation.turn);
-      if (!record) return out;
-      const canon = turnCanon(record.plays);
-      deviation.plays = canon;
-      deviation.differs = !triedHas(tried, { text: "", canon, ...(summary ? { loose: turnCanon(summary.plays) } : {}) });
-    } catch {
-      // the row as recorded
+    // SL_RETRY_EXPLORE_REPLAY_DEVIATE: the deviation made where the replay stopped, against the turns through its board.
+    for (const [deviation, tried] of [[out.deviation, out.target?.tried], [out.fallback, out.fallback?.tried]] as const) {
+      if (!deviation || deviation.turn === undefined || deviation.turn === null || !tried || !out.turns) continue;
+      try {
+        const record = out.turns.find((turn) => turn.turn === deviation.turn);
+        const summary = fight.turns.find((turn) => turn.turn === deviation.turn);
+        if (!record) continue;
+        const canon = turnCanon(record.plays);
+        deviation.plays = canon;
+        deviation.differs = !triedHas(tried, { text: "", canon, ...(summary ? { loose: turnCanon(summary.plays) } : {}) });
+      } catch {
+        // the row as recorded
+      }
     }
     return out;
   }

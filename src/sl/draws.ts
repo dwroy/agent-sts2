@@ -46,6 +46,16 @@
  * comes out of the known order (its first place from the pick on); one they took and this attempt has not (yet): the known
  * order past that moment is not exact, and once this attempt drew past it, the card is in the pile at an unknown place
  * (added at random, as SL_RETRY_KNOWN_INSERTS models it). Without the switch a pick ends the order (as before).
+ *
+ * SL_RETRY_KNOWN_OFF_TOP (2026-10-03, RNTVAT76BPV0 F38; DrawTracker `offTop`, with `inserts`): the potion Distilled Chaos, Havoc and
+ * Cascade play the pile's top cards without drawing them; they were its next cards, so they are places of the order (`offTop`)
+ * and the rest of it goes on (attempts 1-4 there broke at the potion, 10 known; now 29). Several in one step: their order among
+ * themselves is not known (one frame before, one after), a span of `KnownOrder.unordered` until an attempt drew them in order.
+ * With Hellraiser on, a Strike it plays as it is drawn leaves the pile among the step's draws (C4F14F3XPN0N F33 T4-T5): the
+ * step's draws are one such span (where the Strike was among them is not known), and the order goes on (18 known -> 30).
+ *
+ * SL_RETRY_KNOWN_HAND_ORDER (2026-10-03; DrawTracker `handOrder`, with `inserts`): a card played from the hand and a copy of it
+ * drawn in the same step (Shrug It Off drawing Shrug It Off) shows by the hand's order, not its counts (appendedCards).
  */
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, bool, str } from "../util/json.js";
@@ -83,6 +93,14 @@ export interface SlDraws {
    * none, and always with the switch off.
    */
   picked?: { turn: number; at: number; cards: string[]; names: string[] }[];
+  /**
+   * SL_RETRY_KNOWN_OFF_TOP: cards that came off the top of the draw pile without coming into the hand (Distilled Chaos,
+   * Havoc, Cascade play them): the turn, how many entries `order` had then (`at`), the cards and their names (in `order`
+   * from `at` on: they were the pile's next cards), and what played them. More than one card in one step: their order
+   * among themselves is not known (`order` lists them as the pile listing does). Absent when none, and always with the
+   * switch off.
+   */
+  offTop?: { turn: number; at: number; cards: string[]; names: string[]; source: string }[];
 }
 
 /**
@@ -115,6 +133,10 @@ interface Snapshot {
   drawNames: Map<string, string>;
   /** A card selection screen's prompt (in the fight: Seeker Strike's 「选择一张牌加入你的手牌」), "" otherwise. */
   selection: string;
+  /** The potions in the belt, by id (SL_RETRY_KNOWN_OFF_TOP: Distilled Chaos drunk). */
+  potions: string[];
+  /** Our powers, by id (SL_RETRY_KNOWN_OFF_TOP: Hellraiser on). */
+  powers: string[];
 }
 
 /**
@@ -201,7 +223,69 @@ function snapshotOf(state: GameState): Snapshot | null {
     return { key: cardKey(cardId, bool(card["upgraded"])), name: str(card["name"], cardId) };
   });
   const selection = state.screen === "CARD_SELECTION" ? str(asRecord(state.raw["selection"])["prompt"]) : "";
-  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard), discardCards: discard ?? new Map(), drawNames: pileNames(state, "draw"), selection };
+  const potions = asArray(asRecord(state.raw["run"])["potions"]).map((raw) => str(asRecord(raw)["potion_id"])).filter((id) => id !== "");
+  const powers = asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).map((raw) => str(asRecord(raw)["power_id"])).filter((id) => id !== "");
+  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard), discardCards: discard ?? new Map(), drawNames: pileNames(state, "draw"), selection, potions, powers };
+}
+
+/**
+ * SL_RETRY_KNOWN_OFF_TOP: Hellraiser (地狱狂徒, 「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」) plays a card it draws at once:
+ * a card whose name (or id) says Strike that left the pile while it is on.
+ */
+function strikeNamed(key: string, names: Map<string, string>): boolean {
+  return (names.get(key) ?? "").includes("打击") || /STRIKE/.test(baseKey(key));
+}
+
+/**
+ * SL_RETRY_KNOWN_OFF_TOP: what plays cards off the top of the draw pile (game data): the potion Distilled Chaos (精炼混沌,
+ * 「打出你抽牌堆顶部的{Repeat}张牌」), Havoc (破灭, 「打出抽牌堆顶部的牌并将其消耗」: one card) and Cascade (倾泻, 「打出你抽牌堆顶部的X张牌」).
+ * Not here: Mayhem (乱战, at the turn's start: before or after the turn's draw is not known), I Am Invincible (on top at
+ * the turn's end), Catastrophe and Uproar (random cards of the pile, not the top).
+ */
+const OFF_TOP_POTIONS: ReadonlyMap<string, string> = new Map([["DISTILLED_CHAOS", "Distilled Chaos"]]);
+const OFF_TOP_CARDS: ReadonlyMap<string, { name: string; one: boolean }> = new Map([
+  ["HAVOC", { name: "Havoc", one: true }],
+  ["CASCADE", { name: "Cascade", one: false }],
+]);
+/** Cards that play random cards of the draw pile (not its top): a step with one of them is never read as off the top. */
+const RANDOM_PILE_PLAYERS = new Set(["CATASTROPHE", "UPROAR"]);
+
+/**
+ * SL_RETRY_KNOWN_OFF_TOP: the one thing in this step that plays cards off the top of the pile, or null (none, or more than
+ * one, or a card playing random pile cards too): a potion of OFF_TOP_POTIONS gone from the belt, a card of OFF_TOP_CARDS gone
+ * from the hand. `one`: it plays a single card (Havoc).
+ */
+function offTopSource(before: Snapshot, now: Snapshot): { name: string; one: boolean } | null {
+  const sources: { name: string; one: boolean }[] = [];
+  const belt = countOf(now.potions.map((key) => ({ key, name: key })));
+  for (const [id, n] of countOf(before.potions.map((key) => ({ key, name: key })))) {
+    const name = OFF_TOP_POTIONS.get(id);
+    if (name && n > (belt.get(id) ?? 0)) sources.push({ name, one: false });
+  }
+  const left = minus(byBase(before.hand.map((card) => card.key)), byBase(now.hand.map((card) => card.key)));
+  if ([...left.keys()].some((id) => RANDOM_PILE_PLAYERS.has(id))) return null;
+  for (const id of left.keys()) {
+    const card = OFF_TOP_CARDS.get(id);
+    if (card) sources.push(card);
+  }
+  return sources.length === 1 ? sources[0]! : null;
+}
+
+/**
+ * SL_RETRY_KNOWN_HAND_ORDER: within a turn, the cards added to the hand's end: the hand past its longest start that is a
+ * subsequence of the last hand (the cards kept keep their order, the drawn and made ones come last). A card played and a
+ * copy of it drawn in the same step (P68P7CDJRDH3 F25 T1: Shrug It Off from 防御, 挑衅, 耸肩无视, 打击 drew Shrug It Off, the
+ * hand 防御, 打击, 耸肩无视) is new here, where counting the hand's cards sees none.
+ */
+function appendedCards(before: readonly HandCard[], now: readonly HandCard[]): HandCard[] {
+  let j = 0;
+  let k = 0;
+  for (; k < now.length; k += 1) {
+    while (j < before.length && before[j]!.key !== now[k]!.key) j += 1;
+    if (j >= before.length) break;
+    j += 1;
+  }
+  return now.slice(k);
 }
 
 function countOf(cards: HandCard[]): Map<string, number> {
@@ -288,6 +372,17 @@ export interface DrawTrackerOptions {
   tops?: boolean;
   /** SL_RETRY_KNOWN_PICKS (with `inserts`): a card a selection takes out of the pile (Seeker Strike) leaves the order going on (default: it ends it). */
   picks?: boolean;
+  /**
+   * SL_RETRY_KNOWN_OFF_TOP (with `inserts`): cards played off the top of the pile (Distilled Chaos, Havoc, Cascade) are the
+   * pile's next cards, in `order` (`offTop`), and the order goes on; with Hellraiser on, a step's draws with a Strike it played
+   * at once are a span of unknown order (default: it ends there).
+   */
+  offTop?: boolean;
+  /**
+   * SL_RETRY_KNOWN_HAND_ORDER (with `inserts`): within a turn, a card drawn while a copy of it was played from the hand in the
+   * same step is read by the hand's order (appendedCards), not taken for one that left the pile without coming into the hand.
+   */
+  handOrder?: boolean;
 }
 
 /** One attempt's draws, from every state the loop reads during it (DrawTracker.observe). */
@@ -304,11 +399,15 @@ export class DrawTracker {
   private topStack: HandCard[] = [];
 
   private readonly picks: boolean;
+  private readonly offTop: boolean;
+  private readonly handOrder: boolean;
 
   constructor(options: DrawTrackerOptions = {}) {
     this.inserts = options.inserts === true;
     this.tops = this.inserts && options.tops === true;
     this.picks = this.inserts && options.picks === true;
+    this.offTop = this.inserts && options.offTop === true;
+    this.handOrder = this.inserts && options.handOrder === true;
   }
 
   /** SL_RETRY_KNOWN_TOP: the cards moved onto the pile still on it, the next one drawn first; empty without the switch. */
@@ -416,9 +515,9 @@ export class DrawTracker {
     this.own = own;
     // The added cards in the pile before this step (the pile less its own cards and the ones moved on top).
     const added = minus(minus(before.draw, own), countOf(this.topStack));
-    const left = minus(before.draw, now.draw);
+    let left = minus(before.draw, now.draw);
     const grew = minus(now.draw, before.draw);
-    const candidates = now.turn !== before.turn ? now.hand : newCards(before.hand, now.hand);
+    let candidates = now.turn !== before.turn ? now.hand : newCards(before.hand, now.hand);
     // SL_RETRY_KNOWN_TOP: one card from the discard pile onto the pile with nothing drawn past the pile is Headbutt's pick (a
     // step of its own after the selection screen), not a reshuffle (which only comes with a draw from an empty pile).
     const discardLost = minus(before.discardCards, now.discardCards);
@@ -464,7 +563,20 @@ export class DrawTracker {
         }
       }
     }
-    const drawn = matchDrawn(candidates, left);
+    let drawn = matchDrawn(candidates, left);
+    // SL_RETRY_KNOWN_HAND_ORDER: within a turn, a card left the pile and no new card by count came into the hand: a copy of a
+    // card played in this step was drawn (the hand's order shows it, appendedCards). Taken when it accounts for more of
+    // the cards that left the pile.
+    if (this.handOrder && size(left) > 0 && now.turn === before.turn) {
+      const rest = minus(before.draw, now.draw);
+      const ordered = appendedCards(before.hand, now.hand);
+      const again = matchDrawn(ordered, rest);
+      if (size(rest) < size(left)) {
+        candidates = ordered;
+        drawn = again;
+        left = rest;
+      }
+    }
     // A card taken out of the pile by choice (the step after a to-hand selection): not a draw. SL_RETRY_KNOWN_PICKS: out of
     // the pile, the rest in its order; without it, where it was is unknown and the order ends.
     const picked = drawn.length > 0 && TO_HAND_SELECTION.test(before.selection);
@@ -474,7 +586,22 @@ export class DrawTracker {
     if (size(fresh) > 0 || strays.length > 0) {
       (this.record.inserted ??= []).push({ turn: now.turn, at: this.record.order.length, cards: [...fresh].flatMap(([key, n]) => Array.from({ length: n }, () => key)), ...(strays.length > 0 ? { drawn: strays } : {}) });
     }
-    if (size(left) > 0) this.breakAt(now.turn, `${listOf(left)} left the draw pile without coming into the hand (played from the top, discarded, exhausted, or past the 10-card hand)`);
+    // SL_RETRY_KNOWN_OFF_TOP: the cards left the pile's top, played by the one thing in this step that does that
+    // (offTopSource), nothing else coming in or out by choice: they were its next cards, before this step's draws (a card
+    // played off the top draws after it). Several at once with draws among them: which drew is not known, so not here.
+    let offTop: { cards: Map<string, number>; source: string } | null = null;
+    if (this.offTop && size(left) > 0 && size(grew) === 0 && !picked && !TO_HAND_SELECTION.test(before.selection)) {
+      const source = offTopSource(before, now);
+      if (source && (drawn.length === 0 || (source.one && size(left) === 1)) && (!source.one || size(left) === 1)) offTop = { cards: left, source: source.name };
+    }
+    // SL_RETRY_KNOWN_OFF_TOP: with Hellraiser on, the Strikes that left the pile were drawn and played at once (C4F14F3XPN0N F33
+    // T4, every attempt): this step's draws, where among them they were not known, so all of them one span of unknown order.
+    let drawnAndPlayed: Map<string, number> | null = null;
+    if (this.offTop && !offTop && size(left) > 0 && size(grew) === 0 && !picked && (before.powers.includes("HELLRAISER_POWER") || now.powers.includes("HELLRAISER_POWER")) && [...left.keys()].every((key) => strikeNamed(key, before.drawNames))) {
+      drawnAndPlayed = new Map(left);
+      for (const card of drawn) drawnAndPlayed.set(card.key, (drawnAndPlayed.get(card.key) ?? 0) + 1);
+    }
+    if (size(left) > 0 && !offTop && !drawnAndPlayed) this.breakAt(now.turn, `${listOf(left)} left the draw pile without coming into the hand (played from the top, discarded, exhausted, or past the 10-card hand)`);
     // A card added and drawn in the same step never shows in the pile (not in `left`): when the pile's own cards hold the
     // same card, which of the two came is unknown.
     if (size(fresh) > 0) {
@@ -485,8 +612,47 @@ export class DrawTracker {
       if (doubt) this.breakAt(now.turn, `drew ${doubt} as cards like it were added to the draw pile: the added one or the pile's own`);
     }
     if (picked && this.picks) this.takePicked(drawn, own, added, now.turn);
-    else this.takeOwn(drawn, own, added, now.turn);
+    else if (drawnAndPlayed) this.takeOffTop(before, drawnAndPlayed, own, added, now.turn, "Hellraiser");
+    else {
+      if (offTop) this.takeOffTop(before, offTop.cards, own, added, now.turn, offTop.source);
+      this.takeOwn(drawn, own, added, now.turn);
+    }
     this.topStack.push(...movedOnTop);
+  }
+
+  /**
+   * SL_RETRY_KNOWN_OFF_TOP: cards played off the top of the pile (`cards`, as the pile listed them): the cards moved on top
+   * first (SL_RETRY_KNOWN_TOP), then the pile's own, into the order (`offTop` says which entries and what played them; two
+   * or more at once: their order among themselves is not known), an added one skipped (SL_RETRY_KNOWN_INSERTS). One that may
+   * be either an added copy or the pile's own, or one not among the cards moved on top while some still are, ends the order.
+   */
+  private takeOffTop(before: Snapshot, cards: Map<string, number>, own: Map<string, number>, added: Map<string, number>, turn: number, source: string): void {
+    const rest: HandCard[] = [...cards].flatMap(([key, n]) => Array.from({ length: n }, () => ({ key, name: before.drawNames.get(key) ?? key })));
+    while (this.topStack.length > 0 && rest.length > 0) {
+      const top = this.topStack.at(-1)!;
+      const at = rest.findIndex((card) => baseKey(card.key) === baseKey(top.key));
+      if (at < 0) {
+        this.breakAt(turn, `${rest.map((card) => card.name).join(", ")} played off the top of the draw pile (${source}) where ${top.name}, moved on top, was`);
+        this.topStack = [];
+        break;
+      }
+      this.topStack.pop();
+      rest.splice(at, 1);
+    }
+    const mine: HandCard[] = [];
+    for (const card of rest) {
+      const m = own.get(card.key) ?? 0;
+      const t = added.get(card.key) ?? 0;
+      if (m > 0 && t > 0) this.breakAt(turn, `${card.name} played off the top of the draw pile (${source}), which may be the one added to it or the pile's own`);
+      if (m > 0) {
+        own.set(card.key, m - 1);
+        mine.push(card);
+      } else if (t > 0) added.set(card.key, t - 1);
+      else mine.push(card);
+    }
+    if (mine.length === 0) return;
+    (this.record.offTop ??= []).push({ turn, at: this.record.order.length, cards: mine.map((card) => card.key), names: mine.map((card) => card.name), source });
+    this.take(mine, turn, this.intact);
   }
 
   /**
@@ -567,6 +733,69 @@ export interface KnownOrder {
    * `keys` were drawn before each (not in `keys`). Absent: none.
    */
   picked?: { at: number; keys: string[]; names: string[] }[];
+  /**
+   * SL_RETRY_KNOWN_OFF_TOP: places in `keys` that hold the cards listed there, in an order not known (several cards played
+   * off the top of the pile in one step, in every attempt the order comes from): `at` the first, `n` how many. checkKnown
+   * gives the next cards only up to the first of them. Absent: every place known.
+   */
+  unordered?: { at: number; n: number }[];
+}
+
+/** A pile's cards by place, and the places whose order among themselves is not known (SL_RETRY_KNOWN_OFF_TOP). */
+interface PileSeq {
+  keys: readonly string[];
+  unordered: readonly { at: number; n: number }[];
+}
+
+/** SL_RETRY_KNOWN_OFF_TOP: a record's places of unknown order within its first `length` entries (its steps off the top of more than one card). */
+function unorderedOf(draws: Pick<SlDraws, "offTop">, length: number): { at: number; n: number }[] {
+  return (draws.offTop ?? []).filter((step) => step.cards.length > 1 && step.at + step.cards.length <= length).map((step) => ({ at: step.at, n: step.cards.length }));
+}
+
+/** a's keys by the card itself (the upgrade mark dropped), as a multiset. */
+function baseCounts(keys: readonly string[]): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const key of keys) out.set(baseKey(key), (out.get(baseKey(key)) ?? 0) + 1);
+  return out;
+}
+
+/**
+ * The first place where two pile sequences disagree within their common length (null: none), and its end: a place both know
+ * by the card; places of unknown order (either side's, joined while they overlap) by the multiset of the span, a span past
+ * the shorter sequence's end by the shorter's part fitting into the longer's. The span starts are where a cut can go.
+ */
+function disagreement(a: PileSeq, b: PileSeq): { at: number; end: number } | null {
+  const upto = Math.min(a.keys.length, b.keys.length);
+  const ranges = [...a.unordered, ...b.unordered];
+  let p = 0;
+  while (p < upto) {
+    const covering = ranges.filter((range) => range.at <= p && p < range.at + range.n);
+    if (covering.length === 0) {
+      if (baseKey(a.keys[p]!) !== baseKey(b.keys[p]!)) return { at: p, end: p + 1 };
+      p += 1;
+      continue;
+    }
+    let end = Math.max(...covering.map((range) => range.at + range.n));
+    for (let grown = true; grown; ) {
+      grown = false;
+      for (const range of ranges) {
+        if (range.at < end && range.at + range.n > end) {
+          end = range.at + range.n;
+          grown = true;
+        }
+      }
+    }
+    if (end <= upto) {
+      const left = baseCounts(a.keys.slice(p, end));
+      const right = baseCounts(b.keys.slice(p, end));
+      if (size(minus(left, right)) > 0 || size(minus(right, left)) > 0) return { at: p, end };
+    } else {
+      const [short, long] = a.keys.length <= b.keys.length ? [a, b] : [b, a];
+      if (size(minus(baseCounts(short.keys.slice(p, upto)), baseCounts(long.keys.slice(p, end)))) > 0) return { at: p, end };
+    }
+    p = end;
+  }
+  return null;
 }
 
 /** A record's clean prefix drawn before its first added card (all of it without any). */
@@ -589,11 +818,17 @@ export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws |
   /** The first disagreement: nothing from this draw on is known (Infinity: none), and why. */
   let cap = Infinity;
   let cut: string | null = null;
+  /** SL_RETRY_KNOWN_OFF_TOP: the known keys' places of unknown order (none in rows written without the switch). */
+  let unordered: { at: number; n: number }[] = [];
   for (const row of [...rows].sort((a, b) => a.attempt - b.attempt)) {
     const draws = row.draws;
     if (!draws || !Array.isArray(draws.order) || !(draws.clean > 0)) continue;
-    const keys = draws.order.slice(0, Math.min(draws.clean, cap));
-    const names = (draws.names ?? []).slice(0, Math.min(draws.clean, cap));
+    // A cut inside a step off the top of several cards goes back to its start (its places hold them in an unknown order).
+    let length = Math.min(draws.clean, cap);
+    for (const step of draws.offTop ?? []) if (step.cards.length > 1 && step.at < length && length < step.at + step.cards.length) length = step.at;
+    const keys = draws.order.slice(0, length);
+    const names = (draws.names ?? []).slice(0, length);
+    const mine = unorderedOf(draws, keys.length);
     if (Array.isArray(draws.inserted) && draws.inserted.length > 0) modelled = true;
     exact = Math.max(exact ?? 0, exactLength(draws));
     // SL_RETRY_KNOWN_PICKS: the picks within the kept part (none in rows written without the switch).
@@ -601,23 +836,48 @@ export function knownOrderOf(rows: readonly { attempt: number; draws?: SlDraws |
     if (!known) {
       const picked = picksOf(keys.length);
       known = { keys, names, attempts: [row.attempt], ...(picked.length > 0 ? { picked } : {}) };
+      unordered = mine;
       continue;
     }
-    const overlap = Math.min(known.keys.length, keys.length);
-    const differ = Array.from({ length: overlap }, (_, i) => i).find((i) => baseKey(known!.keys[i]!) !== baseKey(keys[i]!));
-    if (differ !== undefined) {
-      cut ??= `attempts ${known.attempts.join(", ")} and ${row.attempt} drew differently at draw ${differ + 1} (${known.keys[differ]} vs ${keys[differ]})`;
-      cap = differ;
+    const differ = disagreement({ keys: known.keys, unordered }, { keys, unordered: mine });
+    if (differ !== null) {
+      const at = differ.at;
+      const what = differ.end - at > 1 ? `draws ${at + 1}-${differ.end} (in an order not known: ${known.keys.slice(at, differ.end).join(", ")} vs ${keys.slice(at, differ.end).join(", ")})` : `draw ${at + 1} (${known.keys[at]} vs ${keys[at]})`;
+      cut ??= `attempts ${known.attempts.join(", ")} and ${row.attempt} drew differently at ${what}`;
+      cap = at;
       const before: KnownOrder = known;
       const kept = (before.picked ?? []).filter((pick) => pick.at < cap);
       known = { keys: before.keys.slice(0, cap), names: before.names.slice(0, cap), attempts: [...before.attempts, row.attempt], ...(kept.length > 0 ? { picked: kept } : {}) };
+      unordered = unordered.filter((range) => range.at + range.n <= cap);
       continue;
     }
-    if (keys.length > known.keys.length) {
+    // SL_RETRY_KNOWN_OFF_TOP: the longer one, its places of unknown order taken from the other where it knows each of them.
+    const longer: boolean = keys.length > known.keys.length;
+    const base: { keys: string[]; names: string[]; unordered: { at: number; n: number }[] } = longer ? { keys: [...keys], names: names.length === keys.length ? [...names] : [...known.names, ...keys.slice(known.keys.length)], unordered: mine } : { keys: [...known.keys], names: [...known.names], unordered };
+    const other: PileSeq & { names: readonly string[] } = longer ? { keys: known.keys, names: known.names, unordered } : { keys, names, unordered: mine };
+    const resolved = base.unordered.filter((range: { at: number; n: number }) => range.at + range.n <= other.keys.length && !other.unordered.some((o) => o.at < range.at + range.n && range.at < o.at + o.n));
+    for (const range of resolved) {
+      for (let i = range.at; i < range.at + range.n; i += 1) {
+        base.keys[i] = other.keys[i]!;
+        base.names[i] = other.names[i] ?? other.keys[i]!;
+      }
+    }
+    unordered = base.unordered.filter((range) => !resolved.includes(range));
+    if (longer) {
       const picked = picksOf(keys.length);
-      known = { keys, names: names.length === keys.length ? names : [...known.names, ...keys.slice(known.keys.length)], attempts: [...known.attempts, row.attempt], ...(picked.length > 0 ? { picked } : {}) };
-    } else known = { ...known, attempts: [...known.attempts, row.attempt] };
+      known = { keys: base.keys, names: base.names, attempts: [...known.attempts, row.attempt], ...(picked.length > 0 ? { picked } : {}) };
+    } else known = { ...known, keys: base.keys, names: base.names, attempts: [...known.attempts, row.attempt] };
   }
+  // SL_RETRY_KNOWN_OFF_TOP with SL_RETRY_KNOWN_PICKS' picks: the picks move the places (withPicks), so the order ends at its
+  // first place of unknown order.
+  if (known && unordered.length > 0 && known.picked !== undefined) {
+    const at = Math.min(...unordered.map((range) => range.at));
+    const kept = known.picked.filter((pick) => pick.at < at);
+    const { picked: _picked, ...rest } = known;
+    known = { ...rest, keys: known.keys.slice(0, at), names: known.names.slice(0, at), ...(kept.length > 0 ? { picked: kept } : {}) };
+    unordered = [];
+  }
+  if (known && unordered.length > 0) known = { ...known, unordered: [...unordered].sort((a, b) => a.at - b.at) };
   if (known && known.keys.length === 0) return { known: null, reason: cut ?? "no earlier attempt recorded its draws" };
   if (known && modelled && exact !== null && exact < known.keys.length) known = { ...known, exact };
   if (!known) return { known: null, reason: "no earlier attempt recorded its draws" };
@@ -649,20 +909,31 @@ export function checkKnown(known: KnownOrder, tracker: DrawTracker): KnownCheck 
   if (!tracker.intact) return { ok: false, reason: record.broke ?? "the draws broke the order" };
   const pile = tracker.drawPile;
   if (pile === null) return { ok: false, reason: "the state does not list the draw pile" };
+  // SL_RETRY_KNOWN_OFF_TOP: the places whose order is not known, this attempt's (its steps off the top of several cards) and
+  // the known order's. A pick moves the places (withPicks): with both, the order is not followed.
+  const mine = unorderedOf(record, record.order.length);
+  const theirs = known.unordered ?? [];
+  if ((mine.length > 0 || theirs.length > 0) && (record.picked !== undefined || known.picked !== undefined)) return { ok: false, reason: "cards played off the top of the draw pile in one step and a card taken from it by choice: their places are not followed" };
   // SL_RETRY_KNOWN_PICKS: the known order and this attempt's draws with the selections' picks accounted for (as they were
   // without any pick on either side).
   const picks = record.picked !== undefined || known.picked !== undefined ? withPicks(known, record) : null;
   const knownKeys = picks?.keys ?? known.keys;
   const knownNames = picks?.names ?? known.names;
   const drawn = picks ? { ...record, order: picks.order, names: picks.orderNames, turns: picks.turns } : record;
-  const upto = Math.min(drawn.order.length, knownKeys.length);
-  for (let i = 0; i < upto; i += 1) {
-    if (baseKey(drawn.order[i]!) !== baseKey(knownKeys[i]!)) return { ok: false, reason: `T${drawn.turns[i] ?? "?"}: drew ${drawn.names[i] ?? drawn.order[i]} where the earlier attempt drew ${knownNames[i] ?? knownKeys[i]} (draw ${i + 1})` };
+  const differ = disagreement({ keys: drawn.order, unordered: mine }, { keys: knownKeys, unordered: theirs });
+  if (differ !== null) {
+    const i = differ.at;
+    if (differ.end - i === 1) return { ok: false, reason: `T${drawn.turns[i] ?? "?"}: drew ${drawn.names[i] ?? drawn.order[i]} where the earlier attempt drew ${knownNames[i] ?? knownKeys[i]} (draw ${i + 1})` };
+    const end = Math.min(differ.end, drawn.order.length);
+    return { ok: false, reason: `T${drawn.turns[i] ?? "?"}: draws ${i + 1}-${end} came off the pile as ${drawn.names.slice(i, end).join(", ")} where the earlier attempt had ${knownNames.slice(i, Math.min(differ.end, knownNames.length)).join(", ")} (in an order not known)` };
   }
   // SL_RETRY_KNOWN_TOP: the cards moved on top come before the known ones.
   const topped = tracker.topped;
   if (drawn.order.length >= knownKeys.length && topped.keys.length === 0 && (picks?.inPile.length ?? 0) === 0) return { ok: true, keys: [], names: [] };
-  const ownKeys = knownKeys.slice(drawn.order.length);
+  // SL_RETRY_KNOWN_OFF_TOP: the known cards from here up to the next place of unknown order (none while in one).
+  const from = drawn.order.length;
+  const stop = theirs.some((range) => range.at <= from && from < range.at + range.n) ? from : Math.min(knownKeys.length, ...theirs.filter((range) => range.at >= from).map((range) => range.at));
+  const ownKeys = knownKeys.slice(from, Math.max(from, stop));
   const keys = [...topped.keys, ...ownKeys];
   // A card an earlier attempt picked that this one has not, past that moment: in the pile at an unknown place.
   const added = picks && picks.inPile.length > 0 ? { keys: [...tracker.added.keys, ...picks.inPile.map((card) => card.key)], names: [...tracker.added.names, ...picks.inPile.map((card) => card.name)] } : tracker.added;
@@ -678,7 +949,7 @@ export function checkKnown(known: KnownOrder, tracker: DrawTracker): KnownCheck 
   // not make).
   const ownExact = known.exact !== undefined ? Math.max(0, Math.min(ownKeys.length, known.exact - drawn.order.length)) : ownKeys.length;
   const exact = tracker.addedToPile || (picks?.inPile.length ?? 0) > 0 ? 0 : topped.keys.length + Math.min(ownExact, picks?.exactAhead ?? Infinity);
-  const names = [...topped.names, ...knownNames.slice(drawn.order.length)];
+  const names = [...topped.names, ...knownNames.slice(from, from + ownKeys.length)];
   return { ok: true, keys, names, ...(added.keys.length > 0 ? { inserted: added } : {}), ...(exact < keys.length ? { exact } : {}) };
 }
 
