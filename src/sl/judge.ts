@@ -56,7 +56,7 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { BEATING_REMNANT_CAP, distinctNames } from "../screens/combat-plan.js";
-import { afterPlayFirst, heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
+import { afterPlayFirst, heldCardEthereal, heldPenaltyOf, unconditionalText } from "../strategy/card-model.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
 import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
 import { randomTargetOnly, randomTargets } from "./random-target.js";
@@ -713,7 +713,9 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
-    const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
+    // The template without its conditionals (card-model unconditionalText): Mad Science's 「{Wisdom: 抽{WisdomCards}张牌|}」
+    // is in its template whatever rider it was given.
+    const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${unconditionalText(str(card["rules_text"]))}`));
     if (drawing && context.drawsKnown !== true) {
       const vetoed = `the planner sees every line die, but ${str(drawing["name"], str(drawing["card_id"]))} draws (unknown cards)`;
       // SL_JUDGE_ANY_DRAW: certain only when the death holds for every draw (anyDrawJudged); absent, the veto as before.
