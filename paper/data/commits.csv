@@ -1,4 +1,31 @@
 hash,full_hash,date,author,upstream,in_origin_main,n_runs_code_version,subject
+6bd48a9,6bd48a9a63a68fdfb29925b91850cbe3e9ad4e1f,2026-10-03T21:14:23+08:00,dwroy,0,0,0,experiments/brain-replay/ds-vs-gpt-1003: send a logged codex question to DeepSeek through the router (Dai: compare the two answers)
+cf57927,cf579277ee144d1b9a1fe569938399c065c24a04,2026-10-03T20:47:43+08:00,dwroy,0,0,0,Eval versions: V4.5.gpt.session (from L3G50U6KX5ST)
+4719643,4719643e5f42b31772ea51751f0693624cd32085,2026-10-03T20:26:16+08:00,dwroy,0,0,2,"Merge branch 'v4' into v4-live: codex schema without route_reason, capped text fields"
+275ab1c,275ab1c70f3081b5f836fd4d208c9fbb90403684,2026-10-03T20:22:20+08:00,dwroy,0,0,0,Merge branch 'v4-codex-brain' into v4: codex schema drops route_reason and caps free-text fields (the runaway's source)
+43230ad,43230ad485b1912c4a1d4ad13047274010377491,2026-10-03T20:21:37+08:00,dwroy,0,0,0,"Codex brain: route_reason out of codex's answer schema, every text field capped (the runaway's source)"
+24b0714,24b071485b74c3c5e7ece0d84e0f081063f24bf8,2026-10-03T20:08:18+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: codex session mode (off until BRAIN_CODEX_MODE=session)
+b1e40b9,b1e40b98b6982b1a1efe25485b98c9995cf8de98,2026-10-03T20:05:20+08:00,dwroy,0,0,0,"Merge branch 'v4-codex-brain' into v4: codex session mode (BRAIN_CODEX_MODE=session: one app-server thread, revert after each answer, runaway cut by BRAIN_CODEX_MAX_ANSWER_CHARS)"
+b081450,b081450d7eac86a945bb3526d00f73a146bd4209,2026-10-03T20:03:48+08:00,dwroy,0,0,0,"Codex brain: session mode (BRAIN_CODEX_MODE=session), one app-server and one reverted thread per process"
+5db96f1,5db96f1fc8939c663e2ca83431d93cd32815fc79,2026-10-03T19:38:40+08:00,dwroy,0,0,0,Eval versions: V4.5.gpt.high (from J4S28FRQKD7G)
+25d86e9,25d86e9beeab31a9c6a4ac7f12a976b68e8bcbcd,2026-10-03T19:25:03+08:00,dwroy,0,0,1,Merge branch 'v4' into v4-live: SANDPIT_START
+87bb7d6,87bb7d6629e07df848187234e7b808b3a537bb12,2026-10-03T19:25:03+08:00,dwroy,0,0,0,Eval versions: V4.5.sandpit (v4-live 25d86e9)
+e9ed859,e9ed85951166ec09f70fcb63c885d6b0c9e61ce5,2026-10-03T19:21:51+08:00,dwroy,0,0,0,"experiments/insatiable: the Escape / Sandpit analysis scripts and summaries (raw jsonl/log kept local, gitignored)"
+aead30f,aead30f309e6cab1188682e0903840d0da654739,2026-10-03T19:21:38+08:00,dwroy,0,0,0,Merge branch 'v4-insatiable' into v4: SANDPIT_START — the live rollout starts the Insatiable's Sandpit from Liquify Ground on turn 1
+1de03d9,1de03d9c02ca060ffcdf4b712abefbc25bcdc31d,2026-10-03T19:20:12+08:00,dwroy,0,0,0,SANDPIT_START: the Insatiable's turn-1 Liquify Ground starts its Sandpit in the 5-turn rollout too
+0aed6e1,0aed6e12f24708df50249a75552c408aed033afd,2026-10-03T19:13:26+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: codex stall detector
+239a3cf,239a3cf5b1182bad6ff3fcce384ad3aa8bcf25cd,2026-10-03T19:13:26+08:00,dwroy,0,0,0,Eval versions: V4.5.gpt.stall (v4-live 0aed6e1)
+2ab0807,2ab080729b7192841e007e76b2686994e9507af5,2026-10-03T19:06:30+08:00,dwroy,0,0,0,"Merge branch 'v4-codex-brain' into v4: codex stall detector (silent after the first token → kill and ask once more), per-run trace rows, retry notices kept, console names the engine"
+b6d1b28,b6d1b2839f9facc1588d54dbbe5cd2cf353b9ce9,2026-10-03T19:05:32+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-codex-brain: the codex usage guard with the stall detector and the run trace
+f3a63fc,f3a63fc13ea9731b8c938a7fca871e93c19383da,2026-10-03T18:58:55+08:00,dwroy,0,0,0,"Codex brain: stall detector, per-run trace, retry notices, engine-named console lines"
+61d236c,61d236ceeb38a0752da47e15a9d35bd7fc0cf12f,2026-10-03T18:48:36+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: SL_RETRY_EXPLORE_POTION
+85dcf67,85dcf676ab410b9126e8a326e040ca044aa44799,2026-10-03T18:48:36+08:00,dwroy,0,0,0,Eval versions: V4.5.potionx (v4-live 61d236c)
+030a735,030a73583a9f9a553a071bd5cd2bb0f0ba245e78,2026-10-03T18:45:10+08:00,dwroy,0,0,0,Merge branch 'v4-explore-potion' into v4: SL_RETRY_EXPLORE_POTION — same cards with a potion moved count as tried
+117461e,117461e76e66c4985913cc2952e011bbf4ed4c99,2026-10-03T18:44:11+08:00,dwroy,0,0,0,SL explore: a retry that only moves a potion is not a new line (SL_RETRY_EXPLORE_POTION)
+172f001,172f001dd54b33628b98e543f1829eacc4115bcf,2026-10-03T18:31:28+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: codex usage guard
+bbe92d8,bbe92d8c5f8b659aab629939139f5e1bf2e2b05c,2026-10-03T18:31:28+08:00,dwroy,0,0,0,Eval versions: V4.5.gpt.guard (v4-live 172f001)
+7cf0348,7cf0348a6bd1a2b078120f0bd3095fe0eb122792,2026-10-03T18:27:32+08:00,dwroy,0,0,0,Merge branch 'v4-codex-guard' into v4: codex usage guard (stop at 80% of any window or at any credit spend)
+fd6959f,fd6959fc74065a5dd293ba7bfe0a162e7fb502ca,2026-10-03T18:26:46+08:00,dwroy,0,0,0,Brain: codex usage guard (stop at 80% of any plan window or on any sign of credits in use)
 ff66eb2,ff66eb235fad22998bc2bbf571fdc88bc2d2d882,2026-10-03T17:59:29+08:00,dwroy,0,0,0,"Eval versions: V4.5.gpt (v4-live 011bfbd, brain on codex from RNTVAT76BPV0)"
 011bfbd,011bfbdd1163f6cad5f90f421cb7fb72c9de5016,2026-10-03T17:55:21+08:00,dwroy,0,0,1,Merge branch 'v4' into v4-live: codex brain engine (off until BRAIN_ENGINE=codex)
 6f4c666,6f4c666c5316650622cfa3d0ecfbf923618da8e4,2026-10-03T17:52:18+08:00,dwroy,0,0,0,"Merge branch 'v4-codex-brain' into v4: the codex brain engine (gpt-6.1-sol, xhigh; Codex CLI on the ChatGPT subscription), isolated from the user's Codex setup"

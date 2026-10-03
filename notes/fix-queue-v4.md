@@ -165,3 +165,12 @@
 - 确认：BVJT 死因是沙坑归零（4→3→2→1，T5 末 21 血 + 12 格挡对 24 按伤害剩 9），ebb3710 judge.ts:520 拒判；0727c1c 新规则判必死（experiments/sl-giant/summary-insatiable.md）。
 - 观察：GPR8（e36535c）where 权重指向 T2 但 T2 其余线死得更多按设计跳过，换线落 T3/T1。gate_reject 0、run_plan_merge 全 stored、「抽什么都会死」0、无回合内自杀；三局未选被标更差路线；knights/deck-passive-engine 0 引用。为 boss 留的药三局都复发。
 - **已修（2026-10-03 18:48 确认）**：SL_RETRY_EXPLORE_POTION——换线出牌（含目标）与某次失败同回合相同、所喝药那次后面也喝过，即算已试；回放 41 次换线中挡掉 6 次只挪药水（P68P 3/4、GQ5H 4–6、Z4UK 6），两场换线胜局仍能走到。v4-live 61d236c（V4.5.potionx，18:48 CST），下一局起生效。关闭。
+
+### V4.5 GPT 三局复盘补充（RNTV/J4S2/L3G5，2026-10-03 21:36）
+- **小刀 SHIV 出牌不带目标**（中，不阻塞，建议优先）：src/strategy/card-model.ts:385（011bfbd 起，4719643 仍在）targetMode 匹配未渲染模板「{TargetType:choose(AllEnemies):对所有敌人|}」把要目标的小刀判成群伤。RNTV 执行闸拒绝 18 次、6 个局面（控制台 20261003-175840-011bfbd+dirty.log :889–893、:986–990、:1310–1314、:1395–1399、:1443–1447、:1524–1528），每次连拒 3 次后结束回合，F30 丢掉同计划的欺凌、防御和两瓶药。
+- **回退时失败引擎耗时不记**（小）：src/brain/router.ts:357–365（4719643）只写回退那一行；RNTV 5×600 s 共 50 分钟不在 brain.jsonl，brain-latency.py 少算；L3G5 少算约 2.2 分钟。
+- **exec 断流耗时算到下一题**（小）：25d86e9 src/brain/engines/codex.ts:705、:768、:697；J4S2 11:59:43 act-plan 记 315.7 s（=41.4+136.5+137.7）、12:09:26 shop 293.4 s。会话模式不漏。
+- **决策日志把 codex 回答记成 deepseek**（小，统计口径）：src/loop.ts:912 decider 写死 "deepseek"。
+- 设计缺口：**SL 重放走不到换线点**——src/sl/explore.ts:998、src/sl/controller.ts:568；J4S2 第 3/4/6 次 T2 报「line is not among the options」停止重放，第 6 次与第 4 次 8 回合出牌相同。
+- 设计缺口：精炼混沌「从牌堆顶打出」被算作断序，已知抽牌只保留 10 张（可推出 26 张）（RNTV F38）。
+- 观察：L3G5 会话模式 7 次 stalled 全是 runaway（>2000 字符，reward/card 4、rest/plan 3），每个文本字段已封顶 600（codex.ts:266/:284），具体哪个字段查不出（codex-calls 不存答案）。J4S2 实际 42 次运行、10 次 stalled（全是断流）。
