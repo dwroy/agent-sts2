@@ -12,6 +12,12 @@
  * enemy's move changes at once": an Axebot killed with Stock left comes back with its move Boot Up (no attack), 22 of 23
  * logged last-Stock strips and 22 of 22 first revives (Stock 2 -> 1; TQX5JJX3UD39 F37 T1 and T5: HAMMER_UPPERCUT /
  * ONE_TWO -> BOOT_UP, Hammer Uppercut next). Moves are a monster's own, so this class is learned per monster.
+ *
+ * The third (MECH_DEATH_MOVE, docs/mechanics-learning.md §9) is "an ally dies on our turn -> a survivor's move changes",
+ * learned per (survivor, ally) pair from every logged multi-enemy fight: the Torch Head Amalgam dying turns the Queen's Burn
+ * Bright For Me into Enrage on that very frame (21 of 21; no attack either way, so that turn's incoming stays) and her next
+ * move into Off With Your Head (22 of 22; 7x5 at A8, the first one killed us in 7 logged attempts), moves she never showed
+ * beside a living Amalgam in 205 turns. No power text says it.
  */
 
 import type { MonsterDb } from "./monster-db.js";
@@ -99,6 +105,8 @@ export interface ObservedMonster {
   escape_moves?: Record<string, EscapeObserved>;
   kill_rewards?: KillReward[];
   mid_turn_stuns?: MidTurnStuns;
+  /** MECH_DEATH_MOVE: by the dying ally's monster id, this monster's move around that death (deathRules). */
+  ally_deaths?: Record<string, AllyDeathObserved>;
 }
 
 /** The DB's top-level `observed` block: each stripped power pooled over the monsters carrying it. */
@@ -271,4 +279,157 @@ export function moveRulesOf(db: Pick<MonsterDb, "monsters"> | null | undefined):
  */
 export function clearedWith(rule: Pick<MoveRule, "power" | "move">, rules: readonly MoveRule[]): string[] {
   return [...new Set(rules.filter((other) => other.how === "removed" && other.move === rule.move && other.power !== rule.power).map((other) => other.power))].sort();
+}
+
+/* ---- class D: an ally's death -> a survivor's move changes (MECH_DEATH_MOVE) -------------------------------------- */
+
+/**
+ * One (survivor, ally) pair's logged ally deaths on our turn (build-monster-db.py death_obj; monster-db.json
+ * monsters.<survivor>.observed.ally_deaths.<ally>). Docs: docs/mechanics-learning.md §9.
+ */
+export interface AllyDeathObserved {
+  n: number;
+  fights: number;
+  /** The survivor's move on the frame before the death, and by it the move on the death's own frame. */
+  move_before?: Record<string, number>;
+  move_changed?: number;
+  move_changed_share?: number | null;
+  changed_to?: Record<string, number>;
+  by_move?: Record<string, { n: number; changed_to?: Record<string, number> }>;
+  changed_evidence?: string[];
+  /** Deaths whose frame changed the survivor's intent total; deaths with another enemy dead on the same frame. */
+  attack_changed?: number;
+  co_deaths?: number;
+  /** Its move at our end-turn decision; the deaths it lived to the next turn's first frame and its move there (by end move). */
+  end_move?: Record<string, number>;
+  next_n?: number;
+  next_move?: Record<string, number>;
+  next_after?: Record<string, Record<string, number>>;
+  next_evidence?: string[];
+  /** The baseline: the turns it started beside a living ally of that id, the moves it showed, the next move by move. */
+  alive?: { turns?: number; moves?: Record<string, number>; next?: Record<string, Record<string, number>> };
+  /** The turns it started after such an ally died on an earlier turn of the fight, none of that id alive: the moves it showed. */
+  dead?: { turns?: number; moves?: Record<string, number> };
+}
+
+/** A death rule (either part) needs at least this many logged deaths behind it: fewer is an anecdote (Dai 2026-10-03). */
+export const DEATH_RULE_MIN_N = 3;
+/**
+ * ... and this share of them showing the one move. The logged shares that pass n >= 3 are 1.0 or far below (the Queen's
+ * Burn Bright For Me -> Enrage 21/21, Off With Your Head next 22/22; the noise pairs' "next" moves are their own cycles).
+ */
+export const DEATH_RULE_MIN_SHARE = 0.9;
+/** A move is the death's own (never shown while the ally lived) only over at least this many turns beside a living one. */
+export const DEATH_ALIVE_MIN_TURNS = 10;
+/**
+ * A next-turn rule must be the death's doing, not the survivor's own cycle: its move is one the survivor never showed beside a
+ * living ally (above), or, after the same end move with the ally alive (at least this many logged turns), the survivor went
+ * elsewhere at least DEATH_BASELINE_MISS of the time (the Living Shield: Shield Slam -> Shield Slam 81/81 beside a living
+ * Turret Operator, Smash 5/5 once it died). Otherwise the move model already says it (a Twig Slime's Pokey Pounce).
+ */
+export const DEATH_BASELINE_MIN_N = 3;
+export const DEATH_BASELINE_MISS = 0.5;
+/**
+ * ... and it must change what the move model says: after at least one of the end moves it was logged after, the monster's
+ * own successor counts give its move less than this share (or none). Else it is reported but not applied: the rollout's
+ * move model already makes that move (the Living Fog's Bloat after a Gas Bomb dies: Super Gas Blast -> Bloat 70/70).
+ */
+export const DEATH_MODEL_SHARE = 0.9;
+
+/**
+ * A learned "an ally's death changes my move" rule (MECH_DEATH_MOVE): when a `ally` dies on our turn, the survivor
+ * `monster`'s move changes at once (same turn: `now`, by the move it shows then) and/or is `next.move` on the next turn.
+ */
+export interface DeathRule {
+  monster: string;
+  ally: string;
+  n: number;
+  fights: number;
+  /** Same turn: by the survivor's move when the ally dies, the move it shows on the death's own frame (this enemy turn's). */
+  now: Record<string, { move: string; changed: number; n: number }>;
+  /**
+   * Next turn: its move on the next turn's first frame after such a death (its next intent), or null; `after`: the moves
+   * it was logged ending our turn on before it (the rule is applied after those only: past them it is a guess).
+   */
+  next: { move: string; count: number; n: number; after: string[] } | null;
+  /** The rule's moves it never showed at a turn start beside a living ally of that id (the rollout keeps them out then). */
+  exclusive: string[];
+  /**
+   * The moves it showed beside a living ally of that id and never once such an ally was dead (at least DEATH_ALIVE_MIN_TURNS
+   * turns after a death): the rollout keeps them out after the death (the Queen's Burn Bright For Me, You Are Mine, Puppet
+   * Strings).
+   */
+  aliveOnly: string[];
+  /** Turns logged beside a living ally of that id (the baseline behind `exclusive`). */
+  aliveTurns: number;
+  evidence: string[];
+}
+
+const topMove = (counts: Record<string, number> | undefined, skip?: string): [string, number] | null =>
+  Object.entries(counts ?? {})
+    .filter(([move]) => move !== skip && move !== STUN_MOVE && move !== "?")
+    .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0] ?? null;
+
+/**
+ * The rule of one logged (survivor, ally) pair under the thresholds, or null (nothing passes). `moves`: the survivor's move
+ * table (monster DB `moves`, its `next` successor counts) for the move-model check; absent, no next-turn rule is applied.
+ */
+export function deathRuleOf(monster: string, ally: string, stats: AllyDeathObserved | undefined, moves?: Record<string, { next?: Record<string, number> } | undefined>): DeathRule | null {
+  if (!stats) return null;
+  const now: DeathRule["now"] = {};
+  for (const before of sortedKeys(stats.by_move)) {
+    const by = stats.by_move![before]!;
+    const top = topMove(by.changed_to, before);
+    if (count(by.n) >= DEATH_RULE_MIN_N && top && top[1] >= DEATH_RULE_MIN_SHARE * count(by.n)) now[before] = { move: top[0], changed: top[1], n: count(by.n) };
+  }
+  const aliveTurns = count(stats.alive?.turns);
+  const ownMove = (move: string) => aliveTurns >= DEATH_ALIVE_MIN_TURNS && count(stats.alive?.moves?.[move]) === 0;
+  let next: DeathRule["next"] = null;
+  const nextN = count(stats.next_n);
+  const top = topMove(stats.next_move);
+  if (nextN >= DEATH_RULE_MIN_N && top && top[1] >= DEATH_RULE_MIN_SHARE * nextN) {
+    // The survivor's own cycle beside a living ally, after the end moves these deaths left it on.
+    let weight = 0;
+    let miss = 0;
+    for (const [end, after] of Object.entries(stats.next_after ?? {})) {
+      const base = stats.alive?.next?.[end] ?? {};
+      const total = Object.values(base).reduce((sum, n) => sum + count(n), 0);
+      if (total < DEATH_BASELINE_MIN_N) continue;
+      const c = Object.values(after).reduce((sum, n) => sum + count(n), 0);
+      weight += c;
+      miss += c * (1 - count(base[top[0]]) / total);
+    }
+    const ownCycle = weight >= DEATH_BASELINE_MIN_N && miss / weight < DEATH_BASELINE_MISS;
+    const after = sortedKeys(stats.next_after).filter((end) => end !== "?");
+    // The move model already makes it after every one of those end moves: nothing to change.
+    const changesModel = after.some((end) => {
+      const successors = moves?.[end]?.next;
+      const total = Object.values(successors ?? {}).reduce((sum, n) => sum + count(n), 0);
+      return moves !== undefined && (total === 0 || count(successors?.[top[0]]) < DEATH_MODEL_SHARE * total);
+    });
+    if ((ownMove(top[0]) || (weight >= DEATH_BASELINE_MIN_N && !ownCycle)) && changesModel) next = { move: top[0], count: top[1], n: nextN, after };
+  }
+  if (Object.keys(now).length === 0 && !next) return null;
+  const ruleMoves = [...new Set([...Object.values(now).map((entry) => entry.move), ...(next ? [next.move] : [])])].sort();
+  const aliveOnly = count(stats.dead?.turns) >= DEATH_ALIVE_MIN_TURNS ? sortedKeys(stats.alive?.moves).filter((move) => move !== "?" && count(stats.dead?.moves?.[move]) === 0) : [];
+  return {
+    monster, ally, n: count(stats.n), fights: count(stats.fights), now, next, exclusive: ruleMoves.filter(ownMove), aliveOnly, aliveTurns,
+    evidence: [...new Set([...(stats.changed_evidence ?? []), ...(stats.next_evidence ?? [])])].slice(0, 3),
+  };
+}
+
+/** Every learned death rule, by survivor monster id, from the monsters' `observed.ally_deaths` (empty without them). */
+export function deathRules(monsters: Record<string, { observed?: ObservedMonster; moves?: Record<string, { next?: Record<string, number> } | undefined> } | undefined> | undefined | null): Map<string, DeathRule[]> {
+  const out = new Map<string, DeathRule[]>();
+  for (const monster of sortedKeys(monsters ?? {})) {
+    const table = monsters![monster]?.observed?.ally_deaths;
+    const rules = sortedKeys(table).map((ally) => deathRuleOf(monster, ally, table![ally], monsters![monster]?.moves ?? {})).filter((rule): rule is DeathRule => rule !== null);
+    if (rules.length > 0) out.set(monster, rules);
+  }
+  return out;
+}
+
+/** The death rules of a loaded monster DB. */
+export function deathRulesOf(db: Pick<MonsterDb, "monsters"> | null | undefined): Map<string, DeathRule[]> {
+  return deathRules(db?.monsters);
 }

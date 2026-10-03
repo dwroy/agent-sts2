@@ -52,7 +52,7 @@ import { isStrikeCard, type CardModel } from "./card-model.js";
 import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -1310,12 +1310,15 @@ export const STATUS_INTO_DRAW: Record<string, number> = { LIQUIFY_GROUND_MOVE: 3
  *    its Plating and block are gone;
  *  - never a death move (DEATH_MOVES) or another phase's move (PHASE_MOVES).
  */
-function fightNextMove(e: SimEnemy, table: EnemyTable | undefined, random: () => number, enemies: SimEnemy[], exclude?: string): string | null {
+function fightNextMove(e: SimEnemy, table: EnemyTable | undefined, random: () => number, enemies: SimEnemy[], exclude?: string, learned?: (move: string) => boolean): string | null {
   if (e.id === "CEREMONIAL_BEAST" && e.move === "PLOW_MOVE" && e.shriekArmed) return "PLOW_MOVE";
-  if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE") return enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM") ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
+  // MECH_DEATH_MOVE: a learned death rule on the Queen (her moves around the Amalgam's death, from the logs) takes over
+  // this hand-written script.
+  if (e.id === "QUEEN" && e.move === "BURN_BRIGHT_FOR_ME_MOVE" && !(e.base.moveOnDeath ?? []).length) return enemies.some((x) => x.alive && x.id === "TORCH_HEAD_AMALGAM") ? "BURN_BRIGHT_FOR_ME_MOVE" : "OFF_WITH_YOUR_HEAD_MOVE";
+  const and = (allowed?: (move: string) => boolean): ((move: string) => boolean) | undefined => (!learned ? allowed : !allowed ? learned : (m) => learned(m) && allowed(m));
   // B4: no fourth curse; the move model's Ponder -> Slap is what the logged fights do after the third.
   if (e.id === "KNOWLEDGE_DEMON" && (e.curses ?? 0) >= KNOWLEDGE_CURSES) {
-    const next = nextMove(table, e.move, random, exclude, (m) => m !== "CURSE_OF_KNOWLEDGE_MOVE");
+    const next = nextMove(table, e.move, random, exclude, and((m) => m !== "CURSE_OF_KNOWLEDGE_MOVE"));
     return next === "CURSE_OF_KNOWLEDGE_MOVE" ? "SLAP_MOVE" : next;
   }
   if (e.asleep !== undefined && e.asleep > 0) {
@@ -1324,12 +1327,65 @@ function fightNextMove(e: SimEnemy, table: EnemyTable | undefined, random: () =>
     // Awake: its sleeping Plating is gone with its block (logged Matriarch: Plating 12, block 12/12/11 on T1-T3, 0 on T4).
     e.plating = 0;
     e.block = 0;
-    const awake = nextMove(table, e.move, random, exclude, (m) => m !== e.move && m !== STUNNED_MOVE);
+    const awake = nextMove(table, e.move, random, exclude, and((m) => m !== e.move && m !== STUNNED_MOVE));
     return awake === e.move ? usualMove(table) : awake;
   }
   const dead = DEATH_MOVES[e.id] ?? [];
   const phase = PHASE_MOVES[e.id]?.[e.phase ?? 0];
-  return nextMove(table, e.move, random, exclude, (m) => !dead.includes(m) && (!phase || phase.includes(m)));
+  return nextMove(table, e.move, random, exclude, and((m) => !dead.includes(m) && (!phase || phase.includes(m))));
+}
+
+/**
+ * MECH_DEATH_MOVE (knowledge/mechanics.ts deathRules): the moves a survivor's learned death rules keep out of its next move
+ * now, or undefined (none): while an ally of a rule's monster lives, the moves the logs only show after such a death (the
+ * Queen's Enrage and Off With Your Head beside a living Amalgam: 0 of 205 logged turns; the move model's Burn Bright For
+ * Me -> Off With Your Head 20% are the death turns); once every such ally is dead, the moves never shown after (her Burn
+ * Bright For Me, You Are Mine, Puppet Strings).
+ */
+export function deathAllowed(e: Pick<SimEnemy, "index" | "base">, enemies: Pick<SimEnemy, "index" | "id" | "alive" | "gone" | "reattachIn" | "reviveIn">[]): ((move: string) => boolean) | undefined {
+  const rules = e.base.moveOnDeath;
+  if (!rules || rules.length === 0) return undefined;
+  const banned = new Set<string>();
+  for (const allyId of new Set(rules.map((rule) => rule.allyId))) {
+    const own = rules.filter((rule) => rule.allyId === allyId);
+    const alive = enemies.some((x) => x.index !== e.index && x.id === allyId && x.alive);
+    const dead = !alive && own.some((rule) => enemies.some((x) => x.index === rule.ally && deadForGood(x)));
+    for (const rule of own) for (const move of alive ? rule.rule.exclusive : dead ? rule.rule.aliveOnly : []) banned.add(move);
+  }
+  return banned.size > 0 ? (move) => !banned.has(move) : undefined;
+}
+
+/**
+ * MECH_DEATH_MOVE: a survivor's next move from its learned death rules after an ally of `aliveBefore` died for good this
+ * turn (on our turn or in the enemy turn), its move this turn being one the rule's next move was logged after; else null.
+ */
+function deathNextOf(e: SimEnemy, enemies: SimEnemy[], aliveBefore: ReadonlySet<number>): string | null {
+  for (const rule of e.base.moveOnDeath ?? []) {
+    if (!aliveBefore.has(rule.ally) || rule.rule.next === null || e.move === null || !rule.rule.after.includes(e.move)) continue;
+    if (enemies.some((x) => x.index === rule.ally && deadForGood(x))) return rule.rule.next;
+  }
+  return null;
+}
+
+/** Dead and not coming back: not left the fight (an Escape), not a segment about to reattach, not an illusion about to revive. */
+function deadForGood(x: Pick<SimEnemy, "alive" | "gone" | "reattachIn" | "reviveIn">): boolean {
+  return !x.alive && !x.gone && x.reattachIn === undefined && x.reviveIn === undefined;
+}
+
+/**
+ * MECH_DEATH_MOVE: a survivor's death rules for a later simulated turn's solver, re-read from the move it has now (the
+ * decision's were read from the move it showed then), for the allies still alive; the same-turn move's attack as the
+ * rollout prices any of its moves (moveAttack). Undefined when none is left.
+ */
+function laterDeathMoves(e: SimEnemy, enemies: SimEnemy[], table: EnemyTable | undefined, playerVulnerable: boolean, fight: { fullFight: boolean; faced: boolean }): DeathMove[] | undefined {
+  const rules = (e.base.moveOnDeath ?? []).filter((rule) => enemies.some((x) => x.index === rule.ally && x.alive));
+  if (rules.length === 0) return undefined;
+  return rules.map((rule) => {
+    const move = e.move !== null ? rule.rule.now[e.move] ?? null : null;
+    const end = move ?? e.move;
+    const next = rule.rule.next !== null && end !== null && rule.rule.after.includes(end) ? rule.rule.next : null;
+    return { ...rule, move, moveName: move, attacks: move !== null ? moveAttack(e, table, move, playerVulnerable, fight) : [], next, nextName: next, nextAttack: null };
+  });
 }
 
 function withStrength(card: CardModel, player: SimPlayer, index: number, targets: number[]): CardModel {
@@ -1707,6 +1763,8 @@ function applyPlan(
 ): TurnRecord {
   const o = plan.outcome;
   const startHp = player.hp;
+  // MECH_DEATH_MOVE: the enemies alive as the turn starts (an ally's death this turn changes a survivor's next move).
+  const aliveBefore = new Set(enemies.filter((e) => e.alive).map((e) => e.index));
   // A line saved by a revive: its hpLoss counts the revive's HP; our own turn's loss is apart.
   const ownLoss = o.revived ? o.revived.ownLoss : Math.max(0, o.hpLoss - o.incomingAfterBlock);
   let regenDrunk = 0;
@@ -1885,6 +1943,9 @@ function applyPlan(
       const rule = e.base.moveOnStrip?.find((entry) => entry.power === a.movedTo!.power && entry.how === a.movedTo!.how);
       for (const power of rule?.clears ?? []) clearPower(e, power);
     }
+    // MECH_DEATH_MOVE: a learned death rule the line set off (the Torch Head Amalgam killed: the Queen's Burn Bright For Me
+    // is Enrage at once, 21 of 21 logged): this enemy turn is that move (Enrage's Strength), its successor below.
+    if (a.deathMove?.move && e.alive) e.move = a.deathMove.move;
   }
   // Sandpit (The Insatiable): the count after this turn's enemy turn, Frantic Escapes included; the solver
   // already calls a line that ends it at 0 a death. The rollout kept the starting count every turn, so in
@@ -2029,14 +2090,19 @@ function applyPlan(
       const imbalanced = (e.powers["IMBALANCED_POWER"] ?? 0) > 0;
       // A whole fight draws each enemy's moves from its own stream (common random numbers across lines).
       const pick = e.random ?? random;
+      // MECH_DEATH_MOVE: an ally dead this turn sets its next move (the Queen's Off With Your Head, 22 of 22 logged), and its
+      // rules keep the death's own moves out while such an ally lives and the living ally's moves out once all are dead.
+      const deathNext = e.base.moveOnDeath ? deathNextOf(e, enemies, aliveBefore) : null;
+      const deathFilter = e.base.moveOnDeath ? deathAllowed(e, enemies) : undefined;
       if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", pick) : nextMove(table, e.move, pick);
       else if (imbalanced && blockStunned.has(e.index)) e.move = STUNNED_MOVE;
       else if (fullFight && !(e.burrowed && m && !m.burrows)) {
         // The growing move's next use has a hit more (Multi Claw) or more damage (Pressure Gun); the script picks the next move.
         if (e.move !== null && e.move === GROWING_HITS[e.id]) e.extraHits = (e.extraHits ?? 0) + 1;
         if (e.move !== null && m?.growth) e.uses = { ...e.uses, [e.move]: (e.uses?.[e.move] ?? 0) + 1 };
-        e.move = fightNextMove(e, table, pick, enemies, imbalanced ? STUNNED_MOVE : undefined);
-      } else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random, imbalanced ? STUNNED_MOVE : undefined);
+        e.move = fightNextMove(e, table, pick, enemies, imbalanced ? STUNNED_MOVE : undefined, deathFilter);
+      } else if (!(e.burrowed && m && !m.burrows)) e.move = nextMove(table, e.move, random, imbalanced ? STUNNED_MOVE : undefined, deathFilter);
+      if (deathNext !== null) e.move = deathNext;
       e.hurt = false;
       // A Plow threshold that comes up later (the Beast's after Stamp): armed from its turn on, once.
       const later = fullFight ? table?.shriekFrom : undefined;
@@ -2448,6 +2514,8 @@ function simulate(
         // Hardened Shell: a new turn, the whole cap again (the decision's is what was left of that turn's).
         ...((e.powers["HARDENED_SHELL_POWER"] ?? 0) > 0 ? { hpLossCap: e.powers["HARDENED_SHELL_POWER"]! } : {}),
         ...(e.base.timeLimit !== undefined ? { timeLimit: Math.max(1, e.base.timeLimit - h) } : {}),
+        // MECH_DEATH_MOVE: its death rules re-read from the move it has now (laterTurnSim keeps the decision's).
+        ...(e.base.moveOnDeath ? { moveOnDeath: laterDeathMoves(e, enemies, input.tables[e.id], player.vulnTurns > 0, { fullFight, faced: (fullFight && base.surrounded === true && facing !== null) || single }) } : {}),
         attacks: e.explodeAt !== undefined ? (e.explodeAt === h ? [{ damage: e.blast ?? 0, hits: 1 }] : []) : behind(e.index, moveAttack(e, input.tables[e.id], e.move, player.vulnTurns > 0, { fullFight, faced: (fullFight && base.surrounded === true && facing !== null) || single })),
       }))
       // Imbalanced on this simulated turn too (laterTurnSim drops the decision's): a hit fully blocked stuns it,

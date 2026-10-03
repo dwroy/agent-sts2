@@ -101,14 +101,14 @@ export function meanMoveDamage(enemyId: string, ctx?: DamageContext): number | n
 }
 
 /** Expected attack damage of this enemy's move next turn (moveDamage at `ctx`), or null when unknown. */
-export function expectedNextDamage(enemyId: string, currentMove: string, ctx?: DamageContext): number | null {
+export function expectedNextDamage(enemyId: string, currentMove: string, ctx?: DamageContext, exclude?: ReadonlySet<string>): number | null {
   const entry = load()[enemyId];
   if (!entry) return null;
   const successors = entry.next[currentMove];
   if (!successors) return null;
   let total = 0;
   let count = 0;
-  for (const [move, n] of Object.entries(successors)) {
+  for (const [move, n] of keptSuccessors(Object.entries(successors), exclude)) {
     const damage = moveDamage(enemyId, move, ctx, 1);
     if (damage === null) continue;
     total += damage * n;
@@ -118,19 +118,30 @@ export function expectedNextDamage(enemyId: string, currentMove: string, ctx?: D
 }
 
 /**
+ * The successors left once `exclude` is taken out (MECH_DEATH_MOVE: the moves a learned death rule says this enemy never
+ * makes while its ally lives, the Queen's Off With Your Head beside the Amalgam), all of them when that leaves none or
+ * nothing is excluded.
+ */
+function keptSuccessors(successors: [string, number][], exclude?: ReadonlySet<string>): [string, number][] {
+  if (!exclude || exclude.size === 0) return successors;
+  const kept = successors.filter(([move]) => !exclude.has(move));
+  return kept.length > 0 ? kept : successors;
+}
+
+/**
  * Expected attack damage of this enemy on each of the next `turns` enemy turns after the current one
  * (index 0 = next turn), walking the learned move chain from its current move. A move with no learned
  * successor is repeated. `sleepTurns`: the enemy is asleep (ASLEEP_POWER N skips N enemy turns, this
  * one included), so the next N - 1 turns are 0 and it wakes into the current move's other successors.
  * null when the enemy has no learned moves.
  */
-export function damageForecast(enemyId: string, currentMove: string, turns: number, sleepTurns = 0, ctx?: DamageContext): number[] | null {
+export function damageForecast(enemyId: string, currentMove: string, turns: number, sleepTurns = 0, ctx?: DamageContext, exclude?: ReadonlySet<string>): number[] | null {
   const entry = load()[enemyId];
   if (!entry || turns <= 0) return null;
   const step = (dist: Map<string, number>, skipSelf = false): Map<string, number> => {
     const out = new Map<string, number>();
     for (const [move, p] of dist) {
-      const successors = Object.entries(entry.next[move] ?? {}).filter(([next]) => !skipSelf || next !== move);
+      const successors = keptSuccessors(Object.entries(entry.next[move] ?? {}).filter(([next]) => !skipSelf || next !== move), exclude);
       const total = successors.reduce((sum, [, n]) => sum + n, 0);
       if (total <= 0) {
         out.set(move, (out.get(move) ?? 0) + p);

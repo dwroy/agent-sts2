@@ -418,6 +418,12 @@ function moveRulesSwitch(): boolean {
   return config.mechRules && config.mechMoveRules;
 }
 
+/** MECH_DEATH_MOVE likewise: on unless it or MECH_RULES is off. */
+function deathMoveSwitch(): boolean {
+  const config = loadConfig({ MECH_RULES: process.env["MECH_RULES"], MECH_DEATH_MOVE: process.env["MECH_DEATH_MOVE"] } as NodeJS.ProcessEnv);
+  return config.mechRules && config.mechDeathMove;
+}
+
 /**
  * The pre-fight start of `bossId` for the run in `state` (any screen), entered at `entryHp`: the live planner's
  * turn-1 board on the synthetic frame, then (as boss-sim redealInput fresh) the hand back in the deck, every card in
@@ -441,6 +447,8 @@ export function syntheticBossStart(state: GameState, knowledge: Knowledge, bossI
     // MECH_MOVE_RULES (the Kaiser Crab's back attack needing both claws, the learned move changes) as the loop runs it
     // (its .env is in process.env), off with MECH_RULES off; the rest of this start does not read the config.
     mechMoveRules: moveRulesSwitch(),
+    // MECH_DEATH_MOVE (the learned "an ally's death changes my move" rules: the Queen once the Amalgam dies) likewise.
+    mechDeathMove: deathMoveSwitch(),
     runStart: "auto",
     characterPreference: null,
     allowFtueModals: false,

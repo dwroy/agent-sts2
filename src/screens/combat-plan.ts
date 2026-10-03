@@ -33,7 +33,7 @@ import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
-import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, SHRINKER, solveTurn, STRIP_COUNTERS, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
+import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, SHRINKER, solveTurn, STRIP_COUNTERS, type DeathMove, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
@@ -43,8 +43,8 @@ import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, pickRollout
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { heldPotionWorth } from "../knowledge/potion-equivalents.js";
 import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPotionCost, type PotionCost } from "../strategy/potion-cost.js";
-import { actThreatIds, bossOnBoard, monsterMoves, moveDamageAt, moveTurns, observedMechanics, shownDamageAt, spawnsAt } from "../knowledge/monster-db.js";
-import { clearedWith, moveRulesOf, stripStunRules, type MoveRule, type StripStunRule } from "../knowledge/mechanics.js";
+import { actThreatIds, bossOnBoard, monsterMoves, moveAmountAt, moveDamageAt, moveTurns, observedMechanics, regularEffect, shownDamageAt, spawnsAt } from "../knowledge/monster-db.js";
+import { clearedWith, deathRulesOf, moveRulesOf, stripStunRules, type DeathRule, type MoveRule, type StripStunRule } from "../knowledge/mechanics.js";
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 import { BOSS_LINES_TIE_SE, bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simCompare, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
@@ -783,13 +783,13 @@ export function learnedMoveRules(env: Pick<DecisionEnv, "mechRules" | "mechMoveR
  * hit of a back-attack move; a move never measured, its most common shown hit), with the enemy's Strength and Weak unless
  * the change clears them (an Axebot's revive: clearedWith), and our Vulnerable. A move without damage (Boot Up): none.
  */
-function ruleMoveAttacks(monster: string, move: string, asc: number, enemy: Record<string, unknown>, player: Record<string, unknown>, cleared: readonly string[]): { damage: number; hits: number }[] {
+function ruleMoveAttacks(monster: string, move: string, asc: number, enemy: Record<string, unknown>, player: Record<string, unknown>, cleared: readonly string[], extraStrength = 0): { damage: number; hits: number }[] {
   const db = monsterMoves();
   const logged = moveDamageAt(db, monster, move, asc);
   if (logged) {
     if (logged.perHit <= 0) return [];
     const base = logged.base ?? logged.perHit;
-    const strength = cleared.includes("STRENGTH_POWER") ? 0 : powerAmount(enemy, "STRENGTH_POWER");
+    const strength = (cleared.includes("STRENGTH_POWER") ? 0 : powerAmount(enemy, "STRENGTH_POWER")) + extraStrength;
     const weak = !cleared.includes("WEAK_POWER") && powerAmount(enemy, "WEAK_POWER") > 0;
     const damage = Math.max(0, Math.floor((base + strength) * (weak ? 0.75 : 1) * (powerAmount(player, "VULNERABLE_POWER") > 0 ? 1.5 : 1)));
     return [{ damage, hits: Math.max(1, logged.hits) }];
@@ -828,6 +828,101 @@ export function applyMoveRules(enemies: EnemySim[], combat: Record<string, unkno
     }
     if (moved.length > 0) enemy.moveOnStrip = moved;
   }
+}
+
+/** MECH_DEATH_MOVE in use: the switch on, and MECH_RULES on (it is a class of the learned rules). */
+export function mechDeathOn(env: Pick<DecisionEnv, "mechRules" | "mechDeathMove">): boolean {
+  return env.mechRules !== false && env.mechDeathMove !== false;
+}
+
+/**
+ * MECH_DEATH_MOVE (docs/mechanics-learning.md §9, knowledge/mechanics.ts deathRules): the learned "an ally's death changes
+ * a survivor's move" rules by survivor monster id, from the monster DB's `observed.ally_deaths`. Empty with either switch
+ * off or without the data (a DB built before it). A failure reading them throws: withMechFallback then plans the turn with
+ * MECH_DEATH_MOVE off.
+ */
+export function learnedDeathRules(env: Pick<DecisionEnv, "mechRules" | "mechDeathMove">): Map<string, DeathRule[]> {
+  if (!mechDeathOn(env)) return new Map();
+  return deathRulesOf({ monsters: monsterMoves() });
+}
+
+/**
+ * The learned death rules onto the board's survivors (EnemySim.moveOnDeath): for each rule of the enemy's monster, one entry
+ * per living ally of the rule's monster on the board, resolved for the move it shows now (the same-turn change, if logged
+ * from that move, with its attack: monster DB at this ascension, its Strength and Weak, our Vulnerable; the next move when
+ * logged after the move it would end the turn on) and carrying the rule for the rollout's later turns. Enemies are matched
+ * as enemySims indexes them; one without such a rule is left as it was.
+ */
+export function applyDeathRules(enemies: EnemySim[], combat: Record<string, unknown>, rules: Map<string, DeathRule[]>, asc: number): void {
+  if (rules.size === 0) return;
+  const living = asArray(combat["enemies"])
+    .map(asRecord)
+    .filter((enemy) => enemy["is_alive"] !== false);
+  const byIndex = new Map(living.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, enemy]));
+  const player = asRecord(combat["player"]);
+  const total = (attacks: { damage: number; hits: number }[]) => attacks.reduce((sum, hit) => sum + hit.damage * hit.hits, 0);
+  const moveName = (monster: string, move: string) => monsterMoves()[monster]?.moves?.[move]?.name || move;
+  for (const enemy of enemies) {
+    const source = byIndex.get(enemy.index);
+    if (!source) continue;
+    const monster = str(source["enemy_id"]);
+    const shown = str(source["move_id"]);
+    const entries: DeathMove[] = [];
+    for (const rule of rules.get(monster) ?? []) {
+      for (const ally of enemies) {
+        const allySource = byIndex.get(ally.index);
+        if (ally.index === enemy.index || !allySource || str(allySource["enemy_id"]) !== rule.ally || ally.hp <= 0) continue;
+        const now = shown ? rule.now[shown] ?? null : null;
+        const end = now?.move ?? shown;
+        const next = rule.next && end && rule.next.after.includes(end) ? rule.next : null;
+        // The Strength the same-turn move gives before the next one (the Queen's Enrage: +2, her first head-chop 7x5 at A8),
+        // at this ascension as the rollout's move table has it (a regular effect of the move).
+        const entry = now ? monsterMoves()[monster]?.moves?.[now.move] : undefined;
+        const gained = entry && regularEffect(entry, entry.self_powers_gained?.["STRENGTH_POWER"]) ? moveAmountAt(monsterMoves(), monster, entry, "self", "STRENGTH_POWER", asc)?.value ?? 0 : 0;
+        entries.push({
+          ally: ally.index, allyId: rule.ally, allyName: ally.name,
+          move: now?.move ?? null, moveName: now ? moveName(monster, now.move) : null,
+          attacks: now ? ruleMoveAttacks(monster, now.move, asc, source, player, []) : [],
+          next: next?.move ?? null, nextName: next ? moveName(monster, next.move) : null,
+          nextAttack: next ? total(ruleMoveAttacks(monster, next.move, asc, source, player, [], gained)) : null,
+          ...(now ? { nowCounts: [now.changed, now.n] as [number, number] } : {}),
+          ...(next ? { nextCounts: [next.count, next.n] as [number, number] } : {}),
+          rule: {
+            now: Object.fromEntries(Object.entries(rule.now).map(([from, change]) => [from, change.move])),
+            next: rule.next?.move ?? null, after: rule.next?.after ?? [], exclusive: rule.exclusive, aliveOnly: rule.aliveOnly,
+          },
+        });
+      }
+    }
+    if (entries.length > 0) enemy.moveOnDeath = entries;
+  }
+}
+
+/**
+ * MECH_DEATH_MOVE: by board index, the moves each survivor's learned death rules say it never shows while such an ally lives
+ * (every rule on the board is for a living ally): kept out of the planner's move-model forecasts (nextIncoming, laterIncoming).
+ * Empty without rules.
+ */
+export function deathOnlyMoves(enemies: EnemySim[]): Map<number, Set<string>> {
+  const out = new Map<number, Set<string>>();
+  for (const enemy of enemies) {
+    const moves = new Set((enemy.moveOnDeath ?? []).flatMap((rule) => rule.rule.exclusive));
+    if (moves.size > 0) out.set(enemy.index, moves);
+  }
+  return out;
+}
+
+/** The learned death-rule note on an enemy in the combat question (MECH_DEATH_MOVE): what its allies' deaths do to its move. */
+export function deathRuleNote(enemy: EnemySim | undefined): string {
+  const own = (enemy?.moveOnDeath ?? []).filter((rule) => rule.move !== null || rule.next !== null);
+  if (own.length === 0) return "";
+  const named = (name: string | null, id: string) => (name && name !== id ? `${name} (${id}, ` : `${id} (`);
+  const parts = own.map((rule) => {
+    const now = rule.move !== null ? `its move changes at once to ${named(rule.moveName, rule.move)}${rule.attacks.length > 0 ? `attack ${rule.attacks.reduce((sum, hit) => sum + hit.damage * hit.hits, 0)}` : "no attack"} this turn; ${rule.nowCounts?.[0]} of ${rule.nowCounts?.[1]} logged)` : "";
+    const next = rule.next !== null ? `its next move is ${named(rule.nextName, rule.next)}${rule.nextAttack ? `attack ~${rule.nextAttack}` : "no attack"}; ${rule.nextCounts?.[0]} of ${rule.nextCounts?.[1]} logged)` : "";
+    return `when ${rule.allyName} dies on my turn ${[now, next].filter(Boolean).join(", then ")}`;
+  });
+  return `observed in the logs, not in its text: ${parts.join("; ")}; the options' numbers and the rollout already count it`;
 }
 
 /**
@@ -1031,6 +1126,24 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
         const attack = change.attack > 0 ? `attack ${change.attack}` : "no attack";
         const instead = change.before !== change.attack ? ` instead of the ${change.before > 0 ? `${change.before} shown` : "move shown"}` : "";
         return `${change.how === "removed" ? "removes" : "takes a stack of"} ${enemy.name}'s ${change.name}: its move becomes ${change.moveName} (${change.move}, ${attack} this turn${instead}; ${change.changed} of ${change.n} logged), already in hp_lost`;
+      })
+      .join("; ");
+  }
+  // MECH_DEATH_MOVE: a learned death rule this line sets off (the Amalgam killed: the Queen's Enrage now, Off With Your Head next).
+  const deaths = o.winsFight ? [] : o.enemyHpAfter.filter((enemy) => enemy.deathMove && enemy.hp > 0);
+  if (deaths.length > 0) {
+    summary["death_move"] = deaths
+      .map((enemy) => {
+        const change = enemy.deathMove!;
+        // The game's move name and its id ("ENRAGE_MOVE" alone when the DB has no name for it).
+        const named = (name: string | null, id: string) => (name && name !== id ? `${name} (${id}, ` : `${id} (`);
+        const now = change.move !== null
+          ? `${enemy.name}'s move becomes ${named(change.moveName, change.move)}${change.attack > 0 ? `attack ${change.attack}` : "no attack"} this turn${change.before !== change.attack ? ` instead of the ${change.before > 0 ? `${change.before} shown` : "move shown"}` : ""}; ${change.nowCounts?.[0]} of ${change.nowCounts?.[1]} logged) at once, already in hp_lost`
+          : "";
+        const next = change.next !== null
+          ? `next turn ${enemy.name} uses ${named(change.nextName, change.next)}${change.nextAttack ? `attack ~${change.nextAttack} as priced now` : "no attack"}; ${change.nextCounts?.[0]} of ${change.nextCounts?.[1]} logged), not in hp_lost (the rollout counts it)`
+          : "";
+        return `kills ${change.allyName}: ${[now, next].filter(Boolean).join("; ")}`;
       })
       .join("; ");
   }
@@ -2451,9 +2564,17 @@ export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) =
   try {
     return plan(env);
   } catch {
+    // MECH_DEATH_MOVE on: first without the death rules (the other learned rules kept).
+    if (env.mechDeathMove !== false) {
+      try {
+        return plan({ ...env, mechDeathMove: false });
+      } catch {
+        // as with the move rules off too, below
+      }
+    }
     if (env.mechMoveRules !== false) {
       try {
-        return plan({ ...env, mechMoveRules: false });
+        return plan({ ...env, mechMoveRules: false, mechDeathMove: false });
       } catch {
         // as with both off, below
       }
@@ -2516,6 +2637,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // MECH_MOVE_RULES (docs/mechanics-learning.md §8): the learned move changes (an Axebot killed with Stock left comes back
   // in Boot Up, no attack) on the enemies carrying such a power, for the solver, the rollout and the option's fact.
   applyMoveRules(enemies, combat, learnedMoveRules(env), ascension);
+  // MECH_DEATH_MOVE (docs/mechanics-learning.md §9): the learned "an ally's death changes my move" rules on the survivors
+  // (the Queen once the Torch Head Amalgam dies: Enrage at once, Off With Your Head next turn), for the solver, the rollout
+  // and the option's fact.
+  applyDeathRules(enemies, combat, learnedDeathRules(env), ascension);
   carryHpLossCaps(env.screenMemory, `${fightKey(state)}:${state.turn ?? "?"}`, enemies);
   if (enemies.length === 0) {
     // Every enemy at 0 HP but the fight goes on: a multi-phase boss (Test Subject, ADAPTABLE_POWER)
@@ -2726,13 +2851,15 @@ function planTurn(env: DecisionEnv): Decision | null {
   // the table's held value, 0 in a boss fight); whether it is worth spending is Jev's call, with potion_context
   // and each option's potion_cost as its facts.
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
+  // MECH_DEATH_MOVE: a survivor's moves its learned death rules say it never makes while the ally lives are no forecast now.
+  const deathExcluded = deathOnlyMoves(enemies);
   const nextIncoming =
     asArray(combat["enemies"])
       .map(asRecord)
       .filter((enemy) => enemy["is_alive"] !== false)
-      .reduce((sum, enemy) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension)) ?? 0), 0) +
+      .reduce((sum, enemy, i) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension), deathExcluded.get(numOrNull(enemy["index"]) ?? i)) ?? 0), 0) +
     revivingIllusions(combat).reduce((sum, enemy) => sum + (revivingForecast(str(enemy["enemy_id"]), 1, boardDamageContext(enemy, player, ascension))?.[0] ?? 0), 0);
-  const laterIncoming = laterIncomingOf(combat, ascension);
+  const laterIncoming = laterIncomingOf(combat, ascension, deathExcluded);
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
   const fightPlan = activeFightPlan(env);
   // What gets through the block already up (CCPR F43 T1: 30 starting block from Anchor and Diamond
@@ -3496,6 +3623,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           const sim = enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i));
           return `${enemyPowerText(power, env.knowledge)}${POWER_NOTES[str(power["power_id"])] ?? ""}${stripStunNote(sim, str(power["power_id"]), mechRules)}${moveRuleNote(sim, str(power["power_id"]))}${backAttackPairNote(env, str(power["power_id"]), living.length)}`;
         }),
+        // MECH_DEATH_MOVE: what an ally's death does to its move, as the logs show it (none with the switch off).
+        ...((note): Record<string, string> => (note ? { observed: note } : {}))(deathRuleNote(enemies.find((other) => other.index === (numOrNull(enemy["index"]) ?? i)))),
         // Powers the solver does not model: the options' damage into this enemy is counted at 80% (to stay safe).
         ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
       })),
@@ -3533,7 +3662,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (env.jevContext === "v1") {
     const liveEnemies = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
     const nextThreat = new Map<number, number | null>(
-      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension))]),
+      liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension), deathExcluded.get(numOrNull(enemy["index"]) ?? fallbackIndex))]),
     );
     const illusions = liveEnemies.filter((enemy) => powerAmount(enemy, "ILLUSION_POWER") > 0);
     const dead = revivingIllusions(combat).map((enemy) => revivingForecast(str(enemy["enemy_id"]), 1, boardDamageContext(enemy, player, ascension))?.[0] ?? null).filter((hit): hit is number => hit !== null);
@@ -3896,15 +4025,18 @@ function planTurn(env: DecisionEnv): Decision | null {
           : null;
       const ruled = enemies.filter((enemy) => (enemy.stunOnStrip ?? []).length > 0);
       const moveRuled = enemies.filter((enemy) => (enemy.moveOnStrip ?? []).length > 0);
-      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0 && moveRuled.length === 0 && exploreLog === null) return noted(resolved);
+      const deathRuled = enemies.filter((enemy) => (enemy.moveOnDeath ?? []).length > 0);
+      if (!rolloutRecord && !potionsRecord && focusOf.size === 0 && !bossSim && thieves.length === 0 && ruled.length === 0 && moveRuled.length === 0 && deathRuled.length === 0 && exploreLog === null) return noted(resolved);
       const answer = answers["plan"];
       const pick = answer?.type === "choice" ? byKey.get(answer.choice) : undefined;
       // MECH_RULES: the learned strip-stun rules on the board, the shown lines setting one off, and the chosen line's.
       const setsOff = (plan: Plan): boolean => plan.outcome.enemyHpAfter.some((enemy) => enemy.strippedStun !== undefined && enemy.hp > 0);
       // MECH_MOVE_RULES: the learned move rules on the board, the shown lines setting one off, and the chosen line's.
       const movesOff = (plan: Plan): boolean => plan.outcome.enemyHpAfter.some((enemy) => enemy.movedTo !== undefined);
+      // MECH_DEATH_MOVE: the learned death rules on the board, the shown lines setting one off, and the chosen line's.
+      const deathsOff = (plan: Plan): boolean => !plan.outcome.winsFight && plan.outcome.enemyHpAfter.some((enemy) => enemy.deathMove !== undefined && enemy.hp > 0);
       const mechRecord: JsonValue | null =
-        ruled.length > 0 || moveRuled.length > 0
+        ruled.length > 0 || moveRuled.length > 0 || deathRuled.length > 0
           ? {
               ...(ruled.length > 0
                 ? {
@@ -3918,6 +4050,13 @@ function planTurn(env: DecisionEnv): Decision | null {
                     move_rules: moveRuled.flatMap((enemy) => enemy.moveOnStrip!.map((rule) => ({ enemy: enemy.name, power: rule.power, how: rule.how, move: rule.move, n: rule.n }))),
                     moves_now: [...shown, ...mcMedians].filter(movesOff).map(keyOfShown),
                     chosen_moves: pick?.plan ? movesOff(pick.plan) : null,
+                  }
+                : {}),
+              ...(deathRuled.length > 0
+                ? {
+                    death_rules: deathRuled.flatMap((enemy) => enemy.moveOnDeath!.map((rule) => ({ enemy: enemy.name, ally: rule.allyName, move: rule.move, next: rule.next }))),
+                    deaths_now: [...shown, ...mcMedians].filter(deathsOff).map(keyOfShown),
+                    chosen_deaths: pick?.plan ? deathsOff(pick.plan) : null,
                   }
                 : {}),
             }
@@ -4329,7 +4468,7 @@ export function revivingIllusions(combat: Record<string, unknown>): Record<strin
   return enemies.filter((enemy) => enemy["is_alive"] === false && powerAmount(enemy, "ILLUSION_POWER") > 0);
 }
 
-export function laterIncomingOf(combat: Record<string, unknown>, asc?: number): number[] | null {
+export function laterIncomingOf(combat: Record<string, unknown>, asc?: number, exclude?: ReadonlyMap<number, ReadonlySet<string>>): number[] | null {
   const out: number[] = Array.from({ length: LATER_TURNS }, () => 0);
   let known = false;
   // At the run's ascension from the monster DB (move-model DamageContext), when it is given.
@@ -4340,8 +4479,8 @@ export function laterIncomingOf(combat: Record<string, unknown>, asc?: number): 
     known = true;
     for (let k = 0; k < LATER_TURNS; k += 1) out[k]! += forecast[k] ?? 0;
   }
-  for (const enemy of asArray(combat["enemies"]).map(asRecord).filter((entry) => entry["is_alive"] !== false)) {
-    const forecast = damageForecast(str(enemy["enemy_id"]), str(enemy["move_id"]), LATER_TURNS, powerAmount(enemy, "ASLEEP_POWER"), ctxOf(enemy));
+  for (const [i, enemy] of asArray(combat["enemies"]).map(asRecord).filter((entry) => entry["is_alive"] !== false).entries()) {
+    const forecast = damageForecast(str(enemy["enemy_id"]), str(enemy["move_id"]), LATER_TURNS, powerAmount(enemy, "ASLEEP_POWER"), ctxOf(enemy), exclude?.get(numOrNull(enemy["index"]) ?? i));
     const shown = asArray(enemy["intents"]).map(asRecord).reduce((sum, intent) => sum + num(intent["damage"]) * Math.max(1, num(intent["hits"])), 0);
     if (forecast) known = true;
     const special = multiClawNext(enemy);
