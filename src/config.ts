@@ -424,6 +424,14 @@ export interface BrainConfig {
      */
     maxAnswerChars: number | null;
     /**
+     * BRAIN_CODEX_MAX_ANSWER_BLANKS (session mode, default 100; off: none): a streamed answer with this many whitespace
+     * characters in a row between its JSON tokens (outside any string) is given up on at once, as a runaway past
+     * maxAnswerChars is. 2026-10-03: the cut runaways were whitespace after a complete reason (a replay's: 1,875 of 2,044
+     * characters, strict mode allows it and no maxLength reaches it); the 56 answered session turns of L3G50U6KX5ST and
+     * 3JHE2AWF5MWB padded at most 9. The same retry or fallback follows, 7-34 s sooner.
+     */
+    maxAnswerBlanks: number | null;
+    /**
      * BRAIN_CODEX_ROUTE_REASON: "drop" (default) leaves route_reason out of codex's answer schema (only logged; the
      * replayed runaways were all in it), "keep" keeps it capped at 60 characters (engines/codex.ts codexSchema).
      */
@@ -472,6 +480,12 @@ export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
  * sent nothing for 10 minutes after it.
  */
 export const DEFAULT_CODEX_STALL_MS: number | null = 120_000;
+
+/**
+ * BRAIN_CODEX_MAX_ANSWER_BLANKS when unset: whitespace characters in a row between a streamed answer's JSON tokens after
+ * which session mode gives the turn up as a runaway (answered turns padded at most 9; the runaways ran to ~1,900).
+ */
+export const DEFAULT_CODEX_MAX_ANSWER_BLANKS = 100;
 
 /**
  * The codex usage guard's defaults (engines/codex-usage.ts). Stop at 80% of any window (Dai 2026-10-03: protect the
@@ -627,6 +641,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const stallMs = stallRaw === null ? DEFAULT_CODEX_STALL_MS : ["off", "none", "0"].includes(stallRaw.toLowerCase()) ? null : parseInteger(stallRaw, "BRAIN_CODEX_STALL_MS", problems, { min: 1_000, max: 3_600_000 });
   const maxAnswerRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_CHARS");
   const maxAnswerChars = maxAnswerRaw === null ? 2_000 : ["off", "none", "0"].includes(maxAnswerRaw.toLowerCase()) ? null : parseInteger(maxAnswerRaw, "BRAIN_CODEX_MAX_ANSWER_CHARS", problems, { min: 200, max: 1_000_000 });
+  const blanksRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_BLANKS");
+  const maxAnswerBlanks = blanksRaw === null ? DEFAULT_CODEX_MAX_ANSWER_BLANKS : ["off", "none", "0"].includes(blanksRaw.toLowerCase()) ? null : parseInteger(blanksRaw, "BRAIN_CODEX_MAX_ANSWER_BLANKS", problems, { min: 20, max: 1_000_000 });
   const routeReasonRaw = (readEnv(env, "BRAIN_CODEX_ROUTE_REASON") ?? "drop").toLowerCase();
   if (routeReasonRaw !== "drop" && routeReasonRaw !== "keep") problems.push({ field: "BRAIN_CODEX_ROUTE_REASON", message: `expected drop or keep, got "${routeReasonRaw}"` });
   const fieldRaw = readEnv(env, "BRAIN_CODEX_MAX_FIELD_CHARS");
@@ -674,6 +690,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       firstTokenMs,
       mode: modeRaw === "session" ? "session" : "exec",
       maxAnswerChars,
+      maxAnswerBlanks,
       routeReason: routeReasonRaw === "keep" ? "keep" : "drop",
       maxFieldChars,
       stallRetries: stallRetries ?? 1,

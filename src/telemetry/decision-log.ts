@@ -7,6 +7,7 @@
 import { appendFileSync, mkdirSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 
+import type { BrainDecider } from "../brain/types.js";
 import type { JsonValue } from "../util/json.js";
 
 export interface DecisionRecord {
@@ -19,8 +20,12 @@ export interface DecisionRecord {
   label: string;
   /** This decision's id: Jev's prompts for it (jev-prompts.jsonl) carry the same one. */
   decision_id?: string;
-  /** Who made this call: code (rules/solver), jev, deepseek, or code after an unusable model answer. */
-  decider?: "code" | "jev" | "deepseek" | "claude" | "code-fallback";
+  /**
+   * Who made this call: code (rules/solver), jev, a model (the brain engine that answered: deepseek, codex, claude, or
+   * "deepseek (for codex)" when the router's fallback answered; a v3 escalation's deepseek / claude), or code after an
+   * unusable model answer. Before 2026-10-03 every brain answer was logged as deepseek, whichever engine gave it.
+   */
+  decider?: "code" | "jev" | "code-fallback" | BrainDecider;
   fingerprint: string;
   questions?: Record<string, JsonValue>;
   answers?: JsonValue;

@@ -128,6 +128,15 @@ class ExtractTest(unittest.TestCase):
                                                    "usage": {"inputTokens": 5, "outputTokens": 1}}).encode(), 0)
         self.assertEqual((after["engine"], after["fallback_from"], after["fallback_kind"], after["effort"]), ("deepseek", "codex", "timeout", None))
         self.assertEqual((codex["limit_used_pct"], codex["limit_resets_at"], codex["limit_credits"]), (None, None, None))
+        # From 2026-10-03 the fallback's row carries the failed primary's wall clock and every row the question's id;
+        # older rows have neither (NULL: no rebuild, they never logged them).
+        timed = extract.brain_call_row(json.dumps({"ts": "2026-10-03T21:00:00.000Z", "label": "reward/card", "engine": "deepseek", "answer": {"choice": "a"},
+                                                   "latency_ms": 4600, "question_id": "mgb1x2-4242-7", "primary_ms": 600012,
+                                                   "fell_back_from": {"engine": "codex", "error": "codex timed out after 600000 ms", "kind": "timeout"},
+                                                   "usage": {"inputTokens": 5, "outputTokens": 1}}).encode(), 0)
+        self.assertEqual((timed["latency_ms"], timed["primary_ms"], timed["question_id"], timed["fallback_from"]), (4600, 600012, "mgb1x2-4242-7", "codex"))
+        self.assertEqual((after["primary_ms"], after["question_id"], codex["primary_ms"]), (None, None, None))
+        self.assertEqual([c for c, _ in extract.TABLES["llm_calls_raw"]][-2:], ["primary_ms", "question_id"])
         # The codex usage guard's latest reading (src/brain/engines/codex-usage.ts usageNote), on a row about codex.
         guarded = extract.brain_call_row(json.dumps({"ts": "2026-10-03T12:00:00.000Z", "label": "map/route-plan", "engine": "deepseek", "answer": {"route": "keep"},
                                                      "fell_back_from": {"engine": "codex", "error": "codex usage guard: codex/primary 7-day window 81% used", "kind": "quota"},

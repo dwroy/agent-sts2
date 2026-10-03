@@ -36,8 +36,13 @@
  *   before it is capped only by BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's BRAIN_CODEX_TIMEOUT_MS.
  *   codex's own retry notices ("Reconnecting... 1/5") are retries, not failures.
  * - Trace: every run writes a row to codex-calls.jsonl next to brain.jsonl (CodexTraceRow: the event timeline with
- *   arrival times, retries, errors, the first-token time, the stderr tail with credentials masked; never the prompt or
- *   the answer text), the stalled and timed-out runs included.
+ *   arrival times, retries, errors, the first-token time, the stderr tail with credentials masked; never the prompt),
+ *   the stalled and timed-out runs included. A row names its question (question_id, as brain.jsonl's row) and the
+ *   call's time so far (call_ms). A session turn cut before its answer (a runaway, a stall, an abort) keeps the answer
+ *   text it had streamed (answer_text); an answered one does not (brain.jsonl has the answer).
+ * - Time: a call's latency is exactly its own runs (the stalled ones before the one that answered included); a run
+ *   given up on is never billed to a later question (2026-10-03, J4S28FRQKD7G: two stalled runs of a reward question
+ *   that fell back were added to the next question's latency, the act-plan's 41 s logged as 316 s).
  * - Environment: only the basics a process needs (engines/process.ts agentEnv), CODEX_HOME for the login, the log
  *   filter, and the program's own directory first in PATH (the npm launcher is `#!/usr/bin/env node`).
  * - Usage guard (engines/codex-usage.ts): the plan's windows and credits are read at process start (Brain.preflight)
@@ -80,16 +85,25 @@ export interface CodexEngineOptions {
   now?: () => number;
 }
 
-/** A codex run's trace row (codex-calls.jsonl): no prompt and no answer text, only what happened when. */
+/**
+ * A codex run's trace row (codex-calls.jsonl): no prompt, only what happened when; the answer text only when a session
+ * turn was cut before its answer (answer_text).
+ */
 export interface CodexTraceRow {
   ts: string;
   run_id?: string;
+  /** The question's id (BrainRequest.questionId: brain.jsonl's question_id). */
+  question_id?: string;
   /** exec (one codex exec per run) or session (a turn on the app-server thread). */
   mode?: "exec" | "session";
   turn_id?: string;
-  /** Session mode: the streamed deltas, the streamed answer's length, and whether the thread went back to its base. */
+  /**
+   * Session mode: the streamed deltas, the streamed answer's length, its longest whitespace run between JSON tokens
+   * (BRAIN_CODEX_MAX_ANSWER_BLANKS), and whether the thread went back to its base.
+   */
   deltas?: number;
   answer_chars?: number;
+  max_blank_run?: number;
   reverted?: boolean;
   /** Session mode: requests the server made of us (none is expected: no tool is offered). */
   server_requests?: string[];
@@ -100,7 +114,20 @@ export interface CodexTraceRow {
   attempt: number;
   /** answered | failed (codex said why) | stalled (no event for stall_ms: killed) | aborted (the router's timeout) | error (did not run). */
   outcome: "answered" | "failed" | "stalled" | "aborted" | "error";
+  /** This run's wall clock. */
   ms: number;
+  /**
+   * The engine call's time so far: this run and the call's runs before it (a stalled run, session mode's turns before
+   * exec mode took over). An answering run's call_ms is the latency the call reports (brain.jsonl's latency_ms, its
+   * re-ask apart).
+   */
+  call_ms?: number;
+  /**
+   * Session mode, a turn that ended without its answer (a runaway: past BRAIN_CODEX_MAX_ANSWER_CHARS or
+   * BRAIN_CODEX_MAX_ANSWER_BLANKS; a stall, an abort, a failure): the answer text it had streamed (at most
+   * ANSWER_TEXT_KEEP characters). Answers are not secret.
+   */
+  answer_text?: string;
   exit?: number | null;
   signal?: string | null;
   thread_id?: string | null;
@@ -633,12 +660,14 @@ function sessionTrace(
   req: BrainRequest,
   c: CodexCall,
   attempt: number,
-  r: { outcome: CodexTraceRow["outcome"]; turn?: SessionTurn; threadId?: string | null; ms?: number; error?: string; stderr: string; serverRequests?: string[] },
+  r: { outcome: CodexTraceRow["outcome"]; turn?: SessionTurn; threadId?: string | null; ms?: number; callMs: number; error?: string; stderr: string; serverRequests?: string[] },
 ): CodexTraceRow {
   const turn = r.turn;
+  const cut = turn && r.outcome !== "answered" && turn.answerText ? turn.answerText : "";
   return {
     ts: new Date().toISOString(),
     ...(req.runId ? { run_id: req.runId } : {}),
+    ...(req.questionId ? { question_id: req.questionId } : {}),
     mode: "session",
     label: req.label,
     model: c.model,
@@ -646,10 +675,12 @@ function sessionTrace(
     attempt,
     outcome: r.outcome,
     ms: turn?.ms ?? r.ms ?? 0,
+    call_ms: r.callMs,
+    ...(cut ? { answer_text: cut } : {}),
     thread_id: turn?.threadId ?? r.threadId ?? null,
     ...(turn?.turnId ? { turn_id: turn.turnId } : {}),
     ...(turn && turn.firstDeltaMs !== null ? { ttft_ms: turn.firstDeltaMs } : {}),
-    ...(turn ? { deltas: turn.deltas, answer_chars: turn.answerChars, reverted: turn.reverted } : {}),
+    ...(turn ? { deltas: turn.deltas, answer_chars: turn.answerChars, max_blank_run: turn.maxBlankRun, reverted: turn.reverted } : {}),
     max_gap_ms: turn?.maxGapMs ?? 0,
     stall_ms: null,
     first_token_ms: null,
@@ -726,25 +757,23 @@ export class CodexEngine implements BrainEngine {
     return entry;
   }
 
-  /** Calls so far in this process: a stalled run's wall clock is added to the next one's latency. */
-  private stalledMs = 0;
-
   /**
    * One codex run, watched. stdout's --json events and stderr's telemetry (codex.turn_ttft: the first output token,
    * CODEX_RUST_LOG) give its phases: thinking until the first token, then the output. A run is killed as stalled when
    * its first token has not come within first_token_ms (when set), or when, after it, the stream is silent for
    * stall_ms (the stall seen in play: the first token at 18 s, then nothing for 10 minutes on an open WebSocket, no
    * retry by codex). The caller's abort (the router's timeout) kills it too. Every run leaves a trace row
-   * (codex-calls.jsonl), the aborted and stalled ones included, with what codex had sent by then.
+   * (codex-calls.jsonl), the aborted and stalled ones included, with what codex had sent by then. `ms` is the run's own
+   * wall clock (as its trace row's); `spentMs` what the call spent before it (its call_ms adds them).
    */
   private async runOnce(
     bin: string,
     args: string[],
-    o: { cwd: string; env: Record<string, string>; stdin: string; signal: AbortSignal | undefined; req: BrainRequest; model: string; effort: string; attempt: number },
+    o: { cwd: string; env: Record<string, string>; stdin: string; signal: AbortSignal | undefined; req: BrainRequest; model: string; effort: string; attempt: number; spentMs: number },
   ): Promise<
-    | { kind: "done"; run: Awaited<ReturnType<typeof runAgent>>; stream: CodexStream; totalMs: number }
-    | { kind: "stalled"; why: string }
-    | { kind: "thrown"; error: unknown }
+    | { kind: "done"; run: Awaited<ReturnType<typeof runAgent>>; stream: CodexStream; ms: number }
+    | { kind: "stalled"; why: string; ms: number }
+    | { kind: "thrown"; error: unknown; ms: number }
   > {
     const { stallMs, firstTokenMs } = this.opts.codex;
     const started = Date.now();
@@ -786,17 +815,20 @@ export class CodexEngine implements BrainEngine {
       if (stallMs) stallAfter(stallMs, silence);
       else clearTimeout(timer);
     };
+    let ms = 0;
     const trace = (row: Partial<CodexTraceRow> & Pick<CodexTraceRow, "outcome">, stderr: string): void => {
-      const ms = Date.now() - started;
+      ms = Date.now() - started;
       this.writeTrace({
         ts: new Date().toISOString(),
         ...(o.req.runId ? { run_id: o.req.runId } : {}),
+        ...(o.req.questionId ? { question_id: o.req.questionId } : {}),
         mode: "exec",
         label: o.req.label,
         model: o.model,
         effort: o.effort,
         attempt: o.attempt,
         ms,
+        call_ms: o.spentMs + ms,
         ...(ttftMs !== null ? { ttft_ms: ttftMs } : {}),
         ...(events.length > 0 ? { first_event_ms: events[0]!.t, last_event_ms: events[events.length - 1]!.t } : {}),
         max_gap_ms: maxGap(events, ms),
@@ -816,25 +848,18 @@ export class CodexEngine implements BrainEngine {
       const stream = parseCodexStream(run.stdout);
       const answered = codexFailure(stream, run) === null;
       trace({ outcome: answered ? "answered" : "failed", exit: run.code, signal: run.signal, thread_id: stream.threadId, retries: stream.retries, errors: stream.errors, warnings: stream.warnings, ...(stream.usage ? { usage: stream.usage } : {}) }, run.stderr);
-      const totalMs = run.ms + this.stalledMs;
-      this.stalledMs = 0;
-      return { kind: "done", run, stream, totalMs };
+      return { kind: "done", run, stream, ms };
     } catch (error) {
       if (error instanceof AgentAbortedError) {
         const stream = parseCodexStream(error.stdout);
         trace({ outcome: stalled ? "stalled" : "aborted", ...(stalled ? { stall: stalled } : {}), thread_id: stream.threadId, retries: stream.retries, errors: stream.errors, warnings: stream.warnings }, error.stderr);
-        if (stalled && !o.signal?.aborted) {
-          this.stalledMs += error.ms;
-          return { kind: "stalled", why: stalled };
-        }
-        this.stalledMs = 0;
-        return { kind: "thrown", error };
+        if (stalled && !o.signal?.aborted) return { kind: "stalled", why: stalled, ms };
+        return { kind: "thrown", error, ms };
       }
       trace({ outcome: "error", error: (error instanceof Error ? error.message : String(error)).slice(0, 300) }, "");
-      this.stalledMs = 0;
       // Not found / not executable: rest it, so the next questions go to the fallback without trying again.
-      if (error instanceof AgentStartError) return { kind: "thrown", error: new EngineFailure(`${error.message} [unavailable]`, "unavailable", CODEX_REST_MS.unavailable) };
-      return { kind: "thrown", error };
+      if (error instanceof AgentStartError) return { kind: "thrown", error: new EngineFailure(`${error.message} [unavailable]`, "unavailable", CODEX_REST_MS.unavailable), ms };
+      return { kind: "thrown", error, ms };
     } finally {
       clearTimeout(timer);
       o.signal?.removeEventListener("abort", onOuterAbort);
@@ -919,7 +944,7 @@ export class CodexEngine implements BrainEngine {
    * exec mode takes over; an isolation problem (config.toml, instruction sources) turns session mode off at once.
    */
   private async decideSession(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall): Promise<BrainAnswer> {
-    const { home, summary, stallMs, firstTokenMs, stallRetries, maxAnswerChars } = this.opts.codex;
+    const { home, summary, stallMs, firstTokenMs, stallRetries, maxAnswerChars, maxAnswerBlanks } = this.opts.codex;
     const prompt = promptWithReask(req);
     let attempt = 1;
     let spentMs = 0;
@@ -930,11 +955,12 @@ export class CodexEngine implements BrainEngine {
       try {
         await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
         this.usage.noteCall();
-        turn = await session.ask({ prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars });
+        turn = await session.ask({ prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
       } catch (error) {
         if (!(error instanceof SessionError || error instanceof RpcError)) throw error;
-        spentMs += Date.now() - began;
-        this.writeTrace(sessionTrace(req, c, attempt, { outcome: "error", error: error.message, threadId: session.threadId, ms: Date.now() - began, stderr: session.stderrTail() }));
+        const ms = Date.now() - began;
+        spentMs += ms;
+        this.writeTrace(sessionTrace(req, c, attempt, { outcome: "error", error: error.message, threadId: session.threadId, ms, callMs: spentMs, stderr: session.stderrTail() }));
         if (error instanceof SessionError && error.kind === "isolation") {
           this.turnSessionOff(error.message);
           return this.decideExec(req, signal, c, spentMs);
@@ -950,7 +976,7 @@ export class CodexEngine implements BrainEngine {
         continue;
       }
       spentMs += turn.ms;
-      this.writeTrace(sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, stderr: session.stderrTail(), serverRequests: session.serverRequests }));
+      this.writeTrace(sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }));
       if (turn.status === "completed" && turn.text) {
         if (!session.hasPath()) void session.refreshPath();
         const usage = turn.usage ?? {};
@@ -988,7 +1014,10 @@ export class CodexEngine implements BrainEngine {
     }
   }
 
-  /** Exec mode: one `codex exec` per question (and once more after a stall). */
+  /**
+   * Exec mode: one `codex exec` per question (and once more after a stall). The latency is this call's own runs (and
+   * what session mode spent on it before handing it over: spentBeforeMs), nothing else.
+   */
   private async decideExec(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall, spentBeforeMs = 0): Promise<BrainAnswer> {
     const { bin, summary, serviceTier } = this.opts.codex;
     const { model, effort, env, entry, schema } = c;
@@ -1006,13 +1035,16 @@ export class CodexEngine implements BrainEngine {
       const args = codexArgs({ cwd, model, schemaFile, systemFile, catalogFile, stateDir: this.stateDir, effort, summary, serviceTier });
       const stdin = promptWithReask(req);
       let attempt = 1;
+      let spentMs = spentBeforeMs;
       this.usage.noteCall();
-      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt });
+      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs });
+      spentMs += outcome.ms;
       // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
       while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
         attempt += 1;
         this.usage.noteCall();
-        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt });
+        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs });
+        spentMs += outcome.ms;
       }
       if (outcome.kind === "stalled") throw new EngineFailure(`codex stalled [timeout]: ${outcome.why} (${attempt} run(s))`, "timeout");
       if (outcome.kind === "thrown") throw outcome.error;
@@ -1022,7 +1054,7 @@ export class CodexEngine implements BrainEngine {
       const toolCalls: ToolCallRecord[] = stream.toolItems.map((item) => ({ name: `codex:${String(item["type"] ?? "item")}`, input: item, output: "", ms: 0 }));
       return this.answer(req, c, {
         text: stream.messages[stream.messages.length - 1] ?? "",
-        latencyMs: outcome.totalMs + spentBeforeMs,
+        latencyMs: spentMs,
         usage: stream.usage ?? {},
         reasoning: stream.reasoning,
         toolCalls,
