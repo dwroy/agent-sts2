@@ -43,6 +43,7 @@
     {"name": "V4.5.gpt.guard", "family": "V4", "commit": "172f001", "source": "decision-log 2026-10-03 18:31 (codex usage guard: reads account/rateLimits through a short-lived app-server at start and every 3 calls / 10 min; codex off at 80% of any window or at any sign of credit use; BRAIN_CODEX_USAGE_REQUIRED=on fails closed)"},
     {"name": "V4.5.potionx", "family": "V4", "commit": "61d236c", "source": "decision-log 2026-10-03 18:48 (SL_RETRY_EXPLORE_POTION: a retry line with a failed turn's cards whose potions that attempt drank anyway counts as tried; mid-batch)"},
     {"name": "V4.5.gpt.stall", "family": "V4", "commit": "0aed6e1", "source": "decision-log 2026-10-03 19:13 (codex stall detector: silent BRAIN_CODEX_STALL_MS after the first token → kill and ask once more, then DeepSeek; per-run trace rows in codex-calls.jsonl; retry notices no longer discard answers; console names the engine)"},
-    {"name": "V4.5.sandpit", "family": "V4", "commit": "25d86e9", "source": "decision-log 2026-10-03 19:25 (SANDPIT_START: the live rollout starts the Insatiable's Sandpit at 4 with 3 Escapes in the draw pile from Liquify Ground on turn 1; mid-batch)"}
+    {"name": "V4.5.sandpit", "family": "V4", "commit": "25d86e9", "source": "decision-log 2026-10-03 19:25 (SANDPIT_START: the live rollout starts the Insatiable's Sandpit at 4 with 3 Escapes in the draw pile from Liquify Ground on turn 1; mid-batch)"},
+    {"name": "V4.5.gpt.high", "family": "V4", "commit": "25d86e9", "source": "decision-log 2026-10-03 19:38 (brain on codex at effort high, with the usage guard (REQUIRED on, stop 80%) and the stall detector (120 s after the first token, first token 180 s, 1 retry); from run J4S28FRQKD7G, 2026-10-03T11:37:23Z)"}
   ]
 }
