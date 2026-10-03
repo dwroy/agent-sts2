@@ -441,12 +441,13 @@ function stampedeBound(
     const name = str(card["name"], str(card["card_id"]));
     const text = (str(card["resolved_rules_text"]) || str(card["rules_text"])).replace(/\[[^\]]*\]/g, "");
     if (!knowledge?.card) {
-      if (/造成\d+点伤害|deal \d+ damage/i.test(text)) return { refuse: `${name}: the card types are not known` };
+      if (!text || /伤害|damage/i.test(text)) return { refuse: `${name}: the card types are not known` };
       continue;
     }
     const info = knowledge.card(str(card["card_id"]));
     if (!info) return { refuse: `${name}: its type is not known` };
     if (info.type !== "Attack") continue;
+    if (!text) return { refuse: `${name} (an Attack in hand): its text is not known` };
     let damage = 0;
     for (const sentence of text.split(/[。.]/).map((part) => part.trim()).filter(Boolean)) {
       const hit = DAMAGE_SENTENCE.exec(sentence);
@@ -486,6 +487,15 @@ function endBlockGains(state: GameState, hand: Record<string, unknown>[], ethere
     + (num(player["attacks_played_this_turn"]) === 0 ? relicIds.filter((id) => id === "RIPPLE_BASIN").length : 0);
 }
 
+/** One thing hitting the enemies at the end of our turn: `all` of them or one at random; `attack` (Vulnerable raises it); `debuff` (it may carry one: Stampede's Attack). */
+interface EndHit {
+  name: string;
+  all: boolean;
+  damage: number;
+  attack?: true;
+  debuff?: true;
+}
+
 /**
  * What hits the enemies after we end the turn and before they act (Dai 2026-10-02: an attacker it kills does not attack, so
  * the death is not certain): `sources` with their damage (`all` enemies, or one at random), each enemy's poison, or
@@ -516,8 +526,8 @@ function endOfTurnHits(
   etherealHeld: number,
   knowledge: (Pick<Knowledge, "power" | "relic"> & Partial<Pick<Knowledge, "card">>) | undefined,
   board: { endTotal?: number; heldLossEvents?: number } = {},
-): { sources: { name: string; all: boolean; damage: number; attack?: true }[]; refuse: string | null } {
-  const sources: { name: string; all: boolean; damage: number; attack?: true }[] = [];
+): { sources: EndHit[]; refuse: string | null } {
+  const sources: EndHit[] = [];
   const run = asRecord(state.raw["run"]);
   const combat = asRecord(state.raw["combat"]);
   const player = asRecord(combat["player"]);
@@ -553,7 +563,7 @@ function endOfTurnHits(
       handled.add(`${name} (power)`);
       const bound = stampedeBound(state, hand, num(power["amount"], 1), knowledge);
       if ("refuse" in bound) return { sources, refuse: `${name} plays an Attack in hand at a random enemy at the end of the turn, and ${bound.refuse}` };
-      if (bound.damage > 0) sources.push({ name: `${name} (an Attack in hand at a random enemy, at most ${bound.damage}: ${bound.from.join(", ")})`, all: false, damage: bound.damage, attack: true });
+      if (bound.damage > 0) sources.push({ name: `${name} (an Attack in hand at a random enemy, at most ${bound.damage}: ${bound.from.join(", ")})`, all: false, damage: bound.damage, attack: true, debuff: true });
     } else if (id === "JUGGERNAUT_POWER") {
       const gains = endBlockGains(state, hand, etherealHeld);
       if (gains > 0) sources.push({ name: `${name} (${num(power["amount"])} to a random enemy for each of at most ${gains} end-of-turn block gain(s))`, all: false, damage: num(power["amount"]) * gains });
@@ -1276,6 +1286,20 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const poison = powersOf(enemy).filter((power) => str(power["power_id"]) === "POISON_POWER").reduce((sum, power) => sum + num(power["amount"]), 0);
     return { hit, poison, hp: num(enemy["current_hp"]) };
   });
+  // A hit before they act may stun an enemy without killing it: Shriek / Plow at their threshold (the Terror Eel at half HP;
+  // turn-solver `shriek`), a counter the learned stun-on-strip rules see go (Flutter, Slippery, Curl Up on any hit; Artifact
+  // on a debuff, which only Stampede's Attack may bring: turn-solver STRIP_COUNTERS). Its move is then lost: its hits taken
+  // out as a death's, without changing the others' (an ally's death does that, below).
+  const stunned = living
+    .map((enemy, i) => {
+      const { hit, hp: hpLeft } = before[i]!;
+      if (hit <= 0) return null;
+      const threshold = Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER"));
+      if (threshold > 0 && hpLeft > threshold && hpLeft - hit <= threshold) return { i, why: `its stun at ${threshold} HP` };
+      const counter = ["FLUTTER_POWER", "SLIPPERY_POWER", "CURL_UP_POWER", ...(ends.sources.some((source) => source.debuff) ? ["ARTIFACT_POWER"] : [])].find((id) => powerAmount(enemy, id) > 0);
+      return counter ? { i, why: `its ${counter} going may stun it` } : null;
+    })
+    .filter((entry): entry is { i: number; why: string } => entry !== null);
   const mayDie = living
     .map((enemy, i) => {
       const { hit, poison, hp: hpLeft } = before[i]!;
@@ -1345,10 +1369,11 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     return hitsOf[i]!.slice(0, Math.ceil(lowest / retaliation));
   };
   const cut = living.map((_, i) => i).filter((i) => landing(i).length < hitsOf[i]!.length);
-  if (mayDie.length > 0 || cut.length > 0) {
+  const stunnedOnly = stunned.filter((entry) => !mayDie.some((dead) => dead.i === entry.i));
+  if (mayDie.length > 0 || cut.length > 0 || stunnedOnly.length > 0) {
     const minion = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "MINION_POWER");
     const leaderMayDie = mayDie.some((entry) => !minion(entry.enemy));
-    const gone = new Set(mayDie.map((entry) => entry.i));
+    const gone = new Set([...mayDie.map((entry) => entry.i), ...stunnedOnly.map((entry) => entry.i)]);
     if (leaderMayDie) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
     if (cut.some((i) => !minion(living[i]!))) living.forEach((enemy, i) => minion(enemy) && gone.add(i));
     // An ally's death may change a survivor's move before it attacks (its learned death move, MECH_DEATH_MOVE: the Queen's
@@ -1366,6 +1391,7 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const stillDies = keptLoss !== null && (keptLoss >= hp || (byStart && hp - keptLoss <= startLoss));
     const who = [
       ...mayDie.map((entry) => `${names[entry.i]} (${entry.why}) may die first`),
+      ...stunnedOnly.map((entry) => `${names[entry.i]} may be stunned first (${entry.why})`),
       ...cut.filter((i) => !gone.has(i)).map((i) => `${names[i]} may die to our retaliation (${retaliation} a hit) after ${landing(i).length} of its ${hitsOf[i]!.length} hits`),
       ...(changed.length > 0 ? [`an ally's death may change the move of ${changed.map((i) => names[i]).join(", ")} (its hits not counted)`] : []),
     ].join(", ");

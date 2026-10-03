@@ -85,6 +85,10 @@ describe("Stampede: its Attack at the end of the turn bounded", () => {
     expect(judge(fan, "combat/end_turn").reason).toMatch(/ORNAMENTAL_FAN \(relic\) acts on the Attack Stampede plays$/);
     const blind = judgeEndTurn(parseGameState(board("z2h3_f17_t11_end")), { label: "combat/end_turn", revives: [], ethereal, knowledge: { power: knowledge.power, relic: knowledge.relic } });
     expect(blind.reason).toMatch(/: the card types are not known$/);
+    // An Attack with no text shown: not bounded.
+    const bare = board("z2h3_f17_t11_end");
+    hand(bare)[0]!["resolved_rules_text"] = hand(bare)[0]!["rules_text"] = "";
+    expect(judge(bare, "combat/end_turn").reason).toMatch(/打击 \(an Attack in hand\): its text is not known$/);
   });
 
   it("LMTA6JC86RCC F17 T7: a Stampede card held is a Power not played, it does nothing at the end of the turn: certain", () => {
@@ -131,6 +135,26 @@ describe("what hits the enemies before they act, bounded", () => {
     expect(judge(low, LEAST_LOSS_LABEL, { drawsKnown: true }).reason).toMatch(/but every enemy may die before it \(势不可当 \(8 to a random enemy for each of at most 1 end-of-turn block gain\(s\)\), 势不可当 8x2 \(block at the turn's start\)\)$/);
     enemies(low)[0]!["current_hp"] = 25;
     expect(judge(low, LEAST_LOSS_LABEL, { drawsKnown: true }).certain).toBe(true);
+  });
+
+  it("a hit before they act may stun without killing: Shriek / Plow at the threshold, Curl Up and the like on any hit", () => {
+    // FP35 F42 T5: Forgotten Soul's 1 on the 47-HP Axebot. With a stun at 46 HP, or Curl Up up, its 19x2 may not come.
+    const shriek = board("fp35_f42_t5_end");
+    (enemies(shriek)[0]!["powers"] as Raw[]).push({ index: 9, power_id: "SHRIEK_POWER", name: "尖啸", amount: 46, is_debuff: false });
+    expect(judge(shriek).reason).toMatch(/may be stunned first \(its stun at 46 HP\), and the rest's 0 does not kill$/);
+    (enemies(shriek)[0]!["powers"] as Raw[]).at(-1)!["amount"] = 45;
+    expect(judge(shriek).certain).toBe(true);
+    const curled = board("fp35_f42_t5_end");
+    (enemies(curled)[0]!["powers"] as Raw[]).push({ index: 9, power_id: "CURL_UP_POWER", name: "蜷身", amount: 9, is_debuff: false });
+    expect(judge(curled).reason).toMatch(/may be stunned first \(its CURL_UP_POWER going may stun it\)/);
+    // Artifact goes on a debuff, which Forgotten Soul's hit does not bring: still certain.
+    const artifact = board("fp35_f42_t5_end");
+    (enemies(artifact)[0]!["powers"] as Raw[]).push({ index: 9, power_id: "ARTIFACT_POWER", name: "人工制品", amount: 1, is_debuff: false });
+    expect(judge(artifact).certain).toBe(true);
+    // Nothing hits it at the end of the turn (X80A F42 T6): a Curl Up on the Soul Nexus changes nothing.
+    const quiet = board("x80a_f42_t6_end");
+    (enemies(quiet)[0]!["powers"] as Raw[]).push({ index: 9, power_id: "CURL_UP_POWER", name: "蜷身", amount: 9, is_debuff: false });
+    expect(judge(quiet).certain).toBe(true);
   });
 
   it("D4JGCNEL40VL F33 T5: the Rocket may die to Howl from Beyond, and the Crusher's move with it (its 21 from behind landed as 20): not certain", () => {
