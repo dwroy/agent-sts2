@@ -159,6 +159,8 @@ export interface BrainLogRow {
    */
   primary_ms?: number;
   primary_usage?: BrainUsage;
+  /** The engine's notes on how it got the answer (BrainAnswer.notes: codex took it from a cut answer). */
+  notes?: string[];
   error?: string;
   error_kind?: FailureKind;
   raw?: string;
@@ -579,6 +581,7 @@ export class BrainRouter {
       ...(error === undefined ? {} : { error: message(error).slice(0, 500), error_kind: failureKind(error) }),
       ...(result?.raw !== undefined && result.answer === null ? { raw: result.raw.slice(0, 4000) } : {}),
       ...(result?.reasoning ? { reasoning_chars: result.reasoning.length } : {}),
+      ...(result?.notes?.length ? { notes: result.notes } : {}),
     };
     try {
       const limits = this.limitsFor(engine, fellBackFrom);

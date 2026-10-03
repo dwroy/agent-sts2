@@ -436,6 +436,22 @@ export interface BrainConfig {
      * replayed runaways were all in it), "keep" keeps it capped at 60 characters (engines/codex.ts codexSchema).
      */
     routeReason: "drop" | "keep";
+    /**
+     * BRAIN_CODEX_SCHEMA_FIELDS: "all" gives codex the kind's whole stable schema (every optional field, null when the
+     * question does not use it); "used" only the fields the question's own spec has (route with a route review or an act
+     * route, cards when an option lists eligible_cards, discard with a discard option, run_plan with a due run plan).
+     * 2026-10-03: every one of 22 session runaways was a pick that used none of the optional fields (engines/codex.ts
+     * codexKindSchema).
+     */
+    schemaFields: "all" | "used";
+    /** BRAIN_CODEX_REASON_LAST (on/off): `reason` as the last field of codex's answer schema (the order codex writes them in). */
+    reasonLast: boolean;
+    /**
+     * BRAIN_CODEX_ACCEPT_CUT (on/off, session mode): a turn cut as a runaway (BRAIN_CODEX_MAX_ANSWER_CHARS or
+     * BRAIN_CODEX_MAX_ANSWER_BLANKS) whose streamed prefix closes into a JSON answer with every required field, passing
+     * the question's checks, is taken as the answer instead of asking again; brain.jsonl's row notes it.
+     */
+    acceptCut: boolean;
     /** BRAIN_CODEX_MAX_FIELD_CHARS (default 600; off: none): the maxLength of every free-text field in codex's answer schema. */
     maxFieldChars: number | null;
     /**
@@ -486,6 +502,17 @@ export const DEFAULT_CODEX_STALL_MS: number | null = 120_000;
  * which session mode gives the turn up as a runaway (answered turns padded at most 9; the runaways ran to ~1,900).
  */
 export const DEFAULT_CODEX_MAX_ANSWER_BLANKS = 100;
+
+/**
+ * BRAIN_CODEX_SCHEMA_FIELDS, BRAIN_CODEX_REASON_LAST and BRAIN_CODEX_ACCEPT_CUT when unset (engines/codex.ts). The A/B of
+ * 2026-10-03 (experiments/brain-replay/schema-ab-1003: 10 logged questions, session mode, effort high): the whole stable
+ * schema ran away on 5 of 10 (every one a pick using no optional field), "used" on 0 and "used" with reason last on 0;
+ * "used" matched live codex's choices 7 of 7 and DeepSeek's 3 of 3 (the whole schema, replayed: 5 of 7), reason last
+ * 6 of 7 (a route changed). Every one of the 5 cut answers closed into a complete, valid answer (accepted).
+ */
+export const DEFAULT_CODEX_SCHEMA_FIELDS: "all" | "used" = "used";
+export const DEFAULT_CODEX_REASON_LAST = false;
+export const DEFAULT_CODEX_ACCEPT_CUT = true;
 
 /**
  * The codex usage guard's defaults (engines/codex-usage.ts). Stop at 80% of any window (Dai 2026-10-03: protect the
@@ -643,6 +670,10 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const maxAnswerChars = maxAnswerRaw === null ? 2_000 : ["off", "none", "0"].includes(maxAnswerRaw.toLowerCase()) ? null : parseInteger(maxAnswerRaw, "BRAIN_CODEX_MAX_ANSWER_CHARS", problems, { min: 200, max: 1_000_000 });
   const blanksRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_BLANKS");
   const maxAnswerBlanks = blanksRaw === null ? DEFAULT_CODEX_MAX_ANSWER_BLANKS : ["off", "none", "0"].includes(blanksRaw.toLowerCase()) ? null : parseInteger(blanksRaw, "BRAIN_CODEX_MAX_ANSWER_BLANKS", problems, { min: 20, max: 1_000_000 });
+  const schemaFieldsRaw = (readEnv(env, "BRAIN_CODEX_SCHEMA_FIELDS") ?? DEFAULT_CODEX_SCHEMA_FIELDS).toLowerCase();
+  if (schemaFieldsRaw !== "all" && schemaFieldsRaw !== "used") problems.push({ field: "BRAIN_CODEX_SCHEMA_FIELDS", message: `expected all or used, got "${schemaFieldsRaw}"` });
+  const reasonLast = parseOnOff(readEnv(env, "BRAIN_CODEX_REASON_LAST"), "BRAIN_CODEX_REASON_LAST", problems) ?? DEFAULT_CODEX_REASON_LAST;
+  const acceptCut = parseOnOff(readEnv(env, "BRAIN_CODEX_ACCEPT_CUT"), "BRAIN_CODEX_ACCEPT_CUT", problems) ?? DEFAULT_CODEX_ACCEPT_CUT;
   const routeReasonRaw = (readEnv(env, "BRAIN_CODEX_ROUTE_REASON") ?? "drop").toLowerCase();
   if (routeReasonRaw !== "drop" && routeReasonRaw !== "keep") problems.push({ field: "BRAIN_CODEX_ROUTE_REASON", message: `expected drop or keep, got "${routeReasonRaw}"` });
   const fieldRaw = readEnv(env, "BRAIN_CODEX_MAX_FIELD_CHARS");
@@ -692,6 +723,9 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       maxAnswerChars,
       maxAnswerBlanks,
       routeReason: routeReasonRaw === "keep" ? "keep" : "drop",
+      schemaFields: schemaFieldsRaw === "used" ? "used" : "all",
+      reasonLast,
+      acceptCut,
       maxFieldChars,
       stallRetries: stallRetries ?? 1,
       usage: codexUsage,
