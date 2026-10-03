@@ -246,3 +246,48 @@ describe("Buffer and Intangible: at the most they can save", () => {
     expect(judge(twice, LEAST_LOSS_LABEL, { revives: ["FAIRY_IN_A_BOTTLE"] }).reason).toMatch(/^a revive is left \(FAIRY_IN_A_BOTTLE\): Buffer with a revive in the turn is not judged/);
   });
 });
+
+describe("Disintegration: its end-of-turn damage counted as a held Burn's (the Knowledge Demon's curse)", () => {
+  it("79YRPJ8TCCZ5 F33 T6 (A8): 19 + Disintegration's 7 against 17 HP + 5 block, the mod not flagging it: certain (it died)", () => {
+    const raw = board("79yr_f33_t6_end");
+    expect(combat(raw)["end_turn_will_kill_player"]).toBe(false);
+    const verdict = judge(raw);
+    expect(verdict).toMatchObject({ certain: true, tier: "least-loss", held: { damage: 7, loss: 0 }, ownCountDies: true });
+    expect(verdict.reason).toBe("the turn planner: every simulated line dies and ending the turn keeps the most HP; 19 incoming + held 瓦解 (power, 7 at the end of the turn): 7 damage (the mod does not count them) vs 17 HP + 5 block + 0 end-of-turn block");
+  });
+
+  it("JRSF34UJJND4 F33 T5: no attack shown, its 6 at 4 HP: certain; Tungsten Rod takes 1 off it", () => {
+    expect(judge(board("jrsf_f33_t5_end"), "combat/end_turn")).toMatchObject({ certain: true, tier: "rules", held: { damage: 6 } });
+    const rod = board("jrsf_f33_t5_end");
+    addRelic(rod, "TUNGSTEN_ROD");
+    // 6 less 1 lands as 5: a death at 5 HP, not at 6.
+    player(rod)["current_hp"] = 5;
+    expect(judge(rod, "combat/end_turn").certain).toBe(true);
+    player(rod)["current_hp"] = 6;
+    expect(judge(rod, "combat/end_turn")).toMatchObject({ certain: false, reason: "the mod does not flag ending the turn as lethal" });
+  });
+
+  it("it meets block, the end-of-turn block too: our count is the logged loss (377J T3: 3 lost; JSA5 T7, Plating 4: 25 lost)", () => {
+    // 377JPY9LPG1L F33 T3: 24 + 6 against 27 block: 3, at 3 HP our death, at 4 not.
+    const t3 = board("377j_f33_t3_end");
+    player(t3)["current_hp"] = 3;
+    expect(judge(t3, "combat/end_turn")).toMatchObject({ certain: true, held: { damage: 6 } });
+    player(t3)["current_hp"] = 4;
+    expect(judge(t3, "combat/end_turn").certain).toBe(false);
+    // JSA5K8YZ9RXV F33 T7: 27 + 7 against 5 block + Plating 4: 25 of its 50.
+    const t7 = board("jsa5_f33_t7_end");
+    expect(judge(t7, LEAST_LOSS_LABEL, { drawsKnown: true })).toMatchObject({ certain: false, endBlock: 4, held: { damage: 7 } });
+    player(t7)["current_hp"] = 25;
+    expect(judge(t7, LEAST_LOSS_LABEL, { drawsKnown: true }).certain).toBe(true);
+    player(t7)["current_hp"] = 26;
+    expect(judge(t7, LEAST_LOSS_LABEL, { drawsKnown: true }).certain).toBe(false);
+  });
+
+  it("377JPY9LPG1L F33 T7: Howl from Beyond (18 + Strength) may leave the demon to Thorns after 2 of its 3 hits: not certain; without it, certain", () => {
+    const raw = board("377j_f33_t7_end");
+    expect(judge(raw, "combat/end_turn").reason).toBe("the enemies may be hit before they act: 知识恶魔 may die to our retaliation (3 a hit) after 2 of its 3 hits, and the rest's 20 does not kill");
+    const view = (raw["agent_view"] as Raw)["combat"] as Raw;
+    view["exhaust"] = (view["exhaust"] as Raw[]).filter((entry) => !String(entry["line"]).includes("消耗牌堆中"));
+    expect(judge(raw, "combat/end_turn")).toMatchObject({ certain: true, tier: "rules", held: { damage: 6 } });
+  });
+});

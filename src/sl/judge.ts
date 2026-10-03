@@ -29,7 +29,8 @@
  * hit the enemies for, the least damage it lets through), and the death judged at that bound
  * (tools/sl-judge-bounds-replay.ts: every logged end_turn board, before and after).
  * - Held cards' end-of-turn damage (Burn, Wither; through block) and HP loss (Beckon; past it) count too (2026-10-02,
- *   TMNFVW6DRQ20 F48 T8). When only they make the turn lethal, the death rests on them: certain even without the mod's
+ *   TMNFVW6DRQ20 F48 T8), and so does Disintegration's (the Knowledge Demon's curse, through block like Burn:
+ *   withEndOfTurnPowers; 2026-10-04, 79YRPJ8TCCZ5 F33 T6). When only they make the turn lethal, the death rests on them: certain even without the mod's
  *   flag (it does not count them), but only with every amount given (Regret's, the cards in hand, at its least) and
  *   nothing acting by chance before that death (heldGuard).
  * - So does our own HP loss at the next turn's start (Inferno's 1 for each copy up, Crimson Mantle's cost; 2026-10-02,
@@ -207,6 +208,25 @@ function heldEndOfTurn(hand: Record<string, unknown>[], leaveFirst = 0): { damag
     } else if (HELD_CLAUSE.test(text)) inexact.push(name);
   }
   return { damage, loss, from, inexact, damages, losses, items };
+}
+
+/**
+ * Disintegration (DISINTEGRATION_POWER, the Knowledge Demon's curse: 「在你的回合结束时，受到N点伤害」): its amount as damage at the
+ * end of our turn, meeting block like a held Burn, after the end-of-turn block. Logged 2026-10-04: every end_turn holding it
+ * that reached the next turn (37: amounts 6, 7, 8; Plating up on 4, Feel No Pain's block on others) lost exactly the intents
+ * plus its amount past the block and the end-of-turn block, less nothing else (377JPY9LPG1L F33 T3: 24 + 6 against 27, 3
+ * lost); a second pick adds to the amount (94FPBTS15SQT F33: 7, then 15). The curse card itself only applies it (never in a
+ * deck or hand in the logs), so no held card counts it twice. The mod's flag leaves it out: 377JPY9LPG1L F33 T7 (28 HP + 6
+ * block against 30), JRSF34UJJND4 F33 T5 (4 HP, no attack), 79YRPJ8TCCZ5 F33 T6 (A8, 17 + 5 against 19) died unflagged.
+ */
+function withEndOfTurnPowers(held: ReturnType<typeof heldEndOfTurn>, state: GameState): ReturnType<typeof heldEndOfTurn> {
+  const player = asRecord(asRecord(state.raw["combat"])["player"]);
+  const amount = powerAmount(player, "DISINTEGRATION_POWER");
+  if (amount <= 0) return held;
+  const name = str(asArray(player["powers"]).map(asRecord).find((power) => str(power["power_id"]) === "DISINTEGRATION_POWER")?.["name"], "DISINTEGRATION_POWER");
+  return {
+    ...held, damage: held.damage + amount, damages: [...held.damages, amount], items: [...held.items, { amount, blocked: true }], from: [...held.from, `${name} (power, ${amount} at the end of the turn)`],
+  };
 }
 
 /** One HP loss of the end of the turn: damage that meets block first (`blocked`), or HP lost past it. */
@@ -551,7 +571,7 @@ function endOfTurnHits(
       sources.push({ name: `${name} (${FORGOTTEN_SOUL_DAMAGE} to a random enemy for each of the ${etherealHeld} Ethereal card(s) exhausted)`, all: false, damage: FORGOTTEN_SOUL_DAMAGE * etherealHeld });
     }
   }
-  const held = heldEndOfTurn(hand, etherealHeld);
+  const held = withEndOfTurnPowers(heldEndOfTurn(hand, etherealHeld), state);
   const heldLossEvents = board.heldLossEvents ?? held.items.length;
   for (const power of asArray(player["powers"]).map(asRecord)) {
     const id = str(power["power_id"]);
@@ -1121,7 +1141,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // 11 of 11 logged turns where the order showed, e.g. ZANMLV9UU31K F42 T3, Burn 8 against Plating 5 took 3), and their HP
   // loss does not. Neither the mod's flag nor the plain count sees them (TMNFVW6DRQ20 F48 T8: 15 HP + 28 block against the
   // Aeonglass's 19x2 and a held Wither+'s 9, the mod did not flag it, it died with 5 retries left).
-  const held = heldEndOfTurn(hand, etherealHeld);
+  // Disintegration's end-of-turn damage with them (withEndOfTurnPowers).
+  const held = withEndOfTurnPowers(heldEndOfTurn(hand, etherealHeld), state);
   // Orichalcum (「如果你在回合结束时没有格挡，获得6点格挡」): counted whenever the turn ends with no block from the cards. Plating up
   // does not stop it (A8ENYFR4ZWKG F48 T7: 0 block, Plating 9, 36 in three hits took 21, 15 came; 842N6N604DVX F31 T3:
   // Plating 3, 19 took 10, 9 came; Y3XT9EBS7U8B F45 T4: Plating 4, 18 took 8, 10 came; each less Inferno's 1 at the next
