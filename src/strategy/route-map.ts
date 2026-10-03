@@ -347,7 +347,9 @@ function arrivalText(median: PathProjection, p75: PathProjection, at: number): s
  * The facts of a route from here (the route's first node on), projected from `start` with the measured room costs
  * (route-projection.ts, unchanged): HP on arrival at each node at the median costs and with every room at its p75
  * cost, each rest site healed or smithed, the fights before the next rest site, the next elite and the boss.
- * `chain`: fights in a row that end at the current node. `options`: the HP each option of this question leaves.
+ * `chain`: the fight chain ending at the current node (screens/map.ts chainAfter: act 1 fights in a row; acts 2 and 3
+ * the Monster and Elite rooms since the last rest site or the act start, shops and "?" rooms not ending it, as the
+ * experience route-no-chains counts a stretch). `options`: the HP each option of this question leaves.
  */
 export function routeFacts(map: RouteMap, ids: string[], start: RouteStart, costs: RoomCostModel, chain = 0, options: { label: string; hp: number; max: number }[] = []): RouteFacts {
   const nodes = ids.map((id) => map.nodes.get(id)!);
@@ -373,8 +375,12 @@ export function routeFacts(map: RouteMap, ids: string[], start: RouteStart, cost
   const unknown = before.filter((node) => node.type === "Unknown").length;
   const shops = before.filter((node) => node.type === "Shop").length;
   const counted = `战斗 ${monsters + elites} 场（普通战 ${monsters}、精英 ${elites}），问号 ${unknown} 个，商店 ${shops} 个`;
-  const fights_before_rest =
-    (restAt >= 0 ? `到下一个休息点 ${place(restAt)} 前：${counted}` : `路线上没有休息点：到 boss 前${counted}`) + `；到当前节点为止已连续战斗 ${chain} 场`;
+  // Act 1: the old chain (fights in a row). Acts 2-3: the stretch between rest sites, its fights so far and in all.
+  const sofar =
+    map.act >= 2
+      ? `；本幕从上一个休息点（没有就从幕初）到当前节点已打普通战和精英 ${chain} 场（商店、问号不打断，问号不计），这一段到${restAt >= 0 ? `休息点 ${place(restAt)}` : " boss"} 前共 ${chain + monsters + elites} 场`
+      : `；到当前节点为止已连续战斗 ${chain} 场`;
+  const fights_before_rest = (restAt >= 0 ? `到下一个休息点 ${place(restAt)} 前：${counted}` : `路线上没有休息点：到 boss 前${counted}`) + sofar;
   const eliteAt = nodes.findIndex((node) => node.type === "Elite");
   const bossAt = nodes.findIndex((node) => map.bosses.includes(node.id));
   const next_elite = eliteAt >= 0 ? `${place(eliteAt)}：到达 ${arrivalText(median, p75, eliteAt)}` : "路线上没有精英";

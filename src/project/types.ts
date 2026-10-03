@@ -341,7 +341,10 @@ export interface RememberedMap {
    * is sent, and by the replay after a restart. The REWARD and REST states carry no map position.
    */
   chosen?: { row: number; col: number; type: string } | null;
-  /** Hallway/elite fights in a row ending at `current` (the route model's fight chain). */
+  /**
+   * The route model's fight chain ending at `current` (screens/map.ts chainAfter): act 1 hallway/elite fights in a
+   * row; acts 2 and 3 the Monster and Elite rooms since the last rest site or the act start.
+   */
   fights?: number;
 }
 
