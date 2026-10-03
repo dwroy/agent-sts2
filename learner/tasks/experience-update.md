@@ -38,6 +38,7 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
   - 代码修好了的机制，把对应条目退役，写明 retired_reason；
   - version 改成下一个版本号（今天的日期 + 序号，照文件里现有的写法）。
 - **条目上限**：tests/experience.test.ts 限制 active ≤ 200。新增前先合并或退役；确实放不下就在回报里写「需要 Dai 定」，**不许改测试的上限**。
+  - active ≥ 195 时（Dai 2026-10-03）：开工先腾位置，再新增。优先把 n_support = 1、confidence low 的条目并进同一 scope 的相近条目（证据、反例一起带过去，留一句原条目的结论），并不进去、本批也没有新证据的就退役（retired_reason 写「低置信、合并腾位」）。在回报里列出合并和退役了哪些条目，以及合并进了哪一条。
 - **只用已有的 scope 类型**（boss、elite、hallway、act、general:<话题>、card、relic、potion、event）。v3 的切片（src/knowledge/experience.ts 的 relevance）不认识的类型会被整条丢掉。
 - **药水**（照上一节）：
   - `potion:*` 和 `general:potion` 条目只改句内数字，不加证据局（n 不变）；
