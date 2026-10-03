@@ -15,7 +15,7 @@
  *   it certain there (that turn does not come when we live through the blast).
  * - our own count agrees: the attack intents (damage x hits) minus the block up now, the block that comes at the end
  *   of the turn (Plating / Plated Armor / Metallicize, Cloak Clasp for each card held, Feel No Pain for each Ethereal
- *   card held, Orichalcum when no block is left) and Regen reach our HP.
+ *   card held, Orichalcum when the cards left no block, whatever the other end-of-turn block) and Regen reach our HP.
  * - Held cards' end-of-turn damage (Burn, Wither; through block) and HP loss (Beckon; past it) count too (2026-10-02,
  *   TMNFVW6DRQ20 F48 T8). When only they make the turn lethal, the death rests on them: certain even without the mod's
  *   flag (it does not count them), but only with every amount given and nothing that could cut the loss or kill an
@@ -533,13 +533,20 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   if (relics.has("CLOAK_CLASP")) endBlock += hand.length;
   const etherealHeld = hand.filter((card) => (context.ethereal ?? ((held) => heldCardEthereal(held)))(card)).length;
   endBlock += powerAmount(player, "FEEL_NO_PAIN_POWER") * etherealHeld;
-  if (relics.has("ORICHALCUM") && block + endBlock <= 0) endBlock += ORICHALCUM_BLOCK;
-  const regen = powerAmount(player, "REGEN_POWER");
   // Held cards (Burn, Wither, Beckon): their end-of-turn damage meets block, the end-of-turn block included (it comes first:
   // 11 of 11 logged turns where the order showed, e.g. ZANMLV9UU31K F42 T3, Burn 8 against Plating 5 took 3), and their HP
   // loss does not. Neither the mod's flag nor the plain count sees them (TMNFVW6DRQ20 F48 T8: 15 HP + 28 block against the
   // Aeonglass's 19x2 and a held Wither+'s 9, the mod did not flag it, it died with 5 retries left).
   const held = heldEndOfTurn(hand);
+  // Orichalcum (「如果你在回合结束时没有格挡，获得6点格挡」): counted whenever the turn ends with no block from the cards. Plating up
+  // does not stop it (A8ENYFR4ZWKG F48 T7: 0 block, Plating 9, 36 in three hits took 21, 15 came; 842N6N604DVX F31 T3:
+  // Plating 3, 19 took 10, 9 came; Y3XT9EBS7U8B F45 T4: Plating 4, 18 took 8, 10 came; each less Inferno's 1 at the next
+  // turn's start). The other end-of-turn block (Plated Armor, Metallicize, Cloak Clasp, Feel No Pain) never showed the order
+  // with Orichalcum in the logs: taken not to stop it either, and so the held cards' damage that may take our block first.
+  // Block counted that does not come only makes fewer deaths certain (Dai: certain only); the rule was "no block at all
+  // with the end-of-turn block", which could call a death certain that Orichalcum's 6 would have saved.
+  if (relics.has("ORICHALCUM") && (block <= 0 || held.damage >= block)) endBlock += ORICHALCUM_BLOCK;
+  const regen = powerAmount(player, "REGEN_POWER");
   // Tungsten Rod and Beating Remnant in our count (ownLoss); without them the count as before.
   const rod = relics.has("TUNGSTEN_ROD");
   const remnant = relics.has("BEATING_REMNANT");
