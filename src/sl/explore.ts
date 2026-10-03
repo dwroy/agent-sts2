@@ -46,6 +46,9 @@
  *   later in the turn reaches every line that survives, not only the ones shown (code's "only distinct line" after the
  *   draw); an avoid that cannot act says so; and a deviation whose turn still ended as a failed one is not a used point
  *   (exploreTarget: the next attempt goes back to it, its line there now tried).
+ * - SL_RETRY_EXPLORE_WHERE (2026-10-03, GQ5H73A1VCL8 F48: attempts 3-6 all at T1, the HP lost after T4 and T5): the point
+ *   goes where the failed attempts lost their HP (hpLostByTurn, whereWeights), a different turn each attempt (whereChoice);
+ *   "every line loses" only breaks ties (it is the rollout's horizon).
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
@@ -125,6 +128,12 @@ export interface SlTarget {
    * deviation's turn (the replacement there, and with _TURN every later decision of that turn). Absent with both off.
    */
   tried?: SlTried;
+  /**
+   * SL_RETRY_EXPLORE_WHERE: why this turn: its weight (whereWeights), how many earlier attempts deviated on this turn (at
+   * any of its questions), the HP the failed attempts lost on each turn (hpLostByTurn's mean, "T4": 20) and the weight of
+   * each turn with a question left to change ("T4": 31.3), rounded to a tenth. Absent with the switch off.
+   */
+  where?: { weight: number; turnRound: number; lost: Record<string, number>; weights: Record<string, number> };
 }
 
 /** What came of an attempt's deviation point. */
@@ -559,7 +568,91 @@ export interface ExploreTargetOptions {
    * that attempt played is now tried too. Off: every reached deviation counts, as before.
    */
   whole?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_WHERE (2026-10-03, GQ5H73A1VCL8 F48): the turn deviated at is where the failed attempts lost their HP,
+   * a different turn each attempt. Among the turns deviated at the fewest times (at any of their questions; a wasted
+   * deviation with `whole` is none), the one whose weight is the largest (whereWeights: the HP the failed attempts lost on
+   * the enemy turn after it, plus the later turns' losses at WHERE_DECAY per turn, so the turn before a big hit counts
+   * too), a point with an untried line not worse than the one played first as before; ties: (SL_RETRY_EXPLORE_ORDER) a point
+   * not lost first, then the latest turn. Within the turn: its question deviated at the fewest times, the turn's first of
+   * them (the whole turn open). "Every line loses" no longer orders the turns: it is the rollout's 5-turn horizon (GQ5H's T1:
+   * dead in no sample with the death on T7; its T4-T6 dead in every sample, so attempts 3-6 all went to T1) and
+   * 9175DLPM2EFR F33 attempt 6 won at a point where every line died in every sample. Off: as before.
+   */
+  where?: boolean;
+  /** SL_RETRY_EXPLORE_WHERE's decay (default WHERE_DECAY): only tools/sl-explore-where-replay.ts sets it, to compare. */
+  whereDecay?: number;
 }
+
+/**
+ * SL_RETRY_EXPLORE_WHERE: how much of a later turn's loss a turn carries, per turn between them (the next turn's at half,
+ * the one after at a quarter, ...): a turn's plays decide its block against the hit that follows, and set up the turns
+ * after it (9175DLPM2EFR F33: attempts 2-5 lost 33-36 HP after T3; attempts 4-5 changed T3 and still lost them; attempt 6
+ * changed T2 and won).
+ */
+export const WHERE_DECAY = 0.5;
+
+/** SL_RETRY_EXPLORE_WHERE: the HP the failed attempts lost on one turn (hpLostByTurn). */
+export interface TurnLoss {
+  turn: number;
+  /** The mean over the failed attempts that played the turn. */
+  mean: number;
+  attempts: number;
+}
+
+/**
+ * SL_RETRY_EXPLORE_WHERE: the HP the failed attempts before `attempt` lost on each turn, from their summaries: a turn's
+ * loss is its start HP less the next turn's (what its plays and the enemy turn after them cost; a heal counts 0), and the
+ * last turn of an attempt that died there (predicted_death, died) loses all the HP it began with; an unfinished attempt's
+ * last turn is left out. The mean over the failed attempts that played the turn (attempt 1 too: its HP is the fight's as
+ * much as the others'), one row an attempt (a finished row over an unfinished one). By turn, in order.
+ */
+export function hpLostByTurn(rows: readonly ExploreRow[], attempt: number): TurnLoss[] {
+  const byAttempt = new Map<number, ExploreRow>();
+  for (const row of rows) {
+    if (row.attempt >= attempt || row.result === "won") continue;
+    const had = byAttempt.get(row.attempt);
+    if (!had || (had.result === "unfinished" && row.result !== "unfinished")) byAttempt.set(row.attempt, row);
+  }
+  const sums = new Map<number, { sum: number; n: number }>();
+  for (const row of byAttempt.values()) {
+    const turns = row.summary?.turns ?? [];
+    const died = row.result === "predicted_death" || row.result === "died";
+    for (let i = 0; i < turns.length; i += 1) {
+      const turn = turns[i]!;
+      if (turn.hp === null) continue;
+      const next = turns[i + 1];
+      let loss: number;
+      if (next) {
+        if (next.hp === null) continue;
+        loss = Math.max(0, turn.hp - next.hp);
+      } else if (died) loss = Math.max(0, turn.hp);
+      else continue;
+      const entry = sums.get(turn.turn) ?? { sum: 0, n: 0 };
+      entry.sum += loss;
+      entry.n += 1;
+      sums.set(turn.turn, entry);
+    }
+  }
+  return [...sums.entries()].sort((a, b) => a[0] - b[0]).map(([turn, { sum, n }]) => ({ turn, mean: sum / n, attempts: n }));
+}
+
+/**
+ * SL_RETRY_EXPLORE_WHERE: each turn's weight: the HP lost on it (hpLostByTurn's mean) and on every later turn, that one's
+ * at `decay` per turn between them (WHERE_DECAY). A turn before a big hit weighs about half of it; T1 weighs much only
+ * when the first turns lost much (UK7R9A0NMCXL F33: 16-18 HP after T1, 15 after T2).
+ */
+export function whereWeights(losses: readonly TurnLoss[], decay = WHERE_DECAY): Map<number, number> {
+  const out = new Map<number, number>();
+  for (const { turn } of losses) {
+    let weight = 0;
+    for (const later of losses) if (later.turn >= turn) weight += later.mean * decay ** (later.turn - turn);
+    out.set(turn, weight);
+  }
+  return out;
+}
+
+const tenth = (x: number): number => Math.round(x * 10) / 10;
 
 /**
  * Every line of a question's record (the one played and its alternatives) with numbers loses in every sample: B2's share won
@@ -599,17 +692,22 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     }
   }
   const uses = new Map<string, number>();
+  // SL_RETRY_EXPLORE_WHERE: the same by turn (any of its questions).
+  const turnUses = new Map<string, number>();
   // SL_RETRY_EXPLORE_WHOLE: the attempts whose deviation there ended its turn as a failed attempt's (not a use), by board.
   const wasted = new Map<string, number[]>();
   for (const row of failed) {
     const target = row.explore!.target;
     if (!target || !row.explore!.deviation?.reached) continue;
     if (options.whole === true && row.explore!.deviation.differs === false) wasted.set(target.board, [...(wasted.get(target.board) ?? []), row.attempt]);
-    else uses.set(target.board, (uses.get(target.board) ?? 0) + 1);
+    else {
+      uses.set(target.board, (uses.get(target.board) ?? 0) + 1);
+      turnUses.set(String(target.turn), (turnUses.get(String(target.turn)) ?? 0) + 1);
+    }
   }
   const points = reference.explore!.points;
   // Each question of the path with a line untried on its board, counted back from the death (1: the latest).
-  const open: { point: SlPoint; back: number; untried: string[]; worse: boolean; lost: boolean }[] = [];
+  const open: OpenPoint[] = [];
   const seen = new Set<string>();
   let back = 0;
   for (let i = points.length - 1; i >= 0; i -= 1) {
@@ -629,23 +727,36 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     if (untried.length > 0) open.push({ point, back, untried, worse, lost: options.aliveFirst === true && pointLost(point) });
   }
   if (open.length === 0) return { target: null, why: `no question on attempt ${reference.attempt}'s path has a line no failed attempt played` };
-  // SL_RETRY_EXPLORE_ORDER: the points where some line does not lose in every sample first (without it, none is lost).
-  const alive = open.some((entry) => !entry.lost) ? open.filter((entry) => !entry.lost) : open;
-  const fewest = Math.min(...alive.map((entry) => uses.get(entry.point.board) ?? 0));
-  const least = alive.filter((entry) => (uses.get(entry.point.board) ?? 0) === fewest);
-  const chosen = least.find((entry) => !entry.worse) ?? least[0]!;
-  const lostPassed = alive === open ? [] : open.filter((entry) => entry.lost && entry.back < chosen.back);
-  const lostWhy =
-    lostPassed.length > 0
-      ? `; passed over ${lostPassed.map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, where every line loses in every sample`
-      : chosen.lost
-        ? "; every line loses in every sample here, as on every point left"
-        : "";
+  let chosen: OpenPoint;
+  let why: string;
+  let where: SlTarget["where"] | undefined;
+  if (options.where === true) {
+    // SL_RETRY_EXPLORE_WHERE: the turn where the failed attempts lost their HP, another turn each attempt.
+    ({ chosen, why, where } = whereChoice(open, hpLostByTurn(rows, attempt), turnUses, uses, options.aliveFirst === true, options.whereDecay ?? WHERE_DECAY));
+  } else {
+    // SL_RETRY_EXPLORE_ORDER: the points where some line does not lose in every sample first (without it, none is lost).
+    const alive = open.some((entry) => !entry.lost) ? open.filter((entry) => !entry.lost) : open;
+    const fewest = Math.min(...alive.map((entry) => uses.get(entry.point.board) ?? 0));
+    const least = alive.filter((entry) => (uses.get(entry.point.board) ?? 0) === fewest);
+    const pick = least.find((entry) => !entry.worse) ?? least[0]!;
+    chosen = pick;
+    const lostPassed = alive === open ? [] : open.filter((entry) => entry.lost && entry.back < pick.back);
+    const lostWhy =
+      lostPassed.length > 0
+        ? `; passed over ${lostPassed.map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, where every line loses in every sample`
+        : pick.lost
+          ? "; every line loses in every sample here, as on every point left"
+          : "";
+    why = `${pick.untried.length} line${pick.untried.length === 1 ? "" : "s"} shown there never played on that board${pick.worse ? "; all dying more often in the rollout than the one played, as on every other point left" : ""}${least.some((entry) => entry.worse && entry.back < pick.back) ? `; passed over ${least.filter((entry) => entry.worse && entry.back < pick.back).map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, whose untried lines all die more often in the rollout` : ""}${lostWhy}`;
+  }
   const entry = played.get(chosen.point.board)!;
   const round = uses.get(chosen.point.board) ?? 0;
   const again = wasted.get(chosen.point.board) ?? [];
   const againText = again.length > 0 ? ` (attempt${again.length === 1 ? "" : "s"} ${again.join(", ")} deviated there but ended the turn as a failed attempt's: again, another line)` : "";
-  const point = `T${chosen.point.turn ?? "?"}, the ${ordinal(chosen.back)} question before attempt ${reference.attempt}'s death on T${reference.turns}${round > 0 ? ` (deviated at ${round} time${round === 1 ? "" : "s"} before: another untried line)` : ""}${againText}`;
+  // SL_RETRY_EXPLORE_WHERE: the turn's deviations at its other questions.
+  const elsewhere = where ? where.turnRound - round : 0;
+  const elsewhereText = elsewhere > 0 ? ` (T${chosen.point.turn ?? "?"} deviated at ${elsewhere} other question${elsewhere === 1 ? "" : "s"} before)` : "";
+  const point = `T${chosen.point.turn ?? "?"}, the ${ordinal(chosen.back)} question before attempt ${reference.attempt}'s death on T${reference.turns}${round > 0 ? ` (deviated at ${round} time${round === 1 ? "" : "s"} before: another untried line)` : ""}${elsewhereText}${againText}`;
   const turnsThere = tried?.get(chosen.point.board);
   // SL_RETRY_EXPLORE_CANON: the attempts whose turns came through the board count among those that played there.
   const attempts = new Set([...entry.attempts, ...(canonOn && turnsThere ? turnsThere.attempts : [])]);
@@ -660,9 +771,74 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
       attempts: [...attempts].sort((a, b) => a - b),
       point,
       ...(tried ? { tried: triedOf(turnsThere) } : {}),
+      ...(where ? { where } : {}),
     },
-    why: `${chosen.untried.length} line${chosen.untried.length === 1 ? "" : "s"} shown there never played on that board${chosen.worse ? "; all dying more often in the rollout than the one played, as on every other point left" : ""}${least.some((entry) => entry.worse && entry.back < chosen.back) ? `; passed over ${least.filter((entry) => entry.worse && entry.back < chosen.back).map((entry) => `T${entry.point.turn ?? "?"}`).join(", ")}, whose untried lines all die more often in the rollout` : ""}${lostWhy}`,
+    why,
   };
+}
+
+/** A question of the reference path with a line untried on its board (exploreTarget's candidates). */
+interface OpenPoint {
+  point: SlPoint;
+  /** Counted back from the death (1: the latest question of the path). */
+  back: number;
+  untried: string[];
+  /** Every untried line dies more often in the rollout than the one played. */
+  worse: boolean;
+  /** SL_RETRY_EXPLORE_ORDER: every line of the record loses in every sample (pointLost). */
+  lost: boolean;
+}
+
+/**
+ * SL_RETRY_EXPLORE_WHERE: exploreTarget's choice among `open` by where the failed attempts lost their HP (`losses`,
+ * hpLostByTurn). The turns deviated at the fewest times (`turnUses`, at any of their questions) first; of them the points
+ * with an untried line not worse than the one played, when there are some (as before); of those the turn with the largest
+ * weight (whereWeights); ties: with `aliveFirst` (SL_RETRY_EXPLORE_ORDER) a point not lost first, then the latest turn.
+ * Within the turn: the question deviated at the fewest times (`uses`), the turn's first of them (the whole turn open).
+ */
+function whereChoice(open: readonly OpenPoint[], losses: readonly TurnLoss[], turnUses: ReadonlyMap<string, number>, uses: ReadonlyMap<string, number>, aliveFirst: boolean, decay: number): { chosen: OpenPoint; why: string; where: NonNullable<SlTarget["where"]> } {
+  const weights = whereWeights(losses, decay);
+  const weightOf = (entry: OpenPoint): number => (entry.point.turn === null ? 0 : (weights.get(entry.point.turn) ?? 0));
+  const turnUse = (entry: OpenPoint): number => turnUses.get(String(entry.point.turn)) ?? 0;
+  const turnOf = (entry: OpenPoint): number => entry.point.turn ?? -Infinity;
+  const fewest = Math.min(...open.map(turnUse));
+  const least = open.filter((entry) => turnUse(entry) === fewest);
+  const better = least.filter((entry) => !entry.worse);
+  let pool = better.length > 0 ? better : least;
+  const top = Math.max(...pool.map(weightOf));
+  pool = pool.filter((entry) => weightOf(entry) >= top - 1e-9);
+  if (aliveFirst && pool.some((entry) => !entry.lost)) pool = pool.filter((entry) => !entry.lost);
+  const latest = Math.max(...pool.map(turnOf));
+  pool = pool.filter((entry) => turnOf(entry) === latest);
+  const fewestHere = Math.min(...pool.map((entry) => uses.get(entry.point.board) ?? 0));
+  pool = pool.filter((entry) => (uses.get(entry.point.board) ?? 0) === fewestHere);
+  const chosen = pool.reduce((first, entry) => (entry.back > first.back ? entry : first));
+  const weight = weightOf(chosen);
+  const turn = (entry: OpenPoint): string => `T${entry.point.turn ?? "?"}`;
+  // The open turns, one each (its weight, and how many times it was deviated at).
+  const turns = new Map<string, OpenPoint>();
+  for (const entry of open) if (!turns.has(turn(entry))) turns.set(turn(entry), entry);
+  const others = [...turns.values()]
+    .filter((entry) => entry.point.turn !== chosen.point.turn)
+    .sort((a, b) => weightOf(b) - weightOf(a) || turnOf(b) - turnOf(a))
+    .map((entry) => `${turn(entry)} ${tenth(weightOf(entry))}${turnUse(entry) > 0 ? ` (deviated at ${turnUse(entry)})` : ""}`);
+  const passed = [...new Set(least.filter((entry) => entry.worse && !chosen.worse && weightOf(entry) > weight + 1e-9).map(turn))];
+  const own = losses.find((loss) => loss.turn === chosen.point.turn)?.mean ?? 0;
+  const why =
+    `${chosen.untried.length} line${chosen.untried.length === 1 ? "" : "s"} shown there never played on that board` +
+    `; where the failed attempts lost their HP: ${turn(chosen)} weighs ${tenth(weight)} (${tenth(own)} lost on it on average, the later turns' losses at ${decay} a turn)` +
+    `, the most of the turns deviated at the fewest times (${fewest === 0 ? "none" : `${fewest} each`})` +
+    `${chosen.worse ? "; all dying more often in the rollout than the one played, as on every other point left" : ""}` +
+    `${passed.length > 0 ? `; passed over ${passed.join(", ")}, whose untried lines all die more often in the rollout` : ""}` +
+    `${chosen.lost ? "; every line loses in every sample here (the rollout's horizon: it does not order the turns)" : ""}` +
+    `${others.length > 0 ? `; the other turns: ${others.join(", ")}` : ""}`;
+  const where = {
+    weight: tenth(weight),
+    turnRound: turnUse(chosen),
+    lost: Object.fromEntries(losses.map((loss) => [`T${loss.turn}`, tenth(loss.mean)])),
+    weights: Object.fromEntries([...turns.values()].sort((a, b) => turnOf(a) - turnOf(b)).map((entry) => [turn(entry), tenth(weightOf(entry))])),
+  };
+  return { chosen, why, where };
 }
 
 /**
