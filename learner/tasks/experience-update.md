@@ -3,7 +3,7 @@ title: 经验库更新
 tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 600
-default.base_branch: v3
+default.base_branch: v4
 default.merge: no
 default.merge_dir: {{project_root}}/jev-sts2-v3
 ---
@@ -61,6 +61,17 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 - 机制推理同样**不许写喝药规则**；药水只能作为事实出现在推理里（例：力量药水 = 一回合的临时力量）。
 - 说不清机制、只有相关性的，写成「观察」，不要写成因果。
 
+## 4.1 V4 的重点（Dai 2026-10-03）
+Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验给到 ds」——经验库是给 DeepSeek 做构筑、路线、休息、事件决策用的。这一轮除了照常合并，重点补三类，都要对数据（第 3 节），说清楚口径和局数：
+1. **路线与血量管理**（现在只有 general:route 8 条、general:rest 4 条，XC4TNGZU4KT9 F8/F9 两次路线复核在 36/80、11/80 都「保持」，F11 死在双敌走廊）：
+   - 按血量比例分档（例如 <25%、25–40%、40–60%、>60% max HP），各幕、各房间类型（走廊 / 精英 / 问号 / 休息 / 商店）下一场的掉血和死亡率；数据用 logs（fights 表、room-costs.json 的口径），A8 以上。
+   - 什么情况下改路线（绕开精英 / 走廊、去休息点或商店）实际更好：找日志里低血时走了不同节点的局对比，说清楚是观察还是因果。
+   - 写成 `general:route` / `general:rest` / `general:elite` / `act:*` 条目，句式照现有条目：结论 + 数据（n、比例）+ 典型案例 run id。
+2. **SL 重打的对照**（同一场战斗、同样抽牌的多次尝试是天然的对照实验）：logs/sl-attempts.jsonl 的每场多次尝试，哪一次赢了、和输的几次差在哪（`explore`、`sl_explore`、decisions 的 sl_attempt）。能归纳成 boss / 精英打法经验的，写进 `boss:*` / `elite:*` 条目（区分「赢的那次改了什么」和「运气」），每条写明几场重打、几次赢。
+3. **A9**（V4.4 起）：boss 伤害比 A8 高约 10–18%、增益多 1 层（monster-db observed / 第 3 节可复算）；A9 的死亡分布（二幕 boss 为主）。已有条目的 asc 范围按证据更新；A9 特有的结论单列。
+- 机制推理（第 4 节）照做；药水规则限制（第 2 节）照旧。
+- **CPU**：对局在跑（boss 模拟会占满核），抽数据、跑工具只用单进程或最多 4 个 `nice -n 19` 进程，不跑 boss 模拟池。
+
 ## 5. 更新 experience.json
 - 只改 {{worktree}}/src/knowledge/experience.json（和第 2 节里核对后需要改的手写知识文件）。JSON 格式、字段顺序、缩进照原文件。
 - 改完跑 `python3 -c 'import json; json.load(open("src/knowledge/experience.json"))'` 确认合法。
@@ -73,7 +84,7 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 - 在 {{worktree}} 提交：`git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，英文提交信息，写明版本号和增删改条数。不推送。
 - 在变更记录末尾追加一节（标题照上一节：`## <日期> 第N次增量：<局数> 局 A几（version …，分支 …，<提交号>）`），小节依次是：来源、对照数据检查的主题、经验库自己带偏或写了没被执行的地方、**机制推理**、新增、更新、退役、和手写知识及代码冲突、代码问题（不给 DS）、测试、切片大小。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交，由调用方提交。
 
-## 8. 合入（只有 merge = v3 时做）
+## 8. 合入（只有 merge = v3 时做；V4 一律 merge = no，由开发会话审过后合入 v4 / v4-live）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里做：
 1. 等后台知识刷新跑完：`while pgrep -f 'jev-sts2-v3/tools/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省）；
 2. 在 {{merge_dir}} 里，如果有刷新过、没提交的知识数据：`git add notes/fight-value-backtest.md src/knowledge`，commit "Refresh knowledge data"；
