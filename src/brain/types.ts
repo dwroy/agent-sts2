@@ -10,7 +10,8 @@ import type { JsonSchema, ToolContext, ToolDef } from "../tools/types.js";
 
 export type EngineName = "deepseek" | "claude" | "codex" | "dsh";
 
-export type Effort = "low" | "medium" | "high" | "max";
+/** Reasoning effort (claude --effort, codex model_reasoning_effort; xhigh: codex, Dai 2026-10-03). */
+export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 
 /** The answer format for one question kind, shared by every engine. */
 export interface AnswerSpec {
@@ -111,6 +112,8 @@ export interface ToolCallRecord {
 export interface BrainAnswer {
   engine: EngineName;
   model: string;
+  /** The reasoning effort the engine asked for, when it sets one (codex model_reasoning_effort); logged in brain.jsonl. */
+  effort?: string;
   /** The parsed answer when it passed spec.validate, else null. */
   answer: unknown | null;
   /** Remaining problems when answer is null (or minor ones the router accepted). */

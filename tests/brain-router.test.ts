@@ -91,8 +91,8 @@ describe("engine choice", () => {
   });
 
   it("an engine that is not built yet says so; the fallback answers", async () => {
-    const config = loadConfig({ BRAIN_ENGINE: "codex", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
-    await expect(createRouter(config, null).decide(request())).rejects.toThrow("brain engine codex is not implemented yet (implemented: deepseek, claude)");
+    const config = loadConfig({ BRAIN_ENGINE: "dsh", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
+    await expect(createRouter(config, null).decide(request())).rejects.toThrow("brain engine dsh is not implemented yet (implemented: deepseek, claude, codex)");
     const deepseek = new FakeEngine("deepseek", [{ choice: "a", reason: "heal" }]);
     const { router: r, rows } = router({ BRAIN_ENGINE: "dsh", BRAIN_FALLBACK: "deepseek" }, { deepseek });
     const answer = await r.decide(request());

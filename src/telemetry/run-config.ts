@@ -160,6 +160,8 @@ export interface RunConfigRow {
   arm: string | null;
   /** When the configuration asks Claude: the program the brain runs and its start-up check (Brain.preflight). */
   claude_check?: { bin: string; ok: boolean; version?: string; error?: string };
+  /** When the configuration asks codex: the program and its start-up check (Brain.preflight). */
+  codex_check?: { bin: string; ok: boolean; version?: string; error?: string };
   /** SL's configuration (SL_ENABLED on only). */
   sl?: Record<string, JsonValue>;
   /** What the run was warned about at its start (a configured engine that cannot run, an oversized prefix). */
@@ -456,6 +458,7 @@ export function runConfigRow(
     ...setup,
     // Outside the identity: a check's outcome or wording is not a different setup.
     ...(brain?.claudeCheck ? { claude_check: { ...brain.claudeCheck } } : {}),
+    ...(brain?.codexCheck ? { codex_check: { ...brain.codexCheck } } : {}),
     ...(warnings.length > 0 ? { warnings } : {}),
     config_sha: sha(JSON.stringify(identity)),
   };
