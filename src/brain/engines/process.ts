@@ -39,6 +39,19 @@ export interface AgentRun {
   ms: number;
 }
 
+/** The run was aborted (the caller's signal: a timeout, a stall): what the agent had written by then, for the evidence. */
+export class AgentAbortedError extends Error {
+  constructor(
+    readonly bin: string,
+    readonly ms: number,
+    readonly stdout: string,
+    readonly stderr: string,
+  ) {
+    super(`${bin} aborted after ${ms} ms`);
+    this.name = "AgentAbortedError";
+  }
+}
+
 /** The program could not be started at all (ENOENT: not found, EACCES: not executable, ...). */
 export class AgentStartError extends Error {
   constructor(
@@ -105,7 +118,11 @@ export const EXIT_CLOSE_GRACE_MS = 2_000;
  * SIGKILL after KILL_GRACE_MS, by negative PID) and rejects, so the processes the agent started die with it. The
  * promise always settles: on 'close', or EXIT_CLOSE_GRACE_MS after 'exit' when something still holds the pipes.
  */
-export function runAgent(bin: string, args: string[], opts: { cwd: string; env: Record<string, string>; stdin: string; signal?: AbortSignal }): Promise<AgentRun> {
+export function runAgent(
+  bin: string,
+  args: string[],
+  opts: { cwd: string; env: Record<string, string>; stdin: string; signal?: AbortSignal; onStdoutLine?: (line: string) => void; onStderrLine?: (line: string) => void },
+): Promise<AgentRun> {
   const started = Date.now();
   return new Promise((resolve, reject) => {
     if (opts.signal?.aborted) {
@@ -115,6 +132,24 @@ export function runAgent(bin: string, args: string[], opts: { cwd: string; env: 
     const child = spawn(bin, args, { cwd: opts.cwd, env: opts.env, stdio: ["pipe", "pipe", "pipe"], detached: true });
     let stdout = "";
     let stderr = "";
+    /** stdout / stderr after their last newline (the line callbacks get whole lines). */
+    let pending = "";
+    let pendingErr = "";
+    const lines = (buffer: string, text: string, each: ((line: string) => void) | undefined): string => {
+      if (!each) return "";
+      let rest = buffer + text;
+      let newline: number;
+      while ((newline = rest.indexOf("\n")) >= 0) {
+        const line = rest.slice(0, newline);
+        rest = rest.slice(newline + 1);
+        try {
+          each(line);
+        } catch {
+          // a watcher's error must not break the run
+        }
+      }
+      return rest;
+    };
     let killTimer: NodeJS.Timeout | undefined;
     let exitTimer: NodeJS.Timeout | undefined;
     let aborted = false;
@@ -147,12 +182,20 @@ export function runAgent(bin: string, args: string[], opts: { cwd: string; env: 
     };
     const finish = (code: number | null, signal: NodeJS.Signals | null): void => {
       if (!settle()) return;
-      if (aborted) reject(new Error(`${bin} aborted after ${Date.now() - started} ms`));
+      if (aborted) reject(new AgentAbortedError(bin, Date.now() - started, stdout, stderr));
       else resolve({ code, signal, stdout, stderr, ms: Date.now() - started });
     };
     opts.signal?.addEventListener("abort", onAbort, { once: true });
-    child.stdout.on("data", (chunk: Buffer) => (stdout += chunk.toString("utf8")));
-    child.stderr.on("data", (chunk: Buffer) => (stderr += chunk.toString("utf8")));
+    child.stdout.on("data", (chunk: Buffer) => {
+      const text = chunk.toString("utf8");
+      stdout += text;
+      pending = lines(pending, text, opts.onStdoutLine);
+    });
+    child.stderr.on("data", (chunk: Buffer) => {
+      const text = chunk.toString("utf8");
+      stderr += text;
+      pendingErr = lines(pendingErr, text, opts.onStderrLine);
+    });
     child.on("error", (error) => {
       if (!settle()) return;
       reject(new AgentStartError(bin, String((error as NodeJS.ErrnoException).code ?? "error"), error.message));

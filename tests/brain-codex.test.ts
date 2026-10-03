@@ -12,8 +12,9 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain, createRouter } from "../src/brain/brain.js";
-import { brainCatalogEntry, checkCodex, CODEX_DISABLED_FEATURES, codexFailure, CodexEngine, dropNulls, parseCodexStream, strictSchema } from "../src/brain/engines/codex.js";
+import { brainCatalogEntry, checkCodex, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, dropNulls, parseCodexStream, redact, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
+import { answeredBy, engineLabel } from "../src/loop.js";
 import { EngineFailure, type BrainLogRow } from "../src/brain/router.js";
 import { fightPlanSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
@@ -86,7 +87,11 @@ appendFileSync(${JSON.stringify(seenFile)}, JSON.stringify(seen) + "\\n");
 const n = readFileSync(${JSON.stringify(seenFile)}, "utf8").split("\\n").filter(Boolean).length;
 const calls = ${JSON.stringify(calls)};
 ${opts.sleepMs ? `await new Promise((ok) => setTimeout(ok, ${opts.sleepMs}));` : ""}
-for (const event of calls[Math.min(n, calls.length) - 1] ?? []) process.stdout.write(JSON.stringify(event) + "\\n");
+for (const event of calls[Math.min(n, calls.length) - 1] ?? []) {
+  if (event.__sleep) { await new Promise((ok) => setTimeout(ok, event.__sleep)); continue; }
+  if (event.__stderr) { process.stderr.write(event.__stderr); continue; }
+  process.stdout.write(JSON.stringify(event) + "\\n");
+}
 ${opts.stderr ? `process.stderr.write(${JSON.stringify(opts.stderr)});` : ""}
 process.exit(${opts.exitCode ?? 0});
 `);
@@ -273,6 +278,116 @@ describe("codex engine", () => {
   });
 });
 
+describe("codex runs watched: retries, stalls, timeouts and their trace", () => {
+  const started = [{ type: "thread.started", thread_id: "t-stall" }, { type: "turn.started" }];
+  /** codex's telemetry line for the first output token (CODEX_RUST_LOG), on stderr. */
+  const ttft = { __stderr: '2026-10-03T10:32:41.466877Z  INFO session_loop{…}: codex_otel.trace_safe: event.name="codex.turn_ttft" duration_ms=17779 model=gpt-6.1-sol\n' };
+  const traceOf = (file: string): Array<Record<string, any>> => (existsSync(file) ? readFileSync(file, "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line)) : []);
+  function tracedEngine(bin: string, name: string, env: Record<string, string> = {}): { engine: CodexEngine; trace: () => Array<Record<string, any>> } {
+    const cfg = config(bin, codexHome(name), env);
+    const file = join(dir, `${name}-codex-calls.jsonl`);
+    rmSync(file, { force: true });
+    return { engine: new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir: join(dir, "state"), traceFile: file }), trace: () => traceOf(file) };
+  }
+
+  it("a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice", async () => {
+    const notice = "Reconnecting... 1/5 (stream disconnected before completion: idle timeout waiting for SSE)";
+    const fake = fakeCodex("retry", [[...started, { type: "error", message: notice }, ...answered({ choice: "a", reason: "heal" }).slice(2)]]);
+    const { engine: e, trace } = tracedEngine(fake.bin, "retry");
+    const answer = await e.decide(request({ runId: "RUN1" }));
+    expect(answer.answer).toEqual({ choice: "a", reason: "heal" });
+    expect(answer.native).toMatchObject({ retries: [notice], runs: 1 });
+    const [row] = trace();
+    expect(row).toMatchObject({ run_id: "RUN1", label: "rest/plan", model: "gpt-6.1-sol", effort: "xhigh", attempt: 1, outcome: "answered", exit: 0, retries: [notice], errors: [], usage: { input_tokens: 150000 } });
+    expect(row!["events"].map((event: any) => event.type)).toEqual(["thread.started", "turn.started", "error", "item.completed", "item.completed", "turn.completed"]);
+    expect(row!["events"][2]).toMatchObject({ type: "error", message: notice });
+    // The trace holds sizes, never the texts.
+    expect(row!["events"][3]).toEqual({ t: expect.any(Number), type: "item.completed", item: "reasoning", chars: 51 });
+    expect(JSON.stringify(row)).not.toContain("Weighing the rest");
+    expect(JSON.stringify(row)).not.toContain("SYSTEM PROMPT");
+    expect(parseCodexStream(JSON.stringify({ type: "error", message: notice })).errors).toEqual([]);
+  });
+
+  it("after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken", async () => {
+    const fake = fakeCodex("stall-once", [[...started, ttft, { __sleep: 30_000 }, ...answered({ choice: "b", reason: "late" }).slice(2)], answered({ choice: "a", reason: "heal" })]);
+    const { engine: e, trace } = tracedEngine(fake.bin, "stall-once", { BRAIN_CODEX_STALL_MS: "1500" });
+    const began = Date.now();
+    const answer = await e.decide(request());
+    expect(Date.now() - began).toBeLessThan(15_000);
+    expect(fake.calls()).toBe(2);
+    expect(answer).toMatchObject({ answer: { choice: "a", reason: "heal" }, native: { runs: 2 } });
+    // The latency counts the stalled run too.
+    expect(answer.latencyMs).toBeGreaterThanOrEqual(1_500);
+    expect(trace().map((row) => [row["attempt"], row["outcome"], row["events"].map((event: any) => event.type).join(",")])).toEqual([
+      [1, "stalled", "thread.started,turn.started"],
+      [2, "answered", "thread.started,turn.started,item.completed,item.completed,turn.completed"],
+    ]);
+    expect(trace()[0]!["max_gap_ms"]).toBeGreaterThanOrEqual(1_500);
+    expect(trace()[0]).toMatchObject({ ttft_ms: expect.any(Number), stall: expect.stringMatching(/^no stream event for 2 s after the first token at 0 s \(last: turn\.started at 0 s\)$/) });
+    expect(fake.seen()[0]!.env["RUST_LOG"]).toBe(CODEX_RUST_LOG);
+  }, 30_000);
+
+  it("before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall", async () => {
+    const thinking = fakeCodex("thinking", [[...started, { __sleep: 3_000 }, ttft, ...answered({ choice: "a", reason: "heal" }).slice(2)]]);
+    const { engine: e } = tracedEngine(thinking.bin, "thinking", { BRAIN_CODEX_STALL_MS: "1000" });
+    await expect(e.decide(request())).resolves.toMatchObject({ answer: { choice: "a" }, native: { runs: 1 } });
+    const capped = fakeCodex("first-token", [[...started, { __sleep: 30_000 }], answered({ choice: "b", reason: "smith" })]);
+    const { engine: f, trace } = tracedEngine(capped.bin, "first-token", { BRAIN_CODEX_FIRST_TOKEN_MS: "2000" });
+    await expect(f.decide(request())).resolves.toMatchObject({ answer: { choice: "b" }, native: { runs: 2 } });
+    expect(trace()[0]).toMatchObject({ outcome: "stalled", stall: "no first token within 2 s", first_token_ms: 2000 });
+  }, 30_000);
+
+  it("stalled twice: the question fails as a timeout and the fallback answers it", async () => {
+    const fake = fakeCodex("stall-twice", [[...started, ttft, { __sleep: 30_000 }]]);
+    const home = codexHome("stall-twice");
+    const log = join(dir, "stall-twice-brain.jsonl");
+    rmSync(log, { force: true });
+    const cfg = config(fake.bin, home, { BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek", BRAIN_LOG: log, BRAIN_CODEX_STALL_MS: "1000" });
+    class Stub extends DeepSeekClient {
+      constructor() {
+        super({ apiKey: "k", baseUrl: "http://127.0.0.1:9", model: "fake", timeoutMs: 100 });
+      }
+      override async choose(): Promise<DeepSeekAnswer> {
+        return { choice: "a", reason: "deepseek", latencyMs: 1, inputTokens: 1, outputTokens: 1 };
+      }
+    }
+    const answer = await createBrain(cfg, new Stub()).choose({ hp: 20 }, "Heal or smith?", options, { label: "rest/plan" });
+    expect(fake.calls()).toBe(2);
+    expect(answer).toMatchObject({ choice: "a", brain: { engine: "deepseek", fell_back_from: { engine: "codex", error: expect.stringMatching(/^codex stalled \[timeout\]: no stream event for 1 s after the first token at 0 s \(last: turn\.started at 0 s\) \(2 run\(s\)\)/) } } });
+    const row = JSON.parse(readFileSync(log, "utf8").trim().split("\n")[0]!) as BrainLogRow;
+    expect(row.fell_back_from).toMatchObject({ engine: "codex", kind: "timeout" });
+    const trace = traceOf(join(dir, "codex-calls.jsonl"));
+    expect(trace.filter((t) => t["label"] === "rest/plan" && t["outcome"] === "stalled").length).toBeGreaterThanOrEqual(2);
+  }, 30_000);
+
+  it("the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked", async () => {
+    const jwt = `eyJ${"a".repeat(20)}.${"b".repeat(20)}.${"c".repeat(10)}`;
+    const fake = fakeCodex("abort", [[...started, { __stderr: `WARN codex_core::client: retrying, auth Bearer ${jwt} access_token=abc123secret\n` }, { __sleep: 30_000 }]]);
+    const { engine: e, trace } = tracedEngine(fake.bin, "abort");
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 1_500);
+    await expect(e.decide(request(), controller.signal)).rejects.toThrow(/aborted after/);
+    const [row] = trace();
+    expect(row).toMatchObject({ outcome: "aborted", thread_id: "t-stall", stall_ms: 120_000, first_token_ms: null });
+    expect(row!["events"].map((event: any) => event.type)).toEqual(["thread.started", "turn.started"]);
+    expect(row!["max_gap_ms"]).toBeGreaterThanOrEqual(1_400);
+    expect(row!["stderr_tail"]).toContain("retrying");
+    expect(row!["stderr_tail"]).not.toContain(jwt);
+    expect(row!["stderr_tail"]).not.toContain("abc123secret");
+    expect(redact(`Bearer ${jwt} "refresh_token": "r1" cookie=c2 sk-${"x".repeat(20)}`)).toBe('Bearer <redacted> "refresh_token": "<redacted>" cookie=<redacted> <key>');
+  }, 30_000);
+});
+
+describe("the console names the engine", () => {
+  it("says which engine decides and which answered (and for whom, after a fallback)", () => {
+    expect(engineLabel("codex")).toBe("Codex");
+    expect(engineLabel(undefined)).toBe("DeepSeek");
+    expect(answeredBy(undefined)).toBe("DeepSeek");
+    expect(answeredBy({ engine: "codex", model: "gpt-6.1-sol", attempts: 1, tool_calls: [] })).toBe("Codex");
+    expect(answeredBy({ engine: "deepseek", model: "deepseek-flash", attempts: 1, tool_calls: [], fell_back_from: { engine: "codex", error: "codex timed out after 600000 ms" } })).toBe("DeepSeek (for Codex)");
+  });
+});
+
 describe("the strict answer schema", () => {
   it("makes every property required, the optional ones nullable, and drops their nulls from the answer", () => {
     const pick = strictSchema(stableSchema(pickSpec("rest/plan", options, {})))!;
@@ -324,7 +439,8 @@ describe("the codex start-up check", () => {
     writeFileSync(installed, "#!/bin/sh\n");
     chmodSync(installed, 0o755);
     const brain = (env: Record<string, string>) => loadConfig({ HOME: home, PATH: "/nonexistent", ...env } as unknown as NodeJS.ProcessEnv).brain;
-    expect(brain({}).codex).toMatchObject({ bin: installed, home: join(home, ".codex"), summary: "auto", serviceTier: null });
+    expect(brain({}).codex).toMatchObject({ bin: installed, home: join(home, ".codex"), summary: "auto", serviceTier: null, stallMs: 120_000, firstTokenMs: null, stallRetries: 1 });
+    expect(brain({ BRAIN_CODEX_STALL_MS: "off", BRAIN_CODEX_FIRST_TOKEN_MS: "240000", BRAIN_CODEX_STALL_RETRIES: "0" }).codex).toMatchObject({ stallMs: null, firstTokenMs: 240_000, stallRetries: 0 });
     expect(brain({ PATH: join(home, ".local", "node", "bin") }).codex.bin).toBe(installed);
     expect(brain({ BRAIN_CODEX_BIN: "/opt/codex" }).codex.bin).toBe("/opt/codex");
     expect(brain({ CODEX_HOME: "/c" }).codex.home).toBe("/c");
