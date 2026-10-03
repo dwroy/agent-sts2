@@ -215,7 +215,7 @@ export interface RouteBlockInput {
   plan?: string[];
   start: { hp: number; max: number };
   costs: RoomCostModel;
-  /** Fights in a row ending at the current node. */
+  /** The fight chain ending at the current node (screens/map.ts chainAfter: act 1 in a row, acts 2-3 since the last rest site). */
   chain?: number;
   /** The HP each option of this question leaves (a rest site's options). */
   options?: { label: string; hp: number; max: number }[];

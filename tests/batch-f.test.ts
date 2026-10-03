@@ -526,7 +526,10 @@ describe("8. Rest-site facts for DeepSeek: a forced Elite within 3 nodes (7KDMKN
     expect(factsOf(raw)["boss_start_heal"]).toBeUndefined();
     run["relics"] = [...(run["relics"] as unknown[]), { index: 9, relic_id: "PANTOGRAPH", name: "缩放仪" }];
     const facts = factsOf(raw);
-    expect(String(facts["boss_start_heal"])).toMatch(/^Pantograph \(缩放仪\) heals 25 HP when the boss fight starts: entering it at 80\/80 after healing here, 65\/80 without/);
+    // The board's HEAL text says 26 (its own max HP); the boss is the next floor (no remembered map: the floor rule).
+    expect(String(facts["boss_start_heal"])).toBe(
+      "Pantograph (缩放仪) heals 25 HP when the boss fight starts (up to max HP), and the next fight after this rest site is the act boss: resting here heals 26 (66/80) and enters the boss at 80/80; smithing (or any option that does not heal) enters it at 65/80. Resting's real heal for the boss: min(26, 80 - 40 - 25) = 15 HP.",
+    );
     // Not before the boss: nothing.
     run["floor"] = 8;
     expect(factsOf(raw)["boss_start_heal"]).toBeUndefined();

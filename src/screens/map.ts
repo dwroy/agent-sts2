@@ -43,21 +43,67 @@ function hpPercent(env: DecisionEnv): number {
 interface RouteState {
   hp: number;
   gold: number;
-  /** Hallway/elite fights in a row so far, with no rest, shop or "?" between them. */
+  /** The fight chain so far: hallway/elite fights as the act counts them (chainAfter). */
   fights: number;
 }
 
 /**
- * A chain of hallway fights with no rest, shop or "?" between them is what killed QE4K, XJWF (both at
- * F22 after four forced Act 2 fights, 80/80 -> 18 and 92 -> 41) and MD3F (five in Act 3, 87 -> 16);
- * every time the fork before it had a route with a RestSite, Shop or Unknown. The 3rd fight in a row
- * and every one after it costs this much, up to twice as much as projected HP falls below 60%.
+ * A chain of hallway fights is what killed QE4K, XJWF (both at F22 after four forced Act 2 fights, 80/80 -> 18 and
+ * 92 -> 41) and MD3F (five in Act 3, 87 -> 16); every time the fork before it had a route with a RestSite, Shop or
+ * Unknown. A fight from FIGHT_CHAIN_FROM on (chainPenalised: hallway fights, from act 2 elites too) costs this much, up
+ * to twice as much as projected HP falls below 60%.
  */
 export const FIGHT_CHAIN_PENALTY = 1.5;
-export function fightChainPenalty(fightsBefore: number, hpOnArrival: number): number {
-  if (fightsBefore < 2) return 0;
+
+const isRestNode = (type: string): boolean => type === "RestSite" || type === "Rest";
+
+/**
+ * The fight chain the route model counts (RouteState.fights), by act:
+ * - act 1 (unchanged, 200e5f3): hallway/elite fights in a row. A rest site or a shop ends it; ahead (this function,
+ *   the projection) a "?" room or a treasure room carries it; walking back from the current node (fightsSoFar) the
+ *   chain stops at anything but a fight or a treasure room.
+ * - acts 2 and 3 (Dai 2026-10-03, experience route-no-chains): hallway/elite fights since the last rest site or the
+ *   act start, as the data counts a stretch between rests. Shops, "?" rooms and treasure rooms do not end it, and a
+ *   "?" room is not counted (the map cannot tell its fight from its event). The data (A8+A9 to 10-02, stretches
+ *   starting at >= 60% HP) counts the fights the run actually had, "?" fights included; counting only the map's
+ *   Monster and Elite rooms gives the same step: an act-2 Monster/Elite room is the run's death in 9/464 (1.9%) as
+ *   the 1st of its stretch, 8/315 (2.5%) the 2nd, 11/193 (5.7%) the 3rd, 13/79 (16.5%) the 4th. A shop in the
+ *   stretch does not reset it: the 4th fight with a shop earlier in the stretch 6/52 (11.5%), without 10/51 (19.6%).
+ */
+export function chainAfter(type: string, chain: number, act: number): number {
+  if (type === "Monster" || type === "Elite") return chain + 1;
+  if (act >= 2) return isRestNode(type) || type === "Ancient" ? 0 : chain;
+  return isRestNode(type) || type === "Shop" || type === "Event" ? 0 : chain;
+}
+
+/**
+ * The fights before a fight in its chain from which the penalty applies, by act (null: none):
+ * - act 1: the 3rd fight in a row (unchanged; act-1 deaths are 0.4-1.7% per Monster/Elite room up to the 4th of a
+ *   stretch, so the data neither asks for nor against it).
+ * - act 2: the 4th fight between rest sites (route-no-chains: A8+A9 act-2 stretches with 1-3 fights died in 29 of
+ *   368, with 4+ in 21 of 103; the act-2 opening to the first rest site with <= 3 fights A8 7/98, >= 4 15/80).
+ * - act 3: none. The count alone does not raise deaths there (stretches with 1, 2, 3 fights 17%, 15%, 19%; 4+ 1/24);
+ *   the HP projection (monsterWeight, LIKELY_DEATH) still prices every fight.
+ */
+export const FIGHT_CHAIN_FROM: Record<number, number | null> = { 1: 2, 2: 3, 3: null };
+
+/**
+ * The rooms the chain penalty is charged on: act 1 hallway fights only (unchanged: elites have their own HP rules);
+ * from act 2 an elite too, since the data counts it as one of the stretch's fights (A8+A9 act 2: an Elite room as
+ * the 2nd-4th Monster/Elite room of its stretch was the run's death in 9 of 29). Act 3 has no penalty.
+ */
+export function chainPenalised(type: string, act: number): boolean {
+  return type === "Monster" || (act >= 2 && type === "Elite");
+}
+
+export function fightChainPenalty(fightsBefore: number, hpOnArrival: number, act: number): number {
+  const from = FIGHT_CHAIN_FROM[Math.min(Math.max(act, 1), 3)] ?? null;
+  if (from === null || fightsBefore < from) return 0;
   return FIGHT_CHAIN_PENALTY * (1 + Math.min(1, Math.max(0, 0.6 - hpOnArrival) / 0.3));
 }
+
+/** The chain lengths the memo tells apart: every count below the act's penalty start, then "that many or more". */
+const CHAIN_MEMO_CAP = 3;
 
 /**
  * Hallway fights are worth a little (cards, gold) only while there is HP to pay for them. MD3F walked
@@ -185,23 +231,22 @@ const GOLD_AFTER_SHOP = 50;
  * 44/71. Rests heal and shops spend, so a fight behind a rest is valued at the healed HP.
  */
 function stateAfter(type: string, at: RouteState, act: number, ascension: number, rest: RestContext = null): RouteState {
+  const fights = chainAfter(type, at.fights, act);
   switch (type) {
     case "Monster":
     case "Elite":
-      return { hp: Math.max(0, at.hp - fightHpCost(type, act)), gold: at.gold + fightGold(type, ascension), fights: at.fights + 1 };
+      return { hp: Math.max(0, at.hp - fightHpCost(type, act)), gold: at.gold + fightGold(type, ascension), fights };
     case "RestSite":
     case "Rest":
-      return { hp: restedFraction(at.hp, rest), gold: at.gold, fights: 0 };
+      return { hp: restedFraction(at.hp, rest), gold: at.gold, fights };
     case "Shop":
-      return { hp: at.hp, gold: Math.min(at.gold, GOLD_AFTER_SHOP), fights: 0 };
+      return { hp: at.hp, gold: Math.min(at.gold, GOLD_AFTER_SHOP), fights };
     case "Unknown":
       // A "?" room is often a fight or an HP event: it costs some HP and does not reset the fight chain
       // (4V5T F20: the lantern-key event fight cost 28 HP on a route priced as free).
-      return { ...at, hp: Math.max(0, at.hp - UNKNOWN_HP_SHARE * fightHpCost("Monster", act)) };
-    case "Event":
-      return { ...at, fights: 0 };
+      return { ...at, hp: Math.max(0, at.hp - UNKNOWN_HP_SHARE * fightHpCost("Monster", act)), fights };
     default:
-      return at;
+      return { ...at, fights };
   }
 }
 
@@ -211,7 +256,7 @@ type Weights = (type: string, at: RouteState, row: number) => number;
 /** Best continuation value from a node reached in state `at`, memoised (the graph is a DAG in row order). */
 function continuation(node: MapNode, at: RouteState, nodes: Map<string, MapNode>, weights: Weights, act: number, memo: Map<string, number>, ascension: number, rest: RestContext = null): number {
   const left = stateAfter(node.type, at, act, ascension, rest);
-  const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}/${Math.min(left.fights, 2)}`;
+  const nodeKey = `${key(node.row, node.col)}@${left.hp.toFixed(2)}/${Math.round(left.gold)}/${Math.min(left.fights, CHAIN_MEMO_CAP)}`;
   const cached = memo.get(nodeKey);
   if (cached !== undefined) return cached;
   // Children can all be negative (forced fights at low HP): the best of them, not 0.
@@ -272,16 +317,29 @@ function mapGraph(map: Record<string, unknown>): Map<string, MapNode> {
   return nodes;
 }
 
-/** Fights in a row ending at a MAP state's current node (kept with the remembered map for the rooms after it). */
-export function fightChainAt(map: Record<string, unknown>): number {
-  return fightsSoFar(mapGraph(map), map["current_node"]);
+/** The fight chain ending at a MAP state's current node in this act (kept with the remembered map for the rooms after it). */
+export function fightChainAt(map: Record<string, unknown>, act: number): number {
+  return fightsSoFar(mapGraph(map), map["current_node"], act);
 }
 
-/** Fights in a row that end at the current node, walking back through visited parents. */
-function fightsSoFar(nodes: Map<string, MapNode>, current: unknown): number {
+/**
+ * The fight chain ending at the current node (chainAfter's count, walking back). Act 1: fights in a row, through
+ * visited parents and treasure rooms. Acts 2 and 3: the Monster and Elite rooms walked since the last rest site or
+ * the act start, the visited node of each row back from the current one (one per row, Winged Boots jumps included).
+ */
+function fightsSoFar(nodes: Map<string, MapNode>, current: unknown, act: number): number {
   const at = asRecord(current);
   let node = at["row"] === undefined ? undefined : nodes.get(key(num(at["row"]), num(at["col"])));
   let fights = 0;
+  if (act >= 2) {
+    if (!node) return 0;
+    const walked = [...nodes.values()].filter((entry) => entry.visited && entry.row <= node!.row && entry !== node).sort((a, b) => b.row - a.row);
+    for (const entry of [node, ...walked]) {
+      if (isRestNode(entry.type) || entry.type === "Ancient") break;
+      if (entry.type === "Monster" || entry.type === "Elite") fights += 1;
+    }
+    return fights;
+  }
   while (node && (node.type === "Monster" || node.type === "Elite" || node.type === "Treasure")) {
     if (node.type !== "Treasure") fights += 1;
     node = (node.parents ?? []).map((parent) => nodes.get(key(parent.row, parent.col))).find((parent) => parent?.visited);
@@ -305,7 +363,7 @@ export function routeCostShare(type: string, costs: RoomCostModel): number | und
 export function makeRouteWeights(act: number, costs: RoomCostModel, runPlan?: DecisionEnv["screenMemory"]["runPlan"]): Weights {
   return (type, at, row) =>
     nodeWeight(type, at.hp, at.gold, Math.max(1, row + 1), act, routeCostShare(type, costs)) -
-    (type === "Monster" ? fightChainPenalty(at.fights, at.hp) : 0) +
+    (chainPenalised(type, act) ? fightChainPenalty(at.fights, at.hp, act) : 0) +
     (type === "Elite" ? runPlanEliteShift(runPlan, at.hp) : 0);
 }
 
@@ -350,7 +408,7 @@ export function planMap(env: DecisionEnv): Decision | null {
   const floor = state.run?.floor ?? 1;
   const { act, weightOf, costs } = routeWeights(env, floor);
   const rest: RestContext = { maxHp: costs.maxHp, heal: costs.rest ?? NO_REST_RELICS };
-  const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"]) };
+  const start: RouteState = { hp: hpPct, gold, fights: fightsSoFar(nodes, map["current_node"], act) };
 
   const options: PickOption[] = available.flatMap((node) => {
     const index = numOrNull(node["index"]);
@@ -739,9 +797,11 @@ export function roomPosition(map: RememberedMap | undefined, runId: string, floo
   const only = map.available.filter((node) => rooms.includes(node.type));
   const here = map.chosen ?? (only.length === 1 ? only[0]! : null);
   if (!here || !rooms.includes(here.type)) return null;
-  // The fight chain ending here: the map's chain at its current node, plus this room (as fightsSoFar walks it).
+  // The fight chain ending here: the map's chain at its current node, plus this room (as fightsSoFar walks it: in
+  // act 1 anything but a fight or a treasure room ends it; from act 2 only a rest site or the act start).
   const chain = map.fights ?? 0;
-  const fights = here.type === "Monster" || here.type === "Elite" ? chain + 1 : here.type === "Treasure" ? chain : 0;
+  const act = actOfFloor(floor);
+  const fights = act >= 2 ? chainAfter(here.type, chain, act) : here.type === "Monster" || here.type === "Elite" ? chain + 1 : here.type === "Treasure" ? chain : 0;
   return { row: here.row, col: here.col, type: here.type, fights };
 }
 
