@@ -1,0 +1,71 @@
+scan: 199612 state lines, 4803426 card entries (18253 distinct)
+  game data SHIV (AnyEnemy, Token, colorless): pile target: "all" -> "single"; pile+ target: "all" -> "single"; pool target: "all" -> "single"; pool validTargets: [] -> [0,1]
+  game data SOVEREIGN_BLADE (AnyEnemy, Token, colorless): pile target: "all" -> "single"; pile+ target: "all" -> "single"; pool target: "all" -> "single"; pool validTargets: [] -> [0,1]
+  logged SHIV at combat.hand (target_type AnyEnemy, requires_target true; 8 frames, 1 runs): target: "all" -> "single"
+  frames holding a changed card: 102; hand frames the judge's draw test reads apart: 189
+  deck profile (cards whose Strength is only in a conditional: MAD_SCIENCE): 261 decks on 1966 frames, changed 134 decks on 769 frames (8 runs)
+    力量来源 燃烧+、恶魔形态+、烙印+、恶魔形态、疯狂科学、烘焙手套（牌面或遗物文字写明获得持续的力量） -> 力量来源 燃烧+、恶魔形态+、烙印+、恶魔形态、烘焙手套（牌面或遗物文字写明获得持续的力量）
+    力量来源 恶魔形态、燃烧、疯狂科学、红头骨（牌面或遗物文字写明获得持续的力量） -> 力量来源 恶魔形态、燃烧、红头骨（牌面或遗物文字写明获得持续的力量）
+    力量来源 恶魔形态、燃烧、疯狂科学、红头骨（牌面或遗物文字写明获得持续的力量） -> 力量来源 恶魔形态、燃烧、红头骨（牌面或遗物文字写明获得持续的力量）
+    力量来源 主宰、疯狂科学、红头骨（牌面或遗物文字写明获得持续的力量） -> 力量来源 主宰、红头骨（牌面或遗物文字写明获得持续的力量）
+affected: 54 planning decisions (1 runs), byte-identical 47, changed 7; by where the changed card is: combat.hand 7 changed of 8, discard 0 changed of 44, draw 0 changed of 2
+  RNTVAT76BPV0 F30 T1 2026-10-03T11:11:06.975000 (SHIV@combat.hand) logged combat/plan-choice end_turn [the gate-refusal fallback]
+    base: question combat/plan-choice, rollout pick ["plan4"] {"action":"end_turn"}; refused first actions 1 of 4; lines with an untargeted step 2
+    new:  question combat/plan-choice, rollout pick ["plan4"] {"action":"end_turn"}; refused first actions 0 of 4; lines with an untargeted step 0
+      plan2: 放血, then 小刀, then 欺凌 -> 虱虫之祖
+         -> 放血, then 小刀 -> 虱虫之祖, then 欺凌 -> 虱虫之祖
+      plan3: 小刀, then 欺凌 -> 虱虫之祖, then potion 明耀酊剂, then 防御, then potion 消亡粉末 -> 虱虫之祖
+         -> 小刀 -> 虱虫之祖, then 欺凌 -> 虱虫之祖, then potion 明耀酊剂, then 防御, then potion 消亡粉末 -> 虱虫之祖
+  RNTVAT76BPV0 F33 T1 2026-10-03T11:12:52.111000 (SHIV@combat.hand) logged combat/plan-choice end_turn [the gate-refusal fallback]
+    base: question combat/plan-choice, rollout pick ["plan2"] {"action":"play_card","card_index":1}; refused first actions 2 of 2; lines with an untargeted step 2
+    new:  question combat/plan-choice, rollout pick ["plan2"] {"action":"play_card","card_index":1,"target_index":0}; refused first actions 0 of 2; lines with an untargeted step 0
+      plan1: 小刀
+         -> 小刀 -> 无厌沙虫
+      plan2: 小刀, then potion 消亡粉末 -> 无厌沙虫
+         -> 小刀 -> 无厌沙虫, then potion 消亡粉末 -> 无厌沙虫
+  RNTVAT76BPV0 F38 T1 2026-10-03T11:34:01.009000 (SHIV@combat.hand) logged combat/plan-choice+potion end_turn [the gate-refusal fallback]
+    base: question combat/plan-choice+potion, rollout pick ["plan1"] {"action":"play_card","card_index":1}; refused first actions 2 of 3; lines with an untargeted step 2
+    new:  question combat/plan-choice+potion, rollout pick ["plan1"] {"action":"play_card","card_index":1,"target_index":0}; refused first actions 0 of 3; lines with an untargeted step 0
+      plan1: 小刀
+         -> 小刀 -> 巨斧机器人
+      plan2: 小刀
+         -> 小刀 -> 巨斧机器人
+      p1: drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 残酷, 小刀
+         -> drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 残酷, 小刀 -> 巨斧机器人
+  RNTVAT76BPV0 F38 T1 2026-10-03T11:34:57.584000 (SHIV@combat.hand) logged combat/plan end_turn [the gate-refusal fallback]
+    base: code combat/plan {"action":"play_card","card_index":0} gate target_index unset is not in valid_target_indices [0]
+    new:  code combat/plan {"action":"play_card","card_index":0,"target_index":0} gate ok
+  RNTVAT76BPV0 F38 T1 2026-10-03T11:35:25.034000 (SHIV@combat.hand) logged combat/plan-choice+potion play_card card 0
+    base: question combat/plan-choice+potion, rollout pick ["plan1"] {"action":"play_card","card_index":0}; refused first actions 0 of 4; lines with an untargeted step 3
+    new:  question combat/plan-choice+potion, rollout pick ["plan1"] {"action":"play_card","card_index":0}; refused first actions 0 of 4; lines with an untargeted step 0
+      plan1: 防御, then 小刀
+         -> 防御, then 小刀 -> 巨斧机器人
+      plan2: 残酷, then 小刀
+         -> 残酷, then 小刀 -> 巨斧机器人
+      plan3: 防御, then 小刀
+         -> 防御, then 小刀 -> 巨斧机器人
+      p1: drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 残酷, 小刀
+         -> drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 残酷, 小刀 -> 巨斧机器人
+  RNTVAT76BPV0 F38 T1 2026-10-03T11:35:27.141000 (SHIV@combat.hand) logged combat/plan end_turn [the gate-refusal fallback]
+    base: question combat/plan-choice+potion, rollout pick ["plan1"] {"action":"play_card","card_index":1}; refused first actions 2 of 3; lines with an untargeted step 2
+    new:  question combat/plan-choice+potion, rollout pick ["plan1"] {"action":"play_card","card_index":1,"target_index":0}; refused first actions 0 of 3; lines with an untargeted step 0
+      plan1: 小刀
+         -> 小刀 -> 巨斧机器人
+      plan2: 小刀
+         -> 小刀 -> 巨斧机器人
+      p1: drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 小刀
+         -> drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 小刀 -> 巨斧机器人
+  RNTVAT76BPV0 F38 T1 2026-10-03T11:36:18.769000 (SHIV@combat.hand) logged combat/plan end_turn [the gate-refusal fallback]
+    base: question combat/plan-choice+potion, rollout pick ["p1"] {"action":"use_potion","option_index":1}; refused first actions 2 of 3; lines with an untargeted step 2
+    new:  question combat/plan-choice+potion, rollout pick ["p1"] {"action":"use_potion","option_index":1}; refused first actions 0 of 3; lines with an untargeted step 0
+      plan1: 小刀
+         -> 小刀 -> 巨斧机器人
+      plan2: 小刀
+         -> 小刀 -> 巨斧机器人
+      p1: drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 小刀
+         -> drink 精炼混沌 now (plays the top 3 cards of the draw pile), then re-plan the turn with the real cards; example, the median of 12 samples: potion 精炼混沌, 小刀 -> 巨斧机器人
+  options whose first action the gate refuses: 10 -> 0; lines with a step needing a target and naming none: 13 -> 0; the rollout pick (or code's action) refused: 4 -> 0
+control: 714 planning decisions (319 runs), byte-identical 714, changed 0
+judge (logged least-loss decisions, a hand card the draw test reads apart): 1; certain or tier changed 0, only the reason 1
+  7DFB21JE2DTK F48 T7 2026-09-26T12:17:40.537000 MAD_SCIENCE: 造成17点伤害。 给予2层虚弱。 给予2层易伤。: {"certain":false,"tier":null,"reason":"the planner sees every line die, but 疯狂科学 draws (unknown cards)"} -> {"certain":false,"tier":null,"reason":"the planner sees every line die, but 剑柄打击 draws (unknown cards)"}
+deck profile (the brain's decisions off combat with such a card in the deck): 483 in 15 runs, the line changed on 224 (8 runs): event 22/50, map 48/99, reward 64/130, rest 25/53, selection 27/60, run 8/15, chest 18/33, shop 12/43
