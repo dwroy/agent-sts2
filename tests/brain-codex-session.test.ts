@@ -11,7 +11,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
-import { CodexEngine, sessionFailure, strictSchema } from "../src/brain/engines/codex.js";
+import { CodexEngine, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
 import { pickSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { loadConfig } from "../src/config.js";
@@ -178,7 +178,7 @@ describe("codex session mode", () => {
     expect(start).toMatchObject({ model: "gpt-6.1-sol", approvalPolicy: "never", sandbox: "read-only", baseInstructions: "SYSTEM PROMPT v1", ephemeral: false, threadSource: "jev-brain" });
     expect(start["cwd"].startsWith(sessionCwdRoot(join(fake.state, "codex-state")))).toBe(true);
     const turns = reqs.filter((r) => r.method === "turn/start").map((r) => r.params);
-    expect(turns[0]).toMatchObject({ threadId: "thr-1", effort: "xhigh", summary: "auto", model: "gpt-6.1-sol", outputSchema: strictSchema(stableSchema(pickSpec("rest/plan", options, {}))) });
+    expect(turns[0]).toMatchObject({ threadId: "thr-1", effort: "xhigh", summary: "auto", model: "gpt-6.1-sol", outputSchema: codexSchema(stableSchema(pickSpec("rest/plan", options, {})), { routeReason: "drop", maxFieldChars: 600 }) });
     expect(JSON.parse(turns[0]!["input"][0].text)).toEqual({ memory: { act: "第1幕" }, state: { hp: 20 }, question: "Heal or smith?", options });
     expect(turns[1]!["threadId"]).toBe("thr-1");
     expect(reqs.filter((r) => r.method === "thread/revert").map((r) => r.params)).toEqual([{ threadId: "thr-1", beforeTurnId: "turn-1" }, { threadId: "thr-1", beforeTurnId: "turn-2" }]);

@@ -257,6 +257,42 @@ export function strictSchema(schema: JsonSchema): StrictSchema | null {
   return walk(schema);
 }
 
+/**
+ * The answer schema codex gets: the kind's stable schema made strict, with two changes against runaway answers
+ * (2026-10-03, RNTVAT76BPV0 / J4S28FRQKD7G: 7 of 27 live calls at high stalled; the replayed ones streamed route_reason
+ * as an endless chain of single characters, 「稳。好。走。保。…」, after a short phrase):
+ * - routeReason "drop" (BRAIN_CODEX_ROUTE_REASON, default): no route_reason field (it is only logged: the route review's
+ *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS.
+ * - maxFieldChars (BRAIN_CODEX_MAX_FIELD_CHARS, default 600): every free-text string (no enum) gets that maxLength,
+ *   which OpenAI's strict mode enforces while it samples: a runaway in any text field ends there. Logged answers' longest
+ *   single field is ~180 characters; the act route ~90.
+ * DeepSeek's and Claude's schemas and every prompt stay as they are.
+ */
+export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null }): StrictSchema | null {
+  let schema = kindSchema;
+  if (opts.routeReason === "drop" && schema.properties?.["route_reason"]) {
+    const { route_reason: _dropped, ...properties } = schema.properties;
+    schema = { ...schema, properties, required: (schema.required ?? []).filter((key) => key !== "route_reason") };
+  }
+  const strict = strictSchema(schema);
+  if (!strict || !opts.maxFieldChars) return strict;
+  const cap = opts.maxFieldChars;
+  const walk = (node: StrictSchema, key: string | null): StrictSchema => {
+    const out: StrictSchema = { ...node };
+    const type = node["type"];
+    const types = Array.isArray(type) ? type : [type];
+    if (types.includes("string") && !Array.isArray(node["enum"])) out["maxLength"] = key === "route_reason" ? Math.min(cap, ROUTE_REASON_CHARS) : cap;
+    if (isObject(node["properties"])) out["properties"] = Object.fromEntries(Object.entries(node["properties"]).map(([k, v]) => [k, walk(v as StrictSchema, k)]));
+    if (isObject(node["items"])) out["items"] = walk(node["items"] as StrictSchema, null);
+    if (Array.isArray(node["anyOf"])) out["anyOf"] = node["anyOf"].map((v) => (isObject(v) ? walk(v as StrictSchema, key) : v));
+    return out;
+  };
+  return walk(strict, null);
+}
+
+/** route_reason's cap when it is kept (BRAIN_CODEX_ROUTE_REASON=keep): the prompt asks for 15 characters. */
+export const ROUTE_REASON_CHARS = 60;
+
 /** The answer with the nulls of optional properties dropped (strictSchema's nullable fields, as if left out). */
 export function dropNulls(value: unknown, schema: JsonSchema | undefined): unknown {
   if (!schema) return value;
@@ -840,7 +876,7 @@ export class CodexEngine implements BrainEngine {
     mkdirSync(this.stateDir, { recursive: true });
     const entry = await this.catalog(model, effort, env);
     const kindSchema = stableSchema(req.spec);
-    const schema = strictSchema(kindSchema);
+    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars });
     const call = { model, effort, env, entry, kindSchema, schema };
     return this.mode === "session" ? this.decideSession(req, signal, call) : this.decideExec(req, signal, call);
   }
