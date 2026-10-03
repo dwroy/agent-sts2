@@ -7,7 +7,12 @@
  * - the mod's own flag, combat.end_turn_will_kill_player, is true (the intents against the block up now);
  * - nothing revives us: no Fairy in a Bottle held, no unspent Lizard Tail (`revives`, from combat-plan's revivesOf);
  * - no Buffer or Intangible on us, no Ripple Basin with no attack played (its block is not modelled here);
- * - no enemy in a special phase (max HP at or above a million: the Waterfall Giant's eruption; a DeathBlow intent);
+ * - no enemy in a special phase (max HP at or above a million, a DeathBlow intent: specialPhase), except the Waterfall
+ *   Giant's husk on its blast turn, alone, its one DeathBlow intent giving the number (docs/sl.md §2.4; ops 2026-10-03,
+ *   QLL4VM0WZKW3 F17 T13: 33 HP, no block, nothing to play or drink against the shown 50, refused, died with 6 retries
+ *   left). The blast is judged as an attack by the rules below: the shown number is what hits, after the end-of-turn
+ *   block (all 76 logged blast turns), and the fight ends with it; so our own loss at the next turn's start never makes
+ *   it certain there (that turn does not come when we live through the blast).
  * - our own count agrees: the attack intents (damage x hits) minus the block up now, the block that comes at the end
  *   of the turn (Plating / Plated Armor / Metallicize, Cloak Clasp for each card held, Feel No Pain for each Ethereal
  *   card held, Orichalcum when no block is left) and Regen reach our HP.
@@ -351,6 +356,51 @@ export interface DrawBound {
 /** The planner label whose end_turn means "every simulated line dies; ending the turn keeps the most HP". */
 export const LEAST_LOSS_LABEL = "combat/least-loss";
 const SPECIAL_ENEMY_HP = 1_000_000;
+const GIANT_ID = "WATERFALL_GIANT";
+/** The husk's moves: the Stun turn right after the kill, then the blast at the end of our next turn. */
+const GIANT_ABOUT_MOVE = "ABOUT_TO_BLOW_MOVE";
+const GIANT_BLAST_MOVE = "EXPLODE_MOVE";
+
+/**
+ * The Waterfall Giant's husk on its blast turn, in the one shape every logged one had (76 fights, states.jsonl to
+ * 2026-10-03): enemy WATERFALL_GIANT at max HP 999,999,999, move EXPLODE_MOVE, one intent, DeathBlow, its damage given
+ * (hits 1), the Steam Eruption power gone. Its damage is the eruption stacks at the kill (3T+9 for a kill on T, A0-A8;
+ * 3T+14 at A9) as the game shows them: with the husk's Strength (+1: 7Q5GTQNH1SZT 27 -> 28), Weak (x0.75: H7W047ZCEBSA
+ * 48 -> 36; LSWUK6D2EV89 51 -> 38 after an Uppercut this turn) and our Colossus on a Vulnerable husk (x0.5: FH3MZ3G0HECD
+ * 24 -> 12). Null: not that shape.
+ */
+function giantBlast(enemy: Record<string, unknown>): { damage: number } | null {
+  if (str(enemy["enemy_id"]) !== GIANT_ID || num(enemy["max_hp"]) < SPECIAL_ENEMY_HP || str(enemy["move_id"]) !== GIANT_BLAST_MOVE) return null;
+  const intents = asArray(enemy["intents"]).map(asRecord);
+  if (intents.length !== 1 || str(intents[0]!["intent_type"]) !== "DeathBlow") return null;
+  const damage = numOrNull(intents[0]!["damage"]);
+  if (damage === null || damage <= 0 || (numOrNull(intents[0]!["hits"]) ?? 1) !== 1) return null;
+  if (asArray(enemy["powers"]).some((power) => str(asRecord(power)["power_id"]) === "STEAM_ERUPTION_POWER")) return null;
+  return { damage };
+}
+
+/**
+ * The special phase on this board (an enemy at max HP a million or more, or with a DeathBlow intent): null when none;
+ * `blast` when it is the Waterfall Giant's husk on its blast turn (giantBlast) and the only living enemy, judged by the
+ * common rules (docs/sl.md §2.4); otherwise `refuse`, saying what is not judged.
+ */
+function specialPhase(living: Record<string, unknown>[], names: string[]): { blast: { name: string; damage: number } } | { refuse: string } | null {
+  const at = living.findIndex((enemy) => num(enemy["max_hp"]) >= SPECIAL_ENEMY_HP || asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "DeathBlow"));
+  if (at < 0) return null;
+  const enemy = living[at]!;
+  const name = names[at] ?? str(enemy["name"], str(enemy["enemy_id"]));
+  const id = str(enemy["enemy_id"]);
+  const move = str(enemy["move_id"], "?");
+  const intents = asArray(enemy["intents"]).map(asRecord).map((intent) => `${str(intent["intent_type"], "?")}${numOrNull(intent["damage"]) !== null ? ` ${num(intent["damage"])}${(numOrNull(intent["hits"]) ?? 1) > 1 ? `x${num(intent["hits"])}` : ""}` : ""}`).join(", ") || "none";
+  if (id !== GIANT_ID) return { refuse: `${name} is in a special phase (${num(enemy["max_hp"]) >= SPECIAL_ENEMY_HP ? "a million HP" : "a DeathBlow intent"}; move ${move}, intent ${intents}): only the Waterfall Giant's blast is judged` };
+  if (num(enemy["max_hp"]) < SPECIAL_ENEMY_HP) return { refuse: `${name} shows a DeathBlow intent before it was killed (move ${move}, intent ${intents}): not a logged shape` };
+  if (move === GIANT_ABOUT_MOVE) return { refuse: `${name} is a husk on its Stun turn (${GIANT_ABOUT_MOVE}): it explodes at the end of our next turn, only that turn is judged` };
+  const blast = giantBlast(enemy);
+  if (!blast) return { refuse: `${name} is a husk, but not on a plain blast turn (move ${move}, intent ${intents}): not a logged shape` };
+  const others = names.filter((_, i) => i !== at);
+  if (others.length > 0) return { refuse: `${name}'s blast with other enemies alive (${others.join(", ")}): not a logged board` };
+  return { blast: { name, damage: blast.damage } };
+}
 const SAVING_POWERS = ["BUFFER_POWER", "INTANGIBLE_POWER"];
 const END_BLOCK_POWERS = ["PLATING_POWER", "PLATED_ARMOR_POWER", "METALLICIZE_POWER"];
 const ORICHALCUM_BLOCK = 6;
@@ -522,10 +572,11 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   const saving = SAVING_POWERS.filter((id) => powerAmount(player, id) > 0);
   if (saving.length > 0) return verdict(false, null, `${saving.join(", ")} up`);
   if (relics.has("RIPPLE_BASIN") && num(player["attacks_played_this_turn"]) === 0) return verdict(false, null, "Ripple Basin (no attack played): its block is not counted here");
-  const special = living.find(
-    (enemy) => num(enemy["max_hp"]) >= SPECIAL_ENEMY_HP || asArray(enemy["intents"]).some((intent) => str(asRecord(intent)["intent_type"]) === "DeathBlow"),
-  );
-  if (special) return verdict(false, null, `${str(special["name"], str(special["enemy_id"]))} is in a special phase (DeathBlow or a million HP)`);
+  // A special phase is refused, but for the Waterfall Giant's husk on its blast turn: the blast is an attack here like any
+  // other (docs/sl.md §2.4), the shown number what hits after the end-of-turn block, and the fight ends with it.
+  const special = specialPhase(living, names);
+  if (special && "refuse" in special) return verdict(false, null, special.refuse);
+  const blast = special?.blast ?? null;
   const heldText = `held ${held.from.join(", ")}: ${held.damage} damage${held.loss > 0 ? ` + ${held.loss} HP loss` : ""}`;
   const relicText = [rod ? "Tungsten Rod: each HP loss 1 less" : "", remnant ? `Beating Remnant: at most ${BEATING_REMNANT_CAP} lost this turn${context.lostSoFar !== undefined ? `, ${context.lostSoFar} lost so far` : ""}` : ""].filter(Boolean).join("; ");
   if (countUnknown) return verdict(false, null, `own count not exact: Beating Remnant caps the HP lost this turn at ${BEATING_REMNANT_CAP} and the HP lost so far this turn is not known exactly`);
@@ -539,6 +590,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   }
   const startText = `then ${startLoss} HP lost at the next turn's start (${[powerAmount(player, "INFERNO_POWER") > 0 ? "Inferno" : "", powerAmount(player, "CRIMSON_MANTLE_POWER") > 0 ? "Crimson Mantle" : ""].filter(Boolean).join(" + ")})`;
   if (byStart) {
+    // Lived through, the Giant's blast ends the fight (53 of 53 logged: the rewards came right after it): no next turn.
+    if (blast) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), but the fight ends when we live through ${blast.name}'s blast (${blast.damage}): no next turn`);
     const guard = startGuard(state, living, powerAmount(player, "INFERNO_POWER"), context.knowledge);
     if (guard) return verdict(false, null, `only our own loss at the next turn's start makes it lethal (${startText}), and ${guard}`);
   }
@@ -598,7 +651,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // The cards Enthralled locks (card-model afterPlayFirst) are played once it is: their draws veto as a playable card's.
   const reachable = [...playable, ...hand.filter((card) => card["playable"] !== true && afterPlayFirst(card))];
   const drinkable = asArray(run["potions"]).map(asRecord).filter((slot) => slot["occupied"] !== false && str(slot["potion_id"]) && slot["can_use"] === true);
-  const lethal = `${incoming} incoming${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${endNote}`;
+  const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
+  const lethal = `${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${endNote}`;
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
     const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
@@ -725,12 +779,16 @@ export function midTurnRisks(state: GameState, knowledge?: Pick<Knowledge, "powe
 /** The enemy intents the game shows (and the solver and the mod count): a living enemy with none, or an unknown kind, is not shown. */
 const SHOWN_INTENTS = new Set(["Attack", "Buff", "Debuff", "DebuffStrong", "Defend", "StatusCard", "CardDebuff", "Summon", "Stun", "Sleep", "Heal", "Escape"]);
 
-/** A living enemy whose intent is not shown (no intent, or a kind not in SHOWN_INTENTS), or null. */
+/**
+ * A living enemy whose intent is not shown (no intent, or a kind not in SHOWN_INTENTS), or null. The Waterfall Giant's husk
+ * on its blast turn shows its DeathBlow with the number that hits (giantBlast; docs/sl.md §2.4).
+ */
 export function intentNotShown(state: GameState): string | null {
   for (const enemy of asArray(asRecord(state.raw["combat"])["enemies"]).map(asRecord).filter((entry) => entry["is_alive"] !== false)) {
     const intents = asArray(enemy["intents"]).map(asRecord);
     const name = str(enemy["name"], str(enemy["enemy_id"], "?"));
     if (intents.length === 0) return `${name} shows no intent`;
+    if (giantBlast(enemy)) continue;
     const odd = intents.find((intent) => !SHOWN_INTENTS.has(str(intent["intent_type"])));
     if (odd) return `${name}'s intent ${str(odd["intent_type"], "?")} is not a plain one`;
   }
