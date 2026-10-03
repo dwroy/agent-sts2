@@ -647,3 +647,4 @@
 - 2026-10-03T15:48:41Z 开发会话通知：C4F1 F33 att5 死因=两层狱火+开局扣2血（判官按1算），judge.ts 修复上线 v4-live 3dfc2af，eval V4.5.inferno，分界 23:48 CST；规划器狱火计数与地狱狂徒 stable 过早两项在 v4-inferno-planner 另修
 - 2026-10-03T16:06:00Z 复盘 3JHE/C4F1/RJZG（V4.5.gpt）：SL 读档全部成功且从 T1 重开；RJZG 第 6 次不读档=次数用完（6/6）；新缺口：复活不触发读档、POMMEL_STRIKE 断序、机甲骑士不在 SL 名单；explore.fallback 0/22
 - 2026-10-03T16:21:54Z SL 漏判：ET3V F48 最终 boss T13 判官以「revive left (LIZARD_TAIL)」不读档而阵亡，余 5 次；已报 Dai 与开发会话（另：死后重复挂跟踪行）
+- 2026-10-03T16:22:29Z 开发会话开 v4-revive-judge（复活精确判、跟踪漏记、game over 后重复挂跟踪）；「靠烧复活也读档」待 Dai 定，已写 for-dai
