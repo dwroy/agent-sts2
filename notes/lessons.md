@@ -4148,3 +4148,34 @@ V4.5.gpt：ed03f4c+dirty（dirty 只有 6 个 knowledge json；含 cd707a1：控
   - [Jev 出牌] 战斗选线 93 题：code rank 1 只有 18 次，rollout 加入的线 35 次，低信心（<0.35）8 题（F17 3、F19 1、F35 1、F39 2、F42 1），HP 护栏 0，「as good or better」0。
   - [执行闸] gate_reject 0；控制台 errors 0；calc mismatch 3（F42 T4/T5 的「mod says lethal, solver counts Plating」，求解器对）。旧版「board changed before asking Jev … re-planning」5 次（debounce 跳过 5 次 stale 调用）；03eedec 的新提示「state changed while deciding … re-planning」三局都是 0，本批代码早于 03eedec。
 - **机制：** 灵魂枢纽 254 血，T1 约 23、之后每回合 40–46 的攻击。涟漪盆只在本回合没出攻击时给 4 格挡，逼着低血回合放弃输出。6 回合打掉 172（约 29/回合），掉血约 40/回合。
+
+## PEGLM9PFY97U（A9，第30层，死于二幕走廊 外骨骼虫 ×4（27/29/26/28 共 110 血），12/80 进场（15%）、1 瓶肌肉药水；**SL 没跟踪**（二幕走廊不在名单，act3-low-hp 线只管三幕）；T1 12→9、T2 9→6，T3 6 血 + 18 格挡对 11×3 = 33 死，虫子还剩 12/26/20；本批最后一局，也是唯一跑 03eedec 的局；代码 03eedec+dirty；V4.5.gpt / A9）
+V4.5.gpt：03eedec+dirty（V4.5.inferno2，含 e32c8b7 V4.5.revive 和 ed03f4c 的引擎名修复），codex 会话模式 + high，无重启。2026-10-03 17:42:16 – 18:05:12（UTC），22.9 分钟，决策 426（Jev 68 次）。大脑 30 题全部由 codex 回答，0 次 stalled，0 次回退。一幕 boss 第 1 次就赢；没走到二幕 boss。
+- **教训 1（路线）二幕开局选了一条「双商店」独木桥，F19–F31 只有 1 个火堆，走廊把血磨光：**
+  - F18 远古题 codex 同时定路线：「士兵强化防守；双商店补力量、删打击，避开精英。」路线 r1c1 → r2c0 → r3c0 问号 → r4c0 商店 → r5c0 → r6c0 休息 → r7c0 → r8c1 宝箱 → r9c0 问号 → r10c0 问号 → r11c0 → r12c0 → r13c0 商店 → r14c0 休息 → Boss。这一列从 r1c1 起没有分叉（只有 F27 问号/普通战二选一，都汇到 r10c0），**选了 r1c1 就等于定死了后面 12 层**：普通战 6、问号 3、商店 2、休息 2（F24、F32），精英 0。
+  - 同一张地图上从 r1c6 走：r2c6 → r3c6 商店 → r4c6 问号 → r5c6 → r6c6 → r7c6 问号 → r8c6 宝箱 → r9c5 休息 → r10c6 → r11c6 休息 → r12c5 → r13c4/c6 → r14c5 休息，精英 0、商店 1、休息 3（F27、F29、F32）。codex 用第二个商店换掉了 F27、F29 两个火堆。
+  - 远古题的题面只有每类房间的掉血（普通战 8/17、问号 0/3），**没有各条路线的投影**；b3a950a 的 route_review.next_rest 只在之后的选牌/火堆/事件题出现，而那时这条路已经「没有别的路线：从下一步到下一个休息点只有计划这一段」。F18 时投影 F30 到达 53/80、boss 69/80；实际 F30 是 12/80。
+  - 掉血：F19 地道虫 −3、F20 外骨骼虫 −18、F23 幼虫/直飞产卵虫/结实的卵 60→21（−39）、F24 回血（hp_drop 计划改 rest heal）→ 51、F25 棘刺蟾蜍 51→22（−29）、F27 问号变成猎人杀手 28→20、F29 胧光怪 26→6（hard-fight 第 1 次就赢）、F30 12 血进 4 只外骨骼虫。二幕走廊中位 8 的假设，这局实际是 3/18/39/29/8/20。
+  - F28 codex 在 20 血时写「Preserve scarce HP before two forced fights」，知道前面两场躲不掉，但已经没有路可换。
+- **教训 2（药水）四瓶写明留给 boss 的药，三瓶在走廊/精英里喝掉（已知项又一次复发）：**
+  - F6 商店 codex 弃灰水换力量药水：「reserve it and Power Potion for Vantom's opening」。F7 问号战扭动虫（80/80 满血）Jev 0.41 选了带力量药水的线，80→78。
+  - F4 买的能力药水（「Save Power Potion for Vantom's opening scaling」）F9 精英多尼斯异鸟 T1 Jev 0.74 喝掉。F17 墨影幻灵只剩士兵炖汤，73→20（−53，7 回合），第 1 次赢。
+  - F22 商店买异鱼之油：「Reserve Fysh Oil for the boss」；下一层 F23 走廊 Jev 0.91 选了喝它的线。
+  - 二幕 boss_prep：「Preserve Touch of Insanity for a costly card」；F27 猎人杀手 Jev 0.88 选了喝癫狂之触的线。
+  - 死时手里 0 瓶（肌肉药水在 F30 T3 least-loss 里喝了）。
+- **教训 3（构筑）自伤力量牌组在二幕走廊吃亏，沙虫也打不过：** F18 幕计划 archetype 改成「Self-damage Strength scaling」，F24 hp_drop 计划写「Close the estimated 38 damage-per-turn gap」。牌组里自伤牌 5 张（突破、血墙、御血术 ×2、烙印），力量来源只有烙印和手里剑。整场 boss 模拟对二幕沙虫的胜率 5%（原始 0%）。即使活到 F33，大概率也是 BVJT/J4S2 那种结局。
+- 记录：
+  - [SL] 跟踪 2 场，0 次读档：F17 墨影幻灵 boss（第 1 次赢，T1 士兵炖汤，7 回合，结束 26 血）、F29 胧光怪 hard-fight（名单精英，走廊节点；第 1 次赢，7 回合，26→6，+6 = 12）。没有 reload、重放、换线，**explore.fallback 没有触发**。F30 外骨骼虫 12/80（15%）不在名单，act3-low-hp 只管三幕，所以没跟踪；4 只虫 110 血、T3 来袭 33，就算跟踪也很难救。二幕走廊低血是新的名单外死亡位置（建议：二幕非 boss 战低于某条线也纳入，或者让路线在低血时有退路）。
+  - [GPT 专项] codex 运行 31 次：answered 31，stalled 0，断流 0，超时 0，回退 0，runaway 0，accepted_from_cut 0（没有截断）。F20 reward/card 重问 1 次：第一答的 route 是「keep','route_reason':'双商店补强，避开精英'}」，把已删掉的 route_reason 塞进了 route 字段（4719643 去掉 route_reason 后第一次见），第二答 8.0 s 合格（两次共 26.6 s）。ttft：中位 13.6 s / max 27.4。最长静默：中位 10.2 s / max 22.9。中位耗时 15.4 s：reward 13.8（16 次，含重问）、event 25.7（6）、rest 16.4（4）、shop 22.6（3）、map 37.2（1）、selection 5.4（1）；最长 F1 map/route-plan 37.2 s。brain-latency：大脑 9.1 分钟/局（全部 codex，失败 0），GPT 段最低（这局只有 30 题、死在 F30）；比 DeepSeek 基线中位 14.2 s 慢约 1.1 倍。额度 used_pct 26% → 27%（credits 500 未动）。
+  - [GPT 理由] codex 选择理由 28/28 全英文；路线/幕计划中文（F1「商店补强，休息后打一精英；三处火堆保血，普通战触发钓鱼竿。」、F18「士兵强化防守；双商店补力量、删打击，避开精英。」）。控制台全部写「Codex decided / Codex planned」，没有一处「DeepSeek」（cd707a1 生效）。但喂给 codex 的 memory 日志仍把它自己的回答标成「[DS]」，商店步骤写「DeepSeek plan …:F4:shop#3 step 2」（小，标签残留）。
+  - [计划与路线] 没有自相矛盾。一幕计划 elites normal，路线 1 只精英（F9 多尼斯异鸟 80→52，HP 护栏把 −11 的线换成 −2）；F11 review 改 avoid，之后没有精英。二幕 avoid，路线 0 只精英。只有一处软冲突：二幕 boss_prep 写「Enter near full HP」，路线却只有 F24 一个火堆（见教训 1）。
+  - [state changed while deciding] 03eedec 的新提示「state changed while deciding; re-planning」**0 次**（控制台 0，decisions.jsonl 里「not dispatched: state changed while deciding」0）；旧版「board changed」0；debounce 复用 0 / 跳过 0。「action came back pending; waited for the board to settle」15 次（X80A 3、7TQF 7），都自愈。这局牌组没有狱火和地狱狂徒，所以 03eedec 的「回合开局等稳定」和规划器按层数计狱火都没有被触发，**本批没测到 03eedec 和 e32c8b7 的效果**。
+  - [least-loss] 2 条，都在 F30：T2「先抽牌找击杀/格挡」（最高伤害线 27），T3「every simulated line dies」保血线（−9）。没有回合内自杀。
+  - [低血死亡与路线] 最后一次路线复核在 F29 reward/card（12/80）：keep r12c0 普通战 → r13c0 商店 → F32 r14c0 休息；「没有别的路线」。投影 F30 12/80、F31 4/80（p75 耗尽）。F29 codex 选坚毅（「At 12 HP before a forced fight, non-self-damaging block…」）。
+  - [进场与构筑] F30 12/80、27 张：打击 ×4、防御 ×2、防御+ ×2、痛击+、进阶之灾、突破、坚毅 ×2、头槌、怨恨+、血墙、飞剑回旋镖、御血术+、御血术、上勾拳+、无情猛攻、烙印、剑柄打击 ×2、被遗忘的仪式、邪眼、双重打击+；遗物：燃烧之血、钓鱼竿、意外光滑的石头、棋子、佩尔的士兵、手里剑。
+  - [药水] F5 能量（走廊）；F7 力量（走廊，留给 boss 的）；F9 能力（精英，留给 boss 的）；F14 攻击 + 火焰（走廊藤蔓蹒跚者）；F17 士兵炖汤（boss）；F23 异鱼之油（走廊，留给 boss 的）；F27 癫狂之触（问号战，boss_prep 写了要留）；F30 肌肉药水。
+  - [大脑决定] F1 涅奥选钓鱼竿（「repeated upgrades … without a curse」）。牌：突破、坚毅、怨恨、血墙、飞剑回旋镖、御血术 ×2、上勾拳、无情猛攻、烙印、剑柄打击 ×2、被遗忘的仪式（F21 五选一）、双重打击+、坚毅（F29）；F23 跳过。商店：F4 能力药水 + 头槌，F6 弃灰水买力量药水，F22 异鱼之油 + 删打击 + 邪眼。休息：F8 锻造痛击、F12 回血、F16 锻造上勾拳、F24 回血。事件：F7 回血 + 进战斗、F11 掉 6 血不拿诅咒、F18 佩尔的士兵、F21 分享知识、F28 采集花蜜（金币）。
+  - [run_plan_merge] 4 次（start、review F11、act F18、hp_drop F24），全部搭在 codex 题上。
+  - [Jev 出牌] 战斗选线 64 题：code rank 1 21 次，rollout 加入的线 19 次，低信心（<0.35）3 题（F14、F17 selection、F19 0.15），HP 护栏 1 次（F9），「as good or better」0。
+  - [执行闸] gate_reject 0；控制台 errors 0；calc mismatch 0。
+- **机制：** 外骨骼虫 A9 一组 4 只，单只 26–29 血，攻击 9/11 或 1×4、3×4 轮换，T3 三只同时 11。12 血进场时 T1、T2 各掉 3，T3 必须 33 格挡或先杀两只，牌组每回合约 25 伤害做不到。
