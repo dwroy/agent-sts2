@@ -411,6 +411,19 @@ export interface BrainConfig {
     /** BRAIN_CODEX_STALL_RETRIES: runs after a stalled one (default 1). */
     stallRetries: number;
     /**
+     * BRAIN_CODEX_MODE: "exec" (default: one `codex exec` per question) or "session" (one app-server per process, one
+     * saved thread holding the system prompt, each question a turn reverted after it: the prompt cache holds;
+     * engines/codex-session.ts). Session mode falls back to exec mode for the process when it cannot run isolated or
+     * its server fails twice.
+     */
+    mode: "exec" | "session";
+    /**
+     * BRAIN_CODEX_MAX_ANSWER_CHARS (session mode, default 2000; off: none): a streamed answer longer than this is given up
+     * on as a stall (interrupted, reverted, asked once more). Logged answers are at most ~1,000 characters (2026-10-03);
+     * a runaway one streams ~33 characters a second without end (2 of 4 real turns at high; one ran 10 minutes).
+     */
+    maxAnswerChars: number | null;
+    /**
      * The usage guard (engines/codex-usage.ts): the plan's windows and credits read at process start and before a
      * codex call every `everyCalls` calls (BRAIN_CODEX_USAGE_EVERY_CALLS, default 3) or `everyMin` minutes
      * (BRAIN_CODEX_USAGE_EVERY_MIN, default 10); codex is off for the rest of the process once a window is at
@@ -605,6 +618,10 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const tierRaw = readEnv(env, "BRAIN_CODEX_SERVICE_TIER");
   const stallRaw = readEnv(env, "BRAIN_CODEX_STALL_MS");
   const stallMs = stallRaw === null ? DEFAULT_CODEX_STALL_MS : ["off", "none", "0"].includes(stallRaw.toLowerCase()) ? null : parseInteger(stallRaw, "BRAIN_CODEX_STALL_MS", problems, { min: 1_000, max: 3_600_000 });
+  const maxAnswerRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_CHARS");
+  const maxAnswerChars = maxAnswerRaw === null ? 2_000 : ["off", "none", "0"].includes(maxAnswerRaw.toLowerCase()) ? null : parseInteger(maxAnswerRaw, "BRAIN_CODEX_MAX_ANSWER_CHARS", problems, { min: 200, max: 1_000_000 });
+  const modeRaw = (readEnv(env, "BRAIN_CODEX_MODE") ?? "exec").toLowerCase();
+  if (modeRaw !== "exec" && modeRaw !== "session") problems.push({ field: "BRAIN_CODEX_MODE", message: `expected exec or session, got "${modeRaw}"` });
   const firstRaw = readEnv(env, "BRAIN_CODEX_FIRST_TOKEN_MS");
   const firstTokenMs = firstRaw === null || ["off", "none", "0"].includes(firstRaw.toLowerCase()) ? null : parseInteger(firstRaw, "BRAIN_CODEX_FIRST_TOKEN_MS", problems, { min: 1_000, max: 3_600_000 });
   const stallRetriesRaw = readEnv(env, "BRAIN_CODEX_STALL_RETRIES");
@@ -644,6 +661,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       serviceTier: tierRaw && tierRaw.toLowerCase() !== "default" ? tierRaw : null,
       stallMs,
       firstTokenMs,
+      mode: modeRaw === "session" ? "session" : "exec",
+      maxAnswerChars,
       stallRetries: stallRetries ?? 1,
       usage: codexUsage,
     },
