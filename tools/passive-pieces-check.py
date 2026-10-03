@@ -9,6 +9,8 @@ the fire rates the boss clock uses (A8+ boss fights).
 Turn transitions: the last frame of our turn whose action is end_turn, and the first frame of the next turn.
 
 Usage: .cache/logdb-venv/bin/python tools/passive-pieces-check.py [--frames OUT.jsonl] [--reuse OUT.jsonl] [--examples N]
+       .cache/logdb-venv/bin/python tools/passive-pieces-check.py --realised OUT.jsonl   (the boss fights' realised damage a
+       turn into the parts the boss clock counts, for tools/passive-pieces-replay.ts --mode clock)
 """
 import argparse
 import json
@@ -111,6 +113,55 @@ def transitions(frames):
             yield t, turns[t][-1], turns[t + 1][0]
 
 
+# The parts whose HP the boss clock counts (boss-clock BOSSES hpParts); every enemy otherwise.
+CLOCK_PARTS = {"QUEEN": ["QUEEN"], "KIN_PRIEST": ["KIN_PRIEST"]}
+
+
+def realised(out_path):
+    """Per A7+ boss fight: the HP taken off the clock's parts a turn (a won fight: their whole max HP, its last hit is not
+    logged; boss-fights-extract.py's convention), and the mean HP lost per enemy turn (turns view)."""
+    import query  # noqa: E402
+    import sync as logsync  # noqa: E402
+
+    db = os.path.abspath(os.environ.get("LOGDB_DIR", os.path.join(ROOT, ".cache", "logdb")))
+    sql = """
+    WITH ends AS (
+      SELECT run_id, fight_no, arg_min(enemies, off) FILTER (WHERE len(enemies) > 0) AS first_e, arg_max(enemies, off) FILTER (WHERE len(enemies) > 0) AS last_e
+      FROM fight_frames WHERE is_combat AND fight_no > 0 GROUP BY 1, 2
+    ),
+    per AS (SELECT run_id, fight_no, avg(enemy_turn_hp_lost) AS per_enemy_turn FROM turns GROUP BY 1, 2)
+    SELECT f.run_id, f.fight_no, f.ascension, f.encounter, f.outcome, f.turns, e.first_e, e.last_e, p.per_enemy_turn
+    FROM fights f JOIN ends e USING (run_id, fight_no) LEFT JOIN per p USING (run_id, fight_no)
+    WHERE f.room = 'boss' AND f.ascension >= 7
+    """
+    with logsync.read_lock(db, shared=True):
+        con = query.connect(db, threads=2)
+        rows = con.execute(sql).fetchall()
+    with open(out_path, "w", encoding="utf8") as out:
+        for run_id, fight_no, asc, enc, outcome, turns, first_e, last_e, per in rows:
+            ids = {e["id"] for e in first_e or []}
+            parts = next((v for k, v in CLOCK_PARTS.items() if k in ids), None)
+            counted = [e for e in first_e or [] if parts is None or e["id"] in parts]
+            # The last frame's enemies by id, in board order (a dead one leaves the list and the indices shift: the Queen
+            # is index 1 beside the Amalgam, 0 once it is gone).
+            last = defaultdict(list)
+            for e in last_e or []:
+                last[e["id"]].append(e)
+            if "TEST_SUBJECT" in ids or not counted or not turns:
+                value = None
+            else:
+                removed = 0
+                seen = Counter()
+                for e in counted:
+                    same = last.get(e["id"], [])
+                    end = same[seen[e["id"]]] if seen[e["id"]] < len(same) else None
+                    seen[e["id"]] += 1
+                    removed += e["max_hp"] if outcome == "won" else e["max_hp"] - (end["hp"] if end and end["alive"] else 0)
+                value = removed / turns
+            out.write(json.dumps({"key": f"{run_id}:{fight_no}", "asc": asc, "encounter": enc, "outcome": outcome, "turns": turns,
+                                  "realised": None if value is None else round(value, 2), "per_enemy_turn": None if per is None else round(per, 2)}) + "\n")
+
+
 CAPS = ("INTANGIBLE_POWER", "SLIPPERY_POWER", "HARDENED_SHELL_POWER", "REGENERATE_POWER", "REGEN_POWER", "PLATING_POWER", "PLATED_ARMOR_POWER")
 
 
@@ -119,7 +170,11 @@ def main():
     parser.add_argument("--frames", default=None, help="write the compact frames here (default: a temp file)")
     parser.add_argument("--reuse", default=None, help="read compact frames written earlier instead of the logs")
     parser.add_argument("--examples", type=int, default=2)
+    parser.add_argument("--realised", default=None, help="write the boss fights' realised damage a turn here and stop")
     args = parser.parse_args()
+    if args.realised:
+        realised(args.realised)
+        return
     path = args.reuse
     if not path:
         path = args.frames or os.path.join(os.environ.get("TMPDIR", "/tmp"), "passive-pieces-frames.jsonl")

@@ -32,7 +32,7 @@ import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { modelHandCard, turnStartOnly } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
-import { clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "./passive-pieces.js";
+import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "./passive-pieces.js";
 import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
@@ -212,20 +212,24 @@ export function unblockedShare(bossKey: string): UnblockedShare | null {
 export function bossLossPerTurn(
   profile: BossProfile & { id: string },
   ascension: number,
-  turnBlock: number | { byTurn: number[]; names: string[] } = 0,
+  turnBlock: number | { byTurn: number[]; names: string[]; share?: number } = 0,
 ): { value: number; source: string; estimated: boolean } {
   const damage = bossDamageByTurn(profile.id, ascension, profile.scriptTurns);
   const share = unblockedShare(profile.id);
   // Block a relic gives every turn (Sai, turnBlockOf) on top of the logged fights' own: it takes up to that much off what
   // got through each turn, nothing on a turn the boss does not attack (8D8DZ9K680C2 F48 with Sai: T1-T5 cost 11 HP).
-  // PASSIVE_PIECES: the passive block by fight turn (deckProfileForBoss turnBlock: Sai, Crimson Mantle, Plating, ...).
-  const blockAt = (t: number): number => (typeof turnBlock === "number" ? turnBlock : turnBlock.byTurn[t] ?? turnBlock.byTurn[turnBlock.byTurn.length - 1] ?? 0);
+  // PASSIVE_PIECES: the passive block by fight turn (deckProfileForBoss turnBlock: Sai, Crimson Mantle, Plating, ...), the
+  // `share` of it counted (passive-pieces CLOCK_PASSIVE_BLOCK_SHARE).
+  const blockAt = (t: number): number =>
+    typeof turnBlock === "number" ? turnBlock : (turnBlock.byTurn[t] ?? turnBlock.byTurn[turnBlock.byTurn.length - 1] ?? 0) * (turnBlock.share ?? 1);
   const turns = damage && damage.perTurn.length > 0 ? damage.perTurn.length : profile.scriptTurns;
   const meanBlock = typeof turnBlock === "number" ? turnBlock : Array.from({ length: Math.max(1, turns) }, (_, t) => blockAt(t)).reduce((sum, b) => sum + b, 0) / Math.max(1, turns);
   const less =
     typeof turnBlock === "number"
       ? turnBlock > 0 ? ` less ${turnBlock} block a turn from Sai` : ""
-      : meanBlock > 0 ? ` less ~${Math.round(meanBlock * 10) / 10} passive block a turn (${turnBlock.names.join(", ")}; not cut by Frail)` : "";
+      : meanBlock > 0
+        ? ` less ~${Math.round(meanBlock * 10) / 10} a turn of passive block${(turnBlock.share ?? 1) !== 1 ? ` (counted at ${Math.round((turnBlock.share ?? 1) * 100)}%: the logged share has the average fight's in it)` : ""} (${turnBlock.names.join(", ")}; not cut by Frail)`
+        : "";
   if (!damage || !share || damage.perTurn.length === 0) {
     const value = typeof turnBlock === "number" ? Math.max(0, profile.lossPerTurn - turnBlock) : Math.max(0, Math.round((profile.lossPerTurn - meanBlock) * 10) / 10);
     return { value, source: `logged A8 HP loss a turn (no DB damage)${less}`, estimated: false };
@@ -1384,7 +1388,9 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
   const loss = bossLossPerTurn(
     profile,
     ascension,
-    deck?.turnBlock && deck.turnBlock.some((b) => b > 0) ? { byTurn: deck.turnBlock, names: deck.passiveBlock ?? [] } : turnBlockOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))),
+    deck?.turnBlock && deck.turnBlock.some((b) => b > 0)
+      ? { byTurn: deck.turnBlock, names: deck.passiveBlock ?? [], share: CLOCK_PASSIVE_BLOCK_SHARE }
+      : turnBlockOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))),
   );
   const survive = survivableTurns(profile, entryHp, loss.value);
   const estimateAt = (turns: number): number => (deck ? deckEstimate(deck, bossId, turns) : 0);

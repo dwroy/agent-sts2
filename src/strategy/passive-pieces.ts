@@ -55,8 +55,25 @@
  * Horn Cleat, Letter Opener, Ornamental Fan and Parrying Shield (rollout-live boardRolloutInput: RolloutInput.passive);
  * the boss clock counts Thorns per boss hit, Flame Barrier, Mercury Hourglass, Letter Opener and Parrying Shield as
  * damage the Queen's Weak does not cut (with Inferno and Juggernaut), and Crimson Mantle, Plating, Orichalcum, Ornamental
- * Fan, Ripple Basin and the one-turn block relics with Sai as block a turn. The live solver's current turn is unchanged.
- * off: everything exactly as before.
+ * Fan, Ripple Basin and the one-turn block relics with Sai as block a turn (at CLOCK_PASSIVE_BLOCK_SHARE). The live
+ * solver's current turn is unchanged. off: everything exactly as before (the v4 base's clock on all 578 logged A7-A9 boss
+ * fights, B2 on 68 control fight starts, the golden planner tests: byte for byte).
+ *
+ * Replayed 2026-10-03 (tools/passive-pieces-replay.ts, tools/boss-sim/pp-calib.py; off vs on in one process):
+ *   - 5-turn rollout (turn 1 and 5 boards at the live settings): every board without a relic piece the same byte for byte
+ *     (25 Queen, 35 other boss, 34 elite); on the 261 boards with one (Horn Cleat, Orichalcum, Ripple Basin, Letter
+ *     Opener, Ornamental Fan, Parrying Shield) the next turn loses 1.7-3.1 HP less a line, the best line moves on 37, and
+ *     the first line's further-loss forecast against the log comes down from +7.0 to +6.0 (boss) and +7.1 to +5.4 (elite),
+ *     mean |error| 11.6 -> 11.3 and 9.7 -> 9.0. The Queen's turn-1 boards are saturated (every line loses every HP within
+ *     the horizon or by the terminal estimate): no line's number moves there.
+ *   - Whole-fight sim (B2 backtest, 100 samples, the 49 A7-A9 boss fights holding Letter Opener, Fan or Parrying Shield,
+ *     the only ones it changes): the calibrated win rate 2-3 points higher (actual 0.41: 0.48 -> 0.51 from turn 1);
+ *     calibrated Brier 0.1307 -> 0.1315 (turn 1), 0.1287 -> 0.1366 (turn 5), 0.1345 -> 0.1406 (pre-fight), every
+ *     difference inside its paired-bootstrap 95% interval; raw Brier 0.1198 -> 0.1128 (turn 1).
+ *   - Boss clock (502 A8/A9 fights): HP lost a turn against (entry - end) / turns, bias +0.69 -> +0.22 and median |error|
+ *     1.57 -> 1.47 on the 325 non-Queen fights it changes, the 153 others unchanged; the Queen's 24: -0.52 -> -1.03,
+ *     2.30 -> 2.12. Deck damage at the real length against the damage realised into the clock's parts: median |log error|
+ *     0.25 -> 0.24 (non-Queen), 0.56 -> 0.59 (the Queen: her realised damage leaves out the Amalgam's 211 HP).
  */
 
 /** PASSIVE_PIECES (config.passivePieces; the loop sets it at start, process.env before that). */
@@ -126,6 +143,19 @@ export const PASSIVE_SIM_RELICS = ["ORICHALCUM", "RIPPLE_BASIN", "LETTER_OPENER"
  * 110 turns (0.92 Skills a turn).
  */
 export const CLOCK_FIRE_RATE = { parryingShield: 48 / 130, orichalcumAttacked: 22 / 81, ornamentalFan: 31 / 113, rippleBasin: 15 / 135, letterOpener: 4 / 110 } as const;
+
+/**
+ * The share of the passive block a turn the boss clock's HP lost a turn counts (bossLossPerTurn: that turn's attack x the
+ * boss's logged unblocked share, less this much of the block). The logged share already carries the logged fights'
+ * own passive block, and a turn whose card block stops the attack wastes it (20% of the 2,905 attacked A8+ boss turns lost
+ * nothing). Measured by replaying the clock on the 193 logged A8+ boss fights whose decks or relics hold a block piece
+ * (tools/passive-pieces-replay.ts, 2026-10-03; error = the clock's HP lost a turn - (entry - end HP) / turns): Sai alone
+ * as before, bias +0.79 / mean |error| 2.00 on the 173 non-Queen fights, Queen +-0.73 / median |error| 2.30 (20); every
+ * piece at full value -0.81 / 2.10, Queen -2.79 / 2.77; at half -0.09 / 1.87, Queen -1.35 / 2.12 (0.4: +0.09 / 1.86;
+ * 0.6: -0.26 / 1.90). Half was the better of the two time halves' fits too (mean |error| 1.77 -> 1.74 early, 2.23 -> 2.00
+ * late). In-sample: one number fitted on these fights.
+ */
+export const CLOCK_PASSIVE_BLOCK_SHARE = 0.5;
 
 /** One passive piece of the boss clock, with its name for the note. */
 export interface ClockPiece {

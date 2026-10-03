@@ -17,7 +17,7 @@ import { parseGameState, type GameState } from "../src/mod/schema.js";
 import { planCombatTurn } from "../src/screens/combat-plan.js";
 import { passiveSimRelic } from "../src/sim/boss-start.js";
 import { bossClock, bossClockJson, BOSSES, bossLossPerTurn, deckEstimate, deckProfileForBoss, mechanicFactor, rawDeckDamage, setUnblockedSharesForTests } from "../src/strategy/boss-clock.js";
-import { clockBlockAt, clockRelicPieces, LETTER_OPENER, ORNAMENTAL_FAN, PARRYING_SHIELD, passivePiecesOptions, solverPiecesOf } from "../src/strategy/passive-pieces.js";
+import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, LETTER_OPENER, ORNAMENTAL_FAN, PARRYING_SHIELD, passivePiecesOptions, solverPiecesOf } from "../src/strategy/passive-pieces.js";
 import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
 import { boardRolloutInput, fightRelicsOf, relicBlockOf, rolloutLiveOptions, type MonsterMoves } from "../src/strategy/rollout-live.js";
 import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
@@ -251,7 +251,7 @@ describe("the boss clock", () => {
     expect([1, 2, 3, 4, 5, 6].map(byTurn)).toEqual([21, 24, 9, 8, 7, 7]);
   });
 
-  it("8D8DZ9K680C2 F48 T1 (Sai, Hourglass, Bronze Scales, Inferno+, Flame Barrier): more damage a turn, less HP lost a turn, the passive part not cut by the Queen's Weak", () => {
+  it("8D8DZ9K680C2 F48 T1 (Sai, Hourglass, Bronze Scales, Inferno+, Flame Barrier): more damage a turn, the passive part not cut by the Queen's Weak; the passive block counted at its share", () => {
     withQueenDb(() => {
       const state = parseGameState(board("8d8d-f48-t1")) as GameState;
       passivePiecesOptions.enabled = false;
@@ -276,9 +276,12 @@ describe("the boss clock", () => {
       expect(factor).toBeLessThan(1);
       expect(deckEstimate(deckOn, "QUEEN_BOSS", turns)).toBeGreaterThan(deckEstimate({ ...deckOn, passiveStart: 0, passiveStartAoe: 0 }, "QUEEN_BOSS", turns));
       expect(deckEstimate({ ...deckOn, passiveStart: 0, passiveStartAoe: 0 }, "QUEEN_BOSS", turns)).toBeGreaterThan(deckEstimate(deckOff, "QUEEN_BOSS", turns));
-      // Sai (7) is still in, as one of the passive blocks; the JSON names them.
-      expect(on.lossPerTurn).toBeLessThanOrEqual(off.lossPerTurn);
+      // Sai (7) is one of the passive blocks now, counted at CLOCK_PASSIVE_BLOCK_SHARE (the logged share has the average
+      // fight's passive block in it): 45 x 0.4 = 18 a turn less 3.5, where Sai alone took the whole 7 off before.
+      expect(off.lossPerTurn).toBe(11);
+      expect(on.lossPerTurn).toBe(18 - 7 * CLOCK_PASSIVE_BLOCK_SHARE);
       expect(on.lossNote).toMatch(/Sai 7/);
+      expect(on.lossNote).toMatch(/counted at 50%/);
       expect(bossClockJson(state, loggedKnowledge)!["passive_block"]).toMatch(/Sai 7/);
     });
   });
