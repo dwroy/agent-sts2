@@ -16,7 +16,7 @@ import { RunJournal } from "../src/project/run-journal.js";
 import { createScreenMemory } from "../src/project/types.js";
 import type { SlAttemptRow } from "../src/sl/attempts.js";
 import { previousAttemptsJson } from "../src/sl/attempts.js";
-import { ACT3_LOW_HP_GATE, actNumberOf, belowHpLine, SlController, slGate } from "../src/sl/controller.js";
+import { ACT2_LOW_HP_GATE, ACT3_LOW_HP_GATE, actNumberOf, belowHpLine, SlController, slGate } from "../src/sl/controller.js";
 import { listedElite, loadSlElites, type SlEliteList } from "../src/sl/elites.js";
 import { judgeEndTurn, LEAST_LOSS_LABEL } from "../src/sl/judge.js";
 import { encounterOf, reloadFight } from "../src/sl/reload.js";
@@ -178,14 +178,16 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
 describe("the hard elite list (src/sl/sl-elites.json)", () => {
   it("lists the hardest non-boss fights by A8+ deaths (any room), plus Soul Nexus by rate, with their enemy ids, source and date", () => {
     const list = loadSlElites();
-    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus"]);
-    expect(list.date).toBe("2026-10-02");
+    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus", "Mecha Knight", "Three Knights"]);
+    expect(list.date).toBe("2026-10-04");
     expect(list.source).toMatch(/A8\+/);
     expect(listedElite(["SOUL_NEXUS"], list)?.name).toBe("Soul Nexus");
     expect(listedElite(["DECIMILLIPEDE_SEGMENT_MIDDLE"], list)?.name).toBe("Decimillipede");
     expect(listedElite(["BOWLBUG_ROCK", "BOWLBUG_SILK", "SLUMBERING_BEETLE"], list)?.name).toBe("Slumbering Beetle + Bowlbugs");
     expect(listedElite(["BOWLBUG_NECTAR", "BOWLBUG_ROCK", "BOWLBUG_SILK"], list)).toBeNull();
-    expect(listedElite(["FLAIL_KNIGHT", "MAGI_KNIGHT", "SPECTRAL_KNIGHT"], list)).toBeNull();
+    // Every act-3 elite since 2026-10-04 (Dai): Mecha Knight and the Three Knights joined Soul Nexus.
+    expect(listedElite(["FLAIL_KNIGHT", "MAGI_KNIGHT", "SPECTRAL_KNIGHT"], list)?.name).toBe("Three Knights");
+    expect(listedElite(["MECHA_KNIGHT"], list)?.name).toBe("Mecha Knight");
     expect(listedElite(["BYGONE_EFFIGY"], list)).toBeNull();
   });
 });
@@ -442,7 +444,7 @@ describe("SlController", () => {
 
   it("describe() is what run-config records", () => {
     const t = setup("/nowhere/sl.jsonl");
-    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, act3_low_hp: true, act3_low_hp_pct: 40, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus"] });
+    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, act3_low_hp: true, act3_low_hp_pct: 40, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus", "Mecha Knight", "Three Knights"] });
   });
 });
 
@@ -473,7 +475,7 @@ describe("previousAttemptsJson", () => {
 describe("configuration", () => {
   it("SL is on by default (Dai 2026-10-02), with retries 5 / 3, the sim shown on retries, the log next to the decision log", () => {
     const config = loadConfig({ DECISION_LOG: "/tmp/x/decisions.jsonl" } as NodeJS.ProcessEnv);
-    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, act3LowHp: true, act3LowHpPct: 50, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, reloadOnRevive: false, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreReplayPlays: true, retryExploreReplayDeviate: true, retryExploreKeyCounters: true, retryExploreSecond: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: true, retryKnownPicks: true, retryKnownOffTop: true, retryKnownHandOrder: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
+    expect(config.sl).toEqual({ enabled: true, bossRetries: 5, eliteRetries: 3, act3LowHp: true, act3LowHpPct: 50, act2LowHp: true, act2LowHpPct: 50, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, reloadOnRevive: false, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreReplayPlays: true, retryExploreReplayDeviate: true, retryExploreKeyCounters: true, retryExploreSecond: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: true, retryKnownPicks: true, retryKnownOffTop: true, retryKnownHandOrder: true, log: "/tmp/x/sl-attempts.jsonl", stepTimeoutMs: 60_000 });
     const on = loadConfig({ SL_ENABLED: "on", SL_BOSS_RETRIES: "2", SL_ELITE_RETRIES: "0", SL_ACT3_LOW_HP: "off", SL_ACT3_LOW_HP_PCT: "55", SL_RETRY_SHOW_SIM: "off", SL_RETRY_KNOWN_DRAWS: "off", SL_RETRY_COMPUTE: "off", SL_JUDGE_KNOWN_DRAWS: "off", SL_JUDGE_ANY_DRAW: "off", SL_RELOAD_EARLY: "off", SL_RELOAD_ON_REVIVE: "on", SL_RETRY_KNOWN_INSERTS: "off", SL_RETRY_KNOWN_TOP: "off", SL_RETRY_EXPLORE: "off", SL_RETRY_EXPLORE_B2: "off", SL_RETRY_EXPLORE_BOSS_POTIONS: "off", SL_RETRY_EXPLORE_ORDER: "off", SL_RETRY_EXPLORE_REPLAY: "off", SL_RETRY_EXPLORE_CANON: "off", SL_RETRY_EXPLORE_TURN: "off", SL_RETRY_EXPLORE_WHOLE: "off", SL_RETRY_EXPLORE_WHERE: "off", SL_RETRY_EXPLORE_POTION: "off", SL_RETRY_KNOWN_PICKS: "off", SL_RETRY_EXPLORE_REPLAY_PLAYS: "off", SL_RETRY_EXPLORE_REPLAY_DEVIATE: "off", SL_RETRY_EXPLORE_KEY_COUNTERS: "off", SL_RETRY_EXPLORE_SECOND: "off", SL_RETRY_KNOWN_OFF_TOP: "off", SL_RETRY_KNOWN_HAND_ORDER: "off", SL_LOG: "off" } as NodeJS.ProcessEnv);
     expect(on.sl).toMatchObject({ enabled: true, bossRetries: 2, eliteRetries: 0, act3LowHp: false, act3LowHpPct: 55, retryShowSim: false, retryKnownDraws: false, retryCompute: false, judgeKnownDraws: false, judgeAnyDraw: false, reloadEarly: false, reloadOnRevive: true, retryKnownInserts: false, retryKnownTop: false, retryExplore: false, retryExploreB2: false, retryExploreBossPotions: false, retryExploreOrder: false, retryExploreReplay: false, retryExploreCanon: false, retryExploreTurn: false, retryExploreWhole: false, retryExploreWhere: false, retryExplorePotion: false, retryKnownPicks: false, retryExploreReplayPlays: false, retryExploreReplayDeviate: false, retryExploreKeyCounters: false, retryExploreSecond: false, retryKnownOffTop: false, retryKnownHandOrder: false, log: null });
     expect(() => loadConfig({ SL_BOSS_RETRIES: "-1" } as NodeJS.ProcessEnv)).toThrow(/SL_BOSS_RETRIES/);
@@ -535,6 +537,23 @@ describe("SL_ACT3_LOW_HP (Dai 2026-10-03): act-3 fights with no boss, entered be
     expect(gateOf(noAct(34))).not.toBeNull();
     expect(gateOf(noAct(33))).toBeNull();
     expect(actNumberOf(state(hallway({ actId: "2", floor: 17 })))).toBe(3);
+  });
+
+  it("SL_ACT2_LOW_HP (Dai 2026-10-04): an act-2 fight with no boss below its line is eligible with its own gate; act 1 never; off or absent as before", () => {
+    const act2 = (options: Parameters<typeof bossBoard>[0] = {}): Raw => bossBoard({ enemyIds: HALLWAY, actId: "1", floor: 30, ...options });
+    const both = { act3LowHp: true, act3LowHpPct: 40, act2LowHp: true, act2LowHpPct: 50 };
+    expect(gateOf(act2({ turn: 1, hp: 12, lethal: false }), both)).toEqual({ kind: "elite", elite: null, reason: `${ACT2_LOW_HP_GATE} 12/80` });
+    expect(gateOf(act2({ turn: 1, hp: 39, lethal: false }), both)?.reason).toBe("act2-low-hp 39/80");
+    expect(gateOf(act2({ turn: 1, hp: 40, lethal: false }), both)).toBeNull();
+    // Act 3 keeps its own line (40 here), act 1 is never eligible.
+    expect(gateOf(hallway({ turn: 1, hp: 35, lethal: false }), both)).toBeNull();
+    expect(gateOf(hallway({ turn: 1, hp: 31, lethal: false }), both)?.reason).toBe("act3-low-hp 31/80");
+    expect(gateOf(act2({ turn: 1, hp: 5, lethal: false, actId: "0", floor: 10 }), both)).toBeNull();
+    // Off, or absent from an older config: as before.
+    expect(gateOf(act2({ turn: 1, hp: 12, lethal: false }), { ...both, act2LowHp: false })).toBeNull();
+    expect(gateOf(act2({ turn: 1, hp: 12, lethal: false }), on)).toBeNull();
+    // A restarted retry keeps its logged act-2 gate.
+    expect(gateOf(act2({ turn: 3, hp: 70 }), both, { logged: "act2-low-hp 12/80" })?.reason).toBe("act2-low-hp 12/80");
   });
 
   it("the switch off: not eligible, whatever the HP", () => {

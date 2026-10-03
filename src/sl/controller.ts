@@ -214,6 +214,8 @@ export interface SlGate {
 }
 
 export const ACT3_LOW_HP_GATE = "act3-low-hp";
+/** SL_ACT2_LOW_HP's gate (Dai 2026-10-04): an act-2 fight with no boss entered below the line, as act 3's. */
+export const ACT2_LOW_HP_GATE = "act2-low-hp";
 
 /** The act of a state, 1-based (act_id counts from 0; without a number there, by the floor: acts end on F17, F33, F48). */
 export function actNumberOf(state: GameState): number | null {
@@ -263,16 +265,23 @@ export function entryHpOf(state: GameState, journal: Pick<RunJournal, "fights"> 
 export function slGate(
   state: GameState,
   enemyIds: readonly string[],
-  deps: { knowledge: Knowledge; elites: SlEliteList; config: Pick<SlConfig, "act3LowHp" | "act3LowHpPct">; journal?: Pick<RunJournal, "fights">; firstSeen?: EntryHp | null; logged?: string | null },
+  deps: { knowledge: Knowledge; elites: SlEliteList; config: Pick<SlConfig, "act3LowHp" | "act3LowHpPct" | "act2LowHp" | "act2LowHpPct">; journal?: Pick<RunJournal, "fights">; firstSeen?: EntryHp | null; logged?: string | null },
 ): SlGate | null {
   if (enemyIds.some((id) => deps.knowledge.monster(id)?.type === "Boss")) return { kind: "boss", elite: null, reason: "boss" };
   const elite = listedElite(enemyIds, deps.elites);
   if (elite) return { kind: "elite", elite, reason: "hard-fight" };
-  if (deps.config.act3LowHp !== true || actNumberOf(state) !== 3) return null;
-  if (deps.logged?.startsWith(ACT3_LOW_HP_GATE)) return { kind: "elite", elite: null, reason: deps.logged };
+  const act = actNumberOf(state);
+  const line =
+    act === 3 && deps.config.act3LowHp === true
+      ? { gate: ACT3_LOW_HP_GATE, pct: deps.config.act3LowHpPct }
+      : act === 2 && deps.config.act2LowHp === true
+        ? { gate: ACT2_LOW_HP_GATE, pct: deps.config.act2LowHpPct ?? 50 }
+        : null;
+  if (!line) return null;
+  if (deps.logged?.startsWith(line.gate)) return { kind: "elite", elite: null, reason: deps.logged };
   const entry = entryHpOf(state, deps.journal, deps.firstSeen);
-  if (!entry || !belowHpLine(entry.hp, entry.maxHp, deps.config.act3LowHpPct)) return null;
-  return { kind: "elite", elite: null, reason: `${ACT3_LOW_HP_GATE} ${entry.hp}/${entry.maxHp}` };
+  if (!entry || !belowHpLine(entry.hp, entry.maxHp, line.pct)) return null;
+  return { kind: "elite", elite: null, reason: `${line.gate} ${entry.hp}/${entry.maxHp}` };
 }
 
 /**
@@ -372,6 +381,8 @@ export class SlController {
       elite_retries: this.config.eliteRetries,
       act3_low_hp: this.config.act3LowHp === true,
       act3_low_hp_pct: this.config.act3LowHpPct,
+      act2_low_hp: this.config.act2LowHp === true,
+      act2_low_hp_pct: this.config.act2LowHpPct ?? 50,
       retry_show_sim: this.config.retryShowSim,
       retry_known_draws: this.config.retryKnownDraws,
       retry_compute: this.config.retryCompute ? { rollout_samples: RETRY_COMPUTE.rolloutSamples, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_budget_ms: RETRY_COMPUTE.turnBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } : false,
@@ -1095,7 +1106,12 @@ export class SlController {
       hpTurn: null,
       explore: this.newExplore({ floor, encounter }, done + 1),
     };
-    const what = boss ? "boss" : elite ? `listed elite (${elite.name})` : `act-3 low-HP (${gate.reason.slice(ACT3_LOW_HP_GATE.length + 1)} HP at entry, below ${this.config.act3LowHpPct}%)`;
+    const act2 = gate.reason.startsWith(ACT2_LOW_HP_GATE);
+    const what = boss
+      ? "boss"
+      : elite
+        ? `listed elite (${elite.name})`
+        : `act-${act2 ? 2 : 3} low-HP (${gate.reason.split(" ")[1] ?? "?"} HP at entry, below ${act2 ? this.config.act2LowHpPct ?? 50 : this.config.act3LowHpPct}%)`;
     if (retries > 0) this.options.note(`SL: tracking ${what} fight F${floor ?? "?"} ${encounter}: attempt ${done + 1} of at most ${1 + retries}`);
   }
 
