@@ -145,6 +145,21 @@ export interface SlConfig {
    */
   retryExploreReplayDeviate: boolean;
   /**
+   * SL_RETRY_EXPLORE_KEY_COUNTERS (default on, 2026-10-04, 7TQFLQBKRE4S F33 attempt 3; with SL_RETRY_EXPLORE): in the board
+   * key (slBoardKey), a relic counter that goes back to 0 at its count (Happy Flower's 3, Kunai's 3, Nunchaku's 10, ...) and
+   * shows the count reads 0: the frame came before the counter's reset was shown, the relic's effect already in the board
+   * (the replay stopped at T4, "not on attempt 2's path", on Happy Flower 3 against 0). Off: the key as before.
+   */
+  retryExploreKeyCounters: boolean;
+  /**
+   * SL_RETRY_EXPLORE_SECOND (default on, 2026-10-04, 7TQFLQBKRE4S F39; with SL_RETRY_EXPLORE_CANON): attempt 2 plays as a
+   * known-draws replan, but where it is still on attempt 1's path (the same board) from the turn attempt 1 lost the most HP
+   * (whereWeights) to its last turn, the first question there deviates: a line attempt 1's turn there did not have. The logs:
+   * every attempt 2 still on attempt 1's path at that turn (past T1) repeated attempt 1's whole fight (4 of 4), and the 4
+   * attempt-2 wins had left the path before it (docs/sl.md §11.12). Off: attempt 2 as before.
+   */
+  retryExploreSecond: boolean;
+  /**
    * SL_RETRY_EXPLORE_CANON (default on, 2026-10-03, A9 runs 10-12; with SL_RETRY_EXPLORE): a line counts as tried on a
    * board by the turn's plays (the multiset of card id with "+" and target, potions included, the cards already played that
    * turn counted in), not by its text: the same plays in another order or line text are the same line, the same cards on
@@ -1103,6 +1118,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryExploreReplay: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY"), "SL_RETRY_EXPLORE_REPLAY", problems) ?? true,
     retryExploreReplayPlays: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_PLAYS"), "SL_RETRY_EXPLORE_REPLAY_PLAYS", problems) ?? true,
     retryExploreReplayDeviate: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_DEVIATE"), "SL_RETRY_EXPLORE_REPLAY_DEVIATE", problems) ?? true,
+    retryExploreKeyCounters: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_KEY_COUNTERS"), "SL_RETRY_EXPLORE_KEY_COUNTERS", problems) ?? true,
+    retryExploreSecond: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_SECOND"), "SL_RETRY_EXPLORE_SECOND", problems) ?? true,
     retryExploreCanon: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_CANON"), "SL_RETRY_EXPLORE_CANON", problems) ?? true,
     retryExploreTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TURN"), "SL_RETRY_EXPLORE_TURN", problems) ?? true,
     retryExploreWhole: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WHOLE"), "SL_RETRY_EXPLORE_WHOLE", problems) ?? true,

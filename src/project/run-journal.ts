@@ -344,6 +344,11 @@ export class RunJournal {
     Object.assign(this, structuredClone(snapshot));
   }
 
+  /** The map node type of the room on `floor` as chosen on the map ("Monster", "Elite", "Unknown", "Boss", ...), or null. */
+  roomOf(floor: number | null): string | null {
+    return floor === null ? null : (this.rooms.get(floor) ?? null);
+  }
+
   /** Items made so far this run (grows with every decision, fight, change and plan the journal files). */
   get itemCount(): number {
     return this.seq;
