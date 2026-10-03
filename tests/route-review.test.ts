@@ -160,11 +160,11 @@ describe("card reward: the act's route rides on the same question", () => {
     const keptEnd = stretchOf(map, planIds(block), { hp: 54, max: 91 }, resolvedCosts(block));
     const newEnd = stretchOf(map, route.split(" "), { hp: 54, max: 91 }, resolvedCosts(block));
     expect(newEnd.ids).not.toEqual(keptEnd.ids);
-    // The first route that skips the F7 Terror Eel meets no rest site before F13 (an F12 elite on the way), where the
-    // kept route has rested at F9 and F11: compared on F13 (the later rest floor) and on F12 (the later elite's floor),
-    // clearly lower both times. Logged, not blocked.
+    // The first route that skips the F7 Terror Eel meets no rest site before F13 (an F12 elite on the way, as many elites
+    // as the kept stretch), where the kept route has rested at F9 and F11: clearly lower on F13; its elite entered at 50
+    // (p75 22) against 54 (p75 48). Logged, not blocked.
     expect(resolved.routeReview?.change?.nextRest).toEqual({
-      text: "到 F13 时新路线约 24/91，保留路线约 80/91（p75 耗尽 对 53）；下一只精英：新路线 F12 r11c2 进场 50/91（p75 22），保留路线 F7 r6c6 进场 54/91（p75 48）（到 F12 时新路线约 50/91，保留路线约 80/91（p75 22 对 59））",
+      text: "到 F13 时新路线约 24/91，保留路线约 80/91（p75 耗尽 对 53）；下一只精英：新路线 F12 r11c2 进场 50/91（p75 22），保留路线 F7 r6c6 进场 54/91（p75 48）",
       worse: true,
       eliteWorse: true,
     });
@@ -443,10 +443,11 @@ describe("rest site route review in the loop", () => {
     const { records } = await play([board(REST, "map_before"), board(REST, "rest"), board(REST, "map_after"), mainMenuPayload()], client);
     const rest = records.find((row) => row["label"] === "rest/plan")!;
     const review = rest["route_review"] as Record<string, unknown>;
-    // The first such route takes a second elite to the F16 rest: compared on F16 (the later rest floor), it runs out on
-    // the way, clearly worse (not blocked). Both meet the same first elite (F9 r8c2, the same entry): not repeated.
-    expect(review).toMatchObject({ outcome: "change", next_rest: "到 F16 时新路线约 0（血量耗尽），保留路线约 40/77（p75 耗尽 对 耗尽）", next_rest_worse: true, next_rest_elite_worse: false });
-    expect(String(rest["rationale"])).toContain("(clearly worse than the kept route)");
+    // The first such route takes a second elite to the F16 rest: on F16 (the later rest floor) it runs out on the way,
+    // but with one elite more than the kept stretch that is in its counts: no flag. Both meet the same first elite (F9
+    // r8c2, the same entry): not repeated.
+    expect(review).toMatchObject({ outcome: "change", next_rest: "到 F16 时新路线约 0（血量耗尽），保留路线约 40/77（p75 耗尽 对 耗尽）", next_rest_worse: false, next_rest_elite_worse: false });
+    expect(String(rest["rationale"])).not.toContain("clearly");
     const change = records.find((row) => row["label"] === "map/route-change")!;
     expect(change["deepseek"]).toMatchObject({ next_rest: review["next_rest"], next_rest_worse: review["next_rest_worse"] });
     expect(String(change["rationale"])).toContain(`; next rest: ${String(review["next_rest"])}`);

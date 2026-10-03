@@ -503,10 +503,12 @@ function betterStretch(a: Stretch, b: Stretch): number {
 }
 
 /**
- * When an alternative is clearly worse than the kept route: on the same floor, the median lower by at least this share
- * of max HP, or the p75 line lower by at least NEXT_REST_CLEAR_P75 (9175 F37: one hallway more, 7 and 16 of 80
- * lower), or it runs out where the kept route does not. The floor (Dai 2026-10-03): the later of the two routes' next
- * rest floors, and for the next elite the later of the two elites' floors, each route's HP on arriving there.
+ * When an alternative is clearly worse than the kept route: the median lower by at least this share of max HP, or the
+ * p75 line lower by at least NEXT_REST_CLEAR_P75 (9175 F37: one hallway more, 7 and 16 of 80 lower), or it runs out
+ * where the kept route does not (Dai 2026-10-03). Compared at the later of the two routes' next rest floors, each
+ * route's HP on arriving there, and said only for a line with no more elites than the kept stretch (an extra elite's
+ * cost is already in its counts: 62% of the lines flagged without this rule); and, when both routes meet an elite
+ * before the boss, each one's own elite-entry HP (LTKW24N3R9PG F36: 41 against 41).
  */
 export const NEXT_REST_CLEAR_MEDIAN = 0.1;
 export const NEXT_REST_CLEAR_P75 = 0.15;
@@ -630,15 +632,32 @@ function restVersus(other: Stretch, otherRoute: WholeRoute, kept: Stretch, keptR
   return sameFloor(otherRoute, keptRoute, Math.max(other.row, kept.row), clear);
 }
 
+/** Two routes' next elites: each one's entry HP on its own floor, and whether `other`'s is clearly worse. */
+export interface EliteEntries {
+  otherRow: number;
+  keptRow: number;
+  other: HpPoint;
+  kept: HpPoint;
+  worse: boolean;
+}
+
 /**
- * At the later of the two routes' next elites' floors, when both meet an elite before the boss. With one elite there is
- * no entry to compare: its entry HP against the other route's HP on that floor would call a route that skips the
- * elite worse (0QSB F19: 50/80 on F29 against the kept route's 64/80 entering its elite).
+ * Each route's own next-elite entry, when both meet an elite before the boss (not on one floor: at the later elite's
+ * floor the earlier one is already fought, LTKW F36 8 against 41 for two entries at 41). With one elite there is no
+ * entry to compare (0QSB F19 skips the kept route's F29 elite).
  */
-function eliteVersus(map: RouteMap, otherRoute: WholeRoute, keptRoute: WholeRoute, clear: ClearMargin): SameFloor | null {
+function eliteVersus(map: RouteMap, otherRoute: WholeRoute, keptRoute: WholeRoute, clear: ClearMargin): EliteEntries | null {
   const other = nextEliteStep(map, otherRoute);
   const kept = nextEliteStep(map, keptRoute);
-  return other >= 0 && kept >= 0 ? sameFloor(otherRoute, keptRoute, Math.max(otherRoute.rows[other]!, keptRoute.rows[kept]!), clear) : null;
+  if (other < 0 || kept < 0) return null;
+  const a = pointAt(otherRoute, otherRoute.rows[other]!)!;
+  const b = pointAt(keptRoute, keptRoute.rows[kept]!)!;
+  return { otherRow: otherRoute.rows[other]!, keptRow: keptRoute.rows[kept]!, other: a, kept: b, worse: clearlyWorse(a, b, clear) };
+}
+
+/** "下一只精英进场：这条 F42 约 33/74，保留路线 F43 约 41/74（p75 耗尽 对 27）". */
+function eliteEntriesText(map: RouteMap, versus: EliteEntries, which: string): string {
+  return `下一只精英进场：${which} F${floorOfRow(map, versus.otherRow)} 约 ${hpAt(versus.other.median, versus.other.max)}，保留路线 F${floorOfRow(map, versus.keptRow)} 约 ${hpAt(versus.kept.median, versus.kept.max)}（p75 ${hpRound(versus.other.p75)} 对 ${hpRound(versus.kept.p75)}）`;
 }
 
 /** "到 F40 时这条约 35/80，保留路线约 42/80（p75 17 对 33）". */
@@ -709,8 +728,11 @@ export interface SwitchCompare {
   route: WholeRoute;
   /** At the later of the two next rest floors. */
   rest: SameFloor | null;
-  /** At the later of the two next elites' floors. */
-  elite: SameFloor | null;
+  /** The two next elites' entries. */
+  elite: EliteEntries | null;
+  /** Said on the line: clearly lower on the rest floor with no more elites than the kept stretch; at the elite entry. */
+  restFlag: boolean;
+  eliteFlag: boolean;
 }
 
 /** The kept route's stretch and whole route, and each switch line's comparison with it (`clear`: the margins). */
@@ -721,7 +743,9 @@ export function nextRestCompare(map: RouteMap, plan: string[], start: RouteStart
     kept,
     switches: switches.map((stretch) => {
       const route = wholeRoute(map, [...stretch.ids, ...wayOn(map, stretch.ids[stretch.ids.length - 1]!, plan, costs)], start, costs);
-      return { stretch, route, rest: restVersus(stretch, route, kept, keptRoute, clear), elite: eliteVersus(map, route, keptRoute, clear) };
+      const rest = restVersus(stretch, route, kept, keptRoute, clear);
+      const elite = eliteVersus(map, route, keptRoute, clear);
+      return { stretch, route, rest, elite, restFlag: (rest?.worse ?? false) && stretch.elites <= kept.elites, eliteFlag: elite?.worse ?? false };
     }),
   };
 }
@@ -744,11 +768,8 @@ export function nextRestFacts(map: RouteMap, plan: string[], start: RouteStart, 
   if (plan.length === 0 || plan.some((id) => !map.nodes.has(id))) return null;
   const { kept, switches } = nextRestCompare(map, plan, start, costs, clear);
   const keptRoute = wholeRoute(map, plan, start, costs);
-  const lines = switches.map(({ stretch, route, rest, elite }) => {
-    const flags = [
-      ...(rest?.worse ? [`；比保留路线明显低：${sameFloorText(map, rest, "这条")}`] : []),
-      ...(elite?.worse && !(rest?.worse && rest.row === elite.row) ? [`；精英那层比保留路线明显低：${sameFloorText(map, elite, "这条")}`] : []),
-    ];
+  const lines = switches.map(({ stretch, route, rest, elite, restFlag, eliteFlag }) => {
+    const flags = [...(restFlag && rest ? [`；比保留路线明显低：${sameFloorText(map, rest, "这条")}`] : []), ...(eliteFlag && elite ? [`；${eliteEntriesText(map, elite, "这条")}，明显低`] : [])];
     return `${stretchLine(map, stretch, chain)}${eliteText(map, route)}${flags.join("")}`;
   });
   const pct = (share: number): string => `${Math.round(share * 100)}%`;
@@ -756,7 +777,7 @@ export function nextRestFacts(map: RouteMap, plan: string[], start: RouteStart, 
     about:
       `从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（${startNote ?? `从现在的 HP ${hpAt(start.hp, start.max)} 起`}，中位数和 p75，同 plan_facts）。` +
       `keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；` +
-      `和保留路线在同一层比 HP：两条的下一个休息点中较晚的那层（两条都有精英时，也比两只精英中较晚的那层），明显低（中位数低 ≥${pct(clear.median)} 最大生命、p75 低 ≥${pct(clear.p75)} 或耗尽）的写明。`,
+      `和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥${pct(clear.median)} 最大生命、p75 低 ≥${pct(clear.p75)} 或耗尽）的写明。`,
     keep: `${stretchLine(map, kept, chain)}${eliteText(map, keptRoute)}`,
     switch: lines.length > 0 ? lines : ["没有别的路线：从下一步到下一个休息点只有计划这一段"],
   };
@@ -770,8 +791,9 @@ function eliteLabel(map: RouteMap, route: WholeRoute): string {
 
 /**
  * A changed route against the kept one, for the change's log: both routes' HP on the later of their next rest floors,
- * their next elites, and whether the new one is clearly worse there (`worse`: the rest floor; `eliteWorse`: the later
- * elite floor). Null when the stretch to the next rest site and the next elite's entry are the same.
+ * their next elites, and whether the new one is clearly worse as a switch line would say it (`worse`: the rest floor,
+ * with no more elites than the kept stretch; `eliteWorse`: the two elite entries). Null when the stretch to the next
+ * rest site and the next elite's entry are the same.
  */
 export function nextRestVersus(map: RouteMap, kept: string[], changed: string[], start: RouteStart, costs: RoomCostModel, clear: ClearMargin = NEXT_REST_CLEAR): { text: string; worse: boolean; eliteWorse: boolean } | null {
   if (kept.length === 0 || changed.length === 0 || [...kept, ...changed].some((id) => !map.nodes.has(id))) return null;
@@ -787,9 +809,9 @@ export function nextRestVersus(map: RouteMap, kept: string[], changed: string[],
   const elite = eliteVersus(map, newRoute, keptRoute, clear);
   const parts = [
     ...(rest ? [sameFloorText(map, rest, "新路线")] : []),
-    ...(keptElite === newElite ? [] : [`下一只精英：新路线 ${newElite}，保留路线 ${keptElite}${elite && elite.row !== rest?.row ? `（${sameFloorText(map, elite, "新路线")}）` : ""}`]),
+    ...(keptElite === newElite ? [] : [`下一只精英：新路线 ${newElite}，保留路线 ${keptElite}`]),
   ];
-  return { text: parts.join("；"), worse: rest?.worse ?? false, eliteWorse: elite?.worse ?? false };
+  return { text: parts.join("；"), worse: (rest?.worse ?? false) && after.elites <= before.elites, eliteWorse: elite?.worse ?? false };
 }
 
 /** The room costs the facts use, with their sources and n (Chinese, one line). */

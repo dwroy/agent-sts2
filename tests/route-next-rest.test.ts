@@ -2,8 +2,9 @@
  * The route review's next_rest facts (Dai 2026-10-03, experience route-replan-on-drop): for the kept route and the
  * routes the answer may switch to, the fights and "?" rooms to the next rest site, whether the stretch passes a
  * shop, the projected HP on arriving there and on entering the route's next elite (median and p75, the route
- * projection unchanged); an alternative clearly worse than the kept route on the same floor (the later of the two
- * rest floors; with two elites, the later elite's floor) says so, and a change logs the same comparison.
+ * projection unchanged); an alternative clearly worse than the kept route says so: on the later of the two rest floors
+ * when it has no more elites than the kept stretch, and at the two elite entries when both meet one. A change logs the
+ * same comparison.
  *
  * Fixed data only: the views DeepSeek saw at 9175DLPM2EFR F37 (A9 act 3, 49/80: the shop swapped for two hallways,
  * died at F39), QWXKQVYQGGCJ F25 (A8 act 2, a rest site at 30/91: the elite moved after a hallway) and 0QSB9YV3UFCL
@@ -205,7 +206,7 @@ describe("which stretches are listed, on the small fixed map", () => {
     expect(facts.switch[0]).toBe(`r1c0 问号（飞行靴跳跃） → F20 r2c0 休息：普通战 0、精英 0（这一段共 0 场）、问号 1，没有商店；到达 ${60 - costs.unknown.median}/80（p75 ${60 - costs.unknown.p75}）`);
   });
 
-  it("two elites: compared on the later elite's floor; the line says so apart from the rest floor's flag; the change logs it", () => {
+  it("two elites: each route's own elite entry compared; the line says so apart from the rest floor's flag; the change logs it", () => {
     // r0c0 (here) → r1c0 普通战 | r1c1 商店; r1c0 → r2c0 精英; r1c1 → r2c1 精英; both → r3c0 休息 → r4c0 Boss.
     const map = buildRouteMap({
       act: 1,
@@ -228,13 +229,65 @@ describe("which stretches are listed, on the small fixed map", () => {
     expect(facts.keep).toBe("r1c1 商店 → r2c1 精英 → F4 r3c0 休息：普通战 0、精英 1、问号 0，经过商店；到达 35/80（p75 25）；下一只精英 F3 r2c1 进场 60/80（p75 60）");
     expect(facts.switch).toEqual([
       "r1c0 普通战 → r2c0 精英 → F4 r3c0 休息：普通战 1、精英 1、问号 0，没有商店；到达 25/80（p75 9）；下一只精英 F3 r2c0 进场 50/80（p75 44）" +
-        "；比保留路线明显低：到 F4 时这条约 25/80，保留路线约 35/80（p75 9 对 25）；精英那层比保留路线明显低：到 F3 时这条约 50/80，保留路线约 60/80（p75 44 对 60）",
+        "；比保留路线明显低：到 F4 时这条约 25/80，保留路线约 35/80（p75 9 对 25）；下一只精英进场：这条 F3 约 50/80，保留路线 F3 约 60/80（p75 44 对 60），明显低",
     ]);
     expect(nextRestVersus(map, plan, ["r1c0", "r2c0", "r3c0", "r4c0"], { hp: 60, max: 80 }, costs)).toEqual({
-      text: "到 F4 时新路线约 25/80，保留路线约 35/80（p75 9 对 25）；下一只精英：新路线 F3 r2c0 进场 50/80（p75 44），保留路线 F3 r2c1 进场 60/80（p75 60）（到 F3 时新路线约 50/80，保留路线约 60/80（p75 44 对 60））",
+      text: "到 F4 时新路线约 25/80，保留路线约 35/80（p75 9 对 25）；下一只精英：新路线 F3 r2c0 进场 50/80（p75 44），保留路线 F3 r2c1 进场 60/80（p75 60）",
       worse: true,
       eliteWorse: true,
     });
+  });
+
+  it("an extra elite's gap is in the line's counts: the numbers, no flag; with no more elites the same gap is flagged", () => {
+    // r0c0 (here) → r1c0 普通战 → r2c0 精英 | r1c1 商店 → r2c1 普通战; both → r3c0 休息 → r4c0 Boss.
+    const nodes = [
+      { ...p(0, 0), type: "Monster", children: [p(1, 0), p(1, 1)], visited: true },
+      { ...p(1, 0), type: "Monster", children: [p(2, 0)] },
+      { ...p(1, 1), type: "Shop", children: [p(2, 1)] },
+      { ...p(2, 0), type: "Elite", children: [p(3, 0)] },
+      { ...p(2, 1), type: "Monster", children: [p(3, 0)] },
+      { ...p(3, 0), type: "RestSite", children: [p(4, 0)] },
+      { ...p(4, 0), type: "Boss", children: [] },
+    ];
+    const map = buildRouteMap({ act: 1, nodes, bosses: [p(4, 0)], current: p(0, 0), next: [p(1, 0), p(1, 1)], boots: 0 });
+    const facts = nextRestFacts(map, ["r1c1", "r2c1", "r3c0", "r4c0"], { hp: 60, max: 80 }, costs)!;
+    // 25 against 50 on F4 (31% of max HP), but its elite is in its counts: no wording.
+    expect(facts.switch).toEqual(["r1c0 普通战 → r2c0 精英 → F4 r3c0 休息：普通战 1、精英 1、问号 0，没有商店；到达 25/80（p75 9）；下一只精英 F3 r2c0 进场 50/80（p75 44）"]);
+    expect(nextRestVersus(map, ["r1c1", "r2c1", "r3c0", "r4c0"], ["r1c0", "r2c0", "r3c0", "r4c0"], { hp: 60, max: 80 }, costs)).toMatchObject({ worse: false, eliteWorse: false });
+    // A hallway in place of the elite: two hallways against one, 40 against 50 on F4, flagged.
+    const hallway = buildRouteMap({ act: 1, nodes: nodes.map((node) => (node.row === 2 && node.col === 0 ? { ...node, type: "Monster" } : node)), bosses: [p(4, 0)], current: p(0, 0), next: [p(1, 0), p(1, 1)], boots: 0 });
+    expect(nextRestFacts(hallway, ["r1c1", "r2c1", "r3c0", "r4c0"], { hp: 60, max: 80 }, costs)!.switch).toEqual([
+      "r1c0 普通战 → r2c0 普通战 → F4 r3c0 休息：普通战 2、精英 0、问号 0，没有商店；到达 40/80（p75 28）；比保留路线明显低：到 F4 时这条约 40/80，保留路线约 50/80（p75 28 对 44）",
+    ]);
+  });
+
+  it("two elites on different floors entered at the same HP: not flagged (LTKW24N3R9PG F36: 41 against 41, the later one's floor said 8 against 41)", () => {
+    // r0c0 (here) → r1c0 商店 → r2c0 精英 → r3c0 商店 | r1c1 商店 → r2c1 商店 → r3c1 精英; both → r4c0 休息 → r5c0 Boss.
+    const map = buildRouteMap({
+      act: 1,
+      nodes: [
+        { ...p(0, 0), type: "Monster", children: [p(1, 0), p(1, 1)], visited: true },
+        { ...p(1, 0), type: "Shop", children: [p(2, 0)] },
+        { ...p(1, 1), type: "Shop", children: [p(2, 1)] },
+        { ...p(2, 0), type: "Elite", children: [p(3, 0)] },
+        { ...p(2, 1), type: "Shop", children: [p(3, 1)] },
+        { ...p(3, 0), type: "Shop", children: [p(4, 0)] },
+        { ...p(3, 1), type: "Elite", children: [p(4, 0)] },
+        { ...p(4, 0), type: "RestSite", children: [p(5, 0)] },
+        { ...p(5, 0), type: "Boss", children: [] },
+      ],
+      bosses: [p(5, 0)],
+      current: p(0, 0),
+      next: [p(1, 0), p(1, 1)],
+      boots: 0,
+    });
+    const kept = ["r1c1", "r2c1", "r3c1", "r4c0", "r5c0"];
+    expect(nextRestVersus(map, kept, ["r1c0", "r2c0", "r3c0", "r4c0", "r5c0"], { hp: 60, max: 80 }, costs)).toEqual({
+      text: "到 F5 时新路线约 35/80，保留路线约 35/80（p75 25 对 25）；下一只精英：新路线 F3 r2c0 进场 60/80（p75 60），保留路线 F4 r3c1 进场 60/80（p75 60）",
+      worse: false,
+      eliteWorse: false,
+    });
+    expect(nextRestFacts(map, kept, { hp: 60, max: 80 }, costs)!.switch.some((line) => line.includes("明显低"))).toBe(false);
   });
 
   it("clearly worse: the median 10% of max HP lower, the p75 line 15% lower, or a run-out the kept route does not have; the margins can be given", () => {
