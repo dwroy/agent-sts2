@@ -25,6 +25,8 @@
  *   SL_RETRY_EXPLORE_BOSS_POTIONS on every board, which the record and the replacement follow). SL_RETRY_EXPLORE_ORDER: the
  *   points where every line loses come last; SL_RETRY_EXPLORE_REPLAY: on the reference path's boards before the point,
  *   envFor() gives its line there (the planner plays it) and notePoint() counts them or stops the replay (noteReplay).
+ *   SL_RETRY_EXPLORE_WHERE: the point goes where the failed attempts lost their HP, another turn each attempt (explore.ts
+ *   whereChoice, over the rows' summaries).
  *
  * Nothing here touches a save file: the game restarts the fight from the save it wrote on entering the room.
  */
@@ -273,6 +275,11 @@ export class SlController {
     return this.turnOn() && this.config.retryExploreWhole === true;
   }
 
+  /** SL_RETRY_EXPLORE_WHERE (with SL_RETRY_EXPLORE): the deviation point where the failed attempts lost their HP. */
+  private whereOn(): boolean {
+    return this.config.retryExplore === true && this.config.retryExploreWhere === true;
+  }
+
   /** The configuration as run-config.jsonl records it. */
   describe(): Record<string, JsonValue> {
     return {
@@ -297,6 +304,7 @@ export class SlController {
       retry_explore_canon: this.canonOn(),
       retry_explore_turn: this.turnOn(),
       retry_explore_whole: this.wholeOn(),
+      retry_explore_where: this.whereOn(),
       retry_known_picks: this.config.retryKnownPicks === true,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
@@ -562,7 +570,7 @@ export class SlController {
       const turns = this.canonOn() || this.turnOn() ? { turns: [] as SlTurnPlays[] } : {};
       if (attempt < 3) return { points: [], target: null, ...turns };
       const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
-      const { target, why } = exploreTarget(earlier, attempt, { aliveFirst: this.config.retryExploreOrder === true, ...(this.canonOn() ? { canon: true } : {}), ...(this.turnOn() ? { tried: true } : {}), ...(this.wholeOn() ? { whole: true } : {}) });
+      const { target, why } = exploreTarget(earlier, attempt, { aliveFirst: this.config.retryExploreOrder === true, ...(this.canonOn() ? { canon: true } : {}), ...(this.turnOn() ? { tried: true } : {}), ...(this.wholeOn() ? { whole: true } : {}), ...(this.whereOn() ? { where: true } : {}) });
       const turnsNote = target?.tried ? `; ${target.tried.canon.length + target.tried.loose.length} turn${target.tried.canon.length + target.tried.loose.length === 1 ? "" : "s"} through it not again` : "";
       this.options.note(
         target
