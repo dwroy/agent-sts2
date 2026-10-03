@@ -276,6 +276,11 @@ export function nextPlanRef(env: DecisionEnv, kind: string): string {
   return `${runId}:F${env.state.run?.floor ?? "?"}:${kind}#${seq + 1}`;
 }
 
+/** Who made plan `ref`, as its steps' rationales name it (DecisionEnv.planMaker; "DeepSeek" without one). */
+export function planMakerOf(env: DecisionEnv, ref: string, label: string): string {
+  return env.planMaker?.(ref, label) ?? "DeepSeek";
+}
+
 /** Marks a plan reference as used (the plan was played). */
 export function usePlanRef(memory: ScreenMemory, runId: string): void {
   const seq = memory.planSeq && memory.planSeq.runId === runId ? memory.planSeq.n : 0;

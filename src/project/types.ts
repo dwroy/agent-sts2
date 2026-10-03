@@ -91,6 +91,12 @@ export interface DecisionEnv {
    * false: the rollout exactly as before (whole fights only).
    */
   sandpitStart?: boolean;
+  /**
+   * Who made the one-shot plan `ref` (BUILD_ONESHOT), as the texts name it ("Codex", "DeepSeek (for Codex)"; src/brain/labels.ts):
+   * the engine that answered its question, else the one configured for `label` (a plan made before a restart), as the
+   * decision log's decider of its steps (loop.ts). The steps' rationales name it. Absent (tests, no brain): "DeepSeek".
+   */
+  planMaker?: (ref: string, label: string) => string;
 }
 
 /** A retried fight, as the combat planners see it (src/sl/controller.ts envFor). */
@@ -548,6 +554,12 @@ export interface ActDecision {
   apply?: () => void;
   /** Extra decision-log fields, as a resolution's (combat: SL_RETRY_EXPLORE_WHOLE's sl_explore.avoid_failed on code's own line). */
   log?: ResolvedAction["log"];
+  /**
+   * The run journal's text for this step when it is not the rationale (else the rationale: run-journal.ts describeChoice).
+   * A one-shot plan's steps: the rationale names the engine that made the plan (planMakerOf), the run memory the models
+   * read keeps the words it always had ("DeepSeek plan … step 2: …", 2026-10-04: the prompt unchanged).
+   */
+  journal?: string;
 }
 
 /** Which plan a code-executed step belongs to (ActDecision.plan). */

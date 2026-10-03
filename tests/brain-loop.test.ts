@@ -19,6 +19,7 @@ import { mainMenuPayload } from "./scenarios.js";
 setupOneshotTests();
 
 const REST = "7b0d-f8-rest";
+const SHOP = "u6ru-f22-shop";
 const dir = mkdtempSync(join(tmpdir(), "brain-loop-"));
 
 /** A fake claude that prints one result object (and a version line for `--version`, unless `version` is false). */
@@ -52,6 +53,30 @@ describe("the loop with BRAIN_* set", () => {
     });
     // The step code plays from Claude's one-shot plan (the card to smith) is Claude's decision too.
     expect(records.map((row) => [row["label"], row["decider"]])).toEqual([["rest/plan", "claude"], ["selection/upgrade", "claude"]]);
+    // The rationales (the console prints them) name Claude, not DeepSeek (they did until 2026-10-04, whichever engine answered).
+    const [plan, step] = records.map((row) => String(row["rationale"]));
+    expect(plan).toMatch(new RegExp(`^Claude decided o1:${bash}: smith Bash for the boss \\| Claude chose 锻造 \\(SMITH\\): upgrade .* not shown to Claude\\)`));
+    expect(step).toMatch(/^Claude plan 7B0D6XKP0BAZ:F8:rest#1 step 2: upgrade /);
+    expect(`${plan} ${step}`).not.toContain("DeepSeek");
+    // The run memory (a prompt the models read) keeps the words it had: the step's journal text is the old rationale.
+    expect((records[1]!["journal"] as Record<string, unknown>)["choice"]).toBe(step.replace(/^Claude plan /, "DeepSeek plan "));
+  });
+
+  it("BRAIN_ENGINE_SHOP=claude: the shop plan and every step code plays from it name Claude (decider and rationale)", async () => {
+    const answer = { plan: ["buy_card3", "buy_potion2", "buy_card4", "buy_card0", "buy_card2"], reason: "block and draw for the crab" };
+    const bin = fakeClaude("shop", { type: "result", subtype: "success", is_error: false, result: JSON.stringify(answer), structured_output: answer, total_cost_usd: 0.02, usage: { input_tokens: 10, output_tokens: 90 }, modelUsage: { "claude-opus-5": {} } });
+    const deepseek = new FakeDeepSeek(() => "leave");
+    const sequence = ["open", "after_card3", "after_potion2", "after_card4", "after_card0", "after_card2", "closed"].map((key) => board(SHOP, key));
+    const { records } = await play([...sequence, mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_SHOP: "claude", BRAIN_CLAUDE_BIN: bin, BRAIN_CLAUDE_MODEL: "opus" }) });
+    expect(deepseek.calls).toEqual([]);
+    const rows = records.filter((row) => String(row["label"]).startsWith("shop/") && row["label"] !== "shop/leave");
+    expect(rows.map((row) => row["decider"])).toEqual(["claude", "claude", "claude", "claude", "claude", "claude"]);
+    const texts = rows.map((row) => String(row["rationale"]));
+    expect(texts[0]).toMatch(/^Claude planned: block and draw for the crab \| plan U6RUE7LBUFJF:F22:shop#1: /);
+    expect(texts.slice(1)).toEqual([2, 3, 4, 5, 6].map((n) => expect.stringMatching(new RegExp(`^Claude plan U6RUE7LBUFJF:F22:shop#1 step ${n}: `))));
+    expect(texts.join(" ")).not.toContain("DeepSeek");
+    // The run memory's text for the steps (a prompt) is as before: "DeepSeek plan …".
+    expect(rows.slice(1).map((row) => (row["journal"] as Record<string, unknown>)["choice"])).toEqual(texts.slice(1).map((text) => text.replace(/^Claude plan /, "DeepSeek plan ")));
   });
 
   it("a used-up Claude quota falls back to DeepSeek on the same question", async () => {
@@ -64,8 +89,9 @@ describe("the loop with BRAIN_* set", () => {
     expect(row.deepseek.brain.engine).toBe("deepseek");
     expect(row.deepseek.brain.fell_back_from.engine).toBe("claude");
     expect(row.deepseek.brain.fell_back_from.error).toMatch(/\[quota\]/);
-    // The fallback answered for Claude: the decider says both.
+    // The fallback answered for Claude: the decider says both, and so does the rationale.
     expect((row as unknown as Record<string, unknown>)["decider"]).toBe("deepseek (for claude)");
+    expect(String((row as unknown as Record<string, unknown>)["rationale"])).toMatch(/^DeepSeek \(for Claude\) decided o0: .* \| DeepSeek \(for Claude\) chose 休息 \(HEAL\)/);
   });
 
   it("a used-up Claude call budget (BRAIN_CLAUDE_MAX_CALLS) falls back to DeepSeek, which then spends DeepSeek's", async () => {
@@ -133,5 +159,7 @@ describe("the loop with BRAIN_* set", () => {
     const row = records.find((r) => r["label"] === "rest/plan") as { deepseek: Record<string, unknown> };
     expect(row.deepseek["choice"]).toBe("o0");
     expect("brain" in row.deepseek).toBe(false);
+    // Plain v3 DeepSeek: the rationale reads as it always did.
+    expect(String((row as unknown as Record<string, unknown>)["rationale"])).toMatch(/^DeepSeek decided o0: .* \| DeepSeek chose 休息 \(HEAL\) \(code's fallback order: .*; not shown to DeepSeek\)$/);
   });
 });
