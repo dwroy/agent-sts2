@@ -131,6 +131,16 @@ export interface SlConfig {
    */
   retryExploreTurn: boolean;
   /**
+   * SL_RETRY_EXPLORE_WHOLE (default on, 2026-10-03, PW7Y9EWUW8SB F48 attempts 3-4; with SL_RETRY_EXPLORE_TURN): the
+   * deviation's turn judged by its whole plays, the ones after a draw's re-plan too. A line drawing before its turn is over
+   * whose plays up to the draw are within a failed attempt's turn there gives way to a not-worse line that cannot end as
+   * one (replacements prefer those); later in that turn the avoid reaches every line that survives (code's "only distinct
+   * line" no longer slips through), and says so where it cannot (sl_explore.avoid_failed, the row's deviation); a deviation
+   * whose turn still ended as a failed one does not use its point: the next attempt goes back to it with another line
+   * (docs/sl.md §11.8). Off: as before.
+   */
+  retryExploreWhole: boolean;
+  /**
    * SL_RETRY_KNOWN_PICKS (default on, 2026-10-03, R1QJUBVBSSB2 F33; with SL_RETRY_KNOWN_INSERTS): a card taken out of the
    * draw pile by a selection (Seeker Strike) leaves the rest of the pile in its order: it is taken out of the known order,
    * which goes on (docs/sl.md §10.2). Off: the order ends there, as before.
@@ -796,6 +806,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryExploreReplay: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY"), "SL_RETRY_EXPLORE_REPLAY", problems) ?? true,
     retryExploreCanon: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_CANON"), "SL_RETRY_EXPLORE_CANON", problems) ?? true,
     retryExploreTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TURN"), "SL_RETRY_EXPLORE_TURN", problems) ?? true,
+    retryExploreWhole: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WHOLE"), "SL_RETRY_EXPLORE_WHOLE", problems) ?? true,
     retryKnownPicks: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_PICKS"), "SL_RETRY_KNOWN_PICKS", problems) ?? true,
     log: slLogRaw === null ? join(dirname(decisionLog), "sl-attempts.jsonl") : /^(off|none|false|0)$/i.test(slLogRaw) ? null : slLogRaw,
     stepTimeoutMs: parseInteger(readEnv(env, "SL_STEP_TIMEOUT_MS") ?? "60000", "SL_STEP_TIMEOUT_MS", problems, { min: 1000, max: 600_000 }),

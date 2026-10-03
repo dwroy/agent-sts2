@@ -4,11 +4,15 @@
  * the turn it plays there is one a failed attempt already had there, under two rules side by side:
  * - "08ec8f9": the sub-switches live then (SL_RETRY_EXPLORE_B2, _BOSS_POTIONS, _ORDER, _REPLAY, SL_RETRY_KNOWN_PICKS);
  * - "new": with SL_RETRY_EXPLORE_CANON (a line tried by its turn's plays, attempt 1 recorded and counted) and
- *   SL_RETRY_EXPLORE_TURN (the deviation holds for the rest of its turn).
+ *   SL_RETRY_EXPLORE_TURN (the deviation holds for the rest of its turn);
+ * - "whole": "new" with SL_RETRY_EXPLORE_WHOLE (a drawing line judged by its sure plays, the avoid over every surviving
+ *   line, a deviation whose turn ended as a failed one not a use of its point; offline the simulated attempt's turn is
+ *   the line as planned there, so its `differs` is the planned turn's).
  * Where the live attempts recorded their explore (from R1QJUBVBSSB2 F33 on), what they did: the point, whether it was
  * reached, where the attempt left attempt 2's path, the turn it played there (the realized plays, from its frames) and
  * whether a failed attempt's turn there had the same plays; and the decisions later in that turn (a re-plan after a draw)
- * planned again on their logged boards under "new" (SL_RETRY_EXPLORE_TURN's avoid), Jev answering as logged. No model is
+ * planned again on their logged boards under "new" (SL_RETRY_EXPLORE_TURN's avoid) and "whole", Jev answering as logged;
+ * and the deviation point's own board resolved again under "whole" (Jev's logged answer). No model is
  * called, nothing is written outside --out; logs are read only.
  *
  * Per fight: the logged frames (states.jsonl rows of that run and floor, in combat) and decisions, split into attempts where
@@ -69,12 +73,13 @@ const tag = arg("tag", "");
 /** B2 on a boss it is trusted on (the gate there, and the ranking of both rules), in this thread. */
 const B2 = arg("b2", "off") === "on";
 const B2_SAMPLES = Number(arg("b2-samples", String(RETRY_COMPUTE.bossSimSamples)));
-type RuleName = "08ec8f9" | "new";
-type RuleFlags = Pick<SlExploreEnv, "b2Gate" | "bossPotions">;
-/** The two rules: as live at 08ec8f9, and with SL_RETRY_EXPLORE_CANON and _TURN on. */
-const RULES: { name: RuleName; flags: RuleFlags; aliveFirst: boolean; replay: boolean; canon: boolean; turn: boolean }[] = [
-  { name: "08ec8f9", flags: { b2Gate: true, bossPotions: true }, aliveFirst: true, replay: true, canon: false, turn: false },
-  { name: "new", flags: { b2Gate: true, bossPotions: true }, aliveFirst: true, replay: true, canon: true, turn: true },
+type RuleName = "08ec8f9" | "new" | "whole";
+type RuleFlags = Pick<SlExploreEnv, "b2Gate" | "bossPotions" | "whole">;
+/** The rules: as live at 08ec8f9, with SL_RETRY_EXPLORE_CANON and _TURN on (e0fa69b), and with SL_RETRY_EXPLORE_WHOLE too. */
+const RULES: { name: RuleName; flags: RuleFlags; aliveFirst: boolean; replay: boolean; canon: boolean; turn: boolean; whole: boolean }[] = [
+  { name: "08ec8f9", flags: { b2Gate: true, bossPotions: true }, aliveFirst: true, replay: true, canon: false, turn: false, whole: false },
+  { name: "new", flags: { b2Gate: true, bossPotions: true }, aliveFirst: true, replay: true, canon: true, turn: true, whole: false },
+  { name: "whole", flags: { b2Gate: true, bossPotions: true, whole: true }, aliveFirst: true, replay: true, canon: true, turn: true, whole: true },
 ];
 /** The fights of the A9 runs 10-12 postmortem (UK7R F33, 9V7K F45, JSA5 F33 and F48) and the earlier ones (R1QJ F33, 63WB F33). */
 const FIGHTS = (arg("fights", "") || "UK7R9A0NMCXL:33,9V7K1P899R5N:45,JSA5K8YZ9RXV:33,JSA5K8YZ9RXV:48,R1QJUBVBSSB2:33,63WBEEF2JVM5:33")
@@ -422,7 +427,7 @@ async function main(): Promise<void> {
       const truth: ExploreRow[] = [exactRow(1), exactRow(2, { points })];
       const list: Row[] = [];
       for (let attempt = 3; attempt <= maxAttempts; attempt += 1) {
-        const { target, why } = exploreTarget(rowsSoFar, attempt, { aliveFirst: rule.aliveFirst, ...(rule.canon ? { canon: true } : {}), ...(rule.turn ? { tried: true } : {}) });
+        const { target, why } = exploreTarget(rowsSoFar, attempt, { aliveFirst: rule.aliveFirst, ...(rule.canon ? { canon: true } : {}), ...(rule.turn ? { tried: true } : {}), ...(rule.whole ? { whole: true } : {}) });
         if (!target) {
           const result = { run: fight.run, floor: fight.floor, rule: rule.name, attempt, target: null, why };
           writeFileSync(out, `${JSON.stringify(result)}\n`, { flag: "a" });
@@ -508,7 +513,8 @@ async function main(): Promise<void> {
           if (!boardAt || !turn.plays) return entry;
           return { turn: entry.turn, plays: turn.plays, boards: entry.boards.filter((b) => b.at <= boardAt.at) };
         });
-        const simulated: ExploreRow = { attempt, turns: deathTurn, result: "predicted_death", explore: { points: next, target: target as SlTarget, deviation: { reached: true, original, replacement, reason: String(result.reason) }, ...(rule.canon || rule.turn ? { turns: turnsUpTo } : {}) } };
+        // "whole": the deviation's turn as planned there, against the failed ones (a wasted point is not a use of it).
+        const simulated: ExploreRow = { attempt, turns: deathTurn, result: "predicted_death", explore: { points: next, target: target as SlTarget, deviation: { reached: true, original, replacement, reason: String(result.reason), ...(rule.whole && differs !== null ? { differs } : {}) }, ...(rule.canon || rule.turn ? { turns: turnsUpTo } : {}) } };
         rowsSoFar.push(simulated);
         truth.push({ ...simulated, explore: { ...simulated.explore!, turns: turnsUpTo } });
       }
@@ -533,6 +539,7 @@ async function main(): Promise<void> {
       const same = attemptsWith(liveRows.filter((r) => r.attempt < row.attempt && r.result !== "won"), target.board, canon);
       // The decisions after the point in its turn, planned again on their boards with "new"'s avoid (Jev as logged).
       const replans: Row[] = [];
+      let pointWhole: Row | null = null;
       if (turnThere && explore.deviation?.reached) {
         const attemptFrames = frameAttempts[row.attempt - 1] ?? [];
         const attemptDecisions = decisionAttempts[row.attempt - 1] ?? [];
@@ -548,6 +555,29 @@ async function main(): Promise<void> {
           const board = slBoardKey(state);
           if (board === target.board) {
             passed = true;
+            // "whole" on the point's board: the deviation resolved again with Jev's logged answer.
+            if (String(logged["label"]).startsWith("combat/plan-choice")) {
+              const played = record!.before.get(String(frame["ts"])) ?? { canon: [], text: [] };
+              const plan = planBoard(state, { attempt: row.attempt, maxAttempts, previous: slRows.filter((r) => r.attempt < row.attempt), knownDraws: knownOf(known, tracker), played });
+              const chosen = loggedPick(logged).chosen;
+              const chosenText = chosen ? normal(criteriaOf(logged)[chosen]?.["plays"]) : null;
+              if (plan.decision?.kind === "ask") {
+                const ask = plan.decision as AskDecision;
+                const options = Object.fromEntries(Object.entries(((ask.questions["plan"] as { criteria: Record<string, string | null> }).criteria)).map(([key, text]) => [key, text ? (JSON.parse(text) as Row) : {}]));
+                const key = Object.keys(options).find((k) => chosenText !== null && normal(options[k]!["plays"]) === chosenText) ?? null;
+                if (key) {
+                  // "new" and "whole" on the same plan (the same rollout): which replacement each makes.
+                  const resolveWith = (whole: boolean): Row => {
+                    for (const k of Object.keys(plan.explore)) if (k !== "played") delete (plan.explore as Record<string, unknown>)[k];
+                    Object.assign(plan.explore, { b2Gate: true, bossPotions: true, ...(whole ? { whole: true } : {}), deviate: { point: target.point, excluded: target.excluded, attempts: target.attempts, ...(target.tried ? { tried: target.tried } : {}) } });
+                    const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.95 }, confidence: 0.95, raw: {} } } as unknown as AnswerSet);
+                    const log = asRow(asRow(resolved.log)["sl_explore"]);
+                    return { replacement: log["replacement"] ?? null, reason: log["reason"] ?? null, turn: log["turn"] ?? null, turn_instead: log["turn_instead"] ?? null };
+                  };
+                  pointWhole = { answer: chosenText, ...resolveWith(true), new: resolveWith(false) };
+                } else pointWhole = { answer: chosenText, missing: "Jev's logged answer is not among the options now" };
+              } else pointWhole = { answer: chosenText, missing: `the board is code's own now (${plan.decision?.label ?? "none"})` };
+            }
             continue;
           }
           if (!passed || !PLANNING.test(String(logged["label"]))) continue;
@@ -559,24 +589,29 @@ async function main(): Promise<void> {
             const criteria = criteriaOf(logged);
             return pick.played && criteria[pick.played] ? normal(criteria[pick.played]!["plays"]) : null;
           })() : null;
-          // The same board under avoid: code's own line may become a question; Jev answers as logged (its line), else the rollout's best.
+          // The same board under avoid ("new"), and with SL_RETRY_EXPLORE_WHOLE ("whole"): code's own line may become a
+          // question; Jev answers as logged (its line), else code's line, else the rollout's best.
           let outcome: Row = { label: String(logged["label"]), logged_line: loggedLine ?? (plan.codeLine ?? null) };
-          const asked = (() => {
-            thiefTrace.last = null;
-            const env = envOf(state, { attempt: row.attempt, maxAttempts, previousAttempts: previousAttemptsJson(slRows.filter((r) => r.attempt < row.attempt), row.attempt, maxAttempts, { knownDraws: true }), showSim: true, ...(knownOf(known, tracker) ? { knownDraws: knownOf(known, tracker)! } : {}), compute: { ...RETRY_COMPUTE, bossSimSamples: B2_SAMPLES }, explore: { b2Gate: true, bossPotions: true, played, avoid } });
-            return planCombatTurn(env);
-          })();
-          if (asked?.kind === "ask") {
-            const ask = asked as AskDecision;
-            const options = Object.fromEntries(Object.entries(((ask.questions["plan"] as { criteria: Record<string, string | null> }).criteria)).map(([key, text]) => [key, text ? (JSON.parse(text) as Row) : {}]));
-            const key = Object.keys(options).find((k) => loggedLine !== null && normal(options[k]!["plays"]) === loggedLine) ?? Object.keys(options).find((k) => plan.codeLine !== null && normal(options[k]!["plays"]) === plan.codeLine) ?? Object.keys(options).find((k) => options[k]!["rollout_best"] === true) ?? null;
-            if (key) {
-              const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.95 }, confidence: 0.95, raw: {} } } as unknown as AnswerSet);
-              const log = asRow(asRow(asRow(resolved.log)["sl_explore"])["avoid"]);
-              outcome = { ...outcome, new: { kind: "question", answer: normal(options[key]!["plays"]), replacement: log["replacement"] ?? null, reason: log["reason"] ?? null, turn: log["turn"] ?? null, turn_instead: log["turn_instead"] ?? null } };
+          for (const variant of ["new", "whole"] as const) {
+            const asked = (() => {
+              thiefTrace.last = null;
+              const env = envOf(state, { attempt: row.attempt, maxAttempts, previousAttempts: previousAttemptsJson(slRows.filter((r) => r.attempt < row.attempt), row.attempt, maxAttempts, { knownDraws: true }), showSim: true, ...(knownOf(known, tracker) ? { knownDraws: knownOf(known, tracker)! } : {}), compute: { ...RETRY_COMPUTE, bossSimSamples: B2_SAMPLES }, explore: { b2Gate: true, bossPotions: true, played, avoid, ...(variant === "whole" ? { whole: true } : {}) } });
+              return planCombatTurn(env);
+            })();
+            if (asked?.kind === "ask") {
+              const ask = asked as AskDecision;
+              const options = Object.fromEntries(Object.entries(((ask.questions["plan"] as { criteria: Record<string, string | null> }).criteria)).map(([key, text]) => [key, text ? (JSON.parse(text) as Row) : {}]));
+              const key = Object.keys(options).find((k) => loggedLine !== null && normal(options[k]!["plays"]) === loggedLine) ?? Object.keys(options).find((k) => plan.codeLine !== null && normal(options[k]!["plays"]) === plan.codeLine) ?? Object.keys(options).find((k) => options[k]!["rollout_best"] === true) ?? null;
+              if (key) {
+                const resolved = ask.resolve({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.95 }, confidence: 0.95, raw: {} } } as unknown as AnswerSet);
+                const explored = asRow(asRow(resolved.log)["sl_explore"]);
+                const log = asRow(explored["avoid"]);
+                outcome = { ...outcome, [variant]: { kind: "question", answer: normal(options[key]!["plays"]), replacement: log["replacement"] ?? null, reason: log["reason"] ?? null, turn: log["turn"] ?? null, turn_instead: log["turn_instead"] ?? null, ...(explored["avoid_failed"] ? { avoid_failed: explored["avoid_failed"] } : {}) } };
+              }
+            } else {
+              const point = asked ? slPointOf(asked, { intent: null, rationale: "", confidence: null, fallback: false }) : undefined;
+              outcome = { ...outcome, [variant]: { kind: asked?.kind ?? null, label: asked?.label ?? null, line: point?.line ?? null, turn: point?.canon?.[point.line] ?? null, ...(point?.avoidFailed ? { avoid_failed: point.avoidFailed } : {}) } };
             }
-          } else {
-            outcome = { ...outcome, new: { kind: asked?.kind ?? null, label: asked?.label ?? null, line: asked ? (slPointOf(asked, { intent: null, rationale: "", confidence: null, fallback: false })?.line ?? null) : null } };
           }
           replans.push({ turn: state.turn, ...outcome });
         }
@@ -589,6 +624,7 @@ async function main(): Promise<void> {
         turn: canon,
         turn_same_as: same,
         failed_turns_there: check.tried.canon,
+        point_whole: pointWhole,
         replans,
         result: row.result,
         turns: row.turns,
@@ -612,11 +648,16 @@ async function main(): Promise<void> {
         return `    ${rule.name}: T${String(t["turn"])} (back ${String(t["back"])}${Number(t["round"]) > 0 ? `, round ${String(t["round"])}` : ""}${t["lost"] ? ", every line lost" : ""}; played there in ${((t["attempts"] as number[]) ?? []).join(", ")}) ${String(r["original"] ?? "?")}  ->  ${String(r["replacement"] ?? "(none)")}${asRow(r["jev_pick"])["assumed"] ? " [Jev's pick assumed]" : ""}\n        ${turnText}: ${String(turn["plays"] ?? "?")}${Object.keys(replay).length > 0 ? `\n        replay: ${String(replay["boards"])} boards before it (${String(replay["questions"])} questions)${replay["breaks"] ? `, breaks at ${String(replay["breaks"])}` : ", every question shows attempt 2's line"}` : ""}\n        ${String(r["reason"])}${r["gate"] ? ` [gate ${String(r["gate"])}]` : ""}\n        original: ${String(n["original"] ?? "-")}\n        replacement: ${String(n["replacement"] ?? "-")}${Object.keys(b2).length > 0 ? `\n        B2 calibrated ${String(b2["original"])} -> ${String(b2["replacement"])} (paired ${String(b2["diff"])} ± ${String(b2["se"])})` : ""}\n        why: ${String(r["why"])}`;
       });
       const l = live.get(attempt);
+      /** A re-plan's outcome under a variant, as one line. */
+      const variantText = (now: Row): string =>
+        `${now["kind"] === "question" ? `Jev's ${String(now["answer"])} -> ${String(now["replacement"] ?? "(kept)")} (${String(now["reason"] ?? "")})` : `${String(now["label"] ?? now["kind"])} ${String(now["line"] ?? "")}`}${now["avoid_failed"] ? ` [avoid failed: ${String(asRow(now["avoid_failed"])["reason"])}]` : ""}`;
       const replans = ((l?.["replans"] as Row[] | undefined) ?? []).map((entry) => {
-        const now = asRow(entry["new"]);
-        return `\n      later in that turn (T${String(entry["turn"])}): logged ${String(entry["logged_line"] ?? "?")} [${String(entry["label"])}]; new: ${now["kind"] === "question" ? `Jev's ${String(now["answer"])} -> ${String(now["replacement"] ?? "(kept)")} (${String(now["reason"] ?? "")})` : `${String(now["label"] ?? now["kind"])} ${String(now["line"] ?? "")}`}`;
+        return `\n      later in that turn (T${String(entry["turn"])}): logged ${String(entry["logged_line"] ?? "?")} [${String(entry["label"])}]\n        new: ${variantText(asRow(entry["new"]))}\n        whole: ${variantText(asRow(entry["whole"]))}`;
       }).join("");
-      const liveText = l ? `\n    live: aimed at ${String(l["target"] ?? "-")}; ${l["reached"] ? "reached" : "not reached"}${l["left_path_at"] ? `, left attempt 2's path at ${String(l["left_path_at"])}` : ""}; ${String(l["deviation"] ?? "no deviation")}; ${l["turn"] === null ? "no turn through the point" : `its turn there ${(l["turn_same_as"] as number[]).length > 0 ? `= attempt ${(l["turn_same_as"] as number[]).join(", ")}'s` : "differs from every failed attempt's"} (${String(l["turn"])})`}; ${String(l["result"])} on T${String(l["turns"])}${replans}` : "";
+      const pw = l ? asRow(l["point_whole"]) : {};
+      const pwNew = asRow(pw["new"]);
+      const pointText = Object.keys(pw).length > 0 ? `\n      the point planned again: Jev's ${String(pw["answer"] ?? "?")}${pw["missing"] ? ` (${String(pw["missing"])})` : `\n        new: -> ${String(pwNew["replacement"] ?? "(kept)")} (${String(pwNew["reason"] ?? "")})\n        whole: -> ${String(pw["replacement"] ?? "(kept)")} (${String(pw["reason"] ?? "")})`}` : "";
+      const liveText = l ? `\n    live: aimed at ${String(l["target"] ?? "-")}; ${l["reached"] ? "reached" : "not reached"}${l["left_path_at"] ? `, left attempt 2's path at ${String(l["left_path_at"])}` : ""}; ${String(l["deviation"] ?? "no deviation")}; ${l["turn"] === null ? "no turn through the point" : `its turn there ${(l["turn_same_as"] as number[]).length > 0 ? `= attempt ${(l["turn_same_as"] as number[]).join(", ")}'s` : "differs from every failed attempt's"} (${String(l["turn"])})`}; ${String(l["result"])} on T${String(l["turns"])}${pointText}${replans}` : "";
       console.log(`  a${attempt}:\n${lines.join("\n")}${liveText}`);
     }
   }

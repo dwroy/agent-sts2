@@ -250,7 +250,7 @@ function rows(path: string): SlAttemptRow[] {
   return readFileSync(path, "utf8").trim().split("\n").map((line) => JSON.parse(line) as SlAttemptRow);
 }
 function slConfig(log: string | null, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: true, retryExploreTurn: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 3, eliteRetries: 1, retryShowSim: true, retryKnownDraws: true, retryCompute: true, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryKnownPicks: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 
 /** The deck of these fights: 8 cards; the first attempt draws A..E on T1, F, G, H on T2. */

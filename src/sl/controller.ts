@@ -33,7 +33,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { RunJournal } from "../project/run-journal.js";
 import type { Decision, ResolvedAction, ScreenMemory, SlCompute, SlEnv } from "../project/types.js";
 import { isMenuRunId } from "../project/journal-replay.js";
-import { distinctNames, drawBoundOf, revivesOf, slPointOf, type SlPointInfo } from "../screens/combat-plan.js";
+import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type SlPointInfo } from "../screens/combat-plan.js";
 import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
@@ -189,6 +189,11 @@ export class SlController {
     return this.config.retryExplore === true && this.config.retryExploreTurn === true;
   }
 
+  /** SL_RETRY_EXPLORE_WHOLE (with SL_RETRY_EXPLORE_TURN): the deviation's turn judged by its whole plays. */
+  private wholeOn(): boolean {
+    return this.turnOn() && this.config.retryExploreWhole === true;
+  }
+
   /** The configuration as run-config.jsonl records it. */
   describe(): Record<string, JsonValue> {
     return {
@@ -210,6 +215,7 @@ export class SlController {
       retry_explore_replay: this.config.retryExplore === true && this.config.retryExploreReplay === true,
       retry_explore_canon: this.canonOn(),
       retry_explore_turn: this.turnOn(),
+      retry_explore_whole: this.wholeOn(),
       retry_known_picks: this.config.retryKnownPicks === true,
       step_timeout_ms: this.config.stepTimeoutMs,
       log: this.config.log,
@@ -321,7 +327,8 @@ export class SlController {
     try {
       // The sub-switches (SL_RETRY_EXPLORE_B2, SL_RETRY_EXPLORE_BOSS_POTIONS): absent when off, as before them.
       // SL_RETRY_EXPLORE_CANON / _TURN: this turn's plays so far (the turn record is there only with one of them on).
-      const flags = { ...(this.config.retryExploreB2 === true ? { b2Gate: true } : {}), ...(this.config.retryExploreBossPotions === true ? { bossPotions: true } : {}), ...(explore.turns ? { played: this.playedNow(fight, explore, state) } : {}) };
+      // SL_RETRY_EXPLORE_WHOLE: the lines judged by the turn they may end with (with the turn record only).
+      const flags = { ...(this.config.retryExploreB2 === true ? { b2Gate: true } : {}), ...(this.config.retryExploreBossPotions === true ? { bossPotions: true } : {}), ...(explore.turns ? { played: this.playedNow(fight, explore, state) } : {}), ...(explore.turns && this.wholeOn() ? { whole: true } : {}) };
       const target = explore.target;
       const deviation = explore.deviation;
       // SL_RETRY_EXPLORE_TURN: later in the deviation's turn, the turns failed attempts had through the point's board.
@@ -357,6 +364,15 @@ export class SlController {
     if (!fight || !explore || !inCombat(state)) return;
     try {
       const info = slPointOf(decision, resolved);
+      // SL_RETRY_EXPLORE_WHOLE: a decision of the deviation's turn whose line ends it as a failed attempt's, nothing could
+      // change it: on the row's deviation, and said.
+      const failed = slAvoidFailedOf(decision, resolved);
+      if (failed && explore.target && explore.deviation?.reached) {
+        const deviation = explore.deviation;
+        const attempts = explore.target.attempts;
+        deviation.avoidFailed = [...(deviation.avoidFailed ?? []), { turn: state.turn, label: info?.label ?? decision.label, line: failed.line, reason: failed.reason }];
+        this.options.note(`SL: could not keep the deviation's turn off the failed ones at F${fight.floor ?? "?"} T${state.turn ?? "?"} attempt ${fight.attempt}/${fight.maxAttempts}: ${failed.line} ends it as attempt${attempts.length === 1 ? "" : "s"} ${attempts.join(", ")} had it (${failed.reason})`);
+      }
       if (!info) return;
       const board = slBoardKey(state);
       const point: SlPoint = { board, turn: state.turn, kind: info.kind, label: info.label, line: info.line, ...(info.alternatives ? { alternatives: info.alternatives } : {}), ...(info.dead ? { dead: info.dead } : {}), ...(info.b2 ? { b2: info.b2 } : {}), ...(info.explored ? { explored: true as const } : {}), ...(info.canon ? { canon: info.canon } : {}) };
@@ -460,7 +476,7 @@ export class SlController {
       const turns = this.canonOn() || this.turnOn() ? { turns: [] as SlTurnPlays[] } : {};
       if (attempt < 3) return { points: [], target: null, ...turns };
       const earlier = this.rows.filter((row) => row.floor === fight.floor && row.encounter === fight.encounter && row.attempt < attempt);
-      const { target, why } = exploreTarget(earlier, attempt, { aliveFirst: this.config.retryExploreOrder === true, ...(this.canonOn() ? { canon: true } : {}), ...(this.turnOn() ? { tried: true } : {}) });
+      const { target, why } = exploreTarget(earlier, attempt, { aliveFirst: this.config.retryExploreOrder === true, ...(this.canonOn() ? { canon: true } : {}), ...(this.turnOn() ? { tried: true } : {}), ...(this.wholeOn() ? { whole: true } : {}) });
       const turnsNote = target?.tried ? `; ${target.tried.canon.length + target.tried.loose.length} turn${target.tried.canon.length + target.tried.loose.length === 1 ? "" : "s"} through it not again` : "";
       this.options.note(
         target
