@@ -386,6 +386,14 @@ export interface BrainConfig {
     summary: "auto" | "concise" | "detailed" | "none";
     /** BRAIN_CODEX_SERVICE_TIER: e.g. "priority" (Fast: about 2x speed at more usage); null (default) = the standard tier. */
     serviceTier: string | null;
+    /**
+     * The usage guard (engines/codex-usage.ts): the plan's windows and credits read at process start and before a
+     * codex call every `everyCalls` calls (BRAIN_CODEX_USAGE_EVERY_CALLS, default 3) or `everyMin` minutes
+     * (BRAIN_CODEX_USAGE_EVERY_MIN, default 10); codex is off for the rest of the process once a window is at
+     * `stopPct` % (BRAIN_CODEX_USAGE_STOP_PCT, default 80) or credits are in use. `required`
+     * (BRAIN_CODEX_USAGE_REQUIRED=on, default off): a read that fails stops codex too, instead of being said once.
+     */
+    usage: { stopPct: number; everyCalls: number; everyMin: number; required: boolean };
   };
 }
 
@@ -413,6 +421,16 @@ export const DEFAULT_CODEX_EFFORT: Effort = "xhigh";
 
 /** BRAIN_CODEX_TIMEOUT_MS when unset: 10 minutes per call (xhigh on a map / act-plan question takes minutes). */
 export const DEFAULT_CODEX_TIMEOUT_MS = 600_000;
+
+/**
+ * The codex usage guard's defaults (engines/codex-usage.ts). Stop at 80% of any window (Dai 2026-10-03: protect the
+ * weekly window shared with Dai's own Codex use; past 100% the backend draws on credits). A read (~0.9 s, one
+ * short-lived app-server) before every third codex call or after 10 minutes: a call at xhigh takes minutes and is about
+ * 0.1-0.4% of the weekly window, so the guard costs well under 1% of the brain's time and overshoots by about 1%.
+ */
+export const DEFAULT_CODEX_USAGE_STOP_PCT = 80;
+export const DEFAULT_CODEX_USAGE_EVERY_CALLS = 3;
+export const DEFAULT_CODEX_USAGE_EVERY_MIN = 10;
 
 /** Engine names BRAIN_* may use; dsh is named but not implemented yet (the router says so). */
 const ENGINES: readonly EngineName[] = ["deepseek", "claude", "codex", "dsh"];
@@ -554,6 +572,16 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const summaryRaw = (readEnv(env, "BRAIN_CODEX_SUMMARY") ?? "auto").toLowerCase();
   if (!["auto", "concise", "detailed", "none"].includes(summaryRaw)) problems.push({ field: "BRAIN_CODEX_SUMMARY", message: `expected auto, concise, detailed or none, got "${summaryRaw}"` });
   const tierRaw = readEnv(env, "BRAIN_CODEX_SERVICE_TIER");
+  const usageInt = (field: string, fallback: number, range: { min: number; max: number }): number => {
+    const raw = readEnv(env, field);
+    return raw === null ? fallback : parseInteger(raw, field, problems, range);
+  };
+  const codexUsage = {
+    stopPct: usageInt("BRAIN_CODEX_USAGE_STOP_PCT", DEFAULT_CODEX_USAGE_STOP_PCT, { min: 1, max: 100 }),
+    everyCalls: usageInt("BRAIN_CODEX_USAGE_EVERY_CALLS", DEFAULT_CODEX_USAGE_EVERY_CALLS, { min: 1, max: 1000 }),
+    everyMin: usageInt("BRAIN_CODEX_USAGE_EVERY_MIN", DEFAULT_CODEX_USAGE_EVERY_MIN, { min: 1, max: 1440 }),
+    required: parseOnOff(readEnv(env, "BRAIN_CODEX_USAGE_REQUIRED"), "BRAIN_CODEX_USAGE_REQUIRED", problems) ?? false,
+  };
   const prefixRaw = (readEnv(env, "KNOWLEDGE_PREFIX") ?? "off").toLowerCase();
   if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
   const knowledgePrefix: KnowledgePrefixMode = prefixRaw === "full" ? "full" : "off";
@@ -577,6 +605,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       home: resolveCodexHome(env),
       summary: (["auto", "concise", "detailed", "none"].includes(summaryRaw) ? summaryRaw : "auto") as BrainConfig["codex"]["summary"],
       serviceTier: tierRaw && tierRaw.toLowerCase() !== "default" ? tierRaw : null,
+      usage: codexUsage,
     },
   };
 }
