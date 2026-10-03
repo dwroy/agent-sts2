@@ -35,6 +35,7 @@ import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, SHRINKER, solveTurn, STRIP_COUNTERS, type DeathMove, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "../strategy/turn-solver.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
+import { liveSolverFields } from "../strategy/passive-pieces.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../strategy/fight-plan.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
@@ -2738,6 +2739,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     // twice). Known only on turn 1 with no card played yet: the relic shows no used state and the state has no count of
     // the fight's plays (a fight whose turn 1 played nothing is left out).
     ...(relicIds.includes("THROWING_AXE") && state.turn === 1 && num(player["cards_played_this_turn"]) === 0 ? { firstCardReplay: true } : {}),
+    // PASSIVE_PIECES (passive-pieces.ts): Orichalcum, Ripple Basin, Letter Opener, Ornamental Fan, Parrying Shield on this
+    // turn too, the counters from the relics (none held, or off: nothing, the solver as before).
+    ...liveSolverFields(state.run?.raw, num(player["cards_played_this_turn"]), num(player["attacks_played_this_turn"])),
   };
   const kind = fightKind(combat, env);
   // Withering Presence counts every card played: sample the count on every decision, plan-continue
