@@ -4,7 +4,7 @@
  * engine when one fails or times out, and writes one row per question to logs/brain.jsonl.
  *
  * Switching engines is configuration only (config.ts readBrainConfig):
- *   BRAIN_ENGINE=claude|deepseek               default deepseek (v3 behaviour); codex, dsh: named, not built yet
+ *   BRAIN_ENGINE=claude|codex|deepseek         default deepseek (v3 behaviour); dsh: named, not built yet
  *   BRAIN_ENGINE_<PREFIX>=...                   per question kind: the label's first segment, upper case,
  *                                               non-alphanumerics as "_" (map/route-plan -> MAP, run-plan -> RUN_PLAN)
  *   BRAIN_<ENGINE>_MODEL[_<PREFIX>]             the engine's model, overall or per question kind
@@ -110,6 +110,8 @@ export interface BrainLogRow {
   label: string;
   engine: EngineName;
   model: string;
+  /** The reasoning effort asked for (the engine's answer, else its configured one), when the engine has one. */
+  effort?: string;
   system_sha: string;
   system_chars: number;
   /** KNOWLEDGE_PREFIX=full: the prefix the system carried (or why v3's went out instead). */
@@ -169,8 +171,26 @@ export class BrainRouter {
   private readonly calls = new Map<EngineName, number>();
   /** Timeouts in a row per engine (a call that returns or fails otherwise starts it over). */
   private readonly timeouts = new Map<EngineName, number>();
+  /** Where the router says what the console should see (an engine rested for the process); set by Brain.onNote. */
+  private notify: ((message: string) => void) | null = null;
+  /** Engines whose rest for the process was said already (once each). */
+  private readonly saidResting = new Set<EngineName>();
 
   constructor(private readonly deps: RouterDeps) {}
+
+  /** Where to say that an engine is rested for the rest of the process (a used-up subscription): once per engine. */
+  onNote(notify: (message: string) => void): void {
+    this.notify = notify;
+  }
+
+  /** An engine failure's rest; one for the rest of the process is said once (the console). */
+  private rest(engine: EngineName, error: EngineFailure, kind: FailureKind): void {
+    this.resting.set(engine, { until: this.now() + error.cooldownMs, reason: message(error).slice(0, 200), kind });
+    if (Number.isFinite(error.cooldownMs) || this.saidResting.has(engine)) return;
+    this.saidResting.add(engine);
+    const fallback = this.deps.config.fallback && this.deps.config.fallback !== engine ? this.deps.config.fallback : null;
+    this.notify?.(`WARNING: brain engine ${engine} is off for the rest of this process after ${kind}: ${message(error).slice(0, 200)}; its questions go to ${fallback ?? "Jev/code (no BRAIN_FALLBACK)"}`);
+  }
 
   get config(): BrainConfig {
     return this.deps.config;
@@ -193,7 +213,8 @@ export class BrainRouter {
   toolsFor(engine: EngineName): boolean {
     const set = this.deps.config.engines[engine].tools ?? this.deps.config.tools;
     if (set !== null && set !== undefined) return set;
-    return engine !== "deepseek" && this.deps.config.knowledgePrefix !== "full";
+    // Codex runs with no tool at all (engines/codex.ts isolation): it ignores a tool list.
+    return engine !== "deepseek" && engine !== "codex" && this.deps.config.knowledgePrefix !== "full";
   }
 
   /** Calls made to an engine so far in this process (re-asks included). */
@@ -297,7 +318,7 @@ export class BrainRouter {
         throw error;
       }
       const kind = failureKind(error);
-      if (error instanceof EngineFailure && error.cooldownMs > 0) this.resting.set(primary, { until: this.now() + error.cooldownMs, reason: message(error).slice(0, 200), kind });
+      if (error instanceof EngineFailure && error.cooldownMs > 0) this.rest(primary, error, kind);
       if (!fallback || !this.canFallBackTo(fallback)) {
         this.write(primary, req, null, error, undefined, this.spent(error, began));
         throw error;
@@ -449,6 +470,7 @@ export class BrainRouter {
    */
   private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"], failed?: { latencyMs: number; usage?: BrainUsage }): void {
     let model = result?.model ?? "";
+    const effort = result ? result.effort : (req.effort ?? this.deps.config.engines[engine]?.effort ?? undefined);
     if (!result) {
       try {
         model = this.deps.engine(engine).model;
@@ -462,6 +484,7 @@ export class BrainRouter {
       label: req.label,
       engine,
       model,
+      ...(effort ? { effort } : {}),
       system_sha: sha(req.system),
       system_chars: req.system.length,
       ...(req.knowledge ? { knowledge: req.knowledge } : {}),

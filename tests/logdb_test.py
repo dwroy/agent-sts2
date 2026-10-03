@@ -114,6 +114,19 @@ class ExtractTest(unittest.TestCase):
                                                   "problems": ["route: not a path"], "fell_back_from": {"engine": "claude", "error": "limit", "kind": "quota"},
                                                   "memory": "journal", "usage": {"inputTokens": 5, "outputTokens": 1}}).encode(), 0)
         self.assertEqual((fell["fallback_from"], fell["fallback_kind"], fell["parse_error"], fell["memory_chars"], fell["options"]), ("claude", "quota", True, 7, None))
+        # A codex row (src/brain/engines/codex.ts): the router writes its effort; codex's usage arrives in the router's names.
+        codex = extract.brain_call_row(json.dumps({"ts": "2026-10-03T11:00:00.000Z", "run_id": "RUNCODEX0001", "label": "reward/card", "engine": "codex",
+                                                   "model": "gpt-6.1-sol", "effort": "xhigh", "options": {"o0": None, "o1": None},
+                                                   "answer": {"choice": "o1", "reason": "draw"}, "reasks": 0, "attempts": 1, "latency_ms": 41000,
+                                                   "usage": {"inputTokens": 150000, "cacheHitTokens": 140000, "outputTokens": 3000, "reasoningTokens": 2500}}).encode(), 0)
+        self.assertEqual((codex["engine"], codex["model"], codex["effort"], codex["label_head"], codex["latency_ms"], codex["choice"], codex["run_id"]),
+                         ("codex", "gpt-6.1-sol", "xhigh", "reward", 41000, "o1", "RUNCODEX0001"))
+        self.assertEqual((codex["input_tokens"], codex["cache_hit_tokens"], codex["output_tokens"], codex["reasoning_tokens"], codex["cache_write_tokens"], codex["parse_error"]),
+                         (150000, 140000, 3000, 2500, None, False))
+        after = extract.brain_call_row(json.dumps({"ts": "2026-10-03T11:01:00.000Z", "label": "event/choice", "engine": "deepseek", "answer": {"choice": "a"},
+                                                   "fell_back_from": {"engine": "codex", "error": "codex timed out after 600000 ms", "kind": "timeout"},
+                                                   "usage": {"inputTokens": 5, "outputTokens": 1}}).encode(), 0)
+        self.assertEqual((after["engine"], after["fallback_from"], after["fallback_kind"], after["effort"]), ("deepseek", "codex", "timeout", None))
         self.assertEqual(extract.line_ts(lines("runs.jsonl")[0]), None)
         self.assertEqual(extract.line_ts(lines("states.jsonl")[0]), "2026-09-20T10:00:00.000Z")
 
