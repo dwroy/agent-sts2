@@ -148,6 +148,8 @@ export interface BrainAnswer {
   fellBackFrom?: { engine: EngineName; error: string; ms?: number };
   /** Model calls the router's re-ask made (set by the router when it re-asked; the loop counts them against its budget). */
   reaskCalls?: number;
+  /** What the engine wants the log to know about how it got the answer (codex: taken from a cut answer); brain.jsonl's notes. */
+  notes?: string[];
 }
 
 export interface BrainEngine {

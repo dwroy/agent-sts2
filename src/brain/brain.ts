@@ -49,6 +49,8 @@ export interface BrainMeta {
   fell_back_from?: { engine: EngineName; error: string; ms?: number };
   /** Model calls the router's re-ask added (a route checked by its AnswerSpec: M2). */
   reask_calls?: number;
+  /** The engine's notes on how it got the answer (codex: taken from a cut answer, BRAIN_CODEX_ACCEPT_CUT). */
+  notes?: string[];
 }
 
 export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta };
@@ -313,6 +315,7 @@ export class Brain {
       ...(result.problems.length > 0 ? { problems: result.problems } : {}),
       ...(result.fellBackFrom ? { fell_back_from: result.fellBackFrom } : {}),
       ...(result.reaskCalls ? { reask_calls: result.reaskCalls } : {}),
+      ...(result.notes?.length ? { notes: result.notes } : {}),
     };
   }
 
