@@ -1,7 +1,25 @@
 hash,full_hash,date,author,upstream,in_origin_main,n_runs_code_version,subject
+02e2ca8,02e2ca80094201c0eb5352e2312850b53c9f5afe,2026-10-03T23:48:12+08:00,dwroy,0,0,0,Eval versions: V4.5.inferno (v4-live 3dfc2af)
+3dfc2af,3dfc2af7438ce075d80044a7ce4f2675193dab7f,2026-10-03T23:48:12+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: SL judge counts Inferno per copy
+c706afd,c706afdfba3afda297ad46a885b9d630972d14f2,2026-10-03T23:44:52+08:00,dwroy,0,0,0,"Merge branch 'v4-kd-judge' into v4: SL judge counts Inferno's start-of-turn loss per copy, vetoed when the draw could kill every enemy first"
+815810c,815810cc18e09cbb42d9ae9edce826e72a119584,2026-10-03T23:44:01+08:00,dwroy,0,0,0,SL judge: Inferno's start-of-turn loss is 1 for each copy up
+554951d,554951daa4908ad2a0116fa9ac928cfbc82a8508,2026-10-03T23:28:16+08:00,dwroy,0,0,1,"Merge branch 'v4' into v4-live: SL replay reaches its point, off-top plays keep the known order"
+ae1539e,ae1539e10e69f2ad42becfcd25295320dc55af89,2026-10-03T23:28:16+08:00,dwroy,0,0,0,Eval versions: V4.5.slreplay (v4-live 554951d)
+2dee437,2dee43725c5518a4f0abf7cb5fb5747b9dd614ab,2026-10-03T23:24:52+08:00,dwroy,0,0,0,Merge branch 'v4-sl-replay' into v4: SL replay plays the logged plays to reach its point; cards played off the draw pile's top keep the known order
+4b2e147,4b2e147f5267fcd51cc1a0444dbe971eec3ba904,2026-10-03T23:24:14+08:00,dwroy,0,0,0,"SL known draws: Hellraiser's Strikes, played as they are drawn, keep the order (a span of unknown order)"
+9d533bf,9d533bf9caf9fc4764f905474679ca6c6bc18cde,2026-10-03T23:12:22+08:00,dwroy,0,0,0,SL retries: replay the logged plays to the deviation point; cards off the pile's top keep the known order
+8e19a8d,8e19a8dc4f05a70964f4e9662ec2dfdb567ea0e7,2026-10-03T23:07:35+08:00,dwroy,0,0,0,"Merge branch 'v4' into v4-live: codex schema with only the used fields, accept complete cut answers"
+8d444e5,8d444e56ca659f4d482d9a00b481697e43aa5c1b,2026-10-03T23:07:35+08:00,dwroy,0,0,0,Eval versions: V4.5.gpt.schema (v4-live 8e19a8d)
+be9f4dc,be9f4dcd27513dd59d4901899db88959eec5e56d,2026-10-03T23:03:52+08:00,dwroy,0,0,0,"Merge branch 'v4-brain-logs' into v4: codex schema with only the fields a question uses, cut answers accepted when complete"
+311c740,311c74029770192d72fd2430763eaa2429fa8c82,2026-10-03T23:03:15+08:00,dwroy,0,0,0,Codex answer schema: only the fields a question uses (the runaway's cause); a cut answer that is already whole is taken
+b576213,b57621350c9cec7a69cd7c81537aadf1df2ae0ec,2026-10-03T22:46:37+08:00,dwroy,0,0,0,"tools/template-target-replay.ts: the card-text fix replayed on the logs, v4 6bd48a9 and this tree side by side"
+3b80b0e,3b80b0e79e2376fd3abd200ba48e59ad6abb4d34,2026-10-03T22:38:54+08:00,dwroy,0,0,0,Card text: a template's conditional placeholders no longer decide the card; the mod's target fields first (Shiv read as AoE)
+6d2ce32,6d2ce32a6bf3b7771d93355d7a55eff634785870,2026-10-03T22:35:38+08:00,dwroy,0,0,1,"Merge branch 'v4' into v4-live: brain logging fixes, whitespace-loop cut"
+052e586,052e586d753df2f10e478b95e72e2993eb808229,2026-10-03T22:27:44+08:00,dwroy,0,0,0,"Merge branch 'v4-brain-logs' into v4: failed primary time on the fallback row, per-question codex latency, decider names the engine, runaway text kept, whitespace-loop cut"
+fc5b2e5,fc5b2e5e6314c40590dd976189d0137309383c6b,2026-10-03T22:25:14+08:00,dwroy,0,0,0,"Brain logs: a failed primary's time on the fallback's row, each question timed by its own runs, the answering engine as the decider, runaway answers kept and cut early"
 6bd48a9,6bd48a9a63a68fdfb29925b91850cbe3e9ad4e1f,2026-10-03T21:14:23+08:00,dwroy,0,0,0,experiments/brain-replay/ds-vs-gpt-1003: send a logged codex question to DeepSeek through the router (Dai: compare the two answers)
 cf57927,cf579277ee144d1b9a1fe569938399c065c24a04,2026-10-03T20:47:43+08:00,dwroy,0,0,0,Eval versions: V4.5.gpt.session (from L3G50U6KX5ST)
-4719643,4719643e5f42b31772ea51751f0693624cd32085,2026-10-03T20:26:16+08:00,dwroy,0,0,2,"Merge branch 'v4' into v4-live: codex schema without route_reason, capped text fields"
+4719643,4719643e5f42b31772ea51751f0693624cd32085,2026-10-03T20:26:16+08:00,dwroy,0,0,3,"Merge branch 'v4' into v4-live: codex schema without route_reason, capped text fields"
 275ab1c,275ab1c70f3081b5f836fd4d208c9fbb90403684,2026-10-03T20:22:20+08:00,dwroy,0,0,0,Merge branch 'v4-codex-brain' into v4: codex schema drops route_reason and caps free-text fields (the runaway's source)
 43230ad,43230ad485b1912c4a1d4ad13047274010377491,2026-10-03T20:21:37+08:00,dwroy,0,0,0,"Codex brain: route_reason out of codex's answer schema, every text field capped (the runaway's source)"
 24b0714,24b071485b74c3c5e7ece0d84e0f081063f24bf8,2026-10-03T20:08:18+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: codex session mode (off until BRAIN_CODEX_MODE=session)
