@@ -294,6 +294,14 @@ def damage_mods(enemy, player):
     return tuple(sorted(set(enemy["powers"]) & ENEMY_DAMAGE_MODS)) + tuple(sorted(set(player["powers"]) & PLAYER_DAMAGE_MODS))
 
 
+def vulnerable_base(shown):
+    """The hit before our Vulnerable (base + Strength) behind a shown one: the x with floor(x * 1.5) == shown (unique when it
+    exists: floor(1.5x) rises by 1 or 2 per step of x), else None (the Queen's Off With Your Head 7 = floor(5 x 1.5): base 3
+    with her Strength 2; 9, 10, 12, 16 with Strength 3, 4, 5, 8 all give 3 at A8)."""
+    x = -(-2 * shown // 3)  # ceil(shown / 1.5)
+    return x if (3 * x) // 2 == shown else None
+
+
 def back_pair_base(shown, damage, strength, mods):
     """A back-attack enemy's base on a turn that showed both facings' numbers (see BACK_ATTACK_POWERS), else None."""
     same = {d for d, s, m in shown if s == strength and m == mods}
@@ -334,6 +342,9 @@ def new_move():
         "intents": collections.Counter(),
         "shown": collections.defaultdict(collections.Counter),  # asc -> Counter("dmg x hits")
         "base": collections.defaultdict(collections.Counter),  # asc -> Counter(base damage per hit)
+        # asc -> Counter(base damage per hit) from turns whose only damage modifier was our Vulnerable (shown = floor((base +
+        # Strength) x 1.5), inverted): used only for a move with no clean turn at any ascension (vulnerable_base).
+        "vbase": collections.defaultdict(collections.Counter),
         "hits": collections.defaultdict(collections.Counter),
         "totals": [],
         "next": collections.Counter(),
@@ -544,6 +555,7 @@ class Builder:
                 move["totals"].append(intent_total(enemy["intents"]))
                 strength = enemy["powers"].get("STRENGTH_POWER", 0)
                 clean = not (set(enemy["powers"]) & ENEMY_DAMAGE_MODS) and not (set(first["player"]["powers"]) & PLAYER_DAMAGE_MODS)
+                vulnerable_only = not (set(enemy["powers"]) & ENEMY_DAMAGE_MODS) and set(first["player"]["powers"]) & PLAYER_DAMAGE_MODS == {"VULNERABLE_POWER"}
                 back = bool(BACK_ATTACK_POWERS & set(enemy["powers"])) and "SURROUNDED_POWER" in first["player"]["powers"]
                 akey = asc if asc is not None else "?"
                 for intent in enemy["intents"]:
@@ -559,6 +571,8 @@ class Builder:
                                 move["base"][akey][base] += 1
                         elif clean:
                             move["base"][akey][dmg - strength] += 1
+                        elif vulnerable_only and vulnerable_base(dmg) is not None:
+                            move["vbase"][akey][vulnerable_base(dmg) - strength] += 1
                     if intent.get("status_card_count"):
                         move["status_cards"][int(intent["status_card_count"])] += 1
                         if status_added is not None and status_added[0] == index:
@@ -696,6 +710,37 @@ def move_change_tally():
             "end_move": collections.Counter(), "next_move": collections.Counter(), "changed_next": collections.Counter(), "revived": 0}
 
 
+def death_tally():
+    """MECH_DEATH_MOVE (docs/mechanics-learning.md §9): a survivor's move when an ally dies on our turn (one monster id for
+    the survivor, one for the ally): its move just before the death and on the death's own frame (by the move before), what
+    it shows at our end-turn decision and on the next turn's first frame; and, as the baseline, the turns it lived beside a
+    living ally of that id: the moves it started them with and the move it showed the turn after (the ally still alive), and
+    the turns it started after such an ally died earlier in the attempt with none of that id alive: the moves it showed."""
+    return {"n": 0, "fights": set(), "move_before": collections.Counter(), "move_changed": 0, "changed_to": collections.Counter(),
+            "by_move": collections.defaultdict(lambda: {"n": 0, "changed_to": collections.Counter()}), "changed_evidence": [],
+            "attack_changed": 0, "co_deaths": 0, "end_move": collections.Counter(), "next_n": 0, "next_move": collections.Counter(),
+            "next_after": collections.defaultdict(collections.Counter), "next_evidence": [], "alive_turns": 0,
+            "alive_moves": collections.Counter(), "alive_next": collections.defaultdict(collections.Counter), "dead_turns": 0,
+            "dead_moves": collections.Counter()}
+
+
+def death_obj(t):
+    seen = set(t["next_after"])
+    return {"n": t["n"], "fights": len(t["fights"]), "move_before": dict(t["move_before"].most_common()), "move_changed": t["move_changed"],
+            "move_changed_share": round(t["move_changed"] / t["n"], 3) if t["n"] else None, "changed_to": dict(t["changed_to"].most_common()),
+            "by_move": {move: {"n": by["n"], "changed_to": dict(by["changed_to"].most_common())} for move, by in sorted(t["by_move"].items())},
+            "changed_evidence": t["changed_evidence"], "attack_changed": t["attack_changed"], "co_deaths": t["co_deaths"],
+            "end_move": dict(t["end_move"].most_common()), "next_n": t["next_n"], "next_move": dict(t["next_move"].most_common()),
+            "next_after": {move: dict(c.most_common()) for move, c in sorted(t["next_after"].items())}, "next_evidence": t["next_evidence"],
+            "alive": {"turns": t["alive_turns"], "moves": dict(t["alive_moves"].most_common()),
+                      "next": {move: dict(c.most_common()) for move, c in sorted(t["alive_next"].items()) if move in seen}},
+            "dead": {"turns": t["dead_turns"], "moves": dict(t["dead_moves"].most_common())}}
+
+
+# A (survivor, ally) pair is written to the DB with at least this many logged deaths (fewer: noise, and the DB stays small).
+DEATH_MIN_WRITE = 2
+
+
 def move_change_obj(t):
     return {"move_before": dict(t["move_before"].most_common()), "move_changed": t["move_changed"],
             "move_changed_share": round(t["move_changed"] / t["n"], 3) if t["n"] else None,
@@ -719,6 +764,8 @@ class Mechanics:
         # (monster, power) -> the class-B counters of the power lowered (still > 0) on our turn while the enemy lived (an
         # Axebot's Stock 2 -> 1 on its first revive: TQX5JJX3UD39 F37 T1, HAMMER_UPPERCUT -> BOOT_UP)
         self.lowers = collections.defaultdict(lambda: {"n": 0, "fights": set(), **move_change_tally()})
+        # (survivor monster, ally monster) -> its move when such an ally dies on our turn, and the baseline beside a living one
+        self.deaths = collections.defaultdict(death_tally)
         # (monster, move) -> tallies of the enemy turns after an Escape intent
         self.escapes = collections.defaultdict(lambda: {"n": 0, "gone": 0, "gone_stunned": 0, "stayed": 0, "stayed_stunned": 0, "killed_first": 0,
                                                        "killed_last_card": 0, "we_died": 0, "unclear": 0,
@@ -753,8 +800,44 @@ class Mechanics:
             mech["last_ts"][turn] = ts
             if prev is not None:
                 self._frame(fight, turn, prev, snap, mech)
+            self.death_frame(fight, turn, snap, ts)
         except Exception as error:  # noqa: BLE001 - the mining never breaks the DB build
             self.fail(error)
+
+    @staticmethod
+    def death_frame(fight, turn, snap, ts):
+        """MECH_DEATH_MOVE: an enemy dying on our turn while others live, and each survivor's move just before and on that
+        frame (enemies do not advance their moves on our turn, so a change there is the death's doing: the Queen's Burn
+        Bright For Me -> Enrage on the frame the Torch Head Amalgam dies, 0U96U4D9Z3PP F48 T5). Kept per attempt: an SL
+        reload (back to the room-entry save, turn 1, through screens the stream skips) goes on in the same fight, and its
+        turn 1 against the last attempt's would read every enemy back at full HP as a new one and the old one as dead
+        (7PWU4CD3QCP3 F48: four such "deaths")."""
+        attempts = fight.__dict__.setdefault("_attempts", [])
+        if not attempts or turn < attempts[-1]["turn"]:
+            attempts.append({"turn": turn, "first": {}, "last": {}, "last_ts": {}, "deaths": []})
+        att = attempts[-1]
+        att["turn"] = turn
+        prev = att["last"].get(turn)
+        att["first"].setdefault(turn, snap)
+        att["last"][turn] = snap
+        att["last_ts"][turn] = ts
+        if prev is None:
+            return
+        alive_before = {s for s, e in prev["enemies"].items() if living(e)}
+        died = sorted(s for s in alive_before if s not in snap["enemies"] or not living(snap["enemies"][s]))
+        if not died:
+            return
+        # An id back under a serial the last frame did not have (its HP up: the tracker's "came back") is no death of it.
+        fresh = {e["id"] for s, e in snap["enemies"].items() if s not in prev["enemies"] and living(e)}
+        died = [s for s in died if prev["enemies"][s]["id"] not in fresh]
+        for serial, enemy in snap["enemies"].items():
+            before = prev["enemies"].get(serial)
+            if serial not in alive_before or before is None or before["id"] != enemy["id"] or not living(enemy):
+                continue
+            for dead in died:
+                att["deaths"].append({"turn": turn, "serial": serial, "id": enemy["id"], "ally": dead, "ally_id": prev["enemies"][dead]["id"],
+                                      "move_before": before["move"], "move_after": enemy["move"], "attack_before": intent_total(before["intents"]),
+                                      "attack_after": intent_total(enemy["intents"]), "co": len(died)})
 
     def _frame(self, fight, turn, prev, snap, mech):
         alive_before = {s for s, e in prev["enemies"].items() if living(e)}
@@ -885,6 +968,8 @@ class Mechanics:
             end = (mech["last"].get(turn) or {"enemies": {}})["enemies"].get(serial)
             if end is not None and living(end) and self.ended(fight, mech, turn):
                 self.move_after_turn(tally, event, mech, end, moved)
+        for attempt in fight.__dict__.get("_attempts") or []:
+            self.commit_deaths(fight, attempt)
         # Escape intents (at the turn's first decision frame): is it still there at the next turn's first frame?
         left_ids = set()
         for turn in sorted(mech["first"]):
@@ -931,6 +1016,67 @@ class Mechanics:
                 self.reward_with[eid][status][key] += 1
                 if status == "killed":
                     _evidence(self.reward_evidence[(eid, key)], f"{fight.run_id} F{fight.floor}")
+
+    def commit_deaths(self, fight, mech):
+        """MECH_DEATH_MOVE: one attempt's ally deaths (death_frame) into the (survivor, ally) tallies, and its baseline turns."""
+        for event in mech["deaths"]:
+            turn, serial = event["turn"], event["serial"]
+            t = self.deaths[(event["id"], event["ally_id"])]
+            t["n"] += 1
+            t["fights"].add(fight.key)
+            before = event["move_before"] or "?"
+            t["move_before"][before] += 1
+            by = t["by_move"][before]
+            by["n"] += 1
+            if event["move_before"] and event["move_after"] and event["move_after"] != event["move_before"]:
+                t["move_changed"] += 1
+                t["changed_to"][event["move_after"]] += 1
+                by["changed_to"][event["move_after"]] += 1
+                _evidence(t["changed_evidence"], where(fight, turn))
+            t["attack_changed"] += event["attack_after"] != event["attack_before"]
+            t["co_deaths"] += event["co"] > 1
+            end = (mech["last"].get(turn) or {"enemies": {}})["enemies"].get(serial)
+            if end is None or not living(end) or end["id"] != event["id"] or not self.ended(fight, mech, turn):
+                continue
+            t["end_move"][end["move"] or "?"] += 1
+            following = (mech["first"].get(turn + 1) or {"enemies": {}})["enemies"].get(serial)
+            if following is None or following["id"] != event["id"] or not living(following):
+                continue
+            t["next_n"] += 1
+            t["next_move"][following["move"] or "?"] += 1
+            t["next_after"][end["move"] or "?"][following["move"] or "?"] += 1
+            _evidence(t["next_evidence"], where(fight, turn))
+        # The baseline: each turn a survivor started beside a living ally (another enemy, any id), its move then; and when
+        # that ally (every one of its id) still lived at the turn's end and on the next turn's first frame, the move after.
+        # And the turns it started after such an ally died on an earlier turn of the attempt, none of that id alive: its moves.
+        died_at = {}
+        for event in mech["deaths"]:
+            died_at[event["ally_id"]] = min(died_at.get(event["ally_id"], event["turn"]), event["turn"])
+        for turn in sorted(mech["first"]):
+            first = mech["first"][turn]
+            last = mech["last"].get(turn) or {"enemies": {}}
+            nxt = mech["first"].get(turn + 1) if self.ended(fight, mech, turn) else None
+            for serial, enemy in first["enemies"].items():
+                if not living(enemy) or not enemy["move"]:
+                    continue
+                allies = {}
+                for other, ally in first["enemies"].items():
+                    if other != serial and living(ally):
+                        allies.setdefault(ally["id"], set()).add(other)
+                following = (nxt or {"enemies": {}})["enemies"].get(serial)
+                for ally_id, since in died_at.items():
+                    if since < turn and ally_id not in allies:
+                        t = self.deaths[(enemy["id"], ally_id)]
+                        t["dead_turns"] += 1
+                        t["dead_moves"][enemy["move"]] += 1
+                for ally_id, serials in allies.items():
+                    t = self.deaths[(enemy["id"], ally_id)]
+                    t["alive_turns"] += 1
+                    t["alive_moves"][enemy["move"]] += 1
+                    lived = all(s in last["enemies"] and living(last["enemies"][s]) and nxt is not None and s in nxt["enemies"] and living(nxt["enemies"][s])
+                                for s in serials)
+                    if lived and following is not None and following["id"] == enemy["id"] and living(following) and following["move"]:
+                        t["alive_next"][enemy["move"]][following["move"]] += 1
 
     @staticmethod
     def move_change(tally, event, fight, turn):
@@ -981,6 +1127,9 @@ class Mechanics:
         rewards = self.rewards_of(eid)
         if rewards:
             out["kill_rewards"] = rewards
+        deaths = {ally: death_obj(t) for (mid, ally), t in sorted(self.deaths.items()) if mid == eid and t["n"] >= DEATH_MIN_WRITE}
+        if deaths:
+            out["ally_deaths"] = deaths
         stun = self.stuns.get(eid)
         if stun and stun["n"]:
             out["mid_turn_stuns"] = {"n": stun["n"], "fights": len(stun["fights"]), "triggers": dict(stun["triggers"].most_common()),
@@ -1071,7 +1220,15 @@ OBSERVED_NOTE = (
     "screen items (numbers as N) on at least half of the won fights in which the monster was killed and on none in which it "
     "left (only_when_killed), or on at most 2% of the fights without it (exclusive). mid_turn_stuns: its move turning STUNNED "
     "between two decision frames, with what changed on that frame (powers removed / down, block broken, an ally died, HP lost). "
-    "The top-level powers_stripped pools every monster carrying the power."
+    "ally_deaths (per monster, by the dying ally's id; pairs with at least 2 deaths): an ally dying between two decision frames of our "
+    "turn while this monster lives: move_before / by_move = its move on the frame before and, by it, the move on the death's own frame "
+    "(move_changed / changed_to), attack_changed = its intent total changed on that frame, co_deaths = other enemies died on the same "
+    "frame; end_move = its move at our end-turn decision, next_n / next_move = the ones alive on the next turn's first frame and that "
+    "move, next_after = the same by the end move; alive = the baseline: the turns it started beside a living ally of that id (turns, "
+    "the moves it showed) and, by the move, the move on the next turn's first frame when every such ally still lived then (only for "
+    "the moves in next_after); dead = the turns it started after such an ally died earlier in the attempt with none of that id "
+    "alive (turns, the moves it showed). Kept per SL attempt (a reload starts again at turn 1). The top-level powers_stripped "
+    "pools every monster carrying the power."
 )
 
 
@@ -1164,13 +1321,18 @@ def build_output(builder, game):
         moves = {}
         for move_id, move in sorted(mon["moves"].items()):
             by_asc = {}
-            for akey in sorted(set(move["shown"]) | set(move["base"]), key=lambda a: (isinstance(a, str), a)):
-                base_counter = move["base"].get(akey, collections.Counter())
+            # A move never shown on a clean turn at any ascension (every turn under our Vulnerable: You Are Mine's 99 in the
+            # Queen's fight) takes its base from the Vulnerable-only turns, marked so (base_from).
+            under_vulnerable = not any(sum(c.values()) for c in move["base"].values()) and any(sum(c.values()) for c in move["vbase"].values())
+            bases = move["vbase"] if under_vulnerable else move["base"]
+            for akey in sorted(set(move["shown"]) | set(bases), key=lambda a: (isinstance(a, str), a)):
+                base_counter = bases.get(akey, collections.Counter())
                 by_asc[str(akey)] = {
                     "shown": counter_obj(move["shown"].get(akey, collections.Counter())),
                     "base_per_hit": counter_obj(base_counter),
                     "hits": counter_obj(move["hits"].get(akey, collections.Counter())),
                     "n_base": sum(base_counter.values()),
+                    **({"base_from": "vulnerable"} if under_vulnerable and base_counter else {}),
                 }
             entry = {
                 "name": game_move_name(gm, move_id),
@@ -1583,6 +1745,18 @@ def _synthetic_lines(end_turns=None):
     lines.append(state("COMBAT", "R12", 3, 37, 55, [bot(5, 81, "ONE_TWO_MOVE", {"STOCK_POWER": 1, "STRENGTH_POWER": 3}, dmg=13)], True))
     lines.append(state("COMBAT", "R12", 3, 37, 55, [bot(90, 90, "BOOT_MOVE", {}, types=("Buff", "Defend"))], True, end_turn=True))
     lines.append(state("COMBAT", "R12", 4, 37, 55, [bot(90, 90, "HAMMER_MOVE", {"STRENGTH_POWER": 3}, dmg=17)], True))
+    # Run R13, floor 48 (class D): the Torch dies on T2, the Matron's Pray becomes Rage on that frame, Chop 7x5 next turn
+    # (her Strength 2, our Vulnerable 99: base 3). Then an SL reload back to T1 (the Torch at full HP again: no death of
+    # the first attempt's Torch), and the same death again on T2.
+    vul = [{"power_id": "VULNERABLE_POWER", "amount": 99}]
+    matron = lambda move, powers=None, dmg=None, hits=None, types=("Buff",): enemy(0, "MATRON", 400, 400, move, dmg, hits, powers, types=types)
+    torch = lambda hp: enemy(1, "TORCH", hp, 211, "TACKLE_MOVE", 20, 1)
+    for _attempt in range(2):
+        lines.append(state("COMBAT", "R13", 1, 48, 80, [matron("PRAY_MOVE"), torch(211)], True, player_powers=vul))
+        lines.append(state("COMBAT", "R13", 1, 48, 80, [matron("PRAY_MOVE"), torch(150)], True, player_powers=vul, end_turn=True))
+        lines.append(state("COMBAT", "R13", 2, 48, 60, [matron("PRAY_MOVE"), torch(40)], True, player_powers=vul))
+        lines.append(state("COMBAT", "R13", 2, 48, 60, [matron("RAGE_MOVE"), torch(0)], True, player_powers=vul, end_turn=True))
+        lines.append(state("COMBAT", "R13", 3, 48, 60, [matron("CHOP_MOVE", {"STRENGTH_POWER": 2}, 7, 5, ("Attack",))], True, player_powers=vul))
     return lines
 
 
@@ -1710,6 +1884,17 @@ def self_test():
     assert pooled_stock["move_changed"] == 1 and pooled_stock["changed_to"] == {"BOOT_MOVE": 1} and pooled_stock["monsters"] == {"BOT": 1}, pooled_stock
     # The Hopper's Flutter strips changed its move to STUNNED (counted here too) and never revived it.
     assert flutter["move_changed"] == 2 and flutter["changed_to"] == {"STUNNED": 2} and flutter["revived"] == 0, flutter
+    # Class D: two deaths (one per attempt; the reload's Torch back at full HP is no third), Rage on the frame, Chop next;
+    # the baseline turns beside a living Torch and after its death. The Chop's base from the Vulnerable-only turns: 3.
+    death = db["monsters"]["MATRON"]["observed"]["ally_deaths"]["TORCH"]
+    assert (death["n"], death["by_move"], death["next_n"], death["next_move"]) == (2, {"PRAY_MOVE": {"n": 2, "changed_to": {"RAGE_MOVE": 2}}}, 2, {"CHOP_MOVE": 2}), death
+    assert death["alive"]["turns"] == 4 and death["alive"]["moves"] == {"PRAY_MOVE": 4} and death["dead"] == {"turns": 2, "moves": {"CHOP_MOVE": 2}}, death
+    assert death["changed_evidence"] == ["R13 F48 T2"] and death["attack_changed"] == 0 and death["co_deaths"] == 0, death
+    # (The move tables read each turn's first frame of the fight, the first attempt's: one Chop.)
+    chop = db["monsters"]["MATRON"]["moves"]["CHOP_MOVE"]["damage_by_asc"]["8"]
+    assert chop["base_per_hit"] == {"3": 1} and chop["base_from"] == "vulnerable" and chop["shown"] == {"7x5": 1}, chop
+    assert "base_from" not in db["monsters"]["SLIME"]["moves"]["HIT_MOVE"]["damage_by_asc"]["8"], "a move with clean turns keeps its own base"
+    assert vulnerable_base(7) == 5 and vulnerable_base(16) == 11 and vulnerable_base(8) is None
     # A slime without anything notable has no `observed` entry.
     assert "observed" not in slime, slime.get("observed")
     # A failure in the mining drops every `observed` field and nothing else.

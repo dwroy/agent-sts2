@@ -252,6 +252,7 @@ def main():
     w("")
     observed_section(db, w)
     move_rules_section(db, w)
+    death_rules_section(db, w)
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf8") as handle:
         handle.write("\n".join(out) + "\n")
@@ -303,6 +304,70 @@ def move_rules_section(db, w):
         w("No move change recorded (a DB built before the class-B counters, or none happened).\n")
         return
     w("| monster | power | how | changed / n | to | next (after a change) | revived | move rule |")
+    w("|---|---|---|---|---|---|---|---|")
+    for row in rows:
+        w(row)
+    w("")
+
+
+def death_rule(t, moves=None):
+    """The thresholds of src/knowledge/mechanics.ts deathRuleOf (MECH_DEATH_MOVE; the two must change together): a same-turn
+    change from a move with n >= 3 deaths and >= 90% to one move (STUNNED aside); a next-turn move on >= 90% of n >= 3,
+    either never shown beside a living ally (>= 10 such turns) or, after the same end moves with the ally alive (>= 3
+    logged), not the survivor's own move half the time, and not what its move table already gives after every logged end move
+    (>= 90%). Returns (same-turn {move: to}, next move or None, death's own moves, the next move that passes all but the
+    move-table check or None)."""
+    now = {}
+    for before, by in sorted((t.get("by_move") or {}).items()):
+        targets = sorted(((m, k) for m, k in (by.get("changed_to") or {}).items() if m not in ("STUNNED", before, "?")), key=lambda mk: (-mk[1], mk[0]))
+        if by.get("n", 0) >= 3 and targets and targets[0][1] >= 0.9 * by["n"]:
+            now[before] = targets[0][0]
+    alive = t.get("alive") or {}
+    own = lambda move: alive.get("turns", 0) >= 10 and not (alive.get("moves") or {}).get(move)
+    nxt = same = None
+    n = t.get("next_n", 0)
+    tops = sorted(((m, k) for m, k in (t.get("next_move") or {}).items() if m not in ("STUNNED", "?")), key=lambda mk: (-mk[1], mk[0]))
+    if n >= 3 and tops and tops[0][1] >= 0.9 * n:
+        move = tops[0][0]
+        weight = miss = 0
+        for end, after in (t.get("next_after") or {}).items():
+            base = (alive.get("next") or {}).get(end) or {}
+            total = sum(base.values())
+            if total < 3:
+                continue
+            c = sum(after.values())
+            weight += c
+            miss += c * (1 - base.get(move, 0) / total)
+        # ... and the move model (the monster's own successor counts) does not already give it after every logged end move.
+        changes = any((lambda succ: sum(succ.values()) == 0 or succ.get(move, 0) < 0.9 * sum(succ.values()))(((moves or {}).get(end) or {}).get("next") or {})
+                      for end in (t.get("next_after") or {}) if end != "?")
+        if own(move) or (weight >= 3 and miss / weight >= 0.5):
+            if changes:
+                nxt = move
+            else:
+                same = move
+    return now, nxt, sorted(m for m in set(now.values()) | ({nxt} if nxt else set()) if own(m)), same
+
+
+def death_rules_section(db, w):
+    """(f) The class-D death rules (MECH_DEATH_MOVE; docs/mechanics-learning.md §9): per survivor and dying ally, the logged
+    deaths on our turn, the survivor's move changes on the death's own frame, its next-turn move, the baseline beside a
+    living ally, and whether it is a rule (death_rule). Only the pairs with at least 3 deaths."""
+    w("## (f) a survivor's move when an ally dies (`ally_deaths`, class D)\n")
+    rows = []
+    for eid, monster in sorted((db.get("monsters") or {}).items()):
+        for ally, t in sorted(((monster.get("observed") or {}).get("ally_deaths") or {}).items()):
+            if t.get("n", 0) < 3:
+                continue
+            now, nxt, own, same = death_rule(t, monster.get("moves") or {})
+            changes = "; ".join(f"{b}: " + ", ".join(f"{m} {k}" for m, k in (by.get("changed_to") or {}).items()) + f" of {by.get('n', 0)}" for b, by in sorted((t.get("by_move") or {}).items()) if by.get("changed_to"))
+            tops = ", ".join(f"{m} {k}" for m, k in list((t.get("next_move") or {}).items())[:2])
+            rule = "; ".join([*(f"now {b} -> {m}" for b, m in now.items()), *([f"next {nxt}"] if nxt else [])])
+            rows.append(f"| {eid} | {ally} | {t.get('n', 0)} ({t.get('fights', 0)}) | {changes or '-'} | {tops or '-'} / {t.get('next_n', 0)} | {(t.get('alive') or {}).get('turns', 0)} | {', '.join(own) or '-'} | {('**' + rule + '**') if rule else (f'no (next {same}: its move table gives it already)' if same else 'no')} |")
+    if not rows:
+        w("No ally death recorded (a DB built before the class-D counters).\n")
+        return
+    w("| survivor | ally | deaths (fights) | same-frame changes | next turn / n | turns beside a living ally | death's own moves | rule |")
     w("|---|---|---|---|---|---|---|---|")
     for row in rows:
         w(row)

@@ -253,6 +253,15 @@ export interface AppConfig {
    * attack intents unmultiplied). off (or MECH_RULES off): the combat question and the prefix exactly as before them.
    */
   mechMoveRules: boolean;
+  /**
+   * MECH_DEATH_MOVE (default on; docs/mechanics-learning.md §9, Dai 2026-10-03), with MECH_RULES on: the class learned from
+   * the logged multi-enemy fights, "an ally's death changes a survivor's move" (the Torch Head Amalgam dying turns the
+   * Queen's Burn Bright For Me into Enrage at once, 21 of 21, and her next move into Off With Your Head, 22 of 22), in the
+   * solver (this turn's move), the rollout and the whole-fight boss sim (that enemy turn's move and the next one, the
+   * death's own moves kept out while the ally lives) and the option's fact. off (or MECH_RULES off), or a DB without the
+   * data: the combat question as before it.
+   */
+  mechDeathMove: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -785,6 +794,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const mechMoveRulesProblems: ConfigProblem[] = [];
   const mechMoveRules = parseOnOff(readEnv(env, "MECH_MOVE_RULES"), "MECH_MOVE_RULES", mechMoveRulesProblems) ?? true;
   for (const problem of mechMoveRulesProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // MECH_DEATH_MOVE likewise (on by default; it needs MECH_RULES on to do anything).
+  const mechDeathMoveProblems: ConfigProblem[] = [];
+  const mechDeathMove = parseOnOff(readEnv(env, "MECH_DEATH_MOVE"), "MECH_DEATH_MOVE", mechDeathMoveProblems) ?? true;
+  for (const problem of mechDeathMoveProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -900,6 +913,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     thiefCost,
     mechRules,
     mechMoveRules,
+    mechDeathMove,
     sl,
     brain,
     deepseek,

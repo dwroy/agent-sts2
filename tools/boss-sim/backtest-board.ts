@@ -59,6 +59,8 @@ export function boardOf(state: GameState, knowledge: Knowledge, encounter: strin
     fightPlan: "off",
     // MECH_MOVE_RULES as configured (MECH_MOVE_RULES=off in the environment: the backtest as before it).
     mechMoveRules: config.mechRules && config.mechMoveRules,
+    // MECH_DEATH_MOVE likewise (MECH_DEATH_MOVE=off: the backtest as before it).
+    mechDeathMove: config.mechRules && config.mechDeathMove,
   };
   // The board only: no whole-fight lines inside the planner (B2).
   bossLinesOptions.enabled = false;

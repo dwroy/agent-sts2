@@ -76,6 +76,52 @@ export function ruledMove(enemy: EnemySim & { alive?: boolean }, start: EnemySim
   return null;
 }
 
+/**
+ * MECH_DEATH_MOVE (class D, knowledge/mechanics.ts deathRules, docs/mechanics-learning.md §9): one learned "an ally's death
+ * changes my move" rule on a survivor (EnemySim.moveOnDeath), for one ally on the board. When the line kills that ally for
+ * good, the survivor's move this turn becomes `move` at once (its attack in hp_lost instead of the shown one; the Queen's
+ * Burn Bright For Me -> Enrage, no attack either way), and its next move is `next` (the rollout's next enemy turn: Off With
+ * Your Head, 7x5 at A8).
+ */
+export interface DeathMove {
+  /** The ally's board index, monster id and game name. */
+  ally: number;
+  allyId: string;
+  allyName: string;
+  /** This turn, from the survivor's move now: the move it changes to at once and that move's attack, or null (no change). */
+  move: string | null;
+  moveName: string | null;
+  attacks: { damage: number; hits: number }[];
+  /** Its next move after such a death (after `move`, or its move now), its game name and attack as priced now, or null. */
+  next: string | null;
+  nextName: string | null;
+  nextAttack: number | null;
+  /** The logged counts: same turn [changed, deaths at its move now], next [count, deaths it lived to the next turn]. */
+  nowCounts?: [number, number];
+  nextCounts?: [number, number];
+  /**
+   * The rule for the rollout's later turns (re-read from the move it has then): the same-turn change by move, the next move
+   * and the end moves it was logged after, the death's own moves (never shown while such an ally lived: kept out of its
+   * successors then) and the moves it never showed once such an ally was dead (kept out after).
+   */
+  rule: { now: Record<string, string>; next: string | null; after: string[]; exclusive: string[]; aliveOnly: string[] };
+}
+
+/** The line killed this enemy for good: dead at its end and not back (Stock, an illusion, a reattaching segment, a next phase, a husk). */
+export function diedForGood(enemy: { alive?: boolean } | undefined, start: EnemySim | undefined): boolean {
+  if (!enemy || !start || start.hp <= 0 || enemy.alive !== false) return false;
+  return !start.illusion && !((start.stock ?? 0) > 0) && !start.reattach && !start.revives && !((start.eruption ?? 0) > 0);
+}
+
+/** The learned death rule a line set off on a survivor still alive (MECH_DEATH_MOVE): the first whose ally it killed for good. */
+export function deathMoved(enemy: EnemySim & { alive?: boolean }, sim: { enemies: (EnemySim & { alive?: boolean })[] }, input: Pick<SolverInput, "enemies">): DeathMove | null {
+  if (!enemy.moveOnDeath || enemy.alive === false) return null;
+  for (const rule of enemy.moveOnDeath) {
+    if (diedForGood(sim.enemies.find((entry) => entry.index === rule.ally), input.enemies.find((entry) => entry.index === rule.ally))) return rule;
+  }
+  return null;
+}
+
 /** The learned strip-stun of an enemy this line set off: the first power of its rules that was up and is at 0 now. */
 export function strippedStun(enemy: EnemySim, start: EnemySim | undefined): { power: string; name: string } | null {
   if (!enemy.stunOnStrip || !start) return null;
@@ -236,6 +282,13 @@ export interface EnemySim {
    * such rule (the switch off, no data).
    */
   moveOnStrip?: MoveOnStrip[];
+  /**
+   * MECH_DEATH_MOVE (knowledge/mechanics.ts deathRules, docs/mechanics-learning.md §9): its learned move changes on an ally's
+   * death, one per ally on the board (the Queen's on the Torch Head Amalgam: Enrage at once, Off With Your Head next turn).
+   * A line killing that ally counts the same-turn move's attack in hp_lost instead of the shown one. Absent: no such rule
+   * (the switch off, no data).
+   */
+  moveOnDeath?: DeathMove[];
   /** Attack intents for this enemy's next turn, as shown (already including its own Strength/Weak). */
   attacks: { damage: number; hits: number }[];
 }
@@ -723,6 +776,12 @@ export interface Outcome {
      * logged counts (an Axebot killed with Stock left: Boot Up, 0 for the 14 its Hammer Uppercut showed).
      */
     movedTo?: { power: string; name: string; how: "removed" | "lowered"; move: string; moveName: string; attack: number; before: number; n: number; changed: number };
+    /**
+     * MECH_DEATH_MOVE: the learned death rule this line set off (EnemySim.moveOnDeath): the ally killed (board index, game
+     * name), the move it changes to at once (or null) with its attack this turn (in hp_lost) and the shown attack it
+     * replaces, its next move (or null) with that move's attack as priced now, and the logged counts.
+     */
+    deathMove?: { ally: number; allyName: string; move: string | null; moveName: string | null; attack: number; before: number; next: string | null; nextName: string | null; nextAttack: number | null; nowCounts?: [number, number]; nextCounts?: [number, number] };
     /** A Waterfall Giant husk (999,999,999 max HP): its HP is not there to take off, it explodes. */
     husk?: boolean;
   }[];
@@ -2052,6 +2111,22 @@ function moveRuleOf(enemy: Sim["enemies"][number], input: SolverInput): { movedT
   return { movedTo: { power: rule.power, name: rule.name, how: rule.how, move: rule.move, moveName: rule.moveName, attack: total(rule.attacks), before: total(start?.attacks ?? []), n: rule.n, changed: rule.changed } };
 }
 
+/** A line's learned death rule on a survivor, for the outcome (MECH_DEATH_MOVE), or nothing. */
+function deathMoveOf(enemy: Sim["enemies"][number], sim: Sim, input: SolverInput): { deathMove?: NonNullable<Outcome["enemyHpAfter"][number]["deathMove"]> } {
+  const rule = deathMoved(enemy, sim, input);
+  // Nothing logged from the move it shows now (the Queen's Puppet Strings): no change to say (the rollout re-reads the rule).
+  if (!rule || (rule.move === null && rule.next === null)) return {};
+  const total = (attacks: { damage: number; hits: number }[]) => attacks.reduce((sum, hit) => sum + hit.damage * hit.hits, 0);
+  const start = input.enemies.find((entry) => entry.index === enemy.index);
+  return {
+    deathMove: {
+      ally: rule.ally, allyName: rule.allyName, move: rule.move, moveName: rule.moveName, attack: total(rule.move !== null ? rule.attacks : start?.attacks ?? []),
+      before: total(start?.attacks ?? []), next: rule.next, nextName: rule.nextName, nextAttack: rule.nextAttack,
+      ...(rule.nowCounts ? { nowCounts: rule.nowCounts } : {}), ...(rule.nextCounts ? { nextCounts: rule.nextCounts } : {}),
+    },
+  };
+}
+
 /**
  * MECH_MOVE_RULES (class C): an attack's number before this line's facing, with Surrounded's back attack needing two
  * living enemies (PlayerSim.backAttackPair). One enemy at the start: shown without the x1.5, whatever we turn to. Its
@@ -2087,6 +2162,8 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     // Up): the new move's attack, not the shown one; a revived enemy attacks at its full HP.
     const moved = enemy.moveOnStrip ? ruledMove(enemy, input.enemies.find((entry) => entry.index === enemy.index)) : null;
     if (!enemy.alive && !moved) continue;
+    // MECH_DEATH_MOVE: an ally this line killed changes its move at once (the Queen's Enrage once the Amalgam is dead).
+    const died = !moved && enemy.moveOnDeath ? deathMoved(enemy, sim, input) : null;
     const start = input.enemies.find((entry) => entry.index === enemy.index);
     // Shriek: taken to the threshold this turn, it is stunned and its move is lost.
     if (enemy.alive && (enemy.shriek ?? 0) > 0 && enemy.hp <= (enemy.shriek ?? 0) && (start?.hp ?? 0) > (enemy.shriek ?? 0)) continue;
@@ -2100,7 +2177,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     const halvedByColossus = enemy.vulnerable > 0 && (sim.colossus ? !(player.colossus && (start?.vulnerable ?? 0) > 0) : player.colossus === true && (start?.vulnerable ?? 0) === 0);
     const retaliation = enemy.intangible ? Math.min(1, sim.retaliate) : sim.retaliate;
     let attackerHp = enemy.alive ? enemy.hp : enemy.maxHp;
-    for (const attack of moved ? moved.attacks : enemy.attacks) {
+    for (const attack of moved ? moved.attacks : died && died.move !== null ? died.attacks : enemy.attacks) {
       for (let hit = 0; hit < attack.hits; hit += 1) {
         if (retaliation > 0 && attackerHp <= 0) break;
         const shown = shownAttack(attack.damage, enemy.index, player, sim, input);
@@ -2798,6 +2875,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           ...(enemy.ravenousStunned ? { stunned: true } : {}),
           ...stripStunOf(enemy, input),
           ...(enemy.moveOnStrip ? moveRuleOf(enemy, input) : {}),
+          ...(enemy.moveOnDeath ? deathMoveOf(enemy, sim, input) : {}),
           ...(enemy.maxHp >= 1_000_000 ? { husk: true } : {}),
         })),
       incomingAfterBlock,
