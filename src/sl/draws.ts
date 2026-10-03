@@ -55,7 +55,9 @@
  * step's draws are one such span (where the Strike was among them is not known), and the order goes on (18 known -> 30).
  *
  * SL_RETRY_KNOWN_HAND_ORDER (2026-10-03; DrawTracker `handOrder`, with `inserts`): a card played from the hand and a copy of it
- * drawn in the same step (Shrug It Off drawing Shrug It Off) shows by the hand's order, not its counts (appendedCards).
+ * drawn in the same step (Shrug It Off drawing Shrug It Off) shows by the hand's order, not its counts (appendedCards). When the
+ * played card was the hand's last, the hand looks the same before and after (RJZGFGNYK56W F33 T8: 耸肩无视, 打击, 打击, 剑柄打击
+ * both times, Pommel Strike played and the other Pommel Strike drawn): then by where the played card went (handExits, 2026-10-04).
  */
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, bool, str } from "../util/json.js";
@@ -129,6 +131,8 @@ interface Snapshot {
   discard: number;
   /** The discard pile as a multiset of card keys (empty when the state does not list it). */
   discardCards: Map<string, number>;
+  /** The exhaust pile as a multiset of card keys (empty when the state does not list it). */
+  exhaustCards: Map<string, number>;
   /** The draw pile's card names by key (the listing's line), for the added cards' names. */
   drawNames: Map<string, string>;
   /** A card selection screen's prompt (in the fight: Seeker Strike's 「选择一张牌加入你的手牌」), "" otherwise. */
@@ -137,6 +141,10 @@ interface Snapshot {
   potions: string[];
   /** Our powers, by id (SL_RETRY_KNOWN_OFF_TOP: Hellraiser on). */
   powers: string[];
+  /** Cards played this turn (combat.player.cards_played_this_turn), NaN when the state does not say. */
+  played: number;
+  /** A card selection screen's kind ("combat_hand_select": cards chosen from the hand, to exhaust or discard), "" otherwise. */
+  selectionKind: string;
 }
 
 /**
@@ -177,7 +185,7 @@ function pileNames(state: GameState, pile: "draw" | "discard"): Map<string, stri
 }
 
 /** A pile of agent_view.combat as a multiset of card keys, or null when the state does not list it. */
-export function pileMultiset(state: GameState, pile: "draw" | "discard"): Map<string, number> | null {
+export function pileMultiset(state: GameState, pile: "draw" | "discard" | "exhaust"): Map<string, number> | null {
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   if (!Array.isArray(view[pile])) return null;
   const out = new Map<string, number>();
@@ -224,8 +232,11 @@ function snapshotOf(state: GameState): Snapshot | null {
   });
   const selection = state.screen === "CARD_SELECTION" ? str(asRecord(state.raw["selection"])["prompt"]) : "";
   const potions = asArray(asRecord(state.raw["run"])["potions"]).map((raw) => str(asRecord(raw)["potion_id"])).filter((id) => id !== "");
-  const powers = asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).map((raw) => str(asRecord(raw)["power_id"])).filter((id) => id !== "");
-  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard), discardCards: discard ?? new Map(), drawNames: pileNames(state, "draw"), selection, potions, powers };
+  const player = asRecord(asRecord(state.raw["combat"])["player"]);
+  const powers = asArray(player["powers"]).map((raw) => str(asRecord(raw)["power_id"])).filter((id) => id !== "");
+  const played = typeof player["cards_played_this_turn"] === "number" ? player["cards_played_this_turn"] : Number.NaN;
+  const selectionKind = state.screen === "CARD_SELECTION" ? str(asRecord(state.raw["selection"])["kind"]) : "";
+  return { turn: state.turn, hand, draw, discard: discard === null ? 0 : size(discard), discardCards: discard ?? new Map(), exhaustCards: pileMultiset(state, "exhaust") ?? new Map(), drawNames: pileNames(state, "draw"), selection, potions, powers, played, selectionKind };
 }
 
 /**
@@ -269,6 +280,36 @@ function offTopSource(before: Snapshot, now: Snapshot): { name: string; one: boo
     if (card) sources.push(card);
   }
   return sources.length === 1 ? sources[0]! : null;
+}
+
+/**
+ * SL_RETRY_KNOWN_HAND_ORDER: the hand's cards that left it in this step for the discard or the exhaust pile, when nothing in
+ * the step can have put a draw-pile card there: a card was played from the hand (cards played this turn went up) or a hand
+ * selection took cards (Burning Pact's exhaust, a replace), no potion was drunk, nothing that plays pile cards was played
+ * (Havoc, Cascade, Catastrophe, Uproar; Hellraiser off), no card went onto the pile, and the hand is under 10 (a draw past it
+ * goes to the discard pile). Null when any of that fails or none left. A card played from the hand's end whose copy it drew
+ * leaves the hand looking the same (RJZGFGNYK56W F33 T8, the logs' 31 such steps: Pommel Strike, Shrug It Off, Slimed …):
+ * without the hand less these, neither its counts nor its order show the drawn copy.
+ */
+function handExits(before: Snapshot, now: Snapshot): Map<string, number> | null {
+  if (now.turn !== before.turn || now.hand.length >= 10) return null;
+  if (size(minus(now.draw, before.draw)) > 0) return null;
+  if (TO_HAND_SELECTION.test(before.selection)) return null;
+  const playedOne = now.played > before.played;
+  if (!playedOne && before.selectionKind !== "combat_hand_select") return null;
+  if (size(minus(countOf(before.potions.map((key) => ({ key, name: key }))), countOf(now.potions.map((key) => ({ key, name: key }))))) > 0) return null;
+  if (before.powers.includes("HELLRAISER_POWER") || now.powers.includes("HELLRAISER_POWER")) return null;
+  const leftHand = minus(byBase(before.hand.map((card) => card.key)), byBase(now.hand.map((card) => card.key)));
+  if ([...leftHand.keys()].some((id) => OFF_TOP_CARDS.has(id) || RANDOM_PILE_PLAYERS.has(id))) return null;
+  const gained = minus(now.discardCards, before.discardCards);
+  for (const [key, n] of minus(now.exhaustCards, before.exhaustCards)) gained.set(key, (gained.get(key) ?? 0) + n);
+  const held = countOf(before.hand);
+  const out = new Map<string, number>();
+  for (const [key, n] of gained) {
+    const m = Math.min(n, held.get(key) ?? 0);
+    if (m > 0) out.set(key, m);
+  }
+  return out.size > 0 ? out : null;
 }
 
 /**
@@ -380,9 +421,16 @@ export interface DrawTrackerOptions {
   offTop?: boolean;
   /**
    * SL_RETRY_KNOWN_HAND_ORDER (with `inserts`): within a turn, a card drawn while a copy of it was played from the hand in the
-   * same step is read by the hand's order (appendedCards), not taken for one that left the pile without coming into the hand.
+   * same step is read by the hand's order (appendedCards), not taken for one that left the pile without coming into the hand;
+   * when the hand looks the same (the played card was its last), by the hand less the cards it lost to the discard or exhaust
+   * pile (handExits).
    */
   handOrder?: boolean;
+  /**
+   * With `handOrder` (default on; false only for the offline comparison, tools/sl-draws-replay.ts): the hand less the cards it
+   * lost to the discard or exhaust pile in the step (handExits), when its order shows nothing (the played card was its last).
+   */
+  handExits?: boolean;
 }
 
 /** One attempt's draws, from every state the loop reads during it (DrawTracker.observe). */
@@ -401,6 +449,7 @@ export class DrawTracker {
   private readonly picks: boolean;
   private readonly offTop: boolean;
   private readonly handOrder: boolean;
+  private readonly handExits: boolean;
 
   constructor(options: DrawTrackerOptions = {}) {
     this.inserts = options.inserts === true;
@@ -408,6 +457,7 @@ export class DrawTracker {
     this.picks = this.inserts && options.picks === true;
     this.offTop = this.inserts && options.offTop === true;
     this.handOrder = this.inserts && options.handOrder === true;
+    this.handExits = this.handOrder && options.handExits !== false;
   }
 
   /** SL_RETRY_KNOWN_TOP: the cards moved onto the pile still on it, the next one drawn first; empty without the switch. */
@@ -575,6 +625,26 @@ export class DrawTracker {
         candidates = ordered;
         drawn = again;
         left = rest;
+      }
+      // Still some unaccounted for: the hand less the cards that went to the discard or exhaust pile from it (handExits), and
+      // what it holds past that is new (a card played from the hand's end drew its copy: the hand looks the same).
+      const exits = this.handExits && size(left) > 0 ? handExits(before, now) : null;
+      if (exits) {
+        const kept = [...before.hand];
+        for (const [key, n] of exits) {
+          for (let k = 0; k < n; k += 1) {
+            const at = kept.map((card) => card.key).lastIndexOf(key);
+            if (at >= 0) kept.splice(at, 1);
+          }
+        }
+        const came = newCards(kept, now.hand);
+        const unread = minus(before.draw, now.draw);
+        const read = matchDrawn(came, unread);
+        if (size(unread) < size(left)) {
+          candidates = came;
+          drawn = read;
+          left = unread;
+        }
       }
     }
     // A card taken out of the pile by choice (the step after a to-hand selection): not a draw. SL_RETRY_KNOWN_PICKS: out of
