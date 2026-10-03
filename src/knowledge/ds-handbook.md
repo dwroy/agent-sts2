@@ -39,7 +39,7 @@
 - 二幕火堆之间连打 ≥4 场的路线不走，二幕开局尤其：A8+A9 截至 10-02，二幕路段（起点 ≥60%）1–3 场 368 段死 29（8%）、≥4 场 103 段死 21（20%）；二幕开头到第一个火堆 ≤3 场 A8 98 局死 7、≥4 场 80 局死 15。三幕每段死亡率 15–19%，不随场数变，靠进场血量和药（经验 route-no-chains）。〔MD3F, XJWF, QE4K, RLCN, 0QSB〕
 - 可选精英的进场血量线见知识切片 general:elite（elite-threshold，按本幕精英实测 p75 掉血定）和路线事实的实测投影；确认精英路线时不要引用燃烧之血。蜂群术士 A7–A9 已 9 次致死（A7 3、A8 4、A9 2；A0–A2 另 2 次）。〔Y83U, UJS2, G8AQ, 2AX4；A7–A9：6X8F, CY8U, F8HR, VF5C, NJSZ, EA7F, J300, YQL8, 7KDM〕
 - 两步内有强制精英且血量不足时，下一步选商店/休息，不选普通战（线见知识切片 general:route route-low-hp）。〔2AX4〕
-- 回血还是锻造按知识切片 general:rest（rest-smith-threshold、rest-before-forced、rest-by-boss-loss）：锻造时优先升级永久力量牌；休息回血会被血量上限截掉一部分时（帝王枕头等），更应该锻造。〔G6YV 4 次休息 0 次升级〕
+- 回血还是锻造按知识切片 general:rest（rest-smith-threshold、rest-before-forced、rest-by-boss-loss）：锻造时优先升级永久力量牌；回血一半以上会被血量上限截掉时（帝王枕头等）才锻造，下一场是 boss/必经精英时按 rest-before-forced 的血线回血（Z3DF 66/80 boss 前锻造，回血 +14 就能活过 T8；DT1H 77/95 锻造后进三骑士死；Z4UK A9 69/80 锻造后两场走廊 69→10）。〔G6YV 4 次休息 0 次升级；Z3DF, DT1H, Z4UK〕
 
 ## 药水
 - 两种错误都出现过多次：一是囤到必死才喝（7Q5G, Y83U, MD3F, PLCX 超巨化从 T1 留到 T9 死），二是在不需要的回合喝掉（1R3C T1 来袭 7 喝光 3 瓶，2AX4 Buff 回合喝了应急按钮，JEGB 88/94 喝速度药水）。
