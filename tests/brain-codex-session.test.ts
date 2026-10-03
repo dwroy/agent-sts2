@@ -7,7 +7,8 @@
  */
 import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
@@ -311,6 +312,45 @@ describe("codex session mode", () => {
     expect(answer.latencyMs).toBe(trace()[0]!["ms"]);
   }, 30_000);
 
+  it("ET3V5177HXSY F42 rest/plan, logged: a whole cut answer to a question with a discard option is taken (it was refused for lacking discard)", async () => {
+    const logged = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "codex-cut-data", "et3v-f42-rest.json"), "utf8")) as { label: string; option_keys: string[]; cuts: Array<{ answer_text: string }> };
+    const keyed = Object.fromEntries(logged.option_keys.map((key) => [key, null]));
+    for (const [i, cut] of logged.cuts.entries()) {
+      // The logged turn as the fake streams it: its answer text, then whitespace past BRAIN_CODEX_MAX_ANSWER_BLANKS.
+      const fake = fakeSession(`et3v-${i}`, { turns: [blankRunaway(cut.answer_text.trimEnd()), answering({ choice: "o0", reason: "never asked" })] });
+      const { engine, trace } = sessionEngine(fake);
+      const answer = await engine.decide(request({ label: logged.label, options: keyed, payload: {}, spec: pickSpec(logged.label, keyed, {}) }));
+      expect(answer.answer).toEqual({ choice: "o1:c21", reason: JSON.parse(`${cut.answer_text.trimEnd()}}`).reason });
+      expect(answer.native).toMatchObject({ runs: 1, accepted_from_cut: expect.stringMatching(/\(runaway\)$/) });
+      // codex's schema for it holds discard (an option takes it), which the answer did not need.
+      const turnStart = fake.requests().find((r) => r.method === "turn/start")!.params;
+      expect(Object.keys(turnStart["outputSchema"]["properties"])).toEqual(["choice", "reason", "discard"]);
+      expect(trace()).toEqual([expect.objectContaining({ outcome: "stalled", accepted_from_cut: true })]);
+    }
+  }, 60_000);
+
+  it("a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why", async () => {
+    const options = { o0: JSON.stringify({ option: "heal" }), "o0:discard": JSON.stringify({ option: "discard, then heal" }), o1: JSON.stringify({ option: "remove", eligible_cards: { c1: "Strike", c2: "Defend" }, cards_to_name: "[1 keys]" }), o2: JSON.stringify({ option: "leave" }) };
+    const cases: Array<[string, string, RegExp | null]> = [
+      ["needs-discard", '{"choice":"o0:discard","reason":"free a slot first"', /o0:discard discards potions first/],
+      ["needs-cards", '{"choice":"o1","reason":"remove a Strike"', /o1 takes 1 card/],
+      ["needs-nothing", '{"choice":"o2","reason":"nothing worth it"', null],
+    ];
+    for (const [name, prefix, why] of cases) {
+      const fake = fakeSession(`cut-${name}`, { turns: [blankRunaway(prefix), answering({ choice: "o0", reason: "asked again" })] });
+      const { engine, trace } = sessionEngine(fake);
+      const answer = await engine.decide(request({ label: "event/choose", options, spec: pickSpec("event/choose", options, {}) }));
+      if (why) {
+        expect(answer.answer, name).toEqual({ choice: "o0", reason: "asked again" });
+        expect(trace()[0], name).toMatchObject({ outcome: "stalled", cut_rejected: expect.stringMatching(why) });
+        expect(trace()[0], name).not.toHaveProperty("accepted_from_cut");
+      } else {
+        expect(answer.answer, name).toEqual({ choice: "o2", reason: "nothing worth it" });
+        expect(trace(), name).toHaveLength(1);
+      }
+    }
+  }, 60_000);
+
   it("a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off", async () => {
     // reason cut half-way (the length cap inside the string): only choice closes.
     const halfReason: Event[] = [{ method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: `{"choice":"b","reason":"${"稳。".repeat(150)}` } }, { __sleep: 20_000 }];
@@ -326,6 +366,7 @@ describe("codex session mode", () => {
       expect(answer, name).toMatchObject({ answer: { choice: "a", reason: "asked again" }, native: { runs: 2 } });
       expect(answer.notes, name).toBeUndefined();
       expect(trace().map((row) => [row["outcome"], row["accepted_from_cut"] ?? false]), name).toEqual([["stalled", false], ["answered", false]]);
+      expect(trace()[0]!["cut_rejected"] ?? null, name).toEqual(name === "cut-half" ? "missing reason" : name === "cut-bad-choice" ? expect.stringMatching(/choice "zz" is not one of/) : null);
     }
   }, 60_000);
 
