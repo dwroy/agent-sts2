@@ -14,7 +14,7 @@ import { describe, expect, it } from "vitest";
 import { createBrain, createRouter } from "../src/brain/brain.js";
 import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
-import { answeredBy, engineLabel } from "../src/loop.js";
+import { answeredBy, deciderLabel, engineLabel } from "../src/loop.js";
 import { EngineFailure, type BrainLogRow } from "../src/brain/router.js";
 import { fightPlanSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
@@ -415,6 +415,17 @@ describe("the console names the engine", () => {
     expect(answeredBy(undefined)).toBe("DeepSeek");
     expect(answeredBy({ engine: "codex", model: "gpt-6.1-sol", attempts: 1, tool_calls: [] })).toBe("Codex");
     expect(answeredBy({ engine: "deepseek", model: "deepseek-flash", attempts: 1, tool_calls: [], fell_back_from: { engine: "codex", error: "codex timed out after 600000 ms" } })).toBe("DeepSeek (for Codex)");
+  });
+
+  it("deciderLabel: a decision log decider as the rationale names it (RJZGFGNYK56W: codex's answers read \"DeepSeek decided\")", () => {
+    expect(deciderLabel("codex")).toBe("Codex");
+    expect(deciderLabel("deepseek")).toBe("DeepSeek");
+    expect(deciderLabel("claude")).toBe("Claude");
+    expect(deciderLabel("deepseek (for codex)")).toBe("DeepSeek (for Codex)");
+    expect(deciderLabel("claude (for codex)")).toBe("Claude (for Codex)");
+    // None (plain v3 DeepSeek, a resolver called outside the loop): DeepSeek, as before.
+    expect(deciderLabel(undefined)).toBe("DeepSeek");
+    expect(deciderLabel("")).toBe("DeepSeek");
   });
 });
 

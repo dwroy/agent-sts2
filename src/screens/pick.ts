@@ -12,6 +12,7 @@ import { choiceQ, type QuestionSet } from "../jev/questions.js";
 import type { Decision, ResolvedAction } from "../project/types.js";
 import { OUTCOME_BASIS_KEY, outcomeStatsBasis } from "../knowledge/outcome-facts.js";
 import { asArray, asRecord, type JsonValue } from "../util/json.js";
+import { deciderLabel } from "../brain/labels.js";
 import { DISCARD_SUFFIX, discardSlotsOf, optionQuestions } from "./potion-discard.js";
 
 export interface PickOption {
@@ -302,25 +303,27 @@ function deepseekPick(params: PickDecisionParams, deepseek: NonNullable<PickDeci
       const raw = asRecord(answer?.raw);
       const discard = discardSlotsOf(raw["discard"]);
       const named = answer && answer.type === "choice" ? byKey.get(answer.choice) : undefined;
+      // The engine that answered (the loop puts its decider in the answer's raw): the texts name it.
+      const who = deciderLabel(typeof raw["decider"] === "string" ? raw["decider"] : undefined);
       // The plain key with a "discard" list names its "discard, then …" variant (as "o1" with "cards": ["c5"] names o1:c5).
       const chosen = named && discard && discard.length > 0 && !named.key.endsWith(DISCARD_SUFFIX) ? byKey.get(`${named.key}${DISCARD_SUFFIX}`) ?? named : named;
       if (!chosen) {
         // Not reached through the loop (it plays the baseline when DeepSeek has no usable answer).
         const best = bestOption(params.options);
-        return { intent: best.intent, rationale: `no usable DeepSeek answer; code chose ${best.label ?? best.key}`, confidence: null, fallback: true };
+        return { intent: best.intent, rationale: `no usable ${who} answer; code chose ${best.label ?? best.key}`, confidence: null, fallback: true };
       }
       // A one-shot option names what its follow-up takes: the answer's `cards`, `route` and `discard` ride in its raw.
       const cards = asArray(raw["cards"]).filter((card): card is string => typeof card === "string");
       const route = typeof raw["route"] === "string" ? raw["route"] : undefined;
       const outcome = chosen.plan?.({ cards, ...(route ? { route } : {}), ...(discard ? { discard } : {}) }) ?? null;
       if (outcome && "invalid" in outcome) {
-        return { intent: null, rationale: `DeepSeek chose ${chosen.label ?? chosen.key}, but ${outcome.invalid}`, confidence: null, fallback: true };
+        return { intent: null, rationale: `${who} chose ${chosen.label ?? chosen.key}, but ${outcome.invalid}`, confidence: null, fallback: true };
       }
       const planned = outcome;
       const apply = chosen.apply || planned?.apply ? (): void => (chosen.apply?.(), planned?.apply?.()) : undefined;
       return {
         intent: planned?.intent ?? chosen.intent,
-        rationale: `DeepSeek chose ${chosen.label ?? chosen.key} (code's fallback order: ${Number(chosen.score.toFixed(2))}, rank ${rankOf(chosen)} of ${ranked.length}; not shown to DeepSeek)`,
+        rationale: `${who} chose ${chosen.label ?? chosen.key} (code's fallback order: ${Number(chosen.score.toFixed(2))}, rank ${rankOf(chosen)} of ${ranked.length}; not shown to ${who})`,
         confidence: answer && answer.type === "choice" ? answer.confidence : null,
         fallback: false,
         decider: "deepseek",

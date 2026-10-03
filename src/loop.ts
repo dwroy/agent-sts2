@@ -20,6 +20,7 @@ import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "
 import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "./brain/brain.js";
 import { fallbackOf } from "./brain/router.js";
 import type { BrainDecider } from "./brain/types.js";
+import { deciderLabel, engineLabel } from "./brain/labels.js";
 import { moveModel } from "./knowledge/move-model.js";
 import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, trackLizardTail } from "./screens/combat-plan.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
@@ -692,6 +693,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       mechMoveRules: config.mechMoveRules,
       mechDeathMove: config.mechDeathMove,
       sandpitStart: config.sandpitStart,
+      // Who made a one-shot plan, as its steps' decider (below) and their rationales name it.
+      planMaker: (ref, label) => deciderLabel(planDeciders.get(ref) ?? (brain ? brain.engineFor(label) : "deepseek")),
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
@@ -917,7 +920,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
         const accept = (answer: BrainChoice, recovered: { line: string } | null): boolean => {
           const picked = ask.resolve({
-            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}), ...(answer.discard ? { discard: answer.discard } : {}) } },
+            [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", decider: brainDecider(answer.brain), ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}), ...(answer.discard ? { discard: answer.discard } : {}) } },
           } as AnswerSet);
           // A one-shot resolution that fell back in code means the choice named no option.
           if (!picked.intent || (spec.oneshot && picked.fallback)) {
@@ -929,7 +932,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           // The decider is the engine that answered (codex, or "deepseek (for codex)" after a fallback), not always deepseek.
           const by = brainDecider(answer.brain);
           if (picked.plan) notePlanDecider(picked.plan.id, by);
-          deepseekResolved = { ...picked, decider: by, confidence: null, fallback: false, rationale: `DeepSeek decided ${answer.choice}${how}: ${answer.reason} | ${picked.rationale}` };
+          deepseekResolved = { ...picked, decider: by, confidence: null, fallback: false, rationale: `${answeredBy(answer.brain)} decided ${answer.choice}${how}: ${answer.reason} | ${picked.rationale}` };
           deepseekRecord = {
             by: "deepseek",
             direct: true,
@@ -1005,7 +1008,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               onEvent({ type: "note", message: `${answeredBy(meta.brain)}'s plan on ${decision.label} is invalid (${why})` });
             } else {
               if (out.plan) notePlanDecider(out.plan.id, brainBy);
-              deepseekResolved = { ...out, decider: brainBy, confidence: null, fallback: false, rationale: `DeepSeek planned: ${reason} | ${out.rationale}` };
+              deepseekResolved = { ...out, decider: brainBy, confidence: null, fallback: false, rationale: `${answeredBy(meta.brain)} planned: ${reason} | ${out.rationale}` };
               deepseekRecord = {
                 by: "deepseek",
                 direct: true,
@@ -1028,7 +1031,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             if (answer.consistency) {
               stats.deepseekCalls += 1; // the re-ask
               deepseekConsistency = toJsonValue(answer.consistency);
-              onEvent({ type: "note", message: `DeepSeek answer on ${decision.label} was inconsistent (${answer.consistency.first.issues.join("; ")}); re-asked, resolved by ${answer.consistency.resolution}: ${answer.consistency.choice}` });
+              onEvent({ type: "note", message: `${answeredBy(answer.brain)} answer on ${decision.label} was inconsistent (${answer.consistency.first.issues.join("; ")}); re-asked, resolved by ${answer.consistency.resolution}: ${answer.consistency.choice}` });
             }
             if (!accept(answer, null)) deepseekFailed = true;
           }
@@ -1073,7 +1076,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           }
         }
       } else if (brain && !brainBudgetLeft(decision.label)) {
-        onEvent({ type: "note", message: `DeepSeek budget used up (${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0}); ${decision.label} goes to Jev/code` });
+        // The engine for the question is out of calls and so is DeepSeek, its fallback (brainBudgetLeft).
+        const engine = brain.engineFor(decision.label);
+        const spent = `(${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0})`;
+        onEvent({ type: "note", message: `${engine === "deepseek" ? `DeepSeek budget used up ${spent}` : `${engineLabel(engine)} call budget used up, and DeepSeek's as its fallback ${spent}`}; ${decision.label} goes to Jev/code` });
       }
       if (!deepseekResolved && deepseekFailed && spec.oneshot && deepseekAnswerUnusable !== null) {
         // A one-shot question whose answer was unusable: the screen asks its step-by-step questions (logged:
@@ -1143,7 +1149,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // DeepSeek's own tokens (zero when the answer was reused from the memo: no call was made).
       if (deepseekRecord && deepseekRecord["reused"] !== true) usage = deepseekUsage(deepseekRecord);
     } else if (decision.kind === "act") {
-      resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}) };
+      resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}), ...(decision.journal ? { journal: decision.journal } : {}) };
       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
       if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
     } else if (!jev || codeBaseline) {
@@ -1251,17 +1257,18 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 stats.deepseekCalls += 1; // the re-ask
                 reasked = true;
               }
+              // The DeepSeek escalator is asked through the brain: the engine that answered (escalator.name otherwise).
+              const escalatedBy: BrainDecider = escalator.name === "claude" ? "claude" : brainDecider("brain" in answer ? (answer.brain as BrainMeta | undefined) : undefined);
               const override = decision.resolve({
                 ...result.answers,
-                [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name, ...("discard" in answer && Array.isArray(answer.discard) ? { discard: answer.discard } : {}) } },
+                [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name, decider: escalatedBy, ...("discard" in answer && Array.isArray(answer.discard) ? { discard: answer.discard } : {}) } },
               } as AnswerSet);
               if (!override.intent) continue;
               const agreed = answer.choice === jevAnswer.choice;
-              const who = escalator.name === "claude" ? "Claude" : "DeepSeek";
+              const who = deciderLabel(escalatedBy);
               resolved = {
                 ...override,
-                // The DeepSeek escalator is asked through the brain: the engine that answered (escalator.name otherwise).
-                decider: escalator.name === "claude" ? "claude" : brainDecider("brain" in answer ? (answer.brain as BrainMeta | undefined) : undefined),
+                decider: escalatedBy,
                 confidence: jevAnswer.confidence,
                 rationale: `${who} ${agreed ? "confirmed" : "overrode"} Jev (${jevAnswer.choice} @${jevAnswer.confidence.toFixed(2)} -> ${answer.choice}; ${esc.why}): ${answer.reason} | ${override.rationale}`,
               };
@@ -1278,7 +1285,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
             } catch (error) {
-              onEvent({ type: "note", message: `${escalator.name} escalation failed: ${error instanceof Error ? error.message : String(error)}` });
+              // The DeepSeek escalator is asked through the brain: named by the engine the brain asks for this label.
+              onEvent({ type: "note", message: `${escalator.name === "deepseek" && brain ? engineLabel(brain.engineFor(decision.label)) : escalator.name} escalation failed: ${error instanceof Error ? error.message : String(error)}` });
             }
           }
         }
@@ -1511,7 +1519,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         label: "map/route-change",
         decider: by,
         fingerprint: stateFingerprint,
-        rationale: `DeepSeek changed the act's route in ${decision.label} (${change.why}): ${change.from} => ${change.to}${reason ? ` — ${reason}` : ""}${change.nextRest ? `; next rest: ${change.nextRest.text}${change.nextRest.worse ? " (clearly worse than the kept route)" : ""}${change.nextRest.eliteWorse ? " (clearly lower at the next elite)" : ""}` : ""}`,
+        rationale: `${deciderLabel(by)} changed the act's route in ${decision.label} (${change.why}): ${change.from} => ${change.to}${reason ? ` — ${reason}` : ""}${change.nextRest ? `; next rest: ${change.nextRest.text}${change.nextRest.worse ? " (clearly worse than the kept route)" : ""}${change.nextRest.eliteWorse ? " (clearly lower at the next elite)" : ""}` : ""}`,
         confidence: null,
         fallback: false,
         reasked: false,
@@ -1800,11 +1808,7 @@ const ALL_FIGHT_PLANS_FROM_ASCENSION = 8;
 /** …after this floor (act 1's first fights are left to code). */
 const ALL_FIGHT_PLANS_FROM_FLOOR = 3;
 
-/** A brain engine as the console names it (deepseek when there is no brain: v3's client). */
-export function engineLabel(engine: string | undefined): string {
-  const names: Record<string, string> = { deepseek: "DeepSeek", codex: "Codex", claude: "Claude", dsh: "dsh" };
-  return names[engine ?? "deepseek"] ?? String(engine);
-}
+export { deciderLabel, engineLabel };
 
 /**
  * Who answered a brain question, for the decision log's decider: the engine ("codex"), with the one it stood in for when

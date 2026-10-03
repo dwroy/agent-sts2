@@ -23,7 +23,7 @@ import { annotatePlating } from "../knowledge/enchant-text.js";
 import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import type { ResolvedAction } from "../project/types.js";
-import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, sameCard, selectableCards, unlistedNote, usePlanRef, visitKey, type CardIdentity, type DeckFollowUp } from "./oneshot.js";
+import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, planMakerOf, sameCard, selectableCards, unlistedNote, usePlanRef, visitKey, type CardIdentity, type DeckFollowUp } from "./oneshot.js";
 
 /** The shop removal's selection screen, as a one-shot follow-up (which cards it lists: selectableCards). */
 const REMOVAL_FOLLOW: DeckFollowUp = { task: "remove", count: 1, upTo: false, text: "" };
@@ -467,11 +467,13 @@ function shopOneshot(env: DecisionEnv, inputs: OneshotInputs): Decision {
     const step = memo.steps[memo.next];
     if (!step) {
       // The plan was played to its end and the inventory is still open: close it.
-      return { kind: "act", label: "shop/buy", intent: { action: "close_shop_inventory" }, rationale: `DeepSeek plan ${memo.ref} is done: closing the shop` };
+      const done = `plan ${memo.ref} is done: closing the shop`;
+      return { kind: "act", label: "shop/buy", intent: { action: "close_shop_inventory" }, rationale: `${planMakerOf(env, memo.ref, "shop/buy")} ${done}`, journal: `DeepSeek ${done}` };
     }
     replan = stockDrift(memo, env) ?? stepProblem(step, env);
     if (replan && !inputs.canBuy) {
-      return { kind: "act", label: "shop/buy", intent: { action: "close_shop_inventory" }, rationale: `DeepSeek plan ${memo.ref} cannot go on (${replan}) and nothing else is affordable: leaving` };
+      const stuck = `plan ${memo.ref} cannot go on (${replan}) and nothing else is affordable: leaving`;
+      return { kind: "act", label: "shop/buy", intent: { action: "close_shop_inventory" }, rationale: `${planMakerOf(env, memo.ref, "shop/buy")} ${stuck}`, journal: `DeepSeek ${stuck}` };
     }
     if (!replan) {
       const { label, intent, text } = stepAction(step);
@@ -479,7 +481,9 @@ function shopOneshot(env: DecisionEnv, inputs: OneshotInputs): Decision {
         kind: "act",
         label,
         intent,
-        rationale: `DeepSeek plan ${memo.ref} step ${memo.actions + 1}: ${text}`,
+        rationale: `${planMakerOf(env, memo.ref, label)} plan ${memo.ref} step ${memo.actions + 1}: ${text}`,
+        // The run memory (a prompt) keeps its words: "DeepSeek plan …" whichever engine made the plan.
+        journal: `DeepSeek plan ${memo.ref} step ${memo.actions + 1}: ${text}`,
         plan: { ref: memo.ref, step: memo.actions + 1, choice: step.key },
         apply: () => advance(env, memo, step),
       };
