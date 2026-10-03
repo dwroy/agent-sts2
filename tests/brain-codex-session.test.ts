@@ -10,7 +10,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
+import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
 import { CodexEngine, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
 import { pickSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
@@ -243,10 +243,74 @@ describe("codex session mode", () => {
     runaway.push({ __sleep: 20_000 });
     const fake = fakeSession("runaway", { turns: [runaway, answering({ choice: "a", reason: "short" })] });
     const { engine, trace } = sessionEngine(fake, { env: { BRAIN_CODEX_MAX_ANSWER_CHARS: "200" } });
-    await expect(engine.decide(request())).resolves.toMatchObject({ answer: { reason: "short" }, native: { runs: 2 } });
+    const answer = await engine.decide(request({ questionId: "Q7" }));
+    expect(answer).toMatchObject({ answer: { reason: "short" }, native: { runs: 2 } });
     expect(trace()[0]).toMatchObject({ outcome: "stalled", stall: "the answer ran past 200 characters (runaway)" });
     expect(trace()[0]!["answer_chars"]).toBeGreaterThan(200);
     expect(fake.requests().map((r) => r.method)).toContain("turn/interrupt");
+    // The cut answer is kept whole on its trace row (the evidence of which field ran away); the answered run's is not.
+    const cut = trace()[0]!["answer_text"] as string;
+    expect(cut.startsWith('{"choice":"a","reason":"保留。稳。好。佳。保留。')).toBe(true);
+    expect(cut.length).toBe(trace()[0]!["answer_chars"]);
+    expect(trace()[1]).not.toHaveProperty("answer_text");
+    // Both turns name the question; the answer's latency is exactly the two turns.
+    expect(trace().map((row) => row["question_id"])).toEqual(["Q7", "Q7"]);
+    expect(answer.latencyMs).toBe(trace()[0]!["ms"] + trace()[1]!["ms"]);
+    expect(trace().map((row) => row["call_ms"])).toEqual([trace()[0]!["ms"], answer.latencyMs]);
+    // The prompt never reaches the trace.
+    expect(JSON.stringify(trace())).not.toContain("SYSTEM PROMPT");
+    expect(JSON.stringify(trace())).not.toContain("Heal or smith?");
+  }, 30_000);
+
+  it("a whitespace runaway (BRAIN_CODEX_MAX_ANSWER_BLANKS in a row between JSON tokens) is cut at once, long before the length cap; a padded answer is not", async () => {
+    // The runaway of 2026-10-03 (L3G50U6KX5ST F31 reward/card, replayed): a complete reason, then spaces and newlines without end.
+    const blank = { method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: "            \n" } };
+    const runaway: Event[] = [{ method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: '{"choice":"card2","reason":"Rage supplies free defense \\"while\\" attacking."' } }];
+    for (let i = 0; i < 200; i += 1) runaway.push(blank, { __sleep: 2 });
+    runaway.push({ __sleep: 20_000 });
+    // An answer with a little padding (the answered turns padded at most 9), spaces inside its strings, an escaped quote.
+    const padded: Event[] = [
+      { method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: '{"choice":"a",  "reason":"       heal \\"   now\\"        "  \t ,"route":null' } },
+      ...answering({ choice: "a", reason: "heal" }).slice(2),
+    ];
+    const fake = fakeSession("blanks", { turns: [runaway, padded] });
+    const { engine, trace } = sessionEngine(fake);
+    const answer = await engine.decide(request());
+    expect(answer).toMatchObject({ answer: { choice: "a", reason: "heal" }, native: { runs: 2 } });
+    const [cut, ok] = trace();
+    expect(cut).toMatchObject({ outcome: "stalled", stall: expect.stringMatching(/^the answer ran 1\d\d whitespace characters between its JSON tokens \(runaway\)$/) });
+    // Cut within the first ~10 blank deltas (13 characters each), not at the 2000-character cap.
+    expect(cut!["answer_chars"]).toBeLessThan(500);
+    expect(cut!["max_blank_run"]).toBeGreaterThanOrEqual(100);
+    expect((cut!["answer_text"] as string).startsWith('{"choice":"card2","reason":"Rage supplies free defense')).toBe(true);
+    expect(ok).toMatchObject({ outcome: "answered", max_blank_run: 4 });
+  }, 30_000);
+
+  it("BlankRun counts whitespace between JSON tokens only: not inside strings (escaped quotes included), across deltas", () => {
+    const run = new BlankRun();
+    expect(run.feed('{"reason":"a    b')).toBe(0);
+    expect(run.feed('  \\"   c"')).toBe(0);
+    expect(run.feed("   ")).toBe(3);
+    expect(run.feed("\n\t ,")).toBe(6);
+    expect(run.feed('"x":"\\\\"  ')).toBe(6);
+    expect(run.feed("\n".repeat(7))).toBe(9);
+    expect(new BlankRun().feed('{"a":"     ","b":null}')).toBe(0);
+  });
+
+  it("BRAIN_CODEX_MAX_ANSWER_BLANKS: 100 by default, off, or a number of at least 20", () => {
+    const codex = (env: Record<string, string>) => loadConfig(env as unknown as NodeJS.ProcessEnv).brain.codex;
+    expect(codex({}).maxAnswerBlanks).toBe(100);
+    expect(codex({ BRAIN_CODEX_MAX_ANSWER_BLANKS: "off" }).maxAnswerBlanks).toBeNull();
+    expect(codex({ BRAIN_CODEX_MAX_ANSWER_BLANKS: "250" }).maxAnswerBlanks).toBe(250);
+    expect(() => codex({ BRAIN_CODEX_MAX_ANSWER_BLANKS: "5" })).toThrow(/BRAIN_CODEX_MAX_ANSWER_BLANKS/);
+  });
+
+  it("the answer text a turn keeps is capped (ANSWER_TEXT_KEEP), however long the runaway streamed before the interrupt landed", async () => {
+    const long = { method: "item/agentMessage/delta", params: { threadId: "$THREAD", turnId: "$TURN", itemId: "m", delta: "x".repeat(5_000) } };
+    const fake = fakeSession("runaway-cap", { turns: [[long, long, long, { __sleep: 20_000 }], answering({ choice: "a", reason: "short" })] });
+    const { engine, trace } = sessionEngine(fake, { env: { BRAIN_CODEX_MAX_ANSWER_CHARS: "200" } });
+    await engine.decide(request());
+    expect((trace()[0]!["answer_text"] as string).length).toBe(ANSWER_TEXT_KEEP);
   }, 30_000);
 
   it("a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process", async () => {

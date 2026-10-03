@@ -45,10 +45,13 @@ describe("the loop with BRAIN_* set", () => {
     // Claude's calls have their own budget (BRAIN_CLAUDE_MAX_CALLS, the router's count): none of DeepSeek's is spent.
     expect(stats.deepseekCalls).toBe(0);
     expect(actions).toEqual([{ action: "choose_rest_option", option_index: 1 }, { action: "select_deck_card", option_index: 9 }]);
+    // The decider is the engine that answered (it read "deepseek" for every brain answer before 2026-10-03).
     expect(records.find((row) => row["label"] === "rest/plan")).toMatchObject({
-      decider: "deepseek",
+      decider: "claude",
       deepseek: { choice: `o1:${bash}`, reason: "smith Bash for the boss", input_tokens: 810, cache_hit_tokens: 300, output_tokens: 90, brain: { engine: "claude", model: "claude-opus-5", attempts: 1, cost_usd: 0.02 } },
     });
+    // The step code plays from Claude's one-shot plan (the card to smith) is Claude's decision too.
+    expect(records.map((row) => [row["label"], row["decider"]])).toEqual([["rest/plan", "claude"], ["selection/upgrade", "claude"]]);
   });
 
   it("a used-up Claude quota falls back to DeepSeek on the same question", async () => {
@@ -61,6 +64,8 @@ describe("the loop with BRAIN_* set", () => {
     expect(row.deepseek.brain.engine).toBe("deepseek");
     expect(row.deepseek.brain.fell_back_from.engine).toBe("claude");
     expect(row.deepseek.brain.fell_back_from.error).toMatch(/\[quota\]/);
+    // The fallback answered for Claude: the decider says both.
+    expect((row as unknown as Record<string, unknown>)["decider"]).toBe("deepseek (for claude)");
   });
 
   it("a used-up Claude call budget (BRAIN_CLAUDE_MAX_CALLS) falls back to DeepSeek, which then spends DeepSeek's", async () => {
@@ -113,10 +118,12 @@ describe("the loop with BRAIN_* set", () => {
     }
     const bin = fakeClaude("quota-unusable", { type: "result", subtype: "success", is_error: true, result: "You've hit your limit · resets 3pm" }, 1);
     const deepseek = new UnusableDeepSeek(() => "o0");
-    const { stats } = await play([board(REST, "rest"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_BIN: bin }) });
+    const { stats, records } = await play([board(REST, "rest"), mainMenuPayload()], deepseek, { brain: brainConfig({ BRAIN_ENGINE_REST: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_BIN: bin }) });
     // The one-shot rest/plan, then the step-by-step rest/choose: both answered unusably, both counted.
     expect(deepseek.calls.map((call) => call.label)).toEqual(["rest/plan", "rest/choose"]);
     expect(stats.deepseekCalls).toBe(2);
+    // The one-shot's "asking step by step" row names the engine whose answer was unusable.
+    expect(records.find((row) => row["label"] === "rest/plan")).toMatchObject({ decider: "deepseek (for claude)", result: expect.stringMatching(/^not dispatched: one-shot answer unusable/) });
   });
 
   it("default configuration: DeepSeek decides and the row carries no brain note (v3's rows)", async () => {

@@ -3,7 +3,7 @@
 import { describe, expect, it } from "vitest";
 
 import { createRouter } from "../src/brain/brain.js";
-import { BrainRouter, EngineFailure, labelPrefix, TIMEOUT_REST_AFTER, TIMEOUT_REST_MS, type BrainLogRow } from "../src/brain/router.js";
+import { BrainRouter, EngineFailure, fallbackOf, labelPrefix, TIMEOUT_REST_AFTER, TIMEOUT_REST_MS, withUsage, type BrainLogRow } from "../src/brain/router.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "../src/brain/types.js";
 import { brainLogPath, ConfigError, loadConfig } from "../src/config.js";
@@ -97,7 +97,7 @@ describe("engine choice", () => {
     const { router: r, rows } = router({ BRAIN_ENGINE: "dsh", BRAIN_FALLBACK: "deepseek" }, { deepseek });
     const answer = await r.decide(request());
     expect(answer.engine).toBe("deepseek");
-    expect(answer.fellBackFrom).toEqual({ engine: "dsh", error: "brain engine dsh is not implemented yet" });
+    expect(answer.fellBackFrom).toEqual({ engine: "dsh", error: "brain engine dsh is not implemented yet", ms: 0 });
     expect(rows[0]!.fell_back_from).toMatchObject({ engine: "dsh", kind: "unavailable" });
   });
 });
@@ -258,7 +258,7 @@ describe("fallback", () => {
     const { router: r, rows } = router({ BRAIN_ENGINE: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_CLAUDE_TIMEOUT_MS: "1000" }, { claude, deepseek });
     const answer = await r.decide(request());
     expect(answer.engine).toBe("deepseek");
-    expect(answer.fellBackFrom).toEqual({ engine: "claude", error: "claude timed out after 1000 ms" });
+    expect(answer.fellBackFrom).toEqual({ engine: "claude", error: "claude timed out after 1000 ms", ms: 0 });
     expect(claude.aborted).toBe(1);
     expect(rows[0]!.fell_back_from).toMatchObject({ kind: "timeout" });
   });
@@ -383,5 +383,88 @@ describe("the caller's budget for the fallback (the loop's DEEPSEEK_MAX_CALLS)",
     expect(spent()).toBe(2);
     await expect(r.decide(request())).rejects.toThrow("claude exited 1 without a result");
     expect(deepseek.requests).toHaveLength(2);
+  });
+});
+
+describe("the time of a question whose primary failed (2026-10-03: RNTVAT76BPV0's five 600 s codex timeouts were in no row)", () => {
+  /** An engine that takes `ms` of the router's clock, then throws (or answers). */
+  class SlowEngine implements BrainEngine {
+    readonly model = "codex-model";
+    readonly requests: BrainRequest[] = [];
+    constructor(
+      readonly name: EngineName,
+      private readonly clock: { now: number },
+      private readonly steps: Array<{ ms: number; error?: Error; answer?: unknown }>,
+    ) {}
+    async decide(req: BrainRequest): Promise<BrainAnswer> {
+      this.requests.push(req);
+      const step = this.steps[Math.min(this.requests.length - 1, this.steps.length - 1)]!;
+      this.clock.now += step.ms;
+      if (step.error) throw step.error;
+      return { engine: this.name, model: this.model, answer: step.answer, problems: [], attempts: 1, latencyMs: step.ms, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] };
+    }
+  }
+
+  it("an engine failure: the fallback's row carries the failed attempt's wall clock (primary_ms) and its tokens; the answer's fellBackFrom too", async () => {
+    const clock = { now: 1_000 };
+    const codex = new SlowEngine("codex", clock, [{ ms: 600_000, error: withUsage(new EngineFailure("codex timed out after 600000 ms", "timeout"), { inputTokens: 7, outputTokens: 3 }) }]);
+    const deepseek = new SlowEngine("deepseek", clock, [{ ms: 4_600, answer: { choice: "a", reason: "heal" } }]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek" }, { codex: codex as unknown as FakeEngine, deepseek: deepseek as unknown as FakeEngine }, clock);
+    const answer = await r.decide(request());
+    expect(answer.fellBackFrom).toEqual({ engine: "codex", error: "codex timed out after 600000 ms", ms: 600_000 });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ engine: "deepseek", latency_ms: 4_600, primary_ms: 600_000, primary_usage: { inputTokens: 7, outputTokens: 3 }, fell_back_from: { engine: "codex", kind: "timeout" } });
+    // The row's fell_back_from stays {engine, error, kind}: the time is primary_ms (one place to add it from).
+    expect(rows[0]!.fell_back_from).not.toHaveProperty("ms");
+  });
+
+  it("a fallback that fails too: its own failed time is latency_ms, the primary's primary_ms; the error says which engine raised it", async () => {
+    const clock = { now: 0 };
+    const codex = new SlowEngine("codex", clock, [{ ms: 274_000, error: new EngineFailure("codex stalled [timeout]: no stream event for 120 s (2 run(s))", "timeout") }]);
+    const deepseek = new SlowEngine("deepseek", clock, [{ ms: 3_000, error: new Error("HTTP 503") }]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek" }, { codex: codex as unknown as FakeEngine, deepseek: deepseek as unknown as FakeEngine }, clock);
+    const error = await r.decide(request()).catch((e: unknown) => e);
+    expect((error as Error).message).toBe("HTTP 503");
+    expect(fallbackOf(error)).toEqual({ engine: "deepseek", for: "codex" });
+    expect(rows).toEqual([expect.objectContaining({ engine: "deepseek", error: "HTTP 503", latency_ms: 3_000, primary_ms: 274_000 })]);
+  });
+
+  it("no fallback: the primary's own row has its time (latency_ms) and no primary_ms; resting: the fallback's row has none (the primary was not asked)", async () => {
+    const clock = { now: 0 };
+    const alone = new SlowEngine("codex", clock, [{ ms: 600_000, error: new EngineFailure("codex timed out after 600000 ms", "timeout") }]);
+    const solo = router({ BRAIN_ENGINE: "codex" }, { codex: alone as unknown as FakeEngine }, clock);
+    await expect(solo.router.decide(request())).rejects.toThrow(/timed out/);
+    expect(solo.rows[0]).toMatchObject({ engine: "codex", latency_ms: 600_000 });
+    expect(solo.rows[0]).not.toHaveProperty("primary_ms");
+    const codex = new SlowEngine("codex", clock, [{ ms: 10, error: new EngineFailure("codex [quota]: limit", "quota", 60_000) }]);
+    const deepseek = new SlowEngine("deepseek", clock, [{ ms: 5, answer: { choice: "a", reason: "heal" } }]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek" }, { codex: codex as unknown as FakeEngine, deepseek: deepseek as unknown as FakeEngine }, clock);
+    await r.decide(request());
+    const rested = await r.decide(request());
+    expect(codex.requests).toHaveLength(1);
+    expect(rows.map((row) => row.primary_ms ?? null)).toEqual([10, null]);
+    expect(rested.fellBackFrom).not.toHaveProperty("ms");
+  });
+
+  it("an answer unusable after the re-ask: the primary's own row holds its time, the fallback's has no primary_ms; both share the question id", async () => {
+    const clock = { now: 0 };
+    const codex = new SlowEngine("codex", clock, [{ ms: 20_000, answer: { choice: "c" } }, { ms: 15_000, answer: { choice: "d" } }]);
+    const deepseek = new SlowEngine("deepseek", clock, [{ ms: 5_000, answer: { choice: "b", reason: "smith" } }]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek" }, { codex: codex as unknown as FakeEngine, deepseek: deepseek as unknown as FakeEngine }, clock);
+    const answer = await r.decide(request());
+    expect(answer.fellBackFrom).toMatchObject({ engine: "codex", ms: 35_000 });
+    expect(rows.map((row) => [row.engine, row.latency_ms, row.primary_ms ?? null])).toEqual([["codex", 35_000, null], ["deepseek", 5_000, null]]);
+    expect(rows[0]!.question_id).toMatch(/^[0-9a-z]+-\d+-\d+$/);
+    expect(rows[1]!.question_id).toBe(rows[0]!.question_id);
+  });
+
+  it("every question gets its own id, passed to the engines (their trace rows carry it); a caller's id is kept", async () => {
+    const codex = new FakeEngine("codex", [{ choice: "a", reason: "heal" }]);
+    const { router: r, rows } = router({ BRAIN_ENGINE: "codex" }, { codex });
+    await r.decide(request());
+    await r.decide(request());
+    await r.decide(request("rest/plan", { questionId: "Q-mine" }));
+    expect(codex.requests.map((req) => req.questionId)).toEqual([rows[0]!.question_id, rows[1]!.question_id, "Q-mine"]);
+    expect(new Set(rows.map((row) => row.question_id)).size).toBe(3);
   });
 });

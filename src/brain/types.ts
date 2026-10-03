@@ -10,6 +10,12 @@ import type { JsonSchema, ToolContext, ToolDef } from "../tools/types.js";
 
 export type EngineName = "deepseek" | "claude" | "codex" | "dsh";
 
+/**
+ * Who made a brain decision, as the decision log names it (decider): the engine that answered, and the engine it stood
+ * in for when the router fell back ("deepseek (for codex)"). Plain v3 DeepSeek is "deepseek".
+ */
+export type BrainDecider = EngineName | `${EngineName} (for ${EngineName})`;
+
 /** Reasoning effort (claude --effort, codex model_reasoning_effort; xhigh: codex, Dai 2026-10-03). */
 export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 
@@ -73,6 +79,11 @@ export interface BrainRequest {
   knowledge?: KnowledgeNote;
   /** The run the question belongs to (the state's run_id, as decisions.jsonl logs it); logged in brain.jsonl. */
   runId?: string;
+  /**
+   * The question's id, set by the router (one per question: its re-ask and its fallback share it), logged in brain.jsonl
+   * (question_id) and on each of the engine's own trace rows (codex-calls.jsonl), so a question's runs can be found.
+   */
+  questionId?: string;
 }
 
 /** The knowledge a request carries (KNOWLEDGE_PREFIX=full), or why it fell back to v3's prompt. */
@@ -130,8 +141,11 @@ export interface BrainAnswer {
    * its guide/handbook ids, effort and consistency record). Not logged by the router.
    */
   native?: unknown;
-  /** Set when the router fell back to another engine; names the engine that failed and why. */
-  fellBackFrom?: { engine: EngineName; error: string };
+  /**
+   * Set when the router fell back to another engine; names the engine that failed and why, and how long its failed
+   * attempt took (ms: wall clock, about 0 when its budget refused the call; absent when it was resting, not tried).
+   */
+  fellBackFrom?: { engine: EngineName; error: string; ms?: number };
   /** Model calls the router's re-ask made (set by the router when it re-asked; the loop counts them against its budget). */
   reaskCalls?: number;
 }

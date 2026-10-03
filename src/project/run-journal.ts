@@ -167,6 +167,23 @@ export interface JournalContext {
   screenMemory?: Partial<Pick<ScreenMemory, "lastMap" | "routePlan" | "runPlan">>;
 }
 
+/**
+ * Whether a decider is a model's own decision (the brain's, or a v3 escalation's): its choice is always kept with its
+ * reason. The decision log names the engine that answered ("deepseek", "codex", "claude"; "deepseek (for codex)" when
+ * the router's fallback did): every one of them counts, as "deepseek" did when the log named no other.
+ */
+export function isBrainDecider(by: string): boolean {
+  return /^(deepseek|claude|codex|dsh)( \(for (deepseek|claude|codex|dsh)\))?$/.test(by);
+}
+
+/**
+ * The run memory's tag for a decider: "DS" for every brain engine but claude (the memory read "DS" for the brain's
+ * decisions before the decision log named the engine, and still does: the prompt stays as it was), else the decider.
+ */
+export function journalTag(by: string): string {
+  return isBrainDecider(by) && by !== "claude" ? "DS" : by;
+}
+
 /** Non-DeepSeek decisions worth keeping (deck, relics, potions, rests, events, route plans). */
 const KEY_LABELS = /^(reward\/(card|skip)|shop\/(buy|discard|plan)|rest\/(choose|plan)|event\/(choose|only|plan)|chest\/relic|selection\/(?!confirm)|bundle\/choose|capstone\/choose|map\/(discard-potion|route-plan))/;
 
@@ -367,7 +384,7 @@ export class RunJournal {
     }
     // Combat turns are not decisions here: each fight is one line (the fights section).
     if (entry.label.startsWith("combat/") || inCombat(state)) return;
-    if (entry.by === "deepseek" || entry.by === "claude" || KEY_LABELS.test(entry.label)) this.pushChoice(state, entry);
+    if (isBrainDecider(entry.by) || KEY_LABELS.test(entry.label)) this.pushChoice(state, entry);
   }
 
   private pushChoice(state: GameState, entry: JournalEntry): void {
@@ -379,7 +396,7 @@ export class RunJournal {
       label: entry.label,
       by: entry.by,
       choice: compact(entry.choice),
-      reason: entry.by === "deepseek" || entry.by === "claude" ? journalReason(entry.reason) : "",
+      reason: isBrainDecider(entry.by) ? journalReason(entry.reason) : "",
     });
   }
 
@@ -685,7 +702,7 @@ export class RunJournal {
       if (item.kind === "choice") {
         const entry = item.choice;
         const reason = entry.reason.replace(UNVERIFIED_REASON_PREFIX, "");
-        lines.push(` ${other(entry.floor)}${entry.label} [${entry.by === "deepseek" ? "DS" : entry.by}]: ${entry.choice}${reason ? ` — 未核实理由: ${reason}` : ""}`);
+        lines.push(` ${other(entry.floor)}${entry.label} [${journalTag(entry.by)}]: ${entry.choice}${reason ? ` — 未核实理由: ${reason}` : ""}`);
       } else if (item.kind === "fight") {
         lines.push(` ${other(item.fight.floor)}战斗 ${fightLine(item.fight, state)}`);
       } else {

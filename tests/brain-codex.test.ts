@@ -316,8 +316,11 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     expect(Date.now() - began).toBeLessThan(15_000);
     expect(fake.calls()).toBe(2);
     expect(answer).toMatchObject({ answer: { choice: "a", reason: "heal" }, native: { runs: 2 } });
-    // The latency counts the stalled run too.
+    // The latency counts the stalled run too: exactly the two runs' own times, as their trace rows say.
     expect(answer.latencyMs).toBeGreaterThanOrEqual(1_500);
+    const [stalledRun, answeredRun] = trace();
+    expect(answer.latencyMs).toBe(stalledRun!["ms"] + answeredRun!["ms"]);
+    expect([stalledRun!["call_ms"], answeredRun!["call_ms"]]).toEqual([stalledRun!["ms"], answer.latencyMs]);
     expect(trace().map((row) => [row["attempt"], row["outcome"], row["events"].map((event: any) => event.type).join(",")])).toEqual([
       [1, "stalled", "thread.started,turn.started"],
       [2, "answered", "thread.started,turn.started,item.completed,item.completed,turn.completed"],
@@ -325,6 +328,24 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     expect(trace()[0]!["max_gap_ms"]).toBeGreaterThanOrEqual(1_500);
     expect(trace()[0]).toMatchObject({ ttft_ms: expect.any(Number), stall: expect.stringMatching(/^no stream event for 2 s after the first token at 0 s \(last: turn\.started at 0 s\)$/) });
     expect(fake.seen()[0]!.env["RUST_LOG"]).toBe(CODEX_RUST_LOG);
+  }, 30_000);
+
+  it("a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s)", async () => {
+    const stall = [...started, ttft, { __sleep: 30_000 }];
+    const fake = fakeCodex("stall-not-billed", [stall, stall, answered({ choice: "a", reason: "heal" })]);
+    const { engine: e, trace } = tracedEngine(fake.bin, "stall-not-billed", { BRAIN_CODEX_STALL_MS: "1000" });
+    await expect(e.decide(request({ runId: "RUN1", questionId: "Q1" }))).rejects.toThrow(/^codex stalled \[timeout\]: .* \(2 run\(s\)\)$/);
+    const next = await e.decide(request({ runId: "RUN1", questionId: "Q2", label: "event/act-plan" }));
+    const rows = trace();
+    expect(rows.map((row) => [row["question_id"], row["label"], row["attempt"], row["outcome"]])).toEqual([
+      ["Q1", "rest/plan", 1, "stalled"],
+      ["Q1", "rest/plan", 2, "stalled"],
+      ["Q2", "event/act-plan", 1, "answered"],
+    ]);
+    // Before the fix the answered run's latency carried both stalled runs (>= 2 s here): now it is its own run only.
+    expect(rows[0]!["ms"] + rows[1]!["ms"]).toBeGreaterThanOrEqual(2_000);
+    expect(next.latencyMs).toBe(rows[2]!["ms"]);
+    expect(rows.map((row) => row["call_ms"])).toEqual([rows[0]!["ms"], rows[0]!["ms"] + rows[1]!["ms"], rows[2]!["ms"]]);
   }, 30_000);
 
   it("before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall", async () => {
@@ -358,6 +379,13 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     expect(row.fell_back_from).toMatchObject({ engine: "codex", kind: "timeout" });
     const trace = traceOf(join(dir, "codex-calls.jsonl"));
     expect(trace.filter((t) => t["label"] === "rest/plan" && t["outcome"] === "stalled").length).toBeGreaterThanOrEqual(2);
+    // The two stalled runs' time is on DeepSeek's row (primary_ms: the router's wall clock of codex's attempt), and the
+    // runs are found by the row's question id.
+    const runs = trace.filter((t) => t["question_id"] === row.question_id);
+    expect(runs.map((t) => t["outcome"])).toEqual(["stalled", "stalled"]);
+    expect(row.primary_ms).toBeGreaterThanOrEqual(runs[0]!["ms"] + runs[1]!["ms"]);
+    expect(row.primary_ms).toBeLessThan(runs[0]!["ms"] + runs[1]!["ms"] + 5_000);
+    expect(answer.brain?.fell_back_from?.ms).toBe(row.primary_ms);
   }, 30_000);
 
   it("the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked", async () => {

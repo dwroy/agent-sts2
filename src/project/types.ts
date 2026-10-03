@@ -1,5 +1,6 @@
 /** Shared shapes for the decision layer (PLAN.md §3.1, §5). */
 
+import type { BrainDecider } from "../brain/types.js";
 import type { AnswerSet } from "../jev/answers.js";
 import type { QuestionSet } from "../jev/questions.js";
 import type { Knowledge } from "../knowledge/index.js";
@@ -438,8 +439,8 @@ export interface ResolvedAction {
   confidence: number | null;
   fallback: boolean;
   reask?: ReaskSpec;
-  /** Set when a model other than Jev made the call (escalation). */
-  decider?: "jev" | "deepseek" | "claude";
+  /** Set when a model other than Jev made the call: the brain engine that answered (loop.ts brainDecider), or an escalator. */
+  decider?: "jev" | BrainDecider;
   /** Set when code replaced the chosen option (combat HP guard): the option actually played. */
   guard?: { kind: "hp"; choice: string; plan: string };
   /**

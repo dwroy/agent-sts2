@@ -361,7 +361,9 @@ describe("BRAIN_CLAUDE_MAX_CALLS", () => {
     expect(router.budgetLeft("claude")).toBe(false);
     const third = await router.decide(request());
     expect(third.engine).toBe("deepseek");
-    expect(third.fellBackFrom).toEqual({ engine: "claude", error: "claude call budget used up (3/3, BRAIN_CLAUDE_MAX_CALLS)" });
+    // ms: the refused attempt's wall clock (no call was made: about 0).
+    expect(third.fellBackFrom).toEqual({ engine: "claude", error: "claude call budget used up (3/3, BRAIN_CLAUDE_MAX_CALLS)", ms: expect.any(Number) });
+    expect(third.fellBackFrom!.ms).toBeLessThan(1_000);
     expect(logged[2]!.fell_back_from).toMatchObject({ engine: "claude", kind: "budget" });
     expect(claude.requests).toHaveLength(3);
     expect(router.callsMade("deepseek")).toBe(1);
