@@ -27,7 +27,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isPlayFirst, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
@@ -1500,7 +1500,9 @@ export function drawPileCards(raw: Record<string, unknown>): DrawPileCard[] | un
       const line = str(asRecord(entry)["line"]);
       const count = Number(/^[^[：:]*?\*(\d+)\s*\[/.exec(line)?.[1] ?? 1);
       const cost = /\[(-?\d+|X)费\]/.exec(line)?.[1];
-      const playable = cost !== "-1" && !/不能被打出|unplayable/i.test(line);
+      // Enthralled drawn mid-turn plays nothing: it locks the rest of the hand until 2 energy are spent on it (no draw value).
+      const playFirst = asArray(asRecord(entry)["card_ids"]).some((id) => typeof id === "string" && isPlayFirst(id));
+      const playable = cost !== "-1" && !/不能被打出|unplayable/i.test(line) && !playFirst;
       const text = line.replace(/\[[^\]]*\]/g, "");
       const block = /获得\d+点格挡|gain \d+ block/i.test(text) && !/造成\d+点伤害|deal \d+ damage/i.test(text);
       const strike = asArray(asRecord(entry)["card_ids"]).some((id) => typeof id === "string" && isStrikeCard({ cardId: id }));
@@ -4164,7 +4166,19 @@ export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity
   const plans = deadline ? pool.filter(pitSafe) : pool;
   const picked = leastLossOf(plans, hand, hp);
   const escape = deadline ? picked.steps.findIndex((step) => step.cardId === "FRANTIC_ESCAPE") : -1;
-  return escape > 0 ? { ...picked, steps: [picked.steps[escape]!, ...picked.steps.slice(0, escape), ...picked.steps.slice(escape + 1)] } : picked;
+  return escape > 0 ? stepFirst(picked, escape, hand) : picked;
+}
+
+/**
+ * The plan with step `at` played first: before every earlier step, but after a "play me first" card (Enthralled,
+ * card-model playFirst) the plan plays before it, which nothing else can be played before. Unchanged when that leaves it
+ * where it is.
+ */
+export function stepFirst<T extends Pick<Plan, "steps">>(plan: T, at: number, hand: CardModel[]): T {
+  const playFirst = (step: Step) => !step.cardId.startsWith("POTION:") && (hand.find((card) => card.index === step.cardIndex)?.playFirst === true || isPlayFirst(step.cardId));
+  const lead = plan.steps.slice(0, at).reduce((last, step, i) => (playFirst(step) ? i + 1 : last), 0);
+  if (at <= lead) return plan;
+  return { ...plan, steps: [...plan.steps.slice(0, lead), plan.steps[at]!, ...plan.steps.slice(lead, at), ...plan.steps.slice(at + 1)] };
 }
 
 function leastLossOf(plans: Plan[], hand: CardModel[], hp: number): Plan {
@@ -4178,7 +4192,7 @@ function leastLossOf(plans: Plan[], hand: CardModel[], hp: number): Plan {
   );
   const at = drawAt(most);
   if (at === 0) return most;
-  return { ...most, steps: [most.steps[at]!, ...most.steps.slice(0, at), ...most.steps.slice(at + 1)] };
+  return stepFirst(most, at, hand);
 }
 
 /** Cards that exhaust a card of our choosing (a Wound, a Burn) from the hand. */
@@ -4190,6 +4204,14 @@ const EXHAUST_PICKERS = new Set(["BURNING_PACT"]);
  * when it carries over. null when nothing has value: end the turn.
  */
 export function phaseSetupCard(hand: CardModel[], energy: number, keepsBlock: boolean): { card: CardModel; why: string } | null {
+  // Enthralled (card-model playFirst) in the hand: nothing else can be played before it, so it goes first when a setup
+  // card is left for after it.
+  const first = hand.find((card) => card.playFirst === true);
+  if (first) {
+    if (!first.playable || first.cost > energy) return null;
+    const after = phaseSetupCard(hand.filter((card) => card !== first), energy - first.cost, keepsBlock);
+    return after ? { card: first, why: `playing ${first.name} first (nothing else can be played before it), then ${after.why}` } : null;
+  }
   const affordable = hand.filter((card) => card.playable && !card.xCost && card.cost <= energy && card.target !== "single");
   const junk = hand.filter((card) => card.type === "Status" || card.type === "Curse");
   if (junk.length > 0) {

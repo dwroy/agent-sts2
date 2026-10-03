@@ -1355,6 +1355,11 @@ function clone(sim: Sim): Sim {
   };
 }
 
+/** A "play me first" card (Enthralled) is in the hand, playable or held: every other card waits for it. */
+function playFirstHeld(sim: Pick<Sim, "hand" | "held">): boolean {
+  return sim.hand.some((entry) => entry.playFirst === true && entry.type !== "Potion") || sim.held.some((entry) => entry.playFirst === true && entry.type !== "Potion");
+}
+
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
   // Stomp: 1 less per Attack played earlier in this plan (8XQM F48 T8: Pommel Strike+ and Strike
@@ -1364,6 +1369,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       ? 0
       : card.xCost ? sim.energy : card.special === "stomp" ? Math.max(0, card.cost - sim.attacksPlayed) : card.cost;
   if (cost > sim.energy) return null;
+  // Enthralled (card-model playFirst): while one is in the hand, no other card can be played; a potion can (HYQW47E7CBSC
+  // F38 T4: the cards it locked were left out, end turn the only line at 5 energy, 13 HP lost).
+  if (card.type !== "Potion" && card.playFirst !== true && playFirstHeld(sim)) return null;
   // Touch of Insanity: only with a card worth making free (YP9 T1: drunk with only 0-cost cards left).
   if (card.special === "free_card" && !freeCardPick(sim.hand)) return null;
   // Ashwater with nothing worth exhausting does nothing (H14T: wasted four times with "selected 0/0").
