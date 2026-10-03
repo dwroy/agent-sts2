@@ -14,7 +14,7 @@ import type { ActionRequest } from "../mod/client.js";
 import { enemyJson, enemyViews, handCardJson, handViews, playerJson, potionViews } from "../project/narrow.js";
 import { playerPowers } from "../project/narrow.js";
 import { briefJson } from "../project/run-brief.js";
-import { modelHandCard } from "../strategy/card-model.js";
+import { afterPlayFirst, isPlayFirst, modelHandCard } from "../strategy/card-model.js";
 import { resolveDamage } from "../strategy/damage.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../project/types.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../util/json.js";
@@ -109,7 +109,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
       return [model.index, model.hpLoss] as const;
     }),
   );
-  const pushCard = (card: (typeof hand)[number], targetIndex: number | null): void => {
+  const pushCard = (card: (typeof hand)[number], targetIndex: number | null, into: Candidate[] = candidates, budget = energy): void => {
     const target = targetIndex === null ? null : enemyByIndex.get(targetIndex) ?? null;
     const perHit = card.damage;
     // Modifier-aware: Vulnerable on the target, Weak on us, Intangible on the target, and block
@@ -159,7 +159,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
     if (blockGain > 0) summary["block_gained"] = blockGain;
     if (hpCost > 0) summary["hp_cost"] = hpCost;
     summary["incoming_damage_after_this"] = incomingAfter;
-    if (card.cost > energy) summary["warning"] = "costs more energy than you have";
+    if (card.cost > budget) summary["warning"] = "costs more energy than you have";
     if (stars > 0) summary["stars_after"] = stars;
 
     const score =
@@ -167,10 +167,10 @@ export function planCombat(env: DecisionEnv): Decision | null {
       (kills ? 500 : 0) +
       (damageAfterBlock ?? 0) * 3 +
       (incoming > 0 ? blockGain * 2 : 0) +
-      (card.cost > energy ? -1_000 : 0) -
+      (card.cost > budget ? -1_000 : 0) -
       hpCost * 3;
 
-    candidates.push({ key, intent: targetIndex === null ? { action: "play_card", card_index: card.index } : { action: "play_card", card_index: card.index, target_index: targetIndex }, summary, score, isEndTurn: false, lethal: kills });
+    into.push({ key, intent: targetIndex === null ? { action: "play_card", card_index: card.index } : { action: "play_card", card_index: card.index, target_index: targetIndex }, summary, score, isEndTurn: false, lethal: kills });
   };
 
   for (const card of hand) {
@@ -179,6 +179,28 @@ export function planCombat(env: DecisionEnv): Decision | null {
       for (const targetIndex of card.valid_targets) pushCard(card, targetIndex);
     } else {
       pushCard(card, null);
+    }
+  }
+  // Enthralled (card-model playFirst): while it is in the hand the mod locks every other card (blocked_by_hook, preventer
+  // ENTHRALLED; afterPlayFirst). Its option names what it unlocks and is worth the best of those with the energy left after it
+  // (HYQW47E7CBSC F38 T4: it alone was playable, worth nothing, and the turn ended at 5 energy).
+  const rawHand = asArray(combat["hand"]).map(asRecord);
+  const locked = hand.filter((card) => !card.playable && rawHand.some((entry) => numOrNull(entry["index"]) === card.index && afterPlayFirst(entry)));
+  const first = locked.length > 0 ? hand.find((card) => card.playable && isPlayFirst(card.card_id, card.text)) : undefined;
+  if (first) {
+    const left = energy - first.cost;
+    const after: Candidate[] = [];
+    for (const card of locked) {
+      if (card.requires_target) {
+        for (const targetIndex of card.valid_targets) pushCard(card, targetIndex, after, left);
+      } else {
+        pushCard(card, null, after, left);
+      }
+    }
+    const best = Math.max(...after.map((candidate) => candidate.score));
+    for (const candidate of candidates.filter((entry) => entry.intent.action === "play_card" && entry.intent.card_index === first.index)) {
+      candidate.summary["unlocks"] = `nothing else can be played while it is in the hand; once it is played: ${[...new Set(locked.map((card) => card.name))].join(", ")} (${left} energy left)`;
+      if (best > candidate.score) candidate.score = best;
     }
   }
 
