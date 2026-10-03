@@ -969,6 +969,32 @@ export interface PotionContext {
   upgrades?: Record<string, UpgradeDelta>;
   /** Soldier's Stew: the damage per play of the Strike cards in the draw and discard piles, summed. */
   strikePileDamage?: number;
+  /**
+   * What a Power a potion makes free this turn costs all the same (potionCardCost: Spiked Gauntlets' +1). Absent: 0.
+   */
+  powerExtraCost?: number;
+}
+
+/**
+ * The cards a potion adds to the hand (Attack / Skill / Power / Colorless Potion, Orobic Acid, Liquid Memories: 「这张牌在
+ * 本回合可以免费打出」) cost 0 this turn, and a relic's change applies on top: Spiked Gauntlets (Powers cost 1 more) leaves
+ * a Power at 1. Checked on the logs (2026-10-03: 549 drinks of these potions and 86 plays of cards adding a free card,
+ * Infernal Blade, Discovery, Distraction; the card at energy_cost 0 every time, played for 0 energy, but the one Power
+ * under Spiked Gauntlets, A4PWRULKG2JT F46 T1: the Power Potion's Demon Form at 1 with 0 energy, never played, discarded at
+ * the end of the turn; under the relic every Power in hand shows its cost + 1, the potions' other cards 0). `relics` off
+ * (tools only): every such card at 0, as before.
+ */
+export const potionCardCostOptions: { relics: boolean } = { relics: true };
+
+/** What a Power a potion makes free costs this turn with these relics (Spiked Gauntlets: 1; else 0). */
+export function potionPowerExtraCost(relicIds: readonly string[]): number {
+  return potionCardCostOptions.relics && relicIds.includes("SPIKED_GAUNTLETS") ? 1 : 0;
+}
+
+/** The cost this turn of a card a potion makes free: 0, a Power `powerExtraCost` more (an X card keeps its X). */
+export function potionCardCost(card: { type: string; xCost: boolean; cost: number }, powerExtraCost = 0): number {
+  if (card.xCost) return card.cost;
+  return card.type === "Power" ? powerExtraCost : 0;
 }
 
 /**
@@ -1027,10 +1053,11 @@ export const PILE_CARD_POTIONS: Record<string, { pile: "discard" | "draw"; free:
  * The pile card a pile-card potion takes: the best one this turn by thisTurnScore (the selection
  * screen's own rule), at cost 0 when the potion makes it free. null for an empty pile.
  */
-export function pileCardPick(cards: CardModel[], incoming: number, enemies: number, free: boolean, board: ThisTurnBoard = {}): CardModel | null {
+export function pileCardPick(cards: CardModel[], incoming: number, enemies: number, free: boolean, board: ThisTurnBoard = {}, powerExtraCost = 0): CardModel | null {
   const playable = cards.filter((card) => card.playable && card.type !== "Status" && card.type !== "Curse" && card.cardId !== "THE_GAMBIT");
   if (playable.length === 0) return null;
-  const scored = playable.map((card) => (free ? { ...card, cost: card.xCost ? card.cost : 0 } : card));
+  // Free this turn: 0, a Power under Spiked Gauntlets 1 (potionCardCost).
+  const scored = playable.map((card) => (free ? { ...card, cost: potionCardCost(card, powerExtraCost) } : card));
   return scored.reduce((best, card) => (thisTurnScore(card, incoming, enemies, board) > thisTurnScore(best, incoming, enemies, board) ? card : best));
 }
 
@@ -1145,7 +1172,8 @@ export function modelPotion(potionId: string, name: string, slot: number, validT
         name: `card from ${name}`,
         type: card.type,
         upgraded: false,
-        cost: 0,
+        // Free this turn; a Power under Spiked Gauntlets 1 (potionCardCost).
+        cost: potionCardCost({ type: card.type, xCost: false, cost: 0 }, ctx?.powerExtraCost ?? 0),
         xCost: false,
         playable: true,
         target: card.target,

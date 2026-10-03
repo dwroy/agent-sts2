@@ -510,6 +510,8 @@ export interface ActDecision {
   plan?: PlanStepMark;
   /** Memory effect once this action is dispatched (a plan step advancing its plan). */
   apply?: () => void;
+  /** Extra decision-log fields, as a resolution's (combat: SL_RETRY_EXPLORE_WHOLE's sl_explore.avoid_failed on code's own line). */
+  log?: ResolvedAction["log"];
 }
 
 /** Which plan a code-executed step belongs to (ActDecision.plan). */

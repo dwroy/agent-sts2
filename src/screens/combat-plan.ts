@@ -27,7 +27,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
@@ -50,7 +50,7 @@ import type { RunPlan } from "../strategy/run-plan.js";
 import { BOSS_LINES_TIE_SE, bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simCompare, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 import { knownTopIndices } from "../sl/draws.js";
-import { explorePoint, exploreReplacement, lineText, playKey, rankByOrder, replayChoice, summaryPlay, triedHas, turnCanon, type ExploreB2, type ExploreChoice, type ExploreLine, type SlExploreEnv, type SlPoint } from "../sl/explore.js";
+import { explorePoint, exploreReplacement, lineText, MAY_REPEAT, playKey, rankByOrder, replayChoice, summaryPlay, triedHas, turnCanon, type ExploreB2, type ExploreChoice, type ExploreLine, type SlExploreEnv, type SlPoint } from "../sl/explore.js";
 import { ANY_DRAW_BUDGET_MS, MODELLED_POWERS, type DrawBound, type LeastLossFacts } from "../sl/judge.js";
 import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
 
@@ -1799,20 +1799,56 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
 
 export function planCombatTurn(env: DecisionEnv): Decision | null {
   const explore = env.sl?.explore !== undefined;
-  if (explore) slCommitted = null;
-  const decision = withMechFallback(env, (mechEnv) => withSlRetryFallback(mechEnv, (planEnv) => guardSandpit(planEnv, planTurn(planEnv))));
+  if (explore) {
+    slCommitted = null;
+    slAvoidFailed = null;
+  }
+  let decision = withMechFallback(env, (mechEnv) => withSlRetryFallback(mechEnv, (planEnv) => guardSandpit(planEnv, planTurn(planEnv))));
   // SL_RETRY_EXPLORE: code's own line on this board, for the attempt's record (an error: not recorded). SL_RETRY_EXPLORE_CANON
   // / _TURN (env.sl.explore.played): with its turn's plays.
   if (explore && decision?.kind === "act" && CODE_POINTS.has(decision.label) && slCommitted) {
     try {
       const steps = (slCommitted as Plan).steps;
       const keys = turnKeys(env.sl?.explore?.played, steps);
-      slPoints.set(decision, { kind: "code", label: decision.label, line: lineText(steps), ...(keys.canon !== undefined ? { canon: { [lineText(steps)]: keys.canon } } : {}) });
+      // SL_RETRY_EXPLORE_WHOLE: the line ends the deviation's turn as a failed one and the avoid could not act: the decision
+      // row says so (sl_explore.avoid_failed), and the point carries it to the attempt's deviation.
+      const failed = slAvoidFailed && slAvoidFailed.plan === slCommitted ? { line: lineText(steps), reason: slAvoidFailed.reason } : null;
+      if (failed) {
+        const avoid = env.sl?.explore?.avoid;
+        decision = { ...decision, log: { ...(decision.log ?? {}), sl_explore: { avoid_failed: { point: avoid?.point ?? null, played_in: avoid?.attempts ?? [], ...failed, ...(keys.canon !== undefined ? { turn: keys.canon } : {}) } } } };
+      }
+      slPoints.set(decision, { kind: "code", label: decision.label, line: lineText(steps), ...(keys.canon !== undefined ? { canon: { [lineText(steps)]: keys.canon } } : {}), ...(failed ? { avoidFailed: failed } : {}) });
     } catch {
       // not recorded
     }
+  } else if (explore && decision?.kind === "act" && decision.intent.action === "end_turn" && env.sl?.explore?.whole === true && env.sl.explore.avoid && env.sl.explore.played) {
+    // SL_RETRY_EXPLORE_WHOLE: the turn ended with no line to choose (no card to play) while its plays so far are a failed
+    // attempt's turn there: said too (no decision point: only the row and the deviation).
+    try {
+      const avoid = env.sl.explore.avoid;
+      const keys = turnKeys(env.sl.explore.played, []);
+      if (triedHas(avoid.tried, { text: "", ...keys })) {
+        const failed = { line: "end turn", reason: "nothing can be played this turn" };
+        decision = { ...decision, log: { ...(decision.log ?? {}), sl_explore: { avoid_failed: { point: avoid.point, played_in: avoid.attempts, ...failed, ...(keys.canon !== undefined ? { turn: keys.canon } : {}) } } } };
+        slAvoidFails.set(decision, failed);
+      }
+    } catch {
+      // not said
+    }
   }
   return decision;
+}
+
+/** SL_RETRY_EXPLORE_WHOLE: an end of turn with nothing to play that ends the deviation's turn as a failed one (planCombatTurn). */
+const slAvoidFails = new WeakMap<object, { line: string; reason: string }>();
+
+/**
+ * SL_RETRY_EXPLORE_WHOLE: the decision's line ends the deviation's turn as a failed attempt's and the avoid could not act
+ * (code's own line, a question's answer: the point's avoidFailed; an end of turn with nothing to play), as the controller
+ * records it on the attempt's deviation.
+ */
+export function slAvoidFailedOf(decision: Decision, resolved: ResolvedAction): { line: string; reason: string } | undefined {
+  return slPointOf(decision, resolved)?.avoidFailed ?? slAvoidFails.get(decision);
 }
 
 /** SL_RETRY_EXPLORE_CANON: a line's step as the turn's canonical form has it (explore.ts playKey): the card or potion id, its target's name. */
@@ -1836,6 +1872,25 @@ export function turnKeys(played: SlExploreEnv["played"], steps: readonly Step[],
 }
 
 /**
+ * SL_RETRY_EXPLORE_WHOLE (explore.ts mayRepeat): whether a line draws before its turn is over, and the plays sure to be made
+ * (`committed`, turnCanon: the plays already made this turn, `played`, and the line's up to and with its first card that
+ * draws; all of them when none draws). A card that draws ends the committed line there: the plan is re-planned after it
+ * (combat-plan plan-continue stops at a drawing card). A potion option (`extra`: drink it, then re-plan) is open with its
+ * drink. None without `played`.
+ */
+export function turnOpen(played: SlExploreEnv["played"], steps: readonly Step[], hand: readonly CardModel[], extra?: { canon: string }): { open?: boolean; committed?: string } {
+  if (!played) return {};
+  if (extra) return { open: true, committed: turnCanon([...played.canon, ...steps.map(stepPlay), extra.canon]) };
+  const at = steps.findIndex((step) => {
+    if (step.cardId.startsWith("POTION:")) return false;
+    const card = cardFor(step, hand as CardModel[]);
+    return card !== undefined && drawsCards(card);
+  });
+  const sure = at < 0 ? steps : steps.slice(0, at + 1);
+  return { open: at >= 0, committed: turnCanon([...played.canon, ...sure.map(stepPlay)]) };
+}
+
+/**
  * SL_RETRY_EXPLORE (docs/sl.md §11, src/sl/explore.ts): the line a decision chose, as the SL controller records it for the
  * attempt (slPointOf), by the decision object (code's own line) or the resolution it played (a question's). Kept beside
  * them, not on them: the decision and its log row are as before. Only on an SL retry with the switch on (env.sl.explore).
@@ -1847,10 +1902,17 @@ export type SlPointInfo = Pick<SlPoint, "kind" | "label" | "line" | "alternative
   replay?: { overridden: boolean; reason: string };
   /** SL_RETRY_EXPLORE_TURN, later in the deviation's turn: the answer, what replaced it (null: kept), why. */
   avoided?: { original: string; replacement: string | null; reason: string };
+  /**
+   * SL_RETRY_EXPLORE_WHOLE, later in the deviation's turn: the line played ends the turn as a failed attempt's and the avoid
+   * could not change it (why). The controller adds it to the attempt's deviation (`avoidFailed`).
+   */
+  avoidFailed?: { line: string; reason: string };
 };
 const slPoints = new WeakMap<object, SlPointInfo>();
 /** The line the last commit() made (planCombatTurn reads it for code's own decision). */
 let slCommitted: Plan | null = null;
+/** SL_RETRY_EXPLORE_WHOLE: code's own line about to be played ends the deviation's turn as a failed one (planCombatTurn logs it). */
+let slAvoidFailed: { plan: Plan; reason: string } | null = null;
 /** Code's decisions that choose a line (code plays it: the only line, a dominating one, a lethal, every line dying...). */
 const CODE_POINTS = new Set(["combat/plan", "combat/plan-guarded", "combat/lethal", "combat/least-loss", "combat/mod-lethal"]);
 
@@ -2686,6 +2748,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // rule, thisTurnScore), and the draw pile's expected card (Gambler's Brew, Glowwater, Distilled Chaos).
   const enemyTargets = enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.index);
   const pileContext = { enemyTargets, strength: playerSim.strengthNow ?? 0, weak: playerSim.weak };
+  // A card a potion adds is free this turn; a Power under Spiked Gauntlets costs 1 all the same (card-model potionCardCost).
+  const powerExtraCost = potionPowerExtraCost(relicIds);
   // SL_RETRY_KNOWN_DRAWS (docs/sl.md §10): the draw pile's next cards in order, known from an earlier attempt at this fight,
   // as indices into the pile's listing (pileCardModels' order: the rollout's, the random potions' and B2's piles come from
   // the same listing) and as the solver's known cards. A card the pile does not hold: none, the draws random as before.
@@ -2695,10 +2759,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     pileCardPick(pileCardModels(state, env.knowledge, pile, pileContext), thisTurnIncoming(combat), Math.max(1, enemyTargets.length), free, {
       ...(exhaustPileSize(state.raw) === undefined ? {} : { exhaustReach: (exhaustPileSize(state.raw) ?? 0) + hand.filter((card) => card.exhausts).length }),
       vulnerable: Math.max(0, ...enemies.filter((enemy) => enemy.hp > 0).map((enemy) => enemy.vulnerable)),
-    });
+    }, powerExtraCost);
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
     ...(beltIds.has("SOLDIERS_STEW")
       ? { strikePileDamage: [...pileCardModels(state, env.knowledge, "draw", pileContext), ...pileCardModels(state, env.knowledge, "discard", pileContext)].filter(isStrikeCard).reduce((sum, card) => sum + (card.damage ?? 0) * Math.max(1, card.hits), 0) }
@@ -3036,6 +3101,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // shown line that survives does not (drinking no potion it does not, but in a boss fight with SL_RETRY_EXPLORE_BOSS_POTIONS):
   // the turn is Jev's question then, and the answer is kept off those turns (combat-plan explored). Fail safe: an error, as
   // without it.
+  // SL_RETRY_EXPLORE_WHOLE (env.sl.explore.whole): such a line among every line that survives, not only the shown ones
+  // (PW7Y9EWUW8SB F48 attempt 3 T1, after Pommel Strike+ drew: "only distinct line" Rampage, Stomp, attempts 1-2's turn,
+  // while Stomp alone survived too); the best of them is shown. None: code plays its line, and says so (avoid_failed).
   let avoidsTop = false;
   const avoidOf = env.sl?.explore?.avoid;
   const endsTried = (plan: Plan): boolean => {
@@ -3045,10 +3113,26 @@ function planTurn(env: DecisionEnv): Decision | null {
       return false;
     }
   };
+  const avoidWhole = avoidOf !== undefined && env.sl?.explore?.whole === true;
+  /** SL_RETRY_EXPLORE_WHOLE: why no line keeps the turn off the failed ones instead of `line` (it ends as one). */
+  const avoidFailReason = (line: Plan): string => {
+    const others = surviving.filter((plan) => plan !== line);
+    if (others.length === 0) return solved.plans.some((plan) => plan !== line) ? "every other line dies this turn" : "nothing else can be played this turn";
+    if (others.every(endsTried)) return "every other line that survives this turn ends it as a failed attempt's too";
+    return "every other line that survives this turn and ends it otherwise drinks a potion this one does not";
+  };
   if (avoidOf && env.sl?.explore?.played && endsTried(top)) {
     const anyDrink = env.sl.explore.bossPotions === true && kind === "boss";
     const topPotions = potionIdsOf(top);
-    avoidsTop = options.some((plan) => plan !== top && !plan.outcome.dies && (anyDrink || potionIdsOf(plan).every((id) => topPotions.includes(id))) && !endsTried(plan));
+    const keepsOff = (plan: Plan) => plan !== top && !plan.outcome.dies && (anyDrink || potionIdsOf(plan).every((id) => topPotions.includes(id))) && !endsTried(plan);
+    avoidsTop = options.some(keepsOff);
+    if (!avoidsTop && avoidWhole) {
+      const other = surviving.find(keepsOff);
+      if (other) {
+        options.push(other);
+        avoidsTop = true;
+      }
+    }
   }
   const clear =
     (!second || options.every((plan) => plan === top || dominates(top, plan))) &&
@@ -3082,6 +3166,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (raceEruption) guarded = null;
     // SL_RETRY_EXPLORE_TURN: nor a guard's swap into a line ending the deviation turn as a failed attempt's did.
     if (guarded && avoidOf && endsTried(guarded) && !endsTried(top)) guarded = null;
+    // SL_RETRY_EXPLORE_WHOLE: code's line ends the deviation's turn as a failed one, no other could: planCombatTurn logs it.
+    const codeLine = guarded ?? top;
+    if (avoidWhole && endsTried(codeLine)) slAvoidFailed = { plan: codeLine, reason: avoidFailReason(codeLine) };
     if (guarded) {
       commit(env, state.turn, guarded, hand, "code");
       return {
@@ -3489,7 +3576,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // SL_RETRY_EXPLORE (docs/sl.md §11, src/sl/explore.ts), on an SL retry: the line each resolution plays, noted for the
   // attempt's record (notePick); on the deviation point's board, a line a failed attempt played there gives way to the shown
   // line the question's ranking puts first among those none played (explored, in resolve). Nothing runs without env.sl.explore.
-  type PickedLine = { plan: Plan | null; text: string; potions: string[]; wins: boolean; via: CombatPlanMemo["via"]; guardExtra?: (line: Plan) => number; rated?: Plan | null; canon?: string; loose?: string };
+  type PickedLine = { plan: Plan | null; text: string; potions: string[]; wins: boolean; via: CombatPlanMemo["via"]; guardExtra?: (line: Plan) => number; rated?: Plan | null; canon?: string; loose?: string; open?: boolean; committed?: string };
   const explore = env.sl?.explore;
   const picks = new WeakMap<ResolvedAction, PickedLine>();
   const notePick = (resolved: ResolvedAction, pick: PickedLine): ResolvedAction => {
@@ -3521,15 +3608,23 @@ function planTurn(env: DecisionEnv): Decision | null {
         return { canon: playKey({ potion: id }, target), text: `potion ${potion?.name ?? id}` };
       };
       const pickDrink = noted.plan === null && resolved.intent?.action === "use_potion" ? drinkOf(resolved.intent.option_index, resolved.intent.target_index) : undefined;
-      const pick: PickedLine = !played ? noted : { ...noted, ...(noted.plan ? turnKeys(played, noted.plan.steps) : pickDrink ? turnKeys(played, [], pickDrink) : {}) };
+      // SL_RETRY_EXPLORE_WHOLE: each line's turn by what it is sure to play before a draw re-plans it (turnOpen).
+      const whole = explore.whole === true && played !== undefined;
+      const openOf = (steps: readonly Step[], extra?: { canon: string }): { open?: boolean; committed?: string } => (whole ? turnOpen(played, steps, hand, extra) : {});
+      const pick: PickedLine = !played
+        ? noted
+        : { ...noted, ...(noted.plan ? turnKeys(played, noted.plan.steps) : pickDrink ? turnKeys(played, [], pickDrink) : {}), ...(noted.plan ? openOf(noted.plan.steps) : pickDrink ? openOf([], pickDrink) : {}) };
       // SL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight (potions cost 0 there) the lines drinking a potion the pick does not
       // are alternatives too, the random potions' Monte Carlo lines among them (their option: drink it, then re-plan).
       const drinks = explore.bossPotions === true && kind === "boss";
       const mcOf = new Map<Plan, PotionMc>(drinks ? mcShown.flatMap((mc) => (mc.median ? [[mc.median, mc] as const] : [])) : []);
       /** A random potion's option as a line: drink it (its play), then re-plan. */
-      const mcLine = (plan: Plan, mc: PotionMc, potions: string[]): ExploreLine<Plan> => ({ plan, text: `drink ${mc.source.name}, then re-plan`, dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions, ...turnKeys(played, [], drinkOf(mc.source.slot, undefined, mc.source.potionId)) });
+      const mcLine = (plan: Plan, mc: PotionMc, potions: string[]): ExploreLine<Plan> => {
+        const drink = drinkOf(mc.source.slot, undefined, mc.source.potionId);
+        return { plan, text: `drink ${mc.source.name}, then re-plan`, dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions, ...turnKeys(played, [], drink), ...openOf([], drink ?? { canon: playKey({ potion: mc.source.potionId }, null) }) };
+      };
       const lines: ExploreLine<Plan>[] = [
-        ...shown.map((plan) => ({ plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan), ...turnKeys(played, plan.steps) })),
+        ...shown.map((plan) => ({ plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan), ...turnKeys(played, plan.steps), ...openOf(plan.steps) })),
         ...[...mcOf].map(([plan, mc]) => mcLine(plan, mc, [...new Set([mc.source.potionId, ...potionIdsOf(plan)])])),
       ];
       const estimate = (plan: Plan) => (rollout?.available ? rollout.byPlan.get(plan) : undefined);
@@ -3614,6 +3709,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         b2,
         rank,
         ...(deviate?.tried ? { tried: deviate.tried } : avoid ? { tried: avoid.tried, avoid: true } : {}),
+        ...(whole ? { whole: true } : {}),
       });
       const numbers = (plan: Plan | null): string | null => {
         if (!plan) return null;
@@ -3648,9 +3744,13 @@ function planTurn(env: DecisionEnv): Decision | null {
         // The turn's plays as they would end, and the ones failed attempts had through the deviation point's board.
         const avoided = { original: pick.text, replacement: rep?.text ?? null, reason: choice.reason };
         const turnLog: Record<string, JsonValue> = { ...(pick.canon !== undefined ? { turn: pick.canon } : {}), ...(rep?.canon !== undefined ? { turn_instead: rep.canon } : {}) };
-        const log: JsonValue = { avoid: { point: avoid.point, ...avoided, played_in: avoid.attempts, ...turnLog, ...numbersLog, ...gateLog } };
-        if (!rep) return { resolved, log, info: { ...info, avoided } };
-        const out = playInstead(rep, mc, `SL explore (the deviation's turn, ${avoid.point.split(",")[0]}): playing ${rep.text} instead of ${pick.text}, which ends the turn with the plays attempt${avoid.attempts.length === 1 ? "" : "s"} ${avoid.attempts.join(", ")} had through the deviation point (${choice.reason})`);
+        // SL_RETRY_EXPLORE_WHOLE: the answer ends the turn as a failed attempt's and no shown line keeps it off: said so.
+        const failed = whole && !rep && !pick.wins && triedHas(avoid.tried, pick) ? { line: pick.text, reason: choice.reason } : null;
+        const log: JsonValue = { avoid: { point: avoid.point, ...avoided, played_in: avoid.attempts, ...turnLog, ...numbersLog, ...gateLog }, ...(failed ? { avoid_failed: { point: avoid.point, played_in: avoid.attempts, ...failed, ...turnLog } } : {}) };
+        if (!rep) return { resolved, log, info: { ...info, avoided, ...(failed ? { avoidFailed: failed } : {}) } };
+        // SL_RETRY_EXPLORE_WHOLE: a pick not tried here that may still end the turn as a failed one after its draw.
+        const ends = whole && choice.reason.startsWith(MAY_REPEAT) ? "which may end the turn after its draw with the plays" : "which ends the turn with the plays";
+        const out = playInstead(rep, mc, `SL explore (the deviation's turn, ${avoid.point.split(",")[0]}): playing ${rep.text} instead of ${pick.text}, ${ends} attempt${avoid.attempts.length === 1 ? "" : "s"} ${avoid.attempts.join(", ")} had through the deviation point (${choice.reason})`);
         return { resolved: out, log, info: { kind: "question", label, ...pointOf(asPick(rep, mc)), explored: true, avoided } };
       }
       const point = deviate!;
@@ -3667,7 +3767,9 @@ function planTurn(env: DecisionEnv): Decision | null {
       };
       const deviation = { original: pick.text, replacement: rep?.text ?? null, reason: choice.reason };
       if (!rep) return { resolved, log, info: { ...info, deviation } };
-      const out = playInstead(rep, mc, `SL explore (${point.point}): playing ${rep.text} instead of ${pick.text}, played on this board in attempt${point.attempts.length === 1 ? "" : "s"} ${point.attempts.join(", ")} (${choice.reason})`);
+      // SL_RETRY_EXPLORE_WHOLE: a pick not played here whose turn may still end as a failed one after its draw.
+      const mayEnd = whole && choice.reason.startsWith(MAY_REPEAT);
+      const out = playInstead(rep, mc, `SL explore (${point.point}): playing ${rep.text} instead of ${pick.text}, ${mayEnd ? "whose turn may end after its draw as it did on this board" : "played on this board"} in attempt${point.attempts.length === 1 ? "" : "s"} ${point.attempts.join(", ")} (${choice.reason})`);
       return { resolved: out, log, info: { kind: "question", label, ...pointOf(asPick(rep, mc)), explored: true, deviation } };
     } catch {
       // Any error: the resolution as without the switch.
@@ -3890,8 +3992,12 @@ export function trimForPotionOptions(options: Plan[], reserved: number, keep: Se
   return out;
 }
 
-/** A game-data card as a card a potion puts in the hand, free this turn (Strength and Weak in). */
-export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel {
+/**
+ * A game-data card as a card a potion puts in the hand, free this turn (Strength and Weak in); a Power under Spiked
+ * Gauntlets costs `ctx.powerExtraCost` (1) all the same (card-model potionCardCost; A4PWRULKG2JT F46 T1).
+ */
+export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean; powerExtraCost?: number }): CardModel {
+  const cost = potionCardCost({ type: info.type, xCost: info.xCost, cost: 0 }, ctx.powerExtraCost ?? 0);
   const raw = {
     card_id: info.id,
     name: info.name,
@@ -3901,7 +4007,7 @@ export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemy
     target_type: info.target,
     requires_target: info.target === "AnyEnemy",
     playable: true,
-    energy_cost: 0,
+    energy_cost: cost,
     costs_x: info.xCost,
     upgraded: false,
     index: 0,
@@ -3909,7 +4015,7 @@ export function poolCardModel(info: CardInfo, knowledge: Knowledge, ctx: { enemy
   const model = modelHandCard(raw, 0, knowledge);
   return {
     ...model,
-    cost: 0,
+    cost,
     playable: true,
     validTargets: model.target === "single" ? ctx.enemyTargets : [],
     damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)),
@@ -3930,12 +4036,15 @@ export function randomPotionSource(potion: PotionView, state: GameState, knowled
     const color = spec.pool === "colorless" ? "colorless" : character;
     if (!color) return null;
     const all = knowledge.cards();
+    // Spiked Gauntlets: the Powers it offers cost 1 this turn, not 0 (potionCardCost).
+    const powerExtraCost = potionPowerExtraCost(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
     const pools: Record<string, CardModel[]> = {};
     for (const type of spec.types) {
-      pools[type] = all.filter((card) => card.color === color && card.type === type && POOL_RARITIES.has(card.rarity)).map((card) => poolCardModel(card, knowledge, ctx));
+      pools[type] = all.filter((card) => card.color === color && card.type === type && POOL_RARITIES.has(card.rarity)).map((card) => poolCardModel(card, knowledge, { ...ctx, ...(powerExtraCost > 0 ? { powerExtraCost } : {}) }));
     }
     if (spec.types.some((type) => (pools[type] ?? []).length === 0)) return null;
-    return { ...base, pools, poolName: `${color} ${spec.types.join("/")}` };
+    const powersCost = powerExtraCost > 0 && spec.types.includes("Power") ? { powerExtraCost } : {};
+    return { ...base, pools, poolName: `${color} ${spec.types.join("/")}`, ...powersCost };
   }
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   if (!Array.isArray(view["draw"]) && !Array.isArray(view["discard"])) return null;

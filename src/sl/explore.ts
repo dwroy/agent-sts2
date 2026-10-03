@@ -38,6 +38,14 @@
  * - SL_RETRY_EXPLORE_TURN (2026-10-03, UK7R F33 attempt 4): the deviation holds for the rest of its turn: every later
  *   decision of that turn avoids a line that would end the turn with the plays a failed attempt's turn had through the
  *   deviation point's board (Shrug It Off drew, the re-plan's answer was Defend, Defend: attempt 2's turn in another order).
+ * - SL_RETRY_EXPLORE_WHOLE (2026-10-03, PW7Y9EWUW8SB F48 attempts 3-4): the deviation's turn judged by its whole plays. A
+ *   line that draws before its turn is over (`open`) is re-planned after the draw, so only its plays up to the draw are
+ *   sure (`committed`): when those are within a failed attempt's turn there, the rest may end the turn as that one
+ *   (mayRepeat; attempt 3's Blood Wall, Pommel Strike+, Stomp "not played there", then Rampage, Stomp after the draw:
+ *   attempts 1-2's turn). Such a pick gives way to a line that cannot, not worse; a replacement prefers one; the avoid
+ *   later in the turn reaches every line that survives, not only the ones shown (code's "only distinct line" after the
+ *   draw); an avoid that cannot act says so; and a deviation whose turn still ended as a failed one is not a used point
+ *   (exploreTarget: the next attempt goes back to it, its line there now tried).
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
@@ -134,6 +142,11 @@ export interface SlDeviation {
   turn?: number | null;
   plays?: string;
   differs?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_WHOLE: the decisions later in the deviation's turn whose line ended the turn as a failed attempt's and
+   * the avoid could not change (no line that survives this turn ends it otherwise...), in order. Absent: none.
+   */
+  avoidFailed?: { turn: number | null; label: string; line: string; reason: string }[];
 }
 
 /** The attempt row's `explore` (SL_RETRY_EXPLORE on, attempts from the 2nd). */
@@ -191,6 +204,13 @@ export interface SlExploreEnv {
    * potions' Monte Carlo lines. Out of a boss fight never (a listed elite's potion costs HP-equivalents).
    */
   bossPotions?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_WHOLE (2026-10-03, PW7Y9EWUW8SB F48): the deviation's turn by its whole plays: with `deviate` or `avoid`,
+   * a line drawing before its turn is over whose plays up to the draw are within a failed turn (mayRepeat) gives way to a
+   * not-worse line that cannot end so, replacements prefer such lines, and the avoid reaches every surviving line (code's
+   * own line too, not only the shown ones); an avoid that cannot act is logged (`avoid_failed`). Absent: as before.
+   */
+  whole?: boolean;
 }
 
 /** The steps of a line, as the options and the decision rows write them ("A -> X, B"; "end turn"). */
@@ -238,6 +258,41 @@ export function triedHas(tried: SlTried | null | undefined, line: TriedKey): boo
   if (!tried) return false;
   return (line.canon !== undefined && tried.canon.includes(line.canon)) || (line.loose !== undefined && tried.loose.includes(line.loose));
 }
+
+/** The plays of a turn's key (turnCanon), one by one ("nothing": none). */
+function canonPlays(canon: string): string[] {
+  return canon === "nothing" || canon === "" ? [] : canon.split(", ");
+}
+
+/** The plays of `part` (turnCanon) are among those of `whole` (turnCanon), as multisets: `part` can grow into `whole`. */
+export function canonWithin(part: string, whole: string): boolean {
+  const left = new Map<string, number>();
+  for (const play of canonPlays(whole)) left.set(play, (left.get(play) ?? 0) + 1);
+  for (const play of canonPlays(part)) {
+    const n = left.get(play) ?? 0;
+    if (n === 0) return false;
+    left.set(play, n - 1);
+  }
+  return true;
+}
+
+/**
+ * SL_RETRY_EXPLORE_WHOLE: a line that draws before its turn is over (`open`: a card that draws, a potion option drunk then
+ * re-planned) is re-planned after the draw, so only its plays up to the draw (`committed`, the turn's so far counted in)
+ * are sure; when those are within a failed attempt's turn on the board (exact records: `tried.canon`), the re-planned rest
+ * may end the turn as that one did. PW7Y9EWUW8SB F48 attempt 3 T1: Blood Wall, Pommel Strike+, Stomp was "not played
+ * there" (attempts 1-2: Blood Wall, Rampage, Pommel Strike+, Stomp); Pommel Strike+ drew and code's re-plan played
+ * Rampage, Stomp: their turn to the card. A line known to end the turn otherwise (closed, or its sure plays in no failed
+ * turn) cannot.
+ */
+export function mayRepeat(tried: SlTried | null | undefined, line: { open?: boolean | undefined; committed?: string | undefined }): boolean {
+  if (!tried || line.open !== true || line.committed === undefined) return false;
+  const committed = line.committed;
+  return tried.canon.some((turn) => canonWithin(committed, turn));
+}
+
+/** SL_RETRY_EXPLORE_WHOLE: how exploreReplacement's reason begins for a pick that may repeat a failed turn after its draw. */
+export const MAY_REPEAT = "the pick's turn may end as a failed attempt's after its draw (its plays up to the draw are within one)";
 
 /** A play the summary logged without its card ("card 3 -> X", "potion potion 1": not found in the hand or the belt). */
 const UNREAD_PLAY = /^(?:card (?:\d+|\?)(?: -> .*)?|potion potion (?:\d+|\?))$/;
@@ -497,6 +552,13 @@ export interface ExploreTargetOptions {
    * board (`tried`, from their records); the point is chosen as before.
    */
   tried?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_WHOLE (2026-10-03, PW7Y9EWUW8SB F48 attempts 3 and 4): a deviation whose turn still ended with a failed
+   * attempt's plays (`deviation.differs` false: a draw's re-plan went back to them) explored nothing there, so it is not a
+   * use of its point: the next attempt goes back to the point (while it is still the first by the order), where the line
+   * that attempt played is now tried too. Off: every reached deviation counts, as before.
+   */
+  whole?: boolean;
 }
 
 /**
@@ -537,9 +599,13 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     }
   }
   const uses = new Map<string, number>();
+  // SL_RETRY_EXPLORE_WHOLE: the attempts whose deviation there ended its turn as a failed attempt's (not a use), by board.
+  const wasted = new Map<string, number[]>();
   for (const row of failed) {
     const target = row.explore!.target;
-    if (target && row.explore!.deviation?.reached) uses.set(target.board, (uses.get(target.board) ?? 0) + 1);
+    if (!target || !row.explore!.deviation?.reached) continue;
+    if (options.whole === true && row.explore!.deviation.differs === false) wasted.set(target.board, [...(wasted.get(target.board) ?? []), row.attempt]);
+    else uses.set(target.board, (uses.get(target.board) ?? 0) + 1);
   }
   const points = reference.explore!.points;
   // Each question of the path with a line untried on its board, counted back from the death (1: the latest).
@@ -577,7 +643,9 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
         : "";
   const entry = played.get(chosen.point.board)!;
   const round = uses.get(chosen.point.board) ?? 0;
-  const point = `T${chosen.point.turn ?? "?"}, the ${ordinal(chosen.back)} question before attempt ${reference.attempt}'s death on T${reference.turns}${round > 0 ? ` (deviated at ${round} time${round === 1 ? "" : "s"} before: another untried line)` : ""}`;
+  const again = wasted.get(chosen.point.board) ?? [];
+  const againText = again.length > 0 ? ` (attempt${again.length === 1 ? "" : "s"} ${again.join(", ")} deviated there but ended the turn as a failed attempt's: again, another line)` : "";
+  const point = `T${chosen.point.turn ?? "?"}, the ${ordinal(chosen.back)} question before attempt ${reference.attempt}'s death on T${reference.turns}${round > 0 ? ` (deviated at ${round} time${round === 1 ? "" : "s"} before: another untried line)` : ""}${againText}`;
   const turnsThere = tried?.get(chosen.point.board);
   // SL_RETRY_EXPLORE_CANON: the attempts whose turns came through the board count among those that played there.
   const attempts = new Set([...entry.attempts, ...(canonOn && turnsThere ? turnsThere.attempts : [])]);
@@ -650,6 +718,12 @@ export interface ExploreLine<P> {
   /** SL_RETRY_EXPLORE_CANON / _TURN: the turn's plays if it is played (turnCanon), and as the summary writes them (looseCanon). */
   canon?: string;
   loose?: string;
+  /**
+   * SL_RETRY_EXPLORE_WHOLE: it draws before the turn is over (re-planned after the draw), and the plays sure to be made, the
+   * turn's so far and its own up to the draw (turnCanon; the whole line's when it does not draw). See mayRepeat.
+   */
+  open?: boolean;
+  committed?: string;
 }
 
 /** The pick about to be played: its line (null: a potion option, drink then re-plan), text and potions. */
@@ -663,6 +737,8 @@ export interface ExplorePick<P> {
   /** As ExploreLine's. */
   canon?: string;
   loose?: string;
+  open?: boolean;
+  committed?: string;
 }
 
 /**
@@ -753,6 +829,10 @@ export interface ExploreChoice<P> {
  * the pick, T2 21.9% against 6.3%); else the rollout does not see it dying more often (deathShare). `drinks`
  * (SL_RETRY_EXPLORE_BOSS_POTIONS in a boss fight): the lines drinking a potion the pick does not are alternatives too.
  * Every alternative dying in every sample still gives one: the pick is known to fail.
+ * `whole` (SL_RETRY_EXPLORE_WHOLE): a pick not tried here whose turn may still end as a failed one after its draw
+ * (mayRepeat) gives way to the best line that cannot (its turn known to differ), surviving this turn and not worse than
+ * the pick; without one it is played as answered (the avoid keeps the rest of the turn off the failed turns). Among the
+ * untried lines replacing a tried pick, the ones that cannot come first (within the gate's pool).
  */
 export function exploreReplacement<P>(args: {
   pick: ExplorePick<P>;
@@ -769,46 +849,77 @@ export function exploreReplacement<P>(args: {
    */
   tried?: SlTried | null;
   avoid?: boolean;
+  /** SL_RETRY_EXPLORE_WHOLE: judge the lines by the turn they may end with (mayRepeat: `open` and `committed`). */
+  whole?: boolean;
 }): ExploreChoice<P> {
   const { pick } = args;
   if (pick.wins) return { replacement: null, reason: "the line wins the fight this turn: never changed", gate: null };
   const excluded = new Set(args.excluded);
   const tried = args.tried ?? null;
   const isTried = (line: TriedKey): boolean => excluded.has(line.text) || triedHas(tried, line);
+  // SL_RETRY_EXPLORE_WHOLE: not tried, but its turn may end as a failed one after its draw; `safe`: known to end otherwise.
+  const repeats = (line: TriedKey & { open?: boolean | undefined; committed?: string | undefined }): boolean => args.whole === true && !isTried(line) && mayRepeat(tried, line);
+  const safe = (line: ExploreLine<P>): boolean => !isTried(line) && !repeats(line);
   // An attempt whose plays on this board could not be read may have played the pick here: not known to be untried.
   const unknown = !isTried(pick) && (tried?.unknown?.length ?? 0) > 0 ? tried!.unknown! : null;
   if (!isTried(pick) && !unknown) {
+    if (repeats(pick)) {
+      const may = MAY_REPEAT;
+      const candidates = exploreAlternatives(pick, args.shown, args.drinks === true).filter((line) => safe(line) && !line.dies);
+      const choice = candidates.length > 0 ? replacementAmong(args, candidates, { notWorseOnly: true }) : null;
+      if (choice?.replacement) return { ...choice, reason: `${may}; ${choice.reason}` };
+      return {
+        replacement: null,
+        reason: `${may}, but ${candidates.length === 0 ? "no shown line that survives this turn is known to end it otherwise" : `none known to end it otherwise is not worse (${choice!.reason})`}: played as answered, the rest of the turn kept off the failed turns`,
+        gate: choice?.gate ?? null,
+      };
+    }
     return { replacement: null, reason: args.avoid ? "the pick does not end the turn as a failed attempt's did through the deviation point: played as answered" : "the pick was not played on this board before: played as answered", gate: null };
   }
   const untried = exploreAlternatives(pick, args.shown, args.drinks === true).filter((line) => !isTried(line));
   if (untried.length === 0) return { replacement: null, reason: args.avoid ? "no shown line left that ends the turn otherwise than a failed attempt's" : "no shown line left that no failed attempt played here", gate: null };
   const known = unknown ? `; attempt${unknown.length === 1 ? "" : "s"} ${unknown.join(", ")} may have played the pick here (plays logged without their card)` : "";
-  const choice = replacementAmong(args, untried);
+  const choice = replacementAmong(args, untried, args.whole === true ? { prefer: safe } : {});
   return { ...choice, reason: `${choice.reason}${known}` };
 }
 
-/** exploreReplacement's ranking among the untried lines, with its gate (B2's on a trusted boss, else the rollout's). */
-function replacementAmong<P>(args: { pick: ExplorePick<P>; deathShare: (plan: P) => number | null; rank: (plans: P[]) => P | null; b2?: ExploreB2<P> | null }, untried: ExploreLine<P>[]): ExploreChoice<P> {
+/**
+ * exploreReplacement's ranking among the untried lines, with its gate (B2's on a trusted boss, else the rollout's).
+ * SL_RETRY_EXPLORE_WHOLE: `prefer`, the lines of the gate's pool first that it holds for (the ones whose turn cannot end as
+ * a failed one after a draw), when there are both kinds; `notWorseOnly`, no replacement unless one is not worse.
+ */
+function replacementAmong<P>(
+  args: { pick: ExplorePick<P>; deathShare: (plan: P) => number | null; rank: (plans: P[]) => P | null; b2?: ExploreB2<P> | null },
+  untried: ExploreLine<P>[],
+  opts: { prefer?: (line: ExploreLine<P>) => boolean; notWorseOnly?: boolean } = {},
+): ExploreChoice<P> {
   const { pick } = args;
   const rated = pick.plan ?? pick.rated ?? null;
   const b2 = args.b2 && rated !== null && args.b2.win(rated) !== null ? args.b2 : null;
+  /** The gate's pool narrowed to the preferred lines when some are and some are not, and the note saying so. */
+  const narrow = (pool: ExploreLine<P>[]): { pool: ExploreLine<P>[]; note: string } => {
+    const preferred = opts.prefer ? pool.filter(opts.prefer) : [];
+    return preferred.length > 0 && preferred.length < pool.length ? { pool: preferred, note: "; of them, one whose turn cannot end as a failed attempt's after a draw" } : { pool, note: "" };
+  };
   if (b2) {
     const notWorse = untried.filter((line) => b2.notWorse(line.plan, rated!) === true);
-    const pool = notWorse.length > 0 ? notWorse : untried;
+    if (opts.notWorseOnly && notWorse.length === 0) return { replacement: null, reason: `B2 rates every such line worse (win rate more than ${b2.rule} below the pick's)`, gate: "b2" };
+    const { pool, note } = narrow(notWorse.length > 0 ? notWorse : untried);
     const ranked = args.rank(pool.map((line) => line.plan));
     const replacement = pool.find((line) => line.plan === ranked) ?? pool[0]!;
     const why =
       notWorse.length > 0
         ? `the best untried line by the question's ranking, among those B2 rates no worse (win rate at most ${b2.rule} below the pick's)`
         : `the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than ${b2.rule} below the pick's; the pick is known to fail)`;
-    return { replacement, reason: why, gate: "b2" };
+    return { replacement, reason: `${why}${note}`, gate: "b2" };
   }
   const own = pick.plan === null ? null : args.deathShare(pick.plan);
   const notWorse = own === null ? [] : untried.filter((line) => {
     const share = args.deathShare(line.plan);
     return share !== null && share <= own + 1e-9;
   });
-  const pool = notWorse.length > 0 ? notWorse : untried;
+  if (opts.notWorseOnly && notWorse.length === 0) return { replacement: null, reason: own === null ? "no rollout numbers for the pick" : "every such line dies more often in the rollout", gate: "rollout" };
+  const { pool, note } = narrow(notWorse.length > 0 ? notWorse : untried);
   const ranked = args.rank(pool.map((line) => line.plan));
   const replacement = pool.find((line) => line.plan === ranked) ?? pool[0]!;
   const why =
@@ -817,7 +928,7 @@ function replacementAmong<P>(args: { pick: ExplorePick<P>; deathShare: (plan: P)
       : own === null
         ? "the best untried line by the question's ranking"
         : "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)";
-  return { replacement, reason: why, gate: "rollout" };
+  return { replacement, reason: `${why}${note}`, gate: "rollout" };
 }
 
 /**
