@@ -101,8 +101,9 @@ describe("the blast turn, other logged boards", () => {
     // LSWUK6D2EV89 T15: 21 + 5 against 38, the Fairy revived us. MZCG9T5G6TBZ T8: 17 + 10 against 30, the Lizard Tail did.
     for (const [key, reason] of [
       ["8v0h_t13_end", "Ripple Basin (no attack played): its block is not counted here"],
-      ["lswu_t15_end", "a revive is left (FAIRY_IN_A_BOTTLE)"],
-      ["mzcg_t8_end", "a revive is left (LIZARD_TAIL)"],
+      // The revive played out (docs/sl.md §2.7): the blast is the turn's one hit, the revive's HP is what is left.
+      ["lswu_t15_end", "a revive is left (FAIRY_IN_A_BOTTLE): back at 24 HP, the rest of the turn leaves 24"],
+      ["mzcg_t8_end", "a revive is left (LIZARD_TAIL): back at 40 HP, the rest of the turn leaves 40"],
     ] as const) {
       expect(combat(board(key))["end_turn_will_kill_player"]).toBe(true);
       for (const label of [LEAST_LOSS_LABEL, "combat/end_turn", "combat/plan"]) expect(judge(board(key), label), `${key} ${label}`).toMatchObject({ certain: false, reason });
@@ -127,7 +128,7 @@ describe("the blast turn, other logged boards", () => {
       (player(raw)["powers"] as Raw[]).push({ index: 9, power_id: id, name: id, amount: 1, is_debuff: false });
       expect(judge(raw, LEAST_LOSS_LABEL)).toMatchObject({ certain: false, reason: `${id} up` });
     }
-    expect(judgeEndTurn(parseGameState(board("qll4_t13_end")), { label: LEAST_LOSS_LABEL, revives: ["LIZARD_TAIL"], knowledge }).reason).toBe("a revive is left (LIZARD_TAIL)");
+    expect(judgeEndTurn(parseGameState(board("qll4_t13_end")), { label: LEAST_LOSS_LABEL, revives: ["LIZARD_TAIL"], knowledge }).reason).toBe("a revive is left (LIZARD_TAIL): back at 43 HP, the rest of the turn leaves 43");
   });
 
   it("end-of-turn block counts against the blast (it comes first: Plating, Orichalcum, Ripple Basin in the logs)", () => {

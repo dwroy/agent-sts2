@@ -87,7 +87,7 @@ describe("the Sandpit, other logged boards", () => {
 
 describe("what keeps the Sandpit death uncertain", () => {
   it("a revive, a potion to drink", () => {
-    expect(judgeEndTurn(parseGameState(board("bvjt_t5_end")), { label: LEAST_LOSS_LABEL, revives: ["LIZARD_TAIL"], knowledge }).reason).toBe("a revive is left (LIZARD_TAIL)");
+    expect(judgeEndTurn(parseGameState(board("bvjt_t5_end")), { label: LEAST_LOSS_LABEL, revives: ["LIZARD_TAIL"], knowledge }).reason).toBe("a revive is left (LIZARD_TAIL): the Sandpit eats us whatever the HP, and a revive against it is not logged");
     const potion = board("bvjt_t5_end");
     ((potion["run"] as Raw)["potions"] as Raw[])[0] = { index: 0, potion_id: "BLOCK_POTION", name: "格挡药水", occupied: true, can_use: true, can_discard: true, requires_target: false, valid_target_indices: [] };
     expect(judge(potion, "combat/end_turn").reason).toBe("0 playable card(s) and 1 potion(s) left");
