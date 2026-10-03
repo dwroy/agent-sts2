@@ -76,6 +76,8 @@ TABLES = {
         # brain.jsonl only (NULL on deepseek-reasoning rows):
         ("cache_write_tokens", "INTEGER"), ("system_chars", "INTEGER"), ("reasks", "INTEGER"), ("fallback_kind", "VARCHAR"),
         ("error_kind", "VARCHAR"), ("error", "VARCHAR"),
+        # brain.jsonl `limits` (codex's usage guard): the plan's fullest window and the credit balance as last read.
+        ("limit_used_pct", "DOUBLE"), ("limit_resets_at", "TIMESTAMP"), ("limit_credits", "DOUBLE"),
     ],
     "run_plans": [
         ("off", "BIGINT"), ("len", "INTEGER"), ("ts", "TIMESTAMP"), ("run_id", "VARCHAR"), ("floor", "INTEGER"), ("trigger", "VARCHAR"),
@@ -522,7 +524,8 @@ def brain_call_row(raw, off):
     engine, model, system_sha, system_chars, memory (string or sections), question, options {key: criteria},
     payload, tools, tool_calls [...], answer (null when it failed), problems, reasks, attempts, latency_ms,
     usage {inputTokens, cacheHitTokens?, cacheWriteTokens?, outputTokens, reasoningTokens?, costUsd?},
-    first?, fell_back_from? {engine, error, kind}, error?, error_kind?, raw?, reasoning_chars?.
+    first?, fell_back_from? {engine, error, kind}, error?, error_kind?, raw?, reasoning_chars?, limits? {used_pct,
+    resets_at, credits, ...} (src/brain/engines/codex-usage.ts usageNote: the codex plan's fullest window as last read).
     The router writes no run id (llm_calls gives the row its run by time) and no effort. Usage covers every
     model call of the question (re-asks summed); inputTokens counts cached tokens too."""
     record = json.loads(raw)
@@ -538,6 +541,7 @@ def brain_call_row(raw, off):
     reasoning_chars = to_int(record.get("reasoning_chars"))
     if reasoning_chars is None and record.get("reasoning") is not None:
         reasoning_chars = text_len(record.get("reasoning"))
+    limits = record.get("limits") if isinstance(record.get("limits"), dict) else {}
     return {
         "src": "brain",
         "off": off,
@@ -574,6 +578,9 @@ def brain_call_row(raw, off):
         "fallback_kind": to_str(fell.get("kind")) if fell else None,
         "error_kind": to_str(record.get("error_kind")),
         "error": scrub(error, 500) if error else None,
+        "limit_used_pct": to_float(limits.get("used_pct")),
+        "limit_resets_at": to_ts(limits.get("resets_at")),
+        "limit_credits": to_float(limits.get("credits")),
     }
 
 

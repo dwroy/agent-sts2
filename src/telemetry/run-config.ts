@@ -34,6 +34,7 @@ import { fileURLToPath } from "node:url";
 import type { Brain } from "../brain/brain.js";
 import { KNOWLEDGE_DIR } from "../brain/brain.js";
 import { claudeModelId } from "../brain/engines/claude.js";
+import type { UsageStatus } from "../brain/engines/codex-usage.js";
 import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
 import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../config.js";
@@ -162,6 +163,11 @@ export interface RunConfigRow {
   claude_check?: { bin: string; ok: boolean; version?: string; error?: string };
   /** When the configuration asks codex: the program and its start-up check (Brain.preflight). */
   codex_check?: { bin: string; ok: boolean; version?: string; error?: string };
+  /**
+   * When preflight read codex's plan usage (engines/codex-usage.ts): the guard's settings, the process-start and the
+   * latest reading (fullest window's used %, length, reset time; credit balance), and why codex was stopped, if it was.
+   */
+  codex_usage?: UsageStatus;
   /** SL's configuration (SL_ENABLED on only). */
   sl?: Record<string, JsonValue>;
   /** What the run was warned about at its start (a configured engine that cannot run, an oversized prefix). */
@@ -459,6 +465,7 @@ export function runConfigRow(
     // Outside the identity: a check's outcome or wording is not a different setup.
     ...(brain?.claudeCheck ? { claude_check: { ...brain.claudeCheck } } : {}),
     ...(brain?.codexCheck ? { codex_check: { ...brain.codexCheck } } : {}),
+    ...(brain?.codexUsage ? { codex_usage: brain.codexUsage.status() } : {}),
     ...(warnings.length > 0 ? { warnings } : {}),
     config_sha: sha(JSON.stringify(identity)),
   };
