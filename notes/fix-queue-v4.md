@@ -184,3 +184,10 @@
 - 小：RJZG decider 已记 codex，但 rationale/控制台仍写「DeepSeek changed the act's route」「DeepSeek decided」。 已修（10-04 确认，v4-live ed03f4c）
 - SL 漏判（最终 boss）：ET3V F48 永世沙漏 T13 判官「not certain: a revive is left (LIZARD_TAIL)」不读档，结束回合即阵亡，余 5 次（控制台 20261003-233142-554951d+dirty.log:2210）；尾巴是否早已用掉或复活后同回合再死待查。另：game over 后又挂了一行 F48 attempt 1 跟踪（sl-attempts 多一行，draws「tracking began after the fight's start (T13)」）。 已修（10-04 确认，v4-live e32c8b7，V4.5.revive；尾巴 T10 开局已被凋萎+披风触发而追踪漏记，T13 死于凋萎回合末伤害；开关 SL_RELOAD_ON_REVIVE 默认关待 Dai）
 - SL 漏判：X80A F42 灵魂枢纽（列名精英，最多 4 次）T4/T5/T6 判官「not certain: Ripple Basin (no attack played): its block is not counted here」不读档；T6 1 血 0 格挡对 46 来袭阵亡，4 次未用（控制台 3dfc2af 批次第 1399/1406/1419 行）。建议涟漪盆格挡按实值或上限计入，仍死则判必死；回放排查其他「not certain: X」整体放过。
+### V4.5.gpt ET3V/7TQF/X80A 复盘补充（10-04）
+- accept-cut 没接住（小）：ET3V F42 rest/plan 两次空白 runaway（105/100 字符），choice o1:c21 + reason 已写完，closeCutAnswer 离线可闭合，fromCut 仍返回 null，回退 DeepSeek（554951d src/brain/engines/codex.ts:1049/:1155），原因待查。
+- SL 第 2 次只带已知抽牌重打等于白打：7TQF F33（T7 3→6 血）、F39（T4 3 血、法官 142 两次相同）；F39 上限 4 次只剩 2 次真换线。建议第 2 次就换线。
+- SL 重放走不到目标：7TQF F33 第 3 次目标 T4（权重 44.8），出牌和血量相同，却报「T4: the board is not on attempt 2's path」（3dfc2af 控制台 :1340），靠 explore.fallback 在 T5 换线才赢，原因待查。
+- 更正：X80A 涟漪盆漏判的控制台是 20261004-010345-ed03f4c+dirty.log:1399/:1406/:1419；T6 计入涟漪盆 4 + 覆甲 4 仍是 34 对 46，必死。
+- 小：sl-attempts 把 act3-low-hp 的走廊（AXEBOT、OWL_MAGISTRATE，普通战节点）记成 fight_kind「elite」。
+- 观察：ET3V 火堆上 mod 超时 4 次（F24/F29/F32/F47，「cannot reach the STS2-Agent mod … request timed out」），都自愈。
