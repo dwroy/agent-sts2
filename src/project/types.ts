@@ -174,6 +174,12 @@ export interface ScreenMemory {
   potionTake?: { turn: number | null; cardId: string; upgraded: boolean };
   /** When combat was first seen after that drink with the card still to be taken (combat-plan waits for the screen). */
   takeWaitSince?: number;
+  /**
+   * The potion drunk or the card played last (loop.ts, selection.ts noteCardSource: each use_potion / play_card sent in
+   * combat), the source of a card choice it opens: the card potions' and Discovery's offers are free this turn
+   * (selection.ts freeOfferSource; the choice screen itself only says 「选择一张牌」). `fight` as facingFight.
+   */
+  cardSource?: { fight: string; turn: number | null; action: "use_potion" | "play_card"; id: string };
   /** Fight key where Pael's Eye's extra turn was taken (once per fight). */
   paelsEyeFight?: string;
   /** Enemy max HP (non-minions) at the fight's first look: a bigger total later means a new boss phase. */

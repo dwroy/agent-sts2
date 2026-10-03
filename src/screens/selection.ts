@@ -14,8 +14,10 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../strategy/build-facts.js";
 import { cardValue, damageRole, deckProfile, isBlockCardId } from "../strategy/card-value.js";
 import { boardDamageContext, expectedNextDamage, meanMoveDamage } from "../knowledge/move-model.js";
-import { freeCardPick, modelHandCard, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
-import { exhaustPileSize, fightPlaysPerTurn } from "./combat-plan.js";
+import { FREE_OFFER_SOURCES, freeCardPick, modelHandCard, potionCardCost, potionPowerExtraCost, thisTurnScore, type CardModel, type ThisTurnBoard } from "../strategy/card-model.js";
+import type { ActionRequest } from "../mod/client.js";
+import type { GameState } from "../mod/schema.js";
+import { exhaustPileSize, facingFightOf, fightPlaysPerTurn } from "./combat-plan.js";
 import { SELECTION_SCREEN_CARDS, sameCard, selectionTask, upgradePreview, type DeckTask, type TargetScore } from "./oneshot.js";
 import { cardOutcome } from "../knowledge/outcome-facts.js";
 
@@ -131,6 +133,14 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const incoming = forThisTurn ? incomingDamage(combat) : 0;
   const livingEnemies = asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length;
   const board = forThisTurn ? thisTurnBoard(state.raw, knowledge) : {};
+  // A card potion's (Discovery's, Liquid Memories') offer is free this turn: scored at that cost, not the printed one
+  // (potionCardCost: 0, a Power 1 under Spiked Gauntlets).
+  const freeSource = forThisTurn ? freeOfferSource(env, kind) : null;
+  const powerExtraCost = freeSource ? potionPowerExtraCost(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))) : 0;
+  const thisTurnModel = (card: Record<string, unknown>, index: number): CardModel => {
+    const model = modelHandCard(card, index, knowledge);
+    return freeSource ? { ...model, cost: potionCardCost(model, powerExtraCost) } : model;
+  };
   const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
   // Headbutt in combat: the card on top of the draw pile is next turn's first draw. With a big hit
   // coming it should be block (Y27B F33 T10: Pommel Strike+ went on top instead of Flame Barrier, 24
@@ -192,7 +202,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       score: unranked
         ? 0
         : forThisTurn
-        ? thisTurnScore(modelHandCard(card, index, knowledge), incoming, Math.max(1, livingEnemies), board)
+        ? thisTurnScore(thisTurnModel(card, index), incoming, Math.max(1, livingEnemies), board)
         : topDanger
           ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
@@ -207,7 +217,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
         card: name,
         upgraded: bool(card["upgraded"]),
         type: str(card["card_type"], info?.type ?? ""),
-        cost: numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
+        // A free offer: this turn's cost (the printed one is not paid).
+        cost: freeSource ? thisTurnModel(card, index).cost : numOrNull(card["energy_cost"]) ?? info?.cost ?? null,
         text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 160),
       } satisfies JsonValue,
     };
@@ -286,6 +297,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
         ...(forThisTurn
           ? {
               note: "this card is only for this turn — judge its immediate effect",
+              ...(freeSource
+                ? { cost_this_turn: `the card taken is free this turn (each candidate's cost is this turn's${powerExtraCost > 0 ? `; a Power costs ${powerExtraCost}: Spiked Gauntlets` : ""})` }
+                : {}),
               hp: `${numOrNull(asRecord(combat["player"])["current_hp"]) ?? "?"}/${numOrNull(asRecord(combat["player"])["max_hp"]) ?? "?"}`,
               energy: numOrNull(asRecord(combat["player"])["energy"]),
               incoming_attack: incoming,
@@ -319,6 +333,47 @@ export function planSelection(env: DecisionEnv): Decision | null {
     }),
     deepseek: { facts: buildFacts(env, { selection: { task: verb, prompt, selecting: selectingText(selected, min, max), ...(kind === "deck_enchant_select" ? { enchantment: enchantmentNote(env) } : {}), ...pickNotOfferedNote(env, selectionTask(kind, prompt)) } }) },
   });
+}
+
+/** Tools only: `enabled` off scores a free offer at its printed cost, as before (freeOfferSource). */
+export const freeOfferOptions: { enabled: boolean } = { enabled: true };
+
+/**
+ * Notes the potion drunk or the card played (each use_potion / play_card sent in combat; loop.ts after the dispatch): the
+ * source of the card choice it may open (freeOfferSource). Other actions (the choice's own picks) leave it.
+ */
+export function noteCardSource(memory: DecisionEnv["screenMemory"], state: GameState, intent: ActionRequest | null | undefined): void {
+  if (!state.in_combat || !intent) return;
+  const action = intent.action;
+  if (action !== "use_potion" && action !== "play_card") return;
+  const entry =
+    action === "use_potion"
+      ? asArray(asRecord(state.run?.raw)["potions"]).map(asRecord).find((slot) => numOrNull(slot["index"]) === intent.option_index)
+      : asArray(asRecord(state.raw["combat"])["hand"]).map(asRecord).find((card) => numOrNull(card["index"]) === intent.card_index);
+  const id = str(entry?.[action === "use_potion" ? "potion_id" : "card_id"]);
+  memory.cardSource = { fight: facingFightOf(state), turn: state.turn ?? null, action, id };
+}
+
+/**
+ * What a card choice for this turn comes from when its card is free this turn (card-model FREE_OFFER_SOURCES), else null.
+ * The screen's prompt is 「选择一张牌」 whatever opened it; the state names the action running (agent_view action_readiness
+ * running_action_type: UsePotionAction on all 481 logged first picks of the Attack / Skill / Power / Colorless Potion,
+ * PlayCardAction on Discovery's 6 and Seeker Strike's 32, GenericHookGameAction on a relic's turn-start pick). The loop's
+ * memory (noteCardSource) names the potion or card, when it is this fight's and turn's and the action running is that kind:
+ * Liquid Memories and Droplet of Precognition open the same screen (「选择一张牌放入你的手牌。」, UsePotionAction), only
+ * the first free. Without that memory (a restart): a potion's 1-of-3 offer (choose_card_select) is one of the four card
+ * potions', each free.
+ */
+export function freeOfferSource(env: DecisionEnv, kind: string): string | null {
+  const { state } = env;
+  if (!freeOfferOptions.enabled || !state.in_combat) return null;
+  const running = str(asRecord(asRecord(asRecord(state.raw["agent_view"])["combat"])["action_readiness"])["running_action_type"]);
+  const runningAction = /UsePotionAction$/.test(running) ? "use_potion" : /PlayCardAction$/.test(running) ? "play_card" : running ? "other" : null;
+  const memo = env.screenMemory.cardSource;
+  if (memo && memo.fight === facingFightOf(state) && memo.turn === (state.turn ?? null) && (runningAction === null || runningAction === memo.action)) {
+    return FREE_OFFER_SOURCES.has(memo.id) ? memo.id : null;
+  }
+  return kind === "choose_card_select" && runningAction === "use_potion" ? "a card potion" : null;
 }
 
 /**

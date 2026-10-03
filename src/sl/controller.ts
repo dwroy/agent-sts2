@@ -1,9 +1,11 @@
 /**
- * The SL controller (docs/sl.md): retries of boss fights and of the listed hard elites (sl-elites.json), death only.
+ * The SL controller (docs/sl.md): retries of boss fights, of the listed hard elites (sl-elites.json) and (SL_ACT3_LOW_HP)
+ * of act-3 fights with no boss entered below the HP line, death only.
  *
- * - observe(): every state the loop reads. A boss or listed-elite fight is tracked from its first state as attempt
- *   1 (or, after a restart, as the attempt sl-attempts.jsonl says it is); each turn's start (HP, block, enemies) is
- *   noted, and noteAction() adds what was played. The fight ending writes the attempt's row (won / died).
+ * - observe(): every state the loop reads. A boss, listed-elite or act-3 low-HP fight (slGate) is tracked from its first
+ *   state as attempt 1 (or, after a restart, as the attempt sl-attempts.jsonl says it is); each turn's start (HP, block,
+ *   enemies) is noted, and noteAction() adds what was played. The fight ending writes the attempt's row (won / died), with
+ *   the gate it came in by.
  * - beforeEndTurn(): the loop is about to send end_turn. When judgeEndTurn says the enemy turn certainly kills us
  *   and a retry is left, the turn is not ended: the fight is reloaded (reload.ts: save_and_quit, continue_run, the
  *   same floor and fight checked), the attempt's row is written (predicted_death) and the next attempt begins. A
@@ -38,7 +40,7 @@ import { heldCardEthereal } from "../strategy/card-model.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
-import { listedElite, loadSlElites, type SlEliteList } from "./elites.js";
+import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
 import { exploreTarget, playKey, replayPoints, slBoardKey, triedHas, turnCanon, type SlExploreRecord, type SlPoint, type SlTarget, type SlTurnPlays } from "./explore.js";
 import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type DrawBound, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
@@ -65,6 +67,8 @@ interface FightTrack {
   enemies: string[];
   kind: "boss" | "elite";
   elite: string | null;
+  /** Why the fight gets SL (SlGate.reason), as its rows say it. */
+  gate: string;
   attempt: number;
   maxAttempts: number;
   startedAt: string;
@@ -156,6 +160,76 @@ function inCombat(state: GameState): boolean {
   return state.in_combat || state.screen === "COMBAT";
 }
 
+/** Why a fight gets SL: its kind and listed elite as the rows write them, and the row's `gate`. */
+export interface SlGate {
+  kind: "boss" | "elite";
+  elite: SlElite | null;
+  /** "boss", "hard-fight" (sl-elites.json) or "act3-low-hp HP/MAX" (SL_ACT3_LOW_HP: the entry HP and max HP). */
+  reason: string;
+}
+
+export const ACT3_LOW_HP_GATE = "act3-low-hp";
+
+/** The act of a state, 1-based (act_id counts from 0; without a number there, by the floor: acts end on F17, F33, F48). */
+export function actNumberOf(state: GameState): number | null {
+  const id = state.run?.act_id ?? null;
+  if (id !== null && /^\d+$/.test(id)) return Number(id) + 1;
+  const floor = state.run?.floor ?? null;
+  return floor === null ? null : floor <= 17 ? 1 : floor <= 33 ? 2 : 3;
+}
+
+/** SL_ACT3_LOW_HP's line: `hp` strictly below `pct` percent of `maxHp` (integer arithmetic: 32/80 is not below 40). */
+export function belowHpLine(hp: number, maxHp: number, pct: number): boolean {
+  return maxHp > 0 && hp * 100 < pct * maxHp;
+}
+
+export interface EntryHp {
+  hp: number;
+  maxHp: number;
+}
+
+/** Our HP and max HP on a combat state (the player's, else the run's); null when either is unknown. */
+export function playerHpOf(state: GameState): EntryHp | null {
+  const player = asRecord(asRecord(state.raw["combat"])["player"]);
+  const hp = numOrNull(player["current_hp"]) ?? state.run?.current_hp ?? null;
+  const maxHp = numOrNull(player["max_hp"]) ?? state.run?.max_hp ?? null;
+  return hp !== null && maxHp !== null && maxHp > 0 ? { hp, maxHp } : null;
+}
+
+/**
+ * The fight's entry HP and max HP, the HP of its first state: the journal's record of this floor's open fight (it saw that
+ * state; after a restart, replayed from the logs), else `firstSeen` (the first state the controller saw of this floor's
+ * fight), else `state`'s own. Null when unknown.
+ */
+export function entryHpOf(state: GameState, journal: Pick<RunJournal, "fights"> | undefined, firstSeen?: EntryHp | null): EntryHp | null {
+  const floor = state.run?.floor ?? null;
+  const record = floor === null ? undefined : journal?.fights.findLast((fight) => fight.floor === floor && !fight.over);
+  if (record && record.hpBefore !== null && record.maxHp !== null && record.maxHp > 0) return { hp: record.hpBefore, maxHp: record.maxHp };
+  return firstSeen ?? playerHpOf(state);
+}
+
+/**
+ * Whether the fight on `state` gets SL, and why (docs/sl.md §3): a boss among the enemies alive at its start; else a listed
+ * hard fight (sl-elites.json); else (SL_ACT3_LOW_HP on) an act-3 fight entered strictly below SL_ACT3_LOW_HP_PCT percent of
+ * max HP (entryHpOf: the fight's first state, never a later one's). `logged`: the gate an earlier attempt's row of this
+ * fight has (a restarted process; the reload restores the entry HP, so a retry is eligible as its first attempt was).
+ * Null: no SL for this fight.
+ */
+export function slGate(
+  state: GameState,
+  enemyIds: readonly string[],
+  deps: { knowledge: Knowledge; elites: SlEliteList; config: Pick<SlConfig, "act3LowHp" | "act3LowHpPct">; journal?: Pick<RunJournal, "fights">; firstSeen?: EntryHp | null; logged?: string | null },
+): SlGate | null {
+  if (enemyIds.some((id) => deps.knowledge.monster(id)?.type === "Boss")) return { kind: "boss", elite: null, reason: "boss" };
+  const elite = listedElite(enemyIds, deps.elites);
+  if (elite) return { kind: "elite", elite, reason: "hard-fight" };
+  if (deps.config.act3LowHp !== true || actNumberOf(state) !== 3) return null;
+  if (deps.logged?.startsWith(ACT3_LOW_HP_GATE)) return { kind: "elite", elite: null, reason: deps.logged };
+  const entry = entryHpOf(state, deps.journal, deps.firstSeen);
+  if (!entry || !belowHpLine(entry.hp, entry.maxHp, deps.config.act3LowHpPct)) return null;
+  return { kind: "elite", elite: null, reason: `${ACT3_LOW_HP_GATE} ${entry.hp}/${entry.maxHp}` };
+}
+
 export class SlController {
   readonly config: SlConfig;
   private readonly knowledge: Knowledge;
@@ -170,6 +244,11 @@ export class SlController {
   private fight: FightTrack | null = null;
   /** SL_RELOAD_EARLY: the attempt and turn whose "not early" note was said (once a turn). */
   private earlyNoted: string | null = null;
+  /**
+   * SL_ACT3_LOW_HP: our HP on the first state seen of this run's fight on this floor, tracked or not (a fight that is not
+   * eligible is looked at again on each state: its entry HP stays that first state's, not a later, lower one).
+   */
+  private firstSeen: (EntryHp & { runId: string; floor: number | null }) | null = null;
 
   constructor(options: SlControllerOptions) {
     this.options = options;
@@ -200,6 +279,8 @@ export class SlController {
       enabled: this.config.enabled,
       boss_retries: this.config.bossRetries,
       elite_retries: this.config.eliteRetries,
+      act3_low_hp: this.config.act3LowHp === true,
+      act3_low_hp_pct: this.config.act3LowHpPct,
       retry_show_sim: this.config.retryShowSim,
       retry_known_draws: this.config.retryKnownDraws,
       retry_compute: this.config.retryCompute ? { rollout_samples: RETRY_COMPUTE.rolloutSamples, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_budget_ms: RETRY_COMPUTE.turnBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } : false,
@@ -246,7 +327,12 @@ export class SlController {
       return;
     }
     const living = livingEnemies(state);
-    if (!fight || fight.floor !== (state.run?.floor ?? null)) {
+    const floor = state.run?.floor ?? null;
+    if (living.length > 0 && (this.firstSeen?.runId !== runId || this.firstSeen.floor !== floor)) {
+      const hp = playerHpOf(state);
+      this.firstSeen = hp ? { ...hp, runId, floor } : null;
+    }
+    if (!fight || fight.floor !== floor) {
       if (fight) this.close("unfinished", state);
       if (living.length === 0 || this.stopped !== null) return;
       this.open(state, living, memory);
@@ -725,21 +811,25 @@ export class SlController {
 
   private open(state: GameState, living: Record<string, unknown>[], memory: { journal: RunJournal; screenMemory: ScreenMemory }): void {
     const ids = living.map((enemy) => str(enemy["enemy_id"]));
-    const boss = ids.some((id) => this.knowledge.monster(id)?.type === "Boss");
-    const elite = boss ? null : listedElite(ids, this.elites);
-    if (!boss && !elite) return;
     const floor = state.run?.floor ?? null;
     const encounter = encounterOf(state);
+    const earlier = this.rows.filter((row) => row.floor === floor && row.encounter === encounter);
+    const seen = this.firstSeen && this.firstSeen.runId === this.runId && this.firstSeen.floor === floor ? { hp: this.firstSeen.hp, maxHp: this.firstSeen.maxHp } : null;
+    const gate = slGate(state, ids, { knowledge: this.knowledge, elites: this.elites, config: this.config, journal: memory.journal, firstSeen: seen, logged: earlier.find((row) => row.gate)?.gate ?? null });
+    if (!gate) return;
+    const boss = gate.kind === "boss";
+    const elite = gate.elite;
     const retries = boss ? this.config.bossRetries : this.config.eliteRetries;
-    const done = this.rows.filter((row) => row.floor === floor && row.encounter === encounter && row.result === "predicted_death" && row.reload?.ok === true).length;
+    const done = earlier.filter((row) => row.result === "predicted_death" && row.reload?.ok === true).length;
     this.fight = {
       runId: this.runId,
       act: state.run?.act_id ?? null,
       floor,
       encounter,
       enemies: livingNames(living),
-      kind: boss ? "boss" : "elite",
+      kind: gate.kind,
       elite: elite?.name ?? null,
+      gate: gate.reason,
       attempt: done + 1,
       maxAttempts: 1 + Math.max(0, retries),
       startedAt: new Date().toISOString(),
@@ -754,7 +844,8 @@ export class SlController {
       hpTurn: null,
       explore: this.newExplore({ floor, encounter }, done + 1),
     };
-    if (retries > 0) this.options.note(`SL: tracking ${boss ? "boss" : `listed elite (${elite?.name})`} fight F${floor ?? "?"} ${encounter}: attempt ${done + 1} of at most ${1 + retries}`);
+    const what = boss ? "boss" : elite ? `listed elite (${elite.name})` : `act-3 low-HP (${gate.reason.slice(ACT3_LOW_HP_GATE.length + 1)} HP at entry, below ${this.config.act3LowHpPct}%)`;
+    if (retries > 0) this.options.note(`SL: tracking ${what} fight F${floor ?? "?"} ${encounter}: attempt ${done + 1} of at most ${1 + retries}`);
   }
 
   /** The current turn's record, made at the turn's first state where we can act. */
@@ -822,6 +913,7 @@ export class SlController {
       enemies: fight.enemies,
       fight_kind: fight.kind,
       elite: fight.elite,
+      gate: fight.gate,
       attempt: fight.attempt,
       max_attempts: fight.maxAttempts,
       from: attemptFrom(fight.attempt, fight.floor),

@@ -27,7 +27,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isPlayFirst, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isPlayFirst, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, pilePowerExtraCost, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, withPowerExtraCost, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
@@ -1424,6 +1424,8 @@ export function entropicBrewPotions(state: GameState): number {
  */
 export function deckDrawPool(state: GameState, knowledge: Knowledge, ctx: { enemyTargets: number[]; strength: number; weak: boolean }, hand: CardModel[]): CardModel[] {
   const inHand = hand.filter((card) => card.type !== "Potion").map((card) => `${card.cardId}${card.upgraded ? "+" : ""}`);
+  // Spiked Gauntlets: a Power 1 more than the deck says (card-model pilePowerExtraCost).
+  const powerExtraCost = pilePowerExtraCost(runRelicIds(state));
   return asArray(asRecord(state.run?.raw)["deck"]).flatMap((raw, position) => {
     const own = asRecord(raw);
     const cardId = str(own["card_id"]);
@@ -1434,9 +1436,14 @@ export function deckDrawPool(state: GameState, knowledge: Knowledge, ctx: { enem
       inHand.splice(at, 1);
       return [];
     }
-    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge);
+    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge, null, powerExtraCost);
     return [{ ...model, validTargets: model.target === "single" ? ctx.enemyTargets : [], damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)) }];
   });
+}
+
+/** The run's relic ids. */
+export function runRelicIds(state: GameState): string[] {
+  return asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
 }
 
 export function pileCardModels(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): CardModel[] {
@@ -1460,6 +1467,8 @@ export interface PileEntry {
 export function pileEntries(state: GameState, knowledge: Knowledge, pile: "discard" | "draw", ctx: { enemyTargets: number[]; strength: number; weak: boolean }): PileEntry[] {
   const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
   const deck = asArray(asRecord(state.run?.raw)["deck"]).map(asRecord);
+  // Spiked Gauntlets: a deck entry's Power is 1 more in the pile (its line shows it; card-model pilePowerExtraCost).
+  const powerExtraCost = pilePowerExtraCost(runRelicIds(state));
   return asArray(view[pile]).flatMap((raw, position): PileEntry[] => {
     const entry = asRecord(raw);
     const cardId = str(asArray(entry["card_ids"])[0]);
@@ -1469,7 +1478,7 @@ export function pileEntries(state: GameState, knowledge: Knowledge, pile: "disca
     const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? null;
     // Not in the deck (a status an enemy added): the game data's card at the line's cost (Frantic Escape's grows).
     const lineCost = /\[(-?\d+)费\]/.exec(line)?.[1];
-    const model = offHandCardModel(own, cardId, upgraded, 900 + position, knowledge, own === null && lineCost !== undefined ? Number(lineCost) : null);
+    const model = offHandCardModel(own, cardId, upgraded, 900 + position, knowledge, own === null && lineCost !== undefined ? Number(lineCost) : null, powerExtraCost);
     const card: CardModel = {
       ...model,
       validTargets: model.target === "single" ? ctx.enemyTargets : [],
@@ -2171,8 +2180,10 @@ export function pileCardCost(entry: PileEntry, knowledge: Knowledge, relicIds: r
   // Jeweled Mask: a Power it took into the hand at the fight's start stays free for the fight (back in the pile after a
   // discard, its line still shows its cost; 8L29N792FA45, GWGTNXPWS7PE): any Power may be that one.
   if (relicIds.includes("JEWELED_MASK") && card.type === "Power") return 0;
-  const base = knowledge.card(card.cardId)?.cost;
-  return Math.min(card.cost, entry.lineCost ?? card.cost, typeof base === "number" && base >= 0 ? base : card.cost);
+  const data = knowledge.card(card.cardId)?.cost;
+  // The game data's cost with Spiked Gauntlets' +1 on a Power: no Power costs less under it (pilePowerExtraCost).
+  const base = typeof data === "number" && data >= 0 ? withPowerExtraCost({ type: card.type, xCost: false, cost: data }, pilePowerExtraCost(relicIds)).cost : card.cost;
+  return Math.min(card.cost, entry.lineCost ?? card.cost, base);
 }
 
 /** Player powers that only lower the cards' numbers in the hand (Frail's block): the pile's higher ones can only help a line. */
