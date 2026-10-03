@@ -22,6 +22,10 @@ export interface BossBoard {
   potion?: boolean;
   enemyIds?: string[];
   floor?: number;
+  /** The run's act_id (0-based; default the scenario's "1", act 2). */
+  actId?: string;
+  /** Our max HP (default the scenario's 80). */
+  maxHp?: number;
   runId?: string;
   playerPowers?: Raw[];
   relics?: string[];
@@ -37,6 +41,7 @@ export function bossBoard(options: BossBoard = {}): Raw {
   const combat = payload["combat"] as Raw;
   const player = combat["player"] as Raw;
   player["current_hp"] = options.hp ?? 10;
+  if (options.maxHp !== undefined) player["max_hp"] = options.maxHp;
   player["block"] = options.block ?? 0;
   player["energy"] = options.playable ? 3 : 0;
   if (options.playerPowers) player["powers"] = options.playerPowers;
@@ -60,6 +65,8 @@ export function bossBoard(options: BossBoard = {}): Raw {
   const run = payload["run"] as Raw;
   run["floor"] = options.floor ?? 17;
   run["current_hp"] = options.hp ?? 10;
+  if (options.maxHp !== undefined) run["max_hp"] = options.maxHp;
+  if (options.actId !== undefined) run["act_id"] = options.actId;
   if (options.relics) run["relics"] = options.relics.map((id, index) => ({ index, relic_id: id, name: id, description: "", stack: null, is_melted: false }));
   const potions = run["potions"] as Raw[];
   potions[0]!["can_use"] = options.potion === true;
