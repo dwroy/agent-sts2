@@ -28,7 +28,9 @@
  *   budget is an engine failure ("budget"): the question goes to BRAIN_FALLBACK, or fails when there is none. A
  *   call to the fallback also answers to the caller's budget for it (RouterDeps.fallbackBudget: the loop's
  *   DEEPSEEK_MAX_CALLS), checked and spent before each call, so one that throws is counted too.
- * - Keys never reach the log: rows hold the request, the answer, the usage and error texts only.
+ * - Keys never reach the log: rows hold the request, the answer, the usage and error texts only. A row about an
+ *   engine that reads its plan's limits (codex's usage guard, engines/codex-usage.ts), as the one answering or the one
+ *   fallen back from, carries its latest reading as `limits` (used %, window, reset time, credit balance).
  */
 import { createHash } from "node:crypto";
 import { appendFileSync, mkdirSync } from "node:fs";
@@ -134,6 +136,11 @@ export interface BrainLogRow {
   error_kind?: FailureKind;
   raw?: string;
   reasoning_chars?: number;
+  /**
+   * The plan-limit reading of the engine that answered or failed (BrainEngine.limits: codex's usage guard): the fullest
+   * window's used %, length and reset time, the credit balance, when it was read.
+   */
+  limits?: object;
 }
 
 export interface RouterDeps {
@@ -232,8 +239,32 @@ export class BrainRouter {
    * An engine that cannot run in this process (Brain.preflight: `claude --version` failed): rested for good, so
    * its questions go to the fallback, or fail at once without starting it when there is none.
    */
-  markUnavailable(engine: EngineName, reason: string): void {
-    this.resting.set(engine, { until: Number.POSITIVE_INFINITY, reason: reason.slice(0, 200), kind: "unavailable" });
+  markUnavailable(engine: EngineName, reason: string, kind: FailureKind = "unavailable"): void {
+    this.resting.set(engine, { until: Number.POSITIVE_INFINITY, reason: reason.slice(0, 300), kind });
+  }
+
+  /** The engine for a name, or null when it cannot run here (Brain.preflight: the codex usage guard). */
+  engineOf(name: EngineName): BrainEngine | null {
+    try {
+      return this.deps.engine(name);
+    } catch {
+      return null;
+    }
+  }
+
+  /** Says a message where the console sees it (Brain.onNote), when one is set: an engine's own note. */
+  say(message: string): void {
+    this.notify?.(message);
+  }
+
+  /** The plan-limit reading for a row: the engine's, else that of the engine it fell back from. */
+  private limitsFor(engine: EngineName, fellBackFrom?: BrainLogRow["fell_back_from"]): object | undefined {
+    for (const name of [engine, fellBackFrom?.engine]) {
+      if (!name) continue;
+      const note = this.engineOf(name)?.limits?.();
+      if (note) return note;
+    }
+    return undefined;
   }
 
   /** The engine resting now (after a quota / rate-limit failure), if any. */
@@ -507,6 +538,8 @@ export class BrainRouter {
       ...(result?.reasoning ? { reasoning_chars: result.reasoning.length } : {}),
     };
     try {
+      const limits = this.limitsFor(engine, fellBackFrom);
+      if (limits) row.limits = limits;
       if (this.deps.log) this.deps.log(row);
       else if (this.deps.config.log) {
         mkdirSync(dirname(this.deps.config.log), { recursive: true });

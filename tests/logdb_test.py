@@ -127,6 +127,14 @@ class ExtractTest(unittest.TestCase):
                                                    "fell_back_from": {"engine": "codex", "error": "codex timed out after 600000 ms", "kind": "timeout"},
                                                    "usage": {"inputTokens": 5, "outputTokens": 1}}).encode(), 0)
         self.assertEqual((after["engine"], after["fallback_from"], after["fallback_kind"], after["effort"]), ("deepseek", "codex", "timeout", None))
+        self.assertEqual((codex["limit_used_pct"], codex["limit_resets_at"], codex["limit_credits"]), (None, None, None))
+        # The codex usage guard's latest reading (src/brain/engines/codex-usage.ts usageNote), on a row about codex.
+        guarded = extract.brain_call_row(json.dumps({"ts": "2026-10-03T12:00:00.000Z", "label": "map/route-plan", "engine": "deepseek", "answer": {"route": "keep"},
+                                                     "fell_back_from": {"engine": "codex", "error": "codex usage guard: codex/primary 7-day window 81% used", "kind": "quota"},
+                                                     "limits": {"engine": "codex", "read_at": "2026-10-03T11:59:00.000Z", "used_pct": 81, "window": "codex/primary", "window_min": 10080,
+                                                                "resets_at": "2026-10-10T09:06:37.000Z", "credits": 500, "plan": "prolite"},
+                                                     "usage": {"inputTokens": 5, "outputTokens": 1}}).encode(), 0)
+        self.assertEqual((guarded["limit_used_pct"], guarded["limit_resets_at"], guarded["limit_credits"], guarded["fallback_kind"]), (81.0, "2026-10-10T09:06:37.000Z", 500.0, "quota"))
         self.assertEqual(extract.line_ts(lines("runs.jsonl")[0]), None)
         self.assertEqual(extract.line_ts(lines("states.jsonl")[0]), "2026-09-20T10:00:00.000Z")
 

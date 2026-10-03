@@ -25,6 +25,7 @@ import type { ToolContext, ToolDef } from "../tools/types.js";
 import type { JsonValue } from "../util/json.js";
 import { checkClaudeBin, ClaudeEngine, type ClaudeCheck } from "./engines/claude.js";
 import { checkCodex, CodexEngine, type CodexCheck } from "./engines/codex.js";
+import type { CodexUsageGuard } from "./engines/codex-usage.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
 import { frozenFacts } from "../knowledge/render/facts.js";
@@ -57,7 +58,7 @@ type Json = Record<string, unknown>;
 const isObject = (value: unknown): value is Json => typeof value === "object" && value !== null && !Array.isArray(value);
 
 /** The engine for a name; throws with the reason when it cannot run here. */
-export function createEngine(name: EngineName, config: AppConfig, deepseek: DeepSeekClient | null, options: { claudeToolsModule?: string } = {}): BrainEngine {
+export function createEngine(name: EngineName, config: AppConfig, deepseek: DeepSeekClient | null, options: { claudeToolsModule?: string; note?: (message: string) => void } = {}): BrainEngine {
   const settings = config.brain.engines[name];
   switch (name) {
     case "deepseek":
@@ -66,7 +67,7 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
     case "claude":
       return new ClaudeEngine({ settings, claude: config.brain.claude, ...(options.claudeToolsModule ? { toolsModule: options.claudeToolsModule } : {}) });
     case "codex":
-      return new CodexEngine({ settings, codex: config.brain.codex });
+      return new CodexEngine({ settings, codex: config.brain.codex, ...(options.note ? { note: options.note } : {}) });
     case "dsh":
       // Named in the contract, to come with the offline learner (Dai 2026-09-29).
       throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek, claude, codex)`);
@@ -76,12 +77,14 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
 /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
 export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget } = {}): BrainRouter {
   const engines = new Map<EngineName, BrainEngine>();
-  return new BrainRouter({
+  // An engine's own notes (codex: a usage read that failed) go where the router's go (Brain.onNote).
+  const note = (message: string): void => router.say(message);
+  const router: BrainRouter = new BrainRouter({
     config: { ...config.brain, log: brainLogPath(config) },
     engine: (name) => {
       let engine = engines.get(name);
       if (!engine) {
-        engine = createEngine(name, config, deepseek, options);
+        engine = createEngine(name, config, deepseek, { ...(options.claudeToolsModule ? { claudeToolsModule: options.claudeToolsModule } : {}), note });
         engines.set(name, engine);
       }
       return engine;
@@ -89,6 +92,7 @@ export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null,
     ...(options.log ? { log: options.log } : {}),
     ...(options.fallbackBudget ? { fallbackBudget: options.fallbackBudget } : {}),
   });
+  return router;
 }
 
 /** Whether a brain configuration can ask this engine: by default, for a question kind, or as the fallback. */
@@ -140,6 +144,8 @@ export class Brain {
   claudeCheck: ({ bin: string } & ClaudeCheck) | null = null;
   /** The start-up check of codex (preflight: program, login file, no AGENTS.md, model and effort), when it is used. */
   codexCheck: ({ bin: string } & CodexCheck) | null = null;
+  /** Codex's usage guard (engines/codex-usage.ts), once preflight has read the plan's usage: run-config.jsonl's codex_usage. */
+  codexUsage: CodexUsageGuard | null = null;
   /** What the run should be warned about (the console and run-config.jsonl's `warnings`). */
   readonly warnings: string[] = [];
 
@@ -169,7 +175,8 @@ export class Brain {
   /**
    * Before play: when the configuration asks Claude anywhere (BRAIN_ENGINE, BRAIN_ENGINE_<PREFIX>, BRAIN_FALLBACK),
    * `claude --version` once; when it asks codex, codex's check (engines/codex.ts checkCodex: the program, the login
-   * file, no AGENTS.md in its home, the model and effort in its catalog). A failure is returned (and kept in
+   * file, no AGENTS.md in its home, the model and effort in its catalog) and then the plan's usage (the engine's usage
+   * guard: a window at BRAIN_CODEX_USAGE_STOP_PCT or credits in use keep codex off). A failure is returned (and kept in
    * `warnings`) for the console and run-config.jsonl, and the engine is marked unavailable for the process: its
    * questions go to BRAIN_FALLBACK (or fail at once, then Jev/code), instead of each one failing on its own.
    */
@@ -194,12 +201,28 @@ export class Brain {
       const effort = settings.effort ?? DEFAULT_CODEX_EFFORT;
       const result = await codexCheck(config.codex, model, effort);
       this.codexCheck = { bin: config.codex.bin, ...result };
+      const then = config.fallback && config.fallback !== "codex" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
       if (!result.ok) {
-        const then = config.fallback && config.fallback !== "codex" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
         const message = `codex is unavailable for this run: ${result.error}; ${then} (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)`;
         this.router.markUnavailable("codex", result.error);
         this.warnings.push(message);
         problems.push(message);
+      } else {
+        // The plan's usage before the first call (engines/codex-usage.ts): a window at the stop or credits in use keep
+        // codex off for the process; a read that fails is said once by the guard (or stops codex when required).
+        const engine = this.router.engineOf("codex");
+        if (engine instanceof CodexEngine) {
+          this.codexUsage = engine.usage;
+          const stop = await engine.usage.start();
+          if (stop) {
+            const message = `codex is off for this run: ${stop}; ${then}`;
+            this.router.markUnavailable("codex", stop, engine.usage.stopKind);
+            this.warnings.push(message);
+            problems.push(message);
+          } else if (engine.usage.unreadable) {
+            this.warnings.push(`codex usage could not be read at the start (${engine.usage.unreadable}); codex stays on without the usage guard until a read works`);
+          }
+        }
       }
     }
     return problems;
