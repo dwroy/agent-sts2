@@ -1,0 +1,4495 @@
+{
+ "source": "P68P7CDJRDH3 F48 attempt 4 T1 2026-10-03T09:01:49.210Z combat/plan-choice",
+ "decision": {
+  "label": "combat/plan-choice",
+  "decider": "jev",
+  "rationale": "Jev chose plan 5/5 (熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46); plan 1 (熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46) is as good or better on every axis, playing it with confidence 0.18; code rank 1; SL explore (T1, the 2nd latest question before attempt 2's death on T3): playing 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46 instead of 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46, played on this board in attempts 2, 3 (the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+  "chosen": "{\"action\":\"play_card\",\"card_index\":6,\"target_index\":0}"
+ },
+ "state": {
+  "state_version": 16,
+  "native_profile_id": 1,
+  "run_id": "P68P7CDJRDH3",
+  "screen": "COMBAT",
+  "session": {
+   "mode": "singleplayer",
+   "phase": "run",
+   "control_scope": "local_player"
+  },
+  "in_combat": true,
+  "turn": 1,
+  "available_actions": [
+   "end_turn",
+   "play_card",
+   "save_and_quit",
+   "use_potion",
+   "discard_potion"
+  ],
+  "combat": {
+   "action_readiness": {
+    "can_use_combat_actions": true,
+    "reason": "ready",
+    "actions_settled": true,
+    "running_action_type": null,
+    "ready_action_type": null,
+    "modal_open": false,
+    "modal_type": null,
+    "player_actions_disabled": false,
+    "is_paused": false,
+    "local_ready_to_end_turn": false,
+    "all_players_ready_to_end_turn": true,
+    "ending_turn_phase_one": false,
+    "ending_turn_phase_two": false,
+    "end_turn_kick": "",
+    "combat_in_progress": true,
+    "combat_over_or_ending": false,
+    "combat_room_mode": "ActiveCombat",
+    "hand_in_card_play": false,
+    "hand_in_card_selection": false,
+    "hand_mode": "Play",
+    "local_turn_ready": true,
+    "snapshot_stable": true,
+    "player_action_phase": true
+   },
+   "player": {
+    "current_hp": 23,
+    "max_hp": 80,
+    "block": 0,
+    "energy": 2,
+    "stars": 0,
+    "focus": 0,
+    "powers": [
+     {
+      "index": 0,
+      "power_id": "INFERNO_POWER",
+      "name": "狱火",
+      "amount": 9,
+      "is_debuff": false
+     },
+     {
+      "index": 1,
+      "power_id": "RUPTURE_POWER",
+      "name": "撕裂",
+      "amount": 2,
+      "is_debuff": false
+     },
+     {
+      "index": 2,
+      "power_id": "STRENGTH_POWER",
+      "name": "力量",
+      "amount": 4,
+      "is_debuff": false
+     }
+    ],
+    "base_orb_slots": 0,
+    "orb_capacity": 0,
+    "empty_orb_slots": 0,
+    "orbs": [],
+    "pets": [
+     {
+      "index": 0,
+      "pet_id": "PAELS_LEGION",
+      "name": "佩尔的士兵",
+      "current_hp": 9999,
+      "max_hp": 9999,
+      "block": 0,
+      "powers": []
+     }
+    ],
+    "pet_missing": false,
+    "cards_played_this_turn": 8,
+    "attacks_played_this_turn": 4,
+    "skills_played_this_turn": 2
+   },
+   "players": [
+    {
+     "player_id": "1",
+     "slot_index": 0,
+     "is_local": true,
+     "is_connected": true,
+     "character_id": "IRONCLAD",
+     "character_name": "铁甲战士",
+     "current_hp": 23,
+     "max_hp": 80,
+     "block": 0,
+     "energy": 2,
+     "stars": 0,
+     "focus": 0,
+     "is_alive": true
+    }
+   ],
+   "hand": [
+    {
+     "index": 0,
+     "card_id": "BLOOD_WALL",
+     "name": "血墙+",
+     "upgraded": true,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "失去2点生命。 获得40点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 20,
+       "current_value": 40,
+       "enchanted_value": 20,
+       "is_modified": true,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 1,
+     "card_id": "SHRUG_IT_OFF",
+     "name": "耸肩无视+",
+     "upgraded": true,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "获得22点格挡。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 11,
+       "current_value": 22,
+       "enchanted_value": 11,
+       "is_modified": true,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 2,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得10点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 10,
+       "enchanted_value": 5,
+       "is_modified": true,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 3,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得10点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 10,
+       "enchanted_value": 5,
+       "is_modified": true,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 4,
+     "card_id": "STONE_ARMOR",
+     "name": "岩石铠甲",
+     "upgraded": false,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+     "resolved_rules_text": "获得4层覆甲。",
+     "dynamic_values": [
+      {
+       "name": "PlatingPower",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 5,
+     "card_id": "FEEL_NO_PAIN",
+     "name": "无惧疼痛",
+     "upgraded": false,
+     "target_type": "Self",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "每当有一张牌被消耗时，获得{Power:diff()}点格挡。",
+     "resolved_rules_text": "每当有一张牌被消耗时，获得3点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Power",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 6,
+     "card_id": "MOLTEN_FIST",
+     "name": "熔融之拳",
+     "upgraded": false,
+     "target_type": "AnyEnemy",
+     "requires_target": true,
+     "target_index_space": "enemies",
+     "valid_target_indices": [
+      0
+     ],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将该敌人身上的易伤层数翻倍。",
+     "resolved_rules_text": "造成14点伤害。 将该敌人身上的易伤层数翻倍。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 14,
+       "enchanted_value": 10,
+       "is_modified": true,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 7,
+     "card_id": "ASCENDERS_BANE",
+     "name": "进阶之灾",
+     "upgraded": false,
+     "target_type": "None",
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": -1,
+     "star_cost": 0,
+     "rules_text": "",
+     "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+     "dynamic_values": [],
+     "playable": false,
+     "can_play_result": false,
+     "unplayable_reason": "unplayable",
+     "unplayable_reason_raw": "HasUnplayableKeyword",
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 8,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "target_type": "AnyEnemy",
+     "requires_target": true,
+     "target_index_space": "enemies",
+     "valid_target_indices": [
+      0
+     ],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成10点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 10,
+       "enchanted_value": 6,
+       "is_modified": true,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    },
+    {
+     "index": 9,
+     "card_id": "ANGER",
+     "name": "愤怒",
+     "upgraded": false,
+     "target_type": "AnyEnemy",
+     "requires_target": true,
+     "target_index_space": "enemies",
+     "valid_target_indices": [
+      0
+     ],
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "resolved_rules_text": "造成10点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 10,
+       "enchanted_value": 6,
+       "is_modified": true,
+       "was_just_upgraded": false
+      }
+     ],
+     "playable": true,
+     "can_play_result": true,
+     "unplayable_reason": null,
+     "unplayable_reason_raw": null,
+     "unplayable_preventer_id": null,
+     "unplayable_preventer_type": null
+    }
+   ],
+   "enemies": [
+    {
+     "index": 0,
+     "enemy_id": "TEST_SUBJECT",
+     "name": "实验体 #C46",
+     "current_hp": 27,
+     "max_hp": 111,
+     "base_max_hp": 111,
+     "block": 0,
+     "is_alive": true,
+     "is_hittable": true,
+     "powers": [
+      {
+       "index": 0,
+       "power_id": "ADAPTABLE_POWER",
+       "name": "适者生存",
+       "amount": 1,
+       "is_debuff": false
+      },
+      {
+       "index": 1,
+       "power_id": "ENRAGE_POWER",
+       "name": "激怒",
+       "amount": 3,
+       "is_debuff": false
+      },
+      {
+       "index": 2,
+       "power_id": "STRENGTH_POWER",
+       "name": "力量",
+       "amount": 6,
+       "is_debuff": false
+      }
+     ],
+     "intent": "BITE_MOVE",
+     "move_id": "BITE_MOVE",
+     "intents": [
+      {
+       "index": 0,
+       "intent_type": "Attack",
+       "label": "28",
+       "damage": 28,
+       "hits": 1,
+       "total_damage": 28,
+       "status_card_count": null
+      }
+     ]
+    }
+   ],
+   "end_turn_will_kill_player": true,
+   "lethal_risks": [
+    {
+     "risk_id": "incoming_damage",
+     "source": "enemy_intents",
+     "will_kill_player": true,
+     "reason": "Enemy intent damage after current block is at least current HP.",
+     "incoming_damage": 28,
+     "damage_after_block": 28,
+     "player_hp": 23,
+     "player_block": 0,
+     "power_id": null,
+     "power_amount": null
+    }
+   ]
+  },
+  "run": {
+   "character_id": "IRONCLAD",
+   "character_name": "铁甲战士",
+   "ascension": 9,
+   "ascension_effects": [
+    {
+     "id": "LEVEL_01",
+     "name": "精英蜂拥",
+     "description": "[gold]精英[/gold]敌人出现更加频繁。"
+    },
+    {
+     "id": "LEVEL_02",
+     "name": "旅途劳顿",
+     "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
+    },
+    {
+     "id": "LEVEL_03",
+     "name": "贫穷",
+     "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
+    },
+    {
+     "id": "LEVEL_04",
+     "name": "收紧腰带",
+     "description": "游戏开始时药水栏位减少1。"
+    },
+    {
+     "id": "LEVEL_05",
+     "name": "进阶之灾",
+     "description": "游戏开始时被[red]诅咒[/red]。"
+    },
+    {
+     "id": "LEVEL_06",
+     "name": "通货膨胀",
+     "description": "商人的卡牌移除服务价格提升。"
+    },
+    {
+     "id": "LEVEL_07",
+     "name": "稀缺",
+     "description": "稀有和已升级卡牌更少出现。"
+    },
+    {
+     "id": "LEVEL_08",
+     "name": "强韧敌人",
+     "description": "所有的敌人变得更难杀死。"
+    },
+    {
+     "id": "LEVEL_09",
+     "name": "致命敌人",
+     "description": "所有的敌人变得更加致命。"
+    }
+   ],
+   "floor": 48,
+   "current_hp": 23,
+   "max_hp": 80,
+   "gold": 104,
+   "max_energy": 3,
+   "base_orb_slots": 0,
+   "act_id": "2",
+   "boss_id": "TEST_SUBJECT_BOSS",
+   "deck": [
+    {
+     "index": 0,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成9点伤害。 重放1。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 1,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 2,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 3,
+     "card_id": "STRIKE_IRONCLAD",
+     "name": "打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成6点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 4,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 5,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 6,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 7,
+     "card_id": "DEFEND_IRONCLAD",
+     "name": "防御",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "获得5点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 8,
+     "card_id": "BASH",
+     "name": "痛击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Basic",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 给予{VulnerablePower:diff()}层易伤。",
+     "resolved_rules_text": "造成8点伤害。 给予2层易伤。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "VulnerablePower",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 9,
+     "card_id": "ASCENDERS_BANE",
+     "name": "进阶之灾",
+     "upgraded": false,
+     "card_type": "Curse",
+     "rarity": "Curse",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": -1,
+     "star_cost": 0,
+     "rules_text": "",
+     "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+     "dynamic_values": []
+    },
+    {
+     "index": 10,
+     "card_id": "SHRUG_IT_OFF",
+     "name": "耸肩无视",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "获得8点格挡。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 11,
+     "card_id": "ANGER",
+     "name": "愤怒",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "resolved_rules_text": "造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 12,
+     "card_id": "STONE_ARMOR",
+     "name": "岩石铠甲",
+     "upgraded": false,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+     "resolved_rules_text": "获得4层覆甲。",
+     "dynamic_values": [
+      {
+       "name": "PlatingPower",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 13,
+     "card_id": "ANGER",
+     "name": "愤怒",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "resolved_rules_text": "造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 14,
+     "card_id": "INFERNO",
+     "name": "狱火+",
+     "upgraded": true,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成{InfernoPower:diff()}点伤害。",
+     "resolved_rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+     "dynamic_values": [
+      {
+       "name": "InfernoPower",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 15,
+     "card_id": "TAUNT",
+     "name": "挑衅",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 给予{VulnerablePower:diff()}层易伤。",
+     "resolved_rules_text": "获得6点格挡。 给予1层易伤。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "VulnerablePower",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 16,
+     "card_id": "BLOOD_WALL",
+     "name": "血墙",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "失去2点生命。 获得16点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 16,
+       "current_value": 16,
+       "enchanted_value": 16,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 17,
+     "card_id": "RUPTURE",
+     "name": "撕裂+",
+     "upgraded": true,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "每当你在你的回合失去生命值时, 获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "每当你在你的回合失去生命值时, 获得2点力量。",
+     "dynamic_values": [
+      {
+       "name": "StrengthPower",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 18,
+     "card_id": "STONE_ARMOR",
+     "name": "岩石铠甲",
+     "upgraded": false,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+     "resolved_rules_text": "获得4层覆甲。",
+     "dynamic_values": [
+      {
+       "name": "PlatingPower",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 19,
+     "card_id": "OFFERING",
+     "name": "祭品",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Energy:energyIcons()}。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Energy",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 20,
+     "card_id": "SHRUG_IT_OFF",
+     "name": "耸肩无视",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "获得{Block:diff()}点格挡。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "获得8点格挡。 抽1张牌。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 8,
+       "current_value": 8,
+       "enchanted_value": 8,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Cards",
+       "base_value": 1,
+       "current_value": 1,
+       "enchanted_value": 1,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 21,
+     "card_id": "TWIN_STRIKE",
+     "name": "双重打击",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害两次。",
+     "resolved_rules_text": "造成5点伤害两次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 5,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 22,
+     "card_id": "MOLTEN_FIST",
+     "name": "熔融之拳",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将该敌人身上的易伤层数翻倍。",
+     "resolved_rules_text": "造成10点伤害。 将该敌人身上的易伤层数翻倍。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 23,
+     "card_id": "INFERNO",
+     "name": "狱火+",
+     "upgraded": true,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成{InfernoPower:diff()}点伤害。",
+     "resolved_rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+     "dynamic_values": [
+      {
+       "name": "InfernoPower",
+       "base_value": 9,
+       "current_value": 9,
+       "enchanted_value": 9,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 24,
+     "card_id": "DEMON_FORM",
+     "name": "恶魔形态+",
+     "upgraded": true,
+     "card_type": "Power",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 3,
+     "star_cost": 0,
+     "rules_text": "在你的回合开始时，获得{StrengthPower:diff()}点力量。",
+     "resolved_rules_text": "在你的回合开始时，获得4点力量。",
+     "dynamic_values": [
+      {
+       "name": "StrengthPower",
+       "base_value": 4,
+       "current_value": 4,
+       "enchanted_value": 4,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 25,
+     "card_id": "BLOOD_WALL",
+     "name": "血墙",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "失去2点生命。 获得16点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 16,
+       "current_value": 16,
+       "enchanted_value": 16,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 26,
+     "card_id": "SWORD_BOOMERANG",
+     "name": "飞剑回旋镖",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+     "resolved_rules_text": "随机对敌人造成5点伤害3次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 3,
+       "current_value": 5,
+       "enchanted_value": 5,
+       "is_modified": true,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Repeat",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 27,
+     "card_id": "BLOOD_WALL",
+     "name": "血墙",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 2,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Block:diff()}点格挡。",
+     "resolved_rules_text": "失去2点生命。 获得16点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Block",
+       "base_value": 16,
+       "current_value": 16,
+       "enchanted_value": 16,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 28,
+     "card_id": "OFFERING",
+     "name": "祭品",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Energy:energyIcons()}。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Energy",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 29,
+     "card_id": "FEEL_NO_PAIN",
+     "name": "无惧疼痛",
+     "upgraded": false,
+     "card_type": "Power",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "每当有一张牌被消耗时，获得{Power:diff()}点格挡。",
+     "resolved_rules_text": "每当有一张牌被消耗时，获得3点格挡。",
+     "dynamic_values": [
+      {
+       "name": "Power",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 30,
+     "card_id": "POMMEL_STRIKE",
+     "name": "剑柄打击+",
+     "upgraded": true,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "造成10点伤害。 抽2张牌。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Damage",
+       "base_value": 10,
+       "current_value": 10,
+       "enchanted_value": 10,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 31,
+     "card_id": "BLUDGEON",
+     "name": "重锤",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Uncommon",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 3,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。",
+     "resolved_rules_text": "造成32点伤害。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 32,
+       "current_value": 32,
+       "enchanted_value": 32,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 32,
+     "card_id": "ANGER",
+     "name": "愤怒",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "造成{Damage:diff()}点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "resolved_rules_text": "造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 33,
+     "card_id": "OFFERING",
+     "name": "祭品",
+     "upgraded": false,
+     "card_type": "Skill",
+     "rarity": "Rare",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 0,
+     "star_cost": 0,
+     "rules_text": "失去{HpLoss:diff()}点生命。 获得{Energy:energyIcons()}。 抽{Cards:diff()}张牌。",
+     "resolved_rules_text": "失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+     "dynamic_values": [
+      {
+       "name": "Cards",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Energy",
+       "base_value": 2,
+       "current_value": 2,
+       "enchanted_value": 2,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "HpLoss",
+       "base_value": 6,
+       "current_value": 6,
+       "enchanted_value": 6,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    },
+    {
+     "index": 34,
+     "card_id": "SWORD_BOOMERANG",
+     "name": "飞剑回旋镖",
+     "upgraded": false,
+     "card_type": "Attack",
+     "rarity": "Common",
+     "costs_x": false,
+     "star_costs_x": false,
+     "energy_cost": 1,
+     "star_cost": 0,
+     "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+     "resolved_rules_text": "随机对敌人造成3点伤害3次。",
+     "dynamic_values": [
+      {
+       "name": "Damage",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      },
+      {
+       "name": "Repeat",
+       "base_value": 3,
+       "current_value": 3,
+       "enchanted_value": 3,
+       "is_modified": false,
+       "was_just_upgraded": false
+      }
+     ]
+    }
+   ],
+   "relics": [
+    {
+     "index": 0,
+     "relic_id": "BURNING_BLOOD",
+     "name": "燃烧之血",
+     "description": "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 1,
+     "relic_id": "PHIAL_HOLSTER",
+     "name": "药瓶皮套",
+     "description": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 2,
+     "relic_id": "JUZU_BRACELET",
+     "name": "佛珠手链",
+     "description": "你在[gold]?[/gold]房间中不会再遭遇常规战斗。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 3,
+     "relic_id": "WHITE_STAR",
+     "name": "白星",
+     "description": "[gold]精英[/gold]敌人额外掉落一次[gold]稀有[/gold]卡牌奖励。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 4,
+     "relic_id": "PAELS_LEGION",
+     "name": "佩尔的士兵",
+     "description": "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 5,
+     "relic_id": "BELLOWS",
+     "name": "风箱",
+     "description": "你在每场战斗开始时的[gold]手牌[/gold]，将被[gold]升级[/gold]。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 6,
+     "relic_id": "POTION_BELT",
+     "name": "药水腰带",
+     "description": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 7,
+     "relic_id": "CENTENNIAL_PUZZLE",
+     "name": "百年积木",
+     "description": "你在每场战斗中第一次损失生命值时，抽[blue]{Cards}[/blue]张牌。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 8,
+     "relic_id": "JEWELED_MASK",
+     "name": "宝石面具",
+     "description": "在每场战斗开始时，将一张随机能力牌从你的[gold]抽牌堆[/gold]放入你的[gold]手牌[/gold]，这张牌在本场战斗可以免费打出。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 9,
+     "relic_id": "FORGOTTEN_SOUL",
+     "name": "遗忘之魂",
+     "description": "每当你[gold]消耗[/gold]一张牌，随机对一名敌人造成[blue]{Damage}[/blue]点伤害。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 10,
+     "relic_id": "POCKETWATCH",
+     "name": "怀表",
+     "description": "当你在本回合打出的牌少于等于[blue]{CardThreshold}[/blue]张时，则在你的下个回合开始时额外抽[blue]{Cards}[/blue]张牌。",
+     "stack": 8,
+     "is_melted": false
+    },
+    {
+     "index": 11,
+     "relic_id": "ROYAL_POISON",
+     "name": "王室猛毒",
+     "description": "在每场战斗开始时，失去[blue]{Damage}[/blue]点生命。",
+     "stack": null,
+     "is_melted": false
+    },
+    {
+     "index": 12,
+     "relic_id": "LANTERN",
+     "name": "灯笼",
+     "description": "在每场战斗的第一回合获得{Energy:energyIcons()}。",
+     "stack": null,
+     "is_melted": false
+    }
+   ],
+   "players": [
+    {
+     "player_id": "1",
+     "slot_index": 0,
+     "is_local": true,
+     "is_connected": true,
+     "character_id": "IRONCLAD",
+     "character_name": "铁甲战士",
+     "current_hp": 23,
+     "max_hp": 80,
+     "gold": 104,
+     "is_alive": true
+    }
+   ],
+   "potions": [
+    {
+     "index": 0,
+     "potion_id": "POWDERED_DEMISE",
+     "name": "消亡粉末",
+     "description": "敌人在自身的每个回合结束时，失去[blue]{Demise}[/blue]点生命。",
+     "rarity": "Uncommon",
+     "occupied": true,
+     "usage": "CombatOnly",
+     "target_type": "AnyEnemy",
+     "is_queued": false,
+     "requires_target": true,
+     "target_index_space": "enemies",
+     "valid_target_indices": [
+      0
+     ],
+     "can_use": true,
+     "can_discard": true
+    },
+    {
+     "index": 1,
+     "potion_id": null,
+     "name": null,
+     "description": null,
+     "rarity": null,
+     "occupied": false,
+     "usage": null,
+     "target_type": null,
+     "is_queued": false,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "can_use": false,
+     "can_discard": false
+    },
+    {
+     "index": 2,
+     "potion_id": null,
+     "name": null,
+     "description": null,
+     "rarity": null,
+     "occupied": false,
+     "usage": null,
+     "target_type": null,
+     "is_queued": false,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "can_use": false,
+     "can_discard": false
+    },
+    {
+     "index": 3,
+     "potion_id": null,
+     "name": null,
+     "description": null,
+     "rarity": null,
+     "occupied": false,
+     "usage": null,
+     "target_type": null,
+     "is_queued": false,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "can_use": false,
+     "can_discard": false
+    },
+    {
+     "index": 4,
+     "potion_id": null,
+     "name": null,
+     "description": null,
+     "rarity": null,
+     "occupied": false,
+     "usage": null,
+     "target_type": null,
+     "is_queued": false,
+     "requires_target": false,
+     "target_index_space": null,
+     "valid_target_indices": [],
+     "can_use": false,
+     "can_discard": false
+    }
+   ]
+  },
+  "multiplayer": null,
+  "multiplayer_lobby": null,
+  "map": null,
+  "selection": null,
+  "character_select": null,
+  "timeline": null,
+  "unlock": null,
+  "chest": null,
+  "event": null,
+  "crystal_sphere": null,
+  "shop": null,
+  "rest": null,
+  "reward": null,
+  "bundles": null,
+  "capstone": null,
+  "modal": null,
+  "game_over": null,
+  "agent_view": {
+   "version": 11,
+   "screen": "COMBAT",
+   "native_profile_id": 1,
+   "run_id": "P68P7CDJRDH3",
+   "session": {
+    "mode": "singleplayer",
+    "phase": "run",
+    "control_scope": "local_player"
+   },
+   "turn": 1,
+   "available_actions": [
+    "end_turn",
+    "play_card",
+    "save_and_quit",
+    "use_potion",
+    "discard_potion"
+   ],
+   "combat": {
+    "action_readiness": {
+     "can_use_combat_actions": true,
+     "reason": "ready",
+     "actions_settled": true,
+     "running_action_type": null,
+     "ready_action_type": null,
+     "modal_open": false,
+     "modal_type": null,
+     "player_actions_disabled": false,
+     "is_paused": false,
+     "local_ready_to_end_turn": false,
+     "all_players_ready_to_end_turn": true,
+     "ending_turn_phase_one": false,
+     "ending_turn_phase_two": false,
+     "end_turn_kick": "",
+     "combat_in_progress": true,
+     "combat_over_or_ending": false,
+     "combat_room_mode": "ActiveCombat",
+     "hand_in_card_play": false,
+     "hand_in_card_selection": false,
+     "hand_mode": "Play",
+     "local_turn_ready": true,
+     "snapshot_stable": true,
+     "player_action_phase": true
+    },
+    "player": {
+     "hp": "23/80",
+     "block": 0,
+     "energy": 2,
+     "stars": 0,
+     "focus": 0,
+     "orbs": [],
+     "pets": [
+      "佩尔的士兵 9999/9999 格挡0"
+     ],
+     "pet_missing": false,
+     "cards_played_this_turn": 8,
+     "attacks_played_this_turn": 4,
+     "skills_played_this_turn": 2,
+     "powers": [
+      "INFERNO_POWER 9",
+      "RUPTURE_POWER 2",
+      "STRENGTH_POWER 4"
+     ]
+    },
+    "players": [
+     {
+      "player_id": "1",
+      "slot_index": 0,
+      "is_local": true,
+      "is_connected": true,
+      "character_id": "IRONCLAD",
+      "character_name": "铁甲战士",
+      "current_hp": 23,
+      "max_hp": 80,
+      "block": 0,
+      "energy": 2,
+      "stars": 0,
+      "focus": 0,
+      "is_alive": true
+     }
+    ],
+    "end_turn_will_kill_player": true,
+    "lethal_risks": [
+     {
+      "risk_id": "incoming_damage",
+      "source": "enemy_intents",
+      "will_kill_player": true,
+      "reason": "Enemy intent damage after current block is at least current HP.",
+      "incoming_damage": 28,
+      "damage_after_block": 28,
+      "player_hp": 23,
+      "player_block": 0,
+      "power_id": null,
+      "power_amount": null
+     }
+    ],
+    "hand": [
+     {
+      "i": 0,
+      "card_id": "BLOOD_WALL",
+      "line": "血墙+ [2费]：失去2点生命。 获得40点格挡。",
+      "upgraded": true,
+      "energy_cost": 2,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": null,
+      "targets": [],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "i": 1,
+      "card_id": "SHRUG_IT_OFF",
+      "line": "耸肩无视+ [1费]：获得22点格挡。 抽1张牌。",
+      "upgraded": true,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": null,
+      "targets": [],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "i": 2,
+      "card_id": "DEFEND_IRONCLAD",
+      "line": "防御 [1费]：获得10点格挡。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": null,
+      "targets": [],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "i": 3,
+      "card_id": "DEFEND_IRONCLAD",
+      "line": "防御 [1费]：获得10点格挡。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": null,
+      "targets": [],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "i": 4,
+      "card_id": "STONE_ARMOR",
+      "line": "岩石铠甲 [1费]：获得4层覆甲。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": null,
+      "targets": [],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "i": 5,
+      "card_id": "FEEL_NO_PAIN",
+      "line": "无惧疼痛 [1费]：每当有一张牌被消耗时，获得3点格挡。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": null,
+      "targets": [],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "格挡",
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "i": 6,
+      "card_id": "MOLTEN_FIST",
+      "line": "熔融之拳 [1费]：造成14点伤害。 将该敌人身上的易伤层数翻倍。 消耗。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": "enemies",
+      "targets": [
+       0
+      ],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [
+       "易伤",
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "i": 7,
+      "card_id": "ASCENDERS_BANE",
+      "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
+      "upgraded": false,
+      "energy_cost": -1,
+      "star_cost": 0,
+      "playable": false,
+      "can_play_result": false,
+      "target": null,
+      "targets": [],
+      "why": "unplayable",
+      "unplayable_reason": "unplayable",
+      "unplayable_reason_raw": "HasUnplayableKeyword",
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [],
+      "mods": [
+       "Eternal",
+       "Ethereal",
+       "Unplayable"
+      ]
+     },
+     {
+      "i": 8,
+      "card_id": "STRIKE_IRONCLAD",
+      "line": "打击 [1费]：造成10点伤害。",
+      "upgraded": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": "enemies",
+      "targets": [
+       0
+      ],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "i": 9,
+      "card_id": "ANGER",
+      "line": "愤怒 [0费]：造成10点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+      "upgraded": false,
+      "energy_cost": 0,
+      "star_cost": 0,
+      "playable": true,
+      "can_play_result": true,
+      "target": "enemies",
+      "targets": [
+       0
+      ],
+      "why": null,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null,
+      "keywords": [],
+      "mods": []
+     }
+    ],
+    "draw": [
+     {
+      "line": "双重打击 [1费]：造成5点伤害两次。",
+      "card_ids": [
+       "TWIN_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "岩石铠甲 [1费]：获得4层覆甲。",
+      "card_ids": [
+       "STONE_ARMOR"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "恶魔形态+ [3费]：在你的回合开始时，获得4点力量。",
+      "card_ids": [
+       "DEMON_FORM"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "愤怒 [0费]：造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+      "card_ids": [
+       "ANGER"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "打击*2 [1费]：造成6点伤害。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "打击+ [1费]：造成9点伤害。 重放1。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [
+       "附魔"
+      ],
+      "mods": [
+       "Enchantment",
+       "涡旋"
+      ]
+     },
+     {
+      "line": "挑衅 [1费]：获得6点格挡。 给予1层易伤。",
+      "card_ids": [
+       "TAUNT"
+      ],
+      "keywords": [
+       "易伤",
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "狱火+ [1费]：在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+      "card_ids": [
+       "INFERNO"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "痛击 [2费]：造成8点伤害。 给予2层易伤。",
+      "card_ids": [
+       "BASH"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "祭品 [0费]：失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+      "card_ids": [
+       "OFFERING"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "耸肩无视 [1费]：获得8点格挡。 抽1张牌。",
+      "card_ids": [
+       "SHRUG_IT_OFF"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "血墙*2 [2费]：失去2点生命。 获得16点格挡。",
+      "card_ids": [
+       "BLOOD_WALL"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "防御*2 [1费]：获得5点格挡。",
+      "card_ids": [
+       "DEFEND_IRONCLAD"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "飞剑回旋镖 [1费]：随机对敌人造成5点伤害3次。",
+      "card_ids": [
+       "SWORD_BOOMERANG"
+      ],
+      "keywords": [
+       "附魔"
+      ],
+      "mods": [
+       "Enchantment",
+       "锋利"
+      ]
+     }
+    ],
+    "discard": [
+     {
+      "line": "剑柄打击+ [1费]：造成10点伤害。 抽2张牌。",
+      "card_ids": [
+       "POMMEL_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "愤怒*2 [0费]：造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+      "card_ids": [
+       "ANGER"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "重锤 [3费]：造成32点伤害。",
+      "card_ids": [
+       "BLUDGEON"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "飞剑回旋镖+ [1费]：随机对敌人造成3点伤害4次。",
+      "card_ids": [
+       "SWORD_BOOMERANG"
+      ],
+      "keywords": [],
+      "mods": []
+     }
+    ],
+    "exhaust": [
+     {
+      "line": "祭品 [0费]：失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+      "card_ids": [
+       "OFFERING"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "祭品+ [0费]：失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽5张牌。 消耗。",
+      "card_ids": [
+       "OFFERING"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     }
+    ],
+    "enemies": [
+     {
+      "i": 0,
+      "enemy_id": "TEST_SUBJECT",
+      "name": "实验体 #C46",
+      "hp": "27/111",
+      "base_max_hp": 111,
+      "block": 0,
+      "intent": "BITE_MOVE",
+      "move_id": "BITE_MOVE",
+      "powers": [
+       "ADAPTABLE_POWER 1",
+       "ENRAGE_POWER 3",
+       "STRENGTH_POWER 6"
+      ],
+      "intents": [
+       {
+        "i": 0,
+        "intent_type": "Attack",
+        "label": "28",
+        "damage": 28,
+        "hits": 1,
+        "total_damage": 28,
+        "status_card_count": null
+       }
+      ],
+      "alive": true,
+      "hittable": true
+     }
+    ]
+   },
+   "run": {
+    "character": "铁甲战士",
+    "ascension": 9,
+    "ascension_effects": [
+     {
+      "id": "LEVEL_01",
+      "name": "精英蜂拥",
+      "description": "[gold]精英[/gold]敌人出现更加频繁。"
+     },
+     {
+      "id": "LEVEL_02",
+      "name": "旅途劳顿",
+      "description": "先古之民只会回复你已损失生命值的[blue]80%[/blue]。"
+     },
+     {
+      "id": "LEVEL_03",
+      "name": "贫穷",
+      "description": "敌人和宝箱掉落的[gold]金币[/gold]减少[blue]25%[/blue]。"
+     },
+     {
+      "id": "LEVEL_04",
+      "name": "收紧腰带",
+      "description": "游戏开始时药水栏位减少1。"
+     },
+     {
+      "id": "LEVEL_05",
+      "name": "进阶之灾",
+      "description": "游戏开始时被[red]诅咒[/red]。"
+     },
+     {
+      "id": "LEVEL_06",
+      "name": "通货膨胀",
+      "description": "商人的卡牌移除服务价格提升。"
+     },
+     {
+      "id": "LEVEL_07",
+      "name": "稀缺",
+      "description": "稀有和已升级卡牌更少出现。"
+     },
+     {
+      "id": "LEVEL_08",
+      "name": "强韧敌人",
+      "description": "所有的敌人变得更难杀死。"
+     },
+     {
+      "id": "LEVEL_09",
+      "name": "致命敌人",
+      "description": "所有的敌人变得更加致命。"
+     }
+    ],
+    "floor": 48,
+    "act_id": "2",
+    "boss_id": "TEST_SUBJECT_BOSS",
+    "hp": "23/80",
+    "gold": 104,
+    "max_energy": 3,
+    "base_orb_slots": 0,
+    "deck": [
+     {
+      "line": "剑柄打击+ [1费]：造成10点伤害。 抽2张牌。",
+      "card_ids": [
+       "POMMEL_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "双重打击 [1费]：造成5点伤害两次。",
+      "card_ids": [
+       "TWIN_STRIKE"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "岩石铠甲*2 [1费]：获得4层覆甲。",
+      "card_ids": [
+       "STONE_ARMOR"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "恶魔形态+ [3费]：在你的回合开始时，获得4点力量。",
+      "card_ids": [
+       "DEMON_FORM"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "愤怒*3 [0费]：造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+      "card_ids": [
+       "ANGER"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "打击*3 [1费]：造成6点伤害。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "打击+ [1费]：造成9点伤害。 重放1。",
+      "card_ids": [
+       "STRIKE_IRONCLAD"
+      ],
+      "keywords": [
+       "附魔"
+      ],
+      "mods": [
+       "Enchantment",
+       "涡旋"
+      ]
+     },
+     {
+      "line": "挑衅 [1费]：获得6点格挡。 给予1层易伤。",
+      "card_ids": [
+       "TAUNT"
+      ],
+      "keywords": [
+       "易伤",
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "撕裂+ [1费]：每当你在你的回合失去生命值时, 获得2点力量。",
+      "card_ids": [
+       "RUPTURE"
+      ],
+      "keywords": [
+       "力量"
+      ],
+      "mods": []
+     },
+     {
+      "line": "无惧疼痛 [1费]：每当有一张牌被消耗时，获得3点格挡。",
+      "card_ids": [
+       "FEEL_NO_PAIN"
+      ],
+      "keywords": [
+       "格挡",
+       "消耗"
+      ],
+      "mods": []
+     },
+     {
+      "line": "熔融之拳 [1费]：造成10点伤害。 将该敌人身上的易伤层数翻倍。 消耗。",
+      "card_ids": [
+       "MOLTEN_FIST"
+      ],
+      "keywords": [
+       "易伤",
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "狱火+*2 [1费]：在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+      "card_ids": [
+       "INFERNO"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "痛击 [2费]：造成8点伤害。 给予2层易伤。",
+      "card_ids": [
+       "BASH"
+      ],
+      "keywords": [
+       "易伤"
+      ],
+      "mods": []
+     },
+     {
+      "line": "祭品*3 [0费]：失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+      "card_ids": [
+       "OFFERING"
+      ],
+      "keywords": [
+       "消耗"
+      ],
+      "mods": [
+       "Exhaust"
+      ]
+     },
+     {
+      "line": "耸肩无视*2 [1费]：获得8点格挡。 抽1张牌。",
+      "card_ids": [
+       "SHRUG_IT_OFF"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "血墙*3 [2费]：失去2点生命。 获得16点格挡。",
+      "card_ids": [
+       "BLOOD_WALL"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
+      "card_ids": [
+       "ASCENDERS_BANE"
+      ],
+      "keywords": [],
+      "mods": [
+       "Eternal",
+       "Ethereal",
+       "Unplayable"
+      ]
+     },
+     {
+      "line": "重锤 [3费]：造成32点伤害。",
+      "card_ids": [
+       "BLUDGEON"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "防御*4 [1费]：获得5点格挡。",
+      "card_ids": [
+       "DEFEND_IRONCLAD"
+      ],
+      "keywords": [
+       "格挡"
+      ],
+      "mods": []
+     },
+     {
+      "line": "飞剑回旋镖 [1费]：随机对敌人造成3点伤害3次。",
+      "card_ids": [
+       "SWORD_BOOMERANG"
+      ],
+      "keywords": [],
+      "mods": []
+     },
+     {
+      "line": "飞剑回旋镖 [1费]：随机对敌人造成5点伤害3次。",
+      "card_ids": [
+       "SWORD_BOOMERANG"
+      ],
+      "keywords": [
+       "附魔"
+      ],
+      "mods": [
+       "Enchantment",
+       "锋利"
+      ]
+     }
+    ],
+    "relics": [
+     "燃烧之血",
+     "药瓶皮套",
+     "佛珠手链",
+     "白星",
+     "佩尔的士兵",
+     "风箱",
+     "药水腰带",
+     "百年积木",
+     "宝石面具",
+     "遗忘之魂",
+     "怀表",
+     "王室猛毒",
+     "灯笼"
+    ],
+    "relic_ids": [
+     "BURNING_BLOOD",
+     "PHIAL_HOLSTER",
+     "JUZU_BRACELET",
+     "WHITE_STAR",
+     "PAELS_LEGION",
+     "BELLOWS",
+     "POTION_BELT",
+     "CENTENNIAL_PUZZLE",
+     "JEWELED_MASK",
+     "FORGOTTEN_SOUL",
+     "POCKETWATCH",
+     "ROYAL_POISON",
+     "LANTERN"
+    ],
+    "relic_stacks": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     8,
+     null,
+     null
+    ],
+    "relic_descriptions": [
+     "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+     "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位并获得[blue]{Potions}[/blue]瓶随机[gold]药水[/gold]。",
+     "你在[gold]?[/gold]房间中不会再遭遇常规战斗。",
+     "[gold]精英[/gold]敌人额外掉落一次[gold]稀有[/gold]卡牌奖励。",
+     "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+     "你在每场战斗开始时的[gold]手牌[/gold]，将被[gold]升级[/gold]。",
+     "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位。",
+     "你在每场战斗中第一次损失生命值时，抽[blue]{Cards}[/blue]张牌。",
+     "在每场战斗开始时，将一张随机能力牌从你的[gold]抽牌堆[/gold]放入你的[gold]手牌[/gold]，这张牌在本场战斗可以免费打出。",
+     "每当你[gold]消耗[/gold]一张牌，随机对一名敌人造成[blue]{Damage}[/blue]点伤害。",
+     "当你在本回合打出的牌少于等于[blue]{CardThreshold}[/blue]张时，则在你的下个回合开始时额外抽[blue]{Cards}[/blue]张牌。",
+     "在每场战斗开始时，失去[blue]{Damage}[/blue]点生命。",
+     "在每场战斗的第一回合获得{Energy:energyIcons()}。"
+    ],
+    "players": [
+     {
+      "player_id": "1",
+      "slot_index": 0,
+      "is_local": true,
+      "is_connected": true,
+      "character_id": "IRONCLAD",
+      "character_name": "铁甲战士",
+      "current_hp": 23,
+      "max_hp": 80,
+      "gold": 104,
+      "is_alive": true
+     }
+    ],
+    "potions": [
+     {
+      "i": 0,
+      "potion_id": "POWDERED_DEMISE",
+      "line": "0: 消亡粉末：CombatOnly",
+      "description": "敌人在自身的每个回合结束时，失去[blue]{Demise}[/blue]点生命。",
+      "usable": true,
+      "discard": true,
+      "target": "enemy",
+      "targets": [
+       0
+      ]
+     },
+     {
+      "i": 1,
+      "potion_id": null,
+      "line": "1: 空",
+      "description": null,
+      "usable": false,
+      "discard": false,
+      "target": null,
+      "targets": []
+     },
+     {
+      "i": 2,
+      "potion_id": null,
+      "line": "2: 空",
+      "description": null,
+      "usable": false,
+      "discard": false,
+      "target": null,
+      "targets": []
+     },
+     {
+      "i": 3,
+      "potion_id": null,
+      "line": "3: 空",
+      "description": null,
+      "usable": false,
+      "discard": false,
+      "target": null,
+      "targets": []
+     },
+     {
+      "i": 4,
+      "potion_id": null,
+      "line": "4: 空",
+      "description": null,
+      "usable": false,
+      "discard": false,
+      "target": null,
+      "targets": []
+     }
+    ],
+    "piles": {
+     "draw": [
+      {
+       "line": "双重打击 [1费]：造成5点伤害两次。",
+       "card_ids": [
+        "TWIN_STRIKE"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "岩石铠甲 [1费]：获得4层覆甲。",
+       "card_ids": [
+        "STONE_ARMOR"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "恶魔形态+ [3费]：在你的回合开始时，获得4点力量。",
+       "card_ids": [
+        "DEMON_FORM"
+       ],
+       "keywords": [
+        "力量"
+       ],
+       "mods": []
+      },
+      {
+       "line": "愤怒 [0费]：造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+       "card_ids": [
+        "ANGER"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "打击*2 [1费]：造成6点伤害。",
+       "card_ids": [
+        "STRIKE_IRONCLAD"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "打击+ [1费]：造成9点伤害。 重放1。",
+       "card_ids": [
+        "STRIKE_IRONCLAD"
+       ],
+       "keywords": [
+        "附魔"
+       ],
+       "mods": [
+        "Enchantment",
+        "涡旋"
+       ]
+      },
+      {
+       "line": "挑衅 [1费]：获得6点格挡。 给予1层易伤。",
+       "card_ids": [
+        "TAUNT"
+       ],
+       "keywords": [
+        "易伤",
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "狱火+ [1费]：在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+       "card_ids": [
+        "INFERNO"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "痛击 [2费]：造成8点伤害。 给予2层易伤。",
+       "card_ids": [
+        "BASH"
+       ],
+       "keywords": [
+        "易伤"
+       ],
+       "mods": []
+      },
+      {
+       "line": "祭品 [0费]：失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+       "card_ids": [
+        "OFFERING"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      },
+      {
+       "line": "耸肩无视 [1费]：获得8点格挡。 抽1张牌。",
+       "card_ids": [
+        "SHRUG_IT_OFF"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "血墙*2 [2费]：失去2点生命。 获得16点格挡。",
+       "card_ids": [
+        "BLOOD_WALL"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "防御*2 [1费]：获得5点格挡。",
+       "card_ids": [
+        "DEFEND_IRONCLAD"
+       ],
+       "keywords": [
+        "格挡"
+       ],
+       "mods": []
+      },
+      {
+       "line": "飞剑回旋镖 [1费]：随机对敌人造成5点伤害3次。",
+       "card_ids": [
+        "SWORD_BOOMERANG"
+       ],
+       "keywords": [
+        "附魔"
+       ],
+       "mods": [
+        "Enchantment",
+        "锋利"
+       ]
+      }
+     ],
+     "discard": [
+      {
+       "line": "剑柄打击+ [1费]：造成10点伤害。 抽2张牌。",
+       "card_ids": [
+        "POMMEL_STRIKE"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "愤怒*2 [0费]：造成6点伤害。 将一张此牌的复制品加入你的弃牌堆。",
+       "card_ids": [
+        "ANGER"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "重锤 [3费]：造成32点伤害。",
+       "card_ids": [
+        "BLUDGEON"
+       ],
+       "keywords": [],
+       "mods": []
+      },
+      {
+       "line": "飞剑回旋镖+ [1费]：随机对敌人造成3点伤害4次。",
+       "card_ids": [
+        "SWORD_BOOMERANG"
+       ],
+       "keywords": [],
+       "mods": []
+      }
+     ],
+     "exhaust": [
+      {
+       "line": "祭品 [0费]：失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽3张牌。 消耗。",
+       "card_ids": [
+        "OFFERING"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      },
+      {
+       "line": "祭品+ [0费]：失去6点生命。 获得res://images/packed/sprite_fonts/ironclad_energy_icon.pngres://images/packed/sprite_fonts/ironclad_energy_icon.png。 抽5张牌。 消耗。",
+       "card_ids": [
+        "OFFERING"
+       ],
+       "keywords": [
+        "消耗"
+       ],
+       "mods": [
+        "Exhaust"
+       ]
+      }
+     ]
+    }
+   },
+   "multiplayer": null,
+   "multiplayer_lobby": null,
+   "map": null,
+   "selection": null,
+   "character_select": null,
+   "timeline": null,
+   "chest": null,
+   "event": null,
+   "crystal_sphere": null,
+   "shop": null,
+   "rest": null,
+   "reward": null,
+   "bundles": null,
+   "capstone": null,
+   "unlock": null,
+   "modal": null,
+   "game_over": null,
+   "glossary": {
+    "力量": "每层力量通常使攻击额外造成 1 点伤害。",
+    "易伤": "易伤单位会承受更多攻击伤害。",
+    "格挡": "格挡会优先抵消即将受到的伤害。",
+    "消耗": "消耗牌打出后会移出本场战斗。",
+    "附魔": "附魔是卡牌附着的额外词条或效果层。"
+   }
+  }
+ },
+ "knownDraws": {
+  "cards": [
+   "DEMON_FORM+",
+   "DEFEND_IRONCLAD",
+   "DEFEND_IRONCLAD",
+   "STRIKE_IRONCLAD+",
+   "STRIKE_IRONCLAD",
+   "STRIKE_IRONCLAD",
+   "BLOOD_WALL",
+   "BLOOD_WALL",
+   "SHRUG_IT_OFF",
+   "SWORD_BOOMERANG",
+   "STONE_ARMOR",
+   "OFFERING",
+   "TAUNT",
+   "BASH",
+   "TWIN_STRIKE",
+   "INFERNO+",
+   "ANGER"
+  ],
+  "names": [
+   "恶魔形态+",
+   "防御",
+   "防御",
+   "打击+",
+   "打击",
+   "打击",
+   "血墙",
+   "血墙",
+   "耸肩无视",
+   "飞剑回旋镖",
+   "岩石铠甲",
+   "祭品",
+   "挑衅",
+   "痛击",
+   "双重打击",
+   "狱火+",
+   "愤怒"
+  ],
+  "attempts": [
+   1,
+   2,
+   3
+  ]
+ },
+ "played": {
+  "canon": [
+   "INFERNO+",
+   "SWORD_BOOMERANG+",
+   "POMMEL_STRIKE+>实验体 #C46",
+   "RUPTURE+",
+   "OFFERING+",
+   "BLUDGEON>实验体 #C46",
+   "ANGER>实验体 #C46",
+   "OFFERING"
+  ],
+  "text": [
+   "狱火+",
+   "飞剑回旋镖+",
+   "剑柄打击+ -> 实验体 #C46",
+   "撕裂+",
+   "祭品+",
+   "重锤 -> 实验体 #C46",
+   "愤怒 -> 实验体 #C46",
+   "祭品"
+  ]
+ },
+ "rows": [
+  {
+   "ts": "2026-10-03T08:58:12.565Z",
+   "run_id": "P68P7CDJRDH3",
+   "act": "2",
+   "floor": 48,
+   "encounter": "TEST_SUBJECT",
+   "enemies": [
+    "实验体 #C46"
+   ],
+   "fight_kind": "boss",
+   "elite": null,
+   "gate": "boss",
+   "attempt": 1,
+   "max_attempts": 6,
+   "from": "first play of the fight",
+   "started_at": "2026-10-03T08:56:39.469Z",
+   "ended_at": "2026-10-03T08:58:12.565Z",
+   "result": "predicted_death",
+   "turns": 6,
+   "end_hp": 7,
+   "end_block": 22,
+   "incoming": 45,
+   "judge": {
+    "tier": "rules",
+    "reason": "nothing left to play or drink; 45 incoming vs 7 HP + 22 block + 0 end-of-turn block"
+   },
+   "reload": {
+    "ok": true,
+    "ms": 7723,
+    "resumed_turn": 1
+   },
+   "give_up_reason": null,
+   "summary": {
+    "turns": [
+     {
+      "turn": 1,
+      "hp": 35,
+      "block": 0,
+      "enemies": "实验体 #C46 111/111",
+      "plays": [
+       "狱火+",
+       "飞剑回旋镖+",
+       "剑柄打击+ -> 实验体 #C46",
+       "岩石铠甲",
+       "撕裂+",
+       "祭品+",
+       "血墙+",
+       "祭品",
+       "愤怒 -> 实验体 #C46",
+       "熔融之拳 -> 实验体 #C46",
+       "打击 -> 实验体 #C46",
+       "愤怒 -> 实验体 #C46",
+       "potion 消亡粉末"
+      ]
+     },
+     {
+      "turn": 2,
+      "hp": 20,
+      "block": 0,
+      "enemies": "",
+      "plays": [
+       "恶魔形态+"
+      ]
+     },
+     {
+      "turn": 3,
+      "hp": 19,
+      "block": 0,
+      "enemies": "实验体 #C46 203/212",
+      "plays": [
+       "血墙",
+       "飞剑回旋镖"
+      ]
+     },
+     {
+      "turn": 4,
+      "hp": 17,
+      "block": 0,
+      "enemies": "实验体 #C46 131/212",
+      "plays": [
+       "双重打击 -> 实验体 #C46",
+       "狱火+",
+       "愤怒 -> 实验体 #C46",
+       "剑柄打击+ -> 实验体 #C46",
+       "愤怒 -> 实验体 #C46"
+      ]
+     },
+     {
+      "turn": 5,
+      "hp": 14,
+      "block": 0,
+      "enemies": "实验体 #C46 312/313",
+      "plays": [
+       "愤怒 -> 实验体 #C46",
+       "耸肩无视+",
+       "飞剑回旋镖",
+       "耸肩无视"
+      ]
+     },
+     {
+      "turn": 6,
+      "hp": 9,
+      "block": 0,
+      "enemies": "实验体 #C46 290/313",
+      "plays": [
+       "挑衅 -> 实验体 #C46",
+       "血墙",
+       "愤怒 -> 实验体 #C46"
+      ]
+     }
+    ],
+    "potions": [
+     "T1 消亡粉末"
+    ],
+    "killers": [
+     "实验体 #C46 (Attack 45)"
+    ]
+   },
+   "draws": {
+    "order": [
+     "INFERNO+",
+     "SWORD_BOOMERANG",
+     "OFFERING",
+     "POMMEL_STRIKE+",
+     "BLOOD_WALL",
+     "SHRUG_IT_OFF",
+     "OFFERING",
+     "DEFEND_IRONCLAD",
+     "DEFEND_IRONCLAD",
+     "STONE_ARMOR",
+     "RUPTURE+",
+     "FEEL_NO_PAIN",
+     "BLUDGEON",
+     "ANGER",
+     "MOLTEN_FIST",
+     "ASCENDERS_BANE",
+     "STRIKE_IRONCLAD",
+     "ANGER",
+     "DEMON_FORM+",
+     "DEFEND_IRONCLAD",
+     "DEFEND_IRONCLAD",
+     "STRIKE_IRONCLAD+",
+     "STRIKE_IRONCLAD",
+     "STRIKE_IRONCLAD",
+     "BLOOD_WALL",
+     "BLOOD_WALL",
+     "SHRUG_IT_OFF",
+     "SWORD_BOOMERANG",
+     "STONE_ARMOR",
+     "OFFERING",
+     "TAUNT",
+     "BASH",
+     "TWIN_STRIKE",
+     "INFERNO+",
+     "ANGER"
+    ],
+    "names": [
+     "狱火+",
+     "飞剑回旋镖",
+     "祭品",
+     "剑柄打击+",
+     "血墙",
+     "耸肩无视",
+     "祭品+",
+     "防御",
+     "防御",
+     "岩石铠甲",
+     "撕裂+",
+     "无惧疼痛",
+     "重锤",
+     "愤怒",
+     "熔融之拳",
+     "进阶之灾",
+     "打击",
+     "愤怒",
+     "恶魔形态+",
+     "防御",
+     "防御",
+     "打击+",
+     "打击",
+     "打击",
+     "血墙",
+     "血墙",
+     "耸肩无视",
+     "飞剑回旋镖",
+     "岩石铠甲",
+     "祭品",
+     "挑衅",
+     "痛击",
+     "双重打击",
+     "狱火+",
+     "愤怒"
+    ],
+    "turns": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     2,
+     2,
+     2,
+     2,
+     2,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3,
+     4,
+     4,
+     4,
+     4
+    ],
+    "clean": 35,
+    "broke": "T4: reshuffle (the discard pile shuffled into the draw pile)"
+   },
+   "explore": {
+    "points": [],
+    "target": null,
+    "turns": [
+     {
+      "turn": 1,
+      "plays": [
+       "INFERNO+",
+       "SWORD_BOOMERANG+",
+       "POMMEL_STRIKE+>实验体 #C46",
+       "STONE_ARMOR",
+       "RUPTURE+",
+       "OFFERING+",
+       "BLOOD_WALL+",
+       "OFFERING",
+       "ANGER>实验体 #C46",
+       "MOLTEN_FIST>实验体 #C46",
+       "STRIKE_IRONCLAD>实验体 #C46",
+       "ANGER>实验体 #C46",
+       "potion:POWDERED_DEMISE>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "0c84fd2529cfaaee",
+        "at": 0
+       },
+       {
+        "board": "9ff64d47328bb689",
+        "at": 1
+       },
+       {
+        "board": "9fd6bafcb0a8e13b",
+        "at": 2
+       },
+       {
+        "board": "1facf73b95909c4e",
+        "at": 3
+       },
+       {
+        "board": "fa1d4bc3fff40689",
+        "at": 4
+       },
+       {
+        "board": "3ca78a5c3429ced9",
+        "at": 5
+       },
+       {
+        "board": "0b1dadc67d463ea6",
+        "at": 6
+       },
+       {
+        "board": "11878ecf9f78d9e5",
+        "at": 7
+       },
+       {
+        "board": "3de86e3dafbd0688",
+        "at": 8
+       },
+       {
+        "board": "23a34968b120f3cc",
+        "at": 9
+       },
+       {
+        "board": "050f562ecb731e7d",
+        "at": 10
+       },
+       {
+        "board": "8b9c9f96c917f0f9",
+        "at": 11
+       },
+       {
+        "board": "6b4ccbe2400016c4",
+        "at": 12
+       },
+       {
+        "board": "63909ac2661beb5e",
+        "at": 13
+       }
+      ]
+     },
+     {
+      "turn": 2,
+      "plays": [
+       "DEMON_FORM+"
+      ],
+      "boards": [
+       {
+        "board": "c283d8066df73321",
+        "at": 0
+       },
+       {
+        "board": "cc628dfe2860611b",
+        "at": 1
+       }
+      ]
+     },
+     {
+      "turn": 3,
+      "plays": [
+       "BLOOD_WALL",
+       "SWORD_BOOMERANG"
+      ],
+      "boards": [
+       {
+        "board": "c8d4a76ad48e4340",
+        "at": 0
+       },
+       {
+        "board": "1d6dd2289f677b37",
+        "at": 1
+       },
+       {
+        "board": "9d4a98ad49566326",
+        "at": 2
+       }
+      ]
+     },
+     {
+      "turn": 4,
+      "plays": [
+       "TWIN_STRIKE>实验体 #C46",
+       "INFERNO+",
+       "ANGER>实验体 #C46",
+       "POMMEL_STRIKE+>实验体 #C46",
+       "ANGER>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "45445d4cc53deeb8",
+        "at": 0
+       },
+       {
+        "board": "0f6e0209f5c41710",
+        "at": 1
+       },
+       {
+        "board": "b086b9243cedaa16",
+        "at": 2
+       },
+       {
+        "board": "d199231a11412d1f",
+        "at": 3
+       },
+       {
+        "board": "16c0a979783b1012",
+        "at": 4
+       },
+       {
+        "board": "2d11e71275751b52",
+        "at": 5
+       }
+      ]
+     },
+     {
+      "turn": 5,
+      "plays": [
+       "ANGER>实验体 #C46",
+       "SHRUG_IT_OFF+",
+       "SWORD_BOOMERANG",
+       "SHRUG_IT_OFF"
+      ],
+      "boards": [
+       {
+        "board": "0b6f9c666d478172",
+        "at": 0
+       },
+       {
+        "board": "0c0926a8028ddf20",
+        "at": 1
+       },
+       {
+        "board": "e70578a046c30c5d",
+        "at": 2
+       },
+       {
+        "board": "b57b1cc40037e7d1",
+        "at": 3
+       },
+       {
+        "board": "f2dbe9a4ff2e7807",
+        "at": 4
+       }
+      ]
+     },
+     {
+      "turn": 6,
+      "plays": [
+       "TAUNT>实验体 #C46",
+       "BLOOD_WALL",
+       "ANGER>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "8892d3df5c3562f5",
+        "at": 0
+       },
+       {
+        "board": "e74f400fce4b8c3c",
+        "at": 1
+       },
+       {
+        "board": "e893985766954a49",
+        "at": 2
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "ts": "2026-10-03T08:59:37.182Z",
+   "run_id": "P68P7CDJRDH3",
+   "act": "2",
+   "floor": 48,
+   "encounter": "TEST_SUBJECT",
+   "enemies": [
+    "实验体 #C46"
+   ],
+   "fight_kind": "boss",
+   "elite": null,
+   "gate": "boss",
+   "attempt": 2,
+   "max_attempts": 6,
+   "from": "reloaded from the game's room-entry save of F48 (save_and_quit, continue_run)",
+   "started_at": "2026-10-03T08:58:12.566Z",
+   "ended_at": "2026-10-03T08:59:37.182Z",
+   "result": "predicted_death",
+   "turns": 3,
+   "end_hp": 1,
+   "end_block": 24,
+   "incoming": 44,
+   "judge": {
+    "tier": "rules",
+    "reason": "nothing left to play or drink; 44 incoming vs 1 HP + 24 block + 0 end-of-turn block"
+   },
+   "reload": {
+    "ok": true,
+    "ms": 6975,
+    "resumed_turn": 1
+   },
+   "give_up_reason": null,
+   "summary": {
+    "turns": [
+     {
+      "turn": 1,
+      "hp": 35,
+      "block": 0,
+      "enemies": "实验体 #C46 111/111",
+      "plays": [
+       "狱火+",
+       "飞剑回旋镖+",
+       "剑柄打击+ -> 实验体 #C46",
+       "撕裂+",
+       "祭品+",
+       "重锤 -> 实验体 #C46",
+       "愤怒 -> 实验体 #C46",
+       "祭品",
+       "熔融之拳 -> 实验体 #C46",
+       "打击 -> 实验体 #C46",
+       "愤怒 -> 实验体 #C46"
+      ]
+     },
+     {
+      "turn": 2,
+      "hp": 22,
+      "block": 0,
+      "enemies": "实验体 #C46 203/212",
+      "plays": [
+       "防御",
+       "防御",
+       "打击+ -> 实验体 #C46",
+       "potion 消亡粉末"
+      ]
+     },
+     {
+      "turn": 3,
+      "hp": 3,
+      "block": 0,
+      "enemies": "实验体 #C46 155/212",
+      "plays": [
+       "耸肩无视",
+       "血墙"
+      ]
+     }
+    ],
+    "potions": [
+     "T2 消亡粉末"
+    ],
+    "killers": [
+     "实验体 #C46 (Attack 11x4)"
+    ]
+   },
+   "draws": {
+    "order": [
+     "INFERNO+",
+     "SWORD_BOOMERANG",
+     "OFFERING",
+     "POMMEL_STRIKE+",
+     "BLOOD_WALL",
+     "SHRUG_IT_OFF",
+     "OFFERING",
+     "DEFEND_IRONCLAD",
+     "DEFEND_IRONCLAD",
+     "STONE_ARMOR",
+     "RUPTURE+",
+     "FEEL_NO_PAIN",
+     "BLUDGEON",
+     "ANGER",
+     "MOLTEN_FIST",
+     "ASCENDERS_BANE",
+     "STRIKE_IRONCLAD",
+     "ANGER",
+     "DEMON_FORM+",
+     "DEFEND_IRONCLAD",
+     "DEFEND_IRONCLAD",
+     "STRIKE_IRONCLAD+",
+     "STRIKE_IRONCLAD",
+     "STRIKE_IRONCLAD",
+     "BLOOD_WALL",
+     "BLOOD_WALL",
+     "SHRUG_IT_OFF",
+     "SWORD_BOOMERANG",
+     "STONE_ARMOR"
+    ],
+    "names": [
+     "狱火+",
+     "飞剑回旋镖+",
+     "祭品+",
+     "剑柄打击+",
+     "血墙+",
+     "耸肩无视+",
+     "祭品",
+     "防御",
+     "防御",
+     "岩石铠甲",
+     "撕裂+",
+     "无惧疼痛",
+     "重锤",
+     "愤怒",
+     "熔融之拳",
+     "进阶之灾",
+     "打击",
+     "愤怒",
+     "恶魔形态+",
+     "防御",
+     "防御",
+     "打击+",
+     "打击",
+     "打击",
+     "血墙",
+     "血墙",
+     "耸肩无视",
+     "飞剑回旋镖",
+     "岩石铠甲"
+    ],
+    "turns": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     2,
+     2,
+     2,
+     2,
+     2,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "clean": 29,
+    "broke": null
+   },
+   "explore": {
+    "points": [
+     {
+      "board": "0c84fd2529cfaaee",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 耸肩无视+, 祭品, potion 消亡粉末 -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品+, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 剑柄打击+ -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 血墙+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 剑柄打击+ -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 耸肩无视+, 祭品, potion 消亡粉末 -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品+, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 剑柄打击+ -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 血墙+": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 剑柄打击+ -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, DEMON_FORM+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 耸肩无视+, 祭品, potion 消亡粉末 -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品+, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, DEMON_FORM+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 剑柄打击+ -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, DEMON_FORM+, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 血墙+": "ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 剑柄打击+ -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+"
+      }
+     },
+     {
+      "board": "1facf73b95909c4e",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "撕裂+, 祭品+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "撕裂+, 祭品+, 重锤 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46",
+       "耸肩无视+, 撕裂+, 祭品+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 愤怒 -> 实验体 #C46",
+       "撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46",
+       "撕裂+, 祭品+, 血墙+, 祭品, potion 消亡粉末 -> 实验体 #C46, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "撕裂+, 祭品+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "撕裂+, 祭品+, 重锤 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+, 撕裂+, 祭品+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 愤怒 -> 实验体 #C46": 1,
+       "撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46": 1,
+       "撕裂+, 祭品+, 血墙+, 祭品, potion 消亡粉末 -> 实验体 #C46, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "撕裂+, 祭品+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "撕裂+, 祭品+, 重锤 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, DEMON_FORM+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "耸肩无视+, 撕裂+, 祭品+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "撕裂+, 祭品+, 血墙+, 祭品, potion 消亡粉末 -> 实验体 #C46, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "2d90b52f43d1b6ae",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 岩石铠甲, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 愤怒 -> 实验体 #C46, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "耸肩无视+, 岩石铠甲, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46",
+       "耸肩无视+, 岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 岩石铠甲, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 愤怒 -> 实验体 #C46, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+, 岩石铠甲, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+, 岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 岩石铠甲, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "血墙+, 愤怒 -> 实验体 #C46, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "耸肩无视+, 岩石铠甲, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, DEMON_FORM+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "耸肩无视+, 岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "4596458eacf1ea2f",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "血墙+, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46",
+       "耸肩无视+",
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+": 1,
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "耸肩无视+": "ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, SWORD_BOOMERANG+",
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "c54a67959ccce5cc",
+      "turn": 2,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46",
+      "alternatives": [
+       "防御, 防御, 打击+ -> 实验体 #C46"
+      ],
+      "dead": {
+       "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46": 1,
+       "防御, 防御, 打击+ -> 实验体 #C46": 1
+      },
+      "canon": {
+       "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46, potion:POWDERED_DEMISE>实验体 #C46",
+       "防御, 防御, 打击+ -> 实验体 #C46": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46"
+      }
+     },
+     {
+      "board": "ad34977c3444df8a",
+      "turn": 2,
+      "kind": "code",
+      "label": "combat/plan",
+      "line": "end turn",
+      "canon": {
+       "end turn": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "7b0d4d3b2901fdd3",
+      "turn": 3,
+      "kind": "code",
+      "label": "combat/least-loss",
+      "line": "耸肩无视, 打击 -> 实验体 #C46, 飞剑回旋镖",
+      "canon": {
+       "耸肩无视, 打击 -> 实验体 #C46, 飞剑回旋镖": "SHRUG_IT_OFF, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG"
+      }
+     },
+     {
+      "board": "677bf7d3fabc985e",
+      "turn": 3,
+      "kind": "code",
+      "label": "combat/least-loss",
+      "line": "血墙",
+      "canon": {
+       "血墙": "BLOOD_WALL, SHRUG_IT_OFF"
+      }
+     }
+    ],
+    "target": null,
+    "turns": [
+     {
+      "turn": 1,
+      "plays": [
+       "INFERNO+",
+       "SWORD_BOOMERANG+",
+       "POMMEL_STRIKE+>实验体 #C46",
+       "RUPTURE+",
+       "OFFERING+",
+       "BLUDGEON>实验体 #C46",
+       "ANGER>实验体 #C46",
+       "OFFERING",
+       "MOLTEN_FIST>实验体 #C46",
+       "STRIKE_IRONCLAD>实验体 #C46",
+       "ANGER>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "0c84fd2529cfaaee",
+        "at": 0
+       },
+       {
+        "board": "9ff64d47328bb689",
+        "at": 1
+       },
+       {
+        "board": "9fd6bafcb0a8e13b",
+        "at": 2
+       },
+       {
+        "board": "1facf73b95909c4e",
+        "at": 3
+       },
+       {
+        "board": "0244b6c13f902fbd",
+        "at": 4
+       },
+       {
+        "board": "2d90b52f43d1b6ae",
+        "at": 5
+       },
+       {
+        "board": "368199fb34b4f312",
+        "at": 6
+       },
+       {
+        "board": "776a24edc7a4642f",
+        "at": 7
+       },
+       {
+        "board": "4596458eacf1ea2f",
+        "at": 8
+       },
+       {
+        "board": "e3865dd4cfa9a37b",
+        "at": 9
+       },
+       {
+        "board": "8ad136e13f075560",
+        "at": 10
+       },
+       {
+        "board": "89f27a0308623ac3",
+        "at": 11
+       }
+      ]
+     },
+     {
+      "turn": 2,
+      "plays": [
+       "DEFEND_IRONCLAD",
+       "DEFEND_IRONCLAD",
+       "STRIKE_IRONCLAD+>实验体 #C46",
+       "potion:POWDERED_DEMISE>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "c54a67959ccce5cc",
+        "at": 0
+       },
+       {
+        "board": "955c7f5dd1d158ee",
+        "at": 1
+       },
+       {
+        "board": "c26682596d64a180",
+        "at": 2
+       },
+       {
+        "board": "b411b102f32c4015",
+        "at": 3
+       },
+       {
+        "board": "ad34977c3444df8a",
+        "at": 4
+       }
+      ]
+     },
+     {
+      "turn": 3,
+      "plays": [
+       "SHRUG_IT_OFF",
+       "BLOOD_WALL"
+      ],
+      "boards": [
+       {
+        "board": "7b0d4d3b2901fdd3",
+        "at": 0
+       },
+       {
+        "board": "677bf7d3fabc985e",
+        "at": 1
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "ts": "2026-10-03T09:01:02.603Z",
+   "run_id": "P68P7CDJRDH3",
+   "act": "2",
+   "floor": 48,
+   "encounter": "TEST_SUBJECT",
+   "enemies": [
+    "实验体 #C46"
+   ],
+   "fight_kind": "boss",
+   "elite": null,
+   "gate": "boss",
+   "attempt": 3,
+   "max_attempts": 6,
+   "from": "reloaded from the game's room-entry save of F48 (save_and_quit, continue_run)",
+   "started_at": "2026-10-03T08:59:37.182Z",
+   "ended_at": "2026-10-03T09:01:02.603Z",
+   "result": "predicted_death",
+   "turns": 3,
+   "end_hp": 1,
+   "end_block": 24,
+   "incoming": 44,
+   "judge": {
+    "tier": "rules",
+    "reason": "nothing left to play or drink; 44 incoming vs 1 HP + 24 block + 0 end-of-turn block"
+   },
+   "reload": {
+    "ok": true,
+    "ms": 7647,
+    "resumed_turn": 1
+   },
+   "give_up_reason": null,
+   "summary": {
+    "turns": [
+     {
+      "turn": 1,
+      "hp": 35,
+      "block": 0,
+      "enemies": "实验体 #C46 111/111",
+      "plays": [
+       "狱火+",
+       "飞剑回旋镖+",
+       "剑柄打击+ -> 实验体 #C46",
+       "撕裂+",
+       "祭品+",
+       "重锤 -> 实验体 #C46",
+       "愤怒 -> 实验体 #C46",
+       "祭品",
+       "熔融之拳 -> 实验体 #C46",
+       "打击 -> 实验体 #C46",
+       "愤怒 -> 实验体 #C46"
+      ]
+     },
+     {
+      "turn": 2,
+      "hp": 22,
+      "block": 0,
+      "enemies": "实验体 #C46 203/212",
+      "plays": [
+       "防御",
+       "防御",
+       "打击+ -> 实验体 #C46"
+      ]
+     },
+     {
+      "turn": 3,
+      "hp": 3,
+      "block": 0,
+      "enemies": "实验体 #C46 164/212",
+      "plays": [
+       "耸肩无视",
+       "血墙",
+       "potion 消亡粉末"
+      ]
+     }
+    ],
+    "potions": [
+     "T3 消亡粉末"
+    ],
+    "killers": [
+     "实验体 #C46 (Attack 11x4)"
+    ]
+   },
+   "draws": {
+    "order": [
+     "INFERNO+",
+     "SWORD_BOOMERANG",
+     "OFFERING",
+     "POMMEL_STRIKE+",
+     "BLOOD_WALL",
+     "SHRUG_IT_OFF",
+     "OFFERING",
+     "DEFEND_IRONCLAD",
+     "DEFEND_IRONCLAD",
+     "STONE_ARMOR",
+     "RUPTURE+",
+     "FEEL_NO_PAIN",
+     "BLUDGEON",
+     "ANGER",
+     "MOLTEN_FIST",
+     "ASCENDERS_BANE",
+     "STRIKE_IRONCLAD",
+     "ANGER",
+     "DEMON_FORM+",
+     "DEFEND_IRONCLAD",
+     "DEFEND_IRONCLAD",
+     "STRIKE_IRONCLAD+",
+     "STRIKE_IRONCLAD",
+     "STRIKE_IRONCLAD",
+     "BLOOD_WALL",
+     "BLOOD_WALL",
+     "SHRUG_IT_OFF",
+     "SWORD_BOOMERANG",
+     "STONE_ARMOR"
+    ],
+    "names": [
+     "狱火+",
+     "飞剑回旋镖+",
+     "祭品+",
+     "剑柄打击+",
+     "血墙+",
+     "耸肩无视+",
+     "祭品",
+     "防御",
+     "防御",
+     "岩石铠甲",
+     "撕裂+",
+     "无惧疼痛",
+     "重锤",
+     "愤怒",
+     "熔融之拳",
+     "进阶之灾",
+     "打击",
+     "愤怒",
+     "恶魔形态+",
+     "防御",
+     "防御",
+     "打击+",
+     "打击",
+     "打击",
+     "血墙",
+     "血墙",
+     "耸肩无视",
+     "飞剑回旋镖",
+     "岩石铠甲"
+    ],
+    "turns": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     2,
+     2,
+     2,
+     2,
+     2,
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "clean": 29,
+    "broke": null
+   },
+   "explore": {
+    "points": [
+     {
+      "board": "0c84fd2529cfaaee",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 耸肩无视+, 祭品, potion 消亡粉末 -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品+, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 剑柄打击+ -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 血墙+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 剑柄打击+ -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 耸肩无视+, 祭品, potion 消亡粉末 -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品+, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 剑柄打击+ -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 血墙+": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 剑柄打击+ -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 撕裂+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, DEMON_FORM+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 耸肩无视+, 祭品, potion 消亡粉末 -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品+, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 岩石铠甲, 撕裂+, 血墙+, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 祭品, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, DEMON_FORM+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 剑柄打击+ -> 实验体 #C46, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, DEMON_FORM+, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 剑柄打击+ -> 实验体 #C46, 祭品+, 岩石铠甲, 撕裂+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 血墙+": "ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 剑柄打击+ -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "狱火+, 飞剑回旋镖+, 祭品+, 耸肩无视+, 剑柄打击+ -> 实验体 #C46, 岩石铠甲, 撕裂+, 无惧疼痛, 祭品, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+"
+      }
+     },
+     {
+      "board": "1facf73b95909c4e",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "撕裂+, 祭品+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "撕裂+, 祭品+, 重锤 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46",
+       "耸肩无视+, 撕裂+, 祭品+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 愤怒 -> 实验体 #C46",
+       "撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46",
+       "撕裂+, 祭品+, 血墙+, 祭品, potion 消亡粉末 -> 实验体 #C46, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "撕裂+, 祭品+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "撕裂+, 祭品+, 重锤 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+, 撕裂+, 祭品+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 愤怒 -> 实验体 #C46": 1,
+       "撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46": 1,
+       "撕裂+, 祭品+, 血墙+, 祭品, potion 消亡粉末 -> 实验体 #C46, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "撕裂+, 祭品+, 血墙+, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "撕裂+, 祭品+, 重锤 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, DEMON_FORM+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "耸肩无视+, 撕裂+, 祭品+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "岩石铠甲, 撕裂+, 祭品+, 血墙+, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "撕裂+, 祭品+, 血墙+, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "撕裂+, 祭品+, 血墙+, 祭品, potion 消亡粉末 -> 实验体 #C46, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "2d90b52f43d1b6ae",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 岩石铠甲, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 愤怒 -> 实验体 #C46, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "耸肩无视+, 岩石铠甲, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+",
+       "岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "血墙+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46",
+       "耸肩无视+, 岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 岩石铠甲, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 愤怒 -> 实验体 #C46, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+, 岩石铠甲, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": 1,
+       "岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+, 岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 岩石铠甲, 祭品, 无惧疼痛, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "血墙+, 愤怒 -> 实验体 #C46, 祭品, 重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "耸肩无视+, 岩石铠甲, 愤怒 -> 实验体 #C46, 祭品, 愤怒 -> 实验体 #C46, 恶魔形态+": "ANGER>实验体 #C46, ANGER>实验体 #C46, DEMON_FORM+, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 祭品, 岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, BLOOD_WALL+, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "耸肩无视+, 岩石铠甲, 无惧疼痛, 祭品, 愤怒 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "重锤 -> 实验体 #C46, 愤怒 -> 实验体 #C46, 祭品, 熔融之拳 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "4596458eacf1ea2f",
+      "turn": 1,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46",
+      "alternatives": [
+       "血墙+, 愤怒 -> 实验体 #C46",
+       "岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46",
+       "耸肩无视+",
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46"
+      ],
+      "dead": {
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1,
+       "血墙+, 愤怒 -> 实验体 #C46": 1,
+       "岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": 1,
+       "耸肩无视+": 1,
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46": 1
+      },
+      "canon": {
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+",
+       "血墙+, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SWORD_BOOMERANG+",
+       "岩石铠甲, 无惧疼痛, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, FEEL_NO_PAIN, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, SWORD_BOOMERANG+",
+       "耸肩无视+": "ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, SHRUG_IT_OFF+, SWORD_BOOMERANG+",
+       "熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46, 愤怒 -> 实验体 #C46": "ANGER>实验体 #C46, ANGER>实验体 #C46, BLUDGEON>实验体 #C46, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "c54a67959ccce5cc",
+      "turn": 2,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "防御, 防御, 打击+ -> 实验体 #C46",
+      "alternatives": [
+       "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46"
+      ],
+      "dead": {
+       "防御, 防御, 打击+ -> 实验体 #C46": 1,
+       "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46": 1
+      },
+      "explored": true,
+      "canon": {
+       "防御, 防御, 打击+ -> 实验体 #C46": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46",
+       "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "b411b102f32c4015",
+      "turn": 2,
+      "kind": "question",
+      "label": "combat/plan-choice",
+      "line": "end turn",
+      "alternatives": [
+       "potion 消亡粉末 -> 实验体 #C46"
+      ],
+      "dead": {
+       "end turn": 1,
+       "potion 消亡粉末 -> 实验体 #C46": 1
+      },
+      "explored": true,
+      "canon": {
+       "end turn": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46",
+       "potion 消亡粉末 -> 实验体 #C46": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "5cc6dc7028532ef6",
+      "turn": 3,
+      "kind": "code",
+      "label": "combat/least-loss",
+      "line": "耸肩无视, 打击 -> 实验体 #C46, 飞剑回旋镖, potion 消亡粉末 -> 实验体 #C46",
+      "canon": {
+       "耸肩无视, 打击 -> 实验体 #C46, 飞剑回旋镖, potion 消亡粉末 -> 实验体 #C46": "SHRUG_IT_OFF, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     },
+     {
+      "board": "7978f54beb7ede9f",
+      "turn": 3,
+      "kind": "code",
+      "label": "combat/least-loss",
+      "line": "血墙, potion 消亡粉末 -> 实验体 #C46",
+      "canon": {
+       "血墙, potion 消亡粉末 -> 实验体 #C46": "BLOOD_WALL, SHRUG_IT_OFF, potion:POWDERED_DEMISE>实验体 #C46"
+      }
+     }
+    ],
+    "target": {
+     "board": "c54a67959ccce5cc",
+     "turn": 2,
+     "reference": 2,
+     "back": 1,
+     "round": 0,
+     "excluded": [
+      "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46"
+     ],
+     "attempts": [
+      2
+     ],
+     "point": "T2, the latest question before attempt 2's death on T3",
+     "tried": {
+      "canon": [
+       "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46, potion:POWDERED_DEMISE>实验体 #C46"
+      ],
+      "loose": []
+     }
+    },
+    "replay": {
+     "replayed": 4,
+     "overridden": 0,
+     "stopped": null
+    },
+    "turns": [
+     {
+      "turn": 1,
+      "plays": [
+       "INFERNO+",
+       "SWORD_BOOMERANG+",
+       "POMMEL_STRIKE+>实验体 #C46",
+       "RUPTURE+",
+       "OFFERING+",
+       "BLUDGEON>实验体 #C46",
+       "ANGER>实验体 #C46",
+       "OFFERING",
+       "MOLTEN_FIST>实验体 #C46",
+       "STRIKE_IRONCLAD>实验体 #C46",
+       "ANGER>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "0c84fd2529cfaaee",
+        "at": 0
+       },
+       {
+        "board": "9ff64d47328bb689",
+        "at": 1
+       },
+       {
+        "board": "9fd6bafcb0a8e13b",
+        "at": 2
+       },
+       {
+        "board": "1facf73b95909c4e",
+        "at": 3
+       },
+       {
+        "board": "0244b6c13f902fbd",
+        "at": 4
+       },
+       {
+        "board": "2d90b52f43d1b6ae",
+        "at": 5
+       },
+       {
+        "board": "368199fb34b4f312",
+        "at": 6
+       },
+       {
+        "board": "776a24edc7a4642f",
+        "at": 7
+       },
+       {
+        "board": "4596458eacf1ea2f",
+        "at": 8
+       },
+       {
+        "board": "e3865dd4cfa9a37b",
+        "at": 9
+       },
+       {
+        "board": "8ad136e13f075560",
+        "at": 10
+       },
+       {
+        "board": "89f27a0308623ac3",
+        "at": 11
+       }
+      ]
+     },
+     {
+      "turn": 2,
+      "plays": [
+       "DEFEND_IRONCLAD",
+       "DEFEND_IRONCLAD",
+       "STRIKE_IRONCLAD+>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "c54a67959ccce5cc",
+        "at": 0
+       },
+       {
+        "board": "955c7f5dd1d158ee",
+        "at": 1
+       },
+       {
+        "board": "c26682596d64a180",
+        "at": 2
+       },
+       {
+        "board": "b411b102f32c4015",
+        "at": 3
+       }
+      ]
+     },
+     {
+      "turn": 3,
+      "plays": [
+       "SHRUG_IT_OFF",
+       "BLOOD_WALL",
+       "potion:POWDERED_DEMISE>实验体 #C46"
+      ],
+      "boards": [
+       {
+        "board": "5cc6dc7028532ef6",
+        "at": 0
+       },
+       {
+        "board": "7978f54beb7ede9f",
+        "at": 1
+       },
+       {
+        "board": "a95316ae01c4309e",
+        "at": 2
+       }
+      ]
+     }
+    ],
+    "deviation": {
+     "reached": true,
+     "original": "防御, 防御, 打击+ -> 实验体 #C46, potion 消亡粉末 -> 实验体 #C46",
+     "replacement": "防御, 防御, 打击+ -> 实验体 #C46",
+     "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+     "turn": 2,
+     "plays": "DEFEND_IRONCLAD, DEFEND_IRONCLAD, STRIKE_IRONCLAD+>实验体 #C46",
+     "differs": true
+    }
+   }
+  }
+ ]
+}

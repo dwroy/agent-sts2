@@ -49,6 +49,12 @@
  * - SL_RETRY_EXPLORE_WHERE (2026-10-03, GQ5H73A1VCL8 F48: attempts 3-6 all at T1, the HP lost after T4 and T5): the point
  *   goes where the failed attempts lost their HP (hpLostByTurn, whereWeights), a different turn each attempt (whereChoice);
  *   "every line loses" only breaks ties (it is the rollout's horizon).
+ * - SL_RETRY_EXPLORE_POTION (2026-10-03, P68P7CDJRDH3 F48 attempts 3-4): a line is tried on a board by its cards (the
+ *   multiset of card and target, as _CANON) when its potions add nothing the failed attempt lacked: a failed turn there
+ *   with the same cards whose attempt drank, from that turn to its end, every potion the line drinks (cardsOf, potionsOf,
+ *   SlTried.cards). Attempt 3 drank one potion fewer on T2 (attempt 2 drank it there, attempt 3 on T3), attempt 4 one more
+ *   on T1 (attempts 2-3 drank it on T2-T3): both played attempt 2's cards and all three ended at 1 HP + 24 block against
+ *   44. A potion none of them drank from there on (held to the death) still makes the line new.
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
@@ -106,6 +112,22 @@ export interface SlTried {
   loose: string[];
   /** Attempts whose plays on the board could not be read (a play logged without its card): not known to be untried. */
   unknown?: number[];
+  /**
+   * SL_RETRY_EXPLORE_POTION: the same turns by their cards (SlTriedCards): a line with a turn's cards and no potion its
+   * attempt did not drink from that turn on is tried too (triedHas, mayRepeat). Absent with the switch off.
+   */
+  cards?: SlTriedCards[];
+}
+
+/**
+ * SL_RETRY_EXPLORE_POTION: one failed turn through a board by its cards: the turn's plays without its potions (cardsOf),
+ * and the potions its attempt drank from that turn to its end (that turn's, the board's earlier ones too, and every later
+ * turn's: what it did not lack). By id; `loose`: a row rebuilt from its summary (looseCanon), by name.
+ */
+export interface SlTriedCards {
+  cards: string;
+  drunk: string[];
+  loose?: true;
 }
 
 /** Where an attempt deviates (exploreTarget), as its row records it. */
@@ -262,10 +284,26 @@ export interface TriedKey {
   loose?: string | undefined;
 }
 
-/** `line`'s turn is one a failed attempt had on the board (`tried`): its plays exactly, or as a rebuilt row has them. */
+/**
+ * `line`'s turn is one a failed attempt had on the board (`tried`): its plays exactly, or as a rebuilt row has them; with
+ * SL_RETRY_EXPLORE_POTION (`tried.cards`) also its cards, with no potion that attempt did not drink from there on.
+ */
 export function triedHas(tried: SlTried | null | undefined, line: TriedKey): boolean {
-  if (!tried) return false;
-  return (line.canon !== undefined && tried.canon.includes(line.canon)) || (line.loose !== undefined && tried.loose.includes(line.loose));
+  return triedHow(tried, line) !== null;
+}
+
+/**
+ * How `line` is tried on the board (triedHas): "exact" (a failed turn's plays, or a rebuilt row's), "cards"
+ * (SL_RETRY_EXPLORE_POTION only: a failed turn's cards, its potions drunk by that attempt too), null (not tried).
+ */
+export function triedHow(tried: SlTried | null | undefined, line: TriedKey): "exact" | "cards" | null {
+  if (!tried) return null;
+  if ((line.canon !== undefined && tried.canon.includes(line.canon)) || (line.loose !== undefined && tried.loose.includes(line.loose))) return "exact";
+  const byCards = (tried.cards ?? []).some((entry) => {
+    const key = entry.loose === true ? line.loose : line.canon;
+    return key !== undefined && cardsRepeat(entry, key);
+  });
+  return byCards ? "cards" : null;
 }
 
 /** The plays of a turn's key (turnCanon), one by one ("nothing": none). */
@@ -273,16 +311,53 @@ function canonPlays(canon: string): string[] {
   return canon === "nothing" || canon === "" ? [] : canon.split(", ");
 }
 
-/** The plays of `part` (turnCanon) are among those of `whole` (turnCanon), as multisets: `part` can grow into `whole`. */
-export function canonWithin(part: string, whole: string): boolean {
+/**
+ * SL_RETRY_EXPLORE_POTION: the potion a play of a turn's key drinks: playKey's "potion:<id>" (its target after ">" left
+ * out) or a summary's "potion <name>" (looseCanon); null for a card.
+ */
+export function potionOfPlay(play: string): string | null {
+  if (play.startsWith("potion:")) return play.slice("potion:".length).split(">")[0] ?? "";
+  if (play.startsWith("potion ")) return play.slice("potion ".length);
+  return null;
+}
+
+/** SL_RETRY_EXPLORE_POTION: a turn's key (turnCanon) without its potions: the cards it plays, with their targets. */
+export function cardsOf(canon: string): string {
+  return turnCanon(canonPlays(canon).filter((play) => potionOfPlay(play) === null));
+}
+
+/** SL_RETRY_EXPLORE_POTION: the potions a turn's key (turnCanon) drinks, by id (a summary's: by name), sorted. */
+export function potionsOf(canon: string): string[] {
+  return canonPlays(canon)
+    .map(potionOfPlay)
+    .filter((potion): potion is string => potion !== null)
+    .sort();
+}
+
+/**
+ * SL_RETRY_EXPLORE_POTION: `key` (a line's turn, turnCanon) repeats the failed turn `entry`: the same cards (and targets),
+ * and every potion it drinks (as many of each) drunk by that attempt from that turn on. A potion drunk a turn earlier or
+ * later, or not drunk this turn, is the same line; one that attempt never drank from there (held to its end) is not.
+ */
+export function cardsRepeat(entry: SlTriedCards, key: string): boolean {
+  return cardsOf(key) === entry.cards && multisetWithin(potionsOf(key), entry.drunk);
+}
+
+/** `part` is within `whole` as multisets (two of a thing are not one). */
+function multisetWithin(part: readonly string[], whole: readonly string[]): boolean {
   const left = new Map<string, number>();
-  for (const play of canonPlays(whole)) left.set(play, (left.get(play) ?? 0) + 1);
-  for (const play of canonPlays(part)) {
-    const n = left.get(play) ?? 0;
+  for (const item of whole) left.set(item, (left.get(item) ?? 0) + 1);
+  for (const item of part) {
+    const n = left.get(item) ?? 0;
     if (n === 0) return false;
-    left.set(play, n - 1);
+    left.set(item, n - 1);
   }
   return true;
+}
+
+/** The plays of `part` (turnCanon) are among those of `whole` (turnCanon), as multisets: `part` can grow into `whole`. */
+export function canonWithin(part: string, whole: string): boolean {
+  return multisetWithin(canonPlays(part), canonPlays(whole));
 }
 
 /**
@@ -292,13 +367,20 @@ export function canonWithin(part: string, whole: string): boolean {
  * may end the turn as that one did. PW7Y9EWUW8SB F48 attempt 3 T1: Blood Wall, Pommel Strike+, Stomp was "not played
  * there" (attempts 1-2: Blood Wall, Rampage, Pommel Strike+, Stomp); Pommel Strike+ drew and code's re-plan played
  * Rampage, Stomp: their turn to the card. A line known to end the turn otherwise (closed, or its sure plays in no failed
- * turn) cannot.
+ * turn) cannot. SL_RETRY_EXPLORE_POTION (`tried.cards`): nor may one whose sure cards are within a failed turn's cards and
+ * whose sure potions that attempt drank from there on (the rest may end the turn with its cards).
  */
 export function mayRepeat(tried: SlTried | null | undefined, line: { open?: boolean | undefined; committed?: string | undefined }): boolean {
   if (!tried || line.open !== true || line.committed === undefined) return false;
   const committed = line.committed;
-  return tried.canon.some((turn) => canonWithin(committed, turn));
+  if (tried.canon.some((turn) => canonWithin(committed, turn))) return true;
+  const cards = cardsOf(committed);
+  const potions = potionsOf(committed);
+  return (tried.cards ?? []).some((entry) => entry.loose !== true && canonWithin(cards, entry.cards) && multisetWithin(potions, entry.drunk));
 }
+
+/** SL_RETRY_EXPLORE_POTION: exploreReplacement's note on a pick tried by its cards only (cardsRepeat). */
+export const POTION_ONLY = "the pick plays a failed attempt's cards here and drinks no potion that attempt did not drink from here on";
 
 /** SL_RETRY_EXPLORE_WHOLE: how exploreReplacement's reason begins for a pick that may repeat a failed turn after its draw. */
 export const MAY_REPEAT = "the pick's turn may end as a failed attempt's after its draw (its plays up to the draw are within one)";
@@ -396,6 +478,8 @@ interface TriedEntry {
   loose: Set<string>;
   unknown: Set<number>;
   attempts: Set<number>;
+  /** SL_RETRY_EXPLORE_POTION: the same turns by their cards, by stableStringify (null: the switch off). */
+  cards: Map<string, SlTriedCards> | null;
 }
 
 /**
@@ -439,12 +523,13 @@ function boardsByTurn(reference: ExploreRow): Map<number, { board: string; at: n
  * began at the same HP, block and enemies and played the same cards, the same draws then; within the turn, the same
  * plays before the board). The plays as the summary writes them (looseCanon: a potion's target is not there); a turn with
  * a play logged without its card is unknown there. A turn played otherwise ends the match: the next starts elsewhere.
+ * Each with its turn.
  */
-export function legacyTried(row: ExploreRow, reference: ExploreRow): { board: string; loose: string | null }[] {
+export function legacyTried(row: ExploreRow, reference: ExploreRow): { board: string; loose: string | null; turn: number }[] {
   const mine = row.summary?.turns ?? [];
   const theirs = reference.summary?.turns ?? [];
   const boards = boardsByTurn(reference);
-  const out: { board: string; loose: string | null }[] = [];
+  const out: { board: string; loose: string | null; turn: number }[] = [];
   for (let i = 0; i < mine.length && i < theirs.length; i += 1) {
     const a = mine[i]!;
     const b = theirs[i]!;
@@ -452,7 +537,7 @@ export function legacyTried(row: ExploreRow, reference: ExploreRow): { board: st
     const readable = a.plays.every((play) => !UNREAD_PLAY.test(play));
     for (const { board, at } of boards.get(a.turn) ?? []) {
       if (at > a.plays.length || at > b.plays.length || turnCanon(a.plays.slice(0, at)) !== turnCanon(b.plays.slice(0, at))) continue;
-      out.push({ board, loose: readable ? turnCanon(a.plays) : null });
+      out.push({ board, loose: readable ? turnCanon(a.plays) : null, turn: a.turn });
     }
     if (turnCanon(a.plays) !== turnCanon(b.plays)) break;
   }
@@ -462,38 +547,52 @@ export function legacyTried(row: ExploreRow, reference: ExploreRow): { board: st
 /**
  * The turns failed attempts had through each board: the turn record's (every board an action of the turn was decided
  * on gets the whole turn's plays), each point's line as planned there (point.canon), and with `legacy` (SL_RETRY_EXPLORE_CANON)
- * the rows without a turn record rebuilt from their summary (legacyTried).
+ * the rows without a turn record rebuilt from their summary (legacyTried). With `potion` (SL_RETRY_EXPLORE_POTION) each of
+ * them by its cards too, with the potions its attempt drank from that turn on (SlTriedCards): the turn record's, a point's
+ * planned line's and the record's later turns', a rebuilt row's summary's (by name).
  */
-function triedByBoard(rows: readonly ExploreRow[], reference: ExploreRow, legacy: boolean): Map<string, TriedEntry> {
+function triedByBoard(rows: readonly ExploreRow[], reference: ExploreRow, legacy: boolean, potion = false): Map<string, TriedEntry> {
   const out = new Map<string, TriedEntry>();
   const at = (board: string): TriedEntry => {
     let entry = out.get(board);
-    if (!entry) out.set(board, (entry = { canon: new Set(), loose: new Set(), unknown: new Set(), attempts: new Set() }));
+    if (!entry) out.set(board, (entry = { canon: new Set(), loose: new Set(), unknown: new Set(), attempts: new Set(), cards: potion ? new Map() : null }));
     return entry;
   };
+  const addCards = (entry: TriedEntry, cards: SlTriedCards) => {
+    if (entry.cards) entry.cards.set(stableStringify({ ...cards, drunk: [...cards.drunk].sort() }), { ...cards, drunk: [...cards.drunk].sort() });
+  };
   for (const row of rows) {
+    const turns = row.explore?.turns;
+    /** The potions the row's turn record drank after `turn` (none without a record). */
+    const later = (turn: number | null): string[] => (turn === null ? [] : (turns ?? []).filter((t) => t.turn > turn).flatMap((t) => potionsOf(turnCanon(t.plays))));
     for (const point of row.explore?.points ?? []) {
       const canon = point.canon?.[point.line];
       if (canon === undefined) continue;
       const entry = at(point.board);
       entry.canon.add(canon);
       entry.attempts.add(row.attempt);
+      if (potion) addCards(entry, { cards: cardsOf(canon), drunk: [...potionsOf(canon), ...later(point.turn)] });
     }
-    const turns = row.explore?.turns;
     if (turns) {
       for (const turn of turns) {
         const canon = turnCanon(turn.plays);
+        const drunk = potion ? [...potionsOf(canon), ...later(turn.turn)] : [];
         for (const { board } of turn.boards) {
           const entry = at(board);
           entry.canon.add(canon);
           entry.attempts.add(row.attempt);
+          if (potion) addCards(entry, { cards: cardsOf(canon), drunk });
         }
       }
     } else if (legacy) {
-      for (const { board, loose } of legacyTried(row, reference)) {
+      const summary = row.summary?.turns ?? [];
+      for (const { board, loose, turn } of legacyTried(row, reference)) {
         const entry = at(board);
         if (loose === null) entry.unknown.add(row.attempt);
-        else entry.loose.add(loose);
+        else {
+          entry.loose.add(loose);
+          if (potion) addCards(entry, { cards: cardsOf(loose), drunk: summary.filter((t) => t.turn >= turn).flatMap((t) => potionsOf(turnCanon(t.plays))), loose: true });
+        }
         entry.attempts.add(row.attempt);
       }
     }
@@ -504,14 +603,16 @@ function triedByBoard(rows: readonly ExploreRow[], reference: ExploreRow, legacy
 /**
  * The turns failed attempts had through `board` (SlTried) and the attempts they came from, as exploreTarget gathers them
  * for its target (`canon`, SL_RETRY_EXPLORE_CANON: attempt 1 and the rows from before the record too; else the rows from
- * the 2nd with a record). The reference for rebuilt rows: the first failed attempt from the 2nd with points.
+ * the 2nd with a record). The reference for rebuilt rows: the first failed attempt from the 2nd with points. `potion`
+ * (SL_RETRY_EXPLORE_POTION): with the turns by their cards (`tried.cards`).
  */
-export function exploreTried(rows: readonly ExploreRow[], attempt: number, board: string, options: { canon?: boolean } = {}): { tried: SlTried; attempts: number[] } {
+export function exploreTried(rows: readonly ExploreRow[], attempt: number, board: string, options: { canon?: boolean; potion?: boolean } = {}): { tried: SlTried; attempts: number[] } {
   const failed = failedRows(rows, attempt, 2);
   const reference = failed.find((row) => row.explore && Array.isArray(row.explore.points));
-  if (!reference) return { tried: { canon: [], loose: [] }, attempts: [] };
-  const entry = triedByBoard(options.canon === true ? failedRows(rows, attempt, 1) : failed.filter((row) => row.explore), reference, options.canon === true).get(board);
-  return { tried: triedOf(entry), attempts: [...(entry?.attempts ?? [])].sort((a, b) => a - b) };
+  const potion = options.potion === true;
+  if (!reference) return { tried: { canon: [], loose: [], ...(potion ? { cards: [] } : {}) }, attempts: [] };
+  const entry = triedByBoard(options.canon === true ? failedRows(rows, attempt, 1) : failed.filter((row) => row.explore), reference, options.canon === true, potion).get(board);
+  return { tried: triedOf(entry, potion), attempts: [...(entry?.attempts ?? [])].sort((a, b) => a - b) };
 }
 
 /** The failed attempts before `attempt` from `from` on, by attempt (an unfinished row after its attempt's finished one). */
@@ -521,9 +622,18 @@ function failedRows(rows: readonly ExploreRow[], attempt: number, from: number):
     .sort((a, b) => a.attempt - b.attempt || Number(a.result === "unfinished") - Number(b.result === "unfinished"));
 }
 
-function triedOf(entry: TriedEntry | undefined): SlTried {
+/** An entry as the target carries it; `potion` (SL_RETRY_EXPLORE_POTION): its turns by their cards too (none: an empty list). */
+function triedOf(entry: TriedEntry | undefined, potion = false): SlTried {
   const unknown = entry ? [...entry.unknown].sort((a, b) => a - b) : [];
-  return { canon: entry ? [...entry.canon] : [], loose: entry ? [...entry.loose] : [], ...(unknown.length > 0 ? { unknown } : {}) };
+  const cards = potion ? { cards: [...(entry?.cards?.values() ?? [])] } : {};
+  return { canon: entry ? [...entry.canon] : [], loose: entry ? [...entry.loose] : [], ...(unknown.length > 0 ? { unknown } : {}), ...cards };
+}
+
+/** A line's turn (turnCanon) is one of `entry`'s: exactly, or (SL_RETRY_EXPLORE_POTION) by its cards (cardsRepeat). */
+function entryHas(entry: TriedEntry, canon: string): boolean {
+  if (entry.canon.has(canon)) return true;
+  for (const cards of entry.cards?.values() ?? []) if (cards.loose !== true && cardsRepeat(cards, canon)) return true;
+  return false;
 }
 
 const ordinal = (n: number): string => (n === 1 ? "latest" : `${n}${n === 2 ? "nd" : n === 3 ? "rd" : "th"} latest`);
@@ -582,6 +692,13 @@ export interface ExploreTargetOptions {
   where?: boolean;
   /** SL_RETRY_EXPLORE_WHERE's decay (default WHERE_DECAY): only tools/sl-explore-where-replay.ts sets it, to compare. */
   whereDecay?: number;
+  /**
+   * SL_RETRY_EXPLORE_POTION (2026-10-03, P68P7CDJRDH3 F48 attempts 3-4; with `canon` or `tried`): a line is tried on a board
+   * also by its cards, when it drinks no potion the failed attempt with those cards did not drink from that turn on
+   * (cardsRepeat): a point whose other lines only move a potion is not open, and the target's `tried` carries the turns
+   * by their cards (`cards`) for the replacement, the avoid and the row's `differs`. Off: by the whole plays, as before.
+   */
+  potion?: boolean;
 }
 
 /**
@@ -680,7 +797,8 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
   // the rows from before the record rebuilt from their summary).
   const canonOn = options.canon === true;
   const allFailed = canonOn ? failedRows(rows, attempt, 1) : failed;
-  const tried = canonOn || options.tried === true ? triedByBoard(allFailed, reference, canonOn) : null;
+  const potionOn = options.potion === true;
+  const tried = canonOn || options.tried === true ? triedByBoard(allFailed, reference, canonOn, potionOn) : null;
   // The lines played on each board by the failed attempts, and in which attempts.
   const played = new Map<string, { lines: Set<string>; attempts: Set<number> }>();
   for (const row of failed) {
@@ -720,7 +838,8 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     const texts = played.get(point.board)?.lines ?? new Set<string>();
     // SL_RETRY_EXPLORE_CANON: nor a line whose turn a failed attempt had through this board (another order, attempt 1's).
     const turnsThere = canonOn ? tried?.get(point.board) : undefined;
-    const untried = point.alternatives.filter((line) => !texts.has(line) && !(turnsThere && point.canon?.[line] !== undefined && turnsThere.canon.has(point.canon[line])));
+    // SL_RETRY_EXPLORE_POTION: nor one with such a turn's cards, its potions drunk by that attempt from there on.
+    const untried = point.alternatives.filter((line) => !texts.has(line) && !(turnsThere && point.canon?.[line] !== undefined && entryHas(turnsThere, point.canon[line])));
     // Every untried line dies more often in the rollout than the one played (no numbers: not known to be worse).
     const own = point.dead?.[point.line];
     const worse = own !== undefined && untried.every((line) => (point.dead?.[line] ?? -1) > own + 1e-9);
@@ -770,7 +889,7 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
       excluded: [...entry.lines],
       attempts: [...attempts].sort((a, b) => a - b),
       point,
-      ...(tried ? { tried: triedOf(turnsThere) } : {}),
+      ...(tried ? { tried: triedOf(turnsThere, potionOn) } : {}),
       ...(where ? { where } : {}),
     },
     why,
@@ -1009,6 +1128,8 @@ export interface ExploreChoice<P> {
  * (mayRepeat) gives way to the best line that cannot (its turn known to differ), surviving this turn and not worse than
  * the pick; without one it is played as answered (the avoid keeps the rest of the turn off the failed turns). Among the
  * untried lines replacing a tried pick, the ones that cannot come first (within the gate's pool).
+ * SL_RETRY_EXPLORE_POTION (`tried.cards`): a line with a failed turn's cards whose potions that attempt drank from here on
+ * is tried too (triedHas), the pick and the alternatives alike; a pick tried only so says it (POTION_ONLY).
  */
 export function exploreReplacement<P>(args: {
   pick: ExplorePick<P>;
@@ -1052,11 +1173,13 @@ export function exploreReplacement<P>(args: {
     }
     return { replacement: null, reason: args.avoid ? "the pick does not end the turn as a failed attempt's did through the deviation point: played as answered" : "the pick was not played on this board before: played as answered", gate: null };
   }
+  // SL_RETRY_EXPLORE_POTION: the pick is tried by its cards only (its potions moved, not new): said so.
+  const byCards = !excluded.has(pick.text) && triedHow(tried, pick) === "cards" ? `; ${POTION_ONLY}` : "";
   const untried = exploreAlternatives(pick, args.shown, args.drinks === true).filter((line) => !isTried(line));
-  if (untried.length === 0) return { replacement: null, reason: args.avoid ? "no shown line left that ends the turn otherwise than a failed attempt's" : "no shown line left that no failed attempt played here", gate: null };
+  if (untried.length === 0) return { replacement: null, reason: `${args.avoid ? "no shown line left that ends the turn otherwise than a failed attempt's" : "no shown line left that no failed attempt played here"}${byCards}`, gate: null };
   const known = unknown ? `; attempt${unknown.length === 1 ? "" : "s"} ${unknown.join(", ")} may have played the pick here (plays logged without their card)` : "";
   const choice = replacementAmong(args, untried, args.whole === true ? { prefer: safe } : {});
-  return { ...choice, reason: `${choice.reason}${known}` };
+  return { ...choice, reason: `${choice.reason}${known}${byCards}` };
 }
 
 /**
