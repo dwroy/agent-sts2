@@ -28,6 +28,11 @@ const BOARDS: { name: string; run: string; ts: string; why: string }[] = [
   { name: "vc4l_f23_t2_end", run: "VC4LRL945UEF", ts: "2026-09-25T10:53:16.937000", why: "F23 T2 end_turn (least-loss): 17 HP, no block, against 8x2, Beating Remnant, Inferno: 1 left, Inferno's 1 at T3's start: died" },
   { name: "ynmb_f17_t9_start", run: "YNMB8X87UEH1", ts: "2026-09-27T07:11:15.031000", why: "F17 T9's first state (A8): 6 HP, Bread and Beating Remnant held" },
   { name: "ynmb_f17_t9_end", run: "YNMB8X87UEH1", ts: "2026-09-27T07:11:17.660000", why: "F17 T9 end_turn (least-loss): 6 HP + 5 block against 11, nothing lost this turn, Beating Remnant: died" },
+  { name: "79yr_f33_t6_end", run: "79YRPJ8TCCZ5", ts: "2026-09-29T18:20:26.976000", why: "F33 T6 end_turn (least-loss, A8, Knowledge Demon 19): 17 HP + 5 block, Disintegration 7, the mod not flagging it: died" },
+  { name: "jrsf_f33_t5_end", run: "JRSF34UJJND4", ts: "2026-09-24T09:17:15.374000", why: "F33 T5 end_turn: 4 HP, no block, no attack shown, Disintegration 6: died" },
+  { name: "377j_f33_t3_end", run: "377JPY9LPG1L", ts: "2026-09-24T06:21:36.821000", why: "F33 T3 end_turn: 24 shown + Disintegration 6 against 27 block: 3 lost" },
+  { name: "377j_f33_t7_end", run: "377JPY9LPG1L", ts: "2026-09-24T06:23:01.573000", why: "F33 T7 end_turn: 28 HP + 6 block against the 35-HP demon's 10x3 + Disintegration 6, Howl from Beyond in the exhaust pile, Thorns 3: died" },
+  { name: "jsa5_f33_t7_end", run: "JSA5K8YZ9RXV", ts: "2026-10-02T20:19:13.333000", why: "F33 T7 end_turn: 27 shown + Disintegration 7 against 5 block + Plating 4: 25 lost" },
   { name: "d4jg_f33_t5_end", run: "D4JGCNEL40VL", ts: "2026-09-24T06:46:45.029000", why: "F33 T5 end_turn (A0, Kaiser Crab): 7 HP + 11 block, Plating 3, the Crusher's 21 from behind, the Rocket (12 HP) killed by Howl from Beyond at the end of the turn: the Crusher hit for 20, lived at 1" },
 ];
 type Row = Record<string, unknown>;
@@ -74,8 +79,8 @@ for (const board of BOARDS) {
 closeSync(fd);
 // What the tests put on edited boards: a Power card, Iron Wave, the relics and powers they add.
 for (const id of ["INFLAME", "IRON_WAVE", "DEMON_FORM"]) cards.add(id);
-for (const id of ["BUFFER_POWER", "INTANGIBLE_POWER", "JUGGERNAUT_POWER", "STAMPEDE_POWER", "INFERNO_POWER", "AGGRESSION_POWER"]) powers.add(id);
-for (const id of ["ORNAMENTAL_FAN", "CHARONS_ASHES", "BREAD", "MUMMIFIED_HAND", "RIPPLE_BASIN"]) relics.add(id);
+for (const id of ["BUFFER_POWER", "INTANGIBLE_POWER", "JUGGERNAUT_POWER", "STAMPEDE_POWER", "INFERNO_POWER", "AGGRESSION_POWER", "DISINTEGRATION_POWER"]) powers.add(id);
+for (const id of ["ORNAMENTAL_FAN", "CHARONS_ASHES", "BREAD", "MUMMIFIED_HAND", "RIPPLE_BASIN", "TUNGSTEN_ROD"]) relics.add(id);
 writeFileSync(
   `${DIR}/boards.json`,
   JSON.stringify({ source: "Logged boards as the mod sent them (logs/states.jsonl; agent_view cut to its combat part). ops 2026-10-04: X80AD9MHAKZW F42 died on attempt 1 with 3 retries unused, the judge refusing for Ripple Basin's block.", notes, states }),
