@@ -55,6 +55,7 @@ import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
 import { stableSchema } from "../specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
+import { CodexSession, configProblems, RpcError, SessionError, type SessionOptions, type SessionTurn } from "./codex-session.js";
 import { CodexUsageGuard, readCodexUsage, type CodexUsage, type UsageNote } from "./codex-usage.js";
 import { AgentAbortedError, AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
 
@@ -70,6 +71,8 @@ export interface CodexEngineOptions {
   stateDir?: string;
   /** One JSON row per codex run (codex-calls.jsonl next to brain.jsonl): its event timeline, retries, stderr tail; null: none. */
   traceFile?: string | null;
+  /** Session mode's request timeouts (tests). */
+  sessionTimeouts?: SessionOptions["timeouts"];
   /** Where the engine says what the console should see (a usage read that failed); the router's note. */
   note?: (message: string) => void;
   /** The usage read (default: readCodexUsage through a short-lived app-server; tests), and the guard's clock. */
@@ -81,6 +84,15 @@ export interface CodexEngineOptions {
 export interface CodexTraceRow {
   ts: string;
   run_id?: string;
+  /** exec (one codex exec per run) or session (a turn on the app-server thread). */
+  mode?: "exec" | "session";
+  turn_id?: string;
+  /** Session mode: the streamed deltas, the streamed answer's length, and whether the thread went back to its base. */
+  deltas?: number;
+  answer_chars?: number;
+  reverted?: boolean;
+  /** Session mode: requests the server made of us (none is expected: no tool is offered). */
+  server_requests?: string[];
   label: string;
   model: string;
   effort: string;
@@ -544,6 +556,79 @@ export async function checkCodex(codex: BrainConfig["codex"], model: string, eff
   }
 }
 
+/* ---- session mode ------------------------------------------------------------------------------- */
+
+/** What one question's call needs in either mode. */
+interface CodexCall {
+  model: string;
+  effort: string;
+  env: Record<string, string>;
+  entry: Json;
+  kindSchema: JsonSchema;
+  schema: StrictSchema | null;
+}
+
+/** `codex app-server`'s arguments in session mode: stdio, and exec mode's isolation overrides and feature switches. */
+export function sessionArgs(opts: { catalogFile: string; stateDir: string; effort: string; summary: string; serviceTier: string | null }): string[] {
+  const settings = codexConfig({ systemFile: "", ...opts }).filter((setting) => !setting.startsWith("model_instructions_file="));
+  return ["app-server", "--listen", "stdio://", ...settings.flatMap((setting) => ["-c", setting]), ...CODEX_DISABLED_FEATURES.flatMap((feature) => ["--disable", feature])];
+}
+
+/** codexErrorInfo kinds that mean the stream to the backend broke (restart the session once). */
+const TRANSPORT_INFO = ["httpConnectionFailed", "responseStreamConnectionFailed", "responseStreamDisconnected", "responseTooManyFailedAttempts"];
+
+/** A failed or interrupted session turn as exec mode's failures (codexFailure's kinds), and whether its stream broke. */
+export function sessionFailure(turn: SessionTurn): { error: EngineFailure; transport: boolean } {
+  const info = turn.error?.info;
+  const tag = typeof info === "string" ? info : isObject(info) ? Object.keys(info)[0] ?? "" : "";
+  const message = [turn.error?.message ?? "", ...turn.errors].filter(Boolean).join(" | ") || `the turn ended ${turn.status}`;
+  let kind: FailureKind = "error";
+  if (tag === "usageLimitExceeded" || /usage limit|hit your limit|purchase more credits/i.test(message)) kind = "quota";
+  else if (tag === "rateLimitExceeded" || /\b429\b|rate.?limit|too many requests/i.test(message)) kind = "rate_limit";
+  else if (tag === "serverOverloaded" || tag === "internalServerError" || /overloaded|\b50[234]\b/i.test(message)) kind = "overloaded";
+  else if (tag === "unauthorized" || /\b401\b|unauthori[sz]ed|not logged in/i.test(message)) kind = "auth";
+  const overflow = tag === "contextWindowExceeded" ? " (context window exceeded)" : "";
+  const transport = kind === "error" && (TRANSPORT_INFO.includes(tag) || /stream disconnected|connection (failed|reset|closed)|websocket/i.test(message));
+  return { error: new EngineFailure(`codex session turn ${turn.status} [${kind}]: ${message.slice(0, 400)}${overflow}`, kind, CODEX_REST_MS[kind] ?? 0), transport };
+}
+
+/** A session turn's trace row (codex-calls.jsonl, as exec mode's: no prompt or answer text). */
+function sessionTrace(
+  req: BrainRequest,
+  c: CodexCall,
+  attempt: number,
+  r: { outcome: CodexTraceRow["outcome"]; turn?: SessionTurn; threadId?: string | null; ms?: number; error?: string; stderr: string; serverRequests?: string[] },
+): CodexTraceRow {
+  const turn = r.turn;
+  return {
+    ts: new Date().toISOString(),
+    ...(req.runId ? { run_id: req.runId } : {}),
+    mode: "session",
+    label: req.label,
+    model: c.model,
+    effort: c.effort,
+    attempt,
+    outcome: r.outcome,
+    ms: turn?.ms ?? r.ms ?? 0,
+    thread_id: turn?.threadId ?? r.threadId ?? null,
+    ...(turn?.turnId ? { turn_id: turn.turnId } : {}),
+    ...(turn && turn.firstDeltaMs !== null ? { ttft_ms: turn.firstDeltaMs } : {}),
+    ...(turn ? { deltas: turn.deltas, answer_chars: turn.answerChars, reverted: turn.reverted } : {}),
+    max_gap_ms: turn?.maxGapMs ?? 0,
+    stall_ms: null,
+    first_token_ms: null,
+    ...(turn?.stall ? { stall: turn.stall } : {}),
+    retries: turn?.retries ?? [],
+    errors: [...(turn?.errors ?? []), ...(turn?.error ? [turn.error.message] : [])],
+    warnings: [],
+    events: (turn?.events ?? []) as TraceEvent[],
+    stderr_tail: stderrTail(r.stderr),
+    ...(turn?.usage ? { usage: turn.usage } : {}),
+    ...(r.serverRequests && r.serverRequests.length > 0 ? { server_requests: r.serverRequests } : {}),
+    ...(r.error ? { error: r.error.slice(0, 300) } : {}),
+  };
+}
+
 /* ---- the engine -------------------------------------------------------------------------------- */
 
 export class CodexEngine implements BrainEngine {
@@ -670,6 +755,7 @@ export class CodexEngine implements BrainEngine {
       this.writeTrace({
         ts: new Date().toISOString(),
         ...(o.req.runId ? { run_id: o.req.runId } : {}),
+        mode: "exec",
         label: o.req.label,
         model: o.model,
         effort: o.effort,
@@ -730,8 +816,20 @@ export class CodexEngine implements BrainEngine {
     }
   }
 
+  /** Session mode's app-server and thread (BRAIN_CODEX_MODE=session), made on the first question. */
+  private session: CodexSession | null = null;
+  /** Why session mode is off for this process (exec mode answers), once it is. */
+  private sessionOff: string | null = null;
+  /** Session restarts so far (one, then exec mode). */
+  private sessionRestarts = 0;
+
+  /** The mode the next question goes out in. */
+  get mode(): "exec" | "session" {
+    return this.opts.codex.mode === "session" && !this.sessionOff ? "session" : "exec";
+  }
+
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {
-    const { bin, home, summary, serviceTier } = this.opts.codex;
+    const { bin, home } = this.opts.codex;
     const agents = instructionFiles(home);
     if (agents.length > 0) throw new EngineFailure(`${agents.join(", ")} would be loaded into the brain call (codex reads it whatever the flags) [unavailable]`, "unavailable", CODEX_REST_MS.unavailable);
     // The plan's usage, when a read is due: a window at the stop or credits in use rest codex for the process.
@@ -741,6 +839,123 @@ export class CodexEngine implements BrainEngine {
     const env = codexEnv(bin, home);
     mkdirSync(this.stateDir, { recursive: true });
     const entry = await this.catalog(model, effort, env);
+    const kindSchema = stableSchema(req.spec);
+    const schema = strictSchema(kindSchema);
+    const call = { model, effort, env, entry, kindSchema, schema };
+    return this.mode === "session" ? this.decideSession(req, signal, call) : this.decideExec(req, signal, call);
+  }
+
+  /** Session mode off for the rest of the process (said once); exec mode answers from now on. */
+  private turnSessionOff(why: string): void {
+    if (this.sessionOff) return;
+    this.sessionOff = why.slice(0, 300);
+    this.opts.note?.(`WARNING: codex session mode is off for the rest of this process (${this.sessionOff}); codex answers in exec mode`);
+    const session = this.session;
+    this.session = null;
+    void session?.close();
+  }
+
+  /** The session for this process, made when there is none (its app-server arguments carry the isolation). */
+  private sessionFor(c: CodexCall): CodexSession {
+    if (this.session) return this.session;
+    const { bin, home, summary, serviceTier } = this.opts.codex;
+    const catalogDir = join(this.stateDir, "session-catalog");
+    mkdirSync(catalogDir, { recursive: true });
+    const catalogFile = join(catalogDir, `${process.pid}.json`);
+    writeFileSync(catalogFile, JSON.stringify({ models: [c.entry] }), "utf8");
+    this.session = new CodexSession({
+      bin,
+      home,
+      args: sessionArgs({ catalogFile, stateDir: this.stateDir, effort: c.effort, summary, serviceTier }),
+      env: c.env,
+      stateDir: this.stateDir,
+      model: c.model,
+      serviceTier,
+      onRateLimits: (params) => this.usage.observe(params),
+      ...(this.opts.sessionTimeouts ? { timeouts: this.opts.sessionTimeouts } : {}),
+    });
+    return this.session;
+  }
+
+  /**
+   * Session mode: the question as a turn on the base thread (codex-session.ts), reverted after. A stalled turn is
+   * asked once more (BRAIN_CODEX_STALL_RETRIES); a dead server or a broken stream restarts the session once, then
+   * exec mode takes over; an isolation problem (config.toml, instruction sources) turns session mode off at once.
+   */
+  private async decideSession(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall): Promise<BrainAnswer> {
+    const { home, summary, stallMs, firstTokenMs, stallRetries, maxAnswerChars } = this.opts.codex;
+    const prompt = promptWithReask(req);
+    let attempt = 1;
+    let spentMs = 0;
+    for (;;) {
+      const began = Date.now();
+      let turn: SessionTurn;
+      const session = this.sessionFor(c);
+      try {
+        await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
+        this.usage.noteCall();
+        turn = await session.ask({ prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars });
+      } catch (error) {
+        if (!(error instanceof SessionError || error instanceof RpcError)) throw error;
+        spentMs += Date.now() - began;
+        this.writeTrace(sessionTrace(req, c, attempt, { outcome: "error", error: error.message, threadId: session.threadId, ms: Date.now() - began, stderr: session.stderrTail() }));
+        if (error instanceof SessionError && error.kind === "isolation") {
+          this.turnSessionOff(error.message);
+          return this.decideExec(req, signal, c, spentMs);
+        }
+        if (signal?.aborted) throw error;
+        if (this.sessionRestarts >= 1) {
+          this.turnSessionOff(`the app-server failed again after a restart: ${error.message}`);
+          return this.decideExec(req, signal, c, spentMs);
+        }
+        this.sessionRestarts += 1;
+        await this.session?.close();
+        this.session = null;
+        continue;
+      }
+      spentMs += turn.ms;
+      this.writeTrace(sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, stderr: session.stderrTail(), serverRequests: session.serverRequests }));
+      if (turn.status === "completed" && turn.text) {
+        if (!session.hasPath()) void session.refreshPath();
+        const usage = turn.usage ?? {};
+        return this.answer(req, c, {
+          text: turn.text,
+          latencyMs: spentMs,
+          usage: { input_tokens: usage["inputTokens"], cached_input_tokens: usage["cachedInputTokens"], cache_write_input_tokens: usage["cacheWriteInputTokens"], output_tokens: usage["outputTokens"], reasoning_output_tokens: usage["reasoningOutputTokens"] },
+          reasoning: turn.reasoning,
+          toolCalls: [],
+          native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none" },
+        });
+      }
+      if (turn.status === "completed") throw new EngineFailure("codex gave no answer [error] (session turn completed without an agent message)", "error");
+      if (turn.status === "aborted") throw new Error(`codex session turn aborted after ${turn.ms} ms`);
+      if (turn.status === "stalled") {
+        if (attempt <= stallRetries && !signal?.aborted) {
+          attempt += 1;
+          continue;
+        }
+        throw new EngineFailure(`codex stalled [timeout]: ${turn.stall ?? "no notification"} (${attempt} turn(s), session mode)`, "timeout");
+      }
+      // failed / interrupted: what codex said, classified as exec mode's failures; a broken stream restarts the session once.
+      const failure = sessionFailure(turn);
+      if (failure.transport && !signal?.aborted) {
+        if (this.sessionRestarts >= 1) {
+          this.turnSessionOff(`the stream to the backend failed again after a restart: ${failure.error.message}`);
+          return this.decideExec(req, signal, c, spentMs);
+        }
+        this.sessionRestarts += 1;
+        await this.session?.close();
+        this.session = null;
+        continue;
+      }
+      throw failure.error;
+    }
+  }
+
+  /** Exec mode: one `codex exec` per question (and once more after a stall). */
+  private async decideExec(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall, spentBeforeMs = 0): Promise<BrainAnswer> {
+    const { bin, summary, serviceTier } = this.opts.codex;
+    const { model, effort, env, entry, schema } = c;
     // The files next to an empty working directory (codex is given no tool to read either).
     const work = makeWorkDir("jev-brain-codex-");
     try {
@@ -750,8 +965,6 @@ export class CodexEngine implements BrainEngine {
       writeFileSync(systemFile, req.system, "utf8");
       const catalogFile = join(work, "catalog.json");
       writeFileSync(catalogFile, JSON.stringify({ models: [entry] }), "utf8");
-      const kindSchema = stableSchema(req.spec);
-      const schema = strictSchema(kindSchema);
       const schemaFile = schema ? join(work, "schema.json") : null;
       if (schemaFile) writeFileSync(schemaFile, JSON.stringify(schema), "utf8");
       const args = codexArgs({ cwd, model, schemaFile, systemFile, catalogFile, stateDir: this.stateDir, effort, summary, serviceTier });
@@ -770,33 +983,51 @@ export class CodexEngine implements BrainEngine {
       const { run, stream } = outcome;
       const failure = codexFailure(stream, run);
       if (failure) throw failure;
-      const text = stream.messages[stream.messages.length - 1] ?? "";
-      const usage = stream.usage ?? {};
-      const parsed = parseAnswerText(text);
-      const answer = parsed ? (dropNulls(parsed, kindSchema) as Json) : null;
       const toolCalls: ToolCallRecord[] = stream.toolItems.map((item) => ({ name: `codex:${String(item["type"] ?? "item")}`, input: item, output: "", ms: 0 }));
-      return {
-        engine: this.name,
-        model,
-        effort,
-        answer: answer ? normalisePick(req, answer) : null,
-        problems: answer ? [] : [`no JSON answer in the reply: ${text.slice(0, 120)}`],
-        attempts: 1,
-        latencyMs: outcome.totalMs,
-        usage: {
-          inputTokens: num(usage["input_tokens"]),
-          cacheHitTokens: num(usage["cached_input_tokens"]),
-          ...(num(usage["cache_write_input_tokens"]) > 0 ? { cacheWriteTokens: num(usage["cache_write_input_tokens"]) } : {}),
-          outputTokens: num(usage["output_tokens"]),
-          reasoningTokens: num(usage["reasoning_output_tokens"]),
-        },
+      return this.answer(req, c, {
+        text: stream.messages[stream.messages.length - 1] ?? "",
+        latencyMs: outcome.totalMs + spentBeforeMs,
+        usage: stream.usage ?? {},
+        reasoning: stream.reasoning,
         toolCalls,
-        ...(stream.reasoning.length > 0 ? { reasoning: stream.reasoning.join("\n\n") } : {}),
-        raw: text,
-        native: { thread_id: stream.threadId, warnings: stream.warnings, retries: stream.retries, runs: attempt, schema: schema ? "strict" : "none" },
-      };
+        native: { mode: "exec", thread_id: stream.threadId, warnings: stream.warnings, retries: stream.retries, runs: attempt, schema: schema ? "strict" : "none" },
+      });
     } finally {
       removeDir(work);
     }
   }
+
+  /** The BrainAnswer of an answered call (both modes): the text read back, the strict schema's nulls dropped, codex's usage. */
+  private answer(req: BrainRequest, c: CodexCall, r: { text: string; latencyMs: number; usage: Json; reasoning: string[]; toolCalls: ToolCallRecord[]; native: Json }): BrainAnswer {
+    const parsed = parseAnswerText(r.text);
+    const answer = parsed ? (dropNulls(parsed, c.kindSchema) as Json) : null;
+    return {
+      engine: this.name,
+      model: c.model,
+      effort: c.effort,
+      answer: answer ? normalisePick(req, answer) : null,
+      problems: answer ? [] : [`no JSON answer in the reply: ${r.text.slice(0, 120)}`],
+      attempts: 1,
+      latencyMs: r.latencyMs,
+      usage: {
+        inputTokens: num(r.usage["input_tokens"]),
+        cacheHitTokens: num(r.usage["cached_input_tokens"]),
+        ...(num(r.usage["cache_write_input_tokens"]) > 0 ? { cacheWriteTokens: num(r.usage["cache_write_input_tokens"]) } : {}),
+        outputTokens: num(r.usage["output_tokens"]),
+        reasoningTokens: num(r.usage["reasoning_output_tokens"]),
+      },
+      toolCalls: r.toolCalls,
+      ...(r.reasoning.length > 0 ? { reasoning: r.reasoning.join("\n\n") } : {}),
+      raw: r.text,
+      native: r.native,
+    };
+  }
+
+  /** Ends session mode's app-server and deletes its thread (the play process's end; tests). */
+  async close(): Promise<void> {
+    const session = this.session;
+    this.session = null;
+    await session?.close();
+  }
+
 }

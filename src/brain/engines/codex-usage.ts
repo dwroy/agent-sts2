@@ -474,6 +474,41 @@ export class CodexUsageGuard {
     if (this.stopped) throw new EngineFailure(`${this.stopped} [${this.stopKind}]`, this.stopKind, Number.POSITIVE_INFINITY);
   }
 
+  /**
+   * A reading the app-server pushed (account/rateLimits/updated, session mode: after each turn): a sparse snapshot,
+   * merged over the latest read (credits, plan and ordinary usage kept when it leaves them out), whose verdict applies
+   * at once (a window at the stop stops codex before the next due read). The reads themselves are unchanged: the
+   * EVERY_CALLS / EVERY_MIN counters are not started over by a push.
+   */
+  observe(pushed: unknown): void {
+    if (this.stopped) return;
+    let parsed: Omit<CodexUsage, "readAt" | "ms">;
+    try {
+      parsed = parseRateLimits(isObject(pushed) ? { rateLimits: pushed["rateLimits"] } : {});
+    } catch {
+      return;
+    }
+    if (parsed.windows.length === 0) return;
+    const usage: CodexUsage = {
+      readAt: new Date(this.now()).toISOString(),
+      ms: 0,
+      ...parsed,
+      plan: parsed.plan ?? this.last?.plan ?? null,
+      credits: parsed.credits ?? this.last?.credits ?? null,
+      ordinaryUsageAllowed: parsed.ordinaryUsageAllowed ?? this.last?.ordinaryUsageAllowed ?? null,
+    };
+    this.pushes += 1;
+    this.last = usage;
+    this.first ??= usage;
+    const why = this.verdict(usage);
+    const balance = usage.credits?.balance ?? null;
+    if (balance !== null && (this.topBalance === null || balance > this.topBalance)) this.topBalance = balance;
+    if (why) this.stop(why, "quota");
+  }
+
+  /** Readings pushed by the app-server so far (observe). */
+  pushes = 0;
+
   /** A codex call went out (re-asks included): counted for EVERY_CALLS. */
   noteCall(): void {
     this.callsSinceRead += 1;
