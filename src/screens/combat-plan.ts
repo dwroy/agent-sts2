@@ -3402,6 +3402,8 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...(noPotionBase && noPotionCopy ? { noPotion: { line: noPotionCopy, base: noPotionBase } } : {}),
         // THIEF_FACTS: an enemy whose Escape / Flee resolves leaves the rollout's fight; the loot back or gone per sample.
         ...(escapes ? { thieves } : {}),
+        // SANDPIT_START: the Sandpit the Insatiable's Liquify Ground starts, in the later turns too (absent: rollout-live's default).
+        ...(env.sandpitStart !== undefined ? { sandpitStart: env.sandpitStart } : {}),
       })
     : null;
   let rollout = runRollout(thiefOn && !thiefFailed);

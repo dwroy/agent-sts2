@@ -676,6 +676,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       mechRules: config.mechRules,
       mechMoveRules: config.mechMoveRules,
       mechDeathMove: config.mechDeathMove,
+      sandpitStart: config.sandpitStart,
     };
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
