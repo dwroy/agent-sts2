@@ -18,6 +18,8 @@ limit = None
 if "--max" in sys.argv:
     limit = int(sys.argv[sys.argv.index("--max") + 1])
 lessons = open(os.path.join(ROOT, "notes/lessons.md"), encoding="utf8").read()
+# Runs listed inside <!-- --> have no post-mortem (the pre-learning-loop A0 runs).
+lessons = re.sub(r"<!--.*?-->", "", lessons, flags=re.S)
 ids = list(dict.fromkeys(re.findall(r"^## ([0-9A-Z]{12})", lessons, re.M)))
 folded = set()
 exp = json.load(open(os.path.join(ROOT, "jev-sts2-v4run/src/knowledge/experience.json"), encoding="utf8"))
