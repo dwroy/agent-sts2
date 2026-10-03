@@ -29,14 +29,23 @@
  *   program that does not start rest it for a while, as Claude's. The router's timeout (BRAIN_CODEX_TIMEOUT_MS, 10
  *   minutes) kills the process group. The prompt goes in on stdin, which is then closed (codex exec waits on an open
  *   stdin).
- * - Environment: only the basics a process needs (engines/process.ts agentEnv), CODEX_HOME for the login, and the
- *   program's own directory first in PATH (the npm launcher is `#!/usr/bin/env node`).
+ * - Stalls (2026-10-03: RNTVAT76BPV0 in play, and its question replayed): codex streams over a
+ *   WebSocket; a call could get its first output token and then nothing for 10 minutes, with no retry by codex. Each run
+ *   is watched (runOnce): codex's trace-safe telemetry on stderr (CODEX_RUST_LOG) marks the first output token, after
+ *   which a silent stream is killed after BRAIN_CODEX_STALL_MS and asked once more (BRAIN_CODEX_STALL_RETRIES); thinking
+ *   before it is capped only by BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's BRAIN_CODEX_TIMEOUT_MS.
+ *   codex's own retry notices ("Reconnecting... 1/5") are retries, not failures.
+ * - Trace: every run writes a row to codex-calls.jsonl next to brain.jsonl (CodexTraceRow: the event timeline with
+ *   arrival times, retries, errors, the first-token time, the stderr tail with credentials masked; never the prompt or
+ *   the answer text), the stalled and timed-out runs included.
+ * - Environment: only the basics a process needs (engines/process.ts agentEnv), CODEX_HOME for the login, the log
+ *   filter, and the program's own directory first in PATH (the npm launcher is `#!/usr/bin/env node`).
  * - Usage guard (engines/codex-usage.ts): the plan's windows and credits are read at process start (Brain.preflight)
  *   and before a call every BRAIN_CODEX_USAGE_EVERY_CALLS calls or BRAIN_CODEX_USAGE_EVERY_MIN minutes; a window at
  *   BRAIN_CODEX_USAGE_STOP_PCT or credits in use rest codex for the rest of the process (the used-up-plan path), so a
  *   call never goes out past the stop. Each brain.jsonl row about codex carries the latest reading (`limits`).
  */
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join } from "node:path";
 
@@ -47,7 +56,7 @@ import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
 import { stableSchema } from "../specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import { CodexUsageGuard, readCodexUsage, type CodexUsage, type UsageNote } from "./codex-usage.js";
-import { AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
+import { AgentAbortedError, AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
 
 type Json = Record<string, unknown>;
 
@@ -59,12 +68,53 @@ export interface CodexEngineOptions {
   codex: BrainConfig["codex"];
   /** Where codex keeps its SQLite state and logs (default: CODEX_STATE_DIR in the temp dir). */
   stateDir?: string;
+  /** One JSON row per codex run (codex-calls.jsonl next to brain.jsonl): its event timeline, retries, stderr tail; null: none. */
+  traceFile?: string | null;
   /** Where the engine says what the console should see (a usage read that failed); the router's note. */
   note?: (message: string) => void;
   /** The usage read (default: readCodexUsage through a short-lived app-server; tests), and the guard's clock. */
   readUsage?: () => Promise<CodexUsage>;
   now?: () => number;
 }
+
+/** A codex run's trace row (codex-calls.jsonl): no prompt and no answer text, only what happened when. */
+export interface CodexTraceRow {
+  ts: string;
+  run_id?: string;
+  label: string;
+  model: string;
+  effort: string;
+  /** 1, or 2 for the run after a stall. */
+  attempt: number;
+  /** answered | failed (codex said why) | stalled (no event for stall_ms: killed) | aborted (the router's timeout) | error (did not run). */
+  outcome: "answered" | "failed" | "stalled" | "aborted" | "error";
+  ms: number;
+  exit?: number | null;
+  signal?: string | null;
+  thread_id?: string | null;
+  first_event_ms?: number;
+  last_event_ms?: number;
+  /** The first output token (stderr telemetry codex.turn_ttft), when it came. */
+  ttft_ms?: number;
+  /** The longest silence (start, events, end). */
+  max_gap_ms: number;
+  stall_ms: number | null;
+  first_token_ms: number | null;
+  /** Why a stalled run was killed. */
+  stall?: string;
+  retries: string[];
+  errors: string[];
+  warnings: string[];
+  events: TraceEvent[];
+  events_dropped?: number;
+  stderr_tail: string;
+  usage?: Json;
+  error?: string;
+}
+
+/** The trace keeps the first and the last events of a long stream. */
+const TRACE_HEAD = 60;
+const TRACE_TAIL = 40;
 
 /** Codex's SQLite state and logs for brain calls: ours, kept between calls (a fresh one costs its migrations each time). */
 export const CODEX_STATE_DIR = join(tmpdir(), "jev-brain-codex-state");
@@ -248,8 +298,10 @@ export interface CodexStream {
   reasoning: string[];
   /** turn.completed's usage. */
   usage: Json | null;
-  /** turn.failed / error messages. */
+  /** turn.failed / error messages (not the retry notices). */
   errors: string[];
+  /** codex's own retry notices ("Reconnecting... 1/5 (stream disconnected before completion: …)"): it retried the request. */
+  retries: string[];
   /** Items of type "error" (codex's warnings: an ignored setting, ...). */
   warnings: string[];
   /** Items that are neither a message, reasoning nor a warning (a tool the model used). */
@@ -257,9 +309,12 @@ export interface CodexStream {
   completed: boolean;
 }
 
+/** codex's notice that it retries the sampling request after a dropped or idle stream (core/src/responses_retry.rs). */
+export const RETRY_NOTICE = /^Reconnecting\.\.\.\s*\d+\/\d+/;
+
 /** Codex's --json events (one JSON object per line; anything else is skipped). */
 export function parseCodexStream(stdout: string): CodexStream {
-  const stream: CodexStream = { threadId: null, messages: [], reasoning: [], usage: null, errors: [], warnings: [], toolItems: [], completed: false };
+  const stream: CodexStream = { threadId: null, messages: [], reasoning: [], usage: null, errors: [], retries: [], warnings: [], toolItems: [], completed: false };
   for (const line of stdout.split("\n")) {
     const text = line.trim();
     if (!text.startsWith("{")) continue;
@@ -280,7 +335,9 @@ export function parseCodexStream(stdout: string): CodexStream {
       const error = isObject(event["error"]) ? event["error"]["message"] : event["error"];
       if (typeof error === "string" && !stream.errors.includes(error)) stream.errors.push(error);
     } else if (type === "error" && typeof event["message"] === "string") {
-      if (!stream.errors.includes(event["message"])) stream.errors.push(event["message"]);
+      // A retry notice is not a failure: the turn goes on (and may complete).
+      if (RETRY_NOTICE.test(event["message"])) stream.retries.push(event["message"]);
+      else if (!stream.errors.includes(event["message"])) stream.errors.push(event["message"]);
     } else if (type === "item.completed" && isObject(event["item"])) {
       const item = event["item"];
       const kind = item["type"];
@@ -337,6 +394,70 @@ export function codexFailure(stream: CodexStream, run: { code: number | null; si
   return new EngineFailure(`${what} [${kind}]: ${(text || "no error message").slice(0, 400)}`, kind, CODEX_REST_MS[kind] ?? 0);
 }
 
+/* ---- the call trace ---------------------------------------------------------------------------- */
+
+/** One event of a call's stream as the trace keeps it: when it came (ms after the start) and what it was; never its text. */
+export interface TraceEvent {
+  t: number;
+  type: string;
+  /** item.* events: the item's type (reasoning, agent_message, error, ...). */
+  item?: string;
+  /** The item's text length (reasoning summaries, the answer): the size, not the words. */
+  chars?: number;
+  /** error / turn.failed events and error items: codex's message (a retry notice, a failure), truncated. */
+  message?: string;
+}
+
+/** A line of codex's --json stream as a trace event (null: not an event). */
+export function traceEvent(line: string, t: number): TraceEvent | null {
+  const text = line.trim();
+  if (!text.startsWith("{")) return null;
+  let event: Json;
+  try {
+    const value = JSON.parse(text) as unknown;
+    if (!isObject(value)) return null;
+    event = value;
+  } catch {
+    return null;
+  }
+  const out: TraceEvent = { t, type: String(event["type"] ?? "?") };
+  const item = isObject(event["item"]) ? event["item"] : null;
+  if (item) {
+    out.item = String(item["type"] ?? "?");
+    if (typeof item["text"] === "string") out.chars = item["text"].length;
+    if (out.item === "error" && typeof item["message"] === "string") out.message = item["message"].slice(0, 300);
+  }
+  const message = typeof event["message"] === "string" ? event["message"] : isObject(event["error"]) && typeof event["error"]["message"] === "string" ? event["error"]["message"] : null;
+  if (message) out.message = message.slice(0, 300);
+  return out;
+}
+
+/** Text with anything that looks like a credential masked (JWTs, bearer values, token / key / cookie fields). */
+export function redact(text: string): string {
+  return text
+    .replace(/eyJ[\w-]{8,}\.[\w-]{8,}\.[\w-]+/g, "<jwt>")
+    .replace(/\b(Bearer|Basic)\s+[^\s"',;]+/gi, "$1 <redacted>")
+    .replace(/((?:access|refresh|id|session)[_-]?token|api[_-]?key|secret|password|cookie|set-cookie)(["']?\s*[:=]\s*["']?)[^\s"',;}]+/gi, "$1$2<redacted>")
+    .replace(/\b(sk|rk|sess)-[A-Za-z0-9_-]{16,}/g, "<key>");
+}
+
+/** codex's stderr for the trace: its warning about PATH aliases dropped, credentials masked, the last part kept. */
+export function stderrTail(stderr: string, max = 1500): string {
+  const lines = stderr.split("\n").filter((line) => line.trim() && !/could not create PATH aliases/.test(line));
+  return redact(lines.join("\n")).slice(-max);
+}
+
+/** The largest silence in a call: between its start, its events and its end (ms). */
+export function maxGap(events: TraceEvent[], endMs: number): number {
+  let gap = 0;
+  let last = 0;
+  for (const event of events) {
+    gap = Math.max(gap, event.t - last);
+    last = event.t;
+  }
+  return Math.max(gap, endMs - last);
+}
+
 /* ---- isolation guards -------------------------------------------------------------------------- */
 
 /**
@@ -355,11 +476,20 @@ export function instructionFiles(home: string): string[] {
     });
 }
 
-/** The child's environment: the basics, CODEX_HOME, and the program's directory first in PATH (node for the npm launcher). */
+/**
+ * codex's log filter for brain calls: warnings, and its trace-safe telemetry (event names, durations, token counts; the
+ * prompt only as its length, auth as header names) on stderr, whose codex.turn_ttft line marks the first output token.
+ */
+export const CODEX_RUST_LOG = "warn,codex_otel.trace_safe=info";
+
+/** The telemetry line of the turn's first output token. */
+export const TTFT_LINE = /event\.name="codex\.turn_ttft"/;
+
+/** The child's environment: the basics, CODEX_HOME, the log filter, and the program's directory first in PATH (node for the npm launcher). */
 export function codexEnv(bin: string, home: string): Record<string, string> {
   const base = agentEnv();
   const path = isAbsolute(bin) ? [dirname(bin), base["PATH"] ?? ""].filter(Boolean).join(":") : (base["PATH"] ?? "");
-  return { ...base, PATH: path, CODEX_HOME: home };
+  return { ...base, PATH: path, CODEX_HOME: home, RUST_LOG: CODEX_RUST_LOG };
 }
 
 /* ---- the start-up check ------------------------------------------------------------------------ */
@@ -475,6 +605,131 @@ export class CodexEngine implements BrainEngine {
     return entry;
   }
 
+  /** Calls so far in this process: a stalled run's wall clock is added to the next one's latency. */
+  private stalledMs = 0;
+
+  /**
+   * One codex run, watched. stdout's --json events and stderr's telemetry (codex.turn_ttft: the first output token,
+   * CODEX_RUST_LOG) give its phases: thinking until the first token, then the output. A run is killed as stalled when
+   * its first token has not come within first_token_ms (when set), or when, after it, the stream is silent for
+   * stall_ms (the stall seen in play: the first token at 18 s, then nothing for 10 minutes on an open WebSocket, no
+   * retry by codex). The caller's abort (the router's timeout) kills it too. Every run leaves a trace row
+   * (codex-calls.jsonl), the aborted and stalled ones included, with what codex had sent by then.
+   */
+  private async runOnce(
+    bin: string,
+    args: string[],
+    o: { cwd: string; env: Record<string, string>; stdin: string; signal: AbortSignal | undefined; req: BrainRequest; model: string; effort: string; attempt: number },
+  ): Promise<
+    | { kind: "done"; run: Awaited<ReturnType<typeof runAgent>>; stream: CodexStream; totalMs: number }
+    | { kind: "stalled"; why: string }
+    | { kind: "thrown"; error: unknown }
+  > {
+    const { stallMs, firstTokenMs } = this.opts.codex;
+    const started = Date.now();
+    const events: TraceEvent[] = [];
+    let dropped = 0;
+    let ttftMs: number | null = null;
+    const controller = new AbortController();
+    let stalled: string | null = null;
+    let timer: NodeJS.Timeout | undefined;
+    const stallAfter = (ms: number, why: () => string): void => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        stalled = why();
+        controller.abort();
+      }, ms);
+    };
+    const onOuterAbort = (): void => controller.abort();
+    if (o.signal?.aborted) controller.abort();
+    o.signal?.addEventListener("abort", onOuterAbort, { once: true });
+    if (firstTokenMs) stallAfter(firstTokenMs, () => `no first token within ${Math.round(firstTokenMs / 1000)} s`);
+    const silence = (): string => {
+      const last = events[events.length - 1];
+      return `no stream event for ${Math.round((stallMs ?? 0) / 1000)} s after the first token at ${Math.round((ttftMs ?? 0) / 1000)} s (last: ${last ? `${last.type}${last.item ? `/${last.item}` : ""} at ${Math.round(last.t / 1000)} s` : "none"})`;
+    };
+    const onStdoutLine = (line: string): void => {
+      const event = traceEvent(line, Date.now() - started);
+      if (!event) return;
+      if (ttftMs !== null && stallMs) stallAfter(stallMs, silence);
+      if (events.length < TRACE_HEAD + TRACE_TAIL) events.push(event);
+      else {
+        events.splice(TRACE_HEAD, 1);
+        events.push(event);
+        dropped += 1;
+      }
+    };
+    const onStderrLine = (line: string): void => {
+      if (ttftMs !== null || !TTFT_LINE.test(line)) return;
+      ttftMs = Date.now() - started;
+      if (stallMs) stallAfter(stallMs, silence);
+      else clearTimeout(timer);
+    };
+    const trace = (row: Partial<CodexTraceRow> & Pick<CodexTraceRow, "outcome">, stderr: string): void => {
+      const ms = Date.now() - started;
+      this.writeTrace({
+        ts: new Date().toISOString(),
+        ...(o.req.runId ? { run_id: o.req.runId } : {}),
+        label: o.req.label,
+        model: o.model,
+        effort: o.effort,
+        attempt: o.attempt,
+        ms,
+        ...(ttftMs !== null ? { ttft_ms: ttftMs } : {}),
+        ...(events.length > 0 ? { first_event_ms: events[0]!.t, last_event_ms: events[events.length - 1]!.t } : {}),
+        max_gap_ms: maxGap(events, ms),
+        stall_ms: stallMs,
+        first_token_ms: firstTokenMs,
+        retries: [],
+        errors: [],
+        warnings: [],
+        events,
+        ...(dropped > 0 ? { events_dropped: dropped } : {}),
+        stderr_tail: stderrTail(stderr),
+        ...row,
+      });
+    };
+    try {
+      const run = await runAgent(bin, args, { cwd: o.cwd, env: o.env, stdin: o.stdin, signal: controller.signal, onStdoutLine, onStderrLine });
+      const stream = parseCodexStream(run.stdout);
+      const answered = codexFailure(stream, run) === null;
+      trace({ outcome: answered ? "answered" : "failed", exit: run.code, signal: run.signal, thread_id: stream.threadId, retries: stream.retries, errors: stream.errors, warnings: stream.warnings, ...(stream.usage ? { usage: stream.usage } : {}) }, run.stderr);
+      const totalMs = run.ms + this.stalledMs;
+      this.stalledMs = 0;
+      return { kind: "done", run, stream, totalMs };
+    } catch (error) {
+      if (error instanceof AgentAbortedError) {
+        const stream = parseCodexStream(error.stdout);
+        trace({ outcome: stalled ? "stalled" : "aborted", ...(stalled ? { stall: stalled } : {}), thread_id: stream.threadId, retries: stream.retries, errors: stream.errors, warnings: stream.warnings }, error.stderr);
+        if (stalled && !o.signal?.aborted) {
+          this.stalledMs += error.ms;
+          return { kind: "stalled", why: stalled };
+        }
+        this.stalledMs = 0;
+        return { kind: "thrown", error };
+      }
+      trace({ outcome: "error", error: (error instanceof Error ? error.message : String(error)).slice(0, 300) }, "");
+      this.stalledMs = 0;
+      // Not found / not executable: rest it, so the next questions go to the fallback without trying again.
+      if (error instanceof AgentStartError) return { kind: "thrown", error: new EngineFailure(`${error.message} [unavailable]`, "unavailable", CODEX_REST_MS.unavailable) };
+      return { kind: "thrown", error };
+    } finally {
+      clearTimeout(timer);
+      o.signal?.removeEventListener("abort", onOuterAbort);
+    }
+  }
+
+  private writeTrace(row: CodexTraceRow): void {
+    const file = this.opts.traceFile;
+    if (!file) return;
+    try {
+      mkdirSync(dirname(file), { recursive: true });
+      appendFileSync(file, `${JSON.stringify(row)}\n`, "utf8");
+    } catch {
+      // the trace must never break play
+    }
+  }
+
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {
     const { bin, home, summary, serviceTier } = this.opts.codex;
     const agents = instructionFiles(home);
@@ -500,16 +755,19 @@ export class CodexEngine implements BrainEngine {
       const schemaFile = schema ? join(work, "schema.json") : null;
       if (schemaFile) writeFileSync(schemaFile, JSON.stringify(schema), "utf8");
       const args = codexArgs({ cwd, model, schemaFile, systemFile, catalogFile, stateDir: this.stateDir, effort, summary, serviceTier });
-      let run: Awaited<ReturnType<typeof runAgent>>;
+      const stdin = promptWithReask(req);
+      let attempt = 1;
       this.usage.noteCall();
-      try {
-        run = await runAgent(bin, args, { cwd, env, stdin: promptWithReask(req), ...(signal ? { signal } : {}) });
-      } catch (error) {
-        // Not found / not executable: rest it, so the next questions go to the fallback without trying again.
-        if (error instanceof AgentStartError) throw new EngineFailure(`${error.message} [unavailable]`, "unavailable", CODEX_REST_MS.unavailable);
-        throw error;
+      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt });
+      // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
+      while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
+        attempt += 1;
+        this.usage.noteCall();
+        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt });
       }
-      const stream = parseCodexStream(run.stdout);
+      if (outcome.kind === "stalled") throw new EngineFailure(`codex stalled [timeout]: ${outcome.why} (${attempt} run(s))`, "timeout");
+      if (outcome.kind === "thrown") throw outcome.error;
+      const { run, stream } = outcome;
       const failure = codexFailure(stream, run);
       if (failure) throw failure;
       const text = stream.messages[stream.messages.length - 1] ?? "";
@@ -524,7 +782,7 @@ export class CodexEngine implements BrainEngine {
         answer: answer ? normalisePick(req, answer) : null,
         problems: answer ? [] : [`no JSON answer in the reply: ${text.slice(0, 120)}`],
         attempts: 1,
-        latencyMs: run.ms,
+        latencyMs: outcome.totalMs,
         usage: {
           inputTokens: num(usage["input_tokens"]),
           cacheHitTokens: num(usage["cached_input_tokens"]),
@@ -535,7 +793,7 @@ export class CodexEngine implements BrainEngine {
         toolCalls,
         ...(stream.reasoning.length > 0 ? { reasoning: stream.reasoning.join("\n\n") } : {}),
         raw: text,
-        native: { thread_id: stream.threadId, warnings: stream.warnings, schema: schema ? "strict" : "none" },
+        native: { thread_id: stream.threadId, warnings: stream.warnings, retries: stream.retries, runs: attempt, schema: schema ? "strict" : "none" },
       };
     } finally {
       removeDir(work);

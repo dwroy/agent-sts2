@@ -690,7 +690,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           // RUN_PLAN_MERGE: a due plan rides on the next DeepSeek question; asked here only when none carried it in time
           // or the act boss is next (strategy/run-plan-merge.ts).
           const step = runPlanAtMap(screenMemory, state, currentRunPlan(screenMemory, config.runPlanLog, runId));
-          if (step.action === "wait" && step.fresh) onEvent({ type: "note", message: `run plan due (${step.trigger}, floor ${state.run?.floor ?? "?"}): it rides on the next DeepSeek question` });
+          if (step.action === "wait" && step.fresh) onEvent({ type: "note", message: `run plan due (${step.trigger}, floor ${state.run?.floor ?? "?"}): it rides on the next ${engineLabel(brain?.engineFor("run-plan"))} question` });
           // A call that failed on this floor is not retried on it (ensureRunPlan): nothing to say on every poll of the map.
           if (step.action === "ask" && screenMemory.runPlanFailed !== `${runId}:${state.run?.floor ?? "?"}`) {
             onEvent({ type: "note", message: `run plan (${step.trigger}) asked on its own: ${step.why}` });
@@ -810,7 +810,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         if (stale) {
           stats.staleSkips += 1;
-          onEvent({ type: "note", message: `board changed before asking DeepSeek on ${state.screen}; re-planning` });
+          onEvent({ type: "note", message: `board changed before asking the brain on ${state.screen}; re-planning` });
           await sleep(pollIntervalMs);
           continue;
         }
@@ -849,7 +849,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         // The question's facts carry the deck, relics, potions, HP, gold, clock and plan: `now` stays empty.
         const memory = journal.render(state, knowledge, screenMemory, { label: decision.label, criteria: question.criteria, factsCovered: "facts" in decision.state, ...(spec.offeredCards ? { offeredCards: spec.offeredCards } : {}), ...(OUTCOME_BASIS_KEY in asRecord(decision.state["facts"]) ? { statsCovered: true } : {}) });
-        onEvent({ type: "note", message: `DeepSeek decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
+        onEvent({ type: "note", message: `${engineLabel(brain?.engineFor(decision.label))} decides ${decision.label} (${Object.keys(question.criteria).length} options, floor ${state.run?.floor ?? "?"}, run context ${memoryChars(memory)} chars)` });
         const ask = decision;
         /**
          * RUN_PLAN_MERGE: the run plan in the answer (its run_plan), stored and logged as the run plan's own call stored it
@@ -903,7 +903,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           } as AnswerSet);
           // A one-shot resolution that fell back in code means the choice named no option.
           if (!picked.intent || (spec.oneshot && picked.fallback)) {
-            onEvent({ type: "note", message: `DeepSeek's ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
+            onEvent({ type: "note", message: `${answeredBy(answer.brain)}'s ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
             deepseekAnswerUnusable = `${answer.choice} did not resolve`;
             return false;
           }
@@ -937,7 +937,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           };
           deepseekAsked = toJsonValue(ask.questions) as Record<string, JsonValue>;
           deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
-          onEvent({ type: "note", message: `DeepSeek (${(answer.latencyMs / 1000).toFixed(1)} s) ${ask.label}: ${answer.choice}${how} — ${answer.reason}` });
+          onEvent({ type: "note", message: `${answeredBy(answer.brain)} (${(answer.latencyMs / 1000).toFixed(1)} s) ${ask.label}: ${answer.choice}${how} — ${answer.reason}` });
           return true;
         };
         try {
@@ -980,7 +980,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               deepseekFailed = true;
               deepseekAnswerUnusable = `plan invalid: ${why}`;
               deepseekRecord = { by: "deepseek", direct: true, choice: "", reason, answer: toJsonValue(json), invalid: why, ...usage };
-              onEvent({ type: "note", message: `DeepSeek's plan on ${decision.label} is invalid (${why})` });
+              onEvent({ type: "note", message: `${answeredBy(meta.brain)}'s plan on ${decision.label} is invalid (${why})` });
             } else {
               deepseekResolved = { ...out, decider: "deepseek", confidence: null, fallback: false, rationale: `DeepSeek planned: ${reason} | ${out.rationale}` };
               deepseekRecord = {
@@ -993,7 +993,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               };
               deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
               deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
-              onEvent({ type: "note", message: `DeepSeek (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]}${note ? ` (${note})` : ""} — ${reason}` });
+              onEvent({ type: "note", message: `${answeredBy(meta.brain)} (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]}${note ? ` (${note})` : ""} — ${reason}` });
             }
           } else {
             const answer = await brain.choose(decision.state, question.instructions, question.criteria, { label: decision.label, memory: { ...memory } });
@@ -1020,7 +1020,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             const first = error.record.first;
             deepseekNote = { reason: first.reason, ...(first.conclusion_line ? { conclusion: first.conclusion_line } : {}) };
           }
-          onEvent({ type: "note", message: `DeepSeek failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)})` });
+          onEvent({ type: "note", message: `${error instanceof DeepSeekAnswerError ? answeredBy((error.meta as { brain?: BrainMeta }).brain) : engineLabel(brain?.engineFor(decision.label))} failed on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)})` });
           if (error instanceof DeepSeekAnswerError) {
             // A run plan riding on it does not depend on the choice: taken when the answer gave one.
             takeRunPlan(error.detail.runPlan, error.meta);
@@ -1039,7 +1039,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             if (recovered && accept(error.answerFrom(recovered), recovered)) deepseekFailed = false;
             if (deepseekFailed) {
               deepseekNote = { ...(error.detail.reason ? { reason: error.detail.reason } : {}), ...(recovered ? { conclusion: recovered.line } : {}) };
-              onEvent({ type: "note", message: `DeepSeek's choice on ${decision.label} could not be recovered from its reasoning; falling back to Jev/code` });
+              onEvent({ type: "note", message: `${answeredBy((error.meta as { brain?: BrainMeta }).brain)}'s choice on ${decision.label} could not be recovered from its reasoning; falling back to Jev/code` });
             }
           } else {
             onEvent({ type: "note", message: `falling back to Jev/code on ${decision.label}` });
@@ -1768,9 +1768,21 @@ const ALL_FIGHT_PLANS_FROM_ASCENSION = 8;
 /** …after this floor (act 1's first fights are left to code). */
 const ALL_FIGHT_PLANS_FROM_FLOOR = 3;
 
+/** A brain engine as the console names it (deepseek when there is no brain: v3's client). */
+export function engineLabel(engine: string | undefined): string {
+  const names: Record<string, string> = { deepseek: "DeepSeek", codex: "Codex", claude: "Claude", dsh: "dsh" };
+  return names[engine ?? "deepseek"] ?? String(engine);
+}
+
+/** Who answered a brain question, for the console: the engine, and the one that failed first when the fallback answered. */
+export function answeredBy(brain: BrainMeta | undefined): string {
+  if (!brain) return "DeepSeek";
+  return brain.fell_back_from ? `${engineLabel(brain.engine)} (for ${engineLabel(brain.fell_back_from.engine)})` : engineLabel(brain.engine);
+}
+
 async function ensureFightPlan(
   env: DecisionEnv,
-  deepseek: Pick<Brain, "askJson">,
+  deepseek: Pick<Brain, "askJson"> & Partial<Pick<Brain, "engineFor">>,
   journal: RunJournal,
   logFile: string,
   onEvent: (event: LoopEvent) => void,
@@ -1809,7 +1821,7 @@ async function ensureFightPlan(
       : {}),
     ...(current && current.fight === fight ? { previous_plan: fightPlanJson(current), note: "A new boss/elite enemy appeared: revise the plan for the rest of the fight." } : {}),
   };
-  onEvent({ type: "note", message: `asking DeepSeek for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
+  onEvent({ type: "note", message: `asking ${engineLabel(deepseek.engineFor?.("fight-plan"))} for the ${kind} fight plan (floor ${state.run?.floor ?? "?"}${replans > 0 ? ", re-plan" : ""})` });
   try {
     // Label outside "combat/": one call per fight is worth the build-question effort (max), not the
     // per-turn combat effort. A reply that is no fight plan (an empty one, a {choice, reason} echo) takes the
@@ -1857,7 +1869,7 @@ async function ensureFightPlan(
  */
 async function ensureRunPlan(
   env: DecisionEnv,
-  deepseek: Pick<Brain, "askJson">,
+  deepseek: Pick<Brain, "askJson"> & Partial<Pick<Brain, "engineFor">>,
   journal: RunJournal,
   logFile: string,
   observedTs: string,
@@ -1881,7 +1893,7 @@ async function ensureRunPlan(
     memory: { ...memory },
     ...(screenMemory.runPlan ? { previous_plan: toJsonValue(screenMemory.runPlan) } : {}),
   };
-  onEvent({ type: "note", message: `asking DeepSeek for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
+  onEvent({ type: "note", message: `asking ${engineLabel(deepseek.engineFor?.("run-plan"))} for the run plan (${trigger}, floor ${state.run?.floor ?? "?"})` });
   try {
     // A reply that is no run plan is recovered from the reasoning or fails: the plan in force stays.
     const { json, meta, recovered, note } = await deepseek.askJson(payload, "run-plan", isRunPlanReply);
