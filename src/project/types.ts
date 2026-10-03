@@ -169,6 +169,11 @@ export interface ScreenMemory {
    */
   boulder?: { fight: string; turn: number; amount: number; waitTurn?: number; since?: number };
   /**
+   * The fight turn ("<run>:<act>:<floor>:<turn>") a combat action last went out on: the turn's first action holding Inferno
+   * or Hellraiser waits for the turn start to settle, the later ones do not (act/turn-start.ts).
+   */
+  turnActed?: string;
+  /**
    * True once a card reward has been skipped on this screen. The mod documents that
    * `skip_reward_cards` "may leave the underlying reward item claimable", and a live run proved it:
    * the loop skipped, re-claimed the same card reward, and skipped again forever.

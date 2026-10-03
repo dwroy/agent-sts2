@@ -53,7 +53,7 @@ import { laterPhaseHps } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
-import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
+import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, infernoCopiesOf, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -927,9 +927,12 @@ function hellraised(card: CardModel): CardModel {
  */
 export const BOULDER_STEP = 5;
 
-/** HP lost at the start of our next turn (Crimson Mantle's per copy, Inferno's 1, anything else already up). */
+/**
+ * HP lost at the start of our next turn (Crimson Mantle's per copy, Inferno's 1 per copy, anything else already up). An
+ * Inferno played in a later turn adds a copy (applyLasting): two Inferno+ up took 2 (C4F14F3XPN0N F33), not 1.
+ */
 function startTurnHpLossOf(player: SimPlayer): number {
-  return player.otherStartLoss + mantleHpCost(player.mantle) + (player.inferno > 0 ? 1 : 0);
+  return player.otherStartLoss + mantleHpCost(player.mantle) + player.infernoCopies;
 }
 
 /** HP-loss events at the start of our turn: each one triggers Inferno and Rupture. */
@@ -1081,6 +1084,8 @@ interface SimPlayer {
   potions: number;
   /** Inferno up (INFERNO_POWER amount): every HP loss on our turn hits every enemy for it. */
   inferno: number;
+  /** Infernos up, each losing 1 HP at the start of our turn (the decision's count, then one more for each played). */
+  infernoCopies: number;
   /** Crimson Mantle up (CRIMSON_MANTLE_POWER: block at the start of our turn, 1 HP per copy). */
   mantle: number;
   /** Rupture stacks: Strength per HP loss on our turn. */
@@ -1730,6 +1735,7 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
   const effect = POWER_EFFECTS[card.cardId];
   if (effect && card.type === "Power") {
     const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
+    if (effect.effect === "inferno") player.infernoCopies += 1;
     if (effect.effect === "keepsBlock") player.keepsBlock = true;
     else if (effect.effect === "unmovable") player.unmovable = true;
     else if (effect.effect === "hellraiser") player.hellraiser = true;
@@ -2307,6 +2313,8 @@ function simulate(
     feelNoPain: base.feelNoPain ?? 0,
     potions: input.potions,
     inferno: base.inferno ?? 0,
+    // The decision's Infernos (combat-plan counts them off the state); without the count, from the power's amount.
+    infernoCopies: base.infernoCopies ?? infernoCopiesOf(base.inferno ?? 0),
     mantle: input.playerPowers["CRIMSON_MANTLE_POWER"] ?? 0,
     rupture: base.rupture ?? 0,
     pyre: input.playerPowers["PYRE_POWER"] ?? 0,
@@ -2354,7 +2362,7 @@ function simulate(
   if (player.disintegration + player.constrict === 0) player.disintegration = base.endTurnHpLoss ?? 0;
   // What of the start-of-turn loss and AoE is not Mantle or Inferno (relics, other powers): kept as is.
   player.relicAoe = Math.max(0, (base.turnStartAoe ?? 0) - player.inferno * startLossEvents(player) - player.boulder);
-  player.otherStartLoss = Math.max(0, (base.startTurnHpLoss ?? 0) - mantleHpCost(player.mantle) - (player.inferno > 0 ? 1 : 0));
+  player.otherStartLoss = Math.max(0, (base.startTurnHpLoss ?? 0) - mantleHpCost(player.mantle) - player.infernoCopies);
   const byIndex = new Map(input.enemies.map((e) => [e.index, e]));
   const enemies: SimEnemy[] = s.enemies.map((e) => {
     const info = byIndex.get(e.index);
@@ -2603,6 +2611,7 @@ function simulate(
       darkEmbrace: player.darkEmbrace,
       // Lasting powers up by now, played in the line or before (0B5Y F33 T1: Inferno was T1's 0 every turn).
       inferno: player.inferno,
+      infernoCopies: player.infernoCopies,
       rupture: player.rupture,
       startTurnHpLoss: startTurnHpLossOf(player),
       turnStartAoe: turnStartAoeOf(player),

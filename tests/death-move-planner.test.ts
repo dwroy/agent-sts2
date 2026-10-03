@@ -122,10 +122,15 @@ function digest(view: unknown): string {
 const BOARDS = ["0u96-f48-t5-queen-kill", "5gka-f48-t2-queen-mine", "y3xt-f37-t1-shield", "nx48-f33-t7-crab"] as const;
 const RULED = BOARDS.filter((name) => name !== "nx48-f33-t7-crab");
 
-/** Digests of v4 0f63d28's planner on the boards above (JEV_CONTEXT off and v1), MECH_RULES on (its default). */
+/**
+ * Digests of v4 0f63d28's planner on the boards above (JEV_CONTEXT off and v1), MECH_RULES on (its default). 0U96's are
+ * re-pinned at v4-inferno-planner: its draw pile holds both Infernos (none up), and the rollout's later turns now lose 1 HP
+ * per Inferno played at each turn's start (strategy/start-loss.ts; a second one had looked free): its numbers moved and the
+ * rollout's best (all three lines 5-8/8 dead) became Blood Wall, then Uppercut+; the rest of the question as at 0f63d28.
+ */
 const GOLDEN_ON: Record<string, string> = {
-  "0u96-f48-t5-queen-kill:off": "57ebd5df716ce50508b184574f545a2f",
-  "0u96-f48-t5-queen-kill:v1": "a34aaa48fc2a3fe8fa3de8580eeab1ee",
+  "0u96-f48-t5-queen-kill:off": "47e0f43e56058400f3f8ed3a861e1dac",
+  "0u96-f48-t5-queen-kill:v1": "3a068a1fd19acd2277d8089a802e9aa2",
   "5gka-f48-t2-queen-mine:off": "ea2d21a53876060cc500968ffa4ae855",
   "5gka-f48-t2-queen-mine:v1": "4c620f5b109262d63c4d0d2cb209dc55",
   "y3xt-f37-t1-shield:off": "99fa9d304089373588a420e810956b13",
