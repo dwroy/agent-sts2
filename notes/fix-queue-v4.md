@@ -254,3 +254,4 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### 静默猎手 KAY522KT5NXR 复盘回报（运维 codex，2026-10-05 04:37）
 - **非阻塞，学习者数据模型提案：跨读档阶段序列使实验体第三阶段血量被截错**。来源 KAY522KT5NXR 复盘首条、账本 silent-0041，定位 `agent/src/knowledge/monster-db.ts:1009`（优先最长阶段序列）、`agent/src/sim/boss-clock.ts:1503`（取前三项），生成来源 `knowledge/builders/build-monster-db.py:410`、`:275`。学习者证据：本局 F34 路线题把 TEST_SUBJECT 写成100/200/100、总400，两次实际阶段均为100→200→300、总600；静默角色记录的最长序列拼接了六次 SL 的100→200重复，前三项因此取成100/200/100。学习者另回溯 R0HEV5E3QT6G F34/F36 同样错误，first_run 记为该局；本条与 silent-0040 的回合拼接问题分开记录。这里只转录学习者的局号、定位和分析，不补机制、不改模型、不另设审核；交学习者实现、自测、上线。既有 silent-0003、silent-0008 的重复证据由学习者追加原账本，不重复开项。
+- **broker 加 eval-metrics 动作**（运维 2026-10-05 04:26）：eval/metrics.py 调 eval/strength-sources.ts 时 tsx 在 /tmp/tsx-1000/*.pipe 监听，沙箱拒绝（listen EPERM）。给 ops/codex-ops-actions.sh 加白名单动作（沙箱外跑 eval/metrics.py，参数限定），输出写到 paper/materials/<角色>/ 下。A0 这次由观察者在沙箱外跑了，结果 paper/materials/silent/a0-metrics.md。
