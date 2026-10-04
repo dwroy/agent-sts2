@@ -29,7 +29,7 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox):
         verified = subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", merged, "HEAD"],
                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
     task = batch["task"]
-    batch.update(state="done" if rc == 0 else "failed", rc=rc, merged=merged if verified else None)
+    batch.update(state="done" if rc == 0 and verified else "failed", rc=rc, merged=merged if verified else None)
     enqueue("experience-done" if task == "experience-update" else "fix-done",
             f"{task} 批次 {batch_id} 结束：exit {rc}；已核实合入 live：{merged if verified else '无'}。"
             f"回报：{out_dir}/{batch_id}.out。学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。")

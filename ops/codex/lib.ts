@@ -76,6 +76,8 @@ export const SCHEDULER_FILES = [
   "ops/codex-ops-do.sh",
   "ops/codex-ops-learn.py",
   "ops/codex-ops-learner.sh",
+  "ops/learner_checks.py",
+  "ops/learner_jobs.py",
   "ops/paths.sh",
   "ops/paths.py",
   "ops/stall-check.sh",
@@ -224,6 +226,9 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "win-procs": { args: 0, ms: 60_000 },
   "win-kill": { args: 1, ms: 60_000 },
   postmortem: { args: 1, ms: 30_000 },
+  "experience-update": { args: 1, ms: 30_000 },
+  "fix-batch": { args: 0, ms: 30_000 },
+  "learner-merge": { args: 1, ms: 30_000 },
   "learner-status": { args: 0, ms: 30_000 },
   "scheduler-status": { args: 0, ms: 30_000 },
 };

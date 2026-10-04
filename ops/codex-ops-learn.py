@@ -21,6 +21,7 @@ State: ops/codex-ops/learn.json. --character (default silent); CODEX_OPS_DIR / C
 """
 import argparse
 import datetime as dt
+import fcntl
 import json
 import os
 import re
@@ -31,6 +32,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths  # noqa: E402
 from learner_checks import finish_write_batch  # noqa: E402
+from learner_jobs import check_jobs, dispatch_write, pending  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
 SCRIPTS = os.path.dirname(os.path.abspath(__file__))  # this file's ops/ (the scripts)
@@ -128,6 +130,8 @@ def alive(pid):
 def running_batch(state):
     """The batch in progress, if any; a batch whose process is gone (a crash, a restart) is marked failed."""
     for batch_id, batch in state["batches"].items():
+        if batch.get("task", "postmortem") != "postmortem":
+            continue
         if batch.get("state") != "running":
             continue
         if alive(batch.get("pid")):
@@ -233,10 +237,10 @@ def check_pending(state, character):
         return False
     ids = [run for run in (out[1].split(",") if len(out) > 1 else []) if run]
     key = ",".join(ids[:10])
-    if count < 10 or state.get("pending_notified", {}).get(character) == key:
+    if count < 1 or state.get("pending_notified", {}).get(character) == key:
         return False
     state.setdefault("pending_notified", {})[character] = key
-    inbox(f"{NAMES_ZH.get(character, character)}未并入经验库的复盘满 {count} 局（最早 10 局：{key}）。请开发会话发起 experience-update --character {character}。")
+    inbox(f"{NAMES_ZH.get(character, character)}未并入经验库的复盘满 {count} 局（最早 10 局：{key}）。调度器按每局一更自动派 experience-update，工作树忙时并入下一批。")
     return True
 
 
@@ -247,6 +251,7 @@ def cmd_tick(args):
     batch = check_postmortems(state, character)
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)
+    report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     save_state(state)
     print(json.dumps(report, ensure_ascii=False))
 
@@ -345,7 +350,32 @@ def cmd_finish(args):
     elif args.rc != 0:
         lines.append("如果 stderr 或回报里是额度或登录错误：decision-log 记一行，复盘往后顺延，对局照常。")
     enqueue("learner-done", "\n".join(lines))
+    check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    save_state(state)
     print("\n".join(lines))
+    return 0
+
+
+def cmd_write(args):
+    state = load_state()
+    runs = [run for run in args.runs.split(",") if run] if args.runs else pending(ROOT, SCRIPTS, args.character)
+    if args.task == "experience-update":
+        known = {row["run_id"] for row in finished_runs(args.character)}
+        if not runs or len(runs) > 10 or not all(RUN_ID.fullmatch(run) and run in known for run in runs):
+            print("经验批次需要 1–10 个本角色已结束的局号")
+            return 2
+    result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task == "experience-update" else [],
+                            ",".join(runs), "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    save_state(state)
+    print(json.dumps({"dispatched": result}, ensure_ascii=False))
+    return 0 if result else 1
+
+
+def cmd_request_merge(args):
+    if args.branch not in ("codex-dev", "exp-silent"):
+        return 2
+    enqueue("manual", f"学习者合入兜底请求：{args.branch}。仅在学习者提交或合入受阻时，按任务 live 流程合入；无须另设审核。")
+    print("已发送合入兜底事件；运维会话执行 live 流程。")
     return 0
 
 
@@ -364,15 +394,21 @@ def cmd_status(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status"])
+    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge"])
+    parser.add_argument("--task", choices=["experience-update", "fix-batch"], default="fix-batch")
+    parser.add_argument("--branch", default="")
     parser.add_argument("--character", default="silent")
     parser.add_argument("--runs", default="")
     parser.add_argument("--batch", default="")
     parser.add_argument("--rc", type=int, default=1)
     args = parser.parse_args()
     args.character = character_key(args.character) or "silent"
-    handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status}[args.command]
-    return handler(args) or 0
+    handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
+               "write": cmd_write, "request-merge": cmd_request_merge}[args.command]
+    os.makedirs(DIR, exist_ok=True)
+    with open(os.path.join(DIR, "learn.lock"), "a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        return handler(args) or 0
 
 
 if __name__ == "__main__":

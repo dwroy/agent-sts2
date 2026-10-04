@@ -139,6 +139,12 @@ for row in csv.reader(sys.stdin):
     exit 0 ;;
   postmortem)
     exec python3 "$OPS/codex-ops-learn.py" dispatch --runs "$arg" ;;
+  experience-update)
+    exec python3 "$OPS/codex-ops-learn.py" write --task experience-update --runs "$arg" ;;
+  fix-batch)
+    exec python3 "$OPS/codex-ops-learn.py" write --task fix-batch ;;
+  learner-merge)
+    exec python3 "$OPS/codex-ops-learn.py" request-merge --branch "$arg" ;;
   learner-status)
     exec python3 "$OPS/codex-ops-learn.py" status ;;
   scheduler-status)
