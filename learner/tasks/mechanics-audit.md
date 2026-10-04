@@ -3,7 +3,7 @@ title: 机制审计（只出提案）
 tools: Read, Grep, Glob, Bash, Write
 timeout_min: 45
 max_turns: 200
-model: opus
+model.claude: opus
 default.report: {{worktree}}/notes/mechanics-residuals.md
 default.summary: {{worktree}}/experiments/mechanics/summary.json
 default.monster_db: {{worktree}}/knowledge/common/monster-db.json

@@ -1,6 +1,6 @@
 # 离线学习者（learner）
 
-V4 架构 §1 的「学习者」、§4 的 M4（docs/v4-architecture.md）：把自我迭代从对局里拆出来，三类学习任务（复盘、经验库更新、批量修 bug）写成**与引擎无关的任务说明**，由一个**统一启动器**交给 CLI agent 执行。引擎可切换：现在支持 **Claude（订阅，本机登录态）**；codex 的调用已写好、用假程序测过，本机装好并登录后即可用。
+V4 架构 §1 的「学习者」、§4 的 M4（docs/v4-architecture.md）：把自我迭代从对局里拆出来，三类学习任务（复盘、经验库更新、批量修 bug）写成**与引擎无关的任务说明**，由一个**统一启动器**交给 CLI agent 执行。引擎可切换：**codex（ChatGPT 订阅，gpt-6.1-sol / xhigh；Dai 2026-10-04 定为学习者引擎）** 和 **Claude（订阅，本机登录态）**，两者都跑通过真实冒烟。
 
 ```
 learner/
@@ -45,7 +45,8 @@ agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --s
 | `--task <名字或路径>` | 必填；名字 = learner/tasks/<名字>.md |
 | `--cwd <目录>` | 必填；agent 的工作目录，必须在 ~/Projects/sts2-jev 里 |
 | `--set name=value` | 任务参数，可重复；值里可以有逗号和等号 |
-| `--model <模型>` | 如 `opus`、`sonnet`；不给时用任务 front matter 的 `model`，再没有就用 CLI 默认 |
+| `--model <模型>` | 如 `gpt-6.1-sol`、`opus`；不给时用任务 front matter 的 `model.<引擎>`，再没有：codex 用 gpt-6.1-sol，claude 用 CLI 默认 |
+| `--effort <档位>` | 推理强度（codex 的 `model_reasoning_effort`，claude 的 `--effort`）；不给时用 `effort.<引擎>`，再没有：codex 用 xhigh，claude 不传 |
 | `--max-turns N` | claude 的轮数上限；默认取任务的 `max_turns`（codex 没有这个参数，只靠超时） |
 | `--timeout-min N` | 超时（分钟），到时按 PID 先 SIGTERM、10 秒后 SIGKILL；默认取任务的 `timeout_min` |
 | `--dry-run` | 只打印最终提示、命令行、被去掉的环境变量名；不启动 agent，不建日志 |
@@ -91,7 +92,8 @@ title: 复盘
 tools: Read, Grep, Glob, Bash        # 只能从 Read Grep Glob Bash Edit Write 里选；决定权限
 timeout_min: 120
 max_turns: 400
-model: opus                          # 可选
+model.claude: opus                   # 可选，按引擎写；不写 = codex gpt-6.1-sol、claude CLI 默认
+effort.codex: xhigh                  # 可选，按引擎写；不写 = codex xhigh；单独的 model: / effort: 会报错（会落到所有引擎上）
 default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用内置参数
 ---
 正文（中文），用 {{参数}}。
@@ -109,7 +111,22 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 - 子进程环境设 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`：不读交互会话的自动记忆，任务说明就是全部上下文。
 - 限制：Bash 没法按路径限定（只能按命令前缀拒绝），所以 Bash 里的越界靠 deny 规则 + 任务说明里的安全规矩兜底；日志事后再做 key 扫描（下面）。
 
-**codex**（`codex exec`）：`--json`、`--cd <cwd>`、只读任务 `--sandbox read-only`，会写的任务 `--sandbox workspace-write` 加 `--add-dir ~/Projects/sts2-jev`、`-c approval_policy="never"`、`--model`、`-`（提示走 stdin）；`--with-tools` 时用 `-c mcp_servers.gkb.command=… / .args=[…] / .env={…}`。
+**codex**（`codex exec`，codex-cli 0.160，ChatGPT 订阅登录态）：沿用对局大脑的 codex 管道（agent/src/brain/engines/codex.ts）：
+- 程序：`LEARNER_CODEX_BIN`，否则和大脑一样找（PATH，再 ~/.local/node/bin/codex）；登录目录：`LEARNER_CODEX_HOME`，否则 `CODEX_HOME`，否则 ~/.codex；子进程环境 = 去掉 key 的环境 + 大脑的 `codexEnv`（CODEX_HOME、codex 的 trace-safe 日志、程序目录放 PATH 最前）；
+- 运行前做大脑的启动检查 `checkCodex`：`--version`、登录文件在、$CODEX_HOME 里没有 AGENTS.md、模型目录里有这个模型且支持这个 effort；不过就 exit 3；
+- 命令行：`exec --json --ignore-user-config --ignore-rules --cd <cwd> -c default_permissions="learner" -c permissions.learner.filesystem={…} --model <模型>`，`-c approval_policy="never"`、`web_search="disabled"`（游戏知识只能来自对局日志）、`model_reasoning_effort=<effort>`、`allow_login_shell=false`、`skills.include_instructions=false`、`skills.bundled.enabled=false`、不检查更新、不写 history、不发 analytics；大脑关掉的 feature 除了 `shell_tool`、`unified_exec`、`code_mode_host`（学习者要用工具）全部 `--disable`；`-` = 提示走 stdin；
+- **key 隔离（Dai 2026-10-04 批准）**：codex 自带的 read-only / workspace-write 沙箱能读所有文件，所以不用 `--sandbox`，改用 codex 的权限配置 `learner`（engines.ts `codexPermissions`）：
+  - 全部可读（`:root`）；只读任务什么都不能写；写任务另外可写工作目录（`:project_roots`）、项目根和临时目录（`:tmpdir`、`:slash_tmp`），等同原来的 workspace-write + `--add-dir <项目根>`；不联网；
+  - 两种任务都读不到：~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、codex 的 auth.json（codex 在沙箱外的自己进程里读登录，实测照常登录）、项目根和它所属主检出下所有 `.env` / `*.env`（`**` glob，`glob_scan_max_depth=8`），再加上启动器在磁盘上找到的每个 key 文件的绝对路径（根、agent/、一级子目录、.worktrees/*、.claude/worktrees/* 及其 agent/）；
+  - **运行前自检**：每次 codex 运行前，用 `codex sandbox -P learner`（同一份配置）起一个 shell，对每个找到的 key 文件 `head -c 0`，只输出打得开的文件名；有任何一个打得开、或自检本身失败，就 exit 3，只列文件名；
+  - 实测（2026-10-04）：shell 里读 key 文件全部被拒（只读和写任务）；写任务里 apply_patch 能改工作目录里的文件，写项目外被拒（「writing outside of the project」），shell 写 ~ 被拒（Read-only file system）；apply_patch 是 codex 在沙箱里起的子进程（`--codex-run-as-apply-patch`），在同一配置下改一个 .env 诱饵被拒（「Failed to read file to update」）；模型的 JS exec 环境没有绕过 shell 的读文件办法。模型自己看到权限说明后会拒绝去碰被禁的路径（探针里它不肯尝试），所以「apply_patch 改 .env」是直接在沙箱里跑 codex 的 apply_patch 子进程验证的；
+  - 局限：glob 只覆盖命令启动时已存在的文件；MCP 服务器（gkb）在沙箱外运行，它只读知识库和日志；日志事后的 key 扫描照旧保留。
+- 和大脑不同：**不关项目文档**（不设 `project_doc_max_bytes=0`），codex 从 git 根到 --cd 读本仓库的 AGENTS.md；会话不加 `--ephemeral`，存在 $CODEX_HOME/sessions，可以 `codex exec resume <会话 id>` 接着做；
+- 启动器在提示前面加一段【启动器说明（codex）】，把任务里通用的工具名（Read / Grep / Glob / Bash / Edit / Write）对到 shell 和 apply_patch，并说明只读任务里只读命令可以用（第一次冒烟没有这段：codex 找不到叫 Read、Grep 的工具，又把「不运行任何命令」理解成不许用 shell，什么都没读）；
+- `--with-tools`：`-c mcp_servers.gkb.command / .args / .env`，加 `default_tools_approval_mode="approve"`（不加的话 approval_policy=never 会把每次 kb_* 调用都拒掉，实测过）；
+- 超时和 Ctrl-C：agent 在自己的进程组里启动，按 PID 杀整个组（npm 的 node 启动器、codex 本体和它起的 shell 一起停）；
+- 登录被拒（401、令牌过期）：照大脑的做法让 codex 刷新一次令牌（`refreshCodexAuth`），提示重跑，不自动重跑；
+- **没有用量护栏**（Dai 2026-10-04 19:53）；codex 没有轮数上限参数，只靠超时。
 
 **环境变量**：子进程里去掉 `DEEPSEEK_*`、`TYPESAFE_*`、`JEV_*`、`OPENROUTER_*`、`ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN`、`OPENAI_API_KEY`、`CODEX_API_KEY`、名字里带 KEY/TOKEN/SECRET/PASSWORD 的变量，以及上层 Claude Code 会话自己的 `CLAUDECODE`、`CLAUDE_CODE_*`（学习者是一个全新的顶层会话）。例外：claude 引擎保留 `CLAUDE_CODE_OAUTH_TOKEN`（这就是订阅登录态）。`--dry-run` 只列被去掉的变量名，从不打印值。
 
@@ -136,15 +153,22 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 
 agent/src/brain/tools/registry.ts 里已有 7 个 kb_* 工具（kb_monster、kb_encounter、kb_experience、kb_stats、kb_old_knowledge、kb_postmortem、kb_runs）。`--with-tools` 按 agent/src/brain/tools/mcp-launch.ts 的 `mcpLaunchSpec` 起 stdio MCP 服务器（服务名 gkb，工具在 Claude 里叫 `mcp__gkb__kb_*`，允许规则 `mcp__gkb`），另外把 `KNOWLEDGE_LESSONS_FILE` 指到 ~/Projects/sts2-jev/notes/lessons.md。知识目录默认是启动器所在工作树的 knowledge（`--knowledge-dir` 可改，例如指到 jev-sts2-v3/src/knowledge 取对局在用的最新数据），进阶默认取 `TARGET_ASCENSION`，再没有就是 9。
 
-**现状**：服务器 agent/src/brain/tools/mcp-server.ts 在 v4-brain 分支上开发（这里不写），还没合进来，所以 `--with-tools` 现在会报错退出（exit 3）并说明原因；合入后不用改启动器就能用（测试也会自动切到「挂上」的分支）。工具调用在 stream-json 里有完整的输入和输出。
+**现状**：服务器 agent/src/brain/tools/mcp-server.ts 已在本仓库；找不到时 `--with-tools` 报错退出（exit 3）并说明原因。claude 的工具调用在 stream-json 里有完整的输入和输出；codex 的在 `mcp_tool_call` 事件和会话记录里（2026-10-04 实测 kb_runs 可用，见上面 codex 一节）。
 
-## 以后接 codex 要做什么
+## codex 的摘要和会话记录
 
-1. **Dai**：安装 Codex CLI，`codex login` 用 ChatGPT 账号登录（学习者只走订阅登录态；启动器会去掉 `OPENAI_API_KEY`、`CODEX_API_KEY`）。装好后 `which codex` 能找到即可，或设 `LEARNER_CODEX_BIN`。
-2. 对一下 `codex exec --help`：`--json`、`--cd`、`--sandbox`、`--add-dir`、`--model`、`-c key=value`、`-` 读 stdin 这几项（按官方 CLI 参考写的；`--full-auto` 已被官方标为过时，用 `--sandbox workspace-write` 代替）。
-3. 跑一次冒烟：`agent/node_modules/.bin/tsx learner/run.ts --engine codex --task smoke --set run=<id> --cwd <工作树>`，确认 summary.ts 认得它的事件名（thread.started、turn.completed 的 usage、item.completed 的 agent_message / command_execution）；codex 不报成本，摘要写「未提供」。
-4. 注意：codex 没有轮数上限参数，只靠 `--timeout-min`；workspace-write 沙箱默认不联网（本地 git、tsc、vitest 不受影响）；codex 读 AGENTS.md 而不是 CLAUDE.md（仓库里两者都没有）。
-5. `--with-tools` 走 `-c mcp_servers.gkb.*`，服务器合入后要实测一次 codex 能否连上。
+summary.ts 按真实事件流解析（2026-10-04 实测，codex-cli 0.160）：`thread.started`（会话 id）、`turn.started`、`item.started` / `item.completed`（`agent_message`、`reasoning`、`command_execution`（command、aggregated_output、exit_code）、`file_change`、`mcp_tool_call`（server、tool、status）、`error` = 警告）、`turn.completed` 的 usage（`input_tokens` 含 cache、`cached_input_tokens`、`cache_write_input_tokens`、`output_tokens` 含推理、`reasoning_output_tokens`）、`turn.failed`、`error`（「Reconnecting... n/5」是重连，不算失败）。摘要里的「输入」是去掉 cache 的部分；codex 不报成本。
+- 每个事件按到达时间记进摘要的 `timing`（首个事件、模型首个输出、首次和末次工具、工具内时间、逐项时间线），stderr 行带 `t_ms`；
+- gpt-6.1-sol 的工具都经过一个 JavaScript `exec` 工具（code mode），只有跑 shell 的那部分会出现在 `--json` 里。所以运行后启动器再读 codex 自己的会话记录（$CODEX_HOME/sessions/…/rollout-…-<会话 id>.jsonl），在摘要里给出**AGENTS.md 是否加载**（加载了哪个目录的）和**模型的全部工具调用**。
+
+### 冒烟测试（2026-10-04 20:14，codex，gpt-6.1-sol / xhigh）
+`STS2_WORKSPACE=~/Projects/agent-sts2 agent/node_modules/.bin/tsx learner/run.ts --engine codex --task smoke --set run=9VHPE06AC7R8 --cwd <工作树>`
+- 状态 success、退出码 0；1 轮；AGENTS.md 已加载（工作树根）；模型的工具调用 exec×3，里面跑了 8 条只读 shell 命令（rg 找行号、sed 按行读这一节；另外 AGENTS.md 的「先读」让它读了 README、STATE、decision-log 末尾、学习协议）；
+- token：输入 50.1k（去掉 cache）、cache 读 29.6k、输出 949（推理 447）；墙钟 43.5 s：codex 启动到发出请求约 2.5 s，模型首个输出 5.8 s，工具本身合计不到 1 s，其余都是模型（按 AGENTS.md 读文档后的推理约 10 s，最后的总结约 16 s）；
+- 三句话总结和 lessons.md 里 9VHP 一节一致；lessons.md 没变。
+- 第一次（20:12，还没有启动器说明）：codex 没读任何东西就交了「没有 Grep / Read 工具」的回答，36.3 s——这是加启动器说明的原因。
+- 只读复盘试跑（20:16，T0ZSE8L3MCDA，postmortem 任务改成只读、整节作为回答输出、不读旧复盘）：success，墙钟 1051 s（17.5 min）；24 次 exec 里跑了 45 条 shell 命令（rg 按局号抽、python 流式读 states.jsonl），工具本身合计 1.8 s；token 输入 187.8k、cache 读 2.45M（命中 92.9%）、输出 26.1k（推理 13.1k）；开头按 AGENTS.md 读 README / STATE / 协议约 56 s；写出一节（3 条经验 + 记录 + 机制），lessons.md 前后 sha256 相同。
+- `--with-tools` 实测（20:15，effort low）：MCP gkb 连上，`kb_runs` 返回最近 3 局（T0ZS、9VHP、4AWD，和 runs.jsonl 一致），15.2 s。
 
 ## 和运维会话现有流程的对应关系（建议，不改 ops-session-prompt.md）
 

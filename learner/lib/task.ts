@@ -5,8 +5,11 @@
  *   ---
  *   title: 复盘
  *   tools: Read, Grep, Glob, Bash          (built-in tools the agent may use; decides the permissions)
- *   timeout_min: 120                       (optional defaults for --timeout-min / --max-turns / --model)
+ *   timeout_min: 120                       (optional defaults for --timeout-min / --max-turns)
  *   max_turns: 400
+ *   model.claude: opus                     (optional, per engine: defaults for --model / --effort; codex
+ *   model.codex: gpt-6.1-sol                otherwise gets the launcher's gpt-6.1-sol at xhigh)
+ *   effort.codex: xhigh
  *   default.code_dir: {{project_root}}/jev-sts2-v3   (a parameter's default; may use the built-ins)
  *   ---
  *
@@ -43,7 +46,10 @@ export interface TaskSpec {
   tools: TaskTool[];
   timeoutMin?: number;
   maxTurns?: number;
-  model?: string;
+  /** model.<engine>: the task's model per engine (a plain `model:` would reach every engine, so there is none). */
+  models: Partial<Record<TaskEngine, string>>;
+  /** effort.<engine>: the reasoning effort per engine (claude --effort, codex model_reasoning_effort). */
+  efforts: Partial<Record<TaskEngine, string>>;
   /** Characters the task is for (front matter `characters:`); undefined = any. */
   characters?: string[];
   /** Parameter defaults, still holding built-in placeholders. */
@@ -54,6 +60,11 @@ export interface TaskSpec {
 
 /** The character built-ins (characterBuiltins); fixed, set with --character. */
 export const CHARACTER_PARAMS = ["character", "character_name", "character_dir", "experience_path", "changelog_path", "is_ironclad"] as const;
+/** Engines a task may set a model or effort for (engines.ts ENGINES). */
+export const TASK_ENGINES = ["claude", "codex"] as const;
+export type TaskEngine = (typeof TASK_ENGINES)[number];
+const EFFORT_VALUE = /^[a-z]+$/;
+
 /** Parameters the launcher fills; --set may override only `worktree` and `logs_dir`. */
 export const BUILTIN_PARAMS = ["cwd", "worktree", "project_root", "logs_dir", "scratch", "task", ...CHARACTER_PARAMS] as const;
 const FIXED_BUILTINS = new Set<string>(["cwd", "project_root", "scratch", "task", ...CHARACTER_PARAMS]);
@@ -128,7 +139,7 @@ function positiveInt(raw: string, key: string, path: string): number {
 export function parseTask(text: string, name: string, path: string): TaskSpec {
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/.exec(text);
   if (!match) throw new LearnerUsageError(`${path}: 缺少开头的 --- front matter ---`);
-  const spec: TaskSpec = { name, path, title: name, tools: [], defaults: {}, body: match[2]!.trim() + "\n" };
+  const spec: TaskSpec = { name, path, title: name, tools: [], models: {}, efforts: {}, defaults: {}, body: match[2]!.trim() + "\n" };
   let sawTools = false;
   for (const rawLine of match[1]!.split(/\r?\n/)) {
     const line = rawLine.trim();
@@ -146,7 +157,14 @@ export function parseTask(text: string, name: string, path: string): TaskSpec {
       }
     } else if (key === "timeout_min") spec.timeoutMin = positiveInt(value, key, path);
     else if (key === "max_turns") spec.maxTurns = positiveInt(value, key, path);
-    else if (key === "model") spec.model = value;
+    else if (key === "model" || key === "effort") throw new LearnerUsageError(`${path}: 「${key}」要按引擎写：${TASK_ENGINES.map((engine) => `${key}.${engine}`).join(" / ")}`);
+    else if (key.startsWith("model.") || key.startsWith("effort.")) {
+      const [field, engine] = key.split(".", 2) as [string, string];
+      if (!(TASK_ENGINES as readonly string[]).includes(engine)) throw new LearnerUsageError(`${path}: 不认识的引擎「${engine}」（${key}），可用：${TASK_ENGINES.join(", ")}`);
+      if (!value) throw new LearnerUsageError(`${path}: ${key} 没有值`);
+      if (field === "effort" && !EFFORT_VALUE.test(value)) throw new LearnerUsageError(`${path}: ${key} 要是 low / medium / high / xhigh 这类小写词，现在是「${value}」`);
+      (field === "model" ? spec.models : spec.efforts)[engine as TaskEngine] = value;
+    }
     else if (key === "characters") {
       spec.characters = value.split(",").map((item) => item.trim()).filter(Boolean).map((item) => {
         const id = characterKey(item);
