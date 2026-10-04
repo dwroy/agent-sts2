@@ -109,7 +109,7 @@ export interface CardModel {
   /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
   ethereal?: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
+  special: "malaise" | "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -773,7 +773,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // An X-cost Attack hitting X times (Skewer 「造成{Damage}点伤害X次」, Eradicate, Heavenly Drill) is Whirlwind's
   // single-target kin: X hits at play time. Without it Skewer was one hit whatever X was (ZRYR5WLG6E9K F39 T1: played
   // at 0 energy after Unrelenting+, counted 8 x1.5 into Vulnerable; planned 70, dealt 58).
-  const special = SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
+  const special = cardId === "MALAISE" && !bool(card["upgraded"]) && bool(card["costs_x"]) ? "malaise" :
+    SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
 
   // Ambiguous or conditional vars, by id.
   switch (cardId) {
@@ -836,7 +837,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force") {
+  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force" || special === "malaise") {
     known = true; // its whole value is the Sandpit count / the block doubled / the Attacks doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable

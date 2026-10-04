@@ -17,8 +17,8 @@ One CSV per character, paper/data/learning-curve-<character>.csv, one row per as
   ascension and after the start of every earlier run, i.e. the first run that could use them played this ascension
   (a run's start: its first logs/run-config.jsonl row, else the previous run's end). Shipped after the last run: a row
   with an empty ascension ("not played yet").
-- repeats: "repeat" evidence (the same mistake again) in runs at this ascension; repeats_after_ship: those logged after
-  the item shipped.
+- repeats: "repeat" evidence (the same mistake again) in runs at this ascension; repeats_after_ship: those in runs
+  starting at or after shipping, regardless of when the post-mortem was logged.
 
 Usage: python3 eval/learning-curve.py [--character silent] [--logs DIR] [--ledger FILE] [--out-dir DIR] [--print]
 Default: every character with a run in runs.jsonl. Python 3 stdlib only (paper_dataset.py runs it).
@@ -45,6 +45,7 @@ def load(name, path):
 
 
 metrics = load("eval_metrics", os.path.join(ROOT, "eval", "metrics.py"))
+ledger_tools = load("ledger_tools", os.path.join(ROOT, "learner", "ledger.py"))
 
 COLUMNS = ["character", "ascension", "runs", "wins", "first_try_wins", "sl_wins", "mean_floor", "mean_first_try_floor",
            "first_run", "last_run", "started", "ended", "items_found", "items_found_prior_yes", "items_shipped",
@@ -87,18 +88,8 @@ def curve(character, logs, items):
     for row in jsonl(os.path.join(logs, "sl-attempts.jsonl")):
         if row.get("run_id"):
             sl.setdefault(row["run_id"], []).append(row)
-    starts = {}
-    for row in jsonl(os.path.join(logs, "run-config.jsonl")):
-        t = when(row.get("ts"))
-        if row.get("run_id") and t and (row["run_id"] not in starts or t < starts[row["run_id"]]):
-            starts[row["run_id"]] = t
-    # Each run's start (run-config, else the previous run's end) and ascension, in file order.
-    previous_end = None
-    timeline = []
-    for run in runs:
-        start = starts.get(run["run_id"]) or previous_end
-        timeline.append((start, run))
-        previous_end = when(run.get("ended")) or previous_end
+    starts = ledger_tools.run_starts(runs, jsonl(os.path.join(logs, "run-config.jsonl")))
+    timeline = [(starts.get(run["run_id"]), run) for run in runs]
     asc_of = {run["run_id"]: run.get("ascension") for run in runs}
 
     by_asc = {}
@@ -128,7 +119,7 @@ def curve(character, logs, items):
         found = [i for i in mine if i.get("asc") == asc]
         shipped = sorted(i for i, a in shipped_at.items() if a == asc)
         reps = [(item, e) for item in mine for e in item.get("evidence", []) if e.get("role") == "repeat" and asc_of.get(e.get("run")) == asc]
-        late = [1 for item, e in reps if item.get("shipped_at") and (e.get("added") or "") > item["shipped_at"]]
+        late = [1 for item, e in reps if ledger_tools.evidence_after_ship(item, e, starts)]
         starts_known = [s for s in g["starts"] if s]
         ends = [when(r.get("ended")) for r in g["runs"] if when(r.get("ended"))]
         rows.append({

@@ -201,7 +201,7 @@
 - 小：codex xhigh 在路线字段里输出乱码（77 次中 3 次，如「keep出来ketøy…」），re-ask 能修好。 已修（10-04，v4-live 0b12aa1，V4.6.routekeep）
 ### V4.6 D4VF/3B4K/4AWD 复盘（10-04）
 - SL 名单：把 AXEBOT（巨斧机器人）作为 hard-fight 加进 sl-elites.json。4AWD F40 进场 73% 仍阵亡；3B4K F45 进场 85% 掉 56 血。act3-a9 里「走廊进场 ≥60% 时 0 死」这句需要更新。
-- outcome-stats 加载时机：进程第一次读取后就缓存，文件刷新后不重新读。4AWD 拿到的仍是只有 A8 的表，要到 9VHP 才用上 A9 数据。建议文件变化时重载，或者 autoplay 等赛后刷新完成再开下一局。
+- outcome-stats 加载时机：进程第一次读取后就缓存，文件刷新后不重新读。4AWD 拿到的仍是只有 A8 的表，要到 9VHP 才用上 A9 数据。建议文件变化时重载，或者 autoplay 等赛后刷新完成再开下一局。 **已修（2026-10-05 06:11运维核实，源码2650aed8，live发布5f74cd50，main已包含于561f2cbd，eval S1.fix4）：按角色文件路径、mtime、size使缓存失效；固定测试覆盖等长刷新、大小变化及缺失/损坏恢复。**
 - SL 参照：3B4K 第 3–6 次都以第 2 次为参照，而最好的是第 1 次（T8，boss 309）。8939eb0 的 ANCHOR 应该已经覆盖，需在下一批核实。
 - SL 白打判定：3B4K 第 4 次标记为 differs:true，但 deviation.plays 和 replacement 不一致，结果与第 2 次相同。这种情况应按 differs:false 处理。 已修（10-04，v4-live 0b12aa1，V4.6.routekeep）
 - codex 路线字段：输出「keep」加乱码、又没有节点 id 时，直接当作 keep，不要重问。这 3 局共重问 12 次，每次 10–20 s；其中 3 次重问后仍是乱码。 已修（10-04，v4-live 0b12aa1，V4.6.routekeep）
@@ -257,4 +257,14 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 - **broker 加 eval-metrics 动作**（运维 2026-10-05 04:26）：eval/metrics.py 调 eval/strength-sources.ts 时 tsx 在 /tmp/tsx-1000/*.pipe 监听，沙箱拒绝（listen EPERM）。给 ops/codex-ops-actions.sh 加白名单动作（沙箱外跑 eval/metrics.py，参数限定），输出写到 paper/materials/<角色>/ 下。A0 这次由观察者在沙箱外跑了，结果 paper/materials/silent/a0-metrics.md。 2026-10-05 05:22进度：本批fix-batch因ops文件只读跳过；运维权限同样将broker文件设为只读，已交收件箱请Dai安排有相应写权限的执行方。
 
 ### 主目录自测误收学习者运行夹具（运维 codex，2026-10-05 05:22）
-- **非阻塞，工具问题：TypeScript通配纳入learner/runs临时源码**。定位 `agent/tsconfig.json:23`，include为`../learner/**/*.ts`，没有排除学习者运行产物。证据批次20261005-041302-fix-batch（R0HEV5E3QT6G/KAY522KT5NXR等静默证据的学习任务）：主目录合入S1.fix3后运行`nice -n 19 bash tools/test-sandbox.sh`（cwd=agent），tsc exit 1，343条诊断全部来自`learner/runs/20261005-041302-fix-batch/`中的临时测试和poison-src源码，没有实际源码路径诊断，日志`/tmp/sts2-fix3-main-sandbox-tests.log`。同一暂存合并内容已复制到干净校验工作树验证；原始运行归档保留。交学习者修正编译包含范围，对局未因此停下。
+- **非阻塞，工具问题：TypeScript通配纳入learner/runs临时源码**。定位 `agent/tsconfig.json:23`，include为`../learner/**/*.ts`，没有排除学习者运行产物。证据批次20261005-041302-fix-batch（R0HEV5E3QT6G/KAY522KT5NXR等静默证据的学习任务）：主目录合入S1.fix3后运行`nice -n 19 bash tools/test-sandbox.sh`（cwd=agent），tsc exit 1，343条诊断全部来自`learner/runs/20261005-041302-fix-batch/`中的临时测试和poison-src源码，没有实际源码路径诊断，日志`/tmp/sts2-fix3-main-sandbox-tests.log`。同一暂存合并内容已复制到干净校验工作树验证；原始运行归档保留。交学习者修正编译包含范围，对局未因此停下。 **已修（2026-10-05 06:11运维核实，源码7bc83580，live发布5f74cd50，main已包含于561f2cbd）：排除learner/runs归档源码，保留learner实现编译检查；编译范围回归撤修复失败、恢复通过。本项为纯工具，不单独加对局版本。**
+
+### 静默猎手 XYYQYBRM2A01 复盘回报（运维 codex，2026-10-05 05:39）
+- **非阻塞，学习者机制模型提案：萎靡的X减益漏建模、零能量仍获固定价值**。来源 XYYQYBRM2A01 复盘首条、账本 silent-0051（机制证据 silent-0053），定位 `agent/src/reflex/card-model.ts:767`、`:771`、`:772`、`:841`、`:844`，以及 `agent/src/reflex/turn-solver.ts:1510`（复盘只读live 00fa8f79）。学习者证据：F33六次耗尽能量后施放未升级萎靡，力量与虚弱均未因此变化，首战T3候选仍计3分；F30 T1实际X3令力量−6→−9、虚弱1→4，临时尖啸恢复后仍−3。更早KAY522KT5NXR F9 T3已有零X，F12 T3的X1建立−1力量与1虚弱，first_run为KAY。学习者区分零X自身减益与开信刀第三技能5伤，不声称调整时点必胜、不补升级规则。只转录证据，交学习者实现、自测、上线，运维不改机制或另设审核。
+- **非阻塞，纯统计bug：晚写复盘被误计为上线后重犯**。来源 XYYQYBRM2A01 复盘第三条、账本 silent-0052，定位 `learner/ledger.py:280`、`:285`、`:286`。学习者证据：本局2026-10-05 05:05:41.432+08:00结束，运行bb19732f+dirty；silent-0008于05:22:46登记S1.fix3，正常追补repeat时工具只比较入账时间added与shipped_at，误计after-shipping repeat，未检查错误发生时间或实际生效版本。交学习者修正统计口径并保留原始账本历史；本轮dataset沿现脚本生成，暂不据该计数推断上线后效果。既有毒模型silent-0008的证据已由学习者追加，本局早于修复，不重复开毒模型待办。
+
+### 合入兜底后缺少沙箱外完整检查（运维 codex，2026-10-05 05:44）
+- **非阻塞，调度工具问题**。定位 `ops/learner_checks.py:37`：完成事件回报`merged=null`时直接返回，运维随后按live流程成功兜底合入也没有重新触发完整tsc + vitest。证据批次20261005-051301-experience-update：学习者cf3de824自测通过、因decision-log冲突未合；运维保留记录后合入c5b9123b并登记S1.exp6/live 69630ae6，live沙箱145文件1888用例通过，但无沙箱外补跑动作。请求有broker写权限的学习任务提供按批次校验实际合入、锁内补完整检查并发learner-checks的动作；去重且保留原失败/兜底历史，运维不改宽沙箱出口。已在收件箱及for-dai附这次的完整补跑命令。
+
+### 单次动作超时触发卡死提醒（运维 codex，2026-10-05 05:51）
+- **非阻塞，监测判读问题**。定位 `ops/stall-check.sh:25`，尾部四行出现`cannot reach the STS2-Agent mod`即追加stuck/unreachable，没有结合持续时间或后续Codex决策。证据局K3676LU8B0UH A1 F36，控制台`logs/console/20261005-050828-ccf1fcde+dirty.log`：05:44:46一次choose_event_option请求超时，05:44:48已开始事件决策；05:50送达的stall提醒仍引用该片段，而本轮检查日志已推进F40，mod为REST且进程存活，stall-check返回OK（决策19秒、控制台6秒）。请学习者依据当前状态与连续失败证据区分单次超时和持续卡住，保留对实际持续无法访问mod的检测；运维本轮只登记，不改只读调度器。
