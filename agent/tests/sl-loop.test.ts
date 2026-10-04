@@ -10,12 +10,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AppConfig } from "../src/config.js";
-import { loadConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { JevAskResult, JevClient } from "../src/jev/client.js";
-import { runLoop } from "../src/loop.js";
-import { ModClient } from "../src/mod/client.js";
+import type { AppConfig } from "../src/core/config.js";
+import { loadConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+import { runLoop } from "../src/hand/loop.js";
+import { ModClient } from "../src/hand/mod/client.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import { gameOverPayload, testKnowledge } from "./scenarios.js";
 import { bossBoard, menuBoard } from "./sl-support.js";

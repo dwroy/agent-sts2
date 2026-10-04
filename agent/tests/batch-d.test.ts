@@ -5,11 +5,11 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AskDecision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { modelHandCard } from "../src/strategy/card-model.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
+import type { AskDecision } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { modelHandCard } from "../src/reflex/card-model.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;

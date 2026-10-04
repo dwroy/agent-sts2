@@ -11,7 +11,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { cardValue, type DeckProfile } from "../src/strategy/card-value.js";
+import { cardValue, type DeckProfile } from "../src/hand/screens/card-value.js";
 
 describe("card tiers from the A8 outcome data", () => {
   const deck: DeckProfile = { size: 15, aoe: 1, draw: 2, scaling: 1, frontload: 3, block: 2, exhaust: 0, basics: 8, copies: new Map() };

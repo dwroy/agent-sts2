@@ -20,9 +20,9 @@ import { closeSync, openSync, readSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 
-import { restStart, ROUTE_REVIEW_NOTE } from "../src/screens/route-review.js";
-import { checkRoute, floorOfRow, isKeep, NEXT_REST_CLEAR, nextRestCompare, nextRestFacts, nextRestStretches, nextRestVersus, routeFacts, routeIds, routeMapFromView, stretchOf, type ClearMargin, type Stretch } from "../src/strategy/route-map.js";
-import type { RestHeal, RoomCostEntry, RoomCostModel } from "../src/strategy/route-projection.js";
+import { restStart, ROUTE_REVIEW_NOTE } from "../src/hand/screens/route-review.js";
+import { checkRoute, floorOfRow, isKeep, NEXT_REST_CLEAR, nextRestCompare, nextRestFacts, nextRestStretches, nextRestVersus, routeFacts, routeIds, routeMapFromView, stretchOf, type ClearMargin, type Stretch } from "../src/sim/route-map.js";
+import type { RestHeal, RoomCostEntry, RoomCostModel } from "../src/sim/route-projection.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const { values } = parseArgs({

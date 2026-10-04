@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cross-check knowledge/common/monster-db.json against the hand-written tables -> a markdown report.
 
-Compared: (a) agent/src/strategy/boss-clock.ts BOSSES (hp, hpA8, lossPerTurn, scriptTurns) and
+Compared: (a) agent/src/sim/boss-clock.ts BOSSES (hp, hpA8, lossPerTurn, scriptTurns) and
 testSubjectPhases; (b) the enemy dossiers (hp a7/a8, need_damage_per_turn, deaths) - read from
 agent/src/knowledge/enemy-dossiers.json, or from git (`--dossiers-rev`, default the tag redesign-end) when the
 file is not in the tree; (c) knowledge/common/move-model.json (moves, average damage, successors).
@@ -58,7 +58,7 @@ def main():
     args = parser.parse_args()
     db = json.load(open(args.db, encoding="utf8"))
     monsters, bosses, encounters = db["monsters"], db["bosses"], db["encounters"]
-    clock, phases = parse_boss_clock(os.path.join(ROOT, "agent/src/strategy/boss-clock.ts"))
+    clock, phases = parse_boss_clock(os.path.join(ROOT, "agent/src/sim/boss-clock.ts"))
     dossiers, dossier_src = load_dossiers(args.dossiers, args.dossiers_rev)
     move_model = json.load(open(os.path.join(ROOT, "knowledge/common/move-model.json"), encoding="utf8"))
     meta = db["meta"]["generated_from"]

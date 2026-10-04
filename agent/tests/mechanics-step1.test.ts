@@ -8,10 +8,10 @@
 
 import { describe, expect, it } from "vitest";
 
-import { drawablePileSize, enemySims, planCombatTurn, vambraceArmed } from "../src/screens/combat-plan.js";
-import { planSelection, thisTurnDamage } from "../src/screens/selection.js";
-import { modelHandCard, nextTurnOnly, turnStartOnly, type CardModel } from "../src/strategy/card-model.js";
-import { bufferedLoss, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { drawablePileSize, enemySims, planCombatTurn, vambraceArmed } from "../src/reflex/combat-plan.js";
+import { planSelection, thisTurnDamage } from "../src/hand/screens/selection.js";
+import { modelHandCard, nextTurnOnly, turnStartOnly, type CardModel } from "../src/reflex/card-model.js";
+import { bufferedLoss, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;

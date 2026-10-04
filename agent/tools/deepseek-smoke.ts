@@ -1,5 +1,5 @@
-import { loadConfig } from "../src/config.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
 const env = { ...process.env };
 for (const line of (await import("node:fs")).readFileSync(".env", "utf8").split("\n")) {
   const m = line.match(/^([A-Z_]+)=(.*)$/); if (m && !(m[1]! in env)) env[m[1]!] = m[2]!;

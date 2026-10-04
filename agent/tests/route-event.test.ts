@@ -13,11 +13,11 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { isLastEventPage, optionContinues, setEventPagesForTests } from "../src/knowledge/event-pages.js";
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
-import type { RoutePlan } from "../src/screens/map.js";
-import { rememberChosenNode, rememberMap } from "../src/screens/rest.js";
-import type { JsonValue } from "../src/util/json.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";
+import type { RoutePlan } from "../src/hand/screens/map.js";
+import { rememberChosenNode, rememberMap } from "../src/hand/screens/rest.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { ask, board, choose, decide, DIR, env, keyOf, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { legalRoutes } from "./route-fixture.js";
 import { eventPayload } from "./scenarios.js";

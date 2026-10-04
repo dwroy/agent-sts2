@@ -1,5 +1,5 @@
 /**
- * PASSIVE_PIECES (src/strategy/passive-pieces.ts): the passive damage and block pieces in the rollout's later turns, the
+ * PASSIVE_PIECES (src/reflex/passive-pieces.ts): the passive damage and block pieces in the rollout's later turns, the
  * whole-fight boss sim (B2 / B3) and the boss clock. Logged boards (tests/logged-states/passive/boards.json, states.jsonl
  * lines as the mod sent them) with the fixed test knowledge (tests/logged-states/game-data.json) and a fixed monster DB
  * and boss shares written here, never the refreshing knowledge files; no model call, nothing written under logs/.
@@ -11,16 +11,16 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { bossHitsByTurn, setMonsterDbForTests, type MonsterDb, type MonsterEntry } from "../src/knowledge/monster-db.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
 import { passiveSimRelic } from "../src/sim/boss-start.js";
-import { bossClock, bossClockJson, BOSSES, bossLossPerTurn, deckEstimate, deckProfileForBoss, mechanicFactor, rawDeckDamage, setUnblockedSharesForTests } from "../src/strategy/boss-clock.js";
-import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, LETTER_OPENER, liveSolverFields, ORNAMENTAL_FAN, PARRYING_SHIELD, passivePiecesOptions, solverPiecesOf } from "../src/strategy/passive-pieces.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
-import { boardRolloutInput, fightRelicsOf, relicBlockOf, rolloutLiveOptions, type MonsterMoves } from "../src/strategy/rollout-live.js";
-import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
+import { bossClock, bossClockJson, BOSSES, bossLossPerTurn, deckEstimate, deckProfileForBoss, mechanicFactor, rawDeckDamage, setUnblockedSharesForTests } from "../src/sim/boss-clock.js";
+import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, LETTER_OPENER, liveSolverFields, ORNAMENTAL_FAN, PARRYING_SHIELD, passivePiecesOptions, solverPiecesOf } from "../src/reflex/passive-pieces.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/reflex/rollout.js";
+import { boardRolloutInput, fightRelicsOf, relicBlockOf, rolloutLiveOptions, type MonsterMoves } from "../src/reflex/rollout-live.js";
+import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/reflex/turn-solver.js";
 import { loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;

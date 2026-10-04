@@ -15,9 +15,9 @@ import { agentEnv, EXIT_CLOSE_GRACE_MS, runAgent } from "../src/brain/engines/pr
 import { EngineFailure } from "../src/brain/router.js";
 import { pickSpec, runPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
-import { loadConfig } from "../src/config.js";
-import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import type { JsonValue } from "../src/util/json.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+import type { JsonValue } from "../src/core/util/json.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-claude-"));
 

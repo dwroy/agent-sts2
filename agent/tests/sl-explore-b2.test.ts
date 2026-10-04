@@ -56,17 +56,17 @@ vi.mock("node:fs", async (importOriginal) => {
 
 // Every module again under the mock (tests/boss-lines-planner.test.ts); potion costs on, as live.
 vi.resetModules();
-const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+const { potionCostOptions } = await import("../src/reflex/potion-cost.js");
 potionCostOptions.enabled = true;
 const { logged, loggedEnv } = await import("./logged.js");
-const { planCombatTurn, slPointOf } = await import("../src/screens/combat-plan.js");
-const { rolloutLiveOptions } = await import("../src/strategy/rollout-live.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
+const { planCombatTurn, slPointOf } = await import("../src/reflex/combat-plan.js");
+const { rolloutLiveOptions } = await import("../src/reflex/rollout-live.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 const { bossLinesOptions, BOSS_LINES_SAMPLES } = await import("../src/sim/boss-lines.js");
-type AnswerSet = import("../src/jev/answers.js").AnswerSet;
-type AskDecision = import("../src/project/types.js").AskDecision;
-type DecisionEnv = import("../src/project/types.js").DecisionEnv;
-type SlEnv = import("../src/project/types.js").SlEnv;
+type AnswerSet = import("../src/reflex/jev/answers.js").AnswerSet;
+type AskDecision = import("../src/memory/types.js").AskDecision;
+type DecisionEnv = import("../src/memory/types.js").DecisionEnv;
+type SlEnv = import("../src/memory/types.js").SlEnv;
 
 const pick = (key: string): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: 0.9 }, confidence: 0.9, raw: {} } }) as AnswerSet;
 const digest = (view: unknown): string => createHash("sha256").update(JSON.stringify(view)).digest("hex").slice(0, 32);

@@ -8,14 +8,14 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { JEV_DATA_OVER_GUIDES, planCombatTurn } from "../src/screens/combat-plan.js";
-import { DATA_OVER_GUIDES, DeepSeekClient, recoverRoute } from "../src/llm/deepseek.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
-import { ROLLOUT_BUDGET_MS, boardRolloutInput, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
-import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { JEV_DATA_OVER_GUIDES, planCombatTurn } from "../src/reflex/combat-plan.js";
+import { DATA_OVER_GUIDES, DeepSeekClient, recoverRoute } from "../src/brain/llm/deepseek.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { modelPotion, type CardModel } from "../src/reflex/card-model.js";
+import { ROLLOUT_BUDGET_MS, boardRolloutInput, rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutInput } from "../src/reflex/rollout.js";
+import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 import { knowledgeFile } from "../src/knowledge/files.js";

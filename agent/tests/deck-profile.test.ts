@@ -5,9 +5,9 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { deckProfileLine } from "../src/project/deck-profile.js";
-import { givesLastingStrength } from "../src/strategy/card-model.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { deckProfileLine } from "../src/memory/deck-profile.js";
+import { givesLastingStrength } from "../src/reflex/card-model.js";
 import { loggedKnowledge } from "./logged.js";
 import { baseState, runPayload } from "./scenarios.js";
 

@@ -1,5 +1,5 @@
 /**
- * Offline check of CARD_CONDITIONS (2026-10-04, src/strategy/card-model.ts cardConditionOptions): Restlessness's draw and energy
+ * Offline check of CARD_CONDITIONS (2026-10-04, src/reflex/card-model.ts cardConditionOptions): Restlessness's draw and energy
  * only on an empty hand (Impatience's draw only with no Attack in it), Spite's second hit after HP lost earlier this turn, a
  * Rage played in the line, Ashen Strike / Expect a Fight / Tear Asunder with what the line exhausted / gained / lost first.
  *
@@ -25,19 +25,19 @@
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import * as combatPlan from "../src/screens/combat-plan.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import * as combatPlan from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
 import { computeMemoOptions } from "../src/sim/compute-memo.js";
-import * as cardModel from "../src/strategy/card-model.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { replaySteps, solveTap, type Plan, type SolverInput, type Step } from "../src/strategy/turn-solver.js";
+import * as cardModel from "../src/reflex/card-model.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { replaySteps, solveTap, type Plan, type SolverInput, type Step } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

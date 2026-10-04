@@ -10,7 +10,7 @@ Plus a main-menu frame between them, one broken states line, two DeepSeek calls 
 run A's first frame, like the Neow question), three brain.jsonl rows in src/brain/router.ts's format (a Claude
 answer with a tool call; the DeepSeek engine's row for the reward/card call that deepseek-reasoning.jsonl also
 logged, i.e. a duplicate; a Claude timeout with no answer), one run plan, and run-config.jsonl in
-src/telemetry/run-config.ts's format (tests/run-config.test.ts checks the keys): run A started with DeepSeek + Claude
+src/eye/run-config.ts's format (tests/run-config.test.ts checks the keys): run A started with DeepSeek + Claude
 Opus for map questions and the full knowledge prefix, then a restarted process played it with another setup (a second
 row, restart = true); run B with plain DeepSeek and the prefix off.
 
@@ -30,7 +30,7 @@ def engine(model, tools, max_calls, timeout_ms=None, model_by_prefix=None):
 
 
 def run_config(ts, run_id, asc, floor, code, by_prefix, prefix, config_sha, restart=False, claude=None, arm=None, target=9):
-    """One run-config.jsonl row as src/telemetry/run-config.ts writes it (RunConfigRow). `claude`: Claude's engine
+    """One run-config.jsonl row as src/eye/run-config.ts writes it (RunConfigRow). `claude`: Claude's engine
     settings when it is in use (then the brain carries its schema and budget)."""
     engines = {"deepseek": engine("deepseek-flash", False, 300)}
     if claude:

@@ -1,5 +1,5 @@
 /**
- * Offline learner launcher (src/learner, learner/run.ts): task placeholders, missing/unused parameters, the
+ * Offline learner launcher (learner/lib, learner/run.ts): task placeholders, missing/unused parameters, the
  * claude and codex command lines, the child environment without keys, --dry-run, and whole runs against fake
  * claude/codex binaries written into a temp directory. No test calls a real LLM.
  */
@@ -11,10 +11,10 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { childEnv, claudeCommand, claudePermissions, codexCommand, engineBinary, shellQuote, strippedEnvNames, type EngineRequest } from "../src/learner/engines.js";
-import { collectSecrets, main, parseArgs, redactSecrets, type LauncherDeps } from "../src/learner/launcher.js";
-import { SummaryTracker } from "../src/learner/summary.js";
-import { LearnerUsageError, fillTemplate, loadTask, parseSets, parseTask, placeholdersOf, renderTask } from "../src/learner/task.js";
+import { childEnv, claudeCommand, claudePermissions, codexCommand, engineBinary, shellQuote, strippedEnvNames, type EngineRequest } from "../../learner/lib/engines.js";
+import { collectSecrets, main, parseArgs, redactSecrets, type LauncherDeps } from "../../learner/lib/launcher.js";
+import { SummaryTracker } from "../../learner/lib/summary.js";
+import { LearnerUsageError, fillTemplate, loadTask, parseSets, parseTask, placeholdersOf, renderTask } from "../../learner/lib/task.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TASKS = join(REPO, "..", "learner", "tasks");
@@ -379,10 +379,10 @@ describe("--dry-run", () => {
     expect(outside.err.join("")).toContain("不在项目目录");
   });
 
-  it("--with-tools: stops with an explanation while src/tools/mcp-server.ts is missing, else mounts it", async () => {
+  it("--with-tools: stops with an explanation while src/brain/tools/mcp-server.ts is missing, else mounts it", async () => {
     const { deps: d, out, err } = deps({ ...baseEnv(), LEARNER_CLAUDE_BIN: writeFake("claude") });
     const code = await main(smokeArgs("claude", ["--dry-run", "--with-tools"]), d);
-    if (existsSync(join(REPO, "src", "tools", "mcp-server.ts"))) {
+    if (existsSync(join(REPO, "src", "brain", "tools", "mcp-server.ts"))) {
       expect(code).toBe(0);
       expect(out.join("")).toContain("--mcp-config");
       expect(out.join("")).toContain("mcp__gkb");

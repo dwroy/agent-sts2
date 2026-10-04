@@ -9,24 +9,24 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { noteScreenChange } from "../src/loop.js";
-import { parseGameState } from "../src/mod/schema.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { planReward } from "../src/screens/reward.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { noteScreenChange } from "../src/hand/loop.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { planReward } from "../src/hand/screens/reward.js";
 import { annotatePlating } from "../src/knowledge/enchant-text.js";
 import { fillPotionText } from "../src/knowledge/potion-values.js";
-import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
-import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
-import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
+import { modelPotion, type CardModel } from "../src/reflex/card-model.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { solveTap, solveTurn, turnOnlyDrink, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/reflex/rollout.js";
 import { logged, loggedEnv } from "./logged.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
-import { fillGuideFacts, giantKillRecord, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { fillGuideFacts, giantKillRecord, setUnblockedSharesForTests, type GiantKillRow } from "../src/sim/boss-clock.js";
 import { ask, decide, env as oneshotEnv } from "./oneshot-support.js";
-import { parseShopPlan } from "../src/screens/shop.js";
-import { DISCARD_ANSWER_NOTE } from "../src/screens/potion-discard.js";
+import { parseShopPlan } from "../src/hand/screens/shop.js";
+import { DISCARD_ANSWER_NOTE } from "../src/hand/screens/potion-discard.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 type Raw = Record<string, unknown>;
@@ -401,7 +401,7 @@ describe("7. \"solver says dead, mod says safe\" from cards held (Burn) is not a
 
 describe("8. The \"discard potion(s), then …\" answer note of rest sites and events is the shared DISCARD_ANSWER_NOTE (was a copy in each)", () => {
   it("rest.ts and event.ts use the constant; the sentence is written once, in potion-discard.ts", () => {
-    const SCREENS = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "screens");
+    const SCREENS = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "hand", "screens");
     const sentence = 'also needs "discard": [potion slot numbers from its discardable_potions] in your answer';
     expect(DISCARD_ANSWER_NOTE).toContain(sentence);
     for (const name of ["rest.ts", "event.ts"]) {

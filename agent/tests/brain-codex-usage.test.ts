@@ -18,10 +18,10 @@ import { codexEnv } from "../src/brain/engines/codex.js";
 import { BrainRouter, EngineFailure, errorNotes, type BrainLogRow } from "../src/brain/router.js";
 import type { BrainAnswer, BrainEngine, BrainRequest } from "../src/brain/types.js";
 import { pickSpec } from "../src/brain/specs.js";
-import { loadConfig } from "../src/config.js";
-import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import { runConfigRow } from "../src/telemetry/run-config.js";
-import type { JsonValue } from "../src/util/json.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+import { runConfigRow } from "../src/eye/run-config.js";
+import type { JsonValue } from "../src/core/util/json.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-codex-usage-"));
 

@@ -12,10 +12,10 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { leastLossFactsOf, planCombatTurn, revivesOf } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { leastLossFactsOf, planCombatTurn, revivesOf } from "../src/reflex/combat-plan.js";
 import { judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict } from "../src/sl/judge.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { loggedEnv, loggedKnowledge as knowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;

@@ -11,10 +11,10 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { modelHandCard, playSelfDamageOf, type CardModel } from "../src/strategy/card-model.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { modelHandCard, playSelfDamageOf, type CardModel } from "../src/reflex/card-model.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/reflex/turn-solver.js";
 import { alignEnemies, enemyIndexMaps, type FrameEnemy } from "../tools/mechanics-align.js";
 import { loggedEnv, loggedKnowledge } from "./logged.js";
 

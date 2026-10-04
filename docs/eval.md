@@ -55,11 +55,11 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 | 校准（三行，§7） | 这局的推演回合、路线投影节点、boss 战（eval/calibration.py 的行） | 组内合并：推演本回合掉血 ±2 内的回合比例；路线投影离计划 2–3 层的中位误差（投影 − 实际）和中位 \|误差\|；boss 时钟实打/估值的中位。回合、节点彼此不独立，不给区间；n < `--min-n` 标 `*` |
 | 大脑调用 | llm_calls（deepseek-reasoning.jsonl + brain.jsonl，按局归属见 docs/logdb.md），**去掉 `duplicate`**（路由器的 DeepSeek 引擎不带工具时，同一次调用两个文件都记）。每局：行数、input（全部提示 token，含缓存命中）、cache_hit、output（含推理）、latency_ms 之和；按引擎分开 | 调用数、耗时对全部局取均值；token 只对**每次调用都有 usage** 的局（deepseek-reasoning 从 2026-09-28 11:03 UTC 起才有 usage，更早的是「—」）；缓存命中率 = 命中合计 ÷ 输入合计；每次调用耗时 = 耗时合计 ÷ 调用合计 |
 
-**力量来源的清单不另造**：eval/strength-sources.ts 调 agent/src/project/deck-profile.ts 的 `strengthSourceIds`，用的就是题面「力量来源」那一项的判断（`isStrengthCard` / `isStrengthRelic` → card-model.ts 的 `givesLastingStrength`，读游戏数据里的牌和遗物文本），在 data/game-data.json 上算出 id 清单；metrics.py 每次启动调它一次（~0.3 秒），算不出来就报错，不会拿空清单。当前游戏数据（mod 0.16.2）得到：
+**力量来源的清单不另造**：eval/strength-sources.ts 调 agent/src/memory/deck-profile.ts 的 `strengthSourceIds`，用的就是题面「力量来源」那一项的判断（`isStrengthCard` / `isStrengthRelic` → card-model.ts 的 `givesLastingStrength`，读游戏数据里的牌和遗物文本），在 data/game-data.json 上算出 id 清单；metrics.py 每次启动调它一次（~0.3 秒），算不出来就报错，不会拿空清单。当前游戏数据（mod 0.16.2）得到：
 - 牌：ARSENAL、BRAND、BULK_UP、DEMON_FORM、DOMINATE、FIGHT_ME、INFLAME、MAD_SCIENCE、PROWESS、RESONANCE、RUPTURE；
 - 遗物：BRIMSTONE、EMBER_TEA、GIRYA、MINI_REGENT、RAINBOW_RING、RED_SKULL、SHURIKEN、SLING_OF_COURAGE、SPARKLING_ROUGE、SWORD_OF_JADE、TOASTY_MITTENS、VAJRA。
 
-没用 agent/src/strategy/card-value.ts 的 `SCALING`：那是「成长」集合，含腐化、无痛、壁垒等不给力量的牌。
+没用 agent/src/hand/screens/card-value.ts 的 `SCALING`：那是「成长」集合，含腐化、无痛、壁垒等不给力量的牌。
 
 **区间**：均值用 Student t 的 95% 区间（n ≥ 2；这些量都不为负，下限截到 0）；比例用 Wilson 95% 区间。局数（或这个指标的 n）少于 `--min-n`（默认 10）标 `*`：样本不足，区间只作参考。
 
@@ -126,7 +126,7 @@ $P eval/calibration.py --ascension 9 --json [--rows]            # 汇总、覆�
 
 ### 7.4 boss 时钟
 
-- **没有落盘，离线重算**：时钟（act_boss_clock）只作为 facts 在 DeepSeek 的题面里；deepseek-reasoning.jsonl 只存问题文本，decisions.jsonl、run-plans.jsonl 里也没有它的数（run-plans 的理由里偶尔提到）。所以每场 boss 战取**第一个战斗帧**的原始状态（states.jsonl 按 fights.first_off 的偏移读，去掉 agent_view），连同实际进场血量交给 eval/boss-clock-recompute.ts，调 agent/src/strategy/boss-clock.ts 的 `bossClock(state, knowledge, entryHp)`（和 agent/tools/boss-clock-calibrate.ts 一样），**算法不改**。用的是当前工作树的代码和知识数据（monster-db.json、boss-damage.json）以及 data/game-data.json，不是那局跑的版本；当时 DeepSeek 看到的是按「预计进场血量」算的，这里用实际进场血量，所以数不一定和当时的题面相同。
+- **没有落盘，离线重算**：时钟（act_boss_clock）只作为 facts 在 DeepSeek 的题面里；deepseek-reasoning.jsonl 只存问题文本，decisions.jsonl、run-plans.jsonl 里也没有它的数（run-plans 的理由里偶尔提到）。所以每场 boss 战取**第一个战斗帧**的原始状态（states.jsonl 按 fights.first_off 的偏移读，去掉 agent_view），连同实际进场血量交给 eval/boss-clock-recompute.ts，调 agent/src/sim/boss-clock.ts 的 `bossClock(state, knowledge, entryHp)`（和 agent/tools/boss-clock-calibrate.ts 一样），**算法不改**。用的是当前工作树的代码和知识数据（monster-db.json、boss-damage.json）以及 data/game-data.json，不是那局跑的版本；当时 DeepSeek 看到的是按「预计进场血量」算的，这里用实际进场血量，所以数不一定和当时的题面相同。
 - **boss 战**：和 metrics.py 同一个认法（每幕第一场 Boss 房间的战斗，没有就推断）。
 - **估值** = 时钟的牌组每回合伤害（deck，按时钟自己估的战斗回合数）；另给按实际回合数的估值（deckEstimate(牌组, boss, 实际回合数)）。
 - **实打** = boss 本体掉的血 ÷ 回合数，口径同 agent/tools/boss-fights-extract.py（时钟估值的「11 + 0.92 × 原始估计」就是按它标定的，见 boss-clock.ts ESTIMATE_BASE）：本体 = 第一帧的非 minion 敌人（同族只算神官、女王不算汞合体、帝王蟹两只钳子都算）；赢局按本体的最大血量（最后一击在最后一帧之后），输局按最大血量 − 本体合计的最低血量；回血、复活不加，格挡不算；巨兽死后的标记血量（999999999）当作已死。
@@ -139,7 +139,7 @@ metrics.py 默认对选中的局跑一遍 calibration（`--no-calibration` 关�
 
 ## 8. 每局配置（logs/run-config.jsonl）和 `--group-by config`
 
-V4 的决策取决于环境变量（引擎、按题型覆盖、模型、知识前缀……），runs.jsonl 只有提交号，分不开。所以对局进程在**第一次看到一个新 run id 时**写一行配置（agent/src/telemetry/run-config.ts，loop.ts 里一处调用）：
+V4 的决策取决于环境变量（引擎、按题型覆盖、模型、知识前缀……），runs.jsonl 只有提交号，分不开。所以对局进程在**第一次看到一个新 run id 时**写一行配置（agent/src/eye/run-config.ts，loop.ts 里一处调用）：
 
 - 路径：默认和决策日志同目录（logs/run-config.jsonl）；`RUN_CONFIG_LOG=<路径>` 改，`RUN_CONFIG_LOG=off` 关。
 - 字段：`ts, run_id, ascension, character, floor`（进程第一次看到这局时的层：> 1 说明是局中重启接手）`, restart, process {pid, started}`；`code {commit, code`（短号 + `+dirty`，同 ops/run.sh）`, dirty, dirty_files`（改动的受跟踪文件名，最多 20 个：每局后刷新的知识数据）`, branch, worktree}`，进程启动时读一次（跑的是启动时加载的代码）；`brain {active, engine, by_prefix, fallback, reask, tools, log, engines {<引擎>: {model`（实际发送的 id，opus → claude-opus-5-5；DeepSeek 是 DEEPSEEK_MODEL）`, model_by_prefix, timeout_ms, effort, reask, tools, max_calls}}, claude {schema, max_budget_usd}}`（只列这套配置会问到的引擎：默认、按题型、回退）；`knowledge {prefix, ascension, prefix_sha, prefix_chars, prefix_tokens_est {deepseek, claude}, system_sha, system_chars, experience_version, error?}`；`deepseek {model, max_calls, timeout_ms, reasoning_effort, combat_reasoning_effort, effort_by_label}`；`jev {enabled, model, context, strict, prompt_log}`；`loop {mode, combat_planner, build_decider, build_oneshot, combat_deepseek, fight_plan, run_plan, escalation, confidence, run_start, character}`；`target_ascension, arm, config_sha`（除时间、局、进程以外全部配置的哈希：相同 = 同一套配置）。

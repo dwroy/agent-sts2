@@ -16,9 +16,9 @@ import { createRouter } from "../../../agent/src/brain/brain.js";
 import { KnowledgePrompt } from "../../../agent/src/brain/knowledge.js";
 import { carriesRunPlan, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "../../../agent/src/brain/specs.js";
 import type { AnswerSpec, BrainRequest } from "../../../agent/src/brain/types.js";
-import { loadConfig } from "../../../agent/src/config.js";
+import { loadConfig } from "../../../agent/src/core/config.js";
 import { frozenFacts } from "../../../agent/src/knowledge/render/facts.js";
-import { DeepSeekClient } from "../../../agent/src/llm/deepseek.js";
+import { DeepSeekClient } from "../../../agent/src/brain/llm/deepseek.js";
 
 const { values } = parseArgs({ options: { rows: { type: "string" }, knowledge: { type: "string" }, facts: { type: "string" }, out: { type: "string" } } });
 type Row = Record<string, any>;

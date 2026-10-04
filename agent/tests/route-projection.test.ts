@@ -3,10 +3,10 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
-import { planDecision } from "../src/screens/index.js";
-import { projectPath, roomCostModel, type RoomCostModel } from "../src/strategy/route-projection.js";
-import type { AskDecision, DecisionEnv } from "../src/project/types.js";
-import type { JsonValue } from "../src/util/json.js";
+import { planDecision } from "../src/hand/screens/index.js";
+import { projectPath, roomCostModel, type RoomCostModel } from "../src/sim/route-projection.js";
+import type { AskDecision, DecisionEnv } from "../src/memory/types.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { logged, loggedEnv } from "./logged.js";
 
 const model: RoomCostModel = {

@@ -14,8 +14,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { buildRouteMap, CANDIDATE_MAX, candidateRoutes, candidateRoutesFacts, checkRoute, routeMapFromView, routesToBoss } from "../src/strategy/route-map.js";
-import type { RoomCostModel } from "../src/strategy/route-projection.js";
+import { buildRouteMap, CANDIDATE_MAX, candidateRoutes, candidateRoutesFacts, checkRoute, routeMapFromView, routesToBoss } from "../src/sim/route-map.js";
+import type { RoomCostModel } from "../src/sim/route-projection.js";
 import { p } from "./route-fixture.js";
 
 interface Plan {

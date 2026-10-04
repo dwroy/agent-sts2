@@ -18,20 +18,20 @@ import { closeSync, createReadStream, existsSync, mkdirSync, openSync, readFileS
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 
-import { loadConfig, requireJevApiKey } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { JevClient } from "../src/jev/client.js";
-import type { QuestionSet } from "../src/jev/questions.js";
+import { loadConfig, requireJevApiKey } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { JevClient } from "../src/reflex/jev/client.js";
+import type { QuestionSet } from "../src/reflex/jev/questions.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import type { RoutePlan } from "../src/screens/map.js";
-import { rememberMap } from "../src/screens/rest.js";
-import { runPlanLine, type RunPlan } from "../src/strategy/run-plan.js";
-import { askJevLogged, createJevPromptLog } from "../src/telemetry/jev-prompt-log.js";
-import type { JsonValue } from "../src/util/json.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import type { RoutePlan } from "../src/hand/screens/map.js";
+import { rememberMap } from "../src/hand/screens/rest.js";
+import { runPlanLine, type RunPlan } from "../src/memory/run-plan.js";
+import { askJevLogged, createJevPromptLog } from "../src/eye/jev-prompt-log.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

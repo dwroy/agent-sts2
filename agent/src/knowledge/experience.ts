@@ -13,12 +13,12 @@
 
 import { readFileSync } from "node:fs";
 
-import type { GameState } from "../mod/schema.js";
-import { fillGuideFacts } from "../strategy/boss-clock.js";
-import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
+import type { GameState } from "../hand/mod/schema.js";
+import { fillGuideFacts } from "../sim/boss-clock.js";
+import { asArray, asRecord, num, str, type JsonValue } from "../core/util/json.js";
 import { actThreatIds, bossOnBoard } from "./monster-db.js";
 import { outcomeView, pairHelps, pairThin, referenceNote, referenceRow, rowHelps, rowThin } from "./outcome-tables.js";
-import { bumpDataVersion } from "../util/data-version.js";
+import { bumpDataVersion } from "../core/util/data-version.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 
 export type Confidence = "low" | "med" | "high";

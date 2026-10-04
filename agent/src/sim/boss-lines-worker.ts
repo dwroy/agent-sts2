@@ -7,8 +7,8 @@
 
 import { parentPort, workerData, type MessagePort } from "node:worker_threads";
 
-import type { KillOrder, RolloutInput } from "../strategy/rollout.js";
-import type { Plan } from "../strategy/turn-solver.js";
+import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
+import type { Plan } from "../reflex/turn-solver.js";
 import { fightSample, type FightSampleResult } from "./boss-sim.js";
 import type { LinesWorkerReply, LinesWorkerRequest } from "./boss-lines.js";
 

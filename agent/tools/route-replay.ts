@@ -21,21 +21,21 @@ import { parseArgs } from "node:util";
 
 import { Brain, createRouter, toolContextOf } from "../src/brain/brain.js";
 import type { BrainLogRow } from "../src/brain/router.js";
-import { loadConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
+import { loadConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { isLastEventPage } from "../src/knowledge/event-pages.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import { planDecision } from "../src/screens/index.js";
-import { rememberChosenNode, rememberMap } from "../src/screens/rest.js";
-import { makeRoutePlan, mapActOf, mapFromState, routeCosts } from "../src/screens/route-plan.js";
-import { routeMapFromView, type RouteMap } from "../src/strategy/route-map.js";
-import { actOf } from "../src/strategy/run-plan.js";
-import type { JsonValue } from "../src/util/json.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import { planDecision } from "../src/hand/screens/index.js";
+import { rememberChosenNode, rememberMap } from "../src/hand/screens/rest.js";
+import { makeRoutePlan, mapActOf, mapFromState, routeCosts } from "../src/hand/screens/route-plan.js";
+import { routeMapFromView, type RouteMap } from "../src/sim/route-map.js";
+import { actOf } from "../src/memory/run-plan.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const { values } = parseArgs({

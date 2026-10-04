@@ -5,19 +5,19 @@
  */
 import { closeSync, openSync, readSync } from "node:fs";
 
-import { loadConfig } from "../../src/config.js";
+import { loadConfig } from "../../src/core/config.js";
 import type { Knowledge } from "../../src/knowledge/index.js";
-import type { GameState } from "../../src/mod/schema.js";
-import { potionViews } from "../../src/project/narrow.js";
-import { buildRunBrief } from "../../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../../src/project/types.js";
-import { pileCardModels, planCombatTurn, randomPotionSource } from "../../src/screens/combat-plan.js";
+import type { GameState } from "../../src/hand/mod/schema.js";
+import { potionViews } from "../../src/memory/narrow.js";
+import { buildRunBrief } from "../../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../../src/memory/types.js";
+import { pileCardModels, planCombatTurn, randomPotionSource } from "../../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../../src/sim/boss-lines.js";
-import { modelPotion, type CardModel } from "../../src/strategy/card-model.js";
-import type { PotionMcSource } from "../../src/strategy/potion-mc.js";
-import type { KillOrder, MoveModelData, RolloutInput } from "../../src/strategy/rollout.js";
-import { boardRolloutInput, deckModels, fightMetaOf, fightRelicsOf, type MonsterMoves } from "../../src/strategy/rollout-live.js";
-import { solveTap, type Plan, type SolveResult, type SolverInput } from "../../src/strategy/turn-solver.js";
+import { modelPotion, type CardModel } from "../../src/reflex/card-model.js";
+import type { PotionMcSource } from "../../src/reflex/potion-mc.js";
+import type { KillOrder, MoveModelData, RolloutInput } from "../../src/reflex/rollout.js";
+import { boardRolloutInput, deckModels, fightMetaOf, fightRelicsOf, type MonsterMoves } from "../../src/reflex/rollout-live.js";
+import { solveTap, type Plan, type SolveResult, type SolverInput } from "../../src/reflex/turn-solver.js";
 
 const asRecord = (v: unknown): Record<string, unknown> => (v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {});
 const cardKey = (c: { cardId: string; upgraded: boolean }) => `${c.cardId}${c.upgraded ? "+" : ""}`;

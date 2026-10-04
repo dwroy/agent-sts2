@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PASSIVE_PIECES (src/strategy/passive-pieces.ts) on the whole-fight boss sim: two tools/boss-sim/backtest.ts runs on
+"""PASSIVE_PIECES (src/reflex/passive-pieces.ts) on the whole-fight boss sim: two tools/boss-sim/backtest.ts runs on
 the same fights and seeds (PASSIVE_PIECES=off and on), compared start by start: the Brier score of the raw and the
 calibrated win rate (boss-sim BOSS_SIM_PLATT, the map B2 and B3 show) against the actual outcome, the mean predicted
 against the actual win rate, the won fights' HP loss (the sim's median over its won samples - the log's), with a paired

@@ -7,9 +7,9 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { knowledgeSlice, offeredOn, selectLessons, setExperienceForTests, type ExperienceEntry, type OutcomeStats, type SliceInput } from "../src/knowledge/experience.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { fightLessons } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { fightLessons } from "../src/reflex/combat-plan.js";
 import { baseState, combatPayload, runPayload, testKnowledge } from "./scenarios.js";
 
 /** The active lessons' total length in characters (Dai 2026-10-04: 60k; about 40k at 198 entries then). */

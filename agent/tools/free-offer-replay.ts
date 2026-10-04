@@ -17,15 +17,15 @@ import { execFileSync } from "node:child_process";
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { facingFightOf } from "../src/screens/combat-plan.js";
-import { freeOfferOptions, freeOfferSource, planSelection } from "../src/screens/selection.js";
-import { asRecord, str } from "../src/util/json.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { facingFightOf } from "../src/reflex/combat-plan.js";
+import { freeOfferOptions, freeOfferSource, planSelection } from "../src/hand/screens/selection.js";
+import { asRecord, str } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

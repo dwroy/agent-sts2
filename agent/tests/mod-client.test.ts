@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 
-import { ModClient, ModProtocolError, ModResponseError, ModUnreachableError, isRetryableModError } from "../src/mod/client.js";
-import { PayloadShapeError } from "../src/mod/schema.js";
+import { ModClient, ModProtocolError, ModResponseError, ModUnreachableError, isRetryableModError } from "../src/hand/mod/client.js";
+import { PayloadShapeError } from "../src/hand/mod/schema.js";
 import {
   actionsPayload,
   closedPorts,

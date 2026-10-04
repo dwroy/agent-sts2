@@ -14,16 +14,16 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { STRIP_STUN_MIN_N, isStripStun, stripStunRules, type ObservedDb, type StrippedPower } from "../src/knowledge/mechanics.js";
 import { renderKnowledgePrefix } from "../src/knowledge/render/knowledge-prefix.js";
 import { renderMonster } from "../src/knowledge/render/monster-text.js";
-import type { DecisionEnv } from "../src/project/types.js";
-import { applyStripStuns, describePlan, withMechFallback } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
-import { escapeInput, type Thief } from "../src/strategy/thief.js";
-import { solveTurn, strippedStun, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { DecisionEnv } from "../src/memory/types.js";
+import { applyStripStuns, describePlan, withMechFallback } from "../src/reflex/combat-plan.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/reflex/rollout.js";
+import { escapeInput, type Thief } from "../src/reflex/thief.js";
+import { solveTurn, strippedStun, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 /** The pooled Flutter strips of the 2026-10-02 build (41 logged, all stunned; the 10 with an attack cancelled). */

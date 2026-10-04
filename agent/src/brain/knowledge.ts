@@ -29,7 +29,7 @@ import { loadKnowledgeData, loadPostmortems, type Postmortems, type RenderContex
 import { loadPotionEquivalents } from "../knowledge/potion-equivalents.js";
 import type { FactFiller } from "../knowledge/render/facts.js";
 import { renderKnowledgePrefix } from "../knowledge/render/knowledge-prefix.js";
-import { SYSTEM } from "../llm/deepseek.js";
+import { SYSTEM } from "./llm/deepseek.js";
 import type { BrainRequest, KnowledgeNote } from "./types.js";
 
 /**

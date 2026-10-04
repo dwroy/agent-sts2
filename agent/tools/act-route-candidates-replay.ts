@@ -15,9 +15,9 @@ import { closeSync, openSync, readSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 
-import { candidateRoutes, candidateRoutesFacts, candidateText, checkRoute, floorOfRow, routeCandidate, routeIds, routeMapFromView, type CandidateRoute, type RouteMap } from "../src/strategy/route-map.js";
-import type { RestHeal, RoomCostEntry, RoomCostModel } from "../src/strategy/route-projection.js";
-import { ACT_START_NOTE } from "../src/screens/act-start.js";
+import { candidateRoutes, candidateRoutesFacts, candidateText, checkRoute, floorOfRow, routeCandidate, routeIds, routeMapFromView, type CandidateRoute, type RouteMap } from "../src/sim/route-map.js";
+import type { RestHeal, RoomCostEntry, RoomCostModel } from "../src/sim/route-projection.js";
+import { ACT_START_NOTE } from "../src/hand/screens/act-start.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const { values } = parseArgs({

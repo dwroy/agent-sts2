@@ -36,10 +36,10 @@ import { createHash } from "node:crypto";
 import { deserialize, serialize } from "node:v8";
 
 import { ascAmountOptions } from "../knowledge/monster-db.js";
-import { cardConditionOptions, pileCostOptions, playFirstOptions, potionCardCostOptions } from "../strategy/card-model.js";
-import { passivePiecesOptions } from "../strategy/passive-pieces.js";
-import { potionCostOptions } from "../strategy/potion-cost.js";
-import { dataVersion } from "../util/data-version.js";
+import { cardConditionOptions, pileCostOptions, playFirstOptions, potionCardCostOptions } from "../reflex/card-model.js";
+import { passivePiecesOptions } from "../reflex/passive-pieces.js";
+import { potionCostOptions } from "../reflex/potion-cost.js";
+import { dataVersion } from "../core/util/data-version.js";
 
 /** Results kept a fight (serialized bytes). */
 export const COMPUTE_MEMO_MAX_BYTES = 512 * 1024 * 1024;

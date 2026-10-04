@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { FileEscalator } from "../src/llm/file-escalation.js";
+import { FileEscalator } from "../src/brain/llm/file-escalation.js";
 
 describe("FileEscalator", () => {
   it("returns the supervisor's answer written next to the pending file", async () => {

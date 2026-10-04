@@ -9,9 +9,9 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { briefJson, buildRunBrief } from "../src/project/run-brief.js";
+import { loadConfig } from "../src/core/config.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { briefJson, buildRunBrief } from "../src/memory/run-brief.js";
 import {
   loadRunPlan,
   logRunPlan,
@@ -24,7 +24,7 @@ import {
   RUN_PLAN_AVOID_MALUS,
   RUN_PLAN_WANT_BONUS,
   type RunPlan,
-} from "../src/strategy/run-plan.js";
+} from "../src/memory/run-plan.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 
 const plan = (over: Partial<RunPlan> = {}): RunPlan => ({

@@ -6,9 +6,9 @@
 
 import { describe, expect, it } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { AskDecision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { AskDecision } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
 import { logged, loggedEnv } from "./logged.js";
 
 const answer = (key: string, confidence: number): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;

@@ -8,8 +8,8 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { BOSS_SIM_LOOKAHEAD, slimInput } from "../src/sim/boss-sim.js";
-import { rolloutDecision, simulateFight, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
-import { ERUPTION_NEXT_BLOCK, nextHitShortfall, solveTap, solveTurn, type EnemySim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { rolloutDecision, simulateFight, type EnemyTable, type RolloutInput } from "../src/reflex/rollout.js";
+import { ERUPTION_NEXT_BLOCK, nextHitShortfall, solveTap, solveTurn, type EnemySim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { board, card, strike } from "./boss-sim-fixture.js";
 
 const enemy = (index: number, name: string, hp: number, attacks: { damage: number; hits: number }[] = [], weak = 0): EnemySim => ({ index, name, hp, maxHp: hp, block: 0, vulnerable: 0, weak, artifact: 0, intangible: false, attacks });

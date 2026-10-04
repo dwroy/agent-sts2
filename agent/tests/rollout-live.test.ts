@@ -1,5 +1,5 @@
 /**
- * The rollout as facts for Jev's combat question (src/strategy/rollout-live.ts, combat-plan.ts): the facts are
+ * The rollout as facts for Jev's combat question (src/reflex/rollout-live.ts, combat-plan.ts): the facts are
  * on every option, the rollout's best line is shown (added when code did not show it), the time budget holds
  * under a mock clock, and code's options, their order and its auto-acts are the same with and without it.
  */
@@ -10,15 +10,15 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { AskDecision, Decision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { enemyTable, liveRollout, pickRolloutBest, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, segmentName } from "../src/strategy/rollout-live.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { AskDecision, Decision } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { enemyTable, liveRollout, pickRolloutBest, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, segmentName } from "../src/reflex/rollout-live.js";
 import { readFileSync } from "node:fs";
-import { loadFightValueGates, type FightValueGates, type LineEstimate } from "../src/strategy/rollout.js";
-import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
-import type { CardModel } from "../src/strategy/card-model.js";
+import { loadFightValueGates, type FightValueGates, type LineEstimate } from "../src/reflex/rollout.js";
+import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
 import { logged, loggedEnv } from "./logged.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
@@ -174,7 +174,7 @@ describe("rollout facts on Jev's combat question", () => {
   }, 30_000);
 
   it("up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)", async () => {
-    const { MAX_OPTIONS } = await import("../src/screens/combat-plan.js");
+    const { MAX_OPTIONS } = await import("../src/reflex/combat-plan.js");
     expect(MAX_OPTIONS).toBe(10);
     let most = 0;
     for (const name of BOARDS) {
@@ -370,7 +370,7 @@ describe("the rollout's best line when every line loses all the HP (HEACJRY5LEVD
 
 describe("an illusion killed before the decision revives in the rollout (QUG1DSDARAXU F23 T3)", () => {
   it("the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it", async () => {
-    const { laterIncomingOf, revivingIllusions } = await import("../src/screens/combat-plan.js");
+    const { laterIncomingOf, revivingIllusions } = await import("../src/reflex/combat-plan.js");
     rolloutLiveOptions.budgetMs = 1e9;
     const fx = logged("qug1-f23-t3-illusion-dead");
     const combat = fx.state["combat"] as Record<string, unknown>;

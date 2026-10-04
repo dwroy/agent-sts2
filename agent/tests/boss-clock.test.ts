@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
 import {
   averageStrength,
   bossClock,
@@ -45,9 +45,9 @@ import {
   setUnblockedSharesForTests,
   type GiantKillRow,
   testSubjectPhase2Loss,
-} from "../src/strategy/boss-clock.js";
+} from "../src/sim/boss-clock.js";
 import { powerScheduleAt, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
-import { bossNote as journalBossNote } from "../src/project/run-journal.js";
+import { bossNote as journalBossNote } from "../src/memory/run-journal.js";
 import { loggedKnowledge } from "./logged.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
 

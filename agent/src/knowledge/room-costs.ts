@@ -4,7 +4,7 @@
  */
 
 import { readFileSync } from "node:fs";
-import { bumpDataVersion } from "../util/data-version.js";
+import { bumpDataVersion } from "../core/util/data-version.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 
 export interface MeasuredRoom {

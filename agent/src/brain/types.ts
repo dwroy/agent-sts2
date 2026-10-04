@@ -6,7 +6,7 @@
  * choice: every engine takes the same BrainRequest and returns the same BrainAnswer, and the router
  * owns validation, the single re-ask, fallback and logging, so switching engines is one env var.
  */
-import type { JsonSchema, ToolContext, ToolDef } from "../tools/types.js";
+import type { JsonSchema, ToolContext, ToolDef } from "./tools/types.js";
 
 export type EngineName = "deepseek" | "claude" | "codex" | "dsh";
 

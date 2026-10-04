@@ -7,7 +7,7 @@ Inputs (nothing hand-typed except the named estimate constants below):
   data/game-data.json        the 66 potions (name, description template, rarity, usage, target, pool) and
                                the cards (type, hits, block, Strike tag) the per-turn counts are read with
   agent/src/knowledge/potion-values.ts   the measured template numbers (FIRE_POTION Damage 20, BLOCK_POTION Block 12, …)
-  agent/src/strategy/card-model.ts   which potions the turn solver models exactly / by Monte Carlo (keys of
+  agent/src/reflex/card-model.ts   which potions the turn solver models exactly / by Monte Carlo (keys of
                                POTION_EFFECTS, CHOICE_POTIONS, DRAW_POTIONS)
   the log database (data/logdb, docs/logdb.md)   per act and ascension, from the boss fights' turns:
                                our damage a turn, the boss's unblocked damage a turn, fight length, attack
@@ -49,7 +49,7 @@ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout
 DEFAULT_OUT = os.path.join(ROOT, "knowledge", "characters", "ironclad", "potion-equivalents.json")
 GAME_DATA = os.path.join(ROOT, "data", "game-data.json")
 POTION_VALUES_TS = os.path.join(ROOT, "agent", "src", "knowledge", "potion-values.ts")
-CARD_MODEL_TS = os.path.join(ROOT, "agent", "src", "strategy", "card-model.ts")
+CARD_MODEL_TS = os.path.join(ROOT, "agent", "src", "reflex", "card-model.ts")
 
 ASCENSIONS = (8, 9)
 ACTS = (1, 2, 3)

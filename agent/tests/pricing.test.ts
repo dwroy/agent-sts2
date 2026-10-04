@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { JEV_INPUT_USD_PER_MTOK, estimateCostUsd, formatCostUsd } from "../src/jev/pricing.js";
+import { JEV_INPUT_USD_PER_MTOK, estimateCostUsd, formatCostUsd } from "../src/reflex/jev/pricing.js";
 
 describe("Jev pricing", () => {
   it("matches the documented per-million price", () => {

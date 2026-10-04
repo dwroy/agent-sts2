@@ -20,7 +20,7 @@ default.min_n: 20
 - 残差报告：{{report}}（agent/tools/mechanics-residuals.ts 生成；每个记录的战斗回合，求解器对实际打出的线预测的本回合掉血 vs 实际，按场上的敌人能力、本回合被去掉的能力、敌人分组；负数 = 求解器高估掉血）。分组的明细在 {{summary}}。
 - 怪物数据库：{{monster_db}}。每个怪物的 `powers`（能力名和游戏描述）、`moves`（出招表），以及 `observed`（日志统计的机制：powers_stripped、escape_moves、kill_rewards、mid_turn_stuns）；顶层 `observed.powers_stripped` 是每个能力在所有怪物上的合计。口径见 `meta.note` 和 `observed.note`。
 - 日志库（只读，DuckDB）：`{{worktree}}/data/logdb-venv/bin/python {{worktree}}/agent/tools/logdb/query.py --no-sync "SELECT ..."`；`--schema` 看表；`--raw states <off>` 按字节偏移取一行原始状态（state_index.off）。用法见 {{worktree}}/docs/logdb.md。原始日志在 {{logs_dir}}（很大，不许整份读，只用日志库或按偏移读）。
-- 求解器和规则：{{worktree}}/agent/src/strategy/turn-solver.ts（`incomingHits`、`STRIP_COUNTERS`、EnemySim 字段的注释里有每个已建模机制和证据）、{{worktree}}/agent/src/knowledge/mechanics.ts（规则门槛）、{{worktree}}/agent/src/screens/combat-plan.ts（`MODELLED_ENEMY_POWERS`、`POWER_NOTES`、`enemySims`）。
+- 求解器和规则：{{worktree}}/agent/src/reflex/turn-solver.ts（`incomingHits`、`STRIP_COUNTERS`、EnemySim 字段的注释里有每个已建模机制和证据）、{{worktree}}/agent/src/knowledge/mechanics.ts（规则门槛）、{{worktree}}/agent/src/reflex/combat-plan.ts（`MODELLED_ENEMY_POWERS`、`POWER_NOTES`、`enemySims`）。
 
 ## 做法
 1. 先跑 `date`。读 docs/mechanics-learning.md 和残差报告。

@@ -2,13 +2,13 @@
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { describePlan, enemySims, planCombatTurn, planFacts } from "../src/screens/combat-plan.js";
-import { modelHandCard } from "../src/strategy/card-model.js";
-import { solveTurn } from "../src/strategy/turn-solver.js";
+import { loadConfig } from "../src/core/config.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { describePlan, enemySims, planCombatTurn, planFacts } from "../src/reflex/combat-plan.js";
+import { modelHandCard } from "../src/reflex/card-model.js";
+import { solveTurn } from "../src/reflex/turn-solver.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;

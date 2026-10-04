@@ -43,7 +43,7 @@ import { createHash } from "node:crypto";
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
-import type { BrainConfig } from "../config.js";
+import type { BrainConfig } from "../core/config.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, KnowledgeNote } from "./types.js";
 
 /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */

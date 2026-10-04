@@ -4,7 +4,7 @@
  * Flower's counter one turn back, Ember Tea's fights left one up). Offline, for tools/boss-sim/backtest.ts --starts syn
  * and synthetic-check.ts.
  */
-import { parseGameState, type GameState } from "../../src/mod/schema.js";
+import { parseGameState, type GameState } from "../../src/hand/mod/schema.js";
 
 export function preFightState(t1: Record<string, unknown>): GameState {
   const raw = JSON.parse(JSON.stringify(t1)) as Record<string, unknown>;

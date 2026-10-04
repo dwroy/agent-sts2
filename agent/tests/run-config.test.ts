@@ -1,5 +1,5 @@
 /**
- * The run configuration log (src/telemetry/run-config.ts, docs/eval.md §8): one row per run with the configuration
+ * The run configuration log (src/eye/run-config.ts, docs/eval.md §8): one row per run with the configuration
  * it was played with, never a key; once per run (a restart writes again only with a changed configuration); the
  * loop writes it on a run's first state; tools/logdb/extract.py reads the rows the writer makes, and the Python
  * fixtures have the writer's shape. Fixed data (tests/gkb-data), no model is called.
@@ -12,8 +12,8 @@ import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { createBrain, type Brain } from "../src/brain/brain.js";
-import { loadConfig, type AppConfig } from "../src/config.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
+import { loadConfig, type AppConfig } from "../src/core/config.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
 import { LOGS_DIR } from "../src/core/paths.js";
 import {
   type CodeInfo,
@@ -25,7 +25,7 @@ import {
   runConfigLogPath,
   type RunConfigRow,
   TOKENS_PER_CHAR,
-} from "../src/telemetry/run-config.js";
+} from "../src/eye/run-config.js";
 import { board, FakeDeepSeek, play, setupOneshotTests } from "./oneshot-support.js";
 import { mainMenuPayload } from "./scenarios.js";
 import { knowledgeFile } from "../src/knowledge/files.js";

@@ -12,8 +12,8 @@
 
 import { DEFAULT_KNOWLEDGE_DIR, DEFAULT_LOGS_DIR } from "../src/knowledge/render/data.js";
 import { renderKnowledgeSections } from "../src/knowledge/render/knowledge-prefix.js";
-import { buildTools } from "../src/tools/registry.js";
-import type { ToolContext } from "../src/tools/types.js";
+import { buildTools } from "../src/brain/tools/registry.js";
+import type { ToolContext } from "../src/brain/tools/types.js";
 
 function usage(message: string): never {
   process.stderr.write(`${message}\nusage: npx tsx tools/gkb-dump.ts [--ascension N] [--act N] [--knowledge-dir D] [--logs-dir D] [--section KEY] [--sizes-only] [--tool NAME 'JSON']\n`);

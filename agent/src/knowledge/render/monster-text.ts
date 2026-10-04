@@ -7,7 +7,7 @@
  * Every number carries its n. Encounters list our record at every logged ascension.
  */
 
-import { stripMarkup } from "../../util/json.js";
+import { stripMarkup } from "../../core/util/json.js";
 import {
   ON_DEATH_SPAWNS,
   amountEstimateNote,

@@ -7,13 +7,13 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { setExperienceForTests, type ExperienceEntry } from "../src/knowledge/experience.js";
 import type { MonsterEntry } from "../src/knowledge/monster-db.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
 import {
   JEV_EXPERIENCE_TEXTS,
   jevExperience,
@@ -24,8 +24,8 @@ import {
   planPotionClauses,
   POTION_BOSS_DATA,
   type JevExperienceInput,
-} from "../src/screens/jev-experience.js";
-import type { RunPlan } from "../src/strategy/run-plan.js";
+} from "../src/reflex/jev-experience.js";
+import type { RunPlan } from "../src/memory/run-plan.js";
 import { combatPayload, runPayload, testKnowledge } from "./scenarios.js";
 
 afterEach(() => setExperienceForTests(null));

@@ -9,11 +9,11 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory } from "../src/project/types.js";
-import { deckCards } from "../src/screens/oneshot.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory } from "../src/memory/types.js";
+import { deckCards } from "../src/hand/screens/oneshot.js";
 import { loggedKnowledge } from "./logged.js";
-import type { JsonValue } from "../src/util/json.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { act, ask, board, choose, decide, env, FakeDeepSeek, keyOf, optionsOf, play, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { eventPayload, mainMenuPayload } from "./scenarios.js";
 

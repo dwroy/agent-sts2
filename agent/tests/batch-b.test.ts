@@ -6,14 +6,14 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory, type AskDecision, type Decision } from "../src/project/types.js";
-import { describePlan, planCombatTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate, type RolloutInput } from "../src/strategy/rollout.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { reviveThrough, solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type Revive } from "../src/strategy/turn-solver.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory, type AskDecision, type Decision } from "../src/memory/types.js";
+import { describePlan, planCombatTurn, revivesOf, trackLizardTail } from "../src/reflex/combat-plan.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate, type RolloutInput } from "../src/reflex/rollout.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { reviveThrough, solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type Revive } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
@@ -246,7 +246,7 @@ describe("2. Thrash takes an Attack from the hand; its damage is added to Thrash
   });
 
   it("the card model: Thrash is its own effect, not a random exhaust of any card", async () => {
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const { loggedKnowledge } = await import("./logged.js");
     const thrash = modelHandCard(thrashRaw(0), 0, loggedKnowledge);
     expect(thrash).toMatchObject({ special: "thrash", damage: 16, hits: 2 });
@@ -254,7 +254,7 @@ describe("2. Thrash takes an Attack from the hand; its damage is added to Thrash
   });
 
   it("one Attack in hand: it is exhausted, Thrash hits for its printed 16 and grows by the Attack's 8; a Skill is still planned after", async () => {
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const { loggedKnowledge } = await import("./logged.js");
     const thrash = modelHandCard(thrashRaw(0), 0, loggedKnowledge);
     const dismantle = card(1, "DISMANTLE", { damage: 8, damageBase: 8, special: "dismantle" });
@@ -271,7 +271,7 @@ describe("2. Thrash takes an Attack from the hand; its damage is added to Thrash
   });
 
   it("several Attacks: the least damage is the growth (the pick is random) and no Attack is planned after it", async () => {
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const { loggedKnowledge } = await import("./logged.js");
     const thrash = modelHandCard(thrashRaw(0), 0, loggedKnowledge);
     const plans = solveTurn({ hand: [thrash, card(1, "BLUDGEON", { cost: 3, damage: 32, damageBase: 32 }), strike(2), defend(3)], player: player({ hp: 60, energy: 2 }), enemies: [enemy({ hp: 100, maxHp: 100, attacks: [{ damage: 10, hits: 1 }] })], fightKind: "monster" }).plans;
@@ -369,7 +369,7 @@ describe("4. The 0.8 cut only for powers still unmodelled; Corpse Slug's Ravenou
   });
 
   it("the enemy sims: Ravenous, the gold and stolen-stat powers and our temporary Strength loss take no cut; the rest does, named for Jev", async () => {
-    const { enemySims, unmodelledEnemyPowers } = await import("../src/screens/combat-plan.js");
+    const { enemySims, unmodelledEnemyPowers } = await import("../src/reflex/combat-plan.js");
     const withPowers = (...ids: string[]) => ({ enemies: [{ index: 0, enemy_id: "X", name: "X", current_hp: 30, max_hp: 30, block: 0, intents: [], powers: ids.map((id) => ({ power_id: id, amount: 1 })) }] });
     for (const id of ["RAVENOUS_POWER", "THIEVERY_POWER", "HEIST_POWER", "HATCH_POWER", "POSSESS_SPEED_POWER", "POSSESS_STRENGTH_POWER", "DEXTERITY_POWER", "GALVANIC_POWER", "MANGLE_POWER", "DARK_SHACKLES_POWER", "SHACKLING_POTION_POWER", "PIERCING_WAIL_POWER", "HIGH_VOLTAGE_POWER"]) {
       expect(enemySims(withPowers(id))[0]!.unmodelled, id).toBe(false);
@@ -399,7 +399,7 @@ describe("4. The 0.8 cut only for powers still unmodelled; Corpse Slug's Ravenou
   });
 
   it("Dark Shackles is a modelled card (its temporary Strength loss is applied), not 'unmodelled'", async () => {
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const { loggedKnowledge } = await import("./logged.js");
     const shackles = modelHandCard({ index: 0, card_id: "DARK_SHACKLES", name: "黑暗镣铐", energy_cost: 0, playable: true, target_type: "AnyEnemy", requires_target: true, valid_target_indices: [0], dynamic_values: [{ name: "StrengthLoss", base_value: 9, current_value: 9 }], resolved_rules_text: "使一名敌人在本回合失去9点力量。 消耗。" }, 0, loggedKnowledge);
     expect(shackles).toMatchObject({ enemyTempStrengthLoss: 9, known: true });
@@ -573,7 +573,7 @@ describe("7. Status cards with a cost are playable in the piles and the rollout,
   };
 
   it("the piles: cost and effect from the game text; only Dazed and Wound are unplayable", async () => {
-    const { pileCardModels } = await import("../src/screens/combat-plan.js");
+    const { pileCardModels } = await import("../src/reflex/combat-plan.js");
     const knowledge = await statusKnowledge();
     const fx = logged("en55-f8-t9");
     const view = (fx.state["agent_view"] as Raw)["combat"] as Raw;
@@ -593,7 +593,7 @@ describe("7. Status cards with a cost are playable in the piles and the rollout,
   });
 
   it("the rollout: a Beckon drawn is played away when there is energy for it", async () => {
-    const { statusCardModel } = await import("../src/strategy/rollout-live.js");
+    const { statusCardModel } = await import("../src/reflex/rollout-live.js");
     const knowledge = await statusKnowledge();
     const beckon = (index: number) => statusCardModel("BECKON", knowledge, index);
     expect(beckon(0)).toMatchObject({ playable: true, cost: 1, heldHpLoss: 6 });
@@ -656,12 +656,12 @@ describe("8. A move's rare logged effect is not applied on every use (consistenc
     const { monsterDamageByTurn } = await import("../src/knowledge/monster-db.js");
     const byTurn = monsterDamageByTurn("WATERFALL_GIANT", 8, 5, GIANT_DB.monsters as never)!;
     expect(byTurn.perTurn).toEqual([15, 15, 15, 15, 15]);
-    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const { enemyTable } = await import("../src/reflex/rollout-live.js");
     expect(enemyTable("WATERFALL_GIANT", 8, GIANT_DB.monsters as never, {})!.moves["STOMP_MOVE"]).toMatchObject({ damage: 15, strength: 0 });
   });
 
   it("our debuffs: a leak is dropped, a real choice kept (Magi Knight's 1 Weak in 16; the Knowledge Demon's curses)", async () => {
-    const { playerPowersOf } = await import("../src/strategy/rollout-live.js");
+    const { playerPowersOf } = await import("../src/reflex/rollout-live.js");
     const dampen = { n_seen: 16, player_powers_applied: { DAMPEN_POWER: { "1": 14 }, WEAK_POWER: { "1": 1 } } };
     expect(playerPowersOf(dampen as never, 8)).toEqual({});
     const curse = { n_seen: 109, player_powers_applied: { SLOTH_POWER: { "3": 38 }, MIND_ROT_POWER: { "1": 39 }, WASTE_AWAY_POWER: { "1": 19 }, DISINTEGRATION_POWER: { "5": 9 } } };
@@ -675,7 +675,7 @@ describe("9. Route scoring: each elite at its own floor (R1); likely death from 
   const costs = { act: 2, maxHp: 80, monster: { median: 11, p75: 19, source: "test" }, elite: { median: 33, p75: 45, source: "test" }, unknown: { median: 0, p75: 3, source: "test" } };
 
   it("the weights take the node's row: floor in act = row + 1", async () => {
-    const { makeRouteWeights } = await import("../src/screens/map.js");
+    const { makeRouteWeights } = await import("../src/hand/screens/map.js");
     const weights = makeRouteWeights(2, costs);
     const at = { hp: 0.9, gold: 100, fights: 0 };
     expect(weights("Elite", at, 2)).toBe(-3); // first floors of the act
@@ -684,7 +684,7 @@ describe("9. Route scoring: each elite at its own floor (R1); likely death from 
   });
 
   it("a fight is a likely death only at or below its median measured cost (33/80 = 41%), not the old 55%", async () => {
-    const { LIKELY_DEATH, makeRouteWeights } = await import("../src/screens/map.js");
+    const { LIKELY_DEATH, makeRouteWeights } = await import("../src/hand/screens/map.js");
     const weights = makeRouteWeights(2, costs);
     expect(weights("Elite", { hp: 0.45, gold: 100, fights: 0 }, 7)).not.toBe(LIKELY_DEATH);
     expect(weights("Elite", { hp: 0.4, gold: 100, fights: 0 }, 7)).toBe(LIKELY_DEATH);
@@ -694,7 +694,7 @@ describe("9. Route scoring: each elite at its own floor (R1); likely death from 
 
   it("the map question at act start values a mid-act elite as mid-act (it read every elite as a first-floors -3)", async () => {
     const { mapPayload } = await import("./scenarios.js");
-    const { planMap } = await import("../src/screens/map.js");
+    const { planMap } = await import("../src/hand/screens/map.js");
     const { setRoomCostsForTests } = await import("../src/knowledge/room-costs.js");
     setRoomCostsForTests({ "0": { "1": { Monster: { n: 100, median: 8, p75: 12, mean: 9 }, Elite: { n: 50, median: 20, p75: 30, mean: 22 }, Unknown: { n: 50, median: 0, p75: 2, mean: 1 } } } });
     try {
@@ -753,7 +753,7 @@ describe("10. Small ones", () => {
   });
 
   it("the backtest builds its rollout input with the live builder (status cards, energy relics, spawns)", async () => {
-    const { boardRolloutInput } = await import("../src/strategy/rollout-live.js");
+    const { boardRolloutInput } = await import("../src/reflex/rollout-live.js");
     const fx = logged("en55-f8-t9");
     const run = fx.state["run"] as Raw;
     run["relics"] = [...((run["relics"] as Raw[]) ?? []), { index: 9, relic_id: "PUMPKIN_CANDLE", name: "南瓜蜡烛", stack: 1 }];
@@ -770,7 +770,7 @@ describe("10. Small ones", () => {
 
 describe("10b. No code value or rank on any DeepSeek pick, route questions included (V4 M2; was consistency R9's shared ranks)", () => {
   it("a map/* pick shows each option's facts only; code's order stays for the fallback", async () => {
-    const { buildPickDecision } = await import("../src/screens/pick.js");
+    const { buildPickDecision } = await import("../src/hand/screens/pick.js");
     const option = (key: string, score: number) => ({ key, intent: { action: "choose_map_node" as const, option_index: Number(key.slice(1)) }, label: key, score, summary: { path: key } });
     const decision = buildPickDecision({
       label: "map/statue-potion",
@@ -845,7 +845,7 @@ describe("11. A saturated board ranks lines by the leader's HP left first, as th
     ({ plan: { steps: [], name } as unknown as Plan, value: -62 - 40, hpLoss: 62, wins: 0, deaths: 8, samples: 8, enemyHpLeft: 100, turnsSurvived: 4, leaderHpLeft: null, ...over }) as LineEstimate;
 
   it("the Priest's HP left, not the summed HP with the Followers (Fiend Fire into a Follower read best)", async () => {
-    const { pickRolloutBest } = await import("../src/strategy/rollout-live.js");
+    const { pickRolloutBest } = await import("../src/reflex/rollout-live.js");
     const priest = line("into the Priest", { enemyHpLeft: 120, leaderHpLeft: 60 });
     const follower = line("into a Follower", { enemyHpLeft: 110, leaderHpLeft: 110 });
     expect(pickRolloutBest([follower, priest], 62)).toMatchObject({ best: priest, saturated: true });
@@ -857,7 +857,7 @@ describe("11. A saturated board ranks lines by the leader's HP left first, as th
   });
 
   it("every line carries the leader's HP left, the ones rolled out without a kill order too", async () => {
-    const { killOrders } = await import("../src/strategy/rollout.js");
+    const { killOrders } = await import("../src/reflex/rollout.js");
     const table: EnemyTable = { moves: { HIT: { damage: 4, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } };
     const meta: FightMeta = { act: 1, t: 1, asc: 9, kind: "boss", enc: "KIN_FOLLOWER+KIN_PRIEST", deck: { n: 10, atk: 10, skl: 0, pow: 0, junk: 0, dmg: 60, blk: 0, up: 0 }, relics: 1, max_en: 3 };
     const hand = [card(0, "STRIKE_IRONCLAD", { damage: 6, validTargets: [0, 1] }), card(1, "STRIKE_IRONCLAD", { damage: 6, validTargets: [0, 1] })];

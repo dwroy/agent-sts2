@@ -15,14 +15,14 @@ import { FULL_KNOWLEDGE_NOTE, isContextOverflow, KnowledgePrompt, fullSystemProm
 import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "../src/brain/types.js";
-import { DEFAULT_CLAUDE_MAX_CALLS, loadConfig } from "../src/config.js";
+import { DEFAULT_CLAUDE_MAX_CALLS, loadConfig } from "../src/core/config.js";
 import { SLICE_LESSONS_HEADING, SLICE_STATS_HEADING } from "../src/knowledge/experience.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 import { loadKnowledgeData, loadPostmortems } from "../src/knowledge/render/data.js";
 import { queryOldKnowledge } from "../src/knowledge/render/old-knowledge.js";
 import { renderKnowledgePrefix } from "../src/knowledge/render/knowledge-prefix.js";
-import { DeepSeekClient, SYSTEM } from "../src/llm/deepseek.js";
-import type { JsonValue } from "../src/util/json.js";
+import { DeepSeekClient, SYSTEM } from "../src/brain/llm/deepseek.js";
+import type { JsonValue } from "../src/core/util/json.js";
 
 const DATA = join(dirname(fileURLToPath(import.meta.url)), "gkb-data");
 const KNOWLEDGE = join(DATA, "knowledge");

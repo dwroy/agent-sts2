@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fight value model from our own logs (live only as facts for Jev: agent/src/strategy/rollout-live.ts).
+"""Fight value model from our own logs (live only as facts for Jev: agent/src/reflex/rollout-live.ts).
 
 What happens AFTER one of our turns ends, learned from logs/states.jsonl (+ runs.jsonl, decisions.jsonl):
 from the state at the end of our turn (after our plays, before the enemies act) until the fight ends,
@@ -1705,7 +1705,7 @@ def export(suite, rows, feats, out_path, report):
         "support": {"k": Table.K, "hp_loss": acc(table["hp_loss"])},
         "test_error": kinds,
     }
-    # Golden examples for the TS loader (agent/src/strategy/fight-value.ts must reproduce them exactly).
+    # Golden examples for the TS loader (agent/src/reflex/fight-value.ts must reproduce them exactly).
     rng = random.Random(3)
     examples = []
     for i in sorted(rng.sample(range(len(rows)), 6)):

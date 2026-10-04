@@ -11,9 +11,9 @@
  *   for the free-form plans: the run plan is accepted when it is a plan at all (isRunPlanReply, as v3 did), and
  *   the loop's parsers drop unknown ids as before.
  */
-import { isRunPlanReply, RUN_PLAN_TASK_KEY } from "../strategy/run-plan.js";
-import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../strategy/route-map.js";
-import type { JsonSchema } from "../tools/types.js";
+import { isRunPlanReply, RUN_PLAN_TASK_KEY } from "../memory/run-plan.js";
+import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../sim/route-map.js";
+import type { JsonSchema } from "./tools/types.js";
 import type { AnswerSpec } from "./types.js";
 
 type Json = Record<string, unknown>;

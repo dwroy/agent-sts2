@@ -8,12 +8,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { DeepSeekAnswerError, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import type { JsonValue } from "../src/util/json.js";
-import { runConfigLogPath, type RunConfigRow } from "../src/telemetry/run-config.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekAnswerError, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+import type { JsonValue } from "../src/core/util/json.js";
+import { runConfigLogPath, type RunConfigRow } from "../src/eye/run-config.js";
 import { board, FakeDeepSeek, keyOf, play, setupOneshotTests } from "./oneshot-support.js";
-import type { AppConfig } from "../src/config.js";
+import type { AppConfig } from "../src/core/config.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();

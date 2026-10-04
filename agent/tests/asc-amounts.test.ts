@@ -26,7 +26,7 @@ import {
 } from "../src/knowledge/monster-db.js";
 import { renderMonster } from "../src/knowledge/render/monster-text.js";
 import { bossOpening } from "../src/sim/boss-start.js";
-import { enemyTable, playerPowersOf, shriekFromOf } from "../src/strategy/rollout-live.js";
+import { enemyTable, playerPowersOf, shriekFromOf } from "../src/reflex/rollout-live.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 /** A move giving itself Strength, by ascension (asc -> most common amount, logged `n` times). */

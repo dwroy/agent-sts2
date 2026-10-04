@@ -4,6 +4,6 @@
  * costs, which is also POTION_COST=off's. The potion-cost tests switch it on with their own fixed table
  * (tests/potion-cost.test.ts).
  */
-import { potionCostOptions } from "../src/strategy/potion-cost.js";
+import { potionCostOptions } from "../src/reflex/potion-cost.js";
 
 potionCostOptions.enabled = false;

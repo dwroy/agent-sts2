@@ -9,18 +9,18 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv, type SlEnv } from "../src/project/types.js";
-import { planCombatTurn, slPointOf } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv, type SlEnv } from "../src/memory/types.js";
+import { planCombatTurn, slPointOf } from "../src/reflex/combat-plan.js";
 import { previousAttemptsJson, type SlAttemptRow } from "../src/sl/attempts.js";
 import { exploreTried, slBoardKey } from "../src/sl/explore.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import type { AnswerSet } from "../src/jev/answers.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
 
 type Raw = Record<string, unknown>;
 export const DATA = join(dirname(fileURLToPath(import.meta.url)), "sl-explore-whole-data");

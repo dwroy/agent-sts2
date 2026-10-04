@@ -1,5 +1,5 @@
 /**
- * Offline rollout (src/strategy/rollout.ts): deterministic under a seed, degrades to fit its time budget,
+ * Offline rollout (src/reflex/rollout.ts): deterministic under a seed, degrades to fit its time budget,
  * the gating math agrees with the builder's gates file, the features mirror the Python builder, and decision
  * code reaches it only through the combat facts (rollout-live.ts; tests/rollout-live.test.ts).
  */
@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import type { CardModel } from "../src/strategy/card-model.js";
+import type { CardModel } from "../src/reflex/card-model.js";
 import {
   blend,
   calibrate,
@@ -28,8 +28,8 @@ import {
   type FightValueGates,
   type RolloutInput,
   type Snapshot,
-} from "../src/strategy/rollout.js";
-import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+} from "../src/reflex/rollout.js";
+import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -421,7 +421,7 @@ describe("rollout (offline)", () => {
         for (const name of readdirSync(dir)) {
           const path = join(dir, name);
           if (statSync(path).isDirectory()) walk(path);
-          else if (path.endsWith(".ts") && new RegExp(`from "[./]*(strategy/)?${module}\\.js"`).test(readFileSync(path, "utf8"))) found.push(path.slice(ROOT.length + 1));
+          else if (path.endsWith(".ts") && new RegExp(`from "[./]*(reflex/)?${module}\\.js"`).test(readFileSync(path, "utf8"))) found.push(path.slice(ROOT.length + 1));
         }
       };
       walk(join(ROOT, "src"));
@@ -431,13 +431,13 @@ describe("rollout (offline)", () => {
     // into the combat question through src/sim/boss-lines.ts only (facts, and the boss ranking behind BOSS_SIM_LINES).
     // B3 builds its synthetic boss start with the live planner's board (rollout-live), and reaches the loop only through
     // build-sim-facts (the deck-building questions' facts) and its worker pool (index.ts).
-    expect(importers("rollout").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/strategy/rollout-live.ts"]);
-    expect(importers("rollout-live").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/screens/combat-plan.ts"]);
+    expect(importers("rollout").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/rollout-live.ts"]);
+    expect(importers("rollout-live").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/combat-plan.ts"]);
     expect(importers("(sim/)?boss-sim").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
-    expect(importers("(sim/)?boss-lines").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/screens/combat-plan.ts"]);
+    expect(importers("(sim/)?boss-lines").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/reflex/combat-plan.ts"]);
     expect(importers("(sim/)?(boss-start|build-sim)").filter((path) => !path.startsWith("src/sim/"))).toEqual([]);
-    expect(importers("(sim/)?build-sim-facts").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/loop.ts"]);
-    expect(importers("(sim/)?build-sim-pool").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/index.ts"]);
+    expect(importers("(sim/)?build-sim-facts").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/hand/loop.ts"]);
+    expect(importers("(sim/)?build-sim-pool").filter((path) => !path.startsWith("src/sim/"))).toEqual(["src/core/index.ts"]);
   });
 });
 
@@ -510,7 +510,7 @@ describe("the rollout policy's later turns hold the potions like 0-cost cards (D
 
 describe("a phase boss revives into its real later phases (FSPK F48: Test Subject A8 111/212/313, the monster DB)", () => {
   it("laterPhaseHps: the phases after the current one, by the nearest phase HP; an unknown reviver gets one at 1.5x", async () => {
-    const { laterPhaseHps } = await import("../src/strategy/boss-clock.js");
+    const { laterPhaseHps } = await import("../src/sim/boss-clock.js");
     // Phase 3 at A8 is logged now (313; it was assumed ~318).
     expect(laterPhaseHps(111, 8)).toEqual([212, 313]);
     expect(laterPhaseHps(212, 8)).toEqual([313]);
@@ -851,7 +851,7 @@ describe("debuffs enemy moves put on us carry into the rollout's later turns (XL
   });
 
   it("the real DB: Terror puts 99 Vulnerable on us", async () => {
-    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const { enemyTable } = await import("../src/reflex/rollout-live.js");
     const db = JSON.parse(readFileSync(join(ROOT, "..", "knowledge/common/monster-db.json"), "utf8")) as { monsters: Record<string, never> };
     expect(enemyTable("TERROR_EEL", 9, db.monsters, {})!.moves["TERROR_MOVE"]!.playerPowers).toEqual({ VULNERABLE_POWER: 99 });
   });
@@ -1071,7 +1071,7 @@ describe("enemy Strength that grows every turn (Ritual, Territorial, High Voltag
   });
 
   it("the table reads a move's Ritual from the monster DB at this ascension", async () => {
-    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const { enemyTable } = await import("../src/reflex/rollout-live.js");
     const db = { CULTIST: { moves: { INCANTATION_MOVE: { n_seen: 10, self_powers_gained_by_asc: { "8": { RITUAL_POWER: { "5": 9 } }, "9": { RITUAL_POWER: { "6": 3 } } } } } } };
     expect(enemyTable("CULTIST", 9, db, {})!.moves["INCANTATION_MOVE"]!.selfPowers).toEqual({ RITUAL_POWER: 6 });
     expect(enemyTable("CULTIST", 8, db, {})!.moves["INCANTATION_MOVE"]!.selfPowers).toEqual({ RITUAL_POWER: 5 });
@@ -1121,7 +1121,7 @@ describe("what enemy moves give themselves besides Strength (Soul Fysh's Fade; f
   });
 
   it("the table reads them from the monster DB", async () => {
-    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const { enemyTable } = await import("../src/reflex/rollout-live.js");
     const db = { SOUL_FYSH: { moves: { FADE_MOVE: { n_seen: 10, self_powers_gained_by_asc: { "8": { INTANGIBLE_POWER: { "1": 9 } } } } } } };
     expect(enemyTable("SOUL_FYSH", 8, db, {})!.moves["FADE_MOVE"]!.selfPowers).toEqual({ INTANGIBLE_POWER: 1 });
   });
@@ -1198,7 +1198,7 @@ describe("Waterfall Giant and Knowledge Demon in the later turns: the eruption g
   });
 
   it("the heal comes from the monster DB at this ascension, the boss clock's numbers without it", async () => {
-    const { healOf } = await import("../src/strategy/rollout-live.js");
+    const { healOf } = await import("../src/reflex/rollout-live.js");
     expect(healOf("WATERFALL_GIANT", "SIPHON_MOVE", { heal_by_asc: { "8": { "15": 6 }, "9": { "18": 2 } } }, 9)).toBe(18);
     // A tie goes to the larger amount (a heal near full HP gives less): the Knowledge Demon's A9 Ponder, 12/24/30 once each.
     expect(healOf("KNOWLEDGE_DEMON", "PONDER_MOVE", { heal_by_asc: { "8": { "27": 8, "30": 46 }, "9": { "12": 1, "24": 1, "30": 1 } } }, 9)).toBe(30);
@@ -1244,7 +1244,7 @@ describe("status cards enemy moves add go into the rollout's piles (coverage gap
   });
 
   it("statusCardsOf: the intent's count, the DB's card and pile; an unnamed card is left to the stand-in", async () => {
-    const { statusCardsOf } = await import("../src/strategy/rollout-live.js");
+    const { statusCardsOf } = await import("../src/reflex/rollout-live.js");
     expect(statusCardsOf({ status_cards: { "2": 30 }, status_card_ids: { BECKON: 58, DAZED: 1 }, status_card_pile: { discard: 59 } })).toEqual({ statusCards: [{ cardId: "BECKON", count: 2, pile: "discard" }] });
     expect(statusCardsOf({ status_cards: { "3": 9 }, status_card_ids: { DAZED: 27 }, status_card_pile: { draw: 20, discard: 7 } })).toEqual({ statusCards: [{ cardId: "DAZED", count: 3, pile: "draw" }] });
     expect(statusCardsOf({ status_cards: { "3": 9 } })).toEqual({ statusCards: [{ cardId: null, count: 3, pile: "discard" }] });
@@ -1364,7 +1364,7 @@ describe("our debuffs in the rollout: Tender, Smoggy, Tangled, Chains of Binding
   });
 
   it("playerPowersOf: alternatives when the powers' uses add up to the move's, ordered by this ascension's picks", async () => {
-    const { playerPowersOf } = await import("../src/strategy/rollout-live.js");
+    const { playerPowersOf } = await import("../src/reflex/rollout-live.js");
     const entry = {
       n_seen: 109,
       player_powers_applied: { SLOTH_POWER: { "3": 38 }, MIND_ROT_POWER: { "1": 39 }, WASTE_AWAY_POWER: { "1": 19 }, DISINTEGRATION_POWER: { "6": 5, "7": 2, "8": 2 } },
@@ -1406,7 +1406,7 @@ describe("moves with no measured base (Queen, Torch Head Amalgam): their shown h
   };
 
   it("enemyTable: the shown hit and its hits, marked shown", async () => {
-    const { enemyTable } = await import("../src/strategy/rollout-live.js");
+    const { enemyTable } = await import("../src/reflex/rollout-live.js");
     const table = enemyTable("QUEEN", 8, QUEEN_DB, { QUEEN: { next: {}, damage: { OFF_WITH_YOUR_HEAD_MOVE: 43, EXECUTION_MOVE: 25 } } })!;
     expect(table.moves["OFF_WITH_YOUR_HEAD_MOVE"]).toMatchObject({ damage: 7, hits: 5, shown: true });
     expect(table.moves["EXECUTION_MOVE"]).toMatchObject({ damage: 25, hits: 1, shown: true });
@@ -1467,7 +1467,7 @@ describe("energy relics in the rollout's later turns (consistency #9: Pumpkin Ca
   });
 
   it("relicEnergyOf: the energy relics held, Pael's Flesh from T3, a Pumpkin Candle only while lit", async () => {
-    const { relicEnergyOf } = await import("../src/strategy/rollout-live.js");
+    const { relicEnergyOf } = await import("../src/reflex/rollout-live.js");
     expect(relicEnergyOf({ relics: [{ relic_id: "BURNING_BLOOD" }, { relic_id: "BLESSED_ANTLER" }, { relic_id: "PAELS_FLESH" }, { relic_id: "PUMPKIN_CANDLE", stack: 3 }] })).toEqual([
       { amount: 1, from: 1 },
       { amount: 1, from: 3 },

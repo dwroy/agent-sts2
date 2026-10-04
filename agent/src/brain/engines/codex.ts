@@ -54,8 +54,8 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFil
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join } from "node:path";
 
-import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../config.js";
-import type { JsonSchema } from "../../tools/types.js";
+import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
+import type { JsonSchema } from "../tools/types.js";
 import { EngineFailure, labelPrefix, withNotes, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
 import { lenientRoute, stableSchema } from "../specs.js";

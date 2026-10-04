@@ -15,7 +15,7 @@
 import { execFileSync } from "node:child_process";
 import { closeSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 
-import { parseGameState } from "../../src/mod/schema.js";
+import { parseGameState } from "../../src/hand/mod/schema.js";
 import { createSlLog } from "../../src/sl/attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf } from "../../src/sl/draws.js";
 import { fromRoot } from "../../src/core/paths.js";

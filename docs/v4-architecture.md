@@ -14,10 +14,10 @@ A/B/C 三个事实口径（路线投影算法、卡牌统计口径、Jev 的「�
 
 | 模块 | 职责 | 现在对应的代码 |
 |---|---|---|
-| 手 action adapter + 执行闸 | 执行动作；执行前核对状态指纹和合法性，过期动作不执行；大脑和小脑的动作都经过它 | agent/src/mod、agent/src/screens、loop.ts |
-| 眼 watcher | 结构化状态（不看画面）；**每个模块看到的输入原文全部落盘**；预测对实际的偏差记录 | agent/src/telemetry、logs/*.jsonl |
+| 手 action adapter + 执行闸 | 执行动作；执行前核对状态指纹和合法性，过期动作不执行；大脑和小脑的动作都经过它 | agent/src/hand/mod、agent/src/hand/screens、loop.ts |
+| 眼 watcher | 结构化状态（不看画面）；**每个模块看到的输入原文全部落盘**；预测对实际的偏差记录 | agent/src/eye、logs/*.jsonl |
 | 小脑 reflex | 战斗：代码推演 + Jev 挑选；按明确条件升级给大脑 | screens/combat-plan.ts、turn-solver、rollout |
-| 大脑 brain | 本地 agent：路线、构筑、商店、休息、事件、整局计划；能调工具查知识、问模拟器、下动作；以后接小脑的升级 | agent/src/brain（新）；原 agent/src/llm/deepseek.ts |
+| 大脑 brain | 本地 agent：路线、构筑、商店、休息、事件、整局计划；能调工具查知识、问模拟器、下动作；以后接小脑的升级 | agent/src/brain（新）；原 agent/src/brain/llm/deepseek.ts |
 | 模拟器 simulator | 算准的事实：战斗推演、路线血量、boss 时钟；作为工具给大脑和小脑 | strategy/route-projection.ts、boss-clock.ts、rollout |
 | 工作记忆 | 本局计划和承诺（如「这瓶药留给 boss」），大脑写、小脑读，只作事实、不作硬过滤 | project/run-journal.ts、run-plan.ts |
 | 知识库 GKB | 游戏事实（观察所得，带 n）、日志库、统计（自动算）、经验（带证据局号） | knowledge、logs、experience.json |
@@ -61,7 +61,7 @@ A/B/C 三个事实口径（路线投影算法、卡牌统计口径、Jev 的「�
 
 ## 3. 工具层和知识库
 
-接口在 `agent/src/tools/types.ts`：`ToolDef { name, description, inputSchema, run(input, ctx) }`。
+接口在 `agent/src/brain/tools/types.ts`：`ToolDef { name, description, inputSchema, run(input, ctx) }`。
 
 - 工具分三类：知识库（kb_*，只读、确定性）、模拟器（sim_*，只读、确定性）、游戏（game_state 只读；game_act 经执行闸执行动作，只在行动模式开放）。
 - 日志库（09-29 Dai 定用 DuckDB）：logs/*.jsonl 增量派生成 Parquet 分析库 data/logdb（JSONL 仍是唯一原始记录），表 runs / floors / fights / turns / decisions / llm_calls / run_plans / state_index；查询入口 agent/tools/logdb/query.py，工具 `logs_query`（只读 SQL）。见 docs/logdb.md。
@@ -91,7 +91,7 @@ A/B/C 三个事实口径（路线投影算法、卡牌统计口径、Jev 的「�
 
 - `v4`（jev-sts2）：集成分支。各开发项在自己的工作树和分支上做，做完合回 v4：
   - `v4-brain`（jev-sts2-v4brain）：大脑、路由器、引擎、MCP 服务；
-  - `v4-gkb`（jev-sts2-v4gkb）：知识渲染器和 kb_* 工具（agent/src/tools/registry.ts 的内容）。
+  - `v4-gkb`（jev-sts2-v4gkb）：知识渲染器和 kb_* 工具（agent/src/brain/tools/registry.ts 的内容）。
 - 定期把 v3 合进 v4（运维会话一直往 v3 合修复），再从 v4 合到各开发分支。
 - 一个工作树同一时间只让一个 agent 改代码。
 

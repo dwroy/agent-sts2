@@ -9,24 +9,24 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
-import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
-import { noteScreenChange } from "../src/loop.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { givesPotion, planEvent } from "../src/screens/event.js";
-import { planMap, restedFraction } from "../src/screens/map.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { DeepSeekAnswerError, DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { noteScreenChange } from "../src/hand/loop.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { givesPotion, planEvent } from "../src/hand/screens/event.js";
+import { planMap, restedFraction } from "../src/hand/screens/map.js";
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
-import { NO_REST_RELICS, restHealOf } from "../src/strategy/route-projection.js";
+import { NO_REST_RELICS, restHealOf } from "../src/sim/route-projection.js";
 import { board as oneshotBoard, env as oneshotEnv } from "./oneshot-support.js";
-import type { AskDecision } from "../src/project/types.js";
+import type { AskDecision } from "../src/memory/types.js";
 
-import { distinctNames, enemySims, killGroups, planCombatTurn } from "../src/screens/combat-plan.js";
-import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
-import { killOrders, rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
-import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { isRunPlanReply } from "../src/strategy/run-plan.js";
-import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { distinctNames, enemySims, killGroups, planCombatTurn } from "../src/reflex/combat-plan.js";
+import { modelHandCard, type CardModel } from "../src/reflex/card-model.js";
+import { killOrders, rolloutDecision, type EnemyTable, type FightMeta } from "../src/reflex/rollout.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { isRunPlanReply } from "../src/memory/run-plan.js";
+import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge } from "./logged.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 

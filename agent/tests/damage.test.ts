@@ -5,12 +5,12 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory } from "../src/project/types.js";
-import { planDecision } from "../src/screens/index.js";
-import { resolveDamage } from "../src/strategy/damage.js";
-import { loadConfig } from "../src/config.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory } from "../src/memory/types.js";
+import { planDecision } from "../src/hand/screens/index.js";
+import { resolveDamage } from "../src/reflex/damage.js";
+import { loadConfig } from "../src/core/config.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);

@@ -7,17 +7,17 @@
  */
 import { readFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { moveModel } from "../src/knowledge/move-model.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { fightKind } from "../src/screens/combat-plan.js";
-import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, parseFightPlan } from "../src/strategy/fight-plan.js";
-import { asRecord, str, type JsonValue } from "../src/util/json.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { fightKind } from "../src/reflex/combat-plan.js";
+import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, parseFightPlan } from "../src/memory/fight-plan.js";
+import { asRecord, str, type JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const file = process.argv[2];

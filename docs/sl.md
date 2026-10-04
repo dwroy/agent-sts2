@@ -13,7 +13,7 @@ boss 战、以及按战绩最难打的 5 种非 boss 战斗（knowledge/characte
 | 事实 | 证据 | 状态 |
 |---|---|---|
 | 局内每个画面 mod 都给 `save_and_quit`（战斗里是 `end_turn, play_card, save_and_quit`） | states.jsonl 末尾的 COMBAT / CARD_SELECTION / REWARD / EVENT 帧的 available_actions | 确认 |
-| 主菜单有这局可继续时给 `continue_run`（菜单规划器一直在用） | agent/src/screens/misc.ts、agent/tests/scenarios.ts | 确认 |
+| 主菜单有这局可继续时给 `continue_run`（菜单规划器一直在用） | agent/src/hand/screens/misc.ts、agent/tests/scenarios.ts | 确认 |
 | GAME_OVER 只给 `continue_game_over`，点了之后才有 `return_to_main_menu` | 最后几局的 GAME_OVER 帧 | 确认 |
 | 局结束后 current_run.save 不在了 | 现在 modded/profile1/saves/ 下只有 history、prefs、progress，没有 current_run.save（最后一局 00:08 结束） | 确认 |
 | history/&lt;开局 unix 时间&gt;.run 在 GAME_OVER 出现时就写了，早于 continue_game_over | 1790866223.run（负局）mtime 23:10:55 = 控制台「run ended (defeat)」23:10:55，continue_game_over 在 23:11:00；胜局 1790867487.run 00:08:51.23 vs GAME_OVER 帧 00:08:51.36 | 确认 |
@@ -344,7 +344,7 @@ rollout / B2 关；`--tag before` 在 v4 052e586 上跑，`--tag after` 在这�
 ### 2.7 规划器也按张数算狱火（2026-10-04，v4-inferno-planner）
 
 **改了什么**（判定、规划器、rollout、整场模拟共用一个数法）：
-- `agent/src/strategy/start-loss.ts`：`infernoCopies(state, INFERNO_POWER)` 从判定（§2.6）挪过来，判定、combat-plan、combat.ts（逐张出牌的旧规划器）都用它；
+- `agent/src/reflex/start-loss.ts`：`infernoCopies(state, INFERNO_POWER)` 从判定（§2.6）挪过来，判定、combat-plan、combat.ts（逐张出牌的旧规划器）都用它；
   `startTurnHpLossOf` = 狱火张数 + 深红斗篷的代价（`mantleHpCost`）。纯数的 `infernoCopiesOf(amount)`（÷9 向上取整）在 turn-solver.ts。
 - 本回合（turn-solver）：`startTurnHpLoss` 里已经是在场的张数；本回合每打出一张狱火 `Sim.infernos` +1（复制药水下打两次就是 +2），下回合开头的掉血加上它。
   原来只有「之前没有狱火、这回合打了」才 +1，第二张狱火看着不掉血。
@@ -384,7 +384,7 @@ C4F14F3XPN0N F33 第 5 次 T6（15 HP、两张狱火+，拍击 21）：原来问
 测试：agent/tests/inferno-planner.test.ts（agent/tests/inferno-planner-data 的 4 个日志局面，知识数据钉在 02e2ca8）、turn-solver / rollout 的单元测试；
 agent/tests/death-move-planner.test.ts 的 0U96 F48 T5 摘要重钉（抽牌堆里两张狱火，rollout 的数变了）。
 
-### 2.8 回合开头还没走完就出牌：loop 等一等再发（2026-10-04，v4-inferno-planner，agent/src/act/turn-start.ts）
+### 2.8 回合开头还没走完就出牌：loop 等一等再发（2026-10-04，v4-inferno-planner，agent/src/hand/act/turn-start.ts）
 
 **看到的**（agent/tools/turn-start-settle.py，每回合（T2 起、每次尝试）第一个战斗决策的那一帧对下一帧，experiments/inferno-planner/turn-start-settle.md）：
 回合开头游戏一个接一个跑钩子：抽牌（地狱狂徒把抽到的打击打出去）、狱火的扣血和群伤、深红斗篷、烘焙手套的消耗、抱抱先生。一个钩子的动作（自动打出的打击、群伤）做完、

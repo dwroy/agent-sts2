@@ -14,7 +14,7 @@ import { BuildSimPool } from "../src/sim/build-sim-pool.js";
 import { simPoolsHolding } from "../src/sim/sim-pools.js";
 import { LOW_TRUST_B2 } from "../src/sim/boss-trust.js";
 import { summarizeLine, type BossSimLineResult, type FightSampleResult } from "../src/sim/boss-sim.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 import { board } from "./boss-sim-fixture.js";
 
 const noHold = () => null;

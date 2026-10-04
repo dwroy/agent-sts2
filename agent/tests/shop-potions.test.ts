@@ -5,10 +5,10 @@
 
 import { describe, expect, it } from "vitest";
 
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { planDecision } from "../src/screens/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { potionHpSaved } from "../src/strategy/potion-value.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { planDecision } from "../src/hand/screens/index.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { potionHpSaved } from "../src/reflex/potion-value.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;

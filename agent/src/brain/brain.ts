@@ -17,11 +17,11 @@
  */
 import { dirname, join } from "node:path";
 
-import { brainLogPath, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type AppConfig } from "../config.js";
-import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "../llm/deepseek.js";
-import { buildTools } from "../tools/registry.js";
-import type { ToolContext, ToolDef } from "../tools/types.js";
-import type { JsonValue } from "../util/json.js";
+import { brainLogPath, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type AppConfig } from "../core/config.js";
+import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "./llm/deepseek.js";
+import { buildTools } from "./tools/registry.js";
+import type { ToolContext, ToolDef } from "./tools/types.js";
+import type { JsonValue } from "../core/util/json.js";
 import { checkClaudeBin, ClaudeEngine, type ClaudeCheck } from "./engines/claude.js";
 import { checkCodex, CodexEngine, type CodexCheck } from "./engines/codex.js";
 import type { CodexUsageGuard } from "./engines/codex-usage.js";
@@ -30,7 +30,7 @@ import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowled
 import { frozenFacts } from "../knowledge/render/facts.js";
 import { BrainRouter, type BrainLogRow, type FallbackBudget } from "./router.js";
 import { carriesRunPlan, fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "./specs.js";
-import { routeAnswerText } from "../strategy/route-map.js";
+import { routeAnswerText } from "../sim/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
 

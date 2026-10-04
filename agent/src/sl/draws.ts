@@ -59,8 +59,8 @@
  * played card was the hand's last, the hand looks the same before and after (RJZGFGNYK56W F33 T8: 耸肩无视, 打击, 打击, 剑柄打击
  * both times, Pommel Strike played and the other Pommel Strike drawn): then by where the played card went (handExits, 2026-10-04).
  */
-import type { GameState } from "../mod/schema.js";
-import { asArray, asRecord, bool, str } from "../util/json.js";
+import type { GameState } from "../hand/mod/schema.js";
+import { asArray, asRecord, bool, str } from "../core/util/json.js";
 
 /** One attempt's draws, as the attempt's row in sl-attempts.jsonl keeps them. */
 export interface SlDraws {

@@ -22,9 +22,9 @@ import { loadKnowledgeData, loadPostmortems } from "../src/knowledge/render/data
 import { frozenFacts } from "../src/knowledge/render/facts.js";
 import { renderKnowledgeSections } from "../src/knowledge/render/knowledge-prefix.js";
 import { renderRestStats } from "../src/knowledge/render/stats-text.js";
-import type { GameState } from "../src/mod/schema.js";
-import { cardOutcomeText, factsAtAscension, fillGuideFacts } from "../src/strategy/boss-clock.js";
-import type { JsonValue } from "../src/util/json.js";
+import type { GameState } from "../src/hand/mod/schema.js";
+import { cardOutcomeText, factsAtAscension, fillGuideFacts } from "../src/sim/boss-clock.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { ask, board, decide, env, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 

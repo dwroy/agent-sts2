@@ -9,10 +9,10 @@
 
 import { describe, expect, it } from "vitest";
 
-import type { CardModel } from "../src/strategy/card-model.js";
-import { rolloutDecision, simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
-import { escapeInput, type Thief } from "../src/strategy/thief.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { rolloutDecision, simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/reflex/rollout.js";
+import { escapeInput, type Thief } from "../src/reflex/thief.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {

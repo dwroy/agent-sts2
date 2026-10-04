@@ -2,15 +2,15 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState, type GameState } from "../src/mod/schema.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
-import { bossNote, describeChoice, isBrainDecider, journalTag, memoryChars, memorySections, pathSpans, renderLookahead, routeText, RunJournal, UNVERIFIED_REASON_PREFIX, upgradedName, type JournalEntry } from "../src/project/run-journal.js";
-import { brainDecider } from "../src/loop.js";
-import { runPlanLine } from "../src/strategy/run-plan.js";
-import type { RoutePlan } from "../src/screens/map.js";
-import type { AskDecision } from "../src/project/types.js";
-import { createScreenMemory, type RememberedMap } from "../src/project/types.js";
-import { rememberMap } from "../src/screens/rest.js";
+import { bossNote, describeChoice, isBrainDecider, journalTag, memoryChars, memorySections, pathSpans, renderLookahead, routeText, RunJournal, UNVERIFIED_REASON_PREFIX, upgradedName, type JournalEntry } from "../src/memory/run-journal.js";
+import { brainDecider } from "../src/hand/loop.js";
+import { runPlanLine } from "../src/memory/run-plan.js";
+import type { RoutePlan } from "../src/hand/screens/map.js";
+import type { AskDecision } from "../src/memory/types.js";
+import { createScreenMemory, type RememberedMap } from "../src/memory/types.js";
+import { rememberMap } from "../src/hand/screens/rest.js";
 import { baseState, combatPayload, runPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;

@@ -15,14 +15,14 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { choiceMessage } from "../src/llm/deepseek-message.js";
-import { readRunLogs, replayRun } from "../src/project/journal-replay.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import type { DecisionEnv } from "../src/project/types.js";
-import { planDecision } from "../src/screens/index.js";
-import { asRecord, type JsonValue } from "../src/util/json.js";
+import { choiceMessage } from "../src/brain/llm/deepseek-message.js";
+import { readRunLogs, replayRun } from "../src/memory/journal-replay.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import type { DecisionEnv } from "../src/memory/types.js";
+import { planDecision } from "../src/hand/screens/index.js";
+import { asRecord, type JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const { values } = parseArgs({

@@ -1,5 +1,5 @@
 /**
- * PASSIVE_PIECES replay (src/strategy/passive-pieces.ts) on logged fights, the switch off and on in one process (the
+ * PASSIVE_PIECES replay (src/reflex/passive-pieces.ts) on logged fights, the switch off and on in one process (the
  * builders read passivePiecesOptions when called). Offline: the logged states (tools/boss-sim/extract.py output), the
  * committed knowledge files; no model call, nothing played, nothing written under logs/ or .cache.
  *
@@ -19,14 +19,14 @@
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
 import { fightOrders } from "../src/sim/boss-sim.js";
-import { bossClock, bossProfile, deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js";
-import { loadFightValueModel } from "../src/strategy/fight-value.js";
-import { passivePiecesOptions } from "../src/strategy/passive-pieces.js";
-import { loadFightValueGates, rolloutDecision, type MoveModelData, type RolloutResult } from "../src/strategy/rollout.js";
-import { pickRolloutBest, rolloutLiveOptions, ROLLOUT_HORIZON, ROLLOUT_SAMPLES, type MonsterMoves } from "../src/strategy/rollout-live.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import { bossClock, bossProfile, deckEstimate, deckProfileForBoss } from "../src/sim/boss-clock.js";
+import { loadFightValueModel } from "../src/reflex/fight-value.js";
+import { passivePiecesOptions } from "../src/reflex/passive-pieces.js";
+import { loadFightValueGates, rolloutDecision, type MoveModelData, type RolloutResult } from "../src/reflex/rollout.js";
+import { pickRolloutBest, rolloutLiveOptions, ROLLOUT_HORIZON, ROLLOUT_SAMPLES, type MonsterMoves } from "../src/reflex/rollout-live.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 import { boardOf } from "./boss-sim/backtest-board.js";
 import { fromRoot } from "../src/core/paths.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../src/knowledge/files.js";

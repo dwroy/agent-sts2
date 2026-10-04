@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { hintText, loadHints } from "../src/knowledge/jev-hints.js";
 import { powerAmountByAscText, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
-import { bossNote } from "../src/project/run-journal.js";
+import { bossNote } from "../src/memory/run-journal.js";
 import {
   bossNote as clockBossNote,
   bossProfile,
@@ -26,7 +26,7 @@ import {
   unknownFightsText,
   type CrabFightRow,
   type LagSleepRow,
-} from "../src/strategy/boss-clock.js";
+} from "../src/sim/boss-clock.js";
 
 const crab = (first: CrabFightRow["first"], won: boolean, run?: string): CrabFightRow => ({ first, won, ...(run ? { run } : {}) });
 const CRAB = {

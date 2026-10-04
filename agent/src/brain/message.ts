@@ -5,9 +5,9 @@
  * is {memory, state, question, options}, a task is {memory, task, ...input}; memory first in its own section
  * order so prefix caches hit. The router's re-ask follows as one more user turn quoting the problems.
  */
-import { choiceMessage, taskMessage } from "../llm/deepseek-message.js";
-import { embeddedJsonObjects, pickJsonObject, resolveOptionKey, severalOptionKeys } from "../llm/deepseek.js";
-import type { JsonValue } from "../util/json.js";
+import { choiceMessage, taskMessage } from "./llm/deepseek-message.js";
+import { embeddedJsonObjects, pickJsonObject, resolveOptionKey, severalOptionKeys } from "./llm/deepseek.js";
+import type { JsonValue } from "../core/util/json.js";
 import type { BrainRequest } from "./types.js";
 
 type Json = Record<string, JsonValue>;

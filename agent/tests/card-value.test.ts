@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
-import { cardValue, deckProfile, type DeckProfile } from "../src/strategy/card-value.js";
+import { cardValue, deckProfile, type DeckProfile } from "../src/hand/screens/card-value.js";
 
 function deck(size: number): DeckProfile {
   return { size, aoe: 1, draw: 2, scaling: 1, frontload: 3, block: 2, exhaust: 0, basics: 8, copies: new Map() };

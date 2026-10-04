@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { hintText, loadHints } from "../src/knowledge/jev-hints.js";
-import { bossNote } from "../src/project/run-journal.js";
+import { bossNote } from "../src/memory/run-journal.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 import {
   bossNote as clockBossNote,
@@ -27,7 +27,7 @@ import {
   setUnblockedSharesForTests,
   type QueenFightRow,
   type SandpitFightRow,
-} from "../src/strategy/boss-clock.js";
+} from "../src/sim/boss-clock.js";
 
 const KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "knowledge");
 const read = (name: string) => readFileSync(knowledgeFile(KNOWLEDGE, name), "utf8");

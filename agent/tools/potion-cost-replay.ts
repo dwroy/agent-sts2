@@ -1,5 +1,5 @@
 /**
- * Offline acceptance of the potion cost (Dai 2026-09-30; src/strategy/potion-cost.ts, docs/potion-equivalents.md §8).
+ * Offline acceptance of the potion cost (Dai 2026-09-30; src/reflex/potion-cost.ts, docs/potion-equivalents.md §8).
  * No model is called (no Jev, no DeepSeek): the recorded boards are rebuilt and planned by the current code twice, the
  * cost off (the ranking before) and on (the potion table knowledge/characters/ironclad/potion-equivalents.json), and what the rollout
  * picks is compared.
@@ -21,17 +21,17 @@ import { closeSync, createReadStream, existsSync, mkdirSync, openSync, readFileS
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { loadPotionEquivalents } from "../src/knowledge/potion-equivalents.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type Decision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { potionCostOptions } from "../src/strategy/potion-cost.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import type { JsonValue } from "../src/util/json.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type Decision, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { potionCostOptions } from "../src/reflex/potion-cost.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { fromRoot, workspaceRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

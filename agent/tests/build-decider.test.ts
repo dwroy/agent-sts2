@@ -10,21 +10,21 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AppConfig } from "../src/config.js";
-import { loadConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { JevAskResult, JevClient } from "../src/jev/client.js";
+import type { AppConfig } from "../src/core/config.js";
+import { loadConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
 import { fillRelicText } from "../src/knowledge/relic-values.js";
-import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import { runLoop } from "../src/loop.js";
-import { ModClient } from "../src/mod/client.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type Decision, type DecisionEnv } from "../src/project/types.js";
-import { planDecision } from "../src/screens/index.js";
-import { rememberMap } from "../src/screens/rest.js";
-import type { RunPlan } from "../src/strategy/run-plan.js";
-import type { JsonValue } from "../src/util/json.js";
+import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+import { runLoop } from "../src/hand/loop.js";
+import { ModClient } from "../src/hand/mod/client.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type Decision, type DecisionEnv } from "../src/memory/types.js";
+import { planDecision } from "../src/hand/screens/index.js";
+import { rememberMap } from "../src/hand/screens/rest.js";
+import type { RunPlan } from "../src/memory/run-plan.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import {
   baseState,

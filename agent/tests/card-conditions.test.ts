@@ -1,5 +1,5 @@
 /**
- * CARD_CONDITIONS (src/strategy/card-model.ts cardConditionOptions, default on): conditional card effects read on the solver's
+ * CARD_CONDITIONS (src/reflex/card-model.ts cardConditionOptions, default on): conditional card effects read on the solver's
  * simulated state when the card is played, not counted every time. Restlessness (心神不宁: 「如果你的手牌为空，则抽2张牌并获得
  * 2能量」) was planned as 2 cards and 2 energy whatever the hand; 95 logged plays, all with other cards in hand, drew nothing
  * and gained nothing (AKK09TEEEXKD F17 T10: "Strike, Defend, Restlessness, Strike, True Grit" on its 2 energy, then only
@@ -18,13 +18,13 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import type { Decision } from "../src/project/types.js";
-import { hpLostSinceTurnStart, noteTurnStartExhaust, noteTurnStartHp, planCombatTurn } from "../src/screens/combat-plan.js";
-import { cardConditionOptions, handConditionOf, modelHandCard, offHandCardModel, type CardModel } from "../src/strategy/card-model.js";
-import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { drawFirst, isFreeDraw, replaySteps, solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../src/strategy/turn-solver.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import type { Decision } from "../src/memory/types.js";
+import { hpLostSinceTurnStart, noteTurnStartExhaust, noteTurnStartHp, planCombatTurn } from "../src/reflex/combat-plan.js";
+import { cardConditionOptions, handConditionOf, modelHandCard, offHandCardModel, type CardModel } from "../src/reflex/card-model.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/reflex/rollout.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { drawFirst, isFreeDraw, replaySteps, solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput, type Step } from "../src/reflex/turn-solver.js";
 import { loggedEnv } from "./logged.js";
 
 type Raw = Record<string, unknown>;

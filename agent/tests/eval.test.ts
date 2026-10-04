@@ -13,9 +13,9 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { strengthSourceIds } from "../src/project/deck-profile.js";
-import { bossClock, deckEstimate, deckProfileForBoss } from "../src/strategy/boss-clock.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { strengthSourceIds } from "../src/memory/deck-profile.js";
+import { bossClock, deckEstimate, deckProfileForBoss } from "../src/sim/boss-clock.js";
 import { logged, loggedKnowledge } from "./logged.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");

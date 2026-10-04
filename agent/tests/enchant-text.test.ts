@@ -6,14 +6,14 @@
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { annotateEnchants, enchantEffect, enchantsNamed } from "../src/knowledge/enchant-text.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { deckEntries, describeDeck } from "../src/project/deck.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import { planEvent } from "../src/screens/event.js";
-import { planSelection } from "../src/screens/selection.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { deckEntries, describeDeck } from "../src/memory/deck.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import { planEvent } from "../src/hand/screens/event.js";
+import { planSelection } from "../src/hand/screens/selection.js";
 import { baseState, eventPayload, runPayload, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);

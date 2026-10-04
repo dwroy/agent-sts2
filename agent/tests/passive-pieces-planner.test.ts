@@ -1,5 +1,5 @@
 /**
- * PASSIVE_PIECES on the combat planner (src/strategy/passive-pieces.ts): the death-move logged boards and their pinned
+ * PASSIVE_PIECES on the combat planner (src/reflex/passive-pieces.ts): the death-move logged boards and their pinned
  * knowledge (tests/death-move-data, as tests/death-move-planner.test.ts reads them). On and off, the boards holding none
  * of the relic pieces get the same question, Jev's view and resolutions byte for byte; the Kaiser Crab board holding
  * Ornamental Fan differs (this turn's solver and the rollout's later turns count the Fan's block: the options' numbers
@@ -51,23 +51,23 @@ vi.mock("node:fs", async (importOriginal) => {
 
 vi.resetModules();
 const { readFileSync } = await import("node:fs");
-const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+const { potionCostOptions } = await import("../src/reflex/potion-cost.js");
 potionCostOptions.enabled = true;
 // PASSIVE_PIECES on the fresh module (each test sets it).
-const { passivePiecesOptions } = await import("../src/strategy/passive-pieces.js");
+const { passivePiecesOptions } = await import("../src/reflex/passive-pieces.js");
 const { makeKnowledge } = await import("../src/knowledge/index.js");
 const { setMonsterDbForTests } = await import("../src/knowledge/monster-db.js");
-const { loadConfig } = await import("../src/config.js");
-const { parseGameState } = await import("../src/mod/schema.js");
-const { buildRunBrief } = await import("../src/project/run-brief.js");
-const { createScreenMemory } = await import("../src/project/types.js");
-const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
+const { loadConfig } = await import("../src/core/config.js");
+const { parseGameState } = await import("../src/hand/mod/schema.js");
+const { buildRunBrief } = await import("../src/memory/run-brief.js");
+const { createScreenMemory } = await import("../src/memory/types.js");
+const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
+const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/reflex/rollout-live.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 const { bossLinesOptions } = await import("../src/sim/boss-lines.js");
-type AnswerSet = import("../src/jev/answers.js").AnswerSet;
-type AskDecision = import("../src/project/types.js").AskDecision;
-type DecisionEnv = import("../src/project/types.js").DecisionEnv;
+type AnswerSet = import("../src/reflex/jev/answers.js").AnswerSet;
+type AskDecision = import("../src/memory/types.js").AskDecision;
+type DecisionEnv = import("../src/memory/types.js").DecisionEnv;
 
 // The whole-fight boss lines (B2) are a worker pool on a wall clock: off here, the rest of the question is pinned.
 bossLinesOptions.enabled = false;

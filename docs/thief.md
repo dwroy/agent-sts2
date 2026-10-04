@@ -1,15 +1,15 @@
 # 小偷：偷窃草蜢和地精佣兵（THIEF_FACTS）
 
 Dai 2026-10-02 定：**第一步——事实 + 选项覆盖，排序不加代价**。和药水代价的做法一样：代码给事实，Jev 决定。
-全部改动在一个开关 `THIEF_FACTS` 后面（agent/src/config.ts，默认开，.env.example 有说明）；关掉时战斗题面、选项、每个答案的处理和
+全部改动在一个开关 `THIEF_FACTS` 后面（agent/src/core/config.ts，默认开，.env.example 有说明）；关掉时战斗题面、选项、每个答案的处理和
 接入前逐字节相同（agent/tests/thief.test.ts 的 golden，和 420 个日志回合的离线对比，§5）。奖励屏的修复（§4）不在开关后面，是 bug 修复。
 
 **第二步（§7，同日 Dai 定）：被偷的牌和金币折成血，像药水代价一样进排序**，开关 `THIEF_COST`（Dai 看了数后同日定：默认开；帝王蟹那幕模拟降到 500 样本）；
 关掉时和只开 THIEF_FACTS 时逐字节相同（agent/tests/thief-cost.test.ts）。离线的数在 notes/thief-cost-report.md。
 
-代码：agent/src/strategy/thief.ts（谁带着什么、还剩几回合、事实文字、末回合击杀线），agent/src/strategy/rollout-live.ts（推演里每条线
-拿回/被带走的样本数、推演覆盖线），agent/src/strategy/rollout.ts（`RolloutInput.escapes`：逃跑），agent/src/screens/combat-plan.ts（接入），
-agent/src/screens/reward.ts（奖励屏），agent/src/loop.ts + agent/src/project/journal-replay.ts（战斗第一帧的记忆）。
+代码：agent/src/reflex/thief.ts（谁带着什么、还剩几回合、事实文字、末回合击杀线），agent/src/reflex/rollout-live.ts（推演里每条线
+拿回/被带走的样本数、推演覆盖线），agent/src/reflex/rollout.ts（`RolloutInput.escapes`：逃跑），agent/src/reflex/combat-plan.ts（接入），
+agent/src/hand/screens/reward.ts（奖励屏），agent/src/hand/loop.ts + agent/src/memory/journal-replay.ts（战斗第一帧的记忆）。
 
 ## 1. 机制（日志核对，A8+，log DB 2026-10-02）
 
@@ -96,15 +96,15 @@ agent/tools/thief-facts-replay.ts：98 场草蜢 + 46 场佣兵里，每个有�
 
 ## 7. 第二步：赃物折血进排序（THIEF_COST，默认开）
 
-Dai 2026-10-02 定：被偷的牌、被带走的金币折成血，像药水代价一样进推演排序（死亡数永远第一）。开关 `THIEF_COST`（agent/src/config.ts、
+Dai 2026-10-02 定：被偷的牌、被带走的金币折成血，像药水代价一样进推演排序（死亡数永远第一）。开关 `THIEF_COST`（agent/src/core/config.ts、
 .env.example、run-config 记录；要 THIEF_FACTS 开着才起作用），**默认开**：Dai 看了 notes/thief-cost-report.md 的数后于 2026-10-02 打开（上限 30 血、2 倍标准误不变、佣兵以后的偷钱不计、帝王蟹 500 样本：THIEF_CARD_SAMPLES_BY_BOSS）。
 关掉时题面、选项、每个答案的处理和只开 THIEF_FACTS 时（ffed0d4）逐字节相同：agent/tests/thief-cost.test.ts 钉住 9 个日志局面 ×
 JEV_CONTEXT off/v1 = 18 个摘要（在 ffed0d4 上算的），离线 420 个日志回合同样对过（报告 §1）。
 
 代码：agent/src/sim/thief-card-value.ts（牌的估值，用 B3 的整场模拟）、agent/src/sim/thief-card-hp.ts（换算规则和文字，纯函数）、
-agent/src/strategy/thief.ts（`withLoot`、`goldLoot`、`cardLoot`、`lastTurnLoot`、事实文字）、agent/src/strategy/rollout.ts（`escapes.lootHp`：
-每个样本的赃物代价）、agent/src/strategy/rollout-live.ts（排序）、agent/src/screens/combat-plan.ts（接入、代码自己决定的地方）、
-agent/src/loop.ts（每场算一次牌的值）、knowledge/builders/build-potion-equivalents.py（金币换算）。
+agent/src/reflex/thief.ts（`withLoot`、`goldLoot`、`cardLoot`、`lastTurnLoot`、事实文字）、agent/src/reflex/rollout.ts（`escapes.lootHp`：
+每个样本的赃物代价）、agent/src/reflex/rollout-live.ts（排序）、agent/src/reflex/combat-plan.ts（接入、代码自己决定的地方）、
+agent/src/hand/loop.ts（每场算一次牌的值）、knowledge/builders/build-potion-equivalents.py（金币换算）。
 
 ### 7.1 金币
 
@@ -149,7 +149,7 @@ H = B3 的进场血量（本幕路线计划投影到 boss，没有路线计划�
 - 模拟里效果没完全建模的牌（card-model `known` 为假，或者「抽牌直到……」：劫掠在模拟里就是一张 6 伤害的攻击，SCBC3F0QT8BC F19
   它和打击的数一模一样）标「effect partly modelled」：值可能偏低。
 
-**什么时候算**：对局循环（agent/src/loop.ts）在出题之前，看到活着的、带着牌的偷窃草蜢，牌能从「战斗第一帧 − 现在」认出来（正好一张），
+**什么时候算**：对局循环（agent/src/hand/loop.ts）在出题之前，看到活着的、带着牌的偷窃草蜢，牌能从「战斗第一帧 − 现在」认出来（正好一张），
 这一场还没算过，就 await 算一次（`ensureThiefCardValue`），放进屏幕记忆 `thiefCardValue`，下一条决策日志带 `thief_card_value`；
 重启后 journal-replay 从日志里拿回来，不重算。少了不止一张牌（认不出是哪张）：没有值。用 B3 的 worker 池（BOSS_SIM_BUILD 开时
 同一个池），否则开关开时自己建一个。

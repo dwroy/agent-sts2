@@ -36,7 +36,7 @@ import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-import type { BrainConfig } from "../../config.js";
+import type { BrainConfig } from "../../core/config.js";
 import { EngineFailure, withNotes } from "../router.js";
 
 type Json = Record<string, unknown>;

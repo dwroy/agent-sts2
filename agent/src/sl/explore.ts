@@ -73,8 +73,8 @@
  * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.
  */
 import { createHash } from "node:crypto";
-import type { GameState } from "../mod/schema.js";
-import { asArray, asRecord, num, numOrNull, str, stableStringify } from "../util/json.js";
+import type { GameState } from "../hand/mod/schema.js";
+import { asArray, asRecord, num, numOrNull, str, stableStringify } from "../core/util/json.js";
 
 /** One decision point of an attempt: the board and the line chosen on it. */
 export interface SlPoint {

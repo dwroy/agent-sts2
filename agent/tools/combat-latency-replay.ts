@@ -31,20 +31,20 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { closeSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/project/types.js";
-import { planCombatTurn, thiefTrace } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/memory/types.js";
+import { planCombatTurn, thiefTrace } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions, releaseBossLinesPool, type BossLineSim } from "../src/sim/boss-lines.js";
 import { computeMemoOptions, currentComputeMemo } from "../src/sim/compute-memo.js";
 import { createSlLog, previousAttemptsJson, type SlAttemptRow } from "../src/sl/attempts.js";
 import { RETRY_COMPUTE } from "../src/sl/controller.js";
 import { checkKnown, DrawTracker, knownOrderOf } from "../src/sl/draws.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

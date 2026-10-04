@@ -1,5 +1,5 @@
 /**
- * Offline replay of THIEF_FACTS (docs/thief.md, src/strategy/thief.ts) on the logged A8+ Thieving Hopper and Gremlin
+ * Offline replay of THIEF_FACTS (docs/thief.md, src/reflex/thief.ts) on the logged A8+ Thieving Hopper and Gremlin
  * Merc fights. No model is called: each turn's first planning decision with a carrying thief alive is rebuilt from
  * its logged state (the log DB's state_index offset into logs/states.jsonl; read-only) and planned by the current code
  * twice, THIEF_FACTS off (the question as before) and on, with the fight's first frame noted in screen memory as the
@@ -33,19 +33,19 @@ import { createHash } from "node:crypto";
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
+import { loadConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import { planCombatTurn, thiefTrace } from "../src/screens/combat-plan.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import { planCombatTurn, thiefTrace } from "../src/reflex/combat-plan.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
 import { potionWorthSource } from "../src/knowledge/potion-equivalents.js";
-import { rolloutLiveOptions, thiefSamples } from "../src/strategy/rollout-live.js";
-import { backShare, killsThief, noteFightStart, thiefTag, thievesOf, type Thief } from "../src/strategy/thief.js";
+import { rolloutLiveOptions, thiefSamples } from "../src/reflex/rollout-live.js";
+import { backShare, killsThief, noteFightStart, thiefTag, thievesOf, type Thief } from "../src/reflex/thief.js";
 import { cardHpOf, type ThiefCardValue } from "../src/sim/thief-card-hp.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

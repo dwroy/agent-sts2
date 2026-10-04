@@ -7,7 +7,7 @@
 
 import { parentPort } from "node:worker_threads";
 
-import type { KillOrder, RolloutInput } from "../strategy/rollout.js";
+import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
 import { fightSample } from "./boss-sim.js";
 import type { BuildWorkerReply, BuildWorkerRequest } from "./build-sim-pool.js";
 

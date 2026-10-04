@@ -14,15 +14,15 @@ import { describe, expect, it } from "vitest";
 import { createBrain, createRouter } from "../src/brain/brain.js";
 import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, ROUTE_PATTERN, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
-import { answeredBy, deciderLabel, engineLabel } from "../src/loop.js";
+import { answeredBy, deciderLabel, engineLabel } from "../src/hand/loop.js";
 import { BrainRouter, EngineFailure, type BrainLogRow } from "../src/brain/router.js";
 import { fightPlanSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
-import { loadConfig } from "../src/config.js";
-import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
+import { loadConfig } from "../src/core/config.js";
+import { buildRouteMap, routeView } from "../src/sim/route-map.js";
 import { input as routeInput } from "./route-fixture.js";
-import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import type { JsonValue } from "../src/util/json.js";
+import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+import type { JsonValue } from "../src/core/util/json.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-codex-"));
 

@@ -17,7 +17,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { restStart } from "../src/screens/route-review.js";
+import { restStart } from "../src/hand/screens/route-review.js";
 import {
   buildRouteMap,
   clearlyWorse,
@@ -29,8 +29,8 @@ import {
   routeMapFromView,
   stretchOf,
   type RouteMap,
-} from "../src/strategy/route-map.js";
-import type { RoomCostModel } from "../src/strategy/route-projection.js";
+} from "../src/sim/route-map.js";
+import type { RoomCostModel } from "../src/sim/route-projection.js";
 import { costs as fixtureCosts, input, p } from "./route-fixture.js";
 
 interface Review {

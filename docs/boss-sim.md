@@ -97,7 +97,7 @@ calibratedWinProb(best.lines[0]!.winProb, 300, "mid");                        //
 
 ## 2. 设计
 
-**完全复用推演**。每个样本都跑 agent/src/strategy/rollout.ts 里的 `simulate`，只是入口换成新导出的 `simulateFight(input, line, maxTurns, seed)`。推演原有的这些机制全部照用，不另写一套卡牌或怪物规则：
+**完全复用推演**。每个样本都跑 agent/src/reflex/rollout.ts 里的 `simulate`，只是入口换成新导出的 `simulateFight(input, line, maxTurns, seed)`。推演原有的这些机制全部照用，不另写一套卡牌或怪物规则：
 
 - 抽牌堆洗牌和抽牌，弃牌堆洗回；
 - 怪物按出招模型（move-model 的后继计数）出招，伤害按 monster-db 的按进阶数值，另外处理力量、易伤、虚弱、格挡、覆甲、各种自身增益、状态牌、给我方上的减益；
@@ -146,7 +146,7 @@ calibratedWinProb(best.lines[0]!.winProb, 300, "mid");                        //
   
   agent/tests/boss-sim.test.ts 在合成盘面上用 solver 和 5 回合推演的数字做了一份摘要。这份摘要和改动前（89b8cd0）逐字节相同，测试把它固定为常量。
 
-agent/src/sim/ 在 B1、B1.5 里不被 src 里任何别的模块引用。B2 起 combat-plan.ts 经 agent/src/sim/boss-lines.ts 引用（§11）；B3 起 agent/src/loop.ts 引用 build-sim-facts（构筑题的事实），agent/src/index.ts 引用 build-sim-pool（整局一个 worker 池）（§12）。agent/tests/rollout.test.ts 检查这一点。
+agent/src/sim/ 在 B1、B1.5 里不被 src 里任何别的模块引用。B2 起 combat-plan.ts 经 agent/src/sim/boss-lines.ts 引用（§11）；B3 起 agent/src/hand/loop.ts 引用 build-sim-facts（构筑题的事实），agent/src/index.ts 引用 build-sim-pool（整局一个 worker 池）（§12）。agent/tests/rollout.test.ts 检查这一点。
 
 ## 3. 速度
 
@@ -620,7 +620,7 @@ B3：agent/tests/boss-sim-build.test.ts 12 个，另在 agent/tests/build-facts-
 
 ## 11. B2：boss 战里每条候选线的整场数字
 
-2026-10-01。架构不变（Dai）：boss 战里仍由 Jev 每回合在几条线里挑一条出牌；整场模拟只给每条线「照这样打完整场」的数字，每隔几回合再给一句整场计划，代码不按计划出牌。代码在 agent/src/sim/boss-lines.ts（worker 在 boss-lines-worker.ts），接进 agent/src/screens/combat-plan.ts 的出题。
+2026-10-01。架构不变（Dai）：boss 战里仍由 Jev 每回合在几条线里挑一条出牌；整场模拟只给每条线「照这样打完整场」的数字，每隔几回合再给一句整场计划，代码不按计划出牌。代码在 agent/src/sim/boss-lines.ts（worker 在 boss-lines-worker.ts），接进 agent/src/reflex/combat-plan.ts 的出题。
 
 ### 11.1 先补模拟器的缺口（480beca；验证集重跑和 Platt 重拟合 c0ff1db）
 
@@ -831,7 +831,7 @@ V4.2（2026-10-01，Dai 按下面 1、2、3、5 定）：1 低可信 boss 题面
 
 ### 11.5 boss 时钟怎么替换的
 
-构筑题原来的 facts.act_boss_clock（agent/src/strategy/build-facts.ts 的 bossClockJson）在对局循环问 DeepSeek 之前被换成 facts.act_boss_sim，放在原来的位置：boss 和部件血量、进场血量和来源、当前牌组的胜率 / 赢局掉血 / 回合 / 死亡回合、样本数和用时、方法、局限、开场生效和没有建模的遗物、低可信原因。只有模拟失败或截止时间内一个样本都没跑完时，act_boss_clock 原样保留，另加 act_boss_sim 一句「boss 模拟没有结果（原因）：act_boss_clock 仍是 boss 时钟的估计」。build-facts.ts 本身没改：`BOSS_SIM_BUILD=off` 时题面逐字节和以前一样（loop 测试锁住）。地图和路线题不换，仍是时钟。
+构筑题原来的 facts.act_boss_clock（agent/src/brain/build-facts.ts 的 bossClockJson）在对局循环问 DeepSeek 之前被换成 facts.act_boss_sim，放在原来的位置：boss 和部件血量、进场血量和来源、当前牌组的胜率 / 赢局掉血 / 回合 / 死亡回合、样本数和用时、方法、局限、开场生效和没有建模的遗物、低可信原因。只有模拟失败或截止时间内一个样本都没跑完时，act_boss_clock 原样保留，另加 act_boss_sim 一句「boss 模拟没有结果（原因）：act_boss_clock 仍是 boss 时钟的估计」。build-facts.ts 本身没改：`BOSS_SIM_BUILD=off` 时题面逐字节和以前一样（loop 测试锁住）。地图和路线题不换，仍是时钟。
 
 ### 11.6 耗时和验收（experiments/boss-sim-build/summary.md）
 

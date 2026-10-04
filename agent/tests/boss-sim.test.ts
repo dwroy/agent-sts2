@@ -8,9 +8,9 @@
 import { describe, expect, it } from "vitest";
 
 import { BOSS_SIM_PLATT, BossSimPool, calibratedWinProb, compareLines, fightOrders, redealInput, runBestOrder, runBossSim, sampleSeed, slimInput } from "../src/sim/boss-sim.js";
-import { fightRelicsOf, relicBlockOf } from "../src/strategy/rollout-live.js";
-import { policyWeights, rolloutDecision, simulateFight, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
-import { solveTap, solveTurn, type EnemySim } from "../src/strategy/turn-solver.js";
+import { fightRelicsOf, relicBlockOf } from "../src/reflex/rollout-live.js";
+import { policyWeights, rolloutDecision, simulateFight, type EnemyTable, type RolloutInput } from "../src/reflex/rollout.js";
+import { solveTap, solveTurn, type EnemySim } from "../src/reflex/turn-solver.js";
 import { board, card, defend, liveDigest, strike } from "./boss-sim-fixture.js";
 
 const pick = (r: ReturnType<typeof runBossSim>) => r.lines.map((l) => ({ win: l.winProb, loss: l.hpLoss, turns: l.turns, outcomes: l.outcomes.map((o) => [o.won, o.died, o.turns, o.hpLoss]) }));

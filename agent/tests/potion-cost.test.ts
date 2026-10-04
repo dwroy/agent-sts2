@@ -1,5 +1,5 @@
 /**
- * Potion cost (Dai 2026-09-30; src/strategy/potion-cost.ts): a potion drunk before the act boss is HP paid later, at
+ * Potion cost (Dai 2026-09-30; src/reflex/potion-cost.ts): a potion drunk before the act boss is HP paid later, at
  * its held value in the potion table; 0 in a boss fight; deaths first, then the effective loss (HP + potions); a
  * "no potion this fight" line on every question with a potion to drink (not in a boss fight).
  * Fixed data only: the hand-written table tests/gkb-data/knowledge/characters/ironclad/potion-equivalents.json (A8/A9: Block Potion 7/8/9,
@@ -13,14 +13,14 @@ import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { loadPotionEquivalents, potionWorthSource } from "../src/knowledge/potion-equivalents.js";
-import type { AskDecision, Decision } from "../src/project/types.js";
-import { hpGuardReplacement, planCombatTurn, potionCostContext } from "../src/screens/combat-plan.js";
-import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
-import { potionCost, potionCostFact, potionCostFrom, potionCostOptions, potionCosts, withPotionCost } from "../src/strategy/potion-cost.js";
-import { beatsDryLine, potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate, type RolloutInput } from "../src/strategy/rollout.js";
-import { pickRolloutBest, rolloutLiveOptions, rolloutTies, sameShownResult } from "../src/strategy/rollout-live.js";
-import { effectiveLoss, solveTap, solveTurn, weightsFor, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { AskDecision, Decision } from "../src/memory/types.js";
+import { hpGuardReplacement, planCombatTurn, potionCostContext } from "../src/reflex/combat-plan.js";
+import { modelPotion, type CardModel } from "../src/reflex/card-model.js";
+import { potionCost, potionCostFact, potionCostFrom, potionCostOptions, potionCosts, withPotionCost } from "../src/reflex/potion-cost.js";
+import { beatsDryLine, potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate, type RolloutInput } from "../src/reflex/rollout.js";
+import { pickRolloutBest, rolloutLiveOptions, rolloutTies, sameShownResult } from "../src/reflex/rollout-live.js";
+import { effectiveLoss, solveTap, solveTurn, weightsFor, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));

@@ -6,12 +6,12 @@
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { DEATH_RULE_MIN_N, deathRuleOf, deathRules, type AllyDeathObserved } from "../src/knowledge/mechanics.js";
-import { applyDeathRules, deathOnlyMoves, describePlan, mechDeathOn } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { deathAllowed, simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
-import { deathMoved, diedForGood, solveTurn, type DeathMove, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { applyDeathRules, deathOnlyMoves, describePlan, mechDeathOn } from "../src/reflex/combat-plan.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { deathAllowed, simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/reflex/rollout.js";
+import { deathMoved, diedForGood, solveTurn, type DeathMove, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 
 /** The Queen beside the Torch Head Amalgam, as the 2026-10-03 build counted it (6,575 fights; trimmed to the fields read). */
 const QUEEN: AllyDeathObserved = {

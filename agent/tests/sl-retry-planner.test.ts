@@ -62,20 +62,20 @@ vi.mock("node:fs", async (importOriginal) => {
 
 vi.resetModules();
 const { readFileSync } = await import("node:fs");
-const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+const { potionCostOptions } = await import("../src/reflex/potion-cost.js");
 potionCostOptions.enabled = true;
 const { makeKnowledge } = await import("../src/knowledge/index.js");
-const { loadConfig } = await import("../src/config.js");
-const { parseGameState } = await import("../src/mod/schema.js");
-const { buildRunBrief } = await import("../src/project/run-brief.js");
-const { createScreenMemory } = await import("../src/project/types.js");
-const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
+const { loadConfig } = await import("../src/core/config.js");
+const { parseGameState } = await import("../src/hand/mod/schema.js");
+const { buildRunBrief } = await import("../src/memory/run-brief.js");
+const { createScreenMemory } = await import("../src/memory/types.js");
+const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
+const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/reflex/rollout-live.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 const { previousAttemptsJson } = await import("../src/sl/attempts.js");
-type AnswerSet = import("../src/jev/answers.js").AnswerSet;
-type AskDecision = import("../src/project/types.js").AskDecision;
-type DecisionEnv = import("../src/project/types.js").DecisionEnv;
+type AnswerSet = import("../src/reflex/jev/answers.js").AnswerSet;
+type AskDecision = import("../src/memory/types.js").AskDecision;
+type DecisionEnv = import("../src/memory/types.js").DecisionEnv;
 type SlAttemptRow = import("../src/sl/attempts.js").SlAttemptRow;
 
 const knowledge = makeKnowledge(JSON.parse(readFileSync(join(DATA, "game-data.json"), "utf8")), "cache");
@@ -273,7 +273,7 @@ describe("SL_RETRY_COMPUTE on: more samples on a retry", () => {
   it("a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual", async () => {
     frozen();
     const { RETRY_COMPUTE } = await import("../src/sl/controller.js");
-    const { fightKey } = await import("../src/strategy/fight-plan.js");
+    const { fightKey } = await import("../src/memory/fight-plan.js");
     const budgetWith = (spentMs: number, attempt = 2): number => {
       const env = envOf("vnkn-f25-a2-t3-pact", "off", { compute: { ...RETRY_COMPUTE, rolloutSamples: 8 } });
       env.screenMemory.slRetryCompute = { turn: `${fightKey(env.state)}:${attempt}:${env.state.turn}`, spentMs };

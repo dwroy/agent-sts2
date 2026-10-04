@@ -1,5 +1,5 @@
 /**
- * Offline backtest of the combat line evaluators (src/strategy/rollout.ts) on logged Jev decision points.
+ * Offline backtest of the combat line evaluators (src/reflex/rollout.ts) on logged Jev decision points.
  * Nothing is played, no model API is called; reads logs/ and the committed knowledge files only.
  *
  * For every logged plan choice (decisions.jsonl combat/plan-choice[+potion], A7+, the first of each turn,
@@ -23,16 +23,16 @@ import { createReadStream, mkdirSync, readFileSync, writeFileSync, appendFileSyn
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { pileCardModels, planCombatTurn } from "../src/screens/combat-plan.js";
-import { boardRolloutInput, deckModels, type MonsterMoves } from "../src/strategy/rollout-live.js";
-import { loadFightValueModel, type FightValueModel } from "../src/strategy/fight-value.js";
-import { loadFightValueGates, rolloutDecision, type FightValueGates, type FightMeta, type MoveModelData } from "../src/strategy/rollout.js";
-import { solveTap, type Plan, type SolveResult, type SolverInput, type Step } from "../src/strategy/turn-solver.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { pileCardModels, planCombatTurn } from "../src/reflex/combat-plan.js";
+import { boardRolloutInput, deckModels, type MonsterMoves } from "../src/reflex/rollout-live.js";
+import { loadFightValueModel, type FightValueModel } from "../src/reflex/fight-value.js";
+import { loadFightValueGates, rolloutDecision, type FightValueGates, type FightMeta, type MoveModelData } from "../src/reflex/rollout.js";
+import { solveTap, type Plan, type SolveResult, type SolverInput, type Step } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../src/knowledge/files.js";
 

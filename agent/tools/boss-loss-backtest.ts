@@ -12,7 +12,7 @@
  */
 import { readFileSync } from "node:fs";
 
-import { BOSSES, bossLossPerTurn } from "../src/strategy/boss-clock.js";
+import { BOSSES, bossLossPerTurn } from "../src/sim/boss-clock.js";
 
 interface Fight {
   key: string;

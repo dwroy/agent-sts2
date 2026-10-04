@@ -9,11 +9,11 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { fightSample, slimInput } from "../src/sim/boss-sim.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import type { PotionMcSource } from "../src/strategy/potion-mc.js";
-import { simulateFight, type RolloutInput } from "../src/strategy/rollout.js";
-import { fightRelicsOf, ORICHALCUM_BLOCK, PENDULUM_DRAW, RIPPLE_BASIN_BLOCK, STURDY_CLAMP_BLOCK } from "../src/strategy/rollout-live.js";
-import { solveTap, solveTurn, type EnemySim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import type { PotionMcSource } from "../src/reflex/potion-mc.js";
+import { simulateFight, type RolloutInput } from "../src/reflex/rollout.js";
+import { fightRelicsOf, ORICHALCUM_BLOCK, PENDULUM_DRAW, RIPPLE_BASIN_BLOCK, STURDY_CLAMP_BLOCK } from "../src/reflex/rollout-live.js";
+import { solveTap, solveTurn, type EnemySim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { board, card, defend, strike } from "./boss-sim-fixture.js";
 
 /** The policy's solver inputs of one whole-fight sample, turn by turn. */

@@ -15,7 +15,7 @@ import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "
 import { CodexEngine, codexKindSchema, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
 import { pickSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-codex-session-"));
@@ -459,7 +459,7 @@ describe("the play process's end", () => {
     writeFileSync(script, `
 import { CodexEngine } from ${src("src/brain/engines/codex.ts")};
 import { pickSpec } from ${src("src/brain/specs.ts")};
-import { loadConfig } from ${src("src/config.ts")};
+import { loadConfig } from ${src("src/core/config.ts")};
 const cfg = loadConfig({ BRAIN_CODEX_BIN: ${JSON.stringify(fake.bin)}, BRAIN_CODEX_HOME: ${JSON.stringify(home)}, BRAIN_LOG: "off", BRAIN_CODEX_MODE: "session", BRAIN_CODEX_USAGE_EVERY_MIN: "1440", BRAIN_CODEX_USAGE_EVERY_CALLS: "1000" });
 const engine = new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir: ${JSON.stringify(join(fake.state, "codex-state"))}, traceFile: null });
 const options = { a: "{}", b: "{}" };

@@ -1,7 +1,7 @@
 /** A small fixed map and fixed room costs for the route tests (tests/route-map.test.ts, tests/brain-specs.test.ts). */
 
-import { routeMapFromView, type RouteMapInput } from "../src/strategy/route-map.js";
-import type { RoomCostModel } from "../src/strategy/route-projection.js";
+import { routeMapFromView, type RouteMapInput } from "../src/sim/route-map.js";
+import type { RoomCostModel } from "../src/sim/route-projection.js";
 
 export const p = (row: number, col: number) => ({ row, col });
 

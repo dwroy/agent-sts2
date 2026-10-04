@@ -4,10 +4,10 @@
  * from the save it wrote on entering the room (the genre's rule, Dai 2026-10-02), so nothing here reads or writes
  * a save file. Every step has a deadline; the first one that fails ends the reload with its reason.
  */
-import { dispatch } from "../act/dispatch.js";
-import type { ModClient } from "../mod/client.js";
-import type { GameState } from "../mod/schema.js";
-import { asArray, asRecord, str } from "../util/json.js";
+import { dispatch } from "../hand/act/dispatch.js";
+import type { ModClient } from "../hand/mod/client.js";
+import type { GameState } from "../hand/mod/schema.js";
+import { asArray, asRecord, str } from "../core/util/json.js";
 
 export interface ReloadTarget {
   runId: string;

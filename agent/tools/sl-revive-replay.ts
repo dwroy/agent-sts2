@@ -25,14 +25,14 @@ import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync }
 import { join } from "node:path";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { createScreenMemory } from "../src/project/types.js";
-import { noteLizardTailEndTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory } from "../src/memory/types.js";
+import { noteLizardTailEndTurn, revivesOf, trackLizardTail } from "../src/reflex/combat-plan.js";
 import { turnStartLoss } from "../src/sl/controller.js";
 import { judgeEndTurn, LEAST_LOSS_LABEL, type DeathVerdict, type JudgeContext } from "../src/sl/judge.js";
-import { heldCardEthereal } from "../src/strategy/card-model.js";
-import { fightKey } from "../src/strategy/fight-plan.js";
-import { asArray, asRecord, bool, num, numOrNull, str } from "../src/util/json.js";
+import { heldCardEthereal } from "../src/reflex/card-model.js";
+import { fightKey } from "../src/memory/fight-plan.js";
+import { asArray, asRecord, bool, num, numOrNull, str } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

@@ -31,20 +31,20 @@ import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync }
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type Decision, type DecisionEnv } from "../src/project/types.js";
-import { drawBoundOf, leastLossFactsOf, noteLizardTailEndTurn, planCombatTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type Decision, type DecisionEnv } from "../src/memory/types.js";
+import { drawBoundOf, leastLossFactsOf, noteLizardTailEndTurn, planCombatTurn, revivesOf, trackLizardTail } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
 import { turnStartLoss } from "../src/sl/controller.js";
 import * as current from "../src/sl/judge.js";
 import type { DeathVerdict, JudgeContext } from "../src/sl/judge.js";
-import { heldCardEthereal } from "../src/strategy/card-model.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { asArray, asRecord, num, numOrNull, str } from "../src/util/json.js";
+import { heldCardEthereal } from "../src/reflex/card-model.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { asArray, asRecord, num, numOrNull, str } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

@@ -16,16 +16,16 @@
 import { createReadStream, existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline";
 
-import { loadConfig, requireJevApiKey } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { JevClient } from "../src/jev/client.js";
-import type { QuestionSet } from "../src/jev/questions.js";
+import { loadConfig, requireJevApiKey } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { JevClient } from "../src/reflex/jev/client.js";
+import type { QuestionSet } from "../src/reflex/jev/questions.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import type { JsonValue } from "../src/util/json.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

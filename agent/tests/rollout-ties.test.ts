@@ -7,16 +7,16 @@
 
 import { describe, expect, it, vi } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { AskDecision } from "../src/project/types.js";
-import type { LineEstimate } from "../src/strategy/rollout.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { AskDecision } from "../src/memory/types.js";
+import type { LineEstimate } from "../src/reflex/rollout.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 /** The live rollout, with its first two shown lines forced into a tie (the fixture: the labels, not the numbers). */
 const forceTie = { on: false };
-vi.mock("../src/strategy/rollout-live.js", async (importOriginal) => {
-  const original = await importOriginal<typeof import("../src/strategy/rollout-live.js")>();
+vi.mock("../src/reflex/rollout-live.js", async (importOriginal) => {
+  const original = await importOriginal<typeof import("../src/reflex/rollout-live.js")>();
   return {
     ...original,
     liveRollout: (args: Parameters<typeof original.liveRollout>[0]) => {
@@ -27,9 +27,9 @@ vi.mock("../src/strategy/rollout-live.js", async (importOriginal) => {
   };
 });
 
-const { pickRolloutBest, rolloutTies, sameShownResult, rolloutLiveOptions } = await import("../src/strategy/rollout-live.js");
-const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
+const { pickRolloutBest, rolloutTies, sameShownResult, rolloutLiveOptions } = await import("../src/reflex/rollout-live.js");
+const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 
 const line = (name: string, over: Partial<LineEstimate>): LineEstimate =>
   ({ plan: { steps: [], name } as unknown as Plan, value: -30, hpLoss: 10, wins: 0, deaths: 0, samples: 8, enemyHpLeft: 40, turnsSurvived: 5, ...over }) as LineEstimate;

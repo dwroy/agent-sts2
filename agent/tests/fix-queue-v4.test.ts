@@ -5,21 +5,21 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { hpGuardNote, hpGuardReplacement, hpGuardSlack } from "../src/screens/combat-plan.js";
-import { createScreenMemory } from "../src/project/types.js";
+import { hpGuardNote, hpGuardReplacement, hpGuardSlack } from "../src/reflex/combat-plan.js";
+import { createScreenMemory } from "../src/memory/types.js";
 import { DeepSeekEngine } from "../src/brain/engines/deepseek.js";
 import { BrainRouter, errorUsage, withUsage, type BrainLogRow } from "../src/brain/router.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest } from "../src/brain/types.js";
-import { loadConfig } from "../src/config.js";
-import { DeepSeekAnswerError, DeepSeekClient, leadingJsonObject, pickJsonObject } from "../src/llm/deepseek.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekAnswerError, DeepSeekClient, leadingJsonObject, pickJsonObject } from "../src/brain/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 import { ask, board, decide, env as oneshotEnv, optionsOf, setupOneshotTests, type Raw } from "./oneshot-support.js";
-import { potionEffect, potionShell, type CardModel } from "../src/strategy/card-model.js";
-import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/strategy/potion-mc.js";
-import type { LineEstimate } from "../src/strategy/rollout.js";
-import { pickRolloutBest, rankingNote, rolloutTies, sameShownResult } from "../src/strategy/rollout-live.js";
-import { distinctPlans, dominates, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { potionEffect, potionShell, type CardModel } from "../src/reflex/card-model.js";
+import { beatsDryLine, MC_BUDGET_MS, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, type PotionMcSource } from "../src/reflex/potion-mc.js";
+import type { LineEstimate } from "../src/reflex/rollout.js";
+import { pickRolloutBest, rankingNote, rolloutTies, sameShownResult } from "../src/reflex/rollout-live.js";
+import { distinctPlans, dominates, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 
 const player = (over: Partial<PlayerSim> = {}): PlayerSim => ({ hp: 60, maxHp: 80, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0, ...over });
 const enemy = (over: Partial<EnemySim> = {}): EnemySim => ({ index: 0, name: "Dummy", hp: 100, maxHp: 100, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...over });

@@ -9,12 +9,12 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv, type RememberedMap } from "../src/project/types.js";
-import { chainAfter, chainPenalised, fightChainAt, fightChainPenalty, FIGHT_CHAIN_PENALTY, makeRouteWeights, planMap, roomPosition } from "../src/screens/map.js";
-import { buildRouteMap, routeFacts } from "../src/strategy/route-map.js";
-import type { RoomCostModel } from "../src/strategy/route-projection.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv, type RememberedMap } from "../src/memory/types.js";
+import { chainAfter, chainPenalised, fightChainAt, fightChainPenalty, FIGHT_CHAIN_PENALTY, makeRouteWeights, planMap, roomPosition } from "../src/hand/screens/map.js";
+import { buildRouteMap, routeFacts } from "../src/sim/route-map.js";
+import type { RoomCostModel } from "../src/sim/route-projection.js";
 import { costs, input } from "./route-fixture.js";
 import { mapPayload, testKnowledge } from "./scenarios.js";
 

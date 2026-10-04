@@ -9,11 +9,11 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge, type Knowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
 
 type Raw = Record<string, unknown>;
 const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-states");

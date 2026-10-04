@@ -13,14 +13,14 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import type { AskDecision } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutDecision, simulateFight, type EnemyTable, type RolloutInput, type RolloutResult } from "../src/strategy/rollout.js";
-import { rolloutLiveOptions, rolloutTap } from "../src/strategy/rollout-live.js";
-import { solveTap, solveTurn, type EnemySim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
+import { loadConfig } from "../src/core/config.js";
+import type { AskDecision } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutDecision, simulateFight, type EnemyTable, type RolloutInput, type RolloutResult } from "../src/reflex/rollout.js";
+import { rolloutLiveOptions, rolloutTap } from "../src/reflex/rollout-live.js";
+import { solveTap, solveTurn, type EnemySim, type SolveResult, type SolverInput } from "../src/reflex/turn-solver.js";
 import { board, card } from "./boss-sim-fixture.js";
 import { logged, loggedEnv } from "./logged.js";
 

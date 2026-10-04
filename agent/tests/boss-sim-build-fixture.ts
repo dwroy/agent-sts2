@@ -5,7 +5,7 @@
  * two first moves for two copies, a minion power, a power seen on turn 1 that is ours).
  */
 import type { MonsterDb, MonsterEntry } from "../src/knowledge/monster-db.js";
-import type { MoveModelData } from "../src/strategy/rollout.js";
+import type { MoveModelData } from "../src/reflex/rollout.js";
 
 const hp = (median: number, n = 10) => ({ "8": { min: Math.floor(median), median, max: Math.ceil(median), n } });
 const attack = (damage: number, first: number, next: Record<string, number>) => ({

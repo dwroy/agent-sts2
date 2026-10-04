@@ -6,17 +6,17 @@
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { choiceMessage, deepseekState } from "../src/llm/deepseek-message.js";
+import { loadConfig } from "../src/core/config.js";
+import { choiceMessage, deepseekState } from "../src/brain/llm/deepseek-message.js";
 import { fillRelicText } from "../src/knowledge/relic-values.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { deckEntries, describeDeck, describeRunRelicEffects } from "../src/project/deck.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { RunJournal, type JournalEntry } from "../src/project/run-journal.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planReward } from "../src/screens/reward.js";
-import { fightPlanInput } from "../src/strategy/fight-plan.js";
-import { iconsToText, stripMarkup, type JsonValue } from "../src/util/json.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { deckEntries, describeDeck, describeRunRelicEffects } from "../src/memory/deck.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { RunJournal, type JournalEntry } from "../src/memory/run-journal.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
+import { planReward } from "../src/hand/screens/reward.js";
+import { fightPlanInput } from "../src/memory/fight-plan.js";
+import { iconsToText, stripMarkup, type JsonValue } from "../src/core/util/json.js";
 import { baseState, combatPayload, rewardCardPayload, runPayload, testKnowledge } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;

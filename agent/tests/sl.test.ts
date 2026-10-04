@@ -8,12 +8,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { SlConfig } from "../src/config.js";
-import { loadConfig } from "../src/config.js";
-import type { ActionRequest } from "../src/mod/client.js";
-import type { ActionResult } from "../src/mod/schema.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { createScreenMemory } from "../src/project/types.js";
+import type { SlConfig } from "../src/core/config.js";
+import { loadConfig } from "../src/core/config.js";
+import type { ActionRequest } from "../src/hand/mod/client.js";
+import type { ActionResult } from "../src/hand/mod/schema.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { createScreenMemory } from "../src/memory/types.js";
 import type { SlAttemptRow } from "../src/sl/attempts.js";
 import { previousAttemptsJson } from "../src/sl/attempts.js";
 import { ACT2_LOW_HP_GATE, ACT3_LOW_HP_GATE, actNumberOf, belowHpLine, SlController, slGate } from "../src/sl/controller.js";

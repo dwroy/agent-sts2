@@ -41,8 +41,8 @@ vi.resetModules();
 const { readFileSync } = await import("node:fs");
 const { exploreTarget, exploreTried, hpLostByTurn, pointLost, whereWeights, WHERE_DECAY } = await import("../src/sl/explore.js");
 const { SlController } = await import("../src/sl/controller.js");
-const { RunJournal } = await import("../src/project/run-journal.js");
-const { createScreenMemory } = await import("../src/project/types.js");
+const { RunJournal } = await import("../src/memory/run-journal.js");
+const { createScreenMemory } = await import("../src/memory/types.js");
 const { testKnowledge } = await import("./scenarios.js");
 const { bossBoard, state } = await import("./sl-support.js");
 type ExploreRow = import("../src/sl/explore.js").ExploreRow;
@@ -50,7 +50,7 @@ type ExploreTargetOptions = import("../src/sl/explore.js").ExploreTargetOptions;
 type SlPoint = import("../src/sl/explore.js").SlPoint;
 type SlTarget = import("../src/sl/explore.js").SlTarget;
 type SlAttemptRow = import("../src/sl/attempts.js").SlAttemptRow;
-type SlConfig = import("../src/config.js").SlConfig;
+type SlConfig = import("../src/core/config.js").SlConfig;
 
 afterAll(() => {
   expect([...touched]).toEqual([]);

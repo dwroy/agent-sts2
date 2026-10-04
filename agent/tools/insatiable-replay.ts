@@ -22,16 +22,16 @@
  */
 import { appendFileSync, closeSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { DEATH_HP, gateFor, simulateFight, terminal, type LineEstimate, type RolloutInput, type RolloutResult, type TerminalContext } from "../src/strategy/rollout.js";
-import { rolloutLiveOptions, rolloutTap } from "../src/strategy/rollout-live.js";
-import { solveTap, type Plan, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { DEATH_HP, gateFor, simulateFight, terminal, type LineEstimate, type RolloutInput, type RolloutResult, type TerminalContext } from "../src/reflex/rollout.js";
+import { rolloutLiveOptions, rolloutTap } from "../src/reflex/rollout-live.js";
+import { solveTap, type Plan, type SolveResult, type SolverInput } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 
 interface Row {

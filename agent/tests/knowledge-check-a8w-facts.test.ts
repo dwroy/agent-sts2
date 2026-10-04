@@ -24,7 +24,7 @@ import {
   setUnblockedSharesForTests,
   type QueenFightRow,
   type SandpitFightRow,
-} from "../src/strategy/boss-clock.js";
+} from "../src/sim/boss-clock.js";
 
 const queen = (won: boolean, killed: number | null, t12Queen: number, t12Amalgam: number, run: string): QueenFightRow => ({ won, killed_turn: killed, t12_queen: t12Queen, t12_amalgam: t12Amalgam, run });
 const QUEEN = {

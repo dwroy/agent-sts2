@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Restructure check: run five knowledge builders on the live logs into OUT (never into the knowledge directory) and
+# Restructure check: run six knowledge builders on the live logs into OUT (never into the knowledge directory) and
 # print each output's sha256, the builders' "generated" timestamps blanked. The same logs before and after files move
 # must give the same hashes.
 #
@@ -36,6 +36,8 @@ run python3 "$B/build-boss-damage.py" "${IN_ROOMS[@]}" --out "$OUT/boss-damage.j
 run python3 "$B/build-outcome-stats.py" "${IN_STATS[@]}" --out "$OUT/outcome-stats.json" --quiet
 run python3 "$B/build-monster-db.py" "${IN_DB[@]}" --out "$OUT/monster-db.json" --move-model-out "$OUT/move-model.json" --quiet
 run "$PY" "$B/build-event-pages.py" "${IN_ROOMS[@]}" --out "$OUT/event-pages.json"
+if [ "$B" = "$ROOT/tools" ]; then IN_PE=(--db "$DATA/logdb" --logs "$LOGS"); else IN_PE=(); fi
+run "$PY" "$B/build-potion-equivalents.py" "${IN_PE[@]}" --no-sync --ascensions 9 --out "$OUT/potion-equivalents.json"
 cd "$OUT"
 for f in *.json; do
   printf '%s  %s\n' "$(sed -E 's/"generated": *"[^"]*"/"generated": ""/' "$f" | sha256sum | cut -c1-32)" "$f"

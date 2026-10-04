@@ -1,5 +1,5 @@
 /**
- * The execution gate's identity check (V4 M3, src/act/identity.ts): an action is refused when its indices still
+ * The execution gate's identity check (V4 M3, src/hand/act/identity.ts): an action is refused when its indices still
  * exist but point at something else than what was decided, for every kind of action; a combat line's steps carry
  * the line's own card, enemy, potion, turn and hand; intents without an identity keep the old legality checks;
  * the loop logs a refusal (gate_reject) and re-plans.
@@ -10,19 +10,19 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { gate } from "../src/act/gate.js";
-import { checkIdentity, handSignatureOf, identityAt, wireIntent, withExpect } from "../src/act/identity.js";
-import { loadConfig, type AppConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { JevAskResult, JevClient } from "../src/jev/client.js";
-import { runLoop } from "../src/loop.js";
-import { ModClient, type ActionRequest } from "../src/mod/client.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { continueAfterDiscard } from "../src/screens/potion-discard.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { gate } from "../src/hand/act/gate.js";
+import { checkIdentity, handSignatureOf, identityAt, wireIntent, withExpect } from "../src/hand/act/identity.js";
+import { loadConfig, type AppConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+import { runLoop } from "../src/hand/loop.js";
+import { ModClient, type ActionRequest } from "../src/hand/mod/client.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { continueAfterDiscard } from "../src/hand/screens/potion-discard.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { logged } from "./logged.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import {

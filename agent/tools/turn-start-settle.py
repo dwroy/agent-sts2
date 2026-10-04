@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Whether the loop acted at the start of a turn on a board the turn-start hooks were still changing, and what the
-turn-start settle (src/act/turn-start.ts) costs. Read-only: the log DB (tools/logdb/query.py --no-sync) and
+turn-start settle (src/hand/act/turn-start.ts) costs. Read-only: the log DB (tools/logdb/query.py --no-sync) and
 logs/states.jsonl at its offsets; writes only --out.
 
 For every logged turn (T2+) the first combat decision of each SL attempt (play_card / use_potion / end_turn) is taken with

@@ -17,16 +17,16 @@ import { closeSync, existsSync, openSync, readFileSync, readSync, writeFileSync 
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { loadConfig } from "../../src/config.js";
+import { loadConfig } from "../../src/core/config.js";
 import { makeKnowledge } from "../../src/knowledge/index.js";
-import { parseGameState } from "../../src/mod/schema.js";
-import { buildRunBrief } from "../../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../../src/project/types.js";
-import { planCombatTurn } from "../../src/screens/combat-plan.js";
-import { planDecision } from "../../src/screens/index.js";
+import { parseGameState } from "../../src/hand/mod/schema.js";
+import { buildRunBrief } from "../../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../../src/memory/types.js";
+import { planCombatTurn } from "../../src/reflex/combat-plan.js";
+import { planDecision } from "../../src/hand/screens/index.js";
 import { bossLinesOptions } from "../../src/sim/boss-lines.js";
-import { potionMcOptions } from "../../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../../src/strategy/rollout-live.js";
+import { potionMcOptions } from "../../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../../src/reflex/rollout-live.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 

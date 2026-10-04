@@ -3,9 +3,9 @@
  * solver's and the 5-turn rollout's numbers on them, pinned in the test as computed before the whole-fight simulator's
  * B1.5 policy knobs (89b8cd0), so the live planner is shown unchanged.
  */
-import type { CardModel } from "../src/strategy/card-model.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutEnemy, type RolloutInput } from "../src/strategy/rollout.js";
-import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type RolloutEnemy, type RolloutInput } from "../src/reflex/rollout.js";
+import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 
 export function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {

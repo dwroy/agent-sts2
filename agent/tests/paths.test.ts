@@ -11,14 +11,14 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { brainLogPath, loadConfig } from "../src/config.js";
+import { brainLogPath, loadConfig } from "../src/core/config.js";
 import { AGENT_DIR, DATA_DIR, fromRoot, KNOWLEDGE_DIR, LOGS_DIR, PROJECT_ROOT, workspaceRoot } from "../src/core/paths.js";
 import { COMMON_FILES, DEFAULT_CHARACTER, knowledgeDataDirs, knowledgeFile } from "../src/knowledge/files.js";
 import { DEFAULT_KNOWLEDGE_DIR, KNOWLEDGE_FILES, lessonsPath } from "../src/knowledge/render/data.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
-import { resolveJevPromptLog } from "../src/telemetry/jev-prompt-log.js";
-import { resolveRunConfigLog } from "../src/telemetry/run-config.js";
-import { mcpLaunchSpec } from "../src/tools/mcp-launch.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { resolveJevPromptLog } from "../src/eye/jev-prompt-log.js";
+import { resolveRunConfigLog } from "../src/eye/run-config.js";
+import { mcpLaunchSpec } from "../src/brain/tools/mcp-launch.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const cwd = process.cwd();
@@ -151,7 +151,7 @@ describe("the knowledge files", () => {
 describe("the tool servers' and log database's defaults", () => {
   it("the MCP server runs this package's tsx on its own source", () => {
     const spec = mcpLaunchSpec({ ascension: 9, knowledgeDir: KNOWLEDGE_DIR, logsDir: LOGS_DIR });
-    expect(spec.args.slice(0, 2)).toEqual([join(AGENT_DIR, "node_modules/.bin/tsx"), join(AGENT_DIR, "src/tools/mcp-server.ts")]);
+    expect(spec.args.slice(0, 2)).toEqual([join(AGENT_DIR, "node_modules/.bin/tsx"), join(AGENT_DIR, "src/brain/tools/mcp-server.ts")]);
     expect(existsSync(spec.args[1]!)).toBe(true);
   });
 

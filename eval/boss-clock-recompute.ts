@@ -1,5 +1,5 @@
 /**
- * Recomputes the act boss clock (agent/src/strategy/boss-clock.ts `bossClock`, unchanged) on logged boss fights, for
+ * Recomputes the act boss clock (agent/src/sim/boss-clock.ts `bossClock`, unchanged) on logged boss fights, for
  * eval/calibration.py (docs/eval.md "calibration"). The clock is not logged as data: DeepSeek's facts carry
  * it, and deepseek-reasoning.jsonl keeps only the question text. So it is rebuilt from each boss fight's first
  * combat state (deck, relics, boss id, ascension) with the HP the fight was actually entered with, as
@@ -17,8 +17,8 @@
 import { readFileSync } from "node:fs";
 
 import { makeKnowledge } from "../agent/src/knowledge/index.js";
-import { parseGameState } from "../agent/src/mod/schema.js";
-import { bossClock, deckEstimate, deckProfileForBoss } from "../agent/src/strategy/boss-clock.js";
+import { parseGameState } from "../agent/src/hand/mod/schema.js";
+import { bossClock, deckEstimate, deckProfileForBoss } from "../agent/src/sim/boss-clock.js";
 import { fromRoot } from "../agent/src/core/paths.js";
 
 interface Input {

@@ -5,11 +5,11 @@
 import { readFileSync } from "node:fs";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
-import { parseGameState } from "../../src/mod/schema.js";
+import { parseGameState } from "../../src/hand/mod/schema.js";
 import { sampleSeed, slimInput } from "../../src/sim/boss-sim.js";
-import { simulateFight, type MoveModelData } from "../../src/strategy/rollout.js";
-import { solveTap } from "../../src/strategy/turn-solver.js";
-import type { MonsterMoves } from "../../src/strategy/rollout-live.js";
+import { simulateFight, type MoveModelData } from "../../src/reflex/rollout.js";
+import { solveTap } from "../../src/reflex/turn-solver.js";
+import type { MonsterMoves } from "../../src/reflex/rollout-live.js";
 import { boardOf } from "./backtest-board.js";
 import { fromRoot } from "../../src/core/paths.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../../src/knowledge/files.js";

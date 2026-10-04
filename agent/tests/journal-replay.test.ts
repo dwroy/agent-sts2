@@ -9,17 +9,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig, type AppConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { JevAskResult, JevClient } from "../src/jev/client.js";
-import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import { runLoop } from "../src/loop.js";
-import { ModClient } from "../src/mod/client.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun, scanBackward } from "../src/project/journal-replay.js";
-import { RunJournal, type JournalEntry } from "../src/project/run-journal.js";
-import { stateLogPath } from "../src/telemetry/decision-log.js";
-import type { JsonValue } from "../src/util/json.js";
+import { loadConfig, type AppConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+import { runLoop } from "../src/hand/loop.js";
+import { ModClient } from "../src/hand/mod/client.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun, scanBackward } from "../src/memory/journal-replay.js";
+import { RunJournal, type JournalEntry } from "../src/memory/run-journal.js";
+import { stateLogPath } from "../src/eye/decision-log.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { baseState, combatPayload, eventPayload, mainMenuPayload, rewardCardPayload, runPayload, testKnowledge } from "./scenarios.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 

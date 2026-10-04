@@ -7,13 +7,13 @@
  */
 import { readFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { potionMcOptions, potionMcTap, type PotionMc } from "../src/strategy/potion-mc.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { potionMcOptions, potionMcTap, type PotionMc } from "../src/reflex/potion-mc.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const config = loadConfig(process.env);

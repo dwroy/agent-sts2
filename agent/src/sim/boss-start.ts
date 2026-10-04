@@ -18,21 +18,21 @@
 
 import { readFileSync } from "node:fs";
 
-import { loadConfig } from "../config.js";
+import { loadConfig } from "../core/config.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { amountEstimateNote, moveDamageAt, nearestAscension, startAmountAt, type MonsterDb, type MonsterEntry } from "../knowledge/monster-db.js";
-import { parseGameState, type GameState } from "../mod/schema.js";
-import { buildRunBrief } from "../project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../project/types.js";
-import { planCombatTurn } from "../screens/combat-plan.js";
-import { ENERGY_RELICS } from "../strategy/boss-clock.js";
-import { CHOICE_POTIONS, DRAW_POTIONS } from "../strategy/card-model.js";
-import { PASSIVE_SIM_RELICS, passivePiecesOptions } from "../strategy/passive-pieces.js";
-import { potionIdOf } from "../strategy/potion-cost.js";
-import type { MoveModelData, RolloutInput } from "../strategy/rollout.js";
-import { boardRolloutInput, deckModels, enemyTable, fightMetaOf, fightRelicsOf, relicBlockOf, relicEnergyOf, rolloutLiveOptions, type MonsterMoves } from "../strategy/rollout-live.js";
-import { solveTap, type SolveResult, type SolverInput } from "../strategy/turn-solver.js";
-import { asArray, asRecord, str } from "../util/json.js";
+import { parseGameState, type GameState } from "../hand/mod/schema.js";
+import { buildRunBrief } from "../memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../memory/types.js";
+import { planCombatTurn } from "../reflex/combat-plan.js";
+import { ENERGY_RELICS } from "./boss-clock.js";
+import { CHOICE_POTIONS, DRAW_POTIONS } from "../reflex/card-model.js";
+import { PASSIVE_SIM_RELICS, passivePiecesOptions } from "../reflex/passive-pieces.js";
+import { potionIdOf } from "../reflex/potion-cost.js";
+import type { MoveModelData, RolloutInput } from "../reflex/rollout.js";
+import { boardRolloutInput, deckModels, enemyTable, fightMetaOf, fightRelicsOf, relicBlockOf, relicEnergyOf, rolloutLiveOptions, type MonsterMoves } from "../reflex/rollout-live.js";
+import { solveTap, type SolveResult, type SolverInput } from "../reflex/turn-solver.js";
+import { asArray, asRecord, str } from "../core/util/json.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
 
 /** Cards drawn on turn 1 without relics. */

@@ -6,10 +6,10 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
-import type { LineEstimate } from "../src/strategy/rollout.js";
-import { rolloutKillLine, thiefSamples } from "../src/strategy/rollout-live.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";
+import type { LineEstimate } from "../src/reflex/rollout.js";
+import { rolloutKillLine, thiefSamples } from "../src/reflex/rollout-live.js";
 import {
   goldTaken,
   killsThief,
@@ -23,8 +23,8 @@ import {
   thievesOf,
   turnsLeftOf,
   type Thief,
-} from "../src/strategy/thief.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+} from "../src/reflex/thief.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 import { baseState, runPayload } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;

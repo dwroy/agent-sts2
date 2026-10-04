@@ -10,7 +10,7 @@
  * the name (迅速2, 锋利2). Anything not measured reads "effect text unavailable", never a guess.
  */
 
-import { stripMarkup } from "../util/json.js";
+import { stripMarkup } from "../core/util/json.js";
 
 /** Effects by the game's (Chinese) enchantment name; `n` is the shown amount (null when none is shown). */
 export const ENCHANT_TEXT: Record<string, (n: number | null) => string> = {

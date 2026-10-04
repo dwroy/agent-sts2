@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
 import { checkKnown, DrawTracker, knownOrderOf, type DrawTrackerOptions, type KnownOrder, type SlDraws } from "../src/sl/draws.js";
 import { bossBoard, state } from "./sl-support.js";
 

@@ -12,12 +12,12 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
-import { parseGameState } from "../../src/mod/schema.js";
+import { parseGameState } from "../../src/hand/mod/schema.js";
 import { BossSimPool, compareLines, redealInput, runBestOrder } from "../../src/sim/boss-sim.js";
-import type { CardModel } from "../../src/strategy/card-model.js";
-import { offHandCardModel } from "../../src/strategy/card-model.js";
-import type { MoveModelData, RolloutInput } from "../../src/strategy/rollout.js";
-import type { MonsterMoves } from "../../src/strategy/rollout-live.js";
+import type { CardModel } from "../../src/reflex/card-model.js";
+import { offHandCardModel } from "../../src/reflex/card-model.js";
+import type { MoveModelData, RolloutInput } from "../../src/reflex/rollout.js";
+import type { MonsterMoves } from "../../src/reflex/rollout-live.js";
 import { boardOf } from "./backtest-board.js";
 import { fromRoot } from "../../src/core/paths.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../../src/knowledge/files.js";

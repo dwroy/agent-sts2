@@ -18,16 +18,16 @@ import { execFileSync } from "node:child_process";
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import type { RoutePlan } from "../src/screens/route-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import type { RoutePlan } from "../src/hand/screens/route-plan.js";
 import { BuildSimPool } from "../src/sim/build-sim-pool.js";
 import { cardValueText, thiefCardValue, THIEF_CARD_BUDGET_MS, type ThiefCardValue } from "../src/sim/thief-card-value.js";
-import { missingCardKeys, noteFightStart } from "../src/strategy/thief.js";
-import { asArray, asRecord, str } from "../src/util/json.js";
+import { missingCardKeys, noteFightStart } from "../src/reflex/thief.js";
+import { asArray, asRecord, str } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

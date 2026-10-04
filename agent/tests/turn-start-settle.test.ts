@@ -1,5 +1,5 @@
 /**
- * The turn-start settle (src/act/turn-start.ts, loop.ts before the re-read that precedes a dispatch): at the start of our turn
+ * The turn-start settle (src/hand/act/turn-start.ts, loop.ts before the re-read that precedes a dispatch): at the start of our turn
  * the mod reads ready between two hooks (Hellraiser's auto-played Strikes, Inferno's loss and sweep), so the turn's first
  * combat action holding Inferno or Hellraiser goes out only once its board has stood the power's settle time since it was
  * read. C4F14F3XPN0N F33 attempt 1 T7 (2026-10-03): the least-loss Anger went out 3 ms after a frame read mid-draw (4 HP, one
@@ -13,14 +13,14 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { noteTurnActed, settlePowersOf, TURN_START_SETTLE_MS, turnKeyOf, turnStartSettleMs } from "../src/act/turn-start.js";
-import { loadConfig, type AppConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { JevAskResult, JevClient } from "../src/jev/client.js";
-import { resetFightMemory, runLoop } from "../src/loop.js";
-import { ModClient } from "../src/mod/client.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory } from "../src/project/types.js";
+import { noteTurnActed, settlePowersOf, TURN_START_SETTLE_MS, turnKeyOf, turnStartSettleMs } from "../src/hand/act/turn-start.js";
+import { loadConfig, type AppConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+import { resetFightMemory, runLoop } from "../src/hand/loop.js";
+import { ModClient } from "../src/hand/mod/client.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory } from "../src/memory/types.js";
 import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 

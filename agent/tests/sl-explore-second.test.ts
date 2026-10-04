@@ -15,13 +15,13 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig, type SlConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv, type SlEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import { loadConfig, type SlConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv, type SlEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
 import type { SlAttemptRow } from "../src/sl/attempts.js";
 import { SlController, slRoomOf } from "../src/sl/controller.js";
 import { boardTried, exploreTarget, RELIC_COUNTER_WRAPS, replayPoints, secondPlan, slBoardKey, type ExploreRow, type SlTarget } from "../src/sl/explore.js";

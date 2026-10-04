@@ -5,10 +5,10 @@ import { describe, expect, it } from "vitest";
 import { normalisePick, parseAnswerText, reaskMessage, userMessage } from "../src/brain/message.js";
 import { fightPlanFromSchema, fightPlanSpec, lenientRoute, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
-import { choiceMessage, taskMessage } from "../src/llm/deepseek-message.js";
-import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
-import { isRunPlanReply } from "../src/strategy/run-plan.js";
-import type { JsonValue } from "../src/util/json.js";
+import { choiceMessage, taskMessage } from "../src/brain/llm/deepseek-message.js";
+import { buildRouteMap, routeView } from "../src/sim/route-map.js";
+import { isRunPlanReply } from "../src/memory/run-plan.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { input, legalRoutes } from "./route-fixture.js";
 
 describe("pick spec", () => {

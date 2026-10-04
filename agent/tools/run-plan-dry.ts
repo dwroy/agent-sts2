@@ -6,14 +6,14 @@
  */
 import { readFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { fightPlanInput } from "../src/strategy/fight-plan.js";
-import { parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanTrigger } from "../src/strategy/run-plan.js";
-import { asArray, type JsonValue } from "../src/util/json.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { fightPlanInput } from "../src/memory/fight-plan.js";
+import { parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanTrigger } from "../src/memory/run-plan.js";
+import { asArray, type JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const file = process.argv[2];

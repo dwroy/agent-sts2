@@ -16,7 +16,7 @@
  *   identity line, an environment note (temp cwd, OS), the model name, the date and the login's e-mail.
  *   --safe-mode is not used: it drops --mcp-config servers too. --bare is not used: it ignores the login.
  * - Tools: --tools "" removes every built-in tool (Read, Bash, ...); --strict-mcp-config with --mcp-config names
- *   only our stdio MCP server (src/tools/mcp-server.ts, started by Claude Code with the question's context and a
+ *   only our stdio MCP server (src/brain/tools/mcp-server.ts, started by Claude Code with the question's context and a
  *   state file), whose tools are pre-approved with --allowedTools mcp__gkb under --permission-mode dontAsk
  *   (anything else is denied, never prompted). The server writes each call to a record file read back here.
  * - Model: BRAIN_CLAUDE_MODEL (an alias such as opus / sonnet, or a full id), BRAIN_CLAUDE_MODEL_<PREFIX> for one
@@ -34,8 +34,8 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { CLAUDE_MODEL_ALIASES, DEFAULT_CLAUDE_MODEL, type BrainConfig, type BrainEngineSettings } from "../../config.js";
-import { claudeMcpConfig, MCP_SERVER_NAME } from "../../tools/mcp-launch.js";
+import { CLAUDE_MODEL_ALIASES, DEFAULT_CLAUDE_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
+import { claudeMcpConfig, MCP_SERVER_NAME } from "../tools/mcp-launch.js";
 import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask, TOOLS_NOTE } from "../message.js";
 import { stableSchema } from "../specs.js";

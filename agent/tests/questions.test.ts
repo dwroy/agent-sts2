@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { MAX_CHOICE_OPTIONS, choiceQ, noulQ, scoreQ } from "../src/jev/questions.js";
+import { MAX_CHOICE_OPTIONS, choiceQ, noulQ, scoreQ } from "../src/reflex/jev/questions.js";
 
 const options = (count: number): Record<string, string | null> =>
   Object.fromEntries(Array.from({ length: count }, (_, index) => [`o${index}`, null]));

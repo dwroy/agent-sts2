@@ -49,20 +49,20 @@ vi.mock("node:fs", async (importOriginal) => {
 
 vi.resetModules();
 const { readFileSync } = await import("node:fs");
-const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+const { potionCostOptions } = await import("../src/reflex/potion-cost.js");
 potionCostOptions.enabled = true;
 const { makeKnowledge } = await import("../src/knowledge/index.js");
-const { loadConfig } = await import("../src/config.js");
-const { parseGameState } = await import("../src/mod/schema.js");
-const { buildRunBrief } = await import("../src/project/run-brief.js");
-const { createScreenMemory } = await import("../src/project/types.js");
-const { planCombatTurn, thiefTrace } = await import("../src/screens/combat-plan.js");
-const { rolloutLiveOptions } = await import("../src/strategy/rollout-live.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
+const { loadConfig } = await import("../src/core/config.js");
+const { parseGameState } = await import("../src/hand/mod/schema.js");
+const { buildRunBrief } = await import("../src/memory/run-brief.js");
+const { createScreenMemory } = await import("../src/memory/types.js");
+const { planCombatTurn, thiefTrace } = await import("../src/reflex/combat-plan.js");
+const { rolloutLiveOptions } = await import("../src/reflex/rollout-live.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 const { bossLinesOptions } = await import("../src/sim/boss-lines.js");
-const { infernoCopies, startTurnHpLossOf } = await import("../src/strategy/start-loss.js");
-type DecisionEnv = import("../src/project/types.js").DecisionEnv;
-type Plan = import("../src/strategy/turn-solver.js").Plan;
+const { infernoCopies, startTurnHpLossOf } = await import("../src/reflex/start-loss.js");
+type DecisionEnv = import("../src/memory/types.js").DecisionEnv;
+type Plan = import("../src/reflex/turn-solver.js").Plan;
 
 bossLinesOptions.enabled = false;
 const knowledge = makeKnowledge(JSON.parse(readFileSync(join(DATA, "game-data.json"), "utf8")), "cache");

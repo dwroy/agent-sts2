@@ -12,8 +12,8 @@
 import { readFileSync } from "node:fs";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { bossClock, bossProfile, calibrated, deckProfileForBoss, ESTIMATE_BASE, ESTIMATE_SLOPE, mechanicFactor, rawDeckDamage } from "../src/strategy/boss-clock.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { bossClock, bossProfile, calibrated, deckProfileForBoss, ESTIMATE_BASE, ESTIMATE_SLOPE, mechanicFactor, rawDeckDamage } from "../src/sim/boss-clock.js";
 import { fromRoot } from "../src/core/paths.js";
 
 interface Fight {
@@ -28,7 +28,7 @@ interface Fight {
 const file = process.argv[2];
 if (!file) throw new Error("usage: boss-clock-calibrate.ts fights.jsonl [--old module]");
 const oldPath = process.argv.includes("--old") ? process.argv[process.argv.indexOf("--old") + 1] : undefined;
-const old = oldPath ? ((await import(new URL(`../${oldPath}`, import.meta.url).href)) as typeof import("../src/strategy/boss-clock.js")) : null;
+const old = oldPath ? ((await import(new URL(`../${oldPath}`, import.meta.url).href)) as typeof import("../src/sim/boss-clock.js")) : null;
 const knowledge = makeKnowledge(JSON.parse(readFileSync(fromRoot("data/game-data.json"), "utf8")).collections, "cache");
 const fights = readFileSync(file, "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line) as Fight);
 

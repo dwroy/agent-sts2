@@ -8,7 +8,7 @@
 
 import type { Confidence, ExperienceEntry } from "../experience.js";
 import { KnowledgeLookupError, loadKnowledgeData, loadPostmortems, lessonsPath, type KnowledgeData, type Postmortems, type RenderContext } from "./data.js";
-import { factsAtAscension, fillGuideFacts } from "../../strategy/boss-clock.js";
+import { factsAtAscension, fillGuideFacts } from "../../sim/boss-clock.js";
 import { freshFacts, type FactFiller } from "./facts.js";
 import { cmp } from "./format.js";
 

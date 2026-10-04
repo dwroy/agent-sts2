@@ -24,7 +24,7 @@ import { KnowledgePrompt } from "../../../agent/src/brain/knowledge.js";
 import { BrainRouter } from "../../../agent/src/brain/router.js";
 import { pickSpec } from "../../../agent/src/brain/specs.js";
 import type { BrainRequest, EngineName } from "../../../agent/src/brain/types.js";
-import { loadConfig } from "../../../agent/src/config.js";
+import { loadConfig } from "../../../agent/src/core/config.js";
 import { frozenFacts } from "../../../agent/src/knowledge/render/facts.js";
 
 const { values } = parseArgs({ options: { rows: { type: "string" }, knowledge: { type: "string" }, facts: { type: "string" }, out: { type: "string" }, check: { type: "boolean", default: false }, loose: { type: "boolean", default: false }, only: { type: "string", default: "" } } });

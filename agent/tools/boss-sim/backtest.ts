@@ -31,12 +31,12 @@ import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../../src/mod/schema.js";
+import { parseGameState, type GameState } from "../../src/hand/mod/schema.js";
 import { BOSS_POLICY_THREAT, BOSS_SIM_DAMAGE_SCALE, BOSS_SIM_LOOKAHEAD, BOSS_SIM_HP_SCALE, BOSS_SIM_POTION_HOLD, BOSS_SIM_THREAT, redealInput, runBestOrder, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
-import { bossClock } from "../../src/strategy/boss-clock.js";
-import { loadFightValueModel } from "../../src/strategy/fight-value.js";
-import { loadFightValueGates, rolloutDecision, type KillOrder, type MoveModelData, type RolloutInput } from "../../src/strategy/rollout.js";
-import type { MonsterMoves } from "../../src/strategy/rollout-live.js";
+import { bossClock } from "../../src/sim/boss-clock.js";
+import { loadFightValueModel } from "../../src/reflex/fight-value.js";
+import { loadFightValueGates, rolloutDecision, type KillOrder, type MoveModelData, type RolloutInput } from "../../src/reflex/rollout.js";
+import type { MonsterMoves } from "../../src/reflex/rollout-live.js";
 import { loadMonsterDb, syntheticBossStart } from "../../src/sim/boss-start.js";
 import { boardOf, queenOrder } from "./backtest-board.js";
 import { preFightState } from "./pre-fight.js";

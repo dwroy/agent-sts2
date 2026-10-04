@@ -1,6 +1,6 @@
 /**
  * Prints the ids of the cards and relics that give lasting Strength, by the deck profile's own test
- * (agent/src/project/deck-profile.ts strengthSourceIds over the game data), as JSON for eval/metrics.py
+ * (agent/src/memory/deck-profile.ts strengthSourceIds over the game data), as JSON for eval/metrics.py
  * (docs/eval.md: "Strength source at the act-1 boss"). One definition: the evaluator does not keep a list.
  *
  * Usage: npx tsx eval/strength-sources.ts [game-data.json]   (default data/game-data.json)
@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 
 import { makeKnowledge } from "../agent/src/knowledge/index.js";
-import { strengthSourceIds } from "../agent/src/project/deck-profile.js";
+import { strengthSourceIds } from "../agent/src/memory/deck-profile.js";
 import { fromRoot } from "../agent/src/core/paths.js";
 
 const path = process.argv[2] ?? fromRoot("data/game-data.json");

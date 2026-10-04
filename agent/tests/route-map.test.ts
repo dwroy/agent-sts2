@@ -1,13 +1,13 @@
 /**
- * The act's map as the brain sees it (M2, src/strategy/route-map.ts): the rendered map and reading it back, the route
+ * The act's map as the brain sees it (M2, src/sim/route-map.ts): the rendered map and reading it back, the route
  * check (lines, Winged Boots charges, the boss, A10's two boss nodes, node ids, step-by-step errors), the answer
  * parser, and the chosen route's facts on a fixed map with fixed room costs (no logged data).
  */
 
 import { describe, expect, it } from "vitest";
 
-import { bootsJumps, buildRouteMap, checkRoute, hasChoiceAhead, isKeep, mapLines, MAP_LEGEND, routeAnswerText, routeFacts, routeIds, routeMapFromView, routeText, routeView } from "../src/strategy/route-map.js";
-import type { RoomCostModel } from "../src/strategy/route-projection.js";
+import { bootsJumps, buildRouteMap, checkRoute, hasChoiceAhead, isKeep, mapLines, MAP_LEGEND, routeAnswerText, routeFacts, routeIds, routeMapFromView, routeText, routeView } from "../src/sim/route-map.js";
+import type { RoomCostModel } from "../src/sim/route-projection.js";
 import { costs, input, p } from "./route-fixture.js";
 
 describe("the map the brain sees", () => {

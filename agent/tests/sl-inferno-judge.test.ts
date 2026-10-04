@@ -14,7 +14,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
 import { judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type LeastLossFacts } from "../src/sl/judge.js";
 
 type Raw = Record<string, unknown>;

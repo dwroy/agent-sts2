@@ -20,7 +20,7 @@ Three predictions, each aligned with what the logs say happened, grouped by asce
      (floors.entry_hp); the next node after the room the run died in counts as 0. By distance in floors from the
      plan, by node type, and each room's own projected cost against its actual cost.
   3. Boss clock. Per boss fight: the clock's deck damage a turn and HP loss a turn / survivable turns (not logged:
-     recomputed with the unchanged agent/src/strategy/boss-clock.ts on the fight's first combat state and the HP it was
+     recomputed with the unchanged agent/src/sim/boss-clock.ts on the fight's first combat state and the HP it was
      entered with, eval/boss-clock-recompute.ts) against the HP the boss's own bodies lost a turn (the measure
      the clock's estimate was fitted on, agent/tools/boss-fights-extract.py) and the HP the fight cost a turn; wins and
      losses apart.

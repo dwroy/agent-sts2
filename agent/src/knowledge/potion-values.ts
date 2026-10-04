@@ -10,7 +10,7 @@
  * SPEED_POTION_POWER 5; Fire Potion 20 (44 drinks, Vulnerable or not); Potion-Shaped Rock 15.
  */
 
-import { stripMarkup } from "../util/json.js";
+import { stripMarkup } from "../core/util/json.js";
 import { annotatePlating } from "./enchant-text.js";
 
 export const POTION_VALUES: Record<string, Record<string, number>> = {

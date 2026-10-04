@@ -3,7 +3,7 @@
  * prompt with a one-line user message and a tiny max_tokens, and reports the exact prompt tokens, the cache hit
  * and miss tokens and the latency of each call (the second identical call shows the prefix cache). An API error
  * (e.g. over the context limit) is reported with its message, the key scrubbed. The key is read the way
- * src/config.ts reads it (DEEPSEEK_API_KEY or DEEPSEEK_API_KEY_FILE) from the given .env, and is never printed
+ * src/core/config.ts reads it (DEEPSEEK_API_KEY or DEEPSEEK_API_KEY_FILE) from the given .env, and is never printed
  * or written.
  *
  *   npx tsx tools/gkb-measure.ts --env ../jev-sts2-v3/.env [--ascension 9] [--calls 2]
@@ -11,7 +11,7 @@
 
 import { readFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { DEFAULT_KNOWLEDGE_DIR } from "../src/knowledge/render/data.js";
 import { renderKnowledgeSections } from "../src/knowledge/render/knowledge-prefix.js";
 

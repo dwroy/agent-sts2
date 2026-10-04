@@ -14,17 +14,17 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import type { AskDecision, Decision } from "../src/project/types.js";
-import { planCombat } from "../src/screens/combat.js";
-import { drawPileCards, phaseSetupCard, pileCardModels, planCombatTurn, stepFirst } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import type { AskDecision, Decision } from "../src/memory/types.js";
+import { planCombat } from "../src/reflex/combat.js";
+import { drawPileCards, phaseSetupCard, pileCardModels, planCombatTurn, stepFirst } from "../src/reflex/combat-plan.js";
 import { judgeEndTurn } from "../src/sl/judge.js";
-import { modelHandCard, offHandCardModel, playFirstOptions, type CardModel } from "../src/strategy/card-model.js";
-import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { replaySteps, solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/strategy/turn-solver.js";
+import { modelHandCard, offHandCardModel, playFirstOptions, type CardModel } from "../src/reflex/card-model.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/reflex/rollout.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { replaySteps, solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolveResult, type SolverInput } from "../src/reflex/turn-solver.js";
 import { loggedEnv, loggedKnowledge } from "./logged.js";
 
 type Raw = Record<string, unknown>;

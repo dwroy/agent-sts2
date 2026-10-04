@@ -15,11 +15,11 @@ import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
-import { parseGameState } from "../../src/mod/schema.js";
-import { describePlan } from "../../src/screens/combat-plan.js";
+import { parseGameState } from "../../src/hand/mod/schema.js";
+import { describePlan } from "../../src/reflex/combat-plan.js";
 import { redealInput, runBossSim, type BossSimLineResult } from "../../src/sim/boss-sim.js";
-import type { MoveModelData } from "../../src/strategy/rollout.js";
-import type { MonsterMoves } from "../../src/strategy/rollout-live.js";
+import type { MoveModelData } from "../../src/reflex/rollout.js";
+import type { MonsterMoves } from "../../src/reflex/rollout-live.js";
 import { boardOf, queenOrder, readAt } from "./backtest-board.js";
 import { fromRoot } from "../../src/core/paths.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../../src/knowledge/files.js";

@@ -5,7 +5,7 @@
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
-import type { JsonValue } from "../util/json.js";
+import type { JsonValue } from "../core/util/json.js";
 import type { SlDraws } from "./draws.js";
 import type { SlExploreRecord } from "./explore.js";
 import type { JudgeTier } from "./judge.js";

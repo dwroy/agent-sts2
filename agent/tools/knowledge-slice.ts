@@ -10,7 +10,7 @@
 import { readFileSync } from "node:fs";
 
 import { knowledgeSlice } from "../src/knowledge/experience.js";
-import { parseGameState } from "../src/mod/schema.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
 
 const LABELS: Record<string, string> = {
   REWARD: "reward/card",

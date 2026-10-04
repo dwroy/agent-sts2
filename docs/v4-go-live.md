@@ -39,7 +39,7 @@
 git -C ~/Projects/sts2-jev/jev-sts2 merge-tree --write-tree --name-only v3 v4
 ```
 
-2026-09-30 v3 c52587c 对 v4 9841bbc 有 10 个文件冲突：agent/src/llm/deepseek.ts、agent/src/project/types.ts、agent/src/screens/{combat-plan,event,oneshot,potion-discard,rest,selection,shop}.ts、knowledge/builders/build-room-costs.py。这些屏幕文件 M2b 和 v3 的修复都改过，除了文字冲突，还要当心语义冲突：v3 新加的修复里如果又往大脑题面加了分数，要按 M2b 的规矩改成事实。
+2026-09-30 v3 c52587c 对 v4 9841bbc 有 10 个文件冲突：agent/src/brain/llm/deepseek.ts、agent/src/memory/types.ts、agent/src/hand/screens/{combat-plan,event,oneshot,potion-discard,rest,selection,shop}.ts、knowledge/builders/build-room-costs.py。这些屏幕文件 M2b 和 v3 的修复都改过，除了文字冲突，还要当心语义冲突：v3 新加的修复里如果又往大脑题面加了分数，要按 M2b 的规矩改成事实。
 
 ### a) 新开运行工作树 jev-sts2-v4run（建议第一批用这个）
 
@@ -167,13 +167,13 @@ $P eval/calibration.py --ascension 9 --since <上线时间> --group-by config --
 
 - 合并提交 96a2be7，带进 v3 在 389bdb7 之后的 48 个提交（5 次合并、4 次知识数据刷新、2 次经验和攻略更新，其余是修复批次 I–L）。
 - 冲突 11 个文件，处理方式：
-  - agent/src/llm/deepseek.ts：两边都留。v3 的 severalOptionKeys、DATA_OVER_GUIDES，加上 V4 导出的 `SYSTEM`。默认配置下，大脑请求的系统提示和请求格式仍和（合并后的）v3 相同（题面内容因 M2a、M2b 不同，见第 1 节）。
-  - agent/src/project/types.ts：afterDiscard 两个字段都留（V4 的 moreIds 和 v3 的 via）。
-  - agent/src/screens/combat-plan.ts：用 V4 执行闸的 intent（带 expect），后面接上 v3 等液态记忆取牌屏的逻辑。
-  - agent/src/screens/potion-discard.ts：用 v3 填好数字的药水文字和 drinkableSlots/drinkVariant，每个槽位加回 V4 执行闸要的 `id`。
-  - agent/src/screens/event.ts、rest.ts、map.ts：只有 import 冲突，两边合并。
-  - agent/src/screens/selection.ts：保留 V4 的 facts 题面（不带 why 和 unranked）；「第几张」改用 v3 的 selectingText（每次回答一张牌）；followUpTargetScore 只返回分数。
-  - agent/src/screens/shop.ts、oneshot.ts：保留 V4，不给代码删牌顺序和目标牌分值；加上 v3 的 annotatePlating import。
+  - agent/src/brain/llm/deepseek.ts：两边都留。v3 的 severalOptionKeys、DATA_OVER_GUIDES，加上 V4 导出的 `SYSTEM`。默认配置下，大脑请求的系统提示和请求格式仍和（合并后的）v3 相同（题面内容因 M2a、M2b 不同，见第 1 节）。
+  - agent/src/memory/types.ts：afterDiscard 两个字段都留（V4 的 moreIds 和 v3 的 via）。
+  - agent/src/reflex/combat-plan.ts：用 V4 执行闸的 intent（带 expect），后面接上 v3 等液态记忆取牌屏的逻辑。
+  - agent/src/hand/screens/potion-discard.ts：用 v3 填好数字的药水文字和 drinkableSlots/drinkVariant，每个槽位加回 V4 执行闸要的 `id`。
+  - agent/src/hand/screens/event.ts、rest.ts、map.ts：只有 import 冲突，两边合并。
+  - agent/src/hand/screens/selection.ts：保留 V4 的 facts 题面（不带 why 和 unranked）；「第几张」改用 v3 的 selectingText（每次回答一张牌）；followUpTargetScore 只返回分数。
+  - agent/src/hand/screens/shop.ts、oneshot.ts：保留 V4，不给代码删牌顺序和目标牌分值；加上 v3 的 annotatePlating import。
   - knowledge/builders/build-room-costs.py：用 v3 的说明，加上 V4 的 p90。
 - 知识数据（knowledge/ 下的 *.json、攻略、经验库）都取 v3 的版本。ds-handbook.md 的路线一段保留 V4（M2a）的写法。room-costs.json 由 v3 的脚本生成，没有 p90：上线前按 2a 的命令用合并后的脚本重建一次，重建后同时有 p90、UnknownFight 和战内掉血。
 - 放弃的 v3 修复：
@@ -192,10 +192,10 @@ $P eval/calibration.py --ascension 9 --since <上线时间> --group-by config --
 
 - 合并提交 a19c49e，带进 v3 在 c52587c 之后的 27 个提交（修复批次 M、N；A8 窗口 1–11 局的经验、攻略、卡牌评级、boss 数据；两次知识刷新）。后续修正 3ecd8b5、ba44291。
 - 冲突 4 个文件：
-  - agent/src/llm/deepseek.ts：配置两个字段都留（V4 的 systemPrompt、v3 的 factsSnapshotDir）。
-  - agent/src/loop.ts：import 两边合并（V4 的 actOf、v3 的 isFightPlanReply）。商店一次计划仍走 brain.choosePlan，传入屏幕自己的校验（v3 7b54237）；日志行里 V4 的 brain 和 v3 的 recovered_from_reasoning、note 都留。战斗计划、整局计划用 V4 的 `count(…, meta.brain)`，加上 v3 的 isFightPlanReply 和 note。
-  - agent/src/screens/combat-plan.ts：保留 V4 的 jevLessonLine；它现在用 lessonText 填经验里的占位符（v3 b5e1f44 的意图）。
-  - agent/src/screens/selection.ts：保留 V4 的 facts 题面（不带 why、unranked）；followUpTargetScore 只返回分数（+40 改用常量 RUN_PLAN_REMOVE_BONUS）。
+  - agent/src/brain/llm/deepseek.ts：配置两个字段都留（V4 的 systemPrompt、v3 的 factsSnapshotDir）。
+  - agent/src/hand/loop.ts：import 两边合并（V4 的 actOf、v3 的 isFightPlanReply）。商店一次计划仍走 brain.choosePlan，传入屏幕自己的校验（v3 7b54237）；日志行里 V4 的 brain 和 v3 的 recovered_from_reasoning、note 都留。战斗计划、整局计划用 V4 的 `count(…, meta.brain)`，加上 v3 的 isFightPlanReply 和 note。
+  - agent/src/reflex/combat-plan.ts：保留 V4 的 jevLessonLine；它现在用 lessonText 填经验里的占位符（v3 b5e1f44 的意图）。
+  - agent/src/hand/screens/selection.ts：保留 V4 的 facts 题面（不带 why、unranked）；followUpTargetScore 只返回分数（+40 改用常量 RUN_PLAN_REMOVE_BONUS）。
 - 为合并而改的 V4 代码（在合并提交里）：brain.choosePlan 加 accept 参数，和 askJson 一样并进 spec 的校验（withAccept，accept 通过即合法）；DeepSeek 引擎把这个校验交给 v3 的 choosePlan，空回答就从推理里取屏幕接受的计划。choosePlan、askJson 的返回类型加 note。
 - 知识数据都取 V3-final 的版本；ds-handbook.md 的路线一段仍是 V4（M2a）的写法；event-pages.json 保留 V4 新增的页。room-costs.json 仍然没有 p90：上线前照旧用合并后的脚本重建。knowledge/builders/build-boss-damage.py 只有 v3 的改动，直接合入。
 - 放弃的 v3 修复：16559ba（单独的删牌屏把整局计划的 +40 拆开写，并注明「只是参考」）。理由和上次放弃 f8aef72 相同：V4 M2b 不给 DeepSeek 看代码分值、排名和 why，没有可拆的数。batch-m 第 6 组改成断言题面里没有 code value、removal order 和 +40 的说法。

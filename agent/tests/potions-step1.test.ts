@@ -10,12 +10,12 @@
 import { describe, expect, it } from "vitest";
 
 import { fillPotionText, UNKNOWN_VALUE } from "../src/knowledge/potion-values.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { potionViews } from "../src/project/narrow.js";
-import { drawablePileSize, enemySims, forgeUpgrades, laterIncomingOf, pileCardModels } from "../src/screens/combat-plan.js";
-import { planSelection } from "../src/screens/selection.js";
-import { expectedDraw, modelHandCard, modelPotion, pileCardPick, replayOf, upgradeDelta, type CardModel } from "../src/strategy/card-model.js";
-import { platingAbsorbed, solveTurn, type EnemySim, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { potionViews } from "../src/memory/narrow.js";
+import { drawablePileSize, enemySims, forgeUpgrades, laterIncomingOf, pileCardModels } from "../src/reflex/combat-plan.js";
+import { planSelection } from "../src/hand/screens/selection.js";
+import { expectedDraw, modelHandCard, modelPotion, pileCardPick, replayOf, upgradeDelta, type CardModel } from "../src/reflex/card-model.js";
+import { platingAbsorbed, solveTurn, type EnemySim, type Plan, type SolverInput } from "../src/reflex/turn-solver.js";
 import { combatOf, logged, loggedEnv, loggedKnowledge, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;

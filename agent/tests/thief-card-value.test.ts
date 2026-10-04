@@ -8,11 +8,11 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory } from "../src/project/types.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory } from "../src/memory/types.js";
 import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
 import { cardHpOf, cardValueText, ensureThiefCardValue, thiefCardValue, THIEF_CARD_CAP_HP, type ThiefCardMeasures } from "../src/sim/thief-card-value.js";
-import { cardLoot } from "../src/strategy/thief.js";
+import { cardLoot } from "../src/reflex/thief.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";

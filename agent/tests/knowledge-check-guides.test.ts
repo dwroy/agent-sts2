@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { DeepSeekClient } from "../src/llm/deepseek.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 const KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "knowledge");

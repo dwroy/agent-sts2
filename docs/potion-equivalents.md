@@ -2,7 +2,7 @@
 
 Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿着药 = 多了一些血、攻击或格挡。」
 这张表把每瓶药折算成它在**本幕 boss 战**里值多少：**血 / 伤害 / 格挡**三种等价量，放进知识库给 DeepSeek（知识前缀、`kb_potion` 工具）和 Jev（战斗题面）用。
-求解器、推演和 Jev 的出牌题怎么用这张表（药水代价）见 §8（2026-09-30 Dai 定的参数，`agent/src/strategy/potion-cost.ts`）。
+求解器、推演和 Jev 的出牌题怎么用这张表（药水代价）见 §8（2026-09-30 Dai 定的参数，`agent/src/reflex/potion-cost.ts`）。
 
 - 生成：`data/logdb-venv/bin/python knowledge/builders/build-potion-equivalents.py [--no-sync] [--markdown]` → `knowledge/characters/ironclad/potion-equivalents.json`（约 3 秒；`--markdown` 另外打印 §3 和 §5 的两张表）。公式自检：`python3 knowledge/builders/build-potion-equivalents.py --self-test`（不需要 DuckDB，vitest 也会跑）。
 - 读取：`agent/src/knowledge/potion-equivalents.ts`（`loadPotionEquivalents`、`potionEquivalent(id, act, ascension)`；文件缺失或格式不对抛 `KnowledgeLoadError`）。
@@ -26,7 +26,7 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 |---|---|---|
 | 66 种药水：id、中文名、效果模板、稀有度、用法（战斗外能否用）、目标、药水池 | `data/game-data.json` 的 `collections.potions` | 药水池 shared / ironclad / event / token 算「铁甲战士能拿到」；其他角色的池、deprecated、mock 不给数值 |
 | 模板数值（火焰 20、格挡 12、力量 2、再生 5 …） | `agent/src/knowledge/potion-values.ts` 的 `POTION_VALUES`（日志实测） | 构建脚本按正则读这张表；没有的数值（瓶中精灵 30%、超巨化三倍）取游戏描述里的原文 |
-| 求解器是否建模 | `agent/src/strategy/card-model.ts`：`POTION_EFFECTS` 的键 = 精确；`CHOICE_POTIONS` + `DRAW_POTIONS` = 蒙特卡洛；都不在 = 未建模 | 瓶中精灵不在 `POTION_EFFECTS` 里，但求解器把它当复活处理，记「精确」 |
+| 求解器是否建模 | `agent/src/reflex/card-model.ts`：`POTION_EFFECTS` 的键 = 精确；`CHOICE_POTIONS` + `DRAW_POTIONS` = 蒙特卡洛；都不在 = 未建模 | 瓶中精灵不在 `POTION_EFFECTS` 里，但求解器把它当复活处理，记「精确」 |
 | 卡牌类型、段数、格挡、打击标签 | `game-data.json` 的 `collections.cards` | 攻击段数 = `Repeat` 变量，或描述里「伤害两次/三次」，X 费 = 那回合的能量；有 `Block` 的牌算格挡牌 |
 | boss 战每回合的数据 | 日志库 `turns`（`room = 'boss'`，A8/A9） | 只用**非最后一回合**（最后一回合被击杀或死亡截断）：我方伤害 = 本回合开始到下回合开始敌人总血量的下降（`enemy_hp`，负数记 0）；boss 打进来的血 = `enemy_turn_hp_lost`；敌方意图 = `intent_damage`；回合末格挡 = `end_block`；能量 = `start_energy`（第 1 回合的第一帧还没发能量，不算）；出牌数 = `cards_n`；打出的牌 = `cards_played` |
 | boss 战回合数、最大生命、牌组大小 | 日志库 `fights`（`room = 'boss'`） | 中位数；所有结果（赢和输）都算 |
@@ -262,7 +262,7 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 
 ## 8. 药水代价（2026-09-30 Dai 定，已接入）
 
-用掉的药水是以后要扣的血。代码：`agent/src/strategy/potion-cost.ts`；开关 `POTION_COST=off`（全部代价归 0，题面和排序回到接入前）。
+用掉的药水是以后要扣的血。代码：`agent/src/reflex/potion-cost.ts`；开关 `POTION_COST=off`（全部代价归 0，题面和排序回到接入前）。
 
 **Dai 定的参数**：
 1. 只用公式值（表的现状），不乘「能用上的概率」，不加别的系数。

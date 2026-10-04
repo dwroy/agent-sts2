@@ -10,11 +10,11 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 import { makeKnowledge } from "../../src/knowledge/index.js";
-import { parseGameState } from "../../src/mod/schema.js";
+import { parseGameState } from "../../src/hand/mod/schema.js";
 import { redealInput } from "../../src/sim/boss-sim.js";
 import { loadMonsterDb, loadMoveModel, syntheticBossStart } from "../../src/sim/boss-start.js";
-import type { RolloutInput } from "../../src/strategy/rollout.js";
-import type { MonsterMoves } from "../../src/strategy/rollout-live.js";
+import type { RolloutInput } from "../../src/reflex/rollout.js";
+import type { MonsterMoves } from "../../src/reflex/rollout-live.js";
 import { boardOf } from "./backtest-board.js";
 import { preFightState } from "./pre-fight.js";
 import { fromRoot } from "../../src/core/paths.js";

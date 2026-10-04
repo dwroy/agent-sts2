@@ -5,14 +5,14 @@
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { loadHints, MAX_HINT_WORDS, MAX_HINTS, selectHints, type HintQuery } from "../src/knowledge/jev-hints.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { briefJson, buildRunBrief, combatBriefJson, isCombatRelic } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn, planFacts, type FactContext } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import type { EnemySim, Outcome, Plan } from "../src/strategy/turn-solver.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { briefJson, buildRunBrief, combatBriefJson, isCombatRelic } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn, planFacts, type FactContext } from "../src/reflex/combat-plan.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import type { EnemySim, Outcome, Plan } from "../src/reflex/turn-solver.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);

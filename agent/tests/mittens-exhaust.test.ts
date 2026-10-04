@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { planSelection } from "../src/screens/selection.js";
+import { planSelection } from "../src/hand/screens/selection.js";
 import { logged, loggedEnv } from "./logged.js";
 
 function pickOf(name: string): { id: string; rationale: string } {
@@ -44,7 +44,7 @@ describe("Toasty Mittens reads Colossus and keeps the only Artifact answer (LY0N
   });
 
   it("Colossus with nothing to make the attacker Vulnerable is only its 4 block", async () => {
-    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const { combatExhaustScore } = await import("../src/hand/screens/selection.js");
     const context = { attacks: 10, incoming: 27, hp: 70 };
     const defend = combatExhaustScore("DEFEND_IRONCLAD", "Skill", context, true, { block: 5 });
     // No Vulnerable source and none on the enemy: 4 block is less than a Defend's 5.

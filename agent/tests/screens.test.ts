@@ -5,19 +5,19 @@
 
 import { describe, expect, it } from "vitest";
 
-import { fingerprint, gate } from "../src/act/gate.js";
-import { wireIntent } from "../src/act/identity.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import type { Decision, DecisionEnv } from "../src/project/types.js";
-import { createScreenMemory } from "../src/project/types.js";
-import { planDecision, type PlanOutcome } from "../src/screens/index.js";
-import { curseCosts } from "../src/screens/selection.js";
-import { str } from "../src/util/json.js";
-import { fightGold, nodeWeight, shopWeight } from "../src/screens/map.js";
-import { rememberMap } from "../src/screens/rest.js";
-import { loadConfig } from "../src/config.js";
+import { fingerprint, gate } from "../src/hand/act/gate.js";
+import { wireIntent } from "../src/hand/act/identity.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import type { Decision, DecisionEnv } from "../src/memory/types.js";
+import { createScreenMemory } from "../src/memory/types.js";
+import { planDecision, type PlanOutcome } from "../src/hand/screens/index.js";
+import { curseCosts } from "../src/hand/screens/selection.js";
+import { str } from "../src/core/util/json.js";
+import { fightGold, nodeWeight, shopWeight } from "../src/hand/screens/map.js";
+import { rememberMap } from "../src/hand/screens/rest.js";
+import { loadConfig } from "../src/core/config.js";
 import {
   baseState,
   characterSelectPayload,
@@ -442,7 +442,7 @@ describe("map", () => {
   });
 
   it("charges the fight-chain penalty from the 3rd fight in act 1, more below 60% HP (acts 2-3: tests/route-rest.test.ts)", async () => {
-    const { fightChainPenalty } = await import("../src/screens/map.js");
+    const { fightChainPenalty } = await import("../src/hand/screens/map.js");
     expect(fightChainPenalty(1, 0.9, 1)).toBe(0);
     expect(fightChainPenalty(2, 0.9, 1)).toBe(1.5);
     expect(fightChainPenalty(4, 0.3, 1)).toBe(3);
@@ -450,7 +450,7 @@ describe("map", () => {
   });
 
   it("scales hallway HP cost by act and Monster weight by HP on arrival", async () => {
-    const { fightHpCost, monsterWeight } = await import("../src/screens/map.js");
+    const { fightHpCost, monsterWeight } = await import("../src/hand/screens/map.js");
     expect([1, 2, 3].map((act) => fightHpCost("Monster", act))).toEqual([0.1, 0.22, 0.28]);
     expect(fightHpCost("Elite", 3)).toBeCloseTo(0.7);
     expect(monsterWeight(0.8)).toBe(1.2);
@@ -943,7 +943,7 @@ describe("in-combat selections", () => {
 
   it("in-combat exhaust never takes a block card when HP is at or below the hit coming (U6W7 F42: 12 HP, 21 next)", async () => {
     expect([0, 2]).toContain(exhausted(frogTurn(12)));
-    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const { combatExhaustScore } = await import("../src/hand/screens/selection.js");
     // Even with the attacks at the fight's minimum, the Defend is kept.
     const tight = { attacks: 3, incoming: 21, hp: 12 };
     expect(combatExhaustScore("DEFEND_IRONCLAD", "Skill", tight)).toBeLessThan(combatExhaustScore("STRIKE_IRONCLAD", "Attack", tight));
@@ -952,7 +952,7 @@ describe("in-combat selections", () => {
   });
 
   it("Toasty Mittens keeps Strength-scaled attacks, AoE into two bodies, Fight Me and debuffs under Artifact (6HRZ F33 T6, XWPV F48 T4)", async () => {
-    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const { combatExhaustScore } = await import("../src/hand/screens/selection.js");
     const pick = (context: Record<string, unknown>, hand: [string, string, { hits?: number; aoe?: boolean; debuff?: boolean }, boolean?][]) =>
       hand.map(([id, type, card, upgraded]) => ({ id, score: combatExhaustScore(id, type, { attacks: 12, incoming: 10, hp: 60, ...context }, false, card) - (upgraded ? 8 : 0) }))
         .sort((a, b) => b.score - a.score)[0]!.id;
@@ -982,7 +982,7 @@ describe("in-combat selections", () => {
   });
 
   it("in-combat exhaust never takes Frantic Escape while the Sandpit is up (THMG F33 T4: 'scores 90 vs Strike 70')", async () => {
-    const { combatExhaustScore } = await import("../src/screens/selection.js");
+    const { combatExhaustScore } = await import("../src/hand/screens/selection.js");
     const context = { attacks: 8, incoming: 10, hp: 50 };
     expect(combatExhaustScore("FRANTIC_ESCAPE", "Status", context)).toBe(90);
     const sandpit = { ...context, sandpit: true };
@@ -1199,7 +1199,7 @@ describe("gate and fingerprint", () => {
 
 describe("turn-start settle guard", () => {
   it("waits while a new turn shows 0 energy, then acts after 3 s", async () => {
-    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const { turnStartUnsettled } = await import("../src/hand/screens/index.js");
     const raw = combatPayload();
     ((raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>)["energy"] = 0;
     const e = env(raw, { combatPlanner: "turn" });
@@ -1209,7 +1209,7 @@ describe("turn-start settle guard", () => {
   });
 
   it("waits on a fight's first frame that still shows the last fight's counters (M75J F37 T1)", async () => {
-    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const { turnStartUnsettled } = await import("../src/hand/screens/index.js");
     const raw = combatPayload();
     raw["turn"] = 1;
     const combat = raw["combat"] as Record<string, unknown>;
@@ -1226,7 +1226,7 @@ describe("turn-start settle guard", () => {
   });
 
   it("a new fight's first frame is not 'stable' because the last fight ended on the same counters (YKFW F14 T1)", async () => {
-    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const { turnStartUnsettled } = await import("../src/hand/screens/index.js");
     const frame = (floor: number, hand: unknown[], energy: number, played: number) => {
       const raw = combatPayload();
       raw["turn"] = 1;
@@ -1260,14 +1260,14 @@ describe("turn-start settle guard", () => {
   });
 
   it("does not wait on a normal turn start", async () => {
-    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const { turnStartUnsettled } = await import("../src/hand/screens/index.js");
     const e = env(combatPayload(), { combatPlanner: "turn" });
     expect(turnStartUnsettled(e, 1_000)).toBe(true); // 3-card hand: the draw may still be landing
     expect(turnStartUnsettled(e, 2_600)).toBe(false);
   });
 
   it("times the wait from the last hand change, not from the turn number (G7EJ T9)", async () => {
-    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const { turnStartUnsettled } = await import("../src/hand/screens/index.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
     const hand = combat["hand"] as unknown[];
@@ -1283,7 +1283,7 @@ describe("turn-start settle guard", () => {
   });
 
   it("trusts a full hand after 700 ms of no change, and an energy change restarts the clock", async () => {
-    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const { turnStartUnsettled } = await import("../src/hand/screens/index.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
     const hand = combat["hand"] as Record<string, unknown>[];
@@ -1298,7 +1298,7 @@ describe("turn-start settle guard", () => {
   });
 
   it("never waits once a card has been played this turn", async () => {
-    const { turnStartUnsettled } = await import("../src/screens/index.js");
+    const { turnStartUnsettled } = await import("../src/hand/screens/index.js");
     const raw = combatPayload();
     ((raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>)["cards_played_this_turn"] = 1;
     expect(turnStartUnsettled(env(raw, { combatPlanner: "turn" }), 1_000)).toBe(false);
@@ -1310,7 +1310,7 @@ describe("committed combat plan", () => {
   const step = (cardId: string, upgraded = false) => ({ cardIndex: 0, cardId, upgraded, name: cardId, target: null, targetName: null });
 
   it("keeps playing the plan when the hand is as expected", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const e = env(combatPayload(), { combatPlanner: "turn" });
     e.screenMemory.combatPlan = { turn: 3, remaining: [step("DEFEND_R"), step("STRIKE_R")], expectedHand: signature(["STRIKE_R", "DEFEND_R", "BASH"]), handLen: 3, via: "code" };
     const decision = planCombatTurn(e);
@@ -1319,14 +1319,14 @@ describe("committed combat plan", () => {
   });
 
   it("drops the plan when the hand grew since it was made (the draw was still landing)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const e = env(combatPayload(), { combatPlanner: "turn" });
     e.screenMemory.combatPlan = { turn: 3, remaining: [step("DEFEND_R")], expectedHand: signature(["STRIKE_R", "DEFEND_R", "BASH"]), handLen: 2, via: "code" };
     expect(planCombatTurn(e)?.label).not.toBe("combat/plan-continue");
   });
 
   it("plays the upgraded copy the plan named (0NG F17: Defend+ planned, Defend played)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
     const hand = combat["hand"] as Record<string, unknown>[];
@@ -1346,7 +1346,7 @@ describe("committed combat plan", () => {
 
 describe("Waterfall Giant modelling", () => {
   it("is modelled (no damage discount), not scaling, and carries its eruption stacks", async () => {
-    const { enemySims } = await import("../src/screens/combat-plan.js");
+    const { enemySims } = await import("../src/reflex/combat-plan.js");
     const [giant] = enemySims({
       enemies: [
         {
@@ -1384,20 +1384,20 @@ describe("Sandpit guard", () => {
   const endTurn: Decision = { kind: "act", label: "combat/end_turn", intent: { action: "end_turn" }, rationale: "test" };
 
   it("plays an affordable Frantic Escape instead of ending the turn at Sandpit 1", async () => {
-    const { guardSandpit } = await import("../src/screens/combat-plan.js");
+    const { guardSandpit } = await import("../src/reflex/combat-plan.js");
     const decision = guardSandpit(env(sandpitCombat(1, 1), { combatPlanner: "turn" }), endTurn);
     expect(decision?.label).toBe("combat/sandpit-guard");
     expect(decision && decision.kind === "act" ? wireIntent(decision.intent) : null).toEqual({ action: "play_card", card_index: 1 });
   });
 
   it("leaves end_turn alone when the count survives or the Escape is unaffordable", async () => {
-    const { guardSandpit } = await import("../src/screens/combat-plan.js");
+    const { guardSandpit } = await import("../src/reflex/combat-plan.js");
     expect(guardSandpit(env(sandpitCombat(2, 1), { combatPlanner: "turn" }), endTurn)).toBe(endTurn);
     expect(guardSandpit(env(sandpitCombat(1, 4), { combatPlanner: "turn" }), endTurn)).toBe(endTurn);
   });
 
   it("overrides an end_turn answer from Jev/DeepSeek too", async () => {
-    const { guardSandpit } = await import("../src/screens/combat-plan.js");
+    const { guardSandpit } = await import("../src/reflex/combat-plan.js");
     const ask: Decision = {
       kind: "ask", label: "combat/plan-choice", state: {}, questions: {},
       resolve: () => ({ intent: { action: "end_turn" }, rationale: "Jev chose plan 2", confidence: 0.6, fallback: false }),
@@ -1408,7 +1408,7 @@ describe("Sandpit guard", () => {
   });
 
   it("the turn planner plays the Escape at Sandpit 1", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     // Without the Fire Potion: The Insatiable ramps (Buff moves), so a potion line is a real second option.
     const raw = sandpitCombat(1, 1);
     (raw["run"] as Record<string, unknown>)["potions"] = [];
@@ -1417,7 +1417,7 @@ describe("Sandpit guard", () => {
   });
 
   it("THMG F33 T5/T6: lines ending at Sandpit 1 are not offered while one keeps it at 2", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = sandpitCombat(1, 1);
     const combat = raw["combat"] as Record<string, unknown>;
     const enemy = (combat["enemies"] as Record<string, unknown>[])[0]!;
@@ -1446,7 +1446,7 @@ describe("Sandpit guard", () => {
   });
 
   it("shows enemy powers (the Sandpit countdown) in the plan-choice question", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = sandpitCombat(2, 1);
     const enemy = ((raw["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[])[0]!;
     enemy["intents"] = [{ index: 0, intent_type: "Attack", label: "20x2", damage: 20, hits: 2, total_damage: 40 }];
@@ -1467,7 +1467,7 @@ describe("combat plan guards (batch 2)", () => {
   });
 
   it("does not commit a score-best plan that is missing from the options as the 'only line' (YP9 T3)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
     (combat["player"] as Record<string, unknown>)["energy"] = 1;
@@ -1500,7 +1500,7 @@ describe("combat plan guards (batch 2)", () => {
   };
 
   it("HP guard: a plan losing far more HP than the cheapest one is replaced (DeepSeek 'HP buffer is comfortable')", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const decision = planCombatTurn(env(guardCombat(), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
@@ -1520,7 +1520,7 @@ describe("combat plan guards (batch 2)", () => {
   });
 
   it("HP guard leaves a plan within the slack alone", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const decision = planCombatTurn(env(guardCombat(), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const criteria = decision.questions["plan"]?.type === "choice" ? decision.questions["plan"].criteria : {};
@@ -1532,7 +1532,7 @@ describe("combat plan guards (batch 2)", () => {
   });
 
   it("reads Kaiser Crab's Crab Rage and Crimson Mantle's HP cost", async () => {
-    const { enemySims, mantleHpCost } = await import("../src/screens/combat-plan.js");
+    const { enemySims, mantleHpCost } = await import("../src/reflex/combat-plan.js");
     const [rocket] = enemySims({
       enemies: [{ index: 1, enemy_id: "ROCKET", name: "Rocket", current_hp: 14, max_hp: 199, block: 0, is_alive: true, powers: [{ power_id: "CRAB_RAGE_POWER", amount: 1 }], intents: [] }],
     });
@@ -1563,7 +1563,7 @@ describe("potions at low HP outside boss fights", () => {
   };
 
   it("offers an unsimulated potion at any HP loss (Dai: a potion is a 0-cost one-shot card; T1, 12% of HP, was the gate until batch K)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const hit = (hp: number, damage: number) => {
       const raw = pressedCombat(hp, "LIQUID_MEMORIES");
       const combat = raw["combat"] as Record<string, unknown>;
@@ -1581,7 +1581,7 @@ describe("potions at low HP outside boss fights", () => {
   });
 
   it("a modelled potion has no use cost: its line is shown at any HP, and code's own line never drinks it", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     for (const hp of [25, 55]) {
       const e = env(pressedCombat(hp, "FIRE_POTION"), { combatPlanner: "turn" });
       const decision = planCombatTurn(e);
@@ -1614,7 +1614,7 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
   });
 
   it("Jev's potion pick stands at any confidence (the hallway 0.75 bar is gone)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = pressedCombat(25, "LIQUID_MEMORIES");
     const combat = raw["combat"] as Record<string, unknown>;
     combat["enemies"] = (combat["enemies"] as Record<string, unknown>[]).map((enemy) => ({ ...enemy, intents: [{ index: 0, intent_type: "Attack", label: "10", damage: 10, hits: 1, total_damage: 10 }] }));
@@ -1631,8 +1631,8 @@ describe("hallway potion lines (NZR7 F6, JGJS F23, VC4L F23 T1)", () => {
   });
 
   it("potion_context: a forced Elite ahead, the belt, the act boss and the run plan are on the combat question", async () => {
-    const { deepseekPlanLine, planCombatTurn, potionContextJson } = await import("../src/screens/combat-plan.js");
-    const { forcedEliteWithin } = await import("../src/screens/rest.js");
+    const { deepseekPlanLine, planCombatTurn, potionContextJson } = await import("../src/reflex/combat-plan.js");
+    const { forcedEliteWithin } = await import("../src/hand/screens/rest.js");
     const eliteNext = (childType: string) => {
       const memory = createScreenMemory("COMBAT");
       rememberMap(memory, parseGameState(baseState("MAP", {
@@ -1701,7 +1701,7 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
   };
 
   it("offers an unmodelled potion in a hallway fight when the min-loss line leaves HP below 25% (7Q5G, MD3F), and at high HP too (batch K: always)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const low = planCombatTurn(env(costlyCombat(22, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
     expect(low?.label).toBe("combat/plan-choice+potion");
     const high = planCombatTurn(env(costlyCombat(60, 8, "LIQUID_MEMORIES"), { combatPlanner: "turn" }));
@@ -1712,7 +1712,7 @@ describe("potions when even the cheapest line costs a lot of HP", () => {
 
 describe("Crimson Mantle already in play", () => {
   it("its start-of-turn HP shows in the plan's HP loss (Y83U F30 T3: hp_lost 0)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const hpLost = (mantle: number): number => {
       const raw = combatPayload();
       const player = (raw["combat"] as Record<string, unknown>)["player"] as Record<string, unknown>;
@@ -1778,7 +1778,7 @@ describe("combat plan guards (batch 3)", () => {
   const escalated = (key: string): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: 1 }, confidence: 1, raw: { escalated: "deepseek" } } }) as AnswerSet;
 
   it("HP guard slack: max(8, 10% HP) in boss/elite fights, max(8, 20%) otherwise, 0 past the fight budget", async () => {
-    const { hpGuardSlack, HP_GUARD_FIGHT_BUDGET } = await import("../src/screens/combat-plan.js");
+    const { hpGuardSlack, HP_GUARD_FIGHT_BUDGET } = await import("../src/reflex/combat-plan.js");
     expect(hpGuardSlack(30, "boss")).toBe(8);
     expect(hpGuardSlack(70, "elite")).toBe(8);
     expect(hpGuardSlack(100, "elite")).toBe(10);
@@ -1793,7 +1793,7 @@ describe("combat plan guards (batch 3)", () => {
   });
 
   it("boss fight: a choice more than 8 HP over the cheapest plan is replaced", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const decision = planCombatTurn(env(guardCombat("LAGAVULIN_MATRIARCH"), { combatPlanner: "turn" }));
     if (decision?.kind !== "ask") throw new Error("expected an ask");
     const plans = planLosses(decision);
@@ -1806,7 +1806,7 @@ describe("combat plan guards (batch 3)", () => {
   });
 
   it("tracks the extra HP accepted in a fight, and past the budget (24) plays the cheapest plan (Z2H3 T7/T8: the trade split across re-plans)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const first = env(guardCombat(), { combatPlanner: "turn" });
     const decision = planCombatTurn(first);
     if (decision?.kind !== "ask") throw new Error("expected an ask");
@@ -1842,7 +1842,7 @@ describe("combat plan guards (batch 3)", () => {
   });
 
   it("HP guard budget: resolving twice (Jev, then the escalator) and re-planning in a turn count once (b63e836 regression)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     // A boss at 100 HP: the guard's slack (10) lets the next-cheapest plan through, so the turn accepts extra HP.
     const board = (): Record<string, unknown> => {
       const raw = guardCombat("LAGAVULIN_MATRIARCH");
@@ -1875,7 +1875,7 @@ describe("combat plan guards (batch 3)", () => {
   });
 
   it("boss fight: a second potion in a turn is offered too (the 1R3C one-a-turn cap is gone)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Record<string, unknown>;
     const enemies = combat["enemies"] as Record<string, unknown>[];
@@ -1917,7 +1917,7 @@ describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 
   };
 
   it("code takes the card that blocks the incoming attack over the deck-building pick", async () => {
-    const { planSelection } = await import("../src/screens/selection.js");
+    const { planSelection } = await import("../src/hand/screens/selection.js");
     const decision = planSelection(env(choice([
       offered(0, "BLOODLETTING", 0, [["HpLoss", 3], ["Energy", 2]]),
       offered(1, "IMPERVIOUS", 2, [["Block", 30]]),
@@ -1929,7 +1929,7 @@ describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 
   });
 
   it("Headbutt puts a block card on top when next turn's hit is big (Y27B F33 T10)", async () => {
-    const { planSelection } = await import("../src/screens/selection.js");
+    const { planSelection } = await import("../src/hand/screens/selection.js");
     const raw = choice([
       { ...offered(0, "POMMEL_STRIKE", 1, [["Damage", 9]]), card_type: "Attack", upgraded: true },
       offered(1, "FLAME_BARRIER", 2, [["Block", 12]]),
@@ -1945,7 +1945,7 @@ describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 
   });
 
   it("a close call goes to the model with a this-turn note", async () => {
-    const { planSelection } = await import("../src/screens/selection.js");
+    const { planSelection } = await import("../src/hand/screens/selection.js");
     const decision = planSelection(env(choice([
       offered(0, "SHRUG_IT_OFF", 1, [["Block", 8], ["Cards", 1]]),
       offered(1, "TRUE_GRIT", 1, [["Block", 7]]),
@@ -1956,8 +1956,8 @@ describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 
   });
 
   it("thisTurnScore: AoE counts every enemy, block past the attack counts little", async () => {
-    const { thisTurnScore } = await import("../src/screens/selection.js");
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { thisTurnScore } = await import("../src/hand/screens/selection.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const aoe = modelHandCard({ index: 0, card_id: "THUNDERCLAP", energy_cost: 1, target_type: "AllEnemies", dynamic_values: [{ name: "Damage", base_value: 4, current_value: 4 }] }, 0, testKnowledge);
     expect(thisTurnScore(aoe, 0, 3)).toBe(12 - 2);
     const wall = modelHandCard({ index: 0, card_id: "IMPERVIOUS", energy_cost: 2, target_type: "Self", dynamic_values: [{ name: "Block", base_value: 30, current_value: 30 }] }, 0, testKnowledge);
@@ -1967,7 +1967,7 @@ describe("in-combat card choices are for this turn (7Q5G T5: Bloodletting at 11 
 
 describe("Test Subject phases (2WUMK6PK5QHD)", () => {
   it("its powers are modelled: Enrage, Adaptable (revives), Painful Stabs wounds, Nemesis", async () => {
-    const { enemySims } = await import("../src/screens/combat-plan.js");
+    const { enemySims } = await import("../src/reflex/combat-plan.js");
     const [phase1] = enemySims({
       enemies: [
         {
@@ -1984,7 +1984,7 @@ describe("Test Subject phases (2WUMK6PK5QHD)", () => {
   });
 
   it("Axebot's Stock is modelled: no unmodelled 20% damage cut, the revives are counted (U6W7 F39)", async () => {
-    const { enemySims } = await import("../src/screens/combat-plan.js");
+    const { enemySims } = await import("../src/reflex/combat-plan.js");
     const [axebot] = enemySims({
       enemies: [
         {
@@ -2012,7 +2012,7 @@ describe("Test Subject phases (2WUMK6PK5QHD)", () => {
     energy_cost: 1, rules_text: "", resolved_rules_text: "", dynamic_values: [], playable: true, ...overrides,
   });
   const decideAfterSettle = async (raw: Record<string, unknown>): Promise<Decision | null> => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const e = env(raw, { combatPlanner: "turn" });
     e.screenMemory.noEnemiesSince = Date.now() - 5_000;
     return planCombatTurn(e);
@@ -2047,7 +2047,7 @@ describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
   });
 
   it("races when the projected eruption at death reaches HP plus a hand of block", async () => {
-    const { eruptionRace } = await import("../src/screens/combat-plan.js");
+    const { eruptionRace } = await import("../src/reflex/combat-plan.js");
     // T9, 160 HP left after 90 dealt in 8 turns (one Siphon): 18 more turns, eruption 36 + 51 = 87 vs 40 HP + 12.
     expect(eruptionRace(giant(160, 36), 40, 9, 0, 0)).toBe(true);
     // A fast deck: 160 dealt in 4 turns, 90 left = 3 turns, eruption 24 + 6 = 30 vs 50 - 2 x 5.5 + 12.
@@ -2061,7 +2061,7 @@ describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
   });
 
   it("counts the Siphon heals: in the damage dealt so far and the ones still to come (Y0CWCD0C03FL: 4 Siphons healed 60)", async () => {
-    const { eruptionRace, giantTurnsToKill, SIPHON_HEAL } = await import("../src/screens/combat-plan.js");
+    const { eruptionRace, giantTurnsToKill, SIPHON_HEAL } = await import("../src/reflex/combat-plan.js");
     expect(SIPHON_HEAL).toEqual({ base: 10, a8: 15 });
     // Siphons on T4, T9, T14 (monster DB turns_seen). 200 HP at 25 a turn from T3: 8 turns without heals;
     // with +15 on T4 and T9 it takes 10 (230 to deal).
@@ -2084,8 +2084,8 @@ describe("Waterfall Giant kill speed (1ZQJXQ53KSBG)", () => {
   });
 
   it("compares the eruption at the kill with our HP at the kill, not now (1VX145UJM8RZ T5)", async () => {
-    const { eruptionRace } = await import("../src/screens/combat-plan.js");
-    const { bossLossPerTurn, bossProfile } = await import("../src/strategy/boss-clock.js");
+    const { eruptionRace } = await import("../src/reflex/combat-plan.js");
+    const { bossLossPerTurn, bossProfile } = await import("../src/sim/boss-clock.js");
     // A9 T5: Giant 159/250 after one Siphon (106 dealt in 4 turns), eruption 29, we have 69. Killed on T11
     // (7 turns with the T9 Siphon) it explodes for 29 + 6 x 3 = 47 (it did: 47). At the clock's A9 loss a turn
     // (5.9 at the time) we hold ~34 then, 34 + 12 < 47: race. It used to read 69 + 12 = 81 against 50: no
@@ -2131,7 +2131,7 @@ describe("Gambler's Brew: discard any number (1ZQJ T4: confirmed with 0 selected
     c(4, "DEFEND_R", [["Block", 5]]),
   ];
   const pick = async (raw: Record<string, unknown>): Promise<Decision | null> => {
-    const { planSelection } = await import("../src/screens/selection.js");
+    const { planSelection } = await import("../src/hand/screens/selection.js");
     return planSelection(env(raw, { combatPlanner: "turn" }));
   };
 
@@ -2199,7 +2199,7 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
   };
 
   it("PYTG F17 T2: lines that wake it are not offered to Jev at all (Jev took the waking rank 2 at 0.69)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = board();
     raw["turn"] = 2;
     const potions = (raw["run"] as Record<string, unknown>)["potions"] as Record<string, unknown>[];
@@ -2225,7 +2225,7 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
   });
 
   it("the committed (or top-ranked) line leaves it asleep", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const e = env(board(), { combatPlanner: "turn" });
     const decision = planCombatTurn(e);
     if (!decision) throw new Error("expected a decision");
@@ -2238,8 +2238,8 @@ describe("sleeping Matriarch through the whole plan path (1K5G F17 T1: a dominan
   });
 
   it("a line that wakes it is never shown as dominating one that does not", async () => {
-    const { solveTurn, distinctPlans, dominates } = await import("../src/strategy/turn-solver.js");
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { solveTurn, distinctPlans, dominates } = await import("../src/reflex/turn-solver.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const combat = board()["combat"] as Record<string, unknown>;
     const hand = (combat["hand"] as unknown[]).map((entry, index) => modelHandCard(entry, index, testKnowledge));
     const result = solveTurn({
@@ -2291,9 +2291,9 @@ describe("Vigor is spent by the first Attack (KFP1 F17 T1: Akabeko's 8 counted o
   };
 
   it("Bash+ then Sword Boomerang deals the real 18, and letting it sleep ranks first", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-    const { solveTurn } = await import("../src/strategy/turn-solver.js");
-    const { modelHandCard, stripVigor } = await import("../src/strategy/card-model.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
+    const { solveTurn } = await import("../src/reflex/turn-solver.js");
+    const { modelHandCard, stripVigor } = await import("../src/reflex/card-model.js");
     const combat = board()["combat"] as Record<string, unknown>;
     const hand = (combat["hand"] as unknown[]).map((entry, index) => modelHandCard(entry, index, testKnowledge));
     stripVigor(hand, 8, false);
@@ -2324,8 +2324,8 @@ describe("Vigor is spent by the first Attack (KFP1 F17 T1: Akabeko's 8 counted o
   });
 
   it("the first Attack's first hit carries the Vigor, later hits and Attacks do not", async () => {
-    const { solveTurn } = await import("../src/strategy/turn-solver.js");
-    const { modelHandCard, stripVigor } = await import("../src/strategy/card-model.js");
+    const { solveTurn } = await import("../src/reflex/turn-solver.js");
+    const { modelHandCard, stripVigor } = await import("../src/reflex/card-model.js");
     const hand = [
       modelHandCard(card(0, "STRIKE_R", 1, [["Damage", 6, 14]]), 0, testKnowledge),
       modelHandCard(card(1, "STRIKE_R", 1, [["Damage", 6, 14]]), 1, testKnowledge),
@@ -2377,7 +2377,7 @@ describe("least-loss draws first when every line dies (VP5F F48 T8: 12 HP, 0-cos
   };
 
   it("plays the 0-cost draw first, then re-plans", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const e = env(board(true), { combatPlanner: "turn" });
     const decision = planCombatTurn(e);
     expect(decision?.kind).toBe("act");
@@ -2389,7 +2389,7 @@ describe("least-loss draws first when every line dies (VP5F F48 T8: 12 HP, 0-cos
   });
 
   it("a paid draw over the block that only delays death (Pommel Strike over Defend at 1 energy)", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = board(false);
     const combat = raw["combat"] as Record<string, unknown>;
     (combat["player"] as Record<string, unknown>)["energy"] = 1;
@@ -2400,14 +2400,14 @@ describe("least-loss draws first when every line dies (VP5F F48 T8: 12 HP, 0-cos
   });
 
   it("without a draw card it still keeps the most HP", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const decision = planCombatTurn(env(board(false), { combatPlanner: "turn" }));
     expect(decision?.kind === "act" && decision.label).toBe("combat/least-loss");
     expect(decision?.kind === "act" && decision.rationale).toMatch(/keeps the most HP/);
   });
 
   it("a phase kill is no death: the revive turn has no attack", async () => {
-    const { planCombatTurn } = await import("../src/screens/combat-plan.js");
+    const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
     const raw = board(true);
     const enemies = (raw["combat"] as Record<string, unknown>)["enemies"] as Record<string, unknown>[];
     enemies[0]!["current_hp"] = 60;
@@ -2418,7 +2418,7 @@ describe("least-loss draws first when every line dies (VP5F F48 T8: 12 HP, 0-cos
 
 describe("draw pile from agent_view (XPA4 T8: 3 Beckons in a 6-card draw pile)", () => {
   it("expands grouped lines and reads the held penalty; falls back to the discard pile", async () => {
-    const { drawPileCards } = await import("../src/screens/combat-plan.js");
+    const { drawPileCards } = await import("../src/reflex/combat-plan.js");
     const view = (draw: unknown[], discard: unknown[] = []) => ({ agent_view: { combat: { draw, discard } } });
     const beckon = { line: "呼唤*3 [1费]：在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。", card_ids: ["BECKON"] };
     const strike = { line: "打击*2 [1费]：造成6点伤害。", card_ids: ["STRIKE_IRONCLAD"] };
@@ -2439,7 +2439,7 @@ describe("draw pile from agent_view (XPA4 T8: 3 Beckons in a 6-card draw pile)",
 
 describe("turnStartAoe (9XZX: Inferno 6 at each turn start killed a 3 HP Crusher)", () => {
   it("adds Mercury Hourglass and the INFERNO_POWER amount", async () => {
-    const { turnStartAoe } = await import("../src/screens/combat-plan.js");
+    const { turnStartAoe } = await import("../src/reflex/combat-plan.js");
     const inferno = { powers: [{ power_id: "INFERNO_POWER", amount: 6 }] };
     expect(turnStartAoe([], {})).toBe(0);
     expect(turnStartAoe(["MERCURY_HOURGLASS"], {})).toBe(3);
@@ -2457,7 +2457,7 @@ describe("ramping enemies count as scaling (6A36: Sludge Spinner, Rage +3 Streng
   });
 
   it("any Strength makes it scaling; a Buff move elsewhere in the cycle alone does not", async () => {
-    const { enemySims } = await import("../src/screens/combat-plan.js");
+    const { enemySims } = await import("../src/reflex/combat-plan.js");
     expect(enemySims({ enemies: [spinner("SLUDGE_SPINNER", [{ power_id: "STRENGTH_POWER", amount: 3 }])] })[0]!.scaling).toBe(true);
     expect(enemySims({ enemies: [spinner("NOT_A_KNOWN_ENEMY", [{ power_id: "STRENGTH_POWER", amount: 3 }])] })[0]!.scaling).toBe(true);
     expect(enemySims({ enemies: [spinner("NOT_A_KNOWN_ENEMY")] })[0]!.scaling).toBe(false);

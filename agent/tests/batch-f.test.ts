@@ -9,24 +9,24 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { bossNote as journalBossNote } from "../src/project/run-journal.js";
-import { bossMechanic, bossProfile, giantKillRecord, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
-import { modelHandCard, type CardModel } from "../src/strategy/card-model.js";
+import { bossNote as journalBossNote } from "../src/memory/run-journal.js";
+import { bossMechanic, bossProfile, giantKillRecord, setUnblockedSharesForTests, type GiantKillRow } from "../src/sim/boss-clock.js";
+import { modelHandCard, type CardModel } from "../src/reflex/card-model.js";
 import { logged, loggedEnv, loggedKnowledge } from "./logged.js";
-import { planEvent, potionSlotsNeeded } from "../src/screens/event.js";
-import { planRest, restHealHere } from "../src/screens/rest.js";
-import { restedHp, restHealOf } from "../src/strategy/route-projection.js";
+import { planEvent, potionSlotsNeeded } from "../src/hand/screens/event.js";
+import { planRest, restHealHere } from "../src/hand/screens/rest.js";
+import { restedHp, restHealOf } from "../src/sim/route-projection.js";
 import { board as oneshotBoard, env as oneshotEnv } from "./oneshot-support.js";
-import { createScreenMemory } from "../src/project/types.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { AskDecision } from "../src/project/types.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/strategy/rollout.js";
-import { boardRolloutInput, pickRolloutBest, rolloutTies } from "../src/strategy/rollout-live.js";
-import { parseGameState } from "../src/mod/schema.js";
+import { createScreenMemory } from "../src/memory/types.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { AskDecision } from "../src/memory/types.js";
+import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate } from "../src/reflex/rollout.js";
+import { boardRolloutInput, pickRolloutBest, rolloutTies } from "../src/reflex/rollout-live.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { exhaustedSinceTurnStart, turnStartAoe } from "../src/screens/combat-plan.js";
-import { replayRun } from "../src/project/journal-replay.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { exhaustedSinceTurnStart, turnStartAoe } from "../src/reflex/combat-plan.js";
+import { replayRun } from "../src/memory/journal-replay.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {

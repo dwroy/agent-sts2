@@ -14,17 +14,17 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { deckDrawPool, pileCardCost, pileCardModels, pileEntries, planCombatTurn, rolloutPiles, thiefTrace } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { deckDrawPool, pileCardCost, pileCardModels, pileEntries, planCombatTurn, rolloutPiles, thiefTrace } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { offHandCardModel, pileCostOptions, pilePowerExtraCost, withPowerExtraCost } from "../src/strategy/card-model.js";
-import { deckModels } from "../src/strategy/rollout-live.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { offHandCardModel, pileCostOptions, pilePowerExtraCost, withPowerExtraCost } from "../src/reflex/card-model.js";
+import { deckModels } from "../src/reflex/rollout-live.js";
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { syntheticBossStart } from "../src/sim/boss-start.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";

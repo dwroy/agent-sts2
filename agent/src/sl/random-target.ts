@@ -4,8 +4,8 @@
  * chance) and the turn planner's least-loss facts (combat-plan leastLossFactsFor: Juggernaut, Kusarigama, Hellraiser, a card
  * hitting a random enemy). Its own module: the judge reads the planner and the planner the judge.
  */
-import type { GameState } from "../mod/schema.js";
-import { asArray, asRecord } from "../util/json.js";
+import type { GameState } from "../hand/mod/schema.js";
+import { asArray, asRecord } from "../core/util/json.js";
 
 const RANDOM = /随机|random/i;
 /** "A random enemy" as the game's texts say it (对随机敌人, 随机对一名敌人, 对一名随机敌人, 随机一名敌人, 给予随机敌人, 随机对敌人...). */

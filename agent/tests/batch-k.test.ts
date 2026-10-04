@@ -6,12 +6,12 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { recoverRoute } from "../src/llm/deepseek.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/strategy/rollout.js";
-import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { recoverRoute } from "../src/brain/llm/deepseek.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { modelPotion, type CardModel } from "../src/reflex/card-model.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/reflex/rollout.js";
+import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 
 type Raw = Record<string, unknown>;

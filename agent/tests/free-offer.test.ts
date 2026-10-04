@@ -17,16 +17,16 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { ActionRequest } from "../src/mod/client.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import { facingFightOf } from "../src/screens/combat-plan.js";
-import { freeOfferOptions, freeOfferSource, noteCardSource, planSelection } from "../src/screens/selection.js";
-import { potionCardCostOptions } from "../src/strategy/card-model.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { ActionRequest } from "../src/hand/mod/client.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import { facingFightOf } from "../src/reflex/combat-plan.js";
+import { freeOfferOptions, freeOfferSource, noteCardSource, planSelection } from "../src/hand/screens/selection.js";
+import { potionCardCostOptions } from "../src/reflex/card-model.js";
 
 type Raw = Record<string, unknown>;
 interface Board { source: string; decision: Raw; opened: { action: "use_potion" | "play_card"; id: string; option_index: number | null; card_index: number | null; state?: Raw }; state: Raw }

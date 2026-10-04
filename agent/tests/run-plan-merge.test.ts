@@ -1,5 +1,5 @@
 /**
- * RUN_PLAN_MERGE (Dai 2026-10-02, src/strategy/run-plan-merge.ts): a due run plan rides on the next DeepSeek question
+ * RUN_PLAN_MERGE (Dai 2026-10-02, src/memory/run-plan-merge.ts): a due run plan rides on the next DeepSeek question
  * (state.run_plan_task, the answer's run_plan) instead of its own call at the map; its own call only when no question
  * carried it within RUN_PLAN_MERGE_FLOORS floors, or the act boss is next; off: exactly as before.
  *
@@ -15,19 +15,19 @@ import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { carriesRunPlan, pickSpec, routePlanSpec, stableSchema, withRunPlanField } from "../src/brain/specs.js";
-import type { AppConfig } from "../src/config.js";
-import { loadConfig } from "../src/config.js";
+import type { AppConfig } from "../src/core/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
-import { choiceMessage } from "../src/llm/deepseek-message.js";
-import { DeepSeekClient, pickJsonObject, questionEffort, type DeepSeekAnswer } from "../src/llm/deepseek.js";
-import { runLoop, type LoopOptions } from "../src/loop.js";
-import { ModClient } from "../src/mod/client.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
-import { rememberMap } from "../src/screens/rest.js";
-import { RUN_PLAN_MERGE_FLOORS, RUN_PLAN_MERGE_NOTE, runPlanAtMap, runPlanDueAtQuestion, ridingPlanOf } from "../src/strategy/run-plan-merge.js";
-import { RUN_PLAN_TASK, type RunPlan } from "../src/strategy/run-plan.js";
-import type { JsonValue } from "../src/util/json.js";
+import { choiceMessage } from "../src/brain/llm/deepseek-message.js";
+import { DeepSeekClient, pickJsonObject, questionEffort, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+import { runLoop, type LoopOptions } from "../src/hand/loop.js";
+import { ModClient } from "../src/hand/mod/client.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";
+import { rememberMap } from "../src/hand/screens/rest.js";
+import { RUN_PLAN_MERGE_FLOORS, RUN_PLAN_MERGE_NOTE, runPlanAtMap, runPlanDueAtQuestion, ridingPlanOf } from "../src/memory/run-plan-merge.js";
+import { RUN_PLAN_TASK, type RunPlan } from "../src/memory/run-plan.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { loggedKnowledge } from "./logged.js";
 import { ask, board, decide, DIR, env, scriptedDeepSeek, setupOneshotTests, stubJev, type Raw } from "./oneshot-support.js";
 import { legalRoutes } from "./route-fixture.js";

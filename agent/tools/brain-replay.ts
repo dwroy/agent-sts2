@@ -31,9 +31,9 @@ import { KnowledgePrompt } from "../src/brain/knowledge.js";
 import { pickSpec, runPlanSpec, shopPlanSpec } from "../src/brain/specs.js";
 import { userMessage } from "../src/brain/message.js";
 import type { BrainRequest } from "../src/brain/types.js";
-import { loadConfig } from "../src/config.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
-import type { ToolContext, ToolDef } from "../src/tools/types.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import type { ToolContext, ToolDef } from "../src/brain/tools/types.js";
 import { fromRoot, KNOWLEDGE_DIR } from "../src/core/paths.js";
 
 /** The dsh question set (dataset.jsonl, system-prompt.txt): DSH_DATA, else data/dsh (a copy of jev-sts2-dsh/experiments/dsh/data). */

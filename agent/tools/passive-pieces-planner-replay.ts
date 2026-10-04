@@ -1,5 +1,5 @@
 /**
- * PASSIVE_PIECES on the live combat planner (src/strategy/passive-pieces.ts, combat-plan planCombatTurn): every logged
+ * PASSIVE_PIECES on the live combat planner (src/reflex/passive-pieces.ts, combat-plan planCombatTurn): every logged
  * turn's first planning decision (per SL attempt) of the chosen fights, rebuilt from its logged state and planned twice,
  * PASSIVE_PIECES off and on, as live: the 5-turn rollout and the random potions' Monte Carlo on a frozen clock (the full 5
  * turns x 8 samples, the board's seeds), the whole-fight boss simulation (B2) off, MECH_* as configured. No model call.
@@ -22,17 +22,17 @@ import { execFileSync } from "node:child_process";
 import { closeSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import { facingFightOf, planCombatTurn } from "../src/screens/combat-plan.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import { facingFightOf, planCombatTurn } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
-import { passivePiecesOptions, PASSIVE_SIM_RELICS } from "../src/strategy/passive-pieces.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { passivePiecesOptions, PASSIVE_SIM_RELICS } from "../src/reflex/passive-pieces.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

@@ -42,23 +42,23 @@ import { createReadStream, mkdirSync, readFileSync, writeFileSync } from "node:f
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge, type Knowledge } from "../src/knowledge/index.js";
-import type { ActionRequest } from "../src/mod/client.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/project/types.js";
-import { planCombatTurn, slPointOf, stepPlay, thiefTrace, turnKeys } from "../src/screens/combat-plan.js";
+import type { ActionRequest } from "../src/hand/mod/client.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/memory/types.js";
+import { planCombatTurn, slPointOf, stepPlay, thiefTrace, turnKeys } from "../src/reflex/combat-plan.js";
 import { BOSS_LINES_TIE_SE, bossLinesOptions, lowTrustOfState, simWinsLess } from "../src/sim/boss-lines.js";
 import { createSlLog, previousAttemptsJson, type SlAttemptRow } from "../src/sl/attempts.js";
 import { actionPlay, RETRY_COMPUTE } from "../src/sl/controller.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "../src/sl/draws.js";
 import { explorePoint, exploreTarget, exploreTried, lineText, playKey, pointLost, replayPath, slBoardKey, turnCanon, type ExploreB2, type ExploreLine, type ExplorePick, type ExploreRow, type SlExploreEnv, type SlPoint, type SlTarget, type SlTurnPlays } from "../src/sl/explore.js";
-import { modelHandCard, offHandCardModel } from "../src/strategy/card-model.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { drawsCards, type Plan, type Step } from "../src/strategy/turn-solver.js";
+import { modelHandCard, offHandCardModel } from "../src/reflex/card-model.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { drawsCards, type Plan, type Step } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

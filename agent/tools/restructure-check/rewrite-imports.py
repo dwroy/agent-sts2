@@ -8,7 +8,8 @@ target's location AFTER the move (the staged renames since BASE). A specifier th
 from the file's new place (a new import) is left alone; one that resolves in neither is reported. The suffix style is
 kept (a `.js` specifier of a `.ts` file stays `.js`). Nothing else in a file changes.
 
-  python3 rewrite-imports.py BASE [--dry-run]     (run from the repository root, renames staged with git mv)
+  python3 rewrite-imports.py BASE [--dry-run] [--rename OLD=NEW ...] [--only FILE ...]
+      (run from the repository root, renames staged with git mv)
 """
 import os
 import posixpath
@@ -30,12 +31,16 @@ def git(*args):
 def main():
     base = sys.argv[1]
     dry = "--dry-run" in sys.argv
+    # --rename OLD=NEW: a move git does not see as one (a new file left at the old path: src/index.ts's entry shim).
+    extra = dict(arg.split("=", 1) for flag, arg in zip(sys.argv, sys.argv[1:]) if flag == "--rename")
+    only = {arg for flag, arg in zip(sys.argv, sys.argv[1:]) if flag == "--only"}
     old_files = set(git("ls-tree", "-r", "--name-only", base).split("\n")) - {""}
     renames = {}
     for line in git("diff", "--cached", "--name-status", "-M30%", base).split("\n"):
         parts = line.split("\t")
         if parts and parts[0].startswith("R") and len(parts) == 3:
             renames[parts[1]] = parts[2]
+    renames.update(extra)
     new_of = lambda old: renames.get(old, old)
     old_of = {new: old for old, new in renames.items()}
     tracked = [f for f in git("ls-files").split("\n") if f]
@@ -58,7 +63,7 @@ def main():
     total = 0
     problems = []
     for path in tracked:
-        if not path.endswith(CODE) or path.startswith("third_party/") or not os.path.exists(path):
+        if not path.endswith(CODE) or path.startswith("third_party/") or not os.path.exists(path) or (only and path not in only):
             continue
         old_path = old_of.get(path, path)
         text = open(path, encoding="utf8").read()

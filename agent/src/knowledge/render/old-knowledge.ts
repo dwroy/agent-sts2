@@ -7,7 +7,7 @@
  * (boss-clock factsAtAscension: from A8 up A8 and A9 apart), in the guide and the handbook too.
  */
 
-import { factsAtAscension, fillGuideFacts } from "../../strategy/boss-clock.js";
+import { factsAtAscension, fillGuideFacts } from "../../sim/boss-clock.js";
 import { fillDbNumbers } from "../monster-db.js";
 import { KNOWLEDGE_FILES, KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
 import { freshFacts, type FactFiller } from "./facts.js";

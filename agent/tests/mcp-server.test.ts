@@ -1,4 +1,4 @@
-/** The MCP tool server (src/tools/mcp-server.ts): JSON-RPC methods, stdio transport, call records, launch config. */
+/** The MCP tool server (src/brain/tools/mcp-server.ts): JSON-RPC methods, stdio transport, call records, launch config. */
 
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -6,9 +6,9 @@ import { join } from "node:path";
 import { PassThrough } from "node:stream";
 import { describe, expect, it } from "vitest";
 
-import { claudeMcpConfig, mcpLaunchSpec } from "../src/tools/mcp-launch.js";
-import { handleMessage, handlePayload, hostFromArgs, serveStdio, ToolHost } from "../src/tools/mcp-server.js";
-import type { ToolContext, ToolDef } from "../src/tools/types.js";
+import { claudeMcpConfig, mcpLaunchSpec } from "../src/brain/tools/mcp-launch.js";
+import { handleMessage, handlePayload, hostFromArgs, serveStdio, ToolHost } from "../src/brain/tools/mcp-server.js";
+import type { ToolContext, ToolDef } from "../src/brain/tools/types.js";
 
 const ctx: ToolContext = { ascension: 8, act: 2, knowledgeDir: "/nonexistent/knowledge", logsDir: "/nonexistent/logs" };
 
@@ -133,7 +133,7 @@ describe("MCP launch configs", () => {
     const spec = mcpLaunchSpec(ctx, { stateFile: "/s.json", recordFile: "/r.jsonl", toolsModule: "/t.mjs" });
     expect(spec.command).toBe(process.execPath);
     expect(spec.args.slice(1)).toEqual([
-      expect.stringMatching(/src\/tools\/mcp-server\.ts$/),
+      expect.stringMatching(/src\/brain\/tools\/mcp-server\.ts$/),
       "--ascension", "8", "--knowledge-dir", "/nonexistent/knowledge", "--logs-dir", "/nonexistent/logs", "--act", "2",
       "--state-file", "/s.json", "--record-file", "/r.jsonl", "--tools-module", "/t.mjs",
     ]);

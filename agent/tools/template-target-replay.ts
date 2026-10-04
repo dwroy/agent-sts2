@@ -30,6 +30,7 @@ import { execFileSync } from "node:child_process";
 import { closeSync, existsSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fromRoot } from "../src/core/paths.js";
+import { srcModule } from "./src-layout.js";
 
 type Row = Record<string, unknown>;
 
@@ -48,30 +49,31 @@ const PLANNING = "combat/(plan-choice|plan$|plan-guarded|lethal|least-loss|mod-l
 
 /* ---- the two code trees ------------------------------------------------------------------------------------ */
 
-type CombatPlan = typeof import("../src/screens/combat-plan.js");
-type CardModelModule = typeof import("../src/strategy/card-model.js");
+type CombatPlan = typeof import("../src/reflex/combat-plan.js");
+type CardModelModule = typeof import("../src/reflex/card-model.js");
 interface Code {
   name: "base" | "new";
   plan: CombatPlan;
   cards: CardModelModule;
-  deckProfileLine: (typeof import("../src/project/deck-profile.js"))["deckProfileLine"];
+  deckProfileLine: (typeof import("../src/memory/deck-profile.js"))["deckProfileLine"];
   judge: typeof import("../src/sl/judge.js");
-  gate: (typeof import("../src/act/gate.js"))["gate"];
-  parseGameState: (typeof import("../src/mod/schema.js"))["parseGameState"];
-  buildRunBrief: (typeof import("../src/project/run-brief.js"))["buildRunBrief"];
-  createScreenMemory: (typeof import("../src/project/types.js"))["createScreenMemory"];
-  config: ReturnType<(typeof import("../src/config.js"))["loadConfig"]>;
+  gate: (typeof import("../src/hand/act/gate.js"))["gate"];
+  parseGameState: (typeof import("../src/hand/mod/schema.js"))["parseGameState"];
+  buildRunBrief: (typeof import("../src/memory/run-brief.js"))["buildRunBrief"];
+  createScreenMemory: (typeof import("../src/memory/types.js"))["createScreenMemory"];
+  config: ReturnType<(typeof import("../src/core/config.js"))["loadConfig"]>;
   knowledge: import("../src/knowledge/index.js").Knowledge;
 }
 
 async function loadCode(root: string, name: Code["name"]): Promise<Code> {
-  const at = (path: string) => join(root, "src", path);
+  // A module by its name before the module split, in either layout (tools/src-layout.ts).
+  const at = (path: string) => srcModule(join(root, "src"), path);
   const plan = (await import(at("screens/combat-plan.ts"))) as CombatPlan;
   const cards = (await import(at("strategy/card-model.ts"))) as CardModelModule;
   const { makeKnowledge } = (await import(at("knowledge/index.ts"))) as typeof import("../src/knowledge/index.js");
-  const { loadConfig } = (await import(at("config.ts"))) as typeof import("../src/config.js");
-  const { rolloutLiveOptions } = (await import(at("strategy/rollout-live.ts"))) as typeof import("../src/strategy/rollout-live.js");
-  const { potionMcOptions } = (await import(at("strategy/potion-mc.ts"))) as typeof import("../src/strategy/potion-mc.js");
+  const { loadConfig } = (await import(at("config.ts"))) as typeof import("../src/core/config.js");
+  const { rolloutLiveOptions } = (await import(at("strategy/rollout-live.ts"))) as typeof import("../src/reflex/rollout-live.js");
+  const { potionMcOptions } = (await import(at("strategy/potion-mc.ts"))) as typeof import("../src/reflex/potion-mc.js");
   const { bossLinesOptions } = (await import(at("sim/boss-lines.ts"))) as typeof import("../src/sim/boss-lines.js");
   rolloutLiveOptions.enabled = true;
   rolloutLiveOptions.now = () => 0;
@@ -84,12 +86,12 @@ async function loadCode(root: string, name: Code["name"]): Promise<Code> {
     name,
     plan,
     cards,
-    deckProfileLine: ((await import(at("project/deck-profile.ts"))) as typeof import("../src/project/deck-profile.js")).deckProfileLine,
+    deckProfileLine: ((await import(at("project/deck-profile.ts"))) as typeof import("../src/memory/deck-profile.js")).deckProfileLine,
     judge: (await import(at("sl/judge.ts"))) as typeof import("../src/sl/judge.js"),
-    gate: ((await import(at("act/gate.ts"))) as typeof import("../src/act/gate.js")).gate,
-    parseGameState: ((await import(at("mod/schema.ts"))) as typeof import("../src/mod/schema.js")).parseGameState,
-    buildRunBrief: ((await import(at("project/run-brief.ts"))) as typeof import("../src/project/run-brief.js")).buildRunBrief,
-    createScreenMemory: ((await import(at("project/types.ts"))) as typeof import("../src/project/types.js")).createScreenMemory,
+    gate: ((await import(at("act/gate.ts"))) as typeof import("../src/hand/act/gate.js")).gate,
+    parseGameState: ((await import(at("mod/schema.ts"))) as typeof import("../src/hand/mod/schema.js")).parseGameState,
+    buildRunBrief: ((await import(at("project/run-brief.ts"))) as typeof import("../src/memory/run-brief.js")).buildRunBrief,
+    createScreenMemory: ((await import(at("project/types.ts"))) as typeof import("../src/memory/types.js")).createScreenMemory,
     config: loadConfig({} as NodeJS.ProcessEnv),
     knowledge,
   };
@@ -276,11 +278,11 @@ async function scan(base: Code, next: Code): Promise<void> {
 
 /* ---- decisions --------------------------------------------------------------------------------------------- */
 
-type Decision = import("../src/project/types.js").Decision;
-type AskDecision = import("../src/project/types.js").AskDecision;
-type AnswerSet = import("../src/jev/answers.js").AnswerSet;
+type Decision = import("../src/memory/types.js").Decision;
+type AskDecision = import("../src/memory/types.js").AskDecision;
+type AnswerSet = import("../src/reflex/jev/answers.js").AnswerSet;
 
-function envOf(code: Code, raw: Row): import("../src/project/types.js").DecisionEnv {
+function envOf(code: Code, raw: Row): import("../src/memory/types.js").DecisionEnv {
   const state = code.parseGameState(raw);
   return {
     state, knowledge: code.knowledge, brief: code.buildRunBrief(state, code.knowledge), screenMemory: code.createScreenMemory("COMBAT"), thresholds: code.config.thresholds, runStart: "auto",
@@ -314,7 +316,7 @@ function viewOf(code: Code, raw: Row): Row {
   const boundView = bound ? { refused: bound.refused, ...(bound.superset ? { cards: bound.superset.cards, allDie: bound.superset.allDie, aliveAfterDraw: bound.superset.aliveAfterDraw, inexact: bound.superset.inexact.length } : {}) } : null;
   const hand = list(record(raw["combat"])["hand"]).map(record);
   const needTarget = new Set(hand.filter((card) => card["requires_target"] === true).flatMap((card) => [String(card["name"] ?? ""), `${String(card["name"] ?? "")}+`]));
-  const gateOf = (intent: import("../src/mod/client.js").ActionRequest) => {
+  const gateOf = (intent: import("../src/hand/mod/client.js").ActionRequest) => {
     const result = code.gate(env.state, intent);
     return result.ok ? "ok" : result.reason;
   };
@@ -505,7 +507,7 @@ function summary(): void {
 async function main(): Promise<void> {
   mkdirSync(outDir, { recursive: true });
   if (step === "summary") return summary();
-  if (!baseDir || !existsSync(join(baseDir, "src", "screens", "combat-plan.ts"))) throw new Error(`--base ${baseDir || "(missing)"}: no src/screens/combat-plan.ts there`);
+  if (!baseDir || !existsSync(srcModule(join(baseDir, "src"), "screens/combat-plan.ts"))) throw new Error(`--base ${baseDir || "(missing)"}: no combat-plan.ts there (src/screens/ or src/reflex/)`);
   if (resolve(baseDir) === resolve(process.cwd())) throw new Error("--base is this tree: give the base's own copy");
   const base = await loadCode(baseDir, "base");
   const next = await loadCode(process.cwd(), "new");

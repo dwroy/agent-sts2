@@ -32,20 +32,20 @@ import { execFileSync } from "node:child_process";
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/project/types.js";
-import { planCombatTurn, thiefTrace } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/memory/types.js";
+import { planCombatTurn, thiefTrace } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions, releaseBossLinesPool, type BossLineSim } from "../src/sim/boss-lines.js";
 import { createSlLog, previousAttemptsJson, type SlAttemptRow } from "../src/sl/attempts.js";
 import { RETRY_COMPUTE } from "../src/sl/controller.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder, type SlDraws } from "../src/sl/draws.js";
 import { loadSlElites } from "../src/sl/elites.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

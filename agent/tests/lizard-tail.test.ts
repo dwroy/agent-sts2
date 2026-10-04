@@ -10,10 +10,10 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { replayRun } from "../src/project/journal-replay.js";
-import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
-import { noteLizardTailEndTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { replayRun } from "../src/memory/journal-replay.js";
+import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";
+import { noteLizardTailEndTurn, revivesOf, trackLizardTail } from "../src/reflex/combat-plan.js";
 import { judgeEndTurn } from "../src/sl/judge.js";
 import { loggedKnowledge } from "./logged.js";
 

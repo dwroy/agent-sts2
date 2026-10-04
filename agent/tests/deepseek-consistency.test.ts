@@ -5,8 +5,8 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { checkConsistency, reaskFields, reaskMessage, reasoningConclusion } from "../src/llm/consistency.js";
-import { DeepSeekClient, DeepSeekInconsistentError } from "../src/llm/deepseek.js";
+import { checkConsistency, reaskFields, reaskMessage, reasoningConclusion } from "../src/brain/llm/consistency.js";
+import { DeepSeekClient, DeepSeekInconsistentError } from "../src/brain/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 interface Reply {

@@ -29,8 +29,8 @@ import {
 } from "../src/knowledge/potion-equivalents.js";
 import { KnowledgeLoadError, KnowledgeLookupError } from "../src/knowledge/render/data.js";
 import { findPotion, renderPotion, renderPotionTable } from "../src/knowledge/render/potion-text.js";
-import { buildTools } from "../src/tools/registry.js";
-import type { ToolContext } from "../src/tools/types.js";
+import { buildTools } from "../src/brain/tools/registry.js";
+import type { ToolContext } from "../src/brain/tools/types.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");

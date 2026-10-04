@@ -6,11 +6,11 @@
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type Decision, type DecisionEnv } from "../src/project/types.js";
-import { noChoiceSpecialCard, planReward } from "../src/screens/reward.js";
+import { loadConfig } from "../src/core/config.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type Decision, type DecisionEnv } from "../src/memory/types.js";
+import { noChoiceSpecialCard, planReward } from "../src/hand/screens/reward.js";
 import { baseState, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);

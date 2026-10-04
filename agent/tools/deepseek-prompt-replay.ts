@@ -6,24 +6,24 @@
  *
  * The state part is the card-reward planner's state for REWARD screens, else `{facts}` for that state
  * (the logs do not keep the exact DeepSeek state). The journal is rebuilt as a restarted loop rebuilds it
- * (src/project/journal-replay.ts): logged states, decisions, run plans and route plans.
+ * (src/memory/journal-replay.ts): logged states, decisions, run plans and route plans.
  *
  * Usage: STATES=<the run's states.jsonl lines> DECISIONS=<decisions.jsonl (slice)> [RUNPLANS=<run-plans.jsonl>]
  *        [FLOOR=24] [LABEL=reward/card] npx tsx tools/deepseek-prompt-replay.ts out.json
  */
 import { readFileSync, writeFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { choiceMessage } from "../src/llm/deepseek-message.js";
-import type { GameState } from "../src/mod/schema.js";
-import { replayRun } from "../src/project/journal-replay.js";
-import { isBrainDecider } from "../src/project/run-journal.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import type { AskDecision, DecisionEnv, ScreenMemory } from "../src/project/types.js";
-import { planReward } from "../src/screens/reward.js";
-import { buildFacts } from "../src/strategy/build-facts.js";
-import type { JsonValue } from "../src/util/json.js";
+import { choiceMessage } from "../src/brain/llm/deepseek-message.js";
+import type { GameState } from "../src/hand/mod/schema.js";
+import { replayRun } from "../src/memory/journal-replay.js";
+import { isBrainDecider } from "../src/memory/run-journal.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import type { AskDecision, DecisionEnv, ScreenMemory } from "../src/memory/types.js";
+import { planReward } from "../src/hand/screens/reward.js";
+import { buildFacts } from "../src/brain/build-facts.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 type Row = Record<string, JsonValue>;

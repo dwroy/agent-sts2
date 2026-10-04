@@ -7,8 +7,8 @@
 
 import { readFileSync } from "node:fs";
 
-import { asArray, asRecord, bool, str } from "../util/json.js";
-import { bumpDataVersion } from "../util/data-version.js";
+import { asArray, asRecord, bool, str } from "../core/util/json.js";
+import { bumpDataVersion } from "../core/util/data-version.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 
 /** Per event id: option text_key -> [continues, ends]. */

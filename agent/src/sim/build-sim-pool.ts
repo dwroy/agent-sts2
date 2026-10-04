@@ -15,7 +15,7 @@
 
 import { Worker } from "node:worker_threads";
 
-import type { KillOrder, RolloutInput } from "../strategy/rollout.js";
+import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
 import { BOSS_SIM_MAX_TURNS, BOSS_SIM_MAX_WORKERS, defaultWorkers, fightSample, sampleSeed, slimInput, type FightSampleResult } from "./boss-sim.js";
 import { claimSimCores, leaveSimCores } from "./sim-pools.js";
 

@@ -2,8 +2,8 @@
 
 import { describe, expect, it } from "vitest";
 
-import { pickNote } from "../src/screens/combat-plan.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import { pickNote } from "../src/reflex/combat-plan.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 
 const line = (...names: string[]): Plan => ({ steps: names.map((name, i) => ({ cardIndex: i, cardId: name.toUpperCase(), upgraded: false, name, target: null })) }) as unknown as Plan;
 

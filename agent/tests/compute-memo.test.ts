@@ -15,17 +15,17 @@ import { serialize } from "node:v8";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { AskDecision, DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn, plannerTiming } from "../src/screens/combat-plan.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { AskDecision, DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn, plannerTiming } from "../src/reflex/combat-plan.js";
 import { BOSS_LINES_DEADLINE_MS, BOSS_LINES_MIN_MS, BOSS_LINES_SAMPLES, BOSS_LINES_WORKERS, bossLinesOptions, bossLinesPoolData, releaseBossLinesPool, workerDataSignature } from "../src/sim/boss-lines.js";
 import { canonicalText, COMPUTE_MEMO_MAX_BYTES, ComputeMemo, computeMemoFor, computeMemoOptions, currentComputeMemo, dropComputeMemo, memoKey } from "../src/sim/compute-memo.js";
 import { RETRY_COMPUTE } from "../src/sl/controller.js";
-import { passivePiecesOptions } from "../src/strategy/passive-pieces.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutDecision, type RolloutInput, type RolloutResult } from "../src/strategy/rollout.js";
-import { ROLLOUT_BUDGET_MS, rolloutLiveOptions, rolloutTap } from "../src/strategy/rollout-live.js";
-import { bumpDataVersion } from "../src/util/data-version.js";
+import { passivePiecesOptions } from "../src/reflex/passive-pieces.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutDecision, type RolloutInput, type RolloutResult } from "../src/reflex/rollout.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions, rolloutTap } from "../src/reflex/rollout-live.js";
+import { bumpDataVersion } from "../src/core/util/data-version.js";
 import { logged, loggedEnv } from "./logged.js";
 
 describe("the key", () => {

@@ -6,9 +6,9 @@
 
 import { describe, expect, it } from "vitest";
 
-import { modelPotion, type CardModel } from "../src/strategy/card-model.js";
-import { rolloutDecision, type FightMeta } from "../src/strategy/rollout.js";
-import { RADIANCE_ENERGY_VALUE, RADIANCE_LATER_ENERGY, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { modelPotion, type CardModel } from "../src/reflex/card-model.js";
+import { rolloutDecision, type FightMeta } from "../src/reflex/rollout.js";
+import { RADIANCE_ENERGY_VALUE, RADIANCE_LATER_ENERGY, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 
 function strike(index: number): CardModel {
   return {

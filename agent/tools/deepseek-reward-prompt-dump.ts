@@ -7,14 +7,14 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { choiceMessage } from "../src/llm/deepseek-message.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv } from "../src/project/types.js";
-import { planReward } from "../src/screens/reward.js";
-import type { JsonValue } from "../src/util/json.js";
+import { choiceMessage } from "../src/brain/llm/deepseek-message.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
+import { planReward } from "../src/hand/screens/reward.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const out = process.argv[2] ?? fromRoot("logs/deepseek-reward-prompt.json");
@@ -35,7 +35,7 @@ for (const line of lines) {
   if (decision?.kind !== "ask") continue;
   const [key, question] = Object.entries(decision.questions)[0]!;
   const message = choiceMessage(decision.state, question.instructions, question.criteria, memoryRow?.memory as JsonValue | undefined);
-  writeFileSync(out, JSON.stringify({ question_key: key, floor: state.run?.floor, system_prompt: "(static: SYSTEM + ironclad guide + 经验手册, see src/llm/deepseek.ts)", user_message: JSON.parse(message) as JsonValue }, null, 1));
+  writeFileSync(out, JSON.stringify({ question_key: key, floor: state.run?.floor, system_prompt: "(static: SYSTEM + ironclad guide + 经验手册, see src/brain/llm/deepseek.ts)", user_message: JSON.parse(message) as JsonValue }, null, 1));
   console.log(`F${state.run?.floor} ${decision.label} -> ${out} (${message.length} chars)`);
   break;
 }

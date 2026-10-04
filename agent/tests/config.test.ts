@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { ConfigError, loadConfig, parsePortRange, requireJevApiKey, resolveClaudeBin } from "../src/config.js";
+import { ConfigError, loadConfig, parsePortRange, requireJevApiKey, resolveClaudeBin } from "../src/core/config.js";
 
 const env = (values: Record<string, string> = {}): NodeJS.ProcessEnv => values as NodeJS.ProcessEnv;
 

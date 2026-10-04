@@ -4,7 +4,7 @@
  * play, whether the deck out-damages the boss) is simulated rather than extrapolated by the rollout's terminal estimate
  * or the boss clock. Not wired into play and not shown to Jev or DeepSeek (B2 / B3 will; docs/boss-sim.md).
  *
- * It is the rollout's own simulation (src/strategy/rollout.ts simulateFight): the same cards, piles, enemy move model,
+ * It is the rollout's own simulation (src/reflex/rollout.ts simulateFight): the same cards, piles, enemy move model,
  * status cards, potions (a held potion is a 0-energy card with its cost; 0 in a boss fight, potion-cost.ts) and the
  * turn solver as the policy, with no horizon, no terminal estimate and no time budget, plus the scripts a long fight
  * exposes (fightNextMove: the Beast's Plow, the Queen's Amalgam switch, the Matriarch's sleep, death and phase moves,
@@ -22,9 +22,9 @@
 import { availableParallelism } from "node:os";
 import { Worker } from "node:worker_threads";
 
-import { killOrders, simulateFight, type KillGroup, type KillOrder, type RolloutInput } from "../strategy/rollout.js";
-import { potionCost, potionIdOf } from "../strategy/potion-cost.js";
-import type { Plan } from "../strategy/turn-solver.js";
+import { killOrders, simulateFight, type KillGroup, type KillOrder, type RolloutInput } from "../reflex/rollout.js";
+import { potionCost, potionIdOf } from "../reflex/potion-cost.js";
+import type { Plan } from "../reflex/turn-solver.js";
 
 /** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
 export const BOSS_SIM_MAX_TURNS = 30;

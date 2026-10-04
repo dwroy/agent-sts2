@@ -8,9 +8,9 @@ import { createRouter } from "../src/brain/brain.js";
 import { BrainRouter, EngineFailure, fallbackOf, labelPrefix, TIMEOUT_REST_AFTER, TIMEOUT_REST_MS, withUsage, type BrainLogRow } from "../src/brain/router.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, EngineName } from "../src/brain/types.js";
-import { brainLogPath, ConfigError, loadConfig } from "../src/config.js";
-import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
-import type { ToolDef } from "../src/tools/types.js";
+import { brainLogPath, ConfigError, loadConfig } from "../src/core/config.js";
+import { buildRouteMap, routeView } from "../src/sim/route-map.js";
+import type { ToolDef } from "../src/brain/tools/types.js";
 import { input } from "./route-fixture.js";
 import { LOGS_DIR } from "../src/core/paths.js";
 

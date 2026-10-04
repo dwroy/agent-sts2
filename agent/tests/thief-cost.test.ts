@@ -64,23 +64,23 @@ vi.mock("node:fs", async (importOriginal) => {
 
 vi.resetModules();
 const { readFileSync } = await import("node:fs");
-const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+const { potionCostOptions } = await import("../src/reflex/potion-cost.js");
 potionCostOptions.enabled = true;
-// PASSIVE_PIECES (src/strategy/passive-pieces.ts) postdates these digests: off here, on the fresh module (the boards holding
+// PASSIVE_PIECES (src/reflex/passive-pieces.ts) postdates these digests: off here, on the fresh module (the boards holding
 // Orichalcum, Ripple Basin or Ornamental Fan change with it on: tests/passive-pieces-planner.test.ts).
-const { passivePiecesOptions } = await import("../src/strategy/passive-pieces.js");
+const { passivePiecesOptions } = await import("../src/reflex/passive-pieces.js");
 passivePiecesOptions.enabled = false;
 const { makeKnowledge } = await import("../src/knowledge/index.js");
-const { loadConfig } = await import("../src/config.js");
-const { parseGameState } = await import("../src/mod/schema.js");
-const { buildRunBrief } = await import("../src/project/run-brief.js");
-const { createScreenMemory } = await import("../src/project/types.js");
-const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
-type AnswerSet = import("../src/jev/answers.js").AnswerSet;
-type AskDecision = import("../src/project/types.js").AskDecision;
-type DecisionEnv = import("../src/project/types.js").DecisionEnv;
+const { loadConfig } = await import("../src/core/config.js");
+const { parseGameState } = await import("../src/hand/mod/schema.js");
+const { buildRunBrief } = await import("../src/memory/run-brief.js");
+const { createScreenMemory } = await import("../src/memory/types.js");
+const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
+const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/reflex/rollout-live.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
+type AnswerSet = import("../src/reflex/jev/answers.js").AnswerSet;
+type AskDecision = import("../src/memory/types.js").AskDecision;
+type DecisionEnv = import("../src/memory/types.js").DecisionEnv;
 
 const knowledge = makeKnowledge(JSON.parse(readFileSync(join(DATA, "game-data.json"), "utf8")), "cache");
 const config = loadConfig({} as NodeJS.ProcessEnv);
@@ -310,10 +310,10 @@ describe("THIEF_COST on: the gold", () => {
   });
 });
 
-const { lootSwapOk } = await import("../src/screens/combat-plan.js");
-const { goldLoot, lastTurnLoot } = await import("../src/strategy/thief.js");
-const { pickRolloutBest } = await import("../src/strategy/rollout-live.js");
-const { replayRun } = await import("../src/project/journal-replay.js");
+const { lootSwapOk } = await import("../src/reflex/combat-plan.js");
+const { goldLoot, lastTurnLoot } = await import("../src/reflex/thief.js");
+const { pickRolloutBest } = await import("../src/reflex/rollout-live.js");
+const { replayRun } = await import("../src/memory/journal-replay.js");
 
 describe("THIEF_COST: code's own choices", () => {
   const plan = (hpLoss: number) => ({ steps: [], outcome: { hpLoss } }) as never;

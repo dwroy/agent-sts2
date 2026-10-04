@@ -6,8 +6,8 @@ import { createReadStream, readFileSync, statSync } from "node:fs";
 import { createInterface } from "node:readline";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { damageGap } from "../src/strategy/boss-clock.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { damageGap } from "../src/sim/boss-clock.js";
 import { fromRoot } from "../src/core/paths.js";
 
 const knowledge = makeKnowledge(JSON.parse(readFileSync(fromRoot("data/game-data.json"), "utf8")).collections, "cache");

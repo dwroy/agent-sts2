@@ -17,12 +17,12 @@ import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync }
 import { join } from "node:path";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { pileCardCost, pileCardInexact, pileCardNow, pileEntries, vambraceArmed } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { pileCardCost, pileCardInexact, pileCardNow, pileEntries, vambraceArmed } from "../src/reflex/combat-plan.js";
 import { loadSlElites } from "../src/sl/elites.js";
 import { randomTargets } from "../src/sl/random-target.js";
-import { modelHandCard } from "../src/strategy/card-model.js";
-import { asArray, asRecord, bool, num, str } from "../src/util/json.js";
+import { modelHandCard } from "../src/reflex/card-model.js";
+import { asArray, asRecord, bool, num, str } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

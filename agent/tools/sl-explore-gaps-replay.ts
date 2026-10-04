@@ -26,20 +26,20 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
+import { loadConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { makeKnowledge, type Knowledge } from "../src/knowledge/index.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/project/types.js";
-import { livingEnemySignature, planCombatTurn, slPointOf } from "../src/screens/combat-plan.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv, type SlEnv } from "../src/memory/types.js";
+import { livingEnemySignature, planCombatTurn, slPointOf } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
 import { previousAttemptsJson, type SlAttemptRow } from "../src/sl/attempts.js";
 import { RETRY_COMPUTE } from "../src/sl/controller.js";
 import { checkKnown, DrawTracker, knownOrderOf, type DrawTrackerOptions, type KnownOrder } from "../src/sl/draws.js";
 import { boardTried, exploreTarget, replayPlays, replayPoints, slBoardKey, triedHas, turnCanon, type ExploreRow, type ExploreTargetOptions, type SlExploreEnv, type SlPoint, type SlTarget } from "../src/sl/explore.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

@@ -13,11 +13,11 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { modelPotion, ourAttackScaled } from "../src/strategy/card-model.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { replaySteps, solveTap, type Plan, type SolveResult, type SolverInput, type Step } from "../src/strategy/turn-solver.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { modelPotion, ourAttackScaled } from "../src/reflex/card-model.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { replaySteps, solveTap, type Plan, type SolveResult, type SolverInput, type Step } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 type Raw = Record<string, unknown>;

@@ -10,8 +10,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 import { DATA_DIR } from "../core/paths.js";
-import type { ModClient } from "../mod/client.js";
-import { asArray, asRecord, numOrNull, str, stripMarkup } from "../util/json.js";
+import type { ModClient } from "../hand/mod/client.js";
+import { asArray, asRecord, numOrNull, str, stripMarkup } from "../core/util/json.js";
 import { fillPotionText } from "./potion-values.js";
 
 export interface CardInfo {

@@ -17,17 +17,17 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { SlConfig } from "../src/config.js";
+import type { SlConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import type { ActionRequest } from "../src/mod/client.js";
-import { parseGameState, type ActionResult, type GameState } from "../src/mod/schema.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
-import { noteLizardTailEndTurn, revivesOf, trackLizardTail } from "../src/screens/combat-plan.js";
+import type { ActionRequest } from "../src/hand/mod/client.js";
+import { parseGameState, type ActionResult, type GameState } from "../src/hand/mod/schema.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";
+import { noteLizardTailEndTurn, revivesOf, trackLizardTail } from "../src/reflex/combat-plan.js";
 import type { SlAttemptRow } from "../src/sl/attempts.js";
 import { SlController, turnStartLoss } from "../src/sl/controller.js";
 import { judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type JudgeContext } from "../src/sl/judge.js";
-import { heldCardEthereal } from "../src/strategy/card-model.js";
+import { heldCardEthereal } from "../src/reflex/card-model.js";
 import { menuBoard } from "./sl-support.js";
 
 type Raw = Record<string, unknown>;

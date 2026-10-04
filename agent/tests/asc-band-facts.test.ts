@@ -20,7 +20,7 @@ import { loadPostmortems } from "../src/knowledge/render/data.js";
 import { frozenFacts } from "../src/knowledge/render/facts.js";
 import { renderKnowledgeSections } from "../src/knowledge/render/knowledge-prefix.js";
 import { queryOldKnowledge } from "../src/knowledge/render/old-knowledge.js";
-import { jevLessonLine } from "../src/screens/jev-experience.js";
+import { jevLessonLine } from "../src/reflex/jev-experience.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 import {
   crabKillShort,
@@ -40,7 +40,7 @@ import {
   type QueenFightRow,
   type SandpitFightRow,
   type UnblockedShare,
-} from "../src/strategy/boss-clock.js";
+} from "../src/sim/boss-clock.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIXTURE = join(HERE, "gkb-data", "knowledge");

@@ -72,13 +72,13 @@
  * with four retries left. Only Ethereal cards are exhausted at the end of the turn (context.ethereal, card-model).
  */
 import type { Knowledge } from "../knowledge/index.js";
-import type { GameState } from "../mod/schema.js";
-import { BEATING_REMNANT_CAP, distinctNames, FAIRY_REVIVE_SHARE, LIZARD_TAIL_REVIVE_SHARE, MERCURY_HOURGLASS_DAMAGE } from "../screens/combat-plan.js";
-import { afterPlayFirst, heldCardEthereal, heldPenaltyOf, unconditionalText } from "../strategy/card-model.js";
-import { CAPTAINS_WHEEL_TURN, HORN_CLEAT_TURN, PARRYING_SHIELD, RIPPLE_BASIN_BLOCK } from "../strategy/passive-pieces.js";
-import { infernoCopies } from "../strategy/start-loss.js";
-import { mantleHpCost } from "../strategy/turn-solver.js";
-import { asArray, asRecord, num, numOrNull, str } from "../util/json.js";
+import type { GameState } from "../hand/mod/schema.js";
+import { BEATING_REMNANT_CAP, distinctNames, FAIRY_REVIVE_SHARE, LIZARD_TAIL_REVIVE_SHARE, MERCURY_HOURGLASS_DAMAGE } from "../reflex/combat-plan.js";
+import { afterPlayFirst, heldCardEthereal, heldPenaltyOf, unconditionalText } from "../reflex/card-model.js";
+import { CAPTAINS_WHEEL_TURN, HORN_CLEAT_TURN, PARRYING_SHIELD, RIPPLE_BASIN_BLOCK } from "../reflex/passive-pieces.js";
+import { infernoCopies } from "../reflex/start-loss.js";
+import { mantleHpCost } from "../reflex/turn-solver.js";
+import { asArray, asRecord, num, numOrNull, str } from "../core/util/json.js";
 import { randomTargetOnly, randomTargets } from "./random-target.js";
 
 export type JudgeTier = "rules" | "least-loss";

@@ -12,12 +12,12 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createBrain, type Brain } from "../src/brain/brain.js";
 import { DeepSeekEngine } from "../src/brain/engines/deepseek.js";
 import { pickSpec } from "../src/brain/specs.js";
-import { loadConfig } from "../src/config.js";
-import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
-import { isRunPlanReply } from "../src/strategy/run-plan.js";
-import type { ToolDef } from "../src/tools/types.js";
-import type { JsonValue } from "../src/util/json.js";
-import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekAnswerError, DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { isRunPlanReply } from "../src/memory/run-plan.js";
+import type { ToolDef } from "../src/brain/tools/types.js";
+import type { JsonValue } from "../src/core/util/json.js";
+import { buildRouteMap, routeView } from "../src/sim/route-map.js";
 import { input } from "./route-fixture.js";
 
 /** The act-start joint question's map (tests/route-fixture.ts). */

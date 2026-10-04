@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { modelHandCard, modelPotion, type CardModel } from "../src/strategy/card-model.js";
+import { modelHandCard, modelPotion, type CardModel } from "../src/reflex/card-model.js";
 import { testKnowledge } from "./scenarios.js";
 import {
   backAttack,
@@ -21,8 +21,8 @@ import {
   WOUND_COST,
   type EnemySim,
   type PlayerSim,
-} from "../src/strategy/turn-solver.js";
-import { hardRuleLines } from "../src/screens/combat-plan.js";
+} from "../src/reflex/turn-solver.js";
+import { hardRuleLines } from "../src/reflex/combat-plan.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {
@@ -173,7 +173,7 @@ describe("enemy powers", () => {
 
 describe("potions", () => {
   it("uses a damage potion when it completes a lethal; otherwise a potion-free line stays among the plans", async () => {
-    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const { modelPotion } = await import("../src/reflex/card-model.js");
     const rock = modelPotion("POTION_SHAPED_ROCK", "rock", 1, [0])!;
     const lethal = solveTurn({
       hand: [strike(0), rock],
@@ -340,7 +340,7 @@ describe("more enemy powers", () => {
   });
 
   it("Ashwater exhausts Howl, which hits every enemy at the end of the turn (H14T F39 T4)", async () => {
-    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const { modelPotion } = await import("../src/reflex/card-model.js");
     const ashwater = modelPotion("ASHWATER", "Ashwater", 0, [])!;
     const howl = card(3, "HOWL_FROM_BEYOND", { cost: 3, damage: 30, target: "all", validTargets: [] });
     const result = solveTurn({
@@ -360,7 +360,7 @@ describe("more enemy powers", () => {
   });
 
   it("an exhaust takes Howl from Beyond first: it plays itself once from the exhaust pile and is not lost (SVN2 F17, N1V2 F48)", async () => {
-    const { exhaustPick } = await import("../src/strategy/turn-solver.js");
+    const { exhaustPick } = await import("../src/reflex/turn-solver.js");
     const howl = card(3, "HOWL_FROM_BEYOND", { cost: 3, damage: 18, target: "all", validTargets: [] });
     const wound = card(4, "WOUND", { type: "Status", playable: false, heldPenalty: 0, validTargets: [] });
     expect(exhaustPick([strike(1), defend(2), howl, wound])?.cardId).toBe("HOWL_FROM_BEYOND");
@@ -457,7 +457,7 @@ describe("more enemy powers", () => {
 
 describe("Fortifier", () => {
   it("plays Defend before tripling the block (boss floor 17, live run)", async () => {
-    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const { modelPotion } = await import("../src/reflex/card-model.js");
     const fortifier = modelPotion("FORTIFIER", "fortifier", 0, [])!;
     const result = solveTurn({
       hand: [defend(0), fortifier],
@@ -502,7 +502,7 @@ describe("status cards in hand", () => {
 
 describe("Duplication potion", () => {
   it("plays the next card twice (floor 12 elite, live run)", async () => {
-    const { modelPotion } = await import("../src/strategy/card-model.js");
+    const { modelPotion } = await import("../src/reflex/card-model.js");
     const dup = modelPotion("DUPLICATOR", "dup", 2, [])!;
     const setup = card(0, "SETUP_STRIKE", { damage: 7, tempStrength: 3 });
     const result = solveTurn({
@@ -1054,7 +1054,7 @@ describe("Test Subject (2WUM F48)", () => {
   });
 
   it("Personal Hive: each hit on the Entomancer adds a Dazed, and full damage lands (M812 F28)", async () => {
-    const { DAZED_COST } = await import("../src/strategy/turn-solver.js");
+    const { DAZED_COST } = await import("../src/reflex/turn-solver.js");
     const hive = (dazedPerHit: number): EnemySim => enemy({ name: "Entomancer", hp: 145, maxHp: 145, dazedPerHit, attacks: [] });
     const twinScore = (dazedPerHit: number) => solveTurn({ hand: [card(0, "TWIN_STRIKE", { damage: 5, hits: 2 })], player: player({ hp: 80 }), enemies: [hive(dazedPerHit)], fightKind: "elite" }).plans.find((plan) => plan.steps.length > 0)!;
     expect(twinScore(0).score - twinScore(1).score).toBeCloseTo(2 * DAZED_COST);
@@ -1138,7 +1138,7 @@ describe("Apparition (1LJF F42 T6)", () => {
 
 describe("least-loss fallback (2VW5 F28 T7)", () => {
   it("does not play a drawing card first whose HP cost kills us", async () => {
-    const { leastLossPlan } = await import("../src/screens/combat-plan.js");
+    const { leastLossPlan } = await import("../src/reflex/combat-plan.js");
     const offering = card(0, "OFFERING", { type: "Skill", target: "self", validTargets: [], cost: 0, draw: 3, hpLoss: 6 });
     const base = solveTurn({ hand: [strike(1)], player: player({ hp: 5 }), enemies: [enemy({ index: 0, hp: 50, attacks: [{ damage: 37, hits: 1 }] })], fightKind: "monster" }).plans[0]!;
     const plan = { ...base, steps: [{ cardIndex: 1, cardId: "STRIKE_IRONCLAD", upgraded: false, name: "Strike", target: 0, targetName: null }, { cardIndex: 0, cardId: "OFFERING", upgraded: false, name: "Offering", target: null, targetName: null }] };
@@ -1174,7 +1174,7 @@ describe("Pact's End (H1FA F17 T9)", () => {
 
 describe("dominated lines (Q4JV F17 T3)", () => {
   it("cards drawn with no energy left do not keep a weaker line alive", async () => {
-    const { dominates } = await import("../src/strategy/turn-solver.js");
+    const { dominates } = await import("../src/reflex/turn-solver.js");
     const base = solveTurn({ hand: [strike(0)], player: player({ hp: 60 }), enemies: [enemy({ index: 0, hp: 200, attacks: [] })], fightKind: "boss" }).plans[0]!;
     const hits = { ...base, outcome: { ...base.outcome, damageDealt: 23, cardsDrawn: 0, energyLeft: 0 } };
     const trance = (energyLeft: number) => ({ ...base, outcome: { ...base.outcome, damageDealt: 8, cardsDrawn: 3, energyLeft } });
@@ -1197,7 +1197,7 @@ describe("The Bomb (1ZQJ: 40 to every enemy after 3 turns, scored 0 as unmodelle
   });
 
   it("card model reads BombDamage", async () => {
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const { testKnowledge } = await import("./scenarios.js");
     const model = modelHandCard(
       { index: 0, card_id: "THE_BOMB", energy_cost: 2, target_type: "Self", playable: true, dynamic_values: [{ name: "BombDamage", base_value: 40, current_value: 40 }, { name: "Turns", base_value: 3, current_value: 3 }] },
@@ -1333,7 +1333,7 @@ describe("debuffs into Artifact (TQX5 T1: Powdered Demise into Artifact 3 did no
   });
 
   it("debuffs land in card-text order: Uppercut's Weak meets Artifact 1, the Vulnerable lands (UJS25 F28)", async () => {
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const knowledge = { card: () => undefined } as unknown as Parameters<typeof modelHandCard>[2];
     const uppercut = modelHandCard(
       {
@@ -1577,7 +1577,7 @@ describe("Chains of Binding (88HN: after one Soulbound card the others are locke
   });
 
   it("card model reads the Soulbound keyword from the rendered text", async () => {
-    const { modelHandCard } = await import("../src/strategy/card-model.js");
+    const { modelHandCard } = await import("../src/reflex/card-model.js");
     const knowledge = { card: () => undefined } as unknown as Parameters<typeof modelHandCard>[2];
     const bound = modelHandCard({ index: 0, card_id: "DEFEND_IRONCLAD", energy_cost: 1, playable: true, resolved_rules_text: "获得9点格挡。 魂缚", dynamic_values: [] }, 0, knowledge);
     const exhausting = modelHandCard({ index: 1, card_id: "DEMONIC_FLAME", energy_cost: 1, playable: true, resolved_rules_text: "造成7点伤害。 魂缚 消耗。", dynamic_values: [] }, 1, knowledge);
@@ -1620,7 +1620,7 @@ describe("Touch of Insanity (G8AQ T3: free Bludgeon+ was lethal, the potion went
   });
 
   it("the solver and the selection screen agree on the card", async () => {
-    const { freeCardPick } = await import("../src/strategy/card-model.js");
+    const { freeCardPick } = await import("../src/reflex/card-model.js");
     expect(freeCardPick(hand())?.cardId).toBe("BLUDGEON");
     expect(freeCardPick([strike(0), defend(1)])).toBeNull();
   });

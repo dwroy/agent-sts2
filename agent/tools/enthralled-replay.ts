@@ -18,17 +18,17 @@
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import type { AnswerSet } from "../src/jev/answers.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTap, type Plan } from "../src/strategy/turn-solver.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { solveTap, type Plan } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {
@@ -105,7 +105,7 @@ async function main(): Promise<void> {
   potionMcOptions.now = () => 0;
   bossLinesOptions.enabled = false;
   // The switch exists only with the fix: a tree without it plans as it is (plain mode).
-  const switches = (await import("../src/strategy/card-model.js")) as { playFirstOptions?: { enabled: boolean } };
+  const switches = (await import("../src/reflex/card-model.js")) as { playFirstOptions?: { enabled: boolean } };
   if (mode === "ab" && !switches.playFirstOptions) throw new Error("ab mode needs playFirstOptions (the fixed card-model)");
   const frames = JSON.parse(readFileSync(arg("frames", ""), "utf8")) as Row[];
   const fd = openSync(fromRoot("logs/states.jsonl"), "r");

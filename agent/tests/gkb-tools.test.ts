@@ -1,5 +1,5 @@
 /**
- * V4 knowledge-base tools (src/tools/kb-tools.ts via buildTools): every tool's normal and error paths, on the
+ * V4 knowledge-base tools (src/brain/tools/kb-tools.ts via buildTools): every tool's normal and error paths, on the
  * fixed data in tests/gkb-data.
  */
 
@@ -8,9 +8,9 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { buildTools } from "../src/tools/registry.js";
-import type { ToolContext, ToolDef, ToolResult } from "../src/tools/types.js";
-import { validateInput } from "../src/tools/validate.js";
+import { buildTools } from "../src/brain/tools/registry.js";
+import type { ToolContext, ToolDef, ToolResult } from "../src/brain/tools/types.js";
+import { validateInput } from "../src/brain/tools/validate.js";
 
 const DATA = join(dirname(fileURLToPath(import.meta.url)), "gkb-data");
 const ctx: ToolContext = { ascension: 9, knowledgeDir: join(DATA, "knowledge"), logsDir: join(DATA, "run-logs") };

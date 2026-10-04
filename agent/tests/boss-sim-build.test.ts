@@ -8,15 +8,15 @@
  */
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
-import { parseGameState } from "../src/mod/schema.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
 import { sampleSeed } from "../src/sim/boss-sim.js";
 import { bossOpening, syntheticBossStart } from "../src/sim/boss-start.js";
 import { compareOptions } from "../src/sim/build-sim.js";
 import { BOSS_SIM_NOTE, LOW_CONFIDENCE, withBossSim } from "../src/sim/build-sim-facts.js";
 import { BuildSimPool, SerialDeckRunner, type DeckRunRequest } from "../src/sim/build-sim-pool.js";
-import type { JsonValue } from "../src/util/json.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
 import { loggedKnowledge } from "./logged.js";
 import { ask, board, decide, env, FakeDeepSeek, play, setupOneshotTests, type Raw } from "./oneshot-support.js";

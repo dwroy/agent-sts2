@@ -18,7 +18,7 @@
  * attacks_played_this_turn); Captain's Wheel 18 block at the start of turn 3 (19 of 20 third turns, no other turn).
  */
 
-import { stripMarkup } from "../util/json.js";
+import { stripMarkup } from "../core/util/json.js";
 import { UNKNOWN_VALUE } from "./potion-values.js";
 
 export const RELIC_VALUES: Record<string, Record<string, number>> = {

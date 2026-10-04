@@ -5,8 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { ModClient } from "../src/mod/client.js";
-import { recordStates } from "../src/replay/record.js";
+import { ModClient } from "../src/hand/mod/client.js";
+import { recordStates } from "../src/eye/replay/record.js";
 import { combatPayload } from "./scenarios.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 

@@ -5,8 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { DeepSeekClient, effortFor, parseEffortTiers, pickJsonObject, resolveOptionKey } from "../src/llm/deepseek.js";
+import { loadConfig } from "../src/core/config.js";
+import { DeepSeekClient, effortFor, parseEffortTiers, pickJsonObject, resolveOptionKey } from "../src/brain/llm/deepseek.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 
 let server: TestServer | null = null;

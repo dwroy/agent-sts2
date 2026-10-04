@@ -11,7 +11,7 @@ Per run:
     node; never a fixed floor number);
   - potions still held when a lost run died (its death fight's potions in, less those drunk in it);
   - a Strength source at the act-1 boss: a deck card or relic that gives lasting Strength (the deck profile's
-    own test, agent/src/project/deck-profile.ts, via eval/strength-sources.ts), or Strength on the player
+    own test, agent/src/memory/deck-profile.ts, via eval/strength-sources.ts), or Strength on the player
     during that fight;
   - act-1 elite fights entered below 78% of max HP;
   - died in act 2 before its first rest site (out of the runs that entered act 2);
@@ -28,7 +28,7 @@ eval/versions.json by git ancestry (docs/eval.md §2). A version whose commit is
 live) is skipped.
 
 Configuration (--group-by config, docs/eval.md §8): the version plus the brain setup the run started with, from
-logs/run-config.jsonl (agent/src/telemetry/run-config.ts; the runs view's brain_label and knowledge_prefix): e.g.
+logs/run-config.jsonl (agent/src/eye/run-config.ts; the runs view's brain_label and knowledge_prefix): e.g.
 "V4 · deepseek:deepseek-flash; MAP=claude:claude-opus-5-5 · 知识前缀 full". Runs from before that log are
 "<version> · 未记录配置"; a run a restarted process played with another configuration is marked "局中改过配置".
 

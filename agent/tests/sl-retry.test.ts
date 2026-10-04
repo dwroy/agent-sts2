@@ -11,18 +11,18 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { SlConfig } from "../src/config.js";
-import type { ActionRequest } from "../src/mod/client.js";
-import type { ActionResult } from "../src/mod/schema.js";
-import { RunJournal } from "../src/project/run-journal.js";
-import { createScreenMemory } from "../src/project/types.js";
+import type { SlConfig } from "../src/core/config.js";
+import type { ActionRequest } from "../src/hand/mod/client.js";
+import type { ActionResult } from "../src/hand/mod/schema.js";
+import { RunJournal } from "../src/memory/run-journal.js";
+import { createScreenMemory } from "../src/memory/types.js";
 import { previousAttemptsJson, type SlAttemptRow } from "../src/sl/attempts.js";
 import { RETRY_COMPUTE, SlController } from "../src/sl/controller.js";
 import { checkKnown, DrawTracker, knownOrderOf, knownTopIndices, type KnownOrder, type SlDraws } from "../src/sl/draws.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { samplePotion, type PotionMcSource } from "../src/strategy/potion-mc.js";
-import { rng, sampledDrawPile } from "../src/strategy/rollout.js";
-import { solveTurn, type EnemySim, type PlayerSim } from "../src/strategy/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { samplePotion, type PotionMcSource } from "../src/reflex/potion-mc.js";
+import { rng, sampledDrawPile } from "../src/reflex/rollout.js";
+import { solveTurn, type EnemySim, type PlayerSim } from "../src/reflex/turn-solver.js";
 import { testKnowledge } from "./scenarios.js";
 import { bossBoard, menuBoard, state } from "./sl-support.js";
 

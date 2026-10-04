@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PASSIVE_PIECES (src/strategy/passive-pieces.ts): the logged rules of the passive damage and block pieces.
+"""PASSIVE_PIECES (src/reflex/passive-pieces.ts): the logged rules of the passive damage and block pieces.
 
 Reads the log database (tools/logdb, read-only) for the A7+ boss and elite fights and every A7+ fight holding one of the
 relics below, then those fights' combat frames from logs/states.jsonl by byte offset (never the whole file). Prints, per

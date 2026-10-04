@@ -32,7 +32,7 @@ $P agent/tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一�
 
 - query.py 默认先做一次增量同步（`--no-sync` 关掉）；只接受**一条只读语句**（SELECT / WITH / FROM / DESCRIBE / SUMMARIZE / EXPLAIN），默认最多返回 200 行（`--max-rows`），30 秒超时（`--timeout`）。连接锁死：不能读写库目录以外的文件、不能装/加载扩展、不能改设置。
 - 环境变量：`LOGDB_DIR`（库目录）、`LOGDB_LOGS`（日志目录）、`LOGDB_PYTHON`（TS 工具用的 Python）。
-- **`logs_query` 工具**（agent/src/tools/logs-query.ts，在 `buildTools` 里）：输入 `{sql, max_rows?}`（默认 50 行，最多 200），子进程跑 `query.py --json --no-sync`，30 秒超时，子进程环境里不带任何 key，返回文本表；description 里列了表和主要字段。工具不同步，靠对局后的同步或 query.py 保持新鲜。
+- **`logs_query` 工具**（agent/src/brain/tools/logs-query.ts，在 `buildTools` 里）：输入 `{sql, max_rows?}`（默认 50 行，最多 200），子进程跑 `query.py --json --no-sync`，30 秒超时，子进程环境里不带任何 key，返回文本表；description 里列了表和主要字段。工具不同步，靠对局后的同步或 query.py 保持新鲜。
 - 测试：`data/logdb-venv/bin/python agent/tests/logdb_test.py`（没有 duckdb 时只跑抽取器测试，其余跳过）；vitest 的 agent/tests/logdb.test.ts 会调它，并测 `logs_query`（假脚本；有 venv 时再对样本库实跑）。样本在 agent/tests/logdb-data/（`make-fixture.py` 生成）。
 - 评估指标脚本 eval/metrics.py 和校准脚本 eval/calibration.py（预测对实际）建在这个库上，见 docs/eval.md。
 
@@ -52,7 +52,7 @@ $P agent/tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一�
 
 **run_plans** ← run-plans.jsonl：`off, len, ts, run_id, floor, trigger, version, archetype, summary, want, avoid, input_tokens, output_tokens, cache_hit_tokens, reasoning_tokens, latency_ms, effort, error`。
 
-**run_config** ← run-config.jsonl（每局开局时的配置，agent/src/telemetry/run-config.ts，docs/eval.md §8；重启换了配置的局有第二行）：`off, len, ts, run_id, ascension, character, floor, restart, pid, process_started, code`（短号 + `+dirty`）`, commit, dirty, dirty_files, branch, worktree, brain_active, brain_engine, brain_by_prefix`（JSON 文本）`, brain_fallback, brain_label`（如 `deepseek:deepseek-flash; MAP=claude:claude-opus-5-5`）`, brain_engines, claude_model, claude_max_calls, claude_effort, deepseek_model, deepseek_max_calls, deepseek_effort, knowledge_prefix, prefix_sha, prefix_chars, prefix_tokens_deepseek, prefix_tokens_claude, system_sha, system_chars, experience_version, knowledge_error, jev_enabled, jev_model, jev_context, loop_mode, build_decider, build_oneshot, run_plan, fight_plan, target_ascension, arm, config_sha, config`（整行 JSON 文本，过 scrub，用 json_extract 查别的字段）。
+**run_config** ← run-config.jsonl（每局开局时的配置，agent/src/eye/run-config.ts，docs/eval.md §8；重启换了配置的局有第二行）：`off, len, ts, run_id, ascension, character, floor, restart, pid, process_started, code`（短号 + `+dirty`）`, commit, dirty, dirty_files, branch, worktree, brain_active, brain_engine, brain_by_prefix`（JSON 文本）`, brain_fallback, brain_label`（如 `deepseek:deepseek-flash; MAP=claude:claude-opus-5-5`）`, brain_engines, claude_model, claude_max_calls, claude_effort, deepseek_model, deepseek_max_calls, deepseek_effort, knowledge_prefix, prefix_sha, prefix_chars, prefix_tokens_deepseek, prefix_tokens_claude, system_sha, system_chars, experience_version, knowledge_error, jev_enabled, jev_model, jev_context, loop_mode, build_decider, build_oneshot, run_plan, fight_plan, target_ascension, arm, config_sha, config`（整行 JSON 文本，过 scrub，用 json_extract 查别的字段）。
 
 ### 视图（查询时现算）
 

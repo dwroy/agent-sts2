@@ -5,8 +5,8 @@
 
 import { parentPort } from "node:worker_threads";
 
-import type { KillOrder, RolloutInput } from "../strategy/rollout.js";
-import type { Plan } from "../strategy/turn-solver.js";
+import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
+import type { Plan } from "../reflex/turn-solver.js";
 import { fightSample, type WorkerReply, type WorkerRequest } from "./boss-sim.js";
 
 const jobs = new Map<number, { input: RolloutInput; lines: (Plan | null)[]; maxTurns: number; scripts: boolean; order: KillOrder | null }>();

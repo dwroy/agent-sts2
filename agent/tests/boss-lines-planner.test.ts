@@ -66,19 +66,19 @@ vi.mock("node:fs", async (importOriginal) => {
 // Load every module again, now under the mock (the setup files had loaded some with the real node:fs), and redo the
 // potion-cost setup on the fresh module (setup-potion-cost.ts: costs off).
 vi.resetModules();
-const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+const { potionCostOptions } = await import("../src/reflex/potion-cost.js");
 potionCostOptions.enabled = false;
-// PASSIVE_PIECES (src/strategy/passive-pieces.ts) postdates these digests: off here, on the fresh module (the boards holding
+// PASSIVE_PIECES (src/reflex/passive-pieces.ts) postdates these digests: off here, on the fresh module (the boards holding
 // Orichalcum, Ripple Basin or Ornamental Fan change with it on: tests/passive-pieces-planner.test.ts).
-const { passivePiecesOptions } = await import("../src/strategy/passive-pieces.js");
+const { passivePiecesOptions } = await import("../src/reflex/passive-pieces.js");
 passivePiecesOptions.enabled = false;
 const { logged, loggedEnv } = await import("./logged.js");
-const { planCombatTurn } = await import("../src/screens/combat-plan.js");
-const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
+const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
+const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/reflex/rollout-live.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 const { bossLinesOptions, BOSS_LINES_SAMPLES } = await import("../src/sim/boss-lines.js");
-type AnswerSet = import("../src/jev/answers.js").AnswerSet;
-type AskDecision = import("../src/project/types.js").AskDecision;
+type AnswerSet = import("../src/reflex/jev/answers.js").AnswerSet;
+type AskDecision = import("../src/memory/types.js").AskDecision;
 
 /** The whole decision as data: the question, Jev's view, and each option's (and no answer's) resolution. */
 function digestOf(name: string, jevContext: "off" | "v1"): string {
@@ -188,7 +188,7 @@ describe("B2 on: the boss question", () => {
     bossLinesOptions.lowTrust = "retry";
   });
 
-  function ask(name: string, enabled: boolean, over: Partial<import("../src/project/types.js").DecisionEnv> = {}): { decision: AskDecision; criteria: Record<string, Record<string, unknown>> } {
+  function ask(name: string, enabled: boolean, over: Partial<import("../src/memory/types.js").DecisionEnv> = {}): { decision: AskDecision; criteria: Record<string, Record<string, unknown>> } {
     rolloutLiveOptions.now = () => 0;
     potionMcOptions.now = () => 0;
     bossLinesOptions.enabled = enabled;

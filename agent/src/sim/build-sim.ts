@@ -7,7 +7,7 @@
  * samples and the median turns. Facts, not a verdict: no option is scored, ranked or dropped.
  */
 
-import type { RolloutInput } from "../strategy/rollout.js";
+import type { RolloutInput } from "../reflex/rollout.js";
 import { calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
 

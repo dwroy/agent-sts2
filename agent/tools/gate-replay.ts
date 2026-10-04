@@ -1,5 +1,5 @@
 /**
- * V4 M3 acceptance for the execution gate's identity check (src/act/identity.ts): logged actions replayed through
+ * V4 M3 acceptance for the execution gate's identity check (src/hand/act/identity.ts): logged actions replayed through
  * the current gate. Only reports; nothing is changed.
  *
  * 1. stale: the drinks of a Jev line cut short (combat/plan-potion, "drinking X from the Jev-chosen line before
@@ -27,19 +27,19 @@ import { execFileSync } from "node:child_process";
 import { closeSync, mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { gate } from "../src/act/gate.js";
-import { handSignatureOf, livingEnemiesOf, wireIntent, withExpect, type ActionExpect } from "../src/act/identity.js";
-import { loadConfig } from "../src/config.js";
-import type { AnswerSet } from "../src/jev/answers.js";
+import { gate } from "../src/hand/act/gate.js";
+import { handSignatureOf, livingEnemiesOf, wireIntent, withExpect, type ActionExpect } from "../src/hand/act/identity.js";
+import { loadConfig } from "../src/core/config.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { noteScreenChange } from "../src/loop.js";
-import type { ActionRequest } from "../src/mod/client.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { asArray, asRecord, bool, num, numOrNull, str } from "../src/util/json.js";
+import { noteScreenChange } from "../src/hand/loop.js";
+import type { ActionRequest } from "../src/hand/mod/client.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { asArray, asRecord, bool, num, numOrNull, str } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

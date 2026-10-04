@@ -17,16 +17,16 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn, poolCardModel, randomPotionSource, thiefTrace } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn, poolCardModel, randomPotionSource, thiefTrace } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
-import { modelHandCard, modelPotion, pileCardPick, potionCardCost, potionCardCostOptions, potionPowerExtraCost, type CardModel } from "../src/strategy/card-model.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
+import { modelHandCard, modelPotion, pileCardPick, potionCardCost, potionCardCostOptions, potionPowerExtraCost, type CardModel } from "../src/reflex/card-model.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 
 type Raw = Record<string, unknown>;
 const DATA = join(dirname(fileURLToPath(import.meta.url)), "potion-card-cost-data");

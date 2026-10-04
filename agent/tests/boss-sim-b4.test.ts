@@ -8,9 +8,9 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { CardModel } from "../src/strategy/card-model.js";
-import { KNOWLEDGE_CURSES, rolloutDecision, simulateFight, STATUS_INTO_DRAW, type EnemyTable, type RolloutInput } from "../src/strategy/rollout.js";
-import { solveTap, solveTurn, type EnemySim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { KNOWLEDGE_CURSES, rolloutDecision, simulateFight, STATUS_INTO_DRAW, type EnemyTable, type RolloutInput } from "../src/reflex/rollout.js";
+import { solveTap, solveTurn, type EnemySim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { board, card } from "./boss-sim-fixture.js";
 
 /** The policy's solver inputs of one whole-fight sample (or the 5-turn rollout's when `rollout`), turn by turn. */

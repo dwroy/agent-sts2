@@ -9,7 +9,7 @@ import {
   parseEnvelope,
   parseGameState,
   parseHealth,
-} from "../src/mod/schema.js";
+} from "../src/hand/mod/schema.js";
 import { actionsPayload, combatStatePayload, healthPayload, statePayload } from "./support.js";
 
 describe("parseHealth", () => {

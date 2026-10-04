@@ -10,16 +10,16 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { setExperienceForTests, type ExperienceEntry } from "../src/knowledge/experience.js";
-import type { AskDecision, Decision } from "../src/project/types.js";
-import { focusLines, focusTargets, guardKeepsPick, hpGuardReplacement, killGroups, MAX_OPTIONS, planCombatTurn, targetOptions } from "../src/screens/combat-plan.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import { ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, type LiveRollout } from "../src/strategy/rollout-live.js";
-import { killOrders, LEADER_HP_TIE, rankOrders, rolloutDecision, type EnemyTable, type KillGroup, type RolloutInput } from "../src/strategy/rollout.js";
-import type { RunPlan } from "../src/strategy/run-plan.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
-import type { CardModel } from "../src/strategy/card-model.js";
+import type { AskDecision, Decision } from "../src/memory/types.js";
+import { focusLines, focusTargets, guardKeepsPick, hpGuardReplacement, killGroups, MAX_OPTIONS, planCombatTurn, targetOptions } from "../src/reflex/combat-plan.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import { ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, type LiveRollout } from "../src/reflex/rollout-live.js";
+import { killOrders, LEADER_HP_TIE, rankOrders, rolloutDecision, type EnemyTable, type KillGroup, type RolloutInput } from "../src/reflex/rollout.js";
+import type { RunPlan } from "../src/memory/run-plan.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
 import { logged, loggedEnv } from "./logged.js";
 
 // The Queen + Amalgam boards plan with full rollouts (both kill orders, death-move and passive pieces): ~1–4 s each

@@ -1,5 +1,5 @@
 /**
- * Random potions by Monte Carlo (Dai 2026-09-28, src/strategy/potion-mc.ts): card-choice potions sample
+ * Random potions by Monte Carlo (Dai 2026-09-28, src/reflex/potion-mc.ts): card-choice potions sample
  * offers from the real card pool, draw potions sample pile orders; every sample's line starts with the
  * drink; the option shows the distribution and says the turn is re-planned after the drink; unsimulated
  * potions carry no numbers; the samples are deterministic per board.
@@ -7,13 +7,13 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AnswerSet } from "../src/jev/answers.js";
-import type { AskDecision, Decision } from "../src/project/types.js";
-import { MAX_OPTIONS, planCombatTurn, trimForPotionOptions } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { beatsDryLine, MC_BEATS_DAMAGE, MC_BEATS_HP, MC_MIN_SAMPLES, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, samplePotion, seedOf, type PotionMcSource } from "../src/strategy/potion-mc.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { AnswerSet } from "../src/reflex/jev/answers.js";
+import type { AskDecision, Decision } from "../src/memory/types.js";
+import { MAX_OPTIONS, planCombatTurn, trimForPotionOptions } from "../src/reflex/combat-plan.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { beatsDryLine, MC_BEATS_DAMAGE, MC_BEATS_HP, MC_MIN_SAMPLES, MC_SAMPLES, potionMcCriteria, potionMcOptions, runPotionMc, samplePotion, seedOf, type PotionMcSource } from "../src/reflex/potion-mc.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
 afterEach(() => {

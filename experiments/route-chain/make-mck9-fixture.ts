@@ -1,8 +1,8 @@
 /** Builds tests/logged-states/route-rest/mck9-f32-rest.json: MCK9SMSK40ZY's F32 REST board and the map remembered from F31. */
 import { readFileSync, readSync, openSync, writeFileSync } from "node:fs";
-import { parseGameState } from "../../agent/src/mod/schema.js";
-import { createScreenMemory } from "../../agent/src/project/types.js";
-import { rememberChosenNode, rememberMap } from "../../agent/src/screens/rest.js";
+import { parseGameState } from "../../agent/src/hand/mod/schema.js";
+import { createScreenMemory } from "../../agent/src/memory/types.js";
+import { rememberChosenNode, rememberMap } from "../../agent/src/hand/screens/rest.js";
 
 const fd = openSync("logs/states.jsonl", "r");
 const at = (off: number, len: number) => {

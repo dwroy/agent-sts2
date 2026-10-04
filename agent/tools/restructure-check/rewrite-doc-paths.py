@@ -17,7 +17,7 @@ import re
 import subprocess
 import sys
 
-TOKEN = re.compile(r"(?<![\w./@-])(?P<pre>\{\{(?:worktree|code_dir)\}\}/)?(?P<path>(?:src|tools|tests|\.cache)/(?:[\w.*{}@+-]+/?)*)")
+TOKEN = re.compile(r"(?<![\w./@-])(?P<pre>\{\{(?:worktree|code_dir)\}\}/)?(?P<path>(?:agent/)?(?:src|tools|tests|\.cache)/(?:[\w.*{}@+-]+/?)*)")
 
 
 def git(*args):
@@ -25,13 +25,18 @@ def git(*args):
 
 
 def main():
-    base, mode, files = sys.argv[1], sys.argv[2], sys.argv[3:]
+    args = [a for a in sys.argv[1:] if a != "--split"]
+    # --split (phase 2): BASE is the phase-1 commit, whose paths already start with agent/; a mention inside agent/
+    # is package-relative (src/x means agent/src/x); the phase-1 rules (src/knowledge -> knowledge, .cache -> data) are done.
+    split = len(args) != len(sys.argv) - 1
+    base, mode, files = args[0], args[1], args[2:]
     renames = {}
     for line in git("diff", "--cached", "--name-status", "-M30%", base).split("\n"):
         parts = line.split("\t")
         if parts and parts[0].startswith("R") and len(parts) == 3:
             renames[parts[1]] = parts[2]
     old_files = set(git("ls-tree", "-r", "--name-only", base).split("\n")) - {""}
+    new_tree = set(git("ls-files").split("\n")) - {""}
     old_dirs = {posixpath.dirname(f) for f in old_files}
     old_dirs |= {d for f in old_dirs for d in [posixpath.dirname(f)]}
     # The new directory of an old one: where most of its files went (src/screens -> agent/src/hand/screens, say).
@@ -44,14 +49,31 @@ def main():
             if posixpath.dirname(f) == d and f in renames:
                 nd = posixpath.dirname(renames[f])
                 dests[nd] = dests.get(nd, 0) + 1
-        if dests:
+        # Only a directory the move emptied: one that still holds files (agent/src, src/sim) did not move.
+        if dests and not any(posixpath.dirname(f) == d for f in new_tree):
             moved_dir[d] = max(dests.items(), key=lambda kv: kv[1])[0]
-    special = {"src/knowledge": "knowledge", "tools/eval": "eval", ".cache": "data", ".cache/logdb-venv": "data/logdb-venv", ".cache/logdb": "data/logdb"}
+    special = {} if split else {"src/knowledge": "knowledge", "tools/eval": "eval", ".cache": "data", ".cache/logdb-venv": "data/logdb-venv", ".cache/logdb": "data/logdb"}
 
     def to_root(path):
         """An old code-root path -> its project-root path (None: not a moved path)."""
         trail = "/" if path.endswith("/") else ""
         p = path.rstrip("/")
+        if split:
+            if p.startswith(".cache/"):
+                return None
+            key = p if p.startswith("agent/") else "agent/" + p
+            if key in renames:
+                return renames[key] + trail
+            if key in moved_dir:
+                return moved_dir[key] + trail
+            parts = key.split("/")
+            for i in range(len(parts) - 1, 1, -1):
+                head = "/".join(parts[:i])
+                if head in moved_dir:
+                    return moved_dir[head] + "/" + "/".join(parts[i:]) + trail
+            return None
+        if p.startswith("agent/"):
+            return None
         if p in renames:
             return renames[p] + trail
         if p in special:

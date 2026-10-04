@@ -10,15 +10,15 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { wireIntent } from "../src/act/identity.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/project/types.js";
-import { dryFirst, MAX_OPTIONS, planCombatTurn, potionLethalLines, potionLethalNote, withPotionLines } from "../src/screens/combat-plan.js";
+import { loadConfig } from "../src/core/config.js";
+import { wireIntent } from "../src/hand/act/identity.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type Decision, type DecisionEnv } from "../src/memory/types.js";
+import { dryFirst, MAX_OPTIONS, planCombatTurn, potionLethalLines, potionLethalNote, withPotionLines } from "../src/reflex/combat-plan.js";
 import { POTION_WORTH_KEY, potionWorthSource } from "../src/knowledge/potion-equivalents.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { dominates, solveTap, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { dominates, solveTap, type Plan, type SolverInput } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 

@@ -10,14 +10,14 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory, type ScreenMemory } from "../src/project/types.js";
-import { revealsLater, routeEffect } from "../src/screens/act-start.js";
-import { rememberMap } from "../src/screens/rest.js";
-import type { JsonValue } from "../src/util/json.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";
+import { revealsLater, routeEffect } from "../src/hand/screens/act-start.js";
+import { rememberMap } from "../src/hand/screens/rest.js";
+import type { JsonValue } from "../src/core/util/json.js";
 import { act, ask, board, choose, decide, env, FakeDeepSeek, keyOf, optionsOf, play, scriptedDeepSeek, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { legalRoutes } from "./route-fixture.js";
-import { checkRoute, routeMapFromView } from "../src/strategy/route-map.js";
+import { checkRoute, routeMapFromView } from "../src/sim/route-map.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();

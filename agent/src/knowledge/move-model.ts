@@ -12,9 +12,9 @@
 
 import { readFileSync } from "node:fs";
 
-import { asArray, asRecord, numOrNull, str } from "../util/json.js";
+import { asArray, asRecord, numOrNull, str } from "../core/util/json.js";
 import { monsterMoves, moveDamageAt, shownDamageAt } from "./monster-db.js";
-import { bumpDataVersion } from "../util/data-version.js";
+import { bumpDataVersion } from "../core/util/data-version.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 
 export interface EnemyModel {

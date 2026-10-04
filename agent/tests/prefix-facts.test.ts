@@ -13,13 +13,13 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { createBrain } from "../src/brain/brain.js";
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { loadPostmortems } from "../src/knowledge/render/data.js";
 import { freshFacts, frozenFacts } from "../src/knowledge/render/facts.js";
 import { renderKnowledgePrefix, renderKnowledgeSections } from "../src/knowledge/render/knowledge-prefix.js";
 import { loadExperience, type ExperienceEntry } from "../src/knowledge/experience.js";
-import { DeepSeekClient } from "../src/llm/deepseek.js";
-import { jevLessonLine } from "../src/screens/jev-experience.js";
+import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+import { jevLessonLine } from "../src/reflex/jev-experience.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));

@@ -11,13 +11,13 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { DeepSeekAnswerError, DeepSeekClient, frozenGuideFacts, pickJsonObject, truncatedJsonObject } from "../src/llm/deepseek.js";
-import { endTurnLethalNote, planCombatTurn } from "../src/screens/combat-plan.js";
-import { planSelection } from "../src/screens/selection.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { isRunPlanReply } from "../src/strategy/run-plan.js";
-import { hpText, MUSIC_BOX_INDEX, solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/strategy/turn-solver.js";
+import { DeepSeekAnswerError, DeepSeekClient, frozenGuideFacts, pickJsonObject, truncatedJsonObject } from "../src/brain/llm/deepseek.js";
+import { endTurnLethalNote, planCombatTurn } from "../src/reflex/combat-plan.js";
+import { planSelection } from "../src/hand/screens/selection.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { isRunPlanReply } from "../src/memory/run-plan.js";
+import { hpText, MUSIC_BOX_INDEX, solveTurn, type EnemySim, type Plan, type PlayerSim } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 

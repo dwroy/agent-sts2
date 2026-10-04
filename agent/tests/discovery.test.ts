@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 
-import { ModDiscoveryError, discoverMod, reportedUrlFrom } from "../src/mod/discovery.js";
-import { parseHealth } from "../src/mod/schema.js";
+import { ModDiscoveryError, discoverMod, reportedUrlFrom } from "../src/hand/mod/discovery.js";
+import { parseHealth } from "../src/hand/mod/schema.js";
 import { closedPorts, envelope, healthPayload, sendJson, startTestServer, type TestServer } from "./support.js";
 
 const servers: TestServer[] = [];

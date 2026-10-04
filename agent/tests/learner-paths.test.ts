@@ -10,8 +10,8 @@ import { join } from "node:path";
 
 import { afterAll, describe, expect, it } from "vitest";
 
-import { BASH_DENY, claudePermissions } from "../src/learner/engines.js";
-import { collectSecrets, secretFilesOf } from "../src/learner/launcher.js";
+import { BASH_DENY, claudePermissions } from "../../learner/lib/engines.js";
+import { collectSecrets, secretFilesOf } from "../../learner/lib/launcher.js";
 
 const tmp = mkdtempSync(join(tmpdir(), "learner-paths-"));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));

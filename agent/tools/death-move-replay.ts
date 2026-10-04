@@ -19,19 +19,19 @@ import { execFileSync, spawn } from "node:child_process";
 import { closeSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { deathRulesOf } from "../src/knowledge/mechanics.js";
 import { setMonsterDbForTests, type MonsterDb } from "../src/knowledge/monster-db.js";
-import { parseGameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type Decision, type DecisionEnv, type ScreenMemory } from "../src/project/types.js";
-import { facingFightOf, planCombatTurn, thiefTrace } from "../src/screens/combat-plan.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type Decision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
+import { facingFightOf, planCombatTurn, thiefTrace } from "../src/reflex/combat-plan.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
-import { potionMcOptions } from "../src/strategy/potion-mc.js";
-import type { LineEstimate } from "../src/strategy/rollout.js";
-import { effectiveFightLoss, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import type { Plan } from "../src/strategy/turn-solver.js";
+import { potionMcOptions } from "../src/reflex/potion-mc.js";
+import type { LineEstimate } from "../src/reflex/rollout.js";
+import { effectiveFightLoss, rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import type { Plan } from "../src/reflex/turn-solver.js";
 import { fromRoot } from "../src/core/paths.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../src/knowledge/files.js";
 

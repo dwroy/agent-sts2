@@ -6,8 +6,8 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { actThreats, ascensionDamageRatio, backAttackShare, bossDossier, bossHpLoss, chainedDamageRatio, monsterDamageByTurn, moveDamageAt, monsterLine, monstersNamedIn, nearestAscension, selfGainAt, setMonsterDbForTests, type MonsterMoveData } from "../src/knowledge/monster-db.js";
-import { forcedFightCost } from "../src/screens/event.js";
-import { enemyTable } from "../src/strategy/rollout-live.js";
+import { forcedFightCost } from "../src/hand/screens/event.js";
+import { enemyTable } from "../src/reflex/rollout-live.js";
 import { expectedNextDamage, moveModel } from "../src/knowledge/move-model.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 

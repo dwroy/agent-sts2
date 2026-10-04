@@ -17,7 +17,7 @@ import { createRouter } from "../../../agent/src/brain/brain.js";
 import { KnowledgePrompt } from "../../../agent/src/brain/knowledge.js";
 import { carriesRunPlan, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "../../../agent/src/brain/specs.js";
 import type { AnswerSpec, BrainRequest } from "../../../agent/src/brain/types.js";
-import { loadConfig } from "../../../agent/src/config.js";
+import { loadConfig } from "../../../agent/src/core/config.js";
 import { frozenFacts } from "../../../agent/src/knowledge/render/facts.js";
 
 const { values } = parseArgs({ options: { rows: { type: "string" }, knowledge: { type: "string" }, facts: { type: "string" }, out: { type: "string" }, check: { type: "boolean", default: false }, "stop-after-ms": { type: "string", default: "300000" } } });

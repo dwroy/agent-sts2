@@ -14,15 +14,15 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
+import { loadConfig } from "../src/core/config.js";
 import { clearedWith, MOVE_RULE_MIN_N, moveChangeOf, moveRules, type ObservedMonster, type StrippedPower } from "../src/knowledge/mechanics.js";
 import { setMonsterDbForTests, type MonsterDb } from "../src/knowledge/monster-db.js";
 import { renderKnowledgePrefix } from "../src/knowledge/render/knowledge-prefix.js";
 import { renderMonster } from "../src/knowledge/render/monster-text.js";
-import { applyMoveRules, describePlan, learnedMoveRules, mechMoveOn } from "../src/screens/combat-plan.js";
-import type { CardModel } from "../src/strategy/card-model.js";
-import { simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/strategy/rollout.js";
-import { ruledMove, solveTurn, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import { applyMoveRules, describePlan, learnedMoveRules, mechMoveOn } from "../src/reflex/combat-plan.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { simulateFight, type EnemyTable, type FightMeta, type RolloutInput } from "../src/reflex/rollout.js";
+import { ruledMove, solveTurn, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
 /** The Axebot's last-Stock strips of the 2026-10-02 build: 22 of 23 showed Boot Up on their own frame (one was in it). */

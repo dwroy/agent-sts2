@@ -658,7 +658,7 @@ def brain_label(brain):
 
 def run_config_row(raw, off):
     """logs/run-config.jsonl: one row per run (a second one when a restarted process ran it with another setup), as
-    src/telemetry/run-config.ts writes it (RunConfigRow): run, code, brain engines and models, knowledge prompt
+    src/eye/run-config.ts writes it (RunConfigRow): run, code, brain engines and models, knowledge prompt
     hashes and sizes, Jev and loop settings, config_sha. It holds no key (the writer checks); `config` keeps the
     whole row as JSON text (scrubbed) for ad-hoc json_extract queries."""
     record = json.loads(raw)

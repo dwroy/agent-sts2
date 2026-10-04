@@ -9,9 +9,9 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { CardModel } from "../src/strategy/card-model.js";
-import { clockEstimate, deathMoveOptions, eruptionOptions, featuresOf, giantTerminal, rolloutDecision, type EnemyTable, type FightMeta, type MoveModelData, type SnapEnemy, type Snapshot } from "../src/strategy/rollout.js";
-import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
+import type { CardModel } from "../src/reflex/card-model.js";
+import { clockEstimate, deathMoveOptions, eruptionOptions, featuresOf, giantTerminal, rolloutDecision, type EnemyTable, type FightMeta, type MoveModelData, type SnapEnemy, type Snapshot } from "../src/reflex/rollout.js";
+import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {

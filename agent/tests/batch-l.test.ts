@@ -6,22 +6,22 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { DeepSeekClient, severalOptionKeys } from "../src/llm/deepseek.js";
-import { endTurnLethalNote, facingFightOf, noteFacing, planCombatTurn } from "../src/screens/combat-plan.js";
-import { replayRun } from "../src/project/journal-replay.js";
-import { createScreenMemory } from "../src/project/types.js";
-import { parseGameState } from "../src/mod/schema.js";
-import type { JsonValue } from "../src/util/json.js";
-import { rolloutLiveOptions } from "../src/strategy/rollout-live.js";
-import { modelPotion, potionShell, type CardModel } from "../src/strategy/card-model.js";
-import { solveTap, solveTurn, type Plan, type SolverInput } from "../src/strategy/turn-solver.js";
+import { DeepSeekClient, severalOptionKeys } from "../src/brain/llm/deepseek.js";
+import { endTurnLethalNote, facingFightOf, noteFacing, planCombatTurn } from "../src/reflex/combat-plan.js";
+import { replayRun } from "../src/memory/journal-replay.js";
+import { createScreenMemory } from "../src/memory/types.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import type { JsonValue } from "../src/core/util/json.js";
+import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { modelPotion, potionShell, type CardModel } from "../src/reflex/card-model.js";
+import { solveTap, solveTurn, type Plan, type SolverInput } from "../src/reflex/turn-solver.js";
 import { loggedKnowledge } from "./logged.js";
 import { ask, board, decide, env as oneshotEnv } from "./oneshot-support.js";
-import { pendingPickStep, selectingText } from "../src/screens/selection.js";
-import { discardableSlots } from "../src/screens/potion-discard.js";
-import { planMap, statuePotionOptions } from "../src/screens/map.js";
-import { reachableNext, routeMapFromView } from "../src/strategy/route-map.js";
-import type { PickOption } from "../src/screens/pick.js";
+import { pendingPickStep, selectingText } from "../src/hand/screens/selection.js";
+import { discardableSlots } from "../src/hand/screens/potion-discard.js";
+import { planMap, statuePotionOptions } from "../src/hand/screens/map.js";
+import { reachableNext, routeMapFromView } from "../src/sim/route-map.js";
+import type { PickOption } from "../src/hand/screens/pick.js";
 import { logged, loggedEnv } from "./logged.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 

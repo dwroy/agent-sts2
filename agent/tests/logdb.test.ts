@@ -1,6 +1,6 @@
 /**
  * The log database (docs/logdb.md): the Python suite for tools/logdb (tests/logdb_test.py: extractors, incremental
- * sync, views, query.py), and the logs_query tool (src/tools/logs-query.ts) against a fake query script and, when
+ * sync, views, query.py), and the logs_query tool (src/brain/tools/logs-query.ts) against a fake query script and, when
  * the log database's Python environment (data/logdb-venv) exists, against the fixed sample in tests/logdb-data.
  */
 
@@ -12,8 +12,8 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { LOGS_QUERY_MAX_ROWS, logsQueryTool, renderRows } from "../src/tools/logs-query.js";
-import type { ToolContext } from "../src/tools/types.js";
+import { LOGS_QUERY_MAX_ROWS, logsQueryTool, renderRows } from "../src/brain/tools/logs-query.js";
+import type { ToolContext } from "../src/brain/tools/types.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "tests/logdb-data");

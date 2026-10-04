@@ -107,7 +107,7 @@ slice for recorded states without calling any API.
 
 ## Safety model
 
-The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/loop.ts`:
+The guards that keep this from wrecking a run (PLAN.md §8.1) are all in `src/hand/loop.ts`:
 
 - only actions present in the freshest `available_actions` are dispatched, and indexes are re-derived
   from that same payload;
@@ -166,29 +166,27 @@ Beyond `.env.example`, two settings shape behaviour on the main menu:
 
 ## Layout
 
+The project root's layout (agent/, knowledge/, logs/, data/, learner/, eval/, docs/) is in ../docs/layout.md; inside
+this package, paths are relative to agent/, the data's to the project root.
+
 ```
 src/
-  index.ts          CLI entry point
-  config.ts         env + flag parsing and validation
-  cli/doctor.ts     the `doctor` command
-  cli/runtime.ts    discovery → knowledge → Jev wiring
-  cli/reporter.ts   console output for the loop
-  mod/client.ts     HTTP transport for the STS2-Agent API
-  mod/schema.ts     payload validation + version guards
-  mod/discovery.ts  base-URL discovery across the port range
-  jev/client.ts     TypeSafe SDK wrapper and smoke check
-  jev/questions.ts  typed choice / noul / score specs
-  jev/answers.ts    defensive answer parsing
-  knowledge/        /data/* cache and id → English text lookups
-  project/          run brief, deck summary, narrow payload builders
-  screens/          one planner per screen (combat, map, reward, shop, …)
-  act/              legality gate, fingerprint, failure classification
-  loop.ts           the decision loop: budget, circuit breaker, logging
-  replay/           record and replay
-  telemetry/        decision log writer
-  util/             json + terminal helpers
-tools/fake-mod.mjs  fixture server for offline checks
-tests/              88 tests: screens, loop, mod client, discovery, schema, config
+  index.ts          CLI entry (`npx tsx src/index.ts play`); the wiring is core/index.ts
+  core/             config.ts (env + flags), paths.ts (project root, logs/, data/, knowledge/), cli/ (doctor,
+                    runtime wiring, reporter), util/ (json, terminal, lock)
+  hand/             mod/ (HTTP client, schema, discovery), screens/ (one planner per screen but combat),
+                    act/ (legality gate, dispatch, identity, turn start), loop.ts (the decision loop)
+  eye/              decision log, Jev prompt log, run-config log; replay/ (record and replay)
+  reflex/           the combat question: combat-plan.ts, combat.ts, the turn solver, the rollout, card model,
+                    potion costs; jev/ (TypeSafe client, questions, answers, pricing)
+  brain/            router, engines (DeepSeek, Claude, Codex), knowledge prefix, llm/ (DeepSeek client and
+                    messages), tools/ (kb_* tools, logs_query, MCP server), build-facts.ts
+  sim/              B2/B3 boss and build simulations, boss clock, route map and projection
+  memory/           run journal, run brief, run plan, fight plan, the screen memory and decision types
+  sl/               the SL (save/load) controller
+  knowledge/        loading, filtering and rendering the knowledge data (files.ts: where each file is)
+tools/              replay and analysis tools, logdb/ (the log database), boss-sim/, fake-mod.mjs, check-imports.ts
+tests/              vitest tests and their fixed data (tests/*-data)
 ```
 
 ## Reading a decision log

@@ -11,10 +11,11 @@
  */
 import { execFileSync } from "node:child_process";
 import { closeSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { fromRoot } from "../src/core/paths.js";
+import { srcModule } from "./src-layout.js";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -53,11 +54,11 @@ const BOARDS_SQL =
 
 async function replay(): Promise<void> {
   const root = resolve(values.src!);
-  const { planMap } = (await import(pathToFileURL(join(root, "screens/map.ts")).href)) as { planMap: (env: unknown) => Row | null };
-  const { parseGameState } = (await import(pathToFileURL(join(root, "mod/schema.ts")).href)) as { parseGameState: (raw: unknown) => Row & { run?: Row } };
-  const { createScreenMemory } = (await import(pathToFileURL(join(root, "project/types.ts")).href)) as { createScreenMemory: (screen: string) => unknown };
-  const { buildRunBrief } = (await import(pathToFileURL(join(root, "project/run-brief.ts")).href)) as { buildRunBrief: (state: unknown, knowledge: unknown) => unknown };
-  const { makeKnowledge } = (await import(pathToFileURL(join(root, "knowledge/index.ts")).href)) as { makeKnowledge: (collections: unknown, source: string) => unknown };
+  const { planMap } = (await import(pathToFileURL(srcModule(root, "screens/map.ts")).href)) as { planMap: (env: unknown) => Row | null };
+  const { parseGameState } = (await import(pathToFileURL(srcModule(root, "mod/schema.ts")).href)) as { parseGameState: (raw: unknown) => Row & { run?: Row } };
+  const { createScreenMemory } = (await import(pathToFileURL(srcModule(root, "project/types.ts")).href)) as { createScreenMemory: (screen: string) => unknown };
+  const { buildRunBrief } = (await import(pathToFileURL(srcModule(root, "project/run-brief.ts")).href)) as { buildRunBrief: (state: unknown, knowledge: unknown) => unknown };
+  const { makeKnowledge } = (await import(pathToFileURL(srcModule(root, "knowledge/index.ts")).href)) as { makeKnowledge: (collections: unknown, source: string) => unknown };
   const knowledge = makeKnowledge(JSON.parse(readFileSync(fromRoot("data/game-data.json"), "utf8")).collections, "cache");
   const boards = query(BOARDS_SQL);
   const fd = openSync(STATES, "r");

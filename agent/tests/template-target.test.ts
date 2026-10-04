@@ -65,24 +65,24 @@ vi.mock("node:fs", async (importOriginal) => {
 
 vi.resetModules();
 const { readFileSync } = await import("node:fs");
-const { potionCostOptions } = await import("../src/strategy/potion-cost.js");
+const { potionCostOptions } = await import("../src/reflex/potion-cost.js");
 potionCostOptions.enabled = true;
 const { makeKnowledge } = await import("../src/knowledge/index.js");
-const { loadConfig } = await import("../src/config.js");
-const { parseGameState } = await import("../src/mod/schema.js");
-const { buildRunBrief } = await import("../src/project/run-brief.js");
-const { deckProfileLine } = await import("../src/project/deck-profile.js");
-const { createScreenMemory } = await import("../src/project/types.js");
-const { planCombatTurn, poolCardModel } = await import("../src/screens/combat-plan.js");
-const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/strategy/rollout-live.js");
-const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
+const { loadConfig } = await import("../src/core/config.js");
+const { parseGameState } = await import("../src/hand/mod/schema.js");
+const { buildRunBrief } = await import("../src/memory/run-brief.js");
+const { deckProfileLine } = await import("../src/memory/deck-profile.js");
+const { createScreenMemory } = await import("../src/memory/types.js");
+const { planCombatTurn, poolCardModel } = await import("../src/reflex/combat-plan.js");
+const { rolloutLiveOptions, ROLLOUT_BUDGET_MS } = await import("../src/reflex/rollout-live.js");
+const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 const { bossLinesOptions } = await import("../src/sim/boss-lines.js");
-const { gate } = await import("../src/act/gate.js");
+const { gate } = await import("../src/hand/act/gate.js");
 const { judgeEndTurn, LEAST_LOSS_LABEL } = await import("../src/sl/judge.js");
-const cardModel = await import("../src/strategy/card-model.js");
-type AnswerSet = import("../src/jev/answers.js").AnswerSet;
-type AskDecision = import("../src/project/types.js").AskDecision;
-type DecisionEnv = import("../src/project/types.js").DecisionEnv;
+const cardModel = await import("../src/reflex/card-model.js");
+type AnswerSet = import("../src/reflex/jev/answers.js").AnswerSet;
+type AskDecision = import("../src/memory/types.js").AskDecision;
+type DecisionEnv = import("../src/memory/types.js").DecisionEnv;
 type Raw = Record<string, unknown>;
 
 // The whole-fight boss lines (B2) are a worker pool on a wall clock: off here, the rest of the question is pinned.

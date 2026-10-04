@@ -22,7 +22,7 @@ import { KnowledgePrompt } from "../../../agent/src/brain/knowledge.js";
 import { BrainRouter } from "../../../agent/src/brain/router.js";
 import { pickSpec } from "../../../agent/src/brain/specs.js";
 import type { BrainRequest, EngineName } from "../../../agent/src/brain/types.js";
-import { loadConfig } from "../../../agent/src/config.js";
+import { loadConfig } from "../../../agent/src/core/config.js";
 import { frozenFacts } from "../../../agent/src/knowledge/render/facts.js";
 
 const VARIANTS: Record<string, Record<string, string>> = {

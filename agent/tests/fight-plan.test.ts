@@ -10,13 +10,13 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { loadConfig } from "../src/config.js";
-import { parseGameState, type GameState } from "../src/mod/schema.js";
-import { buildRunBrief } from "../src/project/run-brief.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { planCombatTurn } from "../src/screens/combat-plan.js";
-import { planCombat } from "../src/screens/combat.js";
-import { LIKELY_DEATH, nodeWeight } from "../src/screens/map.js";
+import { loadConfig } from "../src/core/config.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+import { buildRunBrief } from "../src/memory/run-brief.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
+import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { planCombat } from "../src/reflex/combat.js";
+import { LIKELY_DEATH, nodeWeight } from "../src/hand/screens/map.js";
 import {
   fightKey,
   fightPlanInput,
@@ -27,7 +27,7 @@ import {
   planFit,
   planOffersPotion,
   type FightPlan,
-} from "../src/strategy/fight-plan.js";
+} from "../src/memory/fight-plan.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);
@@ -457,7 +457,7 @@ describe("turn planner with a fight plan", () => {
 
 describe("big_hit on an attack potion (24HM F33)", () => {
   it("falls back to the default offer rule instead of waiting for an enemy big hit", async () => {
-    const { planOffersPotion } = await import("../src/strategy/fight-plan.js");
+    const { planOffersPotion } = await import("../src/memory/fight-plan.js");
     const p = plan({ potions: { ATTACK_POTION: "big_hit", BLOCK_POTION: "big_hit" } });
     const calm = { turn: 5, bigHit: false, pressed: false, costly: false };
     expect(planOffersPotion(p, "ATTACK_POTION", { ...calm, offensive: true })).toBeNull();
@@ -467,7 +467,7 @@ describe("big_hit on an attack potion (24HM F33)", () => {
 
 describe("Withering Presence count with Throwing Axe (XWPV F48)", () => {
   it("counts the axe's replay of the fight's first card", async () => {
-    const { witherInput } = await import("../src/screens/combat-plan.js");
+    const { witherInput } = await import("../src/reflex/combat-plan.js");
     const raw = combatPayload();
     const combat = raw["combat"] as Raw;
     (combat["enemies"] as Raw[])[0]!["powers"] = [{ index: 0, power_id: "WITHERING_PRESENCE_POWER", name: "Withering", amount: 1, is_debuff: false }];
@@ -482,7 +482,7 @@ describe("Withering Presence count with Throwing Axe (XWPV F48)", () => {
 
 describe("no playable card (CY8U F25 T7)", () => {
   it("drinks a potion before ending the turn into a lethal hit", async () => {
-    const { noPlayRescuePotion } = await import("../src/screens/combat-plan.js");
+    const { noPlayRescuePotion } = await import("../src/reflex/combat-plan.js");
     const raw = combatPayload();
     Object.assign(((raw["run"] as Raw)["potions"] as Raw[])[0]!, { potion_id: "BLOCK_POTION", name: "Block Potion", description: "获得 12 点格挡。", requires_target: false, valid_target_indices: [] });
     const e = env(raw);
@@ -500,7 +500,7 @@ describe("no playable card (CY8U F25 T7)", () => {
 
 describe("plan continuation after a kill (NEVM F23 T2)", () => {
   it("the living-enemy signature changes when an enemy dies, so the plan is re-made", async () => {
-    const { livingEnemySignature } = await import("../src/screens/combat-plan.js");
+    const { livingEnemySignature } = await import("../src/reflex/combat-plan.js");
     const raw = combatPayload();
     const before = livingEnemySignature(raw);
     const combat = raw["combat"] as Raw;
@@ -511,7 +511,7 @@ describe("plan continuation after a kill (NEVM F23 T2)", () => {
 
 describe("Multi Claw next hit (YFG5, ZANM)", () => {
   it("is this Multi Claw plus one hit", async () => {
-    const { multiClawNext } = await import("../src/screens/combat-plan.js");
+    const { multiClawNext } = await import("../src/reflex/combat-plan.js");
     expect(multiClawNext({ move_id: "MULTI_CLAW", intents: [{ damage: 10, hits: 4 }] })).toBe(50);
     expect(multiClawNext({ move_id: "BITE", intents: [{ damage: 20, hits: 1 }] })).toBeNull();
     // Kin Priest: Beam after Orb of Weakness, 3 hits of 3 + Strength (P78Z, PPKT T11: 21).

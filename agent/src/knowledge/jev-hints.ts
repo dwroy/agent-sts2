@@ -6,7 +6,7 @@
 
 import { readFileSync } from "node:fs";
 
-import { fillGuideFacts } from "../strategy/boss-clock.js";
+import { fillGuideFacts } from "../sim/boss-clock.js";
 import { fillDbNumbers } from "./monster-db.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 

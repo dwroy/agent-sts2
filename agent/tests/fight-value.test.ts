@@ -1,5 +1,5 @@
 /**
- * Fight value stub (src/strategy/fight-value.ts): offline, not called by decision code. Checks the loader
+ * Fight value stub (src/reflex/fight-value.ts): offline, not called by decision code. Checks the loader
  * reproduces the Python builder's golden examples, the pure function on a tiny hand-made model, and that
  * no decision code imports it yet.
  */
@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { loadFightValueModel, supportKeys, valueOf, type FightValueFeatures, type FightValueModel } from "../src/strategy/fight-value.js";
+import { loadFightValueModel, supportKeys, valueOf, type FightValueFeatures, type FightValueModel } from "../src/reflex/fight-value.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 

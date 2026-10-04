@@ -18,12 +18,12 @@ import { fileURLToPath } from "node:url";
 
 import { KNOWLEDGE_DIR } from "../../src/brain/brain.js";
 import { KnowledgePrompt } from "../../src/brain/knowledge.js";
-import { loadConfig } from "../../src/config.js";
+import { loadConfig } from "../../src/core/config.js";
 import { DEFAULT_KNOWLEDGE_DIR, loadPostmortems } from "../../src/knowledge/render/data.js";
 import { renderKnowledgeSections } from "../../src/knowledge/render/knowledge-prefix.js";
-import { DeepSeekClient, SYSTEM } from "../../src/llm/deepseek.js";
-import { buildTools } from "../../src/tools/registry.js";
-import type { JsonSchema, ToolContext } from "../../src/tools/types.js";
+import { DeepSeekClient, SYSTEM } from "../../src/brain/llm/deepseek.js";
+import { buildTools } from "../../src/brain/tools/registry.js";
+import type { JsonSchema, ToolContext } from "../../src/brain/tools/types.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 

@@ -11,10 +11,10 @@
  *   recorded, and the loop ends on a reply without tool calls.
  * - The router's re-ask: the same conversation with the previous answer and the problems as a new user turn.
  */
-import { DeepSeekAnswerError, DeepSeekClient, embeddedJsonObjects, type DeepSeekAnswer } from "../../llm/deepseek.js";
+import { DeepSeekAnswerError, DeepSeekClient, embeddedJsonObjects, type DeepSeekAnswer } from "../llm/deepseek.js";
 import { withUsage } from "../router.js";
-import type { JsonValue } from "../../util/json.js";
-import { ToolHost } from "../../tools/mcp-server.js";
+import type { JsonValue } from "../../core/util/json.js";
+import { ToolHost } from "../tools/mcp-server.js";
 import { normalisePick, parseAnswerText, reaskMessage, TOOLS_NOTE, userMessage } from "../message.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage } from "../types.js";
 

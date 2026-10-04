@@ -13,10 +13,10 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { makeKnowledge } from "../src/knowledge/index.js";
-import { parseGameState } from "../src/mod/schema.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
 import { turnStartLoss } from "../src/sl/controller.js";
 import { chanceTrigger, judgeEndTurn, LEAST_LOSS_LABEL, type DeathVerdict, type JudgeContext } from "../src/sl/judge.js";
-import { heldCardEthereal } from "../src/strategy/card-model.js";
+import { heldCardEthereal } from "../src/reflex/card-model.js";
 
 type Raw = Record<string, unknown>;
 const DATA = join(dirname(fileURLToPath(import.meta.url)), "sl-judge-bounds-data");

@@ -2,7 +2,7 @@
  * Boards for the SL tests (tests/sl.test.ts, tests/sl-loop.test.ts): a boss fight on a turn the enemy turn kills us
  * after, its first turn again, the main menu in between. Built on the scenario payloads.
  */
-import { parseGameState, type GameState } from "../src/mod/schema.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
 import { baseState, combatPayload } from "./scenarios.js";
 
 type Raw = Record<string, unknown>;

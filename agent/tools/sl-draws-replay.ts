@@ -32,9 +32,9 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, openSync, readFileSync, readSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { parseGameState, type GameState } from "../src/mod/schema.js";
+import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
 import { baseKey, cardKey, checkKnown, DrawTracker, knownOrderOf, pileMultiset, type DrawTrackerOptions, type SlDraws } from "../src/sl/draws.js";
-import { asArray, asRecord, bool, str } from "../src/util/json.js";
+import { asArray, asRecord, bool, str } from "../src/core/util/json.js";
 import { fromRoot } from "../src/core/paths.js";
 
 function arg(name: string, fallback: string): string {

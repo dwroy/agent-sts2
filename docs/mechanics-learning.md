@@ -81,7 +81,7 @@ thief.ts `stunsThief`）；这里把它变成通用规则，振翅是第一个�
 
 ## 4. 开关和失败保护
 
-`MECH_RULES`（agent/src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_rules`）：
+`MECH_RULES`（agent/src/core/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_rules`）：
 - off：战斗题面、选项、每个答案的处理和 v4 ffed0d4 逐字节相同，知识前缀和以前相同。agent/tests/mech-rules-planner.test.ts 钉住 6 个日志
   局面 × JEV_CONTEXT off/v1 的摘要（在 ffed0d4 上算的，数据库里**带着** observed 数据）；
 - on 但数据库没有 `observed`（规则刷新前的旧数据库）：同 off（同一组摘要）；
@@ -246,7 +246,7 @@ Dai 2026-10-02 定：做第二个数据规则类「能力被去掉（或少一�
 
 ### 8.5 开关和失败保护
 
-`MECH_MOVE_RULES`（agent/src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_move_rules`），要 `MECH_RULES`
+`MECH_MOVE_RULES`（agent/src/core/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_move_rules`），要 `MECH_RULES`
 也开才起作用。B 类要新 build-monster-db.py 建出来的数据库（旧库没有 move_changed 等字段：换招规则为空，等于关；凯撒蟹的修正不靠数据，照样生效）。
 - off（或 MECH_RULES off）：战斗题面、选项、每个答案的处理和 v4 3488dc5 逐字节相同。agent/tests/mech-move-planner.test.ts 钉住 4 个日志局面（凯撒蟹
   一只钳子死的回合、只剩一只的回合，巨斧机器人库存 1 和 2）× JEV_CONTEXT off/v1 的摘要（在 3488dc5 上算的，MECH_RULES 开 / 关；整场 boss
@@ -419,7 +419,7 @@ builder 现在对**在任何进阶都没有干净回合的招**，用只有我�
 
 ### 9.6 开关和失败保护
 
-`MECH_DEATH_MOVE`（agent/src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_death_move`），要 `MECH_RULES`
+`MECH_DEATH_MOVE`（agent/src/core/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_death_move`），要 `MECH_RULES`
 也开才起作用；数据库没有 `ally_deaths`（新 builder 之前建的库）时等于关。读规则出错：`withMechFallback` 先只关 MECH_DEATH_MOVE 再规划一次，还出错
 再关 MECH_MOVE_RULES，最后关 MECH_RULES（agent/tests/mech-rules.test.ts 的顺序测试改了）。
 

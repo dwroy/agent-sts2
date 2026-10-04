@@ -6,9 +6,9 @@
 
 import { describe, expect, it } from "vitest";
 
-import { parseGameState } from "../src/mod/schema.js";
-import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/project/types.js";
-import { bossIsNextFight, bossStartHealFacts, planRest } from "../src/screens/rest.js";
+import { parseGameState } from "../src/hand/mod/schema.js";
+import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
+import { bossIsNextFight, bossStartHealFacts, planRest } from "../src/hand/screens/rest.js";
 import { logged, loggedEnv } from "./logged.js";
 
 type Raw = Record<string, unknown>;

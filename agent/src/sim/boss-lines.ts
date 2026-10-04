@@ -25,14 +25,14 @@ import { availableParallelism } from "node:os";
 import { MessageChannel, receiveMessageOnPort, Worker, type MessagePort } from "node:worker_threads";
 
 import type { Knowledge } from "../knowledge/index.js";
-import type { GameState } from "../mod/schema.js";
-import type { ScreenMemory } from "../project/types.js";
-import type { JsonValue } from "../util/json.js";
-import type { CardModel } from "../strategy/card-model.js";
-import type { PotionMcSource } from "../strategy/potion-mc.js";
-import type { KillOrder, RolloutInput } from "../strategy/rollout.js";
-import { boardRolloutInput, fightMetaOf, fightRelicsOf } from "../strategy/rollout-live.js";
-import type { Plan, SolverInput } from "../strategy/turn-solver.js";
+import type { GameState } from "../hand/mod/schema.js";
+import type { ScreenMemory } from "../memory/types.js";
+import type { JsonValue } from "../core/util/json.js";
+import type { CardModel } from "../reflex/card-model.js";
+import type { PotionMcSource } from "../reflex/potion-mc.js";
+import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
+import { boardRolloutInput, fightMetaOf, fightRelicsOf } from "../reflex/rollout-live.js";
+import type { Plan, SolverInput } from "../reflex/turn-solver.js";
 import {
   BOSS_SIM_DAMAGE_SCALE,
   BOSS_SIM_HP_SCALE,

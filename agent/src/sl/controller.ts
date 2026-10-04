@@ -35,17 +35,17 @@
  *
  * Nothing here touches a save file: the game restarts the fight from the save it wrote on entering the room.
  */
-import type { SlConfig } from "../config.js";
-import type { ActionRequest } from "../mod/client.js";
-import type { GameState } from "../mod/schema.js";
+import type { SlConfig } from "../core/config.js";
+import type { ActionRequest } from "../hand/mod/client.js";
+import type { GameState } from "../hand/mod/schema.js";
 import type { Knowledge } from "../knowledge/index.js";
-import type { RunJournal } from "../project/run-journal.js";
-import type { Decision, ResolvedAction, ScreenMemory, SlCompute, SlEnv } from "../project/types.js";
-import { isMenuRunId } from "../project/journal-replay.js";
-import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type SlPointInfo } from "../screens/combat-plan.js";
-import { heldCardEthereal } from "../strategy/card-model.js";
-import { mantleHpCost } from "../strategy/turn-solver.js";
-import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
+import type { RunJournal } from "../memory/run-journal.js";
+import type { Decision, ResolvedAction, ScreenMemory, SlCompute, SlEnv } from "../memory/types.js";
+import { isMenuRunId } from "../memory/journal-replay.js";
+import { distinctNames, drawBoundOf, revivesOf, slAvoidFailedOf, slPointOf, type SlPointInfo } from "../reflex/combat-plan.js";
+import { heldCardEthereal } from "../reflex/card-model.js";
+import { mantleHpCost } from "../reflex/turn-solver.js";
+import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
