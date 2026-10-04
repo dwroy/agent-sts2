@@ -258,3 +258,10 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### 主目录自测误收学习者运行夹具（运维 codex，2026-10-05 05:22）
 - **非阻塞，工具问题：TypeScript通配纳入learner/runs临时源码**。定位 `agent/tsconfig.json:23`，include为`../learner/**/*.ts`，没有排除学习者运行产物。证据批次20261005-041302-fix-batch（R0HEV5E3QT6G/KAY522KT5NXR等静默证据的学习任务）：主目录合入S1.fix3后运行`nice -n 19 bash tools/test-sandbox.sh`（cwd=agent），tsc exit 1，343条诊断全部来自`learner/runs/20261005-041302-fix-batch/`中的临时测试和poison-src源码，没有实际源码路径诊断，日志`/tmp/sts2-fix3-main-sandbox-tests.log`。同一暂存合并内容已复制到干净校验工作树验证；原始运行归档保留。交学习者修正编译包含范围，对局未因此停下。
+
+### 静默猎手 XYYQYBRM2A01 复盘回报（运维 codex，2026-10-05 05:39）
+- **非阻塞，学习者机制模型提案：萎靡的X减益漏建模、零能量仍获固定价值**。来源 XYYQYBRM2A01 复盘首条、账本 silent-0051（机制证据 silent-0053），定位 `agent/src/reflex/card-model.ts:767`、`:771`、`:772`、`:841`、`:844`，以及 `agent/src/reflex/turn-solver.ts:1510`（复盘只读live 00fa8f79）。学习者证据：F33六次耗尽能量后施放未升级萎靡，力量与虚弱均未因此变化，首战T3候选仍计3分；F30 T1实际X3令力量−6→−9、虚弱1→4，临时尖啸恢复后仍−3。更早KAY522KT5NXR F9 T3已有零X，F12 T3的X1建立−1力量与1虚弱，first_run为KAY。学习者区分零X自身减益与开信刀第三技能5伤，不声称调整时点必胜、不补升级规则。只转录证据，交学习者实现、自测、上线，运维不改机制或另设审核。
+- **非阻塞，纯统计bug：晚写复盘被误计为上线后重犯**。来源 XYYQYBRM2A01 复盘第三条、账本 silent-0052，定位 `learner/ledger.py:280`、`:285`、`:286`。学习者证据：本局2026-10-05 05:05:41.432+08:00结束，运行bb19732f+dirty；silent-0008于05:22:46登记S1.fix3，正常追补repeat时工具只比较入账时间added与shipped_at，误计after-shipping repeat，未检查错误发生时间或实际生效版本。交学习者修正统计口径并保留原始账本历史；本轮dataset沿现脚本生成，暂不据该计数推断上线后效果。既有毒模型silent-0008的证据已由学习者追加，本局早于修复，不重复开毒模型待办。
+
+### 合入兜底后缺少沙箱外完整检查（运维 codex，2026-10-05 05:44）
+- **非阻塞，调度工具问题**。定位 `ops/learner_checks.py:37`：完成事件回报`merged=null`时直接返回，运维随后按live流程成功兜底合入也没有重新触发完整tsc + vitest。证据批次20261005-051301-experience-update：学习者cf3de824自测通过、因decision-log冲突未合；运维保留记录后合入c5b9123b并登记S1.exp6/live 69630ae6，live沙箱145文件1888用例通过，但无沙箱外补跑动作。请求有broker写权限的学习任务提供按批次校验实际合入、锁内补完整检查并发learner-checks的动作；去重且保留原失败/兜底历史，运维不改宽沙箱出口。已在收件箱及for-dai附这次的完整补跑命令。
