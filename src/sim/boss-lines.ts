@@ -18,6 +18,8 @@
  * Switch: BOSS_SIM_LINES=off (bossLinesOptions.enabled) leaves the question and its ranking as they were before B2.
  */
 
+import { createHash } from "node:crypto";
+import { readdirSync, readFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { MessageChannel, receiveMessageOnPort, Worker, type MessagePort } from "node:worker_threads";
 
@@ -52,6 +54,7 @@ import {
   type LineComparison,
 } from "./boss-sim.js";
 import { LOW_TRUST_B2 } from "./boss-trust.js";
+import { identityToken, memoKey, type ComputeMemo } from "./compute-memo.js";
 import { claimSimCores, leaveSimCores } from "./sim-pools.js";
 
 /** Samples per line (docs/boss-sim.md §8: 600 give a paired win-rate standard error of ~1-2 points). */
@@ -203,6 +206,29 @@ export interface PairsRun {
   timedOut: boolean;
   elapsedMs: number;
   workers: number;
+  /**
+   * (pair, sample) fights whose results came back (of samples x pairs): more than complete x pairs when the deadline cut
+   * samples some pairs had finished (their work is not used). A chunk still running at the deadline is not counted.
+   */
+  done: number;
+}
+
+/**
+ * The data files a pool's workers load when they start (src/knowledge and src/sim JSON; the refresh job rewrites some
+ * between runs), by content: the SL retry compute memo keys a pool's runs by it (BossLinesPool.data), so a pool rebuilt
+ * on the same data finds its predecessor's runs and one on new data does not. null when they cannot be read.
+ */
+export function workerDataSignature(): string | null {
+  try {
+    const hash = createHash("sha256");
+    for (const dir of ["../knowledge", "."]) {
+      const at = new URL(`${dir}/`, import.meta.url);
+      for (const name of readdirSync(at).filter((f) => f.endsWith(".json")).sort()) hash.update(name).update("\u0000").update(readFileSync(new URL(name, at))).update("\u0000");
+    }
+    return hash.digest("hex").slice(0, 32);
+  } catch {
+    return null;
+  }
 }
 
 interface PoolWorker {
@@ -222,6 +248,8 @@ export class BossLinesPool {
   private readonly signal = new SharedArrayBuffer(8);
   private readonly flag = new Int32Array(this.signal);
   private job = 0;
+  /** The data its workers loaded (workerDataSignature at their start; null: not started, or unreadable). */
+  data: string | null = null;
 
   constructor(size = bossLinesOptions.workers) {
     this.size = Math.max(1, Math.min(BOSS_SIM_MAX_WORKERS, availableParallelism() - 2, Math.floor(size)));
@@ -236,6 +264,7 @@ export class BossLinesPool {
       if (shared === this) shared = null;
       void this.close();
     });
+    this.data = workerDataSignature();
     for (let k = 0; k < this.size; k += 1) {
       const { port1, port2 } = new MessageChannel();
       const worker = new Worker(url, { workerData: { port: port2, signal: this.signal }, transferList: [port2], ...(ts ? { execArgv: ["--import", "tsx"] } : {}) });
@@ -260,6 +289,7 @@ export class BossLinesPool {
     const outcomes: (FightSampleResult | undefined)[][] = pairs.map(() => new Array<FightSampleResult | undefined>(samples));
     for (const w of workers) w.worker.postMessage({ type: "input", job, input, pairs, maxTurns: BOSS_SIM_MAX_TURNS } satisfies LinesWorkerRequest);
     let pending = chunks.length;
+    let done = 0;
     let error: string | null = null;
     const give = (w: PoolWorker) => {
       const next = chunks.shift();
@@ -281,6 +311,7 @@ export class BossLinesPool {
             if ("error" in reply) error = reply.error;
             else {
               for (const [pair, i, result] of reply.results) outcomes[pair]![i] = result;
+              done += reply.results.length;
               pending -= 1;
             }
           }
@@ -301,7 +332,7 @@ export class BossLinesPool {
     if (error !== null) throw new Error(`boss-lines worker: ${error}`);
     const complete: number[] = [];
     for (let i = 0; i < samples; i += 1) if (outcomes.every((row) => row[i] !== undefined)) complete.push(i);
-    return { outcomes, complete, timedOut, elapsedMs: Math.round(now() - started), workers: workers.length };
+    return { outcomes, complete, timedOut, elapsedMs: Math.round(now() - started), workers: workers.length, done };
   }
 
   /** Workers running now (0 before the first run and after close()). */
@@ -324,6 +355,11 @@ export function bossLinesPool(): BossLinesPool {
   return (shared ??= new BossLinesPool());
 }
 
+/** The data signature of the fight's pool when its workers run (null: no pool running, or its data unreadable). */
+export function bossLinesPoolData(): string | null {
+  return shared && shared.live > 0 ? shared.data : null;
+}
+
 /** Out of the boss fight: the workers go (a no-op without a pool). */
 export function releaseBossLinesPool(): void {
   const pool = shared;
@@ -336,6 +372,7 @@ export function runPairsSerial(input: RolloutInput, pairs: { plan: Plan | null; 
   const started = now();
   const outcomes: (FightSampleResult | undefined)[][] = pairs.map(() => new Array<FightSampleResult | undefined>(samples));
   let timedOut = false;
+  let done = 0;
   for (let i = 0; i < samples && !timedOut; i += 1) {
     for (let pair = 0; pair < pairs.length; pair += 1) {
       if (now() - started > deadlineMs) {
@@ -343,11 +380,12 @@ export function runPairsSerial(input: RolloutInput, pairs: { plan: Plan | null; 
         break;
       }
       outcomes[pair]![i] = fightSampleOf(input, pairs[pair]!, sampleSeed(seed, i));
+      done += 1;
     }
   }
   const complete: number[] = [];
   for (let i = 0; i < samples; i += 1) if (outcomes.every((row) => row[i] !== undefined)) complete.push(i);
-  return { outcomes, complete, timedOut, elapsedMs: Math.round(now() - started), workers: 0 };
+  return { outcomes, complete, timedOut, elapsedMs: Math.round(now() - started), workers: 0, done };
 }
 
 /** One (line, order) sample, as the worker runs it. */
@@ -368,6 +406,14 @@ export interface LinesResult {
   workers: number;
   /** Kill orders compared per line (besides the solver's own targets). */
   orders: number;
+  /** (line, order) pairs run, and their fights whose results came back (PairsRun.done; samples x pairs used). */
+  pairs?: number;
+  done?: number;
+  /**
+   * The SL retry compute memo handed this run back (src/sim/compute-memo.ts): `elapsedMs` is then the stored run's time
+   * (charged to the turn's budget and shown as if run), `wallMs` this question's own.
+   */
+  memo?: { wallMs: number };
 }
 
 /** The sim's input for these options (boss-sim slimInput at the B1.5 settings). */
@@ -400,7 +446,7 @@ export function runLines(
     }
     return pick!;
   });
-  return { lines: out, samples: run.complete.length, requested: opts.samples, timedOut: run.timedOut, elapsedMs: run.elapsedMs, workers: run.workers, orders: orders.length };
+  return { lines: out, samples: run.complete.length, requested: opts.samples, timedOut: run.timedOut, elapsedMs: run.elapsedMs, workers: run.workers, orders: orders.length, pairs: pairs.length, done: run.done };
 }
 
 export interface LinesRank {
@@ -574,6 +620,11 @@ export interface BossLineSimArgs extends BossSimInputArgs {
   drinks: (plan: Plan) => boolean;
   /** SL_RETRY_COMPUTE (docs/sl.md §10): the samples per line on a retried fight's question (default bossLinesOptions.samples). */
   samples?: number;
+  /**
+   * The SL retry compute memo (src/sim/compute-memo.ts; the planner passes the fight's on a retried fight): a run of the
+   * same input and samples that finished every sample is handed back when this question's deadline is at least its time.
+   */
+  memo?: ComputeMemo | null;
 }
 
 /**
@@ -600,14 +651,20 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
     const lowTrust = boss ? (LOW_TRUST_BOSSES[boss] ?? null) : null;
+    const samples = args.samples ?? bossLinesOptions.samples;
+    const memoed = args.memo ? recallLines(args.memo, input, args.lines, samples, left) : null;
     let run: LinesResult;
-    try {
-      run = runLines(input, args.lines, { samples: args.samples ?? bossLinesOptions.samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now });
-    } catch (error) {
-      // A worker's error: the next question starts a new pool.
-      releaseBossLinesPool();
-      failed = { fight, count: failed.fight === fight ? failed.count + 1 : 1 };
-      throw error;
+    if (memoed) run = { ...memoed, memo: { wallMs: ms() } };
+    else {
+      try {
+        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now });
+      } catch (error) {
+        // A worker's error: the next question starts a new pool.
+        releaseBossLinesPool();
+        failed = { fight, count: failed.fight === fight ? failed.count + 1 : 1 };
+        throw error;
+      }
+      if (args.memo) storeLines(args.memo, input, args.lines, samples, run);
     }
     args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + run.elapsedMs };
     if (run.samples === 0) {
@@ -653,6 +710,50 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
   }
 }
 
+// ---------------------------------------------------------------- the SL retry compute memo (src/sim/compute-memo.ts)
+
+/**
+ * Where a run's samples run: this thread (its data loaded once, at the process's start), or the fight's pool by the data
+ * its workers loaded (no pool running: the data a pool started now would load). A pool released after a question with
+ * no sample and built again on the same data finds the runs before it; null: the data files cannot be read (no memo).
+ */
+function linesWhere(): string | null {
+  if (bossLinesOptions.serial) return "main";
+  const data = bossLinesPoolData() ?? workerDataSignature();
+  return data ? `pool:${data}` : null;
+}
+
+/** The memo key of a B2 run: everything runLines reads (the input, the lines, samples, seed, hold values, turns) and where it ran. */
+function linesMemoKey(input: RolloutInput, lines: Plan[], samples: number, where: string): string | null {
+  return memoKey("b2", { input, lines, samples, seed: bossLinesOptions.seed, holdHp: identityToken(bossLinesOptions.holdHp ?? tableHoldHp), maxTurns: BOSS_SIM_MAX_TURNS, where });
+}
+
+/** A stored run of this input that finished every sample, when `left` (this question's deadline) is at least its time; else null. */
+function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, left: number): LinesResult | null {
+  try {
+    const where = linesWhere();
+    const key = where ? linesMemoKey(input, lines, samples, where) : null;
+    const hit = key ? memo.get<LinesResult, { elapsedMs: number }>(key) : null;
+    if (!hit || hit.value.timedOut || hit.meta.elapsedMs > left) return null;
+    memo.took();
+    return hit.value;
+  } catch {
+    return null;
+  }
+}
+
+/** Keeps a run that finished every sample (none cut by the deadline). */
+function storeLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, run: LinesResult): void {
+  try {
+    if (run.timedOut || run.samples < samples || run.samples === 0) return;
+    const where = linesWhere();
+    const key = where ? linesMemoKey(input, lines, samples, where) : null;
+    if (key) memo.set(key, run, { elapsedMs: run.elapsedMs });
+  } catch {
+    // not kept
+  }
+}
+
 /** `plan` against `than` on the simulation's samples (paired; null: no numbers for one of them). SL_RETRY_EXPLORE_B2's row. */
 export function simCompare(sim: BossLineSim | null, plan: Plan, than: Plan): LineComparison | null {
   const a = sim?.available ? sim.byPlan.get(plan) : undefined;
@@ -695,7 +796,8 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
   }
   return {
     available: true,
-    ms: sim.run.elapsedMs,
+    // The question's own wall clock (an SL retry memo hit: the lookup's; the decision row's timing.memo has the stored run's).
+    ms: sim.run.memo ? sim.run.memo.wallMs : sim.run.elapsedMs,
     samples: sim.run.samples,
     requested: sim.run.requested,
     timed_out: sim.run.timedOut,

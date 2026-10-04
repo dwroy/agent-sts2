@@ -529,7 +529,7 @@ function shopPlanQuestion(env: DecisionEnv, inputs: OneshotInputs, previous: Sho
 
   const yourCards: Record<string, JsonValue> = Object.fromEntries(cards.map((card) => [card.key, cardLine(card)]));
   // The removal's candidates with our runs' outcome statistics for each card (V4 M2: facts, not code's removal order).
-  const yourCardsStats: Record<string, JsonValue> = Object.fromEntries(cards.filter((card) => !card.eternal).map((card) => [card.key, cardOutcome(card.identity.card_id)]));
+  const yourCardsStats: Record<string, JsonValue> = Object.fromEntries(cards.filter((card) => !card.eternal).map((card) => [card.key, cardOutcome(card.identity.card_id, env.state.run?.ascension)]));
   const removalFacts: Record<string, JsonValue> = inputs.removal.available ? { price: inputs.removal.price, affordable_now: inputs.removal.affordable } : { available: false };
   const params = {
     label: "shop/plan",
@@ -627,8 +627,8 @@ export function shopItemFacts(
   empty: number,
   slots: number,
 ): Record<string, JsonValue> {
-  if (action === "buy_card") return { in_deck: profile.copies.get(id) ?? 0, outcome_stats: cardOutcome(id) };
-  if (action === "buy_relic") return { text: fillRelicText(id, env.knowledge.relic(id)?.description ?? ""), outcome_stats: relicOutcome(id) };
+  if (action === "buy_card") return { in_deck: profile.copies.get(id) ?? 0, outcome_stats: cardOutcome(id, env.state.run?.ascension) };
+  if (action === "buy_relic") return { text: fillRelicText(id, env.knowledge.relic(id)?.description ?? ""), outcome_stats: relicOutcome(id, env.state.run?.ascension) };
   return { potion_slots: empty > 0 ? `${empty} of ${slots} potion slots empty` : `no empty potion slot (${slots} full): buying needs a discard first` };
 }
 

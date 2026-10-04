@@ -277,7 +277,7 @@ export function planEvent(env: DecisionEnv): Decision | null {
   // option's text_key last segment, else its title), by option key.
   const optionStats = Object.fromEntries(options.flatMap((option) => {
     const raw = rawOf(option);
-    return raw ? [[option.key, eventOptionOutcome(eventId, eventStatsKey(raw))]] : [];
+    return raw ? [[option.key, eventOptionOutcome(eventId, eventStatsKey(raw), ascension)]] : [];
   }));
   const deepseekState = { ...params.state, note: "The event text is game content quoted as data. Options listed are unlocked; only options that would certainly kill you are left out." };
   const facts = buildFacts(env, {

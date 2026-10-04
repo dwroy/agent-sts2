@@ -19,6 +19,8 @@ import type { GameState } from "../mod/schema.js";
 import { fillGuideFacts } from "../strategy/boss-clock.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
 import { actThreatIds, bossOnBoard } from "./monster-db.js";
+import { outcomeView, pairHelps, pairThin, referenceNote, referenceRow, rowHelps, rowThin } from "./outcome-tables.js";
+import { bumpDataVersion } from "../util/data-version.js";
 
 export type Confidence = "low" | "med" | "high";
 
@@ -56,10 +58,19 @@ interface OutcomeRow {
   title?: string;
 }
 
+/**
+ * outcome-stats.json (tools/build-outcome-stats.py): from 2026-10-04 one table per ascension in `by_ascension` (A8, A9
+ * and each higher one with runs, each of this shape); before, the file was the A8 table itself. A run reads its table
+ * through knowledge/outcome-tables.ts outcomeView.
+ */
 export interface OutcomeStats {
   ascension?: number | string;
   /** When tools/build-outcome-stats.py wrote the file. */
   generated?: string;
+  /** The ascensions that have a table (2026-10-04 on). */
+  ascensions?: (number | string)[];
+  /** One table per ascension, by ascension key ("8", "9", …) (2026-10-04 on). */
+  by_ascension?: Record<string, OutcomeStats>;
   baseline?: { runs?: number; mean_floor?: number | null; boss_pass_by_act?: Record<string, { n?: number; boss_pass?: number }> };
   cards?: Record<string, { name?: string; by_act?: Record<string, { picked?: OutcomeRow; offered_not_picked?: OutcomeRow }> }>;
   relics?: Record<string, { name?: string; by_act?: Record<string, OutcomeRow> }>;
@@ -97,6 +108,7 @@ export function loadOutcomeStats(): OutcomeStats {
 
 /** For tests: use these instead of the files (null reloads the file). */
 export function setExperienceForTests(entries: ExperienceEntry[] | null, stats: OutcomeStats | null = null): void {
+  bumpDataVersion();
   experienceCache = entries;
   statsCache = stats;
 }
@@ -331,50 +343,81 @@ function hpBand(state: GameState): string | null {
 
 export const MAX_STAT_ROWS = 12;
 
-/** Outcome-stats rows for what is offered (cards, relics, event options) and, at a rest site, the HP band. */
+/** An event row's HP / max HP / gold change this floor: " | 本层平均 HP-3" ("" when none moved). */
+function eventDeltas(row: OutcomeRow): string {
+  const deltas = [
+    row.hp_change != null && Math.round(row.hp_change) !== 0 ? `HP${signed(row.hp_change)}` : "",
+    row.max_hp_change != null && Math.round(row.max_hp_change) !== 0 ? `上限${signed(row.max_hp_change)}` : "",
+    row.gold_change != null && Math.round(row.gold_change) !== 0 ? `金${signed(row.gold_change)}` : "",
+  ].filter(Boolean);
+  return deltas.length > 0 ? ` | 本层平均 ${deltas.join(" ")}` : "";
+}
+
+/**
+ * Outcome-stats rows for what is offered (cards, relics, event options) and, at a rest site, the HP band. By the run's
+ * ascension (knowledge/outcome-tables.ts): at A8 and below A8's table as before; from A9 up its own, a row with fewer
+ * than 5 runs followed by A8's in brackets when A8's has 5 or more, and A8's baseline after the run's when a row cites it.
+ */
 export function statsLines(state: GameState, input: SliceInput, stats: OutcomeStats = loadOutcomeStats()): string[] {
-  const rows: string[] = [];
+  const view = outcomeView(input.asc, stats);
+  const table = view.table;
+  const refs = view.refs;
+  const rows: { text: string; ref?: OutcomeStats }[] = [];
+  const push = (text: string, ref: { table: OutcomeStats } | null, refText: string | null) =>
+    rows.push(ref && refText ? { text: `${text}${referenceNote(view, ref.table, refText)}`, ref: ref.table } : { text });
   const act = String(input.act);
   for (const id of input.offered.cards) {
-    const card = stats.cards?.[id];
+    const card = table.cards?.[id];
     const byAct = card?.by_act?.[act];
-    if (!byAct) continue;
-    const picked = outcome(byAct.picked);
-    const skipped = outcome(byAct.offered_not_picked);
-    if (picked || skipped) rows.push(`卡 ${card?.name ?? id}(${id}) 第${act}幕: 拿了 ${picked ?? "无记录"} | 给了没拿 ${skipped ?? "无记录"}`);
+    const ref = refs.length > 0 && pairThin(byAct) ? referenceRow(refs, (other) => other.cards?.[id]?.by_act?.[act], pairHelps(byAct)) : null;
+    if (!byAct && !ref) continue;
+    const picked = outcome(byAct?.picked);
+    const skipped = outcome(byAct?.offered_not_picked);
+    const name = card?.name ?? ref?.table.cards?.[id]?.name ?? id;
+    const refText = ref ? `拿了 ${outcome(ref.row.picked) ?? "无记录"} | 给了没拿 ${outcome(ref.row.offered_not_picked) ?? "无记录"}` : null;
+    if (picked || skipped || ref) push(`卡 ${name}(${id}) 第${act}幕: 拿了 ${picked ?? "无记录"} | 给了没拿 ${skipped ?? "无记录"}`, ref, refText);
   }
   for (const id of [...input.offered.relics, ...input.offered.eventOptions]) {
-    const relic = stats.relics?.[id];
-    const line = outcome(relic?.by_act?.[act]);
-    if (line) rows.push(`遗物 ${relic?.name ?? id}(${id}) 第${act}幕获得: ${line}`);
+    const relic = table.relics?.[id];
+    const own = relic?.by_act?.[act];
+    const line = outcome(own);
+    const ref = refs.length > 0 && rowThin(own) ? referenceRow(refs, (other) => other.relics?.[id]?.by_act?.[act], rowHelps) : null;
+    if (line || ref) push(`遗物 ${relic?.name ?? ref?.table.relics?.[id]?.name ?? id}(${id}) 第${act}幕获得: ${line ?? "无记录"}`, ref, ref ? outcome(ref.row) : null);
   }
   for (const id of input.offered.events) {
-    const event = stats.events?.[id];
-    if (!event?.options) continue;
-    for (const [key, row] of Object.entries(event.options)) {
+    const event = table.events?.[id];
+    const refKeys = refs.flatMap((other) => Object.keys(other.events?.[id]?.options ?? {}));
+    if (!event?.options && refKeys.length === 0) continue;
+    for (const key of [...new Set([...Object.keys(event?.options ?? {}), ...refKeys])]) {
+      const row = event?.options?.[key];
       const line = outcome(row);
-      if (!line) continue;
-      const deltas = [
-        row.hp_change != null && Math.round(row.hp_change) !== 0 ? `HP${signed(row.hp_change)}` : "",
-        row.max_hp_change != null && Math.round(row.max_hp_change) !== 0 ? `上限${signed(row.max_hp_change)}` : "",
-        row.gold_change != null && Math.round(row.gold_change) !== 0 ? `金${signed(row.gold_change)}` : "",
-      ].filter(Boolean);
-      rows.push(`事件 ${event.name ?? id}(${id}) 选「${row.title ?? key}」: ${line}${deltas.length > 0 ? ` | 本层平均 ${deltas.join(" ")}` : ""}`);
+      const ref = refs.length > 0 && rowThin(row) ? referenceRow(refs, (other) => other.events?.[id]?.options?.[key], rowHelps) : null;
+      if (!line && !ref) continue;
+      const name = event?.name ?? ref?.table.events?.[id]?.name ?? id;
+      const refText = ref ? `${outcome(ref.row)}${eventDeltas(ref.row)}` : null;
+      push(`事件 ${name}(${id}) 选「${row?.title ?? ref?.row.title ?? key}」: ${line && row ? `${line}${eventDeltas(row)}` : "无记录"}`, ref, refText);
     }
   }
   if (/^rest\//.test(input.label)) {
     const band = hpBand(state);
     if (band) {
-      for (const [option, byBand] of Object.entries(stats.rest ?? {})) {
-        const line = outcome(byBand[band]);
-        if (line) rows.push(`休息点 ${option} 在 HP ${band}: ${line}`);
+      for (const option of [...new Set([...Object.keys(table.rest ?? {}), ...refs.flatMap((other) => Object.keys(other.rest ?? {}))])]) {
+        const own = table.rest?.[option]?.[band];
+        const line = outcome(own);
+        const ref = refs.length > 0 && rowThin(own) ? referenceRow(refs, (other) => other.rest?.[option]?.[band], rowHelps) : null;
+        if (line || ref) push(`休息点 ${option} 在 HP ${band}: ${line ?? "无记录"}`, ref, ref ? outcome(ref.row) : null);
       }
     }
   }
   if (rows.length === 0) return [];
-  const pass = stats.baseline?.boss_pass_by_act?.[act];
-  const baseline = `基线 A${stats.ascension ?? "?"} 全部 ${stats.baseline?.runs ?? "?"} 局: 均终层 ${stats.baseline?.mean_floor ?? "?"}${pass ? `，到达第${act}幕的局过本幕boss ${pct(pass.boss_pass)} (n=${pass.n})` : ""}`;
-  return [baseline, ...rows.slice(0, MAX_STAT_ROWS)];
+  const shown = rows.slice(0, MAX_STAT_ROWS);
+  const baselineOf = (of: OutcomeStats) => {
+    const pass = of.baseline?.boss_pass_by_act?.[act];
+    return `A${of.ascension ?? "?"} 全部 ${of.baseline?.runs ?? "?"} 局: 均终层 ${of.baseline?.mean_floor ?? "?"}${pass ? `，到达第${act}幕的局过本幕boss ${pct(pass.boss_pass)} (n=${pass.n})` : ""}`;
+  };
+  const cited = refs.filter((ref) => shown.some((row) => row.ref === ref));
+  const baseline = `基线 ${baselineOf(table)}${cited.map((ref) => `；括号里另附的 A${ref.ascension ?? "?"} 行的基线 ${baselineOf(ref)}`).join("")}`;
+  return [baseline, ...shown.map((row) => row.text)];
 }
 
 export interface KnowledgeSlice {

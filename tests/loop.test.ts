@@ -220,6 +220,27 @@ describe("runLoop", () => {
     }
   });
 
+  it("logs the planner's wall time and the time before it on every planned row (latency_ms.planner, latency_ms.pre)", async () => {
+    const config = testConfig();
+    const { server } = await scriptedMod({ sequence: [combatPayload(), mainMenuPayload()] });
+    const jev = stubJev();
+    const started = Date.now();
+    await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: jev.client, knowledge: testKnowledge, maxRuns: 1, maxDecisions: 20, pollIntervalMs: 1 });
+    const elapsed = Date.now() - started;
+    const lines = readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line) as { latency_ms: Record<string, number>; ts: string; observed_ts?: string });
+    expect(lines.length).toBeGreaterThan(0);
+    for (const line of lines) {
+      const { planner, pre } = line.latency_ms;
+      expect(Number.isInteger(planner)).toBe(true);
+      expect(Number.isInteger(pre)).toBe(true);
+      expect(planner).toBeGreaterThanOrEqual(0);
+      expect(pre).toBeGreaterThanOrEqual(0);
+      expect(planner! + pre!).toBeLessThanOrEqual(elapsed);
+      // Both happen between the state read and the row.
+      if (line.observed_ts) expect(planner! + pre!).toBeLessThanOrEqual(Date.parse(line.ts) - Date.parse(line.observed_ts) + 1);
+    }
+  });
+
   it("dispatches nothing in shadow mode", async () => {
     const config = testConfig();
     const { server, actions } = await scriptedMod({ sequence: [combatPayload(), combatPayload()] });

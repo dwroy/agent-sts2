@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Outcome statistics from our own logs -> src/knowledge/outcome-stats.json (the knowledge base's stats layer).
 
-What happened to the runs that made a given choice, per ascension (default A8):
+What happened to the runs that made a given choice, one table per ascension (by_ascension; default: A8 and each
+higher ascension with logged runs, each apart with its own baseline: Dai 2026-10-04, A8 and A9 counted separately):
   cards   per card acquired, by the act it was acquired in: runs, mean final floor, pass rate of that act's
           boss; and the same for runs that were offered it on a card reward in that act and did not take it
   relics  per relic acquired, by act: the same numbers
@@ -10,7 +11,8 @@ What happened to the runs that made a given choice, per ascension (default A8):
   rest    per rest-site choice (HEAL / SMITH / ...) by HP band on arrival: runs' outcome for that act
   baseline  all runs at this ascension: mean final floor, each act boss's pass rate among runs reaching it
 Every row carries n (runs); rows with n < 5 are marked "low_n": true. Observational data: a pick's
-numbers mix the pick's effect with the situations it is picked in.
+numbers mix the pick's effect with the situations it is picked in. Each ascension's table is what the whole file was
+before 2026-10-04 (then A8 only): the same method, counted over that ascension's runs alone; the logs are read once.
 
 Sources (streamed, stdlib only): logs/runs.jsonl (finished runs: ascension, final floor, victory),
 logs/decisions.jsonl (event and rest choices, HP/gold per decision), logs/states.jsonl (deck and relic
@@ -18,9 +20,10 @@ changes, card rewards offered, event ids and option keys, rest options; combat s
 without parsing and the agent_view copy of each state is cut before parsing).
 
 Usage:
-  python3 tools/build-outcome-stats.py [--logs DIR] [--ascension 8|all] [--out PATH] [--quiet]
+  python3 tools/build-outcome-stats.py [--logs DIR] [--ascension band|8,9|all] [--out PATH] [--quiet]
   python3 tools/build-outcome-stats.py --self-test
-Refresh (after new runs): python3 tools/build-outcome-stats.py   (about a minute on ~3 GB of states)
+Refresh (after new runs): python3 tools/build-outcome-stats.py   (about half a minute on ~6 GB of states, every table
+in one pass; ops/report.py refresh_knowledge runs it with no arguments after every run, so the default is the band)
 """
 import argparse
 import bisect
@@ -34,6 +37,9 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_OUT = os.path.join(ROOT, "src", "knowledge", "outcome-stats.json")
 LOW_N = 5
+# From this ascension up each ascension gets a table of its own (--ascension band, the default): A8, A9, and each
+# higher one once it has a finished run. Below it nothing is counted (the file was A8 only before 2026-10-04).
+BAND_FROM = 8
 SCREEN_RE = re.compile(rb'"screen":\s*"([A-Z_]+)"')
 SKIP_SCREENS = {b"COMBAT", b"MAIN_MENU", b"CHARACTER_SELECT", b"TIMELINE", b"UNLOCK", b"SETTINGS"}
 AGENT_VIEW = b',"agent_view":'
@@ -60,8 +66,17 @@ def hp_band(hp, max_hp):
 # ---------------------------------------------------------------- reading
 
 
+def keeps_ascension(asc, ascension):
+    """Whether a run at `asc` is counted: "band" = BAND_FROM and up, "all" = every run, else a set of ascensions."""
+    if ascension == "all":
+        return True
+    if ascension == "band":
+        return isinstance(asc, int) and not isinstance(asc, bool) and asc >= BAND_FROM
+    return asc in ascension
+
+
 def read_runs(path, ascension):
-    """run id -> {floor, victory, ascension} for finished runs at the ascension ("all" keeps every one)."""
+    """run id -> {floor, victory, ascension} for finished runs at the ascensions kept (keeps_ascension)."""
     runs = {}
     with open(path, "r", encoding="utf8") as handle:
         for line in handle:
@@ -73,7 +88,7 @@ def read_runs(path, ascension):
             if not run_id:
                 continue
             asc = row.get("ascension")
-            if ascension != "all" and asc != ascension:
+            if not keeps_ascension(asc, ascension):
                 continue
             runs[run_id] = {"floor": row.get("floor") or 0, "victory": bool(row.get("victory")), "ascension": asc}
     return runs
@@ -148,8 +163,10 @@ def act_of(run):
         return 1
 
 
-def read_states(path, runs):
-    """Deck/relic acquisitions, card rewards offered, event and rest screens, highest act per run."""
+def read_states(path, runs, table_of):
+    """Deck/relic acquisitions, card rewards offered, event and rest screens, highest act per run. Names (cards,
+    relics, events) are kept per table (`table_of`: run id -> table key), each from its own runs' states, as a
+    table's whole file had them before."""
     deck_snap, relic_snap = {}, {}
     acquired_cards = collections.defaultdict(dict)  # run -> {(card, act): source}
     acquired_relics = collections.defaultdict(dict)
@@ -157,12 +174,13 @@ def read_states(path, runs):
     max_act = collections.defaultdict(int)
     event_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, event_id, {index: (key, title)})]
     rest_screens = collections.defaultdict(list)  # run -> [(ts, floor, act, {index: option_id}, hp, max_hp)]
-    names = {"card": {}, "relic": {}, "event": {}}
+    names_by_table = collections.defaultdict(lambda: {"card": {}, "relic": {}, "event": {}})
     for screen, entry in iter_states(path):
         state = entry.get("state") or {}
         run_id = state.get("run_id")
         if run_id not in runs:
             continue
+        names = names_by_table[table_of(run_id)]
         run = state.get("run") or {}
         act = act_of(run)
         max_act[run_id] = max(max_act[run_id], act)
@@ -221,7 +239,7 @@ def read_states(path, runs):
         "max_act": max_act,
         "event_screens": event_screens,
         "rest_screens": rest_screens,
-        "names": names,
+        "names_by_table": names_by_table,
     }
 
 
@@ -276,12 +294,46 @@ def floor_delta(marks, ts, floor, hp, max_hp, gold):
     return None, None, None
 
 
-def build(logs, ascension):
+ABOUT = (
+    "Outcome stats from our logs (tools/build-outcome-stats.py). Observational: a choice's numbers mix its effect with the situations it was made in. "
+    "n = runs; low_n = n<5. boss_pass = share of those runs that beat the boss of the act the choice was made in; mean_floor = mean final floor of those runs. "
+    "events: hp/max_hp/gold change = from the choice to the first decision on the next floor. "
+    "by_ascension: one table per ascension (A8, A9 and each higher one with runs), each counted over that ascension's runs alone with its own baseline; "
+    "a run reads its own ascension's table (before 2026-10-04 the file was the A8 table alone)."
+)
+
+
+def table_key(run, ascension):
+    """The table a run is counted in: its ascension's, or "all" (--ascension all: every run in one table)."""
+    return "all" if ascension == "all" else run["ascension"]
+
+
+def build(logs, ascension="band"):
+    """The whole file: one table per ascension kept (by_ascension), the logs read once for all of them."""
     runs = read_runs(os.path.join(logs, "runs.jsonl"), ascension)
     marks, event_choices, rest_choices = read_decisions(os.path.join(logs, "decisions.jsonl"), runs)
-    seen = read_states(os.path.join(logs, "states.jsonl"), runs)
+    seen = read_states(os.path.join(logs, "states.jsonl"), runs, lambda run_id: table_key(runs[run_id], ascension))
+    groups = collections.defaultdict(dict)
+    for run_id, run in runs.items():
+        groups[table_key(run, ascension)][run_id] = run
+    # Runs with no state at all (logged before states.jsonl) cannot say which act they reached: a table is kept only
+    # when one of its runs has states.
+    keys = sorted(key for key, group in groups.items() if any(seen["max_act"].get(run_id) for run_id in group))
+    tables = {str(key): aggregate(groups[key], key, marks, event_choices, rest_choices, seen) for key in keys}
+    return {
+        "_about": ABOUT,
+        "generated": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "ascensions": keys,
+        "by_ascension": tables,
+    }
+
+
+
+
+def aggregate(runs, ascension, marks, event_choices, rest_choices, seen):
+    """One ascension's table (the whole file before 2026-10-04): baseline, cards, relics, events, rest, coverage."""
     max_act = seen["max_act"]
-    names = seen["names"]
+    names = seen["names_by_table"][ascension]
     # Runs with no state at all (logged before states.jsonl) cannot say which act they reached.
     runs = {run_id: run for run_id, run in runs.items() if max_act.get(run_id)}
 
@@ -347,8 +399,6 @@ def build(logs, ascension):
         return {str(act): value for act, value in sorted(table.items())}
 
     out = {
-        "_about": "Outcome stats from our logs (tools/build-outcome-stats.py). Observational: a choice's numbers mix its effect with the situations it was made in. n = runs; low_n = n<5. boss_pass = share of those runs that beat the boss of the act the choice was made in; mean_floor = mean final floor of those runs. events: hp/max_hp/gold change = from the choice to the first decision on the next floor.",
-        "generated": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "ascension": ascension,
         "baseline": baseline,
         "cards": {},
@@ -382,11 +432,12 @@ def build(logs, ascension):
 # ---------------------------------------------------------------- self-test
 
 
-def _state_line(ts, run_id, screen, floor, act, deck, relics, extra=None):
+def _state_line(ts, run_id, screen, floor, act, deck, relics, extra=None, names=None):
+    names = names or {}
     state = {
         "run_id": run_id,
         "screen": screen,
-        "run": {"act_id": act - 1, "floor": floor, "deck": [{"card_id": card, "name": card.lower()} for card in deck], "relics": [{"relic_id": relic, "name": relic.lower()} for relic in relics]},
+        "run": {"act_id": act - 1, "floor": floor, "deck": [{"card_id": card, "name": names.get(card, card.lower())} for card in deck], "relics": [{"relic_id": relic, "name": relic.lower()} for relic in relics]},
     }
     state.update(extra or {})
     return json.dumps({"ts": ts, "screen": screen, "state": state, "agent_view": {"ignored": True}})
@@ -402,6 +453,16 @@ def self_test():
 
     start = ["STRIKE", "STRIKE", "DEFEND", "BASH"]
     states, decisions, runs = [], [], []
+    # Run D (A9), logged first and with its own name for INFLAME: offered INFLAME at F2, takes it; rests (SMITH) at
+    # 90% HP on F6; dies at the act-1 boss (F17). Counted in the A9 table only; the A8 table's names stay its own.
+    a9_names = {"INFLAME": "inflame-a9"}
+    states += [
+        _state_line("s01", "RUND", "MAP", 1, 1, start, ["BURNING_BLOOD"], names=a9_names),
+        _state_line("s02", "RUND", "REWARD", 2, 1, start, ["BURNING_BLOOD"], {"reward": {"card_options": [{"card_id": "INFLAME", "name": "inflame-a9"}]}}, names=a9_names),
+        _state_line("s03", "RUND", "MAP", 2, 1, start + ["INFLAME"], ["BURNING_BLOOD"], names=a9_names),
+        _state_line("s06", "RUND", "REST", 6, 1, start + ["INFLAME"], ["BURNING_BLOOD"], {"rest": {"options": [{"index": 0, "option_id": "HEAL"}, {"index": 1, "option_id": "SMITH"}]}}, names=a9_names),
+    ]
+    decisions += [_decision_line("s06b", "RUND", 6, "rest/choose", 72, 80, 99, {"action": "choose_rest_option", "option_index": 1})]
     # Run A (A8): offered INFLAME and ANGER at F2, takes INFLAME; event option GAIN at F3 (+10 max HP, -5 gold);
     # rests (HEAL) at 30% HP on F5; reaches act 2 (passes the act-1 boss), dies F20.
     states += [
@@ -425,29 +486,41 @@ def self_test():
         _state_line("u02", "RUNB", "REWARD", 2, 1, start, ["BURNING_BLOOD"], {"reward": {"card_options": [{"card_id": "INFLAME"}]}}),
         _state_line("u03", "RUNB", "MAP", 3, 1, start, ["BURNING_BLOOD"]),
     ]
-    # Run C (A0): must be filtered out at the default ascension.
+    # Run C (A0): below the band, not counted by default.
     states += [_state_line("v01", "RUNC", "MAP", 1, 1, start, []), _state_line("v02", "RUNC", "MAP", 2, 1, start + ["INFLAME"], [])]
+    # Run E (A10): a higher ascension gets its table once it has a run with states; run F (A11) has none, so no table.
+    states += [_state_line("w01", "RUNE", "MAP", 1, 1, start, [])]
     runs += [
+        json.dumps({"run_id": "RUND", "ascension": 9, "floor": 17, "victory": False}),
         json.dumps({"run_id": "RUNA", "ascension": 8, "floor": 20, "victory": False}),
         json.dumps({"run_id": "RUNB", "ascension": 8, "floor": 17, "victory": False}),
         json.dumps({"run_id": "RUNC", "ascension": 0, "floor": 5, "victory": False}),
+        json.dumps({"run_id": "RUNE", "ascension": 10, "floor": 3, "victory": False}),
+        json.dumps({"run_id": "RUNF", "ascension": 11, "floor": 2, "victory": False}),
     ]
     with tempfile.TemporaryDirectory() as tmp:
         for name, lines in (("states.jsonl", states), ("decisions.jsonl", decisions), ("runs.jsonl", runs)):
             with open(os.path.join(tmp, name), "w", encoding="utf8") as handle:
                 handle.write("\n".join(lines) + "\n")
-        out = build(tmp, 8)
+        whole = build(tmp)
+        only8 = build(tmp, {8})
+        pooled = build(tmp, "all")
     failures = []
 
     def check(label, got, want):
         if got != want:
             failures.append(f"{label}: got {got!r}, want {want!r}")
 
+    check("tables", (whole["ascensions"], sorted(whole["by_ascension"])), ([8, 9, 10], ["10", "8", "9"]))
+    out = whole["by_ascension"]["8"]
+    check("A8 table's ascension", out["ascension"], 8)
     check("runs", out["baseline"]["runs"], 2)
     check("act-1 boss pass", out["baseline"]["boss_pass_by_act"]["1"], {"n": 2, "boss_pass": 0.5})
     inflame = out["cards"].get("INFLAME", {}).get("by_act", {}).get("1", {})
     check("INFLAME picked", inflame.get("picked"), {"n": 1, "mean_floor": 20.0, "boss_pass": 1.0, "low_n": True})
     check("INFLAME skipped", inflame.get("offered_not_picked"), {"n": 1, "mean_floor": 17.0, "boss_pass": 0.0, "low_n": True})
+    # A8's own first sighting (RUNA's reward screen, no name: the id), not the A9 run's name logged before it.
+    check("A8 names from A8 runs", out["cards"].get("INFLAME", {}).get("name"), "INFLAME")
     check("ANGER skipped only", list(out["cards"].get("ANGER", {}).get("by_act", {}).get("1", {}).keys()), ["offered_not_picked"])
     check("combat WOUND not an acquisition", "WOUND" in out["cards"], False)
     check("relic ANCHOR", out["relics"].get("ANCHOR", {}).get("by_act", {}).get("1", {}).get("n"), 1)
@@ -455,6 +528,14 @@ def self_test():
     check("event delta", (gain.get("n"), gain.get("hp_change"), gain.get("max_hp_change"), gain.get("gold_change")), (1, 0, 10, -5))
     check("rest band", out["rest"].get("HEAL", {}).get("<40%", {}).get("n"), 1)
     check("shadow decision ignored", "SMITH" in out["rest"], False)
+    check("A8 table alone = the band's A8 table", only8["by_ascension"], {"8": out})
+    a9 = whole["by_ascension"]["9"]
+    check("A9 baseline", (a9["ascension"], a9["baseline"]["runs"], a9["baseline"]["boss_pass_by_act"]), (9, 1, {"1": {"n": 1, "boss_pass": 0.0}}))
+    check("A9 INFLAME", a9["cards"].get("INFLAME"), {"name": "inflame-a9", "by_act": {"1": {"picked": {"n": 1, "mean_floor": 17.0, "boss_pass": 0.0, "low_n": True}}}, "sources": {"MAP": 1}})
+    check("A9 has no A8 choice", ("ANGER" in a9["cards"], "FOUNTAIN" in a9["events"], "ANCHOR" in a9["relics"]), (False, False, False))
+    check("A9 rest", a9["rest"], {"SMITH": {">=80%": {"n": 1, "mean_floor": 17.0, "boss_pass": 0.0, "low_n": True}}})
+    check("A10 table", whole["by_ascension"]["10"]["baseline"]["runs"], 1)
+    check("all: one pooled table", (pooled["ascensions"], pooled["by_ascension"]["all"]["baseline"]["runs"]), (["all"], 5))
     if failures:
         print("self-test FAILED:\n  " + "\n  ".join(failures))
         return 1
@@ -462,30 +543,38 @@ def self_test():
     return 0
 
 
+def parse_ascension(text):
+    """--ascension: "band" (A8 and each higher ascension with runs, apart), "all" (one pooled table), or "8,9"."""
+    if text in ("band", "all"):
+        return text
+    return {int(part) for part in text.split(",") if part.strip()}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--logs", default=_default_logs())
-    parser.add_argument("--ascension", default="8", help="ascension to keep, or 'all'")
+    parser.add_argument("--ascension", default="band", help="'band' (default: A8 and each higher ascension with runs, one table each), a list such as 8,9, or 'all' (one pooled table)")
     parser.add_argument("--out", default=DEFAULT_OUT)
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     if args.self_test:
         return self_test()
-    ascension = "all" if args.ascension == "all" else int(args.ascension)
     started = time.time()
-    stats = build(args.logs, ascension)
+    stats = build(args.logs, parse_ascension(args.ascension))
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(stats, handle, ensure_ascii=False, indent=1)
         handle.write("\n")
     os.replace(tmp, args.out)
     if not args.quiet:
-        print(
-            f"{args.out}: {stats['baseline']['runs']} runs (A{ascension}), {len(stats['cards'])} cards, {len(stats['relics'])} relics, "
-            f"{sum(len(e['options']) for e in stats['events'].values())} event options in {len(stats['events'])} events, "
-            f"{len(stats['rest'])} rest choices; unmatched {stats['coverage']}; {time.time() - started:.0f} s"
-        )
+        for key, table in stats["by_ascension"].items():
+            print(
+                f"A{key}: {table['baseline']['runs']} runs, {len(table['cards'])} cards, {len(table['relics'])} relics, "
+                f"{sum(len(e['options']) for e in table['events'].values())} event options in {len(table['events'])} events, "
+                f"{len(table['rest'])} rest choices; unmatched {table['coverage']}"
+            )
+        print(f"{args.out}: {len(stats['by_ascension'])} tables; {time.time() - started:.0f} s")
     return 0
 
 

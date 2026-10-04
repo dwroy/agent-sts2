@@ -25,6 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
+import { OUTCOME_BASE_ASC, hasAscensionTables, outcomeView, pairHelps, pairThin, referenceNote, referenceRow } from "../knowledge/outcome-tables.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { bossDamageByTurn, bossHitsByTurn, bossHpAt, bossHpLoss, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
 import { measuredRoomExact } from "../knowledge/room-costs.js";
@@ -34,6 +35,7 @@ import { modelHandCard, turnStartOnly } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
 import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "./passive-pieces.js";
 import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
+import { bumpDataVersion } from "../util/data-version.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
 export const BRIMSTONE_STRENGTH = 2;
@@ -188,6 +190,7 @@ let unblockedCache: Record<string, UnblockedShare> | null = null;
 
 /** For tests: use these shares instead of boss-damage.json (null reloads the file). */
 export function setUnblockedSharesForTests(shares: Record<string, UnblockedShare> | null): void {
+  bumpDataVersion();
   unblockedCache = shares;
 }
 
@@ -387,6 +390,9 @@ export function giantBlockBandText(kills: Record<string, GiantKillRow[]>, lang: 
  * with A9 (BAND_FACTS) are read by the run's ascension band: {@N:NAME} (factsAtAscension marks them so for a run at
  * A8 and up) gives A8's fights and A9's apart; {NAME} unmarked keeps the text written before, for a run below A8 and
  * for the callers that do not know the run's ascension.
+ * 2026-10-04 (Dai: outcome statistics by ascension): {CARD_OUTCOME:ID} is A8's rows as before at A8, below it and
+ * unmarked; {@N:CARD_OUTCOME:ID} (factsAtAscension marks it so from A9 up) gives that ascension's rows, an act with
+ * fewer than 5 runs on a side followed by A8's where A8 has 5 or more (cardOutcomeText).
  */
 const GUIDE_FACTS: Record<string, () => string> = {
   "{GIANT_BLOCK_RECORD}": () => giantBlockRecord("zh"),
@@ -426,15 +432,25 @@ const BAND_FACTS: Record<string, (ascension?: number) => string> = {
 const BAND_TOKEN = new RegExp(`\\{(${Object.keys(BAND_FACTS).join("|")})\\}`, "g");
 const BAND_MARKED = /\{@(\d+):([A-Z_]+)\}/g;
 
+/** {CARD_OUTCOME:ID} as written, and as factsAtAscension marks it from A9 up. */
+const CARD_OUTCOME = /\{CARD_OUTCOME:([A-Z_]+)\}/g;
+const CARD_OUTCOME_MARKED = /\{@(\d+):CARD_OUTCOME:([A-Z_]+)\}/g;
+
 /**
  * The text with its by-ascension facts (BAND_FACTS) marked with the run's ascension from A8 up ({CRAB_KILL_ORDER} ->
- * {@9:CRAB_KILL_ORDER}); as written below A8 or without an ascension. fillGuideFacts fills a marked one by its
- * ascension's band. Marked, a fact has its own key in the day's frozen table (render/facts.ts): a table filled earlier
+ * {@9:CRAB_KILL_ORDER}), and its card outcome rows from A9 up ({CARD_OUTCOME:TAUNT} -> {@9:CARD_OUTCOME:TAUNT}); as
+ * written below A8 or without an ascension. fillGuideFacts fills a marked one by its ascension's band. Marked, a fact has its own key in the day's frozen table (render/facts.ts): a table filled earlier
  * with the all-ascension text, or by a run below A8, is not handed to a run at A8 and up.
  */
 export function factsAtAscension(text: string, ascension: number | undefined): string {
   if (recordBand(ascension) === null || !text.includes("{")) return text;
-  return text.replace(BAND_TOKEN, (_, name: string) => `{@${ascension}:${name}}`);
+  const marked = text.replace(BAND_TOKEN, (_, name: string) => `{@${ascension}:${name}}`);
+  // The outcome rows by ascension from A9 up only: at A8 the A8 rows are the text (and the frozen key) as before. An
+  // outcome-stats.json of the older shape (A8 alone: before the first refresh by the 2026-10-04 build script) has no
+  // A9 rows, so the placeholder keeps its key and its A8 text; marked, the day's table would hold A8's text under the
+  // A9 key until the next day.
+  if ((ascension ?? 0) <= OUTCOME_BASE_ASC || !marked.includes("{CARD_OUTCOME:") || !hasAscensionTables(loadOutcomeStats())) return marked;
+  return marked.replace(CARD_OUTCOME, (_, card: string) => `{@${ascension}:CARD_OUTCOME:${card}}`);
 }
 
 /**
@@ -449,27 +465,38 @@ export function fillGuideFacts(text: string, ascension?: number): string {
   out = out.replace(/\{UNKNOWN_FIGHTS:(\d+):(\d)\}/g, (_, asc: string, act: string) => unknownFightsText([Number(asc)], [Number(act)]));
   out = out.replace(/\{BOSS_LOSS:([A-Z_]+):(\d+)\}/g, (_, boss: string, asc: string) => bossLossText(boss, Number(asc)));
   out = out.replace(/\{BOSS_RECORD:([A-Z_]+)\}/g, (_, boss: string) => bossRecord(boss));
-  out = out.replace(/\{CARD_OUTCOME:([A-Z_]+)\}/g, (_, card: string) => cardOutcomeText(card));
+  out = out.replace(CARD_OUTCOME, (_, card: string) => cardOutcomeText(card));
+  out = out.replace(CARD_OUTCOME_MARKED, (_, asc: string, card: string) => cardOutcomeText(card, undefined, Number(asc)));
   return out.replace(/\{@(\d+):([A-Z]+:[A-Z0-9_:]+)\}/g, (_, asc: string, inner: string) => fillDbNumbers(`{${inner}}`, Number(asc)));
 }
+
+/** The guide's "too few records" (cardOutcomeText). */
+const FEW_RECORDS = "还没有足够的记录";
 
 /**
  * A card's outcome rows (outcome-stats.json, tools/build-outcome-stats.py; observational): the act's boss pass rate
  * of the runs that took it in acts 1 and 2 against those offered it that did not ("A8 一幕拿了 51 局过 boss 65%、
  * 给了没拿 35 局 77%；…"). The guide's card grades quote it where the data moved a grade (Taunt, 2026-09-29).
+ * `ascension`: the run's (outcome-tables outcomeView): at A8, below it or unset A8's rows as before; from A9 up that
+ * ascension's, an act with fewer than 5 runs on a side followed by A8's for that act when A8 has 5 or more there ("A9
+ * 一幕拿了 3 局过 boss 33%、给了没拿 12 局 50%（A9 不足5局，另附 A8：一幕拿了 51 局过 boss 65%、给了没拿 35 局 77%）").
  */
-export function cardOutcomeText(cardId: string, stats: OutcomeStats = loadOutcomeStats()): string {
-  const byAct = stats.cards?.[cardId]?.by_act ?? {};
+export function cardOutcomeText(cardId: string, stats: OutcomeStats = loadOutcomeStats(), ascension?: number): string {
+  const view = outcomeView(ascension, stats);
+  const actsOf = (table: OutcomeStats) => table.cards?.[cardId]?.by_act ?? {};
   const pct = (value: number | null | undefined) => (value == null ? "?" : `${Math.round(value * 100)}%`);
-  const acts = ["1", "2"]
-    .map((act) => {
-      const picked = byAct[act]?.picked;
-      const skipped = byAct[act]?.offered_not_picked;
-      if (!picked?.n || !skipped?.n) return null;
-      return `${act === "1" ? "一" : "二"}幕拿了 ${picked.n} 局过 boss ${pct(picked.boss_pass)}、给了没拿 ${skipped.n} 局 ${pct(skipped.boss_pass)}`;
-    })
-    .filter(Boolean);
-  return acts.length > 0 ? `A${stats.ascension ?? "?"} ${acts.join("；")}` : "还没有足够的记录";
+  type Pair = ReturnType<typeof actsOf>[string];
+  // Both sides with runs: the contrast the guide quotes.
+  const both = (pair: Pair | undefined) => Boolean(pair?.picked?.n && pair?.offered_not_picked?.n);
+  const line = (act: string, pair: Pair | undefined) => `${act === "1" ? "一" : "二"}幕拿了 ${pair?.picked?.n} 局过 boss ${pct(pair?.picked?.boss_pass)}、给了没拿 ${pair?.offered_not_picked?.n} 局 ${pct(pair?.offered_not_picked?.boss_pass)}`;
+  const acts = ["1", "2"].flatMap((act) => {
+    const own = actsOf(view.table)[act];
+    const ref = view.refs.length > 0 && pairThin(own) ? referenceRow(view.refs, (table) => actsOf(table)[act], (ref) => both(ref) && pairHelps(own)(ref)) : null;
+    if (!both(own) && !ref) return [];
+    const head = both(own) ? line(act, own) : `${act === "1" ? "一" : "二"}幕${FEW_RECORDS}`;
+    return [`${head}${ref ? referenceNote(view, ref.table, line(act, ref.row)) : ""}`];
+  });
+  return acts.length > 0 ? `A${view.table.ascension ?? "?"} ${acts.join("；")}` : FEW_RECORDS;
 }
 
 /** The ascensions the guides quote records for (the ones played now). */

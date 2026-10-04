@@ -56,7 +56,7 @@ export function planBundle(env: DecisionEnv): Decision | null {
         strictJev: env.strictJev,
         // DeepSeek's view: each bundle's cards with our runs' outcome statistics per card (V4 M2: facts, no score).
         options: deepseekDecides(env)
-          ? options.map((option, at) => ({ ...option, facts: { card_outcome_stats: Object.fromEntries(bundleCards(bundles[at]!, knowledge).map((card) => [card.name, cardOutcome(card.id)])) } }))
+          ? options.map((option, at) => ({ ...option, facts: { card_outcome_stats: Object.fromEntries(bundleCards(bundles[at]!, knowledge).map((card) => [card.name, cardOutcome(card.id, env.state.run?.ascension)])) } }))
           : options,
         state: { run_brief: briefJson(env.brief), situation: { screen: "BUNDLE_SELECTION" } },
         ...(deepseekDecides(env) ? { deepseek: { facts: buildFacts(env) } } : {}),

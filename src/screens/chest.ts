@@ -55,7 +55,7 @@ export function planChest(env: DecisionEnv): Decision | null {
     // (V4 M2: facts; code does not score relics).
     const withText = options.map((option, at) => {
       const id = str(relics[at]?.["relic_id"]);
-      return { ...option, facts: { text: fillRelicText(id, knowledge.relic(id)?.description ?? ""), outcome_stats: relicOutcome(id) } };
+      return { ...option, facts: { text: fillRelicText(id, knowledge.relic(id)?.description ?? ""), outcome_stats: relicOutcome(id, state.run?.ascension) } };
     });
     return buildPickDecision({ ...params, options: withText, deepseek: { facts: buildFacts(env) } });
   }

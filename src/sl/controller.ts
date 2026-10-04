@@ -413,6 +413,7 @@ export class SlController {
       act2_low_hp: this.config.act2LowHp === true,
       act2_low_hp_pct: this.config.act2LowHpPct ?? 50,
       retry_show_sim: this.config.retryShowSim,
+      retry_memo: this.config.retryMemo !== false,
       retry_known_draws: this.config.retryKnownDraws,
       retry_compute: this.config.retryCompute ? { rollout_samples: RETRY_COMPUTE.rolloutSamples, rollout_budget_ms: RETRY_COMPUTE.rolloutBudgetMs, turn_budget_ms: RETRY_COMPUTE.turnBudgetMs, mc_samples: RETRY_COMPUTE.mcSamples, mc_budget_ms: RETRY_COMPUTE.mcBudgetMs, boss_sim_samples: RETRY_COMPUTE.bossSimSamples } : false,
       judge_known_draws: this.config.judgeKnownDraws === true,

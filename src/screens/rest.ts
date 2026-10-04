@@ -138,7 +138,7 @@ export function planRest(env: DecisionEnv): Decision | null {
       ...(forcedEliteWithin(env.screenMemory, state, REST_NODES, FORCED_ELITE_REST_DEPTH) ? { forced_elite_ahead: `every path meets an Elite within ${FORCED_ELITE_REST_DEPTH} nodes, with no rest site or shop before it` } : {}),
       ...bossStartHealFacts(relicIdsOf(state), bossIsNextFight(env.screenMemory, state), heal.total, healed, hpNow, maxNow),
       // Our runs' outcome statistics per rest action, by the HP band on arrival (V4 M2: facts, not code's heal/smith score).
-      ...restOutcomeFacts(options.map((option) => str(rawByKey.get(option.key)?.["option_id"]).toUpperCase()), hpNow, maxNow),
+      ...restOutcomeFacts(options.map((option) => str(rawByKey.get(option.key)?.["option_id"]).toUpperCase()), hpNow, maxNow, state.run?.ascension),
     },
   });
   // The act's route rides on the rest question while a fork is left (route-review.ts), the one-shot rest plan
@@ -201,14 +201,15 @@ export function planRest(env: DecisionEnv): Decision | null {
 
 /**
  * The rest actions' outcome statistics (outcome-stats.json "rest": runs that took that action at a rest site, by
- * their HP band on arrival) and the band this rest site is in.
+ * their HP band on arrival) and the band this rest site is in. `ascension`: the run's (from A9 up its own rows, thin ones
+ * with A8's: knowledge/outcome-tables.ts).
  */
-export function restOutcomeFacts(actionIds: string[], hp: number, maxHp: number): Record<string, JsonValue> {
+export function restOutcomeFacts(actionIds: string[], hp: number, maxHp: number, ascension?: number | null): Record<string, JsonValue> {
   const kinds = [...new Set(actionIds.filter(Boolean))];
   if (kinds.length === 0) return {};
   return {
     hp_band_now: hpBandOf(hp, maxHp),
-    option_outcome_stats: Object.fromEntries(kinds.map((kind) => [kind, restOutcome(kind)])),
+    option_outcome_stats: Object.fromEntries(kinds.map((kind) => [kind, restOutcome(kind, ascension)])),
   };
 }
 

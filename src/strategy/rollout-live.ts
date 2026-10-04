@@ -25,6 +25,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { Knowledge } from "../knowledge/index.js";
+import { identityToken, memoKey, type ComputeMemo } from "../sim/compute-memo.js";
 import { appliedPowerIds, countsAt, moveAmountAt, moveBaseDamages, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, startAmountAt, type AmountWhere, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../mod/schema.js";
 import type { ScreenMemory } from "../project/types.js";
@@ -544,6 +545,11 @@ export interface LiveRolloutArgs {
   /** Overrides (tests): the model, the gates. */
   model?: FightValueModel | null;
   gates?: FightValueGates | null;
+  /**
+   * The SL retry compute memo (src/sim/compute-memo.ts; the planner passes the fight's on a retried fight): a result of the
+   * same input that no clock cut is handed back when this question's budget is at least the least the stored run needed.
+   */
+  memo?: ComputeMemo | null;
 }
 
 export type LiveRollout =
@@ -588,7 +594,10 @@ export type LiveRollout =
       noPotion: { line: Plan; base: Plan; merged: boolean } | null;
       /** Wall clock the random potions' Monte Carlo took out of this decision's budget before the rollout (spentMs). */
       spentMs: number;
+      /** Wall clock of this call (a memo hit: the lookup's, not the stored run's). */
       elapsedMs: number;
+      /** The result came from the SL retry compute memo: the stored run's own time (charged to the turn's budget as if run). */
+      memo?: { ms: number };
     };
 
 const drinks = (plan: Plan) => plan.steps.some((step) => step.cardId.startsWith("POTION:"));
@@ -876,7 +885,10 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
         ...((args.sandpitStart ?? rolloutLiveOptions.sandpitStart) ? { sandpitStart: true } : {}),
       },
     };
-    const result = rolloutDecision(input);
+    const memoKeyed = args.memo ? rolloutMemoKey(input) : null;
+    const memoed = args.memo && memoKeyed ? recallRollout(args.memo, memoKeyed, input, budgetMs) : null;
+    const result = memoed ?? rolloutDecision(input);
+    if (args.memo && memoKeyed && !memoed) storeRollout(args.memo, memoKeyed, input, result);
     rolloutTap.onRollout?.(input, result);
     // The no-potion line is the base line itself when the base's rollout drinks nothing in its later turns (and this
     // turn: it is potion-free): merged, the copy is dropped. Otherwise the copy stays, an option of its own.
@@ -931,9 +943,67 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       noPotion,
       spentMs: args.spentMs ?? 0,
       elapsedMs: elapsed(),
+      ...(memoed ? { memo: { ms: memoed.elapsedMs } } : {}),
     };
   } catch (error) {
     return { available: false, reason: `error: ${String(error).slice(0, 120)}`, elapsedMs: elapsed() };
+  }
+}
+
+// ---------------------------------------------------------------- the SL retry compute memo (src/sim/compute-memo.ts)
+
+/** The plans a rollout result's lines may be (rolloutDecision's candidates come from these): a line's plan is stored as its index. */
+function rolloutRefs(input: RolloutInput): Plan[] {
+  const opts = input.options ?? {};
+  return [...input.plans, ...(opts.include ?? []), ...(opts.noPotionLine ? [opts.noPotionLine] : [])];
+}
+
+/**
+ * The memo key of a rollout input: everything rolloutDecision reads but the clock and the budget (the hit's own condition),
+ * the shared data tables by identity.
+ */
+function rolloutMemoKey(input: RolloutInput): string | null {
+  try {
+    const { now: _now, budgetMs: _budget, ...options } = input.options ?? {};
+    return memoKey("rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
+  } catch {
+    return null;
+  }
+}
+
+interface StoredRollout {
+  /** The run's least budget (RolloutResult.budgetNeedMs) and its own time. */
+  needMs: number;
+  ms: number;
+}
+
+/** A stored result for this input, when `budgetMs` (this question's) is at least what the stored run needed; else null. */
+function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budgetMs: number): RolloutResult | null {
+  try {
+    const hit = memo.get<Omit<RolloutResult, "lines"> & { lines: (Omit<LineEstimate, "plan"> & { plan: number })[] }, StoredRollout>(key);
+    if (!hit || budgetMs < hit.meta.needMs) return null;
+    const refs = rolloutRefs(input);
+    if (hit.value.lines.some((line) => refs[line.plan] === undefined)) return null;
+    memo.took();
+    return { ...hit.value, lines: hit.value.lines.map((line) => ({ ...line, plan: refs[line.plan]! })) } as RolloutResult;
+  } catch {
+    return null;
+  }
+}
+
+/** Keeps a result no clock cut (nothing degraded), its lines' plans by index into rolloutRefs. */
+function storeRollout(memo: ComputeMemo, key: string, input: RolloutInput, result: RolloutResult): void {
+  try {
+    if (result.degraded.length > 0 || result.budgetNeedMs === undefined) return;
+    const refs = rolloutRefs(input);
+    const index = new Map<Plan, number>();
+    refs.forEach((plan, i) => {
+      if (!index.has(plan)) index.set(plan, i);
+    });
+    if (result.lines.some((line) => !index.has(line.plan))) return;
+    memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs, ms: result.elapsedMs });
+  } catch {
+    // not kept
   }
 }
 
@@ -1058,6 +1128,7 @@ export function rolloutLog(r: LiveRollout, bestKey: string | null, added: boolea
   if (!r.available) return { available: false, reason: r.reason, ms: Math.round(r.elapsedMs) };
   return {
     available: true,
+    // This call's own wall clock (an SL retry memo hit: the lookup's; the decision row's timing.memo says so).
     ms: Math.round(r.elapsedMs),
     horizon: r.result.horizon,
     samples: r.result.samples,

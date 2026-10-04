@@ -51,6 +51,8 @@ import { clearedWith, deathRulesOf, moveRulesOf, stripStunRules, type DeathRule,
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../strategy/run-plan.js";
 import { BOSS_LINES_TIE_SE, bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simCompare, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
+import { computeMemoFor, dropComputeMemo, type ComputeMemo } from "../sim/compute-memo.js";
+import { loadavg } from "node:os";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "../strategy/thief.js";
 import { knownTopIndices } from "../sl/draws.js";
 import { explorePoint, exploreReplacement, lineText, MAY_REPEAT, playKey, rankByOrder, replayChoice, summaryPlay, triedHas, turnCanon, type ExploreB2, type ExploreChoice, type ExploreLine, type SlExploreEnv, type SlPoint } from "../sl/explore.js";
@@ -229,6 +231,73 @@ export function dryFirst(plans: Plan[]): Plan | undefined {
 
 /** Test hook: per-target options and kill-order rollouts off (the question as before them). */
 export const targetOptions: { enabled: boolean } = { enabled: true };
+
+/**
+ * The combat planner's time to its last question (planTurn's ask path; null after a decision code made alone), which the
+ * loop puts on the decision row as `timing` (loop.ts, right after planDecision). Beside the decision, not in its log: the
+ * pinned digests of decisions and resolutions stay as they were, and the numbers are the wall clock's.
+ *   planner_ms   planTurn's wall clock to the question (a planCombatTurn fallback re-plan: the last plan's);
+ *   solve_ms     the turn solver; mc_ms the random potions' Monte Carlo; rollout_ms the 5-turn rollout; boss_sim_ms B2;
+ *   other_ms     the rest (options, facts, the question);
+ *   cpu_ms       the process's CPU over planner_ms, every thread (the B2 workers' too): cpu > wall, the workers ran;
+ *                cpu < wall, the planner's thread waited or was not scheduled (a loaded machine);
+ *   load1        the machine's 1-minute load average then (os.loadavg; 32 logical CPUs on the play machine; WSL's own:
+ *                the game and anything else on the Windows side share the cores unseen);
+ *   probe_ms     a fixed integer loop timed on the planner's thread as the question is made (speedProbeMs; ~2.7 ms with
+ *                the machine quiet, 2026-10-04): this thread's speed then, whatever slows it (the Windows side included);
+ *   boss_sim     B2's (line, order) pairs and the fights whose results came back (sims_done; more than samples x pairs:
+ *                work the deadline wasted, a chunk still running then not counted);
+ *   memo         the SL retry compute memo (src/sim/compute-memo.ts): which stage came from it and the time it stands for.
+ */
+export const plannerTiming: { last: Record<string, JsonValue> | null } = { last: null };
+
+/** A fixed 2M-step xorshift loop's wall time on this thread (ms): the machine's speed for it now (plannerTiming.probe_ms). */
+export function speedProbeMs(): number {
+  const started = performance.now();
+  let x = 0x9e3779b9 | 0;
+  for (let i = 0; i < 2_000_000; i += 1) {
+    x ^= x << 13;
+    x ^= x >>> 17;
+    x ^= x << 5;
+  }
+  const ms = performance.now() - started;
+  // (x read so the loop is not dropped.)
+  return x === 0 ? ms + 0 : ms;
+}
+
+function plannerTimingOf(t: {
+  planStart: number;
+  cpuStart: NodeJS.CpuUsage;
+  solveMs: number;
+  mcShown: PotionMc[];
+  rollout: LiveRollout | null;
+  bossSim: BossLineSim | null;
+  computeMemo: ComputeMemo | null;
+}): Record<string, JsonValue> {
+  const plannedMs = performance.now() - t.planStart;
+  const cpu = process.cpuUsage(t.cpuStart);
+  const mcMs = t.mcShown.reduce((sum, mc) => sum + mc.ms, 0);
+  const rolloutMs = t.rollout?.elapsedMs ?? 0;
+  const sim = t.bossSim?.available ? t.bossSim : null;
+  const simMs = sim ? (sim.run.memo?.wallMs ?? sim.run.elapsedMs) : t.bossSim && !t.bossSim.available ? t.bossSim.ms : 0;
+  const rolloutMemo = t.rollout?.available && t.rollout.memo ? t.rollout.memo.ms : null;
+  const simMemo = sim?.run.memo ? sim.run.elapsedMs : null;
+  return {
+    planner_ms: Math.round(plannedMs),
+    solve_ms: Math.round(t.solveMs),
+    mc_ms: Math.round(mcMs),
+    rollout_ms: Math.round(rolloutMs),
+    boss_sim_ms: Math.round(simMs),
+    other_ms: Math.round(plannedMs - t.solveMs - mcMs - rolloutMs - simMs),
+    cpu_ms: Math.round((cpu.user + cpu.system) / 1000),
+    load1: Math.round((loadavg()[0] ?? 0) * 100) / 100,
+    probe_ms: Math.round(speedProbeMs() * 100) / 100,
+    ...(sim && !sim.run.memo && sim.run.pairs !== undefined && sim.run.done !== undefined ? { boss_sim: { pairs: sim.run.pairs, sims_done: sim.run.done, samples: sim.run.samples, workers: sim.run.workers } } : {}),
+    ...(t.computeMemo
+      ? { memo: { ...(rolloutMemo !== null ? { rollout_ms: Math.round(rolloutMemo) } : {}), ...(simMemo !== null ? { boss_sim_ms: Math.round(simMemo) } : {}), hits: t.computeMemo.hits, stored: t.computeMemo.size } }
+      : {}),
+  };
+}
 
 /**
  * Tool hook (tools/thief-facts-replay.ts): with `enabled`, each combat question leaves its lines here (the surviving
@@ -2646,6 +2715,10 @@ export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) =
 const TAKE_WAIT_MS = 4_000;
 
 function planTurn(env: DecisionEnv): Decision | null {
+  // The planner's own time (the decision log's `timing`): its wall clock, the process's CPU (the worker threads' too).
+  const planStart = performance.now();
+  const cpuStart = process.cpuUsage();
+  plannerTiming.last = null;
   const { state } = env;
   // Before any early return: the turn's first frame sets the exhaust pile it started with.
   const exhaustedEarlier = exhaustedSinceTurnStart(env);
@@ -3035,7 +3108,9 @@ function planTurn(env: DecisionEnv): Decision | null {
       ...(nextIncoming > 0 ? { nextIncoming } : {}),
       ...(laterIncoming ? { laterIncoming } : {}),
     }));
+  const solveStart = performance.now();
   const solved = solve();
+  const solveMs = performance.now() - solveStart;
   // Tool hook: every line the solver found, also when code decides on its own below (a lethal, a dominating line).
   if (thiefTrace.enabled) thiefTrace.last = { plans: solved.plans, surviving: [], shown: [], rollout: null, thieves: [], lastTurnLine: null, rolloutLine: null };
   // The random potions' Monte Carlo, run once when a decision needs it (every question does).
@@ -3468,6 +3543,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   const retrySpent = retryTurn !== null && env.screenMemory.slRetryCompute?.turn === retryTurn ? env.screenMemory.slRetryCompute.spentMs : 0;
   const retryBudgetMs = slCompute ? Math.max(rolloutLiveOptions.budgetMs, Math.min(slCompute.rolloutBudgetMs, slCompute.turnBudgetMs - retrySpent)) : rolloutLiveOptions.budgetMs;
   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
+  // The SL retry compute memo (src/sim/compute-memo.ts): a retried fight's rollouts and B2 runs on a board an earlier
+  // attempt planned come back from it, the same numbers; any other fight has none.
+  const computeMemo: ComputeMemo | null = env.sl ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
+  if (!env.sl) dropComputeMemo();
   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
   const runRollout = (escapes: boolean): LiveRollout | null =>
@@ -3490,11 +3569,14 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...(escapes ? { thieves } : {}),
         // SANDPIT_START: the Sandpit the Insatiable's Liquify Ground starts, in the later turns too (absent: rollout-live's default).
         ...(env.sandpitStart !== undefined ? { sandpitStart: env.sandpitStart } : {}),
+        ...(computeMemo ? { memo: computeMemo } : {}),
       })
     : null;
   let rollout = runRollout(thiefOn && !thiefFailed);
   // SL_RETRY_COMPUTE: the turn's spent time (the random potions' and the rollout's), for the next question of the turn.
-  if (retryTurn !== null) env.screenMemory.slRetryCompute = { turn: retryTurn, spentMs: retrySpent + mcShown.reduce((sum, mc) => sum + mc.ms, 0) + (rollout?.elapsedMs ?? 0) };
+  // A memo hit is charged the stored run's time as well, as if it had run (the next question's budget as it would be).
+  const rolloutCharged = (r: LiveRollout | null) => (r?.elapsedMs ?? 0) + (r?.available && r.memo ? r.memo.ms : 0);
+  if (retryTurn !== null) env.screenMemory.slRetryCompute = { turn: retryTurn, spentMs: retrySpent + mcShown.reduce((sum, mc) => sum + mc.ms, 0) + rolloutCharged(rollout) };
   // THIEF_FACTS fail safe: a rollout that failed with the escapes in it runs again as before, the thief facts dropped.
   if (thiefOn && !thiefFailed && rollout !== null && !rollout.available && rollout.reason.startsWith("error")) {
     thieves = [];
@@ -3574,6 +3656,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             turn: state.turn ?? null,
             drinks: drinksPotion,
             ...(slCompute ? { samples: slCompute.bossSimSamples } : {}),
+            ...(computeMemo ? { memo: computeMemo } : {}),
           })
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
@@ -4151,6 +4234,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   };
 
   if (thiefTrace.enabled) thiefTrace.last = { plans: solved.plans, surviving, shown, rollout, thieves, lastTurnLine: thiefKill, rolloutLine: thiefRollout, kind, mcShown, simRanks };
+  // The planner's time to this question (2026-10-04: V4.6's boss questions took 20-40 s, and only the stages' own `ms`
+  // said where), for the decision row's `timing` (plannerTiming: beside the decision, not in it).
+  plannerTiming.last = plannerTimingOf({ planStart, cpuStart, solveMs, mcShown, rollout, bossSim, computeMemo });
   const questionLabel = potionLethal.length > 0 ? "combat/plan-choice+potion-lethal" : offerPotions || mcShown.length > 0 ? "combat/plan-choice+potion" : "combat/plan-choice";
   return {
     kind: "ask",

@@ -80,7 +80,7 @@ export function planReward(env: DecisionEnv): Decision | null {
         intent: { action: "choose_reward_card", option_index: index },
         score: valued.value,
         // DeepSeek's view: copies already in the deck and our runs' outcome statistics (code_value and why are Jev's only).
-        facts: { in_deck: profile.copies.get(cardId) ?? 0, outcome_stats: cardOutcome(cardId) },
+        facts: { in_deck: profile.copies.get(cardId) ?? 0, outcome_stats: cardOutcome(cardId, state.run?.ascension) },
         summary: {
           code_value: valued.value,
           why: valued.reasons.join("; ") || null,

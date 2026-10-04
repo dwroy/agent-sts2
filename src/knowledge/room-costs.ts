@@ -6,6 +6,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { bumpDataVersion } from "../util/data-version.js";
 
 export interface MeasuredRoom {
   n: number;
@@ -39,6 +40,7 @@ function load(): RoomCosts {
 
 /** For tests: use these costs instead of the file (null reloads the file). */
 export function setRoomCostsForTests(costs: RoomCosts | null): void {
+  bumpDataVersion();
   cached = costs;
 }
 
