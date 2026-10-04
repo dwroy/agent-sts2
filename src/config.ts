@@ -575,7 +575,8 @@ export interface BrainConfig {
      * codex call every `everyCalls` calls (BRAIN_CODEX_USAGE_EVERY_CALLS, default 3) or `everyMin` minutes
      * (BRAIN_CODEX_USAGE_EVERY_MIN, default 10); codex is off for the rest of the process once a window is at
      * `stopPct` % (BRAIN_CODEX_USAGE_STOP_PCT, default 80) or credits are in use. `required`
-     * (BRAIN_CODEX_USAGE_REQUIRED=on, default off): a read that fails stops codex too, instead of being said once.
+     * (BRAIN_CODEX_USAGE_REQUIRED=on, default off): while reads fail codex is off (its questions to the fallback) until
+     * a read works, instead of being said once and kept on.
      */
     usage: { stopPct: number; everyCalls: number; everyMin: number; required: boolean };
   };
