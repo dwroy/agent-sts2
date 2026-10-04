@@ -13,7 +13,7 @@ if [ -z "$console" ]; then echo "STALL: no console log"; exit 0; fi
 quiet=$(( now - $(stat -c %Y "$console") ))
 last_dec=$(tail -1 "$LOGDIR/decisions.jsonl" | python3 -c 'import json,sys,datetime as d;print(int(d.datetime.fromisoformat(json.loads(sys.stdin.read())["ts"].replace("Z","+00:00")).timestamp()))' 2>/dev/null || echo "$now")
 no_decision=$(( now - last_dec ))
-running=$(pgrep -x node | while read -r p; do tr '\0' ' ' < "/proc/$p/cmdline" 2>/dev/null | grep -q 'index.ts pla[y]' && echo "$p"; done | wc -l)
+running=$(pgrep -x node | while read -r p; do { tr '\0' ' ' < "/proc/$p/cmdline"; } 2>/dev/null | grep -q 'index.ts pla[y]' && echo "$p"; done | wc -l)
 
 why=""
 # Between runs autoplay writes the post-mortem and pauses briefly: not a stall unless it lasts.

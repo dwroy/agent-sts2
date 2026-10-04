@@ -75,7 +75,9 @@ drain() {
 tick_stall() {
   local out first sig now count next
   out=$(bash ${CODEX_OPS_STALL_CHECK:-"$OPS/stall-check.sh"} 2>&1)
-  first=$(printf '%s\n' "$out" | head -1)
+  # The verdict is the line starting OK / STALL; anything before it (e.g. a /proc race from a process that just exited) is noise.
+  first=$(printf '%s\n' "$out" | grep -E '^(OK|STALL)' | tail -1)
+  [ -n "$first" ] || first=$(printf '%s\n' "$out" | head -1)
   if [ "${first:0:2}" = OK ]; then
     [ -f "$DIR/stall.state" ] && { log "stall over: $first"; rm -f "$DIR/stall.state"; }
     return 0
