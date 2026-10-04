@@ -217,18 +217,19 @@ export function bossNote(bossId: string | null | undefined, ascension = 8): stri
   if (!note) return null;
   // The Giant's and the Test Subject's numbers at this ascension (monster DB): A8 第 2 回合 15，A9 20，
   // 每回合 +3; 250 HP from A8; Pressure Gun A8 20/25/30, A9 23/28/33; phases A8 111/212/313. Every other
-  // number from the DB at this ascension too (fillDbNumbers).
+  // number from the DB at this ascension too (fillDbNumbers). The counted records by this ascension's band
+  // (boss-clock recordBand: from A8 up A8 and A9 apart).
   const eruption = eruptionSchedule(ascension);
   const giant = giantNumbers(ascension);
   const filled = note
     .replace("{ERUPTION}", `A${ascension}：第 ${eruption.firstTurn} 回合 ${eruption.first}，每回合 +${eruption.perTurn}`)
     .replace("{GIANT_HP}", String(giant.hp))
     .replace("{GIANT_KILLS}", giantKillRecord(ascension, "zh"))
-    .replace("{GIANT_BLOCK}", giantBlockRecord("zh"))
-    .replace("{CRAB_KILLS}", () => crabKillRecord("zh"))
-    .replace("{LAG_SLEEP}", () => lagSleepRecord("zh"))
-    .replace("{QUEEN_AMALGAM}", () => queenAmalgamRecord("zh"))
-    .replace("{SANDPIT_DEATHS}", () => sandpitDeathRecord("zh"))
+    .replace("{GIANT_BLOCK}", giantBlockRecord("zh", ascension))
+    .replace("{CRAB_KILLS}", () => crabKillRecord("zh", ascension))
+    .replace("{LAG_SLEEP}", () => lagSleepRecord("zh", ascension))
+    .replace("{QUEEN_AMALGAM}", () => queenAmalgamRecord("zh", ascension))
+    .replace("{SANDPIT_DEATHS}", () => sandpitDeathRecord("zh", ascension))
     .replace("{SIPHON}", String(giant.siphon))
     .replace("{GUN}", giant.gun.join("→"))
     .replace("{TS_PHASES}", testSubjectPhases(ascension).join("/"));

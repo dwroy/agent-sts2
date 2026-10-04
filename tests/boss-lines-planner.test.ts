@@ -117,6 +117,10 @@ const BOARDS = ["3sbp-f17-t3-flex", "k8tc-f17-t5", "xmy2-f17-t1", "8v0h-f17-t2-s
  * files; the registry is now reset under the mock and those files pinned from 69a33f9's data, the data these digests
  * were captured on. CAPTURE=1 on the current planner (whose off path is the pre-B2 one with the fix-queue changes
  * above) gave every digest unchanged.
+ * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): 8v0h and ez2l (A8 and up) whose question carries a counted record
+ * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
+ * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
+ * earlier digest held: nothing else in the decision moved.
  */
 const GOLDEN: Record<string, string> = {
   "3sbp-f17-t3-flex:off": "dccd163df08174647e3c1cdcd4bcf9c4",
@@ -125,10 +129,10 @@ const GOLDEN: Record<string, string> = {
   "k8tc-f17-t5:v1": "f384927f7a7eb8ea80042a0997231940",
   "xmy2-f17-t1:off": "ccf70183bb58499c1e90534f573e3ec3",
   "xmy2-f17-t1:v1": "d8ef465061a61dd7ae4326cf65e80e33",
-  "8v0h-f17-t2-saturated:off": "8b438468c96718c5ceccd0e6721c790a",
-  "8v0h-f17-t2-saturated:v1": "3e8bd1db016185cc173b00efb6a66b97",
-  "ez2l-f48-t2:off": "c6de5775368dfdf499e362edb02feb22",
-  "ez2l-f48-t2:v1": "5ce33d7f7a81fa513856c48a7120381d",
+  "8v0h-f17-t2-saturated:off": "a8e3acfcf797cb129f112bdce0a20277",
+  "8v0h-f17-t2-saturated:v1": "cccace252a934b5ef78532e218c21a66",
+  "ez2l-f48-t2:off": "ed6434d0ca7c66378126f7ca04ab0eff",
+  "ez2l-f48-t2:v1": "ad895638c297e80c4b1d1157e24fd470",
   "2mk4-f8-t2-ask:v1": "a8c6b59e8bca465e9e48beac868692c2",
 };
 

@@ -47,17 +47,23 @@ afterEach(() => setUnblockedSharesForTests(null));
 describe("the boss notes carry the records", () => {
   it("the Queen: single-target into the Amalgam from turn 1, with its record (DeepSeek zh, the boss clock en)", () => {
     setUnblockedSharesForTests({ QUEEN: { unblocked_share: 0.5, fights: 5, turns: 30, amalgam: QUEEN } });
-    expect(bossNote("QUEEN_BOSS", 8)).toContain(`单体伤害从第 1 回合起就给它，女王只吃群伤（${queenAmalgamText(QUEEN, "zh")}；经验 queen-plan）`);
+    // From A8 up A8's fights and A9's apart (2026-10-04, recordBand: BDAK's A4 win is not counted there); below A8
+    // the text over every ascension.
+    expect(bossNote("QUEEN_BOSS", 8)).toContain(`单体伤害从第 1 回合起就给它，女王只吃群伤（${queenAmalgamText(QUEEN, "zh", [8, 9])}；经验 queen-plan）`);
+    expect(bossNote("QUEEN_BOSS", 7)).toContain(`单体伤害从第 1 回合起就给它，女王只吃群伤（${queenAmalgamText(QUEEN, "zh")}；经验 queen-plan）`);
     expect(bossNote("QUEEN_BOSS", 8)).not.toContain("A8 5 场输局");
-    expect(clockBossNote(bossProfile("QUEEN")!, 8)).toContain(`(${queenAmalgamText(QUEEN, "en")}; experience queen-plan)`);
+    expect(clockBossNote(bossProfile("QUEEN")!, 8)).toContain(`(${queenAmalgamText(QUEEN, "en", [8, 9])}; experience queen-plan)`);
+    expect(clockBossNote(bossProfile("QUEEN")!, 7)).toContain(`(${queenAmalgamText(QUEEN, "en")}; experience queen-plan)`);
   });
 
   it("the Insatiable: compare the Sandpit and HP death lines, with the losses by line", () => {
     setUnblockedSharesForTests({ THE_INSATIABLE: { unblocked_share: 0.5, fights: 7, turns: 50, deaths: SAND } });
     const note = bossNote("THE_INSATIABLE_BOSS", 8)!;
     expect(note).toContain("先比沙坑和 HP 哪条死线先到");
-    expect(note).toContain(sandpitDeathText(SAND, "zh"));
-    expect(clockBossNote(bossProfile("THE_INSATIABLE")!, 8)).toContain(sandpitDeathText(SAND, "en"));
+    expect(note).toContain(sandpitDeathText(SAND, "zh", [8, 9]));
+    expect(bossNote("THE_INSATIABLE_BOSS", 7)!).toContain(sandpitDeathText(SAND, "zh"));
+    expect(clockBossNote(bossProfile("THE_INSATIABLE")!, 8)).toContain(sandpitDeathText(SAND, "en", [8, 9]));
+    expect(clockBossNote(bossProfile("THE_INSATIABLE")!, 7)).toContain(sandpitDeathText(SAND, "en"));
   });
 });
 
@@ -70,7 +76,8 @@ describe("Jev's hints: the Queen and the Sandpit", () => {
     expect(hint.text).toContain("turns 1-2 included");
     expect(hint.evidence).toEqual(expect.arrayContaining(["5LRZ7HJ7YGSY", "Q8XR6EXAF6QV", "RBJ402TKQZ6F"]));
     setUnblockedSharesForTests({ QUEEN: { unblocked_share: 0.5, fights: 5, turns: 30, amalgam: QUEEN } });
-    expect(hintText(hint, 8)).toContain(`(${queenAmalgamText(QUEEN, "en")})`);
+    expect(hintText(hint, 8)).toContain(`(${queenAmalgamText(QUEEN, "en", [8, 9])})`);
+    expect(hintText(hint, 7)).toContain(`(${queenAmalgamText(QUEEN, "en")})`);
   });
 
   it("the Sandpit hints compare the two death lines; no 'Escape before extra damage'", () => {
@@ -79,7 +86,8 @@ describe("Jev's hints: the Queen and the Sandpit", () => {
     const hpFirst = byId("sandpit-hp-first")!;
     expect(hpFirst.evidence).toContain("NH8A3VBDRDZW");
     setUnblockedSharesForTests({ THE_INSATIABLE: { unblocked_share: 0.5, fights: 7, turns: 50, deaths: SAND } });
-    expect(hintText(hpFirst, 8)).toBe(`When my HP runs out before the Sandpit, Escapes only waste energy: block or deal damage instead (${sandpitDeathText(SAND, "en")}).`);
+    expect(hintText(hpFirst, 8)).toBe(`When my HP runs out before the Sandpit, Escapes only waste energy: block or deal damage instead (${sandpitDeathText(SAND, "en", [8, 9])}).`);
+    expect(hintText(hpFirst, 7)).toBe(`When my HP runs out before the Sandpit, Escapes only waste energy: block or deal damage instead (${sandpitDeathText(SAND, "en")}).`);
     for (const hint of loadHints()) expect(hint.text, hint.id).not.toContain("Frantic Escape before extra damage");
   });
 });

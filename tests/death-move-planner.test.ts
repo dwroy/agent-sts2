@@ -127,22 +127,26 @@ const RULED = BOARDS.filter((name) => name !== "nx48-f33-t7-crab");
  * re-pinned at v4-inferno-planner: its draw pile holds both Infernos (none up), and the rollout's later turns now lose 1 HP
  * per Inferno played at each turn's start (strategy/start-loss.ts; a second one had looked free): its numbers moved and the
  * rollout's best (all three lines 5-8/8 dead) became Blood Wall, then Uppercut+; the rest of the question as at 0f63d28.
+ * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): the boards at A8 and up whose question carries a counted record
+ * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
+ * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
+ * earlier digest held: nothing else in the decision moved.
  */
 const GOLDEN_ON: Record<string, string> = {
-  "0u96-f48-t5-queen-kill:off": "47e0f43e56058400f3f8ed3a861e1dac",
-  "0u96-f48-t5-queen-kill:v1": "3a068a1fd19acd2277d8089a802e9aa2",
-  "5gka-f48-t2-queen-mine:off": "ea2d21a53876060cc500968ffa4ae855",
-  "5gka-f48-t2-queen-mine:v1": "4c620f5b109262d63c4d0d2cb209dc55",
+  "0u96-f48-t5-queen-kill:off": "0b65fa9f3dcda0acbf0dbf9dc28b4c98",
+  "0u96-f48-t5-queen-kill:v1": "f63ffd6a5bc569645a517a2812f6f7f2",
+  "5gka-f48-t2-queen-mine:off": "03f5f863c244274e1ada2b2f659db6b0",
+  "5gka-f48-t2-queen-mine:v1": "22188743afba4cbb2fc437d3c59441f5",
   "y3xt-f37-t1-shield:off": "99fa9d304089373588a420e810956b13",
   "y3xt-f37-t1-shield:v1": "866cff99296cb892e28b46ad4ebedb05",
-  "nx48-f33-t7-crab:off": "51ca5092a06f92a1789ab8afd13bc944",
-  "nx48-f33-t7-crab:v1": "1387c42705c390cc9895f176e4c16daa",
+  "nx48-f33-t7-crab:off": "0ff11129271d04e4821689c48a8e496d",
+  "nx48-f33-t7-crab:v1": "6976e5f93c3c4aa668386a731db32b38",
 };
 /** ... and MECH_RULES off: the same but on the Crab (its back attack needing both claws is MECH_MOVE_RULES's). */
 const GOLDEN_OFF: Record<string, string> = {
   ...GOLDEN_ON,
-  "nx48-f33-t7-crab:off": "a0327bd97bf9678cbc54766f04e31e17",
-  "nx48-f33-t7-crab:v1": "f7a5d967c694758c969b07689bd59674",
+  "nx48-f33-t7-crab:off": "b6eda93fc803be1a66b868c9a1d8f5fb",
+  "nx48-f33-t7-crab:v1": "4de59f7b9d5c5b549c64d8d9a0bb1a37",
 };
 
 function frozen(): void {

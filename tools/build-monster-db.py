@@ -1606,14 +1606,19 @@ def main(argv=None):
         return self_test()
     start = time.time()
     db = build(args.states, args.runs, args.game_data, args.decisions)
-    tmp = args.out + ".tmp"
+    # The tmp name is this process's: ops/report.py and ops/wait-run.sh both refresh after a run, at once, and with
+    # one shared "monster-db.json.tmp" the second rename failed (ops/refresh.log, FileNotFoundError) after both had
+    # written into the same file.
+    tmp = f"{args.out}.{os.getpid()}.tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(db, handle, ensure_ascii=False, indent=1, sort_keys=False)
         handle.write("\n")
     os.replace(tmp, args.out)
     if args.move_model_out:
-        with open(args.move_model_out, "w", encoding="utf8") as handle:
+        tmp = f"{args.move_model_out}.{os.getpid()}.tmp"
+        with open(tmp, "w", encoding="utf8") as handle:
             json.dump(move_model_view(db), handle, ensure_ascii=False, indent=1, sort_keys=True)
+        os.replace(tmp, args.move_model_out)
     if not args.quiet:
         meta = db["meta"]["generated_from"]
         print(f"{len(db['monsters'])} monsters, {len(db['bosses'])} bosses, {meta['fights']} fights "
