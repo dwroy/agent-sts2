@@ -33,12 +33,15 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 - **字段**：
   - evidence 用 12 位 run id，n_support = 证据局数；结论相反的局进 contradicting / n_contradict；反例多过支持时退役；
   - confidence：high = n ≥ 5 且反例 ≤ n/3，或 n ≥ 4、原文就是规则、没有反例；med = n ≥ 2；low = 其余；
-  - asc 从证据局最低进阶到 20；last_seen 取证据局和反例局里最新的日期（notes 里 `run-MMDD-…` 文件名）；
+  - asc：机制类（招式、数值公式、触发时机）写 [0,20]，数字用按进阶填的占位符；策略和统计类按证据的进阶段写（A8+ 的证据写 [8,20]，只在 A9 验证过的写 [9,20]）；低进阶学来、在 A8+ 被反驳或没有数据的策略条目，写进阶上限（如 [0,7]）或退役（Dai 2026-10-04）；last_seen 取证据局和反例局里最新的日期（notes 里 `run-MMDD-…` 文件名）；
   - card / relic / potion / event 类 scope 带中文 name；
   - 代码修好了的机制，把对应条目退役，写明 retired_reason；
   - version 改成下一个版本号（今天的日期 + 序号，照文件里现有的写法）。
-- **条目上限**：tests/experience.test.ts 限制 active ≤ 200。新增前先合并或退役；确实放不下就在回报里写「需要 Dai 定」，**不许改测试的上限**。
-  - active ≥ 195 时（Dai 2026-10-03）：开工先腾位置，再新增。优先把 n_support = 1、confidence low 的条目并进同一 scope 的相近条目（证据、反例一起带过去，留一句原条目的结论），并不进去、本批也没有新证据的就退役（retired_reason 写「低置信、合并腾位」）。在回报里列出合并和退役了哪些条目，以及合并进了哪一条。
+- **字数预算**（Dai 2026-10-04，取代原来的 200 条上限）：tests/experience.test.ts 限制所有 active 条目的 lesson 总长 ≤ 60000 字符。V4 大脑的知识前缀带着本进阶适用的全部条目，每道题都要付这些字数。条数不限，但：
+  - 同一件事只留一条；重复的、互相矛盾的、被代码修掉的，合并或退役；
+  - 总长超过 55000 字符时，开工先压缩：把 n_support = 1、confidence low 的条目并进同一 scope 的相近条目（证据、反例一起带过去），再把冗长的条目压短（留数字和局号，删重复的叙述）。在回报里列出合并、退役、压缩了哪些条目；
+  - 确实放不下就在回报里写「需要 Dai 定」，**不许改测试的预算**；
+  - 回报里写 active 条数、总字符数，以及在 A8、A9 各适用多少条、多少字符。
 - **只用已有的 scope 类型**（boss、elite、hallway、act、general:<话题>、card、relic、potion、event）。v3 的切片（src/knowledge/experience.ts 的 relevance）不认识的类型会被整条丢掉。
 - **药水**（照上一节）：
   - `potion:*` 和 `general:potion` 条目只改句内数字，不加证据局（n 不变）；
