@@ -2633,7 +2633,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...sim.held];
-  const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
+  const heldCount = heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand;
+  const heldLoss = (card: CardModel): number => (card.heldHpLoss ?? 0) + (card.heldHpLossPerCard ?? 0) * heldCount;
+  const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + heldLoss(card), 0);
   // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
   // -3, the 6th card added a Wither and the turn cost 9).
   const wither = input.wither;
@@ -2648,7 +2650,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
     ...(winsFight || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
   ]);
-  const heldHpLossFrom = countedNames(heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).map((card) => card.name));
+  const heldHpLossFrom = countedNames(heldCards.filter((card) => heldLoss(card) > 0).map((card) => card.name));
   const hits = winsFight ? [] : incomingHits(sim, input);
   const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
@@ -2690,7 +2692,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // HP loss, Disintegration past block, each held Burn or enemy hit past block and Buffer) on top of what is owed.
   const clayEvents = winsFight
     ? 0
-    : sim.hpLossEvents + heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).length + (disintegration > blockAtEnd ? 1 : 0) + lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer);
+    : sim.hpLossEvents + heldCards.filter((card) => heldLoss(card) > 0).length + (disintegration > blockAtEnd ? 1 : 0) + lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer);
   const clayBlockNext = winsFight || (input.player.clayBlock ?? 0) <= 0 ? 0 : (input.player.clayPending ?? 0) + (input.player.clayBlock ?? 0) * clayEvents;
   const cap = input.player.hpLossCap;
   let hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;

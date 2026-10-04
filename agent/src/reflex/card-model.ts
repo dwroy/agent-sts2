@@ -122,6 +122,8 @@ export interface CardModel {
   heldPenalty: number;
   /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
   heldHpLoss?: number;
+  /** HP lost per non-potion card left in hand (Regret, R0HEV5E3QT6G F48 attempt 3 T3, silent-0032). */
+  heldHpLossPerCard?: number;
   /**
    * Damage the card deals to us when played (Foul Potion; a Power under the Globe Head's Galvanic, playSelfDamageOf): our
    * block takes it first, the rest is HP lost.
@@ -862,9 +864,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const rendered = renderedText;
   const weakFirst = weak > 0 && vulnerable > 0 && debuffWeakFirst(rendered || template);
   const { heldPenalty, heldHpLoss } = heldPenaltyOf(rendered);
+  const heldHpLossPerCard = cardId === "REGRET" && /失去相当于[^。]*手牌数量[^。]*生命|lose hp equal to[^.]*cards? in your hand/i.test(rendered) ? 1 : 0;
   // Galvanic's 「受到6点伤害」 on a Power (turn-solver selfDamage: through block, after the card's own effects).
   const selfDamage = playSelfDamageOf(rendered);
-  if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {
+  if ((heldPenalty > 0 || heldHpLossPerCard > 0) && (type === "Status" || type === "Curse")) {
     // Its Damage var is the self-damage, not an attack.
     damage = null;
     known = true;
@@ -921,6 +924,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     flatValue,
     heldPenalty,
     heldHpLoss,
+    ...(heldHpLossPerCard > 0 ? { heldHpLossPerCard } : {}),
     ...(selfDamage > 0 ? { selfDamage } : {}),
     retaliate: dyn(card, "DamageBack") ?? 0,
     delayedDamage,
