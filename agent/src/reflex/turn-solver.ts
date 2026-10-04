@@ -1310,13 +1310,14 @@ function redSkullCheck(sim: Sim, player: PlayerSim): void {
  * One debuff application: Artifact negates it and loses a stack, whatever the debuff (TQX5 T1:
  * Powdered Demise into Artifact 3 did nothing). Returns the amount that landed.
  */
-function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise" | "shrink" | "poison", amount: number): number {
+function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "strengthLoss" | "tempStrengthLoss" | "demise" | "shrink" | "poison", amount: number): number {
   if (amount <= 0) return 0;
   if (enemy.artifact > 0) {
     enemy.artifact -= 1;
     return 0;
   }
   if (kind === "vulnerable") enemy.vulnerable += amount;
+  else if (kind === "strengthLoss") enemy.strengthDelta -= amount;
   else if (kind === "poison") enemy.poison = (enemy.poison ?? 0) + amount;
   else if (kind === "weak") {
     if (enemy.weak === 0) enemy.newlyWeak = true;
@@ -1992,7 +1993,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   for (const enemy of debuffTargets) {
     if (!enemy.alive) continue;
     // In card-text order: Artifact blocks whichever lands first (Uppercut: Weak, then Vulnerable).
-    if (card.weakFirst) {
+    if (card.special === "malaise") {
+      // KAY522KT5NXR F12 T3 / XYYQYBRM2A01 F30 T1, silent-0051/0053: unupgraded X=1/3.
+      // Strength loss persists after temporary Wail restores; zero X applies neither debuff nor Artifact loss.
+      applyDebuff(enemy, "strengthLoss", cost);
+      next.weakApplied += applyDebuff(enemy, "weak", cost);
+    } else if (card.weakFirst) {
       next.weakApplied += applyDebuff(enemy, "weak", card.weak);
       next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
     } else {
