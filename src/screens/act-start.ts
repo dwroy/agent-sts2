@@ -13,7 +13,8 @@
  * the first map. The route is checked like map/route-plan's (the AnswerSpec re-asks once with the errors); a route
  * still missing or illegal then does not block the option: it is taken, and the first map asks for the route. When
  * the option's outcome was not known in advance (random relics, cards chosen later), the brain reviews the route
- * once at that first map (keep or change; default keep).
+ * once at that first map (keep or change; default keep). The map comes with candidate routes to the boss and their
+ * projected HP (state.act_route.candidate_routes, Dai 2026-10-04; strategy/route-map.ts candidateRoutesFacts).
  */
 
 import { eventHpCost } from "./event.js";
@@ -82,7 +83,8 @@ export const ACT_START_NOTE =
   "幕初：远古的选项和本幕路线一起定。state.act_route 是本幕完整地图（你在远古节点上，节点 id 规则见 map_legend）。" +
   '回答 JSON：{"choice": "<选项 key>", "route": "<节点 id，用空格分隔：从 next_nodes 之一出发，沿连线（或用飞行靴）一直到 boss>", "reason": "<30 字以内>"}' +
   '（选项列出 eligible_cards 时再加 "cards"）。选项改变 HP、最大生命或金币时写在它的 route_effect 里。代码先执行选项，再按路线逐个节点走，' +
-  "只在路线走不通时再问你；选项结果随机时，揭晓后在第一张地图问一次保留还是换路线；之后的选牌、休息点和事件的最后一问也会附上路线让你保留或修改。";
+  "只在路线走不通时再问你；选项结果随机时，揭晓后在第一张地图问一次保留还是换路线；之后的选牌、休息点和事件的最后一问也会附上路线让你保留或修改。" +
+  "state.act_route.candidate_routes 是代码按投影列的几条到 boss 的路线，每段的战斗、精英进场和到达休息点、boss 的 HP（事实，不是选项）。";
 
 interface Inputs {
   params: Parameters<typeof buildPickDecision>[0];
@@ -165,7 +167,7 @@ export function actStartPlan(env: DecisionEnv, inputs: Inputs): Decision | null 
     ...inputs.params,
     label: "event/act-plan",
     instructions: "Which of the Ancient's options should I take, and which route should I follow this act?",
-    state: { ...inputs.state, act_route: routeBlockState({ map, start: { hp, max: maxHp }, costs }) },
+    state: { ...inputs.state, act_route: routeBlockState({ map, start: { hp, max: maxHp }, costs, candidates: { note: `从现在的 HP ${hp}/${maxHp} 起；改变 HP 的选项按它的 route_effect 加减` } }) },
     options: expanded,
     deepseek: {
       facts: inputs.facts,
