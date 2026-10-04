@@ -13,9 +13,10 @@ import { describe, expect, it } from "vitest";
 
 import { createBrain } from "../src/brain/brain.js";
 import { CodexEngine } from "../src/brain/engines/codex.js";
-import { CODEX_USAGE_DISABLED_FEATURES, CodexUsageGuard, parseRateLimits, readCodexUsage, usageNote, type CodexUsage } from "../src/brain/engines/codex-usage.js";
+import { AUTH_REFRESH_EVERY_MS, CODEX_USAGE_DISABLED_FEATURES, CodexUsageGuard, parseRateLimits, readCodexUsage, refreshCodexAuth, usageNote, USAGE_RETRY_MS, type CodexUsage } from "../src/brain/engines/codex-usage.js";
 import { codexEnv } from "../src/brain/engines/codex.js";
-import { EngineFailure, type BrainLogRow } from "../src/brain/router.js";
+import { BrainRouter, EngineFailure, errorNotes, type BrainLogRow } from "../src/brain/router.js";
+import type { BrainAnswer, BrainEngine, BrainRequest } from "../src/brain/types.js";
 import { pickSpec } from "../src/brain/specs.js";
 import { loadConfig } from "../src/config.js";
 import { DeepSeekClient, type DeepSeekAnswer } from "../src/llm/deepseek.js";
@@ -62,11 +63,13 @@ function fakeCodex(name: string): { bin: string; setMode: (mode: Record<string, 
   const modeFile = join(dir, `${name}.mode.json`);
   const serverFile = join(dir, `${name}.servers.jsonl`);
   const execFile = join(dir, `${name}.exec.jsonl`);
-  for (const file of [serverFile, execFile]) rmSync(file, { force: true });
+  // Written by the fake's account/read with refreshToken: codex's token refresh ran (the reads may work after it).
+  const refreshedFile = join(dir, `${name}.refreshed`);
+  for (const file of [serverFile, execFile, refreshedFile]) rmSync(file, { force: true });
   writeFileSync(modeFile, JSON.stringify({ result: liveResult() }));
   const sol = { slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "xhigh" }] };
   writeFileSync(bin, `#!${process.execPath}
-import { appendFileSync, readFileSync } from "node:fs";
+import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline";
 const argv = process.argv.slice(2);
 if (argv[0] === "--version") { console.log("codex-cli 0.160.0"); process.exit(0); }
@@ -87,7 +90,13 @@ if (argv[0] === "app-server") {
       if (mode.exitEarly) process.exit(3);
       if (mode.hang) { setInterval(() => {}, 1000); continue; }
       write({ method: "account/updated", params: { authMode: "chatgpt", planType: "prolite" } });
-      write(mode.error ? { id: msg.id, error: { code: -32600, message: mode.error } } : { id: msg.id, result: mode.result });
+      // { error, refreshFixes }: the error until codex's token refresh (account/read refreshToken) has run once.
+      const failing = mode.error && !(mode.refreshFixes && existsSync(${JSON.stringify(refreshedFile)}));
+      write(failing ? { id: msg.id, error: { code: -32600, message: mode.error } } : { id: msg.id, result: mode.result ?? ${JSON.stringify(liveResult())} });
+    } else if (msg.method === "account/read") {
+      record();
+      if (msg.params && msg.params.refreshToken === true) writeFileSync(${JSON.stringify(refreshedFile)}, "1");
+      write(mode.refreshError ? { id: msg.id, error: { code: -32600, message: mode.refreshError } } : { id: msg.id, result: { account: { type: "chatgpt", email: "dai@example.invalid", planType: "promax" }, requiresOpenaiAuth: true } });
     }
   }
   if (mode.linger) setInterval(() => {}, 1000);
@@ -299,20 +308,123 @@ describe("the guard", () => {
     await expect(guard.beforeCall()).resolves.toBeUndefined();
     guard.noteCall();
     await expect(guard.beforeCall()).resolves.toBeUndefined();
-    expect(notes).toEqual(["WARNING: codex usage could not be read (no answer within 20000 ms); codex stays on without the usage guard until a read works (BRAIN_CODEX_USAGE_REQUIRED=on stops it instead)"]);
+    expect(notes).toEqual(["WARNING: codex usage could not be read (no answer within 20000 ms); codex stays on without the usage guard until a read works (BRAIN_CODEX_USAGE_REQUIRED=on keeps it off until then instead)"]);
     expect(guard.status()).toMatchObject({ start: null, last: null, unreadable: "no answer within 20000 ms" });
     expect(guard.note()).toBeNull();
     // A later read that works applies its verdict.
     fail = false;
     guard.noteCall();
     await expect(guard.beforeCall()).rejects.toThrow(/85% used/);
+    // BRAIN_CODEX_USAGE_REQUIRED=on: off until a read works (no longer for the rest of the process).
     const required = new CodexUsageGuard({ ...SETTINGS, required: true }, async () => {
       throw new Error("chatgpt authentication required");
-    });
-    await expect(required.start()).resolves.toBe("codex usage guard: codex usage could not be read (chatgpt authentication required) and BRAIN_CODEX_USAGE_REQUIRED=on");
-    expect(required.stopKind).toBe("unavailable");
+    }, { now: () => clock });
+    await expect(required.start()).resolves.toBeNull();
+    expect(required.blocked).toMatchObject({ failures: 1, nextReadAt: clock + USAGE_RETRY_MS[0] });
     const error = await required.beforeCall().catch((e: unknown) => e);
-    expect(error).toMatchObject({ kind: "unavailable", cooldownMs: Number.POSITIVE_INFINITY });
+    expect(error).toMatchObject({ kind: "unavailable", cooldownMs: USAGE_RETRY_MS[0], message: expect.stringMatching(/codex is off until a read works, the next in 30 s \[unavailable\]$/) });
+  });
+
+  it("BRAIN_CODEX_USAGE_REQUIRED=on, reads failing: off until one works (30 s, 2 min, 5 min, then every 10 min); each change said once and noted; a working read brings codex back", async () => {
+    const notes: string[] = [];
+    let clock = 1_000_000;
+    let reads = 0;
+    let result: CodexUsage | Error = new Error("no answer within 20000 ms");
+    const read = async (): Promise<CodexUsage> => {
+      reads += 1;
+      if (result instanceof Error) throw result;
+      return result;
+    };
+    const guard = new CodexUsageGuard({ ...SETTINGS, required: true }, read, { now: () => clock, note: (m) => notes.push(m) });
+    await expect(guard.start()).resolves.toBeNull();
+    const first = (await guard.beforeCall().catch((e: unknown) => e)) as EngineFailure;
+    expect(first).toMatchObject({ kind: "unavailable", cooldownMs: 30_000 });
+    // The change is said once on the console and rides on the question's row (the router reads errorNotes).
+    expect(notes).toEqual([expect.stringMatching(/^WARNING: codex usage could not be read \(no answer within 20000 ms\); with BRAIN_CODEX_USAGE_REQUIRED=on codex is off until a read works: its questions go to the fallback, the next read in 30 s/)]);
+    expect(errorNotes(first)).toEqual([notes[0]!.replace(/^WARNING: /, "")]);
+    // Within the wait no read is made (the router rests codex meanwhile; a call that comes anyway is refused at once).
+    clock += 10_000;
+    await expect(guard.beforeCall()).rejects.toMatchObject({ cooldownMs: 20_000 });
+    expect(reads).toBe(1);
+    // Each later failed read waits longer, capped at 10 minutes; said once only, noted once only.
+    const waits: number[] = [];
+    for (let i = 0; i < 5; i += 1) {
+      clock = guard.blocked!.nextReadAt;
+      const error = (await guard.beforeCall().catch((e: unknown) => e)) as EngineFailure;
+      waits.push(error.cooldownMs);
+      expect(errorNotes(error)).toEqual([]);
+    }
+    expect(waits).toEqual([120_000, 300_000, 600_000, 600_000, 600_000]);
+    expect(reads).toBe(6);
+    expect(notes).toHaveLength(1);
+    expect(guard.status()).toMatchObject({ unreadable: "no answer within 20000 ms", blocked: { failures: 6 } });
+    // A read that works and passes the stop rules: codex is back, said once, noted for the next codex row.
+    result = reading({}, 3);
+    clock = guard.blocked!.nextReadAt;
+    await expect(guard.beforeCall()).resolves.toBeUndefined();
+    expect(guard.blocked).toBeNull();
+    expect(notes[1]).toBe(`codex usage can be read again after 6 failed read(s) (plan prolite, codex/primary 7-day window 3% used, resets ${RESETS}): codex answers again`);
+    expect(guard.takeNotes()).toEqual([notes[1]]);
+    expect(guard.status()).not.toHaveProperty("blocked");
+    // The quota stop rules still stop codex for the process.
+    result = reading({}, 82);
+    guard.noteCall();
+    guard.noteCall();
+    guard.noteCall();
+    await expect(guard.beforeCall()).rejects.toMatchObject({ kind: "quota", cooldownMs: Number.POSITIVE_INFINITY });
+    expect(guard.blocked).toBeNull();
+  });
+
+  it("a read refused on the login (401, expired token): codex's token refresh first, then the read at once; at most one refresh per 10 minutes", async () => {
+    const notes: string[] = [];
+    let clock = 5_000_000;
+    let refreshes = 0;
+    let fixed = false;
+    const expired = "account/rateLimits/read failed: failed to fetch codex rate limits: GET https://chatgpt.com/backend-api/wham/usage failed: 401 Unauthorized; Provided authentication token is expired";
+    const read = async (): Promise<CodexUsage> => {
+      if (!fixed) throw new Error(expired);
+      return reading({ plan: "promax" }, 0);
+    };
+    const refreshAuth = async (): Promise<void> => {
+      refreshes += 1;
+    };
+    // The refresh works: codex never goes off; the refresh is said once and noted.
+    const guard = new CodexUsageGuard({ ...SETTINGS, required: true }, async () => {
+      if (refreshes === 0) throw new Error(expired);
+      return reading({ plan: "promax" }, 0);
+    }, { now: () => clock, note: (m) => notes.push(m), refreshAuth });
+    await expect(guard.start()).resolves.toBeNull();
+    expect(refreshes).toBe(1);
+    expect(guard.blocked).toBeNull();
+    expect(notes).toEqual([expect.stringMatching(/^codex usage read was refused on the login \(.*401 Unauthorized.*\); codex refreshed its token \(account\/read\) and the read works$/)]);
+    expect(guard.status()).toMatchObject({ auth_refreshes: 1, last: { plan: "promax", used_pct: 0 } });
+    // The refresh does not help: off until a read works; no second refresh within 10 minutes, one after.
+    refreshes = 0;
+    const stuck = new CodexUsageGuard({ ...SETTINGS, required: true }, read, { now: () => clock, refreshAuth });
+    await stuck.start();
+    expect([refreshes, stuck.blocked?.failures]).toEqual([1, 1]);
+    expect(stuck.unreadable).toMatch(/\(read again after codex refreshed its token\)$/);
+    clock = stuck.blocked!.nextReadAt;
+    await expect(stuck.beforeCall()).rejects.toMatchObject({ kind: "unavailable" });
+    expect(refreshes).toBe(1);
+    clock += AUTH_REFRESH_EVERY_MS;
+    fixed = true;
+    await expect(stuck.beforeCall()).resolves.toBeUndefined();
+    expect(refreshes).toBe(1);
+    // A refresh that fails says so in the reason; a read error that is not about the login asks for no refresh.
+    const failing = new CodexUsageGuard({ ...SETTINGS, required: true }, async () => {
+      throw new Error(expired);
+    }, { now: () => clock, refreshAuth: async () => {
+      throw new Error("account/read failed: refresh token was already used");
+    } });
+    await failing.start();
+    expect(failing.unreadable).toMatch(/; codex's token refresh \(account\/read\) failed too: account\/read failed: refresh token was already used$/);
+    let asked = 0;
+    const other = new CodexUsageGuard({ ...SETTINGS, required: true }, async () => {
+      throw new Error("no answer within 20000 ms");
+    }, { now: () => clock, refreshAuth: async () => void (asked += 1) });
+    await other.start();
+    expect(asked).toBe(0);
   });
 
   it("calls that meet a due read at once share it", async () => {
@@ -436,13 +548,65 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     expect(open.notes).toEqual([expect.stringMatching(/^WARNING: codex usage could not be read \(account\/rateLimits\/read failed: chatgpt authentication required to read rate limits\); codex stays on/)]);
     expect(open.brain.warnings).toEqual([expect.stringContaining("codex usage could not be read at the start")]);
     expect(open.rows()[0]).not.toHaveProperty("limits");
+    // BRAIN_CODEX_USAGE_REQUIRED=on: off until a read works, not for the run (a warning, not a problem); DeepSeek answers.
     const closed = brainWith("loop-required", { BRAIN_CODEX_USAGE_REQUIRED: "on" });
     closed.fake.setMode({ exitEarly: true });
-    const problems = await closed.brain.preflight();
-    expect(problems).toEqual([expect.stringMatching(/^codex is off for this run: codex usage guard: codex usage could not be read \(codex app-server ended before answering.*\) and BRAIN_CODEX_USAGE_REQUIRED=on; its questions go to deepseek$/)]);
+    await expect(closed.brain.preflight()).resolves.toEqual([]);
+    expect(closed.brain.warnings).toEqual([expect.stringMatching(/^codex usage could not be read at the start \(codex app-server ended before answering.*\); with BRAIN_CODEX_USAGE_REQUIRED=on codex is off until a read works: its questions go to deepseek$/)]);
     await expect(ask(closed.brain)).resolves.toMatchObject({ choice: "a", brain: { engine: "deepseek" } });
     expect(closed.fake.execCalls()).toBe(0);
     expect(closed.rows()[0]!.fell_back_from).toMatchObject({ engine: "codex", kind: "unavailable" });
+    expect(closed.rows()[0]!.notes).toEqual([expect.stringMatching(/^codex usage could not be read .* codex is off until a read works/)]);
+    expect(closed.notes.filter((note) => /off for the rest of this process/.test(note))).toEqual([]);
+  });
+
+  it("the live case (2026-10-04 07:06Z): a 401 expired token on the read, codex's token refresh through the app-server, the read again: codex answers", async () => {
+    const { fake, brain, rows, notes } = brainWith("loop-expired", { BRAIN_CODEX_USAGE_REQUIRED: "on" });
+    fake.setMode({ error: "failed to fetch codex rate limits: GET https://chatgpt.com/backend-api/wham/usage failed: 401 Unauthorized; Provided authentication token is expired", refreshFixes: true, result: liveResult(0, "500", { planType: "promax" }) });
+    await expect(brain.preflight()).resolves.toEqual([]);
+    expect(fake.servers().map((server) => server.requests.map((r) => r.method).filter((m) => m !== "initialize" && m !== "initialized"))).toEqual([["account/rateLimits/read"], ["account/read"], ["account/rateLimits/read"]]);
+    expect(fake.servers()[1]!.requests.find((r) => r.method === "account/read")!.params).toEqual({ refreshToken: true });
+    await expect(ask(brain)).resolves.toMatchObject({ choice: "b", brain: { engine: "codex" } });
+    expect(notes).toEqual([expect.stringMatching(/^codex usage read was refused on the login .*401 Unauthorized.*; codex refreshed its token \(account\/read\) and the read works$/)]);
+    expect(rows()[0]).toMatchObject({ engine: "codex", notes: [notes[0]], limits: { plan: "promax", used_pct: 0 } });
+    // The account the refresh returned is not kept anywhere.
+    expect(JSON.stringify(rows())).not.toContain("example.invalid");
+    expect(JSON.stringify(brain.codexUsage!.status())).not.toContain("example.invalid");
+  });
+
+  it("through the router: reads failing send codex's questions to the fallback until the wait is over, then a working read brings codex back", async () => {
+    const fake = fakeCodex("router-recover");
+    fake.setMode({ error: "no answer within 20000 ms (fake)" });
+    let clock = 10_000_000;
+    const cfg = loadConfig({ BRAIN_CODEX_BIN: fake.bin, BRAIN_CODEX_HOME: home("router-recover"), BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek", BRAIN_CODEX_USAGE_REQUIRED: "on", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
+    const notes: string[] = [];
+    const codex = new CodexEngine({ settings: cfg.brain.engines.codex, codex: cfg.brain.codex, stateDir: join(dir, "state-router-recover"), now: () => clock, note: (m) => notes.push(m) });
+    const deepseek: BrainEngine = { name: "deepseek", model: "fake", decide: async (): Promise<BrainAnswer> => ({ engine: "deepseek", model: "fake", answer: { choice: "a", reason: "deepseek" }, problems: [], attempts: 1, latencyMs: 1, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] }) };
+    const rows: BrainLogRow[] = [];
+    const router = new BrainRouter({ config: cfg.brain, engine: (name) => (name === "codex" ? codex : deepseek), log: (row) => rows.push(row), now: () => clock });
+    const req: BrainRequest = { label: "rest/plan", system: "S", question: "Heal or smith?", options, payload: { hp: 20 }, spec: pickSpec("rest/plan", options, {}) };
+    await expect(router.decide(req)).resolves.toMatchObject({ engine: "deepseek", fellBackFrom: { engine: "codex" } });
+    clock += 15_000;
+    await expect(router.decide(req)).resolves.toMatchObject({ engine: "deepseek" });
+    // One read so far: the second question went straight to DeepSeek (codex resting until the next read is due).
+    expect(fake.servers()).toHaveLength(1);
+    fake.setMode({ result: liveResult(2) });
+    clock += 16_000;
+    await expect(router.decide(req)).resolves.toMatchObject({ engine: "codex", answer: { choice: "b" } });
+    expect(fake.servers()).toHaveLength(2);
+    expect(fake.execCalls()).toBe(1);
+    expect(rows.map((row) => [row.engine, row.fell_back_from?.kind ?? null, row.notes?.length ?? 0])).toEqual([["deepseek", "unavailable", 1], ["deepseek", "unavailable", 0], ["codex", null, 1]]);
+    expect(rows[1]!.fell_back_from!.error).toMatch(/^resting until .* after unavailable: codex usage guard: codex usage could not be read/);
+    expect(rows[2]!.notes).toEqual([expect.stringMatching(/^codex usage can be read again after 1 failed read\(s\) \(plan prolite, codex\/primary 7-day window 2% used/)]);
+    expect(notes.map((note) => note.slice(0, 40))).toEqual(["WARNING: codex usage could not be read (", "codex usage can be read again after 1 fa"]);
+  });
+
+  it("refreshCodexAuth asks the app-server account/read with refreshToken and keeps nothing of the account", async () => {
+    const fake = fakeCodex("refresh-direct");
+    await expect(refreshCodexAuth({ bin: fake.bin, home: home("refresh-direct"), env: codexEnv(fake.bin, home("refresh-direct")), stateDir: join(dir, "state-refresh") })).resolves.toBeUndefined();
+    expect(fake.servers()[0]!.requests.map((r) => r.method)).toEqual(["initialize", "initialized", "account/read"]);
+    fake.setMode({ refreshError: "refresh token was already used" });
+    await expect(refreshCodexAuth({ bin: fake.bin, home: home("refresh-direct"), env: codexEnv(fake.bin, home("refresh-direct")), stateDir: join(dir, "state-refresh") })).rejects.toThrow(/account\/read failed: refresh token was already used/);
   });
 
   it("an engine used without preflight reads before its first call", async () => {

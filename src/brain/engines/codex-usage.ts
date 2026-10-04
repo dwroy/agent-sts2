@@ -22,14 +22,22 @@
  *   said once on the console, every question to BRAIN_FALLBACK) when (a) any window is at BRAIN_CODEX_USAGE_STOP_PCT
  *   or more, or (b) credits are in use: the balance below the highest this process saw, ordinary (plan) usage not
  *   allowed, a limit reached, spend control reached, a window at 100%. A read that fails is said once and codex
- *   stays on (the next read is tried at the next due call), unless BRAIN_CODEX_USAGE_REQUIRED=on: then codex stops.
+ *   stays on (the next read is tried at the next due call), unless BRAIN_CODEX_USAGE_REQUIRED=on: then codex is off
+ *   until a read works (2026-10-04; it was off for the rest of the process): its questions go to BRAIN_FALLBACK (an
+ *   EngineFailure "unavailable" whose rest is the wait before the next read: USAGE_RETRY_MS, 30 s, 2 min, 5 min, then
+ *   every 10 min), the first question after the wait reads again, and a read that works and passes the stop rules
+ *   brings codex back. Each of these changes is said once on the console and noted on its brain.jsonl row.
+ * - A read refused on the login (401, an expired token: 2026-10-04 07:06Z, right after Dai's plan upgrade, "Provided
+ *   authentication token is expired" on /backend-api/wham/usage) first asks codex to refresh its token: account/read
+ *   with refreshToken (codex's own refresh flow, as any codex call runs it; we never read or write its login file), at
+ *   most once per AUTH_REFRESH_EVERY_MS, then reads again at once.
  */
 import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 import type { BrainConfig } from "../../config.js";
-import { EngineFailure } from "../router.js";
+import { EngineFailure, withNotes } from "../router.js";
 
 type Json = Record<string, unknown>;
 
@@ -63,6 +71,15 @@ export const CODEX_USAGE_DISABLED_FEATURES = [
   "workspace_dependencies",
   "unbounded_connection_retries",
 ] as const;
+
+/** The waits before reading again while reads fail under BRAIN_CODEX_USAGE_REQUIRED=on (the last one repeats). */
+export const USAGE_RETRY_MS = [30_000, 120_000, 300_000, 600_000] as const;
+
+/** A read error that means codex's login token was refused or is expired (a token refresh may help). */
+export const AUTH_ERROR = /\b401\b|unauthori[sz]ed|token (?:is )?expired|expired token|authentication token/i;
+
+/** The token refresh (account/read refreshToken) is asked at most this often while reads fail on the login. */
+export const AUTH_REFRESH_EVERY_MS = 10 * 60_000;
 
 /** One rate-limit window as read. */
 export interface CodexLimitWindow {
@@ -285,6 +302,23 @@ export interface UsageReadOptions {
   exitGraceMs?: number;
 }
 
+/**
+ * Codex's own token refresh: account/read with refreshToken (codex-cli 0.160: "requests a proactive token refresh
+ * before returning; in managed auth mode this triggers the normal refresh-token flow") through a short-lived app-server.
+ * Its answer (the account) is not kept; only whether it worked.
+ */
+export async function refreshCodexAuth(opts: UsageReadOptions): Promise<void> {
+  mkdirSync(opts.stateDir, { recursive: true });
+  await appServerRequest(opts.bin, usageArgs(opts.stateDir), {
+    cwd: opts.stateDir,
+    env: opts.env,
+    method: "account/read",
+    params: { refreshToken: true },
+    timeoutMs: opts.timeoutMs ?? CODEX_USAGE_TIMEOUT_MS,
+    ...(opts.exitGraceMs === undefined ? {} : { exitGraceMs: opts.exitGraceMs }),
+  });
+}
+
 /** One read of the plan's windows and credits (account/rateLimits/read through a short-lived app-server). */
 export async function readCodexUsage(opts: UsageReadOptions): Promise<CodexUsage> {
   const began = Date.now();
@@ -363,6 +397,10 @@ export interface UsageStatus {
   stopped?: string;
   /** Why the latest read failed, when it did. */
   unreadable?: string;
+  /** BRAIN_CODEX_USAGE_REQUIRED=on while reads fail: codex is off until one works (since when, how many failed, the next). */
+  blocked?: { since: string; failures: number; next_read: string };
+  /** Token refreshes asked for (account/read refreshToken) after a read refused on the login. */
+  auth_refreshes?: number;
 }
 
 export class CodexUsageGuard {
@@ -375,6 +413,16 @@ export class CodexUsageGuard {
   stopKind: "quota" | "unavailable" = "quota";
   /** Why the latest read failed (null: it worked). */
   unreadable: string | null = null;
+  /**
+   * BRAIN_CODEX_USAGE_REQUIRED=on and the latest read failed: codex is off until a read works. Since when, how many
+   * reads failed in a row, when the next is due.
+   */
+  blocked: { reason: string; since: number; failures: number; nextReadAt: number } | null = null;
+  /** Token refreshes asked for (account/read refreshToken), and when the last was. */
+  authRefreshes = 0;
+  private lastAuthRefreshAt: number | null = null;
+  /** The guard's changes (off until a read works, back on, a refreshed token) not yet on a brain.jsonl row. */
+  private pendingNotes: string[] = [];
   /** The highest credit balance this process read (a lower one means credits were spent). */
   private topBalance: number | null = null;
   private callsSinceRead = 0;
@@ -385,8 +433,21 @@ export class CodexUsageGuard {
   constructor(
     private readonly settings: CodexUsageSettings,
     private readonly read: () => Promise<CodexUsage>,
-    private readonly opts: { now?: () => number; note?: (message: string) => void } = {},
+    private readonly opts: { now?: () => number; note?: (message: string) => void; refreshAuth?: () => Promise<void> } = {},
   ) {}
+
+  /** A change of the guard's state: said on the console once, and kept for the next brain.jsonl row (takeNotes). */
+  private say(message: string): void {
+    this.opts.note?.(message);
+    this.pendingNotes.push(message.replace(/^WARNING: /, ""));
+  }
+
+  /** The changes not yet noted on a brain.jsonl row (the engine puts them on the question's row), emptied. */
+  takeNotes(): string[] {
+    const notes = this.pendingNotes;
+    this.pendingNotes = [];
+    return notes;
+  }
 
   private now(): number {
     return this.opts.now ? this.opts.now() : Date.now();
@@ -416,24 +477,18 @@ export class CodexUsageGuard {
     return null;
   }
 
-  /** One read, its verdict applied; a failed read is said once (and stops codex under BRAIN_CODEX_USAGE_REQUIRED). */
+  /**
+   * One read, its verdict applied. A failed read is said once and codex stays on, or, under BRAIN_CODEX_USAGE_REQUIRED,
+   * codex is off until a read works (the next one after USAGE_RETRY_MS); a read that works again brings it back.
+   */
   private async readNow(): Promise<void> {
     this.callsSinceRead = 0;
     this.lastReadAt = this.now();
     let usage: CodexUsage;
     try {
-      usage = await this.read();
+      usage = await this.readRefreshing();
     } catch (error) {
-      const message = (error instanceof Error ? error.message : String(error)).slice(0, 300);
-      this.unreadable = message;
-      if (this.settings.required) {
-        this.stop(`codex usage could not be read (${message}) and BRAIN_CODEX_USAGE_REQUIRED=on`, "unavailable");
-        return;
-      }
-      if (!this.saidUnreadable) {
-        this.saidUnreadable = true;
-        this.opts.note?.(`WARNING: codex usage could not be read (${message}); codex stays on without the usage guard until a read works (BRAIN_CODEX_USAGE_REQUIRED=on stops it instead)`);
-      }
+      this.failedRead((error instanceof Error ? error.message : String(error)).slice(0, 300));
       return;
     }
     this.unreadable = null;
@@ -442,7 +497,60 @@ export class CodexUsageGuard {
     const why = this.verdict(usage);
     const balance = usage.credits?.balance ?? null;
     if (balance !== null && (this.topBalance === null || balance > this.topBalance)) this.topBalance = balance;
-    if (why) this.stop(why, "quota");
+    const was = this.blocked;
+    this.blocked = null;
+    if (why) {
+      this.stop(why, "quota");
+      return;
+    }
+    if (was) {
+      const top = fullestWindow(usage);
+      this.say(`codex usage can be read again after ${was.failures} failed read(s) (plan ${usage.plan ?? "?"}${top ? `, ${describeWindow(top)}` : ""}): codex answers again`);
+    }
+  }
+
+  /** The read; when the login refuses it (AUTH_ERROR), codex's token refresh first (at most every AUTH_REFRESH_EVERY_MS), then the read once more. */
+  private async readRefreshing(): Promise<CodexUsage> {
+    try {
+      return await this.read();
+    } catch (error) {
+      const message = (error instanceof Error ? error.message : String(error)).slice(0, 300);
+      const refresh = this.opts.refreshAuth;
+      if (!refresh || !AUTH_ERROR.test(message)) throw error;
+      if (this.lastAuthRefreshAt !== null && this.now() - this.lastAuthRefreshAt < AUTH_REFRESH_EVERY_MS) throw error;
+      this.lastAuthRefreshAt = this.now();
+      this.authRefreshes += 1;
+      try {
+        await refresh();
+      } catch (refreshError) {
+        throw new Error(`${message}; codex's token refresh (account/read) failed too: ${(refreshError instanceof Error ? refreshError.message : String(refreshError)).slice(0, 200)}`);
+      }
+      let usage: CodexUsage;
+      try {
+        usage = await this.read();
+      } catch (again) {
+        throw new Error(`${(again instanceof Error ? again.message : String(again)).slice(0, 300)} (read again after codex refreshed its token)`);
+      }
+      this.say(`codex usage read was refused on the login (${message.slice(0, 160)}); codex refreshed its token (account/read) and the read works`);
+      return usage;
+    }
+  }
+
+  /** A read that failed: said once (codex stays on), or under BRAIN_CODEX_USAGE_REQUIRED codex off until a read works. */
+  private failedRead(message: string): void {
+    this.unreadable = message;
+    if (this.settings.required) {
+      const failures = (this.blocked?.failures ?? 0) + 1;
+      const wait = USAGE_RETRY_MS[Math.min(failures, USAGE_RETRY_MS.length) - 1]!;
+      const first = this.blocked === null;
+      this.blocked = { reason: message, since: this.blocked?.since ?? this.now(), failures, nextReadAt: this.now() + wait };
+      if (first) this.say(`WARNING: codex usage could not be read (${message}); with BRAIN_CODEX_USAGE_REQUIRED=on codex is off until a read works: its questions go to the fallback, the next read in ${wait / 1000} s (then 2, 5, every 10 minutes)`);
+      return;
+    }
+    if (!this.saidUnreadable) {
+      this.saidUnreadable = true;
+      this.opts.note?.(`WARNING: codex usage could not be read (${message}); codex stays on without the usage guard until a read works (BRAIN_CODEX_USAGE_REQUIRED=on keeps it off until then instead)`);
+    }
   }
 
   private stop(reason: string, kind: "quota" | "unavailable"): void {
@@ -459,19 +567,31 @@ export class CodexUsageGuard {
     return this.reading;
   }
 
-  /** Process start (Brain.preflight): the first read; the stop reason when codex must not start, else null. */
+  /**
+   * Process start (Brain.preflight): the first read; the stop reason when codex must not start for the process (a
+   * limit or credits), else null (a read that failed under BRAIN_CODEX_USAGE_REQUIRED leaves codex off until one works:
+   * blocked).
+   */
   async start(): Promise<string | null> {
     if (this.lastReadAt === null) await this.refresh();
     return this.stopped;
   }
 
   /**
-   * Before a codex call: a read when one is due; throws the stop (EngineFailure "quota", or "unavailable" for a
-   * required read that failed, resting codex for the rest of the process) instead of letting the call go out.
+   * Before a codex call: a read when one is due (while reads fail under BRAIN_CODEX_USAGE_REQUIRED: when the wait is
+   * over); throws instead of letting the call go out: the stop (EngineFailure "quota", resting codex for the rest of the
+   * process), or, while no read works, "unavailable" resting codex until the next read is due (its questions go to the
+   * fallback meanwhile), with the guard's notes for the question's row.
    */
   async beforeCall(): Promise<void> {
-    if (!this.stopped && (this.reading || this.due())) await this.refresh();
+    const readNow = this.blocked ? this.now() >= this.blocked.nextReadAt : this.due();
+    if (!this.stopped && (this.reading || readNow)) await this.refresh();
     if (this.stopped) throw new EngineFailure(`${this.stopped} [${this.stopKind}]`, this.stopKind, Number.POSITIVE_INFINITY);
+    if (this.blocked) {
+      const wait = Math.max(1_000, this.blocked.nextReadAt - this.now());
+      const error = new EngineFailure(`codex usage guard: codex usage could not be read (${this.blocked.reason}) and BRAIN_CODEX_USAGE_REQUIRED=on: codex is off until a read works, the next in ${Math.round(wait / 1000)} s [unavailable]`, "unavailable", wait);
+      throw withNotes(error, this.takeNotes());
+    }
   }
 
   /**
@@ -530,6 +650,8 @@ export class CodexUsageGuard {
       calls_since_read: this.callsSinceRead,
       ...(this.stopped ? { stopped: this.stopped } : {}),
       ...(this.unreadable ? { unreadable: this.unreadable } : {}),
+      ...(this.blocked ? { blocked: { since: new Date(this.blocked.since).toISOString(), failures: this.blocked.failures, next_read: new Date(this.blocked.nextReadAt).toISOString() } } : {}),
+      ...(this.authRefreshes > 0 ? { auth_refreshes: this.authRefreshes } : {}),
     };
   }
 }
