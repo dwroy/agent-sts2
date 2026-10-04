@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 
 import { asArray, asRecord, numOrNull, str } from "../util/json.js";
 import { monsterMoves, moveDamageAt, shownDamageAt } from "./monster-db.js";
+import { bumpDataVersion } from "../util/data-version.js";
 
 export interface EnemyModel {
   next: Record<string, Record<string, number>>;
@@ -84,6 +85,7 @@ export function moveDamage(enemyId: string, move: string, ctx?: DamageContext, a
 
 /** For tests: use this model instead of the file (null reloads the file). */
 export function setMoveModelForTests(data: Record<string, EnemyModel> | null): void {
+  bumpDataVersion();
   model = data;
 }
 

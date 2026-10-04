@@ -63,6 +63,12 @@ export interface SlConfig {
   /** SL_RETRY_SHOW_SIM (default on): a retried boss fight's questions show the whole-fight simulation even for a low-trust boss, labelled. */
   retryShowSim: boolean;
   /**
+   * SL_RETRY_MEMO (default on, 2026-10-04): a retried fight's rollouts and B2 runs on an input an earlier attempt computed
+   * come back from the fight's memo (src/sim/compute-memo.ts, docs/sl.md §10.6): the same numbers, no time. false: every
+   * question computes as before. Absent: on.
+   */
+  retryMemo?: boolean;
+  /**
    * SL_RETRY_KNOWN_DRAWS (default on, Dai 2026-10-02): on a retry the draw pile's next cards are the order an earlier
    * attempt saw (the solver, the rollout, the random potions and B2 take them first; Jev is told), until this attempt's
    * draws leave that order (a reshuffle, a card put into the pile, a different card drawn). docs/sl.md §10.
@@ -1112,6 +1118,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     act2LowHp: parseOnOff(readEnv(env, "SL_ACT2_LOW_HP"), "SL_ACT2_LOW_HP", problems) ?? true,
     act2LowHpPct: parseInteger(readEnv(env, "SL_ACT2_LOW_HP_PCT") ?? "50", "SL_ACT2_LOW_HP_PCT", problems, { min: 0, max: 100 }),
     retryShowSim: parseOnOff(readEnv(env, "SL_RETRY_SHOW_SIM"), "SL_RETRY_SHOW_SIM", problems) ?? true,
+    retryMemo: parseOnOff(readEnv(env, "SL_RETRY_MEMO"), "SL_RETRY_MEMO", problems) ?? true,
     retryKnownDraws: parseOnOff(readEnv(env, "SL_RETRY_KNOWN_DRAWS"), "SL_RETRY_KNOWN_DRAWS", problems) ?? true,
     retryCompute: parseOnOff(readEnv(env, "SL_RETRY_COMPUTE"), "SL_RETRY_COMPUTE", problems) ?? true,
     judgeKnownDraws: parseOnOff(readEnv(env, "SL_JUDGE_KNOWN_DRAWS"), "SL_JUDGE_KNOWN_DRAWS", problems) ?? true,

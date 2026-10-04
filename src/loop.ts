@@ -23,7 +23,8 @@ import { fallbackOf } from "./brain/router.js";
 import type { BrainDecider } from "./brain/types.js";
 import { deciderLabel, engineLabel } from "./brain/labels.js";
 import { moveModel } from "./knowledge/move-model.js";
-import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, trackLizardTail } from "./screens/combat-plan.js";
+import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, plannerTiming, trackLizardTail } from "./screens/combat-plan.js";
+import { computeMemoOptions } from "./sim/compute-memo.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "./strategy/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger, type RunPlanTrigger } from "./strategy/run-plan.js";
 import { currentRunPlan, ridingPlanOf, runPlanAtMap, runPlanDueAtQuestion, runPlanTaskState, withRunPlanTask } from "./strategy/run-plan-merge.js";
@@ -242,6 +243,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const { config, mode, client, knowledge } = options;
   // PASSIVE_PIECES as configured (.env read after the modules loaded: their process.env default may predate it).
   passivePiecesOptions.enabled = config.passivePieces;
+  // SL_RETRY_MEMO likewise (src/sim/compute-memo.ts).
+  computeMemoOptions.enabled = config.sl?.retryMemo !== false;
   const jev = options.jev;
   const pollIntervalMs = options.pollIntervalMs ?? 400;
   const jevRetry = {
@@ -742,9 +745,20 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         onEvent({ type: "note", message: `thief card value: ${value.card} ${value.hp === null ? "no HP value" : `≈ ${value.hp} HP`} (${value.status}${value.route ? `, ${value.route}` : ""}; ${value.samples} samples, ${value.ms} ms)` });
       }
     }
+    // The planner's wall time and what came before it since the state was read (latency_ms.planner / .pre), and the combat
+    // planner's own breakdown of its question (the row's `timing`, combat-plan.ts plannerTiming).
+    let plannerMs: number | null = null;
+    let preMs: number | null = null;
+    let combatTiming: JsonValue | null = null;
     if (!planned) {
       try {
+        const plannerStarted = Date.now();
+        preMs = plannerStarted - Date.parse(observedTs);
+        plannerTiming.last = null;
         planned = planDecision(gateCodeBaseline ? { ...env, strictJev: false } : env);
+        plannerMs = Date.now() - plannerStarted;
+        combatTiming = plannerTiming.last;
+        plannerTiming.last = null;
       } catch (error) {
         // A planner bug (or a screen whose option set exceeds what a question may carry) must not take
         // the process down: report it, then let the circuit breaker stop the run if it keeps happening.
@@ -1405,7 +1419,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       no_jev: !usedJev && !fromMemo && !deepseekResolved && decision.kind === "ask",
       reused_answer: fromMemo,
       request_ids: requestIds,
-      latency_ms: { plan: Date.now() - planStarted - jevLatency - deepseekLatency, jev: jevLatency, action: 0, ...(deepseekLatency > 0 ? { deepseek: deepseekLatency } : {}) },
+      latency_ms: { plan: Date.now() - planStarted - jevLatency - deepseekLatency, jev: jevLatency, action: 0, ...(deepseekLatency > 0 ? { deepseek: deepseekLatency } : {}), ...(plannerMs !== null ? { planner: plannerMs } : {}), ...(preMs !== null ? { pre: preMs } : {}) },
       usage,
       ...(escalation === undefined ? {} : { escalation }),
       // BUILD_DECIDER=deepseek: DeepSeek's own decision (not an escalation of a Jev answer).
@@ -1420,6 +1434,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       ...(decision.kind === "ask" && decision.jevView ? { jev_context: decision.jevView.context, jev_hints: decision.jevView.hints } : {}),
       // Combat: the rollout facts' timing and whether Jev picked the rollout's best line (rollout-live.ts).
       ...(resolved.log ?? {}),
+      // Combat: the planner's time to the question, by part (combat-plan.ts plannerTiming).
+      ...(combatTiming !== null && decision.kind === "ask" ? { timing: combatTiming } : {}),
       // A route review that rode on this question (card reward, rest site): its answer and outcome; a change is its own row.
       ...(resolved.routeReview ? { route_review: routeReviewLog(resolved.routeReview) } : {}),
       // SL (docs/sl.md): the attempt at the fight being played and the reloads so far this run (SL_ENABLED only).

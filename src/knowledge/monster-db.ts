@@ -12,6 +12,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { ObservedDb, ObservedMonster } from "./mechanics.js";
+import { bumpDataVersion } from "../util/data-version.js";
 
 export interface Stat {
   median?: number;
@@ -137,6 +138,7 @@ export function observedMechanics(): ObservedDb | undefined {
 
 /** For tests: use this DB instead of the file (null reloads the file). */
 export function setMonsterDbForTests(db: MonsterDb | null): void {
+  bumpDataVersion();
   cached = db;
 }
 
