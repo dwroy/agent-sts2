@@ -206,3 +206,12 @@
 - SL 白打判定：3B4K 第 4 次标记为 differs:true，但 deviation.plays 和 replacement 不一致，结果与第 2 次相同。这种情况应按 differs:false 处理。 已修（10-04，v4-live 0b12aa1，V4.6.routekeep）
 - codex 路线字段：输出「keep」加乱码、又没有节点 id 时，直接当作 keep，不要重问。这 3 局共重问 12 次，每次 10–20 s；其中 3 次重问后仍是乱码。 已修（10-04，v4-live 0b12aa1，V4.6.routekeep）
 - 路线复核：换到预估血量更低的路线时，要求写出 route_reason（4AWD F7，预估 54 对 76，结果 F8 精英从 76 打到 25）。
+
+### 运维 codex 卡死检查误报（2026-10-04 22:16）
+- ~~**非阻塞：进程扫描竞态触发假 stall**~~（已修 9692ea6，2026-10-04 22:2x：判读改认 OK/STALL 行，/proc 竞态静音）。证据局 C48LLXBGKXQ9（SILENT A0），2026-10-04 22:15 调度器消息先报 `/proc/202999/cmdline: No such file or directory`，末行却是 `OK (last decision 4s ago, console quiet 3s)`；22:15 的 broker 复核同样先报 PID 205098/205163 不存在，再报 `OK (last decision 3s ago, console quiet 2s)`。`ops/stall-check.sh:16`（动作输出标 :17）在 pgrep 后打开 cmdline，进程退出时输入重定向报错，后置 `2>/dev/null` 未抑制该错误；`ops/codex-ops.sh:77-79` 合并 stderr 后只看第一行是否以 OK 开头，把此错误当成 stall。autoplay PID 180434、play node PID 180482 均在，控制台 22:15:55 仍出牌/结束回合。建议开发会话抑制正常退出的 /proc 竞态诊断，并按检查的明确 OK / STALL 结果分类；不影响游戏行为。调度器和检查脚本在运维沙箱中只读，交开发会话处理。
+
+### 开发会话转交 codex 学习者（2026-10-04，Dai：改动和优化尽量交给 codex 学习者，Claude 只监控和对话）
+- **learner/tasks/fix-batch.md 过时**：默认 items 指向 notes/fix-queue.md（现在用的是 fix-queue-v4.md）；合入流程还写「merge = v3」「flock ops/v3-merge.lock」，一个仓库之后对局分支是 live（.worktrees/live）。改成 merge=live 的流程（等知识刷新跑完、先提交刷新过的数据、合入、tsc + vitest、decision-log 一行、eval/versions.json 视是否改打法加版本），并按学习协议：改打法的修复要引证据局号和账本条目。
+- **知识前缀模板里的角色专属文字**：房间代价表说明「战斗房含燃烧之血等战后回血」（agent/src/knowledge/render/ 下），燃烧之血是铁甲战士的遗物；改成和角色无关的说法。注意铁甲的前缀会因此变（prefix sha），记 eval 版本。
+- **agent/tools/deepseek-prompt-dump.ts 跑不了**：整份读 logs/states.jsonl（超 Node 字符串上限 ERR_STRING_TOO_LONG）；改成按偏移从文件尾流式找最后一个战斗局面。
+- **codex 大脑缓存命中偏低**：C48LLXBGKXQ9（静默猎手 A0）输入约 3.8 万 token/次只命中约 1 万；铁甲时期 GPT 命中约一半到七成。查原因（前缀里每局变的内容是否排在不变内容之前、会话模式的 thread 前缀、prompt_cache_key 等），给出改法和实测对比；不降推理强度（记忆卡 keep-ds-reasoning-effort 的原则同样适用）。
