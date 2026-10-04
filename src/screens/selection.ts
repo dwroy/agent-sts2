@@ -327,7 +327,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
         facts: {
           ...(isUpgrade ? { upgrade: upgradePreview(card, knowledge) } : {}),
           ...(isAdd ? { in_deck: copies.get(cardId) ?? 0 } : {}),
-          outcome_stats: cardOutcome(cardId),
+          outcome_stats: cardOutcome(cardId, state.run?.ascension),
         },
       };
     }),

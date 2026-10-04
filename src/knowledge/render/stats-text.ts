@@ -5,6 +5,8 @@
  * bands come from the data: no floor numbers are written here.
  */
 
+import type { OutcomeStats } from "../experience.js";
+import { OUTCOME_MIN_N, outcomeView, referenceNote, referenceRow, rowHelps, rowThin } from "../outcome-tables.js";
 import { MEASURED_ROOM_MIN_N } from "../room-costs.js";
 import { KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
 import { RECORD_LEGEND, bossAct, bossIds, bossLine, encounterKeys, encounterLine } from "./monster-text.js";
@@ -112,27 +114,54 @@ export function renderFightRecords(ctx: RenderContext, act?: number): string {
   return lines.join("\n");
 }
 
-/** Rest-site choices by HP band on arrival (outcome-stats.json rest), with the baseline they compare to. */
+type RestRow = { n?: number; low_n?: boolean; mean_floor?: number | null; boss_pass?: number | null };
+
+/** One rest cell's numbers: "n=137 均终层 30.4 过boss 31%". */
+function restCell(row: RestRow): string {
+  return `n=${row.n ?? 0}${row.low_n ? "(少)" : ""} 均终层 ${row.mean_floor ?? "?"} 过boss ${pct(row.boss_pass)}`;
+}
+
+/** A table's baseline: "第1幕 77% (n=232)，…". */
+function bossPassText(stats: OutcomeStats): string {
+  return Object.entries(stats.baseline?.boss_pass_by_act ?? {})
+    .sort((a, b) => Number(a[0]) - Number(b[0]))
+    .map(([act, row]) => `第${act}幕 ${pct(row.boss_pass)} (n=${row.n ?? 0})`)
+    .join("，");
+}
+
+/**
+ * Rest-site choices by HP band on arrival (outcome-stats.json rest), with the baseline they compare to. By the run's
+ * ascension (knowledge/outcome-tables.ts): at A8 and below A8's table as before (another ascension's said); from A9 up
+ * the run's own, a cell with fewer than 5 runs followed by A8's in brackets when A8's has 5 or more, with A8's baseline.
+ */
 export function renderRestStats(ctx: RenderContext): string {
   const data = loadKnowledgeData(ctx.knowledgeDir);
-  const stats = data.outcomeStats;
+  const view = outcomeView(ctx.ascension, data.outcomeStats);
+  const stats = view.table;
   const baseline = stats.baseline;
-  const pass = Object.entries(baseline?.boss_pass_by_act ?? {})
-    .sort((a, b) => Number(a[0]) - Number(b[0]))
-    .map(([act, row]) => `第${act}幕 ${pct(row.boss_pass)} (n=${row.n ?? 0})`);
+  const pass = bossPassText(stats);
+  const refs = view.refs;
   const lines = [
     `结果统计（outcome-stats.json，A${stats.ascension ?? "?"} 的局，生成于 ${stats.generated ?? "?"}；观察数据：一个选择的数字混有「在什么局面下选它」的影响；n=局数，n<5 标(少)）。` +
-      `${String(stats.ascension) !== String(ctx.ascension) ? `注意：这是 A${stats.ascension ?? "?"} 的数据，不是本局的 A${ctx.ascension}。` : ""}`,
-    `基线 ${baseline?.runs ?? "?"} 局：均终层 ${baseline?.mean_floor ?? "?"}；过本幕 boss 比例 ${pass.join("，") || "?"}。`,
+      (refs.length > 0
+        ? `每个进阶分开统计：A${stats.ascension ?? "?"} 不足${OUTCOME_MIN_N}局、而 ${refs.map((ref) => `A${ref.ascension ?? "?"}`).join("/")} 够${OUTCOME_MIN_N}局的格子，括号里另附那一格（另算，不合并）。`
+        : `${String(stats.ascension) !== String(ctx.ascension) ? `注意：这是 A${stats.ascension ?? "?"} 的数据，不是本局的 A${ctx.ascension}。` : ""}`),
+    `基线 ${baseline?.runs ?? "?"} 局：均终层 ${baseline?.mean_floor ?? "?"}；过本幕 boss 比例 ${pass || "?"}。` +
+      refs.map((ref) => `A${ref.ascension ?? "?"} 基线 ${ref.baseline?.runs ?? "?"} 局：均终层 ${ref.baseline?.mean_floor ?? "?"}；过本幕 boss 比例 ${bossPassText(ref) || "?"}。`).join(""),
     "休息点选择（按到达时的血量段）：n 局，均终层，过本幕 boss 比例。实际回血多少见房间代价表「休息」列（负数=回血）。",
   ];
-  for (const option of orderBy(Object.keys(stats.rest ?? {}), Object.keys(REST_NAME))) {
-    const byBand = stats.rest![option]!;
-    const cells = orderBy(Object.keys(byBand), BAND_ORDER).map((band) => {
-      const row = byBand[band]!;
-      return `${band} n=${row.n ?? 0}${row.low_n ? "(少)" : ""} 均终层 ${row.mean_floor ?? "?"} 过boss ${pct(row.boss_pass)}`;
+  const restOf = (table: OutcomeStats) => (table.rest ?? {}) as Record<string, Record<string, RestRow>>;
+  const options = [...new Set([stats, ...refs].flatMap((table) => Object.keys(restOf(table))))];
+  for (const option of orderBy(options, Object.keys(REST_NAME))) {
+    const byBand = restOf(stats)[option] ?? {};
+    const bands = [...new Set([stats, ...refs].flatMap((table) => Object.keys(restOf(table)[option] ?? {})))];
+    // A band only a lower ascension has, as thin there: nothing to show.
+    const cells = orderBy(bands, BAND_ORDER).flatMap((band) => {
+      const row = byBand[band];
+      const ref = refs.length > 0 && rowThin(row) ? referenceRow(refs, (table) => restOf(table)[option]?.[band], rowHelps) : null;
+      return row || ref ? [`${band} ${row ? restCell(row) : "无数据"}${ref ? referenceNote(view, ref.table, restCell(ref.row)) : ""}`] : [];
     });
-    lines.push(`- ${REST_NAME[option] ?? option}：${cells.join("；")}`);
+    if (cells.length > 0) lines.push(`- ${REST_NAME[option] ?? option}：${cells.join("；")}`);
   }
   return lines.join("\n");
 }
