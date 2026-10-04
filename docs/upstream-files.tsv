@@ -1,0 +1,61 @@
+# upstream path (jev-sts2 002e873)	our path now	at v4 5ec1384	now
+.env.example	agent/.env.example	changed +223 -0	changed +223 -0
+.gitignore	.gitignore	changed +31 -0	changed +37 -0
+PLAN.md	agent/PLAN.md	identical	identical
+README.md	agent/README.md	changed +16 -0	changed +36 -22
+package-lock.json	agent/package-lock.json	identical	identical
+package.json	agent/package.json	changed +2 -1	changed +4 -1
+src/act/dispatch.ts	agent/src/hand/act/dispatch.ts	changed +3 -1	changed +3 -1
+src/act/gate.ts	agent/src/hand/act/gate.ts	changed +42 -10	changed +43 -11
+src/cli/doctor.ts	agent/src/core/cli/doctor.ts	identical	imports
+src/cli/reporter.ts	agent/src/core/cli/reporter.ts	identical	imports
+src/cli/runtime.ts	agent/src/core/cli/runtime.ts	identical	imports
+src/config.ts	agent/src/core/config.ts	changed +1031 -2	changed +1033 -2
+src/index.ts	agent/src/core/index.ts	changed +27 -2	changed +39 -12
+src/jev/answers.ts	agent/src/reflex/jev/answers.ts	identical	imports
+src/jev/client.ts	agent/src/reflex/jev/client.ts	changed +40 -0	changed +40 -0
+src/jev/pricing.ts	agent/src/reflex/jev/pricing.ts	identical	identical
+src/jev/questions.ts	agent/src/reflex/jev/questions.ts	identical	identical
+src/knowledge/index.ts	agent/src/knowledge/index.ts	changed +19 -1	changed +23 -4
+src/loop.ts	agent/src/hand/loop.ts	changed +1367 -44	changed +1372 -49
+src/mod/client.ts	agent/src/hand/mod/client.ts	changed +6 -0	changed +6 -0
+src/mod/discovery.ts	agent/src/hand/mod/discovery.ts	identical	identical
+src/mod/schema.ts	agent/src/hand/mod/schema.ts	identical	identical
+src/project/deck.ts	agent/src/memory/deck.ts	changed +42 -6	changed +43 -7
+src/project/narrow.ts	agent/src/memory/narrow.ts	changed +18 -1	changed +20 -3
+src/project/run-brief.ts	agent/src/memory/run-brief.ts	changed +73 -4	changed +74 -5
+src/project/types.ts	agent/src/memory/types.ts	changed +500 -1	changed +505 -6
+src/replay/record.ts	agent/src/eye/replay/record.ts	identical	imports
+src/replay/replay.ts	agent/src/eye/replay/replay.ts	changed +3 -1	changed +13 -11
+src/screens/chest.ts	agent/src/hand/screens/chest.ts	changed +14 -2	changed +17 -5
+src/screens/combat.ts	agent/src/reflex/combat.ts	changed +70 -12	changed +78 -20
+src/screens/event.ts	agent/src/hand/screens/event.ts	changed +307 -11	changed +310 -14
+src/screens/index.ts	agent/src/hand/screens/index.ts	changed +63 -1	changed +65 -3
+src/screens/map.ts	agent/src/hand/screens/map.ts	changed +779 -39	changed +780 -40
+src/screens/misc.ts	agent/src/hand/screens/misc.ts	changed +42 -3	changed +45 -6
+src/screens/pick.ts	agent/src/hand/screens/pick.ts	changed +225 -8	changed +227 -10
+src/screens/rest.ts	agent/src/hand/screens/rest.ts	changed +365 -5	changed +367 -7
+src/screens/reward.ts	agent/src/hand/screens/reward.ts	changed +101 -14	changed +105 -18
+src/screens/selection.ts	agent/src/hand/screens/selection.ts	changed +854 -11	changed +858 -15
+src/screens/shop.ts	agent/src/hand/screens/shop.ts	changed +527 -17	changed +531 -21
+src/strategy/damage.ts	agent/src/reflex/damage.ts	identical	identical
+src/telemetry/decision-log.ts	agent/src/eye/decision-log.ts	changed +133 -3	changed +134 -4
+src/util/format.ts	agent/src/core/util/format.ts	identical	identical
+src/util/json.ts	agent/src/core/util/json.ts	changed +27 -1	changed +27 -1
+src/util/lock.ts	agent/src/core/util/lock.ts	identical	identical
+tests/config.test.ts	agent/tests/config.test.ts	changed +42 -1	changed +42 -1
+tests/damage.test.ts	agent/tests/damage.test.ts	changed +4 -3	changed +10 -9
+tests/discovery.test.ts	agent/tests/discovery.test.ts	identical	imports
+tests/lock.test.ts	agent/tests/lock.test.ts	identical	imports
+tests/loop.test.ts	agent/tests/loop.test.ts	changed +83 -2	changed +89 -8
+tests/mod-client.test.ts	agent/tests/mod-client.test.ts	identical	imports
+tests/pricing.test.ts	agent/tests/pricing.test.ts	identical	imports
+tests/questions.test.ts	agent/tests/questions.test.ts	identical	imports
+tests/record.test.ts	agent/tests/record.test.ts	identical	imports
+tests/scenarios.ts	agent/tests/scenarios.ts	changed +7 -0	changed +7 -0
+tests/schema.test.ts	agent/tests/schema.test.ts	identical	imports
+tests/screens.test.ts	agent/tests/screens.test.ts	changed +1919 -0	changed +1927 -8
+tests/support.ts	agent/tests/support.ts	identical	identical
+tools/fake-mod.mjs	agent/tools/fake-mod.mjs	identical	identical
+tsconfig.json	agent/tsconfig.json	identical	changed +2 -2
+tsconfig.test.json	agent/tsconfig.test.json	identical	changed +2 -2
