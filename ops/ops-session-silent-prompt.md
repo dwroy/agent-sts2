@@ -15,7 +15,7 @@
 
 ## 开工
 1. 先读：AGENTS.md、docs/learning-protocol.md、notes/multi-character.md、decision-log 最后 40 行、docs/layout.md、docs/eval.md。
-2. **启动对局，对局进程归你管。** 现在游戏停在铁甲战士的 64ZXC1JCDX2M（F33，不计入战绩）。CHARACTER=SILENT 遇到别的角色的存档会停下。怎么处理这一局由 Dai 定（放弃这局，还是先换存档位），不要自己放弃。确认可以开新局后：
+2. **启动对局，对局进程归你管。** 铁甲战士那局 64ZXC1JCDX2M 已按 Dai 的决定放弃（2026-10-04）；游戏开在桌面上，停在主菜单，静默猎手已解锁、进阶 0。确认可以开新局后：
    - 先确认没有残留进程：`pgrep -af 'ops/autoplay.sh|stop-after'`，并且没有 cmdline 含 `index.ts play` 的 node 进程。
    - `rm ops/STOP`。
    - `setsid nohup bash ops/autoplay.sh >/dev/null 2>&1 </dev/null &`

@@ -26,7 +26,7 @@
 
 ## 开工（第一轮）
 1. 先读：AGENTS.md、docs/learning-protocol.md、notes/multi-character.md、decision-log 最后 40 行、docs/layout.md、docs/eval.md、docs/codex-ops.md。
-2. **启动对局，对局进程归你管。** 现在游戏停在铁甲战士的 64ZXC1JCDX2M（F33，不计入战绩）。CHARACTER=SILENT 遇到别的角色的存档会停下。怎么处理这一局由 Dai 定（放弃这局，还是先换存档位），不要自己放弃。确认可以开新局后：
+2. **启动对局，对局进程归你管。** 铁甲战士那局 64ZXC1JCDX2M 已按 Dai 的决定放弃（2026-10-04）；游戏开在桌面上，停在主菜单，静默猎手已解锁、进阶 0。确认可以开新局后：
    - `bash ops/codex-ops-do.sh autoplay-start`（它先确认没有残留的 autoplay / stop-after / 对局进程，再删 ops/STOP、起 autoplay）。
    - 在 decision-log 记下它打印的 PID、开局时间（先跑 `date`），以及 live 的提交号。
    以后要重启，只停你自己启动的进程：autoplay 用 `autoplay-stop`（或 `kill <PID>`），对局用 `play-stop`。沙箱或动作拒绝了某个操作，就把完整命令和原因写进收件箱请 Dai 处理，不要想办法绕过。
