@@ -242,8 +242,8 @@ const GIANT_KILL_TURNS = 15;
  * its HP and the Siphons on the way, its moves in their logged order), it blows for the stacks then (+3 a move). HP then:
  * the coming enemy turn's hit through the block up now, then the boss clock's measured loss a turn against the Giant
  * (bossLossPerTurn: its attack at this ascension x the share our block let through in the logged fights, 4.3 at A9; the
- * deck clock's own next-turn threat less half a hand's block read ~11-14 a turn there, and every A9 Giant fight lost at
- * T1). A later kill only grows the blast and costs more HP, so the earliest is the best this estimate can do: win on the
+ * deck clock's own next-turn threat less half a hand's block read ~11-14 a turn there, and read AKK0's fight as lost from
+ * T1 in a first try of this estimate). A later kill only grows the blast and costs more HP, so the earliest is the best this estimate can do: win on the
  * clock's scale for the margin HP + 12 - blast (logged A8/A9 kills, n = 77: this curve fits the wins about as well as the
  * best fit of its two numbers, log-likelihood -20.4 vs -18.1). Further loss: until the kill, then the blast through that
  * block. Anything but a lone Giant (or with the switch off): the clock as it is.
