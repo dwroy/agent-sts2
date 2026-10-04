@@ -121,6 +121,9 @@ const BOARDS = ["3sbp-f17-t3-flex", "k8tc-f17-t5", "xmy2-f17-t1", "8v0h-f17-t2-s
  * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
  * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
  * earlier digest held: nothing else in the decision moved.
+ * 2026-10-04 (v4-giant-potion, ops: the Waterfall Giant kept at 1-6 HP): 8v0h, the one Waterfall Giant board, re-pinned: the
+ * rollout's end-of-horizon estimate counts the Giant's blast after the kill and a living Giant draws no Explode
+ * (rollout.ts giantTerminal, eruptionOptions). With both switched off every digest held, 8v0h's included.
  */
 const GOLDEN: Record<string, string> = {
   "3sbp-f17-t3-flex:off": "dccd163df08174647e3c1cdcd4bcf9c4",
@@ -129,8 +132,8 @@ const GOLDEN: Record<string, string> = {
   "k8tc-f17-t5:v1": "f384927f7a7eb8ea80042a0997231940",
   "xmy2-f17-t1:off": "ccf70183bb58499c1e90534f573e3ec3",
   "xmy2-f17-t1:v1": "d8ef465061a61dd7ae4326cf65e80e33",
-  "8v0h-f17-t2-saturated:off": "a8e3acfcf797cb129f112bdce0a20277",
-  "8v0h-f17-t2-saturated:v1": "cccace252a934b5ef78532e218c21a66",
+  "8v0h-f17-t2-saturated:off": "80908008461d9547ac0e1eb6d45d59ec",
+  "8v0h-f17-t2-saturated:v1": "a301ee7d690a1acaf1eee1ae11d317f1",
   "ez2l-f48-t2:off": "ed6434d0ca7c66378126f7ca04ab0eff",
   "ez2l-f48-t2:v1": "ad895638c297e80c4b1d1157e24fd470",
   "2mk4-f8-t2-ask:v1": "a8c6b59e8bca465e9e48beac868692c2",

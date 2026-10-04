@@ -49,7 +49,7 @@ import { fileURLToPath } from "node:url";
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { withAddedAtRandom } from "../sl/draws.js";
 import { isStrikeCard, type CardModel } from "./card-model.js";
-import { laterPhaseHps } from "./boss-clock.js";
+import { bossLossPerTurn, bossProfile, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
@@ -199,6 +199,11 @@ export interface Estimate {
   turns: number;
 }
 
+/** The clock's win probability for an HP margin (HP left over what is lost). */
+function clockWin(margin: number): number {
+  return 1 / (1 + Math.exp(-margin / 8));
+}
+
 /** baseline_b1() of the Python builder: a deck-damage clock (incoming now + next-turn threat per turn to kill). */
 export function clockEstimate(f: Record<string, number>): Estimate {
   if ((f["n_living"] ?? 0) === 0 || (f["enemy_hp_sum"] ?? 0) <= 0) return { hpLoss: 0, winProb: 0.99, turns: 0 };
@@ -206,7 +211,89 @@ export function clockEstimate(f: Record<string, number>): Estimate {
   const per = Math.max(0, (f["threat_next"] ?? 0) - 0.5 * (f["deck_blk_per_card"] ?? 0) * Math.min(5, (f["energy_per_turn"] ?? 3) * 1.4) * (1 - (f["deck_atk_frac"] ?? 0)));
   const loss = (f["incoming_after_block"] ?? 0) + per * (ttk - 1);
   const margin = (f["hp"] ?? 0) - loss;
-  return { hpLoss: loss, winProb: 1 / (1 + Math.exp(-margin / 8)), turns: ttk - 1 };
+  return { hpLoss: loss, winProb: clockWin(margin), turns: ttk - 1 };
+}
+
+/**
+ * Switches of the Waterfall Giant's modelling in the 5-turn rollout (tools/giant-replay.ts turns them off for the rollout
+ * before 2026-10-04; no decision code sets them):
+ *   - blastTerminal: the end-of-horizon estimate counts the blast (giantTerminal);
+ *   - deathMoveFilter: a living Giant never draws its Explode, a move it only makes once dead (DEATH_MOVES).
+ */
+export const eruptionOptions: { blastTerminal: boolean; deathMoveFilter: boolean } = { blastTerminal: true, deathMoveFilter: true };
+
+/** The Waterfall Giant's id, and its healing move (Siphon). */
+const GIANT_ID = "WATERFALL_GIANT";
+const SIPHON_MOVE = "SIPHON_MOVE";
+/** Turns the blast estimate looks for the kill, at most (the clock's own cap). */
+const GIANT_KILL_TURNS = 15;
+
+/**
+ * The Waterfall Giant at the horizon (experience giant-explode, ops 2026-10-04): the fight is not won by bringing it to
+ * 0 HP but by living through the blast that follows. Killed on our turn T it is a husk that explodes at the end of our
+ * next turn for the Steam Eruption stacks it died with (3T+14 at A9, 3T+9 at A8; +3 with every move it makes while it
+ * lives, and Siphon heals it), through that turn's block: we live when HP + next turn's block >= the blast. The deck-damage
+ * clock read a Giant left at 6 HP as a near win (AKK09TEEEXKD F17, attempts 1 and 6: "win chance ~43%" for every line
+ * that kept it alive at 1-6 HP, ~8 turns running, the blast 53 -> 74 against 19 -> 1 HP).
+ *
+ * A husk (killed on the horizon's last turn): its blast against HP now and next turn's block, ERUPTION_NEXT_BLOCK (the
+ * solver's and the boss clock's ~12; this turn's block is gone by then: the clock had read it against this turn's).
+ * A living Giant: killed at its earliest, on the k-th turn after this one (the deck's damage a turn, the clock's, against
+ * its HP and the Siphons on the way, its moves in their logged order), it blows for the stacks then (+3 a move). HP then:
+ * the coming enemy turn's hit through the block up now, then the boss clock's measured loss a turn against the Giant
+ * (bossLossPerTurn: its attack at this ascension x the share our block let through in the logged fights, 4.3 at A9; the
+ * deck clock's own next-turn threat less half a hand's block read ~11-14 a turn there, and read AKK0's fight as lost from
+ * T1 in a first try of this estimate). A later kill only grows the blast and costs more HP, so the earliest is the best this estimate can do: win on the
+ * clock's scale for the margin HP + 12 - blast (logged A8/A9 kills, n = 77: this curve fits the wins about as well as the
+ * best fit of its two numbers, log-likelihood -20.4 vs -18.1). Further loss: until the kill, then the blast through that
+ * block. Anything but a lone Giant (or with the switch off): the clock as it is.
+ */
+export function giantTerminal(clock: Estimate, f: Record<string, number>, snap: Snapshot, meta: FightMeta, mm: MoveModelData): Estimate {
+  if (!eruptionOptions.blastTerminal) return clock;
+  const live = snap.E.filter((e) => e[5]);
+  if (live.length !== 1 || live[0]![1] !== GIANT_ID) return clock;
+  const giant = live[0]!;
+  const hp = f["hp"] ?? 0;
+  if (giant[3] >= HUSK_HP) {
+    const blast = giant[7];
+    if (!(blast > 0)) return clock;
+    return { hpLoss: Math.max(0, blast - ERUPTION_NEXT_BLOCK), winProb: clockWin(hp + ERUPTION_NEXT_BLOCK - blast), turns: 1 };
+  }
+  const schedule = eruptionSchedule(meta.asc);
+  const stacks = giant[9]["STEAM_ERUPTION_POWER"] ?? 0;
+  // Before its first move (T1's Pressurize) it has none yet: the schedule's stacks on the kill turn.
+  const blastAt = (k: number): number => (stacks > 0 ? stacks + schedule.perTurn * k : eruptionAt(meta.t + k, meta.asc, schedule));
+  const damage = Math.max(1, f["deck_dmg_turn"] ?? 1);
+  const heal = meta.asc >= 8 ? SIPHON_HEAL.a8 : SIPHON_HEAL.base;
+  const nextOf = (move: string | null): string | null => {
+    const successors = move ? mm[GIANT_ID]?.next[move] : undefined;
+    const ranked = Object.entries(successors ?? {}).filter(([m]) => !(DEATH_MOVES[GIANT_ID] ?? []).includes(m)).sort((a, b) => b[1] - a[1]);
+    return ranked[0]?.[0] ?? move;
+  };
+  // Its move this enemy turn (the intent shown at the end of ours), then the next ones; a Siphon heals before our next turn.
+  let move = giant[8];
+  let healed = 0;
+  let k = 1;
+  for (; k < GIANT_KILL_TURNS; k += 1) {
+    if (move === SIPHON_MOVE) healed += heal;
+    if (damage * k >= Math.max(0, giant[2]) + healed) break;
+    move = nextOf(move);
+  }
+  const blast = blastAt(k);
+  const loss = (f["incoming_after_block"] ?? 0) + giantLossPerTurn(meta.asc) * (k - 1);
+  return { hpLoss: loss + Math.max(0, blast - ERUPTION_NEXT_BLOCK), winProb: clockWin(hp - loss + ERUPTION_NEXT_BLOCK - blast), turns: k };
+}
+
+const giantLossCache = new Map<number, number>();
+/** HP we lose a turn against the Waterfall Giant at this ascension (boss-clock bossLossPerTurn), cached. */
+function giantLossPerTurn(asc: number): number {
+  let loss = giantLossCache.get(asc);
+  if (loss === undefined) {
+    const profile = bossProfile(GIANT_ID);
+    loss = profile ? bossLossPerTurn(profile, asc).value : 0;
+    giantLossCache.set(asc, loss);
+  }
+  return loss;
 }
 
 // ---------------------------------------------------------------- gates (Part A)
@@ -339,7 +426,8 @@ export interface TerminalContext {
 export function terminal(ctx: TerminalContext, snap: Snapshot, t: number): { model: Estimate | null; clock: Estimate; gated: Estimate; n: number } {
   const meta = { ...ctx.meta, t };
   const f = featuresOf(meta, snap, ctx.mm);
-  const clock = clockEstimate(f);
+  // The Waterfall Giant's blast after the kill (giantTerminal): the clock alone reads a Giant at a few HP as a near win.
+  const clock = giantTerminal(clockEstimate(f), f, snap, meta, ctx.mm);
   const live = snap.E.filter((e) => e[5]);
   const raw = ctx.model ? valueOf({ features: f, enemyIds: live.map((e) => e[1]), encounter: meta.enc, kind: meta.kind, act: meta.act }, ctx.model) : null;
   const model = raw ? { hpLoss: raw.hpLoss, winProb: calibrate(ctx.gates?.calibration[meta.kind], raw.winProb), turns: raw.turns } : null;
@@ -1448,6 +1536,9 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
         if (v) powers[id] = v;
         else delete powers[id];
       }
+      // A living Giant's Steam Eruption as it has grown in the simulated turns (the board's power is the decision's): the
+      // stacks its blast would be (giantTerminal).
+      if (eruptionOptions.blastTerminal && (e.base.eruption ?? 0) > 0 && e.explodeAt === undefined && e.maxHp < HUSK_HP) powers["STEAM_ERUPTION_POWER"] = e.base.eruption!;
       const intent = e.base.attacks.reduce((s, a) => s + a.damage * a.hits, 0);
       // A Giant husk is no HP to chew through, only its blast to survive (the terminal reads it so).
       if (e.explodeAt !== undefined) return [e.index, e.id, 1, e.maxHp, 0, e.alive, false, e.blast ?? intent, e.move, powers] as SnapEnemy;
@@ -2131,8 +2222,16 @@ function applyPlan(
       // MECH_DEATH_MOVE: an ally dead this turn sets its next move (the Queen's Off With Your Head, 22 of 22 logged), and its
       // rules keep the death's own moves out while such an ally lives and the living ally's moves out once all are dead.
       const deathNext = e.base.moveOnDeath ? deathNextOf(e, enemies, aliveBefore) : null;
-      const deathFilter = e.base.moveOnDeath ? deathAllowed(e, enemies) : undefined;
-      if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", pick) : nextMove(table, e.move, pick);
+      const learnedFilter = e.base.moveOnDeath ? deathAllowed(e, enemies) : undefined;
+      // A living Giant never makes its Explode, a move it only makes once dead (DEATH_MOVES), as a whole fight's script
+      // already keeps it out. The move model has it after every Giant move (4-17%) and nothing after it, so a 5-turn
+      // sample's living Giant "blew" for 40 and again every turn after (AKK09TEEEXKD F17: 41-HP losses on Siphon turns,
+      // which hit nothing). The Test Subject's Respawn is the same kind of move (Multi Claw -> Respawn 2 of 40 in the move
+      // model); it stays as it was here until its fights are replayed (tools/giant-replay.ts covers the Giant's).
+      const dead = eruptionOptions.deathMoveFilter && e.id === GIANT_ID ? DEATH_MOVES[e.id] : undefined;
+      const deathFilter = dead ? (m: string) => !dead.includes(m) && (!learnedFilter || learnedFilter(m)) : learnedFilter;
+      const living = dead ? (m: string) => !dead.includes(m) : undefined;
+      if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", pick, undefined, living) : nextMove(table, e.move, pick, undefined, living);
       else if (imbalanced && blockStunned.has(e.index)) e.move = STUNNED_MOVE;
       else if (fullFight && !(e.burrowed && m && !m.burrows)) {
         // The growing move's next use has a hit more (Multi Claw) or more damage (Pressure Gun); the script picks the next move.
