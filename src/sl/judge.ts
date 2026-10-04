@@ -74,7 +74,7 @@
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../mod/schema.js";
 import { BEATING_REMNANT_CAP, distinctNames, FAIRY_REVIVE_SHARE, LIZARD_TAIL_REVIVE_SHARE, MERCURY_HOURGLASS_DAMAGE } from "../screens/combat-plan.js";
-import { afterPlayFirst, heldCardEthereal, heldPenaltyOf } from "../strategy/card-model.js";
+import { afterPlayFirst, heldCardEthereal, heldPenaltyOf, unconditionalText } from "../strategy/card-model.js";
 import { CAPTAINS_WHEEL_TURN, HORN_CLEAT_TURN, PARRYING_SHIELD, RIPPLE_BASIN_BLOCK } from "../strategy/passive-pieces.js";
 import { infernoCopies } from "../strategy/start-loss.js";
 import { mantleHpCost } from "../strategy/turn-solver.js";
@@ -1436,7 +1436,9 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
       const why = attackers > 1 ? `${attackers} enemies attack (the order of their turns with the revive)` : kinds > 1 ? "the held cards both damage us and take HP (their order with the revive)" : regen > 0 ? "Regen heals before or after the held cards" : null;
       if (why) return verdict(false, null, `the planner sees every line die, but a revive is left (${reviveNames}) and its lines play it out in one order: ${why}`);
     }
-    const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${str(card["rules_text"])}`));
+    // The template without its conditionals (card-model unconditionalText): Mad Science's 「{Wisdom: 抽{WisdomCards}张牌|}」
+    // is in its template whatever rider it was given.
+    const drawing = reachable.find((card) => DRAWS.test(`${str(card["resolved_rules_text"])} ${unconditionalText(str(card["rules_text"]))}`));
     if (drawing && context.drawsKnown !== true) {
       const vetoed = `the planner sees every line die, but ${str(drawing["name"], str(drawing["card_id"]))} draws (unknown cards)`;
       // SL_JUDGE_ANY_DRAW: certain only when the death holds for every draw (anyDrawJudged); absent, the veto as before.

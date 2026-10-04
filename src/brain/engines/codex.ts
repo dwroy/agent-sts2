@@ -56,12 +56,12 @@ import { dirname, isAbsolute, join } from "node:path";
 
 import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../config.js";
 import type { JsonSchema } from "../../tools/types.js";
-import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
+import { EngineFailure, labelPrefix, withNotes, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
 import { lenientRoute, stableSchema } from "../specs.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import { CodexSession, configProblems, RpcError, SessionError, type SessionOptions, type SessionTurn } from "./codex-session.js";
-import { CodexUsageGuard, readCodexUsage, type CodexUsage, type UsageNote } from "./codex-usage.js";
+import { CodexUsageGuard, readCodexUsage, refreshCodexAuth, type CodexUsage, type UsageNote } from "./codex-usage.js";
 import { AgentAbortedError, AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
 
 type Json = Record<string, unknown>;
@@ -80,7 +80,11 @@ export interface CodexEngineOptions {
   sessionTimeouts?: SessionOptions["timeouts"];
   /** Where the engine says what the console should see (a usage read that failed); the router's note. */
   note?: (message: string) => void;
-  /** The usage read (default: readCodexUsage through a short-lived app-server; tests), and the guard's clock. */
+  /**
+   * The usage read (default: readCodexUsage through a short-lived app-server; tests), codex's token refresh after a read
+   * refused on the login (default: refreshCodexAuth, account/read refreshToken), and the guard's clock.
+   */
+  refreshAuth?: () => Promise<void>;
   readUsage?: () => Promise<CodexUsage>;
   now?: () => number;
 }
@@ -787,7 +791,8 @@ export class CodexEngine implements BrainEngine {
   constructor(private readonly opts: CodexEngineOptions) {
     const { bin, home } = opts.codex;
     const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
-    this.usage = new CodexUsageGuard(opts.codex.usage, read, { note: (message) => this.opts.note?.(message), ...(opts.now ? { now: opts.now } : {}) });
+    const refreshAuth = opts.refreshAuth ?? (() => refreshCodexAuth({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
+    this.usage = new CodexUsageGuard(opts.codex.usage, read, { note: (message) => this.opts.note?.(message), refreshAuth, ...(opts.now ? { now: opts.now } : {}) });
   }
 
   /** The latest usage reading, for brain.jsonl (router.ts: rows about codex). */
@@ -981,7 +986,14 @@ export class CodexEngine implements BrainEngine {
     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
     const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern });
     const call = { model, effort, env, entry, kindSchema, schema };
-    return this.mode === "session" ? this.decideSession(req, signal, call) : this.decideExec(req, signal, call);
+    // The usage guard's changes since the last row (codex back after reads failed, a refreshed token): on this question's row.
+    const usageNotes = this.usage.takeNotes();
+    try {
+      const answer = await (this.mode === "session" ? this.decideSession(req, signal, call) : this.decideExec(req, signal, call));
+      return usageNotes.length > 0 ? { ...answer, notes: [...usageNotes, ...(answer.notes ?? [])] } : answer;
+    } catch (error) {
+      throw withNotes(error, usageNotes);
+    }
   }
 
   /** Session mode off for the rest of the process (said once); exec mode answers from now on. */

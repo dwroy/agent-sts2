@@ -69,6 +69,21 @@ export function withUsage<T>(error: T, usage: BrainUsage): T {
   return error;
 }
 
+/**
+ * Notes an engine attaches to its error for the question's log row (withNotes; codex's usage guard: codex off until a
+ * read works), read back by the router for the row it writes (the fallback's, or the failure's).
+ */
+export function errorNotes(error: unknown): string[] {
+  const notes = typeof error === "object" && error !== null ? (error as { brainNotes?: unknown }).brainNotes : undefined;
+  return Array.isArray(notes) ? notes.filter((note): note is string => typeof note === "string") : [];
+}
+
+/** Attaches notes to an error (errorNotes reads them back); the error, for a rethrow. */
+export function withNotes<T>(error: T, notes: string[]): T {
+  if (notes.length > 0 && typeof error === "object" && error !== null) (error as { brainNotes?: string[] }).brainNotes = [...errorNotes(error), ...notes];
+  return error;
+}
+
 /** Which engine threw an error the fallback raised, and for which engine it stood in (tagFallback); undefined otherwise. */
 export function fallbackOf(error: unknown): { engine: EngineName; for: EngineName } | undefined {
   const note = typeof error === "object" && error !== null ? (error as { brainFallback?: unknown }).brainFallback : undefined;
@@ -391,17 +406,21 @@ export class BrainRouter {
       if (error instanceof EngineFailure && error.cooldownMs > 0) this.rest(primary, error, kind);
       // The failed attempt's time and tokens: on its own row when nothing else is asked, else on the fallback's.
       const failedPrimary = this.spent(error, began);
+      // What the primary noted with its failure (codex's usage guard: off until a read works): on the row written.
+      const primaryNotes = errorNotes(error);
       if (!fallback || !this.canFallBackTo(fallback)) {
-        this.write(primary, req, null, error, undefined, failedPrimary);
+        this.write(primary, req, null, error, undefined, failedPrimary, undefined, primaryNotes);
         throw error;
       }
       const fellBackFrom = { engine: primary, error: message(error).slice(0, 300) };
       const again = this.now();
       try {
-        result = { ...(await this.attempt(fallback, req, true)), fellBackFrom: { ...fellBackFrom, ms: failedPrimary.latencyMs } };
+        const answered = await this.attempt(fallback, req, true);
+        const notes = [...primaryNotes, ...(answered.notes ?? [])];
+        result = { ...answered, fellBackFrom: { ...fellBackFrom, ms: failedPrimary.latencyMs }, ...(notes.length > 0 ? { notes } : {}) };
       } catch (second) {
-        this.write(fallback, req, null, second, { ...fellBackFrom, kind }, this.spent(second, again), failedPrimary);
-        throw tagFallback(second, fallback, primary);
+        this.write(fallback, req, null, second, { ...fellBackFrom, kind }, this.spent(second, again), failedPrimary, primaryNotes);
+        throw tagFallback(withNotes(second, primaryNotes), fallback, primary);
       }
       this.write(result.engine, req, result, undefined, { ...fellBackFrom, kind }, undefined, failedPrimary);
       return result;
@@ -542,7 +561,8 @@ export class BrainRouter {
    * 41VAUAM2EFY7 F34's 300 s timeout was logged as 0 ms). The fallback's row after the primary failed as an engine has
    * `primary`: the failed attempt's wall clock and known usage (primary_ms, primary_usage).
    */
-  private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"], failed?: { latencyMs: number; usage?: BrainUsage }, primary?: { latencyMs: number; usage?: BrainUsage }): void {
+  private write(engine: EngineName, req: BrainRequest, result: Attempt | null, error?: unknown, fellBackFrom?: BrainLogRow["fell_back_from"], failed?: { latencyMs: number; usage?: BrainUsage }, primary?: { latencyMs: number; usage?: BrainUsage }, notes?: string[]): void {
+    const allNotes = [...(notes ?? []), ...(result?.notes ?? [])];
     let model = result?.model ?? "";
     const effort = result ? result.effort : (req.effort ?? this.deps.config.engines[engine]?.effort ?? undefined);
     if (!result) {
@@ -581,7 +601,7 @@ export class BrainRouter {
       ...(error === undefined ? {} : { error: message(error).slice(0, 500), error_kind: failureKind(error) }),
       ...(result?.raw !== undefined && result.answer === null ? { raw: result.raw.slice(0, 4000) } : {}),
       ...(result?.reasoning ? { reasoning_chars: result.reasoning.length } : {}),
-      ...(result?.notes?.length ? { notes: result.notes } : {}),
+      ...(allNotes.length ? { notes: allNotes } : {}),
     };
     try {
       const limits = this.limitsFor(engine, fellBackFrom);

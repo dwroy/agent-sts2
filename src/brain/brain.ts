@@ -229,6 +229,9 @@ export class Brain {
             this.router.markUnavailable("codex", stop, engine.usage.stopKind);
             this.warnings.push(message);
             problems.push(message);
+          } else if (engine.usage.blocked) {
+            // BRAIN_CODEX_USAGE_REQUIRED=on: off until a read works (the guard reads again after its wait), not for the run.
+            this.warnings.push(`codex usage could not be read at the start (${engine.usage.unreadable}); with BRAIN_CODEX_USAGE_REQUIRED=on codex is off until a read works: ${then}`);
           } else if (engine.usage.unreadable) {
             this.warnings.push(`codex usage could not be read at the start (${engine.usage.unreadable}); codex stays on without the usage guard until a read works`);
           }
