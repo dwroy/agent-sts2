@@ -154,10 +154,11 @@ describe("TARGET_ASCENSION=climb", () => {
 });
 
 describe("a character with no knowledge yet", () => {
+  // A character id with no directory under knowledge/characters/ (the Silent has its own data since 2026-10-04).
   it("reads every file as empty, never the Ironclad's", () => {
-    setKnowledgeCharacter("silent");
-    expect(knowledgeCharacter()).toBe("silent");
-    expect(knowledgeFile(KNOWLEDGE_DIR, "experience.json")).toContain(join("characters", "silent"));
+    setKnowledgeCharacter("test_fresh");
+    expect(knowledgeCharacter()).toBe("test_fresh");
+    expect(knowledgeFile(KNOWLEDGE_DIR, "experience.json")).toContain(join("characters", "test_fresh"));
     const data = loadKnowledgeData(KNOWLEDGE_DIR);
     expect(data.experience.entries).toEqual([]);
     expect(data.jevHints.hints).toEqual([]);
