@@ -113,6 +113,21 @@ export interface RunConfigRow {
     engines: Partial<Record<EngineName, EngineSnapshot>>;
     /** When Claude is among them: its schema mode and per-call budget. */
     claude?: { schema: string; max_budget_usd: number | null };
+    /** When codex is among them: its BRAIN_CODEX_* run settings (service_tier null: the standard tier). */
+    codex?: {
+      mode: string;
+      service_tier: string | null;
+      summary: string;
+      stall_ms: number | null;
+      first_token_ms: number | null;
+      stall_retries: number;
+      schema_fields: string;
+      route_reason: string;
+      route_pattern: boolean;
+      accept_cut: boolean;
+      max_field_chars: number | null;
+      max_answer_blanks: number | null;
+    };
   };
   knowledge: {
     prefix: "off" | "full";
@@ -313,6 +328,23 @@ function engineSnapshot(name: EngineName, config: AppConfig, brain: Brain | null
   };
 }
 
+function codexSnapshot(codex: AppConfig["brain"]["codex"]): NonNullable<RunConfigRow["brain"]["codex"]> {
+  return {
+    mode: codex.mode,
+    service_tier: codex.serviceTier,
+    summary: codex.summary,
+    stall_ms: codex.stallMs,
+    first_token_ms: codex.firstTokenMs,
+    stall_retries: codex.stallRetries,
+    schema_fields: codex.schemaFields,
+    route_reason: codex.routeReason,
+    route_pattern: codex.routePattern,
+    accept_cut: codex.acceptCut,
+    max_field_chars: codex.maxFieldChars,
+    max_answer_blanks: codex.maxAnswerBlanks,
+  };
+}
+
 /** knowledge.prefix_note: the prefix above is the run's start; brain.jsonl has the one each call used. */
 export const PREFIX_NOTE =
   "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha";
@@ -406,6 +438,7 @@ export function runConfigRow(
       log: brain ? (brain.router.config.log || null) : null,
       engines,
       ...(used.includes("claude") ? { claude: { schema: config.brain.claude.schema, max_budget_usd: config.brain.claude.maxBudgetUsd } } : {}),
+      ...(used.includes("codex") ? { codex: codexSnapshot(config.brain.codex) } : {}),
     },
     knowledge: knowledgeSnapshot(config, brain, run.ascension, opts.knowledgeDir ?? KNOWLEDGE_DIR),
     deepseek,
