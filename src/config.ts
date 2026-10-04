@@ -205,6 +205,16 @@ export interface SlConfig {
    */
   retryExploreRearm: boolean;
   /**
+   * SL_RETRY_EXPLORE_WASTED (default on, 2026-10-04, 3B4K4UDQ56B9 F48 attempt 4; with SL_RETRY_EXPLORE_CANON or _TURN): a
+   * deviation's turn counts as a failed one's (`differs` false, `repeats` says how; SL_RETRY_EXPLORE_REARM acts on it) also
+   * when its plays are a failed turn's but for which copy of a card was upgraded (3B4K T4: Twin Strike for Twin Strike+, the
+   * fight on as attempt 2's), or a failed attempt's turn from the same turn start that did not pass the point's board
+   * (P68P7CDJRDH3 F48 attempt 5 T1: attempt 1's turn), or the next turn begins on a failed attempt's board; REARM re-arms off
+   * the reference path too (the deviation then made on a failed attempt's board or on the point's turn). Off: by the exact
+   * plays through the point's board, and on the path only, as before.
+   */
+  retryExploreWasted: boolean;
+  /**
    * SL_RETRY_EXPLORE_ANCHOR (2026-10-04, ABCJ0TZ6MD06 F48; with SL_RETRY_EXPLORE_REPLAY): the reference path (the anchor) of
    * attempts 3+ is the failed attempt that lived longest (the latest turn reached; ties: the least enemy HP left, then the
    * earliest attempt from the 2nd), attempt 1 among them once its decision points are recorded (with this switch attempt 1
@@ -1179,6 +1189,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryExploreReplayCode: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_CODE"), "SL_RETRY_EXPLORE_REPLAY_CODE", problems) ?? true,
     retryExploreTargetTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TARGET_TURN"), "SL_RETRY_EXPLORE_TARGET_TURN", problems) ?? true,
     retryExploreRearm: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REARM"), "SL_RETRY_EXPLORE_REARM", problems) ?? true,
+    retryExploreWasted: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WASTED"), "SL_RETRY_EXPLORE_WASTED", problems) ?? true,
     retryExploreAnchor: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_ANCHOR"), "SL_RETRY_EXPLORE_ANCHOR", problems) ?? true,
     retryExploreCanon: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_CANON"), "SL_RETRY_EXPLORE_CANON", problems) ?? true,
     retryExploreTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TURN"), "SL_RETRY_EXPLORE_TURN", problems) ?? true,

@@ -65,7 +65,7 @@ const { RunJournal } = await import("../src/project/run-journal.js");
 const { planCombatTurn, slPointOf } = await import("../src/screens/combat-plan.js");
 const { previousAttemptsJson } = await import("../src/sl/attempts.js");
 const { SlController } = await import("../src/sl/controller.js");
-const { anchorRank, enemyHpLeft, exploreTarget, replayPlays, replayPoints, slBoardKey, triedHas, turnCanon } = await import("../src/sl/explore.js");
+const { anchorRank, canonWithoutUpgrades, enemyHpLeft, exploreTarget, replayPlays, replayPoints, slBoardKey, triedHas, turnCanon, turnRepeats } = await import("../src/sl/explore.js");
 const { bossLinesOptions } = await import("../src/sim/boss-lines.js");
 const { potionMcOptions } = await import("../src/strategy/potion-mc.js");
 const { rolloutLiveOptions } = await import("../src/strategy/rollout-live.js");
@@ -108,6 +108,8 @@ interface Board {
 const boardOf = (name: string): Board => JSON.parse(readFileSync(join(DATA, `${name}.json`), "utf8")) as Board;
 const abcj = (): SlAttemptRow[] => JSON.parse(readFileSync(join(DATA, "abcj-rows.json"), "utf8")) as SlAttemptRow[];
 const akk0 = (): SlAttemptRow[] => JSON.parse(readFileSync(join(DATA, "akk0-rows.json"), "utf8")) as SlAttemptRow[];
+const b3b4k = (): SlAttemptRow[] => JSON.parse(readFileSync(join(DATA, "3b4k-rows.json"), "utf8")) as SlAttemptRow[];
+const p68p = (): SlAttemptRow[] => JSON.parse(readFileSync(join(DATA, "p68p-rows.json"), "utf8")) as SlAttemptRow[];
 
 /** A logged board planned as attempt `attempt` of ABCJ (the rows before it, its known draws), the rollout and B2 off. */
 function plan(name: string, attempt: number, explore: SlExploreEnv | null, record?: SlExploreEnv): { decision: Decision; env: DecisionEnv } {
@@ -345,13 +347,59 @@ describe("SL_RETRY_EXPLORE_REARM over the logged rows: AKK09TEEEXKD F17", () => 
   });
 });
 
+describe("SL_RETRY_EXPLORE_WASTED over the logged rows: deviations written differs true that repeated a failed turn", () => {
+  /** A row's deviation turn read again (as exploreOut does with the switch): its record, the next turn's first board. */
+  const reread = (rows: SlAttemptRow[], attempt: number) => {
+    const row = rows.find((other) => other.attempt === attempt)!;
+    const turn = row.explore!.deviation!.turn!;
+    const record = row.explore!.turns!.find((entry) => entry.turn === turn)!;
+    const next = row.explore!.turns!.find((entry) => entry.turn > turn)?.boards[0]?.board ?? null;
+    const summary = row.summary!.turns.find((entry) => entry.turn === turn);
+    return { row, repeat: turnRepeats(rows.filter((other) => other.attempt < attempt) as unknown as ExploreRow[], attempt, record, row.explore!.target!.tried, next, summary ? turnCanon(summary.plays) : undefined) };
+  };
+
+  it("3B4K4UDQ56B9 F48 attempt 4 T4: the plays actually made, attempts 2-3's turn but for the plain Twin Strike", () => {
+    const rows = b3b4k();
+    const { row, repeat } = reread(rows, 4);
+    // The row: differs true, from the plays made (not the replacement, which planned both Twin Strikes), against the right
+    // turns (attempts 2-3's through the point's board).
+    expect(row.explore!.deviation).toMatchObject({ replacement: "双重打击 -> 永世沙漏, 耸肩无视, 双重打击+ -> 永世沙漏", plays: "EVIL_EYE, SHRUG_IT_OFF, TWIN_STRIKE>永世沙漏", differs: true });
+    expect(row.explore!.target).toMatchObject({ reference: 2, attempts: [2, 3], tried: { canon: ["EVIL_EYE, SHRUG_IT_OFF, TWIN_STRIKE+>永世沙漏"] } });
+    expect(canonWithoutUpgrades(row.explore!.deviation!.plays!)).toBe(canonWithoutUpgrades(row.explore!.target!.tried!.canon[0]!));
+    expect(repeat).toEqual({ how: "upgrades", attempts: [2, 3] });
+    // The fight on from there: attempt 2's T5 plays, death on T7 as attempt 2's.
+    const two = rows.find((other) => other.attempt === 2)!;
+    expect(row.summary!.turns.find((turn) => turn.turn === 5)!.plays).toEqual(two.summary!.turns.find((turn) => turn.turn === 5)!.plays);
+    expect([row.turns, two.turns]).toEqual([7, 7]);
+    // Its T5 board was not attempt 2's (the boss 4 HP higher): off the path, where round 3's REARM gave up.
+    expect(new Set(two.explore!.turns!.flatMap((turn) => turn.boards.map((entry) => entry.board))).has(row.explore!.turns!.find((turn) => turn.turn === 5)!.boards[0]!.board)).toBe(false);
+    // A deviation that did explore: none (attempt 3's T5).
+    expect(reread(rows, 3).repeat).toBeNull();
+  });
+
+  it("P68P7CDJRDH3 F48 attempt 5 T1: attempt 1's whole T1 from the same turn start, not through the point's board", () => {
+    const rows = p68p();
+    const { row, repeat } = reread(rows, 5);
+    expect(row.explore!.deviation).toMatchObject({ differs: true, turn: 1 });
+    expect(repeat).toEqual({ how: "turn start", attempts: [1] });
+    const one = rows.find((other) => other.attempt === 1)!;
+    // The next turn began on attempt 1's board too.
+    expect(row.explore!.turns!.find((turn) => turn.turn === 2)!.boards[0]!.board).toBe(one.explore!.turns!.find((turn) => turn.turn === 2)!.boards[0]!.board);
+  });
+
+  it("canonWithoutUpgrades: card upgrades left out, targets and potions kept", () => {
+    expect(canonWithoutUpgrades("EVIL_EYE, SHRUG_IT_OFF+, TWIN_STRIKE+>永世沙漏, potion:FIRE_POTION>永世沙漏")).toBe("EVIL_EYE, SHRUG_IT_OFF, TWIN_STRIKE>永世沙漏, potion:FIRE_POTION>永世沙漏");
+    expect(canonWithoutUpgrades("nothing")).toBe("nothing");
+  });
+});
+
 // ---------------------------------------------------------------- the controller (scripted fights, testKnowledge)
 
 const board = (turn: number, hp: number): Raw => bossBoard({ turn, hp, playable: true, lethal: false });
 const death = (turn: number): Raw => bossBoard({ turn, hp: 10 });
 
 function slConfig(log: string, overrides: Partial<SlConfig> = {}): SlConfig {
-  return { enabled: true, bossRetries: 4, eliteRetries: 1, act3LowHp: true, act3LowHpPct: 40, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreReplayPlays: true, retryExploreReplayDeviate: true, retryExploreKeyCounters: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: false, retryKnownPicks: true, retryKnownOffTop: true, retryKnownHandOrder: true, retryExploreReplayOrder: true, retryExploreReplayCode: true, retryExploreTargetTurn: true, retryExploreRearm: true, retryExploreAnchor: true, log, stepTimeoutMs: 5_000, ...overrides };
+  return { enabled: true, bossRetries: 4, eliteRetries: 1, act3LowHp: true, act3LowHpPct: 40, retryShowSim: false, retryKnownDraws: true, retryCompute: false, judgeKnownDraws: true, judgeAnyDraw: true, reloadEarly: true, retryKnownInserts: true, retryKnownTop: true, retryExplore: true, retryExploreB2: true, retryExploreBossPotions: true, retryExploreOrder: true, retryExploreReplay: true, retryExploreReplayPlays: true, retryExploreReplayDeviate: true, retryExploreKeyCounters: true, retryExploreCanon: true, retryExploreTurn: true, retryExploreWhole: true, retryExploreWhere: true, retryExplorePotion: false, retryKnownPicks: true, retryKnownOffTop: true, retryKnownHandOrder: true, retryExploreReplayOrder: true, retryExploreReplayCode: true, retryExploreTargetTurn: true, retryExploreRearm: true, retryExploreWasted: true, retryExploreAnchor: true, log, stepTimeoutMs: 5_000, ...overrides };
 }
 function tempLog(): string {
   const dir = mkdtempSync(join(tmpdir(), "sl-gaps-"));
@@ -438,7 +486,8 @@ describe("the controller with SL_RETRY_EXPLORE_ANCHOR", () => {
     const runs = [] as { rows: SlAttemptRow[]; a2: Awaited<ReturnType<typeof playAttempt>>; notes: string[] }[];
     for (const anchor of [true, false]) {
       const log = tempLog();
-      const t = controller(log, () => board(1, 60), { retryExploreSecond: true, retryExploreAnchor: anchor });
+      // (SL_RETRY_EXPLORE_WASTED off: the scripted boards do not follow the plays, so every next board is attempt 1's.)
+      const t = controller(log, () => board(1, 60), { retryExploreSecond: true, retryExploreAnchor: anchor, retryExploreWasted: false });
       await playAttempt(t, [board(1, 60), bossBoard({ turn: 2, hp: 20, playable: true, lethal: false, damage: 5 })], death(3));
       const a2 = await playAttempt(t, [board(1, 60), bossBoard({ turn: 2, hp: 20, playable: true, lethal: false, damage: 5 })], death(3));
       runs.push({ rows: logRows(log), a2, notes: t.notes });
@@ -499,6 +548,66 @@ describe("the controller with SL_RETRY_EXPLORE_REARM", () => {
     const offRow = logRows(offLog)[2]!;
     expect(offRow.explore!.wasted).toBeUndefined();
     expect(offRow.explore!.deviation).toMatchObject({ turn: 1, differs: false });
+  });
+});
+
+describe("the controller with SL_RETRY_EXPLORE_WASTED", () => {
+  const q2 = (hp: number) => bossBoard({ turn: 2, hp, playable: true, lethal: false, damage: 5 });
+
+  it("a deviation whose next turn began on a failed attempt's board is wasted (differs false, repeats), and re-armed", async () => {
+    // The scripted boards do not follow the plays: attempt 3's T2 is attempt 2's board whatever it played on T1.
+    const log = tempLog();
+    const t = controller(log, () => board(1, 60));
+    await playAttempt(t, [board(1, 60), q2(20)], death(3));
+    await playAttempt(t, [board(1, 60), q2(20)], death(3));
+    const a3 = await playAttempt(t, [board(1, 60), q2(20)], death(3));
+    expect(a3[0]!.log).toMatchObject({ original: "DEFEND_R, BASH -> Test Subject", replacement: "STRIKE_R -> Test Subject, BASH -> Test Subject" });
+    const row3 = logRows(log)[2]!;
+    expect(row3.explore!.wasted).toMatchObject([{ target: { turn: 1 }, deviation: { turn: 1, plays: "STRIKE_R>Test Subject", differs: false, repeats: { how: "next board", attempts: [1, 2] } } }]);
+    expect(row3.explore!.target).toMatchObject({ turn: 2, rearmed: { turn: 1 } });
+    expect(row3.explore!.target!.rearmed!.offPath).toBeUndefined();
+    expect(t.notes.some((note) => /ended its turn as a failed attempt's \(STRIKE_R>Test Subject\) \(next board: attempt 1, 2\); .* still on attempt 2's path: deviates at T2, /.test(note))).toBe(true);
+    // Off: differs true (another card played), nothing more.
+    const offLog = tempLog();
+    const off = controller(offLog, () => board(1, 60), { retryExploreWasted: false });
+    expect(off.sl.describe()).toMatchObject({ retry_explore_wasted: false });
+    await playAttempt(off, [board(1, 60), q2(20)], death(3));
+    await playAttempt(off, [board(1, 60), q2(20)], death(3));
+    await playAttempt(off, [board(1, 60), q2(20)], death(3));
+    const offRow = logRows(offLog)[2]!;
+    expect(offRow.explore!.deviation).toMatchObject({ turn: 1, differs: true });
+    expect(offRow.explore!.deviation!.repeats).toBeUndefined();
+    expect(offRow.explore!.wasted).toBeUndefined();
+  });
+
+  it("re-armed off the reference path too: the replay stopped, the next point's turn deviates on the attempt's own board", async () => {
+    const log = tempLog();
+    const t = controller(log, () => board(1, 60));
+    expect(t.sl.describe()).toMatchObject({ retry_explore_wasted: true });
+    await playAttempt(t, [board(1, 60), q2(20)], death(3));
+    await playAttempt(t, [board(1, 60), q2(20)], death(3));
+    // T1's deviation taken away (attempt 2's line played: wasted); T2's board is not attempt 2's (19 HP).
+    const a3 = await playAttempt(t, [board(1, 60), q2(19)], death(3), (i, env) => {
+      if (i === 0 && env?.explore?.deviate) delete env.explore.deviate;
+    });
+    const row3 = logRows(log)[2]!;
+    expect(row3.explore!.wasted).toMatchObject([{ target: { turn: 1 }, deviation: { turn: 1, differs: false } }]);
+    expect(row3.explore!.target).toMatchObject({ turn: 2, rearmed: { turn: 1, offPath: true } });
+    expect(row3.explore!.replay!.stopped).toBe("T2: off attempt 2's path after the wasted deviation at T1");
+    expect(a3[1]!.env?.explore?.deviate?.point).toMatch(/^T2, after the replay of attempt 2's path stopped \(T2: off attempt 2's path after the wasted deviation at T1\): the point's turn \(T2, /);
+    expect(row3.explore!.fallback).toMatchObject({ reached: true, turn: 2 });
+    expect(t.notes.some((note) => /is off attempt 2's path: deviates on the first board a failed attempt decided on, or on T2 /.test(note))).toBe(true);
+    // Off (round 3): no later point off the path.
+    const offLog = tempLog();
+    const off = controller(offLog, () => board(1, 60), { retryExploreWasted: false });
+    await playAttempt(off, [board(1, 60), q2(20)], death(3));
+    await playAttempt(off, [board(1, 60), q2(20)], death(3));
+    const o3 = await playAttempt(off, [board(1, 60), q2(19)], death(3), (i, env) => {
+      if (i === 0 && env?.explore?.deviate) delete env.explore.deviate;
+    });
+    expect(o3[1]!.env?.explore?.deviate).toBeUndefined();
+    expect(logRows(offLog)[2]!.explore!.wasted).toBeUndefined();
+    expect(off.notes.some((note) => /is off attempt 2's path: no later point of it$/.test(note))).toBe(true);
   });
 });
 
