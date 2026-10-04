@@ -68,7 +68,7 @@ function roomCell(room: { n: number; deaths?: number; median: number; p75: numbe
 function fightNote(data: KnowledgeData): string {
   const rooms = Object.values(data.roomCosts.by_asc).flatMap((byAct) => Object.values(byAct).flatMap((byRoom) => Object.entries(byRoom)));
   const parts = [
-    ...(rooms.some(([, room]) => typeof room.fight_median === "number") ? ["「战内 中位/p75」= 战斗里掉的血（第一个到最后一个出牌决策，不含战后燃烧之血等回血）"] : []),
+    ...(rooms.some(([, room]) => typeof room.fight_median === "number") ? ["「战内 中位/p75」= 战斗里掉的血（第一个到最后一个出牌决策，不含战后回血）"] : []),
     ...(rooms.some(([name]) => name === "UnknownFight") ? ["「问号里的战斗」= 进门是战斗的问号房，也算在「问号」里"] : []),
   ];
   return parts.length > 0 ? `${parts.join("；")}。` : "";
@@ -82,7 +82,7 @@ export function renderRoomCosts(ctx: RenderContext, act?: number): string {
   const meta = data.roomCosts.meta;
   const p90Note = hasP90(data) ? "" : "p90 暂缺（room-costs.json 还没有 p90 字段，要用新版 tools/build-room-costs.py 重建），记为 —。";
   const lines = [
-    `每个房间的血量变化 = 进房血量 − 下一层地图上的血量（正数=掉血，负数=回血；战斗房含燃烧之血等战后回血；死在房间里的按进房血量全掉计）。格子: 中位/p75/p90 死亡率 n=房间数；n<${MEASURED_ROOM_MIN_N} 标(少)。${fightNote(data)}${p90Note}数据 ${meta?.runs ?? "?"} 局，最后 ${meta?.last_seen ?? "?"}。`,
+    `每个房间的血量变化 = 进房血量 − 下一层地图上的血量（正数=掉血，负数=回血；战斗房含战后回血；死在房间里的按进房血量全掉计）。格子: 中位/p75/p90 死亡率 n=房间数；n<${MEASURED_ROOM_MIN_N} 标(少)。${fightNote(data)}${p90Note}数据 ${meta?.runs ?? "?"} 局，最后 ${meta?.last_seen ?? "?"}。`,
   ];
   for (const at of act === undefined ? all : [act]) {
     const rooms = roomTypes(data, at);
