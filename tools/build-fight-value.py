@@ -53,6 +53,17 @@ _spec.loader.exec_module(bmd)
 DEFAULT_ROWS = os.path.join(ROOT, ".cache", "fight-value-rows.jsonl")
 MIN_ASC = 7  # the models are trained and tested on A7-A8; rows below are extracted and counted only
 
+
+def write_whole_json(path, data):
+    """Written whole under this process's tmp name, then moved into place: a run starting during the refresh (ops/report.py
+    runs fight-value in the background) reads the old file or the new one, never half of one (as 7efb2d4 for boss-damage)."""
+    tmp = f"{path}.{os.getpid()}.tmp"
+    with open(tmp, "w", encoding="utf8") as handle:
+        json.dump(data, handle, ensure_ascii=False, separators=(",", ":"))
+        handle.write("\n")
+    os.replace(tmp, path)
+
+
 # ---------------------------------------------------------------- extract
 
 
@@ -1167,9 +1178,7 @@ def write_gates(path, gates, rows):
         "nested_check": {k: {kk: round(vv, 4) if isinstance(vv, float) else vv for kk, vv in v.items()} for k, v in gates["nested"].items()},
         "segments": gates["segments"],
     }
-    with open(path, "w", encoding="utf8") as handle:
-        json.dump(out, handle, ensure_ascii=False, separators=(",", ":"))
-        handle.write("\n")
+    write_whole_json(path, out)
 
 
 def gate_notes(gates):
@@ -1710,9 +1719,7 @@ def export(suite, rows, feats, out_path, report):
     keep = ("act", "t", "asc", "kind", "enc", "deck", "relics", "max_en", "E")
     out["feature_examples"] = [{"row": {k: rows[i][k] for k in keep},
                                 "features": {k: round(v, 6) if isinstance(v, float) else v for k, v in feats[i].items()}} for i in picks]
-    with open(out_path, "w", encoding="utf8") as handle:
-        json.dump(out, handle, ensure_ascii=False, separators=(",", ":"))
-        handle.write("\n")
+    write_whole_json(out_path, out)
 
 
 def example_input(row, f):
