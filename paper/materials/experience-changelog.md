@@ -2331,3 +2331,162 @@ Dai 的规则（2026-09-29）：攻略 ironclad-guide.md、DeepSeek 手册 ds-ha
 - 抽查：新增 card-panic-button（应急按钮禁格挡只管下一回合，日志 17 次）、relic-fiddle（小提琴，观察）、act3-a9（A9 三幕路线和精英，12 局）都带数据和 run id；退役 2 条是低置信合并腾位（precarious-shears、scroll-boxes → neow-a2-hp）。药水条目只改句内数字，没有新增或加强喝药规则。
 - tsc 0；vitest 2454/2455，turn-start-settle 的计时用例在负载下超时（已放宽为 1000 ms，9fd9e8e），单独跑 4/4。
 - 合入：v4 3090337，v4-live 8ab0878，V4.6 批中从下一局生效（eval 版本 V4.6.exp4）。
+
+## 2026-10-04 进阶审核（version 2026-10-04.2，分支 v4-exp-asc-10040840，c08de33）
+
+### 方法
+- 任务：learner/tasks/experience-asc-audit.md（Dai 2026-10-04）。开工 `git merge --no-edit v4`：已是最新（25eae40），无冲突。
+- 对象：开工时 active 198 条（version 2026-10-04.1），A9 全部适用、A8 适用 194 条，lesson 总长 39806 字。
+- 先查每条证据局的进阶（runs 表），再逐条读文字，分成三类：
+  - **机制类（M）**：招式、数值公式、触发时机、牌/遗物/药水怎么起作用。asc 写 [0,20]；随进阶变的数字写明进阶（「A8 35、A9 40」）。经验文字走 fillGuideFacts，只认 `{@8:DMG:…}` 这种带进阶的写法、不认裸 `{DMG:…}`，这次都直接写数字。先古回血那条只在 A2+ 成立，写 [2,20]。
+  - **统计类（S）**：死亡率、掉血中位、胜率、血量线。数字一律按 A8+ 重算，A8、A9 分开写；asc [8,20]，只有 A9 数据的 [9,20]。
+  - **策略类（T）**：有 A8+ 证据的 [8,20]，A8+ 证据全是 A9 的 [9,20]；A8+ 没有证据的写上限 [lo,7]。
+- 数据：日志库 `tools/logdb/query.py --no-sync`（没有同步）。**截止点**和第十三次增量相同：PEGLM9PFY97U 结束（2026-10-03T18:05:13Z），A8 232 局、A9 95 局；库里 PEGL 之后还有 1 局 A9（AKK09TEEEXKD，10-04 00:35Z 结束，没有复盘），不算。文中写「截至 10-03 末」。
+- 口径同首次构建和前几节：战内掉血 = fights.hp_loss（第一帧 − 最后一帧），死亡单独计；走廊只算 Monster 房，问号（unknown_room）另算，条目写「含问号」时是合计；赢局掉血写「中位/p75」；SL 的多次尝试在 fights 里算一场。
+- 脚本和输出都在 `learner/runs/20261004-084102-experience-asc-audit/`：qa.py（本节所有新查询：relicruns、ancient2、demonform、fyshexh、fyshdmg、aeondmg、hall、elites、obscura、tunneler、winstrikes、queen、bossrec）、qq.py（elitecounts，沿用上一节的脚本）、q-*.txt（输出，含 q-crabfirst.txt、q-queenamalg.txt、q-hall-combined.txt）、audit_edits.py + pass2.py（改库脚本，每条的类别、asc 和新文字）、audit-kinds.json（每条的类别、新旧 asc、新旧字数）、check_potion.py（药水分句核对）、sizes.py、slice_*.py。
+- 药水：`potion:*`、`general:potion` 的文字一字未改（这次没有要改的数字：句内数字已是 A8/A9 的），只按类别改了 asc 下限，23 条在 A8、A9 都仍适用。其他条目里原有的喝药/留药分句一字未改：check_potion.py 把改动条目旧文字里所有含「药」的分句逐个在新文字里找，0 处缺失（初稿漏了 card-purity 的「XTB4 放掉 89 金的净化买了能力药水和耸肩无视」，已还原）。没有新增或加强任何喝药规则。
+- 校验（c08de33）：tsc 退出 0；vitest（`nice -n 19`，`--maxWorkers=4`）最后一次全量 164 个文件 2455/2455 通过，退出 0。之前三次全量（负载 15–20，对局在跑）各有 1–3 个计时用例失败（5 s 超时：fix-queue-v4-shrink、run-plan-merge；rollout-live 的 1500 ms 预算、turn-start-settle 的 ≥950 ms），单独重跑全部通过（vitest-rerun.log）。
+- **改了一个测试辅助函数**：route-review「a change with another stretch…」在新经验库下稳定失败——题面里「从本休息点 o0 HEAL 后的 HP」的「后」变成了两个 U+FFFD。原因是 tests/oneshot-support.ts 的假 DeepSeek 服务器按 Buffer 分块 `body += chunk`，一个中文字跨两块就被拆坏；前缀变短后分块边界正好落在这个字上（换回改前的 experience.json 就通过）。改成 `req.setEncoding("utf8")` 后通过。tests/ 下还有 7 处同样的写法（journal-replay、build-decider、mod-client、execution-gate ×2、learner 等），这次没动。
+
+### 三类各自的处理和数字
+条数：active 198 → 197；机制 58、统计 69、策略 70，合并 1（deck-random-ev）。asc 变化：155 条改了 asc；[0,20] 的 76 条里 58 条改了（55 条 → [8,20]、1 条 → [9,20]、1 条 → [0,7]、1 条合并退役），另有 39 条从 [2–7,20] 改成 [0,20]（机制类），改后 [0,20] 共 57 条；只适用 ≤A7 的 2 条；A8 适用 194 → 192 条，A9 198 → 195 条。
+
+**机制类 58 条**（改文字 21 条）：
+- vantom-multihit、vantom-dismember、lag-sleep、fysh-beckon、giant-explode、giant-gun、insatiable-escape、crab-kill-order、kd-single-target、kd-free-turns、queen-plan、ts-phases、ts-phase3、aeon-wither、aeon-artifact、act2-ancient-heal（[2,20]）、deck-plan-ids、deck-growth-turns、deck-self-damage、deck-passive-engine；卡牌 card-howl、pacts-end、feel-no-pain、expect-a-fight、fight-me、gambit、spoils-map、greed、armaments、pyre、true-grit、crimson-mantle、inferno、purity、colossus、rolling-boulder、panic-button；遗物 relic-burning-blood、spiked-gauntlets、blood-soaked-rose、petrified-toad、ember-tea、lizard-tail、molten-egg、very-hot-cocoa、whispering-earring、royal-poison、brimstone、fiddle；药水 potion-ashwater、foul、stable-serum、vulnerable、fairy、swift、fysh-oil、potion-code-discard；event-symbiote。
+- 文字改动：数字写明进阶（猫头鹰判决「35/38」→ 基础 A8 33、A9 36；机甲骑士重劈「A8 40/45/50，A9 45/50/55」→ 基础 A8 35、A9 40 再加力量；三骑士魔法炸弹「36」→ A8 35；狂战士窒息「33→39」→ 基础 A8 30、A9 33；棘刺蟾蜍补 A9 25/19；知识淹没补「A9 每段 +1」）；删低进阶的说法（lag-sleep「小伤害打醒的都在 A0–A2」，熔火之蛋「A5 通关局」）；数字按 A8+ 重算（见下表）；去掉和别条重复的案例。
+- **抽查机制是否随进阶变（24 处）**：monster-db 的 damage_by_asc（base_per_hit）和 hp_by_asc：
+
+| 条目 | 查的招式/数值 | A0 / A7 / A8 / A9 | 结论 |
+| --- | --- | --- | --- |
+| vantom-dismember | 肢解 DISMEMBER | 26 / 26 / 26 / 30 | 机制同，A9 +4，条目已分写 |
+| giant-gun | 高压水枪 | 20 / 20 / 20 / 23（+5 递增） | 一致 |
+| giant-explode | 蒸汽 PRESSURE_UP | 13 / 13 / 13 / 14；自爆 3T+9 / 3T+14 | 一致（日志 {GIANT_KILLS_*}） |
+| kd-block | 知识淹没 | 8×3 / 8×3 / 8×3 / 9×3 | 补「A9 每段 +1」 |
+| mecha-knight | 重劈 | 35 / 35 / 35 / 40 | 原写显示值，改成基础值 + 力量 |
+| ts-phases | 多次爪击 / 猛扑 | 10 / 10 / 10 / 11；45（A9 无样本） | 一致 |
+| ts-phases | 三阶段血量 | — / 100 / 111 / 111 | 一致（A8=A9） |
+| kin-priest-focus | 神官血量 | — / 190 / 199 / 199 | 一致 |
+| beast-clock | 仪式兽血量 | — / 252 / 262 / 262 | 一致 |
+| soul-nexus | 灵魂灼烧 | 29 / — / 29 / 31（上节 A9 复核） | 一致 |
+| bowlbugs | 石盛碗虫头槌 | 15 / 15 / 15 / 16 | 一致 |
+| owl | 判决 VERDICT | — / 33 / 33 / 36 | 原写「35/38」，改 |
+| spiny-toad | 尖刺爆发 / 舌鞭 | 23/17 / 23/17 / 23/17 / 25/19 | 补 A9 |
+| terror-eel | 骇鳗血量 | — / 140 / 150 / 150 | 一致 |
+| aeon-clock | 沙漏血量 | — / 512 / 535 / 无 A9 样本 | 一致（a9-damage：A9 血量同 A8） |
+| fysh-damage | 异鱼血量 | — / 211 / 221 / 221 | 一致 |
+| crab-entry | 碾碎爪 / 火箭血量 | — / 209,199 / 219,209 / 219,209 | 一致 |
+| lag-race | 族母血量 | — / 222 / 233 / 233 | 一致 |
+| insatiable-entry | 猛咬 / 血量 | 28 / 28 / 28 / 31；341 | 一致 |
+| queen-hp | 女王血量 | — / 400 / 419 / 无 A9 样本 | 一致 |
+| tunneler | 血量 / BELOW | 92；23 / 23 / 23 / 26 | 补 A9 26 |
+| knights | 魔法炸弹 | 35 / — / 35 / 无 A9 样本 | 原写「36」，改 A8 35 |
+| sculptor | 血量 / SAVAGE | 172；12 / 12 / 12 / 15 | 一致 |
+| berserker | 血量 / 窒息 | 281；30 / 30 / 30 / 33 | 原写「33→39」，改 |
+
+  - 结论：查到的招式 A0–A8 的基础伤害都相同，A9 才涨（×1.07–1.25）；血量 A7 比 A8 低约 5%，A8 = A9。所以机制本身不随进阶变，随进阶变的只有数字，写明 A8/A9 就够。
+  - 日志另核 2 处机制：帝王蟹先死一只的结局（fight_frames 每帧敌人存活，q-crabfirst.txt）、女王聚合体死亡后的结局（q-queenamalg.txt），见下表。
+
+**统计类 69 条**（改文字 59 条）：asc 全部 [8,20]，a9-damage、act3-a9 [9,20]。改了数字的见下表；其余只是压缩（删重复案例、删「旧的…」历史说明），数字没动。
+
+**策略类 70 条**（改文字 14 条）：
+- 有 A8+ 证据 → [8,20]：67 条（含 15 条药水条目，只改了 asc 下限）。
+- A8+ 证据全是 A9 → [9,20]：beast-ringing-block（A9 7YT0、B3PJ；另两局 A0、A7）。
+- **A8+ 没有证据 → 上限 ≤A7（2 条）**：card-stomp [3,7]（证据 A3/A4/A7；「单体 boss 别拿第二张踩踏」kd-single-target 已写）、relic-blessed-antler [0,7]（证据 A0/A1/A5/A7）。
+- 在 A8+ 被反驳、改成数据版本的：deck-remove、shop-priority「两胜局打击删到 0–1 张」（低进阶）→ A8+ 14 场胜局最终打击 0–5 张、中位 3（q-winstrikes.txt），删牌优先打击的规则不变；relic-looming-fruit「两胜局都拿了最大生命选项」（低进阶）→ A8+ 拿它 6 局 0 通关（观察）。
+
+**改了的统计数字（截止点 10-03 末 = PEGL 结束；A8 232 局、A9 95 局；查询见各 q-*.txt）**
+
+| 条目 | 类别 | 原 asc → 新 asc | 原数字 → 新数字（口径） | 理由 |
+| --- | --- | --- | --- | --- |
+| vantom-entry | S | [7,20]→[8,20] | 只有 A8 ≥75% 28/30、<75% 6/8 → 补 A9 ≥75% 12/14、<75% 2/2（boss 战进场血量分组，q-bossrec） | A9 分开写 |
+| fysh-beckon | M | [0,20]→[0,20] | A7–A9 有清呼唤牌 16 场赢 12、没有 24/20 → A8 有 23/20、没有 15/13；A9 7/6、11/9（boss 战第一帧牌组含燃烧契约/坚毅+/净化/恶魔之焰，q-fyshexh） | 去掉 A7 |
+| fysh-damage | S | [0,20]→[8,20] | A7–A9 输局 8 场 ≤14.7/回合、32 场赢局 ≥13 → A8 输 5 场 9.6–14.6、赢 33 场 13–36.8（中位 24.6）；A9 输 3 场 6.3–14.7、赢 15 场 17–36.8（中位 27.6）（每回合实打 =（首帧敌人血 − 末帧存活敌人血）/回合，q-fyshdmg） | 去掉 A7，A8/A9 分开 |
+| crab-entry | S | [0,20]→[8,20] | A9 16 场赢 6（≥75% 12/6）→ 补 A9 <75% 0/4 | A9 分开写 |
+| crab-kill-order | M | [0,20]→[0,20] | 「截至 10-02 碾碎爪先死的 6 场也赢 5」→ 火箭先死 A8 13/9、A9 5/4，碾碎爪先死 A8 6/5、A9 2/2，都没先死 A8 27/3、A9 9/0（fight_frames 里某只先从存活列表消失，q-crabfirst） | 占位符 {CRAB_KILL_ORDER} 按全部进阶计、A9 只有 5 场（见「需要 Dai 定」），补日志库的 A8/A9 |
+| queen-plan | M | [2,20]→[0,20] | 「截至 10-02 聚合体死了的 14 场赢 3，没死的 9 场全输，11 场输局 6 场死在这第一下」→ 聚合体死了 A8 14/3、A9 2/0，没死 A8 8 场全输（q-queenamalg）；「11 场输局 6 场」改「多半」 | 同上，{QUEEN_AMALGAM} 只有 18 场、含低进阶 |
+| queen-prep | S | [0,20]→[8,20] | 补 A9 2 场 0 胜 | A9 分开写 |
+| aeon-clock | S | [3,20]→[8,20] | 「每回合都掉约 7.7，赢局 59、输局 34/回合」→ 约 7.5；A8 赢局中位 72、输局 33，A9 输局 38（q-aeondmg） | 去掉低进阶局 |
+| effigy-cost | S | [0,20]→[8,20] | A8 27 场死 4、−30/−36.5；A9 7 场全胜、−23 → A8 45 场死 4、−24/−36；A9 17 场全胜、−22/−27（精英房，q-elites） | 旧数字是早期截止点 |
+| prism | S | [0,20]→[8,20] | A8 17 场死 4、−29/−38 → 31 场死 4、−26/−35；A9 补 p75 −48 | 同上 |
+| terror-eel | S | [0,20]→[8,20] | A8 27 场死 1 → 49 场死 1、−23.5/−35；A9 补 p75 −35 | 同上 |
+| gardener | S | [0,20]→[8,20] | A8 22 场死 1、−13/−25 → 47 场死 1、−18.5/−27 | 同上 |
+| skulking-colony | S | [0,20]→[8,20] | A8 20 场死 1、−23/−35.5；A9 7 场死 1、−39 → A8 42 场死 1、−23/−29；A9 13 场死 1、−38.5/−50 | 同上 |
+| phrog | S | [3,20]→[8,20] | A8 20 场全胜、−16.5/−26；A9 7 场全胜、中位 35 → A8 36 场、−17/−22；A9 20 场、−24.5/−41 | 同上 |
+| byrdonis | S | [8,20]→[8,20] | A8 19 场全胜、−33/−38.5 → 34 场全胜、−27/−34；删旧的「A9 8 场赢 7」 | 同上 |
+| decimillipede | S | [0,20]→[8,20] | A9 补赢局 −46.5/−55 | A9 分开写 |
+| beetle | S | [0,20]→[8,20] | A9 12 场死 3 → 16 场死 3（−28/−36 不变） | 截止点 |
+| bowlbugs | S | [7,20]→[8,20] | A8 各组 −11~−19、p75 −17~−29 → −9~−19、−15~−22（走廊，各盛碗虫组合） | 截止点 |
+| hunter-killer | S | [0,20]→[8,20] | A8 35 场死 3、p75 −29；A9 14 场死 2、p75 −29.5 → A8 60 场死 3（走廊 48、问号 12）、p75 −27；A9 18 场死 2、p75 −27（含问号，q-hall-combined） | 截止点，统一含问号 |
+| spiny-toad | S | [0,20]→[8,20] | A8 36 场死 4、−19/−25.5 → 55 场死 4、−18/−25；补 A9 18 场死 1、−19/−24 | 同上 |
+| obscura | S | [0,20]→[8,20] | A9 15 场死 2 → 24 场死 2（含问号）；「进场 <50% 4/10 赢」→ A8 13/8、A9 5/4（q-obscura） | 旧的 4/10 口径不明 |
+| louse | S | [0,20]→[8,20] | A8 30 场死 2、−14.5/−23；A9 9 场、−20/−26 → A8 54 场死 3、−13/−20；A9 26 场全胜、−19/−24（含问号） | 截止点 |
+| tunneler | S | [7,20]→[8,20] | A8 56 场全胜；≤6 回合 48 场中位 13、≥7 回合 8 场 37.5；中位/p75/p90 −13.5/−24/−34.5 → A8 90 场、A9 33 场全胜；≤6 回合 113 场中位 11、≥7 回合 10 场（都 A8）34.5；A8 −13/−23、A9 −9/−18（q-tunneler、q-hall） | 截止点，补 A9 |
+| myte | S | [0,20]→[8,20] | A8 39 场死 2、−14/−24 → A8 59 场死 3（走廊 51 场 −11/−21）；A9 18 场全胜、走廊 −9/−12.5 | 截止点，补 A9 |
+| chomper | S | [2,20]→[8,20] | A8 36 场死 1、−18/−27；A9 4 场 → A8 57 场死 1、−16/−25；A9 16 场全胜、−23/−27 | 同上 |
+| ovicopter | S | [0,20]→[8,20] | A8 32 场死 2、−21/−29；A9 9 场死 1、−19 → A8 48 场死 2、−16.5/−26；A9 21 场死 1、−17/−23 | 同上 |
+| hopper | S | [7,20]→[8,20] | A8 54 场、−18/−26；A9 16 场、−13.5/−19.5 → A8 83 场、−16/−23；A9 36 场、−12/−19.5（全胜） | 同上 |
+| frog-knight | S | [2,20]→[8,20] | 「8 局 2 死」、A9 4 场死 1 → A8 14 场死 2、走廊 −17.5/−33；A9 6 场死 1 | 去掉不分进阶的数 |
+| berserker | S | [0,20]→[8,20] | A9 7 场死 1 → 8 场死 1（含问号） | 截止点 |
+| fossil-stalker | S | [8,20]→[8,20] | 「一幕一场 −32~−40」→ A8 42 场全胜、−10/−12；A9 15 场全胜、−6/−14.5 | **A8+ 数据反驳**原数字（证据 3 局都是 A8 的个案） |
+| card-demon-form | S | [0,20]→[8,20] | 一幕 boss「10 战全胜，胜局力量 28–41」；二、三幕「有它 28/15、没有 131/69」→ 一幕 A8 8/8、A9 2/2；二、三幕 ≥75% 进场有它 A8 26/13、A9 4/4，没有 A8 112/62、A9 36/20（q-demonform） | A8/A9 分开，删不明进阶的力量数 |
+| relic-toasty-mittens | S | [3,20]→[8,20] | A7–A9 23 局过二幕 boss 8 → 二幕拿它 A8 22 局过 10、A9 11 局 2（任何帧遗物里首次出现在二幕，q-relicruns） | 去掉 A7 |
+| relic-seal-of-gold | S | [3,20]→[8,20] | A7–A9 8 局过 4 → A8 7/5、A9 5/3 | 同上 |
+| relic-nutritious-soup | S | [8,20]→[8,20] | A7–A9 16 局过 9（A8 7/11）→ A8 22/14、A9 6/3 | 同上 |
+| relic-very-hot-cocoa | M | [3,20]→[0,20] | A7–A9 13 局过 3（A8 1/6、A9 2/3）→ A8 8/1、A9 3/2 | 同上 |
+| relic-royal-poison | M | [7,20]→[0,20] | A7–A9 13 局都没通关 → A8 7 局、A9 5 局都没通关；删 A7 P2E4 | 同上 |
+| neow-growth | S | [0,20]→[8,20] | 二幕先古「A7–A9 手套 8/23、营养汤 5/12、黄金印 2/6、可可 2/12」→ A8/A9：营养汤 14/22、3/6，手套 10/22、2/11，黄金印 5/7、3/5，可可 1/8、2/3（第 18 层首次拿到，q-ancient2）；删「胜局的成长件几乎都来自这类选择」 | 去掉 A7；结论「成长件 > 可可」仍成立 |
+| relic-paels-tooth | T | [8,20]→[8,20] | 补 A9 2 局过二幕 boss 1 | A9 分开写 |
+| relic-looming-fruit | T | [0,20]→[8,20] | 「两胜局都拿了」→ A8+ 拿它 6 局 0 通关（观察） | 低进阶说法，A8+ 不支持 |
+| deck-remove、shop-priority | T | [0,20]→[8,20] | 「两胜局打击删到 0–1 张」→ A8+ 14 场胜局 0–5 张、中位 3（q-winstrikes） | 同上 |
+| elite-no-double | S | [5,20]→[8,20] | A9 2–3 只 11 局 8/5、1 只 45 局 26/4 → 19 局 15/11、61 局 40/13（q-elitecounts） | 旧数是 A9 56 局时的；和 elite-need-one 对齐 |
+| elite-need-one | S | [8,20]→[8,20] | 补 A8 二幕 0 精英 79 局过 25、1 只 85 局 31（从 act2-opening 移来） | 去重 |
+| route-entry-hp | S | [0,20]→[8,20] | 删「A5/A6 通关局三个 boss 都 ≥75% 进场」 | 低进阶 |
+| giant-deck | S | [0,20]→[8,20] | 删「旧的『输局 0.3、赢局 2.2』来自 A0 三局」 | 低进阶 |
+| act3-hallways | S | [5,20]→[8,20] | 删「A9 3 局到三幕第一个火堆前 4–6 场、到达中位 49%」 | 旧数，act3-a9 已是 26 局的版本 |
+| card-rupture、deck-growth-turns、deck-passive-engine | T/M | — | n=40、n=197、「女王 23 场」标明是 A8/A9 | 口径写清 |
+
+### 合并和退役
+- **退役 1（合并）**：deck-random-ev（general:deck，n=4，证据 A0/A3，A8+ 没有数据）→ event-unknown-effects（随机能力牌、宝石面具、黑暗之拥三句并入，证据并入：n 4 → 8，中 → 高，按公式算）。event-unknown-effects 原有的「腐化」一句删了，见 event-symbiote（同一件事只留一条）。
+- **考虑过没做**：deck-strength-aoe 并入 act1-strength——tests/knowledge-check-a8w-experience.test.ts 和 experience.test.ts 要求它 active、含「A8 一幕 boss 152 场」、并出现在一幕奖励切片里，没改测试；改为去重：deck-strength-aoe 删掉和 act1-strength 重复的「力量来源 A8 92/103…」那句（旧截止点的数），留 152 场的张数/格挡/AOE 对比，指向 act1-strength。card-dark-embrace 并进 card-feel-no-pain：不同的牌，合并后黑暗之拥被提供时不再按 id 命中，没做。
+- **没有因代码修好而退役的**：card-armaments（求解器不建模升级效果）在 card-value.ts:44 的注释里仍是现状。
+- **压缩**：改文字 94 条，lesson 少 3.5k 字。删的是：和别条重复的数字（a9-damage 的各幕走廊数 → 指向 act1-costs/act2-opening/act3-hallways；act2-opening 的二幕精英数 → elite-need-one；act3-hallways 的 A9 三幕开头 → act3-a9；deck-strength-aoe 的力量来源 → act1-strength）、逐局叙述（kin-scaling、crab-dps、kd-dps、ts-phases、insatiable-*、route-forced-elite-prep、route-shops、event-slippery-bridge 等每条留 2–4 个局号）、「旧的…/旧时钟…」历史说明（insatiable-clock、giant-deck、card-sword-boomerang）。药水分句都没动（见「方法」）。
+
+### A8 / A9 前缀字数（改前→改后）
+- lesson 总长（active）：39806 → 36212 字（预算 60000）；A8 适用 194 条 38292 字 → 192 条 35070 字；A9 适用 198 条 39806 字 → 195 条 36103 字。
+- 知识前缀的经验部分（`tools/gkb-dump.ts --section experience`，同一份日志、占位符现填）：
+
+| 块 | A8 改前 | A8 改后 | A9 改前 | A9 改后 |
+| --- | --- | --- | --- | --- |
+| 怪物/boss | 32586 | 29820 | 33709 | 31290 |
+| 构筑 | 19792 | 19652 | 21466 | 20303 |
+| 路线/休息 | 11138 | 10530 | 11662 | 11054 |
+| 商店/事件 | 7410 | 7382 | 7493 | 7465 |
+| 药水 | 6825 | 6825 | 6822 | 6822 |
+| 机制/综合 | 621 | 621 | 1326 | 1306 |
+| 合计（含标题） | 78521 | 74980 | 82627 | 78390 |
+
+  - A8 −3541（−4.5%）、A9 −4237（−5.1%）。比 lesson 本身少得少：每条还带一行「支持/反对/置信/案例」，条数只少了 2–3 条。药水块没变（文字没动）。
+- `tools/knowledge-slice.ts`（上一节的 240 个状态，同一抽样文件）：中位 / 最大（字）
+
+| 界面 | A8 改前 | A8 改后 | A9 改前 | A9 改后 |
+| --- | --- | --- | --- | --- |
+| 战斗 | 4.69k / 7.21k | 4.27k / 6.39k | 5.20k / 7.83k | 4.70k / 6.94k |
+| 奖励 | 6.46k / 7.91k | 5.81k / 7.13k | 6.10k / 7.91k | 5.54k / 7.18k |
+| 地图 | 7.66k / 8.48k | 6.98k / 7.56k | 7.66k / 8.48k | 6.98k / 7.56k |
+| 事件 | 5.14k / 8.09k | 4.97k / 7.31k | 5.13k / 7.43k | 4.93k / 6.62k |
+| 火堆 | 6.73k / 7.45k | 6.18k / 6.64k | 4.41k / 7.45k | 4.09k / 6.63k |
+| 商店 | 6.38k / 7.33k | 6.17k / 6.70k | 6.47k / 7.23k | 6.20k / 6.60k |
+
+  - 同一状态改后减改前的中位：A8 战斗 −0.46k、奖励 −0.58k、地图 −0.67k、事件 −0.28k、火堆 −0.55k、商店 −0.28k；A9 −0.43k、−0.57k、−0.66k、−0.32k、−0.32k、−0.29k。单个切片最多涨 0.11k（A8 V3UP F3 商店：退役的 deck-random-ev 78 字空出的第 25 个位子由 terror-eel 补上）。
+
+### 需要 Dai 定的事
+1. **boss-damage.json 过时、占位符按全部进阶计数**：仓库里的 boss-damage.json 是 09-30（a5b3a1a）的，A9 帝王蟹只有 5 场。经验里的 {BOSS_RECORD:*}（8 条用到）、{CRAB_KILL_ORDER}、{QUEEN_AMALGAM}、{SANDPIT_DEATHS}、{GIANT_KILLS_A9}、{LAG_SLEEP} 都从它填，所以 A9 前缀里会出现「帝王蟹 A9 5 场赢 0」，而同一条的文字（日志库）是「A9 16 场赢 6」；{CRAB_KILL_ORDER}、{QUEEN_AMALGAM}、{SANDPIT_DEATHS} 的开头还是全部进阶的总数（「有记录的 59 场螃蟹战」，含 A0–A7）。测试要求 crab-kill-order、queen-plan 必须用占位符（09-30 的规则），所以这次没删占位符，只在旁边补了日志库的 A8/A9 数。要不要重建 boss-damage.json（tools/build-boss-damage.py），并让这几个占位符只报 A8/A9。
+2. **药水条目的 asc**：按规则只改句内数字，23 条药水条目在 A9 都仍适用。其中 potion-vulnerable 前半句是策略（「别在一幕 boss 前 ≤3 层的精英里喝」），证据只有 A4、A7；这次按机制类（后半句「对人工制品无效」）留在 [0,20]，没有动。要不要给它加上限。
+3. **只适用 ≤A7 的 2 条**：card-stomp [3,7]、relic-blessed-antler [0,7]，A8+ 没有数据。A8/A9 不再看到它们；如果以后要在 A8+ 用，需要新的对局证据。
+4. **114 条的下限提到 8**：A0–A7 的对局（如果还跑）会少看到这些条目。现在只跑 A8/A9，不影响；以后回低进阶时要重新审。
+5. **测试钉住的旧设计**：deck-strength-aoe 和 act1-strength 讲的是同一件事，因为测试要求前者存在、出现在一幕奖励切片里，这次只去重没合并。要不要放开这条测试，把两条合成一条。
+
+### 开发会话审核（2026-10-04 09:39）
+- 抽查：23 条药水条目文字一字未改（脚本比对），只改了 asc；asc 变化 0→8 共 55 条、机制类改成 [0,20] 39 条；只适用 ≤A7 的是 card-stomp、relic-blessed-antler。A9 适用 198 → 195 条、36,103 字符（预算 60,000）。
+- tsc 0；vitest 2454/2455（batch-c 计时用例在负载下超时，单独 28/28）。
+- 合入：v4 73a60d0，v4-live c9955eb，V4.6 批中下一局生效（eval 版本 V4.6.asc）。
