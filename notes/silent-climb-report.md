@@ -181,3 +181,20 @@ nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group
 ```
 
 退出码1：`RuntimeError: eval/strength-sources.ts failed`，tsx CLI监听`/tmp/tsx-1000/68.pipe`被沙箱拒绝（`listen EPERM: operation not permitted`）。当前白名单没有eval-metrics动作，broker与检查脚本只读待办继续保留；本轮不绕过沙箱，完整评估表、力量来源和校准指标均待外部结果。以上核心统计已由runs、SL、run-config、论文表和只读日志库交叉核对；失败命令及A1补跑请求追加到收件箱与notes/for-dai.md。
+
+### A1首胜复盘补齐（2026-10-05 06:34 CST）
+
+批次20261005-061301完成K3676LU8B0UH正式复盘及数字、时间勘误，A1正式复盘从2/3补齐为3/3。事件列出的12个账本条目全部覆盖本局；`ledger.py check`为60项、0个问题。学习者新增silent-0056—0060，并更新silent-0005/0011/0024/0025/0046/0051/0053；先前的「首胜复盘待完成」保留为当时快照。
+
+`ledger.py find --character silent --asc 1`现为8项：silent-0048、silent-0052、silent-0055、silent-0056、silent-0057、silent-0058、silent-0059、silent-0060。新五项分别记录撕咬共享增伤的模型缺口、未施放群蛇形态的观察、撕咬共享成长的机制证据、毒斩杀时仍发生的回合末损失、遗忘之魂的消耗触发；结论均为学习者从本局证据登记，运维不补规则。它们在首胜结束后登记，不反写进前文A1期间15项新增的时间统计。
+
+本轮仅将silent-0056的模型提案及F48第二次T9证据加入修复队列；silent-0051为已有萎靡模型缺口，追加本局七次零X及F33 T4证据，没有重复开项。机制及打法交学习者，其他观察保留在复盘和账本；首战T11实际死亡结算、实际执行最优线比例等缺失项沿学习者回报保持「未记录」。完整eval仍等待上轮已发出的沙箱外补跑请求，不因复盘完成另跑或替代完整指标。
+
+本批论文数据刷新后的A1原行（cut：2026-10-05 06:32:31 CST），截至06:37核对：
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,1,3,1,0,1,32.67,32.67,E6AVMMVCSRPC,K3676LU8B0UH,2026-10-04T19:50:28+00:00,2026-10-04T22:02:02+00:00,8,0,10,silent-0005 silent-0027 silent-0028 silent-0034 silent-0035 silent-0039 silent-0042 silent-0043 silent-0044 silent-0047,4,1
+```
+
+胜负与平均层数保持三局统计；新复盘使items_found由3变8，repeat由3变4。repeats_after_ship仍为1，沿用silent-0052的统计缺陷提示，不据此推断学习效果。
