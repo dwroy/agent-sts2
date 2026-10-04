@@ -411,12 +411,15 @@ def refresh_knowledge() -> None:
            f'python3 {tools}/build-room-costs.py >/dev/null 2>&1; '
            f'python3 {tools}/build-boss-damage.py >/dev/null 2>&1; '
            f'python3 {tools}/build-card-upgrades.py >/dev/null 2>&1; '
-           f'nice -n 10 python3 {tools}/build-fight-value.py all >/dev/null 2>&1; '
            f'nice -n 10 {wt}/.cache/logdb-venv/bin/python {tools}/logdb/sync.py >/dev/null 2>&1; '
            f'{wt}/tools/refresh-potion-equivalents.sh >/dev/null 2>&1')
     log = open(os.path.expanduser("~/Projects/sts2-jev/ops/refresh.log"), "a")
+    # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
+    # so it runs on its own and the next run never waits for it; a run that starts meanwhile reads the previous copy.
+    subprocess.Popen(["bash", "-c", f"nice -n 10 python3 {tools}/build-fight-value.py all >/dev/null 2>&1"],
+                     stdout=log, stderr=log, start_new_session=True)
     proc = subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
-    # REFRESH_WAIT=1 (autoplay.sh, 2026-10-04): block until every file is written, so the next run reads them fresh
+    # REFRESH_WAIT=1 (autoplay.sh, 2026-10-04): block until every file the next run reads is written, so the next run reads them fresh
     # (4AWD read the old outcome-stats.json while this was still rebuilding it). Capped; past the cap it keeps going.
     if os.environ.get("REFRESH_WAIT") == "1":
         try:
