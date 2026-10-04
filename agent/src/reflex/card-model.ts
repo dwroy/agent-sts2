@@ -48,6 +48,8 @@ export interface CardModel {
   /** Per hit, before this turn's extra Strength and before Vulnerable/Weak. null = deals no damage. */
   damage: number | null;
   hits: number;
+  /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
+  maulIncrease?: number;
   block: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
   vulnerable: number;
@@ -109,7 +111,7 @@ export interface CardModel {
   /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
   ethereal?: boolean;
   /** Conditional behaviour the solver implements by id. */
-  special: "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
+  special: "malaise" | "dismantle" | "thrash" | "body_slam" | "bully" | "molten_fist" | "whirlwind" | "spite" | "feed" | "triple_block" | "double_block" | "temp_dex" | "buffer" | "duplicate_next" | "rupture" | "colossus" | "frantic_escape" | "crimson_mantle" | "triple_next_attack" | "free_card" | "dexterity" | "dominate" | "fiend_fire" | "ashwater" | "stomp" | "second_wind" | "intangible" | "clarity" | "ritual" | "plating" | "snecko" | "heal" | "gamble" | "regen" | "chaos" | "glowwater" | "bottled" | "radiance" | "forge" | "stew" | "double_next_attacks" | "free_next_attack" | "primal_force" | "retain_hand" | null;
   /**
    * Replay N (「重放N」 in the card's text: an enchantment, or Soldier's Stew on a Strike): the card is
    * played N extra times.
@@ -667,6 +669,7 @@ export function replayOf(rendered: string): number {
 export interface UpgradeDelta {
   damage?: number;
   hits?: number;
+  maulIncrease?: number;
   block?: number;
   vulnerable?: number;
   weak?: number;
@@ -681,7 +684,7 @@ export interface UpgradeDelta {
   powerAmount?: number;
 }
 
-const UPGRADE_FIELDS = ["damage", "hits", "block", "vulnerable", "weak", "strength", "tempStrength", "draw", "energyGain", "hpLoss", "cost", "plating", "retaliate", "powerAmount"] as const;
+const UPGRADE_FIELDS = ["damage", "hits", "maulIncrease", "block", "vulnerable", "weak", "strength", "tempStrength", "draw", "energyGain", "hpLoss", "cost", "plating", "retaliate", "powerAmount"] as const;
 
 /**
  * What upgrading this plain card changes, as model fields: the card entry with its dynamic values and
@@ -727,6 +730,7 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
     damage: card.damage === null && !delta.damage ? null : add(card.damage ?? 0, delta.damage),
     ...(card.damageBase !== undefined && delta.damage ? { damageBase: card.damageBase + delta.damage } : {}),
     hits: Math.max(0, add(card.hits, delta.hits)),
+    ...(card.maulIncrease !== undefined || delta.maulIncrease !== undefined ? { maulIncrease: add(card.maulIncrease, delta.maulIncrease) } : {}),
     block: Math.max(0, add(card.block, delta.block)),
     vulnerable: add(card.vulnerable, delta.vulnerable),
     weak: add(card.weak, delta.weak),
@@ -773,7 +777,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // An X-cost Attack hitting X times (Skewer 「造成{Damage}点伤害X次」, Eradicate, Heavenly Drill) is Whirlwind's
   // single-target kin: X hits at play time. Without it Skewer was one hit whatever X was (ZRYR5WLG6E9K F39 T1: played
   // at 0 energy after Unrelenting+, counted 8 x1.5 into Vulnerable; planned 70, dealt 58).
-  const special = SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
+  const special = cardId === "MALAISE" && !bool(card["upgraded"]) && bool(card["costs_x"]) ? "malaise" :
+    SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
 
   // Ambiguous or conditional vars, by id.
   switch (cardId) {
@@ -836,7 +841,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force") {
+  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force" || special === "malaise") {
     known = true; // its whole value is the Sandpit count / the block doubled / the Attacks doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
@@ -916,6 +921,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     damage,
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
+    ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
     block,
     vulnerable,
     weak,

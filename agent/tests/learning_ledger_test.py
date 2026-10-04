@@ -7,7 +7,6 @@ import os
 import subprocess
 import sys
 import tempfile
-import time
 import unittest
 from pathlib import Path
 
@@ -114,7 +113,10 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual(upd({"status": "shipped", "version": "S9.none"}).returncode, 2)  # not in versions.json
         self.assertEqual(upd({"status": "rejected"}).returncode, 2)  # rejected needs a note
         self.assertEqual(upd({"status": "shipped", "version": "S1.x", "where": {"commits": ["abc1234"]}}).returncode, 0)
-        time.sleep(1.1)  # the repeat is logged after the shipping (ts has seconds)
+        # Freeze the fixture's shipping time; post-release classification must not depend on today's date.
+        rows = self.lines()
+        rows[-1]["ts"] = "2026-10-05T04:30:00Z"
+        write_jsonl(self.ledger, rows)
         self.assertEqual(upd({"evidence": [{"run": "SILENT000004", "role": "repeat", "floor": 5}]}).returncode, 0)
         self.assertEqual(self.cli("update", stdin=json.dumps({"id": "silent-0099", "by": "dev", "note": "x"})).returncode, 2)
         shown = json.loads(self.cli("show", "silent-0001").stdout)
