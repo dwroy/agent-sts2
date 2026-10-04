@@ -40,3 +40,9 @@ experiments/giant-replay/*.jsonl
 experiments/living-death-moves/*.jsonl
 # CARD_CONDITIONS replay raw rows (tools/card-conditions-replay.ts; the summary and the frame sets are committed)
 experiments/card-conditions/*.jsonl
+# Project-root data that is not in git (docs/layout.md): raw logs, rebuildable data (game data cache, log database and
+# its venv), the package's node_modules. In a checkout they may be links to the live copies.
+/logs
+/data
+/node_modules
+/agent/node_modules
