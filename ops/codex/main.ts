@@ -5,8 +5,8 @@
  *                                                                    (the first wake creates it from the ops prompt)
  *   agent/node_modules/.bin/tsx ops/codex/main.ts precheck            codex usable + key files unreadable under "ops"
  *   agent/node_modules/.bin/tsx ops/codex/main.ts growth              the session file's size, context, compactions
- *   agent/node_modules/.bin/tsx ops/codex/main.ts snapshot-session    copy the session file to paper/materials/session/
- *                                                                    with every key value replaced by [REDACTED]
+ *   agent/node_modules/.bin/tsx ops/codex/main.ts snapshot-session    copy the codex transcripts (ops session, learner) to
+ *                                                                    paper/materials/session/codex/, keys -> [REDACTED]
  *   agent/node_modules/.bin/tsx ops/codex/main.ts probe <script.sh>   run a shell script under the ops profile
  *                                                                    (re-verify the sandbox after a codex update)
  *
@@ -14,7 +14,7 @@
  * pre-check failed, 124 timed out.
  */
 import { spawn } from "node:child_process";
-import { appendFileSync, copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
@@ -25,6 +25,7 @@ import { PROJECT_ROOT } from "../../agent/src/core/paths.js";
 import { codexChildEnv, codexKeyCheck, codexProfileOverrides, engineBinary, learnerCodexHome, shellQuote, strippedEnvNames } from "../../learner/lib/engines.js";
 import { collectSecrets, redactSecrets, secretFilesOf, stamp } from "../../learner/lib/launcher.js";
 import { SummaryTracker, findRollout } from "../../learner/lib/summary.js";
+import { archiveCodexTranscripts } from "./archive.js";
 import {
   ACTIONS,
   DEFAULT_WAKE_TIMEOUT_MIN,
@@ -333,21 +334,28 @@ function growthReport(): number {
   return 0;
 }
 
-/** The daily snapshot's copy of the session file, key values replaced (ops prompt「论文数据快照」). */
+/**
+ * The daily snapshot's copy of the codex transcripts for the paper, key values replaced (ops prompt「论文数据快照」):
+ * the ops session (rollout, wakes) and the learner (run logs, codex rollouts), into paper/materials/session/codex/
+ * (ops/codex/archive.ts). Never prints a key: only paths and counts.
+ */
 function snapshotSession(): number {
   const session = readSessionId(paths);
-  if (!session) return 0;
-  const rollout = findRollout(learnerCodexHome(env), session);
-  if (!rollout) {
+  const result = archiveCodexTranscripts({
+    root: ROOT,
+    codexHome: learnerCodexHome(env),
+    opsDir: paths.dir,
+    opsSession: session,
+    secrets: collectSecrets(secretFilesOf(ROOT), env, strippedEnvNames(env, "codex")),
+  });
+  process.stdout.write(
+    `${result.outDir}: ${result.copied.length} file(s) copied, ${result.unchanged} unchanged, ${result.redacted} key value(s) redacted` +
+      `${result.missingRollouts.length ? `; rollout not found for ${result.missingRollouts.join(", ")}` : ""}\n`,
+  );
+  if (session && result.missingRollouts.includes(session)) {
     log(`snapshot: session file of ${session} not found`);
     return 1;
   }
-  const dir = join(ROOT, "paper", "materials", "session");
-  mkdirSync(dir, { recursive: true });
-  const target = join(dir, `codex-ops-${session}.jsonl`);
-  copyFileSync(rollout, target);
-  const redacted = redactSecrets(target, collectSecrets(secretFilesOf(ROOT), env, strippedEnvNames(env, "codex")));
-  process.stdout.write(`${target} (${redacted} key value(s) redacted)\n`);
   return 0;
 }
 

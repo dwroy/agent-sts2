@@ -56,6 +56,21 @@ default.code_dir: {{project_root}}/.worktrees/live
    - 路线预测（投影血量对实到血量）和 boss 时钟（需要/估计、实打/估值）；
    - 用时、token 和缓存命中。
 3. **机制观察**（新增，给经验库的机制推理用，v4-dev-brief 第 5 项）：本局里力量、敏捷、能力牌、增益（包括敌人的）在决定胜负的战斗里起了什么作用：怎么起作用、和什么搭配、差了多少（带数字）。放在记录里，以「机制：」开头；本局没有值得写的就写「机制：无」。
+4. **新错还是老错**（论文用，paper/materials/learning/README.md）：3 条经验里每个关键失误，在那一行末尾标一个：
+   - `（第一次遇到）`：学习账本和这个角色更早的复盘里都没有这件事；
+   - `（之前见过：<账本 id>）`：账本里有、还没上线（状态不是 shipped）；
+   - `（之前学过：<账本 id>，<eval 版本>）`：账本里有、已经上线，这局又犯了。
+   查法：`python3 {{project_root}}/learner/ledger.py find --character {{character}} --text <关键词>`（换几个关键词：牌名、敌人名、ID），再按 `## ` 标题 grep lessons.md 里这个角色更早的复盘。只认这个角色自己的局。
+
+## 3.1 学习账本（每局写完复盘之后）
+账本是 `{{project_root}}/paper/materials/learning/ledger.jsonl`，字段见 `{{project_root}}/paper/materials/learning/README.md`（先读）。**只用** `python3 {{project_root}}/learner/ledger.py` 写，不许直接改这个文件。
+- 3 条经验（包括 bug）每条对应账本里的一个条目：
+  - 第一次遇到的：`add` 一个条目，`status` 是 `observed`，`by` 是 `learner:postmortem`，`where` 写 `{"lessons": ["<run id>"]}`。`claim` 用你自己的话写结论；`evidence` 带局号、层、回合；`first_run` 是这个角色最早出现这件事的局（通常就是这局）；`kind` 按 README 选（bug 是 `bug-infra`）。
+  - `prior`：**在任何学习之前** agent 是不是已经做对了。看这个角色更早的局里有没有同样的局面、当时怎么做的：一直做对写 `yes`，有对有错写 `partly`，一直做错写 `no`，没碰到过写 `unknown`；用到的局写进 `prior_runs`，一句话依据写进 `prior_note`。
+  - 之前见过 / 学过的：`update` 那个条目，`evidence` 追加这局（又犯了同样的错用 `"role": "repeat"`；只是又一次印证用 `"support"`；和结论相反用 `"contradict"`），`where` 追加 `{"lessons": ["<run id>"]}`。
+- 「机制：」里有新机制的，同样 `add` 一个 `kind` 为 `mechanic` 的条目（「机制：无」就不用）。
+- 写法：把 JSON 从标准输入传进去，例如 `python3 {{project_root}}/learner/ledger.py add <<'EOF'` + 一个 JSON 对象 + `EOF`。它会校验（局号要在 runs.jsonl 里、是这个角色的局，字段和取值要对），通过才追加并打印条目 id；不通过 exit 2、什么都不写，按提示改了再写。
+- 写完跑 `python3 {{project_root}}/learner/ledger.py find --run <run id>`，确认每局都有条目；再跑 `python3 {{project_root}}/learner/ledger.py check`，退出码要是 0。
 
 ## 4. 数字的规矩
 - **每个数字都要对过日志**。查不到的写「未记录」，不许估，不许从别的局套。
@@ -64,8 +79,8 @@ default.code_dir: {{project_root}}/.worktrees/live
 
 ## 5. 安全
 - key 不许打印、不许落盘：不许读或 grep `.env`、`~/.jev_api_keys`、`~/.deepseek_api_key`，不许跑 `env`、`printenv`、`set` 之类会打印环境变量的命令。
-- 只改 {{project_root}} 里的这两处：notes/lessons.md（只追加）和 {{scratch}}。其他文件（ops/、paper/、notes/ 下的其他文件、任何代码）都只读。
-- 不推送；不提交（lessons.md 的提交由调用方做）。
+- 只改 {{project_root}} 里的这三处：notes/lessons.md（只追加）、学习账本 paper/materials/learning/ledger.jsonl（只经 learner/ledger.py 追加）和 {{scratch}}。其他文件（ops/、paper/、notes/ 下的其他文件、任何代码）都只读。
+- 不推送；不提交（lessons.md 和账本的提交由调用方做）。
 - 不运行 play；不用 Zboubkiller DLL，不开 mod 自带的 autoplay。
 - 不读游戏二进制（sts2.dll）或 .pck 文件。
 - 杀进程用 PID，不用 `pkill -f`；不许 `npm install`；logs/ 只读。
@@ -79,11 +94,12 @@ default.code_dir: {{project_root}}/.worktrees/live
 - 新的纯 bug（file:line，每条一行；没有写「无」）：
   - <run id>：<一句话> — <file:line>（新 / fix-queue 已有）
 - 写成「未记录」的项：<run id>：<哪几项>
+- 学习账本：<run id>：新增 <id,…>；更新 <id,…>（老错 <id>）……每局一行；`ledger.py check` 退出码
 - 需要 Dai 定的事（策略类证据，没有写「无」）：……
 ```
 
 最后再单独给一个 json 代码块，给调用方的脚本读：
 
 ```json
-{"task": "postmortem", "appended": ["<run id>", "..."], "skipped": [{"run": "<run id>", "reason": "..."}], "bugs": [{"run": "<run id>", "where": "agent/src/...:123", "what": "...", "new": true}]}
+{"task": "postmortem", "appended": ["<run id>", "..."], "skipped": [{"run": "<run id>", "reason": "..."}], "bugs": [{"run": "<run id>", "where": "agent/src/...:123", "what": "...", "new": true}], "ledger": {"added": ["<id>"], "updated": ["<id>"], "repeats": ["<id>"], "check": 0}}
 ```

@@ -81,10 +81,11 @@
    - 模型和强度用学习者的默认值（gpt-6.1-sol、xhigh），不另设。学习者的 codex 要联网，你的沙箱里跑不了，所以由调度器跑；要补派用 `postmortem <id,…>` 动作。
    - 启动器每次运行前都会检查 key 隔离，检查不过会以 exit 3 停下：报给开发会话（收件箱），不要绕过。
    - 跑完调度器发 `learner-done` 事件，里面有退出码、已有和还缺复盘的局、回报文件的位置。你看回报：新的纯 bug 中，阻塞性的按「卡死」的修法，其他的追加到 fix-queue-v4.md；打法或机制上的发现不用你处理，开发会话按批次交给学习者。
-   - 然后运行 `python3 ops/paper_dataset.py --no-raw`，在 decision-log 记一行，提交主目录仓库（只 add 自己改的文件）。
+   - 查学习账本（paper/materials/learning/README.md）：`learner-done` 里列了每局的账本条目和没有条目的局；再跑 `python3 learner/ledger.py check`。有局没有条目、或 check 不过，在 decision-log 记一行并写进收件箱交给开发会话；账本只由学习者和开发会话写，你不补写。
+   - 然后运行 `python3 ops/paper_dataset.py --no-raw`，在 decision-log 记一行，提交主目录仓库（只 add 自己改的文件，加上 paper/materials/learning/ledger.jsonl）。
 3. **经验批次**：调度器跑 `python3 ops/experience-pending.py --character silent`，未并入的复盘满 10 局时直接写进收件箱通知开发会话。经验更新由开发会话发起和审核，你不跑这一步。
 4. **额度**：学习者不设额度保护。如果 `learner-done` 里是额度或登录错误，在 decision-log 记一行，复盘往后顺延（调度器 1 小时后重派，每局最多 3 次），对局照常跑。
-5. **每过一级**（事件 `ascension-up`：climb 升级之后的第一局开打时）：运行 eval/metrics.py，加上 `--character silent --group-by ascension --md`，写入 notes/silent-climb-report.md 的新一节，内容包括：这一级打了几局、第一次尝试和 SL 的胜负、平均层数、主要死因，以及这一级期间学习者产出了什么、上线了什么。在收件箱用五行以内写给 Dai。
+5. **每过一级**（事件 `ascension-up`：climb 升级之后的第一局开打时）：运行 eval/metrics.py，加上 `--character silent --group-by ascension --md`，写入 notes/silent-climb-report.md 的新一节，内容包括：这一级打了几局、第一次尝试和 SL 的胜负、平均层数、主要死因，以及这一级期间学习者产出了什么、上线了什么（引学习账本的条目 id：`python3 learner/ledger.py find --character silent --asc <这一级>` 和 `--status shipped`，并附 paper/data/learning-curve-silent.csv 里这一级的一行）。在收件箱用五行以内写给 Dai。
 
 ## 论文数据快照（调度器每天 4:07 跑）
 调度器运行 `python3 ops/paper_dataset.py`（完整版），把你这个会话的记录替换掉 key 后复制到 paper/materials/session/，并在 decision-log 记一行。只有失败时才叫你（事件 `snapshot-failed`）：看输出找原因，修得了就修（脚本问题按「其他 bug」记 fix-queue），在 decision-log 记一行。

@@ -26,8 +26,8 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | 时间 | 调度器自己做 | 叫醒 codex（事件） |
 |---|---|---|
 | 每 5 分钟 | `ops/stall-check.sh` | 输出 STALL → `stall`（带完整输出）。同一原因（去掉数字后相同）第一次之后隔 10、20、40、80 分钟、之后每 2 小时再叫一次；OK 了就清掉 |
-| 每小时 13、43 分 | `ops/codex-ops-learn.py tick`：① runs.jsonl 里静默猎手的胜局不在 ops/win-notified 里的，写进去；② 这个角色最新的 run-config 进阶比上次见到的高；③ 已结束、没有 `## <id>` 复盘、没派过的局，派一批学习者（最多 5 局，同一时间一批），`learner/run.ts --engine codex --task postmortem --character silent`；④ `experience-pending.py` 满 10 局，在收件箱写一行（同一批只写一次） | ① → `victory`；② → `ascension-up`（第一次见到只记下，不叫）；③ 的批次跑完 → `learner-done`（退出码、已有/还缺的复盘、回报文件）；④ 不叫 |
-| 每天 4:07 | `ops/paper_dataset.py`（完整版）；运维会话的会话记录替换 key 后复制到 paper/materials/session/codex-ops-<id>.jsonl；decision-log 记一行 | 失败时 `snapshot-failed` |
+| 每小时 13、43 分 | `ops/codex-ops-learn.py tick`：① runs.jsonl 里静默猎手的胜局不在 ops/win-notified 里的，写进去；② 这个角色最新的 run-config 进阶比上次见到的高；③ 已结束、没有 `## <id>` 复盘、没派过的局，派一批学习者（最多 5 局，同一时间一批），`learner/run.ts --engine codex --task postmortem --character silent`；④ `experience-pending.py` 满 10 局，在收件箱写一行（同一批只写一次） | ① → `victory`；② → `ascension-up`（第一次见到只记下，不叫）；③ 的批次跑完 → `learner-done`（退出码、已有/还缺的复盘、每局的学习账本条目和没有条目的局、回报文件）；④ 不叫 |
+| 每天 4:07 | `ops/paper_dataset.py`（完整版，含 `paper/data/learning-curve-<角色>.csv`）；codex 记录替换 key 后复制到 paper/materials/session/codex/（运维会话的 rollout 和 wakes、学习者的 learner/runs/*.jsonl 和它们的 codex rollout；ops/codex/archive.ts，按 MANIFEST.json 只复制变了的），再用 gitleaks 扫一遍（比上次多就在收件箱写一行，不叫醒运维）；decision-log 记一行 | 失败时 `snapshot-failed` |
 | 随时 | — | `ops/codex-ops.sh wake "<话>"` → `manual` |
 
 学习者跑在调度器这边（沙箱外）：它自己的 codex 要联网，运维会话的沙箱里跑不了。失败的批次（还缺复盘的局）1 小时后重派，每局最多 3 次。
@@ -81,6 +81,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 |---|---|
 | ops/codex-ops.sh | 调度器：start / stop / status / tick / drain / wake / pause；stall 的退避；快照 |
 | ops/codex/lib.ts、main.ts | 命令行、权限配置、事件消息、broker、叫醒、预检、会话大小、快照复制、`probe` |
+| ops/codex/archive.ts | 每日快照：运维和学习者的 codex 记录替换 key 后复制到 paper/materials/session/codex/ |
 | ops/codex-ops-learn.py | 学习闭环的机械部分；状态 ops/codex-ops/learn.json |
 | ops/codex-ops-learner.sh | 跑一批复盘（沙箱外），结束时发 learner-done 并马上叫醒 |
 | ops/codex-ops-do.sh、ops/codex-ops-actions.sh | 沙箱里的请求端、沙箱外的动作 |
