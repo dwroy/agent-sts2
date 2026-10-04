@@ -176,10 +176,11 @@ describe("the loop at a turn start still settling", () => {
   it("neither power up: not held, the action goes out on the first board read (as before)", async () => {
     const config = testConfig();
     const { stale, settled } = turnStart(false);
-    const { server, sent } = await turnStartMod(stale, settled, 400);
+    // The board moves at 1000 ms (400 before: the first read's planning alone took ~500 ms at load ~20 while live play ran).
+    const { server, sent } = await turnStartMod(stale, settled, 1000);
     await runLoop({ config, mode: "play", client: new ModClient({ baseUrl: server.url }), jev: stubJev(), knowledge: testKnowledge, maxRuns: 1, maxDecisions: 10, pollIntervalMs: 1 });
     expect(sent).toHaveLength(1);
-    expect(sent[0]!.at).toBeLessThan(400);
+    expect(sent[0]!.at).toBeLessThan(1000);
     expect(recordsOf(config).filter((record) => record["screen"] === "COMBAT").map((record) => record["result"])).toEqual(["completed: scripted"]);
   }, 30_000);
 });
