@@ -272,6 +272,8 @@ export function fightStartRelics(runRaw: Record<string, unknown>, knowledge?: Kn
       continue;
     }
     if (MODELLED_ELSEWHERE.has(id) || passiveSimRelic(id)) continue;
+    // The live planner supplies this learned Silent relic field, inherited by later simulated turns.
+    if (id === "DAUGHTER_OF_THE_WIND" && str(runRaw["character_id"]).toLowerCase() === "silent") continue;
     const text = knowledge?.relic(id)?.description ?? str(raw["description"]);
     if (FIGHT_TEXT.test(text)) unmodelled.push(name);
   }

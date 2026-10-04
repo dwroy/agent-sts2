@@ -366,6 +366,8 @@ export interface PlayerSim {
    * 2 after the 3rd and 6th Attack), the count starting again each turn.
    */
   shuriken?: { every: number; strength: number; count: number };
+  /** Daughter of the Wind: block per Attack play, not per hit (CSBR5CRDWQNB F33 attempt 6 T1/T2/T4). */
+  daughterWindBlock?: number;
   /**
    * Music Box (「将你每回合打出的第一张攻击牌的一张虚无复制品加入你的手牌」): the first Attack card played in a turn
    * adds an Ethereal copy of itself to the hand (after its own effects, draws included). `count`: the Attacks already
@@ -2124,6 +2126,8 @@ function thrashAbsorb(next: Sim, card: CardModel, player: PlayerSim): void {
  */
 function attackRelics(sim: Sim, player: PlayerSim): void {
   sim.relicAttacks += 1;
+  // Relic block: the observed T4 trigger still gave one under Frail; printed card Block is separate.
+  if ((player.daughterWindBlock ?? 0) > 0) gainBlock(sim, player.daughterWindBlock!, player);
   // Kusarigama's random hit can kill a claw alone (MX8K F33 T9: Crusher died to it, the crab enraged).
   const kusa = player.kusarigama;
   if (kusa && kusa.every > 0 && (kusa.count + sim.relicAttacks) % kusa.every === 0) {
