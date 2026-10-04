@@ -52,7 +52,8 @@ exp = json.load(open(library, encoding="utf8")) if character == LEGACY or os.pat
 for entry in exp["entries"]:
     folded.update(entry.get("evidence") or [])
     folded.update(entry.get("contradicting") or [])
-changelog = os.path.join(ROOT, "paper/materials/experience-changelog.md")
+# One changelog per character (Dai 2026-10-04): the Ironclad's as before, another's experience-changelog-<id>.md.
+changelog = os.path.join(ROOT, "paper/materials/experience-changelog.md" if character == LEGACY else f"paper/materials/experience-changelog-{character}.md")
 if os.path.exists(changelog):
     folded.update(re.findall(r"[0-9A-Z]{12}", open(changelog, encoding="utf8").read()))
 pending = [run for run in ids if run not in folded]

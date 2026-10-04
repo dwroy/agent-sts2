@@ -15,6 +15,9 @@
  * FAKE_MOD_SCREEN=character_select: serves character select instead (Ironclad and Silent unlocked, the others locked),
  * answering select_character, increase_ascension / decrease_ascension and embark (embark then serves the mid-run state of
  * the character selected, at the ascension chosen), so character choice and ascension can be exercised end to end.
+ *
+ * Its game data is empty and its mod version ends in "-fake": a client run against it never writes that into the
+ * project's data/game-data.json (knowledge/index.ts cacheWriteRefusal); give the client GAME_DATA_DIR=<a temp dir> anyway.
  */
 
 import { createServer } from "node:http";

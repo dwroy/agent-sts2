@@ -17,7 +17,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 改代码的工作树：{{worktree}}（在这里改 experience.json、跑测试、提交）
 - 合并基线：{{base_branch}}；是否合入：{{merge}}（V4 一律 `no`，由开发会话审过后合入）
 - 复盘：{{project_root}}/notes/lessons.md（只读，2 MB 以上，按 grep 定位后按行号读）
-- 变更记录：{{project_root}}/paper/materials/experience-changelog.md（只追加一节）
+- 变更记录：{{project_root}}/{{changelog_path}}（只追加一节）
 - 日志（只读）：{{logs_dir}}；日志库：`data/logdb-venv/bin/python agent/tools/logdb/query.py --no-sync "SQL"`（`--schema` 看表；fights、floors、turns、fight_frames、runs 等）
 - 临时文件只放在：{{scratch}}
 

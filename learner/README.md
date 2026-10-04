@@ -60,12 +60,13 @@ agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --s
 缺参数、或 --set 了任务用不到的参数，都直接报错（exit 2），防止拼错。
 
 ### 多角色（2026-10-04）
-- 角色内置参数（由 `--character` 决定，不能 --set）：`{{character}}`（silent）、`{{character_name}}`（静默猎手）、`{{character_dir}}`（knowledge/characters/silent）、`{{experience_path}}`（knowledge/characters/silent/experience.json）。
+- 角色内置参数（由 `--character` 决定，不能 --set）：`{{character}}`（silent）、`{{character_name}}`（静默猎手）、`{{character_dir}}`（knowledge/characters/silent）、`{{experience_path}}`（knowledge/characters/silent/experience.json）、`{{changelog_path}}`（变更记录：铁甲战士仍是 paper/materials/experience-changelog.md，其他角色各有一份 paper/materials/experience-changelog-<id>.md，Dai 2026-10-04）。
 - 段落：`{{#is_ironclad}}…{{/is_ironclad}}` 只给铁甲战士，`{{^is_ironclad}}…{{/is_ironclad}}` 给其他角色；标记独占一行时连同这一行一起去掉，所以铁甲战士的任务说明和加角色之前逐字相同。
 - front matter `characters: ironclad` 限定任务只给哪些角色用（experience-asc-audit 是铁甲战士 A9 专用）。
 - `--set runs=…` / `run=…` 里的局，runs.jsonl 记的角色（`character`，没有这个字段 = 铁甲战士的旧局）和本次角色不同的，直接报错（exit 2）；runs.jsonl 里没有的局留给任务自己判断。
 - 新角色的经验库从空开始，只从它自己的局学；任务说明不写任何角色的打法。非铁甲战士的复盘标题第二项写角色名：`## <run id>（A0，静默猎手，第N层，死因）`；没有角色名的标题都是铁甲战士的。
 - 每 10 局并一次经验库按角色数：`agent/node_modules/.bin/tsx learner/pending.ts --character silent [--max 10]`（输出和 ops/experience-pending.py 一样：先个数，再逗号分隔的 run id；铁甲战士的结果和那个脚本相同）。
+- **学习节奏按角色（Dai 2026-10-04）**：复盘、待并复盘的计数、每 10 局一批的经验库更新都按角色分开做。运维每次只给**有新复盘的角色**跑：对 runs.jsonl 里出现过的每个角色跑 `ops/experience-pending.py --character <id>`（或 `learner/pending.ts --character <id>`），个数到 10 的才派 `experience-update --character <id>`；没有新复盘的角色不跑。各角色的批次互不混，铁甲战士的批次和以前一样。
 - `--with-tools` 的进阶：`--ascension N`（可以是 0），否则 `TARGET_ASCENSION`：数字照用；没设是 9；`climb`（或任何非数字）= 这个角色在 runs.jsonl 里打过的最高进阶，没打过是 0。非铁甲战士时给工具服务器设 `CHARACTER`。
 
 | 任务 | 必填 | 可选（默认） | 工具 | 建议的 --cwd | 会改什么 |

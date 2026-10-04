@@ -16,7 +16,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 合并基线：{{base_branch}}
 - 是否合入对局分支：{{merge}}（`no` = 只在本分支提交；`v3` = 按第 8 节合入 {{merge_dir}}）
 - 复盘：{{project_root}}/notes/lessons.md（只读）
-- 变更记录：{{project_root}}/paper/materials/experience-changelog.md（只追加一节）
+- 变更记录：{{project_root}}/{{changelog_path}}（只追加一节）
 - 日志（只读）：{{logs_dir}}
 - 临时文件只放在：{{scratch}}
 {{^is_ironclad}}
@@ -25,7 +25,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 这几局（{{runs}}）在 runs.jsonl 里的 `character` 都要是 {{character}}（不分大小写）；不是的跳过，在回报里写明。汇总、重算数字时也只用这个角色的局（runs.jsonl 的 `character`；没有这个字段的旧局是铁甲战士的，不算）；states.jsonl 里按 `state.run.character_id` 区分。
 - 新角色的经验库从空开始：`{{experience_path}}` 不存在时新建，字段照 agent/src/knowledge/experience.ts 的 `ExperienceFile` / `ExperienceEntry` 类型（`version`、`_about`、`entries`），`entries` 从空列表开始，version 用今天的日期 + 序号。
 - 别的角色（包括铁甲战士）的经验库、攻略、手册、代码里的手写知识，和 lessons.md 里别的角色的复盘，都不许搬过来，也不许当证据；这个角色的每条经验都要有这个角色自己的局作证据。和角色无关的游戏事实（怪物招式、数值）以 knowledge/common/ 下的数据和日志为准。
-- lessons.md 里这个角色的复盘，标题第二项是「{{character_name}}」。变更记录里这个角色的小节标题带角色名；还没有的，这次就是这个角色的首次构建：方法、口径、格式照「2026-09-28 首次构建」和最后两节，里面的数字和结论都不用。
+- lessons.md 里这个角色的复盘，标题第二项是「{{character_name}}」。这个角色有自己的变更记录 `{{changelog_path}}`，小节标题带角色名；文件还没有的，这次就是这个角色的首次构建（新建文件）：方法、口径、格式照铁甲战士的变更记录 paper/materials/experience-changelog.md 的「2026-09-28 首次构建」和最后两节，里面的数字和结论都不用。下文说的「上一节」「最后两节」在首次构建时都指铁甲战士那份的格式。
 - 跑工具（knowledge-slice.ts 等）时加环境变量 `CHARACTER={{character}}`，让它们读这个角色的知识。
 {{/is_ironclad}}
 

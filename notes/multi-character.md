@@ -2,7 +2,15 @@
 
 Mandate: decision-log 2026-10-04 19:37. Dai wants the Silent played from A0, going up one ascension per win, while the Ironclad stays exactly as it was. Nothing about how to play the Silent is hand-written. Branch `worktree-agent-a05e774f117deacd2`, on top of 1079972.
 
-**URGENT: data/game-data.json was overwritten.** At 20:00 a `doctor`/`explain` run against `tools/fake-mod.mjs` replaced the shared `data/game-data.json` with the fake mod's empty catalogue (175 bytes, `mod_version 0.13.0-fake`). The runtime refreshes this cache whenever the mod version changes. I tried to restore it and the permission check refused. There is a copy at `C:\Users\XD\Documents\agent-sts2-backup\2026-10-04\cache\game-data.json` (mod 0.16.2, fetched 09-27). To restore: `cp` it back, then run `build-monster-db` and compare it with the baseline hash 7761c479…. Until then, monster-db, fight-value and the eval calibration read an empty catalogue. Running fake-mod against the shared data/ has to be prevented next.
+**Incident: data/game-data.json was overwritten, now restored.**
+- What happened: at 20:00 a `doctor`/`explain` run against `tools/fake-mod.mjs` replaced the shared `data/game-data.json` with the fake mod's empty catalogue (mod `0.13.0-fake`). The runtime re-fetches this cache whenever the mod version changes.
+- Restore: Dai authorised it, and the coordinator copied back the Windows backup (mod 0.16.2, fetched 09-27).
+- Checks rerun after the restore, all identical to the baseline:
+  - builders: hashes, including monster-db 7761c479
+  - fight-value: rows sha 01cc2516, gates identical, model JSON-equal
+  - the eval metrics with calibration
+  - digests and prefix
+- Fix: the cache now follows `GAME_DATA_DIR`. It never writes a catalogue with no cards, and never writes a `-fake` mod's catalogue into the project's data/ (`knowledge/index.ts` `cacheWriteRefusal`; test `game-data-cache.test.ts`).
 
 ## Commits
 - ec19bef: the TS side
@@ -52,6 +60,7 @@ With `CHARACTER=SILENT` and `TARGET_ASCENSION=climb`:
 
 ## Not done, and open questions
 - Hand-written Ironclad card ids elsewhere in code (card-model mechanics, Howl from Beyond and so on) are card facts and were left alone. `UPGRADE_PRIORITY` (Ironclad cards) was not gated: those ids never appear in a Silent deck.
-- One shared changelog for every character, or one per character?
-- `ops/experience-pending.py` and the hourly cadence default to `CHARACTER`. Should ops run them per character?
+- Dai's answers (2026-10-04):
+  - **Changelog:** one per character. The Ironclad keeps `paper/materials/experience-changelog.md`; every other character gets `paper/materials/experience-changelog-<id>.md` (learner `{{changelog_path}}`).
+  - **Learning cadence:** per character. Ops runs `experience-pending` and the learner batches only for characters with new post-mortems (`learner/README.md`).
 - For the Silent run, should `CHARACTER=SILENT` go in the live `.env`, or into a separate worktree?

@@ -7,9 +7,9 @@
  */
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
-import { DATA_DIR } from "../core/paths.js";
+import { DATA_DIR, fromRoot } from "../core/paths.js";
 import type { ModClient } from "../hand/mod/client.js";
 import { asArray, asRecord, numOrNull, str, stripMarkup } from "../core/util/json.js";
 import { fillPotionText } from "./potion-values.js";
@@ -101,7 +101,7 @@ export interface Knowledge {
 const COLLECTIONS = ["cards", "monsters", "relics", "potions", "powers", "events", "characters"] as const;
 export type CollectionName = (typeof COLLECTIONS)[number];
 
-interface KnowledgeFile {
+export interface KnowledgeFile {
   mod_version: string;
   fetched_at: string;
   collections: Partial<Record<CollectionName, unknown[]>>;
@@ -247,9 +247,30 @@ export interface LoadKnowledgeOptions {
   refresh?: boolean;
 }
 
+/**
+ * The game-data cache's directory: the option, else GAME_DATA_DIR (relative to the project root), else the project's
+ * data/. A fake mod run (tools/fake-mod.mjs) points GAME_DATA_DIR at a temp dir.
+ */
+export function gameDataDir(options: { cacheDir?: string } = {}, env: NodeJS.ProcessEnv = process.env): string {
+  const configured = env["GAME_DATA_DIR"]?.trim();
+  return options.cacheDir ?? (configured ? fromRoot(configured) : DATA_DIR);
+}
+
+/**
+ * Why a fetched catalogue must not replace the cache at `cacheDir`, or null when it may. 2026-10-04 20:00: a doctor run
+ * against the fake mod wrote its empty catalogue (mod 0.13.0-fake) over the project's data/game-data.json, which the
+ * builders, the eval and the live game read. A catalogue with no cards is never written (it caches nothing); a fake
+ * mod's never goes into the project's data/.
+ */
+export function cacheWriteRefusal(file: KnowledgeFile, cacheDir: string): string | null {
+  if (asArray(file.collections.cards).length === 0) return `the catalogue from mod ${file.mod_version} has no cards`;
+  if (/-fake$/.test(file.mod_version) && resolve(cacheDir) === resolve(DATA_DIR)) return `mod ${file.mod_version} is a fake mod: not cached in the project's data/`;
+  return null;
+}
+
 /** Fetches every collection (or reuses the on-disk cache) and returns id → English metadata lookups. */
 export async function loadKnowledge(client: ModClient, options: LoadKnowledgeOptions): Promise<Knowledge> {
-  const cacheDir = options.cacheDir ?? DATA_DIR;
+  const cacheDir = gameDataDir(options);
   const cachePath = join(cacheDir, "game-data.json");
 
   if (!options.refresh) {
@@ -275,8 +296,10 @@ export async function loadKnowledge(client: ModClient, options: LoadKnowledgeOpt
     collections,
   };
   try {
-    await mkdir(dirname(cachePath), { recursive: true });
-    await writeFile(cachePath, JSON.stringify(file), "utf8");
+    if (cacheWriteRefusal(file, cacheDir) === null) {
+      await mkdir(dirname(cachePath), { recursive: true });
+      await writeFile(cachePath, JSON.stringify(file), "utf8");
+    }
   } catch {
     // A read-only filesystem is not fatal: we simply refetch next time.
   }

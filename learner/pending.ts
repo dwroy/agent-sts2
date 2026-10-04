@@ -11,6 +11,7 @@ import { join } from "node:path";
 
 import { PROJECT_ROOT, resolveCharacter } from "./lib/launcher.js";
 import { pendingRuns } from "./lib/runs.js";
+import { experienceChangelogPath } from "./lib/task.js";
 import { characterKey } from "../agent/src/knowledge/files.js";
 
 const argv = process.argv.slice(2);
@@ -25,7 +26,7 @@ const pending = pendingRuns({
   lessonsFile: join(PROJECT_ROOT, "notes", "lessons.md"),
   runsFile: join(PROJECT_ROOT, "logs", "runs.jsonl"),
   liveDir: process.env["STS2_LIVE"] ?? join(PROJECT_ROOT, ".worktrees", "live"),
-  changelogFile: join(PROJECT_ROOT, "paper", "materials", "experience-changelog.md"),
+  changelogFile: join(PROJECT_ROOT, experienceChangelogPath(character)),
   character,
 });
 process.stdout.write(`${pending.length}\n${(Number(max) ? pending.slice(0, Number(max)) : pending).join(",")}\n`);

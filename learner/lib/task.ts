@@ -53,10 +53,18 @@ export interface TaskSpec {
 }
 
 /** The character built-ins (characterBuiltins); fixed, set with --character. */
-export const CHARACTER_PARAMS = ["character", "character_name", "character_dir", "experience_path", "is_ironclad"] as const;
+export const CHARACTER_PARAMS = ["character", "character_name", "character_dir", "experience_path", "changelog_path", "is_ironclad"] as const;
 /** Parameters the launcher fills; --set may override only `worktree` and `logs_dir`. */
 export const BUILTIN_PARAMS = ["cwd", "worktree", "project_root", "logs_dir", "scratch", "task", ...CHARACTER_PARAMS] as const;
 const FIXED_BUILTINS = new Set<string>(["cwd", "project_root", "scratch", "task", ...CHARACTER_PARAMS]);
+
+/**
+ * The experience changelog of a character, relative to the project root (Dai 2026-10-04: one per character): the
+ * Ironclad's stays paper/materials/experience-changelog.md, another's is paper/materials/experience-changelog-<id>.md.
+ */
+export function experienceChangelogPath(character: string): string {
+  return character === DEFAULT_CHARACTER ? "paper/materials/experience-changelog.md" : `paper/materials/experience-changelog-${character}.md`;
+}
 
 /** The character built-ins for a knowledge id ("ironclad", "silent"); is_ironclad is "yes" or "" (a section flag). */
 export function characterBuiltins(character: string): Record<string, string> {
@@ -66,6 +74,7 @@ export function characterBuiltins(character: string): Record<string, string> {
     character_name: characterName(character, "zh"),
     character_dir: dir,
     experience_path: `${dir}/experience.json`,
+    changelog_path: experienceChangelogPath(character),
     is_ironclad: character === DEFAULT_CHARACTER ? "yes" : "",
   };
 }
