@@ -42,14 +42,20 @@
 | `potions`、`potion_slots` | 药水文字（实测数值）、已用/总格数 | 状态 + 日志库（potion-values.ts） |
 | `act_boss_clock` | boss 血量、预计进场血量、可撑回合、每回合掉血、战斗回合、每回合需要伤害、本牌组估计伤害、缺口 | boss 时钟（boss-clock.ts，算法未改）：boss 血量和每回合掉血来自怪物库/boss-damage.json（带 n），进场血量和回合是确定性计算，牌组伤害是在 215 场 A8 boss 战上校准的估计（注明约 25% 误差） |
 | `your_run_plan` | 大脑自己写的整局计划 | 大脑 |
-| `outcome_stats_basis` | 下面各 `*outcome_stats` 字段的口径、数据文件、生成时间、进阶、总局数、各幕基线通过率 | 日志库（outcome-stats.json） |
+| `outcome_stats_basis` | 下面各 `*outcome_stats` 字段的口径、数据文件、生成时间、进阶、总局数、各幕基线通过率（A9 起另有 A8 的基线） | 日志库（outcome-stats.json） |
 
-`*outcome_stats` 的格式（knowledge/outcome-facts.ts），全部原样来自 outcome-stats.json，口径未改：
+`*outcome_stats` 的格式（knowledge/outcome-facts.ts），全部原样来自 outcome-stats.json，口径未改。2026-10-04 起（Dai：按进阶分开统计）outcome-stats.json 每个进阶一张表（`by_ascension`：A8、A9，以及有了局的更高进阶；每张表只数这个进阶的局，基线也是这个进阶的），本局读自己进阶的表（knowledge/outcome-tables.ts）：
+- A8、A8 以下、不知道进阶：读 A8 的表，文字和以前逐字相同（以前的单表文件也照旧读）；
+- A9 起：读本局进阶的表；某一行不足 5 局、而 A8 的同一行够 5 局时（卡牌按「拿了 / 给了没拿」一对看，A8 在 A9 不足的那一边够 5 局），后面括号里另附 A8 的那一行：`（A9 不足5局，另附 A8：…）`，不合并成一个数；A8 也不足 5 局的不附（起始牌从不出现在卡牌奖励里，「给了没拿」各进阶都是空的）；basis 里写 A9 的基线和 A8 的基线；
+- 更高进阶同理，附最近的、够 5 局的低进阶（到 A8 为止）；
+- 攻略里的 {CARD_OUTCOME:ID} 同样：A9 起标成 {@9:CARD_OUTCOME:ID}，当天冻结表里有自己的 key（render/facts.ts），A8 的 key 和值不变。
+
+格式：
 - 卡牌：`A8 第1幕 拿了 n=41 过本幕boss 73% 均终层27.9 / 给了没拿 n=1(少) 过本幕boss 0% 均终层17；第2幕 …`（「拿了」= 这一幕牌组多了这张牌，任何来源；「给了没拿」= 这一幕卡牌奖励给过、这一幕没拿）；
 - 遗物：`A8 第1幕获得 n=5 过本幕boss 80% 均终层28.8；…`；
 - 事件选项：`A8 选这个选项 n=10 过本幕boss 20% 均终层32.4，到下一层平均 HP-3`（以遗物命名的选项再附遗物那一行）；
 - 休息动作：`A8 HP<40% n=137 过本幕boss 31% 均终层30.4；HP40-60% …`（按到达时 HP 档）；
-- 没有记录：`无数据`；n<5 标「(少)」；本局进阶和统计进阶不同时在 basis 里写明（现在只有 A8）。
+- 没有记录：`无数据`；n<5 标「(少)」；本局进阶和统计进阶不同时（A8 以下）在 basis 里写明。
 - 药水不在 outcome-stats.json 里，药水选项不带统计。
 
 题面带统计时，memory.knowledge 不再重复统计行（run-journal `statsCovered`）；经验条目照旧。
