@@ -199,3 +199,10 @@
 - 药水：rollout 加进来的线会喝掉 run plan 留给 boss 的药（AKK0 F14 强化药；ABCJ F44/F46 两瓶力量药、F30 鲜血药）。 核查无绕过（10-04 开发会话：862 次喝药 837 次付了持有价值，其余 25 次属 09-30 例外；要改就改表和规则，交给 Dai）
 - boss 模拟样本不足：ABCJ 41 次中有 16 次不到 300 个样本（AKK0、V8N5 各 1 次）。
 - 小：codex xhigh 在路线字段里输出乱码（77 次中 3 次，如「keep出来ketøy…」），re-ask 能修好。
+### V4.6 D4VF/3B4K/4AWD 复盘（10-04）
+- SL 名单：把 AXEBOT（巨斧机器人）作为 hard-fight 加进 sl-elites.json。4AWD F40 进场 73% 仍阵亡；3B4K F45 进场 85% 掉 56 血。act3-a9 里「走廊进场 ≥60% 时 0 死」这句需要更新。
+- outcome-stats 加载时机：进程第一次读取后就缓存，文件刷新后不重新读。4AWD 拿到的仍是只有 A8 的表，要到 9VHP 才用上 A9 数据。建议文件变化时重载，或者 autoplay 等赛后刷新完成再开下一局。
+- SL 参照：3B4K 第 3–6 次都以第 2 次为参照，而最好的是第 1 次（T8，boss 309）。8939eb0 的 ANCHOR 应该已经覆盖，需在下一批核实。
+- SL 白打判定：3B4K 第 4 次标记为 differs:true，但 deviation.plays 和 replacement 不一致，结果与第 2 次相同。这种情况应按 differs:false 处理。
+- codex 路线字段：输出「keep」加乱码、又没有节点 id 时，直接当作 keep，不要重问。这 3 局共重问 12 次，每次 10–20 s；其中 3 次重问后仍是乱码。
+- 路线复核：换到预估血量更低的路线时，要求写出 route_reason（4AWD F7，预估 54 对 76，结果 F8 精英从 76 打到 25）。

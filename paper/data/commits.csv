@@ -1,6 +1,31 @@
 hash,full_hash,date,author,upstream,in_origin_main,n_runs_code_version,subject
+06e4fc5,06e4fc52151c73da49209e7c9b938d871381475d,2026-10-04T13:52:51+08:00,dwroy,0,0,0,Eval versions: V4.6.explore3 (v4-live 8939eb0)
+8939eb0,8939eb0e7511559a765f393a3adf8cc7512d5492,2026-10-04T13:52:51+08:00,dwroy,0,0,0,"Merge branch 'v4' into v4-live: SL explore round 3 (rearm, order, target turn, anchor)"
+9cafbf4,9cafbf4abb48afc0b5347ff4a1953abfdf6e87ee,2026-10-04T13:49:19+08:00,dwroy,0,0,0,"Merge branch 'v4-sl-replay' into v4: SL explore — rearm after a wasted deviation, replay the reference's play order, keep the target turn's exclusions off-path, anchor to the best failed attempt, replay code's lines on reference boards"
+912012b,912012bb3b15a707409ab290de72f229a888c69e,2026-10-04T13:44:32+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-sl-replay
+e9efa6a,e9efa6a6ac1f8ae233e2822cc16bd4e4b6fa54c7,2026-10-04T13:44:00+08:00,dwroy,0,0,0,"SL explore: replay order, the point's turn off the path, re-arm after a wasted deviation, anchor to the longest-lived attempt"
+334fbb6,334fbb6f3ededf14cf4cc11afa2cfb37004e4d62,2026-10-04T13:31:17+08:00,dwroy,0,0,1,Merge branch 'v4' into v4-live: no death-only moves for living enemies in the rollout
+f2829ca,f2829cad9cadf74a0eb9216f90e5fc04aa79c52d,2026-10-04T13:31:17+08:00,dwroy,0,0,0,Eval versions: V4.6.deathonly (v4-live 334fbb6)
+e09f314,e09f314dc679b632b60995c5bd96e9ade1397db6,2026-10-04T13:31:04+08:00,dwroy,0,0,0,tests/rollout-live: the real-clock budget check allows one sample's overrun (+300 ms) under load
+c2d0810,c2d08108700d1172002e80d17a8137cced537c30,2026-10-04T13:24:53+08:00,dwroy,0,0,0,"Merge branch 'v4-giant-potion' into v4: no death-only move (Respawn, Reattach, Dead, Eye Revive) for a living enemy in the rollout"
+a315611,a315611d04d85f592835683aebe4aef657d91971,2026-10-04T13:24:04+08:00,dwroy,0,0,0,"Rollout: no death-only move for any living enemy (Test Subject's Respawn, Decimillipede's Reattach/Dead, Eye's Revive)"
+fa29905,fa299050e3c8ff232b93f181850c5c72197fb8ef,2026-10-04T12:16:48+08:00,dwroy,0,0,1,Merge branch 'v4' into v4-live: Waterfall Giant terminal value
+6e96848,6e96848d7c6f8f57de904df9f6eef3ce3a1c7d2c,2026-10-04T12:16:48+08:00,dwroy,0,0,0,Eval versions: V4.6.giant (v4-live fa29905)
+3958afb,3958afb19483118652de48e28518248eadb25d74,2026-10-04T12:16:32+08:00,dwroy,0,0,0,tests/brain-codex: the aborted run's silence bound at 500 ms (the fake process starts late under load)
+f24abb8,f24abb888647e7bc885a82668b92841e52745758,2026-10-04T12:09:59+08:00,dwroy,0,0,0,"Merge branch 'v4-giant-potion' into v4: Waterfall Giant terminal value (earliest survivable kill vs the growing blast), no Explode for a living Giant in the rollout; potion-drink audit"
+b4425ff,b4425ff33f7586e82be61d21bf9c76310f2ab481,2026-10-04T12:08:44+08:00,dwroy,0,0,0,Giant rollout replay and the potion drink audit (ops 2026-10-04 V4.6 reviews)
+f38cb78,f38cb784a0aca5219aca73fa03302a6a011bbf5e,2026-10-04T12:00:38+08:00,dwroy,0,0,0,Eval versions: V4.6.memo (v4-live 8099cdc)
+8099cdc,8099cdca60688cd27d1f9bf01b15d0a098b4ccea,2026-10-04T12:00:37+08:00,dwroy,0,0,0,"Merge branch 'v4' into v4-live: SL_RETRY_MEMO, stage timing"
+6e4c853,6e4c8537266396ae848317f0012d6ff198d9c571,2026-10-04T11:55:46+08:00,dwroy,0,0,0,"Rollout: the Waterfall Giant's blast in the end-of-horizon estimate, and no Explode while it lives"
+2e9a080,2e9a080c58dde648f33e94fa6b70b6c61e8aea2a,2026-10-04T11:52:39+08:00,dwroy,0,0,0,"Merge branch 'v4-combat-latency' into v4: SL_RETRY_MEMO (reuse un-cut rollout and B2 results on replayed retry boards), stage timing in decision rows"
+d6cc970,d6cc9708c89222045ced30fb0e64ac062510c422,2026-10-04T11:50:41+08:00,dwroy,0,0,0,Combat latency: the SL retry compute memo (SL_RETRY_MEMO) and the planner's time in the decision row
+94307f9,94307f9c411b547d61f6d4947d55108a15b95c03,2026-10-04T11:47:49+08:00,dwroy,0,0,0,Eval versions: V4.6.outcomeasc (v4-live e76bc9d)
+e76bc9d,e76bc9d1ff3caf4fa4b9a916678cd3bbf503393f,2026-10-04T11:47:48+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: outcome statistics per ascension
+754236b,754236b7423787ab3af64fa07969036a024e1492,2026-10-04T11:38:30+08:00,dwroy,0,0,0,Merge branch 'v4-outcome-asc' into v4: outcome statistics per ascension (A8 and A9 apart; A8 text unchanged)
+18edfa2,18edfa2c629b50c443b8ff3a1f5d59114ff9db72,2026-10-04T11:26:50+08:00,dwroy,0,0,0,"build-outcome-stats.py: one table per ascension, A8 and A9 apart (Dai 2026-10-04)"
+7c8978b,7c8978b7064c393beb691c193941eba4b8c659e4,2026-10-04T11:21:13+08:00,dwroy,0,0,0,"Outcome statistics by the run's ascension: A9 reads A9's rows, thin ones with A8's beside them (Dai 2026-10-04)"
 1bd1ff1,1bd1ff1b65395a5a9432924cead952b776bd5db6,2026-10-04T10:30:16+08:00,dwroy,0,0,0,Eval versions: V4.6.ascfacts (v4-live 75d1d71)
-75d1d71,75d1d71f8a688295f0d24b367a796f99c8a40694,2026-10-04T10:29:48+08:00,dwroy,0,0,1,"Merge branch 'v4' into v4-live: data placeholders by ascension band, refresh tools fixed"
+75d1d71,75d1d71f8a688295f0d24b367a796f99c8a40694,2026-10-04T10:29:48+08:00,dwroy,0,0,2,"Merge branch 'v4' into v4-live: data placeholders by ascension band, refresh tools fixed"
 8e46da8,8e46da875318b1a23c54d24df9aaa1e849db342f,2026-10-04T10:29:48+08:00,dwroy,0,0,0,"Refresh knowledge data: boss-damage.json (the live copy, before merging v4's refreshed repo copy)"
 5a65f59,5a65f5964e93ccaaa4e83fe35cbd94c0c77ef294,2026-10-04T10:25:40+08:00,dwroy,0,0,0,"Merge branch 'v4-asc-facts' into v4: data placeholders by ascension band (A8 and A9 apart), refreshed boss-damage, refresh tools write whole files"
 7efb2d4,7efb2d4d999cfbe6340e5a7aca47992caf56d644,2026-10-04T10:23:32+08:00,dwroy,0,0,0,Knowledge refresh tools: fight-value refreshes again; boss-damage and monster-db written whole
@@ -10,8 +35,8 @@ c9955eb,c9955eb46a25417487d852c9b3a2eecc431325c0,2026-10-04T09:39:32+08:00,dwroy
 3412666,341266607ebcf35ba0c454bd42a089068c17a643,2026-10-04T09:39:32+08:00,dwroy,0,0,0,Eval versions: V4.6.asc (v4-live c9955eb)
 73a60d0,73a60d05f22343cc1a0c5f65129e9a4adf146ae3,2026-10-04T09:35:07+08:00,dwroy,0,0,0,"Merge branch 'v4-exp-asc-10040840' into v4: experience 2026-10-04.2 (ascension audit: mechanisms [0,20], statistics on A8+, strategy bounded by its data)"
 c08de33,c08de3344ab24c9dab3144799584d7aa1287e88b,2026-10-04T09:34:11+08:00,dwroy,0,0,0,Experience 2026-10-04.2: ascension audit (Dai 2026-10-04)
-25eae40,25eae403265e657fc79671dc9ca6c567602dcb26,2026-10-04T08:40:46+08:00,dwroy,0,0,0,"Merge branch 'v4-exp-budget' into v4: experience size budget, asc audit task"
 f0a9df5,f0a9df504fe18e96ccaefca7b1eb1a778aee998d,2026-10-04T08:40:46+08:00,dwroy,0,0,0,Experience: a 60k-character size budget replaces the 200-entry cap; asc ranges by kind; a one-off ascension audit task (Dai 2026-10-04)
+25eae40,25eae403265e657fc79671dc9ca6c567602dcb26,2026-10-04T08:40:46+08:00,dwroy,0,0,0,"Merge branch 'v4-exp-budget' into v4: experience size budget, asc audit task"
 0f0648f,0f0648f8baedbcc57c3fadfd6fc2435d2488c1dc,2026-10-04T08:31:20+08:00,dwroy,0,0,0,Eval versions: V4.6.exp4 (v4-live 8ab0878)
 8ab0878,8ab0878520be901831258ab9199e087db0090ef2,2026-10-04T08:31:03+08:00,dwroy,0,0,2,Merge branch 'v4' into v4-live: experience 2026-10-04.1
 9fd9e8e,9fd9e8e93ddd0325101f5ce513f48f329a3fde96,2026-10-04T08:30:56+08:00,dwroy,0,0,0,tests/turn-start-settle: the no-power case moves its board at 1000 ms (planning alone took ~500 ms under live-play load)
