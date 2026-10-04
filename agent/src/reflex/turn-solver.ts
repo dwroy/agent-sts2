@@ -1751,6 +1751,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;
+  next.tempDex += card.dexterity ?? 0;
   if (card.special === "dexterity") {
     next.tempDex += DEX_POTION;
     if (!next.noBlock) next.flat += DEX_LASTING_PER_BLOCK_CARD * next.hand.filter((entry) => entry.type !== "Potion" && entry.block > 0).length;

@@ -59,6 +59,8 @@ export interface CardModel {
   weakFirst?: boolean;
   /** Permanent Strength for the player. */
   strength: number;
+  /** Dexterity gained on play, from observed Footwork vars (silent-0026). */
+  dexterity?: number;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
@@ -905,6 +907,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     weak,
     ...(weakFirst ? { weakFirst } : {}),
     strength,
+    ...(cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     tempStrength,
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
     ...(dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),

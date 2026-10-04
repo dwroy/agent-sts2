@@ -1863,6 +1863,10 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
     playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
   }
   if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
+  if (card.dexterity) {
+    player.dexterity += card.dexterity;
+    playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + card.dexterity;
+  }
   if (card.plating) player.plating += card.plating;
 }
 
