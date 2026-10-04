@@ -9,9 +9,11 @@ import argparse
 import collections
 import json
 import os
+import sys
 
-ROOT = os.path.expanduser("~/Projects/sts2-jev")
-DEC = os.path.join(ROOT, "jev-sts2/logs/decisions.jsonl")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from paths import LOGS, ROOT  # noqa: E402
+DEC = os.path.join(LOGS, "decisions.jsonl")
 OUT = os.path.join(ROOT, "notes/corrections.md")
 
 ap = argparse.ArgumentParser()

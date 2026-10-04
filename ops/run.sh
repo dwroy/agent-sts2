@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
-# Play one run from the run worktree jev-sts2-v4run (branch v4-live; Dai 2026-09-30: v3 stopped, V4 plays A8 x20; was jev-sts2-v3).
-# Its logs/, node_modules/ and .cache/ are symlinks into jev-sts2, so logs stay at jev-sts2/logs; console log goes to
-# logs/console/<ts>-<sha>.log.
+# Play one run from the live worktree ($LIVE, .worktrees/live; agent-sts2 layout 2026-10-04, was jev-sts2-v4run).
+# Its logs/, data/ and agent/node_modules/ are links into the main checkout, so logs stay at $ROOT/logs; the console
+# log goes to $ROOT/logs/console/<ts>-<sha>.log. STS2_WORKSPACE: notes/ (lessons.md) and ops/ come from the main checkout.
 set -u
-cd "$HOME/Projects/sts2-jev/jev-sts2-v4run"
+. "$(dirname "$0")/paths.sh"
+cd "$LIVE/agent"
+export STS2_WORKSPACE="$ROOT"
 export PATH="$HOME/.local/node/bin:$PATH"
 sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
 ts=$(date +%Y%m%d-%H%M%S)
-mkdir -p logs/console
-out="logs/console/$ts-$sha.log"
+mkdir -p "$LOGS/console"
+out="$LOGS/console/$ts-$sha.log"
 echo "$out"
 # A finished run leaves the game on its summary screen, which the loop reads as "run already ended".
 screen=$(curl -s -m 5 http://127.0.0.1:8080/state | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["screen"])' 2>/dev/null)
@@ -19,7 +21,6 @@ fi
 # Ablation (Dai 2026-09-27, A8): ops/ablation.json {"arms": [...], "i": n, "total": N} rotates the arms
 # code (no Jev, no DeepSeek), jev (no DeepSeek), ds (DeepSeek without Jev), full. The arm of the run
 # in progress is kept in ops/ablation-current.json until report.py marks it done (a restart keeps it).
-OPS="$HOME/Projects/sts2-jev/ops"
 arm=$(python3 - "$OPS" <<'PY'
 import json, os, sys
 ops = sys.argv[1]

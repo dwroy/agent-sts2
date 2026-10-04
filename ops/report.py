@@ -10,7 +10,8 @@ import os
 import re
 import sys
 
-ROOT = os.path.expanduser("~/Projects/sts2-jev/jev-sts2")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from paths import LIVE, ROOT  # noqa: E402
 DEC = os.path.join(ROOT, "logs/decisions.jsonl")
 STATES = os.path.join(ROOT, "logs/states.jsonl")
 RUNS = os.path.join(ROOT, "logs/runs.jsonl")
@@ -378,7 +379,7 @@ def main():
 def ablation_arm():
     """The ablation arm this run played under (ops/ablation-current.json, set by ops/run.sh), then
     advance the schedule. {} when no ablation is running."""
-    ops = os.path.join(os.path.dirname(ROOT), "ops")
+    ops = os.path.join(ROOT, "ops")
     cur_path = os.path.join(ops, "ablation-current.json")
     sched_path = os.path.join(ops, "ablation.json")
     try:
@@ -401,22 +402,14 @@ def ablation_arm():
 def refresh_knowledge() -> None:
     """After each run: monster DB, per-fight move model, outcome stats. Background, unless REFRESH_WAIT=1 (autoplay.sh)."""
     import subprocess
-    # Into the run worktree (branch v4-live since 2026-09-30; was jev-sts2-v3 / v3), whose logs/ links to jev-sts2/logs.
-    wt = os.path.expanduser("~/Projects/sts2-jev/jev-sts2-v4run")
-    tools = f"{wt}/tools"
-    mm = f"{wt}/src/knowledge/move-model.json"
-    cmd = (f'python3 {tools}/build-monster-db.py --quiet --move-model-out {mm}; '
-           f'python3 {tools}/monster-db-check.py >/dev/null 2>&1; '
-           f'python3 {tools}/build-outcome-stats.py >/dev/null 2>&1; '
-           f'python3 {tools}/build-room-costs.py >/dev/null 2>&1; '
-           f'python3 {tools}/build-boss-damage.py >/dev/null 2>&1; '
-           f'python3 {tools}/build-card-upgrades.py >/dev/null 2>&1; '
-           f'nice -n 10 {wt}/.cache/logdb-venv/bin/python {tools}/logdb/sync.py >/dev/null 2>&1; '
-           f'{wt}/tools/refresh-potion-equivalents.sh >/dev/null 2>&1')
-    log = open(os.path.expanduser("~/Projects/sts2-jev/ops/refresh.log"), "a")
+    # Into the live worktree (.worktrees/live, agent-sts2 layout 2026-10-04; was jev-sts2-v4run), whose logs/ and data/
+    # link to the main checkout's. knowledge/builders/refresh.sh holds the command list (same steps, same order).
+    refresh = f"{LIVE}/knowledge/builders/refresh.sh"
+    cmd = refresh
+    log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
     # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
     # so it runs on its own and the next run never waits for it; a run that starts meanwhile reads the previous copy.
-    subprocess.Popen(["bash", "-c", f"nice -n 10 python3 {tools}/build-fight-value.py all >/dev/null 2>&1"],
+    subprocess.Popen(["bash", "-c", f"{refresh} --fight-value >/dev/null 2>&1"],
                      stdout=log, stderr=log, start_new_session=True)
     proc = subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
     # REFRESH_WAIT=1 (autoplay.sh, 2026-10-04): block until every file the next run reads is written, so the next run reads them fresh

@@ -213,10 +213,10 @@ import re
 import sys
 from typing import Any
 
-ROOT = os.path.expanduser("~/Projects/sts2-jev")
-LOGS = os.path.join(ROOT, "jev-sts2", "logs")
-SRC = os.path.join(ROOT, "jev-sts2-v3", "src")  # the code that plays (branch v3)
-GAME_DATA = os.path.join(ROOT, "jev-sts2", ".cache", "game-data.json")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from paths import DATA, LIVE, LOGS, ROOT  # noqa: E402
+SRC = os.path.join(LIVE, "agent", "src")  # the code that plays (the live worktree)
+GAME_DATA = os.path.join(DATA, "game-data.json")
 CUTOFF = "2026-09-27T08:48:01Z"  # 892278c, 16:48:01 +0800
 INTENT_CUTOFF = "2026-09-27T11:57:05Z"  # 0f2e648, 19:57:05 +0800 (strategy-intent merge)
 ERA_PRE, ERA_MID, ERA_INTENT = "pre-892278c", "892278c..0f2e648", "intent (from 0f2e648)"

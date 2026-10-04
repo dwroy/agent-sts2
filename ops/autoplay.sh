@@ -10,10 +10,10 @@
 # WAIT_PID=<pid of a play process left running by a killed autoplay>: wait for it as the first run
 # instead of starting one, so the loop can be restarted mid-run.
 set -u
-OPS="$HOME/Projects/sts2-jev/ops"
-NOTES="$HOME/Projects/sts2-jev/notes"
-CONSOLE="$HOME/Projects/sts2-jev/jev-sts2/logs/console"
-RUNS="$HOME/Projects/sts2-jev/jev-sts2/logs/runs.jsonl"
+. "$(dirname "$0")/paths.sh"
+CONSOLE="$LOGS/console"
+RUNS="$LOGS/runs.jsonl"
+export LOGS
 mkdir -p "$NOTES"
 restarts=0
 while [ ! -f "$OPS/STOP" ]; do
@@ -26,7 +26,7 @@ while [ ! -f "$OPS/STOP" ]; do
   rid=$(python3 - <<'PY'
 import json, os
 last = None
-for line in open(os.path.expanduser("~/Projects/sts2-jev/jev-sts2/logs/decisions.jsonl"), encoding="utf8"):
+for line in open(os.path.join(os.environ["LOGS"], "decisions.jsonl"), encoding="utf8"):
     try:
         run = json.loads(json.loads(line)["fingerprint"]).get("run")
     except Exception:

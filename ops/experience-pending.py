@@ -13,7 +13,8 @@ import os
 import re
 import sys
 
-ROOT = os.path.expanduser("~/Projects/sts2-jev")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from paths import LIVE, ROOT  # noqa: E402
 limit = None
 if "--max" in sys.argv:
     limit = int(sys.argv[sys.argv.index("--max") + 1])
@@ -22,7 +23,7 @@ lessons = open(os.path.join(ROOT, "notes/lessons.md"), encoding="utf8").read()
 lessons = re.sub(r"<!--.*?-->", "", lessons, flags=re.S)
 ids = list(dict.fromkeys(re.findall(r"^## ([0-9A-Z]{12})", lessons, re.M)))
 folded = set()
-exp = json.load(open(os.path.join(ROOT, "jev-sts2-v4run/src/knowledge/experience.json"), encoding="utf8"))
+exp = json.load(open(os.path.join(LIVE, "knowledge/characters/ironclad/experience.json"), encoding="utf8"))
 for entry in exp["entries"]:
     folded.update(entry.get("evidence") or [])
     folded.update(entry.get("contradicting") or [])

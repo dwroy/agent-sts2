@@ -3,9 +3,8 @@
 # When the 20th starts (19 finished) it creates ops/STOP, so autoplay.sh exits after that run.
 # If autoplay still starts another run after the 20th, that play process and the loop are stopped by PID.
 set -u
-ROOT="$HOME/Projects/sts2-jev"
-OPS="$ROOT/ops"
-RUNS="$ROOT/jev-sts2/logs/runs.jsonl"
+. "$(dirname "$0")/paths.sh"
+RUNS="$LOGS/runs.jsonl"
 START="${1:?start time, ISO UTC, e.g. 2026-09-29T13:26:00Z}"
 TARGET="${2:-20}"
 LOG="$OPS/stop-after-a8.log"

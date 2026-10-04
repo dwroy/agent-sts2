@@ -21,7 +21,7 @@ import re
 import statistics
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOGS = os.path.join(ROOT, "jev-sts2", "logs")
+LOGS = os.path.join(ROOT, "logs")
 BOSS_FLOORS = (17, 33, 48)
 ARCH_START = "2026-09-25T12:10"  # FIGHT_PLAN=v1 went live (UTC)
 

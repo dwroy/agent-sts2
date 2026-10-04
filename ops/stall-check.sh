@@ -2,8 +2,8 @@
 # Quick stall check for the autoplay loop. Prints "OK" when play looks alive, otherwise "STALL: <why>"
 # plus the console tail and the mod screen. Used by the 5-minute cron; cheap enough to run often.
 set -u
-ROOT="$HOME/Projects/sts2-jev"
-LOGDIR="$ROOT/jev-sts2/logs"
+. "$(dirname "$0")/paths.sh"
+LOGDIR="$LOGS"
 now=$(date +%s)
 
 [ -f "$ROOT/ops/STOP" ] && { echo "OK (STOP file present, autoplay paused on purpose)"; exit 0; }

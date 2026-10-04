@@ -35,9 +35,9 @@ import re
 import subprocess
 import sys
 
-ROOT = os.path.expanduser(os.environ.get("JEV_STS2_ROOT", "~/Projects/sts2-jev/jev-sts2"))
-PY = os.path.join(ROOT, ".cache/logdb-venv/bin/python")
-QUERY = os.path.join(ROOT, "tools/logdb/query.py")
+ROOT = os.path.expanduser(os.environ.get("JEV_STS2_ROOT", os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+PY = os.path.join(ROOT, "data/logdb-venv/bin/python")
+QUERY = os.path.join(ROOT, "agent/tools/logdb/query.py")
 LOGS = os.environ.get("LOGDB_LOGS", os.path.join(ROOT, "logs"))
 # Default window: from the V4.5 start (2026-10-03 11:00 CST); pass --since for the codex switch-over once it is live.
 BRAIN_SINCE = "2026-10-03T03:00:00"

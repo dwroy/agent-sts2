@@ -4,8 +4,10 @@ import collections
 import json
 import os
 import re
+import sys
 
-ROOT = os.path.expanduser("~/Projects/sts2-jev/jev-sts2")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from paths import ROOT  # noqa: E402
 DEC = os.path.join(ROOT, "logs/decisions.jsonl")
 STATES = os.path.join(ROOT, "logs/states.jsonl")
 JEV_PRICE = 0.042  # $/M tokens (handoff estimate)

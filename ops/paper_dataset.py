@@ -27,9 +27,9 @@ import subprocess
 import sys
 import tarfile
 
-ROOT = os.path.expanduser("~/Projects/sts2-jev")
-JEV = os.path.join(ROOT, "jev-sts2")
-LOGS = os.path.join(JEV, "logs")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from paths import LOGS, ROOT  # noqa: E402
+JEV = ROOT  # the one repo since 2026-10-04 (code history included, hashes kept)
 NOTES = os.path.join(ROOT, "notes")
 AUTOPLAY = os.path.join(ROOT, "ops/autoplay.log")
 OUT = os.path.join(ROOT, "paper")
@@ -392,7 +392,7 @@ def scan_autoplay():
 def git_commits():
     out = subprocess.run(["git", "-C", JEV, "log", "--all", "--format=%H%x1f%h%x1f%aI%x1f%an%x1f%s"],
                          capture_output=True, text=True, check=True).stdout
-    main = set(subprocess.run(["git", "-C", JEV, "rev-list", "origin/main"], capture_output=True, text=True).stdout.split())
+    main = set(subprocess.run(["git", "-C", JEV, "rev-list", "upstream/main"], capture_output=True, text=True).stdout.split())
     rows = []
     for line in out.splitlines():
         full, short, date, author, subject = line.split("\x1f", 4)

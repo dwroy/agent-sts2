@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Milestones of back-to-back runs: new run, every 5th floor, boss floors, game over, stalls, loop exit."""
 import json, os, subprocess, time, urllib.request
-L = os.path.expanduser("~/Projects/sts2-jev/jev-sts2/logs/decisions.jsonl")
+L = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs", "decisions.jsonl")
 seen = sum(1 for _ in open(L)) if os.path.exists(L) else 0
 run = None; floor = None; last_new = time.time(); stalled = False; idle_since = None
 def loop_alive():
