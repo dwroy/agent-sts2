@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Potion equivalents: what each potion held is worth in the act boss fight, as HP, damage and block
 (Dai 2026-09-30: a potion drunk is HP paid later; holding one is having some extra HP, attack or block).
-Writes knowledge/characters/ironclad/potion-equivalents.json; docs/potion-equivalents.md explains every formula.
+Writes knowledge/characters/<id>/potion-equivalents.json; docs/potion-equivalents.md explains every formula.
+One character's runs only (--character, default ironclad; the log database's character, none = the Ironclad): the
+rates are our play with that character's deck, and the pool flag (`<id>`: the potion can drop for it) is its own.
+A character with no logged run gets no file (the TS loaders read a missing file as "no knowledge yet").
 
 Inputs (nothing hand-typed except the named estimate constants below):
   data/game-data.json        the 66 potions (name, description template, rarity, usage, target, pool) and
@@ -31,7 +34,7 @@ Merc / Fat Gremlin takes away: gold ÷ the median shop potion price at A8+ (the 
 act's median held value of those offered potions at this ascension.
 
 Usage:
-  data/logdb-venv/bin/python knowledge/builders/build-potion-equivalents.py [--out PATH] [--no-sync] [--markdown]
+  data/logdb-venv/bin/python knowledge/builders/build-potion-equivalents.py [--character ID] [--out PATH] [--no-sync] [--markdown]
   python3 knowledge/builders/build-potion-equivalents.py --self-test      (formulas on a fixed sample; no DuckDB needed)
 """
 import argparse
@@ -46,7 +49,8 @@ import sys
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
-DEFAULT_OUT = os.path.join(ROOT, "knowledge", "characters", "ironclad", "potion-equivalents.json")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from characters import LEGACY, NAMES_ZH, character_dir, character_key  # noqa: E402
 GAME_DATA = os.path.join(ROOT, "data", "game-data.json")
 POTION_VALUES_TS = os.path.join(ROOT, "agent", "src", "knowledge", "potion-values.ts")
 CARD_MODEL_TS = os.path.join(ROOT, "agent", "src", "reflex", "card-model.ts")
@@ -244,7 +248,9 @@ def pool_of(potion):
     return pool or "none"
 
 
-IRONCLAD_POOLS = {"shared", "ironclad", "event", "token"}
+def character_pools(character):
+    """The potion pools a character's runs draw from: the shared, event and token pools and its own."""
+    return {"shared", character, "event", "token"}
 
 
 # ---------------------------------------------------------------- rates (pure)
@@ -617,39 +623,54 @@ def fetch(con, sql):
     return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 
-def load_logs(con, ascensions):
+def runs_of(character, column="run_id"):
+    """SQL: " AND <column> ..." keeping the character's rows, or "" for every run (character None). A run's character
+    is its frames' last character_id; frames without one are the Ironclad's (every run before 2026-10-04), and so is a
+    row whose run has no frame or no id at all (on 2026-10-04: one drink of a run with no logged frame): the
+    Ironclad keeps every row but the other characters' runs, another character keeps its own runs alone."""
+    if not character:
+        return ""
+    if character == LEGACY:
+        return (f" AND coalesce({column}, '') NOT IN (SELECT run_id FROM frames WHERE run_id IS NOT NULL GROUP BY run_id "
+                f"HAVING lower(coalesce(arg_max(character, off), '{LEGACY}')) <> '{LEGACY}')")
+    return (f" AND {column} IN (SELECT run_id FROM frames WHERE run_id IS NOT NULL GROUP BY run_id "
+            f"HAVING lower(coalesce(arg_max(character, off), '{LEGACY}')) = '{character}')")
+
+
+def load_logs(con, ascensions, character=None):
     ascs = ",".join(str(a) for a in sorted(set(ascensions)))
+    own = runs_of(character)
     turns = fetch(con, f"""
         WITH b AS (
           SELECT t.*, lead(enemy_hp) OVER (PARTITION BY run_id, fight_no ORDER BY turn) AS next_enemy_hp
-          FROM turns t WHERE room = 'boss' AND ascension IN ({ascs}))
+          FROM turns t WHERE room = 'boss' AND ascension IN ({ascs}){own})
         SELECT ascension, act, run_id || ':' || fight_no AS fight, turn, last_turn AS last,
                CASE WHEN next_enemy_hp IS NULL THEN NULL ELSE greatest(enemy_hp - next_enemy_hp, 0) END AS dmg,
                enemy_turn_hp_lost AS loss, intent_damage AS intent, end_block, start_energy AS energy, cards_played AS cards, cards_n
         FROM b""")
     fights = fetch(con, f"""
         SELECT ascension, act, run_id || ':' || fight_no AS fight, turns, max_hp, deck_size AS deck, outcome
-        FROM fights WHERE room = 'boss' AND ascension IN ({ascs}) AND turns IS NOT NULL""")
-    seen = fetch(con, """
-        WITH s AS (SELECT DISTINCT run_id, unnest(potions) AS id FROM frames WHERE potions IS NOT NULL)
+        FROM fights WHERE room = 'boss' AND ascension IN ({ascs}) AND turns IS NOT NULL{own}""")
+    seen = fetch(con, f"""
+        WITH s AS (SELECT DISTINCT run_id, unnest(potions) AS id FROM frames WHERE potions IS NOT NULL{own})
         SELECT id, count(*) AS runs FROM s GROUP BY 1""")
-    drinks = fetch(con, "SELECT potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL GROUP BY 1")
+    drinks = fetch(con, f"SELECT potion_id AS id, count(*) AS n FROM decisions WHERE action = 'use_potion' AND potion_id IS NOT NULL{own} GROUP BY 1")
     boss_drinks = fetch(con, f"""
-        WITH u AS (SELECT ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}))
+        WITH u AS (SELECT ascension, unnest(potions_used) AS id FROM turns WHERE room = 'boss' AND ascension IN ({ascs}){own})
         SELECT id, ascension, count(*) AS n FROM u GROUP BY 1, 2""")
-    entropic = fetch(con, """
+    entropic = fetch(con, f"""
         SELECT avg(potion_slots - len(potions) + 1) AS slots, count(*) AS n FROM frames
-        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL""")
+        WHERE list_contains(potions, 'ENTROPIC_BREW') AND potion_slots IS NOT NULL{own}""")
     # Every combat question of these ascensions (the Monte Carlo summaries) and the boss drinks (the check).
     questions = fetch(con, f"""
         SELECT d.off, d.run_id, d.floor, d.turn, f.act, f.ascension, f.room
         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor
-        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}) ORDER BY d.off""")
+        WHERE d.label LIKE 'combat/plan-choice%' AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
     boss_drink_rows = fetch(con, f"""
         SELECT d.off, d.run_id, d.floor, d.turn, d.label, d.potion_id, f.act, f.ascension
         FROM decisions d JOIN fights f ON f.run_id = d.run_id AND f.floor = d.floor AND f.room = 'boss'
-        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}) ORDER BY d.off""")
-    last = fetch(con, "SELECT max(last_ts) AS last, count(*) AS n FROM fights")[0]
+        WHERE d.action = 'use_potion' AND d.potion_id IS NOT NULL AND f.ascension IN ({ascs}){runs_of(character, "d.run_id")} ORDER BY d.off""")
+    last = fetch(con, f"SELECT max(last_ts) AS last, count(*) AS n FROM fights WHERE TRUE{own}")[0]
     return {
         "turns": turns, "fights": fights, "seen": {r["id"]: r["runs"] for r in seen}, "drinks": {r["id"]: r["n"] for r in drinks},
         "boss_drinks": boss_drinks, "entropic": entropic[0], "questions": questions, "boss_drink_rows": boss_drink_rows,
@@ -662,14 +683,14 @@ def read_raw(handle, off):
     return json.loads(handle.readline())
 
 
-def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC):
+def load_shop_offers(con, states_handle, min_asc=GOLD_PRICE_MIN_ASC, character=None):
     """The potion offers of the logged shop visits from `min_asc` up: [{id, rarity, price, act, asc}], one visit's offers
     from the first of its SHOP frames (up to SHOP_FRAMES_PER_VISIT) that lists priced potions; and the visits read."""
     visits = fetch(con, f"""
         SELECT si.run_id, si.floor, any_value(si.act) AS act, any_value(r.ascension) AS asc,
                list(si.off ORDER BY si.off) AS offs, list(si.len ORDER BY si.off) AS lens
         FROM state_index si JOIN runs r ON r.run_id = si.run_id
-        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)} GROUP BY 1, 2 ORDER BY 1, 2""")
+        WHERE si.screen = 'SHOP' AND r.ascension >= {int(min_asc)}{runs_of(character, "si.run_id")} GROUP BY 1, 2 ORDER BY 1, 2""")
     offers = []
     seen = 0
     for visit in visits:
@@ -789,8 +810,9 @@ def public_rates(rates):
     return {k: (round(rates[k], 3) if isinstance(rates[k], float) else rates[k]) for k in keep}
 
 
-def build(logs, potions, cards, values, solver, ascensions, mc, checks):
+def build(logs, potions, cards, values, solver, ascensions, mc, checks, character=LEGACY):
     rates = group_rates(logs, cards, ascensions)
+    pools = character_pools(character)
     boss_drinks = collections.defaultdict(dict)
     for row in logs["boss_drinks"]:
         boss_drinks[row["id"]][str(row["ascension"])] = row["n"]
@@ -809,7 +831,8 @@ def build(logs, potions, cards, values, solver, ascensions, mc, checks):
             "usage": potion.get("usage"),
             "target": potion.get("target_type"),
             "pool": pool,
-            "ironclad": pool in IRONCLAD_POOLS,
+            # The pool flag is named after the character (the TS side reads entry[character]).
+            character: pool in pools,
             "category": category,
             "kind": kind,
             "solver": "exact" if pid == "FAIRY_IN_A_BOTTLE" else solver.get(pid, "none"),
@@ -819,7 +842,7 @@ def build(logs, potions, cards, values, solver, ascensions, mc, checks):
             "by_asc": {},
         }
         if kind is None:
-            item["note"] = NO_VALUE_NOTE.get(pid, "不在铁甲战士的药水池，日志里没出现" if pool not in IRONCLAD_POOLS else "数值未知")
+            item["note"] = NO_VALUE_NOTE.get(pid, f"不在{NAMES_ZH.get(character, character)}的药水池，日志里没出现" if pool not in pools else "数值未知")
         entry[pid] = item
     for pid, item in entry.items():
         if item["kind"] in (None, "entropic"):
@@ -836,7 +859,7 @@ def build(logs, potions, cards, values, solver, ascensions, mc, checks):
             rr = rates.get((asc, act))
             if not rr:
                 continue
-            pool_values = [e["by_asc"][str(asc)][str(act)]["hold_hp"] for e in entry.values() if e["ironclad"] and e["kind"] not in (None, "entropic", "max_hp") and e["rarity"] in ("Common", "Uncommon", "Rare") and str(asc) in e["by_asc"] and str(act) in e["by_asc"][str(asc)]]
+            pool_values = [e["by_asc"][str(asc)][str(act)]["hold_hp"] for e in entry.values() if e[character] and e["kind"] not in (None, "entropic", "max_hp") and e["rarity"] in ("Common", "Uncommon", "Rare") and str(asc) in e["by_asc"] and str(act) in e["by_asc"][str(asc)]]
             extras = {"entropic_slots": entropic["slots"], "pool_mean_hp": mean(pool_values)}
             value = potion_value("ENTROPIC_BREW", "entropic", {}, rr, extras)
             if value:
@@ -924,7 +947,8 @@ def rates_table(rates):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("--out", default=DEFAULT_OUT)
+    parser.add_argument("--character", default=LEGACY, help="the character's knowledge id (default ironclad)")
+    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/potion-equivalents.json")
     parser.add_argument("--db", default=None)
     parser.add_argument("--logs", default=None)
     parser.add_argument("--no-sync", action="store_true")
@@ -935,6 +959,10 @@ def main(argv=None):
     if args.self_test:
         return self_test()
     ascensions = tuple(sorted(set(ASCENSIONS) | {int(a) for a in args.ascensions.split(",") if a.strip()}))
+    character = character_key(args.character)
+    if not character or not character.replace("_", "").isalnum():
+        parser.error(f"--character {args.character!r}: not a character id")  # it goes into SQL
+    args.out = args.out or os.path.join(character_dir(ROOT, character), "potion-equivalents.json")
 
     sys.path.insert(0, os.path.join(ROOT, "agent", "tools", "logdb"))
     import query as logquery  # noqa: E402  (needs duckdb: run with .cache/logdb-venv/bin/python)
@@ -952,16 +980,20 @@ def main(argv=None):
     names.update({p["id"]: p["id"] for p in potions})
     with logsync.read_lock(db, shared=True):
         con = logquery.connect(db, threads=2)
-        logs = load_logs(con, ascensions)
+        has_runs = fetch(con, f"SELECT count(*) AS n FROM (SELECT 1 FROM frames WHERE TRUE{runs_of(character)} LIMIT 1)")[0]["n"]
+        logs = load_logs(con, ascensions, character) if has_runs else None
+    if logs is None:
+        print(f"no {character} runs in the log database; nothing written -> {args.out}")
+        return 0
     with open(os.path.join(logs_dir, "decisions.jsonl"), "rb") as handle:
         mc = mc_summaries(logs["questions"], handle)
         checks = check_column(logs["boss_drink_rows"], logs["questions"], handle, names)
-    rates, entry = build(logs, potions, cards, values, solver, ascensions, mc, checks)
+    rates, entry = build(logs, potions, cards, values, solver, ascensions, mc, checks, character)
     # The gold rate (THIEF_COST): the logged shop visits' potion offers (states.jsonl by offset, read-only).
     with logsync.read_lock(db, shared=True):
         con = logquery.connect(db, threads=2)
         with open(os.path.join(logs_dir, "states.jsonl"), "rb") as handle:
-            offers, shop_visits = load_shop_offers(con, handle)
+            offers, shop_visits = load_shop_offers(con, handle, character=character)
     gold = gold_rates(offers, shop_visits, entry, ascensions)
     if gold is None:
         print("warning: no shop potion offers in the logs: no gold rate (meta.gold_hp)", file=sys.stderr)
@@ -987,6 +1019,7 @@ def main(argv=None):
         "potions": entry,
     }
     text = json.dumps(out, ensure_ascii=False, indent=1, sort_keys=True) + "\n"
+    os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         handle.write(text)

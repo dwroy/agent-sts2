@@ -32,8 +32,13 @@ logs/run-config.jsonl (agent/src/eye/run-config.ts; the runs view's brain_label 
 "V4 · deepseek:deepseek-flash; MAP=claude:claude-opus-5-5 · 知识前缀 full". Runs from before that log are
 "<version> · 未记录配置"; a run a restarted process played with another configuration is marked "局中改过配置".
 
+Character (multi-character, 2026-10-04): --character ID keeps one character's runs (default: the CHARACTER environment
+variable, else every character); --group-by character splits them (a run naming none is the Ironclad's: every run
+before the Silent).
+
 Usage (the log database's Python: data/logdb-venv/bin/python):
-  eval/metrics.py [--ascension 9] [--since 2026-09-29T00:00] [--until ...] [--group-by version|family|config|commit|ascension|day]
+  eval/metrics.py [--ascension 9] [--character silent] [--since 2026-09-29T00:00] [--until ...]
+                        [--group-by version|family|config|commit|ascension|character|day]
                         [--md | --json] [--per-run] [--total] [--min-n 10] [--no-sync] [--no-calibration] [--boss-clocks FILE]
 Times without an offset are UTC (the database's clock); --group-by day uses the local date (UTC+8).
 """
@@ -50,6 +55,8 @@ from pathlib import Path
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = str(Path(__file__).resolve().parents[1])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.join(ROOT, "agent", "tools", "logdb"))
+sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+from characters import character_key, env_character, run_character  # noqa: E402
 
 VERSIONS_FILE = os.path.join(HERE, "versions.json")
 ELITE_HP_SHARE = 0.78
@@ -529,10 +536,15 @@ def as_utc(value):
     return when
 
 
-def load_runs(con, sets, ascensions=None, since=None, until=None):
-    """run_metrics for every finished run (with frames) in the filters, oldest first."""
+def load_runs(con, sets, ascensions=None, since=None, until=None, character=None, characters=None):
+    """run_metrics for every finished run (with frames) in the filters, oldest first. `character`: that character's
+    runs alone (a knowledge id; None: every one); `characters` (a dict) gets each kept run's character id (kept out of
+    the run's metrics, so the per-run output is as before)."""
     runs = [r for r in dicts(con.execute(RUNS_SQL))
-            if (not ascensions or r["ascension"] in ascensions) and (since is None or r["started"] >= since) and (until is None or r["started"] < until)]
+            if (not ascensions or r["ascension"] in ascensions) and (since is None or r["started"] >= since) and (until is None or r["started"] < until)
+            and (character is None or run_character(r) == character)]
+    if characters is not None:
+        characters.update({r["run_id"]: run_character(r) for r in runs})
     ids = [r["run_id"] for r in runs]
     by = {rid: {"fights": [], "floors": [], "entry": {}, "calls": [], "sl": []} for rid in ids}
     if ids:
@@ -583,8 +595,9 @@ def config_label(row):
     return label + (" · 局中改过配置" if row.get("config_changed") else "")
 
 
-def group_runs(rows, how, versions=None):
-    """[(group name, rows)] in group order: versions in versions.json order, the rest by name / first run."""
+def group_runs(rows, how, versions=None, characters=None):
+    """[(group name, rows)] in group order: versions in versions.json order, the rest by name / first run.
+    `characters`: run id -> character id (--group-by character; a run not in it is the Ironclad's)."""
     groups, order = {}, {}
     for row in rows:
         if how in ("version", "family", "config"):
@@ -603,6 +616,9 @@ def group_runs(rows, how, versions=None):
         elif how == "ascension":
             key = f"A{row['ascension']}"
             order.setdefault(key, (row["ascension"] if row["ascension"] is not None else -1, row["started"]))
+        elif how == "character":
+            key = (characters or {}).get(row["run_id"]) or "ironclad"
+            order.setdefault(key, (0, row["started"]))
         elif how == "day":
             key = local_day(row["started"])
             order.setdefault(key, (0, key))
@@ -753,7 +769,8 @@ def main(argv=None):
     parser.add_argument("--ascension", type=int, action="append", help="only this ascension (repeatable)")
     parser.add_argument("--since", help="runs started at or after this time (ISO; UTC unless it has an offset)")
     parser.add_argument("--until", help="runs started before this time")
-    parser.add_argument("--group-by", default="version", choices=["version", "family", "config", "commit", "ascension", "day"],
+    parser.add_argument("--character", default=env_character(), help="only this character's runs (knowledge id, e.g. silent; default: $CHARACTER, else all)")
+    parser.add_argument("--group-by", default="version", choices=["version", "family", "config", "commit", "ascension", "character", "day"],
                         help="config = version + brain engines/models + knowledge prefix (logs/run-config.jsonl)")
     parser.add_argument("--md", action="store_true", help="markdown table (metrics x groups)")
     parser.add_argument("--json", action="store_true", help="per-run metrics and group summaries as JSON")
@@ -781,7 +798,8 @@ def main(argv=None):
     sets = strength_sets(args.strength_sets, args.game_data)
     with logsync.read_lock(db, shared=True):
         con = logquery.connect(db, threads=2)
-        rows = load_runs(con, sets, set(args.ascension or []), as_utc(args.since), as_utc(args.until))
+        characters = {}
+        rows = load_runs(con, sets, set(args.ascension or []), as_utc(args.since), as_utc(args.until), character_key(args.character), characters)
         if not args.no_calibration:
             attach_calibration(con, rows, logs, args.boss_clocks, args.game_data)
     versions = VersionMap(load_versions(args.versions), Git()) if args.group_by in ("version", "family", "config") or args.per_run or args.json else None
@@ -789,7 +807,7 @@ def main(argv=None):
         for row in rows:
             entry, row["version_how"] = versions.assign(row["code"], row["started"])
             row["version"] = entry["name"]
-    groups = group_runs(rows, args.group_by, versions)
+    groups = group_runs(rows, args.group_by, versions, characters)
     if args.total and rows:
         groups.append(("全部", rows))
     if args.json:

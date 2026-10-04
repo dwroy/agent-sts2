@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Cross-run statistics for the jev-sts2 experiment (all play-mode decisions in logs/decisions.jsonl)."""
+"""Cross-run statistics for the jev-sts2 experiment (all play-mode decisions in logs/decisions.jsonl).
+
+One character's runs with --character ID (default: the CHARACTER environment variable, else every character); a run's
+character is its states' run.character_id (none, or no state: the Ironclad's, as every run before 2026-10-04).
+"""
 import collections
 import json
 import os
@@ -8,6 +12,11 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import ROOT  # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+from characters import LEGACY, character_key, env_character, run_character  # noqa: E402
+CHARACTER = env_character()
+if "--character" in sys.argv:
+    CHARACTER = character_key(sys.argv[sys.argv.index("--character") + 1])
 DEC = os.path.join(ROOT, "logs/decisions.jsonl")
 STATES = os.path.join(ROOT, "logs/states.jsonl")
 JEV_PRICE = 0.042  # $/M tokens (handoff estimate)
@@ -93,6 +102,11 @@ for s in load(STATES):
     st = s.get("state") or {}
     if st.get("run_id") and st.get("run"):
         states.setdefault(st["run_id"], []).append(st)
+if CHARACTER:
+    # The decisions of the character's runs alone (the run's first state with a run says whose it is).
+    whose = {rid: run_character(sts[0]["run"]) for rid, sts in states.items()}
+    recs = [r for r in recs if whose.get(r["_run"], LEGACY) == CHARACTER]
+    states = {rid: sts for rid, sts in states.items() if whose[rid] == CHARACTER}
 runs = collections.OrderedDict()
 for r in recs:
     rid = r["_run"]

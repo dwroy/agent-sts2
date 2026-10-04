@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Outcome statistics from our own logs -> knowledge/characters/ironclad/outcome-stats.json (the knowledge base's stats layer).
+"""Outcome statistics from our own logs -> knowledge/characters/<id>/outcome-stats.json (the knowledge base's stats layer).
+One character's runs only (--character, default ironclad; runs.jsonl `character`, none = the Ironclad): a card's
+numbers are the deck's it was played in. A character with no finished run gets no file (the TS loaders read a
+missing file as "no knowledge yet").
 
 What happened to the runs that made a given choice, one table per ascension (by_ascension; default: A8 and each
 higher ascension with logged runs, each apart with its own baseline: Dai 2026-10-04, A8 and A9 counted separately):
@@ -20,7 +23,7 @@ changes, card rewards offered, event ids and option keys, rest options; combat s
 without parsing and the agent_view copy of each state is cut before parsing).
 
 Usage:
-  python3 knowledge/builders/build-outcome-stats.py [--logs DIR] [--ascension band|8,9|all] [--out PATH] [--quiet]
+  python3 knowledge/builders/build-outcome-stats.py [--logs DIR] [--character ID] [--ascension band|8,9|all] [--out PATH] [--quiet]
   python3 knowledge/builders/build-outcome-stats.py --self-test
 Refresh (after new runs): python3 knowledge/builders/build-outcome-stats.py   (about half a minute on ~6 GB of states, every table
 in one pass; ops/report.py refresh_knowledge runs it with no arguments after every run, so the default is the band)
@@ -36,7 +39,8 @@ import time
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
-DEFAULT_OUT = os.path.join(ROOT, "knowledge", "characters", "ironclad", "outcome-stats.json")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from characters import character_dir, character_key, run_character  # noqa: E402
 LOW_N = 5
 # From this ascension up each ascension gets a table of its own (--ascension band, the default): A8, A9, and each
 # higher one once it has a finished run. Below it nothing is counted (the file was A8 only before 2026-10-04).
@@ -73,8 +77,9 @@ def keeps_ascension(asc, ascension):
     return asc in ascension
 
 
-def read_runs(path, ascension):
-    """run id -> {floor, victory, ascension} for finished runs at the ascensions kept (keeps_ascension)."""
+def read_runs(path, ascension, character=None):
+    """run id -> {floor, victory, ascension} for finished runs at the ascensions kept (keeps_ascension), of `character`
+    alone when given (the states and decisions are then read for these runs only)."""
     runs = {}
     with open(path, "r", encoding="utf8") as handle:
         for line in handle:
@@ -87,6 +92,8 @@ def read_runs(path, ascension):
                 continue
             asc = row.get("ascension")
             if not keeps_ascension(asc, ascension):
+                continue
+            if character and run_character(row) != character:
                 continue
             runs[run_id] = {"floor": row.get("floor") or 0, "victory": bool(row.get("victory")), "ascension": asc}
     return runs
@@ -306,9 +313,10 @@ def table_key(run, ascension):
     return "all" if ascension == "all" else run["ascension"]
 
 
-def build(logs, ascension="band"):
-    """The whole file: one table per ascension kept (by_ascension), the logs read once for all of them."""
-    runs = read_runs(os.path.join(logs, "runs.jsonl"), ascension)
+def build(logs, ascension="band", character=None):
+    """The whole file: one table per ascension kept (by_ascension), the logs read once for all of them; `character`:
+    that character's runs alone (None: every run)."""
+    runs = read_runs(os.path.join(logs, "runs.jsonl"), ascension, character)
     marks, event_choices, rest_choices = read_decisions(os.path.join(logs, "decisions.jsonl"), runs)
     seen = read_states(os.path.join(logs, "states.jsonl"), runs, lambda run_id: table_key(runs[run_id], ascension))
     groups = collections.defaultdict(dict)
@@ -486,14 +494,16 @@ def self_test():
     ]
     # Run C (A0): below the band, not counted by default.
     states += [_state_line("v01", "RUNC", "MAP", 1, 1, start, []), _state_line("v02", "RUNC", "MAP", 2, 1, start + ["INFLAME"], [])]
-    # Run E (A10): a higher ascension gets its table once it has a run with states; run F (A11) has none, so no table.
+    # Run E (A10, the Silent): a higher ascension gets its table once it has a run with states; run F (A11) has none,
+    # so no table. The Ironclad's file (--character ironclad) leaves run E out; the other rows name no character (the
+    # Ironclad's, legacy) or "IRONCLAD".
     states += [_state_line("w01", "RUNE", "MAP", 1, 1, start, [])]
     runs += [
         json.dumps({"run_id": "RUND", "ascension": 9, "floor": 17, "victory": False}),
-        json.dumps({"run_id": "RUNA", "ascension": 8, "floor": 20, "victory": False}),
+        json.dumps({"run_id": "RUNA", "ascension": 8, "floor": 20, "victory": False, "character": "IRONCLAD"}),
         json.dumps({"run_id": "RUNB", "ascension": 8, "floor": 17, "victory": False}),
         json.dumps({"run_id": "RUNC", "ascension": 0, "floor": 5, "victory": False}),
-        json.dumps({"run_id": "RUNE", "ascension": 10, "floor": 3, "victory": False}),
+        json.dumps({"run_id": "RUNE", "ascension": 10, "floor": 3, "victory": False, "character": "SILENT"}),
         json.dumps({"run_id": "RUNF", "ascension": 11, "floor": 2, "victory": False}),
     ]
     with tempfile.TemporaryDirectory() as tmp:
@@ -503,6 +513,8 @@ def self_test():
         whole = build(tmp)
         only8 = build(tmp, {8})
         pooled = build(tmp, "all")
+        ironclad = build(tmp, "band", "ironclad")
+        silent = build(tmp, "band", "silent")
     failures = []
 
     def check(label, got, want):
@@ -534,6 +546,8 @@ def self_test():
     check("A9 rest", a9["rest"], {"SMITH": {">=80%": {"n": 1, "mean_floor": 17.0, "boss_pass": 0.0, "low_n": True}}})
     check("A10 table", whole["by_ascension"]["10"]["baseline"]["runs"], 1)
     check("all: one pooled table", (pooled["ascensions"], pooled["by_ascension"]["all"]["baseline"]["runs"]), (["all"], 5))
+    check("ironclad: no Silent table", (ironclad["ascensions"], ironclad["by_ascension"]["8"]), ([8, 9], out))
+    check("silent: its own run alone", (silent["ascensions"], silent["by_ascension"]["10"]["baseline"]["runs"]), ([10], 1))
     if failures:
         print("self-test FAILED:\n  " + "\n  ".join(failures))
         return 1
@@ -548,18 +562,37 @@ def parse_ascension(text):
     return {int(part) for part in text.split(",") if part.strip()}
 
 
+def _run_rows(path):
+    """Every row of runs.jsonl (unreadable lines skipped)."""
+    with open(path, "r", encoding="utf8") as handle:
+        for line in handle:
+            try:
+                row = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(row, dict) and row.get("run_id"):
+                yield row
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--logs", default=_default_logs())
     parser.add_argument("--ascension", default="band", help="'band' (default: A8 and each higher ascension with runs, one table each), a list such as 8,9, or 'all' (one pooled table)")
-    parser.add_argument("--out", default=DEFAULT_OUT)
+    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
+    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/outcome-stats.json")
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     if args.self_test:
         return self_test()
+    character = character_key(args.character)
+    args.out = args.out or os.path.join(character_dir(ROOT, character), "outcome-stats.json")
     started = time.time()
-    stats = build(args.logs, parse_ascension(args.ascension))
+    if not any(run_character(row) == character for row in _run_rows(os.path.join(args.logs, "runs.jsonl"))):
+        print(f"{args.out}: no {character} runs; nothing written")
+        return 0
+    stats = build(args.logs, parse_ascension(args.ascension), character)
+    os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     tmp = args.out + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(stats, handle, ensure_ascii=False, indent=1)

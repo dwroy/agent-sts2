@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """How much of the act bosses' shown damage got through our block, from logs/states.jsonl ->
-knowledge/characters/ironclad/boss-damage.json (and, with --fights, one JSON line per boss fight for the backtest).
+knowledge/characters/<id>/boss-damage.json (and, with --fights, one JSON line per boss fight for the backtest).
+One character's fights only (--character, default ironclad; a state's run.character_id, none = the Ironclad): how
+much got through is our play, and the Silent plays another game.
 
 For every logged boss fight (every ascension): the frame at the start of each of our turns gives our HP
 and the boss's shown attack for the coming enemy turn (its intents' damage x hits, Strength and our
@@ -23,17 +25,20 @@ over the shown attack, or both at once; from the fight's last frame).
 
 Only states that name a boss enemy are read (grep), not the whole file.
 
-Usage: knowledge/builders/build-boss-damage.py [--logs DIR] [--fights FILE] [--out FILE]
+Usage: knowledge/builders/build-boss-damage.py [--logs DIR] [--character ID] [--fights FILE] [--out FILE]
+A character with no row in runs.jsonl gets no file (the TS loaders read a missing file as "no knowledge yet").
 """
 import argparse
 import collections
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
-OUT = os.path.join(ROOT, "knowledge/characters/ironclad/boss-damage.json")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from characters import character_dir, character_key, run_character  # noqa: E402
 
 # Boss clock key (strategy/boss-clock.ts BOSSES) -> the enemy ids of its bodies.
 BOSSES = {
@@ -69,8 +74,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
     parser.add_argument("--fights", default=None)
-    parser.add_argument("--out", default=OUT)
+    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
+    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
     args = parser.parse_args()
+    character = character_key(args.character)
+    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
 
     runs = {}
     with open(os.path.join(args.logs, "runs.jsonl"), encoding="utf8") as handle:
@@ -80,6 +88,9 @@ def main() -> None:
             except ValueError:
                 continue
             runs[run.get("run_id")] = run
+    if not any(run_character(run) == character for run in runs.values()):
+        print(f"no {character} runs; nothing written -> {args.out}")
+        return
 
     patterns = []
     for enemy in BOSS_OF:
@@ -113,6 +124,8 @@ def main() -> None:
         combat = state.get("combat") or {}
         run = state.get("run") or {}
         if not state.get("in_combat") or not combat:
+            continue
+        if run_character(run) != character:
             continue
         bodies = [e for e in combat.get("enemies", []) if e.get("enemy_id") in BOSS_OF]
         if not bodies:
@@ -280,6 +293,7 @@ def main() -> None:
     # half of one (boss-clock reads it once a process; unreadable, every record read "no logged fights" for the run,
     # and the first render of a day froze that for the day). The tmp name is this process's: two refreshes at once
     # (ops/report.py and ops/wait-run.sh) do not write into one file.
+    os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     tmp = f"{args.out}.{os.getpid()}.tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)

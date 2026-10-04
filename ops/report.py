@@ -2,7 +2,8 @@
 """Post-mortem for one jev-sts2 run: outcome, where HP went, who decided what (code / Jev / DeepSeek).
 
 Usage: report.py [run_id]   (default: the last run in logs/decisions.jsonl)
-Prints Markdown. Appends a one-line summary to logs/runs.jsonl (idempotent per run id).
+Prints Markdown. Appends a one-line summary to logs/runs.jsonl (idempotent per run id), then refreshes the knowledge
+of the run's character (knowledge/builders/refresh.sh --character <id>; the character-independent steps run as well).
 """
 import collections
 import json
@@ -12,6 +13,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import LIVE, ROOT  # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+from characters import run_character  # noqa: E402
 DEC = os.path.join(ROOT, "logs/decisions.jsonl")
 STATES = os.path.join(ROOT, "logs/states.jsonl")
 RUNS = os.path.join(ROOT, "logs/runs.jsonl")
@@ -214,6 +217,7 @@ def decider(record):
 
 
 def main():
+    """Prints the post-mortem; returns the run's character (knowledge id; None when no state of it names a run)."""
     decisions = [r for r in load(DEC) if r.get("mode") == "play"]
     runs = [run_of(r) for r in decisions]
     run_id = sys.argv[1] if len(sys.argv) > 1 else next((r for r in reversed(runs) if r), None)
@@ -239,6 +243,7 @@ def main():
             except json.JSONDecodeError:
                 continue
             states[entry["ts"]] = entry["state"]
+    run_char = next((run_character(states[r["ts"]]["run"]) for r in recs if (states.get(r["ts"]) or {}).get("run")), None)
 
     floors = [r["floor"] for r in recs if r.get("floor") is not None]
     top_floor = max(floors) if floors else None
@@ -374,6 +379,7 @@ def main():
                 "death_fight": None if victory or not fights else sorted(x for x in fights[-1]["enemies"] if x),
                 **ablation_arm(),
             }, ensure_ascii=False) + "\n")
+    return run_char
 
 
 def ablation_arm():
@@ -399,12 +405,15 @@ def ablation_arm():
     return {"arm": cur.get("arm")}
 
 
-def refresh_knowledge() -> None:
-    """After each run: monster DB, per-fight move model, outcome stats. Background, unless REFRESH_WAIT=1 (autoplay.sh)."""
+def refresh_knowledge(character=None) -> None:
+    """After each run: monster DB, per-fight move model, outcome stats. Background, unless REFRESH_WAIT=1 (autoplay.sh).
+    `character`: the finished run's (its knowledge alone is rebuilt; None: every character with runs)."""
     import subprocess
     # Into the live worktree (.worktrees/live, agent-sts2 layout 2026-10-04; was jev-sts2-v4run), whose logs/ and data/
     # link to the main checkout's. knowledge/builders/refresh.sh holds the command list (same steps, same order).
     refresh = f"{LIVE}/knowledge/builders/refresh.sh"
+    if character and re.fullmatch(r"[a-z0-9_]+", character):
+        refresh += f" --character {character}"
     cmd = refresh
     log = open(os.path.join(ROOT, "ops", "refresh.log"), "a")
     # fight-value (~5 min) is only a reference for Jev's history estimate and is written whole (tmp + rename, ede54d1),
@@ -426,8 +435,8 @@ if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]:
         selftest()
         sys.exit(0)
-    main()
+    run_char = main()
     try:
-        refresh_knowledge()
+        refresh_knowledge(run_char)
     except Exception:
         pass

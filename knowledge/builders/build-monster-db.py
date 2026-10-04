@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Monster database from our own logs: logs/states.jsonl (+ runs.jsonl) -> knowledge/common/monster-db.json.
+"""Monster database from our own logs: logs/states.jsonl (+ runs.jsonl) -> knowledge/common/monster-db.json, and
+each character's own records -> knowledge/characters/<id>/monster-records.json.
 
 DATA ONLY. Nothing in agent/src/ reads monster-db.json yet; it is the observed reference the hand tables
 (boss-clock.ts, enemy dossiers, move-model.json) are checked against.
@@ -7,9 +8,14 @@ DATA ONLY. Nothing in agent/src/ reads monster-db.json yet; it is the observed r
 Per monster id: names, acts, kind (hallway/elite/boss/minion/event), encounter groups, max HP by
 ascension, moves (intent, damage per hit and hits by ascension, Strength taken out where it is
 computable, block and powers the move put on itself or on us, successor counts), powers seen on it with
-the game's text, the threat to us by ascension (HP lost, win rate, deaths with run ids) and provenance.
+the game's text and provenance: game facts, counted over every character's fights (common/monster-db.json).
 Every number carries its sample size (n); an ascension that was never logged is absent, not guessed.
-Also `bosses`: one summary per act boss (all parts and phases).
+How the fights went for us is the character's (multi-character, 2026-10-04: the Silent's deaths say nothing of the
+Ironclad's deck): characters/<id>/monster-records.json holds `bosses` (one summary per act boss, all parts and
+phases), `encounters` and `threat_by_asc` (per monster: HP lost, win rate, deaths with run ids, by ascension), from
+that character's fights alone (state.run.character_id; none = the Ironclad). The TS loader merges the two into the
+shape this file had before the split: {meta, bosses, encounters, monsters (threat_by_asc after powers), observed}
+(merge_records below does the same).
 
 The move sequence is the move-model's (knowledge/builders/build-move-model.py): the move an enemy shows at the first
 logged state of each turn, successors counted between consecutive turns. Here it is keyed per fight
@@ -18,7 +24,10 @@ two fights. `--move-model-out PATH` writes the same data in move-model.json's fo
 
 Usage:
   python3 knowledge/builders/build-monster-db.py [--states PATH] [--runs PATH] [--game-data PATH] [--out PATH]
-                                    [--move-model-out PATH] [--quiet]
+                                    [--character ID] [--records-out PATH] [--move-model-out PATH] [--quiet]
+  --records-out: where each character's records go, "{character}" standing for its id (default
+  knowledge/characters/{character}/monster-records.json); --character ID: that character's records alone (default:
+  every character with a logged fight). The common file is always written, over every fight.
   python3 knowledge/builders/build-monster-db.py --self-test
 Stdlib only; states.jsonl is streamed (the agent_view copy of each state is cut before parsing).
 """
@@ -33,6 +42,8 @@ import time
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from characters import LEGACY, character_key, run_character  # noqa: E402
 
 
 def _default_logs():
@@ -141,6 +152,7 @@ def act_of(run):
 class Fight:
     def __init__(self, run_id, run, state, ts):
         self.run_id = run_id
+        self.character = run_character(run) or LEGACY
         self.floor = run.get("floor")
         self.act = act_of(run)
         self.asc = run.get("ascension")
@@ -326,7 +338,9 @@ def new_monster():
         "powers": collections.defaultdict(lambda: {"fights": 0, "start": collections.Counter(), "max": collections.Counter(),
                                                    "start_by_asc": collections.defaultdict(collections.Counter),
                                                    "turn_by_asc": collections.defaultdict(collections.Counter)}),
-        "threat": collections.defaultdict(list),  # asc -> [fight result]
+        # character -> asc -> [fight result] (the character's records); characters: those it was met by
+        "threat": collections.defaultdict(lambda: collections.defaultdict(list)),
+        "characters": set(),
         "runs": set(),
         "first": None,
         "last": None,
@@ -370,8 +384,11 @@ def new_move():
 class Builder:
     def __init__(self, runs=None):
         self.monsters = collections.defaultdict(new_monster)
-        self.bosses = collections.defaultdict(lambda: collections.defaultdict(list))
-        self.encounters = collections.defaultdict(lambda: collections.defaultdict(list))
+        # character -> boss key / encounter -> asc -> [fight] (the character's records)
+        self.bosses = collections.defaultdict(lambda: collections.defaultdict(lambda: collections.defaultdict(list)))
+        self.encounters = collections.defaultdict(lambda: collections.defaultdict(lambda: collections.defaultdict(list)))
+        # character -> {fights, first_ts, last_ts, asc_seen}: the records' generated_from
+        self.by_character = collections.defaultdict(lambda: {"fights": 0, "first_ts": None, "last_ts": None, "asc_seen": collections.Counter()})
         self.runs = runs or {}
         self.open = {}  # run_id -> Fight
         self.await_map = collections.defaultdict(list)  # run_id -> [Fight]
@@ -468,13 +485,18 @@ class Builder:
         if fight.outcome is None and run is not None and run.get("floor") == fight.floor and not run.get("victory") and run.get("death_fight"):
             fight.outcome = "died"
         self.fights += 1
+        mine = self.by_character[fight.character]
+        mine["fights"] += 1
         asc = fight.asc if isinstance(fight.asc, int) else None
         if asc is not None:
             self.asc_seen[asc] += 1
+            mine["asc_seen"][asc] += 1
         for ts in (fight.first_ts, fight.last_ts):
             if ts:
                 self.first_ts = min(self.first_ts or ts, ts)
                 self.last_ts = max(self.last_ts or ts, ts)
+                mine["first_ts"] = min(mine["first_ts"] or ts, ts)
+                mine["last_ts"] = max(mine["last_ts"] or ts, ts)
         kind = self.room_kind(fight, GAME_TYPES)
         encounter = "+".join(fight.initial)
         turns = fight.max_turn
@@ -521,19 +543,20 @@ class Builder:
             mon["runs"].add(fight.run_id)
             mon["first"] = min(mon["first"] or fight.first_ts, fight.first_ts)
             mon["last"] = max(mon["last"] or fight.last_ts, fight.last_ts)
+            mon["characters"].add(fight.character)
             if asc is not None:
-                mon["threat"][asc].append(result)
+                mon["threat"][fight.character][asc].append(result)
         self.moves_of(fight, asc)
         start_hp = sum(inst["hp"][0] for inst in fight.instances.values() if not inst["spawned"] and inst["hp"])
         all_hp = sum(inst["hp"][0] for inst in fight.instances.values() if inst["hp"])
         if asc is not None:
-            self.encounters[encounter][asc].append({**result, "start_hp": start_hp, "all_hp": all_hp, "kind": kind, "act": fight.act})
+            self.encounters[fight.character][encounter][asc].append({**result, "start_hp": start_hp, "all_hp": all_hp, "kind": kind, "act": fight.act})
         if kind == "boss" and asc is not None:
             boss_key = boss_key_of(fight.boss_id, ids_in_fight)
             parts = collections.defaultdict(list)
             for (index, eid), inst in sorted(fight.instances.items(), key=lambda kv: (kv[0][0] if isinstance(kv[0][0], int) else 99)):
                 parts[eid].append({"hp": inst["hp"], "spawned": inst["spawned"], "minion": inst["minion"]})
-            self.bosses[boss_key][asc].append({**result, "parts": dict(parts), "start_hp": start_hp, "ids": sorted(ids_in_fight)})
+            self.bosses[fight.character][boss_key][asc].append({**result, "parts": dict(parts), "start_hp": start_hp, "ids": sorted(ids_in_fight)})
         MECHANICS.commit(fight, ids_in_fight)
 
     def moves_of(self, fight, asc):
@@ -1403,7 +1426,6 @@ def build_output(builder, game):
             "hp_by_asc": hp,
             "moves": moves,
             "powers": powers,
-            "threat_by_asc": {str(asc): threat_obj(mon["threat"][asc]) for asc in sorted(mon["threat"])},
             "provenance": {"first_seen": mon["first"], "last_seen": mon["last"], "n_runs": len(mon["runs"]),
                            "n_instances": mon["instances"], "n_spawned_mid_fight": mon["spawned"],
                            "n_minion_instances": mon["minion_instances"]},
@@ -1413,11 +1435,35 @@ def build_output(builder, game):
         if per_monster.get(eid):
             entry["observed"] = per_monster[eid]
         out[eid] = entry
+    meta = {
+        "note": META_NOTE,
+        "generated_from": {"fights": builder.fights, "first_seen": builder.first_ts, "last_seen": builder.last_ts,
+                           "fights_by_asc": {str(k): v for k, v in sorted(builder.asc_seen.items())}},
+    }
+    result = {"meta": meta, "monsters": out}
+    if pooled is not None:
+        result["observed"] = pooled
+    return result
+
+
+def records_output(builder, character):
+    """One character's records (characters/<id>/monster-records.json): its boss and encounter summaries and each
+    monster's threat_by_asc, from its own fights alone; the same keys, order and numbers the monster DB carried before
+    the split, for the monsters it met (a monster met only at an unknown ascension: {})."""
+    mine = builder.by_character[character]
+    bosses_of, encounters_of = builder.bosses.get(character, {}), builder.encounters.get(character, {})
+    threat = {}
+    for eid in sorted(builder.monsters):
+        mon = builder.monsters[eid]
+        if not mon["instances"] or character not in mon["characters"]:
+            continue
+        table = mon["threat"].get(character, {})
+        threat[eid] = {str(asc): threat_obj(table[asc]) for asc in sorted(table)}
     bosses = {}
-    for boss_key in sorted(builder.bosses):
+    for boss_key in sorted(bosses_of):
         by_asc = {}
-        for asc in sorted(builder.bosses[boss_key]):
-            fights = builder.bosses[boss_key][asc]
+        for asc in sorted(bosses_of[boss_key]):
+            fights = bosses_of[boss_key][asc]
             part_hp = collections.defaultdict(list)
             phase_seqs = collections.Counter()
             for f in fights:
@@ -1446,17 +1492,45 @@ def build_output(builder, game):
             }
         bosses[boss_key] = by_asc
     encounters = {}
-    for key in sorted(builder.encounters):
+    for key in sorted(encounters_of):
         by_asc = {}
-        for asc in sorted(builder.encounters[key]):
-            fights = builder.encounters[key][asc]
+        for asc in sorted(encounters_of[key]):
+            fights = encounters_of[key][asc]
             by_asc[str(asc)] = {**threat_obj(fights), "start_hp_total": dist([f["start_hp"] for f in fights]),
                                 "hp_total_incl_spawned": dist([f["all_hp"] for f in fights])}
-        rooms = collections.Counter(f["kind"] for fs in builder.encounters[key].values() for f in fs if f["kind"])
-        acts = collections.Counter(f["act"] for fs in builder.encounters[key].values() for f in fs if f["act"])
+        rooms = collections.Counter(f["kind"] for fs in encounters_of[key].values() for f in fs if f["kind"])
+        acts = collections.Counter(f["act"] for fs in encounters_of[key].values() for f in fs if f["act"])
         encounters[key] = {"rooms": dict(rooms.most_common()), "acts": {str(a): n for a, n in sorted(acts.items())}, "by_asc": by_asc}
     meta = {
-        "note": "Generated by tools/build-monster-db.py from logs/states.jsonl and runs.jsonl. DATA ONLY: not read by the player code. "
+        "note": RECORDS_NOTE,
+        "character": character,
+        "generated_from": {"fights": mine["fights"], "first_seen": mine["first_ts"], "last_seen": mine["last_ts"],
+                           "fights_by_asc": {str(k): v for k, v in sorted(mine["asc_seen"].items())}},
+    }
+    return {"meta": meta, "bosses": bosses, "encounters": encounters, "threat_by_asc": threat}
+
+
+def merge_records(db, records):
+    """The monster DB as it was before the split (and as the TS loader builds it): common's meta, the records' bosses
+    and encounters, the monsters with the records' threat_by_asc back after `powers` ({} for a monster the character
+    never met), then `observed`."""
+    threat = (records or {}).get("threat_by_asc") or {}
+    monsters = {}
+    for eid, mon in db["monsters"].items():
+        entry = {}
+        for key, value in mon.items():
+            entry[key] = value
+            if key == "powers":
+                entry["threat_by_asc"] = threat.get(eid, {})
+        monsters[eid] = entry
+    merged = {"meta": db["meta"], "bosses": (records or {}).get("bosses") or {}, "encounters": (records or {}).get("encounters") or {},
+              "monsters": monsters}
+    if "observed" in db:
+        merged["observed"] = db["observed"]
+    return merged
+
+
+META_NOTE = ("Generated by tools/build-monster-db.py from logs/states.jsonl and runs.jsonl. DATA ONLY: not read by the player code. "
                 "n / n_seen on every number; an ascension that was not logged is absent. hp_by_asc = the first max_hp of each instance (phase 1 for "
                 "multi-phase enemies; see phases_by_asc). damage_by_asc.shown = intent as displayed at the first logged state of the turn ('dmg x hits', "
                 "after Strength, Weak, Vulnerable); base_per_hit = shown - enemy Strength, only from turns without enemy Weak/Shrink or our "
@@ -1468,14 +1542,12 @@ def build_output(builder, game):
                 "Surrounded (Kaiser Crab): a back-attack enemy's frame is a base sample only when its turn also showed the other facing's "
                 "number (behind = floor((base + Strength) x 1.5)); back_attack_by_asc counts the turns it came from behind or in front. threat: hp_loss_won = entry HP - HP on the last "
                 "combat state (includes self-damage cards), net_hp_loss_won = entry HP - HP after the fight (after Burning Blood and other end-of-combat "
-                "heals). kind from the map node of the fight (Monster=hallway, Elite, Boss, Unknown=event), minion when MINION_POWER is on most instances.",
-        "generated_from": {"fights": builder.fights, "first_seen": builder.first_ts, "last_seen": builder.last_ts,
-                           "fights_by_asc": {str(k): v for k, v in sorted(builder.asc_seen.items())}},
-    }
-    result = {"meta": meta, "bosses": bosses, "encounters": encounters, "monsters": out}
-    if pooled is not None:
-        result["observed"] = pooled
-    return result
+                "heals). kind from the map node of the fight (Monster=hallway, Elite, Boss, Unknown=event), minion when MINION_POWER is on most instances.")
+RECORDS_NOTE = ("Generated by knowledge/builders/build-monster-db.py: how this character's fights went (its runs alone; "
+                "knowledge/common/monster-db.json holds the monsters' own facts, over every character). bosses / encounters: per boss "
+                "and encounter by ascension; threat_by_asc: per monster id by ascension (merged into the monster DB's entries). threat: "
+                "hp_loss_won = entry HP - HP on the last combat state (includes self-damage cards), net_hp_loss_won = entry HP - HP "
+                "after the fight (after end-of-combat heals).")
 
 
 def observed_output(ids):
@@ -1561,6 +1633,7 @@ def load_runs(path):
 
 
 def build(states, runs_path, game_path, decisions_path=None):
+    """(the common monster DB, {character: its records}) for every character with a logged fight."""
     global MECHANICS, END_TURNS
     MECHANICS = Mechanics()
     try:
@@ -1584,7 +1657,19 @@ def build(states, runs_path, game_path, decisions_path=None):
     for screen, entry in iter_entries(states):
         builder.feed(screen, entry)
     builder.finish()
-    return build_output(builder, game)
+    return build_output(builder, game), {c: records_output(builder, c) for c in sorted(builder.by_character)}
+
+
+def write_json(path, data):
+    """Written whole under this process's tmp name, then moved into place: ops/report.py and ops/wait-run.sh both
+    refresh after a run, at once, and with one shared "monster-db.json.tmp" the second rename failed
+    (ops/refresh.log, FileNotFoundError) after both had written into the same file."""
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    tmp = f"{path}.{os.getpid()}.tmp"
+    with open(tmp, "w", encoding="utf8") as handle:
+        json.dump(data, handle, ensure_ascii=False, indent=1, sort_keys=False)
+        handle.write("\n")
+    os.replace(tmp, path)
 
 
 def main(argv=None):
@@ -1596,6 +1681,9 @@ def main(argv=None):
     parser.add_argument("--decisions", default=os.path.join(logs, "decisions.jsonl"))
     parser.add_argument("--game-data", default=os.path.join(ROOT, "data/game-data.json"))
     parser.add_argument("--out", default=os.path.join(ROOT, "knowledge/common/monster-db.json"))
+    # Each character's records; "{character}" is its id. --character: that one alone (none logged: nothing written).
+    parser.add_argument("--records-out", default=os.path.join(ROOT, "knowledge/characters/{character}/monster-records.json"))
+    parser.add_argument("--character", default=None, help="write only this character's records (default: every character with fights)")
     parser.add_argument("--move-model-out", default=None)
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--self-test", action="store_true")
@@ -1603,15 +1691,12 @@ def main(argv=None):
     if args.self_test:
         return self_test()
     start = time.time()
-    db = build(args.states, args.runs, args.game_data, args.decisions)
-    # The tmp name is this process's: ops/report.py and ops/wait-run.sh both refresh after a run, at once, and with
-    # one shared "monster-db.json.tmp" the second rename failed (ops/refresh.log, FileNotFoundError) after both had
-    # written into the same file.
-    tmp = f"{args.out}.{os.getpid()}.tmp"
-    with open(tmp, "w", encoding="utf8") as handle:
-        json.dump(db, handle, ensure_ascii=False, indent=1, sort_keys=False)
-        handle.write("\n")
-    os.replace(tmp, args.out)
+    db, records = build(args.states, args.runs, args.game_data, args.decisions)
+    write_json(args.out, db)
+    wanted = [character_key(args.character)] if args.character else sorted(records)
+    for character in wanted:
+        if character in records:
+            write_json(args.records_out.replace("{character}", character), records[character])
     if args.move_model_out:
         tmp = f"{args.move_model_out}.{os.getpid()}.tmp"
         with open(tmp, "w", encoding="utf8") as handle:
@@ -1619,8 +1704,12 @@ def main(argv=None):
         os.replace(tmp, args.move_model_out)
     if not args.quiet:
         meta = db["meta"]["generated_from"]
-        print(f"{len(db['monsters'])} monsters, {len(db['bosses'])} bosses, {meta['fights']} fights "
-              f"(by ascension {meta['fights_by_asc']}) in {time.time() - start:.1f}s -> {args.out}")
+        print(f"{len(db['monsters'])} monsters, {meta['fights']} fights (by ascension {meta['fights_by_asc']}) in "
+              f"{time.time() - start:.1f}s -> {args.out}")
+        for character in wanted:
+            mine = records.get(character)
+            print(f"  {character}: " + (f"{len(mine['bosses'])} bosses, {mine['meta']['generated_from']['fights']} fights -> "
+                                        f"{args.records_out.replace('{character}', character)}" if mine else "no fights; no records written"))
     return 0
 
 
@@ -1631,9 +1720,9 @@ def _synthetic_lines(end_turns=None):
     """A two-fight run: a hallway fight won at A8, then an elite fight we die in. Then more runs, one per feature below.
     `end_turns` gets the (run, ts) of the frames marked as end-turn decisions (the decisions.jsonl rows)."""
     def state(screen, run_id, turn, floor, hp, enemies=None, in_combat=False, map_=None, game_over=None, player_powers=None, piles=None, hand=None,
-              block=0, reward=None, observed=False, end_turn=False):
+              block=0, reward=None, observed=False, end_turn=False, character=None):
         run = {"ascension": 8, "act_id": "0", "floor": floor, "current_hp": hp, "max_hp": 80, "boss_id": "VANTOM_BOSS",
-               "relics": [{"relic_id": "BURNING_BLOOD"}]}
+               "relics": [{"relic_id": "BURNING_BLOOD"}], **({"character_id": character} if character else {})}
         combat = None
         if enemies is not None:
             combat = {"player": {"current_hp": hp, "block": block, "powers": player_powers or []}, "enemies": enemies, "hand": [{"card_id": c} for c in hand or []]}
@@ -1698,10 +1787,11 @@ def _synthetic_lines(end_turns=None):
     lines.append(state("COMBAT", "R3", 2, 2, 70, [crusher(10), rocket(49)], True, player_powers=sur))
     lines.append(state("COMBAT", "R3", 3, 2, 60, [crusher(10), rocket(33)], True, player_powers=sur))
     # Run R5, floor 17: a boss fight while run.boss_id names another boss (VANTOM_BOSS): filed under the
-    # boss on the board, the Queen with her Amalgam; then R6 fights Vantom itself, filed under VANTOM.
+    # boss on the board, the Queen with her Amalgam (R5 names its character: IRONCLAD; the other runs name none, the
+    # Ironclad's too); then R6, the Silent's, fights Vantom itself, filed under VANTOM in the Silent's records.
     lines.append(state("COMBAT", "R5", 1, 17, 80, [enemy(0, "QUEEN", 419, 419, "PUPPET_STRINGS_MOVE", types=("Debuff",)),
-                                                   enemy(1, "TORCH_HEAD_AMALGAM", 211, 211, "STRONG_TACKLE_MOVE", 26, 1)], True))
-    lines.append(state("COMBAT", "R6", 1, 17, 80, [enemy(0, "VANTOM", 183, 183, "INK_BLOT_MOVE", 7, 1)], True))
+                                                   enemy(1, "TORCH_HEAD_AMALGAM", 211, 211, "STRONG_TACKLE_MOVE", 26, 1)], True, character="IRONCLAD"))
+    lines.append(state("COMBAT", "R6", 1, 17, 80, [enemy(0, "VANTOM", 183, 183, "INK_BLOT_MOVE", 7, 1)], True, character="SILENT"))
     # Run R4, floor 2: a guard's Defend turn; our next turn opens with its 12 block.
     lines.append(state("COMBAT", "R4", 1, 2, 80, [enemy(0, "GUARD", 50, 50, "SHIELD_MOVE", types=("Defend",))], True))
     lines.append(state("COMBAT", "R4", 2, 2, 80, [enemy(0, "GUARD", 50, 50, "SWIPE_MOVE", 5, 1, block=12)], True))
@@ -1789,9 +1879,28 @@ def self_test():
         min_n = globals()["REWARD_MIN_N"]
         globals()["REWARD_MIN_N"] = 1
         try:
-            db = build(states, None, game, decisions)
+            common, records = build(states, None, game, decisions)
         finally:
             globals()["REWARD_MIN_N"] = min_n
+    # The split: the common file has the monsters' facts and no record of ours; each character has its own records.
+    assert sorted(common) == ["meta", "monsters", "observed"], sorted(common)
+    assert sorted(records) == ["ironclad", "silent"], sorted(records)
+    assert all("threat_by_asc" not in mon for mon in common["monsters"].values())
+    assert sorted(records["ironclad"]) == ["bosses", "encounters", "meta", "threat_by_asc"], sorted(records["ironclad"])
+    assert records["silent"]["meta"]["character"] == "silent" and records["silent"]["meta"]["generated_from"]["fights"] == 1, records["silent"]["meta"]
+    assert common["meta"]["generated_from"]["fights"] == records["ironclad"]["meta"]["generated_from"]["fights"] + 1, common["meta"]
+    # Vantom's moves are game facts (common), its record is the Silent's alone.
+    assert common["monsters"]["VANTOM"]["moves"]["INK_BLOT_MOVE"]["n_seen"] == 1
+    assert sorted(records["silent"]["bosses"]) == ["VANTOM"] and list(records["silent"]["threat_by_asc"]) == ["VANTOM"], records["silent"]
+    assert records["silent"]["threat_by_asc"]["VANTOM"]["8"]["fights"] == 1, records["silent"]["threat_by_asc"]
+    assert "VANTOM" not in records["ironclad"]["threat_by_asc"] and "VANTOM" not in records["ironclad"]["encounters"] and "VANTOM" in records["silent"]["encounters"]
+    # The merged view (the TS loader's): the old shape, threat_by_asc right after powers, {} for a monster never met.
+    db = merge_records(common, records["ironclad"])
+    assert list(db) == ["meta", "bosses", "encounters", "monsters", "observed"], list(db)
+    slime_keys = list(db["monsters"]["SLIME"])
+    assert slime_keys[slime_keys.index("powers") + 1] == "threat_by_asc", slime_keys
+    assert db["monsters"]["VANTOM"]["threat_by_asc"] == {}, db["monsters"]["VANTOM"]
+    assert merge_records(common, None)["bosses"] == {}
     slime = db["monsters"]["SLIME"]
     assert slime["kind"] == "hallway", slime["kind"]
     assert slime["hp_by_asc"]["8"] == {"min": 40, "median": 40, "max": 40, "n": 1}, slime["hp_by_asc"]
@@ -1835,9 +1944,9 @@ def self_test():
     assert bite["damage_by_asc"]["8"]["base_per_hit"] == {"10": 1}, bite["damage_by_asc"]
     assert bite["back_attack_by_asc"] == {"8": {"behind": 0, "facing": 3}}, bite
     # A boss fight is filed under the boss on the board, not a run.boss_id naming another one.
-    assert sorted(db["bosses"]) == ["QUEEN", "VANTOM"], sorted(db["bosses"])
+    assert sorted(db["bosses"]) == ["QUEEN"], sorted(db["bosses"])
     assert sorted(db["bosses"]["QUEEN"]["8"]["parts"]) == ["QUEEN", "TORCH_HEAD_AMALGAM"], db["bosses"]["QUEEN"]
-    assert db["bosses"]["VANTOM"]["8"]["fights"] == 1, db["bosses"]["VANTOM"]
+    assert records["silent"]["bosses"]["VANTOM"]["8"]["fights"] == 1, records["silent"]["bosses"]["VANTOM"]
     assert boss_key_of("KAISER_CRAB_BOSS", ["CRUSHER", "ROCKET"]) == "KAISER_CRAB"
     assert boss_key_of("VANTOM_BOSS", ["CRUSHER", "ROCKET"]) == "KAISER_CRAB"
     assert boss_key_of("QUEEN_BOSS", ["TEST_SUBJECT"]) == "TEST_SUBJECT"

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Measured HP change per map room -> knowledge/characters/ironclad/room-costs.json (the route facts' HP projection).
+"""Measured HP change per map room -> knowledge/characters/<id>/room-costs.json (the route facts' HP projection).
+One character's runs only (--character, default ironclad: an Ironclad room's cost says nothing of the Silent's).
 
 For every logged run, the HP on the last MAP frame of floor f-1 (the HP the room of floor f was entered
 with) minus the HP on the first MAP frame of floor f (after that room: fight, Burning Blood, event, rest,
@@ -18,7 +19,7 @@ unknownFightsText).
 Output: {"meta": {...}, "by_asc": {"8": {"2": {"Monster": {"n", "deaths", "median", "p75", "p90", "mean"}, ...}}}}.
 
 Usage:
-  python3 knowledge/builders/build-room-costs.py [--logs DIR] [--out PATH]
+  python3 knowledge/builders/build-room-costs.py [--logs DIR] [--character ID] [--out PATH]
 Refresh (after new runs): python3 knowledge/builders/build-room-costs.py   (seconds: only MAP frames are parsed)
 """
 import argparse
@@ -32,7 +33,8 @@ import time
 from pathlib import Path
 
 ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout.md)
-DEFAULT_OUT = os.path.join(ROOT, "knowledge", "characters", "ironclad", "room-costs.json")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from characters import character_dir, character_key, run_character  # noqa: E402
 MAP_MARK = b'"screen":"MAP"'
 OVER_MARK = b'"screen":"GAME_OVER"'
 
@@ -49,8 +51,9 @@ def quantile(values, p):
     return xs[i] + (xs[j] - xs[i]) * (k - i)
 
 
-def scan(states_path):
-    """run id -> floor -> {first, last, type, asc, avail} from the MAP frames; run id -> death floor."""
+def scan(states_path, character=None):
+    """run id -> floor -> {first, last, type, asc, avail} from the MAP frames; run id -> death floor. With `character`,
+    only that character's MAP frames (a death floor is kept for every run: it only counts for a run with frames)."""
     runs = collections.defaultdict(dict)
     deaths = {}
     first_ts = last_ts = None
@@ -75,6 +78,8 @@ def scan(states_path):
                     deaths[run_id] = over.get("floor")
                 continue
             if state.get("screen") != "MAP":
+                continue
+            if character and run_character(run) != character:
                 continue
             floor = run.get("floor")
             hp = run.get("current_hp")
@@ -189,10 +194,17 @@ def build(runs, deaths, chosen, fights=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
-    parser.add_argument("--out", default=DEFAULT_OUT)
+    parser.add_argument("--character", default="ironclad", help="the character's knowledge id (default ironclad)")
+    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/room-costs.json")
     args = parser.parse_args()
+    character = character_key(args.character)
+    out_path = args.out or os.path.join(character_dir(ROOT, character), "room-costs.json")
     started = time.time()
-    runs, deaths, first_ts, last_ts = scan(os.path.join(args.logs, "states.jsonl"))
+    runs, deaths, first_ts, last_ts = scan(os.path.join(args.logs, "states.jsonl"), character)
+    if not runs:
+        # A character with no logged run yet: no file (the TS loaders read a missing file as "no knowledge yet").
+        print(f"room costs: no {character} runs; nothing written", file=sys.stderr)
+        return
     fights = {}
     chosen = map_choices(os.path.join(args.logs, "decisions.jsonl"), fights)
     out = {
@@ -208,12 +220,13 @@ def main():
         },
         "by_asc": build(runs, deaths, chosen, fights),
     }
-    tmp = args.out + ".tmp"
+    os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
+    tmp = out_path + ".tmp"
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(out, handle, indent=1, sort_keys=True)
         handle.write("\n")
-    os.replace(tmp, args.out)
-    print(f"room costs: {len(runs)} runs -> {args.out} ({time.time() - started:.1f} s)", file=sys.stderr)
+    os.replace(tmp, out_path)
+    print(f"room costs: {len(runs)} runs -> {out_path} ({time.time() - started:.1f} s)", file=sys.stderr)
 
 
 if __name__ == "__main__":

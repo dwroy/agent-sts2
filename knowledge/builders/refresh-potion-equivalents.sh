@@ -1,33 +1,41 @@
 #!/usr/bin/env bash
-# Rebuild the potion table (knowledge/characters/ironclad/potion-equivalents.json: what each potion held is worth in the act boss,
+# Rebuild a character's potion table (knowledge/characters/<id>/potion-equivalents.json: what each potion held is worth in the act boss,
 # the potion cost the solver and Jev's question use; docs/potion-equivalents.md) only when it is stale (Dai
 # 2026-09-30: once a day, and when the ascension goes up):
 #   - it was generated before today (local date), or
 #   - it has no numbers for .env's TARGET_ASCENSION.
 # Otherwise it does nothing. Ops calls it in each run's post-game knowledge refresh (docs/v4-go-live.md).
 #
-# Usage: knowledge/builders/refresh-potion-equivalents.sh [--dry-run] [--force]
-#   --dry-run  say whether it would rebuild, and why; change nothing
-#   --force    rebuild whatever the table's date
-# Env: ENV_FILE (default <root>/agent/.env), POTION_TABLE (default <root>/knowledge/characters/ironclad/potion-equivalents.json).
+# Usage: knowledge/builders/refresh-potion-equivalents.sh [--dry-run] [--force] [--character ID]
+#   --dry-run       say whether it would rebuild, and why; change nothing
+#   --force         rebuild whatever the table's date
+#   --character ID  the character's table (default ironclad; a character with no logged run gets none)
+# Env: ENV_FILE (default <root>/agent/.env), POTION_TABLE (default <root>/knowledge/characters/<id>/potion-equivalents.json).
 # The rebuild runs with the log database's Python (data/logdb-venv/bin/python; it syncs the log DB first) and
 # writes the table atomically: a failed rebuild leaves the old table in place and exits non-zero.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"  # the project root (docs/layout.md)
 ENV_FILE="${ENV_FILE:-$ROOT/agent/.env}"
-TABLE="${POTION_TABLE:-$ROOT/knowledge/characters/ironclad/potion-equivalents.json}"
 PY="$ROOT/data/logdb-venv/bin/python"
 
 dry=0
 force=0
-for arg in "$@"; do
-  case "$arg" in
+character=ironclad
+while [[ $# -gt 0 ]]; do
+  case "$1" in
     --dry-run) dry=1 ;;
     --force) force=1 ;;
-    *) echo "usage: $0 [--dry-run] [--force]" >&2; exit 2 ;;
+    --character) character="$(printf '%s' "${2:-}" | tr '[:upper:]' '[:lower:]')"; shift ;;
+    *) echo "usage: $0 [--dry-run] [--force] [--character ID]" >&2; exit 2 ;;
   esac
+  shift
 done
+if [[ ! "$character" =~ ^[a-z0-9_]+$ ]]; then
+  echo "refresh-potion-equivalents: --character '$character' is not a character id" >&2
+  exit 2
+fi
+TABLE="${POTION_TABLE:-$ROOT/knowledge/characters/$character/potion-equivalents.json}"
 
 # TARGET_ASCENSION from the env file (the last assignment; quotes and spaces dropped). Empty: not set.
 target=""
@@ -76,4 +84,4 @@ if [[ ! -x "$PY" ]]; then
 fi
 echo "refresh-potion-equivalents: rebuilding ($reason)"
 cd "$ROOT"
-"$PY" knowledge/builders/build-potion-equivalents.py --out "$TABLE" ${target:+--ascensions "$target"}
+"$PY" knowledge/builders/build-potion-equivalents.py --character "$character" --out "$TABLE" ${target:+--ascensions "$target"}

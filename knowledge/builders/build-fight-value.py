@@ -11,7 +11,11 @@ Stages:
   extract  stream states.jsonl once -> data/fight-value-rows.jsonl (one row per combat turn: the
            start-of-turn and end-of-turn snapshot, fight constants, the realised outcome)
   train    rows -> baselines + learned models, backtest by run and by time, the ranking test,
-           knowledge/characters/ironclad/fight-value.json and notes/fight-value-backtest.md
+           knowledge/characters/<id>/fight-value.json and notes/fight-value-backtest.md
+One character's fights only (--character, default ironclad; a state's run.character_id, none = the Ironclad): what
+happens after a turn is that deck's. Another character's rows and notes go to data/fight-value-rows-<id>.jsonl and
+notes/fight-value-backtest-<id>.md (the Ironclad's keep their old names); a character with no row in runs.jsonl
+gets nothing written (the TS loaders read a missing file as "no knowledge yet").
 
 Models (pure Python, stdlib only):
   B0 "solver"  the code's implied estimate: this enemy turn's incoming after block + the move model's
@@ -29,7 +33,7 @@ Usage:
   python3 knowledge/builders/build-fight-value.py all
   python3 knowledge/builders/build-fight-value.py folds --fold-dir DIR        (out-of-fold models + gates for the rollout backtest)
   python3 knowledge/builders/build-fight-value.py rollout-report --work DIR   (after agent/tools/rollout-backtest.ts; see notes/rollout-backtest.md)
-`train` also writes knowledge/characters/ironclad/fight-value-gates.json (Part A: per-segment blend weight of the model vs the
+`train` also writes knowledge/characters/<id>/fight-value-gates.json (Part A: per-segment blend weight of the model vs the
 current solver weights, and the win-probability calibration). Rebuild after each run: `python3 knowledge/builders/build-fight-value.py all`.
 Parsing (fight boundaries, room kind, enemy identity across a fight) is knowledge/builders/build-monster-db.py's.
 """
@@ -50,6 +54,7 @@ ROOT = str(Path(__file__).resolve().parents[2])  # the project root (docs/layout
 _spec = importlib.util.spec_from_file_location("bmd", os.path.join(ROOT, "knowledge", "builders", "build-monster-db.py"))
 bmd = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bmd)
+from characters import LEGACY, character_dir, character_key, characters_with_runs  # noqa: E402  (bmd put builders/ on sys.path)
 
 DEFAULT_ROWS = os.path.join(ROOT, "data", "fight-value-rows.jsonl")
 MIN_ASC = 7  # the models are trained and tested on A7-A8; rows below are extracted and counted only
@@ -119,14 +124,17 @@ def snap(state, fight):
 
 
 class RowBuilder(bmd.Builder):
-    def __init__(self, runs, out):
+    def __init__(self, runs, out, character=None):
         super().__init__(runs)
         self.out = out
+        self.character = character  # None: every character's fights
         self.rows = 0
         self.by_asc = collections.Counter()
 
     def commit(self, fight):
         if not fight.initial:
+            return
+        if self.character and fight.character != self.character:
             return
         run = self.runs.get(fight.run_id)
         if fight.outcome is None and run is not None and run.get("floor") == fight.floor and not run.get("victory") and run.get("death_fight"):
@@ -182,7 +190,7 @@ def _observe(original):
     return observe
 
 
-def extract(states, runs_path, game_path, rows_path):
+def extract(states, runs_path, game_path, rows_path, character=None):
     game = {}
     if game_path and os.path.exists(game_path):
         raw = json.load(open(game_path, encoding="utf8"))
@@ -193,7 +201,7 @@ def extract(states, runs_path, game_path, rows_path):
     os.makedirs(os.path.dirname(rows_path), exist_ok=True)
     tmp = rows_path + ".tmp"
     with open(tmp, "w", encoding="utf8") as out:
-        builder = RowBuilder(bmd.load_runs(runs_path), out)
+        builder = RowBuilder(bmd.load_runs(runs_path), out, character)
         for screen, entry in bmd.iter_entries(states):
             builder.feed(screen, entry)
         builder.finish()
@@ -1876,12 +1884,22 @@ def main(argv=None):
     parser.add_argument("--runs", default=os.path.join(logs, "runs.jsonl"))
     parser.add_argument("--decisions", default=os.path.join(logs, "decisions.jsonl"))
     parser.add_argument("--game-data", default=os.path.join(ROOT, "data/game-data.json"))
-    parser.add_argument("--rows", default=DEFAULT_ROWS)
-    parser.add_argument("--out", default=os.path.join(ROOT, "knowledge/characters/ironclad/fight-value.json"))
-    parser.add_argument("--notes", default=os.path.join(ROOT, "notes/fight-value-backtest.md"))
-    parser.add_argument("--gates", default=os.path.join(ROOT, "knowledge/characters/ironclad/fight-value-gates.json"))
+    parser.add_argument("--character", default=LEGACY, help="the character's knowledge id (default ironclad)")
+    parser.add_argument("--rows", default=None, help="default data/fight-value-rows.jsonl (another character: -<id> before .jsonl)")
+    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/fight-value.json")
+    parser.add_argument("--notes", default=None, help="default notes/fight-value-backtest.md (another character: -<id> before .md)")
+    parser.add_argument("--gates", default=None, help="default knowledge/characters/<character>/fight-value-gates.json")
     parser.add_argument("--trees", type=int, default=150)
     args = parser.parse_args(argv)
+    character = character_key(args.character)
+    suffix = "" if character == LEGACY else f"-{character}"
+    args.rows = args.rows or DEFAULT_ROWS.replace(".jsonl", f"{suffix}.jsonl")
+    args.notes = args.notes or os.path.join(ROOT, f"notes/fight-value-backtest{suffix}.md")
+    args.out = args.out or os.path.join(character_dir(ROOT, character), "fight-value.json")
+    args.gates = args.gates or os.path.join(character_dir(ROOT, character), "fight-value-gates.json")
+    if args.stage in ("extract", "all") and character not in characters_with_runs(args.runs):
+        print(f"no {character} runs in {args.runs}; nothing written")
+        return 0
     start = time.time()
     if args.stage == "folds":
         fold_models(args.rows, args.decisions, args.fold_dir, args.trees)
@@ -1890,10 +1908,11 @@ def main(argv=None):
         rollout_report(args.work, args.rows, args.rollout_notes, args.gates)
         return 0
     if args.stage in ("extract", "all"):
-        b = extract(args.states, args.runs, args.game_data, args.rows)
+        b = extract(args.states, args.runs, args.game_data, args.rows, character)
         print(f"extract: {b.rows} rows from {b.fights} fights (by ascension {dict(b.by_asc)}) in {time.time() - start:.0f}s -> {args.rows}")
     if args.stage in ("train", "all"):
         os.makedirs(os.path.dirname(args.notes), exist_ok=True)
+        os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
         train(args.rows, args.decisions, args.out, args.notes, args.trees, args.gates)
         print(f"train: done in {time.time() - start:.0f}s -> {args.out}, {args.notes}")
     return 0

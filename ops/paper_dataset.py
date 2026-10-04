@@ -29,6 +29,8 @@ import tarfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import LOGS, ROOT  # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+from characters import run_character  # noqa: E402
 JEV = ROOT  # the one repo since 2026-10-04 (code history included, hashes kept)
 NOTES = os.path.join(ROOT, "notes")
 AUTOPLAY = os.path.join(ROOT, "ops/autoplay.log")
@@ -623,6 +625,10 @@ def build():
                                for r in rows if r["floor_max"] is not None), key=lambda x: -x["floor"])[:10],
         "floor_max_distribution": dict(sorted(collections.Counter(r["floor_max"] for r in rows).items(), key=lambda kv: kv[0] or 0)),
         "per_ascension": {k: {kk: vv for kk, vv in group(v).items()} for k, v in sorted(by_asc.items())},
+        # Per character (multi-character, 2026-10-04), once there is more than one: the Ironclad-only dataset stays as it
+        # was. A run naming no character is the Ironclad's (every run before the Silent).
+        **({"per_character": {c: group([r for r in rows if run_character(r) == c]) for c in sorted({run_character(r) for r in rows})}}
+           if len({run_character(r) for r in rows}) > 1 else {}),
         "per_era": {e: group([r for r in rows if r["era"] == e]) for e in eras},
         "per_learning_loop": {"before": group([r for r in rows if not r["learning_loop"]]),
                               "after": group([r for r in rows if r["learning_loop"]])},

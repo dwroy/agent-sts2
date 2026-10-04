@@ -12,6 +12,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
+import { mergeMonsterRecords } from "../src/knowledge/monster-db.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -43,7 +44,8 @@ describe("monster db generator", () => {
 });
 
 describe("committed monster-db.json", () => {
-  const db = JSON.parse(readFileSync(join(ROOT, "..", "knowledge/common/monster-db.json"), "utf8")) as MonsterDb;
+  // The common facts with the Ironclad's records (split 2026-10-04: knowledge/characters/ironclad/monster-records.json).
+  const db = mergeMonsterRecords(JSON.parse(readFileSync(join(ROOT, "..", "knowledge/common/monster-db.json"), "utf8")), JSON.parse(readFileSync(join(ROOT, "..", "knowledge/characters/ironclad/monster-records.json"), "utf8"))) as unknown as MonsterDb;
 
   it("has monsters, bosses and encounters with sample sizes", () => {
     expect(Object.keys(db.monsters).length).toBeGreaterThan(50);

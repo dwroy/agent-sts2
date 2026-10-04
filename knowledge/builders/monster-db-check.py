@@ -55,8 +55,19 @@ def main():
     # The dossiers file is gone from the tree: by default it is read from git at --dossiers-rev (its historical path).
     parser.add_argument("--dossiers", default=None)
     parser.add_argument("--dossiers-rev", default="redesign-end")
+    # How the fights went is a character's (build-monster-db.py writes it apart since 2026-10-04); the hand tables
+    # checked here are the Ironclad's.
+    parser.add_argument("--character", default="ironclad")
+    parser.add_argument("--records", default=None, help="default knowledge/characters/<character>/monster-records.json")
     args = parser.parse_args()
     db = json.load(open(args.db, encoding="utf8"))
+    records_path = args.records or os.path.join(ROOT, "knowledge", "characters", args.character.lower(), "monster-records.json")
+    if "bosses" not in db:
+        # The split DB: the character's records merged back in (as the TS loader and build-monster-db merge_records do).
+        records = json.load(open(records_path, encoding="utf8")) if os.path.exists(records_path) else {}
+        threat = records.get("threat_by_asc") or {}
+        db = {**db, "bosses": records.get("bosses") or {}, "encounters": records.get("encounters") or {},
+              "monsters": {eid: {**mon, "threat_by_asc": threat.get(eid, {})} for eid, mon in db["monsters"].items()}}
     monsters, bosses, encounters = db["monsters"], db["bosses"], db["encounters"]
     clock, phases = parse_boss_clock(os.path.join(ROOT, "agent/src/sim/boss-clock.ts"))
     dossiers, dossier_src = load_dossiers(args.dossiers, args.dossiers_rev)
