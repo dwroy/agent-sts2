@@ -1797,7 +1797,7 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
-  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1) };
+  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1), lethal: plan.outcome.winsFight };
   // A line's later drinks go with the rest of the line: when it is cut short (a draw, a random exhaust, a
   // hand the plan did not expect) the re-plan offers the potion again beside the new hand, and whoever
   // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
@@ -1811,6 +1811,7 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
     (plan.steps.length > 1 || (plan.steps.length === 1 && via !== "code")) && drawsOrRandom === 0
       ? {
           turn,
+          lethal: plan.outcome.winsFight,
           remaining: plan.steps.slice(1),
           expectedHand: expectedHandAfterFirst(plan, hand, musicBoxArmed(env.state)),
           handLen: handLenAfter(first!, hand, musicBoxArmed(env.state)),
@@ -1929,9 +1930,11 @@ export function guardSandpit(env: DecisionEnv, decision: Decision | null): Decis
   const intent: ActionRequest = { action: "play_card", card_index: num(escape["index"]) };
   const why = `Sandpit ${Math.min(...sandpits)} would reach 0 at the enemy turn (death regardless of HP/block)`;
   if (decision.kind === "act") {
-    if (decision.intent.action === "play_card" && decision.label !== "combat/lethal") {
+    // C48LLXBGKXQ9 F33 attempt 5 T13: the second card of a lethal has a continuation label.
+    const after = env.screenMemory.plannedAfter;
+    const lethalContinuation = decision.label === "combat/plan-continue" && after?.turn === (env.state.turn ?? null) && after.lethal === true;
+    if (decision.intent.action === "play_card" && decision.label !== "combat/lethal" && !lethalContinuation) {
       const played = hand.find((card) => num(card["index"]) === decision.intent.card_index);
-      const after = env.screenMemory.plannedAfter;
       const escapeNext = after !== undefined && after.turn === (env.state.turn ?? null) && after.steps.some((step) => step.cardId === "FRANTIC_ESCAPE");
       const cost = played ? (bool(played["costs_x"]) ? energy : num(played["energy_cost"])) : 0;
       if (!played || str(played["card_id"]) === "FRANTIC_ESCAPE" || escapeNext || energy - cost >= num(escape["energy_cost"])) return decision;
@@ -2959,7 +2962,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       notePotionTake(env, memo.turn, next);
-      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1) };
+      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1), lethal: memo.lethal };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
