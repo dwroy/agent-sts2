@@ -337,6 +337,9 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       cwd,
       projectRoot: deps.projectRoot,
       tools: spec.tools,
+      // Commits need the main checkout's git directory (a worktree's metadata lives there): writable, its hooks and
+      // config read-only, as the ops session's profile (2026-10-04: fix-batch could not merge main, ORIG_HEAD.lock).
+      extraRules: learnerGitRules(deps.projectRoot),
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
       ...(maxTurns !== undefined ? { maxTurns } : {}),
@@ -488,4 +491,10 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   }
   if (timedOut) return 124;
   return exitCode === 0 && !summary.isError ? 0 : 1;
+}
+
+/** The git rules of a learner run: the main checkout's .git writable (write tasks only), hooks and config read-only. */
+export function learnerGitRules(projectRoot: string): Record<string, "read" | "write" | "none"> {
+  const git = join(projectRoot, ".git");
+  return { [git]: "write", [join(git, "hooks")]: "read", [join(git, "config")]: "read" };
 }
