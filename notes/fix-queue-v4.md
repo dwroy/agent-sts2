@@ -191,3 +191,11 @@
 - 更正：X80A 涟漪盆漏判的控制台是 20261004-010345-ed03f4c+dirty.log:1399/:1406/:1419；T6 计入涟漪盆 4 + 覆甲 4 仍是 34 对 46，必死。
 - 小：sl-attempts 把 act3-low-hp 的走廊（AXEBOT、OWL_MAGISTRATE，普通战节点）记成 fight_kind「elite」。
 - 观察：ET3V 火堆上 mod 超时 4 次（F24/F29/F32/F47，「cannot reach the STS2-Agent mod … request timed out」），都自愈。
+### V4.6 AKK0/V8N5/ABCJ 复盘（10-04）
+- SL explore：换线结果解析成与失败那次相同的出牌（differs:false）时，应改走下一条没试过的线（AKK0 第 3、5 次白打）。
+- SL explore：报「board not on path」后，应在同一次尝试里于目标回合强制避开被排除的线，不要等下一次才 fallback（ABCJ 第 4 次）。只是出牌顺序不同，局面 hash 也会不同。
+- SL 参照：重打应锚定最好的那次失败，而不是固定锚第 2 次（ABCJ 第 1 次打到 T10、boss 剩 211，之后再没回去试）。
+- 判官（瀑布巨兽）：HP 加上能拿到的最大格挡低于下一次自爆（3T+14）且只会越来越差时，应判必死。另外代码在巨兽剩 1–6 血时迟迟不打死它（AKK0 第 1、6 次各白打约 8 回合）。
+- 药水：rollout 加进来的线会喝掉 run plan 留给 boss 的药（AKK0 F14 强化药；ABCJ F44/F46 两瓶力量药、F30 鲜血药）。
+- boss 模拟样本不足：ABCJ 41 次中有 16 次不到 300 个样本（AKK0、V8N5 各 1 次）。
+- 小：codex xhigh 在路线字段里输出乱码（77 次中 3 次，如「keep出来ketøy…」），re-ask 能修好。
