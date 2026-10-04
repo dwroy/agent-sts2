@@ -1066,6 +1066,7 @@ interface SimEnemy {
   vigor: number;
   vulnerable: number;
   weak: number;
+  poison: number;
   alive: boolean;
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
@@ -1184,6 +1185,8 @@ interface SimPlayer {
   juggernaut: number;
   feelNoPain: number;
   afterImage: number;
+  poisonPerTurn: number;
+  poisonExtraTriggers: number;
   doubleDamage: boolean;
   doubleDamageNext: boolean;
   potions: number;
@@ -1566,7 +1569,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
     pots: player.potions,
     E: enemies.map((e) => {
       const powers: Record<string, number> = { ...e.powers };
-      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VIGOR_POWER", e.vigor], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
+      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VIGOR_POWER", e.vigor], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns], ["POISON_POWER", e.poison]] as const) {
         if (v) powers[id] = v;
         else delete powers[id];
       }
@@ -1595,6 +1598,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
     vigor: 0,
     vulnerable: 0,
     weak: 0,
+    poison: 0,
     alive: true,
     intangibleTurns: 0,
     burrowed: false,
@@ -1657,6 +1661,8 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     e.maxHp = next;
     e.vulnerable = 0;
     e.weak = 0;
+    // T082DRCUHRRD F48 T5-T6: the revived phase has only the new Fumes application, not the old poison.
+    e.poison = 0;
     e.strength = 0;
     if (e.phasesLeft.length === 0) {
       const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
@@ -1717,6 +1723,12 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
     player.strength += player.skullUp ? player.redSkull : -player.redSkull;
   }
   player.strength += player.rupture * startLossEvents(player);
+  // Y6GM2CHWJBEY F17 T3-T4: Fumes starts on the turn after it is played.
+  if (player.poisonPerTurn > 0) for (const enemy of enemies) {
+    if (!enemy.alive || enemy.explodeAt !== undefined) continue;
+    if (enemy.artifact > 0) enemy.artifact -= 1;
+    else enemy.poison += player.poisonPerTurn;
+  }
   const aoe = turnStartAoeOf(player);
   if (player.boulder > 0) player.boulder += BOULDER_STEP;
   if (aoe <= 0) return 0;
@@ -1863,6 +1875,14 @@ function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebu
 
 /** A played card's lasting effects on the simulated player: a Power's (POWER_EFFECTS), Feel No Pain, Plating. */
 function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<string, number>): void {
+  if (card.poisonPerTurn) {
+    player.poisonPerTurn += card.poisonPerTurn;
+    playerPowers["NOXIOUS_FUMES_POWER"] = player.poisonPerTurn;
+  }
+  if (card.poisonExtraTriggers) {
+    player.poisonExtraTriggers += card.poisonExtraTriggers;
+    playerPowers["ACCELERANT_POWER"] = player.poisonExtraTriggers;
+  }
   if (card.doubleDamageNext) player.doubleDamageNext = true;
   const effect = POWER_EFFECTS[card.cardId];
   if (effect && card.type === "Power") {
@@ -2094,6 +2114,7 @@ function applyPlan(
     if (fullFight) e.hurt = e.hurt === true || hit || e.hp < a.hp;
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
+    e.poison = a.poison ?? e.poison;
     if (a.artifact !== undefined) e.artifact = a.artifact;
     if (a.slippery !== undefined) e.slippery = Math.max(0, a.slippery - (slipperyUsed.get(e.index) ?? 0));
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
@@ -2475,6 +2496,8 @@ function simulate(
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
     afterImage: base.afterImage ?? input.playerPowers["AFTERIMAGE_POWER"] ?? 0,
+    poisonPerTurn: input.playerPowers["NOXIOUS_FUMES_POWER"] ?? 0,
+    poisonExtraTriggers: base.poisonExtraTriggers ?? input.playerPowers["ACCELERANT_POWER"] ?? 0,
     doubleDamage: (input.playerPowers["DOUBLE_DAMAGE_POWER"] ?? 0) > 0,
     doubleDamageNext: (input.playerPowers["SHADOW_STEP_POWER"] ?? 0) > 0,
     potions: input.potions,
@@ -2551,6 +2574,7 @@ function simulate(
       vigor: info?.powers?.["VIGOR_POWER"] ?? 0,
       vulnerable: e.vulnerable,
       weak: e.weak,
+      poison: e.poison ?? info?.powers?.["POISON_POWER"] ?? 0,
       alive: e.hp > 0,
       // Intangible now lasts its stacks; Nemesis re-grants it at the end of every 2nd enemy turn, so it is
       // on every other turn (VQKX F48 T6: "win 88%" with Intangible never coming back, T7 212 -> 208).
@@ -2697,6 +2721,7 @@ function simulate(
         block: e.block,
         vulnerable: e.vulnerable,
         weak: e.weak,
+        ...(e.poison > 0 || e.base.poison !== undefined ? { poison: e.poison } : {}),
         artifact: e.artifact,
         slippery: e.slippery,
         curlUp: e.curlUp,
@@ -2777,6 +2802,7 @@ function simulate(
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
       afterImage: player.afterImage,
+      poisonExtraTriggers: player.poisonExtraTriggers,
       // Mid-turn draws: Hellraiser plays the Strikes, Dark Embrace draws for each exhaust (the solver's own turn).
       hellraiser: player.hellraiser,
       darkEmbrace: player.darkEmbrace,

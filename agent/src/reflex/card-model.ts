@@ -66,6 +66,12 @@ export interface CardModel {
   /** Observed unupgraded Shadow Step: discard all other hand cards, double attacks next turn only. */
   discardsHand?: boolean;
   doubleDamageNext?: boolean;
+  /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
+  poison?: number;
+  poisonRequiresExisting?: boolean;
+  poisonNow?: boolean;
+  poisonPerTurn?: number;
+  poisonExtraTriggers?: number;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
@@ -820,9 +826,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // The Bomb (1ZQJ: in hand four turns, never played, scored 0 as unmodelled): 40 to every enemy at
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
+  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0;
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
@@ -932,6 +939,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     exhausts,
     special,
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
+    ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
+    ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
+    ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
     known,
     flatValue,
     heldPenalty,
