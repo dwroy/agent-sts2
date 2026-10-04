@@ -1,15 +1,15 @@
 # 小偷：偷窃草蜢和地精佣兵（THIEF_FACTS）
 
 Dai 2026-10-02 定：**第一步——事实 + 选项覆盖，排序不加代价**。和药水代价的做法一样：代码给事实，Jev 决定。
-全部改动在一个开关 `THIEF_FACTS` 后面（src/config.ts，默认开，.env.example 有说明）；关掉时战斗题面、选项、每个答案的处理和
-接入前逐字节相同（tests/thief.test.ts 的 golden，和 420 个日志回合的离线对比，§5）。奖励屏的修复（§4）不在开关后面，是 bug 修复。
+全部改动在一个开关 `THIEF_FACTS` 后面（agent/src/config.ts，默认开，.env.example 有说明）；关掉时战斗题面、选项、每个答案的处理和
+接入前逐字节相同（agent/tests/thief.test.ts 的 golden，和 420 个日志回合的离线对比，§5）。奖励屏的修复（§4）不在开关后面，是 bug 修复。
 
 **第二步（§7，同日 Dai 定）：被偷的牌和金币折成血，像药水代价一样进排序**，开关 `THIEF_COST`（Dai 看了数后同日定：默认开；帝王蟹那幕模拟降到 500 样本）；
-关掉时和只开 THIEF_FACTS 时逐字节相同（tests/thief-cost.test.ts）。离线的数在 notes/thief-cost-report.md。
+关掉时和只开 THIEF_FACTS 时逐字节相同（agent/tests/thief-cost.test.ts）。离线的数在 notes/thief-cost-report.md。
 
-代码：src/strategy/thief.ts（谁带着什么、还剩几回合、事实文字、末回合击杀线），src/strategy/rollout-live.ts（推演里每条线
-拿回/被带走的样本数、推演覆盖线），src/strategy/rollout.ts（`RolloutInput.escapes`：逃跑），src/screens/combat-plan.ts（接入），
-src/screens/reward.ts（奖励屏），src/loop.ts + src/project/journal-replay.ts（战斗第一帧的记忆）。
+代码：agent/src/strategy/thief.ts（谁带着什么、还剩几回合、事实文字、末回合击杀线），agent/src/strategy/rollout-live.ts（推演里每条线
+拿回/被带走的样本数、推演覆盖线），agent/src/strategy/rollout.ts（`RolloutInput.escapes`：逃跑），agent/src/screens/combat-plan.ts（接入），
+agent/src/screens/reward.ts（奖励屏），agent/src/loop.ts + agent/src/project/journal-replay.ts（战斗第一帧的记忆）。
 
 ## 1. 机制（日志核对，A8+，log DB 2026-10-02）
 
@@ -58,13 +58,13 @@ src/screens/reward.ts（奖励屏），src/loop.ts + src/project/journal-replay.
 - 每个选项一条 `thief`：本回合的确切结果——「kills 偷窃草蜢: 拆解 comes back」/「偷窃草蜢 left at 23 HP, leaves at the end of
   next turn」/ 末回合「leaves at the end of this turn with 拆解」/ 打掉最后一层振翅「stunned, …(its Escape: one more turn)」，
   再加推演的「killed before it leaves in k/n samples, left with it in m/n」；有杀戮顺序时，另一个顺序拿回得更多也写上。
-  只有数字和事实，没有建议、没有代码分数（tests/thief-facts.test.ts 的审计）。
+  只有数字和事实，没有建议、没有代码分数（agent/tests/thief-facts.test.ts 的审计）。
 - 选项覆盖：小偷的最后一回合，如果有一条幸存线能杀它而选项里没有，就加进来（不喝药的优先）；不是最后一回合，就把推演里
   「逃走前拿回」样本最多的那条线放进选项（各杀戮顺序取最多；并列看推演价值），已经在选项里的就保留，不被药水选项挤掉。只用求解器
   本来就生成的线。
 - 决策日志多一个 `thief`：小偷、本回合能杀它的选项 key、加入/保留的覆盖线、所选的线有没有杀它。
 - 失败保护（直接上线跑，Dai 10-02）：小偷的任何一步出错，这次决策就丢掉全部小偷事实，按开关关的样子出题（推演不带逃跑重跑一次）；
-  记战斗第一帧的那一步永远不抛错；`THIEF_FACTS` 写错只给警告（按开），不会让程序起不来。tests/thief.test.ts 里有一条：第一帧记录坏了时，
+  记战斗第一帧的那一步永远不抛错；`THIEF_FACTS` 写错只给警告（按开），不会让程序起不来。agent/tests/thief.test.ts 里有一条：第一帧记录坏了时，
   题面和开关关逐字节相同。
 - DeepSeek 不接战斗题（Dai 09-28 起战斗不升级；FIGHT_PLAN 线上是 off；最后一次 DeepSeek 选线是 09-25）；事实同样写在决策自己的
   `state`/`questions` 里，以后升级回来也带着。按牌出的后备题（combat.ts，求解器没有线时）没有加。
@@ -81,7 +81,7 @@ Card 前面）。日志里只有两种 SpecialCard：取回被偷的牌（141 �
 
 ## 5. 离线回放（notes/thief-facts-report.md）
 
-tools/thief-facts-replay.ts：98 场草蜢 + 46 场佣兵里，每个有小偷带东西的回合的第一个规划决策，用现在的代码开关关、开各出一次题。
+agent/tools/thief-facts-replay.ts：98 场草蜢 + 46 场佣兵里，每个有小偷带东西的回合的第一个规划决策，用现在的代码开关关、开各出一次题。
 要点：开关关的题面和接入前（894f245）的规划器 420/420 逐字节相同；推演最优线因逃跑模型改变 15/271，只有 1 次变成更少拿回
 （8V0HD9Y207WY F19 T3）；胖地精最后一回合 43 次里 33 次有击杀线、都在选项里，但只有 7 次打了；7 场草蜢逃跑的 T3–T5 都没有
 「本回合就能杀」的线。
@@ -96,15 +96,15 @@ tools/thief-facts-replay.ts：98 场草蜢 + 46 场佣兵里，每个有小偷�
 
 ## 7. 第二步：赃物折血进排序（THIEF_COST，默认开）
 
-Dai 2026-10-02 定：被偷的牌、被带走的金币折成血，像药水代价一样进推演排序（死亡数永远第一）。开关 `THIEF_COST`（src/config.ts、
+Dai 2026-10-02 定：被偷的牌、被带走的金币折成血，像药水代价一样进推演排序（死亡数永远第一）。开关 `THIEF_COST`（agent/src/config.ts、
 .env.example、run-config 记录；要 THIEF_FACTS 开着才起作用），**默认开**：Dai 看了 notes/thief-cost-report.md 的数后于 2026-10-02 打开（上限 30 血、2 倍标准误不变、佣兵以后的偷钱不计、帝王蟹 500 样本：THIEF_CARD_SAMPLES_BY_BOSS）。
-关掉时题面、选项、每个答案的处理和只开 THIEF_FACTS 时（ffed0d4）逐字节相同：tests/thief-cost.test.ts 钉住 9 个日志局面 ×
+关掉时题面、选项、每个答案的处理和只开 THIEF_FACTS 时（ffed0d4）逐字节相同：agent/tests/thief-cost.test.ts 钉住 9 个日志局面 ×
 JEV_CONTEXT off/v1 = 18 个摘要（在 ffed0d4 上算的），离线 420 个日志回合同样对过（报告 §1）。
 
-代码：src/sim/thief-card-value.ts（牌的估值，用 B3 的整场模拟）、src/sim/thief-card-hp.ts（换算规则和文字，纯函数）、
-src/strategy/thief.ts（`withLoot`、`goldLoot`、`cardLoot`、`lastTurnLoot`、事实文字）、src/strategy/rollout.ts（`escapes.lootHp`：
-每个样本的赃物代价）、src/strategy/rollout-live.ts（排序）、src/screens/combat-plan.ts（接入、代码自己决定的地方）、
-src/loop.ts（每场算一次牌的值）、tools/build-potion-equivalents.py（金币换算）。
+代码：agent/src/sim/thief-card-value.ts（牌的估值，用 B3 的整场模拟）、agent/src/sim/thief-card-hp.ts（换算规则和文字，纯函数）、
+agent/src/strategy/thief.ts（`withLoot`、`goldLoot`、`cardLoot`、`lastTurnLoot`、事实文字）、agent/src/strategy/rollout.ts（`escapes.lootHp`：
+每个样本的赃物代价）、agent/src/strategy/rollout-live.ts（排序）、agent/src/screens/combat-plan.ts（接入、代码自己决定的地方）、
+agent/src/loop.ts（每场算一次牌的值）、knowledge/builders/build-potion-equivalents.py（金币换算）。
 
 ### 7.1 金币
 
@@ -117,7 +117,7 @@ src/loop.ts（每场算一次牌的值）、tools/build-potion-equivalents.py（
 - 每金币的血：A8 一幕 **0.112**（38 金币 ≈ **4.2 血**）、二幕 0.141、三幕 0.180；A9 一幕 0.124、二幕 0.190。佣兵都在一幕
   （46 场里 39 场 A8、7 场 A9）。
 - 写在 potion-equivalents.json 的 `meta.gold_hp`（价格、n、每幕每进阶的 per_gold / hold_hp / n、公式文字），由
-  tools/build-potion-equivalents.py 每天和药水表一起重建（`--self-test` 里有它的检查）。表里没有这一项（它之前建的表）、或者
+  knowledge/builders/build-potion-equivalents.py 每天和药水表一起重建（`--self-test` 里有它的检查）。表里没有这一项（它之前建的表）、或者
   不认得的格式：**没有金币的值，不算代价**，题面写「the potion table has no gold rate」。
 - 用的是现在带着的金币（佣兵目前偷的；胖地精的 HEIST）。活着的佣兵每次攻击还会再偷 20，这部分没有算进代价（偏低）。
 
@@ -149,7 +149,7 @@ H = B3 的进场血量（本幕路线计划投影到 boss，没有路线计划�
 - 模拟里效果没完全建模的牌（card-model `known` 为假，或者「抽牌直到……」：劫掠在模拟里就是一张 6 伤害的攻击，SCBC3F0QT8BC F19
   它和打击的数一模一样）标「effect partly modelled」：值可能偏低。
 
-**什么时候算**：对局循环（src/loop.ts）在出题之前，看到活着的、带着牌的偷窃草蜢，牌能从「战斗第一帧 − 现在」认出来（正好一张），
+**什么时候算**：对局循环（agent/src/loop.ts）在出题之前，看到活着的、带着牌的偷窃草蜢，牌能从「战斗第一帧 − 现在」认出来（正好一张），
 这一场还没算过，就 await 算一次（`ensureThiefCardValue`），放进屏幕记忆 `thiefCardValue`，下一条决策日志带 `thief_card_value`；
 重启后 journal-replay 从日志里拿回来，不重算。少了不止一张牌（认不出是哪张）：没有值。用 B3 的 worker 池（BOSS_SIM_BUILD 开时
 同一个池），否则开关开时自己建一个。

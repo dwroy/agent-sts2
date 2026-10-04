@@ -9,9 +9,9 @@
 import { parseArgs } from "node:util";
 import { join } from "node:path";
 
-import { CODEX_STATE_DIR, codexEnv } from "../../../src/brain/engines/codex.js";
-import { CodexUsageGuard, readCodexUsage, usageNote } from "../../../src/brain/engines/codex-usage.js";
-import { loadConfig } from "../../../src/config.js";
+import { CODEX_STATE_DIR, codexEnv } from "../../../agent/src/brain/engines/codex.js";
+import { CodexUsageGuard, readCodexUsage, usageNote } from "../../../agent/src/brain/engines/codex-usage.js";
+import { loadConfig } from "../../../agent/src/config.js";
 
 const { values } = parseArgs({ options: { repeat: { type: "string", default: "1" } } });
 const env = { HOME: process.env["HOME"] ?? "", PATH: process.env["PATH"] ?? "", BRAIN_LOG: "off", ...(process.env["BRAIN_CODEX_HOME"] ? { BRAIN_CODEX_HOME: process.env["BRAIN_CODEX_HOME"] } : {}) };

@@ -35,7 +35,7 @@
 - **v4-sim 里的修正**：无厌沙虫 Liquify Ground 的沙坑 4 从来没进模拟（从第 1 回合或战前起点永远不会被吃），6 张狂乱逃离一半进抽牌堆；知识恶魔的诅咒每场最多 3 次。
 - **分支里的修正**（没上）：帝王蟹背后攻击算了两次（表里的伤害已是按朝向比例的平均，B2 的朝向又 ×1.5）；女王和火炬头的显示值招式换成从日志反解的基础伤害，Burn Bright 每次给火炬头 +1 力量，火炬头死时女王 +2 力量。
 - 验证集校准 Brier（val 141 场 / val_ext 165 场）：第 1 回合 0.1456 → 0.1358 / 0.1347 → 0.1240，战前 0.1436 → 0.1354 / 0.1326 → 0.1239，第 5 回合 0.0882 → 0.0882 / 0.0797 → 0.0797（不变）。
-- 可信标准：验证集 ≥ 10 场、校准 Brier ≤ 整体 1.25 倍、预测平均与实际胜率差 ≤ 15 个百分点、被打穿的血模拟 / 日志在 0.7–1.3。B2 按第 1 回合起判，B3 按战前判，名单从 src/sim/boss-trust.json 读。新名单（两份相同）：帝王蟹、女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体；知识恶魔变为可信，瀑布巨兽新进名单。
+- 可信标准：验证集 ≥ 10 场、校准 Brier ≤ 整体 1.25 倍、预测平均与实际胜率差 ≤ 15 个百分点、被打穿的血模拟 / 日志在 0.7–1.3。B2 按第 1 回合起判，B3 按战前判，名单从 knowledge/characters/ironclad/boss-trust.json 读。新名单（两份相同）：帝王蟹、女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体；知识恶魔变为可信，瀑布巨兽新进名单。
 
 **B5 结论**（§14；2026-10-02，汇总在 experiments/boss-sim/b5-*.md、b5-summary.json）：目标是让 B2 能用在死得最多的 boss 上。
 
@@ -84,7 +84,7 @@ calibratedWinProb(best.lines[0]!.winProb, 300, "mid");                        //
 - 逐回合数据：还在打的样本数，平均掉血、伤害、来袭、被打穿的血，到这回合末还活着 / 已赢的样本数；
 - 每个样本的结果（按样本序号排）。
 
-回测工具在 tools/boss-sim/：
+回测工具在 agent/tools/boss-sim/：
 
 - `extract.py`：从日志库取 boss 战，按偏移读 states.jsonl 的开场局面和第 5 回合局面；
 - `backtest.ts`：逐场跑模拟、5 回合推演、boss 时钟，可分片并行；
@@ -97,7 +97,7 @@ calibratedWinProb(best.lines[0]!.winProb, 300, "mid");                        //
 
 ## 2. 设计
 
-**完全复用推演**。每个样本都跑 src/strategy/rollout.ts 里的 `simulate`，只是入口换成新导出的 `simulateFight(input, line, maxTurns, seed)`。推演原有的这些机制全部照用，不另写一套卡牌或怪物规则：
+**完全复用推演**。每个样本都跑 agent/src/strategy/rollout.ts 里的 `simulate`，只是入口换成新导出的 `simulateFight(input, line, maxTurns, seed)`。推演原有的这些机制全部照用，不另写一套卡牌或怪物规则：
 
 - 抽牌堆洗牌和抽牌，弃牌堆洗回；
 - 怪物按出招模型（move-model 的后继计数）出招，伤害按 monster-db 的按进阶数值，另外处理力量、易伤、虚弱、格挡、覆甲、各种自身增益、状态牌、给我方上的减益；
@@ -144,13 +144,13 @@ calibratedWinProb(best.lines[0]!.winProb, 300, "mid");                        //
   - `policyWeights` 在没设模拟开关时返回空，和原来的 `damageScale` 分支等价；
   - rollout-live 新增 `fightRelicsOf`，实盘不调用。
   
-  tests/boss-sim.test.ts 在合成盘面上用 solver 和 5 回合推演的数字做了一份摘要。这份摘要和改动前（89b8cd0）逐字节相同，测试把它固定为常量。
+  agent/tests/boss-sim.test.ts 在合成盘面上用 solver 和 5 回合推演的数字做了一份摘要。这份摘要和改动前（89b8cd0）逐字节相同，测试把它固定为常量。
 
-src/sim/ 在 B1、B1.5 里不被 src 里任何别的模块引用。B2 起 combat-plan.ts 经 src/sim/boss-lines.ts 引用（§11）；B3 起 src/loop.ts 引用 build-sim-facts（构筑题的事实），src/index.ts 引用 build-sim-pool（整局一个 worker 池）（§12）。tests/rollout.test.ts 检查这一点。
+agent/src/sim/ 在 B1、B1.5 里不被 src 里任何别的模块引用。B2 起 combat-plan.ts 经 agent/src/sim/boss-lines.ts 引用（§11）；B3 起 agent/src/loop.ts 引用 build-sim-facts（构筑题的事实），agent/src/index.ts 引用 build-sim-pool（整局一个 worker 池）（§12）。agent/tests/rollout.test.ts 检查这一点。
 
 ## 3. 速度
 
-在 32 核机器上测，测时机器负载约 12；用 tools/boss-sim/bench.ts，取 12 场分布在全部数据里的 boss 战，从第 1 回合开始：
+在 32 核机器上测，测时机器负载约 12；用 agent/tools/boss-sim/bench.ts，取 12 场分布在全部数据里的 boss 战，从第 1 回合开始：
 
 | 项目 | 中位 | 最慢 |
 |---|---|---|
@@ -191,7 +191,7 @@ monster-db 的 bosses 共 12 个，下表按幕列出。「完整」指日志里
 
 ## 5. 回测
 
-口径：用 tools/boss-sim/extract.py 取日志库 fights 视图里 room = boss 的战斗，A7–A9 共 424 场（2026-09-26 至 09-30）。起点有两个：
+口径：用 agent/tools/boss-sim/extract.py 取日志库 fights 视图里 room = boss 的战斗，A7–A9 共 424 场（2026-09-26 至 09-30）。起点有两个：
 
 - 第 1 回合第一个决策帧。不用 observed 帧，因为 164 场的第一帧是在抽牌之前记的，手里没牌。
 - 第 5 回合第一个决策帧（打到第 5 回合的 412 场）。
@@ -207,7 +207,7 @@ monster-db 的 bosses 共 12 个，下表按幕列出。「完整」指日志里
 对比对象都在同一个状态上离线重算：
 
 - **推演**：rolloutDecision，线上的设置（5 回合 × 8 样本、门控终值，这里不限时），取同一条线的「到战斗结束的预期掉血 / 胜率」；
-- **推演-模型**：同一推演换成 fight-value 模型终值（w = 1）。这个模型是在这些战斗上训练的，所以全集上的数是样本内的，偏乐观；**留出集**只算模型训练行（.cache/fight-value-rows.jsonl，324 局）里没有的局，共 112 场 boss 战；
+- **推演-模型**：同一推演换成 fight-value 模型终值（w = 1）。这个模型是在这些战斗上训练的，所以全集上的数是样本内的，偏乐观；**留出集**只算模型训练行（data/fight-value-rows.jsonl，324 局）里没有的局，共 112 场 boss 战；
 - **时钟**：boss-clock.ts 按实际进场血量重算，只有第 1 回合。时钟不给概率，胜负预测按「够」（gap 0）算 1、否则 0；AUC 用 −gap 算；赢局掉血 = 每回合掉血 × 时钟回合数。
 
 误差一律是 预测 − 实际。
@@ -305,7 +305,7 @@ monster-db 的 bosses 共 12 个，下表按幕列出。「完整」指日志里
 
 ### 6.1 数据切分
 
-tools/boss-sim/split.py → experiments/boss-sim/split.json。按每局第一场 boss 战的时间给局排序，最早的那些局凑满约 2/3 的场次作调参集，其余作验证集。同一局的几场 boss 战都在同一边，所以调参时见过的牌组不会出现在验证集里。
+agent/tools/boss-sim/split.py → experiments/boss-sim/split.json。按每局第一场 boss 战的时间给局排序，最早的那些局凑满约 2/3 的场次作调参集，其余作验证集。同一局的几场 boss 战都在同一边，所以调参时见过的牌组不会出现在验证集里。
 
 | 集 | 场次 | 时间 | 进阶 | 实际胜率 |
 |---|---|---|---|---|
@@ -316,9 +316,9 @@ tools/boss-sim/split.py → experiments/boss-sim/split.json。按每局第一场
 
 ### 6.2 诊断：模拟多掉的血从哪里来
 
-**Jev 实际怎么选线**（tools/boss-sim/choices.py，调参集 2383 次 plan-choice）：72% 选 solver 的第一条线。另外 28% 选了别的线，平均每回合少掉 3.2 血，同时少打 8.3 伤害。偏离最多的是女王（58%）、帝王蟹（45%）、实验体（43%）。只看每回合的第一次决策：solver 第一条线自己预测掉 9.3 血，Jev 选的线预测掉 8.2，这一回合实际掉 6.6。
+**Jev 实际怎么选线**（agent/tools/boss-sim/choices.py，调参集 2383 次 plan-choice）：72% 选 solver 的第一条线。另外 28% 选了别的线，平均每回合少掉 3.2 血，同时少打 8.3 伤害。偏离最多的是女王（58%）、帝王蟹（45%）、实验体（43%）。只看每回合的第一次决策：solver 第一条线自己预测掉 9.3 血，Jev 选的线预测掉 8.2，这一回合实际掉 6.6。
 
-**单回合回放**（tools/boss-sim/turn-replay.ts，b15-replay.json）：取日志里 Jev 规划过的每一个 boss 回合，从当时的真实局面出发，让模拟的策略只打这一回合，和日志里这一回合的实际掉血对比。调参集 1451 个回合，每回合平均：
+**单回合回放**（agent/tools/boss-sim/turn-replay.ts，b15-replay.json）：取日志里 Jev 规划过的每一个 boss 回合，从当时的真实局面出发，让模拟的策略只打这一回合，和日志里这一回合的实际掉血对比。调参集 1451 个回合，每回合平均：
 
 | 策略 | 掉血 | 伤害 |
 |---|---|---|
@@ -356,7 +356,7 @@ tools/boss-sim/split.py → experiments/boss-sim/split.json。按每局第一场
 5. **伤害权重 0.5** 在调参集上重选；HP 权重倍数（`hpScale`）和威胁项（`threat`，turn-solver 新增的 `SolverInput.hpScale`）做成开关，默认关。
 6. **Platt 映射**（`BOSS_SIM_PLATT` / `calibratedWinProb`）：p' = sigmoid(a + b · logit(p))，每种起点一组，只在调参集上拟合：第 1 回合 (0.730, 0.498)，战中 (0.748, 0.864)，战前 (0.708, 0.519)。b < 1，说明模拟在两头过于自信。给绝对胜率时用映射后的数；配对差（`compareLines`）仍用原始样本算。
 
-实盘不变的保证：新增的字段和开关只在 simulateFight 或模拟专用的选项下读取，实盘不设。tests/boss-sim.test.ts 用合成盘面算了一份实盘数字的摘要：solver 各线和 5 回合推演的估计。摘要在改动前（89b8cd0）和改动后逐字节相同，测试把它固定为常量。另有一个测试核对：推演会忽略 `fightRelics`，未设开关时 `policyWeights` 为空。
+实盘不变的保证：新增的字段和开关只在 simulateFight 或模拟专用的选项下读取，实盘不设。agent/tests/boss-sim.test.ts 用合成盘面算了一份实盘数字的摘要：solver 各线和 5 回合推演的估计。摘要在改动前（89b8cd0）和改动后逐字节相同，测试把它固定为常量。另有一个测试核对：推演会忽略 `fightRelics`，未设开关时 `policyWeights` 为空。
 
 ### 6.4 调参集上的选择
 
@@ -437,7 +437,7 @@ tools/boss-sim/split.py → experiments/boss-sim/split.json。按每局第一场
 
 **战前起点**：`redealInput(input, { fresh: true, hp })`。手牌放回牌组，抽牌堆装入全部牌（含弃牌堆），手牌为空；起点回合在每个样本里先抽牌，再由策略出牌；血量按实际进场血量。敌人和遗物目前还是取自日志里第 1 回合的状态。验证集结果见 §6.5：校准后 Brier 0.146，各桶误差都在 4 个百分点内，预测平均 0.610 对实际 0.593。战前起点并不比第 1 回合起点差，所以不知道起手牌也能用。
 
-**配对比较**（tools/boss-sim/pairs.ts，b15-pairs.jsonl）：取验证集的战斗，从战前起点出发，比较「实际牌组」和「少一张 / 多一张」的牌组。每副牌组 600 个样本，用同一组种子，击杀顺序取最好。表中是胜率差 ± 标准误（百分点）：
+**配对比较**（agent/tools/boss-sim/pairs.ts，b15-pairs.jsonl）：取验证集的战斗，从战前起点出发，比较「实际牌组」和「少一张 / 多一张」的牌组。每副牌组 600 个样本，用同一组种子，击杀顺序取最好。表中是胜率差 ± 标准误（百分点）：
 
 | 战斗（实际结果） | 实际牌组 | 去掉唯一的群伤牌 | 去掉格挡最多的牌 | 加一张打击 | 再加一张格挡最多的牌 |
 |---|---|---|---|---|---|
@@ -457,7 +457,7 @@ tools/boss-sim/split.py → experiments/boss-sim/split.json。按每局第一场
 
 ### 6.7 候选线比较（B2 的底座）
 
-tools/boss-sim/lines.ts，结果在 b15-lines.jsonl。从验证集里抽 30 个战中局面：第 2–8 回合，12 个 boss 都有，每场只取一个回合。每个局面比较 solver 的前 5 条线、Jev 实际选的线和模拟策略自己的线。每条线 300 个样本，用同一组种子，击杀顺序取最好。
+agent/tools/boss-sim/lines.ts，结果在 b15-lines.jsonl。从验证集里抽 30 个战中局面：第 2–8 回合，12 个 boss 都有，每场只取一个回合。每个局面比较 solver 的前 5 条线、Jev 实际选的线和模拟策略自己的线。每条线 300 个样本，用同一组种子，击杀顺序取最好。
 
 - **Jev 实际选的线排第几**：在参与比较的线里（平均 5.2 条），11/30 排第 1；排名分布为第 1 名 11 次、第 2 名 5 次、第 3 名 5 次、第 4 名 3 次、第 5 名 4 次、第 6 名 2 次。24/30 和最优线的差在 2 个标准误以内，算并列。
 - **和最优线差多少**：胜率差中位 0，平均 −2.6 个百分点。差距超过 5 个百分点的有 4 个局面：
@@ -511,7 +511,7 @@ Dai 2026-09-30 定的前提：
 ### B2：boss 战整场规划
 
 - **输入**：直接用实盘推演的输入（rollout-live 的 `boardRolloutInput` + 抽牌堆 / 弃牌堆 + `fightMetaOf`），不用另外建。
-- **每条线怎么模拟**：Jev 这回合看到的每条线，加上「整场不喝药」那条线，一起交给 `runBestOrder((i, l, o) => pool.run(i, l, o), input, lines, { samples, seed })`：每个击杀顺序跑一次（同一组种子），每条线取最好的顺序，`byOrder` 留着每个顺序的数。tools/boss-sim/lines.ts 就是这样做的。
+- **每条线怎么模拟**：Jev 这回合看到的每条线，加上「整场不喝药」那条线，一起交给 `runBestOrder((i, l, o) => pool.run(i, l, o), input, lines, { samples, seed })`：每个击杀顺序跑一次（同一组种子），每条线取最好的顺序，`byOrder` 留着每个顺序的数。agent/tools/boss-sim/lines.ts 就是这样做的。
 - **给 Jev 看什么**：
   - 每条线的胜率、掉血中位和 p90、赢时的回合数、死亡回合分布；
   - 和最好那条线的配对差（`compareLines`：胜率差 ± 标准误），差距在 2 个标准误以内的线就说「并列」；
@@ -537,14 +537,14 @@ B3 按上面的建议做了，见 §12。和建议不同的地方：击杀顺序
 
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH
-P=.cache/logdb-venv/bin/python
-$P tools/boss-sim/extract.py                      # experiments/boss-sim/raw/fights.jsonl（约 30 MB）+ turns.jsonl
-for i in $(seq 0 23); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 200 --out-dir experiments/boss-sim/raw/final & done; wait
-for i in $(seq 0 23); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 200 --no-rollout --no-scripts --out-dir experiments/boss-sim/raw/final-noscripts & done; wait
-python3 tools/boss-sim/report.py --results 'experiments/boss-sim/raw/final/results-*.jsonl' \
+P=data/logdb-venv/bin/python
+$P agent/tools/boss-sim/extract.py                      # experiments/boss-sim/raw/fights.jsonl（约 30 MB）+ turns.jsonl
+for i in $(seq 0 23); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 200 --out-dir experiments/boss-sim/raw/final & done; wait
+for i in $(seq 0 23); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 200 --no-rollout --no-scripts --out-dir experiments/boss-sim/raw/final-noscripts & done; wait
+python3 agent/tools/boss-sim/report.py --results 'experiments/boss-sim/raw/final/results-*.jsonl' \
   --ablation 'experiments/boss-sim/raw/final-noscripts/results-*.jsonl' --md experiments/boss-sim/report.md --json experiments/boss-sim/summary.json
-nice -n 10 npx tsx tools/boss-sim/bench.ts --fights 12 --workers 24 --samples 100,300 --lines 6 > experiments/boss-sim/bench.json
-npx tsx tools/boss-sim/trace.ts RUN:FIGHT [--start t5] [--seed N]   # 单场单样本逐回合，对照 turns 视图
+nice -n 10 npx tsx agent/tools/boss-sim/bench.ts --fights 12 --workers 24 --samples 100,300 --lines 6 > experiments/boss-sim/bench.json
+npx tsx agent/tools/boss-sim/trace.ts RUN:FIGHT [--start t5] [--seed N]   # 单场单样本逐回合，对照 turns 视图
 ```
 
 24 个分片各跑一遍约 3 分钟（带推演），不带推演约 2 分钟。raw/ 在 .gitignore 里，提交的是报告和汇总。上面 B1 的数是在 89b8cd0 跑的；B1.5 之后，backtest.ts 默认用 B1.5 的配置（策略起手、药水保留 0.5、击杀顺序取最好、回合遗物）。要复现 B1 的起手方式，加 `--start-line plan1 --potion-hold 0 --no-best-order`，但回合遗物关不掉。
@@ -552,16 +552,16 @@ npx tsx tools/boss-sim/trace.ts RUN:FIGHT [--start t5] [--seed N]   # 单场单�
 B1.5：
 
 ```bash
-$P tools/boss-sim/choices.py                      # raw/choices.jsonl：Jev 在 boss 战里的 plan-choice（线、选择、状态偏移）
-python3 tools/boss-sim/split.py                   # experiments/boss-sim/split.json
-for i in $(seq 0 23); do nice -n 15 npx tsx tools/boss-sim/turn-replay.ts --shard $i --shards 24 --configs "d1;d0.5;d1,t2" --out-dir experiments/boss-sim/raw/replay & done; wait
-for i in $(seq 0 23); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 100 --starts t1,t5 --no-rollout --set tune \
+$P agent/tools/boss-sim/choices.py                      # raw/choices.jsonl：Jev 在 boss 战里的 plan-choice（线、选择、状态偏移）
+python3 agent/tools/boss-sim/split.py                   # experiments/boss-sim/split.json
+for i in $(seq 0 23); do nice -n 15 npx tsx agent/tools/boss-sim/turn-replay.ts --shard $i --shards 24 --configs "d1;d0.5;d1,t2" --out-dir experiments/boss-sim/raw/replay & done; wait
+for i in $(seq 0 23); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 100 --starts t1,t5 --no-rollout --set tune \
   --damage-scale 0.5 --potion-hold 0.5 --out-dir experiments/boss-sim/raw/grid/NAME & done; wait     # 调参：只跑调参集
-python3 tools/boss-sim/calib.py --set tune --compare "A=experiments/boss-sim/raw/grid/A/results-*.jsonl" "B=..."
-for i in $(seq 0 23); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 200 --starts t1,t5,pre --no-rollout --out-dir experiments/boss-sim/raw/b15 & done; wait
-python3 tools/boss-sim/calib.py --results 'experiments/boss-sim/raw/b15/results-*.jsonl' --set val [--platt] --md OUT.md --json OUT.json
-nice -n 10 npx tsx tools/boss-sim/lines.ts --n 30 --top 5 --samples 300 --set val --out experiments/boss-sim/raw/lines.jsonl
-nice -n 10 npx tsx tools/boss-sim/pairs.ts --n 8 --samples 600 --set val --out experiments/boss-sim/raw/pairs.jsonl
+python3 agent/tools/boss-sim/calib.py --set tune --compare "A=experiments/boss-sim/raw/grid/A/results-*.jsonl" "B=..."
+for i in $(seq 0 23); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts --shard $i --shards 24 --samples 200 --starts t1,t5,pre --no-rollout --out-dir experiments/boss-sim/raw/b15 & done; wait
+python3 agent/tools/boss-sim/calib.py --results 'experiments/boss-sim/raw/b15/results-*.jsonl' --set val [--platt] --md OUT.md --json OUT.json
+nice -n 10 npx tsx agent/tools/boss-sim/lines.ts --n 30 --top 5 --samples 300 --set val --out experiments/boss-sim/raw/lines.jsonl
+nice -n 10 npx tsx agent/tools/boss-sim/pairs.ts --n 8 --samples 600 --set val --out experiments/boss-sim/raw/pairs.jsonl
 ```
 
 调参集一个配置（100 样本，t1 + t5）24 个分片约 3–4 分钟；最终 424 场 × 3 个起点 × 200 样本约 20 分钟。
@@ -569,20 +569,20 @@ nice -n 10 npx tsx tools/boss-sim/pairs.ts --n 8 --samples 600 --set val --out e
 B3（§12）：
 
 ```bash
-nice -n 10 npx tsx tools/boss-sim/synthetic-check.ts --set val          # 合成开场和日志战前起点逐项对比 → experiments/boss-sim-build/raw/synthetic-check.jsonl
-for i in $(seq 0 11); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --shard $i --shards 12 --samples 200 --starts pre,syn --no-rollout --set val --out-dir experiments/boss-sim-build/raw/val & done; wait
-python3 tools/boss-sim/syn-calib.py --results 'experiments/boss-sim-build/raw/val/results-*.jsonl' --md experiments/boss-sim-build/syn-calib.md --json experiments/boss-sim-build/syn-calib.json
+nice -n 10 npx tsx agent/tools/boss-sim/synthetic-check.ts --set val          # 合成开场和日志战前起点逐项对比 → experiments/boss-sim-build/raw/synthetic-check.jsonl
+for i in $(seq 0 11); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts --shard $i --shards 12 --samples 200 --starts pre,syn --no-rollout --set val --out-dir experiments/boss-sim-build/raw/val & done; wait
+python3 agent/tools/boss-sim/syn-calib.py --results 'experiments/boss-sim-build/raw/val/results-*.jsonl' --md experiments/boss-sim-build/syn-calib.md --json experiments/boss-sim-build/syn-calib.json
 grep -F -e RUN1 -e RUN2 … logs/states.jsonl > experiments/boss-sim-build/raw/states-sel.jsonl      # targets 里 9 局的行（decisions 同样）
-nice -n 5 npx tsx tools/boss-sim/build-replay.ts --targets experiments/build-facts-m2/targets.jsonl --states experiments/boss-sim-build/raw/states-sel.jsonl \
+nice -n 5 npx tsx agent/tools/boss-sim/build-replay.ts --targets experiments/build-facts-m2/targets.jsonl --states experiments/boss-sim-build/raw/states-sel.jsonl \
   --decisions experiments/boss-sim-build/raw/decisions-sel.jsonl --run-plans logs/run-plans.jsonl --out experiments/boss-sim-build/raw/replay.jsonl --workers 12 [--profile]
-python3 tools/boss-sim/build-replay-report.py experiments/boss-sim-build/raw/replay.jsonl > experiments/boss-sim-build/replay-table.md
+python3 agent/tools/boss-sim/build-replay-report.py experiments/boss-sim-build/raw/replay.jsonl > experiments/boss-sim-build/replay-table.md
 ```
 
 验证集回测 12 个分片约 8 分钟（两种起点）；20 道题的重放约 2.5 分钟。
 
 ## 10. 测试
 
-tests/boss-sim.test.ts 共 16 个测试（B1 8 个，B1.5 8 个），合成盘面在 tests/boss-sim-fixture.ts：不依赖每局刷新的知识数据，不调用 LLM，不写 logs 或 .cache。
+agent/tests/boss-sim.test.ts 共 16 个测试（B1 8 个，B1.5 8 个），合成盘面在 agent/tests/boss-sim-fixture.ts：不依赖每局刷新的知识数据，不调用 LLM，不写 logs 或 .cache。
 
 B1.5 新增的 8 个：
 
@@ -605,9 +605,9 @@ B1 的 8 个：
 - 活着的巨兽不会爆炸，Pressure Gun 20/25/30 递增；
 - 族母睡满 3 回合后 Slash，第 1 回合被打穿格挡则第 2 回合 Slash。
 
-tests/rollout.test.ts 的引用边界测试放行了 src/sim/，同时检查 src 里没有别的模块引用 src/sim/。
+agent/tests/rollout.test.ts 的引用边界测试放行了 agent/src/sim/，同时检查 src 里没有别的模块引用 agent/src/sim/。
 
-B3：tests/boss-sim-build.test.ts 12 个，另在 tests/build-facts-audit.test.ts 加了 4 个（选牌、商店、休息点、选牌屏带模拟后仍只有事实），tests/rollout.test.ts 的引用边界加了 B3 的三条。怪物库和出招模型用 tests/boss-sim-build-fixture.ts 的固定小表，不读每局刷新的文件：
+B3：agent/tests/boss-sim-build.test.ts 12 个，另在 agent/tests/build-facts-audit.test.ts 加了 4 个（选牌、商店、休息点、选牌屏带模拟后仍只有事实），agent/tests/rollout.test.ts 的引用边界加了 B3 的三条。怪物库和出招模型用 agent/tests/boss-sim-build-fixture.ts 的固定小表，不读每局刷新的文件：
 
 - 合成开场：boss 的部件、站位、进阶血量（取最近的进阶）、两只同族信徒各自的首招、只取 boss 自己的开场能力（易伤不算）；开场遗物（金刚杵、锚、红面具、灯笼、准备背包）的力量、格挡、能量、抽牌和敌人虚弱；手里只剩药水；随机药水不进模拟；
 - 选项对比：同一副牌组复制一份，差恰好为 0；同样的输入跑两遍逐样本相同；worker 池和串行逐样本相同；变化的混合按样本分给各张牌；
@@ -620,11 +620,11 @@ B3：tests/boss-sim-build.test.ts 12 个，另在 tests/build-facts-audit.test.t
 
 ## 11. B2：boss 战里每条候选线的整场数字
 
-2026-10-01。架构不变（Dai）：boss 战里仍由 Jev 每回合在几条线里挑一条出牌；整场模拟只给每条线「照这样打完整场」的数字，每隔几回合再给一句整场计划，代码不按计划出牌。代码在 src/sim/boss-lines.ts（worker 在 boss-lines-worker.ts），接进 src/screens/combat-plan.ts 的出题。
+2026-10-01。架构不变（Dai）：boss 战里仍由 Jev 每回合在几条线里挑一条出牌；整场模拟只给每条线「照这样打完整场」的数字，每隔几回合再给一句整场计划，代码不按计划出牌。代码在 agent/src/sim/boss-lines.ts（worker 在 boss-lines-worker.ts），接进 agent/src/screens/combat-plan.ts 的出题。
 
 ### 11.1 先补模拟器的缺口（480beca；验证集重跑和 Platt 重拟合 c0ff1db）
 
-只在整场模拟里生效（`fullFight`，或实盘不设的可选字段），实盘 solver 和 5 回合推演不变，tests/boss-sim.test.ts 的实盘数字摘要仍和 89b8cd0 逐字节相同。
+只在整场模拟里生效（`fullFight`，或实盘不设的可选字段），实盘 solver 和 5 回合推演不变，agent/tests/boss-sim.test.ts 的实盘数字摘要仍和 89b8cd0 逐字节相同。
 
 - **随机药水**（`RolloutInput.randomPotions`，就是 potion-mc 的药水源）：还拿着的随机药水，之后每回合各抽一次新样本，做法同 potion-mc：选牌药水（攻击 / 技能 / 能力 / 无色药水、Orobic Acid）从牌池随机给 3 张（`samplePotion`），随机流由（样本种子、药水槽、回合）决定，所以同一个样本的各条线看到同样的 3 张；纯抽牌药水（Swift、Clarity、Cure All）抽的是这个样本自己抽牌堆上接下来的牌，作为已知抽牌可以打出。其余抽牌药水（Snecko Oil、Gambler's Brew 等）仍按期望值。回测里每场喝药：模拟 1.25 瓶、实际 1.25 瓶，其中随机药水 0.33 对 0.31（B1.5 模拟 0.92 瓶，随机药水 0）。
 - **回合遗物**（`fightRelicsOf`，数值都从日志库量的）：
@@ -638,7 +638,7 @@ B3：tests/boss-sim-build.test.ts 12 个，另在 tests/build-facts-audit.test.t
 - **还没建的按回合遗物**（boss 战里出现 ≥ 4 场、src 里没有任何处理的，括号里是 424 场里的场数）：Centennial Puzzle（24）、Pen Nib（18）、Unceasing Top（15）、Letter Opener（13）、Ornamental Fan（12）、Mummified Hand（12）、Parrying Shield（12）、Permafrost（12）、Mr Struggles（12）、Nunchaku（10）、Reptile Trinket（9）、Tuning Fork（8）、Pael's Legion（7）、Stone Calendar（6）、Unsettling Lamp（6）、Kunai（6）、Art of War（4）。其中有的效果可能已经在 mod 给的手牌数字里，没有逐个核对。
 - **帝王蟹的朝向**（Surrounded）：朝向跨回合带着走（上一条线最后打的那个敌人，和 solver 的规则一样）；之后的回合里，背对着的钳子来袭 ×1.5（和游戏显示的意图一致），这一回合转身时由 solver 的 `backAttack` 去掉或加上。
 - **逐回合记录**（给整场计划用）：每回合获得的格挡、打出的能力牌；每个样本记下能力牌、喝药、击杀各在第几回合。
-- **回测工具**：tools/boss-sim/backtest-board.ts 的盘面带上随机药水（期望值牌进手牌 + 药水源），`--no-random-potions` 可去掉。
+- **回测工具**：agent/tools/boss-sim/backtest-board.ts 的盘面带上随机药水（期望值牌进手牌 + 药水源），`--no-random-potions` 可去掉。
 
 **验证集重跑**（experiments/boss-sim/b2-gaps-val.md，b2-gaps-summary.json；和 §6.5 同样的 200 样本、同样的切分，Platt 映射只在调参集上重拟合）：
 
@@ -655,7 +655,7 @@ B3：tests/boss-sim-build.test.ts 12 个，另在 tests/build-facts-audit.test.t
 - **什么时候跑**：boss 战、`BOSS_SIM_LINES` 开着，出题时（推演和随机药水蒙特卡洛之后）。要模拟的线 = 题面上的每条方案线（代码的选项，加上推演补的最优线；boss 战没有「本场不用药」线，这条线只在非 boss 战出现）+ 每瓶随机药水「喝了再重新规划」选项的中位样本线（和推演一样）。没有模拟效果的药水选项不给数字。
 - **输入**：推演的输入（rollout-live 的 `boardRolloutInput`、`fightMetaOf`、抽牌堆 / 弃牌堆）+ 回合遗物 + 随机药水源（`bossSimInput`）；策略的设置同 B1.5（伤害权重 ×0.5、药水保留 0.5）。boss 战的药水代价仍是 0，排序里不算药水代价；药水保留只是模拟策略什么时候喝药的行为模型。
 - **一次跑完**：每条线 ×（solver 自选目标 + 每种击杀顺序）作为一组，全部用同一组种子（common random numbers）；每条线取胜率最高的击杀顺序（同胜率取赢局掉血中位少的，和排序同一个口径；V4.2 前是平均掉血，同 `runBestOrder`）。
-- **同步 worker 池**（`BossLinesPool`）：规划器是同步的，所以 worker 把结果发到各自的 MessagePort 后给一个共享计数器加 1，规划器线程用 `Atomics.wait` 等、用 `receiveMessageOnPort` 收。池在本场 boss 战第一次出题时建（默认 20 个 worker，V4.2 前是 12；`BOSS_SIM_WORKERS` 可改；最多核数 − 2、24 个），整场复用，到非 boss 战出题时释放；worker 已 unref，不挡进程退出。**和 B3 的池不同时占着 worker**（V4.2，src/sim/sim-pools.ts）：boss 战和构筑题不会同时跑，所以一个池起 worker 时先放掉另一个池的——boss 战第一次出题时 B3 的构筑池（最多 24 个 worker、各自加载了 solver）被释放，boss 战后第一道构筑题时 B2 的池被释放（原来要等到下一场非 boss 战），被释放的池下次用时重建（每个 worker 约 0.4 秒，并行）。B3 的池本来就不预热（第一道构筑题才起 worker）。某次出题一个样本都没拿到（池坏了）就重建，本场连续两次就关掉。
+- **同步 worker 池**（`BossLinesPool`）：规划器是同步的，所以 worker 把结果发到各自的 MessagePort 后给一个共享计数器加 1，规划器线程用 `Atomics.wait` 等、用 `receiveMessageOnPort` 收。池在本场 boss 战第一次出题时建（默认 20 个 worker，V4.2 前是 12；`BOSS_SIM_WORKERS` 可改；最多核数 − 2、24 个），整场复用，到非 boss 战出题时释放；worker 已 unref，不挡进程退出。**和 B3 的池不同时占着 worker**（V4.2，agent/src/sim/sim-pools.ts）：boss 战和构筑题不会同时跑，所以一个池起 worker 时先放掉另一个池的——boss 战第一次出题时 B3 的构筑池（最多 24 个 worker、各自加载了 solver）被释放，boss 战后第一道构筑题时 B2 的池被释放（原来要等到下一场非 boss 战），被释放的池下次用时重建（每个 worker 约 0.4 秒，并行）。B3 的池本来就不预热（第一道构筑题才起 worker）。某次出题一个样本都没拿到（池坏了）就重建，本场连续两次就关掉。
 - **截止时间**：每题最多 25 秒，每回合所有出题合计最多 30 秒（抽牌后重新出题也算在内），剩不到 3 秒就不跑。到时间就停，worker 在样本之间检查任务是否还有效，放弃剩下的；只用所有线都跑完的样本（同一批样本），题面注明「412 of 600 samples (time limit)」。
 - **每条线给什么**（选项的 `whole_fight_sim` 字段，英文和题面一致），例如：
 
@@ -678,7 +678,7 @@ B3：tests/boss-sim-build.test.ts 12 个，另在 tests/build-facts-audit.test.t
   - HP 护栏只比整场胜率（`simWinsLess`），不看模拟的掉血，所以 V4.2 的口径变化不影响它；
   - 药水代价：boss 战为 0，排序不看药水代价；
   - 执行闸不受影响。
-- **低可信 boss**（`LOW_TRUST_BOSSES`）：B2 时是帝王蟹、实验体、女王、知识恶魔、永恒镜、贪得无厌者，按当时已知的问题列的；B4 起改成按验证集成绩的固定标准算，名单和原因从 src/sim/boss-trust.json 读（§13.8），B4 时是帝王蟹、女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体（知识恶魔已转可信），B5 起是女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体（帝王蟹已转可信，§14.6）。这些 boss 的 `rollout_best`、并列、HP 护栏、回退线都按原来的 5 回合推演。**V4.2（Dai 2026-10-01）起，Jev 的题面里不再出现它们的整场数字和整场计划**（选项没有 `whole_fight_sim`，state 没有 `whole_fight_sim` / `whole_fight_plan`），题面、Jev 的视图、每个答案的处理和 `BOSS_SIM_LINES=off` 逐字节相同；模拟照跑，决策日志照样记 `boss_sim`（`low_trust: true`，每条线的数字和整场计划），留着以后校验。模拟没跑出结果时（时间用完、池坏了），按局面里的敌人认 boss（`lowTrustOfState`），低可信 boss 也不写「模拟不可用」。B3 的构筑题不变：低可信照样给数字、标明原因（§12.4）。
+- **低可信 boss**（`LOW_TRUST_BOSSES`）：B2 时是帝王蟹、实验体、女王、知识恶魔、永恒镜、贪得无厌者，按当时已知的问题列的；B4 起改成按验证集成绩的固定标准算，名单和原因从 knowledge/characters/ironclad/boss-trust.json 读（§13.8），B4 时是帝王蟹、女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体（知识恶魔已转可信），B5 起是女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体（帝王蟹已转可信，§14.6）。这些 boss 的 `rollout_best`、并列、HP 护栏、回退线都按原来的 5 回合推演。**V4.2（Dai 2026-10-01）起，Jev 的题面里不再出现它们的整场数字和整场计划**（选项没有 `whole_fight_sim`，state 没有 `whole_fight_sim` / `whole_fight_plan`），题面、Jev 的视图、每个答案的处理和 `BOSS_SIM_LINES=off` 逐字节相同；模拟照跑，决策日志照样记 `boss_sim`（`low_trust: true`，每条线的数字和整场计划），留着以后校验。模拟没跑出结果时（时间用完、池坏了），按局面里的敌人认 boss（`lowTrustOfState`），低可信 boss 也不写「模拟不可用」。B3 的构筑题不变：低可信照样给数字、标明原因（§12.4）。
 
 ### 11.4 整场计划
 
@@ -696,11 +696,11 @@ B3：tests/boss-sim-build.test.ts 12 个，另在 tests/build-facts-audit.test.t
 
 ### 11.5 开关
 
-`BOSS_SIM_LINES=on|off`，默认 on（`bossLinesOptions.enabled`）。off 时 boss 战的题面、Jev 的视图、每个答案的处理（排序、HP 护栏、回退线、决策日志）和 B2 之前逐字节相同；非 boss 战开着也逐字节相同。tests/boss-lines-planner.test.ts 用日志里的 5 个 boss 盘面（每个 Jev 视图开 / 关各一次）和 1 个非 boss 盘面锁住：摘要在接入前的规划器上算好写进测试，规划器读的知识数据（怪物库、出招模型）用测试里固定的裁剪版，别的知识文件一律当作不存在，所以知识数据每局刷新也不影响这个测试。
+`BOSS_SIM_LINES=on|off`，默认 on（`bossLinesOptions.enabled`）。off 时 boss 战的题面、Jev 的视图、每个答案的处理（排序、HP 护栏、回退线、决策日志）和 B2 之前逐字节相同；非 boss 战开着也逐字节相同。agent/tests/boss-lines-planner.test.ts 用日志里的 5 个 boss 盘面（每个 Jev 视图开 / 关各一次）和 1 个非 boss 盘面锁住：摘要在接入前的规划器上算好写进测试，规划器读的知识数据（怪物库、出招模型）用测试里固定的裁剪版，别的知识文件一律当作不存在，所以知识数据每局刷新也不影响这个测试。
 
 ### 11.6 验收：30 个 boss 战中途局面
 
-tools/boss-sim/b2-lines.ts，结果在 experiments/boss-sim-lines/（report.md、summary.json、states.jsonl；原始输出 experiments/boss-sim/raw/b2-lines.jsonl 不提交）。取法同 §6.7：验证集的 boss 战，第 2–8 回合，每场一个回合，按 boss 轮流取，12 个 boss 都有。每个局面让实盘规划器各出一次题：`BOSS_SIM_LINES` 关、开（12 个 worker、每条线 600 样本、截止 25 秒）。不调用 Jev 或 DeepSeek；Jev 的选择取自日志，按出牌文字对到新题面的选项（30 个里对上 27 个）。跑的时候机器上另有对局和别的 agent，负载 8–13。
+agent/tools/boss-sim/b2-lines.ts，结果在 experiments/boss-sim-lines/（report.md、summary.json、states.jsonl；原始输出 experiments/boss-sim/raw/b2-lines.jsonl 不提交）。取法同 §6.7：验证集的 boss 战，第 2–8 回合，每场一个回合，按 boss 轮流取，12 个 boss 都有。每个局面让实盘规划器各出一次题：`BOSS_SIM_LINES` 关、开（12 个 worker、每条线 600 样本、截止 25 秒）。不调用 Jev 或 DeepSeek；Jev 的选择取自日志，按出牌文字对到新题面的选项（30 个里对上 27 个）。跑的时候机器上另有对局和别的 agent，负载 8–13。
 
 - **耗时**：整场模拟每题中位 1.5 秒，p90 13.9 秒，最慢 25.0 秒（截止时间）；整个出题（含推演、药水蒙特卡洛）中位 1.7 秒、最慢 26.4 秒。到截止时间的 2 个：同族第 2 回合（6 条线 × 3 种击杀顺序，只跑完 150/600 个样本）、帝王蟹第 2 回合（593/600）。其余 28 个都跑满 600 个样本。目标（中位 ≤ 10 秒、最慢 ≤ 30 秒）达到。
 - **最优线变没变**：15 个低可信 boss 的局面照旧按推演排序。15 个可信 boss 的局面里，新排序的最优线和原来不同的 9 个（其中 1 个变成并列），没变的 6 个。
@@ -728,23 +728,23 @@ tools/boss-sim/b2-lines.ts，结果在 experiments/boss-sim-lines/（report.md�
 复现：
 
 ```bash
-for i in $(seq 0 11); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --shard $i --shards 12 --samples 200 --starts t1,t5,pre --no-rollout --out-dir experiments/boss-sim/raw/b2 & done; wait
-python3 tools/boss-sim/calib.py --results 'experiments/boss-sim/raw/b2/results-*.jsonl' --set val [--platt]   # §11.1 的表和新 Platt 参数
-nice -n 5 npx tsx tools/boss-sim/b2-lines.ts --n 30 --samples 600 --deadline 25000 --workers 12             # raw/b2-lines.jsonl
-python3 tools/boss-sim/b2-lines-report.py                                                                     # experiments/boss-sim-lines/
-nice -n 5 npx tsx tools/boss-sim/b2-lines.ts --n 30 --samples 600 --deadline 25000 --workers 20 --out experiments/boss-sim/raw/v42-lines.jsonl   # V4.2
-python3 tools/boss-sim/b2-lines-report.py --in experiments/boss-sim/raw/v42-lines.jsonl --out-dir experiments/boss-sim-lines/v42 --workers 20
+for i in $(seq 0 11); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts --shard $i --shards 12 --samples 200 --starts t1,t5,pre --no-rollout --out-dir experiments/boss-sim/raw/b2 & done; wait
+python3 agent/tools/boss-sim/calib.py --results 'experiments/boss-sim/raw/b2/results-*.jsonl' --set val [--platt]   # §11.1 的表和新 Platt 参数
+nice -n 5 npx tsx agent/tools/boss-sim/b2-lines.ts --n 30 --samples 600 --deadline 25000 --workers 12             # raw/b2-lines.jsonl
+python3 agent/tools/boss-sim/b2-lines-report.py                                                                     # experiments/boss-sim-lines/
+nice -n 5 npx tsx agent/tools/boss-sim/b2-lines.ts --n 30 --samples 600 --deadline 25000 --workers 20 --out experiments/boss-sim/raw/v42-lines.jsonl   # V4.2
+python3 agent/tools/boss-sim/b2-lines-report.py --in experiments/boss-sim/raw/v42-lines.jsonl --out-dir experiments/boss-sim-lines/v42 --workers 20
 ```
 
 ### 11.7 测试
 
 新增 21 个，都不依赖每局刷新的知识数据，不调用 LLM，不写 logs 或 .cache：
 
-- tests/boss-sim-gaps.test.ts（8 个，合成盘面）：`fightRelicsOf` 的新遗物和 Pendulum 的回合；solver 的 Orichalcum / Ripple Basin；整场模拟里 Pendulum 多一张、Ice Cream 能量结转、Orichalcum 进 solver；Sturdy Clamp 留格挡（有上限）；帝王蟹背对的钳子 ×1.5、面对的不变；选牌药水每回合新的 3 张且同一样本各线相同；纯抽牌药水抽已知牌；样本的逐回合记录。
-- tests/boss-lines.test.ts（8 个 + V4.2 的 3 个，合成盘面）：同一条线两遍逐样本相同、再跑一遍相同（CRN、确定性），worker 池和串行逐样本相同；截止时间只用所有线都跑完的同一批样本、题面写样本数、池马上能接下一题、串行也按时停；排序（2 个标准误内并列再看掉血、数字相同算并列、只在可选的线里排）；HP 护栏不换进胜率低 2 个标准误的线；低可信 boss 的识别和文字；整场计划的提炼（逐字核对一个样例；V4.2：大招回合只写来袭、不出现「block ~」）。V4.2 新增：并列组里按赢局掉血中位而不是平均掉血（平均掉血选 B、赢局中位选 A 的一对线；回退线的不喝药排序同口径；没有赢局的线排最后）；默认 20 个 worker；B2 和 B3 的池互相释放（构筑池跑完 → boss 池起 worker 时构筑池的 worker 为 0 → 构筑池再跑时 boss 池为 0，两边都照常出结果）。
-- tests/boss-lines-planner.test.ts（5 个，日志盘面 + 固定的裁剪知识数据）：off 时 5 个 boss 盘面（Jev 视图开 / 关）逐字节同接入前；非 boss 盘面开着也逐字节相同；可信 boss（同族第 5 回合）每个选项有整场数字、`rollout_best` 就是模拟的最优、日志、回退线；低可信 boss（女王，V4.2）题面、Jev 视图和每个答案的处理与 off 逐字节相同、题面里没有 whole_fight，日志里有 `boss_sim`（`low_trust: true`、每条线的数字）；第 1 回合有整场计划。
-- tests/rollout.test.ts 的引用边界改成：src 里只有 combat-plan.ts 引用 src/sim/，而且只经 boss-lines.ts。
-- tests/setup-boss-lines.ts：测试里默认关（设环境变量，不提前加载模块），B2 的测试自己打开。
+- agent/tests/boss-sim-gaps.test.ts（8 个，合成盘面）：`fightRelicsOf` 的新遗物和 Pendulum 的回合；solver 的 Orichalcum / Ripple Basin；整场模拟里 Pendulum 多一张、Ice Cream 能量结转、Orichalcum 进 solver；Sturdy Clamp 留格挡（有上限）；帝王蟹背对的钳子 ×1.5、面对的不变；选牌药水每回合新的 3 张且同一样本各线相同；纯抽牌药水抽已知牌；样本的逐回合记录。
+- agent/tests/boss-lines.test.ts（8 个 + V4.2 的 3 个，合成盘面）：同一条线两遍逐样本相同、再跑一遍相同（CRN、确定性），worker 池和串行逐样本相同；截止时间只用所有线都跑完的同一批样本、题面写样本数、池马上能接下一题、串行也按时停；排序（2 个标准误内并列再看掉血、数字相同算并列、只在可选的线里排）；HP 护栏不换进胜率低 2 个标准误的线；低可信 boss 的识别和文字；整场计划的提炼（逐字核对一个样例；V4.2：大招回合只写来袭、不出现「block ~」）。V4.2 新增：并列组里按赢局掉血中位而不是平均掉血（平均掉血选 B、赢局中位选 A 的一对线；回退线的不喝药排序同口径；没有赢局的线排最后）；默认 20 个 worker；B2 和 B3 的池互相释放（构筑池跑完 → boss 池起 worker 时构筑池的 worker 为 0 → 构筑池再跑时 boss 池为 0，两边都照常出结果）。
+- agent/tests/boss-lines-planner.test.ts（5 个，日志盘面 + 固定的裁剪知识数据）：off 时 5 个 boss 盘面（Jev 视图开 / 关）逐字节同接入前；非 boss 盘面开着也逐字节相同；可信 boss（同族第 5 回合）每个选项有整场数字、`rollout_best` 就是模拟的最优、日志、回退线；低可信 boss（女王，V4.2）题面、Jev 视图和每个答案的处理与 off 逐字节相同、题面里没有 whole_fight，日志里有 `boss_sim`（`low_trust: true`、每条线的数字）；第 1 回合有整场计划。
+- agent/tests/rollout.test.ts 的引用边界改成：src 里只有 combat-plan.ts 引用 agent/src/sim/，而且只经 boss-lines.ts。
+- agent/tests/setup-boss-lines.ts：测试里默认关（设环境变量，不提前加载模块），B2 的测试自己打开。
 
 ### 11.8 遗留和要 Dai 定的事
 
@@ -764,7 +764,7 @@ V4.2（2026-10-01，Dai 按下面 1、2、3、5 定）：1 低可信 boss 题面
 
 2026-09-30 Dai 定：构筑决策由 DeepSeek 做，代码只给算得准的事实、不打分；构筑类问题每题最多多花 10–15 秒。
 
-### 11.1 合成开场（src/sim/boss-start.ts）
+### 11.1 合成开场（agent/src/sim/boss-start.ts）
 
 构筑题没有战斗状态，`syntheticBossStart(state, knowledge, bossId, entryHp)` 从现在的局面造一个第 1 回合的战斗帧，交给实盘规划器建盘面（planCombatTurn → solver 输入，rollout-live boardRolloutInput；建盘面时关掉实盘推演），再和 `redealInput(fresh)` 一样把牌全放进抽牌堆、手牌只留药水：
 
@@ -772,9 +772,9 @@ V4.2（2026-10-01，Dai 按下面 1、2、3、5 定）：1 低可信 boss 题面
 - **我方**：牌组（含升级、附魔后的数值，照 deck 里的 dynamic_values）、遗物、药水都照局面；进场血量见 §12.3；药水按 boss 战算（代价 0，喝药保留 0.5 × 药水表 holdHp，和 B1.5 一样）；随机药水（Swift、各种 Potion）和日志盘面一样不进模拟。
 - **开场遗物**（`FIGHT_START_RELICS`，数值按日志 435 场 boss 战的第一帧核对）：金刚杵 / 壶铃 / 余烬茶 / 烘焙手套 / 硫磺的力量，意外光滑的石头的敏捷，锚 10 格挡，护喉甲覆甲 4，铜质鳞片荆棘 3，赤牛活力 8，弹珠袋 / 红面具给敌人易伤 / 虚弱，灯笼 +1、古茶具套装 +2、黄金印 +1、烫嘴可可 +4、开心小花（计数到 3 时）+1 能量，准备背包 +2、佩尔之血 +1 抽牌（第 1 回合）。每回合能量遗物、回合遗物（烛台等）和规划器自己读的遗物照旧。其余有战斗文字的遗物列在 facts.act_boss_sim.relics_not_modelled。
 
-**和日志战前起点对齐**（tools/boss-sim/synthetic-check.ts，验证集 141 场逐项比）：我方血量、格挡、能量、力量、药水、敌人能力和首招基本一致。剩下的差：同族信徒 62/63 血是随机的（12 场差 1 血）；部分场次日志的第一帧里 boss 已经挨过打（开场伤害类遗物）；烘焙手套开场消耗一张牌、风箱把开场手牌升级（这两件没建模，风箱列为未建模；日志战前起点反而把风箱升级的 5 张牌当成永久升级）。
+**和日志战前起点对齐**（agent/tools/boss-sim/synthetic-check.ts，验证集 141 场逐项比）：我方血量、格挡、能量、力量、药水、敌人能力和首招基本一致。剩下的差：同族信徒 62/63 血是随机的（12 场差 1 血）；部分场次日志的第一帧里 boss 已经挨过打（开场伤害类遗物）；烘焙手套开场消耗一张牌、风箱把开场手牌升级（这两件没建模，风箱列为未建模；日志战前起点反而把风箱升级的 5 张牌当成永久升级）。
 
-**验证集校准**（tools/boss-sim/backtest.ts `--starts pre,syn`，同一组种子，各 200 样本；experiments/boss-sim-build/syn-calib.md）：
+**验证集校准**（agent/tools/boss-sim/backtest.ts `--starts pre,syn`，同一组种子，各 200 样本；experiments/boss-sim-build/syn-calib.md）：
 
 | 起点 | Brier 原始 / 校准 | AUC | 预测平均 / 实际（校准） | n ≥ 20 的桶最大误差（校准） |
 |---|---|---|---|---|
@@ -783,7 +783,7 @@ V4.2（2026-10-01，Dai 按下面 1、2、3、5 定）：1 低可信 boss 题面
 
 同一场两种起点的原始胜率差平均 −0.4 个百分点，平均绝对值 2.6，90% 分位 6.0。差得最多的是同族 YX5E7NFW5R82:7（日志 0.98，合成 0.65：日志起点带着风箱升级的 5 张牌）。按 boss 看，除永世沙漏（4 场，合成 0.088、日志 0.131）外，两者的校准 Brier 都在 ±0.01 内。B1.5 的 Platt 映射（pre）直接沿用，不重新拟合。
 
-### 11.2 选项对比（src/sim/build-sim.ts、build-sim-pool.ts）
+### 11.2 选项对比（agent/src/sim/build-sim.ts、build-sim-pool.ts）
 
 - 当前牌组和每个选项的牌组（或血量）一起跑，第 i 个样本在所有牌组里用同一个种子（common random numbers），按样本配对算差。
 - 有击杀顺序可选的 boss（同族、女王、帝王蟹）：先用当前牌组在「自选目标」和每种顺序下各跑 100 个样本，取赢得最多的顺序，之后所有牌组都按它跑（每个牌组都跑所有顺序要三倍时间）。
@@ -818,24 +818,24 @@ V4.2（2026-10-01，Dai 按下面 1、2、3、5 定）：1 低可信 boss 题面
 
 和路线块同一个来源：本幕的路线计划（screenMemory.routePlan）从当前层往后的节点，用 route-projection `projectPath` 和同样的房间代价（routeCosts）从现在的 HP 投影，取 boss 节点的中位数到达血量（含缩放仪一类的 boss 开场回血）。这就是 route_review.plan_facts.boss 的数。改血量的选项从选项之后的 HP 投影，和休息点 plan_facts.if_option 一样。没有路线计划时用当前血量，并在 facts 里写明；中位投影在 boss 前耗尽时按 1 血算并写明。
 
-### 11.4 题面（src/sim/build-sim-facts.ts）
+### 11.4 题面（agent/src/sim/build-sim-facts.ts）
 
 - 每个选项的事实里加 `boss_sim` 一行，例如（休息点，墨影幻灵，A9，第 11 层）：
   - 锻造防御：「打本幕 boss（墨影幻灵，A9）的模拟：当前牌组胜率 60%；选这个 71%（+11.2 ± 0.7），赢局掉血中位 81，约 9 回合（1000 次模拟，校准后）」
   - 休息：「……选这个 60%（+0 ± 0）……；回血后 HP 83/87，进场血量按它投影」（到 boss 前还有休息点，回满，所以没有差）
   - 当前牌组几乎打不过时（商店，第 4 层）：「……当前牌组胜率 8%；选这个 8%（+0 ± 0），赢局掉血中位 —，约 12 回合；boss 平均剩血 123（当前牌组 132，−8.7 ± 0.6）（1000 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）」
 - 删牌和一步一步问的锻造：选项上一行总述，每张牌一行放在 `boss_sim_by_card`。
-- 低可信 boss 每行写「低可信，见 facts.act_boss_sim」，原因写在 facts.act_boss_sim.low_confidence。B3 时名单是帝王蟹、实验体、女王、知识恶魔、永世沙漏、无厌沙虫，原因按当时已知的问题写；B4 起按验证集战前起点的成绩算，名单和原因从 src/sim/boss-trust.json 读（§13.8），例如帝王蟹：「验证集 14 场（战前起点）：模拟每回合被打穿的血是实际的 1.34 倍」。
-- 指令末尾加一句说明 boss_sim 是什么（英文，和指令其余部分一致）。不打分、不排序、不删选项；tests/build-facts-audit.test.ts 在带模拟的题上也跑一遍。
+- 低可信 boss 每行写「低可信，见 facts.act_boss_sim」，原因写在 facts.act_boss_sim.low_confidence。B3 时名单是帝王蟹、实验体、女王、知识恶魔、永世沙漏、无厌沙虫，原因按当时已知的问题写；B4 起按验证集战前起点的成绩算，名单和原因从 knowledge/characters/ironclad/boss-trust.json 读（§13.8），例如帝王蟹：「验证集 14 场（战前起点）：模拟每回合被打穿的血是实际的 1.34 倍」。
+- 指令末尾加一句说明 boss_sim 是什么（英文，和指令其余部分一致）。不打分、不排序、不删选项；agent/tests/build-facts-audit.test.ts 在带模拟的题上也跑一遍。
 - 决策日志多一个 `boss_sim` 字段：boss、进场血量和来源、样本数、是否到时、用时、每个选项的数。
 
 ### 11.5 boss 时钟怎么替换的
 
-构筑题原来的 facts.act_boss_clock（src/strategy/build-facts.ts 的 bossClockJson）在对局循环问 DeepSeek 之前被换成 facts.act_boss_sim，放在原来的位置：boss 和部件血量、进场血量和来源、当前牌组的胜率 / 赢局掉血 / 回合 / 死亡回合、样本数和用时、方法、局限、开场生效和没有建模的遗物、低可信原因。只有模拟失败或截止时间内一个样本都没跑完时，act_boss_clock 原样保留，另加 act_boss_sim 一句「boss 模拟没有结果（原因）：act_boss_clock 仍是 boss 时钟的估计」。build-facts.ts 本身没改：`BOSS_SIM_BUILD=off` 时题面逐字节和以前一样（loop 测试锁住）。地图和路线题不换，仍是时钟。
+构筑题原来的 facts.act_boss_clock（agent/src/strategy/build-facts.ts 的 bossClockJson）在对局循环问 DeepSeek 之前被换成 facts.act_boss_sim，放在原来的位置：boss 和部件血量、进场血量和来源、当前牌组的胜率 / 赢局掉血 / 回合 / 死亡回合、样本数和用时、方法、局限、开场生效和没有建模的遗物、低可信原因。只有模拟失败或截止时间内一个样本都没跑完时，act_boss_clock 原样保留，另加 act_boss_sim 一句「boss 模拟没有结果（原因）：act_boss_clock 仍是 boss 时钟的估计」。build-facts.ts 本身没改：`BOSS_SIM_BUILD=off` 时题面逐字节和以前一样（loop 测试锁住）。地图和路线题不换，仍是时钟。
 
 ### 11.6 耗时和验收（experiments/boss-sim-build/summary.md）
 
-从日志取 20 道真实构筑题（experiments/build-facts-m2/targets.jsonl：选牌 4、商店 4、休息 4、事件 4、选牌屏 4），在决策时的状态上离线重出题并跑模拟（tools/boss-sim/build-replay.ts；不调用 DeepSeek）。12 个 worker，机器负载 3–16（别的 agent 和对局在跑），截止时间 11 秒：
+从日志取 20 道真实构筑题（experiments/build-facts-m2/targets.jsonl：选牌 4、商店 4、休息 4、事件 4、选牌屏 4），在决策时的状态上离线重出题并跑模拟（agent/tools/boss-sim/build-replay.ts；不调用 DeepSeek）。12 个 worker，机器负载 3–16（别的 agent 和对局在跑），截止时间 11 秒：
 
 - 19 道在范围内（附魔选牌屏不在）。每题用时中位 8.5 秒，最慢 11.0 秒；8 道到截止时间。每个选项的样本数最少 296（无厌沙虫商店，7 个选项；一场 83 毫秒）和 448（帝王蟹选牌，一场 55–69 毫秒，每回合求解 443 个节点）。其他 boss 一场 10–13 毫秒。上线时 24 个 worker、负载低，样本数大约翻倍。
 - 题面每题多约 1.4k 字（最多 2.6k）。
@@ -866,15 +866,15 @@ V4.2（2026-10-01，Dai 按下面 1、2、3、5 定）：1 低可信 boss 题面
 
 **Dai 2026-10-01 定**：帝王蟹和女王的修正先不上，等它们变成可信、日志多积累几盘再修；这次 v4-sim 只上无厌沙虫和知识恶魔的修正，以及工具、验证集扩充和可信名单机制。四个 boss 全修的版本留在分支 `v4-sim-crabqueen`（提交 0cbf8d8 起，7e0fe7c 是那边的文档和数），以后再用。下面 §13.2、§13.3 是在分支上做的核对和修正，§13.7 起的数是 v4-sim 实际的。
 
-只改整场模拟（`fullFight` 或实盘不读的字段）；实盘 solver 和 5 回合推演不变（tests/boss-sim.test.ts 的实盘摘要仍和 89b8cd0 逐字节相同）。汇总在 experiments/boss-sim/b4-*.md、b4-summary.json。
+只改整场模拟（`fullFight` 或实盘不读的字段）；实盘 solver 和 5 回合推演不变（agent/tests/boss-sim.test.ts 的实盘摘要仍和 89b8cd0 逐字节相同）。汇总在 experiments/boss-sim/b4-*.md、b4-summary.json。
 
 旧报告里的名字：永恒镜 = 永世沙漏（AEONGLASS），贪得无厌者 = 无厌沙虫（THE_INSATIABLE），幻影墨 = 墨影幻灵，灵魂鱼 = 灵魂异鱼。
 
 ### 13.1 数据和工具
 
-- **验证集扩充**：日志库同步后多了 24 场 boss 战（09-30 13:41–20:24 UTC），都来自切分时间点之后开始的局。`tools/boss-sim/split.py --extend` 把它们记为 `val_new`，`val_ext` = 原验证集 141 场 + 24 场 = 165 场。调参集不变（283 场）。下面的按 boss 数字和可信名单都用 val_ext；整体数字两个验证集都给。
-- **逐回合对照**：`tools/boss-sim/per-turn.py`，对每个 boss 按回合比日志和模拟：敌人来袭、敌人回合打穿格挡的血、这回合掉血、回合开始时敌人血量、模拟还在打的样本比例。backtest 的 `perTurn` 多了两列（回合末敌人剩血、这回合获得的格挡），`--enc` 只跑某几个 boss，`--boss-threat` 试 boss 专用的策略威胁项。
-- 日志只按 run id 和 state_index 偏移点查（tools/logdb），没有整读 states.jsonl。
+- **验证集扩充**：日志库同步后多了 24 场 boss 战（09-30 13:41–20:24 UTC），都来自切分时间点之后开始的局。`agent/tools/boss-sim/split.py --extend` 把它们记为 `val_new`，`val_ext` = 原验证集 141 场 + 24 场 = 165 场。调参集不变（283 场）。下面的按 boss 数字和可信名单都用 val_ext；整体数字两个验证集都给。
+- **逐回合对照**：`agent/tools/boss-sim/per-turn.py`，对每个 boss 按回合比日志和模拟：敌人来袭、敌人回合打穿格挡的血、这回合掉血、回合开始时敌人血量、模拟还在打的样本比例。backtest 的 `perTurn` 多了两列（回合末敌人剩血、这回合获得的格挡），`--enc` 只跑某几个 boss，`--boss-threat` 试 boss 专用的策略威胁项。
+- 日志只按 run id 和 state_index 偏移点查（agent/tools/logdb），没有整读 states.jsonl。
 
 ### 13.2 帝王蟹（碾碎爪 + 火箭）
 
@@ -961,14 +961,14 @@ v4-sim（无厌沙虫 + 知识恶魔的修正）和 B4 之前比。两次 backte
 
 ### 13.8 可信名单：标准和结果
 
-标准（tools/boss-sim/trust.py 的常数，在看 B4 修后的数之前定的）：一个 boss 在某个起点上算可信，要同时满足：
+标准（agent/tools/boss-sim/trust.py 的常数，在看 B4 修后的数之前定的）：一个 boss 在某个起点上算可信，要同时满足：
 
 1. 验证集（val_ext）至少 **10** 场；
 2. 校准后 Brier 不高于该起点整体 Brier 的 **1.25 倍**；
 3. 预测平均胜率和实际胜率相差不超过 **15 个百分点**；
 4. 第 2–7 回合被打穿的血，模拟 / 日志在 **0.70–1.30** 之间。
 
-B2（每条线的整场数字，`LOW_TRUST_BOSSES`）按第 1 回合起点的成绩判；B3（构筑题，`LOW_CONFIDENCE`）按战前起点判。trust.py 把每个 boss 的数、标准、两份名单和不满足哪一条写进 **src/sim/boss-trust.json**；src/sim/boss-trust.ts 读它，`LOW_TRUST_BOSSES` 和 `LOW_CONFIDENCE` 直接取它的两份名单（原因文字也从这里来；文件读不到时全部 boss 算低可信）。重跑验证后用 trust.py 重新生成即可，代码不用改。下表是 v4-sim 的数（整体 Brier：第 1 回合 0.124，战前 0.124；门槛 0.155）：
+B2（每条线的整场数字，`LOW_TRUST_BOSSES`）按第 1 回合起点的成绩判；B3（构筑题，`LOW_CONFIDENCE`）按战前起点判。trust.py 把每个 boss 的数、标准、两份名单和不满足哪一条写进 **knowledge/characters/ironclad/boss-trust.json**；agent/src/sim/boss-trust.ts 读它，`LOW_TRUST_BOSSES` 和 `LOW_CONFIDENCE` 直接取它的两份名单（原因文字也从这里来；文件读不到时全部 boss 算低可信）。重跑验证后用 trust.py 重新生成即可，代码不用改。下表是 v4-sim 的数（整体 Brier：第 1 回合 0.124，战前 0.124；门槛 0.155）：
 
 | boss | 第 1 回合（B2）：n，Brier，预测 / 实际，被打穿比 | 战前（B3） | 名单 |
 |---|---|---|---|
@@ -985,23 +985,23 @@ B2（每条线的整场数字，`LOW_TRUST_BOSSES`）按第 1 回合起点的成
 
 ### 13.9 测试
 
-- tests/boss-sim-b4.test.ts（4 个，合成盘面，固定的小出招表）：知识恶魔诅咒 3 次后 Ponder 接 Slap、中途开始时按已有诅咒计数；无厌沙虫 Liquify Ground 给沙坑 4、没有逃离时第 5 回合末被吃、推演里没有沙坑；6 张狂乱逃离里 3 张进抽牌堆，推演全进弃牌堆。（帝王蟹、女王的 3 个测试在分支上。）
-- tests/boss-trust.test.ts（2 个）：boss-trust.json 的每个 boss 按它自己写的标准重算，名单和 `failed` 一致；`LOW_TRUST_BOSSES`、`LOW_CONFIDENCE` 就是文件里的名单；永世沙漏、实验体在两份名单里；文件读不到返回 null。
-- tests/boss-lines.test.ts、tests/boss-sim-build.test.ts：名单不再写死，低可信的文字和标记用测试自己设的理由检查。
-- 实盘不变：tests/boss-sim.test.ts 的实盘摘要不变；新字段只在整场模拟里读，测试里核对了推演不读它们。
+- agent/tests/boss-sim-b4.test.ts（4 个，合成盘面，固定的小出招表）：知识恶魔诅咒 3 次后 Ponder 接 Slap、中途开始时按已有诅咒计数；无厌沙虫 Liquify Ground 给沙坑 4、没有逃离时第 5 回合末被吃、推演里没有沙坑；6 张狂乱逃离里 3 张进抽牌堆，推演全进弃牌堆。（帝王蟹、女王的 3 个测试在分支上。）
+- agent/tests/boss-trust.test.ts（2 个）：boss-trust.json 的每个 boss 按它自己写的标准重算，名单和 `failed` 一致；`LOW_TRUST_BOSSES`、`LOW_CONFIDENCE` 就是文件里的名单；永世沙漏、实验体在两份名单里；文件读不到返回 null。
+- agent/tests/boss-lines.test.ts、agent/tests/boss-sim-build.test.ts：名单不再写死，低可信的文字和标记用测试自己设的理由检查。
+- 实盘不变：agent/tests/boss-sim.test.ts 的实盘摘要不变；新字段只在整场模拟里读，测试里核对了推演不读它们。
 
 ### 13.10 复现
 
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH
-.cache/logdb-venv/bin/python tools/boss-sim/extract.py --out experiments/boss-sim/raw/fights-1001.jsonl --turns-out experiments/boss-sim/raw/turns-1001.jsonl
-python3 tools/boss-sim/split.py --extend --in experiments/boss-sim/raw/fights-1001.jsonl       # split.json: val_new, val_ext
-for i in $(seq 0 19); do nice -n 15 npx tsx tools/boss-sim/backtest.ts --in experiments/boss-sim/raw/fights-1001.jsonl --shard $i --shards 20 \
+data/logdb-venv/bin/python agent/tools/boss-sim/extract.py --out experiments/boss-sim/raw/fights-1001.jsonl --turns-out experiments/boss-sim/raw/turns-1001.jsonl
+python3 agent/tools/boss-sim/split.py --extend --in experiments/boss-sim/raw/fights-1001.jsonl       # split.json: val_new, val_ext
+for i in $(seq 0 19); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts --in experiments/boss-sim/raw/fights-1001.jsonl --shard $i --shards 20 \
   --samples 200 --starts t1,t5,pre --no-rollout --out-dir experiments/boss-sim/raw/b4-sub & done; wait     # 约 45 分钟
-python3 tools/boss-sim/b4-report.py --before 'experiments/boss-sim/raw/b4-base/results-*.jsonl' --after 'experiments/boss-sim/raw/b4-sub/results-*.jsonl' \
+python3 agent/tools/boss-sim/b4-report.py --before 'experiments/boss-sim/raw/b4-base/results-*.jsonl' --after 'experiments/boss-sim/raw/b4-sub/results-*.jsonl' \
   --sets val,val_ext,tune --json experiments/boss-sim/b4-summary.json
-python3 tools/boss-sim/per-turn.py --results 'experiments/boss-sim/raw/b4-sub/results-*.jsonl' --set val_ext --start t1 --enc THE_INSATIABLE
-python3 tools/boss-sim/trust.py --results 'experiments/boss-sim/raw/b4-sub/results-*.jsonl' --md experiments/boss-sim/b4-trust.md   # 写 src/sim/boss-trust.json
+python3 agent/tools/boss-sim/per-turn.py --results 'experiments/boss-sim/raw/b4-sub/results-*.jsonl' --set val_ext --start t1 --enc THE_INSATIABLE
+python3 agent/tools/boss-sim/trust.py --results 'experiments/boss-sim/raw/b4-sub/results-*.jsonl' --md experiments/boss-sim/b4-trust.md   # 写 knowledge/characters/ironclad/boss-trust.json
 # 策略威胁项（§13.6，分支上）：--enc CRUSHER,QUEEN --set tune --boss-threat CRUSHER=2,ROCKET=2,QUEEN=2,TORCH_HEAD_AMALGAM=2
 ```
 
@@ -1018,7 +1018,7 @@ b4-base 是同样的命令在 B4 之前的代码（70aba58）上跑的。新机�
 
 2026-10-02（Dai 定目标）。B4 之后低可信的六个 boss（帝王蟹、女王、无厌沙虫、瀑布巨兽、永世沙漏、实验体）正是死得最多的：三批 A8 共 60 局里 boss 死亡女王 12、帝王蟹 8、无厌沙虫 7、瀑布巨兽 6、实验体 3、永世沙漏 3。B5 做五件事：把 V4.1 / V4.2 的 boss 战加进验证集，并直接核对 V4.2 实盘时整场模拟的预测；把帝王蟹和女王的修正拿回来重新验收；给模拟的策略加一回合前瞻；按 B4 的固定标准（不改）重算名单；估计转为可信的 boss 由 B2 排序后的潜在收益。汇总在 experiments/boss-sim/b5-*.md、b5-summary.json；原始输出在 raw/（不提交）。
 
-只改整场模拟（`fullFight`、模拟专用的可选字段）；实盘 solver 和 5 回合推演不变（tests/boss-sim.test.ts 的实盘摘要仍和 89b8cd0 逐字节相同，新测试核对推演不读新字段）。
+只改整场模拟（`fullFight`、模拟专用的可选字段）；实盘 solver 和 5 回合推演不变（agent/tests/boss-sim.test.ts 的实盘摘要仍和 89b8cd0 逐字节相同，新测试核对推演不读新字段）。
 
 ### 14.1 数据：验证集扩到 211 场
 
@@ -1043,7 +1043,7 @@ b4-base 是同样的命令在 B4 之前的代码（70aba58）上跑的。新机�
 
 ### 14.2 V4.2 实盘：整场模拟当时的预测 vs 实际
 
-tools/boss-sim/live-check.py，结果在 b5-live.md / b5-live.json。V4.2 起每道 boss 战的题都跑整场模拟，决策日志记 `boss_sim`（低可信的 `low_trust: true`，不给 Jev 看）。每场每回合取第一条记录，看 Jev 选的那条线的校准胜率和赢局掉血中位，对比这场的结果（46 场、288 个回合，全部对上）。
+agent/tools/boss-sim/live-check.py，结果在 b5-live.md / b5-live.json。V4.2 起每道 boss 战的题都跑整场模拟，决策日志记 `boss_sim`（低可信的 `low_trust: true`，不给 Jev 看）。每场每回合取第一条记录，看 Jev 选的那条线的校准胜率和赢局掉血中位，对比这场的结果（46 场、288 个回合，全部对上）。
 
 | | 场 | 第 1 回合：预测 / 实际，Brier | 全部回合：预测 / 实际，Brier | 赢局掉血 预测中位 / 实际（误差中位） | Jev 选中模拟最优线（或并列） |
 |---|---|---|---|---|---|
@@ -1083,7 +1083,7 @@ tools/boss-sim/live-check.py，结果在 b5-live.md / b5-live.json。V4.2 起每
 - 交给 solver 两样：`nextIncoming`（和实盘同一个字段，solver 已有的「安静回合不要自残到下回合打不住」、Plating 的吸收用它）；`nextHit`（新的可选字段，实盘不设）：这条线打完后，下回合还活着的敌人的来袭减去一手牌能挡的 12（`ERUPTION_NEXT_BLOCK`，瀑布巨兽爆炸规则里同样的数），本回合掉的血里落到这条线以下的部分多算 `lethal` 倍（`nextHitShortfall`）——和瀑布巨兽「爆炸线以下的血算双倍」是同一条规则推广到所有下一招。
 - `threat`：HP 权重再乘 (1 + threat × 下回合来袭 / 当前血量)，下一招越重，现在的血越值钱。
 
-**调参集上的选择**（每个配置 100 样本，b5-grid.md，tools/boss-sim/b5-grid.py）。事先定的规则：在前瞻的几个设置里，选四个目标 boss（帝王蟹、女王、无厌沙虫、瀑布巨兽）第 1 回合被打穿比最接近 1 的（Σ|ln 比| 最小），前提是折外校准 Brier（5 折按局拟合 Platt）三个起点之和不比不加前瞻差 0.01 以上；然后在验证集上看整体 Brier。
+**调参集上的选择**（每个配置 100 样本，b5-grid.md，agent/tools/boss-sim/b5-grid.py）。事先定的规则：在前瞻的几个设置里，选四个目标 boss（帝王蟹、女王、无厌沙虫、瀑布巨兽）第 1 回合被打穿比最接近 1 的（Σ|ln 比| 最小），前提是折外校准 Brier（5 折按局拟合 Platt）三个起点之和不比不加前瞻差 0.01 以上；然后在验证集上看整体 Brier。
 
 | 配置 | 原始 Brier 三起点和 | 折外校准 Brier 和 | 被打穿比 t1 整体 | 帝王蟹 / 女王 / 无厌沙虫 / 瀑布巨兽 | Σ\|ln 比\| |
 |---|---|---|---|---|---|
@@ -1133,7 +1133,7 @@ tools/boss-sim/live-check.py，结果在 b5-live.md / b5-live.json。V4.2 起每
 
 ### 14.6 可信名单（标准不变）
 
-trust.py 在 B5 的回测上重算（b5-trust.md，写回 src/sim/boss-trust.json；整体 Brier 第 1 回合 0.1197、战前 0.1205，门槛 0.150 / 0.151）：
+trust.py 在 B5 的回测上重算（b5-trust.md，写回 knowledge/characters/ironclad/boss-trust.json；整体 Brier 第 1 回合 0.1197、战前 0.1205，门槛 0.150 / 0.151）：
 
 | boss | B2（第 1 回合）：n，Brier，预测 / 实际，被打穿比 | B3（战前） | 名单 |
 |---|---|---|---|
@@ -1149,7 +1149,7 @@ trust.py 在 B5 的回测上重算（b5-trust.md，写回 src/sim/boss-trust.jso
 
 ### 14.7 帝王蟹转可信：Jev 选的线 vs 整场模拟的最优线
 
-tools/boss-sim/b5-lines.ts（结果 b5-lines.md / b5-lines.json，原始输出 raw/b5-lines-crab.jsonl 不提交）。取 V4.1 / V4.2 的 13 场帝王蟹战里 Jev 规划过的每个回合（第 1–12 回合，每回合第一次出牌决定，79 个），让实盘规划器按 B5 的模拟重新出题（帝王蟹现在可信，B2 按整场数字排序；每条线 600 样本、截止 25 秒、20 个 worker），按出牌文字找到 Jev 当时选的线（71 个对上）。不调模型。
+agent/tools/boss-sim/b5-lines.ts（结果 b5-lines.md / b5-lines.json，原始输出 raw/b5-lines-crab.jsonl 不提交）。取 V4.1 / V4.2 的 13 场帝王蟹战里 Jev 规划过的每个回合（第 1–12 回合，每回合第一次出牌决定，79 个），让实盘规划器按 B5 的模拟重新出题（帝王蟹现在可信，B2 按整场数字排序；每条线 600 样本、截止 25 秒、20 个 worker），按出牌文字找到 Jev 当时选的线（71 个对上）。不调模型。
 
 | 版本 | 回合 | Jev 选中最优或并列 | 2 个标准误内 | 差 2 个标准误以上（这些回合的平均差） | 平均差（原始配对） | 平均校准差（最优 − Jev） | 每场第一个回合的校准差 |
 |---|---|---|---|---|---|---|---|
@@ -1164,29 +1164,29 @@ tools/boss-sim/b5-lines.ts（结果 b5-lines.md / b5-lines.json，原始输出 r
 
 ### 14.8 测试
 
-- tests/boss-sim-b5.test.ts（7 个，合成盘面，固定的小出招表，不读知识数据、不调模型、不写 logs / .cache）：`nextHitShortfall` 的数（下回合还活着的敌人、虚弱还剩没剩、一手牌 12 格挡、不超过本回合的掉血）；solver 带 `nextHit` 时不再为两张打击自损 4 血，不带时计划和分数与原来逐个相同；整场模拟每个策略回合拿到下回合的预测来袭（蓄力 → 40 的一击），关掉时后面的回合没有这些字段；预测是出招模型的期望，不随样本的种子变（50% 42、50% 0 → 21，HP 权重乘 1 + 21 / 70）；已知下回合大招时，前瞻不再为伤害自损；5 回合推演即使带着选项也不前瞻；`slimInput` 把 `BOSS_SIM_LOOKAHEAD` 带进策略选项，两个都为 0 时不带。
-- tests/boss-sim-b4.test.ts：帝王蟹面对 / 背对的测试回来了（女王的测试随修正留在分支上）。
-- 实盘不变：tests/boss-sim.test.ts 的实盘摘要不变（solver 和 5 回合推演的数字与 89b8cd0 逐字节相同）；tests/boss-lines-planner.test.ts 的开 / 关逐字节测试照过；tests/boss-trust.test.ts 按新的 boss-trust.json 重算一致。
+- agent/tests/boss-sim-b5.test.ts（7 个，合成盘面，固定的小出招表，不读知识数据、不调模型、不写 logs / .cache）：`nextHitShortfall` 的数（下回合还活着的敌人、虚弱还剩没剩、一手牌 12 格挡、不超过本回合的掉血）；solver 带 `nextHit` 时不再为两张打击自损 4 血，不带时计划和分数与原来逐个相同；整场模拟每个策略回合拿到下回合的预测来袭（蓄力 → 40 的一击），关掉时后面的回合没有这些字段；预测是出招模型的期望，不随样本的种子变（50% 42、50% 0 → 21，HP 权重乘 1 + 21 / 70）；已知下回合大招时，前瞻不再为伤害自损；5 回合推演即使带着选项也不前瞻；`slimInput` 把 `BOSS_SIM_LOOKAHEAD` 带进策略选项，两个都为 0 时不带。
+- agent/tests/boss-sim-b4.test.ts：帝王蟹面对 / 背对的测试回来了（女王的测试随修正留在分支上）。
+- 实盘不变：agent/tests/boss-sim.test.ts 的实盘摘要不变（solver 和 5 回合推演的数字与 89b8cd0 逐字节相同）；agent/tests/boss-lines-planner.test.ts 的开 / 关逐字节测试照过；agent/tests/boss-trust.test.ts 按新的 boss-trust.json 重算一致。
 
 ### 14.9 复现
 
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH
-P=.cache/logdb-venv/bin/python
-$P tools/logdb/sync.py
-$P tools/boss-sim/extract.py --out experiments/boss-sim/raw/fights-1002.jsonl --turns-out experiments/boss-sim/raw/turns-1002.jsonl
-python3 tools/boss-sim/split.py --extend --in experiments/boss-sim/raw/fights-1002.jsonl      # val_new 70, val_ext 211
-python3 tools/boss-sim/live-check.py --md experiments/boss-sim/b5-live.md --json experiments/boss-sim/b5-live.json   # §14.2（读 logs/decisions.jsonl，只读）
+P=data/logdb-venv/bin/python
+$P agent/tools/logdb/sync.py
+$P agent/tools/boss-sim/extract.py --out experiments/boss-sim/raw/fights-1002.jsonl --turns-out experiments/boss-sim/raw/turns-1002.jsonl
+python3 agent/tools/boss-sim/split.py --extend --in experiments/boss-sim/raw/fights-1002.jsonl      # val_new 70, val_ext 211
+python3 agent/tools/boss-sim/live-check.py --md experiments/boss-sim/b5-live.md --json experiments/boss-sim/b5-live.json   # §14.2（读 logs/decisions.jsonl，只读）
 B="--in experiments/boss-sim/raw/fights-1002.jsonl --no-rollout --starts t1,t5,pre"
-for i in $(seq 0 19); do nice -n 15 npx tsx tools/boss-sim/backtest.ts $B --shard $i --shards 20 --samples 200 --out-dir experiments/boss-sim/raw/b5-final & done; wait   # 约 45 分钟
+for i in $(seq 0 19); do nice -n 15 npx tsx agent/tools/boss-sim/backtest.ts $B --shard $i --shards 20 --samples 200 --out-dir experiments/boss-sim/raw/b5-final & done; wait   # 约 45 分钟
 # 调参网格（§14.4）：--set tune --samples 100，加 --lookahead lethal=1,threat=1 等（"" 为不前瞻），--threat 1 为参照
-python3 tools/boss-sim/b5-grid.py --run 'g0=experiments/boss-sim/raw/g0/results-*.jsonl' --run ... --md experiments/boss-sim/b5-grid.md
-python3 tools/boss-sim/b5-report.py --run '修前=experiments/boss-sim/raw/b5-base/results-*.jsonl' --run 'B5=experiments/boss-sim/raw/b5-final/results-*.jsonl' \
+python3 agent/tools/boss-sim/b5-grid.py --run 'g0=experiments/boss-sim/raw/g0/results-*.jsonl' --run ... --md experiments/boss-sim/b5-grid.md
+python3 agent/tools/boss-sim/b5-report.py --run '修前=experiments/boss-sim/raw/b5-base/results-*.jsonl' --run 'B5=experiments/boss-sim/raw/b5-final/results-*.jsonl' \
   --sets val_ext,val,val_new,tune --md experiments/boss-sim/b5-val.md --json experiments/boss-sim/b5-summary.json
-python3 tools/boss-sim/trust.py --results 'experiments/boss-sim/raw/b5-final/results-*.jsonl' --md experiments/boss-sim/b5-trust.md   # 写 src/sim/boss-trust.json
-.cache/logdb-venv/bin/python tools/boss-sim/choices.py --out experiments/boss-sim/raw/choices-1002.jsonl
-nice -n 5 npx tsx tools/boss-sim/b5-lines.ts --enc CRUSHER --since "2026-09-30 08:22:52" --samples 600 --deadline 25000 --workers 20 --out experiments/boss-sim/raw/b5-lines-crab.jsonl
-python3 tools/boss-sim/b5-lines-report.py --in experiments/boss-sim/raw/b5-lines-crab.jsonl --title 帝王蟹 --md experiments/boss-sim/b5-lines.md --json experiments/boss-sim/b5-lines.json
+python3 agent/tools/boss-sim/trust.py --results 'experiments/boss-sim/raw/b5-final/results-*.jsonl' --md experiments/boss-sim/b5-trust.md   # 写 knowledge/characters/ironclad/boss-trust.json
+data/logdb-venv/bin/python agent/tools/boss-sim/choices.py --out experiments/boss-sim/raw/choices-1002.jsonl
+nice -n 5 npx tsx agent/tools/boss-sim/b5-lines.ts --enc CRUSHER --since "2026-09-30 08:22:52" --samples 600 --deadline 25000 --workers 20 --out experiments/boss-sim/raw/b5-lines-crab.jsonl
+python3 agent/tools/boss-sim/b5-lines-report.py --in experiments/boss-sim/raw/b5-lines-crab.jsonl --title 帝王蟹 --md experiments/boss-sim/b5-lines.md --json experiments/boss-sim/b5-lines.json
 ```
 
 b5-base 是同样的回测在 B5 之前的代码（edd66ae）上跑的；两组修正（b5-cq，只重跑帝王蟹和女王）和「两组修正 + 前瞻」（b5-look）是中间版本。最终的 b5-final = b5-look 除女王以外的行 + 女王用最终代码重跑（`--enc QUEEN`）：女王的代码只在女王 / 火炬头的招式上触发，抽查过帝王蟹和墨影幻灵的样本和最终代码逐个相同。

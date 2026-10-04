@@ -1,27 +1,27 @@
-# 评估指标（tools/eval/metrics.py）
+# 评估指标（eval/metrics.py）
 
-V4 架构 §1 的「评估 evaluator」、§4 的 M4（notes/v4-dev-brief.md 第 7 项）：每个版本冻结后跑一批，按**每局都能算的代理指标**和上一版本对比，Dai 决定上线。脚本建在日志库上（docs/logdb.md），不改任何文件。第一份基线：experiments/eval/baseline-2026-09-29.md。§7 是「眼」的预测对实际（tools/eval/calibration.py），第一份：experiments/eval/calibration-2026-09-30.md；它的三个摘要也是版本表的三行。
+V4 架构 §1 的「评估 evaluator」、§4 的 M4（notes/v4-dev-brief.md 第 7 项）：每个版本冻结后跑一批，按**每局都能算的代理指标**和上一版本对比，Dai 决定上线。脚本建在日志库上（docs/logdb.md），不改任何文件。第一份基线：experiments/eval/baseline-2026-09-29.md。§7 是「眼」的预测对实际（eval/calibration.py），第一份：experiments/eval/calibration-2026-09-30.md；它的三个摘要也是版本表的三行。
 
 ## 1. 用法
 
 ```bash
-P=.cache/logdb-venv/bin/python        # 日志库的 Python 环境（要 duckdb）
-$P tools/eval/metrics.py --ascension 9 --md                    # A9，按版本，markdown 表（指标 × 版本）
-$P tools/eval/metrics.py --ascension 8 --since 2026-09-29T13:26 --group-by day
-$P tools/eval/metrics.py --ascension 9 --group-by family --md  # V3 的子版本合成一列
-$P tools/eval/metrics.py --group-by commit --per-run           # 按提交号，并列出每一局
-$P tools/eval/metrics.py --ascension 9 --group-by config --md  # 版本 + 大脑引擎/模型 + 知识前缀（§8）
-$P tools/eval/metrics.py --json > out.json                     # 每局的数和每组的汇总
+P=data/logdb-venv/bin/python        # 日志库的 Python 环境（要 duckdb）
+$P eval/metrics.py --ascension 9 --md                    # A9，按版本，markdown 表（指标 × 版本）
+$P eval/metrics.py --ascension 8 --since 2026-09-29T13:26 --group-by day
+$P eval/metrics.py --ascension 9 --group-by family --md  # V3 的子版本合成一列
+$P eval/metrics.py --group-by commit --per-run           # 按提交号，并列出每一局
+$P eval/metrics.py --ascension 9 --group-by config --md  # 版本 + 大脑引擎/模型 + 知识前缀（§8）
+$P eval/metrics.py --json > out.json                     # 每局的数和每组的汇总
 ```
 
 - 选项：`--ascension N`（可重复）、`--since / --until`（按开局时间，ISO；不带时区按 UTC，例如 `2026-09-29T21:26+08:00` 是本地时间）、`--group-by version|family|config|commit|ascension|day`（默认 version；day 按本地日期 UTC+8；config 见 §8）、`--md`、`--json`、`--per-run`（附每局一行）、`--total`（加一列「全部」）、`--min-n`（默认 10，局数少于它的组和指标标 `*`）、`--no-sync`、`--db / --logs`、`--versions`（版本表）、`--strength-sets`（力量来源清单的 JSON，默认现算，见 §3）、`--no-calibration`（不算 §7 的三行校准）、`--boss-clocks`（校准用现成的 boss 时钟 JSONL，不跑 tsx）、`--game-data`。
-- 默认先做一次增量同步（tools/logdb/sync.py），自己 nice 19 + ionice idle，DuckDB 2 线程；A9 全部 ~3 秒（其中校准 ~2 秒：按偏移读 decisions.jsonl 的原始行、跑一次 tsx 重算 boss 时钟），`--no-calibration` ~1 秒。
+- 默认先做一次增量同步（agent/tools/logdb/sync.py），自己 nice 19 + ionice idle，DuckDB 2 线程；A9 全部 ~3 秒（其中校准 ~2 秒：按偏移读 decisions.jsonl 的原始行、跑一次 tsx 重算 boss 时钟），`--no-calibration` ~1 秒。
 - **只算已结束的局**：runs.jsonl 里有、states.jsonl 里有帧的局。正在打的局不算（它的指标是半截的）；09-24 那几局没写 runs.jsonl 的也不算。
 
 ## 2. 「代码版本」怎么认
 
 1. **每局的提交号**：runs.jsonl 的 `code`。ops/run.sh 每次启动对局进程前取运行工作树（现在是 jev-sts2-v3）的 `git rev-parse --short HEAD`，工作树有未提交的改动时加 `+dirty`——这些改动是每局结束后自动刷新的知识数据（monster-db.json、room-costs.json 等），不是代码，所以**去掉 `+dirty` 就是这局跑的提交**。局中重启过的局，`code` 是最后一次启动时的提交。runs / frames / decisions 里没有别的版本字段。
-2. **提交号太细**：v3 每次合并、每次知识刷新都是新提交，平均每个提交 1–3 局，没法比。所以按 **tools/eval/versions.json 的命名版本**分组：一局属于「版本的起点提交是这局提交的祖先（或就是它）」的**最后一个**版本——看 git 的祖先关系，不看时间，所以 v3 在 v4 之后的提交不会被算成 V4。版本表每条写了 decision-log 的哪一条或哪个 tag 说它什么时候上线：
+2. **提交号太细**：v3 每次合并、每次知识刷新都是新提交，平均每个提交 1–3 局，没法比。所以按 **eval/versions.json 的命名版本**分组：一局属于「版本的起点提交是这局提交的祖先（或就是它）」的**最后一个**版本——看 git 的祖先关系，不看时间，所以 v3 在 v4 之后的提交不会被算成 V4。版本表每条写了 decision-log 的哪一条或哪个 tag 说它什么时候上线：
 
    | 版本 | 起点提交 | 依据 |
    |---|---|---|
@@ -52,14 +52,14 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 | 一幕精英进场血量 < 78% | 一幕 room = elite 的战斗，第一帧血量 < 0.78 × 最大血量（严格小于：62/80 算，63/80 不算） | 每局次数取均值；另给合计占一幕精英战的比例 |
 | 二幕第一个休息点前死亡 | 分母：有二幕楼层的局。分子：死在二幕的层、且这层低于二幕第一个休息点（floors.room_node = RestSite）的层，或者二幕一个休息点都没到 | 比例；一幕就死的局不进分母，三幕死的不算 |
 | 各阶段通过率 | 过一幕 boss：胜局，或 frames 里出现过二幕（max_act ≥ 2），或一幕 boss 战 outcome = won；过二幕同理；胜局看 runs.victory | 比例，分母是组内全部局 |
-| 校准（三行，§7） | 这局的推演回合、路线投影节点、boss 战（tools/eval/calibration.py 的行） | 组内合并：推演本回合掉血 ±2 内的回合比例；路线投影离计划 2–3 层的中位误差（投影 − 实际）和中位 \|误差\|；boss 时钟实打/估值的中位。回合、节点彼此不独立，不给区间；n < `--min-n` 标 `*` |
+| 校准（三行，§7） | 这局的推演回合、路线投影节点、boss 战（eval/calibration.py 的行） | 组内合并：推演本回合掉血 ±2 内的回合比例；路线投影离计划 2–3 层的中位误差（投影 − 实际）和中位 \|误差\|；boss 时钟实打/估值的中位。回合、节点彼此不独立，不给区间；n < `--min-n` 标 `*` |
 | 大脑调用 | llm_calls（deepseek-reasoning.jsonl + brain.jsonl，按局归属见 docs/logdb.md），**去掉 `duplicate`**（路由器的 DeepSeek 引擎不带工具时，同一次调用两个文件都记）。每局：行数、input（全部提示 token，含缓存命中）、cache_hit、output（含推理）、latency_ms 之和；按引擎分开 | 调用数、耗时对全部局取均值；token 只对**每次调用都有 usage** 的局（deepseek-reasoning 从 2026-09-28 11:03 UTC 起才有 usage，更早的是「—」）；缓存命中率 = 命中合计 ÷ 输入合计；每次调用耗时 = 耗时合计 ÷ 调用合计 |
 
-**力量来源的清单不另造**：tools/eval/strength-sources.ts 调 src/project/deck-profile.ts 的 `strengthSourceIds`，用的就是题面「力量来源」那一项的判断（`isStrengthCard` / `isStrengthRelic` → card-model.ts 的 `givesLastingStrength`，读游戏数据里的牌和遗物文本），在 .cache/game-data.json 上算出 id 清单；metrics.py 每次启动调它一次（~0.3 秒），算不出来就报错，不会拿空清单。当前游戏数据（mod 0.16.2）得到：
+**力量来源的清单不另造**：eval/strength-sources.ts 调 agent/src/project/deck-profile.ts 的 `strengthSourceIds`，用的就是题面「力量来源」那一项的判断（`isStrengthCard` / `isStrengthRelic` → card-model.ts 的 `givesLastingStrength`，读游戏数据里的牌和遗物文本），在 data/game-data.json 上算出 id 清单；metrics.py 每次启动调它一次（~0.3 秒），算不出来就报错，不会拿空清单。当前游戏数据（mod 0.16.2）得到：
 - 牌：ARSENAL、BRAND、BULK_UP、DEMON_FORM、DOMINATE、FIGHT_ME、INFLAME、MAD_SCIENCE、PROWESS、RESONANCE、RUPTURE；
 - 遗物：BRIMSTONE、EMBER_TEA、GIRYA、MINI_REGENT、RAINBOW_RING、RED_SKULL、SHURIKEN、SLING_OF_COURAGE、SPARKLING_ROUGE、SWORD_OF_JADE、TOASTY_MITTENS、VAJRA。
 
-没用 src/strategy/card-value.ts 的 `SCALING`：那是「成长」集合，含腐化、无痛、壁垒等不给力量的牌。
+没用 agent/src/strategy/card-value.ts 的 `SCALING`：那是「成长」集合，含腐化、无痛、壁垒等不给力量的牌。
 
 **区间**：均值用 Student t 的 95% 区间（n ≥ 2；这些量都不为负，下限截到 0）；比例用 Wilson 95% 区间。局数（或这个指标的 n）少于 `--min-n`（默认 10）标 `*`：样本不足，区间只作参考。
 
@@ -84,21 +84,21 @@ version_compare.py 的做法（手列 run id + 按时间窗口）在这里不需
 
 ## 6. 测试
 
-- `.cache/logdb-venv/bin/python tests/eval_metrics_test.py`：每个指标的算法用手写的小样本测（boss 在第 9 层也认得出、推断 boss、推断出的 boss 战里喝药不算非 boss、力量来源三类和「只看第一帧」、78% 的边界 62/80 与 63/80、二幕第一个休息点的各种情况、t / Wilson 区间、只对 usage 齐全的局算 token、版本表的祖先关系 / `+dirty` / 按时间兜底 / 消融分组）；有 duckdb 时再把 tests/eval-data（`make-fixture.py` 生成：两局、幕很短、boss 在第 4 层和第 3 层，一局的 boss 节点被写成 Monster）同步进临时库，从视图一直算到分组输出和命令行。没有 duckdb 时只跑算法测试，其余跳过并写明原因。
-- `.cache/logdb-venv/bin/python tests/eval_calibration_test.py`（§7）：对齐逻辑用手写的小样本测——选中的线（回答、升级、HP 护栏和支配换线、code-fallback 不算）、题面里 hp_lost / 推演文字 / rollout_turns 的解析（随机药水线取均值、超时兜底不算预测）、按「还在打的样本」加权的逐回合累计、预测对到同一回合（下回合第一帧；战斗在本回合结束用结束血量，巨兽爆炸取战后帧、燃烧之血不算；死了是 0；日志缺回合记为对不上）、路线节点对到同一节点（第 i 步必须在计划层 + 1 + i 层走到；离开计划就停；死在路上下一节点记 0）、每个房间的代价、层数分桶、boss 本体的血（同族只算神官、蟹两只钳子、巨兽死后的标记血量）、按进阶/幕/版本分组、metrics 的三个摘要；有 duckdb 时把 tests/calibration-data（`make-fixture.py` 生成：A9 一局走完一份一幕路线计划、重算过的回合、code-fallback 回合、boss 战、二幕死亡；A8 一局升级换线、死在计划路线的精英房）同步进临时库，从视图、原始行一直算到报告、JSON 和 metrics 的三行（boss 时钟用固定的 boss-clocks.jsonl，另用假的重算函数核对传给 tsx 的是 boss 战第一帧的状态）。
-- vitest 的 tests/eval.test.ts 调上面两个 Python 测试，并测 `strengthSourceIds` 和 strength-sources.ts 的输出（固定的 tests/logged-states/game-data.json），以及 boss-clock-recompute.ts 在一个记录下来的 boss 局面（yg3h-f33-t1）上的输出和进程内直接调 `bossClock` / `deckEstimate` 完全一样、认不出的 boss 给 `{key, error}`。
+- `data/logdb-venv/bin/python agent/tests/eval_metrics_test.py`：每个指标的算法用手写的小样本测（boss 在第 9 层也认得出、推断 boss、推断出的 boss 战里喝药不算非 boss、力量来源三类和「只看第一帧」、78% 的边界 62/80 与 63/80、二幕第一个休息点的各种情况、t / Wilson 区间、只对 usage 齐全的局算 token、版本表的祖先关系 / `+dirty` / 按时间兜底 / 消融分组）；有 duckdb 时再把 agent/tests/eval-data（`make-fixture.py` 生成：两局、幕很短、boss 在第 4 层和第 3 层，一局的 boss 节点被写成 Monster）同步进临时库，从视图一直算到分组输出和命令行。没有 duckdb 时只跑算法测试，其余跳过并写明原因。
+- `data/logdb-venv/bin/python agent/tests/eval_calibration_test.py`（§7）：对齐逻辑用手写的小样本测——选中的线（回答、升级、HP 护栏和支配换线、code-fallback 不算）、题面里 hp_lost / 推演文字 / rollout_turns 的解析（随机药水线取均值、超时兜底不算预测）、按「还在打的样本」加权的逐回合累计、预测对到同一回合（下回合第一帧；战斗在本回合结束用结束血量，巨兽爆炸取战后帧、燃烧之血不算；死了是 0；日志缺回合记为对不上）、路线节点对到同一节点（第 i 步必须在计划层 + 1 + i 层走到；离开计划就停；死在路上下一节点记 0）、每个房间的代价、层数分桶、boss 本体的血（同族只算神官、蟹两只钳子、巨兽死后的标记血量）、按进阶/幕/版本分组、metrics 的三个摘要；有 duckdb 时把 agent/tests/calibration-data（`make-fixture.py` 生成：A9 一局走完一份一幕路线计划、重算过的回合、code-fallback 回合、boss 战、二幕死亡；A8 一局升级换线、死在计划路线的精英房）同步进临时库，从视图、原始行一直算到报告、JSON 和 metrics 的三行（boss 时钟用固定的 boss-clocks.jsonl，另用假的重算函数核对传给 tsx 的是 boss 战第一帧的状态）。
+- vitest 的 agent/tests/eval.test.ts 调上面两个 Python 测试，并测 `strengthSourceIds` 和 strength-sources.ts 的输出（固定的 agent/tests/logged-states/game-data.json），以及 boss-clock-recompute.ts 在一个记录下来的 boss 局面（yg3h-f33-t1）上的输出和进程内直接调 `bossClock` / `deckEstimate` 完全一样、认不出的 boss 给 `{key, error}`。
 
-## 7. 校准：预测对实际（tools/eval/calibration.py）
+## 7. 校准：预测对实际（eval/calibration.py）
 
 V4 架构 §1「眼」的「预测对实际的偏差记录」（M3）。**只测量，不改任何预测算法**（路线投影、卡牌口径等 A/B/C 等 Dai 讨论后再定）。
 
 ### 7.1 用法
 
 ```bash
-P=.cache/logdb-venv/bin/python
-$P tools/eval/calibration.py --ascension 9 --md                       # markdown 报告（默认就是 markdown）
-$P tools/eval/calibration.py --ascension 8 --since 2026-09-28T03:12 --md
-$P tools/eval/calibration.py --ascension 9 --json [--rows]            # 汇总、覆盖率、最坏的例子；--rows 附每一行对齐结果
+P=data/logdb-venv/bin/python
+$P eval/calibration.py --ascension 9 --md                       # markdown 报告（默认就是 markdown）
+$P eval/calibration.py --ascension 8 --since 2026-09-28T03:12 --md
+$P eval/calibration.py --ascension 9 --json [--rows]            # 汇总、覆盖率、最坏的例子；--rows 附每一行对齐结果
 ```
 
 选项和 metrics.py 一样（`--ascension`、`--since/--until`、`--group-by version|family|config|commit|day`、`--min-n`、`--no-sync`、`--db/--logs/--versions`），另有 `--top`（最坏的例子列几个，默认 10）、`--no-boss`（不算 boss 时钟）、`--boss-clocks FILE`（用现成的 boss-clock-recompute.ts 输出）、`--game-data`。先增量同步，再查日志库；预测本身不在库的列里，按库里的偏移（decisions.off / frames.off）去读 decisions.jsonl、states.jsonl 的那几行，不整读文件。A9 全部约 3 秒。只算已结束的局（同 metrics.py）。
@@ -126,10 +126,10 @@ $P tools/eval/calibration.py --ascension 9 --json [--rows]            # 汇总�
 
 ### 7.4 boss 时钟
 
-- **没有落盘，离线重算**：时钟（act_boss_clock）只作为 facts 在 DeepSeek 的题面里；deepseek-reasoning.jsonl 只存问题文本，decisions.jsonl、run-plans.jsonl 里也没有它的数（run-plans 的理由里偶尔提到）。所以每场 boss 战取**第一个战斗帧**的原始状态（states.jsonl 按 fights.first_off 的偏移读，去掉 agent_view），连同实际进场血量交给 tools/eval/boss-clock-recompute.ts，调 src/strategy/boss-clock.ts 的 `bossClock(state, knowledge, entryHp)`（和 tools/boss-clock-calibrate.ts 一样），**算法不改**。用的是当前工作树的代码和知识数据（monster-db.json、boss-damage.json）以及 .cache/game-data.json，不是那局跑的版本；当时 DeepSeek 看到的是按「预计进场血量」算的，这里用实际进场血量，所以数不一定和当时的题面相同。
+- **没有落盘，离线重算**：时钟（act_boss_clock）只作为 facts 在 DeepSeek 的题面里；deepseek-reasoning.jsonl 只存问题文本，decisions.jsonl、run-plans.jsonl 里也没有它的数（run-plans 的理由里偶尔提到）。所以每场 boss 战取**第一个战斗帧**的原始状态（states.jsonl 按 fights.first_off 的偏移读，去掉 agent_view），连同实际进场血量交给 eval/boss-clock-recompute.ts，调 agent/src/strategy/boss-clock.ts 的 `bossClock(state, knowledge, entryHp)`（和 agent/tools/boss-clock-calibrate.ts 一样），**算法不改**。用的是当前工作树的代码和知识数据（monster-db.json、boss-damage.json）以及 data/game-data.json，不是那局跑的版本；当时 DeepSeek 看到的是按「预计进场血量」算的，这里用实际进场血量，所以数不一定和当时的题面相同。
 - **boss 战**：和 metrics.py 同一个认法（每幕第一场 Boss 房间的战斗，没有就推断）。
 - **估值** = 时钟的牌组每回合伤害（deck，按时钟自己估的战斗回合数）；另给按实际回合数的估值（deckEstimate(牌组, boss, 实际回合数)）。
-- **实打** = boss 本体掉的血 ÷ 回合数，口径同 tools/boss-fights-extract.py（时钟估值的「11 + 0.92 × 原始估计」就是按它标定的，见 boss-clock.ts ESTIMATE_BASE）：本体 = 第一帧的非 minion 敌人（同族只算神官、女王不算汞合体、帝王蟹两只钳子都算）；赢局按本体的最大血量（最后一击在最后一帧之后），输局按最大血量 − 本体合计的最低血量；回血、复活不加，格挡不算；巨兽死后的标记血量（999999999）当作已死。
+- **实打** = boss 本体掉的血 ÷ 回合数，口径同 agent/tools/boss-fights-extract.py（时钟估值的「11 + 0.92 × 原始估计」就是按它标定的，见 boss-clock.ts ESTIMATE_BASE）：本体 = 第一帧的非 minion 敌人（同族只算神官、女王不算汞合体、帝王蟹两只钳子都算）；赢局按本体的最大血量（最后一击在最后一帧之后），输局按最大血量 − 本体合计的最低血量；回血、复活不加，格挡不算；巨兽死后的标记血量（999999999）当作已死。
 - **掉血/回合** = (进场血量 − 战斗结束血量，死了是 0) ÷ 回合数，对时钟的 hp_loss_per_turn；**可活回合**只在输局里看得到（死的那回合），对时钟的 survivable_turns（估 − 实）。另数时钟报「够」（gap 0）的赢局和输局各几场。
 - **局限**：赢局的回合数含最后不完整的一回合；测试体（三个阶段）的本体血量只按第一帧的第一阶段算（同 boss-fights-extract.py，时钟标定时也把它排除了），它的实打/估值偏低、不能读；一个进阶一幕只有几十场，按 boss 分更少；二幕、三幕的 boss 在 A9 只有 12 场和 1 场。
 
@@ -139,7 +139,7 @@ metrics.py 默认对选中的局跑一遍 calibration（`--no-calibration` 关�
 
 ## 8. 每局配置（logs/run-config.jsonl）和 `--group-by config`
 
-V4 的决策取决于环境变量（引擎、按题型覆盖、模型、知识前缀……），runs.jsonl 只有提交号，分不开。所以对局进程在**第一次看到一个新 run id 时**写一行配置（src/telemetry/run-config.ts，loop.ts 里一处调用）：
+V4 的决策取决于环境变量（引擎、按题型覆盖、模型、知识前缀……），runs.jsonl 只有提交号，分不开。所以对局进程在**第一次看到一个新 run id 时**写一行配置（agent/src/telemetry/run-config.ts，loop.ts 里一处调用）：
 
 - 路径：默认和决策日志同目录（logs/run-config.jsonl）；`RUN_CONFIG_LOG=<路径>` 改，`RUN_CONFIG_LOG=off` 关。
 - 字段：`ts, run_id, ascension, character, floor`（进程第一次看到这局时的层：> 1 说明是局中重启接手）`, restart, process {pid, started}`；`code {commit, code`（短号 + `+dirty`，同 ops/run.sh）`, dirty, dirty_files`（改动的受跟踪文件名，最多 20 个：每局后刷新的知识数据）`, branch, worktree}`，进程启动时读一次（跑的是启动时加载的代码）；`brain {active, engine, by_prefix, fallback, reask, tools, log, engines {<引擎>: {model`（实际发送的 id，opus → claude-opus-5-5；DeepSeek 是 DEEPSEEK_MODEL）`, model_by_prefix, timeout_ms, effort, reask, tools, max_calls}}, claude {schema, max_budget_usd}}`（只列这套配置会问到的引擎：默认、按题型、回退）；`knowledge {prefix, ascension, prefix_sha, prefix_chars, prefix_tokens_est {deepseek, claude}, system_sha, system_chars, experience_version, error?}`；`deepseek {model, max_calls, timeout_ms, reasoning_effort, combat_reasoning_effort, effort_by_label}`；`jev {enabled, model, context, strict, prompt_log}`；`loop {mode, combat_planner, build_decider, build_oneshot, combat_deepseek, fight_plan, run_plan, escalation, confidence, run_start, character}`；`target_ascension, arm, config_sha`（除时间、局、进程以外全部配置的哈希：相同 = 同一套配置）。
@@ -154,4 +154,4 @@ V4 的决策取决于环境变量（引擎、按题型覆盖、模型、知识�
 
 `--group-by config`（metrics.py 和 calibration.py）：组名 = 版本 · brain_label · 知识前缀，例如 `V4 · deepseek:deepseek-flash · 知识前缀 full`；没有配置行的局是 `<版本> · 未记录配置`；局中换过配置的单独成组（`· 局中改过配置`），不和同配置的局混；消融的 `[arm …]` 照旧。`--per-run` 多一列「配置」，`--json` 的每局带 `brain_label, knowledge_prefix, config_rows, config_changed`。按引擎的调用、token、耗时仍在每组的「按引擎」几行里。
 
-测试：tests/run-config.test.ts（字段、没有 key、秘密命中不写、一局一行、重启换配置、loop 里写一行、extract.py 读写入的行、Python 样本和写入的键一致）；tests/logdb_test.py（抽取、brain_label、runs 视图的配置列、旧库缺表时的提示）；tests/eval_metrics_test.py（待填的版本条目、config 分组、命令行）。
+测试：agent/tests/run-config.test.ts（字段、没有 key、秘密命中不写、一局一行、重启换配置、loop 里写一行、extract.py 读写入的行、Python 样本和写入的键一致）；agent/tests/logdb_test.py（抽取、brain_label、runs 视图的配置列、旧库缺表时的提示）；agent/tests/eval_metrics_test.py（待填的版本条目、config 分组、命令行）。

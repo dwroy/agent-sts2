@@ -19,13 +19,13 @@ import { appendFileSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 
-import { CodexEngine } from "../../../src/brain/engines/codex.js";
-import { KnowledgePrompt } from "../../../src/brain/knowledge.js";
-import { BrainRouter } from "../../../src/brain/router.js";
-import { pickSpec } from "../../../src/brain/specs.js";
-import type { BrainRequest, EngineName } from "../../../src/brain/types.js";
-import { loadConfig } from "../../../src/config.js";
-import { frozenFacts } from "../../../src/knowledge/render/facts.js";
+import { CodexEngine } from "../../../agent/src/brain/engines/codex.js";
+import { KnowledgePrompt } from "../../../agent/src/brain/knowledge.js";
+import { BrainRouter } from "../../../agent/src/brain/router.js";
+import { pickSpec } from "../../../agent/src/brain/specs.js";
+import type { BrainRequest, EngineName } from "../../../agent/src/brain/types.js";
+import { loadConfig } from "../../../agent/src/config.js";
+import { frozenFacts } from "../../../agent/src/knowledge/render/facts.js";
 
 const { values } = parseArgs({ options: { rows: { type: "string" }, knowledge: { type: "string" }, facts: { type: "string" }, out: { type: "string" }, check: { type: "boolean", default: false }, loose: { type: "boolean", default: false }, only: { type: "string", default: "" } } });
 type Row = Record<string, any>;

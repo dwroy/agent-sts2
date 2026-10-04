@@ -4,16 +4,16 @@ V4 架构 §1 的「学习者」、§4 的 M4（docs/v4-architecture.md）：把
 
 ```
 learner/
-  run.ts              启动器入口（代码在 src/learner/）
+  run.ts              启动器入口（代码在 agent/src/learner/）
   tasks/*.md          任务说明（中文，{{占位符}} 参数）
   runs/               每次运行的日志和临时目录（已加 .gitignore）
   proposal-ops-prompt.md   给 Dai 审的运维 prompt 修改建议（机制推理）
-src/learner/
+agent/src/learner/
   task.ts             任务文件解析、占位符替换、参数检查
   engines.ts          claude / codex 命令行、权限、子进程环境
   summary.ts          事件流 → 摘要（轮数、token、cache、成本、耗时、状态）
   launcher.ts         参数解析、--dry-run、运行、日志、超时、key 清洗
-tests/learner.test.ts
+agent/tests/learner.test.ts
 ```
 
 ## 用法
@@ -91,7 +91,7 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 - `--restricted`：文件工具只能碰工作目录（`--cwd` 和 `--add-dir ~/Projects/sts2-jev`），不加载用户/项目的 settings 和 hooks；
 - `--permission-mode dontAsk` + `--permission-prompts none`：没预先允许的一律拒绝，不会卡在询问上；
 - `--tools` = 任务 front matter 的工具；`--allowedTools`：`Read(//home/dw/Projects/sts2-jev/**)`、`Grep`、`Glob`，有写工具时 `Edit(//home/dw/Projects/sts2-jev/**)`（Edit 规则同时管 Write），有 Bash 时 `Bash`；
-- `--disallowedTools`：读 key 文件（~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、任何 .env）、读 sts2.dll / .pck、改 .env；Bash 的 `git push`、`pkill`、`killall`、`npm install/i/ci`、`npm run play`、`tsx src/index.ts play`、`sudo`、`ssh`、`env`、`printenv`、`curl`、`wget`；
+- `--disallowedTools`：读 key 文件（~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、任何 .env）、读 sts2.dll / .pck、改 .env；Bash 的 `git push`、`pkill`、`killall`、`npm install/i/ci`、`npm run play`、`tsx agent/src/index.ts play`、`sudo`、`ssh`、`env`、`printenv`、`curl`、`wget`；
 - `--strict-mcp-config`：不加载本机配置的任何 MCP 服务器和 claude.ai 连接器，只有 `--with-tools` 时挂我们的 gkb；
 - 子进程环境设 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`：不读交互会话的自动记忆，任务说明就是全部上下文。
 - 限制：Bash 没法按路径限定（只能按命令前缀拒绝），所以 Bash 里的越界靠 deny 规则 + 任务说明里的安全规矩兜底；日志事后再做 key 扫描（下面）。
@@ -121,9 +121,9 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 
 ## --with-tools：学习者可用的知识库工具
 
-src/tools/registry.ts 里已有 7 个 kb_* 工具（kb_monster、kb_encounter、kb_experience、kb_stats、kb_old_knowledge、kb_postmortem、kb_runs）。`--with-tools` 按 src/tools/mcp-launch.ts 的 `mcpLaunchSpec` 起 stdio MCP 服务器（服务名 gkb，工具在 Claude 里叫 `mcp__gkb__kb_*`，允许规则 `mcp__gkb`），另外把 `KNOWLEDGE_LESSONS_FILE` 指到 ~/Projects/sts2-jev/notes/lessons.md。知识目录默认是启动器所在工作树的 src/knowledge（`--knowledge-dir` 可改，例如指到 jev-sts2-v3/src/knowledge 取对局在用的最新数据），进阶默认取 `TARGET_ASCENSION`，再没有就是 9。
+agent/src/tools/registry.ts 里已有 7 个 kb_* 工具（kb_monster、kb_encounter、kb_experience、kb_stats、kb_old_knowledge、kb_postmortem、kb_runs）。`--with-tools` 按 agent/src/tools/mcp-launch.ts 的 `mcpLaunchSpec` 起 stdio MCP 服务器（服务名 gkb，工具在 Claude 里叫 `mcp__gkb__kb_*`，允许规则 `mcp__gkb`），另外把 `KNOWLEDGE_LESSONS_FILE` 指到 ~/Projects/sts2-jev/notes/lessons.md。知识目录默认是启动器所在工作树的 knowledge（`--knowledge-dir` 可改，例如指到 jev-sts2-v3/src/knowledge 取对局在用的最新数据），进阶默认取 `TARGET_ASCENSION`，再没有就是 9。
 
-**现状**：服务器 src/tools/mcp-server.ts 在 v4-brain 分支上开发（这里不写），还没合进来，所以 `--with-tools` 现在会报错退出（exit 3）并说明原因；合入后不用改启动器就能用（测试也会自动切到「挂上」的分支）。工具调用在 stream-json 里有完整的输入和输出。
+**现状**：服务器 agent/src/tools/mcp-server.ts 在 v4-brain 分支上开发（这里不写），还没合进来，所以 `--with-tools` 现在会报错退出（exit 3）并说明原因；合入后不用改启动器就能用（测试也会自动切到「挂上」的分支）。工具调用在 stream-json 里有完整的输入和输出。
 
 ## 以后接 codex 要做什么
 

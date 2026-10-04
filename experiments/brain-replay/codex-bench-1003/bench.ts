@@ -13,12 +13,12 @@ import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 
-import { createRouter } from "../../../src/brain/brain.js";
-import { KnowledgePrompt } from "../../../src/brain/knowledge.js";
-import { carriesRunPlan, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "../../../src/brain/specs.js";
-import type { AnswerSpec, BrainRequest } from "../../../src/brain/types.js";
-import { loadConfig } from "../../../src/config.js";
-import { frozenFacts } from "../../../src/knowledge/render/facts.js";
+import { createRouter } from "../../../agent/src/brain/brain.js";
+import { KnowledgePrompt } from "../../../agent/src/brain/knowledge.js";
+import { carriesRunPlan, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "../../../agent/src/brain/specs.js";
+import type { AnswerSpec, BrainRequest } from "../../../agent/src/brain/types.js";
+import { loadConfig } from "../../../agent/src/config.js";
+import { frozenFacts } from "../../../agent/src/knowledge/render/facts.js";
 
 const { values } = parseArgs({ options: { rows: { type: "string" }, knowledge: { type: "string" }, facts: { type: "string" }, out: { type: "string" }, check: { type: "boolean", default: false }, "stop-after-ms": { type: "string", default: "300000" } } });
 type Row = Record<string, any>;

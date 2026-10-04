@@ -10,7 +10,7 @@
 
 | 模块 | 改了什么 |
 |---|---|
-| 大脑路由器 | DeepSeek 的决策调用都走路由器（src/brain）：统一校验答案、按题型选引擎、失败时回退，每题写一行 brain.jsonl。默认引擎是 deepseek、不带工具，v3 自己的修复（一致性补问、从推理里找回选择）照旧；除带路线的题外，路由器对 DeepSeek 只记录问题、不补问。 |
+| 大脑路由器 | DeepSeek 的决策调用都走路由器（agent/src/brain）：统一校验答案、按题型选引擎、失败时回退，每题写一行 brain.jsonl。默认引擎是 deepseek、不带工具，v3 自己的修复（一致性补问、从推理里找回选择）照旧；除带路线的题外，路由器对 DeepSeek 只记录问题、不补问。 |
 | 路线（M2a） | map/route-plan 在整张地图上要一串节点（地图写成文字行，标出所在位置、走过的点、飞行靴次数、所有 boss 点，A10 有第二个 boss）。代码只查合法性（checkRoute：下一步、连线、一步一行、飞行靴跳跃次数、以 boss 结尾）并给出所选路线的事实（到达血量的中位数和 p75、休息点、到下个休息点前的战斗数、下一个精英、boss），不给候选路线、代码分数或名次（f66bf8d）。路线块跟着选牌、休息点、事件的最后一题走，回答 keep 或新路线；幕初古神题看整张地图。大脑失败时这一层用代码的贪心走法（不给大脑看）。 |
 | 带路线题的补问 | 带路线的题（map/route-plan、map/route-review，以及附带路线块的选牌、休息、事件题）路线不合法时，**对 DeepSeek 也补问一次**（specs.ts：pickSpec 带路线时 `reask: true`、routePlanSpec `reask: true`）。补问后还不合法：附带路线的题 choice 照用、路线不变；路线规划题判失败，走代码的贪心走法。补问的调用计入 DEEPSEEK_MAX_CALLS。 |
 | 构筑事实（M2b） | 选牌、商店、休息、事件、选牌屏的题面去掉代码分数和名次、角色张数、门槛和建议，只留事实和日志统计（没有数据写「无数据」），也不删选项（docs/v4-build-facts.md）。路线块里的分数也已由 M2a 去掉。回放 20 题：新题面首答合法 18/20（旧题面 20/20；商店步骤写法、选多张牌的写法各错 1 题，补问也没救回），构筑决定一致 11/18 |
@@ -27,7 +27,7 @@
 | jev-prompts.jsonl | 每次问 Jev 的原文 | 开 | `JEV_PROMPT_LOG=off` 关 |
 | run-config.jsonl（M4c） | 每局开局写一行：提交号、分支、引擎和模型、知识前缀的哈希和 token 估计、Jev 和进阶配置，不含 key；开局告警在 `warnings`。metrics.py `--group-by config` 按这一行分组（docs/eval.md §8） | 开 | `RUN_CONFIG_LOG=off` 关 |
 
-对局外、上线用不到的：tools/logdb（DuckDB 分析库）、tools/eval/metrics.py、calibration.py（M3c、M4b）；learner/run.ts（M4a，把复盘、经验更新、批量修 bug 写成任务文件交给 claude 或 codex；运维 prompt 的修改建议在 learner/proposal-ops-prompt.md，等你审）。
+对局外、上线用不到的：agent/tools/logdb（DuckDB 分析库）、eval/metrics.py、calibration.py（M3c、M4b）；learner/run.ts（M4a，把复盘、经验更新、批量修 bug 写成任务文件交给 claude 或 codex；运维 prompt 的修改建议在 learner/proposal-ops-prompt.md，等你审）。
 
 新增的日志文件都在 logs/，按审查实测：brain.jsonl 约 1–1.5 MB/局，jev-prompts.jsonl 约 1.3–2 MB/局，run-config.jsonl 约 3 KB/局；三个加起来 24 小时约 70 MB。
 
@@ -39,7 +39,7 @@
 git -C ~/Projects/sts2-jev/jev-sts2 merge-tree --write-tree --name-only v3 v4
 ```
 
-2026-09-30 v3 c52587c 对 v4 9841bbc 有 10 个文件冲突：src/llm/deepseek.ts、src/project/types.ts、src/screens/{combat-plan,event,oneshot,potion-discard,rest,selection,shop}.ts、tools/build-room-costs.py。这些屏幕文件 M2b 和 v3 的修复都改过，除了文字冲突，还要当心语义冲突：v3 新加的修复里如果又往大脑题面加了分数，要按 M2b 的规矩改成事实。
+2026-09-30 v3 c52587c 对 v4 9841bbc 有 10 个文件冲突：agent/src/llm/deepseek.ts、agent/src/project/types.ts、agent/src/screens/{combat-plan,event,oneshot,potion-discard,rest,selection,shop}.ts、knowledge/builders/build-room-costs.py。这些屏幕文件 M2b 和 v3 的修复都改过，除了文字冲突，还要当心语义冲突：v3 新加的修复里如果又往大脑题面加了分数，要按 M2b 的规矩改成事实。
 
 ### a) 新开运行工作树 jev-sts2-v4run（建议第一批用这个）
 
@@ -55,8 +55,8 @@ cd ../jev-sts2-v4run
 ln -s ../jev-sts2/logs logs && ln -s ../jev-sts2/node_modules node_modules && ln -s ../jev-sts2/.cache .cache
 cp ../jev-sts2-v3/.env .env      # 含 key：只复制，不要打印；再在末尾追加下面的 V4 变量
 # 知识数据用 v4 自己的工具按最新日志刷新一遍（和 report.py 每局后的刷新命令相同，只是换成这个工作树）
-python3 tools/build-monster-db.py --quiet --move-model-out src/knowledge/move-model.json
-python3 tools/build-outcome-stats.py; python3 tools/build-room-costs.py; python3 tools/build-boss-damage.py; python3 tools/build-card-upgrades.py
+python3 knowledge/builders/build-monster-db.py --quiet --move-model-out knowledge/common/move-model.json
+python3 knowledge/builders/build-outcome-stats.py; python3 knowledge/builders/build-room-costs.py; python3 knowledge/builders/build-boss-damage.py; python3 knowledge/builders/build-card-upgrades.py
 ```
 
 ops/ 里要改的地方（这里只写出来，本次没有改）：
@@ -66,7 +66,7 @@ ops/ 里要改的地方（这里只写出来，本次没有改）：
 
 风险：
 - 维护两条线。运维会话往 v3 合的修复不会自动到 V4，要走 v3 → v4 → v4-live；v4-live 用 `git merge --ff-only v4` 跟上。
-- report.py 路径漏改：知识数据不再刷新，而且不会报错。第一局之后看 run-config 的 `code` 是否带 `+dirty`，以及 src/knowledge 的修改时间。
+- report.py 路径漏改：知识数据不再刷新，而且不会报错。第一局之后看 run-config 的 `code` 是否带 `+dirty`，以及 knowledge 的修改时间。
 - 回退很快：run.sh 第 6 行和 report.py 两行改回 v3，下一局就是 v3。logs/ 是共用的，run-config 和 versions.json 能分开 V3 和 V4 的局。
 
 ### b) 把 v4 合进 v3
@@ -116,11 +116,11 @@ BRAIN_CLAUDE_MAX_CALLS=40        # 每个进程（约一局）的上限；A9 每
 - **第 2 批（10 局）**：「关键题用 Opus」。
 - 每组 10 局时，通过率的 Wilson 区间约 ±30 个百分点，只能看方向。进阶和对照组相同。
 
-看哪些数（`P=.cache/logdb-venv/bin/python`）：
+看哪些数（`P=data/logdb-venv/bin/python`）：
 
 ```bash
-$P tools/eval/metrics.py --ascension 9 --since <上线时间> --group-by config --md --total
-$P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by config --md
+$P eval/metrics.py --ascension 9 --since <上线时间> --group-by config --md --total
+$P eval/calibration.py --ascension 9 --since <上线时间> --group-by config --md
 ```
 
 - metrics.py：
@@ -131,7 +131,7 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
   - 代价：「大脑调用 / 局」「输入 token / 局」「缓存命中率」「每次调用平均耗时」和按引擎的几行。
   - 对照组是同一进阶最近的 v3 组（`V3.route-review · 未记录配置`）。
 - calibration.py：三行都不该变，因为算法没改。「推演本回合掉血 ±2 内」、「路线投影 2–3 层误差」、「boss 时钟 实打/估值」如果明显变了，先查 bug。
-- 日志库里另外看（`$P tools/logdb/query.py "…"`）：
+- 日志库里另外看（`$P agent/tools/logdb/query.py "…"`）：
   - 大脑回退：`SELECT engine, fallback_from, fallback_kind, count(*) FROM llm_calls WHERE ts > '<上线时间>' GROUP BY ALL`
   - 答案不合法：`count(*) FILTER (WHERE parse_error)`
   - 执行闸拒绝：`SELECT count(*) FROM decisions WHERE result LIKE 'not dispatched: gate refused%' AND ts > '<上线时间>'`
@@ -146,9 +146,9 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 ## 4. 上线前检查清单
 
 - [ ] v3 已合进 v4（方式 b 是 v4 合进 v3），运行工作树里 `npx tsc -p tsconfig.json --noEmit` 和 `npx vitest run` 都是 0。负载高时战斗测试可能超时，重跑一次再下结论。
-- [ ] tools/eval/versions.json 的 V4 条目填好 `commit`（上线提交）和 `source`（decision-log 那一条），然后提交。不填的话，V4 的局按祖先关系会算进 V3.route-review。
-- [ ] 知识数据已刷新（见 2a 的命令；方式 b 不用），experience.json 是 v3 最新的版本。`KNOWLEDGE_PREFIX=full` 时跑 `npx tsx tools/gkb-dump.ts --ascension <进阶> --sizes-only`，确认能渲染、大小正常（A9 约 17 万字）。
-- [ ] 日志库同步一次：`$P tools/logdb/sync.py`。新表 run_config 要同步过才有；旧库 query.py 会提示去同步。
+- [ ] eval/versions.json 的 V4 条目填好 `commit`（上线提交）和 `source`（decision-log 那一条），然后提交。不填的话，V4 的局按祖先关系会算进 V3.route-review。
+- [ ] 知识数据已刷新（见 2a 的命令；方式 b 不用），experience.json 是 v3 最新的版本。`KNOWLEDGE_PREFIX=full` 时跑 `npx tsx agent/tools/gkb-dump.ts --ascension <进阶> --sizes-only`，确认能渲染、大小正常（A9 约 17 万字）。
+- [ ] 日志库同步一次：`$P agent/tools/logdb/sync.py`。新表 run_config 要同步过才有；旧库 query.py 会提示去同步。
 - [ ] 用 Claude 时：本机 `claude` 登录态有效，订阅额度够一批（约 10 局 × 9 题）；`BRAIN_FALLBACK=deepseek` 已设。额度用完不会卡住，只会退回 DeepSeek，brain.jsonl 里记 `fell_back_from.kind` 为 `quota`。第一局开局后看控制台没有 `ERROR: claude is unavailable`，run-config 的 `claude_check.ok` 是 true、`bin` 是绝对路径（run.sh 的 PATH 里没有 ~/.local/bin，代码自己会找；装在别处就写 `BRAIN_CLAUDE_BIN`）。
 - [ ] 日志大小：
   - 新增三个文件（审查实测）：brain.jsonl 约 1–1.5 MB/局；jev-prompts.jsonl 约 1.3–2 MB/局；run-config.jsonl 约 3 KB/局；24 小时合计约 70 MB。
@@ -159,7 +159,7 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
   - brain.jsonl 有行，`knowledge.prefix_sha` 和 run-config 里的一样；
   - 决策日志里执行闸拒绝的次数正常。
 - [ ] crontab 里的 ops/auto-relaunch.sh 还在：切换期间它会在没有 STOP 文件时拉起 autoplay。改 run.sh 要趁 STOP 在的时候改。
-- [ ] 药水代价（§6，v4-potion 合进 v4 / v4-live 之后）：ops/report.py 的 `refresh_knowledge` 加上药水换算表的刷新（见 §6「上线要改的地方」）；运行工作树里 `tools/refresh-potion-equivalents.sh --dry-run` 能跑，说「up to date」或「would rebuild (…)」。
+- [ ] 药水代价（§6，v4-potion 合进 v4 / v4-live 之后）：ops/report.py 的 `refresh_knowledge` 加上药水换算表的刷新（见 §6「上线要改的地方」）；运行工作树里 `knowledge/builders/refresh-potion-equivalents.sh --dry-run` 能跑，说「up to date」或「would rebuild (…)」。
 
 ## 5. v3 同步记录
 
@@ -167,15 +167,15 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 
 - 合并提交 96a2be7，带进 v3 在 389bdb7 之后的 48 个提交（5 次合并、4 次知识数据刷新、2 次经验和攻略更新，其余是修复批次 I–L）。
 - 冲突 11 个文件，处理方式：
-  - src/llm/deepseek.ts：两边都留。v3 的 severalOptionKeys、DATA_OVER_GUIDES，加上 V4 导出的 `SYSTEM`。默认配置下，大脑请求的系统提示和请求格式仍和（合并后的）v3 相同（题面内容因 M2a、M2b 不同，见第 1 节）。
-  - src/project/types.ts：afterDiscard 两个字段都留（V4 的 moreIds 和 v3 的 via）。
-  - src/screens/combat-plan.ts：用 V4 执行闸的 intent（带 expect），后面接上 v3 等液态记忆取牌屏的逻辑。
-  - src/screens/potion-discard.ts：用 v3 填好数字的药水文字和 drinkableSlots/drinkVariant，每个槽位加回 V4 执行闸要的 `id`。
-  - src/screens/event.ts、rest.ts、map.ts：只有 import 冲突，两边合并。
-  - src/screens/selection.ts：保留 V4 的 facts 题面（不带 why 和 unranked）；「第几张」改用 v3 的 selectingText（每次回答一张牌）；followUpTargetScore 只返回分数。
-  - src/screens/shop.ts、oneshot.ts：保留 V4，不给代码删牌顺序和目标牌分值；加上 v3 的 annotatePlating import。
-  - tools/build-room-costs.py：用 v3 的说明，加上 V4 的 p90。
-- 知识数据（src/knowledge/*.json、攻略、经验库）都取 v3 的版本。ds-handbook.md 的路线一段保留 V4（M2a）的写法。room-costs.json 由 v3 的脚本生成，没有 p90：上线前按 2a 的命令用合并后的脚本重建一次，重建后同时有 p90、UnknownFight 和战内掉血。
+  - agent/src/llm/deepseek.ts：两边都留。v3 的 severalOptionKeys、DATA_OVER_GUIDES，加上 V4 导出的 `SYSTEM`。默认配置下，大脑请求的系统提示和请求格式仍和（合并后的）v3 相同（题面内容因 M2a、M2b 不同，见第 1 节）。
+  - agent/src/project/types.ts：afterDiscard 两个字段都留（V4 的 moreIds 和 v3 的 via）。
+  - agent/src/screens/combat-plan.ts：用 V4 执行闸的 intent（带 expect），后面接上 v3 等液态记忆取牌屏的逻辑。
+  - agent/src/screens/potion-discard.ts：用 v3 填好数字的药水文字和 drinkableSlots/drinkVariant，每个槽位加回 V4 执行闸要的 `id`。
+  - agent/src/screens/event.ts、rest.ts、map.ts：只有 import 冲突，两边合并。
+  - agent/src/screens/selection.ts：保留 V4 的 facts 题面（不带 why 和 unranked）；「第几张」改用 v3 的 selectingText（每次回答一张牌）；followUpTargetScore 只返回分数。
+  - agent/src/screens/shop.ts、oneshot.ts：保留 V4，不给代码删牌顺序和目标牌分值；加上 v3 的 annotatePlating import。
+  - knowledge/builders/build-room-costs.py：用 v3 的说明，加上 V4 的 p90。
+- 知识数据（knowledge/ 下的 *.json、攻略、经验库）都取 v3 的版本。ds-handbook.md 的路线一段保留 V4（M2a）的写法。room-costs.json 由 v3 的脚本生成，没有 p90：上线前按 2a 的命令用合并后的脚本重建一次，重建后同时有 p90、UnknownFight 和战内掉血。
 - 放弃的 v3 修复：
   - f8aef72（删牌顺序里把整局计划的 +40 单独写出，并注明「只是参考」）。起因是 UNRL F14，大脑把代码的删牌顺序当成结论。V4 M2b 已经不给大脑看这个顺序（code_removal_order、eligible_cards 里的 code remove value 都删了），问题的来源已不存在。batch-l 第 1 组的第一个测试改成断言题面里没有这个顺序；第二个测试（remove:<诅咒> 删的就是诅咒）不变。
 - v3 修复在 V4 里补做的部分（合并后的单独提交）：
@@ -192,12 +192,12 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 
 - 合并提交 a19c49e，带进 v3 在 c52587c 之后的 27 个提交（修复批次 M、N；A8 窗口 1–11 局的经验、攻略、卡牌评级、boss 数据；两次知识刷新）。后续修正 3ecd8b5、ba44291。
 - 冲突 4 个文件：
-  - src/llm/deepseek.ts：配置两个字段都留（V4 的 systemPrompt、v3 的 factsSnapshotDir）。
-  - src/loop.ts：import 两边合并（V4 的 actOf、v3 的 isFightPlanReply）。商店一次计划仍走 brain.choosePlan，传入屏幕自己的校验（v3 7b54237）；日志行里 V4 的 brain 和 v3 的 recovered_from_reasoning、note 都留。战斗计划、整局计划用 V4 的 `count(…, meta.brain)`，加上 v3 的 isFightPlanReply 和 note。
-  - src/screens/combat-plan.ts：保留 V4 的 jevLessonLine；它现在用 lessonText 填经验里的占位符（v3 b5e1f44 的意图）。
-  - src/screens/selection.ts：保留 V4 的 facts 题面（不带 why、unranked）；followUpTargetScore 只返回分数（+40 改用常量 RUN_PLAN_REMOVE_BONUS）。
+  - agent/src/llm/deepseek.ts：配置两个字段都留（V4 的 systemPrompt、v3 的 factsSnapshotDir）。
+  - agent/src/loop.ts：import 两边合并（V4 的 actOf、v3 的 isFightPlanReply）。商店一次计划仍走 brain.choosePlan，传入屏幕自己的校验（v3 7b54237）；日志行里 V4 的 brain 和 v3 的 recovered_from_reasoning、note 都留。战斗计划、整局计划用 V4 的 `count(…, meta.brain)`，加上 v3 的 isFightPlanReply 和 note。
+  - agent/src/screens/combat-plan.ts：保留 V4 的 jevLessonLine；它现在用 lessonText 填经验里的占位符（v3 b5e1f44 的意图）。
+  - agent/src/screens/selection.ts：保留 V4 的 facts 题面（不带 why、unranked）；followUpTargetScore 只返回分数（+40 改用常量 RUN_PLAN_REMOVE_BONUS）。
 - 为合并而改的 V4 代码（在合并提交里）：brain.choosePlan 加 accept 参数，和 askJson 一样并进 spec 的校验（withAccept，accept 通过即合法）；DeepSeek 引擎把这个校验交给 v3 的 choosePlan，空回答就从推理里取屏幕接受的计划。choosePlan、askJson 的返回类型加 note。
-- 知识数据都取 V3-final 的版本；ds-handbook.md 的路线一段仍是 V4（M2a）的写法；event-pages.json 保留 V4 新增的页。room-costs.json 仍然没有 p90：上线前照旧用合并后的脚本重建。tools/build-boss-damage.py 只有 v3 的改动，直接合入。
+- 知识数据都取 V3-final 的版本；ds-handbook.md 的路线一段仍是 V4（M2a）的写法；event-pages.json 保留 V4 新增的页。room-costs.json 仍然没有 p90：上线前照旧用合并后的脚本重建。knowledge/builders/build-boss-damage.py 只有 v3 的改动，直接合入。
 - 放弃的 v3 修复：16559ba（单独的删牌屏把整局计划的 +40 拆开写，并注明「只是参考」）。理由和上次放弃 f8aef72 相同：V4 M2b 不给 DeepSeek 看代码分值、排名和 why，没有可拆的数。batch-m 第 6 组改成断言题面里没有 code value、removal order 和 +40 的说法。
 - 补做（合并后单独提交）：
   - 3ecd8b5，对应 8546fde（系统提示里攻略、手册的数据按天冻结）。KNOWLEDGE_PREFIX=off 完全沿用 v3：DeepSeekClient 的攻略和手册按天快照，存在 logs/guide-facts/<日期>-<hash>.md。full 的前缀是自己渲染的，v3 的快照管不到；而且前缀开头的「数据版本」行每局都会变，缓存从第一块就断了。现在做了三件事：① render/facts.ts 把每个占位符的值按天冻结在同一目录的 <日期>-prefix-facts.json 里，覆盖攻略、手册、Jev 提示里的怪物库数字（按进阶分开）和经验条目；同一个占位符在攻略和经验里取同一个数。② 数据版本行从头部移到经验之后、怪物之前，单独成块「## 数据版本」。③ 头部加一句：旧知识和经验里的战绩数字可能是当天早些时候的，和统计表不同时以统计表为准。效果：同一天内，每局结束刷新数据后，前缀从「数据版本」块起才变；前面的头部、旧知识和经验（A8 约 9.7 万字，全长约 17.6 万字）保持逐字节不变，可以继续命中缓存。没有配置目录时（工具、回放、测试）照旧现填。
@@ -205,13 +205,13 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
   - ba44291，对应 fa46f6c 和 7b54237 在 V4 路由器路径（重问、带工具）上的部分：chat() 带回 finish_reason；空回答取推理里最后一个符合题目 spec 的答案；取不到时，问题里写明 finish_reason，由路由器的重问充当「再问一次」。
   - f26ae1a（逗号连接的两个对象）：这一半由 pickJsonObject 处理，V4 的 parseAnswerText 也调用它，所以自动生效。截断回答保留完整成员这一半只在 v3 路径（choose、choosePlan）里做。路由器路径不做，截断的回答按不合法重问；v3 对自由格式的计划同样不做。
 - 其余 v3 修复原样保留：八音盒建模（求解器、推演、线承诺；执行闸照常带 expect，batch-m 第 4 组改用 toMatchObject 并检查 expect）、boss 时钟（撕裂+、狱火/深红披风、主宰伤害）、「现在结束会死」按牌名写（含 Beckon）、知识恶魔排序、回血写成 hp +N、战斗计划的格式检查。
-- tests/run-config.test.ts 的 DeepSeek 客户端原来会用默认目录 logs/guide-facts（软链到线上的 logs），现在改用测试自己的目录。改之前的第一次全量测试已经往那里写了两个小文件：2026-09-30-3493cfe2.md 和 2026-09-30-f28937d5.md，内容是测试夹具的攻略和手册。它们和线上快照不同名，不会被读到；第二天第一次写快照时，v3 的清理会把它们删掉。这个 agent 没有删除权限。
+- agent/tests/run-config.test.ts 的 DeepSeek 客户端原来会用默认目录 logs/guide-facts（软链到线上的 logs），现在改用测试自己的目录。改之前的第一次全量测试已经往那里写了两个小文件：2026-09-30-3493cfe2.md 和 2026-09-30-f28937d5.md，内容是测试夹具的攻略和手册。它们和线上快照不同名，不会被读到；第二天第一次写快照时，v3 的清理会把它们删掉。这个 agent 没有删除权限。
 - 测试：`npx tsc -p tsconfig.json --noEmit` 为 0；`npx vitest run` 96 个文件、1,556 个测试全过。
 - 上线注意：v4-live 升级到这个版本后，logs/guide-facts 里会多一个 <日期>-prefix-facts.json，每天第一次渲染前缀时写入。
 
 ## 6. 药水代价（2026-09-30 Dai 定，分支 v4-potion）
 
-一句话：用掉的药水按「以后要扣的血」计价。代价 = 这瓶药在当前进阶、当前幕的持有价值（药水换算表 src/knowledge/potion-equivalents.json 的公式值）；boss 战为 0；精英和走廊一样；死亡数永远排第一。细节在 docs/potion-equivalents.md §8。
+一句话：用掉的药水按「以后要扣的血」计价。代价 = 这瓶药在当前进阶、当前幕的持有价值（药水换算表 knowledge/characters/ironclad/potion-equivalents.json 的公式值）；boss 战为 0；精英和走廊一样；死亡数永远排第一。细节在 docs/potion-equivalents.md §8。
 
 **行为变化**（默认开；`POTION_COST=off` 写进 .env 就全部关掉，下一局生效，题面和排序回到接入前）：
 - 求解器：喝药的线分数减「HP 权重 × 代价」。代码自己的排序、选项里谁排前面、HP 护栏（含每场预算）、随机药水的「胜过最佳不用药线」都按「掉血 + 药水代价」比。代码自己仍然不在有不用药的线时喝药。
@@ -220,14 +220,14 @@ $P tools/eval/calibration.py --ascension 9 --since <上线时间> --group-by con
 - 走廊里「喝不喝都一样」的题，rollout_best 从喝药的线（以前并列时常落在喝药线上）移到不喝的线；随机药水不再「胜过」不用药的线时，代码直接打自己的线，Jev 少被问一次。
 - boss 战：代价 0，选项、分数、rollout_best 和现在完全一样（测试锁住；离线回放 boss 20 次见下），题面上的 `potion_cost` 都写 0。boss 战不加「本场不用药」的线（要 Dai 确认）。
 
-**离线回放**（`npx tsx tools/potion-cost-replay.ts` → experiments/potion-cost/summary.md，不调用任何模型）：notes/potion-drinks-2026-09-29.md 附表 A 的 154 次非 boss 战喝药，重算 150 次（3 次是代码开场直接喝果汁、1 次是已修的去重 bug，不涉及排序）。同一个重建局面，推演最优本回合喝药：代价关 104 次 → 代价开 45 次；本回合不喝 24 → 100（其中 20 次推演后续回合会喝，80 次整场不喝）；并列 22 → 5。按附表分类：值得喝 15 次 9 → 9（只有 1 次从「本回合喝」变成「后续回合喝」），小收益 74 次 66 → 23，持平 60 次 28 → 12。「不喝会死」的 10 个局面推演最优全部用药（100%，8 次本回合就喝）。boss 战抽查 20 次：选项、每个选项的推演数字、推演最优和并列 20/20 完全相同。
+**离线回放**（`npx tsx agent/tools/potion-cost-replay.ts` → experiments/potion-cost/summary.md，不调用任何模型）：notes/potion-drinks-2026-09-29.md 附表 A 的 154 次非 boss 战喝药，重算 150 次（3 次是代码开场直接喝果汁、1 次是已修的去重 bug，不涉及排序）。同一个重建局面，推演最优本回合喝药：代价关 104 次 → 代价开 45 次；本回合不喝 24 → 100（其中 20 次推演后续回合会喝，80 次整场不喝）；并列 22 → 5。按附表分类：值得喝 15 次 9 → 9（只有 1 次从「本回合喝」变成「后续回合喝」），小收益 74 次 66 → 23，持平 60 次 28 → 12。「不喝会死」的 10 个局面推演最优全部用药（100%，8 次本回合就喝）。boss 战抽查 20 次：选项、每个选项的推演数字、推演最优和并列 20/20 完全相同。
 
 **上线要改的地方（本次没有改 ops/）**：
-- **ops/report.py `refresh_knowledge`（现在第 360–376 行）**：`cmd` 最后一段（第 374 行的 `…/logdb/sync.py >/dev/null 2>&1'`）后面接上 `f'; {wt}/tools/refresh-potion-equivalents.sh >/dev/null 2>&1'`（在日志库同步之后；输出也可以留在 refresh.log 里）。它只在「表的生成日期不是今天」或「表里没有 .env 的 TARGET_ASCENSION」时重建（读 `{wt}/.env`，用 `{wt}/.cache/logdb-venv/bin/python`），其余时候什么都不做，一天最多重建一次（约 3 秒）。重建会改 src/knowledge/potion-equivalents.json（和其他知识数据一样，run-config 的 `code` 会带 `+dirty`）。
-- 升进阶：改 .env 的 TARGET_ASCENSION 后，下一局赛后的刷新会因为「表里没有这个进阶」重建一次（场数不够的进阶借最近进阶的输入）。上线当天也可以手动跑一次：`tools/refresh-potion-equivalents.sh`（`--dry-run` 只看会不会重建）。
+- **ops/report.py `refresh_knowledge`（现在第 360–376 行）**：`cmd` 最后一段（第 374 行的 `…/logdb/sync.py >/dev/null 2>&1'`）后面接上 `f'; {wt}/tools/refresh-potion-equivalents.sh >/dev/null 2>&1'`（在日志库同步之后；输出也可以留在 refresh.log 里）。它只在「表的生成日期不是今天」或「表里没有 .env 的 TARGET_ASCENSION」时重建（读 `{wt}/.env`，用 `{wt}/.cache/logdb-venv/bin/python`），其余时候什么都不做，一天最多重建一次（约 3 秒）。重建会改 knowledge/characters/ironclad/potion-equivalents.json（和其他知识数据一样，run-config 的 `code` 会带 `+dirty`）。
+- 升进阶：改 .env 的 TARGET_ASCENSION 后，下一局赛后的刷新会因为「表里没有这个进阶」重建一次（场数不够的进阶借最近进阶的输入）。上线当天也可以手动跑一次：`knowledge/builders/refresh-potion-equivalents.sh`（`--dry-run` 只看会不会重建）。
 - 表加载不了时代价按 0 算（题面写明），对局不会停。
 
-**怎么看效果**（`P=.cache/logdb-venv/bin/python`；`$P tools/eval/metrics.py --ascension <进阶> --since <上线时间> --group-by config --md --total`，对照同进阶上线前的组）：
+**怎么看效果**（`P=data/logdb-venv/bin/python`；`$P eval/metrics.py --ascension <进阶> --since <上线时间> --group-by config --md --total`，对照同进阶上线前的组）：
 - 「非 boss 战喝药 / 10 层」应该下降（V3 A9 55 局：2.24）；
 - 「进一幕 / 二幕 boss 带药（瓶）」应该上升（V3 A9：1.37 / 1.33）；
 - 「死时手里的药（瓶，输的局）」（新指标：死的那场战斗进场带的药 − 这场里喝的）不该上升（V3 A9：0.16）——上升说明药留过头、死时还攥着；

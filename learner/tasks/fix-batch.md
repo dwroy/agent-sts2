@@ -32,8 +32,8 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 
 ## 2. 每个修复
 - **每个修复单独提交**，英文提交信息写清楚改了什么、证据（run id、floor、turn）。
-- **每个修复带一个测试**，用固定数据（tests/ 下的夹具，或在测试里写死的局面），**不许依赖每局都在刷新的知识数据**（src/knowledge/*.json 里会被刷新的那些）。
-- **测试要在去掉修复时失败**。做法：修复和测试写好后，只把源码的改动暂时撤掉（例如 `git stash push -- src/…`），跑这个测试，确认失败；再恢复修复（`git stash pop`），确认通过。两次的结果写进回报。
+- **每个修复带一个测试**，用固定数据（agent/tests/ 下的夹具，或在测试里写死的局面），**不许依赖每局都在刷新的知识数据**（knowledge/ 下的 *.json 里会被刷新的那些）。
+- **测试要在去掉修复时失败**。做法：修复和测试写好后，只把源码的改动暂时撤掉（例如 `git stash push -- agent/src/…`），跑这个测试，确认失败；再恢复修复（`git stash pop`），确认通过。两次的结果写进回报。
 - 注释用英文，和现有代码风格一致；给模型看的文字用中文。
 
 ## 3. 测试
@@ -48,10 +48,10 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 ## 5. 合入（只有 merge = v3 时做）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里按「合入 v3 的流程」做：
 1. 等后台知识刷新跑完：`while pgrep -f 'jev-sts2-v3/tools/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省，否则会匹配到自己的 shell，永远等下去）；
-2. 在 {{merge_dir}} 里先提交刷新过的知识数据：`git add notes/fight-value-backtest.md src/knowledge`，commit "Refresh knowledge data"（没有改动就跳过）；
+2. 在 {{merge_dir}} 里先提交刷新过的知识数据：`git add notes/fight-value-backtest.md knowledge`，commit "Refresh knowledge data"（没有改动就跳过）；
 3. `git merge --no-edit <本分支>`；
 4. 跑 tsc 和 vitest，退出码都要是 0；不是 0 就回退到合入前的提交，在回报里写明；
-5. 如果改了知识数据的生成脚本，用 tools/ 下的脚本重建数据，再提交一次；
+5. 如果改了知识数据的生成脚本，用 knowledge/builders/ 下的脚本重建数据，再提交一次；
 6. 不停对局，不运行 play。
 
 ## 6. 安全
@@ -78,5 +78,5 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 最后再单独给一个 json 代码块：
 
 ```json
-{"task": "fix-batch", "base": "...", "fixes": [{"item": "...", "commit": "...", "test": "tests/...", "fails_without_fix": true}], "skipped": [{"item": "...", "reason": "..."}], "merged": null, "tests": {"tsc": 0, "vitest": 0, "cases": 0}}
+{"task": "fix-batch", "base": "...", "fixes": [{"item": "...", "commit": "...", "test": "agent/tests/...", "fails_without_fix": true}], "skipped": [{"item": "...", "reason": "..."}], "merged": null, "tests": {"tsc": 0, "vitest": 0, "cases": 0}}
 ```

@@ -9,7 +9,7 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 ---
 # 任务：更新经验库（{{runs}}）
 
-你是 STS2 × Jev 项目的离线学习者，这一次只做一件事：把新写好的复盘并进经验库 `src/knowledge/experience.json`，同时在变更记录里追加一节。全程用中文。自己做，不许再派下级 agent。
+你是 STS2 × Jev 项目的离线学习者，这一次只做一件事：把新写好的复盘并进经验库 `knowledge/characters/ironclad/experience.json`，同时在变更记录里追加一节。全程用中文。自己做，不许再派下级 agent。
 
 - 新复盘的局（run id，逗号分隔）：{{runs}}
 - 改代码的工作树：{{worktree}}（在这里改 experience.json、跑测试、提交）
@@ -27,7 +27,7 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 4. 读 lessons.md 里这几局的小节（按 `## <run id>` grep 定位，再按行号读；文件有 2 MB 以上，不许整份读）。小节后面如果有「勘误」，按勘误用。
 
 ## 2. 方法（照变更记录）
-- **来源**：这几局的复盘，加上日志里重新抽出来的数字。日志文件很大，只能按 run id grep 或按字节偏移 seek 流式读；`deepseek-reasoning.jsonl`、`states.jsonl` 没有 run id，按时间窗定位。可以沿用变更记录里写过的抽取脚本和工具（`tools/boss-fights-extract.py`、`tools/boss-clock-calibrate.ts --rows`、`tools/knowledge-slice.ts` 等），在 {{worktree}} 里跑。
+- **来源**：这几局的复盘，加上日志里重新抽出来的数字。日志文件很大，只能按 run id grep 或按字节偏移 seek 流式读；`deepseek-reasoning.jsonl`、`states.jsonl` 没有 run id，按时间窗定位。可以沿用变更记录里写过的抽取脚本和工具（`agent/tools/boss-fights-extract.py`、`agent/tools/boss-clock-calibrate.ts --rows`、`agent/tools/knowledge-slice.ts` 等），在 {{worktree}} 里跑。
 - **口径**沿用上一节（「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房，问号另算；汇总截至哪个时间、哪些局只进数字，都写明）。用同样的口径把上一节的数字重算一遍，对上了再加新局；对不上的，先找原因并写进本节。
 - **合并原则**：同一件事只留一条；单局事实并入汇总条目作证据；丢掉纯代码 bug 和战斗里的出牌细节（带真实游戏数据的 bug 记录，把数据留下）。
 - **字段**：
@@ -37,17 +37,17 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
   - card / relic / potion / event 类 scope 带中文 name；
   - 代码修好了的机制，把对应条目退役，写明 retired_reason；
   - version 改成下一个版本号（今天的日期 + 序号，照文件里现有的写法）。
-- **字数预算**（Dai 2026-10-04，取代原来的 200 条上限）：tests/experience.test.ts 限制所有 active 条目的 lesson 总长 ≤ 60000 字符。V4 大脑的知识前缀带着本进阶适用的全部条目，每道题都要付这些字数。条数不限，但：
+- **字数预算**（Dai 2026-10-04，取代原来的 200 条上限）：agent/tests/experience.test.ts 限制所有 active 条目的 lesson 总长 ≤ 60000 字符。V4 大脑的知识前缀带着本进阶适用的全部条目，每道题都要付这些字数。条数不限，但：
   - 同一件事只留一条；重复的、互相矛盾的、被代码修掉的，合并或退役；
   - 总长超过 55000 字符时，开工先压缩：把 n_support = 1、confidence low 的条目并进同一 scope 的相近条目（证据、反例一起带过去），再把冗长的条目压短（留数字和局号，删重复的叙述）。在回报里列出合并、退役、压缩了哪些条目；
   - 确实放不下就在回报里写「需要 Dai 定」，**不许改测试的预算**；
   - 回报里写 active 条数、总字符数，以及在 A8、A9 各适用多少条、多少字符。
-- **只用已有的 scope 类型**（boss、elite、hallway、act、general:<话题>、card、relic、potion、event）。v3 的切片（src/knowledge/experience.ts 的 relevance）不认识的类型会被整条丢掉。
+- **只用已有的 scope 类型**（boss、elite、hallway、act、general:<话题>、card、relic、potion、event）。v3 的切片（agent/src/knowledge/experience.ts 的 relevance）不认识的类型会被整条丢掉。
 - **药水**（照上一节）：
   - `potion:*` 和 `general:potion` 条目只改句内数字，不加证据局（n 不变）；
   - 其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分；
   - **不许新增或加强任何「什么时候喝 / 别喝」的说法，不许写喝药规则**。
-- **知识库一视同仁**：攻略（src/knowledge/ironclad-guide.md）、DeepSeek 手册（ds-handbook.md）、Jev 提示（jev-hints.json）、代码的卡牌参考分（card-value.ts 的 TIER 表和角色分类）、boss 笔记（run-journal.ts 的 BOSS_NOTES）都算知识库。每次更新都要核对：和复盘数据冲突的，改成数据版本（写明局数）；数据说明无效的删掉；还没有数据覆盖的先保留。改了什么、没改什么都记进本节（照上一节「和手写知识、代码冲突」的写法）。
+- **知识库一视同仁**：攻略（knowledge/characters/ironclad/ironclad-guide.md）、DeepSeek 手册（ds-handbook.md）、Jev 提示（jev-hints.json）、代码的卡牌参考分（card-value.ts 的 TIER 表和角色分类）、boss 笔记（run-journal.ts 的 BOSS_NOTES）都算知识库。每次更新都要核对：和复盘数据冲突的，改成数据版本（写明局数）；数据说明无效的删掉；还没有数据覆盖的先保留。改了什么、没改什么都记进本节（照上一节「和手写知识、代码冲突」的写法）。
 
 ## 3. 每条结论都要对数据
 - 每个主题在变更记录里写一行「主题 | 数据 | 结论」（照上一节「对照数据检查的主题」的表）。数字要能从日志或 monster-db.json 复算出来。
@@ -77,11 +77,11 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 - **CPU**：对局在跑（boss 模拟会占满核），抽数据、跑工具只用单进程或最多 4 个 `nice -n 19` 进程，不跑 boss 模拟池。
 
 ## 5. 更新 experience.json
-- 只改 {{worktree}}/src/knowledge/experience.json（和第 2 节里核对后需要改的手写知识文件）。JSON 格式、字段顺序、缩进照原文件。
-- 改完跑 `python3 -c 'import json; json.load(open("src/knowledge/experience.json"))'` 确认合法。
+- 只改 {{worktree}}/knowledge/characters/ironclad/experience.json（和第 2 节里核对后需要改的手写知识文件）。JSON 格式、字段顺序、缩进照原文件。
+- 改完跑 `python3 -c 'import json; json.load(open("knowledge/characters/ironclad/experience.json"))'` 确认合法。
 
 ## 6. 切片大小
-照上一节「切片大小」：用固定种子 20260929 从 states.jsonl 抽 A8、A9 各 20 个状态 × 6 种界面，分别用改前、改后的 experience.json 跑 `tools/knowledge-slice.ts`，报告中位 / 最大（字）。逐局、逐回合的细节压成一句放条目里，完整数字留在变更记录。写明 active 条目数和置信度分布。
+照上一节「切片大小」：用固定种子 20260929 从 states.jsonl 抽 A8、A9 各 20 个状态 × 6 种界面，分别用改前、改后的 experience.json 跑 `agent/tools/knowledge-slice.ts`，报告中位 / 最大（字）。逐局、逐回合的细节压成一句放条目里，完整数字留在变更记录。写明 active 条目数和置信度分布。
 
 ## 7. 测试和提交
 - `export PATH=$HOME/.local/node/bin:$PATH`，`npx tsc -p tsconfig.json --noEmit` 和 `npx vitest run` 退出码都要是 0（高负载时战斗测试可能超时，先重跑一次再下结论）。测试用固定数据。
@@ -91,7 +91,7 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 ## 8. 合入（只有 merge = v3 时做；V4 一律 merge = no，由开发会话审过后合入 v4 / v4-live）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里做：
 1. 等后台知识刷新跑完：`while pgrep -f 'jev-sts2-v3/tools/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省）；
-2. 在 {{merge_dir}} 里，如果有刷新过、没提交的知识数据：`git add notes/fight-value-backtest.md src/knowledge`，commit "Refresh knowledge data"；
+2. 在 {{merge_dir}} 里，如果有刷新过、没提交的知识数据：`git add notes/fight-value-backtest.md knowledge`，commit "Refresh knowledge data"；
 3. `git merge --no-edit <本分支>`；
 4. 跑 tsc 和 vitest，退出码都要是 0；不是 0 就 `git merge --abort`（或回退到合入前的提交），在回报里写明；
 5. 不停对局，不运行 play。

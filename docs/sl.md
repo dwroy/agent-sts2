@@ -1,10 +1,10 @@
-# SL：boss 和难打精英的死亡重打（src/sl/）
+# SL：boss 和难打精英的死亡重打（agent/src/sl/）
 
 Dai 2026-10-01/02 定：目标改为让模型快速学习、看能摸到多高的天花板，允许 SL，但做最简单的版本——**只在死亡时用**：
-boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.json，不限精英），还有（`SL_ACT3_LOW_HP`，Dai 2026-10-03）低血进场的三幕非 boss 战斗，在「这回合一结束就必死」时不结束回合，回主菜单再「继续」，
+boss 战、以及按战绩最难打的 5 种非 boss 战斗（knowledge/characters/ironclad/sl-elites.json，不限精英），还有（`SL_ACT3_LOW_HP`，Dai 2026-10-03）低血进场的三幕非 boss 战斗，在「这回合一结束就必死」时不结束回合，回主菜单再「继续」，
 游戏从进房间时的存档把这场战斗从第 1 回合重新开始，换打法再打；赢了接着往下打。不做构筑分叉、不做 boss 实验室，
 **不读、不写、不复制任何存档文件**（Dai 10-02），不改随机种子。架构不变：Jev 出牌，DeepSeek 做构筑、路线和战斗计划。
-`SL_ENABLED` 默认开（Dai 2026-10-02：SL 做成开关、默认开；原先默认关）；关的时候对局循环、题面和日志与没有 SL 时逐字节相同（tests/sl-loop.test.ts、boss-lines-planner 的 golden）。
+`SL_ENABLED` 默认开（Dai 2026-10-02：SL 做成开关、默认开；原先默认关）；关的时候对局循环、题面和日志与没有 SL 时逐字节相同（agent/tests/sl-loop.test.ts、boss-lines-planner 的 golden）。
 
 ## 1. 机制：确认了什么、推测了什么
 
@@ -13,7 +13,7 @@ boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.j
 | 事实 | 证据 | 状态 |
 |---|---|---|
 | 局内每个画面 mod 都给 `save_and_quit`（战斗里是 `end_turn, play_card, save_and_quit`） | states.jsonl 末尾的 COMBAT / CARD_SELECTION / REWARD / EVENT 帧的 available_actions | 确认 |
-| 主菜单有这局可继续时给 `continue_run`（菜单规划器一直在用） | src/screens/misc.ts、tests/scenarios.ts | 确认 |
+| 主菜单有这局可继续时给 `continue_run`（菜单规划器一直在用） | agent/src/screens/misc.ts、agent/tests/scenarios.ts | 确认 |
 | GAME_OVER 只给 `continue_game_over`，点了之后才有 `return_to_main_menu` | 最后几局的 GAME_OVER 帧 | 确认 |
 | 局结束后 current_run.save 不在了 | 现在 modded/profile1/saves/ 下只有 history、prefs、progress，没有 current_run.save（最后一局 00:08 结束） | 确认 |
 | history/&lt;开局 unix 时间&gt;.run 在 GAME_OVER 出现时就写了，早于 continue_game_over | 1790866223.run（负局）mtime 23:10:55 = 控制台「run ended (defeat)」23:10:55，continue_game_over 在 23:11:00；胜局 1790867487.run 00:08:51.23 vs GAME_OVER 帧 00:08:51.36 | 确认 |
@@ -27,7 +27,7 @@ boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.j
 | 重打不经过 GAME_OVER，所以失败的尝试不写 history/*.run，也不记 progress 里的死亡 | 上面两条 | 推测 |
 | 存档里的 num_reloads 每「继续」一次加 1 | 字段名 | 推测；我们不读也不改 |
 
-## 2. 预判必死（src/sl/judge.ts）
+## 2. 预判必死（agent/src/sl/judge.ts）
 
 只在对局循环**马上要发 `end_turn`**、而且这场战斗还能重打时问。判断要保守：任何一条不满足就不 SL。
 
@@ -38,7 +38,7 @@ boss 战、以及按战绩最难打的 5 种非 boss 战斗（src/sl/sl-elites.j
   回合末读到致死（意图 + 留手牌回合末的伤害过格挡，加留手牌的失去生命和下回合开头的扣血：狱火每张 1、深红斗篷、身上的中毒；§2.7）、没少瓶中精灵，
   下回合血量 ≤ 50% 且比回合末高（或在 50% 往下 5 以内，或按意图逐段打、中间复活后剩下的血量对得上）；
   敌方回合把战斗打完了（发了 end_turn）就看战后血量减战后回血；战斗中读到 ≤ 0 血且没有瓶中精灵（实盘读到的敌方回合帧，标记时记进 states.jsonl）。
-  日志里 8 次触发都读到（最早的规则 5 次，只看意图时 7 次：漏了 ET3V5177HXSY F48 T10），465 局没持有它的局放进去 0 次误判（tools/lizard-tail-replay.ts，§2.7）。
+  日志里 8 次触发都读到（最早的规则 5 次，只看意图时 7 次：漏了 ET3V5177HXSY F48 T10），465 局没持有它的局放进去 0 次误判（agent/tools/lizard-tail-replay.ts，§2.7）。
   读档（同一场战斗回合数变小）把它恢复成这场战斗开始时的样子：这场里用掉的回来，之前的战斗用掉的不回来；
 - 缓冲（Buffer）、无实体（Intangible）按它们最多能挡的算（缓冲 N 挡掉最大的 N 下、无实体每下按 1；§2.9），挡了还死才判；
 - 没有特殊阶段的敌人（最大血量 ≥ 100 万，或者意图是 DeathBlow）——**瀑布巨兽被击杀后、爆炸那一回合除外**（§2.4：按下面同样的规则判，爆炸当作一次攻击）；
@@ -111,14 +111,14 @@ Dai 10-02（1a）：重打时 `SL_RETRY_KNOWN_DRAWS` 给了这回合的抽牌，
 ### 2.2 提前 SL（SL_RELOAD_EARLY，默认开）
 
 Dai 10-02（1b）：「为了速度快一点 知道必死了就sl」——规划器在某一步给出 least-loss（每条模拟线都死）时，就在出这条线的第一张牌（或药）之前判，
-同样的判定提前做，第一次尝试也适用；判不了的照旧打完这条线、在 end_turn 判（不变）。必须**全部**满足（src/sl/judge.ts `judgeLeastLossNow`）：
+同样的判定提前做，第一次尝试也适用；判不了的照旧打完这条线、在 end_turn 判（不变）。必须**全部**满足（agent/src/sl/judge.ts `judgeLeastLossNow`）：
 1. `judgeEndTurn` 在这个局面上（label 当作 least-loss）判必死：mod 的 `end_turn_will_kill_player`、自己数（涟漪盆的 4、缓冲 / 无实体按最多能挡的，§2.9）、
    没有能救的复活、没有特殊阶段（巨兽的爆炸回合按 §2.4 判）、least-loss 层和它的抽牌否决（只按 §2.1 的确切已知抽牌放行）；
 2. 规划器的结论里没有运气（`LeastLossFacts.chance`）：身上没有随机药水（它的蒙特卡洛就是推演）；没有一条模拟线抽到不确切已知的牌（`SL_JUDGE_ANY_DRAW` 开时，§2.3 证明任何抽法都死也算）；
    手牌、建模的药水、已知抽到的牌里没有随机目标（飞剑回旋镖）、随机消耗（坚毅）、痛殴的随机吸收、随机生成（羽化、地狱之刃）、打出牌堆顶（破灭），
    也没有没建模的牌；没有势不可当、锁镰、地狱狂徒的随机伤害。**只有一个能打的敌人时，「随机敌人」不算运气**（2026-10-02 运维：X7BX5DYHFZ3N F48
    单独的永世沙漏，势不可当「对随机敌人」挡住了提前 SL）：势不可当、锁镰、地狱狂徒和只在目标上随机的牌（飞剑回旋镖）只在活着、能被打的敌人 ≥ 2 时
-   算运气（src/sl/random-target.ts）；其余随机（随机消耗、随机生成、痛殴）照旧；
+   算运气（agent/src/sl/random-target.ts）；其余随机（随机消耗、随机生成、痛殴）照旧；
 3. 这次尝试里没有牌被随机插进抽牌堆（跟踪器看到的：插入事件，或手里出现没从抽牌堆来的晕眩 / 狂乱逃离 / 呼唤之类；开关 3 关时是「放进抽牌堆」的断点）；
 4. 敌人意图照显示的来：每个活着的敌人都有显示的意图、类型是普通的（攻击 / 增益 / 减益 / 格挡 / 状态牌 / 召唤 / 眩晕 / 睡眠 / 治疗 / 逃跑；
    没有意图、或别的类型就不提前；巨兽空壳爆炸回合的 DeathBlow 算显示的意图，§2.4）；没有遗物 / 能力这回合（含回合末）随机行动（招架盾、遗忘之魂、群蛇形态……；文字里的随机只是「随机敌人」、
@@ -130,7 +130,7 @@ Dai 10-02（1b）：「为了速度快一点 知道必死了就sl」——规划
 不满足且只差提前的条件时，控制台每回合一行 `SL: every simulated line dies at F.. T.., but not before the line is played: 原因; end_turn decides`。
 没有重打次数时不提前（照旧打完、end_turn 判、写 no retry left）。任何出错：不提前。
 
-**校准**（tools/sl-early-replay.ts，notes/sl-retry-report.md §9；合并 v4 70cee12 并加上 §2 的回合末先打敌人 / 钨合金棍 / 搏动残片后重跑，提前判必死 179 个仍然 179 个都死，§9.8）：
+**校准**（agent/tools/sl-early-replay.ts，notes/sl-retry-report.md §9；合并 v4 70cee12 并加上 §2 的回合末先打敌人 / 钨合金棍 / 搏动残片后重跑，提前判必死 179 个仍然 179 个都死，§9.8）：
 日志里所有 mod 报致死的局面（全部难度、全部房间，4231 个决策）用现在的规划器重算：
 least-loss 的第一步 1192 个，提前判必死 179 个，**179 个那回合游戏真的杀了我们，0 个误判**（加上回合末打敌人这条之前是 181 / 183，多出的 2 个就是上面的历石）。
 SL 范围（A8+ boss 和名单战）的死亡回合 215 个里提前 41 个（其中 2 个 end_turn 判定本来抓不到），**每个只早 3 步左右、中位 2.4 秒**（平均 2.4、最多 6.7，
@@ -174,10 +174,10 @@ SL 范围（A8+ boss 和名单战）的死亡回合 215 个里提前 41 个（�
    不放行时否决理由后面写 `; not with any draw: 原因`。
 
 两次求解都：自己回合血到 0 的线不往下展开（游戏里那一刻就死了）、找到第一条不死的线就停（只问是不是每条线都死）。开关关：judge 拿不到这个界，
-判定、理由、规划器的决策都与 124fef7 相同（界是懒算的，只有被问到才解；tests/sl-any-draw.test.ts）。
+判定、理由、规划器的决策都与 124fef7 相同（界是懒算的，只有被问到才解；agent/tests/sl-any-draw.test.ts）。
 
-**离线评估**（2026-10-03，tools/sl-any-draw-replay.ts 用现在的规划器重放日志里 mod 报致死、规划器给 least-loss 的全部局面，
-rollout / B2 关；tools/sl-any-draw-summary.py 汇总；experiments/sl-any-draw/summary-sl.md、summary-all.md）：
+**离线评估**（2026-10-03，agent/tools/sl-any-draw-replay.ts 用现在的规划器重放日志里 mod 报致死、规划器给 least-loss 的全部局面，
+rollout / B2 关；agent/tools/sl-any-draw-summary.py 汇总；experiments/sl-any-draw/summary-sl.md、summary-all.md）：
 
 | 范围 | 抽牌否决的局面（开关关） | 开关开变成必死 | 其中真死 | 误判 |
 |---|---|---|---|---|
@@ -190,7 +190,7 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
 没放行的主要原因：超集上有线活（某种抽法能救，146）、不精确且打出抽牌牌后还有血（105）、遗物 / 能力回合中抽牌（百年积木、地精之角……73）。
 **第一版的误判**：NJSZDS6U5X9G F25 T9（走廊熟睡甲虫）：抽牌堆的完美打击按牌组条目算 6 伤（实际 18），超集判了每条线都死，实际战斗专注抽到它，
 飞剑回旋镖 + 完美打击打死甲虫赢了。改成用抽牌堆那一行的数值（取较大）、打出时才算的数值算不精确之后，0 误判（这一局也成了测试）。
-**校准**（tools/sl-any-draw-pile-check.ts，全部日志里 23876 次抽牌：抽到手里的牌对比上一帧抽牌堆里同一张的超集模型）：手里的数值比超集用的好
+**校准**（agent/tools/sl-any-draw-pile-check.ts，全部日志里 23876 次抽牌：抽到手里的牌对比上一帧抽牌堆里同一张的超集模型）：手里的数值比超集用的好
 （伤害 / 段数 / 格挡更高、费用更低）620 次，全部是已经算「不精确」的牌（打击木偶、附魔、数值不同、佩尔的士兵、臂甲 + 无懈……）；
 没算不精确的 0 次（排除异蛇之油自己抽的牌：随机药水，界在它还在身上时不放行；全身撞击由求解器按格挡算）。
 **用时**（加载约 10 的机器上、nice 15）：界的中位 1 ms、p90 13 ms，超集求解中位 2 ms、p90 17 ms，最慢两次过 2 秒被截断（算不必死）；
@@ -219,7 +219,7 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
 - mod 的 `end_turn_will_kill_player` 在 76 次里都等于「显示 − 现有格挡 ≥ 血」；报致死的 26 次里 23 次真死，活下来的 3 次正好是
   瓶中精灵（LSWU）、蜥蜴尾巴（MZCG9T5G6TBZ）、涟漪盆没打攻击（8V0H 30 血 + 20 格挡对 50，盆的 4 点让我们剩 4 血），这三种 §2 本来就否决。
 
-**现在的规则**（src/sl/judge.ts `specialPhase` / `giantBlast`）：
+**现在的规则**（agent/src/sl/judge.ts `specialPhase` / `giantBlast`）：
 - 巨兽空壳在爆炸回合、而且是**唯一活着的敌人**、形状和日志里完全一样（`EXPLODE_MOVE`、唯一意图 DeathBlow、数字给了、段数 1、蒸汽喷发不在）时，
   不再否决：爆炸当作一次攻击，走 §2 的全部规则——mod 报致死、没有复活、缓冲 / 无实体、自己数（爆炸 ≥ 血 + 格挡 + 回合末格挡，涟漪盆的 4 也在里面）、
   留手牌的伤害、钨合金棍 / 搏动残片、回合末先打敌人的东西（打不死空壳；惊逃按 §2.9 算上限）、rules / least-loss 两层和抽牌否决（§2.1、§2.3 照旧放行）。
@@ -232,8 +232,8 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
   爆炸时还有别的敌人（`with other enemies alive`）；活着的巨兽出 DeathBlow；别的敌人 100 万血或 DeathBlow（`only the Waterfall Giant's blast is judged`）。
   没有巨兽空壳的局面，判定和理由与之前逐字节相同。
 
-**重放**（tools/sl-giant-replay.ts 用现在的规划器把这 76 场每个空壳回合的决策重算一遍，rollout / B2 关，`--tag before` 在 v4 cd31bfe 上跑、
-`--tag after` 在这次的改动上跑；tools/sl-giant-summary.py 汇总到 experiments/sl-giant/summary.md）：
+**重放**（agent/tools/sl-giant-replay.ts 用现在的规划器把这 76 场每个空壳回合的决策重算一遍，rollout / B2 关，`--tag before` 在 v4 cd31bfe 上跑、
+`--tag after` 在这次的改动上跑；agent/tools/sl-giant-summary.py 汇总到 experiments/sl-giant/summary.md）：
 
 | 局面 | 个数 | 改之前判必死 | 改之后判必死 | 其中真死 | 误判 |
 |---|---|---|---|---|---|
@@ -244,7 +244,7 @@ end_turn 时还带着抽牌牌的局面很少（规划器的 least-loss 线通�
 23 次爆炸死亡里 20 次现在会 SL（8 次在提前那一步，含 QLL4 T13 出第一张打击之前），没抓到的 3 次：7048QYLLYJLS（涟漪盆没打攻击，9 + 23 + 4 仍不够 39，
 当时 §2 的涟漪盆规则否决；2026-10-04 起算上 4 点，判必死，§2.9）、1VX145UJM8RZ（惊逃：当时照旧否决；2026-10-04 起按手里攻击牌最多的伤害算，打不死空壳，判必死）、
 5NFGDU7BQPD3（头槌抽牌，任何抽法都死证明不了）。
-53 次活下来的爆炸回合 0 次判必死。测试：tests/sl-giant-judge.test.ts（tests/logged-states/giant-judge/husk.json 里的 10 个日志局面）。
+53 次活下来的爆炸回合 0 次判必死。测试：agent/tests/sl-giant-judge.test.ts（agent/tests/logged-states/giant-judge/husk.json 里的 10 个日志局面）。
 
 ### 2.5 无厌沙虫的沙坑（2026-10-03）
 
@@ -263,7 +263,7 @@ mod 的 `end_turn_will_kill_player` 只看意图伤害，我们自己数也只�
 - 规划器早就算了：turn-solver `sandpitAfter = 沙坑 + 本回合逃离数 − 1`，≤ 0 就是这条线死（`otherDeath`），逃离按牌建模（+1、耗能）；
   rollout 把它带到后面的回合，B4 整场脚本从液化地面开始；BVJT T5 的 least-loss 就是这么来的。
 
-**现在的规则**（src/sl/judge.ts `sandpitOf`）：沙虫活着、沙坑正好是 1、自己数（含留手牌）不死时，死亡**落在沙坑上**：
+**现在的规则**（agent/src/sl/judge.ts `sandpitOf`）：沙虫活着、沙坑正好是 1、自己数（含留手牌）不死时，死亡**落在沙坑上**：
 - 不要求 mod 报致死（和留手牌、回合开始扣血一样）；回合开始的扣血不再单独算（沙坑先到）。
 - §2 的共同条件照旧：没有复活（复活能不能救下被吞，日志里没有，按能算）、缓冲 / 无实体（被吞时它们挡不挡，日志里没有，不判）、特殊阶段；
   回合末先打敌人的东西（历石、招架盾、炸弹……照旧，算不准的照旧不判）。
@@ -277,7 +277,7 @@ mod 的 `end_turn_will_kill_player` 只看意图伤害，我们自己数也只�
   sl-attempts 行的 judge 里多 `sandpit: 1`；不判时控制台照样写 `SL: ending the turn may be lethal ...`（ownCountDies）。
 - 提前 SL（§2.2）不变：沙虫会把狂乱逃离随机塞进抽牌堆，第 3 条「这次尝试里有牌被随机插进抽牌堆」几乎总挡住它，所以沙坑的死亡在 end_turn 判。
 
-**重放**（tools/sl-giant-replay.ts `--boss insatiable`，81 场每个决策局面用现在的规划器重算，rollout / B2 关；改之前 / 改之后；
+**重放**（agent/tools/sl-giant-replay.ts `--boss insatiable`，81 场每个决策局面用现在的规划器重算，rollout / B2 关；改之前 / 改之后；
 experiments/sl-giant/summary-insatiable.md）：
 
 | 局面 | 个数 | 改之前判必死 | 改之后判必死 | 其中真死 | 误判 |
@@ -288,7 +288,7 @@ experiments/sl-giant/summary-insatiable.md）：
 
 新判必死的 8 次（THMGB35RGDSD、M8123JA75Y1G、Y08TU00D9VLH、X8HF0SB0XGJ1、FN0HCB4DVKZK、LXB3、06S8、BVJT）都是被吞；沙坑 1 结束回合没判的 2 次死亡
 （TTVYCS2ADZRM T6、9V09G0TKK5EQ T5）手里还有能喝的药、label 不是 least-loss，照旧不判。理由变了的 31 个局面全在沙坑 1。
-测试：tests/sl-sandpit-judge.test.ts（tests/logged-states/sandpit-judge/insatiable.json 里的 6 个日志局面）。
+测试：agent/tests/sl-sandpit-judge.test.ts（agent/tests/logged-states/sandpit-judge/insatiable.json 里的 6 个日志局面）。
 
 ### 2.6 两张狱火：下回合开头掉的是张数（2026-10-03）
 
@@ -308,7 +308,7 @@ experiments/sl-giant/summary-insatiable.md）：
 群伤只来一次（B3PJGKHAQGK6 狱火 12：敌人 14→2）。顺序（C4F1 第 1 次 T7 的三帧）：先抽牌（地狱狂徒打出抽到的打击，4 血），再是狱火扣 2（2 血，恶魔 −18），
 再是烘焙手套的消耗、抱抱先生的 7。
 
-**现在的规则**（src/sl/judge.ts `infernoCopies`、`startHitsBefore`）：
+**现在的规则**（agent/src/sl/judge.ts `infernoCopies`、`startHitsBefore`）：
 - 狱火的张数按能力数值能对上的**最少**张数算：数值 ÷ 一张最多加的伤害（9，牌组 / 手牌 / 牌堆里的狱火写的更大就用那个），向上取整；少算只会少判必死。
   下回合开头掉血 = 张数 + 深红斗篷的代价，其余照旧（回合开始能回血 / 护盾的遗物和能力不判；狱火群伤能打死所有敌人不判；
   钨合金棍、搏动残片 2026-10-04 起按 §2.9 算：每份少 1；这回合按封顶算、开头那点归下一回合的封顶）。
@@ -325,8 +325,8 @@ experiments/sl-giant/summary-insatiable.md）：
 - 提前 SL 和 least-loss 这次都抓不到：T6 的 end_turn 是 `combat/end_turn`（没有能打的牌），走 rules；T7 那一帧的提前 SL 被地狱狂徒（不建模的回合中能力）挡住，
   就算放过也晚了——那一帧之后狱火的扣血已经在路上。
 
-**重放**（tools/sl-start-loss-replay.ts：身上有狱火或深红斗篷的 985 场战斗、13864 个决策局面，mod 报致死或自己数会死的用现在的规划器重算（改之前 1313 个、改之后 1320 个），
-rollout / B2 关；`--tag before` 在 v4 052e586 上跑，`--tag after` 在这次的改动上跑；tools/sl-start-loss-summary.py 汇总到 experiments/sl-start-loss/summary.md）：
+**重放**（agent/tools/sl-start-loss-replay.ts：身上有狱火或深红斗篷的 985 场战斗、13864 个决策局面，mod 报致死或自己数会死的用现在的规划器重算（改之前 1313 个、改之后 1320 个），
+rollout / B2 关；`--tag before` 在 v4 052e586 上跑，`--tag after` 在这次的改动上跑；agent/tools/sl-start-loss-summary.py 汇总到 experiments/sl-start-loss/summary.md）：
 
 | 局面 | 个数 | 改之前判必死 | 改之后判必死 | 其中真死 | 误判 |
 |---|---|---|---|---|---|
@@ -338,13 +338,13 @@ rollout / B2 关；`--tag before` 在 v4 052e586 上跑，`--tag after` 在这�
 
 新判必死的只有 C4F1 第 5 次 T6；两张以上狱火结束回合死掉的 5 次现在全判。不再判必死的 0 个。理由变了、仍不判的：Z3DFG85QDRCD F48 T8（深红斗篷 + 势不可当，
 死了；原来被抽牌否决挡住，现在先被「势不可当在回合开头可能先打」挡住）；YFG53EZ372D7 F48 T10 的提前 SL 是任何抽牌界限的 2000 ms 预算在两次运行里一次超时一次没超（负载不同），和这次改动无关。
-测试：tests/sl-inferno-judge.test.ts（tests/sl-inferno-judge-data 里 C4F1 F33 的 4 个日志局面，和在它们上面改出来的局面）。
+测试：agent/tests/sl-inferno-judge.test.ts（agent/tests/sl-inferno-judge-data 里 C4F1 F33 的 4 个日志局面，和在它们上面改出来的局面）。
 规划器那边（turn-solver / combat-plan / rollout / combat.ts 的 `startTurnHpLoss`）也是不管几张狱火都按 1 算，第二张狱火在它看来每回合不多掉血——这次没改，§2.7 改了。
 
 ### 2.7 规划器也按张数算狱火（2026-10-04，v4-inferno-planner）
 
 **改了什么**（判定、规划器、rollout、整场模拟共用一个数法）：
-- `src/strategy/start-loss.ts`：`infernoCopies(state, INFERNO_POWER)` 从判定（§2.6）挪过来，判定、combat-plan、combat.ts（逐张出牌的旧规划器）都用它；
+- `agent/src/strategy/start-loss.ts`：`infernoCopies(state, INFERNO_POWER)` 从判定（§2.6）挪过来，判定、combat-plan、combat.ts（逐张出牌的旧规划器）都用它；
   `startTurnHpLossOf` = 狱火张数 + 深红斗篷的代价（`mantleHpCost`）。纯数的 `infernoCopiesOf(amount)`（÷9 向上取整）在 turn-solver.ts。
 - 本回合（turn-solver）：`startTurnHpLoss` 里已经是在场的张数；本回合每打出一张狱火 `Sim.infernos` +1（复制药水下打两次就是 +2），下回合开头的掉血加上它。
   原来只有「之前没有狱火、这回合打了」才 +1，第二张狱火看着不掉血。
@@ -354,7 +354,7 @@ rollout / B2 关；`--tag before` 在 v4 052e586 上跑，`--tag after` 在这�
   斗篷 7 下回合开头掉 1 的 160 次、10 掉 1 的 45 次、14（两张）掉 2 的 6 次。三张斗篷+（30）会多算成 4（日志里没出现）。
   别的「回合开始失去生命」只有中毒（在我们身上，游戏数据里能力的说明这么查的）：规划器没算它，但日志里我们身上从没有过中毒（0 帧），没动。
 
-**重放**（tools/inferno-planner-replay.ts，v4 02e2ca8 与这次各跑一遍，rollout 冻结时钟满 5 回合 × 8 样本、B2 关；experiments/inferno-planner/compare.md）：
+**重放**（agent/tools/inferno-planner-replay.ts，v4 02e2ca8 与这次各跑一遍，rollout 冻结时钟满 5 回合 × 8 样本、B2 关；experiments/inferno-planner/compare.md）：
 牌组里两张以上狱火或 INFERNO_POWER ≥ 12 的 116 场战斗的全部规划决策，一张狱火的 150 场、没有狱火的 50 场（A8+）每回合第一个规划决策，共 2501 个局面：
 
 | 局面（在场张数 + 手牌 / 抽牌堆 / 弃牌堆里的狱火） | 个数 | 一字不差 | 决策变了 | 代码自己的出牌变了 | 给 Jev 的选项变了 | rollout 的最佳变了 |
@@ -381,12 +381,12 @@ C4F14F3XPN0N F33 第 5 次 T6（15 HP、两张狱火+，拍击 21）：原来问
 和「防御、劫掠+」；现在前者算出 hp -15 = 死，判死的线 4/8 → 6/8，代码自己打「防御、劫掠+」（hp -14，T7 开头之后还剩 1）。第 1、2 次 T6（17 HP）判死的线 2/8 → 4/8。
 别的：JGJS7QE62GLD F24 T2（16 HP，一张在场、第二张在手，每条线都死）least-loss 从「打狱火」变成「结束回合」；A8ENYFR4ZWKG F33 T6（两张在场，赢了）rollout 死 16/48 → 27/48，
 最佳从「防御、上勾拳+、打击」变成「血墙+、上勾拳+」。已经输定的局面（重开、之后死）原来 rollout 就几乎全死。
-测试：tests/inferno-planner.test.ts（tests/inferno-planner-data 的 4 个日志局面，知识数据钉在 02e2ca8）、turn-solver / rollout 的单元测试；
-tests/death-move-planner.test.ts 的 0U96 F48 T5 摘要重钉（抽牌堆里两张狱火，rollout 的数变了）。
+测试：agent/tests/inferno-planner.test.ts（agent/tests/inferno-planner-data 的 4 个日志局面，知识数据钉在 02e2ca8）、turn-solver / rollout 的单元测试；
+agent/tests/death-move-planner.test.ts 的 0U96 F48 T5 摘要重钉（抽牌堆里两张狱火，rollout 的数变了）。
 
-### 2.8 回合开头还没走完就出牌：loop 等一等再发（2026-10-04，v4-inferno-planner，src/act/turn-start.ts）
+### 2.8 回合开头还没走完就出牌：loop 等一等再发（2026-10-04，v4-inferno-planner，agent/src/act/turn-start.ts）
 
-**看到的**（tools/turn-start-settle.py，每回合（T2 起、每次尝试）第一个战斗决策的那一帧对下一帧，experiments/inferno-planner/turn-start-settle.md）：
+**看到的**（agent/tools/turn-start-settle.py，每回合（T2 起、每次尝试）第一个战斗决策的那一帧对下一帧，experiments/inferno-planner/turn-start-settle.md）：
 回合开头游戏一个接一个跑钩子：抽牌（地狱狂徒把抽到的打击打出去）、狱火的扣血和群伤、深红斗篷、烘焙手套的消耗、抱抱先生。一个钩子的动作（自动打出的打击、群伤）做完、
 下一个钩子还没开始的那一下，mod 的 readiness 全是「好了」：loop 第一次出手的 25327 帧里 `can_use_combat_actions`、`actions_settled`、`snapshot_stable` 全是 true，
 `running_action_type` 全是 null——提前的那些也一样，所以 mod 的标志分不出来。loop 只在 `can_use_combat_actions` 为 false 时等，出牌后只在结果不是 completed/stable 时等。
@@ -401,7 +401,7 @@ C4F14F3XPN0N F33 第 1 次 T7：那一帧 4 HP、手里一张牌（地狱狂徒�
 新的一帧再从头算。这一回合后面的动作、两样都没有的回合不等。滚石有它自己的等法（combat-plan `boulderSettling`），不在这里。
 代价（记了读取时间的 982 个有狱火或地狱狂徒的回合开头）：448 个要等，平均 0.51 s（全部平均 0.23 s，一场 0.7 s）；狱火 910 个平均 0.20 s，地狱狂徒 78 个平均 0.63 s；
 本来就想了 500 / 1000 ms 以上的（多数 plan-choice）不多等。
-测试：tests/turn-start-settle.test.ts（C4F1 F33 的日志局面上的等待时间；脚本 mod 上回合开头还在变的局面：有狱火时不在旧的一帧上发，没有时照旧立刻发）。
+测试：agent/tests/turn-start-settle.test.ts（C4F1 F33 的日志局面上的等待时间；脚本 mod 上回合开头还在变的局面：有狱火时不在旧的一帧上发，没有时照旧立刻发）。
 
 ### 2.7 复活按顺序打过去（2026-10-03）
 
@@ -433,7 +433,7 @@ C4F14F3XPN0N F33 第 1 次 T7：那一帧 4 HP、手里一张牌（地狱狂徒�
   `revive` 照样记它会怎样。关的时候就是上面的逐段判定。注意：规划器的 least-loss 已经把复活算进去（复活救下的线不算死），所以开了以后实际上只有 rules 层会多判。
 - 控制器：GAME_OVER 画面不再开始记新的战斗（§3）。
 
-**重放**（tools/sl-revive-replay.ts：持有瓶中精灵 / 蜥蜴尾巴 / 搏动残片的 31 局里有局面的 27 局，逐帧跑跟踪器和控制器的「这回合的血」，每个发出去的 end_turn
+**重放**（agent/tools/sl-revive-replay.ts：持有瓶中精灵 / 蜥蜴尾巴 / 搏动残片的 31 局里有局面的 27 局，逐帧跑跟踪器和控制器的「这回合的血」，每个发出去的 end_turn
 有复活、或有搏动残片且回合开头扣过血的，用记录的 label 判；另外把 mod 的致死标志强制打开，看复活逐段打下来剩多少，和下回合实际血量比）：
 
 | 局面 | 个数 | 结果 | 判必死 | 误判 |
@@ -443,7 +443,7 @@ C4F14F3XPN0N F33 第 1 次 T7：那一帧 4 HP、手里一张牌（地狱狂徒�
 | end_turn、搏动残片 + 回合开头扣血 | 45 | 活 42、赢 1、死 2 | 2（之前 0：ET3V F48 T13、9XZX4ZJ1ZKUA F33 T7） | 0 |
 | least-loss 的第一张牌、有复活（提前 SL 的前提） | 13 | 活 10、赢 3 | 0 | 0 |
 
-- 日志里没有「复活触发了还是死了」的局面（有复活时 0 次死亡），所以「复活救不了 → 判必死」这一支只在改过的日志局面上测（tests/sl-revive-judge.test.ts）。
+- 日志里没有「复活触发了还是死了」的局面（有复活时 0 次死亡），所以「复活救不了 → 判必死」这一支只在改过的日志局面上测（agent/tests/sl-revive-judge.test.ts）。
 - 复活逐段打的结果对下回合实际血量：19 次正好一样；2 次敌方回合把战斗打完了，实际多燃烧之血的 6（MZCG9T5G6TBZ F17、LSWUK6D2EV89 F17）；
   JR66CJ9T8H7W F48 T8 有两个 end_turn（第一个没生效，中间一次消耗选择），真正结束回合那个对得上 12；3MDJW1UAD5M6 F31 T6 算出来剩 23、实际 6
   （异螨的撕咬像是又打了一次，没查清；算多了是不判的方向）；2 次没算（ET3V F48 T9 自己数活——山铜多算；G1Z0X3WBH4XQ F48 T7 钨合金棍）。
@@ -461,7 +461,7 @@ C4F14F3XPN0N F33 第 1 次 T7：那一帧 4 HP、手里一张牌（地狱狂徒�
 Dai 的规则：只在真的必死时 SL，不按推演。所以每个「身上有某个遗物 / 能力 / 牌就不判」的否决，要么按它**最多能救多少**算（最多的格挡、最多能先打敌人多少、
 最少放过多少伤害），这个上限下还死才判；要么留着，写清楚为什么算不出上限。
 
-**按上限算的**（日志依据；src/sl/judge.ts）：
+**按上限算的**（日志依据；agent/src/sl/judge.ts）：
 - **涟漪盆**：本回合没打攻击牌（mod 的 `attacks_played_this_turn`），回合末 +4（每件）。日志里有它、没打攻击、没有别的干扰的回合末：19 次正好 4（敏捷 1 / 3 / 5
   的 3 次、虚弱的 2 次也是 4），3 次 0，没有多于 4 的；规划器用的同一个数（passive-pieces `RIPPLE_BASIN_BLOCK`）。一条线打了攻击只会少这 4 点。
 - **惊逃（能力）**：回合末随机打出手里一张攻击牌：按手里每张攻击牌（游戏数据的牌类型）能打出的最多伤害算一个随机敌人挨的（显示的数 × 段数、加活力、
@@ -509,7 +509,7 @@ Dai 的规则：只在真的必死时 SL，不按推演。所以每个「身上�
 充能球、历史课、遗物伤害没写、势不可当以外「每当……」打敌人的能力（火焰吐息、黑洞）、回合开始打敌人的能力、地狱狂徒算不准的几种；沙坑：别的敌人活着、
 钨合金棍 / 搏动残片 / 缓冲 / 无实体（被吞怎么扣看不到）、意图不显示；least-loss + 复活（规划器只按一种顺序打复活）；抽牌否决照 §2.1、§2.3。
 
-**重放**（tools/sl-judge-bounds-replay.ts 和 tools/sl-judge-bounds-summary.py，experiments/sl-judge-bounds/summary.md）：日志里每个 end_turn 局面（到 10-03，476 局、26,851 个，
+**重放**（agent/tools/sl-judge-bounds-replay.ts 和 agent/tools/sl-judge-bounds-summary.py，experiments/sl-judge-bounds/summary.md）：日志里每个 end_turn 局面（到 10-03，476 局、26,851 个，
 SL 读档没发出去的 85 个也在内），v4 的判定（cbf6895）和这个分支的判定在同一进程里判；least-loss 的局面重新规划拿规划器的事实（任何抽牌都死的界限，和实盘一样）。
 `live` 用记录的 label，`open` 把层强制打开（least-loss、抽牌当已知）——end_turn 局面上敌方回合做了什么日志里有，所以 `open` 判必死而活下来就是误判，不管 label。
 致死局面（mod 报致死，或任一边自己数死）597 个：
@@ -528,7 +528,7 @@ SL 读档没发出去的 85 个也在内），v4 的判定（cbf6895）和这个
 还没判的死（live）：手里有牌 / 药而不是 least-loss 21、抽牌证明不了 7、彼岸咆哮 + 荆棘可能先打死恶魔 1（377J，上面）、mod 不报也没算到的 1
 （孤注一掷：S780Y1W7AQZL A0，受到未格挡的攻击伤害就死）——这些不是「有某个东西就不判」的否决，没动。
 
-## 3. 控制器（src/sl/controller.ts、reload.ts）
+## 3. 控制器（agent/src/sl/controller.ts、reload.ts）
 
 - **认战斗**（controller.ts `slGate`，按顺序，第一条成立的就是这场的 `gate`）：每读一次状态都看一下。开场活着的敌人里有 boss
   （知识库 type = Boss）→ `boss`；有名单精英的敌人 id → `hard-fight`；`SL_ACT3_LOW_HP` 开（默认开）、三幕（act_id 2；没有 act_id 时按层，
@@ -577,7 +577,7 @@ V4.4 A9 窗口 20 负里 11 局进了三幕，7 局死在非 boss 战（notes/v4
 - **V4.4 A9 的 7 场三幕非 boss 死亡**（进场血）：XPDA F39 ? 猫头鹰法官 15/100（15%）、A4PW F46 ? 电球头 13/72（18%）、9175 F39 走廊咬人卷轴 ×4 16/80（20%）、
   EQL9 F45 走廊史莱姆狂战士 28/80（35%）、8RB3 F46 走廊巨斧机器人 47/101（47%）、HYQW F38 走廊青蛙骑士 49/101（49%）、9V7K F45 灵魂枢纽 46/80（57%，名单内，原来就有 SL）。
   线在 40：管到前 4 场；50：再加 8RB3、HYQW，名单外的 6 场全管到；60：同 50。
-- **会不会真读档**：tools/sl-early-replay.ts（规划器在记录的局面上重算，rollout / B2 关）重判这 6 场名单外死亡回合的 end_turn：6 场都判必死
+- **会不会真读档**：agent/tools/sl-early-replay.ts（规划器在记录的局面上重算，rollout / B2 关）重判这 6 场名单外死亡回合的 end_turn：6 场都判必死
   （rules 3 场、least-loss 3 场）。A8+A9 合计 16 场三幕非 boss 死亡里 15 场判必死，LTKW F44 没判（重放只看这一场的帧，不知道蜥蜴尾巴 F37 已用掉，判「还有复活」；
   实盘的记录在 10-02 8c93fa4 修过）。
 - **误判**：同一批 82 局里进场 <60% 而赢下的 24 场三幕非 boss 战，14 场出现过 mod 标「回合结束会死」的局面（61 个决策），end_turn 和提前 SL
@@ -608,7 +608,7 @@ V4.4 A9 窗口 20 负里 11 局进了三幕，7 局死在非 boss 战（notes/v4
 - **run-config.jsonl**：SL 开着时多一个 `sl`（开关、次数、显示模拟、超时、日志、精英名单和日期），也进 config_sha。
 - 日志库（docs/logdb.md）：表 sl_attempts，decisions 多 sl_attempt、sl_reloads。注意 fights 视图按层切战斗，同一场的几次尝试合成一场。
 
-## 5. 统计口径（tools/eval/metrics.py，docs/eval.md §3）
+## 5. 统计口径（eval/metrics.py，docs/eval.md §3）
 
 上面原有的各行是**最终**成绩（重打之后）。组里有 SL 记录时多六行：「SL：有 SL 记录的局」「SL：重打次数 / 局」，以及
 **第一次尝试**的终层、过一幕、过二幕、胜局：这局第一条 predicted_death（第 1 次尝试预判必死、触发重打）的层就是第一次尝试的死亡层，
@@ -687,7 +687,7 @@ V4.4 A9 窗口 20 负里 11 局进了三幕，7 局死在非 boss 战（notes/v4
 | `SL_LOG` | 决策日志旁的 sl-attempts.jsonl | off 不写 |
 | `SL_STEP_TIMEOUT_MS` | 60000 | 等主菜单、等回到战斗各自的上限 |
 
-难打战斗名单 src/sl/sl-elites.json（Dai 2026-10-02：按战绩取前 5，不限精英，各重打 3 次）：A8–A9 至少 8 场、死亡率 ≥10% 的非 boss 战斗按死亡次数排——残杀千足虫 11/38（精英）、蜂群术士 7/43（精英）、熟睡甲虫 + 盛碗虫 7/50（走廊，按熟睡甲虫认）、胧光怪 7/62（走廊）、感染棱柱 5/32（精英）；按死亡率排更高但场数太少、没收：三骑士 2/9、机甲骑士 2/11、青蛙骑士 2/11（三幕）。改名单只改这个文件。
+难打战斗名单 knowledge/characters/ironclad/sl-elites.json（Dai 2026-10-02：按战绩取前 5，不限精英，各重打 3 次）：A8–A9 至少 8 场、死亡率 ≥10% 的非 boss 战斗按死亡次数排——残杀千足虫 11/38（精英）、蜂群术士 7/43（精英）、熟睡甲虫 + 盛碗虫 7/50（走廊，按熟睡甲虫认）、胧光怪 7/62（走廊）、感染棱柱 5/32（精英）；按死亡率排更高但场数太少、没收：三骑士 2/9、机甲骑士 2/11、青蛙骑士 2/11（三幕）。改名单只改这个文件。
 
 ## 8. 风险和局限
 
@@ -715,7 +715,7 @@ V4.4 A9 窗口 20 负里 11 局进了三幕，7 局死在非 boss 战（notes/v4
    → `SL: continue_run -> completed` → `SL: back in the fight at F.. T1 (.. s); attempt 2/4 begins`。logs/sl-attempts.jsonl 那一行
    `reload.ok = true`、`resumed_turn = 1`。若 `resumed_turn` 不是 1（游戏在战斗中途也存档），或出现 `reload failed at ...`，记下原因告诉
    开发会话（SL 已自动在这局停用，对局继续）。
-3. 统计：`tools/eval/metrics.py --group-by version --md` 里看「第一次尝试」各行和最终成绩并列。
+3. 统计：`eval/metrics.py --group-by version --md` 里看「第一次尝试」各行和最终成绩并列。
 4. 回退：.env 里 `SL_ENABLED=off`（或删掉这一行），下一局起生效。
 
 ## 10. 重打：已知抽牌顺序、多算（SL_RETRY_KNOWN_DRAWS、SL_RETRY_COMPUTE）
@@ -749,7 +749,7 @@ rollout 被时间预算砍到 1–4 个样本的噪声。也就是说重打基�
   它们每招只有一个后继，千足虫只在死亡时多一个重接），rollout 的招式模型本来就几乎确定。对招式真随机的 boss 还没有一次重打的证据，
   所以**没有做**「按前一次的敌人招式算」（待定，见回报）。
 
-### 10.2 已知抽牌（SL_RETRY_KNOWN_DRAWS，src/sl/draws.ts）
+### 10.2 已知抽牌（SL_RETRY_KNOWN_DRAWS，agent/src/sl/draws.ts）
 
 - **记录**：控制器每读一个战斗状态就交给这次尝试的 DrawTracker：比较上一个状态，离开抽牌堆（按卡 id + 升级）并且新进手牌的牌按手牌顺序记下
   （新回合手牌全部算候选，回合内只看比上个状态多出来的；从手牌末尾往前对，所以保留在手里的同名牌不会被当成新抽的）。这次尝试的第一个状态
@@ -813,7 +813,7 @@ rollout 被时间预算砍到 1–4 个样本的噪声。也就是说重打基�
   - 已知顺序（`knownOrderOf`）：比较几次尝试时，「不知道先后」的那段按多重集比（两边的段重叠就连成一段），对不上就切在段的开头；合并时一段位置要是另一次每一位
     都确切知道（第 2 次把 11–13 抽进了手里），就用它的，这段变成确切的；还不知道的段留在 `unordered`。`checkKnown` 给规划的接下来几张只到下一段不知道先后的
     位置为止（在段里面时一张都不给），这次把这段抽完 / 打完（多重集对上）以后再接着给；带探寻打击那种挑牌的（位置会移）遇到这种段就切在段前（少见，保守）。
-  - 离线（tools/sl-draws-replay.ts → experiments/sl-draws：sl-attempts.jsonl 到 10-03 23:15 里 169 场战斗的帧重新跟踪，老 / 新两种跟踪器，每个帧上的预测和下一步实际离开抽牌堆的牌比，不知道先后的
+  - 离线（agent/tools/sl-draws-replay.ts → experiments/sl-draws：sl-attempts.jsonl 到 10-03 23:15 里 169 场战斗的帧重新跟踪，老 / 新两种跟踪器，每个帧上的预测和下一步实际离开抽牌堆的牌比，不知道先后的
     位置按那段的牌比；那一步还有挑牌 / 插入的不比）：RNTVAT F38 第 2 次开始时已知 10 → 29 张（11–13 位不知道先后），第 3、4 次 10 → 29 张（全确切）；预测
     并对上的抽牌第 2 次 0 → 12、第 3 次 5 → 24、第 4 次 5 → 15；C4F14 F33 第 2–4 次开始时已知 18 → 30 张（T4、T5 两段不知道先后，第 5 次 30 张全确切），预测并对上的抽牌第 2、3 次
     12 → 15、第 4 次 12 → 14、第 5 次 12 → 24；102 次「第 2 次起」的尝试里预测错 0 张（老的也是 0；对上的老的 2027 张、新的 2088 张），开始时已知的张数合计 2722 → 2815。日志里
@@ -825,18 +825,18 @@ rollout 被时间预算砍到 1–4 个样本的噪声。也就是说重打基�
   回合内、而且这样能多认出来时才用。离线：日志里（sl-attempts.jsonl 的战斗加上有这几样牌的 24 局）16 场战斗因此记得更长（P68P F25 5 → 23 张、X7BX5DYHFZ3N F17 5 → 19），但都只打了一次，没有重打能核对。
   - RJZGFGNYK56W F33（知识恶魔，6 次，V4.5 GPT 运维复盘 10-04）：牌组 2 张剑柄打击（「造成9点伤害。抽1张牌。」），没有地狱狂徒。第 1–4、6 次 T4 手里一张，
     打出它抽到了另一张（抽牌堆少一张剑柄打击、弃牌堆多一张、手里还是一张，排到了最后）。实盘当时（6d2ce32）还没有这条，每次在 T4 断，已知 21 张；
-    按手牌顺序（v4 2dee437 起）认得出：第 2–6 次开始时都已知 29 张，到各自 T6 洗牌，每次预测并对上 24 张（原来 16），错 0（tests/sl-draws-pommel.test.ts）。
+    按手牌顺序（v4 2dee437 起）认得出：第 2–6 次开始时都已知 29 张，到各自 T6 洗牌，每次预测并对上 24 张（原来 16），错 0（agent/tests/sl-draws-pommel.test.ts）。
   - **手牌看起来没变**（2026-10-04，`DrawTrackerOptions.handExits`，跟这个开关走）：打出的是手里最后一张、又抽到它的同名牌时，前后手牌一模一样
     （M6P7KAWMF6BC F29 T1：旋风斩、剑柄打击 → 旋风斩、剑柄打击），顺序也看不出。这时按「这一步从手里进了弃牌堆 / 消耗堆的牌」把它们从上一手牌里拿掉，
     剩下的手牌之外多出来的就是抽的（`handExits`）。只在这一步确实有牌从手里出去、又没有别的东西能把抽牌堆的牌直接放进弃牌堆时才这样认：这回合打出的牌数
     （`cards_played_this_turn`）变多了，或者上一步是从手牌里选（`selection.kind = combat_hand_select`：燃烧契约的消耗、替换手牌）；没喝药水、没打破灭 / 倾泻 /
-    横祸 / 骚动、地狱狂徒不在身上、抽牌堆没多牌、手牌不满 10 张（满了抽到的进弃牌堆）。离线（tools/sl-draws-replay.ts --all，日志里全部 6878 场战斗、6986 次）：
+    横祸 / 骚动、地狱狂徒不在身上、抽牌堆没多牌、手牌不满 10 张（满了抽到的进弃牌堆）。离线（agent/tools/sl-draws-replay.ts --all，日志里全部 6878 场战斗、6986 次）：
     32 次记得更长（干净的抽牌合计 123718 → 124025；剑柄打击 10 次、耸肩无视 9 次、替换手牌 5 次，还有战斗专注抽到战斗专注、燃烧契约、突破等），原来的干净部分一张不变；
     这 32 场都只打了一次，没有重打能核对；有重打的 108 次尝试（sl-attempts 的战斗）记录一张不变，预测错 0（打出抽牌牌的那一步 309 张、抽到自己同名牌的 4 张，都对）。
 
 ### 10.3 多算（SL_RETRY_COMPUTE）
 
-第 2 次尝试起（`RETRY_COMPUTE`，src/sl/controller.ts）：rollout 24 个样本（平时 8）、每个规划题的预算最多 20 秒（平时 1.5 秒），同一回合的几道题
+第 2 次尝试起（`RETRY_COMPUTE`，agent/src/sl/controller.ts）：rollout 24 个样本（平时 8）、每个规划题的预算最多 20 秒（平时 1.5 秒），同一回合的几道题
 （抽牌后重新规划会再问）合计最多 30 秒（像 B2 的回合预算；用完后的题回到平时的 1.5 秒；记在屏幕记忆 `slRetryCompute`，键里有第几次尝试）；随机药水 36 个样本、1.2 秒（平时 12、0.4 秒）；
 B2 每条线 1200 个样本（平时 600；它自己的每题 25 秒、每回合 30 秒上限不变）。rollout 的时间表多了 5 回合 × 24 / 16 / 12 三档，排在原来的 8 样本时间表前面，
 预算不够时照旧往下降。理由和测量见 notes/sl-retry-report.md §6–§7：实盘时钟（机器有对局在跑）在 607 个已记录的死亡局规划题上，多算后每题中位 1.1 秒、p90 9.9 秒，
@@ -849,19 +849,19 @@ B2 600 样本在已记录的 boss 题上多数 0.02–3 秒（20 线程），翻
 
 - 规划里用到已知抽牌或多算的任何一步抛错：整题去掉这两样重新规划（`withSlRetryFallback`，和 MECH_RULES 的做法一样），等于两个开关都关。
 - 控制器里记录 / 核对出错：这次尝试不再用已知抽牌，SL 本身照常。
-- 两个开关都关（或第 1 次尝试）：题面、Jev 看到的内容、每个答案的结果与 v4 3488dc5 逐字节相同（tests/sl-retry-planner.test.ts：4 个已记录的重打局面，
+- 两个开关都关（或第 1 次尝试）：题面、Jev 看到的内容、每个答案的结果与 v4 3488dc5 逐字节相同（agent/tests/sl-retry-planner.test.ts：4 个已记录的重打局面，
   在 3488dc5 的 git archive 上算的摘要）。sl-attempts 行照样记 `draws`（只是日志）。
 - `SL_JUDGE_KNOWN_DRAWS`、`SL_RELOAD_EARLY` 关：判定和循环与之前相同（规划器的事实放在决策旁边的 WeakMap 里，决策本身、题面、日志不变；
-  tests/sl-retry-planner.test.ts 的摘要照样相同）；规划器算事实或 judge 出错：不放行、不提前。`SL_RETRY_KNOWN_INSERTS` 关：跟踪器和记录与之前逐字节相同
-  （tests/sl-early.test.ts）；只多一个不进题面的 `exact`（规划器只在事实里读它，tests/sl-early-planner.test.ts 钉住决策不变）。
+  agent/tests/sl-retry-planner.test.ts 的摘要照样相同）；规划器算事实或 judge 出错：不放行、不提前。`SL_RETRY_KNOWN_INSERTS` 关：跟踪器和记录与之前逐字节相同
+  （agent/tests/sl-early.test.ts）；只多一个不进题面的 `exact`（规划器只在事实里读它，agent/tests/sl-early-planner.test.ts 钉住决策不变）。
 
 - 附带（同一个提交）：已知抽牌让求解器的线多很多，`distinctPlans` 原来两两比较支配关系（O(n²)，JW925EDF9ZTQ F48 T1 108 秒）；改成按结果向量的字典序排序、
   只和已找到的前沿比，结果集合和原来一模一样（注释里有证明；所有钉住的摘要不变），这一题 3 秒，开关关时的同一题也从 12 秒降到 0.7 秒。
 
 ### 10.5 离线评估（notes/sl-retry-report.md）
 
-tools/sl-retry-replay.ts 把已记录的局面按四种情况重新规划（off / draws / compute / both，另有换随机数的 off2 / draws2 / compute2 / both2 量噪声），
-tools/sl-retry-summary.py 出表。要点：
+agent/tools/sl-retry-replay.ts 把已记录的局面按四种情况重新规划（off / draws / compute / both，另有换随机数的 off2 / draws2 / compute2 / both2 量噪声），
+agent/tools/sl-retry-summary.py 出表。要点：
 - 212 场 A8+ boss / 名单战死亡局的 T1–T3（635 题）：70% 的题拿得到已知抽牌；rollout 的最优线「没有样本死」净多 17 题（换随机数的对照净 2 题），
   预测的死亡比例和掉血平均几乎不变。
 - 噪声很大：同一题换随机数，8 样本的 rollout_best 有 47% 会变；已知抽牌降到 33%；所以多算在已知抽牌之后仍然有用。
@@ -870,7 +870,7 @@ tools/sl-retry-summary.py 出表。要点：
   无厌者 40、蜂群术士 11、灵魂异鱼 8）；其余 49 题断在头槌一类把牌移到牌堆顶（46）。这 59 题的 rollout 最优线变化 33 题，同样的题只换随机数是 32 题——
   看不出比噪声大（这些题的求解器因为有插入牌本来就不用已知抽牌，只有 rollout 的样本不同）。
 
-### 10.6 算过的不再算（SL_RETRY_MEMO，默认开，2026-10-04，src/sim/compute-memo.ts）
+### 10.6 算过的不再算（SL_RETRY_MEMO，默认开，2026-10-04，agent/src/sim/compute-memo.ts）
 
 运维 10-04：V4.6 的战斗决策慢了（plan-choice 中位 2.7 秒、p90 18.7 秒，V4.5 是 1.0 / 3.2–3.9），boss 回合「想」20–40 秒，记下的 plan / jev / rollout 加起来不到 1 秒。
 查日志（decisions.jsonl 每行 `ts − observed_ts`）：时间没有丢——V4.6 的 284 道 plan 题共 1794 秒，B2 的 `boss_sim.ms` 1259 秒、rollout 的 `rollout.ms` 367 秒、Jev 约 160 秒，
@@ -891,24 +891,24 @@ rollout 和 B2 的耗时在噪声内一样（V8N5、AKK0 的 5 个局面；B2 �
 - rollout：只存没有被时钟截断的结果（`degraded` 为空），并记下这次运行的时钟检查最少需要多少预算（`RolloutResult.budgetNeedMs`：同样的时钟读数下，
   预算不少于它就哪里都不截断）；这题的预算不少于它才拿回。
 - B2：只存全部样本跑完（没超时）的；这题的截止时间不少于它当时用的时间才拿回。超时的不存，也不续跑（续跑会多出样本，改变数字，留给 Dai）。
-  工作线程池跑的按线程启动时读的数据文件（src/knowledge、src/sim 的 JSON，按内容）记键：一题没出样本时池会被关掉重建，数据没变就还能找到之前的结果；
+  工作线程池跑的按线程启动时读的数据文件（knowledge、agent/src/sim 的 JSON，按内容）记键：一题没出样本时池会被关掉重建，数据没变就还能找到之前的结果；
   刷新任务改了数据文件，新池的结果另算。
 - 拿回的结果按它当时的耗时记进这回合的预算（SL_RETRY_COMPUTE 的回合 30 秒、B2 的回合 30 秒），B2 的说明里的秒数也是当时的：同一回合后面的题拿到的预算和重算时一样，
   所以数字、排序、题面、每个答案的结果都和重算相同；只有墙钟变（决策行的 `rollout.ms`、`boss_sim.ms` 是这题自己的墙钟，命中时是查找的时间；`timing.memo` 写当时的耗时）。
 - 内存：每场战斗最多 512 MB 序列化结果（在 V8 堆外），满了先丢最早的；换一场战斗就清掉。
 - 失败保护：键算不出来（输入里有函数）、存取出错：这题照常算。
 
-证明：tools/combat-latency-replay.ts 在冻结时钟下把 V4.6 两场 boss（以及 V4.5 的 RJZG F33 知识恶魔、J4S2 F33 螃蟹、RNTV F38 斧头机器人）每次尝试的每道规划题
+证明：agent/tools/combat-latency-replay.ts 在冻结时钟下把 V4.6 两场 boss（以及 V4.5 的 RJZG F33 知识恶魔、J4S2 F33 螃蟹、RNTV F38 斧头机器人）每次尝试的每道规划题
 按顺序重新规划（B2 在本线程、每条线 8 个样本），开 / 关两遍：662 个决策（328 道题，rollout 命中 103 次、B2 命中 101 次）的题面、Jev 看到的内容、
 每个答案（0.9、0.3、无答案、坏答案）的结果和日志全部逐字节相同（去掉墙钟的 `ms` 和 `timing`）；规划时间 1855 秒降到 1038 秒；
-tests/compute-memo.test.ts 钉住键、存储、`budgetNeedMs` 的精确性（预算恰好等于它不截断、少 1 毫秒就截断）和规划器上开 / 关相同、命中按当时耗时计入预算。
+agent/tests/compute-memo.test.ts 钉住键、存储、`budgetNeedMs` 的精确性（预算恰好等于它不截断、少 1 毫秒就截断）和规划器上开 / 关相同、命中按当时耗时计入预算。
 
 决策行新增的计时（2026-10-04）：`latency_ms.planner` 是规划器调用（planDecision）的墙钟、`latency_ms.pre` 是读到状态到规划器开始（日志、SL 控制器的 observe、
 跑图计划、小偷牌价）；战斗题的 `timing` 分到求解器、随机药水、rollout、B2、其余，加进程 CPU（含 B2 的工作线程：cpu 大于墙钟是线程在跑，小于是主线程等了或没排上）、
 机器 1 分钟负载（WSL 自己的：游戏和 Windows 那边的进程同用这些核，看不到）、`probe_ms`（出题时在规划线程上跑一个固定的整数循环的时间，机器空闲时约 2.7 毫秒：
 这条线程当时有多快，Windows 那边的负载也算在内）、B2 的 (线, 击杀顺序) 对数和收回的模拟场数（多于样本 × 对数的部分是截止时间浪费的）、memo 命中。
 
-## 11. 重打换打法（SL_RETRY_EXPLORE，默认开，src/sl/explore.ts）
+## 11. 重打换打法（SL_RETRY_EXPLORE，默认开，agent/src/sl/explore.ts）
 
 Dai 2026-10-02 定：重打必须换打法。起因（A9，10-02）：有了已知抽牌（§10），同一个局面每次 rollout 的样本一样（种子是局面的，不是尝试的），
 Jev 的回答也一样，第 3 次以后的重打什么都没多试——
@@ -994,34 +994,34 @@ Jev 的回答也一样，第 3 次以后的重打什么都没多试——
 ### 11.4 失败保护和开关
 
 - 控制器（选偏离点、算局面键、记录）出错：这次尝试不再记录 / 偏离，照常打（控制台一行）。规划器里替换出错：这道题照没开关时的结果打。
-- 开关关、或只记录不偏离（不是偏离点的局面）：规划器的题、Jev 看到的内容、每个回答的结果与之前逐字节相同（tests/sl-explore.test.ts：4 个已记录的
+- 开关关、或只记录不偏离（不是偏离点的局面）：规划器的题、Jev 看到的内容、每个回答的结果与之前逐字节相同（agent/tests/sl-explore.test.ts：4 个已记录的
   重打局面用 3488dc5 的整题摘要钉住；开关关时 sl-attempts 行没有 `explore`，env.sl 没有 `explore`）。
 - 两个子开关（`SL_RETRY_EXPLORE_B2`、`SL_RETRY_EXPLORE_BOSS_POTIONS`）关：env.sl.explore 里没有它们，记录和替换与 bc8c9bc 逐字节相同（6 个已记录局面——
   3 个重打局面、B2 开着的 The Kin / 仪式兽（受信任）和女王（低可信）——每个回答的记录、偏离时每个回答的结果、决策行和记录，用 bc8c9bc 上算的摘要钉住：
-  tests/sl-explore.test.ts、tests/sl-explore-b2.test.ts）。名单战子开关开着也逐字节相同（只在 boss 战起作用）。
+  agent/tests/sl-explore.test.ts、agent/tests/sl-explore-b2.test.ts）。名单战子开关开着也逐字节相同（只在 boss 战起作用）。
 - `SL_RETRY_EXPLORE_REPLAY_PLAYS`、`SL_RETRY_EXPLORE_REPLAY_DEVIATE` 关（§11.11）：env.sl.explore 的 `replay` 没有 `plays` / `fallback`，规划器的题、每个回答的
-  结果和记录、控制器的重放与之前相同（`replay_stopped` 后面照旧「played as usual」；tests/sl-replay-plays.test.ts 开关对比：J4S28 那个局面关着时的解析就是
-  实盘那一行的 `sl_explore`）。`SL_RETRY_KNOWN_OFF_TOP`、`SL_RETRY_KNOWN_HAND_ORDER` 关：跟踪器的记录与之前相同（tests/sl-draws-offtop.test.ts：RNTVAT F38
+  结果和记录、控制器的重放与之前相同（`replay_stopped` 后面照旧「played as usual」；agent/tests/sl-replay-plays.test.ts 开关对比：J4S28 那个局面关着时的解析就是
+  实盘那一行的 `sl_explore`）。`SL_RETRY_KNOWN_OFF_TOP`、`SL_RETRY_KNOWN_HAND_ORDER` 关：跟踪器的记录与之前相同（agent/tests/sl-draws-offtop.test.ts：RNTVAT F38
   4 次、P68P F25 的记录等于实盘行的 `draws`）。run-config 的 sl 多 `retry_explore_replay_plays`、`retry_explore_replay_deviate`、`retry_known_off_top`、
   `retry_known_hand_order`。
 - `SL_RETRY_EXPLORE_ORDER`、`SL_RETRY_EXPLORE_REPLAY`、`SL_RETRY_KNOWN_PICKS` 关：选点照旧（只在开着时读「全输」）、env.sl.explore 没有 `replay`、
   偏离点的 `deviate` 没有 `replayed`、行里没有 `explore.replay`、挑牌处照旧断（tests：exploreTarget 开关对比、控制器关重放时 Jev 的回答照打、
   DrawTracker 不带 `picks` 时的探寻打击测试）。
 - `SL_RETRY_EXPLORE_CANON`、`SL_RETRY_EXPLORE_TURN` 关：第 1 次的行没有 `explore`，各行没有 `explore.turns`、点没有 `canon`、目标没有 `tried`、
-  env.sl.explore 没有 `played` / `avoid`、`deviate` 没有 `tried`，规划器的题、每个回答的结果、记录与 08ec8f9 逐字节相同（tests/sl-explore-canon.test.ts：
+  env.sl.explore 没有 `played` / `avoid`、`deviate` 没有 `tried`，规划器的题、每个回答的结果、记录与 08ec8f9 逐字节相同（agent/tests/sl-explore-canon.test.ts：
   4 个已记录局面——UK7R F33 第 5 次 T1、第 4 次 T2 偏离点和抽牌后的重新规划、JSA5 F48 T1 代码自己定的线——记录和偏离时每个回答的结果用
-  08ec8f9 上算的摘要钉住；控制器两个都关时什么都不多记、不多给）。tests/sl-explore.test.ts 两个都关着跑，钉的仍是之前的行为。
+  08ec8f9 上算的摘要钉住；控制器两个都关时什么都不多记、不多给）。agent/tests/sl-explore.test.ts 两个都关着跑，钉的仍是之前的行为。
 - `SL_RETRY_EXPLORE_WHOLE` 关（或 `_TURN` 关）：env.sl.explore 没有 `whole`，各条线没有 `open` / `committed`，选点照旧数每次到过的偏离，规划器的题、
-  每个回答的结果、记录与 e0fa69b 逐字节相同（tests/sl-explore-whole.test.ts：PW7Y9EWUW8SB F48 的 4 个已记录局面——第 3 次 T1 偏离点和抽牌后的
+  每个回答的结果、记录与 e0fa69b 逐字节相同（agent/tests/sl-explore-whole.test.ts：PW7Y9EWUW8SB F48 的 4 个已记录局面——第 3 次 T1 偏离点和抽牌后的
   重新规划、第 4 次 T2 偏离点和抽牌后的重新规划——记录、偏离、avoid 时每个回答的结果用 e0fa69b 上算的摘要钉住）。
-- `SL_RETRY_EXPLORE_WHERE` 关：目标没有 `where`，选点和理由与 cd31bfe 相同（tests/sl-explore-where.test.ts：GQ5H F48 第 3–6 次、JKP6 F17 的目标逐字段
+- `SL_RETRY_EXPLORE_WHERE` 关：目标没有 `where`，选点和理由与 cd31bfe 相同（agent/tests/sl-explore-where.test.ts：GQ5H F48 第 3–6 次、JKP6 F17 的目标逐字段
   等于实盘的行，UK7R、9V7K、JSA5、B3PJ、Z4UK 的点和轮次与实盘相同；控制器关着时照旧去 T1）。run-config 的 sl 多 `retry_explore_where`。
-- `SL_RETRY_EXPLORE_POTION` 关：目标的 `tried` 没有 `cards`，选点、打过没打过、替换线、`differs` 与 ff66eb2 相同（tests/sl-explore-potion.test.ts：
+- `SL_RETRY_EXPLORE_POTION` 关：目标的 `tried` 没有 `cards`，选点、打过没打过、替换线、`differs` 与 ff66eb2 相同（agent/tests/sl-explore-potion.test.ts：
   12 场已记录战斗、两套规则下第 3 次起每次的目标、经过它的整回合、每次偏离那回合算不算打过，用 ff66eb2 上算的摘要钉住；P68P F48 两个已记录
   偏离局面上关着时的替换线和实盘相同）。run-config 的 sl 多 `retry_explore_potion`（要 `_CANON` 或 `_TURN` 开着才开：它读的是整回合的键）。
 - SL 何时重打（判定、提前 SL）完全不变：只在必死时。
 
-### 11.5 离线评估（notes/sl-explore.md，tools/sl-explore-replay.ts）
+### 11.5 离线评估（notes/sl-explore.md，agent/tools/sl-explore-replay.ts）
 
 日志里重打过的 6 场（63WB F33、1YXM F33、XSPH F48、VNKN F25 / F33、JW92 F48）：第 2 次的每个决策点用现在的代码按重打重新规划（已知抽牌、多算、
 冻结时钟，B2 关），再按控制器的规则算第 3 次起每次改哪个点、换成哪条线和两条线的 rollout 数字。游戏结果离线不知道。要点：
@@ -1066,7 +1066,7 @@ Jev 的回答也一样，第 3 次以后的重打什么都没多试——
    9V7K1P899R5N F45 第 4 次 T3 选了第 1 次的「打击+, 旋风斩+」，早一回合死（那个局面和第 1 次的 T3 不是同一个：第 1 次 T1 没喝虚弱药水，
    T3 是 23 血、灵魂枢纽 181，第 2 次起 22 血、161；按局面这条线确实没在这里打过，新规则也照答）。
 
-**一回合的出牌作为键**（`SL_RETRY_EXPLORE_CANON`，src/sl/explore.ts `playKey` / `turnCanon`）：这回合打出的牌（牌 id，升级加「+」）和药水
+**一回合的出牌作为键**（`SL_RETRY_EXPLORE_CANON`，agent/src/sl/explore.ts `playKey` / `turnCanon`）：这回合打出的牌（牌 id，升级加「+」）和药水
 （`potion:<id>`），各带目标（选项里的 distinctNames 名字：「残杀千足虫 (MIDDLE)」「寄生信徒 #2」；有敌人死了线就重新规划，所以每张牌的目标名都是它
 决策时那个局面的），排序后连起来。顺序不同、写法不同的同一组出牌是同一个键；同样的牌打不同的敌人、升级与否、药水打不同目标都是不同的键（`SL_RETRY_EXPLORE_POTION` 开着时，牌相同、只挪了失败尝试之后也喝了的药的不算不同，§11.10）。
 - 记录：控制器每发出一个动作（noteAction）就记它的局面键和出牌（`explore.turns`：每回合 `plays` 和 `boards`，每个局面带「之前已打几张」）；
@@ -1094,7 +1094,7 @@ Jev 的回答也一样，第 3 次以后的重打什么都没多试——
 抽上来的正是那张、而且线打完以后没有别的决策再加牌。已知抽牌断了时线本来就在抽牌那一步结束，没有「后面的步骤」可接；线打完以后 stopLine 那道题
 Jev 还可以加牌；抽上来的牌不对时也只能重新规划。前者每个决策都只做一次同样的检查（这回合已打的牌 + 这条线的出牌是不是失败过的），不管抽牌知不知道、
 是 Jev 答还是代码定都成立，用的正是第 2 个缺口的同一个键和同一套替换排序；不碰计划续打和执行门（手牌校验照旧）。UK7R 第 4 次那次重新规划上，
-新规则把「防御, 防御」换成「痛击 -> 火箭」——和替换线原来的后半段一样（tests/sl-explore-canon.test.ts，已记录局面）。
+新规则把「防御, 防御」换成「痛击 -> 火箭」——和替换线原来的后半段一样（agent/tests/sl-explore-canon.test.ts，已记录局面）。
 
 **局限**：
 - 进程在一回合中途重启：这回合之前打的牌不在新进程的回合记录里，这回合的键少算（这次尝试的行本来也会丢）。
@@ -1103,7 +1103,7 @@ Jev 还可以加牌；抽上来的牌不对时也只能重新规划。前者每�
 - 和旧行比时药水不看目标（摘要里没有）；旧参照尝试的局面位置是推出来的。
 - 代码自己的 mod-lethal、per-card 兜底、没牌可打的结束回合不改。
 
-离线（notes/sl-explore.md §5，tools/sl-explore-replay.ts 两条规则 08ec8f9 / 新，UK7R F33、9V7K F45、JSA5 F33、R1QJ F33、63WB F33；JSA5 F48 只有
+离线（notes/sl-explore.md §5，agent/tools/sl-explore-replay.ts 两条规则 08ec8f9 / 新，UK7R F33、9V7K F45、JSA5 F33、R1QJ F33、63WB F33；JSA5 F48 只有
 一次，跳过）：两个缺口各出现一次，新规则两处都换成没打过的回合——UK7R 第 4 次抽牌后的重新规划（实盘回合 = 第 2、3 次的）换成「痛击 -> 火箭」；
 第 5 次 T1（实盘、和 08ec8f9 的替换都 = 第 1 次的「御血术 -> 碾碎爪」）换成「御血术 -> 火箭」。其余每一次选点和替换线与 08ec8f9 相同，第 1 次只是
 多算进「打过的」（9V7K F45、JSA5 F33 的第 1 次在之后的回合不在同一个局面上，不算）。
@@ -1117,7 +1117,7 @@ Jev 还可以加牌；抽上来的牌不对时也只能重新规划。前者每�
 - **第 4 次 T2**（:2152/:2157）：替换线第一张是战斗专注+（抽牌），抽完重新规划又是代码「only distinct line」，整回合 = 第 2、3 次的。
 - 两处的根子一样：explore.ts 判「这里没打过」用的是抽牌前规划的那条线的出牌；抽牌以后这回合剩下的是重新规划的，整回合的多重集才算数。
 
-**改动**（`src/sl/explore.ts` `mayRepeat` / `canonWithin`，`combat-plan.ts` `turnOpen`）：
+**改动**（`agent/src/sl/explore.ts` `mayRepeat` / `canonWithin`，`combat-plan.ts` `turnOpen`）：
 - **一条线抽牌前定下的出牌**（`committed`）：这回合已打的 + 线的步骤到第一张抽牌的牌为止（含它；计划续打在抽牌的牌之后就不再续，combat-plan
   plan-continue），线里没有抽牌的牌就是整条线（`open` false）；喝药选项（Jev 选药水、随机药水的 MC 线「drink X, then re-plan」）是喝了再重新规划，
   `open`，定下的是这回合已打的 + 这瓶药。
@@ -1144,12 +1144,12 @@ Jev 还可以加牌；抽上来的牌不对时也只能重新规划。前者每�
 - **不变的**：斩杀线从不换；有这回合活的线时不换成这回合死的（可能重复的回答只换成活的线）；名单战不加药（boss 战照 `SL_RETRY_EXPLORE_BOSS_POTIONS`）；
   判定、提前 SL 不变。
 
-**离线**（tools/sl-explore-replay.ts 第三条规则 `whole`；实盘尝试在帧里的局面上重新规划，Jev 照日志回答；10 场的数字见 notes/sl-explore.md §0.00）：
+**离线**（agent/tools/sl-explore-replay.ts 第三条规则 `whole`；实盘尝试在帧里的局面上重新规划，Jev 照日志回答；10 场的数字见 notes/sl-explore.md §0.00）：
 - PW7Y F48 第 3 次：偏离点 Jev 的「血墙, 剑柄打击+, 踩踏」——可能重复（定下的是血墙、剑柄打击+），整回合一定不同的线（如「血墙, 痛击, 踩踏」）
   rollout 都死得更多，照答；剑柄打击+ 抽牌后那一步变成问题，「暴走, 踩踏」换成「打击, 踩踏」，整回合 = 血墙, 剑柄打击+, 踩踏, 打击，不是失败的。
 - 第 4 次：T2 每条线第一张都是战斗专注+ 或剑柄打击+（都抽牌、都在失败回合里），没有一定不同的线，替换线同实盘；抽牌后那一步变成问题，代码的线换成
   「暴走, 无情猛攻, 与我一战！+, 飞剑回旋镖, 欺凌」，整回合不同。
-- 测试：tests/sl-explore-whole.test.ts（已记录局面 + 控制器）。
+- 测试：agent/tests/sl-explore-whole.test.ts（已记录局面 + 控制器）。
 
 **局限**：
 - 「一定不同」只看抽牌前定下的出牌；抽牌以后的部分靠 avoid，它在所有活线都以失败出牌收尾时做不到（会说出来）。
@@ -1161,12 +1161,12 @@ Jev 还可以加牌；抽上来的牌不对时也只能重新规划。前者每�
 运维复盘 V4.5 GQ5H73A1VCL8 F48（永世沙漏）：6 次都是真死，第 3–6 次的 4 个偏离点都在 T1，而血是 T4、T5 之后掉的（每次 20、21–25），T4–T6 一次都没换过。
 Dai：「确实应该换」。
 
-**为什么都在 T1**（行里的记录；tests/sl-explore-where.test.ts 钉住）：第 2 次的路上 10 道题——T1 一道；T3 三道，它们唯一的另一条线就是第 1 次在那里的
+**为什么都在 T1**（行里的记录；agent/tests/sl-explore-where.test.ts 钉住）：第 2 次的路上 10 道题——T1 一道；T3 三道，它们唯一的另一条线就是第 1 次在那里的
 整回合（第 1 次 T3 喝了缚魂药水，第 2 次 T5 才喝），按 `_CANON` 已打过，没有未试线；T4–T6 六道，每条线在每个 rollout 样本里都死（第 2 次 T7 死，在它们 5 回合的
 rollout 视野里），`_ORDER` 判为「全输」；T1 那条线没有一个样本死，因为 T1 的 rollout 只看到 T5，看不到 T7 的死。`_ORDER` 把全输的点排在所有别的点之后，而
 「被偏离次数最少」只在没全输的点里比：只剩 T1，第 3–6 次都去 T1（第 0–3 轮），第 6 次那条已是「未试线都更容易死」的线。
 
-**日志里其他的重打**（11 场有 explore 记录、重打到第 3 次以上的战斗，tools/sl-explore-where-replay.ts，experiments/sl-explore/explore-where.txt）：
+**日志里其他的重打**（11 场有 explore 记录、重打到第 3 次以上的战斗，agent/tools/sl-explore-where-replay.ts，experiments/sl-explore/explore-where.txt）：
 - 实盘到过的 36 次偏离：14 次在 T1，18 次在 T1–T2，只有 8 次在「掉血最多的、有题的回合」；3 场的偏离全在同一个回合（GQ5H、B3PJ F17 4 次 T1，
   JKP6 F17 4 次 T4——JKP6 的 T1、T5、T8 全输，T4 是唯一没全输的点）。
 - 失败尝试在哪掉血（平均每次；这回合开始的血减下一回合开始的血，死的那回合算剩下的全部血）：GQ5H T5 22.2、T4 18；B3PJ T3 17；JKP6 T8 19.5；
@@ -1174,7 +1174,7 @@ rollout 视野里），`_ORDER` 判为「全输」；T1 那条线没有一个样
 - 「全输」多半是视野：第 2 次路上有数字的题里，离它的死亡 4 回合以内的 40/51 全输，5 回合以上的 8/38。9175 F33 第 6 次在 T2 赢了——那个点每条线
   每个样本都死。
 
-**新规则**（`src/sl/explore.ts` `hpLostByTurn`、`whereWeights`、`exploreTarget` 的 `where` → `whereChoice`）：
+**新规则**（`agent/src/sl/explore.ts` `hpLostByTurn`、`whereWeights`、`exploreTarget` 的 `where` → `whereChoice`）：
 - 每回合的掉血：失败尝试（第 1 次也算：它的血和别的尝试一样是这场战斗的）这回合开始的血减下一回合开始的血（回血算 0）；死的那回合（predicted_death、
   died）算它剩下的全部血；unfinished 的最后一回合不算。取打到这回合的失败尝试的平均。
 - 回合的权重：它自己的掉血，加上之后每回合的掉血 × 0.5^相隔回合数（`WHERE_DECAY`）——一回合的出牌决定它对接下来那一击的格挡，也给之后几回合铺垫
@@ -1197,7 +1197,7 @@ rollout 视野里），`_ORDER` 判为「全输」；T1 那条线没有一个样
 **衰减为什么是 0.5**（同一个工具 `--decays 0,1`）：只看本回合（0）时，9175 赢的 T2 第 5 次才到；不衰减（1：「从这回合起掉的全部血」，越早的回合越大）
 时 JSA5 第 3 次赢的 T7 那个点 4 次都没到（T1、T2、T3、T6）。0.5 两个都到（JSA5 第 3 次、9175 第 4 次）。
 
-**离线**（experiments/sl-explore/explore-where.{txt,jsonl}，输入 tests/sl-explore-where-data/sl-attempts.jsonl：logs/sl-attempts.jsonl 到 10-03 16:00
+**离线**（experiments/sl-explore/explore-where.{txt,jsonl}，输入 agent/tests/sl-explore-where-data/sl-attempts.jsonl：logs/sl-attempts.jsonl 到 10-03 16:00
 这 11 场的行；不调模型、不规划。每条规则自己的序列：模拟的尝试走到偏离点、在那里打第一条「rollout 不觉得更容易死」的未试线、整回合不同、然后失败，
 它的掉血不知道、不算；old = `_ORDER`、`_CANON`、`_TURN`、`_WHOLE` 开，即 cd31bfe）：
 
@@ -1232,9 +1232,9 @@ rollout 视野里），`_ORDER` 判为「全输」；T1 那条线没有一个样
 - 第 3 次偏离 T2：换成「防御, 防御, 打击+」——少喝消亡粉末（T3 的 least-loss 线里喝了）。
 - 第 4 次偏离 T1：Jev 的「熔融之拳, 打击, 消亡粉末, 愤怒」被支配换成第 2 次的线，偏离又换回带药的这条——第 2 次的牌多喝一瓶（第 2、3 次在 T2、T3 喝）。
 - 三次出的牌一张不差，都在 T3 以 1 血 + 24 格挡对 44 结束。`_CANON` 的整回合键里有药水，两次都算新的（`differs` true）：白打两次。规划器在第 4 次那个局面上
-  的数字也一样：带药的线和第 2 次的线这回合都是 -1 血、27 伤害，rollout 都是 24/24 死、之后掉 23（tests/sl-explore-potion.test.ts，已记录局面）。
+  的数字也一样：带药的线和第 2 次的线这回合都是 -1 血、27 伤害，rollout 都是 24/24 死、之后掉 23（agent/tests/sl-explore-potion.test.ts，已记录局面）。
 
-**日志里的同类**（tools/sl-explore-potion-replay.ts，experiments/sl-explore/explore-potion.{txt,jsonl}；13 场有 explore 记录的重打，41 次走到的偏离）：
+**日志里的同类**（agent/tools/sl-explore-potion-replay.ts，experiments/sl-explore/explore-potion.{txt,jsonl}；13 场有 explore 记录的重打，41 次走到的偏离）：
 只挪药水的偏离一共 6 次、3 场——
 - P68P 第 3、4 次（上面）；
 - GQ5H73A1VCL8 F48 第 4 次：第 3 次的牌，缚魂药水从 T4 挪到 T1，和第 3 次一样 T5 以 22 + 10 对 34；第 5 次：第 1、2 次的牌，缚魂药水从 T3 / T5 挪到 T1
@@ -1242,7 +1242,7 @@ rollout 视野里），`_ORDER` 判为「全输」；T1 那条线没有一个样
 - Z4UK0CA16THF F33 第 6 次：第 2–5 次的 T1 牌，两瓶药从 T2 挪到 T1，仍 T4 死（这些行在回合记录之前，按摘要重建）。
 六次挪的都是失败尝试在这之后也喝了的药（早一回合、晚一回合、这回合不喝），没有一次改变死亡回合；没有一次是喝失败尝试一直没喝的药。
 
-**规则**（`src/sl/explore.ts` `cardsOf` / `potionsOf` / `cardsRepeat`，`SlTried.cards`）：
+**规则**（`agent/src/sl/explore.ts` `cardsOf` / `potionsOf` / `cardsRepeat`，`SlTried.cards`）：
 - 一条线在一个局面上「打过」：原来的（文字相同，或整回合出牌完全相同），再加上——和某个经过这个局面的失败回合**出的牌相同**（牌 id、升级、目标，同 `_CANON`，
   顺序不论），而且它喝的每一瓶药，那次尝试从这一回合起到结束都喝过（同样多瓶；按药水 id，不看目标）。
 - 也就是：同样的牌，药早一回合、晚一回合、这回合不喝，是同一条线；喝一瓶那次尝试从这里起一直没喝的药（死的时候还在药水栏），才是新的——那是失败尝试缺的。
@@ -1282,7 +1282,7 @@ rollout 视野里），`_ORDER` 判为「全输」；T1 那条线没有一个样
 运维复盘 V4.5（GPT）J4S28FRQKD7G F33（碾碎者 + 火箭）：第 3、4、6 次（偏离点 T4、T4、T5）都在 T2 的第一个局面停止重放（「attempt 2's line is not among the
 options」），之后照常打；第 6 次 8 回合的出牌和第 4 次一模一样（整场重来了一遍），一次 SL 白用。
 
-**为什么不在选项里**（日志；tests/sl-replay-plays.test.ts 在实盘局面上钉住）：
+**为什么不在选项里**（日志；agent/tests/sl-replay-plays.test.ts 在实盘局面上钉住）：
 - 第 2 次开始时只知道第 1 次的 5 张抽牌（第 1 次 T1 喝了瓶装潜能、洗了牌），到 T2 一张已知都没剩：它在 T2 第一个局面选的「防御, 剑柄打击 -> 火箭, 怨恨 -> 火箭」
   按期望算剑柄打击抽到的牌（这回合掉 21 血）。
 - 第 3–6 次知道 11 张（第 2 次自己的），剑柄打击抽的是烙印+：同一个局面（局面键相同）上求解器把这条线算成掉 29 血，排到 1290 条线的第 1016 位，没进显示的 9 条；
@@ -1308,7 +1308,7 @@ options」），之后照常打；第 6 次 8 回合的出牌和第 4 次一模�
   attempt 2's path could not go on): ...`。**不算用过目标点**：exploreTarget 只数 `deviation`，下次照常排序。
 - 不变的：重放的其他规则（斩杀不换、局面不在参照路上就停）、代码自己定的回合不重放、偏离点和替换线的规则、判定和提前 SL。
 
-**离线**（tools/sl-replay-reach.ts → experiments/sl-replay/reach.{jsonl,txt}：sl-attempts.jsonl 到 10-03 23:00 里实盘重放过的 14 场、第 3 次起的 46 次尝试，
+**离线**（agent/tools/sl-replay-reach.ts → experiments/sl-replay/reach.{jsonl,txt}：sl-attempts.jsonl 到 10-03 23:00 里实盘重放过的 14 场、第 3 次起的 46 次尝试，
 每次的偏离点照实盘；参照尝试路上偏离点之前的每个局面按那次尝试的已知抽牌重新规划（RETRY_COMPUTE、冻结时钟、B2 关），Jev 照那次尝试在这个局面的回答、
 没到过就照参照尝试的、再没有就 rollout 最优；参照局面上一条线刚打完的那道题按实盘的计划记忆（lineDone）；不调模型）：
 - 老规则离线和实盘逐次一致：42 次走到偏离点，4 次停（J4S28 第 3、4、6 次在 T2 走过 2 个局面后、GPR8 第 3 次在 T2 走过 4 个后，都是「not among the options」）。
@@ -1327,7 +1327,7 @@ options」），之后照常打；第 6 次 8 回合的出牌和第 4 次一模�
 运维：实盘第一次 `explore.fallback` 出在 7TQFLQBKRE4S F33 第 3 次（控制台 20261004-001849-3dfc2af :1340）：重放第 2 次的路去 T4 的点，T4 第一个局面「not on attempt 2's
 path」，之后就地偏离在 T5（与我一战！+ -> 火箭），T10 赢了。出牌、血量和第 2 次都一样。
 
-**为什么键不一样**（tests/sl-explore-second.test.ts 用两帧钉住）：两个局面只差一处——遗物开心小花（「每 3 个回合获得能量」）的计数，第 3 次那一帧是 3，第 2 次是 0；
+**为什么键不一样**（agent/tests/sl-explore-second.test.ts 用两帧钉住）：两个局面只差一处——遗物开心小花（「每 3 个回合获得能量」）的计数，第 3 次那一帧是 3，第 2 次是 0；
 能量两边都是 4（小花已经给了能量）。它在触发的回合（T4、T7、T10）开头先显示 3、下一帧才显示 0：三次尝试里 T4 / T7 / T10 的第一帧有时 0 有时 3，第二帧起都是 0。
 所以不是没看到的格挡 / 能力 / 抽牌堆、不是随机数、也不是狱火或缩小那几处改动，是同一个局面的计数显示晚了一拍：键太严。
 - 日志里一样的情况（帧文件里所有有计数的遗物）：到数归 0 的计数显示成那个数的帧很少、都是一闪——开心小花 2030 帧里 55 帧是 3，全是回合的第一帧，下一帧 0；苦无、
@@ -1381,11 +1381,11 @@ path」，之后就地偏离在 T5（与我一战！+ -> 火箭），T10 赢了�
 运维复盘 V4.6 ABCJ0TZ6MD06 F48（永世沙漏）：第 4 次 T4 重放报「board not on attempt 2's path」，可是两次只差出牌顺序；之后第 4 次照常打，T5 把偏离点排除的
 「绯红披风, 血墙+」又打了一遍；就地偏离（§11.11）到第 5、6 次才出现。
 
-**原因**（核对过，tests/sl-explore-gaps.test.ts 用实盘的局面钉住）：不是局面键——第 2、4 次 T4 第一个局面的键相同（26ede86dad1a0963；键里手牌、各牌堆本来就排序）。
+**原因**（核对过，agent/tests/sl-explore-gaps.test.ts 用实盘的局面钉住）：不是局面键——第 2、4 次 T4 第一个局面的键相同（26ede86dad1a0963；键里手牌、各牌堆本来就排序）。
 那个局面上第 2 次的线「铁斩波, 防御+, 打击, 耸肩无视+」不在第 4 次的选项里，重放按整回合出牌（§11.7）取了第一条出牌相同的显示线「防御+, 打击, 铁斩波, 耸肩无视+」。
 顺序不是无关的：先打铁斩波再打防御+、打击，T5 开头 boss 376，另一个顺序 372（钢笔尖的计数也不同），T5 的局面就不是第 2 次的了，重放停在 T4 之后。
 到了 T5（点的回合）局面没有任何失败尝试决策过，§11.11 的就地偏离找不到局面，于是照答——正是排除的那回合。第 5、6 次能就地偏离，是因为第 4 次已经到过那个局面。
-- 日志里（tools/sl-explore-gaps.ts → experiments/sl-explore-gaps/，sl-attempts 到 10-04 11:45，前 324 行，`--attempts` 给它；重放的几种 `--mode` 同样）偏离点之前离开参照路的 8 次：5 次是参照的那回合换了顺序（ABCJ 第 4–6 次的 T4；J4S28 F33 第 4、6 次的 T2），
+- 日志里（agent/tools/sl-explore-gaps.ts → experiments/sl-explore-gaps/，sl-attempts 到 10-04 11:45，前 324 行，`--attempts` 给它；重放的几种 `--mode` 同样）偏离点之前离开参照路的 8 次：5 次是参照的那回合换了顺序（ABCJ 第 4–6 次的 T4；J4S28 F33 第 4、6 次的 T2），
   2 次是别的出牌（GPR8 F40 第 3 次、J4S28 第 3 次：§11.11 改之前的「not among the options」），1 次出牌和顺序都相同（7TQF F33 第 3 次：开心小花的计数，§11.12）。
 - 这 8 次里 3 次在点的回合又打了失败尝试的那回合（J4S28 第 4 次 T4、7TQF 第 3 次 T4、ABCJ 第 4 次 T5），只有 7TQF 有就地偏离、而且在点的回合之后（T5）。
 
@@ -1400,7 +1400,7 @@ path」，之后就地偏离在 T5（与我一战！+ -> 火箭），T10 赢了�
   「T5, off attempt 2's path before T5: the point's turn (...)」），不算用过目标点。那里没有一条没打过的线时（「no shown line left」）这回合下一道题再试。
 
 **离线**：
-- 点的回合（tools/sl-explore-gaps-replay.ts `--mode target-turn`：这 8 次尝试自己的帧，点的回合第一道题按点的偏离重新规划）：5 次给出替换线——在点的回合重复了失败
+- 点的回合（agent/tools/sl-explore-gaps-replay.ts `--mode target-turn`：这 8 次尝试自己的帧，点的回合第一道题按点的偏离重新规划）：5 次给出替换线——在点的回合重复了失败
   回合的 3 次都在内（J4S28 第 4 次「巨像+, 与我一战！」、7TQF 第 3 次「防御, 双重打击, 打击, 烙印+」、ABCJ 第 4 次「突破, 飞剑回旋镖, 血墙+」），另 2 次是 ABCJ 第 5、6 次
   （实盘本来就在那里就地偏离了）；其余 3 次那回合本来就没打失败的出牌（照答）。
 - 重放走到点（`--mode live`：实盘重放过的第 3 次起 66 次、实盘的点，从参照尝试的帧按那次的已知抽牌重新规划；冻结时钟、B2 关、不调模型）：实盘 58 次走到。
@@ -1423,7 +1423,7 @@ path」，之后就地偏离在 T5（与我一战！+ -> 火箭），T10 赢了�
 在 T10 第三个局面换成「打击, 防御, 心神不宁, 防御, 防御」，同样死在心神不宁上。决策的时候知道不了：那两个局面上显示的每条线都在回合结束前抽牌（耸肩、战斗专注、
 心神不宁），`_WHOLE`（§11.8）找不到一条「一定和失败回合不同」的线；替换线看起来不同，是因为求解器把心神不宁的抽牌和能量当成无条件的（卡牌模型没有「手牌为空」
 这个条件）——这是求解器的问题，另修。所以「在同一个点换下一条没试的线」在这里也一样会白费；能做的是这次尝试接着往后找点。
-- 日志里（tools/sl-explore-gaps.ts）走到的 64 次偏离里有 `differs` 的 44 次，6 次白费：PW7Y9EWUW8SB F48 第 3 次（T1）、第 4 次（T2）、9175DLPM2EFR F33 第 3 次（T4）、RNTVAT76BPV0 F38
+- 日志里（agent/tools/sl-explore-gaps.ts）走到的 64 次偏离里有 `differs` 的 44 次，6 次白费：PW7Y9EWUW8SB F48 第 3 次（T1）、第 4 次（T2）、9175DLPM2EFR F33 第 3 次（T4）、RNTVAT76BPV0 F38
   第 3 次（T1）、AKK0 F17 第 3、5 次（T10）。5 次下一回合第一个局面还在参照路上；其中 4 次参照路后面还有点（PW7Y 第 3 次 → T4、第 4 次 → T3、AKK0 第 3 次 → T14、第 5 次
   → T12），而且这 4 次实盘自己就走到了那个局面（白偏离之后照常打，整场跟着第 2 次）。RNTVAT 第 3 次下一回合已经不在参照路上（局面不同，已经是自己的路）；9175 第 3 次
   后面没有还有没试的线的点。
@@ -1445,7 +1445,7 @@ path」，之后就地偏离在 T5（与我一战！+ -> 火箭），T10 赢了�
 
 运维复盘 V4.6 ABCJ0TZ6MD06 F48：第 1 次活到 T10（boss 211/535），第 2 次 T8（274）；第 3–6 次全以第 2 次为参照路，全在 T8 死，第 1 次走得最远的那条路一次都没再用。
 
-**数据**（tools/sl-explore-gaps.ts → experiments/sl-explore-gaps/gaps.txt，sl-attempts 前 324 行、到 10-04 11:45：第 3 次起有偏离点的 74 次、23 场）：
+**数据**（agent/tools/sl-explore-gaps.ts → experiments/sl-explore-gaps/gaps.txt，sl-attempts 前 324 行、到 10-04 11:45：第 3 次起有偏离点的 74 次、23 场）：
 - 参照（全是第 2 次）就是最好的失败尝试（或并列）的：23 次；有别的失败尝试活到更晚的回合：26 次（第 1 次 20、第 3 次起 6）；同一回合但敌人剩血更少：25 次
   （第 1 次 14、第 3 次起 11）。23 场里 19 场至少有一次参照不是最好的；重打过两次以上的 30 场里第 1 次比第 2 次活得久的 16 场。
 - 参照会封顶：74 次里 48 次正好死在参照的最后一回合，17 次更早，只有 9 次活过了它。参照不是最好的那 51 次里 29 次死在最好那次的最后一回合之前。
@@ -1462,7 +1462,7 @@ boss（P68P F48 第 2 次 T3 剩 155 却死得早，第 1 次 T6 剩 290），�
 点的回合偏离、白偏离后换点都照这条路。「这个局面打过的线」照旧算所有失败尝试的（第 1 次的线按文字也算进去）。
 - **第 1 次也记决策点**：日志里第 1 次从来不记题（§11.1），所以它不能当参照。开着时控制器给第 1 次的规划器一个只记录的 env（`DecisionEnv.slRecord`：`played`、B2 / boss 药水
   的记录开关），规划器照第 2 次起那样记下每道题的线、备选、rollout 死亡比例和代码自己定的线，题、回答、执行一个字不变（`env.sl` 照旧没有：题面、算力、已知抽牌都和
-  原来一样；tests/sl-explore-gaps.test.ts 比过同一个局面开关两边的题和执行）。第 1 次的线没有已知抽牌，后面的尝试多半看不到同样的写法，重放靠记下的出牌（§11.11）
+  原来一样；agent/tests/sl-explore-gaps.test.ts 比过同一个局面开关两边的题和执行）。第 1 次的线没有已知抽牌，后面的尝试多半看不到同样的写法，重放靠记下的出牌（§11.11）
   和顺序（§11.14）走。
 - **不影响的**：已知抽牌（knownOrderOf 用所有之前尝试的抽牌记录，与参照无关）；第 2 次的 `_SECOND`（只看第 1 次的路；第 1 次有了点以后，它那回合计划的整回合出牌也算
   「打过」，测试里钉住）。
@@ -1474,7 +1474,7 @@ boss（P68P F48 第 2 次 T3 剩 155 却死得早，第 1 次 T6 剩 290），�
   不死；斩杀线从不换；least-loss / mod 说致死的回合不动）。决策行 `sl_explore.replay` 带 `code: true`，rationale 写「SL explore: replaying attempt 1's plays from this board,
   ... instead of code's ...」；控制器照 §11.11 算它走过了这个局面。
 
-**离线**（tools/sl-explore-gaps-replay.ts，同 §11.14 的规划条件）：
+**离线**（agent/tools/sl-explore-gaps-replay.ts，同 §11.14 的规划条件）：
 - 这些行上开关一开（第 1 次还没有点，只能选第 3 次起的）：参照换了 25 次（换成第 3 次起活得更久的），点也跟着换（6 次换到更晚的回合）。`--mode anchor`：按新参照
   重放 24/25 次走到点，剩下 1 次（C4F14F3XPN0N F33 第 5 次 T3：参照那步是随机药水选项「喝混沌药水、再重新规划」，这里打不了）就地偏离；按老参照 25/25。
 - 第 1 次当参照（`--mode anchor1`：第 1 次的决策点从它的帧和决策重建——每个决策打的线、题的其他选项——就是开关从现在起记的样子）：10 场里 27 次尝试会以第 1 次为
@@ -1497,7 +1497,7 @@ boss（P68P F48 第 2 次 T3 剩 155 却死得早，第 1 次 T6 剩 290），�
 运维复盘 V4.6 3B4K4UDQ56B9 F48（永世沙漏）第 4 次：行里 `differs: true`，可 `deviation.plays`（邪眼、耸肩无视、双重打击）不是替换线「双重打击, 耸肩无视, 双重打击+」，
 这次尝试也和第 2 次一样在 T7 死——其实是白偏离，§11.15 的 REARM 应该接住。
 
-**为什么 `differs` 是 true**（tests/sl-explore-gaps.test.ts 用实盘的行钉住）：三种猜测都不是——
+**为什么 `differs` 是 true**（agent/tests/sl-explore-gaps.test.ts 用实盘的行钉住）：三种猜测都不是——
 - 不是按计划的替换线算的：`plays` 是这回合实际打的（回合记录）。替换线在耸肩无视（抽牌）之后重新规划，Jev 选了邪眼，没打双重打击+，所以 `plays` 和替换线不同，这是对的。
 - 不是比错了参照：比的是失败尝试经过点的局面那回合的出牌（`target.tried`：第 2、3 次的「邪眼, 耸肩无视, 双重打击+」），也是对的。
 - 是键看到了一处「不算数」的不同：第 4 次打的是**没升级的**双重打击（`TWIN_STRIKE`），第 2、3 次是 `TWIN_STRIKE+`。多重集按牌 id 加升级比，所以不同。实际上这回合
@@ -1505,7 +1505,7 @@ boss（P68P F48 第 2 次 T3 剩 155 却死得早，第 1 次 T6 剩 290），�
 - 另外一种（扫全部行找到的）：P68P7CDJRDH3 F48 第 5 次 T1，点在 T1 中间第 2 次路上的一个局面，偏离那回合打的正是**第 1 次**整个 T1 的牌（顺序不同），第 1 次没经过点的
   局面，所以不在 `tried` 里；T2 开头就是第 1 次的局面（同一场战斗）。
 
-**全部行**（tools/sl-explore-gaps.ts → experiments/sl-explore-wasted/gaps.txt，sl-attempts 到 10-04 14:02 共 339 行）：写着 `differs: true`、有回合记录的偏离（点的、就地偏离的、第 2 次的）46 次，
+**全部行**（agent/tools/sl-explore-gaps.ts → experiments/sl-explore-wasted/gaps.txt，sl-attempts 到 10-04 14:02 共 339 行）：写着 `differs: true`、有回合记录的偏离（点的、就地偏离的、第 2 次的）46 次，
 真正重复了失败回合的 2 次——上面两次（升级 1、同一回合开头 1）；目标不同而算不同的 0 次；回合不同但下一回合开头回到失败尝试局面的 0 次（另外的都已被前两条接住）。
 
 **规则**（`turnRepeats`）：偏离那回合打完，按实际打的出牌，以下任一条就算重复了失败回合（`differs: false`，`deviation.repeats` 写 `how` 和哪几次）：

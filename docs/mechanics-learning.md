@@ -9,7 +9,7 @@ thief.ts `stunsThief`）；这里把它变成通用规则，振翅是第一个�
 三部分：(a) 每天刷新的数据库统计 `observed`；(b) 离线的机制审计（残差工具 + 学习者任务，只出提案）；(c) 一条数据驱动的规则
 「能力被打到 0 就眩晕」，在开关 `MECH_RULES` 后面。
 
-## 1. 统计什么（tools/build-monster-db.py → monster-db.json `observed`）
+## 1. 统计什么（knowledge/builders/build-monster-db.py → monster-db.json `observed`）
 
 和数据库其余部分同一次读日志（每局结束后 ops/report.py refresh_knowledge 刷新），代码里**没有任何敌人或能力的名字**，所有能力、
 逃跑招式、奖励都走同一套计数。只用**决策帧**：`observed` 帧可能是敌方回合中途拍的，却还标着我方回合（MCK9SMSK40ZY F19 T1：
@@ -30,7 +30,7 @@ thief.ts `stunsThief`）；这里把它变成通用规则，振翅是第一个�
 
 顶层 `observed.powers_stripped` = 每个能力在所有怪物上的合计（规则按能力定，不按怪物）。口径在 `observed.note` 和 `meta.note`。
 **失败保护**：挖掘的任何一步出错，所有 `observed` 字段都不写（stderr 有一行说明），数据库其余部分照常；在完整日志上核对过，除了
-`observed` 以外和改动前逐字节相同，耗时基本不变（约 50 秒）。`tools/monster-db-check.py` 的报告多了 (d) 节。
+`observed` 以外和改动前逐字节相同，耗时基本不变（约 50 秒）。`knowledge/builders/monster-db-check.py` 的报告多了 (d) 节。
 
 2026-10-02 的结果（6073 场）：
 
@@ -50,7 +50,7 @@ thief.ts `stunsThief`）；这里把它变成通用规则，振翅是第一个�
 「取回你被偷走的牌。」（击杀 141/142 场、逃走 0/13 场）、偷窃草蜢的金币（142/142 vs 0/13）、「N金币（偷回）」（胖地精 26/26 vs 0/49）、
 神秘骑士的「将灯火钥匙加入你的牌组。」（5/5，没有它的战斗 0 场）。
 
-## 2. 规则：能力被打到 0 就眩晕（src/knowledge/mechanics.ts）
+## 2. 规则：能力被打到 0 就眩晕（agent/src/knowledge/mechanics.ts）
 
 一个能力（顶层合计）是眩晕规则，当：去掉次数 n ≥ 5（再少就是个例）；≥ 80% 下一帧眩晕（日志里的比例是两极的：1.0 或 ≤ 0.44，0.8
 在缺口里，也容得下偶尔一帧显示不准）；去掉前显示攻击的有 ≥ 3 次时，≥ 80% 在结束回合时不再显示攻击；能核对掉血的有 ≥ 3 次时，
@@ -81,15 +81,15 @@ thief.ts `stunsThief`）；这里把它变成通用规则，振翅是第一个�
 
 ## 4. 开关和失败保护
 
-`MECH_RULES`（src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_rules`）：
-- off：战斗题面、选项、每个答案的处理和 v4 ffed0d4 逐字节相同，知识前缀和以前相同。tests/mech-rules-planner.test.ts 钉住 6 个日志
+`MECH_RULES`（agent/src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_rules`）：
+- off：战斗题面、选项、每个答案的处理和 v4 ffed0d4 逐字节相同，知识前缀和以前相同。agent/tests/mech-rules-planner.test.ts 钉住 6 个日志
   局面 × JEV_CONTEXT off/v1 的摘要（在 ffed0d4 上算的，数据库里**带着** observed 数据）；
 - on 但数据库没有 `observed`（规则刷新前的旧数据库）：同 off（同一组摘要）；
 - 读规则出错：同 off（同一组摘要）；规划时出错：关掉规则再规划一次（`withMechFallback`；别的原因的错误照旧抛出）。
 
 ## 5. 机制审计（离线，只出提案）
 
-**残差工具** `npx tsx tools/mechanics-residuals.ts run [--shards 8] [--monster-db <带 observed 的库>]`（8 个进程约 7 分钟）：每个记录的
+**残差工具** `npx tsx agent/tools/mechanics-residuals.ts run [--shards 8] [--monster-db <带 observed 的库>]`（8 个进程约 7 分钟）：每个记录的
 战斗回合，取第一个规划决策的状态，用现在的代码规划（规则关/开；§8 起再加一次 MECH_MOVE_RULES 开，并按实盘当时记的 Surrounded 朝向，只取求解器的线），在线里找出当时实际打出的线（卡 id + 目标；
 第一个决策之后打了抽到的牌就用之后重新规划的那个决策），它预测的本回合掉血对比实际掉血；按场上的敌人能力、本回合被去掉的能力、
 敌人分组，按偏差和 |误差| 排序，附能力描述和 `observed` 统计。输出 notes/mechanics-residuals.md 和 experiments/mechanics/summary.json
@@ -111,7 +111,7 @@ BOOT_UP 23/23）；C 只能手写；D 不是机制（噪声、日志问题、已
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH
 cd ~/Projects/sts2-jev/jev-sts2-v4run            # 怪物数据库已刷新出 observed 的工作树
-npx tsx tools/mechanics-residuals.ts run          # 先刷新残差报告
+npx tsx agent/tools/mechanics-residuals.ts run          # 先刷新残差报告
 npx tsx learner/run.ts --engine claude --task mechanics-audit --cwd ~/Projects/sts2-jev/jev-sts2-v4run --model opus
 # 参数（--set）：report、summary、monster_db、out（默认 notes/mechanics-proposals.md）、min_n（默认 20）
 ```
@@ -122,7 +122,7 @@ npx tsx learner/run.ts --engine claude --task mechanics-audit --cwd ~/Projects/s
 
 学习者的第一次审计（notes/mechanics-proposals.md）8 个候选里没有新的怪物机制，偏差最大的组大多是**工具口径**，另有求解器 bug。都已修：
 
-- 工具（tools/mechanics-residuals.ts，tools/mechanics-align.ts）：当回合打赢的回合**单列**，不进任何分组和偏差（最后一帧在致死那张牌之前，那张牌
+- 工具（agent/tools/mechanics-residuals.ts，agent/tools/mechanics-align.ts）：当回合打赢的回合**单列**，不进任何分组和偏差（最后一帧在致死那张牌之前，那张牌
   的荆棘反伤、失去生命不在实际里）；敌方回合被**复活**接住（仙女瓶少一瓶，或持有蜥蜴尾巴、敌方回合血量升 8 以上到最大生命 40% 以上）按死亡算；出牌的
   **目标序号**按当时的敌人列表换算回决策时的序号（敌人死了游戏会压缩序号）；卡牌比对带**升级标记**（出牌那一帧手里的牌）；线的**沙坑**在敌方回合后
   到 0 时预测按全部血量。
@@ -154,7 +154,7 @@ npx tsx learner/run.ts --engine claude --task mechanics-audit --cwd ~/Projects/s
 hp_lost 变了 74、rollout_best 变了 163。代码的首选线变了的 226 个，按新模型：推演说不差 107、求解器 hp_lost 更少 66、相同 14、并列 22、旧线不在新候选里
 12（多是投掷斧第 1 回合）、看起来更差 5（3 个是边缘：两条线的推演 value 只差 0.1–3，推演的排序还看首领 / 敌人剩余血量；2 个旧线不在新推演里，只能拿求解器的数比）。
 
-## 6. 离线回放（tools/mech-rules-replay.ts，notes/mech-rules-replay.md）
+## 6. 离线回放（agent/tools/mech-rules-replay.ts，notes/mech-rules-replay.md）
 
 日志里每个有规则能力在场（振翅 > 0）的回合，第一个规划决策用现在的代码出题两次（规则关/开，和对局一样：THIEF_FACTS 开、推演和随机药水
 用冻结的时钟跑满）。2026-10-02：255 个回合（127 场）。
@@ -178,7 +178,7 @@ hp_lost 变了 74、rollout_best 变了 163。代码的首选线变了的 226 �
 Dai 2026-10-02 定：做第二个数据规则类「能力被去掉（或少一层）→ 敌人的招式立刻变了」，并查凯撒蟹（当时最大的未解释偏差：约 500 个回合
 −2.3/回合，一只钳子死的回合 −7.1）。两样都在开关 `MECH_MOVE_RULES` 后面。
 
-### 8.1 统计（tools/build-monster-db.py → `observed`）
+### 8.1 统计（knowledge/builders/build-monster-db.py → `observed`）
 
 同一次读日志，「能力被去掉」（§1 的 powers_stripped）每次多记：`move_before`（去掉前一帧的招式）、`move_changed` / `changed_to`（去掉那一帧
 招式变了的次数和变成什么，STUNNED 也算）、`end_move` / `next_move`（结束回合那一帧、下回合第一帧的招式；`changed_next` 是变了的那些下回合的
@@ -198,7 +198,7 @@ Dai 2026-10-02 定：做第二个数据规则类「能力被去掉（或少一�
 | 振翅、埋地、尖叫、横冲直撞、沉睡 / 覆甲、熟睡 | 去掉 | 全部 | STUNNED | — | 0 | 眩晕是 A 类（§2），不算 B 类 |
 | 蟹之怒（碾碎爪 19、火箭 8）、滑溜 168 + 66、蜷身 92、人工制品 47 / 43 / 30 / 11 / 7 | 去掉 | 0 | — | — | — | 否 |
 
-### 8.2 规则（src/knowledge/mechanics.ts `moveRules`）
+### 8.2 规则（agent/src/knowledge/mechanics.ts `moveRules`）
 
 一个（怪物, 能力, 去掉 / 少一层）是换招规则，当：次数 n ≥ 5；≥ 80% 在那一帧换了招；≥ 80% 换成同一个招（STUNNED 不算，那是眩晕规则）。
 日志里的比例是两极的：n ≥ 5 的组合要么 0% 换招，要么 87.5–100%，而且每个都只换成一个招；0.8 在缺口里，和眩晕规则的门槛一样。按怪物定
@@ -213,7 +213,7 @@ Dai 2026-10-02 定：做第二个数据规则类「能力被去掉（或少一�
 - **求解器**：规划器给场上带着规则能力（数量 > 0）的敌人设 `EnemySim.moveOnStrip`（combat-plan.ts `applyMoveRules`），新招的攻击取本进阶
   招式表的伤害（monster-db `moveDamageAt`；背后攻击的招取正面的基础；没测到基础的取最常见的显示值），加它的力量和虚弱（随换招清掉的除外）
   和我们的易伤。一条线把这个能力去掉（或少一层）时，本回合它的攻击按新招算进 hp_lost，`enemyHpAfter` 标 `movedTo`。启动没有攻击，而被杀的
-  巨斧机器人在求解器里本来就不算攻击，所以今天 hp_lost 不变（新招有攻击时会变，tests/mech-move-rules.test.ts 有例子）。
+  巨斧机器人在求解器里本来就不算攻击，所以今天 hp_lost 不变（新招有攻击时会变，agent/tests/mech-move-rules.test.ts 有例子）。
 - **推演**（rollout.ts applyPlan）：标了 `movedTo` 的敌人这个敌方回合走新招（启动的格挡和力量），下一招照招式表（上勾锤击），随换招清掉的
   能力（力量、易伤、虚弱）清掉。以前推演里复活的巨斧机器人留着力量、易伤、虚弱，下一招接着复活前的招走。
 - **题面**：选项多一条 `move_change`：「removes 巨斧机器人's 库存: its move becomes 启动 (BOOT_UP_MOVE, no attack this turn instead of the 26
@@ -246,19 +246,19 @@ Dai 2026-10-02 定：做第二个数据规则类「能力被去掉（或少一�
 
 ### 8.5 开关和失败保护
 
-`MECH_MOVE_RULES`（src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_move_rules`），要 `MECH_RULES`
+`MECH_MOVE_RULES`（agent/src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_move_rules`），要 `MECH_RULES`
 也开才起作用。B 类要新 build-monster-db.py 建出来的数据库（旧库没有 move_changed 等字段：换招规则为空，等于关；凯撒蟹的修正不靠数据，照样生效）。
-- off（或 MECH_RULES off）：战斗题面、选项、每个答案的处理和 v4 3488dc5 逐字节相同。tests/mech-move-planner.test.ts 钉住 4 个日志局面（凯撒蟹
+- off（或 MECH_RULES off）：战斗题面、选项、每个答案的处理和 v4 3488dc5 逐字节相同。agent/tests/mech-move-planner.test.ts 钉住 4 个日志局面（凯撒蟹
   一只钳子死的回合、只剩一只的回合，巨斧机器人库存 1 和 2）× JEV_CONTEXT off/v1 的摘要（在 3488dc5 上算的，MECH_RULES 开 / 关；整场 boss
-  模拟关着）；知识前缀和只开 MECH_RULES 时相同（tests/mech-move-rules.test.ts）。小偷的 6 个局面（tests/mech-rules-planner.test.ts）开着它也和
+  模拟关着）；知识前缀和只开 MECH_RULES 时相同（agent/tests/mech-move-rules.test.ts）。小偷的 6 个局面（agent/tests/mech-rules-planner.test.ts）开着它也和
   以前逐字节相同。
 - 读规则出错：`withMechFallback` 先关掉 MECH_MOVE_RULES 再规划一次（凯撒蟹的修正也一起关），还出错再关 MECH_RULES；测试钉住出错时和 off 一样。
-- 整场 boss 模拟跟着开关走：B2 用规划器的输入；B3 和小偷卡价值的合成起点（src/sim/boss-start.ts）读 process.env 里的开关（.env 已载入）；
-  tools/boss-sim/backtest-board.ts 也一样（`MECH_MOVE_RULES=off` 跑的是改动前的回测）。
+- 整场 boss 模拟跟着开关走：B2 用规划器的输入；B3 和小偷卡价值的合成起点（agent/src/sim/boss-start.ts）读 process.env 里的开关（.env 已载入）；
+  agent/tools/boss-sim/backtest-board.ts 也一样（`MECH_MOVE_RULES=off` 跑的是改动前的回测）。
 
 ### 8.6 残差和回放
 
-**残差**（`npx tsx tools/mechanics-residuals.ts run`，notes/mechanics-residuals.md；现在每回合规划三次：off = MECH_RULES 关、on = 只开
+**残差**（`npx tsx agent/tools/mechanics-residuals.ts run`，notes/mechanics-residuals.md；现在每回合规划三次：off = MECH_RULES 关、on = 只开
 MECH_RULES（3488dc5 的实盘）、move = 两个都开；Surrounded 的朝向按实盘当时记的给）。28,646 个回合，能对上的 27,847：
 
 | 组 | n | 偏差 on → move | \|误差\| on → move |
@@ -278,7 +278,7 @@ F33 T8 2 → 5（5）。（表里「本回合一只钳子死了」按结束回�
 巨斧机器人：启动没有攻击、被杀的它在求解器里本来就不算攻击，所以预测一个都没变。**其他所有分组（按能力、被去掉的能力、敌人）|误差| 都没有
 变差**（move 只在这 11 个回合和 on 不同）。全部：偏差 −0.12 / |误差| 0.224 → 0.223。
 
-**回放**（`npx tsx tools/mech-move-replay.ts run`，notes/mech-move-replay.md；695 个回合，MECH_MOVE_RULES 关 / 开，MECH_RULES 都开，推演跑满，
+**回放**（`npx tsx agent/tools/mech-move-replay.ts run`，notes/mech-move-replay.md；695 个回合，MECH_MOVE_RULES 关 / 开，MECH_RULES 都开，推演跑满，
 整场 boss 模拟关着）：
 
 | 局面 | 回合 | 代码自打 ↔ 问 Jev | 代码自打的线变了 | 问 Jev 的：选项 / hp_lost / rollout_best 变了 | 选项里有换招事实 | 开的模型自己认为更差 |
@@ -298,9 +298,9 @@ F33 T8 2 → 5（5）。（表里「本回合一只钳子死了」按结束回�
 **同一个错误也在整场模拟里。** 整场模拟（rollout.ts 的 whole fight）后面的回合里，没面对的那只钳子按 ×1.5 算（`behind`），不管还剩几只：
 样本里一只钳子死了以后，朝向停在死掉那只的序号上，活着的那只每回合都按背后 ×1.5 打，直到策略的线对它出牌；死的那个回合求解器也留着它的 ×1.5。
 修正走同一个开关进去：B2 用规划器的输入（`backAttackPair` 在 PlayerSim 里），B3 和小偷卡价值的合成起点读 process.env 的开关，回测
-（tools/boss-sim/backtest-board.ts）也读，`MECH_MOVE_RULES=off` 就是改动前的回测。
+（agent/tools/boss-sim/backtest-board.ts）也读，`MECH_MOVE_RULES=off` 就是改动前的回测。
 
-在 val_ext 的 23 场帝王蟹上量了（tools/boss-sim/backtest.ts `--enc CRUSHER --set val_ext --starts t1,pre --samples 200 --no-rollout`，fights-1002，
+在 val_ext 的 23 场帝王蟹上量了（agent/tools/boss-sim/backtest.ts `--enc CRUSHER --set val_ext --starts t1,pre --samples 200 --no-rollout`，fights-1002，
 同一份代码开关关 / 开；校准用 boss-trust.json 现有的 Platt 映射；关的结果和 b5-final 的帝王蟹行一致：0.445 / 0.147 / 1.266）：
 
 | 起点 | 原始胜率 关 → 开 | 校准胜率 关 → 开（实际 0.391） | 校准 Brier 关 → 开 | 被打穿 模拟/日志 关 → 开 |
@@ -310,7 +310,7 @@ F33 T8 2 → 5（5）。（表里「本回合一只钳子死了」按结束回�
 
 影响很小：只剩一只钳子的阶段在样本里不长，策略多半很快对它出牌；被打穿多出来的 1.27 倍主要是别处来的（模拟的策略比实际挡得少，boss-sim.md §13.6）。
 可信标准仍然都满足，但第 1 回合的 Brier 0.1493 贴着门槛（整体 0.1197 × 1.25 = 0.1496）；这些差别在 200 样本的噪声以内。**建议合并时重跑帝王蟹的
-B5 回测行和 tools/boss-sim/trust.py**（帝王蟹可能落到低可信，那样 B2 就不再按整场数字给它排序）。boss-trust.json 这里没有改。
+B5 回测行和 agent/tools/boss-sim/trust.py**（帝王蟹可能落到低可信，那样 B2 就不再按整场数字给它排序）。boss-trust.json 这里没有改。
 
 ### 8.8 留给 Dai 的问题
 
@@ -348,7 +348,7 @@ Dai 2026-10-03 定：女王和火炬头聚合体有个机制：聚合体死了�
 - 伤害：第一次砍头 7x5 = 35（A8，力量 2）；力量 3、4、5、8 时 9x5、10x5、12x5、16x5（硫磺石 W80JV2YVC8UZ：80），A9（JSA5K8YZ9RXV）
   力量 4 时 12x5 = 60。我们一直有「你是我的了」的 99 层易伤：显示值 = floor((底数 + 力量) × 1.5)，A0–A8 的底数都是 3，A9 是 4。
 
-### 9.2 统计（tools/build-monster-db.py → monsters.<幸存者>.observed.ally_deaths.<盟友>）
+### 9.2 统计（knowledge/builders/build-monster-db.py → monsters.<幸存者>.observed.ally_deaths.<盟友>）
 
 和数据库其余部分同一次读日志，代码里没有任何敌人的名字。我方回合两个决策帧之间某个敌人死了（不再活着或不在列表里）、其他敌人还活着时，
 每个活着的幸存者记一次：`move_before` / `by_move`（死前那一帧的招，以及按它分的死亡那一帧的招：`move_changed` / `changed_to`）、
@@ -364,7 +364,7 @@ Dai 2026-10-03 定：女王和火炬头聚合体有个机制：聚合体死了�
 `observed`（各怪物新增的 `ally_deaths`、顶层 note）和下面 §9.5 的 5 个招式，数据库和改动前逐字节相同；耗时 41 → 44–53 秒。
 monster-db-check.py 多了 (f) 节（门槛和 mechanics.ts 一样，两处要一起改）。
 
-### 9.3 规则（src/knowledge/mechanics.ts `deathRules`）和全部候选
+### 9.3 规则（agent/src/knowledge/mechanics.ts `deathRules`）和全部候选
 
 一个（幸存者, 盟友）组合是规则，当（Dai：n ≥ 3 且 ≥ 90%）：
 - **本回合换招**（按死前的招）：从这个招开始的死亡 ≥ 3 次，≥ 90% 在死亡那一帧换成同一个招（STUNNED 不算：那是眩晕，噬尸蛞蝓的贪食已经
@@ -419,11 +419,11 @@ builder 现在对**在任何进阶都没有干净回合的招**，用只有我�
 
 ### 9.6 开关和失败保护
 
-`MECH_DEATH_MOVE`（src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_death_move`），要 `MECH_RULES`
+`MECH_DEATH_MOVE`（agent/src/config.ts，默认 on，.env.example 有说明；写错只给警告、按 on；run-config 记 `loop.mech_death_move`），要 `MECH_RULES`
 也开才起作用；数据库没有 `ally_deaths`（新 builder 之前建的库）时等于关。读规则出错：`withMechFallback` 先只关 MECH_DEATH_MOVE 再规划一次，还出错
-再关 MECH_MOVE_RULES，最后关 MECH_RULES（tests/mech-rules.test.ts 的顺序测试改了）。
+再关 MECH_MOVE_RULES，最后关 MECH_RULES（agent/tests/mech-rules.test.ts 的顺序测试改了）。
 
-### 9.7 回放（tools/death-move-replay.ts，notes/death-move-replay.md）
+### 9.7 回放（agent/tools/death-move-replay.ts，notes/death-move-replay.md）
 
 日志里每个场上同时有规则幸存者和它的盟友的回合（每次 SL 尝试分开），第一个规划决策用现在的代码出题两次（MECH_DEATH_MOVE 关 / 开，MECH_RULES
 和 MECH_MOVE_RULES 都开；推演和随机药水蒙特卡洛冻结时钟跑满 5 回合 × 8 样本；整场 boss 模拟 B2 关着；两边用同一个新数据库）。
@@ -448,15 +448,15 @@ builder 现在对**在任何进阶都没有干净回合的招**，用只有我�
 - 「开的推演自己都认为更差」（含药水代价的总掉血多 0.5 以上、死亡不更少）：1 个（88HNFZ9K5LZ5 F48 T3），按推演排序用的 value 新线更好（−91.4 对
   −98.4）。
 
-**对照**（tools/plan-digests.ts：每个局面的整个决策——题面、Jev 看到的、每个答案的处理——取哈希；v4 0f63d28 的工作树和本分支用同一份知识数据）：
+**对照**（agent/tools/plan-digests.ts：每个局面的整个决策——题面、Jev 看到的、每个答案的处理——取哈希；v4 0f63d28 的工作树和本分支用同一份知识数据）：
 84 个没有规则的多敌人局面（A8+ 的 23 种遭遇：史莱姆、碗虫、邪教徒、凯撒蟹、亲属、节段……，每 10 场取一场的第 2 回合）和 156 个规则遭遇的局面
 （女王 31、活体盾 56、活雾 69，第 3 回合）：
 MECH_DEATH_MOVE 关：240/240 逐字节和 v4 相同。开：84 个没有规则的局面全部相同；活雾 69 个全部相同（它的规则不应用）；活体盾 56 个里 41 个相同
-（炮手已死，或盾当时不是盾击）、15 个不同；女王 31 个里 30 个不同（1 个聚合体已死）。tests/death-move-planner.test.ts 把 4 个日志局面
+（炮手已死，或盾当时不是盾击）、15 个不同；女王 31 个里 30 个不同（1 个聚合体已死）。agent/tests/death-move-planner.test.ts 把 4 个日志局面
 （女王杀聚合体回合 0U96U4D9Z3PP F48 T5、你是我的了回合 5GKAR00L5AYV F48 T2、活体盾 Y3XT9EBS7U8B F37 T1、凯撒蟹 NX48MBG3SPRJ F33 T7）× JEV_CONTEXT
 off/v1 的摘要钉在 v4 0f63d28 上（开关关、MECH_RULES 关、库里没有 `ally_deaths`、读规则出错、没有规则的蟹）。
 
-**整场 boss 模拟（B2/B3）**：tools/boss-sim/backtest.ts `--enc QUEEN --starts t1,pre --samples 100 --no-rollout`（v4sim 的 fights-1002：22 场 A7–A8 女王战，
+**整场 boss 模拟（B2/B3）**：agent/tools/boss-sim/backtest.ts `--enc QUEEN --starts t1,pre --samples 100 --no-rollout`（v4sim 的 fights-1002：22 场 A7–A8 女王战，
 赢 4 场；同一个新数据库，MECH_DEATH_MOVE 关 / 开；串行，没有线程池）：
 
 | 起点 | 原始胜率 关 → 开（实际 0.182） | Brier 关 → 开 | 胜率变了的战斗 |

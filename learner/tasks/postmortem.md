@@ -79,5 +79,5 @@ default.code_dir: {{project_root}}/jev-sts2-v3
 最后再单独给一个 json 代码块，给调用方的脚本读：
 
 ```json
-{"task": "postmortem", "appended": ["<run id>", "..."], "skipped": [{"run": "<run id>", "reason": "..."}], "bugs": [{"run": "<run id>", "where": "src/...:123", "what": "...", "new": true}]}
+{"task": "postmortem", "appended": ["<run id>", "..."], "skipped": [{"run": "<run id>", "reason": "..."}], "bugs": [{"run": "<run id>", "where": "agent/src/...:123", "what": "...", "new": true}]}
 ```

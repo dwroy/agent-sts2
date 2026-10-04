@@ -2,11 +2,11 @@
 
 Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿着药 = 多了一些血、攻击或格挡。」
 这张表把每瓶药折算成它在**本幕 boss 战**里值多少：**血 / 伤害 / 格挡**三种等价量，放进知识库给 DeepSeek（知识前缀、`kb_potion` 工具）和 Jev（战斗题面）用。
-求解器、推演和 Jev 的出牌题怎么用这张表（药水代价）见 §8（2026-09-30 Dai 定的参数，`src/strategy/potion-cost.ts`）。
+求解器、推演和 Jev 的出牌题怎么用这张表（药水代价）见 §8（2026-09-30 Dai 定的参数，`agent/src/strategy/potion-cost.ts`）。
 
-- 生成：`.cache/logdb-venv/bin/python tools/build-potion-equivalents.py [--no-sync] [--markdown]` → `src/knowledge/potion-equivalents.json`（约 3 秒；`--markdown` 另外打印 §3 和 §5 的两张表）。公式自检：`python3 tools/build-potion-equivalents.py --self-test`（不需要 DuckDB，vitest 也会跑）。
-- 读取：`src/knowledge/potion-equivalents.ts`（`loadPotionEquivalents`、`potionEquivalent(id, act, ascension)`；文件缺失或格式不对抛 `KnowledgeLoadError`）。
-- 展示：知识前缀的「药水换算表」块（`src/knowledge/render/potion-text.ts`；在经验之后、`## 数据版本` 之前）、工具 `kb_potion`、Jev 战斗题 `potion_context.potion_worth_in_act_boss`。
+- 生成：`data/logdb-venv/bin/python knowledge/builders/build-potion-equivalents.py [--no-sync] [--markdown]` → `knowledge/characters/ironclad/potion-equivalents.json`（约 3 秒；`--markdown` 另外打印 §3 和 §5 的两张表）。公式自检：`python3 knowledge/builders/build-potion-equivalents.py --self-test`（不需要 DuckDB，vitest 也会跑）。
+- 读取：`agent/src/knowledge/potion-equivalents.ts`（`loadPotionEquivalents`、`potionEquivalent(id, act, ascension)`；文件缺失或格式不对抛 `KnowledgeLoadError`）。
+- 展示：知识前缀的「药水换算表」块（`agent/src/knowledge/render/potion-text.ts`；在经验之后、`## 数据版本` 之前）、工具 `kb_potion`、Jev 战斗题 `potion_context.potion_worth_in_act_boss`。
 
 ## 1. 口径
 
@@ -24,9 +24,9 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 
 | 输入 | 来源 | 口径 |
 |---|---|---|
-| 66 种药水：id、中文名、效果模板、稀有度、用法（战斗外能否用）、目标、药水池 | `.cache/game-data.json` 的 `collections.potions` | 药水池 shared / ironclad / event / token 算「铁甲战士能拿到」；其他角色的池、deprecated、mock 不给数值 |
-| 模板数值（火焰 20、格挡 12、力量 2、再生 5 …） | `src/knowledge/potion-values.ts` 的 `POTION_VALUES`（日志实测） | 构建脚本按正则读这张表；没有的数值（瓶中精灵 30%、超巨化三倍）取游戏描述里的原文 |
-| 求解器是否建模 | `src/strategy/card-model.ts`：`POTION_EFFECTS` 的键 = 精确；`CHOICE_POTIONS` + `DRAW_POTIONS` = 蒙特卡洛；都不在 = 未建模 | 瓶中精灵不在 `POTION_EFFECTS` 里，但求解器把它当复活处理，记「精确」 |
+| 66 种药水：id、中文名、效果模板、稀有度、用法（战斗外能否用）、目标、药水池 | `data/game-data.json` 的 `collections.potions` | 药水池 shared / ironclad / event / token 算「铁甲战士能拿到」；其他角色的池、deprecated、mock 不给数值 |
+| 模板数值（火焰 20、格挡 12、力量 2、再生 5 …） | `agent/src/knowledge/potion-values.ts` 的 `POTION_VALUES`（日志实测） | 构建脚本按正则读这张表；没有的数值（瓶中精灵 30%、超巨化三倍）取游戏描述里的原文 |
+| 求解器是否建模 | `agent/src/strategy/card-model.ts`：`POTION_EFFECTS` 的键 = 精确；`CHOICE_POTIONS` + `DRAW_POTIONS` = 蒙特卡洛；都不在 = 未建模 | 瓶中精灵不在 `POTION_EFFECTS` 里，但求解器把它当复活处理，记「精确」 |
 | 卡牌类型、段数、格挡、打击标签 | `game-data.json` 的 `collections.cards` | 攻击段数 = `Repeat` 变量，或描述里「伤害两次/三次」，X 费 = 那回合的能量；有 `Block` 的牌算格挡牌 |
 | boss 战每回合的数据 | 日志库 `turns`（`room = 'boss'`，A8/A9） | 只用**非最后一回合**（最后一回合被击杀或死亡截断）：我方伤害 = 本回合开始到下回合开始敌人总血量的下降（`enemy_hp`，负数记 0）；boss 打进来的血 = `enemy_turn_hp_lost`；敌方意图 = `intent_damage`；回合末格挡 = `end_block`；能量 = `start_energy`（第 1 回合的第一帧还没发能量，不算）；出牌数 = `cards_n`；打出的牌 = `cards_played` |
 | boss 战回合数、最大生命、牌组大小 | 日志库 `fights`（`room = 'boss'`） | 中位数；所有结果（赢和输）都算 |
@@ -262,11 +262,11 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 
 ## 8. 药水代价（2026-09-30 Dai 定，已接入）
 
-用掉的药水是以后要扣的血。代码：`src/strategy/potion-cost.ts`；开关 `POTION_COST=off`（全部代价归 0，题面和排序回到接入前）。
+用掉的药水是以后要扣的血。代码：`agent/src/strategy/potion-cost.ts`；开关 `POTION_COST=off`（全部代价归 0，题面和排序回到接入前）。
 
 **Dai 定的参数**：
 1. 只用公式值（表的现状），不乘「能用上的概率」，不加别的系数。
-2. 表每天重建一次，升进阶时也重建（`tools/refresh-potion-equivalents.sh`，见 §9）。
+2. 表每天重建一次，升进阶时也重建（`knowledge/builders/refresh-potion-equivalents.sh`，见 §9）。
 3. **代价 = 这瓶药在当前进阶、当前幕的持有价值（`hold_hp`，血）**：`potionCost(id, ascension, act, fightKind)`。
    - **不做特例**：药栏满时不把价值最低的那瓶按 0 算（价值低的药代价本来就低）；什么时候喝都一样的药（果汁）也按表值（代码本来就开场直接喝它，不进选线）。
    - **boss 战代价为 0**（这就是要留它的地方）。**精英战不打折**，和走廊一样。
@@ -283,7 +283,7 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 - **HP 护栏**、它的每场预算、setup 线和 boss 竞速的比较、随机药水蒙特卡洛的「胜过最佳不用药线」，都比「掉血 + 药水代价」。代码自己的回退线仍是「有不用药的线就不喝」（排序本身已含代价）。
 - **题面**：每个选项 `potion_cost`：「fight HP loss X; potions used N (this turn: 药名 代价; later turns: 药名 in k/8 samples); potion cost Y HP (potion table, this act's held value); total Z」（没有推演时写「this turn HP loss … (no rollout …)」）；随机药水按中位样本那条线写，没模拟的药写「drinking it costs …」。`potion_context.potion_cost` 用一句话说代价的来源（持有价值 = worth 行里的「血」，boss 战为 0），没有数值的药列在 `potion_cost_zero`。原有的 `potion_worth_in_act_boss` 和留药经验块（`potion_experience`）不变。
 
-**boss 战**：代价 0，排序、选项、分数和接入前一模一样（tests/potion-cost.test.ts 用 RTF3 F17 T1 的局面锁住）；题面上每个选项的 `potion_cost` 写 0（boss fight）。**不加「本场不用药」的线**：boss 战里药没有要留到的地方，而加一条选项会改变 boss 题（需要 Dai 确认，见 experiments/potion-cost/summary.md）。
+**boss 战**：代价 0，排序、选项、分数和接入前一模一样（agent/tests/potion-cost.test.ts 用 RTF3 F17 T1 的局面锁住）；题面上每个选项的 `potion_cost` 写 0（boss fight）。**不加「本场不用药」的线**：boss 战里药没有要留到的地方，而加一条选项会改变 boss 题（需要 Dai 确认，见 experiments/potion-cost/summary.md）。
 
 **遗留和要 Dai 定的**：
 - boss 战没有「本场不用药」的线（代价 0，加选项会改 boss 题）。要不要加？
@@ -299,7 +299,7 @@ Dai：用掉的药水不是免费的，而是以后要扣的血。「手里拿�
 - 知识前缀：「药水换算表」块（本局进阶，每瓶铁甲能拿到的药一行：一/二/三幕的血/伤害/格挡、来源和 n；块里写了生成日期和 boss 战场数）。块的顺序按「越不常变越靠前」：旧知识 → 经验 → **药水换算表** → 数据版本 → 怪物 → 遭遇 → 统计表。这张表只在手动重建时变，放在每局数据刷新不动的那一段里，同一天内前缀的稳定部分（到「## 数据版本」为止）不被它打断；**如果以后把它加进每局结束后的自动刷新，要把这块挪到「## 数据版本」之后。** 大脑缓存的前缀在表变化时重渲染。
 - `kb_potion`：不给 id 返回整张表；给 id（或中文名）返回效果、日志次数、各幕数值、公式、两个校验列。
 - Jev 战斗题：`potion_context.potion_worth_in_act_boss`，手里每瓶有数值的药一行，如「火焰药水：约等于 4 血 / 20 伤害 / 4 格挡（本幕 boss，A8 公式 n=88）」；表加载不了时写 `potion_worth_error`。这几行是事实；药水代价（§8）用的就是其中的「血」（持有价值）。
-- **刷新**：`tools/refresh-potion-equivalents.sh` 只在「表的生成日期不是今天（本地日期）」或「表里没有 .env 的 TARGET_ASCENSION」时重建（用日志库的 Python，先同步日志库；`--dry-run` 只说会不会重建和原因，`--force` 强制）；否则什么都不做。构建脚本 `--ascensions N` 给额外的进阶出数（场数不够时借最近进阶的输入）。上线时运维在每局赛后的知识刷新里调用它（docs/v4-go-live.md「药水代价」）。一天最多重建一次：知识前缀里这块（在「## 数据版本」之前）一天变一次，大脑前缀缓存一天冷一次；如果以后改成每局都重建，要把这块挪到「## 数据版本」之后。
+- **刷新**：`knowledge/builders/refresh-potion-equivalents.sh` 只在「表的生成日期不是今天（本地日期）」或「表里没有 .env 的 TARGET_ASCENSION」时重建（用日志库的 Python，先同步日志库；`--dry-run` 只说会不会重建和原因，`--force` 强制）；否则什么都不做。构建脚本 `--ascensions N` 给额外的进阶出数（场数不够时借最近进阶的输入）。上线时运维在每局赛后的知识刷新里调用它（docs/v4-go-live.md「药水代价」）。一天最多重建一次：知识前缀里这块（在「## 数据版本」之前）一天变一次，大脑前缀缓存一天冷一次；如果以后改成每局都重建，要把这块挪到「## 数据版本」之后。
 - **遗留**：数据校验列需要「不喝的线后面也不许喝这瓶」的推演才能直接定持有价值（「本场不用药」的线已经是这种推演，可以用来重做校验列）；`ENEMY_HITS` 可以从怪物数据库的招式段数取代常数；表默认只有 A8/A9（TARGET_ASCENSION 另加）。
 
 ## 10. 金币的血（`meta.gold_hp`，2026-10-02，THIEF_COST）

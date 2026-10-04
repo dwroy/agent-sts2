@@ -19,13 +19,13 @@ import { appendFileSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 
-import { CodexEngine } from "../../../src/brain/engines/codex.js";
-import { KnowledgePrompt } from "../../../src/brain/knowledge.js";
-import { BrainRouter } from "../../../src/brain/router.js";
-import { carriesRunPlan, pickSpec, routePlanSpec, shopPlanSpec, withRunPlanField } from "../../../src/brain/specs.js";
-import type { AnswerSpec, BrainRequest, EngineName } from "../../../src/brain/types.js";
-import { loadConfig } from "../../../src/config.js";
-import { frozenFacts } from "../../../src/knowledge/render/facts.js";
+import { CodexEngine } from "../../../agent/src/brain/engines/codex.js";
+import { KnowledgePrompt } from "../../../agent/src/brain/knowledge.js";
+import { BrainRouter } from "../../../agent/src/brain/router.js";
+import { carriesRunPlan, pickSpec, routePlanSpec, shopPlanSpec, withRunPlanField } from "../../../agent/src/brain/specs.js";
+import type { AnswerSpec, BrainRequest, EngineName } from "../../../agent/src/brain/types.js";
+import { loadConfig } from "../../../agent/src/config.js";
+import { frozenFacts } from "../../../agent/src/knowledge/render/facts.js";
 
 const VARIANTS: Record<string, Record<string, string>> = {
   current: { BRAIN_CODEX_SCHEMA_FIELDS: "all", BRAIN_CODEX_REASON_LAST: "off" },

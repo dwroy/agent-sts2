@@ -4,11 +4,11 @@
 
 ## 1. 现在的文字（ops/ops-session-prompt.md:79，定时任务 2 第 4 步）
 
-> 4. **经验库**：每满 5 局新复盘，派 agent 在 jev-sts2-exp 的 exp-update 分支更新 src/knowledge/experience.json，先 merge v3。方法和格式照 paper/materials/experience-changelog.md 的上一节，改动也记在那里。不许写喝药规则，然后合入 v3。
+> 4. **经验库**：每满 5 局新复盘，派 agent 在 jev-sts2-exp 的 exp-update 分支更新 knowledge/characters/ironclad/experience.json，先 merge v3。方法和格式照 paper/materials/experience-changelog.md 的上一节，改动也记在那里。不许写喝药规则，然后合入 v3。
 
 ## 2. 建议的新文字（整段替换）
 
-> 4. **经验库**：每满 5 局新复盘，派 agent 在 jev-sts2-exp 的 exp-update 分支更新 src/knowledge/experience.json，先 merge v3。方法和格式照 paper/materials/experience-changelog.md 的上一节，改动也记在那里。另外每次都要做**机制推理**：
+> 4. **经验库**：每满 5 局新复盘，派 agent 在 jev-sts2-exp 的 exp-update 分支更新 knowledge/characters/ironclad/experience.json，先 merge v3。方法和格式照 paper/materials/experience-changelog.md 的上一节，改动也记在那里。另外每次都要做**机制推理**：
 >    - 总结力量、敏捷、各种能力牌和增益（包括遗物、敌人的增益和减益）怎么起作用、和什么搭配、在哪些战斗里决定了胜负；
 >    - 每条机制结论都要有三样：**推理**（机制本身怎么算，为什么在这类战斗里决定胜负，例如 boss 血量和回合数 → 每回合要多少伤害 → 这张能力牌几回合回本）、**证据**（支持和反例的局数、进阶，run id 进 evidence / contradicting）、**典型案例**（一两个 run id + 一句话，写明哪场、哪回合、数字）；
 >    - 从这批新复盘出发，再用全部复盘和日志验证；只有相关性、说不清机制的写成「观察」，不写成因果；
@@ -38,8 +38,8 @@
 
 ## 4. 为什么这样写
 - 「推理 + 证据 + 案例」三样缺一不可：只有局数是相关性（经验库以前就被「条目读到了、做不到」「照抄了没执行」带偏过，见变更记录第七、八次增量的「经验库自己带偏」小节）；只有推理没有局数，DeepSeek 无法判断可信度；案例让它能对照当前局面。
-- 「只用已有 scope」是为了 v3 现在的切片：src/knowledge/experience.ts 的 relevance() 对不认识的 scope 类型返回 null，新类型的条目永远不会下发。V4 的全量前缀会把 general:plan 放进「机制/综合」主题，也不受影响。
-- 「上限 200 不变」：tests/experience.test.ts 限制 active ≤ 200，现在是 198；机制条目多半是给已有的 card:/relic: 条目补推理，而不是新增。
+- 「只用已有 scope」是为了 v3 现在的切片：agent/src/knowledge/experience.ts 的 relevance() 对不认识的 scope 类型返回 null，新类型的条目永远不会下发。V4 的全量前缀会把 general:plan 放进「机制/综合」主题，也不受影响。
+- 「上限 200 不变」：agent/tests/experience.test.ts 限制 active ≤ 200，现在是 198；机制条目多半是给已有的 card:/relic: 条目补推理，而不是新增。
 
 ## 5. 需要 Dai 定的事
 1. 第 2 节的新文字是否采用（可以改字）。

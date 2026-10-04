@@ -1,12 +1,12 @@
 # V4 M2 构筑题面：事实字段表（2026-09-30）
 
 原则（v4-dev-brief 第 3 项、v4-architecture §4 M2）：大脑有推理能力，代码只给算得准、能追溯的事实，不替它打分、不排名、不删选项。
-验收测试：`tests/build-facts-audit.test.ts`（固定数据渲染每类题面，断言没有分数型字段和文字；最后一条锁定卡牌奖励题面的原文）。
+验收测试：`agent/tests/build-facts-audit.test.ts`（固定数据渲染每类题面，断言没有分数型字段和文字；最后一条锁定卡牌奖励题面的原文）。
 
 来源缩写：
 - **状态** = 本回合 mod 给的游戏状态（state.raw）；
-- **游戏数据** = `.cache/game-data.json`（卡牌、遗物、药水的文字、稀有度、费用）；
-- **日志库** = 由 logs/*.jsonl 自动统计出的数据文件（每局结束刷新）：`src/knowledge/outcome-stats.json`（tools/build-outcome-stats.py）、`monster-db.json`、`room-costs.json`、`card-upgrades.json`、`boss-damage.json`，以及 `relic-values.ts` / `potion-values.ts` / `enchant-text.ts` 里注明局号和样本数的实测值；
+- **游戏数据** = `data/game-data.json`（卡牌、遗物、药水的文字、稀有度、费用）；
+- **日志库** = 由 logs/*.jsonl 自动统计出的数据文件（每局结束刷新）：`knowledge/characters/ironclad/outcome-stats.json`（knowledge/builders/build-outcome-stats.py）、`monster-db.json`、`room-costs.json`、`card-upgrades.json`、`boss-damage.json`，以及 `relic-values.ts` / `potion-values.ts` / `enchant-text.ts` 里注明局号和样本数的实测值；
 - **确定性计算** = 由上面的数字按固定规则算出（无权重、无打分），规则写在代码注释里。
 
 ## 1. 去掉了什么（大脑题面里不再出现）
