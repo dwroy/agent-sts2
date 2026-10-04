@@ -1,0 +1,10 @@
+CARD_CONDITIONS byte-for-byte checks (tools/card-conditions-replay.ts --mode plain; clocks frozen, B2 off, SL_RETRY_MEMO off),
+2026-10-04, base tree v4 06e4fc5 (before the change) against this branch:
+
+1. Boards holding none of the fixed cards (frames-without.json: a seeded sample of 300 fresh combat decisions, 299 framed),
+   base vs this branch with the switch on: 294 of 299 rows identical. The 5 that differ are all reached by a fixed card off
+   the hand: 3 decks hold Spite or Rage (the rollout's later turns draw it), 2 hold an Attack / Colorless Potion whose Monte
+   Carlo sample offered Restlessness or Spite. Of the 206 boards whose deck holds none of them and no card-making potion
+   (Attack / Skill / Power / Colorless Potion, Orobic Acid), 206 identical.
+2. Boards holding them (frames-with.json part 1/5: 560 decisions), base vs this branch with CARD_CONDITIONS=off: 560 of 560
+   identical (md5 af2441c7873cb7cc25a4075482907ccf both): the switch off is the old code.

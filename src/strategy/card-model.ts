@@ -235,9 +235,10 @@ export interface CardModel {
  * decision numbers whatever the line did first).
  *
  * Checked on the logs (states.jsonl to 2026-10-04; the frame at each play and the next one):
- * - Restlessness (心神不宁, colorless, 0 cost, Retain; upgraded: Cards 3, Energy 3): 95 plays in 9 runs (89 at A8+), every
- *   one with other cards in hand (1-7 of them; the minimum, 1, three times: a Defend); 0 cards drawn and 0 energy gained
- *   every time, the hand the same less the card, the discard pile +1. AKK09TEEEXKD F17 T10: "Strike, Defend, Restlessness,
+ * - Restlessness (心神不宁, colorless, 0 cost, Retain; upgraded: Cards 3, Energy 3): 95 plays in 9 runs (92 at A8+; 68 code's,
+ *   27 Jev's), every one with other cards in hand (1-7 of them; the minimum, 1, three times: a Defend); 0 cards drawn and 0
+ *   energy gained every time (12 under No Draw), the draw pile unchanged, the discard pile +1, the hand the card less (92;
+ *   3 got an enemy's Wither as well). AKK09TEEEXKD F17 T10: "Strike, Defend, Restlessness,
  *   Strike, True Grit" planned on its 2 energy; after Defend it did nothing and the turn ended with Strike and True Grit
  *   unplayed (-7), and the SL explore deviations repeated it. No logged play had an empty hand, so the "fires" branch is
  *   the card's text: the card being played is not in the hand, every other card is (unplayable ones too), potions are not.
@@ -246,8 +247,9 @@ export interface CardModel {
  *   others. The solver only knew a loss in the line itself (PlayerSim.hpLostThisTurn now carries the earlier ones).
  * - Rage: all 111 of 114 Attacks played with RAGE_POWER N up gained exactly N Block more (no Dexterity, no Frail; the 3
  *   others gained more from elsewhere): the solver's RAGE_POWER rule, now also for a Rage played in the line.
- * - Ashen Strike: the shown CalculatedDamage is 6 + 3 x the exhaust pile + Strength (76 of 92 matched exactly, the rest
- *   Weak or Vulnerable rounding), dealt as shown; a card exhausted earlier in the line raises it.
+ * - Ashen Strike: the shown CalculatedDamage is 6 + 3 x the exhaust pile + Strength, Weak and Shrink applied (91 of 108 plays
+ *   exactly, 2 more with Vigor in it; 13 of the other 15 in one run, VQKX9AD1YHKS, against a pile read short), dealt as shown;
+ *   a card exhausted earlier in the line raises it.
  * - Expect a Fight: the shown CalculatedBlock is 15 + 5 x Strength (+ Dexterity, Frail), gained as shown (134 of 134).
  * - Tear Asunder: the shown CalculatedHits is the fight's HP losses so far; dealt Damage x that (67 of 67 read cleanly).
  * Already right and kept: Evil Eye (doubled on 135 plays after an exhaust this turn or with Toasty Mittens, single on 487

@@ -16,7 +16,8 @@
  *
  * Usage: npx tsx tools/card-conditions-replay.ts --frames <frames.json> --out <dir> [--mode ab|plain] [--switch on|off]
  *   [--from <results.jsonl>] [--part i/n]
- * frames.json: [{ off, len, first_off, first_len, ts, run, asc, floor, turn, label, decider, chosen, cards, executed:
+ * frames.json (tools/card-conditions-frames.py; the sets replayed are experiments/card-conditions/frames-*.json):
+ * [{ off, len, first_off, first_len, ts, run, asc, floor, turn, label, decider, chosen, cards, executed:
  * [{ cardIndex, cardId, target }], complete, end_energy, hp, hp_next }] (states.jsonl offsets of the decision frame and of
  * the turn's first frame; `cards`: the fixed cards in hand; the rest: the logged decision and what the turn then did).
  * Output: <out>/results.jsonl and, in ab mode, a summary on stdout (also <out>/summary.txt).
