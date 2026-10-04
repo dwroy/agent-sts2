@@ -50,6 +50,14 @@ export interface EngineRequest {
   keyFiles?: string[];
   /** The launcher's repository (default: this checkout), whose main checkout's .env files are denied too (keyRoots). */
   repo?: string;
+  /** codex: the permission profile's name (default LEARNER_PROFILE; the ops session uses "ops", ops/codex/lib.ts). */
+  profile?: string;
+  /**
+   * codex: more filesystem rules by absolute path ("write" only for write tasks), applied after the root's. The ops
+   * session's: its git directory writable (codex keeps a .git read-only inside a writable root unless it is granted by
+   * name; 2026-10-04 probe: index.lock "Read-only file system") and the scheduler's own scripts read-only.
+   */
+  extraRules?: Record<string, "read" | "write" | "none">;
 }
 
 export interface CommandLine {
@@ -369,6 +377,7 @@ export function codexPermissions(request: EngineRequest): FilesystemRules {
   }
   rules[root] = { ...(writes ? { ".": "write" as const } : {}), "**/.env": "none", "**/*.env": "none" };
   for (const other of keyRoots(root, request.repo)) if (other !== root) rules[other] = { "**/.env": "none", "**/*.env": "none" };
+  for (const [path, access] of Object.entries(request.extraRules ?? {})) if (writes || access !== "write") rules[path.replace(/\/+$/, "")] = access;
   const homeRules: Record<string, Access> = { ".sts2-jev-env*": "none" };
   for (const name of HOME_KEY_FILES) homeRules[name] = "none";
   rules[home] = homeRules;
@@ -379,7 +388,7 @@ export function codexPermissions(request: EngineRequest): FilesystemRules {
 
 /** The -c overrides that define the profile (exec adds default_permissions; `codex sandbox` takes -P). */
 export function codexProfileOverrides(request: EngineRequest): string[] {
-  return ["-c", `permissions.${LEARNER_PROFILE}.filesystem=${toml(codexPermissions(request))}`];
+  return ["-c", `permissions.${request.profile ?? LEARNER_PROFILE}.filesystem=${toml(codexPermissions(request))}`];
 }
 
 /**
@@ -388,7 +397,7 @@ export function codexProfileOverrides(request: EngineRequest): string[] {
  */
 export function codexKeyCheckCommand(request: EngineRequest, files: string[], binary = "codex"): CommandLine {
   const script = 'for f in "$@"; do if head -c 0 -- "$f" 2>/dev/null; then printf "%s\\n" "$f"; fi; done';
-  return { command: binary, args: ["sandbox", "-C", request.cwd, "-P", LEARNER_PROFILE, ...codexProfileOverrides(request), "--", "sh", "-c", script, "sh", ...files], stdin: "" };
+  return { command: binary, args: ["sandbox", "-C", request.cwd, "-P", request.profile ?? LEARNER_PROFILE, ...codexProfileOverrides(request), "--", "sh", "-c", script, "sh", ...files], stdin: "" };
 }
 
 /**
@@ -404,7 +413,7 @@ export function codexKeyCheckCommand(request: EngineRequest, files: string[], bi
 export function codexCommand(request: EngineRequest, prompt: string, binary = "codex"): CommandLine {
   const writes = request.tools.some((tool) => tool === "Bash" || tool === "Edit" || tool === "Write");
   const args = ["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", request.cwd];
-  args.push("-c", `default_permissions=${toml(LEARNER_PROFILE)}`, ...codexProfileOverrides(request));
+  args.push("-c", `default_permissions=${toml(request.profile ?? LEARNER_PROFILE)}`, ...codexProfileOverrides(request));
   args.push("--model", request.model ?? DEFAULT_CODEX_MODEL);
   for (const setting of codexLearnerConfig({ effort: request.effort ?? DEFAULT_CODEX_EFFORT })) args.push("-c", setting);
   if (request.mcp) {
