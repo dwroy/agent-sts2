@@ -146,10 +146,11 @@ class RowBuilder(bmd.Builder):
 
 
 def _observe(original):
-    # Same signature as build-monster-db.observe_combat, which gained the draw/discard piles (`piles`);
-    # a three-argument wrapper raised TypeError on every fight and stopped the fight-value refresh.
-    def observe(fight, state, ts, piles=None):
-        original(fight, state, ts, piles)
+    # Takes and passes on whatever build-monster-db.observe_combat takes: it gained the draw/discard piles (`piles`,
+    # 2026-09-30) and then `observed` (MECH_RULES), and each time a wrapper of the old arity raised TypeError on every
+    # fight and stopped the fight-value refresh (fight-value.json unchanged since 2026-10-02 13:47 on v4-live).
+    def observe(fight, state, ts, *rest, **named):
+        original(fight, state, ts, *rest, **named)
         turn = state.get("turn")
         if not isinstance(turn, int):
             return
