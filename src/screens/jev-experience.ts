@@ -145,9 +145,12 @@ function withinBudget(ranked: readonly ExperienceEntry[], maxCount: number, maxC
   return out;
 }
 
-/** A lesson as Jev reads it (the `experience` block's format), its data placeholders filled (v3 b5e1f44 lessonText). */
-export function jevLessonLine(entry: ExperienceEntry): string {
-  return `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${lessonText(entry)}`;
+/**
+ * A lesson as Jev reads it (the `experience` block's format), its data placeholders filled (v3 b5e1f44 lessonText), the
+ * records by the run's ascension band when `ascension` is given (from A8 up A8 and A9 apart).
+ */
+export function jevLessonLine(entry: ExperienceEntry, ascension?: number): string {
+  return `[${entry.scope} | confidence ${entry.confidence}, n=${entry.n_support}${entry.n_contradict > 0 ? `, against ${entry.n_contradict}` : ""}] ${lessonText(entry, ascension)}`;
 }
 
 /* ---- the board ------------------------------------------------------------------------------------------ */
@@ -377,12 +380,12 @@ export function jevExperience(input: JevExperienceInput): JevExperience {
     note: inBoss ? POTION_NOTE_BOSS : POTION_NOTE_HALLWAY,
     ...(inBoss ? {} : { data: POTION_BOSS_DATA.map((data) => `[data: ${data.source}] ${data.text}`) }),
     ...(clauses.length > 0 ? { run_plan_on_potions: `DeepSeek's run plan${plan?.floor != null ? ` (F${plan.floor})` : ""}, its words on potions: ${clauses.join(" | ")}` } : {}),
-    ...(potion.length > 0 ? { lessons: potion.map(jevLessonLine) } : {}),
+    ...(potion.length > 0 ? { lessons: potion.map((entry) => jevLessonLine(entry, at.asc)) } : {}),
   };
   return {
     // A boss fight with nothing to say about potions gets no block (the note alone adds nothing).
     potion: inBoss && clauses.length === 0 && potion.length === 0 ? null : potionBlock,
-    mechanics: mechanics.length > 0 ? { note: MECHANICS_NOTE, lessons: mechanics.map(jevLessonLine) } : null,
+    mechanics: mechanics.length > 0 ? { note: MECHANICS_NOTE, lessons: mechanics.map((entry) => jevLessonLine(entry, at.asc)) } : null,
     ids: { potion: potion.map((entry) => entry.id), mechanics: mechanics.map((entry) => entry.id) },
   };
 }

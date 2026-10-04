@@ -52,17 +52,37 @@ describe("counted records for the Queen and the Insatiable", () => {
       "5 logged Queen fights: 2/2 wins killed the Amalgam first (T3-T4); 1/3 losses never did; turns 1-2 mostly into the Queen won 0/2, into the Amalgam 2/3",
     );
     expect(queenAmalgamText({}, "zh")).toBe("还没有女王战记录");
+    // From A8 up (2026-10-04, recordBand): each of A8 and A9 apart, BDAK's A4 win left out.
+    expect(queenAmalgamText(QUEEN, "zh", [8, 9])).toBe(
+      "有记录的女王战 A8 4 场赢 1，赢的都先打死聚合体（RBJ4 T3），输的 3 场 1 场没打死、2 场 T5–T6 才打死，T1–T2 伤害多进女王的 2 场赢 0、多进聚合体的 2 场赢 1；A9 还没有记录",
+    );
+    expect(queenAmalgamText(QUEEN, "en", [8, 9])).toBe(
+      "logged Queen fights A8 4 (1 won): 1/1 wins killed the Amalgam first (T3), 1/3 losses never killed it, turns 1-2 mostly into the Queen won 0/2, into the Amalgam 1/2; A9 none",
+    );
+    expect(queenAmalgamText({ "9": [queen(false, 4, 14, 126, "Y8E0")] }, "zh", [8, 9])).toBe(
+      "有记录的女王战 A8 还没有记录；A9 1 场赢 0，还没有赢过，输的 1 场 0 场没打死、1 场 T4 才打死，T1–T2 伤害多进女王的 0 场赢 0、多进聚合体的 1 场赢 0",
+    );
+    expect(queenAmalgamText({ "9": [queen(false, 4, 14, 126, "Y8E0")] }, "en", [8, 9])).toBe(
+      "logged Queen fights A8 none; A9 1 (0 won): no win yet, 0/1 losses never killed it, turns 1-2 mostly into the Queen won 0/0, into the Amalgam 0/1",
+    );
     setUnblockedSharesForTests({ QUEEN: { unblocked_share: 0.5, fights: 5, turns: 30, amalgam: QUEEN } });
     expect(queenAmalgamRecord("zh")).toBe(queenAmalgamText(QUEEN, "zh"));
     expect(fillGuideFacts("{QUEEN_AMALGAM}|{QUEEN_AMALGAM_EN}")).toBe(`${queenAmalgamText(QUEEN, "zh")}|${queenAmalgamText(QUEEN, "en")}`);
+    expect(fillGuideFacts("{QUEEN_AMALGAM}|{QUEEN_AMALGAM_EN}", 9)).toBe(`${queenAmalgamText(QUEEN, "zh", [8, 9])}|${queenAmalgamText(QUEEN, "en", [8, 9])}`);
+    expect(fillGuideFacts("{QUEEN_AMALGAM}", 7)).toBe(queenAmalgamText(QUEEN, "zh"));
   });
 
   it("the Insatiable: losses by death line, all ascensions and A8/A9", () => {
     expect(sandpitDeathText(SAND, "zh")).toBe("有记录的沙虫输局 6 场：死在 HP 上（沙坑还剩 ≥2）3、被沙坑吞掉 1、两条线同一回合 2（A8 4 场 2/1/1，A9 2 场 1/0/1）");
     expect(sandpitDeathText(SAND, "en")).toBe("6 logged losses: 3 died on HP with the Sandpit at 2+, 1 to the Sandpit, 2 both at once");
+    // From A8 up (2026-10-04, recordBand): each of A8 and A9 apart.
+    expect(sandpitDeathText(SAND, "zh", [8, 9])).toBe("有记录的沙虫输局 A8 4 场：死在 HP 上（沙坑还剩 ≥2）2、被沙坑吞掉 1、两条线同一回合 1；A9 2 场：死在 HP 上 1、被沙坑吞掉 0、两条线同一回合 1");
+    expect(sandpitDeathText(SAND, "en", [8, 9])).toBe("logged losses A8 4: 2 died on HP with the Sandpit at 2+, 1 to the Sandpit, 1 both at once; A9 2: 1 on HP, 0 to the Sandpit, 1 both at once");
+    expect(sandpitDeathText({ "8": [sand(true, null, "RVR6")], "9": SAND["9"] }, "zh", [8, 9])).toBe("有记录的沙虫输局 A8 没有输局；A9 2 场：死在 HP 上（沙坑还剩 ≥2）1、被沙坑吞掉 0、两条线同一回合 1");
     setUnblockedSharesForTests({ THE_INSATIABLE: { unblocked_share: 0.5, fights: 7, turns: 50, deaths: SAND } });
     expect(sandpitDeathRecord("en")).toBe(sandpitDeathText(SAND, "en"));
     expect(fillGuideFacts("{SANDPIT_DEATHS}")).toBe(sandpitDeathText(SAND, "zh"));
+    expect(fillGuideFacts("{SANDPIT_DEATHS}|{SANDPIT_DEATHS_EN}", 8)).toBe(`${sandpitDeathText(SAND, "zh", [8, 9])}|${sandpitDeathText(SAND, "en", [8, 9])}`);
   });
 
   it("one cell of the ? room record, and a boss's HP lost a turn at one ascension (monster DB)", () => {

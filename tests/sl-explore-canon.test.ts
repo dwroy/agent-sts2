@@ -216,14 +216,20 @@ describe("rows from before the record (no turns): rebuilt from their summary whe
 
 // ---------------------------------------------------------------- the planner on logged boards
 
-/** 08ec8f9's views of the boards (tests/sl-explore-canon-views.ts offViews, captured on 08ec8f9). */
+/**
+ * 08ec8f9's views of the boards (tests/sl-explore-canon-views.ts offViews, captured on 08ec8f9).
+ * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): the UK7R boards (A8 and up) whose question carries a counted record
+ * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
+ * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
+ * earlier digest held: nothing else in the decision moved.
+ */
 const GOLDEN_08EC8F9: Record<string, string> = {
-  "uk7r-a5-t1-hemokinesis:record": "067ef178a31fcfbe2e1cba7a23689145",
-  "uk7r-a5-t1-hemokinesis:deviate": "be4bf2d6e3e39b0559751d4732fe8462",
-  "uk7r-a4-t2-deviation:record": "1b99a340b93ebf281218ffa3085d4af0",
-  "uk7r-a4-t2-deviation:deviate": "9277f49e01e52dc0c4c61767f6be372a",
-  "uk7r-a4-t2-replan:record": "2b18e2a6d27704cf4d9add9f73975144",
-  "uk7r-a4-t2-replan:deviate": "f41c1802d4f0eee753328bddc209279d",
+  "uk7r-a5-t1-hemokinesis:record": "4a5ae97675fc27d2841ced71207305dc",
+  "uk7r-a5-t1-hemokinesis:deviate": "e64cec8dbc1ed68c4d77aee21ee6ea3e",
+  "uk7r-a4-t2-deviation:record": "d9928a4bc4473e4949b0cbf454eac06d",
+  "uk7r-a4-t2-deviation:deviate": "341913fe0e16275e801933e5ca499db1",
+  "uk7r-a4-t2-replan:record": "d50485aa02106077db2dc2a4b1c2b88e",
+  "uk7r-a4-t2-replan:deviate": "ba18cb02ab3e3a9925dabfcd10f151fc",
   "jsa5-f48-t1-demon-form:record": "5a1085d031a0c1dd3bf7e819dec0d5c4",
 };
 

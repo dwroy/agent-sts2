@@ -86,8 +86,8 @@ export function selectHints(query: HintQuery, hints: JevHint[] = loadHints(), ma
  * filled from the monster DB at this ascension (monster-db fillDbNumbers), so no A0/A8 number reaches Jev
  * as fact at A9 (the Rocket's Laser "about 49" is 35, 52 from behind); and its counted records
  * ({CRAB_KILLS_EN}, {LAG_NO_STRENGTH_EN}: boss-clock fillGuideFacts) from the fight data, not hand-written
- * ("9/12 vs 8/39" went stale).
+ * ("9/12 vs 8/39" went stale), by this ascension's band (from A8 up A8 and A9 apart: boss-clock recordBand).
  */
 export function hintText(hint: JevHint, ascension: number): string {
-  return fillGuideFacts(fillDbNumbers(hint.text, ascension));
+  return fillGuideFacts(fillDbNumbers(hint.text, ascension), ascension);
 }

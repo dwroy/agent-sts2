@@ -171,8 +171,10 @@ describe("3. Hand-written knowledge per ascension, as the data has it (experienc
       const a9Note = journalBossNote("WATERFALL_GIANT_BOSS", 9)!;
       expect(a9Note).toContain("T10 前击杀赢 1/3");
       expect(a9Note).not.toContain("13/15");
-      // Batch H: the block-needed record is counted from the kills' HP and stacks (these rows carry two).
-      expect(a9Note).toContain("A8/A9 有击杀的 2 场：所需格挡（层数 − HP）≤13 的 0 场赢 0，≥20 的 2 场赢 0");
+      // Batch H: the block-needed record is counted from the kills' HP and stacks (these rows carry two); from A8 up
+      // by ascension (2026-10-04, recordBand), the pooled A8/A9 text below A8.
+      expect(a9Note).toContain("有击杀的巨兽战按所需格挡（层数 − HP）分：A8 没有记下击杀时 HP 的对局；A9 2 场中 ≤13 的 0 场赢 0，≥20 的 2 场赢 0");
+      expect(journalBossNote("WATERFALL_GIANT_BOSS", 7)).toContain("A8/A9 有击杀的 2 场：所需格挡（层数 − HP）≤13 的 0 场赢 0，≥20 的 2 场赢 0");
       expect(journalBossNote("WATERFALL_GIANT_BOSS", 8)).toContain("13/15");
       const giant = bossProfile("WATERFALL_GIANT_BOSS")!;
       expect(bossMechanic(giant, 9)).toContain("killed by T10 1/3 won");

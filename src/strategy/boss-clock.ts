@@ -295,15 +295,15 @@ export function bossNote(profile: BossProfile & { id?: string }, ascension: numb
       .replace("{PHASES}", testSubjectPhases(ascension).join("/"))
       .replace("{SIPHON}", `${giant.siphon} HP`)
       .replace("{GUN}", giant.gun.join("/"))
-      .replace("{CRAB_KILLS}", () => crabKillRecord("en")),
+      .replace("{CRAB_KILLS}", () => crabKillRecord("en", ascension)),
     ascension,
-  ).replace(/\{(?:QUEEN_AMALGAM|SANDPIT_DEATHS)_EN\}/g, (placeholder) => fillGuideFacts(placeholder));
+  ).replace(/\{(?:QUEEN_AMALGAM|SANDPIT_DEATHS)_EN\}/g, (placeholder) => fillGuideFacts(placeholder, ascension));
 }
 
 /** The boss's mechanic line with its numbers at this ascension (the Giant's eruption, DB placeholders). */
 export function bossMechanic(profile: BossProfile, ascension: number): string {
   return fillDbNumbers(
-    profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)).replace("{GIANT_KILLS}", giantKillRecord(ascension, "en")).replace("{GIANT_BLOCK}", giantBlockRecord("en")),
+    profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)).replace("{GIANT_KILLS}", giantKillRecord(ascension, "en")).replace("{GIANT_BLOCK}", giantBlockRecord("en", ascension)),
     ascension,
   );
 }
@@ -312,29 +312,56 @@ export function bossMechanic(profile: BossProfile, ascension: number): string {
  * The block the Giant's kill left to find (its stacks less our HP at the kill) against the outcome, over the logged
  * A8 and A9 kills (boss-damage.json WATERFALL_GIANT.kills, tools/build-boss-damage.py). Was hard-coded ("33 kills:
  * 13 or less 17/18 won, 20 or more 3/15") and went stale with Y36HXZ80A8LL (a T9 kill at 36 HP into 41, won).
+ * Read at A8 and up (recordBand), A8's kills and A9's apart (Dai 2026-10-04); without an ascension or below A8, the
+ * two pooled as before.
  */
-export function giantBlockRecord(lang: "zh" | "en"): string {
+export function giantBlockRecord(lang: "zh" | "en", ascension?: number): string {
   const kills = unblockedShare("WATERFALL_GIANT")?.kills ?? {};
-  return giantBlockText([...(kills["8"] ?? []), ...(kills["9"] ?? [])], lang);
+  const band = recordBand(ascension);
+  return band ? giantBlockBandText(kills, lang, band) : giantBlockText([...(kills["8"] ?? []), ...(kills["9"] ?? [])], lang);
+}
+
+/** The fights killed with our HP and the stacks known, bucketed by the block that was needed (stacks - HP). */
+function giantBlockBuckets(rows: GiantKillRow[]): { killed: number; low: WonOf; mid: WonOf; high: WonOf } {
+  const killed = rows.filter((row) => row.turn !== null && row.hp != null && row.stacks != null);
+  const bucket = (test: (need: number) => boolean): WonOf => {
+    const list = killed.filter((row) => test(row.stacks! - row.hp!));
+    return { won: list.filter((row) => row.won).length, n: list.length };
+  };
+  return { killed: killed.length, low: bucket((need) => need <= 13), mid: bucket((need) => need > 13 && need < 20), high: bucket((need) => need >= 20) };
+}
+
+/** Fights and the ones won. */
+interface WonOf {
+  n: number;
+  won: number;
 }
 
 /** The block-needed record text of these fights (giantBlockRecord; exported for tests). */
 export function giantBlockText(rows: GiantKillRow[], lang: "zh" | "en"): string {
-  const killed = rows.filter((row) => row.turn !== null && row.hp != null && row.stacks != null);
-  if (killed.length === 0) return lang === "zh" ? "A8/A9 没有记下击杀时 HP 的巨兽对局" : "no logged A8/A9 Giant kill with the HP at the kill";
-  const bucket = (test: (need: number) => boolean) => {
-    const list = killed.filter((row) => test(row.stacks! - row.hp!));
-    return { won: list.filter((row) => row.won).length, n: list.length };
-  };
-  const low = bucket((need) => need <= 13);
-  const mid = bucket((need) => need > 13 && need < 20);
-  const high = bucket((need) => need >= 20);
+  const { killed, low, mid, high } = giantBlockBuckets(rows);
+  if (killed === 0) return lang === "zh" ? "A8/A9 没有记下击杀时 HP 的巨兽对局" : "no logged A8/A9 Giant kill with the HP at the kill";
   if (lang === "zh") {
     const parts = [`≤13 的 ${low.n} 场赢 ${low.won}`, ...(mid.n > 0 ? [`14–19 的 ${mid.n} 场赢 ${mid.won}`] : []), `≥20 的 ${high.n} 场赢 ${high.won}`];
-    return `A8/A9 有击杀的 ${killed.length} 场：所需格挡（层数 − HP）${parts.join("，")}`;
+    return `A8/A9 有击杀的 ${killed} 场：所需格挡（层数 − HP）${parts.join("，")}`;
   }
   const parts = [`13 or less ${low.won}/${low.n} won`, ...(mid.n > 0 ? [`14-19 ${mid.won}/${mid.n}`] : []), `20 or more ${high.won}/${high.n}`];
-  return `A8/A9 kills (${killed.length}): block needed (stacks - HP) ${parts.join(", ")}`;
+  return `A8/A9 kills (${killed}): block needed (stacks - HP) ${parts.join(", ")}`;
+}
+
+/**
+ * The block-needed record by ascension, each of `band` apart (giantBlockRecord at A8 and up; exported for tests):
+ * "有击杀的巨兽战按所需格挡（层数 − HP）分：A8 40 场中 ≤13 的 27 场赢 25，14–19 的 1 场赢 0，≥20 的 12 场赢 2；A9 13 场中 …".
+ */
+export function giantBlockBandText(kills: Record<string, GiantKillRow[]>, lang: "zh" | "en", band: readonly number[]): string {
+  const zh = lang === "zh";
+  const rows = band.map((asc) => {
+    const { killed, low, mid, high } = giantBlockBuckets(kills[String(asc)] ?? []);
+    if (killed === 0) return zh ? `A${asc} 没有记下击杀时 HP 的对局` : `A${asc} none logged`;
+    if (zh) return `A${asc} ${killed} 场中 ${[`≤13 的 ${low.n} 场赢 ${low.won}`, ...(mid.n > 0 ? [`14–19 的 ${mid.n} 场赢 ${mid.won}`] : []), `≥20 的 ${high.n} 场赢 ${high.won}`].join("，")}`;
+    return `A${asc} (${killed}) ${[`13 or less ${low.won}/${low.n} won`, ...(mid.n > 0 ? [`14-19 ${mid.won}/${mid.n}`] : []), `20 or more ${high.won}/${high.n}`].join(", ")}`;
+  });
+  return zh ? `有击杀的巨兽战按所需格挡（层数 − HP）分：${rows.join("；")}` : `Giant kills by block needed (stacks - HP): ${rows.join("; ")}`;
 }
 
 /**
@@ -356,6 +383,10 @@ export function giantBlockText(rows: GiantKillRow[], lang: "zh" | "en"): string 
  * unknownFightsText), {BOSS_LOSS:ID:ASC} (bossLossText: the monster DB's median HP we lose a turn against the boss at
  * that ascension). The experience base's lesson texts are filled with these too (experience lessonText), so a
  * lesson and a guide no longer quote two different counts of the same fights.
+ * 2026-10-04 (Dai: experience by ascension): the facts that counted fights over every logged ascension or pooled A8
+ * with A9 (BAND_FACTS) are read by the run's ascension band: {@N:NAME} (factsAtAscension marks them so for a run at
+ * A8 and up) gives A8's fights and A9's apart; {NAME} unmarked keeps the text written before, for a run below A8 and
+ * for the callers that do not know the run's ascension.
  */
 const GUIDE_FACTS: Record<string, () => string> = {
   "{GIANT_BLOCK_RECORD}": () => giantBlockRecord("zh"),
@@ -375,8 +406,45 @@ const GUIDE_FACTS: Record<string, () => string> = {
   "{SANDPIT_DEATHS_EN}": () => sandpitDeathRecord("en"),
 };
 
-export function fillGuideFacts(text: string): string {
-  let out = text;
+/**
+ * The guide facts that count fights over more than one ascension, by the ascension of the run that reads them
+ * (recordBand: from A8 up each ascension apart; below A8, or no ascension, the text written before 2026-10-04: every
+ * logged ascension for the crab, the Queen, the Insatiable and the Matriarch's wake-ups, A8 and A9 pooled for the
+ * Giant's block).
+ */
+const BAND_FACTS: Record<string, (ascension?: number) => string> = {
+  GIANT_BLOCK_RECORD: (ascension) => giantBlockRecord("zh", ascension),
+  CRAB_KILL_ORDER: (ascension) => crabKillRecord("zh", ascension),
+  CRAB_KILLS_EN: (ascension) => crabKillShort(undefined, recordBand(ascension)),
+  LAG_SLEEP: (ascension) => lagSleepRecord("zh", ascension),
+  QUEEN_AMALGAM: (ascension) => queenAmalgamRecord("zh", ascension),
+  QUEEN_AMALGAM_EN: (ascension) => queenAmalgamRecord("en", ascension),
+  SANDPIT_DEATHS: (ascension) => sandpitDeathRecord("zh", ascension),
+  SANDPIT_DEATHS_EN: (ascension) => sandpitDeathRecord("en", ascension),
+};
+
+const BAND_TOKEN = new RegExp(`\\{(${Object.keys(BAND_FACTS).join("|")})\\}`, "g");
+const BAND_MARKED = /\{@(\d+):([A-Z_]+)\}/g;
+
+/**
+ * The text with its by-ascension facts (BAND_FACTS) marked with the run's ascension from A8 up ({CRAB_KILL_ORDER} ->
+ * {@9:CRAB_KILL_ORDER}); as written below A8 or without an ascension. fillGuideFacts fills a marked one by its
+ * ascension's band. Marked, a fact has its own key in the day's frozen table (render/facts.ts): a table filled earlier
+ * with the all-ascension text, or by a run below A8, is not handed to a run at A8 and up.
+ */
+export function factsAtAscension(text: string, ascension: number | undefined): string {
+  if (recordBand(ascension) === null || !text.includes("{")) return text;
+  return text.replace(BAND_TOKEN, (_, name: string) => `{@${ascension}:${name}}`);
+}
+
+/**
+ * The text with its data placeholders filled. `ascension`: the run's, when known (factsAtAscension: from A8 up, the
+ * facts that count fights over several ascensions give each of A8 and A9 apart); without it those keep the text over
+ * every logged ascension (or {@N:NAME} marks them one by one).
+ */
+export function fillGuideFacts(text: string, ascension?: number): string {
+  let out = factsAtAscension(text, ascension);
+  out = out.replace(BAND_MARKED, (marked, asc: string, name: string) => (Object.hasOwn(BAND_FACTS, name) ? BAND_FACTS[name]!(Number(asc)) : marked));
   for (const [placeholder, fill] of Object.entries(GUIDE_FACTS)) if (out.includes(placeholder)) out = out.split(placeholder).join(fill());
   out = out.replace(/\{UNKNOWN_FIGHTS:(\d+):(\d)\}/g, (_, asc: string, act: string) => unknownFightsText([Number(asc)], [Number(act)]));
   out = out.replace(/\{BOSS_LOSS:([A-Z_]+):(\d+)\}/g, (_, boss: string, asc: string) => bossLossText(boss, Number(asc)));
@@ -407,6 +475,19 @@ export function cardOutcomeText(cardId: string, stats: OutcomeStats = loadOutcom
 /** The ascensions the guides quote records for (the ones played now). */
 const RECORD_ASCENSIONS = [8, 9];
 
+/** From this ascension up a run reads the fight records by ascension (recordBand). */
+export const RECORD_BAND_FROM = 8;
+
+/**
+ * The ascensions whose records a run at `ascension` reads, each apart (Dai 2026-10-04, experience by ascension): A8
+ * and A9 (and the run's own, were it above them) from A8 up, so an A9 run sees "A8 46 场赢 17；A9 16 场赢 6", not one
+ * count over A0-A9. null below A8 or without an ascension: the records keep the text written before.
+ */
+export function recordBand(ascension: number | undefined): number[] | null {
+  if (ascension === undefined || !Number.isFinite(ascension) || ascension < RECORD_BAND_FROM) return null;
+  return [...new Set([...RECORD_ASCENSIONS, ascension])].sort((a, b) => a - b);
+}
+
 /** A boss's logged fights won by ascension (boss-damage.json by_asc): "A8 24 场赢 5、A9 5 场赢 0". */
 export function bossRecord(bossKey: string, byAsc: Record<string, BossAscRecord> = unblockedShare(bossKey)?.by_asc ?? {}): string {
   return RECORD_ASCENSIONS.map((asc) => {
@@ -415,71 +496,111 @@ export function bossRecord(bossKey: string, byAsc: Record<string, BossAscRecord>
   }).join("、");
 }
 
-/** The Kaiser Crab's logged fights by the claw that died first (boss-damage.json first_death), all ascensions and A8/A9. */
-export function crabKillRecord(lang: "zh" | "en"): string {
-  return crabKillText(unblockedShare("KAISER_CRAB")?.first_death ?? {}, lang);
+/**
+ * The Kaiser Crab's logged fights by the claw that died first (boss-damage.json first_death): at A8 and up each of
+ * A8 and A9 apart (recordBand); below A8 or without an ascension, all ascensions with A8/A9 after them.
+ */
+export function crabKillRecord(lang: "zh" | "en", ascension?: number): string {
+  return crabKillText(unblockedShare("KAISER_CRAB")?.first_death ?? {}, lang, recordBand(ascension));
 }
 
-/** The kill-order text of these fights (crabKillRecord; exported for tests). */
-export function crabKillText(byAsc: Record<string, CrabFightRow[]>, lang: "zh" | "en"): string {
+/** The fights where this claw died first (null: neither did), and the ones won. */
+function crabFirst(rows: CrabFightRow[], first: CrabFightRow["first"]): WonOf {
+  const list = rows.filter((row) => row.first === first);
+  return { n: list.length, won: list.filter((row) => row.won).length };
+}
+
+/** The kill-order text of these fights (crabKillRecord; exported for tests). `band`: the ascensions apart (recordBand). */
+export function crabKillText(byAsc: Record<string, CrabFightRow[]>, lang: "zh" | "en", band: readonly number[] | null = null): string {
+  if (band) return crabKillBandText(byAsc, lang, band);
   const all = Object.values(byAsc).flat();
   if (all.length === 0) return lang === "zh" ? "没有螃蟹战记录" : "no logged crab fights";
-  const count = (rows: CrabFightRow[], first: CrabFightRow["first"]) => {
-    const list = rows.filter((row) => row.first === first);
-    return { n: list.length, won: list.filter((row) => row.won).length };
-  };
-  const rocket = count(all, "ROCKET");
-  const crusher = count(all, "CRUSHER");
-  const neither = count(all, null);
+  const rocket = crabFirst(all, "ROCKET");
+  const crusher = crabFirst(all, "CRUSHER");
+  const neither = crabFirst(all, null);
   if (lang === "en") {
     return `${all.length} logged crab fights: Rocket died first ${rocket.won}/${rocket.n} won, Crusher first ${crusher.won}/${crusher.n}, neither died first ${neither.won}/${neither.n}`;
   }
   const perAsc = RECORD_ASCENSIONS.map((asc) => {
     const rows = byAsc[String(asc)] ?? [];
-    const first = count(rows, "ROCKET");
+    const first = crabFirst(rows, "ROCKET");
     const rest = { n: rows.length - first.n, won: rows.filter((row) => row.won).length - first.won };
     return rows.length > 0 ? `A${asc} 火箭先死 ${first.won}/${first.n}、其余 ${rest.won}/${rest.n}` : null;
   }).filter(Boolean);
   return `有记录的 ${all.length} 场螃蟹战：火箭先死 ${rocket.n} 场赢 ${rocket.won}，碾碎爪先死 ${crusher.n} 场赢 ${crusher.won}，没有哪只先死（同回合一起死或我方先死）${neither.n} 场赢 ${neither.won}${perAsc.length > 0 ? `（${perAsc.join("；")}）` : ""}`;
 }
 
-/** Jev's short form (the crab-rocket-first hint): "Rocket died first 9/12 won, otherwise 8/45". */
-export function crabKillShort(byAsc: Record<string, CrabFightRow[]> = unblockedShare("KAISER_CRAB")?.first_death ?? {}): string {
-  const all = Object.values(byAsc).flat();
-  const rocket = all.filter((row) => row.first === "ROCKET");
-  const rest = all.filter((row) => row.first !== "ROCKET");
-  return `Rocket died first ${rocket.filter((row) => row.won).length}/${rocket.length} won, otherwise ${rest.filter((row) => row.won).length}/${rest.length}`;
+/**
+ * The kill order by ascension, each of `band` apart: "有记录的螃蟹战 A8 46 场赢 17，火箭先死 13 场赢 9、碾碎爪先死 6 场赢 5、
+ * 没有哪只先死 27 场赢 3；A9 …（没有哪只先死 = 同回合一起死或我方先死）".
+ */
+function crabKillBandText(byAsc: Record<string, CrabFightRow[]>, lang: "zh" | "en", band: readonly number[]): string {
+  const zh = lang === "zh";
+  const rows = band.map((asc) => {
+    const list = byAsc[String(asc)] ?? [];
+    if (list.length === 0) return zh ? `A${asc} 还没有记录` : `A${asc} none`;
+    const won = list.filter((row) => row.won).length;
+    const [rocket, crusher, neither] = [crabFirst(list, "ROCKET"), crabFirst(list, "CRUSHER"), crabFirst(list, null)];
+    if (zh) return `A${asc} ${list.length} 场赢 ${won}，火箭先死 ${rocket.n} 场赢 ${rocket.won}、碾碎爪先死 ${crusher.n} 场赢 ${crusher.won}、没有哪只先死 ${neither.n} 场赢 ${neither.won}`;
+    return `A${asc} ${list.length} (${won} won): Rocket died first ${rocket.won}/${rocket.n} won, Crusher first ${crusher.won}/${crusher.n}, neither died first ${neither.won}/${neither.n}`;
+  });
+  return zh ? `有记录的螃蟹战 ${rows.join("；")}（没有哪只先死 = 同回合一起死或我方先死）` : `logged crab fights ${rows.join("; ")}`;
 }
 
-/** The Matriarch's sleep in the logged fights (boss-damage.json sleep): the no-Strength decks, and waking it on T1-T2. */
-export function lagSleepRecord(lang: "zh" | "en"): string {
-  return lagSleepText(unblockedShare("LAGAVULIN_MATRIARCH")?.sleep ?? {}, lang);
+/**
+ * Jev's short form (the crab-rocket-first hint): "Rocket died first 9/12 won, otherwise 8/45" over every ascension;
+ * with `band` (recordBand) each of its ascensions apart: "A8 Rocket died first 9/13 won, otherwise 8/33; A9 …".
+ */
+export function crabKillShort(byAsc: Record<string, CrabFightRow[]> = unblockedShare("KAISER_CRAB")?.first_death ?? {}, band: readonly number[] | null = null): string {
+  const short = (rows: CrabFightRow[]) => {
+    const rocket = rows.filter((row) => row.first === "ROCKET");
+    const rest = rows.filter((row) => row.first !== "ROCKET");
+    return `Rocket died first ${rocket.filter((row) => row.won).length}/${rocket.length} won, otherwise ${rest.filter((row) => row.won).length}/${rest.length}`;
+  };
+  if (!band) return short(Object.values(byAsc).flat());
+  return band.map((asc) => ((byAsc[String(asc)] ?? []).length > 0 ? `A${asc} ${short(byAsc[String(asc)]!)}` : `A${asc} no logged fights`)).join("; ");
+}
+
+/**
+ * The Matriarch's sleep in the logged fights (boss-damage.json sleep): the no-Strength decks by ascension, and waking
+ * it on T1-T2 (over every ascension; at A8 and up, recordBand, by ascension too).
+ */
+export function lagSleepRecord(lang: "zh" | "en", ascension?: number): string {
+  return lagSleepText(unblockedShare("LAGAVULIN_MATRIARCH")?.sleep ?? {}, lang, recordBand(ascension));
 }
 
 /** Share of its HP a T1-T2 hit must take to count as a burst, not chip damage (the guide's "25% of its HP"). */
 export const LAG_BURST_PCT = 25;
 
-/** The sleep text of these fights (lagSleepRecord; exported for tests). */
-export function lagSleepText(byAsc: Record<string, LagSleepRow[]>, lang: "zh" | "en"): string {
+/**
+ * The sleep text of these fights (lagSleepRecord; exported for tests). `band` (recordBand; the zh text only): each of
+ * its ascensions apart, the T1-T2 wake-ups included ("A8 有持续力量牌 21/22 赢、没有 10/16 赢，T1–T2 一次打掉 ≥25% 打醒的 1 场赢 1
+ * （EZ2L 52%）、小伤害打醒的 9 场赢 6；A9 …"); without it the wake-ups are counted over every ascension.
+ */
+export function lagSleepText(byAsc: Record<string, LagSleepRow[]>, lang: "zh" | "en", band: readonly number[] | null = null): string {
   const won = (rows: LagSleepRow[]) => `${rows.filter((row) => row.won).length}/${rows.length}`;
   const at = (asc: number) => byAsc[String(asc)] ?? [];
   const noStrength = (rows: LagSleepRow[]) => rows.filter((row) => row.strength.length === 0);
   if (lang === "en") {
     return `decks without a lasting-Strength card won ${RECORD_ASCENSIONS.map((asc) => `A${asc} ${won(noStrength(at(asc)))}`).join(", ")}`;
   }
-  const parts = RECORD_ASCENSIONS.filter((asc) => at(asc).length > 0).map((asc) => {
+  const strength = (asc: number) => {
     const rows = at(asc);
     const without = noStrength(rows);
     const waited = without.filter((row) => !row.won && (row.woke_turn ?? 0) >= 3).map((row) => row.run ?? "?");
     const note = waited.length > 0 && waited.length <= 3 ? `（输的 ${waited.join("、")} 都等它自然醒，前两回合没有伤害进它）` : "";
     return `A${asc} 有持续力量牌 ${won(rows.filter((row) => row.strength.length > 0))} 赢、没有 ${won(without)} 赢${note}`;
-  });
-  const early = Object.values(byAsc).flat().filter((row) => row.woke_turn !== null && row.woke_turn <= 2 && row.woke_pct !== null);
-  const burst = early.filter((row) => row.woke_pct! >= LAG_BURST_PCT);
-  const chip = early.filter((row) => row.woke_pct! < LAG_BURST_PCT);
-  const burstRuns = burst.length > 0 && burst.length <= 3 ? `（${burst.map((row) => `${row.run ?? "?"} ${row.woke_pct}%`).join("、")}）` : "";
-  const wake = `T1–T2 一次打掉 ≥${LAG_BURST_PCT}% 打醒的 ${burst.length} 场赢 ${burst.filter((row) => row.won).length}${burstRuns}，小伤害打醒的 ${chip.length} 场赢 ${chip.filter((row) => row.won).length}`;
-  return `${parts.join("；")}；${wake}`;
+  };
+  const wake = (rows: LagSleepRow[], sep: string) => {
+    const early = rows.filter((row) => row.woke_turn !== null && row.woke_turn <= 2 && row.woke_pct !== null);
+    const burst = early.filter((row) => row.woke_pct! >= LAG_BURST_PCT);
+    const chip = early.filter((row) => row.woke_pct! < LAG_BURST_PCT);
+    const burstRuns = burst.length > 0 && burst.length <= 3 ? `（${burst.map((row) => `${row.run ?? "?"} ${row.woke_pct}%`).join("、")}）` : "";
+    return `T1–T2 一次打掉 ≥${LAG_BURST_PCT}% 打醒的 ${burst.length} 场赢 ${burst.filter((row) => row.won).length}${burstRuns}${sep}小伤害打醒的 ${chip.length} 场赢 ${chip.filter((row) => row.won).length}`;
+  };
+  if (band) return band.map((asc) => (at(asc).length === 0 ? `A${asc} 还没有记录` : `${strength(asc)}，${wake(at(asc), "、")}`)).join("；");
+  const parts = RECORD_ASCENSIONS.filter((asc) => at(asc).length > 0).map(strength);
+  return `${parts.join("；")}；${wake(Object.values(byAsc).flat(), "，")}`;
 }
 
 /**
@@ -555,33 +676,48 @@ export function bossLossText(bossKey: string, ascension: number): string {
   return loss && loss.asc === ascension ? loss.median.toFixed(1) : "?";
 }
 
-/** The Queen's logged fights by when the Amalgam died (boss-damage.json QUEEN.amalgam), all ascensions and A8. */
-export function queenAmalgamRecord(lang: "zh" | "en"): string {
-  return queenAmalgamText(unblockedShare("QUEEN")?.amalgam ?? {}, lang);
+/**
+ * The Queen's logged fights by when the Amalgam died (boss-damage.json QUEEN.amalgam): at A8 and up each of A8 and A9
+ * apart (recordBand); below A8 or without an ascension, all ascensions and A8.
+ */
+export function queenAmalgamRecord(lang: "zh" | "en", ascension?: number): string {
+  return queenAmalgamText(unblockedShare("QUEEN")?.amalgam ?? {}, lang, recordBand(ascension));
+}
+
+/** One set of Queen fights: the wins and losses by when the Amalgam died, and where turns 1-2's damage went. */
+function queenSplit(rows: QueenFightRow[], lang: "zh" | "en") {
+  const range = (list: QueenFightRow[]) => {
+    const turns = list.map((row) => row.killed_turn).filter((turn): turn is number => turn !== null).sort((a, b) => a - b);
+    const dash = lang === "zh" ? "–" : "-";
+    return turns.length === 0 ? "" : turns[0] === turns.at(-1) ? `T${turns[0]}` : `T${turns[0]}${dash}T${turns.at(-1)}`;
+  };
+  const wins = rows.filter((row) => row.won);
+  const losses = rows.filter((row) => !row.won);
+  const split = rows.filter((row) => row.t12_queen != null && row.t12_amalgam != null && row.t12_queen + row.t12_amalgam > 0);
+  return {
+    range,
+    wins,
+    losses,
+    winsKilled: wins.filter((row) => row.killed_turn !== null),
+    lossNever: losses.filter((row) => row.killed_turn === null),
+    lossKilled: losses.filter((row) => row.killed_turn !== null),
+    intoQueen: split.filter((row) => row.t12_queen! > row.t12_amalgam!),
+    intoAmalgam: split.filter((row) => row.t12_queen! <= row.t12_amalgam!),
+  };
 }
 
 /**
  * The Amalgam record text of these fights (queenAmalgamRecord; exported for tests): the wins that killed it first and
  * on which turns, the losses that never did or did late, and where turns 1-2's damage went (more into the Queen or
  * into the Amalgam). Written 2026-09-30: 17 fights, the 5 wins killed it on T3-T8 (RBJ4 A8 T3); 7 of the 12 losses
- * never did; turns 1-2 mostly into the Queen 1/6 won (5LRZ, Q8XR A8: 58 and 87 into her on T1, both lost).
+ * never did; turns 1-2 mostly into the Queen 1/6 won (5LRZ, Q8XR A8: 58 and 87 into her on T1, both lost). `band`
+ * (recordBand): each of its ascensions apart instead of all of them.
  */
-export function queenAmalgamText(byAsc: Record<string, QueenFightRow[]>, lang: "zh" | "en"): string {
+export function queenAmalgamText(byAsc: Record<string, QueenFightRow[]>, lang: "zh" | "en", band: readonly number[] | null = null): string {
+  if (band) return queenAmalgamBandText(byAsc, lang, band);
   const all = Object.values(byAsc).flat();
   if (all.length === 0) return lang === "zh" ? "还没有女王战记录" : "no logged Queen fights";
-  const range = (rows: QueenFightRow[]) => {
-    const turns = rows.map((row) => row.killed_turn).filter((turn): turn is number => turn !== null).sort((a, b) => a - b);
-    const dash = lang === "zh" ? "–" : "-";
-    return turns.length === 0 ? "" : turns[0] === turns.at(-1) ? `T${turns[0]}` : `T${turns[0]}${dash}T${turns.at(-1)}`;
-  };
-  const wins = all.filter((row) => row.won);
-  const losses = all.filter((row) => !row.won);
-  const winsKilled = wins.filter((row) => row.killed_turn !== null);
-  const lossNever = losses.filter((row) => row.killed_turn === null);
-  const lossKilled = losses.filter((row) => row.killed_turn !== null);
-  const split = all.filter((row) => row.t12_queen != null && row.t12_amalgam != null && row.t12_queen + row.t12_amalgam > 0);
-  const intoQueen = split.filter((row) => row.t12_queen! > row.t12_amalgam!);
-  const intoAmalgam = split.filter((row) => row.t12_queen! <= row.t12_amalgam!);
+  const { range, wins, losses, winsKilled, lossNever, lossKilled, intoQueen, intoAmalgam } = queenSplit(all, lang);
   const won = (rows: QueenFightRow[]) => rows.filter((row) => row.won).length;
   if (lang === "en") {
     return `${all.length} logged Queen fights: ${winsKilled.length}/${wins.length} wins killed the Amalgam first${winsKilled.length > 0 ? ` (${range(winsKilled)})` : ""}; ${lossNever.length}/${losses.length} losses never did; turns 1-2 mostly into the Queen won ${won(intoQueen)}/${intoQueen.length}, into the Amalgam ${won(intoAmalgam)}/${intoAmalgam.length}`;
@@ -594,19 +730,62 @@ export function queenAmalgamText(byAsc: Record<string, QueenFightRow[]>, lang: "
   return `有记录的 ${all.length} 场女王战：${winPart}；${lossPart}；T1–T2 伤害多进女王的 ${intoQueen.length} 场赢 ${won(intoQueen)}、多进聚合体的 ${intoAmalgam.length} 场赢 ${won(intoAmalgam)}${a8Text}`;
 }
 
-/** The Insatiable's logged losses by death line (boss-damage.json THE_INSATIABLE.deaths), all ascensions, A8 and A9. */
-export function sandpitDeathRecord(lang: "zh" | "en"): string {
-  return sandpitDeathText(unblockedShare("THE_INSATIABLE")?.deaths ?? {}, lang);
+/**
+ * The Amalgam record by ascension, each of `band` apart: "有记录的女王战 A8 22 场赢 3，赢的都先打死聚合体（5HHL T8、8D8D T6、RBJ4 T3），
+ * 输的 19 场 8 场没打死、11 场 T2–T9 才打死，T1–T2 伤害多进女王的 7 场赢 0、多进聚合体的 15 场赢 3；A9 2 场赢 0，…".
+ */
+function queenAmalgamBandText(byAsc: Record<string, QueenFightRow[]>, lang: "zh" | "en", band: readonly number[]): string {
+  const zh = lang === "zh";
+  const won = (rows: QueenFightRow[]) => rows.filter((row) => row.won).length;
+  const rows = band.map((asc) => {
+    const list = byAsc[String(asc)] ?? [];
+    if (list.length === 0) return zh ? `A${asc} 还没有记录` : `A${asc} none`;
+    const { range, wins, losses, winsKilled, lossNever, lossKilled, intoQueen, intoAmalgam } = queenSplit(list, lang);
+    if (!zh) {
+      const winPart = wins.length === 0 ? "no win yet" : `${winsKilled.length}/${wins.length} wins killed the Amalgam first${winsKilled.length > 0 ? ` (${range(winsKilled)})` : ""}`;
+      const lossPart = losses.length === 0 ? "no loss" : `${lossNever.length}/${losses.length} losses never killed it`;
+      return `A${asc} ${list.length} (${wins.length} won): ${winPart}, ${lossPart}, turns 1-2 mostly into the Queen won ${won(intoQueen)}/${intoQueen.length}, into the Amalgam ${won(intoAmalgam)}/${intoAmalgam.length}`;
+    }
+    const killedRuns = winsKilled.length > 0 && winsKilled.length <= 3 ? winsKilled.map((row) => `${row.run ?? "?"} T${row.killed_turn}`).join("、") : range(winsKilled);
+    const winPart = wins.length === 0 ? "还没有赢过" : `赢的${winsKilled.length === wins.length ? "都" : `里 ${winsKilled.length} 场`}先打死聚合体${winsKilled.length > 0 ? `（${killedRuns}）` : ""}`;
+    const lossPart = losses.length === 0 ? "没有输局" : `输的 ${losses.length} 场 ${lossNever.length} 场没打死${lossKilled.length > 0 ? `、${lossKilled.length} 场 ${range(lossKilled)} 才打死` : ""}`;
+    return `A${asc} ${list.length} 场赢 ${wins.length}，${winPart}，${lossPart}，T1–T2 伤害多进女王的 ${intoQueen.length} 场赢 ${won(intoQueen)}、多进聚合体的 ${intoAmalgam.length} 场赢 ${won(intoAmalgam)}`;
+  });
+  return zh ? `有记录的女王战 ${rows.join("；")}` : `logged Queen fights ${rows.join("; ")}`;
+}
+
+/**
+ * The Insatiable's logged losses by death line (boss-damage.json THE_INSATIABLE.deaths): at A8 and up each of A8 and
+ * A9 apart (recordBand); below A8 or without an ascension, all ascensions with A8/A9 after them.
+ */
+export function sandpitDeathRecord(lang: "zh" | "en", ascension?: number): string {
+  return sandpitDeathText(unblockedShare("THE_INSATIABLE")?.deaths ?? {}, lang, recordBand(ascension));
 }
 
 /**
  * The death-line text of these fights (sandpitDeathRecord; exported for tests). Written 2026-09-30: of the 17 A8
  * losses 10 died on HP with the Sandpit at 2 or more, 4 to the Sandpit, 3 both at once (NH8A: an Escape over a
- * 41-damage line on T3 with HP the earlier line; died with the Sandpit at 2).
+ * 41-damage line on T3 with HP the earlier line; died with the Sandpit at 2). `band` (recordBand): each of its
+ * ascensions apart ("有记录的沙虫输局 A8 23 场：死在 HP 上（沙坑还剩 ≥2）14、被沙坑吞掉 5、两条线同一回合 4；A9 5 场：…").
  */
-export function sandpitDeathText(byAsc: Record<string, SandpitFightRow[]>, lang: "zh" | "en"): string {
+export function sandpitDeathText(byAsc: Record<string, SandpitFightRow[]>, lang: "zh" | "en", band: readonly number[] | null = null): string {
   const count = (rows: SandpitFightRow[], death: SandpitFightRow["death"]) => rows.filter((row) => !row.won && row.death === death).length;
   const lost = (rows: SandpitFightRow[]) => rows.filter((row) => !row.won);
+  if (band) {
+    const zh = lang === "zh";
+    // The death line's meaning once, at the first ascension with a loss.
+    const first = band.find((asc) => lost(byAsc[String(asc)] ?? []).length > 0);
+    const rows = band.map((asc) => {
+      const list = byAsc[String(asc)] ?? [];
+      const n = lost(list).length;
+      if (n === 0) return zh ? `A${asc} ${list.length > 0 ? "没有输局" : "还没有记录"}` : `A${asc} none`;
+      if (zh) return `A${asc} ${n} 场：死在 HP 上${asc === first ? "（沙坑还剩 ≥2）" : " "}${count(list, "hp")}、被沙坑吞掉 ${count(list, "sandpit")}、两条线同一回合 ${count(list, "both")}`;
+      return asc === first
+        ? `A${asc} ${n}: ${count(list, "hp")} died on HP with the Sandpit at 2+, ${count(list, "sandpit")} to the Sandpit, ${count(list, "both")} both at once`
+        : `A${asc} ${n}: ${count(list, "hp")} on HP, ${count(list, "sandpit")} to the Sandpit, ${count(list, "both")} both at once`;
+    });
+    return zh ? `有记录的沙虫输局 ${rows.join("；")}` : `logged losses ${rows.join("; ")}`;
+  }
   const all = Object.values(byAsc).flat();
   if (lost(all).length === 0) return lang === "zh" ? "还没有沙虫输局的记录" : "no logged Insatiable losses";
   if (lang === "en") {

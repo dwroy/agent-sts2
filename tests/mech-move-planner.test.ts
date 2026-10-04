@@ -124,16 +124,20 @@ const BOARDS = ["nx48-f33-t7-crab-death", "8l29-f33-t5-crab-alone", "y3xt-f45-t5
  * Digests of v4 3488dc5's planner on the boards above (JEV_CONTEXT off and v1), MECH_RULES on (its default). The 8L29
  * run held Lost Wisp, which the solver models since (fix-queue-v4 fix2: 8 to every enemy per Power): its two boards
  * are 3488dc5's plus that (with the relic's lines off they read 3488dc5's bc13d834…, f69d22f6…, 21324a53…, e1f0817c…).
+ * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): the boards at A8 and up whose question carries a counted record
+ * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
+ * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
+ * earlier digest held: nothing else in the decision moved.
  */
 const GOLDEN_ON: Record<string, string> = {
-  "nx48-f33-t7-crab-death:off": "cd5581f4910af21308ff7890df28817f",
-  "nx48-f33-t7-crab-death:v1": "c9ad08821b2fced0b5feaa23e416070d",
-  "8l29-f33-t5-crab-alone:off": "a6482fb703a125444cffba8d7bc30b0c",
-  "8l29-f33-t5-crab-alone:v1": "bbd558bf7556801bad0f7002bacd40c0",
+  "nx48-f33-t7-crab-death:off": "1e916a66856f00fbeef0ec59d3168d15",
+  "nx48-f33-t7-crab-death:v1": "58f682b783ec4fb6cb190c594f077683",
+  "8l29-f33-t5-crab-alone:off": "1a1eae7813ea0328f9920e8bb1640aec",
+  "8l29-f33-t5-crab-alone:v1": "76ff44399ce497a3bc3f22ec49b186c1",
   "y3xt-f45-t5-axebot-stock1:off": "40399a49c414cf8c9768f1802bcbfbd6",
   "y3xt-f45-t5-axebot-stock1:v1": "55148044f38ebd91f93c25280b10de6a",
   "8l29-f39-t3-axebot-stock2:off": "71009ab06986ebeb3cd29453338e4d5b",
-  "8l29-f39-t3-axebot-stock2:v1": "a380b127cfa146a26d0daea1e34d4119",
+  "8l29-f39-t3-axebot-stock2:v1": "f33b7b050f05afe75c809e0db7d686c2",
 };
 /** ... and MECH_RULES off: the same there (no Flutter on these boards). */
 const GOLDEN_OFF: Record<string, string> = { ...GOLDEN_ON };

@@ -3691,7 +3691,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       ? {
           experience: {
             note: "lessons from past runs about these enemies (experience base): evidence, not orders",
-            lessons: lessons.map(jevLessonLine),
+            lessons: lessons.map((entry) => jevLessonLine(entry, state.run?.ascension ?? undefined)),
           },
         }
       : {}),
