@@ -339,7 +339,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       tools: spec.tools,
       // Commits need the main checkout's git directory (a worktree's metadata lives there): writable, its hooks and
       // config read-only, as the ops session's profile (2026-10-04: fix-batch could not merge main, ORIG_HEAD.lock).
-      extraRules: learnerGitRules(deps.projectRoot),
+      extraRules: learnerGitRules(deps.projectRoot, cwd),
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
       ...(maxTurns !== undefined ? { maxTurns } : {}),
@@ -493,8 +493,21 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   return exitCode === 0 && !summary.isError ? 0 : 1;
 }
 
-/** The git rules of a learner run: the main checkout's .git writable (write tasks only), hooks and config read-only. */
-export function learnerGitRules(projectRoot: string): Record<string, "read" | "write" | "none"> {
+/**
+ * The git rules of a learner run (write tasks only): the main checkout's .git writable, its hooks and config read-only,
+ * and, when cwd is a worktree, its own git directory (.git/worktrees/<name>) by name — codex keeps the working
+ * directory's git dir read-only unless granted exactly (2026-10-04 probe with `codex sandbox -P learner`).
+ */
+export function learnerGitRules(projectRoot: string, cwd?: string): Record<string, "read" | "write" | "none"> {
   const git = join(projectRoot, ".git");
-  return { [git]: "write", [join(git, "hooks")]: "read", [join(git, "config")]: "read" };
+  const rules: Record<string, "read" | "write" | "none"> = { [git]: "write", [join(git, "hooks")]: "read", [join(git, "config")]: "read" };
+  if (cwd) {
+    try {
+      const pointer = readFileSync(join(cwd, ".git"), "utf8").match(/^gitdir:\s*(.+)$/m)?.[1]?.trim();
+      if (pointer) rules[resolve(cwd, pointer)] = "write";
+    } catch {
+      // cwd is the main checkout (a .git directory) or not a git checkout: nothing more to grant
+    }
+  }
+  return rules;
 }
