@@ -237,7 +237,7 @@ export interface ScreenMemory {
    * that card draws (4V5T F24 T4: Burning Pact drew, the plan was dropped, and its exhaust took the True
    * Grit the plan played next). Only read for the same turn.
    */
-  plannedAfter?: { turn: number | null; steps: import("../reflex/turn-solver.js").Step[] };
+  plannedAfter?: { turn: number | null; steps: import("../reflex/turn-solver.js").Step[]; lethal?: boolean };
   /**
    * Turn-start settle guard: the board's hand size and energy, and when either last changed. The
    * turn number flips during the enemy turn, so it cannot tell when the player's draw has landed.
@@ -398,6 +398,8 @@ export interface RememberedMap {
 
 export interface CombatPlanMemo {
   turn: number | null;
+  /** The validated line wins the fight; keep its Sandpit exemption across steps. */
+  lethal?: boolean;
   remaining: import("../reflex/turn-solver.js").Step[];
   /** Hand signature the next step expects; any other hand means the board surprised us. */
   expectedHand: string;

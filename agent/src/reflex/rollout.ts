@@ -52,7 +52,7 @@ import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
 import { samplePotion, type PotionMcSource } from "./potion-mc.js";
 import { CLARITY_LATER_DRAWS, DEX_POTION, ERUPTION_NEXT_BLOCK, HAND_LIMIT, infernoCopiesOf, mantleHpCost, MUSIC_BOX_INDEX, musicBoxCopy, PEN_NIB_EVERY, RADIANCE_LATER_ENERGY, SHRINK_DAMAGE_FACTOR, SHRINKER, solveTurn, STABLE_SERUM_TURNS, turnsLeftOf, type DeathMove, type EnemySim, type Plan, type PlayerSim, type Revive, type SolverInput } from "./turn-solver.js";
-import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
+import { KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile } from "../knowledge/files.js";
 
 // ---------------------------------------------------------------- state snapshot + features (mirror of the Python builder)
 
@@ -281,18 +281,21 @@ export function giantTerminal(clock: Estimate, f: Record<string, number>, snap: 
     move = nextOf(move);
   }
   const blast = blastAt(k);
-  const loss = (f["incoming_after_block"] ?? 0) + giantLossPerTurn(meta.asc) * (k - 1);
+  const perTurn = giantLossPerTurn(meta.asc);
+  if (perTurn === null) return clock;
+  const loss = (f["incoming_after_block"] ?? 0) + perTurn * (k - 1);
   return { hpLoss: loss + Math.max(0, blast - ERUPTION_NEXT_BLOCK), winProb: clockWin(hp - loss + ERUPTION_NEXT_BLOCK - blast), turns: k };
 }
 
-const giantLossCache = new Map<number, number>();
+const giantLossCache = new Map<string, number | null>();
 /** HP we lose a turn against the Waterfall Giant at this ascension (boss-clock bossLossPerTurn), cached. */
-function giantLossPerTurn(asc: number): number {
-  let loss = giantLossCache.get(asc);
+function giantLossPerTurn(asc: number): number | null {
+  const key = `${knowledgeCharacter()}:${asc}`;
+  let loss = giantLossCache.get(key);
   if (loss === undefined) {
     const profile = bossProfile(GIANT_ID);
-    loss = profile ? bossLossPerTurn(profile, asc).value : 0;
-    giantLossCache.set(asc, loss);
+    loss = profile ? bossLossPerTurn(profile, asc).value : null;
+    giantLossCache.set(key, loss);
   }
   return loss;
 }

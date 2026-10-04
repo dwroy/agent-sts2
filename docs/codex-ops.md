@@ -1,6 +1,6 @@
 # 运维会话跑在 codex 上（调度器 + 一个可续的 codex 会话）
 
-Dai 2026-10-04 21:00 定：Claude 只留一个会话（开发会话，负责派活和盯进度）；运维会话改用 codex（gpt-6.1-sol，强度 xhigh，和学习者一样）。codex 没有会话内的定时任务（原来的 Claude 运维 prompt 靠 CronCreate），所以拆成两半：
+Dai 2026-10-04 21:00 定：Claude 只观察和与 Dai 对话，不修改或审核；codex 学习者自行实现、自测、合入，运维 codex 确认上线和提交兜底；运维会话改用 codex（gpt-6.1-sol，强度 xhigh，和学习者一样）。codex 没有会话内的定时任务（原来的 Claude 运维 prompt 靠 CronCreate），所以拆成两半：
 
 - **调度器**（`ops/codex-ops.sh`，cron 或一个 setsid 的 bash 循环）：做所有机械的活，只在需要判断时叫醒 codex。
 - **运维 codex 会话**：只建一次（第一轮 = `ops/ops-session-silent-codex-prompt.md`），以后每次叫醒都是 `codex exec resume <会话 id>`，消息是调度器攒下的事件。会话 id 在 `ops/codex-ops/session-id`。
@@ -26,11 +26,13 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | 时间 | 调度器自己做 | 叫醒 codex（事件） |
 |---|---|---|
 | 每 5 分钟 | `ops/stall-check.sh` | 输出 STALL → `stall`（带完整输出）。同一原因（去掉数字后相同）第一次之后隔 10、20、40、80 分钟、之后每 2 小时再叫一次；OK 了就清掉 |
-| 每小时 13、43 分 | `ops/codex-ops-learn.py tick`：① runs.jsonl 里静默猎手的胜局不在 ops/win-notified 里的，写进去；② 这个角色最新的 run-config 进阶比上次见到的高；③ 已结束、没有 `## <id>` 复盘、没派过的局，派一批学习者（最多 5 局，同一时间一批），`learner/run.ts --engine codex --task postmortem --character silent`；④ `experience-pending.py` 满 10 局，在收件箱写一行（同一批只写一次） | ① → `victory`；② → `ascension-up`（第一次见到只记下，不叫）；③ 的批次跑完 → `learner-done`（退出码、已有/还缺的复盘、每局的学习账本条目和没有条目的局、回报文件）；④ 不叫 |
+| 每小时 13、43 分 | `ops/codex-ops-learn.py tick`：① runs.jsonl 里静默猎手的胜局不在 ops/win-notified 里的，写进去；② 这个角色最新的 run-config 进阶比上次见到的高；③ 已结束、没有 `## <id>` 复盘、没派过的局，派一批学习者（最多 5 局，同一时间一批），`learner/run.ts --engine codex --task postmortem --character silent`；④ `experience-pending.py` 有 ≥1 局就派 experience-update（同时一批，迟到的并入下一批）；⑤ accepted 未上线提案或未关闭修复队列派 fix-batch（同时一批）；两类一律 merge=live，忙或脏的工作树不派 | ① → `victory`；② → `ascension-up`（第一次见到只记下，不叫）；③ 的批次跑完 → `learner-done`（退出码、已有/还缺的复盘、每局的学习账本条目和没有条目的局、回报文件）；④/⑤ 完成发 `experience-done` / `fix-done`，已合入的批次在沙箱外完整检查后发 `learner-checks` |
 | 每天 4:07 | `ops/paper_dataset.py`（完整版，含 `paper/data/learning-curve-<角色>.csv`）；codex 记录替换 key 后复制到 paper/materials/session/codex/（运维会话的 rollout 和 wakes、学习者的 learner/runs/*.jsonl 和它们的 codex rollout；ops/codex/archive.ts，按 MANIFEST.json 只复制变了的），再用 gitleaks 扫一遍（比上次多就在收件箱写一行，不叫醒运维）；decision-log 记一行 | 失败时 `snapshot-failed` |
 | 随时 | — | `ops/codex-ops.sh wake "<话>"` → `manual` |
 
-学习者跑在调度器这边（沙箱外）：它自己的 codex 要联网，运维会话的沙箱里跑不了。失败的批次（还缺复盘的局）1 小时后重派，每局最多 3 次。
+学习者跑在调度器这边（沙箱外）：它自己的 codex 要联网，运维会话的沙箱里跑不了。失败批次 1 小时后重派，最多 3 次。经验与修复任务在各自工作树自测通过后自行合入 live，不另设审核。调度器用 learn.lock 串行更新批次状态，按内容去重；收到完成事件后，运维确认实际合入、机械同步 main 和上线账本。学习者提交或合入受阻时运维兜底。
+
+学习者的沙箱检查用 `bash agent/tools/test-sandbox.sh`（在 agent/ 可用 `bash tools/test-sandbox.sh`）。排除名单与原因固定在脚本里；实际合入 live 后，调度器在沙箱外、live-merge.lock 内跑完整 tsc + vitest。失败写收件箱并发送 learner-checks，运维决定回滚还是派修复；调度器不自动回滚。
 
 ## 叫醒（ops/codex/main.ts wake）
 
@@ -66,6 +68,8 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | launch-game | 记忆卡 launch-game-on-desktop 的做法：`cd /mnt/c`，schtasks /create … /it、/run、/delete，再等 mod 最多 3 分钟；游戏在跑时拒绝 |
 | win-procs / win-kill <PID> | tasklist 里的 steam / 游戏进程和所在会话 / 只关会话 0（Services）里的 steam.exe 或游戏 |
 | postmortem <ids> / learner-status / scheduler-status | 马上派一批复盘 / 批次状态 / 调度器状态 |
+| experience-update <ids> / fix-batch | 手动派经验 / 修复批次，一律 merge=live；工作树占用时拒绝 |
+| learner-merge <branch> | 发合入兜底事件，由运维执行 live 流程；只接收 codex-dev / exp-silent |
 
 实测（2026-10-04，真实 codex，测试会话）：init 5 s；一次叫醒里模型依次调了 procs（0）、mod-state（0，拿到 mod 的 JSON）、`kill 1`（2，被动作脚本拒绝：不是我们的进程）、`rm-rf`（2，broker 拒绝：没有这个动作），31 s，会话记得第一轮的暗号。没有在真实游戏上测 autoplay-start / launch-game / win-kill（按要求没碰对局）。
 
@@ -83,7 +87,8 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | ops/codex/lib.ts、main.ts | 命令行、权限配置、事件消息、broker、叫醒、预检、会话大小、快照复制、`probe` |
 | ops/codex/archive.ts | 每日快照：运维和学习者的 codex 记录替换 key 后复制到 paper/materials/session/codex/ |
 | ops/codex-ops-learn.py | 学习闭环的机械部分；状态 ops/codex-ops/learn.json |
-| ops/codex-ops-learner.sh | 跑一批复盘（沙箱外），结束时发 learner-done 并马上叫醒 |
+| ops/codex-ops-learner.sh | 跑复盘、经验或修复批次（沙箱外），结束时发完成事件并叫醒 |
+| ops/learner_jobs.py、learner_checks.py | 写任务去重、工作树占用检查；完成事件和合入后的完整检查 |
 | ops/codex-ops-do.sh、ops/codex-ops-actions.sh | 沙箱里的请求端、沙箱外的动作 |
 | ops/ops-session-silent-codex-prompt.md | 会话的第一轮 prompt |
 | agent/tests/ops-codex.test.ts | 命令行和权限、broker 往返、事件、会话大小、学习闭环（假学习者）、卡死退避 |

@@ -157,13 +157,13 @@ describe("the task files in learner/tasks", () => {
 
   it("fix-batch uses the current queue and an explicit live merge with evidence and release records", () => {
     const spec = loadTask("fix-batch", TASKS);
-    expect(renderTask(spec, {}, BUILTINS).values.merge).toBe("no");
+    expect(renderTask(spec, {}, BUILTINS).values.merge).toBe("live");
     const { prompt } = renderTask(spec, { merge: "live" }, BUILTINS);
     expect(prompt).toContain("/p/notes/fix-queue-v4.md");
     expect(prompt).toContain("合入 /p/.worktrees/live");
     expect(prompt).toContain("flock /p/ops/live-merge.lock");
     expect(prompt).not.toMatch(/merge = v3|v3-merge\.lock|notes\/fix-queue\.md/);
-    for (const step of ["等后台知识刷新跑完", "先提交刷新过的知识数据", "git merge --no-edit <本分支>", "npx tsc -p tsconfig.json --noEmit", "npx vitest run", "decision-log.md", "eval/versions.json", "证据局号", "账本 id", "通知运维会话"]) {
+    for (const step of ["等后台知识刷新跑完", "先提交刷新过的知识数据", "git merge --no-edit <本分支>", "bash tools/test-sandbox.sh", "decision-log.md", "eval/versions.json", "证据局号", "账本 id", "通知运维会话"]) {
       expect(prompt).toContain(step);
     }
   });

@@ -1697,6 +1697,20 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.target === "single" && targetEnemy === null) return;
 
   if (card.hpLoss > 0) loseHp(next, card.hpLoss, player);
+  if (card.immediatePlays) {
+    for (let i = 0; i < card.immediatePlays.count; i += 1) {
+      if (next.hp <= 0 || !next.enemies.some((enemy) => enemy.alive)) break;
+      const automatic = card.immediatePlays.card;
+      const base = automatic.damageBase ?? automatic.damage;
+      const generated: CardModel = { ...automatic, key: `${card.key}~auto${i}`, cost: 0,
+        damage: base === null ? null : Math.floor(ourAttackScaled(base + (player.strengthNow ?? 0), player.weak, false)) };
+      const resolved = play(next, generated, target, player);
+      if (!resolved) break;
+      // Keep the attack/exhaust triggers, but the mod performs these plays itself: no extra hand actions.
+      const steps = next.steps;
+      Object.assign(next, resolved, { steps });
+    }
+  }
   // Rupture's amount (Rupture+ 2: 8L29N792FA45 F37 T2, played at block 0 under Galvanic, its own 6 gave +2 Strength), as the
   // rollout's later turns take it (POWER_EFFECTS); it was +1 whatever the card.
   if (card.special === "rupture") next.rupture += card.powerAmount ?? 1;
