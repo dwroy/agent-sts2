@@ -1,0 +1,28 @@
+# 实验记录
+
+- 2026-09-25 DeepSeek 记忆 v1 上线（代码 307658f 起）：系统提示加经验手册 ds-handbook.md（f104b23），用户消息加本局日志/本场战斗记录/前方路况。对照组：此前进阶2的 12 局（cfe81cf 及之前）。评估：过二幕 boss 比例、平均层数、护栏拦截次数、DeepSeek 费用与延迟；约 10 局后对比。
+- 2026-09-25 18:00 注意：记忆 v1 的实验局从进阶 3 开始（第三胜 4JVP 后游戏自动升级），对照组为进阶 2 的 12 局，存在进阶等级的混杂因素。首个实验局 5FMU（进阶 3）死于第 17 层乐加维林族母。
+- 2026-09-25 Dai 决定：不固定进阶，继续随通关自动提升，目标打过进阶 10。记忆 v1 的评估改为：按进阶分组看趋势（每个进阶的平均层数、过各幕 boss 的比例），不再与进阶 2 对照组做严格比较。
+- 2026-09-25 Dai 决定：记忆 v1 实验缩短为 5 局（按 escalation.handbook 字段计），期间在独立分支准备迁移第 1 步（Jev 选项标签 + 战斗提示 + 精简局面），5 局后合并上线。
+- 2026-09-25 20:00 记忆 v1 实验 5 局结束（全部进阶 3）：5FMU 第 17 层（一幕 boss）、VC4L 第 23 层、NZR7 第 7 层、JGJS 第 24 层、Y0KJ 第 48 层（最终 boss 永恒之镜）。平均 23.8 层；过一幕 boss 3/5，过二幕 boss 1/5，到最终 boss 1/5，0 胜。DeepSeek 单次平均延迟 13–28 秒（对照组 15–32 秒），每层用时 0.7–0.85 分钟（VC4L 因选牌卡死 25 分钟除外），记忆没有拖慢速度。进阶混杂，结论只作趋势参考。
+- 2026-09-25 20:00 迁移第 1 步（M1）上线前重评（tools/jev-context-eval.ts 新采样器，120 个局面，其中 31 个有"该打能力牌"选项）：选能力牌线比例 基线 0.32 → 标签 0.39 → 标签+提示 0.48；比最省血线多掉的血 1.53 → 1.47 → 1.28；伤害 19.0 → 16.6。不低于基线，按约定上线 JEV_CONTEXT=v1。结果存 paper/materials/analysis/jev-context-eval-2.json。
+- 2026-09-25 20:10 同时上线"开战计划"（FIGHT_PLAN=v1，d98b0a8，Dai 同意）：DeepSeek 在精英/boss 战开场做一次整场计划（打法、先打的能力牌、先杀谁、每瓶药的用途、危险回合），不再逐回合接手出牌。计划以标签进入 Jev 的选项、以药水成本进入求解器。试跑 Y0KJ 三个 boss：每次 7–13 秒。实验变量：M1 与开战计划同时上线（混杂），用 decisions.jsonl 的 jev_context 字段和 logs/fight-plans.jsonl 区分。评估指标：精英/boss 战失血、过各幕 boss 比例、每局 DeepSeek 费用与总用时。首个新代码局 CAYKKMTJWBPM（局中重启，前几层为旧代码）。
+- 2026-09-26 10:05 上线整局计划 RUN_PLAN=v1（2c61c6f）。评估：进阶 5 的过幕率、进 boss 血量、牌组格挡牌数、药水携带数；对照为进阶 5 此前 12 局（到最终 boss 2 次，0 胜）。日志 logs/run-plans.jsonl。
+
+## Boss clock (from 2026-09-26T11:42 UTC)
+Code estimates the deck's damage a turn against the act boss's need; damage cards get a gap bonus, rests lean to smith, DeepSeek's run plan sees the clock. Measure: `python3 ops/metrics.py --asc 7 --split 2026-09-26T11:42` — past act 2 boss rate (was 1/15 at A7), F33 boss HP lost, after 8–10 runs.
+
+## Enemy dossiers + run-plan commitments (from 2026-09-27T01:43 UTC)
+Dossiers for 47 enemies feed the run plan and fight plans; the run plan's entry HP, potions kept for the boss and must-have roles are strong weights plus labels for Jev. Measure: `python3 ops/metrics.py --asc 8 --split 2026-09-27T01:43` — boss entry HP, potions into the boss, past-act-2-boss rate.
+
+## A8 ablation result (2026-09-27, 20 runs, 01:58–16:00)
+| arm | floors | mean | past act-1 boss | past act-2 boss | wins |
+|---|---|---|---|---|---|
+| code | 17,17,17,33,17 | 20.2 | 1/5 | 0/5 | 0 |
+| jev (code+Jev) | 24,48,21,48,27 | 33.6 | 5/5 | 2/5 | 0 |
+| ds (code+DeepSeek, Jev stubbed) | 33,17,33,33,33 | 29.8 | 4/5 | 0/5 | 0 |
+| full | 7,33,48,28,27 | 28.6 (34.0 w/o X226 bug death) | 4/5 | 1/5 | 0 |
+Caveats: n=5 per arm; X226 (full) died F7 to a stale-event code bug; ds-arm stub picks the first option on card-by-card combat decisions (not code #1), hurting ds in ZWX5's last boss turn. Reading: any model layer lifts act-1 boss pass from 1/5 to 4–5/5; Jev (in-fight choices) is the main source of act-2 passes; DeepSeek run/fight plans reliably reach F33 but did not convert act-2 bosses (4 of 4 deaths on F33, damage 18–54/turn vs clock); full not better than jev alone at this n. Code frozen during the run; queued fixes in decision-log resume now.
+
+## Era: strategy-only DeepSeek + Jev final (from 2026-09-27 19:57, phase2 0f2e648)
+Compare against the post-ablation full runs (892278c/b31b36e/2c98200) on mean floor, act-2 boss pass, boss-reserved potions kept (plan_adherence), intent deviations, validator repairs/rejected changes. Evaluate after ~10 runs.

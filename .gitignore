@@ -1,3 +1,11 @@
+# agent-sts2: one repo since 2026-10-04 (docs/layout.md).
+
+# Project-root data that is not in git: raw logs, rebuildable data (game data cache, log database and its venv), the
+# package's node_modules. In a worktree they are links to the main checkout's.
+/logs
+/data
+/node_modules
+/agent/node_modules
 node_modules/
 dist/
 logs/
@@ -6,6 +14,26 @@ fixtures/
 .env
 .env.local
 *.log
+# ops' own logs are tracked (autoplay.log, refresh.log, stop-after-*.log, restarts.log).
+!ops/*.log
+
+# Worktrees of this repo, and the old code repo with its worktrees until they are removed.
+/.worktrees/
+/jev-sts2/
+/jev-sts2-*/
+
+# Large or duplicated archives (backed up to the Windows drive instead).
+paper/raw/
+paper/materials/session/
+paper/materials/code/
+# Local tool state and runtime output.
+.claude/
+ops/autoplay.out
+ops/*.lock
+ops/.auto-relaunch-fails*
+ops/STOP
+*.pyc
+__pycache__/
 
 # local scratch: upstream docs snapshots used while writing PLAN.md
 research-notes/
@@ -19,8 +47,6 @@ experiments/build-facts-m2/**/results.jsonl
 experiments/build-facts-m2/**/brain*.jsonl
 experiments/build-facts-m2/**/deepseek-reasoning*.jsonl
 experiments/build-facts-m2/**/dataset.jsonl
-# Python bytecode (tools/logdb modules are imported by query.py and tests/logdb_test.py)
-__pycache__/
 # M2 route replay raw outputs (summary committed)
 experiments/route-m2/*.jsonl
 # MECH_DEATH_MOVE replay: the frozen log copy, per-turn rows and run logs (the report, boards and digests are committed)
@@ -40,9 +66,3 @@ experiments/giant-replay/*.jsonl
 experiments/living-death-moves/*.jsonl
 # CARD_CONDITIONS replay raw rows (tools/card-conditions-replay.ts; the summary and the frame sets are committed)
 experiments/card-conditions/*.jsonl
-# Project-root data that is not in git (docs/layout.md): raw logs, rebuildable data (game data cache, log database and
-# its venv), the package's node_modules. In a checkout they may be links to the live copies.
-/logs
-/data
-/node_modules
-/agent/node_modules

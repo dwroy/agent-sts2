@@ -1,0 +1,126 @@
+## 复盘：run 7DXAW0ZBDFHP — 阵亡，最高第 33 层
+
+- 决策 479 个；Jev 调用 62 次，Claude 0 次，DeepSeek 12 次；token 106,138 入 / 3,007 出，约 $0.0046；用时 24.0 分钟
+- 决策者：code 361，jev 52，jev-plan 44，deepseek 12，code-fallback 10
+
+### 战斗掉血（按层）
+- 第 2 层 海洋混混: HP 64→63（-1），决策 code 13，jev-plan 2，jev 1，code-fallback 1
+- 第 3 层 噬尸蛞蝓: HP 69→60（-9），决策 code 9，jev 2，code-fallback 1，jev-plan 1
+- 第 4 层 淤泥旋螺: HP 66→60（-6），决策 code 6，jev-plan 2，jev 1
+- 第 5 层 拳击构装体: HP 66→51（-15），决策 code 13，code-fallback 1
+- 第 8 层 气态炸弹/活雾: HP 49→38（-11），决策 code 20，code-fallback 2，jev-plan 2，jev 1
+- 第 9 层 噬尸蛞蝓: HP 44→24（-20），决策 jev-plan 4，code 3，jev 3，code-fallback 2
+- 第 12 层 拳击构装体: HP 54→54（-0），决策 code 4，jev 2，jev-plan 2
+- 第 12 层 拳击构装体: HP 54→3（-51），决策 code 15，jev 2，jev-plan 2
+- 第 13 层 幽灵船: HP 9→9（-0），决策 jev-plan 3，jev 2
+- 第 13 层 幽灵船: HP 9→4（-5），决策 code 11
+- 第 17 层 灵魂异鱼: HP 34→9（-25），决策 jev 16，jev-plan 11，code 1
+- 第 19 层 偷窃草蜢: HP 67→67（-0），决策 code 3，jev 1
+- 第 19 层 偷窃草蜢: HP 63→63（-0），决策 code 4
+- 第 19 层 偷窃草蜢: HP 63→63（-0），决策 code-fallback 1，code 1，jev 1
+- 第 19 层 偷窃草蜢: HP 41→41（-0），决策 jev 2，jev-plan 1
+- 第 22 层 外骨骼虫: HP 32→32（-0），决策 jev 1，jev-plan 1，code 1
+- 第 22 层 外骨骼虫: HP 26→26（-0），决策 jev 2，code 1
+- 第 22 层 外骨骼虫: HP 26→26（-0），决策 jev-plan 2，code 2，jev 1
+- 第 22 层 外骨骼虫: HP 22→22（-0），决策 code 2
+- 第 22 层 外骨骼虫: HP 22→22（-0），决策 code 1
+- 第 23 层 胧光怪: HP 28→28（-0），决策 jev 1，jev-plan 1，code-fallback 1，code 1
+- 第 23 层 寄生惧魔/胧光怪: HP 28→28（-0），决策 code 3
+- 第 23 层 寄生惧魔/胧光怪: HP 28→28（-0），决策 jev 2，jev-plan 2
+- 第 23 层 寄生惧魔/胧光怪: HP 28→28（-0），决策 code 1
+- 第 23 层 寄生惧魔/胧光怪: HP 7→7（-0），决策 code 3
+- 第 23 层 寄生惧魔/胧光怪: HP 7→7（-0），决策 code 4
+- 第 23 层 寄生惧魔/胧光怪: HP 7→7（-0），决策 code 4
+- 第 23 层 寄生惧魔/胧光怪: HP 3→3（-0），决策 code 4
+- 第 28 层 熟睡甲虫/盛碗虫（丝）/盛碗虫（石）: HP 57→57（-0），决策 code 4
+- 第 28 层 熟睡甲虫/盛碗虫（丝）/盛碗虫（石）: HP 46→46（-0），决策 code 4
+- 第 28 层 熟睡甲虫/盛碗虫（丝）: HP 42→42（-0），决策 jev-plan 2，jev 1，code 1
+- 第 28 层 熟睡甲虫: HP 42→42（-0），决策 code 2
+- 第 28 层 熟睡甲虫: HP 30→30（-0），决策 code 1
+- 第 29 层 猎人杀手: HP 36→36（-0），决策 code 4
+- 第 29 层 猎人杀手: HP 36→34（-2），决策 jev 1，jev-plan 1，code 1
+- 第 29 层 猎人杀手: HP 34→32（-2），决策 code 2，code-fallback 1
+- 第 29 层 猎人杀手: HP 29→13（-16），决策 jev-plan 3，code 2，jev 1
+- 第 29 层 猎人杀手: HP 13→13（-0），决策 code 1
+- 第 30 层 啃咬机: HP 19→17（-2），决策 jev 2，jev-plan 1
+- 第 30 层 啃咬机: HP 17→17（-0），决策 code 4
+- 第 30 层 啃咬机: HP 17→17（-0），决策 jev 1，jev-plan 1，code 1
+- 第 30 层 啃咬机: HP 11→11（-0），决策 code 3
+- 第 30 层 啃咬机: HP 11→11（-0），决策 code 3
+- 第 30 层 啃咬机: HP 11→11（-0），决策 code 1
+- 第 33 层 火箭/碾碎爪: HP 66→66（-0），决策 code 3
+- 第 33 层 火箭/碾碎爪: HP 49→49（-0），决策 code 3
+- 第 33 层 火箭/碾碎爪: HP 29→29（-0），决策 code 4
+- 第 33 层 火箭/碾碎爪: HP 29→29（-0），决策 code 3
+
+### 死亡战斗：第 33 层 火箭/碾碎爪
+- T4 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (0): 坚定不移, 全身撞击 -> 火箭
+- T4 [code] combat/plan-continue: continuing the code-chosen plan: 全身撞击 -> 火箭
+- T4 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (0): end turn
+
+### 各类决策由谁做
+- combat/plan / code: 95
+- combat/plan-continue / code: 62
+- reward/claim / code: 45
+- combat/plan-continue / jev-plan: 44
+- selection/exhaust / code: 35
+- combat/plan-choice+potion / jev: 34
+- map/route / code: 29
+- reward/proceed / code: 16
+- reward/card / code: 14
+- combat/lethal / code: 13
+- combat/plan-choice / jev: 13
+- combat/plan-choice / code-fallback: 9
+- event/leave / code: 7
+- shop/buy / code: 6
+- combat/least-loss / code: 5
+- rest/choose / code: 5
+- rest/proceed / code: 5
+- reward/card / deepseek: 5
+- event/choose / deepseek: 4
+- event/only / code: 3
+- map/route / jev: 3
+- selection/remove / code: 3
+- shop/buy / deepseek: 3
+- shop/leave / code: 3
+- shop/open / code: 3
+- chest/open / code: 2
+- chest/proceed / code: 2
+- chest/relic / code: 2
+- combat/end_turn / code: 2
+- selection/confirm / code: 2
+- selection/take into my hand / jev: 2
+- combat/plan-choice+potion / code-fallback: 1
+- run/finalize / code: 1
+- selection/transform / code: 1
+
+### 兜底介入（Claude/DeepSeek）：12 次（推翻 Jev 9 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o0 @0.24 → o1）：Floor 1 transform (a Strike) is a free permanent deck upgrade; Wing Boots is only 3 path skips, and losing 99 gold costs
+- [deepseek] 第 6 层 TNone event/choose: 推翻 Jev（o0 @0.11 → o1）：藏宝图是占手牌的死牌（按诅咒算）；57/80 血换随机药水划算，药水格有空位，下一个节点是商店可补状态。
+- [deepseek] 第 7 层 TNone shop/buy: 同意 Jev（buy_card0 @0.31 → buy_card0）：踩踏仅39金，二张AOE正合第一幕需求；买后剩101金仍够删一张打击，跃跃欲试无力量时太弱。
+- [deepseek] 第 15 层 TNone event/choose: 推翻 Jev（o0 @0.25 → o1）：仅4金，67金杯水车薪；305金可在二幕删诅咒、买卡与药水，弱势牌组急需资源，诅咒可在首个商店移除。
+- [deepseek] 第 18 层 TNone event/choose: 同意 Jev（o1 @0.20 → o1）：牌组零力量来源，帝皇蟹boss需要持续成长；烘焙手套每回合+1力量并顺带消耗诅咒/打击等废牌，比黄金印的少量能量更补本局短板。
+- [deepseek] 第 19 层 T5 reward/card: 同意 Jev（card1 @0.06 → card1）：HP only 32 with one non-basic block card; upgraded 6 Plated Armor sustains the 14-floor path and long Kaiser Crab fight,
+- [deepseek] 第 25 层 TNone shop/buy: 推翻 Jev（leave @0.17 → buy_card0）：宾邦让24金的预备打击变2张：1费7伤+3临时力量，配合踩踏/回旋镖/重锤与手套、手里剑爆发，且留钱继续买药水。
+- [deepseek] 第 25 层 TNone reward/card: 推翻 Jev（skip @0.13 → card1）：0费8伤可自我复制，配手里剑/烘焙手套叠力量，能边打边留能量格挡，蟹王408血需要廉价持续输出。
+- [deepseek] 第 25 层 TNone reward/card: 推翻 Jev（skip @0.22 → card2）：突破+ is AOE for Kaiser Crab's twin claws; its HP loss triggers 狱火 (+6 AOE) and feeds 扯碎, and 宾邦 duplicates it. Better tha
+- [deepseek] 第 25 层 TNone shop/buy: 推翻 Jev（buy_card1 @0.16 → buy_card3）：Buy 血墙: 16 block fixes thin non-basic block, 坚定不移 doubles it, and its 2-HP loss triggers 狱火 AOE for Kaiser Crab's twin c
+- [deepseek] 第 28 层 T5 reward/card: 推翻 Jev（skip @0.08 → card0）：旋风斩+ is multi-hit AOE that scales with this deck's strength (燃烧++×2, 预备打击, 手里剑) and lets both Kaiser Crab claws die the 
+- [deepseek] 第 29 层 T5 reward/card: 推翻 Jev（skip @0.40 → card1）：Deck lacks reliable block (only 4 block cards, 3 basic 防御); HP 19 with Kaiser Crab ahead; Flame Barrier's 12 block + tho
+
+### Jev 低置信度（<0.35）决策：19 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/3 (防御, 防御, 全身撞击 -> 海洋混混) with confidence 0.30; code rank 1 (0.30)
+- 第 4 层 combat/plan-choice: Jev chose plan 1/3 (防御, 防御, 全身撞击 -> 淤泥旋螺) with confidence 0.10; code rank 1 (0.10)
+- 第 12 层 combat/plan-choice+potion: Jev chose plan 1/1 (打击 -> 拳击构装体, 痛击 -> 拳击构装体, 欺凌 -> 拳击构装体) with confidence 0.14; code rank 1 (0.14)
+- 第 12 层 combat/plan-choice+potion: Jev chose to drink 无色药水 (confidence 0.14) (0.14)
+- 第 12 层 combat/plan-choice: Jev chose plan 1/4 (踩踏) with confidence 0.23; code rank 1 (0.23)
+- 第 13 层 combat/plan-choice+potion: Jev chose to drink 灰水 (confidence 0.10) (0.10)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.10; code rank 1 (0.10)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (踩踏) with confidence 0.28; code rank 1 (0.28)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (踩踏) with confidence 0.28; code rank 1 (0.28)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.28; code rank 1 (0.28)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (踩踏) with confidence 0.32; code rank 1 (0.32)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.06; code rank 1 (0.06)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.34; code rank 1 (0.34)
+- 第 19 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.05; code rank 1 (0.05)
+- 第 22 层 combat/plan-choice: Jev chose plan 1/2 (痛击 -> 外骨骼虫, 防御) with confidence 0.24; code rank 1 (0.24)

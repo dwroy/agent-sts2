@@ -1,0 +1,132 @@
+## 复盘：run B6ACRLQYB83N — 阵亡，最高第 33 层
+
+- 决策 519 个；Jev 调用 77 次，Claude 0 次，DeepSeek 18 次；token 137,820 入 / 4,028 出，约 $0.0060；用时 31.2 分钟
+- 决策者：code 376，jev 70，jev-plan 48，deepseek 18，code-fallback 7
+
+### 战斗掉血（按层）
+- 第 2 层 噬尸蛞蝓: HP 64→60（-4），决策 jev-plan 2，code 2，jev 1，code-fallback 1
+- 第 2 层 噬尸蛞蝓: HP 60→60（-0），决策 code 6
+- 第 3 层 蟾蜍蝌蚪: HP 66→62（-4），决策 jev-plan 3，jev 2，code 1
+- 第 3 层 蟾蜍蝌蚪: HP 60→51（-9），决策 code 5，jev-plan 3，jev 2
+- 第 5 层 海洋混混: HP 57→57（-0），决策 jev 1，jev-plan 1
+- 第 5 层 海洋混混: HP 57→46（-11），决策 code 2
+- 第 6 层 下水道蚌: HP 52→52（-0），决策 code 3，code-fallback 1
+- 第 6 层 下水道蚌: HP 52→46（-6），决策 code 8，jev 2，jev-plan 1
+- 第 8 层 花园幽灵鳗: HP 76→71（-5），决策 code 4，jev 2，jev-plan 2
+- 第 11 层 鬼祟珊瑚群: HP 77→57（-20），决策 code 9，jev 5，jev-plan 2
+- 第 13 层 噬尸蛞蝓: HP 77→74（-3），决策 code 4，code-fallback 1
+- 第 13 层 噬尸蛞蝓: HP 74→60（-14），决策 code 4，jev 2，jev-plan 2
+- 第 14 层 海洋混混/钙化邪教徒: HP 66→66（-0），决策 code 5
+- 第 14 层 海洋混混/钙化邪教徒: HP 66→55（-11），决策 code 17
+- 第 15 层 活雾: HP 61→55（-6），决策 jev-plan 5，jev 2，code 2
+- 第 15 层 气态炸弹/活雾: HP 55→50（-5），决策 code 4
+- 第 17 层 灵魂异鱼: HP 84→84（-0），决策 code 4，jev 2，jev-plan 1
+- 第 17 层 灵魂异鱼: HP 84→58（-26），决策 code 23，jev-plan 8，jev 5
+- 第 19 层 偷窃草蜢: HP 88→78（-10），决策 jev 4，jev-plan 4，code 4
+- 第 19 层 偷窃草蜢: HP 78→66（-12），决策 code 6，code-fallback 1，jev 1
+- 第 20 层 地道虫: HP 72→69（-3），决策 code 4，jev 2，jev-plan 2，code-fallback 1
+- 第 20 层 地道虫: HP 68→67（-1），决策 code 2，jev 1
+- 第 22 层 直飞产卵虫/结实的卵: HP 73→73（-0），决策 code 3，jev-plan 2，jev 1
+- 第 22 层 幼虫/直飞产卵虫/结实的卵: HP 72→54（-18），决策 code 15
+- 第 22 层 直飞产卵虫/结实的卵: HP 53→53（-0），决策 code 1
+- 第 23 层 异螨: HP 59→55（-4），决策 jev 2，code 2
+- 第 23 层 异螨: HP 54→51（-3），决策 code 11，jev 4，jev-plan 2
+- 第 23 层 异螨: HP 50→46（-4），决策 code 3，jev 1
+- 第 27 层 外骨骼虫: HP 67→64（-3），决策 code 3
+- 第 27 层 外骨骼虫: HP 64→64（-0），决策 code 2，jev 1，jev-plan 1
+- 第 27 层 外骨骼虫: HP 63→53（-10），决策 code 9，jev 1，jev-plan 1
+- 第 29 层 蜂群术士: HP 87→62（-25），决策 code 4，jev 2，jev-plan 1
+- 第 29 层 蜂群术士: HP 62→54（-8），决策 code 6，jev 1
+- 第 29 层 蜂群术士: HP 53→50（-3），决策 code 6，jev 1
+- 第 29 层 蜂群术士: HP 49→20（-29），决策 code 4，jev 3，jev-plan 1
+- 第 30 层 盛碗虫（丝）/盛碗虫（石）/盛碗虫（蜜）: HP 26→26（-0），决策 jev 4，code 2，jev-plan 1
+- 第 30 层 盛碗虫（丝）/盛碗虫（石）/盛碗虫（蜜）: HP 26→19（-7），决策 code 13，jev 2，code-fallback 2，jev-plan 1
+- 第 33 层 知识恶魔: HP 53→53（-0），决策 code 4，jev 1
+- 第 33 层 知识恶魔: HP 53→53（-0），决策 code 2
+- 第 33 层 知识恶魔: HP 53→27（-26），决策 jev 4，code 3，jev-plan 2
+- 第 33 层 知识恶魔: HP 26→26（-0），决策 code 3
+- 第 33 层 知识恶魔: HP 26→26（-0），决策 code 6
+- 第 33 层 知识恶魔: HP 26→26（-0），决策 code 1
+
+### 死亡战斗：第 33 层 知识恶魔
+- T7 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (-4): end turn
+
+### 各类决策由谁做
+- combat/plan / code: 117
+- combat/plan-continue / code: 71
+- combat/plan-choice / jev: 54
+- combat/plan-continue / jev-plan: 48
+- reward/claim / code: 45
+- map/route / code: 25
+- combat/lethal / code: 22
+- reward/proceed / code: 18
+- selection/confirm / code: 12
+- reward/card / code: 9
+- reward/card / deepseek: 9
+- selection/exhaust / code: 9
+- combat/plan-choice+potion / jev: 8
+- combat/plan-choice / code-fallback: 7
+- combat/end_turn / code: 6
+- event/leave / code: 6
+- map/route / jev: 6
+- rest/proceed / code: 6
+- rest/choose / code: 5
+- event/choose / deepseek: 4
+- combat/least-loss / code: 3
+- chest/open / code: 2
+- chest/proceed / code: 2
+- chest/relic / code: 2
+- combat/plan-guarded / code: 2
+- selection/curse / code: 2
+- selection/remove / code: 2
+- selection/upgrade / code: 2
+- shop/buy / code: 2
+- shop/buy / deepseek: 2
+- combat/plan-potion / code: 1
+- event/choose / jev: 1
+- event/only / code: 1
+- map/route / deepseek: 1
+- rest/choose / jev: 1
+- run/finalize / code: 1
+- selection/add / code: 1
+- selection/add / deepseek: 1
+- selection/enchant / deepseek: 1
+- shop/leave / code: 1
+- shop/open / code: 1
+
+### 兜底介入（Claude/DeepSeek）：18 次（推翻 Jev 12 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o0 @0.40 → o1）：Free rare card boosts Act 1 damage (boss Soul Fysh needs output); o2's curse is too costly, Wing Boots is only utility a
+- [deepseek] 第 2 层 T4 reward/card: 推翻 Jev（card1 @0.10 → card2）：Shrug It Off is a premium common: block+draw fixes the deck's 0 block/0 draw gaps, and one Twin Strike isn't needed yet 
+- [deepseek] 第 4 层 TNone event/choose: 推翻 Jev（o0 @0.23 → o1）：删牌确定性强：优先删打击提高抽到痛击/核心牌概率，随机升级可能浪费在防御上；小牌组收益更持久。
+- [deepseek] 第 8 层 T3 reward/card: 推翻 Jev（card1 @0.08 → skip）：余烬是陷阱牌(F)：2费18伤随机消耗关键牌，牌组仅13张需精简，跳过更好。
+- [deepseek] 第 11 层 T5 reward/card: 推翻 Jev（card2 @0.29 → card1）：0-cost +2 energy fuels 3E Howl from Beyond and Bash++; Feel No Pain lacks exhaust triggers in this deck, True Grit's ran
+- [deepseek] 第 13 层 T4 reward/card: 同意 Jev（skip @0.08 → skip）：完美打击仅16伤/2E，需靠保留打击支撑，而本牌组计划删打击、缺格挡与成长；薄牌组现在跳过更优。
+- [deepseek] 第 17 层 T9 reward/card: 推翻 Jev（skip @0.18 → card2）：Deck has zero strength source; 烙印 gives 0-cost permanent strength and its exhaust clears Soul Fysh's Beckons. Fiend Fire
+- [deepseek] 第 18 层 TNone event/choose: 推翻 Jev（o0 @0.12 → o2）：佩尔的士兵不占牌位，可与岿然不动等大格挡牌配合翻倍；加牌稀释17张牌组、强化将删的基础防御价值低，知识恶魔长战防御优先。
+- [deepseek] 第 19 层 T5 reward/card: 同意 Jev（card1 @0.09 → card1）：完美打击+当前24伤/2E（配易伤36），对付懒惰限3张/回合效率高；愤怒每张仅6伤还会稀释牌组。
+- [deepseek] 第 20 层 T4 reward/card: 同意 Jev（card2 @0.21 → card2）：Block is the deck's fatal gap (1 block card) for a long Knowledge Demon fight; 邪眼 with 烙印/涅奥之怒 exhausts gives 16 block p
+- [deepseek] 第 20 层 T4 map/route: 同意 Jev（n1 @0.23 → n1）：Unknown breaks up the Monster-heavy continuation, may offer shop/event value; HP 78% is safe and route value is slightly
+- [deepseek] 第 21 层 TNone selection/enchant: 同意 Jev（card17 @0.25 → card17）：完美打击+是打知识恶魔的主力单体输出（24伤/2E）；附魔加伤或减费收益最大，AOE对单体boss无用。
+- [deepseek] 第 23 层 T6 reward/card: 同意 Jev（card1 @0.31 → card1）：牌组严重缺非基础格挡牌（仅2张）；不安油灯+痛击++给6层易伤，巨像+可在大招回合减半伤害，正对知识恶魔长战；跳过伤害牌，商店再补输出。
+- [deepseek] 第 24 层 TNone shop/buy: 推翻 Jev（buy_relic0 @0.07 → buy_card0）：Cheap second AOE (AOE>=2 correlates with wins) for 39 gold; the 163-229 relics are marginal value at that price, keeping
+- [deepseek] 第 24 层 TNone shop/buy: 推翻 Jev（buy_relic1 @0.07 → buy_card6）：滚石每回合递增的伤害补上牌组最缺的成长速度，对379血知识恶魔是决胜引擎；防御已有巨像+/邪眼，不缺护喉甲。
+- [deepseek] 第 29 层 T9 reward/card: 推翻 Jev（skip @0.09 → card1）：头槌+ 1费12伤且能把关键牌（邪眼/巨像++/彼岸咆哮）回收到牌堆顶，比重复的拆卸更灵活；牌组22张不算臃肿。
+- [deepseek] 第 30 层 T2 selection/add: 推翻 Jev（card0 @0.21 → card2）：薪火之源是S级：+1能量/回合，最缺资源（滚石/彼岸咆哮都3费）；26血下3费零防御的彼岸咆哮太险，打击防御无价值。
+- [deepseek] 第 31 层 TNone event/choose: 推翻 Jev（o0 @0.20 → o1）：牌组已有2张AOE，下个boss知识恶魔是379血单体，压扁更可能补单体输出；杀灭偏群体清场，对boss无用。
+
+### Jev 低置信度（<0.35）决策：37 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/3 (防御, 防御, 打击 -> 噬尸蛞蝓) with confidence 0.30; code rank 1 (0.30)
+- 第 3 层 combat/plan-choice: Jev chose plan 1/3 (防御, 打击 -> 蟾蜍蝌蚪, 打击 -> 蟾蜍蝌蚪) with confidence 0.21; code rank 1 (0.21)
+- 第 3 层 combat/plan-choice: Jev chose plan 1/4 (打击 -> 蟾蜍蝌蚪, 防御, 防御) with confidence 0.18; code rank 1 (0.18)
+- 第 5 层 combat/plan-choice: Jev chose plan 1/3 (痛击 -> 海洋混混, 涅奥之怒 -> 海洋混混) with confidence 0.22; code rank 1 (0.22)
+- 第 6 层 combat/plan-choice: Jev chose plan 1/2 (耸肩无视, 防御, 防御) with confidence 0.14; code rank 1 (0.14)
+- 第 8 层 combat/plan-choice: Jev chose plan 4/4 (耸肩无视, 痛击 -> 花园幽灵鳗) with confidence 0.11; code rank 4 (0.11)
+- 第 8 层 combat/plan-choice: Jev chose plan 2/4 (防御, 拆卸 -> 花园幽灵鳗, potion 爆炸安瓿) with confidence 0.21; code rank 2 (0.21)
+- 第 11 层 combat/plan-choice: Jev chose plan 3/3 (打击 -> 鬼祟珊瑚群, 打击 -> 鬼祟珊瑚群, 打击 -> 鬼祟珊瑚群) with confidence 0.23; code rank 3; HP guard: plan 3 (打击 -> 鬼祟珊瑚群, 打击 -> 鬼祟珊瑚群, 打击 -> 鬼祟珊瑚群) (0.23)
+- 第 13 层 combat/plan-choice: Jev chose plan 1/3 (彼岸咆哮) with confidence 0.23; code rank 1 (0.23)
+- 第 13 层 combat/plan-choice: Jev chose plan 1/2 (防御, 打击 -> 噬尸蛞蝓, 打击 -> 噬尸蛞蝓) with confidence 0.10; code rank 1 (0.10)
+- 第 15 层 combat/plan-choice: Jev chose plan 1/2 (放血, 打击 -> 活雾, 打击 -> 活雾, 防御, 剑柄打击 -> 活雾) with confidence 0.20; code rank 1 (0.20)
+- 第 15 层 combat/plan-choice: Jev chose plan 1/2 (痛击+ -> 活雾, 涅奥之怒 -> 活雾) with confidence 0.10; code rank 1 (0.10)
+- 第 17 层 combat/plan-choice: Jev chose plan 5/5 (耸肩无视+, 彼岸咆哮, 呼唤) with confidence 0.12; code rank 5 (0.12)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/2 (呼唤, 防御, potion 迅捷药水) with confidence 0.19; code rank 1 (0.19)
+- 第 17 层 combat/plan-choice: Jev chose plan 1/2 (放血, 拆卸 -> 灵魂异鱼) with confidence 0.15; code rank 1 (0.15)

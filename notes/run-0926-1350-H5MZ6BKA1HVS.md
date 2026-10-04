@@ -1,0 +1,126 @@
+## 复盘：run H5MZ6BKA1HVS — 胜利，最高第 48 层
+
+- 决策 729 个；Jev 调用 77 次，Claude 0 次，DeepSeek 16 次；token 149,660 入 / 3,892 出，约 $0.0064；用时 41.0 分钟
+- 决策者：code 575，jev 65，jev-plan 61，deepseek 16，code-fallback 12
+
+### 战斗掉血（按层）
+- 第 2 层 蟾蜍蝌蚪: HP 64→53（-11），决策 code 8，code-fallback 1
+- 第 3 层 海洋混混: HP 57→51（-6），决策 code 7
+- 第 5 层 噬尸蛞蝓: HP 57→56（-1），决策 code 3，jev-plan 2，jev 1
+- 第 5 层 噬尸蛞蝓: HP 56→50（-6），决策 code 8
+- 第 6 层 幽灵船: HP 56→56（-0），决策 code 3
+- 第 6 层 幽灵船: HP 56→46（-10），决策 code 8，jev-plan 2，jev 1
+- 第 8 层 海洋混混/钙化邪教徒: HP 52→38（-14），决策 code 4，jev-plan 3，jev 2
+- 第 8 层 海洋混混: HP 38→38（-0），决策 code 5，jev 2，jev-plan 2
+- 第 11 层 下水道蚌: HP 44→44（-0），决策 code 6，jev 1，jev-plan 1
+- 第 11 层 下水道蚌: HP 44→42（-2），决策 code 5
+- 第 13 层 双尾鼠: HP 75→69（-6），决策 code 5
+- 第 13 层 双尾鼠: HP 69→69（-0），决策 code 4
+- 第 14 层 拳击构装体: HP 75→66（-9），决策 code 8，jev-plan 3，jev 2
+- 第 17 层 乐加维林族母: HP 72→72（-0），决策 code-fallback 3，jev 1
+- 第 17 层 乐加维林族母: HP 72→59（-13），决策 jev 9，jev-plan 8，code 6，code-fallback 1
+- 第 17 层 乐加维林族母: HP 59→34（-25），决策 jev 5，jev-plan 3，code-fallback 1
+- 第 17 层 乐加维林族母: HP 34→24（-10），决策 jev 3，code 2，code-fallback 1
+- 第 19 层 外骨骼虫: HP 72→67（-5），决策 code 12
+- 第 20 层 盛碗虫（石）/盛碗虫（蜜）: HP 76→73（-3），决策 code 7，jev-plan 2，jev 1
+- 第 20 层 盛碗虫（蜜）: HP 73→64（-9），决策 code 4
+- 第 21 层 猎人杀手: HP 70→61（-9），决策 code 12，jev-plan 2，jev 1
+- 第 22 层 熟睡甲虫/盛碗虫（丝）/盛碗虫（石）: HP 67→57（-10），决策 code 13，jev-plan 2，jev 1
+- 第 22 层 熟睡甲虫/盛碗虫（丝）: HP 57→20（-37），决策 code 13，jev-plan 2，jev 1，code-fallback 1
+- 第 25 层 异螨: HP 36→25（-11），决策 code 9，jev-plan 4，jev 3，code-fallback 2
+- 第 25 层 异螨: HP 25→25（-0），决策 code 3，jev 2
+- 第 29 层 蜂群术士: HP 62→58（-4），决策 code 11
+- 第 29 层 蜂群术士: HP 58→47（-11），决策 code 7
+- 第 31 层 虱虫之祖: HP 53→48（-5），决策 code 8，jev-plan 5，jev 2
+- 第 31 层 虱虫之祖: HP 48→48（-0），决策 code 3
+- 第 33 层 无厌沙虫: HP 85→44（-41），决策 code 25，jev-plan 7，jev 6
+- 第 35 层 活体盾/高塔炮手: HP 94→94（-0），决策 code 9，jev-plan 2，jev 1
+- 第 36 层 虔诚雕刻师: HP 103→101（-2），决策 code 16
+- 第 38 层 拳击构装体/方柱构装体: HP 107→95（-12），决策 code 14
+- 第 38 层 拳击构装体/方柱构装体: HP 95→86（-9），决策 code 17，jev 1
+- 第 39 层 巨斧机器人: HP 92→92（-0），决策 code 1
+- 第 39 层 巨斧机器人: HP 92→92（-0），决策 code 1
+- 第 39 层 巨斧机器人: HP 92→90（-2），决策 code 22，jev-plan 3，jev 2
+- 第 40 层 灵魂枢纽: HP 96→35（-61），决策 code 11，jev-plan 5，jev 4，code-fallback 1
+- 第 40 层 灵魂枢纽: HP 35→35（-0），决策 code 1
+- 第 44 层 噪音机器人/守护机器人/电击机器人/组装师: HP 75→46（-29），决策 code 23，code-fallback 1
+- 第 48 层 女王/火炬头聚合体: HP 86→2（-84），决策 code 39，jev 3，jev-plan 3
+
+### 各类决策由谁做
+- combat/plan-continue / code: 164
+- combat/plan / code: 147
+- combat/plan-continue / jev-plan: 61
+- reward/claim / code: 56
+- map/route / code: 41
+- combat/plan-choice / jev: 31
+- combat/lethal / code: 30
+- combat/plan-choice+potion / jev: 24
+- reward/proceed / code: 24
+- reward/card / code: 18
+- combat/end_turn / code: 16
+- selection/add / code: 13
+- combat/plan-choice+potion / code-fallback: 9
+- event/leave / code: 8
+- shop/buy / code: 8
+- event/choose / deepseek: 6
+- rest/proceed / code: 6
+- shop/buy / deepseek: 6
+- shop/leave / code: 6
+- rest/choose / code: 5
+- shop/open / code: 5
+- chest/open / code: 4
+- chest/proceed / code: 4
+- chest/relic / code: 4
+- map/route / jev: 4
+- combat/least-loss / code: 3
+- combat/plan-choice / code-fallback: 3
+- event/only / code: 3
+- reward/card / deepseek: 3
+- combat/plan-potion / code: 2
+- reward/card / jev: 2
+- selection/remove / code: 2
+- selection/take into my hand / code: 2
+- combat/plan-guarded / code: 1
+- map/route / deepseek: 1
+- rest/choose / jev: 1
+- run/finalize / code: 1
+- selection/add / jev: 1
+- selection/enchant / jev: 1
+- selection/free-card / code: 1
+- selection/upgrade / code: 1
+- shop/buy / jev: 1
+
+### 兜底介入（Claude/DeepSeek）：16 次（推翻 Jev 9 次）
+- [deepseek] 第 1 层 TNone event/choose: 同意 Jev（o2 @0.37 → o2）：两件随机遗物是长期战力；代价只是两张基础牌，前期可打、后期可删，远轻于拿诅咒；新叶只换一张牌，期望偏低。
+- [deepseek] 第 1 层 TNone map/route: 同意 Jev（n2 @0.30 → n2）：Highest route value (27.38); early Act 1 monsters build attack cards and gold, Unknown adds upside before boss.
+- [deepseek] 第 2 层 T3 reward/card: 同意 Jev（card1 @0.26 → card1）：0费攻击配合痛击易伤，无易伤也仅比打击少2点伤害；前期补输出符合计划，格挡可后面再拿。
+- [deepseek] 第 7 层 TNone shop/buy: 推翻 Jev（buy_card4 @0.21 → buy_card3）：火焰屏障是优质格挡，克制族母 9×2 多段攻击并反伤，补齐第二张非基础格挡；余钱 62 还够随后买剑柄打击，优于 100 金单删一张打击。
+- [deepseek] 第 9 层 TNone event/choose: 推翻 Jev（o1 @0.11 → o0）：攻击牌 12 张且无力量/AOE，伤害是瓶颈；+2 伤害附在欺凌或多段攻击上每回合都生效，格挡可靠折扇/音叉补。
+- [deepseek] 第 15 层 TNone event/choose: 同意 Jev（o0 @0.17 → o0）：Avoid the Greed curse: deck has no exhaust outlets, boss is 2 floors away, and 66 gold still funds a strike removal with
+- [deepseek] 第 18 层 TNone event/choose: 推翻 Jev（o1 @0.41 → o0）：Deck is attack-heavy with ~6 Strikes and no strength yet; enchanting them all is a large permanent boost, while one card
+- [deepseek] 第 20 层 T4 reward/card: 推翻 Jev（card0 @0.34 → card1）：拆卸+ with 痛击++ 3易伤 = 20伤害/1费, repeatable, fits the vuln package; deck lacks damage for the 321HP sandpit boss. 坚毅 random 
+- [deepseek] 第 23 层 TNone shop/buy: 同意 Jev（buy_card2 @0.27 → buy_card2）：HP 26/92: a second 火焰屏障 is the stock's best survival buy — 12 block plus thorns versus multi-attacks; the long Insatiabl
+- [deepseek] 第 23 层 TNone shop/buy: 推翻 Jev（buy_card4 @0.07 → buy_card3）：HP 28%: block in hand is the death risk; 挑衅 gives cheap 6 block + vulnerable fuel for 拆卸++/欺凌/巨像, and leaves 56 gold.
+- [deepseek] 第 30 层 TNone shop/buy: 推翻 Jev（leave @0.19 → buy_potion0）：50 gold buys nothing else here; unequipped slots and hoarded gold are wasted, and +敏捷 is usable defense for the sand-wor
+- [deepseek] 第 34 层 TNone event/choose: 同意 Jev（o1 @0.12 → o1）：钻石头冠：每场战斗开局20格挡且首回合格挡保留，稳定保命；本牌组均费仅0.79、过牌只有1张，免费能量收益低，随机附魔不可靠。
+- [deepseek] 第 42 层 TNone shop/buy: 推翻 Jev（buy_potion2 @0.32 → buy_card0）：Only 1 AOE in deck; Stomp+ adds a second cheap/free AOE needed for Queen + Amalgam, and it's affordable (58/92). Potions
+- [deepseek] 第 42 层 TNone shop/buy: 同意 Jev（buy_card2 @0.37 → buy_card2）：19 gold is otherwise idle; Blood Wall is cheap above-rate block (16 for 1 energy) that helps survive the long Queen figh
+- [deepseek] 第 44 层 T6 reward/card: 推翻 Jev（skip @0.20 → card2）：Uppercut+ gives 2 Weak (25% less Queen damage) plus 2 Vulnerable on a long boss fight; A-tier card, and skipping won't s
+- [deepseek] 第 46 层 TNone event/choose: 推翻 Jev（o0 @0.19 → o2）：熔火之蛋已无新攻击牌可升级，换钨合金棍为女王战提供每段减伤的稳定收益；保留光滑石头的防御比换铜质鳞片更稳。
+
+### Jev 低置信度（<0.35）决策：34 个
+- 第 6 层 combat/plan-choice: Jev chose plan 1/2 (防御, 打击 -> 幽灵船, 打击 -> 幽灵船) with confidence 0.08; code rank 1 (0.08)
+- 第 8 层 combat/plan-choice: Jev chose plan 1/3 (痛击 -> 钙化邪教徒, 剑柄打击 -> 钙化邪教徒) with confidence 0.19; code rank 1 (0.19)
+- 第 8 层 combat/plan-choice: Jev chose plan 1/2 (剑柄打击 -> 海洋混混, 防御, 打击 -> 海洋混混, 欺凌 -> 海洋混混) with confidence 0.17; code rank 1 (0.17)
+- 第 8 层 combat/plan-choice: Jev chose plan 1/3 (防御, 欺凌 -> 海洋混混, 防御) with confidence 0.33; code rank 1 (0.33)
+- 第 11 层 combat/plan-choice: Jev chose plan 1/2 (防御, 防御) with confidence 0.12; code rank 1 (0.12)
+- 第 14 层 combat/plan-choice: Jev chose plan 1/3 (火焰屏障, 双重打击 -> 拳击构装体) with confidence 0.10; code rank 1 (0.10)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (挑衅 -> 乐加维林族母) with confidence 0.25; code rank 1 (0.25)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 2/3 (双重打击 -> 乐加维林族母, 防御, 打击 -> 乐加维林族母) with confidence 0.22; code rank 2; HP guard: plan 2 (双重打击 -> 乐加维林族母, 防御, 打击 -> 乐加维林族母) loses 14  (0.22)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.01; code rank 1 (0.01)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.28; code rank 1 (0.28)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.01; code rank 1 (0.01)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (痛击+ -> 乐加维林族母) with confidence 0.19; code rank 1 (0.19)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.29; code rank 1 (0.29)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.19; code rank 1 (0.19)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (end turn) with confidence 0.10; code rank 1 (0.10)

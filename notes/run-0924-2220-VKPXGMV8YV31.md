@@ -1,0 +1,116 @@
+## 复盘：run VKPXGMV8YV31 — 未结束，最高第 31 层
+
+- 决策 509 个；Jev 调用 75 次，Claude 0 次，DeepSeek 34 次；token 182,201 入 / 5,285 出，约 $0.0079；用时 37.0 分钟
+- 决策者：code 354，jev 63，jev-plan 40，deepseek 34，code-fallback 12，deepseek-plan 6
+
+### 战斗掉血（按层）
+- 第 2 层 噬尸蛞蝓: HP 80→68（-12），决策 jev-plan 6，code 6，jev 3，code-fallback 1
+- 第 4 层 蟾蜍蝌蚪: HP 67→60（-7），决策 code 5，code-fallback 1
+- 第 5 层 海洋混混: HP 66→55（-11），决策 code 4，jev 1，jev-plan 1
+- 第 6 层 化石追踪者: HP 61→28（-33），决策 jev-plan 5，code 5，jev 4，code-fallback 1
+- 第 7 层 双尾鼠: HP 34→34（-0），决策 jev-plan 2，jev 1，code 1，code-fallback 1
+- 第 7 层 双尾鼠: HP 34→18（-16），决策 code 16，deepseek-plan 2，jev 1，code-fallback 1，deepseek 1
+- 第 13 层 花园幽灵鳗: HP 67→38（-29），决策 code 4，jev 3，jev-plan 1，deepseek 1，deepseek-plan 1
+- 第 14 层 拳击构装体: HP 44→41（-3），决策 code 5，jev 1，code-fallback 1
+- 第 14 层 拳击构装体: HP 41→27（-14），决策 jev 2，code 2
+- 第 15 层 地精佣兵: HP 33→31（-2），决策 code 7，code-fallback 1
+- 第 15 层 卑鄙地精/地精佣兵/胖地精: HP 31→31（-0），决策 code 9
+- 第 17 层 乐加维林族母: HP 57→43（-14），决策 deepseek 9，code 4，jev 3，jev-plan 3，deepseek-plan 3
+- 第 17 层 乐加维林族母: HP 43→37（-6），决策 jev-plan 3，deepseek 2，jev 2，code 1
+- 第 17 层 乐加维林族母: HP 37→24（-13），决策 jev 3，jev-plan 3，code 3，deepseek 2
+- 第 19 层 地道虫: HP 67→67（-0），决策 jev-plan 2，code 2，jev 1
+- 第 19 层 地道虫: HP 67→62（-5），决策 code 13，jev 2，jev-plan 1
+- 第 19 层 地道虫: HP 62→62（-0），决策 code 6，jev 1，jev-plan 1
+- 第 19 层 地道虫: HP 62→62（-0），决策 code 3，jev 1
+- 第 19 层 地道虫: HP 62→62（-0），决策 code 9，jev 3
+- 第 19 层 地道虫: HP 62→62（-0），决策 code 8，jev 1，jev-plan 1
+- 第 20 层 外骨骼虫: HP 67→67（-0），决策 code 5，code-fallback 1
+- 第 20 层 外骨骼虫: HP 67→59（-8），决策 code 4
+- 第 22 层 胧光怪: HP 67→67（-0），决策 code 3
+- 第 22 层 寄生惧魔/胧光怪: HP 67→34（-33），决策 code 17，jev 7，jev-plan 5，code-fallback 2
+- 第 22 层 寄生惧魔/胧光怪: HP 34→9（-25），决策 code 13，jev-plan 3，jev 2，deepseek 1
+- 第 22 层 寄生惧魔/胧光怪: HP 9→2（-7），决策 code 5，jev 4，jev-plan 1
+- 第 22 层 寄生惧魔/胧光怪: HP 2→2（-0），决策 code 3，jev 2
+- 第 22 层 寄生惧魔/胧光怪: HP 2→2（-0），决策 code 2
+- 第 24 层 啃咬机: HP 10→6（-4），决策 code 20，jev 1
+- 第 27 层 外骨骼虫: HP 34→25（-9），决策 code 8，jev 4，jev-plan 2，code-fallback 1
+- 第 30 层 盛碗虫（丝）/盛碗虫（卵）/盛碗虫（石）: HP 67→64（-3），决策 code 14，jev 2，code-fallback 1
+
+### 各类决策由谁做
+- combat/end_turn / code: 71
+- combat/plan / code: 71
+- reward/claim / code: 52
+- combat/plan-continue / code: 46
+- combat/plan-choice / jev: 40
+- combat/plan-continue / jev-plan: 40
+- map/route / code: 27
+- combat/lethal / code: 18
+- combat/plan-choice+potion / deepseek: 16
+- reward/proceed / code: 15
+- combat/plan-choice / code-fallback: 12
+- selection/exhaust / code: 12
+- combat/plan-choice+potion / jev: 10
+- reward/card / code: 9
+- event/leave / code: 8
+- combat/plan-continue / deepseek-plan: 6
+- event/choose / deepseek: 6
+- combat/play / jev: 5
+- rest/choose / code: 4
+- rest/proceed / code: 4
+- reward/card / deepseek: 4
+- shop/buy / deepseek: 4
+- map/route / jev: 3
+- reward/card / jev: 3
+- selection/choose / deepseek: 3
+- shop/buy / code: 3
+- chest/open / code: 2
+- chest/proceed / code: 2
+- chest/relic / code: 2
+- selection/remove / code: 2
+- shop/open / code: 2
+- combat/least-loss / code: 1
+- event/choose / jev: 1
+- event/only / code: 1
+- selection/add / code: 1
+- selection/add / deepseek: 1
+- selection/choose / jev: 1
+- shop/leave / code: 1
+
+### 兜底介入（Claude/DeepSeek）：34 次（推翻 Jev 22 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o1 @0.07 → o2）：两件随机遗物在开局收益最高，长期强度远超靴子；额外打击/防御虽稀释牌组，但零代价下仍是最大价值。
+- [deepseek] 第 3 层 TNone event/choose: 同意 Jev（o1 @0.07 → o1）：93% HP makes 7 HP trivial (Burning Blood refunds it); 113 gold buys guaranteed shop value—removal or a core card—while t
+- [deepseek] 第 4 层 T2 reward/card: 推翻 Jev（skip @0.14 → card0）：坚毅是扎实的1费格挡（剃刀牙还会将其升级为9格挡+指定消耗），牌组正缺非基础防御牌；随机消耗在13张牌中多半命中打击，无风险。
+- [deepseek] 第 7 层 T6 combat/plan-choice+potion: 同意 Jev（plan2 @0.25 → plan2）：Kills a rat (removes 6 dmg/turn), deals most damage, and loses only 12 HP like plan1; leaving two rats is much safer.
+- [deepseek] 第 9 层 TNone event/choose: 同意 Jev（o1 @0.20 → o1）：26 HP (~1/3 of max) restores a safe buffer for the act 1 boss; enchanting a basic Strike/Defend we intend to remove is f
+- [deepseek] 第 11 层 TNone event/choose: 推翻 Jev（o0 @0.09 → o1）：Permanent relic outweighs one potion; this comfortable A0 run at 74 HP can absorb 13 max HP, Burning Blood and rest site
+- [deepseek] 第 12 层 TNone shop/buy: 同意 Jev（buy_card1 @0.09 → buy_card1）：彼岸咆哮仅38金：18点AOE正好补牌组最大短板，对1幕精英/群怪极强；剩余金币之后还能删牌，优先拿下这张便宜核心。
+- [deepseek] 第 12 层 TNone shop/buy: 推翻 Jev（leave @0.16 → buy_card0）：痛殴是S级成长攻击，牌组缺输出打第一幕Boss；买后还剩74金可再买药水。
+- [deepseek] 第 12 层 TNone shop/buy: 推翻 Jev（leave @0.15 → buy_potion1）：铁心药水(覆甲)是实打实的防御增益，留给第一幕Boss/精英战；战栗是F级陷阱牌，速度药水太弱，留金币无意义。
+- [deepseek] 第 13 层 T2 combat/plan-choice+potion: 同意 Jev（plan1 @0.24 → plan1）：Full HP affords the 17 HP; max damage plus Vulnerable 2 sets up killing this eel next turn, shortening the scaling elite
+- [deepseek] 第 17 层 T1 combat/plan-choice+potion: 推翻 Jev（p1 @0.05 → plan1）：Enemy is stunned with 0 incoming: free turn. No need to burn potions; save them for the boss's wake-up burst phase since
+- [deepseek] 第 17 层 T2 combat/plan-choice+potion: 推翻 Jev（plan2 @0.40 → p2）：Iron Heart potion grants permanent Plating, reducing damage every turn for the whole boss fight; using it early maximize
+- [deepseek] 第 17 层 T2 combat/plan-choice+potion: 推翻 Jev（plan2 @0.26 → plan1）：Bash sets up Vulnerable 2 for future turns, Shrug It Off blocks well with Plated Armor, costs only 2 HP on a long boss f
+- [deepseek] 第 17 层 T2 combat/plan-choice+potion: 同意 Jev（plan1 @0.35 → plan1）：Bash deals 8 and applies 2 Vulnerable, amplifying all future damage in a long 209-HP boss fight; losing 2 HP at 57 is tr
+- [deepseek] 第 17 层 T3 combat/plan-choice+potion: 推翻 Jev（plan3 @0.15 → plan1）：Burst before the boss's str/dex debuffs; 25 damage plus two Razor Tooth upgrades outweigh 12 HP, and 43/67 stays safe.
+- [deepseek] 第 17 层 T4 combat/plan-choice+potion: 同意 Jev（plan1 @0.42 → plan1）：Block 19 total, take 0 damage and gain Flame Barrier; long boss fight means preserving HP beats +12 damage from plan3.
+- [deepseek] 第 17 层 T6 combat/plan-choice+potion: 同意 Jev（plan2 @0.48 → plan2）：Same 30 damage as plan1 but only 9 HP lost; strictly better than plan3 (0 damage). Preserves potions for later turns.
+- [deepseek] 第 17 层 T6 combat/plan-choice+potion: 推翻 Jev（plan1 @0.27 → plan2）：Balanced: 30 damage while losing only 9 HP keeps us healthy in a long boss fight; better damage-per-HP than racing plan1
+- [deepseek] 第 17 层 T6 combat/plan-choice+potion: 推翻 Jev（plan1 @0.21 → p1）：Boss fight, tight HP clock; a free skill can add block to cut the 9 HP loss and free energy to attack.
+- [deepseek] 第 17 层 T6 selection/choose: 推翻 Jev（card0 @0.12 → card2）：放血是0费能量牌，A级，当前缺能量且已有燃烧契约；3点生命代价低，能放大锁镰与高费回合。战栗被痛击完爆，第二张契约不如放血。
+
+### Jev 低置信度（<0.35）决策：17 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/2 (防御, 打击 -> 噬尸蛞蝓, 防御) with confidence 0.01; code rank 1 (0.01)
+- 第 2 层 combat/plan-choice: Jev chose plan 1/4 (打击 -> 噬尸蛞蝓, 防御, 防御+) with confidence 0.33; code rank 1 (0.33)
+- 第 2 层 combat/plan-choice: Jev chose plan 1/3 (防御+, 打击+ -> 噬尸蛞蝓, 打击+ -> 噬尸蛞蝓) with confidence 0.22; code rank 1 (0.22)
+- 第 6 层 combat/plan-choice: Jev chose plan 1/3 (防御, 防御, 熔融之拳 -> 化石追踪者) with confidence 0.23; code rank 1 (0.23)
+- 第 6 层 combat/plan-choice: Jev chose plan 1/2 (痛击 -> 化石追踪者) with confidence 0.30; code rank 1 (0.30)
+- 第 7 层 combat/plan-choice: Jev chose plan 1/3 (防御, 防御, 防御) with confidence 0.08; code rank 1 (0.08)
+- 第 14 层 combat/plan-choice: Jev chose plan 1/3 (坚毅, 防御) with confidence 0.18; code rank 1 (0.18)
+- 第 17 层 combat/plan-choice+potion: Jev chose plan 1/1 (熔融之拳 -> 乐加维林族母, 打击 -> 乐加维林族母) with confidence 0.34; code rank 1 (0.34)
+- 第 19 层 combat/plan-choice: Jev chose plan 1/2 (战斗专注+, 火焰屏障+) with confidence 0.32; code rank 1 (0.32)
+- 第 19 层 combat/plan-choice: Jev chose plan 1/4 (火焰屏障+) with confidence 0.27; code rank 1 (0.27)
+- 第 22 层 combat/plan-choice: Jev chose plan 1/4 (剑柄打击+ -> 胧光怪, 痛殴 -> 寄生惧魔, 打击+ -> 寄生惧魔) with confidence 0.26; code rank 1 (0.26)
+- 第 22 层 combat/plan-choice: Jev chose plan 1/2 (邪眼+, 战斗专注+, 火焰屏障) with confidence 0.24; code rank 1 (0.24)
+- 第 22 层 combat/plan-choice: Jev chose plan 1/2 (打击+ -> 寄生惧魔, 防御+, 怨恨+ -> 寄生惧魔) with confidence 0.24; code rank 1 (0.24)
+- 第 22 层 combat/plan-choice: Jev chose plan 1/2 (痛击+ -> 寄生惧魔, 剑柄打击+ -> 寄生惧魔) with confidence 0.17; code rank 1 (0.17)
+- 第 22 层 combat/play: Jev chose c0 (Play 彼岸咆哮+) with confidence 0.29 (0.29)

@@ -1,0 +1,142 @@
+## 复盘：run PLCXM5MLTHP7 — 阵亡，最高第 33 层
+
+- 决策 475 个；Jev 调用 45 次，Claude 0 次，DeepSeek 42 次；token 127,703 入 / 3,930 出，约 $0.0055；用时 31.0 分钟
+- 决策者：code 345，deepseek 42，jev 38，deepseek-plan 26，jev-plan 17，code-fallback 7
+
+### 战斗掉血（按层）
+- 第 2 层 淤泥旋螺: HP 80→80（-0），决策 jev 1，jev-plan 1
+- 第 2 层 淤泥旋螺: HP 80→71（-9），决策 code 5，jev 1，code-fallback 1
+- 第 3 层 海洋混混: HP 77→77（-0），决策 jev-plan 2，jev 1
+- 第 3 层 海洋混混: HP 77→68（-9），决策 code 5，jev 1，code-fallback 1
+- 第 4 层 噬尸蛞蝓: HP 74→74（-0），决策 code 3
+- 第 4 层 噬尸蛞蝓: HP 74→74（-0），决策 code 7，jev 1，jev-plan 1
+- 第 5 层 拳击构装体: HP 80→80（-0），决策 code 6，code-fallback 1
+- 第 5 层 拳击构装体: HP 80→75（-5），决策 code 1，jev 1，jev-plan 1
+- 第 5 层 拳击构装体: HP 75→70（-5），决策 code 3，jev 1
+- 第 7 层 骇鳗: HP 76→76（-0），决策 deepseek-plan 2，deepseek 1
+- 第 7 层 骇鳗: HP 76→65（-11），决策 code 3
+- 第 7 层 骇鳗: HP 65→65（-0），决策 code 5，deepseek-plan 2，deepseek 1
+- 第 7 层 骇鳗: HP 65→65（-0），决策 code 2，deepseek-plan 2，deepseek 1
+- 第 8 层 地精佣兵: HP 71→71（-0），决策 code-fallback 1，code 1
+- 第 8 层 卑鄙地精/地精佣兵/胖地精: HP 71→67（-4），决策 code 10，jev 2，jev-plan 1
+- 第 9 层 海洋混混/钙化邪教徒: HP 73→73（-0），决策 code-fallback 1，code 1
+- 第 9 层 海洋混混/钙化邪教徒: HP 73→64（-9），决策 code 9，jev 3，jev-plan 1
+- 第 11 层 花园幽灵鳗: HP 70→70（-0），决策 jev 2，deepseek 1
+- 第 11 层 花园幽灵鳗: HP 70→55（-15），决策 code 7，deepseek 1，deepseek-plan 1
+- 第 13 层 化石追踪者: HP 61→54（-7），决策 code 3，jev-plan 2，code-fallback 1，jev 1
+- 第 14 层 噬尸蛞蝓: HP 60→60（-0），决策 code 7，jev 1，jev-plan 1，code-fallback 1
+- 第 15 层 活雾: HP 66→58（-8），决策 code 2，jev 1，jev-plan 1
+- 第 15 层 活雾: HP 58→58（-0），决策 code 2
+- 第 17 层 乐加维林族母: HP 80→80（-0），决策 code 6，deepseek 2，deepseek-plan 1
+- 第 17 层 乐加维林族母: HP 80→74（-6），决策 deepseek 2，code 1
+- 第 17 层 乐加维林族母: HP 74→74（-0），决策 jev 1
+- 第 17 层 乐加维林族母: HP 74→39（-35），决策 code 13，jev 1，deepseek 1，deepseek-plan 1
+- 第 19 层 外骨骼虫: HP 80→80（-0），决策 code 6，jev-plan 2，jev 1
+- 第 21 层 盛碗虫（卵）/盛碗虫（石）: HP 83→81（-2），决策 code 6
+- 第 22 层 寄生惧魔/胧光怪: HP 86→86（-0），决策 code 4，jev 1，jev-plan 1
+- 第 22 层 寄生惧魔/胧光怪: HP 86→86（-0），决策 code 1
+- 第 22 层 寄生惧魔/胧光怪: HP 86→76（-10），决策 code 3
+- 第 22 层 寄生惧魔/胧光怪: HP 76→70（-6），决策 code 6
+- 第 24 层 蜂群术士: HP 76→69（-7），决策 code 11，jev 2，deepseek 2，jev-plan 2，deepseek-plan 1
+- 第 28 层 感染棱柱: HP 69→59（-10），决策 code 5，deepseek 2，deepseek-plan 2
+- 第 28 层 感染棱柱: HP 59→53（-6），决策 code 5，deepseek 3，deepseek-plan 3
+- 第 30 层 虱虫之祖: HP 59→59（-0），决策 code 5，jev 1
+- 第 30 层 虱虫之祖: HP 59→59（-0），决策 code 3
+- 第 31 层 异螨: HP 68→68（-0），决策 code 3，jev 1
+- 第 31 层 异螨: HP 68→62（-6），决策 code 5，jev 1
+- 第 33 层 火箭/碾碎爪: HP 92→92（-0），决策 deepseek 1
+- 第 33 层 火箭/碾碎爪: HP 92→90（-2），决策 deepseek 5，deepseek-plan 4，code 4，jev 1，jev-plan 1
+- 第 33 层 火箭/碾碎爪: HP 90→25（-65），决策 deepseek-plan 7，code 7，deepseek 6，jev 1
+
+### 死亡战斗：第 33 层 火箭/碾碎爪
+- T6 [code] combat/end_turn: no playable cards; ending the turn
+- T7 [deepseek] combat/plan-choice+potion: DeepSeek confirmed Jev (plan1 @0.48 -> plan1; boss fight): Loses only 9 HP (vs 21) keeping 16/92, and dumps damage onto 火箭 while keeping 碾碎爪 higher — even wear  conf 0.48
+- T7 [deepseek-plan] combat/plan-continue: continuing the DeepSeek-chosen plan: 拆卸 -> 碾碎爪
+- T7 [deepseek-plan] combat/plan-continue: continuing the DeepSeek-chosen plan: 愤怒 -> 火箭
+- T7 [code] combat/end_turn: no playable cards; ending the turn
+- T8 [deepseek] combat/plan-choice+potion: DeepSeek confirmed Jev (plan1 @0.20 -> plan1; boss fight): Killing 碾碎爪 would trigger 火箭's 99 block +5 strength (guide warns); stay defensive, only lose 1 HP, dr conf 0.20
+- T8 [deepseek-plan] combat/plan-continue: continuing the DeepSeek-chosen plan: 耸肩无视+
+- T8 [deepseek] combat/plan-choice+potion: DeepSeek confirmed Jev (plan1 @0.16 -> plan1; boss fight): Only 1 energy; chip the low crab (16 dmg, 1 HP lost) without triggering its partner's 99-block rage,  conf 0.16
+- T8 [code] combat/end_turn: no playable cards; ending the turn
+- T9 [jev] combat/play: Jev chose p1 (Drink 超巨化药水) with confidence 0.35 conf 0.35
+- T9 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (-3): 防御+
+- T9 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (-3): end turn
+
+### 各类决策由谁做
+- combat/end_turn / code: 58
+- combat/plan-continue / code: 57
+- reward/claim / code: 53
+- combat/plan / code: 40
+- combat/plan-continue / deepseek-plan: 26
+- combat/plan-choice / jev: 25
+- map/route / code: 23
+- combat/lethal / code: 19
+- reward/proceed / code: 19
+- combat/plan-choice / deepseek: 17
+- combat/plan-continue / jev-plan: 17
+- reward/card / code: 16
+- selection/confirm / code: 13
+- combat/plan-choice+potion / deepseek: 12
+- map/route / jev: 8
+- combat/plan-choice / code-fallback: 7
+- selection/remove / code: 7
+- selection/add / code: 6
+- event/choose / deepseek: 4
+- event/leave / code: 4
+- rest/choose / code: 4
+- rest/proceed / code: 4
+- shop/buy / code: 4
+- chest/open / code: 3
+- chest/proceed / code: 3
+- chest/relic / code: 3
+- reward/card / deepseek: 3
+- combat/least-loss / code: 2
+- combat/plan-choice+potion / jev: 2
+- selection/add / deepseek: 2
+- shop/leave / code: 2
+- shop/open / code: 2
+- combat/play / jev: 1
+- map/route / deepseek: 1
+- run/finalize / code: 1
+- selection/enchant / deepseek: 1
+- selection/take into my hand / code: 1
+- selection/take into my hand / jev: 1
+- selection/upgrade / code: 1
+- selection/upgrade / deepseek: 1
+- shop/buy / deepseek: 1
+- shop/buy / jev: 1
+
+### 兜底介入（Claude/DeepSeek）：42 次（推翻 Jev 23 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o0 @0.42 → o1）：第1幕最缺输出：免费攻击牌直接提升前期战力，自伤可被燃烧之血抵消；升级打击/防御收益太小，10张牌的薄牌组里检索牌价值低。
+- [deepseek] 第 2 层 T3 reward/card: 同意 Jev（card0 @0.03 → card0）：Early Act 1 needs damage; Anger is 0-cost 6 damage that scales with strength and copies itself, better rate than Strike.
+- [deepseek] 第 5 层 T4 reward/card: 同意 Jev（card2 @0.38 → card2）：Twin Strike beats Strike, scales with strength/vulnerable from Bash; deck lacks real damage more than a second 2E Flame 
+- [deepseek] 第 6 层 TNone shop/buy: 推翻 Jev（buy_card0 @0.13 → buy_card1）：预备打击 A 级：7伤害+本回合3力，放大双重打击爆发；头槌已有重复、战鼓陷阱、能力药水随机。买它剩21金。
+- [deepseek] 第 7 层 T1 combat/plan-choice: 同意 Jev（plan1 @0.24 → plan1）：Trade 5 HP for 4 damage is poor value in a 140 HP elite fight; blocking preserves HP for a long fight, Burning Blood wil
+- [deepseek] 第 7 层 T3 combat/plan-choice: 同意 Jev（plan2 @0.10 → plan2）：Same 24 damage as plan1, but Vulnerable 2 adds ~50% for two turns, killing the Eel a turn sooner — saving ~22 HP, well w
+- [deepseek] 第 7 层 T5 combat/plan-choice: 推翻 Jev（plan2 @0.18 → plan1）：Both leave the eel killable next turn (any attack kills 8 HP with vulnerable); plan1 preserves 5 more HP, and taking 0 n
+- [deepseek] 第 10 层 TNone map/route: 推翻 Jev（n2 @0.23 → n1）：HP 88%, Act 1, only one elite so far; take guaranteed relic/card, then shop. Deck has Strike Dummy and high attacks, eli
+- [deepseek] 第 11 层 T1 combat/plan-choice+potion: 推翻 Jev（plan1 @0.37 → p0）：Turn 1 of an elite with a long 4-enemy fight: Power Potion is free this turn, and an early power compounds. Use it now, 
+- [deepseek] 第 11 层 T1 combat/plan-choice: 同意 Jev（plan2 @0.04 → plan2）：Plays Demon Form, deals full 22 to the buffing elite (28→6) instead of overkilling a weak eel; 5 extra HP is affordable 
+- [deepseek] 第 14 层 T3 reward/card: 推翻 Jev（card2 @0.23 → card1）：Twin Strike hits twice, scaling with 预备打击's temp strength, 易伤 and 打击木偶; Breakthrough's self-damage AOE is useless vs the
+- [deepseek] 第 17 层 T2 combat/plan-choice: 同意 Jev（plan1 @0.16 → plan1）：At full HP, taking 19 to deal 40 preserves Impervious for bigger later hits; racing boss is best.
+- [deepseek] 第 17 层 T3 combat/plan-choice: 推翻 Jev（plan2 @0.36 → plan3）：At full HP, trading 18 HP for 23 damage plus Vulnerable-2 accelerates killing the 153 HP boss and saves the potion for l
+- [deepseek] 第 17 层 T3 combat/plan-choice: 推翻 Jev（plan2 @0.47 → plan3）：At full HP the 12 extra damage taken is cheap; Bash applies Vulnerable 2 to boost our 16-attack deck, accelerating the k
+- [deepseek] 第 17 层 T4 combat/plan-choice: 推翻 Jev（plan2 @0.23 → plan1）：HP is comfortable (74/80). Bludgeon deals 32, shortening the boss fight; 14 extra damage for 5 more HP is a good race tr
+- [deepseek] 第 17 层 T4 selection/add: 同意 Jev（card7 @0.18 → card7）：剑柄打击：1费9伤还抽1张，无前置条件，收益最稳；拆卸需易伤，踩踏费用高，预备打击力量仅本回合。
+- [deepseek] 第 17 层 T6 combat/plan-choice: 同意 Jev（plan1 @0.44 → plan1）：Race boss: deal 29, leave 51 HP, likely kill in 2 turns; more damage than blocking plans.
+- [deepseek] 第 18 层 TNone event/choose: 推翻 Jev（o0 @0.26 → o1）：Deck is bloated (23) and block-light; removing 5 cards and getting them back upgraded is the biggest permanent power gai
+- [deepseek] 第 20 层 TNone event/choose: 同意 Jev（o0 @0.30 → o0）：Pay 100 for a random relic at a discount; keep 115 gold for shop removal. Leaving would downgrade a card, wasting Pael's
+- [deepseek] 第 22 层 T3 selection/add: 推翻 Jev（card5 @0.35 → card8）：岿然不动 is a top-tier defensive card; deck has 18 attacks/4 skills, desperately needs block for act 1 boss. Exhausts, alway
+
+### Jev 低置信度（<0.35）决策：11 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/3 (防御, 涅奥之怒 -> 淤泥旋螺, 防御) with confidence 0.11; code rank 1 (0.11)
+- 第 3 层 combat/plan-choice: Jev chose plan 1/2 (愤怒 -> 海洋混混, 打击 -> 海洋混混, 涅奥之怒 -> 海洋混混, 防御) with confidence 0.26; code rank 1 (0.26)
+- 第 3 层 combat/plan-choice: Jev chose plan 1/2 (防御) with confidence 0.15; code rank 1 (0.15)
+- 第 4 层 combat/plan-choice: Jev chose plan 1/4 (火焰屏障, 防御) with confidence 0.12; code rank 1 (0.12)
+- 第 5 层 combat/plan-choice: Jev chose plan 1/3 (愤怒 -> 拳击构装体, 涅奥之怒 -> 拳击构装体, 火焰屏障) with confidence 0.22; code rank 1 (0.22)
+- 第 8 层 combat/plan-choice: Jev chose plan 1/2 (防御) with confidence 0.12; code rank 1 (0.12)
+- 第 9 层 combat/plan-choice: Jev chose plan 1/2 (头槌 -> 钙化邪教徒) with confidence 0.24; code rank 1 (0.24)
+- 第 9 层 combat/plan-choice: Jev chose plan 1/2 (剑柄打击 -> 钙化邪教徒, 岿然不动) with confidence 0.32; code rank 1 (0.32)
+- 第 9 层 combat/plan-choice: Jev chose plan 1/4 (防御, 双重打击 -> 钙化邪教徒) with confidence 0.30; code rank 1 (0.30)
+- 第 15 层 combat/plan-choice: Jev chose plan 1/4 (痛击 -> 活雾, 双重打击 -> 活雾) with confidence 0.34; code rank 1 (0.34)
+- 第 22 层 combat/plan-choice: Jev chose plan 1/4 (双重打击 -> 胧光怪, 涅奥之怒 -> 寄生惧魔, 头槌 -> 寄生惧魔, 愤怒 -> 胧光怪) with confidence 0.07; code rank 1 (0.07)

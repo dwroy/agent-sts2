@@ -1,0 +1,131 @@
+## 复盘：run RTF3KZLZPV2L — 阵亡，最高第 42 层
+
+- 决策 531 个；Jev 调用 64 次，Claude 0 次，DeepSeek 0 次；token 131,360 入 / 2,949 出，约 $0.0056；用时 22.4 分钟
+- 决策者：code 440，jev 63，jev-plan 27，code-fallback 1
+
+### 战斗掉血（按层）
+- 第 2 层 海洋混混: HP 64→55（-9），决策 code 9，jev-plan 2，code-fallback 1，jev 1
+- 第 3 层 噬尸蛞蝓: HP 61→48（-13），决策 code 6，jev-plan 4，jev 2
+- 第 6 层 蟾蜍蝌蚪: HP 54→46（-8），决策 code 10
+- 第 9 层 鬼祟珊瑚群: HP 74→43（-31），决策 code 13，jev 4，jev-plan 3
+- 第 12 层 气态炸弹/活雾: HP 73→59（-14），决策 code 13，jev 2，jev-plan 2
+- 第 14 层 花园幽灵鳗: HP 65→40（-25），决策 code 8，jev-plan 2，jev 1
+- 第 15 层 海洋混混/钙化邪教徒: HP 46→40（-6），决策 code 4，jev-plan 2，jev 1
+- 第 15 层 海洋混混: HP 40→32（-8），决策 code 7
+- 第 17 层 灵魂异鱼: HP 62→62（-0），决策 jev 1
+- 第 17 层 灵魂异鱼: HP 62→62（-0），决策 code 2
+- 第 17 层 灵魂异鱼: HP 62→62（-0），决策 code 1
+- 第 17 层 灵魂异鱼: HP 62→10（-52），决策 code 22，jev 3，jev-plan 2
+- 第 19 层 外骨骼虫: HP 67→67（-0），决策 code 4
+- 第 19 层 外骨骼虫: HP 56→56（-0），决策 jev 2，jev-plan 1，code 1
+- 第 19 层 外骨骼虫: HP 53→53（-0），决策 code 4
+- 第 19 层 外骨骼虫: HP 53→53（-0），决策 code 2
+- 第 22 层 偷窃草蜢: HP 59→59（-0），决策 jev 2，jev-plan 2
+- 第 22 层 偷窃草蜢: HP 46→46（-0），决策 code 3
+- 第 22 层 偷窃草蜢: HP 46→62（+16），决策 jev 2，jev-plan 1，code 1
+- 第 22 层 偷窃草蜢: HP 43→43（-0），决策 code 1
+- 第 28 层 蜂群术士: HP 73→73（-0），决策 jev 1，code 1
+- 第 28 层 蜂群术士: HP 72→72（-0），决策 jev-plan 3，jev 1，code 1
+- 第 28 层 蜂群术士: HP 64→64（-0），决策 code 2
+- 第 28 层 蜂群术士: HP 64→64（-0），决策 code 2
+- 第 28 层 蜂群术士: HP 64→64（-0），决策 jev 1，code 1
+- 第 28 层 蜂群术士: HP 64→62（-2），决策 code 3，jev 1
+- 第 30 层 啃咬机: HP 68→66（-2），决策 jev-plan 2，jev 1，code 1
+- 第 30 层 啃咬机: HP 66→64（-2），决策 code 7
+- 第 30 层 啃咬机: HP 56→56（-0），决策 jev 1，jev-plan 1，code 1
+- 第 30 层 啃咬机: HP 56→56（-0），决策 code 1
+- 第 33 层 知识恶魔: HP 80→80（-0），决策 jev 2
+- 第 33 层 知识恶魔: HP 80→80（-0），决策 jev 2
+- 第 33 层 知识恶魔: HP 80→80（-0），决策 jev 1，code 1
+- 第 33 层 知识恶魔: HP 80→80（-0），决策 code 6
+- 第 33 层 知识恶魔: HP 68→68（-0），决策 code 3
+- 第 33 层 知识恶魔: HP 58→58（-0），决策 code 4
+- 第 33 层 知识恶魔: HP 51→51（-0），决策 code 3
+- 第 33 层 知识恶魔: HP 51→49（-2），决策 code 4
+- 第 33 层 知识恶魔: HP 35→35（-0），决策 code 3
+- 第 33 层 知识恶魔: HP 18→18（-0），决策 code 3
+- 第 33 层 知识恶魔: HP 18→18（-0），决策 code 1
+- 第 33 层 知识恶魔: HP 18→18（-0），决策 code 1
+- 第 35 层 咬人卷轴: HP 68→68（-0），决策 code 4
+- 第 35 层 咬人卷轴: HP 68→68（-0），决策 code 1
+- 第 35 层 咬人卷轴: HP 52→52（-0），决策 code 5
+- 第 35 层 咬人卷轴: HP 52→52（-0），决策 code 3
+- 第 35 层 咬人卷轴: HP 52→52（-0），决策 code 1
+- 第 40 层 虔诚雕刻师: HP 70→70（-0），决策 code 3
+- 第 40 层 虔诚雕刻师: HP 70→70（-0），决策 code 5
+- 第 40 层 虔诚雕刻师: HP 70→68（-2），决策 code 4
+- 第 40 层 虔诚雕刻师: HP 56→56（-0），决策 code 1
+- 第 42 层 灵魂枢纽: HP 58→58（-0），决策 code 4
+- 第 42 层 灵魂枢纽: HP 58→58（-0），决策 code 1
+- 第 42 层 灵魂枢纽: HP 58→58（-0），决策 code 1
+- 第 42 层 灵魂枢纽: HP 58→58（-0），决策 code 1
+- 第 42 层 灵魂枢纽: HP 58→58（-0），决策 code 2
+- 第 42 层 灵魂枢纽: HP 57→57（-0），决策 code 3，jev 1
+- 第 42 层 灵魂枢纽: HP 57→57（-0），决策 code 4
+- 第 42 层 灵魂枢纽: HP 21→21（-0），决策 code 3
+- 第 42 层 灵魂枢纽: HP 21→21（-0），决策 code 3
+- 第 42 层 灵魂枢纽: HP 21→21（-0），决策 code 4
+- 第 42 层 灵魂枢纽: HP 2→2（-0），决策 code 4
+
+### 死亡战斗：第 42 层 灵魂枢纽
+- T7 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (0): 防御+, 拆卸+ -> 灵魂枢纽, 防御
+- T7 [code] combat/plan-continue: continuing the code-chosen plan: 拆卸+ -> 灵魂枢纽
+- T7 [code] combat/plan-continue: continuing the code-chosen plan: 防御
+- T7 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (0): end turn
+
+### 各类决策由谁做
+- combat/plan / code: 129
+- combat/plan-continue / code: 65
+- selection/exhaust / code: 43
+- map/route / code: 41
+- reward/claim / code: 41
+- combat/plan-choice / jev: 33
+- combat/plan-continue / jev-plan: 27
+- combat/lethal / code: 16
+- reward/proceed / code: 15
+- shop/buy / jev: 13
+- event/leave / code: 12
+- reward/card / code: 12
+- event/choose / jev: 11
+- selection/add / code: 7
+- shop/buy / code: 7
+- rest/proceed / code: 6
+- rest/choose / code: 5
+- selection/take into my hand / code: 5
+- shop/leave / code: 5
+- selection/curse / code: 4
+- selection/remove / code: 4
+- shop/open / code: 4
+- chest/open / code: 3
+- chest/proceed / code: 3
+- chest/relic / code: 3
+- combat/end_turn / code: 3
+- combat/least-loss / code: 3
+- reward/card / jev: 3
+- combat/plan-choice / code-fallback: 1
+- combat/plan-guarded / code: 1
+- event/only / code: 1
+- rest/choose / jev: 1
+- run/finalize / code: 1
+- selection/add / jev: 1
+- selection/take into my hand / jev: 1
+- selection/upgrade / code: 1
+
+### 兜底介入（Claude/DeepSeek）：0 次（推翻 Jev 0 次）
+
+### Jev 低置信度（<0.35）决策：20 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/2 (打击 -> 海洋混混, 打击 -> 海洋混混, 防御) with confidence 0.32; code rank 1 (0.32)
+- 第 3 层 combat/plan-choice: Jev chose plan 1/3 (打击 -> 噬尸蛞蝓, 防御, 打击 -> 噬尸蛞蝓) with confidence 0.26; code rank 1 (0.26)
+- 第 5 层 shop/buy: Jev chose buy 岩石铠甲 (37g) with confidence 0.27 (0.27)
+- 第 5 层 shop/buy: Jev chose buy 跃跃欲试 (72g) with confidence 0.27 (0.27)
+- 第 9 层 reward/card: Jev chose 预备打击 (Attack, 1E) with confidence 0.24 (0.24)
+- 第 17 层 combat/plan-choice: Jev chose plan 2/2 (生产制造, 打击 -> 灵魂异鱼) with confidence 0.23; code rank 2 (0.23)
+- 第 18 层 event/choose: Jev chose 烘焙手套 with confidence 0.13 (0.13)
+- 第 23 层 event/choose: Jev chose 情绪觉察 with confidence 0.25 (0.25)
+- 第 28 层 combat/plan-choice: Jev chose plan 1/2 (跃跃欲试) with confidence 0.08; code rank 1 (0.08)
+- 第 28 层 combat/plan-choice: Jev chose plan 2/2 (防御, 主宰 -> 蜂群术士, 痛击+ -> 蜂群术士, 防御) with confidence 0.08; code rank 2 (0.08)
+- 第 29 层 shop/buy: Jev chose buy 无惧疼痛 (73g) with confidence 0.14 (0.14)
+- 第 29 层 shop/buy: Jev chose buy 剑柄打击 (48g) with confidence 0.18 (0.18)
+- 第 29 层 shop/buy: Jev chose stop shopping with confidence 0.21 (0.21)
+- 第 34 层 event/choose: Jev chose 图章戒指 with confidence 0.34 (0.34)
+- 第 36 层 event/choose: Jev chose 喝杯好茶 with confidence 0.25 (0.25)

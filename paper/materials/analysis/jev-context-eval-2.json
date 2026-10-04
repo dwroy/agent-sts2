@@ -1,0 +1,6994 @@
+{
+  "generated": "2026-09-25T12:01:42.793Z",
+  "model": "jev-1.13",
+  "states": "logs/states.jsonl",
+  "tail_mb": 200,
+  "calls": 360,
+  "boards": 120,
+  "hinted_boards": 60,
+  "picks_changed": {
+    "baseline_vs_tags": 28,
+    "tags_vs_tags_hints": 25,
+    "baseline_vs_tags_hints": 34
+  },
+  "summary": {
+    "baseline": {
+      "boards": 120,
+      "answered": 120,
+      "errors": 0,
+      "mean_extra_hp_vs_min_loss": 1.5299145299145298,
+      "mean_damage": 19,
+      "potion_picks": 3,
+      "setup_boards": 31,
+      "lasting_share_on_setup_boards": 0.3225806451612903,
+      "agree_code_rank1": 0.625,
+      "confidence": {
+        "mean": 0.40241666666666664,
+        "median": 0.37,
+        "<0.3": 44,
+        "0.3-0.5": 32,
+        "0.5-0.75": 42,
+        ">=0.75": 2
+      },
+      "mean_latency_ms": 278.30833333333334,
+      "mean_input_tokens": 1341.1583333333333
+    },
+    "tags": {
+      "boards": 120,
+      "answered": 120,
+      "errors": 0,
+      "mean_extra_hp_vs_min_loss": 1.4684684684684686,
+      "mean_damage": 18.46846846846847,
+      "potion_picks": 9,
+      "setup_boards": 31,
+      "lasting_share_on_setup_boards": 0.3870967741935484,
+      "agree_code_rank1": 0.5833333333333334,
+      "confidence": {
+        "mean": 0.3299166666666666,
+        "median": 0.3,
+        "<0.3": 59,
+        "0.3-0.5": 34,
+        "0.5-0.75": 22,
+        ">=0.75": 5
+      },
+      "mean_latency_ms": 282.4583333333333,
+      "mean_input_tokens": 1237.1333333333334
+    },
+    "tags_hints": {
+      "boards": 120,
+      "answered": 120,
+      "errors": 0,
+      "mean_extra_hp_vs_min_loss": 1.2758620689655173,
+      "mean_damage": 16.586206896551722,
+      "potion_picks": 4,
+      "setup_boards": 31,
+      "lasting_share_on_setup_boards": 0.4838709677419355,
+      "agree_code_rank1": 0.55,
+      "confidence": {
+        "mean": 0.36508333333333337,
+        "median": 0.31,
+        "<0.3": 53,
+        "0.3-0.5": 39,
+        "0.5-0.75": 19,
+        ">=0.75": 9
+      },
+      "mean_latency_ms": 273.30833333333334,
+      "mean_input_tokens": 1299.7833333333333
+    }
+  },
+  "summary_hinted_boards": {
+    "baseline": {
+      "boards": 60,
+      "answered": 60,
+      "errors": 0,
+      "mean_extra_hp_vs_min_loss": 1.7719298245614035,
+      "mean_damage": 19.614035087719298,
+      "potion_picks": 3,
+      "setup_boards": 11,
+      "lasting_share_on_setup_boards": 0.6363636363636364,
+      "agree_code_rank1": 0.7166666666666667,
+      "confidence": {
+        "mean": 0.39699999999999996,
+        "median": 0.37,
+        "<0.3": 24,
+        "0.3-0.5": 14,
+        "0.5-0.75": 21,
+        ">=0.75": 1
+      },
+      "mean_latency_ms": 270.9166666666667,
+      "mean_input_tokens": 1429.6333333333334
+    },
+    "tags": {
+      "boards": 60,
+      "answered": 60,
+      "errors": 0,
+      "mean_extra_hp_vs_min_loss": 1.6470588235294117,
+      "mean_damage": 19.941176470588236,
+      "potion_picks": 9,
+      "setup_boards": 11,
+      "lasting_share_on_setup_boards": 0.7272727272727273,
+      "agree_code_rank1": 0.65,
+      "confidence": {
+        "mean": 0.33799999999999997,
+        "median": 0.32,
+        "<0.3": 26,
+        "0.3-0.5": 20,
+        "0.5-0.75": 12,
+        ">=0.75": 2
+      },
+      "mean_latency_ms": 287.95,
+      "mean_input_tokens": 1295.3
+    },
+    "tags_hints": {
+      "boards": 60,
+      "answered": 60,
+      "errors": 0,
+      "mean_extra_hp_vs_min_loss": 1.1428571428571428,
+      "mean_damage": 16.017857142857142,
+      "potion_picks": 4,
+      "setup_boards": 11,
+      "lasting_share_on_setup_boards": 0.9090909090909091,
+      "agree_code_rank1": 0.5666666666666667,
+      "confidence": {
+        "mean": 0.3973333333333333,
+        "median": 0.36,
+        "<0.3": 23,
+        "0.3-0.5": 22,
+        "0.5-0.75": 9,
+        ">=0.75": 6
+      },
+      "mean_latency_ms": 273.8833333333333,
+      "mean_input_tokens": 1420.6
+    }
+  },
+  "per_board": [
+    {
+      "id": "undefined:F12:T1:11",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 8,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 17,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.47,
+          "latencyMs": 603,
+          "inputTokens": 1071
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.08,
+          "latencyMs": 553,
+          "inputTokens": 919
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.08,
+          "latencyMs": 533,
+          "inputTokens": 919
+        }
+      }
+    },
+    {
+      "id": "undefined:F12:T1:12",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.74,
+          "latencyMs": 543,
+          "inputTokens": 1052
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.04,
+          "latencyMs": 252,
+          "inputTokens": 899
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.12,
+          "latencyMs": 236,
+          "inputTokens": 899
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T2:23",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "matriarch-asleep",
+        "matriarch-sleep-turns",
+        "matriarch-siphon",
+        "setup-free-turn",
+        "hp-trade-boss"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.65,
+          "latencyMs": 317,
+          "inputTokens": 1275
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.65,
+          "latencyMs": 305,
+          "inputTokens": 1029
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.92,
+          "latencyMs": 261,
+          "inputTokens": 1197
+        }
+      }
+    },
+    {
+      "id": "undefined:F2:T2:51",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 18,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 24,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.49,
+          "latencyMs": 277,
+          "inputTokens": 948
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.19,
+          "latencyMs": 267,
+          "inputTokens": 922
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.23,
+          "latencyMs": 301,
+          "inputTokens": 922
+        }
+      }
+    },
+    {
+      "id": "undefined:F14:T1:61",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 36,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 24,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.66,
+          "latencyMs": 227,
+          "inputTokens": 1185
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 218,
+          "inputTokens": 1108
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.3,
+          "latencyMs": 240,
+          "inputTokens": 1108
+        }
+      }
+    },
+    {
+      "id": "undefined:F25:T1:109",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 40,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 27,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 13,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.23,
+          "latencyMs": 262,
+          "inputTokens": 1350
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 335,
+          "inputTokens": 1241
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.21,
+          "latencyMs": 276,
+          "inputTokens": 1241
+        }
+      }
+    },
+    {
+      "id": "undefined:F19:T2:216",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 8,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.63,
+          "latencyMs": 236,
+          "inputTokens": 1258
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.03,
+          "latencyMs": 271,
+          "inputTokens": 1057
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.06,
+          "latencyMs": 231,
+          "inputTokens": 1057
+        }
+      }
+    },
+    {
+      "id": "undefined:F31:T1:255",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [
+        "obscura-summoner"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 43,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 28,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 24,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": true
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 9,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.62,
+          "latencyMs": 233,
+          "inputTokens": 1630
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.55,
+          "latencyMs": 290,
+          "inputTokens": 1523
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.22,
+          "latencyMs": 278,
+          "inputTokens": 1560
+        }
+      }
+    },
+    {
+      "id": "undefined:F31:T1:256",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [
+        "obscura-summoner"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 34,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 19,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 15,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": true
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.57,
+          "latencyMs": 299,
+          "inputTokens": 1584
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.42,
+          "latencyMs": 296,
+          "inputTokens": 1477
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.29,
+          "latencyMs": 297,
+          "inputTokens": 1514
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T2:357",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "matriarch-siphon",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 43,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 30,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 25,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 12,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.55,
+          "latencyMs": 297,
+          "inputTokens": 1609
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.52,
+          "latencyMs": 328,
+          "inputTokens": 1690
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.32,
+          "latencyMs": 336,
+          "inputTokens": 1858
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T1:542",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "fysh-beckon",
+        "fysh-draw-energy",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 8,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 30,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.63,
+          "latencyMs": 247,
+          "inputTokens": 1298
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.41,
+          "latencyMs": 256,
+          "inputTokens": 1150
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.83,
+          "latencyMs": 281,
+          "inputTokens": 1315
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T4:607",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "sandpit-zero",
+        "sandpit-no-race",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 20,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.72,
+          "latencyMs": 226,
+          "inputTokens": 1468
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.67,
+          "latencyMs": 282,
+          "inputTokens": 1040
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.77,
+          "latencyMs": 277,
+          "inputTokens": 1213
+        }
+      }
+    },
+    {
+      "id": "undefined:F4:T2:827",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 4,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.56,
+          "latencyMs": 265,
+          "inputTokens": 966
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.28,
+          "latencyMs": 263,
+          "inputTokens": 935
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.22,
+          "latencyMs": 280,
+          "inputTokens": 935
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T9:884",
+      "label": "combat/plan-choice",
+      "fight": "boss",
+      "hints": [
+        "matriarch-siphon",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.22,
+          "latencyMs": 302,
+          "inputTokens": 1048
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.12,
+          "latencyMs": 250,
+          "inputTokens": 974
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.37,
+          "latencyMs": 324,
+          "inputTokens": 1142
+        }
+      }
+    },
+    {
+      "id": "undefined:F5:T3:1121",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 15,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 13,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.71,
+          "latencyMs": 293,
+          "inputTokens": 1083
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.72,
+          "latencyMs": 339,
+          "inputTokens": 1050
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.68,
+          "latencyMs": 305,
+          "inputTokens": 1050
+        }
+      }
+    },
+    {
+      "id": "undefined:F7:T1:1127",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 6,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.43,
+          "latencyMs": 275,
+          "inputTokens": 1065
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.23,
+          "latencyMs": 247,
+          "inputTokens": 1049
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.16,
+          "latencyMs": 247,
+          "inputTokens": 1049
+        }
+      }
+    },
+    {
+      "id": "undefined:F7:T1:1128",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.47,
+          "latencyMs": 254,
+          "inputTokens": 1039
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.27,
+          "latencyMs": 314,
+          "inputTokens": 1022
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.2,
+          "latencyMs": 237,
+          "inputTokens": 1022
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T4:1225",
+      "label": "combat/plan-choice",
+      "fight": "boss",
+      "hints": [
+        "sandpit-zero",
+        "sandpit-no-race",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 65,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 80,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 75,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 59,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.41,
+          "latencyMs": 284,
+          "inputTokens": 1995
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.29,
+          "latencyMs": 304,
+          "inputTokens": 1973
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.39,
+          "latencyMs": 282,
+          "inputTokens": 2146
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T1:1358",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "sandpit-zero",
+        "sandpit-no-race",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 18,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 8,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.63,
+          "latencyMs": 229,
+          "inputTokens": 1479
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.61,
+          "latencyMs": 252,
+          "inputTokens": 1341
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.43,
+          "latencyMs": 246,
+          "inputTokens": 1514
+        }
+      }
+    },
+    {
+      "id": "undefined:F6:T4:1512",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 15,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 9,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.72,
+          "latencyMs": 274,
+          "inputTokens": 1197
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.45,
+          "latencyMs": 292,
+          "inputTokens": 1239
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.37,
+          "latencyMs": 238,
+          "inputTokens": 1239
+        }
+      }
+    },
+    {
+      "id": "undefined:F6:T4:1514",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.42,
+          "latencyMs": 270,
+          "inputTokens": 989
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.39,
+          "latencyMs": 250,
+          "inputTokens": 962
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.33,
+          "latencyMs": 349,
+          "inputTokens": 962
+        }
+      }
+    },
+    {
+      "id": "undefined:F9:T3:1626",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 14,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 21,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.56,
+          "latencyMs": 234,
+          "inputTokens": 1143
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.19,
+          "latencyMs": 266,
+          "inputTokens": 1104
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.08,
+          "latencyMs": 298,
+          "inputTokens": 1104
+        }
+      }
+    },
+    {
+      "id": "undefined:F9:T3:1628",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.64,
+          "latencyMs": 296,
+          "inputTokens": 1093
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.51,
+          "latencyMs": 355,
+          "inputTokens": 1053
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.58,
+          "latencyMs": 273,
+          "inputTokens": 1053
+        }
+      }
+    },
+    {
+      "id": "undefined:F19:T2:1646",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 39,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 45,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 34,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 25,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.22,
+          "latencyMs": 227,
+          "inputTokens": 1507
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.31,
+          "latencyMs": 327,
+          "inputTokens": 1481
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.31,
+          "latencyMs": 260,
+          "inputTokens": 1481
+        }
+      }
+    },
+    {
+      "id": "undefined:F21:T2:1654",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.28,
+          "latencyMs": 279,
+          "inputTokens": 1187
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.29,
+          "latencyMs": 266,
+          "inputTokens": 1028
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.36,
+          "latencyMs": 304,
+          "inputTokens": 1028
+        }
+      }
+    },
+    {
+      "id": "undefined:F24:T1:1683",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 24,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 18,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 18,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.43,
+          "latencyMs": 247,
+          "inputTokens": 1305
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.8,
+          "latencyMs": 263,
+          "inputTokens": 1185
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.8,
+          "latencyMs": 251,
+          "inputTokens": 1185
+        }
+      }
+    },
+    {
+      "id": "undefined:F24:T1:1685",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 16,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 6,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 10,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": true
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.2,
+          "latencyMs": 364,
+          "inputTokens": 1302
+        },
+        "tags": {
+          "choice": "plan3",
+          "confidence": 0.14,
+          "latencyMs": 240,
+          "inputTokens": 1257
+        },
+        "tags_hints": {
+          "choice": "plan3",
+          "confidence": 0.13,
+          "latencyMs": 268,
+          "inputTokens": 1257
+        }
+      }
+    },
+    {
+      "id": "undefined:F31:T1:1770",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 21,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 15,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 25,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 35,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan4",
+          "confidence": 0.39,
+          "latencyMs": 246,
+          "inputTokens": 1740
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.34,
+          "latencyMs": 289,
+          "inputTokens": 1718
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.36,
+          "latencyMs": 250,
+          "inputTokens": 1718
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T5:1795",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-curse-turn",
+        "kd-long-fight",
+        "kd-overwhelm",
+        "setup-free-turn",
+        "hp-trade-boss"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 84,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.91,
+          "latencyMs": 297,
+          "inputTokens": 1547
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.9,
+          "latencyMs": 271,
+          "inputTokens": 1321
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.98,
+          "latencyMs": 282,
+          "inputTokens": 1498
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T5:1797",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-curse-turn",
+        "kd-long-fight",
+        "kd-overwhelm",
+        "setup-free-turn",
+        "hp-trade-boss"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.65,
+          "latencyMs": 272,
+          "inputTokens": 1562
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.61,
+          "latencyMs": 289,
+          "inputTokens": 1328
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.94,
+          "latencyMs": 241,
+          "inputTokens": 1505
+        }
+      }
+    },
+    {
+      "id": "undefined:F11:T1:0",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 13,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 13,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.51,
+          "latencyMs": 232,
+          "inputTokens": 1392
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.12,
+          "latencyMs": 347,
+          "inputTokens": 1434
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.27,
+          "latencyMs": 268,
+          "inputTokens": 1507
+        }
+      }
+    },
+    {
+      "id": "undefined:F25:T1:42",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "entomancer-fast",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 19,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 14,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 14,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.18,
+          "latencyMs": 253,
+          "inputTokens": 1575
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.3,
+          "latencyMs": 249,
+          "inputTokens": 1573
+        },
+        "tags_hints": {
+          "choice": "plan4",
+          "confidence": 0.1,
+          "latencyMs": 271,
+          "inputTokens": 1678
+        }
+      }
+    },
+    {
+      "id": "undefined:F31:T2:124",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 38,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 28,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.17,
+          "latencyMs": 272,
+          "inputTokens": 1426
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 776,
+          "inputTokens": 1221
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.21,
+          "latencyMs": 306,
+          "inputTokens": 1294
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T3:144",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "crab-level",
+        "crab-charge",
+        "crab-scaling",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 44,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 32,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.16,
+          "latencyMs": 269,
+          "inputTokens": 1704
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.07,
+          "latencyMs": 237,
+          "inputTokens": 1433
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.4,
+          "latencyMs": 228,
+          "inputTokens": 1603
+        }
+      }
+    },
+    {
+      "id": "undefined:F14:T2:184",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.1,
+          "latencyMs": 246,
+          "inputTokens": 1335
+        },
+        "tags": {
+          "choice": "p2",
+          "confidence": 0.05,
+          "latencyMs": 277,
+          "inputTokens": 1179
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.08,
+          "latencyMs": 242,
+          "inputTokens": 1281
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T3:204",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 7,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 7,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan3",
+          "confidence": 0.34,
+          "latencyMs": 360,
+          "inputTokens": 1510
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.28,
+          "latencyMs": 236,
+          "inputTokens": 1419
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.26,
+          "latencyMs": 263,
+          "inputTokens": 1526
+        }
+      }
+    },
+    {
+      "id": "undefined:F28:T3:233",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 17,
+          "damage": 18,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 8,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.71,
+          "latencyMs": 271,
+          "inputTokens": 1650
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.64,
+          "latencyMs": 295,
+          "inputTokens": 1536
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.57,
+          "latencyMs": 334,
+          "inputTokens": 1609
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T2:267",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-long-fight",
+        "kd-overwhelm",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 17,
+          "damage": 18,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.71,
+          "latencyMs": 251,
+          "inputTokens": 1463
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.56,
+          "latencyMs": 275,
+          "inputTokens": 1200
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.78,
+          "latencyMs": 302,
+          "inputTokens": 1375
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T6:286",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-long-fight",
+        "kd-overwhelm",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 20,
+          "damage": 13,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 12,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 20,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.19,
+          "latencyMs": 407,
+          "inputTokens": 1642
+        },
+        "tags": {
+          "choice": "p0",
+          "confidence": 0.31,
+          "latencyMs": 266,
+          "inputTokens": 1435
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.42,
+          "latencyMs": 309,
+          "inputTokens": 1610
+        }
+      }
+    },
+    {
+      "id": "undefined:F12:T5:349",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 23,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "p0",
+          "confidence": 0.24,
+          "latencyMs": 319,
+          "inputTokens": 1015
+        },
+        "tags": {
+          "choice": "p0",
+          "confidence": 0.28,
+          "latencyMs": 244,
+          "inputTokens": 924
+        },
+        "tags_hints": {
+          "choice": "p0",
+          "confidence": 0.09,
+          "latencyMs": 351,
+          "inputTokens": 997
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T5:371",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "matriarch-siphon",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 9,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.22,
+          "latencyMs": 229,
+          "inputTokens": 1113
+        },
+        "tags": {
+          "choice": "p0",
+          "confidence": 0.07,
+          "latencyMs": 258,
+          "inputTokens": 957
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.63,
+          "latencyMs": 260,
+          "inputTokens": 1096
+        }
+      }
+    },
+    {
+      "id": "undefined:F27:T5:419",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "entomancer-fast",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 19,
+          "damage": 23,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 11,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.37,
+          "latencyMs": 295,
+          "inputTokens": 1291
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.3,
+          "latencyMs": 253,
+          "inputTokens": 1121
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.33,
+          "latencyMs": 238,
+          "inputTokens": 1226
+        }
+      }
+    },
+    {
+      "id": "undefined:F15:T3:465",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 18,
+          "damage": 20,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 11,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 24,
+          "damage": 20,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 17,
+          "damage": 18,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.58,
+          "latencyMs": 244,
+          "inputTokens": 1345
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.5,
+          "latencyMs": 243,
+          "inputTokens": 1413
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.71,
+          "latencyMs": 411,
+          "inputTokens": 1486
+        }
+      }
+    },
+    {
+      "id": "undefined:F11:T1:523",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 8,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 14,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.33,
+          "latencyMs": 305,
+          "inputTokens": 1329
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.32,
+          "latencyMs": 280,
+          "inputTokens": 1183
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.72,
+          "latencyMs": 235,
+          "inputTokens": 1256
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T3:548",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "fysh-beckon",
+        "fysh-draw-energy",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 6,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.65,
+          "latencyMs": 308,
+          "inputTokens": 1409
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.44,
+          "latencyMs": 286,
+          "inputTokens": 1303
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.51,
+          "latencyMs": 243,
+          "inputTokens": 1473
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T8:568",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "fysh-beckon",
+        "fysh-draw-energy",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.01,
+          "latencyMs": 223,
+          "inputTokens": 1125
+        },
+        "tags": {
+          "choice": "p1",
+          "confidence": 0.07,
+          "latencyMs": 260,
+          "inputTokens": 902
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.39,
+          "latencyMs": 277,
+          "inputTokens": 1072
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T2:597",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "sandpit-zero",
+        "sandpit-no-race",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 68,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 68,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.72,
+          "latencyMs": 281,
+          "inputTokens": 1649
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.77,
+          "latencyMs": 289,
+          "inputTokens": 1268
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.73,
+          "latencyMs": 230,
+          "inputTokens": 1446
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T1:665",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "fysh-beckon",
+        "fysh-draw-energy",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 43,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 29,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.33,
+          "latencyMs": 259,
+          "inputTokens": 1311
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.23,
+          "latencyMs": 250,
+          "inputTokens": 1226
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.18,
+          "latencyMs": 255,
+          "inputTokens": 1391
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T5:684",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "fysh-beckon",
+        "fysh-draw-energy",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 1,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.28,
+          "latencyMs": 256,
+          "inputTokens": 1269
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.2,
+          "latencyMs": 243,
+          "inputTokens": 1180
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.31,
+          "latencyMs": 301,
+          "inputTokens": 1350
+        }
+      }
+    },
+    {
+      "id": "undefined:F28:T6:711",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 65,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 49,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.74,
+          "latencyMs": 249,
+          "inputTokens": 1534
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.26,
+          "latencyMs": 335,
+          "inputTokens": 1379
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.37,
+          "latencyMs": 296,
+          "inputTokens": 1452
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T4:748",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "sandpit-zero",
+        "sandpit-no-race",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 41,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 21,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.49,
+          "latencyMs": 230,
+          "inputTokens": 1419
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.33,
+          "latencyMs": 294,
+          "inputTokens": 1227
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.37,
+          "latencyMs": 266,
+          "inputTokens": 1400
+        }
+      }
+    },
+    {
+      "id": "undefined:F42:T2:787",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "mecha-knight-t4",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 7,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 18,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 13,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.37,
+          "latencyMs": 345,
+          "inputTokens": 1666
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.31,
+          "latencyMs": 272,
+          "inputTokens": 1495
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.47,
+          "latencyMs": 248,
+          "inputTokens": 1597
+        }
+      }
+    },
+    {
+      "id": "undefined:F14:T2:852",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 15,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.66,
+          "latencyMs": 249,
+          "inputTokens": 1093
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.48,
+          "latencyMs": 299,
+          "inputTokens": 990
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.46,
+          "latencyMs": 268,
+          "inputTokens": 1063
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T5:872",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "matriarch-siphon",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.29,
+          "latencyMs": 259,
+          "inputTokens": 1097
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.32,
+          "latencyMs": 299,
+          "inputTokens": 957
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.23,
+          "latencyMs": 315,
+          "inputTokens": 1125
+        }
+      }
+    },
+    {
+      "id": "undefined:F8:T3:906",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 19,
+          "damage": 27,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 18,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 9,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.16,
+          "latencyMs": 219,
+          "inputTokens": 1184
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.11,
+          "latencyMs": 324,
+          "inputTokens": 1160
+        },
+        "tags_hints": {
+          "choice": "plan3",
+          "confidence": 0.13,
+          "latencyMs": 254,
+          "inputTokens": 1233
+        }
+      }
+    },
+    {
+      "id": "undefined:F27:T1:935",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "decimillipede-segments",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 9,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.67,
+          "latencyMs": 267,
+          "inputTokens": 1474
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.54,
+          "latencyMs": 284,
+          "inputTokens": 1206
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.23,
+          "latencyMs": 267,
+          "inputTokens": 1309
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T3:960",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-long-fight",
+        "kd-overwhelm",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 22,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.18,
+          "latencyMs": 246,
+          "inputTokens": 1446
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.42,
+          "latencyMs": 260,
+          "inputTokens": 1212
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.45,
+          "latencyMs": 272,
+          "inputTokens": 1387
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T8:980",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-long-fight",
+        "kd-overwhelm",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.16,
+          "latencyMs": 238,
+          "inputTokens": 1533
+        },
+        "tags": {
+          "choice": "plan3",
+          "confidence": 0.06,
+          "latencyMs": 285,
+          "inputTokens": 1352
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.3,
+          "latencyMs": 265,
+          "inputTokens": 1527
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T4:1029",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "matriarch-siphon",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 8,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 299,
+          "inputTokens": 1324
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.06,
+          "latencyMs": 543,
+          "inputTokens": 1224
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.45,
+          "latencyMs": 285,
+          "inputTokens": 1363
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T9:1049",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "matriarch-siphon",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 24,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 13,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.54,
+          "latencyMs": 275,
+          "inputTokens": 1245
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.42,
+          "latencyMs": 263,
+          "inputTokens": 1145
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 219,
+          "inputTokens": 1284
+        }
+      }
+    },
+    {
+      "id": "undefined:F14:T1:1079",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 25,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 35,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 15,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.26,
+          "latencyMs": 271,
+          "inputTokens": 1350
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.35,
+          "latencyMs": 251,
+          "inputTokens": 1353
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.17,
+          "latencyMs": 251,
+          "inputTokens": 1426
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T4:1105",
+      "label": "combat/plan-choice",
+      "fight": "boss",
+      "hints": [
+        "fysh-beckon",
+        "fysh-draw-energy",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.14,
+          "latencyMs": 297,
+          "inputTokens": 1150
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.26,
+          "latencyMs": 307,
+          "inputTokens": 967
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.56,
+          "latencyMs": 243,
+          "inputTokens": 1132
+        }
+      }
+    },
+    {
+      "id": "undefined:F12:T2:1144",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.41,
+          "latencyMs": 239,
+          "inputTokens": 1233
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.42,
+          "latencyMs": 278,
+          "inputTokens": 1132
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.3,
+          "latencyMs": 252,
+          "inputTokens": 1205
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T2:1170",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "vantom-dismember",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 1,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 12,
+          "damage": 2,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.34,
+          "latencyMs": 274,
+          "inputTokens": 1429
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.17,
+          "latencyMs": 245,
+          "inputTokens": 1332
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.38,
+          "latencyMs": 276,
+          "inputTokens": 1482
+        }
+      }
+    },
+    {
+      "id": "undefined:F28:T2:1193",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 20,
+          "damage": 30,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 19,
+          "damage": 28,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 15,
+          "damage": 22,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 15,
+          "damage": 10,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.56,
+          "latencyMs": 269,
+          "inputTokens": 1957
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.44,
+          "latencyMs": 283,
+          "inputTokens": 1888
+        },
+        "tags_hints": {
+          "choice": "plan3",
+          "confidence": 0.2,
+          "latencyMs": 374,
+          "inputTokens": 1961
+        }
+      }
+    },
+    {
+      "id": "undefined:F30:T4:1213",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [
+        "obscura-summoner"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 43,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 25,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 25,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 37,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.33,
+          "latencyMs": 229,
+          "inputTokens": 1928
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.15,
+          "latencyMs": 271,
+          "inputTokens": 1907
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.19,
+          "latencyMs": 337,
+          "inputTokens": 1944
+        }
+      }
+    },
+    {
+      "id": "undefined:F14:T2:1261",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 9,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 9,
+          "damage": 10,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.22,
+          "latencyMs": 271,
+          "inputTokens": 1311
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.36,
+          "latencyMs": 353,
+          "inputTokens": 1210
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.72,
+          "latencyMs": 224,
+          "inputTokens": 1283
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T3:1287",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "giant-eruption",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 11,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 5,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.19,
+          "latencyMs": 337,
+          "inputTokens": 1358
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.22,
+          "latencyMs": 250,
+          "inputTokens": 1190
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.44,
+          "latencyMs": 245,
+          "inputTokens": 1333
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T7:1306",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "giant-eruption",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.08,
+          "latencyMs": 230,
+          "inputTokens": 1234
+        },
+        "tags": {
+          "choice": "p0",
+          "confidence": 0.15,
+          "latencyMs": 231,
+          "inputTokens": 1011
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.34,
+          "latencyMs": 257,
+          "inputTokens": 1154
+        }
+      }
+    },
+    {
+      "id": "undefined:F31:T1:1354",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 15,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 15,
+          "damage": 7,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 15,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.52,
+          "latencyMs": 268,
+          "inputTokens": 1557
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.45,
+          "latencyMs": 268,
+          "inputTokens": 1466
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.18,
+          "latencyMs": 222,
+          "inputTokens": 1539
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T4:1374",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "sandpit-zero",
+        "sandpit-no-race",
+        "setup-free-turn",
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.15,
+          "latencyMs": 269,
+          "inputTokens": 1448
+        },
+        "tags": {
+          "choice": "p1",
+          "confidence": 0.07,
+          "latencyMs": 242,
+          "inputTokens": 1225
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.19,
+          "latencyMs": 294,
+          "inputTokens": 1398
+        }
+      }
+    },
+    {
+      "id": "undefined:F48:T1:1415",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.42,
+          "latencyMs": 227,
+          "inputTokens": 1511
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.13,
+          "latencyMs": 249,
+          "inputTokens": 1372
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.73,
+          "latencyMs": 245,
+          "inputTokens": 1479
+        }
+      }
+    },
+    {
+      "id": "undefined:F48:T4:1434",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 43,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 14,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.52,
+          "latencyMs": 332,
+          "inputTokens": 1805
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.39,
+          "latencyMs": 225,
+          "inputTokens": 1723
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.36,
+          "latencyMs": 241,
+          "inputTokens": 1830
+        }
+      }
+    },
+    {
+      "id": "undefined:F14:T1:1466",
+      "label": "combat/plan-choice+potion",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 15,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "p0",
+          "confidence": 0.29,
+          "latencyMs": 293,
+          "inputTokens": 1318
+        },
+        "tags": {
+          "choice": "p0",
+          "confidence": 0.54,
+          "latencyMs": 238,
+          "inputTokens": 1144
+        },
+        "tags_hints": {
+          "choice": "p0",
+          "confidence": 0.31,
+          "latencyMs": 267,
+          "inputTokens": 1217
+        }
+      }
+    },
+    {
+      "id": "undefined:F11:T4:1522",
+      "label": "combat/plan-choice",
+      "fight": "elite",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 23,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 24,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 5,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 11,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.4,
+          "latencyMs": 247,
+          "inputTokens": 1301
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.36,
+          "latencyMs": 268,
+          "inputTokens": 1403
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.26,
+          "latencyMs": 246,
+          "inputTokens": 1476
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T5:1548",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "giant-eruption",
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.43,
+          "latencyMs": 250,
+          "inputTokens": 1246
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.55,
+          "latencyMs": 331,
+          "inputTokens": 1186
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.29,
+          "latencyMs": 270,
+          "inputTokens": 1329
+        }
+      }
+    },
+    {
+      "id": "undefined:F17:T1:1640",
+      "label": "combat/plan-choice",
+      "fight": "boss",
+      "hints": [
+        "hp-trade-boss",
+        "vulnerable-trade",
+        "potion-big-turn"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 6,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 10,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan3",
+          "confidence": 0.3,
+          "latencyMs": 225,
+          "inputTokens": 1575
+        },
+        "tags": {
+          "choice": "plan3",
+          "confidence": 0.09,
+          "latencyMs": 273,
+          "inputTokens": 1599
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.06,
+          "latencyMs": 260,
+          "inputTokens": 1706
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T1:1779",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-curse-turn",
+        "kd-long-fight",
+        "kd-overwhelm",
+        "setup-free-turn",
+        "hp-trade-boss"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "p0",
+          "confidence": 0.21,
+          "latencyMs": 270,
+          "inputTokens": 1546
+        },
+        "tags": {
+          "choice": "p0",
+          "confidence": 0.25,
+          "latencyMs": 301,
+          "inputTokens": 1299
+        },
+        "tags_hints": {
+          "choice": "p1",
+          "confidence": 0.14,
+          "latencyMs": 229,
+          "inputTokens": 1476
+        }
+      }
+    },
+    {
+      "id": "undefined:F33:T5:1800",
+      "label": "combat/plan-choice+potion",
+      "fight": "boss",
+      "hints": [
+        "kd-curse-turn",
+        "kd-long-fight",
+        "kd-overwhelm",
+        "setup-free-turn",
+        "hp-trade-boss"
+      ],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.18,
+          "latencyMs": 298,
+          "inputTokens": 1458
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.11,
+          "latencyMs": 268,
+          "inputTokens": 1211
+        },
+        "tags_hints": {
+          "choice": "p2",
+          "confidence": 0.16,
+          "latencyMs": 316,
+          "inputTokens": 1388
+        }
+      }
+    },
+    {
+      "id": "undefined:F12:T2:13",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 14,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 23,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.31,
+          "latencyMs": 293,
+          "inputTokens": 1116
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.2,
+          "latencyMs": 231,
+          "inputTokens": 955
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.08,
+          "latencyMs": 220,
+          "inputTokens": 955
+        }
+      }
+    },
+    {
+      "id": "undefined:F28:T2:45",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 16,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.31,
+          "latencyMs": 273,
+          "inputTokens": 1364
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.22,
+          "latencyMs": 220,
+          "inputTokens": 1132
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.16,
+          "latencyMs": 268,
+          "inputTokens": 1132
+        }
+      }
+    },
+    {
+      "id": "undefined:F19:T1:78",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 31,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 41,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.66,
+          "latencyMs": 226,
+          "inputTokens": 1383
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.46,
+          "latencyMs": 223,
+          "inputTokens": 1194
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.42,
+          "latencyMs": 242,
+          "inputTokens": 1194
+        }
+      }
+    },
+    {
+      "id": "undefined:F23:T3:99",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 19,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 25,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.11,
+          "latencyMs": 240,
+          "inputTokens": 1397
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.02,
+          "latencyMs": 249,
+          "inputTokens": 1202
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.15,
+          "latencyMs": 267,
+          "inputTokens": 1202
+        }
+      }
+    },
+    {
+      "id": "undefined:F3:T1:157",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.1,
+          "latencyMs": 251,
+          "inputTokens": 897
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.13,
+          "latencyMs": 235,
+          "inputTokens": 837
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.1,
+          "latencyMs": 249,
+          "inputTokens": 837
+        }
+      }
+    },
+    {
+      "id": "undefined:F22:T3:223",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 5,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.27,
+          "latencyMs": 385,
+          "inputTokens": 1317
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.39,
+          "latencyMs": 382,
+          "inputTokens": 1101
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.43,
+          "latencyMs": 313,
+          "inputTokens": 1101
+        }
+      }
+    },
+    {
+      "id": "undefined:F3:T1:303",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 8,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.14,
+          "latencyMs": 388,
+          "inputTokens": 1011
+        },
+        "tags": {
+          "choice": "plan3",
+          "confidence": 0.08,
+          "latencyMs": 333,
+          "inputTokens": 1018
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.09,
+          "latencyMs": 373,
+          "inputTokens": 1018
+        }
+      }
+    },
+    {
+      "id": "undefined:F3:T1:324",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.11,
+          "latencyMs": 252,
+          "inputTokens": 936
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.14,
+          "latencyMs": 371,
+          "inputTokens": 885
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.27,
+          "latencyMs": 270,
+          "inputTokens": 885
+        }
+      }
+    },
+    {
+      "id": "undefined:F20:T2:384",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 9,
+          "damage": 13,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 11,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.75,
+          "latencyMs": 225,
+          "inputTokens": 1484
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.62,
+          "latencyMs": 310,
+          "inputTokens": 1530
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.65,
+          "latencyMs": 231,
+          "inputTokens": 1530
+        }
+      }
+    },
+    {
+      "id": "undefined:F23:T3:405",
+      "label": "combat/plan-choice+potion",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 19,
+          "damage": 14,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 10,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p1",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p2",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.52,
+          "latencyMs": 266,
+          "inputTokens": 1644
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.2,
+          "latencyMs": 216,
+          "inputTokens": 1514
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.24,
+          "latencyMs": 270,
+          "inputTokens": 1514
+        }
+      }
+    },
+    {
+      "id": "undefined:F12:T3:458",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 7,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.3,
+          "latencyMs": 268,
+          "inputTokens": 1063
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.36,
+          "latencyMs": 228,
+          "inputTokens": 982
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.35,
+          "latencyMs": 260,
+          "inputTokens": 982
+        }
+      }
+    },
+    {
+      "id": "undefined:F23:T4:489",
+      "label": "combat/plan-choice+potion",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 16,
+          "damage": 43,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.67,
+          "latencyMs": 275,
+          "inputTokens": 1367
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.66,
+          "latencyMs": 234,
+          "inputTokens": 1146
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.61,
+          "latencyMs": 224,
+          "inputTokens": 1146
+        }
+      }
+    },
+    {
+      "id": "undefined:F8:T3:520",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 18,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 26,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0,
+          "latencyMs": 248,
+          "inputTokens": 1049
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.22,
+          "latencyMs": 242,
+          "inputTokens": 939
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 241,
+          "inputTokens": 939
+        }
+      }
+    },
+    {
+      "id": "undefined:F39:T3:618",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 8,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": true
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.46,
+          "latencyMs": 251,
+          "inputTokens": 1557
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.38,
+          "latencyMs": 320,
+          "inputTokens": 1165
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.37,
+          "latencyMs": 228,
+          "inputTokens": 1165
+        }
+      }
+    },
+    {
+      "id": "undefined:F5:T2:640",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 13,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 4,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.6,
+          "latencyMs": 254,
+          "inputTokens": 1134
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.41,
+          "latencyMs": 338,
+          "inputTokens": 1151
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.43,
+          "latencyMs": 246,
+          "inputTokens": 1151
+        }
+      }
+    },
+    {
+      "id": "undefined:F19:T2:695",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 39,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 41,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 15,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.72,
+          "latencyMs": 260,
+          "inputTokens": 1541
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.83,
+          "latencyMs": 310,
+          "inputTokens": 1503
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.82,
+          "latencyMs": 228,
+          "inputTokens": 1503
+        }
+      }
+    },
+    {
+      "id": "undefined:F31:T2:729",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 18,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.37,
+          "latencyMs": 259,
+          "inputTokens": 1383
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.24,
+          "latencyMs": 261,
+          "inputTokens": 1258
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.3,
+          "latencyMs": 257,
+          "inputTokens": 1258
+        }
+      }
+    },
+    {
+      "id": "undefined:F37:T4:777",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 48,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 34,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.2,
+          "latencyMs": 236,
+          "inputTokens": 1455
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.1,
+          "latencyMs": 349,
+          "inputTokens": 1287
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.2,
+          "latencyMs": 260,
+          "inputTokens": 1287
+        }
+      }
+    },
+    {
+      "id": "undefined:F4:T1:823",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 13,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 4,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.05,
+          "latencyMs": 313,
+          "inputTokens": 1130
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.05,
+          "latencyMs": 267,
+          "inputTokens": 1145
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.21,
+          "latencyMs": 220,
+          "inputTokens": 1145
+        }
+      }
+    },
+    {
+      "id": "undefined:F13:T1:845",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 17,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 23,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 17,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan4",
+          "confidence": 0.19,
+          "latencyMs": 426,
+          "inputTokens": 1239
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.2,
+          "latencyMs": 322,
+          "inputTokens": 1345
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.26,
+          "latencyMs": 221,
+          "inputTokens": 1345
+        }
+      }
+    },
+    {
+      "id": "undefined:F20:T1:924",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.64,
+          "latencyMs": 219,
+          "inputTokens": 1191
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.77,
+          "latencyMs": 231,
+          "inputTokens": 949
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.79,
+          "latencyMs": 232,
+          "inputTokens": 949
+        }
+      }
+    },
+    {
+      "id": "undefined:F5:T1:1000",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 2,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan3",
+          "confidence": 0.71,
+          "latencyMs": 240,
+          "inputTokens": 1200
+        },
+        "tags": {
+          "choice": "plan3",
+          "confidence": 0.3,
+          "latencyMs": 255,
+          "inputTokens": 1206
+        },
+        "tags_hints": {
+          "choice": "plan3",
+          "confidence": 0.28,
+          "latencyMs": 225,
+          "inputTokens": 1206
+        }
+      }
+    },
+    {
+      "id": "undefined:F2:T2:1055",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 18,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.31,
+          "latencyMs": 289,
+          "inputTokens": 931
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.51,
+          "latencyMs": 241,
+          "inputTokens": 898
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.46,
+          "latencyMs": 246,
+          "inputTokens": 898
+        }
+      }
+    },
+    {
+      "id": "undefined:F5:T2:1119",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 8,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 6,
+          "damage": 17,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.11,
+          "latencyMs": 266,
+          "inputTokens": 1079
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.19,
+          "latencyMs": 224,
+          "inputTokens": 1070
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.16,
+          "latencyMs": 241,
+          "inputTokens": 1070
+        }
+      }
+    },
+    {
+      "id": "undefined:F31:T2:1216",
+      "label": "combat/plan-choice+potion",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 18,
+          "damage": 56,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 54,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 40,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 18,
+          "damage": 62,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.35,
+          "latencyMs": 222,
+          "inputTokens": 2074
+        },
+        "tags": {
+          "choice": "plan3",
+          "confidence": 0.35,
+          "latencyMs": 285,
+          "inputTokens": 2106
+        },
+        "tags_hints": {
+          "choice": "plan3",
+          "confidence": 0.3,
+          "latencyMs": 244,
+          "inputTokens": 2106
+        }
+      }
+    },
+    {
+      "id": "undefined:F7:T2:1246",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 9,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 15,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.35,
+          "latencyMs": 233,
+          "inputTokens": 1114
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.15,
+          "latencyMs": 280,
+          "inputTokens": 1074
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.21,
+          "latencyMs": 243,
+          "inputTokens": 1074
+        }
+      }
+    },
+    {
+      "id": "undefined:F23:T1:1323",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 6,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 26,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.65,
+          "latencyMs": 275,
+          "inputTokens": 1397
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.65,
+          "latencyMs": 290,
+          "inputTokens": 1228
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.64,
+          "latencyMs": 315,
+          "inputTokens": 1228
+        }
+      }
+    },
+    {
+      "id": "undefined:F38:T1:1384",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 36,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 12,
+          "damage": 36,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 221,
+          "inputTokens": 1398
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.02,
+          "latencyMs": 256,
+          "inputTokens": 1310
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.17,
+          "latencyMs": 229,
+          "inputTokens": 1310
+        }
+      }
+    },
+    {
+      "id": "undefined:F3:T2:1448",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 4,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.37,
+          "latencyMs": 264,
+          "inputTokens": 922
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.52,
+          "latencyMs": 246,
+          "inputTokens": 879
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.56,
+          "latencyMs": 621,
+          "inputTokens": 879
+        }
+      }
+    },
+    {
+      "id": "undefined:F3:T4:1493",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 16,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.1,
+          "latencyMs": 624,
+          "inputTokens": 1295
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.28,
+          "latencyMs": 238,
+          "inputTokens": 1326
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.34,
+          "latencyMs": 262,
+          "inputTokens": 1326
+        }
+      }
+    },
+    {
+      "id": "undefined:F13:T2:1526",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 11,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 5,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.11,
+          "latencyMs": 254,
+          "inputTokens": 1107
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 241,
+          "inputTokens": 1027
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 474,
+          "inputTokens": 1027
+        }
+      }
+    },
+    {
+      "id": "undefined:F21:T6:1570",
+      "label": "combat/plan-choice+potion",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 15,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.67,
+          "latencyMs": 237,
+          "inputTokens": 1162
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.48,
+          "latencyMs": 220,
+          "inputTokens": 1040
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.53,
+          "latencyMs": 279,
+          "inputTokens": 1040
+        }
+      }
+    },
+    {
+      "id": "undefined:F6:T2:1592",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 3,
+          "damage": 3,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 7,
+          "damage": 10,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 18,
+          "damage": 14,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.54,
+          "latencyMs": 230,
+          "inputTokens": 1203
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.51,
+          "latencyMs": 271,
+          "inputTokens": 1237
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.55,
+          "latencyMs": 265,
+          "inputTokens": 1237
+        }
+      }
+    },
+    {
+      "id": "undefined:F7:T3:1620",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 30,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 21,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.55,
+          "latencyMs": 316,
+          "inputTokens": 1090
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.62,
+          "latencyMs": 347,
+          "inputTokens": 1081
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.64,
+          "latencyMs": 220,
+          "inputTokens": 1081
+        }
+      }
+    },
+    {
+      "id": "undefined:F21:T3:1658",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 8,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.26,
+          "latencyMs": 230,
+          "inputTokens": 1241
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.17,
+          "latencyMs": 228,
+          "inputTokens": 1070
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.13,
+          "latencyMs": 236,
+          "inputTokens": 1070
+        }
+      }
+    },
+    {
+      "id": "undefined:F23:T4:1679",
+      "label": "combat/plan-choice+potion",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 24,
+          "damage": 22,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 23,
+          "damage": 26,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 24,
+          "damage": 30,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 22,
+          "damage": 9,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "p0",
+          "isPlan": false,
+          "hpLost": null,
+          "damage": null,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan3",
+          "confidence": 0.24,
+          "latencyMs": 314,
+          "inputTokens": 1640
+        },
+        "tags": {
+          "choice": "plan2",
+          "confidence": 0.16,
+          "latencyMs": 262,
+          "inputTokens": 1646
+        },
+        "tags_hints": {
+          "choice": "plan2",
+          "confidence": 0.15,
+          "latencyMs": 240,
+          "inputTokens": 1646
+        }
+      }
+    },
+    {
+      "id": "undefined:F5:T2:1703",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 1,
+          "damage": 0,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 9,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.28,
+          "latencyMs": 233,
+          "inputTokens": 1042
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.26,
+          "latencyMs": 267,
+          "inputTokens": 1087
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.29,
+          "latencyMs": 265,
+          "inputTokens": 1087
+        }
+      }
+    },
+    {
+      "id": "undefined:F7:T1:1724",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 24,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 12,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 12,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 0,
+          "damage": 0,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.39,
+          "latencyMs": 267,
+          "inputTokens": 1229
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.32,
+          "latencyMs": 243,
+          "inputTokens": 1321
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.36,
+          "latencyMs": 289,
+          "inputTokens": 1321
+        }
+      }
+    },
+    {
+      "id": "undefined:F21:T1:1748",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 13,
+          "damage": 30,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 18,
+          "damage": 40,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 4,
+          "damage": 20,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan4",
+          "confidence": 0.55,
+          "latencyMs": 336,
+          "inputTokens": 1392
+        },
+        "tags": {
+          "choice": "plan4",
+          "confidence": 0.38,
+          "latencyMs": 268,
+          "inputTokens": 1433
+        },
+        "tags_hints": {
+          "choice": "plan4",
+          "confidence": 0.39,
+          "latencyMs": 227,
+          "inputTokens": 1433
+        }
+      }
+    },
+    {
+      "id": "undefined:F38:T2:1807",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 14,
+          "damage": 59,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 59,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 11,
+          "damage": 39,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan4",
+          "isPlan": true,
+          "hpLost": 8,
+          "damage": 39,
+          "wins": false,
+          "lasting": false,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan2",
+          "confidence": 0.32,
+          "latencyMs": 300,
+          "inputTokens": 1851
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.25,
+          "latencyMs": 250,
+          "inputTokens": 1737
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.28,
+          "latencyMs": 285,
+          "inputTokens": 1737
+        }
+      }
+    },
+    {
+      "id": "undefined:F45:T1:1829",
+      "label": "combat/plan-choice",
+      "fight": "monster",
+      "hints": [],
+      "options": [
+        {
+          "key": "plan1",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 40,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan2",
+          "isPlan": true,
+          "hpLost": 5,
+          "damage": 14,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        },
+        {
+          "key": "plan3",
+          "isPlan": true,
+          "hpLost": 10,
+          "damage": 15,
+          "wins": false,
+          "lasting": true,
+          "setupTurn": false
+        }
+      ],
+      "picks": {
+        "baseline": {
+          "choice": "plan1",
+          "confidence": 0.63,
+          "latencyMs": 311,
+          "inputTokens": 1656
+        },
+        "tags": {
+          "choice": "plan1",
+          "confidence": 0.5,
+          "latencyMs": 227,
+          "inputTokens": 1495
+        },
+        "tags_hints": {
+          "choice": "plan1",
+          "confidence": 0.52,
+          "latencyMs": 261,
+          "inputTokens": 1495
+        }
+      }
+    }
+  ]
+}

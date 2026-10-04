@@ -1,0 +1,122 @@
+## 复盘：run THMGB35RGDSD — 阵亡，最高第 33 层
+
+- 决策 437 个；Jev 调用 42 次，Claude 0 次，DeepSeek 37 次；token 116,061 入 / 3,412 出，约 $0.0050；用时 28.1 分钟
+- 决策者：code 299，deepseek 37，jev-plan 37，jev 36，deepseek-plan 22，code-fallback 6
+
+### 战斗掉血（按层）
+- 第 2 层 毛绒伏地虫: HP 64→64（-0），决策 jev 1
+- 第 2 层 毛绒伏地虫: HP 63→52（-11），决策 code 8，jev 1，jev-plan 1
+- 第 3 层 树叶史莱姆（中）/树叶史莱姆（小）/树枝史莱姆（小）: HP 58→58（-0），决策 code 4，code-fallback 1
+- 第 3 层 树叶史莱姆（中）: HP 57→57（-0），决策 code 3
+- 第 5 层 小啃兽: HP 63→60（-3），决策 jev-plan 3，code 3，jev 2，code-fallback 1
+- 第 5 层 小啃兽: HP 59→50（-9），决策 code 4，jev-plan 2，jev 1
+- 第 7 层 方柱构装体: HP 56→56（-0），决策 jev 2，jev-plan 2，code 1
+- 第 7 层 方柱构装体: HP 55→51（-4），决策 code 4，jev 1，jev-plan 1
+- 第 8 层 旧日雕像: HP 57→57（-0），决策 jev-plan 3，code 2，jev 1
+- 第 8 层 旧日雕像: HP 56→35（-21），决策 code 7，jev-plan 4，jev 1
+- 第 12 层 异蛙寄生虫: HP 80→80（-0），决策 code 4，jev 1，jev-plan 1
+- 第 12 层 异蛙寄生虫/扭动虫: HP 79→59（-20），决策 code 6，deepseek 5，deepseek-plan 5
+- 第 14 层 蛮兽: HP 65→65（-0），决策 jev 1
+- 第 14 层 蛮兽: HP 64→57（-7），决策 code 6，jev-plan 2，code-fallback 1，jev 1
+- 第 17 层 墨影幻灵: HP 80→80（-0），决策 deepseek 1，deepseek-plan 1
+- 第 17 层 墨影幻灵: HP 79→76（-3），决策 deepseek 4，code 4，jev-plan 2，jev 1，deepseek-plan 1
+- 第 17 层 墨影幻灵: HP 76→76（-0），决策 code 2，jev 1，jev-plan 1
+- 第 17 层 墨影幻灵: HP 75→53（-22），决策 code 10，deepseek 1，jev 1
+- 第 19 层 地道虫: HP 75→65（-10），决策 code 4，jev 3，code-fallback 1
+- 第 19 层 地道虫: HP 64→63（-1），决策 code 5
+- 第 22 层 偷窃草蜢: HP 69→55（-14），决策 code 8
+- 第 24 层 蜂群术士: HP 61→43（-18），决策 code 12，deepseek 1，deepseek-plan 1
+- 第 24 层 蜂群术士: HP 42→41（-1），决策 code 7
+- 第 28 层 感染棱柱: HP 71→59（-12），决策 jev-plan 4，jev 3，code 1，deepseek 1，deepseek-plan 1
+- 第 28 层 感染棱柱: HP 58→31（-27），决策 deepseek 5，deepseek-plan 4，code 4
+- 第 28 层 感染棱柱: HP 30→30（-0），决策 code 2
+- 第 30 层 寄生惧魔/胧光怪: HP 60→42（-18），决策 code 8，jev-plan 7，jev 3，code-fallback 1
+- 第 31 层 啃咬机: HP 48→31（-17），决策 code 8，deepseek-plan 6，deepseek 2，code-fallback 1
+- 第 33 层 无厌沙虫: HP 61→42（-19），决策 code 14，deepseek 2，jev-plan 2，deepseek-plan 1，jev 1
+- 第 33 层 无厌沙虫: HP 41→41（-0），决策 deepseek 1
+- 第 33 层 无厌沙虫: HP 41→22（-19），决策 code 9，deepseek-plan 2，jev 2，jev-plan 2，deepseek 1
+
+### 死亡战斗：第 33 层 无厌沙虫
+- T5 [code] combat/plan: code plan (dominates the score-best line): 战斗专注, 狂乱逃离, 狂乱逃离, 狂乱逃离; hp -16, dmg 0 [calc mismatch: solver says ending now kills, mod says safe]
+- T5 [jev] combat/plan-choice: Jev chose plan 3/4 (狂乱逃离, 打击 -> 无厌沙虫, 耸肩无视) with confidence 0.57; code rank 3 [calc mismatch: solver says ending now kills, mod says safe] conf 0.57
+- T5 [jev-plan] combat/plan-continue: continuing the Jev-chosen plan: 打击 -> 无厌沙虫
+- T5 [jev-plan] combat/plan-continue: continuing the Jev-chosen plan: 耸肩无视
+- T5 [code] combat/plan: code plan (only line): end turn; hp -6, dmg 0
+- T6 [jev] combat/plan-choice: Jev chose plan 2/3 (燃烧, 狂乱逃离, 究极打击 -> 无厌沙虫) with confidence 0.77; code rank 2 [calc mismatch: solver says ending now kills, mod says safe] conf 0.77
+- T6 [code] combat/plan: code plan (+9.0 over next): 狂乱逃离, 究极打击 -> 无厌沙虫; hp -14, dmg 25 [calc mismatch: solver says ending now kills, mod says safe]
+- T6 [code] combat/plan-continue: continuing the code-chosen plan: 究极打击 -> 无厌沙虫
+- T6 [code] combat/plan: code plan (only line): end turn; hp -14, dmg 0
+- T7 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (5): 防御, 拆卸 -> 无厌沙虫
+- T7 [code] combat/plan-continue: continuing the code-chosen plan: 拆卸 -> 无厌沙虫
+- T7 [code] combat/least-loss: every simulated line dies; playing the one that keeps the most HP (12): end turn
+
+### 各类决策由谁做
+- combat/plan / code: 71
+- combat/plan-continue / code: 55
+- reward/claim / code: 40
+- combat/plan-continue / jev-plan: 37
+- map/route / code: 27
+- combat/plan-continue / deepseek-plan: 22
+- combat/plan-choice / jev: 20
+- combat/plan-choice+potion / deepseek: 18
+- reward/proceed / code: 14
+- selection/exhaust / code: 14
+- combat/lethal / code: 13
+- reward/card / code: 10
+- combat/end_turn / code: 9
+- combat/plan-choice+potion / jev: 8
+- rest/proceed / code: 7
+- combat/plan-choice / code-fallback: 6
+- combat/plan-choice / deepseek: 6
+- event/choose / deepseek: 6
+- rest/choose / code: 6
+- shop/buy / code: 6
+- event/leave / code: 5
+- map/route / jev: 5
+- selection/remove / code: 4
+- reward/card / deepseek: 3
+- shop/leave / code: 3
+- shop/open / code: 3
+- chest/open / code: 2
+- chest/proceed / code: 2
+- chest/relic / code: 2
+- combat/least-loss / code: 2
+- shop/buy / deepseek: 2
+- event/choose / jev: 1
+- rest/choose / jev: 1
+- reward/card / jev: 1
+- run/finalize / code: 1
+- selection/add / code: 1
+- selection/choose / deepseek: 1
+- selection/enchant / deepseek: 1
+- selection/take into my hand / code: 1
+- selection/upgrade / code: 1
+
+### 兜底介入（Claude/DeepSeek）：37 次（推翻 Jev 23 次）
+- [deepseek] 第 1 层 TNone event/choose: 推翻 Jev（o1 @0.37 → o2）：A rare Ironclad card (Demon Form/Offering tier) is a run-defining power spike; Injury is a manageable dead card removed 
+- [deepseek] 第 1 层 TNone selection/choose: 推翻 Jev（card2 @0.14 → card0）：烙印: 0费永久力量成长，可消耗沉重石板带来的受伤诅咒；壁垒前期太慢，地狱狂徒需保留打击且随机目标，成型要求高。
+- [deepseek] 第 6 层 TNone shop/buy: 推翻 Jev（buy_card1 @0.11 → buy_card3）：放血 is cheap (36g), 0-cost 2-energy acceleration enabling the 3-cost 彼岸咆哮 and big turns; 全身撞击 needs a block deck, 武装 is f
+- [deepseek] 第 12 层 T2 combat/plan-choice+potion: 推翻 Jev（plan2 @0.44 → plan1）：Same 11 HP lost either way; 燃烧's permanent +2 strength outweighs 7 extra damage now, scaling all later turns and the min
+- [deepseek] 第 12 层 T2 combat/plan-choice+potion: 同意 Jev（plan1 @0.48 → plan1）：Deals 20 damage, leaving parasite at 11 HP for an easy kill next turn; saves both potions for the boss.
+- [deepseek] 第 12 层 T2 combat/plan-choice+potion: 推翻 Jev（p1 @0.12 → plan1）：At 95% HP with the elite nearly dead, take 11 damage rather than burn a potion; save both for the upcoming boss.
+- [deepseek] 第 12 层 T4 combat/plan-choice+potion: 推翻 Jev（plan2 @0.24 → plan1）：Killing the strength worm and chipping the buff worm to 10 leaves one threat next turn; 59/80 HP is fine with Burning Bl
+- [deepseek] 第 12 层 T4 combat/plan-choice+potion: 推翻 Jev（p1 @0.17 → plan1）：Turn is over (0 energy); 11 HP at 70/80 is affordable. Save both potions for the upcoming act 1 boss rather than spend o
+- [deepseek] 第 14 层 T2 reward/card: 推翻 Jev（card2 @0.17 → skip）：Perfected Strike is a single big hit, wasted early on Vantom's 9 Slippery; deck already has enough attacks and stays lea
+- [deepseek] 第 15 层 TNone event/choose: 同意 Jev（o2 @0.18 → o2）：Powers are highest impact; Swift 2 makes a key power (Demon Form/Barricade/Corruption) cost 2 less, game-winning for bos
+- [deepseek] 第 15 层 TNone selection/enchant: 推翻 Jev（card0 @0.39 → card1）：Strength scales this attack-heavy deck's multi-hit and AOE cards; exhaust triggers are scarce, so upgrading/reducing Inf
+- [deepseek] 第 17 层 T1 combat/plan-choice+potion: 推翻 Jev（plan2 @0.32 → plan1）：Playing the strength power early compounds over a long 173 HP boss fight; 1 HP is trivial at full health, so save potion
+- [deepseek] 第 17 层 T1 combat/plan-choice+potion: 同意 Jev（plan2 @0.15 → plan2）：Safe turn at full HP; enemy attack fully blocked. Efficient Pommel Strike draws a card, avoids wasteful Bloodletting HP 
+- [deepseek] 第 17 层 T1 combat/plan-choice+potion: 推翻 Jev（p1 @0.17 → p2）：Ritual potion gives permanent strength scaling, ideal for long boss fight; use it early to maximize turns.
+- [deepseek] 第 17 层 T2 combat/plan-choice+potion: 推翻 Jev（plan1 @0.37 → plan2）：At 95% HP the 5 HP cost is trivial; the extra hit strips one Slippery stack so real damage lands sooner before the turn-
+- [deepseek] 第 17 层 T2 combat/plan-choice+potion: 推翻 Jev（p1 @0.09 → p0）：0-energy turn: the free attack card scales with Strength 4 + Vulnerable for real damage now, keeping the energy potion a
+- [deepseek] 第 17 层 T3 combat/plan-choice+potion: 推翻 Jev（p1 @0.08 → plan1）：At 75/80 HP we can safely tank 18; turn 4 Prepare is a free damage turn, so save the energy+draw potion to burst then wi
+- [deepseek] 第 18 层 TNone event/choose: 同意 Jev（o0 @0.34 → o0）：Permanent +4 energy on every combat's first turn is elite/boss-winning tempo; far better than one card or random melting
+- [deepseek] 第 19 层 T3 reward/card: 同意 Jev（card1 @0.37 → card1）：熔融之拳+已升级：1费14伤并把痛击++的易伤翻倍，放大拆卸与全队攻击输出；消耗还能触发无惧疼痛。牌组正缺伤害。
+- [deepseek] 第 20 层 TNone shop/buy: 同意 Jev（buy_relic1 @0.27 → buy_relic1）：Marbles gives turn-1 vulnerable to all enemies, instantly enabling Molten Fist++ doubling and Dismantle's double hit; th
+
+### Jev 低置信度（<0.35）决策：5 个
+- 第 2 层 combat/plan-choice: Jev chose plan 1/2 (烙印, 打击 -> 毛绒伏地虫, 防御) with confidence 0.28; code rank 1 (0.28)
+- 第 5 层 combat/plan-choice: Jev chose plan 1/3 (防御, 打击 -> 小啃兽, 打击 -> 小啃兽) with confidence 0.29; code rank 1 (0.29)
+- 第 7 层 combat/plan-choice: Jev chose plan 1/4 (烙印, 彼岸咆哮) with confidence 0.14; code rank 1 (0.14)
+- 第 14 层 combat/plan-choice: Jev chose plan 1/2 (打击 -> 蛮兽, 放血, 防御) with confidence 0.23; code rank 1 (0.23)
+- 第 30 层 combat/plan-choice: Jev chose plan 1/4 (燃烧, 熔融之拳+ -> 胧光怪, 剑柄打击 -> 胧光怪) with confidence 0.30; code rank 1 (0.30)

@@ -1,0 +1,156 @@
+<title>Jev 通关记录</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  :root {
+    --bg: #f6f5f3; --surface: #ffffff; --ink: #1c1f26; --muted: #5d6270; --line: #dedad4;
+    --accent: #a3263a; --accent-soft: #f5e3e5; --good: #2f7a4f; --good-soft: #e1f0e6; --warn: #a86400;
+    --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    --serif: "Noto Serif SC", "Songti SC", serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15161a; --surface: #1d1f25; --ink: #e9e7e3; --muted: #a2a6b1; --line: #33363f;
+      --accent: #e0667a; --accent-soft: #3a2027; --good: #6fc394; --good-soft: #1f3228; --warn: #e3a54a; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15161a; --surface: #1d1f25; --ink: #e9e7e3; --muted: #a2a6b1; --line: #33363f;
+    --accent: #e0667a; --accent-soft: #3a2027; --good: #6fc394; --good-soft: #1f3228; --warn: #e3a54a; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.7 var(--sans); }
+  .wrap { max-width: 800px; margin: 0 auto; padding-inline: 18px; padding-block: 28px 56px; }
+  h1 { font: 700 26px/1.3 var(--serif); margin: 0 0 6px; text-wrap: balance; }
+  h2 { font: 700 18px/1.4 var(--sans); margin: 34px 0 12px; color: var(--accent); text-wrap: balance; }
+  h3 { font-size: 15.5px; margin: 0 0 6px; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .lede { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--good); padding: 14px 16px; margin-top: 18px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 18px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); padding: 10px 12px; }
+  .stat b { display: block; font: 500 22px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--muted); font-size: 12.5px; }
+  .wins { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  .win { background: var(--surface); border: 1px solid var(--line); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .win.pending { border-style: dashed; color: var(--muted); }
+  .tag { display: inline-block; font: 500 12px/1 var(--mono); padding: 4px 7px; background: var(--good-soft); color: var(--good); letter-spacing: .03em; }
+  .tag.asc { background: var(--accent-soft); color: var(--accent); }
+  .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .bosses { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .bosses td { padding: 5px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .bosses td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; padding-left: 8px; }
+  .low { color: var(--accent); font-weight: 700; }
+  .label { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+  ul { padding-left: 1.2em; margin: 4px 0; }
+  li { margin: 4px 0; }
+  .note { color: var(--muted); font-size: 13px; }
+  .tbl { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+  table.cmp { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 480px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.cmp th { font-weight: 500; color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+  td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+</style>
+
+<div class="wrap">
+  <h1>Jev 通关记录</h1>
+  <div class="meta">铁甲战士 · 截至 2026-09-25 18:00（北京时间）· 兜底 DeepSeek（deepseek-flash 思考模式）</div>
+
+  <div class="lede"><strong>已通关 3 次：进阶 0、1、2 各一次。</strong>游戏每次通关后自动把进阶加 1，现在在打进阶 3。前两胜是连续两局；第三胜是进阶 2 的第 14 局。</div>
+
+  <div class="stats">
+    <div class="stat"><b>3</b><span>次通关</span></div>
+    <div class="stat"><b>A2</b><span>最高通关进阶</span></div>
+    <div class="stat"><b>6</b><span>局打到最终 boss</span></div>
+    <div class="stat"><b>~$0.3</b><span>每局 DeepSeek 费用</span></div>
+  </div>
+
+  <h2>两次通关</h2>
+  <div class="wins">
+    <div class="win">
+      <div class="row"><span class="tag">第 1 胜</span><span class="tag asc">进阶 0</span></div>
+      <h3>W6F4YXF3MT7A · 09:31 结束 · 43 分钟</h3>
+      <table class="bosses">
+        <tr><td>F17 墨影幻灵</td><td class="n">72/80 → 49</td></tr>
+        <tr><td>F33 帝皇蟹（碾碎爪 + 火箭钳）</td><td class="n">80/93 → <span class="low">2</span></td></tr>
+        <tr><td>F48 实验体（三阶段）</td><td class="n">109/144 → 74</td></tr>
+      </table>
+      <div><div class="label">牌组</div>30 张，7 张升级，0 张打击。燃烧+ ×2、祭品+、旋风斩 ×2、痛击+、战斗专注+</div>
+      <div><div class="label">关键时刻</div>
+        <ul>
+          <li>最终 boss 第 1 回合，DeepSeek 推翻 Jev 喝下能力药水，代码选出恶魔形态。力量 1 → 28，第 4 回合一回合打出 200，秒掉第二阶段。</li>
+          <li>帝皇蟹战，DeepSeek 让两只钳子均衡掉血；剩 2 血时代码算出斩杀，同回合打死两只，没触发蟹之怒。</li>
+          <li>构筑：DeepSeek 升级燃烧、在商店买祭品和旋风斩、拿玩具箱（5 个药水格），早早删光打击。</li>
+        </ul>
+      </div>
+      <div class="note">决策 684 个：代码 559、Jev 66、DeepSeek 53（推翻 Jev 28 次，血量护栏拦下 5 次）。DeepSeek 费用约 $0.25。</div>
+    </div>
+
+    <div class="win">
+      <div class="row"><span class="tag">第 2 胜</span><span class="tag asc">进阶 1</span></div>
+      <h3>CRRPX9MWJZGM · 10:24 结束 · 51 分钟</h3>
+      <table class="bosses">
+        <tr><td>F17 同族</td><td class="n">78/80 → 57</td></tr>
+        <tr><td>F33 知识恶魔</td><td class="n">70/87 → <span class="low">11</span></td></tr>
+        <tr><td>F48 实验体（三阶段）</td><td class="n">76/87 → <span class="low">7</span></td></tr>
+      </table>
+      <div><div class="label">牌组</div>29 张，11 张升级，只剩 1 张打击。恶魔形态+、预备打击+、烙印、御血术+、剑柄打击+ ×2</div>
+      <div><div class="label">关键时刻</div>
+        <ul>
+          <li>恶魔形态：代码在第 12 层选入，DeepSeek 第 13 层升级，三场 boss 战都打了出来，力量叠到 28 和 40。</li>
+          <li>知识恶魔战，血量护栏两次把 DeepSeek/Jev 的大换血方案（−19、−33）换成更稳的（−11、−24）；boss 剩 2 血时被回合开始的水银沙漏收掉。</li>
+          <li>最终 boss 剩 7 血时，代码判断“每条线都会死”，改打掉血最少的一条；结果预备打击把力量推到 40，战斗专注抽到剑柄打击+，当回合斩杀。</li>
+        </ul>
+      </div>
+      <div class="note">决策 692 个：代码 559、Jev 61、DeepSeek 70（推翻 Jev 34 次，血量护栏拦下 7 次）。DeepSeek 费用约 $0.33。</div>
+    </div>
+
+    <div class="win">
+      <div class="row"><span class="tag">第 3 胜</span><span class="tag asc">进阶 2</span></div>
+      <h3>4JVP9LTXYY9D · 17:43 结束 · 56 分钟</h3>
+      <table class="bosses">
+        <tr><td>F17 瀑布巨兽</td><td class="n">76/87 → 46</td></tr>
+        <tr><td>F33 无厌沙虫</td><td class="n">103/103 → 56</td></tr>
+        <tr><td>F48 女王 + 火炬头聚合体</td><td class="n">109/109 → 31</td></tr>
+      </table>
+      <div><div class="label">牌组</div>28 张，6 张升级，没有恶魔形态。狂宴+（顺带提高了约 22 点最大生命）、祭品+、燃烧、狱火、无情猛攻；遗物有钢笔尖、迷你加农炮、十字弩</div>
+      <div><div class="label">关键时刻</div>
+        <ul>
+          <li>构筑方向由 DeepSeek 定，4 次推翻 Jev：F1 开局事件拿到钢笔尖和迷你加农炮，F18 升级狂宴，F25 在商店买燃烧而不是药水，F34 拿十字弩。</li>
+          <li>女王战：DeepSeek 抢在魂缚锁链之前的两个回合打出狱火和祭品爆发；代码用癫狂之触让无情猛攻变成 0 费；最后 31 血面对 12×5 时，代码算出斩杀。</li>
+          <li>血量护栏整局触发 15 次，其中 8 次在 boss 战；沙虫战里把一条 −30 的线换成了 −21。</li>
+        </ul>
+      </div>
+      <div class="note">决策 725 个：Jev 调用 75 次，DeepSeek 68 次。这局在 DeepSeek 记忆上线之前开局，不计入记忆实验。</div>
+    </div>
+  </div>
+
+  <h2>三次通关的共同点</h2>
+  <ul>
+    <li><strong>一回合爆发</strong>：前两胜靠恶魔形态、燃烧叠永久力量；第三胜没有恶魔形态，靠钢笔尖、迷你加农炮、易伤和狱火爆发。</li>
+    <li><strong>能力牌早打</strong>：boss 战里能力牌都在前 1–4 回合打出。</li>
+    <li><strong>牌组干净</strong>：早早删掉打击，至少 2 张群体伤害牌。</li>
+    <li><strong>boss 前回血</strong>：进 boss 时血量都在 76%–97%。</li>
+    <li><strong>构筑方向都来自 DeepSeek 推翻 Jev</strong>，关键的斩杀回合都由代码算出。</li>
+    <li><strong>都是险胜</strong>：最后一场 boss 战分别剩 2、7、31 血，靠血量护栏和代码斩杀撑过来，还不稳定。</li>
+  </ul>
+
+  <h2>通关前后做对了什么</h2>
+  <div class="tbl"><table class="cmp">
+    <thead><tr><th>问题</th><th>修复前</th><th>修复后</th></tr></thead>
+    <tbody>
+      <tr><td>易伤、虚弱、背后受击重复计算</td><td>易伤时高估受伤 50%，虚弱时低估输出 25%</td><td>预测与实际一致</td></tr>
+      <tr><td>DeepSeek 拿血换伤害</td><td>反复以“燃烧之血会回血”放弃格挡</td><td>血量护栏：每场累计多掉超过 12 血后只选最省血的线</td></tr>
+      <tr><td>能力牌不打</td><td>0 费绯红披风整场留在手里</td><td>长期收益计入方案比较，代码会主动选只打能力牌的回合</td></tr>
+      <tr><td>第一幕选牌</td><td>缺群体伤害和力量成长</td><td>没有群体伤害时加分 +14，第 4 层起给力量成长加分</td></tr>
+      <tr><td>boss 机制</td><td>沙坑、蟹之怒、实验体三阶段等都没建模</td><td>三幕全部 boss 和主要精英已建模</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>接下来</h2>
+  <ul>
+    <li>游戏已经在自动爬进阶，目标进阶 10。每升一级都更难，胜率会下降，需要看进阶 2、3 的表现再调整。</li>
+    <li>仍有漏洞：绯红披风偶尔留在手里、敏捷药水带了 9 层没用、机械骑士第 4 回合的大招两次都没挡住、抽牌不足导致后期浪费大量能量。</li>
+    <li>代码独自决定的回合也要保留最低血量线：第 1 胜里帝皇蟹战从 13 血掉到 2 血那一步，是代码没问模型直接走的。</li>
+  </ul>
+  <p class="note">数据来源：jev-sts2/logs/runs.jsonl、decisions.jsonl、states.jsonl；复盘 notes/lessons.md。</p>
+</div>

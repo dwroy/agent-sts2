@@ -1,0 +1,78 @@
+{
+ "floor": 7,
+ "turn": 3,
+ "label": "combat/plan-choice",
+ "request": {
+  "state": {
+   "run_brief": {
+    "character": "铁甲战士",
+    "act": "1",
+    "floor": 7,
+    "hp": "56/86 (65%)",
+    "gold": 115,
+    "ascension": 8,
+    "deck": "13 cards | 7 attacks / 4 skills / 1 powers | 1 curses/statuses | avg cost 0.92",
+    "relics": [
+     "燃烧之血",
+     "钓鱼竿"
+    ],
+    "relic_effects": [
+     "燃烧之血: 在战斗结束时，回复6点生命。",
+     "钓鱼竿: 每?(数值未知)场普通战斗，随机升级你牌组中的一张牌。"
+    ],
+    "potions": [
+     "迅捷药水: 抽3张牌。"
+    ],
+    "notes": [],
+    "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+   },
+   "fight": "elite",
+   "situation": {
+    "turn": 3,
+    "hp": "56/86",
+    "block": 6,
+    "energy": 2,
+    "incoming_if_i_do_nothing": 3
+   },
+   "player": {
+    "hp": 56,
+    "max_hp": 86,
+    "block": 6,
+    "energy": 2,
+    "stars": 0,
+    "powers": [
+     "力量 1 (力量会增加攻击牌造成的伤害。)",
+     "敏捷 1 (敏捷会增加从卡牌中获得的格挡。)"
+    ],
+    "cards_played_this_turn": 1,
+    "attacks_played_this_turn": 0,
+    "skills_played_this_turn": 1
+   },
+   "enemies": [
+    {
+     "name": "鬼祟珊瑚群",
+     "hp": "43/80",
+     "block": 0,
+     "intents": "Attack 9, Buff ",
+     "powers": [
+      "HARDENED_SHELL_POWER 20"
+     ]
+    }
+   ],
+   "note": "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn."
+  },
+  "questions": {
+   "plan": {
+    "type": "choice",
+    "instructions": "Which plan should I play this turn?",
+    "criteria": {
+     "plan1": "{\"plays\":\"打击 -> 鬼祟珊瑚群, then 剑柄打击 -> 鬼祟珊瑚群\",\"result\":\"survives with 53/86 HP before healing\",\"hp_lost\":3,\"damage_dealt\":17,\"enemies_after\":\"鬼祟珊瑚群 26 HP\",\"cards_drawn\":1,\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 20.3, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3\",\"history_estimate\":\"further HP loss 20, win 100% (this encounter n=76; estimate from act-1 elite fights n=481, typical error ±11; few similar states for this encounter)\"}",
+     "plan2": "{\"plays\":\"剑柄打击 -> 鬼祟珊瑚群\",\"result\":\"survives with 53/86 HP before healing\",\"hp_lost\":3,\"damage_dealt\":10,\"enemies_after\":\"鬼祟珊瑚群 33 HP\",\"cards_drawn\":1,\"energy_unused\":1,\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 20.3, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3\",\"history_estimate\":\"further HP loss 20, win 100% (this encounter n=76; estimate from act-1 elite fights n=481, typical error ±11; few similar states for this encounter)\"}",
+     "plan3": "{\"plays\":\"剑柄打击 -> 鬼祟珊瑚群, then 防御\",\"result\":\"survives with 56/86 HP before healing\",\"hp_lost\":0,\"damage_dealt\":10,\"enemies_after\":\"鬼祟珊瑚群 33 HP\",\"block_gained\":6,\"cards_drawn\":1,\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 17.8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.1\",\"history_estimate\":\"further HP loss 18, win 100% (this encounter n=76; estimate from act-1 elite fights n=481, typical error ±11; few similar states for this encounter)\"}",
+     "plan4": "{\"plays\":\"防御, then potion 迅捷药水\",\"result\":\"survives with 56/86 HP before healing\",\"hp_lost\":0,\"damage_dealt\":0,\"enemies_after\":\"鬼祟珊瑚群 43 HP\",\"block_gained\":6,\"cards_drawn\":3,\"energy_unused\":1,\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 25, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4\",\"history_estimate\":\"further HP loss 25, win 100% (this encounter n=76; estimate from act-1 elite fights n=481, typical error ±11; few similar states for this encounter)\"}",
+     "plan5": "{\"plays\":\"打击 -> 鬼祟珊瑚群, then 防御\",\"result\":\"survives with 56/86 HP before healing\",\"hp_lost\":0,\"damage_dealt\":7,\"enemies_after\":\"鬼祟珊瑚群 36 HP\",\"block_gained\":6,\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 15.8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3\",\"history_estimate\":\"further HP loss 16, win 100% (this encounter n=76; estimate from act-1 elite fights n=481, typical error ±11; few similar states for this encounter)\",\"rollout_best\":true}"
+    }
+   }
+  }
+ }
+}
