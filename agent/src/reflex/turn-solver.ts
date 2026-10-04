@@ -445,6 +445,8 @@ export interface PlayerSim {
    * Fire through 4 cards with Feel No Pain 3 was scored as 9 damage and no block).
    */
   feelNoPain?: number;
+  /** Afterimage already active: block for each subsequent card play, including replays. */
+  afterImage?: number;
   /**
    * Hellraiser up (HELLRAISER_POWER): 「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」 — a Strike drawn this
    * turn plays itself, free, at a random enemy (the rollout does it for later turns' draws, a4f3795).
@@ -1005,6 +1007,7 @@ interface Sim {
   /** Infernos played this turn (each loses 1 HP at the start of every later turn, as Crimson Mantle's `mantles`). */
   infernos: number;
   feelNoPain: number;
+  afterImage: number;
   /** Hellraiser up (already, or played this turn): drawn Strikes play themselves. */
   hellraiser: boolean;
   /** Dark Embrace amount up (already, or played this turn): cards drawn per card exhausted. */
@@ -1695,6 +1698,7 @@ export function musicBoxCopy(card: CardModel): CardModel {
 function resolveEffects(next: Sim, card: CardModel, target: number | null, player: PlayerSim, cost: number): void {
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
+  if (card.type !== "Potion" && next.afterImage > 0) gainBlock(next, next.afterImage, player);
 
   if (card.hpLoss > 0) loseHp(next, card.hpLoss, player);
   if (card.immediatePlays) {
@@ -1981,6 +1985,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // rest is HP lost. Last, as the card text puts it: a Power played under Galvanic is up when its 6 lands (8L29N792FA45
   // F37 T2: Rupture+ played at block 0, its own 6 gave +2 Strength).
   if ((card.selfDamage ?? 0) > 0) damagePlayer(next, card.selfDamage ?? 0, player);
+  // LRN0HPZ0FZS1 F48 T1: the power itself gives no first block; later plays and replays do.
+  next.afterImage += card.afterImage ?? 0;
 }
 
 /** Damage to us on our own turn: block first, Intangible caps it at 1, only the rest is HP lost (loseHp). */
@@ -3250,6 +3256,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     tainted: 0,
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
+    afterImage: input.player.afterImage ?? 0,
     hellraiser: input.player.hellraiser === true,
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,

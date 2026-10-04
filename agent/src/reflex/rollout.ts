@@ -1179,6 +1179,7 @@ interface SimPlayer {
   plating: number;
   juggernaut: number;
   feelNoPain: number;
+  afterImage: number;
   potions: number;
   /** Inferno up (INFERNO_POWER amount): every HP loss on our turn hits every enemy for it. */
   inferno: number;
@@ -1863,6 +1864,10 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
     playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
   }
   if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
+  if (card.afterImage) {
+    player.afterImage += card.afterImage;
+    playerPowers["AFTERIMAGE_POWER"] = (playerPowers["AFTERIMAGE_POWER"] ?? 0) + card.afterImage;
+  }
   if (card.dexterity) {
     player.dexterity += card.dexterity;
     playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + card.dexterity;
@@ -2447,6 +2452,7 @@ function simulate(
     plating: Math.min(base.endTurnBlock ?? 0, input.playerPowers["PLATING_POWER"] ?? 0),
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
+    afterImage: base.afterImage ?? input.playerPowers["AFTERIMAGE_POWER"] ?? 0,
     potions: input.potions,
     inferno: base.inferno ?? 0,
     // The decision's Infernos (combat-plan counts them off the state); without the count, from the power's amount.
@@ -2746,6 +2752,7 @@ function simulate(
       endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
+      afterImage: player.afterImage,
       // Mid-turn draws: Hellraiser plays the Strikes, Dark Embrace draws for each exhaust (the solver's own turn).
       hellraiser: player.hellraiser,
       darkEmbrace: player.darkEmbrace,
