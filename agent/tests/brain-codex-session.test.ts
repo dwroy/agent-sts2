@@ -197,6 +197,24 @@ describe("codex session mode", () => {
     expect(engine.usage.status().calls_since_read).toBe(2);
   }, 30_000);
 
+  it("quoted TUI model state and project trust keep both questions on the same isolated session", async () => {
+    const fake = fakeSession("passiveconfig", { turns: [answering({ choice: "a", reason: "first" }), answering({ choice: "b", reason: "second" })] });
+    const { engine, trace, notes } = sessionEngine(fake, { config: [
+      'model = "gpt-6.1-sol"', 'model_reasoning_effort = "xhigh"',
+      '[tui.model_availability_nux]', '"gpt-6.1-sol" = 1',
+      '[projects."/fixed/project"]', 'trust_level = "trusted"',
+    ].join("\n") });
+    const first = await engine.decide(request());
+    const second = await engine.decide(request({ question: "Another fixed question" }));
+    expect(first.native).toMatchObject({ mode: "session", thread_id: "thr-1", reverted: true });
+    expect(second.native).toMatchObject({ mode: "session", thread_id: "thr-1", reverted: true });
+    expect(fake.execs()).toBe(0);
+    expect(notes).toEqual([]);
+    expect(trace().map((row) => row["mode"])).toEqual(["session", "session"]);
+    expect(fake.requests().filter((r) => r.method === "thread/start")).toHaveLength(1);
+    expect(fake.requests().filter((r) => r.method === "turn/start").map((r) => r.params["effort"])).toEqual(["xhigh", "xhigh"]);
+  }, 30_000);
+
   it("a new thread (the old one deleted) when the system prompt changes or a turn fails", async () => {
     const failed = [{ method: "turn/completed", params: { threadId: "$THREAD", turn: { id: "$TURN", status: "failed", error: { message: "something broke", codexErrorInfo: "badRequest" } } } }];
     const fake = fakeSession("renew", { turns: [answering({ choice: "a", reason: "x" }), answering({ choice: "a", reason: "y" }), failed, answering({ choice: "b", reason: "z" })] });
@@ -487,6 +505,15 @@ describe("pushed rate limits", () => {
 });
 
 describe("the config.toml guard", () => {
+  it("accepts passive quoted TUI keys and project trust, while rejecting project instructions and nested tables", () => {
+    expect(configTomlProblems('[tui.model_availability_nux]\n"gpt-6.1-sol" = 1\n[projects."/fixed/project"]\ntrust_level = "trusted"\n')).toEqual([]);
+    expect(configTomlProblems("[projects.'/fixed/project']\ntrust_level = 'untrusted'\n")).toEqual([]);
+    expect(configTomlProblems('[projects."/fixed/project"]\ninstructions = "SECRET"\ntrust_level = "other"\n')).toEqual(['projects."/fixed/project".instructions', 'projects."/fixed/project".trust_level']);
+    expect(configTomlProblems('[projects."/fixed/project".hooks]\ncommand = "SECRET"\n')).not.toEqual([]);
+    expect(configTomlProblems('"instructions" = "SECRET"\n')).not.toEqual([]);
+    expect(configTomlProblems('[projects."/fixed/project"]\ntrust_level = "trusted"\n[mcp_servers.repl]\ncommand = "/bin/x"\n')).toContain("[mcp_servers.repl]");
+  });
+
   it("takes model, model_reasoning_effort and [tui]; names anything else by key only", () => {
     expect(configTomlProblems('model = "gpt-6.1-sol"\nmodel_reasoning_effort = "xhigh"\n# a comment\n\n[tui]\nscreen_reader_detection_done = true\n')).toEqual([]);
     expect(configTomlProblems("")).toEqual([]);

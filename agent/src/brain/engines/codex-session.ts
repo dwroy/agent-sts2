@@ -8,7 +8,7 @@
  * - Isolation as exec mode (engines/codex.ts): the same request (developer = our system prompt as the thread's base
  *   instructions, user = the question, no tool: the same feature switches, -c overrides and model catalog entry), the
  *   same AGENTS.md refusal. app-server has no --ignore-user-config: $CODEX_HOME/config.toml is checked before each
- *   thread is made (configTomlProblems: only model, model_reasoning_effort and [tui], all overridden or irrelevant),
+ *   thread is made (configTomlProblems: model, effort, TUI state and project trust, all overridden or irrelevant),
  *   and the thread/start answer must list no instruction source. Either problem turns session mode off for the process
  *   (exec mode answers instead).
  * - The thread is saved (thread/revert needs a saved history), in $CODEX_HOME/sessions; it holds our prompt. Its
@@ -41,18 +41,27 @@ const ALLOWED_TOP_KEYS = new Set(["model", "model_reasoning_effort"]);
 
 /**
  * What in $CODEX_HOME/config.toml session mode does not accept (app-server always loads it): [] when the file is fine
- * or absent. Accepted: blank lines, comments, `model` and `model_reasoning_effort` at the top level, and a [tui]
- * table (tui.*) with any single-line key = value. Anything else (another table such as [hooks], [mcp_servers.x],
- * [features], [projects.x]; another top-level key such as instructions, profile, notify; a dotted key; a value over
+ * or absent. Accepted: blank lines, comments, `model` and `model_reasoning_effort` at the top level, a [tui]
+ * table (tui.*) with any single-line key = value (including quoted model ids), and only trust_level in a quoted
+ * [projects."path"] table. Trust cannot add context or tools: the cwd is empty and project docs and hooks are off.
+ * Anything else (another table such as [hooks], [mcp_servers.x], [features]; another top-level key such as
+ * instructions, profile, notify; a dotted key; a value over
  * several lines; an array table) is named, by key only, never its value.
  */
 export function configTomlProblems(text: string): string[] {
   const problems: string[] = [];
   let table: string | null = null;
+  let projectTrust = false;
   for (const [index, raw] of text.split(/\r?\n/).entries()) {
     const line = raw.trim();
     if (!line || line.startsWith("#")) continue;
     if (line.startsWith("[")) {
+      const project = /^\[\s*projects\s*\.\s*("([^"\\]|\\.)*"|'[^']*')\s*\]\s*(#.*)?$/.exec(line);
+      projectTrust = project !== null;
+      if (project) {
+        table = `projects.${project[1]}`;
+        continue;
+      }
       const header = /^\[\s*([A-Za-z0-9_-]+(?:\s*\.\s*[A-Za-z0-9_-]+)*)\s*\]\s*(#.*)?$/.exec(line);
       if (!header || line.startsWith("[[")) {
         problems.push(`line ${index + 1}: a table header session mode does not read`);
@@ -63,16 +72,18 @@ export function configTomlProblems(text: string): string[] {
       if (table !== "tui" && !table.startsWith("tui.")) problems.push(`[${table}]`);
       continue;
     }
-    const pair = /^([A-Za-z0-9_-]+)\s*=\s*(.+)$/.exec(line);
+    const tui = table === "tui" || table?.startsWith("tui.");
+    const pair = (tui ? /^([A-Za-z0-9_-]+|"([^"\\]|\\.)*"|'[^']*')\s*=\s*(.+)$/ : /^([A-Za-z0-9_-]+)\s*=\s*(.+)$/).exec(line);
     if (!pair) {
       problems.push(`line ${index + 1}: not a plain key = value`);
       continue;
     }
     const key = pair[1]!;
-    const value = pair[2]!;
+    const value = pair[tui ? 3 : 2]!;
     const plain = /^("([^"\\]|\\.)*"|'[^']*'|true|false|-?\d+(\.\d+)?|\[[^\][]*\])\s*(#.*)?$/.test(value);
     const where = table === null ? key : `${table}.${key}`;
     if (!plain) problems.push(`${where}: a value session mode does not read (several lines or not plain)`);
+    else if (projectTrust && (key !== "trust_level" || !/^("(?:trusted|untrusted)"|'(?:trusted|untrusted)')\s*(#.*)?$/.test(value))) problems.push(where);
     else if (table === null && !ALLOWED_TOP_KEYS.has(key)) problems.push(where);
   }
   return problems;
