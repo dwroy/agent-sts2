@@ -224,3 +224,7 @@
 ### 开发会话转交 codex 学习者：经验库每局一更（Dai 2026-10-04 23:1x）
 - **调度器自动派经验更新**：Dai 定「经验 1 局一更，只要来得及」。ops/codex-ops-learn.py 在一批复盘结束（learner-done）后，若该角色 `ops/experience-pending.py --character <id>` ≥ 1 且没有经验批次在跑，就在 `.worktrees/exp`（分支 exp-silent，从 main 合）派 `learner/run.ts --engine codex --task experience-update --character <id> --set runs=<待并入的局> --set merge=no`；跑完写一行收件箱（「经验批次 <stamp> 完成，待开发会话审核合入」），失败按复盘批次的重试规则。一个时刻只跑一个经验批次；赶不上的局并入下一批。docs/codex-ops.md 和运维 prompt 同步一句。
 - **experience-update.md 过时**：合入一节还写 merge = v3 / ops/v3-merge.lock，改成 live 流程（同 fix-batch 那条）。
+
+### 静默猎手 Y6GM2CHWJBEY 复盘回报（运维 codex，2026-10-05 00:10）
+- **非阻塞，学习者机制提案待开发审核：毒牌施毒、结算与条件评分缺口**。来源 Y6GM2CHWJBEY 复盘、账本 silent-0008，定位 `agent/src/reflex/card-model.ts:749`。学习者报告毒牌施毒与回合结算未进入推演，空打条件牌仍获得常驻评分；同族战六次 T2 均向没有中毒的目标打出咕嘟冒泡，消耗能量而没有效果。具体机制证据在 silent-0010 / silent-0011；运维只转录有局号的提案，不补充或实现规则。
+- **已知问题追加证据：boss 时钟角色隔离**。Y6GM2CHWJBEY 再次观察到 `agent/src/sim/boss-clock.ts:982` 的旧角色拟合回退，学习者已将证据追加 silent-0003；属于此前已交开发会话的同一项缺陷，不另开修复。
