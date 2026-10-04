@@ -1180,6 +1180,8 @@ interface SimPlayer {
   juggernaut: number;
   feelNoPain: number;
   afterImage: number;
+  doubleDamage: boolean;
+  doubleDamageNext: boolean;
   potions: number;
   /** Inferno up (INFERNO_POWER amount): every HP loss on our turn hits every enemy for it. */
   inferno: number;
@@ -1532,7 +1534,7 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
   return {
     ...card,
     index,
-    damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)),
+    damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)) * (card.type === "Attack" && player.doubleDamage ? 2 : 1),
     // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
     // Frail: 25% less block from cards, after Dexterity.
     block: card.block > 0 ? Math.floor(Math.max(0, card.block + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
@@ -1542,6 +1544,10 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
 
 function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, blockEnd: number, energyLeft: number, handLeft: number, playerPowers: Record<string, number>): Snapshot {
   const pw: Record<string, number> = { ...playerPowers };
+  if (player.doubleDamageNext) pw["SHADOW_STEP_POWER"] = 1;
+  else delete pw["SHADOW_STEP_POWER"];
+  if (player.doubleDamage) pw["DOUBLE_DAMAGE_POWER"] = 1;
+  else delete pw["DOUBLE_DAMAGE_POWER"];
   for (const [id, v] of [["STRENGTH_POWER", player.strength], ["DEXTERITY_POWER", player.dexterity], ["WEAK_POWER", player.weakTurns], ["VULNERABLE_POWER", player.vulnTurns], ["FRAIL_POWER", player.frailTurns], ["PLATING_POWER", player.plating]] as const) {
     if (v !== 0) pw[id] = v;
     else delete pw[id];
@@ -1853,6 +1859,7 @@ function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebu
 
 /** A played card's lasting effects on the simulated player: a Power's (POWER_EFFECTS), Feel No Pain, Plating. */
 function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<string, number>): void {
+  if (card.doubleDamageNext) player.doubleDamageNext = true;
   const effect = POWER_EFFECTS[card.cardId];
   if (effect && card.type === "Power") {
     const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
@@ -2133,6 +2140,9 @@ function applyPlan(
   player.dexterity -= player.tempDexterity;
   player.tempStrength = 0;
   player.tempDexterity = 0;
+  // The observed Shadow Step bonus starts after this turn and lasts through the next one only.
+  player.doubleDamage = player.doubleDamageNext;
+  player.doubleDamageNext = false;
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
@@ -2453,6 +2463,8 @@ function simulate(
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
     afterImage: base.afterImage ?? input.playerPowers["AFTERIMAGE_POWER"] ?? 0,
+    doubleDamage: (input.playerPowers["DOUBLE_DAMAGE_POWER"] ?? 0) > 0,
+    doubleDamageNext: (input.playerPowers["SHADOW_STEP_POWER"] ?? 0) > 0,
     potions: input.potions,
     inferno: base.inferno ?? 0,
     // The decision's Infernos (combat-plan counts them off the state); without the count, from the power's amount.

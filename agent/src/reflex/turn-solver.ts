@@ -1506,6 +1506,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // leaves the hand by its key.
   next.hand = sim.hand.filter((entry) => entry !== card && !(card.type === "Potion" && entry.key === card.key));
   const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
+  if (card.discardsHand) {
+    discarded.push(...[...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").map((entry) => entry.cardId));
+    next.hand = next.hand.filter((entry) => entry.type === "Potion");
+    next.held = [];
+    next.locked = [];
+    next.drawnInHand = 0;
+  }
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
   if (card.soulbound) {
@@ -1660,7 +1667,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
-      ...(card.discards ? { discards: discarded } : {}),
+      ...(card.discards || card.discardsHand ? { discards: discarded } : {}),
       ...(card.type === "Potion" && card.generates?.pileCard ? { takes: card.generates.pileCard } : {}),
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },

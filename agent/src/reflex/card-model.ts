@@ -63,6 +63,9 @@ export interface CardModel {
   dexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
   afterImage?: number;
+  /** Observed unupgraded Shadow Step: discard all other hand cards, double attacks next turn only. */
+  discardsHand?: boolean;
+  doubleDamageNext?: boolean;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
@@ -808,7 +811,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // Drum of Battle's is gained when the card is exhausted, not on play (VC4L F21 T4).
   // Relax's energy and draw are next turn's (nextTurnOnly), like a Power's income.
   const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) || nextTurnOnly(template, "Energy") ? 0 : (dyn(card, "Energy") ?? 0);
-  const draw = nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  // R0HEV5E3QT6G F29 T2 / F48 T4: the unupgraded Shadow Step has a dormant Cards=3 var, but no draw.
+  const shadowStep = cardId === "SHADOW_STEP" && !bool(card["upgraded"]);
+  const draw = shadowStep || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
@@ -926,6 +931,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     draw,
     exhausts,
     special,
+    ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
     known,
     flatValue,
     heldPenalty,
