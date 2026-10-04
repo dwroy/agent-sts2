@@ -98,13 +98,31 @@ tick_stall() {
 $out"
 }
 
+# gitleaks over the archived codex transcripts (values redacted in its report). More findings than last time -> one inbox
+# line for the dev session (not a wake: the ops session does not handle keys). The count is kept in gitleaks-session.count.
+gitleaks_session() {
+  local target="$ROOT/paper/materials/session/codex" report="$DIR/gitleaks-session.json" count last
+  [ -d "$target" ] || return 0
+  command -v "${CODEX_OPS_GITLEAKS:-gitleaks}" > /dev/null || { log "snapshot: gitleaks not installed"; return 0; }
+  nice -n 10 "${CODEX_OPS_GITLEAKS:-gitleaks}" dir "$target" --no-banner --redact --log-level error \
+    --report-format json --report-path "$report" --exit-code 0 > /dev/null 2>&1
+  count=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$report" 2>/dev/null || echo "?")
+  last=$(cat "$DIR/gitleaks-session.count" 2>/dev/null || echo 0)
+  echo "$count" > "$DIR/gitleaks-session.count"
+  echo "gitleaks paper/materials/session/codex: $count finding(s) (report $report, values redacted)"
+  if [ "$count" != "?" ] && [ "$count" -gt "${last:-0}" ] 2>/dev/null; then
+    echo "- $(date '+%F %H:%M') [codex-ops 调度器] gitleaks 在 paper/materials/session/codex/（论文用的 codex 记录）里报了 $count 处（上次 $last），报告 $report（值已遮掉）。请开发会话核对是不是真 key。" >> "$ROOT/ops/inbox-dev.md"
+  fi
+}
+
 tick_snapshot() {
   local rc out
   out="$DIR/snapshot.log"
   { echo "== $(date '+%F %T') paper_dataset.py"; nice -n 10 python3 "$ROOT/ops/paper_dataset.py"; } > "$out" 2>&1
   rc=$?
   nice -n 10 "$TSX" "$MAIN" snapshot-session >> "$out" 2>&1
-  echo "- $(date '+%F %H:%M') 论文数据快照（codex-ops 调度器）：ops/paper_dataset.py 完整版 exit $rc；运维 codex 会话记录替换 key 后复制到 paper/materials/session/" >> "$ROOT/paper/materials/decision-log.md"
+  gitleaks_session >> "$out" 2>&1
+  echo "- $(date '+%F %H:%M') 论文数据快照（codex-ops 调度器）：ops/paper_dataset.py 完整版 exit $rc；运维会话和学习者的 codex 记录替换 key 后复制到 paper/materials/session/codex/（gitleaks：$(cat "$DIR/gitleaks-session.count" 2>/dev/null || echo 未跑) 处）" >> "$ROOT/paper/materials/decision-log.md"
   [ $rc -eq 0 ] || enqueue snapshot-failed "每日快照 ops/paper_dataset.py 失败（exit $rc）。输出末尾：
 $(tail -n 15 "$out")"
 }

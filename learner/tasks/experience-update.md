@@ -119,6 +119,17 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 - 在变更记录末尾追加一节，标题带角色名：`## <日期> {{character_name}} 第N次增量：<局数> 局 A几（version …，分支 …，<提交号>）`（这个角色的第一节写「{{character_name}} 首次构建」，N 只数这个角色的小节），小节依次是：来源、对照数据检查的主题、经验库自己带偏或写了没被执行的地方、**机制推理**、新增、更新、退役、和手写知识及代码冲突、代码问题（不给 DS）、测试、切片大小。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交，由调用方提交。
 {{/is_ironclad}}
 
+## 7.1 学习账本（提交之后）
+账本是 `{{project_root}}/paper/materials/learning/ledger.jsonl`，字段见 `{{project_root}}/paper/materials/learning/README.md`（先读）。**只用** `python3 {{project_root}}/learner/ledger.py` 写（JSON 从标准输入传入），不许直接改这个文件。
+- 这次新增、更新、退役的每个经验条目，都要能在账本里找到来源：
+  - 先找复盘时登记的条目：`python3 {{project_root}}/learner/ledger.py find --character {{character}} --run <run id>`（这次的每一局），或 `--text <关键词>`；
+  - 找到的：`update`，`status` 改成 `proposed`，`where` 追加 `{"experience": ["<条目 id>"], "commits": ["<本分支提交号>"], "changelog": ["<本节标题>"]}`；这次又从别的局找到的证据，`evidence` 追加（`support` / `contradict`）；
+  - 没有对应条目的（例如从汇总数据、SL 重打对照、机制推理里新得出的结论）：`add` 一个，`status` 是 `proposed`，`by` 是 `learner:experience-update`，`where` 同上；`prior` 照 README 判断（看这个角色在这条结论被学到之前的局里是不是已经做对了），`first_run` 是这个角色最早出现这件事的局；
+  - 退役的经验条目：对应的账本条目 `update`，`status` 改成 `retired`，`note` 写退役原因；
+  - 复盘里登记过、这次没有并进经验库的条目，不用动（留在 `observed`）；
+  - 不许把账本里的 `status` 改成 `accepted` / `shipped`：审核和上线由开发会话改。
+- 写完跑 `python3 {{project_root}}/learner/ledger.py check`，退出码要是 0。
+
 ## 8. 合入（只有 merge = v3 时做；V4 一律 merge = no，由开发会话审过后合入 main / live）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里做：
 1. 等后台知识刷新跑完：`while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省）；
@@ -129,7 +140,7 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 
 ## 9. 安全
 - key 不许打印、不许落盘：不许读或 grep `.env`、`~/.jev_api_keys`、`~/.deepseek_api_key`，不许跑 `env`、`printenv` 之类会打印环境变量的命令。
-- 只改 {{project_root}} 里的：{{worktree}}（本分支）、变更记录（只追加一节）、{{scratch}}；merge = v3 时还有 {{merge_dir}} 的合入。ops/、notes/ 和 paper/ 下的其他文件都只读。
+- 只改 {{project_root}} 里的：{{worktree}}（本分支）、变更记录（只追加一节）、学习账本（只经 learner/ledger.py 追加）、{{scratch}}；merge = v3 时还有 {{merge_dir}} 的合入。ops/、notes/ 和 paper/ 下的其他文件都只读。
 - 不推送；不运行 play；不用 Zboubkiller DLL，不开 mod 自带的 autoplay。
 - 不读游戏二进制（sts2.dll）或 .pck 文件。
 - 杀进程用 PID，不用 `pkill -f`；不许 `npm install`（node_modules 是共用的软链接）；logs/ 只读。
@@ -145,11 +156,12 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 - 改了的手写知识：file:line — 改成什么（没有写「无」）
 - 测试：tsc 退出码；vitest 文件数 / 用例数 / 退出码（重跑过的写明）
 - 切片大小：中位涨多少、最大多少
+- 学习账本：新增 <id,…>；改成 proposed <id,…>；退役 <id,…>；`ledger.py check` 退出码
 - 需要 Dai 定的事（没有写「无」）：……
 ```
 
 最后再单独给一个 json 代码块：
 
 ```json
-{"task": "experience-update", "version": "...", "commit": "...", "merged": null, "added": 0, "updated": 0, "retired": 0, "active": 0, "mechanisms": ["..."], "tests": {"tsc": 0, "vitest": 0, "cases": 0}}
+{"task": "experience-update", "version": "...", "commit": "...", "merged": null, "added": 0, "updated": 0, "retired": 0, "active": 0, "mechanisms": ["..."], "tests": {"tsc": 0, "vitest": 0, "cases": 0}, "ledger": {"added": ["<id>"], "proposed": ["<id>"], "retired": ["<id>"], "check": 0}}
 ```

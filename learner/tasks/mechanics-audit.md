@@ -47,13 +47,18 @@ default.min_n: 20
 - 要 Dai 定的问题
 最后一节「已在用的观察规则核对」：报告里振翅的偏差（规则关 → 开）、规则自己的核对（说眩晕而没眩晕、漏掉的），有问题就写出来。
 
+## 学习账本（写完提案之后）
+账本是 `{{project_root}}/paper/materials/learning/ledger.jsonl`，字段见 `{{project_root}}/paper/materials/learning/README.md`。**只用** `python3 {{project_root}}/learner/ledger.py` 写（JSON 从标准输入传入），不许直接改这个文件。
+- A、B、B′、C 类的每个候选登记一个条目（D 类不登记）：先 `python3 {{project_root}}/learner/ledger.py find --character {{character}} --text <能力名或怪物 ID>` 看有没有；有就 `update`（`status` 改成 `proposed`，`where` 追加 `{"proposal": ["{{out}}"]}`，`evidence` 追加例子回合）；没有就 `add`：`kind` 是 `mechanic`（「需要修 bug」的是 `bug-infra`），`status` 是 `proposed`，`by` 是 `learner:mechanics-audit`，`claim` 是你的机制假设，`evidence` 是例子回合（局号、层、回合），`first_run` 是最早的例子局，`prior` 照 README 判断（求解器或 agent 在这之前是不是已经按这个机制处理对了），`where` 是 `{"proposal": ["{{out}}"]}`。
+- 写完 `python3 {{project_root}}/learner/ledger.py check` 退出码要是 0；提案里每个候选的标题后面写上账本 id。
+
 ## 安全
 - key 不许打印、不许落盘：不许读或 grep `.env`、`~/.jev_api_keys`、`~/.deepseek_api_key`，不许跑 `env`、`printenv`。
-- 只写 {{out}} 和 {{scratch}}；不许改代码、数据、测试和其他笔记；不许 git commit / push；不运行 play，不碰正在跑的对局进程；不读 sts2.dll 或 .pck。
+- 只写 {{out}}、{{scratch}} 和学习账本（只经 learner/ledger.py 追加）；不许改代码、数据、测试和其他笔记；不许 git commit / push；不运行 play，不碰正在跑的对局进程；不读 sts2.dll 或 .pck。
 - 查询只用 `--no-sync`（不写日志库）；大文件只按偏移读。
 
 ## 回报
 用中文简短回报：看了哪些候选、各归哪一类、最值得做的三件事。最后附一个 json 代码块：
 ```json
-{"out": "{{out}}", "candidates": [{"mechanic": "…", "monster": "…", "power": "…", "class": "A|B|C|D", "n": 0, "bias": 0.0, "action": "…"}]}
+{"out": "{{out}}", "candidates": [{"mechanic": "…", "monster": "…", "power": "…", "class": "A|B|C|D", "n": 0, "bias": 0.0, "action": "…", "ledger": "<id 或 null>"}]}
 ```

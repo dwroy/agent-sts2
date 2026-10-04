@@ -44,6 +44,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 ## 4. 提交
 - `git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，不推送。
 - fix-queue.md 不要改（划掉条目由调用方做），只在回报里给出每条对应的提交号。
+- 学习账本（`{{project_root}}/paper/materials/learning/ledger.jsonl`，字段见同目录 README.md）：修掉的条目在账本里有对应的 `bug-infra` 条目的（`python3 {{project_root}}/learner/ledger.py find --kind bug-infra --text <关键词或局号>`），用 `python3 {{project_root}}/learner/ledger.py update`（JSON 从标准输入传入）给它追加 `{"where": {"commits": ["<提交号>"]}, "status": "proposed", "by": "learner:fix-batch"}`；没有的不用新建。不许直接改账本文件，不许改成 `shipped`（上线由开发会话改）。
 
 ## 5. 合入（只有 merge = v3 时做）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里按「合入 v3 的流程」做：
@@ -56,7 +57,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 
 ## 6. 安全
 - key 不许打印、不许落盘：不许读或 grep `.env`、`~/.jev_api_keys`、`~/.deepseek_api_key`，不许跑 `env`、`printenv` 之类会打印环境变量的命令。
-- 只改 {{project_root}} 里的：{{worktree}}（本分支）和 {{scratch}}；merge = v3 时还有 {{merge_dir}} 的合入。ops/、notes/、paper/ 都只读。
+- 只改 {{project_root}} 里的：{{worktree}}（本分支）、{{scratch}} 和学习账本（只经 learner/ledger.py 追加）；merge = v3 时还有 {{merge_dir}} 的合入。ops/、notes/、paper/ 的其他文件都只读。
 - 不推送；不运行 play；不用 Zboubkiller DLL，不开 mod 自带的 autoplay。
 - 不读游戏二进制（sts2.dll）或 .pck 文件。
 - 杀进程用 PID，不用 `pkill -f`；不许 `npm install`（node_modules 是共用的软链接）；logs/ 只读。

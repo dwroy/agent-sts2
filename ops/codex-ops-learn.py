@@ -272,6 +272,29 @@ def cmd_dispatch(args):
     return 0
 
 
+def ledger_lines(runs):
+    """The learning ledger's items per run of the batch (paper/materials/learning/README.md): the learner adds or
+    updates one per lesson; the ops session checks every run has some and the file validates."""
+    path = os.environ.get("LEDGER_FILE") or os.path.join(ROOT, "paper", "materials", "learning", "ledger.jsonl")
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("ledger", os.path.join(os.path.dirname(SCRIPTS), "learner", "ledger.py"))
+        ledger = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(ledger)
+        items = list(ledger.fold(ledger.read_rows(path)).values())
+    except Exception as error:  # the event still goes out; the session reads the reason
+        return [f"学习账本读不了（{type(error).__name__}: {error}）。"]
+    per = {}
+    for run in runs:
+        per[run] = [item["id"] for item in items
+                    if run in {e.get("run") for e in item.get("evidence", [])} | set(item.get("where", {}).get("lessons", []))]
+    missing = [run for run, ids in per.items() if not ids]
+    return [
+        "学习账本（paper/materials/learning/ledger.jsonl）：" + "；".join(f"{run} {','.join(ids) or '无'}" for run, ids in per.items())
+        + f"。没有条目的局：{','.join(missing) or '无'}。"
+    ]
+
+
 def cmd_finish(args):
     state = load_state()
     batch = state["batches"].get(args.batch)
@@ -303,8 +326,9 @@ def cmd_finish(args):
         + (f"（{','.join(retry_note)} 调度器 1 小时后重派，每局最多 {MAX_ATTEMPTS} 次）" if retry_note else "")
         + "。",
         f"学习者的回报（最后有 json 块）：{out}；stderr：{err}" + (f"；完整事件流：{log_path}" if log_path else "") + "。",
+        *ledger_lines(done),
         "按「学习闭环」处理回报：新的纯 bug 里阻塞性的按「卡死」的修法，其他追加到 notes/fix-queue-v4.md；打法或机制上的发现不用你处理。"
-        "然后 python3 ops/paper_dataset.py --no-raw，decision-log 记一行，提交主目录仓库（只 add 自己改的文件）。",
+        "然后 python3 ops/paper_dataset.py --no-raw，decision-log 记一行，提交主目录仓库（只 add 自己改的文件，加上 notes/lessons.md 和 paper/materials/learning/ledger.jsonl）。",
     ]
     if args.rc == 3:
         lines.append("exit 3：引擎检查或 key 隔离自检没过。写进 ops/inbox-dev.md 报给开发会话，不要绕过。")

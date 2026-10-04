@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, describe, expect, it } from "vitest";
 
+import { archiveCodexTranscripts } from "../../ops/codex/archive.js";
 import { startBroker } from "../../ops/codex/main.js";
 import {
   ACTIONS,
@@ -212,9 +213,14 @@ describe("learning loop (ops/codex-ops-learn.py)", () => {
     writeFileSync(join(root, "logs", "runs.jsonl"), jsonl(runs));
     writeFileSync(join(root, "logs", "run-config.jsonl"), jsonl([{ run_id: "SILENT000002", character: "SILENT", target_ascension: 1 }]));
     // The fake learner appends a post-mortem heading per run (it runs in the project root, as the real one).
-    const fakeLearner = `for r in $(echo "$1" | tr , ' '); do echo "## $r（A0，静默猎手，第1层，测试）" >> notes/lessons.md; done; echo "回报 json"`;
+    // It also adds one learning-ledger item for SILENT000001 through the real helper (learner/ledger.py).
+    const item = { character: "silent", kind: "fight", claim: "测试", evidence: [{ run: "SILENT000001", floor: 1 }], first_run: "SILENT000001", prior: "unknown", status: "observed", by: "learner:postmortem", where: { lessons: ["SILENT000001"] } };
+    const fakeLearner =
+      `for r in $(echo "$1" | tr , ' '); do echo "## $r（A0，静默猎手，第1层，测试）" >> notes/lessons.md; done; ` +
+      `echo '${JSON.stringify(item)}' | python3 ${join(REPO, "learner", "ledger.py")} add > /dev/null; echo "回报 json"`;
     const pending = `printf '12\\nA00000000001,A00000000002,A00000000003,A00000000004,A00000000005,A00000000006,A00000000007,A00000000008,A00000000009,A00000000010,A00000000011,A00000000012\\n'`;
-    const tickEnv = { ...env, LEARNER_CMD: fakeLearner, CODEX_OPS_PENDING_CMD: pending };
+    const ledgerFile = join(root, "paper", "materials", "learning", "ledger.jsonl");
+    const tickEnv = { ...env, LEARNER_CMD: fakeLearner, CODEX_OPS_PENDING_CMD: pending, LEDGER_FILE: ledgerFile, LEDGER_RUNS: join(root, "logs", "runs.jsonl"), LEDGER_VERSIONS: "none" };
 
     const first = learn(tickEnv, "tick");
     expect(first.status, first.stderr).toBe(0);
@@ -231,6 +237,8 @@ describe("learning loop (ops/codex-ops-learn.py)", () => {
     expect(done.text).toContain("SILENT000001,SILENT000002");
     expect(done.text).toContain("exit 0");
     expect(done.text).toContain("还没有：无");
+    expect(done.text).toContain("SILENT000001 silent-0001；SILENT000002 无。没有条目的局：SILENT000002");
+    expect(done.text).toContain("paper/materials/learning/ledger.jsonl）");
     expect(readFileSync(join(dir, "learner", `${report.dispatched[0]}.out`), "utf8")).toContain("回报 json");
 
     // Next tick: nothing new (no second victory event, no batch, the same pending set is not announced again).
@@ -291,4 +299,47 @@ describe("stall backoff (ops/codex-ops.sh tick stall)", () => {
     expect(tick("OK (last decision 3s ago)")).toHaveLength(1); // the queued event stays for the wake
     expect(existsSync(join(dir, "stall.state"))).toBe(false);
   }, 30_000);
+});
+
+describe("transcript archive for the paper (ops/codex/archive.ts)", () => {
+  it("copies the ops wakes and rollout, the learner run logs and their codex rollouts, keys redacted, incrementally", () => {
+    const root = join(tmp, "archive");
+    const home = join(tmp, "archive-codex");
+    const opsDir = join(root, "ops", "codex-ops");
+    const secret = "FAKEKEYVALUE0123456789abcdef";
+    const thread = "01a10799-0000-7000-8000-000000000001";
+    const lost = "01a10799-0000-7000-8000-00000000dead";
+    const day = join(home, "sessions", "2026", "10", "04");
+    mkdirSync(join(opsDir, "wakes"), { recursive: true });
+    writeFileSync(join(opsDir, "wakes", "20261004-2200-wake.jsonl"), `{"msg":"wake ${secret}"}\n`);
+    writeFileSync(join(opsDir, "wakes.jsonl"), "{}\n");
+    mkdirSync(day, { recursive: true });
+    writeFileSync(join(day, `rollout-2026-10-04T22-00-00-${SESSION}.jsonl`), `{"ops":"${secret}"}\n`);
+    writeFileSync(join(day, `rollout-2026-10-04T22-10-00-${thread}.jsonl`), '{"learner":1}\n');
+    for (const dir of [join(root, "learner", "runs"), join(root, ".worktrees", "exp", "learner", "runs")]) mkdirSync(dir, { recursive: true });
+    writeFileSync(join(root, "learner", "runs", "20261004-221000-postmortem.jsonl"), `{"type":"learner_launch"}\n{"type":"thread.started","thread_id":"${thread}"}\n`);
+    writeFileSync(join(root, ".worktrees", "exp", "learner", "runs", "20261004-230000-experience-update.jsonl"), `{"type":"thread.started","thread_id":"${lost}"}\n`);
+
+    const options = { root, codexHome: home, opsDir, opsSession: SESSION, secrets: [secret] };
+    const first = archiveCodexTranscripts(options);
+    const out = join(root, "paper", "materials", "session", "codex");
+    expect(first.outDir).toBe(out);
+    expect([...first.copied].sort()).toEqual([
+      join("learner", "rollouts", `rollout-${thread}.jsonl`),
+      join("learner", "runs", "20261004-221000-postmortem.jsonl"),
+      join("learner", "runs", "20261004-230000-experience-update.jsonl"),
+      join("ops", `rollout-${SESSION}.jsonl`),
+      join("ops", "wakes.jsonl"),
+      join("ops", "wakes", "20261004-2200-wake.jsonl"),
+    ]);
+    expect(first.redacted).toBe(2);
+    expect(first.missingRollouts).toEqual([lost]);
+    expect(readFileSync(join(out, "ops", `rollout-${SESSION}.jsonl`), "utf8")).toBe('{"ops":"[REDACTED]"}\n');
+    expect(readFileSync(join(out, "ops", "wakes", "20261004-2200-wake.jsonl"), "utf8")).not.toContain(secret);
+
+    // Nothing changed: nothing copied again; a grown wake log is copied again.
+    expect(archiveCodexTranscripts(options).copied).toEqual([]);
+    writeFileSync(join(opsDir, "wakes.jsonl"), "{}\n{}\n");
+    expect(archiveCodexTranscripts(options).copied).toEqual([join("ops", "wakes.jsonl")]);
+  });
 });

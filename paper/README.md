@@ -13,11 +13,12 @@
 | `data/` | 可复现的数据集，由 `ops/paper_dataset.py` 生成：`runs.csv`（每局）、`escalations.csv`（每次兜底调用）、`decisions_by_label.csv`、`commits.csv`、`summary.json`；数据字典见 `data/README.md` |
 | `raw/` | 原始日志的压缩快照：`decisions`、`states`（730 MB 原始）、`deepseek-reasoning`、`runs`、console、Claude 时期的交接文件，附 `SHA256SUMS` 和截断位置 `SOURCE_CUT.json` |
 | `materials/decision-log.md` | 人工指令与设计决策日志：谁在什么时候决定了什么、为什么 |
+| `materials/learning/` | **学习账本**（2026-10-04 起，静默猎手实验）：学习者每个发现 / 学到的一条一行，带证据局号、学之前是否已做对（预训练混杂）、去处、审核和上线状态、上线后的效果；只追加。字段和用法见其 README.md；工具 `learner/ledger.py`；按进阶的学习曲线 `data/learning-curve-<角色>.csv`（`eval/learning-curve.py`） |
 | `materials/prompts/` | DeepSeek 客户端代码、攻略、经验手册的**每个历史版本**（文件名带时间和提交号），Jev 问题模板，一次真实调用的完整请求样本 |
 | `materials/architecture-review/` | 架构评审工作流：3 份调研（Jev 提示能力、开源杀戮尖塔 AI、硬编码规则盘点）、3 个方案、最终综合，以及工作流脚本和日志 |
 | `materials/analysis/` | 三层（代码、Jev、DeepSeek）错误归因分析脚本 |
 | `materials/reports/` | 过程中给出的报告：阶段报告 PDF、10 小时总结（PDF 和网页）、通关总结页、DeepSeek 透视页、架构评审页 |
-| `materials/session/` | 会话原始记录：主会话、上一会话、全部子 agent 记录、记忆快照、HANDOFF.md。已检查，不含 API key |
+| `materials/session/` | 会话原始记录：主会话、上一会话、全部子 agent 记录、记忆快照、HANDOFF.md。已检查，不含 API key。`session/codex/`：codex 运维会话（rollout、每次叫醒）和学习者（learner/runs 的事件流、codex rollout），每日快照替换 key 后复制、gitleaks 扫过（不进仓库，同步到 Windows 盘） |
 | `materials/code/` | 代码仓库完整历史（git bundle，169 个提交）以及 notes/、ops/ 的快照 |
 
 复盘全文在 `../notes/lessons.md`，快照在 `materials/code/notes-and-ops-snapshot.tar.gz` 里。

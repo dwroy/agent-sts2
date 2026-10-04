@@ -132,6 +132,9 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 
 **日志里的 key**：运行结束后，启动器从 ~/.jev_api_keys、~/.deepseek_api_key、工作区和每个工作树里的 .env（根目录、agent/、.worktrees/*/agent/）和被去掉的变量里取出 key 值（≥16 字符、非路径、非 URL），扫描日志，出现就替换成 `[REDACTED]` 并在摘要里提示次数；值本身从不打印。
 
+## 学习账本（2026-10-04，论文用）
+`paper/materials/learning/ledger.jsonl`（只追加；字段见 paper/materials/learning/README.md），只经 `python3 learner/ledger.py add|update` 写（校验、自动编号 `<角色>-NNNN`、flock 追加；`find` / `show` / `fold` / `check`）。postmortem、experience-update、mechanics-audit、fix-batch 四个任务都写它，**所有角色都一样**（说明里不带角色的打法，铁甲战士的任务说明因此也多了这几段）：复盘每条经验对应一个条目（第一次遇到 `add`，老错 `update` 加 `"role": "repeat"` 的证据），经验行末标「第一次遇到 / 之前见过 / 之前学过」；经验更新把条目改成 `proposed` 并记下经验条目 id 和提交；机制审计登记 A–C 类候选；修 bug 给对应的 `bug-infra` 条目记提交。`accepted` / `rejected` / `shipped` 由开发会话改。按进阶的学习曲线：`eval/learning-curve.py` → `paper/data/learning-curve-<角色>.csv`（paper_dataset.py 顺带跑）。测试：agent/tests/learning-ledger.test.ts（调 learning_ledger_test.py）。
+
 ## 日志和摘要
 
 每次运行写 `learner/runs/<YYYYMMDD-HHMMSS>-<任务>.jsonl`：
