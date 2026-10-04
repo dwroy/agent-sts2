@@ -1197,6 +1197,16 @@ export const ON_DEATH_SPAWNS: Record<string, { id: string; count: number }[]> = 
 /** A spawn's HP when the monster DB has none logged (the Wriggler's and the gremlins' are 11-21). */
 const SPAWN_FALLBACK_HP = 15;
 
+/** C48LLXBGKXQ9 F30 T1 / 1HC609GTLGN3 F22 T1, silent-0029: the living Obscura summons one illusion. */
+export function summonsAt(enemyId: string, move: string, asc: number, monsters: Record<string, MonsterEntry> = load().monsters): { id: string; name: string; hp: number; count: number; move: string; illusion: boolean; minion: boolean }[] | null {
+  if (enemyId !== "THE_OBSCURA" || move !== "ILLUSION_MOVE") return null;
+  const monster = monsters["PARAFRIGHT"];
+  const found = nearestAscension(monster?.hp_by_asc, asc);
+  const hp = found ? monster!.hp_by_asc![found.key]!.median : undefined;
+  if (hp === undefined || hp <= 0) return null;
+  return [{ id: "PARAFRIGHT", name: monster?.name?.zh || "PARAFRIGHT", hp: Math.round(hp), count: 1, move: "SLAM_MOVE", illusion: true, minion: true }];
+}
+
 /**
  * An enemy's on-death spawns at `asc`: each one's name, HP (its median max HP at the nearest logged ascension)
  * and first move (SPAWNED_MOVE when logged: no attack on the turn it arrives). null when it spawns nothing known.

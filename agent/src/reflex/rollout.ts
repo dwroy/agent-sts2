@@ -705,6 +705,8 @@ export interface RolloutInput {
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
    */
   spawns?: Record<string, SpawnTemplate[]>;
+  /** Observed living summons, keyed by the summoner and its move. */
+  summons?: Record<string, Record<string, SpawnTemplate[]>>;
   /**
    * A card put into the draw pile each time it is shuffled (Biiig Hug: 「每当你的抽牌堆打乱洗牌时，将一张煤灰加入你的
    * 抽牌堆」; logged CMUX F19/F20/F22: one Soot in the new draw pile after each shuffle), or absent.
@@ -737,6 +739,8 @@ export interface SpawnTemplate {
   count: number;
   /** Its first move (SPAWNED_MOVE: no attack the turn it arrives), null when unknown (the table's own chain). */
   move: string | null;
+  illusion?: boolean;
+  minion?: boolean;
 }
 
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
@@ -1579,7 +1583,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
 
 /** A fresh enemy spawned mid-fight (RolloutInput.spawns), at its first move, with a board index of its own. */
 function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
-  const base: EnemySim = { index, name: template.name, hp: template.hp, maxHp: template.hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const base: EnemySim = { index, name: template.name, hp: template.hp, maxHp: template.hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...(template.illusion ? { illusion: true } : {}), ...(template.minion ? { minion: true } : {}) };
   return {
     index,
     id: template.id,
@@ -1608,7 +1612,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
     vitalSpark: 0,
     moveBuffs: { thorns: false, soar: false },
     plating: 0,
-    powers: {},
+    powers: { ...(template.illusion ? { ILLUSION_POWER: 1 } : {}), ...(template.minion ? { MINION_POWER: 1 } : {}) },
     base,
     shown: [],
   };
@@ -2169,6 +2173,7 @@ function applyPlan(
     const applied: EnemyMove[] = [];
     // Imbalanced enemies whose hits this turn's line fully blocked (the solver's stuns).
     const blockStunned = new Set(o.stunIndexes ?? []);
+    const summoned: SimEnemy[] = [];
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
@@ -2190,6 +2195,12 @@ function applyPlan(
       }
       if (stunned) e.burrowed = false;
       else {
+        // Arrival happens after this enemy turn; its first attack belongs to the next one.
+        for (const template of e.move ? input.summons?.[e.id]?.[e.move] ?? [] : []) {
+          if (enemies.some((other) => other.id === template.id && !other.gone) || summoned.some((other) => other.id === template.id)) continue;
+          const first = Math.max(-1, ...enemies.map((other) => other.index), ...summoned.map((other) => other.index)) + 1;
+          for (let k = 0; k < template.count; k += 1) summoned.push(spawnedEnemy(template, first + k));
+        }
         // An attack spends the Vigor it had (its hits carried it); the move's own Vigor is for the next one.
         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
         e.vigor += m?.vigor ?? 0;
@@ -2292,6 +2303,7 @@ function applyPlan(
         e.shriekArmed = e.hp > later.amount;
       }
     }
+    enemies.push(...summoned);
     // Demise: HP lost at the end of each of its turns, stunned or not, until it dies (the solver only priced about
     // three turns of it; ARKG3JFT26HC F17: 9 a turn on the Soul Fysh never counted in any later turn).
     for (const e of enemies) {
