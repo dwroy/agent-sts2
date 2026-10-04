@@ -19,8 +19,10 @@ V4 知识库里的「日志库」（docs/v4-architecture.md §3）：把 logs/*.
 ```bash
 # 一次性：Python 环境（只装 duckdb）。本机 python3 没有 ensurepip，用 --without-pip + uv 装：
 python3 -m venv --without-pip data/logdb-venv
-~/.local/bin/uv pip install --python data/logdb-venv/bin/python duckdb
-# （有 ensurepip 的机器：python3 -m venv data/logdb-venv && data/logdb-venv/bin/pip install duckdb）
+~/.local/bin/uv pip install --python data/logdb-venv/bin/python -r agent/tools/logdb/requirements.txt   # duckdb==1.5.6
+# （有 ensurepip 的机器：python3 -m venv data/logdb-venv && data/logdb-venv/bin/pip install -r agent/tools/logdb/requirements.txt）
+# 这个环境没有 pip，bin/ 下只有指向 /usr/bin/python3 的链接和 activate 脚本：整个目录搬走（.cache -> data）照样能用，
+# 只有 activate 里的 VIRTUAL_ENV 还是旧路径（不用它就没关系）。
 
 P=data/logdb-venv/bin/python
 $P agent/tools/logdb/sync.py                 # 增量同步（首次就是全量）
