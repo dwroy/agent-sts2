@@ -57,9 +57,19 @@ describe("counted records instead of hand-written ones", () => {
     setUnblockedSharesForTests({ KAISER_CRAB: { unblocked_share: 0.35, fights: 10, turns: 70, first_death: CRAB } });
     expect(crabKillRecord("zh")).toBe(crabKillText(CRAB, "zh"));
     expect(fillGuideFacts("{CRAB_KILL_ORDER}|{CRAB_KILLS_EN}")).toBe(`${crabKillText(CRAB, "zh")}|${crabKillShort(CRAB)}`);
-    // The boss notes (DeepSeek's run journal, the boss clock) carry it.
-    expect(bossNote("KAISER_CRAB_BOSS", 9)).toContain(`（${crabKillText(CRAB, "zh")}；经验 crab-kill-order）`);
-    expect(clockBossNote(bossProfile("KAISER_CRAB")!, 9)).toContain(`(${crabKillText(CRAB, "en")}; experience crab-kill-order)`);
+    // The boss notes (DeepSeek's run journal, the boss clock) carry it: from A8 up A8's fights and A9's apart
+    // (2026-10-04, recordBand), below A8 the text over every ascension.
+    expect(crabKillText(CRAB, "zh", [8, 9])).toBe(
+      "有记录的螃蟹战 A8 5 场赢 3，火箭先死 2 场赢 1、碾碎爪先死 1 场赢 1、没有哪只先死 2 场赢 1；A9 2 场赢 0，火箭先死 0 场赢 0、碾碎爪先死 0 场赢 0、没有哪只先死 2 场赢 0（没有哪只先死 = 同回合一起死或我方先死）",
+    );
+    expect(crabKillText(CRAB, "en", [8, 9])).toBe(
+      "logged crab fights A8 5 (3 won): Rocket died first 1/2 won, Crusher first 1/1, neither died first 1/2; A9 2 (0 won): Rocket died first 0/0 won, Crusher first 0/0, neither died first 0/2",
+    );
+    expect(crabKillShort(CRAB, [8, 9])).toBe("A8 Rocket died first 1/2 won, otherwise 2/3; A9 Rocket died first 0/0 won, otherwise 0/2");
+    expect(bossNote("KAISER_CRAB_BOSS", 9)).toContain(`（${crabKillText(CRAB, "zh", [8, 9])}；经验 crab-kill-order）`);
+    expect(bossNote("KAISER_CRAB_BOSS", 7)).toContain(`（${crabKillText(CRAB, "zh")}；经验 crab-kill-order）`);
+    expect(clockBossNote(bossProfile("KAISER_CRAB")!, 9)).toContain(`(${crabKillText(CRAB, "en", [8, 9])}; experience crab-kill-order)`);
+    expect(clockBossNote(bossProfile("KAISER_CRAB")!, 7)).toContain(`(${crabKillText(CRAB, "en")}; experience crab-kill-order)`);
   });
 
   it("the Matriarch's sleep: decks without lasting Strength by ascension, bursts vs chip damage that woke it", () => {
@@ -69,9 +79,17 @@ describe("counted records instead of hand-written ones", () => {
     expect(lagSleepText(LAG, "en")).toBe("decks without a lasting-Strength card won A8 1/2, A9 1/3");
     setUnblockedSharesForTests({ LAGAVULIN_MATRIARCH: { unblocked_share: 0.5, fights: 10, turns: 90, sleep: LAG } });
     expect(lagSleepRecord("zh")).toBe(lagSleepText(LAG, "zh"));
+    // From A8 up (2026-10-04, recordBand) the T1-T2 wake-ups are counted by ascension too (KFP1 and TXLH were A2).
+    expect(lagSleepText(LAG, "zh", [8, 9])).toBe(
+      "A8 有持续力量牌 2/2 赢、没有 1/2 赢（输的 24UZ 都等它自然醒，前两回合没有伤害进它），T1–T2 一次打掉 ≥25% 打醒的 1 场赢 1（EZ2L 52%）、小伤害打醒的 0 场赢 0；A9 有持续力量牌 1/1 赢、没有 1/3 赢（输的 BXAZ、WQ67 都等它自然醒，前两回合没有伤害进它），T1–T2 一次打掉 ≥25% 打醒的 1 场赢 1（0NZB 26%）、小伤害打醒的 0 场赢 0",
+    );
+    expect(lagSleepText({ "8": LAG["8"] }, "zh", [8, 9])).toMatch(/；A9 还没有记录$/);
+    expect(lagSleepRecord("zh", 9)).toBe(lagSleepText(LAG, "zh", [8, 9]));
+    expect(lagSleepRecord("zh", 7)).toBe(lagSleepText(LAG, "zh"));
     const note = bossNote("LAGAVULIN_MATRIARCH_BOSS", 9)!;
     expect(note).toContain("牌组没有持续力量牌时沉睡回合几乎白过");
-    expect(note).toContain(lagSleepText(LAG, "zh"));
+    expect(note).toContain(lagSleepText(LAG, "zh", [8, 9]));
+    expect(bossNote("LAGAVULIN_MATRIARCH_BOSS", 7)!).toContain(lagSleepText(LAG, "zh"));
   });
 
   it("a boss's fights won by ascension (was \"帝皇蟹（5 局死在它手上\" in the handbook)", () => {
@@ -127,7 +145,9 @@ describe("Jev's hints", () => {
     expect(byId("crab-rocket-first").text).toContain("({CRAB_KILLS_EN})");
     expect(byId("crab-rocket-first").text).not.toMatch(/9\/12|8\/39/);
     setUnblockedSharesForTests({ KAISER_CRAB: { unblocked_share: 0.35, fights: 10, turns: 70, first_death: CRAB } });
-    expect(hintText(byId("crab-rocket-first"), 9)).toContain("Focus the Rocket first (Rocket died first 2/3 won, otherwise 2/7).");
+    // At A8 and up each ascension apart (2026-10-04, recordBand); below A8 over every ascension.
+    expect(hintText(byId("crab-rocket-first"), 9)).toContain("Focus the Rocket first (A8 Rocket died first 1/2 won, otherwise 2/3; A9 Rocket died first 0/0 won, otherwise 0/2).");
+    expect(hintText(byId("crab-rocket-first"), 7)).toContain("Focus the Rocket first (Rocket died first 2/3 won, otherwise 2/7).");
     expect(byId("crab-charge").text).toContain("from behind) plus Strength:");
   });
 

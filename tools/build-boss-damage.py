@@ -275,9 +275,15 @@ def main() -> None:
             out[boss]["amalgam"] = {asc: sorted(rows_, key=lambda r: r["run"]) for asc, rows_ in sorted(queen_rows.items())}
         if boss == "THE_INSATIABLE":
             out[boss]["deaths"] = {asc: sorted(rows_, key=lambda r: r["run"]) for asc, rows_ in sorted(sand_rows.items())}
-    with open(args.out, "w", encoding="utf8") as handle:
+    # Written whole, then moved into place: a run starting during the refresh reads the old file or the new one, never
+    # half of one (boss-clock reads it once a process; unreadable, every record read "no logged fights" for the run,
+    # and the first render of a day froze that for the day). The tmp name is this process's: two refreshes at once
+    # (ops/report.py and ops/wait-run.sh) do not write into one file.
+    tmp = f"{args.out}.{os.getpid()}.tmp"
+    with open(tmp, "w", encoding="utf8") as handle:
         json.dump(out, handle, ensure_ascii=False, indent=1, sort_keys=True)
         handle.write("\n")
+    os.replace(tmp, args.out)
     print(f"{len(out)} bosses, {len(rows)} fights -> {args.out}")
     if args.fights:
         with open(args.fights, "w", encoding="utf8") as handle:

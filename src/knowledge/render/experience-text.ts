@@ -8,7 +8,7 @@
 
 import type { Confidence, ExperienceEntry } from "../experience.js";
 import { KnowledgeLookupError, loadKnowledgeData, loadPostmortems, lessonsPath, type KnowledgeData, type Postmortems, type RenderContext } from "./data.js";
-import { fillGuideFacts } from "../../strategy/boss-clock.js";
+import { factsAtAscension, fillGuideFacts } from "../../strategy/boss-clock.js";
 import { freshFacts, type FactFiller } from "./facts.js";
 import { cmp } from "./format.js";
 
@@ -120,8 +120,9 @@ function caseText(item: Case, postmortems: Postmortems): string {
 export function lessonText(entry: ExperienceEntry, postmortems: Postmortems, asc: number, facts: FactFiller = freshFacts): string {
   const [lo, hi] = entry.asc ?? [0, 20];
   const cases = pickCases(entry, postmortems, asc).map((item) => caseText(item, postmortems));
-  // The lesson's data placeholders filled as the guides' are (v3 b5e1f44: one count of the same fights in both).
-  const head = `- [${entry.id}｜${entry.scope}${entry.name ? ` ${entry.name}` : ""}｜适用 A${lo}–${hi}] ${facts(entry.lesson, fillGuideFacts)}`;
+  // The lesson's data placeholders filled as the guides' are (v3 b5e1f44: one count of the same fights in both), the
+  // records by the run's ascension band (factsAtAscension).
+  const head = `- [${entry.id}｜${entry.scope}${entry.name ? ` ${entry.name}` : ""}｜适用 A${lo}–${hi}] ${facts(factsAtAscension(entry.lesson, asc), fillGuideFacts)}`;
   const tail = `  支持 ${entry.n_support} 局，反对 ${entry.n_contradict} 局，置信 ${CONFIDENCE_ZH[entry.confidence] ?? entry.confidence}${cases.length > 0 ? `；案例: ${cases.join("；")}` : ""}`;
   return `${head}\n${tail}`;
 }

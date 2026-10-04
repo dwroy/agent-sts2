@@ -19,7 +19,7 @@ import { noteScreenChange } from "../src/loop.js";
 import { parseGameState } from "../src/mod/schema.js";
 import { DeepSeekAnswerError, DeepSeekClient } from "../src/llm/deepseek.js";
 import { planRest } from "../src/screens/rest.js";
-import { bossMechanic, bossProfile, giantBlockRecord, giantBlockText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
+import { bossMechanic, bossProfile, giantBlockBandText, giantBlockRecord, giantBlockText, setUnblockedSharesForTests, type GiantKillRow } from "../src/strategy/boss-clock.js";
 import { bossNote } from "../src/project/run-journal.js";
 import { sendJson, startTestServer, type TestServer } from "./support.js";
 import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/strategy/rollout-live.js";
@@ -301,17 +301,25 @@ describe("5. The Giant's block-needed record is counted from the fight data, not
     expect(giantBlockText([...a8, ...a9], "zh")).toBe("A8/A9 有击杀的 6 场：所需格挡（层数 − HP）≤13 的 3 场赢 3，14–19 的 1 场赢 0，≥20 的 2 场赢 1");
     expect(giantBlockText([...a8, ...a9], "en")).toBe("A8/A9 kills (6): block needed (stacks - HP) 13 or less 3/3 won, 14-19 0/1, 20 or more 1/2");
     expect(giantBlockText([row(null, false)], "zh")).toBe("A8/A9 没有记下击杀时 HP 的巨兽对局");
+    // From A8 up (2026-10-04, recordBand): A8's kills and A9's apart.
+    expect(giantBlockBandText({ "8": a8, "9": a9 }, "zh", [8, 9])).toBe("有击杀的巨兽战按所需格挡（层数 − HP）分：A8 3 场中 ≤13 的 2 场赢 2，14–19 的 1 场赢 0，≥20 的 0 场赢 0；A9 3 场中 ≤13 的 1 场赢 1，≥20 的 2 场赢 1");
+    expect(giantBlockBandText({ "8": a8, "9": a9 }, "en", [8, 9])).toBe("Giant kills by block needed (stacks - HP): A8 (3) 13 or less 2/2 won, 14-19 0/1, 20 or more 0/0; A9 (3) 13 or less 1/1 won, 20 or more 1/2");
+    expect(giantBlockBandText({ "9": a9 }, "zh", [8, 9])).toBe("有击杀的巨兽战按所需格挡（层数 − HP）分：A8 没有记下击杀时 HP 的对局；A9 3 场中 ≤13 的 1 场赢 1，≥20 的 2 场赢 1");
   });
 
   it("the boss note, the boss mechanic and the guides carry the counted record", () => {
     setUnblockedSharesForTests({ WATERFALL_GIANT: { unblocked_share: 0.3, fights: 7, turns: 70, kills: { "8": a8, "9": a9 } } });
     try {
+      // Read at A9: A8's kills and A9's apart (recordBand); below A8 and in v3's system prompt (no ascension), pooled.
       const zh = giantBlockRecord("zh");
+      expect(giantBlockRecord("zh", 9)).toBe(giantBlockBandText({ "8": a8, "9": a9 }, "zh", [8, 9]));
+      expect(giantBlockRecord("zh", 7)).toBe(zh);
       const note = bossNote("WATERFALL_GIANT_BOSS", 9)!;
-      expect(note).toContain(`（${zh}）`);
+      expect(note).toContain(`（${giantBlockRecord("zh", 9)}）`);
       expect(note).not.toContain("18 场赢 17");
+      expect(bossNote("WATERFALL_GIANT_BOSS", 7)!).toContain(`（${zh}）`);
       const mechanic = bossMechanic(bossProfile("WATERFALL_GIANT_BOSS")!, 9);
-      expect(mechanic).toContain(giantBlockRecord("en"));
+      expect(mechanic).toContain(giantBlockRecord("en", 9));
       expect(mechanic).not.toContain("17/18");
       for (const name of ["ironclad-guide.md", "ds-handbook.md"]) {
         const text = readFileSync(join(KNOWLEDGE, name), "utf8");

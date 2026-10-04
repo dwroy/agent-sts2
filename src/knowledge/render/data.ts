@@ -68,7 +68,11 @@ export interface KnowledgeData {
   experience: ExperienceFile;
   roomCosts: RoomCostsFile;
   outcomeStats: OutcomeStats & { generated?: string; _about?: string };
-  /** The old hand-written knowledge (docs/v4-architecture.md §3: whole, marked unverified), its data facts filled now. */
+  /**
+   * The old hand-written knowledge (docs/v4-architecture.md §3: whole, marked unverified), its data facts filled now,
+   * without an ascension (the records over every logged ascension); the prefix and the kb_* tools fill the templates
+   * below at the run's ascension instead (render/old-knowledge.ts).
+   */
   guide: string;
   handbook: string;
   /** The same as written, placeholders and all (the prefix fills them through its RenderContext `facts`). */
@@ -154,8 +158,8 @@ function parseAll(dir: string): KnowledgeData {
     experience: { version: String(experience["version"] ?? "?"), entries: experience["entries"] as ExperienceEntry[] },
     roomCosts: rooms as unknown as RoomCostsFile,
     outcomeStats: outcome as unknown as KnowledgeData["outcomeStats"],
-    // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled here, once, as v3 fills them in its prompt: the full
-    // prefix, the kb_* tools and gkb-dump all read the filled text.
+    // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled here, once, as v3 fills them in its prompt (no
+    // ascension). The full prefix, the kb_* tools and gkb-dump fill the templates at the run's ascension.
     guide: fillGuideFacts(guideTemplate),
     handbook: fillGuideFacts(handbookTemplate),
     guideTemplate,

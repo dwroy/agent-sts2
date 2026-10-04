@@ -294,15 +294,16 @@ const CONFIDENCE_ZH: Record<Confidence, string> = { high: "高", med: "中", low
  * ({GIANT_KILLS_A8}, {CRAB_KILL_ORDER}, {BOSS_RECORD:ID}, {QUEEN_AMALGAM}…) and filled here from the data
  * (boss-clock fillGuideFacts), as the guides are, so a lesson and the guide never quote two different counts of the
  * same fights (2026-09-30: giant-explode said "A8 27 场…T10 前击杀 13/15" while the guide's filled record said 29
- * fights, 14/17, in the same DeepSeek question).
+ * fights, 14/17, in the same DeepSeek question). `ascension`: the run's, when known: the records that count fights
+ * over several ascensions are then read by its band (boss-clock recordBand: from A8 up A8 and A9 apart).
  */
-export function lessonText(entry: Pick<ExperienceEntry, "lesson">): string {
-  return entry.lesson.includes("{") ? fillGuideFacts(entry.lesson) : entry.lesson;
+export function lessonText(entry: Pick<ExperienceEntry, "lesson">, ascension?: number): string {
+  return entry.lesson.includes("{") ? fillGuideFacts(entry.lesson, ascension) : entry.lesson;
 }
 
-function lessonLine(entry: ExperienceEntry): string {
+function lessonLine(entry: ExperienceEntry, ascension: number): string {
   const contra = entry.n_contradict > 0 ? ` 反例${entry.n_contradict}` : "";
-  return `- [${entry.scope}${entry.name ? ` ${entry.name}` : ""} | 置信${CONFIDENCE_ZH[entry.confidence]} n=${entry.n_support}${contra}] ${lessonText(entry)}`;
+  return `- [${entry.scope}${entry.name ? ` ${entry.name}` : ""} | 置信${CONFIDENCE_ZH[entry.confidence]} n=${entry.n_support}${contra}] ${lessonText(entry, ascension)}`;
 }
 
 function pct(value: number | null | undefined): string {
@@ -411,7 +412,7 @@ export function knowledgeSlice(state: GameState, label: string, criteria: Record
   const parts: string[] = [];
   if (lessons.length > 0) {
     parts.push(SLICE_LESSONS_HEADING);
-    parts.push(...lessons.map(lessonLine));
+    parts.push(...lessons.map((entry) => lessonLine(entry, asc)));
   }
   if (stats.length > 0) {
     parts.push(SLICE_STATS_HEADING);

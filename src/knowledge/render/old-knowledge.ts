@@ -3,10 +3,11 @@
  * Jev's fight hints, whole, marked as unverified and below the data. The hints' {DMG:…}-style placeholders are
  * filled from the monster DB at the run's ascension (monster-db fillDbNumbers), and their counted records
  * ({CRAB_KILLS_EN}, {LAG_NO_STRENGTH_EN}) from the fight data (boss-clock fillGuideFacts), as Jev reads them
- * (jev-hints.ts hintText).
+ * (jev-hints.ts hintText). The records that count fights over several ascensions are read by the run's ascension band
+ * (boss-clock factsAtAscension: from A8 up A8 and A9 apart), in the guide and the handbook too.
  */
 
-import { fillGuideFacts } from "../../strategy/boss-clock.js";
+import { factsAtAscension, fillGuideFacts } from "../../strategy/boss-clock.js";
 import { fillDbNumbers } from "../monster-db.js";
 import { KNOWLEDGE_FILES, KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
 import { freshFacts, type FactFiller } from "./facts.js";
@@ -25,10 +26,11 @@ export const OLD_KNOWLEDGE_NOTE =
 
 function hintsText(data: KnowledgeData, asc: number, keyword?: string, facts: FactFiller = freshFacts): string[] {
   const needle = keyword?.toLowerCase();
-  // The monster-DB numbers depend on the ascension: their frozen values are kept per ascension.
+  // The monster-DB numbers depend on the ascension: their frozen values are kept per ascension. The records by the
+  // ascension's band are marked with it ({@9:CRAB_KILLS_EN}), so their frozen values are their own too.
   const fill = (text: string) => fillGuideFacts(fillDbNumbers(text, asc, data.monsterDb.monsters));
   return data.jevHints.hints
-    .map((hint) => ({ hint, when: JSON.stringify(hint.when ?? {}), text: facts(hint.text, fill, `A${asc}`) }))
+    .map((hint) => ({ hint, when: JSON.stringify(hint.when ?? {}), text: facts(factsAtAscension(hint.text, asc), fill, `A${asc}`) }))
     .filter(({ hint, when, text }) => !needle || [hint.id, when, text].some((part) => part.toLowerCase().includes(needle)))
     .map(({ hint, when, text }) => `- [${hint.id}] 条件 ${when}：${text}（证据 ${hint.evidence?.length ?? 0} 局${hint.evidence?.length ? `: ${hint.evidence.join(", ")}` : ""}）`);
 }
@@ -44,7 +46,8 @@ export function renderOldSource(source: OldSource, ctx: RenderContext): string {
   const data = loadKnowledgeData(ctx.knowledgeDir);
   const title = sourceTitle(source, data, ctx.ascension);
   if (source === "jev_hints") return [title, data.jevHints.note ?? "", ...hintsText(data, ctx.ascension, undefined, ctx.facts)].filter(Boolean).join("\n");
-  const text = ctx.facts ? ctx.facts(source === "guide" ? data.guideTemplate : data.handbookTemplate, fillGuideFacts) : source === "guide" ? data.guide : data.handbook;
+  const template = source === "guide" ? data.guideTemplate : data.handbookTemplate;
+  const text = ctx.facts ? ctx.facts(factsAtAscension(template, ctx.ascension), fillGuideFacts) : fillGuideFacts(template, ctx.ascension);
   return `${title}\n${demoteHeadings(text.trimEnd())}`;
 }
 
@@ -70,7 +73,7 @@ export function queryOldKnowledge(ctx: RenderContext, source?: string, keyword?:
   const data = loadKnowledgeData(ctx.knowledgeDir);
   const blocks: string[] = [];
   for (const key of sources) {
-    const lines = key === "jev_hints" ? hintsText(data, ctx.ascension, needle) : matchingLines(key === "guide" ? data.guide : data.handbook, needle);
+    const lines = key === "jev_hints" ? hintsText(data, ctx.ascension, needle) : matchingLines(fillGuideFacts(key === "guide" ? data.guideTemplate : data.handbookTemplate, ctx.ascension), needle);
     if (lines.length > 0) blocks.push([sourceTitle(key, data, ctx.ascension), ...lines].join("\n"));
   }
   if (blocks.length === 0) throw new KnowledgeLookupError(`旧知识${source ? ` ${source}` : ""}里没有「${needle}」。可用的来源: ${OLD_SOURCE_KEYS.join(", ")}；不带关键词可取整份`);
