@@ -642,9 +642,11 @@ export const CODEX_RUST_LOG = "warn,codex_otel.trace_safe=info";
 /** The telemetry line of the turn's first output token. */
 export const TTFT_LINE = /event\.name="codex\.turn_ttft"/;
 
-/** The child's environment: the basics, CODEX_HOME, the log filter, and the program's directory first in PATH (node for the npm launcher). */
-export function codexEnv(bin: string, home: string): Record<string, string> {
-  const base = agentEnv();
+/**
+ * The child's environment: the basics, CODEX_HOME, the log filter, and the program's directory first in PATH (node for the
+ * npm launcher). `base` is the environment to start from (the brain: agentEnv(); the offline learner: its own key-free env).
+ */
+export function codexEnv(bin: string, home: string, base: Record<string, string> = agentEnv()): Record<string, string> {
   const path = isAbsolute(bin) ? [dirname(bin), base["PATH"] ?? ""].filter(Boolean).join(":") : (base["PATH"] ?? "");
   return { ...base, PATH: path, CODEX_HOME: home, RUST_LOG: CODEX_RUST_LOG };
 }
@@ -678,7 +680,7 @@ function catalogArgs(stateDir: string): string[] {
  * The start-up check (Brain.preflight): `<bin> --version` answers; the login file exists in codex's home (checked,
  * never read); no AGENTS.md there; the catalog lists the model and the effort. Any other outcome says why.
  */
-export async function checkCodex(codex: BrainConfig["codex"], model: string, effort: string, opts: { stateDir?: string; timeoutMs?: number } = {}): Promise<CodexCheck> {
+export async function checkCodex(codex: Pick<BrainConfig["codex"], "bin" | "home">, model: string, effort: string, opts: { stateDir?: string; timeoutMs?: number } = {}): Promise<CodexCheck> {
   const env = codexEnv(codex.bin, codex.home);
   const timeoutMs = opts.timeoutMs ?? CODEX_CHECK_TIMEOUT_MS;
   const stateDir = opts.stateDir ?? CODEX_STATE_DIR;

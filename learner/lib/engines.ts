@@ -1,6 +1,6 @@
 /**
  * Command lines for the learner's CLI agents (docs/v4-architecture.md §1, M4): headless `claude -p` on the local
- * subscription login, and `codex exec` (not installed yet; built and tested against a fake binary). The prompt
+ * subscription login, and `codex exec` on the ChatGPT subscription login. The prompt
  * always goes in on stdin, so its size never hits the argv limit and it never shows in `ps`.
  *
  * Permissions are derived from the task's tool list and confined to the project root:
@@ -9,13 +9,16 @@
  *           --tools = exactly the task's built-in tools, --allowedTools with Read/Edit rules under the root,
  *           --disallowedTools for key files, pushes, installs, play and pkill; --strict-mcp-config so only our
  *           tool server (with --with-tools) is loaded.
- *   codex:  --sandbox read-only / workspace-write (+ --add-dir root), approvals never.
+ *   codex:  --sandbox read-only / workspace-write (+ --add-dir root), approvals never, on the brain's codex plumbing
+ *           (engines/codex.ts: program lookup, CODEX_HOME, disabled features, the start-up check).
  * The child environment never carries our keys (childEnv).
  */
 import { accessSync, constants } from "node:fs";
 import { delimiter, join } from "node:path";
 
+import { CODEX_DISABLED_FEATURES, codexEnv } from "../../agent/src/brain/engines/codex.js";
 import type { McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
+import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, resolveCodexBin, resolveCodexHome } from "../../agent/src/core/config.js";
 import { MCP_SERVER_NAME } from "../../agent/src/brain/tools/mcp-launch.js";
 import type { TaskTool } from "./task.js";
 
@@ -30,6 +33,8 @@ export interface EngineRequest {
   projectRoot: string;
   tools: TaskTool[];
   model?: string;
+  /** Reasoning effort: claude --effort, codex model_reasoning_effort. */
+  effort?: string;
   maxTurns?: number;
   /** Our stdio MCP tool server (--with-tools). */
   mcp?: McpLaunchSpec;
@@ -83,10 +88,17 @@ export function childEnv(env: NodeJS.ProcessEnv, engine: EngineName): NodeJS.Pro
 
 /* ---- binaries ---------------------------------------------------------------------------------- */
 
-/** LEARNER_<ENGINE>_BIN overrides the PATH lookup (tests use a fake codex/claude). */
+/**
+ * The engine's program: LEARNER_<ENGINE>_BIN (tests use a fake codex/claude), else the first on PATH; codex also where
+ * the brain finds it (config.ts resolveCodexBin: ~/.local/node/bin/codex, the npm install). Undefined when missing.
+ */
 export function engineBinary(engine: EngineName, env: NodeJS.ProcessEnv): string | undefined {
   const override = env[`LEARNER_${engine.toUpperCase()}_BIN`];
-  const candidates = override ? [override] : (env["PATH"] ?? "").split(delimiter).filter(Boolean).map((dir) => join(dir, engine));
+  const candidates = override
+    ? [override]
+    : engine === "codex"
+      ? [resolveCodexBin({ ...env, BRAIN_CODEX_BIN: undefined })]
+      : (env["PATH"] ?? "").split(delimiter).filter(Boolean).map((dir) => join(dir, engine));
   for (const candidate of candidates) {
     try {
       accessSync(candidate, constants.X_OK);
@@ -186,6 +198,7 @@ export function claudeCommand(request: EngineRequest, prompt: string, binary = "
   ];
   if (request.mcp) args.push("--mcp-config", claudeMcpConfig(request.mcp));
   if (request.model) args.push("--model", request.model);
+  if (request.effort) args.push("--effort", request.effort);
   if (request.maxTurns !== undefined) args.push("--max-turns", String(request.maxTurns));
   return { command: binary, args, stdin: prompt };
 }
@@ -201,24 +214,103 @@ function toml(value: unknown): string {
 }
 
 /**
- * `codex exec` per the Codex CLI reference: --json (JSONL events on stdout), --cd, --sandbox (read-only for tasks
- * that only read, workspace-write otherwise, with the project root added as a writable directory), approvals
- * never (`-c approval_policy="never"`), --model, our MCP server as `-c mcp_servers.gkb.*`, and `-` = prompt on
- * stdin. Codex has no turn limit flag; the launcher's timeout still applies.
+ * The brain's features that the learner keeps on: it works with tools (the shell, and the catalog's own tool mode that
+ * runs them), which the brain switches off. Every other feature the brain disables (hooks, memories, plugins, apps,
+ * multi-agent, browser and computer use, image tools, goals, shell snapshots of the user's rc files, the shared
+ * app-server daemon, endless reconnects, ...) is off for the learner too, so a learner run sees the task, the repo's
+ * AGENTS.md and its own tool results, nothing of the machine's codex setup.
  */
+const LEARNER_KEEPS_FEATURES = new Set<string>(["shell_tool", "unified_exec", "code_mode_host"]);
+export const LEARNER_CODEX_DISABLED_FEATURES = CODEX_DISABLED_FEATURES.filter((feature) => !LEARNER_KEEPS_FEATURES.has(feature));
+
+/**
+ * The -c overrides of a learner run. Unlike the brain's (engines/codex.ts codexConfig), project docs stay on: codex
+ * reads the repo's AGENTS.md from the git root down to --cd. Web search is off: game knowledge may come only from
+ * the run logs (docs/learning-protocol.md). The shell is not a login shell (no rc files).
+ */
+export function codexLearnerConfig(opts: { effort: string }): string[] {
+  return [
+    `approval_policy=${toml("never")}`,
+    `web_search=${toml("disabled")}`,
+    `model_reasoning_effort=${toml(opts.effort)}`,
+    "allow_login_shell=false",
+    // No skills catalogue in front of the task (the brain's settings; the 2026-10-04 smoke run had one).
+    "skills.include_instructions=false",
+    "skills.bundled.enabled=false",
+    "check_for_update_on_startup=false",
+    `history.persistence=${toml("none")}`,
+    "analytics.enabled=false",
+  ];
+}
+
+/**
+ * `codex exec` on the brain's plumbing (engines/codex.ts): --json (JSONL events on stdout), --ignore-user-config (no
+ * config.toml: no profiles, MCP servers, plugins or notify of the interactive setup; the login still comes from
+ * CODEX_HOME), --ignore-rules, --cd, --sandbox (read-only for tasks that only read, workspace-write otherwise, with
+ * the project root added as a writable directory), --model, the -c overrides above (approvals never, the reasoning
+ * effort), our MCP server as `-c mcp_servers.gkb.*`, the features the learner does not need disabled, and `-` =
+ * prompt on stdin. The model and the effort are always sent (launcher defaults: config.ts DEFAULT_CODEX_MODEL /
+ * DEFAULT_CODEX_EFFORT). The session is kept (not --ephemeral): `codex exec resume <thread id>` continues it. Codex
+ * has no turn limit flag; the launcher's timeout still applies.
+ */
+/**
+ * The launcher's note in front of a codex task (docs/learning-protocol.md §7: the launcher translates the task's
+ * engine-neutral tool names). The 2026-10-04 smoke run without it: codex looked for tools named Read and Grep, found
+ * none, and took "不运行任何命令" as forbidding the shell, so it read nothing.
+ */
+export function codexPreamble(tools: TaskTool[], writes: boolean): string {
+  const allowed = tools.join("、");
+  const lines = [
+    "【启动器说明（codex）】任务说明里的工具名是通用叫法，在这里这样对应：Read = 用只读的 shell 命令看文件（sed -n '起,止p'、head、tail；大文件不许整份输出），Grep = rg 或 grep，Glob = rg --files、ls 或 find" +
+      (writes ? "，Bash = shell 命令，Edit / Write = apply_patch（或 shell 写文件）。" : "。"),
+    `本任务允许的工具：${allowed}。` +
+      (writes
+        ? "沙箱：工作目录和项目目录可写，不联网。"
+        : "沙箱只读、不联网。任务里「不运行任何命令」「只读」指不运行会改动文件或状态的命令；上面这些只读查看命令就是 Read / Grep / Glob 本身，可以用。"),
+  ];
+  return `${lines.join("\n")}\n\n`;
+}
+
 export function codexCommand(request: EngineRequest, prompt: string, binary = "codex"): CommandLine {
   const writes = request.tools.some((tool) => tool === "Bash" || tool === "Edit" || tool === "Write");
-  const args = ["exec", "--json", "--cd", request.cwd, "--sandbox", writes ? "workspace-write" : "read-only"];
+  const args = ["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", request.cwd, "--sandbox", writes ? "workspace-write" : "read-only"];
   if (writes && request.cwd !== request.projectRoot) args.push("--add-dir", request.projectRoot);
-  args.push("-c", `approval_policy=${toml("never")}`);
-  if (request.model) args.push("--model", request.model);
+  args.push("--model", request.model ?? DEFAULT_CODEX_MODEL);
+  for (const setting of codexLearnerConfig({ effort: request.effort ?? DEFAULT_CODEX_EFFORT })) args.push("-c", setting);
   if (request.mcp) {
     const key = `mcp_servers.${MCP_SERVER_NAME}`;
     args.push("-c", `${key}.command=${toml(request.mcp.command)}`, "-c", `${key}.args=${toml(request.mcp.args)}`);
     if (Object.keys(request.mcp.env).length > 0) args.push("-c", `${key}.env=${toml(request.mcp.env)}`);
+    // Our tools only read the knowledge base and the logs; without this every call waits for an approval that
+    // approval_policy=never turns into a refusal (2026-10-04 probe: "kb_runs ... needs approval").
+    args.push("-c", `${key}.default_tools_approval_mode=${toml("approve")}`);
   }
+  for (const feature of LEARNER_CODEX_DISABLED_FEATURES) args.push("--disable", feature);
   args.push("-");
-  return { command: binary, args, stdin: prompt };
+  return { command: binary, args, stdin: codexPreamble(request.tools, writes) + prompt };
+}
+
+/** Where codex keeps its login: LEARNER_CODEX_HOME, else CODEX_HOME, else ~/.codex (config.ts resolveCodexHome). */
+export function learnerCodexHome(env: NodeJS.ProcessEnv): string {
+  return resolveCodexHome({ ...env, BRAIN_CODEX_HOME: env["LEARNER_CODEX_HOME"] });
+}
+
+/**
+ * The codex child's environment: ours without keys (childEnv), then the brain's codexEnv on top of it (CODEX_HOME,
+ * codex's trace-safe log filter on stderr, the program's directory first in PATH for the npm launcher's node).
+ */
+export function codexChildEnv(env: NodeJS.ProcessEnv, bin: string): Record<string, string> {
+  const base: Record<string, string> = {};
+  for (const [name, value] of Object.entries(childEnv(env, "codex"))) if (value !== undefined) base[name] = value;
+  return codexEnv(bin, learnerCodexHome(env), base);
+}
+
+/**
+ * The engine's defaults under --model / --effort and the task's model.<engine> / effort.<engine>: codex gpt-6.1-sol
+ * at xhigh (Dai 2026-10-04); claude the CLI's own.
+ */
+export function engineDefaults(engine: EngineName): { model?: string; effort?: string } {
+  return engine === "codex" ? { model: DEFAULT_CODEX_MODEL, effort: DEFAULT_CODEX_EFFORT } : {};
 }
 
 export function engineCommand(request: EngineRequest, prompt: string, binary?: string): CommandLine {

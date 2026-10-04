@@ -11,9 +11,10 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { childEnv, claudeCommand, claudePermissions, codexCommand, engineBinary, shellQuote, strippedEnvNames, type EngineRequest } from "../../learner/lib/engines.js";
+import { CODEX_DISABLED_FEATURES } from "../src/brain/engines/codex.js";
+import { LEARNER_CODEX_DISABLED_FEATURES, codexPreamble, childEnv, claudeCommand, claudePermissions, codexChildEnv, codexCommand, engineBinary, learnerCodexHome, shellQuote, strippedEnvNames, type EngineRequest } from "../../learner/lib/engines.js";
 import { collectSecrets, main, parseArgs, redactSecrets, type LauncherDeps } from "../../learner/lib/launcher.js";
-import { SummaryTracker } from "../../learner/lib/summary.js";
+import { SummaryTracker, findRollout, rolloutStats } from "../../learner/lib/summary.js";
 import { LearnerUsageError, fillTemplate, loadTask, parseSets, parseTask, placeholdersOf, renderTask } from "../../learner/lib/task.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -30,6 +31,44 @@ default.code_dir: {{project_root}}/jev-sts2-v3
 ---
 复盘 {{runs}}，在 {{worktree}} 里，基线 {{base_branch}}，代码 {{code_dir}}，再说一次 {{runs}}。
 `;
+
+describe("per-engine model and effort in the front matter", () => {
+  const head = (lines: string): string => `---\ntitle: t\ntools: Read\n${lines}\n---\nbody\n`;
+
+  it("model.<engine> and effort.<engine> are kept per engine", () => {
+    const spec = parseTask(head("model.claude: opus\nmodel.codex: gpt-6.1-sol\neffort.codex: xhigh\neffort.claude: high"), "t", "t.md");
+    expect(spec.models).toEqual({ claude: "opus", codex: "gpt-6.1-sol" });
+    expect(spec.efforts).toEqual({ codex: "xhigh", claude: "high" });
+  });
+
+  it("a plain model / effort (it would reach every engine), an unknown engine or a bad effort is an error", () => {
+    expect(() => parseTask(head("model: opus"), "t", "t.md")).toThrow(/model\.claude \/ model\.codex/);
+    expect(() => parseTask(head("effort: xhigh"), "t", "t.md")).toThrow(/effort\.claude/);
+    expect(() => parseTask(head("model.dsh: x"), "t", "t.md")).toThrow(/不认识的引擎「dsh」/);
+    expect(() => parseTask(head("effort.codex: Extra High"), "t", "t.md")).toThrow(/小写词/);
+  });
+
+  it("the launcher takes --effort, else the task's, else codex's default xhigh; claude gets none by default", async () => {
+    const dir = join(tmpdir(), `learner-fm-${process.pid}`);
+    mkdirSync(join(dir, "tasks"), { recursive: true });
+    mkdirSync(join(dir, "p", "wt"), { recursive: true });
+    writeFileSync(join(dir, "tasks", "t.md"), head("model.claude: sonnet\neffort.codex: high"));
+    const run = async (engine: string, extra: string[] = []): Promise<string> => {
+      const out: string[] = [];
+      const code = await main(["--engine", engine, "--task", "t", "--cwd", join(dir, "p", "wt"), "--dry-run", ...extra], {
+        env: { PATH: "", HOME: dir }, projectRoot: join(dir, "p"), tasksDir: join(dir, "tasks"), runsDir: join(dir, "runs"), secretFiles: [], out: (text) => out.push(text), err: () => undefined,
+      });
+      expect(code).toBe(0);
+      return out.join("");
+    };
+    expect(await run("codex")).toContain(`--model gpt-6.1-sol -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="high"'`);
+    expect(await run("codex", ["--effort", "low", "--model", "gpt-x"])).toContain(`--model gpt-x -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="low"'`);
+    const claude = await run("claude");
+    expect(claude).toContain("--model sonnet");
+    expect(claude).not.toContain("--effort");
+    rmSync(dir, { recursive: true, force: true });
+  });
+});
 
 describe("task placeholders", () => {
   it("lists placeholders once, in order of first use", () => {
@@ -174,29 +213,82 @@ describe("claude command line", () => {
   });
 });
 
+/** The -c overrides and --disable features every learner codex run carries (after --model). */
+const codexTail = (effort: string): string[] => [
+  "-c", 'approval_policy="never"',
+  "-c", 'web_search="disabled"',
+  "-c", `model_reasoning_effort="${effort}"`,
+  "-c", "allow_login_shell=false",
+  "-c", "skills.include_instructions=false",
+  "-c", "skills.bundled.enabled=false",
+  "-c", "check_for_update_on_startup=false",
+  "-c", 'history.persistence="none"',
+  "-c", "analytics.enabled=false",
+];
+const disables = (): string[] => LEARNER_CODEX_DISABLED_FEATURES.flatMap((feature) => ["--disable", feature]);
+
 describe("codex command line", () => {
-  it("codex exec --json in the worktree, workspace-write plus the project root, approvals never, prompt on stdin", () => {
-    const cmd = codexCommand(request({ engine: "codex", model: "gpt-5-codex" }), "提示", "/bin/codex");
+  it("codex exec --json on the brain's isolation flags, workspace-write plus the project root, model and effort, prompt on stdin", () => {
+    const cmd = codexCommand(request({ engine: "codex", model: "gpt-5-codex", effort: "high" }), "提示", "/bin/codex");
     expect(cmd.command).toBe("/bin/codex");
-    expect(cmd.stdin).toBe("提示");
-    expect(cmd.args).toEqual(["exec", "--json", "--cd", `${ROOT}/jev-sts2-step`, "--sandbox", "workspace-write", "--add-dir", ROOT, "-c", 'approval_policy="never"', "--model", "gpt-5-codex", "-"]);
+    expect(cmd.stdin).toBe(`${codexPreamble(request().tools, true)}提示`);
+    expect(cmd.args).toEqual([
+      "exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", `${ROOT}/jev-sts2-step`, "--sandbox", "workspace-write", "--add-dir", ROOT,
+      "--model", "gpt-5-codex", ...codexTail("high"), ...disables(), "-",
+    ]);
   });
 
-  it("a read-only task runs in the read-only sandbox without --add-dir; no model flag unless asked", () => {
+  it("a read-only task runs in the read-only sandbox without --add-dir; gpt-6.1-sol at xhigh unless asked", () => {
     const cmd = codexCommand(request({ engine: "codex", tools: ["Read", "Grep", "Glob"], cwd: ROOT }), "x");
-    expect(cmd.args).toEqual(["exec", "--json", "--cd", ROOT, "--sandbox", "read-only", "-c", 'approval_policy="never"', "-"]);
+    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, "--sandbox", "read-only", "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+  });
+
+  it("puts the launcher's tool note in front of the task: shell commands are Read / Grep / Glob, read-only means no changes", () => {
+    const readOnly = codexCommand(request({ engine: "codex", tools: ["Read", "Grep", "Glob"] }), "任务").stdin;
+    expect(readOnly.startsWith("【启动器说明（codex）】")).toBe(true);
+    expect(readOnly).toContain("本任务允许的工具：Read、Grep、Glob。沙箱只读");
+    expect(readOnly).toContain("可以用");
+    expect(readOnly).not.toContain("apply_patch");
+    expect(readOnly.endsWith("\n\n任务")).toBe(true);
+    expect(codexCommand(request({ engine: "codex" }), "任务").stdin).toContain("Edit / Write = apply_patch");
+  });
+
+  it("keeps the shell and project docs: the brain's features minus its tool switches, no project_doc_max_bytes", () => {
+    expect(LEARNER_CODEX_DISABLED_FEATURES).toEqual(CODEX_DISABLED_FEATURES.filter((feature) => !["shell_tool", "unified_exec", "code_mode_host"].includes(feature)));
+    expect(LEARNER_CODEX_DISABLED_FEATURES).toContain("hooks");
+    expect(LEARNER_CODEX_DISABLED_FEATURES).toContain("shell_snapshot");
+    const args = codexCommand(request({ engine: "codex" }), "x").args;
+    expect(args.join(" ")).not.toContain("project_doc_max_bytes");
+    expect(args).not.toContain("--ephemeral");
   });
 
   it("--with-tools: the stdio server as -c mcp_servers.gkb.* TOML overrides", () => {
     const cmd = codexCommand(request({ engine: "codex", mcp: MCP, cwd: ROOT }), "x");
     const overrides = cmd.args.filter((_arg, i) => cmd.args[i - 1] === "-c");
-    expect(overrides).toEqual([
-      'approval_policy="never"',
+    expect(overrides.slice(-4)).toEqual([
       'mcp_servers.gkb.command="/usr/bin/node"',
       'mcp_servers.gkb.args=["/r/node_modules/.bin/tsx", "/r/src/tools/mcp-server.ts", "--ascension", "9"]',
       'mcp_servers.gkb.env={ "KNOWLEDGE_LESSONS_FILE" = "/p/notes/lessons.md" }',
+      'mcp_servers.gkb.default_tools_approval_mode="approve"',
     ]);
     expect(cmd.args[cmd.args.length - 1]).toBe("-");
+  });
+
+  it("claude takes an effort too (--effort), and no effort flag unless asked", () => {
+    expect(flagValues(claudeCommand(request({ effort: "max" }), "x").args, "--effort")).toEqual(["max"]);
+    expect(claudeCommand(request(), "x").args).not.toContain("--effort");
+  });
+
+  it("finds codex as the brain does and keeps its login home; LEARNER_CODEX_HOME overrides", () => {
+    expect(learnerCodexHome({ HOME: "/h" })).toBe("/h/.codex");
+    expect(learnerCodexHome({ HOME: "/h", CODEX_HOME: "/c", BRAIN_CODEX_HOME: "/brain" })).toBe("/c");
+    expect(learnerCodexHome({ HOME: "/h", CODEX_HOME: "/c", LEARNER_CODEX_HOME: "/l" })).toBe("/l");
+    const env = codexChildEnv({ PATH: "/usr/bin", HOME: "/h", DEEPSEEK_API_KEY: "sk-x", OPENAI_API_KEY: "oa", CODEX_HOME: "/c" }, "/opt/codex/bin/codex");
+    expect(env["CODEX_HOME"]).toBe("/c");
+    expect(env["PATH"]).toBe("/opt/codex/bin:/usr/bin");
+    expect(env["RUST_LOG"]).toBeDefined();
+    expect(env["DEEPSEEK_API_KEY"]).toBeUndefined();
+    expect(env["OPENAI_API_KEY"]).toBeUndefined();
   });
 });
 
@@ -281,6 +373,11 @@ function writeFake(name: "claude" | "codex"): string {
     `#!${process.execPath}
 const fs = require("node:fs");
 let stdin = "";
+if (${JSON.stringify(name)} === "codex" && process.argv[2] === "--version") { process.stdout.write("codex-cli 0.0-fake\\n"); process.exit(0); }
+if (${JSON.stringify(name)} === "codex" && process.argv[2] === "debug") {
+  process.stdout.write(JSON.stringify({ models: [{ slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "high" }, { effort: "xhigh" }] }] }) + "\\n");
+  process.exit(0);
+}
 process.stdin.on("data", (chunk) => (stdin += chunk));
 process.stdin.on("end", () => {
   fs.writeFileSync(process.env.LEARNER_FAKE_RECORD, JSON.stringify({ argv: process.argv.slice(2), cwd: process.cwd(), stdin, env: Object.keys(process.env) }));
@@ -288,9 +385,11 @@ process.stdin.on("end", () => {
   if (${JSON.stringify(name)} === "codex") {
     out({ type: "thread.started", thread_id: "th-1" });
     out({ type: "turn.started" });
-    out({ type: "item.completed", item: { id: "i1", type: "command_execution", command: "grep -n X notes/lessons.md", exit_code: 0 } });
+    out({ type: "error", message: "Reconnecting... 1/5 (stream disconnected before completion)" });
+    out({ type: "item.started", item: { id: "i1", type: "command_execution", command: "grep -n X notes/lessons.md", status: "in_progress" } });
+    out({ type: "item.completed", item: { id: "i1", type: "command_execution", command: "grep -n X notes/lessons.md", exit_code: 0, status: "completed" } });
     out({ type: "item.completed", item: { id: "i2", type: "agent_message", text: "三句话。RUN: X" } });
-    out({ type: "turn.completed", usage: { input_tokens: 1200, cached_input_tokens: 800, output_tokens: 90 } });
+    out({ type: "turn.completed", usage: { input_tokens: 1200, cached_input_tokens: 800, cache_write_input_tokens: 0, output_tokens: 90, reasoning_output_tokens: 40 } });
   } else {
     out({ type: "system", subtype: "init", session_id: "s-1", model: "claude-opus-5-5", tools: ["Read"], mcp_servers: [] });
     out({ type: "assistant", message: { content: [{ type: "tool_use", id: "t1", name: "Grep", input: { pattern: "X" } }] } });
@@ -335,10 +434,12 @@ beforeAll(() => {
   record = join(tmp, "record.json");
   keyFile = join(tmp, "keys");
   writeFileSync(keyFile, `DEEPSEEK=${SECRET}\n`);
+  mkdirSync(join(tmp, "codex-home"));
+  writeFileSync(join(tmp, "codex-home", "auth.json"), "{}"); // a login, as checkCodex looks for it (never read)
 });
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
 
-const baseEnv = (): NodeJS.ProcessEnv => ({ PATH: process.env["PATH"] ?? "", HOME: tmp, LEARNER_FAKE_RECORD: record, DEEPSEEK_API_KEY: "sk-deepseek-should-not-pass", TYPESAFE_API_KEY: "ts", JEV_MODEL: "jev-latest", ANTHROPIC_API_KEY: "sk-ant" });
+const baseEnv = (): NodeJS.ProcessEnv => ({ PATH: process.env["PATH"] ?? "", HOME: tmp, LEARNER_CODEX_HOME: join(tmp, "codex-home"), LEARNER_FAKE_RECORD: record, DEEPSEEK_API_KEY: "sk-deepseek-should-not-pass", TYPESAFE_API_KEY: "ts", JEV_MODEL: "jev-latest", ANTHROPIC_API_KEY: "sk-ant" });
 const smokeArgs = (engine: string, extra: string[] = []): string[] => ["--engine", engine, "--task", "smoke", "--set", "run=ULQPBK1211FG", "--cwd", join(project, "wt"), ...extra];
 
 describe("--dry-run", () => {
@@ -362,7 +463,7 @@ describe("--dry-run", () => {
     const env = { ...baseEnv(), PATH: join(tmp, "empty-path") };
     const dry = deps(env);
     expect(await main(smokeArgs("codex", ["--dry-run"]), dry.deps)).toBe(0);
-    expect(dry.out.join("")).toContain("codex exec --json --cd");
+    expect(dry.out.join("")).toContain("codex exec --json --ignore-user-config --ignore-rules --cd");
     expect(dry.err.join("")).toContain("codex 未安装：需要 Dai 安装并登录");
     const real = deps(env);
     expect(await main(smokeArgs("codex"), real.deps)).toBe(3);
@@ -396,11 +497,25 @@ describe("--dry-run", () => {
 describe("whole runs against fake binaries", () => {
   it("codex: the argv, cwd and stdin the fake saw match codexCommand; no key in its env; log framed and summarised", async () => {
     const fake = writeFake("codex");
+    const day = join(tmp, "codex-home", "sessions", "2026", "10", "04");
+    mkdirSync(day, { recursive: true });
+    writeFileSync(
+      join(day, "rollout-2026-10-04T20-12-11-th-1.jsonl"),
+      [
+        { type: "session_meta", payload: {} },
+        { type: "response_item", payload: { type: "message", role: "user", content: [{ type: "input_text", text: "# AGENTS.md instructions for /p/wt\n\n<INSTRUCTIONS>..." }] } },
+        { type: "response_item", payload: { type: "custom_tool_call", name: "exec", input: "text(1)" } },
+        { type: "response_item", payload: { type: "custom_tool_call", name: "exec", input: "text(2)" } },
+        { type: "response_item", payload: { type: "function_call", name: "mcp__gkb__kb_runs", arguments: "{}" } },
+      ].map((row) => JSON.stringify(row)).join("\n") + "\nnot json\n",
+    );
     const { deps: d, out } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: fake });
-    const code = await main(smokeArgs("codex", ["--model", "gpt-5-codex"]), d);
+    const code = await main(smokeArgs("codex"), d);
     expect(code).toBe(0);
     const seen = JSON.parse(readFileSync(record, "utf8")) as { argv: string[]; cwd: string; stdin: string; env: string[] };
-    expect(seen.argv).toEqual(["exec", "--json", "--cd", join(project, "wt"), "--sandbox", "read-only", "-c", 'approval_policy="never"', "--model", "gpt-5-codex", "-"]);
+    expect(seen.argv).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", join(project, "wt"), "--sandbox", "read-only", "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(seen.env).toContain("CODEX_HOME");
+    expect(seen.stdin.startsWith("【启动器说明（codex）】")).toBe(true);
     expect(seen.cwd).toBe(join(project, "wt"));
     expect(seen.stdin).toContain("## ULQPBK1211FG");
     for (const name of ["DEEPSEEK_API_KEY", "TYPESAFE_API_KEY", "JEV_MODEL", "ANTHROPIC_API_KEY"]) expect(seen.env).not.toContain(name);
@@ -415,8 +530,49 @@ describe("whole runs against fake binaries", () => {
     expect(lines.some((line) => line["type"] === "learner_stderr" && line["text"] === "fake stderr line")).toBe(true);
     const summary = lines[lines.length - 1]!;
     expect(summary).toMatchObject({ type: "learner_summary", exit_code: 0, timed_out: false });
-    expect(summary["summary"]).toMatchObject({ sessionId: "th-1", turns: 1, tokens: { input: 1200, output: 90, cacheRead: 800, cacheCreation: 0 }, result: "三句话。RUN: X", toolCalls: { command_execution: 1 } });
-    expect(out.join("")).toContain("轮数：1");
+    expect(summary["summary"]).toMatchObject({
+      model: "gpt-6.1-sol", sessionId: "th-1", turns: 1, tokens: { input: 400, output: 90, cacheRead: 800, cacheCreation: 0, reasoning: 40 }, result: "三句话。RUN: X",
+      toolCalls: { command_execution: 1 }, isError: false, retries: ["Reconnecting... 1/5 (stream disconnected before completion)"],
+    });
+    expect((summary["summary"] as { timing: { timeline: unknown[] } }).timing.timeline).toHaveLength(2);
+    expect(lines.some((line) => line["type"] === "learner_stderr" && typeof line["t_ms"] === "number")).toBe(true);
+    const text = out.join("");
+    expect(text).toContain("轮数：1");
+    expect(text).toContain("（其中推理 40）");
+    expect(text).toContain("codex 重连：1 次");
+    expect(text).toContain("时间：首个事件");
+    expect(text).toContain("AGENTS.md 已加载（/p/wt）；模型的工具调用 exec×2 mcp__gkb__kb_runs×1");
+    expect(findRollout(join(tmp, "codex-home"), "nope")).toBeUndefined();
+    expect(rolloutStats(findRollout(join(tmp, "codex-home"), "th-1")!).toolCalls).toEqual({ exec: 2, mcp__gkb__kb_runs: 1 });
+    rmSync(join(tmp, "runs"), { recursive: true, force: true });
+  });
+
+  it("codex: the start-up check refuses an effort the model does not take (exit 3, nothing run)", async () => {
+    const fake = writeFake("codex");
+    rmSync(record, { force: true });
+    const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: fake });
+    expect(await main(smokeArgs("codex", ["--effort", "max"]), d)).toBe(3);
+    expect(err.join("")).toContain("does not take reasoning effort max");
+    expect(existsSync(record)).toBe(false);
+  });
+
+  it("codex: no login in its home stops the run (exit 3)", async () => {
+    const fake = writeFake("codex");
+    const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: fake, LEARNER_CODEX_HOME: join(tmp, "no-login") });
+    expect(await main(smokeArgs("codex"), d)).toBe(3);
+    expect(err.join("")).toContain("no codex login");
+  });
+
+  it("codex: a run refused on the login asks codex to refresh its token once and says to re-run", async () => {
+    const path = join(bin, "codex-401");
+    writeFileSync(path, `#!${process.execPath}\nprocess.stdin.resume();process.stdin.on("end",()=>{process.stdout.write(JSON.stringify({type:"turn.failed",error:{message:"401 Unauthorized: authentication token is expired"}})+"\\n");process.exit(1);});\n`);
+    chmodSync(path, 0o755);
+    let refreshed = 0;
+    const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: path });
+    const code = await main(smokeArgs("codex"), { ...d, checkCodex: async () => ({ ok: true, version: "fake" }), refreshCodexAuth: async () => void (refreshed += 1) });
+    expect(code).toBe(1);
+    expect(refreshed).toBe(1);
+    expect(err.join("")).toContain("已请 codex 刷新登录令牌");
     rmSync(join(tmp, "runs"), { recursive: true, force: true });
   });
 

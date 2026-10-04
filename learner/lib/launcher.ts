@@ -14,15 +14,17 @@
  */
 import { spawn } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { homedir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { join, relative, resolve, sep } from "node:path";
 import { createInterface } from "node:readline";
 
 import { PROJECT_ROOT as REPO_ROOT, workspaceRoot } from "../../agent/src/core/paths.js";
 import { DEFAULT_KNOWLEDGE_DIR } from "../../agent/src/knowledge/render/data.js";
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
-import { ENGINES, EngineUnavailableError, childEnv, engineBinary, engineCommand, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
-import { SummaryTracker, formatSummary, progressLine } from "./summary.js";
+import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
+import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
+import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, engineBinary, engineCommand, engineDefaults, learnerCodexHome, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
+import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
 import { LearnerUsageError, loadTask, parseSets, renderTask } from "./task.js";
 
 /** This checkout (the launcher's own repository: core/paths.ts PROJECT_ROOT). */
@@ -69,6 +71,10 @@ export interface LauncherDeps {
   now: () => Date;
   out: (text: string) => void;
   err: (text: string) => void;
+  /** codex's start-up check before a run (default: the brain's checkCodex: version, login, no $CODEX_HOME/AGENTS.md, model and effort in the catalog). */
+  checkCodex?: (bin: string, home: string, model: string, effort: string) => Promise<CodexCheck>;
+  /** codex's token refresh after a run refused on the login (default: the brain's refreshCodexAuth). */
+  refreshCodexAuth?: (bin: string, home: string, env: Record<string, string>) => Promise<void>;
 }
 
 export function defaultDeps(): LauncherDeps {
@@ -81,11 +87,16 @@ export function defaultDeps(): LauncherDeps {
     now: () => new Date(),
     out: (text) => process.stdout.write(text),
     err: (text) => process.stderr.write(text),
+    checkCodex: (bin, home, model, effort) => checkCodex({ bin, home }, model, effort, { stateDir: join(LEARNER_CODEX_STATE, "check") }),
+    refreshCodexAuth: (bin, home, env) => refreshCodexAuth({ bin, home, env, stateDir: join(LEARNER_CODEX_STATE, "auth") }),
   };
 }
 
+/** SQLite state and logs of the learner's codex start-up checks and token refreshes (never CODEX_HOME's). */
+const LEARNER_CODEX_STATE = join(tmpdir(), "jev-learner-codex-state");
+
 export const USAGE = `usage: agent/node_modules/.bin/tsx learner/run.ts --engine claude|codex --task <name|path.md> --cwd <dir> [--set name=value ...]
-         [--model M] [--max-turns N] [--timeout-min N] [--dry-run] [--with-tools [--ascension N] [--knowledge-dir D]]
+         [--model M] [--effort E] [--max-turns N] [--timeout-min N] [--dry-run] [--with-tools [--ascension N] [--knowledge-dir D]]
 tasks: learner/tasks/*.md (postmortem, experience-update, fix-batch, smoke)`;
 
 export interface LauncherOptions {
@@ -94,6 +105,7 @@ export interface LauncherOptions {
   cwd: string;
   sets: string[];
   model?: string;
+  effort?: string;
   maxTurns?: number;
   timeoutMin?: number;
   dryRun: boolean;
@@ -129,6 +141,7 @@ export function parseArgs(argv: string[]): LauncherOptions {
       case "--cwd": options.cwd = value(); break;
       case "--set": options.sets.push(value()); break;
       case "--model": options.model = value(); break;
+      case "--effort": options.effort = value(); break;
       case "--max-turns": options.maxTurns = wholeNumber(arg, value()); break;
       case "--timeout-min": options.timeoutMin = wholeNumber(arg, value()); break;
       case "--ascension": options.ascension = wholeNumber(arg, value()); break;
@@ -254,7 +267,8 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const scratch = join(deps.runsDir, stem);
     const builtins = { cwd, worktree: cwd, project_root: deps.projectRoot, logs_dir: join(deps.projectRoot, "logs"), scratch, task: spec.name };
     const rendered = renderTask(spec, parseSets(options.sets), builtins);
-    const model = options.model ?? spec.model;
+    const model = options.model ?? spec.models[options.engine] ?? engineDefaults(options.engine).model;
+    const effort = options.effort ?? spec.efforts[options.engine] ?? engineDefaults(options.engine).effort;
     const maxTurns = options.maxTurns ?? spec.maxTurns;
     const request: EngineRequest = {
       engine: options.engine,
@@ -262,6 +276,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       projectRoot: deps.projectRoot,
       tools: spec.tools,
       ...(model ? { model } : {}),
+      ...(effort ? { effort } : {}),
       ...(maxTurns !== undefined ? { maxTurns } : {}),
       ...(options.withTools ? { mcp: toolServerSpec(options, deps.projectRoot, deps.env) } : {}),
     };
@@ -296,6 +311,13 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     deps.err(`${unavailableMessage(request.engine)}\n`);
     return 3;
   }
+  if (request.engine === "codex" && deps.checkCodex) {
+    const check = await deps.checkCodex(binary, learnerCodexHome(deps.env), request.model!, request.effort!);
+    if (!check.ok) {
+      deps.err(`codex 用不了：${check.error}\n`);
+      return 3;
+    }
+  }
 
   mkdirSync(scratch, { recursive: true });
   const started = deps.now();
@@ -313,8 +335,19 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     prompt,
   });
 
-  const tracker = new SummaryTracker(request.engine);
-  const child = spawn(command.command, command.args, { cwd: request.cwd, env: childEnv(deps.env, request.engine), stdio: ["pipe", "pipe", "pipe"] });
+  const tracker = new SummaryTracker(request.engine, request.model);
+  const env = request.engine === "codex" ? codexChildEnv(deps.env, binary) : childEnv(deps.env, request.engine);
+  // Its own process group: a timeout or a signal stops the agent and everything it started (codex's npm launcher, its shell commands).
+  const child = spawn(command.command, command.args, { cwd: request.cwd, env, stdio: ["pipe", "pipe", "pipe"], detached: true });
+  const stop = (signal: NodeJS.Signals): void => {
+    try {
+      if (child.pid !== undefined) process.kill(-child.pid, signal);
+      else child.kill(signal);
+    } catch {
+      child.kill(signal);
+    }
+  };
+  const ms = (): number => deps.now().getTime() - started.getTime();
   const elapsed = (): string => {
     const seconds = Math.round((deps.now().getTime() - started.getTime()) / 1000);
     return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
@@ -327,12 +360,12 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     ? setTimeout(() => {
         timedOut = true;
         deps.err(`[${elapsed()}] 超过 ${prepared.timeoutMin} 分钟，终止 PID ${child.pid}\n`);
-        child.kill("SIGTERM");
-        killTimer = setTimeout(() => child.kill("SIGKILL"), 10_000);
+        stop("SIGTERM");
+        killTimer = setTimeout(() => stop("SIGKILL"), 10_000);
       }, prepared.timeoutMin * 60_000)
     : undefined;
   const onSignal = (): void => {
-    child.kill("SIGTERM");
+    stop("SIGTERM");
   };
   process.once("SIGINT", onSignal);
   process.once("SIGTERM", onSignal);
@@ -341,7 +374,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const lines = createInterface({ input: child.stdout! });
     lines.on("line", (line) => {
       appendFileSync(logPath, `${line}\n`);
-      const event = tracker.feed(line);
+      const event = tracker.feed(line, ms());
       const progress = event && progressLine(request.engine, event);
       if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
     });
@@ -349,7 +382,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   });
   const stderrDone = new Promise<void>((done) => {
     const lines = createInterface({ input: child.stderr! });
-    lines.on("line", (line) => log({ type: "learner_stderr", text: line }));
+    lines.on("line", (line) => log({ type: "learner_stderr", t_ms: ms(), text: line }));
     lines.on("close", () => done());
   });
   child.stdin!.on("error", () => undefined); // the agent may exit before reading everything
@@ -370,9 +403,20 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
 
   const wallMs = deps.now().getTime() - started.getTime();
   const summary = tracker.summary;
+  const rollout = request.engine === "codex" && summary.sessionId ? findRollout(learnerCodexHome(deps.env), summary.sessionId) : undefined;
+  if (rollout) summary.rollout = rolloutStats(rollout);
   log({ type: "learner_summary", ts: deps.now().toISOString(), exit_code: exitCode, signal, timed_out: timedOut, wall_ms: wallMs, summary });
   const redacted = redactSecrets(logPath, collectSecrets(deps.secretFiles, deps.env, stripped));
   deps.out(`${summary.result ? `${summary.result}\n\n` : ""}${formatSummary(summary, { task: prepared.taskName, exitCode, signal, timedOut, wallMs, logPath, redacted })}\n`);
+  if (request.engine === "codex" && summary.isError && deps.refreshCodexAuth && AUTH_ERROR.test(summary.errors.join(" "))) {
+    // As the brain does after a refusal on the login: ask codex to refresh its token once; the task is not re-run by itself.
+    try {
+      await deps.refreshCodexAuth(binary, learnerCodexHome(deps.env), env as Record<string, string>);
+      deps.err("codex 登录被拒：已请 codex 刷新登录令牌，请重新运行这个任务\n");
+    } catch (error) {
+      deps.err(`codex 登录被拒，刷新令牌也失败（${error instanceof Error ? error.message.slice(0, 200) : String(error)}）：需要 Dai 重新 \`codex login\`\n`);
+    }
+  }
   if (timedOut) return 124;
   return exitCode === 0 && !summary.isError ? 0 : 1;
 }
