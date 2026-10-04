@@ -874,6 +874,8 @@ export interface Outcome {
   randomExhausts?: number;
   /** Damage a Thrash of this line absorbed (by hand index): the rollout adds it to that Thrash for its later plays. */
   thrashGrowth?: { index: number; amount: number }[];
+  /** Damage added to every MAUL copy by the plays in this line, for the rollout's later turns. */
+  maulGrowth?: number;
   /**
    * A Thrash (by hand index) that took one of several Attacks at random: the rollout picks it among the hand's
    * Attacks left unplayed and grows that Thrash by its shown damage plus `strength` (this turn's Strength gained
@@ -1067,6 +1069,7 @@ interface Sim {
   randomExhausts: number;
   /** Damage each Thrash played this turn absorbed (by hand index): added to that Thrash for the fight. */
   thrashGrowth: { index: number; amount: number }[];
+  maulGrowth: number;
   thrashRandom: { index: number; strength: number; least: number }[];
   /** Cards exhausted this turn so far, before this decision included (Evil Eye doubles its Block after one). */
   exhaustedCount: number;
@@ -1896,6 +1899,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     const shrinkNow = next.shrunk && card.type !== "Potion";
     // Thrash hits for its printed number (3SBP: all 12 plays); what it absorbs is for its later plays.
     let perHit = shrunkHit ? shrunkHit.perHit : shown + next.strength * weakFactor;
+    // K3676LU8B0UH F48 attempt 2 T9/T12: the next MAUL gets the previous one's Increase, before Pen Nib.
+    if (card.cardId === "MAUL" && next.maulGrowth > 0) {
+      perHit = shrunkHit && shrunkHit.pre !== null
+        ? ourAttackScaled(shrunkHit.pre + next.strength + next.maulGrowth, player.weak, shrinkNow)
+        : perHit + ourAttackScaled(next.maulGrowth, player.weak, shrinkNow);
+    }
     let hits = card.hits;
     if (card.special === "body_slam") perHit = shrinkNow ? ourAttackScaled(next.block + next.strength, player.weak, true) : Math.floor((next.block + next.strength) * weakFactor);
     // Pact's End hits only with 3+ cards in the exhaust pile (H1FA F17 T9: counted as a 17 AoE kill on
@@ -1973,6 +1982,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
 
+  if (card.cardId === "MAUL") next.maulGrowth += card.maulIncrease ?? 0;
   thrashAbsorb(next, card, player);
 
   const poisoned = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
@@ -3111,6 +3121,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.drawnExhausted > 0 ? { drawnExhausted: sim.drawnExhausted } : {}),
       ...(sim.randomExhausts > 0 ? { randomExhausts: sim.randomExhausts } : {}),
       ...(sim.thrashGrowth.length > 0 ? { thrashGrowth: sim.thrashGrowth } : {}),
+      ...(sim.maulGrowth > 0 ? { maulGrowth: sim.maulGrowth } : {}),
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.relicAttacks > 0 ? { attackPlays: sim.relicAttacks } : {}),
@@ -3171,7 +3182,7 @@ function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const poisonKey = sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "";
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3332,6 +3343,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     drawnExhausted: 0,
     randomExhausts: 0,
     thrashGrowth: [],
+    maulGrowth: 0,
     thrashRandom: [],
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
@@ -3391,7 +3403,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
     // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
@@ -3512,7 +3524,7 @@ function outcomeVector(plan: Plan): number[] {
   // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
   const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
   // The enemies' Strength gained is an axis too (enemyStrengthGained): a line feeding it never dominates one that does not.
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0, o.winsFight ? 0 : -enemyStrengthGained(o)];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0, o.winsFight ? 0 : o.maulGrowth ?? 0, o.winsFight ? 0 : -enemyStrengthGained(o)];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
