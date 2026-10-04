@@ -1,4 +1,32 @@
 hash,full_hash,date,author,upstream,in_origin_main,n_runs_code_version,subject
+5ec1384,5ec1384be3bfe47fbd5764338efacf7f9596018d,2026-10-04T15:42:42+08:00,dwroy,0,0,0,"run-config: codex's run settings in brain.codex (service tier, mode, stall, schema options) when codex is among the engines"
+4e29a90,4e29a901f2d283cbe9bcf86d9f6942ac8df09f48,2026-10-04T15:42:42+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: run-config records codex's settings (service tier)
+1b2ae9f,1b2ae9f07fc3e8f77fdc6cb732458418d6defd30,2026-10-04T15:30:04+08:00,dwroy,0,0,0,Eval versions: V4.6.shiv also starts the codex priority tier
+296db12,296db1255882fbfab9715bd34694b487fde9258e,2026-10-04T15:29:41+08:00,dwroy,0,0,0,Eval versions: V4.6.shiv (v4-live 7023574)
+7023574,7023574b375743bb02ff8150952ac9ee5904723b,2026-10-04T15:29:26+08:00,dwroy,0,0,1,Merge branch 'v4' into v4-live: Shiv target fix (card text conditionals); codex usage guard recovers
+6e13ac9,6e13ac9dd02aa77b6f6cfccb59e67ede0ce114f4,2026-10-04T15:25:05+08:00,dwroy,0,0,0,"Merge branch 'v4-brain-logs' into v4: codex usage guard — off only until a read works (backoff 30 s / 2 / 5 / 10 min), a 401 first refreshes codex's own token; changes noted once on brain.jsonl"
+7c8f79f,7c8f79f3eddddfa4938cf1112d50cefe850e62a7,2026-10-04T15:25:05+08:00,dwroy,0,0,0,"Merge branch 'v4-shiv' into v4: card text — a template's conditional placeholders no longer decide the card; the mod's target fields first (Shiv read as AoE, RNTV 18 gate refusals)"
+ba0eec8,ba0eec807e0b54278d73663bcf3b7f39aee86a9c,2026-10-04T15:19:48+08:00,dwroy,0,0,0,Codex usage guard: a failed read keeps codex off only until a read works; a 401 has codex refresh its token first
+972519d,972519dda8975f1a8b18693fee96655cd6031c75,2026-10-04T15:16:24+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: CARD_CONDITIONS
+b9473ed,b9473eda960bb0d10f709b8d2ea38b6970c8f482,2026-10-04T15:16:24+08:00,dwroy,0,0,0,Eval versions: V4.6.conditions (v4-live 972519d)
+77218c2,77218c2aa94e851a5dc586ecdbcc20d234bfadaa,2026-10-04T15:12:32+08:00,dwroy,0,0,0,"Merge branch 'v4-card-conditions' into v4: CARD_CONDITIONS — conditional card effects evaluated where they resolve (Restlessness, Impatience, Spite, Rage, Ashen Strike, Expect a Fight, Tear Asunder)"
+19c53ce,19c53ce587419e48f9e4a0725a42c230ccc0c1a7,2026-10-04T15:11:00+08:00,dwroy,0,0,0,"CARD_CONDITIONS replay: 2799 logged decisions both ways, byte-identity checks"
+01917ad,01917adf19ca575aa4e2c39e18b52e818ddf983b,2026-10-04T14:38:23+08:00,dwroy,0,0,0,CARD_CONDITIONS: conditional card effects read on the solver's simulated state
+e69d614,e69d614a9e6c31d7f547895eb99a73731d4340e5,2026-10-04T14:31:24+08:00,dwroy,0,0,0,Eval versions: V4.6.routekeep (v4-live 0b12aa1)
+0b12aa1,0b12aa1a34c6403cdf64e9f92ac7f09c2617ab0f,2026-10-04T14:31:24+08:00,dwroy,0,0,1,"Merge branch 'v4' into v4-live: codex route pattern / lenient keep, SL wasted deviations"
+cbf3da5,cbf3da57b15c5d37666990f3e25347ba93a1fbf3,2026-10-04T14:28:04+08:00,dwroy,0,0,0,"Merge branch 'v4-sl-replay' into v4: SL_RETRY_EXPLORE_WASTED — a deviation that repeats a failed turn (also from the same turn start, up to upgrades, or reaching a failed board) is wasted; REARM off the reference path"
+fadc992,fadc99260216af146d5c987ce9f51a2a77667e23,2026-10-04T14:24:32+08:00,dwroy,0,0,0,Merge branch 'v4-brain-logs' into v4: codex route field limited to keep or node ids; a garbled keep read as keep without a re-ask
+509f060,509f0606e40b552999b10d04f61af8ecfd778834,2026-10-04T14:24:02+08:00,dwroy,0,0,0,"Codex route: a garbled ""keep"" read as keep without a re-ask; the route field constrained to keep or node ids"
+ca72044,ca720443ea96e040e8f2264d53a0733494c8e6cc,2026-10-04T14:19:55+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-sl-replay
+7ca193c,7ca193cbe3a47b6f1398cc735ce2df86d02c1edf,2026-10-04T14:19:51+08:00,dwroy,0,0,0,"SL explore: a wasted deviation is judged by the turn played, but for upgrades and from its turn start; REARM off the path too"
+3a73891,3a73891d2b0c102429ec3764bc6b49cfc3360df8,2026-10-04T14:09:21+08:00,dwroy,0,0,0,"build-fight-value: fight-value.json and fight-value-gates.json written whole under a per-process tmp name, then moved into place"
+f2d59eb,f2d59ebf805d29f3443a07e6d98025ffcf1d44fc,2026-10-04T14:09:21+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: fight-value files written whole; vitest 15 s limit
+ede54d1,ede54d1bf7e18f844242d0551cd43c86ae498d4e,2026-10-04T14:09:21+08:00,dwroy,0,0,0,Merge branch 'v4-fv-atomic' into v4: fight-value files written whole
+fa98f0a,fa98f0a1f6697693a321ff260d0f240c0f401a1d,2026-10-04T14:07:23+08:00,dwroy,0,0,0,Eval versions: V4.6.axebot (v4-live e950e9d)
+0000036,0000036b28d846a4c55a825da190577178a31763,2026-10-04T14:06:53+08:00,dwroy,0,0,0,vitest: 15 s per-test limit (planner tests on logged boards time out at 5 s under live-play load)
+e950e9d,e950e9d4776c064e9d0bbfb2dc1cbb30113a6719,2026-10-04T14:06:28+08:00,dwroy,0,0,0,Merge branch 'v4' into v4-live: Axebot on the SL list
+db6cbb9,db6cbb929ae6df5749db35c5628cbbf090ec46cf,2026-10-04T14:06:27+08:00,dwroy,0,0,0,"SL hard-fight list: Axebot (A8 15 fights 2 deaths, A9 11 / 4; 4AWD died to it at 73% entry, above the act-3 low-HP line)"
+7c1fd35,7c1fd35333b12282363c5ef21f2841514fcc26ef,2026-10-04T14:06:27+08:00,dwroy,0,0,0,Merge branch 'v4-sl-axebot' into v4: Axebot on the SL list
 06e4fc5,06e4fc52151c73da49209e7c9b938d871381475d,2026-10-04T13:52:51+08:00,dwroy,0,0,0,Eval versions: V4.6.explore3 (v4-live 8939eb0)
 8939eb0,8939eb0e7511559a765f393a3adf8cc7512d5492,2026-10-04T13:52:51+08:00,dwroy,0,0,0,"Merge branch 'v4' into v4-live: SL explore round 3 (rearm, order, target turn, anchor)"
 9cafbf4,9cafbf4abb48afc0b5347ff4a1953abfdf6e87ee,2026-10-04T13:49:19+08:00,dwroy,0,0,0,"Merge branch 'v4-sl-replay' into v4: SL explore — rearm after a wasted deviation, replay the reference's play order, keep the target turn's exclusions off-path, anchor to the best failed attempt, replay code's lines on reference boards"
