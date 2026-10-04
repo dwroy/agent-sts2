@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+# The allow-listed actions the codex ops session may ask for outside its sandbox (docs/codex-ops.md). Run only by the
+# wake process's broker (ops/codex/main.ts, outside the sandbox), after ops/codex/lib.ts validateRequest; each action
+# checks its own arguments again. The sandbox has its own PID namespace, no network (not 127.0.0.1 either) and no
+# Windows interop, so these are the only ways the session touches processes, the mod's HTTP state and Windows.
+#
+#   bash ops/codex-ops-actions.sh <action> [arg]
+#
+#   procs              our processes: autoplay, stop-after, play, report.py, learner runs, the scheduler's wake
+#   stall-check        ops/stall-check.sh
+#   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), cut to 20 000 characters
+#   autoplay-start     the ops prompt's start: refuses while autoplay / stop-after / play runs; rm ops/STOP; starts
+#                      ops/autoplay.sh with setsid nohup; prints its PID and live's commit (PID in ops/codex-ops/autoplay.pid)
+#   autoplay-stop      kill the autoplay bash started by autoplay-start (by PID, after checking its command line)
+#   play-stop          ops/stop.sh (stops the play node process by PID; autoplay starts the next one)
+#   kill <pid>         kill one of our processes by PID: autoplay.sh, stop-after*.sh, index.ts play, report.py, learner/run.ts
+#   launch-game        start STS2 on the desktop session (schtasks /it, memory card launch-game-on-desktop), then wait
+#                      for the mod; refuses while SlayTheSpire2.exe runs
+#   win-procs          Windows processes: steam.exe, steamwebhelper count, SlayTheSpire2.exe, with their session
+#   win-kill <pid>     taskkill a steam.exe / SlayTheSpire2.exe that runs in session 0 (Services) only
+#   postmortem <ids>   start a post-mortem batch now (ops/codex-ops-learn.py dispatch)
+#   learner-status     the post-mortem batches (ops/codex-ops-learn.py status)
+#   scheduler-status   ops/codex-ops.sh status
+set -u
+. "$(dirname "$0")/paths.sh"
+ROOT="${CODEX_OPS_ROOT:-$ROOT}"
+DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
+export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+MOD="${CODEX_OPS_MOD_URL:-http://127.0.0.1:8080}"
+WIN=/mnt/c/Windows/System32
+STEAM_URI="steam://rungameid/2868840"
+TASK=sts2-launch-desktop
+action="${1:-}"; arg="${2:-}"
+
+# Our processes (never this script): pid + command line.
+ours() {
+  pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh|index\.ts pla[y]|ops/report\.py|learner/run\.ts|codex-ops-learner\.sh|ops/codex/main\.ts' 2>/dev/null \
+    | grep -v -E '^[0-9]+ (pgrep|grep) ' | cut -c1-220
+}
+play_pids() {
+  for p in $(pgrep -x node); do
+    tr '\0' ' ' < "/proc/$p/cmdline" 2>/dev/null | grep -q 'index\.ts pla[y]' && echo "$p"
+  done
+}
+cmdline() { tr '\0' ' ' < "/proc/$1/cmdline" 2>/dev/null; }
+tasklist() { (cd /mnt/c && timeout 30 "$WIN/tasklist.exe" /FO CSV /NH 2>/dev/null | tr -d '\r'); }
+
+case "$action" in
+  procs)
+    ours || true
+    [ -f "$DIR/autoplay.pid" ] && echo "autoplay.pid: $(cat "$DIR/autoplay.pid")"
+    [ -f "$ROOT/ops/STOP" ] && echo "ops/STOP present"
+    exit 0 ;;
+  stall-check)
+    exec bash "$ROOT/ops/stall-check.sh" ;;
+  mod-state)
+    out=$(curl -s -m 10 "$MOD/state"); rc=$?
+    [ $rc -ne 0 ] && { echo "mod unreachable (curl exit $rc)"; exit 1; }
+    printf '%s\n' "${out:0:20000}"
+    exit 0 ;;
+  autoplay-start)
+    busy=$(pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ')
+    play=$(play_pids)
+    if [ -n "$busy" ] || [ -n "$play" ]; then
+      echo "refused: still running:"; [ -n "$busy" ] && echo "$busy"; [ -n "$play" ] && echo "play PIDs: $play"
+      exit 1
+    fi
+    rm -f "$ROOT/ops/STOP"
+    mkdir -p "$DIR"
+    setsid nohup bash "$ROOT/ops/autoplay.sh" > /dev/null 2>&1 < /dev/null &
+    pid=$!
+    echo "$pid" > "$DIR/autoplay.pid"
+    sleep 2
+    kill -0 "$pid" 2>/dev/null || { echo "autoplay (PID $pid) exited at once; see ops/autoplay.log"; exit 1; }
+    echo "autoplay started: PID $pid; live $(git -C "$LIVE" rev-parse --short HEAD 2>/dev/null); $(date '+%F %T')"
+    exit 0 ;;
+  autoplay-stop)
+    pid=$(cat "$DIR/autoplay.pid" 2>/dev/null)
+    if [ -z "$pid" ] || ! cmdline "$pid" | grep -q 'ops/autoplay\.sh'; then
+      echo "no autoplay started by autoplay-start is running${pid:+ (PID $pid is not ops/autoplay.sh)}; running ones:"
+      pgrep -af 'ops/autoplay\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ' || echo "(none)"
+      exit 1
+    fi
+    kill "$pid" && echo "stopped autoplay PID $pid" && rm -f "$DIR/autoplay.pid"
+    exit 0 ;;
+  play-stop)
+    exec bash "$ROOT/ops/stop.sh" ;;
+  kill)
+    [[ "$arg" =~ ^[0-9]+$ ]] || { echo "kill takes a PID"; exit 2; }
+    line=$(cmdline "$arg")
+    [ -n "$line" ] || { echo "no process $arg"; exit 1; }
+    [ "$(stat -c %u "/proc/$arg")" = "$(id -u)" ] || { echo "refused: $arg is not ours"; exit 2; }
+    echo "$line" | grep -q -E 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh|index\.ts play|ops/report\.py|learner/run\.ts' \
+      || { echo "refused: $arg is not autoplay / stop-after / play / report.py / a learner run: ${line:0:160}"; exit 2; }
+    kill "$arg" && echo "sent SIGTERM to $arg (${line:0:120})"
+    exit 0 ;;
+  launch-game)
+    procs=$(tasklist); rc=$?
+    [ $rc -ne 0 ] && { echo "tasklist.exe failed (rc=$rc): Windows interop is down, not launching"; exit 1; }
+    if printf '%s\n' "$procs" | grep -qi '"SlayTheSpire2.exe"'; then
+      echo "refused: SlayTheSpire2.exe is running:"; printf '%s\n' "$procs" | grep -i -E '"(steam|SlayTheSpire2)\.exe"'
+      exit 1
+    fi
+    cd /mnt/c || exit 1
+    "$WIN/schtasks.exe" /create /tn "$TASK" /tr "C:\\Windows\\explorer.exe $STEAM_URI" /sc once /st 23:59 /it /f 2>&1 | tr -d '\r'
+    "$WIN/schtasks.exe" /run /tn "$TASK" 2>&1 | tr -d '\r'
+    sleep 10
+    "$WIN/schtasks.exe" /delete /tn "$TASK" /f 2>&1 | tr -d '\r'
+    for _ in $(seq 1 36); do
+      if curl -s -m 4 -o /dev/null "$MOD/state"; then
+        echo "mod answers: $(curl -s -m 5 "$MOD/state" | python3 -c 'import json,sys;d=json.load(sys.stdin)["data"];print(d.get("screen"))' 2>&1 | head -1)"
+        tasklist | grep -i -E '"(steam|SlayTheSpire2)\.exe"'
+        exit 0
+      fi
+      sleep 5
+    done
+    echo "the mod did not answer within 3 minutes after the launch:"; tasklist | grep -i -E '"(steam|SlayTheSpire2)\.exe"'
+    exit 1 ;;
+  win-procs)
+    procs=$(tasklist); rc=$?
+    [ $rc -ne 0 ] && { echo "tasklist.exe failed (rc=$rc)"; exit 1; }
+    printf '%s\n' "$procs" | grep -i -E '"(steam|SlayTheSpire2|steamservice)\.exe"' || echo "(no steam.exe / SlayTheSpire2.exe)"
+    echo "steamwebhelper.exe: $(printf '%s\n' "$procs" | grep -ci '"steamwebhelper.exe"')"
+    exit 0 ;;
+  win-kill)
+    [[ "$arg" =~ ^[0-9]+$ ]] || { echo "win-kill takes a Windows PID"; exit 2; }
+    row=$(tasklist | python3 -c '
+import csv, sys
+pid = sys.argv[1]
+for row in csv.reader(sys.stdin):
+    if len(row) >= 4 and row[1] == pid:
+        print("\t".join(row[:4]))
+' "$arg")
+    [ -n "$row" ] || { echo "no Windows process $arg"; exit 1; }
+    image=$(cut -f1 <<< "$row"); session=$(cut -f3 <<< "$row")
+    case "${image,,}" in steam.exe|slaythespire2.exe) ;; *) echo "refused: $arg is $image"; exit 2 ;; esac
+    [ "$session" = "Services" ] || { echo "refused: $image $arg runs in session '$session' (only session 0 / Services instances may be closed here; the desktop one is Dai's)"; exit 2; }
+    (cd /mnt/c && "$WIN/taskkill.exe" /PID "$arg" /F 2>&1 | tr -d '\r')
+    exit 0 ;;
+  postmortem)
+    exec python3 "$OPS/codex-ops-learn.py" dispatch --runs "$arg" ;;
+  learner-status)
+    exec python3 "$OPS/codex-ops-learn.py" status ;;
+  scheduler-status)
+    exec bash "$OPS/codex-ops.sh" status ;;
+  *)
+    echo "unknown action: $action"; exit 2 ;;
+esac

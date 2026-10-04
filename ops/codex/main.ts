@@ -1,0 +1,399 @@
+/**
+ * The codex ops session's runner (docs/codex-ops.md). Called by ops/codex-ops.sh, which holds the wake lock:
+ *
+ *   agent/node_modules/.bin/tsx ops/codex/main.ts wake [--dry-run]   one wake: the queued events to the session
+ *                                                                    (the first wake creates it from the ops prompt)
+ *   agent/node_modules/.bin/tsx ops/codex/main.ts precheck            codex usable + key files unreadable under "ops"
+ *   agent/node_modules/.bin/tsx ops/codex/main.ts growth              the session file's size, context, compactions
+ *   agent/node_modules/.bin/tsx ops/codex/main.ts snapshot-session    copy the session file to paper/materials/session/
+ *                                                                    with every key value replaced by [REDACTED]
+ *   agent/node_modules/.bin/tsx ops/codex/main.ts probe <script.sh>   run a shell script under the ops profile
+ *                                                                    (re-verify the sandbox after a codex update)
+ *
+ * Exit codes: 0 done (or nothing queued), 1 the wake failed (events stay queued), 3 codex unavailable or the key
+ * pre-check failed, 124 timed out.
+ */
+import { spawn } from "node:child_process";
+import { appendFileSync, copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createInterface } from "node:readline";
+
+import { checkCodex } from "../../agent/src/brain/engines/codex.js";
+import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
+import { PROJECT_ROOT } from "../../agent/src/core/paths.js";
+import { codexChildEnv, codexKeyCheck, codexProfileOverrides, engineBinary, learnerCodexHome, shellQuote, strippedEnvNames } from "../../learner/lib/engines.js";
+import { collectSecrets, redactSecrets, secretFilesOf, stamp } from "../../learner/lib/launcher.js";
+import { SummaryTracker, findRollout } from "../../learner/lib/summary.js";
+import {
+  ACTIONS,
+  DEFAULT_WAKE_TIMEOUT_MIN,
+  REQUEST_ID,
+  initCommand,
+  initMessage,
+  localStamp,
+  opsPaths,
+  opsRequest,
+  readQueue,
+  readSessionId,
+  resumeCommand,
+  sessionGrowth,
+  validateRequest,
+  wakeMessage,
+  type OpsPaths,
+} from "./lib.js";
+
+const env = process.env;
+const ROOT = env["CODEX_OPS_ROOT"] || PROJECT_ROOT;
+const paths = opsPaths(ROOT, env);
+const STATE = join(tmpdir(), "jev-codex-ops-state");
+
+function log(text: string): void {
+  const line = `${localStamp(new Date())} ${text}`;
+  process.stderr.write(`${line}\n`);
+  try {
+    mkdirSync(paths.dir, { recursive: true });
+    appendFileSync(paths.schedulerLog, `${line}\n`);
+  } catch {
+    // the log is best effort
+  }
+}
+
+/* ---- broker ------------------------------------------------------------------------------------------------- */
+
+/**
+ * Runs the model's allow-listed requests outside the sandbox while a wake lasts: polls ops/codex-ops/broker/ for
+ * <id>.req, claims it (rename to .run), validates it (lib.ts validateRequest), runs ops/codex-ops-actions.sh with the
+ * action's time limit, and answers <id>.res (written to a temporary name, then renamed). One request at a time.
+ */
+export function startBroker(p: OpsPaths, root: string, onLog: (text: string) => void): () => Promise<void> {
+  mkdirSync(p.broker, { recursive: true });
+  let busy: Promise<void> = Promise.resolve();
+  let stopped = false;
+  const answer = (id: string, body: { code: number; out: string }): void => {
+    const tmp = join(p.broker, `${id}.res.tmp`);
+    writeFileSync(tmp, JSON.stringify(body));
+    renameSync(tmp, join(p.broker, `${id}.res`));
+  };
+  const handle = async (id: string): Promise<void> => {
+    const claimed = join(p.broker, `${id}.run`);
+    try {
+      renameSync(join(p.broker, `${id}.req`), claimed);
+    } catch {
+      return;
+    }
+    let raw: unknown;
+    try {
+      raw = JSON.parse(readFileSync(claimed, "utf8"));
+    } catch {
+      raw = undefined;
+    }
+    rmSync(claimed, { force: true });
+    const request = validateRequest(raw);
+    if (!request.ok) {
+      onLog(`broker refused ${id}: ${request.error}`);
+      answer(id, { code: 2, out: `拒绝：${request.error}\n` });
+      return;
+    }
+    onLog(`broker ${request.action} ${request.args.join(" ")}`.trim());
+    const result = await runAction(root, request.action, request.args, ACTIONS[request.action]!.ms);
+    onLog(`broker ${request.action} exit ${result.code}`);
+    answer(id, result);
+  };
+  const poll = (): void => {
+    if (stopped) return;
+    let names: string[] = [];
+    try {
+      names = readdirSync(p.broker);
+    } catch {
+      // recreated below
+    }
+    for (const name of names.sort()) {
+      const id = name.endsWith(".req") ? name.slice(0, -4) : "";
+      if (REQUEST_ID.test(id)) busy = busy.then(() => handle(id));
+    }
+  };
+  const timer = setInterval(poll, 500);
+  return async () => {
+    stopped = true;
+    clearInterval(timer);
+    await busy;
+  };
+}
+
+const OUT_MAX = 64 * 1024;
+
+/** bash ops/codex-ops-actions.sh <action> [arg], niced, its own process group, killed at the time limit. */
+export function runAction(root: string, action: string, args: string[], ms: number): Promise<{ code: number; out: string }> {
+  return new Promise((done) => {
+    const child = spawn("nice", ["-n", "5", "bash", join(root, "ops", "codex-ops-actions.sh"), action, ...args], { cwd: root, env: { ...process.env, CODEX_OPS_ROOT: root }, stdio: ["ignore", "pipe", "pipe"], detached: true });
+    let out = "";
+    const take = (chunk: Buffer): void => {
+      if (out.length < OUT_MAX) out += chunk.toString("utf8");
+    };
+    child.stdout.on("data", take);
+    child.stderr.on("data", take);
+    const timer = setTimeout(() => {
+      try {
+        process.kill(-child.pid!, "SIGKILL");
+      } catch {
+        child.kill("SIGKILL");
+      }
+      out += `\n（超过 ${ms / 1000} 秒，已终止）\n`;
+    }, ms);
+    child.on("error", (error) => {
+      clearTimeout(timer);
+      done({ code: 127, out: `${out}${error.message}\n` });
+    });
+    child.on("close", (code, signal) => {
+      clearTimeout(timer);
+      done({ code: code ?? (signal ? 128 : 1), out: out.length > OUT_MAX ? `${out.slice(0, OUT_MAX)}\n（输出截断）\n` : out });
+    });
+  });
+}
+
+/* ---- wake --------------------------------------------------------------------------------------------------- */
+
+async function precheck(bin: string): Promise<string | undefined> {
+  const request = opsRequest(ROOT, env);
+  const check = await checkCodex({ bin, home: learnerCodexHome(env) }, request.model!, request.effort!, { stateDir: join(STATE, "check") });
+  if (!check.ok) return `codex 用不了：${check.error}`;
+  const keys = await codexKeyCheck(bin, request, codexChildEnv(env, bin));
+  if (!keys.ok) return `ops 权限配置没能挡住 key 文件，不运行：${keys.readable.length > 0 ? `读得到 ${keys.readable.join("、")}` : ""}${keys.error ? `（检查失败：${keys.error}）` : ""}`;
+  return undefined;
+}
+
+async function wake(dryRun: boolean): Promise<number> {
+  for (const dir of [paths.dir, paths.queue, paths.delivered, paths.broker, paths.wakes]) mkdirSync(dir, { recursive: true });
+  const events = readQueue(paths.queue);
+  const session = readSessionId(paths);
+  if (!session && existsSync(paths.sessionFile)) {
+    log("session-id is not a codex session id; not creating a new session over it (fix or remove ops/codex-ops/session-id)");
+    return 1;
+  }
+  if (session && events.length === 0) return 0;
+  const now = new Date();
+  const message = session ? wakeMessage(events, now) : initMessage(readFileSync(paths.prompt, "utf8"), events, now);
+  const request = opsRequest(ROOT, env);
+  const bin = engineBinary("codex", env);
+  const command = session ? resumeCommand(request, session, message, bin ?? "codex") : initCommand(request, message, bin ?? "codex");
+  if (dryRun) {
+    process.stdout.write(`===== ${session ? `resume ${session}` : "init"}（工作目录 ${ROOT}）=====\n${shellQuote([command.command, ...command.args])}\n===== 消息 =====\n${command.stdin}\n`);
+    return 0;
+  }
+  if (!bin) {
+    log("codex is not installed");
+    return 3;
+  }
+  const refused = await precheck(bin);
+  if (refused) {
+    log(refused);
+    return 3;
+  }
+
+  const startedAt = Date.now();
+  const logPath = join(paths.wakes, `${stamp(now)}-${session ? "wake" : "init"}.jsonl`);
+  const write = (row: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(row)}\n`);
+  write({ type: "ops_wake", ts: now.toISOString(), session: session ?? null, events: events.map((e) => e.name), cwd: ROOT, command: [command.command, ...command.args], message: command.stdin });
+  log(`${session ? "wake" : "init"}: ${events.length} event(s) ${events.map((e) => e.kind).join(",")} → codex (log ${logPath})`);
+
+  const childEnv = codexChildEnv(env, bin);
+  const child = spawn(command.command, command.args, { cwd: ROOT, env: childEnv, stdio: ["pipe", "pipe", "pipe"], detached: true });
+  writeFileSync(join(paths.dir, "wake.pid"), `${child.pid ?? ""}\n`);
+  const stopBroker = startBroker(paths, ROOT, log);
+  const tracker = new SummaryTracker("codex", request.model);
+  let threadId: string | undefined = session;
+  const stdoutDone = new Promise<void>((done) => {
+    const lines = createInterface({ input: child.stdout! });
+    lines.on("line", (line) => {
+      appendFileSync(logPath, `${line}\n`);
+      tracker.feed(line, Date.now() - startedAt);
+      if (!threadId) {
+        try {
+          const event = JSON.parse(line) as { type?: string; thread_id?: string };
+          if (event.type === "thread.started" && event.thread_id) {
+            threadId = event.thread_id;
+            // Saved as soon as the session exists: a first turn that fails later is resumed, never recreated.
+            writeFileSync(paths.sessionFile, `${threadId}\n`);
+            log(`session created: ${threadId}`);
+          }
+        } catch {
+          // not JSON
+        }
+      }
+    });
+    lines.on("close", () => done());
+  });
+  const stderrDone = new Promise<void>((done) => {
+    const lines = createInterface({ input: child.stderr! });
+    lines.on("line", (line) => write({ type: "ops_stderr", t_ms: Date.now() - startedAt, text: line }));
+    lines.on("close", () => done());
+  });
+  child.stdin!.on("error", () => undefined);
+  child.stdin!.end(command.stdin);
+
+  const timeoutMin = Number(env["CODEX_OPS_WAKE_TIMEOUT_MIN"]) || DEFAULT_WAKE_TIMEOUT_MIN;
+  let timedOut = false;
+  const kill = (signal: NodeJS.Signals): void => {
+    try {
+      process.kill(-child.pid!, signal);
+    } catch {
+      child.kill(signal);
+    }
+  };
+  let killTimer: NodeJS.Timeout | undefined;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    log(`wake over ${timeoutMin} min: stopping codex (PID ${child.pid})`);
+    kill("SIGTERM");
+    killTimer = setTimeout(() => kill("SIGKILL"), 10_000);
+  }, timeoutMin * 60_000);
+  const onSignal = (): void => kill("SIGTERM");
+  process.once("SIGTERM", onSignal);
+  process.once("SIGINT", onSignal);
+
+  const [code, signal] = await new Promise<[number | null, NodeJS.Signals | null]>((done) => {
+    child.on("error", (error) => {
+      write({ type: "ops_error", message: error.message });
+      done([null, null]);
+    });
+    child.on("close", (exit, sig) => done([exit, sig]));
+  });
+  await Promise.all([stdoutDone, stderrDone]);
+  clearTimeout(timer);
+  if (killTimer) clearTimeout(killTimer);
+  await stopBroker();
+  rmSync(join(paths.dir, "wake.pid"), { force: true });
+
+  const summary = tracker.summary;
+  const ok = code === 0 && !summary.isError && !timedOut;
+  if (ok) for (const event of events) {
+    try {
+      renameSync(event.file, join(paths.delivered, event.name));
+    } catch {
+      // already moved
+    }
+  }
+  const rollout = threadId ? findRollout(learnerCodexHome(env), threadId) : undefined;
+  const growth = rollout ? sessionGrowth(readFileSync(rollout, "utf8")) : undefined;
+  const row = {
+    ts: new Date().toISOString(),
+    kind: session ? "wake" : "init",
+    session: threadId ?? null,
+    events: events.map((e) => e.name),
+    ok,
+    exit: code,
+    signal,
+    timed_out: timedOut,
+    wall_ms: Date.now() - startedAt,
+    tokens: summary.tokens,
+    context_tokens: growth?.contextTokens ?? null,
+    compactions: growth?.compactions ?? null,
+    rollout_bytes: growth?.bytes ?? null,
+    errors: summary.errors.slice(0, 5),
+    result: (summary.result ?? "").slice(0, 4000),
+    log: logPath,
+  };
+  write({ type: "ops_summary", ...row });
+  appendFileSync(paths.wakesLog, `${JSON.stringify(row)}\n`);
+  const secrets = collectSecrets(secretFilesOf(ROOT), env, strippedEnvNames(env, "codex"));
+  const redacted = redactSecrets(logPath, secrets) + redactSecrets(paths.wakesLog, secrets);
+  if (redacted > 0) log(`replaced ${redacted} key value(s) in the wake logs with [REDACTED]`);
+  log(`${row.kind} ${ok ? "done" : "FAILED"} in ${Math.round(row.wall_ms / 1000)} s (exit ${code}${signal ? `, ${signal}` : ""}${timedOut ? ", timed out" : ""}; context ${growth?.contextTokens ?? "?"} tokens, ${growth?.compactions ?? 0} compaction(s)): ${(summary.result ?? summary.errors.join(" | ")).replace(/\s+/g, " ").slice(0, 300)}`);
+  if (!ok && AUTH_ERROR.test(summary.errors.join(" "))) {
+    try {
+      await refreshCodexAuth({ bin, home: learnerCodexHome(env), env: childEnv as Record<string, string>, stateDir: join(STATE, "auth") });
+      log("codex login refused: asked codex to refresh its token; the events stay queued for the next tick");
+    } catch (error) {
+      log(`codex login refused and the token refresh failed (${error instanceof Error ? error.message.slice(0, 200) : String(error)}): Dai has to run codex login`);
+    }
+  }
+  if (timedOut) return 124;
+  return ok ? 0 : 1;
+}
+
+/* ---- other commands ----------------------------------------------------------------------------------------- */
+
+function growthReport(): number {
+  const session = readSessionId(paths);
+  if (!session) {
+    process.stdout.write("no session yet\n");
+    return 0;
+  }
+  const rollout = findRollout(learnerCodexHome(env), session);
+  if (!rollout) {
+    process.stdout.write(`session ${session}: session file not found under the codex home\n`);
+    return 1;
+  }
+  const g = sessionGrowth(readFileSync(rollout, "utf8"));
+  process.stdout.write(
+    `session ${session}: ${g.turns} turn(s), file ${(g.bytes / 1024).toFixed(0)} KiB, context ${g.contextTokens ?? "?"} / ${g.window ?? "?"} tokens, ${g.compactions} compaction(s)` +
+      `${g.usedPercent !== undefined ? `, weekly limit ${g.usedPercent}% used` : ""}\n  ${rollout}\n`,
+  );
+  return 0;
+}
+
+/** The daily snapshot's copy of the session file, key values replaced (ops prompt「论文数据快照」). */
+function snapshotSession(): number {
+  const session = readSessionId(paths);
+  if (!session) return 0;
+  const rollout = findRollout(learnerCodexHome(env), session);
+  if (!rollout) {
+    log(`snapshot: session file of ${session} not found`);
+    return 1;
+  }
+  const dir = join(ROOT, "paper", "materials", "session");
+  mkdirSync(dir, { recursive: true });
+  const target = join(dir, `codex-ops-${session}.jsonl`);
+  copyFileSync(rollout, target);
+  const redacted = redactSecrets(target, collectSecrets(secretFilesOf(ROOT), env, strippedEnvNames(env, "codex")));
+  process.stdout.write(`${target} (${redacted} key value(s) redacted)\n`);
+  return 0;
+}
+
+async function main(argv: string[]): Promise<number> {
+  const [command, ...rest] = argv;
+  switch (command) {
+    case "wake":
+      return wake(rest.includes("--dry-run"));
+    case "precheck": {
+      const bin = engineBinary("codex", env);
+      if (!bin) {
+        process.stderr.write("codex is not installed\n");
+        return 3;
+      }
+      const refused = await precheck(bin);
+      process.stdout.write(refused ? `${refused}\n` : "ok: codex usable, key files unreadable under the ops profile\n");
+      return refused ? 3 : 0;
+    }
+    case "growth":
+      return growthReport();
+    case "probe": {
+      // Runs a shell script under the ops profile, as the session's commands run (re-verify the sandbox after a codex update).
+      const bin = engineBinary("codex", env);
+      if (!bin || !rest[0]) {
+        process.stderr.write("usage: tsx ops/codex/main.ts probe <script.sh>   (codex installed)\n");
+        return 2;
+      }
+      const request = opsRequest(ROOT, env);
+      const args = ["sandbox", "-C", ROOT, "-P", request.profile!, ...codexProfileOverrides(request), "--", "bash", rest[0]];
+      const child = spawn(bin, args, { cwd: ROOT, env: codexChildEnv(env, bin), stdio: "inherit" });
+      return new Promise<number>((done) => child.on("close", (code) => done(code ?? 1)));
+    }
+    case "snapshot-session":
+      return snapshotSession();
+    default:
+      process.stderr.write("usage: tsx ops/codex/main.ts wake [--dry-run] | precheck | growth | snapshot-session | probe <script.sh>\n");
+      return 2;
+  }
+}
+
+if (process.argv[1] && /ops\/codex\/main\.ts$/.test(process.argv[1])) {
+  main(process.argv.slice(2)).then(
+    (code) => process.exit(code),
+    (error) => {
+      log(`runner crashed: ${error instanceof Error ? error.stack ?? error.message : String(error)}`);
+      process.exit(1);
+    },
+  );
+}
