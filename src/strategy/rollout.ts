@@ -48,7 +48,7 @@ import { fileURLToPath } from "node:url";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { withAddedAtRandom } from "../sl/draws.js";
-import { isStrikeCard, type CardModel } from "./card-model.js";
+import { cardConditionOptions, isStrikeCard, type CardModel } from "./card-model.js";
 import { bossLossPerTurn, bossProfile, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "./boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
@@ -2720,6 +2720,8 @@ function simulate(
       unmovableArmed: player.unmovable,
       strikeReplay: player.strikeReplay,
       exhaustedThisTurn: false,
+      // CARD_CONDITIONS: Inferno's or Crimson Mantle's HP taken as this turn started (Spite hits twice from the first card).
+      ...(cardConditionOptions.enabled && startLossEvents(player) > 0 ? { hpLostThisTurn: true } : {}),
       noBlock: false,
       tender: player.tender,
       maxSkills: player.smoggy ? 1 : null,

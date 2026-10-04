@@ -24,7 +24,7 @@ import { closeSync, existsSync, openSync, readSync, statSync } from "node:fs";
 import type { Knowledge } from "../knowledge/index.js";
 import { parseGameState, type GameState } from "../mod/schema.js";
 import type { RoutePlan } from "../screens/map.js";
-import { noteFacing, noteLizardTailEndTurn, noteTurnStartExhaust, trackLizardTail } from "../screens/combat-plan.js";
+import { noteFacing, noteLizardTailEndTurn, noteTurnStartExhaust, noteTurnStartHp, trackLizardTail } from "../screens/combat-plan.js";
 import { rememberChosenNode, rememberMap } from "../screens/rest.js";
 import { runPlanLine, type RunPlan } from "../strategy/run-plan.js";
 import { noteFightStart } from "../strategy/thief.js";
@@ -214,6 +214,8 @@ export interface ReplayResult {
   lizardTail: ScreenMemory["lizardTail"] | null;
   /** The exhaust pile at the first logged frame of the last combat turn (combat-plan noteTurnStartExhaust). */
   turnStartExhaust: ScreenMemory["turnStartExhaust"] | null;
+  /** Our HP at the first logged frame of the last combat turn (combat-plan noteTurnStartHp; CARD_CONDITIONS, Spite). */
+  turnStartPlayerHp: ScreenMemory["turnStartPlayerHp"] | null;
   /** The deck and gold at the last fight's first logged frame (thief.ts noteFightStart); null when none was in combat. */
   thiefStart: ScreenMemory["thiefStart"] | null;
   /** The last stolen card value logged (THIEF_COST: a decision row's thief_card_value); null when none was. */
@@ -273,6 +275,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     journal.observe(state, { knowledge, screenMemory: memory });
     trackLizardTail(memory, state);
     noteTurnStartExhaust(memory, state);
+    noteTurnStartHp(memory, state);
     noteFightStart(memory, state);
     // As the live loop: the facing is a fight's, cleared out of combat.
     if (!state.in_combat) {
@@ -317,7 +320,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     }
   }
   const facing = typeof memory.facing === "number" && memory.facingFight ? { fight: memory.facingFight, index: memory.facing } : null;
-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
+  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, turnStartPlayerHp: memory.turnStartPlayerHp ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
 }
 
 /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */
