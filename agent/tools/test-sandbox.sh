@@ -5,8 +5,9 @@
 # execFileSync wrappers receive EPERM even after exit 0; config tests read denied .env fixtures.
 # Four threads keep the runner within four OS processes; all other tests remain enabled.
 set -eu
-cd "$(dirname "$0")/.."
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export PATH="$HOME/.local/node/bin:$PATH"
+export npm_config_offline=true
 nice -n 19 npx tsc -p tsconfig.json --noEmit
 nice -n 19 npx vitest run --pool=threads --maxWorkers=4 --exclude tests/paths.test.ts \
   --exclude tests/brain-codex.test.ts \
