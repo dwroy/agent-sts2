@@ -990,6 +990,30 @@ export function bossDamageByTurn(bossId: string, asc: number, turns: number): { 
   return used.length > 0 ? { perTurn, estimated, parts: used } : null;
 }
 
+/** R0HEV5E3QT6G F34/F36 / KAY522KT5NXR F34, silent-0041: an SL restart is not another phase. */
+export function phaseCountsWithoutRetries(id: string, counts: Record<string, number>): Record<string, number> {
+  if (id !== "TEST_SUBJECT") return counts;
+  const out: Record<string, number> = {};
+  for (const [sequence, n] of Object.entries(counts)) {
+    const suffix = /\s*\(.*\)\s*$/.exec(sequence)?.[0] ?? "";
+    const values = sequence.replace(/\s*\(.*\)\s*$/, "").split(">").map((value) => Number(value.trim())).filter((value) => Number.isFinite(value) && value > 0);
+    let attempt: number[] = [];
+    let longest: number[] = [];
+    for (const hp of values) {
+      if (hp === values[0] && attempt.length > 0) {
+        if (attempt.length > longest.length) longest = attempt;
+        attempt = [];
+      }
+      attempt.push(hp);
+    }
+    if (attempt.length > longest.length) longest = attempt;
+    if (longest.length === 0) continue;
+    const key = longest.join(" > ") + suffix;
+    out[key] = (out[key] ?? 0) + n;
+  }
+  return out;
+}
+
 /**
  * An act boss's HP at `asc` from the DB (its parts' median max HP at this ascension, else the nearest
  * logged one; each part times its count per fight), only the parts named when `only` is given, and its
@@ -1004,7 +1028,7 @@ export function bossHpAt(bossId: string, asc: number, only?: string[]): { hp: nu
   const parts = Object.entries(entry.parts ?? {}).filter(([part]) => !only || only.includes(part));
   if (parts.length === 0) return null;
   const hp = parts.reduce((sum, [, range]) => sum + (range.median ?? 0) * (range.count_per_fight ?? 1), 0);
-  const phases = Object.keys(entry.phases ?? {})
+  const phases = Object.keys(phaseCountsWithoutRetries(id, entry.phases ?? {}))
     .map((sequence) => sequence.replace(/\s*\(.*\)\s*$/, "").split(">").map((value) => Number(value.trim())).filter((value) => Number.isFinite(value) && value > 0))
     .sort((a, b) => b.length - a.length)[0] ?? [];
   const n = Math.min(...parts.map(([, range]) => range.n ?? 0));
@@ -1197,6 +1221,16 @@ export const ON_DEATH_SPAWNS: Record<string, { id: string; count: number }[]> = 
 /** A spawn's HP when the monster DB has none logged (the Wriggler's and the gremlins' are 11-21). */
 const SPAWN_FALLBACK_HP = 15;
 
+/** C48LLXBGKXQ9 F30 T1 / 1HC609GTLGN3 F22 T1, silent-0029: the living Obscura summons one illusion. */
+export function summonsAt(enemyId: string, move: string, asc: number, monsters: Record<string, MonsterEntry> = load().monsters): { id: string; name: string; hp: number; count: number; move: string; illusion: boolean; minion: boolean }[] | null {
+  if (enemyId !== "THE_OBSCURA" || move !== "ILLUSION_MOVE") return null;
+  const monster = monsters["PARAFRIGHT"];
+  const found = nearestAscension(monster?.hp_by_asc, asc);
+  const hp = found ? monster!.hp_by_asc![found.key]!.median : undefined;
+  if (hp === undefined || hp <= 0) return null;
+  return [{ id: "PARAFRIGHT", name: monster?.name?.zh || "PARAFRIGHT", hp: Math.round(hp), count: 1, move: "SLAM_MOVE", illusion: true, minion: true }];
+}
+
 /**
  * An enemy's on-death spawns at `asc`: each one's name, HP (its median max HP at the nearest logged ascension)
  * and first move (SPAWNED_MOVE when logged: no attack on the turn it arrives). null when it spawns nothing known.
@@ -1266,7 +1300,7 @@ export function bossDossier(bossId: string | null | undefined, asc: number): str
   const entry = byAsc[found.key]!;
   const parts = Object.entries(entry.parts ?? {});
   const hp = parts.map(([part, range]) => `${monsterName(part)} ${round(range.median)}${(range.count_per_fight ?? 1) > 1 ? `×${round(range.count_per_fight)}` : ""} (n=${range.n ?? 0})`).join(" + ");
-  const phases = Object.entries(entry.phases ?? {}).map(([sequence, n]) => `${sequence} (n=${n})`);
+  const phases = Object.entries(phaseCountsWithoutRetries(id, entry.phases ?? {})).map(([sequence, n]) => `${sequence} (n=${n})`);
   const lines = [
     `boss 数据库 ${monsterName(parts[0]?.[0] ?? id)} (${id}) ${ascLabel(found, asc)}: HP ${hp || "?"}${phases.length > 0 ? ` | 阶段 HP: ${phases.join("; ")}` : ""}`,
     `我方战绩: ${entry.fights ?? 0} 场，胜率 ${pct(entry.win_rate)} (n=${entry.n_outcome_known ?? 0})，阵亡 ${entry.death_runs?.length ?? 0}；赢局失血 中位/p75 ${stat(entry.hp_loss_won)}；赢局回合 ${stat(entry.turns_won)}；每回合失血 ${stat(entry.hp_loss_per_turn)}`,

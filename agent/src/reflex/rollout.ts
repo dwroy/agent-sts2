@@ -705,6 +705,8 @@ export interface RolloutInput {
    * the Gremlin Merc's two gremlins): each spawn's id, name, HP and first move. Their move tables are in `tables`.
    */
   spawns?: Record<string, SpawnTemplate[]>;
+  /** Observed living summons, keyed by the summoner and its move. */
+  summons?: Record<string, Record<string, SpawnTemplate[]>>;
   /**
    * A card put into the draw pile each time it is shuffled (Biiig Hug: 「每当你的抽牌堆打乱洗牌时，将一张煤灰加入你的
    * 抽牌堆」; logged CMUX F19/F20/F22: one Soot in the new draw pile after each shuffle), or absent.
@@ -737,6 +739,8 @@ export interface SpawnTemplate {
   count: number;
   /** Its first move (SPAWNED_MOVE: no attack the turn it arrives), null when unknown (the table's own chain). */
   move: string | null;
+  illusion?: boolean;
+  minion?: boolean;
 }
 
 /** One kill order's rollout of a line: the same numbers as the line's own (LineEstimate). */
@@ -1062,6 +1066,7 @@ interface SimEnemy {
   vigor: number;
   vulnerable: number;
   weak: number;
+  poison: number;
   alive: boolean;
   /** A dead Decimillipede segment: enemy turns left until it reattaches (while another segment lives). */
   reattachIn?: number;
@@ -1179,6 +1184,11 @@ interface SimPlayer {
   plating: number;
   juggernaut: number;
   feelNoPain: number;
+  afterImage: number;
+  poisonPerTurn: number;
+  poisonExtraTriggers: number;
+  doubleDamage: boolean;
+  doubleDamageNext: boolean;
   potions: number;
   /** Inferno up (INFERNO_POWER amount): every HP loss on our turn hits every enemy for it. */
   inferno: number;
@@ -1531,7 +1541,7 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
   return {
     ...card,
     index,
-    damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)),
+    damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)) * (card.type === "Attack" && player.doubleDamage ? 2 : 1),
     // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
     // Frail: 25% less block from cards, after Dexterity.
     block: card.block > 0 ? Math.floor(Math.max(0, card.block + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
@@ -1541,6 +1551,10 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
 
 function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, blockEnd: number, energyLeft: number, handLeft: number, playerPowers: Record<string, number>): Snapshot {
   const pw: Record<string, number> = { ...playerPowers };
+  if (player.doubleDamageNext) pw["SHADOW_STEP_POWER"] = 1;
+  else delete pw["SHADOW_STEP_POWER"];
+  if (player.doubleDamage) pw["DOUBLE_DAMAGE_POWER"] = 1;
+  else delete pw["DOUBLE_DAMAGE_POWER"];
   for (const [id, v] of [["STRENGTH_POWER", player.strength], ["DEXTERITY_POWER", player.dexterity], ["WEAK_POWER", player.weakTurns], ["VULNERABLE_POWER", player.vulnTurns], ["FRAIL_POWER", player.frailTurns], ["PLATING_POWER", player.plating]] as const) {
     if (v !== 0) pw[id] = v;
     else delete pw[id];
@@ -1555,7 +1569,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
     pots: player.potions,
     E: enemies.map((e) => {
       const powers: Record<string, number> = { ...e.powers };
-      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VIGOR_POWER", e.vigor], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns]] as const) {
+      for (const [id, v] of [["STRENGTH_POWER", e.strength], ["VIGOR_POWER", e.vigor], ["VULNERABLE_POWER", e.vulnerable], ["WEAK_POWER", e.weak], ["INTANGIBLE_POWER", e.intangibleTurns], ["POISON_POWER", e.poison]] as const) {
         if (v) powers[id] = v;
         else delete powers[id];
       }
@@ -1572,7 +1586,7 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
 
 /** A fresh enemy spawned mid-fight (RolloutInput.spawns), at its first move, with a board index of its own. */
 function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
-  const base: EnemySim = { index, name: template.name, hp: template.hp, maxHp: template.hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [] };
+  const base: EnemySim = { index, name: template.name, hp: template.hp, maxHp: template.hp, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [], ...(template.illusion ? { illusion: true } : {}), ...(template.minion ? { minion: true } : {}) };
   return {
     index,
     id: template.id,
@@ -1584,6 +1598,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
     vigor: 0,
     vulnerable: 0,
     weak: 0,
+    poison: 0,
     alive: true,
     intangibleTurns: 0,
     burrowed: false,
@@ -1601,7 +1616,7 @@ function spawnedEnemy(template: SpawnTemplate, index: number): SimEnemy {
     vitalSpark: 0,
     moveBuffs: { thorns: false, soar: false },
     plating: 0,
-    powers: {},
+    powers: { ...(template.illusion ? { ILLUSION_POWER: 1 } : {}), ...(template.minion ? { MINION_POWER: 1 } : {}) },
     base,
     shown: [],
   };
@@ -1646,6 +1661,8 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     e.maxHp = next;
     e.vulnerable = 0;
     e.weak = 0;
+    // T082DRCUHRRD F48 T5-T6: the revived phase has only the new Fumes application, not the old poison.
+    e.poison = 0;
     e.strength = 0;
     if (e.phasesLeft.length === 0) {
       const { ADAPTABLE_POWER: _last, ...powers } = e.powers;
@@ -1706,6 +1723,12 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
     player.strength += player.skullUp ? player.redSkull : -player.redSkull;
   }
   player.strength += player.rupture * startLossEvents(player);
+  // Y6GM2CHWJBEY F17 T3-T4: Fumes starts on the turn after it is played.
+  if (player.poisonPerTurn > 0) for (const enemy of enemies) {
+    if (!enemy.alive || enemy.explodeAt !== undefined) continue;
+    if (enemy.artifact > 0) enemy.artifact -= 1;
+    else enemy.poison += player.poisonPerTurn;
+  }
   const aoe = turnStartAoeOf(player);
   if (player.boulder > 0) player.boulder += BOULDER_STEP;
   if (aoe <= 0) return 0;
@@ -1852,6 +1875,15 @@ function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebu
 
 /** A played card's lasting effects on the simulated player: a Power's (POWER_EFFECTS), Feel No Pain, Plating. */
 function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<string, number>): void {
+  if (card.poisonPerTurn) {
+    player.poisonPerTurn += card.poisonPerTurn;
+    playerPowers["NOXIOUS_FUMES_POWER"] = player.poisonPerTurn;
+  }
+  if (card.poisonExtraTriggers) {
+    player.poisonExtraTriggers += card.poisonExtraTriggers;
+    playerPowers["ACCELERANT_POWER"] = player.poisonExtraTriggers;
+  }
+  if (card.doubleDamageNext) player.doubleDamageNext = true;
   const effect = POWER_EFFECTS[card.cardId];
   if (effect && card.type === "Power") {
     const amount = card.powerAmount ?? (card.inferno || undefined) ?? effect.amount[card.upgraded ? 1 : 0];
@@ -1863,6 +1895,14 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
     playerPowers[effect.power] = (playerPowers[effect.power] ?? 0) + amount;
   }
   if (card.feelNoPain) player.feelNoPain += card.feelNoPain;
+  if (card.afterImage) {
+    player.afterImage += card.afterImage;
+    playerPowers["AFTERIMAGE_POWER"] = (playerPowers["AFTERIMAGE_POWER"] ?? 0) + card.afterImage;
+  }
+  if (card.dexterity) {
+    player.dexterity += card.dexterity;
+    playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + card.dexterity;
+  }
   if (card.plating) player.plating += card.plating;
 }
 
@@ -2074,6 +2114,7 @@ function applyPlan(
     if (fullFight) e.hurt = e.hurt === true || hit || e.hp < a.hp;
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
+    e.poison = a.poison ?? e.poison;
     if (a.artifact !== undefined) e.artifact = a.artifact;
     if (a.slippery !== undefined) e.slippery = Math.max(0, a.slippery - (slipperyUsed.get(e.index) ?? 0));
     if (a.curlUp !== undefined) e.curlUp = a.curlUp;
@@ -2124,6 +2165,9 @@ function applyPlan(
   player.dexterity -= player.tempDexterity;
   player.tempStrength = 0;
   player.tempDexterity = 0;
+  // The observed Shadow Step bonus starts after this turn and lasts through the next one only.
+  player.doubleDamage = player.doubleDamageNext;
+  player.doubleDamageNext = false;
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
@@ -2150,6 +2194,7 @@ function applyPlan(
     const applied: EnemyMove[] = [];
     // Imbalanced enemies whose hits this turn's line fully blocked (the solver's stuns).
     const blockStunned = new Set(o.stunIndexes ?? []);
+    const summoned: SimEnemy[] = [];
     for (const e of enemies) {
       if (!e.alive || e.explodeAt !== undefined) continue;
       const table = input.tables[e.id];
@@ -2171,6 +2216,12 @@ function applyPlan(
       }
       if (stunned) e.burrowed = false;
       else {
+        // Arrival happens after this enemy turn; its first attack belongs to the next one.
+        for (const template of e.move ? input.summons?.[e.id]?.[e.move] ?? [] : []) {
+          if (enemies.some((other) => other.id === template.id && !other.gone) || summoned.some((other) => other.id === template.id)) continue;
+          const first = Math.max(-1, ...enemies.map((other) => other.index), ...summoned.map((other) => other.index)) + 1;
+          for (let k = 0; k < template.count; k += 1) summoned.push(spawnedEnemy(template, first + k));
+        }
         // An attack spends the Vigor it had (its hits carried it); the move's own Vigor is for the next one.
         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
         e.vigor += m?.vigor ?? 0;
@@ -2273,6 +2324,7 @@ function applyPlan(
         e.shriekArmed = e.hp > later.amount;
       }
     }
+    enemies.push(...summoned);
     // Demise: HP lost at the end of each of its turns, stunned or not, until it dies (the solver only priced about
     // three turns of it; ARKG3JFT26HC F17: 9 a turn on the Soul Fysh never counted in any later turn).
     for (const e of enemies) {
@@ -2443,6 +2495,11 @@ function simulate(
     plating: Math.min(base.endTurnBlock ?? 0, input.playerPowers["PLATING_POWER"] ?? 0),
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
+    afterImage: base.afterImage ?? input.playerPowers["AFTERIMAGE_POWER"] ?? 0,
+    poisonPerTurn: input.playerPowers["NOXIOUS_FUMES_POWER"] ?? 0,
+    poisonExtraTriggers: base.poisonExtraTriggers ?? input.playerPowers["ACCELERANT_POWER"] ?? 0,
+    doubleDamage: (input.playerPowers["DOUBLE_DAMAGE_POWER"] ?? 0) > 0,
+    doubleDamageNext: (input.playerPowers["SHADOW_STEP_POWER"] ?? 0) > 0,
     potions: input.potions,
     inferno: base.inferno ?? 0,
     // The decision's Infernos (combat-plan counts them off the state); without the count, from the power's amount.
@@ -2517,6 +2574,7 @@ function simulate(
       vigor: info?.powers?.["VIGOR_POWER"] ?? 0,
       vulnerable: e.vulnerable,
       weak: e.weak,
+      poison: e.poison ?? info?.powers?.["POISON_POWER"] ?? 0,
       alive: e.hp > 0,
       // Intangible now lasts its stacks; Nemesis re-grants it at the end of every 2nd enemy turn, so it is
       // on every other turn (VQKX F48 T6: "win 88%" with Intangible never coming back, T7 212 -> 208).
@@ -2663,6 +2721,7 @@ function simulate(
         block: e.block,
         vulnerable: e.vulnerable,
         weak: e.weak,
+        ...(e.poison > 0 || e.base.poison !== undefined ? { poison: e.poison } : {}),
         artifact: e.artifact,
         slippery: e.slippery,
         curlUp: e.curlUp,
@@ -2742,6 +2801,8 @@ function simulate(
       endTurnBlock: player.endTurnBlock + player.plating,
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
+      afterImage: player.afterImage,
+      poisonExtraTriggers: player.poisonExtraTriggers,
       // Mid-turn draws: Hellraiser plays the Strikes, Dark Embrace draws for each exhaust (the solver's own turn).
       hellraiser: player.hellraiser,
       darkEmbrace: player.darkEmbrace,

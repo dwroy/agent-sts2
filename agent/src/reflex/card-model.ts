@@ -59,6 +59,19 @@ export interface CardModel {
   weakFirst?: boolean;
   /** Permanent Strength for the player. */
   strength: number;
+  /** Dexterity gained on play, from observed Footwork vars (silent-0026). */
+  dexterity?: number;
+  /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
+  afterImage?: number;
+  /** Observed unupgraded Shadow Step: discard all other hand cards, double attacks next turn only. */
+  discardsHand?: boolean;
+  doubleDamageNext?: boolean;
+  /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
+  poison?: number;
+  poisonRequiresExisting?: boolean;
+  poisonNow?: boolean;
+  poisonPerTurn?: number;
+  poisonExtraTriggers?: number;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
@@ -122,6 +135,8 @@ export interface CardModel {
   heldPenalty: number;
   /** Part of heldPenalty that is HP loss ("失去N点生命", Beckon): block does not stop it. */
   heldHpLoss?: number;
+  /** HP lost per non-potion card left in hand (Regret, R0HEV5E3QT6G F48 attempt 3 T3, silent-0032). */
+  heldHpLossPerCard?: number;
   /**
    * Damage the card deals to us when played (Foul Potion; a Power under the Globe Head's Galvanic, playSelfDamageOf): our
    * block takes it first, the rest is HP lost.
@@ -802,16 +817,19 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // Drum of Battle's is gained when the card is exhausted, not on play (VC4L F21 T4).
   // Relax's energy and draw are next turn's (nextTurnOnly), like a Power's income.
   const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) || nextTurnOnly(template, "Energy") ? 0 : (dyn(card, "Energy") ?? 0);
-  const draw = nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  // R0HEV5E3QT6G F29 T2 / F48 T4: the unupgraded Shadow Step has a dormant Cards=3 var, but no draw.
+  const shadowStep = cardId === "SHADOW_STEP" && !bool(card["upgraded"]);
+  const draw = shadowStep || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
   // The Bomb (1ZQJ: in hand four turns, never played, scored 0 as unmodelled): 40 to every enemy at
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
+  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0;
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
@@ -862,9 +880,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const rendered = renderedText;
   const weakFirst = weak > 0 && vulnerable > 0 && debuffWeakFirst(rendered || template);
   const { heldPenalty, heldHpLoss } = heldPenaltyOf(rendered);
+  const heldHpLossPerCard = cardId === "REGRET" && /失去相当于[^。]*手牌数量[^。]*生命|lose hp equal to[^.]*cards? in your hand/i.test(rendered) ? 1 : 0;
   // Galvanic's 「受到6点伤害」 on a Power (turn-solver selfDamage: through block, after the card's own effects).
   const selfDamage = playSelfDamageOf(rendered);
-  if (heldPenalty > 0 && (type === "Status" || type === "Curse")) {
+  if ((heldPenalty > 0 || heldHpLossPerCard > 0) && (type === "Status" || type === "Curse")) {
     // Its Damage var is the self-damage, not an attack.
     damage = null;
     known = true;
@@ -902,6 +921,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     weak,
     ...(weakFirst ? { weakFirst } : {}),
     strength,
+    ...(cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
+    ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
     tempStrength,
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
     ...(dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
@@ -917,10 +938,15 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     draw,
     exhausts,
     special,
+    ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
+    ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
+    ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
+    ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
     known,
     flatValue,
     heldPenalty,
     heldHpLoss,
+    ...(heldHpLossPerCard > 0 ? { heldHpLossPerCard } : {}),
     ...(selfDamage > 0 ? { selfDamage } : {}),
     retaliate: dyn(card, "DamageBack") ?? 0,
     delayedDamage,

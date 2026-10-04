@@ -24,7 +24,7 @@ import { readFileSync } from "node:fs";
 
 import type { Knowledge } from "../knowledge/index.js";
 import { identityToken, memoKey, type ComputeMemo } from "../sim/compute-memo.js";
-import { appliedPowerIds, countsAt, moveAmountAt, moveBaseDamages, moveDamageAt, nearestAscension, readMonsterDbJson, regularEffect, selfGainAt, shownDamageAt, spawnsAt, startAmountAt, type AmountWhere, type MoveEntry } from "../knowledge/monster-db.js";
+import { appliedPowerIds, countsAt, moveAmountAt, moveBaseDamages, moveDamageAt, nearestAscension, readMonsterDbJson, regularEffect, selfGainAt, shownDamageAt, spawnsAt, summonsAt, startAmountAt, type AmountWhere, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../hand/mod/schema.js";
 import type { ScreenMemory } from "../memory/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
@@ -320,6 +320,14 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
 }
 
 // ---------------------------------------------------------------- board
+
+/** The observed living summon adds its first attack to next turn's threat, from the current ascension's DB. */
+export function summonThreatAt(enemyId: string, move: string, asc: number, present: readonly string[], vulnerable: boolean, db: MonsterMoves = monsterMoves(), mm: MoveModelData = moveModelData()): number {
+  return (summonsAt(enemyId, move, asc, db) ?? []).filter((spawn) => !present.includes(spawn.id)).reduce((sum, spawn) => {
+    const attack = spawn.move ? enemyTable(spawn.id, asc, db, mm)?.moves[spawn.move] : undefined;
+    return sum + (attack ? Math.floor(attack.damage * (vulnerable ? 1.5 : 1)) * attack.hits * spawn.count : 0);
+  }, 0);
+}
 
 export function powersOf(holder: Record<string, unknown>): Record<string, number> {
   const out: Record<string, number> = {};
@@ -783,7 +791,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "playerPowers" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -816,11 +824,14 @@ export function boardRolloutInput(
   const tables: Record<string, EnemyTable> = {};
   // On-death spawns (Phrog Parasite, Gremlin Merc): what comes, at this ascension, and their move tables.
   const spawns: Record<string, SpawnTemplate[]> = {};
+  const summons: NonNullable<RolloutInput["summons"]> = {};
   for (const e of enemies) {
     const found = spawnsAt(e.id, asc, db);
     if (found) spawns[e.id] = found;
+    const living = summonsAt(e.id, "ILLUSION_MOVE", asc, db)?.filter((spawn) => !enemies.some((other) => other.id === spawn.id));
+    if (living?.length) summons[e.id] = { ILLUSION_MOVE: living };
   }
-  for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id))])) {
+  for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id)), ...Object.values(summons).flatMap((moves) => Object.values(moves).flatMap((list) => list.map((spawn) => spawn.id)))])) {
     const table = enemyTable(id, asc, db, mm);
     if (table) tables[id] = table;
   }
@@ -842,6 +853,7 @@ export function boardRolloutInput(
     relicEnergy: relicEnergyOf(asRecord(state.run?.raw)),
     ...(relicBlockOf(asRecord(state.run?.raw)).length > 0 ? { relicBlock: relicBlockOf(asRecord(state.run?.raw)) } : {}),
     ...(Object.keys(spawns).length > 0 ? { spawns } : {}),
+    ...(Object.keys(summons).length > 0 ? { summons } : {}),
     ...(hug && statusCards["SOOT"] ? { onShuffle: statusCards["SOOT"] } : {}),
     ...(passive ? { passive } : {}),
     playerPowers: powersOf(asRecord(combat["player"])),
