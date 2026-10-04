@@ -141,6 +141,8 @@ export interface EnemySim {
   block: number;
   vulnerable: number;
   weak: number;
+  /** Poison remaining before this enemy turn, observed in Silent runs. */
+  poison?: number;
   artifact: number;
   intangible: boolean;
   /** Slippery N: the next N HP losses are reduced to 1 each. */
@@ -445,6 +447,10 @@ export interface PlayerSim {
    * Fire through 4 cards with Feel No Pain 3 was scored as 9 damage and no block).
    */
   feelNoPain?: number;
+  /** Afterimage already active: block for each subsequent card play, including replays. */
+  afterImage?: number;
+  /** Extra poison triggers granted by the observed Accelerant power. */
+  poisonExtraTriggers?: number;
   /**
    * Hellraiser up (HELLRAISER_POWER): 「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」 — a Strike drawn this
    * turn plays itself, free, at a random enemy (the rollout does it for later turns' draws, a4f3795).
@@ -785,6 +791,8 @@ export interface Outcome {
     hp: number;
     vulnerable: number;
     weak: number;
+    /** Poison left after the observed immediate and enemy-turn triggers. */
+    poison?: number;
     block?: number;
     artifact?: number;
     slippery?: number;
@@ -1005,6 +1013,8 @@ interface Sim {
   /** Infernos played this turn (each loses 1 HP at the start of every later turn, as Crimson Mantle's `mantles`). */
   infernos: number;
   feelNoPain: number;
+  afterImage: number;
+  poisonExtraTriggers: number;
   /** Hellraiser up (already, or played this turn): drawn Strikes play themselves. */
   hellraiser: boolean;
   /** Dark Embrace amount up (already, or played this turn): cards drawn per card exhausted. */
@@ -1300,13 +1310,14 @@ function redSkullCheck(sim: Sim, player: PlayerSim): void {
  * One debuff application: Artifact negates it and loses a stack, whatever the debuff (TQX5 T1:
  * Powdered Demise into Artifact 3 did nothing). Returns the amount that landed.
  */
-function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise" | "shrink", amount: number): number {
+function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "tempStrengthLoss" | "demise" | "shrink" | "poison", amount: number): number {
   if (amount <= 0) return 0;
   if (enemy.artifact > 0) {
     enemy.artifact -= 1;
     return 0;
   }
   if (kind === "vulnerable") enemy.vulnerable += amount;
+  else if (kind === "poison") enemy.poison = (enemy.poison ?? 0) + amount;
   else if (kind === "weak") {
     if (enemy.weak === 0) enemy.newlyWeak = true;
     enemy.weak += amount;
@@ -1434,6 +1445,18 @@ function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
   else crabRage(sim);
 }
 
+/** Y6GM2CHWJBEY F17 T7 / T082DRCUHRRD F33 T4: each poison trigger loses one stack. */
+function triggerPoison(sim: Sim, enemy: Sim["enemies"][number], triggers: number): void {
+  for (let k = 0; k < triggers && enemy.alive && (enemy.poison ?? 0) > 0; k += 1) {
+    // T082DRCUHRRD F48 attempt 6 T10: three poison triggers into Intangible lose only three HP.
+    const lost = Math.min(enemy.hp, enemy.intangible ? 1 : enemy.poison ?? 0);
+    enemy.hp -= lost;
+    enemy.poison = Math.max(0, (enemy.poison ?? 0) - 1);
+    sim.damageDealt += lost;
+    if (enemy.hp <= 0) killEnemy(sim, enemy);
+  }
+}
+
 function crabRage(sim: Sim): void {
   for (const other of sim.enemies) {
     if (!other.alive || !other.crabRage) continue;
@@ -1503,6 +1526,13 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // leaves the hand by its key.
   next.hand = sim.hand.filter((entry) => entry !== card && !(card.type === "Potion" && entry.key === card.key));
   const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
+  if (card.discardsHand) {
+    discarded.push(...[...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").map((entry) => entry.cardId));
+    next.hand = next.hand.filter((entry) => entry.type === "Potion");
+    next.held = [];
+    next.locked = [];
+    next.drawnInHand = 0;
+  }
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
   if (card.soulbound) {
@@ -1657,7 +1687,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
-      ...(card.discards ? { discards: discarded } : {}),
+      ...(card.discards || card.discardsHand ? { discards: discarded } : {}),
       ...(card.type === "Potion" && card.generates?.pileCard ? { takes: card.generates.pileCard } : {}),
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
@@ -1695,6 +1725,7 @@ export function musicBoxCopy(card: CardModel): CardModel {
 function resolveEffects(next: Sim, card: CardModel, target: number | null, player: PlayerSim, cost: number): void {
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
+  if (card.type !== "Potion" && next.afterImage > 0) gainBlock(next, next.afterImage, player);
 
   if (card.hpLoss > 0) loseHp(next, card.hpLoss, player);
   if (card.immediatePlays) {
@@ -1751,6 +1782,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;
+  next.tempDex += card.dexterity ?? 0;
   if (card.special === "dexterity") {
     next.tempDex += DEX_POTION;
     if (!next.noBlock) next.flat += DEX_LASTING_PER_BLOCK_CARD * next.hand.filter((entry) => entry.type !== "Potion" && entry.block > 0).length;
@@ -1942,6 +1974,20 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
 
   thrashAbsorb(next, card, player);
 
+  const poisoned = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
+  if ((card.poison ?? 0) > 0) {
+    if (card.target === "random") {
+      for (let k = 0; k < card.hits; k += 1) {
+        const victim = randomVictim(next);
+        if (victim) applyDebuff(victim, "poison", card.poison!);
+      }
+    } else for (const enemy of poisoned) {
+      if (enemy.alive && (!card.poisonRequiresExisting || (enemy.poison ?? 0) > 0)) applyDebuff(enemy, "poison", card.poison!);
+    }
+  }
+  if (card.poisonNow) for (const enemy of poisoned) triggerPoison(next, enemy, 1 + next.poisonExtraTriggers);
+  next.poisonExtraTriggers += card.poisonExtraTriggers ?? 0;
+
   const debuffTargets = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
   for (const enemy of debuffTargets) {
     if (!enemy.alive) continue;
@@ -1980,6 +2026,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // rest is HP lost. Last, as the card text puts it: a Power played under Galvanic is up when its 6 lands (8L29N792FA45
   // F37 T2: Rupture+ played at block 0, its own 6 gave +2 Strength).
   if ((card.selfDamage ?? 0) > 0) damagePlayer(next, card.selfDamage ?? 0, player);
+  // LRN0HPZ0FZS1 F48 T1: the power itself gives no first block; later plays and replays do.
+  next.afterImage += card.afterImage ?? 0;
 }
 
 /** Damage to us on our own turn: block first, Intangible caps it at 1, only the rest is HP lost (loseHp). */
@@ -2616,6 +2664,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const victim = randomVictim(sim);
     if (victim) hitEnemyRaw(sim, victim, parry.damage);
   }
+  // Y6GM2CHWJBEY F17 T7 / T082DRCUHRRD F33 T9: poison resolves before the enemy attacks.
+  if (sim.enemies.some((enemy) => enemy.alive && (enemy.poison ?? 0) > 0)) {
+    sim = clone(sim);
+    for (const enemy of sim.enemies) triggerPoison(sim, enemy, 1 + sim.poisonExtraTriggers);
+  }
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
   // An Axebot with Stock left comes straight back the same way (Boot Up, no attack this turn).
@@ -2633,7 +2686,9 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
   // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
   const heldCards = [...sim.hand, ...sim.held];
-  const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + (card.heldHpLoss ?? 0), 0);
+  const heldCount = heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand;
+  const heldLoss = (card: CardModel): number => (card.heldHpLoss ?? 0) + (card.heldHpLossPerCard ?? 0) * heldCount;
+  const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + heldLoss(card), 0);
   // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
   // -3, the 6th card added a Wither and the turn cost 9).
   const wither = input.wither;
@@ -2648,7 +2703,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
     ...(winsFight || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
   ]);
-  const heldHpLossFrom = countedNames(heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).map((card) => card.name));
+  const heldHpLossFrom = countedNames(heldCards.filter((card) => heldLoss(card) > 0).map((card) => card.name));
   const hits = winsFight ? [] : incomingHits(sim, input);
   const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
@@ -2690,7 +2745,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // HP loss, Disintegration past block, each held Burn or enemy hit past block and Buffer) on top of what is owed.
   const clayEvents = winsFight
     ? 0
-    : sim.hpLossEvents + heldCards.filter((card) => (card.heldHpLoss ?? 0) > 0).length + (disintegration > blockAtEnd ? 1 : 0) + lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer);
+    : sim.hpLossEvents + heldCards.filter((card) => heldLoss(card) > 0).length + (disintegration > blockAtEnd ? 1 : 0) + lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer);
   const clayBlockNext = winsFight || (input.player.clayBlock ?? 0) <= 0 ? 0 : (input.player.clayPending ?? 0) + (input.player.clayBlock ?? 0) * clayEvents;
   const cap = input.player.hpLossCap;
   let hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
@@ -3011,6 +3066,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           hp: Math.max(0, enemy.hp),
           vulnerable: enemy.vulnerable,
           weak: enemy.weak,
+          ...((enemy.poison ?? 0) > 0 || (input.enemies.find((start) => start.index === enemy.index)?.poison ?? 0) > 0 ? { poison: enemy.poison ?? 0 } : {}),
           block: Math.max(0, enemy.block),
           artifact: enemy.artifact,
           slippery: enemy.slippery ?? 0,
@@ -3108,7 +3164,8 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}`;
+  const poisonKey = sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "";
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}`;
 }
 
 export interface SolveResult {
@@ -3247,6 +3304,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     tainted: 0,
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
+    afterImage: input.player.afterImage ?? 0,
+    poisonExtraTriggers: input.player.poisonExtraTriggers ?? 0,
     hellraiser: input.player.hellraiser === true,
     darkEmbrace: input.player.darkEmbrace ?? 0,
     lastingDrinks: 0,
@@ -3326,7 +3385,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
     // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
