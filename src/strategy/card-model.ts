@@ -200,7 +200,69 @@ export interface CardModel {
    * that goes (PU21 F33 T8: Bash, True Grit, Anger planned 27 damage, Anger was exhausted, 11 dealt).
    */
   randomExhaust?: boolean;
+  /**
+   * CARD_CONDITIONS (cardConditionOptions): the card's draw and energy come only when the rest of the hand meets this as
+   * it is played, the solver's simulated hand (turn-solver handConditionMet): "empty", nothing else in hand (Restlessness
+   * 「如果你的手牌为空，则抽{Cards}张牌并获得{Energy}」); "noAttack", no Attack in hand (Impatience 「如果你的手牌中没有攻击
+   * 牌，抽{Cards}张牌」). Absent: unconditional (and every card with the switch off).
+   */
+  handCondition?: "empty" | "noAttack";
+  /** CARD_CONDITIONS, Rage (「打出此牌后，你在这个回合内每打出一张攻击牌，获得{Power}点格挡」): Block for each Attack played after it this turn. */
+  rageBlock?: number;
+  /**
+   * CARD_CONDITIONS, Ashen Strike (「你的消耗牌堆中每有一张牌，伤害增加{ExtraDamage}」): damage per card exhausted earlier in the
+   * line (its shown number has the pile as it is at the decision).
+   */
+  perExhaustDamage?: number;
+  /**
+   * CARD_CONDITIONS, Expect a Fight (「你每拥有一点力量，这张牌就额外获得{CalculationExtra}点格挡」): Block per point of Strength
+   * gained earlier in the line (its shown number has the Strength at the decision).
+   */
+  perStrengthBlock?: number;
+  /**
+   * CARD_CONDITIONS, Tear Asunder (「在本场战斗中，你每失去过一次生命值，这张牌就额外造成一次伤害」): one more hit per HP loss
+   * earlier in the line (its shown CalculatedHits has the fight's losses up to the decision).
+   */
+  hitPerHpLoss?: boolean;
   text: string;
+}
+
+/**
+ * CARD_CONDITIONS (config.cardConditions; default on; the loop sets it at start, process.env before that): conditional card
+ * effects evaluated on the solver's simulated state when the card is played, not counted every time. Off (tools, tests,
+ * CARD_CONDITIONS=off): the card models and the solver as before (Restlessness's draw and energy every time, Spite's second
+ * hit only after an HP loss in the line, Rage a 3-point unknown, Ashen Strike / Expect a Fight / Tear Asunder at their
+ * decision numbers whatever the line did first).
+ *
+ * Checked on the logs (states.jsonl to 2026-10-04; the frame at each play and the next one):
+ * - Restlessness (心神不宁, colorless, 0 cost, Retain; upgraded: Cards 3, Energy 3): 95 plays in 9 runs (89 at A8+), every
+ *   one with other cards in hand (1-7 of them; the minimum, 1, three times: a Defend); 0 cards drawn and 0 energy gained
+ *   every time, the hand the same less the card, the discard pile +1. AKK09TEEEXKD F17 T10: "Strike, Defend, Restlessness,
+ *   Strike, True Grit" planned on its 2 energy; after Defend it did nothing and the turn ended with Strike and True Grit
+ *   unplayed (-7), and the SL explore deviations repeated it. No logged play had an empty hand, so the "fires" branch is
+ *   the card's text: the card being played is not in the hand, every other card is (unplayable ones too), potions are not.
+ * - Spite: 441 plays read cleanly (target alive, no block in the way): 2 hits on all 123 where HP had been lost earlier this
+ *   turn (HP below the turn's first frame, or Inferno / Crimson Mantle up at it: their turn-start loss), 1 on all 318
+ *   others. The solver only knew a loss in the line itself (PlayerSim.hpLostThisTurn now carries the earlier ones).
+ * - Rage: all 111 of 114 Attacks played with RAGE_POWER N up gained exactly N Block more (no Dexterity, no Frail; the 3
+ *   others gained more from elsewhere): the solver's RAGE_POWER rule, now also for a Rage played in the line.
+ * - Ashen Strike: the shown CalculatedDamage is 6 + 3 x the exhaust pile + Strength (76 of 92 matched exactly, the rest
+ *   Weak or Vulnerable rounding), dealt as shown; a card exhausted earlier in the line raises it.
+ * - Expect a Fight: the shown CalculatedBlock is 15 + 5 x Strength (+ Dexterity, Frail), gained as shown (134 of 134).
+ * - Tear Asunder: the shown CalculatedHits is the fight's HP losses so far; dealt Damage x that (67 of 67 read cleanly).
+ * Already right and kept: Evil Eye (doubled on 135 plays after an exhaust this turn or with Toasty Mittens, single on 487
+ * without), Dismantle (2 hits on 463 of 467 into Vulnerable, 1 on 490 of 490 without), Bully (+2 per Vulnerable), Body Slam
+ * (block at play), Pact's End (18 to all on 16 of 17 with 3+ in the exhaust pile, 0 on 35 of 35 below), Stomp (the shown
+ * cost, 740 of 742).
+ */
+export const cardConditionOptions: { enabled: boolean } = { enabled: process.env["CARD_CONDITIONS"] !== "off" };
+
+/** The hand condition a card's draw and energy wait on (CardModel.handCondition), read from its text; null: none. */
+export function handConditionOf(template: string, rendered = ""): CardModel["handCondition"] | null {
+  const text = `${template} ${rendered}`;
+  if (/如果你的手牌为空|if your hand is empty/i.test(text)) return "empty";
+  if (/如果你的手牌中没有攻击牌|if you have no attacks? in your hand|if your hand (?:has|contains) no attacks?/i.test(text)) return "noAttack";
+  return null;
 }
 
 /** A dynamic value's base (before our Strength/Weak), or null. */
@@ -689,6 +751,18 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // Enthralled does nothing when played but lift its lock, which the solver plays (CardModel.playFirst): modelled.
   const playFirst = isPlayFirst(cardId, renderedText);
   if (playFirst) known = true;
+  // CARD_CONDITIONS: the conditional effects the solver evaluates on its simulated state (cardConditionOptions).
+  const conditions = cardConditionOptions.enabled;
+  const handCondition = conditions && (draw > 0 || energyGain > 0) ? handConditionOf(template, renderedText) : null;
+  const rageBlock = conditions && cardId === "RAGE" ? dyn(card, "Power") ?? 3 : 0;
+  // Rage's whole effect (the Block of the Attacks after it) is simulated: no unknown nudge.
+  if (rageBlock > 0) {
+    known = true;
+    flatValue = 0;
+  }
+  const perExhaustDamage = conditions && cardId === "ASHEN_STRIKE" ? dyn(card, "ExtraDamage") ?? 0 : 0;
+  const perStrengthBlock = conditions && cardId === "EXPECT_A_FIGHT" ? dyn(card, "CalculationExtra") ?? 0 : 0;
+  const hitPerHpLoss = conditions && cardId === "TEAR_ASUNDER";
 
   // Status/curse cards that hurt at end of turn while held: read the number from the rendered text.
   const rendered = renderedText;
@@ -766,6 +840,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     // Thrash's random exhaust takes an Attack and adds its damage (special "thrash", solver), not any card
     // (MAHA F33 T7: played before Anger, which it ate; the boss was left at 1/321).
     randomExhaust: special !== "thrash" && /随机消耗|消耗[^。]*随机|exhausts? \d+ random|random card[^.]*exhaust/i.test(rendered),
+    ...(handCondition ? { handCondition } : {}),
+    ...(rageBlock > 0 ? { rageBlock } : {}),
+    ...(perExhaustDamage > 0 ? { perExhaustDamage } : {}),
+    ...(perStrengthBlock > 0 ? { perStrengthBlock } : {}),
+    ...(hitPerHpLoss ? { hitPerHpLoss } : {}),
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
 }

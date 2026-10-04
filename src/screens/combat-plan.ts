@@ -27,7 +27,7 @@ import { briefJson, combatBriefJson } from "../project/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../project/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isPlayFirst, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, pilePowerExtraCost, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, withPowerExtraCost, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
+import { cardConditionOptions, CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isPlayFirst, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, pilePowerExtraCost, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, withPowerExtraCost, type CardModel, type PotionContext, type UpgradeDelta } from "../strategy/card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "../strategy/potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../project/narrow.js";
@@ -1547,6 +1547,37 @@ export function noteTurnStartExhaust(memory: DecisionEnv["screenMemory"], state:
   return true;
 }
 
+/**
+ * CARD_CONDITIONS (card-model cardConditionOptions): HP was lost earlier this turn, before this decision: our HP is below the
+ * turn's first combat frame's (memory.turnStartPlayerHp: a card's HP cost, an enemy's Thorns), or Inferno or Crimson Mantle
+ * was up at that frame (each takes 1 HP as the turn starts; not under Tungsten Rod, which takes the 1 off). Spite hits twice
+ * then (logged: 2 hits on all 123 such plays, 1 on all 318 others). False with the switch off.
+ */
+export function hpLostSinceTurnStart(env: DecisionEnv): boolean {
+  if (!cardConditionOptions.enabled) return false;
+  noteTurnStartHp(env.screenMemory, env.state);
+  const start = env.screenMemory.turnStartPlayerHp;
+  if (!start || start.key !== `${fightKey(env.state)}:${env.state.turn ?? "?"}`) return false;
+  return start.startLoss || num(asRecord(asRecord(env.state.raw["combat"])["player"])["current_hp"]) < start.hp;
+}
+
+/**
+ * Notes our HP at the turn's first combat frame and whether a turn-start HP loss came before it (Inferno, Crimson Mantle up;
+ * memory.turnStartPlayerHp); true when this frame is that first one. Fed by the journal replay after a restart, like
+ * noteTurnStartExhaust.
+ */
+export function noteTurnStartHp(memory: DecisionEnv["screenMemory"], state: DecisionEnv["state"]): boolean {
+  if (!state.in_combat) return false;
+  const player = asRecord(asRecord(state.raw["combat"])["player"]);
+  if (player["current_hp"] === undefined) return false;
+  const key = `${fightKey(state)}:${state.turn ?? "?"}`;
+  if (memory.turnStartPlayerHp?.key === key) return false;
+  const relicIds = asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]));
+  const startLoss = (powerAmount(player, "INFERNO_POWER") > 0 || powerAmount(player, "CRIMSON_MANTLE_POWER") > 0) && !relicIds.includes("TUNGSTEN_ROD");
+  memory.turnStartPlayerHp = { key, hp: num(player["current_hp"]), startLoss };
+  return true;
+}
+
 /** Cards in the exhaust pile (agent_view.combat.exhaust, grouped "name*N" lines), or undefined. */
 export function exhaustPileSize(raw: Record<string, unknown>): number | undefined {
   return pileSize(raw, "exhaust");
@@ -2722,6 +2753,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const { state } = env;
   // Before any early return: the turn's first frame sets the exhaust pile it started with.
   const exhaustedEarlier = exhaustedSinceTurnStart(env);
+  const hpLostEarlier = hpLostSinceTurnStart(env);
   const combat = asRecord(state.raw["combat"]);
   const readiness = asRecord(combat["action_readiness"]);
   if (readiness["can_use_combat_actions"] === false) return null;
@@ -2863,6 +2895,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
     exhaustedThisTurn,
+    // CARD_CONDITIONS: HP already lost this turn before this decision (Spite's second hit; hpLostSinceTurnStart).
+    ...(hpLostEarlier ? { hpLostThisTurn: true } : {}),
     // Fairy in a Bottle and Lizard Tail: a line that reaches 0 HP goes on at their HP (JR66CJ9T8H7W F48).
     revives: revivesOf(state, env.screenMemory, num(player["max_hp"])),
     ...(relicIds.includes("PAPER_PHROG") ? { vulnerableFactor: PAPER_PHROG_VULNERABLE } : {}),
@@ -4566,9 +4600,10 @@ export function stepFirst<T extends Pick<Plan, "steps">>(plan: T, at: number, ha
 }
 
 function leastLossOf(plans: Plan[], hand: CardModel[], hp: number): Plan {
-  // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first).
+  // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first). Nor is one whose draw
+  // waits on the hand (CARD_CONDITIONS, Restlessness: moved first, it draws nothing; AKK09TEEEXKD F17 T10).
   const drawAt = (plan: Plan): number =>
-    plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp));
+    plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp && card.handCondition === undefined));
   const drawing = plans.filter((plan) => drawAt(plan) >= 0);
   if (drawing.length === 0) return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
   const most = drawing.reduce((a, b) =>

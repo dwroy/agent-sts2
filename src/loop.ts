@@ -48,6 +48,7 @@ import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "
 import { OUTCOME_BASIS_KEY } from "./knowledge/outcome-facts.js";
 import { withBossSim, type BuildSimSetup } from "./sim/build-sim-facts.js";
 import { passivePiecesOptions } from "./strategy/passive-pieces.js";
+import { cardConditionOptions } from "./strategy/card-model.js";
 import { ensureThiefCardValue, type ThiefCardSetup, type ThiefCardValue } from "./sim/thief-card-value.js";
 
 export type LoopMode = "shadow" | "play";
@@ -243,6 +244,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const { config, mode, client, knowledge } = options;
   // PASSIVE_PIECES as configured (.env read after the modules loaded: their process.env default may predate it).
   passivePiecesOptions.enabled = config.passivePieces;
+  // CARD_CONDITIONS likewise (src/strategy/card-model.ts).
+  cardConditionOptions.enabled = config.cardConditions;
   // SL_RETRY_MEMO likewise (src/sim/compute-memo.ts).
   computeMemoOptions.enabled = config.sl?.retryMemo !== false;
   const jev = options.jev;
@@ -625,6 +628,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
           // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
+          // ... and our HP at it: HP lost before the restart still counts this turn (CARD_CONDITIONS, Spite).
+          if (replay.turnStartPlayerHp && !screenMemory.turnStartPlayerHp) screenMemory.turnStartPlayerHp = replay.turnStartPlayerHp;
           // A restart mid-fight: the fight's first logged frame, the deck before a Thieving Hopper's theft (thief.ts).
           if (replay.thiefStart && replay.thiefStart.fight === thiefFightOf(state) && screenMemory.thiefStart?.fight !== replay.thiefStart.fight) screenMemory.thiefStart = replay.thiefStart;
           // ... and the stolen card's value already computed in it (THIEF_COST: its logged thief_card_value), not again.

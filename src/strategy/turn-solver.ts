@@ -532,6 +532,12 @@ export interface PlayerSim {
   /** A card was already exhausted this turn before this decision (Evil Eye's doubling), or every turn (Toasty Mittens). */
   exhaustedThisTurn?: boolean;
   /**
+   * CARD_CONDITIONS: HP was already lost this turn before this decision (Inferno's or Crimson Mantle's at the turn's start, a
+   * card played earlier this turn): Spite hits twice from the line's first card (card-model cardConditionOptions). Only Spite
+   * reads it (Demon Tongue keeps its own rule).
+   */
+  hpLostThisTurn?: boolean;
+  /**
    * Tender N (TENDER_POWER, from the Hunter Killer's Tenderizing Goop): every card played lowers our
    * Strength and Dexterity by N for the rest of the turn (LSWU F21 T5: a "lethal" Setup Strike +
    * Whirlwind fell 6 short; the 5th Hunter Killer loss, C2WY, MF7A, BDAK, WM2X).
@@ -1056,6 +1062,10 @@ interface Sim {
   exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
   held: CardModel[];
+  /** CARD_CONDITIONS: Rage played in this line (CardModel.rageBlock): Block for every Attack played after it, beside PlayerSim.rage. */
+  rage: number;
+  /** Soulbound cards Chains of Binding locked this line: out of the sim's hand, still in the game's (CARD_CONDITIONS' hand checks). */
+  locked: CardModel[];
   /** A card was put on top of the draw pile this turn (Headbutt): the next draw would take it back. */
   topPlaced: boolean;
   /** Vigor not yet spent: added to the next Attack's first hit. */
@@ -1449,6 +1459,24 @@ function playFirstHeld(sim: Pick<Sim, "hand" | "held">): boolean {
   return sim.hand.some((entry) => entry.playFirst === true && entry.type !== "Potion") || sim.held.some((entry) => entry.playFirst === true && entry.type !== "Potion");
 }
 
+/**
+ * CARD_CONDITIONS (card-model handCondition): whether the hand meets a card's condition as it is played, the card itself
+ * aside: "empty", no other card in it (unplayable ones and Soulbound ones Chains of Binding locked count, potions do not);
+ * "noAttack", no Attack in it. A card drawn as an expected value (sim.drawnInHand: drawn, still held, which one unknown)
+ * is in the hand and could be anything: neither condition counts as met while one is held.
+ */
+function handConditionMet(sim: Pick<Sim, "hand" | "held" | "locked" | "drawnInHand">, card: CardModel, condition: NonNullable<CardModel["handCondition"]>): boolean {
+  if (sim.drawnInHand > 0) return false;
+  const others = [...sim.hand, ...sim.held, ...sim.locked].filter((entry) => entry !== card && entry.type !== "Potion");
+  return condition === "empty" ? others.length === 0 : !others.some((entry) => entry.type === "Attack");
+}
+
+/** A hand-conditional card whose condition is unmet: played for nothing it draws or gains. */
+function unconditioned(card: CardModel): CardModel {
+  const { drawn: _drawn, ...rest } = card;
+  return { ...rest, draw: 0, energyGain: 0, drawsUntil: false };
+}
+
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
   // Stomp: 1 less per Attack played earlier in this plan (8XQM F48 T8: Pommel Strike+ and Strike
@@ -1468,7 +1496,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // After Headbutt the next draw is the card it put on top, taken back into hand this turn (XPA4 T11:
   // Shrug It Off+ kept for a 24-damage turn was drawn by Pommel Strike and discarded unplayed). Which
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
-  if (sim.topPlaced && (card.draw > 0 || card.drawsUntil)) return null;
+  // CARD_CONDITIONS: a card whose draw waits on the hand (Restlessness) draws only when the rest of the hand meets it.
+  if (sim.topPlaced && (card.draw > 0 || card.drawsUntil) && (card.handCondition === undefined || handConditionMet(sim, card, card.handCondition))) return null;
   const next = clone(sim);
   // A Gambler's Brew way (or a card-choice potion's pick) is a copy of the belt's potion: the potion
   // leaves the hand by its key.
@@ -1476,7 +1505,12 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
-  if (card.soulbound) next.hand = next.hand.filter((entry) => !entry.soulbound);
+  if (card.soulbound) {
+    // Locked, they are still in the hand (CARD_CONDITIONS: Restlessness's "hand is empty" sees them).
+    const locked = next.hand.filter((entry) => entry.soulbound && entry.type !== "Potion");
+    next.hand = next.hand.filter((entry) => !entry.soulbound);
+    if (locked.length > 0) next.locked = [...next.locked, ...locked];
+  }
   next.energy -= cost;
   if ((player.helmetBlock ?? 0) > 0 && card.type !== "Potion" && cost >= HELMET_MIN_COST) gainBlock(next, player.helmetBlock ?? 0, player);
   if (card.target === "single" && !next.enemies.some((enemy) => enemy.index === target && enemy.alive)) return null;
@@ -1494,7 +1528,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + replays;
   for (let play = 0; play < plays; play += 1) {
-    resolveEffects(next, card, target, player, cost);
+    // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
+    // drew); unmet, the card's draw and energy do not happen.
+    resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(card) : card, target, player, cost);
     if (card.type === "Attack") attackRelics(next, player);
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
     if (card.type === "Skill" && player.letterOpener) skillRelics(next, player.letterOpener);
@@ -1688,10 +1724,14 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // in this line (Q97B F23 T3: doubled from the state flag only, so "True Grit, Evil Eye" read 8, and a
     // line exhausting only after it was never told apart).
     if (card.cardId === "EVIL_EYE" && next.exhaustedCount > 0) shown *= 2;
+    const unmovableDoubles = card.type !== "Potion" && player.unmovableArmed === true && !next.unmovableSpent;
     if (card.type !== "Potion" && player.unmovableArmed) {
       if (next.unmovableSpent) shown = Math.floor(shown / 2);
       next.unmovableSpent = true;
     }
+    // CARD_CONDITIONS, Expect a Fight: its Block per point of Strength gained earlier in this line (Unmovable doubles it too
+    // on the turn's first Block card).
+    if ((card.perStrengthBlock ?? 0) > 0 && next.strength !== 0) shown = Math.max(0, shown + (card.perStrengthBlock ?? 0) * next.strength * (unmovableDoubles ? 2 : 1));
     gainBlock(next, Math.max(0, shown + (card.type === "Potion" ? 0 : next.tempDex)), player);
   }
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
@@ -1777,7 +1817,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if ((card.thorns ?? 0) > 0) next.retaliate += card.thorns ?? 0;
   if (card.special === "buffer") next.buffer += 1;
   if (card.special === "intangible") next.intangible = true;
-  if (card.type === "Attack" && (player.rage ?? 0) > 0) gainBlock(next, player.rage ?? 0, player);
+  // Rage: RAGE_POWER up at the decision, and (CARD_CONDITIONS) a Rage played earlier in this line.
+  if (card.type === "Attack" && (player.rage ?? 0) + next.rage > 0) gainBlock(next, (player.rage ?? 0) + next.rage, player);
+  if ((card.rageBlock ?? 0) > 0) next.rage += card.rageBlock ?? 0;
   if (card.special === "triple_block") {
     next.blockGained += next.block * 2;
     next.block *= 3;
@@ -1816,7 +1858,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // Fiend Fire: one hit per card it exhausts, i.e. the rest of the hand (exhausted after this).
     // Cards drawn earlier in the line and still in hand count too (9VG8 F35 T6).
     if (card.special === "fiend_fire") hits = next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length + next.drawnInHand;
-    if (card.special === "spite" && next.hpLostThisTurn) hits = 2;
+    // Spite: HP lost in this line, or (CARD_CONDITIONS) earlier this turn, before the decision.
+    if (card.special === "spite" && (next.hpLostThisTurn || player.hpLostThisTurn === true)) hits = 2;
+    // CARD_CONDITIONS, Tear Asunder: one more hit for each HP loss earlier in this line (its shown hits have the fight's before).
+    if (card.hitPerHpLoss === true) hits += next.hpLossEvents;
     if (card.special === "dismantle" && targetEnemy && targetEnemy.vulnerable > 0) hits = 2;
     // Bully's bonus and Vigor are not in the shown number: under Shrink they shrink with it, rounded once (from `pre`).
     let bonus = 0;
@@ -1826,6 +1871,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       else if (shrunkHit.pre !== null && perHit !== 0) perHit = ourAttackScaled(shrunkHit.pre + next.strength + bonus, player.weak, shrinkNow);
       else perHit += ourAttackScaled(bonus, player.weak, shrinkNow);
     }
+    // CARD_CONDITIONS, Ashen Strike: ExtraDamage for each card exhausted earlier in this line (its shown number has the pile at
+    // the decision), Weak and Shrink as on the rest of it.
+    const lineExhausts = next.exhaustedCount - (player.exhaustedThisTurn ? 1 : 0);
+    if ((card.perExhaustDamage ?? 0) > 0 && lineExhausts > 0) perHit += ourAttackScaled((card.perExhaustDamage ?? 0) * lineExhausts, player.weak, shrunkHit ? shrinkNow : false);
     // Vigor: spent by the first Attack, on its first hit (KFP1 F17 T1).
     let firstHit = perHit;
     if (card.type === "Attack" && next.vigor > 0) {
@@ -3045,7 +3094,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3083,7 +3132,9 @@ export function isFreeDraw(card: CardModel): boolean {
     !card.randomExhaust &&
     !card.putsOnTop &&
     !EXHAUST_PICKERS.has(card.cardId) &&
-    !EXHAUST_HAND.has(card.cardId)
+    !EXHAUST_HAND.has(card.cardId) &&
+    // CARD_CONDITIONS: Restlessness draws only on an empty hand: when it is played matters.
+    card.handCondition === undefined
   );
 }
 
@@ -3205,6 +3256,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     thrashRandom: [],
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
+    rage: 0,
+    locked: [],
     topPlaced: false,
     vigor: input.player.vigor ?? 0,
     noBlock: input.player.noBlock === true,
