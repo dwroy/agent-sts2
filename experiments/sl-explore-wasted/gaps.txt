@@ -1,0 +1,56 @@
+anchor: 78 explore attempts in 24 fights; reference the best failed attempt (or tied) in 23
+  a failed attempt reached a later turn: 30 (attempt 1: 24, attempt 3+: 6)
+  the same turn, less enemy HP left: 25 (attempt 1: 14, attempt 3+: 11)
+  fights with an explore attempt anchored below the best: 20 of 24; attempt 1 lived longer than attempt 2 in 17 of 31 fights retried twice
+  explore attempts anchored below the best: 55; died before the best's last turn 32, at it 19, after it 4; won 3
+  explore attempts anchored at the best: 23; died before its last turn 8, at it 14, after it 1; won 1
+  metrics agree (latest turn vs least enemy HP left): 66 of 78 readable
+  explore attempts against their reference's last turn: died before it 18, at it 50, after it 10
+  SL_RETRY_EXPLORE_ANCHOR on these rows (attempt 1 has no points recorded yet): reference changes in 28; target changes against the same options without it in 28
+    UK7R9A0NMCXL:33 attempt 6 (died T5): {"reference":2,"turn":1,"point":"T1, the 5th latest question before attempt 2's death on T5 (T1 deviated at 1 other question before)"} -> {"reference":5,"turn":1,"point":"T1, the 5th latest question before attempt 5's death on T5 (T1 deviated at 1 other question before)"}
+    B3PJGKHAQGK6:17 attempt 4 (predicted_death T4): {"reference":2,"turn":3,"point":"T3, the 3rd latest question before attempt 2's death on T6"} -> {"reference":3,"turn":3,"point":"T3, the 3rd latest question before attempt 3's death on T6"}
+    B3PJGKHAQGK6:17 attempt 5 (predicted_death T6): {"reference":2,"turn":3,"point":"T3, the 3rd latest question before attempt 2's death on T6"} -> {"reference":3,"turn":3,"point":"T3, the 3rd latest question before attempt 3's death on T6"}
+    B3PJGKHAQGK6:17 attempt 6 (died T4): {"reference":2,"turn":3,"point":"T3, the 3rd latest question before attempt 2's death on T6"} -> {"reference":3,"turn":3,"point":"T3, the 3rd latest question before attempt 3's death on T6"}
+    Z4UK0CA16THF:33 attempt 4 (predicted_death T4): {"reference":2,"turn":2,"point":"T2, the 3rd latest question before attempt 2's death on T4"} -> {"reference":3,"turn":2,"point":"T2, the 3rd latest question before attempt 3's death on T4"}
+    Z4UK0CA16THF:33 attempt 5 (predicted_death T4): {"reference":2,"turn":2,"point":"T2, the 3rd latest question before attempt 2's death on T4"} -> {"reference":3,"turn":2,"point":"T2, the 3rd latest question before attempt 3's death on T4"}
+    Z4UK0CA16THF:33 attempt 6 (died T4): {"reference":2,"turn":1,"point":"T1, the 6th latest question before attempt 2's death on T4"} -> {"reference":3,"turn":1,"point":"T1, the 6th latest question before attempt 3's death on T4"}
+    9175DLPM2EFR:33 attempt 5 (predicted_death T5): {"reference":2,"turn":2,"point":"T2, the 4th latest question before attempt 2's death on T5"} -> {"reference":4,"turn":2,"point":"T2, the 5th latest question before attempt 4's death on T5"}
+    9175DLPM2EFR:33 attempt 6 (won T5): {"reference":2,"turn":2,"point":"T2, the 4th latest question before attempt 2's death on T5"} -> {"reference":4,"turn":2,"point":"T2, the 5th latest question before attempt 4's death on T5"}
+    GQ5H73A1VCL8:48 attempt 6 (died T5): {"reference":2,"turn":4,"point":"T4, the 6th latest question before attempt 2's death on T7"} -> {"reference":5,"turn":4,"point":"T4, the 2nd latest question before attempt 5's death on T7"}
+    JKP66TF39633:17 attempt 4 (predicted_death T10): {"reference":2,"turn":8,"point":"T8, the latest question before attempt 2's death on T10"} -> {"reference":3,"turn":8,"point":"T8, the 3rd latest question before attempt 3's death on T11"}
+    JKP66TF39633:17 attempt 5 (predicted_death T9): {"reference":2,"turn":8,"point":"T8, the latest question before attempt 2's death on T10"} -> {"reference":3,"turn":8,"point":"T8, the 3rd latest question before attempt 3's death on T11"}
+    JKP66TF39633:17 attempt 6 (died T9): {"reference":2,"turn":8,"point":"T8, the latest question before attempt 2's death on T10"} -> {"reference":3,"turn":8,"point":"T8, the 3rd latest question before attempt 3's death on T11"}
+    P68P7CDJRDH3:48 attempt 6 (died T6): {"reference":2,"turn":1,"point":"T1, the 5th latest question before attempt 2's death on T3 (T1 deviated at 2 other questions before)"} -> {"reference":5,"turn":3,"point":"T3, the 2nd latest question before attempt 5's death on T6"}
+    GPR8TLVPZHBP:40 attempt 4 (died T6): {"reference":2,"turn":1,"point":"T1, the 6th latest question before attempt 2's death on T4"} -> {"reference":3,"turn":1,"point":"T1, the 7th latest question before attempt 3's death on T4"}
+    RNTVAT76BPV0:38 attempt 4 (died T3): {"reference":2,"turn":1,"point":"T1, the latest question before attempt 2's death on T3 (attempt 3 deviated there but ended the turn as a failed attempt's: again, another line)"} -> {"reference":3,"turn":2,"point":"T2, the 2nd latest question before attempt 3's death on T5"}
+    C4F14F3XPN0N:33 attempt 5 (died T7): {"reference":2,"turn":5,"point":"T5, the 2nd latest question before attempt 2's death on T7"} -> {"reference":4,"turn":6,"point":"T6, the 4th latest question before attempt 4's death on T11"}
+    RJZGFGNYK56W:33 attempt 4 (predicted_death T8): {"reference":2,"turn":4,"point":"T4, the 3rd latest question before attempt 2's death on T8"} -> {"reference":3,"turn":4,"point":"T4, the 3rd latest question before attempt 3's death on T8"}
+    RJZGFGNYK56W:33 attempt 5 (predicted_death T8): {"reference":2,"turn":2,"point":"T2, the 6th latest question before attempt 2's death on T8"} -> {"reference":3,"turn":2,"point":"T2, the 6th latest question before attempt 3's death on T8"}
+    RJZGFGNYK56W:33 attempt 6 (died T10): {"reference":2,"turn":1,"point":"T1, the 8th latest question before attempt 2's death on T8"} -> {"reference":5,"turn":1,"point":"T1, the 6th latest question before attempt 5's death on T8"}
+    7TQFLQBKRE4S:39 attempt 4 (died T4): {"reference":2,"turn":2,"point":"T2, the 3rd latest question before attempt 2's death on T4"} -> {"reference":3,"turn":2,"point":"T2, the 2nd latest question before attempt 3's death on T4"}
+    V8N5C1DCXYN8:17 attempt 6 (died T6): {"reference":2,"turn":4,"point":"T4, the 5th latest question before attempt 2's death on T6"} -> {"reference":5,"turn":4,"point":"T4, the 5th latest question before attempt 5's death on T6"}
+    ABCJ0TZ6MD06:48 attempt 4 (predicted_death T8): {"reference":2,"turn":5,"point":"T5, the 2nd latest question before attempt 2's death on T8"} -> {"reference":3,"turn":7,"point":"T7, the latest question before attempt 3's death on T8"}
+    ABCJ0TZ6MD06:48 attempt 5 (predicted_death T8): {"reference":2,"turn":5,"point":"T5, the 2nd latest question before attempt 2's death on T8"} -> {"reference":3,"turn":7,"point":"T7, the latest question before attempt 3's death on T8"}
+    ABCJ0TZ6MD06:48 attempt 6 (died T8): {"reference":2,"turn":5,"point":"T5, the 2nd latest question before attempt 2's death on T8"} -> {"reference":3,"turn":7,"point":"T7, the latest question before attempt 3's death on T8"}
+    3B4K4UDQ56B9:48 attempt 4 (predicted_death T7): {"reference":2,"turn":4,"point":"T4, the 4th latest question before attempt 2's death on T7"} -> {"reference":3,"turn":4,"point":"T4, the 6th latest question before attempt 3's death on T8"}
+    3B4K4UDQ56B9:48 attempt 5 (predicted_death T5): {"reference":2,"turn":1,"point":"T1, the 9th latest question before attempt 2's death on T7"} -> {"reference":3,"turn":1,"point":"T1, the 11th latest question before attempt 3's death on T8"}
+    3B4K4UDQ56B9:48 attempt 6 (died T7): {"reference":2,"turn":6,"point":"T6, the latest question before attempt 2's death on T7"} -> {"reference":3,"turn":6,"point":"T6, the 2nd latest question before attempt 3's death on T8"}
+wasted (differs false): 6; next turn still on the reference path 5; a later point to aim at 4 (the attempt's own play came to it in 4)
+  PW7Y9EWUW8SB:48 attempt 3: T1 wasted; next turn on path true; rearm {"turn":4,"point":"T4, the 4th latest question before attempt 2's death on T6","board":"eb153200cee0f7ab","reachedByItsOwnPlay":true}
+  PW7Y9EWUW8SB:48 attempt 4: T2 wasted; next turn on path true; rearm {"turn":3,"point":"T3, the 6th latest question before attempt 2's death on T6","board":"94d8254b9d3a8a84","reachedByItsOwnPlay":true}
+  9175DLPM2EFR:33 attempt 3: T4 wasted; next turn on path true; rearm {"none":"no question on attempt 2's path has a line no failed attempt played"}
+  RNTVAT76BPV0:38 attempt 3: T1 wasted; next turn on path false; rearm null
+  AKK09TEEEXKD:17 attempt 3: T10 wasted; next turn on path true; rearm {"turn":14,"point":"T14, the 2nd latest question before attempt 2's death on T16","board":"82b5271b6699145d","reachedByItsOwnPlay":true}
+  AKK09TEEEXKD:17 attempt 5: T10 wasted; next turn on path true; rearm {"turn":12,"point":"T12, the 6th latest question before attempt 2's death on T16","board":"983c6d549dc90f6e","reachedByItsOwnPlay":true}
+differs true (a turn record there): 46; really a failed turn (SL_RETRY_EXPLORE_WASTED, turnRepeats): 2 (upgrades 1, turn start 1, next board 0)
+  P68P7CDJRDH3:48 attempt 5 deviation T1: ANGER>实验体 #C46, ANGER>实验体 #C46, BLOOD_WALL+, INFERNO+, MOLTEN_FIST>实验体 #C46, OFFERING, OFFERING+, POMMEL_STRIKE+>实验体 #C46, RUPTURE+, STONE_ARMOR, STRIKE_IRONCLAD>实验体 #C46, SWORD_BOOMERANG+, potion:POWDERED_DEMISE>实验体 #C46 (replacement 血墙+, 岩石铠甲, 祭品, 愤怒 -> 实验体 #C46, 熔融之拳 -> 实验体 #C46, 打击 -> 实验体 #C46, 愤怒 -> 实验体 #C46): {"how":"turn start","attempts":[1]}; predicted_death T6
+  3B4K4UDQ56B9:48 attempt 4 deviation T4: EVIL_EYE, SHRUG_IT_OFF, TWIN_STRIKE>永世沙漏 (replacement 双重打击 -> 永世沙漏, 耸肩无视, 双重打击+ -> 永世沙漏): {"how":"upgrades","attempts":[2,3]}; predicted_death T7
+off-path before the point: 8; same plays, another order 5, other plays 2, same plays, same order 1, unknown 0; the point's turn played a failed turn again in 3 (of them with a fallback 1)
+  GPR8TLVPZHBP:40 attempt 3 -> T3: left {"turn":2,"at":2} (other plays); fallback null; point's turn repeated false
+  J4S28FRQKD7G:33 attempt 3 -> T4: left {"turn":2,"at":2} (other plays); fallback null; point's turn repeated false
+  J4S28FRQKD7G:33 attempt 4 -> T4: left {"turn":2,"at":2} (same plays, another order); fallback null; point's turn repeated true
+  J4S28FRQKD7G:33 attempt 6 -> T5: left {"turn":2,"at":2} (same plays, another order); fallback null; point's turn repeated false
+  7TQFLQBKRE4S:33 attempt 3 -> T4: left {"turn":4,"at":0} (same plays, same order); fallback {"turn":5,"differs":true}; point's turn repeated true
+  ABCJ0TZ6MD06:48 attempt 4 -> T5: left {"turn":4,"at":1} (same plays, another order); fallback null; point's turn repeated true
+  ABCJ0TZ6MD06:48 attempt 5 -> T5: left {"turn":4,"at":1} (same plays, another order); fallback {"turn":5,"differs":true}; point's turn repeated false
+  ABCJ0TZ6MD06:48 attempt 6 -> T5: left {"turn":4,"at":1} (same plays, another order); fallback {"turn":5,"differs":true}; point's turn repeated false

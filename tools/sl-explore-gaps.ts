@@ -8,6 +8,8 @@
  * - wasted: each deviation whose turn ended with a failed attempt's plays (differs false): whether the next turn's first
  *   board was still on the reference path, the later point SL_RETRY_EXPLORE_REARM would aim at, and whether the attempt's
  *   own boards came to it;
+ * - differs: every deviation the rows say differs (`differs` true), read again with turnRepeats (SL_RETRY_EXPLORE_WASTED):
+ *   the ones that really repeated a failed turn (but for upgrades, from the same turn start, or to a failed attempt's board);
  * - off-path: each replay that left the reference path before its point: how (the same plays in another order, other
  *   plays, the same plays in the same order), and whether the attempt then played a failed turn on the point's turn (what
  *   SL_RETRY_EXPLORE_TARGET_TURN keeps off).
@@ -19,7 +21,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import type { SlAttemptRow } from "../src/sl/attempts.js";
-import { anchorRank, enemyHpLeft, exploreTarget, triedHas, turnCanon, type ExploreRow, type ExploreTargetOptions, type SlTarget } from "../src/sl/explore.js";
+import { anchorRank, enemyHpLeft, exploreTarget, triedHas, turnCanon, turnRepeats, type ExploreRow, type ExploreTargetOptions, type SlTarget, type SlTried } from "../src/sl/explore.js";
 
 function arg(name: string, fallback: string): string {
   const at = process.argv.indexOf(`--${name}`);
@@ -45,6 +47,10 @@ function main(): void {
   const anchorCases: Record<string, unknown>[] = [];
   const wastedCases: Record<string, unknown>[] = [];
   const offCases: Record<string, unknown>[] = [];
+  // SL_RETRY_EXPLORE_WASTED: every deviation the rows say differs (the target's, the replay's fallback, attempt 2's second),
+  // read again with turnRepeats.
+  const differsCases: Record<string, unknown>[] = [];
+  let differsTrue = 0;
   const fightsWithExplore = new Set<string>();
   const fightsNotBest = new Set<string>();
   const fightsOneLonger = new Set<string>();
@@ -58,6 +64,17 @@ function main(): void {
       if (better(one, two) < 0) fightsOneLonger.add(key);
     }
     for (const row of live) {
+      const earlierRows = live.filter((other) => other.attempt < row.attempt) as unknown as ExploreRow[];
+      for (const [name, deviation, tried] of [["deviation", row.explore?.deviation, (row.explore?.target as SlTarget | null | undefined)?.tried], ["fallback", row.explore?.fallback, row.explore?.fallback?.tried]] as const) {
+        if (!deviation?.reached || deviation.differs !== true || deviation.turn === undefined || deviation.turn === null) continue;
+        const record = row.explore?.turns?.find((turn) => turn.turn === deviation.turn);
+        if (!record) continue;
+        differsTrue += 1;
+        const summary = row.summary?.turns.find((turn) => turn.turn === deviation.turn);
+        const next = row.explore!.turns!.find((turn) => turn.turn > deviation.turn!)?.boards[0]?.board ?? null;
+        const repeat = turnRepeats(earlierRows, row.attempt, record, tried as SlTried | undefined, next, summary ? turnCanon(summary.plays) : undefined);
+        if (repeat) differsCases.push({ fight: key, attempt: row.attempt, kind: name, turn: deviation.turn, plays: deviation.plays, replacement: deviation.replacement, repeat, result: row.result, turns: row.turns });
+      }
       const target = row.explore?.target as SlTarget | null | undefined;
       if (row.attempt < 3 || !target) continue;
       fightsWithExplore.add(key);
@@ -147,7 +164,7 @@ function main(): void {
     }
   }
 
-  writeFileSync(join(outDir, "gaps.json"), `${JSON.stringify({ anchor: anchorCases, wasted: wastedCases, offPath: offCases }, null, 1)}\n`);
+  writeFileSync(join(outDir, "gaps.json"), `${JSON.stringify({ anchor: anchorCases, wasted: wastedCases, offPath: offCases, differsWasted: differsCases }, null, 1)}\n`);
   const count = (list: Record<string, unknown>[], test: (entry: Record<string, unknown>) => boolean) => list.filter(test).length;
   const say = (text: string) => process.stdout.write(`${text}\n`);
   say(`anchor: ${anchorCases.length} explore attempts in ${fightsWithExplore.size} fights; reference the best failed attempt (or tied) in ${count(anchorCases, (c) => c["how"] === "best")}`);
@@ -165,6 +182,8 @@ function main(): void {
   for (const c of anchorCases.filter((entry) => JSON.stringify(entry["switchTarget"]) !== JSON.stringify(entry["baseTarget"]))) say(`    ${String(c["fight"])} attempt ${String(c["attempt"])} (${String(c["result"])} T${String(c["turns"])}): ${JSON.stringify(c["baseTarget"])} -> ${JSON.stringify(c["switchTarget"])}`);
   say(`wasted (differs false): ${wastedCases.length}; next turn still on the reference path ${count(wastedCases, (c) => c["onPath"] === true)}; a later point to aim at ${count(wastedCases, (c) => Boolean((c["rearm"] as { turn?: number } | null)?.turn))} (the attempt's own play came to it in ${count(wastedCases, (c) => (c["rearm"] as { reachedByItsOwnPlay?: boolean } | null)?.reachedByItsOwnPlay === true)})`);
   for (const c of wastedCases) say(`  ${String(c["fight"])} attempt ${String(c["attempt"])}: T${(c["deviation"] as { turn: number }).turn} wasted; next turn on path ${String(c["onPath"])}; rearm ${JSON.stringify(c["rearm"])}`);
+  say(`differs true (a turn record there): ${differsTrue}; really a failed turn (SL_RETRY_EXPLORE_WASTED, turnRepeats): ${differsCases.length}${differsCases.length > 0 ? ` (${["upgrades", "turn start", "next board"].map((how) => `${how} ${count(differsCases, (c) => (c["repeat"] as { how: string }).how === how)}`).join(", ")})` : ""}`);
+  for (const c of differsCases) say(`  ${String(c["fight"])} attempt ${String(c["attempt"])} ${String(c["kind"])} T${String(c["turn"])}: ${String(c["plays"])} (replacement ${String(c["replacement"])}): ${JSON.stringify(c["repeat"])}; ${String(c["result"])} T${String(c["turns"])}`);
   say(`off-path before the point: ${offCases.length}; ${["same plays, another order", "other plays", "same plays, same order", "unknown"].map((kind) => `${kind} ${count(offCases, (c) => c["kind"] === kind)}`).join(", ")}; the point's turn played a failed turn again in ${count(offCases, (c) => c["pointTurnRepeated"] === true)} (of them with a fallback ${count(offCases, (c) => c["pointTurnRepeated"] === true && c["fallback"] !== null)})`);
   for (const c of offCases) say(`  ${String(c["fight"])} attempt ${String(c["attempt"])} -> T${String(c["target"])}: left ${JSON.stringify(c["left"])} (${String(c["kind"])}); fallback ${JSON.stringify(c["fallback"])}; point's turn repeated ${String(c["pointTurnRepeated"])}`);
 }

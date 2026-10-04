@@ -177,7 +177,7 @@ export interface SlTarget {
    */
   anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null }[] };
   /** SL_RETRY_EXPLORE_REARM: a point chosen in the attempt after its deviation at `after` (that turn's board) was wasted. */
-  rearmed?: { after: string; turn: number | null };
+  rearmed?: { after: string; turn: number | null; offPath?: true };
 }
 
 /** What came of an attempt's deviation point. */
@@ -195,6 +195,11 @@ export interface SlDeviation {
   turn?: number | null;
   plays?: string;
   differs?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_WASTED: the turn repeated a failed attempt's otherwise than by its exact plays through the point's board
+   * (turnRepeats: but for upgrades, from the same turn start, or on to a failed attempt's next board); `differs` is false then.
+   */
+  repeats?: SlTurnRepeat;
   /**
    * SL_RETRY_EXPLORE_WHOLE: the decisions later in the deviation's turn whose line ended the turn as a failed attempt's and
    * the avoid could not change (no line that survives this turn ends it otherwise...), in order. Absent: none.
@@ -737,6 +742,60 @@ function triedOf(entry: TriedEntry | undefined, potion = false): SlTried {
   const unknown = entry ? [...entry.unknown].sort((a, b) => a - b) : [];
   const cards = potion ? { cards: [...(entry?.cards?.values() ?? [])] } : {};
   return { canon: entry ? [...entry.canon] : [], loose: entry ? [...entry.loose] : [], ...(unknown.length > 0 ? { unknown } : {}), ...cards };
+}
+
+/** A play without its card's upgrade mark (playKey "TWIN_STRIKE+>X" is "TWIN_STRIKE>X"); a potion's as it is. */
+function withoutUpgrade(play: string): string {
+  if (play.startsWith("potion:")) return play;
+  const card = play.split(">")[0]!;
+  return `${card.endsWith("+") ? card.slice(0, -1) : card}${play.slice(card.length)}`;
+}
+
+/** A turn's key (turnCanon) with every card's upgrade mark left out (SL_RETRY_EXPLORE_WASTED). */
+export function canonWithoutUpgrades(canon: string): string {
+  return turnCanon(canonPlays(canon).map(withoutUpgrade));
+}
+
+/** How a deviation's turn repeated a failed attempt's (SL_RETRY_EXPLORE_WASTED), and whose turns. */
+export interface SlTurnRepeat {
+  /**
+   * "exact": one of the turns through the point's board (target.tried, as `differs` has always read them); "upgrades": one of
+   * those or a failed turn from the same turn start, but for which copy of a card was upgraded; "turn start": a failed turn
+   * from the same turn start (another attempt's, not through the point's board); "next board": the next turn began on a board
+   * of a failed attempt's (the same fight from there).
+   */
+  how: "exact" | "upgrades" | "turn start" | "next board";
+  attempts: number[];
+}
+
+/**
+ * SL_RETRY_EXPLORE_WASTED (2026-10-04, 3B4K4UDQ56B9 F48 attempt 4, P68P7CDJRDH3 F48 attempt 5): whether the turn an attempt
+ * played (`record`, its turn record: the plays actually made) repeated a failed attempt's, as far as the fight goes:
+ * - its plays are one of the failed turns through the point's board (`tried`: the deviation's `differs` as before), or one
+ *   of them but for upgrades (3B4K attempt 4 T4: Twin Strike, Shrug It Off, Evil Eye for attempts 2-3's Twin Strike+, ...:
+ *   the replacement played the plain copy, the re-plan after the draw left the upgraded one, and the fight went on as
+ *   attempt 2's to its T7 death);
+ * - or the same plays (or but for upgrades) as a failed attempt's turn from the same turn start (its first board): another
+ *   attempt's turn that did not pass the point's board (P68P attempt 5 T1: attempt 1's whole T1 in another order);
+ * - or the next turn began on a board a failed attempt reached (`next`: that board), whatever the plays.
+ * Null: it did not (the deviation explored something). Failed rows without a turn record are not read.
+ */
+export function turnRepeats(rows: readonly ExploreRow[], attempt: number, record: SlTurnPlays, tried: SlTried | null | undefined, next: string | null, loose?: string): SlTurnRepeat | null {
+  const canon = turnCanon(record.plays);
+  const bare = canonWithoutUpgrades(canon);
+  const failed = failedRows(rows, attempt, 1).filter((row) => row.explore?.turns);
+  if (tried && triedHas(tried, { text: "", canon, ...(loose !== undefined ? { loose } : {}) })) return { how: "exact", attempts: [] };
+  const start = record.boards[0]?.board;
+  const fromStart = failed.flatMap((row) => row.explore!.turns!.filter((turn) => turn.turn === record.turn && turn.boards[0]?.board === start).map((turn) => ({ attempt: row.attempt, canon: turnCanon(turn.plays) })));
+  const exactStart = fromStart.filter((turn) => turn.canon === canon).map((turn) => turn.attempt);
+  if (exactStart.length > 0) return { how: "turn start", attempts: [...new Set(exactStart)] };
+  const upgrades = fromStart.filter((turn) => canonWithoutUpgrades(turn.canon) === bare).map((turn) => turn.attempt);
+  if (upgrades.length > 0 || (tried?.canon ?? []).some((turn) => canonWithoutUpgrades(turn) === bare)) return { how: "upgrades", attempts: [...new Set(upgrades)] };
+  if (next !== null) {
+    const there = failed.filter((row) => row.explore!.turns!.some((turn) => turn.boards.some((entry) => entry.board === next))).map((row) => row.attempt);
+    if (there.length > 0) return { how: "next board", attempts: there };
+  }
+  return null;
 }
 
 /** A line's turn (turnCanon) is one of `entry`'s: exactly, or (SL_RETRY_EXPLORE_POTION) by its cards (cardsRepeat). */
