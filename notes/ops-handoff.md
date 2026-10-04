@@ -23,3 +23,12 @@
 - 本轮没有复盘或新纯bug，不改经验内容，不另设审核；合入后完整沙箱外检查缺少补跑动作的既有请求仍在收件箱，待后续回报处理。
 
 - 2026-10-05 06:04 已处理上述待合入：固定提交4f429c0c已于锁内合入live 2398da63，tsc 0、沙箱vitest147文件1892用例通过；c4c7ad97登记S1.exp7（经验2026-10-05.6），12项账本经ledger.py以by=ops登记shipped、check55条0问题，main正在同步同一已测内容。本节保留为历史，经验合入待办已完成；完整沙箱外检查等待后续回报，既有补跑请求保留。
+
+## 运维 codex 待提交 live 合并（2026-10-05 07:08）
+
+- 批次`20261005-063057-experience-update`，固定源`0d469a227c080f8dd460e40352ee10dfee3770b2`（exp-silent，经验2026-10-05.7）。本轮main已集成源经验并随本节归档第七次增量、17项proposed和自测；不另设内容审核。
+- live当前HEAD=`9e0fda2e5057e199b05e2b55397499518f12fe52`，MERGE_HEAD=`0d469a227c080f8dd460e40352ee10dfee3770b2`，暂存树=`c603f398ef5152b6e50dbdd83fedd37cd9e1af0c`。这是本轮运维发起且已解完decision-log冲突的未提交合并；11个暂存文件包含经验与源历史记录，已逐文件核对，保留刷新数据及既有S1.fix5/S1.fix6。没有未暂存live改动。请勿当作其他学习者的冲突盲目abort或reset。
+- 固定沙箱入口tsc 0、150文件1901用例通过，日志`/tmp/sts2-exp7-live-sandbox-tests.log`，原始摘要已归档本批fallback-checks.md。临时脚本的CSV CRLF检查已改为`git -c core.whitespace=cr-at-eol diff --cached --check`；被它误拦前完整沙箱入口已成功，未重跑。当前锁被其他任务占用，本轮不等锁。
+- `bash ops/codex-ops-do.sh learner-merge exp-silent` exit128、输出“（超过 30 秒，已终止）”，尚未确认兜底事件入队；`learner-status`同样超时。收件箱及for-dai请求在锁释放后补一个manual事件。
+- 下一轮先非阻塞取得`ops/live-merge.lock`并确认没有report.py/知识刷新。若HEAD、MERGE_HEAD与暂存树均仍等同上述值，可用已通过的相同内容检查，运行`nice -n 19 python3 /tmp/sts2-exp7-fallback-live.py --resume-tested`（文件仍在时）；它会核对树、接受CRLF、gitleaks扫描、提交合并并登记S1.exp8。若代码或数据已变，重新核对并测试后处理；不要合移动的分支头。实际live提交后同步main、登记eval版本，经ledger.py以by=ops将下列17项shipped并刷新论文表。
+- 待登记：`silent-0005,silent-0007,silent-0006,silent-0019,silent-0020,silent-0021,silent-0057,silent-0011,silent-0030,silent-0046,silent-0053,silent-0050,silent-0058,silent-0024,silent-0059,silent-0060,silent-0025`；目前保持proposed，未登记shipped或S1.exp8。完整沙箱外补测动作缺口的既有请求仍保留。完成后追加处理状态，不删本节。
