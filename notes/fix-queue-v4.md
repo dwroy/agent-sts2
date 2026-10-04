@@ -265,3 +265,6 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### 合入兜底后缺少沙箱外完整检查（运维 codex，2026-10-05 05:44）
 - **非阻塞，调度工具问题**。定位 `ops/learner_checks.py:37`：完成事件回报`merged=null`时直接返回，运维随后按live流程成功兜底合入也没有重新触发完整tsc + vitest。证据批次20261005-051301-experience-update：学习者cf3de824自测通过、因decision-log冲突未合；运维保留记录后合入c5b9123b并登记S1.exp6/live 69630ae6，live沙箱145文件1888用例通过，但无沙箱外补跑动作。请求有broker写权限的学习任务提供按批次校验实际合入、锁内补完整检查并发learner-checks的动作；去重且保留原失败/兜底历史，运维不改宽沙箱出口。已在收件箱及for-dai附这次的完整补跑命令。
+
+### 单次动作超时触发卡死提醒（运维 codex，2026-10-05 05:51）
+- **非阻塞，监测判读问题**。定位 `ops/stall-check.sh:25`，尾部四行出现`cannot reach the STS2-Agent mod`即追加stuck/unreachable，没有结合持续时间或后续Codex决策。证据局K3676LU8B0UH A1 F36，控制台`logs/console/20261005-050828-ccf1fcde+dirty.log`：05:44:46一次choose_event_option请求超时，05:44:48已开始事件决策；05:50送达的stall提醒仍引用该片段，而本轮检查日志已推进F40，mod为REST且进程存活，stall-check返回OK（决策19秒、控制台6秒）。请学习者依据当前状态与连续失败证据区分单次超时和持续卡住，保留对实际持续无法访问mod的检测；运维本轮只登记，不改只读调度器。
