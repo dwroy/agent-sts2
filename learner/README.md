@@ -148,6 +148,7 @@ summary.ts 按真实事件流解析（2026-10-04 实测，codex-cli 0.160）：`
 - token：输入 50.1k（去掉 cache）、cache 读 29.6k、输出 949（推理 447）；墙钟 43.5 s：codex 启动到发出请求约 2.5 s，模型首个输出 5.8 s，工具本身合计不到 1 s，其余都是模型（按 AGENTS.md 读文档后的推理约 10 s，最后的总结约 16 s）；
 - 三句话总结和 lessons.md 里 9VHP 一节一致；lessons.md 没变。
 - 第一次（20:12，还没有启动器说明）：codex 没读任何东西就交了「没有 Grep / Read 工具」的回答，36.3 s——这是加启动器说明的原因。
+- 只读复盘试跑（20:16，T0ZSE8L3MCDA，postmortem 任务改成只读、整节作为回答输出、不读旧复盘）：success，墙钟 1051 s（17.5 min）；24 次 exec 里跑了 45 条 shell 命令（rg 按局号抽、python 流式读 states.jsonl），工具本身合计 1.8 s；token 输入 187.8k、cache 读 2.45M（命中 92.9%）、输出 26.1k（推理 13.1k）；开头按 AGENTS.md 读 README / STATE / 协议约 56 s；写出一节（3 条经验 + 记录 + 机制），lessons.md 前后 sha256 相同。
 - `--with-tools` 实测（20:15，effort low）：MCP gkb 连上，`kb_runs` 返回最近 3 局（T0ZS、9VHP、4AWD，和 runs.jsonl 一致），15.2 s。
 
 ## 和运维会话现有流程的对应关系（建议，不改 ops-session-prompt.md）
