@@ -97,7 +97,7 @@ Every DeepSeek question carries `memory.knowledge`: the slice of the experience 
 | File | What it is | How it changes |
 | --- | --- | --- |
 | `src/knowledge/experience.json` | Curated lessons from `notes/lessons.md` (scope, ascension range, evidence runs, n, confidence, active/retired) | By hand, after post-mortems; log each rebuild in `notes/experience-changelog.md` |
-| `src/knowledge/outcome-stats.json` | Outcome stats from the logs: per card / relic / event option / rest choice, n on every row | `npm run knowledge:stats` (= `python3 tools/build-outcome-stats.py`; `--ascension all`, `--logs DIR`, `--self-test`) |
+| `src/knowledge/outcome-stats.json` | Outcome stats from the logs: per card / relic / event option / rest choice, n on every row; one table per ascension (`by_ascension`: A8, A9 and each higher one with runs, each with its own baseline) | `npm run knowledge:stats` (= `python3 tools/build-outcome-stats.py`; `--ascension band` (default) / `8,9` / `all`, `--logs DIR`, `--self-test`) |
 
 The slice: lessons about the offered cards/relics/potions/events and the act boss are always kept;
 then the act's elites and dangerous hallways (ranked higher on route/rest/run-plan questions), the
