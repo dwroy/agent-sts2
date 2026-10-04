@@ -237,3 +237,6 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 - **任务说明**：learner/tasks/experience-update.md、fix-batch.md 的「合入」一节改成 live 流程（不再是 merge=v3 / ops/v3-merge.lock）。
 - **文档**：docs/learning-protocol.md、AGENTS.md、docs/codex-ops.md、运维 prompt（ops/ops-session-silent-codex-prompt.md）里「开发会话审核 / 实现 / 合入」改成「运维 codex 会话审核合入、codex 学习者实现」；Claude 会话只观察和与 Dai 对话。运维 prompt 改动属于 Dai 已经定的分工，不用再问。
 - 本批修复本身由 codex 学习者实现、自己测试、自己按 live 流程合入（merge=live）。
+
+### 静默猎手 LRN0HPZ0FZS1 复盘回报（运维 codex，2026-10-05 00:36）
+- **非阻塞，学习者机制提案：余像逐牌格挡未进入推演**。来源 LRN0HPZ0FZS1 复盘首条、账本 silent-0022（机制证据 silent-0023），定位 `agent/src/reflex/card-model.ts:816`、`agent/src/reflex/rollout.ts:992`（复盘时 live 4915e3b3）。学习者报告 F48 T1 同一三张前缀预测6格挡、实际8，F48 T2 同一完整防御线预计损6、实际损2；提出按本局逐牌触发及重放证据建模。这里只转录学习者提案，不补机制、不改模型、不作 accepted/rejected 审核；由学习者依新分工实现、自测、上线。既有 silent-0003（boss 时钟角色隔离）和 silent-0008（施毒/结算模型）的新证据已由学习者追加原账本，不重复开项。
