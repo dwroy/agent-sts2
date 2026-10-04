@@ -217,7 +217,7 @@ function planThroughShop(e: DecisionEnv): void {
 }
 
 describe("BUILD_DECIDER=deepseek: the act's route is planned once on the whole map and followed", () => {
-  it("asks for the act's route on the whole map: every node with its lines, the next nodes, the boss; no candidate paths or scores", () => {
+  it("asks for the act's route on the whole map: every node with its lines, the next nodes, the boss; candidate routes as facts, no scores", () => {
     const decision = decide(env(firstFork()));
     expect(decision.label).toBe("map/route-plan");
     const view = (decision.kind === "ask" ? decision.state["route_map"] : {}) as Record<string, JsonValue>;
@@ -237,6 +237,13 @@ describe("BUILD_DECIDER=deepseek: the act's route is planned once on the whole m
     expect(pick?.criteria).toEqual({ r5c1: "F6 普通战（沿连线）", r5c3: "F6 普通战（沿连线）" });
     expect(pick?.instructions).toContain("按顺序列出每个节点的 id");
     expect(JSON.stringify(decision.kind === "ask" ? decision.state : {})).not.toMatch(/code_value|code_rank|route_value|hp_at_boss/);
+    // Candidate routes to the boss with their projected HP (Dai 2026-10-04): legal routes, at most 6.
+    const candidates = view["candidate_routes"] as { about: string; routes: string[] };
+    expect(candidates.about).toMatch(/^代码列出的到 boss 的路线（事实，不是选项）/);
+    expect(candidates.routes.length).toBeGreaterThanOrEqual(1);
+    expect(candidates.routes.length).toBeLessThanOrEqual(6);
+    for (const line of candidates.routes) expect(line).toMatch(/^【[^】]+】r5c[13] r6c\d r7c3：.*F8 boss /);
+    expect(pick?.instructions).toContain("state.route_map.candidate_routes");
   });
 
   it("follows the plan without asking, whatever the HP; re-plans only when the next planned node is missing", () => {

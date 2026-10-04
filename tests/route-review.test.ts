@@ -123,6 +123,8 @@ describe("card reward: the act's route rides on the same question", () => {
     ]);
     expect(block.next_rest.about).toContain("从现在的 HP 54/91 起");
     expect(instructionsOf(decision)).toContain("next_rest 是保留（keep，你的计划）和换线（switch");
+    // The act's candidate routes are for planning (no plan yet), not for the review.
+    expect(block).not.toHaveProperty("candidate_routes");
     // Facts only: no code values or ranks, and no named routes (routeKeys reads route_review.routes as v3's).
     for (const word of ["code_value", "code_rank", "routes", "p1", "hp_if_option"]) expect(JSON.stringify(block)).not.toContain(word);
     expect(instructionsOf(decision)).toContain('"route"："keep"（默认，照计划走）或新的节点序列');

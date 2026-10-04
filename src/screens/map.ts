@@ -479,8 +479,9 @@ export function planMap(env: DecisionEnv): Decision | null {
  * M2 (docs/v4-architecture.md §4): the brain gets the act's whole map (every node's row, column, type and lines,
  * where we stand, the nodes walked, the Winged Boots charges, the boss nodes) and plans any route on it, answering
  * the node sequence from the next node to the boss; code checks it (strategy/route-map.ts checkRoute, through the
- * question's AnswerSpec: one re-ask with the specific errors) and follows it node by node. Code lists no candidate
- * routes and gives no route a score or rank. The chosen route's facts (HP on arrival, rest sites healed or smithed,
+ * question's AnswerSpec: one re-ask with the specific errors) and follows it node by node. Code gives no route a score
+ * or rank; since Dai 2026-10-04 it lists a few candidate routes with their projected HP as facts (candidate_routes:
+ * the best by boss-entry HP, the safest, the most elites and shops; the answer may be any route). The chosen route's facts (HP on arrival, rest sites healed or smithed,
  * fights before the next rest, the next elite and the boss) ride on the next question the brain answers (the card
  * reward, rest site or event after this room: route-review.ts), where it keeps or changes the route.
  * A re-plan is asked only when the plan breaks (its next node is not available, or nothing is left ahead).
@@ -504,6 +505,7 @@ export const ROUTE_PLAN_TASK =
   "从 next_nodes 里的一个节点出发，每一步走到下一层（沿连线；有飞行靴时，每跳一次用掉 1 次，可以跳到下一层任意节点），一直走到 boss，按顺序列出每个节点的 id。" +
   "代码按你的路线逐个节点走，只在路线走不通时再问你；之后的选牌、休息点和事件的最后一问都会附上这条路线按当时 HP 算的事实" +
   "（各节点到达血量的中位数和 p75、休息点回血或锻造后的血量、到下一个休息点前的连续战斗、下一只精英和 boss 前的血量），你可以在那时保留或修改路线。" +
+  "state.route_map.candidate_routes 是代码按投影列的几条到 boss 的路线，每段的战斗、精英进场和到达休息点、boss 的 HP（事实，不是选项）。" +
   '只回答 JSON：{"route": "<节点 id，用空格分隔，从下一步一直到 boss，如 r4c1 r5c2 … r16c3>", "reason": "<30 字以内>"}';
 
 /** The review after an act-start Ancient whose outcome was not known when the route was planned (map/route-review). */
@@ -661,7 +663,7 @@ function routePlanQuestion(env: DecisionEnv, map: RouteMap, fallback: Decision, 
   const start = hpNow(env);
   const statue = statueSlots(env, available);
   const routeMap: Record<string, JsonValue> = {
-    ...routeBlockState({ map, start, costs }),
+    ...routeBlockState({ map, start, costs, candidates: {} }),
     ...(replanWhy ? { replan_because: replanWhy, previous_plan: previous?.summary ?? null } : {}),
     ...(statue ?? {}),
   };

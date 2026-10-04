@@ -17,6 +17,7 @@ import { rememberMap } from "../src/screens/rest.js";
 import type { JsonValue } from "../src/util/json.js";
 import { act, ask, board, choose, decide, env, FakeDeepSeek, keyOf, optionsOf, play, scriptedDeepSeek, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { legalRoutes } from "./route-fixture.js";
+import { checkRoute, routeMapFromView } from "../src/strategy/route-map.js";
 import { mainMenuPayload } from "./scenarios.js";
 
 setupOneshotTests();
@@ -83,8 +84,19 @@ describe("act-start Ancient: its option and the act's route in one question", ()
     expect(String(view["boss"])).toMatch(/（F33 Boss）$/);
     expect(String(view["room_costs"])).toMatch(/^第 2 幕每个房间掉血/);
     expect(legalRoutes(view).length).toBeGreaterThanOrEqual(2);
-    // No candidate routes, code values or ranks for the route.
+    // No code values or ranks; candidate routes as facts (Dai 2026-10-04): a few legal routes to the boss with their
+    // projected HP (the numbers: tests/act-route-candidates.test.ts, on fixed costs).
     expect(JSON.stringify(view)).not.toMatch(/code_value|code_rank|hp_at_boss|act_routes/);
+    const candidates = view["candidate_routes"] as { about: string; routes: string[] };
+    expect(candidates.about).toMatch(/从现在的 HP \d+\/80 起；改变 HP 的选项按它的 route_effect 加减/);
+    expect(candidates.routes.length).toBeGreaterThanOrEqual(1);
+    expect(candidates.routes.length).toBeLessThanOrEqual(6);
+    const map = routeMapFromView(view)!;
+    for (const line of candidates.routes) {
+      expect(line).toMatch(/^【[^】]+】r\d+c\d+[^：]*：.*F33 boss /);
+      expect(checkRoute(map, /】([^：]+)：/.exec(line)![1]!.split(" "))).toEqual([]);
+    }
+    expect(String(question.questions["pick"]?.instructions)).toContain("state.act_route.candidate_routes");
     expect(String(question.questions["pick"]?.instructions)).toContain('"route": "<节点 id，用空格分隔：从 next_nodes 之一出发');
     expect(question.deepseek.baseline.label).toBe("event/choose");
     expect(question.deepseek.oneshot).toBeDefined();
@@ -258,10 +270,14 @@ describe("act start in the loop", () => {
     expect(records.find((row) => row["label"] === "map/route-review")).toMatchObject({ decider: "deepseek", rationale: expect.stringMatching(/keep/) });
   });
 
-  it("the real client reads the answer's route (and cards)", async () => {
+  it("the real client reads the answer's route (and cards); the candidate routes ride in the question, not the system prefix", async () => {
     const route = joint();
-    const { client } = await scriptedDeepSeek([{ content: JSON.stringify({ choice: "o0", route, reason: "soup for the strikes; shop route" }), reasoning: "Decisive: o0." }]);
+    const { client, bodies } = await scriptedDeepSeek([{ content: JSON.stringify({ choice: "o0", route, reason: "soup for the strikes; shop route" }), reasoning: "Decisive: o0." }]);
     const { stats, records } = await play(sequence(), client);
+    const messages = bodies[0]!["messages"] as { role: string; content: string }[];
+    expect(messages[0]!.role).toBe("system");
+    expect(messages[0]!.content).not.toContain("candidate_routes");
+    expect(messages[1]!.content).toContain('"candidate_routes"');
     expect(stats.deepseekCalls).toBe(1);
     expect(records.find((row) => row["label"] === "event/act-plan")).toMatchObject({ decider: "deepseek", deepseek: { choice: "o0", route, plan: ["o0", route] } });
     expect(records.find((row) => row["label"] === "map/route-follow")).toMatchObject({ deepseek: { plan_step: 2 } });
