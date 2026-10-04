@@ -4,7 +4,7 @@ tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 600
 default.base_branch: main
-default.merge: no
+default.merge: live
 default.merge_dir: {{project_root}}/.worktrees/live
 ---
 # 任务：更新经验库（{{runs}}）
@@ -14,7 +14,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 新复盘的局（run id，逗号分隔）：{{runs}}
 - 改代码的工作树：{{worktree}}（在这里改 experience.json、跑测试、提交）
 - 合并基线：{{base_branch}}
-- 是否合入对局分支：{{merge}}（`no` = 只在本分支提交；`v3` = 按第 8 节合入 {{merge_dir}}）
+- 是否合入对局分支：{{merge}}（`no` = 只在本分支提交；`live` = 按第 8 节合入 {{merge_dir}}）
 - 复盘：{{project_root}}/notes/lessons.md（只读）
 - 变更记录：{{project_root}}/{{changelog_path}}（只追加一节）
 - 日志（只读）：{{logs_dir}}
@@ -110,7 +110,7 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 {{/is_ironclad}}
 
 ## 7. 测试和提交
-- `export PATH=$HOME/.local/node/bin:$PATH`，`bash tools/test-sandbox.sh`（内含 tsc 和沙箱可跑的 vitest；固定排除名单及子进程限制原因见脚本注释，合入后由调度器在沙箱外补跑完整套件） 退出码都要是 0（高负载时战斗测试可能超时，先重跑一次再下结论）。测试用固定数据。
+- `mkdir -p "{{scratch}}"`，`export TMPDIR="{{scratch}}"`，`export PATH=$HOME/.local/node/bin:$PATH`，`bash tools/test-sandbox.sh`（内含 tsc 和沙箱可跑的 vitest；固定排除名单及子进程限制原因见脚本注释，合入后由调度器在沙箱外补跑完整套件） 退出码都要是 0（高负载时战斗测试可能超时，先重跑一次再下结论）。测试用固定数据。
 - 在 {{worktree}} 提交：`git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，英文提交信息，写明版本号和增删改条数。不推送。
 {{#is_ironclad}}
 - 在变更记录末尾追加一节（标题照上一节：`## <日期> 第N次增量：<局数> 局 A几（version …，分支 …，<提交号>）`），小节依次是：来源、对照数据检查的主题、经验库自己带偏或写了没被执行的地方、**机制推理**、新增、更新、退役、和手写知识及代码冲突、代码问题（不给 DS）、测试、切片大小。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交，由调用方提交。
@@ -127,20 +127,22 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
   - 没有对应条目的（例如从汇总数据、SL 重打对照、机制推理里新得出的结论）：`add` 一个，`status` 是 `proposed`，`by` 是 `learner:experience-update`，`where` 同上；`prior` 照 README 判断（看这个角色在这条结论被学到之前的局里是不是已经做对了），`first_run` 是这个角色最早出现这件事的局；
   - 退役的经验条目：对应的账本条目 `update`，`status` 改成 `retired`，`note` 写退役原因；
   - 复盘里登记过、这次没有并进经验库的条目，不用动（留在 `observed`）；
-  - 不许把账本里的 `status` 改成 `accepted` / `shipped`：审核和上线由开发会话改。
+  - 不许把账本里的 `status` 改成 `accepted` / `shipped`：实际合入后由运维 codex 据完成事件登记，不另设审核。
 - 写完跑 `python3 {{project_root}}/learner/ledger.py check`，退出码要是 0。
 
-## 8. 合入（只有 merge = v3 时做；V4 一律 merge = no，由开发会话审过后合入 main / live）
-本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里做：
-1. 等后台知识刷新跑完：`while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省）；
-2. 在 {{merge_dir}} 里，如果有刷新过、没提交的知识数据：`git add notes/fight-value-backtest.md knowledge`，commit "Refresh knowledge data"；
-3. `git merge --no-edit <本分支>`；
-4. 在 agent/ 跑 `bash tools/test-sandbox.sh`，退出码都要是 0；不是 0 就 `git merge --abort`（或回退到合入前的提交），在回报里写明；
-5. 不停对局，不运行 play。
+## 8. 合入（只有 merge = live 时做）
+本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `live` 时，在 `flock {{project_root}}/ops/live-merge.lock` 锁里按「合入 live 的流程」做（其他值报错，不猜测合入目标）：
+1. 等后台知识刷新跑完：`while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省，否则会匹配到自己的 shell，永远等下去）；
+2. 在 {{merge_dir}} 里先提交刷新过的知识数据：`git add notes/fight-value-backtest.md knowledge`，commit "Refresh knowledge data"（没有改动就跳过）；
+3. 先检查刷新过的知识数据与本分支的改动是否重叠；有冲突就停下回报，不覆盖刷新数据。记下提交刷新数据之后、合入之前的提交号，再 `git merge --no-edit <本分支>`；
+4. 在 agent/ 跑 `bash tools/test-sandbox.sh`（内含 tsc 和沙箱可跑的 vitest；固定排除名单及子进程限制原因见脚本注释，合入后由调度器在沙箱外补跑完整套件），退出码都要是 0；不是 0 就回退到第 3 步记下的提交（保留刷新数据），在回报里写明；
+5. 如果改了知识数据的生成脚本，用 knowledge/builders/ 下的脚本重建数据，再提交一次；
+6. 先跑 `date`，在 paper/materials/decision-log.md 追加上线记录，写明来源条目、证据局号、账本 id 和提交号。改变对局行为（包括知识前缀文字变化）时，在 eval/versions.json 加版本并通知运维会话；将提交号和版本交运维 codex，由运维 codex 经 learner/ledger.py 将对应账本条目标为 shipped（只有实际合入 live 后）。只修工具或任务模板且不改变对局行为时无需 eval 版本；
+7. 不停对局，不运行 play。
 
 ## 9. 安全
 - key 不许打印、不许落盘：不许读或 grep `.env`、`~/.jev_api_keys`、`~/.deepseek_api_key`，不许跑 `env`、`printenv` 之类会打印环境变量的命令。
-- 只改 {{project_root}} 里的：{{worktree}}（本分支）、变更记录（只追加一节）、学习账本（只经 learner/ledger.py 追加）、{{scratch}}；merge = v3 时还有 {{merge_dir}} 的合入。ops/、notes/ 和 paper/ 下的其他文件都只读。
+- 只改 {{project_root}} 里的：{{worktree}}（本分支）、变更记录（只追加一节）、学习账本（只经 learner/ledger.py 追加）、{{scratch}}；merge = live 时还有 {{merge_dir}} 的合入、第 8 节的上线记录和 eval 版本。ops/、notes/ 和 paper/ 下的其他文件都只读。
 - 不推送；不运行 play；不用 Zboubkiller DLL，不开 mod 自带的 autoplay。
 - 不读游戏二进制（sts2.dll）或 .pck 文件。
 - 杀进程用 PID，不用 `pkill -f`；不许 `npm install`（node_modules 是共用的软链接）；logs/ 只读。
@@ -150,7 +152,7 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 
 ```
 ## 经验库更新回报
-- 版本：<旧> → <新>；提交：<提交号>（分支 …）；合入：<v3 的提交号 / 未合入>
+- 版本：<旧> → <新>；提交：<提交号>（分支 …）；合入：<live 的提交号 / 未合入>
 - 条数：新增 N、更新 N（加证据 N、只改数字 N）、退役 N；active <旧> → <新>
 - 机制推理：每个机制一行「机制 — 结论 — 证据局数 — 典型案例 run id」
 - 改了的手写知识：file:line — 改成什么（没有写「无」）
