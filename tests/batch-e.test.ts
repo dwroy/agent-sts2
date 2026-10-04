@@ -409,11 +409,14 @@ describe("10. The map's route values rest with the game's heal and the rest reli
 });
 
 describe("11. Blessing of the Forge drunk as a line's step: the upgraded hand is the one expected, the line goes on (BXAZV0R9ZHWK F17 T5)", () => {
-  it("\"potion 熔炉的祝福, then 心神不宁+, …\": after the drink every card shows \"+\", the next step is played, not re-planned", () => {
+  // CARD_CONDITIONS (2026-10-04): the logged line was "potion 熔炉的祝福, then 心神不宁+, …", Restlessness+ played with four
+  // cards left in hand on its 3 energy, which it never gives then (tests/card-conditions.test.ts); the forge line offered now
+  // goes on with Headbutt+.
+  it("\"potion 熔炉的祝福, then 头槌+, …\": after the drink every card shows \"+\", the next step is played, not re-planned", () => {
     rolloutLiveOptions.enabled = false;
     const ask = loggedEnv(logged("bxaz-f17-t5-forge"));
     const criteria = planCriteria(planCombatTurn(ask));
-    const chosen = Object.entries(criteria).find(([key, text]) => key.startsWith("plan") && /"plays":"potion 熔炉的祝福, then 心神不宁\+/.test(text));
+    const chosen = Object.entries(criteria).find(([key, text]) => key.startsWith("plan") && /"plays":"potion 熔炉的祝福, then 头槌\+/.test(text));
     if (!chosen) throw new Error("the forge line is not offered");
     const first = (planCombatTurn(ask) as AskDecision).resolve(choose(chosen[0], 0.9));
     first.apply?.();
@@ -426,7 +429,7 @@ describe("11. Blessing of the Forge drunk as a line's step: the upgraded hand is
     potions[0] = { index: 0, occupied: false, can_discard: false };
     const decision = planCombatTurn({ ...loggedEnv(after), screenMemory: ask.screenMemory });
     expect(decision?.label).toBe("combat/plan-continue");
-    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/Jev-chosen plan: 心神不宁\+/);
+    expect(decision?.kind === "act" ? decision.rationale : "").toMatch(/Jev-chosen plan: 头槌\+/);
   });
 });
 

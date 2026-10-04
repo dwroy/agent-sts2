@@ -274,6 +274,11 @@ export interface ScreenMemory {
    */
   turnStartExhaust?: { key: string; size: number };
   /**
+   * Our HP at the first combat frame of the turn (`key` = fight:turn) and whether Inferno or Crimson Mantle took HP as it
+   * started: HP lost earlier this turn (CARD_CONDITIONS, Spite; combat-plan hpLostSinceTurnStart).
+   */
+  turnStartPlayerHp?: { key: string; hp: number; startLoss: boolean };
+  /**
    * Lizard Tail (once a run: back at 50% of max HP instead of dying) seen to trigger this run: the relic shows
    * no used mark (logged `stack` null, `is_melted` false before and after). `last` is our turn's last combat state
    * read while it is held (its HP, block, whether it read lethal, the Fairies held, the intents' hits in order, and

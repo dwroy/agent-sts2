@@ -413,6 +413,14 @@ export interface AppConfig {
    * the whole fights (B4) do. off: whole fights only, as before (a turn-1 rollout played the boss without its Sandpit).
    */
   sandpitStart: boolean;
+  /**
+   * CARD_CONDITIONS (default on; src/strategy/card-model.ts cardConditionOptions, tests/card-conditions.test.ts): conditional
+   * card effects evaluated on the solver's simulated state when the card is played, in the live solver, the rollout and B2:
+   * Restlessness's draw and energy only on an empty hand (Impatience's draw only with no Attack in it), Spite's second hit
+   * after HP lost earlier this turn too, a Rage played in the line, Ashen Strike / Expect a Fight / Tear Asunder with what the
+   * line exhausted / gained / lost before them. off: the card models and the solver exactly as before.
+   */
+  cardConditions: boolean;
   /** SL (docs/sl.md): boss and listed-elite fights reloaded on a foreseen certain death (SL_*; on by default). */
   sl: SlConfig;
   /** V4 brain: engine per question kind, fallback, re-ask, tools, log (BRAIN_*). */
@@ -1170,6 +1178,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   const sandpitStartProblems: ConfigProblem[] = [];
   const sandpitStart = parseOnOff(readEnv(env, "SANDPIT_START"), "SANDPIT_START", sandpitStartProblems) ?? true;
   for (const problem of sandpitStartProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
+  // CARD_CONDITIONS likewise (on by default).
+  const cardConditionsProblems: ConfigProblem[] = [];
+  const cardConditions = parseOnOff(readEnv(env, "CARD_CONDITIONS"), "CARD_CONDITIONS", cardConditionsProblems) ?? true;
+  for (const problem of cardConditionsProblems) warnings.push(`${problem.field}: ${problem.message}; using on`);
   const decisionLog = readEnv(env, "DECISION_LOG") ?? DEFAULTS.decisionLog;
   const slLogRaw = readEnv(env, "SL_LOG");
   const sl: SlConfig = {
@@ -1308,6 +1320,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     mechDeathMove,
     passivePieces,
     sandpitStart,
+    cardConditions,
     sl,
     brain,
     deepseek,

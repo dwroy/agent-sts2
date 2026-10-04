@@ -36,7 +36,7 @@ import { createHash } from "node:crypto";
 import { deserialize, serialize } from "node:v8";
 
 import { ascAmountOptions } from "../knowledge/monster-db.js";
-import { pileCostOptions, playFirstOptions, potionCardCostOptions } from "../strategy/card-model.js";
+import { cardConditionOptions, pileCostOptions, playFirstOptions, potionCardCostOptions } from "../strategy/card-model.js";
 import { passivePiecesOptions } from "../strategy/passive-pieces.js";
 import { potionCostOptions } from "../strategy/potion-cost.js";
 import { dataVersion } from "../util/data-version.js";
@@ -156,7 +156,7 @@ export function identityToken(value: object | null | undefined): number | null {
  * the version of the data tables (a test's setter swapped one: util/data-version.ts).
  */
 function switches(): string {
-  return `${[ascAmountOptions.enabled, playFirstOptions.enabled, pileCostOptions.relics, potionCardCostOptions.relics, passivePiecesOptions.enabled, potionCostOptions.enabled].map((on) => (on ? 1 : 0)).join("")}:${dataVersion()}`;
+  return `${[ascAmountOptions.enabled, playFirstOptions.enabled, pileCostOptions.relics, potionCardCostOptions.relics, passivePiecesOptions.enabled, potionCostOptions.enabled, cardConditionOptions.enabled].map((on) => (on ? 1 : 0)).join("")}:${dataVersion()}`;
 }
 
 /** A tagged stand-in for what JSON would drop or merge (it cannot be an input's own value: its key is a NUL). */
