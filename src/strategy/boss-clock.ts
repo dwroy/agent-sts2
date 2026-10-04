@@ -34,6 +34,7 @@ import { modelHandCard, turnStartOnly } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
 import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "./passive-pieces.js";
 import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
+import { bumpDataVersion } from "../util/data-version.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
 export const BRIMSTONE_STRENGTH = 2;
@@ -188,6 +189,7 @@ let unblockedCache: Record<string, UnblockedShare> | null = null;
 
 /** For tests: use these shares instead of boss-damage.json (null reloads the file). */
 export function setUnblockedSharesForTests(shares: Record<string, UnblockedShare> | null): void {
+  bumpDataVersion();
   unblockedCache = shares;
 }
 

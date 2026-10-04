@@ -19,6 +19,7 @@ import type { GameState } from "../mod/schema.js";
 import { fillGuideFacts } from "../strategy/boss-clock.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../util/json.js";
 import { actThreatIds, bossOnBoard } from "./monster-db.js";
+import { bumpDataVersion } from "../util/data-version.js";
 
 export type Confidence = "low" | "med" | "high";
 
@@ -97,6 +98,7 @@ export function loadOutcomeStats(): OutcomeStats {
 
 /** For tests: use these instead of the files (null reloads the file). */
 export function setExperienceForTests(entries: ExperienceEntry[] | null, stats: OutcomeStats | null = null): void {
+  bumpDataVersion();
   experienceCache = entries;
   statsCache = stats;
 }

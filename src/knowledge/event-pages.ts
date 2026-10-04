@@ -10,6 +10,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { asArray, asRecord, bool, str } from "../util/json.js";
+import { bumpDataVersion } from "../util/data-version.js";
 
 /** Per event id: option text_key -> [continues, ends]. */
 export type EventPages = Record<string, Record<string, [number, number]>>;
@@ -33,6 +34,7 @@ export function eventPages(): EventPages {
 
 /** Tests: fixed data instead of the refreshed file (null restores it). */
 export function setEventPagesForTests(data: EventPages | null): void {
+  bumpDataVersion();
   override = data;
 }
 

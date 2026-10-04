@@ -812,6 +812,12 @@ export interface RolloutResult {
   elapsedMs: number;
   /** Steps taken to fit the budget ("horizon 3", "samples 4", "1-turn"). */
   degraded: string[];
+  /**
+   * The least budget this run's clock checks needed (ms): with at least this much, the same run on the same clock readings
+   * passes every check, so nothing in it is cut. Only meaningful with `degraded` empty (the SL retry compute memo,
+   * src/sim/compute-memo.ts: a stored result is handed back when the question's budget is at least this).
+   */
+  budgetNeedMs?: number;
   policyTurns: number;
   policyMs: number;
   policyNodes: number;
@@ -2269,6 +2275,8 @@ interface Budget {
   policyTurns: number;
   policyMs: number;
   policyNodes: number;
+  /** The least budget the clock checks so far needed to pass (RolloutResult.budgetNeedMs); absent: not tracked. */
+  need?: number;
 }
 
 /** One sample of one line: the line itself, then up to horizon-1 policy turns. Returns the per-turn records. */
@@ -2481,7 +2489,9 @@ function simulate(
   drink(first);
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
-    if (budget.now() - budget.start > deadline) return null;
+    const at = budget.now() - budget.start;
+    if (at > deadline) return null;
+    if (budget.need !== undefined && at > budget.need) budget.need = at;
     const last = records[records.length - 1]!;
     if (last.won || last.died || last.timeUp) break;
     const hand: CardModel[] = [];
@@ -3070,7 +3080,11 @@ const ORDER_SCHEDULE: { horizon: number; samples: number }[] = [
 export function rolloutDecision(input: RolloutInput): RolloutResult {
   const opts = input.options ?? {};
   const now = opts.now ?? (() => performance.now());
-  const budget: Budget = { now, start: now(), budgetMs: opts.budgetMs ?? 1500, policyTurns: 0, policyMs: 0, policyNodes: 0 };
+  const budget: Budget = { now, start: now(), budgetMs: opts.budgetMs ?? 1500, policyTurns: 0, policyMs: 0, policyNodes: 0, need: 0 };
+  /** A clock check passes iff the budget is at least `ms`: the run's least budget is the largest of these (budgetNeedMs). */
+  const needs = (ms: number) => {
+    if (ms > budget.need!) budget.need = ms;
+  };
   const maxHorizon = opts.horizon ?? 5;
   const maxSamples = opts.samples ?? 8;
   const seed = opts.seed ?? 1;
@@ -3174,13 +3188,15 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       const rest = units.length - first.length;
       if (first.length === 1 && records !== null && rest > 0 && firstHorizon > SHORT_HORIZON) {
         const at = now();
+        needs((at - t) * rest + (at - budget.start));
         if ((at - t) * rest > budget.budgetMs - (at - budget.start)) firstHorizon = SHORT_HORIZON;
       }
     }
     if (firstHorizon < maxHorizon) degraded.push(`first wave at ${firstHorizon} turns`);
     const waveMs = now() - t;
     const perTurn = waveMs / Math.max(1, budget.policyTurns - turnsBefore);
-    const left = budget.budgetMs - elapsed();
+    const leftAt = elapsed();
+    const left = budget.budgetMs - leftAt;
     // With kill orders, a sample shared by orders that agree as far as it went is simulated once: the first
     // wave's own time is the measure of a wave.
     const cost = (h: number, m: number) => (orders.length > 1 ? (waveMs * (h - 1)) / Math.max(1, firstHorizon - 1) : perTurn * units.length * (h - 1)) * (m - 1);
@@ -3197,11 +3213,18 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       .concat(firstHorizon < maxHorizon ? [{ horizon: firstHorizon, samples: 1 }] : [])
       .filter((s, i, all) => all.findIndex((t) => t.horizon === s.horizon && t.samples === s.samples) === i);
     const fit = schedule.find((s) => cost(s.horizon, s.samples) <= left);
+    // The schedule's top step fits iff the budget is at least its cost plus the time spent before `left`; the check
+    // below (`elapsed() > budget`) iff it is at least the time spent then (the same clock reading, recorded).
+    if (schedule[0]) needs(cost(schedule[0].horizon, schedule[0].samples) + leftAt);
+    const checked = (ms: number) => {
+      needs(ms);
+      return ms;
+    };
     if (first.some((r) => r === null)) {
       horizon = 1;
       samples = 1;
       degraded.push("1-turn");
-    } else if (elapsed() > budget.budgetMs || !fit) {
+    } else if (checked(elapsed()) > budget.budgetMs || !fit) {
       // The first wave finished, just past the budget: its one sample per line is kept (it was thrown away for
       // the 1-turn fallback), no more waves.
       first.forEach((records, i) => trajectories[i]!.push(records!));
@@ -3373,5 +3396,5 @@ export function rolloutDecision(input: RolloutInput): RolloutResult {
       perTurn: best.perTurn,
     };
   });
-  return { lines, orders: orders.filter((order): order is KillOrder => order !== null), horizon, samples, elapsedMs: elapsed(), degraded, policyTurns: budget.policyTurns, policyMs: budget.policyMs, policyNodes: budget.policyNodes };
+  return { lines, orders: orders.filter((order): order is KillOrder => order !== null), horizon, samples, elapsedMs: elapsed(), degraded, budgetNeedMs: budget.need!, policyTurns: budget.policyTurns, policyMs: budget.policyMs, policyNodes: budget.policyNodes };
 }
