@@ -308,6 +308,20 @@ describe("statistics tables", () => {
     expect(() => renderRoomCosts(ctx, 3)).toThrow(/可用的幕: 1, 2/);
   });
 
+  it("room-cost legends describe post-combat healing without a character-specific relic", () => {
+    const dir = copyData();
+    const path = knowledgeFile(dir, "room-costs.json");
+    const rooms = JSON.parse(readFileSync(path, "utf8"));
+    Object.assign(rooms.by_asc["9"]["1"]["Monster"], { fight_median: 9, fight_p75: 12 });
+    writeFileSync(path, JSON.stringify(rooms));
+    const text = renderRoomCosts({ ...ctx, knowledgeDir: dir });
+    expect(text).toContain("战斗房含战后回血");
+    expect(text).toContain("不含战后回血");
+    expect(text).not.toContain("燃烧之血");
+    expect(text).toContain("2/7/— 战内9/12 死0% n=30");
+    expect(text).toContain("n<5 标(少)");
+  });
+
   it("says p90 is missing when the room-cost file has none", () => {
     const dir = copyData();
     const rooms = JSON.parse(readFileSync(knowledgeFile(dir, "room-costs.json"), "utf8"));
