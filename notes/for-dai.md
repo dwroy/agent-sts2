@@ -331,3 +331,5 @@
 
 - 2026-10-05 04:26 [运维 codex] 需Dai处理：完整评估命令 `nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 0 --md --per-run > /tmp/sts2-a0-climb-metrics.md` exit 1：eval/strength-sources.ts 的 tsx CLI 在 `/tmp/tsx-1000/69.pipe` 监听时被沙箱拒绝（listen EPERM）。当前 broker 动作清单不含评估动作，请 Dai 在沙箱外补跑，或增加 eval-metrics 白名单动作；A0 核心小结已由论文表与原日志核对，见 notes/silent-climb-report.md。
 - 2026-10-05 04:45 [运维 codex] A0评估补跑已完成：观察者沙箱外运行exit 0，结果paper/materials/silent/a0-metrics.md（8dc33dfe）已并入notes/silent-climb-report.md；04:26的A0外部补跑请求已解决。eval-metrics白名单动作仍在学习者待办队列，待上线后使用。
+- 2026-10-05 05:25 [运维 codex] 需Dai处理：fix-batch 20261005-041302跳过eval-metrics动作；任务权限及当前运维沙箱均将ops/codex-ops-actions.sh和ops/codex/下的broker实现设为只读，运维无法补该动作。请安排具备相应写权限的授权学习任务；A0完整评估已归档，后续升级小结仍需要该白名单动作。
+- 2026-10-05 05:25 [运维 codex] 需Dai定：fix-batch回报将保血/留药/全死排序、巨兽拖延、boss时钟校准与样本门槛、路线休息和SL范围列为策略项跳过，请确定是否另交学习者处理；游戏知识仍仅来自本角色对局证据。既有全死、留药、复活SL等待定记录继续保留，详见learner/runs/20261005-041302-fix-batch/handoff-ops.md。
