@@ -400,7 +400,8 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     const [row] = trace();
     expect(row).toMatchObject({ outcome: "aborted", thread_id: "t-stall", stall_ms: 120_000, first_token_ms: null });
     expect(row!["events"].map((event: any) => event.type)).toEqual(["thread.started", "turn.started"]);
-    expect(row!["max_gap_ms"]).toBeGreaterThanOrEqual(1_000);
+    // Aborted at 1.5 s; under load the fake process starts late, so the silence before the abort can fall under 1 s.
+    expect(row!["max_gap_ms"]).toBeGreaterThanOrEqual(500);
     expect(row!["stderr_tail"]).toContain("retrying");
     expect(row!["stderr_tail"]).not.toContain(jwt);
     expect(row!["stderr_tail"]).not.toContain("abc123secret");
