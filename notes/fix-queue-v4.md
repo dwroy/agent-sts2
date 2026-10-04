@@ -215,3 +215,28 @@
 - **知识前缀模板里的角色专属文字**：房间代价表说明「战斗房含燃烧之血等战后回血」（agent/src/knowledge/render/ 下），燃烧之血是铁甲战士的遗物；改成和角色无关的说法。注意铁甲的前缀会因此变（prefix sha），记 eval 版本。
 - **agent/tools/deepseek-prompt-dump.ts 跑不了**：整份读 logs/states.jsonl（超 Node 字符串上限 ERR_STRING_TOO_LONG）；改成按偏移从文件尾流式找最后一个战斗局面。
 - **codex 大脑缓存命中偏低**：C48LLXBGKXQ9（静默猎手 A0）输入约 3.8 万 token/次只命中约 1 万；铁甲时期 GPT 命中约一半到七成。查原因（前缀里每局变的内容是否排在不变内容之前、会话模式的 thread 前缀、prompt_cache_key 等），给出改法和实测对比；不降推理强度（记忆卡 keep-ds-reasoning-effort 的原则同样适用）。
+
+### 静默猎手首局复盘回报（运维 codex，2026-10-04 23:04）
+- **非阻塞，学习者提案待开发审核：连续斩杀被沙坑护栏截断**。来源 C48LLXBGKXQ9 复盘首条、账本 silent-0001，定位 `agent/src/reflex/combat-plan.ts:1932`、`:1938`。学习者证据：F33 第5次 T13，已确认的「打击→冲刺」在第一步后变为 combat/plan-continue，护栏改打狂乱逃离，未完成斩杀。涉及战斗决策，运维仅转录提案，不自行修打法。
+- **非阻塞，学习者机制提案待开发审核：刀刃陷阱即时重放漏算**。来源 C48LLXBGKXQ9 复盘第二条、账本 silent-0002 / silent-0004，定位 `agent/src/reflex/card-model.ts:759`、`:820`—`:823`。学习者证据：F19 T8 文本6张小刀的刀刃陷阱被预测0伤，实际杀敌；F33 第1次 T1 文本0张时仍给固定评分、实际0伤。属于从本局机制证据提出的模型缺口，运维不实现或补充规则。
+- **非阻塞，角色隔离提案待开发审核：boss 时钟回退沿用铁甲拟合常量**。来源 C48LLXBGKXQ9 复盘第三条、账本 silent-0003，定位 `agent/src/sim/boss-clock.ts:982`—`:985`、`:235`—`:237`、`:1758`—`:1759`。学习者报告本局32次 act_boss_clock 使用旧角色215场 A8 的拟合和掉血回退常量；本条交开发会话审核数据来源与角色隔离，不由运维调整估值。
+
+### 开发会话转交 codex 学习者：经验库每局一更（Dai 2026-10-04 23:1x）
+- **调度器自动派经验更新**：Dai 定「经验 1 局一更，只要来得及」。ops/codex-ops-learn.py 在一批复盘结束（learner-done）后，若该角色 `ops/experience-pending.py --character <id>` ≥ 1 且没有经验批次在跑，就在 `.worktrees/exp`（分支 exp-silent，从 main 合）派 `learner/run.ts --engine codex --task experience-update --character <id> --set runs=<待并入的局> --set merge=no`；跑完写一行收件箱（「经验批次 <stamp> 完成，待开发会话审核合入」），失败按复盘批次的重试规则。一个时刻只跑一个经验批次；赶不上的局并入下一批。docs/codex-ops.md 和运维 prompt 同步一句。
+- **experience-update.md 过时**：合入一节还写 merge = v3 / ops/v3-merge.lock，改成 live 流程（同 fix-batch 那条）。
+
+### 静默猎手 Y6GM2CHWJBEY 复盘回报（运维 codex，2026-10-05 00:10）
+- **非阻塞，学习者机制提案待开发审核：毒牌施毒、结算与条件评分缺口**。来源 Y6GM2CHWJBEY 复盘、账本 silent-0008，定位 `agent/src/reflex/card-model.ts:749`。学习者报告毒牌施毒与回合结算未进入推演，空打条件牌仍获得常驻评分；同族战六次 T2 均向没有中毒的目标打出咕嘟冒泡，消耗能量而没有效果。具体机制证据在 silent-0010 / silent-0011；运维只转录有局号的提案，不补充或实现规则。
+- **已知问题追加证据：boss 时钟角色隔离**。Y6GM2CHWJBEY 再次观察到 `agent/src/sim/boss-clock.ts:982` 的旧角色拟合回退，学习者已将证据追加 silent-0003；属于此前已交开发会话的同一项缺陷，不另开修复。
+
+### 最高优先：学习迭代由 codex 自己闭环（Dai 2026-10-05 00:19）
+Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习者自己闭环」。Claude 只做观察。要做成：
+- **（00:2x 更正，Dai：「codex 学习者自己测试确认没有问题就可以直接合并上线」）学习者自测通过就自己按 live 流程合入（经验和修复任务一律 merge=live），不另设审核；下面原写的运维审核只保留「学习者提交被挡时帮它提交、合入」这一兜底。**
+- **谁审核、谁合入（原稿）**：运维 codex 会话接管原来「开发会话」的审核和上线：学习者的经验批次（.worktrees/exp，分支 exp-silent）和修复批次（.worktrees/codex-dev，分支 codex-dev）跑完后，由运维会话按学习协议审核（证据局号、只用本角色数据、台账登记、测试通过），通过就合进 main 和 live、记 decision-log、改打法的加 eval/versions.json 版本、把台账条目改成 accepted / shipped；不通过就把理由写进台账（rejected + note）并退回学习者。学习者产出的提案也由运维会话审核（accepted / rejected）。
+- **谁派活**：调度器（ops/codex-ops-learn.py）每批复盘结束后自动派经验更新（每局一更，同时只跑一批，赶不上的并入下一批）；有 accepted 但没上线的提案、或 fix-queue-v4.md 里没划掉的条目时，自动派 fix-batch（同时只跑一批）。broker（ops/codex-ops-actions.sh）加 `experience-update`、`fix-batch`、`learner-merge <branch>` 一类白名单动作，供运维会话手动触发。
+- **任务说明**：learner/tasks/experience-update.md、fix-batch.md 的「合入」一节改成 live 流程（不再是 merge=v3 / ops/v3-merge.lock）。
+- **文档**：docs/learning-protocol.md、AGENTS.md、docs/codex-ops.md、运维 prompt（ops/ops-session-silent-codex-prompt.md）里「开发会话审核 / 实现 / 合入」改成「运维 codex 会话审核合入、codex 学习者实现」；Claude 会话只观察和与 Dai 对话。运维 prompt 改动属于 Dai 已经定的分工，不用再问。
+- 本批修复本身由 codex 学习者实现、自己测试、自己按 live 流程合入（merge=live）。
+
+### 静默猎手 LRN0HPZ0FZS1 复盘回报（运维 codex，2026-10-05 00:36）
+- **非阻塞，学习者机制提案：余像逐牌格挡未进入推演**。来源 LRN0HPZ0FZS1 复盘首条、账本 silent-0022（机制证据 silent-0023），定位 `agent/src/reflex/card-model.ts:816`、`agent/src/reflex/rollout.ts:992`（复盘时 live 4915e3b3）。学习者报告 F48 T1 同一三张前缀预测6格挡、实际8，F48 T2 同一完整防御线预计损6、实际损2；提出按本局逐牌触发及重放证据建模。这里只转录学习者提案，不补机制、不改模型、不作 accepted/rejected 审核；由学习者依新分工实现、自测、上线。既有 silent-0003（boss 时钟角色隔离）和 silent-0008（施毒/结算模型）的新证据已由学习者追加原账本，不重复开项。
