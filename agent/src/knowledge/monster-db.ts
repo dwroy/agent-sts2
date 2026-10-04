@@ -990,6 +990,30 @@ export function bossDamageByTurn(bossId: string, asc: number, turns: number): { 
   return used.length > 0 ? { perTurn, estimated, parts: used } : null;
 }
 
+/** R0HEV5E3QT6G F34/F36 / KAY522KT5NXR F34, silent-0041: an SL restart is not another phase. */
+export function phaseCountsWithoutRetries(id: string, counts: Record<string, number>): Record<string, number> {
+  if (id !== "TEST_SUBJECT") return counts;
+  const out: Record<string, number> = {};
+  for (const [sequence, n] of Object.entries(counts)) {
+    const suffix = /\s*\(.*\)\s*$/.exec(sequence)?.[0] ?? "";
+    const values = sequence.replace(/\s*\(.*\)\s*$/, "").split(">").map((value) => Number(value.trim())).filter((value) => Number.isFinite(value) && value > 0);
+    let attempt: number[] = [];
+    let longest: number[] = [];
+    for (const hp of values) {
+      if (hp === values[0] && attempt.length > 0) {
+        if (attempt.length > longest.length) longest = attempt;
+        attempt = [];
+      }
+      attempt.push(hp);
+    }
+    if (attempt.length > longest.length) longest = attempt;
+    if (longest.length === 0) continue;
+    const key = longest.join(" > ") + suffix;
+    out[key] = (out[key] ?? 0) + n;
+  }
+  return out;
+}
+
 /**
  * An act boss's HP at `asc` from the DB (its parts' median max HP at this ascension, else the nearest
  * logged one; each part times its count per fight), only the parts named when `only` is given, and its
@@ -1004,7 +1028,7 @@ export function bossHpAt(bossId: string, asc: number, only?: string[]): { hp: nu
   const parts = Object.entries(entry.parts ?? {}).filter(([part]) => !only || only.includes(part));
   if (parts.length === 0) return null;
   const hp = parts.reduce((sum, [, range]) => sum + (range.median ?? 0) * (range.count_per_fight ?? 1), 0);
-  const phases = Object.keys(entry.phases ?? {})
+  const phases = Object.keys(phaseCountsWithoutRetries(id, entry.phases ?? {}))
     .map((sequence) => sequence.replace(/\s*\(.*\)\s*$/, "").split(">").map((value) => Number(value.trim())).filter((value) => Number.isFinite(value) && value > 0))
     .sort((a, b) => b.length - a.length)[0] ?? [];
   const n = Math.min(...parts.map(([, range]) => range.n ?? 0));
@@ -1276,7 +1300,7 @@ export function bossDossier(bossId: string | null | undefined, asc: number): str
   const entry = byAsc[found.key]!;
   const parts = Object.entries(entry.parts ?? {});
   const hp = parts.map(([part, range]) => `${monsterName(part)} ${round(range.median)}${(range.count_per_fight ?? 1) > 1 ? `×${round(range.count_per_fight)}` : ""} (n=${range.n ?? 0})`).join(" + ");
-  const phases = Object.entries(entry.phases ?? {}).map(([sequence, n]) => `${sequence} (n=${n})`);
+  const phases = Object.entries(phaseCountsWithoutRetries(id, entry.phases ?? {})).map(([sequence, n]) => `${sequence} (n=${n})`);
   const lines = [
     `boss 数据库 ${monsterName(parts[0]?.[0] ?? id)} (${id}) ${ascLabel(found, asc)}: HP ${hp || "?"}${phases.length > 0 ? ` | 阶段 HP: ${phases.join("; ")}` : ""}`,
     `我方战绩: ${entry.fights ?? 0} 场，胜率 ${pct(entry.win_rate)} (n=${entry.n_outcome_known ?? 0})，阵亡 ${entry.death_runs?.length ?? 0}；赢局失血 中位/p75 ${stat(entry.hp_loss_won)}；赢局回合 ${stat(entry.turns_won)}；每回合失血 ${stat(entry.hp_loss_per_turn)}`,
