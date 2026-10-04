@@ -220,3 +220,7 @@
 - **非阻塞，学习者提案待开发审核：连续斩杀被沙坑护栏截断**。来源 C48LLXBGKXQ9 复盘首条、账本 silent-0001，定位 `agent/src/reflex/combat-plan.ts:1932`、`:1938`。学习者证据：F33 第5次 T13，已确认的「打击→冲刺」在第一步后变为 combat/plan-continue，护栏改打狂乱逃离，未完成斩杀。涉及战斗决策，运维仅转录提案，不自行修打法。
 - **非阻塞，学习者机制提案待开发审核：刀刃陷阱即时重放漏算**。来源 C48LLXBGKXQ9 复盘第二条、账本 silent-0002 / silent-0004，定位 `agent/src/reflex/card-model.ts:759`、`:820`—`:823`。学习者证据：F19 T8 文本6张小刀的刀刃陷阱被预测0伤，实际杀敌；F33 第1次 T1 文本0张时仍给固定评分、实际0伤。属于从本局机制证据提出的模型缺口，运维不实现或补充规则。
 - **非阻塞，角色隔离提案待开发审核：boss 时钟回退沿用铁甲拟合常量**。来源 C48LLXBGKXQ9 复盘第三条、账本 silent-0003，定位 `agent/src/sim/boss-clock.ts:982`—`:985`、`:235`—`:237`、`:1758`—`:1759`。学习者报告本局32次 act_boss_clock 使用旧角色215场 A8 的拟合和掉血回退常量；本条交开发会话审核数据来源与角色隔离，不由运维调整估值。
+
+### 开发会话转交 codex 学习者：经验库每局一更（Dai 2026-10-04 23:1x）
+- **调度器自动派经验更新**：Dai 定「经验 1 局一更，只要来得及」。ops/codex-ops-learn.py 在一批复盘结束（learner-done）后，若该角色 `ops/experience-pending.py --character <id>` ≥ 1 且没有经验批次在跑，就在 `.worktrees/exp`（分支 exp-silent，从 main 合）派 `learner/run.ts --engine codex --task experience-update --character <id> --set runs=<待并入的局> --set merge=no`；跑完写一行收件箱（「经验批次 <stamp> 完成，待开发会话审核合入」），失败按复盘批次的重试规则。一个时刻只跑一个经验批次；赶不上的局并入下一批。docs/codex-ops.md 和运维 prompt 同步一句。
+- **experience-update.md 过时**：合入一节还写 merge = v3 / ops/v3-merge.lock，改成 live 流程（同 fix-batch 那条）。
