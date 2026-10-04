@@ -11,6 +11,9 @@
  *   1's path (rows 1-2's draws checked against attempt 1's frames up to the board): with them code plays its own line there.
  * - akk0-rows.json: AKK09TEEEXKD F17 (瀑布巨兽), its six rows: attempts 3 and 5 deviated at T10 and still ended the turn with
  *   attempt 2's plays (differs false), then played attempt 2's fight on to its death.
+ * - 3b4k-rows.json: 3B4K4UDQ56B9 F48, its six rows: attempt 4's T4 deviation wrote differs true, its turn attempts 2-3's but
+ *   for the plain Twin Strike (SL_RETRY_EXPLORE_WASTED). p68p-rows.json: P68P7CDJRDH3 F48, attempt 5's T1 deviation played
+ *   attempt 1's whole T1 (another order), a turn that did not pass the point's board.
  * - game-data.json (the mod's collections trimmed to what the ABCJ boards reference) and pinned-knowledge.json (the knowledge
  *   files the planner reads, from REV, trimmed to its enemies).
  * Reads the logs once, run by hand from the repo root: npx tsx tests/sl-explore-gaps-data/make-fixtures.ts. The tests read
@@ -64,6 +67,8 @@ const log = createSlLog("logs/sl-attempts.jsonl");
 const rows = log.readRun(RUN).filter((row) => row.floor === FLOOR);
 writeFileSync(`${DIR}/abcj-rows.json`, JSON.stringify(rows, null, 1));
 writeFileSync(`${DIR}/akk0-rows.json`, JSON.stringify(log.readRun("AKK09TEEEXKD").filter((row) => row.floor === 17), null, 1));
+writeFileSync(`${DIR}/3b4k-rows.json`, JSON.stringify(log.readRun("3B4K4UDQ56B9").filter((row) => row.floor === 48), null, 1));
+writeFileSync(`${DIR}/p68p-rows.json`, JSON.stringify(log.readRun("P68P7CDJRDH3").filter((row) => row.floor === 48), null, 1));
 
 const frames = split(query(`SELECT off, len, ts, turn, observed FROM state_index WHERE run_id = '${RUN}' AND floor = ${FLOOR} AND screen IN ('COMBAT', 'CARD_SELECTION') AND turn IS NOT NULL ORDER BY off`));
 const decisions = query(`SELECT off, len, ts FROM decisions WHERE run_id = '${RUN}' AND floor = ${FLOOR} AND screen = 'COMBAT' AND turn IS NOT NULL ORDER BY off`);

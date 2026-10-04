@@ -49,7 +49,7 @@ import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/
 import { attemptFrom, createSlLog, previousAttemptsJson, type SlAttemptRow, type SlLog, type SlReloadRecord, type SlResult, type SlRoom, type SlTurn } from "./attempts.js";
 import { checkKnown, DrawTracker, knownOrderOf, type KnownOrder } from "./draws.js";
 import { listedElite, loadSlElites, type SlElite, type SlEliteList } from "./elites.js";
-import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, type ExploreTargetOptions, type SlDeviation, type SlExploreEnv, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays } from "./explore.js";
+import { boardTried, exploreTarget, playKey, replayPlays, replayPoints, secondPlan, slBoardKey, triedHas, turnCanon, turnRepeats, type ExploreTargetOptions, type SlDeviation, type SlExploreEnv, type SlExploreRecord, type SlPoint, type SlTarget, type SlTried, type SlTurnPlays, type SlTurnRepeat } from "./explore.js";
 import { drawsKnownAt, judgeEndTurn, judgeLeastLossNow, LEAST_LOSS_LABEL, type DeathVerdict, type DrawBound, type LeastLossFacts } from "./judge.js";
 import { encounterOf, reloadFight, type ReloadDeps, type ReloadOutcome } from "./reload.js";
 
@@ -397,6 +397,11 @@ export class SlController {
     return this.config.retryExplore === true && this.config.retryExploreReplay === true && (this.canonOn() || this.turnOn()) && this.config.retryExploreRearm === true;
   }
 
+  /** SL_RETRY_EXPLORE_WASTED (with SL_RETRY_EXPLORE_CANON or _TURN): a turn repeats a failed one but for upgrades, from its turn start or to its next board. */
+  private wastedOn(): boolean {
+    return this.config.retryExplore === true && (this.canonOn() || this.turnOn()) && this.config.retryExploreWasted === true;
+  }
+
   /** SL_RETRY_EXPLORE_ANCHOR (with SL_RETRY_EXPLORE_REPLAY): the reference path is the failed attempt that lived longest. */
   private anchorOn(): boolean {
     return this.config.retryExplore === true && this.config.retryExploreReplay === true && this.config.retryExploreAnchor === true;
@@ -435,6 +440,7 @@ export class SlController {
       retry_explore_replay_code: this.replayCodeOn(),
       retry_explore_target_turn: this.targetTurnOn(),
       retry_explore_rearm: this.rearmOn(),
+      retry_explore_wasted: this.wastedOn(),
       retry_explore_anchor: this.anchorOn(),
       retry_explore_canon: this.canonOn(),
       retry_explore_turn: this.turnOn(),
@@ -773,11 +779,15 @@ export class SlController {
   }
 
   /**
-   * SL_RETRY_EXPLORE_REARM: once the deviation's turn is over (`state` on a later turn), its plays against the failed turns
-   * through the point's board (as exploreOut's `differs`); a turn that still ended as a failed attempt's explored nothing: the
-   * deviation goes into `wasted` and, while this board is on the reference path, a later point of it (exploreTarget over the
-   * points from this turn on, the wasted boards left out) is the attempt's target, the replay going on to it. Without one,
-   * the attempt goes on as before. Checked once per deviation; never throws.
+   * SL_RETRY_EXPLORE_REARM: once the deviation's turn is over (`state` on a later turn), whether it explored anything: its
+   * plays against the failed turns through the point's board (exploreOut's `differs`) and, with SL_RETRY_EXPLORE_WASTED,
+   * against every failed turn from the same turn start but for upgrades, and this board against the failed attempts'
+   * (turnRepeats). A turn that repeated a failed one: the deviation goes into `wasted` and a later point of the reference path
+   * (exploreTarget over the points from this turn on, the wasted boards left out) is the attempt's target. On the path the
+   * replay goes on to it; off it (SL_RETRY_EXPLORE_WASTED: 3B4K4UDQ56B9 F48 attempt 4, the plain Twin Strike left the boss
+   * 4 HP higher) the replay is stopped, so the attempt deviates on the first board a failed attempt decided on or on the
+   * point's turn (SL_RETRY_EXPLORE_REPLAY_DEVIATE, _TARGET_TURN). Without a point the attempt goes on as before. Checked once
+   * per deviation; never throws.
    */
   private rearmChecked: SlDeviation | null = null;
   private rearm(fight: FightTrack, explore: SlExploreRecord, state: GameState): void {
@@ -787,13 +797,15 @@ export class SlController {
     if (this.rearmChecked === deviation) return;
     this.rearmChecked = deviation;
     try {
-      const differs = this.turnDiffers(fight, explore, deviation.turn, target.tried);
-      if (differs !== false) return;
       const board = this.boardKey(state);
+      const verdict = this.turnWasted(fight, explore, deviation.turn, target.tried, board);
+      if (!verdict?.wasted) return;
       const where = `F${fight.floor ?? "?"} T${state.turn} attempt ${fight.attempt}/${fight.maxAttempts}`;
       const record = this.turnRecord(explore, deviation.turn);
-      const wastedEntry = { target: structuredClone(target), deviation: { ...structuredClone(deviation), ...(record ? { plays: record } : {}), differs: false } };
-      if (!this.onReferencePath(fight, target, board)) {
+      const how = verdict.repeat && verdict.repeat.how !== "exact" ? ` (${verdict.repeat.how}${verdict.repeat.attempts.length > 0 ? `: attempt ${verdict.repeat.attempts.join(", ")}` : ""})` : "";
+      const wastedEntry = { target: structuredClone(target), deviation: { ...structuredClone(deviation), ...(record ? { plays: record } : {}), differs: false, ...(verdict.repeat && verdict.repeat.how !== "exact" ? { repeats: verdict.repeat } : {}) } };
+      const onPath = this.onReferencePath(fight, target, board);
+      if (!onPath && !this.wastedOn()) {
         this.options.note(`SL: the deviation at T${deviation.turn} (${target.point}) ended its turn as a failed attempt's, but ${where} is off attempt ${target.reference}'s path: no later point of it`);
         return;
       }
@@ -802,23 +814,28 @@ export class SlController {
         explore.wasted = [...(explore.wasted ?? []), wastedEntry];
         explore.target = null;
         delete explore.deviation;
-        this.options.note(`SL: attempt 2's deviation at T${deviation.turn} (${target.point}) ended its turn as attempt 1's (${record ?? "?"}); the next board of attempt 1's path to T${explore.second.until} tries again`);
+        this.options.note(`SL: attempt 2's deviation at T${deviation.turn} (${target.point}) ended its turn as attempt 1's (${record ?? "?"})${how}; the next board of attempt 1's path to T${explore.second.until} tries again`);
         return;
       }
       const skip = [...(explore.wasted ?? []).map((entry) => entry.target.board), target.board];
       const earlier = this.fightRows(fight).filter((row) => row.attempt < fight.attempt);
       const { target: next, why } = exploreTarget(earlier, fight.attempt, { ...this.targetOptions(), rearm: { reference: target.reference, fromTurn: state.turn, skip } });
       if (!next) {
-        this.options.note(`SL: the deviation at T${deviation.turn} (${target.point}) ended its turn as a failed attempt's; no later point of attempt ${target.reference}'s path (${why}): played on as before`);
+        this.options.note(`SL: the deviation at T${deviation.turn} (${target.point}) ended its turn as a failed attempt's${how}; no later point of attempt ${target.reference}'s path (${why}): played on as before`);
         return;
       }
       explore.wasted = [...(explore.wasted ?? []), wastedEntry];
-      explore.target = { ...next, rearmed: { after: target.board, turn: deviation.turn } };
+      explore.target = { ...next, ...(target.anchor ? { anchor: structuredClone(target.anchor) } : {}), rearmed: { after: target.board, turn: deviation.turn, ...(onPath ? {} : { offPath: true as const }) } };
       delete explore.deviation;
-      // Back on the reference path: the replay goes on from here (even if it had stopped before the wasted point).
-      if (explore.replay) explore.replay.stopped = null;
+      // On the path the replay goes on from here (even if it had stopped before the wasted point); off it, it is stopped: the
+      // deviation is made on a failed attempt's board or on the point's turn.
+      if (explore.replay) explore.replay.stopped = onPath ? null : `T${state.turn}: off attempt ${target.reference}'s path after the wasted deviation at T${deviation.turn}`;
       this.replayCache = null;
-      this.options.note(`SL: the deviation at T${deviation.turn} (${target.point}) ended its turn as a failed attempt's (${record ?? "?"}); ${where} still on attempt ${target.reference}'s path: deviates at ${next.point} instead: not ${next.excluded.join(" / ")} again there (${why})`);
+      this.options.note(
+        onPath
+          ? `SL: the deviation at T${deviation.turn} (${target.point}) ended its turn as a failed attempt's (${record ?? "?"})${how}; ${where} still on attempt ${target.reference}'s path: deviates at ${next.point} instead: not ${next.excluded.join(" / ")} again there (${why})`
+          : `SL: the deviation at T${deviation.turn} (${target.point}) ended its turn as a failed attempt's (${record ?? "?"})${how}; ${where} is off attempt ${target.reference}'s path: deviates on the first board a failed attempt decided on, or on T${next.turn ?? "?"} (${next.point}): not ${next.excluded.join(" / ")} again (${why})`,
+      );
     } catch {
       // the attempt as before
     }
@@ -830,12 +847,19 @@ export class SlController {
     return record ? turnCanon(record.plays) : undefined;
   }
 
-  /** Whether the attempt's turn `turnNo` differs from every turn in `tried` (exploreOut's `differs`); undefined: not known. */
-  private turnDiffers(fight: FightTrack, explore: SlExploreRecord, turnNo: number, tried: SlTried | undefined): boolean | undefined {
-    const canon = this.turnRecord(explore, turnNo);
-    if (canon === undefined || !tried) return undefined;
+  /**
+   * Whether the attempt's turn `turnNo` repeated a failed one (undefined: not known): its plays among the turns in `tried`
+   * (exploreOut's `differs`), or with SL_RETRY_EXPLORE_WASTED one of turnRepeats' (`next`: the next turn's first board).
+   */
+  private turnWasted(fight: FightTrack, explore: SlExploreRecord, turnNo: number, tried: SlTried | undefined, next: string | null): { wasted: boolean; repeat?: SlTurnRepeat } | undefined {
+    const record = explore.turns?.find((turn) => turn.turn === turnNo);
+    if (!record || !tried) return undefined;
     const summary = fight.turns.find((turn) => turn.turn === turnNo);
-    return !triedHas(tried, { text: "", canon, ...(summary ? { loose: turnCanon(summary.plays) } : {}) });
+    const loose = summary ? turnCanon(summary.plays) : undefined;
+    if (!this.wastedOn()) return { wasted: triedHas(tried, { text: "", canon: turnCanon(record.plays), ...(loose !== undefined ? { loose } : {}) }) };
+    const earlier = this.fightRows(fight).filter((row) => row.attempt < fight.attempt);
+    const repeat = turnRepeats(earlier, fight.attempt, record, tried, next, loose);
+    return repeat ? { wasted: true, repeat } : { wasted: false };
   }
 
   /** SL_RETRY_EXPLORE: exploreTarget's options by the switches. */
@@ -1311,6 +1335,15 @@ export class SlController {
         const canon = turnCanon(record.plays);
         deviation.plays = canon;
         deviation.differs = !triedHas(tried, { text: "", canon, ...(summary ? { loose: turnCanon(summary.plays) } : {}) });
+        // SL_RETRY_EXPLORE_WASTED: nor a turn that repeated a failed one but for upgrades, from its turn start, or to its next board.
+        if (deviation.differs && this.wastedOn()) {
+          const next = out.turns.find((turn) => turn.turn > deviation.turn!)?.boards[0]?.board ?? null;
+          const repeat = turnRepeats(this.fightRows(fight).filter((row) => row.attempt < fight.attempt), fight.attempt, record, tried, next, summary ? turnCanon(summary.plays) : undefined);
+          if (repeat) {
+            deviation.differs = false;
+            deviation.repeats = repeat;
+          }
+        }
       } catch {
         // the row as recorded
       }

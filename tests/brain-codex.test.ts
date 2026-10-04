@@ -12,10 +12,10 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { createBrain, createRouter } from "../src/brain/brain.js";
-import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, strictSchema } from "../src/brain/engines/codex.js";
+import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, ROUTE_PATTERN, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
 import { answeredBy, deciderLabel, engineLabel } from "../src/loop.js";
-import { EngineFailure, type BrainLogRow } from "../src/brain/router.js";
+import { BrainRouter, EngineFailure, type BrainLogRow } from "../src/brain/router.js";
 import { fightPlanSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { loadConfig } from "../src/config.js";
@@ -499,6 +499,33 @@ describe("codex's schema holds only the fields the question uses (BRAIN_CODEX_SC
     expect(codex({ BRAIN_CODEX_SCHEMA_FIELDS: "all", BRAIN_CODEX_REASON_LAST: "on", BRAIN_CODEX_ACCEPT_CUT: "off" })).toMatchObject({ schemaFields: "all", reasonLast: true, acceptCut: false });
     expect(() => codex({ BRAIN_CODEX_SCHEMA_FIELDS: "some" })).toThrow(/BRAIN_CODEX_SCHEMA_FIELDS/);
     expect(() => codex({ BRAIN_CODEX_ACCEPT_CUT: "maybe" })).toThrow(/BRAIN_CODEX_ACCEPT_CUT/);
+  });
+
+  it("a route review's route garbled as at xhigh (\"keep fin? No must exact keep\") is read as keep: one call, no re-ask, brain.jsonl notes it", async () => {
+    const review = { route_review: { ...view(), plan: "r1c2 …" } };
+    const fake = fakeCodex("route-garbled", [answered({ choice: "a", reason: "heal", route: "keep fin? No must exact keep", cards: null, discard: null })]);
+    const cfg = config(fake.bin, codexHome("route-garbled"), { BRAIN_ENGINE: "codex" });
+    const rows: BrainLogRow[] = [];
+    const router = new BrainRouter({ config: cfg.brain, engine: () => engine(fake.bin, codexHome("route-garbled")), log: (row) => rows.push(row) });
+    const answer = await router.decide(request({ label: "reward/card", payload: review, spec: pickSpec("reward/card", options, review) }));
+    expect(fake.calls()).toBe(1);
+    expect(answer).toMatchObject({ answer: { choice: "a", reason: "heal", route: "keep" }, problems: [], notes: ['route "keep fin? No must exact keep" taken as keep: "keep", then no node id'] });
+    expect(rows).toEqual([expect.objectContaining({ reasks: 0, notes: answer.notes })]);
+    // The schema codex got: route as "keep" or node ids (BRAIN_CODEX_ROUTE_PATTERN, default on).
+    expect(fake.seen()[0]!.schema).toMatchObject({ properties: { route: { type: ["string", "null"], pattern: ROUTE_PATTERN, maxLength: 600 } } });
+  });
+
+  it("BRAIN_CODEX_ROUTE_PATTERN: on by default, only on the route field; off leaves route free text", () => {
+    const review = { route_review: { ...view(), plan: "r1c2 …" } };
+    const kind = codexKindSchema(pickSpec("reward/card", options, review), used);
+    const on = codexSchema(kind, { routeReason: "drop", maxFieldChars: 600, routePattern: true })!;
+    expect(on["properties"]).toMatchObject({ route: { pattern: ROUTE_PATTERN }, reason: { maxLength: 600 }, choice: { maxLength: 600 } });
+    expect((on["properties"] as Record<string, object>)["reason"]).not.toHaveProperty("pattern");
+    expect((codexSchema(kind, { routeReason: "drop", maxFieldChars: 600, routePattern: false })!["properties"] as Record<string, object>)["route"]).not.toHaveProperty("pattern");
+    expect(new RegExp(ROUTE_PATTERN).test("keep") && new RegExp(ROUTE_PATTERN).test("r4c1 r5c2 r16c3")).toBe(true);
+    for (const bad of ["keep fin? No must exact keep", "keep 序? ", "r4c1  r5c2", "r4c1 → r5c2", "Keep", ""]) expect(new RegExp(ROUTE_PATTERN).test(bad), bad).toBe(false);
+    expect(loadConfig({} as NodeJS.ProcessEnv).brain.codex.routePattern).toBe(true);
+    expect(loadConfig({ BRAIN_CODEX_ROUTE_PATTERN: "off" } as unknown as NodeJS.ProcessEnv).brain.codex.routePattern).toBe(false);
   });
 
   it("closeCutAnswer: a cut answer's prefix closed after its last complete member", () => {
