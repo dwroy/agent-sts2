@@ -231,7 +231,8 @@
 
 ### 最高优先：学习迭代由 codex 自己闭环（Dai 2026-10-05 00:19）
 Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习者自己闭环」。Claude 只做观察。要做成：
-- **谁审核、谁合入**：运维 codex 会话接管原来「开发会话」的审核和上线：学习者的经验批次（.worktrees/exp，分支 exp-silent）和修复批次（.worktrees/codex-dev，分支 codex-dev）跑完后，由运维会话按学习协议审核（证据局号、只用本角色数据、台账登记、测试通过），通过就合进 main 和 live、记 decision-log、改打法的加 eval/versions.json 版本、把台账条目改成 accepted / shipped；不通过就把理由写进台账（rejected + note）并退回学习者。学习者产出的提案也由运维会话审核（accepted / rejected）。
+- **（00:2x 更正，Dai：「codex 学习者自己测试确认没有问题就可以直接合并上线」）学习者自测通过就自己按 live 流程合入（经验和修复任务一律 merge=live），不另设审核；下面原写的运维审核只保留「学习者提交被挡时帮它提交、合入」这一兜底。**
+- **谁审核、谁合入（原稿）**：运维 codex 会话接管原来「开发会话」的审核和上线：学习者的经验批次（.worktrees/exp，分支 exp-silent）和修复批次（.worktrees/codex-dev，分支 codex-dev）跑完后，由运维会话按学习协议审核（证据局号、只用本角色数据、台账登记、测试通过），通过就合进 main 和 live、记 decision-log、改打法的加 eval/versions.json 版本、把台账条目改成 accepted / shipped；不通过就把理由写进台账（rejected + note）并退回学习者。学习者产出的提案也由运维会话审核（accepted / rejected）。
 - **谁派活**：调度器（ops/codex-ops-learn.py）每批复盘结束后自动派经验更新（每局一更，同时只跑一批，赶不上的并入下一批）；有 accepted 但没上线的提案、或 fix-queue-v4.md 里没划掉的条目时，自动派 fix-batch（同时只跑一批）。broker（ops/codex-ops-actions.sh）加 `experience-update`、`fix-batch`、`learner-merge <branch>` 一类白名单动作，供运维会话手动触发。
 - **任务说明**：learner/tasks/experience-update.md、fix-batch.md 的「合入」一节改成 live 流程（不再是 merge=v3 / ops/v3-merge.lock）。
 - **文档**：docs/learning-protocol.md、AGENTS.md、docs/codex-ops.md、运维 prompt（ops/ops-session-silent-codex-prompt.md）里「开发会话审核 / 实现 / 合入」改成「运维 codex 会话审核合入、codex 学习者实现」；Claude 会话只观察和与 Dai 对话。运维 prompt 改动属于 Dai 已经定的分工，不用再问。
