@@ -328,3 +328,5 @@
 - 留给 boss 的药 3 局全都在走廊喝掉了，D4VF 光三幕就喝了 4 瓶。
 - 「消耗复活也读档」再添一例：D4VF F33 无厌沙虫（80→3）是靠精灵活下来的，判官没有读档。
 - xhigh 的大脑时间比 high 多：每局 41.1 / 33.5 / 29.3 分钟；额度 32→40%，每局约 3%。
+
+- 2026-10-05 04:26 [运维 codex] 需Dai处理：完整评估命令 `nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 0 --md --per-run > /tmp/sts2-a0-climb-metrics.md` exit 1：eval/strength-sources.ts 的 tsx CLI 在 `/tmp/tsx-1000/69.pipe` 监听时被沙箱拒绝（listen EPERM）。当前 broker 动作清单不含评估动作，请 Dai 在沙箱外补跑，或增加 eval-metrics 白名单动作；A0 核心小结已由论文表与原日志核对，见 notes/silent-climb-report.md。
