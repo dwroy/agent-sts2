@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { CODEX_DISABLED_FEATURES } from "../src/brain/engines/codex.js";
-import { LEARNER_CODEX_DISABLED_FEATURES, codexPreamble, childEnv, claudeCommand, claudePermissions, codexChildEnv, codexCommand, engineBinary, learnerCodexHome, shellQuote, strippedEnvNames, type EngineRequest } from "../../learner/lib/engines.js";
+import { LEARNER_CODEX_DISABLED_FEATURES, codexKeyCheckCommand, codexKeyFiles, codexPermissions, codexPreamble, keyRoots, mainCheckout, childEnv, claudeCommand, claudePermissions, codexChildEnv, codexCommand, engineBinary, learnerCodexHome, shellQuote, strippedEnvNames, type EngineRequest } from "../../learner/lib/engines.js";
 import { collectSecrets, main, parseArgs, redactSecrets, type LauncherDeps } from "../../learner/lib/launcher.js";
 import { SummaryTracker, findRollout, rolloutStats } from "../../learner/lib/summary.js";
 import { LearnerUsageError, fillTemplate, loadTask, parseSets, parseTask, placeholdersOf, renderTask } from "../../learner/lib/task.js";
@@ -149,7 +149,7 @@ describe("the task files in learner/tasks", () => {
     expect(experience).toContain("机制推理");
     expect(experience).toMatch(/推理[\s\S]*证据[\s\S]*典型案例/);
     const fix = renderTask(loadTask("fix-batch", TASKS), {}, BUILTINS).prompt;
-    expect(fix).toContain("git merge --no-edit v3");
+    expect(fix).toContain("git merge --no-edit main"); // base_branch defaults to main since the one-repo move
     expect(fix).toContain("去掉修复时失败");
     expect(fix).toContain("/p/notes/fix-queue.md");
     for (const prompt of [experience, fix]) expect(prompt).toContain("不推送");
@@ -225,22 +225,80 @@ const codexTail = (effort: string): string[] => [
   "-c", 'history.persistence="none"',
   "-c", "analytics.enabled=false",
 ];
+/** The permission-profile arguments codexCommand puts after --cd (the profile replaces --sandbox / --add-dir). */
+const profileArgs = (req: EngineRequest): string[] => ["-c", 'default_permissions="learner"', "-c", `permissions.learner.filesystem=${tomlOf(codexPermissions(req))}`];
+function tomlOf(value: unknown): string {
+  if (typeof value === "string") return JSON.stringify(value);
+  if (value && typeof value === "object") return `{ ${Object.entries(value).map(([key, item]) => `${JSON.stringify(key)} = ${tomlOf(item)}`).join(", ")} }`;
+  return String(value);
+}
 const disables = (): string[] => LEARNER_CODEX_DISABLED_FEATURES.flatMap((feature) => ["--disable", feature]);
 
 describe("codex command line", () => {
   it("codex exec --json on the brain's isolation flags, workspace-write plus the project root, model and effort, prompt on stdin", () => {
-    const cmd = codexCommand(request({ engine: "codex", model: "gpt-5-codex", effort: "high" }), "提示", "/bin/codex");
+    const req = request({ engine: "codex", model: "gpt-5-codex", effort: "high", home: "/h", keyFiles: [] });
+    const cmd = codexCommand(req, "提示", "/bin/codex");
     expect(cmd.command).toBe("/bin/codex");
     expect(cmd.stdin).toBe(`${codexPreamble(request().tools, true)}提示`);
     expect(cmd.args).toEqual([
-      "exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", `${ROOT}/jev-sts2-step`, "--sandbox", "workspace-write", "--add-dir", ROOT,
+      "exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", `${ROOT}/jev-sts2-step`, ...profileArgs(req),
       "--model", "gpt-5-codex", ...codexTail("high"), ...disables(), "-",
     ]);
   });
 
-  it("a read-only task runs in the read-only sandbox without --add-dir; gpt-6.1-sol at xhigh unless asked", () => {
-    const cmd = codexCommand(request({ engine: "codex", tools: ["Read", "Grep", "Glob"], cwd: ROOT }), "x");
-    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, "--sandbox", "read-only", "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+  it("a read-only task gets the read-only profile; gpt-6.1-sol at xhigh unless asked; never --sandbox (it cannot mix with a profile)", () => {
+    const req = request({ engine: "codex", tools: ["Read", "Grep", "Glob"], cwd: ROOT, home: "/h", keyFiles: [] });
+    const cmd = codexCommand(req, "x");
+    expect(cmd.args).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", ROOT, ...profileArgs(req), "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(cmd.args).not.toContain("--sandbox");
+    expect(cmd.args).not.toContain("--add-dir");
+  });
+
+  it("the permission profile: all readable, writes only for write tasks (cwd, project root, tmp), key files unreadable in both", () => {
+    const keys = { "/h": { ".sts2-jev-env*": "none", ".jev_api_keys": "none", ".deepseek_api_key": "none" }, "/h/.codex/auth.json": "none", "/h/.jev_api_keys": "none" };
+    const readOnly = codexPermissions(request({ engine: "codex", tools: ["Read", "Grep"], home: "/h", keyFiles: ["/h/.jev_api_keys"], repo: ROOT }));
+    expect(readOnly).toEqual({ ":root": "read", glob_scan_max_depth: 8, [ROOT]: { "**/.env": "none", "**/*.env": "none" }, ...keys });
+    const write = codexPermissions(request({ engine: "codex", home: "/h", keyFiles: ["/h/.jev_api_keys"], repo: ROOT }));
+    expect(write).toEqual({
+      ":root": "read", glob_scan_max_depth: 8, ":project_roots": { ".": "write" }, ":tmpdir": "write", ":slash_tmp": "write",
+      [ROOT]: { ".": "write", "**/.env": "none", "**/*.env": "none" }, ...keys,
+    });
+    // a project root inside a worktree: the main checkout's .env files are denied too
+    const nested = codexPermissions(request({ engine: "codex", projectRoot: "/r/.claude/worktrees/w", cwd: "/r/.claude/worktrees/w", home: "/h", keyFiles: [], repo: "/r/.claude/worktrees/w" }));
+    expect(nested["/r"]).toEqual({ "**/.env": "none", "**/*.env": "none" });
+  });
+
+  it("main checkouts and key roots", () => {
+    expect(mainCheckout("/r/.claude/worktrees/w/agent")).toBe("/r");
+    expect(mainCheckout("/r/.worktrees/live")).toBe("/r");
+    expect(mainCheckout("/r/")).toBe("/r");
+    expect(keyRoots("/r", "/r/.claude/worktrees/w")).toEqual(["/r"]);
+    expect(keyRoots("/p/.worktrees/x", "/r/.claude/worktrees/w")).toEqual(["/p", "/r"]);
+  });
+
+  it("finds the key files on disk: home keys, codex login, every .env in the known places (worktrees included)", () => {
+    const dir = mkdtempSync(join(tmpdir(), "learner-keys-"));
+    const home = join(dir, "home");
+    const root = join(dir, "proj");
+    const make = (path: string): void => {
+      mkdirSync(dirname(path), { recursive: true });
+      writeFileSync(path, "k");
+    };
+    for (const path of [join(home, ".jev_api_keys"), join(home, ".sts2-jev-env-v3"), join(home, ".codex", "auth.json"), join(root, ".env"), join(root, "agent", ".env"), join(root, ".worktrees", "live", "agent", ".env"), join(root, ".claude", "worktrees", "w", "agent", ".env"), join(root, "agent", "x.env"), join(root, "notes", "plain.md")]) make(path);
+    expect(codexKeyFiles(root, home, join(home, ".codex"), root).sort()).toEqual(
+      [join(home, ".jev_api_keys"), join(home, ".sts2-jev-env-v3"), join(home, ".codex", "auth.json"), join(root, ".env"), join(root, "agent", ".env"), join(root, "agent", "x.env"), join(root, ".worktrees", "live", "agent", ".env"), join(root, ".claude", "worktrees", "w", "agent", ".env")].sort(),
+    );
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("the key pre-check runs a shell under the same profile that only names the files it could open", () => {
+    const req = request({ engine: "codex", home: "/h", keyFiles: ["/h/.jev_api_keys"] });
+    const cmd = codexKeyCheckCommand(req, ["/h/.jev_api_keys", "/p/.env"], "/bin/codex");
+    expect(cmd.args.slice(0, 5)).toEqual(["sandbox", "-C", req.cwd, "-P", "learner"]);
+    expect(cmd.args).toContain(`permissions.learner.filesystem=${tomlOf(codexPermissions(req))}`);
+    expect(cmd.args.slice(cmd.args.indexOf("--") + 1, cmd.args.indexOf("--") + 3)).toEqual(["sh", "-c"]);
+    expect(cmd.args.slice(-3)).toEqual(["sh", "/h/.jev_api_keys", "/p/.env"]);
+    expect(cmd.args.join(" ")).toContain("head -c 0");
   });
 
   it("puts the launcher's tool note in front of the task: shell commands are Read / Grep / Glob, read-only means no changes", () => {
@@ -374,6 +432,12 @@ function writeFake(name: "claude" | "codex"): string {
 const fs = require("node:fs");
 let stdin = "";
 if (${JSON.stringify(name)} === "codex" && process.argv[2] === "--version") { process.stdout.write("codex-cli 0.0-fake\\n"); process.exit(0); }
+if (${JSON.stringify(name)} === "codex" && process.argv[2] === "sandbox") {
+  const files = process.argv.slice(process.argv.indexOf("--") + 4);
+  const readable = (process.env.LEARNER_FAKE_READABLE || "").split(",").filter((file) => files.includes(file));
+  if (readable.length) process.stdout.write(readable.join("\\n") + "\\n");
+  process.exit(0);
+}
 if (${JSON.stringify(name)} === "codex" && process.argv[2] === "debug") {
   process.stdout.write(JSON.stringify({ models: [{ slug: "gpt-6.1-sol", supported_reasoning_levels: [{ effort: "high" }, { effort: "xhigh" }] }] }) + "\\n");
   process.exit(0);
@@ -513,7 +577,11 @@ describe("whole runs against fake binaries", () => {
     const code = await main(smokeArgs("codex"), d);
     expect(code).toBe(0);
     const seen = JSON.parse(readFileSync(record, "utf8")) as { argv: string[]; cwd: string; stdin: string; env: string[] };
-    expect(seen.argv).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", join(project, "wt"), "--sandbox", "read-only", "--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(seen.argv.slice(0, 7)).toEqual(["exec", "--json", "--ignore-user-config", "--ignore-rules", "--cd", join(project, "wt"), "-c"]);
+    expect(seen.argv[7]).toBe('default_permissions="learner"');
+    expect(seen.argv[9]).toContain(`${JSON.stringify(join(tmp, "codex-home", "auth.json"))} = "none"`);
+    expect(seen.argv.slice(10)).toEqual(["--model", "gpt-6.1-sol", ...codexTail("xhigh"), ...disables(), "-"]);
+    expect(seen.argv).not.toContain("--sandbox");
     expect(seen.env).toContain("CODEX_HOME");
     expect(seen.stdin.startsWith("【启动器说明（codex）】")).toBe(true);
     expect(seen.cwd).toBe(join(project, "wt"));
@@ -556,6 +624,16 @@ describe("whole runs against fake binaries", () => {
     expect(existsSync(record)).toBe(false);
   });
 
+  it("codex: a key file readable under the profile stops the run before it starts (exit 3, names only)", async () => {
+    const fake = writeFake("codex");
+    rmSync(record, { force: true });
+    const auth = join(tmp, "codex-home", "auth.json");
+    const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: fake, LEARNER_FAKE_READABLE: auth });
+    expect(await main(smokeArgs("codex"), d)).toBe(3);
+    expect(err.join("")).toContain(`没能挡住 key 文件，不运行：读得到 ${auth}`);
+    expect(existsSync(record)).toBe(false);
+  });
+
   it("codex: no login in its home stops the run (exit 3)", async () => {
     const fake = writeFake("codex");
     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: fake, LEARNER_CODEX_HOME: join(tmp, "no-login") });
@@ -569,7 +647,7 @@ describe("whole runs against fake binaries", () => {
     chmodSync(path, 0o755);
     let refreshed = 0;
     const { deps: d, err } = deps({ ...baseEnv(), LEARNER_CODEX_BIN: path });
-    const code = await main(smokeArgs("codex"), { ...d, checkCodex: async () => ({ ok: true, version: "fake" }), refreshCodexAuth: async () => void (refreshed += 1) });
+    const code = await main(smokeArgs("codex"), { ...d, checkCodex: async () => ({ ok: true, version: "fake" }), checkKeys: async () => ({ ok: true, checked: 0 }), refreshCodexAuth: async () => void (refreshed += 1) });
     expect(code).toBe(1);
     expect(refreshed).toBe(1);
     expect(err.join("")).toContain("已请 codex 刷新登录令牌");

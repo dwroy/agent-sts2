@@ -23,7 +23,7 @@ import { DEFAULT_KNOWLEDGE_DIR } from "../../agent/src/knowledge/render/data.js"
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
-import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, engineBinary, engineCommand, engineDefaults, learnerCodexHome, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
+import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
 import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
 import { LearnerUsageError, loadTask, parseSets, renderTask } from "./task.js";
 
@@ -75,6 +75,8 @@ export interface LauncherDeps {
   checkCodex?: (bin: string, home: string, model: string, effort: string) => Promise<CodexCheck>;
   /** codex's token refresh after a run refused on the login (default: the brain's refreshCodexAuth). */
   refreshCodexAuth?: (bin: string, home: string, env: Record<string, string>) => Promise<void>;
+  /** The key-isolation pre-check before every codex run (default: engines.ts codexKeyCheck). */
+  checkKeys?: (bin: string, request: EngineRequest, env: Record<string, string>) => Promise<KeyCheck>;
 }
 
 export function defaultDeps(): LauncherDeps {
@@ -89,6 +91,7 @@ export function defaultDeps(): LauncherDeps {
     err: (text) => process.stderr.write(text),
     checkCodex: (bin, home, model, effort) => checkCodex({ bin, home }, model, effort, { stateDir: join(LEARNER_CODEX_STATE, "check") }),
     refreshCodexAuth: (bin, home, env) => refreshCodexAuth({ bin, home, env, stateDir: join(LEARNER_CODEX_STATE, "auth") }),
+    checkKeys: codexKeyCheck,
   };
 }
 
@@ -270,7 +273,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const model = options.model ?? spec.models[options.engine] ?? engineDefaults(options.engine).model;
     const effort = options.effort ?? spec.efforts[options.engine] ?? engineDefaults(options.engine).effort;
     const maxTurns = options.maxTurns ?? spec.maxTurns;
-    const request: EngineRequest = {
+    const request: EngineRequest = withCodexKeys({
       engine: options.engine,
       cwd,
       projectRoot: deps.projectRoot,
@@ -279,7 +282,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       ...(effort ? { effort } : {}),
       ...(maxTurns !== undefined ? { maxTurns } : {}),
       ...(options.withTools ? { mcp: toolServerSpec(options, deps.projectRoot, deps.env) } : {}),
-    };
+    }, deps.env);
     const timeoutMin = options.timeoutMin ?? spec.timeoutMin;
     prepared = { request, prompt: rendered.prompt, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: `${scratch}.jsonl`, scratch };
   } catch (error) {
@@ -315,6 +318,13 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const check = await deps.checkCodex(binary, learnerCodexHome(deps.env), request.model!, request.effort!);
     if (!check.ok) {
       deps.err(`codex 用不了：${check.error}\n`);
+      return 3;
+    }
+  }
+  if (request.engine === "codex" && deps.checkKeys) {
+    const keys = await deps.checkKeys(binary, request, codexChildEnv(deps.env, binary));
+    if (!keys.ok) {
+      deps.err(`codex 的权限配置没能挡住 key 文件，不运行：${keys.readable.length > 0 ? `读得到 ${keys.readable.join("、")}` : ""}${keys.error ? `（检查失败：${keys.error}）` : ""}\n`);
       return 3;
     }
   }
