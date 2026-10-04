@@ -449,14 +449,21 @@ function viewOf(env: DecisionEnv): unknown {
   };
 }
 const digest = (view: unknown): string => createHash("sha256").update(JSON.stringify(view)).digest("hex").slice(0, 32);
-/** v4 3488dc5's digests (tests/sl-retry-planner.test.ts GOLDEN): the boards' decisions with the retry switches off. */
+/**
+ * v4 3488dc5's digests (tests/sl-retry-planner.test.ts GOLDEN): the boards' decisions with the retry switches off.
+ * 2026-10-04 (v4-giant-potion follow-up, rollout.ts DEATH_MOVES / deathMoveOptions): the two Decimillipede boards (vnkn-f25)
+ * re-pinned. A living segment no longer draws Reattach or Dead (Writhe -> Reattach 17-23 of 61-66 in the move model, never
+ * seen on a living segment in the logs), so the rollout's segments attack every later turn instead of "reattaching" for 0
+ * (vnkn-f25-a2-t1 plan1 T2: -14.1 -> -18.9 HP); the rollout's best moves (t1 plan6 -> plan1, t3-pact plan4 -> plan5). With
+ * deathMoveOptions.others off every digest held; jw92 (the Test Subject on Multi Claw) and vnkn-f33 are unchanged.
+ */
 const GOLDEN: Record<string, string> = {
   "jw92-f48-a2-t3-offering:off": "1ba734936934487606db07981da88e0d",
   "jw92-f48-a2-t3-offering:v1": "4bf5f7a2421257b1a2d4203f18cff8e6",
-  "vnkn-f25-a2-t1:off": "28ba1f00d76a84763bcb3f94e6a9b8fc",
-  "vnkn-f25-a2-t1:v1": "d5319b0374ec2c03213a3bd82612865b",
-  "vnkn-f25-a2-t3-pact:off": "313a52095d167bc32d5115c9fd482b70",
-  "vnkn-f25-a2-t3-pact:v1": "2f1f9f3f4f48ecfb459929281d8da4b8",
+  "vnkn-f25-a2-t1:off": "50274c5794d364f2585fb7a21915da0a",
+  "vnkn-f25-a2-t1:v1": "35b605a22b4008a0a6c3c6e26d3c6312",
+  "vnkn-f25-a2-t3-pact:off": "02c3ab4fb8490827e24ccf91790533be",
+  "vnkn-f25-a2-t3-pact:v1": "e08897c0859c33c6025269b01ce81611",
   "vnkn-f33-a2-t4-shrug:off": "34e66aac3fed416a4d9a37acb6ff23ed",
   "vnkn-f33-a2-t4-shrug:v1": "34e66aac3fed416a4d9a37acb6ff23ed",
 };
@@ -567,10 +574,13 @@ function exploreView(env: (explore: SlEnv["explore"]) => DecisionEnv, explore: R
   };
   return { excluded, points: keys.map((key) => slPointOf(plain, plain.resolve(pick(key))) ?? null), deviated: keys.map((key) => resolved(ask, key)) };
 }
-/** bc8c9bc's (SL_RETRY_EXPLORE before the B2 gate and the boss drinks) explore views of the logged retry boards. */
+/**
+ * bc8c9bc's (SL_RETRY_EXPLORE before the B2 gate and the boss drinks) explore views of the logged retry boards; the two
+ * vnkn-f25 ones re-pinned at the v4-giant-potion follow-up (see GOLDEN above: a living Decimillipede segment draws no Reattach).
+ */
 const EXPLORE_GOLDEN: Record<string, string> = {
-  "vnkn-f25-a2-t1": "d6fd9e856b056d35af216bc99490b296",
-  "vnkn-f25-a2-t3-pact": "7d5f823210777f6829098dac6d0179e8",
+  "vnkn-f25-a2-t1": "1c2ecb1f6cbc04ba9a6790739d51f9a7",
+  "vnkn-f25-a2-t3-pact": "7d95133378a86a77ef6059be23478a95",
   "jw92-f48-a2-t3-offering": "1db00f9e87590d011addcda89c6a032a",
 };
 
