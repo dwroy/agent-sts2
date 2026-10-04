@@ -34,7 +34,7 @@ import { damageRole, isBigHit } from "../hand/screens/card-value.js";
 import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "../reflex/passive-pieces.js";
 import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
-import { DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile } from "../knowledge/files.js";
+import { characterKey, DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile } from "../knowledge/files.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
 export const BRIMSTONE_STRENGTH = 2;
@@ -215,9 +215,10 @@ export function bossLossPerTurn(
   profile: BossProfile & { id: string },
   ascension: number,
   turnBlock: number | { byTurn: number[]; names: string[]; share?: number } = 0,
-): { value: number; source: string; estimated: boolean } {
+  character = knowledgeCharacter(),
+): { value: number | null; source: string; estimated: boolean } {
   const damage = bossDamageByTurn(profile.id, ascension, profile.scriptTurns);
-  const share = unblockedShare(profile.id);
+  const share = character === knowledgeCharacter() ? unblockedShare(profile.id) : null;
   // Block a relic gives every turn (Sai, turnBlockOf) on top of the logged fights' own: it takes up to that much off what
   // got through each turn, nothing on a turn the boss does not attack (8D8DZ9K680C2 F48 with Sai: T1-T5 cost 11 HP).
   // PASSIVE_PIECES: the passive block by fight turn (deckProfileForBoss turnBlock: Sai, Crimson Mantle, Plating, ...), the
@@ -233,6 +234,7 @@ export function bossLossPerTurn(
         ? ` less ~${Math.round(meanBlock * 10) / 10} a turn of passive block${(turnBlock.share ?? 1) !== 1 ? ` (counted at ${Math.round((turnBlock.share ?? 1) * 100)}%: the logged share has the average fight's in it)` : ""} (${turnBlock.names.join(", ")}; not cut by Frail)`
         : "";
   if (!damage || !share || damage.perTurn.length === 0) {
+    if (character !== DEFAULT_CHARACTER) return { value: null, source: `尚无 ${character} 的 boss 掉血统计`, estimated: false };
     const value = typeof turnBlock === "number" ? Math.max(0, profile.lossPerTurn - turnBlock) : Math.max(0, Math.round((profile.lossPerTurn - meanBlock) * 10) / 10);
     return { value, source: `logged A8 HP loss a turn (no DB damage)${less}`, estimated: false };
   }
@@ -991,6 +993,8 @@ const SLIPPERY_STACKS = 9;
 
 /** What the deck plays in an average boss turn, before boss mechanics. */
 export interface DeckProfile {
+  /** Character whose deck is being estimated; omitted by legacy fixtures. */
+  character?: string;
   size: number;
   energy: number;
   /** Share of the drawn cards the energy pays for. */
@@ -1187,6 +1191,7 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   // 5HHLMV2DZ5AZ F48 T5 against the Queen) stays out of the mechanic's cut.
   const exempt = passivePiecesOptions.enabled && (pieces !== null || infernoDamage + juggernautDamage > 0);
   return {
+    character: clockCharacter(state),
     size: n,
     energy,
     playedShare,
@@ -1311,7 +1316,8 @@ export function passiveDeckDamage(deck: DeckProfile, bossId: string, turns: numb
  * the calibration's slope, uncut (the Queen's Weak: 8D8DZ9K680C2 F48 T7, Thorns + Flame Barrier 7 a hit of Off With Your
  * Head under Weak 95, 35 for 35). Without the mechanic (factor 1) the two are the same number.
  */
-export function deckEstimate(deck: DeckProfile, bossId: string, turns: number): number {
+export function deckEstimate(deck: DeckProfile, bossId: string, turns: number): number | null {
+  if ((deck.character ?? knowledgeCharacter()) !== DEFAULT_CHARACTER) return null;
   const id = bossProfile(bossId)?.id ?? "";
   const raw = rawDeckDamage(deck, bossId, turns);
   if (!deck.passivePieces || raw <= 0) return Math.round(calibrated(raw) * mechanicFactor(id, deck, turns));
@@ -1467,10 +1473,12 @@ const TEST_SUBJECT_PHASE2_CLAWS = 4;
  * share of the Test Subject's shown attack that got through our block (A8: 10 x 4.5 x 0.32 = ~14.5, the
  * ~15 D3X1 showed). The hand-set 15 when the DB or the share is missing.
  */
-export function testSubjectPhase2Loss(ascension: number): { value: number; source: string } {
+export function testSubjectPhase2Loss(ascension: number, character = knowledgeCharacter()): { value: number | null; source: string } {
   const claw = moveDamageAt(monsterMoves(), "TEST_SUBJECT", "MULTI_CLAW_MOVE", ascension);
-  const share = unblockedShare("TEST_SUBJECT");
-  if (!claw || !share) return { value: TEST_SUBJECT_PHASE2_LOSS_FALLBACK, source: "~15 a turn (D3X1, A8; no DB numbers)" };
+  const share = character === knowledgeCharacter() ? unblockedShare("TEST_SUBJECT") : null;
+  if (!claw || !share) return character === DEFAULT_CHARACTER
+    ? { value: TEST_SUBJECT_PHASE2_LOSS_FALLBACK, source: "~15 a turn (D3X1, A8; no DB numbers)" }
+    : { value: null, source: `尚无 ${character} 的第二阶段掉血统计` };
   const hits = Array.from({ length: TEST_SUBJECT_PHASE2_CLAWS }, (_, use) => claw.hits + use);
   const mean = (claw.perHit * hits.reduce((sum, n) => sum + n, 0)) / hits.length;
   const value = Math.round(mean * share.unblocked_share * 10) / 10;
@@ -1584,8 +1592,16 @@ export function expectedEntryHp(state: GameState): number {
   return bossEntryHp(rested.hp, rested.max, bossHeal);
 }
 
+function clockCharacter(state: GameState): string {
+  const run = asRecord(state.run?.raw);
+  return characterKey(str(run["character_id"]) || str(run["character_name"])) ?? knowledgeCharacter();
+}
+
 /** The act boss's clock at this state (entryHp overrides the expected entry HP, for the calibration). */
 export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverride?: number): BossClock | null {
+  // C48LLXBGKXQ9 F18/F32, silent-0003: this fit describes Ironclad play, not shared monster facts.
+  const character = clockCharacter(state);
+  if (character !== DEFAULT_CHARACTER) return null;
   const bossId = str(asRecord(state.run?.raw)["boss_id"]);
   const profile = bossProfile(bossId);
   if (!profile) return null;
@@ -1599,9 +1615,11 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     deck?.turnBlock && deck.turnBlock.some((b) => b > 0)
       ? { byTurn: deck.turnBlock, names: deck.passiveBlock ?? [], share: CLOCK_PASSIVE_BLOCK_SHARE }
       : turnBlockOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))),
+    character,
   );
+  if (loss.value === null) return null;
   const survive = survivableTurns(profile, entryHp, loss.value);
-  const estimateAt = (turns: number): number => (deck ? deckEstimate(deck, bossId, turns) : 0);
+  const estimateAt = (turns: number): number => (deck ? deckEstimate(deck, bossId, turns) ?? 0 : 0);
   const base = {
     boss: profile.id,
     ascension,
@@ -1625,7 +1643,8 @@ export function bossClock(state: GameState, knowledge: Knowledge, entryHpOverrid
     const hpAt2 = Math.max(1, entryHp - TEST_SUBJECT_PHASE1_LOSS * turns1);
     // Multi Claw (A8 10x3) on phase 2's first turn, a hit more each turn: its DB damage at this ascension
     // times the logged unblocked share (A8 ~15 net a turn; D3X1: 60 HP at phase 2, dead on the 5th claw).
-    const loss2 = testSubjectPhase2Loss(ascension);
+    const loss2 = testSubjectPhase2Loss(ascension, character);
+    if (loss2.value === null) return null;
     const turns2 = Math.max(3, Math.min(5, Math.round(hpAt2 / Math.max(1, loss2.value))));
     const turns3 = 6;
     // Phase 3 has Nemesis: Intangible on its first turn and every other turn after (logged: VQKX T5/T7,
@@ -1690,7 +1709,8 @@ export function bossNeed(bossId: string): (BossProfile & { id: string; turns: nu
 }
 
 /** Rough damage a turn of the deck in the act boss fight (its expected length). */
-export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): number {
+export function deckDamagePerTurn(state: GameState, knowledge: Knowledge): number | null {
+  if (clockCharacter(state) !== DEFAULT_CHARACTER) return null;
   const clock = bossClock(state, knowledge);
   if (clock) return clock.deck;
   const deck = deckProfileForBoss(state, knowledge);
@@ -1738,6 +1758,15 @@ export function gapRestShift(gap: DamageGap | null, option: string, hpPct: numbe
 
 /** The act boss clock as DeepSeek sees it (run plan, build/route/rest questions). */
 export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
+  const character = clockCharacter(state);
+  if (character !== DEFAULT_CHARACTER) {
+    const boss = bossProfile(str(asRecord(state.run?.raw)["boss_id"]));
+    if (!boss) return null;
+    return { boss: boss.id, boss_hp: bossHp(boss, state.run?.ascension ?? 0),
+      boss_hp_note: bossHpSource(boss, state.run?.ascension ?? 0),
+      deck_damage_per_turn_estimate: null, hp_loss_per_turn: null, survivable_turns: null, gap_per_turn: null,
+      estimate_note: `尚无 ${character} 的 boss 时钟校准；构筑输出、掉血和存活回合未知。` };
+  }
   const clock = bossClock(state, knowledge);
   if (!clock) return null;
   const onBossFloor = BOSS_FLOORS.includes(state.run?.floor ?? 0);

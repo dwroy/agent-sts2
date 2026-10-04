@@ -1106,6 +1106,7 @@ export function eruptionRace(enemy: Record<string, unknown>, playerHp: number, t
   const enemyTurns = giantTurnsToKill(hp, perTurn, turn, heal, schedule) - 1;
   const eruptionAtKill = eruptionNow + eruption.perTurn * enemyTurns;
   const loss = lossPerTurn ?? bossLossPerTurn(bossProfile("WATERFALL_GIANT")!, asc).value;
+  if (loss === null) return false;
   const hpAtKill = playerHp - loss * enemyTurns;
   return eruptionAtKill >= hpAtKill + ERUPTION_BLOCK;
 }
