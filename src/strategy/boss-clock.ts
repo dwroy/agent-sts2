@@ -31,7 +31,7 @@ import { bossDamageByTurn, bossHitsByTurn, bossHpAt, bossHpLoss, fillDbNumbers, 
 import { measuredRoomExact } from "../knowledge/room-costs.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../util/json.js";
-import { modelHandCard, turnStartOnly } from "./card-model.js";
+import { modelHandCard, turnStartOnly, unconditionalText } from "./card-model.js";
 import { damageRole, isBigHit } from "./card-value.js";
 import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "./passive-pieces.js";
 import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
@@ -1132,7 +1132,7 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
     // A power's energy at the start of each turn (Pyre, Pyre+ 2: RBJ402TKQZ6F F48 4 → 6 energy from T4).
     if (card.type === "Power") {
       const income = dynValue(entry, "Energy") ?? 0;
-      const template = str(asRecord(entry)["rules_text"]) || knowledge.card(card.cardId)?.descriptionRaw || "";
+      const template = unconditionalText(str(asRecord(entry)["rules_text"]) || knowledge.card(card.cardId)?.descriptionRaw || "");
       if (income > 0 && turnStartOnly(template, "Energy")) lateEnergy += income;
     }
     // A power's HP loss is not a play cost (card-model gives powers 0): Inferno and Crimson Mantle lose 1 at

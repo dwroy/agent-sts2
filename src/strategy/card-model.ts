@@ -445,10 +445,80 @@ const SPECIAL: Record<string, CardModel["special"]> = {
   UNRELENTING: "free_next_attack",
 };
 
+/** A placeholder's inner text is a conditional: a choose / show / cond / plural formatter, or a branch `|` outside any nested placeholder or parentheses. */
+function conditionalPlaceholder(inner: string): boolean {
+  if (/^[A-Za-z_]*:(?:choose\(|show:|cond:|plural:)/.test(inner)) return true;
+  let braces = 0;
+  let parens = 0;
+  for (const ch of inner) {
+    if (ch === "{") braces += 1;
+    else if (ch === "}") braces -= 1;
+    else if (ch === "(") parens += 1;
+    else if (ch === ")") parens -= 1;
+    else if (ch === "|" && braces === 0 && parens === 0) return true;
+  }
+  return false;
+}
+
+/**
+ * A card's rules template with its conditional placeholders taken out: the game's text formatter's choose, show, cond and
+ * plural placeholders and its bare conditionals (「{InCombat: （打出{CalculatedShivs:diff()}张小刀）|}」), whose text the game
+ * shows only when the condition holds. Shiv's 「{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。」 says
+ * 「对所有敌人」 only under Fan of Knives; read as written it made the single-target Shiv an AoE card (RNTVAT76BPV0, 2026-10-03:
+ * played without a target, the gate refused it 18 times on 6 boards, each turn then ended). Plain placeholders
+ * ({Damage:diff()}, {Energy:energyIcons()}, {Cards}) stay; a template without a conditional comes back as it is. Logged
+ * conditionals (states.jsonl to 2026-10-03, every card text; tools/template-target-replay.ts): Shiv's TargetType,
+ * IfUpgraded (True Grit 「{IfUpgraded:show:| 随机}消耗1张牌」, Armaments, Cascade, Dual Wield, Enlightenment, Jackpot, Primal
+ * Force, Splash, Stoke, Storm of Steel), Pact's End's plural and Mad Science's riders (「{Wisdom: 抽{WisdomCards:diff()}张牌|}」,
+ * 「{Expertise:获得{ExpertiseStrength:diff()}点力量。…|}」: a rider the card was not given is in its template all the same).
+ * The game's own reading of the card is the mod's target fields and the rendered text (resolved_rules_text).
+ */
+export function unconditionalText(template: string): string {
+  if (!template.includes("{")) return template;
+  const known = unconditionalTexts.get(template);
+  if (known !== undefined) return known;
+  const text = withoutConditionals(template);
+  if (unconditionalTexts.size < 4096) unconditionalTexts.set(template, text);
+  return text;
+}
+const unconditionalTexts = new Map<string, string>();
+
+function withoutConditionals(template: string): string {
+  let out = "";
+  let i = 0;
+  while (i < template.length) {
+    if (template[i] !== "{") {
+      out += template[i];
+      i += 1;
+      continue;
+    }
+    let depth = 0;
+    let end = i;
+    for (; end < template.length; end += 1) {
+      if (template[end] === "{") depth += 1;
+      else if (template[end] === "}" && --depth === 0) break;
+    }
+    // An unclosed brace: the rest as it is.
+    if (end >= template.length) return out + template.slice(i);
+    if (!conditionalPlaceholder(template.slice(i + 1, end))) out += template.slice(i, end + 1);
+    i = end + 1;
+  }
+  return out;
+}
+
+/**
+ * What a card hits, the mod's target fields first: they are what the play needs (the gate refuses a card that requires a
+ * target played without one), and the template's own condition on the text (Shiv's 「对所有敌人」 shows when its TargetType
+ * is AllEnemies). The text decides only for a card the fields leave open (Self or None: The Bomb's 「对所有敌人造成…」,
+ * Corrosive Wave's), read without its conditional placeholders (unconditionalText).
+ */
 function targetMode(targetType: string, template: string, requiresTarget: boolean): TargetMode {
-  if (targetType === "AllEnemies" || template.includes("所有敌人") || /all enemies/i.test(template)) return "all";
-  if (targetType === "RandomEnemy" || template.includes("随机对敌人") || /random enem/i.test(template)) return "random";
+  if (targetType === "AllEnemies") return "all";
+  if (targetType === "RandomEnemy") return "random";
   if (requiresTarget || targetType === "AnyEnemy") return "single";
+  const text = unconditionalText(template);
+  if (text.includes("所有敌人") || /all enemies/i.test(text)) return "all";
+  if (text.includes("随机对敌人") || /random enem/i.test(text)) return "random";
   if (targetType === "Self" || targetType === "AnyAlly") return "self";
   return "none";
 }
@@ -664,7 +734,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
   const info = knowledge.card(cardId);
-  const template = str(card["rules_text"]);
+  // The template's text the game shows whatever the card's state (unconditionalText): every reading of it below (the
+  // target, two hits, X hits, next-turn and turn-start vars, Energy on exhaust) sees no conditional's text.
+  const template = unconditionalText(str(card["rules_text"]));
   const index = numOrNull(card["index"]) ?? fallbackIndex;
   const requiresTarget = bool(card["requires_target"]);
   const type = info?.type || "";
