@@ -11,7 +11,7 @@
  * code's computed numbers take precedence (the DeepSeek system prompt says so).
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 
 import type { GameState } from "../hand/mod/schema.js";
 import { fillGuideFacts } from "../sim/boss-clock.js";
@@ -79,6 +79,8 @@ export interface OutcomeStats {
 
 let experienceCache: ExperienceEntry[] | null = null;
 let statsCache: OutcomeStats | null = null;
+let statsStamp: string | null = null;
+let statsOverride: OutcomeStats | null = null;
 
 function here(file: string): string {
   return knowledgeFile(KNOWLEDGE_DIR, file);
@@ -96,12 +98,22 @@ export function loadExperience(): ExperienceEntry[] {
 }
 
 export function loadOutcomeStats(): OutcomeStats {
-  if (statsCache) return statsCache;
+  if (statsOverride !== null) return statsOverride;
+  const path = here("outcome-stats.json");
+  let stamp = `${path}:missing`;
   try {
-    statsCache = JSON.parse(readFileSync(here("outcome-stats.json"), "utf8")) as OutcomeStats;
+    const info = statSync(path);
+    stamp = `${path}:${info.mtimeMs}:${info.size}`;
+  } catch {
+    // A new character may not have statistics yet; retry when its file appears.
+  }
+  if (statsCache && statsStamp === stamp) return statsCache;
+  try {
+    statsCache = JSON.parse(readFileSync(path, "utf8")) as OutcomeStats;
   } catch {
     statsCache = {};
   }
+  statsStamp = stamp;
   return statsCache;
 }
 
@@ -109,7 +121,9 @@ export function loadOutcomeStats(): OutcomeStats {
 export function setExperienceForTests(entries: ExperienceEntry[] | null, stats: OutcomeStats | null = null): void {
   bumpDataVersion();
   experienceCache = entries;
-  statsCache = stats;
+  statsOverride = stats;
+  statsCache = null;
+  statsStamp = null;
 }
 
 /* ---- what is on the screen ------------------------------------------------------------------- */
