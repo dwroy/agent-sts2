@@ -5,6 +5,7 @@ V4 架构 §1 的「学习者」、§4 的 M4（docs/v4-architecture.md）：把
 ```
 learner/
   run.ts              启动器入口（代码在 learner/lib/）
+  pending.ts          某个角色还没并进经验库的复盘（ops/experience-pending.py 按角色分开的版本）
   tasks/*.md          任务说明（中文，{{占位符}} 参数）
   runs/               每次运行的日志和临时目录（已加 .gitignore）
   proposal-ops-prompt.md   给 Dai 审的运维 prompt 修改建议（机制推理）
@@ -13,7 +14,8 @@ learner/lib/
   engines.ts          claude / codex 命令行、权限、子进程环境
   summary.ts          事件流 → 摘要（轮数、token、cache、成本、耗时、状态）
   launcher.ts         参数解析、--dry-run、运行、日志、超时、key 清洗
-agent/tests/learner.test.ts
+  runs.ts             runs.jsonl / lessons.md 按角色：每局的角色、角色打过的最高进阶、待并入的复盘
+agent/tests/learner.test.ts、learner-paths.test.ts、learner-character.test.ts
 ```
 
 ## 用法
@@ -47,6 +49,7 @@ agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --s
 | `--max-turns N` | claude 的轮数上限；默认取任务的 `max_turns`（codex 没有这个参数，只靠超时） |
 | `--timeout-min N` | 超时（分钟），到时按 PID 先 SIGTERM、10 秒后 SIGKILL；默认取任务的 `timeout_min` |
 | `--dry-run` | 只打印最终提示、命令行、被去掉的环境变量名；不启动 agent，不建日志 |
+| `--character <id>` | 角色（游戏的 character_id 小写：ironclad、silent…）；不给时取环境变量 `CHARACTER`，再没有就是 ironclad。见下「多角色」 |
 | `--with-tools [--ascension N] [--knowledge-dir D]` | 用 stdio MCP 把 kb_* 知识库工具挂给 agent（见下） |
 
 退出码：0 完成；1 agent 失败（结果是 error、max turns 等）；2 参数或任务说明有错；3 引擎没装、或工具服务器不存在；124 超时。
@@ -55,6 +58,15 @@ agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --s
 
 内置参数（启动器给，不用 --set）：`{{cwd}}`、`{{worktree}}`（默认 = cwd，可 --set 改）、`{{project_root}}`（~/Projects/sts2-jev）、`{{logs_dir}}`（jev-sts2/logs）、`{{scratch}}`（本次的临时目录 learner/runs/<时间>-<任务>/）、`{{task}}`。
 缺参数、或 --set 了任务用不到的参数，都直接报错（exit 2），防止拼错。
+
+### 多角色（2026-10-04）
+- 角色内置参数（由 `--character` 决定，不能 --set）：`{{character}}`（silent）、`{{character_name}}`（静默猎手）、`{{character_dir}}`（knowledge/characters/silent）、`{{experience_path}}`（knowledge/characters/silent/experience.json）。
+- 段落：`{{#is_ironclad}}…{{/is_ironclad}}` 只给铁甲战士，`{{^is_ironclad}}…{{/is_ironclad}}` 给其他角色；标记独占一行时连同这一行一起去掉，所以铁甲战士的任务说明和加角色之前逐字相同。
+- front matter `characters: ironclad` 限定任务只给哪些角色用（experience-asc-audit 是铁甲战士 A9 专用）。
+- `--set runs=…` / `run=…` 里的局，runs.jsonl 记的角色（`character`，没有这个字段 = 铁甲战士的旧局）和本次角色不同的，直接报错（exit 2）；runs.jsonl 里没有的局留给任务自己判断。
+- 新角色的经验库从空开始，只从它自己的局学；任务说明不写任何角色的打法。非铁甲战士的复盘标题第二项写角色名：`## <run id>（A0，静默猎手，第N层，死因）`；没有角色名的标题都是铁甲战士的。
+- 每 10 局并一次经验库按角色数：`agent/node_modules/.bin/tsx learner/pending.ts --character silent [--max 10]`（输出和 ops/experience-pending.py 一样：先个数，再逗号分隔的 run id；铁甲战士的结果和那个脚本相同）。
+- `--with-tools` 的进阶：`--ascension N`（可以是 0），否则 `TARGET_ASCENSION`：数字照用；没设是 9；`climb`（或任何非数字）= 这个角色在 runs.jsonl 里打过的最高进阶，没打过是 0。非铁甲战士时给工具服务器设 `CHARACTER`。
 
 | 任务 | 必填 | 可选（默认） | 工具 | 建议的 --cwd | 会改什么 |
 |---|---|---|---|---|---|

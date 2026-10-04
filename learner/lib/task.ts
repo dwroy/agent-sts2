@@ -10,11 +10,22 @@
  *   default.code_dir: {{project_root}}/jev-sts2-v3   (a parameter's default; may use the built-ins)
  *   ---
  *
- * Built-in parameters (cwd, worktree, project_root, logs_dir, scratch, task) come from the launcher; the rest
- * come from --set name=value. A placeholder with no value, or a --set nobody uses, is an error.
+ * Built-in parameters (cwd, worktree, project_root, logs_dir, scratch, task, and the character ones below) come from
+ * the launcher; the rest come from --set name=value. A placeholder with no value, or a --set nobody uses, is an error.
+ *
+ * Multi-character (2026-10-04): the launcher's --character (else CHARACTER, else ironclad) gives {{character}} (the
+ * knowledge id: "silent"), {{character_name}} ("静默猎手"), {{character_dir}} ("knowledge/characters/silent") and
+ * {{experience_path}} (".../experience.json"). Text only some characters need sits in a section:
+ *   {{#is_ironclad}} … {{/is_ironclad}}   kept for the Ironclad only
+ *   {{^is_ironclad}} … {{/is_ironclad}}   kept for every other character
+ * A marker alone on its line takes its line with it, so a hidden section leaves no trace: for the Ironclad a brief
+ * renders exactly as it did before sections existed. The optional front matter `characters: ironclad` limits a task
+ * to the listed characters.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { basename, isAbsolute, join, resolve } from "node:path";
+
+import { DEFAULT_CHARACTER, characterKey, characterName } from "../../agent/src/knowledge/files.js";
 
 /** Bad command line, task file or parameters: the launcher prints the message and exits 2. */
 export class LearnerUsageError extends Error {
@@ -33,15 +44,52 @@ export interface TaskSpec {
   timeoutMin?: number;
   maxTurns?: number;
   model?: string;
+  /** Characters the task is for (front matter `characters:`); undefined = any. */
+  characters?: string[];
   /** Parameter defaults, still holding built-in placeholders. */
   defaults: Record<string, string>;
   /** The brief after the front matter. */
   body: string;
 }
 
+/** The character built-ins (characterBuiltins); fixed, set with --character. */
+export const CHARACTER_PARAMS = ["character", "character_name", "character_dir", "experience_path", "is_ironclad"] as const;
 /** Parameters the launcher fills; --set may override only `worktree` and `logs_dir`. */
-export const BUILTIN_PARAMS = ["cwd", "worktree", "project_root", "logs_dir", "scratch", "task"] as const;
-const FIXED_BUILTINS = new Set(["cwd", "project_root", "scratch", "task"]);
+export const BUILTIN_PARAMS = ["cwd", "worktree", "project_root", "logs_dir", "scratch", "task", ...CHARACTER_PARAMS] as const;
+const FIXED_BUILTINS = new Set<string>(["cwd", "project_root", "scratch", "task", ...CHARACTER_PARAMS]);
+
+/** The character built-ins for a knowledge id ("ironclad", "silent"); is_ironclad is "yes" or "" (a section flag). */
+export function characterBuiltins(character: string): Record<string, string> {
+  const dir = `knowledge/characters/${character}`;
+  return {
+    character,
+    character_name: characterName(character, "zh"),
+    character_dir: dir,
+    experience_path: `${dir}/experience.json`,
+    is_ironclad: character === DEFAULT_CHARACTER ? "yes" : "",
+  };
+}
+
+/** A section marker alone on its line (with its line break): the marker stays, the line goes. */
+const STANDALONE_MARKER = /^[ \t]*(\{\{[#^/]\s*[a-z][a-z0-9_]*\s*\}\})[ \t]*\r?\n/gm;
+const SECTION = /\{\{([#^])\s*([a-z][a-z0-9_]*)\s*\}\}([\s\S]*?)\{\{\/\s*\2\s*\}\}/;
+
+/**
+ * Keeps or drops each {{#flag}}…{{/flag}} (kept when the flag's value is non-empty) and {{^flag}}…{{/flag}} (kept when
+ * it is empty). A flag with no value at all, or a marker left unmatched, is an error.
+ */
+export function renderSections(text: string, values: Record<string, string>): string {
+  let out = text.replace(STANDALONE_MARKER, "$1");
+  for (let match = SECTION.exec(out); match; match = SECTION.exec(out)) {
+    const [whole, kind, flag, inner] = match as unknown as [string, string, string, string];
+    if (!(flag in values)) throw new LearnerUsageError(`段落开关 ${flag} 没有值（可用：${CHARACTER_PARAMS.filter((name) => name.startsWith("is_")).join(", ")}）`);
+    const on = values[flag] !== "";
+    out = out.slice(0, match.index) + ((kind === "#") === on ? inner : "") + out.slice(match.index + whole.length);
+  }
+  const stray = /\{\{[#^/]\s*[a-z][a-z0-9_]*\s*\}\}/.exec(out);
+  if (stray) throw new LearnerUsageError(`段落标记没有配对：${stray[0]}`);
+  return out;
+}
 
 const PLACEHOLDER = /\{\{\s*([a-z][a-z0-9_]*)\s*\}\}/g;
 const PARAM_NAME = /^[a-z][a-z0-9_]*$/;
@@ -90,6 +138,13 @@ export function parseTask(text: string, name: string, path: string): TaskSpec {
     } else if (key === "timeout_min") spec.timeoutMin = positiveInt(value, key, path);
     else if (key === "max_turns") spec.maxTurns = positiveInt(value, key, path);
     else if (key === "model") spec.model = value;
+    else if (key === "characters") {
+      spec.characters = value.split(",").map((item) => item.trim()).filter(Boolean).map((item) => {
+        const id = characterKey(item);
+        if (!id) throw new LearnerUsageError(`${path}: characters 里的「${item}」不是角色 id`);
+        return id;
+      });
+    }
     else if (key.startsWith("default.")) {
       const param = key.slice("default.".length);
       if (!PARAM_NAME.test(param)) throw new LearnerUsageError(`${path}: 参数名「${param}」只能用小写字母、数字和下划线`);
@@ -142,10 +197,16 @@ export function renderTask(spec: TaskSpec, sets: Record<string, string>, builtin
   const unused = Object.keys(sets).filter((name) => !used.has(name));
   if (unused.length > 0) throw new LearnerUsageError(`任务 ${spec.name} 用不到这些参数：${unused.join(", ")}（任务的参数：${[...used].join(", ")}）`);
 
-  const values: Record<string, string> = { ...builtins };
-  for (const [name, value] of Object.entries(spec.defaults)) if (used.has(name)) values[name] = fillTemplate(value, builtins);
+  // The character built-ins default to the Ironclad's (callers that predate --character pass none).
+  const all: Record<string, string> = { ...characterBuiltins(builtins["character"] ?? DEFAULT_CHARACTER), ...builtins };
+  const character = all["character"]!;
+  if (spec.characters && !spec.characters.includes(character)) {
+    throw new LearnerUsageError(`任务 ${spec.name} 只给这些角色用：${spec.characters.join(", ")}（现在是 ${character}）`);
+  }
+  const values: Record<string, string> = { ...all };
+  for (const [name, value] of Object.entries(spec.defaults)) if (used.has(name)) values[name] = fillTemplate(value, all);
   for (const [name, value] of Object.entries(sets)) if (value !== "") values[name] = value;
-  const prompt = fillTemplate(spec.body, values);
+  const prompt = fillTemplate(renderSections(spec.body, values), values);
   const shown: Record<string, string> = {};
   for (const name of used) if (values[name] !== undefined) shown[name] = values[name]!;
   return { prompt, values: shown };

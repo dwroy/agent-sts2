@@ -19,6 +19,9 @@ default.code_dir: {{project_root}}/.worktrees/live
 ## 1. 先确认
 1. 每个 run id 都在 {{logs_dir}}/runs.jsonl 里（已结束），而且 lessons.md 里还没有以 `## <run id>` 开头的标题。已经有了的跳过，并在回报里写明；不在 runs.jsonl 里的也跳过并写明。
 2. 往任何文件里写时间之前，先跑 `date` 取当前时间，不要估。
+{{^is_ironclad}}
+3. 这次复盘的是{{character_name}}（{{character}}）的局：每个 run id 在 runs.jsonl 里的 `character` 要是 {{character}}（不分大小写；没有这个字段的旧局是铁甲战士的）。不是的跳过，并在回报里写明。
+{{/is_ironclad}}
 
 ## 2. 读哪些材料
 - `{{project_root}}/notes/run-*-<run id>.md`（一局可能有好几个文件，是中途重启留下的，都要看）。
@@ -35,6 +38,9 @@ default.code_dir: {{project_root}}/.worktrees/live
 每局用**一次** `cat >> {{project_root}}/notes/lessons.md <<'EOF' … EOF` 追加一节，**只追加，不改旧内容**（不许用编辑工具改 lessons.md，不许重写整个文件）。
 
 标题：`## <run id>（A几，第N层，死因）`。死因写清楚是哪场战斗、敌人中文名 + ID、关键数字（照 lessons.md 里最近几节的写法）。
+{{^is_ironclad}}
+这局是{{character_name}}的，标题的第二项写角色名：`## <run id>（A几，{{character_name}}，第N层，死因）`（进阶仍是第一项）。lessons.md 里标题没有角色名的都是铁甲战士的局：照它们的写法只是照格式，那些局的打法结论不要拿来解释这局，这局的经验只从这局自己的日志里来。
+{{/is_ironclad}}
 
 正文：
 1. **3 条经验**，每条一行，格式 `- [一句话标题；bug 还是打法（哪一方：DeepSeek 路线/构筑/休息、Jev 出牌、代码）] 正文`：

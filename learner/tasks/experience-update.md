@@ -9,7 +9,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 ---
 # 任务：更新经验库（{{runs}}）
 
-你是 STS2 × Jev 项目的离线学习者，这一次只做一件事：把新写好的复盘并进经验库 `knowledge/characters/ironclad/experience.json`，同时在变更记录里追加一节。全程用中文。自己做，不许再派下级 agent。
+你是 STS2 × Jev 项目的离线学习者，这一次只做一件事：把新写好的复盘并进经验库 `{{experience_path}}`，同时在变更记录里追加一节。全程用中文。自己做，不许再派下级 agent。
 
 - 新复盘的局（run id，逗号分隔）：{{runs}}
 - 改代码的工作树：{{worktree}}（在这里改 experience.json、跑测试、提交）
@@ -19,6 +19,15 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 变更记录：{{project_root}}/paper/materials/experience-changelog.md（只追加一节）
 - 日志（只读）：{{logs_dir}}
 - 临时文件只放在：{{scratch}}
+{{^is_ironclad}}
+
+**角色：{{character_name}}（{{character}}）。** 这个角色的经验库是 `{{character_dir}}/` 下的文件，只从这个角色自己的局学：
+- 这几局（{{runs}}）在 runs.jsonl 里的 `character` 都要是 {{character}}（不分大小写）；不是的跳过，在回报里写明。汇总、重算数字时也只用这个角色的局（runs.jsonl 的 `character`；没有这个字段的旧局是铁甲战士的，不算）；states.jsonl 里按 `state.run.character_id` 区分。
+- 新角色的经验库从空开始：`{{experience_path}}` 不存在时新建，字段照 agent/src/knowledge/experience.ts 的 `ExperienceFile` / `ExperienceEntry` 类型（`version`、`_about`、`entries`），`entries` 从空列表开始，version 用今天的日期 + 序号。
+- 别的角色（包括铁甲战士）的经验库、攻略、手册、代码里的手写知识，和 lessons.md 里别的角色的复盘，都不许搬过来，也不许当证据；这个角色的每条经验都要有这个角色自己的局作证据。和角色无关的游戏事实（怪物招式、数值）以 knowledge/common/ 下的数据和日志为准。
+- lessons.md 里这个角色的复盘，标题第二项是「{{character_name}}」。变更记录里这个角色的小节标题带角色名；还没有的，这次就是这个角色的首次构建：方法、口径、格式照「2026-09-28 首次构建」和最后两节，里面的数字和结论都不用。
+- 跑工具（knowledge-slice.ts 等）时加环境变量 `CHARACTER={{character}}`，让它们读这个角色的知识。
+{{/is_ironclad}}
 
 ## 1. 开工
 1. 往任何文件里写时间之前，先跑 `date` 取当前时间。
@@ -47,7 +56,12 @@ default.merge_dir: {{project_root}}/.worktrees/live
   - `potion:*` 和 `general:potion` 条目只改句内数字，不加证据局（n 不变）；
   - 其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分；
   - **不许新增或加强任何「什么时候喝 / 别喝」的说法，不许写喝药规则**。
+{{#is_ironclad}}
 - **知识库一视同仁**：攻略（knowledge/characters/ironclad/ironclad-guide.md）、DeepSeek 手册（ds-handbook.md）、Jev 提示（jev-hints.json）、代码的卡牌参考分（card-value.ts 的 TIER 表和角色分类）、boss 笔记（run-journal.ts 的 BOSS_NOTES）都算知识库。每次更新都要核对：和复盘数据冲突的，改成数据版本（写明局数）；数据说明无效的删掉；还没有数据覆盖的先保留。改了什么、没改什么都记进本节（照上一节「和手写知识、代码冲突」的写法）。
+{{/is_ironclad}}
+{{^is_ironclad}}
+- **知识库一视同仁**：{{character_dir}}/ 下这个角色的其他知识文件（有的话）也算知识库，每次更新都核对：和复盘数据冲突的改成数据版本（写明局数），数据说明无效的删掉。没有的不用新建；代码里的手写知识这个任务不改，冲突的写进本节。
+{{/is_ironclad}}
 
 ## 3. 每条结论都要对数据
 - 每个主题在变更记录里写一行「主题 | 数据 | 结论」（照上一节「对照数据检查的主题」的表）。数字要能从日志或 monster-db.json 复算出来。
@@ -67,26 +81,43 @@ default.merge_dir: {{project_root}}/.worktrees/live
 
 ## 4.1 V4 的重点（Dai 2026-10-03）
 Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验给到 ds」——经验库是给 DeepSeek 做构筑、路线、休息、事件决策用的。这一轮除了照常合并，重点补三类，都要对数据（第 3 节），说清楚口径和局数：
+{{#is_ironclad}}
 1. **路线与血量管理**（现在只有 general:route 8 条、general:rest 4 条，XC4TNGZU4KT9 F8/F9 两次路线复核在 36/80、11/80 都「保持」，F11 死在双敌走廊）：
    - 按血量比例分档（例如 <25%、25–40%、40–60%、>60% max HP），各幕、各房间类型（走廊 / 精英 / 问号 / 休息 / 商店）下一场的掉血和死亡率；数据用 logs（fights 表、room-costs.json 的口径），A8 以上。
    - 什么情况下改路线（绕开精英 / 走廊、去休息点或商店）实际更好：找日志里低血时走了不同节点的局对比，说清楚是观察还是因果。
    - 写成 `general:route` / `general:rest` / `general:elite` / `act:*` 条目，句式照现有条目：结论 + 数据（n、比例）+ 典型案例 run id。
 2. **SL 重打的对照**（同一场战斗、同样抽牌的多次尝试是天然的对照实验）：logs/sl-attempts.jsonl 的每场多次尝试，哪一次赢了、和输的几次差在哪（`explore`、`sl_explore`、decisions 的 sl_attempt）。能归纳成 boss / 精英打法经验的，写进 `boss:*` / `elite:*` 条目（区分「赢的那次改了什么」和「运气」），每条写明几场重打、几次赢。
 3. **A9**（V4.4 起）：boss 伤害比 A8 高约 10–18%、增益多 1 层（monster-db observed / 第 3 节可复算）；A9 的死亡分布（二幕 boss 为主）。已有条目的 asc 范围按证据更新；A9 特有的结论单列。
+{{/is_ironclad}}
+{{^is_ironclad}}
+1. **路线与血量管理**：按血量比例分档（例如 <25%、25–40%、40–60%、>60% max HP），各幕、各房间类型（走廊 / 精英 / 问号 / 休息 / 商店）下一场的掉血和死亡率；只用这个角色的局，各进阶分开写局数。什么情况下改路线实际更好：找这个角色低血时走了不同节点的局对比，说清楚是观察还是因果。写成 `general:route` / `general:rest` / `general:elite` / `act:*` 条目，句式：结论 + 数据（n、比例）+ 典型案例 run id。
+2. **SL 重打的对照**（同一场战斗、同样抽牌的多次尝试是天然的对照实验）：logs/sl-attempts.jsonl 里这个角色的局的每场多次尝试，哪一次赢了、和输的几次差在哪（`explore`、`sl_explore`、decisions 的 sl_attempt）。能归纳成 boss / 精英打法经验的，写进 `boss:*` / `elite:*` 条目（区分「赢的那次改了什么」和「运气」），每条写明几场重打、几次赢。
+3. **进阶**：这个角色从 A0 往上爬（赢一局进阶 +1）。asc 按证据所在的进阶写；进阶升高后被反驳的，写进阶上限或退役，写明是哪个进阶的数据。
+{{/is_ironclad}}
 - 机制推理（第 4 节）照做；药水规则限制（第 2 节）照旧。
 - **CPU**：对局在跑（boss 模拟会占满核），抽数据、跑工具只用单进程或最多 4 个 `nice -n 19` 进程，不跑 boss 模拟池。
 
 ## 5. 更新 experience.json
-- 只改 {{worktree}}/knowledge/characters/ironclad/experience.json（和第 2 节里核对后需要改的手写知识文件）。JSON 格式、字段顺序、缩进照原文件。
-- 改完跑 `python3 -c 'import json; json.load(open("knowledge/characters/ironclad/experience.json"))'` 确认合法。
+- 只改 {{worktree}}/{{experience_path}}（和第 2 节里核对后需要改的手写知识文件）。JSON 格式、字段顺序、缩进照原文件。
+- 改完跑 `python3 -c 'import json; json.load(open("{{experience_path}}"))'` 确认合法。
 
 ## 6. 切片大小
+{{#is_ironclad}}
 照上一节「切片大小」：用固定种子 20260929 从 states.jsonl 抽 A8、A9 各 20 个状态 × 6 种界面，分别用改前、改后的 experience.json 跑 `agent/tools/knowledge-slice.ts`，报告中位 / 最大（字）。逐局、逐回合的细节压成一句放条目里，完整数字留在变更记录。写明 active 条目数和置信度分布。
+{{/is_ironclad}}
+{{^is_ironclad}}
+照上一节「切片大小」的做法：用固定种子 20260929 从 states.jsonl 里这个角色的状态（`state.run.character_id`）抽它打过的最高两个进阶（只打过一个就一个）各 20 个状态 × 6 种界面，分别用改前、改后的 experience.json 跑 `CHARACTER={{character}} agent/tools/knowledge-slice.ts`，报告中位 / 最大（字）。逐局、逐回合的细节压成一句放条目里，完整数字留在变更记录。写明 active 条目数和置信度分布。
+{{/is_ironclad}}
 
 ## 7. 测试和提交
 - `export PATH=$HOME/.local/node/bin:$PATH`，`npx tsc -p tsconfig.json --noEmit` 和 `npx vitest run` 退出码都要是 0（高负载时战斗测试可能超时，先重跑一次再下结论）。测试用固定数据。
 - 在 {{worktree}} 提交：`git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，英文提交信息，写明版本号和增删改条数。不推送。
+{{#is_ironclad}}
 - 在变更记录末尾追加一节（标题照上一节：`## <日期> 第N次增量：<局数> 局 A几（version …，分支 …，<提交号>）`），小节依次是：来源、对照数据检查的主题、经验库自己带偏或写了没被执行的地方、**机制推理**、新增、更新、退役、和手写知识及代码冲突、代码问题（不给 DS）、测试、切片大小。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交，由调用方提交。
+{{/is_ironclad}}
+{{^is_ironclad}}
+- 在变更记录末尾追加一节，标题带角色名：`## <日期> {{character_name}} 第N次增量：<局数> 局 A几（version …，分支 …，<提交号>）`（这个角色的第一节写「{{character_name}} 首次构建」，N 只数这个角色的小节），小节依次是：来源、对照数据检查的主题、经验库自己带偏或写了没被执行的地方、**机制推理**、新增、更新、退役、和手写知识及代码冲突、代码问题（不给 DS）、测试、切片大小。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交，由调用方提交。
+{{/is_ironclad}}
 
 ## 8. 合入（只有 merge = v3 时做；V4 一律 merge = no，由开发会话审过后合入 main / live）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里做：

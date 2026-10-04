@@ -110,7 +110,7 @@ describe("the task files in learner/tasks", () => {
     expect(experience).toContain("机制推理");
     expect(experience).toMatch(/推理[\s\S]*证据[\s\S]*典型案例/);
     const fix = renderTask(loadTask("fix-batch", TASKS), {}, BUILTINS).prompt;
-    expect(fix).toContain("git merge --no-edit v3");
+    expect(fix).toContain("git merge --no-edit main");
     expect(fix).toContain("去掉修复时失败");
     expect(fix).toContain("/p/notes/fix-queue.md");
     for (const prompt of [experience, fix]) expect(prompt).toContain("不推送");

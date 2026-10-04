@@ -3,7 +3,11 @@
  * (learner/tasks/*.md) and hands it to a CLI agent (claude on the subscription login; codex once installed).
  *
  *   agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --set runs=A,B,C --cwd <worktree>
- *     [--model opus] [--dry-run] [--max-turns N] [--timeout-min N] [--with-tools [--ascension N]]
+ *     [--model opus] [--dry-run] [--max-turns N] [--timeout-min N] [--character silent] [--with-tools [--ascension N]]
+ *
+ * The character (--character, else CHARACTER, else ironclad; the game's character_id lower-cased) picks the knowledge
+ * the task works on ({{character}}, {{experience_path}}, … in task.ts) and the runs it may name: a --set runs/run id
+ * that logs/runs.jsonl records for another character is refused (a row without `character` is a legacy Ironclad run).
  *
  * The agent's whole event stream goes to learner/runs/<time>-<task>.jsonl, framed by a learner_launch line
  * (task, parameters, command, full prompt) and a learner_summary line; its temporary files go to the matching
@@ -20,10 +24,12 @@ import { createInterface } from "node:readline";
 
 import { PROJECT_ROOT as REPO_ROOT, workspaceRoot } from "../../agent/src/core/paths.js";
 import { DEFAULT_KNOWLEDGE_DIR } from "../../agent/src/knowledge/render/data.js";
+import { DEFAULT_CHARACTER, characterKey } from "../../agent/src/knowledge/files.js";
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { ENGINES, EngineUnavailableError, childEnv, engineBinary, engineCommand, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
 import { SummaryTracker, formatSummary, progressLine } from "./summary.js";
-import { LearnerUsageError, loadTask, parseSets, renderTask } from "./task.js";
+import { highestAscension, runCharacters } from "./runs.js";
+import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
 
 /** This checkout (the launcher's own repository: core/paths.ts PROJECT_ROOT). */
 export const REPO = REPO_ROOT;
@@ -85,7 +91,7 @@ export function defaultDeps(): LauncherDeps {
 }
 
 export const USAGE = `usage: agent/node_modules/.bin/tsx learner/run.ts --engine claude|codex --task <name|path.md> --cwd <dir> [--set name=value ...]
-         [--model M] [--max-turns N] [--timeout-min N] [--dry-run] [--with-tools [--ascension N] [--knowledge-dir D]]
+         [--model M] [--max-turns N] [--timeout-min N] [--dry-run] [--character ID] [--with-tools [--ascension N] [--knowledge-dir D]]
 tasks: learner/tasks/*.md (postmortem, experience-update, fix-batch, smoke)`;
 
 export interface LauncherOptions {
@@ -100,6 +106,8 @@ export interface LauncherOptions {
   withTools: boolean;
   ascension?: number;
   knowledgeDir?: string;
+  /** Knowledge id (characterKey of the flag); undefined = CHARACTER / ironclad (resolveCharacter). */
+  character?: string;
   help: boolean;
 }
 
@@ -131,7 +139,20 @@ export function parseArgs(argv: string[]): LauncherOptions {
       case "--model": options.model = value(); break;
       case "--max-turns": options.maxTurns = wholeNumber(arg, value()); break;
       case "--timeout-min": options.timeoutMin = wholeNumber(arg, value()); break;
-      case "--ascension": options.ascension = wholeNumber(arg, value()); break;
+      case "--ascension": {
+        // 0 is a real ascension (a new character climbs from A0).
+        const raw = value();
+        if (!/^\d+$/.test(raw)) throw new LearnerUsageError(`${arg} 要一个不小于 0 的整数`);
+        options.ascension = Number(raw);
+        break;
+      }
+      case "--character": {
+        const raw = value();
+        const id = characterKey(raw);
+        if (!id) throw new LearnerUsageError(`--character 要一个角色 id（如 ironclad、silent），不是「${raw}」`);
+        options.character = id;
+        break;
+      }
       case "--knowledge-dir": options.knowledgeDir = value(); break;
       case "--dry-run": options.dryRun = true; break;
       case "--with-tools": options.withTools = true; break;
@@ -159,13 +180,31 @@ function inside(root: string, path: string): boolean {
   return rel === "" || (!rel.startsWith("..") && !rel.startsWith(sep) && rel !== "..");
 }
 
+/** The run's character: --character, else CHARACTER from the environment, else the Ironclad. */
+export function resolveCharacter(options: Pick<LauncherOptions, "character">, env: NodeJS.ProcessEnv): string {
+  return options.character ?? characterKey(env["CHARACTER"]) ?? DEFAULT_CHARACTER;
+}
+
+/**
+ * The ascension the tool server answers for when --ascension is not given: TARGET_ASCENSION when it is a number;
+ * unset, 9 (as before). Any other value ("climb": each character climbs from A0, +1 per win) is the highest ascension
+ * this character has played in runs.jsonl, or 0 when it has played none.
+ */
+export function defaultAscension(env: NodeJS.ProcessEnv, character: string, runsFile: string): number {
+  const raw = env["TARGET_ASCENSION"];
+  if (raw === undefined) return 9;
+  if (/^\s*\d+\s*$/.test(raw)) return Number(raw);
+  return highestAscension(runsFile, character) ?? 0;
+}
+
 /**
  * Our stdio MCP tool server, started the way agent/src/brain/tools/mcp-launch.ts says. The server (agent/src/brain/tools/mcp-server.ts)
  * is built on the v4-brain branch; until it is merged here, --with-tools stops with an explanation.
  */
 export function toolServerSpec(options: LauncherOptions, projectRoot: string, env: NodeJS.ProcessEnv): McpLaunchSpec {
+  const character = resolveCharacter(options, env);
   const spec = mcpLaunchSpec({
-    ascension: options.ascension ?? Number(env["TARGET_ASCENSION"] ?? 9),
+    ascension: options.ascension ?? defaultAscension(env, character, join(projectRoot, "logs", "runs.jsonl")),
     knowledgeDir: options.knowledgeDir ? resolve(options.knowledgeDir) : DEFAULT_KNOWLEDGE_DIR,
     logsDir: join(projectRoot, "logs"),
   });
@@ -175,8 +214,11 @@ export function toolServerSpec(options: LauncherOptions, projectRoot: string, en
       `--with-tools 用不了：找不到 ${missing.join("、")}。stdio MCP 服务器（agent/src/brain/tools/mcp-server.ts）在 v4-brain 分支上开发，合入 v4、再合到这个分支后才能用；现在先不带 --with-tools 运行。`,
     );
   }
-  // The post-mortems the kb_postmortem tool reads: the workspace's notes/lessons.md.
-  return { ...spec, env: { ...spec.env, KNOWLEDGE_LESSONS_FILE: join(projectRoot, "notes", "lessons.md") } };
+  // The post-mortems the kb_postmortem tool reads: the workspace's notes/lessons.md. The server reads the character's
+  // knowledge (knowledge/files.ts knowledgeCharacter: CHARACTER); named whenever it is not the default or the
+  // environment already names one, so an Ironclad launch keeps its old command line.
+  const characterEnv: Record<string, string> = character !== DEFAULT_CHARACTER || env["CHARACTER"] !== undefined ? { CHARACTER: character } : {};
+  return { ...spec, env: { ...spec.env, KNOWLEDGE_LESSONS_FILE: join(projectRoot, "notes", "lessons.md"), ...characterEnv } };
 }
 
 /** Variable names that hold where a key is or what it is for, not the key itself. */
@@ -235,6 +277,20 @@ export function redactSecrets(path: string, secrets: string[]): number {
   return found;
 }
 
+/**
+ * Refuses run ids (--set runs=… / run=…) that runs.jsonl records for another character. Ids it does not have are
+ * left to the task (the post-mortem skips unfinished runs and says so).
+ */
+export function checkRunCharacters(sets: Record<string, string>, character: string, runsFile: string): void {
+  const ids = [sets["runs"], sets["run"]].filter((value): value is string => !!value).flatMap((value) => value.split(",")).map((id) => id.trim()).filter(Boolean);
+  if (ids.length === 0) return;
+  const known = runCharacters(runsFile);
+  const other = ids.filter((id) => known.has(id) && known.get(id) !== character);
+  if (other.length > 0) {
+    throw new LearnerUsageError(`这些局不是 ${character} 的（logs/runs.jsonl 的 character）：${other.map((id) => `${id}=${known.get(id)}`).join(", ")}；用 --character 指定角色，每次只给一个角色的局`);
+  }
+}
+
 /** Runs the launcher; returns the process exit code. */
 export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}): Promise<number> {
   const deps = { ...defaultDeps(), ...overrides };
@@ -252,8 +308,11 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const spec = loadTask(options.task, deps.tasksDir);
     const stem = `${stamp(deps.now())}-${spec.name}`;
     const scratch = join(deps.runsDir, stem);
-    const builtins = { cwd, worktree: cwd, project_root: deps.projectRoot, logs_dir: join(deps.projectRoot, "logs"), scratch, task: spec.name };
-    const rendered = renderTask(spec, parseSets(options.sets), builtins);
+    const character = resolveCharacter(options, deps.env);
+    const builtins = { cwd, worktree: cwd, project_root: deps.projectRoot, logs_dir: join(deps.projectRoot, "logs"), scratch, task: spec.name, ...characterBuiltins(character) };
+    const sets = parseSets(options.sets);
+    checkRunCharacters(sets, character, join(deps.projectRoot, "logs", "runs.jsonl"));
+    const rendered = renderTask(spec, sets, builtins);
     const model = options.model ?? spec.model;
     const maxTurns = options.maxTurns ?? spec.maxTurns;
     const request: EngineRequest = {
