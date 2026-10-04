@@ -277,13 +277,63 @@ def fold(rows=None):
     return items
 
 
-def repeats(item, after_ship=False):
-    """Evidence marked "repeat" (the same mistake came back in a later run); with after_ship, only the evidence logged
-    after the item shipped (the learning did not transfer). "added" is the ts of the row that logged it."""
+def when(text):
+    """An aware ISO timestamp, or None when the observation time is unavailable."""
+    if not isinstance(text, str) or not text:
+        return None
+    try:
+        value = dt.datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return value if value.tzinfo else value.replace(tzinfo=dt.timezone.utc)
+
+
+def run_starts(runs, config_rows):
+    """First run-config time, else the previous finished run's end for the same character.
+
+    Changes take effect next run. A restart's later config time cannot turn an old run into a post-release run.
+    Unknown start times are not evidence of a post-release mistake.
+    """
+    starts = {}
+    for row in config_rows:
+        run_id, t = row.get("run_id"), when(row.get("ts"))
+        if run_id and t and (run_id not in starts or t < starts[run_id]):
+            starts[run_id] = t
+    previous_end = {}
+    for row in runs:
+        run_id, character = row.get("run_id"), run_character(row)
+        if not run_id:
+            continue
+        if run_id not in starts and character in previous_end:
+            starts[run_id] = previous_end[character]
+        ended = when(row.get("ended"))
+        if ended:
+            previous_end[character] = ended
+    return starts
+
+
+def load_run_starts():
+    runs = load_runs() or {}
+    configs = read_rows(os.path.join(os.path.dirname(RUNS), "run-config.jsonl")) if RUNS != "none" else []
+    return run_starts(runs.values(), [row for _, row in configs if row])
+
+
+def evidence_after_ship(item, evidence, starts):
+    """Whether the repeat happened in a run that could use this release, independent of when it was written up."""
+    shipped = when(item.get("shipped_at"))
+    started = starts.get(evidence.get("run"))
+    return shipped is not None and started is not None and started >= shipped
+
+
+def repeats(item, after_ship=False, starts=None):
+    """Evidence marked "repeat"; after_ship restricts to runs starting at or after shipping.
+
+    The row's "added" timestamp remains intact for provenance but never determines when gameplay happened.
+    """
     reps = [e for e in item.get("evidence", []) if e.get("role") == "repeat"]
     if after_ship:
-        shipped = item.get("shipped_at")
-        reps = [e for e in reps if shipped and (e.get("added") or "") > shipped]
+        starts = load_run_starts() if starts is None else starts
+        reps = [e for e in reps if evidence_after_ship(item, e, starts)]
     return reps
 
 
@@ -404,10 +454,10 @@ def matches(item, args):
     return True
 
 
-def one_line(item):
+def one_line(item, starts=None):
     runs = sorted({e.get("run") for e in item.get("evidence", [])})
     reps = len(repeats(item))
-    late = len(repeats(item, after_ship=True))
+    late = len(repeats(item, after_ship=True, starts=starts))
     version = f" {item['version']}" if item.get("version") else ""
     return (f"{item['id']} [{item.get('status')}{version}] A{item.get('asc')} {item.get('kind')} prior={item.get('prior')}"
             f" runs={len(runs)}{f' repeats={reps}' if reps else ''}{f' (after shipping {late})' if late else ''}: {item.get('claim')}")
@@ -454,8 +504,9 @@ def main():
     if args.json:
         print(json.dumps(found, ensure_ascii=False, indent=1))
     else:
+        starts = load_run_starts()
         for item in found:
-            print(one_line(item))
+            print(one_line(item, starts=starts))
         print(f"({len(found)} item(s))")
     return 0
 
