@@ -42,7 +42,7 @@ import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } fr
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../sim/boss-clock.js";
-import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, pickRolloutBest, rolloutFacts, rolloutKillLine, rolloutLiveOptions, rolloutLog, thiefSamples, type KillGroup, type LiveRollout } from "./rollout-live.js";
+import { DRINK_FIRST_ROLLOUT, killOrders, liveRollout, noEffectTwin, pickRolloutBest, rolloutFacts, rolloutKillLine, rolloutLiveOptions, rolloutLog, thiefSamples, summonThreatAt, type KillGroup, type LiveRollout } from "./rollout-live.js";
 import { selectLessons, offeredOn, type ExperienceEntry } from "../knowledge/experience.js";
 import { heldPotionWorth } from "../knowledge/potion-equivalents.js";
 import { potionCostFact, potionCostOptions, potionCosts, potionCostText, withPotionCost, type PotionCost } from "./potion-cost.js";
@@ -732,6 +732,7 @@ export function enemySims(combat: Record<string, unknown>, asc?: number): EnemyS
       block: num(enemy["block"]),
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
+      ...(powerAmount(enemy, "POISON_POWER") > 0 ? { poison: powerAmount(enemy, "POISON_POWER") } : {}),
       artifact: powerAmount(enemy, "ARTIFACT_POWER"),
       intangible: powerAmount(enemy, "INTANGIBLE_POWER") > 0,
       slippery: powerAmount(enemy, "SLIPPERY_POWER"),
@@ -1164,7 +1165,7 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if (o.restocked.length > 0) summary["revives_from_stock"] = `${o.restocked.join(", ")}: back at full HP with +3 Strength, NOT a kill`;
   if ((o.spawns ?? []).length > 0) summary["spawns_on_death"] = `${o.spawns!.join("; ")}: they arrive as it dies, the fight is NOT over`;
   // A Waterfall Giant husk has no HP to take off (999,999,999): named as the husk, not by that number.
-  if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.husk ? "husk (cannot be killed, it explodes; damage into it counts for nothing)" : `${enemy.hp} HP`}${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}${enemy.demise ? `, Demise ${enemy.demise} (loses ${enemy.demise} HP at the end of each of its turns)` : ""}`).join("; ");
+  if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.husk ? "husk (cannot be killed, it explodes; damage into it counts for nothing)" : `${enemy.hp} HP`}${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}${enemy.poison ? `, 中毒 ${enemy.poison}` : ""}${enemy.demise ? `, Demise ${enemy.demise} (loses ${enemy.demise} HP at the end of each of its turns)` : ""}`).join("; ");
   if (o.blockGained > 0) summary["block_gained"] = o.blockGained;
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
@@ -1233,6 +1234,8 @@ export interface FactContext {
   enemies: EnemySim[];
   /** Expected attack damage next turn per enemy index (move model), null when unknown. */
   nextThreat: Map<number, number | null>;
+  /** The first attack of a living enemy's observed summon, independent of the summoner's Weak. */
+  summonedThreat?: Map<number, number>;
   /**
    * Illusions (ILLUSION_POWER, the Parafright) come back at full HP the turn after they die and hit with
    * their usual move (move-model revivingForecast; the rollout revives them the same way, 115b517): that
@@ -1269,6 +1272,11 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
     if (o.winsFight) continue;
     const killed = after !== undefined && after.hp <= 0;
     if (killed && !enemy.illusion) continue;
+    const summoned = ctx.summonedThreat?.get(enemy.index) ?? 0;
+    if (summoned > 0 && !killed && !after?.strippedStun) {
+      known = true;
+      threat += summoned;
+    }
     const next = killed ? ctx.revivingThreat?.get(enemy.index) : ctx.nextThreat.get(enemy.index);
     if (next === null || next === undefined) continue;
     known = true;
@@ -2883,6 +2891,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     inferno: powerAmount(player, "INFERNO_POWER"),
     infernoCopies: infernoCopies(state, powerAmount(player, "INFERNO_POWER")),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
+    afterImage: powerAmount(player, "AFTERIMAGE_POWER"),
+    poisonExtraTriggers: powerAmount(player, "ACCELERANT_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
     hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,
     darkEmbrace: powerAmount(player, "DARK_EMBRACE_POWER"),
@@ -3028,11 +3038,13 @@ function planTurn(env: DecisionEnv): Decision | null {
   const nowIncoming = enemies.reduce((sum, enemy) => sum + enemy.attacks.reduce((s, a) => s + a.damage * a.hits, 0), 0);
   // MECH_DEATH_MOVE: a survivor's moves its learned death rules say it never makes while the ally lives are no forecast now.
   const deathExcluded = deathOnlyMoves(enemies);
+  const presentIds = asArray(combat["enemies"]).map((enemy) => str(asRecord(enemy)["enemy_id"]));
+  const summonThreat = (enemy: Record<string, unknown>): number => summonThreatAt(str(enemy["enemy_id"]), str(enemy["move_id"]), ascension, presentIds, playerSim.vulnerable);
   const nextIncoming =
     asArray(combat["enemies"])
       .map(asRecord)
       .filter((enemy) => enemy["is_alive"] !== false)
-      .reduce((sum, enemy, i) => sum + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension), deathExcluded.get(numOrNull(enemy["index"]) ?? i)) ?? 0), 0) +
+      .reduce((sum, enemy, i) => sum + summonThreat(enemy) + (multiClawNext(enemy) ?? expectedNextDamage(str(enemy["enemy_id"]), str(enemy["move_id"]), boardDamageContext(enemy, player, ascension), deathExcluded.get(numOrNull(enemy["index"]) ?? i)) ?? 0), 0) +
     revivingIllusions(combat).reduce((sum, enemy) => sum + (revivingForecast(str(enemy["enemy_id"]), 1, boardDamageContext(enemy, player, ascension))?.[0] ?? 0), 0);
   const laterIncoming = laterIncomingOf(combat, ascension, deathExcluded);
   // FIGHT_PLAN=v1: DeepSeek's plan for this elite/boss fight, when there is one.
@@ -3885,6 +3897,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       hand,
       enemies,
       nextThreat,
+      summonedThreat: new Map(liveEnemies.map((enemy, fallbackIndex) => [numOrNull(enemy["index"]) ?? fallbackIndex, summonThreat(enemy)])),
       noAttack: enemies.every((enemy) => enemy.attacks.length === 0),
       ...(illusions.length > 0
         ? { revivingThreat: new Map(illusions.map((enemy) => [numOrNull(enemy["index"]) ?? liveEnemies.indexOf(enemy), revivingForecast(str(enemy["enemy_id"]), 1, boardDamageContext(enemy, player, ascension))?.[0] ?? null])) }

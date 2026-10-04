@@ -14,6 +14,7 @@ import {
   appliedPowerIds,
   countsAtAscension,
   monsterHpAt,
+  phaseCountsWithoutRetries,
   moveAmountAt,
   moveDamageAt,
   regularEffect,
@@ -145,9 +146,9 @@ function hpLine(data: KnowledgeData, id: string, asc: number): string {
   return `血量 A${asc}: 估 ${hp.hp}（A${hp.from} 中位 ${round1(hp.logged)} (n=${hp.n}${range}) ${ratio}）`;
 }
 
-function phasesLine(monster: MonsterEntry, asc: number): string | null {
+function phasesLine(id: string, monster: MonsterEntry, asc: number): string | null {
   const at = countsAtAscension(monster.phases_by_asc, undefined, asc);
-  const entries = Object.entries(at.counts ?? {})
+  const entries = Object.entries(phaseCountsWithoutRetries(id, at.counts ?? {}))
     .filter(([, n]) => n > 0)
     .sort((a, b) => b[1] - a[1] || b[0].split(">").length - a[0].split(">").length || cmp(a[0], b[0]));
   if (entries.length === 0 || at.asc === null) return null;
@@ -436,7 +437,7 @@ function monsterBlock(data: KnowledgeData, id: string, asc: number, mechanics = 
   const monster = data.monsterDb.monsters[id]!;
   const fights = total(monster.encounters);
   const lines = [`### ${monsterNameOf(data, id)} ${id}〔${KIND_ZH[monster.kind ?? ""] ?? monster.kind ?? "?"}｜${actsText(monster.acts)}｜记录 ${fights} 场〕`, hpLine(data, id, asc)];
-  const phases = phasesLine(monster, asc);
+  const phases = phasesLine(id, monster, asc);
   if (phases) lines.push(phases);
   const opening = openingLine(monster);
   if (opening) lines.push(opening);
