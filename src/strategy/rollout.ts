@@ -218,7 +218,8 @@ export function clockEstimate(f: Record<string, number>): Estimate {
  * Switches of the Waterfall Giant's modelling in the 5-turn rollout (tools/giant-replay.ts turns them off for the rollout
  * before 2026-10-04; no decision code sets them):
  *   - blastTerminal: the end-of-horizon estimate counts the blast (giantTerminal);
- *   - deathMoveFilter: a living Giant never draws its Explode, a move it only makes once dead (DEATH_MOVES).
+ *   - deathMoveFilter: a living Giant never draws its Explode, a move it only makes once dead (DEATH_MOVES; the other
+ *     enemies' are deathMoveOptions.others).
  */
 export const eruptionOptions: { blastTerminal: boolean; deathMoveFilter: boolean } = { blastTerminal: true, deathMoveFilter: true };
 
@@ -1383,11 +1384,30 @@ function nextMove(table: EnemyTable | undefined, move: string | null, random: ()
 
 /**
  * Moves an enemy only makes once it is dead: a Waterfall Giant husk's Explode, the Test Subject's Respawn into its
- * last phase. The move model has them after the move of the turn it was killed (the Giant: ~10% after every move),
- * which a 5-turn window seldom reaches and a whole fight does (a living Giant "exploding" on turn 9). A whole-fight
- * simulation never picks them for a living enemy (the husk's blast is enemyDown's).
+ * next phase, a dead Decimillipede segment's Dead and Reattach, a dead Eye With Teeth's Revive (Fogmog's summon). The
+ * move model has them after the move of the turn it was killed (the builder counts a turn's first move after the
+ * last), so a living enemy drew them in the rollout (the Giant: ~10% after every move, a living Giant "exploding";
+ * a segment's Writhe -> Reattach 21 of 61). In the logs (frames to 2026-10-04) each was seen on a dead enemy or a
+ * husk only, never on a living one: Explode 0 of 337 frames, Respawn 0 of 66 (23 runs), the segments' Reattach
+ * 0 of 444 and Dead 0 of 263, the Eye's Revive 0 of 107 (36 runs). Neither a whole fight nor a 5-turn sample gives one
+ * to a living enemy (the husk's blast and a phase's or a segment's return are enemyDown's and the revive steps').
+ * The Giant's About To Blow and the Parafright's Revive are dead-only too, but the move model never offers them.
  */
-export const DEATH_MOVES: Record<string, readonly string[]> = { WATERFALL_GIANT: ["EXPLODE_MOVE"], TEST_SUBJECT: ["RESPAWN_MOVE"] };
+export const DEATH_MOVES: Record<string, readonly string[]> = {
+  WATERFALL_GIANT: ["EXPLODE_MOVE"],
+  TEST_SUBJECT: ["RESPAWN_MOVE"],
+  DECIMILLIPEDE_SEGMENT_FRONT: ["DEAD_MOVE", "REATTACH_MOVE"],
+  DECIMILLIPEDE_SEGMENT_MIDDLE: ["DEAD_MOVE", "REATTACH_MOVE"],
+  DECIMILLIPEDE_SEGMENT_BACK: ["DEAD_MOVE", "REATTACH_MOVE"],
+  EYE_WITH_TEETH: ["REVIVE_MOVE"],
+};
+
+/**
+ * Replay switch (tools/living-death-moves-replay.ts; no decision code sets it): DEATH_MOVES kept out of the 5-turn rollout's
+ * living enemies other than the Giant (eruptionOptions.deathMoveFilter is the Giant's). Off: as before 2026-10-04's
+ * follow-up (the Giant's alone).
+ */
+export const deathMoveOptions: { others: boolean } = { others: true };
 
 /**
  * A phase boss's moves by phase (logged A7-A9 Test Subject: Bite / Skull Bash at 111 HP, Multi Claw at 212, then
@@ -2223,12 +2243,14 @@ function applyPlan(
       // rules keep the death's own moves out while such an ally lives and the living ally's moves out once all are dead.
       const deathNext = e.base.moveOnDeath ? deathNextOf(e, enemies, aliveBefore) : null;
       const learnedFilter = e.base.moveOnDeath ? deathAllowed(e, enemies) : undefined;
-      // A living Giant never makes its Explode, a move it only makes once dead (DEATH_MOVES), as a whole fight's script
-      // already keeps it out. The move model has it after every Giant move (4-17%) and nothing after it, so a 5-turn
-      // sample's living Giant "blew" for 40 and again every turn after (AKK09TEEEXKD F17: 41-HP losses on Siphon turns,
-      // which hit nothing). The Test Subject's Respawn is the same kind of move (Multi Claw -> Respawn 2 of 40 in the move
-      // model); it stays as it was here until its fights are replayed (tools/giant-replay.ts covers the Giant's).
-      const dead = eruptionOptions.deathMoveFilter && e.id === GIANT_ID ? DEATH_MOVES[e.id] : undefined;
+      // A living enemy never makes a move it only makes once dead (DEATH_MOVES), as a whole fight's script already keeps
+      // them out. The move model has them after the moves of the turns it died on: a 5-turn sample's living Giant "blew"
+      // for 40 and again every turn after (nothing follows Explode; AKK09TEEEXKD F17: 41-HP losses on Siphon turns), a
+      // living Test Subject in phase 2 skipped a turn on Respawn and went on with phase 3's Lacerate (Multi Claw -> Respawn
+      // 2 of 40), a living Decimillipede segment "reattached" for 0 (Writhe -> Reattach 17-23 of 61-66), a living Eye With
+      // Teeth sat on Revive for good (Distract -> Revive 2 of 82, then Revive -> Revive).
+      const filtered = e.id === GIANT_ID ? eruptionOptions.deathMoveFilter : deathMoveOptions.others;
+      const dead = filtered ? DEATH_MOVES[e.id] : undefined;
       const deathFilter = dead ? (m: string) => !dead.includes(m) && (!learnedFilter || learnedFilter(m)) : learnedFilter;
       const living = dead ? (m: string) => !dead.includes(m) : undefined;
       if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", pick, undefined, living) : nextMove(table, e.move, pick, undefined, living);
