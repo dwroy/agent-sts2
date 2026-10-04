@@ -48,6 +48,8 @@ export interface CardModel {
   /** Per hit, before this turn's extra Strength and before Vulnerable/Weak. null = deals no damage. */
   damage: number | null;
   hits: number;
+  /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
+  maulIncrease?: number;
   block: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
   vulnerable: number;
@@ -667,6 +669,7 @@ export function replayOf(rendered: string): number {
 export interface UpgradeDelta {
   damage?: number;
   hits?: number;
+  maulIncrease?: number;
   block?: number;
   vulnerable?: number;
   weak?: number;
@@ -681,7 +684,7 @@ export interface UpgradeDelta {
   powerAmount?: number;
 }
 
-const UPGRADE_FIELDS = ["damage", "hits", "block", "vulnerable", "weak", "strength", "tempStrength", "draw", "energyGain", "hpLoss", "cost", "plating", "retaliate", "powerAmount"] as const;
+const UPGRADE_FIELDS = ["damage", "hits", "maulIncrease", "block", "vulnerable", "weak", "strength", "tempStrength", "draw", "energyGain", "hpLoss", "cost", "plating", "retaliate", "powerAmount"] as const;
 
 /**
  * What upgrading this plain card changes, as model fields: the card entry with its dynamic values and
@@ -727,6 +730,7 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
     damage: card.damage === null && !delta.damage ? null : add(card.damage ?? 0, delta.damage),
     ...(card.damageBase !== undefined && delta.damage ? { damageBase: card.damageBase + delta.damage } : {}),
     hits: Math.max(0, add(card.hits, delta.hits)),
+    ...(card.maulIncrease !== undefined || delta.maulIncrease !== undefined ? { maulIncrease: add(card.maulIncrease, delta.maulIncrease) } : {}),
     block: Math.max(0, add(card.block, delta.block)),
     vulnerable: add(card.vulnerable, delta.vulnerable),
     weak: add(card.weak, delta.weak),
@@ -917,6 +921,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     damage,
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
+    ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
     block,
     vulnerable,
     weak,

@@ -2153,6 +2153,16 @@ function applyPlan(
     if (!segmentsLeft) e.reattachIn = undefined;
     else if (e.reattachIn === undefined) e.reattachIn = REATTACH_TURNS;
   }
+  if ((o.maulGrowth ?? 0) > 0) {
+    // The current hand's damage already includes earlier turns; add only this line's shared growth once to every pile.
+    const grow = (card: CardModel): CardModel => card.cardId !== "MAUL" || card.damage === null ? card : {
+      ...card, damage: card.damage + o.maulGrowth!,
+      ...(card.damageBase !== undefined ? { damageBase: card.damageBase + o.maulGrowth! } : {}),
+    };
+    piles.draw = piles.draw.map(grow);
+    piles.discard = piles.discard.map(grow);
+    player.retained = player.retained.map(grow);
+  }
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
