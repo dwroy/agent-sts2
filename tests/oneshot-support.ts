@@ -219,6 +219,8 @@ export async function scriptedDeepSeek(replies: { content: string; reasoning?: s
   const bodies: Raw[] = [];
   const server = await startTestServer((req, res) => {
     let body = "";
+    // Decoded as one UTF-8 stream: a Chinese character split across two chunks would otherwise come out as U+FFFD.
+    req.setEncoding("utf8");
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
       bodies.push(JSON.parse(body || "{}") as Raw);
