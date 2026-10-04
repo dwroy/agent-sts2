@@ -59,6 +59,31 @@ export function routeProblems(map: RouteMap, value: unknown, keepAllowed: boolea
   return checkRoute(map, ids).map((problem) => `route: ${problem}`);
 }
 
+/**
+ * A route answer read leniently (codex only, engines/codex.ts): on a route review, "keep" followed by text that names no
+ * node id is keep; on either kind, node ids followed by other text are their leading ids when those alone make a legal
+ * route. Null when neither applies (the answer is checked as it is, and re-asked when it is wrong). 2026-10-03/04, V4.6
+ * at xhigh: 19 of 146 codex route reviews wrote "keep" and then the route_reason the instruction asks for (codex's
+ * schema has none) or its own words into route ('keep“,”route_reason“:”单精英三火堆保血', 'keep fin? No must exact keep'),
+ * The words after node ids are dropped only when they name no further node id.
+ * each re-asked (10-20 s) and 3 still garbled after it.
+ */
+export function lenientRoute(state: unknown, value: unknown): { route: string; why: string } | null {
+  if (typeof value !== "string" || isKeep(value)) return null;
+  const st = record(state);
+  const reviewMap = routeMapFromView(st["route_review"]);
+  const map = reviewMap ?? routeMapFromView(st["act_route"]);
+  if (!map) return null;
+  const shown = JSON.stringify(value.length > 60 ? `${value.slice(0, 60)}…` : value);
+  if (reviewMap && /^\s*["'“”‘’]?keep(?![a-z])/i.test(value) && routeIds(value) === null) return { route: "keep", why: `route ${shown} taken as keep: "keep", then no node id` };
+  const lead = /^\s*(r\s*\d+\s*c\s*\d+(?:\s*(?:→|->|>|,|-)?\s*r\s*\d+\s*c\s*\d+)*)([\s\S]*)$/i.exec(value);
+  // Words after the ids, and no further id in them (ids there are read with the rest, as before: routeIds).
+  if (!lead || !lead[2]!.replace(/[\s,.;→>-]+/g, "") || routeIds(lead[2]) !== null) return null;
+  const ids = routeIds(lead[1]);
+  if (!ids || checkRoute(map, ids).length > 0) return null;
+  return { route: ids.join(" "), why: `route ${shown} taken as its leading node ids (a legal route; the text after them dropped)` };
+}
+
 /** The route field's schema entry. */
 const ROUTE_FIELD = (keep: boolean): JsonSchema => ({
   type: "string",

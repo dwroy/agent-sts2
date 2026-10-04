@@ -545,6 +545,11 @@ export interface BrainConfig {
      * codexKindSchema).
      */
     schemaFields: "all" | "used";
+    /**
+     * BRAIN_CODEX_ROUTE_PATTERN (on/off): the route field of codex's answer schema takes only "keep" or node ids
+     * separated by spaces (a JSON Schema pattern, which strict mode enforces while it samples).
+     */
+    routePattern: boolean;
     /** BRAIN_CODEX_REASON_LAST (on/off): `reason` as the last field of codex's answer schema (the order codex writes them in). */
     reasonLast: boolean;
     /**
@@ -614,6 +619,13 @@ export const DEFAULT_CODEX_MAX_ANSWER_BLANKS = 100;
 export const DEFAULT_CODEX_SCHEMA_FIELDS: "all" | "used" = "used";
 export const DEFAULT_CODEX_REASON_LAST = false;
 export const DEFAULT_CODEX_ACCEPT_CUT = true;
+/**
+ * BRAIN_CODEX_ROUTE_PATTERN when unset (engines/codex.ts ROUTE_PATTERN). 2026-10-04 (experiments/brain-replay/
+ * route-garbage-1004, xhigh): the three questions whose route stayed garbled after the re-ask in play (6 of 6 answers)
+ * answered a clean "keep" with the pattern (3 of 3), the same choices as in play; route_reason back in the schema did
+ * too (3 of 3), but it changes what the run memory gets from codex's route changes, the pattern changes no prompt.
+ */
+export const DEFAULT_CODEX_ROUTE_PATTERN = true;
 
 /**
  * The codex usage guard's defaults (engines/codex-usage.ts). Stop at 80% of any window (Dai 2026-10-03: protect the
@@ -775,6 +787,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   if (schemaFieldsRaw !== "all" && schemaFieldsRaw !== "used") problems.push({ field: "BRAIN_CODEX_SCHEMA_FIELDS", message: `expected all or used, got "${schemaFieldsRaw}"` });
   const reasonLast = parseOnOff(readEnv(env, "BRAIN_CODEX_REASON_LAST"), "BRAIN_CODEX_REASON_LAST", problems) ?? DEFAULT_CODEX_REASON_LAST;
   const acceptCut = parseOnOff(readEnv(env, "BRAIN_CODEX_ACCEPT_CUT"), "BRAIN_CODEX_ACCEPT_CUT", problems) ?? DEFAULT_CODEX_ACCEPT_CUT;
+  const routePattern = parseOnOff(readEnv(env, "BRAIN_CODEX_ROUTE_PATTERN"), "BRAIN_CODEX_ROUTE_PATTERN", problems) ?? DEFAULT_CODEX_ROUTE_PATTERN;
   const routeReasonRaw = (readEnv(env, "BRAIN_CODEX_ROUTE_REASON") ?? "drop").toLowerCase();
   if (routeReasonRaw !== "drop" && routeReasonRaw !== "keep") problems.push({ field: "BRAIN_CODEX_ROUTE_REASON", message: `expected drop or keep, got "${routeReasonRaw}"` });
   const fieldRaw = readEnv(env, "BRAIN_CODEX_MAX_FIELD_CHARS");
@@ -827,6 +840,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       schemaFields: schemaFieldsRaw === "used" ? "used" : "all",
       reasonLast,
       acceptCut,
+      routePattern,
       maxFieldChars,
       stallRetries: stallRetries ?? 1,
       usage: codexUsage,

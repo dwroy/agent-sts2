@@ -3,13 +3,13 @@
 import { describe, expect, it } from "vitest";
 
 import { normalisePick, parseAnswerText, reaskMessage, userMessage } from "../src/brain/message.js";
-import { fightPlanFromSchema, fightPlanSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
+import { fightPlanFromSchema, fightPlanSpec, lenientRoute, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { choiceMessage, taskMessage } from "../src/llm/deepseek-message.js";
 import { buildRouteMap, routeView } from "../src/strategy/route-map.js";
 import { isRunPlanReply } from "../src/strategy/run-plan.js";
 import type { JsonValue } from "../src/util/json.js";
-import { input } from "./route-fixture.js";
+import { input, legalRoutes } from "./route-fixture.js";
 
 describe("pick spec", () => {
   const options = {
@@ -167,5 +167,34 @@ describe("message layout", () => {
     expect(normalisePick(req, { choice: "o1, o0", reason: "x" })).toEqual({ choice: "o1", reason: "x [the answer named 2 options (o1, o0) on a one-option question: the first, o1, taken]" });
     expect(normalisePick(req, { choice: ["沉溺", "拒绝"], reason: "" })).toEqual({ choice: "o1", reason: "[the answer named 2 options (沉溺,拒绝) on a one-option question: the first, o1, taken]" });
     expect(normalisePick(req, { choice: "o1, nope" })).toEqual({ choice: "o1, nope" });
+  });
+});
+
+describe("a codex route read leniently (lenientRoute; V4.6 at xhigh, 2026-10-04)", () => {
+  const view = (over: Parameters<typeof input>[0] = {}) => JSON.parse(JSON.stringify(routeView(buildRouteMap(input(over))))) as Record<string, unknown>;
+  const review = { route_review: { ...view(), plan: "r1c2 …" } };
+  const act = { act_route: view() };
+  /** Every distinct route codex wrote in play with "keep" and then words (route_reason, second thoughts), first answers and re-asks. */
+  const GARBLED = ["keep','route_reason':'双商店补强，避开精英'}", "keep出来ketøyroute_reason\":\"保留商店，避开低血精英\"}", "keepг%?}", "keep ท? wait", "keep 文? ", "keep argh", "keep fin? No must exact keep", "keep“,”route_reason“:”单精英三火堆保血", "keep  invalid? Wait no", "keep Raz? ", "keep科?}", "keep】【：】【“】【route_reason\":\"先回血满血进精英\"} 1:0:47:1:0.297 1:0:47:10:1.678", "keep及末火堆", "keep (双火堆备战精英)", "keep 替换为空格? ", "keep 序? ", "keep登??? ", "keep 海商店补强，火堆保血", "keepװroute_reason\":\"火堆保血，精英前补满\"}", "keep 覆盖？", "keep R12? no"];
+
+  it("on a route review, \"keep\" then words without a node id is keep (all 21 distinct garbled routes from play)", () => {
+    for (const route of GARBLED) expect(lenientRoute(review, route), route).toEqual({ route: "keep", why: expect.stringMatching(/taken as keep: "keep", then no node id$/) });
+    // Clean answers and non-keep words are left to the checks; so is keep on an act route (it needs node ids).
+    for (const route of ["keep", " Keep ", '"keep"', "keeping the plan", "stay", "", "keep r5c2?"]) expect(lenientRoute(review, route), route).toBeNull();
+    expect(lenientRoute(act, "keep fin? No must exact keep")).toBeNull();
+    expect(lenientRoute({}, "keep 文? ")).toBeNull();
+    expect(lenientRoute(review, ["keep", "x"])).toBeNull();
+  });
+
+  it("node ids then words: the leading ids when they alone are a legal route, else left to the checks (a re-ask as before)", () => {
+    const legal = legalRoutes(act.act_route)[0]!;
+    const text = legal.join(" ");
+    expect(lenientRoute(act, `${text} route_reason":"保血"}`)).toEqual({ route: text, why: expect.stringMatching(/taken as its leading node ids \(a legal route; the text after them dropped\)$/) });
+    expect(lenientRoute(review, `${legal.join(" → ")}  wait?`)?.route).toBe(text);
+    // A clean route, ids after the words (read with the rest, as before), an illegal leading part: unchanged.
+    expect(lenientRoute(act, text)).toBeNull();
+    expect(lenientRoute(act, `${legal.slice(0, -1).join(" ")} 然后 ${legal.at(-1)}`)).toBeNull();
+    expect(lenientRoute(act, `${legal.slice(1).join(" ")} wait`)).toBeNull();
+    expect(lenientRoute(act, `${legal.slice(0, 2).join(" ")} wait`)).toBeNull();
   });
 });

@@ -58,7 +58,7 @@ import { DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type Brain
 import type { JsonSchema } from "../../tools/types.js";
 import { EngineFailure, labelPrefix, type FailureKind } from "../router.js";
 import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
-import { stableSchema } from "../specs.js";
+import { lenientRoute, stableSchema } from "../specs.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import { CodexSession, configProblems, RpcError, SessionError, type SessionOptions, type SessionTurn } from "./codex-session.js";
 import { CodexUsageGuard, readCodexUsage, type CodexUsage, type UsageNote } from "./codex-usage.js";
@@ -366,20 +366,21 @@ export function closeCutAnswer(text: string): { json: Record<string, unknown>; t
  *   single field is ~180 characters; the act route ~90.
  * DeepSeek's and Claude's schemas and every prompt stay as they are.
  */
-export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null }): StrictSchema | null {
+export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean }): StrictSchema | null {
   let schema = kindSchema;
   if (opts.routeReason === "drop" && schema.properties?.["route_reason"]) {
     const { route_reason: _dropped, ...properties } = schema.properties;
     schema = { ...schema, properties, required: (schema.required ?? []).filter((key) => key !== "route_reason") };
   }
   const strict = strictSchema(schema);
-  if (!strict || !opts.maxFieldChars) return strict;
+  if (!strict || (!opts.maxFieldChars && !opts.routePattern)) return strict;
   const cap = opts.maxFieldChars;
   const walk = (node: StrictSchema, key: string | null): StrictSchema => {
     const out: StrictSchema = { ...node };
     const type = node["type"];
     const types = Array.isArray(type) ? type : [type];
-    if (types.includes("string") && !Array.isArray(node["enum"])) out["maxLength"] = key === "route_reason" ? Math.min(cap, ROUTE_REASON_CHARS) : cap;
+    if (cap && types.includes("string") && !Array.isArray(node["enum"])) out["maxLength"] = key === "route_reason" ? Math.min(cap, ROUTE_REASON_CHARS) : cap;
+    if (opts.routePattern && key === "route" && types.includes("string")) out["pattern"] = ROUTE_PATTERN;
     if (isObject(node["properties"])) out["properties"] = Object.fromEntries(Object.entries(node["properties"]).map(([k, v]) => [k, walk(v as StrictSchema, k)]));
     if (isObject(node["items"])) out["items"] = walk(node["items"] as StrictSchema, null);
     if (Array.isArray(node["anyOf"])) out["anyOf"] = node["anyOf"].map((v) => (isObject(v) ? walk(v as StrictSchema, key) : v));
@@ -387,6 +388,12 @@ export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" 
   };
   return walk(strict, null);
 }
+
+/**
+ * The route field's pattern (BRAIN_CODEX_ROUTE_PATTERN): "keep" or node ids separated by single spaces, nothing else (no
+ * route_reason or second thoughts written into it, as V4.6 at xhigh did).
+ */
+export const ROUTE_PATTERN = "^(keep|r[0-9]+c[0-9]+( r[0-9]+c[0-9]+)*)$";
 
 /** route_reason's cap when it is kept (BRAIN_CODEX_ROUTE_REASON=keep): the prompt asks for 15 characters. */
 export const ROUTE_REASON_CHARS = 60;
@@ -972,7 +979,7 @@ export class CodexEngine implements BrainEngine {
     mkdirSync(this.stateDir, { recursive: true });
     const entry = await this.catalog(model, effort, env);
     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
-    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars });
+    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern });
     const call = { model, effort, env, entry, kindSchema, schema };
     return this.mode === "session" ? this.decideSession(req, signal, call) : this.decideExec(req, signal, call);
   }
@@ -1174,12 +1181,19 @@ export class CodexEngine implements BrainEngine {
   /** The BrainAnswer of an answered call (both modes): the text read back, the strict schema's nulls dropped, codex's usage. */
   private answer(req: BrainRequest, c: CodexCall, r: { text: string; latencyMs: number; usage: Json; reasoning: string[]; toolCalls: ToolCallRecord[]; native: Json; notes?: string[] }): BrainAnswer {
     const parsed = parseAnswerText(r.text);
-    const answer = parsed ? (dropNulls(parsed, c.kindSchema) as Json) : null;
+    let answer = parsed ? normalisePick(req, dropNulls(parsed, c.kindSchema) as Json) : null;
+    // A route of "keep" plus words, or of node ids plus words, read as the route it names (specs.ts lenientRoute).
+    const notes = [...(r.notes ?? [])];
+    const route = answer && req.spec.kind === "pick" && "route" in answer ? lenientRoute(req.payload, answer["route"]) : null;
+    if (answer && route) {
+      answer = { ...answer, route: route.route };
+      notes.push(route.why);
+    }
     return {
       engine: this.name,
       model: c.model,
       effort: c.effort,
-      answer: answer ? normalisePick(req, answer) : null,
+      answer,
       problems: answer ? [] : [`no JSON answer in the reply: ${r.text.slice(0, 120)}`],
       attempts: 1,
       latencyMs: r.latencyMs,
@@ -1194,7 +1208,7 @@ export class CodexEngine implements BrainEngine {
       ...(r.reasoning.length > 0 ? { reasoning: r.reasoning.join("\n\n") } : {}),
       raw: r.text,
       native: r.native,
-      ...(r.notes?.length ? { notes: r.notes } : {}),
+      ...(notes.length ? { notes } : {}),
     };
   }
 
