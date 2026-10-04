@@ -178,7 +178,7 @@ describe("judgeEndTurn: certain death only when nothing can be ruled out", () =>
 describe("the hard elite list (src/sl/sl-elites.json)", () => {
   it("lists the hardest non-boss fights by A8+ deaths (any room), plus Soul Nexus by rate, with their enemy ids, source and date", () => {
     const list = loadSlElites();
-    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus", "Mecha Knight", "Three Knights"]);
+    expect(list.elites.map((elite) => elite.name)).toEqual(["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus", "Mecha Knight", "Three Knights", "Axebot"]);
     expect(list.date).toBe("2026-10-04");
     expect(list.source).toMatch(/A8\+/);
     expect(listedElite(["SOUL_NEXUS"], list)?.name).toBe("Soul Nexus");
@@ -188,6 +188,8 @@ describe("the hard elite list (src/sl/sl-elites.json)", () => {
     // Every act-3 elite since 2026-10-04 (Dai): Mecha Knight and the Three Knights joined Soul Nexus.
     expect(listedElite(["FLAIL_KNIGHT", "MAGI_KNIGHT", "SPECTRAL_KNIGHT"], list)?.name).toBe("Three Knights");
     expect(listedElite(["MECHA_KNIGHT"], list)?.name).toBe("Mecha Knight");
+    // An act-3 hallway monster, listed by its record (2026-10-04: 4AWD died at 73% entry).
+    expect(listedElite(["AXEBOT"], list)?.name).toBe("Axebot");
     expect(listedElite(["BYGONE_EFFIGY"], list)).toBeNull();
   });
 });
@@ -444,7 +446,7 @@ describe("SlController", () => {
 
   it("describe() is what run-config records", () => {
     const t = setup("/nowhere/sl.jsonl");
-    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, act3_low_hp: true, act3_low_hp_pct: 40, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus", "Mecha Knight", "Three Knights"] });
+    expect(t.sl.describe()).toMatchObject({ enabled: true, boss_retries: 3, elite_retries: 1, act3_low_hp: true, act3_low_hp_pct: 40, retry_show_sim: true, elites: ["Decimillipede", "Entomancer", "Slumbering Beetle + Bowlbugs", "The Obscura", "Infested Prism", "Soul Nexus", "Mecha Knight", "Three Knights", "Axebot"] });
   });
 });
 
