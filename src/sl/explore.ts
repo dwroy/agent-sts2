@@ -171,6 +171,13 @@ export interface SlTarget {
    * each turn with a question left to change ("T4": 31.3), rounded to a tenth. Absent with the switch off.
    */
   where?: { weight: number; turnRound: number; lost: Record<string, number>; weights: Record<string, number> };
+  /**
+   * SL_RETRY_EXPLORE_ANCHOR: why this attempt's path is the reference (the failed attempts with decision points recorded,
+   * each one's last turn and the enemy HP left then, the latest first). Absent with the switch off (attempt 2's path).
+   */
+  anchor?: { why: string; ranked: { attempt: number; turns: number; enemyHp: number | null }[] };
+  /** SL_RETRY_EXPLORE_REARM: a point chosen in the attempt after its deviation at `after` (that turn's board) was wasted. */
+  rearmed?: { after: string; turn: number | null };
 }
 
 /** What came of an attempt's deviation point. */
@@ -230,6 +237,12 @@ export interface SlExploreRecord {
    * fight) deviates there; then `target` and `deviation` say where and what, as an attempt 3's do. `weights`: the turns'.
    */
   second?: { turn: number; until: number; weights: Record<string, number> };
+  /**
+   * SL_RETRY_EXPLORE_REARM: the deviations of the attempt whose turn ended with a failed attempt's plays (differs false), in
+   * order, each with its target; after each the attempt went on along the reference path to a later point (`target`,
+   * `deviation` the last one's). Not uses of their points (exploreTarget). Absent: none.
+   */
+  wasted?: { target: SlTarget; deviation: SlDeviation }[];
   /** SL_RETRY_EXPLORE_CANON (attempts from the 1st) / _TURN (from the 2nd): each turn's plays and boards. */
   turns?: SlTurnPlays[];
 }
@@ -271,6 +284,22 @@ export interface SlExploreEnv {
      * 「防御, 剑柄打击 -> 火箭, 烙印+, 怨恨 -> 火箭」 with the drawn 烙印+ in it).
      */
     plays?: string[];
+    /**
+     * SL_RETRY_EXPLORE_REPLAY_ORDER (2026-10-04, ABCJ0TZ6MD06 F48 attempt 4 T4): a line taken as the reference's by its turn's
+     * plays alone (another text: the answer, or the first shown line with them) whose plays from this board come in another
+     * order than `plays` plays `plays` instead, when they can be played here: the order changes the board (attempt 2's
+     * 「铁斩波, 防御+, 打击, 耸肩无视+」 as 「防御+, 打击, 铁斩波, 耸肩无视+」 left the boss at 372 not 376 and Pen Nib at 0 not 9,
+     * so T5's board was not attempt 2's and the replay stopped there). Absent: such a line is the reference's, as before.
+     */
+    order?: boolean;
+    /**
+     * SL_RETRY_EXPLORE_REPLAY_CODE (2026-10-04, with SL_RETRY_EXPLORE_ANCHOR): a board where code plays its own line (only line,
+     * only distinct line, a dominating line, the HP guard's) that is not the reference's line there (`line`) plays `plays` instead, when
+     * they can be played here (never instead of a winning line, nor where they die this turn and code's line does not): attempt
+     * 1's code turns were planned without the known draws (ABCJ0TZ6MD06 F48 T7: 「防御, 探寻打击」 then, 「防御, 被遗忘的仪式,
+     * 探寻打击, 头槌」 with them). Absent: code's line, as before (the replay stops there when it is not the reference's).
+     */
+    code?: boolean;
     /**
      * SL_RETRY_EXPLORE_REPLAY_DEVIATE: where the replay cannot be played on this board (its line not among the options and
      * its plays not legal here, or that line dies this turn where the answer does not), the deviation to make here instead:
@@ -780,6 +809,52 @@ export interface ExploreTargetOptions {
    * by their cards (`cards`) for the replacement, the avoid and the row's `differs`. Off: by the whole plays, as before.
    */
   potion?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_ANCHOR (2026-10-04, ABCJ0TZ6MD06 F48: attempt 1 lived to T10, the boss at 211 of 535, attempt 2 to T8,
+   * and every retry went back to attempt 2's path): the reference path is the failed attempt that lived longest, of those
+   * with decision points recorded (attempt 1 among them once it records them): the latest turn reached; ties: the least
+   * enemy HP left on its last turn, then the earliest attempt from the 2nd (its lines were planned with the known draws),
+   * attempt 1 last. Off: the first failed attempt from the 2nd, as before.
+   */
+  anchor?: boolean;
+  /**
+   * SL_RETRY_EXPLORE_REARM: a point chosen within an attempt whose deviation was wasted: the reference stays `reference`,
+   * only the questions from turn `fromTurn` on are points, and not those on the boards `skip` (the wasted ones).
+   */
+  rearm?: { reference: number; fromTurn: number; skip: readonly string[] };
+}
+
+/** The HP the enemies had left on a row's last turn (its summary: "A 12/40, B 30/30" is 42); null when it is not readable. */
+export function enemyHpLeft(row: Pick<ExploreRow, "summary">): number | null {
+  const last = row.summary?.turns.at(-1);
+  if (!last) return null;
+  const text = last.enemies.trim();
+  if (text === "") return 0;
+  let sum = 0;
+  for (const part of text.split(", ")) {
+    const hp = /\s(\d+)\/(\d+)$/.exec(part);
+    if (!hp) return null;
+    sum += Number(hp[1]);
+  }
+  return sum;
+}
+
+/**
+ * SL_RETRY_EXPLORE_ANCHOR: the failed attempts before `attempt` with decision points (questions) recorded, the one that lived
+ * longest first: the latest turn reached; ties: the least enemy HP left (enemyHpLeft; unreadable last), then the earliest
+ * attempt from the 2nd, attempt 1 last; a row left unfinished after every finished one.
+ */
+export function anchorRank(rows: readonly ExploreRow[], attempt: number): ExploreRow[] {
+  const withPoints = rows.filter((row) => row.attempt < attempt && row.result !== "won" && row.explore && Array.isArray(row.explore.points) && row.explore.points.some((point) => point.kind === "question" && point.alternatives));
+  const hp = new Map(withPoints.map((row) => [row, enemyHpLeft(row)]));
+  return [...withPoints].sort(
+    (a, b) =>
+      Number(a.result === "unfinished") - Number(b.result === "unfinished") ||
+      b.turns - a.turns ||
+      (hp.get(a) ?? Infinity) - (hp.get(b) ?? Infinity) ||
+      Number(a.attempt === 1) - Number(b.attempt === 1) ||
+      a.attempt - b.attempt,
+  );
 }
 
 /**
@@ -869,11 +944,26 @@ export function pointLost(point: SlPoint): boolean {
 export function exploreTarget(rows: readonly ExploreRow[], attempt: number, options: ExploreTargetOptions = {}): { target: SlTarget | null; why: string } {
   if (attempt < 3) return { target: null, why: "attempt 2 plays as usual: it is the first attempt that knows the draws" };
   // A row left unfinished (the session ended in the attempt, a restart went on with it) after the attempt's finished one.
+  // SL_RETRY_EXPLORE_ANCHOR: attempt 1's lines count among the failed attempts' too (it records them with the switch).
+  const from = options.anchor === true ? 1 : 2;
   const failed = rows
-    .filter((row) => row.attempt >= 2 && row.attempt < attempt && row.result !== "won" && row.explore && Array.isArray(row.explore.points))
+    .filter((row) => row.attempt >= from && row.attempt < attempt && row.result !== "won" && row.explore && Array.isArray(row.explore.points))
     .sort((a, b) => a.attempt - b.attempt || Number(a.result === "unfinished") - Number(b.result === "unfinished"));
-  const reference = failed[0];
-  if (!reference || reference.explore!.points.length === 0) return { target: null, why: "no earlier attempt from the 2nd recorded its decision points" };
+  let reference = failed.find((row) => row.attempt >= 2);
+  let anchor: SlTarget["anchor"] | undefined;
+  if (options.rearm) reference = failed.find((row) => row.attempt === options.rearm!.reference);
+  else if (options.anchor === true) {
+    const ranked = anchorRank(rows, attempt);
+    if (ranked.length > 0) {
+      const first = reference;
+      reference = ranked[0]!;
+      const list = ranked.map((row) => ({ attempt: row.attempt, turns: row.turns, enemyHp: enemyHpLeft(row) }));
+      const say = (entry: (typeof list)[number]) => `attempt ${entry.attempt} T${entry.turns}${entry.enemyHp !== null ? ` (enemy HP ${entry.enemyHp})` : ""}`;
+      const why = reference === first ? `attempt ${reference.attempt}'s path, the failed attempt that lived longest (${list.map(say).join(", ")})` : `attempt ${reference.attempt}'s path, not attempt ${first?.attempt ?? 2}'s: it lived longest (${list.map(say).join(", ")})`;
+      anchor = { why, ranked: list };
+    }
+  }
+  if (!reference || reference.explore!.points.length === 0) return { target: null, why: options.anchor === true ? "no earlier failed attempt recorded its decision points" : "no earlier attempt from the 2nd recorded its decision points" };
   // SL_RETRY_EXPLORE_CANON / _TURN: the turns the failed attempts had through each board (with _CANON attempt 1 too, and
   // the rows from before the record rebuilt from their summary).
   const canonOn = options.canon === true;
@@ -896,6 +986,8 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
   // SL_RETRY_EXPLORE_WHOLE: the attempts whose deviation there ended its turn as a failed attempt's (not a use), by board.
   const wasted = new Map<string, number[]>();
   for (const row of failed) {
+    // SL_RETRY_EXPLORE_REARM: an attempt's deviations wasted before its last one (never uses).
+    if (options.whole === true) for (const entry of row.explore!.wasted ?? []) wasted.set(entry.target.board, [...(wasted.get(entry.target.board) ?? []), row.attempt]);
     const target = row.explore!.target;
     if (!target || !row.explore!.deviation?.reached) continue;
     if (options.whole === true && row.explore!.deviation.differs === false) wasted.set(target.board, [...(wasted.get(target.board) ?? []), row.attempt]);
@@ -916,6 +1008,8 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
     if (seen.has(point.board)) continue;
     seen.add(point.board);
     back += 1;
+    // SL_RETRY_EXPLORE_REARM: only the points still ahead of the attempt, not the wasted ones.
+    if (options.rearm && ((point.turn ?? -Infinity) < options.rearm.fromTurn || options.rearm.skip.includes(point.board))) continue;
     const texts = played.get(point.board)?.lines ?? new Set<string>();
     // SL_RETRY_EXPLORE_CANON: nor a line whose turn a failed attempt had through this board (another order, attempt 1's).
     const turnsThere = canonOn ? tried?.get(point.board) : undefined;
@@ -972,8 +1066,9 @@ export function exploreTarget(rows: readonly ExploreRow[], attempt: number, opti
       point,
       ...(tried ? { tried: triedOf(turnsThere, potionOn) } : {}),
       ...(where ? { where } : {}),
+      ...(anchor ? { anchor } : {}),
     },
-    why,
+    why: anchor ? `${why}; ${anchor.why}` : why,
   };
 }
 

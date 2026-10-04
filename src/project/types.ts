@@ -58,6 +58,12 @@ export interface DecisionEnv {
    */
   sl?: SlEnv;
   /**
+   * SL_RETRY_EXPLORE_ANCHOR (docs/sl.md §11.16): on an SL fight's first attempt, only the recording of its decision points (the
+   * lines chosen and their alternatives, as a retry records them) so that a later attempt can take its path as the reference;
+   * set only where `sl` is not. Nothing the planner decides or asks reads it.
+   */
+  slRecord?: SlExploreEnv;
+  /**
    * THIEF_FACTS (config; docs/thief.md): the thieves' facts, their escape in the rollout and a kill line kept among the
    * options. Undefined means on; false: the combat question exactly as before.
    */

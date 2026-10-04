@@ -667,6 +667,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // What the brain's tools read for this state (only used when an engine gets tools).
     brain?.setToolContext(toolContextOf(state, state.run ? actOf(state) : undefined, dirname(config.log.decisionLog)));
     const slEnv = sl?.envFor(state);
+    // SL_RETRY_EXPLORE_ANCHOR: a first attempt's decision points recorded (nothing else changes).
+    const slRecord = slEnv ? undefined : sl?.recordFor(state);
     const env: DecisionEnv = {
       state,
       knowledge,
@@ -687,6 +689,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       buildDecider: config.buildDecider === "deepseek" && deepseekClient ? "deepseek" : "jev",
       oneshot: config.buildOneshot,
       ...(slEnv ? { sl: slEnv } : {}),
+      ...(slRecord ? { slRecord } : {}),
       thiefFacts: config.thiefFacts,
       // THIEF_COST: only with THIEF_FACTS (the cost reads the thieves the facts find).
       thiefCost: config.thiefFacts && config.thiefCost,

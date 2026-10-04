@@ -167,6 +167,45 @@ export interface SlConfig {
    */
   retryExploreSecond: boolean;
   /**
+   * SL_RETRY_EXPLORE_REPLAY_ORDER (default on, 2026-10-04, ABCJ0TZ6MD06 F48 attempt 4 T4; with SL_RETRY_EXPLORE_REPLAY_PLAYS):
+   * on a board of the reference path where a line is the reference's only by its turn's plays (another text) and plays them
+   * in another order than the reference did, the reference's logged plays are played in their order instead (when legal
+   * there): the order changes the board (Iron Wave before Defend+ and Strike left the boss at 376, after them at 372 with Pen
+   * Nib at 0 not 9; T5's board then was not attempt 2's and the replay stopped). Off: such a line is the reference's, as before.
+   */
+  retryExploreReplayOrder: boolean;
+  /**
+   * SL_RETRY_EXPLORE_REPLAY_CODE (default on, 2026-10-04, with SL_RETRY_EXPLORE_REPLAY_PLAYS): on a board of the reference path
+   * where code plays its own line (only line, only distinct line, a dominating line, the HP guard's) and that line is not the
+   * reference's line there, the reference's logged plays from there are played instead (when legal there; never instead of a
+   * winning line, nor dying this turn where code's line does not): a first attempt's code turns were planned without the known
+   * draws (offline, attempt 1's path as the anchor stopped on code's own line in 5 of 27 walks). Off: code's line, as before.
+   */
+  retryExploreReplayCode: boolean;
+  /**
+   * SL_RETRY_EXPLORE_TARGET_TURN (default on, 2026-10-04, ABCJ0TZ6MD06 F48 attempt 4; with SL_RETRY_EXPLORE_REPLAY_DEVIATE): an
+   * attempt off the reference path before its deviation point that reaches the point's turn without having deviated still
+   * deviates there: on that turn's first question, the target's lines and the failed turns through its board are not played
+   * again (attempt 4 left the path at T4 and played T5's excluded 「绯红披风, 血墙+」 again, on a board no failed attempt had
+   * decided on, so the replay's fallback could not fire). Off: as before.
+   */
+  retryExploreTargetTurn: boolean;
+  /**
+   * SL_RETRY_EXPLORE_REARM (default on, 2026-10-04, AKK09TEEEXKD F17 attempts 3 and 5; with SL_RETRY_EXPLORE_REPLAY and
+   * _CANON or _TURN): a deviation whose turn still ended with a failed attempt's plays (differs false: a draw's re-plan, or a
+   * card that did not do what its line counted on, went back to them) explored nothing; when the next turn's board is still on
+   * the reference path, the attempt deviates again at a later point of that path (exploreTarget over the points after it),
+   * in the same attempt. Off: the rest of the attempt replays nothing and deviates nowhere, as before.
+   */
+  retryExploreRearm: boolean;
+  /**
+   * SL_RETRY_EXPLORE_ANCHOR (2026-10-04, ABCJ0TZ6MD06 F48; with SL_RETRY_EXPLORE_REPLAY): the reference path (the anchor) of
+   * attempts 3+ is the failed attempt that lived longest (the latest turn reached; ties: the least enemy HP left, then the
+   * earliest attempt from the 2nd), attempt 1 among them once its decision points are recorded (with this switch attempt 1
+   * records them too, without changing a decision). Off: attempt 2's path, as before.
+   */
+  retryExploreAnchor: boolean;
+  /**
    * SL_RETRY_EXPLORE_CANON (default on, 2026-10-03, A9 runs 10-12; with SL_RETRY_EXPLORE): a line counts as tried on a
    * board by the turn's plays (the multiset of card id with "+" and target, potions included, the cards already played that
    * turn counted in), not by its text: the same plays in another order or line text are the same line, the same cards on
@@ -1129,6 +1168,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     retryExploreReplayDeviate: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_DEVIATE"), "SL_RETRY_EXPLORE_REPLAY_DEVIATE", problems) ?? true,
     retryExploreKeyCounters: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_KEY_COUNTERS"), "SL_RETRY_EXPLORE_KEY_COUNTERS", problems) ?? true,
     retryExploreSecond: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_SECOND"), "SL_RETRY_EXPLORE_SECOND", problems) ?? true,
+    retryExploreReplayOrder: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_ORDER"), "SL_RETRY_EXPLORE_REPLAY_ORDER", problems) ?? true,
+    retryExploreReplayCode: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REPLAY_CODE"), "SL_RETRY_EXPLORE_REPLAY_CODE", problems) ?? true,
+    retryExploreTargetTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TARGET_TURN"), "SL_RETRY_EXPLORE_TARGET_TURN", problems) ?? true,
+    retryExploreRearm: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_REARM"), "SL_RETRY_EXPLORE_REARM", problems) ?? true,
+    retryExploreAnchor: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_ANCHOR"), "SL_RETRY_EXPLORE_ANCHOR", problems) ?? true,
     retryExploreCanon: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_CANON"), "SL_RETRY_EXPLORE_CANON", problems) ?? true,
     retryExploreTurn: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_TURN"), "SL_RETRY_EXPLORE_TURN", problems) ?? true,
     retryExploreWhole: parseOnOff(readEnv(env, "SL_RETRY_EXPLORE_WHOLE"), "SL_RETRY_EXPLORE_WHOLE", problems) ?? true,

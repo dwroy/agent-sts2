@@ -1925,10 +1925,12 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
 }
 
 export function planCombatTurn(env: DecisionEnv): Decision | null {
-  const explore = env.sl?.explore !== undefined;
+  // SL_RETRY_EXPLORE_ANCHOR (env.slRecord, a first attempt): the points recorded the same way, nothing else.
+  const explore = env.sl?.explore !== undefined || env.slRecord !== undefined;
   if (explore) {
     slCommitted = null;
     slAvoidFailed = null;
+    slReplayedCode = null;
   }
   let decision = withMechFallback(env, (mechEnv) => withSlRetryFallback(mechEnv, (planEnv) => guardSandpit(planEnv, planTurn(planEnv))));
   // SL_RETRY_EXPLORE: code's own line on this board, for the attempt's record (an error: not recorded). SL_RETRY_EXPLORE_CANON
@@ -1936,7 +1938,7 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
   if (explore && decision?.kind === "act" && CODE_POINTS.has(decision.label) && slCommitted) {
     try {
       const steps = (slCommitted as Plan).steps;
-      const keys = turnKeys(env.sl?.explore?.played, steps);
+      const keys = turnKeys((env.sl?.explore ?? env.slRecord)?.played, steps);
       // SL_RETRY_EXPLORE_WHOLE: the line ends the deviation's turn as a failed one and the avoid could not act: the decision
       // row says so (sl_explore.avoid_failed), and the point carries it to the attempt's deviation.
       const failed = slAvoidFailed && slAvoidFailed.plan === slCommitted ? { line: lineText(steps), reason: slAvoidFailed.reason } : null;
@@ -1944,7 +1946,10 @@ export function planCombatTurn(env: DecisionEnv): Decision | null {
         const avoid = env.sl?.explore?.avoid;
         decision = { ...decision, log: { ...(decision.log ?? {}), sl_explore: { avoid_failed: { point: avoid?.point ?? null, played_in: avoid?.attempts ?? [], ...failed, ...(keys.canon !== undefined ? { turn: keys.canon } : {}) } } } };
       }
-      slPoints.set(decision, { kind: "code", label: decision.label, line: lineText(steps), ...(keys.canon !== undefined ? { canon: { [lineText(steps)]: keys.canon } } : {}), ...(failed ? { avoidFailed: failed } : {}) });
+      // SL_RETRY_EXPLORE_REPLAY_CODE: code's line gave way to the reference's logged plays (the row and the point say so).
+      const replayed = slReplayedCode && slReplayedCode.plan === slCommitted ? slReplayedCode : null;
+      if (replayed) decision = { ...decision, log: { ...(decision.log ?? {}), sl_explore: { replay: { ...replayed.log } } } };
+      slPoints.set(decision, { kind: "code", label: decision.label, line: lineText(steps), ...(keys.canon !== undefined ? { canon: { [lineText(steps)]: keys.canon } } : {}), ...(failed ? { avoidFailed: failed } : {}), ...(replayed ? { replay: { overridden: true, reason: replayed.reason, logged: true as const } } : {}) });
     } catch {
       // not recorded
     }
@@ -2028,6 +2033,23 @@ export function turnKeys(played: SlExploreEnv["played"], steps: readonly Step[],
 }
 
 /**
+ * SL_RETRY_EXPLORE_REPLAY_ORDER / _CODE: whether a line from this board plays the reference's logged plays from it (`plays`,
+ * up to its next decision) as the reference did: they are the line's first plays, in that order, and the line stops there
+ * (it ends, or the last of them draws, so the plan is re-planned after it as the reference's was). A longer line would go on
+ * past the reference's next decision on its own (plan-continue) and leave the path.
+ */
+export function followsPlays(steps: readonly Step[], plays: readonly string[], hand: readonly CardModel[]): boolean {
+  const order = steps.map(stepPlay);
+  if (!plays.every((play, i) => order[i] === play)) return false;
+  if (order.length === plays.length) return true;
+  if (plays.length === 0) return false;
+  const last = steps[plays.length - 1]!;
+  if (last.cardId.startsWith("POTION:")) return false;
+  const card = cardFor(last, hand as CardModel[]);
+  return card !== undefined && drawsCards(card);
+}
+
+/**
  * SL_RETRY_EXPLORE_WHOLE (explore.ts mayRepeat): whether a line draws before its turn is over, and the plays sure to be made
  * (`committed`, turnCanon: the plays already made this turn, `played`, and the line's up to and with its first card that
  * draws; all of them when none draws). A card that draws ends the committed line there: the plan is re-planned after it
@@ -2072,6 +2094,8 @@ const slPoints = new WeakMap<object, SlPointInfo>();
 let slCommitted: Plan | null = null;
 /** SL_RETRY_EXPLORE_WHOLE: code's own line about to be played ends the deviation's turn as a failed one (planCombatTurn logs it). */
 let slAvoidFailed: { plan: Plan; reason: string } | null = null;
+/** SL_RETRY_EXPLORE_REPLAY_CODE: the reference's logged plays code played instead of its own line (planCombatTurn logs it). */
+let slReplayedCode: { plan: Plan; reason: string; log: Record<string, JsonValue> } | null = null;
 /** Code's decisions that choose a line (code plays it: the only line, a dominating one, a lethal, every line dying...). */
 const CODE_POINTS = new Set(["combat/plan", "combat/plan-guarded", "combat/lethal", "combat/least-loss", "combat/mod-lethal"]);
 
@@ -3349,6 +3373,33 @@ function planTurn(env: DecisionEnv): Decision | null {
     // SL_RETRY_EXPLORE_WHOLE: code's line ends the deviation's turn as a failed one, no other could: planCombatTurn logs it.
     const codeLine = guarded ?? top;
     if (avoidWhole && endsTried(codeLine)) slAvoidFailed = { plan: codeLine, reason: avoidFailReason(codeLine) };
+    // SL_RETRY_EXPLORE_REPLAY_CODE: on a board of the reference path code's own line is not the reference's there (attempt 1
+    // planned without the known draws): the reference's logged plays from the board, when they can be played here and do not
+    // die this turn where code's line does not; never instead of a winning line.
+    const replay = env.sl?.explore?.replay;
+    if (replay?.code === true && replay.plays && solvedInput && !codeLine.outcome.winsFight) {
+      try {
+        // Its line there is the reference's (by text: the controller counts it so) or the reference's plays are played; a
+        // longer line that only starts with them would be counted as leaving the path (RJZGFGNYK56W F33 T5 on attempt 1's path:
+        // 「心神不宁, 打击, 打击, 熔融之拳, 打击」 for attempt 1's 「心神不宁, 打击, 打击」, re-planned after 心神不宁 either way).
+        const logged = lineText(codeLine.steps) === replay.line ? null : loggedLine(solvedInput, replay.plays);
+        if (logged && !(logged.outcome.dies && !codeLine.outcome.dies)) {
+          const plays = replay.plays.length > 0 ? replay.plays.join(", ") : "end turn";
+          const at = replay.point.split(",")[0];
+          const reason = `code's own line (${lineText(codeLine.steps)}) is not attempt ${replay.reference}'s here: its plays from this board (${plays}), replayed to reach ${at}`;
+          slReplayedCode = { plan: logged, reason, log: { point: replay.point, reference: replay.reference, line: replay.line, original: lineText(codeLine.steps), overridden: true, reason, logged: true, code: true, plays: [...replay.plays] } };
+          commit(env, state.turn, logged, hand, "code");
+          return {
+            kind: "act",
+            label: "combat/plan",
+            intent: firstIntent(logged, hand, env),
+            rationale: `SL explore: replaying attempt ${replay.reference}'s plays from this board, ${lineText(logged.steps)}, instead of code's ${lineText(codeLine.steps)} before ${at}${calcNote}`,
+          };
+        }
+      } catch {
+        // code's line, as without it
+      }
+    }
     if (guarded) {
       commit(env, state.turn, guarded, hand, "code");
       return {
@@ -3761,7 +3812,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   // attempt's record (notePick); on the deviation point's board, a line a failed attempt played there gives way to the shown
   // line the question's ranking puts first among those none played (explored, in resolve). Nothing runs without env.sl.explore.
   type PickedLine = { plan: Plan | null; text: string; potions: string[]; wins: boolean; via: CombatPlanMemo["via"]; guardExtra?: (line: Plan) => number; rated?: Plan | null; canon?: string; loose?: string; open?: boolean; committed?: string };
-  const explore = env.sl?.explore;
+  // SL_RETRY_EXPLORE_ANCHOR: a first attempt's recording env (env.slRecord: `played` only) records the same way and changes
+  // nothing (no deviate, replay or avoid in it).
+  const explore = env.sl?.explore ?? env.slRecord;
   const picks = new WeakMap<ResolvedAction, PickedLine>();
   const notePick = (resolved: ResolvedAction, pick: PickedLine): ResolvedAction => {
     if (explore) picks.set(resolved, pick);
@@ -3880,8 +3933,25 @@ function planTurn(env: DecisionEnv): Decision | null {
             logged = true;
           }
         }
+        // SL_RETRY_EXPLORE_REPLAY_ORDER: a line taken as the reference's by its turn's plays alone (the answer, or the first
+        // shown line with them) whose plays from this board come in another order: its logged plays in their order instead,
+        // when they can be played here (the order changes the board: ABCJ0TZ6MD06 F48 attempt 4 T4).
+        let reordered = false;
+        if (!logged && replay.order === true && replay.plays && solvedInput && pick.text !== replay.line) {
+          const canonMatch = ref !== null && ref.text !== replay.line && !mcAll.has(ref.plan) ? ref.plan : ref === null && replay.canon !== undefined && pick.canon === replay.canon ? pick.plan : null;
+          if (canonMatch && !followsPlays(canonMatch.steps, replay.plays, hand)) {
+            const plan = loggedLine(solvedInput, replay.plays);
+            const plays = replay.plays.length > 0 ? replay.plays.join(", ") : "end turn";
+            if (plan && !(plan.outcome.dies && !pickDies)) {
+              ref = { plan, text: lineText(plan.steps), dies: plan.outcome.dies, wins: plan.outcome.winsFight, potions: potionIdsOf(plan), ...turnKeys(played, plan.steps) };
+              reason = `${reason}; in another order than its plays from this board (${plays}): those replayed in their order to reach ${at}`;
+              logged = true;
+              reordered = true;
+            }
+          }
+        }
         const loggedTag = logged ? { logged: true as const } : {};
-        const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!] } : {};
+        const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!], ...(reordered ? { reordered: true } : {}) } : {};
         const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog } };
         // SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played here (or they die this turn and the
         // answer does not): the attempt leaves the path here, so it deviates here (the lines failed attempts played on this
@@ -3893,7 +3963,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         } else {
           if (!ref) return { resolved, log, info: { ...info, replay: { overridden: false, reason } } };
           const mc = mcAll.get(ref.plan);
-          const out = playInstead(ref, mc, logged ? `SL explore: replaying attempt ${replay.reference}'s plays from this board, ${ref.text}, instead of ${pick.text} before ${at} (its line ${replay.line} is not among the options)` : `SL explore: replaying attempt ${replay.reference}'s ${ref.text} instead of ${pick.text} before ${at}`);
+          const out = playInstead(ref, mc, logged ? `SL explore: replaying attempt ${replay.reference}'s plays from this board, ${ref.text}, instead of ${pick.text} before ${at} (${reordered ? `its line ${replay.line} is shown with its plays in another order` : `its line ${replay.line} is not among the options`})` : `SL explore: replaying attempt ${replay.reference}'s ${ref.text} instead of ${pick.text} before ${at}`);
           return { resolved: out, log, info: { kind: "question", label, ...pointOf(asPick(ref, mc)), replay: { overridden: true, reason, ...loggedTag } } };
         }
       }
