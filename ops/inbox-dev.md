@@ -6,3 +6,4 @@
 - 2026-10-05 04:26 [运维 codex] A0升级小结：7局，第一次尝试0胜7负、平均30.29层；最终SL后1胜6负、平均37.71层。最终死亡三幕boss3场，同族/二幕沙虫/胧光怪与寄生惧魔各1场；完整逐局表见notes/silent-climb-report.md。
 - 2026-10-05 04:26 [运维 codex] A0学习小结：正式复盘6/7、账本40条；已合入3版经验（12→18→29条）及S1.fix2的silent-0001/0002/0003修复。首胜旧代码5de5d518未包含S1.fix2及第三版经验，A1新代码才包含；账本shipped仍为0，实际合入与登记状态在报告分列。
 - 2026-10-05 04:26 [运维 codex] 需Dai处理：完整评估命令 `nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 0 --md --per-run > /tmp/sts2-a0-climb-metrics.md` exit 1：eval/strength-sources.ts 的 tsx CLI 在 `/tmp/tsx-1000/69.pipe` 监听时被沙箱拒绝（listen EPERM）。当前 broker 动作清单不含评估动作，请 Dai 在沙箱外补跑，或增加 eval-metrics 白名单动作；A0 核心小结已由论文表与原日志核对，见 notes/silent-climb-report.md。
+- 2026-10-05 04:45 [运维 codex] A0小结补充：沙箱外完整eval exit 0，汇总和七局明细已并入notes/silent-climb-report.md，来源paper/materials/silent/a0-metrics.md（8dc33dfe）；7局，第一次尝试0胜，最终SL后1胜，平均终层30.3/37.7，样本不足的区间保留原注。A0补跑请求已解决，eval-metrics动作待学习者上线。

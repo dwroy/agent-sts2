@@ -330,3 +330,4 @@
 - xhigh 的大脑时间比 high 多：每局 41.1 / 33.5 / 29.3 分钟；额度 32→40%，每局约 3%。
 
 - 2026-10-05 04:26 [运维 codex] 需Dai处理：完整评估命令 `nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 0 --md --per-run > /tmp/sts2-a0-climb-metrics.md` exit 1：eval/strength-sources.ts 的 tsx CLI 在 `/tmp/tsx-1000/69.pipe` 监听时被沙箱拒绝（listen EPERM）。当前 broker 动作清单不含评估动作，请 Dai 在沙箱外补跑，或增加 eval-metrics 白名单动作；A0 核心小结已由论文表与原日志核对，见 notes/silent-climb-report.md。
+- 2026-10-05 04:45 [运维 codex] A0评估补跑已完成：观察者沙箱外运行exit 0，结果paper/materials/silent/a0-metrics.md（8dc33dfe）已并入notes/silent-climb-report.md；04:26的A0外部补跑请求已解决。eval-metrics白名单动作仍在学习者待办队列，待上线后使用。
