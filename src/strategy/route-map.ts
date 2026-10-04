@@ -814,6 +814,239 @@ export function nextRestVersus(map: RouteMap, kept: string[], changed: string[],
   return { text: parts.join("；"), worse: (rest?.worse ?? false) && after.elites <= before.elites, eliteWorse: elite?.worse ?? false };
 }
 
+/* ---- candidate routes to the boss for the act's plan (Dai 2026-10-04) ------------------------------ */
+
+/*
+ * The act-start route questions (event/act-plan with the Ancient, map/route-plan) showed the map and the room costs
+ * but no route's numbers: PEGLM9PFY97U act 2 (A9) took a plan with three hallways to its first rest and four more to
+ * the second, entered F23 at 60/80 and F29 at 26/80, and died to the F30 Exoskeletons at 12/80. These questions now
+ * also carry a bounded set of distinct routes to the boss with the same projection as the route review (projectPath,
+ * median and p75, rests healing): the best few by boss-entry HP, the safest (the highest lowest point), the most elite
+ * and the most shops, each with its fights per stretch between rest sites, its elites' entry HP and the HP at each
+ * rest site and the boss. Facts, not options: the answer may be any route on the map.
+ */
+
+/** At most this many distinct room sequences are kept from one node (an act map has far fewer). */
+const ROUTE_SEQ_CAP = 4000;
+
+/**
+ * Every distinct route from the next nodes to the first boss along the lines (Winged Boots only for the first node, as
+ * map.next offers it): one node path for each sequence of room types (the projection sees only the types).
+ */
+export function routesToBoss(map: RouteMap): string[][] {
+  const memo = new Map<string, Map<string, string[]>>();
+  const from = (id: string): Map<string, string[]> => {
+    const known = memo.get(id);
+    if (known) return known;
+    const node = map.nodes.get(id);
+    const out = new Map<string, string[]>();
+    if (node) {
+      if (map.bosses.includes(id) || node.children.length === 0) out.set(node.type, [id]);
+      else
+        for (const child of node.children) {
+          for (const [seq, path] of from(child)) {
+            const key = `${node.type},${seq}`;
+            if (!out.has(key) && out.size < ROUTE_SEQ_CAP) out.set(key, [id, ...path]);
+          }
+        }
+    }
+    memo.set(id, out);
+    return out;
+  };
+  const all = new Map<string, string[]>();
+  for (const first of map.next) for (const [seq, path] of from(first)) if (!all.has(`${first}:${seq}`)) all.set(`${first}:${seq}`, path);
+  // Only routes that reach a boss.
+  return [...all.values()].filter((path) => map.bosses.includes(path[path.length - 1]!));
+}
+
+/** One stretch of a candidate route: its rooms up to and including the next rest site (or the boss). */
+interface RouteLeg {
+  /** Steps of the route (indices) of the stretch's rooms and of its end. */
+  rooms: number[];
+  end: number;
+  counts: Record<string, number>;
+  elites: number[];
+}
+
+export interface CandidateRoute {
+  route: WholeRoute;
+  /**
+   * The bad-stretch line: at each step, the HP if every room of its own stretch (since the last rest site or the start)
+   * costs its p75 and everything before at the median. Not the whole act at p75 (that runs out on almost every route:
+   * a sum of p75 costs is far rarer than p75, route-projection.ts).
+   */
+  p75: number[];
+  legs: RouteLeg[];
+  bossAt: number;
+  elites: number;
+  shops: number;
+  rests: number;
+  fights: number;
+  /** The lowest projected HP at its rest sites, elite entries and the boss: on the p75 line (0 when it runs out), and median. */
+  lowP75: number;
+  lowMedian: number;
+  /** Why it is listed. */
+  why: string[];
+}
+
+/** One route (node ids from a next node to a boss) as a candidate: its stretches between rest sites and projection. */
+export function routeCandidate(map: RouteMap, ids: string[], start: RouteStart, costs: RoomCostModel): CandidateRoute {
+  const route = wholeRoute(map, ids, start, costs);
+  const types = ids.map((id) => map.nodes.get(id)!.type);
+  const bossAt = ids.findIndex((id) => map.bosses.includes(id));
+  const legs: RouteLeg[] = [];
+  let rooms: number[] = [];
+  types.forEach((type, at) => {
+    if (at > bossAt) return;
+    if (isRestType(type) || at === bossAt) {
+      const counts: Record<string, number> = {};
+      for (const step of rooms) counts[types[step]!] = (counts[types[step]!] ?? 0) + 1;
+      legs.push({ rooms, end: at, counts, elites: rooms.filter((step) => types[step] === "Elite") });
+      rooms = [];
+    } else rooms.push(at);
+  });
+  // Each stretch at p75 from the median HP it starts with (the HP on arriving at its first room; its rest site's heal
+  // is the median line's).
+  const p75 = [...route.median.arrival];
+  const bad = p75Costs(costs);
+  for (const leg of legs) {
+    const steps = [...leg.rooms, leg.end];
+    const first = steps[0]!;
+    const line = projectPath(steps.map((at) => types[at]!), route.median.arrival[first]!, bad, route.median.maxArrival[first]!);
+    steps.forEach((at, k) => (p75[at] = line.arrival[k]!));
+  }
+  const watched = [...legs.map((leg) => leg.end), ...legs.flatMap((leg) => leg.elites)];
+  const count = (type: string): number => types.slice(0, bossAt).filter((t) => t === type).length;
+  return {
+    route,
+    p75,
+    legs,
+    bossAt,
+    elites: count("Elite"),
+    shops: count("Shop"),
+    rests: types.slice(0, bossAt).filter(isRestType).length,
+    fights: count("Monster") + count("Elite"),
+    // Run out is run out: how far below 0 the p75 line goes tells nothing; ties go to the lowest median point.
+    lowP75: Math.max(0, Math.min(...watched.map((at) => p75[at]!))),
+    lowMedian: Math.min(...watched.map((at) => route.median.arrival[at]!)),
+    why: [],
+  };
+}
+
+/** Boss-entry HP (median, then p75), then the lowest point (p75, median), fewer fights, more shops, then the ids. */
+const byBoss = (a: CandidateRoute, b: CandidateRoute): number =>
+  b.route.median.arrival[b.bossAt]! - a.route.median.arrival[a.bossAt]! ||
+  b.p75[b.bossAt]! - a.p75[a.bossAt]! ||
+  b.lowP75 - a.lowP75 ||
+  b.lowMedian - a.lowMedian ||
+  a.fights - b.fights ||
+  b.shops - a.shops ||
+  a.route.ids.join(" ").localeCompare(b.route.ids.join(" "));
+
+/** The same stretches with the same rooms and elites in the same places: one candidate. */
+const legsKey = (c: CandidateRoute): string =>
+  c.legs.map((leg) => `${c.route.rows[leg.end]}:${Object.entries(leg.counts).sort().map(([type, n]) => `${type}${n}`).join("")}:${leg.elites.map((at) => c.route.rows[at]).join(",")}`).join("|");
+
+/** The same numbers on every stretch as shown (rest floors, fights, elites' floors, HP at each end, run out as 0): the same for a best-by-boss pick. */
+const numbersKey = (c: CandidateRoute): string =>
+  c.legs
+    .map((leg) => `${c.route.rows[leg.end]}:${(leg.counts["Monster"] ?? 0) + (leg.counts["Elite"] ?? 0)}:${leg.elites.map((at) => c.route.rows[at]).join(",")}:${Math.max(0, Math.round(c.route.median.arrival[leg.end]!))}/${Math.max(0, Math.round(c.p75[leg.end]!))}`)
+    .join("|");
+
+export const CANDIDATE_BEST = 3;
+export const CANDIDATE_MAX = 6;
+
+/**
+ * The listed routes: the CANDIDATE_BEST best by boss-entry HP, the safest (highest lowest point: p75, then median),
+ * the one with the most elites and the one with the most shops, each listed once (with all its reasons), at most
+ * CANDIDATE_MAX, ordered by boss-entry HP.
+ */
+export function candidateRoutes(map: RouteMap, start: RouteStart, costs: RoomCostModel): CandidateRoute[] {
+  const all = routesToBoss(map).map((ids) => routeCandidate(map, ids, start, costs));
+  if (all.length === 0) return [];
+  const picked = new Map<string, CandidateRoute>();
+  const add = (c: CandidateRoute | undefined, why: string): void => {
+    if (!c) return;
+    const key = legsKey(c);
+    const have = picked.get(key);
+    if (have) {
+      if (!have.why.includes(why)) have.why.push(why);
+      return;
+    }
+    if (picked.size >= CANDIDATE_MAX) return;
+    c.why.push(why);
+    picked.set(key, c);
+  };
+  const ranked = [...all].sort(byBoss);
+  // The best few distinct ones: a route with the same numbers as a better one on every stretch (a "?" room where it
+  // has a shop, both costing nothing) is not another candidate.
+  const seen = new Set<string>();
+  let rank = 0;
+  for (const c of ranked) {
+    const key = numbersKey(c);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    rank += 1;
+    add(c, `boss 前 HP 第 ${rank}`);
+    if (rank >= CANDIDATE_BEST) break;
+  }
+  add([...all].sort((a, b) => b.lowP75 - a.lowP75 || b.lowMedian - a.lowMedian || byBoss(a, b))[0], "最稳（路上最低点最高）");
+  const elites = [...all].sort((a, b) => b.elites - a.elites || byBoss(a, b))[0]!;
+  if (elites.elites > 0) add(elites, `精英最多（${elites.elites}）`);
+  const shops = [...all].sort((a, b) => b.shops - a.shops || byBoss(a, b))[0]!;
+  if (shops.shops > 0) add(shops, `商店最多（${shops.shops}）`);
+  return [...picked.values()].sort(byBoss);
+}
+
+const COUNT_ORDER: [string, string][] = [
+  ["Monster", "普通战"],
+  ["Elite", "精英"],
+  ["Unknown", "问号"],
+  ["Shop", "商店"],
+  ["Treasure", "宝箱"],
+];
+
+/** "45/80（p75 31）" (inside brackets "45/80，p75 31"), or "耗尽" when the median line has run out. */
+function candidateHp(c: CandidateRoute, step: number, nested = false): string {
+  const median = c.route.median.arrival[step]!;
+  if (median <= 0) return "耗尽";
+  const hp = `${Math.round(median)}/${c.route.median.maxArrival[step]!}`;
+  return nested ? `${hp}，p75 ${hpRound(c.p75[step]!)}` : `${hp}（p75 ${hpRound(c.p75[step]!)}）`;
+}
+
+/** "F19–F23 普通战 3、精英 1（F22 进场 60/80，p75 52）、问号 1 → F24 休息 45/80（p75 31）"; a boss right after a rest: "F33 boss …". */
+function legText(map: RouteMap, c: CandidateRoute, leg: RouteLeg): string {
+  const floor = (at: number): number => floorOfRow(map, c.route.rows[at]!);
+  const span = leg.rooms.length === 1 ? `F${floor(leg.rooms[0]!)} ` : `F${floor(leg.rooms[0]!)}–F${floor(leg.rooms[leg.rooms.length - 1]!)} `;
+  const parts = COUNT_ORDER.filter(([type]) => (leg.counts[type] ?? 0) > 0).map(([type, name]) =>
+    type === "Elite" ? `${name} ${leg.counts[type]}（${leg.elites.map((step) => `F${floor(step)} 进场 ${candidateHp(c, step, true)}`).join("；")}）` : `${name} ${leg.counts[type]}`,
+  );
+  const end = `F${floor(leg.end)} ${leg.end === c.bossAt ? "boss" : "休息"} ${candidateHp(c, leg.end)}`;
+  return leg.rooms.length === 0 ? end : `${span}${parts.join("、")} → ${end}`;
+}
+
+/** One candidate route as a line: why it is listed, its node ids, then each stretch between rest sites. */
+export function candidateText(map: RouteMap, c: CandidateRoute): string {
+  return `【${c.why.join("；")}】${c.route.ids.slice(0, c.bossAt + 1).join(" ")}：${c.legs.map((leg) => legText(map, c, leg)).join("；")}`;
+}
+
+export interface CandidateRoutesFacts {
+  about: string;
+  routes: string[];
+}
+
+/** The candidate routes as the question shows them (state.act_route / state.route_map candidate_routes), or null. */
+export function candidateRoutesFacts(map: RouteMap, start: RouteStart, costs: RoomCostModel, startNote?: string): CandidateRoutesFacts | null {
+  const list = candidateRoutes(map, start, costs);
+  if (list.length === 0) return null;
+  return {
+    about:
+      `代码列出的到 boss 的路线（事实，不是选项）：boss 前 HP 最高的 ${CANDIDATE_BEST} 条、最稳的（休息点、精英进场和 boss 前最低的 p75 最高）、精英最多、商店最多的。` +
+      `按休息点分段：每段房间、精英进场、到达休息点和 boss 的 HP（${startNote ?? `从现在的 HP ${hpAt(start.hp, start.max)} 起`}；中位数；p75 = 这一段的房间都按 p75；休息点按回血算，锻造就少这一次回血）。`,
+    routes: list.map((c) => candidateText(map, c)),
+  };
+}
+
 /** The room costs the facts use, with their sources and n (Chinese, one line). */
 export function roomCostsLine(costs: RoomCostModel): string {
   const r = (value: number): string => String(Math.round(value * 10) / 10);
