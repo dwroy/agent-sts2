@@ -243,7 +243,9 @@ describe("rollout facts on Jev's combat question", () => {
       if (decision?.kind !== "ask") continue;
       const log = decision.resolve(pick("plan1")).log?.rollout as Record<string, unknown> | undefined;
       expect(log, name).toBeDefined();
-      expect(Number(log!["ms"]), name).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS);
+      // The clock is checked between samples, so the last sample may run past the budget; under live-play load one sample
+      // takes 100–200 ms (overruns of 1–110 ms were logged at load 15–28). The cut itself is tested above with a fake clock.
+      expect(Number(log!["ms"]), name).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS + 300);
     }
   }, 120_000);
 

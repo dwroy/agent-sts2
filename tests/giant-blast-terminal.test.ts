@@ -10,7 +10,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import type { CardModel } from "../src/strategy/card-model.js";
-import { clockEstimate, eruptionOptions, featuresOf, giantTerminal, rolloutDecision, type EnemyTable, type FightMeta, type MoveModelData, type SnapEnemy, type Snapshot } from "../src/strategy/rollout.js";
+import { clockEstimate, deathMoveOptions, eruptionOptions, featuresOf, giantTerminal, rolloutDecision, type EnemyTable, type FightMeta, type MoveModelData, type SnapEnemy, type Snapshot } from "../src/strategy/rollout.js";
 import { solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/strategy/turn-solver.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
@@ -49,6 +49,7 @@ const terminalOf = (s: Snapshot, meta = META) => {
 afterEach(() => {
   eruptionOptions.blastTerminal = true;
   eruptionOptions.deathMoveFilter = true;
+  deathMoveOptions.others = true;
 });
 
 describe("the end-of-horizon estimate counts the Giant's blast (giantTerminal)", () => {
@@ -155,5 +156,42 @@ describe("the rollout on the Giant's board", () => {
     // Keeping it alive read as a likely win at the horizon; now as lost as the kill.
     expect(before.keep.winProb ?? 0).toBeGreaterThan(0.2);
     expect(after.keep.winProb ?? 0).toBeLessThan(0.05);
+  });
+});
+
+describe("the other enemies' death-only moves stay out of a living enemy's turns (DEATH_MOVES, ops 2026-10-04 follow-up)", () => {
+  /** A 300-HP board of one enemy whose only move hits 10 x 4 and whose model has a death-only move after it 90% of the time. */
+  const run = (id: string, move: string, deathMove: string) => {
+    const table: EnemyTable = {
+      moves: { [move]: { damage: 10, hits: 4, strength: 0, block: 0 }, [deathMove]: { damage: 0, hits: 1, strength: 0, block: 0 } },
+      next: { [move]: { [deathMove]: 9, [move]: 1 }, [deathMove]: { [move]: 1 } },
+    };
+    const zero = (i: number) => card(i, "STRIKE", { damage: 1, cost: 0 });
+    const hand = [zero(0)];
+    const enemy: EnemySim = { index: 0, name: id, hp: 300, maxHp: 300, block: 0, vulnerable: 0, weak: 0, artifact: 0, intangible: false, attacks: [{ damage: 10, hits: 4 }] };
+    const player: PlayerSim = { hp: 400, maxHp: 400, block: 0, energy: 3, weak: false, vulnerable: false, intangible: false, strengthNow: 0 };
+    const solver: SolverInput = { hand, player, enemies: [enemy], fightKind: "elite", turn: 3 };
+    const result = rolloutDecision({
+      solver, plans: solveTurn(solver).plans, enemies: [{ index: 0, id, move, strength: 0, powers: {} }],
+      tables: { [id]: table }, piles: { draw: Array.from({ length: 40 }, (_, k) => zero(10 + k)), discard: [], handBase: hand }, meta: { ...META, kind: "elite", enc: id, t: 3 },
+      playerPowers: {}, potions: 0, mm: {}, model: null, gates: null, options: { budgetMs: 1e9, seed: 5 },
+    });
+    // The least HP lost on any later simulated turn of any sample.
+    return Math.min(...result.lines[0]!.perTurn.map((t) => t.loss.min));
+  };
+
+  it("the Test Subject's Respawn, a Decimillipede segment's Reattach and Dead, the Eye With Teeth's Revive: a living one attacks every turn", () => {
+    const cases: [string, string, string][] = [
+      ["TEST_SUBJECT", "MULTI_CLAW_MOVE", "RESPAWN_MOVE"],
+      ["DECIMILLIPEDE_SEGMENT_MIDDLE", "WRITHE_MOVE", "REATTACH_MOVE"],
+      ["DECIMILLIPEDE_SEGMENT_BACK", "CONSTRICT_MOVE", "DEAD_MOVE"],
+      ["EYE_WITH_TEETH", "DISTRACT_MOVE", "REVIVE_MOVE"],
+    ];
+    for (const [id, move, dead] of cases) {
+      expect(run(id, move, dead), id).toBe(40);
+      deathMoveOptions.others = false;
+      expect(run(id, move, dead), `${id} (switch off)`).toBe(0);
+      deathMoveOptions.others = true;
+    }
   });
 });

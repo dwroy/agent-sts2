@@ -212,14 +212,21 @@ describe("exploreTarget with `whole`: a deviation whose turn ended as a failed o
 
 // ---------------------------------------------------------------- the planner on the logged boards
 
-/** e0fa69b's views of the boards (tests/sl-explore-whole-views.ts offViews, captured on e0fa69b). */
+/**
+ * e0fa69b's views of the boards (tests/sl-explore-whole-views.ts offViews, captured on e0fa69b).
+ * 2026-10-04 (v4-giant-potion follow-up, rollout.ts DEATH_MOVES / deathMoveOptions): the two deviation boards re-pinned. A
+ * living Test Subject no longer draws Respawn (Multi Claw -> Respawn 2 of 40 in the move model; never seen on a living one
+ * in the logs), so a phase-2 sample no longer skips a turn and jumps to phase 3's Lacerate: the rollout's later turns
+ * (T4: -23.4 -> -25 HP, more damage dealt), the enemy HP left and, on a4-t2, the best line (plan1, dead 6/8 instead of 7/8,
+ * over the line the rollout added before, plan4). With deathMoveOptions.others off every digest held; the replans unchanged.
+ */
 const GOLDEN_E0FA69B: Record<string, string> = {
-  "pw7y-a3-t1-deviation:record": "5863b637cca316cfb904f1c3f2443693",
-  "pw7y-a3-t1-deviation:explore": "5a91f2e34ca4229db1ed4e52ded967b2",
+  "pw7y-a3-t1-deviation:record": "7ac59089a26f011840576570ca36cc93",
+  "pw7y-a3-t1-deviation:explore": "4e5fb312ed96dd3d9998631793707cba",
   "pw7y-a3-t1-replan:record": "a29059726bd3c80f152da7d892d404b5",
   "pw7y-a3-t1-replan:explore": "a29059726bd3c80f152da7d892d404b5",
-  "pw7y-a4-t2-deviation:record": "2fe1c64b6c3621a67587252d9bab481b",
-  "pw7y-a4-t2-deviation:explore": "c02e58a078919e0fdee34fbdff8d30da",
+  "pw7y-a4-t2-deviation:record": "7e7221e306471d48873257b14698a1a7",
+  "pw7y-a4-t2-deviation:explore": "b3101a8962cdce3730091fd3ea6868bc",
   "pw7y-a4-t2-replan:record": "fdf378c59f5851800c5363dfa93ecf59",
   "pw7y-a4-t2-replan:explore": "fdf378c59f5851800c5363dfa93ecf59",
 };
