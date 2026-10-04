@@ -7,12 +7,12 @@
  * combat question. Facts only: nothing here decides a drink.
  */
 
-import { readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { fillPotionText } from "./potion-values.js";
 import { DEFAULT_KNOWLEDGE_DIR, KnowledgeLoadError } from "./render/data.js";
-import { knowledgeFile } from "./files.js";
+import { DEFAULT_CHARACTER, knowledgeCharacter, knowledgeFile } from "./files.js";
 
 export const POTION_EQUIVALENTS_FILE = "potion-equivalents.json";
 
@@ -67,8 +67,8 @@ export interface PotionEntry {
   usage: string | null;
   target: string | null;
   pool: string;
-  /** In the pools an Ironclad run draws from (shared, ironclad, event, token). */
-  ironclad: boolean;
+  /** In the pools an Ironclad run draws from (shared, ironclad, event, token): the Ironclad's file; another character's file names this flag after its id (render/potion-text.ts). */
+  ironclad?: boolean;
   category: PotionCategory;
   kind: string | null;
   solver: SolverModel;
@@ -208,6 +208,15 @@ export function loadPotionEquivalents(dir: string = DEFAULT_KNOWLEDGE_DIR): Poti
   return file;
 }
 
+/**
+ * The table, or null when a new character has none yet (no file: a character with no boss fights logged builds no
+ * table). The Ironclad's missing table, or a table that does not load, still throws KnowledgeLoadError.
+ */
+export function loadPotionEquivalentsOrNull(dir: string = DEFAULT_KNOWLEDGE_DIR): PotionEquivalentsFile | null {
+  if (knowledgeCharacter() !== DEFAULT_CHARACTER && !existsSync(knowledgeFile(resolve(dir), POTION_EQUIVALENTS_FILE))) return null;
+  return loadPotionEquivalents(dir);
+}
+
 /** The ascension the table has numbers for: this one, else the nearest (the lower on a tie); null when none. */
 export function tableAscension(file: PotionEquivalentsFile, ascension: number): number | null {
   const ascs = Object.keys(file.rates)
@@ -319,7 +328,10 @@ export function heldPotionWorth(potionIds: string[], act: number | null, ascensi
   if (potionIds.length === 0) return {};
   let file: PotionEquivalentsFile;
   try {
-    file = loadPotionEquivalents(potionWorthSource.dir);
+    // No table for the run's character yet: no worth to show (nothing to report either).
+    const loaded = loadPotionEquivalentsOrNull(potionWorthSource.dir);
+    if (!loaded) return {};
+    file = loaded;
   } catch (error) {
     return { potion_worth_error: (error instanceof Error ? error.message : String(error)).slice(0, 160) };
   }

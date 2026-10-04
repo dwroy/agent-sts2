@@ -34,7 +34,7 @@ import { damageRole, isBigHit } from "../hand/screens/card-value.js";
 import { CLOCK_PASSIVE_BLOCK_SHARE, clockBlockAt, clockRelicPieces, passivePiecesOptions, SAI_BLOCK, type ClockPiece } from "../reflex/passive-pieces.js";
 import { bossEntryHp, bossStartHealOf, restedHp, restHealOf } from "./route-projection.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
-import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
+import { DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile } from "../knowledge/files.js";
 
 /** Brimstone's Strength per turn (the mod does not expose it; the Slay the Spire value). */
 export const BRIMSTONE_STRENGTH = 2;
@@ -285,6 +285,8 @@ export function bossHpSource(profile: BossProfile & { id?: string }, ascension: 
  * fillDbNumbers).
  */
 export function bossNote(profile: BossProfile & { id?: string }, ascension: number): string {
+  // Hand-written from the Ironclad's fights: none for another character (it learns its own; card-value.ts hasCardValues).
+  if (knowledgeCharacter() !== DEFAULT_CHARACTER) return "";
   const part = (id: string) => (profile.id ? bossHpAt(profile.id, ascension, [id])?.hp : undefined);
   const follower = part("KIN_FOLLOWER");
   const giant = giantNumbers(ascension);
@@ -304,6 +306,7 @@ export function bossNote(profile: BossProfile & { id?: string }, ascension: numb
 
 /** The boss's mechanic line with its numbers at this ascension (the Giant's eruption, DB placeholders). */
 export function bossMechanic(profile: BossProfile, ascension: number): string {
+  if (knowledgeCharacter() !== DEFAULT_CHARACTER) return "";
   return fillDbNumbers(
     profile.mechanic.replace("{ERUPTION}", eruptionFormula(ascension)).replace("{GIANT_KILLS}", giantKillRecord(ascension, "en")).replace("{GIANT_BLOCK}", giantBlockRecord("en", ascension)),
     ascension,

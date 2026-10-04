@@ -15,6 +15,7 @@ import { OLD_SOURCE_KEYS, queryOldKnowledge } from "../../knowledge/render/old-k
 import { renderPotion, renderPotionTable } from "../../knowledge/render/potion-text.js";
 import { STATS_TABLES, renderStatsTable } from "../../knowledge/render/stats-text.js";
 import { cmp } from "../../knowledge/render/format.js";
+import { characterKey, characterName, DEFAULT_CHARACTER, knowledgeCharacter } from "../../knowledge/files.js";
 import type { ToolContext, ToolDef, ToolResult } from "./types.js";
 import { validateInput } from "./validate.js";
 
@@ -31,7 +32,10 @@ function error(text: string): ToolResult {
 function tool(def: Omit<ToolDef<Input>, "run"> & { run(input: Input, ctx: ToolContext): string }): ToolDef {
   return {
     name: def.name,
-    description: def.description,
+    // Read when asked (a description may name the run's character).
+    get description() {
+      return def.description;
+    },
     inputSchema: def.inputSchema,
     run(input, ctx) {
       const problems = validateInput(def.inputSchema, input);
@@ -124,8 +128,10 @@ const kbStats = tool({
 
 const kbOldKnowledge = tool({
   name: "kb_old_knowledge",
-  description:
-    "查旧知识（早期手写，待数据验证；和数据冲突时以数据为准）：guide = 铁甲战士攻略，handbook = DeepSeek 经验手册，jev_hints = Jev 战斗提示。给 keyword 只返回含关键词的行（带所在小标题）；不给就返回整份。",
+  // The run's character's guide ("铁甲战士攻略" for the Ironclad): the tools are built after the character is set.
+  get description(): string {
+    return `查旧知识（早期手写，待数据验证；和数据冲突时以数据为准）：guide = ${characterName(knowledgeCharacter())}攻略，handbook = DeepSeek 经验手册，jev_hints = Jev 战斗提示。给 keyword 只返回含关键词的行（带所在小标题）；不给就返回整份。`;
+  },
   inputSchema: {
     type: "object",
     properties: {
@@ -174,7 +180,8 @@ const kbPostmortem = tool({
     if (!/^[0-9A-Z]+$/.test(query) || query.length < MIN_RUN_PREFIX || query.length > 12) throw new KnowledgeLookupError(`run id 应为 ${MIN_RUN_PREFIX}–12 位数字或大写字母，收到「${input["run_id"]}」`);
     const postmortems = loadPostmortems(lessonsPath());
     if (!postmortems.sections) throw new KnowledgeLookupError(postmortems.missing ?? `读不到复盘文件 ${postmortems.path}`);
-    const ids = [...postmortems.sections.keys()].filter((id) => id.startsWith(query)).sort(cmp);
+    // The run's character's post-mortems only (render/data.ts summaryCharacter).
+    const ids = [...postmortems.sections.entries()].filter(([id, sections]) => id.startsWith(query) && sections.some((section) => section.character === knowledgeCharacter())).map(([id]) => id).sort(cmp);
     if (ids.length === 0) throw new KnowledgeLookupError(`复盘里没有以「${query}」开头的局（共 ${postmortems.sections.size} 局有复盘；用 kb_runs 查 run id）`);
     if (ids.length > 1) throw new KnowledgeLookupError(`「${query}」对应多局，请给更长的前缀: ${ids.join(", ")}`);
     return postmortems.sections.get(ids[0]!)!.map((section) => section.text).join("\n\n");
@@ -189,6 +196,7 @@ interface RunRow {
   ascension?: number | null;
   code?: string;
   death_fight?: string[] | null;
+  character?: string | null;
 }
 
 function loadRuns(logsDir: string): { runs: RunRow[]; bad: number } {
@@ -205,8 +213,9 @@ function loadRuns(logsDir: string): { runs: RunRow[]; bad: number } {
     if (!line.trim()) continue;
     try {
       const row = JSON.parse(line) as RunRow;
-      if (typeof row.run_id === "string") runs.push(row);
-      else bad += 1;
+      // Only the run's character's runs (a row without one is an Ironclad run from before the field).
+      if (typeof row.run_id !== "string") bad += 1;
+      else if ((characterKey(row.character) ?? DEFAULT_CHARACTER) === knowledgeCharacter()) runs.push(row);
     } catch {
       bad += 1;
     }

@@ -13,6 +13,7 @@
 
 import type { DeckEntry } from "../../memory/deck.js";
 import { BOSSES, bossHp } from "../../sim/boss-clock.js";
+import { characterName, knowledgeCharacter } from "../../knowledge/files.js";
 
 const TIER: Record<string, number> = {
   // S
@@ -92,6 +93,28 @@ const EXHAUST_PAYOFF: Record<string, number> = { DARK_EMBRACE: 20, FEEL_NO_PAIN:
 
 // EXTERMINATE: 4 hits (6HRZ F33 T6).
 const MULTI_HIT = new Set(["TWIN_STRIKE", "SWORD_BOOMERANG", "CONFLAGRATION", "WHIRLWIND", "THRASH", "FIGHT_ME", "DISMANTLE", "TEAR_ASUNDER", "ANGER", "PUMMEL", "EXTERMINATE"]);
+
+/** Lasting Strength cards: damageRole's "scaling" (the boss clock's gap bonus). */
+const STRENGTH = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "PYRE", "HELLRAISER", "JUGGERNAUT", "FIGHT_ME"]);
+
+/**
+ * Whether the run's character has card values (2026-10-04, multi-character): every table in this module is the
+ * Ironclad's, hand-written from its card lists and our Ironclad runs. Another character gets none of it (Dai: no
+ * hand-written play for a new character, it learns its own): no tier, no roles, no boss bonuses. Its card values are
+ * neutral instead (cardValue: SKIP_BAR for every card, so no offer falls under the skip bar and none is preferred), and
+ * the choice goes to the brain (BUILD_DECIDER) or Jev, as any pick without a clear code answer.
+ */
+export function hasCardValues(character: string = knowledgeCharacter()): boolean {
+  return character === "ironclad";
+}
+
+const NO_CARDS: ReadonlySet<string> = new Set();
+/** The role sets for the run's character (empty without card values). */
+function roles(): { aoe: ReadonlySet<string>; draw: ReadonlySet<string>; scaling: ReadonlySet<string>; frontload: ReadonlySet<string>; block: ReadonlySet<string>; exhaust: ReadonlySet<string>; bigHits: ReadonlySet<string>; strength: ReadonlySet<string> } {
+  return hasCardValues()
+    ? { aoe: AOE, draw: DRAW, scaling: SCALING, frontload: FRONTLOAD, block: BLOCK, exhaust: EXHAUST, bigHits: BIG_HITS, strength: STRENGTH }
+    : { aoe: NO_CARDS, draw: NO_CARDS, scaling: NO_CARDS, frontload: NO_CARDS, block: NO_CARDS, exhaust: NO_CARDS, bigHits: NO_CARDS, strength: NO_CARDS };
+}
 
 /**
  * What each Act boss punishes (from logged boss fights): Vantom has 9 Slippery stacks and 183 HP (A8), so
@@ -181,21 +204,21 @@ function bossBonus(cardId: string, bossId: string, ascension: number): { bonus: 
 
 /** One of the 14+ damage single cards. */
 export function isBigHit(cardId: string): boolean {
-  return BIG_HITS.has(cardId);
+  return roles().bigHits.has(cardId);
 }
 
 /** Which kind of damage card this is (for the boss clock's gap bonus), or null. */
 export function damageRole(cardId: string): "scaling" | "aoe" | "frontload" | null {
-  const STRENGTH = new Set(["DEMON_FORM", "INFLAME", "RUPTURE", "DOMINATE", "FEED", "PYRE", "HELLRAISER", "JUGGERNAUT", "FIGHT_ME"]);
-  if (STRENGTH.has(cardId)) return "scaling";
-  if (AOE.has(cardId)) return "aoe";
-  if (FRONTLOAD.has(cardId)) return "frontload";
+  const role = roles();
+  if (role.strength.has(cardId)) return "scaling";
+  if (role.aoe.has(cardId)) return "aoe";
+  if (role.frontload.has(cardId)) return "frontload";
   return null;
 }
 
 /** Whether a card is one of the deck's block cards (Defends count too). */
 export function isBlockCardId(cardId: string): boolean {
-  return BLOCK.has(cardId) || cardId.startsWith("DEFEND_");
+  return roles().block.has(cardId) || cardId.startsWith("DEFEND_");
 }
 
 const BLOCK = new Set(["SHRUG_IT_OFF", "FLAME_BARRIER", "IMPERVIOUS", "COLOSSUS", "BLOOD_WALL", "TRUE_GRIT", "EVIL_EYE", "EXPECT_A_FIGHT", "STONE_ARMOR", "CRIMSON_MANTLE", "FEEL_NO_PAIN", "TAUNT", "IRON_WAVE"]);
@@ -227,14 +250,15 @@ export function deckProfile(deck: DeckEntry[]): DeckProfile {
   let block = 0;
   let exhaust = 0;
   let basics = 0;
+  const role = roles();
   for (const card of deck) {
     copies.set(card.card_id, (copies.get(card.card_id) ?? 0) + 1);
-    if (AOE.has(card.card_id)) aoe += 1;
-    if (DRAW.has(card.card_id)) draw += 1;
-    if (SCALING.has(card.card_id) && card.card_id !== "SETUP_STRIKE") scaling += 1;
-    if (FRONTLOAD.has(card.card_id)) frontload += 1;
-    if (BLOCK.has(card.card_id)) block += 1;
-    if (EXHAUST.has(card.card_id)) exhaust += 1;
+    if (role.aoe.has(card.card_id)) aoe += 1;
+    if (role.draw.has(card.card_id)) draw += 1;
+    if (role.scaling.has(card.card_id) && card.card_id !== "SETUP_STRIKE") scaling += 1;
+    if (role.frontload.has(card.card_id)) frontload += 1;
+    if (role.block.has(card.card_id)) block += 1;
+    if (role.exhaust.has(card.card_id)) exhaust += 1;
     if (card.rarity === "Basic") basics += 1;
   }
   return { size: deck.length, aoe, draw, scaling, frontload, block, exhaust, basics, copies };
@@ -252,6 +276,10 @@ export function cardValue(
   /** The run's ascension: the boss HP the reasons name (8 when not given). */
   ascension = 8,
 ): CardValue {
+  // No card values for the run's character (hasCardValues): neutral, the skip bar itself for every playable card.
+  if (!hasCardValues()) {
+    return type === "Curse" || type === "Status" ? { value: 0, reasons: [type] } : { value: SKIP_BAR, reasons: [`no card values for ${characterName(knowledgeCharacter(), "en")} yet`] };
+  }
   const reasons: string[] = [];
   let value = TIER[cardId] ?? (type === "Curse" || type === "Status" ? 0 : rarity === "Rare" ? 55 : 45);
   if (!(cardId in TIER)) reasons.push("no tier data");

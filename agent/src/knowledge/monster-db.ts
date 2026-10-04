@@ -11,7 +11,7 @@ import { readFileSync } from "node:fs";
 
 import type { ObservedDb, ObservedMonster } from "./mechanics.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
-import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
+import { KNOWLEDGE_DIR, knowledgeFile, MONSTER_RECORDS_FILE } from "./files.js";
 
 export interface Stat {
   median?: number;
@@ -111,13 +111,78 @@ export interface MonsterDb {
   observed?: ObservedDb;
 }
 
+const isObject = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * The monster DB as one object, in the shape it had before the split (2026-10-04): the common facts (common/monster-db.json:
+ * meta, monsters, observed) with the run's character's own fight records (characters/<id>/monster-records.json: bosses,
+ * encounters, each monster's threat_by_asc) put back where they were (top level: meta, bosses, encounters, monsters, the
+ * rest; in a monster, threat_by_asc right after powers), so every reader and rendered text sees the same JSON as before.
+ * `records` null (no records file: a character with no fights yet) leaves `common` as it is: the split file then has no
+ * records at all, and an older combined file (pinned test data) keeps its own.
+ */
+export function mergeMonsterRecords(common: Record<string, unknown>, records: Record<string, unknown> | null): Record<string, unknown> {
+  if (!records) return common;
+  const threat = isObject(records["threat_by_asc"]) ? records["threat_by_asc"] : {};
+  const monsters: Record<string, unknown> = {};
+  for (const [id, entry] of Object.entries(isObject(common["monsters"]) ? common["monsters"] : {})) {
+    if (!isObject(entry)) {
+      monsters[id] = entry;
+      continue;
+    }
+    const out: Record<string, unknown> = {};
+    let placed = false;
+    for (const [key, value] of Object.entries(entry)) {
+      if (key === "threat_by_asc") continue;
+      out[key] = value;
+      if (key === "powers") {
+        out["threat_by_asc"] = threat[id] ?? {};
+        placed = true;
+      }
+    }
+    if (!placed) out["threat_by_asc"] = threat[id] ?? {};
+    monsters[id] = out;
+  }
+  const { meta, bosses: _bosses, encounters: _encounters, monsters: _monsters, ...rest } = common;
+  return {
+    ...(meta !== undefined ? { meta } : {}),
+    bosses: isObject(records["bosses"]) ? records["bosses"] : {},
+    encounters: isObject(records["encounters"]) ? records["encounters"] : {},
+    monsters,
+    ...rest,
+  };
+}
+
+/**
+ * A character's monster records (characters/<id>/monster-records.json in `dir`), or null when there is no such file
+ * (no knowledge yet). A file that exists but does not parse throws.
+ */
+export function readMonsterRecords(dir: string = KNOWLEDGE_DIR): Record<string, unknown> | null {
+  let text: string;
+  try {
+    text = readFileSync(knowledgeFile(dir, MONSTER_RECORDS_FILE), "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
+  const parsed = JSON.parse(text) as unknown;
+  if (!isObject(parsed)) throw new Error(`${knowledgeFile(dir, MONSTER_RECORDS_FILE)}: not an object`);
+  return parsed;
+}
+
+/** The monster DB in `dir` merged with the run's character's records (mergeMonsterRecords); throws when the common file does not read. */
+export function readMonsterDbJson(dir: string = KNOWLEDGE_DIR): Record<string, unknown> {
+  const parsed = JSON.parse(readFileSync(knowledgeFile(dir, "monster-db.json"), "utf8")) as unknown;
+  if (!isObject(parsed)) throw new Error(`${knowledgeFile(dir, "monster-db.json")}: not an object`);
+  return mergeMonsterRecords(parsed, readMonsterRecords(dir));
+}
+
 let cached: MonsterDb | null = null;
 
 function load(): MonsterDb {
   if (cached) return cached;
   try {
-    const path = knowledgeFile(KNOWLEDGE_DIR, "monster-db.json");
-    const parsed = JSON.parse(readFileSync(path, "utf8")) as Partial<MonsterDb>;
+    const parsed = readMonsterDbJson() as Partial<MonsterDb>;
     cached = { bosses: parsed.bosses ?? {}, encounters: parsed.encounters ?? {}, monsters: parsed.monsters ?? {}, ...(parsed.observed ? { observed: parsed.observed } : {}) };
   } catch {
     cached = { bosses: {}, encounters: {}, monsters: {} };

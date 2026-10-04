@@ -22,6 +22,7 @@ import { toJsonValue } from "./util/json.js";
 import { style } from "./util/format.js";
 import { acquireLock } from "./util/lock.js";
 import { BuildSimPool } from "../sim/build-sim-pool.js";
+import { setKnowledgeCharacter } from "../knowledge/files.js";
 
 const USAGE = `jev-sts2 — play Slay the Spire 2 with Jev (TypeSafe System One)
 
@@ -132,6 +133,8 @@ async function main(argv: string[]): Promise<number> {
     }
     throw error;
   }
+  // Every knowledge loader reads the played character's files (knowledge/files.ts) from here on.
+  setKnowledgeCharacter(config.run.characterId);
 
   // With no command, fall back to MODE from the environment. Without this, `MODE` was configuration
   // that only ever showed up in `doctor` and never selected anything.

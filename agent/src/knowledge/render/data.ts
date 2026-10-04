@@ -6,7 +6,7 @@
  * The files are refreshed after every run, so the cache is keyed by each file's mtime and size.
  */
 
-import { readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 import type { ExperienceEntry, OutcomeStats } from "../experience.js";
@@ -17,7 +17,8 @@ import type { ToolContext } from "../../brain/tools/types.js";
 import { fillGuideFacts } from "../../sim/boss-clock.js";
 import type { FactFiller } from "./facts.js";
 import { fromRoot, KNOWLEDGE_DIR, LOGS_DIR, PROJECT_ROOT, workspaceRoot } from "../../core/paths.js";
-import { knowledgeFile } from "../files.js";
+import { CHARACTER_NAMES, DEFAULT_CHARACTER, knowledgeCharacter, knowledgeFile, MONSTER_RECORDS_FILE } from "../files.js";
+import { mergeMonsterRecords, readMonsterRecords } from "../monster-db.js";
 
 /**
  * What a renderer reads from the context. `facts`: how the hand-written texts' data placeholders are filled (fresh
@@ -82,15 +83,25 @@ export interface KnowledgeData {
   jevHints: JevHintsFile;
 }
 
+/** The hand-written strategy guide's file name for a character ("ironclad-guide.md"); a new character has none yet. */
+export function guideFileName(character: string = knowledgeCharacter()): string {
+  return `${character}-guide.md`;
+}
+
 export const KNOWLEDGE_FILES = {
   monsterDb: "monster-db.json",
+  /** The run's character's fight records, merged into the monster DB (knowledge/monster-db.ts mergeMonsterRecords). */
+  monsterRecords: MONSTER_RECORDS_FILE,
   experience: "experience.json",
   roomCosts: "room-costs.json",
   outcomeStats: "outcome-stats.json",
-  guide: "ironclad-guide.md",
+  /** The run's character's guide (guideFileName). */
+  get guide(): string {
+    return guideFileName();
+  },
   handbook: "ds-handbook.md",
   jevHints: "jev-hints.json",
-} as const;
+};
 
 /** The repository root (core/paths.ts PROJECT_ROOT). */
 export const REPO_ROOT = PROJECT_ROOT;
@@ -112,6 +123,20 @@ function readText(dir: string, name: string): string {
   return text;
 }
 
+/**
+ * The text of a file of the run's character, or null when a new character has none (characters/<id>/ or the file
+ * missing: no knowledge yet, read as empty). The Ironclad's knowledge is complete, so a file of its missing still throws,
+ * as before; a file that is there but empty or unreadable throws for every character.
+ */
+function readCharacterText(dir: string, name: string): string | null {
+  if (knowledgeCharacter() !== DEFAULT_CHARACTER && !existsSync(knowledgeFile(dir, name))) return null;
+  return readText(dir, name);
+}
+
+function readCharacterJson(dir: string, name: string): Record<string, unknown> | null {
+  return readCharacterText(dir, name) === null ? null : readJson(dir, name);
+}
+
 function readJson(dir: string, name: string): Record<string, unknown> {
   const text = readText(dir, name);
   let parsed: unknown;
@@ -131,34 +156,47 @@ function requireRecord(file: string, value: unknown, field: string, nonEmpty = t
 }
 
 function parseAll(dir: string): KnowledgeData {
-  const db = readJson(dir, KNOWLEDGE_FILES.monsterDb);
+  // The common monster facts with the run's character's own records; a character with no records yet has no encounters
+  // or bosses (a file of the combined shape from before the split keeps its own: mergeMonsterRecords).
+  let records: Record<string, unknown> | null;
+  try {
+    records = readMonsterRecords(dir);
+  } catch (error) {
+    throw new KnowledgeLoadError(`知识文件读取失败 ${knowledgeFile(dir, MONSTER_RECORDS_FILE)}: ${(error as Error).message}`);
+  }
+  const db = mergeMonsterRecords(readJson(dir, KNOWLEDGE_FILES.monsterDb), records);
   requireRecord(KNOWLEDGE_FILES.monsterDb, db["monsters"], "monsters");
-  requireRecord(KNOWLEDGE_FILES.monsterDb, db["encounters"], "encounters");
-  requireRecord(KNOWLEDGE_FILES.monsterDb, db["bosses"], "bosses");
+  // The Ironclad's files must hold something (a missing or empty one is a broken refresh); a new character's may be absent.
+  const strict = knowledgeCharacter() === DEFAULT_CHARACTER;
+  const noRecords = !strict && records === null && db["encounters"] === undefined && db["bosses"] === undefined;
+  if (noRecords) Object.assign(db, { encounters: {}, bosses: {} });
+  requireRecord(KNOWLEDGE_FILES.monsterDb, db["encounters"], "encounters", !noRecords);
+  requireRecord(KNOWLEDGE_FILES.monsterDb, db["bosses"], "bosses", !noRecords);
 
-  const experience = readJson(dir, KNOWLEDGE_FILES.experience);
-  if (!Array.isArray(experience["entries"]) || experience["entries"].length === 0) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.experience} 缺少 entries 或为空`);
+  // The run's character's own files: none yet is empty knowledge (a new character starts from nothing, never from another's).
+  const experience = readCharacterJson(dir, KNOWLEDGE_FILES.experience) ?? { version: "无", entries: [] };
+  if (!Array.isArray(experience["entries"]) || (strict && experience["entries"].length === 0)) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.experience} 缺少 entries 或为空`);
   for (const [index, entry] of (experience["entries"] as unknown[]).entries()) {
     const ok = isRecord(entry) && typeof entry["id"] === "string" && typeof entry["scope"] === "string" && typeof entry["lesson"] === "string" && Array.isArray(entry["asc"]) && Array.isArray(entry["evidence"]);
     if (!ok) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.experience} 第 ${index} 条缺少 id/scope/lesson/asc/evidence`);
   }
 
-  const rooms = readJson(dir, KNOWLEDGE_FILES.roomCosts);
-  requireRecord(KNOWLEDGE_FILES.roomCosts, rooms["by_asc"], "by_asc");
+  const rooms = readCharacterJson(dir, KNOWLEDGE_FILES.roomCosts) ?? { by_asc: {} };
+  requireRecord(KNOWLEDGE_FILES.roomCosts, rooms["by_asc"], "by_asc", strict);
 
-  const outcome = readJson(dir, KNOWLEDGE_FILES.outcomeStats);
+  const outcome = readCharacterJson(dir, KNOWLEDGE_FILES.outcomeStats) ?? { by_ascension: {} };
   // One table per ascension from 2026-10-04 (by_ascension; a higher ascension's may have no rest rows yet), else the
   // A8 table itself (knowledge/outcome-tables.ts).
   if (outcome["by_ascension"] !== undefined) {
-    const tables = requireRecord(KNOWLEDGE_FILES.outcomeStats, outcome["by_ascension"], "by_ascension");
+    const tables = requireRecord(KNOWLEDGE_FILES.outcomeStats, outcome["by_ascension"], "by_ascension", strict);
     for (const [asc, table] of Object.entries(tables)) requireRecord(KNOWLEDGE_FILES.outcomeStats, requireRecord(KNOWLEDGE_FILES.outcomeStats, table, `by_ascension.${asc}`)["rest"], `by_ascension.${asc}.rest`, false);
   } else requireRecord(KNOWLEDGE_FILES.outcomeStats, outcome["rest"], "rest");
 
-  const hints = readJson(dir, KNOWLEDGE_FILES.jevHints);
-  if (!Array.isArray(hints["hints"]) || hints["hints"].length === 0) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.jevHints} 缺少 hints 或为空`);
+  const hints = readCharacterJson(dir, KNOWLEDGE_FILES.jevHints) ?? { hints: [] };
+  if (!Array.isArray(hints["hints"]) || (strict && hints["hints"].length === 0)) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.jevHints} 缺少 hints 或为空`);
 
-  const guideTemplate = readText(dir, KNOWLEDGE_FILES.guide);
-  const handbookTemplate = readText(dir, KNOWLEDGE_FILES.handbook);
+  const guideTemplate = readCharacterText(dir, KNOWLEDGE_FILES.guide) ?? "";
+  const handbookTemplate = readCharacterText(dir, KNOWLEDGE_FILES.handbook) ?? "";
   return {
     dir,
     monsterDb: db as unknown as MonsterDbFile,
@@ -190,13 +228,17 @@ function stamp(dir: string): string {
 
 const cache = new Map<string, { stamp: string; data: KnowledgeData }>();
 
-/** Every knowledge file in `dir`, parsed and checked; throws KnowledgeLoadError on any failure. */
+/**
+ * Every knowledge file in `dir` for the run's character, parsed and checked; throws KnowledgeLoadError on any failure. A
+ * file of the character's that is not there is empty knowledge, not a failure.
+ */
 export function loadKnowledgeData(dir: string): KnowledgeData {
-  const key = resolve(dir);
-  const now = stamp(key);
+  const resolved = resolve(dir);
+  const key = `${resolved}|${knowledgeCharacter()}`;
+  const now = stamp(resolved);
   const hit = cache.get(key);
   if (hit && hit.stamp === now) return hit.data;
-  const data = parseAll(key);
+  const data = parseAll(resolved);
   cache.set(key, { stamp: now, data });
   return data;
 }
@@ -215,6 +257,11 @@ export interface PostmortemSection {
   summary: string;
   /** Ascension named at the start of the summary ("A9，…"), null for the early headings without one. */
   asc: number | null;
+  /**
+   * The run's character: the character name the summary carries ("A0，静默猎手，第17层…"; the learner writes it for
+   * every character but the Ironclad), else the Ironclad (every heading written before 2026-10-04).
+   */
+  character: string;
   /** Position in the file (later = more recent). */
   order: number;
   /** The section as written: heading line and body. */
@@ -230,6 +277,15 @@ export interface Postmortems {
 
 const RUN_HEADING = /^## ([0-9A-Z]{12})(?:（(.*)）)?\s*$/;
 
+/** The character a post-mortem heading's summary names (one of its comma-separated items), else the default (the Ironclad). */
+export function summaryCharacter(summary: string): string {
+  for (const item of summary.split(/[，,]/)) {
+    const named = Object.entries(CHARACTER_NAMES).find(([id, names]) => [id, names.zh, names.en.toLowerCase()].includes(item.trim().toLowerCase()) || item.trim() === names.zh);
+    if (named) return named[0];
+  }
+  return DEFAULT_CHARACTER;
+}
+
 /** Parses the post-mortem file: every "## <run id>（…）" section. */
 export function parsePostmortems(text: string, path: string): Postmortems {
   const lines = text.split("\n");
@@ -240,7 +296,7 @@ export function parsePostmortems(text: string, path: string): Postmortems {
     if (!current) return;
     const summary = current.summary;
     const asc = /^A(\d+)/.exec(summary);
-    const section: PostmortemSection = { runId: current.runId, summary, asc: asc ? Number(asc[1]) : null, order: order++, text: lines.slice(current.start, end).join("\n").trimEnd() };
+    const section: PostmortemSection = { runId: current.runId, summary, asc: asc ? Number(asc[1]) : null, character: summaryCharacter(summary), order: order++, text: lines.slice(current.start, end).join("\n").trimEnd() };
     sections.set(current.runId, [...(sections.get(current.runId) ?? []), section]);
     current = null;
   };

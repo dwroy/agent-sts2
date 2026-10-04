@@ -1,11 +1,18 @@
 /**
- * The hard elites that get SL retries (docs/sl.md): knowledge/characters/ironclad/sl-elites.json, the top 5 by logged A8-A9 death rate
- * (Dai 2026-10-02). A fight is a listed elite when any enemy alive at its start has one of an entry's enemy ids.
+ * The hard elites that get SL retries (docs/sl.md): knowledge/characters/<id>/sl-elites.json, the top 5 by logged A8-A9
+ * death rate (Dai 2026-10-02; the Ironclad's list). A fight is a listed elite when any enemy alive at its start has one
+ * of an entry's enemy ids. A character with no list yet (no file) has no listed fights.
  */
 import { readFileSync } from "node:fs";
-import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
+import { DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile } from "../knowledge/files.js";
 
-export const SL_ELITES_PATH = knowledgeFile(KNOWLEDGE_DIR, "sl-elites.json");
+/** The run's character's list (knowledge/files.ts knowledgeCharacter). */
+export function slElitesPath(): string {
+  return knowledgeFile(KNOWLEDGE_DIR, "sl-elites.json");
+}
+
+/** The path when this module loaded (the character then in effect). */
+export const SL_ELITES_PATH = slElitesPath();
 
 export interface SlElite {
   name: string;
@@ -21,17 +28,31 @@ export interface SlEliteList {
   elites: SlElite[];
 }
 
-let cached: SlEliteList | null = null;
+const cached = new Map<string, SlEliteList>();
 
-/** The list in sl-elites.json (read once). Throws when the file is missing or malformed: SL must not guess. */
-export function loadSlElites(path: string = SL_ELITES_PATH): SlEliteList {
-  if (path === SL_ELITES_PATH && cached) return cached;
-  const parsed = JSON.parse(readFileSync(path, "utf8")) as Partial<SlEliteList>;
+/**
+ * The list in sl-elites.json (read once). No file for a new character: an empty list (no hard fights listed yet). Throws
+ * when the Ironclad's is missing or any is malformed: SL must not guess.
+ */
+export function loadSlElites(path: string = slElitesPath()): SlEliteList {
+  const hit = cached.get(path);
+  if (hit) return hit;
+  let text: string;
+  try {
+    text = readFileSync(path, "utf8");
+  } catch (error) {
+    // The Ironclad's list is part of its knowledge: missing, SL must not guess. A new character has none yet.
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT" || knowledgeCharacter() === DEFAULT_CHARACTER) throw error;
+    const empty: SlEliteList = { source: `no ${path}`, date: "", elites: [] };
+    cached.set(path, empty);
+    return empty;
+  }
+  const parsed = JSON.parse(text) as Partial<SlEliteList>;
   if (!Array.isArray(parsed.elites) || parsed.elites.some((elite) => !Array.isArray(elite?.enemy_ids) || elite.enemy_ids.length === 0)) {
     throw new Error(`${path}: expected {elites: [{name, enemy_ids: [...]}, ...]}`);
   }
   const list: SlEliteList = { source: String(parsed.source ?? ""), date: String(parsed.date ?? ""), elites: parsed.elites as SlElite[] };
-  if (path === SL_ELITES_PATH) cached = list;
+  cached.set(path, list);
   return list;
 }
 

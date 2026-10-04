@@ -26,10 +26,11 @@ import { createHash } from "node:crypto";
 
 import { SLICE_LESSONS_HEADING, SLICE_STATS_HEADING } from "../knowledge/experience.js";
 import { loadKnowledgeData, loadPostmortems, type Postmortems, type RenderContext } from "../knowledge/render/data.js";
-import { loadPotionEquivalents } from "../knowledge/potion-equivalents.js";
+import { loadPotionEquivalentsOrNull } from "../knowledge/potion-equivalents.js";
 import type { FactFiller } from "../knowledge/render/facts.js";
 import { renderKnowledgePrefix } from "../knowledge/render/knowledge-prefix.js";
-import { SYSTEM } from "./llm/deepseek.js";
+import { characterName, DEFAULT_CHARACTER, knowledgeCharacter } from "../knowledge/files.js";
+import { systemRules } from "./llm/deepseek.js";
 import type { BrainRequest, KnowledgeNote } from "./types.js";
 
 /**
@@ -72,8 +73,13 @@ export const FULL_KNOWLEDGE_NOTE = [
 ].join("\n");
 
 /** The full-knowledge system prompt: v3's rules, the note, the prefix. */
+/** FULL_KNOWLEDGE_NOTE for the run's character: the Ironclad's is the constant itself, byte for byte. */
+export function fullKnowledgeNote(character: string = knowledgeCharacter()): string {
+  return character === DEFAULT_CHARACTER ? FULL_KNOWLEDGE_NOTE : FULL_KNOWLEDGE_NOTE.replace("铁甲战士攻略", `${characterName(character)}攻略`);
+}
+
 export function fullSystemPrompt(prefix: string): string {
-  return `${SYSTEM}\n\n${FULL_KNOWLEDGE_NOTE}\n\n${prefix}`;
+  return `${systemRules()}\n\n${fullKnowledgeNote()}\n\n${prefix}`;
 }
 
 /**
@@ -128,11 +134,11 @@ export class KnowledgePrompt {
 
   /** The system prompt and its note; throws KnowledgeLoadError when a knowledge file does not load. */
   system(ctx: RenderContext): { system: string; note: KnowledgeNote } {
-    const key = `${ctx.ascension}|${ctx.knowledgeDir}`;
+    const key = `${ctx.ascension}|${ctx.knowledgeDir}|${knowledgeCharacter()}`;
     // The loaders return the same object while their files are unchanged (keyed by mtime and size); the potion
     // table is its own file (knowledge/potion-equivalents.ts).
     const data = loadKnowledgeData(ctx.knowledgeDir);
-    const potions = loadPotionEquivalents(ctx.knowledgeDir);
+    const potions = loadPotionEquivalentsOrNull(ctx.knowledgeDir);
     const postmortems = (this.opts.postmortems ?? loadPostmortems)();
     const hit = this.cached;
     if (hit && hit.key === key && hit.data === data && hit.potions === potions && hit.postmortems === postmortems) return hit;

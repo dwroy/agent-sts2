@@ -130,7 +130,8 @@ export function featuresOf(meta: FightMeta, E: Snapshot, mm: MoveModelData): Rec
   const deck = meta.deck;
   const f: Record<string, number> = {};
   f["hp"] = E.hp;
-  f["max_hp"] = E.mhp || 80;
+  // The state's max HP; a board without one (never in a logged fight) takes its HP, not a character's number.
+  f["max_hp"] = E.mhp || E.hp || 80;
   f["hp_frac"] = E.hp / Math.max(1, f["max_hp"]);
   f["block"] = E.blk;
   for (const p of PLAYER_POWERS) f[`p_${p.replace("_POWER", "").toLowerCase()}`] = pw[p] ?? 0;

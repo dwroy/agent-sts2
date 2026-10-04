@@ -114,7 +114,7 @@ const relicIds = (state: GameState): string[] => asArray(asRecord(state.run?.raw
 export function routeCosts(env: DecisionEnv, act: number): RoomCostModel {
   const { state } = env;
   const relics = relicIds(state);
-  return roomCostModel(act, state.run?.ascension ?? 0, state.run?.max_hp ?? 80, restHealOf(relics, asArray(asRecord(state.run?.raw)["deck"]).length), bossStartHealOf(relics));
+  return roomCostModel(act, state.run?.ascension ?? 0, state.run?.max_hp ?? state.run?.current_hp ?? 80, restHealOf(relics, asArray(asRecord(state.run?.raw)["deck"]).length), bossStartHealOf(relics));
 }
 
 type Point = { row: number; col: number };

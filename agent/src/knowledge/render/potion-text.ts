@@ -9,6 +9,7 @@ import {
   CATEGORY_ZH,
   SOLVER_ZH,
   loadPotionEquivalents,
+  loadPotionEquivalentsOrNull,
   potionEquivalentFrom,
   potionText,
   tableAscension,
@@ -18,6 +19,7 @@ import {
 } from "../potion-equivalents.js";
 import { KnowledgeLookupError, type RenderContext } from "./data.js";
 import { cmp, round1 } from "./format.js";
+import { characterName, knowledgeCharacter } from "../files.js";
 
 const ACTS = [1, 2, 3] as const;
 const ACT_ZH: Record<number, string> = { 1: "一幕", 2: "二幕", 3: "三幕" };
@@ -88,7 +90,12 @@ function heldOrder(file: PotionEquivalentsFile, asc: number): string[] {
 
 /** The prefix block (and kb_potion without an id): every potion an Ironclad run can get, at the run's ascension. */
 export function renderPotionTable(ctx: RenderContext): string {
-  const file = loadPotionEquivalents(ctx.knowledgeDir);
+  const character = knowledgeCharacter();
+  const loaded = loadPotionEquivalentsOrNull(ctx.knowledgeDir);
+  if (!loaded) return `## 药水换算表\n${characterName(character)}还没有药水换算表（还没有它的 boss 战记录）。`;
+  const file = loaded;
+  // The flag of the pools this character's runs draw from is named after it ("ironclad": the Ironclad's file).
+  const inPool = (id: string): boolean => (file.potions[id] as unknown as Record<string, unknown>)[character] === true;
   const asc = ascOf(file, ctx.ascension);
   const note = asc === ctx.ascension ? `A${asc}` : `A${asc}（本表没有 A${ctx.ascension}，用最近的 A${asc}）`;
   const generated = `生成于 ${file.meta.generated.slice(0, 10)}，boss 战 ${file.meta.logs?.boss_fights ?? "?"} 场`;
@@ -96,16 +103,16 @@ export function renderPotionTable(ctx: RenderContext): string {
   const none: string[] = [];
   for (const id of heldOrder(file, asc)) {
     const entry = file.potions[id]!;
-    if (!entry.ironclad) continue;
+    if (!inPool(id)) continue;
     const line = potionLine(file, id, asc);
     if (line) lines.push(line);
     else none.push(`${entry.name} ${id}${entry.note ? `（${entry.note}）` : ""}`);
   }
   if (none.length > 0) lines.push(`没有数值：${none.join("，")}`);
   const others = Object.keys(file.potions)
-    .filter((id) => !file.potions[id]!.ironclad)
+    .filter((id) => !inPool(id))
     .sort(cmp);
-  if (others.length > 0) lines.push(`不在铁甲战士药水池（没有数值）：${others.map((id) => file.potions[id]!.name).join("、")}`);
+  if (others.length > 0) lines.push(`不在${characterName(character)}药水池（没有数值）：${others.map((id) => file.potions[id]!.name).join("、")}`);
   return lines.join("\n");
 }
 

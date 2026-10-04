@@ -20,7 +20,7 @@ import { readFileSync } from "node:fs";
 
 import { loadConfig } from "../core/config.js";
 import type { Knowledge } from "../knowledge/index.js";
-import { amountEstimateNote, moveDamageAt, nearestAscension, startAmountAt, type MonsterDb, type MonsterEntry } from "../knowledge/monster-db.js";
+import { amountEstimateNote, moveDamageAt, nearestAscension, readMonsterDbJson, startAmountAt, type MonsterDb, type MonsterEntry } from "../knowledge/monster-db.js";
 import { parseGameState, type GameState } from "../hand/mod/schema.js";
 import { buildRunBrief } from "../memory/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../memory/types.js";
@@ -160,7 +160,7 @@ let mmCache: MoveModelData | undefined;
 export function loadMonsterDb(): MonsterDb {
   if (dbCache) return dbCache;
   try {
-    const parsed = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as Partial<MonsterDb>;
+    const parsed = readMonsterDbJson() as Partial<MonsterDb>;
     dbCache = { bosses: parsed.bosses ?? {}, encounters: parsed.encounters ?? {}, monsters: parsed.monsters ?? {} };
   } catch {
     dbCache = { bosses: {}, encounters: {}, monsters: {} };

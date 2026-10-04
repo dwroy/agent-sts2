@@ -42,7 +42,8 @@ import { isMenuRunId } from "../memory/journal-replay.js";
 import { str, type JsonValue } from "../core/util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
 import { PROJECT_ROOT } from "../core/paths.js";
-import { knowledgeFile } from "../knowledge/files.js";
+import { characterKey, knowledgeFile } from "../knowledge/files.js";
+import { ascensionMode, resolveTargetAscension } from "../memory/ascension-target.js";
 
 /** The repository this module runs from (core/paths.ts PROJECT_ROOT: the checkout's root). */
 export const REPO_ROOT = PROJECT_ROOT;
@@ -171,8 +172,10 @@ export interface RunConfigRow {
     run_start: string;
     character: string | null;
   };
-  /** TARGET_ASCENSION (screens/misc.ts holds the ascension there); null when unset. */
+  /** TARGET_ASCENSION (screens/misc.ts holds the ascension there); null when unset; with climb, the level it resolved to. */
   target_ascension: number | null;
+  /** "climb" when TARGET_ASCENSION=climb (absent otherwise, as before). */
+  target_ascension_mode?: "climb";
   /** ARM: the ablation arm ops/run.sh set, when one is running. */
   arm: string | null;
   /** When the configuration asks Claude: the program the brain runs and its start-up check (Brain.preflight). */
@@ -303,6 +306,12 @@ function targetAscension(raw: string | undefined): number | null {
   if (raw === undefined || raw.trim() === "") return null;
   const value = Number(raw.trim());
   return Number.isInteger(value) ? value : null;
+}
+
+/** target_ascension as before for a level or nothing; for "climb" the resolved level and target_ascension_mode "climb". */
+function climbSetup(raw: string | undefined, character: string): { target_ascension: number | null; target_ascension_mode?: "climb" } {
+  if (ascensionMode(raw) !== "climb") return { target_ascension: targetAscension(raw) };
+  return { target_ascension: resolveTargetAscension(raw, character).level, target_ascension_mode: "climb" };
 }
 
 /** The engines a brain configuration can ask, in a stable order: default, per-kind (sorted), fallback. */
@@ -472,7 +481,8 @@ export function runConfigRow(
       run_start: config.run.start,
       character: config.run.character,
     },
-    target_ascension: targetAscension(env["TARGET_ASCENSION"]),
+    // TARGET_ASCENSION=climb: the level it resolved to for this run's character (memory/ascension-target.ts), and the mode.
+    ...climbSetup(env["TARGET_ASCENSION"], characterKey(run.character) ?? config.run.characterId),
     arm: str(env["ARM"]) || null,
     // SL_ENABLED only (docs/sl.md): with SL off the row is exactly as before.
     ...(opts.sl ? { sl: opts.sl } : {}),

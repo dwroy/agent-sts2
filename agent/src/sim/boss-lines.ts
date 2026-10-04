@@ -19,7 +19,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { availableParallelism } from "node:os";
 import { MessageChannel, receiveMessageOnPort, Worker, type MessagePort } from "node:worker_threads";
@@ -224,6 +224,8 @@ export function workerDataSignature(): string | null {
   try {
     const hash = createHash("sha256");
     for (const dir of knowledgeDataDirs()) {
+      // A character with no knowledge yet has no characters/<id>/ directory: nothing of its own to sign.
+      if (!existsSync(dir)) continue;
       for (const name of readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) hash.update(name).update("\u0000").update(readFileSync(join(dir, name))).update("\u0000");
     }
     return hash.digest("hex").slice(0, 32);

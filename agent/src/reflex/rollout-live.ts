@@ -24,7 +24,7 @@ import { readFileSync } from "node:fs";
 
 import type { Knowledge } from "../knowledge/index.js";
 import { identityToken, memoKey, type ComputeMemo } from "../sim/compute-memo.js";
-import { appliedPowerIds, countsAt, moveAmountAt, moveBaseDamages, moveDamageAt, nearestAscension, regularEffect, selfGainAt, shownDamageAt, spawnsAt, startAmountAt, type AmountWhere, type MoveEntry } from "../knowledge/monster-db.js";
+import { appliedPowerIds, countsAt, moveAmountAt, moveBaseDamages, moveDamageAt, nearestAscension, readMonsterDbJson, regularEffect, selfGainAt, shownDamageAt, spawnsAt, startAmountAt, type AmountWhere, type MoveEntry } from "../knowledge/monster-db.js";
 import type { GameState } from "../hand/mod/schema.js";
 import type { ScreenMemory } from "../memory/types.js";
 import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
@@ -165,7 +165,13 @@ function readJson<T>(name: string, fallback: T): T {
 }
 
 function monsterMoves(): MonsterMoves {
-  return (dbCache ??= readJson<{ monsters?: MonsterMoves }>("monster-db.json", {}).monsters ?? {});
+  if (dbCache) return dbCache;
+  try {
+    dbCache = (readMonsterDbJson() as { monsters?: MonsterMoves }).monsters ?? {};
+  } catch {
+    dbCache = {};
+  }
+  return dbCache;
 }
 
 function moveModelData(): MoveModelData {

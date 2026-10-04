@@ -28,7 +28,7 @@ afterEach(() => process.chdir(cwd));
 const DATA_FILES = [
   "monster-db.json", "move-model.json", "event-pages.json", "card-upgrades.json",
   "experience.json", "ironclad-guide.md", "ds-handbook.md", "jev-hints.json", "outcome-stats.json", "room-costs.json",
-  "boss-damage.json", "potion-equivalents.json", "fight-value.json", "fight-value-gates.json", "boss-trust.json", "sl-elites.json",
+  "boss-damage.json", "potion-equivalents.json", "fight-value.json", "fight-value-gates.json", "boss-trust.json", "sl-elites.json", "monster-records.json",
 ];
 
 describe("the project root", () => {

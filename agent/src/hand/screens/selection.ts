@@ -12,7 +12,7 @@ import { briefJson } from "../../memory/run-brief.js";
 import type { Decision, DecisionEnv } from "../../memory/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../../brain/build-facts.js";
-import { cardValue, damageRole, deckProfile, isBlockCardId } from "./card-value.js";
+import { cardValue, damageRole, deckProfile, hasCardValues, isBlockCardId } from "./card-value.js";
 import { boardDamageContext, expectedNextDamage, meanMoveDamage } from "../../knowledge/move-model.js";
 import { FREE_OFFER_SOURCES, freeCardPick, modelHandCard, potionCardCost, potionPowerExtraCost, thisTurnScore, type CardModel, type ThisTurnBoard } from "../../reflex/card-model.js";
 import type { ActionRequest } from "../mod/client.js";
@@ -661,7 +661,7 @@ const DEFEND_BASE_BLOCK = 5;
 /** A basic Strike's printed damage: the yardstick an attack is compared with (plus our Strength). */
 const STRIKE_BASE_DAMAGE = 6;
 
-/** Cards whose Vulnerable/Weak strips an enemy's Artifact. */
+/** Cards whose Vulnerable/Weak strips an enemy's Artifact: the Ironclad's (card-value.ts hasCardValues; another character relies on the card's own debuff flag). */
 const DEBUFF_EXHAUST_KEEP = new Set(["BASH", "THUNDERCLAP", "TAUNT", "UPPERCUT", "SHOCKWAVE", "DISARM", "INTIMIDATE"]);
 
 /** A card that gives block: a Defend, a Block value, or block in its text. */
@@ -788,7 +788,7 @@ export function combatExhaustScore(cardId: string, type: string, context: Exhaus
   if (!cardId.startsWith("DEFEND_") && type !== "Attack" && block > DEFEND_BASE_BLOCK) {
     score = Math.min(score, Math.round((EXHAUST_DEFEND_UNDER_FIRE * DEFEND_BASE_BLOCK) / block));
   }
-  if (context.artifact && (card.debuff || DEBUFF_EXHAUST_KEEP.has(cardId))) score = Math.min(score, 10);
+  if (context.artifact && (card.debuff || (hasCardValues() && DEBUFF_EXHAUST_KEEP.has(cardId)))) score = Math.min(score, 10);
   return Math.max(1, score);
 }
 

@@ -11,12 +11,24 @@ import { factsAtAscension, fillGuideFacts } from "../../sim/boss-clock.js";
 import { fillDbNumbers } from "../monster-db.js";
 import { KNOWLEDGE_FILES, KnowledgeLookupError, loadKnowledgeData, type KnowledgeData, type RenderContext } from "./data.js";
 import { freshFacts, type FactFiller } from "./facts.js";
+import { characterName, knowledgeCharacter } from "../files.js";
 
 export const OLD_SOURCES = {
-  guide: { file: KNOWLEDGE_FILES.guide, title: "铁甲战士攻略" },
+  // The run's character's guide ("铁甲战士攻略", ironclad-guide.md): read when asked, the character set at startup.
+  guide: {
+    get file(): string {
+      return KNOWLEDGE_FILES.guide;
+    },
+    get title(): string {
+      return `${characterName(knowledgeCharacter())}攻略`;
+    },
+  },
   handbook: { file: KNOWLEDGE_FILES.handbook, title: "DeepSeek 经验手册" },
   jev_hints: { file: KNOWLEDGE_FILES.jevHints, title: "Jev 战斗提示" },
-} as const;
+};
+
+/** An old-knowledge source the run's character does not have. */
+const NONE_YET = "（本角色还没有）";
 
 export type OldSource = keyof typeof OLD_SOURCES;
 export const OLD_SOURCE_KEYS = Object.keys(OLD_SOURCES) as OldSource[];
@@ -45,8 +57,10 @@ function sourceTitle(source: OldSource, data: KnowledgeData, asc: number): strin
 export function renderOldSource(source: OldSource, ctx: RenderContext): string {
   const data = loadKnowledgeData(ctx.knowledgeDir);
   const title = sourceTitle(source, data, ctx.ascension);
-  if (source === "jev_hints") return [title, data.jevHints.note ?? "", ...hintsText(data, ctx.ascension, undefined, ctx.facts)].filter(Boolean).join("\n");
+  // A character with none of it yet (no file): said, so the brain knows the block is empty rather than lost.
+  if (source === "jev_hints") return [title, data.jevHints.note ?? "", ...hintsText(data, ctx.ascension, undefined, ctx.facts), data.jevHints.hints.length === 0 ? NONE_YET : ""].filter(Boolean).join("\n");
   const template = source === "guide" ? data.guideTemplate : data.handbookTemplate;
+  if (template === "") return `${title}\n${NONE_YET}`;
   const text = ctx.facts ? ctx.facts(factsAtAscension(template, ctx.ascension), fillGuideFacts) : fillGuideFacts(template, ctx.ascension);
   return `${title}\n${demoteHeadings(text.trimEnd())}`;
 }

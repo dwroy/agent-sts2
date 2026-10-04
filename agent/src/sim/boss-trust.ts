@@ -7,7 +7,7 @@
  * than 15 points off its win rate, or HP through block outside 0.7-1.3x the log's; the reason says which.
  */
 import { readFileSync } from "node:fs";
-import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
+import { KNOWLEDGE_DIR, knowledgeFile, onKnowledgeCharacterChange } from "../knowledge/files.js";
 
 export interface BossTrustData {
   criteria: { min_fights: number; brier_ratio: number; max_gap: number; leak_range: [number, number]; starts: Record<string, string> };
@@ -23,10 +23,16 @@ export const BOSS_KEYS = [
   "TEST_SUBJECT", "THE_INSATIABLE", "THE_KIN", "VANTOM", "WATERFALL_GIANT",
 ] as const;
 
-export const BOSS_TRUST_PATH = knowledgeFile(KNOWLEDGE_DIR, "boss-trust.json");
+/** The run's character's trust data file (a character never validated has none: every boss low trust). */
+export function bossTrustPath(): string {
+  return knowledgeFile(KNOWLEDGE_DIR, "boss-trust.json");
+}
+
+/** The path when this module loaded (the character then in effect). */
+export const BOSS_TRUST_PATH = bossTrustPath();
 
 /** The trust data at `path`, or null when it cannot be read. */
-export function loadBossTrust(path = BOSS_TRUST_PATH): BossTrustData | null {
+export function loadBossTrust(path = bossTrustPath()): BossTrustData | null {
   try {
     const data = JSON.parse(readFileSync(path, "utf8")) as Partial<BossTrustData>;
     return data.low_trust_b2 && data.low_confidence_b3 && data.criteria ? (data as BossTrustData) : null;
@@ -35,14 +41,22 @@ export function loadBossTrust(path = BOSS_TRUST_PATH): BossTrustData | null {
   }
 }
 
-const TRUST = loadBossTrust();
-
 /** B2's low-trust bosses and why (English): the data file's, or every boss when it is missing. */
-export const LOW_TRUST_B2: Record<string, string> = TRUST
-  ? { ...TRUST.low_trust_b2 }
-  : Object.fromEntries(BOSS_KEYS.map((key) => [key, "the simulator's validation data (src/sim/boss-trust.json) could not be read"]));
+export const LOW_TRUST_B2: Record<string, string> = {};
 
 /** B3's low-confidence bosses and why (Chinese): the data file's, or every boss when it is missing. */
-export const LOW_CONFIDENCE_B3: Record<string, string> = TRUST
-  ? { ...TRUST.low_confidence_b3 }
-  : Object.fromEntries(BOSS_KEYS.map((key) => [key, "模拟器的验证数据（src/sim/boss-trust.json）读不到"]));
+export const LOW_CONFIDENCE_B3: Record<string, string> = {};
+
+/** Fills the two tables in place (other modules hold them by reference) from the current character's file. */
+function fillTrust(): void {
+  const trust = loadBossTrust();
+  for (const table of [LOW_TRUST_B2, LOW_CONFIDENCE_B3]) for (const key of Object.keys(table)) delete table[key];
+  Object.assign(
+    LOW_TRUST_B2,
+    trust ? trust.low_trust_b2 : Object.fromEntries(BOSS_KEYS.map((key) => [key, "the simulator's validation data (src/sim/boss-trust.json) could not be read"])),
+  );
+  Object.assign(LOW_CONFIDENCE_B3, trust ? trust.low_confidence_b3 : Object.fromEntries(BOSS_KEYS.map((key) => [key, "模拟器的验证数据（src/sim/boss-trust.json）读不到"])));
+}
+
+fillTrust();
+onKnowledgeCharacterChange(fillTrust);

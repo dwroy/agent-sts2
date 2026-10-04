@@ -188,7 +188,8 @@ describe("SL retry switches off: the combat question as v4 3488dc5 asked it", ()
     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got, null, 2));
     expect(got).toEqual(GOLDEN);
     expect([...pinnedRead].sort()).toEqual(["boss-damage.json", "experience.json", "monster-db.json", "move-model.json", "potion-equivalents.json"]);
-    expect([...unpinned].sort()).toEqual(["fight-value-gates.json", "fight-value.json", "jev-hints.json"]);
+    // monster-records.json: the character's monster records beside the pinned (combined, pre-split) monster DB, absent here.
+    expect([...unpinned].sort()).toEqual(["fight-value-gates.json", "fight-value.json", "jev-hints.json", "monster-records.json"]);
     expect([...touched]).toEqual([]);
   }, 300_000);
 });

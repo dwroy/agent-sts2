@@ -12,6 +12,8 @@ import type { Decision, DecisionEnv } from "../../memory/types.js";
 import { buildPickDecision, type PickOption } from "./pick.js";
 import { buildFacts, deepseekDecides } from "../../brain/build-facts.js";
 import { cardOutcome } from "../../knowledge/outcome-facts.js";
+import { characterKey, characterName, knowledgeCharacter } from "../../knowledge/files.js";
+import { fixedAscension, resolveTargetAscension } from "../../memory/ascension-target.js";
 
 /** A bundle's cards: id and name. */
 function bundleCards(bundle: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): { id: string; name: string }[] {
@@ -107,9 +109,25 @@ export function planCapstone(env: DecisionEnv): Decision | null {
 
 /** TARGET_ASCENSION as a level, or null when unset or not a number. */
 export function targetAscension(raw: string | undefined): number | null {
-  if (raw === undefined || raw.trim() === "") return null;
-  const level = Number(raw);
-  return Number.isInteger(level) && level >= 0 ? level : null;
+  return fixedAscension(raw);
+}
+
+/**
+ * The character select entry to play: the configured CHARACTER (matched on the game's character_id or its name, any
+ * case), or with CHARACTER unset the character whose knowledge the process reads (knowledge/files.ts: the Ironclad).
+ * A string when there is none to pick (the loop stops on it: no silent fallback to another character).
+ */
+export function characterSelectTarget(env: DecisionEnv): Record<string, unknown> | string {
+  const select = asRecord(env.state.raw["character_select"]);
+  const characters = asArray(select["characters"]).map(asRecord);
+  const configured = env.characterPreference?.trim() || null;
+  const wanted = configured ?? knowledgeCharacter();
+  const lower = wanted.toLowerCase();
+  const match = characters.find((entry) => str(entry["character_id"]).toLowerCase() === lower || str(entry["name"]).toLowerCase() === lower || characterKey(str(entry["character_id"])) === characterKey(wanted));
+  const listed = characters.map((entry) => `${str(entry["character_id"])}${bool(entry["is_locked"]) ? " (locked)" : ""}`).join(", ");
+  if (!match) return `CHARACTER ${configured ? `"${configured}"` : `unset (the ${wanted} knowledge)`} matches no character on character select (${listed || "none listed"}): set CHARACTER to one of the game's character ids`;
+  if (bool(match["is_locked"])) return `character ${str(match["character_id"])} is locked on character select (${listed})`;
+  return match;
 }
 
 export function planCharacterSelect(env: DecisionEnv): Decision | null {
@@ -117,44 +135,66 @@ export function planCharacterSelect(env: DecisionEnv): Decision | null {
   const select = asRecord(state.raw["character_select"]);
   if (Object.keys(select).length === 0) return null;
 
-  // Hold the ascension at TARGET_ASCENSION (Dai 2026-09-28: stay on A8 for 10 runs even after a win; a
-  // win unlocks the next level and the game then offers it by default). Unset: take what the game offers.
-  const targetLevel = targetAscension(process.env["TARGET_ASCENSION"]);
+  // 1. The character first (2026-10-04, multi-character): the ascension the game offers is the selected character's.
+  const target = characterSelectTarget(env);
+  if (typeof target === "string") return null; // planDecision stops the loop on it (characterSelectProblem)
+  const targetId = str(target["character_id"]);
+  const selectedId = str(select["selected_character_id"]);
+  const index = numOrNull(target["index"]);
+  if (selectedId.toLowerCase() !== targetId.toLowerCase()) {
+    if (index === null || !state.available_actions.includes("select_character")) return null;
+    return { kind: "act", label: "character/select", intent: { action: "select_character", option_index: index }, rationale: `selecting ${targetId} (${env.characterPreference?.trim() ? "CHARACTER" : "the default character"})` };
+  }
+
+  // 2. The ascension: TARGET_ASCENSION (Dai 2026-09-28: stay on A8 for 10 runs even after a win; a win unlocks the next
+  // level and the game then offers it by default), or "climb" (one above this character's highest win; ascension-target.ts).
+  // Unset: take what the game offers.
+  const raw = process.env["TARGET_ASCENSION"];
+  const { level: targetLevel, mode } = resolveTargetAscension(raw, characterKey(targetId) ?? knowledgeCharacter(), numOrNull(select["max_ascension"]));
+  const why = mode === "climb" ? "TARGET_ASCENSION=climb" : "TARGET_ASCENSION";
   const ascension = numOrNull(select["ascension"]);
   if (targetLevel !== null && ascension !== null) {
     if (ascension > targetLevel && state.available_actions.includes("decrease_ascension")) {
-      return { kind: "act", label: "character/ascension", intent: { action: "decrease_ascension" }, rationale: `ascension ${ascension} -> ${targetLevel} (TARGET_ASCENSION)` };
+      return { kind: "act", label: "character/ascension", intent: { action: "decrease_ascension" }, rationale: `ascension ${ascension} -> ${targetLevel} (${why})` };
     }
     if (ascension < targetLevel && state.available_actions.includes("increase_ascension")) {
-      return { kind: "act", label: "character/ascension", intent: { action: "increase_ascension" }, rationale: `ascension ${ascension} -> ${targetLevel} (TARGET_ASCENSION)` };
+      return { kind: "act", label: "character/ascension", intent: { action: "increase_ascension" }, rationale: `ascension ${ascension} -> ${targetLevel} (${why})` };
     }
   }
 
+  // 3. Embark.
   if (bool(select["can_embark"]) && state.available_actions.includes("embark")) {
     return { kind: "act", label: "character/embark", intent: { action: "embark" }, rationale: "character chosen; setting off" };
   }
 
-  const characters = asArray(select["characters"]).map(asRecord);
-  const unlocked = characters.filter((entry) => !bool(entry["is_locked"]));
-  const preferred = env.characterPreference?.trim().toLowerCase();
-  const match = preferred
-    ? unlocked.find(
-        (entry) =>
-          str(entry["character_id"]).toLowerCase() === preferred || str(entry["name"]).toLowerCase() === preferred,
-      )
-    : undefined;
-  const target = match ?? unlocked[0];
-  const index = target ? numOrNull(target["index"]) : null;
-  if (index === null) return null;
-  if (!state.available_actions.includes("select_character")) return null;
+  // Selected but the game will not embark yet (no click on it this visit): select it.
+  if (index === null || !state.available_actions.includes("select_character")) return null;
   return {
     kind: "act",
     label: "character/select",
     intent: { action: "select_character", option_index: index },
-    rationale: match
-      ? `selecting the configured character ${preferred}`
-      : `selecting the first unlocked character (${str(target?.["name"], "unknown")}); set CHARACTER to choose deliberately`,
+    rationale: env.characterPreference?.trim() ? `selecting the configured character ${env.characterPreference.trim().toLowerCase()}` : `selecting ${targetId} (CHARACTER unset: the default character)`,
   };
+}
+
+/** Why character select cannot go on (no character to pick: the loop stops), or null. */
+export function characterSelectProblem(env: DecisionEnv): string | null {
+  if (Object.keys(asRecord(env.state.raw["character_select"])).length === 0) return null;
+  const target = characterSelectTarget(env);
+  return typeof target === "string" ? target : null;
+}
+
+/**
+ * A run of another character than the process plays (RUN_START=continue resuming a saved run of another one, or a run
+ * started by hand): the loop stops, since every piece of knowledge it reads is the configured character's. null when
+ * the run is this character's or the state does not say.
+ */
+export function runCharacterProblem(env: DecisionEnv): string | null {
+  const runCharacter = characterKey(str(asRecord(env.state.run?.raw)["character_id"]));
+  if (runCharacter === null) return null;
+  const playing = knowledgeCharacter();
+  if (runCharacter === playing) return null;
+  return `the run on screen is ${characterName(runCharacter, "en")} (${runCharacter}) but this process plays ${characterName(playing, "en")} (CHARACTER ${env.characterPreference?.trim() || "unset"}) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it`;
 }
 
 export function planTimeline(env: DecisionEnv): Decision | null {

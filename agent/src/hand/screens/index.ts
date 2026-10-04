@@ -7,7 +7,7 @@ import { fightKey } from "../../memory/fight-plan.js";
 import { guardSandpit, planCombatTurn } from "../../reflex/combat-plan.js";
 import { planEvent } from "./event.js";
 import { planMap } from "./map.js";
-import { planBundle, planCapstone, planCharacterSelect, planCloseCardsView, planCrystalSphere, planMenu, planTimeline } from "./misc.js";
+import { characterSelectProblem, planBundle, planCapstone, planCharacterSelect, planCloseCardsView, planCrystalSphere, planMenu, planTimeline, runCharacterProblem } from "./misc.js";
 import { planRest } from "./rest.js";
 import { planReward } from "./reward.js";
 import { planSelection } from "./selection.js";
@@ -73,6 +73,10 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
     const decision = planCloseCardsView(env);
     return decision ? { kind: "decision", decision } : { kind: "wait", reason: `no close action on ${screen}` };
   }
+
+  // One character per process (knowledge/files.ts): a run of another one, or no character to pick, stops the loop.
+  const characterProblem = screen === "CHARACTER_SELECT" ? characterSelectProblem(env) : runCharacterProblem(env);
+  if (characterProblem) return { kind: "blocked", reason: characterProblem };
 
   let decision: Decision | null = null;
   switch (screen) {

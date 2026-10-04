@@ -161,7 +161,8 @@ describe("B2 off: the boss question as before", () => {
     // Every pinned file was read through the mock, the rest of the knowledge the planner asked for read as absent (so
     // the digests never follow the refreshed data), and no log or cache was touched, nothing written.
     expect([...pinnedRead].sort()).toEqual(["boss-damage.json", "experience.json", "monster-db.json", "move-model.json", "potion-equivalents.json"]);
-    expect([...unpinned].sort()).toEqual(["fight-value-gates.json", "fight-value.json", "jev-hints.json"]);
+    // monster-records.json: the character's monster records beside the pinned (combined, pre-split) monster DB, absent here.
+    expect([...unpinned].sort()).toEqual(["fight-value-gates.json", "fight-value.json", "jev-hints.json", "monster-records.json"]);
     expect([...touched]).toEqual([]);
   }, 120_000);
 

@@ -3,7 +3,7 @@ import { delimiter, dirname, isAbsolute, join } from "node:path";
 
 import type { Effort, EngineName } from "../brain/types.js";
 import { fromRoot } from "./paths.js";
-import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
+import { characterKey, DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
 /**
  * Configuration: environment variables overridden by CLI flags (PLAN.md §9).
  *
@@ -301,7 +301,12 @@ export interface AppConfig {
   escalation: { chain: ("claude" | "deepseek")[]; claudeDir: string; claudeTimeoutMs: number; claudeMaxCalls: number };
   thresholds: { act: number; strong: number };
   budgets: { maxRequests: number; maxTokens: number };
-  run: { start: RunStart; character: string | null };
+  /**
+   * character: CHARACTER as given (character select matches it on the game's character_id or name); characterId: the
+   * knowledge id it names (knowledge/files.ts characterKey; "ironclad" when CHARACTER is unset), whose
+   * knowledge/characters/<id>/ the run reads.
+   */
+  run: { start: RunStart; character: string | null; characterId: string };
   shop: { discardPotions: string[] };
   /** Allow the loop to answer tutorial/FTUE prompts that change game settings. Default: false. */
   allowFtueModals: boolean;
@@ -1049,6 +1054,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   }
   const runStart = (RUN_STARTS.includes(runStartRaw as RunStart) ? runStartRaw : DEFAULTS.runStart) as RunStart;
   const character = readEnv(env, "CHARACTER");
+  // The knowledge id of the character played (knowledge/files.ts): the game's character_id lower-cased; the Ironclad
+  // when CHARACTER is unset.
+  const characterId = character === null ? DEFAULT_CHARACTER : characterKey(character);
+  if (characterId === null) {
+    problems.push({ field: "CHARACTER", message: `expected a character id such as IRONCLAD or SILENT, got "${character}"` });
+  }
   const shopDiscardPotions = (readEnv(env, "SHOP_DISCARD_POTIONS") ?? DEFAULTS.shopDiscardPotions)
     .split(",")
     .map((entry) => entry.trim())
@@ -1081,8 +1092,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
         // plus run plans; 300 leaves room for restarts within a run.
         maxCalls: Number(readEnv(env, "DEEPSEEK_MAX_CALLS") ?? "300") || 300,
         timeoutMs: Number(readEnv(env, "DEEPSEEK_TIMEOUT_MS") ?? "30000") || 30000,
-        guideFile: fromRoot(readEnv(env, "DEEPSEEK_GUIDE_FILE") ?? knowledgeFile(KNOWLEDGE_DIR, "ironclad-guide.md")),
-        handbookFile: fromRoot(readEnv(env, "DEEPSEEK_HANDBOOK_FILE") ?? knowledgeFile(KNOWLEDGE_DIR, "ds-handbook.md")),
+        // The played character's own guide and handbook (a character without them has none: llm/deepseek.ts reads them optionally).
+        guideFile: fromRoot(readEnv(env, "DEEPSEEK_GUIDE_FILE") ?? knowledgeFile(KNOWLEDGE_DIR, `${characterId ?? DEFAULT_CHARACTER}-guide.md`, characterId ?? DEFAULT_CHARACTER)),
+        handbookFile: fromRoot(readEnv(env, "DEEPSEEK_HANDBOOK_FILE") ?? knowledgeFile(KNOWLEDGE_DIR, "ds-handbook.md", characterId ?? DEFAULT_CHARACTER)),
         reasoningEffort: readEnv(env, "DEEPSEEK_REASONING_EFFORT") ?? "off",
         combatReasoningEffort: readEnv(env, "DEEPSEEK_COMBAT_REASONING_EFFORT") ?? "",
         // Per-label tiers, "label-prefix=effort,…"; unset = DEFAULT_EFFORT_BY_LABEL (llm/deepseek.ts); "-" = none.
@@ -1301,7 +1313,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     },
     thresholds: { act: confidenceAct, strong: confidenceStrong },
     budgets: { maxRequests, maxTokens },
-    run: { start: runStart, character },
+    run: { start: runStart, character, characterId: characterId ?? DEFAULT_CHARACTER },
     shop: { discardPotions: shopDiscardPotions },
     allowFtueModals,
     strictJev,

@@ -17,6 +17,7 @@ import { discardSlotsOf } from "../../hand/screens/potion-discard.js";
 import { fillGuideFacts } from "../../sim/boss-clock.js";
 import { RUN_PLAN_TASK_KEY } from "../../memory/run-plan.js";
 import type { Escalator } from "./file-escalation.js";
+import { characterName, DEFAULT_CHARACTER, knowledgeCharacter } from "../../knowledge/files.js";
 
 export interface DeepSeekConfig {
   apiKey: string;
@@ -249,6 +250,11 @@ export const SYSTEM = [
   'Reply with JSON only: {"choice": "<one option key exactly as given>", "reason": "<max 25 words>"},',
   'plus every other field the question asks for (such as "route" and "route_reason" when it has a route review, "cards", "discard").',
 ].join(" ");
+
+/** SYSTEM for the run's character (knowledge/files.ts knowledgeCharacter): the Ironclad's is SYSTEM itself, byte for byte. */
+export function systemRules(character: string = knowledgeCharacter()): string {
+  return character === DEFAULT_CHARACTER ? SYSTEM : SYSTEM.replace("(Ironclad, climbing ascension levels)", `(${characterName(character, "en")}, climbing ascension levels)`);
+}
 
 /** Thinking efforts the code sends (see DeepSeekConfig.reasoningEffort); anything else in a tier is ignored. */
 const EFFORTS = new Set(["max", "high", "low", "off"]);
@@ -535,8 +541,10 @@ export class DeepSeekClient implements Escalator {
     const handbook = frozenGuideFacts(readOptional(config.handbookFile), config.factsSnapshotDir);
     this.handbookId = shortHash(handbook);
     this.guideId = [shortHash(guide), this.handbookId].filter(Boolean).join("+");
-    let system = SYSTEM;
-    if (guide) system += `\n\n# Ironclad strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
+    // The run's character's rules and guide (the guide file is the character's own: config.ts guideFile).
+    const character = knowledgeCharacter();
+    let system = systemRules(character);
+    if (guide) system += `\n\n# ${characterName(character, "en")} strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
     // Static text only: the system prompt must stay byte-identical across calls so DeepSeek caches it.
     if (handbook) system += `\n\n# 经验手册（来自过往对局复盘）\n\n${handbook}`;
     this.system = config.systemPrompt ?? system;

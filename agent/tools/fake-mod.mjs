@@ -10,6 +10,11 @@
  *
  * With FAKE_MOD_FIXTURES it serves the recorded states in order, advancing one on every POST
  * /action — which is what makes `shadow` and `play` testable without launching the game.
+ *
+ * FAKE_MOD_CHARACTER=SILENT (default IRONCLAD): the frozen mid-run state is that character's run (character_id, name).
+ * FAKE_MOD_SCREEN=character_select: serves character select instead (Ironclad and Silent unlocked, the others locked),
+ * answering select_character, increase_ascension / decrease_ascension and embark (embark then serves the mid-run state of
+ * the character selected, at the ascension chosen), so character choice and ascension can be exercised end to end.
  */
 
 import { createServer } from "node:http";
@@ -18,6 +23,8 @@ import { readFileSync } from "node:fs";
 const port = Number(process.env.FAKE_MOD_PORT ?? 8080);
 const host = process.env.FAKE_MOD_HOST ?? "127.0.0.1";
 const fixturesPath = process.env.FAKE_MOD_FIXTURES ?? null;
+const NAMES = { IRONCLAD: "Ironclad", SILENT: "Silent", REGENT: "Regent", NECROBINDER: "Necrobinder", DEFECT: "Defect" };
+const fakeCharacter = (process.env.FAKE_MOD_CHARACTER ?? "IRONCLAD").toUpperCase();
 
 function loadFixtures(path) {
   const lines = readFileSync(path, "utf8")
@@ -92,7 +99,8 @@ const defaultState = {
     act_id: "1",
     boss_id: "SLIME_BOSS",
     ascension: 0,
-    character_name: "Ironclad",
+    character_id: fakeCharacter,
+    character_name: NAMES[fakeCharacter] ?? fakeCharacter,
     ascension_effects: [],
     deck: [
       card("STRIKE_R", "Strike", 1, "Attack", "Deal 6 damage."),
@@ -171,7 +179,60 @@ function send(res, status, body) {
   res.end(text);
 }
 
+/** FAKE_MOD_SCREEN=character_select: what the screen holds (null once embarked). */
+const select =
+  process.env.FAKE_MOD_SCREEN === "character_select"
+    ? { selected: "IRONCLAD", clicked: false, ascension: 0, max: Number(process.env.FAKE_MOD_MAX_ASCENSION ?? 3) }
+    : null;
+let embarked = false;
+const SELECT_CHARACTERS = [
+  ["IRONCLAD", "铁甲战士", false],
+  ["RANDOM_CHARACTER", "随机", true],
+  ["SILENT", "静默猎手", false],
+  ["REGENT", "储君", true],
+  ["NECROBINDER", "亡灵契约师", true],
+  ["DEFECT", "故障机器人", true],
+];
+
+function characterSelectState() {
+  const actions = ["close_main_menu_submenu", "select_character"];
+  if (select.clicked) actions.push("embark");
+  if (select.clicked && select.ascension < select.max) actions.push("increase_ascension");
+  if (select.clicked && select.ascension > 0) actions.push("decrease_ascension");
+  return {
+    ...defaultState,
+    run_id: "run_unknown",
+    screen: "CHARACTER_SELECT",
+    session: { mode: "singleplayer", phase: "character_select", control_scope: "local_player" },
+    available_actions: actions,
+    run: null,
+    map: null,
+    character_select: {
+      selected_character_id: select.selected,
+      can_embark: select.clicked,
+      ascension: select.ascension,
+      max_ascension: select.max,
+      characters: SELECT_CHARACTERS.map(([character_id, name, is_locked], index) => ({ index, character_id, name, is_locked, is_selected: character_id === select.selected, is_random: character_id === "RANDOM_CHARACTER" })),
+    },
+  };
+}
+
+function selectAction(intent) {
+  if (intent.action === "select_character") {
+    const entry = SELECT_CHARACTERS[intent.option_index ?? -1];
+    if (!entry || entry[2]) return false;
+    select.selected = entry[0];
+    select.clicked = true;
+  } else if (intent.action === "increase_ascension" && select.clicked && select.ascension < select.max) select.ascension += 1;
+  else if (intent.action === "decrease_ascension" && select.clicked && select.ascension > 0) select.ascension -= 1;
+  else if (intent.action === "embark" && select.clicked) embarked = true;
+  else return false;
+  return true;
+}
+
 function currentState() {
+  if (select && !embarked) return characterSelectState();
+  if (select) return { ...defaultState, run: { ...defaultState.run, floor: 1, ascension: select.ascension, character_id: select.selected, character_name: NAMES[select.selected] ?? select.selected } };
   if (!fixtureStates) return defaultState;
   return fixtureStates[Math.min(fixtureIndex, fixtureStates.length - 1)];
 }
@@ -198,6 +259,10 @@ const server = createServer((req, res) => {
       }
       if (!intent || typeof intent.action !== "string") {
         const { status, body } = failure("invalid_request", "Field 'action' is required.", 400);
+        return send(res, status, body);
+      }
+      if (select && !embarked && !selectAction(intent)) {
+        const { status, body } = failure("invalid_action", `character select does not take ${intent.action} now`, 409);
         return send(res, status, body);
       }
       if (fixtureStates) fixtureIndex += 1;

@@ -20,6 +20,7 @@
 import { knowledgeSlice } from "../knowledge/experience.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { actThreats, bossDossier, fillDbNumbers } from "../knowledge/monster-db.js";
+import { DEFAULT_CHARACTER, knowledgeCharacter } from "../knowledge/files.js";
 import type { GameState } from "../hand/mod/schema.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { RoutePlan } from "../hand/screens/map.js";
@@ -211,7 +212,8 @@ export const BOSS_NOTES: Record<string, string> = {
 };
 
 export function bossNote(bossId: string | null | undefined, ascension = 8): string | null {
-  if (!bossId) return null;
+  // The Ironclad's hand-written lines: none for another character (it learns its own; card-value.ts hasCardValues).
+  if (!bossId || knowledgeCharacter() !== DEFAULT_CHARACTER) return null;
   const key = bossId.toUpperCase().replace(/_BOSS$/, "");
   const note = BOSS_NOTES[key];
   if (!note) return null;
