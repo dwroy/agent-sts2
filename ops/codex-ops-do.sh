@@ -6,7 +6,7 @@
 #
 # Actions (ops/codex/lib.ts ACTIONS, done by ops/codex-ops-actions.sh): procs, stall-check, mod-state, autoplay-start,
 # autoplay-stop, play-stop, kill <pid>, launch-game, win-procs, win-kill <pid>, postmortem <id,id,...>,
-# learner-status, scheduler-status.
+# learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event).
 # The broker only runs while a wake runs: outside a wake this times out (exit 124).
 set -u
 . "$(dirname "$0")/paths.sh"

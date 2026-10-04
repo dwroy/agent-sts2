@@ -2,6 +2,8 @@ import { defineConfig } from "vitest/config";
 
 // The test files, the setup files and the timeout; everything else is vitest's default.
 export default defineConfig({
+  // Tests use fixed inputs; never load a live worktree's credentials or play configuration.
+  envDir: false,
   test: {
     // This package's tests only (agent/tests): never the upstream submodule's, an old worktree's or a nested checkout's.
     include: ["tests/**/*.test.ts"],

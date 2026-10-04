@@ -9,6 +9,8 @@ set -u
 ROOT="${CODEX_OPS_ROOT:-$ROOT}"
 DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 batch="$1"; runs="$2"; character="${3:-silent}"
+task="${4:-postmortem}"; worktree="${5:-$ROOT}"
+case "$task" in postmortem|experience-update|fix-batch) ;; *) exit 2 ;; esac
 mkdir -p "$DIR/learner"
 out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"
 export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
@@ -18,8 +20,13 @@ cd "$ROOT" || exit 1
 if [ -n "${LEARNER_CMD:-}" ]; then
   nice -n 10 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
 else
-  nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" learner/run.ts --engine codex --task postmortem --character "$character" \
-    --set "runs=$runs" --cwd "$ROOT" > "$out" 2> "$err"
+  args=(--engine codex --task "$task" --character "$character" --cwd "$worktree")
+  if [ "$task" = postmortem ]; then args+=(--set "runs=$runs");
+  else
+    args+=(--set merge=live)
+    [ "$task" != experience-update ] || args+=(--set "runs=$runs")
+  fi
+  nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" learner/run.ts "${args[@]}" > "$out" 2> "$err"
 fi
 rc=$?
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"

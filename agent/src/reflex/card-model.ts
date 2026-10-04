@@ -89,6 +89,8 @@ export interface CardModel {
    * (`generates`, never put in the hand).
    */
   playsTop?: number;
+  /** Cards played immediately by this card, without adding controller actions or spending energy. */
+  immediatePlays?: { card: CardModel; count: number };
   draw: number;
   exhausts: boolean;
   /** Ethereal (「虚无」: Dazed, Clumsy, Ascender's Bane): exhausted at the end of the turn when still in hand. */
@@ -812,6 +814,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0;
   let flatValue = 0;
   let known = hasModelledEffect;
+  let immediatePlays: CardModel["immediatePlays"];
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
@@ -821,6 +824,23 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
     // Status: playing a Beckon is only worth its held penalty (VL2D F17 T9: +5 made it beat Burning Pact).
     flatValue = 3 + 2 * Math.max(0, num(card["energy_cost"]));
+  }
+  if (cardId === "KNIFE_TRAP") {
+    // C48LLXBGKXQ9 F19 T8 / F33 attempt 1 T1, silent-0002: six Shivs / none, not lasting value.
+    // Only the observed unupgraded replay is modelled; no damage or upgrade rule is guessed.
+    flatValue = 0;
+    const count = dyn(card, "CalculatedShivs");
+    const shiv = knowledge.card("SHIV");
+    const base = shiv ? dyn({ dynamic_values: shiv.vars }, "Damage") ?? shiv.damage : null;
+    known = !bool(card["upgraded"]) && count !== null && Number.isInteger(count) && count >= 0 && (count === 0 || base !== null);
+    if (known && count! > 0 && shiv && base !== null) {
+      immediatePlays = { count: count!, card: modelHandCard({
+        index: -1, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
+        requires_target: true, target_type: "AnyEnemy", valid_target_indices: card["valid_target_indices"],
+        rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
+        dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
+      }, -1, knowledge) };
+    }
   }
   // Enthralled does nothing when played but lift its lock, which the solver plays (CardModel.playFirst): modelled.
   const playFirst = isPlayFirst(cardId, renderedText);
@@ -875,6 +895,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     target,
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,
+    ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
     block,
     vulnerable,
