@@ -3,7 +3,7 @@ title: 复盘
 tools: Read, Grep, Glob, Bash
 timeout_min: 120
 max_turns: 400
-default.code_dir: {{project_root}}/jev-sts2-v3
+default.code_dir: {{project_root}}/.worktrees/live
 ---
 # 任务：写复盘（{{runs}}）
 

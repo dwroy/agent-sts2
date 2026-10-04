@@ -4,9 +4,9 @@ tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 800
 default.items: {{project_root}}/notes/fix-queue.md 里所有还没划掉的纯 bug
-default.base_branch: v3
+default.base_branch: main
 default.merge: no
-default.merge_dir: {{project_root}}/jev-sts2-v3
+default.merge_dir: {{project_root}}/.worktrees/live
 ---
 # 任务：批量修 bug
 
@@ -47,7 +47,7 @@ default.merge_dir: {{project_root}}/jev-sts2-v3
 
 ## 5. 合入（只有 merge = v3 时做）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里按「合入 v3 的流程」做：
-1. 等后台知识刷新跑完：`while pgrep -f 'jev-sts2-v3/tools/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省，否则会匹配到自己的 shell，永远等下去）；
+1. 等后台知识刷新跑完：`while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省，否则会匹配到自己的 shell，永远等下去）；
 2. 在 {{merge_dir}} 里先提交刷新过的知识数据：`git add notes/fight-value-backtest.md knowledge`，commit "Refresh knowledge data"（没有改动就跳过）；
 3. `git merge --no-edit <本分支>`；
 4. 跑 tsc 和 vitest，退出码都要是 0；不是 0 就回退到合入前的提交，在回报里写明；

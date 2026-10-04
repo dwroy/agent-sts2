@@ -3,9 +3,9 @@ title: 经验库进阶审核
 tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 300
 max_turns: 800
-default.base_branch: v4
+default.base_branch: main
 default.merge: no
-default.merge_dir: {{project_root}}/jev-sts2-v3
+default.merge_dir: {{project_root}}/.worktrees/live
 ---
 # 任务：经验库按进阶审核（Dai 2026-10-04）
 

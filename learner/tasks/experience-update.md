@@ -3,9 +3,9 @@ title: 经验库更新
 tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 600
-default.base_branch: v4
+default.base_branch: main
 default.merge: no
-default.merge_dir: {{project_root}}/jev-sts2-v3
+default.merge_dir: {{project_root}}/.worktrees/live
 ---
 # 任务：更新经验库（{{runs}}）
 
@@ -88,9 +88,9 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 - 在 {{worktree}} 提交：`git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，英文提交信息，写明版本号和增删改条数。不推送。
 - 在变更记录末尾追加一节（标题照上一节：`## <日期> 第N次增量：<局数> 局 A几（version …，分支 …，<提交号>）`），小节依次是：来源、对照数据检查的主题、经验库自己带偏或写了没被执行的地方、**机制推理**、新增、更新、退役、和手写知识及代码冲突、代码问题（不给 DS）、测试、切片大小。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交，由调用方提交。
 
-## 8. 合入（只有 merge = v3 时做；V4 一律 merge = no，由开发会话审过后合入 v4 / v4-live）
+## 8. 合入（只有 merge = v3 时做；V4 一律 merge = no，由开发会话审过后合入 main / live）
 本次 merge = {{merge}}。是 `no` 就跳过本节，在回报里写「未合入，待调用方合入」。是 `v3` 时，在 `flock {{project_root}}/ops/v3-merge.lock` 锁里做：
-1. 等后台知识刷新跑完：`while pgrep -f 'jev-sts2-v3/tools/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省）；
+1. 等后台知识刷新跑完：`while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省）；
 2. 在 {{merge_dir}} 里，如果有刷新过、没提交的知识数据：`git add notes/fight-value-backtest.md knowledge`，commit "Refresh knowledge data"；
 3. `git merge --no-edit <本分支>`；
 4. 跑 tsc 和 vitest，退出码都要是 0；不是 0 就 `git merge --abort`（或回退到合入前的提交），在回报里写明；

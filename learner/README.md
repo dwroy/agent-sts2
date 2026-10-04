@@ -20,7 +20,7 @@ agent/tests/learner.test.ts
 
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH
-cd ~/Projects/sts2-jev/jev-sts2          # 或任何带 learner/ 的工作树
+cd ~/Projects/agent-sts2          # 或任何工作树（.worktrees/<名字>）
 
 # 复盘 3–5 局（agent 在项目根目录工作，只追加 notes/lessons.md）
 agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem \
@@ -28,10 +28,10 @@ agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem \
 
 # 经验库更新（在 exp-update 工作树里改 experience.json、提交；默认不合入 v3）
 agent/node_modules/.bin/tsx learner/run.ts --engine claude --task experience-update \
-  --set runs=A,B,C,D,E --cwd ~/Projects/sts2-jev/jev-sts2-exp --model opus
+  --set runs=A,B,C,D,E --cwd ~/Projects/agent-sts2/.worktrees/exp --model opus
 
 # 批量修 bug（在 step1-bugfix 工作树里；merge=v3 时照「合入 v3 的流程」自己合入）
-agent/node_modules/.bin/tsx learner/run.ts --engine claude --task fix-batch --cwd ~/Projects/sts2-jev/jev-sts2-step --set merge=v3
+agent/node_modules/.bin/tsx learner/run.ts --engine claude --task fix-batch --cwd ~/Projects/agent-sts2/.worktrees/step --set merge=v3
 
 # 只看最终提示和命令行，不执行
 agent/node_modules/.bin/tsx learner/run.ts --engine claude --task postmortem --set runs=A,B,C --cwd ~/Projects/sts2-jev --dry-run
@@ -90,7 +90,7 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 - `--output-format stream-json --verbose`，提示从 stdin 传入（不出现在命令行和 `ps` 里）；
 - `--restricted`：文件工具只能碰工作目录（`--cwd` 和 `--add-dir ~/Projects/sts2-jev`），不加载用户/项目的 settings 和 hooks；
 - `--permission-mode dontAsk` + `--permission-prompts none`：没预先允许的一律拒绝，不会卡在询问上；
-- `--tools` = 任务 front matter 的工具；`--allowedTools`：`Read(//home/dw/Projects/sts2-jev/**)`、`Grep`、`Glob`，有写工具时 `Edit(//home/dw/Projects/sts2-jev/**)`（Edit 规则同时管 Write），有 Bash 时 `Bash`；
+- `--tools` = 任务 front matter 的工具；`--allowedTools`：`Read(//home/dw/Projects/agent-sts2/**)`、`Grep`、`Glob`，有写工具时 `Edit(//home/dw/Projects/sts2-jev/**)`（Edit 规则同时管 Write），有 Bash 时 `Bash`；
 - `--disallowedTools`：读 key 文件（~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、任何 .env）、读 sts2.dll / .pck、改 .env；Bash 的 `git push`、`pkill`、`killall`、`npm install/i/ci`、`npm run play`、`tsx agent/src/index.ts play`、`sudo`、`ssh`、`env`、`printenv`、`curl`、`wget`；
 - `--strict-mcp-config`：不加载本机配置的任何 MCP 服务器和 claude.ai 连接器，只有 `--with-tools` 时挂我们的 gkb；
 - 子进程环境设 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`：不读交互会话的自动记忆，任务说明就是全部上下文。
@@ -100,7 +100,7 @@ default.code_dir: {{project_root}}/jev-sts2-v3   # 参数默认值，可以用�
 
 **环境变量**：子进程里去掉 `DEEPSEEK_*`、`TYPESAFE_*`、`JEV_*`、`OPENROUTER_*`、`ANTHROPIC_API_KEY`、`ANTHROPIC_AUTH_TOKEN`、`OPENAI_API_KEY`、`CODEX_API_KEY`、名字里带 KEY/TOKEN/SECRET/PASSWORD 的变量，以及上层 Claude Code 会话自己的 `CLAUDECODE`、`CLAUDE_CODE_*`（学习者是一个全新的顶层会话）。例外：claude 引擎保留 `CLAUDE_CODE_OAUTH_TOKEN`（这就是订阅登录态）。`--dry-run` 只列被去掉的变量名，从不打印值。
 
-**日志里的 key**：运行结束后，启动器从 ~/.jev_api_keys、~/.deepseek_api_key、jev-sts2-v3/.env、jev-sts2/.env 和被去掉的变量里取出 key 值（≥16 字符、非路径、非 URL），扫描日志，出现就替换成 `[REDACTED]` 并在摘要里提示次数；值本身从不打印。
+**日志里的 key**：运行结束后，启动器从 ~/.jev_api_keys、~/.deepseek_api_key、工作区和每个工作树里的 .env（根目录、agent/、.worktrees/*/agent/）和被去掉的变量里取出 key 值（≥16 字符、非路径、非 URL），扫描日志，出现就替换成 `[REDACTED]` 并在摘要里提示次数；值本身从不打印。
 
 ## 日志和摘要
 
