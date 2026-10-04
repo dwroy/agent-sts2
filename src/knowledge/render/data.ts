@@ -145,7 +145,12 @@ function parseAll(dir: string): KnowledgeData {
   requireRecord(KNOWLEDGE_FILES.roomCosts, rooms["by_asc"], "by_asc");
 
   const outcome = readJson(dir, KNOWLEDGE_FILES.outcomeStats);
-  requireRecord(KNOWLEDGE_FILES.outcomeStats, outcome["rest"], "rest");
+  // One table per ascension from 2026-10-04 (by_ascension; a higher ascension's may have no rest rows yet), else the
+  // A8 table itself (knowledge/outcome-tables.ts).
+  if (outcome["by_ascension"] !== undefined) {
+    const tables = requireRecord(KNOWLEDGE_FILES.outcomeStats, outcome["by_ascension"], "by_ascension");
+    for (const [asc, table] of Object.entries(tables)) requireRecord(KNOWLEDGE_FILES.outcomeStats, requireRecord(KNOWLEDGE_FILES.outcomeStats, table, `by_ascension.${asc}`)["rest"], `by_ascension.${asc}.rest`, false);
+  } else requireRecord(KNOWLEDGE_FILES.outcomeStats, outcome["rest"], "rest");
 
   const hints = readJson(dir, KNOWLEDGE_FILES.jevHints);
   if (!Array.isArray(hints["hints"]) || hints["hints"].length === 0) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.jevHints} 缺少 hints 或为空`);

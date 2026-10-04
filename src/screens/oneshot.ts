@@ -403,7 +403,7 @@ export function withFollowUp(
           ...(card.count > 1 ? { copies: card.count } : {}),
           ...(preview ? { upgrade: preview } : { card_text: truncate(card.text, 140) }),
           ...(card.enchant ? { enchanted: card.enchant } : {}),
-          card_outcome_stats: cardOutcome(card.identity.card_id),
+          card_outcome_stats: cardOutcome(card.identity.card_id, env.state.run?.ascension),
           // Said once, on the first card's option.
           ...(at === 0 ? cut : {}),
         },
@@ -421,7 +421,7 @@ export function withFollowUp(
         cards_to_name: `answer "cards": [${follow.upTo ? "up to " : ""}${follow.count} keys from eligible_cards, repeat a key for several copies]`,
         // Each card as it is, and our runs' outcome statistics for it (V4 M2: no code value as a target).
         eligible_cards: Object.fromEntries(eligible.map((card) => [card.key, cardLine(card)])),
-        card_outcome_stats: Object.fromEntries(eligible.map((card) => [card.key, cardOutcome(card.identity.card_id)])),
+        card_outcome_stats: Object.fromEntries(eligible.map((card) => [card.key, cardOutcome(card.identity.card_id, env.state.run?.ascension)])),
         ...cut,
       },
       plan: (answer: PlanAnswer) => {
