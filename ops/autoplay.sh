@@ -38,7 +38,9 @@ PY
 )
   console=$(ls -t "$CONSOLE"/*.log 2>/dev/null | head -1)
   if [ -n "$rid" ] && [ -n "$console" ] && grep -qE "stopped: run [0-9]+ ended \(" "$console"; then
-    python3 "$OPS/report.py" "$rid" > "$NOTES/run-$(date +%m%d-%H%M)-$rid.md" 2>&1
+    # REFRESH_WAIT=1: report.py waits for its knowledge refresh (outcome-stats, fight-value, monster-db, ...) so the
+    # next run starts on the fresh files (2026-10-04: 4AWD read a stale outcome-stats.json mid-refresh).
+    REFRESH_WAIT=1 python3 "$OPS/report.py" "$rid" > "$NOTES/run-$(date +%m%d-%H%M)-$rid.md" 2>&1
     # report.py appends the run to runs.jsonl only when it sees the end itself (stop-after-a8.sh counts those).
     note=""; grep -q "\"run_id\": \"$rid\"" "$RUNS" || note=" (not in runs.jsonl)"
     echo "$(date '+%F %T') finished run $rid$note" >> "$OPS/autoplay.log"

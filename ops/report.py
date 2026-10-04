@@ -399,7 +399,7 @@ def ablation_arm():
 
 
 def refresh_knowledge() -> None:
-    """After each run: monster DB, per-fight move model, outcome stats (background; never blocks the next run)."""
+    """After each run: monster DB, per-fight move model, outcome stats. Background, unless REFRESH_WAIT=1 (autoplay.sh)."""
     import subprocess
     # Into the run worktree (branch v4-live since 2026-09-30; was jev-sts2-v3 / v3), whose logs/ links to jev-sts2/logs.
     wt = os.path.expanduser("~/Projects/sts2-jev/jev-sts2-v4run")
@@ -415,7 +415,15 @@ def refresh_knowledge() -> None:
            f'nice -n 10 {wt}/.cache/logdb-venv/bin/python {tools}/logdb/sync.py >/dev/null 2>&1; '
            f'{wt}/tools/refresh-potion-equivalents.sh >/dev/null 2>&1')
     log = open(os.path.expanduser("~/Projects/sts2-jev/ops/refresh.log"), "a")
-    subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
+    proc = subprocess.Popen(["bash", "-c", cmd], stdout=log, stderr=log, start_new_session=True)
+    # REFRESH_WAIT=1 (autoplay.sh, 2026-10-04): block until every file is written, so the next run reads them fresh
+    # (4AWD read the old outcome-stats.json while this was still rebuilding it). Capped; past the cap it keeps going.
+    if os.environ.get("REFRESH_WAIT") == "1":
+        try:
+            proc.wait(timeout=int(os.environ.get("REFRESH_WAIT_S", "1800")))
+        except subprocess.TimeoutExpired:
+            log.write(f"refresh still running after {os.environ.get('REFRESH_WAIT_S', '1800')} s; next run starts anyway\n")
+            log.flush()
 
 
 if __name__ == "__main__":
