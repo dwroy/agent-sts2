@@ -8,6 +8,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { bumpDataVersion } from "../util/data-version.js";
 
 export interface CardUpgrade {
   /** Distinct logged entries seen plain / upgraded. */
@@ -32,6 +33,7 @@ function load(): Record<string, CardUpgrade> {
 
 /** For tests: use this table instead of card-upgrades.json (null reloads the file). */
 export function setCardUpgradesForTests(table: Record<string, CardUpgrade> | null): void {
+  bumpDataVersion();
   cached = table;
 }
 

@@ -52,7 +52,14 @@ export interface DecisionRecord {
   reused_answer: boolean;
   /** `usage` counts the tokens spent on *this* decision; these are the calls behind it. */
   request_ids: string[];
-  latency_ms: { plan: number; jev: number; action: number; deepseek?: number };
+  /**
+   * plan: the loop's own time after the planner returned, to the row (the gate, the memo, Jev's stale-board re-read), not
+   * the planner's; jev / deepseek: the model calls; action: the dispatch. planner (2026-10-04): the screen planner's wall
+   * time (planDecision: the solver, the rollout, B2, the SL judge's checks; the parts in the combat row's `timing`), and
+   * pre: from the state read (observed_ts) to the planner's start (the journal, the SL controller's observe, run and fight
+   * plans, a thief's card value). Absent on rows of a decision not planned this read (a plan's later steps, the memo).
+   */
+  latency_ms: { plan: number; jev: number; action: number; deepseek?: number; planner?: number; pre?: number };
   /**
    * Tokens spent on this decision by whoever decided it (Jev, or DeepSeek when decider=deepseek; a
    * DeepSeek escalation's tokens are added too). DeepSeek also reports its cache-hit and reasoning tokens.
@@ -77,6 +84,12 @@ export interface DecisionRecord {
   rollout?: JsonValue;
   /** Combat plan choice: Jev's pick was the rollout's best line (null: no pick, or no rollout). */
   rollout_best_chosen?: boolean | null;
+  /**
+   * Combat plan choice (2026-10-04): the combat planner's time to the question and its parts (planner, solve, mc, rollout,
+   * boss_sim, other ms), the process's CPU over it, the machine's load, B2's fights done, the SL retry memo's hits
+   * (combat-plan.ts plannerTiming). The row's latency_ms.planner is the whole planner call's wall time on every screen.
+   */
+  timing?: JsonValue;
   /**
    * The boss simulation behind this decision. Boss fights (B2, BOSS_SIM_LINES, src/sim/boss-lines.ts): the whole-fight
    * simulation of the lines shown ({ms, samples, best, lines, plan, …}). Deck-building questions (B3, BOSS_SIM_BUILD,
