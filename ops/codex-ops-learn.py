@@ -30,6 +30,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths  # noqa: E402
+from learner_checks import finish_write_batch  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
 SCRIPTS = os.path.dirname(os.path.abspath(__file__))  # this file's ops/ (the scripts)
@@ -301,6 +302,15 @@ def cmd_finish(args):
     if batch is None:
         print(f"unknown batch {args.batch}")
         return 1
+    if batch.get("task", "postmortem") != "postmortem":
+        if batch.get("state") in ("done", "failed") and "rc" in batch:
+            return 0
+        batch["finished"] = now_local()
+        finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
+        if batch["state"] == "failed":
+            batch["retry_at"] = time.time() + RETRY_AFTER_S
+        save_state(state)
+        return 0
     have = postmortem_ids()
     done = [run for run in batch["runs"] if run in have]
     missing = [run for run in batch["runs"] if run not in have]

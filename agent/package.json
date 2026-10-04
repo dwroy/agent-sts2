@@ -20,6 +20,7 @@
     "typecheck:tools": "tsc -p tsconfig.tools.json",
     "check:imports": "tsx tools/check-imports.ts",
     "test": "vitest run",
+    "test:sandbox": "bash tools/test-sandbox.sh",
     "test:watch": "vitest",
     "fake-mod": "node tools/fake-mod.mjs",
     "knowledge:stats": "python3 ../knowledge/builders/build-outcome-stats.py"

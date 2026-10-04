@@ -38,7 +38,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 注释用英文，和现有代码风格一致；给模型看的文字用中文。
 
 ## 3. 测试
-- `export PATH=$HOME/.local/node/bin:$PATH`；每次提交前 `npx tsc -p tsconfig.json --noEmit` 和 `npx vitest run` 退出码都要是 0。
+- `export PATH=$HOME/.local/node/bin:$PATH`；每次提交前 `bash tools/test-sandbox.sh`（内含 tsc 和沙箱可跑的 vitest；固定排除名单及子进程限制原因见脚本注释，合入后由调度器在沙箱外补跑完整套件） 退出码都要是 0。
 - 高负载时战斗测试可能超时：先重跑一次再下结论；重跑才过的，回报里写明是哪个测试。
 - 测试里不许真的调用任何 LLM 或网络。
 
@@ -52,7 +52,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 1. 等后台知识刷新跑完：`while pgrep -f 'knowledge/builders/buil[d]-' >/dev/null; do sleep 10; done`（方括号不能省，否则会匹配到自己的 shell，永远等下去）；
 2. 在 {{merge_dir}} 里先提交刷新过的知识数据：`git add notes/fight-value-backtest.md knowledge`，commit "Refresh knowledge data"（没有改动就跳过）；
 3. 先检查刷新过的知识数据与本分支的改动是否重叠；有冲突就停下回报，不覆盖刷新数据。记下提交刷新数据之后、合入之前的提交号，再 `git merge --no-edit <本分支>`；
-4. 在 agent/ 跑 `npx tsc -p tsconfig.json --noEmit` 和 `npx vitest run`，退出码都要是 0；不是 0 就回退到第 3 步记下的提交（保留刷新数据），在回报里写明；
+4. 在 agent/ 跑 `bash tools/test-sandbox.sh`（内含 tsc 和沙箱可跑的 vitest；固定排除名单及子进程限制原因见脚本注释，合入后由调度器在沙箱外补跑完整套件），退出码都要是 0；不是 0 就回退到第 3 步记下的提交（保留刷新数据），在回报里写明；
 5. 如果改了知识数据的生成脚本，用 knowledge/builders/ 下的脚本重建数据，再提交一次；
 6. 先跑 `date`，在 paper/materials/decision-log.md 追加上线记录，写明来源条目、证据局号、账本 id 和提交号。改变对局行为（包括知识前缀文字变化）时，在 eval/versions.json 加版本并通知运维会话；将提交号和版本交开发会话，由开发会话经 learner/ledger.py 将对应账本条目标为 shipped（只有实际合入 live 后）。只修工具或任务模板且不改变对局行为时无需 eval 版本；
 7. 不停对局，不运行 play。
