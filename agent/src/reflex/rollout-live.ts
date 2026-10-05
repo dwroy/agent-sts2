@@ -908,6 +908,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const memoKeyed = args.memo ? rolloutMemoKey(input) : null;
     const memoed = args.memo && memoKeyed ? recallRollout(args.memo, memoKeyed, input, budgetMs) : null;
     const result = memoed ?? rolloutDecision(input);
+    if (result.unavailable) return { available: false, reason: result.unavailable, elapsedMs: elapsed() };
     if (args.memo && memoKeyed && !memoed) storeRollout(args.memo, memoKeyed, input, result);
     rolloutTap.onRollout?.(input, result);
     // The no-potion line is the base line itself when the base's rollout drinks nothing in its later turns (and this
