@@ -16,3 +16,5 @@ Test Files  232 passed (232)
    Start at  01:13:03
    Duration  555.56s (transform 6.74s, setup 10.40s, import 29.59s, tests 1044.36s, environment 22ms)
 ```
+
+- 2026-10-06 01:29 运维codex按01:22 fix-done尝试兜底固定源779c954876d56d08dab92f89f27345c9788e3d87时，ops/live-merge.lock非阻塞取锁失败（busy）；未开始live合并，不等待/重试，0130本批保持原proposed、未登记S1.fix23或shipped。bash ops/codex-ops-do.sh learner-merge codex-dev返回exit0：已发送合入兜底事件；运维会话执行 live 流程。；固定源和处理方法已追加交接，后续manual事件只按此不可变源处理，不合移动codex-dev头。复盘9YT51CK8RC39与原10条postmortem/1条fix proposed已提交417b9d0bd17e8195e15f4a1ce2fcc34e09e9a898，经验.26完整232文件2846通过/2跳过已核实，论文数据正在按已授权no-raw命令生成；无新Roy待定、不停对局/调度、不运行play。
