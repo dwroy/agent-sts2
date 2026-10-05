@@ -87,13 +87,12 @@ export const SCHEDULER_FILES = [
 /**
  * The ops profile's rules on top of the learner's write profile: commits in the main checkout and its worktrees
  * (.worktrees/step, live; their git dirs are all under <main checkout>/.git) need .git writable; its hooks and config stay
- * read-only (a hook or core.hooksPath would run in whoever commits next, outside the sandbox), and so do the
- * scheduler's files.
+ * read-only (a hook or core.hooksPath would run in whoever commits next, outside the sandbox). The scheduler's files
+ * (SCHEDULER_FILES) were read-only too until Dai, 2026-10-05: codex may change its own broker and scheduler.
  */
 export function opsExtraRules(root: string): Record<string, "read" | "write" | "none"> {
   const git = join(mainCheckout(root), ".git");
   const rules: Record<string, "read" | "write" | "none"> = { [git]: "write", [join(git, "hooks")]: "read", [join(git, "config")]: "read" };
-  for (const file of SCHEDULER_FILES) rules[join(root, file)] = "read";
   return rules;
 }
 
