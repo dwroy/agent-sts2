@@ -23,7 +23,7 @@ def read_report(path):
     return {}
 
 
-def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox):
+def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, run_checks=True):
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
     merged = report.get("merged")
     live = os.path.join(root, ".worktrees", "live")
@@ -37,6 +37,9 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox):
             f"{task} 批次 {batch_id} 结束：exit {rc}；已核实合入 live：{merged if verified else '无'}。"
             f"回报：{out_dir}/{batch_id}.out。学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。")
     if not verified:
+        return
+    if not run_checks:
+        batch["checks_pending"] = True
         return
     # Pin the checked tree under the same lock as live merges and knowledge refresh commits.
     # No rollback here: ops decides whether to roll back or dispatch a fix on failure.

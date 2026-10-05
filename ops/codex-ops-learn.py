@@ -20,6 +20,7 @@ Run by ops/codex-ops.sh at :13 and :43 (`tick`); everything here is deterministi
 State: ops/codex-ops/learn.json. --character (default silent); CODEX_OPS_DIR / CODEX_OPS_ROOT override the paths (tests).
 """
 import argparse
+from contextlib import contextmanager
 import datetime as dt
 import fcntl
 import json
@@ -76,6 +77,13 @@ def save_state(state):
     with open(tmp, "w", encoding="utf8") as handle:
         json.dump(state, handle, ensure_ascii=False, indent=1)
     os.replace(tmp, STATE)
+
+
+@contextmanager
+def state_lock():
+    with open(os.path.join(DIR, "learn.lock"), "a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        yield
 
 
 def enqueue(kind, text):
@@ -311,7 +319,7 @@ def cmd_finish(args):
         if batch.get("state") in ("done", "failed") and "rc" in batch:
             return 0
         batch["finished"] = now_local()
-        finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
+        finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
         save_state(state)
@@ -382,14 +390,30 @@ def cmd_request_merge(args):
 def cmd_recheck(args):
     if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)", args.batch):
         return 2
-    state = load_state()
-    batch = state["batches"].get(args.batch)
-    if not batch or batch.get("state") == "running":
-        return 2
-    result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
-    save_state(state)
-    print(json.dumps({"batch": args.batch, "rc": result, "fallback_checks": batch.get("fallback_checks", [])}, ensure_ascii=False))
-    return result
+    # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
+    with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
+        fcntl.flock(checks_lock, fcntl.LOCK_EX)
+        with state_lock():
+            state = load_state()
+            batch = state["batches"].get(args.batch)
+            if not batch or batch.get("state") == "running":
+                return 2
+        result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
+        # Reload after the expensive checks: other jobs may have updated the scheduler meanwhile.
+        with state_lock():
+            state = load_state()
+            current = state["batches"].get(args.batch)
+            if current is None:
+                return 2
+            if "fallback_checks" in batch:
+                current["fallback_checks"] = batch["fallback_checks"]
+            if batch.get("checks_pending") and result != 2:
+                current["checks_pending"] = False
+                if batch.get("fallback_checks"):
+                    current["checks"] = batch["fallback_checks"][-1]
+            save_state(state)
+        print(json.dumps({"batch": args.batch, "rc": result, "fallback_checks": batch.get("fallback_checks", [])}, ensure_ascii=False))
+        return result
 
 
 def cmd_status(args):
@@ -419,9 +443,15 @@ def main():
     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
                "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck}[args.command]
     os.makedirs(DIR, exist_ok=True)
-    with open(os.path.join(DIR, "learn.lock"), "a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+    # A merge request only appends an event; full checks manage their own short state transactions.
+    if args.command in ("request-merge", "recheck"):
         return handler(args) or 0
+    with state_lock():
+        result = handler(args) or 0
+        checks_pending = args.command == "finish" and load_state()["batches"].get(args.batch, {}).get("checks_pending")
+    if checks_pending:
+        cmd_recheck(args)
+    return result
 
 
 if __name__ == "__main__":
