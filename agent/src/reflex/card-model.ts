@@ -82,6 +82,8 @@ export interface CardModel {
   poisonNow?: boolean;
   poisonPerTurn?: number;
   poisonExtraTriggers?: number;
+  /** Observed Envenom: poison per unblocked attack hit (silent-0082 / silent-0084). */
+  envenom?: number;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
@@ -969,6 +971,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
+    ...(cardId === "ENVENOM" && !bool(card["upgraded"]) && dyn(card, "EnvenomPower") !== null ? { envenom: dyn(card, "EnvenomPower")! } : {}),
     known,
     flatValue,
     heldPenalty,

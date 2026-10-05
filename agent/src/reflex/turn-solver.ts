@@ -457,6 +457,8 @@ export interface PlayerSim {
   afterImage?: number;
   /** Extra poison triggers granted by the observed Accelerant power. */
   poisonExtraTriggers?: number;
+  /** Observed ENVENOM_POWER: poison for each attack hit that removes HP. */
+  envenom?: number;
   /**
    * Hellraiser up (HELLRAISER_POWER): 「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」 — a Strike drawn this
    * turn plays itself, free, at a random enemy (the rollout does it for later turns' draws, a4f3795).
@@ -971,6 +973,7 @@ interface Sim {
   /** Shadowmeld newly played within this line; never carried into a later turn. */
   shadowmeld: boolean;
   corrosiveWave: number;
+  envenom: number;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
   intangible: boolean;
   /** Buffer stacks up (already up plus gained this turn): each negates one HP loss, ours or an enemy hit. */
@@ -1364,7 +1367,7 @@ function attackShrunk(card: CardModel, sim: Sim, player: PlayerSim): { perHit: n
   return { perHit: now + ourAttackScaled(sim.strength, player.weak, sim.shrunk), pre: null };
 }
 
-function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, hits: number, player: PlayerSim, potion = false): number {
+function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, hits: number, player: PlayerSim, potion = false, attack = false): number {
   let dealt = 0;
   for (let hit = 0; hit < hits && enemy.alive; hit += 1) {
     // Our Shrink is in perHitBase already (attackShrunk), unrounded: rounded once with Vulnerable, as the game does.
@@ -1398,6 +1401,9 @@ function hitEnemy(sim: Sim, enemy: Sim["enemies"][number], perHitBase: number, h
     enemy.hp -= loss;
     enemy.lostThisTurn += loss;
     dealt += loss;
+    // F9PP859XZ3RJ F37 T2/T5: each unblocked attack adds one, alongside direct card poison.
+    // Skills, potions, retaliation and poison damage do not trigger this attack-only power.
+    if (attack && loss > 0 && enemy.hp > 0 && sim.envenom > 0) applyDebuff(enemy, "poison", sim.envenom);
     if (loss > 0) wake(enemy);
     // Thorns (Spiny Toad, Toadpole: 「当被攻击命中时，反击造成伤害」) is damage: our block takes it first, Intangible caps it
     // at 1, only the rest is HP lost (and only that sets off Rupture, Inferno, Demon Tongue). Logged (thorns2.py), one
@@ -1975,7 +1981,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       // what the later hits meet.
       for (let hit = 0; hit < hits; hit += 1) {
         next.sweeping = true;
-        for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion");
+        for (const enemy of next.enemies) if (enemy.alive) hitEnemy(next, enemy, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion", card.type === "Attack");
         next.sweeping = false;
         if (next.pendingRage) {
           next.pendingRage = false;
@@ -1988,12 +1994,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       for (let hit = 0; hit < hits; hit += 1) {
         const victim = randomVictim(next);
         if (!victim) break;
-        hitEnemy(next, victim, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion");
+        hitEnemy(next, victim, hit === 0 ? firstHit : perHit, 1, player, card.type === "Potion", card.type === "Attack");
       }
     } else if (targetEnemy) {
       const wasAlive = targetEnemy.alive;
-      if (hits > 0) hitEnemy(next, targetEnemy, firstHit, 1, player, card.type === "Potion");
-      hitEnemy(next, targetEnemy, perHit, hits - 1, player, card.type === "Potion");
+      if (hits > 0) hitEnemy(next, targetEnemy, firstHit, 1, player, card.type === "Potion", card.type === "Attack");
+      hitEnemy(next, targetEnemy, perHit, hits - 1, player, card.type === "Potion", card.type === "Attack");
       if (card.special === "feed" && wasAlive && !targetEnemy.alive) next.feedKills += 1;
       // Feed exhausts: spending it without the kill throws away this fight's max-HP gain.
       else if (card.special === "feed") next.flat -= 8;
@@ -2017,6 +2023,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   if (card.poisonNow) for (const enemy of poisoned) triggerPoison(next, enemy, 1 + next.poisonExtraTriggers);
   next.poisonExtraTriggers += card.poisonExtraTriggers ?? 0;
+  next.envenom += card.envenom ?? 0;
 
   const debuffTargets = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
   for (const enemy of debuffTargets) {
@@ -2694,7 +2701,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     sim = clone(sim);
     for (const howl of howls) {
       const perHit = attackShrunk(howl, sim, input.player)?.perHit ?? (howl.damage ?? 0) + sim.strength * (input.player.weak ? 0.75 : 1);
-      for (const enemy of sim.enemies) if (enemy.alive) hitEnemy(sim, enemy, perHit, 1, input.player);
+      for (const enemy of sim.enemies) if (enemy.alive) hitEnemy(sim, enemy, perHit, 1, input.player, false, howl.type === "Attack");
     }
   }
   // Ethereal cards still in hand are exhausted at the end of the turn, before the enemies act: each one's Feel
@@ -3216,7 +3223,7 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  const poisonKey = sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "";
+  const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}`;
 }
 
@@ -3330,6 +3337,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     tempDex: 0,
     shadowmeld: false,
     corrosiveWave: input.player.corrosiveWave ?? 0,
+    envenom: input.player.envenom ?? 0,
     intangible: false,
     buffer: input.player.buffer ?? 0,
     bufferSpent: 0,
