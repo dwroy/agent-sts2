@@ -1,0 +1,11 @@
+{
+  "subscriptions": {
+    "codex": {"monthly_usd": 500, "plan": "ChatGPT Pro 25x", "source": "Roy 2026-10-05 20:41"},
+    "claude": {"monthly_usd": 200, "plan": "Claude Max 20x", "source": "Roy 2026-10-05 20:41"}
+  },
+  "api": {
+    "deepseek": {"input_miss_per_million": 0.30, "input_hit_per_million": 0.006, "output_per_million": 1.20, "source": "ops/paper_dataset.py: peak flash rates; historical chat priced at flash rates by assumption"},
+    "jev": {"total_per_million": null, "source": "TypeSafe API price not supplied; old OpenRouter estimate is unconfirmed"}
+  },
+  "method": "Weekly USD = monthly USD * 12 / 52; duration-validated weekly usage share apportioned by recorded component tokens in the same reset window. External shared-account usage is not separately observable."
+}
