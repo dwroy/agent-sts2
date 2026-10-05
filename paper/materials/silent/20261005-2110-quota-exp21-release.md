@@ -1,0 +1,8 @@
+# 额度采样分阶段上线与静默经验 .21 完成事件
+
+- 2026-10-05 21:16 CST：21:10 manual / experience-done，main同步提交3a57ad8dc5704259d3a937dc9108347bfc917516。额度采样源码bd41843192173de8344e805de45bfde74b9cfa5c→实际live合入ad0ae9131b27762654c38079863590113c4aa49b→发布5f30bbbfaac38586dcd79f197b76dfe13e2516d6；经验源b76428b2c1ed73f89e18fd56c49ba2f7b7120a75→实际合入959f7f22f6284ce87265b884e471c6fb6265b7fd→发布c3f0410c72166b5c3145fe25c12a2974569b4ff6/S1.exp21。祖先、固定git对象、经验blob及版本唯一均已核实；机械集成固定已测树，只decision-log冲突保双方行，不额外实现或另设审核。
+- 额度采样源及合后tsc0、176文件2006例；经验源tsc0、175文件2003例，合后tsc0、176文件2006例，均首次通过、未重跑。main的agent/learner/eval/knowledge/tools及ops代码同固定发布。七项在线知识刷新06d3f3b6逐blob保留；经验incoming只静默experience.json、重叠空、预检0、无生成器改动/重建。
+- 五分钟stall tick读取新main采样器，另锁、后台nice19、25秒限时，不停对局/调度。按window_minutes=10080/300识别周/五小时；追加白名单、保留观测/重置时间、失败/过期状态、不输出账户或原错误。20:42缓存43%仍为窗口/真实采样时间未知的旧观测，不能充作实时周额度或费用。代码已同步、真实采样成功以追加日志为准，不等待下个tick。纯工具不改对局行为，无新eval版本。
+- 经验.20→.21：来源ENKYQMS9W4ZD SILENT A6及旧27局复算，新增0/补证更新11/退役0、active86不变、41093→42817字符，高32/中25/低29；A8/A9各77条35297字符、实际样本0。240同样本切片配对中位+167、最大6435→6726。学习者记录爆发/复制、药瓶结算、余像、投斧、力量/敏捷与方柱增长、沙坑/攻击两条死线，药水仅事实不加规则、整场反事实不补结果。
+- 14项learner proposed及14项ops shipped经ledger.py/by=ops登记S1.exp21，共28行精确归档，check120项0问题；0117/0118已并入沙虫/爆发经验，0119/0120为之后首胜复盘，不混入本批上线。第二十一节原文保留，旧599252字节前缀SHA256=aa50bb412b1a01d66d4b5d7a1b7cb9c61a9332144b31e6000d0d53b3dc385831保持；复盘方柱T3力4/T4力6的更正只依学习者原始帧在经验/本节记录，旧只读复盘保历史。
+- 原回报ops/codex-ops/learner/20261005-204301-experience-update.out、交接及源/合后日志在learner/runs/20261005-204301-experience-update/；采样交接和测试在learner/runs/20261005-204301-fix-batch/quota-handoff-ops.md及quota-*-sandbox.log。同fix-batch成本归集和升级爆发仍在继续，最终fix-done后补完整套件；经验独立完整外部检查待本批learner-checks，不混用别批结果。无Roy新待定，本轮只归档固定发布与自身记录，其他工作区差异保留。
