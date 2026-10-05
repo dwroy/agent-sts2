@@ -5,9 +5,54 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
+# Environment names passed into a herdr pane (its shell has the herdr server's environment, not ours); never key-like ones.
+PASS_ENV = re.compile(r"^(CODEX_OPS_|LEARNER_|LEDGER_|STS2_|CODEX_HOME$)")
+SECRET_NAME = re.compile(r"KEY|TOKEN|SECRET|PASSWORD|AUTH", re.I)
+
+
+def hosting(state_dir, key, env_name, default):
+    """How a kind of process is hosted: $env_name, else `<key>=<value>` in <state dir>/hosting, else the default."""
+    value = os.environ.get(env_name, "").strip()
+    if not value:
+        try:
+            for line in open(os.path.join(state_dir, "hosting"), encoding="utf8"):
+                name, _, setting = line.strip().partition("=")
+                if name.strip() == key:
+                    value = setting.strip()
+        except OSError:
+            pass
+    return value or default
+
+
+def start_learner(argv, root, scripts, state_dir, label):
+    """Start a learner batch in the background; returns (pid, pane id or None).
+
+    hosting learners=herdr (docs/codex-ops.md「herdr 托管」): in its own herdr pane `label` via ops/herdr-host.sh run
+    --close-on-exit (the pid is the pane-side wrapper, the batch script's parent); otherwise, or when herdr is not
+    available, setsid as before.
+    """
+    if hosting(state_dir, "learners", "CODEX_OPS_LEARNER_HOST", "setsid") == "herdr":
+        pidfile = os.path.join(state_dir, "learner", label + ".pid")
+        os.makedirs(os.path.dirname(pidfile), exist_ok=True)
+        envs = []
+        for name in sorted(os.environ):
+            if PASS_ENV.match(name) and not SECRET_NAME.search(name):
+                envs += ["--env", f"{name}={os.environ[name]}"]
+        try:
+            result = subprocess.run(["bash", os.path.join(scripts, "herdr-host.sh"), "run", label, "--pidfile", pidfile, "--close-on-exit",
+                                     *envs, "--", *argv], cwd=root, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=90)
+            parts = result.stdout.split()
+            if result.returncode == 0 and len(parts) == 2 and parts[1].isdigit():
+                return int(parts[1]), parts[0]
+            sys.stderr.write(f"herdr-host run {label} failed (exit {result.returncode}): {result.stderr.strip()[-300:]}; starting with setsid\n")
+        except (OSError, subprocess.SubprocessError) as error:
+            sys.stderr.write(f"herdr-host run {label} failed ({error}); starting with setsid\n")
+    proc = subprocess.Popen(argv, cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    return proc.pid, None
 WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
 
 
@@ -92,11 +137,14 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         return None
     batch_id = stamp + "-" + task
     worktree = os.path.join(root, ".worktrees", WORKTREES[task])
-    proc = subprocess.Popen(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree],
-                            cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
+    pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree],
+                              root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
-                                 "pid": proc.pid, "state": "running", "reason": reason, "worktree": worktree}
-    return batch_id, proc.pid
+                                 "pid": pid, "state": "running", "reason": reason, "worktree": worktree}
+    if pane:
+        state["batches"][batch_id]["pane"] = pane
+    return batch_id, pid
 
 
 def check_jobs(state, root, scripts, character, alive, stamp):
