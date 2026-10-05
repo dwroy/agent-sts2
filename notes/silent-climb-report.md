@@ -792,3 +792,117 @@ items_found=16按最早证据进阶归属，items_shipped=54按登记后下一�
 character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
 silent,6,11,1,1,0,36.27,34,FH2HB2X17F2H,2SU6XN2AEJRD,2026-10-05T04:25:50+00:00,2026-10-05T12:15:46+00:00,18,1,51,silent-0010 silent-0013 silent-0027 silent-0028 silent-0030 silent-0031 silent-0039 silent-0045 silent-0046 silent-0053 silent-0054 silent-0059 silent-0062 silent-0063 silent-0064 silent-0065 silent-0067 silent-0068 silent-0072 silent-0077 silent-0079 silent-0080 silent-0081 silent-0082 silent-0086 silent-0087 silent-0088 silent-0089 silent-0090 silent-0091 silent-0093 silent-0094 silent-0095 silent-0096 silent-0097 silent-0098 silent-0099 silent-0100 silent-0101 silent-0102 silent-0103 silent-0104 silent-0105 silent-0106 silent-0107 silent-0108 silent-0109 silent-0110 silent-0111 silent-0112 silent-0113,1,0
 ```
+
+## A7 → A8（2026-10-06 02:25 运维记录）
+
+统计窗口以实际run-config为准：2026-10-05 20:18:53 CST（SADL3CGYTGSR/A7开局）至2026-10-06 02:00:49 CST（LLYSRQQ35AVW/A8开局，右端不含）。各局target_ascension均为7，下一局解析值为8、模式climb；不改配置。
+
+4Y94N8RDPGPM 于2026-10-06 01:57:26.505 CST通关A7/F48。三个boss的SL记录均为attempt=1、result=won、reload=null，没有predicted_death或读档：第一次尝试赢。693个决策，首末决策2026-10-06 01:19:50.420—01:57:26.505 CST，跨度2256.085秒（37分36秒）；若从run-config写入计到结束则2285.330秒（38分05秒），两种起点分开记录。下一局LLYSRQQ35AVW已经在2026-10-06 02:00:49.391 CST开始A8。
+
+### 胜负、层数及主要死亡战斗
+
+7局，第一次尝试按首次判死口径为1胜6负；6个败局使用SL，成功读档24次，重打后0胜6负。最终1胜6负，首次胜率和含SL最终胜率均1/7（14.3%）；最终平均层数40.57、首次尝试平均39.00。成功读档及同房多次尝试不算新的独立局，也不把predicted_death当作执行完成的实死。
+
+| 局号 | 最终结果 / 层 | 首次判死层 | 成功读档 | 死亡战斗（runs.jsonl） |
+| --- | --- | --- | --- | --- |
+| SADL3CGYTGSR | 负 / F48 | 48 | 5 | 永世沙漏 |
+| Z6CFLDR3N4SB | 负 / F48 | 48 | 1 | 永世沙漏 |
+| 3KME36ADUE4U | 负 / F27 | 27 | 2 | 熟睡甲虫、盛碗虫（丝）、盛碗虫（石） |
+| VLV17NUSFS61 | 负 / F48 | 37 | 6 | 女王、火炬头聚合体 |
+| 9YT51CK8RC39 | 负 / F17 | 17 | 5 | 仪式兽 |
+| 2PVLGRBGUX9S | 负 / F48 | 48 | 5 | 永世沙漏 |
+| 4Y94N8RDPGPM | 胜 / F48 | 无 | 0 | 无 |
+
+六个最终败局中：永世沙漏3局；女王/火炬头聚合体组合、熟睡甲虫/两种盛碗虫组合、仪式兽各1局。这是日志的死亡战斗分类，不据组合名推断内部击杀先后。学习者已核实2PVLGRBGUX9S末次T12为8血9挡面对三张各12伤凋萎，敌当轮无攻击，需损27但仅扣现存8；其抽序原句及追加勘误均保留：六次共同前缀15张，仅第2—6次前38张一致，不当作六个独立局或整场受控比较。其他打法归因沿已有复盘，不由运维添加。
+
+### 完整评估原文
+
+已运行白名单动作`bash ops/codex-ops-do.sh eval-metrics silent 7`，exit0；它在沙箱外运行`eval/metrics.py --character silent --ascension 7 --group-by ascension --md`。原始报告为[a7-metrics-20261006-021732.BqiotA.md](../paper/materials/silent/a7-metrics-20261006-021732.BqiotA.md)，SHA256见查询快照。表中区间、样本不足标记及缺失值原样保留：
+
+| 指标 | A7 |
+|---|---|
+| 局数 | 7 * |
+| 终层 | 40.6（中位 48.0；CI 28.5–52.6；n=7） * |
+| 过一幕 boss | 86%（6/7；CI 49–97%） * |
+| 过二幕 boss | 71%（5/7；CI 36–92%） * |
+| 胜局 | 14%（1/7；CI 3–51%） * |
+| 非 boss 战喝药 / 10 层 | 3.07（中位 2.92；CI 1.69–4.46；n=7） * |
+| 进一幕 boss 带药（瓶） | 0.86（中位 1.00；CI 0.51–1.21；n=7） * |
+| 进二幕 boss 带药（瓶） | 1.40（中位 1.00；CI 0.00–2.82；n=5） * |
+| 进三幕 boss 带药（瓶） | 2.00（中位 2.00；CI 0.04–3.96；n=5） * |
+| 死时手里的药（瓶，输的局） | 0.00（中位 0.00；CI 0.00–0.00；n=6） * |
+| 一幕 boss 有力量来源 | 0%（0/7；CI 0–35%） *；牌 0 / 遗物 0 / 开场有力量 0 |
+| 一幕精英进场血量 < 78% 次数 / 局 | 0.86（中位 1.00；CI 0.22–1.50；n=7） *；占一幕精英战 6/12 |
+| 二幕第一个休息点前死亡（占进二幕的局） | 0%（0/6；CI 0–39%） * |
+| 大脑调用 / 局 | 40.0（中位 45.0；CI 27.2–52.8；n=7） * |
+| 输入 token / 局（千） | 4340（中位 4911；CI 2974–5705；n=7） * |
+| 缓存命中 token / 局（千） | 139（中位 107；CI 17–262；n=7） * |
+| 输出 token / 局（千） | 10.9（中位 12.3；CI 7.4–14.5；n=7） * |
+| 缓存命中率 | 3% |
+| 大脑耗时 / 局（分钟） | 11.1（中位 12.2；CI 7.6–14.6；n=7） * |
+| 每次调用平均耗时（秒） | 16.7 |
+|   codex：调用 / 局 | 40.0（中位 45.0；CI 27.2–52.8；n=7） * |
+|   codex：输入 / 命中 / 输出（千 token / 局） | 4340 / 139 / 10.9（n=7） |
+|   codex：耗时 / 局（分钟） | 11.1（中位 12.2；CI 7.6–14.6；n=7） * |
+| SL：有 SL 记录的局 | 7/7 |
+| SL：重打次数 / 局 | 3.43（中位 5.00；CI 1.24–5.62；n=7） * |
+| 第一次尝试：终层 | 39.0（中位 48.0；CI 27.3–50.7；n=7） * |
+| 第一次尝试：过一幕 boss | 86%（6/7；CI 49–97%） * |
+| 第一次尝试：过二幕 boss | 71%（5/7；CI 36–92%） * |
+| 第一次尝试：胜局 | 14%（1/7；CI 3–51%） * |
+| 校准：推演本回合掉血 ±2 内（回合） | 93%（451/486 回合） |
+| 校准：路线投影 2–3 层误差（投影 − 实际） | 中位 -0.8，中位 \|误差\| 4.0（n=40） |
+| 校准：boss 时钟 实打/估值 中位 | — |
+
+* 局数 < 10（或该指标的 n < 10）：样本不足，区间只作参考。
+
+样本仅7局；掉血推演±2内451/486回合（93%），路线投影绝对误差中位4.0（n=40），boss时钟没有有效校准值。没有受控整场对照，也不能分离升级难度、局内随机性和多次经验/代码更新的贡献。
+
+### 学习者产出与上线
+
+账本查询分别执行`python3 learner/ledger.py find --character silent --asc 7 --json`和`--status shipped --json`，保存为[a7-learning-snapshot-20261006-0216.json](../paper/materials/silent/a7-learning-snapshot-20261006-0216.json)；文件写入时点及原查询数据均在快照内。查询时首次证据归属A7共11项，9项最后状态shipped、2项proposed；不是11项都在本级时段已经生效。六个败局已有正式复盘，首胜4Y94N8RDPGPM的学习者完成事件尚未收到，不提前计入。
+
+| 账本 id | 学习者记录范围 | 最早证据局 | 查询时状态 / 版本 |
+| --- | --- | --- | --- |
+| silent-0121 | 铁棒与沙漏同一步触发时的持牌伤观察 | SADL3CGYTGSR | shipped / S1.exp23 |
+| silent-0122 | 铁棒累计四张抽牌、跨回合计数的实证 | SADL3CGYTGSR | shipped / S1.exp23 |
+| silent-0123 | 佩尔士兵与融入暗影组合格挡的实证 | SADL3CGYTGSR | shipped / S1.exp23 |
+| silent-0124 | 营养汤与虚无基础牌的后段资源观察 | Z6CFLDR3N4SB | shipped / S1.exp25 |
+| silent-0125 | HP护栏换线的即时血价、输出取舍 | Z6CFLDR3N4SB | shipped / S1.exp25 |
+| silent-0126 | 幽灵种子未打出基础牌消耗的时点 | Z6CFLDR3N4SB | shipped / S1.exp25 |
+| silent-0130 | 单行动题重复抵扣已有格挡的代码缺陷 | Z6CFLDR3N4SB | shipped / S1.fix23 |
+| silent-0131 | 钻石头冠开场格挡保护窗口的实证 | VLV17NUSFS61 | shipped / S1.exp26 |
+| silent-0135 | 长程并列组的即时损血参考提案 | 9YT51CK8RC39 | shipped / S1.strategy3 |
+| silent-0136 | 本局专长版疯狂科学力量/敏捷的实证 | 2PVLGRBGUX9S | proposed / 未上线 |
+| silent-0137 | 升级腐蚀波抽牌施毒的实证 | 2PVLGRBGUX9S | proposed / 未上线 |
+
+按首次登记时间，本级窗口新增19项（silent-0119—0137）；按first_run/asc，其中11项归A7、3项归A6、4项归A0、1项归A4。这些是两种不同口径；旧局机制回溯不混称A7首次遇到。0135虽在本级形成提案，其S1.strategy3实际发布在A8开局之后（02:06发布、02:16由ops登记shipped），不算本级上线或A7首胜使用的版本。0136/0137的原postmortem与抽序勘误已在02:03事件处理，随后经验任务追加proposed，查询时尚无上线；不冒记模拟器实现。关联0079/0080的既有状态保留，重复错误也按原学习者标记。
+
+本级窗口中经验.21—.27共7批，实际对应6个eval经验版本；源码修复3个eval版本，共9个窗口内版本。经验.24首次合后Inferno测试失败已回退，随后被.25继承并以S1.exp25实际生效，不存在独立S1.exp24；原失败、回退、锁占用及两批独立完整补测通过记录保留。S1.exp20是本级开局继承的版本，其eval登记晚于A7开局，不计为本级新合入。
+
+| 本级窗口上线 eval 版本 | eval 记录指向 | 来源和范围 |
+| --- | --- | --- |
+| S1.exp21 | 959f7f22 | 经验.21，ENKYQMS9W4ZD/A6及旧27局；新增0、补证更新11 |
+| S1.fix21 | e7370f88 | 升级爆发计数模型；VN7RQJMJEFMX/A6/F27/T6，机制0115 |
+| S1.exp22 | aea750c9 | 经验.22，2SU6XN2AEJRD/A6及旧28局；新增2、更新13 |
+| S1.exp23 | 6c4a8558 | 经验.23，SADL3CGYTGSR/A7及旧29局；新增2、更新10 |
+| S1.exp25 | 5bc320f7 | 经验.24与.25接力生效，Z6/3KME A7；分别新增2/1、更新10/7 |
+| S1.fix22 | f4a6173a | 没有后继招式时伤害预测标未知；3KME A7及53FL A6，0127；0128机制不冒记完整实现 |
+| S1.exp26 | c7ca5d01 | 经验.26，VLV17NUSFS61/A7及旧32局；新增2、更新13 |
+| S1.exp27 | ce1864a0 | 经验.27，9YT51CK8RC39/A7及旧33局；新增2、更新8 |
+| S1.fix23 | df557706 | 单行动题重复扣已有格挡；VLV A7/F48第6次T5、Z6 A7/F48首战T10，0130 |
+
+经验7批合计新增11条、补证更新82次、退役0，active86→97；更新次数包含同一经验反复补证，不能当作82条独立新增。以上范围只转录学习者changelog、版本source与运维实际发布记录；0127缺数据未知修复、0130已有挡修复和机制观察/经验文本分别计算。额度采样、成本归集、TMPDIR与herdr测试修正是系统记录或测试工作，不混记学习出来的游戏策略。
+
+首胜开局代码8b268858+dirty、经验2026-10-06.1；下一局A8开局代码bf63ab40、经验2026-10-06.2。代码上线按下一局生效，知识前缀会随刷新重渲染，单凭开局版本不能把整场通关归因于某项更新。初始测试失败、勘误、回退、busy及完整检查失败历史均保留。
+
+### 学习曲线A7原行
+
+沿用上一轮`paper_dataset.py --no-raw`生成的论文数据（切点2026-10-05T18:07:49.022Z，已包含本级7个结束局），及02:16上线登记后刷新并提交的学习曲线（03123b44）。本轮不重复整库刷新或手改曲线。完整论文生成当时五项一致性通过、决策计数差异为空、key scan CLEAN；当前账本检查为/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 139 item(s), 0 problem(s)。
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,7,7,1,1,0,40.57,39,SADL3CGYTGSR,4Y94N8RDPGPM,2026-10-05T12:18:53+00:00,2026-10-05T17:57:26+00:00,11,0,38,silent-0007 silent-0009 silent-0010 silent-0011 silent-0013 silent-0017 silent-0027 silent-0036 silent-0046 silent-0048 silent-0053 silent-0057 silent-0059 silent-0063 silent-0069 silent-0077 silent-0092 silent-0107 silent-0110 silent-0111 silent-0114 silent-0115 silent-0116 silent-0117 silent-0118 silent-0119 silent-0120 silent-0121 silent-0122 silent-0123 silent-0124 silent-0125 silent-0126 silent-0127 silent-0128 silent-0129 silent-0131 silent-0132,3,0
+```
+
+items_found=11按最早证据进阶；items_shipped=38按登记后下一场已结束局的起始归属；repeats=3、repeats_after_ship=0按生成器标记及登记时点。它们不同于本级时间窗新增19项、窗口内9个eval版本或查询时全静默113项最后状态shipped，不能由这些口径间的差额推定学习失败。首胜的后续复盘和上线留后续事件补充，不回改本查询点。

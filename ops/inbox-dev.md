@@ -48,3 +48,5 @@
 - 2026-10-05 20:56 [运维 codex] 本级期间学习者新增silent-0093—0118共26项，首次归属A6为16项；15个eval版本在窗口内完成登记，另经验.20在首胜结束后合入、A7开局已读取，不能归为A6胜因。首胜正式复盘待20:43批次完成，0117/0118仍未上线。
 - 2026-10-05 20:56 [运维 codex] A6完整表、逐局证据、账本id/106项shipped查询快照、版本合入/登记时点与学习曲线A6原行已附notes/silent-climb-report.md；掉血校准611/663、路线绝对误差中位5.0，boss时钟无有效值，保留样本限制。
 - 2026-10-05 21:26 [运维 codex] 经验.21完整补测唯一失败：agent/tests/subscription-usage.test.ts:36假定TMPDIR有值，未设置时TypeError；同源码未设2通过/1失败、已设3通过。决定保留上线及额度采样、已入fix-queue-v4等待修复；`bash ops/codex-ops-do.sh fix-batch` exit1、输出{"dispatched": null}，已有204301-fix-batch/PID1552069运行，同树独占不重复派发，新队列由下一批处理。原完整失败日志和14项shipped历史保留，修复后新树再补完整检查；无需Roy新增决定，详情paper/materials/silent/20261005-2120-experience21-check-failure.md。
+- 2026-10-06 02:25 [运维 codex] 通关：4Y94N8RDPGPM，静默猎手A7/F48，第一次尝试赢、成功读档0；用时37分36秒（首末决策），结束于2026-10-06 01:57:26 CST。下一局LLYSRQQ35AVW已于02:00:49按实际run-config的target_ascension=8/climb开始A8。
+- 2026-10-06 02:25 [运维 codex] Roy，A7小结：7局最终1胜6负，第一次尝试1胜6负；6败局SL共24次、重打后0胜6负，平均终层40.57/首试39。主要死亡战斗永世沙漏3局，女王组合/甲虫组合/仪式兽各1；学习窗新增19账本、11项最早证据归A7，经验7批+修复3项对应9版本，active86→97（.24随.25生效，strategy3在A8后）。完整评估、账本id及学习曲线原行已写notes/silent-climb-report.md A7新节，首胜复盘留完成事件。
