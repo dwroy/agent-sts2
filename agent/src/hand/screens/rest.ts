@@ -129,6 +129,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     rest_site: {
       heal_amount: heal.text,
       hp_after_heal: `${healed.hp}/${healed.max}`,
+      ...silentTentRestFacts(state, healed),
       upgradable_cards: entries.filter((entry) => !entry.upgraded && entry.type !== "Curse" && entry.type !== "Status").map((entry) => entry.name),
       floors_to_act_boss: nextBoss - floor,
       next_nodes: nextNodeTypes(env.screenMemory, state),
@@ -197,6 +198,35 @@ export function planRest(env: DecisionEnv): Decision | null {
       },
     }),
   );
+}
+
+/** LLYSRQQ35AVW F24/28/32/40/43/47, silent-0159/0145/0146/0020: two actions, not one whole-visit result. */
+export function silentTentRestFacts(state: GameState, healed: { hp: number; max: number }): Record<string, JsonValue> {
+  const run = asRecord(state.run?.raw);
+  if (str(run["character_id"]).toLowerCase() !== "silent"
+    || !asArray(run["relics"]).map(asRecord).some((relic) => str(relic["relic_id"]) === "MINIATURE_TENT" && !bool(relic["is_melted"]))) return {};
+  // Read the current keys: after the first action, the remaining option is reindexed in the observed boards.
+  const enabled = asArray(asRecord(state.raw["rest"])["options"]).map(asRecord)
+    .filter((option) => bool(option["is_enabled"]) && Number.isInteger(numOrNull(option["index"])) && num(option["index"]) >= 0);
+  const heal = enabled.find((option) => str(option["option_id"]).toUpperCase() === "HEAL");
+  const smith = enabled.find((option) => str(option["option_id"]).toUpperCase() === "SMITH");
+  if (!heal || !smith) return {};
+  const healKey = `o${num(heal["index"])}`;
+  const smithKey = `o${num(smith["index"])}`;
+  return {
+    tent_follow_up: {
+      source: "LLYSRQQ35AVW SILENT A8 F24/28/32/40/43/47（回合不适用）；silent-0159/0145/0146/0020。六火来自同一局。",
+      available_now: [{ key: healKey, kind: "HEAL" }, { key: smithKey, kind: "SMITH" }],
+      observed: "持有微型帐篷时，F24/28先回血后仍能锻造；F32/40/43/47先锻造后仍能回血，每火各执行一次。已用动作不补回，剩余选项索引会变，以返回后的现场启用列表为准；其他营火动作组合未验证。",
+      single_action_scope: "当前选项、route_review与boss_sim只计本次动作：锻造本身不回血，回血本身不升级。它们没有包括帐篷后续另一动作，不是整座营火的最终结果。",
+      if_both_chosen: {
+        condition: "仅当本次及随后另一动作都实际选择并成功执行；本项不自动安排后续动作。",
+        hp_after_heal_and_smith: `${healed.hp}/${healed.max}`,
+        hp_tied_orders: ["HEAL→SMITH", "SMITH→HEAL"],
+        note: "按当前HEAL效果计算，两种顺序仅在这个条件HP指标上并列，回血受最大HP截断；不是两种单次动作的推演并列，升级收益和整局价值仍由DeepSeek比较。",
+      },
+    },
+  };
 }
 
 /**
