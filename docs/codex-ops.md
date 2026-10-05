@@ -82,6 +82,52 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 
 **剩下的风险**：模型能改 live 和 step 里的代码（修阻塞 bug 本来就要），也能改 ops/autoplay.sh、run.sh、report.py，这些都在沙箱外运行、能读 key。所以权限配置挡的是「模型直接读到、打印出 key」，不是对一个恶意模型的隔离——和原来 Claude 运维会话的处境一样。
 
+## herdr 托管（Roy 2026-10-05）
+
+目的：长跑的进程在 herdr 里看得见、管得了（Mac 上 `herdr --machine xdwin …`）。托管层是通用的（`ops/herdr-host.sh` + pane 侧的 `ops/herdr-exec.sh`），不含项目逻辑：一个 workspace `sts2-run`（cwd 主检出），每个 label 一个 tab；label → pane 记在 `ops/codex-ops/herdr.json`。不碰 `agent-sts2`（wD，Claude rc 会话）、geo-crash、codex-gc1。
+
+```bash
+bash ops/herdr-host.sh status            # label、pane、在不在、忙不忙、前台 PID
+bash ops/herdr-host.sh run <label> [--pidfile F] [--close-on-exit] [--env K=V]... -- <命令>
+bash ops/herdr-host.sh stop <label>      # ctrl+c、关 pane；只停自己登记的 label
+bash ops/herdr-host.sh attach-hint       # 从 Mac 怎么看
+```
+
+**开关**：`ops/codex-ops/hosting`，每行 `键=值`（文件，不用改 crontab）；环境变量优先。
+
+| 键 | 值（默认在前） | 环境变量 | 管什么 |
+|---|---|---|---|
+| ops | exec / herdr | CODEX_OPS_MODE | 叫醒走 `codex exec resume`（无头），还是走 herdr 里的交互 TUI |
+| learners | setsid / herdr | CODEX_OPS_LEARNER_HOST | 学习者批次在 pane `learner-<批次 id>[-postmortem]` 里跑，结束关 pane，最后 30 行留在 `ops/codex-ops/herdr-panes.log` |
+| autoplay | setsid / herdr | CODEX_OPS_AUTOPLAY_HOST | 动作 autoplay-start 把 `ops/autoplay.sh` 放进 pane `autoplay`；PID 仍写 `autoplay.pid`，autoplay-stop / kill / 卡死检查不变 |
+
+herdr 不可用时（`herdr-host.sh available` 失败）学习者和 autoplay 退回 setsid，ops 叫醒退回 exec（日志里各有一行）。学习者的命令行、权限配置、key 预检、退出码、`learner/runs/*.jsonl`、批次登记都不变；pane 里 `tail -F` 显示 `.out/.err`，批次结束后 drain 放到 setsid 里（不随 pane 关掉）。
+
+**ops TUI**：第一轮（建会话）仍走 exec。之后每次叫醒：`herdr agent start ops --kind codex --pane <label ops 的 pane> -- resume <同样的 -c / 权限配置 / 模型 / 强度 / --disable …> --no-daemon <会话 id>`（lib.ts `interactiveArgs`；TUI 不接受 `--json`、`--ignore-user-config`、`--ignore-rules`，其余全收，2026-10-05 实测 codex 0.160）。TUI 常驻；参数变了（例如磁盘上多了一个 key 文件、强度改了）且空闲时重启。一次叫醒（herdr.ts `herdrWake`）：
+1. 等就绪：herdr 状态 idle/done（unknown 时看会话文件）、输入框空（ansi 读屏：占位符是暗色）、会话文件里没有没结束的 turn。最多等 10 分钟（CODEX_OPS_HERDR_READY_MIN），不就绪 → exit 75「延后」：事件留在队列，不算失败，下个 tick 再来。blocked（对话框）也延后，调度器不替人回答。
+2. `herdr agent prompt ops "<事件>"`，broker 照常在叫醒期间运行。
+3. 跟 `~/.codex/sessions/…/rollout-…-<会话 id>.jsonl`：带消息首行的 turn 出现 task_complete 就算完；token 取该 turn 最后一条 token_usage_record。超时（120 分钟）发 esc 打断这一轮，TUI 保留。wakes/*.jsonl 里记的是这一轮在会话文件里的行，wakes.jsonl 多 `mode: herdr`、`pane`、`deferred`。
+4. 回到 exec 时 TUI 还开着 → 叫醒延后（两个进程不能同时写一个会话）。
+
+**人在 pane 里打字**：可以看、可以在空闲时自己发问题（那一轮没有 broker，`codex-ops-do.sh` 会等不到回答）。没发出去的字会让调度器一直等（10 分钟后延后），所以不要把半句话留在输入框里。调度器从不向空输入框发 ctrl+c（那会退出 codex）。TUI 里 `!命令` 是人直接跑 shell，**不在沙箱里**（读得到 key），模型触发不了。
+
+**风险**：关 pane 或重启 herdr server（例如升级 0.9.3）会杀掉里面的 autoplay、学习者和 TUI；之前先把 hosting 改回去或挑空档。
+
+### 切换步骤（按顺序；不丢当前对局和会话）
+
+0. 合入 main，完整 tsc + vitest。确认 cron 环境能连上 herdr：`env -i HOME=$HOME PATH=/usr/bin:/bin bash ops/herdr-host.sh available && echo ok`。
+1. 学习者：`echo learners=herdr >> ops/codex-ops/hosting`。正在跑的批次继续在 setsid 下跑完；下一个批次进 pane。
+2. autoplay：`echo autoplay=herdr >> ops/codex-ops/hosting`。等运维下一次 autoplay-start 自然生效；要马上搬：
+   `A=$(cat ops/codex-ops/autoplay.pid); P=<pgrep -af 'index.ts play' 的 PID>; kill $A; bash ops/herdr-host.sh run autoplay --pidfile ops/codex-ops/autoplay.pid --env WAIT_PID=$P -- bash ops/autoplay.sh`
+   （只停 autoplay 的 bash；对局 P 继续，新 autoplay 等它结束后照常写复盘，再开下一局。）
+3. ops 先在临时会话上试：
+   `T=$(mktemp -d); echo '只回复 OK' > $T/p.md; CODEX_OPS_DIR=$T CODEX_OPS_PROMPT=$T/p.md CODEX_OPS_EFFORT=low agent/node_modules/.bin/tsx ops/codex/main.ts wake`（exec 建临时会话），
+   `echo 测试 > $T/queue/$(date +%s%N)-manual.md; CODEX_OPS_DIR=$T CODEX_OPS_MODE=herdr CODEX_OPS_HERDR_AGENT=opstest CODEX_OPS_EFFORT=low agent/node_modules/.bin/tsx ops/codex/main.ts wake`，
+   看 `$T/wakes.jsonl` 最后一行 ok、tokens 非零；`HERDR_HOST_STATE=$T/herdr.json bash ops/herdr-host.sh stop opstest`。
+4. 正式：`bash ops/codex-ops.sh status`（wake: idle）→ `echo ops=herdr >> ops/codex-ops/hosting` → `bash ops/codex-ops.sh wake --fg "herdr 切换：回复一句话确认"` → `tail -1 ops/codex-ops/wakes.jsonl`（mode herdr、ok true）。
+
+**回退**：删掉 hosting 里对应的行（或写 `=exec` / `=setsid`）。ops：等 `herdr agent get ops` 是 idle/done 再 `bash ops/herdr-host.sh stop ops`，下一次叫醒回到 `codex exec resume` 同一个会话。学习者：已在 pane 里的批次跑完自己关。autoplay：在 pane 里的继续跑；要搬回 setsid 同第 2 步，换成 `WAIT_PID=$P setsid nohup bash ops/autoplay.sh >/dev/null 2>&1 </dev/null & echo $! > ops/codex-ops/autoplay.pid`。
+
 ## 收件箱
 
 `ops/inbox-dev.md`：只追加，一行一件事，`- YYYY-MM-DD HH:MM [运维 codex | codex-ops 调度器] 内容`。开发会话盯着这个文件（Monitor 或它自己的定时任务），转告 Dai；需要 Dai 定的事运维会话同时写 notes/for-dai.md。
@@ -99,3 +145,6 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | ops/codex-ops-do.sh、ops/codex-ops-actions.sh | 沙箱里的请求端、沙箱外的动作 |
 | ops/ops-session-silent-codex-prompt.md | 会话的第一轮 prompt |
 | agent/tests/ops-codex.test.ts | 命令行和权限、broker 往返、事件、会话大小、学习闭环（假学习者）、卡死退避 |
+| ops/herdr-host.sh、ops/herdr-exec.sh | 通用的 herdr 托管（workspace、pane、run、stop、status） |
+| ops/codex/herdr.ts | 经 herdr TUI 叫醒：就绪判断、提交、按会话文件判断完成和记 token |
+| agent/tests/ops-herdr.test.ts、tests/fixtures-herdr/fake-herdr.py | TUI 参数、读屏和会话文件、托管脚本、herdr 叫醒、托管的学习者批次（假 herdr） |

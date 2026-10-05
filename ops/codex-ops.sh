@@ -57,6 +57,8 @@ drain() {
     mode=""
     nice -n 5 "$TSX" "$MAIN" wake >> "$DIR/wake.out" 2>&1
     rc=$?
+    # 75: deferred (herdr mode: the ops TUI is busy, shows a dialog or holds a person's unsent text). Not a failure.
+    if [ $rc -eq 75 ]; then log "wake deferred (ops TUI not ready, see above); the events stay queued for the next tick"; break; fi
     if [ $rc -ne 0 ]; then
       echo "$(( $(cat "$DIR/fails" 2>/dev/null || echo 0) + 1 ))" > "$DIR/fails"
       log "wake failed (exit $rc, $(cat "$DIR/fails") in a row); the events stay queued for the next tick"
@@ -168,6 +170,8 @@ status() {
   if [ -s "$DIR/session-id" ]; then "$TSX" "$MAIN" growth 2>&1 | head -3; else echo "session: none yet"; fi
   local pid; pid=$(cat "$DIR/wake.pid" 2>/dev/null)
   if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then echo "wake: running (codex PID $pid)"; else echo "wake: idle"; fi
+  echo "hosting: $( [ -f "$DIR/hosting" ] && grep -v '^#' "$DIR/hosting" | tr '\n' ' ' || echo 'default (ops=exec learners=setsid autoplay=setsid)')${CODEX_OPS_MODE:+; CODEX_OPS_MODE=$CODEX_OPS_MODE}"
+  [ -f "$DIR/herdr.json" ] && timeout 20 bash "$OPS/herdr-host.sh" status 2>&1 | sed 's/^/  /'
   echo "queue: $(ls "$QUEUE"/*.md 2>/dev/null | wc -l) event(s)$( [ -f "$DIR/fails" ] && echo ", $(cat "$DIR/fails") failed wake(s) in a row")"
   [ -f "$DIR/stall.state" ] && echo "stall state: $(cat "$DIR/stall.state")"
   python3 "$OPS/codex-ops-learn.py" status 2>&1 | tail -3

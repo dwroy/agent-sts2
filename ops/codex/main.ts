@@ -11,11 +11,15 @@
  *                                                                    (re-verify the sandbox after a codex update)
  *
  * Exit codes: 0 done (or nothing queued), 1 the wake failed (events stay queued), 3 codex unavailable or the key
- * pre-check failed, 124 timed out.
+ * pre-check failed, 75 deferred (herdr mode: the TUI is busy, blocked or holds unsent text; events stay queued, not a
+ * failure), 124 timed out.
+ *
+ * Wakes after the first go to an interactive TUI in herdr instead of `codex exec resume` when CODEX_OPS_MODE=herdr or
+ * ops/codex-ops/hosting has `ops=herdr` (herdr.ts; docs/codex-ops.md「herdr 托管」).
  */
 import { spawn } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 
@@ -26,12 +30,15 @@ import { codexChildEnv, codexKeyCheck, codexProfileOverrides, engineBinary, lear
 import { collectSecrets, redactSecrets, secretFilesOf, stamp } from "../../learner/lib/launcher.js";
 import { SummaryTracker, findRollout } from "../../learner/lib/summary.js";
 import { archiveCodexTranscripts } from "./archive.js";
+import { herdrWake, runCommand, tuiStateFile } from "./herdr.js";
 import {
   ACTIONS,
   DEFAULT_WAKE_TIMEOUT_MIN,
   REQUEST_ID,
+  hostingMode,
   initCommand,
   initMessage,
+  interactiveArgs,
   localStamp,
   opsPaths,
   opsRequest,
@@ -42,6 +49,7 @@ import {
   validateRequest,
   wakeMessage,
   type OpsPaths,
+  type QueuedEvent,
 } from "./lib.js";
 
 const env = process.env;
@@ -178,6 +186,12 @@ async function wake(dryRun: boolean): Promise<number> {
   const request = opsRequest(ROOT, env);
   const bin = engineBinary("codex", env);
   const command = session ? resumeCommand(request, session, message, bin ?? "codex") : initCommand(request, message, bin ?? "codex");
+  // The first turn always runs headless (it creates the session); later wakes go to the herdr TUI when ops=herdr.
+  const mode = hostingMode(paths.dir, "ops", "CODEX_OPS_MODE", "exec", env);
+  if (dryRun && session && mode === "herdr") {
+    process.stdout.write(`===== herdr: agent ${herdrAgent()} = codex ${shellQuote(interactiveArgs(request, session))}（工作目录 ${ROOT}）=====\n===== 消息 =====\n${message}\n`);
+    return 0;
+  }
   if (dryRun) {
     process.stdout.write(`===== ${session ? `resume ${session}` : "init"}（工作目录 ${ROOT}）=====\n${shellQuote([command.command, ...command.args])}\n===== 消息 =====\n${command.stdin}\n`);
     return 0;
@@ -190,6 +204,17 @@ async function wake(dryRun: boolean): Promise<number> {
   if (refused) {
     log(refused);
     return 3;
+  }
+  if (session && mode === "herdr") {
+    if (await herdrAvailable()) return wakeHerdr(events, session, message, now);
+    log("ops=herdr but herdr does not answer: this wake runs headless (codex exec resume)");
+  } else if (session && existsSync(tuiStateFile(paths.dir)) && (await herdrAvailable())) {
+    // Rolled back to exec while the TUI may still be open on the same session: two writers on one session file.
+    const tui = await runCommand(herdrBin(), ["agent", "get", herdrAgent()], 20_000);
+    if (tui.ok) {
+      log(`ops=exec but the ops TUI is still open in herdr (agent ${herdrAgent()}): close it first (bash ops/herdr-host.sh stop ${herdrAgent()}); the events stay queued`);
+      return 75;
+    }
   }
 
   const startedAt = Date.now();
@@ -311,6 +336,100 @@ async function wake(dryRun: boolean): Promise<number> {
   }
   if (timedOut) return 124;
   return ok ? 0 : 1;
+}
+
+/* ---- wake through herdr ------------------------------------------------------------------------------------- */
+
+/** HERDR_BIN, else herdr on PATH, else ~/.local/bin/herdr (cron's PATH does not have ~/.local/bin; herdr-host.sh does the same). */
+const herdrBin = (): string => {
+  if (env["HERDR_BIN"]) return env["HERDR_BIN"];
+  for (const dir of (env["PATH"] ?? "").split(":")) if (dir && existsSync(join(dir, "herdr"))) return join(dir, "herdr");
+  return join(env["HOME"] || homedir(), ".local", "bin", "herdr");
+};
+const herdrAgent = (): string => env["CODEX_OPS_HERDR_AGENT"] || "ops";
+const hostScript = (): string => env["CODEX_OPS_HERDR_HOST"] || join(ROOT, "ops", "herdr-host.sh");
+
+async function herdrAvailable(): Promise<boolean> {
+  return (await runCommand("bash", [hostScript(), "available"], 30_000)).code === 0;
+}
+
+/**
+ * One wake through the ops TUI in herdr (herdr.ts herdrWake): same queue, broker, logs and summary row as the headless
+ * wake; the event stream in the wake log is the turn's rows of codex's session file, and the tokens come from its
+ * token_usage_record. Exit 75 = deferred (the TUI is busy, shows a dialog, or holds unsent text): the events stay
+ * queued and the scheduler does not count it as a failure.
+ */
+async function wakeHerdr(events: QueuedEvent[], session: string, message: string, now: Date): Promise<number> {
+  const request = opsRequest(ROOT, env);
+  const startedAt = Date.now();
+  const logPath = join(paths.wakes, `${stamp(now)}-wake.jsonl`);
+  const write = (row: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(row)}\n`);
+  const args = interactiveArgs(request, session);
+  write({ type: "ops_wake", ts: now.toISOString(), mode: "herdr", session, events: events.map((e) => e.name), cwd: ROOT, command: [herdrBin(), "agent", "prompt", herdrAgent()], tui: ["codex", ...args], message });
+  log(`wake (herdr): ${events.length} event(s) ${events.map((e) => e.kind).join(",")} → agent ${herdrAgent()} (log ${logPath})`);
+  writeFileSync(join(paths.dir, "wake.pid"), `${process.pid}\n`);
+  const stopBroker = startBroker(paths, ROOT, log);
+  const timeoutMin = Number(env["CODEX_OPS_WAKE_TIMEOUT_MIN"]) || DEFAULT_WAKE_TIMEOUT_MIN;
+  let result;
+  try {
+    result = await herdrWake({
+      herdr: herdrBin(),
+      hostScript: hostScript(),
+      agent: herdrAgent(),
+      session,
+      args,
+      codexHome: learnerCodexHome(env),
+      message,
+      marker: message.split("\n")[0]!,
+      stateFile: tuiStateFile(paths.dir),
+      timeoutMs: timeoutMin * 60_000,
+      readyWaitMs: (Number(env["CODEX_OPS_HERDR_READY_MIN"]) || 10) * 60_000,
+      pollMs: Number(env["CODEX_OPS_HERDR_POLL_MS"]) || 2000,
+      submitWaitMs: Number(env["CODEX_OPS_HERDR_SUBMIT_MS"]) || undefined,
+      log,
+    });
+  } finally {
+    await stopBroker();
+    rmSync(join(paths.dir, "wake.pid"), { force: true });
+  }
+  for (const line of result.turn?.rows ?? []) appendFileSync(logPath, `${line}\n`);
+  const ok = result.code === 0;
+  if (ok) for (const event of events) {
+    try {
+      renameSync(event.file, join(paths.delivered, event.name));
+    } catch {
+      // already moved
+    }
+  }
+  const growth = result.rollout ? sessionGrowth(readFileSync(result.rollout, "utf8")) : undefined;
+  const row = {
+    ts: new Date().toISOString(),
+    kind: "wake",
+    mode: "herdr",
+    session,
+    pane: result.pane ?? null,
+    events: events.map((e) => e.name),
+    ok,
+    exit: result.code,
+    deferred: result.code === 75,
+    timed_out: result.code === 124,
+    wall_ms: Date.now() - startedAt,
+    turn: result.turn?.turnId ?? null,
+    tokens: result.turn?.tokens ?? { input: 0, output: 0, cacheRead: 0, cacheCreation: 0, reasoning: 0 },
+    context_tokens: growth?.contextTokens ?? null,
+    compactions: growth?.compactions ?? null,
+    rollout_bytes: growth?.bytes ?? null,
+    errors: result.reason ? [result.reason] : [],
+    result: (result.turn?.lastMessage ?? "").slice(0, 4000),
+    log: logPath,
+  };
+  write({ type: "ops_summary", ...row });
+  appendFileSync(paths.wakesLog, `${JSON.stringify(row)}\n`);
+  const secrets = collectSecrets(secretFilesOf(ROOT), env, strippedEnvNames(env, "codex"));
+  const redacted = redactSecrets(logPath, secrets) + redactSecrets(paths.wakesLog, secrets);
+  if (redacted > 0) log(`replaced ${redacted} key value(s) in the wake logs with [REDACTED]`);
+  log(`wake (herdr) ${ok ? "done" : result.code === 75 ? "DEFERRED" : "FAILED"} in ${Math.round(row.wall_ms / 1000)} s (exit ${result.code}; context ${growth?.contextTokens ?? "?"} tokens, ${growth?.compactions ?? 0} compaction(s)): ${(result.turn?.lastMessage ?? result.reason ?? "").replace(/\s+/g, " ").slice(0, 300)}`);
+  return result.code;
 }
 
 /* ---- other commands ----------------------------------------------------------------------------------------- */

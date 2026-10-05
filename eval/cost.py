@@ -9,6 +9,7 @@ import collections
 import csv
 import datetime as dt
 import json
+import itertools
 import pathlib
 
 FIELDS = ("input_tokens", "cache_hit_tokens", "cache_write_tokens", "output_tokens", "reasoning_tokens", "total_tokens")
@@ -128,7 +129,7 @@ def collect(root, config, claude_dir=None, codex_home=None):
             seen.add(identity)
         when = time(when)
         if not targets:
-            if not rid and when:
+            if not rid and when and not component.startswith("learner:"):
                 rid = next((r for start, end, r in reversed(intervals) if start <= when and end and when <= end), None)
             targets = [rid] if rid else [None]
         targets = list(dict.fromkeys(targets))
@@ -201,10 +202,18 @@ def collect(root, config, claude_dir=None, codex_home=None):
                 calls=num(s.get("turns")), ms=summary.get("wall_ms"), known=bool(s.get("tokens")), **common)
 
     wakes = collections.defaultdict(list)
-    for r in sources.rows(root / "ops/codex-ops/wakes.jsonl"):
-        if r.get("session"):
-            wakes[r["session"]].append(r)
+    wake_seen = set()
+    wake_paths = sorted((root / "ops/codex-ops").glob("wakes*.jsonl"))
+    if not wake_paths:
+        sources.cuts[str(root / "ops/codex-ops/wakes*.jsonl")] = None
+    for wake_path in wake_paths:
+        for r in sources.rows(wake_path):
+            identity = (r.get("session"), r.get("ts"), r.get("wall_ms"))
+            if r.get("session") and identity not in wake_seen:
+                wake_seen.add(identity)
+                wakes[r["session"]].append(r)
     for session, rows in wakes.items():
+        rows.sort(key=lambda r: time(r.get("ts")) or dt.datetime.min.replace(tzinfo=dt.timezone.utc))
         path = session_file(session)
         if path:
             for when, usage in cumulative_events(sources.rows(path)):
@@ -230,7 +239,9 @@ def collect(root, config, claude_dir=None, codex_home=None):
                     messages[identity] = r
     for r in messages.values():
         add("observer:claude", "claude", r.get("timestamp"), tokens(r["message"]["usage"], exclusive=True, creation_extra=True))
-    periods = quota_periods(sources.rows(root / "logs/subscription-usage-snapshots.jsonl"), config)
+    # Preserve the earlier append-only history while the scheduler writes the canonical log.
+    periods = quota_periods(itertools.chain(sources.rows(root / "logs/subscription-usage-snapshots.jsonl"),
+                                          sources.rows(root / "logs/codex-usage.jsonl")), config)
     for p in periods:
         matching = [e for e in events if e["provider"] == p["provider"] and e["ts"] and p["start"] <= e["ts"] <= p["observed"]]
         total = sum(e["total_tokens"] for e in matching)
@@ -302,7 +313,7 @@ def write_outputs(events, runs, sources, periods, config, out):
         def money(v):
             return "未知" if v is None else f"${v:.4f}"
         lines = [f"# {character}：token 与成本", "", "按组件、进阶、局与批次归集；CSV 保留未归属部分。缓存是输入子集，推理是输出子集，不重复计入总 token。",
-                 "学习批次服务多局时等分，不代表逐局实测。运维和观察按对局时间窗归属，窗外单列 unattributed。",
+                 "学习批次服务多局时等分，不代表逐局实测；未记录服务局号的批次保持未归属。运维和观察按对局时间窗归属，窗外单列 unattributed。",
                  "订阅为共享账户周额度估算，按月费 × 12 / 52 折周、按同一重置窗口内已记录 token 分摊；未观测到的账户外部用量无法单独扣除。",
                  "未知价格、失败/过期/未校验窗口不补零。金额只汇总已知部分，不能当作完整账单；每胜费用在零胜时未知。",
                  "Jev 历史总 token 取 runs，未记录输入/输出拆分；大脑仅归集 brain/codex-calls 留存的请求，早期没有这些日志的调用仍缺失。", "",

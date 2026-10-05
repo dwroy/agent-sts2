@@ -34,7 +34,7 @@ DEFAULT_MAX_ROWS = 200
 DEFAULT_TIMEOUT = 30.0
 CELL_CAP = 300
 # The views a query is expected to use, in the order --schema prints them (helpers follow).
-MAIN_VIEWS = ["runs", "floors", "fights", "turns", "decisions", "llm_calls", "run_plans", "run_config", "sl_attempts", "state_index", "frames"]
+MAIN_VIEWS = ["runs", "floors", "fights", "turns", "decisions", "llm_calls", "all_llm_calls", "component_calls", "run_plans", "run_config", "sl_attempts", "state_index", "frames"]
 ALLOWED = {"SELECT", "EXPLAIN"}
 
 
@@ -51,13 +51,19 @@ def connect(db, threads=4):
 
     if not os.path.exists(os.path.join(db, "manifest.json")):
         raise QueryError(f"no log database at {db}: run tools/logdb/sync.py first")
-    missing = [t for t in extract.TABLES if not os.path.exists(os.path.join(db, t, logsync.EMPTY))]
+    # Cost tables are optional until the first sync after an upgrade. Existing game queries must still bind.
+    optional = {"component_usage_raw"}
+    missing = [t for t in extract.TABLES if t not in optional and not os.path.exists(os.path.join(db, t, logsync.EMPTY))]
     if missing:
         # A table added after the database was last synced (its zero-row shard is written by the next sync).
         raise QueryError(f"the log database at {db} has no {', '.join(missing)} yet: run tools/logdb/sync.py once")
     con = duckdb.connect(config={"threads": threads})
     with open(os.path.join(HERE, "views.sql"), encoding="utf8") as handle:
         views = handle.read().replace("${DB}", db.replace("'", "''"))
+    for table in optional:
+        if not os.path.exists(os.path.join(db, table, logsync.EMPTY)):
+            read = f"SELECT * FROM read_parquet('{db.replace(chr(39), chr(39) * 2)}/{table}/*.parquet', union_by_name = true)"
+            views = views.replace(read, f"SELECT {logsync.select_list(table)} WHERE false")
     con.execute(views)
     con.execute("SET autoinstall_known_extensions = false")
     con.execute("SET autoload_known_extensions = false")

@@ -33,7 +33,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths  # noqa: E402
 from learner_checks import finish_write_batch, recheck_write_batch  # noqa: E402
-from learner_jobs import check_jobs, dispatch_write, pending  # noqa: E402
+from learner_jobs import check_jobs, dispatch_write, pending, start_learner  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
 SCRIPTS = os.path.dirname(os.path.abspath(__file__))  # this file's ops/ (the scripts)
@@ -155,17 +155,17 @@ def dispatch(state, runs, character, reason):
     batch_id = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     out_dir = os.path.join(DIR, "learner")
     os.makedirs(out_dir, exist_ok=True)
-    proc = subprocess.Popen(
-        ["bash", os.path.join(SCRIPTS, "codex-ops-learner.sh"), batch_id, ",".join(runs), character],
-        cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True,
-    )
-    state["batches"][batch_id] = {"runs": runs, "pid": proc.pid, "started": now_local(), "state": "running", "reason": reason, "character": character}
+    pid, pane = start_learner(["bash", os.path.join(SCRIPTS, "codex-ops-learner.sh"), batch_id, ",".join(runs), character],
+                              ROOT, SCRIPTS, DIR, f"learner-{batch_id}-postmortem")
+    state["batches"][batch_id] = {"runs": runs, "pid": pid, "started": now_local(), "state": "running", "reason": reason, "character": character}
+    if pane:
+        state["batches"][batch_id]["pane"] = pane
     for run in runs:
         info = state["runs"].setdefault(run, {"attempts": 0})
         info["attempts"] = info.get("attempts", 0) + 1
         info["batch"] = batch_id
         info.pop("retry_at", None)
-    return batch_id, proc.pid
+    return batch_id, pid
 
 
 def check_victories(character):

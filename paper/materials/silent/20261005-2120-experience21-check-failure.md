@@ -6,3 +6,5 @@
 - 运维决定派修复、保留上线：失败只在测试临时目录初始化，采样器21:15已有fresh周44%真实安全样本；不回滚经验.21或停止采样/对局/调度，不撤14项shipped历史。非阻塞纯测试问题已追加fix-queue-v4，局号/层/回合不适用，没有游戏知识或Roy新增待定。
 - 学习者需按Node临时目录API兼容正常未设置TMPDIR环境，并验证未设置/已设置两种环境，保留追加成功/失败、历史及脱敏检查；不放宽断言、删除用例、新增排除或仅给完整测试命令塞TMPDIR来掩盖。修复自测合入后，用新树补完整检查；旧树失败与此前沙箱通过历史均保留，不能把同树去重返回的旧结果记为重新验证。
 - 已运行完整命令`bash ops/codex-ops-do.sh fix-batch`，exit1、完整输出`{"dispatched": null}`；learner-status已确认20261005-204301-fix-batch/PID1552069在运行（成本归集/升级爆发），现有同树独占，不并发写或停止学习者，新队列供下一批自动派发。本轮不等待批次结束或轮询；派发处置已写收件箱，具体修复/实际上线及完整重测待后续完成事件。
+
+- 2026-10-05 22:10 22:06 learner-checks后续确认：经验.22批次20261005-211301-experience-update在修后固定树b248ad374edbe9dfd5dfc690e2ff7aa8cc3fbd55/发布d5a4f6fcbdb444ee026de83d7507d8dc8c6fb53b完整tsc+vitest exit0，228文件2820通过/2跳过，21:46:40开始562.58秒，原日志ops/codex-ops/learner/20261005-211301-experience-update.fallback-b248ad374edbe9dfd5dfc690e2ff7aa8cc3fbd55.checks.log。原21:20旧树ba54713b完整exit1和所有环境对照历史不改；TMPDIR本条新树完整补测完成，源/合后沙箱通过也保留，不重复派修。该检查覆盖固定d5a4f6fc已上线阶段，同fix-batch后续成本分层改动仍待最终事件的完整检查。

@@ -45,12 +45,19 @@ play_pids() {
 }
 cmdline() { tr '\0' ' ' < "/proc/$1/cmdline" 2>/dev/null; }
 tasklist() { (cd /mnt/c && timeout 30 "$WIN/tasklist.exe" /FO CSV /NH 2>/dev/null | tr -d '\r'); }
+# hosting <key> <env name> <default>: $<env name>, else "<key>=<value>" in $DIR/hosting (ops/learner_jobs.py hosting).
+hosting() {
+  local value="${!2:-}"
+  [ -z "$value" ] && [ -f "$DIR/hosting" ] && value=$(sed -n "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*\([a-z]*\).*/\1/p" "$DIR/hosting" | tail -1)
+  echo "${value:-$3}"
+}
 
 case "$action" in
   procs)
     ours || true
     [ -f "$DIR/autoplay.pid" ] && echo "autoplay.pid: $(cat "$DIR/autoplay.pid")"
     [ -f "$ROOT/ops/STOP" ] && echo "ops/STOP present"
+    [ -f "$DIR/herdr.json" ] && { echo "herdr panes:"; timeout 20 bash "$OPS/herdr-host.sh" status 2>&1 | tail -n +2; }
     exit 0 ;;
   stall-check)
     exec bash "$ROOT/ops/stall-check.sh" ;;
@@ -68,12 +75,21 @@ case "$action" in
     fi
     rm -f "$ROOT/ops/STOP"
     mkdir -p "$DIR"
-    setsid nohup bash "$ROOT/ops/autoplay.sh" > /dev/null 2>&1 < /dev/null &
-    pid=$!
-    echo "$pid" > "$DIR/autoplay.pid"
+    pid=""; where=""
+    # hosting autoplay=herdr (docs/codex-ops.md「herdr 托管」): in the herdr pane `autoplay`; the PID file is the same.
+    if [ "$(hosting autoplay CODEX_OPS_AUTOPLAY_HOST setsid)" = herdr ]; then
+      out=$(bash "$OPS/herdr-host.sh" run autoplay --pidfile "$DIR/autoplay.pid" -- bash "$ROOT/ops/autoplay.sh" 2>&1)
+      if [[ "$out" =~ ^([a-zA-Z0-9]+:p[0-9]+)\ ([0-9]+)$ ]]; then pid="${BASH_REMATCH[2]}"; where=" in herdr pane ${BASH_REMATCH[1]} (label autoplay)"
+      else echo "herdr unavailable or refused (${out:0:200}); starting with setsid"; fi
+    fi
+    if [ -z "$pid" ]; then
+      setsid nohup bash "$ROOT/ops/autoplay.sh" > /dev/null 2>&1 < /dev/null &
+      pid=$!
+      echo "$pid" > "$DIR/autoplay.pid"
+    fi
     sleep 2
     kill -0 "$pid" 2>/dev/null || { echo "autoplay (PID $pid) exited at once; see ops/autoplay.log"; exit 1; }
-    echo "autoplay started: PID $pid; live $(git -C "$LIVE" rev-parse --short HEAD 2>/dev/null); $(date '+%F %T')"
+    echo "autoplay started: PID $pid$where; live $(git -C "$LIVE" rev-parse --short HEAD 2>/dev/null); $(date '+%F %T')"
     exit 0 ;;
   autoplay-stop)
     pid=$(cat "$DIR/autoplay.pid" 2>/dev/null)

@@ -12,6 +12,7 @@ CREATE OR REPLACE VIEW decisions AS SELECT * FROM read_parquet('${DB}/decisions/
 CREATE OR REPLACE VIEW runs_raw AS SELECT * FROM read_parquet('${DB}/runs_raw/*.parquet', union_by_name = true);
 -- One row per model call: logs/deepseek-reasoning.jsonl (src 'deepseek-reasoning') and logs/brain.jsonl (src 'brain').
 CREATE OR REPLACE VIEW llm_calls_raw AS SELECT * FROM read_parquet('${DB}/llm_calls_raw/*.parquet', union_by_name = true);
+CREATE OR REPLACE VIEW component_usage_raw AS SELECT * FROM read_parquet('${DB}/component_usage_raw/*.parquet', union_by_name = true);
 -- One row per logs/run-plans.jsonl line.
 CREATE OR REPLACE VIEW run_plans AS SELECT * FROM read_parquet('${DB}/run_plans/*.parquet', union_by_name = true);
 -- One row per logs/run-config.jsonl line: the configuration a run was played with (src/telemetry/run-config.ts; a
@@ -338,3 +339,49 @@ SELECT c.* EXCLUDE (run_id),
   (c.src = 'brain' AND c.off IN (SELECT off FROM llm_call_dups)) AS duplicate
 FROM llm_calls_raw c
 ASOF LEFT JOIN run_spans s ON c.ts + INTERVAL 3 SECOND >= s.started;
+
+-- Counter snapshots are session-wide. Only a new high watermark contributes tokens.
+CREATE OR REPLACE VIEW component_counter_deltas AS
+SELECT u.* EXCLUDE (input_tokens, cache_hit_tokens, cache_write_tokens, output_tokens, reasoning_tokens),
+  greatest(0, input_tokens - coalesce(max(input_tokens) OVER prev, 0)) AS input_tokens,
+  greatest(0, cache_hit_tokens - coalesce(max(cache_hit_tokens) OVER prev, 0)) AS cache_hit_tokens,
+  greatest(0, cache_write_tokens - coalesce(max(cache_write_tokens) OVER prev, 0)) AS cache_write_tokens,
+  greatest(0, output_tokens - coalesce(max(output_tokens) OVER prev, 0)) AS output_tokens,
+  greatest(0, reasoning_tokens - coalesce(max(reasoning_tokens) OVER prev, 0)) AS reasoning_tokens
+FROM component_usage_raw u WHERE cumulative
+WINDOW prev AS (PARTITION BY session ORDER BY off ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING);
+
+-- Prefer rollouts to summaries; a resumed ops summary is cumulative, not another independent call.
+CREATE OR REPLACE VIEW component_calls AS
+WITH summaries AS (
+  SELECT * EXCLUDE (latency_ms, calls),
+    CASE WHEN component = 'ops:codex' THEN sum(latency_ms) OVER session_rows ELSE latency_ms END AS latency_ms,
+    CASE WHEN component = 'ops:codex' THEN count(*) OVER session_rows ELSE calls END AS calls
+  FROM component_usage_raw WHERE NOT cumulative
+  WINDOW session_rows AS (PARTITION BY component, session)
+  QUALIFY row_number() OVER (PARTITION BY component, session ORDER BY ts DESC NULLS LAST, src DESC, off DESC) = 1
+), summary_calls AS (
+  SELECT s.* REPLACE (
+    CASE WHEN EXISTS (SELECT 1 FROM component_counter_deltas d WHERE d.session = s.session) THEN 0 ELSE input_tokens END AS input_tokens,
+    CASE WHEN EXISTS (SELECT 1 FROM component_counter_deltas d WHERE d.session = s.session) THEN 0 ELSE cache_hit_tokens END AS cache_hit_tokens,
+    CASE WHEN EXISTS (SELECT 1 FROM component_counter_deltas d WHERE d.session = s.session) THEN 0 ELSE cache_write_tokens END AS cache_write_tokens,
+    CASE WHEN EXISTS (SELECT 1 FROM component_counter_deltas d WHERE d.session = s.session) THEN 0 ELSE output_tokens END AS output_tokens,
+    CASE WHEN EXISTS (SELECT 1 FROM component_counter_deltas d WHERE d.session = s.session) THEN 0 ELSE reasoning_tokens END AS reasoning_tokens,
+    CASE WHEN EXISTS (SELECT 1 FROM component_counter_deltas d WHERE d.session = s.session) THEN 0 ELSE calls END AS calls)
+  FROM summaries s
+)
+SELECT *, input_tokens + output_tokens AS total_tokens FROM component_counter_deltas WHERE input_tokens + output_tokens > 0
+UNION ALL BY NAME
+SELECT *, input_tokens + output_tokens AS total_tokens FROM summary_calls;
+
+-- One query can compare task/ops usage to game calls without changing existing game-only llm_calls semantics.
+CREATE OR REPLACE VIEW all_llm_calls AS
+SELECT 'brain:' || coalesce(engine, 'unknown') AS component, engine AS provider, ts, run_id,
+  CASE WHEN run_id IS NULL THEN [] ELSE [run_id] END AS run_ids, '' AS batch,
+  src, off, len, input_tokens, cache_hit_tokens, cache_write_tokens, output_tokens, reasoning_tokens, total_tokens,
+  1::BIGINT AS calls, latency_ms, input_tokens IS NOT NULL AS usage_recorded
+FROM llm_calls WHERE NOT duplicate
+UNION ALL BY NAME
+SELECT component, provider, ts, CASE WHEN len(run_ids) = 1 THEN run_ids[1] END AS run_id,
+  run_ids, batch, src, off, len, input_tokens, cache_hit_tokens, cache_write_tokens, output_tokens, reasoning_tokens,
+  total_tokens, calls, latency_ms, usage_recorded FROM component_calls;

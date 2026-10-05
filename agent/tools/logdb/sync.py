@@ -101,6 +101,8 @@ class LogDb:
         self.manifest_path = os.path.join(self.db, "manifest.json")
         self.con = None
         self.stats = {}
+        self.sources = dict(extract.SOURCES)
+        self.versions = dict(extract.VERSIONS)
 
     # -- small helpers
     def say(self, text):
@@ -221,8 +223,8 @@ class LogDb:
         rec = manifest["sources"].get(key)
         if rec is None:
             return
-        if rec.get("extractor") != extract.VERSIONS[key]:
-            return self.drop_source(manifest, key, f"extractor version {rec.get('extractor')} -> {extract.VERSIONS[key]}")
+        if rec.get("extractor") != self.versions[key]:
+            return self.drop_source(manifest, key, f"extractor version {rec.get('extractor')} -> {self.versions[key]}")
         if not os.path.exists(path):
             return self.drop_source(manifest, key, "file is gone")
         size = os.path.getsize(path)
@@ -241,12 +243,12 @@ class LogDb:
             return self.drop_source(manifest, key, "first line changed (file replaced)")
 
     def sync_source(self, manifest, key):
-        file_name, table, row_of = extract.SOURCES[key]
+        file_name, table, row_of = self.sources[key]
         path = os.path.join(self.logs, file_name)
         self.check_source(manifest, key, path)
         if not os.path.exists(path):
             return
-        rec = manifest["sources"].setdefault(key, {"file": file_name, "table": table, "extractor": extract.VERSIONS[key],
+        rec = manifest["sources"].setdefault(key, {"file": file_name, "table": table, "extractor": self.versions[key],
                                                    "offset": 0, "rows": 0, "bad": 0, "shards": []})
         size = os.path.getsize(path)
         start = rec["offset"]
@@ -351,8 +353,14 @@ class LogDb:
             started = time.time()
             self.ensure_layout()
             manifest = self.load_manifest()
+            dynamic = extract.component_usage.discover(self.logs)
+            self.sources.update(dynamic)
+            self.versions.update({key: 1 for key in dynamic})
+            for key in list(manifest["sources"]):
+                if key.startswith("usage-") and key not in dynamic:
+                    self.drop_source(manifest, key, "usage source is gone")
             self.remove_orphans(manifest)
-            for key in extract.SOURCES:
+            for key in self.sources:
                 self.sync_source(manifest, key)
             self.compact(manifest)
             self.save_manifest(manifest)
