@@ -1,6 +1,6 @@
 {
  "_about": "Outcome stats from our logs (tools/build-outcome-stats.py). Observational: a choice's numbers mix its effect with the situations it was made in. n = runs; low_n = n<5. boss_pass = share of those runs that beat the boss of the act the choice was made in; mean_floor = mean final floor of those runs. events: hp/max_hp/gold change = from the choice to the first decision on the next floor. by_ascension: one table per ascension (A8, A9 and each higher one with runs), each counted over that ascension's runs alone with its own baseline; a run reads its own ascension's table (before 2026-10-04 the file was the A8 table alone).",
- "generated": "2026-10-06T03:22:30",
+ "generated": "2026-10-06T04:07:15",
  "ascensions": [
   8,
   9
@@ -1231,14 +1231,18 @@
   "9": {
    "ascension": 9,
    "baseline": {
-    "runs": 1,
-    "mean_floor": 33.0,
+    "runs": 2,
+    "mean_floor": 35.5,
     "boss_pass_by_act": {
      "1": {
-      "n": 1,
+      "n": 2,
       "boss_pass": 1.0
      },
      "2": {
+      "n": 2,
+      "boss_pass": 0.5
+     },
+     "3": {
       "n": 1,
       "boss_pass": 0.0
      }
@@ -1274,13 +1278,29 @@
       }
      }
     },
+    "AFTERIMAGE": {
+     "name": "余像",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 1
+     }
+    },
     "ANTICIPATE": {
      "name": "预判",
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 33.0,
+        "n": 2,
+        "mean_floor": 35.5,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -1321,10 +1341,19 @@
         "boss_pass": 1.0,
         "low_n": true
        }
+      },
+      "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
       }
      },
      "sources": {
-      "SHOP": 1
+      "SHOP": 1,
+      "REWARD": 1
      }
     },
     "BACKSTAB": {
@@ -1343,14 +1372,43 @@
       "REWARD": 1
      }
     },
+    "BLADE_DANCE": {
+     "name": "刀刃之舞",
+     "by_act": {
+      "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 1
+     }
+    },
+    "BLADE_OF_INK": {
+     "name": "墨之刃",
+     "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     }
+    },
     "BLUR": {
      "name": "残影",
      "by_act": {
       "2": {
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 33.0,
-        "boss_pass": 0.0,
+        "n": 2,
+        "mean_floor": 35.5,
+        "boss_pass": 0.5,
         "low_n": true
        }
       }
@@ -1366,10 +1424,18 @@
         "boss_pass": 1.0,
         "low_n": true
        }
+      },
+      "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
       }
      },
      "sources": {
-      "SHOP": 1
+      "SHOP": 2
      }
     },
     "BURST": {
@@ -1388,9 +1454,33 @@
       "REWARD": 1
      }
     },
+    "CALCULATED_GAMBLE": {
+     "name": "计算下注",
+     "by_act": {
+      "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 1
+     }
+    },
     "CLOAK_AND_DAGGER": {
      "name": "斗篷与匕首",
      "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
       "2": {
        "offered_not_picked": {
         "n": 1,
@@ -1417,13 +1507,26 @@
       "EVENT": 1
      }
     },
+    "CORROSIVE_WAVE": {
+     "name": "腐蚀波",
+     "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     }
+    },
     "DAGGER_SPRAY": {
      "name": "匕首雨",
      "by_act": {
       "1": {
        "picked": {
-        "n": 1,
-        "mean_floor": 33.0,
+        "n": 2,
+        "mean_floor": 35.5,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -1435,10 +1538,18 @@
         "boss_pass": 0.0,
         "low_n": true
        }
+      },
+      "3": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       }
       }
      },
      "sources": {
-      "REWARD": 1
+      "REWARD": 2
      }
     },
     "DAGGER_THROW": {
@@ -1454,9 +1565,9 @@
       },
       "2": {
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 33.0,
-        "boss_pass": 0.0,
+        "n": 2,
+        "mean_floor": 35.5,
+        "boss_pass": 0.5,
         "low_n": true
        }
       }
@@ -1465,14 +1576,50 @@
     "DASH": {
      "name": "冲刺",
      "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
       "2": {
        "offered_not_picked": {
+        "n": 2,
+        "mean_floor": 35.5,
+        "boss_pass": 0.5,
+        "low_n": true
+       }
+      },
+      "3": {
+       "picked": {
         "n": 1,
-        "mean_floor": 33.0,
+        "mean_floor": 38.0,
         "boss_pass": 0.0,
         "low_n": true
        }
       }
+     },
+     "sources": {
+      "EVENT": 1,
+      "REWARD": 1
+     }
+    },
+    "DEADLY_POISON": {
+     "name": "致命毒药",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 1
      }
     },
     "DEFEND_SILENT": {
@@ -1495,6 +1642,12 @@
      "name": "偏折",
      "by_act": {
       "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       },
        "offered_not_picked": {
         "n": 1,
         "mean_floor": 33.0,
@@ -1512,7 +1665,7 @@
       }
      },
      "sources": {
-      "REWARD": 1
+      "REWARD": 2
      }
     },
     "DODGE_AND_ROLL": {
@@ -1531,13 +1684,69 @@
       "REWARD": 1
      }
     },
+    "ECHOING_SLASH": {
+     "name": "回响斩击",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
+      "2": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 1
+     }
+    },
+    "ESCAPE_PLAN": {
+     "name": "逃脱计划",
+     "by_act": {
+      "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 1
+     }
+    },
     "EXPOSE": {
      "name": "暴露",
      "by_act": {
       "1": {
        "picked": {
+        "n": 2,
+        "mean_floor": 35.5,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 2
+     }
+    },
+    "FAN_OF_KNIVES": {
+     "name": "刀扇",
+     "by_act": {
+      "2": {
+       "picked": {
         "n": 1,
-        "mean_floor": 33.0,
+        "mean_floor": 38.0,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -1592,13 +1801,26 @@
       }
      }
     },
+    "INFINITE_BLADES": {
+     "name": "无尽刀刃",
+     "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     }
+    },
     "LEADING_STRIKE": {
      "name": "先制打击",
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 33.0,
+        "n": 2,
+        "mean_floor": 35.5,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -1610,7 +1832,47 @@
         "boss_pass": 0.0,
         "low_n": true
        }
+      },
+      "3": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       }
       }
+     },
+     "sources": {
+      "REWARD": 1
+     }
+    },
+    "LEG_SWEEP": {
+     "name": "扫腿",
+     "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     }
+    },
+    "MASTER_PLANNER": {
+     "name": "谋划专家",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "EVENT": 1
      }
     },
     "MEMENTO_MORI": {
@@ -1636,17 +1898,49 @@
         "boss_pass": 1.0,
         "low_n": true
        }
+      },
+      "2": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
       }
      }
     },
     "NOXIOUS_FUMES": {
      "name": "毒雾",
      "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
       "2": {
        "picked": {
         "n": 1,
         "mean_floor": 33.0,
         "boss_pass": 0.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "REWARD": 2
+     }
+    },
+    "PIERCING_WAIL": {
+     "name": "尖啸",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
         "low_n": true
        }
       }
@@ -1663,6 +1957,14 @@
         "n": 1,
         "mean_floor": 33.0,
         "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
+      "3": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 0.0,
         "low_n": true
        }
       }
@@ -1685,6 +1987,12 @@
         "mean_floor": 33.0,
         "boss_pass": 0.0,
         "low_n": true
+       },
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
        }
       }
      },
@@ -1692,14 +2000,59 @@
       "REWARD": 2
      }
     },
-    "PREPARED": {
-     "name": "早有准备",
+    "PRECISE_CUT": {
+     "name": "精确切击",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "SHOP": 1
+     }
+    },
+    "PREDATOR": {
+     "name": "猎杀者",
      "by_act": {
       "2": {
        "offered_not_picked": {
         "n": 1,
-        "mean_floor": 33.0,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
+      "3": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
         "boss_pass": 0.0,
+        "low_n": true
+       }
+      }
+     }
+    },
+    "PREPARED": {
+     "name": "早有准备",
+     "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
+      "2": {
+       "offered_not_picked": {
+        "n": 2,
+        "mean_floor": 35.5,
+        "boss_pass": 0.5,
         "low_n": true
        }
       }
@@ -1718,9 +2071,30 @@
       }
      }
     },
+    "SERPENT_FORM": {
+     "name": "群蛇形态",
+     "by_act": {
+      "2": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     }
+    },
     "SLICE": {
      "name": "切割",
      "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
       "2": {
        "offered_not_picked": {
         "n": 1,
@@ -1736,8 +2110,8 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 33.0,
+        "n": 2,
+        "mean_floor": 35.5,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -1773,6 +2147,22 @@
       "EVENT": 1
      }
     },
+    "SUCKER_PUNCH": {
+     "name": "突然一拳",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "SHOP": 1
+     }
+    },
     "THE_HUNT": {
      "name": "狩猎",
      "by_act": {
@@ -1783,16 +2173,56 @@
         "boss_pass": 1.0,
         "low_n": true
        }
+      },
+      "2": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
       }
+     }
+    },
+    "ULTIMATE_DEFEND": {
+     "name": "究极防御",
+     "by_act": {
+      "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "EVENT": 1
      }
     },
     "UNTOUCHABLE": {
      "name": "触不可及",
      "by_act": {
-      "2": {
+      "1": {
        "offered_not_picked": {
         "n": 1,
-        "mean_floor": 33.0,
+        "mean_floor": 38.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      },
+      "2": {
+       "offered_not_picked": {
+        "n": 2,
+        "mean_floor": 35.5,
+        "boss_pass": 0.5,
+        "low_n": true
+       }
+      },
+      "3": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 38.0,
         "boss_pass": 0.0,
         "low_n": true
        }
@@ -1801,6 +2231,17 @@
     }
    },
    "relics": {
+    "ARCANE_SCROLL": {
+     "name": "奥术卷轴",
+     "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
     "CENTENNIAL_PUZZLE": {
      "name": "百年积木",
      "by_act": {
@@ -1812,6 +2253,39 @@
       }
      }
     },
+    "EMBER_TEA": {
+     "name": "余烬茶",
+     "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
+    "HORN_CLEAT": {
+     "name": "船夹板",
+     "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
+    "IRON_CLUB": {
+     "name": "铁棒",
+     "by_act": {
+      "3": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 0.0,
+       "low_n": true
+      }
+     }
+    },
     "LARGE_CAPSULE": {
      "name": "巨大扭蛋",
      "by_act": {
@@ -1819,6 +2293,17 @@
        "n": 1,
        "mean_floor": 33.0,
        "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
+    "LASTING_CANDY": {
+     "name": "吃不完的糖",
+     "by_act": {
+      "3": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 0.0,
        "low_n": true
       }
      }
@@ -1851,6 +2336,23 @@
       "1": {
        "n": 1,
        "mean_floor": 33.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      },
+      "2": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
+    "RED_MASK": {
+     "name": "红面具",
+     "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 38.0,
        "boss_pass": 1.0,
        "low_n": true
       }
@@ -1889,12 +2391,45 @@
       }
      }
     },
+    "THE_COURIER": {
+     "name": "送货员",
+     "by_act": {
+      "2": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
+    "TOASTY_MITTENS": {
+     "name": "烘焙手套",
+     "by_act": {
+      "2": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
     "VAJRA": {
      "name": "金刚杵",
      "by_act": {
       "1": {
        "n": 1,
        "mean_floor": 33.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
+    "VENERABLE_TEA_SET": {
+     "name": "古茶具套装",
+     "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 38.0,
        "boss_pass": 1.0,
        "low_n": true
       }
@@ -1910,9 +2445,80 @@
        "low_n": true
       }
      }
+    },
+    "WHETSTONE": {
+     "name": "磨刀石",
+     "by_act": {
+      "2": {
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
     }
    },
    "events": {
+    "AMALGAMATOR": {
+     "name": "熔合者",
+     "options": {
+      "COMBINE_DEFENDS": {
+       "title": "融合防御",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "COMBINE_STRIKES": {
+       "title": "融合打击",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
+    "BRAIN_LEECH": {
+     "name": "脑蛭",
+     "options": {
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "SHARE_KNOWLEDGE": {
+       "title": "分享知识",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
     "CRYSTAL_SPHERE": {
      "name": "水晶球",
      "options": {
@@ -1956,6 +2562,16 @@
     "NEOW": {
      "name": "涅奥",
      "options": {
+      "ARCANE_SCROLL": {
+       "title": "奥术卷轴",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
       "LARGE_CAPSULE": {
        "title": "巨大扭蛋",
        "n": 1,
@@ -1968,8 +2584,68 @@
       },
       "PROCEED": {
        "title": "Proceed",
+       "n": 2,
+       "mean_floor": 35.5,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
+    "ROUND_TEA_PARTY": {
+     "name": "圆桌茶会",
+     "options": {
+      "CONTINUE_FIGHT": {
+       "title": "继续",
        "n": 1,
-       "mean_floor": 33.0,
+       "mean_floor": 38.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": -11.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PICK_FIGHT": {
+       "title": "挑事斗殴",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": -11.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
+    "SELF_HELP_BOOK": {
+     "name": "自助指南",
+     "options": {
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "READ_ENTIRE_BOOK": {
+       "title": "读完整本书",
+       "n": 1,
+       "mean_floor": 38.0,
        "boss_pass": 1.0,
        "gold_change": 0.0,
        "hp_change": 0.0,
@@ -2028,14 +2704,74 @@
       }
      }
     },
+    "TANX": {
+     "name": "坦克斯",
+     "options": {
+      "IRON_CLUB": {
+       "title": "铁棒",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
+    "TEA_MASTER": {
+     "name": "茶艺大师",
+     "options": {
+      "EMBER_TEA": {
+       "title": "余烬茶",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": -150.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
     "TEZCATARA": {
      "name": "特兹卡塔拉",
      "options": {
       "PROCEED": {
        "title": "Proceed",
+       "n": 2,
+       "mean_floor": 35.5,
+       "boss_pass": 0.5,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "TOASTY_MITTENS": {
+       "title": "烘焙手套",
        "n": 1,
-       "mean_floor": 33.0,
-       "boss_pass": 0.0,
+       "mean_floor": 38.0,
+       "boss_pass": 1.0,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
