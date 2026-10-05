@@ -15,3 +15,35 @@ Test Files  232 passed (232)
    Start at  00:52:57
    Duration  541.02s (transform 7.02s, setup 10.70s, import 31.28s, tests 1013.21s, environment 22ms)
 ```
+
+- 2026-10-06 01:13 经验第二十六次增量兜底完成：固定学习者源`c2aba14f9a7a51fa3867360ac996a1e57b336463`→live实际合入`c7ca5d01614905357803b9c644f18ff80d9df703`、发布`8b2688581394344419420a0c341c498d07f03efc`/树`992b9c08c3fc68f57de6c743360e2d4ce2660dcb`，main同步`2472ffd921fe356e1ae5baf9adf8c73913e2759e`。唯一S1.exp26指实际合入，源179文件2030例与合后181文件2038例tsc0首过；知识刷新`000ab7927ba3e57fa786b7d5f593a6eed290ccd2`和全部非经验知识blob保持，main其余1829项源码/记录/论文表保持。不另审策略、不更改经验文字、不重跑相同源码检查。
+- 15项原learner proposed与15项ops shipped完整归档，`/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 134 item(s), 0 problem(s)`；first_run/prior/repeat历史保持，0130独立缺陷提案不混记经验上线或重置，0009本次仅经验证据并入，不冒作源码修复。silent学习曲线已刷新；0131与0132机制进入经验文本不等于模拟代码覆盖已实现，未覆盖项沿原队列由学习者处理。
+- 已调用`bash ops/codex-ops-do.sh learner-recheck 20261006-000206-experience-update`请求本经验独立完整外部检查，结果交后续learner-checks；不借本轮fix-batch的232文件2846通过/2跳过来冒记经验完成。原预检冲突/merged=null及所有旧失败/回退历史保持。无新Roy待定，不停对局/调度，不运行play。
+
+学习者源固定沙箱：`/home/dw/Projects/agent-sts2/learner/runs/20261006-000206-experience-update/test-source.log`，489字节，SHA256 `0edeabcb53b70e0163a8929e0640e60fe9243f9f002808c351713c53890df8cf`。
+
+```text
+Test Files  178 passed (178)
+      Tests  2019 passed (2019)
+   Start at  00:13:15
+   Duration  210.41s (transform 6.18s, setup 8.11s, import 20.01s, tests 789.44s, environment 18ms)
+
+Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  00:16:46
+   Duration  1.48s (transform 1.11s, setup 274ms, import 1.05s, tests 48ms, environment 0ms)
+```
+
+实际合入后固定沙箱：`/tmp/sts2-0101-live-sandbox.log`，491字节，SHA256 `cd0d37b0ea582de36bac805430772d8d2147c849e25660e02f9de23a82e07f53`。
+
+```text
+Test Files  180 passed (180)
+      Tests  2027 passed (2027)
+   Start at  01:08:04
+   Duration  216.97s (transform 7.13s, setup 8.25s, import 21.24s, tests 814.02s, environment 18ms)
+
+Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  01:11:41
+   Duration  1.42s (transform 1.07s, setup 280ms, import 993ms, tests 43ms, environment 0ms)
+```
