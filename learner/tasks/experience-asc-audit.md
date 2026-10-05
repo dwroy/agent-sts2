@@ -1,6 +1,7 @@
 ---
 title: 经验库进阶审核
 characters: ironclad
+effort.codex: high
 tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 300
 max_turns: 800
