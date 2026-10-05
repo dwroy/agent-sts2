@@ -316,6 +316,8 @@ export interface PlayerSim {
    * (9Q7V F17 T14: not read, Sword Boomerang planned at 18 dealt 36 and killed the Giant into its blast).
    */
   duplicateAttacks?: number;
+  /** Burst already up: the next Skill this turn is played once more (silent-0114/0115). */
+  duplicateSkills?: number;
   /** Regen already up (REGEN_POWER): healed at the end of this turn, before the enemy attacks. */
   regen?: number;
   /**
@@ -997,6 +999,8 @@ interface Sim {
   duplicate: number;
   /** One-Two Punch: the next N Attacks played resolve twice. */
   duplicateAttacks: number;
+  /** Burst: pending Skill replays for this turn only. */
+  duplicateSkills: number;
   /** Flame Barrier: damage back per enemy hit taken this turn. */
   retaliate: number;
   /** Rupture stacks active this turn (from the start or played this turn). */
@@ -1582,6 +1586,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (twice) next.duplicate -= 1;
   const twiceAttack = card.type === "Attack" && next.duplicateAttacks > 0;
   if (twiceAttack) next.duplicateAttacks -= 1;
+  const twiceSkill = card.type === "Skill" && next.duplicateSkills > 0;
+  if (twiceSkill) next.duplicateSkills -= 1;
   // Replay: the card is played again (its own Replay, Soldier's Stew on a Strike, Throwing Axe on the fight's first card),
   // energy paid once.
   const axe = card.type !== "Potion" && next.axeReplay;
@@ -1590,7 +1596,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // Every play of an Attack (a duplicate, a replay) is one for the attack-counting relics, each after its own play
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
-  const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + replays;
+  const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
   for (let play = 0; play < plays; play += 1) {
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
@@ -1622,6 +1628,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     enemy.skittish = 0;
   }
   if (card.special === "duplicate_next") next.duplicate += 1;
+  // Arm only after Burst's own play, so it does not consume its newly granted replay.
+  if (card.burst) next.duplicateSkills += 1;
   // One-Two Punch: its next Attacks are played twice (as ONE_TWO_PUNCH_POWER once up); Unrelenting: the next
   // Attack costs 0 (as FREE_ATTACK_POWER), granted after its own play took any free attack already up.
   if (card.special === "double_next_attacks") next.duplicateAttacks += card.nextAttacks ?? 1;
@@ -3259,7 +3267,8 @@ export function turnOnlyDrink(card: CardModel): boolean {
 const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 
 function simKey(sim: Sim): string {
-  const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
+  const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",")
+    + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
@@ -3384,6 +3393,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     bufferSpent: 0,
     duplicate: input.player.duplicate ?? 0,
     duplicateAttacks: input.player.duplicateAttacks ?? 0,
+    duplicateSkills: input.player.duplicateSkills ?? 0,
     retaliate: input.player.retaliate ?? 0,
     rupture: input.player.rupture ?? 0,
     facing: input.player.facing ?? null,
