@@ -647,6 +647,8 @@ export interface RolloutInput {
   };
   meta: FightMeta;
   playerPowers: Record<string, number>;
+  /** Observed Snecko Skull bonus for each Noxious Fumes application (silent-0086 / silent-0087). */
+  fumesPoisonBonus?: number;
   potions: number;
   mm: MoveModelData;
   model: FightValueModel | null;
@@ -1728,7 +1730,8 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   if (player.poisonPerTurn > 0) for (const enemy of enemies) {
     if (!enemy.alive || enemy.explodeAt !== undefined) continue;
     if (enemy.artifact > 0) enemy.artifact -= 1;
-    else enemy.poison += player.poisonPerTurn;
+    // 9YBKCNBFP0X5 F48 attempt 6 T6-T9: three Fumes layers apply four, without changing the power.
+    else enemy.poison += player.poisonPerTurn + (input.fumesPoisonBonus ?? 0);
   }
   const aoe = turnStartAoeOf(player);
   if (player.boulder > 0) player.boulder += BOULDER_STEP;
