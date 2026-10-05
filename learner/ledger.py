@@ -4,7 +4,7 @@
 One append-only JSONL file, paper/materials/learning/ledger.jsonl. Two row kinds:
   {"op": "add", ...}     a new learned item / finding (the full schema, README "add 行")
   {"op": "update", ...}  later changes to one item: status, more evidence, where it went, the shipped version,
-                         the later effect (README "update 行")
+                         the later effect or corrected provenance metadata (README "update 行")
 An item's current state is the fold of its add row and every update row after it, in file order. Nothing is ever
 rewritten: corrections are update rows too.
 
@@ -50,7 +50,7 @@ CLAIM_MAX = 800
 
 ADD_REQUIRED = ["character", "kind", "claim", "evidence", "first_run", "prior", "status", "by"]
 ADD_FIELDS = set(ADD_REQUIRED) | {"op", "id", "ts", "asc", "prior_note", "prior_runs", "where", "version", "note"}
-UPDATE_FIELDS = {"op", "id", "ts", "by", "status", "evidence", "where", "version", "effect", "note", "claim"}
+UPDATE_FIELDS = {"op", "id", "ts", "by", "status", "evidence", "where", "version", "effect", "note", "claim", "first_run", "asc", "prior_note"}
 EFFECT_FIELDS = {"runs_after", "applied", "outcome", "repeats_after", "audited", "by"}
 
 
@@ -221,6 +221,24 @@ def validate_update(row, runs, versions, items):
         problems.append(f"version: {row['version']} is not in eval/versions.json")
     if "claim" in row and (not isinstance(row["claim"], str) or not row["claim"] or len(row["claim"]) > CLAIM_MAX):
         problems.append(f"claim: a string of at most {CLAIM_MAX} characters")
+    if "prior_note" in row and (not isinstance(row["prior_note"], str) or not row["prior_note"].strip()):
+        problems.append("prior_note: a non-empty string")
+    if "first_run" in row or "asc" in row:
+        first = row.get("first_run", (item or {}).get("first_run"))
+        character = (item or {}).get("character")
+        check_evidence([{"run": first}], character, runs, problems, where="first_run")
+        evidence = (item or {}).get("evidence", []) + (row["evidence"] if isinstance(row.get("evidence"), list) else [])
+        if not isinstance(first, str) or first not in {ev.get("run") for ev in evidence if isinstance(ev, dict) and isinstance(ev.get("run"), str)}:
+            problems.append("first_run: must occur in the item's existing or appended evidence")
+        asc = row.get("asc", (item or {}).get("asc"))
+        if isinstance(asc, bool) or not isinstance(asc, int) or not 0 <= asc <= 20:
+            problems.append("asc: an integer 0-20")
+        known_asc = runs[first].get("ascension") if runs is not None and isinstance(first, str) and first in runs else None
+        if isinstance(known_asc, int) and not isinstance(known_asc, bool):
+            if asc != known_asc:
+                problems.append("asc: must match first_run's ascension in runs.jsonl")
+        elif "first_run" in row and "asc" not in row:
+            problems.append("asc: required when correcting first_run without run metadata")
     if "effect" in row:
         effect = row["effect"]
         if not isinstance(effect, dict) or set(effect) - EFFECT_FIELDS:
@@ -255,7 +273,7 @@ def apply(items, row):
     for key, values in (row.get("where") or {}).items():
         have = item["where"].setdefault(key, [])
         have.extend(v for v in values if v not in have)
-    for key in ("version", "claim"):
+    for key in ("version", "claim", "first_run", "asc", "prior_note"):
         if key in row:
             item[key] = row[key]
     if "effect" in row:
@@ -418,6 +436,11 @@ def append(op, rows, path=None):
                 if "asc" not in row:
                     found.append("asc: required (first_run is not in runs.jsonl)")
             else:
+                # Correcting the source also corrects its ascension; explicit mismatches are rejected below.
+                first = row.get("first_run")
+                known_asc = runs[first].get("ascension") if runs is not None and isinstance(first, str) and first in runs else None
+                if "asc" not in row and isinstance(known_asc, int) and not isinstance(known_asc, bool):
+                    row["asc"] = known_asc
                 found = validate_update(row, runs, versions, items)
             if found:
                 problems.extend(f"row {i + 1}: {p}" for p in found)
