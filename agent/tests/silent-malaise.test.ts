@@ -60,7 +60,7 @@ it("three X remains permanent after the existing temporary six Strength loss exp
   expect(records[2]!.loss).toBe(8);
 });
 
-it("keeps the unobserved upgrade outside the new model and leaves other skills unchanged", () => {
+it("keeps upgrades without the observed Silent context outside the model and leaves other skills unchanged", () => {
   expect(malaise(true)).toMatchObject({ special: null, known: false, flatValue: 3 });
   expect(modelHandCard({ card_id: "TEST_UNKNOWN", energy_cost: 0 }, 0,
     makeKnowledge({ cards: [{ id: "TEST_UNKNOWN", type: "Skill" }] }, "cache"))).toMatchObject({ known: false, flatValue: 3 });

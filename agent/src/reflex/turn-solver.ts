@@ -2074,9 +2074,11 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // In card-text order: Artifact blocks whichever lands first (Uppercut: Weak, then Vulnerable).
     if (card.special === "malaise") {
       // KAY522KT5NXR F12 T3 / XYYQYBRM2A01 F30 T1, silent-0051/0053: unupgraded X=1/3.
-      // Strength loss persists after temporary Wail restores; zero X applies neither debuff nor Artifact loss.
-      applyDebuff(enemy, "strengthLoss", cost);
-      next.weakApplied += applyDebuff(enemy, "weak", cost);
+      // LLYSRQQ35AVW F33 T3 / F38 T1 / F48 T2, silent-0144: the upgrade adds one beyond X.
+      // Strength loss persists after temporary Wail restores; unupgraded zero X applies neither debuff.
+      const amount = cost + (card.malaiseBonus ?? 0);
+      applyDebuff(enemy, "strengthLoss", amount);
+      next.weakApplied += applyDebuff(enemy, "weak", amount);
     } else if (card.weakFirst) {
       next.weakApplied += applyDebuff(enemy, "weak", card.weak);
       next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);

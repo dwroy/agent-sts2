@@ -42,6 +42,8 @@ export interface CardModel {
   upgraded: boolean;
   cost: number;
   xCost: boolean;
+  /** The observed Silent Malaise upgrade's extra debuff beyond energy spent (silent-0144). */
+  malaiseBonus?: number;
   playable: boolean;
   target: TargetMode;
   validTargets: number[];
@@ -818,7 +820,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // An X-cost Attack hitting X times (Skewer 「造成{Damage}点伤害X次」, Eradicate, Heavenly Drill) is Whirlwind's
   // single-target kin: X hits at play time. Without it Skewer was one hit whatever X was (ZRYR5WLG6E9K F39 T1: played
   // at 0 energy after Unrelenting+, counted 8 x1.5 into Vulnerable; planned 70, dealt 58).
-  const special = cardId === "MALAISE" && !bool(card["upgraded"]) && bool(card["costs_x"]) ? "malaise" :
+  // LLYSRQQ35AVW F33 T3 / F38 T1 / F48 T2, silent-0144: upgraded X=0/2/3 applies 1/3/4.
+  const upgradedMalaise = cardId === "MALAISE" && character.toLowerCase() === "silent" && bool(card["upgraded"]) &&
+    /^敌人失去X\+1点力量。给予X\+1层虚弱。(?:魂缚)?消耗。$/.test(str(card["resolved_rules_text"]).replace(/\s+/g, ""));
+  const special = cardId === "MALAISE" && (!bool(card["upgraded"]) || upgradedMalaise) && bool(card["costs_x"]) ? "malaise" :
     SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
 
   // Ambiguous or conditional vars, by id.
@@ -959,6 +964,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     upgraded: bool(card["upgraded"]),
     cost: num(card["energy_cost"]),
     xCost: bool(card["costs_x"]),
+    ...(special === "malaise" && upgradedMalaise ? { malaiseBonus: 1 } : {}),
     // Too expensive now is still in the search (it checks energy itself): energy gained this turn, or a
     // Touch of Insanity making it free, can pay for it.
     // The Gambit is never played: after it any unblocked hit is fatal (S780).
