@@ -62,3 +62,5 @@
 - 后两项3cd9fc6c/e3e7068b均不在main/live；两次live沙箱失败后学习者已回退live 452f7bc7、保留S1.exp12及七项刷新，0081/0082保持proposed。失败potion-cost.ts测试298/307行在同一快照的旧基线/新源码均2失败23通过，根因仅怀疑生成数据隔离，交学习者先修测试问题，不由运维修游戏模型、不直接合入codex-dev、不把源分支165/1957成功当live成功。
 - **更正11:02动作清单修复待合入方案**：固定061d1ca9仍只改ops/codex-ops-do.sh及docs/codex-ops.md，但它的父86b24a1f包含本批已撤回模型，当前非live祖先。禁止整枝merge step/061d1ca9或重跑旧/tmp/sts2-1054-deploy.py；下一manual从当前live另建独立工作树，只cherry-pick061d1ca9单提交的两文件差异，确认git diff-tree只有这两文件、代码与live其余路径等价，按live流程测试/合入并同步main。165/1957旧检查基线含撤回模型，不能冒充新基线合后检查。
 - 现时不能learner-recheck 20261005-094524-fix-batch：该动作要求整批全部源已在live，后两项不满足，禁止改回报/绕过校验。动作说明重放上线后可按既有交接对20261005-102754-experience-update补完整检查；本轮没有manual动作说明合入事件，不提前做该合入。
+
+- 2026-10-05 11:17 对11:12部分上线事件的修复补派结果：`bash ops/codex-ops-do.sh fix-batch` exit1、完整输出`{"dispatched": null}`，未派新任务；只读状态已存在20261005-111301-fix-batch、pid966833、running，codex-dev共享工作树被该批占用（并已见动作说明文件及新回归未提交）。只据此解释拒派，不处理该未到达完成事件、不改它的文件、不重试或等待；新potion-cost测试隔离待办保持主目录队列，后续批次按队列推进。
