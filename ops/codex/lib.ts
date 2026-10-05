@@ -229,6 +229,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "fix-batch": { args: 0, ms: 30_000 },
   "strategy-proposal": { args: 1, ms: 30_000 },
   "learner-merge": { args: 1, ms: 30_000 },
+  "learner-recheck": { args: 1, ms: 3_700_000 },
   "eval-metrics": { args: 2, ms: 600_000 },
   "learner-status": { args: 0, ms: 30_000 },
   "scheduler-status": { args: 0, ms: 30_000 },
@@ -257,6 +258,9 @@ export function validateRequest(raw: unknown): BrokerRequest {
   }
   if (action === "strategy-proposal" && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
     return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号" };
+  }
+  if (action === "learner-recheck" && !/^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$/.test(list[0]!)) {
+    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
   }
   return { ok: true, action, args: list };
 }

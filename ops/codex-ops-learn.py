@@ -31,7 +31,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths  # noqa: E402
-from learner_checks import finish_write_batch  # noqa: E402
+from learner_checks import finish_write_batch, recheck_write_batch  # noqa: E402
 from learner_jobs import check_jobs, dispatch_write, pending  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
@@ -379,6 +379,19 @@ def cmd_request_merge(args):
     return 0
 
 
+def cmd_recheck(args):
+    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)", args.batch):
+        return 2
+    state = load_state()
+    batch = state["batches"].get(args.batch)
+    if not batch or batch.get("state") == "running":
+        return 2
+    result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox)
+    save_state(state)
+    print(json.dumps({"batch": args.batch, "rc": result, "fallback_checks": batch.get("fallback_checks", [])}, ensure_ascii=False))
+    return result
+
+
 def cmd_status(args):
     state = load_state()
     busy = running_batch(state)
@@ -394,7 +407,7 @@ def cmd_status(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge"])
+    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck"])
     parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default="silent")
@@ -404,7 +417,7 @@ def main():
     args = parser.parse_args()
     args.character = character_key(args.character) or "silent"
     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
-               "write": cmd_write, "request-merge": cmd_request_merge}[args.command]
+               "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck}[args.command]
     os.makedirs(DIR, exist_ok=True)
     with open(os.path.join(DIR, "learn.lock"), "a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
