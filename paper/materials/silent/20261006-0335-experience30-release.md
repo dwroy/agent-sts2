@@ -45,3 +45,8 @@
   }
 ]
 ```
+
+- 2026-10-06 03:45 本轮完成：原26条proposed及第三十节changelog归档9e901eaa999095af05c4e8dbae77d66e16564d7f；main机械同步固定已测发布25a520d92d46d1d644a3ca14a05406a4a1246238/树50d1b0df8d4b0a218bf7a0f8c4cd500d15f67538的合并提交735ac4411310d375cc52c237997dfefa89989034。1002项源码/测试blob与已测发布相同，8项知识blob使用该发布（含19046402已提交的7项自动刷新），其余main最新2091项blob保持；decision-log唯一冲突已保留双方全部历史。未改live在线工作区。
+- CLI/by=ops登记33个唯一id为shipped/S1.exp30：第30批26项、第29批17项，其中10项重叠只登记一次，旧批独有7项0030/0069/0102/0140/0141/0142/0143随本次实际合入结案。原两个源和证据分别保留，没有独立S1.exp29，没有把旧A7/A0发现归A8。原first_run/prior/prior_note/evidence/repeat/claim/effect不变；0144仍observed、0051仍S1.fix5。
+- /home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 146 item(s), 0 problem(s)。静默学习曲线使用本轮提交账本快照生成，工作区其他原始账本行保留未重排，其他角色曲线及后台成本/ops/notes文件未加入提交；A8小结历史窗口与原CSV行保持，只追加窗口后上线状态。
+- 完整外部测试仍由调度器按本批checks_pending补跑，未声称通过；以前exp28/strategy4的完整预算断言失败及派发记录保持。本轮不停止对局/调度、无Roy新待定。

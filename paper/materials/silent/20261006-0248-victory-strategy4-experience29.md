@@ -81,3 +81,5 @@
 ## 2026-10-06 03:00 独立完整检查结果（02:57事件）
 
 完整固定live 6566b7d308947e1929cb398034dd8f02a1d1cb25/树298172c3021fbc4bdb6fc1b53f0a79e7b143fff3 exit1，rollout-live.test.ts:249:40 yg3h-f33-t1真实时钟2993>1800；234文件2861例通过/1失败/2跳过。checks_pending=false，完整结果为失败，原源/最终沙箱通过不替代此结果。选择保留S1.strategy4/0139真实shipped并派学习者核查；原SHA及字节、源码对照和优先队列见paper/materials/silent/20261006-0257-strategy4-full-check-failure.md。经验29原锁占用待办不在本事件中合入。
+
+- 2026-10-06 03:45 03:35完成事件后续结案：第29批.4源8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87已随第30批.5源0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd实际合入live 3a2a2a48ed594dea69b9c088edfe9259ac89bac8，固定已测发布25a520d92d46d1d644a3ca14a05406a4a1246238/树50d1b0df8d4b0a218bf7a0f8c4cd500d15f67538，唯一S1.exp30；main机械同步735ac4411310d375cc52c237997dfefa89989034。原17项提案随携带发布登记shipped/S1.exp30（与新26项重叠10项，合计33个id），0140/0141/0142/0143来源与首次进阶保持。此前预检冲突、忙锁和待合记录是当时事实，全部保留；未虚构独立S1.exp29。完整外部测试等第30批后续learner-checks；详情paper/materials/silent/20261006-0335-experience30-release.md。
