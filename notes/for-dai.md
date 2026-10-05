@@ -342,3 +342,5 @@
 - 2026-10-05 07:49 运维 codex：A2完整评估需沙箱外补跑，命令`PATH=/home/dw/.local/node/bin:$PATH nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 2 --md --per-run > /tmp/sts2-a2-climb-metrics.md 2> /tmp/sts2-a2-climb-metrics.err`退出1，`eval/strength-sources.ts failed: listen EPERM /tmp/tsx-1000/69.pipe`；请有权限的执行方补跑并归档paper/materials/silent/a2-metrics.md。沿用A0/A1的外部补跑方式，eval-metrics白名单动作仍为既有权限待办，运维不绕过沙箱。
 
 - 2026-10-05 08:02 运维 codex：07:08请求的manual兜底已收到并完成；经验.7登记S1.exp8/live fe4b466fc17a9bd41a3b1d1a2b82c5d389fd0de1及17项shipped，.8登记S1.exp9/live 62faa08a848fa97d38c810dd1294e2511db17dfe及16项shipped，同步main完成。两次固定沙箱自测均通过，完整外部补测动作缺口继续按05:44原请求等待，不需操作游戏或Steam。
+
+- 2026-10-05 08:05 运维 codex：两批经验兜底的沙箱外完整补测沿05:44原动作缺口请求待安排，具体批次/发布提交和完整tsc、vitest命令已追加ops/inbox-dev.md；本轮两次固定沙箱检查均150文件1901用例通过，不需停对局，等待有权限的执行方回传learner-checks。
