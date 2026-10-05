@@ -963,6 +963,7 @@ export interface Plan {
 }
 
 interface Sim {
+  pendingSelection?: boolean;
   hand: CardModel[];
   energy: number;
   hp: number;
@@ -1268,6 +1269,22 @@ function gambleWays(sim: Sim, brew: CardModel): CardModel[] {
   return ways;
 }
 
+/** Only the observed plain Hidden Daggers; upgrades and transformations keep their existing model. */
+function hiddenDaggers(card: CardModel): boolean {
+  return card.cardId === "HIDDEN_DAGGERS" && !card.upgraded && card.discardCount === 2;
+}
+
+/** Every pair is a reference outcome; the live discard selection remains Jev's decision. */
+function hiddenDaggerWays(sim: Sim, card: CardModel): CardModel[] {
+  const cards = [...sim.hand, ...sim.held, ...sim.locked].filter((entry) => entry !== card && entry.type !== "Potion");
+  const ways: CardModel[] = [];
+  for (let i = 0; i < cards.length; i += 1) {
+    for (let j = i + 1; j < cards.length; j += 1) ways.push({ ...card, discards: [cards[i]!.key, cards[j]!.key] });
+  }
+  // Short hands and absent Shiv metadata have no verified continuation; still offer the card itself.
+  return ways.length > 0 ? ways : [card];
+}
+
 /**
  * The ways to drink a card-choice potion (one Monte Carlo sample of its offer): one per card offered, that
  * card taken into the hand (free this turn), the step named for it.
@@ -1542,6 +1559,7 @@ function unconditioned(card: CardModel): CardModel {
 
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
+  if (sim.pendingSelection) return null;
   // Stomp: 1 less per Attack played earlier in this plan (8XQM F48 T8: Pommel Strike+ and Strike
   // first make it cost 1; played first at 3, the lethal line was never found).
   const cost =
@@ -1564,8 +1582,21 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   const next = clone(sim);
   // A Gambler's Brew way (or a card-choice potion's pick) is a copy of the belt's potion: the potion
   // leaves the hand by its key.
-  next.hand = sim.hand.filter((entry) => entry !== card && !(card.type === "Potion" && entry.key === card.key));
-  const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
+  const hidden = hiddenDaggers(card);
+  next.hand = sim.hand.filter((entry) => entry !== card && !((card.type === "Potion" || hidden) && entry.key === card.key));
+  const discardPool = hidden ? [...next.hand, ...next.held, ...next.locked] : sim.hand;
+  const discarded = card.discards ? discardPool.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
+  if (hidden) {
+    if (!card.adds || new Set(card.discards).size !== 2 || discarded.length !== 2) {
+      next.pendingSelection = true;
+      next.unknown = [...next.unknown, `${card.name}（弃牌或生成牌未验证）`];
+    } else {
+      const leaves = new Set(card.discards);
+      next.hand = next.hand.filter((entry) => !leaves.has(entry.key));
+      next.held = next.held.filter((entry) => !leaves.has(entry.key));
+      next.locked = next.locked.filter((entry) => !leaves.has(entry.key));
+    }
+  }
   let redraw = 0;
   if (card.discardsHand) {
     discarded.push(...[...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").map((entry) => entry.cardId));
@@ -1601,6 +1632,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  // The evidence covers one play; repeated discard/generation selections need their own observation.
+  if (hidden && plays > 1) {
+    next.pendingSelection = true;
+    next.unknown = [...next.unknown, `${card.name}（重放弃牌未验证）`];
+  }
   for (let play = 0; play < plays; play += 1) {
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
@@ -1736,7 +1772,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       name: card.name,
       target: card.target === "single" ? target : null,
       targetName: card.target === "single" && targetEnemy ? targetEnemy.name : null,
-      ...(card.discards || card.discardsHand ? { discards: discarded } : {}),
+      ...(hidden || card.discards || card.discardsHand ? { discards: discarded } : {}),
       ...(card.type === "Potion" && card.generates?.pileCard ? { takes: card.generates.pileCard } : {}),
       ...(card.pileCard ? { pileCard: card.pileCard } : {}),
     },
@@ -1888,7 +1924,14 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.plating += card.plating ?? 0;
   }
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
-  if (card.adds) addToHand(next, card.adds, player.handLimit);
+  if (card.adds && !next.pendingSelection && (card.discardCount === undefined || hiddenDaggers(card))) {
+    const adds = hiddenDaggers(card) ? card.adds.map((shiv, i) => ({
+      ...shiv, index: 2_000_000 + next.steps.length * 2 + i, key: `${card.key}~shiv${next.steps.length}:${i}`,
+      validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),
+      damage: shiv.damageBase === undefined ? shiv.damage : Math.floor(ourAttackScaled(shiv.damageBase + (player.strengthNow ?? 0), player.weak, false)),
+    })) : card.adds;
+    addToHand(next, adds, player.handLimit);
+  }
   if (card.drawn && card.special !== "gamble" && card.special !== "chaos" && card.special !== "glowwater" && card.special !== "bottled") drawCards(next, card.drawn, player);
   // Snecko Oil: every card in hand (and those it draws) costs 0-3 at random this turn (a sample: its own
   // costs; else the expected SNECKO_COST).
@@ -3339,7 +3382,18 @@ function replay(input: SolverInput, weights: Weights, steps: Step[]): Plan | nul
   for (const step of steps) {
     const card = sim.hand.find((entry) => entry.index === step.cardIndex);
     if (!card) return null;
-    const next = play(sim, card, step.target, input.player);
+    let chosen = card;
+    if (hiddenDaggers(card) && step.discards) {
+      const pool = [...sim.hand, ...sim.held, ...sim.locked].filter((entry) => entry.key !== card.key && entry.type !== "Potion");
+      const discards: string[] = [];
+      for (const id of step.discards) {
+        const at = pool.findIndex((entry) => entry.cardId === id);
+        if (at < 0) return null;
+        discards.push(pool.splice(at, 1)[0]!.key);
+      }
+      chosen = { ...card, discards };
+    }
+    const next = play(sim, chosen, step.target, input.player);
     if (!next) return null;
     sim = next;
   }
@@ -3512,7 +3566,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
     // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
@@ -3543,7 +3597,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
     const skillsLeft = input.player.maxSkills === null || input.player.maxSkills === undefined ? Infinity : input.player.maxSkills - sim.skillsPlayed;
-    for (const card of sim.hand.flatMap((entry) => (entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
+    for (const card of sim.hand.flatMap((entry) => (hiddenDaggers(entry) ? hiddenDaggerWays(sim, entry) : entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
       if (card.type !== "Potion" && playsLeft <= 0) continue;
       if (card.type === "Skill" && skillsLeft <= 0) continue;
       if (input.firstKey !== undefined && sim.steps.length === 0 && card.key !== input.firstKey) continue;

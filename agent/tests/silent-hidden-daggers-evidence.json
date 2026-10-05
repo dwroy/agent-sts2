@@ -1,0 +1,946 @@
+[
+  {
+    "run": "10GPK5XGHCK3",
+    "floor": 9,
+    "turn": 5,
+    "phase": "before",
+    "ts": "2026-10-04T23:51:14.685Z",
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "DAGGER_THROW",
+        "name": "投掷匕首",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0,
+          1,
+          2
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 抽1张牌。 丢弃1张牌。",
+        "resolved_rules_text": "造成9点伤害。 抽1张牌。 丢弃1张牌。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 1,
+        "card_id": "HIDDEN_DAGGERS",
+        "name": "隐秘匕首",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
+        "resolved_rules_text": "丢弃2张牌。 将2张小刀加入你的手牌。",
+        "dynamic_values": [
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Shivs",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 2,
+        "card_id": "SURVIVOR",
+        "name": "生存者",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
+        "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 8,
+            "current_value": 8,
+            "enchanted_value": 8,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 3,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 4,
+        "card_id": "RICOCHET",
+        "name": "连续反弹",
+        "energy_cost": 2,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "RandomEnemy",
+        "valid_target_indices": [],
+        "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+        "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Repeat",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      }
+    ]
+  },
+  {
+    "run": "10GPK5XGHCK3",
+    "floor": 9,
+    "turn": 5,
+    "phase": "after",
+    "ts": "2026-10-04T23:51:20.085Z",
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "DAGGER_THROW",
+        "name": "投掷匕首",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0,
+          1,
+          2
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 抽1张牌。 丢弃1张牌。",
+        "resolved_rules_text": "造成9点伤害。 抽1张牌。 丢弃1张牌。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 1,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 2,
+        "card_id": "SHIV",
+        "name": "小刀",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0,
+          1,
+          2
+        ],
+        "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成4点伤害。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null
+      },
+      {
+        "index": 3,
+        "card_id": "SHIV",
+        "name": "小刀",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0,
+          1,
+          2
+        ],
+        "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成4点伤害。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null
+      }
+    ]
+  },
+  {
+    "run": "MGA0CZDDKC0P",
+    "floor": 17,
+    "turn": 2,
+    "phase": "before",
+    "ts": "2026-10-05T21:09:06.295Z",
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "SNAKEBITE",
+        "name": "蛇咬",
+        "energy_cost": 2,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "保留。 给予7层中毒。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 7,
+            "current_value": 7,
+            "enchanted_value": 7,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 1,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成6点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 2,
+        "card_id": "SUCKER_PUNCH",
+        "name": "突然一拳",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成8点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 8,
+            "current_value": 8,
+            "enchanted_value": 8,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 3,
+        "card_id": "HIDDEN_DAGGERS",
+        "name": "隐秘匕首",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
+        "resolved_rules_text": "丢弃2张牌。 将2张小刀加入你的手牌。",
+        "dynamic_values": [
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Shivs",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 4,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 5,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      }
+    ]
+  },
+  {
+    "run": "MGA0CZDDKC0P",
+    "floor": 17,
+    "turn": 2,
+    "phase": "after",
+    "ts": "2026-10-05T21:09:08.660Z",
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "SUCKER_PUNCH",
+        "name": "突然一拳",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成8点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 8,
+            "current_value": 8,
+            "enchanted_value": 8,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 1,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 2,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 3,
+        "card_id": "SHIV",
+        "name": "小刀",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成4点伤害。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null
+      },
+      {
+        "index": 4,
+        "card_id": "SHIV",
+        "name": "小刀",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成4点伤害。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null
+      }
+    ]
+  },
+  {
+    "run": "MGA0CZDDKC0P",
+    "floor": 17,
+    "turn": 3,
+    "phase": "before",
+    "ts": "2026-10-05T21:13:20.005Z",
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击+",
+        "energy_cost": 1,
+        "upgraded": true,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成9点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 1,
+        "card_id": "MEMENTO_MORI",
+        "name": "铭记死亡",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 本回合每丢弃过一张牌，则增加{ExtraDamage:diff()}点额外伤害。",
+        "resolved_rules_text": "造成9点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。",
+        "dynamic_values": [
+          {
+            "name": "CalculatedDamage",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "ExtraDamage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 2,
+        "card_id": "DAGGER_THROW",
+        "name": "投掷匕首",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 抽1张牌。 丢弃1张牌。",
+        "resolved_rules_text": "造成9点伤害。 抽1张牌。 丢弃1张牌。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 3,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      },
+      {
+        "index": 4,
+        "card_id": "HIDDEN_DAGGERS",
+        "name": "隐秘匕首",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": false,
+        "target_type": "Self",
+        "valid_target_indices": [],
+        "rules_text": "丢弃{Cards:diff()}张牌。 将{Shivs:diff()}张{IfUpgraded:show:小刀+|小刀}加入你的手牌。",
+        "resolved_rules_text": "丢弃2张牌。 将2张小刀加入你的手牌。",
+        "dynamic_values": [
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Shivs",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Skill"
+      }
+    ]
+  },
+  {
+    "run": "MGA0CZDDKC0P",
+    "floor": 17,
+    "turn": 3,
+    "phase": "after",
+    "ts": "2026-10-05T21:13:22.387Z",
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "MEMENTO_MORI",
+        "name": "铭记死亡",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 本回合每丢弃过一张牌，则增加{ExtraDamage:diff()}点额外伤害。",
+        "resolved_rules_text": "造成17点伤害。 本回合每丢弃过一张牌，则增加4点额外伤害。",
+        "dynamic_values": [
+          {
+            "name": "CalculatedDamage",
+            "base_value": 9,
+            "current_value": 17,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "ExtraDamage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 1,
+        "card_id": "DAGGER_THROW",
+        "name": "投掷匕首",
+        "energy_cost": 1,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "造成{Damage:diff()}点伤害。 抽1张牌。 丢弃1张牌。",
+        "resolved_rules_text": "造成9点伤害。 抽1张牌。 丢弃1张牌。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 9,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null,
+        "card_type": "Attack"
+      },
+      {
+        "index": 2,
+        "card_id": "SHIV",
+        "name": "小刀",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成4点伤害。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null
+      },
+      {
+        "index": 3,
+        "card_id": "SHIV",
+        "name": "小刀",
+        "energy_cost": 0,
+        "upgraded": false,
+        "playable": true,
+        "requires_target": true,
+        "target_type": "AnyEnemy",
+        "valid_target_indices": [
+          0
+        ],
+        "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成4点伤害。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "unplayable_reason": null,
+        "unplayable_preventer_id": null
+      }
+    ]
+  }
+]
