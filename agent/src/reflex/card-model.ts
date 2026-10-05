@@ -84,6 +84,8 @@ export interface CardModel {
   discardsHand?: boolean;
   /** Calculated Gamble draws as many cards as it actually discarded (silent-0081). */
   drawDiscardedHand?: boolean;
+  /** Observed plain Silent Hidden Daggers: discard two before adding two Shivs (silent-0153/0154). */
+  discardCount?: number;
   doubleDamageNext?: boolean;
   /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
   poison?: number;
@@ -878,7 +880,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // R0HEV5E3QT6G F29 T2 / F48 T4: the unupgraded Shadow Step has a dormant Cards=3 var, but no draw.
   const shadowStep = cardId === "SHADOW_STEP" && !bool(card["upgraded"]);
   const calculatedGamble = cardId === "CALCULATED_GAMBLE" && !bool(card["upgraded"]);
-  const draw = shadowStep || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
+    dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
+  const draw = hiddenDaggers || shadowStep || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
@@ -897,10 +901,22 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble;
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
+  let adds: CardModel[] | undefined;
+  if (hiddenDaggers) {
+    // 10GPK5XGHCK3 F9 T5 / MGA0CZDDKC0P F17 retry T3: these are made, not drawn or played immediately.
+    const shiv = knowledge.card("SHIV");
+    const base = shiv ? dyn({ dynamic_values: shiv.vars }, "Damage") ?? shiv.damage : null;
+    known = shiv !== null && base !== null;
+    if (shiv && base !== null) adds = Array.from({ length: 2 }, (_, i) => modelHandCard({
+      index: i, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
+      requires_target: true, target_type: "AnyEnemy", rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
+      dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
+    }, i, knowledge, character));
+  }
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
@@ -1017,6 +1033,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     special,
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
     ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
+    ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
