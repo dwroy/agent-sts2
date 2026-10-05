@@ -2769,6 +2769,8 @@ function simulate(
       ...base,
       // 10GPK5XGHCK3 F42, silent-0075: the decision turn's Shadowmeld has expired.
       shadowmeldActive: false,
+      // 10GPK5XGHCK3 F37/F48, silent-0074: Wave never poisons later turns' draws.
+      corrosiveWave: 0,
       hp: player.hp,
       block: player.block,
       energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + (fullFight ? fightRelicEnergyAt(input, (s.turn ?? input.meta.t) + h) + carried : 0) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),

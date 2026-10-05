@@ -444,6 +444,8 @@ export interface PlayerSim {
   unmovableArmed?: boolean;
   /** Shadowmeld already up: hand card Block is already doubled in the mod's values. */
   shadowmeldActive?: boolean;
+  /** Current CORROSIVE_WAVE_POWER from the observed player state; expires this turn. */
+  corrosiveWave?: number;
   /** Strength at the start of the turn (STRENGTH_POWER), for rounding Weak damage once from the base. */
   strengthNow?: number;
   /**
@@ -968,6 +970,7 @@ interface Sim {
   tempDex: number;
   /** Shadowmeld newly played within this line; never carried into a later turn. */
   shadowmeld: boolean;
+  corrosiveWave: number;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
   intangible: boolean;
   /** Buffer stacks up (already up plus gained this turn): each negates one HP loss, ours or an enemy hit. */
@@ -2047,6 +2050,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.type === "Potion" && !turnOnlyDrink(card)) next.lastingDrinks += 1;
   if (card.type === "Potion") next.potionCost += card.potionCost ?? 0;
   else next.flat += card.flatValue;
+  // 10GPK5XGHCK3 F37 T8 / F48 T6, silent-0074: one observed Wave establishes two per draw.
+  // Do not guess how repeated Wave plays stack; an already observed larger amount remains a fact.
+  next.corrosiveWave = Math.max(next.corrosiveWave, card.corrosiveWave ?? 0);
   if (card.draw > 0) drawExpected(next, card.draw, player);
   // Damage to us (Foul Potion, Galvanic's 「受到6点伤害」): like an enemy hit, block first, Intangible caps it at 1, the
   // rest is HP lost. Last, as the card text puts it: a Power played under Galvanic is up when its 6 lands (8L29N792FA45
@@ -2079,6 +2085,7 @@ function drawExpected(next: Sim, count: number, player: PlayerSim): void {
   // What lands in the hand: no more than the piles hold, nor past the 10-card hand.
   const room = Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn);
   const handSpace = Math.max(0, (player.handLimit ?? HAND_LIMIT) - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand);
+  poisonDraws(next, Math.min(count, room, handSpace));
   next.drawnInHand += Math.min(count, room, handSpace);
   next.cardsDrawn += count;
   next.draws = [...next.draws];
@@ -2199,9 +2206,19 @@ function drawCards(sim: Sim, cards: CardModel[], player: PlayerSim, reshuffled =
   const room = reshuffled ? cards.length : Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - sim.cardsDrawn);
   // Hellraiser: a Strike drawn plays itself, free, at a random enemy (the rollout's hellraised card, a4f3795).
   const taken = cards.slice(0, Math.min(cards.length, room)).map((card) => (sim.hellraiser && isStrikeCard(card) ? hellraised(card) : card));
+  const space = Math.max(0, (player.handLimit ?? HAND_LIMIT) - sim.hand.filter((entry) => entry.type !== "Potion").length - sim.held.length - sim.drawnInHand);
+  poisonDraws(sim, Math.min(taken.length, space));
   addToHand(sim, taken, player.handLimit);
   sim.cardsDrawn += taken.length;
   sim.pileDrawn += taken.length;
+}
+
+/** Only cards actually drawn into available hand space trigger the independently observed Wave effect. */
+function poisonDraws(sim: Sim, count: number): void {
+  if (sim.corrosiveWave <= 0) return;
+  for (let i = 0; i < count; i += 1) {
+    for (const enemy of sim.enemies) if (enemy.alive) applyDebuff(enemy, "poison", sim.corrosiveWave);
+  }
 }
 
 function gainBlock(sim: Sim, amount: number, player: PlayerSim): void {
@@ -3194,7 +3211,7 @@ function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const poisonKey = sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "";
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3306,6 +3323,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     flat: 0,
     tempDex: 0,
     shadowmeld: false,
+    corrosiveWave: input.player.corrosiveWave ?? 0,
     intangible: false,
     buffer: input.player.buffer ?? 0,
     bufferSpent: 0,
