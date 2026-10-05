@@ -67,7 +67,7 @@ function stolenModel(env: DecisionEnv, card: MissingCard) {
   const own = card.upgraded && cardUpgrade(card.id) ? (upgradedEntry(raw) ?? raw) : raw;
   // Spiked Gauntlets: a Power 1 more, as the simulation's deck (rollout-live deckModels).
   const powerExtraCost = pilePowerExtraCost(asArray(asRecord(env.state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
-  return offHandCardModel(own, card.id, card.upgraded, 990, env.knowledge, null, powerExtraCost);
+  return offHandCardModel(own, card.id, card.upgraded, 990, env.knowledge, null, powerExtraCost, str(asRecord(env.state.run?.raw)["character_id"]));
 }
 
 /**

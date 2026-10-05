@@ -675,8 +675,10 @@ export interface SolverInput {
    * turn, no revive held, is not extended (the game ends it there; its later plays cannot save it).
    */
   stopAtOwnDeath?: boolean;
-  /** SL judge only: a Date.now() time past which the search stops, cut short (SolveResult.truncated and timedOut). */
+  /** A time past which the search stops, cut short (SolveResult.truncated and timedOut). */
   deadline?: number;
+  /** The deadline's clock; SL callers use Date.now(), rollouts use their monotonic budget clock. */
+  deadlineNow?: () => number;
   /**
    * SL judge only: the search stops at the first line that does not die (SolveResult.lives): the judge only asks whether
    * every line dies. The plans found so far are returned as they are.
@@ -2072,9 +2074,11 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // In card-text order: Artifact blocks whichever lands first (Uppercut: Weak, then Vulnerable).
     if (card.special === "malaise") {
       // KAY522KT5NXR F12 T3 / XYYQYBRM2A01 F30 T1, silent-0051/0053: unupgraded X=1/3.
-      // Strength loss persists after temporary Wail restores; zero X applies neither debuff nor Artifact loss.
-      applyDebuff(enemy, "strengthLoss", cost);
-      next.weakApplied += applyDebuff(enemy, "weak", cost);
+      // LLYSRQQ35AVW F33 T3 / F38 T1 / F48 T2, silent-0144: the upgrade adds one beyond X.
+      // Strength loss persists after temporary Wail restores; unupgraded zero X applies neither debuff.
+      const amount = cost + (card.malaiseBonus ?? 0);
+      applyDebuff(enemy, "strengthLoss", amount);
+      next.weakApplied += applyDebuff(enemy, "weak", amount);
     } else if (card.weakFirst) {
       next.weakApplied += applyDebuff(enemy, "weak", card.weak);
       next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
@@ -3518,7 +3522,7 @@ export function solveTurn(input: SolverInput): SolveResult {
       truncated = true;
       return;
     }
-    if (input.deadline !== undefined && nodes % 64 === 0 && Date.now() > input.deadline) {
+    if (input.deadline !== undefined && nodes % 64 === 0 && (input.deadlineNow ?? Date.now)() > input.deadline) {
       truncated = true;
       timedOut = true;
       return;

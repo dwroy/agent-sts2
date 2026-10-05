@@ -1,0 +1,81 @@
+{
+  "source": {
+    "run": "2PVLGRBGUX9S",
+    "floor": 48,
+    "turn": 11,
+    "ts": "2026-10-05T16:57:14.396Z",
+    "ledger": "silent-0137"
+  },
+  "card": {
+    "index": 1,
+    "card_id": "CORROSIVE_WAVE",
+    "name": "腐蚀波+",
+    "upgraded": true,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "打出此牌后，你在本回合每抽到一张牌，就给予所有敌人{CorrosiveWave:diff()}层中毒。",
+    "resolved_rules_text": "打出此牌后，你在本回合每抽到一张牌，就给予所有敌人3层中毒。",
+    "dynamic_values": [
+      {
+        "name": "CorrosiveWave",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "backflip": {
+    "index": 3,
+    "card_id": "BACKFLIP",
+    "name": "后空翻",
+    "upgraded": false,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+    "resolved_rules_text": "获得10点格挡。 抽2张牌。",
+    "dynamic_values": [
+      {
+        "name": "Block",
+        "base_value": 5,
+        "current_value": 10,
+        "enchanted_value": 5,
+        "is_modified": true,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Cards",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  }
+}

@@ -160,7 +160,7 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
   const withDraw = (draw: CardModel[]): Partial<RolloutInput> => ({ piles: { ...base.piles, draw } });
   // Spiked Gauntlets: an added or upgraded Power 1 more, as the deck's (rollout-live deckModels).
   const powerExtraCost = pilePowerExtraCost(asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
-  const newCard = (own: Record<string, unknown> | null, cardId: string, upgraded: boolean): CardModel => offHandCardModel(own, cardId, upgraded, 990 + (added += 1), knowledge, null, powerExtraCost);
+  const newCard = (own: Record<string, unknown> | null, cardId: string, upgraded: boolean): CardModel => offHandCardModel(own, cardId, upgraded, 990 + (added += 1), knowledge, null, powerExtraCost, character);
   const positionOfKey = (cardKey: string): number => deck.findIndex((card, p) => `c${numOrNull(card["index"]) ?? p}` === cardKey);
   const positionOf = (card: Record<string, unknown>): number => deck.findIndex((own) => sameCard(own, cardIdentity(card)));
   const draw = base.piles.draw;
@@ -168,7 +168,7 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
   const upgradeAt = (p: number): { change: Partial<RolloutInput>; note?: string } => {
     const own = deck[p]!;
     const up = upgradedEntry(own);
-    const model = offHandCardModel(up ?? { ...own, upgraded: true }, str(own["card_id"]), true, 900 + p, knowledge, null, powerExtraCost);
+    const model = offHandCardModel(up ?? { ...own, upgraded: true }, str(own["card_id"]), true, 900 + p, knowledge, null, powerExtraCost, character);
     return { change: withDraw(draw.map((c) => (c.index === 900 + p ? model : c))), ...(up ? {} : { note: "这张牌的升级数值没有记录，按未升级的数值算" }) };
   };
   const transformAt = (p: number): { mixture: Partial<RolloutInput>[]; note: string } => {

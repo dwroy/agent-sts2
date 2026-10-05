@@ -465,7 +465,7 @@ export function deckModels(state: GameState, knowledge: Knowledge): CardModel[] 
   const powerExtraCost = pilePowerExtraCost(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
   return asArray(asRecord(state.run?.raw)["deck"]).map((raw, i) => {
     const own = asRecord(raw);
-    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge, null, powerExtraCost);
+    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge, null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]));
   });
 }
 

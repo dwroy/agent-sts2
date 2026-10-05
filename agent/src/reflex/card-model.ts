@@ -42,6 +42,8 @@ export interface CardModel {
   upgraded: boolean;
   cost: number;
   xCost: boolean;
+  /** The observed Silent Malaise upgrade's extra debuff beyond energy spent (silent-0144). */
+  malaiseBonus?: number;
   playable: boolean;
   target: TargetMode;
   validTargets: number[];
@@ -70,7 +72,7 @@ export interface CardModel {
   weakFirst?: boolean;
   /** Permanent Strength for the player. */
   strength: number;
-  /** Dexterity gained on play, from observed Footwork vars (silent-0026). */
+  /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
   dexterity?: number;
   /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
   temporaryDexterity?: number;
@@ -786,7 +788,7 @@ export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
   return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
 }
 
-export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
+export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = ""): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
   const info = knowledge.card(cardId);
@@ -795,16 +797,22 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const template = unconditionalText(str(card["rules_text"]));
   const index = numOrNull(card["index"]) ?? fallbackIndex;
   const requiresTarget = bool(card["requires_target"]);
-  const type = info?.type || "";
+  // 2PVLGRBGUX9S F48 first T2, silent-0136: only this resolved Expertise template was observed.
+  // Keep this Silent observation scoped to its character; missing context preserves the prior model.
+  // Mad Science carries all riders' dormant variables, even when it did not receive those riders.
+  const madExpertise = character.toLowerCase() === "silent" && cardId === "MAD_SCIENCE" && !bool(card["upgraded"]) &&
+    dyn(card, "ExpertiseStrength") === 2 && dyn(card, "ExpertiseDexterity") === 2 &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得2点力量。获得2点敏捷。";
+  const type = madExpertise ? "Power" : info?.type || "";
   const target = targetMode(str(card["target_type"]), template, requiresTarget);
 
-  let damage = dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
+  let damage = madExpertise ? null : dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
   let hits = dyn(card, "CalculatedHits") ?? dyn(card, "Repeat") ?? 1;
   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(template)) hits = 2;
-  const block = dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
+  const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
   let weak = dyn(card, "WeakPower") ?? 0;
-  let strength = dyn(card, "StrengthPower") ?? 0;
+  let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
   let tempStrength = 0;
   let strengthPerVulnerable = 0;
   const enemyStrength = dyn(card, "EnemyStrength") ?? 0;
@@ -812,7 +820,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // An X-cost Attack hitting X times (Skewer 「造成{Damage}点伤害X次」, Eradicate, Heavenly Drill) is Whirlwind's
   // single-target kin: X hits at play time. Without it Skewer was one hit whatever X was (ZRYR5WLG6E9K F39 T1: played
   // at 0 energy after Unrelenting+, counted 8 x1.5 into Vulnerable; planned 70, dealt 58).
-  const special = cardId === "MALAISE" && !bool(card["upgraded"]) && bool(card["costs_x"]) ? "malaise" :
+  // LLYSRQQ35AVW F33 T3 / F38 T1 / F48 T2, silent-0144: upgraded X=0/2/3 applies 1/3/4.
+  const upgradedMalaise = cardId === "MALAISE" && character.toLowerCase() === "silent" && bool(card["upgraded"]) &&
+    /^敌人失去X\+1点力量。给予X\+1层虚弱。(?:魂缚)?消耗。$/.test(str(card["resolved_rules_text"]).replace(/\s+/g, ""));
+  const special = cardId === "MALAISE" && (!bool(card["upgraded"]) || upgradedMalaise) && bool(card["costs_x"]) ? "malaise" :
     SPECIAL[cardId] ?? (bool(card["costs_x"]) && /伤害X次|damage X times/i.test(`${template} ${str(card["resolved_rules_text"])}`) ? "whirlwind" : null);
 
   // Ambiguous or conditional vars, by id.
@@ -878,7 +889,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
   const burstSkills = dyn(card, "Skills");
   const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
-  const corrosiveWave = cardId === "CORROSIVE_WAVE" && !bool(card["upgraded"]) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
+  // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
+  const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
@@ -911,7 +923,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
         requires_target: true, target_type: "AnyEnemy", valid_target_indices: card["valid_target_indices"],
         rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
         dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
-      }, -1, knowledge) };
+      }, -1, knowledge, character) };
     }
   }
   // Enthralled does nothing when played but lift its lock, which the solver plays (CardModel.playFirst): modelled.
@@ -952,6 +964,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     upgraded: bool(card["upgraded"]),
     cost: num(card["energy_cost"]),
     xCost: bool(card["costs_x"]),
+    ...(special === "malaise" && upgradedMalaise ? { malaiseBonus: 1 } : {}),
     // Too expensive now is still in the search (it checks energy itself): energy gained this turn, or a
     // Touch of Insanity making it free, can pay for it.
     // The Gambit is never played: after it any unblocked hit is fatal (S780).
@@ -975,17 +988,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
-    ...(dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+    ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
     weak,
     ...(weakFirst ? { weakFirst } : {}),
     strength,
-    ...(cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
+    ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
     tempStrength,
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
-    ...(dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
+    ...(!madExpertise && dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
     ...(cardId === "FEEL_NO_PAIN" ? { feelNoPain: dyn(card, "Power") ?? 3 } : {}),
     ...(special === "double_next_attacks" ? { nextAttacks: dyn(card, "Attacks") ?? 1 } : {}),
     enemyStrength,
@@ -1089,7 +1102,7 @@ export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow:
  * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
  * escaped the Insatiable's Sandpit nor cleared a Beckon).
  */
-export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0): CardModel {
+export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0, character = ""): CardModel {
   const info = knowledge.card(cardId);
   const raw = own ?? {
     card_id: cardId,
@@ -1101,7 +1114,7 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
     energy_cost: info?.cost ?? 0,
     costs_x: info?.xCost ?? false,
   };
-  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character);
   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
   // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
   const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;

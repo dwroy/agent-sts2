@@ -1071,7 +1071,7 @@ export function deckProfileForBoss(state: GameState, knowledge: Knowledge): Deck
   const entries = asArray(run["deck"]);
   // The model takes the type from the game data; the deck entry's own card_type covers unknown ids.
   const cards = entries.map((entry, index) => {
-    const model = modelHandCard(entry, index, knowledge);
+    const model = modelHandCard(entry, index, knowledge, str(run["character_id"]));
     return { entry, model: model.type ? model : { ...model, type: str(asRecord(entry)["card_type"]) } };
   });
   if (cards.length === 0) return null;

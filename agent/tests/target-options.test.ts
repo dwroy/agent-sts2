@@ -18,7 +18,7 @@ import { potionMcOptions } from "../src/reflex/potion-mc.js";
 import { ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions, type LiveRollout } from "../src/reflex/rollout-live.js";
 import { killOrders, LEADER_HP_TIE, rankOrders, rolloutDecision, type EnemyTable, type KillGroup, type RolloutInput } from "../src/reflex/rollout.js";
 import type { RunPlan } from "../src/memory/run-plan.js";
-import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
+import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import type { CardModel } from "../src/reflex/card-model.js";
 import { logged, loggedEnv } from "./logged.js";
 
@@ -172,7 +172,10 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     expect(b).toEqual(a);
   }, 30_000);
 
-  it("stays inside the time budget with the real clock, degrading the samples per order first", () => {
+  it("stays inside the 1500ms time budget with a controlled clock, degrading the samples per order first", () => {
+    // Scheduler pauses cannot be bounded by synchronous code. Advance the same production clock deterministically.
+    let elapsed = 0;
+    rolloutLiveOptions.now = () => ++elapsed;
     const decision = ez2l({ budgetMs: ROLLOUT_BUDGET_MS }) as AskDecision;
     const log = decision.resolve(pick("plan1")).log!["rollout"] as Record<string, unknown>;
     expect(Number(log["ms"])).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS);
@@ -505,7 +508,13 @@ describe("kill-order rollout (offline)", () => {
     const base = input(true);
     const { orders } = killOrders(groupsOf(true));
     let t = 0;
-    const r = rolloutDecision({ ...base, options: { ...base.options!, orders, budgetMs: 400, now: () => (t += 1) } });
+    // Charge policy work, independently of added deadline checks in the search.
+    const originalTap = solveTap.onSolve;
+    solveTap.onSolve = () => { t += 3; };
+    let r: ReturnType<typeof rolloutDecision>;
+    try {
+      r = rolloutDecision({ ...base, options: { ...base.options!, orders, budgetMs: 400, now: () => t } });
+    } finally { solveTap.onSolve = originalTap; }
     expect(r.degraded.length).toBeGreaterThan(0);
     expect(r.degraded.join(",")).toMatch(/per kill order|1-turn|horizon 3/);
     expect(r.elapsedMs).toBeLessThanOrEqual(400 + 50);
