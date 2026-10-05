@@ -1012,3 +1012,5 @@ items_found=2按最早证据进阶归属；items_shipped=5（0016/0054/0080/0130
 03:35 experience-done已确认第30批LLYSRQQ35AVW经验.5源0dba4029实际合入live 3a2a2a48并发布25a520d9/唯一S1.exp30，携带此前待合的第29批.4源8f7d061a；main已同步735ac441。帐篷观察silent-0145/0146现已随该经验文字登记shipped，原first_run=LLYSRQQ35AVW、A8、prior=unknown及证据不变；0144升级萎靡模型缺口仍observed未修，0051旧模型已修状态保持。两批26/17项重叠10项，合计33个id本次登记上线，不能当作33个A8新增。
 
 这次发布和本次登记均在A8首胜及A9开局之后，保持以上03:13爬阶窗口查询快照和学习曲线原行，不倒算为首胜前已学。源与合后沙箱均tsc0/184文件2054例，完整外部检查尚待调度器回报；原exp28/strategy4预算失败记录保持。完整来源与登记见[20261006-0335-experience30-release.md](../paper/materials/silent/20261006-0335-experience30-release.md)。
+
+- 2026-10-06 04:05 首胜复盘后的机制覆盖补记：04:00 fix-done确认学习者升级萎靡模型源d48d1612已随S1.fix24实际合入9af37f37、发布473a62f4，main同步05445876；0144现按实际合入登记shipped/S1.fix24，first_run仍KAY522KT5NXR/A0、prior=no。0145/0146帐篷S1.exp30和0051原版S1.fix5保持。此模型修复在A8首胜及A9开局之后，原03:13观察快照、首胜因果限制和原CSV行保持；最终源/合后188文件2068例沙箱通过，完整外部本批检查等后续事件，详情[20261006-0400-fix24-release.md](../paper/materials/silent/20261006-0400-fix24-release.md)。
