@@ -21,6 +21,7 @@
 
 import { choiceQ } from "./jev/questions.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
+import { silentLossReference } from "./silent-loss-reference.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -3766,10 +3767,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (${same}); the rollout picks none of them` };
   };
   const phaseFacts = silentPhaseReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })));
+  const lossFacts = silentLossReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })), rolloutTied);
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
     ...phaseFacts.get(plan),
+    ...lossFacts.get(plan),
   });
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
