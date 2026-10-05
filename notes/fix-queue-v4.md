@@ -386,3 +386,13 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### 学习者升级爆发模型提案（运维 codex，2026-10-05 20:29）
 - **非阻塞机制模型，来自经验.20学习者的只读定位**：证据VN7RQJMJEFMX SILENT A6 F27 T6，升级爆发建立2层，究极防御15重复后产生30格挡增量、剩1层；学习者定位`agent/src/reflex/card-model.ts:877`仍排除升级牌、`agent/src/reflex/combat-plan.ts:2853`只读BURST_POWER===1。来源learner/runs/20261005-194302-experience-update/handoff-ops.md及第二十节changelog、机制账本silent-0115。普通1层模型0114/S1.fix20已修，S1.exp20仅经验上线，升级/多层模型范围尚未在本任务实现；不把现场效果当作整场替代胜局，不补未观测组合。交学习者依本角色证据实现和固定测试后上线，运维只转录证据与定位，不改机制代码；ENKY的新0118组合另留其学习任务。
+
+### 论文：token 消耗和对应的钱（Roy 2026-10-05 20:3x，高优先）
+Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订阅的额度 Roy 会给，大概能算出来」。做成一个可重跑的统计（例如 eval/cost.py → paper/data/cost-<character>.csv 和 paper/materials/<character>/cost.md，接进 paper_dataset --no-raw），按**组件 × 进阶 × 局**分列：
+- **对局大脑（codex GPT）**：logs/brain.jsonl、logs/codex-calls.jsonl 的输入 / 缓存命中 / 输出 / 推理 token、调用次数、耗时；DeepSeek 回退单列（按 API 价）。
+- **Jev**：每局请求数和 token（runs.jsonl 的 jev_calls、tokens 等；按 TypeSafe 的 API 价）。
+- **codex 学习者**：learner/runs/*.jsonl 的 learner_summary（每个批次的输入 / 缓存 / 输出 token、墙钟），按任务类型（复盘、经验、修复、策略）和它服务的局 / 进阶归属。
+- **codex 运维会话**：ops/codex-ops/wakes*.jsonl 和 session rollout 的 token。
+- **Claude 观察会话**：本会话的转录（~/.claude/projects/-home-dw-Projects-agent-sts2/*.jsonl 里 assistant 消息的 usage），只读取、不改。
+- **订阅换算成钱**：codex 是 ChatGPT 订阅，按「周额度用掉的百分比 × 订阅价按周折算」估算，用 codex-usage 读到的 weekly / 5h 窗口百分比做时间序列（如果现在没有持续记录，就加一个定时快照，写进 logs/ 某个 jsonl），再按各组件的 token 份额分摊；Claude 订阅同理。订阅价和额度留成配置（例如 eval/cost-config.json 的占位），等 Roy 给数字后填；API 计价的部分（DeepSeek、Jev）直接算。
+- 输出每一级的：局数、总 token、各组件占比、估算花费、每局 / 每胜的花费；以及从 A0 起的累计曲线。
