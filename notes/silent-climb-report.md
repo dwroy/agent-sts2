@@ -910,3 +910,10 @@ items_found=11按最早证据进阶；items_shipped=38按登记后下一场已�
 ### A7首胜复盘补齐（2026-10-06 02:40 CST）
 
 正式完成事件20261006-021302补齐4Y94N8RDPGPM，A7正式复盘由6/7补齐为7/7；旧02:16查询点保留。首胜仍是A7/F48首次尝试通关、9血、无读档。学习者新增silent-0140（夜魇启动与兑现观察）、silent-0141（复制到手/附魔现场），均observed、prior=unknown；已有0005/0007/0016/0020/0046/0069/0090七项support补证，repeat无。原文及focus/药水选牌措辞勘误完整保留在notes/lessons.md；没有新的纯bug或Roy待定，未把后续发现倒算为本级通关前已上线。详paper/materials/silent/20261006-0236-postmortem-and-exp28-check-failure.md，论文表刷新结果另记。
+
+- 2026-10-06 02:46 首胜复盘后论文表刷新完成，切点2026-10-05T18:42:20.673Z、五项一致性通过、key scan CLEAN。下列为脚本本次生成的A7原行，后续发现按最早证据归属进阶计入；02:16历史查询点保持。
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,7,7,1,1,0,40.57,39,SADL3CGYTGSR,4Y94N8RDPGPM,2026-10-05T12:18:53+00:00,2026-10-05T17:57:26+00:00,13,0,38,silent-0007 silent-0009 silent-0010 silent-0011 silent-0013 silent-0017 silent-0027 silent-0036 silent-0046 silent-0048 silent-0053 silent-0057 silent-0059 silent-0063 silent-0069 silent-0077 silent-0092 silent-0107 silent-0110 silent-0111 silent-0114 silent-0115 silent-0116 silent-0117 silent-0118 silent-0119 silent-0120 silent-0121 silent-0122 silent-0123 silent-0124 silent-0125 silent-0126 silent-0127 silent-0128 silent-0129 silent-0131 silent-0132,3,0
+```

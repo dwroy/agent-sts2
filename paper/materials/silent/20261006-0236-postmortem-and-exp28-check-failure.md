@@ -30,3 +30,6 @@ Duration  555.36s (transform 6.82s, setup 10.54s, import 29.45s, tests 1043.91s,
 - 随后按协议nice19运行paper_dataset.py --no-raw并提交本轮生成论文表/自身记录；A7首胜正式复盘补充至升级报告，旧统计快照和“首胜待复盘”记录保留。
 
 - 2026-10-06 02:44 实际派发命令 `bash ops/codex-ops-do.sh fix-batch` exit1、返回 `{"dispatched": null}`，未启动新批次。一次 `bash ops/codex-ops-do.sh learner-status` exit0证实20261006-021302-strategy-proposal/PID2125510仍running、使用同一codex-dev工作树；ops/learner_jobs.py:83—89、:135—137的同树busy保护拒绝并发派发。保持该任务与对局/调度运行，预算失败队列等待同树占用解除由调度器下一批承接，不重复派发或绕过保护。收件箱已写原失败、完整命令和原因；无需Roy新增决定。
+
+- 2026-10-06 02:46 本轮论文刷新完成：nice19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-05T18:42:20.673Z，五项一致性通过/决策计数差异为空/key scan CLEAN；行数{"commits.csv": 2611, "decisions_by_label.csv": 17436, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 522}，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 143 item(s), 0 problem(s)。只提交本轮生成论文/成本输出和自身记录，其他任务账本/运行日志保持；生成表按脚本当前日志与账本输入读数，不把这批首胜复盘倒算为本级结束前上线。原复盘九行已提交00d706d1c1cacd4c835bfb85f58df319a18af495，派发/收件箱记录f7cc1f4d498ee13e4c4b104735c7ea2bb32dd77d。
+- 第28批完整外部exit1的预算边界失败仍待学习者核查，定向22例通过不替代完整检查或宣称已修；S1.exp28、17项已上线账本保持。同树021302策略任务占用导致fix-batch返回null，本轮不重复派发或停止任何任务，队列交下一可用fix-batch/后续事件。
