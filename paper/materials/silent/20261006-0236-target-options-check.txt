@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/agent
+
+ ✓ tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap 5438ms
+ ✓ tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage) 2569ms
+ ✓ tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies 2423ms
+ ✓ tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them 2360ms
+ ✓ tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > is deterministic: the same board gives the same options and the same kill-order numbers 4818ms
+ ✓ tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > stays inside the time budget with the real clock, degrading the samples per order first 2380ms
+ ✓ tests/target-options.test.ts > code's auto-acts with the per-target options > every logged board: one kind of enemy unchanged; several kinds only move from code's act to Jev's question, never to another act 19522ms
+ ✓ tests/target-options.test.ts > code's auto-acts with the per-target options > a line that beats the rest on every axis but puts less into one kind of enemy is not code's to play: Jev is asked 29ms
+ ✓ tests/target-options.test.ts > kill groups and orders > groups identical enemies into one position: 3 lice + 1 other = 2 orders, targeting within a group left to the policy 1ms
+ ✓ tests/target-options.test.ts > kill groups and orders > leaves out a non-attacking illusion and a Waterfall Giant husk; keeps an attacking illusion and a minion 1ms
+ ✓ tests/target-options.test.ts > kill groups and orders > caps the permutations: all 6 for 3 kinds of enemy; past 3, each kind first and the rest by HP, the dropped count kept 1ms
+ ✓ tests/target-options.test.ts > kill groups and orders > focus lines: the most damage into each group, potion-free first, none for a group no line reaches 1ms
+ ✓ tests/target-options.test.ts > kill-order rollout (offline) > the minion-first order kills the minion; its numbers differ from leader-first; deterministic; one kind of enemy is unchanged 655ms
+ ✓ tests/target-options.test.ts > kill-order rollout (offline) > orders that agree as far as a sample went share it: Leader > Minion > Other and Leader > Other > Minion while the leader lives 665ms
+ ✓ tests/target-options.test.ts > kill-order rollout (offline) > an attacking illusion first (Parafright) gets no "dead by T5" count: it revives (981W F30); it stays a kill-order target 315ms
+ ✓ tests/target-options.test.ts > kill-order rollout (offline) > The Kin (2CCM6XK4PB37 F17): the Priest is the leader; no order kills it in 5 turns, so the orders rank by its HP left 618ms
+ ✓ tests/target-options.test.ts > kill-order rollout (offline) > rankOrders: value alone once any order ends the fight or without a leader; leader progress before deaths 1ms
+ ✓ tests/target-options.test.ts > kill-order rollout (offline) > no leader when two groups are not minions, or the only other group is an illusion 0ms
+ ✓ tests/target-options.test.ts > kill-order rollout (offline) > under a tight clock the samples per order go first, and it says so 136ms
+ ✓ tests/target-options.test.ts > HP guard keeps Jev's focus target (RBJ402TKQZ6F F48) > the focus target is the enemy the pick damaged most 1ms
+ ✓ tests/target-options.test.ts > HP guard keeps Jev's focus target (RBJ402TKQZ6F F48) > never swaps into a line with less damage into the focus target 1ms
+ ✓ tests/target-options.test.ts > HP guard keeps Jev's focus target (RBJ402TKQZ6F F48) > never swaps into a line the rollout sees dying more often (F48 T5) 0ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  02:36:57
+   Duration  43.65s (transform 1.28s, setup 414ms, import 1.14s, tests 41.94s, environment 0ms)
+
+[ops archive: preceding 4265 bytes are the unchanged original test output; SHA256 4ec7da529d44fef67b5749143707814d5bffa8b3dd53d6cb906a0377cc6ffade; exit 0]

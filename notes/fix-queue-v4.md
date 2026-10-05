@@ -432,3 +432,13 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 2026-10-06 00:44 [新测试失败证据，非对局阻塞，根因未定] 000206 Inferno夹具兜底合后固定9fc1e4f8/树e00c7ce75b7a66da53f0dd33ac9dbaa88fe3ff1a唯一失败agent/tests/ops-herdr.test.ts:187:107（--close-on-exit registry期待空、仍有batch-1），同文件与ops/herdr-host.sh和合前341b75fe blob相同；源181文件2038例首过，合后tsc0/179文件2026例通过+1文件1例失败，paths未运行。已回退341b75fe并保失败分支/完整日志，原时间/指纹断言保留不弱化；本轮只一次同树隔离复测，结果随后追加。此为固定测试证据，运行run/floor/turn不适用，不能据此声称实际herdr进程清理bug已定位或新建游戏知识/bug-infra。详paper/materials/silent/20261006-0028-postmortem-and-inferno-handoff.md。
 
 - 2026-10-06 00:52 [已完成测试修复，保留旧失败历史] Inferno首帧/时间竞态队列项由学习者195869aa实际合live 5b005215e6f578e34bac9f4bb25d50a8a18dd112、发布000ab7927ba3e57fa786b7d5f593a6eed290ccd2，main 1498dd0708ab8ce6bca024091456b48493bcd72f；源首过、首次合后herdr断言失败及回退保留、同一固定合后树一次完整复测tsc0、181文件2038例通过；herdr失败根因未定仍留队列，撤夹具改动1失败/恢复5通过，初次字段错误及既有23:15失败/回退历史保留。仅测试夹具改动，不增行为版本或台账；完整外部本批learner-recheck已请求待事件。新复盘重复扣挡0130仍待学习者，不能随本测试项冒记已修。
+
+## 2026-10-06 02:31 经验第28批机制覆盖证据（转录学习者，待验证）
+
+- [ ] **非阻塞机制模型提案**：`agent/src/reflex/card-model.ts:881`当前只在未升级时建立腐蚀波抽牌施毒，升级3层入口待核；已有CORROSIVE_WAVE_POWER读取与建立前缺口分开。来源第二十八次changelog/handoff-ops.md、账本silent-0076/0137；证据2PVLGRBGUX9S SILENT A7 F48首T11，后空翻抽2使36→42毒、敌HP212不变，之后扣42至170。仅转录学习者发现，未复原本局9988ca8b+dirty源码，不将死亡归因于此项；交学习者核对原帧、固定测试后实现，不按旧普通分支已修状态跳过升级证据。
+- [ ] **非阻塞机制模型提案**：`agent/src/reflex/card-model.ts:983`敏捷入口仅FOOTWORK，专长MAD_SCIENCE的2敏捷入口待核。来源同批changelog/handoff-ops.md、silent-0136/0138；证据2PVLGRBGUX9S SILENT A7 F48首T2科学后1→3力/0→2敏捷、T4步法到5敏捷。0103旧攻击紧勒和0138四模板不可混用；只记学习者证据，不冒记已修或独立纯bug，不补其他模板/游戏知识，交学习者核对并实现。
+
+## 2026-10-06 02:40 完整补测预算断言失败（运维交学习者，优先核查）
+
+- [ ] **非阻塞预算/时钟问题，根因待核**：`agent/tests/target-options.test.ts:178:31` 的真实时钟1500ms预算断言，在经验第28批固定发布98f88e06ac849c29af6474c76121f37c2d8019ce/树d98a9fdb2704aea31f544c350f5a16ae902f64b7报1506>1500；完整tsc/vitest exit1，233文件2855例通过、1文件1例失败、2跳过。证据ops/codex-ops/learner/20261006-020339-experience-update.fallback-d98a9fdb2704aea31f544c350f5a16ae902f64b7.checks.log，02:25:43开始555.36秒，原SHA cb1f9f971f2391c38046c944ba4e87344acc9b6d30c02f16563168e392ac1ac1。同agent源码及固定夹具一次定向1文件22例通过/exit0（43.65秒），原日志paper/materials/silent/20261006-0236-target-options-check.txt。源825c94d5只改静默经验，不把该失败冒记为新机制问题或已定位生产bug。
+- 运维选择**派修复、保留上线**：学习者用固定数据/受控时钟核对生产硬截止与测试时钟边界，只修实际存在的缺陷；若只是夹具时钟不稳则保持原预算含义。不得提高1500ms预算、放宽断言、增加排除或仅重跑后声称已修，不写游戏策略/知识。需修复则源码撤回失败/恢复通过及源/合后沙箱通过，再由调度器补完整套件；证据不足明确未修，保留本次失败与定向通过历史。局号/进阶不适用于新增系统缺陷，EZ2L F48 T2只是既有固定测试夹具，不新建bug-infra条目。

@@ -1,0 +1,14 @@
+# 静默经验第28批运维核实
+
+- 2026-10-06 02:31 experience-done：调度器批次20261006-020339-experience-update，实际学习者目录learner/runs/20261006-020340-experience-update。源825c94d558f24991e8766dfecee71a71c216e83b→集成目标363ff3037178c20342c36fc1ab474b5aed96a441→发布98f88e06ac849c29af6474c76121f37c2d8019ce/树d98a9fdb2704aea31f544c350f5a16ae902f64b7，S1.exp28唯一指向363ff3037178c20342c36fc1ab474b5aed96a441，全部为live祖先。该集成目标是在exp-silent吸收main后由live从f75162d8快进到达，不能误写成新建的live合并提交。
+- 来源handoff-ops.md、live-merge.json、第二十八次changelog；2PVLGRBGUX9S SILENT A7/F48及旧34静默局复算。经验2026-10-06.3，新增0、更新14、退役0，active97，55443→47357字；A8/A9各88条43447字，尚无这些进阶的本批实战验证。240片配对中位减少2113.5字、最大8180→5694，切片配对保留原采样口径。
+- 原17条learner proposed归档：silent-0005,silent-0006,silent-0018,silent-0019,silent-0020,silent-0021,silent-0023,silent-0024,silent-0025,silent-0049,silent-0076,silent-0079,silent-0103,silent-0106,silent-0136,silent-0137,silent-0138。0136仅专长2力2敏捷，0103保留旧攻击紧勒分支，0138四模板区分，0076/0137普通与升级分开；first_run/prior/repeat/evidence不重置。经验已写入不代表同名机制已在推演模型中覆盖，源码缺口仍交学习者处理。
+- 源沙箱tsc0、182文件2042例，合后tsc0、183文件2048例，均首次通过；原日志摘要{"test-live": {"bytes": 492, "cases": 2048, "files": 183, "sha256": "630a98571f3f18ac937f3cc15b9fcb71abc714b39e2e62c795fe63bbf56a60d2", "tsc": 0, "vitest": 0}, "test-source": {"bytes": 490, "cases": 2042, "files": 182, "sha256": "e9c95d42d29fe4b2af4500a9ad05a40128934a97139b4a0efdc51dcd8ec1a0af", "tsc": 0, "vitest": 0}}。知识刷新/重叠为空，非经验知识blob保留，没有生成器变更或重建，铁甲行为等价。
+- 本次changelog新增30852字节，旧前缀775937字节、SHA256 75768b72a3265006274676855f1738ec3e6c688e7b168bdd875d6a857a64716c保持。学习者源码不在运维另审范围；之后机械同步固定已测发布至main，CLI/by=ops登记17项shipped并刷新学习曲线。
+- 当前调度器checks_pending=true，完整外部检查交后续learner-checks，本轮不重复请求或等待。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 141 item(s), 0 problem(s)。S1.strategy3独立完整检查已通过，不混记为本批通过；无Roy新待定、不停对局/调度。
+
+- 2026-10-06 02:35 完成：原17条proposed及changelog第28节归档e7c3fbaa060e8174ea2e6571d6ab7f6c99ffd7d1；main固定发布同步ae49bbec92df38c3d73ec3570560a76a39a408e2，990项源码/测试blob与已测发布一致、2085项其他main文件保持（包括前轮A7报告和收件箱）。首次只读预检将ops/inbox-dev.md计作源码而停止，识别为记录后保留该文件再同步；没有执行错误合并。唯一decision-log冲突已保留双方全部历史。CLI登记后运维校验因部分旧项缺可选prior_runs字段而中止；恢复时核对恰好17条既有更新、按可选字段语义再校验，没有重复写账本。
+- 经CLI/by=ops追加17条shipped/S1.exp28；原first_run/prior/prior_note/evidence/repeat/claim全部保持，0135策略3未重置。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 141 item(s), 0 problem(s)。静默学习曲线使用本轮待提交账本快照生成，未把其他尚未收到完成事件的台账行混入论文表；账本原工作区追加也保留。
+- 策略3完整外部检查待办已关闭；经验28独立完整检查仍checks_pending，交后续事件。本轮只有记录/数据和机械同步学习者已测经验blob，没有运维新写知识、代码、版本、审核或进程操作。科学专长/升级腐蚀波模型覆盖证据转录至fix-queue交学习者，未冒记已修或纯bug。
+
+- 2026-10-06 02:40 02:36完整外部检查已返回exit1：固定发布98f88e06ac849c29af6474c76121f37c2d8019ce/树d98a9fdb2704aea31f544c350f5a16ae902f64b7，233文件2855例通过、1文件1例失败、2跳过；target-options.test.ts:178真实时钟预算断言1506>1500。原SHA cb1f9f971f2391c38046c944ba4e87344acc9b6d30c02f16563168e392ac1ac1及定向1文件22例通过对照归档paper/materials/silent/20261006-0236-postmortem-and-exp28-check-failure.md。运维选择派修复、保留经验上线/17项shipped；完整补测失败仍未解决，局部通过不回改原结果或冒记完整通过。
