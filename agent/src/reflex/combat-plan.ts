@@ -2855,6 +2855,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     energy: num(player["energy"]),
     weak: powerAmount(player, "WEAK_POWER") > 0,
     vulnerable: powerAmount(player, "VULNERABLE_POWER") > 0,
+    frail: powerAmount(player, "FRAIL_POWER") > 0,
+    dexterityNow: powerAmount(player, "DEXTERITY_POWER"),
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
     // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
     shrunk,

@@ -55,6 +55,8 @@ export interface CardModel {
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
   block: number;
+  /** Block before player modifiers, from the observed enchanted/base dynamic value. */
+  blockBase?: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
   vulnerable: number;
   weak: number;
@@ -297,10 +299,10 @@ export function handConditionOf(template: string, rendered = ""): CardModel["han
 }
 
 /** A dynamic value's base (before our Strength/Weak), or null. */
-function dynBase(card: Record<string, unknown>, name: string): number | null {
+function dynBase(card: Record<string, unknown>, name: string, enchanted = false): number | null {
   for (const entry of asArray(card["dynamic_values"])) {
     const value = asRecord(entry);
-    if (str(value["name"]) === name) return numOrNull(value["base_value"]);
+    if (str(value["name"]) === name) return (enchanted ? numOrNull(value["enchanted_value"]) : null) ?? numOrNull(value["base_value"]);
   }
   return null;
 }
@@ -944,6 +946,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(shadowmeld ? { shadowmeld: true } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
+    ...(dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
     weak,
     ...(weakFirst ? { weakFirst } : {}),

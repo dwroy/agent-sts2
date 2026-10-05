@@ -1547,6 +1547,7 @@ function withStrength(card: CardModel, player: SimPlayer, index: number, targets
     damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)) * (card.type === "Attack" && player.doubleDamage ? 2 : 1),
     // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
     // Frail: 25% less block from cards, after Dexterity.
+    ...(card.block > 0 ? { blockBase: card.block } : {}),
     block: card.block > 0 ? Math.floor(Math.max(0, card.block + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
     validTargets: card.target === "single" ? targets : [],
   };
@@ -2791,6 +2792,8 @@ function simulate(
       energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + (fullFight ? fightRelicEnergyAt(input, (s.turn ?? input.meta.t) + h) + carried : 0) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,
+      frail: player.frailTurns > 0,
+      dexterityNow: player.dexterity,
       strengthNow: player.strength,
       // FREE_ATTACK_POWER stays up across turns (Unrelenting as the last Attack): the last turn's leftover.
       freeAttacks: player.freeAttacks,
