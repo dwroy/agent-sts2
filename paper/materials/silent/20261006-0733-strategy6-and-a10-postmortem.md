@@ -41,3 +41,5 @@
 ```
 
 - 2026-10-06 07:35 本轮原复盘末尾空行触发归档前git diff --check的blank-at-eof，尚未提交或合入；原15717字节及指纹保持。本次仅记录类提交临时允许末尾空行（core.whitespace=cr-at-eol,-blank-at-eof），不改仓库配置，其他空白检查及gitleaks照常，非代码测试失败。
+
+- 2026-10-06 07:37 实际发布登记完成：本局原15717字节复盘与18行原账本归档e72a63b79cacc6a7a1da73f3882498911ce8ef64，main同步86a4995aaebeb3c3c5e49ab29264760c0f28d2cd，全部1020源码/测试blob与已测发布一致，其余2135项main最新blob、全部knowledge及双方日志保持。仅CLI/by=ops登记0159 shipped/S1.strategy6，first_run/prior/repeat及0145/0146/0020、0153与本局三项observed保持；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 162 item(s), 0 problem(s)。随后论文刷新，外部完整结果待事件。
