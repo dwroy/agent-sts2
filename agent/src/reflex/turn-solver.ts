@@ -316,7 +316,7 @@ export interface PlayerSim {
    * (9Q7V F17 T14: not read, Sword Boomerang planned at 18 dealt 36 and killed the Giant into its blast).
    */
   duplicateAttacks?: number;
-  /** Burst already up: the next Skill this turn is played once more (silent-0114/0115). */
+  /** Burst already up: each of the next N Skills this turn is played once more (silent-0114/0115). */
   duplicateSkills?: number;
   /** Regen already up (REGEN_POWER): healed at the end of this turn, before the enemy attacks. */
   regen?: number;
@@ -1629,7 +1629,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   }
   if (card.special === "duplicate_next") next.duplicate += 1;
   // Arm only after Burst's own play, so it does not consume its newly granted replay.
-  if (card.burst) next.duplicateSkills += 1;
+  if (card.burst) next.duplicateSkills += card.burstSkills ?? 1;
   // One-Two Punch: its next Attacks are played twice (as ONE_TWO_PUNCH_POWER once up); Unrelenting: the next
   // Attack costs 0 (as FREE_ATTACK_POWER), granted after its own play took any free attack already up.
   if (card.special === "double_next_attacks") next.duplicateAttacks += card.nextAttacks ?? 1;
