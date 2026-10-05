@@ -1114,3 +1114,14 @@ silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,20
 items_found=0按最早证据进阶；items_shipped=30按登记后下一场已结束局的进阶归属。它们与窗口新增6项、4个实际合入版本、53条shipped登记以及查询时全静默140项shipped口径不同。
 
 repeats=1、repeats_after_ship=0存在可复现漏计：silent-0009于01:13:01已登记S1.exp26，HMV于02:45:41开局，其repeat在04:01:19入账；04:35:35再次shipped/S1.exp31后，fold只保留最新shipped_at，evidence_after_ship用该值与局开局比较，漏掉原先已上线的重犯。HMV学习者复盘与原账本均保留“之前学过”的证据。定位learner/ledger.py:283–286、:339–343及eval/learning-curve.py:122，已追加fix-queue-v4非阻塞统计项，交学习者修复并保留历史；不据当前0推断本级没有学习后重犯，也不手工改CSV或账本。
+
+### 2026-10-06 05:50 A9首胜复盘与后续补测
+
+G403VCZ3BH1B的复盘已完成，A9三局现为3/3。新增silent-0150/0151记录飞镖方案内技能离手后的动态计数，最早证据仍归9YBKCNBFP0X5/A4、prior=no/observed；另11旧项仅补证，无repeat。机制实现交学习者，原文与PURITY/女王T6勘误保留，详见paper/materials/silent/20261006-0540-a9-victory-postmortem-and-strategy5-checks.md。本次入账05:33晚于A9首胜04:51:26，不改上文当时的学习窗口与查询快照。
+
+S1.strategy5/0148在05:31上线、05:40事件核实固定树完整tsc/vitest通过（241文件2902通过、2跳过），属于A9首胜之后的上线；不倒算进上文A9窗口。原失败和等待历史保留。此次paper --no-raw生成的A9原行如下，先前原行不覆盖，repeat_after_ship计数缺口仍按05:24队列待修：
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,30,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0053 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,0
+```
