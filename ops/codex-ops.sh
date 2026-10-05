@@ -186,7 +186,7 @@ case "$cmd" in
       (
         exec 6> "$DIR/usage.lock"
         flock -n 6 || exit 0
-        nice -n 19 timeout 25s node --import "$OPS/../agent/node_modules/tsx/dist/loader.mjs" "$OPS/sample-subscription-usage.ts"
+        exec nice -n 19 timeout 25s node --import "$OPS/../agent/node_modules/tsx/dist/loader.mjs" "$OPS/sample-subscription-usage.ts"
       ) > /dev/null 2>&1 &
     fi
     case "$job" in

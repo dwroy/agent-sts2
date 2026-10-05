@@ -974,12 +974,27 @@ def learning_curve():
         return False
 
 
+def component_costs():
+    """Component accounting records its own immutable JSONL byte cuts."""
+    import importlib.util
+    try:
+        spec = importlib.util.spec_from_file_location("paper_cost", os.path.join(ROOT, "eval", "cost.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        mod.build(ROOT)
+        return True
+    except Exception as error:
+        print(f"component costs failed: {type(error).__name__}")
+        return False
+
+
 if __name__ == "__main__":
     lim, summ, counts = build()
     if "--no-raw" not in sys.argv:
         raw_snapshot(lim)
     write_readme(summ, counts)
     curve_ok = learning_curve()
+    cost_ok = component_costs()
     hits = scan_for_keys()
     print("key scan: " + ("CLEAN (no sk-<key> patterns)" if not hits else "FOUND in " + ", ".join(hits)))
-    sys.exit(1 if hits or not curve_ok else 0)
+    sys.exit(1 if hits or not curve_ok or not cost_ok else 0)
