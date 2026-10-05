@@ -54,7 +54,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 
 - 全部可读；可写：项目根（主检出，含 .worktrees/step、live）、/tmp 和 codex 的临时目录；不联网。
 - 读不到：~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、~/.codex/auth.json、项目里所有 .env / *.env（glob + 磁盘上找到的每个的绝对路径）。
-- ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读（hook 或 core.hooksPath 会在下一个提交的人那里、沙箱外运行）；调度器自己的文件只读（ops/codex/、ops/codex-ops*.sh、ops/codex-ops-learn.py、paths.sh/py、stall-check.sh、stop.sh），模型不能改宽自己的出口。
+- ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读。Dai 2026-10-05 08:37 授权运维和学习者修改调度器及 broker 文件，main e601de00 已去掉这些文件的只读规则；key、所有 .env 和 codex 登录令牌仍不可读。
 
 实测（2026-10-04，`tsx ops/codex/main.ts probe <脚本>` 在 ops 配置下跑 shell）：key 文件和 live 的 .env 读不到；项目根、ops/、live 工作树可写，~ 不可写；git 在工作树里提交成功（加 .git 规则之前失败）；hooks、config、调度器文件写不了；tsc、vitest、python 读日志都能跑；gitleaks 在。沙箱有自己的 PID 命名空间（看不到外面的进程，kill 不到）、不联网（127.0.0.1:8080 也连不上，curl exit 7）、调不了 Windows 程序（cmd.exe 报 UtilBindVsockAnyPort）；嵌套的 codex（学习者）因为不联网也跑不了。
 
@@ -70,6 +70,9 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | postmortem <ids> / learner-status / scheduler-status | 马上派一批复盘 / 批次状态 / 调度器状态 |
 | experience-update <ids> / fix-batch | 手动派经验 / 修复批次，一律 merge=live；工作树占用时拒绝 |
 | learner-merge <branch> | 发合入兜底事件，由运维执行 live 流程；只接收 codex-dev / exp-silent |
+| eval-metrics <角色 id> <进阶> | 沙箱外运行完整评估：角色限 ironclad/silent/regent/necrobinder/defect，进阶为 0–999 的整数，不带前导零；固定传 --character、--ascension、--group-by ascension、--md，使用 data/logdb-venv/bin/python，nice 19。结果保存到 paper/materials/<角色>/a<级>-metrics-<时间>.<随机后缀>.md，打印路径；失败保留旧报告，不发布部分或空结果。broker 限时 10 分钟，请求端默认等 11 分钟，CODEX_OPS_DO_WAIT 可显式覆盖 |
+
+例如 `bash ops/codex-ops-do.sh eval-metrics silent 3`。每次产生独立快照，读取返回的文件后并入升级小结；动作不接收任意路径、额外选项或外部命令。broker 的白名单在叫醒开始时加载，本轮改动从下一次叫醒起生效，不需要重启对局。历史升级评估请求可在动作生效后的事件中补跑。
 
 实测（2026-10-04，真实 codex，测试会话）：init 5 s；一次叫醒里模型依次调了 procs（0）、mod-state（0，拿到 mod 的 JSON）、`kill 1`（2，被动作脚本拒绝：不是我们的进程）、`rm-rf`（2，broker 拒绝：没有这个动作），31 s，会话记得第一轮的暗号。没有在真实游戏上测 autoplay-start / launch-game / win-kill（按要求没碰对局）。
 

@@ -21,6 +21,7 @@
 #   postmortem <ids>   start a post-mortem batch now (ops/codex-ops-learn.py dispatch)
 #   learner-status     the post-mortem batches (ops/codex-ops-learn.py status)
 #   scheduler-status   ops/codex-ops.sh status
+#   eval-metrics <character> <ascension>  full metrics for one character/ascension, saved as a new Markdown report
 set -u
 . "$(dirname "$0")/paths.sh"
 ROOT="${CODEX_OPS_ROOT:-$ROOT}"
@@ -145,6 +146,29 @@ for row in csv.reader(sys.stdin):
     exec python3 "$OPS/codex-ops-learn.py" write --task fix-batch ;;
   learner-merge)
     exec python3 "$OPS/codex-ops-learn.py" request-merge --branch "$arg" ;;
+  eval-metrics)
+    [ $# -eq 3 ] || { echo "eval-metrics takes character and ascension" >&2; exit 2; }
+    case "$arg" in ironclad|silent|regent|necrobinder|defect) ;; *) echo "eval-metrics: unknown character" >&2; exit 2 ;; esac
+    asc="$3"
+    [[ "$asc" =~ ^(0|[1-9][0-9]{0,2})$ ]] || { echo "eval-metrics: ascension must be an integer 0-999 without leading zeros" >&2; exit 2; }
+    python="$ROOT/data/logdb-venv/bin/python"
+    [ -x "$python" ] || { echo "eval-metrics: missing log database Python: $python" >&2; exit 127; }
+    folder="$ROOT/paper/materials/$arg"
+    mkdir -p "$folder" || exit 1
+    stamp=$(date '+%Y%m%d-%H%M%S') || exit 1
+    report_tmp=$(mktemp "$folder/.a${asc}-metrics-${stamp}.XXXXXX") || exit 1
+    trap 'rm -f -- "$report_tmp"' EXIT
+    # Keep failures and partial output out of the published reports; never overwrite an earlier snapshot.
+    (cd "$ROOT" && nice -n 19 "$python" "$ROOT/eval/metrics.py" --character "$arg" --ascension "$asc" --group-by ascension --md) > "$report_tmp"
+    rc=$?
+    [ $rc -eq 0 ] || { echo "eval-metrics failed (exit $rc); no report published" >&2; exit "$rc"; }
+    [ -s "$report_tmp" ] || { echo "eval-metrics: empty output; no report published" >&2; exit 1; }
+    name="${report_tmp##*/}"
+    report="$folder/${name#.}.md"
+    mv -- "$report_tmp" "$report" || exit 1
+    trap - EXIT
+    printf 'eval-metrics saved: %s\n' "$report"
+    exit 0 ;;
   learner-status)
     exec python3 "$OPS/codex-ops-learn.py" status ;;
   scheduler-status)
