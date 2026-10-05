@@ -47,3 +47,6 @@
 ```
 
 原第三十一节：29752字节/SHA256 829715dca0e3a9966332a3459ac54f2babe974538a870e4843057bc09e1fa6e3；经验回报SHA256 9b2ad63601f466e06d6fc98b06822381244238fbeb9f09433b2a74ea29cab0fd，复盘回报SHA256 36cc242bc8fbc555fbad42a3ca99b6955ddfd830bf293d5dab58707f9332a254，完整复盘流learner/runs/20261006-041302-postmortem.jsonl。交接learner/runs/20261006-040345-experience-update/handoff-ops.md原处保留。
+
+- 2026-10-06 04:36 原18条经验提案及9条复盘账本、14265字节原复盘与29752字节changelog已归档f7e160eb12970905308f58451ef312dbc5894a05；main同步固定已测发布cf6fae73003337e346c73b600d6c3fc0c791c039/树cd31a8d169349e94117a5c5a7be1acacbf35f802完成于62d6edc5543682a7289d52263d6294b934366f4b，1009项源码/测试blob一致、8项知识blob来自发布、其余2102项main blob保持。decision-log追加冲突保留双方历史；live工作区未改。
+- CLI/by=ops登记18个指定id shipped/S1.exp31：silent-0019, silent-0020, silent-0021, silent-0009, silent-0006, silent-0005, silent-0013, silent-0007, silent-0011, silent-0027, silent-0030, silent-0062, silent-0065, silent-0080, silent-0128, silent-0049, silent-0073, silent-0147。first_run/prior/prior_note/claim/evidence/effect/repeat保持，0147首次证据A6及0009旧重犯不变；0149首次证据C48LLXBGKXQ9/A0、observed，0144旧S1.fix24和0051旧S1.fix5保持，其他任务的0148原始行未混入提交。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 149 item(s), 0 problem(s)。完整外部测试仍checks_pending，待调度器后续事件；随后运行paper_dataset.py --no-raw。不停对局/调度，无Roy新待定。
