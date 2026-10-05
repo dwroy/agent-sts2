@@ -20,6 +20,7 @@
  */
 
 import { choiceQ } from "./jev/questions.js";
+import { silentPhaseReference } from "./silent-phase-reference.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -3759,9 +3760,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     const same = rollout?.available && rollout.saturated ? "every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn" : "the same expected further HP loss, deaths and win chance";
     return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (${same}); the rollout picks none of them` };
   };
+  const phaseFacts = silentPhaseReference(state, shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })));
   const factsOf = (plan: Plan): Record<string, JsonValue> => ({
     ...(rollout ? { ...rolloutFacts(plan, rollout), ...(plan === bestShown ? { rollout_best: true } : {}), ...tieNote(plan) } : {}),
     ...simFact(plan),
+    ...phaseFacts.get(plan),
   });
   const criteria: Record<string, string | null> = {};
   const byKey = new Map<string, { plan?: Plan; potion?: ActionRequest; label: string }>();
