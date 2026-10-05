@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { noteTurnActed, settlePowersOf, TURN_START_SETTLE_MS, turnKeyOf, turnStartSettleMs } from "../src/hand/act/turn-start.js";
 import { loadConfig, type AppConfig } from "../src/core/config.js";
@@ -99,6 +99,8 @@ function stubJev(): JevClient {
 
 const logs: string[] = [];
 afterEach(() => {
+  vi.restoreAllMocks();
+  vi.useRealTimers();
   for (const path of logs.splice(0)) rmSync(path, { force: true });
 });
 
@@ -121,8 +123,10 @@ async function turnStartMod(stale: Raw, settled: Raw, staleMs: number): Promise<
   const fetchImpl: typeof fetch = async (url, options) => {
     let payload: unknown;
     if (String(url).endsWith("/state")) {
-      first ??= Date.now();
-      payload = acted ? mainMenuPayload() : Date.now() - first < staleMs ? stale : settled;
+      // One timestamp per read keeps the first frame stale even if the host is preempted during this read.
+      const now = Date.now();
+      first ??= now;
+      payload = acted ? mainMenuPayload() : now - first < staleMs ? stale : settled;
     } else {
       sent.push({ intent: JSON.parse(String(options?.body ?? "{}")) as Raw, at: Date.now() - (first ?? Date.now()) });
       acted = true;
@@ -148,19 +152,31 @@ function turnStart(inferno: boolean): { stale: Raw; settled: Raw } {
 const recordsOf = (config: AppConfig): Raw[] => readFileSync(config.log.decisionLog, "utf8").trim().split("\n").map((line) => JSON.parse(line) as Raw);
 
 describe("the loop at a turn start still settling", () => {
+  it("the scripted first read stays stale even when the clock advances within that read", async () => {
+    const { stale, settled } = turnStart(true);
+    const { client } = await turnStartMod(stale, settled, 150);
+    const now = vi.spyOn(Date, "now").mockReturnValueOnce(1_000).mockReturnValue(2_000);
+    expect((await client.state()).combat?.current_hp).toBe(55);
+    expect((await client.state()).combat?.current_hp).toBe(53);
+    now.mockRestore();
+  });
+
   it("Inferno up: the first action is not sent on the stale board; the re-read after 500 ms re-plans on the settled one", async () => {
+    vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"] });
     const config = testConfig();
     const { stale, settled } = turnStart(true);
     const { client, sent } = await turnStartMod(stale, settled, 150);
     const notes: string[] = [];
-    await runLoop({ config, mode: "play", client, jev: stubJev(), knowledge: testKnowledge, maxRuns: 1, maxDecisions: 10, pollIntervalMs: 1, onEvent: (event) => {
+    const result = runLoop({ config, mode: "play", client, jev: stubJev(), knowledge: testKnowledge, maxRuns: 1, maxDecisions: 10, pollIntervalMs: 1, onEvent: (event) => {
       if (event.type === "note") notes.push(event.message);
     } });
+    await vi.runAllTimersAsync();
+    await result;
     expect(sent).toHaveLength(1);
     // Planned at ~0 on the stale board, re-read at ~500 (moved), planned again, sent once that board had stood 500 ms.
-    expect(sent[0]!.at).toBeGreaterThanOrEqual(TURN_START_SETTLE_MS["INFERNO_POWER"]! - 50);
+    expect(sent[0]!.at).toBeGreaterThanOrEqual(TURN_START_SETTLE_MS["INFERNO_POWER"]!);
     const records = recordsOf(config).filter((record) => record["screen"] === "COMBAT");
-    // Slow planning can consume the settle interval; the re-read must still catch the changed board.
+    // Virtual time ensures planning cannot consume the fixture's stale interval on a loaded host.
     expect(records.at(-1)!["result"]).toBe("completed: scripted");
     expect(records.at(-1)!["fingerprint"]).not.toBe(records[0]!["fingerprint"]);
     expect(records.slice(0, -1).every((record) => String(record["result"]).startsWith("not dispatched: state changed while deciding"))).toBe(true);
@@ -168,11 +184,14 @@ describe("the loop at a turn start still settling", () => {
   }, 30_000);
 
   it("neither power up: not held, the action goes out on the first board read (as before)", async () => {
+    vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"] });
     const config = testConfig();
     const { stale, settled } = turnStart(false);
-    // The board moves at 1000 ms (400 before: the first read's planning alone took ~500 ms at load ~20 while live play ran).
+    // Hold the first board until dispatch; no real-time cutoff depends on host load.
     const { client, sent } = await turnStartMod(stale, settled, Infinity);
-    await runLoop({ config, mode: "play", client, jev: stubJev(), knowledge: testKnowledge, maxRuns: 1, maxDecisions: 10, pollIntervalMs: 1 });
+    const result = runLoop({ config, mode: "play", client, jev: stubJev(), knowledge: testKnowledge, maxRuns: 1, maxDecisions: 10, pollIntervalMs: 1 });
+    await vi.runAllTimersAsync();
+    await result;
     expect(sent).toHaveLength(1);
     // The fixture holds the first board until dispatch, independent of machine load.
     expect(recordsOf(config).filter((record) => record["screen"] === "COMBAT").map((record) => record["result"])).toEqual(["completed: scripted"]);
