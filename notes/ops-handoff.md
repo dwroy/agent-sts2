@@ -41,3 +41,5 @@
 - 本轮非阻塞取得ops/live-merge.lock失败（busy），未创建live MERGE_HEAD或冲突索引，不等待、不重试。`bash ops/codex-ops-do.sh learner-merge exp-silent`也超时，exit128、输出“（超过 30 秒，已终止）”；未确认manual事件入队，完整命令与原因已写收件箱/for-dai，请锁释放后补manual事件。
 - 下一次合入事件只用上述不可变源，不用exp-silent移动分支头。先非阻塞取锁，确认无report.py/知识构建器及其他未提交合并，保留刷新数据，保留双方decision-log和版本表所有条目（包括已上线S1.fix9/fix10、S1.high和eval-metrics工具）。锁内合入后跑固定沙箱入口；通过再登记新的经验eval版本（预期S1.exp11，必须查重），经ledger.py以by=ops将本批17项shipped，同步main并刷新论文表。`/tmp/sts2-0935-live.py`尚未改live，若仍保留可核对后使用；结果文件不存在时才首次运行。
 - 待登记17项：silent-0005,silent-0006,silent-0007,silent-0010,silent-0019,silent-0020,silent-0021,silent-0027,silent-0028,silent-0030,silent-0037,silent-0046,silent-0053,silent-0063,silent-0064,silent-0076,silent-0077。0074/0075代码模型提案不属于本经验批次；0076的first_run/asc字段更正请求只转录给学习者工具任务，不手改旧账本或把旧无抽牌案例计成施毒观察。完成后追加状态，保留本节。
+
+- 2026-10-05 10:01 处理fix-done/learner-checks 20261005-084301：main已同步71e677e2，S1.fix9/fix10实际live发布7efeed50已核实，外部完整tsc/vitest exit0、208文件2747通过/2跳过。silent-0040/0066/0074/0075/0076/0077按对应模型/统计修复追加shipped，登记提交a42a5d9d；其中0076/0077虽已模型上线，经验.10的17项JSON增量仍未合入live，保留09:44待合入任务，下一manual成功后再按经验版本登记，不将模型状态误作经验已上线。未改live自动刷新，不重复跑完整检查。
