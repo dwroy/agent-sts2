@@ -1,0 +1,121 @@
+{
+  "source": {
+    "run": "2PVLGRBGUX9S",
+    "floor": 48,
+    "turn": 2,
+    "ts": "2026-10-05T16:55:27.578Z",
+    "ledger": "silent-0136"
+  },
+  "card": {
+    "index": 3,
+    "card_id": "MAD_SCIENCE",
+    "name": "疯狂科学",
+    "upgraded": false,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "{CardType:choose(Attack|Skill|Power):造成{Damage:diff()}点伤害{Violence:{ViolenceHits:diff()}次|}。|获得{Block:diff()}点格挡。||？？？}{HasRider:{Sapping: 给予{SappingWeak:diff()}层虚弱。 给予{SappingVulnerable:diff()}层易伤。|}{Choking: 本回合，你每打出一张牌，该敌人失去{ChokingDamage:diff()}点生命。|}{Energized: 获得{EnergizedEnergy:energyIcons()}。|}{Wisdom: 抽{WisdomCards:diff()}张牌|}{Chaos: 将一张随机牌放入你的手牌，这张牌在本回合可以免费打出。|}{Expertise:获得{ExpertiseStrength:diff()}点力量。 获得{ExpertiseDexterity:diff()}点敏捷。|}{Curious:能力牌的耗能减少{CuriousReduction:diff()}{energyPrefix:energyIcons(1)}。|}{Improvement:在战斗结束时，升级你牌组中的一张随机牌。|}|{CardType:choose(Attack|Skill|Power): ？？？| ？？？|？？？|？？？}}",
+    "resolved_rules_text": "获得2点力量。 获得2点敏捷。",
+    "dynamic_values": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 8,
+        "enchanted_value": 8,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ChokingDamage",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "CuriousReduction",
+        "base_value": 1,
+        "current_value": 1,
+        "enchanted_value": 1,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "Damage",
+        "base_value": 12,
+        "current_value": 13,
+        "enchanted_value": 12,
+        "is_modified": true,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "EnergizedEnergy",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseDexterity",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ExpertiseStrength",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingVulnerable",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "SappingWeak",
+        "base_value": 2,
+        "current_value": 2,
+        "enchanted_value": 2,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "ViolenceHits",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      },
+      {
+        "name": "WisdomCards",
+        "base_value": 3,
+        "current_value": 3,
+        "enchanted_value": 3,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  }
+}

@@ -84,7 +84,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
   // Cards that hurt while held at the end of the turn (Beckon 6 HP each, Burn 2): neither the enemy
   // intents nor the mod's lethal flag count them (F6NT F17 T11: 8 HP, two Beckons drawn by Burning
   // Pact, end turn shown as "incoming 0, not lethal"; they dealt 12).
-  const heldModels = asArray(combat["hand"]).map((entry, fallbackIndex) => modelHandCard(entry, fallbackIndex, knowledge));
+  const heldModels = asArray(combat["hand"]).map((entry, fallbackIndex) => modelHandCard(entry, fallbackIndex, knowledge, str(asRecord(state.run?.raw)["character_id"])));
   const heldPenaltyOf = new Map(heldModels.map((model) => [model.index, model.heldPenalty ?? 0] as const));
   const heldHpLoss = heldModels.reduce((sum, model) => sum + (model.heldHpLoss ?? 0), 0);
   const heldDamage = heldModels.reduce((sum, model) => sum + Math.max(0, (model.heldPenalty ?? 0) - (model.heldHpLoss ?? 0)), 0);
@@ -108,7 +108,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
   // T6: Blood Wall at 1 HP was listed as survivable and killed us).
   const hpCostByIndex = new Map(
     asArray(combat["hand"]).map((entry, fallbackIndex) => {
-      const model = modelHandCard(entry, fallbackIndex, knowledge);
+      const model = modelHandCard(entry, fallbackIndex, knowledge, str(asRecord(state.run?.raw)["character_id"]));
       return [model.index, model.hpLoss] as const;
     }),
   );

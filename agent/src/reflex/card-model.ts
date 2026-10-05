@@ -70,7 +70,7 @@ export interface CardModel {
   weakFirst?: boolean;
   /** Permanent Strength for the player. */
   strength: number;
-  /** Dexterity gained on play, from observed Footwork vars (silent-0026). */
+  /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
   dexterity?: number;
   /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
   temporaryDexterity?: number;
@@ -786,7 +786,7 @@ export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
   return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
 }
 
-export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge): CardModel {
+export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = ""): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
   const info = knowledge.card(cardId);
@@ -795,16 +795,22 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const template = unconditionalText(str(card["rules_text"]));
   const index = numOrNull(card["index"]) ?? fallbackIndex;
   const requiresTarget = bool(card["requires_target"]);
-  const type = info?.type || "";
+  // 2PVLGRBGUX9S F48 first T2, silent-0136: only this resolved Expertise template was observed.
+  // Keep this Silent observation scoped to its character; missing context preserves the prior model.
+  // Mad Science carries all riders' dormant variables, even when it did not receive those riders.
+  const madExpertise = character.toLowerCase() === "silent" && cardId === "MAD_SCIENCE" && !bool(card["upgraded"]) &&
+    dyn(card, "ExpertiseStrength") === 2 && dyn(card, "ExpertiseDexterity") === 2 &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得2点力量。获得2点敏捷。";
+  const type = madExpertise ? "Power" : info?.type || "";
   const target = targetMode(str(card["target_type"]), template, requiresTarget);
 
-  let damage = dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
+  let damage = madExpertise ? null : dyn(card, "CalculatedDamage") ?? dyn(card, "Damage");
   let hits = dyn(card, "CalculatedHits") ?? dyn(card, "Repeat") ?? 1;
   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(template)) hits = 2;
-  const block = dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
+  const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
   let weak = dyn(card, "WeakPower") ?? 0;
-  let strength = dyn(card, "StrengthPower") ?? 0;
+  let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
   let tempStrength = 0;
   let strengthPerVulnerable = 0;
   const enemyStrength = dyn(card, "EnemyStrength") ?? 0;
@@ -912,7 +918,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
         requires_target: true, target_type: "AnyEnemy", valid_target_indices: card["valid_target_indices"],
         rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
         dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
-      }, -1, knowledge) };
+      }, -1, knowledge, character) };
     }
   }
   // Enthralled does nothing when played but lift its lock, which the solver plays (CardModel.playFirst): modelled.
@@ -976,17 +982,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
-    ...(dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+    ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
     weak,
     ...(weakFirst ? { weakFirst } : {}),
     strength,
-    ...(cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
+    ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
     tempStrength,
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
-    ...(dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
+    ...(!madExpertise && dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),
     ...(cardId === "FEEL_NO_PAIN" ? { feelNoPain: dyn(card, "Power") ?? 3 } : {}),
     ...(special === "double_next_attacks" ? { nextAttacks: dyn(card, "Attacks") ?? 1 } : {}),
     enemyStrength,
@@ -1090,7 +1096,7 @@ export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow:
  * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
  * escaped the Insatiable's Sandpit nor cleared a Beckon).
  */
-export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0): CardModel {
+export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0, character = ""): CardModel {
   const info = knowledge.card(cardId);
   const raw = own ?? {
     card_id: cardId,
@@ -1102,7 +1108,7 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
     energy_cost: info?.cost ?? 0,
     costs_x: info?.xCost ?? false,
   };
-  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge);
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character);
   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
   // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
   const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;
