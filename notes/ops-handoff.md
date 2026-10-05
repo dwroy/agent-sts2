@@ -32,3 +32,5 @@
 - `bash ops/codex-ops-do.sh learner-merge exp-silent` exit128、输出“（超过 30 秒，已终止）”，尚未确认兜底事件入队；`learner-status`同样超时。收件箱及for-dai请求在锁释放后补一个manual事件。
 - 下一轮先非阻塞取得`ops/live-merge.lock`并确认没有report.py/知识刷新。若HEAD、MERGE_HEAD与暂存树均仍等同上述值，可用已通过的相同内容检查，运行`nice -n 19 python3 /tmp/sts2-exp7-fallback-live.py --resume-tested`（文件仍在时）；它会核对树、接受CRLF、gitleaks扫描、提交合并并登记S1.exp8。若代码或数据已变，重新核对并测试后处理；不要合移动的分支头。实际live提交后同步main、登记eval版本，经ledger.py以by=ops将下列17项shipped并刷新论文表。
 - 待登记：`silent-0005,silent-0007,silent-0006,silent-0019,silent-0020,silent-0021,silent-0057,silent-0011,silent-0030,silent-0046,silent-0053,silent-0050,silent-0058,silent-0024,silent-0059,silent-0060,silent-0025`；目前保持proposed，未登记shipped或S1.exp8。完整沙箱外补测动作缺口的既有请求仍保留。完成后追加处理状态，不删本节。
+
+- 2026-10-05 08:02 已完成07:08待提交live合并：源0d469a22锁内保留新自动刷新、固定沙箱150文件1901用例通过，合入0f34d1c43820371749920bde8e378b598f67fa33、发布fe4b466fc17a9bd41a3b1d1a2b82c5d389fd0de1，登记S1.exp8及17项shipped。随后本轮源267128cd经验.8也按同一流程合入972303c55c0b1ab55453c8f44d967ccf5f53a3f6、发布62faa08a848fa97d38c810dd1294e2511db17dfe，登记S1.exp9及16项shipped；两批已机械同步main 446fd6c406c8763b3fa9872da14e1feb0f753537，原待提交交接完成，保留全部历史。旧/tmp恢复脚本不得重跑；完整外部补测待后续事件或既有权限请求处理。

@@ -247,3 +247,72 @@ silent,1,3,1,0,1,32.67,32.67,E6AVMMVCSRPC,K3676LU8B0UH,2026-10-04T19:50:28+00:00
 | E6AVMMVCSRPC | S1.fix2 | 7be569b1+dirty | 1 | 10-05 03:51 | 17 | 一幕 | 4.1 | 0 | F17 | 是（- / VAJRA / 有） | 1/2 | — | 18 | 1039/208/13 | 6.8 | codex:gpt-6.1-sol · 知识前缀 full | 5 / F17 |
 | XYYQYBRM2A01 | S1.fix2 | bb19732f+dirty | 1 | 10-05 04:18 | 33 | 过一幕 | 1.5 | 1/0 | F17/F33 | 否（- / - / 无） | 0/2 | F24 | 33 | 1994/258/29 | 14.6 | codex:gpt-6.1-sol · 知识前缀 full | 5 / F33 |
 | K3676LU8B0UH | S1.fix3 | ccf1fcde+dirty | 1 | 10-05 05:09 | 48 | 胜 | 1.9 | 1/0/1 | F17/F33/F48 | 否（- / - / 无） | 1/3 | F24 | 48 | 3046/539/40 | 19.3 | codex:gpt-6.1-sol · 知识前缀 full | 1 / F48 |
+
+## A2 → A3（2026-10-05 07:49 CST）
+
+A2窗口为2026-10-05 06:05:11至07:39:21（CST），只含`logs/runs.jsonl`中已结束的两局SILENT A2。`logs/run-config.jsonl`确认10GPK5XGHCK3于07:42:02.095以解析值`target_ascension=3`、模式climb开局，启动代码`9e0fda2e+dirty`，开局经验2026-10-05.7。
+
+ZZMYZ5UBCG72第48层通关，结束于`2026-10-04T23:39:21.975Z`（07:39:21 CST）。一幕乐加维林族母、二幕无厌沙虫、三幕火炬头聚合体/女王的SL记录均为`attempt=1 / won`，本局没有`predicted_death`或成功读档，属于整局第一次尝试胜。首条决策`2026-10-04T22:49:07.149Z`至结束为3014.826秒，四舍五入50分15秒（论文表50.2分钟）；配置记录06:48:25.400至结束另为50分57秒。沿用A0/A1的首决策用时口径。
+
+| 指标 | 第一次尝试 | 最终（含SL） |
+| --- | ---: | ---: |
+| 局数 | 2 | 2 |
+| 胜 / 负 | 1 / 1 | 1 / 1 |
+| 胜率 | 50% | 50% |
+| 平均终层 | 40.50 | 40.50 |
+
+第一次尝试沿用`eval/metrics.py:first_attempt`：取首次`predicted_death`所在层，没有该记录时使用最终结果。两局共成功读档5次，均来自失败的CSBR；SL后新增胜局0。两局样本不足，以上是本级已结束局的描述。
+
+| 局号 | 首次尝试终层 | 最终终层 | 成功读档 | 最终结果 | 最终死亡战斗 | 首决策至结束（分） |
+| --- | ---: | ---: | ---: | --- | --- | ---: |
+| CSBR5CRDWQNB | 33 | 33 | 5 | 负 | 火箭 / 碾碎爪 | 39.4 |
+| ZZMYZ5UBCG72 | 48 | 48 | 0 | 首次尝试胜 | — | 50.2 |
+
+唯一最终死亡在二幕boss火箭/碾碎爪。学习者的CSBR复盘记录：六次均未杀死任一目标，前五次T4判死后读档，第六次T4以10血+7格挡承受火箭24攻击死亡；两敌结算后仍分别165/199、92/209血。学习者还记录F28晚精英损44、F29走廊损13，最后火堆后含小血瓶以38血入boss，路线累计损血没有被最后一次回血补回。这里只转录[学习者复盘](lessons.md)及末态事实，不添加路线禁令、血线或新的机制结论。
+
+### 本级学习产出与实际上线
+
+本轮账本检查65条、0问题。`python3 learner/ledger.py find --character silent --asc 2 --json`返回5项，最早证据都在CSBR：silent-0061（风的女儿逐攻击格挡模型缺口，observed，已按07:30队列转录）；silent-0062（SL换线的朝向、血量、伤害比较）、silent-0063（攻击触发格挡及相关实测）、silent-0064（千足虫复活与毒层时点）、silent-0065（朝向变化实测及未观察范围），后四项当前为proposed。原文、证据与去向见[学习账本](../paper/materials/learning/ledger.jsonl)，运维没有补写知识。
+
+A2期间新登记10项silent-0056—0065；其中0056—0060是A1首胜K367的回补，0061—0065才按最早证据归A2。正式A2复盘目前1/2（CSBR已完成，ZZMY首胜待后续调度器批次），不提前填学习者结论。
+
+| 实际合入时间（CST） | 版本 / 提交 | 来源与生效记录 |
+| --- | --- | --- |
+| 06:32:44代码合入；06:36:49发布 | S1.fix5 / b129cd20，发布b9c46d66 | 学习者萎靡实际X模型silent-0051/0053，证据KAY F9/F12、XYY F30/F33；统计重犯按首次开局时间silent-0052，证据XYY。首胜启动b9c46d66包含本批；失败CSBR启动c4c7ad97。 |
+| 06:51:56代码合入；06:55:29发布 | S1.fix6 / 63c50e94，发布9e0fda2e | 学习者撕咬共享成长silent-0056/0058，证据K367 F48第2次T1/T9/T12；首胜启动b9c46d66不含本批，下一局A3的9e0fda2e包含。 |
+
+以上两批固定沙箱自测已通过，07:17完成事件核实沙箱外完整tsc+vitest exit0（201文件、2709通过、2跳过）。这里只引用既有结果，未重跑测试或额外审核。
+
+经验2026-10-05.7来源0d469a22，依据K367及历史静默九局产出、+4/~13/-0，43→47条。06:52轮机械同步main、live合并尚未提交，HEAD仍9e0fda2e、MERGE_HEAD仍0d469a22；本轮不处理该待提交交接，也没有补登记S1.exp8或把17项待提案改shipped。不过A3的实际开局配置已记录.7，且dirty_files含experience.json，表明未提交的学习者经验文件已被运行读取；正式合入凭据与运行时读取事实分别保留。live新一轮自动刷新数据也已发生，后续兜底须重新核对当前工作树，不能盲用旧干净状态。
+
+两局A2开局经验均为.6，但题面按文件变动刷新。ZZMY的48条大脑请求中，15条使用前缀`5a7110096b52`（06:49:07—06:58:43），33条使用`374c9b29b0c3`（06:59:04—07:37:12），确有局中知识前缀变化。此处不将hash反推成具体经验版本，也不把任何修复或经验变化归为首胜原因；具体题目以`logs/brain.jsonl`留痕为准。
+
+`python3 learner/ledger.py find --character silent --status shipped --json`本轮返回25项，当前最后状态按版本分组如下。部分先前shipped条目被后续经验任务追加proposed，旧上线历史仍保留，因此25是当前最后状态计数，不是累计上线发现数；待提交的经验批次沿既有交接处理。
+
+- S1.fix3（7项）：silent-0008、silent-0022、silent-0026、silent-0029、silent-0032、silent-0033、silent-0041。
+- S1.exp7（4项）：silent-0018、silent-0036、silent-0054、silent-0055。
+- S1.exp5（8项）：silent-0027、silent-0028、silent-0034、silent-0035、silent-0042、silent-0043、silent-0044、silent-0047。
+- S1.exp6（3项）：silent-0045、silent-0048、silent-0049。
+- S1.fix5（2项）：silent-0051、silent-0052。
+- S1.fix6（1项）：silent-0056。
+
+### 学习曲线的A2原行
+
+本轮`nice -n 19 python3 ops/paper_dataset.py --no-raw`退出0，原始日志截点2026-10-05 07:44:32 CST。五项一致性检查通过、decision-count不一致为空、key scan CLEAN。按生成工具原列顺序附`paper/data/learning-curve-silent.csv`的A2行：
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,2,2,1,1,0,40.5,40.5,CSBR5CRDWQNB,ZZMYZ5UBCG72,2026-10-04T22:05:11+00:00,2026-10-04T23:39:21+00:00,5,0,14,silent-0008 silent-0018 silent-0022 silent-0026 silent-0029 silent-0032 silent-0033 silent-0036 silent-0041 silent-0045 silent-0048 silent-0049 silent-0054 silent-0055,1,1
+```
+
+`items_found`按最早证据局进阶归属，`items_shipped`按登记后下一场已结束局进阶归属，并不等于本级期间所有合入数；原始历史及提案状态不由运维改写。只按生成工具口径报告，保留小样本限制。
+
+### 完整eval待沙箱外补跑
+
+本轮按要求实际运行以下命令（PATH已加`~/.local/node/bin`）：
+
+```bash
+nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group-by ascension --ascension 2 --md --per-run > /tmp/sts2-a2-climb-metrics.md 2> /tmp/sts2-a2-climb-metrics.err
+```
+
+退出1，`RuntimeError: eval/strength-sources.ts failed`，根因`Error: listen EPERM: operation not permitted /tmp/tsx-1000/69.pipe`。完整eval没有生成；上面的核心统计由runs、SL、run-config及首条决策核对，不伪造力量来源或校准输入。请沙箱外有权限的执行方补跑同一命令，结果归档`paper/materials/silent/a2-metrics.md`；完整命令及请求已追加收件箱和notes/for-dai.md。eval-metrics白名单动作仍沿已有待办，运维不扩大沙箱出口。
