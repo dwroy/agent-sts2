@@ -2894,6 +2894,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     infernoCopies: infernoCopies(state, powerAmount(player, "INFERNO_POWER")),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     afterImage: powerAmount(player, "AFTERIMAGE_POWER"),
+    shadowmeldActive: powerAmount(player, "SHADOWMELD_POWER") > 0,
     poisonExtraTriggers: powerAmount(player, "ACCELERANT_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
     hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,

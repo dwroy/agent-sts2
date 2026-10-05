@@ -442,6 +442,8 @@ export interface PlayerSim {
   infernoCopies?: number;
   /** Unmovable up and not yet used this turn: shown Block values are doubled, only the first one is real. */
   unmovableArmed?: boolean;
+  /** Shadowmeld already up: hand card Block is already doubled in the mod's values. */
+  shadowmeldActive?: boolean;
   /** Strength at the start of the turn (STRENGTH_POWER), for rounding Weak damage once from the base. */
   strengthNow?: number;
   /**
@@ -964,6 +966,8 @@ interface Sim {
   flat: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
+  /** Shadowmeld newly played within this line; never carried into a later turn. */
+  shadowmeld: boolean;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
   intangible: boolean;
   /** Buffer stacks up (already up plus gained this turn): each negates one HP loss, ours or an enemy hit. */
@@ -1783,8 +1787,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // CARD_CONDITIONS, Expect a Fight: its Block per point of Strength gained earlier in this line (Unmovable doubles it too
     // on the turn's first Block card).
     if ((card.perStrengthBlock ?? 0) > 0 && next.strength !== 0) shown = Math.max(0, shown + (card.perStrengthBlock ?? 0) * next.strength * (unmovableDoubles ? 2 : 1));
-    gainBlock(next, Math.max(0, shown + (card.type === "Potion" ? 0 : next.tempDex)), player);
+    const block = Math.max(0, shown + (card.type === "Potion" ? 0 : next.tempDex));
+    gainBlock(next, block * (next.shadowmeld && card.type !== "Potion" ? 2 : 1), player);
   }
+  // 10GPK5XGHCK3 F42 T2/T7, silent-0075: only later card gains, not Block already held.
+  // Existing shown values already contain this buff; no unobserved stacking or passive-block rule.
+  if (card.shadowmeld && !player.shadowmeldActive) next.shadowmeld = true;
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;
@@ -3186,7 +3194,7 @@ function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const poisonKey = sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "";
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}`;
 }
 
 export interface SolveResult {
@@ -3297,6 +3305,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     weakApplied: 0,
     flat: 0,
     tempDex: 0,
+    shadowmeld: false,
     intangible: false,
     buffer: input.player.buffer ?? 0,
     bufferSpent: 0,
