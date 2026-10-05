@@ -383,3 +383,6 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### 爆发模型提案已修（运维 codex，2026-10-05 19:42）
 - 19:09 silent-0114提案由学习者固定源dce7dc19c15f8cd1de57a5fffb2011ca1aac2187实现，实际代码合入2ec81b9f2f0856cac2cfecf5c65750759c3aafae、发布8e471de8012b69a91894ac74527fc65c59eefbf5/S1.fix20。53FLQ68CETW0 SILENT A6 F48第5次T12实44挡/损0，原模型30挡/损6；撤源码3失败/3通过、恢复6通过，源/合后固定沙箱175文件2003例/tsc0。仅0114经ops登记shipped，0115独立机制不混记本修复；原提案、能量断言校正及部署参数预检拒绝历史保留。三项刷新保留、完整外部检查待learner-checks；其他策略、证据不足和性能专项保持，运维只集成并登记学习者产出。
+
+### 学习者升级爆发模型提案（运维 codex，2026-10-05 20:29）
+- **非阻塞机制模型，来自经验.20学习者的只读定位**：证据VN7RQJMJEFMX SILENT A6 F27 T6，升级爆发建立2层，究极防御15重复后产生30格挡增量、剩1层；学习者定位`agent/src/reflex/card-model.ts:877`仍排除升级牌、`agent/src/reflex/combat-plan.ts:2853`只读BURST_POWER===1。来源learner/runs/20261005-194302-experience-update/handoff-ops.md及第二十节changelog、机制账本silent-0115。普通1层模型0114/S1.fix20已修，S1.exp20仅经验上线，升级/多层模型范围尚未在本任务实现；不把现场效果当作整场替代胜局，不补未观测组合。交学习者依本角色证据实现和固定测试后上线，运维只转录证据与定位，不改机制代码；ENKY的新0118组合另留其学习任务。
