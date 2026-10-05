@@ -762,6 +762,12 @@
       "family": "Silent",
       "commit": "995715e80a825a1e316a6b87195a17958002f842",
       "source": "decision-log 2026-10-06 07:09（Codex学习者修复fix-queue-v4.md 2026-10-06 06:02隐秘匕首Cards语义；源码b7f081fcc26da4506cb775739bb118cb6cbe4ecc，实际合入live 995715e80a825a1e316a6b87195a17958002f842/S1.fix26；来源10GPK5XGHCK3 SILENT A3 F9 T5、MGA0CZDDKC0P SILENT A10 F17首试T2/第6次T3，账本silent-0153（机制0154独立）；固定六帧核对原始只读日志。普通静默隐秘匕首弃两张原手牌后生成两小刀，不抽牌；列弃牌组合参考，由Jev选择，进入选择时清空旧手牌续行。不外推升级、缺牌和重放；缺少生成牌元数据或未验证续行标未知，不增加药水或先手策略；铁甲分支等价。撤整组源码5失败1通过/恢复6通过，撤执行接线1失败5通过；初稿牌型/状态夹具及接线失败、记录预检冲突均保留。源固定沙箱tsc0/193文件2105例，合后tsc0/193文件2105例；无生成器改变，不重建。锁内先提交刷新数据，知识重叠为空；0153仅CLI/by=learner:fix-batch追加proposed，交运维核实际发布后CLI登记shipped。沙箱外完整检查交调度器；不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.strategy6",
+      "family": "Silent",
+      "commit": "03280f7fe2149ae22b5b827dd803ef75ce65fa4d",
+      "source": "decision-log 2026-10-06 07:28（微型帐篷双动作营火的条件HP及单次动作比较口径；来源/home/dw/Projects/agent-sts2/learner/runs/20261006-071302-strategy-proposal/proposal.md，LLYSRQQ35AVW SILENT A8 F24/28/32/40/43/47（回合不适用），账本silent-0159、既有0145/0146/0020；源码57fe209951fc61578435b70e71f19907c40383d2→live实际合入03280f7fe2149ae22b5b827dd803ef75ce65fa4d，合前41bd4a44e4f5148304f072993e04e3685d534616。仅当前未熔化帐篷且HEAL/SMITH均启用时给两种已观测顺序与条件HP，38→59、48→69、满血70→70；只按条件HP标并列，原单次动作HP、route_review、boss_sim、全部选项与DeepSeek选择权保持；不预支或自动执行另一动作、不沿旧索引、不扩展其他营火组合，六火是一局而非六独立样本。铁甲分支等价，无药水代价/过滤/否决/提前或留药规则，无生成器改动。撤生产接线exit1/5失败2通过，恢复exit0/7通过；源及合后固定沙箱tsc0/vitest0，完整外部检查交调度器；初稿夹具配置错误保留。知识刷新及其他live记录保留。账本只proposed/by=learner:strategy-proposal，运维据strategy-done及/home/dw/Projects/agent-sts2/learner/runs/20261006-071302-strategy-proposal/handoff-ops.md核实实际上线后经ledger.py登记shipped。不停对局、不运行play、不推送。）"
     }
   ]
 }
