@@ -25,7 +25,7 @@ import { readFileSync } from "node:fs";
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
 import { OUTCOME_BASE_ASC, hasAscensionTables, outcomeView, pairHelps, pairThin, referenceNote, referenceRow } from "../knowledge/outcome-tables.js";
 import type { Knowledge } from "../knowledge/index.js";
-import { bossDamageByTurn, bossHitsByTurn, bossHpAt, bossHpLoss, fillDbNumbers, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt } from "../knowledge/monster-db.js";
+import { bossDamageByTurn, bossHitsByTurn, bossHpAt, bossHpLoss, bossPartIds, fillDbNumbers, monsterHpAt, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt, shownDamageAt } from "../knowledge/monster-db.js";
 import { measuredRoomExact } from "../knowledge/room-costs.js";
 import type { GameState } from "../hand/mod/schema.js";
 import { asArray, asRecord, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
@@ -1756,14 +1756,52 @@ export function gapRestShift(gap: DamageGap | null, option: string, hpPct: numbe
   return option === "SMITH" ? 2 : 0;
 }
 
+/** Observed boss facts for the uncalibrated Silent clock. */
+function silentBossFacts(boss: BossProfile & { id: string }, ascension: number): Record<string, JsonValue> {
+  // ZZMYZ5UBCG72 F34/F48 and 9YBKCNBFP0X5 F34/F48: 460 mixed the Queen's 400 HP with a legacy block allowance.
+  // Shared monster observations need no deck calibration or five-room-cost samples.
+  const monsters = monsterMoves();
+  const ids = bossPartIds(boss.id);
+  const hpIds = boss.hpParts ?? (monsters[boss.id] ? [boss.id] : ids.filter((id) => id !== boss.id));
+  const hpParts = hpIds.map((id) => monsterHpAt(monsters, id, ascension));
+  const phaseRecord = boss.id === "TEST_SUBJECT" ? bossHpAt(boss.id, ascension) : null;
+  const phases = phaseRecord?.phases ?? [];
+  const hp = boss.id === "TEST_SUBJECT"
+    ? phases.length > 0 ? phases.reduce((sum, value) => sum + value, 0) : null
+    : hpParts.length > 0 && hpParts.every((part) => part !== null) ? hpParts.reduce((sum, part) => sum + part!.hp, 0) : null;
+  const enemies = ids.filter((id) => monsters[id]).map((id) => {
+    const part = monsterHpAt(monsters, id, ascension);
+    const attacks = Object.entries(monsters[id]!.moves ?? {}).flatMap(([moveId, move]) => {
+      const base = moveDamageAt(monsters, id, moveId, ascension);
+      const shown = base?.estimated === false ? null : shownDamageAt(monsters, id, moveId, ascension);
+      // A current-ascension shown sample takes precedence over an older inferred base; base wins at equal distance.
+      const damage = base && (!shown || Math.abs(base.from - ascension) <= Math.abs(shown.from - ascension)) ? base : shown;
+      if (!damage) return [];
+      const isBase = damage === base;
+      const counts = move.damage_by_asc?.[String(damage.from)];
+      const samples = Object.values((isBase ? counts?.base_per_hit : counts?.shown) ?? {}).reduce((sum, n) => sum + n, 0);
+      return [{ move: moveId, per_hit: damage.perHit, hits: damage.hits, basis: isBase ? "base" : "shown",
+        samples, from_ascension: damage.from, estimated: damage.estimated,
+        scaled_through_ascension: damage.ratioTo ?? damage.from }];
+    });
+    return { enemy: id, hp: part?.hp ?? null, hp_samples: part?.n ?? 0,
+      hp_from_ascension: part?.from ?? null, hp_estimated: part?.estimated ?? null, attacks };
+  });
+  return { boss_hp: hp, boss_hp_note: "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+    boss_hp_parts: hpIds, ...(phases.length > 0 ? { boss_hp_phases: phases, boss_hp_phases_from_ascension: phaseRecord!.asc } : {}),
+    boss_enemies: enemies,
+    boss_enemy_note: "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。" };
+}
+
 /** The act boss clock as DeepSeek sees it (run plan, build/route/rest questions). */
 export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
   const character = clockCharacter(state);
   if (character !== DEFAULT_CHARACTER) {
     const boss = bossProfile(str(asRecord(state.run?.raw)["boss_id"]));
     if (!boss) return null;
-    return { boss: boss.id, boss_hp: bossHp(boss, state.run?.ascension ?? 0),
-      boss_hp_note: bossHpSource(boss, state.run?.ascension ?? 0),
+    return { boss: boss.id, ...(character === "silent" ? silentBossFacts(boss, state.run?.ascension ?? 0) : {
+      boss_hp: bossHp(boss, state.run?.ascension ?? 0), boss_hp_note: bossHpSource(boss, state.run?.ascension ?? 0),
+    }),
       deck_damage_per_turn_estimate: null, hp_loss_per_turn: null, survivable_turns: null, gap_per_turn: null,
       estimate_note: `尚无 ${character} 的 boss 时钟校准；构筑输出、掉血和存活回合未知。` };
   }
