@@ -2849,8 +2849,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     duplicate: powerAmount(player, "DUPLICATION_POWER"),
     // One-Two Punch played earlier this turn: its next Attack(s) are played an extra time (9Q7V F17 T14).
     duplicateAttacks: powerAmount(player, "ONE_TWO_PUNCH_POWER"),
-    // 53FLQ68CETW0 F48 attempt 5 T12, silent-0114: Burst's observed single Skill replay.
-    ...(powerAmount(player, "BURST_POWER") === 1 ? { duplicateSkills: 1 } : {}),
+    // 53FLQ68CETW0 F48 T12: one Skill; VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills.
+    ...([1, 2].includes(powerAmount(player, "BURST_POWER")) ? { duplicateSkills: powerAmount(player, "BURST_POWER") } : {}),
     regen: powerAmount(player, "REGEN_POWER"),
     // Buffer already up (a Lucky Tonic drunk earlier this turn or before): the next HP losses are prevented.
     buffer: powerAmount(player, "BUFFER_POWER"),

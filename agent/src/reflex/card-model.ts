@@ -52,8 +52,9 @@ export interface CardModel {
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
   shadowmeld?: boolean;
-  /** Observed unupgraded Burst: the next Skill this turn is played once more (silent-0114/0115). */
+  /** Observed Burst: each of the next armed Skills this turn is played once more (silent-0114/0115). */
   burst?: boolean;
+  burstSkills?: number;
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
   block: number;
@@ -874,7 +875,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
   // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
   const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
-  const burst = cardId === "BURST" && !bool(card["upgraded"]) && dyn(card, "Skills") === 1;
+  // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
+  const burstSkills = dyn(card, "Skills");
+  const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
   const corrosiveWave = cardId === "CORROSIVE_WAVE" && !bool(card["upgraded"]) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
@@ -969,7 +972,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     hits: Math.max(0, Math.round(hits)),
     ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
     ...(shadowmeld ? { shadowmeld: true } : {}),
-    ...(burst ? { burst: true } : {}),
+    ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
     ...(dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
