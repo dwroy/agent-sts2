@@ -52,6 +52,8 @@ export interface CardModel {
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
   shadowmeld?: boolean;
+  /** Observed unupgraded Burst: the next Skill this turn is played once more (silent-0114/0115). */
+  burst?: boolean;
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
   block: number;
@@ -872,6 +874,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
   // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
   const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
+  const burst = cardId === "BURST" && !bool(card["upgraded"]) && dyn(card, "Skills") === 1;
   const corrosiveWave = cardId === "CORROSIVE_WAVE" && !bool(card["upgraded"]) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
@@ -884,7 +887,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (shadowmeld || corrosiveWave > 0 || special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force" || special === "malaise") {
+  } else if (shadowmeld || burst || corrosiveWave > 0 || special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force" || special === "malaise") {
     known = true; // its whole value is the Sandpit count / the block doubled / the Attacks doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
@@ -966,6 +969,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     hits: Math.max(0, Math.round(hits)),
     ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
     ...(shadowmeld ? { shadowmeld: true } : {}),
+    ...(burst ? { burst: true } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
     ...(dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),

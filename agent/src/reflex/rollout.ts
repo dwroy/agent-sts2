@@ -2814,6 +2814,8 @@ function simulate(
       // Mantle up, 7 + 3 block at the next).
       clayPending: (base.clayBlock ?? 0) * startLossEvents(player),
       duplicate: 0,
+      // 53FLQ68CETW0 F48 attempt 6 T3 -> T4, silent-0115: unused Burst expires.
+      duplicateSkills: 0,
       buffer: 0,
       vigor: 0,
       regen: player.regen,
