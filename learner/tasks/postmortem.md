@@ -1,6 +1,6 @@
 ---
 title: 复盘
-effort.codex: high
+effort.codex: xhigh
 tools: Read, Grep, Glob, Bash
 timeout_min: 120
 max_turns: 400
