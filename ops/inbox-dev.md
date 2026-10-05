@@ -51,3 +51,4 @@
 - 2026-10-06 02:25 [运维 codex] 通关：4Y94N8RDPGPM，静默猎手A7/F48，第一次尝试赢、成功读档0；用时37分36秒（首末决策），结束于2026-10-06 01:57:26 CST。下一局LLYSRQQ35AVW已于02:00:49按实际run-config的target_ascension=8/climb开始A8。
 - 2026-10-06 02:25 [运维 codex] Roy，A7小结：7局最终1胜6负，第一次尝试1胜6负；6败局SL共24次、重打后0胜6负，平均终层40.57/首试39。主要死亡战斗永世沙漏3局，女王组合/甲虫组合/仪式兽各1；学习窗新增19账本、11项最早证据归A7，经验7批+修复3项对应9版本，active86→97（.24随.25生效，strategy3在A8后）。完整评估、账本id及学习曲线原行已写notes/silent-climb-report.md A7新节，首胜复盘留完成事件。
 - 2026-10-06 02:44 [运维 codex] 经验第28批S1.exp28完整补测exit1：target-options.test.ts:178耗时1506ms超过1500ms，2855通过/1失败/2跳过；同源码定向22例通过，保留上线并派核查，原失败不回改。命令 `bash ops/codex-ops-do.sh fix-batch` exit1返回`{"dispatched": null}`；learner-status确认021302-strategy-proposal/PID2125510占用同一codex-dev，保护拒绝并发，已将时钟/硬截止核查写入fix-queue优先交下一可用批次，不提高阈值或排除测试。
+- 2026-10-06 02:53 [运维 codex] 通关：LLYSRQQ35AVW 静默猎手A8/F48，第一次尝试赢（F17/33/48均首战赢，0次SL）；用时41分05秒（首末决策；开局配置至结束41分32秒），CST 02:42:21结束；下一局HMVJKM56S4Q8已按climb开A9（run-config target_ascension=9）。
