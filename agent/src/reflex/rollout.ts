@@ -1301,7 +1301,7 @@ const CONSTRICTOR = "SLITHERING_STRANGLER";
  * Shackles, Piercing Wail (logged Byrdonis STRENGTH_POWER -10 with MANGLE_POWER 10).
  */
 export const TEMP_STRENGTH_POWERS = ["SETUP_STRIKE_POWER", "FLEX_POTION_POWER", "REPTILE_TRINKET_POWER", "FEEDING_FRENZY_POWER", "COORDINATE_POWER"] as const;
-export const TEMP_DEXTERITY_POWERS = ["SPEED_POTION_POWER"] as const;
+export const TEMP_DEXTERITY_POWERS = ["SPEED_POTION_POWER", "ANTICIPATE_POWER"] as const;
 export const ENEMY_TEMP_STRENGTH_LOSS_POWERS = TEMP_STRENGTH_LOSS_POWERS;
 
 const sumOf = (powers: Record<string, number> | undefined, ids: readonly string[]): number => ids.reduce((sum, id) => sum + Math.max(0, powers?.[id] ?? 0), 0);
@@ -1903,6 +1903,11 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
     player.dexterity += card.dexterity;
     playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + card.dexterity;
   }
+  if (card.temporaryDexterity) {
+    player.dexterity += card.temporaryDexterity;
+    player.tempDexterity += card.temporaryDexterity;
+    playerPowers["ANTICIPATE_POWER"] = (playerPowers["ANTICIPATE_POWER"] ?? 0) + card.temporaryDexterity;
+  }
   if (card.plating) player.plating += card.plating;
 }
 
@@ -2175,6 +2180,7 @@ function applyPlan(
   player.dexterity -= player.tempDexterity;
   player.tempStrength = 0;
   player.tempDexterity = 0;
+  delete playerPowers["ANTICIPATE_POWER"];
   // The observed Shadow Step bonus starts after this turn and lasts through the next one only.
   player.doubleDamage = player.doubleDamageNext;
   player.doubleDamageNext = false;

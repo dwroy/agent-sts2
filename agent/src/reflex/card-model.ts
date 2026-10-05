@@ -67,6 +67,8 @@ export interface CardModel {
   strength: number;
   /** Dexterity gained on play, from observed Footwork vars (silent-0026). */
   dexterity?: number;
+  /** Dexterity for this turn only, from observed unupgraded Anticipate (silent-0078 / silent-0080). */
+  temporaryDexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
   afterImage?: number;
   /** Observed unupgraded Shadow Step: discard all other hand cards, double attacks next turn only. */
@@ -843,9 +845,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
   const shadowmeld = cardId === "SHADOWMELD" && !bool(card["upgraded"]) && dyn(card, "Power") === 1;
   const corrosiveWave = cardId === "CORROSIVE_WAVE" && !bool(card["upgraded"]) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
+  const anticipate = cardId === "ANTICIPATE" && !bool(card["upgraded"]) && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0;
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
@@ -941,6 +944,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(weakFirst ? { weakFirst } : {}),
     strength,
     ...(cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
+    ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
     tempStrength,
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
