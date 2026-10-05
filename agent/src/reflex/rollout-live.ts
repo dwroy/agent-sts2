@@ -791,7 +791,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -845,6 +845,9 @@ export function boardRolloutInput(
   const baseByKey = new Map(deckModels(state, knowledge).map((c) => [cardKey(c), c]));
   // PASSIVE_PIECES: the relic pieces the later turns' solver plays with (none held, or off: absent).
   const passive = solverPiecesOf(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
+  // Only the observed Silent Fumes trigger: no inferred bonus for direct poison cards or potions.
+  const skull = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" &&
+    asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "SNECKO_SKULL");
   return {
     solver,
     enemies,
@@ -857,6 +860,7 @@ export function boardRolloutInput(
     ...(hug && statusCards["SOOT"] ? { onShuffle: statusCards["SOOT"] } : {}),
     ...(passive ? { passive } : {}),
     playerPowers: powersOf(asRecord(combat["player"])),
+    ...(skull ? { fumesPoisonBonus: 1 } : {}),
     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
   };
