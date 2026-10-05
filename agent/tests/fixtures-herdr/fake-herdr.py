@@ -119,6 +119,11 @@ if group == "pane" and cmd in ("get", "rename", "close", "run", "read", "send-ke
         if busy(p):
             os.killpg(p["pid"], signal.SIGHUP)
         del s["panes"][pane]
+        # Publish pane removal before returning, so tests can expose the host's later registry update.
+        delay = float(os.environ.get("FAKE_HERDR_CLOSE_RETURN_DELAY", "0"))
+        if delay > 0:
+            save()
+            time.sleep(delay)
         out("ok")
     if cmd == "run":
         env = dict(os.environ, HERDR_ENV="1", HERDR_PANE_ID=pane)
