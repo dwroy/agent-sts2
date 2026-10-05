@@ -286,3 +286,7 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 
 ### silent-0040 原跨SL统计问题仍待修（运维 codex，2026-10-05 08:43）
 - **非阻塞，既有学习者统计提案，未修**。来源既有账本silent-0040及本批20261005-081301-fix-batch的report.md“没修的”项；`knowledge/builders/build-boss-damage.py`按(run,floor,turn)保留最早帧而未区分SL，学习者原证据T082DRCUHRRD F48的T1—T9取首战、T10取第3次、T11取第6次，累计hp_lost=84，和最终尝试净损80不同；C48LLXBGKXQ9 F17保留首战T19而获胜线T15结束。098a5471/S1.fix8仅修另一个build-monster-db奖励屏较低终帧漏读，没有修本项，相关shipped只登记终帧子项发布。原跨SL条目继续交学习者核对实现，不补额外机制、不将拼接数值当有效整场数据。
+
+### Dai 决定（2026-10-05 08:37）：codex 可以改自己的白名单动作和调度器
+- Dai：「可以让 codex 修改白名单动作脚本，相信 codex」「授权，可以修改 ops/codex/lib.ts 放宽 codex 的自主权限」。运维权限档里调度器和 broker 文件的只读规则已去掉（main e601de00）；学习者 fix-batch 也可以改 ops/codex-ops-actions.sh、ops/codex-ops-do.sh、ops/codex-ops.sh、ops/codex-ops-learn.py、ops/codex/ 等（learner/tasks/fix-batch.md 里「ops/ 只读」对这些文件不再适用，顺手改掉这句）。key、.env、codex 登录令牌、.git hooks/config 的保护不变。
+- 待做：eval-metrics 白名单动作（见 04:26 那条）。
