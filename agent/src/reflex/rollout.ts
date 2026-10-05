@@ -902,6 +902,8 @@ export function turnSpreads(trajectories: TurnRecord[][], horizon: number): Turn
 }
 
 export interface RolloutResult {
+  /** A missing transition prevents a forecast; no line gets invented survival numbers. */
+  unavailable?: string;
   lines: LineEstimate[];
   /** The kill orders compared (empty: none, the solver's own later turns). */
   orders: KillOrder[];
@@ -1380,7 +1382,21 @@ export function usualMove(table: EnemyTable | undefined): string | null {
 /** The move-model state after an enemy's stun (the Bowlbug Rock's Imbalanced). */
 const STUNNED_MOVE = "STUNNED";
 
+class MissingStunModel extends Error {
+  constructor() {
+    super("眩晕后继招式或伤害数据缺失，后续预测未知");
+  }
+}
+
 function nextMove(table: EnemyTable | undefined, move: string | null, random: () => number, exclude?: string, allowed?: (move: string) => boolean): string | null {
+  // silent-0127: repeating a zero-hit observed stun invents safety after the enemy wakes.
+  // Missing successor damage cannot fall back to the currently shown zero-hit intent either.
+  if (move === STUNNED_MOVE) {
+    const successors = Object.entries(table?.next[move] ?? {}).filter(([, n]) => n > 0);
+    if (successors.length === 0 || successors.some(([m]) => !Number.isFinite(table?.moves[m]?.damage))) {
+      throw new MissingStunModel();
+    }
+  }
   if (!table || !move) return move;
   const successors = table.next[move];
   if (!successors) return move;
@@ -3313,6 +3329,16 @@ const ORDER_SCHEDULE: { horizon: number; samples: number }[] = [
 
 /** Evaluate a decision's candidate lines: (i) current score, (ii) the line + gated terminal, (iii) the rollout. */
 export function rolloutDecision(input: RolloutInput): RolloutResult {
+  try {
+    return evaluateRollout(input);
+  } catch (error) {
+    if (!(error instanceof MissingStunModel)) throw error;
+    return { unavailable: error.message, lines: [], orders: [], horizon: 0, samples: 0, elapsedMs: 0,
+      degraded: ["missing stun model"], policyTurns: 0, policyMs: 0, policyNodes: 0 };
+  }
+}
+
+function evaluateRollout(input: RolloutInput): RolloutResult {
   const opts = input.options ?? {};
   const now = opts.now ?? (() => performance.now());
   const budget: Budget = { now, start: now(), budgetMs: opts.budgetMs ?? 1500, policyTurns: 0, policyMs: 0, policyNodes: 0, need: 0 };
