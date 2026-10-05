@@ -181,6 +181,14 @@ case "$cmd" in
     paused && exit 0
     exec 7> "$DIR/tick-$job.lock"
     flock -n 7 || exit 0
+    # Sample on the existing five-minute job, under a separate lock and time bound. Never delay a stall check/wake.
+    if [ "$job" = stall ]; then
+      (
+        exec 6> "$DIR/usage.lock"
+        flock -n 6 || exit 0
+        nice -n 19 timeout 25s node --import "$OPS/../agent/node_modules/tsx/dist/loader.mjs" "$OPS/sample-subscription-usage.ts"
+      ) > /dev/null 2>&1 &
+    fi
     case "$job" in
       stall) tick_stall ;;
       learn) python3 "$OPS/codex-ops-learn.py" tick >> "$DIR/learn.out" 2>&1 || log "learn tick failed (see learn.out)" ;;
