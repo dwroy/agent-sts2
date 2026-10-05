@@ -1,0 +1,1865 @@
+[
+  {
+    "off": 6671218697,
+    "ts": "2026-10-05T02:36:47.543000",
+    "run": "9YBKCNBFP0X5",
+    "floor": 43,
+    "turn": 4,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得6点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成3点伤害。 （攻击3次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 3,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 3,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予6层中毒。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成6点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "CLOAK_AND_DAGGER",
+        "name": "斗篷与匕首+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+        "resolved_rules_text": "获得7点格挡。 将2张小刀添加到你的手牌。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 6,
+            "current_value": 7,
+            "enchanted_value": 6,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 5,
+        "card_id": "GREED",
+        "name": "贪婪",
+        "upgraded": false,
+        "target_type": "None",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": -1,
+        "star_cost": 0,
+        "rules_text": "",
+        "resolved_rules_text": "不能被打出。 永恒。",
+        "dynamic_values": [],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "unplayable",
+        "unplayable_reason_raw": "HasUnplayableKeyword",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SLIMED_BERSERKER",
+        "current_hp": 135
+      }
+    ]
+  },
+  {
+    "off": 6671320090,
+    "ts": "2026-10-05T02:36:49.604000",
+    "run": "9YBKCNBFP0X5",
+    "floor": 43,
+    "turn": 4,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成3点伤害。 （攻击2次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 2,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 3,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予6层中毒。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成6点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "CLOAK_AND_DAGGER",
+        "name": "斗篷与匕首+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+        "resolved_rules_text": "获得7点格挡。 将2张小刀添加到你的手牌。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 6,
+            "current_value": 7,
+            "enchanted_value": 6,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "SLIMED_BERSERKER",
+        "current_hp": 135
+      }
+    ]
+  },
+  {
+    "off": 7289499060,
+    "ts": "2026-10-05T19:19:48.207000",
+    "run": "HMVJKM56S4Q8",
+    "floor": 33,
+    "turn": 3,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "SURVIVOR",
+        "name": "生存者",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
+        "resolved_rules_text": "获得12点格挡。 丢弃1张牌。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 8,
+            "current_value": 12,
+            "enchanted_value": 8,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得9点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 9,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得9点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 9,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成6点伤害。 （攻击3次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 3,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "CLUMSY",
+        "name": "笨拙",
+        "upgraded": false,
+        "target_type": "None",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": -1,
+        "star_cost": 0,
+        "rules_text": "",
+        "resolved_rules_text": "不能被打出。 虚无。",
+        "dynamic_values": [],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "unplayable",
+        "unplayable_reason_raw": "HasUnplayableKeyword",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "CRUSHER",
+        "current_hp": 142
+      },
+      {
+        "index": 1,
+        "enemy_id": "ROCKET",
+        "current_hp": 195
+      }
+    ]
+  },
+  {
+    "off": 7289542004,
+    "ts": "2026-10-05T19:19:49.367000",
+    "run": "HMVJKM56S4Q8",
+    "floor": 33,
+    "turn": 3,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得9点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 9,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得9点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 9,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成6点伤害。 （攻击2次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 2,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "CLUMSY",
+        "name": "笨拙",
+        "upgraded": false,
+        "target_type": "None",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": -1,
+        "star_cost": 0,
+        "rules_text": "",
+        "resolved_rules_text": "不能被打出。 虚无。",
+        "dynamic_values": [],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "unplayable",
+        "unplayable_reason_raw": "HasUnplayableKeyword",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "CRUSHER",
+        "current_hp": 142
+      },
+      {
+        "index": 1,
+        "enemy_id": "ROCKET",
+        "current_hp": 195
+      }
+    ]
+  },
+  {
+    "off": 7289628478,
+    "ts": "2026-10-05T19:19:50.676000",
+    "run": "HMVJKM56S4Q8",
+    "floor": 33,
+    "turn": 3,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得9点格挡。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 9,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0,
+          1
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成6点伤害。 （攻击1次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 1,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 6,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "CRUSHER",
+        "current_hp": 142
+      },
+      {
+        "index": 1,
+        "enemy_id": "ROCKET",
+        "current_hp": 195
+      }
+    ]
+  },
+  {
+    "off": 7339051012,
+    "ts": "2026-10-05T20:51:05.561000",
+    "run": "G403VCZ3BH1B",
+    "floor": 48,
+    "turn": 11,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得8点格挡。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 8,
+            "current_value": 8,
+            "enchanted_value": 8,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "CLOAK_AND_DAGGER",
+        "name": "斗篷与匕首+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+        "resolved_rules_text": "获得6点格挡。 将2张小刀添加到你的手牌。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "FLICK_FLACK",
+        "name": "翻越撑击",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "对所有敌人造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "奇巧。 对所有敌人造成7点伤害。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 7,
+            "current_value": 7,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "RICOCHET",
+        "name": "连续反弹",
+        "upgraded": false,
+        "target_type": "RandomEnemy",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+        "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Repeat",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "PIERCING_WAIL",
+        "name": "尖啸",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+        "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "StrengthLoss",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 5,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 6,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成4点伤害。 （攻击3次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 3,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 4,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "QUEEN",
+        "current_hp": 42
+      }
+    ]
+  },
+  {
+    "off": 7339104256,
+    "ts": "2026-10-05T20:51:06.405000",
+    "run": "G403VCZ3BH1B",
+    "floor": 48,
+    "turn": 11,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "CLOAK_AND_DAGGER",
+        "name": "斗篷与匕首+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+        "resolved_rules_text": "获得6点格挡。 将2张小刀添加到你的手牌。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "CHAINS_OF_BINDING_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.ChainsOfBindingPower"
+      },
+      {
+        "index": 1,
+        "card_id": "FLICK_FLACK",
+        "name": "翻越撑击",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "对所有敌人造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "奇巧。 对所有敌人造成7点伤害。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 7,
+            "current_value": 7,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "CHAINS_OF_BINDING_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.ChainsOfBindingPower"
+      },
+      {
+        "index": 2,
+        "card_id": "RICOCHET",
+        "name": "连续反弹",
+        "upgraded": false,
+        "target_type": "RandomEnemy",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+        "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Repeat",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "PIERCING_WAIL",
+        "name": "尖啸",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+        "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+        "dynamic_values": [
+          {
+            "name": "StrengthLoss",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 5,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成4点伤害。 （攻击2次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 2,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 4,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "QUEEN",
+        "current_hp": 42
+      }
+    ]
+  },
+  {
+    "off": 7339157145,
+    "ts": "2026-10-05T20:51:07.618000",
+    "run": "G403VCZ3BH1B",
+    "floor": 48,
+    "turn": 11,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "CLOAK_AND_DAGGER",
+        "name": "斗篷与匕首+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+        "resolved_rules_text": "获得6点格挡。 将2张小刀添加到你的手牌。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "CHAINS_OF_BINDING_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.ChainsOfBindingPower"
+      },
+      {
+        "index": 1,
+        "card_id": "FLICK_FLACK",
+        "name": "翻越撑击",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "对所有敌人造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "奇巧。 对所有敌人造成7点伤害。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 7,
+            "current_value": 7,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "CHAINS_OF_BINDING_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.ChainsOfBindingPower"
+      },
+      {
+        "index": 2,
+        "card_id": "RICOCHET",
+        "name": "连续反弹",
+        "upgraded": false,
+        "target_type": "RandomEnemy",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+        "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Repeat",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "not_enough_energy",
+        "unplayable_reason_raw": "EnergyCostTooHigh",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成4点伤害。 （攻击1次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 1,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 4,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "QUEEN",
+        "current_hp": 41
+      }
+    ]
+  },
+  {
+    "off": 7339209547,
+    "ts": "2026-10-05T20:51:08.620000",
+    "run": "G403VCZ3BH1B",
+    "floor": 48,
+    "turn": 11,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "CLOAK_AND_DAGGER",
+        "name": "斗篷与匕首+",
+        "upgraded": true,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+        "resolved_rules_text": "获得6点格挡。 将2张小刀添加到你的手牌。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "CHAINS_OF_BINDING_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.ChainsOfBindingPower"
+      },
+      {
+        "index": 1,
+        "card_id": "FLICK_FLACK",
+        "name": "翻越撑击",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "对所有敌人造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "奇巧。 对所有敌人造成7点伤害。 魂缚",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 7,
+            "current_value": 7,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "blocked_by_hook",
+        "unplayable_reason_raw": "BlockedByHook",
+        "unplayable_preventer_id": "CHAINS_OF_BINDING_POWER",
+        "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.ChainsOfBindingPower"
+      },
+      {
+        "index": 2,
+        "card_id": "RICOCHET",
+        "name": "连续反弹",
+        "upgraded": false,
+        "target_type": "RandomEnemy",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 2,
+        "star_cost": 0,
+        "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+        "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Repeat",
+            "base_value": 4,
+            "current_value": 4,
+            "enchanted_value": 4,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "not_enough_energy",
+        "unplayable_reason_raw": "EnergyCostTooHigh",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "FLECHETTES",
+        "name": "飞镖",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "手牌中每有一张技能牌，造成{Damage:diff()}点伤害。{InCombat: （攻击{CalculatedHits:diff()}次）|}",
+        "resolved_rules_text": "手牌中每有一张技能牌，造成4点伤害。 （攻击1次）",
+        "dynamic_values": [
+          {
+            "name": "CalculatedHits",
+            "base_value": 0,
+            "current_value": 1,
+            "enchanted_value": 0,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 0,
+            "current_value": 0,
+            "enchanted_value": 0,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationExtra",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Damage",
+            "base_value": 5,
+            "current_value": 4,
+            "enchanted_value": 5,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "QUEEN",
+        "current_hp": 38
+      }
+    ]
+  }
+]
