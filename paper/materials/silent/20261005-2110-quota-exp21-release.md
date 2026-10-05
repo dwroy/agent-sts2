@@ -6,3 +6,13 @@
 - 经验.20→.21：来源ENKYQMS9W4ZD SILENT A6及旧27局复算，新增0/补证更新11/退役0、active86不变、41093→42817字符，高32/中25/低29；A8/A9各77条35297字符、实际样本0。240同样本切片配对中位+167、最大6435→6726。学习者记录爆发/复制、药瓶结算、余像、投斧、力量/敏捷与方柱增长、沙坑/攻击两条死线，药水仅事实不加规则、整场反事实不补结果。
 - 14项learner proposed及14项ops shipped经ledger.py/by=ops登记S1.exp21，共28行精确归档，check120项0问题；0117/0118已并入沙虫/爆发经验，0119/0120为之后首胜复盘，不混入本批上线。第二十一节原文保留，旧599252字节前缀SHA256=aa50bb412b1a01d66d4b5d7a1b7cb9c61a9332144b31e6000d0d53b3dc385831保持；复盘方柱T3力4/T4力6的更正只依学习者原始帧在经验/本节记录，旧只读复盘保历史。
 - 原回报ops/codex-ops/learner/20261005-204301-experience-update.out、交接及源/合后日志在learner/runs/20261005-204301-experience-update/；采样交接和测试在learner/runs/20261005-204301-fix-batch/quota-handoff-ops.md及quota-*-sandbox.log。同fix-batch成本归集和升级爆发仍在继续，最终fix-done后补完整套件；经验独立完整外部检查待本批learner-checks，不混用别批结果。无Roy新待定，本轮只归档固定发布与自身记录，其他工作区差异保留。
+
+## 主目录首次真实采样证据（2026-10-05 21:20确认）
+
+在本轮收尾读到已完成的五分钟tick结果：21:15:07.093 CST落盘、21:15:01.994 CST读取，source=account/rateLimits/read、fresh、周窗口10080分钟使用44%、2026-10-11 15:07:58 CST重置。本条只有周窗口，五小时窗口没有返回，不补数值；与20:42无窗口/无原采样时间的缓存43%分别保留。本会话仅读取调度器已追加的白名单日志，没有自行联网或读取认证。原行如下：
+
+```json
+{"schema_version":1,"captured_at":"2026-10-05T13:15:07.093Z","provider":"codex","scope":"shared_subscription","source":"account/rateLimits/read","sample_observed_at":"2026-10-05T13:15:01.994Z","freshness":"fresh","error_code":null,"windows":[{"bucket":"codex/primary","kind":"weekly","used_percent":44,"window_minutes":10080,"resets_at":"2026-10-11T07:07:58.000Z","stale":false}]}
+```
+
+论文表本轮刷新exit0、日志切点2026-10-05T13:17:01.737Z，五项一致性检查通过、决策计数差异空、key scan CLEAN。只更新本轮生成表和上述确认记录；成本归集/升级爆发继续由同fix-batch完成，完整套件待后续事件。
