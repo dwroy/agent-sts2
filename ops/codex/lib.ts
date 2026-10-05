@@ -138,6 +138,44 @@ export function resumeCommand(request: EngineRequest, sessionId: string, message
   return { command: init.command, args: ["exec", "resume", ...options, sessionId, "-"], stdin: message };
 }
 
+/**
+ * The interactive TUI's arguments for the same session (CODEX_OPS_MODE=herdr; docs/codex-ops.md「herdr 托管」):
+ * `codex resume <options> <session id>` (or `codex <options>` without an id, for a throwaway test session), passed to
+ * `herdr agent start ops --kind codex --pane <id> -- <these>`. The options are initCommand's minus what only `codex
+ * exec` has (--json, --ignore-user-config, --ignore-rules; the TUI rejects them) and the trailing '-', plus --no-daemon
+ * so the turn runs in the pane's own process (not in a shared app-server started under another configuration).
+ * Without --ignore-user-config the TUI reads ~/.codex/config.toml; every setting that matters here is passed with -c and
+ * wins over it (profile, model, effort, approval_policy=never, compaction), and the hooks feature stays disabled.
+ */
+export function interactiveArgs(request: EngineRequest, sessionId?: string): string[] {
+  if (sessionId !== undefined && !SESSION_ID.test(sessionId)) throw new Error(`not a codex session id: ${sessionId.slice(0, 60)}`);
+  const args = initCommand(request, "", "codex").args;
+  const head = args.slice(0, 5);
+  if (head.join(" ") !== "exec --json --ignore-user-config --ignore-rules --cd") throw new Error(`codexCommand changed its leading options: ${head.join(" ")}`);
+  const options = args.slice(4, -1); // from --cd <dir> to the last option, without the '-'
+  return sessionId ? ["resume", ...options, "--no-daemon", sessionId] : [...options, "--no-daemon"];
+}
+
+/**
+ * How a kind of process is hosted (docs/codex-ops.md「herdr 托管」): the environment variable, else `<key>=<value>` in
+ * <state dir>/hosting (a file, so the switch needs no crontab edit), else the default. Keys: ops (exec | herdr),
+ * learners and autoplay (setsid | herdr); the same reader is in ops/learner_jobs.py and ops/codex-ops-actions.sh.
+ */
+export function hostingMode(dir: string, key: string, envName: string, fallback: string, env: NodeJS.ProcessEnv = process.env): string {
+  let value = (env[envName] ?? "").trim();
+  if (!value) {
+    try {
+      for (const line of readFileSync(join(dir, "hosting"), "utf8").split("\n")) {
+        const at = line.indexOf("=");
+        if (at > 0 && line.slice(0, at).trim() === key) value = line.slice(at + 1).trim();
+      }
+    } catch {
+      // no file: the default
+    }
+  }
+  return value || fallback;
+}
+
 export const SESSION_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 export function readSessionId(paths: OpsPaths): string | undefined {
