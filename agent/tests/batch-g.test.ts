@@ -24,7 +24,7 @@ import { parseGameState } from "../src/hand/mod/schema.js";
 import { discardSlotsOf } from "../src/hand/screens/potion-discard.js";
 import { logged, loggedEnv, type Logged } from "./logged.js";
 import type { CardModel } from "../src/reflex/card-model.js";
-import { pileValue, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
+import { pileValue, solveTap, solveTurn, type EnemySim, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { rolloutDecision, type EnemyTable, type FightMeta } from "../src/reflex/rollout.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
 
@@ -388,10 +388,12 @@ describe("7c. Rollout under a tight budget: the first wave shrinks to 3 turns on
   const hand = [0, 1, 2, 3, 4].map((i) => (i % 2 ? strike(i) : card(i, "DEFEND_IRONCLAD", { type: "Skill", target: "self", validTargets: [], block: 5 })));
   const solver: SolverInput = { hand, player: player(), enemies: [enemy({ hp: 300, maxHp: 300, attacks: [{ damage: 8, hits: 1 }] })], fightKind: "monster", turn: 1 };
   const plans = solveTurn(solver).plans.slice(0, 6);
-  /** A clock that moves 1 ms on every reading: the time a rollout takes is the work it does. */
+  /** Charge simulated work, not the number of deadline checks. Each policy solve costs three milliseconds. */
   const run = (budgetMs: number) => {
     let t = 0;
-    return rolloutDecision({
+    const originalTap = solveTap.onSolve;
+    solveTap.onSolve = () => { t += 3; };
+    try { return rolloutDecision({
       solver,
       plans,
       enemies: [{ index: 0, id: "X", move: "HIT", strength: 0, powers: {} }],
@@ -403,8 +405,8 @@ describe("7c. Rollout under a tight budget: the first wave shrinks to 3 turns on
       mm: {},
       model: null,
       gates: null,
-      options: { budgetMs, seed: 1, now: () => (t += 1) },
-    });
+      options: { budgetMs, seed: 1, now: () => t },
+    }); } finally { solveTap.onSolve = originalTap; }
   };
 
   it("too little time for the full horizon: 3 turns for the rest of the first wave, not the 1-turn fallback", () => {
@@ -414,7 +416,7 @@ describe("7c. Rollout under a tight budget: the first wave shrinks to 3 turns on
     expect(r.lines[0]!.horizon).toBe(3);
   });
 
-  it("the first wave finished just past the budget: its sample is kept (horizon 5, 1 sample), not thrown away", () => {
+  it("a finished first wave with no time for another wave keeps its sample (horizon 5, 1 sample)", () => {
     const r = run(100);
     expect(r.degraded).toEqual(["samples 1 (clock)"]);
     expect(r.lines[0]!.horizon).toBe(5);

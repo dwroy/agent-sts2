@@ -56,7 +56,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       }
       if (canConfirm && selected > 0) return { kind: "act", label: "selection/confirm", intent: { action: "confirm_selection" }, rationale: `selected ${selected}: the combat plan's discards` };
     }
-    const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
+    const pick = discardPick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge, str(asRecord(state.run?.raw)["character_id"]));
     if (pick && selected < max) {
       return { kind: "act", label: "selection/discard", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: discard ${pick.name} (${pick.why})` };
     }
@@ -65,7 +65,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
   // Touch of Insanity ("选择一张牌使其免费"): the most expensive card, the one the solver planned with
   // (G8AQ T4: the model made a 1-cost Twin Strike free).
   if (kind === "combat_hand_select" && selected === 0 && /免费|free/i.test(prompt)) {
-    const pick = freePick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge);
+    const pick = freePick(asRecord(state.raw["combat"]), asArray(selection["cards"]).map(asRecord), knowledge, str(asRecord(state.run?.raw)["character_id"]));
     if (pick) {
       return { kind: "act", label: "selection/free-card", intent: { action: "select_deck_card", option_index: pick.index }, rationale: `code: make ${pick.name} free for this combat (highest cost, ${pick.cost} energy)` };
     }
@@ -90,7 +90,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
       const incoming = incomingDamage(combat);
       const enemies = Math.max(1, asArray(combat["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length);
       const best = offered
-        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge), incoming, enemies, thisTurnBoard(state.raw, knowledge)) }))
+        .map((card, fallbackIndex) => ({ card, score: thisTurnScore(modelHandCard(card, numOrNull(card["index"]) ?? fallbackIndex, knowledge, str(asRecord(state.run?.raw)["character_id"])), incoming, enemies, thisTurnBoard(state.raw, knowledge)) }))
         .filter((entry) => entry.score > 0)
         .sort((a, b) => b.score - a.score)[0];
       if (best) {
@@ -138,7 +138,7 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const freeSource = forThisTurn ? freeOfferSource(env, kind) : null;
   const powerExtraCost = freeSource ? potionPowerExtraCost(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"]))) : 0;
   const thisTurnModel = (card: Record<string, unknown>, index: number): CardModel => {
-    const model = modelHandCard(card, index, knowledge);
+    const model = modelHandCard(card, index, knowledge, str(asRecord(state.run?.raw)["character_id"]));
     return freeSource ? { ...model, cost: potionCardCost(model, powerExtraCost) } : model;
   };
   const exhaustContext = isExhaust ? combatExhaustContext(state.raw, asArray(selection["cards"]).map(asRecord), knowledge) : null;
@@ -204,9 +204,9 @@ export function planSelection(env: DecisionEnv): Decision | null {
         : forThisTurn
         ? thisTurnScore(thisTurnModel(card, index), incoming, Math.max(1, livingEnemies), board)
         : topDanger
-          ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
+          ? (isBlockCard(card) && cardId !== "THE_GAMBIT" ? 100 + (modelHandCard(card, index, knowledge, str(asRecord(state.run?.raw)["character_id"])).block ?? 0) : 0) + selectionScore("deck_add_select", cardId, str(card["card_type"], info?.type ?? "")) / 10
         : exhaustContext
-          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card), exhaustCardOf(modelHandCard(card, index, knowledge))) - (bool(card["upgraded"]) ? 8 : 0) -
+          ? combatExhaustScore(cardId, str(card["card_type"], info?.type ?? ""), exhaustContext, isBlockCard(card), exhaustCardOf(modelHandCard(card, index, knowledge, str(asRecord(state.run?.raw)["character_id"])))) - (bool(card["upgraded"]) ? 8 : 0) -
             (plannedIds.has(`${cardId}${bool(card["upgraded"]) ? "+" : ""}`) ? PLANNED_CARD_KEEP : 0)
           : selectionScore(isAdd ? "deck_add_select" : kind, cardId, str(card["card_type"], info?.type ?? "")) -
             (!isAdd && !isUpgrade && bool(card["upgraded"]) ? 8 : 0) +
@@ -717,7 +717,7 @@ function combatExhaustContext(raw: Record<string, unknown>, offered: Record<stri
   // What Colossus halves this turn: the attack of the enemies Vulnerable now, plus what a Vulnerable card
   // in hand reaches (all enemies for an AoE one, the biggest attacker for a single-target one); Artifact
   // eats the card's Vulnerable.
-  const sources = hand.map((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge)).filter((model) => model.vulnerable > 0 && model.special !== "colossus");
+  const sources = hand.map((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge, str(asRecord(raw["run"])["character_id"]))).filter((model) => model.vulnerable > 0 && model.special !== "colossus");
   const aoeVulnerable = sources.some((model) => model.target === "all");
   // (The selection's card entries carry no target: anything not all-enemies counts as one target.)
   const singleVulnerable = sources.some((model) => model.target !== "all" && model.target !== "self");
@@ -847,6 +847,7 @@ export function discardPick(
   combat: Record<string, unknown>,
   cards: Record<string, unknown>[],
   knowledge: DecisionEnv["knowledge"],
+  character = "",
 ): { index: number; name: string; why: string } | null {
   const energy = numOrNull(asRecord(combat["player"])["energy"]) ?? 3;
   const incoming = incomingDamage(combat);
@@ -857,7 +858,7 @@ export function discardPick(
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     // The hand entry carries playability; the selection entry may not.
     const inHand = hand.find((entry) => numOrNull(entry["index"]) === index && str(entry["card_id"]) === str(card["card_id"]));
-    const model = modelHandCard({ ...card, ...(inHand ?? {}) }, index, knowledge);
+    const model = modelHandCard({ ...card, ...(inHand ?? {}) }, index, knowledge, character);
     const type = str(card["card_type"], model.type);
     const playable = inHand ? bool(inHand["playable"]) || str(inHand["unplayable_reason"]) === "not_enough_energy" : model.cost >= 0;
     return { index, name: model.name, cardId: model.cardId, type, model, playable, score: thisTurnScore(model, incoming, enemies) };
@@ -887,12 +888,13 @@ export function freePick(
   combat: Record<string, unknown>,
   cards: Record<string, unknown>[],
   knowledge: DecisionEnv["knowledge"],
+  character = "",
 ): CardModel | null {
   const hand = asArray(combat["hand"]).map(asRecord);
   const models = cards.map((card, fallbackIndex) => {
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     const inHand = hand.find((entry) => numOrNull(entry["index"]) === index && str(entry["card_id"]) === str(card["card_id"]));
-    const model = modelHandCard({ ...card, ...(inHand ?? {}) }, index, knowledge);
+    const model = modelHandCard({ ...card, ...(inHand ?? {}) }, index, knowledge, character);
     return { ...model, type: str(card["card_type"], model.type) };
   });
   const usable = models.filter((card) => card.type !== "Status" && card.type !== "Curse" && card.cost >= 0);
@@ -921,7 +923,7 @@ function incomingDamage(combat: Record<string, unknown>): number {
 export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): ThisTurnBoard {
   const combat = asRecord(raw["combat"]);
   const pile = exhaustPileSize(raw);
-  const exhaustingInHand = asArray(combat["hand"]).map(asRecord).filter((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge).exhausts).length;
+  const exhaustingInHand = asArray(combat["hand"]).map(asRecord).filter((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge, str(asRecord(raw["run"])["character_id"])).exhausts).length;
   const vulnerable = Math.max(
     0,
     ...asArray(combat["enemies"])
