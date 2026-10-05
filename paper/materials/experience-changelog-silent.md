@@ -7337,3 +7337,190 @@ A0至A9全部旧格不变，完整全格/零格/局号可由audit.json复算。A
 
 
 本节收尾登记（2026-10-06 06:14:03 +0800）：源c4e3c9ac7c053d567be773d011849503a8a994f3，源固定沙箱tsc0/190文件2094例/退出0、首次通过。锁内等知识刷新、待提交刷新无、incoming仅silent/experience.json、知识重叠空；合前live固定1ee4de7d668835de92ad2b47423a19ffdb4ae4df。git merge-tree --write-tree锁内预检exit1，仅paper/materials/decision-log.md内容冲突，未执行实际git merge、未写MERGE_HEAD、未硬解、不覆盖知识数据。实际merged=null、未跑合后测试、未新增S1.exp34或上线记录；完整预检输出merge-tree-locked.txt及live-merge.json留证，交运维按固定源兜底。live现有notes/monster-db-check.md及未跟踪fight-value-backtest-silent.md保持、不混提交。学习账本新增无；proposed silent-0019,silent-0020,silent-0021,silent-0006,silent-0079,silent-0007,silent-0154,silent-0155；退役无/check0，七个变动经验均有来源，first_run/prior/repeat及原版本历史保留，0153纯bug仍observed、不写accepted/shipped。主目录本节只追加一次及CLI账本不提交；运维交接handoff-ops.md随experience-done完成事件交付，实际合入后由运维登记shipped/发布版本与调度器补全套，不提前报完整外部通过。不停对局、不运行play、不推送；需要Dai定：无，合入冲突由运维兜底。
+
+## 2026-10-06 静默猎手 第三十五次增量：1 局 A10（version 2026-10-06.10，分支 exp-silent，7bcee3eb）
+
+### 来源
+
+- 记录时间2026-10-06 06:47:41 +0800；notes/lessons.md:4910及notes/run-1006-0559-25226ZFLNR1J.md，标题静默猎手，runs.character=SILENT，A10/F48败局，无跳过。节后无本局勘误；last_seen按run-1006文件名2026-10-06。
+- 截至2026-10-05T21:59:18.953Z，共42静默完局，A0至A10各7/3/2/1/4/1/11/7/1/3/2局；A0至A9各一胜、A10两敗。全部有本角色复盘，无只进数字局，后续/进行中局排除；旧724房31实死，加新16房1实死为740房32实死。
+- exp-silent开工干净，git merge --no-edit main无冲突；先读README、最新STATE、decision-log尾、学习协议、铁甲首次构建与最后两节方法，再按静默第33/34节口径。铁甲数字与知识不用，独立完成、不派下级。
+- 全42局日志重新按run id用rg分流decisions/brain/run-plans/sl-attempts；states/deepseek时间二分seek流式读再核state.run.character_id=SILENT与run_id。本局862决策、889状态、45次大脑全Codex、7计划、9条SL记录，DeepSeek窗0；states首末字节7351946909—7384979270。日志只读，nice19单进程，不跑boss模拟池。
+- 先复算旧41局七数组、全部血档/源节点转移/回血/SL逐行一致：fights724→740、nexts641→666、rests314→323、cards15425→15865、ends4163→4291、attempts239→248、growth925→925。baseline-check.json留证。汇总脚本沿用的[:10]未涵盖新A10导致首次断言失败，移除旧固定切段后完整11阶逐行一致，summarize.log与summarize-retry.log均保留；不是旧日志数字变化。
+- 口径同上一节：战内净损为第一战斗帧HP减同房最终尝试最后结算HP，负值保留、实死亡单列；Monster走廊与Unknown问号战分开。血档<25%、[25%,40%)、[40%,60%)、≥60%。SL判死未结算不补伤/实死，胜利GAME_OVER的零HP用最后COMBAT血。REST/SHOP/普通EVENT按源入场血关联更高楼层第一战，Ancient排除，多源可指同战；回血后战按run/floor去重，事件/幕初/奖励回复独立。
+- 本局小血瓶在首战斗帧后回复2：统计首帧一/二/三幕boss65/65/31，与复盘开始实打67/67/33不同；净损43/64/31，对应开战后损45/66/33。F12/F15/F35/F36/F44/F46净损35/12/22/13/38/0，复盘开战后35/14/24/15/40/2；F12已满血无回复，F35上限损失另核。这是首帧时点差异，保留原口径，不改旧基线或把回复重复计为营火。
+- 历史机制回查42份本角色复盘、42局重抽日志与2920个机制动作前后帧：步法315次/28局、毒雾225次/26局、触媒107次/15局，不将全部动作自动作独立支持。石头实际持有七局、76个战斗房开场均1敏捷；小提琴只有本局实持，旧2L1BNN9ZJEFU与Z6CFLDR3N4SB只是提供未选，不加支持/反例。mechanism-facts/relic-holders/stone-openings及historical-mechanism-notes保留证据。
+- 版本2026-10-06.9→2026-10-06.10；新增2、更新9（均加证据、只改数字0）、退役0；active107→109、52755→54484字，高41中37低29→高42中37低30。A8/A9/A10各101条50323→103条52052字，实际局数1/3/2，低阶仅背景。开工未超过55000，不需合并压缩，路线/休息A10旧段更新为两局汇总，证据全留；60000预算不变。
+- 新机制[0,20]仅实见公式和条件；策略统计[8,20]按证据进阶独立列，不混低阶分母。原低阶上限保留，败局不自动反驳增益公式。potion:*和general:potion完全不动，其他旧喝药/留药分句逐字保留，新证据只非药水部分，无新增或加强使用规则。临时文件仅本任务目录。
+
+### 对照数据检查的主题
+
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 角色/旧基线 | 42静默局740房32实死，旧41局七数组、全血档/节点/回血/SL逐行一致 | 不用其他角色、缺character旧局或后续局 |
+| 路线与血量 | A10两局26房2死；一幕高血精英2房净损35/12、三幕高血精英1房净损38；二幕无精英仍boss65→1 | 高血不等于低损、避精英不免其他战斗血价 |
+| 问号与改线 | F25/F42问号战净损16/9；F43营火投影53实31；旧MGA避精英仍F17死 | 不同构筑/敌人，未选线无实战，仅观察 |
+| 回复 | 新八回血162，A10两局10回血204、后战10场2死/10、活损中位26 | 回血兑现仍无另一休息选择胜负对照，小血瓶与营火分账 |
+| 构筑启动 | 35张、4打击5防御/笨拙；毒雾T3建但T5才毒，末未建触媒；T1扣66、八轮115/535 | 取得、建立、触发与可活窗口分账，未隔离构筑胜因 |
+| 小提琴 | 毒雾抽堆13→13或12→12、能力3；后空翻抽堆6→6、挡0→10；斗篷仍生小刀 | 回合内抽牌被封锁，其余效果/生成牌并非抽牌；轮初额外2只选项文本 |
+| 石头/步法/敏捷 | 七局76房开场1敏捷；本局两步法使1→3→5，末三牌10+14+11=35、较无敏多15 | 增益须由随后挡牌兑现，不能关闭敌成长 |
+| 力量/减益 | 沙漏无弱单击在4/9力时30/35、双击32/42 | 逐段增力；本场无玩家力量不预支其他遗物 |
+| 毒雾/制品 | 末次三制品由T1突然一拳/T3中和/T4毒雾耗尽，T5—T8结算3/5/7/9合24 | 消层不等于施毒，末剩8未结算不计实伤 |
+| 触媒 | 首试T7建2，7+6+5=18、442→424；第2次T1早建却T5无毒/T7判死 | 额外结算与启动费、生存分账，早建不单证整战更优 |
+| 凋萎 | 末T8两张9伤；42+18−35=25，4血对应hp_after−21，实扣4 | 完整需损与死亡截断分开，致死逐项先后未知 |
+| SL对照 | 新沙漏一场六次0赢、全部35张基础抽序同；前五判死/末实死 | 能力/弃牌/生成/行动均变，没有赢次改动可归纳因果 |
+| 模拟/执行 | F47千样本原始胜率0、校准4.74%；boss最优回答20/31=64.52% | 校准非实测胜局，回答字段不等于完整实际最优线执行率 |
+
+A0至A9全部旧血档不变。以下A10全部非空格，房为死亡率分母、独立局另列；完整零格、局号和净损列表在audit.json。
+
+| 进阶 | 幕 | 房型 | 血档 | 房/局 | 死/率 | 活场净损中位 |
+| --- | --- | --- | --- | --- | --- | --- |
+| A10 | 1 | Monster | <25% | 1/1 | 0/0.00% | 0 |
+| A10 | 1 | Monster | 25–40% | 1/1 | 0/0.00% | 16 |
+| A10 | 1 | Monster | ≥60% | 7/2 | 0/0.00% | 5 |
+| A10 | 1 | Elite | ≥60% | 2/1 | 0/0.00% | 23.5 |
+| A10 | 1 | Unknown | 25–40% | 1/1 | 0/0.00% | 16 |
+| A10 | 1 | Unknown | 40–60% | 1/1 | 0/0.00% | 7 |
+| A10 | 1 | Unknown | ≥60% | 1/1 | 0/0.00% | 0 |
+| A10 | 1 | Boss | 40–60% | 1/1 | 1/100.00% | None |
+| A10 | 1 | Boss | ≥60% | 1/1 | 0/0.00% | 43 |
+| A10 | 2 | Monster | ≥60% | 2/1 | 0/0.00% | 10.5 |
+| A10 | 2 | Unknown | ≥60% | 1/1 | 0/0.00% | 16 |
+| A10 | 2 | Boss | ≥60% | 1/1 | 0/0.00% | 64 |
+| A10 | 3 | Monster | <25% | 1/1 | 0/0.00% | 0 |
+| A10 | 3 | Monster | 40–60% | 1/1 | 0/0.00% | 13 |
+| A10 | 3 | Monster | ≥60% | 1/1 | 0/0.00% | 22 |
+| A10 | 3 | Elite | ≥60% | 1/1 | 0/0.00% | 38 |
+| A10 | 3 | Unknown | ≥60% | 1/1 | 0/0.00% | 9 |
+| A10 | 3 | Boss | 40–60% | 1/1 | 1/100.00% | None |
+
+源节点按入场血关联后续更高楼层战；多源可指同战、同层问号战另计。A0至A9全格仍同旧值，A10所有非空格：
+
+| 幕 | 源界面 | 血档 | 节点/不同战 | 死/率 | 活场净损中位 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | REST | <25% | 1/1 | 1/100.00% | None |
+| 1 | REST | 25–40% | 1/1 | 0/0.00% | 17 |
+| 1 | REST | 40–60% | 1/1 | 0/0.00% | 12 |
+| 1 | REST | ≥60% | 3/2 | 0/0.00% | 35 |
+| 1 | SHOP | <25% | 1/1 | 0/0.00% | 0 |
+| 1 | SHOP | ≥60% | 1/1 | 0/0.00% | 5 |
+| 1 | EVENT | <25% | 2/2 | 0/0.00% | 8.0 |
+| 1 | EVENT | 25–40% | 1/1 | 0/0.00% | 17 |
+| 1 | EVENT | ≥60% | 3/2 | 0/0.00% | -2 |
+| 2 | REST | 40–60% | 1/1 | 0/0.00% | 14 |
+| 2 | REST | ≥60% | 1/1 | 0/0.00% | 64 |
+| 2 | SHOP | ≥60% | 3/2 | 0/0.00% | 16 |
+| 2 | EVENT | ≥60% | 5/3 | 0/0.00% | 16 |
+| 3 | REST | <25% | 1/1 | 1/100.00% | None |
+| 3 | REST | 25–40% | 1/1 | 0/0.00% | 9 |
+| 3 | REST | 40–60% | 1/1 | 0/0.00% | 38 |
+| 3 | SHOP | <25% | 1/1 | 0/0.00% | 0 |
+| 3 | SHOP | 25–40% | 2/1 | 0/0.00% | 9.0 |
+| 3 | EVENT | 25–40% | 1/1 | 0/0.00% | 9 |
+
+| 进阶 | 局 | 火堆/回血/锻造 | 回血合计 | 回血后战/死/活损中位 | SL多次场/尝试/赢 |
+| --- | --- | --- | --- | --- | --- |
+| A0 | 7 | 55/25/30 | 523 | 23/4/27 | 8/33/4 |
+| A1 | 3 | 21/9/12 | 238 | 8/2/35.0 | 3/14/1 |
+| A2 | 2 | 14/10/4 | 188 | 10/1/11 | 1/6/0 |
+| A3 | 1 | 10/8/2 | 195 | 8/0/17.5 | 0/0/0 |
+| A4 | 4 | 30/22/8 | 476 | 21/2/14 | 2/10/0 |
+| A5 | 1 | 9/6/3 | 127 | 6/0/20.0 | 1/2/1 |
+| A6 | 11 | 81/52/29 | 1219 | 46/4/12.0 | 8/35/3 |
+| A7 | 7 | 56/31/25 | 743 | 27/5/16.0 | 7/31/1 |
+| A8 | 1 | 9/8/7 | 111 | 7/0/10 | 0/0/0 |
+| A9 | 3 | 21/16/5 | 341 | 15/1/34.0 | 3/10/2 |
+| A10 | 2 | 11/10/1 | 204 | 10/2/26.0 | 2/12/0 |
+
+- 真正重打全静默35场153次12赢；沙漏9场32次3赢，其中真正重打7场30次2赢，A10一场六次零赢。新9条SL记录含异鱼/沙虫/狂战士首试won三条，不能全部叫重打；六次只作一独立局。
+
+新沙漏全部draws.order为同35张含升级ID、无重洗；首/第二次T1分别突然一拳/触媒+替换，实建触媒0/2，手动伤57/49、开场拉炮9另计，实损14/7（后轮再核）。第二次T5仍无毒、T7判死，其他后段也变，不用T1多挡少伤推整战胜因。末次未建触媒但毒雾从T5起已结算24；完整explore/sl_explore/决策sl_attempt原行留本局子集。前五最终玩家4/6/8/8/6、敌424/446/431/435/436均未执行致死结算；末次T8结束前敌429、已结算9毒后420，不能把尚剩8层毒记伤。
+
+### 经验库自己带偏或写了没被执行的地方
+
+- 45次大脑全Codex、DeepSeek窗0；knowledge字段为mode=full、ascension=10、prefix_chars=150804（并非仅经验lesson字数）。未见直接引用经验id致错的原话，新条目不能倒记本局原因。F34原话：“小提琴加速毒防启动，双店三火保血。”此前F22已给毒雾附魔抽2、F31购后空翻，回合内抽牌实被封锁；只能说明这部分加速预期没兑现，不能否定轮初收益或宣称不拿就胜。
+- 后续识别了限制：F36原话“Violin disables Dagger Throw’s draw”，F42“Violin prevents drawing, but free double discard…”（不抽牌，使用免费弃牌），F44/F46“Violin disables Backflip’s draw”。这些与日志相符，不能记成始终没理解；没有把候选/原计划当完整已执行。
+- F47原话“Heal to 31 HP…no single upgrade outweighs this immediate buffer.”（回至31、当下缓冲优于单卡升级）；实回19、开场另+2，六败无未选升级实打。计划已有毒轴/敏捷但制品延后启动，实际收益须逐项核；首试/第二次建触媒、末次未建，持有不能补证为已建立。
+- HP护栏两次原题预计合省20血少12伤，原线未实打；F33实际当轮零损、F36整轮损3，不将题面省血等同受控整场更优。boss回答最优20/31，不等于经SL替换/弃牌/重算后的完整执行率。
+
+### 机制推理
+
+| 机制 | 推理 | 证据（支持/反例局数、进阶） | 典型案例 | 进了哪个条目 |
+| --- | --- | --- | --- | --- |
+| 小提琴抽牌封锁 | 回合内抽牌未发生，能力/格挡/生成仍兑现；轮初额外2只来自现场选项，不推全部取牌或胜负因果 | 1/0；A10:1局；支持25226ZFLNR1J；反例无 | 25226ZFLNR1J F48/6 T3抽堆12不变、T8后空翻6不变且10挡，斗篷生刀 | silent-fiddle-draw-lock |
+| 石头开场敏捷 | 76房开场1敏捷、后建步法叠加；每张挡牌兑现，脆弱与被动另核，未隔离遗物胜因 | 7/0；A2:1局,A4:1局,A6:3局,A9:1局,A10:1局；支持ZZMYZ5UBCG72,9YBKCNBFP0X5,UACFSW4VDDLD,2L1BNN9ZJEFU,2SU6XN2AEJRD,HMVJKM56S4Q8,25226ZFLNR1J；反例无 | ZZMYZ5UBCG72 A2 F12开场1；25226ZFLNR1J A10 F48敏1→3→5 | silent-smooth-stone-opening-dexterity |
+| 步法挡牌增益 | 两次普通各加2，三挡牌各加5合增15，但42攻击加18凋萎仍耗尽4血 | 26/0；A0:5局,A1:1局,A3:1局,A4:4局,A5:1局,A6:5局,A7:5局,A8:1局,A9:2局,A10:1局；支持C48LLXBGKXQ9,T082DRCUHRRD,1HC609GTLGN3,R0HEV5E3QT6G,KAY522KT5NXR,K3676LU8B0UH,10GPK5XGHCK3,1NZ8FE5F34R9,F9PP859XZ3RJ,9YBKCNBFP0X5,1LMBFGSMCWKU,ZE8F192FKX24,UACFSW4VDDLD,2L1BNN9ZJEFU,53FLQ68CETW0,ENKYQMS9W4ZD,2SU6XN2AEJRD,3KME36ADUE4U,VLV17NUSFS61,9YT51CK8RC39,2PVLGRBGUX9S,4Y94N8RDPGPM,LLYSRQQ35AVW,HMVJKM56S4Q8,G403VCZ3BH1B,25226ZFLNR1J；反例无 | 25226ZFLNR1J A10 F48/6 T8挡10/14/11合35 | silent-footwork-block |
+| 力量/减益 | 力量逐段，敏捷逐随后卡牌，弱与被动分账；敌成长并不由玩家增益关闭 | 42/0；A0:7局,A1:3局,A2:2局,A3:1局,A4:4局,A5:1局,A6:11局,A7:7局,A8:1局,A9:3局,A10:2局；支持C48LLXBGKXQ9,Y6GM2CHWJBEY,LRN0HPZ0FZS1,T082DRCUHRRD,1HC609GTLGN3,R0HEV5E3QT6G,KAY522KT5NXR,E6AVMMVCSRPC,XYYQYBRM2A01,K3676LU8B0UH,CSBR5CRDWQNB,ZZMYZ5UBCG72,10GPK5XGHCK3,1NZ8FE5F34R9,F9PP859XZ3RJ,9YBKCNBFP0X5,1LMBFGSMCWKU,ZE8F192FKX24,FH2HB2X17F2H,UACFSW4VDDLD,VN7RQJMJEFMX,75X1BARMNZ03,ARKQLHG6RS4W,6EV5V6PJJS9D,8CFMW9SAGFWQ,2L1BNN9ZJEFU,53FLQ68CETW0,ENKYQMS9W4ZD,2SU6XN2AEJRD,SADL3CGYTGSR,Z6CFLDR3N4SB,3KME36ADUE4U,VLV17NUSFS61,9YT51CK8RC39,2PVLGRBGUX9S,4Y94N8RDPGPM,LLYSRQQ35AVW,HMVJKM56S4Q8,F4QKG4J1AJJZ,G403VCZ3BH1B,MGA0CZDDKC0P,25226ZFLNR1J；反例无 | 25226ZFLNR1J A10沙漏4→9力、无弱单击30→35/双击32→42 | silent-strength-weak-observation |
+| 毒雾/制品 | 建3不立即毒，最后制品T4才耗，T5—T8单触发实毒24；剩毒不预支 | 23/0；A0:4局,A1:2局,A2:2局,A4:4局,A5:1局,A6:4局,A7:1局,A8:1局,A9:3局,A10:1局；支持Y6GM2CHWJBEY,LRN0HPZ0FZS1,T082DRCUHRRD,R0HEV5E3QT6G,E6AVMMVCSRPC,K3676LU8B0UH,CSBR5CRDWQNB,ZZMYZ5UBCG72,1NZ8FE5F34R9,F9PP859XZ3RJ,9YBKCNBFP0X5,1LMBFGSMCWKU,ZE8F192FKX24,6EV5V6PJJS9D,2L1BNN9ZJEFU,53FLQ68CETW0,2SU6XN2AEJRD,VLV17NUSFS61,LLYSRQQ35AVW,HMVJKM56S4Q8,F4QKG4J1AJJZ,G403VCZ3BH1B,25226ZFLNR1J；反例无 | 25226ZFLNR1J A10 F48/6 T3建3，T5—T8为3/5/7/9 | silent-noxious-fumes-growth |
+| 触媒额外结算 | 建2每次最多三结算且逐次减1，7毒共18；制品前早建并不已有收益，未隔离早建胜因 | 12/0；A0:3局,A2:1局,A3:1局,A4:1局,A6:2局,A7:1局,A8:1局,A9:1局,A10:1局；支持T082DRCUHRRD,R0HEV5E3QT6G,KAY522KT5NXR,ZZMYZ5UBCG72,10GPK5XGHCK3,1NZ8FE5F34R9,ARKQLHG6RS4W,6EV5V6PJJS9D,SADL3CGYTGSR,LLYSRQQ35AVW,HMVJKM56S4Q8,25226ZFLNR1J；反例无 | 25226ZFLNR1J A10首试T7的7+6+5=18；第2次早建仍T7判死 | silent-accelerant-triggers |
+| 凋萎与沙漏窗口 | 42+18−35需25，HP4对应−21；伤源先后未知、死亡实扣4。制品/力量/持牌伤/实际毒共同核、六次0赢无必胜调序 | 9/0；A0:1局,A1:1局,A5:1局,A6:2局,A7:3局,A10:1局；支持LRN0HPZ0FZS1,K3676LU8B0UH,ZE8F192FKX24,53FLQ68CETW0,2SU6XN2AEJRD,SADL3CGYTGSR,Z6CFLDR3N4SB,2PVLGRBGUX9S,25226ZFLNR1J；反例无 | 25226ZFLNR1J A10 F48/6 T8两9伤凋萎、敌结算后420 | silent-wither-end-turn-loss |
+| 沙漏SL观察 | 同35张基础抽序，组件和后段行动改变；新增一场六败，无赢次可归因；首末敌剩424/420 | 9/0；A0:1局,A1:1局,A5:1局,A6:2局,A7:3局,A10:1局；支持LRN0HPZ0FZS1,K3676LU8B0UH,ZE8F192FKX24,53FLQ68CETW0,2SU6XN2AEJRD,SADL3CGYTGSR,Z6CFLDR3N4SB,2PVLGRBGUX9S,25226ZFLNR1J；反例无 | 25226ZFLNR1J A10第2次触媒T1建却T7判死，末次T8死 | silent-aeonglass-artifact-growth-sl |
+| 构筑启动观察 | 取得、建立、触发和存活窗独立；T1扣66与八轮115分开，未隔离替代构筑/调序胜因 | 41/0；A0:6局,A1:3局,A2:2局,A3:1局,A4:4局,A5:1局,A6:11局,A7:7局,A8:1局,A9:3局,A10:2局；支持C48LLXBGKXQ9,Y6GM2CHWJBEY,T082DRCUHRRD,1HC609GTLGN3,R0HEV5E3QT6G,KAY522KT5NXR,E6AVMMVCSRPC,XYYQYBRM2A01,K3676LU8B0UH,CSBR5CRDWQNB,ZZMYZ5UBCG72,10GPK5XGHCK3,1NZ8FE5F34R9,F9PP859XZ3RJ,9YBKCNBFP0X5,1LMBFGSMCWKU,ZE8F192FKX24,FH2HB2X17F2H,UACFSW4VDDLD,VN7RQJMJEFMX,75X1BARMNZ03,ARKQLHG6RS4W,6EV5V6PJJS9D,8CFMW9SAGFWQ,2L1BNN9ZJEFU,53FLQ68CETW0,ENKYQMS9W4ZD,2SU6XN2AEJRD,SADL3CGYTGSR,Z6CFLDR3N4SB,3KME36ADUE4U,VLV17NUSFS61,9YT51CK8RC39,2PVLGRBGUX9S,4Y94N8RDPGPM,LLYSRQQ35AVW,HMVJKM56S4Q8,F4QKG4J1AJJZ,G403VCZ3BH1B,MGA0CZDDKC0P,25226ZFLNR1J；反例无 | 25226ZFLNR1J A10 F48八轮实扣115仍420/535，敏5三牌35挡不足 | silent-deck-burst-observation |
+
+支持按独立run去重；综合支持不代表每局验证所有子公式。已兑现公式与整战胜因分开，相关性为观察，药水只保留事实，无使用规则。
+
+### 新增
+
+- silent-fiddle-draw-lock（relic:FIDDLE，小提琴，[0,20]，1/low）：机制/数据见上表。
+- silent-smooth-stone-opening-dexterity（relic:ODDLY_SMOOTH_STONE，意外光滑的石头，[0,20]，7/high）：机制/数据见上表。
+
+### 更新
+
+| 条目 | 支持局数 | 本次变化 |
+| --- | --- | --- |
+| silent-footwork-block | 25→26 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+| silent-strength-weak-observation | 41→42 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+| silent-route-hp-observation | 41→42 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+| silent-rest-buffer-observation | 41→42 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+| silent-deck-burst-observation | 40→41 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+| silent-noxious-fumes-growth | 22→23 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+| silent-accelerant-triggers | 11→12 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。原正文n=10陈旧与字段11不符，本次同步12。 |
+| silent-wither-end-turn-loss | 8→9 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+| silent-aeonglass-artifact-growth-sl | 8→9 | 补25226ZFLNR1J A10非药水证据；机制与数字见上表，路线/休息A10改为两局汇总。 |
+
+9条全加证据、只改数字0；不删旧支持/反例，未变条目保持，原全文保留experience-before.json。
+
+### 退役
+
+- 无。新败局不反驳公式，旧低进阶策略上限不变。机制在代码里已有支持，不等于需要退役真实构筑知识；没有“模型尚不支持”的新增条目。
+
+### 和手写知识及代码冲突
+
+- 静默其他六份boss-damage/monster-records/room-costs/outcome-stats/fight-value/fight-value-gates为生成数据，无手写攻略/手册；逐份核生成口径和进阶分表。room-costs是MAP进出血、fight-value是训练预测，与本文首末战斗净损不混。自动刷新截止点不同不据此覆盖，未发现数据说明无效或手写冲突，无需改其他知识、不新建攻略。common怪物数据只核事实，其他角色记录不作静默证据。
+- 当前combat-plan.ts:2795识别FIDDLE为noDraw、:2547区分抽牌与生成；card-value.ts:322对FIDDLE抽牌组件处理，boss-start.ts:81石头1敏与实测一致，无确定新冲突。旧飞镖模型缺口已由S1.fix25覆盖，经验条目是动态计数事实、无“尚未建模”句，不冒记本经验修代码；旧隐秘匕首bug仍由原队列处理，本任务不改源码。铁甲行为等价，无生成器变更、不重建。
+
+### 代码问题（不给 DS）
+
+- 无新增已隔离纯bug。末次T2题面预计损2而实0、T4原问损10而重算实7、T6 SL原17伤改21伤等混部分执行/状态重算，完整差额未逐项隔离，不全归模型。三幕首帧与小血瓶后血量差2已说明；死亡帧伤源顺序、未执行判死回合、替代构筑/路线/休息/遗物、完整最优线实执行率、第二boss实到、boss时钟估值比未知，不补猜。
+- 临时校验脚本最初用action!=rest_smith筛回血漏掉choose_rest_option锻造，修为已记录的正HP回复后核八次21/19合162；首次validate.log保留。仓库实现/测试未修改。
+
+### 测试
+
+- 最终源固定沙箱tsc退出0、vitest192文件/2099用例/退出0；首次测试误将CHARACTER=silent用于默认角色固定夹具，纠正该环境并重跑一次，首次/重跑完整日志均保留，首次42文件156例失败/149文件1932例通过（含超时），详情见test-source.log；重跑不设置角色覆盖、固定夹具不变，未改预算/断言。
+- JSON、字段/角色/证据、原药水条目及分句、60000预算、旧41局基线、石头76房/同35抽序/死亡/回复核验通过；git diff --check、gitleaks补丁扫描退出0。源提交7bcee3ebd8d8f452253c9eedaf7d14b10cc29f17仅改silent/experience.json，英文信息含版本及新增2/更新9/退役0和Co-Authored-By。主目录本节与CLI账本只追加、不提交。
+- 学习账本按提交后仅经learner/ledger.py登记proposed，保留first_run/prior/repeat及历史；实际合入与账本结果在本节末追加收尾，运维核实际合入后登记shipped，不写accepted/shipped、不提前冒记外部完整检查。
+
+### 切片大小
+
+- 固定种子20260929，从state.run.character_id=SILENT最高A9/A10各20×六界面取240配对；所有十二池至少20独立帧，无放回补样。A9池COMBAT/REWARD/MAP/EVENT/REST/SHOP为1367/225/116/66/42/57，A10为932/111/63/33/22/42，manifest保留时间戳。
+- 改前改后同样本、同份冻结生成知识/统计，CHARACTER=silent，setExperienceForTests载入冻结entries/stats再调用官方knowledge-slice.ts，无API。该工具是v3相关切片；本局实际大脑full知识前缀大小另记上文，不将两者混用。
+
+| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |
+| --- | --- | --- | --- |
+| a10-combat | 4128.0/5283 | 4253.0/5408 | +125.0 |
+| a10-event | 1571.0/3209 | 1571.0/3392 | +0.0 |
+| a10-map | 2656.0/3811 | 2840.0/3995 | +184.0 |
+| a10-rest | 2268.0/3093 | 2403.5/3137 | +44.0 |
+| a10-reward | 1984.0/3139 | 2155.0/3310 | +171.0 |
+| a10-shop | 4312.0/5306 | 4545.0/5555 | +171.0 |
+| a9-combat | 4895.0/4953 | 5020.0/5078 | +125.0 |
+| a9-event | 2398.0/3083 | 2398.0/3083 | +0.0 |
+| a9-map | 3481.0/3481 | 3665.0/3665 | +184.0 |
+| a9-rest | 2385.5/2763 | 2429.5/2807 | +44.0 |
+| a9-reward | 2809.0/4227 | 2980.0/4398 | +171.0 |
+| a9-shop | 3981.0/6016 | 4152.0/6187 | +284.0 |
+
+240配对增量中位+171.0字，单片最大增量+506，最大片6016→6187字。active107→109、52755→54484字，高42中37低30；A8/A9各103条52052字，A10同。逐局逐轮压成典型一句，完整数字保留本节与只读子集。
+
+
+本节收尾登记（2026-10-06 06:56:02 +0800）：源7bcee3ebd8d8f452253c9eedaf7d14b10cc29f17，最终源tsc0/192文件2099例/退出0；首次测试误设CHARACTER=silent导致默认角色夹具快照失败，移除后重跑一次通过，test-source.log与test-source-retry.log全保留。源提交后无冲突同步main，仅更新既有上线/账本/运维记录，agent/learner/ops/tools/knowledge与已测源无差异。实际live合入1c85d0a7e6f176a528f7043d5019e0fffdcc5752、发布eda90a6c02bbb411bb74caed8f11cca718fc31b4/S1.exp35，合后tsc0/192文件2099例/退出0；合后首次通过。锁内等刷新，知识重叠空/预检0、其他知识blob保留，无生成器变更不重建；合前经验.9及S1.exp34已在live，本批仅S1.exp35。合前现有notes/monster-db-check.md与未跟踪fight-value-backtest-silent.md不混提交。账本新增silent-0158、proposed silent-0005,silent-0006,silent-0011,silent-0019,silent-0020,silent-0021,silent-0024,silent-0025,silent-0027,silent-0156,silent-0157、退役无/check0，11个变动经验全有来源；原first_run/prior/evidence/repeat保持，未并入复盘项不动、不写accepted/shipped。主目录本节只追加及CLI账本不提交；本任务handoff-ops.md随experience-done完成回报交运维核实际合入后经ledger.py登记shipped及补完整外部套件，不提前报完整外部通过。不停对局、不运行play、不推送；需要Dai定：无。
