@@ -906,3 +906,7 @@ silent,7,7,1,1,0,40.57,39,SADL3CGYTGSR,4Y94N8RDPGPM,2026-10-05T12:18:53+00:00,20
 ```
 
 items_found=11按最早证据进阶；items_shipped=38按登记后下一场已结束局的起始归属；repeats=3、repeats_after_ship=0按生成器标记及登记时点。它们不同于本级时间窗新增19项、窗口内9个eval版本或查询时全静默113项最后状态shipped，不能由这些口径间的差额推定学习失败。首胜的后续复盘和上线留后续事件补充，不回改本查询点。
+
+### A7首胜复盘补齐（2026-10-06 02:40 CST）
+
+正式完成事件20261006-021302补齐4Y94N8RDPGPM，A7正式复盘由6/7补齐为7/7；旧02:16查询点保留。首胜仍是A7/F48首次尝试通关、9血、无读档。学习者新增silent-0140（夜魇启动与兑现观察）、silent-0141（复制到手/附魔现场），均observed、prior=unknown；已有0005/0007/0016/0020/0046/0069/0090七项support补证，repeat无。原文及focus/药水选牌措辞勘误完整保留在notes/lessons.md；没有新的纯bug或Roy待定，未把后续发现倒算为本级通关前已上线。详paper/materials/silent/20261006-0236-postmortem-and-exp28-check-failure.md，论文表刷新结果另记。

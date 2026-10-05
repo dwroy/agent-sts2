@@ -10,3 +10,5 @@
 - 2026-10-06 02:35 完成：原17条proposed及changelog第28节归档e7c3fbaa060e8174ea2e6571d6ab7f6c99ffd7d1；main固定发布同步ae49bbec92df38c3d73ec3570560a76a39a408e2，990项源码/测试blob与已测发布一致、2085项其他main文件保持（包括前轮A7报告和收件箱）。首次只读预检将ops/inbox-dev.md计作源码而停止，识别为记录后保留该文件再同步；没有执行错误合并。唯一decision-log冲突已保留双方全部历史。CLI登记后运维校验因部分旧项缺可选prior_runs字段而中止；恢复时核对恰好17条既有更新、按可选字段语义再校验，没有重复写账本。
 - 经CLI/by=ops追加17条shipped/S1.exp28；原first_run/prior/prior_note/evidence/repeat/claim全部保持，0135策略3未重置。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 141 item(s), 0 problem(s)。静默学习曲线使用本轮待提交账本快照生成，未把其他尚未收到完成事件的台账行混入论文表；账本原工作区追加也保留。
 - 策略3完整外部检查待办已关闭；经验28独立完整检查仍checks_pending，交后续事件。本轮只有记录/数据和机械同步学习者已测经验blob，没有运维新写知识、代码、版本、审核或进程操作。科学专长/升级腐蚀波模型覆盖证据转录至fix-queue交学习者，未冒记已修或纯bug。
+
+- 2026-10-06 02:40 02:36完整外部检查已返回exit1：固定发布98f88e06ac849c29af6474c76121f37c2d8019ce/树d98a9fdb2704aea31f544c350f5a16ae902f64b7，233文件2855例通过、1文件1例失败、2跳过；target-options.test.ts:178真实时钟预算断言1506>1500。原SHA cb1f9f971f2391c38046c944ba4e87344acc9b6d30c02f16563168e392ac1ac1及定向1文件22例通过对照归档paper/materials/silent/20261006-0236-postmortem-and-exp28-check-failure.md。运维选择派修复、保留经验上线/17项shipped；完整补测失败仍未解决，局部通过不回改原结果或冒记完整通过。
