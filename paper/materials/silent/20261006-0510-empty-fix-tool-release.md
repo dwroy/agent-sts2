@@ -40,3 +40,5 @@
 完整交接learner/runs/20261006-044302-fix-batch/handoff-ops.md，108项既有修复映射already-fixed.md/json原样保留；初稿/记录冲突/锁等待历史不删改，运维不再次上线这些基线修复。
 
 - 2026-10-06 05:13 main机械集成完成：f77dc7473044d9a36d758c8654f6ed4c6bb26c39，对应队列项关闭，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 149 item(s), 0 problem(s)。待合原策略307c538c未被本工具批次夹带；续办一次非阻塞取锁busy/exit75，无live修改/合后策略测试/策略版本/0148 shipped。完整外部测试由调度器补跑，之后完成事件接续原交接，不轮询或重复派manual。
+
+- 2026-10-06 05:27 05:25 learner-checks已结案：固定发布9852b39f2be0d95ae102209851af2745c327a79a/树c8da1be82dcef8d24689f8bd37e28d3cefcfbe5c完整外部tsc + vitest exit0，240文件2896通过/2跳过、05:06:38起492.38秒；日志ops/codex-ops/learner/20261006-044301-fix-batch.fallback-c8da1be82dcef8d24689f8bd37e28d3cefcfbe5c.checks.log，60409字节/SHA256 78a4101dcc16a2ba875e2d50537e29234b3e4dc247182fc6db92e7f158769942。checks_pending=false，main/live祖先核对，原pending/失败/策略隔离历史保留，不重复合入、版本或台账；详情paper/materials/silent/20261006-0525-fix-checks-and-empty-batch.md。
