@@ -67,3 +67,7 @@ strategy-done 批次20261005-131301，学习者预检decision-log冲突而未合
 main同步固定已测发布，代码/版本/知识逐路径一致；经learner/ledger.py/by=ops登记silent-0098 shipped，归档本条3行proposed历史及1行shipped，98项0问题。既有0003不重复登记，完整时钟构筑/损血/存活回合校准仍未知。完整沙箱外检查通过learner-recheck 20261005-131301-strategy-proposal动作请求，结果待后续learner-checks事件核实，不在本轮等待结果、不改原回报merged=null。
 
 原始提案、交接和失败预检保留在learner/runs/20261005-131301-strategy-proposal/；无新的Dai待定事项，不改对局配置或停止对局。
+
+### 完整外部检查动作回报（2026-10-05 13:48 CST）
+
+`bash ops/codex-ops-do.sh learner-recheck 20261005-131301-strategy-proposal` exit0；本批独立完整外部tsc/vitest exit0，固定发布6a16980e431c72529c909a5314e0da3172835d1e、树b23dc85fd612cd2ee1e4526953b795d58176f05b，221文件2781用例通过/2跳过，开始13:40:42、耗时466.95s，日志/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261005-131301-strategy-proposal.fallback-b23dc85fd612cd2ee1e4526953b795d58176f05b.checks.log。动作返回与原始摘要已核对；调度器已按动作机制发送learner-checks，后续正式事件可独立确认，不再请求或重复测试。不改学习者原始merged=null回报，S1.strategy1/0098 shipped及main同步保持。
