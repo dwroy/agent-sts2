@@ -82,3 +82,141 @@ AssertionError: expected { 'batch-1': { …(2) } } to deeply equal {}
 ```
 
 只进行一次同一固定失败树复测：隔离工作树.worktrees/ops-inferno-check detached 9fc1e4f8，树必须与首次失败完全相同、不改代码/断言/排除列表/知识，不影响已恢复live；结果后续追加，不能预记通过。新herdr断言证据单列队列；与原Inferno/预算/TMPDIR失败的历史分开，不覆盖旧回报。
+
+- 2026-10-06 00:52 测试修复兜底完成：学习者源195869aa77dc216de08e6d1c5842782b239cb670→live实际合入5b005215e6f578e34bac9f4bb25d50a8a18dd112、固定发布000ab7927ba3e57fa786b7d5f593a6eed290ccd2/树763287a1d10bebee05218fcff76c561250ee4d66，main同步1498dd0708ab8ce6bca024091456b48493bcd72f。源固定沙箱首过；首次合后herdr断言失败、原9fc1e4f8树及回退341b75fe记录全部保留；同一固定合后树仅完整复测一次，tsc0、181文件2038例通过，实际合入源码blob与已测树相同，herdr失败根因未定仍留队列，合入双方decision-log全保留，既有运行源码/知识/版本blob保持，main其他1792项源码/论文/记录blob保持；仅测试夹具修复，不增行为版本或新账本条目，0127与0114/0115等状态不重置。旧首帧/时间竞态与初次字段访问失败、撤源1失败/恢复5通过、23:15失败树/回退/TMPDIR历史全部保留。000206本批完整外部检查已请求learner-recheck，结果交后续learner-checks，不用前批e98d通过冒记本新树。
+
+原始 inferno-initial-field-error.log：1293字节，SHA256 ec2d5b7700db16640a7ca42b0d8629194c16ac6326791393691401df1df9f489。
+
+```text
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/turn-start-settle.test.ts (5 tests | 1 failed) 154ms
+     × the scripted first read stays stale even when the clock advances within that read 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/turn-start-settle.test.ts > the loop at a turn start still settling > the scripted first read stays stale even when the clock advances within that read
+AssertionError: expected undefined to be 55 // Object.is equality
+
+- Expected:
+55
+
++ Received:
+undefined
+
+ ❯ tests/turn-start-settle.test.ts:159:63
+    157|     const { client } = await turnStartMod(stale, settled, 150);
+    158|     const now = vi.spyOn(Date, "now").mockReturnValueOnce(1_000).mockR…
+    159|     expect((await client.state()).combat?.player?.current_hp).toBe(55);
+       |                                                               ^
+    160|     expect((await client.state()).combat?.player?.current_hp).toBe(53);
+    161|     now.mockRestore();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  00:05:48
+   Duration  1.84s (transform 1.28s, setup 251ms, import 1.32s, tests 154ms, environment 0ms)
+
+```
+
+原始 inferno-without-fix.log：1257字节，SHA256 3d2b9fd4436168afd7ad28bc519d118ac11f05876d2905578ec7009f3b84cd69。
+
+```text
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/turn-start-settle.test.ts (5 tests | 1 failed) 153ms
+     × the scripted first read stays stale even when the clock advances within that read 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/turn-start-settle.test.ts > the loop at a turn start still settling > the scripted first read stays stale even when the clock advances within that read
+AssertionError: expected 53 to be 55 // Object.is equality
+
+- Expected
++ Received
+
+- 55
++ 53
+
+ ❯ tests/turn-start-settle.test.ts:157:55
+    155|     const { client } = await turnStartMod(stale, settled, 150);
+    156|     const now = vi.spyOn(Date, "now").mockReturnValueOnce(1_000).mockR…
+    157|     expect((await client.state()).combat?.current_hp).toBe(55);
+       |                                                       ^
+    158|     expect((await client.state()).combat?.current_hp).toBe(53);
+    159|     now.mockRestore();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  00:06:35
+   Duration  1.84s (transform 1.30s, setup 308ms, import 1.28s, tests 153ms, environment 0ms)
+
+```
+
+原始 inferno-with-fix.log：242字节，SHA256 305209fc74526a87107aa7cf1d37290042fbb9e676cc94ea03f59a71fb62a534。
+
+```text
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  00:06:54
+   Duration  1.69s (transform 1.19s, setup 247ms, import 1.20s, tests 139ms, environment 0ms)
+
+```
+
+原始 inferno-sandbox.log：502字节，SHA256 9b04d1a3b13276139109bc446971625762b4a567684447b0d05653aea9ec0084。
+
+```text
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+
+ Test Files  180 passed (180)
+      Tests  2027 passed (2027)
+   Start at  00:07:25
+   Duration  254.88s (transform 6.61s, setup 11.35s, import 24.59s, tests 952.91s, environment 21ms)
+
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  00:11:40
+   Duration  2.03s (transform 1.55s, setup 372ms, import 1.47s, tests 60ms, environment 0ms)
+
+```
+
+同一固定合后树一次复测原日志 /tmp/sts2-0028-test-retry.log：517字节，SHA256 ed8697035bd1ce67b3abec785fb61c5f012efcda4b2115e71ac54c4e5506e281。
+
+```text
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-inferno-check/agent
+
+
+ Test Files  180 passed (180)
+      Tests  2027 passed (2027)
+   Start at  00:42:32
+   Duration  223.49s (transform 7.01s, setup 9.58s, import 23.11s, tests 835.11s, environment 19ms)
+
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-inferno-check/agent
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  00:46:16
+   Duration  1.40s (transform 1.06s, setup 276ms, import 984ms, tests 46ms, environment 0ms)
+
+```
