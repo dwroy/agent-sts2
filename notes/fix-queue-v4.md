@@ -419,3 +419,4 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 ## 2026-10-05 23:13 新复盘非阻塞缺陷（silent-0127，交学习者）
 
 - [ ] `agent/src/reflex/rollout.ts:1386`（同时见`:1356`）：学习者发现没有眩晕后继数据时沿用原招式、缺伤害模型时沿用现场无攻击，漏掉熟睡甲虫醒后威胁。证据`3KME36ADUE4U` A7/F27第2/3次T1：下一轮报8、五轮仅损1／约94%，实际T2甲虫16＋丝虫8＝24攻击、14挡后损10；完成样本0/16和0/24。最早同型证据`53FLQ68CETW0` A6/F30 T3五轮全报0损、T4实际滚动；首次登记为本批，非已学习后重犯。来源notes/lessons.md本局首条、账本silent-0127；非对局卡死/崩溃/非法动作，运维只记证据，交学习者核对并实现，不自行补未知招式或游戏机制。未验证修复后的受控胜负，不把全部损血归因于此项；silent-0128机制观察保持observed。
+- **Jev 计价（Roy 2026-10-05 23:14，TypeSafe 用量页截图）**：输入 **$0.042 / 百万 token**，输出免费（页面注：Estimated at $0.042/MTok input · Free output）。填进 eval/cost-config.json，combat:jev 的 api_usd 由此算出，Jev 的 cost_complete 应变 true。交叉核对：用量页「Last 30 days」截至 2026-10-05 共 $4.9641、119,495,182 tokens、24,740 requests（9/28 起有数，含铁甲和静默全部 Jev 调用）——用同一时段 logs 里的 Jev 合计对一下，差多少写进 paper/materials/silent/cost.md。
