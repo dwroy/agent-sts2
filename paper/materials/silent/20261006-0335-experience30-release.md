@@ -50,3 +50,5 @@
 - CLI/by=ops登记33个唯一id为shipped/S1.exp30：第30批26项、第29批17项，其中10项重叠只登记一次，旧批独有7项0030/0069/0102/0140/0141/0142/0143随本次实际合入结案。原两个源和证据分别保留，没有独立S1.exp29，没有把旧A7/A0发现归A8。原first_run/prior/prior_note/evidence/repeat/claim/effect不变；0144仍observed、0051仍S1.fix5。
 - /home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 146 item(s), 0 problem(s)。静默学习曲线使用本轮提交账本快照生成，工作区其他原始账本行保留未重排，其他角色曲线及后台成本/ops/notes文件未加入提交；A8小结历史窗口与原CSV行保持，只追加窗口后上线状态。
 - 完整外部测试仍由调度器按本批checks_pending补跑，未声称通过；以前exp28/strategy4的完整预算断言失败及派发记录保持。本轮不停止对局/调度、无Roy新待定。
+
+- 2026-10-06 03:46 03:45 learner-checks补测结案：调度器确认本批固定发布25a520d92d46d1d644a3ca14a05406a4a1246238/树50d1b0df8d4b0a218bf7a0f8c4cd500d15f67538沙箱外完整tsc + vitest exit0；原日志ops/codex-ops/learner/20261006-025911-experience-update.fallback-50d1b0df8d4b0a218bf7a0f8c4cd500d15f67538.checks.log，235文件通过、2862测试通过/2跳过，原日志61688字节、SHA256 a5389e94453f286e00c97c584c3535730440badf213f95bfaa85f381402c1497。发布树及main/live祖先核对一致，调度器checks_pending=false；上一轮登记33项shipped/S1.exp30不重复更新。本批完整补测待办关闭，此前经验28及策略4在其他固定树上的失败仍是历史事实，原日志/队列/派发记录保留，不用本次通过覆盖。记录类提交免代码测试，不重复运行套件、建版本或操作对局进程。
