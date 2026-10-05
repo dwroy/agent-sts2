@@ -29,3 +29,9 @@ AssertionError: yg3h-f33-t1: expected 2993 to be less than or equal to 1800
    Start at  02:47:22
    Duration  500.39s (transform 6.19s, setup 10.66s, import 30.20s, tests 932.34s, environment 23ms)
 ```
+
+## 2026-10-06 03:03 实际派发结果
+
+- 原完整失败日志及优先队列已提交d6f771f92bbfd6b2855b9704f1174f565caadad5，随后实际调用`bash ops/codex-ops-do.sh fix-batch`退出1，返回`{"dispatched": null}`。一次learner-status与调度器状态确认已有tick启动20261006-025911-fix-batch、PID2225637在同一codex-dev运行；这是同树busy保护拒绝额外并发，不是本轮修复已经接单/完成。该批次已合到main 00ea8e87，根队列读取入口为learner/tasks/fix-batch.md:26（默认项目根notes/fix-queue-v4.md），新队列后来提交后可由该批次读到，若没处理交下一可用批次。
+- 完整命令/退出码/原stdout/当前占用证据归档paper/materials/silent/20261006-0257-budget-fix-dispatch.json；收件箱已说明失败和接力。预算300ms末采样容差/1500ms生产预算均保持，失败记录和前批失败不删；未重跑完整或定向测试，没有新生产代码/台账/版本变更，不等待学习者、停进程或改live。
+- 本事件完整检查已收到且结果失败：checks_pending=false、checks rc1。选择派修复、保留S1.strategy4/0139实际shipped，问题仍待解决，不能把先前沙箱通过写成完整通过。其他后续LLYS复盘/经验批次并发追加不混此提交；经验29未合入仍按前轮交接，不在本事件中另做合入。

@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-06 03:03",
+  "command": "bash ops/codex-ops-do.sh fix-batch",
+  "exit_code": 1,
+  "output": "{\"dispatched\": null}\n",
+  "observed_running_batch": "20261006-025911-fix-batch",
+  "running_pid": 2225637,
+  "running_reason": "tick",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev",
+  "reason": "同一codex-dev工作树已有fix-batch运行，busy保护拒绝再次派发；不强制并发、等待或终止现有批次",
+  "queue_commit": "d6f771f92bbfd6b2855b9704f1174f565caadad5",
+  "new_evidence": "rollout-live.test.ts:249:40 yg3h-f33-t1 2993>1800",
+  "status": "新证据优先队列已提交，待现有批次读取或下一可用fix-batch承接；不冒记本轮派发成功/已修",
+  "strategy_version": "S1.strategy4",
+  "decision": "保留实际上线与0139 shipped；完整检查失败历史保留"
+}
