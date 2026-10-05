@@ -1190,6 +1190,7 @@ interface SimPlayer {
   poisonPerTurn: number;
   poisonExtraTriggers: number;
   envenom: number;
+  phantomBlades: number;
   doubleDamage: boolean;
   doubleDamageNext: boolean;
   potions: number;
@@ -1880,6 +1881,10 @@ function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebu
 
 /** A played card's lasting effects on the simulated player: a Power's (POWER_EFFECTS), Feel No Pain, Plating. */
 function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<string, number>): void {
+  if (card.phantomBlades === 9 && player.phantomBlades === 0) {
+    player.phantomBlades = 9;
+    playerPowers["PHANTOM_BLADES_POWER"] = 9;
+  }
   if (card.envenom) {
     player.envenom += card.envenom;
     playerPowers["ENVENOM_POWER"] = player.envenom;
@@ -2524,6 +2529,7 @@ function simulate(
     poisonPerTurn: input.playerPowers["NOXIOUS_FUMES_POWER"] ?? 0,
     poisonExtraTriggers: base.poisonExtraTriggers ?? input.playerPowers["ACCELERANT_POWER"] ?? 0,
     envenom: base.envenom ?? input.playerPowers["ENVENOM_POWER"] ?? 0,
+    phantomBlades: (input.playerPowers["PHANTOM_BLADES_POWER"] ?? base.phantomBlades) === 9 ? 9 : 0,
     doubleDamage: (input.playerPowers["DOUBLE_DAMAGE_POWER"] ?? 0) > 0,
     doubleDamageNext: (input.playerPowers["SHADOW_STEP_POWER"] ?? 0) > 0,
     potions: input.potions,
@@ -2836,6 +2842,9 @@ function simulate(
       afterImage: player.afterImage,
       poisonExtraTriggers: player.poisonExtraTriggers,
       envenom: player.envenom,
+      // UACFSW4VDDLD F33 T5 / F48 T9: each fresh turn has one bonus, before enemy damage caps.
+      phantomBlades: player.phantomBlades,
+      phantomBladesSpent: false,
       // Mid-turn draws: Hellraiser plays the Strikes, Dark Embrace draws for each exhaust (the solver's own turn).
       hellraiser: player.hellraiser,
       darkEmbrace: player.darkEmbrace,
