@@ -6,3 +6,7 @@
 - 源沙箱tsc0、182文件2042例，合后tsc0、183文件2048例，均首次通过；原日志摘要{"test-live": {"bytes": 492, "cases": 2048, "files": 183, "sha256": "630a98571f3f18ac937f3cc15b9fcb71abc714b39e2e62c795fe63bbf56a60d2", "tsc": 0, "vitest": 0}, "test-source": {"bytes": 490, "cases": 2042, "files": 182, "sha256": "e9c95d42d29fe4b2af4500a9ad05a40128934a97139b4a0efdc51dcd8ec1a0af", "tsc": 0, "vitest": 0}}。知识刷新/重叠为空，非经验知识blob保留，没有生成器变更或重建，铁甲行为等价。
 - 本次changelog新增30852字节，旧前缀775937字节、SHA256 75768b72a3265006274676855f1738ec3e6c688e7b168bdd875d6a857a64716c保持。学习者源码不在运维另审范围；之后机械同步固定已测发布至main，CLI/by=ops登记17项shipped并刷新学习曲线。
 - 当前调度器checks_pending=true，完整外部检查交后续learner-checks，本轮不重复请求或等待。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 141 item(s), 0 problem(s)。S1.strategy3独立完整检查已通过，不混记为本批通过；无Roy新待定、不停对局/调度。
+
+- 2026-10-06 02:35 完成：原17条proposed及changelog第28节归档e7c3fbaa060e8174ea2e6571d6ab7f6c99ffd7d1；main固定发布同步ae49bbec92df38c3d73ec3570560a76a39a408e2，990项源码/测试blob与已测发布一致、2085项其他main文件保持（包括前轮A7报告和收件箱）。首次只读预检将ops/inbox-dev.md计作源码而停止，识别为记录后保留该文件再同步；没有执行错误合并。唯一decision-log冲突已保留双方全部历史。CLI登记后运维校验因部分旧项缺可选prior_runs字段而中止；恢复时核对恰好17条既有更新、按可选字段语义再校验，没有重复写账本。
+- 经CLI/by=ops追加17条shipped/S1.exp28；原first_run/prior/prior_note/evidence/repeat/claim全部保持，0135策略3未重置。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 141 item(s), 0 problem(s)。静默学习曲线使用本轮待提交账本快照生成，未把其他尚未收到完成事件的台账行混入论文表；账本原工作区追加也保留。
+- 策略3完整外部检查待办已关闭；经验28独立完整检查仍checks_pending，交后续事件。本轮只有记录/数据和机械同步学习者已测经验blob，没有运维新写知识、代码、版本、审核或进程操作。科学专长/升级腐蚀波模型覆盖证据转录至fix-queue交学习者，未冒记已修或纯bug。
