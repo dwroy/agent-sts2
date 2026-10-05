@@ -139,3 +139,5 @@
 - 2026-10-05 18:59 已处理18:58 learner-checks：20261005-181301-fix-batch独立完整沙箱外tsc/vitest exit0，固定发布65d99e74c24daf6dfbe746d9dc810832e199c979/树b6192d9480543635e549e2dbc2aa1f8c7c2cb69a已核对git对象和main/live祖先，225文件2805通过/2跳过、18:44:46开始468.92秒，日志ops/codex-ops/learner/20261005-181301-fix-batch.fallback-b6192d9480543635e549e2dbc2aa1f8c7c2cb69a.checks.log。18:54的S1.fix19完整补测待办完成，原等待及旧high契约失败/修正历史保留；main同步和0112/0113 shipped不重复合并、登记、测试或论文生成。详情paper/materials/silent/20261005-1847-fix19-release.md，对局照常。
 
 - 2026-10-05 19:05 称呼约定（19:05 manual）：今后用户称Roy，新写的收件箱、decision-log、报告统一用Roy；旧称Dai指同一人，旧记录不回改，notes/for-dai.md文件名暂不变。
+
+- 2026-10-05 19:09 已处理19:06 learner-done 20261005-184301：53FLQ68CETW0静默A6/F48永世沙漏，前五判死读档、末次T11以32血2挡对26攻击加12凋萎死亡，毒结算后敌188/512。复盘原文及能力药水/小血瓶/勘误时间追加更正、3新增0114/0115/0116+9旧support共12条台账归档，check116项0问题，无repeat/shipped登记。学习者爆发后双防御少算14挡提案0114及combat-plan.ts:2849等定位已转录fix-queue-v4，属于非阻塞机制模型，运维不修；其他打法机制与未记录项保留，无Roy待定或新角色无关阻塞bug。详情paper/materials/silent/20261005-1906-postmortem-batch.md，随后刷新论文表，对局照常。
