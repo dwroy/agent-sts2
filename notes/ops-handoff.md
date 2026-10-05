@@ -130,3 +130,6 @@
 
 ### 待接续经验.19提交（2026-10-05 18:28，运维 codex）
 - 20261005-180500经验候选在exp-silent未提交，唯一阻塞learner-strategy.test.ts:49旧high断言；首次/完整重跑均tsc0、1失败/1981通过，候选SHA256 `49004a50e944379080f2b5b5a3bc98a1ccdd9028329ae331104c48cba3102bb9`、HEAD158dc8c7。181301学习者正修同一断言，不并发编辑codex-dev。收到其fix-done、核实修复上线后按paper/materials/silent/20261005-1825-exp19-blocked.md接续候选检查/提交兜底；保留两次失败及第十九节changelog，15项来源映射见本批ledger-operations-planned.jsonl、真实源码提交之前不登记，实际合入之前不记shipped/.19已上线。先确认后续批次是否已接续，避免重复处理；对局继续。
+
+### 经验.19已正常重派，替代18:28直接提交待办（2026-10-05 18:47）
+- 18:43 manual授权重派后，exp已合main至67622dcff8c0bd71d2fb141821bf0c2097582459、包含e87b20f6修复。候选原样备份/home/dw/Projects/agent-sts2/learner/runs/20261005-180500-experience-update/candidate-before-retry.json、stash `1b9c1b5f8ae03811adbfb5990d4cac9ac964c725`，旧第十九节未提交草稿保存在/home/dw/Projects/agent-sts2/learner/runs/20261005-180500-experience-update/changelog-before-retry.md；原失败/映射不丢，清理本批草稿后正常白名单派发成功20261005-184601-experience-update（PID1424800，2L1BNN9ZJEFU，running）。后续以新批次完成事件接续，**不要在181301 fix-done时同时改exp、提交旧候选或pop stash覆盖新产出**；先核对新批状态/源码/自测/实际发布，避免重复登记。旧候选未上线，不记shipped；对局继续。
