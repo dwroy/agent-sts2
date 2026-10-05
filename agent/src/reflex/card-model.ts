@@ -71,8 +71,10 @@ export interface CardModel {
   temporaryDexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
   afterImage?: number;
-  /** Observed unupgraded Shadow Step: discard all other hand cards, double attacks next turn only. */
+  /** Observed whole-hand discard (Shadow Step or Calculated Gamble). */
   discardsHand?: boolean;
+  /** Calculated Gamble draws as many cards as it actually discarded (silent-0081). */
+  drawDiscardedHand?: boolean;
   doubleDamageNext?: boolean;
   /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
   poison?: number;
@@ -80,6 +82,8 @@ export interface CardModel {
   poisonNow?: boolean;
   poisonPerTurn?: number;
   poisonExtraTriggers?: number;
+  /** Observed Envenom: poison per unblocked attack hit (silent-0082 / silent-0084). */
+  envenom?: number;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
@@ -835,6 +839,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const energyGain = type === "Power" || energyOnExhaustOnly(template, renderedText) || nextTurnOnly(template, "Energy") ? 0 : (dyn(card, "Energy") ?? 0);
   // R0HEV5E3QT6G F29 T2 / F48 T4: the unupgraded Shadow Step has a dormant Cards=3 var, but no draw.
   const shadowStep = cardId === "SHADOW_STEP" && !bool(card["upgraded"]);
+  const calculatedGamble = cardId === "CALCULATED_GAMBLE" && !bool(card["upgraded"]);
   const draw = shadowStep || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
@@ -848,7 +853,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const anticipate = cardId === "ANTICIPATE" && !bool(card["upgraded"]) && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate;
+    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
@@ -962,9 +967,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     exhausts,
     special,
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
+    ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
+    ...(cardId === "ENVENOM" && !bool(card["upgraded"]) && dyn(card, "EnvenomPower") !== null ? { envenom: dyn(card, "EnvenomPower")! } : {}),
     known,
     flatValue,
     heldPenalty,
