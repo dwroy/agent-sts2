@@ -647,6 +647,8 @@ export interface RolloutInput {
   };
   meta: FightMeta;
   playerPowers: Record<string, number>;
+  /** Observed Snecko Skull bonus for each Noxious Fumes application (silent-0086 / silent-0087). */
+  fumesPoisonBonus?: number;
   potions: number;
   mm: MoveModelData;
   model: FightValueModel | null;
@@ -1187,6 +1189,7 @@ interface SimPlayer {
   afterImage: number;
   poisonPerTurn: number;
   poisonExtraTriggers: number;
+  envenom: number;
   doubleDamage: boolean;
   doubleDamageNext: boolean;
   potions: number;
@@ -1727,7 +1730,8 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   if (player.poisonPerTurn > 0) for (const enemy of enemies) {
     if (!enemy.alive || enemy.explodeAt !== undefined) continue;
     if (enemy.artifact > 0) enemy.artifact -= 1;
-    else enemy.poison += player.poisonPerTurn;
+    // 9YBKCNBFP0X5 F48 attempt 6 T6-T9: three Fumes layers apply four, without changing the power.
+    else enemy.poison += player.poisonPerTurn + (input.fumesPoisonBonus ?? 0);
   }
   const aoe = turnStartAoeOf(player);
   if (player.boulder > 0) player.boulder += BOULDER_STEP;
@@ -1875,6 +1879,10 @@ function applyPlayerDebuffs(player: SimPlayer, powers: Partial<Record<PlayerDebu
 
 /** A played card's lasting effects on the simulated player: a Power's (POWER_EFFECTS), Feel No Pain, Plating. */
 function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<string, number>): void {
+  if (card.envenom) {
+    player.envenom += card.envenom;
+    playerPowers["ENVENOM_POWER"] = player.envenom;
+  }
   if (card.poisonPerTurn) {
     player.poisonPerTurn += card.poisonPerTurn;
     playerPowers["NOXIOUS_FUMES_POWER"] = player.poisonPerTurn;
@@ -2514,6 +2522,7 @@ function simulate(
     afterImage: base.afterImage ?? input.playerPowers["AFTERIMAGE_POWER"] ?? 0,
     poisonPerTurn: input.playerPowers["NOXIOUS_FUMES_POWER"] ?? 0,
     poisonExtraTriggers: base.poisonExtraTriggers ?? input.playerPowers["ACCELERANT_POWER"] ?? 0,
+    envenom: base.envenom ?? input.playerPowers["ENVENOM_POWER"] ?? 0,
     doubleDamage: (input.playerPowers["DOUBLE_DAMAGE_POWER"] ?? 0) > 0,
     doubleDamageNext: (input.playerPowers["SHADOW_STEP_POWER"] ?? 0) > 0,
     potions: input.potions,
@@ -2823,6 +2832,7 @@ function simulate(
       feelNoPain: player.feelNoPain,
       afterImage: player.afterImage,
       poisonExtraTriggers: player.poisonExtraTriggers,
+      envenom: player.envenom,
       // Mid-turn draws: Hellraiser plays the Strikes, Dark Embrace draws for each exhaust (the solver's own turn).
       hellraiser: player.hellraiser,
       darkEmbrace: player.darkEmbrace,

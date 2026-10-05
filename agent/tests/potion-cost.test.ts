@@ -4,21 +4,45 @@
  * "no potion this fight" line on every question with a potion to drink (not in a boss fight).
  * Fixed data only: the hand-written table tests/gkb-data/knowledge/characters/ironclad/potion-equivalents.json (A8/A9: Block Potion 7/8/9,
  * Fire Potion 5/4/4, Foul Potion held value 0, Poison Potion no value), hand-made solver inputs and logged boards.
+ * Logged forecasts use potion-cost-knowledge.json, pinned from the tested f5e05515 baseline.
  * Costs are off for the other test files (tests/setup-potion-cost.ts); this file switches them on.
  */
 
-import { dirname, join } from "node:path";
+import { readFileSync } from "node:fs";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Setup imports planner modules first; clear those caches before installing the fixture-only reader.
+vi.hoisted(() => vi.resetModules());
+
+// Replay the historical Ironclad contracts against committed fixtures, never a refreshed database.
+vi.mock("node:fs", async (importOriginal) => {
+  const fs = await importOriginal<typeof import("node:fs")>();
+  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
+  const pinned = JSON.parse(fs.readFileSync(new URL("./potion-cost-knowledge.json", import.meta.url), "utf8")) as Record<string, unknown>;
+  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
+    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
+      const name = basename(path);
+      if (Object.hasOwn(pinned, name)) return JSON.stringify(pinned[name]);
+      throw Object.assign(new Error(`ENOENT: pinned potion-cost fixture, ${name}`), { code: "ENOENT" });
+    }
+    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
+  }) as typeof fs.readFileSync;
+  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
+});
 
 import { loadPotionEquivalents, potionWorthSource } from "../src/knowledge/potion-equivalents.js";
+import { readMonsterDbJson } from "../src/knowledge/monster-db.js";
+import { knowledgeCharacter, setKnowledgeCharacter } from "../src/knowledge/files.js";
+import { loadFightValueModel } from "../src/reflex/fight-value.js";
 import type { AskDecision, Decision } from "../src/memory/types.js";
 import { hpGuardReplacement, planCombatTurn, potionCostContext } from "../src/reflex/combat-plan.js";
 import { modelPotion, type CardModel } from "../src/reflex/card-model.js";
 import { potionCost, potionCostFact, potionCostFrom, potionCostOptions, potionCosts, withPotionCost } from "../src/reflex/potion-cost.js";
 import { beatsDryLine, potionMcOptions } from "../src/reflex/potion-mc.js";
-import { rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate, type RolloutInput } from "../src/reflex/rollout.js";
+import { loadFightValueGates, rolloutDecision, type EnemyTable, type FightMeta, type LineEstimate, type RolloutInput } from "../src/reflex/rollout.js";
 import { pickRolloutBest, rolloutLiveOptions, rolloutTies, sameShownResult } from "../src/reflex/rollout-live.js";
 import { effectiveLoss, solveTap, solveTurn, weightsFor, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
@@ -26,17 +50,28 @@ import { logged, loggedEnv } from "./logged.js";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TABLE_DIR = join(HERE, "gkb-data", "knowledge");
 const table = () => loadPotionEquivalents(TABLE_DIR);
+const CHARACTER_BEFORE = knowledgeCharacter();
+
+it("keeps historical monster transitions and terminal models fixed across knowledge refreshes", () => {
+  const pinned = JSON.parse(readFileSync(join(HERE, "potion-cost-knowledge.json"), "utf8"));
+  expect(readMonsterDbJson()).toEqual(pinned["monster-db.json"]);
+  expect(loadFightValueModel()).toEqual(pinned["fight-value.json"]);
+  expect(loadFightValueGates()).toEqual(pinned["fight-value-gates.json"]);
+});
 
 beforeEach(() => {
+  setKnowledgeCharacter("ironclad");
   potionCostOptions.enabled = true;
   potionWorthSource.dir = TABLE_DIR;
 });
 
 afterEach(() => {
+  setKnowledgeCharacter(CHARACTER_BEFORE);
   potionCostOptions.enabled = false;
   potionWorthSource.dir = undefined;
   rolloutLiveOptions.enabled = true;
   rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET;
+  rolloutLiveOptions.now = null;
   potionMcOptions.now = null;
   solveTap.onSolve = null;
 });
@@ -275,6 +310,7 @@ const criteriaOf = (decision: Decision | null): Record<string, Record<string, un
 const plan = (name: string): Decision | null => {
   rolloutLiveOptions.enabled = true;
   rolloutLiveOptions.budgetMs = 60_000;
+  rolloutLiveOptions.now = () => 0;
   potionMcOptions.now = () => 0;
   return planCombatTurn(loggedEnv(logged(name), { jevContext: "v1" }));
 };
