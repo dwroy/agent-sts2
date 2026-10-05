@@ -447,3 +447,8 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 - **最高优先，非阻塞系统预算/时钟问题，根因待核**：agent/tests/rollout-live.test.ts:249:40 的真实时钟固定夹具yg3h-f33-t1报2993>1800ms（生产常量agent/src/reflex/rollout-live.ts:72为1500ms，断言容许300ms末采样边界，超1193ms）。独立完整tsc/vitest exit1，234文件2861例通过、1文件1例失败、2跳过；固定6566b7d308947e1929cb398034dd8f02a1d1cb25/树298172c3021fbc4bdb6fc1b53f0a79e7b143fff3，02:47:22开始500.39秒，原SHA 0861eb38d55332c5fbf5a3663d7f133a5c4702c6d85f1b5067065a16df5c72e0。详paper/materials/silent/20261006-0257-strategy4-full-check-failure.md及原字节归档paper/materials/silent/20261006-0257-strategy4-full-check.txt。相关rollout测试/生产源码与策略4合前98f88e06 blob相同；六项知识自动刷新不能据此称无影响，生产缺陷和负载/夹具边界需依据受控证据区分。
 - 运维选择派修复、保留S1.strategy4/0139实际shipped，对局照常。下一fix-batch先与02:40 target-options 1506>1500证据一起核查生产硬截止传播、最后采样/模拟边界和测试时钟/并发；只修已证实系统缺陷，**不得提高1500预算或1800断言、放宽/删断言/排除测试、仅重跑通过就称修复**。固定数据/受控时钟撤源失败、恢复通过，源/合后固定沙箱通过后由调度器补完整外部套件；仍未定位则明确未修、保留全部失败历史。不要改游戏机制、策略/经验或重置0139/相关账本；无对应新bug-infra不建或冒标shipped，局号/进阶不适用（yg3h是已有测试夹具名）。
+
+## 2026-10-06 03:08 A8首胜复盘：升级萎靡机制覆盖证据（交学习者）
+
+- [ ] **非阻塞机制模型提案**：agent/src/reflex/card-model.ts:815的MALAISE入口仅!upgraded；证据LLYSRQQ35AVW SILENT A8 F33 T3，萎靡+显示unmodelled，零能量实测CRUSHER力−1/虚弱+1、意图18→6且7挡覆盖，HP63不变；F38 T1花2能量减3力/加3虚弱；F48 T2花3能量，TORCH_HEAD_AMALGAM力0→−4、虚弱1→5、攻击13→10，TUNING_FORK另给7挡，HP69→66。来源notes/lessons.md本局新节、20261006-024301.out、silent-0144/0146，最早证据KAY522KT5NXR A0 F31 T1。
+- 只转录学习者发现，不按角色无关阻塞bug由运维修，不自行补公式或重建bf63ab40+dirty对局源码。旧silent-0051/S1.fix5仅未升级模型，不重置它的shipped状态；0144原kind=bug-infra保持，升级机制实现与固定验证由学习者负责。无受控全战反事实，不将胜负或全部预测差额归因于此；此前03:00系统时钟预算核查仍为最高优先。
