@@ -36,6 +36,7 @@ vi.mock("../src/reflex/potion-cost.js", async (original) => ({
 type Raw = Record<string, any>;
 const knowledge = makeKnowledge({ cards: [
   { id: "BURST", type: "Skill" }, { id: "DEFEND_SILENT", type: "Skill" }, { id: "WITHER", type: "Status" },
+  { id: "ULTIMATE_DEFEND", type: "Skill" }, { id: "SNAKEBITE", type: "Skill" },
 ] }, "cache");
 const step = (cardIndex: number, cardId: string, target?: number) => ({ cardIndex, cardId, name: cardId, upgraded: false, target });
 const originalRollout = rolloutLiveOptions.enabled;
@@ -49,8 +50,8 @@ afterEach(() => {
   setMonsterDbForTests(null);
 });
 
-function observedInput(frame: number) {
-  const raw = JSON.parse(readFileSync(new URL("./silent-burst-state.json", import.meta.url), "utf8"))[frame].state as Raw;
+function observedInput(frame: number, fixture = "./silent-burst-state.json") {
+  const raw = JSON.parse(readFileSync(new URL(fixture, import.meta.url), "utf8"))[frame].state as Raw;
   const state = parseGameState(raw);
   const env: DecisionEnv = { state, knowledge, brief: buildRunBrief(state, knowledge),
     thresholds: loadConfig({}).thresholds, runStart: "auto", characterPreference: null,
@@ -106,9 +107,9 @@ it("the pending Skill replay survives an Attack, a Power and a zero-cost potion"
   expect(plan.outcome).toMatchObject({ blockGained: 25, damageDealt: 6, energyLeft: 0 });
 });
 
-it("unused Burst expires before the next rollout turn as observed at attempt 6 T3 to T4", () => {
+it.each([1, 2])("unused Burst %i expires before the next rollout turn", (count) => {
   const input = board();
-  input.solver.player.duplicateSkills = 1;
+  input.solver.player.duplicateSkills = count;
   input.solver.hand = [];
   input.piles = { handBase: [], draw: Array.from({ length: 12 }, (_, i) => defend(10 + i)), discard: [] };
   input.options = { handSize: 1 };
@@ -117,11 +118,31 @@ it("unused Burst expires before the next rollout turn as observed at attempt 6 T
   expect(simulateFight(input, plan, 3, 1, false).records.map((record) => record.loss)).toEqual([10, 5, 5]);
 });
 
-it("does not infer upgraded Burst or unobserved Skill counts", () => {
-  for (const [upgraded, count] of [[true, 2], [false, 2], [false, null]] as const) {
+it("does not infer unobserved Burst upgrades or Skill counts", () => {
+  for (const [upgraded, count] of [[true, 3], [false, 2], [false, null]] as const) {
     const model = modelHandCard({ card_id: "BURST", upgraded, playable: true, energy_cost: 1, target_type: "Self",
       dynamic_values: count === null ? [] : [{ name: "Skills", base_value: count, current_value: count }] }, 0, knowledge);
     expect(model.burst).toBeUndefined();
     expect(model.known).toBe(false);
   }
+});
+
+it("VN7 F27 T6: upgraded Burst arms two Skills and repeats Ultimate Defend once for 30 Block", () => {
+  const { input } = observedInput(0, "./silent-burst-upgraded-state.json");
+  const burst = input.hand.find((entry) => entry.cardId === "BURST")!;
+  const ultimate = input.hand.find((entry) => entry.cardId === "ULTIMATE_DEFEND")!;
+  expect(burst).toMatchObject({ upgraded: true, burst: true, burstSkills: 2, known: true, flatValue: 0 });
+  const plays = [step(burst.index, "BURST"), step(ultimate.index, "ULTIMATE_DEFEND")];
+  expect(replaySteps(input, plays)!.outcome.blockGained).toBe(30);
+});
+
+it("VN7 F27 T6: active two-stack Burst reproduces 5 to 35 Block and the observed one-stack remainder", () => {
+  const { input } = observedInput(1, "./silent-burst-upgraded-state.json");
+  expect(input.player.duplicateSkills).toBe(2);
+  const ultimate = input.hand.find((entry) => entry.cardId === "ULTIMATE_DEFEND")!;
+  const plan = replaySteps(input, [step(ultimate.index, "ULTIMATE_DEFEND")])!;
+  expect(input.player.block + plan.outcome.blockGained).toBe(35);
+  const after = JSON.parse(readFileSync(new URL("./silent-burst-upgraded-state.json", import.meta.url), "utf8"))[2].state as Raw;
+  expect(after.combat.player.block).toBe(35);
+  expect(after.combat.player.powers.find((p: Raw) => p.power_id === "BURST_POWER").amount).toBe(1);
 });
