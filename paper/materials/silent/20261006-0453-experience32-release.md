@@ -48,3 +48,6 @@
 ```
 
 原第三十二节：24496字节，SHA256 c29e52fe202b5eeea6b329f231ed60cac4d0740b164fa152cee0ca2c1118eab7；回报SHA256 5bba5d6c06f940000d9c4f85e3567212af81bd2f77b2f354d360ed139f9d567d；学习者交接learner/runs/20261006-042807-experience-update/handoff-ops.md。
+
+- 2026-10-06 04:59 原11条提案与第三十二节归档165051832642d4a491e7d45196b87a2f81be8fbc；固定已测发布a999dba8c53a2dfc22825ba5603cde3f0bebf74b/树0ac8b1636835acdcc3dd67c24dd82b99af126a42同步main ab79a46844c143acb47b374ce8a929fcd4c72e50，全部1009源码/测试blob一致，知识只更新silent/experience.json，其余2111项main blob保持，decision-log双方历史保留。
+- CLI/by=ops登记11项shipped/S1.exp32：silent-0019, silent-0020, silent-0021, silent-0057, silent-0006, silent-0023, silent-0043, silent-0011, silent-0046, silent-0062, silent-0149；每项历史仅追加本次上线行，首次证据、prior、claim、evidence、effect和旧repeat原样保持，0149首证A0、0057的support保持，其他策略0148仍proposed。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 149 item(s), 0 problem(s)。从已提交账本生成静默学习曲线SHA256 dab38ca153d85d2c3c938d76b6b479d78a9dafc9f433347241a127dfa2659e78，未混入其他后台未提交账本或生成表。完整外部检查留待调度器事件；待合固定策略307c538c沿原交接续办，不停对局/调度，无Roy新待定。
