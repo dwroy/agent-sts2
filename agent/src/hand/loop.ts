@@ -1732,9 +1732,9 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // claimable, so without this the planner claims it again on the next iteration.
     if (resolved.intent.action === "skip_reward_cards") screenMemory.cardRewardSkipped = true;
 
-    // Settle debounce: if the mod says the action has not finished, do not plan the next step against
-    // a board that is still animating. Wait for it to move, with a bounded fallback.
-    if (actionResult.status !== "completed" || !actionResult.stable) {
+    // Event clicks can report completed/stable while still serving the old options (JJ75S331VUKX F31).
+    // Wait for the board to move before asking again, as for unfinished actions, with the same bounded fallback.
+    if (actionResult.status !== "completed" || !actionResult.stable || resolved.intent.action === "choose_event_option") {
       const settled = await waitForStateChange({
         client,
         previous: stateFingerprint,
