@@ -618,3 +618,177 @@ silent,5,1,1,0,1,48,48,ZE8F192FKX24,ZE8F192FKX24,2026-10-05T03:39:22+00:00,2026-
 ```
 
 items_found按first_run进阶归属；items_shipped按登记后首个已结束局的起始时间归属，A5行仅silent-0078（S1.fix11），不是“A5期间正式上线版本数”。A5期间登记的其他条目适用后续局，待正式复盘及账本后续追加再更新统计。
+
+## A6 → A7（2026-10-05 20:56 CST；2SU6XN2AEJRD）
+
+A6共11局，首次尝试1胜10负，最终1胜10负，SL后整局胜利0；平均终层36.27，第一次尝试平均终层34.00。首次尝试的10负包含6局预判必死后读档终止首试、4局直接死亡，不能把10负全部称为首战实际死亡。27次成功读档，重打尝试共3胜24负，其中19次判死截停、5次实际死亡；三次重打战斗获胜没有增加整局胜利。10/11局有SL管理日志不等于10局都读档，实际读档6局。
+
+首胜2SU6XN2AEJRD于2026-10-05T20:15:46.209+08:00结束，F48永世沙漏第一次尝试（attempt=1）T10胜、记录结束血量24；F17墨影幻灵、F23虱虫之祖、F33无厌沙虫也均attempt=1/won，四项管理战斗reload均为空，因此归为第一次尝试胜，成功读档0次。用时47分35.205秒（首决策2026-10-05T19:28:11.004+08:00至结束）；配置开始2026-10-05T19:27:39.344+08:00起计48分06.865秒。下一局SADL3CGYTGSR于2026-10-05T20:18:53.710+08:00开打，run-config解析target_ascension=7，经验2026-10-05.20、代码2c81eb7+dirty；climb自动升阶。
+
+本级窗口按首个A6配置FH2HB2X17F2H的12:25:50.167至首个A7配置20:18:53.710 CST界定，胜局20:15:46.209先结束。胜局启动代码2ec81b9+dirty、经验.19；期间知识前缀可重读，代码下一进程生效。经验.20最终合入20:16:12，在首胜结束后、A7启动前；eval登记20:19:30、运维shipped登记20:29，已属A7开始之后。A7开局实际读取.20与上述时间一致，不能把.20或晚于开局的其他版本作为A6胜因。
+
+### 逐局与终局死因
+
+下表的终局战斗只抄runs.jsonl的death_fight，描述的是记录中的敌人组合，不据此推断新的机制根因。构装体组合及实验体各2局，其余6组各1局；10局最终死亡中4局在boss层（F33一局、F48三局）。
+
+| 局号 | 最终层 / 结果 | 首次尝试终层 | 成功读档 | 终局战斗（原日志） |
+|---|---|---|---|---|
+| FH2HB2X17F2H | F6 / 负 | F6 | 0 | 利齿之眼、雾菇 |
+| UACFSW4VDDLD | F48 / 负 | F33 | 8 | 实验体 #C55 |
+| VN7RQJMJEFMX | F42 / 负 | F42 | 0 | 幽灵骑士、连枷骑士、魔法骑士 |
+| 75X1BARMNZ03 | F20 / 负 | F20 | 3 | 偷窃草蜢 |
+| ARKQLHG6RS4W | F33 / 负 | F33 | 5 | 火箭、碾碎爪 |
+| 6EV5V6PJJS9D | F39 / 负 | F39 | 0 | 拳击构装体、方柱构装体 |
+| 8CFMW9SAGFWQ | F24 / 负 | F24 | 0 | 寄生惧魔、胧光怪 |
+| 2L1BNN9ZJEFU | F48 / 负 | F48 | 5 | 实验体 #C56 |
+| 53FLQ68CETW0 | F48 / 负 | F48 | 5 | 永世沙漏 |
+| ENKYQMS9W4ZD | F43 / 负 | F33 | 1 | 拳击构装体、方柱构装体 |
+| 2SU6XN2AEJRD | F48 / 胜 | F48 | 0 | 通关 |
+
+### 完整评估
+
+`bash ops/codex-ops-do.sh eval-metrics silent 6` exit0，沙箱外执行`eval/metrics.py --character silent --ascension 6 --group-by ascension --md`。原件[a6-metrics-20261005-204700.2edtV5.md](../paper/materials/silent/a6-metrics-20261005-204700.2edtV5.md)，以下原样收录：
+
+| 指标 | A6 |
+|---|---|
+| 局数 | 11 |
+| 终层 | 36.3（中位 42.0；CI 26.8–45.7；n=11） |
+| 过一幕 boss | 91%（10/11；CI 62–98%） |
+| 过二幕 boss | 64%（7/11；CI 35–85%） |
+| 胜局 | 9%（1/11；CI 2–38%） |
+| 非 boss 战喝药 / 10 层 | 2.09（中位 2.31；CI 1.48–2.70；n=11） |
+| 进一幕 boss 带药（瓶） | 1.20（中位 1.00；CI 0.64–1.76；n=10） |
+| 进二幕 boss 带药（瓶） | 1.00（中位 1.00；CI 0.37–1.63；n=8） * |
+| 进三幕 boss 带药（瓶） | 1.00（中位 1.00；CI 0.00–2.30；n=4） * |
+| 死时手里的药（瓶，输的局） | 0.00（中位 0.00；CI 0.00–0.00；n=10） |
+| 一幕 boss 有力量来源 | 20%（2/10；CI 6–51%）；牌 1 / 遗物 1 / 开场有力量 1 |
+| 一幕精英进场血量 < 78% 次数 / 局 | 0.45（中位 0.00；CI 0.10–0.81；n=11）；占一幕精英战 5/12 |
+| 二幕第一个休息点前死亡（占进二幕的局） | 20%（2/10；CI 6–51%） |
+| 大脑调用 / 局 | 37.6（中位 40.0；CI 27.7–47.6；n=11） |
+| 输入 token / 局（千） | 3492（中位 3552；CI 2495–4490；n=11） |
+| 缓存命中 token / 局（千） | 230（中位 170；CI 93–368；n=11） |
+| 输出 token / 局（千） | 17.6（中位 12.4；CI 6.4–28.8；n=11） |
+| 缓存命中率 | 7% |
+| 大脑耗时 / 局（分钟） | 11.4（中位 12.6；CI 8.6–14.3；n=11） |
+| 每次调用平均耗时（秒） | 18.2 |
+|   codex：调用 / 局 | 37.0（中位 40.0；CI 27.1–46.9；n=11） |
+|   codex：输入 / 命中 / 输出（千 token / 局） | 3438 / 209 / 10.5（n=11） |
+|   codex：耗时 / 局（分钟） | 10.8（中位 11.4；CI 8.1–13.5；n=11） |
+|   deepseek：调用 / 局 | 0.6（中位 0.0；CI 0.0–1.7；n=11） |
+|   deepseek：输入 / 命中 / 输出（千 token / 局） | 299 / 120 / 39.1（n=2） |
+|   deepseek：耗时 / 局（分钟） | 0.6（中位 0.0；CI 0.0–1.6；n=11） |
+| SL：有 SL 记录的局 | 10/11 |
+| SL：重打次数 / 局 | 2.45（中位 1.00；CI 0.52–4.39；n=11） |
+| 第一次尝试：终层 | 34.0（中位 33.0；CI 25.1–42.9；n=11） |
+| 第一次尝试：过一幕 boss | 91%（10/11；CI 62–98%） |
+| 第一次尝试：过二幕 boss | 45%（5/11；CI 21–72%） |
+| 第一次尝试：胜局 | 9%（1/11；CI 2–38%） |
+| 校准：推演本回合掉血 ±2 内（回合） | 92%（611/663 回合） |
+| 校准：路线投影 2–3 层误差（投影 − 实际） | 中位 +0.0，中位 \|误差\| 5.0（n=90） |
+| 校准：boss 时钟 实打/估值 中位 | — |
+
+掉血推演±2内611/663回合（92%），路线投影绝对误差中位5.0（n=90），boss时钟无有效校准值，保留“—”。星号指标的样本不足10，置信区间及缺失值原样保留；总样本11局、胜率CI 2%—38%，没有受控对照，不能分离升级难度、局内运气与多次更新的贡献。
+
+### 学习者产出与上线
+
+查询快照2026-10-05T20:52:15+08:00，执行`python3 learner/ledger.py find --character silent --asc 6 --json`及`--status shipped --json`，归档[a6-learning-snapshot-20261005-2046.json](../paper/materials/silent/a6-learning-snapshot-20261005-2046.json)。按首次登记时间，本级窗口新增26项silent-0093—0118；按first_run/asc字段，其中16项首次归属A6、A0五项、A2两项、A3一项、A5两项。登记时段与最早证据的进阶分开计算。A6十个败局已有正式复盘；首胜2SU6XN2AEJRD的复盘正由调度器20:43批次处理，完成事件尚未收到，不提前计入产出。
+
+| 本级首次归属A6的账本id | 学习者记录的范围 | 查询时最后状态 / 版本 |
+|---|---|---|
+| silent-0096（FH2HB2X17F2H） | 羊毛剪删牌后的实际防御与未兑现协同观察 | shipped / S1.exp15 |
+| silent-0097（FH2HB2X17F2H） | 疑虑持牌后的实际虚弱与攻击变化 | shipped / S1.exp15 |
+| silent-0099（UACFSW4VDDLD） | 幻影之刃首刀增伤模型缺口 | shipped / S1.fix17 |
+| silent-0100（UACFSW4VDDLD） | 阶段结束窗口已可见但当轮没有兑现 | shipped / S1.exp15 |
+| silent-0102（UACFSW4VDDLD） | 知识恶魔回血与重打输出/损血观察 | shipped / S1.exp15 |
+| silent-0103（VN7RQJMJEFMX） | 定制疯狂科学与本回合出牌触发 | shipped / S1.exp16 |
+| silent-0104（75X1BARMNZ03） | 隐秘匕首与螺线飞镖触发条件辨认 | shipped / S1.exp16 |
+| silent-0105（75X1BARMNZ03） | 螺线飞镖的实际敏捷与时限 | shipped / S1.exp16 |
+| silent-0109（6EV5V6PJJS9D） | 面包首轮/后轮能量时序 | shipped / S1.exp17 |
+| silent-0110（8CFMW9SAGFWQ） | 华丽收场空堆条件与未兑现协同 | shipped / S1.exp18 |
+| silent-0112（2L1BNN9ZJEFU） | 融入暗影+升级分支模型缺口 | shipped / S1.fix19 |
+| silent-0113（VN7RQJMJEFMX） | 预判+临时敏捷升级分支模型缺口 | shipped / S1.fix19 |
+| silent-0114（53FLQ68CETW0） | 普通爆发增益漏技能重复的模型缺口 | shipped / S1.fix20 |
+| silent-0116（53FLQ68CETW0） | 亮片华彩奖励与实际小刀/余像次数 | shipped / S1.exp20 |
+| silent-0117（ENKYQMS9W4ZD） | 沙坑临界弃牌删光逃离的观察 | observed / 未上线 |
+| silent-0118（ENKYQMS9W4ZD） | 爆发+与复制药水已执行的三次药瓶组合 | observed / 未上线 |
+
+上表只概述学习者已经登记的发现。0110字段仍归A6但prior=yes、已有A2证据；0115在本级登记，最早实效已回溯KAY522KT5NXR/A0，因此不列为A6首次。0098时钟事实提案归A2；0108音叉模型归A0；这些仍是在本级产出的修复或提案。0099/0112/0113/0114的代码修复与对应机制经验分别登记；0117/0118仍observed，后续经验批次在跑，不记已上线。升级爆发范围缺口仍交学习者独立处理，经验.20上线不冒记该模型已修。
+
+本级窗口内实际代码/经验合入16个eval版本，15个在窗口内完成eval登记；.20合入在窗口内而登记在窗口外，单独保留两种时点。下面的范围直接来自版本source和学习者记录，不增加游戏知识：
+
+| 版本 | 实际合入 / eval登记（CST） | 证据和范围 |
+|---|---|---|
+| S1.fix14（24ce2a6f） | 12:26:13 / 12:29:34 | 0089/0091；1LMB A4，脆弱下方案内新增敏捷格挡模型 |
+| S1.exp14（103fd5ff） | 12:33:20 / 12:44:12 | 1LMB A4及旧静默证据；经验.14，新增1/更新12 |
+| S1.fix15（2d898397） | 12:56:05 / 12:59:42 | 既有接口证据JJ75 A8；事件完成/稳定后仍等状态变化，通用传输修复 |
+| S1.strategy1（76c82f8d） | 13:40:26 / 13:40:27 | 0098/0003；ZZMY A2、9Y/1LMB A4、CSBR A2，当前进阶boss事实参考 |
+| S1.fix16（ee63d4bb） | 13:55:13 / 13:58:48 | 既有接口证据7PWU A8；关闭覆盖层后同事实/问题复用未执行答案 |
+| S1.strategy2（2b70928a） | 14:13:59 / 14:18:06 | 0100；UAC A6 F48，阶段结束窗口及即时损血参考 |
+| S1.exp15（b3078331） | 14:28:23 / 14:33:11 | ZE8 A5、FH2/UAC A6；经验.15，新增6/更新18 |
+| S1.fix17（6aa5eb0b） | 14:57:31 / 15:01:33 | 0099/0101；UAC A6，幻影之刃首刀模型 |
+| S1.exp16（d668d788） | 15:40:40 / 15:40:40 | VN7/75X A6；经验.16，新增4/更新11 |
+| S1.fix18（68a415a9） | 16:46:43 / 16:50:18 | 0108/0072；6EV A6、T082 A0，音叉技能计数格挡模型 |
+| S1.exp17（5f17e4b3） | 16:50:18 / 17:02:51 | ARK/6EV A6；经验.17，新增2/更新17 |
+| S1.exp18（ee1f4fd1） | 17:26:13 / 17:31:36 | 8CF A6、旧ZZMY A2；经验.18，新增1/更新6 |
+| S1.fix19（850ac015） | 18:37:19 / 18:40:53 | 0112/0113、0077/0080；2L/VN7/75X A6，两项升级模型及xhigh测试契约 |
+| S1.exp19（f90ad2f1） | 19:04:38 / 19:08:08 | 2L A6及旧证据；经验.19，新增0/补证更新14 |
+| S1.fix20（2ec81b9f） | 19:26:25 / 19:29:43 | 0114/0115；53FL A6，普通爆发本回合下一技能重复模型 |
+| S1.exp20（2c81eb76） | 20:16:12 / 20:19:30（A7后） | 53FL A6及旧26局；经验.20，新增2/补证更新12；合入在首胜后，登记在A7后 |
+
+本级经验.14—.20各批的条目增量合计新增16、更新90（含同一条目的反复补证，不是90条独立新增）；从A6开局经验.13的active70累积到.20的active86，.14上线时为71。经验.19曾被旧high断言挡住两次，修复契约后重派；经验.20首次候选因SL洗牌事实校正主动回退后再合，失败、回退和更正历史均保留。以上代码和经验已按各自完成事件核实，完整沙箱外补测已按独立learner-checks完成，不把新成本采样批次计为本级已上线。学习者17:26恢复xhigh、运维17:27调整xhigh是Roy的运行设置决定；大脑仍high，不混称学习出来的打法。
+
+当前最后状态shipped共106项，按最新版本分组如下；它不是本级新增或本级上线数量，后续学习任务追加proposed会改变最后状态，历史上线记录保持。完整查询字段见快照：
+
+- S1.exp10：silent-0018、silent-0069、silent-0070、silent-0071、silent-0073。
+- S1.exp11：silent-0037、silent-0048、silent-0076。
+- S1.exp12：silent-0083、silent-0084、silent-0085。
+- S1.exp13：silent-0079、silent-0087、silent-0088。
+- S1.exp14：silent-0068、silent-0090、silent-0091。
+- S1.exp15：silent-0059、silent-0063、silent-0067、silent-0093、silent-0094、silent-0095、silent-0096、silent-0097、silent-0100、silent-0101、silent-0102。
+- S1.exp16：silent-0053、silent-0064、silent-0103、silent-0104、silent-0105、silent-0106、silent-0107。
+- S1.exp17：silent-0007、silent-0010、silent-0013、silent-0027、silent-0030、silent-0031、silent-0062、silent-0065、silent-0072、silent-0092、silent-0109。
+- S1.exp18：silent-0039、silent-0110、silent-0111。
+- S1.exp19：silent-0028、silent-0045、silent-0046、silent-0054、silent-0057、silent-0077、silent-0080。
+- S1.exp20：silent-0005、silent-0006、silent-0011、silent-0017、silent-0019、silent-0020、silent-0021、silent-0023、silent-0024、silent-0025、silent-0036、silent-0049、silent-0115、silent-0116。
+- S1.exp5：silent-0034、silent-0035、silent-0042、silent-0043、silent-0044、silent-0047。
+- S1.exp7：silent-0055。
+- S1.exp8：silent-0050、silent-0058、silent-0060。
+- S1.fix10：silent-0074、silent-0075。
+- S1.fix11：silent-0078。
+- S1.fix12：silent-0081、silent-0082。
+- S1.fix13：silent-0086。
+- S1.fix14：silent-0089。
+- S1.fix17：silent-0099。
+- S1.fix18：silent-0108。
+- S1.fix19：silent-0112、silent-0113。
+- S1.fix20：silent-0114。
+- S1.fix3：silent-0008、silent-0022、silent-0026、silent-0029、silent-0032、silent-0033、silent-0041。
+- S1.fix5：silent-0051、silent-0052。
+- S1.fix6：silent-0056。
+- S1.fix7：silent-0061。
+- S1.fix9：silent-0040、silent-0066。
+- S1.strategy1：silent-0098。
+
+### 学习曲线A6原行
+
+沿用`python3 ops/paper_dataset.py --no-raw`上一轮已生成并提交的论文表19e7ab79，日志切点2026-10-05T12:30:28.065Z，已覆盖本级11个结束局；此前五项一致性检查通过、决策计数差异空、key scan CLEAN。此轮只追加升级报告及查询快照，避免并发重跑或手改生成表。原行如下：
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,6,11,1,1,0,36.27,34,FH2HB2X17F2H,2SU6XN2AEJRD,2026-10-05T04:25:50+00:00,2026-10-05T12:15:46+00:00,16,1,54,silent-0007 silent-0010 silent-0013 silent-0027 silent-0028 silent-0030 silent-0031 silent-0039 silent-0045 silent-0046 silent-0053 silent-0054 silent-0057 silent-0059 silent-0062 silent-0063 silent-0064 silent-0065 silent-0067 silent-0068 silent-0072 silent-0077 silent-0079 silent-0080 silent-0081 silent-0082 silent-0086 silent-0087 silent-0088 silent-0089 silent-0090 silent-0091 silent-0092 silent-0093 silent-0094 silent-0095 silent-0096 silent-0097 silent-0098 silent-0099 silent-0100 silent-0101 silent-0102 silent-0103 silent-0104 silent-0105 silent-0106 silent-0107 silent-0108 silent-0109 silent-0110 silent-0111 silent-0112 silent-0113,1,0
+```
+
+items_found=16按最早证据进阶归属，items_shipped=54按登记后下一场已结束局的起始归属；它们分别不同于本级时段新增26项、窗口内15次正式登记、查询时106项最后状态shipped。0114虽在本级发布，运维登记晚于首胜启动，生成曲线可以归后续进阶；.20在首胜结束后生效，其shipped适用A7。不得用不同统计口径之间的差额推定学习失败，也不把当前缺复盘的首胜先补进账本。
+
+### A6首胜复盘完成后的补充（2026-10-05 21:09）
+
+21:01事件确认批次20261005-204301的2SU6XN2AEJRD复盘完成、exit0；学习者新增silent-0119（腰带扣空药栏敏捷与格挡组合）和silent-0120（领主阳伞两次商店自动取得及未执行报价），首次证据均为A6首胜，登记于20:59:31、晚于A7开局。因此生成曲线按首次证据归属的items_found由16变18，先前升级窗口0093—0118共26项及20:52:15查询快照保持原统计时点，不追溯加入事后条目。两项仍为observed，没有登记上线；旧十项support补证，不记repeat，不把本局当S1.exp20上线后效果。
+
+学习者原文及20:58:56勘误均保留：沙虫末轮敌40血/37毒，纯伤缺口3、实际打击6覆盖；SPEEDSTER/ULTIMATE_STRIKE中文名更正为速行者/究极打击，ID及实际取得不变。新的纯bug无；预测差额完整来源及源码归因等维持未记录。完整归档见paper/materials/silent/20261005-2101-postmortem-batch.md，台账检查120项0问题。
+
+本轮`python3 ops/paper_dataset.py --no-raw`日志切点2026-10-05T13:06:01.066Z，五项一致性检查通过、决策计数差异空、key scan CLEAN。生成学习曲线A6新原行如下，保留上一轮原行及其时点说明；items_shipped=51沿生成器按登记后下一场已结束局起始归属的口径，不等同于窗口内上线次数或当前最后状态数量。
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,6,11,1,1,0,36.27,34,FH2HB2X17F2H,2SU6XN2AEJRD,2026-10-05T04:25:50+00:00,2026-10-05T12:15:46+00:00,18,1,51,silent-0010 silent-0013 silent-0027 silent-0028 silent-0030 silent-0031 silent-0039 silent-0045 silent-0046 silent-0053 silent-0054 silent-0059 silent-0062 silent-0063 silent-0064 silent-0065 silent-0067 silent-0068 silent-0072 silent-0077 silent-0079 silent-0080 silent-0081 silent-0082 silent-0086 silent-0087 silent-0088 silent-0089 silent-0090 silent-0091 silent-0093 silent-0094 silent-0095 silent-0096 silent-0097 silent-0098 silent-0099 silent-0100 silent-0101 silent-0102 silent-0103 silent-0104 silent-0105 silent-0106 silent-0107 silent-0108 silent-0109 silent-0110 silent-0111 silent-0112 silent-0113,1,0
+```
