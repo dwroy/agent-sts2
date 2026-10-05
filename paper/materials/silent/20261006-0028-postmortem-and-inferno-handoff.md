@@ -33,3 +33,5 @@ VLV17NUSFS61：SILENT A7/F48，学习者已追加完整复盘，六次boss均42/
 ```
 
 000206-fix-batch有一项真实产出：固定源195869aa77dc216de08e6d1c5842782b239cb670，仅测试turn-start-settle.test.ts的首帧/时间竞态；源tsc0、181文件2038例首过，撤夹具改动1失败/4通过，恢复5通过；初次访问错误字段失败单独保留，不当预期红灯或负载重跑。原锁内预检仅decision-log冲突、未merge。后续按live流程兜底；不改变对局行为，不新增eval版本或bug-infra台账、不重复前批Jev/0127部署，不另审策略。不停对局、不运行play；当前本记录不提前宣称本批合入/合后或外部检查通过。
+
+- 2026-10-06 00:39 论文数据生成完成：nice19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-05T16:34:43.331Z；五项一致性全部通过、决策计数差异为空、key scan CLEAN，行数{"commits.csv": 2559, "decisions_by_label.csv": 17362, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 520}。复盘及9条原台账已提交12d828f443fedbcd95b88a4216e92b4d97c300a9，只提交本轮生成的论文/组件成本输出和自身记录；Jev按Roy输入0.042美元/百万token、免费输出及差额/未知保留，其他经验批次的changelog/台账、他人记录不混提交。记录与数据提交免代码测试；000206代码合后测试单独记。
