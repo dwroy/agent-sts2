@@ -482,8 +482,10 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 06:02 A10复盘：隐秘匕首Cards语义（交学习者）
 
-- [ ] **非阻塞机制模型提案**：学习者只读当前live的`agent/src/reflex/card-model.ts:879`将未升级HIDDEN_DAGGERS的Cards=2作draw，未表示弃二与生成两小刀；来源MGA0CZDDKC0P SILENT A10 F17首试T2、第6尝试T3及更早10GPK5XGHCK3 SILENT A3 F9 T1/T5，复盘20261006-054301.out、账本silent-0153/0154。回报虽标纯bug、0153 kind=bug-infra，这项涉及游戏机制，由学习者依据本角色证据实现和固定验证，运维不改公式或角色代码。
+- [x] **非阻塞机制模型提案**：学习者只读当前live的`agent/src/reflex/card-model.ts:879`将未升级HIDDEN_DAGGERS的Cards=2作draw，未表示弃二与生成两小刀；来源MGA0CZDDKC0P SILENT A10 F17首试T2、第6尝试T3及更早10GPK5XGHCK3 SILENT A3 F9 T1/T5，复盘20261006-054301.out、账本silent-0153/0154。回报虽标纯bug、0153 kind=bug-infra，这项涉及游戏机制，由学习者依据本角色证据实现和固定验证，运维不改公式或角色代码。
 - 首试T2题面11伤/损10，实际弃打击和蛇咬、重算打两小刀后19伤/损10；第6次T3 SL把原Jev线换为隐秘匕首→打击+→防御，随后Jev弃掉打击+与防御，实际0挡、14血对16伤死亡，34直伤加6毒、敌剩169/262。模型误读、SL替换与弃牌选择分开记录，不将替线当完整执行，不推断修模型或保留防御即可整场获胜。
 - 0153 first_run=10GPK5XGHCK3/A3/prior=no；0154同首见局/prior=partly；0155铭记死亡独立机制首见已由学习者勘误至R0HEV5E3QT6G/A0/prior=yes，与隐秘匕首模型缺口分别记。只验证未升级及已观察时点，不外推升级/缺牌情形；行号是当前live定位，本局a999dba8+dirty未声称精确复原。原复盘及F3击杀顺序、F15毒层、0155首见局三条勘误一并保留，原台账kind和先验不由运维改写。
 
 - 2026-10-06 06:23 运维核实上述05:24统计项及05:45飞镖项已由学习者实现并实际上线：统计af5c0fa041fbc5b97174490137301a6f6291d92d、飞镖72c1640b3271352e1a744d3997ede4c5fe10e2bd→851e1bafb037482de9d06f018e203343a684535d/S1.fix25，固定发布1ee4de7d668835de92ad2b47423a19ffdb4ae4df/树68c4c14b4db5becbaa5dc1b49966ad204ee3128f，main同步106d78c83e9d1f2522d845408066d8afdb3a2b38；原撤源失败/恢复通过及最终源/合后沙箱结果见paper/materials/silent/20261006-0619-statistics-and-flechettes-release.md。只关闭对应两复选框、保留原证据全文，0150仅CLI/by=ops shipped，0151经验与0153待修机制分别保留；完整外部等learner-checks，其他策略/证据不足/性能专项沿原队列，不称已修。
+
+- 2026-10-06 07:17 运维按07:13 fix-done核实隐秘匕首模型项已由学习者实现、实际上线并机械同步main：源码b7f081fcc26da4506cb775739bb118cb6cbe4ecc→代码合入995715e80a825a1e316a6b87195a17958002f842/S1.fix26，固定发布41bd4a44e4f5148304f072993e04e3685d534616/树a98e7a4af7421a422c517bcf0791f66bd83a128d，main同步f41bcdcf219c03cadda35cfaf8f282c0a400e10f。最终源/合后tsc0/193文件2105例；固定六例撤整组5失败1通过、撤接线1失败5通过、恢复6通过，初稿/预检/锁忙历史保留。仅关闭本模型复选框并经CLI/by=ops将0153登记shipped，保留原证据与先验；0154/0155及0150独立，不称整场胜负由此改变。外部完整检查待learner-checks；详情paper/materials/silent/20261006-0713-hidden-daggers-fix26-release.md。
