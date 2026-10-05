@@ -27,3 +27,5 @@
   }
 ]
 ```
+
+- 2026-10-06 06:04 实际上线登记完成：原26条学习者行与两原节归档59779b40fe5735be0fcea72eeed1b72ea2fcf0bf，固定已测发布f1d951ec442548711c671cb7f9855a4ade1dc412/树37c847082e83670c0ef919a6fd06cab149586409机械同步main 70f6049276ab0c9cc7aab44212edb183985c9dfc，全部1014源码/测试blob一致，其他2121项main blob及双方日志保持；同步携带已测发布中的af5c0fa0纯统计代码，独立fix完整补测仍留后续事件。CLI/by=ops仅19项shipped/S1.exp33：silent-0019, silent-0020, silent-0021, silent-0006, silent-0005, silent-0013, silent-0011, silent-0046, silent-0053, silent-0093, silent-0094, silent-0060, silent-0063, silent-0071, silent-0068, silent-0125, silent-0062, silent-0151, silent-0152，原first_run/prior/claim/evidence/effect及全部历史保持，0150与0153/0154/0155、0007未更新状态。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 155 item(s), 0 problem(s)。下一步paper --no-raw生成曲线及论文数据，保留原A9 CSV及失败历史，不重测记录类提交、不停对局/调度。
