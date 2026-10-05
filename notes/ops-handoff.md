@@ -41,3 +41,17 @@
 - 本轮非阻塞取得ops/live-merge.lock失败（busy），未创建live MERGE_HEAD或冲突索引，不等待、不重试。`bash ops/codex-ops-do.sh learner-merge exp-silent`也超时，exit128、输出“（超过 30 秒，已终止）”；未确认manual事件入队，完整命令与原因已写收件箱/for-dai，请锁释放后补manual事件。
 - 下一次合入事件只用上述不可变源，不用exp-silent移动分支头。先非阻塞取锁，确认无report.py/知识构建器及其他未提交合并，保留刷新数据，保留双方decision-log和版本表所有条目（包括已上线S1.fix9/fix10、S1.high和eval-metrics工具）。锁内合入后跑固定沙箱入口；通过再登记新的经验eval版本（预期S1.exp11，必须查重），经ledger.py以by=ops将本批17项shipped，同步main并刷新论文表。`/tmp/sts2-0935-live.py`尚未改live，若仍保留可核对后使用；结果文件不存在时才首次运行。
 - 待登记17项：silent-0005,silent-0006,silent-0007,silent-0010,silent-0019,silent-0020,silent-0021,silent-0027,silent-0028,silent-0030,silent-0037,silent-0046,silent-0053,silent-0063,silent-0064,silent-0076,silent-0077。0074/0075代码模型提案不属于本经验批次；0076的first_run/asc字段更正请求只转录给学习者工具任务，不手改旧账本或把旧无抽牌案例计成施毒观察。完成后追加状态，保留本节。
+
+- 2026-10-05 10:01 处理fix-done/learner-checks 20261005-084301：main已同步71e677e2，S1.fix9/fix10实际live发布7efeed50已核实，外部完整tsc/vitest exit0、208文件2747通过/2跳过。silent-0040/0066/0074/0075/0076/0077按对应模型/统计修复追加shipped，登记提交a42a5d9d；其中0076/0077虽已模型上线，经验.10的17项JSON增量仍未合入live，保留09:44待合入任务，下一manual成功后再按经验版本登记，不将模型状态误作经验已上线。未改live自动刷新，不重复跑完整检查。
+
+- 2026-10-05 10:20 已完成09:44经验.10待办及本批.11兜底：固定源a1d6ccc2在live保留ab5218d5的七项刷新blob后合入1b4c4c64c0fc7fd05d36296d038129d5700794bf，合后固定沙箱157文件1939用例/tsc通过；发布536e37d9f86b19ffc7afcfa11d71a41803a7cc09登记S1.exp11（经验.9直接到.11，包含.10，不存在单独.10上线时刻），main同步085d287ba1c55962a7475a456b28ce4581410fdf，两个经验批次合计21个不同条目以by=ops追加shipped，模型bug0078仍observed。旧/tmp/sts2-0935-live.py不得重跑；原.10 manual合入请求已由本轮继承合入完成，不再待补发。完整沙箱外补测仍需白名单入口或有权限执行方，已写收件箱；不改变对局/配置，保留上述所有历史。
+
+- 2026-10-05 10:50 已完成20261005-102754经验.12兜底：固定源e6ec56538c8fd8a048d49889df5f4d0ec8003716保留live cf11fab807411ca919b40e045d46b5a7c16ed868七项刷新blob合入5f76a9dd7c696064241c48c6db32fdf975faeb3b，合后固定沙箱tsc0、163文件1951用例通过；发布2a946ca5ec6bbad250bd43df599d77a84a9c0f05登记S1.exp12/.12，main同步1ee49f2c8f5c923bb1ee3bcfdbd78d271d52cfd3。本批12项经验以by=ops追加shipped，0081/0082代码模型bug不作已修；保留既有S1.fix11及其代码，不重复审核，不改配置/停止对局。完整外部补测下一步只通过learner-recheck白名单动作请求；本轮/tmp/sts2-1044-exp-live.py和main.py已完成，不能重跑。
+
+- 2026-10-05 10:52 本轮S1.exp12外部补测未执行：`bash ops/codex-ops-do.sh learner-recheck 20261005-102754-experience-update` 返回exit2，拒绝：没有这个动作：learner-recheck（可用：procs stall-check mod-state autoplay-start autoplay-stop play-stop kill launch-game win-procs win-kill postmortem experience-update fix-batch learner-merge eval-metrics learner-status scheduler-status）。主目录源码已包含新learner-recheck白名单，但本轮broker运行时拒绝；完整命令和原因已写收件箱/for-dai，请下一轮加载新入口后派manual补测此固定批次，不重跑已完成合入、登记及沙箱检查，不绕过白名单或直接执行沙箱外脚本。
+
+## 动作清单修复待合入（2026-10-05 11:02）
+
+- 来源10:54观察者manual：cf11fab8沙箱外tsc0、214文件2758通过/1失败，动作说明漏strategy-proposal。固定源`061d1ca9f3471a952e291efde38cfbeb6a44bd55`（.worktrees/step，step；基线86b24a1f33dba25e4b00427e48a35c4c85ecd73b）仅改ops/codex-ops-do.sh注释及docs/codex-ops.md，现已提交。动作回归修前失败、修后1例通过；完整沙箱tsc0、165文件1957用例通过，原始日志/tmp/sts2-1054-step-sandbox.log，归档paper/materials/silent/20261005-1054-broker-action-list-checks.md。
+- 本轮非阻塞获取ops/live-merge.lock失败，未开始live合并，无本批MERGE_HEAD；不等锁、不重试。下一manual只用上述固定提交，先查report.py及知识刷新/其他合并，保留live最新刷新、所有版本和记录，锁内合入、按要求合后测试并同步main。不改对局行为，无需新增eval版本或经验账本登记；不能重跑已经提交feature的/tmp/sts2-1054-deploy.py。
+- 完整补测机制f670884a已实现并在live保留，清单修复上线后经`bash ops/codex-ops-do.sh learner-recheck 20261005-102754-experience-update`请求当前live完整tsc/vitest；核实源、固定树、去重和learner-checks归档均由该动作执行。本轮尚未执行此完整补测，不能复用cf11fab8的旧失败充作修复后结果。不要合移动step分支头、重复登记S1.exp12或改0081/0082等学习者机制状态。
