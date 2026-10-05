@@ -68,3 +68,12 @@
   }
 ]
 ```
+
+## 2026-10-06 02:57 本轮结果及合入接力
+
+- A8首试通关已写收件箱，下一局HMVJKM56S4Q8实际A9；不改配置或停对局。原21行账本/第29节归档7258600c5209ed75b0565349ac52ab88f8a82c82，未来LLYS复盘等并发追加未混提交。
+- 策略4固定发布291617bc95c34115863eaa57110c255f2894ea59已机械同步main 0f8736a0b6ba2675e14f596864e1923357992e99；993项源码/测试/配置blob与已测发布一致、2088项其他main文件保持，decision-log双方历史完整。CLI/by=ops仅新增0139 shipped/S1.strategy4，first_run/prior/evidence/claim保持，0003/0020/0079及0114/0115不重置。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 143 item(s), 0 problem(s)。
+- 经验29兜底完整命令`nice -n 19 python3 /tmp/sts2-0248-exp-live.py`退出75：`ops/live-merge.lock`非阻塞取锁失败，没有等待、绕锁、停进程或修改live。持锁方未核定；本轮procs同时显示策略021302批次的完整外部检查仍在运行，不能把它当作已通过。原经验source 8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87仍非live祖先，main/live均无S1.exp29，17项proposed保持，不称已上线。
+- 接力：下一相关事件先重新核对procs/report与live状态，在非阻塞锁内保存在线刷新，合固定8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87，只解决已证实的追加记录冲突并保留双方历史；全部现有代码和非经验知识blob保持，跑固定合后sandbox入口。通过后才登记唯一S1.exp29、17项CLI/by=ops shipped、同步main并请求本批learner-recheck；若不能取锁或测试失败照记录流程停下。不得合移动exp-silent或用策略4的完整检查替代经验29检查。
+- 独立外部状态只读记录：策略checks_pending=False、checks_rc=None；经验原state=failed、merged=None。均保持原始状态历史；不重复请求策略已有外部检查，经验尚未实际合入所以不请求外部合后补测。
+- 静默学习曲线仅使用本轮待提交账本快照生成；经验29proposed如实记录，未标shipped，A8刚通关的日志数字进入曲线；其他尚未完成事件的台账追加保留而不混入此提交。前轮经验28完整预算失败/定向22例通过/待派队列保持，不借本轮成功抹掉失败。
