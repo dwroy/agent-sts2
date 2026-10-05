@@ -49,3 +49,9 @@
 - 2026-10-05 10:50 已完成20261005-102754经验.12兜底：固定源e6ec56538c8fd8a048d49889df5f4d0ec8003716保留live cf11fab807411ca919b40e045d46b5a7c16ed868七项刷新blob合入5f76a9dd7c696064241c48c6db32fdf975faeb3b，合后固定沙箱tsc0、163文件1951用例通过；发布2a946ca5ec6bbad250bd43df599d77a84a9c0f05登记S1.exp12/.12，main同步1ee49f2c8f5c923bb1ee3bcfdbd78d271d52cfd3。本批12项经验以by=ops追加shipped，0081/0082代码模型bug不作已修；保留既有S1.fix11及其代码，不重复审核，不改配置/停止对局。完整外部补测下一步只通过learner-recheck白名单动作请求；本轮/tmp/sts2-1044-exp-live.py和main.py已完成，不能重跑。
 
 - 2026-10-05 10:52 本轮S1.exp12外部补测未执行：`bash ops/codex-ops-do.sh learner-recheck 20261005-102754-experience-update` 返回exit2，拒绝：没有这个动作：learner-recheck（可用：procs stall-check mod-state autoplay-start autoplay-stop play-stop kill launch-game win-procs win-kill postmortem experience-update fix-batch learner-merge eval-metrics learner-status scheduler-status）。主目录源码已包含新learner-recheck白名单，但本轮broker运行时拒绝；完整命令和原因已写收件箱/for-dai，请下一轮加载新入口后派manual补测此固定批次，不重跑已完成合入、登记及沙箱检查，不绕过白名单或直接执行沙箱外脚本。
+
+## 动作清单修复待合入（2026-10-05 11:02）
+
+- 来源10:54观察者manual：cf11fab8沙箱外tsc0、214文件2758通过/1失败，动作说明漏strategy-proposal。固定源`061d1ca9f3471a952e291efde38cfbeb6a44bd55`（.worktrees/step，step；基线86b24a1f33dba25e4b00427e48a35c4c85ecd73b）仅改ops/codex-ops-do.sh注释及docs/codex-ops.md，现已提交。动作回归修前失败、修后1例通过；完整沙箱tsc0、165文件1957用例通过，原始日志/tmp/sts2-1054-step-sandbox.log，归档paper/materials/silent/20261005-1054-broker-action-list-checks.md。
+- 本轮非阻塞获取ops/live-merge.lock失败，未开始live合并，无本批MERGE_HEAD；不等锁、不重试。下一manual只用上述固定提交，先查report.py及知识刷新/其他合并，保留live最新刷新、所有版本和记录，锁内合入、按要求合后测试并同步main。不改对局行为，无需新增eval版本或经验账本登记；不能重跑已经提交feature的/tmp/sts2-1054-deploy.py。
+- 完整补测机制f670884a已实现并在live保留，清单修复上线后经`bash ops/codex-ops-do.sh learner-recheck 20261005-102754-experience-update`请求当前live完整tsc/vitest；核实源、固定树、去重和learner-checks归档均由该动作执行。本轮尚未执行此完整补测，不能复用cf11fab8的旧失败充作修复后结果。不要合移动step分支头、重复登记S1.exp12或改0081/0082等学习者机制状态。
