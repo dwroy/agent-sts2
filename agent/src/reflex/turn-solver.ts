@@ -1533,14 +1533,16 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // Shrug It Off+ kept for a 24-damage turn was drawn by Pommel Strike and discarded unplayed). Which
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
   // CARD_CONDITIONS: a card whose draw waits on the hand (Restlessness) draws only when the rest of the hand meets it.
-  if (sim.topPlaced && (card.draw > 0 || card.drawsUntil) && (card.handCondition === undefined || handConditionMet(sim, card, card.handCondition))) return null;
+  if (sim.topPlaced && (card.draw > 0 || card.drawsUntil || card.drawDiscardedHand) && (card.handCondition === undefined || handConditionMet(sim, card, card.handCondition))) return null;
   const next = clone(sim);
   // A Gambler's Brew way (or a card-choice potion's pick) is a copy of the belt's potion: the potion
   // leaves the hand by its key.
   next.hand = sim.hand.filter((entry) => entry !== card && !(card.type === "Potion" && entry.key === card.key));
   const discarded = card.discards ? sim.hand.filter((entry) => card.discards!.includes(entry.key)).map((entry) => entry.cardId) : [];
+  let redraw = 0;
   if (card.discardsHand) {
     discarded.push(...[...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").map((entry) => entry.cardId));
+    if (card.drawDiscardedHand) redraw = discarded.length + next.drawnInHand;
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
     next.locked = [];
@@ -1578,6 +1580,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
     if (card.type === "Skill" && player.letterOpener) skillRelics(next, player.letterOpener);
   }
+  // T082DRCUHRRD F27 T1 / F9PP859XZ3RJ F37 T2: the old hand is gone before the replacement draw.
+  // Use the hand at play time, including held/locked/unknown drawn cards, but excluding potion slots.
+  if (redraw > 0) drawExpected(next, redraw, player);
   // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
   // kill that was 1 short), and Skittish block lands once the card that hit it is done.
   if (card.type !== "Potion") next.played += 1;
