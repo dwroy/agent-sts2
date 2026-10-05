@@ -1,0 +1,2622 @@
+{
+  "recorded_at": "2026-10-05 12:47",
+  "queried_at": "2026-10-05 12:44:05 CST",
+  "window": {
+    "start": "2026-10-05T03:39:22.274Z",
+    "end": "2026-10-05T04:25:50.167Z",
+    "rule": "first A5 run start through first A6 run start"
+  },
+  "runs": [
+    {
+      "run_id": "ZE8F192FKX24",
+      "ended": "2026-10-05T04:22:55.359Z",
+      "victory": true,
+      "floor": 48,
+      "character": "SILENT",
+      "ascension": 5,
+      "code": "452f7bc7+dirty",
+      "decisions": 741,
+      "jev_calls": 203,
+      "deepseek_calls": 46,
+      "claude_calls": 0,
+      "tokens": 764990,
+      "ds_tokens_in": 3706121,
+      "ds_tokens_out": 13019,
+      "ds_cache_hit": 0,
+      "deciders": {
+        "codex": 79,
+        "code": 288,
+        "jev": 203,
+        "jev-plan": 171
+      },
+      "death_fight": null
+    }
+  ],
+  "configs": [
+    {
+      "ts": "2026-10-05T03:39:22.274Z",
+      "run_id": "ZE8F192FKX24",
+      "restart": false,
+      "target_ascension": 5,
+      "code": {
+        "commit": "452f7bc7ac23bd1464fe04b951272236f471de8d",
+        "code": "452f7bc+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "experience": "2026-10-05.12"
+    },
+    {
+      "ts": "2026-10-05T04:25:50.167Z",
+      "run_id": "FH2HB2X17F2H",
+      "restart": false,
+      "target_ascension": 6,
+      "code": {
+        "commit": "f822926366119fff7fa4188924b30d2283bf0722",
+        "code": "f822926+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "agent/src/reflex/card-model.ts",
+          "agent/src/reflex/combat-plan.ts",
+          "agent/src/reflex/rollout.ts",
+          "agent/src/reflex/turn-solver.ts",
+          "agent/tests/silent-frail-dexterity.test.ts",
+          "eval/versions.json",
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "notes/fix-queue-v4.md",
+          "notes/for-dai.md",
+          "notes/lessons.md",
+          "notes/ops-handoff.md",
+          "notes/silent-climb-report.md",
+          "ops/inbox-dev.md",
+          "paper/data/README.md",
+          "paper/data/commits.csv",
+          "paper/data/decisions_by_label.csv",
+          "paper/data/learning-curve-silent.csv",
+          "paper/data/runs.csv"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "experience": "2026-10-05.13"
+    },
+    {
+      "ts": "2026-10-05T04:34:37.801Z",
+      "run_id": "UACFSW4VDDLD",
+      "restart": false,
+      "target_ascension": 6,
+      "code": {
+        "commit": "103fd5ff1d7e592a6ab1b1817e1188b5747fba9c",
+        "code": "103fd5f+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "experience": "2026-10-05.14"
+    }
+  ],
+  "first_decision": {
+    "ts": "2026-10-05T03:39:56.342Z",
+    "run_id": "ZE8F192FKX24",
+    "floor": 1,
+    "label": "event/plan",
+    "code": null
+  },
+  "last_decision": {
+    "ts": "2026-10-05T04:22:55.359Z",
+    "run_id": "ZE8F192FKX24",
+    "floor": 48,
+    "label": "run/finalize",
+    "code": null
+  },
+  "duration_seconds": {
+    "first_decision": 2579.017,
+    "run_config": 2613.085
+  },
+  "sl_attempts": [
+    {
+      "ts": "2026-10-05T03:52:26.458Z",
+      "floor": 17,
+      "encounter": "WATERFALL_GIANT",
+      "enemies": [
+        "瀑布巨兽"
+      ],
+      "attempt": 1,
+      "result": "won",
+      "reload": null,
+      "started_at": "2026-10-05T03:51:09.850Z",
+      "ended_at": "2026-10-05T03:52:26.458Z",
+      "turns": 8,
+      "end_hp": 25,
+      "judge": null
+    },
+    {
+      "ts": "2026-10-05T04:04:41.842Z",
+      "floor": 33,
+      "encounter": "KNOWLEDGE_DEMON",
+      "enemies": [
+        "知识恶魔"
+      ],
+      "attempt": 1,
+      "result": "won",
+      "reload": null,
+      "started_at": "2026-10-05T04:02:06.979Z",
+      "ended_at": "2026-10-05T04:04:41.842Z",
+      "turns": 10,
+      "end_hp": 25,
+      "judge": null
+    },
+    {
+      "ts": "2026-10-05T04:14:20.951Z",
+      "floor": 45,
+      "encounter": "SOUL_NEXUS",
+      "enemies": [
+        "灵魂枢纽"
+      ],
+      "attempt": 1,
+      "result": "won",
+      "reload": null,
+      "started_at": "2026-10-05T04:12:59.229Z",
+      "ended_at": "2026-10-05T04:14:20.951Z",
+      "turns": 6,
+      "end_hp": 14,
+      "judge": null
+    },
+    {
+      "ts": "2026-10-05T04:18:44.972Z",
+      "floor": 48,
+      "encounter": "AEONGLASS",
+      "enemies": [
+        "永世沙漏"
+      ],
+      "attempt": 1,
+      "result": "predicted_death",
+      "reload": {
+        "ok": true,
+        "ms": 7867,
+        "resumed_turn": 1
+      },
+      "started_at": "2026-10-05T04:15:58.689Z",
+      "ended_at": "2026-10-05T04:18:44.972Z",
+      "turns": 11,
+      "end_hp": 38,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 34 incoming + held 凋萎+3: 12 damage (the mod does not count them) vs 38 HP + 8 block + 0 end-of-turn block"
+      }
+    },
+    {
+      "ts": "2026-10-05T04:22:45.888Z",
+      "floor": 48,
+      "encounter": "AEONGLASS",
+      "enemies": [
+        "永世沙漏"
+      ],
+      "attempt": 2,
+      "result": "won",
+      "reload": null,
+      "started_at": "2026-10-05T04:18:44.973Z",
+      "ended_at": "2026-10-05T04:22:45.888Z",
+      "turns": 12,
+      "end_hp": 3,
+      "judge": null
+    }
+  ],
+  "new_items_registered_in_window": [
+    {
+      "id": "silent-0089",
+      "ts": "2026-10-05T11:53:59+08:00",
+      "asc": 4,
+      "first_run": "1LMBFGSMCWKU",
+      "kind": "bug-infra",
+      "claim": "脆弱下，方案中新增敏捷被直接加到已折减的牌面格挡上，造成高估。本局速度药水后防御与残影预测共22挡、实际18挡；应按现场脆弱处理新增敏捷，不能只加5。当前只读live定位agent/src/reflex/turn-solver.ts:1804、:1812。旧能力敏捷遗漏修复不等于已覆盖这个组合。",
+      "status": "shipped",
+      "version": "S1.fix14",
+      "history": [
+        {
+          "ts": "2026-10-05T11:53:59+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T12:23:37+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:37:35+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0090",
+      "ts": "2026-10-05T11:53:59+08:00",
+      "asc": 4,
+      "first_run": "1LMBFGSMCWKU",
+      "kind": "fight",
+      "claim": "女王已有两种获胜顺序：A2女王先毒杀而聚合体未独立结束，A4先结束聚合体后毒杀女王；不同构筑与抽序，没有同盘面顺序对照，不能设统一先杀目标。",
+      "status": "proposed",
+      "version": null,
+      "history": [
+        {
+          "ts": "2026-10-05T11:53:59+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T12:26:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        }
+      ]
+    },
+    {
+      "id": "silent-0091",
+      "ts": "2026-10-05T11:53:59+08:00",
+      "asc": 4,
+      "first_run": "1LMBFGSMCWKU",
+      "kind": "mechanic",
+      "claim": "本局速度药水给予当回合5敏捷，脆弱下实际格挡增量不是每牌直接加5。女王战已有3敏捷时防御与残影各6挡，喝药敏捷变8后各9、合多6；下一回合恢复3敏捷。只记录本局脆弱组合与临时时序。",
+      "status": "proposed",
+      "version": null,
+      "history": [
+        {
+          "ts": "2026-10-05T11:53:59+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T12:26:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        }
+      ]
+    },
+    {
+      "id": "silent-0092",
+      "ts": "2026-10-05T11:53:59+08:00",
+      "asc": 4,
+      "first_run": "1LMBFGSMCWKU",
+      "kind": "mechanic",
+      "claim": "投斧的首牌重放在本局与飞镖多击及自损、百年积木补手牌同时发生。一张手动飞镖动作后聚合体190→69、玩家64→60，新增三张手牌；第一次牌面11伤×4不能代替整段121实伤。重放内部没有中间帧，不把总伤拆成独立验证的逐次伤害，也不将总量单独归于1力量。",
+      "status": "proposed",
+      "version": null,
+      "history": [
+        {
+          "ts": "2026-10-05T11:53:59+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T12:26:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        }
+      ]
+    }
+  ],
+  "find_asc5": [],
+  "find_shipped": [
+    {
+      "id": "silent-0008",
+      "asc": 0,
+      "first_run": "C48LLXBGKXQ9",
+      "status": "shipped",
+      "version": "S1.fix3",
+      "shipped_at": "2026-10-05T05:22:46+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T00:03:15+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T00:33:51+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T02:02:09+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T02:32:59+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T04:32:57+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T04:56:13+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T04:56:37+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:22:46+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T05:34:15+08:00",
+          "by": "learner:postmortem"
+        }
+      ]
+    },
+    {
+      "id": "silent-0018",
+      "asc": 0,
+      "first_run": "C48LLXBGKXQ9",
+      "status": "shipped",
+      "version": "S1.exp10",
+      "shipped_at": "2026-10-05T08:57:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T00:16:48+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:15:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T05:34:15+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T05:49:16+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:03:21+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0022",
+      "asc": 0,
+      "first_run": "LRN0HPZ0FZS1",
+      "status": "shipped",
+      "version": "S1.fix3",
+      "shipped_at": "2026-10-05T05:22:46+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T00:33:00+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:30:52+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:22:46+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0023",
+      "asc": 0,
+      "first_run": "LRN0HPZ0FZS1",
+      "status": "shipped",
+      "version": "S1.exp13",
+      "shipped_at": "2026-10-05T12:03:00+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T00:33:00+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T03:47:26+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T11:27:03+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T11:43:38+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:03:00+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0024",
+      "asc": 0,
+      "first_run": "LRN0HPZ0FZS1",
+      "status": "shipped",
+      "version": "S1.exp8",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T00:33:00+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:28:51+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0025",
+      "asc": 0,
+      "first_run": "LRN0HPZ0FZS1",
+      "status": "shipped",
+      "version": "S1.exp8",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T00:33:00+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T01:47:46+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T03:47:26+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:28:51+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0026",
+      "asc": 0,
+      "first_run": "C48LLXBGKXQ9",
+      "status": "shipped",
+      "version": "S1.fix3",
+      "shipped_at": "2026-10-05T05:22:46+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T02:01:13+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:25:10+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:25:53+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:22:46+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0027",
+      "asc": 0,
+      "first_run": "T082DRCUHRRD",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T02:02:09+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T03:47:26+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:15:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:32:57+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:57:47+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T09:14:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:10:43+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0028",
+      "asc": 0,
+      "first_run": "T082DRCUHRRD",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T02:02:09+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T03:32:16+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T03:47:26+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:15:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:32:57+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:57:47+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T09:14:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0029",
+      "asc": 0,
+      "first_run": "C48LLXBGKXQ9",
+      "status": "shipped",
+      "version": "S1.fix3",
+      "shipped_at": "2026-10-05T05:22:46+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T02:32:40+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:47:10+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:22:46+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0030",
+      "asc": 0,
+      "first_run": "1HC609GTLGN3",
+      "status": "shipped",
+      "version": "S1.exp12",
+      "shipped_at": "2026-10-05T10:50:58+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T02:33:37+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T03:47:26+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:15:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:56:13+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T05:32:58+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:44:29+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T09:14:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:10:43+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T10:41:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:50:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0032",
+      "asc": 0,
+      "first_run": "R0HEV5E3QT6G",
+      "status": "shipped",
+      "version": "S1.fix3",
+      "shipped_at": "2026-10-05T05:22:46+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:31:55+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:21:25+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:22:46+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0033",
+      "asc": 0,
+      "first_run": "R0HEV5E3QT6G",
+      "status": "shipped",
+      "version": "S1.fix3",
+      "shipped_at": "2026-10-05T05:22:46+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:31:55+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:36:06+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:22:46+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0034",
+      "asc": 0,
+      "first_run": "R0HEV5E3QT6G",
+      "status": "shipped",
+      "version": "S1.exp5",
+      "shipped_at": "2026-10-05T05:07:37+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:31:55+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:15:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0035",
+      "asc": 0,
+      "first_run": "R0HEV5E3QT6G",
+      "status": "shipped",
+      "version": "S1.exp5",
+      "shipped_at": "2026-10-05T05:07:37+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:31:55+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:15:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0036",
+      "asc": 0,
+      "first_run": "R0HEV5E3QT6G",
+      "status": "shipped",
+      "version": "S1.exp7",
+      "shipped_at": "2026-10-05T06:03:21+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:31:55+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:15:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T05:34:15+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T05:49:17+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:03:21+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0037",
+      "asc": 0,
+      "first_run": "T082DRCUHRRD",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:47:25+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T09:14:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0039",
+      "asc": 0,
+      "first_run": "C48LLXBGKXQ9",
+      "status": "shipped",
+      "version": "S1.exp10",
+      "shipped_at": "2026-10-05T08:57:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:47:26+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:15:06+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0040",
+      "asc": 0,
+      "first_run": "C48LLXBGKXQ9",
+      "status": "shipped",
+      "version": "S1.fix9",
+      "shipped_at": "2026-10-05T10:00:43+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T03:47:26+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:22:15+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:43:02+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:57:39+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:00:43+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0041",
+      "asc": 0,
+      "first_run": "R0HEV5E3QT6G",
+      "status": "shipped",
+      "version": "S1.fix3",
+      "shipped_at": "2026-10-05T05:22:46+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:30:50+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T05:02:13+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:22:46+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0042",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp5",
+      "shipped_at": "2026-10-05T05:07:37+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:30:50+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0043",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp5",
+      "shipped_at": "2026-10-05T05:07:37+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:30:50+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0044",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp5",
+      "shipped_at": "2026-10-05T05:07:37+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:30:50+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0045",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp6",
+      "shipped_at": "2026-10-05T05:44:29+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:30:50+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T05:32:59+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:44:29+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0046",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:32:57+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T05:49:17+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:03:21+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T06:28:51+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T09:14:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0047",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp5",
+      "shipped_at": "2026-10-05T05:07:37+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:32:57+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T04:46:41+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T04:52:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:07:37+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0048",
+      "asc": 1,
+      "first_run": "E6AVMMVCSRPC",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T04:56:13+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T05:32:59+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:44:29+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T10:10:43+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0049",
+      "asc": 0,
+      "first_run": "R0HEV5E3QT6G",
+      "status": "shipped",
+      "version": "S1.exp6",
+      "shipped_at": "2026-10-05T05:44:29+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T05:32:59+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:44:29+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0050",
+      "asc": 0,
+      "first_run": "T082DRCUHRRD",
+      "status": "shipped",
+      "version": "S1.exp8",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T05:32:59+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T05:44:29+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0051",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.fix5",
+      "shipped_at": "2026-10-05T07:12:25+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T05:34:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:22:25+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:22:42+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:28:51+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T07:12:25+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0052",
+      "asc": 1,
+      "first_run": "XYYQYBRM2A01",
+      "status": "shipped",
+      "version": "S1.fix5",
+      "shipped_at": "2026-10-05T07:12:25+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T05:34:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:30:18+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T07:12:25+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0053",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp13",
+      "shipped_at": "2026-10-05T12:03:00+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T05:34:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T05:49:17+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:03:21+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T06:28:51+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:57:47+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T09:14:07+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T10:41:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:50:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T11:27:03+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T11:43:38+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:03:00+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0054",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp7",
+      "shipped_at": "2026-10-05T06:03:21+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T05:34:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T05:49:17+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:03:21+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0055",
+      "asc": 1,
+      "first_run": "XYYQYBRM2A01",
+      "status": "shipped",
+      "version": "S1.exp7",
+      "shipped_at": "2026-10-05T06:03:21+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T05:34:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T05:49:17+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T06:03:21+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0056",
+      "asc": 1,
+      "first_run": "K3676LU8B0UH",
+      "status": "shipped",
+      "version": "S1.fix6",
+      "shipped_at": "2026-10-05T07:12:25+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T06:27:41+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:51:55+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T07:12:25+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0057",
+      "asc": 1,
+      "first_run": "K3676LU8B0UH",
+      "status": "shipped",
+      "version": "S1.exp9",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T06:27:41+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0058",
+      "asc": 1,
+      "first_run": "K3676LU8B0UH",
+      "status": "shipped",
+      "version": "S1.exp8",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T06:27:42+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0059",
+      "asc": 1,
+      "first_run": "K3676LU8B0UH",
+      "status": "shipped",
+      "version": "S1.exp8",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T06:27:42+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0060",
+      "asc": 1,
+      "first_run": "K3676LU8B0UH",
+      "status": "shipped",
+      "version": "S1.exp8",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T06:29:25+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T06:44:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0061",
+      "asc": 2,
+      "first_run": "CSBR5CRDWQNB",
+      "status": "shipped",
+      "version": "S1.fix7",
+      "shipped_at": "2026-10-05T08:16:53+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T07:27:01+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T07:54:45+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:16:53+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0062",
+      "asc": 2,
+      "first_run": "CSBR5CRDWQNB",
+      "status": "shipped",
+      "version": "S1.exp9",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T07:27:01+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0063",
+      "asc": 2,
+      "first_run": "CSBR5CRDWQNB",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T07:27:01+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T09:14:08+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0064",
+      "asc": 2,
+      "first_run": "CSBR5CRDWQNB",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T07:27:01+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T09:14:08+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:10:43+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0065",
+      "asc": 2,
+      "first_run": "CSBR5CRDWQNB",
+      "status": "shipped",
+      "version": "S1.exp9",
+      "shipped_at": "2026-10-05T08:02:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T07:27:01+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T07:41:13+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:02:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0066",
+      "asc": 0,
+      "first_run": "Y6GM2CHWJBEY",
+      "status": "shipped",
+      "version": "S1.fix9",
+      "shipped_at": "2026-10-05T10:00:43+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T08:49:35+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:51:21+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:00:43+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0067",
+      "asc": 2,
+      "first_run": "ZZMYZ5UBCG72",
+      "status": "shipped",
+      "version": "S1.exp10",
+      "shipped_at": "2026-10-05T08:57:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0069",
+      "asc": 2,
+      "first_run": "ZZMYZ5UBCG72",
+      "status": "shipped",
+      "version": "S1.exp10",
+      "shipped_at": "2026-10-05T08:57:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T11:27:03+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T11:54:39+08:00",
+          "by": "learner:postmortem"
+        }
+      ]
+    },
+    {
+      "id": "silent-0070",
+      "asc": 2,
+      "first_run": "ZZMYZ5UBCG72",
+      "status": "shipped",
+      "version": "S1.exp10",
+      "shipped_at": "2026-10-05T08:57:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0071",
+      "asc": 2,
+      "first_run": "ZZMYZ5UBCG72",
+      "status": "shipped",
+      "version": "S1.exp10",
+      "shipped_at": "2026-10-05T08:57:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:03:38+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0073",
+      "asc": 0,
+      "first_run": "Y6GM2CHWJBEY",
+      "status": "shipped",
+      "version": "S1.exp10",
+      "shipped_at": "2026-10-05T08:57:10+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:23:04+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T08:57:10+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0074",
+      "asc": 3,
+      "first_run": "10GPK5XGHCK3",
+      "status": "shipped",
+      "version": "S1.fix10",
+      "shipped_at": "2026-10-05T10:00:43+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:57:47+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T09:24:19+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:00:43+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0075",
+      "asc": 0,
+      "first_run": "1HC609GTLGN3",
+      "status": "shipped",
+      "version": "S1.fix10",
+      "shipped_at": "2026-10-05T10:00:43+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:57:47+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T09:17:21+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:00:43+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0076",
+      "asc": 3,
+      "first_run": "10GPK5XGHCK3",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:57:47+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T09:14:08+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:00:43+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0077",
+      "asc": 0,
+      "first_run": "1HC609GTLGN3",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T08:57:47+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T09:14:08+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:00:43+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0078",
+      "asc": 4,
+      "first_run": "1NZ8FE5F34R9",
+      "status": "shipped",
+      "version": "S1.fix11",
+      "shipped_at": "2026-10-05T11:15:36+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T09:57:33+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:29:40+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:30:41+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T11:15:36+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0079",
+      "asc": 4,
+      "first_run": "1NZ8FE5F34R9",
+      "status": "shipped",
+      "version": "S1.exp13",
+      "shipped_at": "2026-10-05T12:03:00+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T09:57:33+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:10:44+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        },
+        {
+          "ts": "2026-10-05T11:27:03+08:00",
+          "by": "learner:postmortem"
+        },
+        {
+          "ts": "2026-10-05T11:43:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:03:00+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0080",
+      "asc": 4,
+      "first_run": "1NZ8FE5F34R9",
+      "status": "shipped",
+      "version": "S1.exp11",
+      "shipped_at": "2026-10-05T10:20:34+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T09:57:33+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:10:44+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:20:34+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0081",
+      "asc": 0,
+      "first_run": "T082DRCUHRRD",
+      "status": "shipped",
+      "version": "S1.fix12",
+      "shipped_at": "2026-10-05T12:09:58+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T10:26:12+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:49:14+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T11:42:24+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:09:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0082",
+      "asc": 4,
+      "first_run": "F9PP859XZ3RJ",
+      "status": "shipped",
+      "version": "S1.fix12",
+      "shipped_at": "2026-10-05T12:09:58+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T10:26:12+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:54:55+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T11:42:24+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:09:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0083",
+      "asc": 0,
+      "first_run": "LRN0HPZ0FZS1",
+      "status": "shipped",
+      "version": "S1.exp12",
+      "shipped_at": "2026-10-05T10:50:58+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T10:26:12+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:41:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:50:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0084",
+      "asc": 0,
+      "first_run": "KAY522KT5NXR",
+      "status": "shipped",
+      "version": "S1.exp12",
+      "shipped_at": "2026-10-05T10:50:58+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T10:26:12+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:41:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:50:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0085",
+      "asc": 4,
+      "first_run": "F9PP859XZ3RJ",
+      "status": "shipped",
+      "version": "S1.exp12",
+      "shipped_at": "2026-10-05T10:50:58+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T10:26:12+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T10:41:52+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T10:50:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0086",
+      "asc": 4,
+      "first_run": "9YBKCNBFP0X5",
+      "status": "shipped",
+      "version": "S1.fix13",
+      "shipped_at": "2026-10-05T12:09:58+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T11:27:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T11:51:38+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:09:58+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0087",
+      "asc": 4,
+      "first_run": "9YBKCNBFP0X5",
+      "status": "shipped",
+      "version": "S1.exp13",
+      "shipped_at": "2026-10-05T12:03:00+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T11:27:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T11:43:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:03:00+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0088",
+      "asc": 3,
+      "first_run": "10GPK5XGHCK3",
+      "status": "shipped",
+      "version": "S1.exp13",
+      "shipped_at": "2026-10-05T12:03:00+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T11:27:03+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T11:43:39+08:00",
+          "by": "learner:experience-update",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:03:00+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    },
+    {
+      "id": "silent-0089",
+      "asc": 4,
+      "first_run": "1LMBFGSMCWKU",
+      "status": "shipped",
+      "version": "S1.fix14",
+      "shipped_at": "2026-10-05T12:37:35+08:00",
+      "history": [
+        {
+          "ts": "2026-10-05T11:53:59+08:00",
+          "by": "learner:postmortem",
+          "status": "observed"
+        },
+        {
+          "ts": "2026-10-05T12:23:37+08:00",
+          "by": "learner:fix-batch",
+          "status": "proposed"
+        },
+        {
+          "ts": "2026-10-05T12:37:35+08:00",
+          "by": "ops",
+          "status": "shipped"
+        }
+      ]
+    }
+  ],
+  "current_shipped_groups": {
+    "S1.fix3": [
+      "silent-0008",
+      "silent-0022",
+      "silent-0026",
+      "silent-0029",
+      "silent-0032",
+      "silent-0033",
+      "silent-0041"
+    ],
+    "S1.exp10": [
+      "silent-0018",
+      "silent-0039",
+      "silent-0067",
+      "silent-0069",
+      "silent-0070",
+      "silent-0071",
+      "silent-0073"
+    ],
+    "S1.exp13": [
+      "silent-0023",
+      "silent-0053",
+      "silent-0079",
+      "silent-0087",
+      "silent-0088"
+    ],
+    "S1.exp8": [
+      "silent-0024",
+      "silent-0025",
+      "silent-0050",
+      "silent-0058",
+      "silent-0059",
+      "silent-0060"
+    ],
+    "S1.exp11": [
+      "silent-0027",
+      "silent-0028",
+      "silent-0037",
+      "silent-0046",
+      "silent-0048",
+      "silent-0063",
+      "silent-0064",
+      "silent-0076",
+      "silent-0077",
+      "silent-0080"
+    ],
+    "S1.exp12": [
+      "silent-0030",
+      "silent-0083",
+      "silent-0084",
+      "silent-0085"
+    ],
+    "S1.exp5": [
+      "silent-0034",
+      "silent-0035",
+      "silent-0042",
+      "silent-0043",
+      "silent-0044",
+      "silent-0047"
+    ],
+    "S1.exp7": [
+      "silent-0036",
+      "silent-0054",
+      "silent-0055"
+    ],
+    "S1.fix9": [
+      "silent-0040",
+      "silent-0066"
+    ],
+    "S1.exp6": [
+      "silent-0045",
+      "silent-0049"
+    ],
+    "S1.fix5": [
+      "silent-0051",
+      "silent-0052"
+    ],
+    "S1.fix6": [
+      "silent-0056"
+    ],
+    "S1.exp9": [
+      "silent-0057",
+      "silent-0062",
+      "silent-0065"
+    ],
+    "S1.fix7": [
+      "silent-0061"
+    ],
+    "S1.fix10": [
+      "silent-0074",
+      "silent-0075"
+    ],
+    "S1.fix11": [
+      "silent-0078"
+    ],
+    "S1.fix12": [
+      "silent-0081",
+      "silent-0082"
+    ],
+    "S1.fix13": [
+      "silent-0086"
+    ],
+    "S1.fix14": [
+      "silent-0089"
+    ]
+  },
+  "learning_curve": {
+    "dataset_cut": "2026-10-05T04:37:46.337Z",
+    "header": "character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship",
+    "a5_row": "silent,5,1,1,0,1,48,48,ZE8F192FKX24,ZE8F192FKX24,2026-10-05T03:39:22+00:00,2026-10-05T04:22:55+00:00,0,0,1,silent-0078,0,0"
+  }
+}
