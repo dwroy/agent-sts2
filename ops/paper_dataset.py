@@ -974,14 +974,14 @@ def learning_curve():
         return False
 
 
-def component_costs():
+def component_costs(root=ROOT, code_root=ROOT):
     """Component accounting records its own immutable JSONL byte cuts."""
     import importlib.util
     try:
-        spec = importlib.util.spec_from_file_location("paper_cost", os.path.join(ROOT, "eval", "cost.py"))
+        spec = importlib.util.spec_from_file_location("paper_cost", os.path.join(code_root, "eval", "cost.py"))
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        mod.build(ROOT)
+        mod.build(root, config_path=os.path.join(code_root, "eval", "cost-config.json"))
         return True
     except Exception as error:
         print(f"component costs failed: {type(error).__name__}")

@@ -76,6 +76,10 @@ $P agent/tools/logdb/query.py --raw states 3888720492   # 按字节偏移取一�
 
 ## 4. 口径和已知限制
 
+- 组件成本入口：`component_usage_raw` 增量同步 `learner/runs/*.jsonl` 的摘要、`ops/codex-ops/wakes*.jsonl`，以及这些记录明确引用的 Codex session rollout（只取 token_count 的累计用量，不取会话原文）。`component_calls` 优先使用 rollout 的逐字段最高水位增量，重复/倒退快照不重复计费；无 rollout 时取每会话最后摘要作为下界。学习者保留任务类型、批次、角色和 `run_ids`；多局分摊由 eval/cost.py 处理。运维 resume 摘要不能逐条累加，墙钟另加总。
+- `all_llm_calls` 统一查询对局大脑与学习者/运维：`component, provider, ts, run_id, run_ids, batch, src, off, len, input_tokens, cache_hit_tokens, cache_write_tokens, output_tokens, reasoning_tokens, total_tokens, calls, latency_ms, usage_recorded`。缓存包含在输入内，推理包含在输出内，total 只加输入和输出；旧 `llm_calls` 的对局查询口径保持。
+- 新额度采样写 `logs/codex-usage.jsonl`；eval/cost.py 同时兼容早期 `subscription-usage-snapshots.jsonl`，同一个重置窗口只取最新安全样本。每局 report 的独立 nice 19 后台任务经 paper_dataset 生成成本表和说明页，重叠任务跳过，不延迟下一局。API 价格或实时额度缺失保持未知，不读认证文件或改变游戏行为。
+
 - 帧只在决策点记（加少量 observed 帧），所以「回合开始血量」是这回合第一个记下的帧，「最后血量」是最后一个战斗帧；敌人死亡时的伤害（瀑布巨兽爆炸）会出现在 post_hp 里而不在 last_hp。
 - `act` 取状态里的 `act_id + 1`（boss 打完后的地图帧已经是下一幕）；room-costs.json 按层号分幕（1–17 / 18–33 / 34+），和它对比时用层号。
 - 房间类型和 monster-db.json 有 18 个遭遇差 1–2 场（hallway ↔ unknown_room，精英 1 场）：monster-db 用战后下一个地图帧的节点，没有就按怪物类型猜；这里用本层地图帧，没有就用上一层选的节点。死在问号房里的战斗 monster-db 记成走廊，本库记 unknown_room；战后没有本层地图帧时 monster-db 会拿到下一层的节点，本库不会。遭遇的场次、胜率、掉血都一样。

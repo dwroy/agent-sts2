@@ -11,13 +11,14 @@ are stored as lengths only.
 """
 import json
 import re
+import component_usage
 
 # Bumped per source when its extractor or columns change: sync.py rebuilds that source's shards.
 VERSIONS = {"states": 1, "decisions": 1, "runs": 1, "deepseek-reasoning": 1, "brain": 2, "run-plans": 1, "run-config": 1, "sl-attempts": 2}
 
 KEY_RE = re.compile(r"(sk-(?:ant-)?[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._~+/-]{16,}|(?:api[_-]?key|x-api-key)[\"']?\s*[:=]\s*[\"']?[A-Za-z0-9._-]{12,})", re.I)
 AGENT_VIEW = b',"agent_view":'
-TS_RE = re.compile(rb'"ts":\s*"([^"]+)"')
+TS_RE = re.compile(rb'"(?:ts|timestamp)":\s*"([^"]+)"')
 TEXT_CAP = 4000
 INT_MAX = 2**31 - 1
 
@@ -27,6 +28,7 @@ NODE_TYPE = "STRUCT(idx INTEGER, row INTEGER, col INTEGER, type VARCHAR)[]"
 
 # table -> [(column, DuckDB type)], in column order.
 TABLES = {
+    "component_usage_raw": component_usage.TABLE,
     "frames": [
         ("off", "BIGINT"), ("len", "INTEGER"), ("ts", "TIMESTAMP"), ("observed_ts", "TIMESTAMP"), ("observed", "BOOLEAN"),
         ("fingerprint", "VARCHAR"), ("screen", "VARCHAR"), ("session", "VARCHAR"), ("run_id", "VARCHAR"),
