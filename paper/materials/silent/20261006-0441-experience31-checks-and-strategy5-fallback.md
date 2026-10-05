@@ -55,3 +55,5 @@
 已运行 `bash ops/codex-ops-do.sh learner-merge codex-dev`，exit0，调度器答复「已发送合入兜底事件；运维会话执行 live 流程。」。后续manual事件据本节和原handoff仅兜底固定已测源 `307c538c6e66110635a852093aeba30b20212243`，持锁核对当前刷新，合后自测成功再记版本、同步main、CLI登记shipped并请求learner-recheck；不把当前未完成fix分支HEAD一并合入。本轮/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 149 item(s), 0 problem(s)；没有Roy新待定或收件箱事项。
 
 - 2026-10-06 04:53 04:48 manual续办结果：固定源307c538c保持；首次创建续办脚本的沙箱初始化rg glob扫描碰到已消失临时目录sl-second-LrZVwy，完整命令/错误已提交9852c89de4b4afd66a86f14ce2a56bfdc7a6d34a并报Roy。完整原命令原权限一次重试exit0，启动竞态恢复；后续实际非阻塞锁检查仍busy/exit75，未修改live、未合入或测试、未新增S1.strategy5及0148 shipped。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 149 item(s), 0 problem(s)，0148仍proposed/无版本；其他批次正在运行，不混入其未完成HEAD。不等待/轮询或连续再发manual请求；持锁批次完成事件到来时核实其是否已携带本固定源，未携带再请求续办；先前失败/pending历史全部保留。不停对局/调度，恢复结果已补收件箱和notes/for-dai.md。
+
+- 2026-10-06 05:02 04:59经验32完整补测事件后接续：report已结束；固定策略源307c538c仍非live祖先，当前live HEAD b8a0ee007692225458641a3d58f1f947cd543548。nice -n 19 python3 /tmp/sts2-0459-live.py非阻塞取锁busy/exit75，无等待/合入/合后测试/策略版本/0148 shipped；后续fix批次及当前刷新原样保留，沿原交接待占锁批次完成事件续办，未重复派manual。经验32完整外部通过不借作本策略检查。
