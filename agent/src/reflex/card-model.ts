@@ -86,6 +86,8 @@ export interface CardModel {
   poisonExtraTriggers?: number;
   /** Observed Envenom: poison per unblocked attack hit (silent-0082 / silent-0084). */
   envenom?: number;
+  /** Observed unupgraded Phantom Blades: extra damage on this turn's first Shiv (silent-0099/0101). */
+  phantomBlades?: number;
   /** Strength that only lasts this turn (Setup Strike). */
   tempStrength: number;
   /** Feel No Pain played: Block per card exhausted from then on this turn. */
@@ -344,6 +346,24 @@ export function stripVigor(hand: CardModel[], vigor: number, weak: boolean, shru
   for (const card of hand) {
     if (card.type === "Attack" && card.damage !== null) card.damage = Math.max(0, card.damage - shown);
   }
+}
+
+/**
+ * UACFSW4VDDLD F33 T5: both Shivs show 14, but after the first one the remaining Shiv shows 5.
+ * Normalize the observed nine-point bonus and report whether it is still available. Unmatched values
+ * stay untouched; an already spent or unobserved bonus is never credited from the power alone.
+ */
+export function stripPhantomBlades(hand: CardModel[], amount: number, strength: number, weak: boolean, shrunk = false): boolean {
+  if (amount !== 9) return false;
+  let armed = false;
+  for (const card of hand) {
+    if (card.cardId !== "SHIV" || card.damage === null || card.damageBase === undefined) continue;
+    const base = card.damageBase + strength;
+    if (card.damage !== Math.floor(ourAttackScaled(base + amount, weak, shrunk))) continue;
+    card.damage = Math.floor(ourAttackScaled(base, weak, shrunk));
+    armed = true;
+  }
+  return armed;
 }
 
 /**
@@ -975,6 +995,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
     ...(cardId === "ENVENOM" && !bool(card["upgraded"]) && dyn(card, "EnvenomPower") !== null ? { envenom: dyn(card, "EnvenomPower")! } : {}),
+    ...(cardId === "PHANTOM_BLADES" && !bool(card["upgraded"]) && dyn(card, "PhantomBladesPower") === 9 ? { phantomBlades: 9 } : {}),
     known,
     flatValue,
     heldPenalty,

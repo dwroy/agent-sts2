@@ -462,6 +462,10 @@ export interface PlayerSim {
   poisonExtraTriggers?: number;
   /** Observed ENVENOM_POWER: poison for each attack hit that removes HP. */
   envenom?: number;
+  /** Observed nine-point Phantom Blades power; normalized hand damage excludes it. */
+  phantomBlades?: number;
+  /** The observed first-Shiv bonus has already been spent, or its availability is unknown. */
+  phantomBladesSpent?: boolean;
   /**
    * Hellraiser up (HELLRAISER_POWER): 「每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌」 — a Strike drawn this
    * turn plays itself, free, at a random enemy (the rollout does it for later turns' draws, a4f3795).
@@ -977,6 +981,8 @@ interface Sim {
   shadowmeld: boolean;
   corrosiveWave: number;
   envenom: number;
+  phantomBlades: number;
+  phantomBladesSpent: boolean;
   /** Intangible gained this turn (Apparition): every enemy hit this turn does 1. */
   intangible: boolean;
   /** Buffer stacks up (already up plus gained this turn): each negates one HP loss, ours or an enemy hit. */
@@ -1937,6 +1943,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     const shrinkNow = next.shrunk && card.type !== "Potion";
     // Thrash hits for its printed number (3SBP: all 12 plays); what it absorbs is for its later plays.
     let perHit = shrunkHit ? shrunkHit.perHit : shown + next.strength * weakFactor;
+    // UACFSW4VDDLD F33 T2/T5: the newly established bonus belongs to only the first Shiv.
+    if (card.cardId === "SHIV" && !next.phantomBladesSpent && next.phantomBlades > 0) {
+      const base = card.damageBase === undefined ? null : card.damageBase + (player.strengthNow ?? 0);
+      perHit = base !== null && Math.floor(ourAttackScaled(base, player.weak, shrinkNow)) === (card.damage ?? 0)
+        ? ourAttackScaled(base + next.strength + next.phantomBlades, player.weak, shrinkNow)
+        : perHit + ourAttackScaled(next.phantomBlades, player.weak, shrinkNow);
+    }
     // K3676LU8B0UH F48 attempt 2 T9/T12: the next MAUL gets the previous one's Increase, before Pen Nib.
     if (card.cardId === "MAUL" && next.maulGrowth > 0) {
       perHit = shrunkHit && shrunkHit.pre !== null
@@ -2021,6 +2034,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
 
   if (card.cardId === "MAUL") next.maulGrowth += card.maulIncrease ?? 0;
+  if (card.cardId === "SHIV") next.phantomBladesSpent = true;
+  // Only the observed single, unupgraded nine-point power is modelled; stacking is unknown.
+  if (card.phantomBlades === 9 && next.phantomBlades === 0) next.phantomBlades = 9;
   thrashAbsorb(next, card, player);
 
   const poisoned = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
@@ -3236,8 +3252,9 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
+  const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3351,6 +3368,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     shadowmeld: false,
     corrosiveWave: input.player.corrosiveWave ?? 0,
     envenom: input.player.envenom ?? 0,
+    phantomBlades: input.player.phantomBlades ?? 0,
+    phantomBladesSpent: input.player.phantomBladesSpent ?? false,
     intangible: false,
     buffer: input.player.buffer ?? 0,
     bufferSpent: 0,

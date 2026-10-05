@@ -28,7 +28,7 @@ import { briefJson, combatBriefJson } from "../memory/run-brief.js";
 import { hintText, selectHints } from "../knowledge/jev-hints.js";
 import type { AskDecision, CombatPlanMemo, Decision, DecisionEnv, ResolvedAction, ScreenMemory } from "../memory/types.js";
 import { boardDamageContext, damageForecast, expectedNextDamage, revivingForecast, type DamageContext } from "../knowledge/move-model.js";
-import { cardConditionOptions, CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isPlayFirst, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, pilePowerExtraCost, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripVigor, upgradeDelta, withPowerExtraCost, type CardModel, type PotionContext, type UpgradeDelta } from "./card-model.js";
+import { cardConditionOptions, CHOICE_POTIONS, expectedDraw, heldPenaltyOf, isPlayFirst, isStrikeCard, modelHandCard, modelPotion, offHandCardModel, pileCardPick, pilePowerExtraCost, potionCardCost, potionPowerExtraCost, randomPotionKind, stripPenNib, stripPhantomBlades, stripVigor, upgradeDelta, withPowerExtraCost, type CardModel, type PotionContext, type UpgradeDelta } from "./card-model.js";
 import { POOL_RARITIES, potionMcCriteria, potionMcLog, potionMcOptions, runPotionMc, seedOf, type PotionMc, type PotionMcSource } from "./potion-mc.js";
 import type { CardInfo } from "../knowledge/index.js";
 import type { PotionView } from "../memory/narrow.js";
@@ -2805,6 +2805,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Vigor is in every Attack's shown damage but spent by the first one (KFP1 F17 T1: 54 planned, 18 dealt).
   const vigor = powerAmount(player, "VIGOR_POWER");
   stripVigor(hand, vigor, powerAmount(player, "WEAK_POWER") > 0, shrunk);
+  const phantomBlades = powerAmount(player, "PHANTOM_BLADES_POWER");
+  const phantomBladesArmed = stripPhantomBlades(hand, phantomBlades, powerAmount(player, "STRENGTH_POWER"), powerAmount(player, "WEAK_POWER") > 0, shrunk);
   const ascension = state.run?.ascension ?? 0;
   const enemies = enemySims(combat, ascension);
   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
@@ -2901,6 +2903,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     corrosiveWave: powerAmount(player, "CORROSIVE_WAVE_POWER"),
     poisonExtraTriggers: powerAmount(player, "ACCELERANT_POWER"),
     envenom: powerAmount(player, "ENVENOM_POWER"),
+    ...(phantomBlades === 9 ? { phantomBlades, phantomBladesSpent: !phantomBladesArmed } : {}),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
     hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,
     darkEmbrace: powerAmount(player, "DARK_EMBRACE_POWER"),
