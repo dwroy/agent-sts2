@@ -36,6 +36,7 @@ import { calibratedWinProb } from "./boss-sim.js";
 import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
 import { LOW_CONFIDENCE_B3 } from "./boss-trust.js";
+import { silentBuildWinTies } from "./silent-build-win-ties.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -462,6 +463,10 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const head = `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
     // Mostly lost: the raw rate under 10% (the calibrated one never reads under the map's floor at 0 wins: calibratedFloor).
     const lowWin = result.base.win < 0.1;
+    const winTies = silentBuildWinTies(str(asRecord(state.run?.raw)["character_id"]), result.options.filter((sim) => {
+      const plan = plans.find((p) => p.key === sim.key);
+      return plan && !plan.none && !plan.group && question.criteria[sim.key] != null;
+    }));
     const criteria: Record<string, string | null> = {};
     for (const [k, v] of Object.entries(question.criteria)) {
       const plan = plans.find((p) => p.key === k);
@@ -480,6 +485,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       } else {
         const sim = sims.get(k);
         if (sim) shown["boss_sim"] = `${simLine(head, result.base, sim, result.samples, lowWin)}${plan.note ? `；${plan.note}` : ""}`;
+        Object.assign(shown, winTies.get(k));
       }
       criteria[k] = JSON.stringify(shown);
     }
