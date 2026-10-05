@@ -69,10 +69,14 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | win-procs / win-kill <PID> | tasklist 里的 steam / 游戏进程和所在会话 / 只关会话 0（Services）里的 steam.exe 或游戏 |
 | postmortem <ids> / learner-status / scheduler-status | 马上派一批复盘 / 批次状态 / 调度器状态 |
 | experience-update <ids> / fix-batch | 手动派经验 / 修复批次，一律 merge=live；工作树占用时拒绝 |
+| strategy-proposal <ids> | 手动派学习者策略提案；只接收 1–10 个本角色已结束的 12 位局号，沿用学习任务的证据要求和工作树占用保护 |
 | learner-merge <branch> | 发合入兜底事件，由运维执行 live 流程；只接收 codex-dev / exp-silent |
+| learner-recheck <批次 id> | 兜底合入后补跑完整 tsc + vitest；只接收 YYYYMMDD-HHMMSS-experience-update / fix-batch / strategy-proposal 格式的批次 id。锁内核实回报中所有源提交均在 live，固定检查树、去重同批次同树，保留原失败及兜底检查历史；归档日志并发送 learner-checks，失败写收件箱。broker 限时 3700 秒，请求端默认等 3760 秒 |
 | eval-metrics <角色 id> <进阶> | 沙箱外运行完整评估：角色限 ironclad/silent/regent/necrobinder/defect，进阶为 0–999 的整数，不带前导零；固定传 --character、--ascension、--group-by ascension、--md，使用 data/logdb-venv/bin/python，nice 19。结果保存到 paper/materials/<角色>/a<级>-metrics-<时间>.<随机后缀>.md，打印路径；失败保留旧报告，不发布部分或空结果。broker 限时 10 分钟，请求端默认等 11 分钟，CODEX_OPS_DO_WAIT 可显式覆盖 |
 
 例如 `bash ops/codex-ops-do.sh eval-metrics silent 3`。每次产生独立快照，读取返回的文件后并入升级小结；动作不接收任意路径、额外选项或外部命令。broker 的白名单在叫醒开始时加载，本轮改动从下一次叫醒起生效，不需要重启对局。历史升级评估请求可在动作生效后的事件中补跑。
+
+学习者回报 `merged=null`，随后由运维实际兜底合入时，调用 `bash ops/codex-ops-do.sh learner-recheck <批次 id>` 触发上述完整补测。调度器执行检查并登记结果，运维根据 learner-checks 处理失败；该动作不会重写原完成回报，也不会自动回滚或重复合入。
 
 实测（2026-10-04，真实 codex，测试会话）：init 5 s；一次叫醒里模型依次调了 procs（0）、mod-state（0，拿到 mod 的 JSON）、`kill 1`（2，被动作脚本拒绝：不是我们的进程）、`rm-rf`（2，broker 拒绝：没有这个动作），31 s，会话记得第一轮的暗号。没有在真实游戏上测 autoplay-start / launch-game / win-kill（按要求没碰对局）。
 
