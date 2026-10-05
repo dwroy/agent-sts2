@@ -14,6 +14,8 @@ by it (strategy/boss-clock.ts bossLossPerTurn).
 The fight rows (--fights FILE) carry: key, boss, ascension, outcome (won when the run got past the boss's
 floor, or the run was won on it: a win ends on the final boss's floor), turns, entry_hp, final_hp,
 loss_per_turn ((entry - final) / turns), for agent/tools/boss-loss-backtest.ts.
+Each run/floor retains its final attempt, matching that outcome. A turn reset discards the earlier
+attempt's turns and metadata; it must never splice failed attempts into a winning or losing final line.
 
 Also per boss, by ascension (the counts the guides and boss notes quote, filled from here by strategy/boss-clock.ts
 instead of hand-written: 2026-09-29 knowledge check): by_asc {fights, won, entry_pct_won, entry_pct_lost};
@@ -96,9 +98,10 @@ def main() -> None:
     for enemy in BOSS_OF:
         patterns += ["-e", f'"enemy_id":"{enemy}"']
     grep = subprocess.Popen(["grep", "-F", *patterns, os.path.join(args.logs, "states.jsonl")], stdout=subprocess.PIPE)
-    # (run, floor) -> {turn: (hp, shown attack)} from the turn's first logged frame
+    # (run, floor) -> {turn: (hp, shown attack)} from the final attempt's first frame per turn.
     fights = collections.defaultdict(dict)
     meta = {}
+    previous_turn = {}
     # (run, floor) -> (turn, our HP, eruption stacks) at the Waterfall Giant's kill: the first frame showing its
     # husk (the kill leaves a body of 999999999 HP that blows up for the stacks; Y36HXZ80A8LL T9: 36 HP, 41).
     giant_kills = {}
@@ -133,6 +136,14 @@ def main() -> None:
         boss = BOSS_OF[bodies[0]["enemy_id"]]
         key = (state.get("run_id"), run.get("floor"))
         turn = state.get("turn")
+        if turn is not None:
+            # T082DRCUHRRD F48 / C48LLXBGKXQ9 F17, silent-0040: SL restarts the turn sequence.
+            # Keep the existing one-row-per-room sample unit, with all fields from the final attempt.
+            if turn < previous_turn.get(key, turn):
+                fights[key].clear()
+                for tracked in (meta, giant_kills, entry_max, crab_first, lag_sleep, queen_track, sand_last):
+                    tracked.pop(key, None)
+            previous_turn[key] = turn
         for enemy in bodies:
             if enemy.get("enemy_id") == "WATERFALL_GIANT" and (enemy.get("max_hp") or 0) >= GIANT_HUSK_HP and key not in giant_kills and turn is not None:
                 stacks = next((p.get("amount") for p in enemy.get("powers") or [] if p.get("power_id") == "STEAM_ERUPTION_POWER"), None)

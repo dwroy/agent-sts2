@@ -782,6 +782,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
 
   // Ambiguous or conditional vars, by id.
   switch (cardId) {
+    case "EXPOSE":
+      // ZZMYZ5UBCG72 F48 T2, silent-0066: unupgraded Power=2 applied two Vulnerable.
+      // Block/Artifact removal and the upgrade have no independently verified model here.
+      if (!bool(card["upgraded"])) vulnerable = dyn(card, "Power") ?? vulnerable;
+      break;
     case "UPPERCUT": {
       const amount = dyn(card, "Power") ?? 1;
       vulnerable = amount;
