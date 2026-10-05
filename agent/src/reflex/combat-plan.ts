@@ -2897,6 +2897,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     shadowmeldActive: powerAmount(player, "SHADOWMELD_POWER") > 0,
     corrosiveWave: powerAmount(player, "CORROSIVE_WAVE_POWER"),
     poisonExtraTriggers: powerAmount(player, "ACCELERANT_POWER"),
+    envenom: powerAmount(player, "ENVENOM_POWER"),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
     hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,
     darkEmbrace: powerAmount(player, "DARK_EMBRACE_POWER"),
