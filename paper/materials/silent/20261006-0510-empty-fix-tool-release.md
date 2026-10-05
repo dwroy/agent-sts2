@@ -38,3 +38,5 @@
 ```
 
 完整交接learner/runs/20261006-044302-fix-batch/handoff-ops.md，108项既有修复映射already-fixed.md/json原样保留；初稿/记录冲突/锁等待历史不删改，运维不再次上线这些基线修复。
+
+- 2026-10-06 05:13 main机械集成完成：f77dc7473044d9a36d758c8654f6ed4c6bb26c39，对应队列项关闭，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 149 item(s), 0 problem(s)。待合原策略307c538c未被本工具批次夹带；续办一次非阻塞取锁busy/exit75，无live修改/合后策略测试/策略版本/0148 shipped。完整外部测试由调度器补跑，之后完成事件接续原交接，不轮询或重复派manual。
