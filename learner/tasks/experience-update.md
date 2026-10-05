@@ -1,6 +1,6 @@
 ---
 title: 经验库更新
-effort.codex: high
+effort.codex: xhigh
 tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 600
