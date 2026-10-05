@@ -917,3 +917,92 @@ items_found=11按最早证据进阶；items_shipped=38按登记后下一场已�
 character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
 silent,7,7,1,1,0,40.57,39,SADL3CGYTGSR,4Y94N8RDPGPM,2026-10-05T12:18:53+00:00,2026-10-05T17:57:26+00:00,13,0,38,silent-0007 silent-0009 silent-0010 silent-0011 silent-0013 silent-0017 silent-0027 silent-0036 silent-0046 silent-0048 silent-0053 silent-0057 silent-0059 silent-0063 silent-0069 silent-0077 silent-0092 silent-0107 silent-0110 silent-0111 silent-0114 silent-0115 silent-0116 silent-0117 silent-0118 silent-0119 silent-0120 silent-0121 silent-0122 silent-0123 silent-0124 silent-0125 silent-0126 silent-0127 silent-0128 silent-0129 silent-0131 silent-0132,3,0
 ```
+
+## A8（2026-10-06 03:19 CST 小结；下一局已开 A9）
+
+爬阶窗口从2026-10-06 02:00:49的A8开局至2026-10-06 02:45:41的A9开局；唯一A8局LLYSRQQ35AVW结束于2026-10-06 02:42:21。窗口含通关后至下局开始约3分20秒，学习登记与版本合入时点按此区间统计，游戏结果只计已结束A8局。实际配置target_ascension=8→9、模式climb；下一局HMVJKM56S4Q8。
+
+### 结果与死亡记录
+
+| 口径 | 局数 | 胜 / 负 | 平均终层 | 成功读档 |
+| --- | --- | --- | --- | --- |
+| 第一次尝试 | 1 | 1 / 0 | 48 | 0 |
+| 最终结果 | 1 | 1 / 0 | 48 | 0 |
+| 实际发生SL的局 | 0 | 无 | 无 | 0 |
+
+LLYSRQQ35AVW为首次尝试通关女王/火炬头聚合体，T7剩60血。sl-attempts的F17/F33/F48三条均首次won，没有predicted_death或reload；评估“有SL记录的局1/1”仅表示存在跟踪记录，实际重打0次。没有败局、death_fight为空，主要死因不适用。首末决策跨度41分05秒，配置开局至结束约41分32秒（已在通关事件记录）。只有一局样本，无受控胜负对照，不能据此确定稳定胜率或某项更新的贡献。
+
+### 完整评估
+
+白名单动作`bash ops/codex-ops-do.sh eval-metrics silent 8`退出0；沙箱外执行`eval/metrics.py --character silent --ascension 8 --group-by ascension --md`。原报告[a8-metrics-20261006-031359.cxO8ie.md](../paper/materials/silent/a8-metrics-20261006-031359.cxO8ie.md)，SHA256见账本查询快照。区间、样本不足标记和缺失值原样保留：
+
+| 指标 | A8 |
+|---|---|
+| 局数 | 1 * |
+| 终层 | 48.0（中位 48.0；n=1） * |
+| 过一幕 boss | 100%（1/1；CI 21–100%） * |
+| 过二幕 boss | 100%（1/1；CI 21–100%） * |
+| 胜局 | 100%（1/1；CI 21–100%） * |
+| 非 boss 战喝药 / 10 层 | 2.08（中位 2.08；n=1） * |
+| 进一幕 boss 带药（瓶） | 0.00（中位 0.00；n=1） * |
+| 进二幕 boss 带药（瓶） | 1.00（中位 1.00；n=1） * |
+| 进三幕 boss 带药（瓶） | 1.00（中位 1.00；n=1） * |
+| 死时手里的药（瓶，输的局） | — |
+| 一幕 boss 有力量来源 | 0%（0/1；CI 0–79%） *；牌 0 / 遗物 0 / 开场有力量 0 |
+| 一幕精英进场血量 < 78% 次数 / 局 | 1.00（中位 1.00；n=1） *；占一幕精英战 1/3 |
+| 二幕第一个休息点前死亡（占进二幕的局） | 0%（0/1；CI 0–79%） * |
+| 大脑调用 / 局 | 54.0（中位 54.0；n=1） * |
+| 输入 token / 局（千） | 5771（中位 5771；n=1） * |
+| 缓存命中 token / 局（千） | 98（中位 98；n=1） * |
+| 输出 token / 局（千） | 14.6（中位 14.6；n=1） * |
+| 缓存命中率 | 2% |
+| 大脑耗时 / 局（分钟） | 14.9（中位 14.9；n=1） * |
+| 每次调用平均耗时（秒） | 16.5 |
+|   codex：调用 / 局 | 54.0（中位 54.0；n=1） * |
+|   codex：输入 / 命中 / 输出（千 token / 局） | 5771 / 98 / 14.6（n=1） |
+|   codex：耗时 / 局（分钟） | 14.9（中位 14.9；n=1） * |
+| SL：有 SL 记录的局 | 1/1 |
+| SL：重打次数 / 局 | 0.00（中位 0.00；n=1） * |
+| 第一次尝试：终层 | 48.0（中位 48.0；n=1） * |
+| 第一次尝试：过一幕 boss | 100%（1/1；CI 21–100%） * |
+| 第一次尝试：过二幕 boss | 100%（1/1；CI 21–100%） * |
+| 第一次尝试：胜局 | 100%（1/1；CI 21–100%） * |
+| 校准：推演本回合掉血 ±2 内（回合） | 95%（56/59 回合） |
+| 校准：路线投影 2–3 层误差（投影 − 实际） | 中位 -0.8，中位 \|误差\| 0.8（n=6） * |
+| 校准：boss 时钟 实打/估值 中位 | — |
+
+* 局数 < 10（或该指标的 n < 10）：样本不足，区间只作参考。
+
+### 学习者产出与上线
+
+本局正式复盘已在20261006-024301/03:03完成事件归档（1/1）。本局新登记silent-0144/0145/0146三项，既有0010/0023/0027/0037/0044/0053/0072/0138八项补证，无repeat。其中0144为升级萎靡模型覆盖证据，最早回溯KAY522KT5NXR/A0/F31/T1，按最早证据归A0；运维仅转录队列交学习者，不沿用旧未升级0051已修状态。归A8的两项为：
+
+| 账本 id | 学习者原记录范围 | 最早证据局 / 进阶 | 查询状态 |
+| --- | --- | --- | --- |
+| silent-0145 | 微型帐篷购法及六个营火回血、升级的实际收益观察 | LLYSRQQ35AVW / A8 | observed；prior=unknown |
+| silent-0146 | 微型帐篷允许同一营火回血、锻造两选项及两种顺序的实证 | LLYSRQQ35AVW / A8 | observed；prior=unknown |
+
+两项首次登记于02:57:35，在A8通关及A9开局之后，查询时均未上线；不倒算为A8通关前已学会。账本查询`find --character silent --asc 8 --json`和`find --character silent --status shipped --json`的完整原结果、写入时点、配置及SL记录保存于[a8-learning-snapshot-20261006-0313.json](../paper/materials/silent/a8-learning-snapshot-20261006-0313.json)；全静默最后状态shipped为118项，不能当作A8新增或本级上线数量。
+
+按首次登记时间，爬阶窗口新增6项：0138疯狂科学定制模板（最早R0HEV5E3QT6G/A0）、0139构筑模拟精确胜率并列（2L1BNN9ZJEFU/A6）、0140夜魇启动血价与复制兑现、0141夜魇复制到手/附魔现场（均4Y94N8RDPGPM/A7）、0142永恒羽毛到营火回血的观察（LRN0HPZ0FZS1/A0）、0143勒紧给防御额外挡的观察（4Y94N8RDPGPM/A7）。0142/0143登记于02:45:11的局间窗口；这6项最早证据均不归A8，不与首胜后0145/0146混计。
+
+| 爬阶窗口实际合入版本 | 来源 / 范围 | 已测发布记录 |
+| --- | --- | --- |
+| S1.strategy3（eba51d36） | 0135；9YT51CK8RC39/A7/F17第3/6次T5，长程并列组的即时损血参考 | 02:06发布f75162d8；02:16 ops登记0135 shipped，完整补测已通过 |
+| S1.exp28（363ff303） | 2PVLGRBGUX9S/A7及旧34本角色局，经验2026-10-06.3，新增0/更新14/退役0，active97 | 02:22发布98f88e06；02:34 ops登记17项经验shipped，覆盖经验文本；0136/0137不代表模拟器机制代码已实现 |
+| S1.strategy4（a10be71d） | 0139；2L1BNN9ZJEFU/A6/F9及2PVLGRBGUX9S/A7/F16，精确原始/校准胜率同样本量并列事实 | 02:44发布291617bc，位于通关后局间；ops于02:57登记0139 shipped，已在爬阶窗口之外 |
+
+窗口内有18条ops shipped登记（0135一条、经验.28十七条），主要为已有经验补证，不等于18条新增。查询快照的版本时间为git提交时间，已测发布时间以上表及decision-log为准。经验.29源码8f7d061a尚未成为main/live祖先，新增0142/0143只算学习者提案；原追加记录冲突及忙锁记录保留。
+
+A8开局加载bf63ab40、经验2026-10-06.2，结束记录为bf63ab40+dirty；A9开局加载6566b7d3、经验2026-10-06.3。代码合入下一局生效，不能把本窗口后续代码合入说成A8首胜已使用；知识前缀随刷新渲染，单凭开局版本也不能作单项因果归因。经验.28完整补测1506>1500及策略4完整补测2993>1800的预算断言失败已交学习者核查，原失败、回退及派发占用历史保留，本次评估成功不覆盖代码完整测试失败。
+
+### 学习曲线A8原行
+
+直接附上一轮规定的`paper_dataset.py --no-raw`生成表（提交c1a75e2d，切点2026-10-05T19:08:35.717Z，五项一致性通过、决策计数差异为空、key scan CLEAN）。本轮无需重复整库刷新或手改曲线；当前账本检查：/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 146 item(s), 0 problem(s)。
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,8,1,1,1,0,48,48,LLYSRQQ35AVW,LLYSRQQ35AVW,2026-10-05T18:00:49+00:00,2026-10-05T18:42:21+00:00,2,0,5,silent-0016 silent-0054 silent-0080 silent-0130 silent-0134,0,0
+```
+
+items_found=2按最早证据进阶归属；items_shipped=5（0016/0054/0080/0130/0134）按生成器的登记后下一场已结束局起始归属；repeats及repeats_after_ship均0。它们与窗口新增6项、实际合入3版本、18条窗口登记或全静默118项查询状态口径不同；首胜后发现已明确时点，不改历史窗口记录。

@@ -8,3 +8,5 @@
 - 其他学习者观察及“未记录”项保留原文；没有Roy新待定或账本缺失。无本轮ascension-up事件，不新增A8升级小结、版本或上线标签，不修改对局/调度进程。本轮后续运行paper_dataset.py --no-raw并记录结果。
 
 - 2026-10-06 03:12 本轮论文数据刷新完成：nice -n19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-05T19:08:35.717Z，五项一致性通过、runs.jsonl决策计数差异为空、key scan CLEAN；行数{"commits.csv": 2623, "decisions_by_label.csv": 17470, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 523}，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 146 item(s), 0 problem(s)。本次按脚本的日志/账本切点生成，发现和上线分开，不把首胜后复盘倒算成通关前学习。11条原账本及复盘已提交41206981df2b0db952e41be8d8e91133b9c2672e，本提交只包含自身记录与本轮生成表；当前无本轮升级事件，不另加升级报告。
+
+- 2026-10-06 03:19 运维勘误：03:03归档及队列曾将silent-0146与升级萎靡入口关联，原账本0146实际为微型帐篷同营火HEAL/SMITH可并存及两种顺序；0145为该帐篷购法与实回/升级收益。升级萎靡覆盖缺口只关联0144（旧机制观察0053、未升级模型0051独立），不关联0146。原账本、复盘及旧错误记录保持，A8小结按原条目写。
