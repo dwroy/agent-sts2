@@ -344,6 +344,9 @@ export interface PlayerSim {
   energy: number;
   weak: boolean;
   vulnerable: boolean;
+  /** Existing Frail and Dexterity, already reflected in the hand's displayed Block. */
+  frail?: boolean;
+  dexterityNow?: number;
   /** Takes 50% less from enemy attacks? (Intangible etc. — not modelled beyond this flag.) */
   intangible: boolean;
   /**
@@ -1801,7 +1804,17 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // CARD_CONDITIONS, Expect a Fight: its Block per point of Strength gained earlier in this line (Unmovable doubles it too
     // on the turn's first Block card).
     if ((card.perStrengthBlock ?? 0) > 0 && next.strength !== 0) shown = Math.max(0, shown + (card.perStrengthBlock ?? 0) * next.strength * (unmovableDoubles ? 2 : 1));
-    const block = Math.max(0, shown + (card.type === "Potion" ? 0 : next.tempDex));
+    // 1LMBFGSMCWKU F48 T3/T6, silent-0089/0091: round after adding new Dexterity under Frail.
+    // Keep the displayed Block intact; only the change from this line's new Dexterity is added.
+    let dexBlock = card.type === "Potion" ? 0 : next.tempDex;
+    if (player.frail && dexBlock !== 0) {
+      const raw = (card.blockBase ?? 0) + (player.dexterityNow ?? 0);
+      // Use the observed base only when it reproduces the displayed value. Otherwise use the
+      // smallest integer compatible with that value, without inventing a hidden card modifier.
+      const pre = card.blockBase !== undefined && Math.floor(Math.max(0, raw) * 0.75) === card.block ? raw : Math.ceil(card.block / 0.75);
+      dexBlock = Math.floor(Math.max(0, pre + dexBlock) * 0.75) - card.block;
+    }
+    const block = Math.max(0, shown + dexBlock);
     gainBlock(next, block * (next.shadowmeld && card.type !== "Potion" ? 2 : 1), player);
   }
   // 10GPK5XGHCK3 F42 T2/T7, silent-0075: only later card gains, not Block already held.
