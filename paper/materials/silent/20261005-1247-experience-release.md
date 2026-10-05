@@ -8,3 +8,7 @@
 - 自测源tsc0、167文件1961例，合后tsc0、168文件1964例；首次额外CHARACTER=silent导致41文件158例环境失配，回退保留刷新后恢复源自测环境，完整重跑一次通过，未改代码，全部失败历史保留。
 - 本轮独立完整外部检查归fix-batch 20261005-121301：固定live 103fd5ff1d7e592a6ab1b1817e1188b5747fba9c，树277d9eb82a6321ddcf5458dc7ccd6f6bbbf3e2bd，tsc/vitest exit0，219文件2772通过/2跳过，总2774，开始12:36:59、耗时432.33秒，日志`ops/codex-ops/learner/20261005-121301-fix-batch.fallback-277d9eb82a6321ddcf5458dc7ccd6f6bbbf3e2bd.checks.log`。该树包含本经验源，main代码/知识与此固定树相同，发布仅记录变化，不重复自测；经验独立完整检查事件尚未到达，按后续事件归档。
 - 无Dai待定事项，不改配置或停对局，不处理未到达批次。论文数据随后刷新，本轮仅登记学习者的已完成产出。
+
+## 经验批次独立完整补测完成
+
+2026-10-05 12:55 CST核对12:54调度器事件：20261005-121301-experience-update完整外部tsc/vitest exit0，固定live `a6900b81adb92a0af2a9a1e9d1b95d853a3cd377`、树`cb62e5d7f1c0611e2d3dfcb787bead853fab90ca`，树及live祖先成立。219文件2772通过、2跳过（总2774），开始12:46:13、耗时503.28秒；日志`ops/codex-ops/learner/20261005-121301-experience-update.fallback-cb62e5d7f1c0611e2d3dfcb787bead853fab90ca.checks.log`。上节“经验独立完整检查事件尚未到达”的历史保留，本批补测至此完成；与修复批次结果分别归档，不重复上线、shipped登记或自测。
