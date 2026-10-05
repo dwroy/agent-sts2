@@ -59,3 +59,5 @@
 - 2026-10-06 05:02 04:59经验32完整补测事件后接续：report已结束；固定策略源307c538c仍非live祖先，当前live HEAD b8a0ee007692225458641a3d58f1f947cd543548。nice -n 19 python3 /tmp/sts2-0459-live.py非阻塞取锁busy/exit75，无等待/合入/合后测试/策略版本/0148 shipped；后续fix批次及当前刷新原样保留，沿原交接待占锁批次完成事件续办，未重复派manual。经验32完整外部通过不借作本策略检查。
 
 - 2026-10-06 05:13 05:10工具fix-done后接续：本批工具修复已独立上线并同步main f77dc7473044d9a36d758c8654f6ed4c6bb26c39，原固定策略307c538c未带入。nice -n 19 python3 /tmp/sts2-0510-live.py非阻塞取锁busy/exit75，外部完整补测仍在运行；无等待/合入/合后策略测试/S1.strategy5/0148 shipped，待占锁批次learner-checks完成事件继续原交接，不重复发manual。
+
+- 2026-10-06 05:31 原04:41/04:48兜底已完成：源307c538c6e66110635a852093aeba30b20212243→实际合入d2febb8fef4387fb0fb035f3d525737dbd8fe583→固定发布21cd1ef1bb45628318f38176deb4fefb129a4223/树aa98e6e9fab2310cb2b9e8db98d39f6e1e4d1e59，合后tsc0/190文件2094例，唯一S1.strategy5；main同步d2dd403b66b9b2e16584740c1632d5f9c026e247，CLI/by=ops仅0148 shipped、其余关联不重置。原未合/锁忙为当时状态，全部历史保留；完整外部请求另记，详情paper/materials/silent/20261006-0525-strategy5-release.md。
