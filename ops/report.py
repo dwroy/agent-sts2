@@ -431,6 +431,15 @@ def refresh_knowledge(character=None) -> None:
             log.flush()
 
 
+def refresh_costs() -> None:
+    """Paper accounting is independent of the next run's knowledge refresh and never waits for it."""
+    import subprocess
+    with open(os.path.join(ROOT, "ops", "cost-refresh.log"), "a") as log:
+        subprocess.Popen(["nice", "-n", "19", "python3", os.path.join(LIVE, "ops", "refresh-costs.py"),
+                          "--root", ROOT, "--code-root", LIVE],
+                         stdout=log, stderr=log, start_new_session=True)
+
+
 if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]:
         selftest()
@@ -438,5 +447,9 @@ if __name__ == "__main__":
     run_char = main()
     try:
         refresh_knowledge(run_char)
+    except Exception:
+        pass
+    try:
+        refresh_costs()
     except Exception:
         pass

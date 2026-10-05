@@ -6,7 +6,7 @@ import { codexChildEnv, engineBinary, learnerCodexHome } from "../learner/lib/en
 import { sampleQuota } from "./subscription-usage.js";
 
 const root = process.env["CODEX_OPS_ROOT"] || PROJECT_ROOT;
-sampleQuota(join(root, "logs/subscription-usage-snapshots.jsonl"), async () => {
+sampleQuota(join(root, "logs/codex-usage.jsonl"), async () => {
   const bin = engineBinary("codex", process.env);
   if (!bin) throw new Error("codex_unavailable");
   return readCodexUsage({ bin, home: learnerCodexHome(process.env), env: codexChildEnv(process.env, bin),
