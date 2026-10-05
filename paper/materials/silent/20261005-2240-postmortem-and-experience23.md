@@ -11,3 +11,5 @@ fix-done 与固定成本最终树 learner-checks 均重复确认已在22:20轮�
 经验批次20261005-220458（学习者220459）源 0071cc6a86f7674b91439d13ee99e5c117dc3f34 已提交，纯experience.json变更；初版及最终源固定沙箱tsc0、177文件2012例exit0，数据纠正后复测一次均通过。新增2/更新10/退役0，active88→90、48407字；A8/A9各81项39570字而实测样本0，240片配对中位+262字、最大6466→7278；旧29局重算与SADL3CGYTGSR A7来源保持。学习者刷新7bea7d99已保留，合入预检只在decision-log冲突停下，未实际merge/合后测试/版本/shipped。当前report.py刷新仍在运行，运维先归档复盘和必要论文数据，随后在允许合入时保留双方记录兜底；未提前登记shipped或宣称合后通过。
 
 本轮按要求运行 paper_dataset.py --no-raw（nice19），执行日志 /tmp/sts2-2240-paper-dataset.log，结果另追加。学习者回报、原始事件及handoff路径按调度器消息保留；在线知识刷新、其他工作区修改和原TMPDIR/Inferno失败历史不覆盖，对局照常。
+
+- 2026-10-05 22:49 论文数据刷新完成：`nice -n 19 python3 ops/paper_dataset.py --no-raw` exit0，切点2026-10-05T14:42:50.193Z，五项一致性通过、决策计数差异空、key scan CLEAN；行数{"commits.csv": 2519, "decisions_by_label.csv": 17268, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 517}。只提交本轮生成表和自身记录，组件成本表按已上线分层同步刷新，不重建知识；经验.23的合后沙箱检查在另一个有限命令执行，结果随后追加。
