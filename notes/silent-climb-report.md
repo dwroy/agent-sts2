@@ -413,3 +413,114 @@ silent,3,1,1,1,0,48,48,10GPK5XGHCK3,10GPK5XGHCK3,2026-10-04T23:42:02+00:00,2026-
 ```
 
 items_found按first_run进阶归属，items_shipped按登记之后下一场已结束局归属；与本级期间新增8项、正式上线5个版本分别是不同口径。0076的来源结构字段待更正说明及后续复盘的登记时间保留，原始账本和生成行不手改。
+
+## A4升级小结（2026-10-05 11:47 CST；A5升级事件11:43送达）
+
+统计静默猎手run-config解析target_ascension=4的四局，窗口为2026-10-05 08:44:02.649—11:36:00.474 CST。A5首局ZE8F192FKX24于11:39:22.274解析target_ascension=5，代码452f7bc+dirty、经验2026-10-05.12；配置保持climb，由胜局自动升阶。
+
+| 口径 | 胜 | 负 | 平均终层 |
+|---|---:|---:|---:|
+| 第一次尝试（每局首线，判死读档按失败计） | 1 | 3 | 40.50 |
+| 最终结果（每局一次） | 1 | 3 | 40.50 |
+| 有SL重打的两局最终结果 | 0 | 2 | 38.50 |
+| SL后各次重打（8次，含判死截停） | 0 | 8 | 40.88 |
+
+| 局号 | 最终结果及终层 | 成功读档重打 | 日志记录的终局战斗 | 起始经验 |
+|---|---|---:|---|---|
+| 1NZ8FE5F34R9 | 负，F29 | 3 | 残杀千足虫 | .8 |
+| F9PP859XZ3RJ | 负，F37 | 0 | 虔诚雕刻师 | .9 |
+| 9YBKCNBFP0X5 | 负，F48 | 5 | 女王／火炬头聚合体 | .9 |
+| 1LMBFGSMCWKU | 胜，F48 | 0 | — | .12 |
+
+8次重打由sl-attempts的predicted_death及reload.ok=true核对：1NZ的前三次失败后读档，9Y的前五次失败后读档。SL后的8次尝试中6次判死截停、2次实际死亡，没有SL后胜局。四局均有SL跟踪记录，记录存在不等于读档。三场终局失败各一种，按death_fight只能列上述战斗，不能据此提出未经学习者证据支持的机制或打法死因。
+
+胜局1LMBFGSMCWKU为第一次尝试胜，F17/F33/F48均attempt=1、result=won，无predicted_death或重打。首条决策10:57:55.584至11:36:00.474用时38分4.890秒；配置10:57:29.409至结束38分31.065秒。下一局A5已确认开打。
+
+### 完整评估
+
+`bash ops/codex-ops-do.sh eval-metrics silent 4`沙箱外exit0，实际执行eval/metrics.py --character silent --ascension 4 --group-by ascension --md，原始快照[a4-metrics-20261005-114327.ng67TM.md](../paper/materials/silent/a4-metrics-20261005-114327.ng67TM.md)。以下原样收录，保留小样本区间和缺失值：
+
+| 指标 | A4 |
+|---|---|
+| 局数 | 4 * |
+| 终层 | 40.5（中位 42.5；CI 25.8–55.2；n=4） * |
+| 过一幕 boss | 100%（4/4；CI 51–100%） * |
+| 过二幕 boss | 75%（3/4；CI 30–95%） * |
+| 胜局 | 25%（1/4；CI 5–70%） * |
+| 非 boss 战喝药 / 10 层 | 2.13（中位 2.18；CI 0.63–3.63；n=4） * |
+| 进一幕 boss 带药（瓶） | 1.50（中位 2.00；CI 0.00–3.09；n=4） * |
+| 进二幕 boss 带药（瓶） | 1.00（中位 1.00；CI 0.00–3.48；n=3） * |
+| 进三幕 boss 带药（瓶） | 2.00（中位 2.00；CI 2.00–2.00；n=2） * |
+| 死时手里的药（瓶，输的局） | 0.00（中位 0.00；CI 0.00–0.00；n=3） * |
+| 一幕 boss 有力量来源 | 0%（0/4；CI 0–49%） *；牌 0 / 遗物 0 / 开场有力量 0 |
+| 一幕精英进场血量 < 78% 次数 / 局 | 0.25（中位 0.00；CI 0.00–1.05；n=4） *；占一幕精英战 1/5 |
+| 二幕第一个休息点前死亡（占进二幕的局） | 0%（0/4；CI 0–49%） * |
+| 大脑调用 / 局 | 39.5（中位 41.0；CI 26.4–52.6；n=4） * |
+| 输入 token / 局（千） | 2936（中位 3086；CI 1760–4113；n=4） * |
+| 缓存命中 token / 局（千） | 200（中位 191；CI 0–484；n=4） * |
+| 输出 token / 局（千） | 11.4（中位 11.9；CI 9.0–13.9；n=4） * |
+| 缓存命中率 | 7% |
+| 大脑耗时 / 局（分钟） | 11.2（中位 11.8；CI 8.2–14.2；n=4） * |
+| 每次调用平均耗时（秒） | 17.0 |
+|   codex：调用 / 局 | 39.5（中位 41.0；CI 26.4–52.6；n=4） * |
+|   codex：输入 / 命中 / 输出（千 token / 局） | 2936 / 200 / 11.4（n=4） |
+|   codex：耗时 / 局（分钟） | 11.2（中位 11.8；CI 8.2–14.2；n=4） * |
+| SL：有 SL 记录的局 | 4/4 |
+| SL：重打次数 / 局 | 2.00（中位 1.50；CI 0.00–5.90；n=4） * |
+| 第一次尝试：终层 | 40.5（中位 42.5；CI 25.8–55.2；n=4） * |
+| 第一次尝试：过一幕 boss | 100%（4/4；CI 51–100%） * |
+| 第一次尝试：过二幕 boss | 75%（3/4；CI 30–95%） * |
+| 第一次尝试：胜局 | 25%（1/4；CI 5–70%） * |
+| 校准：推演本回合掉血 ±2 内（回合） | 94%（263/279 回合） |
+| 校准：路线投影 2–3 层误差（投影 − 实际） | 中位 -0.5，中位 \|误差\| 9.2（n=30） |
+| 校准：boss 时钟 实打/估值 中位 | — |
+
+* 局数 < 10（或该指标的 n < 10）：样本不足，区间只作参考。
+
+校准掉血±2内263/279回合（94%），路线投影绝对误差中位9.2（n=30）；boss时钟无有效校准值，保持“—”。四局样本不足，不用多次上线和单场胜利推断某项改动的效果。
+
+### 学习者产出和实际上线
+
+在A4窗口内，学习者新增15项账本silent-0074—0088，来自10GPK5XGHCK3、1NZ8FE5F34R9、F9PP859XZ3RJ、9YBKCNBFP0X5复盘及相应任务；胜局1LMBFGSMCWKU的正式复盘尚未在本轮收到。按11:45:05账本查询快照的first_run/asc字段，15项中A4归属7项、A3归属3项、A0归属5项，登记发生在A4期间不等于首次在A4遇到。原始查询及分组归档[a4-learning-snapshot-20261005-114505.json](../paper/materials/silent/a4-learning-snapshot-20261005-114505.json)；本轮不提交其他任务正在写的账本。
+
+`python3 learner/ledger.py find --character silent --asc 4 --json`快照引用：silent-0078（预判模型，S1.fix11/shipped）、0079（SL换线血价，曾S1.exp11/shipped，当前新批proposed）、0080（预判机制，S1.exp11/shipped）、0082（涂毒模型，proposed）、0085（苦无机制，S1.exp12/shipped）、0086（毒雾与头骨后续推演缺口，observed）、0087（该组合实测机制，当前proposed）。0081计算下注最早来源T082DRCUHRRD/A0；0083/0084和当前字段中0088也不归A4。后续学习者回溯和字段更正保留在账本，不手改旧条目或论文行。
+
+| 版本 | eval登记提交的时间（CST）及提交 | 来源及范围 |
+|---|---|---|
+| S1.exp10 | 08:56:10，002d835f | 经验.9，ZZMYZ5UBCG72 A2及此前静默证据；在A4窗口正式上线 |
+| S1.fix9 | 09:03:09，3fc7a22b | 暴露模型silent-0066及跨SL统计silent-0040；来源ZZMY/Y6GM、T082/C48 |
+| S1.fix10 | 09:24:19，f3eacafe | 融入暗影silent-0075/0077、腐蚀波silent-0074/0076；10G A3及1HC A0证据，版本登记09:28 |
+| S1.exp11 | 10:20:14，1b4c4c64 | 经验.9直接到.11，包含.10；1NZ A4及历史静默局；正式发布536e37d9于10:20:15 |
+| S1.fix11 | 10:30:41，20c01c06 | 预判模型silent-0078/0080及五项学习流程工具；正式登记发布cf11fab8于10:34:30 |
+| S1.exp12 | 10:50:04，5f76a9dd | 经验.12，F9 A4及历史静默局；正式发布2a946ca5于10:50:05 |
+
+以上是已保留在live的正式版本历史。计算下注3cd9fc6c、涂毒e3e7068b及动作说明ed86d537在后续批次合后测试失败并回退，尚未在本轮收到新上线完成事件；0081/0082保持proposed，不记S1.fix12。胜局开局实际代码86b24a1f+dirty是在撤回模型曾临时合入的时间点启动，不能仅用A5开局记录的452f7bc7或正式版本表代表其全部内存代码；A5起始才明确为回退后的452f7bc+dirty。代码下一进程生效，知识前缀可重读，逐次实际输入以brain日志为准，不把临时合入或胜利当作机制修复已正式上线。
+
+按要求执行`python3 learner/ledger.py find --character silent --status shipped --json`。11:43初次查询为71项，11:45:05全量折叠快照为63项；新经验批次追加proposed导致最后状态变化，历史shipped仍保留，两次数值均不是累计已上线经验数。下面引用11:45:05最后状态分组（63项），与上述正式上线历史分别报告：
+
+- S1.exp10：silent-0013、silent-0018、silent-0039、silent-0067、silent-0068、silent-0069、silent-0070、silent-0071、silent-0072、silent-0073。
+- S1.exp11：silent-0007、silent-0027、silent-0028、silent-0037、silent-0046、silent-0048、silent-0063、silent-0064、silent-0076、silent-0077、silent-0080。
+- S1.exp12：silent-0010、silent-0030、silent-0083、silent-0084、silent-0085。
+- S1.exp5：silent-0034、silent-0035、silent-0042、silent-0043、silent-0044、silent-0047。
+- S1.exp6：silent-0045、silent-0049。
+- S1.exp7：silent-0036、silent-0054、silent-0055。
+- S1.exp8：silent-0024、silent-0025、silent-0050、silent-0058、silent-0059、silent-0060。
+- S1.exp9：silent-0017、silent-0057、silent-0062、silent-0065。
+- S1.fix10：silent-0074、silent-0075。
+- S1.fix11：silent-0078。
+- S1.fix3：silent-0008、silent-0022、silent-0026、silent-0029、silent-0032、silent-0033、silent-0041。
+- S1.fix5：silent-0051、silent-0052。
+- S1.fix6：silent-0056。
+- S1.fix7：silent-0061。
+- S1.fix9：silent-0040、silent-0066。
+
+### 学习曲线A4原行
+
+本轮`nice -n 19 python3 ops/paper_dataset.py --no-raw`exit0，日志切点2026-10-05T03:43:52.938Z；五项一致性检查通过、决策计数差异空、key scan CLEAN。学习曲线是生成工具读取日志/账本时的原始结果，其账本读取时间可晚于日志切点及上述查询快照。本轮不手改原行：
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,4,4,1,1,0,40.5,40.5,1NZ8FE5F34R9,1LMBFGSMCWKU,2026-10-05T00:44:02+00:00,2026-10-05T03:36:00+00:00,7,0,41,silent-0007 silent-0010 silent-0013 silent-0017 silent-0018 silent-0024 silent-0025 silent-0027 silent-0028 silent-0030 silent-0037 silent-0039 silent-0040 silent-0046 silent-0048 silent-0050 silent-0057 silent-0058 silent-0059 silent-0060 silent-0061 silent-0062 silent-0063 silent-0064 silent-0065 silent-0066 silent-0067 silent-0068 silent-0069 silent-0070 silent-0071 silent-0072 silent-0073 silent-0074 silent-0075 silent-0076 silent-0077 silent-0080 silent-0083 silent-0084 silent-0085,3,0
+```
+
+items_found按first_run进阶归属，items_shipped按登记之后下一场已结束局归属，重复按账本证据及上线历史统计；与本级期间新增15项、上述六个正式版本是不同口径。
