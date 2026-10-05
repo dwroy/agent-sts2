@@ -6318,3 +6318,237 @@ A7全部非空血档如下；A0—A6旧格逐行不变，完整零格、净损�
 240片配对中位+142.0字、单片最大增895，最大5694→5997，分布中位3094.0→3244.0。active97→100，高36中30低31→高37中31低32，总47357→49929字；A8/A9各88条43447→91条45688字、实战0。逐局/逐轮细节压为条目中的典型一句，完整数字留本节与audit/机制事实。
 
 本节SL口径补记：上文“六场含女王与旧重打病例”未指定样本集，撤回该句的六场数字。正式统计为新增三个boss各首试获胜、无新增多次重打；全静默真重打30场131次10赢，女王旧两场12次0赢，新局女王首胜不计为SL转胜。
+
+## 2026-10-06 静默猎手 第三十次增量：1 局 A8（version 2026-10-06.5，分支 exp-silent，0dba4029）
+
+### 来源
+
+- notes/lessons.md:4868及唯一空局报notes/run-1006-0242-LLYSRQQ35AVW.md；标题静默猎手、runs.character=SILENT、A8/F48、victory=true，未跳过。末尾未见本局勘误；last_seen从run-1006文件名取2026-10-06。
+- 截至2026-10-05T18:42:21.464Z共37静默完局，A0至A8各7/3/2/1/4/1/11/7/1局、各1胜；全部有本角色复盘，无只进数字局，后续A9进行中局排除。旧641房28实死+新25房0死=666房28实死。
+- 开工exp-silent干净，git merge --no-edit main无冲突。先读README、最新STATE、decision-log末尾、学习协议；铁甲首次构建/最后两节只取方法格式，不借数字或知识，实际统计基线为静默第二十八/二十九节。自行完成，无下级agent。
+- 全37局重新按run id一次rg分流decisions/brain/run-plans/sl-attempts；states/deepseek按时间二分seek流式抽、再核state.run.character_id=SILENT和run_id。本局651决策/679真状态/54大脑全Codex/9 run-plan/3 SL记录，DeepSeek时间窗0。states首末字节7243728952—7267146170；首末决策18:01:16.880Z—18:42:21.464Z。三个boss都是attempt1/won、reload0。
+- 七数组旧36局逐行完全相同：fights641→666、nexts563→580、rests276→291、cards13998→14277、ends3777→3861、attempts213→216、growth925→925；旧分阶血档/源节点转移/回血/SL重算一致，无旧数字差异。rests明细是动作数；首次帐篷一火两动作，本局火堆数按run/floor去重为9，不把15动作当15火。
+- 口径沿上一节：净损=首战斗帧HP−最后结算HP，负值保留，实死单计；开战回复/复活、奖励回血和累计承伤另算。SL同房最终尝试计一房，判死读档不作实死。Monster只算走廊，Unknown问号战另算；血档<25%、[25%,40%)、[40%,60%)、≥60%。REST/SHOP/普通EVENT按源节点入场血关联下一战、Ancient排除，多源节点可指同一战；回血子集按战去重。胜局结算GAME_OVER的0血不当阵亡，最后战后REWARD/EVENT实60血。
+- 首次帐篷使已选HEAL后剩SMITH变成option_index=0，沿用旧“索引0=回血”会将F24/28升级错算成回血；本次临时汇总脚本按expect.option.id的HEAL/SMITH识别，旧36局数字仍完全一致。F32满血HEAL合法但实回0；两种顺序均实测，不推重复同一选项。
+- 历史机制回查全部37个本角色复盘与逐帧日志：帐篷此前36局持有帧0；萎靡升级仅KAY522KT5NXR(A0)、VN7RQJMJEFMX(A6)、本局(A8)实际施放，旧两局零X，新X0/2/3。科学五局四模板，格挡抽3模板2局，其余各1；出牌调用总数不直接作为机制支持局数。所有原证据/反例保留，不把未逐帧验证的其他持有/施放局自动扩入evidence。
+- 版本：2026-10-06.4→2026-10-06.5；新增1、更新24（24条加证据，路线/休息兼重算数字；只改数字0）、退役0。active100→101，49929→52601字，高37中31低32→高39中29低33；A8/A9各91条45688→95条50169字。A8仅1完局，A9完局0，不据文字适用条数声称已实战验证。开工未达55000，无预算合并/退役/压缩、不改60000测试预算。
+- 三条general:route/rest/deck有首次A8数据，asc由[0,7]改[8,20]，旧低阶数字注明历史背景、各阶不并分母；其他低阶统计仍封顶A7。机制[0,20]只指实见公式/条件，升级萎靡非零X、帐篷仍各1独立A8证据。potion:*与general:potion完全不动，旧药/喝/瓶/精灵分句逐字保留，新证据只写非药水部分。
+- 全部临时脚本、原始子集、历史回查、基线逐行校验、切片/测试/合入与账本操作保留在learner/runs/20261006-025912-experience-update，nice19、单进程抽取，无boss模拟池。
+
+### 对照数据检查的主题
+
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 角色/旧基线/进阶 | 37静默局666房28实死；旧36局七数组及所有分阶汇总逐行一致；A8一局25房0死 | 不混角色、进行中A9或低阶死亡率 |
+| 路线与高血房间 | A8一幕Monster5/精英3/boss1、二幕6/2/1、三幕Monster5/Unknown1/boss1，各1局且均≥60%血，损中位3/5/20、4.5/2/19、0/17/10 | 全存活不推出安全线，问号17不混Monster中位0 |
+| 低血/不同节点 | A8战斗入场<60%均0样本；一二幕中血REST各2节点，后战损中位11/7；三幕中血SHOP1节点后战损5；旧VLV4血店后零损、2PV27血问号零损、3K回血后走廊死 | 各进阶分开，敌人/构筑混杂，无同条件改线实战因果 |
+| 休息/帐篷/购价 | 9火8回血7锻造、15动作，实回111；177金帐篷后6火回69/锻6，另36金步法；F31加牌回11、F39加牌回20独立 | 购入后双选已兑现，不证明177金最佳购法，满血休息回0 |
+| 投影/实况 | F18投影F24/F28/F32/boss35/31/27/48，实38/41/70/70；后购帐篷和额外回血改变输入 | 不能将全部差额归模型或改线因果；F28模拟58血非实70同条件 |
+| 构筑/启动 | 终41张、双爆发双毒药，F11变1打击、无商店删牌；女王触媒T4/毒雾T5，步法未建、无永久正力敏 | 取得/计划/已建/已结算分账，不由41张判构筑失误 |
+| 帐篷两种顺序 | F24/28 HEAL→SMITH，F32/40/43/47 SMITH→HEAL；各一次后proceed | 一局六次不算六支持局，不外推重复/其他动作 |
+| 萎靡升级与敌成长 | X0/2/3各减1/3/4力并加1/3/4弱；F33 18→6、7挡盖住；女王−4/−3/−2/−1力，音叉独立7挡 | 永久减力不关闭成长，旧原版修复不等于升级模型已覆盖 |
+| 毒爆发/触媒/逐敌截断 | F29普通9毒三触发各24、余6，整轮146；女王T6即刻59+99=158、回末再90，合248；T7毒31只扣余12 | 即时与回末分别计，攻击未执行不算承伤 |
+| 毒雾与实际施毒 | 女王T5才建3、触媒2使每次结算减3；T6两敌毒10/22 | 不套单触发净增2，不补算尚未建立或终战后的收益 |
+| 敏捷/科学/脆弱/余像 | T1临时2敏，科学8+2=10挡/抽3，次轮归零；T3蜃景35毒→26牌挡、余像1使7→34，防御3+1 | 科学模板分开，卡牌与被动挡分账，女王无常驻步法 |
+| 尖啸/制品/构装成长 | F38 T2拳击−3→−11、1×2→0；两方柱制品各消1但力2/9攻击不变；T3/T4力4/6、末44来袭 | 去制品不等于减力成功，末爆发先终战、不推固定目标序 |
+| 音叉/荆棘 | 女王T2萎靡触发音叉9→10补7，69→66；单击反3解释32→35/108→111；T7先毒死 | 不将7归萎靡、3归毒，未发生攻击/反伤不预支 |
+| 女王/帝王蟹/千足虫 | 女王7轮630/损10，第四首胜；帝王蟹先碾碎爪、火箭后96挡8力、5轮428/损19；千足虫1轮146/损0无接续 | 真实顺序和跨局胜负分开，没有同盘顺序对照 |
+| 仪式兽/异鸟 | 新兽6轮262/损20，第八局七活一敗、SL仍2场8次1赢；异鸟3轮90/损13、第六局存活 | 新首试不算SL转胜，不以低损定安全线 |
+| SL天然对照 | 本局三boss首试赢/0reload；全静默多次重打仍30场131次10赢，A8无多次场 | 无本局赢线/输线换法对照；旧抽序/explore范围保留，不归好运或单项因果 |
+| 大脑/执行 | 54大脑全Codex、DeepSeek0；Jev回答最优89/90、女王10/11；计划删打击未商店删、女王未建步法 | 回答字段不是完整实执行率；没找到引用经验id致错原话 |
+
+A8所有非空血档如下，房间作死亡率分母、独立局另列。A0—A7表格与上一节完全相同，全部零格/案例留audit.json；A9完局0。不从一局内多房给总体风险作置信区间。
+
+| 进阶 | 幕 | 房型 | 血档 | n/局 | 死/率 | 赢净损中位 |
+| --- | --- | --- | --- | --- | --- | --- |
+| A8 | 1 | Monster | ≥60% | 5/1 | 0/0% | 3 |
+| A8 | 1 | Elite | ≥60% | 3/1 | 0/0% | 5 |
+| A8 | 1 | Boss | ≥60% | 1/1 | 0/0% | 20 |
+| A8 | 2 | Monster | ≥60% | 6/1 | 0/0% | 4.5 |
+| A8 | 2 | Elite | ≥60% | 2/1 | 0/0% | 2.0 |
+| A8 | 2 | Boss | ≥60% | 1/1 | 0/0% | 19 |
+| A8 | 3 | Monster | ≥60% | 5/1 | 0/0% | 0 |
+| A8 | 3 | Unknown | ≥60% | 1/1 | 0/0% | 17 |
+| A8 | 3 | Boss | ≥60% | 1/1 | 0/0% | 10 |
+
+REST/SHOP/EVENT按源节点入场血档关联下一战，多源节点可指同一战，死亡率只为节点观察。
+
+| 幕 | 源界面 | 血档 | 节点/不同战 | 死/率 | 赢净损中位 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | REST | 40–60% | 2/2 | 0/0% | 11.0 |
+| 1 | REST | ≥60% | 1/1 | 0/0% | 5 |
+| 1 | SHOP | ≥60% | 1/1 | 0/0% | 13 |
+| 1 | EVENT | ≥60% | 2/2 | 0/0% | 4.0 |
+| 2 | REST | 40–60% | 2/2 | 0/0% | 7.0 |
+| 2 | REST | ≥60% | 1/1 | 0/0% | 19 |
+| 2 | SHOP | ≥60% | 1/1 | 0/0% | 2 |
+| 2 | EVENT | ≥60% | 1/1 | 0/0% | 19 |
+| 3 | REST | ≥60% | 3/2 | 0/0% | 5 |
+| 3 | SHOP | 40–60% | 1/1 | 0/0% | 5 |
+| 3 | SHOP | ≥60% | 1/1 | 0/0% | 5 |
+| 3 | EVENT | ≥60% | 1/1 | 0/0% | 0 |
+
+| 进阶 | 局 | 火堆/回血/锻造 | 回血后不同战/死/赢损中位 | SL多次场/尝试/赢 |
+| --- | --- | --- | --- | --- |
+| A0 | 7 | 55/25/30 | 23/4/27 | 8/33/4 |
+| A1 | 3 | 21/9/12 | 8/2/35.0 | 3/14/1 |
+| A2 | 2 | 14/10/4 | 10/1/11 | 1/6/0 |
+| A3 | 1 | 10/8/2 | 8/0/17.5 | 0/0/0 |
+| A4 | 4 | 30/22/8 | 21/2/14 | 2/10/0 |
+| A5 | 1 | 9/6/3 | 6/0/20.0 | 1/2/1 |
+| A6 | 11 | 81/52/29 | 46/4/12.0 | 8/35/3 |
+| A7 | 7 | 56/31/25 | 27/5/16.0 | 7/31/1 |
+| A8 | 1 | 9/8/7 | 7/0/10 | 0/0/0 |
+
+37局全部多次重打原行重新核验，下面按同一场去重列30场；一次首胜从表排除。抽序时点、后段行为及explore/sl_explore仍按各原复盘和analysis.json控制，判死后未执行结算不计伤。
+
+| 局号 | 进阶/层 | 尝试数 | 赢的尝试 |
+| --- | --- | --- | --- |
+| C48LLXBGKXQ9 | A0/F17 | 2 | 2 |
+| C48LLXBGKXQ9 | A0/F33 | 6 | 无 |
+| Y6GM2CHWJBEY | A0/F17 | 6 | 无 |
+| LRN0HPZ0FZS1 | A0/F17 | 2 | 2 |
+| T082DRCUHRRD | A0/F48 | 6 | 无 |
+| 1HC609GTLGN3 | A0/F17 | 6 | 6 |
+| R0HEV5E3QT6G | A0/F48 | 3 | 无 |
+| KAY522KT5NXR | A0/F48 | 2 | 2 |
+| E6AVMMVCSRPC | A1/F17 | 6 | 无 |
+| XYYQYBRM2A01 | A1/F33 | 6 | 无 |
+| K3676LU8B0UH | A1/F48 | 2 | 2 |
+| CSBR5CRDWQNB | A2/F33 | 6 | 无 |
+| 1NZ8FE5F34R9 | A4/F29 | 4 | 无 |
+| 9YBKCNBFP0X5 | A4/F48 | 6 | 无 |
+| ZE8F192FKX24 | A5/F48 | 2 | 2 |
+| UACFSW4VDDLD | A6/F33 | 2 | 2 |
+| UACFSW4VDDLD | A6/F39 | 3 | 3 |
+| UACFSW4VDDLD | A6/F48 | 6 | 无 |
+| 75X1BARMNZ03 | A6/F20 | 4 | 无 |
+| ARKQLHG6RS4W | A6/F33 | 6 | 无 |
+| 2L1BNN9ZJEFU | A6/F48 | 6 | 无 |
+| 53FLQ68CETW0 | A6/F48 | 6 | 无 |
+| ENKYQMS9W4ZD | A6/F33 | 2 | 2 |
+| SADL3CGYTGSR | A7/F48 | 6 | 无 |
+| Z6CFLDR3N4SB | A7/F48 | 2 | 无 |
+| 3KME36ADUE4U | A7/F27 | 3 | 无 |
+| VLV17NUSFS61 | A7/F37 | 2 | 2 |
+| VLV17NUSFS61 | A7/F48 | 6 | 无 |
+| 9YT51CK8RC39 | A7/F17 | 6 | 无 |
+| 2PVLGRBGUX9S | A7/F48 | 6 | 无 |
+
+- 旧受控范围不变：C48LLXBGKXQ9 A0巨兽两次前22张相同、第二次在同盘改变抽牌/刀时点但后续多项不同；LRN0HPZ0FZS1 A0仪式兽二次T1先建毒雾、跨阈值窗口改变，非单因素整战；2PVLGRBGUX9S A7沙漏六败共同前15张、2至6次前38张，不把首战说成同38。新局无SL探索换线，三首胜不能补成这些病例的赢线。详尽旧对照和每次真实末帧仍在原静默小节及本次analysis，不增加新因果经验。
+
+### 经验库自己带偏或写了没被执行的地方
+
+- 54大脑全Codex/high，DeepSeek窗0；未找到直接引用经验id造成错误的原话。runs旧deepseek_calls/ds_*是沿用字段名，不当DeepSeek意见；不把此经验新版本倒记为本局胜因。
+- F32独立run-plan原话：“Remove Strikes first, replacing Defends carefully. Tiny Tent permits healing plus smithing; upgrade Footwork and the second Outbreak.”（先删打击、谨慎替换防御；帐篷允许回血加锻造，升级步法与第二爆发。）两升级/双选兑现，删打击仅F11变一张、无商店删牌；不能把删牌计划当已做，41张仍通关，不认定违反计划即失误。
+- F47计划原话：“Establish Accelerant, Fumes, Footwork, and Afterimage.”（建立触媒、毒雾、步法、余像。）女王实建触媒/毒雾/余像，步法未施；没有给这场补常驻敏捷或将四组件当全部启动。
+- F34原话“皮草大衣免战获资源；揭晓后优先标记精英，保留休息点。”F36雕刻师/F46失落与遗忘各1血，F37青蛙骑士/F38构装体正常高血、分别损17/21；标记免战不是全幕免战。
+- F48 T2所选chosen_order为女王优先而升级萎靡实际指聚合体；真实T6聚合体先死。focus/推演顺序不能替代真实施放目标，也不能把89/90回答最优当完整最优线执行率。
+
+### 机制推理
+
+| 机制 | 推理 | 证据（支持/反例局数、进阶） | 典型案例 | 进了哪个条目 |
+| --- | --- | --- | --- | --- |
+| 微型帐篷双选 | 同火两种动作各一次，回血按HP缺口截断；双选不是最优购法证明 | 1/0；A8:1局；支持LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F24 38→59再锻、F32锻后满血HEAL回0 | silent-miniature-tent-two-rest-options |
+| 萎靡X与持续成长 | 普通X/升级X+1分别施减力和虚弱；X2/3只本A8一局，减力不停止敌加力 | 9/0；A0:1局,A1:2局,A3:1局,A4:2局,A6:1局,A7:1局,A8:1局；支持KAY522KT5NXR,XYYQYBRM2A01,K3676LU8B0UH,10GPK5XGHCK3,F9PP859XZ3RJ,9YBKCNBFP0X5,VN7RQJMJEFMX,SADL3CGYTGSR,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F33 T3 X0令18→6、7挡覆盖；F48 X3令0→−4，后轮仍逐轮+1 | silent-malaise-x-debuff |
+| 尖啸临时减力/制品 | 升级减8普通减6可叠14，但各目标制品仅消层，不建临时减力 | 15/0；A0:3局,A1:2局,A2:1局,A3:1局,A5:1局,A6:4局,A7:2局,A8:1局；支持C48LLXBGKXQ9,LRN0HPZ0FZS1,KAY522KT5NXR,XYYQYBRM2A01,K3676LU8B0UH,ZZMYZ5UBCG72,10GPK5XGHCK3,ZE8F192FKX24,UACFSW4VDDLD,VN7RQJMJEFMX,75X1BARMNZ03,2L1BNN9ZJEFU,3KME36ADUE4U,4Y94N8RDPGPM,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F38 T2拳击−3→−11、两方柱仍2力/9攻击；F44 T3电球16→8→2 | silent-piercing-wail-temporary-strength |
+| 毒性爆发即时触发 | 逐敌先补毒再按触媒额外触发，按剩HP截断；即时与回末分别计 | 4/0；A0:1局,A2:1局,A3:1局,A8:1局；支持T082DRCUHRRD,CSBR5CRDWQNB,10GPK5XGHCK3,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T6即时59+99=158，再结算90、整轮248；F29各24 | silent-outbreak-immediate-poison |
+| 触媒额外次数 | 2层变三次，每次毒减1，输出由当时毒/剩血决定，非毒层乘三 | 10/0；A0:3局,A2:1局,A3:1局,A4:1局,A6:2局,A7:1局,A8:1局；支持T082DRCUHRRD,R0HEV5E3QT6G,KAY522KT5NXR,ZZMYZ5UBCG72,10GPK5XGHCK3,1NZ8FE5F34R9,ARKQLHG6RS4W,6EV5V6PJJS9D,SADL3CGYTGSR,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T6女王34+33+32=99、31+30+29=90 | silent-accelerant-triggers |
+| 毒雾逐轮补毒 | 3层只从建立后的玩家轮首补；触媒2使每次结算减3，不能套净增2 | 19/0；A0:4局,A1:2局,A2:2局,A4:4局,A5:1局,A6:4局,A7:1局,A8:1局；支持Y6GM2CHWJBEY,LRN0HPZ0FZS1,T082DRCUHRRD,R0HEV5E3QT6G,E6AVMMVCSRPC,K3676LU8B0UH,CSBR5CRDWQNB,ZZMYZ5UBCG72,1NZ8FE5F34R9,F9PP859XZ3RJ,9YBKCNBFP0X5,1LMBFGSMCWKU,ZE8F192FKX24,6EV5V6PJJS9D,2L1BNN9ZJEFU,53FLQ68CETW0,2SU6XN2AEJRD,VLV17NUSFS61,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T5建立、T6两敌10/22毒，配爆发终战 | silent-noxious-fumes-growth |
+| 施毒/结算截断 | 普通毒牌只建立层数；终战过量毒和未攻击不能计实际伤 | 15/0；A0:5局,A1:1局,A2:1局,A3:1局,A4:1局,A6:3局,A7:2局,A8:1局；支持Y6GM2CHWJBEY,LRN0HPZ0FZS1,T082DRCUHRRD,1HC609GTLGN3,KAY522KT5NXR,K3676LU8B0UH,ZZMYZ5UBCG72,10GPK5XGHCK3,1NZ8FE5F34R9,75X1BARMNZ03,ARKQLHG6RS4W,6EV5V6PJJS9D,2PVLGRBGUX9S,4Y94N8RDPGPM,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T3女王21→26毒、362血不变；T7仅扣余12 | silent-deadly-poison-application |
+| 步法常驻敏捷 | 每张后续牌挡兑现、已有挡不补；本局女王没建立 | 23/0；A0:5局,A1:1局,A3:1局,A4:4局,A5:1局,A6:5局,A7:5局,A8:1局；支持C48LLXBGKXQ9,T082DRCUHRRD,1HC609GTLGN3,R0HEV5E3QT6G,KAY522KT5NXR,K3676LU8B0UH,10GPK5XGHCK3,1NZ8FE5F34R9,F9PP859XZ3RJ,9YBKCNBFP0X5,1LMBFGSMCWKU,ZE8F192FKX24,UACFSW4VDDLD,2L1BNN9ZJEFU,53FLQ68CETW0,ENKYQMS9W4ZD,2SU6XN2AEJRD,3KME36ADUE4U,VLV17NUSFS61,9YT51CK8RC39,2PVLGRBGUX9S,4Y94N8RDPGPM,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F38防御7+余像1、挡1→9；F48不得预支步法 | silent-footwork-block |
+| 预判临时敏捷 | 仅当轮2敏捷给随后牌挡，次轮消失，不当常驻 | 6/0；A4:1局,A6:3局,A7:1局,A8:1局；支持1NZ8FE5F34R9,VN7RQJMJEFMX,75X1BARMNZ03,2L1BNN9ZJEFU,9YT51CK8RC39,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T1科学8+2=10、斗篷8，次轮无敏捷 | silent-anticipate-temporary-dexterity |
+| 定制科学 | 五局四模板；技能格挡抽3为2/0，其余各1/0，当前敏捷不变成永久2力2敏 | 5/0；A0:1局,A1:1局,A6:1局,A7:1局,A8:1局；支持VN7RQJMJEFMX,R0HEV5E3QT6G,K3676LU8B0UH,2PVLGRBGUX9S,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T1基础8+临时2=10挡、8→18，另抽3 | silent-mad-science-custom-strangle |
+| 蜃景毒量转挡 | 总毒35在脆弱下向下取整26，余像另1；毒不消耗 | 7/0；A0:1局,A2:2局,A4:1局,A5:1局,A6:1局,A8:1局；支持Y6GM2CHWJBEY,CSBR5CRDWQNB,ZZMYZ5UBCG72,F9PP859XZ3RJ,ZE8F192FKX24,ARKQLHG6RS4W,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T3 7→34、毒仍9/26 | silent-mirage-poison-card-block |
+| 脆弱逐牌折挡 | 卡牌挡按当前敏捷/专属增量后折减，被动独立 | 9/0；A0:1局,A2:2局,A4:1局,A6:2局,A7:2局,A8:1局；支持Y6GM2CHWJBEY,CSBR5CRDWQNB,ZZMYZ5UBCG72,1LMBFGSMCWKU,ARKQLHG6RS4W,6EV5V6PJJS9D,VLV17NUSFS61,4Y94N8RDPGPM,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T3蜃景26、防御3；音叉7/余像1完整 | silent-frail-card-block |
+| 余像逐施放挡 | 实际后续每次施放给1，能力建立不补自身，不能预支未来次数 | 10/0；A0:1局,A4:1局,A5:1局,A6:5局,A7:1局,A8:1局；支持LRN0HPZ0FZS1,9YBKCNBFP0X5,ZE8F192FKX24,ARKQLHG6RS4W,6EV5V6PJJS9D,2L1BNN9ZJEFU,53FLQ68CETW0,ENKYQMS9W4ZD,2PVLGRBGUX9S,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T3蜃景26另1；F38防御7另1 | silent-afterimage-per-card-block |
+| 音叉技能计数 | 技能计数9→10另7被动挡，与萎靡减益独立 | 4/0；A0:1局,A2:1局,A6:1局,A8:1局；支持T082DRCUHRRD,ZZMYZ5UBCG72,6EV5V6PJJS9D,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T2攻击13→10、音叉7，实损3 | silent-tuning-fork-skill-block |
+| 荆棘实际反伤 | 每次实际敌攻击反3，先毒杀的未来多段没有反伤 | 4/0；A0:2局,A7:1局,A8:1局；支持1HC609GTLGN3,R0HEV5E3QT6G,Z6CFLDR3N4SB,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T2/T4各另3；T7女王五击未发生 | silent-bronze-scales-per-hit-thorns |
+| 力量敏捷综合 | 力量逐段、敏捷逐卡；临时/永久/敌增长和卡牌/被动分账 | 37/0；A0:7局,A1:3局,A2:2局,A3:1局,A4:4局,A5:1局,A6:11局,A7:7局,A8:1局；支持C48LLXBGKXQ9,Y6GM2CHWJBEY,LRN0HPZ0FZS1,T082DRCUHRRD,1HC609GTLGN3,R0HEV5E3QT6G,KAY522KT5NXR,E6AVMMVCSRPC,XYYQYBRM2A01,K3676LU8B0UH,CSBR5CRDWQNB,ZZMYZ5UBCG72,10GPK5XGHCK3,1NZ8FE5F34R9,F9PP859XZ3RJ,9YBKCNBFP0X5,1LMBFGSMCWKU,ZE8F192FKX24,FH2HB2X17F2H,UACFSW4VDDLD,VN7RQJMJEFMX,75X1BARMNZ03,ARKQLHG6RS4W,6EV5V6PJJS9D,8CFMW9SAGFWQ,2L1BNN9ZJEFU,53FLQ68CETW0,ENKYQMS9W4ZD,2SU6XN2AEJRD,SADL3CGYTGSR,Z6CFLDR3N4SB,3KME36ADUE4U,VLV17NUSFS61,9YT51CK8RC39,2PVLGRBGUX9S,4Y94N8RDPGPM,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48负力逐轮恢复成长；F38方柱2/4/6力，末44来袭 | silent-strength-weak-observation |
+| 女王双敌窗口 | 爪牙死后主目标仍建力攻击，已兑现毒可先终战，无统一目标序因果 | 6/0；A2:1局,A4:2局,A7:2局,A8:1局；支持ZZMYZ5UBCG72,1LMBFGSMCWKU,9YBKCNBFP0X5,VLV17NUSFS61,4Y94N8RDPGPM,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F48 T6先聚合体、T7女王2力25攻击前毒杀12 | silent-queen-poison-main-target |
+| 构装制品与成长 | 各目标减益阻挡分列；方柱增力与已压制拳击独立 | 8/0；A0:3局,A4:1局,A6:2局,A7:1局,A8:1局；支持LRN0HPZ0FZS1,T082DRCUHRRD,R0HEV5E3QT6G,9YBKCNBFP0X5,6EV5V6PJJS9D,ENKYQMS9W4ZD,Z6CFLDR3N4SB,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F38尖啸只清方柱制品，T4爆发在44攻击前终战 | silent-construct-artifact-growth |
+| 帝王蟹先死后增益观察 | 先碾碎爪/后火箭的真窗口，96挡/8力只是本帧，不能外推统一公式或顺序 | 4/0；A0:1局,A2:1局,A6:1局,A8:1局；支持T082DRCUHRRD,CSBR5CRDWQNB,ARKQLHG6RS4W,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F33 T4火箭余40、96挡8力，T5毒杀 | silent-kaiser-crab-facing-sl |
+| 千足虫接续/伤害观察 | 一轮收尽没有实际接续，不预加25；同次内部顺序未知 | 5/0；A2:1局,A3:1局,A4:1局,A6:1局,A8:1局；支持CSBR5CRDWQNB,10GPK5XGHCK3,1NZ8FE5F34R9,VN7RQJMJEFMX,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F29 T1实扣146、损0，两爆发收尽 | silent-decimillipede-reattach-poison |
+| 仪式兽阶段/实际收尾 | 清成长与击杀分开，只计经历阶段与已执行攻击 | 8/0；A0:1局,A4:1局,A6:2局,A7:3局,A8:1局；支持LRN0HPZ0FZS1,9YBKCNBFP0X5,75X1BARMNZ03,8CFMW9SAGFWQ,3KME36ADUE4U,9YT51CK8RC39,4Y94N8RDPGPM,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F17 T6敌4血/26毒，15攻击前毒杀，损20 | silent-ceremonial-beast-threshold-growth-sl |
+| 异鸟多段/窗口观察 | 力量按段放大，已击杀后的攻击不计；A8一病例无安全线 | 6/0；A0:1局,A4:1局,A6:1局,A7:2局,A8:1局；支持Y6GM2CHWJBEY,F9PP859XZ3RJ,75X1BARMNZ03,3KME36ADUE4U,9YT51CK8RC39,LLYSRQQ35AVW；反例无 | LLYSRQQ35AVW A8 F7三轮扣27/37/26、损9/4/0 | silent-byrdonis-strength-multihit-observation |
+
+局数按独立run去重，重打/同局多次施放不增n。综合支持不表示每局验证每个子公式；有真实动作数值的局部机制可核算，卡牌/遗物/路线与整场胜负未隔离的部分都标观察，不写用药规则。
+
+### 新增
+
+- silent-miniature-tent-two-rest-options（relic:MINIATURE_TENT，微型帐篷，n=1/low，[0,20]）：微型帐篷让已见营火的回血与锻造都能执行，实际回血仍受最大HP截断。机制：A8购入后六火均各选HEAL与SMITH一次；F24/28先回血再锻造，F32/40/43/47先锻造后仍可回血，两选完再离开。剩余选项索引会变，按选项名称核；未观察同一选项重复或其他营火动作，不外推。搭配：同火恢复血池并升级当前毒、防御或减益牌，取得升级与实际战斗启动另算。决定胜负的战斗：F21花177金购、另36金步法，224→11；六火实回21+21+0+21+1+5=69，升级触媒/两爆发/萎靡/步法/肾上腺素。F33/F48均70进、分别损19/10首胜，无不买帐篷或另一购法的受控胜负，177金不作普遍购买优先级（支持1局/反例0，A8；n=1）。典型案例：LLYSRQQ35AVW F24先38→59再升级触媒；F32满血先升级萎靡再HEAL、70→70实回0。
+
+### 更新
+
+| 条目 | 支持局数 | 新证据 | 本次增量 |
+| --- | --- | --- | --- |
+| silent-route-hp-observation | 36→37 | LLYSRQQ35AVW | A8独立血档与房型统计；低阶历史不并入A8死亡率，[0,7]→[8,20]。 |
+| silent-rest-buffer-observation | 36→37 | LLYSRQQ35AVW | 九火八回血七锻造、七去重后战0死；到达/加牌/帐篷回血分账，[0,7]→[8,20]。 |
+| silent-deck-burst-observation | 35→36 | LLYSRQQ35AVW | A8已建立组件/未建立步法和永久力敏分别计，不从41张或缺删牌判构筑错误。 |
+| silent-strength-weak-observation | 36→37 | LLYSRQQ35AVW | 永久/临时力敏与敌方后续成长分账。 |
+| silent-footwork-block | 22→23 | LLYSRQQ35AVW | A8实际2敏捷格挡兑现；女王无常驻步法。 |
+| silent-frail-card-block | 8→9 | LLYSRQQ35AVW | 蜃景35毒折26挡、余像与音叉独立。 |
+| silent-deadly-poison-application | 14→15 | LLYSRQQ35AVW | 施毒层数与实际伤/末轮截断分账。 |
+| silent-noxious-fumes-growth | 18→19 | LLYSRQQ35AVW | 毒雾3与触媒2共存时不套单触发净增公式。 |
+| silent-accelerant-triggers | 9→10 | LLYSRQQ35AVW | 2层三触发与逐敌/过量截断。 |
+| silent-outbreak-immediate-poison | 3→4 | LLYSRQQ35AVW | 新增A8成功窗口；即时158与全轮248、逐敌截断。 |
+| silent-malaise-x-debuff | 8→9 | LLYSRQQ35AVW | 升级X0/2/3与音叉另7、永久减力后仍成长。 |
+| silent-afterimage-per-card-block | 9→10 | LLYSRQQ35AVW | 脆弱下余像完整1、步法/牌挡单列。 |
+| silent-tuning-fork-skill-block | 3→4 | LLYSRQQ35AVW | 萎靡触发音叉7另计，A8减益/被动挡核验。 |
+| silent-queen-poison-main-target | 5→6 | LLYSRQQ35AVW | 第四首胜，A8毒窗口与爪牙死亡后主目标成长。 |
+| silent-anticipate-temporary-dexterity | 5→6 | LLYSRQQ35AVW | T1两牌临时敏捷兑现，次轮归零。 |
+| silent-mirage-poison-card-block | 6→7 | LLYSRQQ35AVW | 毒总量35在脆弱下26，余像另1。 |
+| silent-mad-science-custom-strangle | 4→5 | LLYSRQQ35AVW | 第五局/技能格挡抽3模板第二例，不移用紧勒或2力2敏捷模板。 |
+| silent-construct-artifact-growth | 7→8 | LLYSRQQ35AVW | 制品只消层、拳击临时减力与方柱成长分别核。 |
+| silent-bronze-scales-per-hit-thorns | 3→4 | LLYSRQQ35AVW | 实际攻击反伤3；先毒杀后未发生的反伤不预支。 |
+| silent-piercing-wail-temporary-strength | 14→15 | LLYSRQQ35AVW | 升级减8/普通减6叠14，人工制品按目标阻挡。 |
+| silent-kaiser-crab-facing-sl | 3→4 | LLYSRQQ35AVW | A8首胜、先碾碎爪与火箭后续增益，SL分母不变。 |
+| silent-decimillipede-reattach-poison | 4→5 | LLYSRQQ35AVW | A8一轮收尽，无实际接续不加25。 |
+| silent-ceremonial-beast-threshold-growth-sl | 7→8 | LLYSRQQ35AVW | 第八局、A8六轮毒收尾，SL范围不变。 |
+| silent-byrdonis-strength-multihit-observation | 5→6 | LLYSRQQ35AVW | A8三轮存活、按实际伤/回合窗口记录。 |
+
+### 退役
+
+无。没有新增反例；新数据支持同一基本机制，不把“持有能力仍败”当公式反例。没有把已由代码修复的纯bug内容混入本角色active机制；升级萎靡仍未覆盖，不冒记已修。开工49929未超55000，不做预算压缩或改预算。
+
+### 和手写知识及代码冲突
+
+- 静默其余六份boss-damage、monster-records、room-costs、outcome-stats、fight-value、fight-value-gates都是生成数据，没有手写攻略/手册。按刷新截止、进阶、净损/回房/训练口径核对；快照旧样本不当机制反例，无须改手写知识，不新建其他文件。common只用于公共招式/占位符，不读其他角色经验作证据。
+- card-model.ts:815仍!upgraded排除升级MALAISE，:893/:898回退未知技能；turn-solver.ts:2073/:2076/:2077的malaise分支只来自原版识别。silent-0051/S1.fix5原版修复没有修升级；本次只将真实X+1数据补silent-malaise-x-debuff，独立bug账本silent-0144保持observed，不写进DS经验、不改源码。
+- 科学当前定制8挡/抽3与旧攻击紧勒或专长2力2敏不是同模板，数据版经验保留。上一批升级腐蚀波/科学模型覆盖缺口仍作为代码项，未由本任务修复或退役为已修。没有生成器改动，不重建数据；只silent/experience.json改对局前缀，铁甲行为等价。
+
+### 代码问题（不给 DS）
+
+- 已核实新升级萎靡模型缺口，first_run回溯KAY522KT5NXR A0 F31/T1，source code=bf63ab40+dirty不能复原为当前源码。F33预计126伤/损5、实140/0，除了减益漏算，其他伤害差未隔离，不归全部差额或全局胜负于萎靡。
+- F48 T1原66伤线经历抽牌重算、目标改变后全轮实77，不当单一原线误差；T6终线248/0与实际同。F47仅56整场模拟不足300，F28模拟58血/实际70不作同条件胜率校准。完整实际最优线执行率、替代购法/路线/休息/构筑/目标序和不用爆发受控整场胜负均未记录，不补猜。
+- 临时统计脚本已修帐篷索引重排的分类问题，旧基线完全一致；最初A8 EVENT不足20个独立帧的抽样检查失败后，按固定种子保留17帧并有放回补3，完整历史/日志留存。这是样本池限制，未改生产代码或测试。
+
+### 测试
+
+- 源草稿固定沙箱tsc0、vitest184文件/2054用例/退出0；发现两处机制支持范围仍写A0至A7，等长校正到A0至A8后，最终源再次全沙箱tsc0、184文件2054例/退出0。两轮均通过，非高负载失败重跑；完整日志分别test-source-draft.log/test-source.log保留。JSON/字段/scope/name/证据角色/去重/计数/药水旧句/60000预算、七组旧数字、升级减益/科学/蜃景/毒截断/动态休息选项核验通过，gitleaks0、diff --check0。
+- 源提交0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd只silent/experience.json，英文信息含版本/新增1更新24退役0及Co-Authored-By；提交后exp工作区干净，没有源码、测试或其他角色知识改动。
+- 账本新增[]、改proposed ['silent-0019', 'silent-0020', 'silent-0021', 'silent-0006', 'silent-0005', 'silent-0013', 'silent-0007', 'silent-0011', 'silent-0027', 'silent-0037', 'silent-0053', 'silent-0023', 'silent-0072', 'silent-0090', 'silent-0080', 'silent-0010', 'silent-0138', 'silent-0025', 'silent-0129', 'silent-0046', 'silent-0062', 'silent-0064', 'silent-0133', 'silent-0134', 'silent-0145', 'silent-0146']、退役[]、ledger.py check退出0（146 items、0 problems）。25条经验均有对应来源；帐篷使用复盘0145/0146两条来源，故26账本对应25经验。0053升级X+1与0138科学技能模板2局同步数据版claim，first_run/prior/repeat及旧上线历史保留，0144纯bug仍observed，不写accepted/shipped。
+- merge=live：锁内等刷新，刷新190464022a29cfaf1602ad4066edd0ef1698926b、合前190464022a29cfaf1602ad4066edd0ef1698926b；知识重叠[]、预检0，实际合入3a2a2a48ed594dea69b9c088edfe9259ac89bac8。合后固定沙箱tsc0、vitest184文件/2054例/退出0，首过无重跑；非改动知识blob逐项保留，后来新的未提交刷新/其他notes留原处。无生成器改动、不重建。
+- live经验2026-10-06.3→.5包含此前第29批待合.4，原8f7d061a未合入/记录冲突历史保持，无独立S1.exp29时刻；本次eval唯一S1.exp30，上线记录与版本提交25a520d92d46d1d644a3ca14a05406a4a1246238。第29批来源0140/0141(夜魇)、0142(羽毛)、0143(勒紧)和其余未登记来源交运维按实际集成登记，不由本任务改shipped。
+- 运维通知通过本批handoff-ops.md及最终experience-done完成回报，调度器根据merged祖先确认实际合入，并在沙箱外补跑完整tsc/vitest。本次146项账本校验结果不冒记为全部源码覆盖或外部完整套件已通过。主目录仅追加本节/CLI账本、不提交；不停对局、不运行play、不推送。需要Dai定：无。
+
+### 切片大小
+
+固定种子20260929，从截至本局的SILENT真状态抽最高完局A7/A8，各20×COMBAT/REWARD/MAP/EVENT/REST/SHOP共240片。A8 EVENT池17，先无放回取17再固定种子有放回补3、独立17；其他11组均20独立帧。manifest记录全部池/时间/重复，改前后同一批真状态、同份生成数据、均CHARACTER=silent跑agent/tools/knowledge-slice.ts，不合成界面。相关切片不等同V4整份前缀。
+
+| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |
+| --- | --- | --- | --- |
+| a7-combat | 5098.0/5997 | 5572.5/6420 | +423 |
+| a7-event | 2346.0/4572 | 2468.0/4742 | +122 |
+| a7-map | 3517.0/4787 | 2468.0/3786 | -1025 |
+| a7-rest | 1926.0/4142 | 1614.0/3786 | -404 |
+| a7-reward | 2599.0/5314 | 2041.0/4833 | -604 |
+| a7-shop | 4784.5/6217 | 4332.5/5795 | -503.5 |
+| a8-combat | 4364.0/4452 | 4888.0/5026 | +524 |
+| a8-event | 1983.0/2071 | 2254.0/2392 | +271 |
+| a8-map | 1983.0/2071 | 3228.0/3366 | +1245 |
+| a8-rest | 1983.0/2071 | 2709.0/2847 | +726 |
+| a8-reward | 1400.0/3371 | 2257.0/4303 | +857 |
+| a8-shop | 2802.0/4760 | 3766.0/5987 | +964 |
+
+240片配对中位+334字、单片最大增1409，最大6217→6420，分布中位2346.0→2857.0。active100→101，高37中31低32→高39中29低33，总49929→52601字；A8/A9各91条45688→95条50169字、A9完局0。逐局逐轮细节压成条目中的典型一句，完整数据留本节、原复盘和audit/机制事实。
