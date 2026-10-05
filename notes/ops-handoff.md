@@ -123,3 +123,5 @@
 - 2026-10-05 17:13 已处理17:12 learner-checks：20261005-163046-experience-update独立完整外部tsc/vitest0，固定发布2480e1a3435d40808c972b5247e126f42fd8f6c8/树875f89004ff6890fcccd2596460f077a890ad12b已核对main/live祖先，225文件2801通过/2跳过、17:05:03开始472.16秒；日志ops/codex-ops/learner/20261005-163046-experience-update.fallback-875f89004ff6890fcccd2596460f077a890ad12b.checks.log。S1.exp17完整补测待办关闭，原等待历史保留；不重复合并、21项shipped登记、测试或论文生成，对局照常。
 
 - 2026-10-05 17:21 已处理17:20 fix-done 20261005-171301：exit0、fixes空/merged=null，工作树干净HEAD9fe7ffe4f8bf4a2a9a3f19bf0af61e12c6d6c8ea；86项旧源码已核对为固定live2480e1a3祖先，代码/eval/知识等同基线，沙箱174文件1993例/tsc0首过。无新产出或可兜底提交，不重复合并/测试/版本/台账登记或论文生成；未修策略/证据不足/性能专项保持，无新Dai待定，对局照常。
+
+- 2026-10-05 17:38 已处理17:35 experience-done 20261005-171301：源/合入ee1f4fd1897685ecc479e38492d548efa6bb1cf2→发布8944c7a181b6bcbf7b2d9a6bbe9c200ee33ae7bf/S1.exp18实际live祖先和版本唯一核实，main对局代码/eval/知识同步固定发布，保留双方decision-log及main六份较新xhigh模板。9learner+9ops共18行归档、check111项0问题，0110/0111更正13折叠组展开16张；源/合后174文件1993例/tsc0首过，无新刷新/重建，完整外部检查待本批事件。首次模板差异预检停止无live回退/台账重复，详情paper/materials/silent/20261005-1735-exp18-release.md，无新Dai事项，对局照常。
