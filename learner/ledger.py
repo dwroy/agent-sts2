@@ -337,10 +337,14 @@ def load_run_starts():
 
 
 def evidence_after_ship(item, evidence, starts):
-    """Whether the repeat happened in a run that could use this release, independent of when it was written up."""
-    shipped = when(item.get("shipped_at"))
+    """Whether the repeat's run could use a recorded release, independent of later releases or write-up time."""
     started = starts.get(evidence.get("run"))
-    return shipped is not None and started is not None and started >= shipped
+    if started is None:
+        return False
+    # Keep shipped_at as the latest release; earlier shipped history still applies to earlier runs.
+    releases = [item.get("shipped_at")]
+    releases.extend(entry.get("ts") for entry in item.get("history", []) if entry.get("status") == "shipped")
+    return any(shipped is not None and started >= shipped for shipped in map(when, releases))
 
 
 def repeats(item, after_ship=False, starts=None):
