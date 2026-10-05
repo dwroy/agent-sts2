@@ -187,3 +187,11 @@
 - 2026-10-05 23:13 已处理23:08三事件：223518-fix-batch无新增源码/提交、fixes空、merged=null因无新增，99项旧修复核实main/live祖先，基线tsc0/179文件2030例、无重跑，无需合入/版本/shipped。经验.23完整正式检查与上一轮ba729182一致：256b0eee/树5a02c2fd、229文件2821通过/2跳过，仅确认不重复操作。3KME36ADUE4U A7 F27复盘与迅捷药水/击杀勘误、7条原台账归档，check129项0问题；0127非阻塞缺后继推演缺陷已记队列交学习者，0128机制观察及五旧support状态不变，无repeat/Roy待定。论文数据刷新执行中，结果随后归档；其他批次行和在线刷新保留。详情paper/materials/silent/20261005-2308-postmortem-and-noop-fix.md。
 
 - 2026-10-05 23:25 运维codex按Roy 23:15 Jev计价要求，命令bash ops/codex-ops-do.sh fix-batch已exit0，机械派发20261005-232305-fix-batch/PID1819919，merge=live；学习者基线包含队列最高优先Jev输入$0.042/百万token、输出免费及TypeSafe近30天用量交叉核对，再处理0127证据。只确认成功派发，不冒记价格已上线/成本已完整；230528旧修复批无新产出保持，经验.24兜底合后检查另在执行，对局不停。
+
+## 2026-10-05 23:37 待接力：经验.24源已被后续.25包含，未登记独立成功
+
+- 23:15 experience-done 224301：固定源 c02c40a38f476991d68b3ad37a082d8ce30105d5，学习者目录learner/runs/20261005-224302-experience-update，自测首次rollout-live预算断言失败后完整重跑一次tsc0/179文件2030例通过；13proposed原行与第二十四节提交8e9c9a84，账本129项check0。
+- 本轮第一次合入 79b415c09d2cf198506fb00394de1818436d975e/树cbe22c6c2491fde66f6e6cee9694de45cc9e51da，合后唯一失败turn-start-settle.test.ts:165，177文件2018例通过/1失败，已恢复合前256b0eee；原失败/定向4例通过已归档，保留分支ops-exp24-failed-20261005固定失败树，不能记已发布S1.exp24或shipped。源码/合后失败分别保存，不改断言/排除名单。
+- 同树完整重跑尝试因live-merge.lock被其他任务持有退出75，未执行。一次只读此刻live为后续.25 5bc320f7ba980bd4e46049ad4b1758975ef7b77f，c02c40a3是其祖先，运维不覆写/回退这个新树或修改其工作树。bash ops/codex-ops-do.sh learner-merge exp-silent已exit0发送接力事件。下一轮先核实后续231301批次实际完成/测试/版本与source祖先；如.25已成功发布，按实际有效版本及原映射登记仍缺的.24条目，不重置0114/0115或无关0127/0128，不把撤回79b415c0当成功发布、不硬恢复旧经验。若仍忙或测试未完，记录接力、不等待/轮询锁。
+- 原始产出/失败归档paper/materials/silent/20261005-2315-experience24-and-cost-dispatch.md、paper/materials/silent/20261005-2315-experience24-source-checks.md及experience24-first-check-failure.md；/tmp/sts2-2315-live-first-failure.json和live-retry-result.json保留。未来如果另做固定树补测，仅对新实际发布调用本批learner-recheck，并独立留结果，不冒用.23旧成功。
+- Roy Jev0.042/百万输入、免费输出/近30天用量cross-check已成功派232305-fix-batch/PID1819919，队列最高优先；230528批无新增修复，无需合并/新版本。新测试不稳定证据已排队，运维不改源码。无新Roy待定，不停对局/调度。
