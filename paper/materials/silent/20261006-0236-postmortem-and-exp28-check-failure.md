@@ -28,3 +28,5 @@ Duration  555.36s (transform 6.82s, setup 10.54s, import 29.45s, tests 1043.91s,
 - 一次相同源码/固定夹具定向诊断：nice19 node_modules/.bin/vitest run tests/target-options.test.ts --maxWorkers 1 --reporter verbose，exit0、1文件22例、02:36:57开始43.65秒，归档paper/materials/silent/20261006-0236-target-options-check.txt前4265字节为原日志、SHA256 4ec7da529d44fef67b5749143707814d5bffa8b3dd53d6cb906a0377cc6ffade（末尾另附归档说明，原输出字节未修改）。未放宽1500ms断言、改源码或新建排除；这一局部结果不替代失败的完整套件。
 - 运维决定派学习者核查时钟/截止边界，保留S1.exp28及17项既有shipped，不回滚或停对局；未发现该测试导致运行对局阻塞的证据，不能据局部复测宣告根因已修。新队列留原失败与对照，派发结果另记；修复合入后交调度器补完整检查。
 - 随后按协议nice19运行paper_dataset.py --no-raw并提交本轮生成论文表/自身记录；A7首胜正式复盘补充至升级报告，旧统计快照和“首胜待复盘”记录保留。
+
+- 2026-10-06 02:44 实际派发命令 `bash ops/codex-ops-do.sh fix-batch` exit1、返回 `{"dispatched": null}`，未启动新批次。一次 `bash ops/codex-ops-do.sh learner-status` exit0证实20261006-021302-strategy-proposal/PID2125510仍running、使用同一codex-dev工作树；ops/learner_jobs.py:83—89、:135—137的同树busy保护拒绝并发派发。保持该任务与对局/调度运行，预算失败队列等待同树占用解除由调度器下一批承接，不重复派发或绕过保护。收件箱已写原失败、完整命令和原因；无需Roy新增决定。
