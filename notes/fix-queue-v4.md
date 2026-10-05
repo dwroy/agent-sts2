@@ -409,3 +409,5 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 运维决定**派修复、保留上线**：失败发生在测试临时目录初始化，采样器21:15已有fresh周44%真实安全样本，对局行为不受此测试影响；不回滚经验.21或停止额度采样/对局/调度，14项shipped历史保留。当前20261005-204301-fix-batch仍在做成本归集/升级爆发，同工作树不并发修改；本项由下一批机械派发，修复自测通过自行合入后再补完整检查，失败历史保留，不记完整套件已通过。局号/层/回合不适用，无新增游戏知识或Roy待定。
 
 - 2026-10-05 22:01 运维codex核实21:50分阶段通知：升级爆发机制缺口由学习者dafd280b→live e7370f88→32948742/S1.fix21修复，仅VN7RQJMJEFMX A6 F27 T6已观测2层；0115代码链登记、0114原shipped不重置。TMPDIR基础设施条目已在同一204301-fix-batch提前修复6bfbe3d2→live d5a4f6fc，源/合后tsc0及177文件2012例、未设置/已设置固定环境均通过；原21:24失败记录保留，修复已落main 3c06417b3530824fb9c81f4b3c5013a42a965bef。旧完整exit1不改，修后外部完整套件待该批最终完成事件，不再把本条机械派作未修；成本分层后续仍在当前批继续。详情paper/materials/silent/20261005-2150-cost-burst-exp22-release.md。
+
+- 2026-10-05 22:10 22:06 learner-checks后续确认：经验.22批次20261005-211301-experience-update在修后固定树b248ad374edbe9dfd5dfc690e2ff7aa8cc3fbd55/发布d5a4f6fcbdb444ee026de83d7507d8dc8c6fb53b完整tsc+vitest exit0，228文件2820通过/2跳过，21:46:40开始562.58秒，原日志ops/codex-ops/learner/20261005-211301-experience-update.fallback-b248ad374edbe9dfd5dfc690e2ff7aa8cc3fbd55.checks.log。原21:20旧树ba54713b完整exit1和所有环境对照历史不改；TMPDIR本条新树完整补测完成，源/合后沙箱通过也保留，不重复派修。该检查覆盖固定d5a4f6fc已上线阶段，同fix-batch后续成本分层改动仍待最终事件的完整检查。

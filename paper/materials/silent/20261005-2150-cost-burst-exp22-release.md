@@ -20,3 +20,5 @@
 ```
 
 本轮归档提交04b6175ae3c299f867f5266d4c9ff4af64f9544e含16learner proposed+16ops经验shipped及0115独立代码1行，共33行；check120项0问题是登记时快照，其后并行学习者复盘/账本追加留未提交，论文表按生成时输入统计。本轮不代处理未收到的复盘事件。经验独立外部检查及fix-batch最终完整检查仍待后续事件；21:20旧失败没有删改。
+
+- 2026-10-05 22:10 22:06 learner-checks后续确认：经验.22批次20261005-211301-experience-update在修后固定树b248ad374edbe9dfd5dfc690e2ff7aa8cc3fbd55/发布d5a4f6fcbdb444ee026de83d7507d8dc8c6fb53b完整tsc+vitest exit0，228文件2820通过/2跳过，21:46:40开始562.58秒，原日志ops/codex-ops/learner/20261005-211301-experience-update.fallback-b248ad374edbe9dfd5dfc690e2ff7aa8cc3fbd55.checks.log。原21:20旧树ba54713b完整exit1和所有环境对照历史不改；TMPDIR本条新树完整补测完成，源/合后沙箱通过也保留，不重复派修。该检查覆盖固定d5a4f6fc已上线阶段，同fix-batch后续成本分层改动仍待最终事件的完整检查。
