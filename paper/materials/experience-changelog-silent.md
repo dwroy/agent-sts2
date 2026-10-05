@@ -6963,3 +6963,224 @@ REST/SHOP/EVENT源节点按入场血关联下一战，多源可指同战；A9全
 240配对中位+0.0字、单片最大增393，最大片6493→6650。active102→103，高40中29低33→高41中30低32，总54501→55618字；A8/A9各96条52069→97条53186字。逐局逐轮压为典型一句，完整数字留本节及原始子集。
 
 本节收尾登记（2026-10-06 04:50:08 +0800）：经验源69532dfcc6eef838362eaaf235be6eee9641f2b7，最终源tsc0/vitest188文件2068例/退出0；初稿同样188文件2068例通过，支持数正文校正后复测、无失败重跑。为纳入运维同期归档的第31批发布，源提交后再次无冲突合并main，基线集成72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac；无源码/生成器变化，七项刷新使用main已发布数据；正式数据切片在相同冻结生成知识上对照。锁内刷新无、合前cf6fae73003337e346c73b600d6c3fc0c791c039；实际合入72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac、上线记录a999dba8c53a2dfc22825ba5603cde3f0bebf74b/S1.exp32，合后tsc0/vitest188文件2068例/退出0；首轮通过、无失败重跑。 其他知识blob保留校验True。账本新增无、proposed silent-0019,silent-0020,silent-0021,silent-0057,silent-0006,silent-0023,silent-0043,silent-0011,silent-0046,silent-0062,silent-0149、退役无、最终check0，0149补六静默历史局证据、first_run/prior/repeat保持，不改accepted/shipped。主目录只追加本节与CLI账本、不提交；源/集成/上线补丁及本节/交接gitleaks通过。完整外部套件交调度器，运维通知放本任务handoff-ops.md与experience-done回报；不停对局、不运行play、不推送。需要Dai定：无。
+
+## 2026-10-06 静默猎手 第三十三次增量：1 局 A9（version 2026-10-06.8，分支 exp-silent，d8feeed3）
+
+### 来源
+
+- 记录时间2026-10-06 05:51:23 +0800；notes/lessons.md:4889及notes/run-1006-0451-G403VCZ3BH1B.md，标题静默猎手、runs.character=SILENT，A9/F48/victory=true，无跳过。按05:33:05勘误：净化ID用PURITY，步法发生在女王战T6而非F6；last_seen按run-1006文件名取2026-10-06。
+- 截至2026-10-05T20:51:26.103Z共40静默完局，A0至A9各7/3/2/1/4/1/11/7/1/3局、各阶各1胜。全部有本角色复盘，无只进数字局，后续A10/进行中局排除；旧699房30实死加新15房0死=714房30实死。
+- exp-silent开工干净，git merge --no-edit main快进到b989c128，无冲突；先读README、最新STATE、decision-log尾、学习协议、铁甲首次构建及最后两节方法/格式，再按静默第31/32节统计。铁甲结论与数字不用，独立完成、无下级agent。
+- 全40局重新一次run id rg分流decisions/brain/sl-attempts、run-plans按run字段；states/deepseek按时间二分seek流式读再核run_id和state.run.character_id=SILENT。本局635决策/654真状态/48大脑全Codex/7 run-plan/4 SL，DeepSeek窗0；states首末字节7315142091—7339377158。
+- 旧39局七数组逐行完全相同：fights699→714、nexts607→635、rests303→312、cards14970→15236、ends4039→4109、attempts229→233、growth925→925；全部旧血档/源节点转移/回血及SL一致，无旧统计差异。baseline-check.json及summarize.log留证。
+- 口径同上一节：净损=首战斗帧HP−同房最终尝试最后结算HP，负值保留、实死亡单列；Monster走廊、Unknown问号战分开。血档<25%、[25%,40%)、[40%,60%)、≥60%。SL判死未结算不补伤/实死；本局胜利GAME_OVER虽run HP=0却is_victory=true，胜场用最后COMBAT玩家18血，不把女王误记损90或死亡。REST/SHOP/普通EVENT按源入场血关联后战，Ancient排除，多源可指同战；回血后战按run/floor去重，幕初/事件/奖励回复独立。
+- 历史机制回查40份本角色复盘、40局重抽日志与155条机制前后帧；飞镖历史72次实出不直接全作支持，动态技能离手只取9YBK A4、HMV/G403 A9三局可比帧；其余不可比/未知抽牌/重放不外推。白星持有三局只取奖励期间七精英，共14次成功选牌，不把取得白星那场本身算双奖励。
+- 版本2026-10-06.7→2026-10-06.8；新增2、更新16（14加证据、只改数字0、2仅压缩）、退役0；active103→105，55618→51806字，高41中30低32→高41中35低29，A8/A9各97条53186→99条49374字，实际A8一局/A9三局。开工超过55000，先压短八条、节省5944字；低置信单局条目没有同scope相近候选，未为腾位跨scope硬并，证据/反例/原药水分句不删、60000测试预算不改。
+- 机制[0,20]仅实见公式/条件，统计与构筑[8,20]按独立进阶分列；原低阶女王SL失败观察仍[4,7]，A9新转胜进已有女王综合条目，不把高阶胜当低阶公式反例。potion:*及general:potion完全不动、其他原喝药/留药分句逐字核验；不新增或加强使用规则。
+- 临时脚本、子集、完整旧文本、统计/机制/校验/切片/测试/账本/合入记录均留learner/runs/20261006-053524-experience-update；nice19、单进程抽取，测试固定最多4进程，无boss模拟池。
+
+### 对照数据检查的主题
+
+| 主题 | 数据 | 结论 |
+| --- | --- | --- |
+| 角色/旧基线/进阶 | 40静默局714房30死、旧39局七数组及血档/节点/回血/SL一致；A8一局/A9三局 | 不混角色/后续A10/低阶分母 |
+| 路线血档/精英血价 | A9一幕高血精英4房/3局，零死、赢损中位38.5；新两精英损14/41 | 高血不等于低损，白星奖励数量不抵消战内掉血 |
+| 改线对照/问号 | F9避第二精英、F13白星后加回，F14损41对投影20.5；三幕问号战59→59；旧HMV低血问号损4、F4中血Monster死 | 敌人/构筑/路线不同，未选线未打，仅观察，不推手链普遍安全 |
+| 休息/上限/投影 | 新六回血128，A9三局16回血341、后战15场死1/15、赢损中位34；末火67/90→90实23 | 牌面27按上限截断；事件上限与营火回复独立，F44实际锻造改变旧投影 |
+| 构筑/启动 | 36张、五打击五防御/两诅咒、无店删牌；计划触媒/余像未取得；两次均T1滚石/T6步法 | 所有与已建、层数与已兑现分账，两次早建不单证胜因 |
+| 飞镖剩余技能 | 9YBK防御后3→2次各3伤实6；HMV末次生存者/防御后3→2→1实6；G403防御+/尖啸后3→2→1实4 | 三支持局/零反例，动态次数条件不变成出牌调序规则 |
+| 白星奖励 | SADL F31、LLY F13/27/29、G403 F12/14/30七场各两次成功选牌，共14次 | 奖励数可复算；稀有率、所有房型、改线优劣未验证 |
+| 力量/敏捷/脆弱 | 女王T3口红1力/1敏、T6步法敏1→3；防御4→6、防御+实8；女王力2→4五击45→60 | 逐段攻击/逐牌挡与0.75折减核，不简单套每牌实加2 |
+| 萎靡/尖啸 | 重打T10普通X4使4→0力、60→20；T11尖啸0→−6、已有虚弱20→13 | 永久/临时减力与弱分别计，10挡后仍损3 |
+| 毒雾 | 重打T5建2、T6—T11结算2/3/4/5/6/7合27；首试未建 | 不把致命毒药或总净扣倒归毒雾，未触发收益不预支 |
+| 滚石与截断 | 两次T1普通5、重打T11层55；末行动8+毒7使42→27、T12开场只扣剩27 | 尚存50层不能跨过首试当轮攻击，55不是实际55扣血 |
+| 遗忘之魂/风的女儿 | 萎靡107→106、尖啸42→41；首试T3三攻击3挡、重打六攻击6挡；T11飞镖9→10挡 | 消耗另伤、攻击牌次数与攻击段数分账 |
+| 口红/已耗增益 | 两次T3首次1力/1敏；女王时余烬茶已耗尽 | 不虚加2力量，不当每轮成长 |
+| 女王SL/护栏观察 | 同90血/630敌血、前36抽序同；首试T10判死未结算，第二次T12赢净损72；护栏预计省10/实同轮只差3血 | 生成牌、目标和后段均变，未隔离护栏/减力/目标順序胜因 |
+| 纯bug与实际执行 | 飞镖模型固定hits；女王首试14题答案最优全真仍判死，重打14/20=70%却胜 | 答案字段不是完整实际最优线执行率，纯bug不进DS |
+
+A0至A7全部旧格不变；全格/零格/逐房局号在audit.json。以下A8/A9非空血档，房作死亡率分母、独立局另列。
+
+| 进阶 | 幕 | 房型 | 血档 | 房/局 | 死/率 | 活场净损中位 |
+| --- | --- | --- | --- | --- | --- | --- |
+| A8 | 1 | Monster | ≥60% | 5/1 | 0/0.00% | 3 |
+| A8 | 1 | Elite | ≥60% | 3/1 | 0/0.00% | 5 |
+| A8 | 1 | Boss | ≥60% | 1/1 | 0/0.00% | 20 |
+| A8 | 2 | Monster | ≥60% | 6/1 | 0/0.00% | 4.5 |
+| A8 | 2 | Elite | ≥60% | 2/1 | 0/0.00% | 2.0 |
+| A8 | 2 | Boss | ≥60% | 1/1 | 0/0.00% | 19 |
+| A8 | 3 | Monster | ≥60% | 5/1 | 0/0.00% | 0 |
+| A8 | 3 | Unknown | ≥60% | 1/1 | 0/0.00% | 17 |
+| A8 | 3 | Boss | ≥60% | 1/1 | 0/0.00% | 10 |
+| A9 | 1 | Monster | 25–40% | 2/2 | 0/0.00% | 1.0 |
+| A9 | 1 | Monster | 40–60% | 2/2 | 0/0.00% | 0.5 |
+| A9 | 1 | Monster | ≥60% | 9/3 | 0/0.00% | 6 |
+| A9 | 1 | Elite | ≥60% | 4/3 | 0/0.00% | 38.5 |
+| A9 | 1 | Unknown | ≥60% | 1/1 | 0/0.00% | 20 |
+| A9 | 1 | Boss | 40–60% | 2/2 | 0/0.00% | 33.5 |
+| A9 | 1 | Boss | ≥60% | 1/1 | 0/0.00% | 27 |
+| A9 | 2 | Monster | 25–40% | 1/1 | 0/0.00% | 1 |
+| A9 | 2 | Monster | 40–60% | 4/2 | 0/0.00% | 18.5 |
+| A9 | 2 | Monster | ≥60% | 8/3 | 0/0.00% | 3.0 |
+| A9 | 2 | Elite | ≥60% | 3/3 | 0/0.00% | 25 |
+| A9 | 2 | Unknown | <25% | 1/1 | 0/0.00% | 4 |
+| A9 | 2 | Boss | 40–60% | 2/2 | 1/50.00% | 37 |
+| A9 | 2 | Boss | ≥60% | 1/1 | 0/0.00% | 40 |
+| A9 | 3 | Monster | 40–60% | 1/1 | 1/100.00% | None |
+| A9 | 3 | Monster | ≥60% | 4/2 | 0/0.00% | 6.0 |
+| A9 | 3 | Unknown | ≥60% | 1/1 | 0/0.00% | 0 |
+| A9 | 3 | Boss | ≥60% | 1/1 | 0/0.00% | 72 |
+
+REST/SHOP/EVENT按源节点入血关联后战，多源可指同战；A8旧格相同，A9全部非空格如下。
+
+| 幕 | 源界面 | 血档 | 节点/不同战 | 死/率 | 活场净损中位 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | REST | <25% | 1/1 | 0/0.00% | 30 |
+| 1 | REST | 25–40% | 4/4 | 0/0.00% | 28.0 |
+| 1 | REST | 40–60% | 3/2 | 0/0.00% | 14 |
+| 1 | REST | ≥60% | 2/2 | 0/0.00% | 39.5 |
+| 1 | SHOP | 25–40% | 2/2 | 0/0.00% | 28.5 |
+| 1 | SHOP | 40–60% | 1/1 | 0/0.00% | 27 |
+| 1 | SHOP | ≥60% | 2/2 | 0/0.00% | 33.0 |
+| 1 | EVENT | <25% | 1/1 | 0/0.00% | 30 |
+| 1 | EVENT | 25–40% | 2/2 | 0/0.00% | 10.5 |
+| 1 | EVENT | 40–60% | 2/2 | 0/0.00% | 20.5 |
+| 1 | EVENT | ≥60% | 3/2 | 0/0.00% | 11 |
+| 2 | REST | <25% | 2/2 | 1/50.00% | 25 |
+| 2 | REST | 25–40% | 2/2 | 0/0.00% | 31.0 |
+| 2 | REST | 40–60% | 2/2 | 0/0.00% | 30.5 |
+| 2 | REST | ≥60% | 3/3 | 0/0.00% | 18 |
+| 2 | SHOP | <25% | 1/1 | 0/0.00% | 25 |
+| 2 | SHOP | 40–60% | 2/2 | 0/0.00% | 20.0 |
+| 2 | SHOP | ≥60% | 2/1 | 0/0.00% | 0.0 |
+| 2 | EVENT | <25% | 1/1 | 0/0.00% | 25 |
+| 2 | EVENT | 40–60% | 1/1 | 0/0.00% | 0 |
+| 2 | EVENT | ≥60% | 5/3 | 0/0.00% | 0 |
+| 3 | REST | ≥60% | 2/1 | 0/0.00% | 72.0 |
+| 3 | SHOP | ≥60% | 3/2 | 0/0.00% | 72 |
+| 3 | EVENT | ≥60% | 6/4 | 0/0.00% | 12.0 |
+
+| 进阶 | 局 | 火堆/回血/锻造 | 回血后不同战/死/赢损中位 | SL多次场/尝试/赢 |
+| --- | --- | --- | --- | --- |
+| A0 | 7 | 55/25/30 | 23/4/27 | 8/33/4 |
+| A1 | 3 | 21/9/12 | 8/2/35.0 | 3/14/1 |
+| A2 | 2 | 14/10/4 | 10/1/11 | 1/6/0 |
+| A3 | 1 | 10/8/2 | 8/0/17.5 | 0/0/0 |
+| A4 | 4 | 30/22/8 | 21/2/14 | 2/10/0 |
+| A5 | 1 | 9/6/3 | 6/0/20.0 | 1/2/1 |
+| A6 | 11 | 81/52/29 | 46/4/12.0 | 8/35/3 |
+| A7 | 7 | 56/31/25 | 27/5/16.0 | 7/31/1 |
+| A8 | 1 | 9/8/7 | 7/0/10 | 0/0/0 |
+| A9 | 3 | 21/16/5 | 15/1/34.0 | 3/10/2 |
+
+全静默真正重打33场141次12赢，新增女王一场两次1赢；女王累计3场14次1赢，A9本场2次1赢。首胜异鱼/帝王蟹不加重打分母。explore.target两次均null，第二次explore.second为turn10/until10，前36抽序含升级一致，无重洗；十字弓生成牌、弃牌、施毒对象与多轮行动不同，不能把基序相同当整战单项受控。第一试T10余32血12挡对45，需33差1，女王27/7毒、滚石50未兑现；第二试T10萎靡60→20、损19，T11尖啸20→13、10挡损3，T12普通滚石结束、余18。完整尝试和explore/sl_explore原行在子集/analysis/audit，不推好运份额。
+
+### 经验库自己带偏或写了没被执行的地方
+
+- 48次大脑全Codex、DeepSeek窗0，未找到直接引用经验id致错的原话；本轮新文字不倒记已结束局的原因。F9原话：“Healing gives the shop-strengthened deck a safer elite attempt. Skip the second elite, preserving campfires and both shops for boss preparation.”（回血并避第二精英）；F13原话：“Heal before another elite: White Star doubles rare rewards, while Ghost in a Jar provides protection. The final campfire supports boss recovery.”（白星双奖励与末营火支持加回精英）。双选牌真实，但末营火未来收益不能替代F14实损41；没有另一线实打，既不认定改线必错，也不加强其中用药说法。
+- F16原话：“Heal to 39 HP before the forced boss. Its 89% simulated survival decisively exceeds every upgrade; preserve the run over marginal improvement.” 实回18→39、异鱼九轮损37余2；模拟89.13%/664样本是记录，不等于该构筑稳定安全。F47原话：“Heal to 90 HP; no potions and inconsistent scaling make the guaranteed buffer more valuable than one upgrade against Queen.” 实回67→90；首试仍差1判死，未选升级无实战，不把回血等同致胜因果。
+- 计划要求触媒/余像、删基础或贪婪，实际未取得两能力、无商店删牌，终局贪婪永恒保留；用取得/建立/触发验收，不预支计划。首试Jev女王14题均日志最优仍判死，重打20题仅14最优却胜；护栏原题预计省10血只执行部分后重问、同轮实少损3，完整最优线实执行率未知。
+
+### 机制推理
+
+| 机制 | 推理 | 证据（支持/反例局数、进阶） | 典型案例 | 进了哪个条目 |
+| --- | --- | --- | --- | --- |
+| 飞镖剩余技能 | 技能离手实时减少次数；段值×剩余次数，未验证未知抽牌/重放，未证明调序更优 | 3/0；A4:1局,A9:2局；支持/反例局号完整见silent-flechettes-remaining-skills的evidence/contradicting | 9YBKCNBFP0X5 A4 F43 T4 3→2次、实6；G403VCZ3BH1B A9 F48/2 T11 3→2→1、实4 | silent-flechettes-remaining-skills |
+| 白星双奖励观察 | 七精英14次选牌，收益与掉血独立，不外推稀有率/改线因果 | 3/0；A7:1局,A8:1局,A9:1局；支持/反例局号完整见silent-white-star-double-rewards的evidence/contradicting | G403VCZ3BH1B A9 F14双牌、实损41对投影20.5 | silent-white-star-double-rewards |
+| 力量/敏捷/减益 | 力量逐段、敏捷逐牌后折减，临时/永久与敌成长分账 | 40/0；A0:7局,A1:3局,A2:2局,A3:1局,A4:4局,A5:1局,A6:11局,A7:7局,A8:1局,A9:3局；支持/反例局号完整见silent-strength-weak-observation的evidence/contradicting | G403VCZ3BH1B A9女王力2→4五击45→60 | silent-strength-weak-observation |
+| 步法 | 普通加2敏、不补已有挡；脆弱逐牌兑现 | 25/0；A0:5局,A1:1局,A3:1局,A4:4局,A5:1局,A6:5局,A7:5局,A8:1局,A9:2局；支持/反例局号完整见silent-footwork-block的evidence/contradicting | G403VCZ3BH1B A9 T6敏1→3、防御4→6、防御+实8 | silent-footwork-block |
+| 脆弱 | 基础挡加敏捷后逐牌0.75向下折减，被动挡独立 | 11/0；A0:1局,A2:2局,A4:1局,A6:2局,A7:2局,A8:1局,A9:2局；支持/反例局号完整见silent-frail-card-block的evidence/contradicting | G403VCZ3BH1B A9防御+⌊(8+3)×0.75⌋=8、飞镖遗物挡1 | silent-frail-card-block |
+| 毒雾 | 建立后下一回合补2，单触发递减1形成2至7，不预支未建收益 | 22/0；A0:4局,A1:2局,A2:2局,A4:4局,A5:1局,A6:4局,A7:1局,A8:1局,A9:3局；支持/反例局号完整见silent-noxious-fumes-growth的evidence/contradicting | G403VCZ3BH1B A9重打T5建、六次已结算合27、首试未建 | silent-noxious-fumes-growth |
+| 萎靡 | 普通X4永久减4与4虚弱逐段折威胁，但不停止成长 | 10/0；A0:1局,A1:2局,A3:1局,A4:2局,A6:1局,A7:1局,A8:1局,A9:1局；支持/反例局号完整见silent-malaise-x-debuff的evidence/contradicting | G403VCZ3BH1B A9 T10力4→0、60→20、损19 | silent-malaise-x-debuff |
+| 尖啸 | 临时减6与永久萎靡分账，已有虚弱时按意图核 | 17/0；A0:3局,A1:2局,A2:1局,A3:1局,A5:1局,A6:4局,A7:2局,A8:1局,A9:2局；支持/反例局号完整见silent-piercing-wail-temporary-strength的evidence/contradicting | G403VCZ3BH1B A9 T11力0→−6、20→13、10挡损3 | silent-piercing-wail-temporary-strength |
+| 滚石 | 每次玩家回合开始当前层伤后加5，须先活过敌方回合、按剩血截断 | 3/0；A0:1局,A5:1局,A9:1局；支持/反例局号完整见silent-rolling-boulder-start-growth的evidence/contradicting | G403VCZ3BH1B A9首试50层未兑现、末T12只扣剩27 | silent-rolling-boulder-start-growth |
+| 遗忘之魂 | 消耗牌额外扣1，与牌本体减益及毒分账，仍只单敌确认 | 2/0；A1:1局,A9:1局；支持/反例局号完整见silent-forgotten-soul-exhaust-damage的evidence/contradicting | G403VCZ3BH1B A9 T10萎靡107→106、T11尖啸42→41 | silent-forgotten-soul-exhaust-damage |
+| 风的女儿 | 按攻击牌次数补1挡，不按攻击段数 | 2/0；A2:1局,A9:1局；支持/反例局号完整见silent-daughter-wind-attack-block的evidence/contradicting | G403VCZ3BH1B A9 T11飞镖实4并9→10挡 | silent-daughter-wind-attack-block |
+| 闪亮口红 | 第3回合首次建1力/1敏，非开场/逐轮，茶已耗不算 | 2/0；A2:1局,A9:1局；支持/反例局号完整见silent-sparkling-rouge-turn-three的evidence/contradicting | G403VCZ3BH1B A9 T3首次1/1、T6步法再敏1→3 | silent-sparkling-rouge-turn-three |
+| 女王SL窗口观察 | 多组件跨本轮敌攻后才兑现滚石，前36抽序同但后段改变 | 7/0；A2:1局,A4:2局,A7:2局,A8:1局,A9:1局；支持/反例局号完整见silent-queen-poison-main-target的evidence/contradicting | G403VCZ3BH1B A9 T10差1读档、第二次T12余18胜 | silent-queen-poison-main-target |
+| 构筑启动观察 | 持有/已建/已触发/存活窗分别核，缺单项整战对照 | 39/0；A0:6局,A1:3局,A2:2局,A3:1局,A4:4局,A5:1局,A6:11局,A7:7局,A8:1局,A9:3局；支持/反例局号完整见silent-deck-burst-observation的evidence/contradicting | G403VCZ3BH1B A9两次早建滚石/步法仍首试判死 | silent-deck-burst-observation |
+
+支持按独立run去重，同局多战/SL不加n；综合力量/构筑支持不等于每局验证所有子公式。游戏收益机制与整战胜因分开，相关性标观察，药水只保留既有事实/原句，不写使用规则。
+
+### 新增
+
+- silent-flechettes-remaining-skills（card:FLECHETTES，飞镖，[0,20]，3/med）：三局技能离手动态计数、实际段伤；来源复盘silent-0151，first_run仍9YBKCNBFP0X5 A4、prior no。纯模型bug silent-0150仍observed，不把机制文字上线冒为模型修复。
+- silent-white-star-double-rewards（relic:WHITE_STAR，白星，[0,20]，3/med）：SADL A7、LLY A8、G403 A9七精英14次成功选牌与实际损血；新增汇总账本见收尾，first_run SADL3CGYTGSR，prior unknown（此前无可比白星局，不由自动双奖励推模型已理解血价取舍）。
+
+### 更新
+
+| 条目 | 支持局数 | 本次变化 |
+| --- | --- | --- |
+| silent-footwork-block | 24→25 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；兼压缩。 |
+| silent-strength-weak-observation | 39→40 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；兼压缩。 |
+| silent-route-hp-observation | 39→40 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+| silent-rest-buffer-observation | 39→40 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+| silent-deck-burst-observation | 38→39 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+| silent-noxious-fumes-growth | 21→22 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；兼压缩。 |
+| silent-frail-card-block | 10→11 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+| silent-piercing-wail-temporary-strength | 16→17 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；兼压缩。 |
+| silent-malaise-x-debuff | 9→10 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；兼压缩。 |
+| silent-forgotten-soul-exhaust-damage | 1→2 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+| silent-aeonglass-artifact-growth-sl | 8→8 | 只压短重复叙述，不加证据、无新结论。 |
+| silent-daughter-wind-attack-block | 1→2 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+| silent-kaiser-crab-facing-sl | 6→6 | 只压短重复叙述，不加证据、无新结论。 |
+| silent-sparkling-rouge-turn-three | 1→2 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+| silent-queen-poison-main-target | 6→7 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；兼压缩。 |
+| silent-rolling-boulder-start-growth | 2→3 | 补G403VCZ3BH1B A9非药水证据，机制/数据见上表；汇总数字按本节。 |
+
+开工压缩详情（完整原文保存在compression.json，证据/反例保留）；单局低置信项无同scope相近项，合并0/退役0。
+
+| 条目 | 压缩前/后字数（补证前） |
+| --- | --- |
+| silent-footwork-block | 792/459 |
+| silent-strength-weak-observation | 1128/507 |
+| silent-noxious-fumes-growth | 1640/606 |
+| silent-aeonglass-artifact-growth-sl | 1884/598 |
+| silent-kaiser-crab-facing-sl | 1186/517 |
+| silent-queen-poison-main-target | 1008/518 |
+| silent-piercing-wail-temporary-strength | 1439/591 |
+| silent-malaise-x-debuff | 1141/478 |
+
+### 退役
+
+- 无。未新增公式反例，赢/败不自动反驳机制；原女王低阶失败观察[4,7]保留。无纯bug条目混入DS、不改字数测试预算。
+
+### 和手写知识及代码冲突
+
+- 静默其他六份boss-damage/monster-records/room-costs/outcome-stats/fight-value/fight-value-gates全部为生成数据，无手写攻略/手册；逐份核元信息/生成口径/进阶分表。自动数据可含后续A10，本文截止点40局不同不是冲突；room-costs的MAP进出血与战内净损不同，fight-value为训练预测，不直接替代本文净损。monster-records A9为48房，与本文三A9局48房一致；common怪物库A9女王419/聚合体211与现场一致。无需改手写知识/自动数据，不新建其他文件、不用其他角色证据。
+- 飞镖三局真实技能计数与当前card-model.ts:810固定CalculatedHits、turn-solver.ts沿用card.hits有冲突，纯bug交已有silent-0150，不改源码。未发现其他确定的新手写知识冲突；八条冗长/陈旧正文n说明压短并与字段统一，历史原文保留。无源码/生成器/别角色数据变化，铁甲行为等价，不重建自动数据。
+
+### 代码问题（不给 DS）
+
+- 飞镖动态技能计数缺口是复盘已登记silent-0150，新机制silent-0151单独进入知识；本任务不修模拟器。9YBK同轮方案多算3攻击、HMV末次初题18与实际6，G403末线预计18/损1而行动8+毒7=15/实损3，全部差额未逐项隔离，不能全归飛镖缺口。
+- HP护栏原题预计省10只执行部分后状态变化重问，G403首/重试同轮18/15损血还混目标/后续变化；女王重打第一次T11题明确not dispatched，不算已执行两防御。未知抽牌/重放/能力牌的飞镖计数、内部同时死亡次序、完整实际最优线执行率、boss时钟需伤/估伤比等未记录，不补猜。
+
+### 测试
+
+- 最终固定沙箱tsc退出0，vitest190文件/2094用例/退出0；源测试日志test-source.log，未失败重跑。JSON、字段/角色/原用药句/证据/60000预算、旧39局基线、女王同抽序/胜利HP、飞镖/白星/萎靡/尖啸/回血数字核验通过。
+- gitleaks源补丁退出0、git diff --check退出0；固定测试排除名单及预算不改。源提交d8feeed3f9c3a66df935f58af92d7e500f40aff4仅silent/experience.json，英文信息列version及新增2/更新16/退役0、Co-Authored-By；主目录本节与CLI账本只追加不提交。
+- 学习账本新增silent-0152；proposed silent-0019,silent-0020,silent-0021,silent-0006,silent-0005,silent-0013,silent-0011,silent-0046,silent-0053,silent-0093,silent-0094,silent-0060,silent-0063,silent-0071,silent-0068,silent-0125,silent-0062,silent-0151；退役无、check0。保留first_run/prior/repeat，不写accepted/shipped，已登记但未并入的pure bug不动。实际合入/合后测试/上线记录在本节末追加收尾。
+
+### 切片大小
+
+- 固定种子20260929，只取state.run.character_id=SILENT，最高A8/A9各20状态×六界面共240配对；改前/改后同状态、同份冻结生成知识，CHARACTER=silent，经setExperienceForTests载入冻结旧/新entries与同份stats后调用官方knowledge-slice.ts，无API。采样从日志重新抽取，A8 EVENT仅17独立帧有放回补3，其他均20独立帧；重复不当新独立样本，完整池/时间在sample-manifest.json。
+
+| 进阶/界面 | 改前中位/最大（字） | 改后中位/最大（字） | 配对增量中位 |
+| --- | --- | --- | --- |
+| a8-combat | 5932.0/5932 | 4847.0/4847 | -1085.0 |
+| a8-event | 2577.0/3129 | 2308.0/2479 | -269.0 |
+| a8-map | 3296.0/3754 | 3101.0/3159 | -195.0 |
+| a8-rest | 2778.0/3236 | 2549.0/2607 | -229.0 |
+| a8-reward | 3303.0/4644 | 2629.0/3970 | -474.0 |
+| a8-shop | 3844.0/6269 | 3485.5/5269 | -274.0 |
+| a9-combat | 4696.0/5932 | 4280.0/4847 | -416.0 |
+| a9-event | 2621.5/3164 | 2352.5/3083 | -269.0 |
+| a9-map | 2907.0/3754 | 2846.5/3159 | -60.5 |
+| a9-rest | 2000.0/3236 | 2040.0/2607 | +40.0 |
+| a9-reward | 3303.0/4765 | 2629.0/4091 | -474.0 |
+| a9-shop | 4299.0/6771 | 3580.0/6072 | -274.0 |
+
+240配对增量中位-274.0字、单片最大增量+215，最大片6771→6072字。active103→105、总55618→51806字；高41中30低32→高41中35低29；A8/A9各97条53186→99条49374字。逐局逐轮压为典型一句，完整数字留本节与子集/原文。
+
+
+本节收尾登记（2026-10-06 05:55:20 +0800）：源d8feeed3f9c3a66df935f58af92d7e500f40aff4，源最终沙箱tsc0/190文件2094例/退出0；实际live合入1b425cb743eeb3cc77c1c36ffeb9d0b1d9346495，发布f1d951ec442548711c671cb7f9855a4ade1dc412/唯一S1.exp33，合后tsc0/191文件2095例/退出0，源和合后无失败重跑。合前236286e28e28402175b7eeaf36908c3cb6433f40、刷新无，incoming仅silent/experience.json、知识重叠空/预检0、其他知识blob全部保留；live他人notes/monster-db-check.md与未跟踪fight-value-backtest-silent.md均保持，未混提交。账本新增silent-0152、proposed silent-0019,silent-0020,silent-0021,silent-0006,silent-0005,silent-0013,silent-0011,silent-0046,silent-0053,silent-0093,silent-0094,silent-0060,silent-0063,silent-0071,silent-0068,silent-0125,silent-0062,silent-0151、退役无，最终check0；18个变动经验全有账本来源，first_run/prior/repeat保持，0150纯bug仍observed，不写accepted/shipped。主目录本节及CLI账本只追加不提交；经验源/上线补丁与本节/交接gitleaks退出0。运维交接写至本任务handoff-ops.md，随experience-done完成事件交付，交运维核实际上线后CLI登记19项shipped/S1.exp33，调度器沙箱外补完整套件，未宣称完整外部检查已通过。不停对局、不运行play、不推送；需要Dai定：无。
