@@ -472,3 +472,10 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 ### 2026-10-06 05:24 运维记录：学习曲线再次上线后的重犯漏计（非阻塞）
 
 - [ ] 纯统计bug：`learner/ledger.py:283–286`每次shipped覆盖fold的shipped_at，`:339–343`的evidence_after_ship只按最新shipped_at比较局开局，`eval/learning-curve.py:122`据此计数。证据HMVJKM56S4Q8 SILENT A9与silent-0009：01:13:01已有S1.exp26 shipped，02:45:41.432开局，04:01:19入账的F33 T2 repeat及学习者“之前学过”原记录保持；04:35:35再次S1.exp31 shipped后，最新shipped_at晚于该局开局，A9 CSV原行repeats=1/repeats_after_ship=0漏掉早先已上线的重犯。原始历史没有丢失，属于读取/归属缺口；交学习者基于历史发布与实际生效证据修正统计和固定测试，不修改游戏知识、不删除旧行。证据快照`paper/materials/silent/a9-learning-snapshot-20261006-0513.json`及A9小结保留当前原CSV。与已修silent-0052“复盘晚写被算成重犯”的方向不同，不重开该旧项；运维本轮只入队，不改实现或台账。
+
+## 2026-10-06 05:45 A9首胜复盘：飞镖方案内动态计数（交学习者）
+
+- [ ] **非阻塞机制模型提案**：学习者定位当前只读live的`agent/src/reflex/card-model.ts:810`将CalculatedHits读取为固定hits，`agent/src/reflex/turn-solver.ts:1973`沿用card.hits，未随同一方案中技能离手更新。来源G403VCZ3BH1B复盘及20261006-051302.out、原账本silent-0150/0151；虽然回报标“纯bug”、0150 kind=bug-infra，这项涉及游戏机制，按学习协议由学习者实现与测试，运维只转录证据。
+- G403VCZ3BH1B SILENT A9 F48重打T11：防御+→尖啸→中和→飞镖，快照CalculatedHits 3→2→1，末次女王38→34、实扣4。整线预计18伤/损1，实际行动8加毒7共15/损3，其他差额未隔离，不将全部差额或SL胜负归此缺口。
+- 最早可核实9YBKCNBFP0X5 SILENT A4 F43 T4：净化PURITY后新题3次各3伤，防御离手后2次，敌135→129实扣6；方案31伤由9攻击加22毒组成，攻击部分多算3。HMVJKM56S4Q8 SILENT A9 F33第6尝试T3：生存者→防御→飞镖，初始3×6预测18，技能离手后1×6实6，火箭195→189。两新条目first_run仍9YBK/A4、prior=no/status=observed，旧经验shipped及原标签不重置。
+- 只涵盖学习者已验证的技能离手情形；未知抽牌、重放、能力牌计数及调序后的整场胜负未验证，不自行补公式。行号是学习者当前live定位，本局运行473a62f4+dirty、旧9YBK为d9a3ea37+dirty，不冒称复原旧局源码。保留复盘原文和学习者末尾PURITY/女王T6勘误，原0150/0151账本分类不由运维改写。修复采用本角色固定证据，自测通过按既有live流程上线。
