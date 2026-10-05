@@ -127,3 +127,6 @@
 - 2026-10-05 17:38 已处理17:35 experience-done 20261005-171301：源/合入ee1f4fd1897685ecc479e38492d548efa6bb1cf2→发布8944c7a181b6bcbf7b2d9a6bbe9c200ee33ae7bf/S1.exp18实际live祖先和版本唯一核实，main对局代码/eval/知识同步固定发布，保留双方decision-log及main六份较新xhigh模板。9learner+9ops共18行归档、check111项0问题，0110/0111更正13折叠组展开16张；源/合后174文件1993例/tsc0首过，无新刷新/重建，完整外部检查待本批事件。首次模板差异预检停止无live回退/台账重复，详情paper/materials/silent/20261005-1735-exp18-release.md，无新Dai事项，对局照常。
 
 - 2026-10-05 17:43 已处理17:42 learner-checks：20261005-171301-experience-update独立完整外部tsc/vitest0，固定发布8944c7a181b6bcbf7b2d9a6bbe9c200ee33ae7bf/树7484f85e0ffc38d9cc6da8137390f5eb1b8bdcdf核对为main/live祖先，225文件2801通过/2跳过、17:33:07开始471.45秒，日志ops/codex-ops/learner/20261005-171301-experience-update.fallback-7484f85e0ffc38d9cc6da8137390f5eb1b8bdcdf.checks.log。S1.exp18完整补测待办关闭，保留原等待及预检/更正历史，不重复合并、测试、9项shipped或论文生成；对局照常。
+
+### 待接续经验.19提交（2026-10-05 18:28，运维 codex）
+- 20261005-180500经验候选在exp-silent未提交，唯一阻塞learner-strategy.test.ts:49旧high断言；首次/完整重跑均tsc0、1失败/1981通过，候选SHA256 `49004a50e944379080f2b5b5a3bc98a1ccdd9028329ae331104c48cba3102bb9`、HEAD158dc8c7。181301学习者正修同一断言，不并发编辑codex-dev。收到其fix-done、核实修复上线后按paper/materials/silent/20261005-1825-exp19-blocked.md接续候选检查/提交兜底；保留两次失败及第十九节changelog，15项来源映射见本批ledger-operations-planned.jsonl、真实源码提交之前不登记，实际合入之前不记shipped/.19已上线。先确认后续批次是否已接续，避免重复处理；对局继续。
