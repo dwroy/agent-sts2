@@ -15,6 +15,7 @@ DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 BROKER="$DIR/broker"
 default_wait=300
 [ "${1:-}" = eval-metrics ] && default_wait=660
+[ "${1:-}" = learner-recheck ] && default_wait=3760
 WAIT="${CODEX_OPS_DO_WAIT:-$default_wait}"
 [ $# -ge 1 ] || { echo "usage: bash ops/codex-ops-do.sh <action> [arg]" >&2; exit 2; }
 for a in "$@"; do

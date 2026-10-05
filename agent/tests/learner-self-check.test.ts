@@ -24,9 +24,9 @@ print(json.dumps({"batch": batch, "events": events, "inbox": inbox, "calls": cal
 }
 
 describe("learner self-check completion", () => {
-  it.each(["experience-update", "fix-batch"])("%s emits completion and runs the full suite after a verified live merge", (task) => {
+  it.each(["experience-update", "fix-batch", "strategy-proposal"])("%s emits completion and runs the full suite after a verified live merge", (task) => {
     const result = finish(task, "a".repeat(40));
-    expect(result.events.map((event: string[]) => event[0])).toEqual([task === "fix-batch" ? "fix-done" : "experience-done", "learner-checks"]);
+    expect(result.events.map((event: string[]) => event[0])).toEqual([task === "fix-batch" ? "fix-done" : task === "strategy-proposal" ? "strategy-done" : "experience-done", "learner-checks"]);
     expect(result.batch.checks.rc).toBe(0);
     expect(result.calls[1].slice(0, 3)).toEqual(["flock", "/fixture/ops/live-merge.lock", "bash"]);
     expect(result.calls[1].at(-1)).toContain("npx tsc -p tsconfig.json --noEmit");

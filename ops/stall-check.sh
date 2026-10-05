@@ -22,7 +22,10 @@ pgrep -f "ops/report.py" >/dev/null && between=1
 [ "$quiet" -lt 180 ] && between=1
 [ "$running" -eq 0 ] && [ "$between" -eq 0 ] && why="no play process running"
 # The loop logs "stuck for N polls" after ~25 idle polls, and repeated gate rejections mean a loop.
-tail -n 4 "$console" | grep -q -E "stuck for [0-9]+ polls|gate rejected .* times|cannot reach the STS2-Agent mod" && why="${why:+$why; }console reports stuck/unreachable"
+tail -n 4 "$console" | grep -q -E "stuck for [0-9]+ polls|gate rejected .* times" && why="${why:+$why; }console reports stuck"
+# One action timeout can recover while the brain is deciding. Require repeated failures and no recent decision.
+unreachable=$(tail -n 4 "$console" | grep -c 'cannot reach the STS2-Agent mod' || true)
+[ "$unreachable" -ge 2 ] && [ "$no_decision" -ge 180 ] && why="${why:+$why; }console reports unreachable"
 # A play process that keeps exiting early (a model outage) restarts every ~12 s: each start writes a new
 # console log (24HM 2026-09-26: 30 restarts on Jev 403s read as "between runs").
 recent=$(find "$LOGDIR/console" -name '*.log' -newermt "@$(( now - 300 ))" 2>/dev/null | wc -l)

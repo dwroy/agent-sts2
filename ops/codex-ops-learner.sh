@@ -10,7 +10,7 @@ ROOT="${CODEX_OPS_ROOT:-$ROOT}"
 DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 batch="$1"; runs="$2"; character="${3:-silent}"
 task="${4:-postmortem}"; worktree="${5:-$ROOT}"
-case "$task" in postmortem|experience-update|fix-batch) ;; *) exit 2 ;; esac
+case "$task" in postmortem|experience-update|fix-batch|strategy-proposal) ;; *) exit 2 ;; esac
 mkdir -p "$DIR/learner"
 out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"
 export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
@@ -24,7 +24,7 @@ else
   if [ "$task" = postmortem ]; then args+=(--set "runs=$runs");
   else
     args+=(--set merge=live)
-    [ "$task" != experience-update ] || args+=(--set "runs=$runs")
+    [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
   fi
   nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" learner/run.ts "${args[@]}" > "$out" 2> "$err"
 fi

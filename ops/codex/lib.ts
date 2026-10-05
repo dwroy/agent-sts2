@@ -227,7 +227,9 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   postmortem: { args: 1, ms: 30_000 },
   "experience-update": { args: 1, ms: 30_000 },
   "fix-batch": { args: 0, ms: 30_000 },
+  "strategy-proposal": { args: 1, ms: 30_000 },
   "learner-merge": { args: 1, ms: 30_000 },
+  "learner-recheck": { args: 1, ms: 3_700_000 },
   "eval-metrics": { args: 2, ms: 600_000 },
   "learner-status": { args: 0, ms: 30_000 },
   "scheduler-status": { args: 0, ms: 30_000 },
@@ -253,6 +255,12 @@ export function validateRequest(raw: unknown): BrokerRequest {
   if (action === "eval-metrics") {
     if (!/^(ironclad|silent|regent|necrobinder|defect)$/.test(list[0]!)) return { ok: false, error: "eval-metrics 要一个已知角色的知识 id" };
     if (!/^(0|[1-9][0-9]{0,2})$/.test(list[1]!)) return { ok: false, error: "eval-metrics 进阶要是 0–999 的整数（不带前导零）" };
+  }
+  if (action === "strategy-proposal" && !/^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$/.test(list[0]!)) {
+    return { ok: false, error: "strategy-proposal 要 1–10 个 12 位局号" };
+  }
+  if (action === "learner-recheck" && !/^[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)$/.test(list[0]!)) {
+    return { ok: false, error: "learner-recheck 要写入任务的完整批次 id" };
   }
   return { ok: true, action, args: list };
 }
