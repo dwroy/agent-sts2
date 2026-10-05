@@ -1,0 +1,11 @@
+# 23:15 经验兜底与成本派发记录
+
+记录时间：2026-10-05 23:22 CST。只处理本轮三项事件。
+
+experience-update 20261005-224301（学习者目录224302）固定源 `c02c40a38f476991d68b3ad37a082d8ce30105d5`；来源 Z6CFLDR3N4SB SILENT A7 与旧30静默局。学习者报告新增2、更新10、退役0、active92/50553字，A8/A9各83条41402字、实战样本0，240配对切片中位+215字/max7278→8002。此处只转录学习者结果，不追加游戏知识。
+
+源第一次 tsc0、rollout-live 时间预算断言失败：177文件2018例通过、1文件1例失败；完整重跑一次 tsc0、179文件2030例通过。原 `test-source.log`、`test-source-rerun.log` 保留。合入未执行，唯一预检冲突 decision-log，merged=null原回报保持。13条 proposed 原行（12旧update及新0129 add）和changelog第二十四节原文精确归档；旧台账及历史顺序不改，不混新批次。实际合入、合后检查、版本和shipped另行追加。
+
+fix-batch 20261005-230528（学习者目录230529）没有新修复、提交或部署，merged=null表示无新增。95项旧修复逐项核对为基线 `a4bca129a858c362644b280cf55c1e5660e10bfa` 和固定 live `256b0eee715750c1851f85274885a0770c85977f` 祖先；基线 tsc0、179文件2030例通过，无重跑。无需兜底合并、新版本或shipped。策略项沿现有独立任务，传输、缓存、性能证据不足项保持原队列；没有新的 Roy 待定事项。原 report.json/report.md/handoff-ops.md 保留。
+
+Roy 23:15 给定 Jev TypeSafe 输入 $0.042/百万 token、输出免费；近30天 $4.9641、119,495,182 tokens、24,740 requests，9/28起有数。队列明确下一批 fix-batch 优先填写 eval/cost-config.json 并按相同时间全部角色日志交叉核对，结果落 paper/materials/silent/cost.md。运维负责派发，学习者实现、自测、上线；尚未实现，不冒记当前 cost_complete 或金额一致。对局与调度继续。
