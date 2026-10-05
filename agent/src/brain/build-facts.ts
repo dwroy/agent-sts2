@@ -72,6 +72,26 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
       : null,
     ...extra,
   };
+  // silent-0148/0147: 2SU6XN2AEJRD F12 T1 and four events; HMVJKM56S4Q8 F31 T1.
+  // Keep the entry-heal observation separate from room costs, which already include in-room healing.
+  if (str(run["character_id"]).toLowerCase() === "silent"
+    && asArray(run["relics"]).map(asRecord).some((relic) => str(relic["relic_id"]) === "PLANISPHERE" && !bool(relic["is_melted"]))) {
+    facts["route_relic_observations"] = [{
+      relic_id: "PLANISPHERE",
+      name: "活动星图",
+      map_room_type: "Unknown",
+      observed_hp_gain: 5,
+      observations: 6,
+      trigger: "进入地图问号房时，在事件选择或战斗出牌之前回血；问号随后开战也已先回血。",
+      evidence: [
+        { run: "2SU6XN2AEJRD", floor: 12, turn: 1 },
+        ...[15, 21, 36, 43].map((at) => ({ run: "2SU6XN2AEJRD", floor: at, turn: null })),
+        { run: "HMVJKM56S4Q8", floor: 31, turn: 1 },
+      ],
+      projection_note: "这是六次进房实回5的观察。当前血量保持现场值；房间代价按进房前到离房后的净血量变化统计，已包含进房回血，不在路线投影上再加5。现有房间统计没有按是否持有星图区分。",
+      limits: "满血截断、其他房型及择路收益尚未验证；HMVJKM56S4Q8 F31回5后仅11血离场，F32回血至34仍在F33失败。全部选项保留，由DeepSeek结合房间代价与其他事实选择。",
+    }];
+  }
   if ([...relics, ...potions].some((line) => line.includes(UNKNOWN_VALUE))) {
     facts["unknown_value_note"] = `${UNKNOWN_VALUE} marks a number the mod does not expose; the text around it is accurate`;
   }
