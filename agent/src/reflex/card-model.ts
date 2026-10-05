@@ -878,7 +878,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
   const burstSkills = dyn(card, "Skills");
   const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
-  const corrosiveWave = cardId === "CORROSIVE_WAVE" && !bool(card["upgraded"]) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
+  // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
+  const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
