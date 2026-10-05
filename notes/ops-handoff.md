@@ -55,3 +55,10 @@
 - 来源10:54观察者manual：cf11fab8沙箱外tsc0、214文件2758通过/1失败，动作说明漏strategy-proposal。固定源`061d1ca9f3471a952e291efde38cfbeb6a44bd55`（.worktrees/step，step；基线86b24a1f33dba25e4b00427e48a35c4c85ecd73b）仅改ops/codex-ops-do.sh注释及docs/codex-ops.md，现已提交。动作回归修前失败、修后1例通过；完整沙箱tsc0、165文件1957用例通过，原始日志/tmp/sts2-1054-step-sandbox.log，归档paper/materials/silent/20261005-1054-broker-action-list-checks.md。
 - 本轮非阻塞获取ops/live-merge.lock失败，未开始live合并，无本批MERGE_HEAD；不等锁、不重试。下一manual只用上述固定提交，先查report.py及知识刷新/其他合并，保留live最新刷新、所有版本和记录，锁内合入、按要求合后测试并同步main。不改对局行为，无需新增eval版本或经验账本登记；不能重跑已经提交feature的/tmp/sts2-1054-deploy.py。
 - 完整补测机制f670884a已实现并在live保留，清单修复上线后经`bash ops/codex-ops-do.sh learner-recheck 20261005-102754-experience-update`请求当前live完整tsc/vitest；核实源、固定树、去重和learner-checks归档均由该动作执行。本轮尚未执行此完整补测，不能复用cf11fab8的旧失败充作修复后结果。不要合移动step分支头、重复登记S1.exp12或改0081/0082等学习者机制状态。
+
+## 11:12 fix-done结论及上一轮step合入方法更正（2026-10-05 11:15）
+
+- 调度器批次是20261005-094524-fix-batch，学习者归档目录是learner/runs/20261005-094525-fix-batch；不要把归档目录误当动作的调度器批次id。回报merged=null/tests.vitest=1表示整批未完成，不否认前六项已上线；main/live已核对包含afd652a3/f670884a/a4f4ec86/233ede56/87c89b7a/cd55a885及S1.fix11，0078已由ops追加shipped。0080/0084保留已有经验状态；不重复审核或新增eval版本。
+- 后两项3cd9fc6c/e3e7068b均不在main/live；两次live沙箱失败后学习者已回退live 452f7bc7、保留S1.exp12及七项刷新，0081/0082保持proposed。失败potion-cost.ts测试298/307行在同一快照的旧基线/新源码均2失败23通过，根因仅怀疑生成数据隔离，交学习者先修测试问题，不由运维修游戏模型、不直接合入codex-dev、不把源分支165/1957成功当live成功。
+- **更正11:02动作清单修复待合入方案**：固定061d1ca9仍只改ops/codex-ops-do.sh及docs/codex-ops.md，但它的父86b24a1f包含本批已撤回模型，当前非live祖先。禁止整枝merge step/061d1ca9或重跑旧/tmp/sts2-1054-deploy.py；下一manual从当前live另建独立工作树，只cherry-pick061d1ca9单提交的两文件差异，确认git diff-tree只有这两文件、代码与live其余路径等价，按live流程测试/合入并同步main。165/1957旧检查基线含撤回模型，不能冒充新基线合后检查。
+- 现时不能learner-recheck 20261005-094524-fix-batch：该动作要求整批全部源已在live，后两项不满足，禁止改回报/绕过校验。动作说明重放上线后可按既有交接对20261005-102754-experience-update补完整检查；本轮没有manual动作说明合入事件，不提前做该合入。

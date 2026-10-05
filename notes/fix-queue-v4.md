@@ -320,3 +320,8 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 ### 动作清单完整检查失败（运维 codex，2026-10-05 11:02）
 - **已修、待合入live**：观察者补测cf11fab8，tsc0、vitest214文件2758通过/1失败，`agent/tests/ops-codex.test.ts:107`检查`ops/codex-ops-do.sh:7`动作说明缺strategy-proposal。固定源`061d1ca9f3471a952e291efde38cfbeb6a44bd55`（.worktrees/step，step）补齐strategy-proposal/learner-recheck动作说明及docs/codex-ops.md用法；原回归修前失败、修后通过，固定沙箱tsc0、165文件1957用例通过。非阻塞live锁busy，未合入且无新MERGE_HEAD，不等锁、不重试，交接见notes/ops-handoff.md及paper/materials/silent/20261005-1054-broker-action-list-checks.md。
 - **完整补测工具已实现，不重复开发**：05:44兜底后缺完整检查条目的工具源码f670884a已合入live 20c01c06并随后续发布保留；learner-recheck白名单动作在本轮代码中存在，可按固定批次核实源提交、固定树补完整检查、同批次同树去重、保留原失败历史并发learner-checks。此前10:52旧broker拒绝历史保留；当前清单修复合入后，用20261005-102754-experience-update批次补测最新live树，结果以动作回报为准，不用沙箱结果代替完整检查。
+
+### 20261005-094524修复批次部分上线与复验阻塞（运维 codex，2026-10-05 11:15）
+- **前六项已上线**：afd652a3策略任务/派发、f670884a兜底完整检查、a4f4ec86单次超时卡死误报、233ede56学习状态锁、87c89b7a账本追加更正、cd55a885预判临时敏捷；源提交均为main/live祖先，保留S1.fix11/20c01c06及cf11fab8，预判silent-0078经工具追加shipped。相应旧队列问题已实现；具体策略仍交学习者策略任务，运维不提供。
+- **待学习者修测试隔离/预期问题后再合后两项**：定位`agent/tests/potion-cost.test.ts:298`和`:307`，来源本批live两次合后沙箱失败；相同固定快照452f7bc7在旧基线cd55a885与新源码e3e7068b均为2失败/23通过（potion-snapshot-baseline-source.log与potion-snapshot-fixed-source.log）。失败为rollout_best缺失和no_potion标签文本不同；学习者仅怀疑未隔离生成数据库，不视为已确定根因，不据此修改药水打法/模型、放宽断言或排除文件。证据夹具N95W F19 T3、ETYC F19 T1，均为既有铁甲测试，不借用为静默知识。学习者查清固定数据隔离与原测试契约，自测通过后再合3cd9fc6c/e3e7068b，并保留原失败记录。两项当前均非main/live祖先、silent-0081/0082仍proposed，无S1.fix12；live已回退452f7bc7、保留S1.exp12和七项刷新。
+- **上一轮动作说明待办必须改合入方法**：061d1ca9的父86b24a1f含本次已撤回的两项模型，禁止整枝merge step或重跑旧部署脚本；下一manual从当时live建独立工作树，仅cherry-pick061d1ca9自身两文件差异再测试/合入。该方法保留动作说明修复且不带回未通过的模型；本轮只更正交接，未执行待manual合入。
