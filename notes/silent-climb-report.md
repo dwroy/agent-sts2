@@ -779,3 +779,16 @@ silent,6,11,1,1,0,36.27,34,FH2HB2X17F2H,2SU6XN2AEJRD,2026-10-05T04:25:50+00:00,2
 ```
 
 items_found=16按最早证据进阶归属，items_shipped=54按登记后下一场已结束局的起始归属；它们分别不同于本级时段新增26项、窗口内15次正式登记、查询时106项最后状态shipped。0114虽在本级发布，运维登记晚于首胜启动，生成曲线可以归后续进阶；.20在首胜结束后生效，其shipped适用A7。不得用不同统计口径之间的差额推定学习失败，也不把当前缺复盘的首胜先补进账本。
+
+### A6首胜复盘完成后的补充（2026-10-05 21:09）
+
+21:01事件确认批次20261005-204301的2SU6XN2AEJRD复盘完成、exit0；学习者新增silent-0119（腰带扣空药栏敏捷与格挡组合）和silent-0120（领主阳伞两次商店自动取得及未执行报价），首次证据均为A6首胜，登记于20:59:31、晚于A7开局。因此生成曲线按首次证据归属的items_found由16变18，先前升级窗口0093—0118共26项及20:52:15查询快照保持原统计时点，不追溯加入事后条目。两项仍为observed，没有登记上线；旧十项support补证，不记repeat，不把本局当S1.exp20上线后效果。
+
+学习者原文及20:58:56勘误均保留：沙虫末轮敌40血/37毒，纯伤缺口3、实际打击6覆盖；SPEEDSTER/ULTIMATE_STRIKE中文名更正为速行者/究极打击，ID及实际取得不变。新的纯bug无；预测差额完整来源及源码归因等维持未记录。完整归档见paper/materials/silent/20261005-2101-postmortem-batch.md，台账检查120项0问题。
+
+本轮`python3 ops/paper_dataset.py --no-raw`日志切点2026-10-05T13:06:01.066Z，五项一致性检查通过、决策计数差异空、key scan CLEAN。生成学习曲线A6新原行如下，保留上一轮原行及其时点说明；items_shipped=51沿生成器按登记后下一场已结束局起始归属的口径，不等同于窗口内上线次数或当前最后状态数量。
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,6,11,1,1,0,36.27,34,FH2HB2X17F2H,2SU6XN2AEJRD,2026-10-05T04:25:50+00:00,2026-10-05T12:15:46+00:00,18,1,51,silent-0010 silent-0013 silent-0027 silent-0028 silent-0030 silent-0031 silent-0039 silent-0045 silent-0046 silent-0053 silent-0054 silent-0059 silent-0062 silent-0063 silent-0064 silent-0065 silent-0067 silent-0068 silent-0072 silent-0077 silent-0079 silent-0080 silent-0081 silent-0082 silent-0086 silent-0087 silent-0088 silent-0089 silent-0090 silent-0091 silent-0093 silent-0094 silent-0095 silent-0096 silent-0097 silent-0098 silent-0099 silent-0100 silent-0101 silent-0102 silent-0103 silent-0104 silent-0105 silent-0106 silent-0107 silent-0108 silent-0109 silent-0110 silent-0111 silent-0112 silent-0113,1,0
+```
