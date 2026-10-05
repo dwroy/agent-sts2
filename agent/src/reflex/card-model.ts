@@ -50,7 +50,7 @@ export interface CardModel {
   hits: number;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
-  /** Observed unupgraded Shadowmeld: later card Block in this turn is doubled. */
+  /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
   shadowmeld?: boolean;
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
@@ -69,7 +69,7 @@ export interface CardModel {
   strength: number;
   /** Dexterity gained on play, from observed Footwork vars (silent-0026). */
   dexterity?: number;
-  /** Dexterity for this turn only, from observed unupgraded Anticipate (silent-0078 / silent-0080). */
+  /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
   temporaryDexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
   afterImage?: number;
@@ -870,9 +870,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
-  const shadowmeld = cardId === "SHADOWMELD" && !bool(card["upgraded"]) && dyn(card, "Power") === 1;
+  // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
+  const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
   const corrosiveWave = cardId === "CORROSIVE_WAVE" && !bool(card["upgraded"]) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
-  const anticipate = cardId === "ANTICIPATE" && !bool(card["upgraded"]) && dyn(card, "DexterityPower") !== null;
+  // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
+  const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
     damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble;
