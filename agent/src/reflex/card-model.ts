@@ -50,6 +50,8 @@ export interface CardModel {
   /** Per hit, before this turn's extra Strength and before Vulnerable/Weak. null = deals no damage. */
   damage: number | null;
   hits: number;
+  /** Observed plain Silent Flechettes: remove hits as skills from the observed hand leave (silent-0150/0151). */
+  hitsLoseHandSkills?: boolean;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -983,6 +985,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     damage,
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
+    ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
+      dyn(card, "CalculatedHits") !== null && /^手牌中每有一张技能牌，造成/.test(template) ? { hitsLoseHandSkills: true } : {}),
     ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
     ...(shadowmeld ? { shadowmeld: true } : {}),
     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
