@@ -839,7 +839,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (decision.kind === "ask" && decision.deepseek && !codeBaseline) {
       const spec = decision.deepseek;
       let question = decision.questions[spec.question];
-      const memoKey = `${str(state.raw["run_id"])}|${state.run?.floor ?? ""}|${decision.label}|${JSON.stringify(question ?? null)}`;
+      const memoKey = `${stateFingerprint}|${decision.label}|${JSON.stringify(decision.state)}|${JSON.stringify(question ?? null)}`;
       if (deepseekMemo && deepseekMemo.key === memoKey) {
         stats.debounced += 1;
         deepseekResolved = deepseekMemo.resolved;
@@ -1725,9 +1725,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     noteCardSource(screenMemory, state, resolved.intent);
     // A combat action went out on this turn: its later actions are not held for the turn-start settle.
     noteTurnActed(screenMemory, state, resolved.intent);
-    // The board is about to change (or should): never reuse an answer across an action.
+    // Closing an inspection overlay leaves the underlying decision unexecuted (7PWU F47).
+    // Its memo still requires the same board, facts and question; all other actions consume it.
     answerMemo = null;
-    deepseekMemo = null;
+    if (resolved.intent.action !== "close_cards_view") deepseekMemo = null;
     // Remember the one action whose effect the state does not reflect: a skipped card reward stays
     // claimable, so without this the planner claims it again on the next iteration.
     if (resolved.intent.action === "skip_reward_cards") screenMemory.cardRewardSkipped = true;
