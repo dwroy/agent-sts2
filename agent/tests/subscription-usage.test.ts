@@ -1,9 +1,17 @@
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, it } from "vitest";
+import { tmpdir } from "node:os";
+import { expect, it, vi } from "vitest";
 import type { CodexUsage } from "../src/brain/engines/codex-usage.js";
 import { quotaSnapshot, sampleQuota } from "../../ops/subscription-usage.js";
 import { sessionGrowth } from "../../ops/codex/lib.js";
+
+// Keep the API fallback inside the caller's allowed temporary root when testing an unset TMPDIR.
+vi.mock("node:os", async (importOriginal) => {
+  const os = await importOriginal<typeof import("node:os")>();
+  const fallback = os.tmpdir();
+  return { ...os, tmpdir: () => process.env["TMPDIR"] || fallback };
+});
 
 const now = new Date("2026-10-05T12:50:00Z");
 const usage = (reset = "2026-10-10T09:00:00Z"): CodexUsage => ({ readAt: now.toISOString(), ms: 10, plan: "pro",
@@ -32,10 +40,13 @@ it("keeps reset periods separate and marks expired, old and unknown observations
   expect(sessionGrowth(JSON.stringify({ payload: { type: "token_count", rate_limits: { primary: { used_percent: 43 } } } })).weeklyUsedPercent).toBeUndefined();
 });
 
-it("appends success and failure without losing history or disclosing account/error payloads", async () => {
-  const dir = mkdtempSync(join(process.env["TMPDIR"]!, "quota-test-"));
-  const path = join(dir, "snapshots.jsonl");
+it.each([true, false])("appends success and failure without losing history or disclosing account/error payloads (TMPDIR set: %s)", async (configured) => {
+  const root = tmpdir();
+  vi.stubEnv("TMPDIR", configured ? root : undefined);
+  let dir: string | undefined;
   try {
+    dir = mkdtempSync(join(tmpdir(), "quota-test-"));
+    const path = join(dir, "snapshots.jsonl");
     writeFileSync(path, '{"historical":true}\n');
     const raw = { ...usage(), accountId: "PRIVATE_ACCOUNT", secret: "PRIVATE_SECRET" };
     await sampleQuota(path, async () => raw, () => now);
@@ -46,5 +57,8 @@ it("appends success and failure without losing history or disclosing account/err
     const rows = text.trim().split("\n").map((line) => JSON.parse(line));
     expect(rows).toHaveLength(3);
     expect(rows[2]).toMatchObject({ freshness: "failed", error_code: "usage_read_failed", windows: [] });
-  } finally { rmSync(dir, { recursive: true, force: true }); }
+  } finally {
+    if (dir) rmSync(dir, { recursive: true, force: true });
+    vi.unstubAllEnvs();
+  }
 });

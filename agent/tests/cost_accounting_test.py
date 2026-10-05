@@ -43,7 +43,7 @@ class Accounting(unittest.TestCase):
         self.assertEqual(cost.quota_periods([stale], CONFIG), [])
 
     def test_byte_cuts_ignore_partial_lines_and_later_appends(self):
-        with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as tmp:
+        with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as tmp:
             path = Path(tmp) / "source.jsonl"
             path.write_text('{"n":1}\n')
             sources = cost.Sources()
@@ -53,7 +53,7 @@ class Accounting(unittest.TestCase):
             self.assertEqual(list(cost.Sources().rows(path)), [{"n": 1}, {"n": 2}])
 
     def test_components_multi_run_attribution_cost_coverage_and_no_prompt_output(self):
-        with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as tmp:
+        with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as tmp:
             root = Path(tmp)
             def write(name, rows):
                 p = root / name; p.parent.mkdir(parents=True, exist_ok=True)
