@@ -396,3 +396,4 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - **Claude 观察会话**：本会话的转录（~/.claude/projects/-home-dw-Projects-agent-sts2/*.jsonl 里 assistant 消息的 usage），只读取、不改。
 - **订阅换算成钱**：codex 是 ChatGPT 订阅，按「周额度用掉的百分比 × 订阅价按周折算」估算，用 codex-usage 读到的 weekly / 5h 窗口百分比做时间序列（如果现在没有持续记录，就加一个定时快照，写进 logs/ 某个 jsonl），再按各组件的 token 份额分摊；Claude 订阅同理。订阅价和额度留成配置（例如 eval/cost-config.json 的占位），等 Roy 给数字后填；API 计价的部分（DeepSeek、Jev）直接算。
 - 输出每一级的：局数、总 token、各组件占比、估算花费、每局 / 每胜的花费；以及从 A0 起的累计曲线。
+- **订阅数字（Roy 2026-10-05 20:41）**：Claude = Max 20x，**$200/月**；ChatGPT（codex）= Pro 25x，**$500/月**。写进成本配置（如 eval/cost-config.json），注明来源和日期；周折算按 月费 × 12 / 52。Claude 观察会话与 codex 的额度互不相关，各自按自己的订阅算。
