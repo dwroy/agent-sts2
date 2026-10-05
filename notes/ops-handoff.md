@@ -115,3 +115,5 @@
 - 2026-10-05 15:50 已处理15:49正式learner-checks：20261005-150133-experience-update固定发布7c7f22e3a80f2addba1ba199eb1a18084ef78bba/树fdc1c52d3416bcf760fece0305ac9ccebf346c66与15:49补测动作归档一致，完整外部tsc/vitest exit0，224文件2796通过/2跳过，15:41:29开始、444.16秒；S1.exp16正式确认完成，无补测待办。保留原预检/时序失败及工具中断历史，不重复测试、派发、合并、论文生成或16项shipped登记。
 
 - 2026-10-05 16:00 已处理15:58 learner-done 20261005-154301：ARKQLHG6RS4W静默A6/F33帝王蟹六次未过、成功SL五次，末次T4以6血6挡对火箭33攻击死亡；复盘原文及八条旧账本support已归档，无新增/重复犯错/shipped登记，check107项0问题。S1.exp16标签晚于本局结束不据此计重犯，未执行的前五次死亡损血及其他未记录项保持；新纯bug/Dai待定无，后续机制打法交学习者，不加队列或收件箱，详情paper/materials/silent/20261005-1558-postmortem-batch.md，随后刷新论文表，对局照常。
+
+- 2026-10-05 16:57 已处理16:55 fix-done 20261005-163046（学习者163047）：固定源dba8d7caf9f2b44dd2fd11fd8861ecc14be4c09b→合入68a415a9f71beca9549573141248aab2c81fa0d1→发布0ff3ce8214c3122805bb27ddafa668a76519e79a/S1.fix18核实为live祖先，main同步相同代码/eval/知识，decision-log冲突保留双方；刷新8da773c8七项保留。音叉0108经ledger.py/by=ops登记shipped，保留learner proposed共2行，check111项0问题，0072不重复登记。撤4失败/1通过、恢复5通过，源/合后174文件1993例/tsc0，无重跑；完整外部检查待调度器后续learner-checks，不混用其他批。其他经验台账行不提交/登记，策略跳过项沿既有独立任务，无新Dai决定；详情paper/materials/silent/20261005-1655-fix18-release.md，对局照常。

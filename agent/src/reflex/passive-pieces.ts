@@ -133,6 +133,8 @@ export interface SolverPieces {
  * as plain shapes here (this module is a leaf; turn-solver reads the same field names).
  */
 export interface SolverPieceFields {
+  /** Silent-0108: the observed ten-Skill counter persists across turns. */
+  tuningFork?: { every: number; block: number; count: number };
   orichalcum?: number;
   rippleBasin?: number;
   letterOpener?: { every: number; damage: number; count: number };
@@ -174,7 +176,12 @@ export function solverFieldsOf(pieces: SolverPieces | null | undefined, counts: 
 export function liveSolverFields(runRaw: unknown, cardsPlayedThisTurn: number, attacksPlayedThisTurn = 0, enabled = passivePiecesOptions.enabled): SolverPieceFields {
   const relics = asArray(asRecord(runRaw)["relics"]).map(asRecord);
   const found = solverPiecesOf(relics.map((relic) => str(relic["relic_id"])), enabled);
-  if (!found) return {};
+  // 6EV5V6PJJS9D F39 T3 / T082DRCUHRRD F12 T7, silent-0108/0072:
+  // unlike the turn-local counters below, Tuning Fork starts this turn at nine.
+  const fork = relics.find((relic) => str(relic["relic_id"]) === "TUNING_FORK");
+  const tuning = enabled && str(asRecord(runRaw)["character_id"]).toLowerCase() === "silent" && fork
+    ? { tuningFork: { every: 10, block: 7, count: num(fork["stack"]) % 10 } } : {};
+  if (!found) return tuning;
   // Ripple Basin: an Attack already played this turn (a re-plan mid-turn) rules it out; the solver counts only its own.
   const { rippleBasin: _basin, ...rest } = found;
   const pieces: SolverPieces = attacksPlayedThisTurn > 0 ? rest : found;
@@ -182,10 +189,10 @@ export function liveSolverFields(runRaw: unknown, cardsPlayedThisTurn: number, a
     if (cardsPlayedThisTurn <= 0 || every <= 0) return 0;
     return num(relics.find((relic) => str(relic["relic_id"]) === id)?.["stack"]) % every;
   };
-  return solverFieldsOf(pieces, {
+  return { ...tuning, ...solverFieldsOf(pieces, {
     ...(pieces.letterOpener ? { letterOpener: counter("LETTER_OPENER", pieces.letterOpener.every) } : {}),
     ...(pieces.ornamentalFan ? { ornamentalFan: counter("ORNAMENTAL_FAN", pieces.ornamentalFan.every) } : {}),
-  });
+  }) };
 }
 
 /** The run's relics as the later turns' solver pieces (null: none held, or PASSIVE_PIECES off). */
