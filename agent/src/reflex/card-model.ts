@@ -50,6 +50,10 @@ export interface CardModel {
   hits: number;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
+  /** Observed unupgraded Shadowmeld: later card Block in this turn is doubled. */
+  shadowmeld?: boolean;
+  /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
+  corrosiveWave?: number;
   block: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
   vulnerable: number;
@@ -782,6 +786,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
 
   // Ambiguous or conditional vars, by id.
   switch (cardId) {
+    case "EXPOSE":
+      // ZZMYZ5UBCG72 F48 T2, silent-0066: unupgraded Power=2 applied two Vulnerable.
+      // Block/Artifact removal and the upgrade have no independently verified model here.
+      if (!bool(card["upgraded"])) vulnerable = dyn(card, "Power") ?? vulnerable;
+      break;
     case "UPPERCUT": {
       const amount = dyn(card, "Power") ?? 1;
       vulnerable = amount;
@@ -832,6 +841,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
+  const shadowmeld = cardId === "SHADOWMELD" && !bool(card["upgraded"]) && dyn(card, "Power") === 1;
+  const corrosiveWave = cardId === "CORROSIVE_WAVE" && !bool(card["upgraded"]) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
     damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0;
@@ -841,7 +852,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   if (type === "Power") {
     flatValue = POWER_VALUE[cardId] ?? 8;
     known = true;
-  } else if (special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force" || special === "malaise") {
+  } else if (shadowmeld || corrosiveWave > 0 || special === "frantic_escape" || special === "double_block" || special === "double_next_attacks" || special === "primal_force" || special === "malaise") {
     known = true; // its whole value is the Sandpit count / the block doubled / the Attacks doubled, scored by the solver
   } else if (!hasModelledEffect && type !== "Status" && type !== "Curse") {
     // Unmodelled skill/attack (Havoc, Armaments' upgrade, …): a small nudge per energy. Not a playable
@@ -922,6 +933,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
     ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
+    ...(shadowmeld ? { shadowmeld: true } : {}),
+    ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
     vulnerable,
     weak,
