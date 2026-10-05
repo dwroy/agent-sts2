@@ -675,8 +675,10 @@ export interface SolverInput {
    * turn, no revive held, is not extended (the game ends it there; its later plays cannot save it).
    */
   stopAtOwnDeath?: boolean;
-  /** SL judge only: a Date.now() time past which the search stops, cut short (SolveResult.truncated and timedOut). */
+  /** A time past which the search stops, cut short (SolveResult.truncated and timedOut). */
   deadline?: number;
+  /** The deadline's clock; SL callers use Date.now(), rollouts use their monotonic budget clock. */
+  deadlineNow?: () => number;
   /**
    * SL judge only: the search stops at the first line that does not die (SolveResult.lives): the judge only asks whether
    * every line dies. The plans found so far are returned as they are.
@@ -3518,7 +3520,7 @@ export function solveTurn(input: SolverInput): SolveResult {
       truncated = true;
       return;
     }
-    if (input.deadline !== undefined && nodes % 64 === 0 && Date.now() > input.deadline) {
+    if (input.deadline !== undefined && nodes % 64 === 0 && (input.deadlineNow ?? Date.now)() > input.deadline) {
       truncated = true;
       timedOut = true;
       return;

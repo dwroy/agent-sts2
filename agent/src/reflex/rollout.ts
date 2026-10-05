@@ -2520,6 +2520,8 @@ function simulate(
   /** A whole fight (simulateFight): the enemies' scripts (fightNextMove), sleepers and phases carried turn to turn. */
   fullFight = false,
 ): TurnRecord[] | null {
+  // Do not initialize another sample once its budget has already expired.
+  if (Number.isFinite(deadline) && budget.now() - budget.start >= deadline) return null;
   const random = rng(seed);
   const s = input.solver;
   const opts = input.options ?? {};
@@ -2723,7 +2725,7 @@ function simulate(
   for (let h = 1; h < horizon; h += 1) {
     // Past the hard deadline the sample is dropped (the caller keeps the waves already complete).
     const at = budget.now() - budget.start;
-    if (at > deadline) return null;
+    if (at >= deadline) return null;
     if (budget.need !== undefined && at > budget.need) budget.need = at;
     const last = records[records.length - 1]!;
     if (last.won || last.died || last.timeUp) break;
@@ -2895,6 +2897,7 @@ function simulate(
     player.ringingNext = false;
     player.tangledNext = 0;
     const started = budget.now();
+    if (started - budget.start >= deadline) return null;
     const { drawPile: _d, wither: _w, focusIndex: _f, focusWeight: _fw, nextIncoming: _n, laterIncoming: _l, knownTop: _k, ...rest } = s;
     const potions = held.map((card) => ({ ...card, validTargets: card.target === "single" ? targets : [] }));
     // A kill order: this turn's target is the first of its groups with a member alive (the lowest-HP
@@ -2910,10 +2913,13 @@ function simulate(
     const drawing = fullFight ? knownDraws(hand, piles, player, targets) : null;
     const played = drawing?.hand ?? hand;
     const potionsNow = fullFight ? sampledPotions(potions, input, seed, h, played, piles, player, targets, drawing?.known) : potions;
-    const solved = solveTurn({ ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes });
+    const solved = solveTurn({ ...rest, ...focus, ...wither, ...scale, hand: [...played, ...potionsNow], player: pSim, enemies: sims, turn: (s.turn ?? 1) + h, cardsPlayedThisTurn: 0, maxNodes: policyNodes,
+      ...(Number.isFinite(deadline) ? { deadline: budget.start + deadline, deadlineNow: budget.now } : {}) });
     budget.policyMs += budget.now() - started;
     budget.policyTurns += 1;
     budget.policyNodes += solved.nodes;
+    // An unfinished last turn must not be published as a complete sampled trajectory.
+    if (solved.timedOut || (Number.isFinite(deadline) && budget.now() - budget.start >= deadline)) return null;
     const best = solved.plans[0];
     if (!best) break;
     records.push(applyPlan(h, best, [...played, ...potionsNow], handBase, player, enemies, piles, input, random, powers, fullFight, drawing?.known));
@@ -2922,6 +2928,7 @@ function simulate(
     timeUp(h);
     drink(best);
   }
+  if (Number.isFinite(deadline) && budget.now() - budget.start >= deadline) return null;
   return records;
 }
 
