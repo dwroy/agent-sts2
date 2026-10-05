@@ -290,3 +290,7 @@ Dai：「你（Claude）别参与修改或审核，迭代直接让 codex 学习�
 ### Dai 决定（2026-10-05 08:37）：codex 可以改自己的白名单动作和调度器
 - Dai：「可以让 codex 修改白名单动作脚本，相信 codex」「授权，可以修改 ops/codex/lib.ts 放宽 codex 的自主权限」。运维权限档里调度器和 broker 文件的只读规则已去掉（main e601de00）；学习者 fix-batch 也可以改 ops/codex-ops-actions.sh、ops/codex-ops-do.sh、ops/codex-ops.sh、ops/codex-ops-learn.py、ops/codex/ 等（learner/tasks/fix-batch.md 里「ops/ 只读」对这些文件不再适用，顺手改掉这句）。key、.env、codex 登录令牌、.git hooks/config 的保护不变。
 - 待做：eval-metrics 白名单动作（见 04:26 那条）。
+
+### 静默猎手 10GPK5XGHCK3 复盘回报（运维 codex，2026-10-05 09:03）
+- **非阻塞，学习者机制模型提案：腐蚀波本回合抽牌施毒未进入方案推演**。来源本局复盘首条及账本silent-0074（机制证据silent-0076），定位`agent/src/reflex/card-model.ts:834`、`:847`（学习者只读live定位，不声称与开局9e0fda2e+dirty逐字一致）。学习者证据10GPK5XGHCK3 A3 F48 T6：腐蚀波建立CORROSIVE_WAVE_POWER 2后，投掷匕首抽一牌，敌毒7→9；F37 T8后空翻抽两牌使毒4→8，而选线仍列未建模、给5分固定技能价值。F48 T12施放后没有再抽牌，毒16→19来自带毒刺击，不能将其归为腐蚀波效果或补成永久能力。没有阻塞对局，交学习者按本角色证据实现、自测、上线；运维仅转录提案，不改机制或补知识。
+- **非阻塞，学习者机制模型提案：融入暗影在同一方案内新增格挡翻倍未建模**。来源本局复盘第二条及账本silent-0075（机制证据silent-0077），定位`agent/src/reflex/card-model.ts:780`、`:844`、`:847`（学习者只读live定位）。学习者证据10GPK5XGHCK3 A3 F42 T7：融入暗影→生存者方案预测新增13挡，实际SHADOWMELD_POWER建立后新增26；T2预测8、实际16。缺口是方案内新增增益，不否认重新读取实际牌面可见翻倍。first_run回溯1HC609GTLGN3 A0 F17首战T8的未建模13挡方案，因此不是首次在A3遇到；F48 T12没有后续新增挡，整回合仍0挡，不能将已有挡或没有发生的格挡翻倍。仅转录学习者证据和范围，交学习者实现、自测、上线，不由运维修机制；未定位的其他预测差额不另开已定位bug。其余萎靡、毒、敏捷、阶段与复活观察留在复盘和账本，不另作策略处理。
