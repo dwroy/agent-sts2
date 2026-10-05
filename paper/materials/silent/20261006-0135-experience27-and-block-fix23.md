@@ -92,3 +92,8 @@ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
    Start at  01:29:54
    Duration  1.49s (transform 1.13s, setup 278ms, import 1.06s, tests 43ms, environment 0ms)
 ```
+
+- 2026-10-06 01:45 本轮归档提交 `025d70e1470bf9a80bb1c2eac4d15f851f0f72ac`，main固定发布集成 `b70378edafabd9e21a34334ed13c2e5720941795`。逐项源码/测试blob等同已测fix发布 `bf63ab407b647a10bbae156fe05f6741d1fe4eb4`/树 `ab888de781e976ce69f6cb96eae6a06f91266fae`，988项code blob核对、2065项其他main文件保留；未修改live。只同步已测代码，没有重新审核或重复相同源码测试。
+- 11项经验原proposed及11条ops shipped归档，0130原proposed前轮已归档、本轮追加独立S1.fix23 shipped，共12条CLI/by=ops更新；`/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 134 item(s), 0 problem(s)`。first_run/prior/evidence/repeat不变，0114/0115等其他条目未更新；herdr纯测试没有新bug-infra/行为版本，S1.fix23仅由重复扣挡产生行为改变。
+- 静默学习曲线已刷新。01:29旧pending与本轮manual待办因学习者实际继承合入关闭，不重跑旧/tmp恢复脚本。新经验和fix两批完整外部检查已由调度器运行（checks_pending=true），本轮不重复请求它们、不等待或冒记通过。
+- 依旧交接已于01:44运行 `bash ops/codex-ops-do.sh learner-recheck 20261006-004301-fix-batch` 请求前批0130独立完整补测；请求端仍在执行，回报文件 `/tmp/sts2-0135-block-recheck.log`，最终状态及固定树结果交后续learner-checks，不提前声称完整通过，不借他批成功。原批次merged=null/冲突、运维取锁busy、herdr原失败/回退与旧Inferno/TMPDIR失败全部保留。无Roy新待定，不停对局/调度、不运行play。
