@@ -6,3 +6,5 @@
 - 学习者报告的新bug位于agent/src/reflex/card-model.ts:815，属于静默猎手升级牌的机制模型覆盖；按学习协议交学习者处理，未发现让本局停止的阻塞证据。现读代码明确MALAISE只在!upgraded入口，记录的对局源码bf63ab40+dirty不作重建；旧0051/S1.fix5仅未升级模型，升级证据不能沿用旧已修状态。0146机制观察与0144代码入口证据分别保留。
 - 转录学习者证据：本局A8 F33 T3零能量升级萎靡显示unmodelled，CRUSHER减1力/加1虚弱，意图18→6、7挡覆盖、HP63不变；F38 T1花2能量减3力/加3虚弱；F48 T2花3能量，TORCH_HEAD_AMALGAM力0→−4、虚弱1→5，攻击13→10，TUNING_FORK另给7挡、HP69→66。学习者的最早原帧证据是KAY522KT5NXR A0 F31 T1，未建立受控全战反事实，不把所有推演差额或胜负归因于此缺口。详复盘和原账本。
 - 其他学习者观察及“未记录”项保留原文；没有Roy新待定或账本缺失。无本轮ascension-up事件，不新增A8升级小结、版本或上线标签，不修改对局/调度进程。本轮后续运行paper_dataset.py --no-raw并记录结果。
+
+- 2026-10-06 03:12 本轮论文数据刷新完成：nice -n19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-05T19:08:35.717Z，五项一致性通过、runs.jsonl决策计数差异为空、key scan CLEAN；行数{"commits.csv": 2623, "decisions_by_label.csv": 17470, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 523}，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 146 item(s), 0 problem(s)。本次按脚本的日志/账本切点生成，发现和上线分开，不把首胜后复盘倒算成通关前学习。11条原账本及复盘已提交41206981df2b0db952e41be8d8e91133b9c2672e，本提交只包含自身记录与本轮生成表；当前无本轮升级事件，不另加升级报告。
