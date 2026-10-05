@@ -494,6 +494,8 @@ export interface PlayerSim {
    * at the end of the turn, Plating's block counted, `damage` to the solver's worst random victim before the enemies act).
    */
   letterOpener?: { every: number; damage: number; count: number };
+  /** Silent-0108/0072: seven passive Block each ten Skills, across turns. */
+  tuningFork?: { every: number; block: number; count: number };
   ornamentalFan?: { every: number; block: number; count: number };
   parryingShield?: { block: number; damage: number };
   /**
@@ -904,6 +906,8 @@ export interface Outcome {
   freeAttacksLeft?: number;
   /** Attack plays this line makes (duplicates and replays each one; absent when none): Pen Nib's count goes on by them. */
   attackPlays?: number;
+  /** Tuning Fork's persistent counter after this line, when the relic is modelled. */
+  tuningForkCount?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
   /**
@@ -1593,7 +1597,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(card) : card, target, player, cost);
     if (card.type === "Attack") attackRelics(next, player);
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
-    if (card.type === "Skill" && player.letterOpener) skillRelics(next, player.letterOpener);
+    if (card.type === "Skill" && (player.letterOpener || player.tuningFork)) skillRelics(next, player);
   }
   // T082DRCUHRRD F27 T1 / F9PP859XZ3RJ F37 T2: the old hand is gone before the replacement draw.
   // Use the hand at play time, including held/locked/unknown drawn cards, but excluding potion slots.
@@ -2203,12 +2207,16 @@ function attackRelics(sim: Sim, player: PlayerSim): void {
 }
 
 /**
- * PASSIVE_PIECES: one play of a Skill for Letter Opener (PlayerSim.letterOpener), after the play: its damage to every
- * enemy, as non-attack damage, at each play bringing the turn's Skills to a multiple of `every`.
+ * One Skill play advances the modelled relics after its effects: Letter Opener's turn-local
+ * damage and Tuning Fork's persistent passive Block have independent counters.
  */
-function skillRelics(sim: Sim, opener: NonNullable<PlayerSim["letterOpener"]>): void {
+function skillRelics(sim: Sim, player: PlayerSim): void {
   sim.relicSkills += 1;
-  if (opener.every > 0 && (opener.count + sim.relicSkills) % opener.every === 0) sweepRaw(sim, opener.damage);
+  const opener = player.letterOpener;
+  if (opener && opener.every > 0 && (opener.count + sim.relicSkills) % opener.every === 0) sweepRaw(sim, opener.damage);
+  const fork = player.tuningFork;
+  // The observed Frail does not reduce this relic's seven Block (6EV5V6PJJS9D F39 T3).
+  if (fork && fork.every > 0 && (fork.count + sim.relicSkills) % fork.every === 0) gainBlock(sim, fork.block, player);
 }
 
 /** Damage to every living enemy at once (Lost Wisp's): two crabs dying to it die together, as to Inferno's sweep. */
@@ -3196,6 +3204,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.thrashRandom.length > 0 ? { thrashRandom: sim.thrashRandom } : {}),
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.relicAttacks > 0 ? { attackPlays: sim.relicAttacks } : {}),
+      ...(input.player.tuningFork && input.player.tuningFork.every > 0 ? { tuningForkCount: (input.player.tuningFork.count + sim.relicSkills) % input.player.tuningFork.every } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),

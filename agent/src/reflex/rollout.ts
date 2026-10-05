@@ -1166,6 +1166,7 @@ interface SimEnemy {
 }
 
 interface SimPlayer {
+  tuningForkCount?: number;
   hp: number;
   maxHp: number;
   strength: number;
@@ -2100,6 +2101,7 @@ function applyPlan(
   player.strength += o.strengthGained;
   player.freeAttacks = o.freeAttacksLeft ?? 0;
   if (player.penNib !== undefined) player.penNib = (player.penNib + (o.attackPlays ?? 0)) % PEN_NIB_EVERY;
+  if (o.tuningForkCount !== undefined) player.tuningForkCount = o.tuningForkCount;
   // Pael's Tear: this turn's unspent energy gives the next turn its extra energy.
   player.paelsNext = o.nextTurnEnergy ?? 0;
   // Self-Forming Clay: this turn's HP losses give the next turn's block.
@@ -2529,6 +2531,7 @@ function simulate(
     poisonPerTurn: input.playerPowers["NOXIOUS_FUMES_POWER"] ?? 0,
     poisonExtraTriggers: base.poisonExtraTriggers ?? input.playerPowers["ACCELERANT_POWER"] ?? 0,
     envenom: base.envenom ?? input.playerPowers["ENVENOM_POWER"] ?? 0,
+    ...(base.tuningFork ? { tuningForkCount: base.tuningFork.count } : {}),
     phantomBlades: (input.playerPowers["PHANTOM_BLADES_POWER"] ?? base.phantomBlades) === 9 ? 9 : 0,
     doubleDamage: (input.playerPowers["DOUBLE_DAMAGE_POWER"] ?? 0) > 0,
     doubleDamageNext: (input.playerPowers["SHADOW_STEP_POWER"] ?? 0) > 0,
@@ -2789,6 +2792,7 @@ function simulate(
     const carried = fullFight && input.fightRelics?.iceCream ? Math.max(0, Math.floor(last.snap.en)) : 0;
     const pSim: PlayerSim = {
       ...base,
+      ...(base.tuningFork ? { tuningFork: { ...base.tuningFork, count: player.tuningForkCount ?? 0 } } : {}),
       // 10GPK5XGHCK3 F42, silent-0075: the decision turn's Shadowmeld has expired.
       shadowmeldActive: false,
       // 10GPK5XGHCK3 F37/F48, silent-0074: Wave never poisons later turns' draws.
