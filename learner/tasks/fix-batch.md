@@ -60,7 +60,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 
 ## 6. 安全
 - key 不许打印、不许落盘：不许读或 grep `.env`、`~/.jev_api_keys`、`~/.deepseek_api_key`，不许跑 `env`、`printenv` 之类会打印环境变量的命令。
-- 只改 {{project_root}} 里的：{{worktree}}（本分支）、{{scratch}} 和学习账本（只经 learner/ledger.py 追加）；merge = live 时还有 {{merge_dir}} 的合入，以及第 5 节明确要求的上线记录和 eval 版本。ops/、notes/、paper/ 的其他文件都只读。
+- 只改 {{project_root}} 里的：{{worktree}}（本分支）、{{scratch}} 和学习账本（只经 learner/ledger.py 追加）；merge = live 时还有 {{merge_dir}} 的合入，以及第 5 节明确要求的上线记录和 eval 版本。Dai 2026-10-05 08:37 已授权修改本工作树中的 ops/ 调度器与 broker（包括 ops/codex/、codex-ops*.sh、codex-ops-learn.py、learner_jobs.py、learner_checks.py），可实现队列中已批准的动作和学习闭环；不修改 key、.env、codex 登录令牌、.git hooks/config，也不借动作执行清单外操作。notes/、paper/ 的其他文件仍只读。
 - 不推送；不运行 play；不用 Zboubkiller DLL，不开 mod 自带的 autoplay。
 - 不读游戏二进制（sts2.dll）或 .pck 文件。
 - 杀进程用 PID，不用 `pkill -f`；不许 `npm install`（node_modules 是共用的软链接）；logs/ 只读。
