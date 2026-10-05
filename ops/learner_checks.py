@@ -7,6 +7,11 @@ import subprocess
 
 FULL_CHECK_COMMAND = 'export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]'
 
+# Compare executable sources and their validation inputs, not refreshed knowledge or ops records.
+SOURCE_PATHS = ["agent/src", "agent/tools", "agent/tests", "agent/package*.json", "agent/tsconfig*.json",
+                "agent/vitest*", "learner/*.ts", "learner/*.py", "learner/tasks", "ops/*.sh", "ops/*.py",
+                "ops/codex", "eval/*.py", "eval/*.ts", "eval/cost-config.json", "knowledge/builders"]
+
 
 def read_report(path):
     try:
@@ -23,6 +28,42 @@ def read_report(path):
     return {}
 
 
+def verify_empty_fix(report, batch, root):
+    """An empty fix report needs passing checks and Git evidence, not a fabricated merge."""
+    tests = report.get("tests")
+    base = report.get("base")
+    worktree = os.path.join(root, ".worktrees", "codex-dev")
+    if (report.get("task") != "fix-batch" or batch.get("task") != "fix-batch"
+            or report.get("fixes") != [] or report.get("merged") is not None or report.get("commit")
+            or not isinstance(tests, dict)
+            or any(type(tests.get(key)) is not int or tests[key] != 0 for key in ("tsc", "vitest"))
+            or type(tests.get("cases")) is not int or tests["cases"] <= 0
+            or not isinstance(base, str) or not re.fullmatch(r"[0-9a-f]{40}", base)
+            or batch.get("worktree") != worktree):
+        return None
+
+    def git(path, *args):
+        return subprocess.run(["git", "-C", path, *args], capture_output=True, text=True, timeout=10)
+
+    try:
+        status = git(worktree, "status", "--porcelain", "--untracked-files=all")
+        head = git(worktree, "rev-parse", "HEAD")
+        live = git(os.path.join(root, ".worktrees", "live"), "rev-parse", "HEAD")
+        if status.returncode or status.stdout.strip() or head.returncode or live.returncode:
+            return None
+        head, live = head.stdout.strip(), live.stdout.strip()
+        if any(not re.fullmatch(r"[0-9a-f]{40}", commit) for commit in (head, live)):
+            return None
+        # Pin both heads: live can advance while a completion event is being processed.
+        if (git(worktree, "merge-base", "--is-ancestor", base, head).returncode
+                or git(worktree, "diff", "--quiet", base, head, "--").returncode
+                or git(worktree, "diff", "--quiet", head, live, "--", *SOURCE_PATHS).returncode):
+            return None
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return {"base": base, "head": head, "live": live}
+
+
 def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, run_checks=True):
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
     merged = report.get("merged")
@@ -32,10 +73,15 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
         verified = subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", merged, "HEAD"],
                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
     task = batch["task"]
-    batch.update(state="done" if rc == 0 and verified else "failed", rc=rc, merged=merged if verified else None)
+    empty = verify_empty_fix(report, batch, root) if rc == 0 and not verified else None
+    batch.update(state="done" if rc == 0 and (verified or empty) else "failed", rc=rc, merged=merged if verified else None)
+    if empty:
+        batch["no_changes"] = empty
     enqueue({"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done"),
             f"{task} 批次 {batch_id} 结束：exit {rc}；已核实合入 live：{merged if verified else '无'}。"
-            f"回报：{out_dir}/{batch_id}.out。学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。")
+            f"回报：{out_dir}/{batch_id}.out。"
+            + (f"已核实无新增产出、自测通过，源码与 live {empty['live']} 一致；正常结案，无新增合并或完整补测。"
+               if empty else "学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。"))
     if not verified:
         return
     if not run_checks:

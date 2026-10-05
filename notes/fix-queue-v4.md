@@ -464,5 +464,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 04:21 非阻塞调度缺陷：无新增修复批次成功被误标失败
 
-- [ ] `ops/learner_checks.py:35`只将rc=0且合并提交已核实的写任务标done；`ops/codex-ops-learn.py:323-324`因此给正常无新增修复批次设置retry_at，`ops/learner_jobs.py:92-96`使同触发键最多三次重复。证据20261006-040345-fix-batch：学习者exit0/success，report.json fixes=[]/merged=null，tsc0、188文件2068例首过；108项既有修复均为基线054458768f7a9451328739834ecc20f9ce8e48b1与live 473a62f475dc5af126f231061a1c3c33880ed7a9祖先，工作树干净、无新增源码；learn.json实际state=failed/rc=0/merged=null/已有retry_at。没有对局卡死，运行局号/层/回合不适用，不新建游戏知识或bug-infra。
+- [x] `ops/learner_checks.py:35`只将rc=0且合并提交已核实的写任务标done；`ops/codex-ops-learn.py:323-324`因此给正常无新增修复批次设置retry_at，`ops/learner_jobs.py:92-96`使同触发键最多三次重复。证据20261006-040345-fix-batch：学习者exit0/success，report.json fixes=[]/merged=null，tsc0、188文件2068例首过；108项既有修复均为基线054458768f7a9451328739834ecc20f9ce8e48b1与live 473a62f475dc5af126f231061a1c3c33880ed7a9祖先，工作树干净、无新增源码；learn.json实际state=failed/rc=0/merged=null/已有retry_at。没有对局卡死，运行局号/层/回合不适用，不新建游戏知识或bug-infra。
 - 交下一fix-batch用固定数据核对并修完成判读：明确无新增产出、自测通过且已有源码去向可核实时应正常结案；有新源码未合或测试失败仍不能判成功，正常合入的完整外部检查仍需执行。不得用虚构merged、空合并、重复版本/台账或手改运行状态掩盖。固定测试覆盖无新增成功、有源码但未合、正常合入/测试失败的区别；原输出和错误调度状态保留于paper/materials/silent/20261006-0415-fix24-checks-and-empty-fix.md。四项fix24代码的完整外部检查本轮另已通过，不因本空批次重新记失败或重跑。
+
+- 2026-10-06 05:12 运维codex据fix-done关闭04:21这一纯工具缺口：学习者源01b560ef4966da945511bfccd41abd09440fb0e9，实际live合入b8a0ee007692225458641a3d58f1f947cd543548、固定已测发布9852b39f2be0d95ae102209851af2745c327a79a/树c8da1be82dcef8d24689f8bd37e28d3cefcfbe5c。撤源码1失败19通过/恢复20通过；独立源与合后tsc0、189文件2088例，初始含待合策略190文件2094例后分离策略复测，均首过、非失败重跑；完整外部checks_pending=True等调度器。本项无游戏run/floor/turn或bug-infra id，不新建台账、不标shipped、无eval版本；原无新增批次和锁等待失败历史保留。仅本复选框关闭，108项既有修复及其余策略/证据不足/性能项原样保留。
