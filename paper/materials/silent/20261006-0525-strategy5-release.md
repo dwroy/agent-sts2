@@ -19,3 +19,5 @@
   "learning_curve_sha256": "eac93ec3e4017aab98fbd5f101be95eebcd12af13a1ec21fe354abb2dc836b81"
 }
 ```
+
+- 2026-10-06 05:33 完成确认：main同步d2dd403b66b9b2e16584740c1632d5f9c026e247、0148 shipped及曲线提交180959953236d09cc134f528a8d19729f99c2302，唯一S1.strategy5及first_run/prior保持；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 151 item(s), 0 problem(s)。合后原沙箱摘要另存paper/materials/silent/20261006-0525-strategy5-sandbox.md。已执行白名单`bash ops/codex-ops-do.sh learner-recheck 20261006-041302-strategy-proposal`，broker已验证源为live祖先并对固定树aa98e6e9fab2310cb2b9e8db98d39f6e1e4d1e59启动完整检查，日志ops/codex-ops/learner/20261006-041302-strategy-proposal.fallback-aa98e6e9fab2310cb2b9e8db98d39f6e1e4d1e59.checks.log已写入；动作结果仍运行，之后由调度器发learner-checks，不提前标完整通过，不等待/轮询新事件。
