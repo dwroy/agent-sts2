@@ -162,10 +162,30 @@ def collect(root, config, claude_dir=None, codex_home=None):
                     usage["cache_hit_tokens"] * price["input_hit_per_million"] + usage["output_tokens"] * price["output_per_million"]) / 1e6
         add("brain:" + provider, provider, r.get("ts"), usage, rid=r.get("run_id"), ms=r.get("latency_ms"), cost=cost,
             known=bool(r.get("usage")), identity=("brain", r.get("ts"), r.get("question_id"), engine))
+    # Request traces split paid input from free output. Run totals alone cannot determine input cost.
+    jev_recorded = collections.defaultdict(lambda: {"tokens": 0, "calls": 0})
+    for r in sources.rows(root / "logs/jev-prompts.jsonl"):
+        identity = ("jev", r.get("request_id") or (r.get("decision_id"), r.get("ts"), r.get("call")))
+        if identity in seen:
+            continue
+        recorded = all(isinstance(r.get(k), (int, float)) and not isinstance(r[k], bool) and r[k] >= 0
+                       for k in ("input_tokens", "output_tokens"))
+        usage = tokens(r) if recorded else tokens({})
+        price = config["api"]["jev"]
+        paid = None if not recorded or price.get("input_per_million") is None or price.get("output_per_million") is None else (
+            usage["input_tokens"] * price["input_per_million"] + usage["output_tokens"] * price["output_per_million"]) / 1e6
+        add("combat:jev", "jev", r.get("ts"), usage, rid=r.get("run_id"), cost=paid, known=recorded, identity=identity)
+        if recorded:
+            jev_recorded[r.get("run_id")]["tokens"] += usage["total_tokens"]
+            jev_recorded[r.get("run_id")]["calls"] += 1
     for rid, r in runs.items():
-        total, price = num(r.get("tokens")), config["api"]["jev"]["total_per_million"]
-        add("combat:jev", "jev", r.get("ended"), {"total_tokens": total}, rid=rid, calls=num(r.get("jev_calls")),
-            cost=None if price is None else total * price / 1e6, known="tokens" in r)
+        traced = jev_recorded[rid]
+        total = max(0, num(r.get("tokens")) - traced["tokens"])
+        calls = max(0, num(r.get("jev_calls")) - traced["calls"])
+        if traced["calls"] and not total and not calls:
+            continue
+        add("combat:jev", "jev", r.get("ended"), {"total_tokens": total}, rid=rid, calls=calls,
+            cost=None, known=False)
 
     home = pathlib.Path(codex_home) if codex_home else pathlib.Path.home() / ".codex"
     rollouts = list((home / "sessions").glob("*/*/*/rollout-*.jsonl"))
@@ -251,6 +271,24 @@ def collect(root, config, claude_dir=None, codex_home=None):
     return events, runs, sources, periods
 
 
+def jev_reconciliation(events, runs, config):
+    page = config.get("jev_usage_page")
+    if not page:
+        return None
+    start, end = time(page["start_inclusive"]), time(page["end_exclusive"])
+    selected = [e for e in events if e["provider"] == "jev" and e["ts"] and start <= e["ts"] < end]
+    completed = [r for r in runs.values() if time(r.get("ended")) and start <= time(r["ended"]) < end]
+    recorded = [e for e in selected if e["usage_recorded"]]
+    totals = {k: sum(e[k] for e in selected) for k in ("calls", *FIELDS)}
+    totals["known_api_usd"] = sum(e["api_usd"] or 0 for e in recorded)
+    totals["unknown_split_tokens"] = sum(e["total_tokens"] for e in selected if not e["usage_recorded"])
+    return {"page": page, "logs": totals,
+            "finished_runs": {"calls": sum(num(r.get("jev_calls")) for r in completed), "total_tokens": sum(num(r.get("tokens")) for r in completed)},
+            "log_minus_page": {"requests": totals["calls"] - page["requests"], "tokens": totals["total_tokens"] - page["tokens"],
+                               "known_usd": totals["known_api_usd"] - page["usd"]},
+            "unknown_usage_calls": sum(e["calls"] for e in selected if not e["usage_recorded"])}
+
+
 def write_outputs(events, runs, sources, periods, config, out):
     out = pathlib.Path(out)
     data = out / "paper/data"
@@ -316,14 +354,26 @@ def write_outputs(events, runs, sources, periods, config, out):
                  "学习批次服务多局时等分，不代表逐局实测；未记录服务局号的批次保持未归属。运维和观察按对局时间窗归属，窗外单列 unattributed。",
                  "订阅为共享账户周额度估算，按月费 × 12 / 52 折周、按同一重置窗口内已记录 token 分摊；未观测到的账户外部用量无法单独扣除。",
                  "未知价格、失败/过期/未校验窗口不补零。金额只汇总已知部分，不能当作完整账单；每胜费用在零胜时未知。",
-                 "Jev 历史总 token 取 runs，未记录输入/输出拆分；大脑仅归集 brain/codex-calls 留存的请求，早期没有这些日志的调用仍缺失。", "",
+                 "Jev 优先取 jev-prompts 的逐请求输入/输出（按 request_id 去重，缓存不另加），仅输入收费；runs 未覆盖余额只有总 token，拆分与费用未知。失败请求用量未知，未结束局有请求日志也计入。大脑仅归集 brain/codex-calls 留存请求，早期调用仍缺失。", "",
                  "| 进阶 | 局 | 胜 | token | 已知估算 | 每局 | 每胜 | 累计已知 | 覆盖 |", "|---|---:|---:|---:|---:|---:|---:|---:|---|"]
         for r in curve:
             lines.append(f"| A{r['ascension']} | {r['runs']} | {r['wins']} | {r['total_tokens']:.0f} | {money(r['known_estimated_usd'])} | {money(r['usd_per_run'])} | {money(r['usd_per_win'])} | {money(r['cumulative_known_usd'])} | {r['cost_coverage']} |")
-        lines.extend(["", "价格配置：Claude $200/月、ChatGPT $500/月（Roy 2026-10-05 20:41）；DeepSeek 按现有论文峰时价格假设；TypeSafe/Jev 单价尚缺。",
+        jev_price = config["api"]["jev"]
+        lines.extend(["", f"价格配置：Claude $200/月、ChatGPT $500/月（Roy 2026-10-05 20:41）；DeepSeek 按现有论文峰时价格假设；TypeSafe/Jev 输入 ${jev_price.get('input_per_million', '未知')}/百万 token、输出 ${jev_price.get('output_per_million', '未知')}/百万 token（{jev_price['source']}）。",
                       f"本次有效订阅重置窗口：{len(periods)}；数据字节切点、缺失源及坏行数见 paper/data/cost-sources.json。"])
+        reconciliation = jev_reconciliation(events, runs, config)
+        if character == "silent" and reconciliation:
+            p, log, delta = reconciliation["page"], reconciliation["logs"], reconciliation["log_minus_page"]
+            lines.extend(["", "## TypeSafe 用量页交叉核对（全部角色，非静默独占）", "",
+                          f"来源：{p['source']}。页面 ${p['usd']:.4f}、{p['tokens']:,} token、{p['requests']:,} 请求。",
+                          f"日志范围：{p['start_inclusive']} ≤ 时间 < {p['end_exclusive']}；逐请求按请求时间，未拆分余额按局结束时间。页面截图精确截止时间、时区及 Last 30 days 起点未知；9/28 是已知开始有数的日期，此区间只用于近似核对。",
+                          f"日志计入 {log['calls']:,.0f} 请求、{log['total_tokens']:,.0f} 总 token，其中实录输入 {log['input_tokens']:,.0f}、输出 {log['output_tokens']:,.0f}，未拆分 {log['unknown_split_tokens']:,.0f}；已知输入费 ${log['known_api_usd']:.4f}。",
+                          f"日志减页面：请求 {delta['requests']:+,.0f}、总 token {delta['tokens']:+,.0f}、已知费用 ${delta['known_usd']:+.4f}（含未记录余额，不能视作完整账单金额差）。",
+                          f"已完成局汇总另核：{reconciliation['finished_runs']['calls']:,.0f} 成功请求、{reconciliation['finished_runs']['total_tokens']:,.0f} 总 token；逐请求来源含重试失败及在跑局，未知用量请求 {reconciliation['unknown_usage_calls']:,.0f}。",
+                          "各角色仅按 run_id 归属费用，交叉核对允许全部角色合计；不读取或混用角色知识。未留存请求、失败用量、页面是否只统计输入/如何计缓存及账户外调用均未知，不能补齐为相等。",
+                          f"若把页面 token 全视作输入，按给定单价得 ${p['tokens'] * jev_price.get('input_per_million', 0) / 1e6:.4f}，与页面金额不完全相符；页面 token 口径未知，不能据此反推输入数。"])
         report.write_text("\n".join(lines) + "\n")
-    manifest = {"cuts": sources.cuts, "bad_lines": dict(sources.bad_lines), "config": config,
+    manifest = {"cuts": sources.cuts, "bad_lines": dict(sources.bad_lines), "config": config, "jev_reconciliation": jev_reconciliation(events, runs, config),
                 "quota_periods": [{k: v.isoformat() if isinstance(v, dt.datetime) else v for k, v in p.items()} for p in periods], "ascensions": summaries}
     (data / "cost-sources.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     return summaries

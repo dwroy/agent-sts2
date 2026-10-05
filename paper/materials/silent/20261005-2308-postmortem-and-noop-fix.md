@@ -11,3 +11,5 @@ fix-batch 20261005-223518 exit0，fixes为空、merged=null源于没有新增修
 台账7条learner CLI原行精准归档：新增0127 bug-infra（first_run=53FLQ68CETW0/A6/prior=no）和0128 mechanic（first_run=R0HEV5E3QT6G/A0/prior=partly），五旧0005/0019/0020/0021/0046只补support、无repeat或新shipped，check129项0问题。0127是无后继眩晕在推演中沿用当前无攻击的非阻塞缺陷，源码位置1386/1356及两局证据追加fix-queue-v4，交学习者；0128机制观察不由运维处理，不新增证据、状态或打法。回报无Roy待定，修复后受控胜负、替代路线/构筑、召唤孵化总需伤、boss时钟比值保持未记录。
 
 本轮运行nice19 python3 ops/paper_dataset.py --no-raw，结果另追加。只提交本轮复盘/原账本/队列和自身记录、生成论文表，其他批次的changelog与proposed、在线刷新、工作区修改保留；记录数据免代码测试，不停对局、不运行play或派重复测试。
+
+- 2026-10-05 23:14 论文数据刷新完成：`nice -n 19 python3 ops/paper_dataset.py --no-raw` exit0，切点2026-10-05T15:10:28.004Z，五项一致性通过、决策计数差异空、key scan CLEAN；行数{"commits.csv": 2530, "decisions_by_label.csv": 17300, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 518}。本轮复盘/7条原账本/非阻塞0127证据队列已提交cddae3a519403ae50eebd3e6baeb118eff4f5ff6；生成组件成本表保留Roy订阅配置和缺价/覆盖未知，不补游戏知识。只提交本轮生成表和自身记录，其他经验批次changelog/台账及工作区差异保留；记录数据免代码测试，没有停止对局或请求重复补测。

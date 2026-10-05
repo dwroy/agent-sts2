@@ -5,7 +5,14 @@
   },
   "api": {
     "deepseek": {"input_miss_per_million": 0.30, "input_hit_per_million": 0.006, "output_per_million": 1.20, "source": "ops/paper_dataset.py: peak flash rates; historical chat priced at flash rates by assumption"},
-    "jev": {"total_per_million": null, "source": "TypeSafe API price not supplied; old OpenRouter estimate is unconfirmed"}
+    "jev": {"input_per_million": 0.042, "output_per_million": 0, "source": "Roy 2026-10-05 23:14: TypeSafe usage page, $0.042/MTok input; free output"}
+  },
+  "jev_usage_page": {
+    "source": "Roy 2026-10-05 23:14: TypeSafe Last 30 days screenshot",
+    "start_inclusive": "2026-09-28T00:00:00+08:00",
+    "end_exclusive": "2026-10-06T00:00:00+08:00",
+    "usd": 4.9641, "tokens": 119495182, "requests": 24740,
+    "scope": "All characters; dates bound the observed active days, not the unknown exact screenshot cutoff or billing window. Page token input/output/cache definition is unknown."
   },
   "method": "Weekly USD = monthly USD * 12 / 52; duration-validated weekly usage share apportioned by recorded component tokens in the same reset window. External shared-account usage is not separately observable."
 }
