@@ -1125,3 +1125,14 @@ S1.strategy5/0148在05:31上线、05:40事件核实固定树完整tsc/vitest通�
 character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
 silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,30,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0053 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,0
 ```
+
+### 2026-10-06 06:10 第33批经验登记与A9重犯统计后续
+
+S1.exp33已由学习者自测合入live，19项经CLI/by=ops登记shipped，0151飞镖机制经验与0150模型代码缺口分别保留，0150仍observed。来源G403VCZ3BH1B及旧39静默局，A10不并入经验分母；本次MGA0CZDDKC0P A10复盘及7条账本另归档。均为A9首胜之后的处理，不倒算进原A9学习窗口。详情paper/materials/silent/20261006-0559-experience33-and-a10-postmortem.md。
+
+同一已测发布携带学习者af5c0fa0纯统计修复，原历史行和最新版本不改写；本次paper --no-raw原A9行已将silent-0009早先S1.exp26上线期间的repeat计入repeats_after_ship=1。此前报告及原CSV快照的0仍保留为当时读数，原失败历史保持；本轮仅记录实际生成结果，独立fix批次完整外部结案等其事件。
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,29,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,1
+```

@@ -1106,6 +1106,8 @@ interface Sim {
   exhaustedCount: number;
   /** Unplayable cards still in hand (Wound, Beckon): held at the end of the turn unless exhausted. */
   held: CardModel[];
+  /** Skills present when this hand was observed; no inferred counts for later unknown draws. */
+  observedSkillKeys?: readonly string[];
   /** CARD_CONDITIONS: Rage played in this line (CardModel.rageBlock): Block for every Attack played after it, beside PlayerSim.rage. */
   rage: number;
   /** Soulbound cards Chains of Binding locked this line: out of the sim's hand, still in the game's (CARD_CONDITIONS' hand checks). */
@@ -1971,6 +1973,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
         : perHit + ourAttackScaled(next.maulGrowth, player.weak, shrinkNow);
     }
     let hits = card.hits;
+    // 9YBK F43 T4, HMV F33 T3 and G403 F48 T11: only the observed skills leaving reduce Flechettes' shown hits.
+    // Held and Chains-locked skills remain in hand. Do not infer extra hits from unobserved draws or card types.
+    if (card.cardId === "FLECHETTES" && !card.upgraded && card.hitsLoseHandSkills && next.observedSkillKeys) {
+      const stillHeld = new Set([...next.hand, ...next.held, ...next.locked].map((entry) => entry.key));
+      hits = Math.max(0, hits - next.observedSkillKeys.filter((key) => !stillHeld.has(key)).length);
+    }
     if (card.special === "body_slam") perHit = shrinkNow ? ourAttackScaled(next.block + next.strength, player.weak, true) : Math.floor((next.block + next.strength) * weakFactor);
     // Pact's End hits only with 3+ cards in the exhaust pile (H1FA F17 T9: counted as a 17 AoE kill on
     // an empty pile, dealt 0, died by 1 HP). An unknown pile counts as empty.
@@ -3447,6 +3455,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     thrashRandom: [],
     exhaustedCount: input.player.exhaustedThisTurn ? 1 : 0,
     held: input.hand.filter((card) => !card.playable),
+    ...(input.hand.some((card) => card.hitsLoseHandSkills) ? { observedSkillKeys: input.hand.filter((card) => card.type === "Skill").map((card) => card.key) } : {}),
     rage: 0,
     locked: [],
     topPlaced: false,
