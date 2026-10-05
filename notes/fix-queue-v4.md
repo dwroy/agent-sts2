@@ -471,11 +471,11 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ### 2026-10-06 05:24 运维记录：学习曲线再次上线后的重犯漏计（非阻塞）
 
-- [ ] 纯统计bug：`learner/ledger.py:283–286`每次shipped覆盖fold的shipped_at，`:339–343`的evidence_after_ship只按最新shipped_at比较局开局，`eval/learning-curve.py:122`据此计数。证据HMVJKM56S4Q8 SILENT A9与silent-0009：01:13:01已有S1.exp26 shipped，02:45:41.432开局，04:01:19入账的F33 T2 repeat及学习者“之前学过”原记录保持；04:35:35再次S1.exp31 shipped后，最新shipped_at晚于该局开局，A9 CSV原行repeats=1/repeats_after_ship=0漏掉早先已上线的重犯。原始历史没有丢失，属于读取/归属缺口；交学习者基于历史发布与实际生效证据修正统计和固定测试，不修改游戏知识、不删除旧行。证据快照`paper/materials/silent/a9-learning-snapshot-20261006-0513.json`及A9小结保留当前原CSV。与已修silent-0052“复盘晚写被算成重犯”的方向不同，不重开该旧项；运维本轮只入队，不改实现或台账。
+- [x] 纯统计bug：`learner/ledger.py:283–286`每次shipped覆盖fold的shipped_at，`:339–343`的evidence_after_ship只按最新shipped_at比较局开局，`eval/learning-curve.py:122`据此计数。证据HMVJKM56S4Q8 SILENT A9与silent-0009：01:13:01已有S1.exp26 shipped，02:45:41.432开局，04:01:19入账的F33 T2 repeat及学习者“之前学过”原记录保持；04:35:35再次S1.exp31 shipped后，最新shipped_at晚于该局开局，A9 CSV原行repeats=1/repeats_after_ship=0漏掉早先已上线的重犯。原始历史没有丢失，属于读取/归属缺口；交学习者基于历史发布与实际生效证据修正统计和固定测试，不修改游戏知识、不删除旧行。证据快照`paper/materials/silent/a9-learning-snapshot-20261006-0513.json`及A9小结保留当前原CSV。与已修silent-0052“复盘晚写被算成重犯”的方向不同，不重开该旧项；运维本轮只入队，不改实现或台账。
 
 ## 2026-10-06 05:45 A9首胜复盘：飞镖方案内动态计数（交学习者）
 
-- [ ] **非阻塞机制模型提案**：学习者定位当前只读live的`agent/src/reflex/card-model.ts:810`将CalculatedHits读取为固定hits，`agent/src/reflex/turn-solver.ts:1973`沿用card.hits，未随同一方案中技能离手更新。来源G403VCZ3BH1B复盘及20261006-051302.out、原账本silent-0150/0151；虽然回报标“纯bug”、0150 kind=bug-infra，这项涉及游戏机制，按学习协议由学习者实现与测试，运维只转录证据。
+- [x] **非阻塞机制模型提案**：学习者定位当前只读live的`agent/src/reflex/card-model.ts:810`将CalculatedHits读取为固定hits，`agent/src/reflex/turn-solver.ts:1973`沿用card.hits，未随同一方案中技能离手更新。来源G403VCZ3BH1B复盘及20261006-051302.out、原账本silent-0150/0151；虽然回报标“纯bug”、0150 kind=bug-infra，这项涉及游戏机制，按学习协议由学习者实现与测试，运维只转录证据。
 - G403VCZ3BH1B SILENT A9 F48重打T11：防御+→尖啸→中和→飞镖，快照CalculatedHits 3→2→1，末次女王38→34、实扣4。整线预计18伤/损1，实际行动8加毒7共15/损3，其他差额未隔离，不将全部差额或SL胜负归此缺口。
 - 最早可核实9YBKCNBFP0X5 SILENT A4 F43 T4：净化PURITY后新题3次各3伤，防御离手后2次，敌135→129实扣6；方案31伤由9攻击加22毒组成，攻击部分多算3。HMVJKM56S4Q8 SILENT A9 F33第6尝试T3：生存者→防御→飞镖，初始3×6预测18，技能离手后1×6实6，火箭195→189。两新条目first_run仍9YBK/A4、prior=no/status=observed，旧经验shipped及原标签不重置。
 - 只涵盖学习者已验证的技能离手情形；未知抽牌、重放、能力牌计数及调序后的整场胜负未验证，不自行补公式。行号是学习者当前live定位，本局运行473a62f4+dirty、旧9YBK为d9a3ea37+dirty，不冒称复原旧局源码。保留复盘原文和学习者末尾PURITY/女王T6勘误，原0150/0151账本分类不由运维改写。修复采用本角色固定证据，自测通过按既有live流程上线。
@@ -485,3 +485,5 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - [ ] **非阻塞机制模型提案**：学习者只读当前live的`agent/src/reflex/card-model.ts:879`将未升级HIDDEN_DAGGERS的Cards=2作draw，未表示弃二与生成两小刀；来源MGA0CZDDKC0P SILENT A10 F17首试T2、第6尝试T3及更早10GPK5XGHCK3 SILENT A3 F9 T1/T5，复盘20261006-054301.out、账本silent-0153/0154。回报虽标纯bug、0153 kind=bug-infra，这项涉及游戏机制，由学习者依据本角色证据实现和固定验证，运维不改公式或角色代码。
 - 首试T2题面11伤/损10，实际弃打击和蛇咬、重算打两小刀后19伤/损10；第6次T3 SL把原Jev线换为隐秘匕首→打击+→防御，随后Jev弃掉打击+与防御，实际0挡、14血对16伤死亡，34直伤加6毒、敌剩169/262。模型误读、SL替换与弃牌选择分开记录，不将替线当完整执行，不推断修模型或保留防御即可整场获胜。
 - 0153 first_run=10GPK5XGHCK3/A3/prior=no；0154同首见局/prior=partly；0155铭记死亡独立机制首见已由学习者勘误至R0HEV5E3QT6G/A0/prior=yes，与隐秘匕首模型缺口分别记。只验证未升级及已观察时点，不外推升级/缺牌情形；行号是当前live定位，本局a999dba8+dirty未声称精确复原。原复盘及F3击杀顺序、F15毒层、0155首见局三条勘误一并保留，原台账kind和先验不由运维改写。
+
+- 2026-10-06 06:23 运维核实上述05:24统计项及05:45飞镖项已由学习者实现并实际上线：统计af5c0fa041fbc5b97174490137301a6f6291d92d、飞镖72c1640b3271352e1a744d3997ede4c5fe10e2bd→851e1bafb037482de9d06f018e203343a684535d/S1.fix25，固定发布1ee4de7d668835de92ad2b47423a19ffdb4ae4df/树68c4c14b4db5becbaa5dc1b49966ad204ee3128f，main同步106d78c83e9d1f2522d845408066d8afdb3a2b38；原撤源失败/恢复通过及最终源/合后沙箱结果见paper/materials/silent/20261006-0619-statistics-and-flechettes-release.md。只关闭对应两复选框、保留原证据全文，0150仅CLI/by=ops shipped，0151经验与0153待修机制分别保留；完整外部等learner-checks，其他策略/证据不足/性能专项沿原队列，不称已修。
