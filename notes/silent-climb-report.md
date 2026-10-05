@@ -316,3 +316,100 @@ nice -n 19 data/logdb-venv/bin/python eval/metrics.py --character silent --group
 ```
 
 退出1，`RuntimeError: eval/strength-sources.ts failed`，根因`Error: listen EPERM: operation not permitted /tmp/tsx-1000/69.pipe`。完整eval没有生成；上面的核心统计由runs、SL、run-config及首条决策核对，不伪造力量来源或校准输入。请沙箱外有权限的执行方补跑同一命令，结果归档`paper/materials/silent/a2-metrics.md`；完整命令及请求已追加收件箱和notes/for-dai.md。eval-metrics白名单动作仍沿已有待办，运维不扩大沙箱出口。
+
+## A3升级小结（2026-10-05 09:49 CST；A4升级事件09:35送达）
+
+本级只有静默猎手10GPK5XGHCK3一局：run-config于2026-10-05 07:42:02.095 CST解析target_ascension=3，08:41:20.783结束，F48通关。下一进阶的首局1NZ8FE5F34R9于08:44:02.649 CST解析A4；这次事件延迟送达，小结仅统计SILENT/A3。
+
+| 口径 | 胜 | 负 | 平均终层 |
+|---|---:|---:|---:|
+| 第一次尝试 | 1 | 0 | 48.00 |
+| 最终结果 | 1 | 0 | 48.00 |
+| SL后赢 | 0 | — | — |
+
+重打0次。SL日志四条为F17/F33/F39/F48的attempt=1、result=won；有SL跟踪记录与发生读档分别计数。没有终局败局，主要终局死因不适用。学习者复盘及经验回报保留F48 T12的0HP后瓶中精灵复活至16、T13胜利事实；首次尝试胜包含这次实际复活，不能写成终战从未归零。首决策至结束58分38.065秒，配置至结束59分18.688秒（沿08:57已核对记录）。
+
+### 完整评估
+
+`bash ops/codex-ops-do.sh eval-metrics silent 3`沙箱外exit0，原始快照[a3-metrics-20261005-093548.kaoyu5.md](../paper/materials/silent/a3-metrics-20261005-093548.kaoyu5.md)。新动作使用data/logdb-venv/bin/python完整运行eval/metrics.py，固定角色、进阶、按进阶分组及Markdown输出；保留力量来源与校准默认流程，没有删掉沙箱受限指标。以下原样收录：
+
+| 指标 | A3 |
+|---|---|
+| 局数 | 1 * |
+| 终层 | 48.0（中位 48.0；n=1） * |
+| 过一幕 boss | 100%（1/1；CI 21–100%） * |
+| 过二幕 boss | 100%（1/1；CI 21–100%） * |
+| 胜局 | 100%（1/1；CI 21–100%） * |
+| 非 boss 战喝药 / 10 层 | 3.96（中位 3.96；n=1） * |
+| 进一幕 boss 带药（瓶） | 1.00（中位 1.00；n=1） * |
+| 进二幕 boss 带药（瓶） | 3.00（中位 3.00；n=1） * |
+| 进三幕 boss 带药（瓶） | 3.00（中位 3.00；n=1） * |
+| 死时手里的药（瓶，输的局） | — |
+| 一幕 boss 有力量来源 | 0%（0/1；CI 0–79%） *；牌 0 / 遗物 0 / 开场有力量 0 |
+| 一幕精英进场血量 < 78% 次数 / 局 | 0.00（中位 0.00；n=1） *；占一幕精英战 0/3 |
+| 二幕第一个休息点前死亡（占进二幕的局） | 0%（0/1；CI 0–79%） * |
+| 大脑调用 / 局 | 50.0（中位 50.0；n=1） * |
+| 输入 token / 局（千） | 3332（中位 3332；n=1） * |
+| 缓存命中 token / 局（千） | 510（中位 510；n=1） * |
+| 输出 token / 局（千） | 46.7（中位 46.7；n=1） * |
+| 缓存命中率 | 15% |
+| 大脑耗时 / 局（分钟） | 21.0（中位 21.0；n=1） * |
+| 每次调用平均耗时（秒） | 25.2 |
+|   codex：调用 / 局 | 50.0（中位 50.0；n=1） * |
+|   codex：输入 / 命中 / 输出（千 token / 局） | 3332 / 510 / 46.7（n=1） |
+|   codex：耗时 / 局（分钟） | 21.0（中位 21.0；n=1） * |
+| SL：有 SL 记录的局 | 1/1 |
+| SL：重打次数 / 局 | 0.00（中位 0.00；n=1） * |
+| 第一次尝试：终层 | 48.0（中位 48.0；n=1） * |
+| 第一次尝试：过一幕 boss | 100%（1/1；CI 21–100%） * |
+| 第一次尝试：过二幕 boss | 100%（1/1；CI 21–100%） * |
+| 第一次尝试：胜局 | 100%（1/1；CI 21–100%） * |
+| 校准：推演本回合掉血 ±2 内（回合） | 87%（84/97 回合） |
+| 校准：路线投影 2–3 层误差（投影 − 实际） | 中位 +1.0，中位 \|误差\| 2.0（n=10） |
+| 校准：boss 时钟 实打/估值 中位 | — |
+
+* 局数 < 10（或该指标的 n < 10）：样本不足，区间只作参考。
+
+只有一局，区间沿评估工具保留。推演掉血±2内84/97回合，路线投影绝对误差中位2（n=10），boss时钟校准无有效值；缺失值保持“—”。
+
+### 学习者在A3期间的产出与实际上线
+
+按A3配置到结束的07:42:02—08:41:20时间窗，学习者登记8项新账本silent-0066—0073：0066/0073的最早证据属A0，0067—0072属A2；主要来自ZZMYZ5UBCG72复盘和相应经验任务，不能把登记发生在A3期间等同于第一次在A3遇到。以下按live发布提交的实际时间列出上线，保留来源和证据：
+
+| 版本 | live发布 | 来源及范围 |
+|---|---|---|
+| S1.exp8 | 07:58:16，fe4b466f | 经验.7，源0d469a22，K3676LU8B0UH A1及历史静默局；A3开局已经实际读到未提交的.7，正式提交时间另记 |
+| S1.exp9 | 08:01:37，62faa08a | 经验.8，源267128cd，CSBR5CRDWQNB A2及历史静默局；16项登记，保留当时提案/上线历史 |
+| S1.fix7 | 08:16:47，1b294533 | 学习者源907a19f8，silent-0061，CSBR A2 F33第6次T2的风的女儿攻击补挡证据 |
+| S1.high | 08:34:52，61397e29 | Dai的普通模式/high强度决定，登记源码0811875f；不是学习者学出的游戏规则 |
+| S1.fix8 | 08:36:43，45965f49 | 学习者源098a5471，CSBR A2 F17奖励屏较低终帧统计子项；silent-0040原跨SL统计问题当时仍未修 |
+
+A3起始代码9e0fda2e+dirty、经验.7、Codex xhigh/priority；A4升级首局起始代码45965f49+dirty、经验.8、Codex high且service_tier=null。代码上线按流程供下一局使用；知识前缀可重新读取，逐次实际前缀以brain日志为准。S1.exp10（经验.9）08:56正式发布晚于A3结束，本轮经验.10仍待live锁释放后合入。单局、多次上线和引擎配置差异均保留，不据此归因某个版本导致胜利。
+
+本局自己的正式复盘在结束后产出，新增silent-0074/0075两个模型提案、0076/0077两个机制观察，并支持既有0005/0027/0028/0053；新增登记时间08:57:47，晚于本级结束。0075/0077首次来源为1HC609GTLGN3 A0。`ledger.py find --character silent --asc 3`在本轮快照返回0074/0076两项，均proposed；0076的更早T082DRCUHRRD A0 F12 T6只支持建层/时限，实际抽牌施毒证据仍来自10G A3。学习者已补support及note，first_run/asc结构字段更正接口待工具任务处理，生成表沿原字段报告。
+
+按要求执行`ledger.py find --character silent --status shipped --json`，09:44快照最后状态为44项，引用条目如下。它是当前最后状态计数；后续proposed可以覆盖先前shipped状态，所有历史仍保留，不能当作累计上线发现数。
+
+- S1.fix3（7项）：silent-0008、silent-0022、silent-0026、silent-0029、silent-0032、silent-0033、silent-0041。
+- S1.exp10（11项）：silent-0011、silent-0013、silent-0018、silent-0039、silent-0067、silent-0068、silent-0069、silent-0070、silent-0071、silent-0072、silent-0073。
+- S1.exp9（4项）：silent-0017、silent-0057、silent-0062、silent-0065。
+- S1.exp8（6项）：silent-0024、silent-0025、silent-0050、silent-0058、silent-0059、silent-0060。
+- S1.exp5（6项）：silent-0034、silent-0035、silent-0042、silent-0043、silent-0044、silent-0047。
+- S1.exp7（3项）：silent-0036、silent-0054、silent-0055。
+- S1.exp6（3项）：silent-0045、silent-0048、silent-0049。
+- S1.fix5（2项）：silent-0051、silent-0052。
+- S1.fix6（1项）：silent-0056。
+- S1.fix7（1项）：silent-0061。
+
+本轮经验2026-10-05.10固定源c2ece69c8c6d342ab7d55e10d8aca6af1ace25bc已在main 32756163a905574e0716767de0a59cb17be1655b归档，自测tsc0、152文件1906用例通过；新增2、更新15、退役0，active62、19242字符。live非阻塞取锁失败，兜底动作`bash ops/codex-ops-do.sh learner-merge exp-silent`exit128、完整输出“（超过 30 秒，已终止）”；尚未确认manual入队。17项保持proposed，未登记本批shipped或S1.exp11。固定源及后续合入/测试/版本/台账步骤见ops-handoff最新节，已请求锁释放后补manual事件。
+
+### 学习曲线A3原行
+
+本轮`nice -n 19 python3 ops/paper_dataset.py --no-raw`exit0，截点2026-10-05 09:44:47.160 CST；验证与key scan沿生成工具原输出。下面按paper/data/learning-curve-silent.csv原列顺序附A3行：
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,3,1,1,1,0,48,48,10GPK5XGHCK3,10GPK5XGHCK3,2026-10-04T23:42:02+00:00,2026-10-05T00:41:20+00:00,2,0,3,silent-0051 silent-0052 silent-0056,0,0
+```
+
+items_found按first_run进阶归属，items_shipped按登记之后下一场已结束局归属；与本级期间新增8项、正式上线5个版本分别是不同口径。0076的来源结构字段待更正说明及后续复盘的登记时间保留，原始账本和生成行不手改。
