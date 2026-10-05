@@ -359,12 +359,12 @@ def cmd_finish(args):
 def cmd_write(args):
     state = load_state()
     runs = [run for run in args.runs.split(",") if run] if args.runs else pending(ROOT, SCRIPTS, args.character)
-    if args.task == "experience-update":
+    if args.task in ("experience-update", "strategy-proposal"):
         known = {row["run_id"] for row in finished_runs(args.character)}
         if not runs or len(runs) > 10 or not all(RUN_ID.fullmatch(run) and run in known for run in runs):
-            print("经验批次需要 1–10 个本角色已结束的局号")
+            print("学习批次需要 1–10 个本角色已结束的局号")
             return 2
-    result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task == "experience-update" else [],
+    result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
                             ",".join(runs), "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     save_state(state)
     print(json.dumps({"dispatched": result}, ensure_ascii=False))
@@ -395,7 +395,7 @@ def cmd_status(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge"])
-    parser.add_argument("--task", choices=["experience-update", "fix-batch"], default="fix-batch")
+    parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default="silent")
     parser.add_argument("--runs", default="")

@@ -8,7 +8,7 @@ import subprocess
 import time
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
-WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev"}
+WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
 
 
 def external_writer(worktree):
@@ -36,7 +36,7 @@ def available(root, task):
 
 def busy(state, task, alive):
     for batch in state["batches"].values():
-        if batch.get("task", "postmortem") != task or batch.get("state") != "running":
+        if WORKTREES.get(batch.get("task")) != WORKTREES[task] or batch.get("state") != "running":
             continue
         if alive(batch.get("pid")):
             return True
@@ -104,4 +104,29 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
     key = fix_key(root, character)
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    return {"experience": experience, "fixes": fixes}
+    strategy = strategy_job(state, root, scripts, character, alive, stamp)
+    return {"experience": experience, "fixes": fixes, "strategy": strategy}
+
+
+def strategy_job(state, root, scripts, character, alive, stamp):
+    """Dispatch after an ascension change or ten new completed postmortems, retaining a busy trigger."""
+    runs = list(dict.fromkeys(run for batch in state["batches"].values()
+                             if batch.get("task", "postmortem") == "postmortem"
+                             and batch.get("character") == character and batch.get("state") == "done"
+                             for run in batch.get("runs", []) if RUN_ID.fullmatch(run)))
+    level = state.get("ascension", {}).get(character, 0)
+    progress = state.setdefault("strategy", {}).setdefault(character, {"ascension": level, "runs": 0})
+    # Only completed work consumes the trigger; retryable() governs failures and duplicate dispatch.
+    completed = [batch for batch in state["batches"].values()
+                 if batch.get("task") == "strategy-proposal" and batch.get("character") == character
+                 and batch.get("state") == "done" and "strategy_progress" in batch]
+    if completed:
+        latest = completed[-1]["strategy_progress"]
+        progress.update(ascension=max(progress["ascension"], latest["ascension"]), runs=max(progress["runs"], latest["runs"]))
+    if not runs or (level <= progress["ascension"] and len(runs) < progress["runs"] + 10):
+        return None
+    key = f"{character}:A{level}:{len(runs)}"
+    result = dispatch_write(state, root, scripts, "strategy-proposal", character, runs[-10:], key, "tick", alive, stamp)
+    if result:
+        state["batches"][result[0]]["strategy_progress"] = {"ascension": level, "runs": len(runs)}
+    return result

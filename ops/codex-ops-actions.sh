@@ -144,6 +144,9 @@ for row in csv.reader(sys.stdin):
     exec python3 "$OPS/codex-ops-learn.py" write --task experience-update --runs "$arg" ;;
   fix-batch)
     exec python3 "$OPS/codex-ops-learn.py" write --task fix-batch ;;
+  strategy-proposal)
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$ ]] || exit 2
+    exec python3 "$OPS/codex-ops-learn.py" write --task strategy-proposal --runs "$arg" ;;
   learner-merge)
     exec python3 "$OPS/codex-ops-learn.py" request-merge --branch "$arg" ;;
   eval-metrics)
