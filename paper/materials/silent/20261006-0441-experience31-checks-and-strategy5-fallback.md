@@ -45,3 +45,11 @@
   }
 }
 ```
+
+## 本轮结案与后续兜底事件（2026-10-06 04:47）
+
+经验31完整外部补测已经结案，原学习者交付与0148三条proposed账本已提交 `bde2c382a71883754fb695063168c6a25fe342b3`。初次预检检查发现旧源分支会携带其他较旧的记录，保护性断言在真正merge前停止；当时没有源码合入或合后测试，不能记成代码测试失败。原预检 `/tmp/sts2-0441-live-preflight-initial.txt`，189字节、SHA256 `04060fc76444fcae8d1ff5c6b51b0266b513314e108f8f20249f4d13217ce4c9`；策略源仍固定307c538c，不合正在进行的后续codex-dev批次。
+
+另一经验批次已更新live后，第二次非阻塞取锁得到busy/exit75。没有等待、轮询、修改live或停止对局，现有知识及记录保持；0148仍proposed/无版本、first_run=2SU6XN2AEJRD/A6，其他关联项原历史不重置。未新增正式S1.strategy5，没有实际策略合入、合后测试或shipped，也没有提前请求该策略的完整外部测试。
+
+已运行 `bash ops/codex-ops-do.sh learner-merge codex-dev`，exit0，调度器答复「已发送合入兜底事件；运维会话执行 live 流程。」。后续manual事件据本节和原handoff仅兜底固定已测源 `307c538c6e66110635a852093aeba30b20212243`，持锁核对当前刷新，合后自测成功再记版本、同步main、CLI登记shipped并请求learner-recheck；不把当前未完成fix分支HEAD一并合入。本轮/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 149 item(s), 0 problem(s)；没有Roy新待定或收件箱事项。
