@@ -468,3 +468,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 交下一fix-batch用固定数据核对并修完成判读：明确无新增产出、自测通过且已有源码去向可核实时应正常结案；有新源码未合或测试失败仍不能判成功，正常合入的完整外部检查仍需执行。不得用虚构merged、空合并、重复版本/台账或手改运行状态掩盖。固定测试覆盖无新增成功、有源码但未合、正常合入/测试失败的区别；原输出和错误调度状态保留于paper/materials/silent/20261006-0415-fix24-checks-and-empty-fix.md。四项fix24代码的完整外部检查本轮另已通过，不因本空批次重新记失败或重跑。
 
 - 2026-10-06 05:12 运维codex据fix-done关闭04:21这一纯工具缺口：学习者源01b560ef4966da945511bfccd41abd09440fb0e9，实际live合入b8a0ee007692225458641a3d58f1f947cd543548、固定已测发布9852b39f2be0d95ae102209851af2745c327a79a/树c8da1be82dcef8d24689f8bd37e28d3cefcfbe5c。撤源码1失败19通过/恢复20通过；独立源与合后tsc0、189文件2088例，初始含待合策略190文件2094例后分离策略复测，均首过、非失败重跑；完整外部checks_pending=True等调度器。本项无游戏run/floor/turn或bug-infra id，不新建台账、不标shipped、无eval版本；原无新增批次和锁等待失败历史保留。仅本复选框关闭，108项既有修复及其余策略/证据不足/性能项原样保留。
+
+### 2026-10-06 05:24 运维记录：学习曲线再次上线后的重犯漏计（非阻塞）
+
+- [ ] 纯统计bug：`learner/ledger.py:283–286`每次shipped覆盖fold的shipped_at，`:339–343`的evidence_after_ship只按最新shipped_at比较局开局，`eval/learning-curve.py:122`据此计数。证据HMVJKM56S4Q8 SILENT A9与silent-0009：01:13:01已有S1.exp26 shipped，02:45:41.432开局，04:01:19入账的F33 T2 repeat及学习者“之前学过”原记录保持；04:35:35再次S1.exp31 shipped后，最新shipped_at晚于该局开局，A9 CSV原行repeats=1/repeats_after_ship=0漏掉早先已上线的重犯。原始历史没有丢失，属于读取/归属缺口；交学习者基于历史发布与实际生效证据修正统计和固定测试，不修改游戏知识、不删除旧行。证据快照`paper/materials/silent/a9-learning-snapshot-20261006-0513.json`及A9小结保留当前原CSV。与已修silent-0052“复盘晚写被算成重犯”的方向不同，不重开该旧项；运维本轮只入队，不改实现或台账。

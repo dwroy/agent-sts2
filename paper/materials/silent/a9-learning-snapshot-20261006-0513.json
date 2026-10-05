@@ -1,0 +1,3155 @@
+{
+  "recorded_at": "2026-10-06T05:24:18+08:00",
+  "queries_captured_at": "2026-10-06T05:14:11+08:00",
+  "root_head": "a82a6b0a53bea9ecd511ac79d6d3ed8a153da893",
+  "window": {
+    "started": "2026-10-06T02:45:41.432000+08:00",
+    "ended": "2026-10-06T04:51:26.103000+08:00",
+    "basis": "first A9 configuration through A9 victory; later registration is separate"
+  },
+  "sources": {
+    "metrics": {
+      "path": "paper/materials/silent/a9-metrics-20261006-051417.EXgt60.md",
+      "sha256": "08f9f72786de2e48092b2064c1badc730c238def287c83bc81241238068dff5d",
+      "action": "bash ops/codex-ops-do.sh eval-metrics silent 9",
+      "exit": 0
+    },
+    "ledger": {
+      "path": "paper/materials/learning/ledger.jsonl",
+      "sha256": "b425d4cef9a751b4b66d759840ac458c19e36a7532ff6b2f45bcc6c25b97644a",
+      "index_blob": "a34c24920a6c722f5c71eb3c8a0dbdd92ae48b26"
+    },
+    "curve": {
+      "path": "paper/data/learning-curve-silent.csv",
+      "sha256": "dab38ca153d85d2c3c938d76b6b479d78a9dafc9f433347241a127dfa2659e78",
+      "source_commit": "712606065a4cab6c724d8278be023a61536b6810",
+      "header": "character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship",
+      "a9_row": "silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,30,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0053 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,0"
+    }
+  },
+  "queries": {
+    "asc_9": {
+      "command": "python3 learner/ledger.py find --character silent --asc 9 --json",
+      "result": []
+    },
+    "shipped": {
+      "command": "python3 learner/ledger.py find --character silent --status shipped --json",
+      "count": 140,
+      "items": [
+        {
+          "id": "silent-0005",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0006",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0007",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0008",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix3",
+          "shipped_at": "2026-10-05T05:22:46+08:00"
+        },
+        {
+          "id": "silent-0009",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "Y6GM2CHWJBEY",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0010",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "Y6GM2CHWJBEY",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0011",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "Y6GM2CHWJBEY",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0013",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "Y6GM2CHWJBEY",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0016",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp27",
+          "shipped_at": "2026-10-06T01:45:36+08:00"
+        },
+        {
+          "id": "silent-0017",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp20",
+          "shipped_at": "2026-10-05T20:29:50+08:00"
+        },
+        {
+          "id": "silent-0018",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0019",
+          "character": "silent",
+          "kind": "route",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0020",
+          "character": "silent",
+          "kind": "route",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0021",
+          "character": "silent",
+          "kind": "other",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0022",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "LRN0HPZ0FZS1",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix3",
+          "shipped_at": "2026-10-05T05:22:46+08:00"
+        },
+        {
+          "id": "silent-0023",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "LRN0HPZ0FZS1",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0024",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "LRN0HPZ0FZS1",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0025",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "LRN0HPZ0FZS1",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0026",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix3",
+          "shipped_at": "2026-10-05T05:22:46+08:00"
+        },
+        {
+          "id": "silent-0027",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "T082DRCUHRRD",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0028",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "T082DRCUHRRD",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp19",
+          "shipped_at": "2026-10-05T19:19:21+08:00"
+        },
+        {
+          "id": "silent-0029",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix3",
+          "shipped_at": "2026-10-05T05:22:46+08:00"
+        },
+        {
+          "id": "silent-0030",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1HC609GTLGN3",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0031",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1HC609GTLGN3",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp17",
+          "shipped_at": "2026-10-05T17:08:51+08:00"
+        },
+        {
+          "id": "silent-0032",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix3",
+          "shipped_at": "2026-10-05T05:22:46+08:00"
+        },
+        {
+          "id": "silent-0033",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix3",
+          "shipped_at": "2026-10-05T05:22:46+08:00"
+        },
+        {
+          "id": "silent-0034",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp5",
+          "shipped_at": "2026-10-05T05:07:37+08:00"
+        },
+        {
+          "id": "silent-0035",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp5",
+          "shipped_at": "2026-10-05T05:07:37+08:00"
+        },
+        {
+          "id": "silent-0036",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp20",
+          "shipped_at": "2026-10-05T20:29:50+08:00"
+        },
+        {
+          "id": "silent-0037",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "T082DRCUHRRD",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0039",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp18",
+          "shipped_at": "2026-10-05T17:38:31+08:00"
+        },
+        {
+          "id": "silent-0040",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix9",
+          "shipped_at": "2026-10-05T10:00:43+08:00"
+        },
+        {
+          "id": "silent-0041",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix3",
+          "shipped_at": "2026-10-05T05:22:46+08:00"
+        },
+        {
+          "id": "silent-0042",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp5",
+          "shipped_at": "2026-10-05T05:07:37+08:00"
+        },
+        {
+          "id": "silent-0043",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0044",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp5",
+          "shipped_at": "2026-10-05T05:07:37+08:00"
+        },
+        {
+          "id": "silent-0045",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp19",
+          "shipped_at": "2026-10-05T19:19:22+08:00"
+        },
+        {
+          "id": "silent-0046",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0047",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp5",
+          "shipped_at": "2026-10-05T05:07:37+08:00"
+        },
+        {
+          "id": "silent-0048",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "E6AVMMVCSRPC",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp26",
+          "shipped_at": "2026-10-06T01:13:01+08:00"
+        },
+        {
+          "id": "silent-0049",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0050",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "T082DRCUHRRD",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp8",
+          "shipped_at": "2026-10-05T08:02:10+08:00"
+        },
+        {
+          "id": "silent-0051",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "partly",
+          "status": "shipped",
+          "version": "S1.fix5",
+          "shipped_at": "2026-10-05T07:12:25+08:00"
+        },
+        {
+          "id": "silent-0052",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "XYYQYBRM2A01",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix5",
+          "shipped_at": "2026-10-05T07:12:25+08:00"
+        },
+        {
+          "id": "silent-0053",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "partly",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0054",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp27",
+          "shipped_at": "2026-10-06T01:45:36+08:00"
+        },
+        {
+          "id": "silent-0055",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "XYYQYBRM2A01",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp7",
+          "shipped_at": "2026-10-05T06:03:21+08:00"
+        },
+        {
+          "id": "silent-0056",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "K3676LU8B0UH",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix6",
+          "shipped_at": "2026-10-05T07:12:25+08:00"
+        },
+        {
+          "id": "silent-0057",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "K3676LU8B0UH",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0058",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "K3676LU8B0UH",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp8",
+          "shipped_at": "2026-10-05T08:02:10+08:00"
+        },
+        {
+          "id": "silent-0059",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "K3676LU8B0UH",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp23",
+          "shipped_at": "2026-10-05T23:03:33+08:00"
+        },
+        {
+          "id": "silent-0060",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "K3676LU8B0UH",
+          "asc": 1,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp8",
+          "shipped_at": "2026-10-05T08:02:10+08:00"
+        },
+        {
+          "id": "silent-0061",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "CSBR5CRDWQNB",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix7",
+          "shipped_at": "2026-10-05T08:16:53+08:00"
+        },
+        {
+          "id": "silent-0062",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "CSBR5CRDWQNB",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        },
+        {
+          "id": "silent-0063",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "CSBR5CRDWQNB",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp25",
+          "shipped_at": "2026-10-05T23:44:31+08:00"
+        },
+        {
+          "id": "silent-0064",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "CSBR5CRDWQNB",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0065",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "CSBR5CRDWQNB",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0066",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "Y6GM2CHWJBEY",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix9",
+          "shipped_at": "2026-10-05T10:00:43+08:00"
+        },
+        {
+          "id": "silent-0067",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0068",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp14",
+          "shipped_at": "2026-10-05T12:50:20+08:00"
+        },
+        {
+          "id": "silent-0069",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0070",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp10",
+          "shipped_at": "2026-10-05T08:57:10+08:00"
+        },
+        {
+          "id": "silent-0071",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp10",
+          "shipped_at": "2026-10-05T08:57:10+08:00"
+        },
+        {
+          "id": "silent-0072",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0073",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "Y6GM2CHWJBEY",
+          "asc": 0,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0074",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "10GPK5XGHCK3",
+          "asc": 3,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix10",
+          "shipped_at": "2026-10-05T10:00:43+08:00"
+        },
+        {
+          "id": "silent-0075",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "1HC609GTLGN3",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix10",
+          "shipped_at": "2026-10-05T10:00:43+08:00"
+        },
+        {
+          "id": "silent-0076",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "10GPK5XGHCK3",
+          "asc": 3,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0077",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1HC609GTLGN3",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.exp25",
+          "shipped_at": "2026-10-05T23:44:31+08:00"
+        },
+        {
+          "id": "silent-0078",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "1NZ8FE5F34R9",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix11",
+          "shipped_at": "2026-10-05T11:15:36+08:00"
+        },
+        {
+          "id": "silent-0079",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "1NZ8FE5F34R9",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0080",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1NZ8FE5F34R9",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0081",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "T082DRCUHRRD",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix12",
+          "shipped_at": "2026-10-05T12:09:58+08:00"
+        },
+        {
+          "id": "silent-0082",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "F9PP859XZ3RJ",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix12",
+          "shipped_at": "2026-10-05T12:09:58+08:00"
+        },
+        {
+          "id": "silent-0083",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "LRN0HPZ0FZS1",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp12",
+          "shipped_at": "2026-10-05T10:50:58+08:00"
+        },
+        {
+          "id": "silent-0084",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp12",
+          "shipped_at": "2026-10-05T10:50:58+08:00"
+        },
+        {
+          "id": "silent-0085",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "F9PP859XZ3RJ",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp12",
+          "shipped_at": "2026-10-05T10:50:58+08:00"
+        },
+        {
+          "id": "silent-0086",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "9YBKCNBFP0X5",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix13",
+          "shipped_at": "2026-10-05T12:09:58+08:00"
+        },
+        {
+          "id": "silent-0087",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "9YBKCNBFP0X5",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp13",
+          "shipped_at": "2026-10-05T12:03:00+08:00"
+        },
+        {
+          "id": "silent-0088",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "10GPK5XGHCK3",
+          "asc": 3,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp13",
+          "shipped_at": "2026-10-05T12:03:00+08:00"
+        },
+        {
+          "id": "silent-0089",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "1LMBFGSMCWKU",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix14",
+          "shipped_at": "2026-10-05T12:37:35+08:00"
+        },
+        {
+          "id": "silent-0090",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "1LMBFGSMCWKU",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0091",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1LMBFGSMCWKU",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp14",
+          "shipped_at": "2026-10-05T12:50:20+08:00"
+        },
+        {
+          "id": "silent-0092",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1LMBFGSMCWKU",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp21",
+          "shipped_at": "2026-10-05T21:16:37+08:00"
+        },
+        {
+          "id": "silent-0093",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0094",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0095",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZE8F192FKX24",
+          "asc": 5,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0096",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "FH2HB2X17F2H",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0097",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "FH2HB2X17F2H",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0098",
+          "character": "silent",
+          "kind": "other",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "partly",
+          "status": "shipped",
+          "version": "S1.strategy1",
+          "shipped_at": "2026-10-05T13:40:31+08:00"
+        },
+        {
+          "id": "silent-0099",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "UACFSW4VDDLD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix17",
+          "shipped_at": "2026-10-05T15:10:22+08:00"
+        },
+        {
+          "id": "silent-0100",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "UACFSW4VDDLD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0101",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "10GPK5XGHCK3",
+          "asc": 3,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp15",
+          "shipped_at": "2026-10-05T14:38:03+08:00"
+        },
+        {
+          "id": "silent-0102",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "UACFSW4VDDLD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0103",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "VN7RQJMJEFMX",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0104",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "75X1BARMNZ03",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp16",
+          "shipped_at": "2026-10-05T15:41:26+08:00"
+        },
+        {
+          "id": "silent-0105",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "75X1BARMNZ03",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp16",
+          "shipped_at": "2026-10-05T15:41:26+08:00"
+        },
+        {
+          "id": "silent-0106",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "ZE8F192FKX24",
+          "asc": 5,
+          "prior": "partly",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0107",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp25",
+          "shipped_at": "2026-10-06T00:10:44+08:00"
+        },
+        {
+          "id": "silent-0108",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "T082DRCUHRRD",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix18",
+          "shipped_at": "2026-10-05T16:57:23+08:00"
+        },
+        {
+          "id": "silent-0109",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "6EV5V6PJJS9D",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp17",
+          "shipped_at": "2026-10-05T17:08:51+08:00"
+        },
+        {
+          "id": "silent-0110",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "8CFMW9SAGFWQ",
+          "asc": 6,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp23",
+          "shipped_at": "2026-10-05T23:03:33+08:00"
+        },
+        {
+          "id": "silent-0111",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ZZMYZ5UBCG72",
+          "asc": 2,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp23",
+          "shipped_at": "2026-10-05T23:03:33+08:00"
+        },
+        {
+          "id": "silent-0112",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "2L1BNN9ZJEFU",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix19",
+          "shipped_at": "2026-10-05T18:54:41+08:00"
+        },
+        {
+          "id": "silent-0113",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "VN7RQJMJEFMX",
+          "asc": 6,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix19",
+          "shipped_at": "2026-10-05T18:54:41+08:00"
+        },
+        {
+          "id": "silent-0114",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "53FLQ68CETW0",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.fix20",
+          "shipped_at": "2026-10-05T19:42:14+08:00"
+        },
+        {
+          "id": "silent-0115",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp22",
+          "shipped_at": "2026-10-05T22:01:50+08:00"
+        },
+        {
+          "id": "silent-0116",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "53FLQ68CETW0",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp20",
+          "shipped_at": "2026-10-05T20:29:50+08:00"
+        },
+        {
+          "id": "silent-0117",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "ENKYQMS9W4ZD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp21",
+          "shipped_at": "2026-10-05T21:16:37+08:00"
+        },
+        {
+          "id": "silent-0118",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "ENKYQMS9W4ZD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp21",
+          "shipped_at": "2026-10-05T21:16:37+08:00"
+        },
+        {
+          "id": "silent-0119",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "2SU6XN2AEJRD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp22",
+          "shipped_at": "2026-10-05T22:01:50+08:00"
+        },
+        {
+          "id": "silent-0120",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "2SU6XN2AEJRD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp25",
+          "shipped_at": "2026-10-05T23:44:31+08:00"
+        },
+        {
+          "id": "silent-0121",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "SADL3CGYTGSR",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp23",
+          "shipped_at": "2026-10-05T23:03:33+08:00"
+        },
+        {
+          "id": "silent-0122",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "SADL3CGYTGSR",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp23",
+          "shipped_at": "2026-10-05T23:03:33+08:00"
+        },
+        {
+          "id": "silent-0123",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "SADL3CGYTGSR",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp23",
+          "shipped_at": "2026-10-05T23:03:33+08:00"
+        },
+        {
+          "id": "silent-0124",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "Z6CFLDR3N4SB",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp25",
+          "shipped_at": "2026-10-05T23:44:31+08:00"
+        },
+        {
+          "id": "silent-0125",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "Z6CFLDR3N4SB",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp25",
+          "shipped_at": "2026-10-05T23:44:31+08:00"
+        },
+        {
+          "id": "silent-0126",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "Z6CFLDR3N4SB",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp25",
+          "shipped_at": "2026-10-05T23:44:31+08:00"
+        },
+        {
+          "id": "silent-0127",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "53FLQ68CETW0",
+          "asc": 6,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix22",
+          "shipped_at": "2026-10-06T00:20:13+08:00"
+        },
+        {
+          "id": "silent-0128",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "partly",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0129",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1HC609GTLGN3",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0130",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "Z6CFLDR3N4SB",
+          "asc": 7,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix23",
+          "shipped_at": "2026-10-06T01:45:36+08:00"
+        },
+        {
+          "id": "silent-0131",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "VLV17NUSFS61",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp26",
+          "shipped_at": "2026-10-06T01:13:01+08:00"
+        },
+        {
+          "id": "silent-0132",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "1NZ8FE5F34R9",
+          "asc": 4,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp26",
+          "shipped_at": "2026-10-06T01:13:01+08:00"
+        },
+        {
+          "id": "silent-0133",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "LRN0HPZ0FZS1",
+          "asc": 0,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0134",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "Y6GM2CHWJBEY",
+          "asc": 0,
+          "prior": "yes",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0135",
+          "character": "silent",
+          "kind": "fight",
+          "first_run": "9YT51CK8RC39",
+          "asc": 7,
+          "prior": "partly",
+          "status": "shipped",
+          "version": "S1.strategy3",
+          "shipped_at": "2026-10-06T02:16:30+08:00"
+        },
+        {
+          "id": "silent-0136",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "2PVLGRBGUX9S",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0137",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "2PVLGRBGUX9S",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp28",
+          "shipped_at": "2026-10-06T02:34:16+08:00"
+        },
+        {
+          "id": "silent-0138",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "R0HEV5E3QT6G",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0139",
+          "character": "silent",
+          "kind": "route",
+          "first_run": "2L1BNN9ZJEFU",
+          "asc": 6,
+          "prior": "partly",
+          "status": "shipped",
+          "version": "S1.strategy4",
+          "shipped_at": "2026-10-06T02:57:13+08:00"
+        },
+        {
+          "id": "silent-0140",
+          "character": "silent",
+          "kind": "card",
+          "first_run": "4Y94N8RDPGPM",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0141",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "4Y94N8RDPGPM",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0142",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "LRN0HPZ0FZS1",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0143",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "4Y94N8RDPGPM",
+          "asc": 7,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0144",
+          "character": "silent",
+          "kind": "bug-infra",
+          "first_run": "KAY522KT5NXR",
+          "asc": 0,
+          "prior": "no",
+          "status": "shipped",
+          "version": "S1.fix24",
+          "shipped_at": "2026-10-06T04:05:07+08:00"
+        },
+        {
+          "id": "silent-0145",
+          "character": "silent",
+          "kind": "route",
+          "first_run": "LLYSRQQ35AVW",
+          "asc": 8,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0146",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "LLYSRQQ35AVW",
+          "asc": 8,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp30",
+          "shipped_at": "2026-10-06T03:45:03+08:00"
+        },
+        {
+          "id": "silent-0147",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "2SU6XN2AEJRD",
+          "asc": 6,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp31",
+          "shipped_at": "2026-10-06T04:35:35+08:00"
+        },
+        {
+          "id": "silent-0149",
+          "character": "silent",
+          "kind": "mechanic",
+          "first_run": "C48LLXBGKXQ9",
+          "asc": 0,
+          "prior": "unknown",
+          "status": "shipped",
+          "version": "S1.exp32",
+          "shipped_at": "2026-10-06T04:59:22+08:00"
+        }
+      ]
+    },
+    "check": {
+      "exit": 0,
+      "items": 149,
+      "problems": 0
+    }
+  },
+  "window_adds": [
+    {
+      "op": "add",
+      "id": "silent-0144",
+      "ts": "2026-10-06T02:57:35+08:00",
+      "by": "learner:postmortem",
+      "kind": "bug-infra",
+      "first_run": "KAY522KT5NXR",
+      "asc": 0,
+      "prior": "no",
+      "status": "observed",
+      "where": {
+        "lessons": [
+          "LLYSRQQ35AVW"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "id": "silent-0145",
+      "ts": "2026-10-06T02:57:35+08:00",
+      "by": "learner:postmortem",
+      "kind": "route",
+      "first_run": "LLYSRQQ35AVW",
+      "asc": 8,
+      "prior": "unknown",
+      "status": "observed",
+      "where": {
+        "lessons": [
+          "LLYSRQQ35AVW"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "id": "silent-0146",
+      "ts": "2026-10-06T02:57:35+08:00",
+      "by": "learner:postmortem",
+      "kind": "mechanic",
+      "first_run": "LLYSRQQ35AVW",
+      "asc": 8,
+      "prior": "unknown",
+      "status": "observed",
+      "where": {
+        "lessons": [
+          "LLYSRQQ35AVW"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "id": "silent-0147",
+      "ts": "2026-10-06T04:01:19+08:00",
+      "by": "learner:postmortem",
+      "kind": "mechanic",
+      "first_run": "2SU6XN2AEJRD",
+      "asc": 6,
+      "prior": "unknown",
+      "status": "observed",
+      "where": {
+        "lessons": [
+          "HMVJKM56S4Q8"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "id": "silent-0148",
+      "ts": "2026-10-06T04:18:17+08:00",
+      "by": "learner:strategy-proposal",
+      "kind": "route",
+      "first_run": "2SU6XN2AEJRD",
+      "asc": 6,
+      "prior": "partly",
+      "status": "proposed",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261006-041302-strategy-proposal/proposal.md"
+        ],
+        "lessons": [
+          "HMVJKM56S4Q8",
+          "2SU6XN2AEJRD"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "id": "silent-0149",
+      "ts": "2026-10-06T04:26:02+08:00",
+      "by": "learner:postmortem",
+      "kind": "mechanic",
+      "first_run": "C48LLXBGKXQ9",
+      "asc": 0,
+      "prior": "unknown",
+      "status": "observed",
+      "where": {
+        "lessons": [
+          "F4QKG4J1AJJZ"
+        ]
+      }
+    }
+  ],
+  "window_ops_shipped": {
+    "registrations": 53,
+    "unique_items": 41,
+    "by_version": {
+      "S1.strategy4": 1,
+      "S1.exp30": 33,
+      "S1.fix24": 1,
+      "S1.exp31": 18
+    },
+    "rows": [
+      {
+        "op": "update",
+        "id": "silent-0139",
+        "ts": "2026-10-06T02:57:13+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.strategy4",
+        "where": {
+          "commits": [
+            "939db23df241af81cd729489d1ee4e4a8b7115b8",
+            "a10be71d74755150bc5eda0e7df48d437efa9848",
+            "291617bc95c34115863eaa57110c255f2894ea59",
+            "0f8736a0b6ba2675e14f596864e1923357992e99"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0006",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0007",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0010",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0011",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0013",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0021",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0023",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0025",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0027",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0030",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0037",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0046",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0053",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0062",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0064",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0069",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0072",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0080",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0090",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0102",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0129",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0133",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0134",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0138",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0140",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0141",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0142",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0143",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "8f7d061a5dde6da3ce0e3b6fcd7f96a5a38d1e87",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0145",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0146",
+        "ts": "2026-10-06T03:45:03+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp30",
+        "where": {
+          "commits": [
+            "0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd",
+            "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+            "25a520d92d46d1d644a3ca14a05406a4a1246238",
+            "735ac4411310d375cc52c237997dfefa89989034"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0144",
+        "ts": "2026-10-06T04:05:07+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.fix24",
+        "where": {
+          "commits": [
+            "d48d16129b10e5060dc9d33a1b96e3340c7b82b8",
+            "9af37f370f360a94e36ab9ac268c5950ae9549a8",
+            "473a62f475dc5af126f231061a1c3c33880ed7a9",
+            "054458768f7a9451328739834ecc20f9ce8e48b1"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0021",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0009",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0006",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0013",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0007",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0011",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0027",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0030",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0062",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0065",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0080",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0128",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0049",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0073",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      },
+      {
+        "op": "update",
+        "id": "silent-0147",
+        "ts": "2026-10-06T04:35:35+08:00",
+        "by": "ops",
+        "status": "shipped",
+        "version": "S1.exp31",
+        "where": {
+          "commits": [
+            "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+            "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+            "cf6fae73003337e346c73b600d6c3fc0c791c039",
+            "62d6edc5543682a7289d52263d6294b934366f4b"
+          ]
+        }
+      }
+    ]
+  },
+  "a9_runs": [
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "character": "SILENT",
+      "ascension": 9,
+      "floor": 33,
+      "victory": false,
+      "ended": "2026-10-05T19:20:10.364Z",
+      "death_fight": [
+        "火箭",
+        "碾碎爪"
+      ]
+    },
+    {
+      "run_id": "F4QKG4J1AJJZ",
+      "character": "SILENT",
+      "ascension": 9,
+      "floor": 38,
+      "victory": false,
+      "ended": "2026-10-05T20:04:35.380Z",
+      "death_fight": [
+        "史莱姆狂战士"
+      ]
+    },
+    {
+      "run_id": "G403VCZ3BH1B",
+      "character": "SILENT",
+      "ascension": 9,
+      "floor": 48,
+      "victory": true,
+      "ended": "2026-10-05T20:51:26.103Z",
+      "death_fight": null
+    }
+  ],
+  "run_start_configurations": [
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T18:45:41.432Z",
+      "ascension": 9,
+      "code": {
+        "commit": "6566b7d308947e1929cb398034dd8f02a1d1cb25",
+        "code": "6566b7d+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 9,
+        "prefix_sha": "b705a3d20881",
+        "prefix_chars": 125188,
+        "prefix_tokens_est": {
+          "deepseek": 87632,
+          "claude": 121432
+        },
+        "system_sha": "ab24ebb0e497",
+        "system_chars": 127472,
+        "experience_version": "2026-10-06.3",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      }
+    },
+    {
+      "run_id": "F4QKG4J1AJJZ",
+      "ts": "2026-10-05T19:23:12.358Z",
+      "ascension": 9,
+      "code": {
+        "commit": "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+        "code": "3a2a2a4+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 9,
+        "prefix_sha": "cba7bb9525b5",
+        "prefix_chars": 134097,
+        "prefix_tokens_est": {
+          "deepseek": 93868,
+          "claude": 130074
+        },
+        "system_sha": "3a9676d63f3e",
+        "system_chars": 136381,
+        "experience_version": "2026-10-06.5",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      }
+    },
+    {
+      "run_id": "G403VCZ3BH1B",
+      "ts": "2026-10-05T20:08:05.949Z",
+      "ascension": 9,
+      "code": {
+        "commit": "473a62f475dc5af126f231061a1c3c33880ed7a9",
+        "code": "473a62f+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 9,
+        "prefix_sha": "3d778e75de4b",
+        "prefix_chars": 134706,
+        "prefix_tokens_est": {
+          "deepseek": 94294,
+          "claude": 130665
+        },
+        "system_sha": "1b889df6320f",
+        "system_chars": 136990,
+        "experience_version": "2026-10-06.5",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      }
+    },
+    {
+      "run_id": "MGA0CZDDKC0P",
+      "ts": "2026-10-05T20:54:59.160Z",
+      "ascension": 10,
+      "code": {
+        "commit": "a999dba8c53a2dfc22825ba5603cde3f0bebf74b",
+        "code": "a999dba+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "82c48cf978a1",
+        "prefix_chars": 154479,
+        "prefix_tokens_est": {
+          "deepseek": 108135,
+          "claude": 149845
+        },
+        "system_sha": "b8f869903928",
+        "system_chars": 156763,
+        "experience_version": "2026-10-06.7",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      }
+    }
+  ],
+  "victory_duration_seconds": 2600.154,
+  "next_parsed_target_ascension": 10,
+  "sl_attempts": [
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T18:59:34.321Z",
+      "floor": 17,
+      "encounter": "LAGAVULIN_MATRIARCH",
+      "attempt": 1,
+      "started_at": "2026-10-05T18:57:25.668Z",
+      "ended_at": "2026-10-05T18:59:34.321Z",
+      "result": "won",
+      "turns": 12,
+      "end_hp": 43,
+      "end_block": null,
+      "incoming": 25,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:09:57.564Z",
+      "floor": 30,
+      "encounter": "OVICOPTER",
+      "attempt": 1,
+      "started_at": "2026-10-05T19:09:12.696Z",
+      "ended_at": "2026-10-05T19:09:57.564Z",
+      "result": "won",
+      "turns": 4,
+      "end_hp": 10,
+      "end_block": null,
+      "incoming": 23,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:12:22.264Z",
+      "floor": 31,
+      "encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+      "attempt": 1,
+      "started_at": "2026-10-05T19:10:24.453Z",
+      "ended_at": "2026-10-05T19:12:22.264Z",
+      "result": "won",
+      "turns": 8,
+      "end_hp": 11,
+      "end_block": null,
+      "incoming": 26,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:14:30.873Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 1,
+      "started_at": "2026-10-05T19:13:21.426Z",
+      "ended_at": "2026-10-05T19:14:30.873Z",
+      "result": "predicted_death",
+      "turns": 4,
+      "end_hp": 11,
+      "end_block": 24,
+      "incoming": 38,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 38 incoming vs 11 HP + 24 block + 0 end-of-turn block"
+      },
+      "reload": {
+        "ok": true,
+        "ms": 7399,
+        "resumed_turn": 1
+      },
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:15:57.090Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 2,
+      "started_at": "2026-10-05T19:14:30.874Z",
+      "ended_at": "2026-10-05T19:15:57.090Z",
+      "result": "predicted_death",
+      "turns": 4,
+      "end_hp": 9,
+      "end_block": 24,
+      "incoming": 38,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 38 incoming vs 9 HP + 24 block + 0 end-of-turn block"
+      },
+      "reload": {
+        "ok": true,
+        "ms": 6614,
+        "resumed_turn": 1
+      },
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:17:16.119Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 3,
+      "started_at": "2026-10-05T19:15:57.091Z",
+      "ended_at": "2026-10-05T19:17:16.119Z",
+      "result": "predicted_death",
+      "turns": 4,
+      "end_hp": 6,
+      "end_block": 24,
+      "incoming": 38,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 38 incoming vs 6 HP + 24 block + 0 end-of-turn block"
+      },
+      "reload": {
+        "ok": true,
+        "ms": 7717,
+        "resumed_turn": 1
+      },
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:18:24.345Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 4,
+      "started_at": "2026-10-05T19:17:16.120Z",
+      "ended_at": "2026-10-05T19:18:24.345Z",
+      "result": "predicted_death",
+      "turns": 4,
+      "end_hp": 11,
+      "end_block": 24,
+      "incoming": 38,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 38 incoming vs 11 HP + 24 block + 0 end-of-turn block"
+      },
+      "reload": {
+        "ok": true,
+        "ms": 7863,
+        "resumed_turn": 1
+      },
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:19:17.242Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 5,
+      "started_at": "2026-10-05T19:18:24.345Z",
+      "ended_at": "2026-10-05T19:19:17.242Z",
+      "result": "predicted_death",
+      "turns": 4,
+      "end_hp": 6,
+      "end_block": 24,
+      "incoming": 38,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 38 incoming vs 6 HP + 24 block + 0 end-of-turn block"
+      },
+      "reload": {
+        "ok": true,
+        "ms": 7639,
+        "resumed_turn": 1
+      },
+      "give_up_reason": null
+    },
+    {
+      "run_id": "HMVJKM56S4Q8",
+      "ts": "2026-10-05T19:20:10.362Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 6,
+      "started_at": "2026-10-05T19:19:17.243Z",
+      "ended_at": "2026-10-05T19:20:10.362Z",
+      "result": "died",
+      "turns": 4,
+      "end_hp": 0,
+      "end_block": null,
+      "incoming": 38,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 38 incoming vs 2 HP + 18 block + 0 end-of-turn block"
+      },
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "F4QKG4J1AJJZ",
+      "ts": "2026-10-05T19:35:48.111Z",
+      "floor": 17,
+      "encounter": "CEREMONIAL_BEAST",
+      "attempt": 1,
+      "started_at": "2026-10-05T19:34:10.861Z",
+      "ended_at": "2026-10-05T19:35:48.111Z",
+      "result": "won",
+      "turns": 9,
+      "end_hp": 1,
+      "end_block": null,
+      "incoming": 0,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "F4QKG4J1AJJZ",
+      "ts": "2026-10-05T19:48:07.857Z",
+      "floor": 31,
+      "encounter": "CHOMPER+CHOMPER",
+      "attempt": 1,
+      "started_at": "2026-10-05T19:47:10.359Z",
+      "ended_at": "2026-10-05T19:48:07.857Z",
+      "result": "won",
+      "turns": 5,
+      "end_hp": 18,
+      "end_block": null,
+      "incoming": 18,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "F4QKG4J1AJJZ",
+      "ts": "2026-10-05T19:54:47.829Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 1,
+      "started_at": "2026-10-05T19:49:27.328Z",
+      "ended_at": "2026-10-05T19:54:47.829Z",
+      "result": "predicted_death",
+      "turns": 10,
+      "end_hp": 3,
+      "end_block": 10,
+      "incoming": 19,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 19 incoming vs 3 HP + 10 block + 0 end-of-turn block"
+      },
+      "reload": {
+        "ok": true,
+        "ms": 6356,
+        "resumed_turn": 1
+      },
+      "give_up_reason": null
+    },
+    {
+      "run_id": "F4QKG4J1AJJZ",
+      "ts": "2026-10-05T19:59:12.218Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 2,
+      "started_at": "2026-10-05T19:54:47.830Z",
+      "ended_at": "2026-10-05T19:59:12.218Z",
+      "result": "won",
+      "turns": 9,
+      "end_hp": 2,
+      "end_block": null,
+      "incoming": 0,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "G403VCZ3BH1B",
+      "ts": "2026-10-05T20:20:53.140Z",
+      "floor": 17,
+      "encounter": "SOUL_FYSH",
+      "attempt": 1,
+      "started_at": "2026-10-05T20:19:01.625Z",
+      "ended_at": "2026-10-05T20:20:53.140Z",
+      "result": "won",
+      "turns": 9,
+      "end_hp": 2,
+      "end_block": null,
+      "incoming": 7,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "G403VCZ3BH1B",
+      "ts": "2026-10-05T20:35:36.896Z",
+      "floor": 33,
+      "encounter": "CRUSHER+ROCKET",
+      "attempt": 1,
+      "started_at": "2026-10-05T20:31:20.126Z",
+      "ended_at": "2026-10-05T20:35:36.896Z",
+      "result": "won",
+      "turns": 7,
+      "end_hp": 17,
+      "end_block": null,
+      "incoming": 19,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    },
+    {
+      "run_id": "G403VCZ3BH1B",
+      "ts": "2026-10-05T20:45:49.874Z",
+      "floor": 48,
+      "encounter": "QUEEN+TORCH_HEAD_AMALGAM",
+      "attempt": 1,
+      "started_at": "2026-10-05T20:43:17.491Z",
+      "ended_at": "2026-10-05T20:45:49.874Z",
+      "result": "predicted_death",
+      "turns": 10,
+      "end_hp": 32,
+      "end_block": 12,
+      "incoming": 45,
+      "judge": {
+        "tier": "rules",
+        "reason": "nothing left to play or drink; 45 incoming vs 32 HP + 12 block + 0 end-of-turn block"
+      },
+      "reload": {
+        "ok": true,
+        "ms": 7243,
+        "resumed_turn": 1
+      },
+      "give_up_reason": null
+    },
+    {
+      "run_id": "G403VCZ3BH1B",
+      "ts": "2026-10-05T20:51:16.940Z",
+      "floor": 48,
+      "encounter": "QUEEN+TORCH_HEAD_AMALGAM",
+      "attempt": 2,
+      "started_at": "2026-10-05T20:45:49.874Z",
+      "ended_at": "2026-10-05T20:51:16.941Z",
+      "result": "won",
+      "turns": 12,
+      "end_hp": 18,
+      "end_block": null,
+      "incoming": 13,
+      "judge": null,
+      "reload": null,
+      "give_up_reason": null
+    }
+  ],
+  "eval_versions": [
+    {
+      "name": "S1.exp30",
+      "family": "Silent",
+      "commit": "3a2a2a48ed594dea69b9c088edfe9259ac89bac8",
+      "source": "decision-log 2026-10-06 03:28（静默经验2026-10-06.5；源0dba4029da21e3f514050bfd9d7b7dfba9f9c1fd；LLYSRQQ35AVW SILENT A8及旧36局复算，新增1更新24退役0、active101/52601字；帐篷双选、升级萎靡X+1、毒爆发/触媒逐敌截断、临时敏捷与定制科学/格挡分账；A8路线休息构筑仅一局观察，旧低阶不并分母；源及合后沙箱tsc0/184文件2054例；live .3→.5含此前待合.4，无虚构exp29上线时刻；26项账本只proposed交运维登记，0144升级模型缺口未修。）"
+    },
+    {
+      "name": "S1.fix24",
+      "family": "Silent",
+      "commit": "9af37f370f360a94e36ab9ac268c5950ae9549a8",
+      "source": "decision-log 2026-10-06 03:56（fix-queue-v4 02:40/03:00预算缺口、02:31升级腐蚀波/专长科学及03:08升级萎靡；源码9889436c3b332a3984cdb7f850a1349f464182d1,a62cf381f26435693ce30548c9433d219f750b02,32daefc69239c5d23741f35e2f5ce71bef25ebce,d48d16129b10e5060dc9d33a1b96e3340c7b82b8→live 9af37f370f360a94e36ab9ac268c5950ae9549a8；预算1500ms及100ms余量不变，截止前后检查、求解器单调时钟截止、丢弃未完成样本；受控时钟保留原1500ms断言与旧批次G预算/结果断言，旧计时夹具两轮失败及修正后通过历史保留；证据2PVLGRBGUX9S SILENT A7 F48首T11（36→42毒、212→170血，账本silent-0076/0137）、首T2/T4（专长2力2敏捷，账本silent-0136/0138）；仅支持已观测升级3毒和专长2/2模板，不激活科学未启用的伤害/格挡变量，不外推其他模板；逐项撤源码失败、恢复通过，源及合后沙箱tsc/vitest0。升级萎靡证据LLYSRQQ35AVW SILENT A8 F33 T3/F38 T1/F48 T2，X0/2/3实减1/3/4力和虚弱，账本silent-0144（first_run KAY522KT5NXR A0 F31 T1），不关联帐篷0146；仅静默已观测X+1文本启用，不外推X+2等模板。0144经工具追加源码commit和proposed，未标shipped；其他新修无对应bug-infra，不新建/重置旧shipped；代码去向交运维据fix-done登记。铁甲完整且未超时的推演保持数值等价，截止附近会丢弃不完整样本；专长仅在静默角色入口启用，首轮7条铁甲回归失败历史保留，限定角色后原断言通过，铁甲科学及升级萎靡保持等价；其他科学模板保持，升级腐蚀波为静默牌。无策略/药水代价/选项删除/并列规则改动，知识刷新逐blob保留，无生成器改动或重建；完整外部检查由调度器补跑，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp31",
+      "family": "Silent",
+      "commit": "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+      "source": "decision-log 2026-10-06 04:23（静默经验2026-10-06.6；源16a691d1513abe828ad8dab3a352c2cd693d2f14；HMVJKM56S4Q8 SILENT A9及旧37局复算，新增1更新16退役0、active102/54501字；星图真实进房回血、负属性与毒/敏捷/脆弱分账、A9甲虫成长、同抽序帝王蟹六败的血价观察；A8/A9路线/休息/构筑各一局，低阶不并分母；源及合后固定沙箱通过，账本只proposed交运维登记shipped，无源码或其他角色知识变化。）"
+    },
+    {
+      "name": "S1.exp32",
+      "family": "Silent",
+      "commit": "72a48daa5bbb25b9cb6ce8074f4bb26c2c3a4eac",
+      "source": "decision-log 2026-10-06 04:49（静默经验2026-10-06.7；源69532dfcc6eef838362eaaf235be6eee9641f2b7；F4QKG4J1AJJZ SILENT A9与旧38局复算，新增1更新9退役0、active103/55618字；刀扇容量/群伤及逐刀力量，手套成长/余像未建/毒雾兑现/尖啸制品分账；A8一局/A9两局路线休息观察、帝王蟹SL第2次转胜非单项因果；源和合后沙箱通过，账本只proposed交运维登记shipped；无源码或其他角色知识变化。）"
+    }
+  ],
+  "repeat_measurement_evidence": [
+    {
+      "op": "update",
+      "id": "silent-0009",
+      "ts": "2026-10-06T01:13:01+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp26",
+      "where": {
+        "commits": [
+          "c2aba14f9a7a51fa3867360ac996a1e57b336463",
+          "c7ca5d01614905357803b9c644f18ff80d9df703",
+          "8b2688581394344419420a0c341c498d07f03efc",
+          "2472ffd921fe356e1ae5baf9adf8c73913e2759e"
+        ]
+      },
+      "note": "01:01 experience-done运维机械兜底，静默经验2026-10-06.1实际合live c7ca5d01614905357803b9c644f18ff80d9df703/发布8b2688581394344419420a0c341c498d07f03efc，源tsc0/179文件2030例、合后tsc0/181文件2038例首过；本条仅对应已合入experience文本，源码机制覆盖和0130单行动题缺陷不随经验冒记实现，保留prior/first_run/repeat及所有旧上线历史，不另设审核。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0009",
+      "ts": "2026-10-06T04:01:19+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "HMVJKM56S4Q8",
+          "floor": 33,
+          "turn": 2,
+          "role": "repeat",
+          "note": "首战T2有3能量，手中可打2费药瓶+、1费毒雾及触媒，题面已有触媒/毒雾候选；六次均未建立这些毒能力，也未打药瓶或爆发，至T4才施毒，末次合扣111仍差317。重现启毒计划未兑现，不包含旧空打咕嘟冒泡细节；未实打其他能力线，不能证明早启动必胜。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "HMVJKM56S4Q8"
+        ]
+      },
+      "note": "对应第二条经验；开局前已有S1.exp26，记上线后同类失误重犯，保留旧first_run/prior/status。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0009",
+      "ts": "2026-10-06T04:35:35+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp31",
+      "where": {
+        "commits": [
+          "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+          "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+          "cf6fae73003337e346c73b600d6c3fc0c791c039",
+          "62d6edc5543682a7289d52263d6294b934366f4b"
+        ]
+      },
+      "note": "04:28 experience-done机械核实第31批经验2026-10-06.6已实际合入live，登记唯一S1.exp31；HMVJKM56S4Q8 SILENT A9及旧37本角色完局，草稿/最终源/合后均tsc0、188文件2068例。只登记学习者已合入的经验文字，不重写claim/evidence/first_run/prior/repeat；0147最早证据仍归2SU6XN2AEJRD A6，旧0009重犯历史保留，不倒算本经验在已结束HMV局中生效或导致胜利。完整外部checks_pending等后续learner-checks，不借别批结果、不另审。"
+    }
+  ]
+}

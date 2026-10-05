@@ -1014,3 +1014,103 @@ items_found=2按最早证据进阶归属；items_shipped=5（0016/0054/0080/0130
 这次发布和本次登记均在A8首胜及A9开局之后，保持以上03:13爬阶窗口查询快照和学习曲线原行，不倒算为首胜前已学。源与合后沙箱均tsc0/184文件2054例，完整外部检查尚待调度器回报；原exp28/strategy4预算失败记录保持。完整来源与登记见[20261006-0335-experience30-release.md](../paper/materials/silent/20261006-0335-experience30-release.md)。
 
 - 2026-10-06 04:05 首胜复盘后的机制覆盖补记：04:00 fix-done确认学习者升级萎靡模型源d48d1612已随S1.fix24实际合入9af37f37、发布473a62f4，main同步05445876；0144现按实际合入登记shipped/S1.fix24，first_run仍KAY522KT5NXR/A0、prior=no。0145/0146帐篷S1.exp30和0051原版S1.fix5保持。此模型修复在A8首胜及A9开局之后，原03:13观察快照、首胜因果限制和原CSV行保持；最终源/合后188文件2068例沙箱通过，完整外部本批检查等后续事件，详情[20261006-0400-fix24-release.md](../paper/materials/silent/20261006-0400-fix24-release.md)。
+
+## A9（2026-10-06 05:24 CST 小结；下一局已开 A10）
+
+本级三局窗口为2026-10-06 02:45:41.432首次A9配置至04:51:26.103首胜结束；学习产出和实际代码合入按该窗口统计。下一局MGA0CZDDKC0P于04:54:59.160开局，run-config的角色SILENT、解析target_ascension=10/实际ascension=10，climb自动升级。账本查询在05:14:11执行；查询结果、原SL记录节选、开局配置、版本及来源哈希见[a9-learning-snapshot-20261006-0513.json](../paper/materials/silent/a9-learning-snapshot-20261006-0513.json)。登记时点、首次证据所属进阶与局内实际生效分别记录。
+
+### 结果与首试 / SL 分账
+
+| 局号 | 第一次尝试 | 最终结果 | 成功读档 | 配置开局 / 结束（CST） |
+| --- | --- | --- | --- | --- |
+| HMVJKM56S4Q8 | 负，F33 | 负，F33；火箭 / 碾碎爪 | 5 | 02:45:41 / 03:20:10 |
+| F4QKG4J1AJJZ | 负，F33 | 负，F38；史莱姆狂战士 | 1 | 03:23:12 / 04:04:35 |
+| G403VCZ3BH1B | 负，F48 | 胜，F48；末boss第2次 | 1 | 04:08:05 / 04:51:26 |
+
+第一次尝试0胜3负、平均终层38.00；最终1胜2负、平均终层39.67。三局均实际读档，共7次；SL后最终1胜2负。首试“负”按首个predicted_death且读档的尝试分账，不声称这些尝试都实际死亡。HMV末boss六次尝试，前五读档；F4的读档发生在F33，第2次获胜后推进至F38死亡。
+
+G403VCZ3BH1B在F17/F33均首试won，无读档；F48女王 / 火炬头聚合体首试T10日志为32血、12挡、45来伤，result=predicted_death、reload.ok=true，恢复T1。第2次T12 won、余18血，最终runs胜利为04:51:26.103。用时按首条run-config 04:08:05.949至runs结束计算，2600.154秒，即43分20秒（含一次读档）。
+
+主要死亡遭遇各1局：HMV为F33火箭 / 碾碎爪，学习者复盘记录最后T4为2血18挡面对火箭38伤；F4为F38史莱姆狂战士，复盘记录T6为14血0挡面对8×4攻击，终战无SL。仅转录该两局的原日志及学习者复盘；没有替代打法对照，三局样本不足以证明某项学习造成胜负变化。
+
+### 完整评估
+
+`bash ops/codex-ops-do.sh eval-metrics silent 9`退出0，沙箱外执行`eval/metrics.py --character silent --ascension 9 --group-by ascension --md`。原报告[a9-metrics-20261006-051417.EXgt60.md](../paper/materials/silent/a9-metrics-20261006-051417.EXgt60.md)，下文原样并入，保留小样本区间及缺失值：
+
+| 指标 | A9 |
+|---|---|
+| 局数 | 3 * |
+| 终层 | 39.7（中位 38.0；CI 20.7–58.6；n=3） * |
+| 过一幕 boss | 100%（3/3；CI 44–100%） * |
+| 过二幕 boss | 67%（2/3；CI 21–94%） * |
+| 胜局 | 33%（1/3；CI 6–79%） * |
+| 非 boss 战喝药 / 10 层 | 1.98（中位 1.84；CI 0.99–2.96；n=3） * |
+| 进一幕 boss 带药（瓶） | 1.00（中位 1.00；CI 0.00–3.48；n=3） * |
+| 进二幕 boss 带药（瓶） | 1.67（中位 2.00；CI 0.23–3.10；n=3） * |
+| 进三幕 boss 带药（瓶） | 0.00（中位 0.00；n=1） * |
+| 死时手里的药（瓶，输的局） | 0.00（中位 0.00；CI 0.00–0.00；n=2） * |
+| 一幕 boss 有力量来源 | 67%（2/3；CI 21–94%） *；牌 0 / 遗物 2 / 开场有力量 2 |
+| 一幕精英进场血量 < 78% 次数 / 局 | 0.67（中位 1.00；CI 0.00–2.10；n=3） *；占一幕精英战 2/4 |
+| 二幕第一个休息点前死亡（占进二幕的局） | 0%（0/3；CI 0–56%） * |
+| 大脑调用 / 局 | 38.7（中位 37.0；CI 17.2–60.1；n=3） * |
+| 输入 token / 局（千） | 4399（中位 4238；CI 1523–7274；n=3） * |
+| 缓存命中 token / 局（千） | 170（中位 195；CI 29–310；n=3） * |
+| 输出 token / 局（千） | 11.6（中位 11.5；CI 4.9–18.3；n=3） * |
+| 缓存命中率 | 4% |
+| 大脑耗时 / 局（分钟） | 11.2（中位 11.1；CI 4.6–17.8；n=3） * |
+| 每次调用平均耗时（秒） | 17.4 |
+|   codex：调用 / 局 | 38.7（中位 37.0；CI 17.2–60.1；n=3） * |
+|   codex：输入 / 命中 / 输出（千 token / 局） | 4399 / 170 / 11.6（n=3） |
+|   codex：耗时 / 局（分钟） | 11.2（中位 11.1；CI 4.6–17.8；n=3） * |
+| SL：有 SL 记录的局 | 3/3 |
+| SL：重打次数 / 局 | 2.33（中位 1.00；CI 0.00–8.07；n=3） * |
+| 第一次尝试：终层 | 38.0（中位 33.0；CI 16.5–59.5；n=3） * |
+| 第一次尝试：过一幕 boss | 100%（3/3；CI 44–100%） * |
+| 第一次尝试：过二幕 boss | 33%（1/3；CI 6–79%） * |
+| 第一次尝试：胜局 | 0%（0/3；CI 0–56%） * |
+| 校准：推演本回合掉血 ±2 内（回合） | 90%（168/186 回合） |
+| 校准：路线投影 2–3 层误差（投影 − 实际） | 中位 +0.0，中位 \|误差\| 1.5（n=26） |
+| 校准：boss 时钟 实打/估值 中位 | — |
+
+* 局数 < 10（或该指标的 n < 10）：样本不足，区间只作参考。
+
+### 学习产出与上线
+
+本级复盘已完成2/3：HMV及F4；G403胜局尚无lessons标题，留调度器后续复盘。HMV复盘登记0147及13项旧证据，其中0009标repeat、其余support；F4登记0149及8项support。新增发现的最早局分别是A6的2SU6XN2AEJRD和A0的C48LLXBGKXQ9，故按要求执行`ledger.py find --character silent --asc 9 --json`结果为空，表示首次证据归属，不表示A9无学习证据。
+
+窗口内共新增6项账本登记：
+
+| 条目 | 登记时间（CST） | 最早证据 | 类别 | 05:14查询时状态 / 去向 |
+| --- | --- | --- | --- | --- |
+| silent-0144 | 02:57:35 | KAY522KT5NXR，A0 | bug-infra | shipped，S1.fix24 |
+| silent-0145 | 02:57:35 | LLYSRQQ35AVW，A8 | route | shipped，S1.exp30 |
+| silent-0146 | 02:57:35 | LLYSRQQ35AVW，A8 | mechanic | shipped，S1.exp30 |
+| silent-0147 | 04:01:19 | 2SU6XN2AEJRD，A6 | mechanic | shipped，S1.exp31 |
+| silent-0148 | 04:18:17 | 2SU6XN2AEJRD，A6 | route | proposed；固定策略源码307c538c尚待合入 |
+| silent-0149 | 04:26:02 | C48LLXBGKXQ9，A0 | mechanic | shipped，S1.exp32；登记04:59在首胜后 |
+
+窗口内实际合入4个改变行为的eval版本；改动内容由学习者依据静默证据提出和实现，此处只登记：
+
+| 版本 | 实际代码合入（CST / commit） | 固定发布 | 来源 / 产出 |
+| --- | --- | --- | --- |
+| S1.exp30 | 03:22:56 / 3a2a2a48 | 03:28:08 / 25a520d9 | A8复盘及旧静默局；并入此前待合经验.4与新.5，.5新增1 / 更新24，active101；0145/0146及旧项 |
+| S1.fix24 | 03:52:13 / 9af37f37 | 03:56:27 / 473a62f4 | 预算截止、升级腐蚀波、专长科学、升级萎靡；证据2PVLGRBGUX9S A7、LLYSRQQ35AVW A8、KAY522KT5NXR A0；0076/0137、0136/0138、0144 |
+| S1.exp31 | 04:19:08 / fef46e7e | 04:23:31 / cf6fae73 | HMV A9及旧37静默局；.6新增1 / 更新16，active102；0147与0009等旧项 |
+| S1.exp32 | 04:44:28 / 72a48daa | 04:49:51 / a999dba8 | F4 A9及旧38静默局；.7新增1 / 更新9，active103；0149及0057等旧项 |
+
+`ledger.py find --character silent --status shipped --json`当时共140项，全部ID及版本保存在查询快照。窗口内by=ops的shipped登记53条、41个不同ID：S1.strategy4的0139为1条、S1.exp30为33条、S1.fix24为1条、S1.exp31为18条；它们包含旧项补证和再登记，不计为53个新发现。S1.strategy4代码在本窗口之前已合入，仅其登记处于窗口内；S1.exp32的11条shipped登记在04:59，已超出首胜窗口。0148保持proposed，本级未发布S1.strategy5。`ledger.py check`为149项、0问题。
+
+开局配置分别为HMV：6566b7d3 / 经验.3；F4：3a2a2a48 / .5；G403：473a62f4 / .5；下一A10：a999dba8 / .7，均带自动知识刷新dirty记录。F4实际使用.5早于运维shipped登记；G403开局早于经验.6/.7合入。大脑每次调用会重渲染知识，逐调用实际使用需查brain.jsonl的knowledge.prefix_sha，不能仅按后来登记时间把首胜归因于某项经验或代码。
+
+### 学习曲线原行与计数限制
+
+以下为paper_dataset.py所用学习曲线生成器在04:59账本提交712606065a4cab6c724d8278be023a61536b6810之后生成的当前CSV原行；本轮不改其计数：
+
+```csv
+character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,30,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0053 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,0
+```
+
+items_found=0按最早证据进阶；items_shipped=30按登记后下一场已结束局的进阶归属。它们与窗口新增6项、4个实际合入版本、53条shipped登记以及查询时全静默140项shipped口径不同。
+
+repeats=1、repeats_after_ship=0存在可复现漏计：silent-0009于01:13:01已登记S1.exp26，HMV于02:45:41开局，其repeat在04:01:19入账；04:35:35再次shipped/S1.exp31后，fold只保留最新shipped_at，evidence_after_ship用该值与局开局比较，漏掉原先已上线的重犯。HMV学习者复盘与原账本均保留“之前学过”的证据。定位learner/ledger.py:283–286、:339–343及eval/learning-curve.py:122，已追加fix-queue-v4非阻塞统计项，交学习者修复并保留历史；不据当前0推断本级没有学习后重犯，也不手工改CSV或账本。
