@@ -40,13 +40,14 @@ print(json.dumps(dict(initial=initial,blocked=blocked,first=first,duplicate=dupl
     expect(data.calls[0][3].split(",")).toHaveLength(10);
   });
 
-  it("renders a character-isolated evidence task at high effort with the live release protocol", () => {
+  it("renders a character-isolated evidence task at xhigh effort with the live release protocol", () => {
     const spec = loadTask("strategy-proposal", "../learner/tasks");
     const task = renderTask(spec, { runs: "SILENT000001" }, {
       cwd: "/fixture/wt", worktree: "/fixture/wt", project_root: "/fixture", logs_dir: "/fixture/logs",
       scratch: "/fixture/scratch", task: "strategy-proposal", ...characterBuiltins("silent"),
     });
-    expect(spec.efforts.codex).toBe("high");
+    // Dai's 2026-10-05 learner setting (45e22535); the in-game brain keeps its separate effort.
+    expect(spec.efforts.codex).toBe("xhigh");
     expect(task.values.merge).toBe("live");
     for (const text of ["knowledge/characters/silent", "账本 id", "flock /fixture/ops/live-merge.lock", "保留刷新数据", "eval/versions.json", "不删选项", "游戏知识只能从对局里学"]) expect(task.prompt).toContain(text);
     expect(task.prompt).not.toMatch(/\{\{|characters\/ironclad/);
