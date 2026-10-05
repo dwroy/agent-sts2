@@ -138,7 +138,9 @@ export function planCombat(env: DecisionEnv): Decision | null {
     const blockGain = card.block ?? 0;
     const hpCost = hpCostByIndex.get(card.index) ?? 0;
     // Playing a card that hurts while held (a playable Beckon) takes its penalty out of the turn.
-    const incomingAfter = Math.max(0, incoming - (heldPenaltyOf.get(card.index) ?? 0) - (playerBlock + blockGain)) + hpCost;
+    // incoming already includes current block; only this card's new block reduces it further
+    // (VLV17NUSFS61 F48 attempt 6 T5, Z6CFLDR3N4SB F48 attempt 1 T10; silent-0130).
+    const incomingAfter = Math.max(0, incoming - (heldPenaltyOf.get(card.index) ?? 0) - blockGain) + hpCost;
     // Paying its HP cost kills us before anything else happens: not an option.
     if (hpCost > 0 && playerHp !== null && hpCost >= playerHp) return;
 

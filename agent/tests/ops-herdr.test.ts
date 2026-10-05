@@ -45,6 +45,8 @@ function world(name: string) {
     HERDR_HOST_WORKSPACE: "sts2-test",
     HERDR_HOST_CWD: join(dir, "proj"),
     HERDR_HOST_STATE: join(dir, "proj", "ops", "codex-ops", "herdr.json"),
+    // Expose the gap between pane removal and the host's subsequent registry update.
+    FAKE_HERDR_CLOSE_RETURN_DELAY: name === "close" ? "0.6" : "0",
   };
   const host = (...args: string[]) => spawnSync("bash", [HOST, ...args], { env, encoding: "utf8", timeout: 60_000 });
   const state = () => JSON.parse(readFileSync(join(fake, "state.json"), "utf8"));
@@ -179,7 +181,10 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     const run = w.host("run", "batch-1", "--close-on-exit", "--pidfile", join(w.dir, "b.pid"), "--", "bash", "-c", "echo batch output; exit 3");
     expect(run.status, run.stderr).toBe(0);
     const pane = run.stdout.trim().split(" ")[0]!;
-    waitFor(() => w.state().panes[pane] === undefined);
+    const registry = join(w.dir, "proj", "ops", "codex-ops", "herdr.json");
+    // Pane removal happens before close_pane acquires the lock and forgets the label.
+    // Both observable effects must finish before checking the completed close operation.
+    waitFor(() => w.state().panes[pane] === undefined && JSON.parse(readFileSync(registry, "utf8")).panes["batch-1"] === undefined);
     const tail = readFileSync(join(w.dir, "proj", "ops", "codex-ops", "herdr-panes.log"), "utf8");
     expect(tail).toContain("batch-1");
     expect(tail).toContain("batch output");

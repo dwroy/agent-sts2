@@ -1,0 +1,1059 @@
+[
+  {
+    "run": "Z6CFLDR3N4SB",
+    "floor": 48,
+    "turn": 10,
+    "observed_ts": "2026-10-05T14:05:38.299Z",
+    "state": {
+      "state_version": 16,
+      "native_profile_id": 1,
+      "run_id": "Z6CFLDR3N4SB",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 10,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit",
+        "use_potion",
+        "discard_potion"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 24,
+          "max_hp": 80,
+          "block": 9,
+          "energy": 3,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "THORNS_POWER",
+              "name": "荆棘",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [],
+          "pet_missing": false,
+          "cards_played_this_turn": 1,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 1
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 24,
+            "max_hp": 80,
+            "block": 9,
+            "energy": 3,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "WITHER",
+            "name": "凋萎+3",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
+            "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到12点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 12,
+                "current_value": 12,
+                "enchanted_value": 12,
+                "is_modified": false,
+                "was_just_upgraded": true
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "WITHER",
+            "name": "凋萎+3",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "在你的回合结束时，如果这张牌在你的手牌中，你受到{Damage:diff()}点伤害。",
+            "resolved_rules_text": "不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到12点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 12,
+                "current_value": 12,
+                "enchanted_value": 12,
+                "is_modified": false,
+                "was_just_upgraded": true
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "POISONED_STAB",
+            "name": "带毒刺击+",
+            "upgraded": true,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
+            "resolved_rules_text": "造成12点伤害。 给予4层中毒。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 8,
+                "current_value": 12,
+                "enchanted_value": 8,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "PoisonPower",
+                "base_value": 4,
+                "current_value": 4,
+                "enchanted_value": 4,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "ECHOING_SLASH",
+            "name": "回响斩击",
+            "upgraded": false,
+            "target_type": "AllEnemies",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "对所有敌人造成{Damage:diff()}点伤害。 每有一名敌人被击杀，就重复此效果。",
+            "resolved_rules_text": "对所有敌人造成14点伤害。 每有一名敌人被击杀，就重复此效果。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 10,
+                "current_value": 14,
+                "enchanted_value": 10,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "AEONGLASS",
+            "name": "永世沙漏",
+            "current_hp": 241,
+            "max_hp": 512,
+            "base_max_hp": 512,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "WITHERING_PRESENCE_POWER",
+                "name": "凋萎存在",
+                "amount": 6,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 12,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 2,
+                "is_debuff": true
+              },
+              {
+                "index": 3,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 10,
+                "is_debuff": true
+              }
+            ],
+            "intent": "EBB_MOVE",
+            "move_id": "EBB_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "25",
+                "damage": 25,
+                "hits": 1,
+                "total_damage": 25,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Defend",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": false,
+        "lethal_risks": []
+      },
+      "run": {
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "ascension": 7,
+        "floor": 48,
+        "current_hp": 24,
+        "max_hp": 80,
+        "gold": 121,
+        "act_id": "2",
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "WINGED_BOOTS",
+            "name": "羽翼之靴",
+            "description": "你在选择下一层的房间时有[blue]{Rooms}[/blue]次机会可以无视当前的路线。",
+            "stack": 1,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "FESTIVE_POPPER",
+            "name": "节日拉炮",
+            "description": "在每场战斗开始时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "VAMBRACE",
+            "name": "臂甲",
+            "description": "每场战斗中，你第一次从卡牌中获得的[gold]格挡[/gold]值翻倍。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 4,
+            "relic_id": "ETERNAL_FEATHER",
+            "name": "永恒羽毛",
+            "description": "你的[gold]牌组[/gold]中每有[blue]{Cards}[/blue]张牌，当你进入[gold]休息处[/gold]时就会回复[green]{Heal}[/green]点生命。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 5,
+            "relic_id": "NUTRITIOUS_SOUP",
+            "name": "营养汤",
+            "description": "拾起时，为你[gold]牌组[/gold]中的所有“[gold]打击[/gold]”[gold]附魔[/gold]：[purple]特兹卡塔拉的余烬[/purple]",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 6,
+            "relic_id": "TEA_OF_DISCOURTESY",
+            "name": "无礼之茶",
+            "description": "在下一场战斗开始时，将[blue]{DazedCount}[/blue]张[gold]晕眩[/gold]放入你的[gold]抽牌堆[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 7,
+            "relic_id": "BRONZE_SCALES",
+            "name": "铜质鳞片",
+            "description": "在每场战斗开始时，获得[blue]{ThornsPower}[/blue]点[gold]荆棘[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 8,
+            "relic_id": "SHURIKEN",
+            "name": "手里剑",
+            "description": "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+            "stack": 0,
+            "is_melted": false
+          },
+          {
+            "index": 9,
+            "relic_id": "POLLINOUS_CORE",
+            "name": "花粉核心",
+            "description": "每[blue]{Turns}[/blue]个回合，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": 3,
+            "is_melted": false
+          },
+          {
+            "index": 10,
+            "relic_id": "LORDS_PARASOL",
+            "name": "领主阳伞",
+            "description": "当你遇见[gold]商人[/gold]时，立刻获得他所出售的[red]所有[/red]物品。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 11,
+            "relic_id": "UNSETTLING_LAMP",
+            "name": "不安油灯",
+            "description": "你在每场战斗中第一次打出能给予敌人[gold]负面状态[/gold]的牌时，将其效果翻倍。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 12,
+            "relic_id": "LANTERN",
+            "name": "灯笼",
+            "description": "在每场战斗的第一回合获得{Energy:energyIcons()}。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 13,
+            "relic_id": "GHOST_SEED",
+            "name": "幽灵种子",
+            "description": "[gold]打击[/gold]和[gold]防御[/gold]获得[gold]虚无[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 14,
+            "relic_id": "BAG_OF_PREPARATION",
+            "name": "准备背包",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 15,
+            "relic_id": "GREMLIN_HORN",
+            "name": "地精之角",
+            "description": "每当有一名敌人死亡时，获得{Energy:energyIcons()}并抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 16,
+            "relic_id": "REPTILE_TRINKET",
+            "name": "爬行动物饰品",
+            "description": "当你使用药水时，在本回合获得[blue]{StrengthPower}[/blue][gold]力量[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 17,
+            "relic_id": "BLOOD_VIAL",
+            "name": "小血瓶",
+            "description": "在每场战斗开始时，回复[green]{Heal}[/green]点生命。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 18,
+            "relic_id": "TOOLBOX",
+            "name": "工具箱",
+            "description": "在每场战斗开始时，从[blue]{Cards}[/blue]张随机无色牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 19,
+            "relic_id": "PEAR",
+            "name": "梨子",
+            "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+            "stack": null,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": "POISON_POTION",
+            "name": "毒药水",
+            "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyEnemy",
+            "is_queued": false,
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "can_use": true,
+            "can_discard": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "run": "VLV17NUSFS61",
+    "floor": 48,
+    "turn": 5,
+    "observed_ts": "2026-10-05T15:40:36.497Z",
+    "state": {
+      "state_version": 16,
+      "native_profile_id": 1,
+      "run_id": "VLV17NUSFS61",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 5,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit",
+        "use_potion",
+        "discard_potion"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 7,
+          "max_hp": 77,
+          "block": 12,
+          "energy": 4,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "CHAINS_OF_BINDING_POWER",
+              "name": "魂缚锁链",
+              "amount": 3,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 97,
+              "is_debuff": true
+            },
+            {
+              "index": 3,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 97,
+              "is_debuff": true
+            },
+            {
+              "index": 4,
+              "power_id": "VULNERABLE_POWER",
+              "name": "易伤",
+              "amount": 97,
+              "is_debuff": true
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [],
+          "pet_missing": false,
+          "cards_played_this_turn": 1,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 1
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 7,
+            "max_hp": 77,
+            "block": 12,
+            "energy": 4,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SLICE",
+            "name": "切割",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 0,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成4点伤害。 魂缚",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 4,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "NOXIOUS_FUMES",
+            "name": "毒雾+",
+            "upgraded": true,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
+            "resolved_rules_text": "在你的回合开始时，给予所有敌人3层中毒。 魂缚",
+            "dynamic_values": [
+              {
+                "name": "PoisonPerTurn",
+                "base_value": 3,
+                "current_value": 3,
+                "enchanted_value": 3,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "PREDATOR",
+            "name": "猎杀者",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 2,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+            "resolved_rules_text": "造成11点伤害。 在下个回合抽2张牌。 魂缚",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 11,
+                "enchanted_value": 15,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "BUBBLE_BUBBLE",
+            "name": "咕嘟冒泡+",
+            "upgraded": true,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "如果敌方拥有中毒，则给予{PoisonPower:diff()}层中毒。",
+            "resolved_rules_text": "如果敌方拥有中毒，则给予12层中毒。",
+            "dynamic_values": [
+              {
+                "name": "PoisonPower",
+                "base_value": 12,
+                "current_value": 12,
+                "enchanted_value": 12,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TORCH_HEAD_AMALGAM",
+            "name": "火炬头聚合体",
+            "current_hp": 175,
+            "max_hp": 199,
+            "base_max_hp": 199,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "intent": "TACKLE_4_MOVE",
+            "move_id": "TACKLE_4_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "24",
+                "damage": 24,
+                "hits": 1,
+                "total_damage": 24,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "enemy_id": "QUEEN",
+            "name": "女王",
+            "current_hp": 376,
+            "max_hp": 400,
+            "base_max_hp": 400,
+            "block": 20,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 11,
+                "is_debuff": true
+              }
+            ],
+            "intent": "BURN_BRIGHT_FOR_ME_MOVE",
+            "move_id": "BURN_BRIGHT_FOR_ME_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Defend",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 24,
+            "damage_after_block": 12,
+            "player_hp": 7,
+            "player_block": 12,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "ascension": 7,
+        "floor": 48,
+        "current_hp": 7,
+        "max_hp": 77,
+        "gold": 42,
+        "act_id": "2",
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "CURSED_PEARL",
+            "name": "诅咒珍珠",
+            "description": "拾起时，获得一张[red]贪婪[/red]，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "VENERABLE_TEA_SET",
+            "name": "古茶具套装",
+            "description": "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "POTION_BELT",
+            "name": "药水腰带",
+            "description": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 4,
+            "relic_id": "PAELS_FLESH",
+            "name": "佩尔之肉",
+            "description": "从你的第[blue]3[/blue]回合开始，在回合开始时额外获得{Energy:energyIcons()}。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 5,
+            "relic_id": "RIPPLE_BASIN",
+            "name": "波纹水盆",
+            "description": "如果你在本回合中没有打出过攻击牌，则获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 6,
+            "relic_id": "VAMBRACE",
+            "name": "臂甲",
+            "description": "每场战斗中，你第一次从卡牌中获得的[gold]格挡[/gold]值翻倍。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 7,
+            "relic_id": "GORGET",
+            "name": "护喉甲",
+            "description": "在每场战斗开始时，获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 8,
+            "relic_id": "DIAMOND_DIADEM",
+            "name": "钻石头冠",
+            "description": "战斗开始时获得[blue]{Block}[/blue]点[gold]格挡[/gold]。你的[gold]格挡[/gold]不会在你的[blue]第2[/blue]回合开始前被移除。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 9,
+            "relic_id": "STRAWBERRY",
+            "name": "草莓",
+            "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 10,
+            "relic_id": "FORGOTTEN_SOUL",
+            "name": "遗忘之魂",
+            "description": "每当你[gold]消耗[/gold]一张牌，随机对一名敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 11,
+            "relic_id": "HAPPY_FLOWER",
+            "name": "开心小花",
+            "description": "每[blue]{Turns}[/blue]个回合，获得{Energy:energyIcons()}。",
+            "stack": 0,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "POISON_POTION",
+            "name": "毒药水",
+            "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyEnemy",
+            "is_queued": false,
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 2,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 3,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      }
+    }
+  }
+]
