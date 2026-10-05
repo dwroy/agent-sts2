@@ -9,3 +9,7 @@ experience-update 20261005-224301（学习者目录224302）固定源 `c02c40a38
 fix-batch 20261005-230528（学习者目录230529）没有新修复、提交或部署，merged=null表示无新增。95项旧修复逐项核对为基线 `a4bca129a858c362644b280cf55c1e5660e10bfa` 和固定 live `256b0eee715750c1851f85274885a0770c85977f` 祖先；基线 tsc0、179文件2030例通过，无重跑。无需兜底合并、新版本或shipped。策略项沿现有独立任务，传输、缓存、性能证据不足项保持原队列；没有新的 Roy 待定事项。原 report.json/report.md/handoff-ops.md 保留。
 
 Roy 23:15 给定 Jev TypeSafe 输入 $0.042/百万 token、输出免费；近30天 $4.9641、119,495,182 tokens、24,740 requests，9/28起有数。队列明确下一批 fix-batch 优先填写 eval/cost-config.json 并按相同时间全部角色日志交叉核对，结果落 paper/materials/silent/cost.md。运维负责派发，学习者实现、自测、上线；尚未实现，不冒记当前 cost_complete 或金额一致。对局与调度继续。
+
+## 2026-10-05 23:25 派发结果
+
+`bash ops/codex-ops-do.sh fix-batch` exit0，返回批次 `20261005-232305-fix-batch`、PID1819919。工作树codex-dev由该学习者独占，运维不编辑它；经验工作树另有231301批次，兜底仅使用不可变c02c40a3，不操作它的分支。价格实现和交叉核对待后续完成事件，已派发不计已上线。
