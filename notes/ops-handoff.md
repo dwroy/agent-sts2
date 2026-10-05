@@ -34,3 +34,10 @@
 - 待登记：`silent-0005,silent-0007,silent-0006,silent-0019,silent-0020,silent-0021,silent-0057,silent-0011,silent-0030,silent-0046,silent-0053,silent-0050,silent-0058,silent-0024,silent-0059,silent-0060,silent-0025`；目前保持proposed，未登记shipped或S1.exp8。完整沙箱外补测动作缺口的既有请求仍保留。完成后追加处理状态，不删本节。
 
 - 2026-10-05 08:02 已完成07:08待提交live合并：源0d469a22锁内保留新自动刷新、固定沙箱150文件1901用例通过，合入0f34d1c43820371749920bde8e378b598f67fa33、发布fe4b466fc17a9bd41a3b1d1a2b82c5d389fd0de1，登记S1.exp8及17项shipped。随后本轮源267128cd经验.8也按同一流程合入972303c55c0b1ab55453c8f44d967ccf5f53a3f6、发布62faa08a848fa97d38c810dd1294e2511db17dfe，登记S1.exp9及16项shipped；两批已机械同步main 446fd6c406c8763b3fa9872da14e1feb0f753537，原待提交交接完成，保留全部历史。旧/tmp恢复脚本不得重跑；完整外部补测待后续事件或既有权限请求处理。
+
+## 运维 codex 待合入经验第十次增量（2026-10-05 09:44）
+
+- 批次20261005-085844-experience-update，固定学习者源`c2ece69c8c6d342ab7d55e10d8aca6af1ace25bc`（exp-silent，经验2026-10-05.10）；只改silent/experience.json，新增2/更新15/退役0、active62、19242字符；来源10GPK5XGHCK3 A3及此前十二局静默。学习者自测tsc0、152文件1906用例exit0，检查原文learner/runs/20261005-085845-experience-update/test-exp.log及test-exp.exit。main本轮先集成固定源及第十次changelog、17行proposed，生产live仍为经验.9；不是已上线，无S1.exp11或本批shipped。
+- 本轮非阻塞取得ops/live-merge.lock失败（busy），未创建live MERGE_HEAD或冲突索引，不等待、不重试。`bash ops/codex-ops-do.sh learner-merge exp-silent`也超时，exit128、输出“（超过 30 秒，已终止）”；未确认manual事件入队，完整命令与原因已写收件箱/for-dai，请锁释放后补manual事件。
+- 下一次合入事件只用上述不可变源，不用exp-silent移动分支头。先非阻塞取锁，确认无report.py/知识构建器及其他未提交合并，保留刷新数据，保留双方decision-log和版本表所有条目（包括已上线S1.fix9/fix10、S1.high和eval-metrics工具）。锁内合入后跑固定沙箱入口；通过再登记新的经验eval版本（预期S1.exp11，必须查重），经ledger.py以by=ops将本批17项shipped，同步main并刷新论文表。`/tmp/sts2-0935-live.py`尚未改live，若仍保留可核对后使用；结果文件不存在时才首次运行。
+- 待登记17项：silent-0005,silent-0006,silent-0007,silent-0010,silent-0019,silent-0020,silent-0021,silent-0027,silent-0028,silent-0030,silent-0037,silent-0046,silent-0053,silent-0063,silent-0064,silent-0076,silent-0077。0074/0075代码模型提案不属于本经验批次；0076的first_run/asc字段更正请求只转录给学习者工具任务，不手改旧账本或把旧无抽牌案例计成施毒观察。完成后追加状态，保留本节。

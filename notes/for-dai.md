@@ -350,3 +350,4 @@
 - 2026-10-05 08:43 运维 codex：fix-batch 20261005-081301-fix-batch兜底发布S1.fix8/live 45965f496135d8755c69edbadb3eddafbddf703a，合后沙箱检查及重建通过；完整沙箱外补测沿既有动作缺口待安排，具体命令与提交已写ops/inbox-dev.md。只上线终帧漏读子项，原silent-0040跨SL统计问题继续待修，不需停对局。
 
 - 2026-10-05 08:57 运维 codex：经验批次20261005-080501-experience-update兜底发布S1.exp10/live 39efdab8b3f79fe78f39a93ed7df9d53fabc58da、同步main，固定沙箱通过；沿既有动作缺口请求沙箱外完整tsc+vitest补测，具体提交及命令已追加ops/inbox-dev.md，不需停对局。
+- 2026-10-05 09:44 [运维 codex] 需要Dai安排manual事件：经验批次20261005-085844-experience-update（固定源c2ece69c8c6d342ab7d55e10d8aca6af1ace25bc，自测tsc0/152文件1906用例通过）main已归档32756163，live非阻塞合并锁busy；命令 `bash ops/codex-ops-do.sh learner-merge exp-silent` exit128，完整输出“（超过 30 秒，已终止）”，未确认事件入队。请锁释放后补发manual合入事件，按notes/ops-handoff.md最新节完成固定源合入；本批17项保持proposed，未上线。
