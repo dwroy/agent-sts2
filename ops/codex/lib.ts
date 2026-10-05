@@ -66,8 +66,8 @@ export function opsPaths(root: string, env: NodeJS.ProcessEnv = process.env): Op
 }
 
 /**
- * The scheduler's own files, which run outside the sandbox (cron, the broker): read-only for the session, so the model
- * cannot widen its own way out by editing them (changes go through the dev session).
+ * The scheduler's own files, which run outside the sandbox (cron, the broker).
+ * Dai authorised ops and learners to edit them on 2026-10-05; key and git configuration rules still apply.
  */
 export const SCHEDULER_FILES = [
   "ops/codex",
@@ -87,13 +87,12 @@ export const SCHEDULER_FILES = [
 /**
  * The ops profile's rules on top of the learner's write profile: commits in the main checkout and its worktrees
  * (.worktrees/step, live; their git dirs are all under <main checkout>/.git) need .git writable; its hooks and config stay
- * read-only (a hook or core.hooksPath would run in whoever commits next, outside the sandbox), and so do the
- * scheduler's files.
+ * read-only (a hook or core.hooksPath would run in whoever commits next, outside the sandbox). The scheduler's files
+ * (SCHEDULER_FILES) were read-only too until Dai, 2026-10-05: codex may change its own broker and scheduler.
  */
 export function opsExtraRules(root: string): Record<string, "read" | "write" | "none"> {
   const git = join(mainCheckout(root), ".git");
   const rules: Record<string, "read" | "write" | "none"> = { [git]: "write", [join(git, "hooks")]: "read", [join(git, "config")]: "read" };
-  for (const file of SCHEDULER_FILES) rules[join(root, file)] = "read";
   return rules;
 }
 
@@ -229,6 +228,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "experience-update": { args: 1, ms: 30_000 },
   "fix-batch": { args: 0, ms: 30_000 },
   "learner-merge": { args: 1, ms: 30_000 },
+  "eval-metrics": { args: 2, ms: 600_000 },
   "learner-status": { args: 0, ms: 30_000 },
   "scheduler-status": { args: 0, ms: 30_000 },
 };
@@ -250,6 +250,10 @@ export function validateRequest(raw: unknown): BrokerRequest {
   if (list.length !== spec.args) return { ok: false, error: `${action} 要 ${spec.args} 个参数，给了 ${list.length} 个` };
   const bad = list.find((arg) => !ARG.test(arg));
   if (bad !== undefined) return { ok: false, error: `参数不合格：${bad.slice(0, 40)}` };
+  if (action === "eval-metrics") {
+    if (!/^(ironclad|silent|regent|necrobinder|defect)$/.test(list[0]!)) return { ok: false, error: "eval-metrics 要一个已知角色的知识 id" };
+    if (!/^(0|[1-9][0-9]{0,2})$/.test(list[1]!)) return { ok: false, error: "eval-metrics 进阶要是 0–999 的整数（不带前导零）" };
+  }
   return { ok: true, action, args: list };
 }
 

@@ -65,13 +65,16 @@ print(json.dumps({"a":a,"b":b,"blocked":blocked,"calls":calls}))
     expect(result.calls[0].slice(-4)).toEqual(["SILENT000001", "silent", "experience-update", "/fixture/.worktrees/exp"]);
   });
 
-  it("the write and merge fallback broker actions are allow-listed and the new scheduler modules are read-only", () => {
+  it("allows write and merge fallback actions and scheduler edits while protecting git configuration", () => {
     expect(validateRequest({ action: "experience-update", args: ["SILENT000001"] }).ok).toBe(true);
     expect(validateRequest({ action: "fix-batch" }).ok).toBe(true);
     expect(ACTIONS["learner-merge"]).toBeDefined();
     expect(validateRequest({ action: "learner-merge", args: ["bad;command"] }).ok).toBe(false);
     const rules = opsExtraRules("/fixture");
-    expect(rules["/fixture/ops/learner_jobs.py"]).toBe("read");
-    expect(rules["/fixture/ops/learner_checks.py"]).toBe("read");
+    expect(rules["/fixture/ops/learner_jobs.py"]).toBeUndefined();
+    expect(rules["/fixture/ops/learner_checks.py"]).toBeUndefined();
+    expect(rules["/fixture/.git"]).toBe("write");
+    expect(rules["/fixture/.git/hooks"]).toBe("read");
+    expect(rules["/fixture/.git/config"]).toBe("read");
   });
 });
