@@ -279,8 +279,10 @@ export interface SessionGrowth {
   compactions: number;
   /** Turns (task_started events): the first turn plus one per wake. */
   turns: number;
-  /** The subscription's weekly limit used (rate_limits.primary.used_percent), as codex last saw it. */
+  /** Cached primary observation; its duration may be unknown. */
   usedPercent?: number;
+  weeklyUsedPercent?: number;
+  fiveHourUsedPercent?: number;
 }
 
 /** How big the ops session has grown, from codex's own session file ($CODEX_HOME/sessions/…/rollout-…-<id>.jsonl). */
@@ -301,8 +303,19 @@ export function sessionGrowth(text: string): SessionGrowth {
       const info = row.payload?.["info"] as { last_token_usage?: { input_tokens?: number }; model_context_window?: number } | null | undefined;
       if (info?.last_token_usage?.input_tokens !== undefined) growth.contextTokens = info.last_token_usage.input_tokens;
       if (info?.model_context_window !== undefined) growth.window = info.model_context_window;
-      const limits = row.payload?.["rate_limits"] as { primary?: { used_percent?: number } } | null | undefined;
+      const limits = row.payload?.["rate_limits"] as Record<string, { used_percent?: number; window_minutes?: number }> | null | undefined;
       if (limits?.primary?.used_percent !== undefined) growth.usedPercent = limits.primary.used_percent;
+      // Slots can swap after plan changes; identify each window by its reported duration.
+      if (limits) {
+        delete growth.weeklyUsedPercent;
+        delete growth.fiveHourUsedPercent;
+        for (const slot of ["primary", "secondary"]) {
+          const w = limits[slot];
+          if (typeof w?.used_percent !== "number" || !Number.isFinite(w.used_percent)) continue;
+          if (w.window_minutes === 10080) growth.weeklyUsedPercent = w.used_percent;
+          if (w.window_minutes === 300) growth.fiveHourUsedPercent = w.used_percent;
+        }
+      }
     }
   }
   return growth;

@@ -329,7 +329,9 @@ function growthReport(): number {
   const g = sessionGrowth(readFileSync(rollout, "utf8"));
   process.stdout.write(
     `session ${session}: ${g.turns} turn(s), file ${(g.bytes / 1024).toFixed(0)} KiB, context ${g.contextTokens ?? "?"} / ${g.window ?? "?"} tokens, ${g.compactions} compaction(s)` +
-      `${g.usedPercent !== undefined ? `, weekly limit ${g.usedPercent}% used` : ""}\n  ${rollout}\n`,
+      `${g.weeklyUsedPercent !== undefined ? `, cached weekly limit ${g.weeklyUsedPercent}% used` : ""}` +
+      `${g.fiveHourUsedPercent !== undefined ? `, cached 5h limit ${g.fiveHourUsedPercent}% used` : ""}` +
+      `${g.weeklyUsedPercent === undefined && g.fiveHourUsedPercent === undefined && g.usedPercent !== undefined ? `, cached primary ${g.usedPercent}% used (window unknown)` : ""}\n  ${rollout}\n`,
   );
   return 0;
 }
