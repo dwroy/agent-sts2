@@ -15,3 +15,9 @@ main 五分钟 tick 已开始向 logs/codex-usage.jsonl 追加规范额度样本
 S1.fix21 仍唯一指向 e7370f88，证据 VN7RQJMJEFMX SILENT A6 F27 T6/机制0115；此前0115代码上线和0114普通版已 shipped 历史不重复登记、不重置。此批无对应 bug-infra，不补建或冒标游戏账本；日志统计不新增对局版本。本次未改台账、经验、提示或SL名单。
 
 live 七项 tracked 知识刷新及 fight-value-gates.json、fight-value.json、notes/fight-value-backtest-silent.md 留在原处；main 合并后读取时10项 SHA256 均与合并前相同。未停止对局/调度、未运行 play；未来 live 合入继续在锁内保留在线刷新。其他工作区修改不随本轮提交。交接报告原件 learner/runs/20261005-204301-fix-batch/{report.json,report.md,handoff-ops.md} 保留。
+
+## 最终固定发布完整补测完成（2026-10-05 22:36 CST）
+
+调度器账目 learn.json 的 fallback_checks 已登记本批固定 27f7a4d322766828bba34c72c22592b89637b04c/树 54560c457714274c6d35226b4427448232e4c6db，所有五项源提交和发布均核实，rc0、done，checks_pending=false。完整外部 tsc + vitest exit0；229文件2821例通过/2跳过，22:21:37开始、610.59秒，日志 `ops/codex-ops/learner/20261005-204301-fix-batch.fallback-54560c457714274c6d35226b4427448232e4c6db.checks.log`（SHA256 e78597cfaf352cc61237ebc6f0c8196ce4084219190e0844fd72469b7253ee0e）。本轮一次读取核对账目、git对象和日志后归档；这棵最终发布的完整补测待办完成。旧 ba54713b/TMPDIR 失败日志仍含原1失败，源/合后沙箱以及Inferno首次失败/重跑记录均保留。
+
+本轮补测请求排队取得锁时，live 已由其他批次推进到 7bea7d99ce309d37cbc1715ac169623b9de34df4/树 c196d2054e7a5d53de915e7944020dd4ca0d2da5；该有限白名单动作继续执行后续树的完整检查，结果由调度器 learner-checks 事件另归档，未标为通过、不冒记成本最终发布的检查树。运维不等待新情况、不重复派补测或覆盖后续发布；broker 会完成已接收动作并登记回报。
