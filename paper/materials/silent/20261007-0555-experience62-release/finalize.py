@@ -1,0 +1,27 @@
+import hashlib, json, subprocess
+from pathlib import Path
+
+O=Path(__file__).parent;ROOT=Path('/home/dw/Projects/agent-sts2');EXP=ROOT/'.worktrees/exp';LIVE=ROOT/'.worktrees/live'
+M=json.load(open(O/'live-merge.json'));C=json.load(open(O/'changes.json'));L=json.load(open(O/'ledger-result.json'));S=json.load(open(O/'slice-summary.json'))
+assert M['merged'] and M['test_rc']==0 and M['eval_version']=='S1.exp62'
+assert (O/'test-source.rc').read_text().strip()=='0'
+p=subprocess.run(['python3',str(ROOT/'learner/ledger.py'),'check'],capture_output=True,text=True)
+(O/'ledger-check-final.log').write_text(p.stdout+p.stderr);assert p.returncode==0
+experience='knowledge/characters/silent/experience.json'
+assert (EXP/experience).read_bytes()==(LIVE/experience).read_bytes()
+assert not subprocess.check_output(['git','-C',str(EXP),'status','--porcelain'],text=True).strip()
+subprocess.run(['git','-C',str(LIVE),'merge-base','--is-ancestor',M['merged'],'HEAD'],check=True)
+record=ROOT/'paper/materials/experience-changelog-silent.md';before=json.load(open(O/'changelog-before.json'))
+assert hashlib.sha256(record.read_bytes()[:before['bytes']]).hexdigest()==before['sha256']
+versions=json.load(open(LIVE/'eval/versions.json'));assert len([v for v in versions['versions'] if v['name']=='S1.exp62' and v['commit']==M['merged']])==1
+assert '地道虫埋地盾归零' in (LIVE/experience).read_text()
+mechanisms=['埋地盾归零眩晕','步法逐牌敏捷','力量与虚弱','非凡技艺力敏','尖啸临时减力','萎靡与阶段成长','仪式兽阈值清阶段','永恒羽毛到火回血','棱柱技能污染血价','能力实际支付观察']
+handoff=(f'静默第62节完成，请据experience-done确认实际合入后登记上线。\n\n源提交：{M["source_commit"]}（exp-silent），实际live合入：{M["merged"]}，上线登记：{M["release_commit"]}，eval：S1.exp62。经验2026-10-07.7→2026-10-07.8；新增1/更新11均补证/只数字0/退役0，active132→133、48258→47737字，高64中40低29；A8 126条44630字/A9 127条44929字/A10 128条45509字。证据QNTW139MGECA SILENT A10/F28及05:21勘误/05:24机制补记、本角色历史；旧75局七数组及血档/源节点/回血/SL逐行重算一致，76局1189房66实死，A10三十六局475房36死。\n\n新增埋地盾归零机制复用silent-0207：全76局按TUNNELER扫描26遭遇，7局7次非致死清盾取消攻击，A0一局/A2一局/A9两局/A10三局；最早LRN0HPZ0FZS1 A0打击清7挡、31→29敌血、17攻取消。ZZMYZ5UBCG72 A2直接伤害清7挡、23攻取消；HMVJKM56S4Q8 A9 EXPOSE移除37挡、敌32血不变、26攻取消；F4QKG4J1AJJZ A9精确切击取消26攻；PU80F84P6HPN A10突然一拳取消26攻；VPW8YH7A4QFM A10突然一拳清8挡、敌34血不变、15攻取消；本局F22 T6清20挡、余24敌血、23攻取消、玩家29血不变。五次攻击/一次移除格挡/一次直接伤害只核敌反应，不要求敌本体掉血，不设拿牌/喝药规则。0207首证F4Q/A9更正LRN/A0、prior=yes保持及补更早正确执行依据，原登记与本轮更正历史保留。\n\n棱柱T3非凡技艺/步法建1力3敏不加污染，T5三挡各8/共24且污染18使33攻、损9；T4尖啸−2→−8、两技能6污染后8攻被8挡盖，T5恢复−2、火花6。末1力六攻多6原始伤，61攻击先扣22挡再扣39血、毒3后敌余2；6血8挡对24完整需损16、差10，实际死亡只扣6。仪式兽普通萎靡X3减4→1力、24→15攻、零挡损15；T5到149跨160清横冲/旧力，后段再力4/8，262血12轮73→17首胜。羽毛8局58次公式全对，本局到火39与休息88分账，吃蛋7/换幕48另列；群蛇全局0次支付、护栏省3血多8伤但撤爆发机会，不推受控整战胜因。\n\n本局真正SL0，当前原日志仪式兽attempt1首胜一行与复盘0行不符，未增加重打分母；历史71场311次24赢/A10 38场170次12赢不变。低血不同节点/路线血档/回复与未来火混杂只观察。\n\n初稿7846a661曾实际合入，初始源/合后各214文件2289例、tsc0/vitest0；操作来源补核后更正为盾归零触发，定稿源/合后各重新测试一轮，均214文件2289例、tsc0/vitest0，无测试失败或超时重跑。初始提交/经验/源与合后日志、三→七证据及攻击来源更正均保留initial-*、draft-corrections.md和转录，不当生产缺陷。唯一最终注册版本S1.exp62指向定稿实际合入，完整沙箱外套件交调度器。240配对切片中位增量−4字、最大5075→5090字。\n\n合前'+str(M.get('base'))+'、刷新'+str(M.get('refresh_commit'))+'、知识冲突0、其他知识blob保持。无源码/生成器/手写知识/其他角色变更，不重建。账本仅CLI/by=learner:experience-update proposed：'+','.join(L['proposed'])+'，新增/退役无，最终check0。请运维核实际发布后仅经learner/ledger.py将15项登记shipped/S1.exp62；0207更正保留、其他first_run/prior/claim/旧version/repeat保持，不另设审核，学习者未写accepted/shipped。\n\n主目录experience-changelog-silent.md仅追加第62节、ledger.jsonl仅CLI追加，由调用方提交，主检出未提交。调用器读取最终JSON后发experience-done通知运维；原始新片段/历史只读链接/旧基线/机制/SL/切片/测试/gitleaks均保留本目录。不推送、不停对局、不运行play。\n')
+subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %z'],text=True)
+(O/'handoff-ops.md').write_text(handoff)
+report=dict(task='experience-update',version=C['version'],commit=M['source_commit'],merged=M['merged'],added=1,updated=11,retired=0,active=133,mechanisms=mechanisms,tests=dict(tsc=0,vitest=0,cases=M['source_tests']['cases']),ledger=L)
+(O/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+for name in ['handoff-ops.md','report.json','changelog-section.md']:
+    with (O/('gitleaks-'+name+'.log')).open('w') as h:subprocess.run(['nice','-n','19','/home/dw/.local/bin/gitleaks','dir','--redact','--no-banner',str(O/name)],stdout=h,stderr=subprocess.STDOUT,check=True)
+print('源工作区干净、源/live经验一致、实际合入及唯一eval核对、账本最终check0、变更记录旧文逐字保持；运维交接与最终JSON落盘')
+print(json.dumps(report,ensure_ascii=False))

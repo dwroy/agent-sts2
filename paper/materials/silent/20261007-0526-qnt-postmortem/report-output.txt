@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：QNTW139MGECA（A10，第28层，感染棱柱T9以6血、8挡面对24攻击阵亡，敌余2血）；账本标签及增益中文名已追加勘误。
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：QNTW139MGECA：未选方案的受控整场结果、最优原线完整执行比例、T8推演差2伤的根因、boss时钟及实打／估值比例、未抵达boss的实打数据、Jev缓存命中。
+- 学习账本：QNTW139MGECA：新增 silent-0207；更新 silent-0167、silent-0057、silent-0125、silent-0168、silent-0036、silent-0005、silent-0046、silent-0053、silent-0142（均为support，老错repeat无）；`ledger.py check`退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["QNTW139MGECA"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0207"],"updated":["silent-0167","silent-0057","silent-0125","silent-0168","silent-0036","silent-0005","silent-0046","silent-0053","silent-0142"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11310-1294-7a10-bc1a-fc10bf3db0dc
+轮数：1；工具调用：command_execution×37
+token：输入 185.4k、输出 36.3k（其中推理 15.2k）、cache 读 3370.8k、cache 写 0（命中 94.8%）
+成本：未提供
+耗时：830.3 s（墙钟）
+时间：首个事件 1.5 s、模型首个输出 6.4 s、首次工具 10.0 s、末次工具结束 823.5 s；工具内共 20.4 s，其余（模型生成、推理、网络）808.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×28；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T05-13-02-01a11310-1294-7a10-bc1a-fc10bf3db0dc.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-051302-postmortem.jsonl
