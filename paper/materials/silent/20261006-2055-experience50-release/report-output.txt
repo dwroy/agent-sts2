@@ -1,0 +1,35 @@
+## 经验库更新回报
+
+- 版本：2026-10-06.24 → 2026-10-06.25；提交：f13582ed（分支 exp-silent）；合入：47b5e6a5；发布：08fce29e，S1.exp50。
+- 条数：新增 0、更新 10（加证据 10、只改数字 0）、退役 0；active 123 → 123，总字符 58835 → 59533。A8、A9 各适用 117 条、56428 字；置信度高56、中40、低27。压缩力量观察、构筑观察、毒药、冒泡、臂甲、同族SL、触媒、刺击八条，共115字；无合并。
+- 机制推理：
+
+  - 力量逐击 — 多3力使三击多9伤 — 58支持/0反例 — TCFAHJ9K19VY
+  - 臂甲与脆弱 — 首挡7，后续6和3，不重复翻倍 — 3支持/0反例 — TCFAHJ9K19VY
+  - 触媒 — 2层使7毒三次扣18 — 19支持/0反例 — TCFAHJ9K19VY
+  - 致命毒药 — 施毒与随后实伤分账 — 25支持/0反例 — TCFAHJ9K19VY
+  - 咕嘟冒泡 — 已有3毒补至12，随后扣33 — 11支持/0反例 — TCFAHJ9K19VY
+  - 带毒刺击 — 攻击6与施毒3分别计算 — 17支持/0反例 — TCFAHJ9K19VY
+  - 构筑兑现观察 — 组件已启动仍缺143伤 — 57支持/0反例 — TCFAHJ9K19VY
+  - 同族SL观察 — 4场20次1赢，多变量变化未隔离胜因 — 4支持/0反例 — S9UZAK0JP0C0
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；源定稿及合后vitest各206文件／2221用例／退出0。草稿通过后随数据修正复跑，无失败重跑。
+- 切片大小：配对增量中位+64字；总体中位3690.5→3689，最大7005→7258字。
+- 学习账本：新增无；改成proposed：silent-0006、0019、0020、0021、0007、0010、0013、0079、0027、0030、0012；退役无；`ledger.py check`退出0。交接材料已落盘，交调用器通知运维登记shipped。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-06.25","commit":"f13582ed9344a280c01226ad58af2940f1fef00e","merged":"47b5e6a5368b21a7ca9cfefe9eda60cc01611455","added":0,"updated":10,"retired":0,"active":123,"mechanisms":["力量逐击与后段预算","臂甲首次挡与脆弱","触媒三触发","毒药建立与实伤","冒泡目标条件","刺击双分量","构筑兑现观察","同族SL血价观察"],"tests":{"tsc":0,"vitest":0,"cases":2221},"ledger":{"added":[],"proposed":["silent-0006","silent-0019","silent-0020","silent-0021","silent-0007","silent-0010","silent-0013","silent-0079","silent-0027","silent-0030","silent-0012"],"retired":[],"check":0}}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1112e-99dc-7183-b5da-4f8dc9e9610e
+轮数：1；工具调用：command_execution×59 file_change×8
+token：输入 203.1k、输出 45.3k（其中推理 13.3k）、cache 读 6510.2k、cache 写 0（命中 97.0%）
+成本：未提供
+耗时：1444.8 s（墙钟）
+时间：首个事件 5.0 s、模型首个输出 10.6 s、首次工具 13.7 s、末次工具结束 1424.9 s；工具内共 946.8 s，其余（模型生成、推理、网络）493.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×47；/home/dw/.codex-sts2/sessions/2026/10/06/rollout-2026-10-06T20-27-09-01a1112e-99dc-7183-b5da-4f8dc9e9610e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261006-202705-experience-update.jsonl
