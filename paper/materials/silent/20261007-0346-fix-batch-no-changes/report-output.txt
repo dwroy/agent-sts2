@@ -1,0 +1,36 @@
+## 修 bug 回报
+
+- 合并基线：main → ff102ccb9677d0d8eacc774d3a7ad0c5c21b467e
+- 修复（每条一行）：无新增修复。
+- 已被别人修掉的：重放附魔跨回合计数 — 1ab1ba8d；羽化误算即时抽牌 — 129853b8；全部 130 项及对应提交见[逐项核对清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-033145-fix-batch/already-fixed.md)。
+- 没修的：mod 请求超时自愈 — 证据不足，根因未定位；Codex 缓存实测 — 证据不足，离线无法验证；boss 模拟性能及样本不足 — 太大，需专项；策略取舍 — 策略类。
+- 测试：tsc 退出码 0；vitest 214 文件 / 2289 用例 / 退出码 0，首轮通过，无重跑；无新修复，撤修复验证不适用。
+- 合入：未新增合入；既有修复已在 live 3ac2445ace29411d2118191ecb924fd37864d7d0，源码一致，工作树干净。
+- 需要 Dai 定的事：保血、留药、全死排序、巨兽拖延、SL 范围、boss 时钟校准、路线预估、休息回血或锻造、小偷优先级、A10 第三幕第二 boss、无色牌估值、懒惰平均出牌估值。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "ff102ccb9677d0d8eacc774d3a7ad0c5c21b467e",
+  "fixes": [],
+  "skipped": [
+    {"item": "mod请求超时自愈", "reason": "证据不足：根因未定位"},
+    {"item": "Codex缓存命中实测", "reason": "证据不足：离线无法受控验证"},
+    {"item": "boss模拟性能及样本不足", "reason": "太大：需独立专项"},
+    {"item": "保血、留药、排序、SL、时钟、路线、休息及估值策略", "reason": "策略类：需要Dai定"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2289}
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a112b3-5aea-7363-bf34-2c9d22e7cdc3
+轮数：1；工具调用：command_execution×28
+token：输入 134.0k、输出 15.6k（其中推理 6859）、cache 读 2470.5k、cache 写 0（命中 94.9%）
+成本：未提供
+耗时：457.6 s（墙钟）
+时间：首个事件 1.8 s、模型首个输出 6.6 s、首次工具 7.8 s、末次工具结束 429.8 s；工具内共 256.9 s，其余（模型生成、推理、网络）199.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×27；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T03-31-46-01a112b3-5aea-7363-bf34-2c9d22e7cdc3.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-033145-fix-batch.jsonl
