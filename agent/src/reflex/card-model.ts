@@ -888,9 +888,13 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const calculatedGamble = cardId === "CALCULATED_GAMBLE" && !bool(card["upgraded"]);
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
+  // C48LLXBGKXQ9 F24 T1 / HUVEPWQAHWFU F35 T2, silent-0202: Cards=3 adds random attacks
+  // to the draw pile; none enter the hand now. Their unknown future value remains unmodelled.
+  const metamorphosis = character.toLowerCase() === "silent" && cardId === "METAMORPHOSIS" &&
+    !bool(card["upgraded"]) && dyn(card, "Cards") === 3;
   // L704TLETMZBM F48 T4: Dagger Throw's fixed draw has no Cards variable in the observed frame.
   const daggerDraw = character.toLowerCase() === "silent" && cardId === "DAGGER_THROW" && !bool(card["upgraded"]) && /抽1张牌/.test(renderedText.replace(/\s+/g, "")) ? 1 : 0;
-  const draw = hiddenDaggers || shadowStep || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  const draw = hiddenDaggers || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
