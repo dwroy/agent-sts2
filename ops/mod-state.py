@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
-"""Validate a mod state envelope and print its screen for the launch readiness check."""
+"""Validate a mod state envelope and print its screen or the complete JSON response."""
+import argparse
 import json
 import sys
 
 
+def reject_constant(_value):
+    raise ValueError("invalid JSON constant")
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--json", action="store_true", help="Print the complete validated envelope")
+    args = parser.parse_args()
     try:
-        envelope = json.load(sys.stdin)
+        envelope = json.load(sys.stdin, parse_constant=reject_constant)
         if not isinstance(envelope, dict) or envelope.get("ok") is not True:
             raise ValueError("unsuccessful envelope")
         data = envelope.get("data")
@@ -19,7 +27,7 @@ def main():
         # Never echo an untrusted response or exception payload into the ops transcript.
         print("invalid mod state response", file=sys.stderr)
         return 1
-    print(screen)
+    print(json.dumps(envelope, ensure_ascii=False, allow_nan=False) if args.json else screen)
     return 0
 
 

@@ -8,7 +8,7 @@
 #
 #   procs              our processes: autoplay, stop-after, play, report.py, learner runs, the scheduler's wake
 #   stall-check        ops/stall-check.sh
-#   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), cut to 20 000 characters
+#   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), complete validated JSON
 #   autoplay-start     the ops prompt's start: refuses while autoplay / stop-after / play runs; rm ops/STOP; starts
 #                      ops/autoplay.sh with setsid nohup; prints its PID and live's commit (PID in ops/codex-ops/autoplay.pid)
 #   autoplay-stop      kill the autoplay bash started by autoplay-start (by PID, after checking its command line)
@@ -62,10 +62,12 @@ case "$action" in
   stall-check)
     exec bash "$ROOT/ops/stall-check.sh" ;;
   mod-state)
-    out=$(curl -s -m 10 "$MOD/state"); rc=$?
+    response=$(curl -fs -m 10 -w '\n%{http_code}' "$MOD/state"); rc=$?
     [ $rc -ne 0 ] && { echo "mod unreachable (curl exit $rc)"; exit 1; }
-    printf '%s\n' "${out:0:20000}"
-    exit 0 ;;
+    out="${response%$'\n'*}"; http="${response##*$'\n'}"
+    [ "$http" = 200 ] || { echo "mod state request failed (HTTP $http)"; exit 1; }
+    printf '%s' "$out" | python3 "$OPS/mod-state.py" --json
+    exit $? ;;
   autoplay-start)
     busy=$(pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ')
     play=$(play_pids)

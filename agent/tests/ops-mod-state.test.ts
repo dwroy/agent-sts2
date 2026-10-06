@@ -14,6 +14,16 @@ function launch(body: string, http = 200, curlExit = 0, nextBody?: string) {
   const source = readFileSync(join(ops, "codex-ops-actions.sh"), "utf8");
   const branch = source.split("  launch-game)\n")[1]!.split("  win-procs)\n")[0]!;
   const polling = branch.slice(branch.indexOf("    for _ in $(seq 1 36); do")).replace(/;;\s*$/, "");
+  return runBlock(polling, body, http, curlExit, nextBody);
+}
+
+function modState(body: string, http = 200, curlExit = 0) {
+  const source = readFileSync(join(ops, "codex-ops-actions.sh"), "utf8");
+  const branch = source.split("  mod-state)\n")[1]!.split("  autoplay-start)\n")[0]!;
+  return runBlock(branch.replace(/;;\s*$/, ""), body, http, curlExit);
+}
+
+function runBlock(block: string, body: string, http: number, curlExit: number, nextBody?: string) {
   const response = join(scratch, "response.json");
   const next = join(scratch, "next.json");
   const calls = join(scratch, "calls.jsonl");
@@ -41,7 +51,7 @@ curl() {
 seq() { printf '1\\n2\\n'; }
 sleep() { :; }
 tasklist() { :; }
-${polling}
+${block}
 `, "mod-test", ops, response, calls, String(http), String(curlExit), next], { cwd: scratch, encoding: "utf8", timeout: 5000 });
   return { ...result, calls: readFileSync(calls, "utf8").trim().split("\n") };
 }
@@ -82,5 +92,49 @@ describe("launch-game mod readiness", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(result.calls).toHaveLength(2);
     expect(result.stdout).toBe("mod answers: CARD_SELECTION\n");
+  });
+});
+
+describe("mod-state complete response", () => {
+  it.each(["COMBAT", "CARD_SELECTION", "MAP"])("preserves a small %s state envelope", (screen) => {
+    const envelope = { ok: true, data: { screen, turn: 6, available_actions: [] } };
+    const result = modState(JSON.stringify(envelope));
+    expect(result.status, result.stderr).toBe(0);
+    expect(JSON.parse(result.stdout)).toEqual(envelope);
+  });
+
+  it.each([
+    ["ASCII", { text: "x".repeat(20_001) }],
+    ["Chinese", { text: "状态".repeat(20_001) }],
+    ["nested arrays", { entries: Array.from({ length: 5000 }, (_, index) => ({ index, text: "fixed state" })) }],
+  ])("preserves the complete %s state beyond 20000 characters", (_name, extra) => {
+    const envelope = { ...ready, data: { ...ready.data, ...extra } };
+    expect(JSON.stringify(envelope).length).toBeGreaterThan(20_000);
+    const result = modState(JSON.stringify(envelope));
+    expect(result.status, result.stderr).toBe(0);
+    expect(JSON.parse(result.stdout)).toEqual(envelope);
+    expect(result.calls).toHaveLength(1);
+  });
+
+  it.each([
+    "", "{broken", "[]", '{"ok":false}', JSON.stringify({ data: ready.data }),
+    '{"ok":true}', '{"ok":true,"data":{}}',
+    '{"ok":true,"data":{"screen":"COMBAT","value":NaN}}',
+  ])("returns an explicit error for an invalid response %j", (body) => {
+    const result = modState(body);
+    expect(result.status).toBe(1);
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain("invalid mod state response");
+    expect(result.stderr).not.toContain("Traceback");
+  });
+
+  it.each([302, 503])("does not report success for HTTP %i", (status) => {
+    expect(modState(JSON.stringify(ready), status).status).toBe(1);
+  });
+
+  it("reports a transport failure without printing a partial state", () => {
+    const result = modState(JSON.stringify(ready), 200, 28);
+    expect(result.status).toBe(1);
+    expect(result.stdout).toBe("mod unreachable (curl exit 28)\n");
   });
 });
