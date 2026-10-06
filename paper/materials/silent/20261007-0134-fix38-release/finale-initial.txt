@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-finale-selection.test.ts (9 tests | 4 failed) 22ms
+   × 'Y6GM2CHWJBEY': the selection entry keeps Finale available to Jev with its corrected reference score 9ms
+   × 'VPW8YH7A4QFM': the selection entry keeps Finale available to Jev with its corrected reference score 2ms
+   × VPW F39 T1: the generated-card pick no longer auto-selects the unusable 60-damage offer 1ms
+   × an explicitly empty draw pile retains Finale damage even with a nonempty discard pile 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-finale-selection.test.ts > 'Y6GM2CHWJBEY': the selection entry keeps Finale available to Jev with its corrected reference score
+ FAIL  tests/silent-finale-selection.test.ts > 'VPW8YH7A4QFM': the selection entry keeps Finale available to Jev with its corrected reference score
+AssertionError: expected { run_brief: { …(11) }, …(3) } to have property "code_ranking"
+ ❯ tests/silent-finale-selection.test.ts:76:26
+     74|   expect(decision.resolve({ pick: { type: "choice", choice: "card2", p…
+     75|     .toEqual({ action: "select_deck_card", option_index: 2 });
+     76|   expect(decision.state).toHaveProperty("code_ranking");
+       |                          ^
+     77|   const ranking = decision.state.code_ranking as Raw[];
+     78|   expect(ranking.find((entry) => entry.option === "card2")?.score).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-finale-selection.test.ts > VPW F39 T1: the generated-card pick no longer auto-selects the unusable 60-damage offer
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ tests/silent-finale-selection.test.ts:86:18
+     84|   if (decision?.kind !== "ask") throw new Error("expected Jev to compa…
+     85|   const ranking = decision.state.code_ranking as Raw[];
+     86|   expect(ranking.find((entry) => entry.option === "card1")?.score).toB…
+       |                  ^
+     87|   expect(ranking.find((entry) => entry.option === "card2")?.score).toB…
+     88| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/silent-finale-selection.test.ts > an explicitly empty draw pile retains Finale damage even with a nonempty discard pile
+AssertionError: expected 0 to be greater than 0
+ ❯ tests/silent-finale-selection.test.ts:93:48
+     91|   const raw = board();
+     92|   raw.agent_view.combat.draw = [];
+     93|   expect(raw.agent_view.combat.discard.length).toBeGreaterThan(0);
+       |                                                ^
+     94|   const context = thisTurnBoard(raw, knowledge);
+     95|   expect(context.drawPileEmpty).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  01:16:35
+   Duration  1.40s (transform 1.03s, setup 313ms, import 924ms, tests 22ms, environment 0ms)
+

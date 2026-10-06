@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-finale-selection.test.ts (9 tests | 1 failed) 22ms
+   × an explicitly empty draw pile retains Finale damage even with a nonempty discard pile 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-finale-selection.test.ts > an explicitly empty draw pile retains Finale damage even with a nonempty discard pile
+AssertionError: expected 0 to be greater than 0
+ ❯ tests/silent-finale-selection.test.ts:90:48
+     88|   const raw = board();
+     89|   raw.agent_view.combat.draw = [];
+     90|   expect(raw.agent_view.combat.discard.length).toBeGreaterThan(0);
+       |                                                ^
+     91|   const context = thisTurnBoard(raw, knowledge);
+     92|   expect(context.drawPileEmpty).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  01:16:52
+   Duration  1.45s (transform 1.07s, setup 345ms, import 950ms, tests 22ms, environment 0ms)
+

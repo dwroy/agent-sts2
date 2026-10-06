@@ -1,0 +1,24 @@
+Fix Grand Finale immediate scoring for nonempty draw piles
+
+Evidence: Y6GM2CHWJBEY SILENT A0, floor 17, attempt 2, turn 1;
+VPW8YH7A4QFM SILENT A10, floor 39, turn 1. Ledger: silent-0197;
+fix-queue-v4 entry dated 2026-10-07 01:07.
+
+Both generated-card offers were scored as 60 damage per enemy while
+the observed draw piles held 16 and 33 cards. The selected Grand Finale
+then entered the hand as unplayable. Pass the current draw-pile condition
+into Silent's selection scoring and count no immediate Finale damage
+when that pile is known to be nonempty. Keep every choice available to
+Jev; do not infer an empty pile from missing data or the discard pile.
+
+Ironclad inputs and other cards retain their previous scores. This does
+not change potion costs, filtering, vetoes, timing rules, or strategy.
+No controlled alternative fight was recorded, so no victory is claimed.
+
+Fixed logged projections and an isolated knowledge reader use no
+refreshing data, LLM, or network. Stashing both source changes fails
+4 of 9 regression cases; restoring them passes 9 new and 180 related
+cases. Source sandbox: tsc 0, vitest 210 files / 2254 cases / exit 0.
+Initial test drafting failures remain archived in the task directory.
+
+Co-Authored-By: Codex GPT-6 <noreply@openai.com>

@@ -1,0 +1,72 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-finale-selection.test.ts (9 tests | 4 failed) 27ms
+   × 'Y6GM2CHWJBEY' F17 T1: an observed nonempty draw pile gives Finale zero immediate damage 8ms
+   × 'VPW8YH7A4QFM' F39 T1: an observed nonempty draw pile gives Finale zero immediate damage 1ms
+   × VPW F39 T1: the generated-card pick no longer auto-selects the unusable 60-damage offer 2ms
+   × an explicitly empty draw pile retains Finale damage even with a nonempty discard pile 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-finale-selection.test.ts > 'Y6GM2CHWJBEY' F17 T1: an observed nonempty draw pile gives Finale zero immediate damage
+ FAIL  tests/silent-finale-selection.test.ts > 'VPW8YH7A4QFM' F39 T1: an observed nonempty draw pile gives Finale zero immediate damage
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ tests/silent-finale-selection.test.ts:61:33
+     59|   const raw = board(frame.run);
+     60|   const context = thisTurnBoard(raw, knowledge);
+     61|   expect(context.drawPileEmpty).toBe(false);
+       |                                 ^
+     62|   expect(frame.after.finale).toMatchObject({ playable: false, unplayab…
+     63|   expect(thisTurnDamage(model(raw), context)).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-finale-selection.test.ts > VPW F39 T1: the generated-card pick no longer auto-selects the unusable 60-damage offer
+AssertionError: expected 'act' to be 'ask' // Object.is equality
+
+Expected: "ask"
+Received: "act"
+
+ ❯ tests/silent-finale-selection.test.ts:80:26
+     78| it("VPW F39 T1: the generated-card pick no longer auto-selects the unu…
+     79|   const decision = selection(board());
+     80|   expect(decision?.kind).toBe("ask");
+       |                          ^
+     81|   if (decision?.kind !== "ask") throw new Error("expected Jev to compa…
+     82|   const raw = board();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/silent-finale-selection.test.ts > an explicitly empty draw pile retains Finale damage even with a nonempty discard pile
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/silent-finale-selection.test.ts:93:33
+     91|   expect(raw.agent_view.combat.discard.length).toBeGreaterThan(0);
+     92|   const context = thisTurnBoard(raw, knowledge);
+     93|   expect(context.drawPileEmpty).toBe(true);
+       |                                 ^
+     94|   expect(thisTurnDamage(model(raw), context)).toBe(60);
+     95|   const decision = selection(raw);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  01:17:25
+   Duration  1.40s (transform 1.04s, setup 319ms, import 921ms, tests 27ms, environment 0ms)
+
