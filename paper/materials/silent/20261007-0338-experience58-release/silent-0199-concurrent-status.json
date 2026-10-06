@@ -1,0 +1,68 @@
+{
+ "id": "silent-0199",
+ "ts": "2026-10-07T02:04:48+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "跨回合凋萎计数只累计现场cards_played_this_turn，额外仅补投斧，未保留重放附魔的额外打出。DPYF2BAA3DKT首轮重放防御多打一张，后轮累计落后1；末次T7串刺实际触发第30张门槛、新增9伤凋萎，方案却报损26剩2血，重读实际手牌后才报完整需损35、剩−7。需按已观测重放保存实际打出计数，不声称修正即可整场获胜。",
+ "evidence": [
+  {
+   "run": "DPYF2BAA3DKT",
+   "floor": 48,
+   "turn": 1,
+   "note": "防御+重放1同一步格挡0→24、cards_played_this_turn 4→5且新增凋萎；首轮手动7次，含重放8次。",
+   "role": "support",
+   "added": "2026-10-07T02:04:48+08:00"
+  },
+  {
+   "run": "DPYF2BAA3DKT",
+   "floor": 48,
+   "turn": 7,
+   "note": "末次前六轮手动累计25、含重放26；串刺使手动29/实际30，凋萎1→2张各9伤。预测损26余2，实际28血9挡对26攻击及18持牌伤完整需损35、末态0血/敌117血。只读live a12bc862 combat-plan.ts:1485/:1521、turn-solver.ts:2918；fix-queue无该附魔计数项。",
+   "role": "support",
+   "added": "2026-10-07T02:04:48+08:00"
+  }
+ ],
+ "first_run": "DPYF2BAA3DKT",
+ "prior": "unknown",
+ "prior_runs": [
+  "LRN0HPZ0FZS1"
+ ],
+ "prior_note": "更早LRN沙漏T3已见附魔重放使余像13→15而原始计数8→9，但未找到能单独归因于这个跨轮缺口的旧版本生死预测，不能据字段差异认定当时已经误判或已经修好。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "DPYF2BAA3DKT"
+  ],
+  "commits": [
+   "1ab1ba8dc446e5a12dec0396528c9b2a5b478fe8",
+   "0b6e5c94f3bbbe0a936ced995f790987c57c4b88",
+   "0068600d255da2487f777a6e18903fa984895a82",
+   "e4126cdb11349900ad2dc745abb2434fbdc5e049"
+  ]
+ },
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-07T02:04:48+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T03:01:15+08:00",
+   "by": "learner:fix-batch",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T03:15:22+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.fix40",
+ "effect": null,
+ "notes": [
+  "03:10 fix-done确认20261007-024301-fix-batch：羽化源129853b8、重放源1ab1ba8d→实际live代码0b6e5c94→固定发布0068600d/树467e2ab2/唯一S1.fix40，main已机械同步。沿学习者0199重放次数漏入跨回合凋萎、0202羽化虚构即时抽牌两个纯bug，无运维新增游戏知识；0199证据DPYF2BAA3DKT/A10/F48末次T1/T7，0202首证C48LLXBGKXQ9/A0/F24 T1、HUVEPWQAHWFU/A10/F35 T2支持。只计已接受动作的已观察附魔重放，保留失败动作/续行/重启/日志/SL固定覆盖，原始均值与投斧分账；羽化生成未来收益保留未建模，不虚构抽牌/随机牌收益，不改策略、用药或生产复活规则，铁甲等价，不声称整场转胜。羽化源tsc/vitest0、213文件2279例，最终源及合后首轮各214文件2289例、tsc/vitest0，无超时重跑。按原时间戳明确：羽化4例02:46:06先绿→02:46:22撤源2失败2通过→恢复整套2279；重放相关3文件50例02:55:18先绿→02:55:41撤全部源码9失败1通过→恢复整套2289；不把此前4/50例说成撤后单独重跑或重复相加。初稿index接线/复活字段断言失败、原恢复摘要及全部原文/真红保持。无新增知识刷新、重叠[]，全部知识blob及经验.3保持，10个修复blob同已测发布，双方decision-log原行及重复次数保持。128项旧修复祖先与原proposed三行已归档；0202 a-placeholder明确是无效占位、不当git源码提交，正式129853b8勘误保留，追加历史不抹除。本次仅CLI/by=ops两项shipped/S1.fix40并关闭02:20/02:31两个队列框；0199首证DPY/A10/prior=unknown、0202首证C48/A0/prior=no及claim/全部support/repeat/历史保持，0200独立机制LRN/A0/prior=unknown/S1.exp57、0203独立机制C48/A0/prior=no、0201/strategy9、0172/fix39、0197/fix38及全部旧状态不重置。完整外部待本批learner-checks，旧mod/缓存/性能与策略专项保持，无新Roy待定，后台产出及对局继续。"
+ ],
+ "shipped_at": "2026-10-07T03:15:22+08:00"
+}
