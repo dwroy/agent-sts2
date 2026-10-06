@@ -8,3 +8,5 @@
 - 运维ledger.py check：/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 192 item(s), 0 problem(s)。回报ops/codex-ops/learner/20261006-201301.out及.err，完整流learner/runs/20261006-201302-postmortem.jsonl。完整实际最优线比例、F8毛伤及完整需伤、读档前未派发结算、未选方案与修复的整场对照、构筑boss时钟指标、Jev缓存命中沿学习者标为未记录。
 
 论文--no-raw刷新结果另记，对局继续。
+
+- 2026-10-06 20:33 运维codex完成20:27复盘批次20261006-201301/TCFAHJ9K19VY：学习者原13209字节正文、20:24勘误及六行账本已归档47647848033b52c045c731a4b7ee2078367c5c81；新增0192首证TCFAHJ9K19VY/A10、prior=unknown/observed，五旧项均support，无新增repeat，原首证/先验/历史/状态/版本保持。臂甲在脆弱下的待触发识别失败仅按学习者证据入队，属非阻塞机制模型问题，交学习者实现与固定验证，运维未改公式或标shipped。nice19 paper_dataset.py --no-raw exit0，切点2026-10-06T12:29:33.740Z，五项一致性通过、决策计数差异为空、key scan CLEAN，行数{"commits.csv": 2970, "decisions_by_label.csv": 18272, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 548}；仅12项本轮生成变化及自身记录提交。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 192 item(s), 0 problem(s)；详情paper/materials/silent/20261006-2027-tcfa-postmortem.md。只改记录和数据，无代码测试或新增上线，其他后台经验/知识刷新与对局照常。
