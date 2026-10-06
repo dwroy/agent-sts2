@@ -492,6 +492,8 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 08:29 A10复盘：连续Boss后场血量投影（交学习者）
 
-- [ ] **非阻塞路线投影缺陷，按学习者回报登记**：`agent/src/sim/route-projection.ts:178`对Boss返回0成本，`:187`据此不减血，`:223`与`:229`向后继节点传值；`agent/src/sim/route-map.ts:396`输出完整arrival。来源JMH5C51RLN4E SILENT A10 F44路线题、F48第5次T13获胜与F49 T1，复盘`ops/codex-ops/learner/20261006-081301.out`、`notes/lessons.md`的本局节及账本silent-0163。
+- [x] **非阻塞路线投影缺陷，按学习者回报登记**：`agent/src/sim/route-projection.ts:178`对Boss返回0成本，`:187`据此不减血，`:223`与`:229`向后继节点传值；`agent/src/sim/route-map.ts:396`输出完整arrival。来源JMH5C51RLN4E SILENT A10 F44路线题、F48第5次T13获胜与F49 T1，复盘`ops/codex-ops/learner/20261006-081301.out`、`notes/lessons.md`的本局节及账本silent-0163。
 - 学习者证据：F44题面列两场连续Boss且中间不休息，但F48/F49到达血量及p75均写60/60；实际F48五次均60血进场，第5次T13获胜后剩8血，下一层直接以8血进F49。首证回溯25226ZFLNR1J SILENT A10 F35，两场Boss题面均22/64；silent-0163 first_run仍25226ZFLNR1J、prior=no/status=observed，运维不改其先验或分类。
 - 按学习者原分析：未建模的前场Boss损血被呈现为后场确定值，后场血量应保留未知，不能把本局52损血推广为固定成本；其他路线/构筑/锻造的整场胜负没有受控证据。对局已正常结束，无卡死/崩溃/非法动作，交学习者按本角色固定证据实现与测试，运维不修改投影算法。行号是学习者只读live 141df614定位，本局运行41bd4a44+dirty，不声称复原旧局脏源码。低语耳环0164、势不可当0165为独立机制发现，保留复盘和账本，由学习者后续处理。
+
+- 2026-10-06 09:07 运维按09:05 fix-done核实连续Boss后场血量投影模型项已由学习者实现、实际上线并机械同步main：源码3fe6251b746cebe816b9db3c0d8aa9d6090bec0a→代码合入6e9fec36e9eb8098c964114f2f9af097598ae4fc/S1.fix27，固定发布1e047a360ec6aa1a19205c068fb73cef46d685ea/树1528d442a44ad2b1f90b2324726074d404475ebe，main同步388688333229e92f4544f1d208c69e7e4e75cf9f。最终源/合后tsc0/195文件2118例；固定六例撤整组5失败1通过、恢复6通过，初稿字段/decision-log冲突预检历史保留。仅关闭本模型复选框并经CLI/by=ops将0163登记shipped，保留原证据与先验；0164/0165及0150独立，不称整场胜负由此改变。外部完整检查待learner-checks；详情paper/materials/silent/20261006-0905-boss-unknown-fix27-release.md。

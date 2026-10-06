@@ -65,3 +65,5 @@
   }
 }
 ```
+
+- 2026-10-06 09:07 原proposed归档b923590b12c6c548e59c73d9899656cf397cf782，main同步388688333229e92f4544f1d208c69e7e4e75cf9f，全部1021源码/测试blob一致、其他2130项main最新blob及双方日志保持，七项生成知识保留。CLI/by=ops仅silent-0163追加shipped/S1.fix27；first_run/prior/evidence/repeat不变，0164/0165/0150独立保持；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 165 item(s), 0 problem(s)。只关闭队列对应模型项，其他任务保留，随后论文数据刷新。
