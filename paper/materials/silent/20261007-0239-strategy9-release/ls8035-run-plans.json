@@ -1,0 +1,452 @@
+[
+  {
+    "ts": "2026-10-06T11:53:47.476Z",
+    "run": "LS8035TB32P3",
+    "floor": 1,
+    "trigger": "start",
+    "observed_ts": "2026-10-06T11:53:19.814Z",
+    "merged_into": "event/choose",
+    "decision_id": "75a13572-9202-4a90-a488-b602a8afd1e2",
+    "plan": {
+      "runId": "LS8035TB32P3",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "trigger": "start",
+      "archetype": "Efficient early attacks into poison and dexterity defense",
+      "want": [
+        "POISONED_STAB",
+        "DAGGER_SPRAY",
+        "FOOTWORK",
+        "BOUNCING_FLASK",
+        "BACKFLIP",
+        "ACCELERANT"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Improve damage beyond starters; secure persistent scaling, reliable Weak, and stronger block for the 30-damage attack. Upgrade key damage and defense cards.",
+      "summary": "Take immediate damage first, then poison scaling and dexterity. Conch supports selective elites after acquiring attacks and potions. Remove Strikes as replacements arrive; balance upgrades with necessary healing."
+    },
+    "raw": {
+      "archetype": "Efficient early attacks into poison and dexterity defense",
+      "want": [
+        "POISONED_STAB",
+        "DAGGER_SPRAY",
+        "FOOTWORK",
+        "BOUNCING_FLASK",
+        "BACKFLIP",
+        "ACCELERANT"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Improve damage beyond starters; secure persistent scaling, reliable Weak, and stronger block for the 30-damage attack. Upgrade key damage and defense cards.",
+      "summary": "Take immediate damage first, then poison scaling and dexterity. Conch supports selective elites after acquiring attacks and potions. Remove Strikes as replacements arrive; balance upgrades with necessary healing."
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 25333,
+      "input_tokens": 124023,
+      "output_tokens": 557,
+      "reasoning_tokens": 347,
+      "effort": ""
+    },
+    "memory_chars": 3060
+  },
+  {
+    "ts": "2026-10-06T12:00:27.050Z",
+    "run": "LS8035TB32P3",
+    "floor": 11,
+    "trigger": "review",
+    "observed_ts": "2026-10-06T11:59:59.293Z",
+    "merged_into": "rest/plan",
+    "decision_id": "de30fc72-6449-477c-94f7-f58d499fad21",
+    "plan": {
+      "runId": "LS8035TB32P3",
+      "act": 1,
+      "floor": 11,
+      "hpPct": 0.6233766233766234,
+      "trigger": "review",
+      "archetype": "Poison scaling and dexterity defense with efficient opening attacks",
+      "want": [
+        "FOOTWORK",
+        "BOUNCING_FLASK",
+        "LEG_SWEEP",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "ACCELERANT"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "STRIKE_SILENT"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 9,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Add reliable poison scaling and stronger block. Maintain Weak through heavy attacks, use small hits against Slippery, and secure defensive potions.",
+      "summary": "Existing attacks cover early damage and groups. Prioritize poison scaling, dexterity, efficient block, and draw; remove Strikes. Heal before the forced elite, then purchase boss solutions rather than redundant attacks."
+    },
+    "raw": {
+      "archetype": "Poison scaling and dexterity defense with efficient opening attacks",
+      "want": [
+        "FOOTWORK",
+        "BOUNCING_FLASK",
+        "LEG_SWEEP",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "ACCELERANT"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "STRIKE_SILENT"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 9,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Add reliable poison scaling and stronger block. Maintain Weak through heavy attacks, use small hits against Slippery, and secure defensive potions.",
+      "summary": "Existing attacks cover early damage and groups. Prioritize poison scaling, dexterity, efficient block, and draw; remove Strikes. Heal before the forced elite, then purchase boss solutions rather than redundant attacks."
+    },
+    "question": {
+      "label": "rest/plan",
+      "latency_ms": 21384,
+      "input_tokens": 132214,
+      "output_tokens": 428,
+      "reasoning_tokens": 206,
+      "effort": ""
+    },
+    "memory_chars": 8797
+  },
+  {
+    "ts": "2026-10-06T12:06:51.409Z",
+    "run": "LS8035TB32P3",
+    "floor": 18,
+    "trigger": "act",
+    "observed_ts": "2026-10-06T12:06:23.306Z",
+    "merged_into": "event/act-plan",
+    "decision_id": "b534cb3d-6230-4cb2-9849-f545f3ffe94c",
+    "plan": {
+      "runId": "LS8035TB32P3",
+      "act": 2,
+      "floor": 18,
+      "hpPct": 0.8181818181818182,
+      "trigger": "act",
+      "archetype": "Consistent poison scaling with dexterity defense and efficient attacks",
+      "want": [
+        "FOOTWORK",
+        "ACCELERANT",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "BOUNCING_FLASK",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "STRIKE_SILENT"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 10,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Build reliable poison and dexterity, maintain Weak, preserve defensive potions, and manage facing carefully. Prepare to bypass the surviving crab's death-triggered block.",
+      "summary": "Use extra draw to find scaling and defense consistently. Replace Strikes with poison, dexterity, and draw. Take one camp-supported elite; use later camps for essential upgrades when healthy. Avoid redundant attacks and speculative synergies."
+    },
+    "raw": {
+      "archetype": "Consistent poison scaling with dexterity defense and efficient attacks",
+      "want": [
+        "FOOTWORK",
+        "ACCELERANT",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "BOUNCING_FLASK",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "STRIKE_SILENT"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 10,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Build reliable poison and dexterity, maintain Weak, preserve defensive potions, and manage facing carefully. Prepare to bypass the surviving crab's death-triggered block.",
+      "summary": "Use extra draw to find scaling and defense consistently. Replace Strikes with poison, dexterity, and draw. Take one camp-supported elite; use later camps for essential upgrades when healthy. Avoid redundant attacks and speculative synergies."
+    },
+    "question": {
+      "label": "event/act-plan",
+      "latency_ms": 27598,
+      "input_tokens": 129656,
+      "output_tokens": 636,
+      "reasoning_tokens": 352,
+      "effort": ""
+    },
+    "memory_chars": 14167
+  },
+  {
+    "ts": "2026-10-06T12:13:08.580Z",
+    "run": "LS8035TB32P3",
+    "floor": 27,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-06T12:12:37.885Z",
+    "merged_into": "rest/plan",
+    "decision_id": "cd84183d-743f-43bd-8869-a5bde1002a65",
+    "plan": {
+      "runId": "LS8035TB32P3",
+      "act": 2,
+      "floor": 27,
+      "hpPct": 0.33766233766233766,
+      "trigger": "hp_drop",
+      "archetype": "Accelerated poison with reliable defense and draw",
+      "want": [
+        "FOOTWORK",
+        "PIERCING_WAIL",
+        "MALAISE",
+        "NOXIOUS_FUMES",
+        "BACKFLIP",
+        "OUTBREAK"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "STRIKE_SILENT",
+        "ECHOING_SLASH"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 11,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Establish Accelerant and poison, sustain Weak, manage facing, and save defensive potions. Upgrade Deadly Poison or Leg Sweep when healing is unnecessary.",
+      "summary": "Keep the camp-rich route. Existing poison scaling needs stronger defense and faster access, not redundant attacks. Heal now, remove Strikes, and use later safe camps for meaningful upgrades."
+    },
+    "raw": {
+      "archetype": "Accelerated poison with reliable defense and draw",
+      "want": [
+        "FOOTWORK",
+        "PIERCING_WAIL",
+        "MALAISE",
+        "NOXIOUS_FUMES",
+        "BACKFLIP",
+        "OUTBREAK"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "STRIKE_SILENT",
+        "ECHOING_SLASH"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 11,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Establish Accelerant and poison, sustain Weak, manage facing, and save defensive potions. Upgrade Deadly Poison or Leg Sweep when healing is unnecessary.",
+      "summary": "Keep the camp-rich route. Existing poison scaling needs stronger defense and faster access, not redundant attacks. Heal now, remove Strikes, and use later safe camps for meaningful upgrades."
+    },
+    "question": {
+      "label": "rest/plan",
+      "latency_ms": 18898,
+      "input_tokens": 133646,
+      "output_tokens": 450,
+      "reasoning_tokens": 229,
+      "effort": ""
+    },
+    "memory_chars": 18047
+  },
+  {
+    "ts": "2026-10-06T12:23:02.232Z",
+    "run": "LS8035TB32P3",
+    "floor": 34,
+    "trigger": "act",
+    "observed_ts": "2026-10-06T12:22:21.815Z",
+    "merged_into": "event/act-plan",
+    "decision_id": "fd9c8b50-92c5-46bb-b0f9-017c1656af7b",
+    "plan": {
+      "runId": "LS8035TB32P3",
+      "act": 3,
+      "floor": 34,
+      "hpPct": 0.8048780487804879,
+      "trigger": "act",
+      "archetype": "Accelerated poison with energy-supported Weak and dexterity defense",
+      "want": [
+        "FOOTWORK",
+        "MALAISE",
+        "PIERCING_WAIL",
+        "BACKFLIP",
+        "OUTBREAK",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "ECHOING_SLASH",
+        "STRIKE_SILENT",
+        "MASTER_PLANNER"
+      ],
+      "remove": [
+        "STRIKE_SILENT",
+        "MASTER_PLANNER"
+      ],
+      "blockTarget": 12,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Establish Envenom and Accelerant, upgrade Footwork and Leg Sweep, sustain Weak, save defensive potions, and preserve HP for both bosses.",
+      "summary": "Use both shops for defensive solutions, potions, and Strike removals. Extra energy supports setup and blocking. Heal when threatened; otherwise upgrade dexterity and defense. Avoid redundant attacks and unnecessary elites."
+    },
+    "raw": {
+      "archetype": "Accelerated poison with energy-supported Weak and dexterity defense",
+      "want": [
+        "FOOTWORK",
+        "MALAISE",
+        "PIERCING_WAIL",
+        "BACKFLIP",
+        "OUTBREAK",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "ECHOING_SLASH",
+        "STRIKE_SILENT",
+        "MASTER_PLANNER"
+      ],
+      "remove": [
+        "STRIKE_SILENT",
+        "MASTER_PLANNER"
+      ],
+      "block_target": 12,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Establish Envenom and Accelerant, upgrade Footwork and Leg Sweep, sustain Weak, save defensive potions, and preserve HP for both bosses.",
+      "summary": "Use both shops for defensive solutions, potions, and Strike removals. Extra energy supports setup and blocking. Heal when threatened; otherwise upgrade dexterity and defense. Avoid redundant attacks and unnecessary elites."
+    },
+    "question": {
+      "label": "event/act-plan",
+      "latency_ms": 39684,
+      "input_tokens": 133467,
+      "output_tokens": 1133,
+      "reasoning_tokens": 835,
+      "effort": ""
+    },
+    "memory_chars": 21015
+  },
+  {
+    "ts": "2026-10-06T12:29:47.910Z",
+    "run": "LS8035TB32P3",
+    "floor": 40,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-06T12:29:13.136Z",
+    "merged_into": "rest/plan",
+    "decision_id": "c0f73d24-3bf6-4753-9e72-ae1a14e53de8",
+    "plan": {
+      "runId": "LS8035TB32P3",
+      "act": 3,
+      "floor": 40,
+      "hpPct": 0.04878048780487805,
+      "trigger": "hp_drop",
+      "archetype": "Accelerated poison with efficient defense and faster setup",
+      "want": [
+        "PIERCING_WAIL",
+        "MALAISE",
+        "BACKFLIP",
+        "ADRENALINE",
+        "OUTBREAK",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "MASTER_PLANNER",
+        "ECHOING_SLASH",
+        "STRIKE_SILENT"
+      ],
+      "remove": [
+        "MASTER_PLANNER",
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 12,
+      "elites": "avoid",
+      "rest": "heal",
+      "bossPrep": "Preserve HP for consecutive bosses. Secure defensive potions, sustained Weak, and reliable poison access. Upgrade Footwork or Leg Sweep only when survival permits.",
+      "summary": "Heal now and prioritize recovery at remaining camps. Keep the shop route, buy immediate defensive help and potions, trim setup bloat, and add efficient draw or poison burst rather than redundant attacks."
+    },
+    "raw": {
+      "archetype": "Accelerated poison with efficient defense and faster setup",
+      "want": [
+        "PIERCING_WAIL",
+        "MALAISE",
+        "BACKFLIP",
+        "ADRENALINE",
+        "OUTBREAK",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "MASTER_PLANNER",
+        "ECHOING_SLASH",
+        "STRIKE_SILENT"
+      ],
+      "remove": [
+        "MASTER_PLANNER",
+        "STRIKE_SILENT"
+      ],
+      "block_target": 12,
+      "elites": "avoid",
+      "rest": "heal",
+      "boss_prep": "Preserve HP for consecutive bosses. Secure defensive potions, sustained Weak, and reliable poison access. Upgrade Footwork or Leg Sweep only when survival permits.",
+      "summary": "Heal now and prioritize recovery at remaining camps. Keep the shop route, buy immediate defensive help and potions, trim setup bloat, and add efficient draw or poison burst rather than redundant attacks."
+    },
+    "question": {
+      "label": "rest/plan",
+      "latency_ms": 22800,
+      "input_tokens": 141094,
+      "output_tokens": 514,
+      "reasoning_tokens": 275,
+      "effort": ""
+    },
+    "memory_chars": 22627
+  }
+]

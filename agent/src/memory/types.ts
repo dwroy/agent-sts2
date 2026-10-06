@@ -260,7 +260,13 @@ export interface ScreenMemory {
    * Cards played by hand per turn in this fight, recorded every fight (Withering Presence counts them
    * across turns; the Knowledge Demon curse pick reads the per-turn mean), and the Wither damage last seen in hand. Cleared out of combat.
    */
-  fightCards?: { fight: string; perTurn: Record<string, number>; witherDamage: number };
+  fightCards?: {
+    fight: string; perTurn: Record<string, number>; witherDamage: number;
+    /** Silent Wither: accepted enchantment replays keyed by the source play's turn and manual counter. */
+    replays?: Record<string, number>;
+    runId?: string;
+    last?: { turn: number; played: number };
+  };
   /** Silent Permafrost: availability observed since this fight's opening; rebuilt from logged frames/actions. */
   permafrost?: { fight: string; turn: number; cards: number | null; status: "armed" | "spent" | "unknown" };
   /** "fight:turn" in which a card that costs HP was played (Demon Tongue heals the first loss a turn). */

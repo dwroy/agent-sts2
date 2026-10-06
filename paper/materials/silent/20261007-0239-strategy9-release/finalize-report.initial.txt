@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261007-021220-strategy-proposal/finalize-report.py", line 44, in <module>
+    completed = subprocess.run(['python3', str(ROOT / 'learner/ledger.py'), 'update'], input=json.dumps(update, ensure_ascii=False), text=True, capture_output=True, check=True)
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['python3', '/home/dw/Projects/agent-sts2/learner/ledger.py', 'update']' returned non-zero exit status 2.

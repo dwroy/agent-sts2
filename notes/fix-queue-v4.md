@@ -620,3 +620,10 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 0199首个明确误判证据DPYF2BAA3DKT/A10、prior=unknown/status=observed；更早LRN0HPZ0FZS1/A0仅能确认实际重放／原始计数分离，未找到可单独归因的旧版生死误判，不改写先验。独立0200机制首证仍LRN/A0、prior=unknown，交学习者处理，不冒标shipped。
 - 该局六次沙漏尝试、前五次读档后末次正常阵亡，没有本项导致的卡死／崩溃／非法动作；没有修正后的替代整场实打，不声称修复可转胜。请学习者依本角色对局证据修计数状态并做固定红绿验证，自测后按live流程合入，铁甲及无关行为保持等价。运维不添加机制或打法。
 - 来源：ops/codex-ops/learner/20261007-014301.out、notes/lessons.md两局原正文、paper/materials/learning/ledger.jsonl的0199／0200；证据摘录learner/runs/20261007-014302-postmortem/。CRK2HNYKSCZC末轮least-loss余0与实际吻合；其他未核定推演差额和策略取舍不增列纯bug。
+
+## 2026-10-07 02:31 A10复盘：羽化生成到抽牌堆被误算为即时抽牌（交学习者）
+
+- [ ] **非阻塞卡牌模型bug，silent-0202，仅转录学习者定位**：HUVEPWQAHWFU SILENT A10/F35 T2羽化（METAMORPHOSIS）动态Cards=3、文本为向抽牌堆加入随机免费攻击，题面却报cards_drawn=3；Jev信心0.89选羽化→致命毒药，五轮2/8胜仅为推演。实打羽化后手牌5→4、抽牌堆17→20、能量4→2，无即时抽牌，随后重问改步法，本轮敌血116不变。生成及未来收益不能由虚构即时抽牌代替。
+- 学习者只读live ebd920b4定位card-model.ts:893将未排除的Cards直接读成draw，rollout.ts:2094再按cardsDrawn消费抽牌堆；原局9e20ade9+dirty不声称复原。回溯C48LLXBGKXQ9 SILENT A0/F24 T1含羽化方案已报抽3，实打手牌9→8、抽牌堆18→21，故0202首证C48/A0、prior=no/status=observed；本局为首次识别该独立bug，不重写为A10首证或冒标shipped。
+- 独立0203机制同样首证C48/A0、prior=no，交学习者处理。该局正常结束，F33一次沙虫读档后过关、F35走廊无读档而阵亡，没有本项导致的卡死／崩溃／非法动作；未实打修正后替代整场，不将五轮胜率或整场失败全归该项、不声称修复可转胜。请学习者依本角色证据分别处理生成与抽牌效果，做固定红绿验证，自测后按live流程合入，铁甲与无关行为保持等价；运维不补机制或打法。
+- 来源：ops/codex-ops/learner/20261007-021301.out、notes/lessons.md本局原文及两段勘误、paper/materials/learning/ledger.jsonl的0202／0203、learner/runs/20261007-021301-postmortem/。勘误保留原写错标题02:23:36、实际date 02:23:32 +0800与02:24:06追补；仪式为T1敌方行动后T2首帧已见9，F29引用时间改17:50:39.376Z。T5未核定少报5伤和护栏／路线取舍不增列纯bug；0199及旧专项保留。
