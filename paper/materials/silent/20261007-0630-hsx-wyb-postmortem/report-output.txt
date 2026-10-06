@@ -1,0 +1,24 @@
+## 复盘回报
+
+- 已追加：HSX4HYATB4E2（A10，第48层，永世沙漏末轮2血不足承受攻击与凋萎）。已追加勘误：回血合计223、末轮伤害24＋4、机制首证及勘误时间。
+- 已追加：WYB0NCD6W83J（A10，第15层，花园幽灵鳗末轮11攻击对10挡，扣光最后1血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：HSX4HYATB4E2：替代整场结果、最优整线执行比例、第四次T4额外8伤根因、boss时钟指标、后场boss实打、Jev缓存；WYB0NCD6W83J：替代整场结果、最优整线执行比例、boss时钟指标、boss实到实打、Jev缓存。
+- 学习账本：HSX4HYATB4E2：新增 silent-0208；更新 silent-0005、silent-0023、silent-0024、silent-0025、silent-0031、silent-0058、silent-0073、silent-0079、silent-0094（均为支持证据，老错重犯无）。
+- 学习账本：WYB0NCD6W83J：新增 silent-0209、silent-0210、silent-0211、silent-0212；更新 silent-0019（支持证据，老错重犯无）；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["HSX4HYATB4E2","WYB0NCD6W83J"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0208","silent-0209","silent-0210","silent-0211","silent-0212"],"updated":["silent-0005","silent-0023","silent-0024","silent-0025","silent-0031","silent-0058","silent-0073","silent-0079","silent-0094","silent-0019"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11347-0337-78d3-9d22-ab3202235705
+轮数：1；工具调用：command_execution×55
+token：输入 264.6k、输出 43.0k（其中推理 15.9k）、cache 读 6152.2k、cache 写 0（命中 95.9%）
+成本：未提供
+耗时：1019.0 s（墙钟）
+时间：首个事件 1.6 s、模型首个输出 5.5 s、首次工具 10.0 s、末次工具结束 1000.4 s；工具内共 29.8 s，其余（模型生成、推理、网络）987.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×45；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T06-13-03-01a11347-0337-78d3-9d22-ab3202235705.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-061301-postmortem.jsonl
