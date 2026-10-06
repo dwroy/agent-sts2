@@ -1,0 +1,1010 @@
+{
+  "turn7-start": {
+    "evidence": {
+      "run": "UJ0K3G10609Y",
+      "floor": 48,
+      "turn": 7,
+      "attempt": 6,
+      "ts": "2026-10-06T05:26:05.852Z",
+      "offset": 7606419303
+    },
+    "state": {
+      "run_id": "UJ0K3G10609Y",
+      "screen": "COMBAT",
+      "in_combat": true,
+      "turn": 7,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit"
+      ],
+      "combat": {
+        "player": {
+          "current_hp": 29,
+          "max_hp": 81,
+          "block": 0,
+          "energy": 4,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 5,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [],
+          "pet_missing": false,
+          "cards_played_this_turn": 0,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 0
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "AFTERIMAGE",
+            "name": "余像",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "你每打出一张牌，都获得{AfterimagePower:diff()}点格挡。",
+            "resolved_rules_text": "你每打出一张牌，都获得1点格挡。",
+            "dynamic_values": [
+              {
+                "name": "AfterimagePower",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御+",
+            "upgraded": true,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得10点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 8,
+                "current_value": 10,
+                "enchanted_value": 8,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "NIGHTMARE",
+            "name": "夜魇",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 3,
+            "star_cost": 0,
+            "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+            "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+            "dynamic_values": [],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "DEADLY_POISON",
+            "name": "致命毒药+",
+            "upgraded": true,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "给予{PoisonPower:diff()}层中毒。",
+            "resolved_rules_text": "给予7层中毒。",
+            "dynamic_values": [
+              {
+                "name": "PoisonPower",
+                "base_value": 7,
+                "current_value": 7,
+                "enchanted_value": 7,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成7点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 7,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TEST_SUBJECT",
+            "name": "实验体 #C61",
+            "current_hp": 199,
+            "max_hp": 212,
+            "base_max_hp": 111,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "ADAPTABLE_POWER",
+                "name": "适者生存",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "PAINFUL_STABS_POWER",
+                "name": "疼痛戳刺",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intent": "MULTI_CLAW_MOVE",
+            "move_id": "MULTI_CLAW_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "11[font_size=18]×4[/font_size]",
+                "damage": 11,
+                "hits": 4,
+                "total_damage": 44,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 44,
+            "damage_after_block": 44,
+            "player_hp": 29,
+            "player_block": 0,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "ascension": 10,
+        "floor": 48,
+        "current_hp": 29,
+        "max_hp": 81,
+        "gold": 62,
+        "max_energy": 3,
+        "act_id": "2",
+        "boss_id": "TEST_SUBJECT_BOSS",
+        "deck": [],
+        "potions": [],
+        "relics": [
+          {
+            "index": 4,
+            "relic_id": "CLOAK_CLASP",
+            "name": "斗篷扣",
+            "description": "在你的回合结束时，每有一张[gold]手牌[/gold]，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 6,
+            "relic_id": "TUNGSTEN_ROD",
+            "name": "钨合金棍",
+            "description": "你每次失去生命时，减少失去的生命值[blue]{HpLossReduction}[/blue]点。",
+            "stack": null,
+            "is_melted": false
+          }
+        ]
+      },
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      }
+    }
+  },
+  "turn7-end": {
+    "evidence": {
+      "run": "UJ0K3G10609Y",
+      "floor": 48,
+      "turn": 7,
+      "attempt": 6,
+      "ts": "2026-10-06T05:26:09.748Z",
+      "offset": 7606597683
+    },
+    "state": {
+      "run_id": "UJ0K3G10609Y",
+      "screen": "COMBAT",
+      "in_combat": true,
+      "turn": 7,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "player": {
+          "current_hp": 29,
+          "max_hp": 81,
+          "block": 13,
+          "energy": 0,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 5,
+              "is_debuff": false
+            },
+            {
+              "index": 3,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [],
+          "pet_missing": false,
+          "cards_played_this_turn": 4,
+          "attacks_played_this_turn": 1,
+          "skills_played_this_turn": 2
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "NIGHTMARE",
+            "name": "夜魇",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 3,
+            "star_cost": 0,
+            "rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。",
+            "resolved_rules_text": "选择一张牌。 在下个回合将这张牌的3张复制品加入你的手牌。 消耗。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TEST_SUBJECT",
+            "name": "实验体 #C61",
+            "current_hp": 192,
+            "max_hp": 212,
+            "base_max_hp": 111,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "ADAPTABLE_POWER",
+                "name": "适者生存",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "PAINFUL_STABS_POWER",
+                "name": "疼痛戳刺",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 7,
+                "is_debuff": true
+              }
+            ],
+            "intent": "MULTI_CLAW_MOVE",
+            "move_id": "MULTI_CLAW_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "11[font_size=18]×4[/font_size]",
+                "damage": 11,
+                "hits": 4,
+                "total_damage": 44,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 44,
+            "damage_after_block": 31,
+            "player_hp": 29,
+            "player_block": 13,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "ascension": 10,
+        "floor": 48,
+        "current_hp": 29,
+        "max_hp": 81,
+        "gold": 62,
+        "max_energy": 3,
+        "act_id": "2",
+        "boss_id": "TEST_SUBJECT_BOSS",
+        "deck": [],
+        "potions": [],
+        "relics": [
+          {
+            "index": 4,
+            "relic_id": "CLOAK_CLASP",
+            "name": "斗篷扣",
+            "description": "在你的回合结束时，每有一张[gold]手牌[/gold]，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 6,
+            "relic_id": "TUNGSTEN_ROD",
+            "name": "钨合金棍",
+            "description": "你每次失去生命时，减少失去的生命值[blue]{HpLossReduction}[/blue]点。",
+            "stack": null,
+            "is_melted": false
+          }
+        ]
+      },
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      }
+    }
+  },
+  "turn4-end": {
+    "evidence": {
+      "run": "UJ0K3G10609Y",
+      "floor": 48,
+      "turn": 4,
+      "attempt": 6,
+      "ts": "2026-10-06T05:25:29.988Z",
+      "offset": 7605967712
+    },
+    "state": {
+      "run_id": "UJ0K3G10609Y",
+      "screen": "COMBAT",
+      "in_combat": true,
+      "turn": 4,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "player": {
+          "current_hp": 43,
+          "max_hp": 81,
+          "block": 14,
+          "energy": 0,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [],
+          "pet_missing": false,
+          "cards_played_this_turn": 4,
+          "attacks_played_this_turn": 1,
+          "skills_played_this_turn": 3
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRANGLE",
+            "name": "紧勒",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 你在这个回合内每出一张牌，该名敌人都会失去{StranglePower:diff()}点生命。",
+            "resolved_rules_text": "造成9点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 8,
+                "current_value": 9,
+                "enchanted_value": 8,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "StranglePower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TEST_SUBJECT",
+            "name": "实验体 #C61",
+            "current_hp": 31,
+            "max_hp": 111,
+            "base_max_hp": 111,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "ADAPTABLE_POWER",
+                "name": "适者生存",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ENRAGE_POWER",
+                "name": "激怒",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 24,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 4,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 7,
+                "is_debuff": true
+              }
+            ],
+            "intent": "SKULL_BASH_MOVE",
+            "move_id": "SKULL_BASH_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "30",
+                "damage": 30,
+                "hits": 1,
+                "total_damage": 30,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": false,
+        "lethal_risks": []
+      },
+      "run": {
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "ascension": 10,
+        "floor": 48,
+        "current_hp": 43,
+        "max_hp": 81,
+        "gold": 62,
+        "max_energy": 3,
+        "act_id": "2",
+        "boss_id": "TEST_SUBJECT_BOSS",
+        "deck": [],
+        "potions": [],
+        "relics": [
+          {
+            "index": 4,
+            "relic_id": "CLOAK_CLASP",
+            "name": "斗篷扣",
+            "description": "在你的回合结束时，每有一张[gold]手牌[/gold]，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 6,
+            "relic_id": "TUNGSTEN_ROD",
+            "name": "钨合金棍",
+            "description": "你每次失去生命时，减少失去的生命值[blue]{HpLossReduction}[/blue]点。",
+            "stack": null,
+            "is_melted": false
+          }
+        ]
+      },
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      }
+    }
+  },
+  "turn8-end": {
+    "evidence": {
+      "run": "UJ0K3G10609Y",
+      "floor": 48,
+      "turn": 8,
+      "attempt": 6,
+      "ts": "2026-10-06T05:26:26.514Z",
+      "offset": 7606963441
+    },
+    "state": {
+      "run_id": "UJ0K3G10609Y",
+      "screen": "COMBAT",
+      "in_combat": true,
+      "turn": 8,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "player": {
+          "current_hp": 2,
+          "max_hp": 81,
+          "block": 21,
+          "energy": 0,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 5,
+              "is_debuff": false
+            },
+            {
+              "index": 3,
+              "power_id": "AFTERIMAGE_POWER",
+              "name": "余像",
+              "amount": 1,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [],
+          "pet_missing": false,
+          "cards_played_this_turn": 7,
+          "attacks_played_this_turn": 4,
+          "skills_played_this_turn": 3
+        },
+        "hand": [],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TEST_SUBJECT",
+            "name": "实验体 #C61",
+            "current_hp": 138,
+            "max_hp": 212,
+            "base_max_hp": 111,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "ADAPTABLE_POWER",
+                "name": "适者生存",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "PAINFUL_STABS_POWER",
+                "name": "疼痛戳刺",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 6,
+                "is_debuff": true
+              },
+              {
+                "index": 3,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intent": "MULTI_CLAW_MOVE",
+            "move_id": "MULTI_CLAW_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8[font_size=18]×5[/font_size]",
+                "damage": 8,
+                "hits": 5,
+                "total_damage": 40,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 40,
+            "damage_after_block": 19,
+            "player_hp": 2,
+            "player_block": 21,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "ascension": 10,
+        "floor": 48,
+        "current_hp": 2,
+        "max_hp": 81,
+        "gold": 62,
+        "max_energy": 3,
+        "act_id": "2",
+        "boss_id": "TEST_SUBJECT_BOSS",
+        "deck": [],
+        "potions": [],
+        "relics": [
+          {
+            "index": 4,
+            "relic_id": "CLOAK_CLASP",
+            "name": "斗篷扣",
+            "description": "在你的回合结束时，每有一张[gold]手牌[/gold]，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 6,
+            "relic_id": "TUNGSTEN_ROD",
+            "name": "钨合金棍",
+            "description": "你每次失去生命时，减少失去的生命值[blue]{HpLossReduction}[/blue]点。",
+            "stack": null,
+            "is_melted": false
+          }
+        ]
+      },
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      }
+    }
+  }
+}

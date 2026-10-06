@@ -2918,6 +2918,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
+    // silent-0177/0178: only Silent enemy-hit evidence; keep Ironclad's model unchanged.
+    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && relicIds.includes("TUNGSTEN_ROD") ? { tungstenRod: true } : {}),
     vigor,
     ...(penNib !== undefined ? { penNib } : {}),
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
