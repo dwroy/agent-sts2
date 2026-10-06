@@ -337,13 +337,13 @@ export interface RouteStart {
   max: number;
 }
 
-const hpAt = (hp: number, max: number): string => (hp > 0 ? `${Math.round(hp)}/${max}` : "0（血量耗尽）");
+const hpAt = (hp: number | null, max: number): string => (hp === null ? "未知（前场 Boss 损血未建模）" : hp > 0 ? `${Math.round(hp)}/${max}` : "0（血量耗尽）");
 
 /** One node's arrival text: "52/80（p75 45）". */
 function arrivalText(median: PathProjection, p75: PathProjection, at: number): string {
   const max = median.maxArrival[at]!;
-  const low = p75.arrival[at]!;
-  return `${hpAt(median.arrival[at]!, max)}（p75 ${low > 0 ? Math.round(low) : "耗尽"}）`;
+  const low = p75.arrival[at] ?? null;
+  return `${hpAt(median.arrival[at] ?? null, max)}（p75 ${low === null ? "未知" : low > 0 ? Math.round(low) : "耗尽"}）`;
 }
 
 /**
@@ -366,8 +366,8 @@ export function routeFacts(map: RouteMap, ids: string[], start: RouteStart, cost
   const rest_sites = nodes.flatMap((node, at) => {
     if (!isRestType(node.type)) return [];
     const max = median.maxArrival[at]!;
-    const heal = (hp: number): string => (hp > 0 ? `${Math.round(restedHp(hp, max, costs.rest).hp)}` : "耗尽");
-    const smith = (hp: number): string => (hp > 0 ? `${Math.round(Math.min(max, hp + enter))}` : "耗尽");
+    const heal = (hp: number | null): string => (hp === null ? "未知" : hp > 0 ? `${Math.round(restedHp(hp, max, costs.rest).hp)}` : "耗尽");
+    const smith = (hp: number | null): string => (hp === null ? "未知" : hp > 0 ? `${Math.round(Math.min(max, hp + enter))}` : "耗尽");
     const healMax = max + (costs.rest?.maxGain ?? 0);
     return [`${where(at)}：到达 ${arrivalText(median, p75, at)}；回血 → ${heal(median.arrival[at]!)}/${healMax}（p75 ${heal(p75.arrival[at]!)}）；锻造（不回血）→ ${smith(median.arrival[at]!)}/${max}（p75 ${smith(p75.arrival[at]!)}）`];
   });
@@ -408,7 +408,7 @@ export function routeFacts(map: RouteMap, ids: string[], start: RouteStart, cost
     facts.if_option = options.map((option) => {
       const run = projectPath(types, option.hp, costs, option.max);
       const low = projectPath(types, option.hp, p75Costs(costs), option.max);
-      const point = (at: number, what: string): string => `${what} ${hpAt(run.arrival[at]!, run.maxArrival[at]!)}（p75 ${low.arrival[at]! > 0 ? Math.round(low.arrival[at]!) : "耗尽"}）`;
+      const point = (at: number, what: string): string => `${what} ${arrivalText(run, low, at)}`;
       const parts = [...(eliteAt >= 0 ? [point(eliteAt, "下一只精英前")] : []), ...(bossAt >= 0 ? [point(bossAt, "boss 前")] : [])];
       return `${option.label}（HP ${hpAt(option.hp, option.max)}）：${parts.join("，") || "路线上没有精英和 boss"}`;
     });
@@ -566,7 +566,7 @@ function wholeRoute(map: RouteMap, ids: string[], start: RouteStart, costs: Room
 /** The route's HP on arriving at its node on `row`, or null when it has none there. */
 function pointAt(route: WholeRoute, row: number): HpPoint | null {
   const at = route.rows.indexOf(row);
-  return at < 0 ? null : { median: route.median.arrival[at]!, p75: route.p75.arrival[at]!, max: route.median.maxArrival[at]! };
+  return at < 0 || route.median.arrival[at] === null || route.p75.arrival[at] === null ? null : { median: route.median.arrival[at]!, p75: route.p75.arrival[at]!, max: route.median.maxArrival[at]! };
 }
 
 /** The route's next elite before the boss (its step), or -1. */
@@ -875,7 +875,7 @@ export interface CandidateRoute {
    * costs its p75 and everything before at the median. Not the whole act at p75 (that runs out on almost every route:
    * a sum of p75 costs is far rarer than p75, route-projection.ts).
    */
-  p75: number[];
+  p75: (number | null)[];
   legs: RouteLeg[];
   bossAt: number;
   elites: number;

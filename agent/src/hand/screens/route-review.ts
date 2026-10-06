@@ -116,7 +116,7 @@ export function routeReviewBlock(env: DecisionEnv, kind: ReviewKind, rooms: read
 /** HP now against what the plan projected when it was made: its next node, its next elite and the boss. */
 function vsPlan(plan: RoutePlan, map: RouteMap, remaining: string[], start: { hp: number; max: number }, kind: ReviewKind): string {
   const steps = plan.path.filter((step) => remaining.includes(nodeId(step.row, step.col)));
-  const at = (step: (typeof steps)[number]): string => `F${floorOfRow(map, step.row)} ${roomName(step.type)} ${Math.round(step.hpOnArrival * start.max)}/${start.max}`;
+  const at = (step: (typeof steps)[number]): string => `F${floorOfRow(map, step.row)} ${roomName(step.type)} ${step.hpOnArrival === null ? "未知（前场 Boss 损血未建模）" : `${Math.round(step.hpOnArrival * start.max)}/${start.max}`}`;
   const next = steps[0];
   const elite = steps.find((step) => step.type === "Elite");
   const boss = steps.find((step) => step.type === "Boss");
