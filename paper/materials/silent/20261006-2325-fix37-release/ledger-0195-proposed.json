@@ -1,0 +1,78 @@
+{
+  "id": "silent-0195",
+  "ts": "2026-10-06T22:28:06+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "SL判官判断攻击前眩晕时只检查回合末来源伤害hit，hit为0即跳过，未让中毒跨横冲直撞阈值取消攻击；毒伤上界又只取单次毒层数，未计触媒额外触发。本局第三、第五次因此在求解器报损0时被误读档，末次实结算毒越阈值后保留3血证明当前回合非必死；不据此声称整场能赢。",
+  "evidence": [
+    {
+      "run": "KUZVERN40NGK",
+      "floor": 17,
+      "turn": 5,
+      "note": "第3次末164血6毒，玩家触媒1、11血0挡；求解器报11毒及损0，SL以26攻击判死读档，毒未结算。只读live agent/src/sl/judge.ts:1316—1319未把毒纳入阈值；:1307仅一次毒量，controller.ts:1109/1127消费判官结果。",
+      "role": "support",
+      "added": "2026-10-06T22:28:06+08:00"
+    },
+    {
+      "run": "KUZVERN40NGK",
+      "floor": 17,
+      "turn": 6,
+      "note": "第5次末167血12毒、触媒1、玩家3血；求解器报23毒及损0，SL按28攻击读档，毒未结算。",
+      "role": "support",
+      "added": "2026-10-06T22:28:06+08:00"
+    },
+    {
+      "run": "KUZVERN40NGK",
+      "floor": 17,
+      "turn": 6,
+      "note": "末次在173血9毒、触媒1下实际结算9+8=17到156，玩家仍3血；T7敌横冲直撞160和8力量消失，招式兽吼不攻击，证明毒越阈值能取消这一轮28攻击。",
+      "role": "support",
+      "added": "2026-10-06T22:28:06+08:00"
+    }
+  ],
+  "first_run": "KUZVERN40NGK",
+  "prior": "unknown",
+  "prior_runs": [
+    "9YBKCNBFP0X5",
+    "75X1BARMNZ03",
+    "3KME36ADUE4U",
+    "0NZXA12NLDMH"
+  ],
+  "prior_note": "查silent账本、此前角色复盘及十一局仪式兽的决策和SL记录：9YBK T5毒使153→137且52血不变、75X T5毒使155→141且37血不变，已会继续结算；其他低血mismatch有可打牌或毒斩杀，不是无牌且毒越阈值被判官拦下的同局面，缺可比先验，记unknown。",
+  "status": "proposed",
+  "where": {
+    "lessons": [
+      "KUZVERN40NGK"
+    ],
+    "commits": [
+      "PLACEHOLDER",
+      "f6ff3a9ce42337972b19ee227b2d51432e929f50"
+    ]
+  },
+  "note": "新bug，两份fix-queue无同项；0133是既有阈值机制、0127是未知眩晕后继招式模拟，均不是本项修复。运行code=28e339fa+dirty，定位取只读live 6ac57ea6。",
+  "asc": 10,
+  "history": [
+    {
+      "ts": "2026-10-06T22:28:06+08:00",
+      "by": "learner:postmortem",
+      "status": "observed"
+    },
+    {
+      "ts": "2026-10-06T23:12:47+08:00",
+      "by": "learner:fix-batch",
+      "status": "proposed"
+    },
+    {
+      "ts": "2026-10-06T23:13:18+08:00",
+      "by": "learner:fix-batch",
+      "status": "proposed"
+    }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+    "新bug，两份fix-queue无同项；0133是既有阈值机制、0127是未知眩晕后继招式模拟，均不是本项修复。运行code=28e339fa+dirty，定位取只读live 6ac57ea6。",
+    "追加勘误：本批上一行where.commits误写PLACEHOLDER，该占位符无效，不是提交、不作为上线去向。唯一有效修复源码提交为f6ff3a9ce42337972b19ee227b2d51432e929f50；旧行按只追加协议保留。来源KUZVERN40NGK SILENT A10 F17第3次T5、第5次T6、末次T6/T7，首次证据/先验/旧0133与0127保持。"
+  ]
+}

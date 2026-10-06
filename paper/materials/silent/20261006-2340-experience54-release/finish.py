@@ -1,0 +1,18 @@
+import hashlib,json,subprocess
+from pathlib import Path
+O=Path(__file__).parent;ROOT=O.parents[2]
+M=json.load(open(O/'live-merge.json'));C=json.load(open(O/'changes.json'));S=json.load(open(O/'slice-summary.json'));L=json.load(open(O/'ledger-result.json'))
+assert M.get('release_commit') and M['test_rc']==0
+stamp=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %z'],text=True).strip();source=(O/'commit.txt').read_text().strip()
+subprocess.run(['python3',str(ROOT/'learner/ledger.py'),'check'],check=True,stdout=(O/'ledger-check-final.log').open('w'))
+closing=f'\n本节收尾（{stamp}）：源{source}，实际live合入{M["merged"]}，上线登记{M["release_commit"]}、eval {M["eval_version"]}。源tsc0/vitest0、{M["source_tests"]["files"]}文件/{M["source_tests"]["cases"]}用例；合后tsc0/vitest0、{M["live_tests"]["files"]}文件/{M["live_tests"]["cases"]}用例；'+('合后重跑一次通过' if M.get('test_first_rc') else '源及合后均首轮通过、无失败重跑')+f'。新增1更新12（12补证、0只数字）退役0，active125→126、54968→{C["after"]["chars"]}字，高57中41低28，A8 119条52352字、A9 120条52651字、A10 121条53359字；240配对中位增量{S["median_delta"]}、最大{S["before_max"]}→{S["after_max"]}。旧65局全部明细/血档/节点/回血/SL逐行一致，新66局1040房56实死。石虫32局59明确窗口0反例，0196的LRN0HPZ0FZS1首证/prior=yes保持；三虫四试0赢、前三次判死未结算不补死、末毒杀石虫取消16但甲虫15仍杀4血0挡；无不同目标胜因，不规定先杀。毒组件跨战重新启动、未来四火未到和低血节点仅观察；无新用药规则/无步法牌新证据。账本新增/退役无，proposed '+','.join(L['proposed'])+f'，最终check0，first_run/prior/claim/旧version/repeat保持。刷新提交{M.get("refresh_commit")}、合前{M["base"]}，知识不同blob冲突0，经验重叠仅为已测改前.28、其他知识blob保持；预检rc1仅双方追加decision-log冲突，union后双方有序原文全部保留、无知识冲突，实际合入后首轮自测通过。无源码/生成器/手写知识/其他角色变更、不重建；live已有S1.fix36/37修复保留。交接learner/runs/20261006-231302-experience-update/handoff-ops.md及调用器experience-done通知运维，运维核实际合入后CLI登记13项shipped、完整沙箱外检查由调度器补跑。主目录本节/账本只追加不提交；不停对局、不运行play、不推送。需要Dai定：无。\n'
+(O/'changelog-closing.md').write_text(closing)
+p=ROOT/'paper/materials/experience-changelog-silent.md';origin=json.load(open(O/'changelog-origin.json'));before=p.read_bytes();assert hashlib.sha256(before[:origin['bytes']]).hexdigest()==origin['sha256']
+with p.open('ab') as f:f.write(closing.encode())
+assert p.read_bytes()[:len(before)]==before
+handoff=f'# 静默经验第54批上线交接\n\n时间：{stamp}\n\n- 来源：BVF22RSFVBS9 SILENT A10，notes/lessons.md:5171；只改经验数据，无代码/生成器/手写知识/其他角色变化。\n- 源：{source}（exp-silent）；实际合入：{M["merged"]}；固定上线登记：{M["release_commit"]}；eval：{M["eval_version"]}；经验：2026-10-06.28→2026-10-06.29。\n- 源与合后首轮沙箱tsc/vitest0，分别{M["source_tests"]["files"]}文件/{M["source_tests"]["cases"]}例与{M["live_tests"]["files"]}文件/{M["live_tests"]["cases"]}例。完整沙箱外检查交调度器。\n- 新增1更新12退役0，active126/55756字；石虫32支持局59窗口0反例，0196首证LRN0HPZ0FZS1/A0、prior=yes保持。四尝试0赢仅一实死，不声称改变单项可胜，无新用药规则。\n- 刷新提交：{M.get("refresh_commit")}；合前保留点：{M["base"]}；知识实际冲突0，其余blob保持；双方追加日志union保留有序历史，S1.fix36/37保持。\n- 以下13账本项仅proposed/check0，请据实际合入经ledger.py登记shipped（无需另审）：'+','.join(L['proposed'])+'。first_run/prior/claim/旧version/repeat保持，0193/0195及其他旧项不重置。\n- 主目录第54节和账本只追加、未提交，请调用方提交；源经验已提交、不推送；不停对局、不运行play。\n- 产物、证据、原临时断言失败/修正、自测原日志：本目录。\n'
+(O/'handoff-ops.md').write_text(handoff)
+result=dict(task='experience-update',version=C['version_after'],commit=source,merged=M['merged'],added=len(C['added']),updated=len(C['updated']),retired=0,active=C['after']['active'],mechanisms=json.load(open(O/'report-mechanisms.json')),tests=dict(tsc=0,vitest=0,cases=M['live_tests']['cases']),ledger=L)
+(O/'report.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');print(json.dumps(result,ensure_ascii=False))
+for name in ['changelog-closing.md','handoff-ops.md']:
+ with (O/('gitleaks-'+name+'.log')).open('w') as f:subprocess.run(['nice','-n','19',str(Path.home()/'.local/bin/gitleaks'),'dir','--redact','--no-banner',str(O/name)],check=True,stdout=f,stderr=subprocess.STDOUT)

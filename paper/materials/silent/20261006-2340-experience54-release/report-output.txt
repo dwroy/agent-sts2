@@ -1,0 +1,53 @@
+## 经验库更新回报
+
+- 版本：2026-10-06.28 → 2026-10-06.29；提交：4cf918b6（分支 exp-silent）；合入：3caa860b（live，S1.exp54）
+- 条数：新增 1、更新 12（加证据 12、只改数字 0）、退役 0；active 125 → 126，共 55756 字；A8 适用 119 条／52352 字，A9 适用 120 条／52651 字
+- 机制推理：
+  - 石虫失衡 — 自身攻击被完整挡住后眩晕，其他敌人仍可造成损失 — 支持32／反例0 — LRN0HPZ0FZS1、BVF22RSFVBS9
+  - 力量与敏捷 — 加成逐击、逐挡牌兑现，临时收益分轮核 — 支持62／反例0 — BVF22RSFVBS9
+  - 毒雾 — 建立后须活到下一轮补毒，新战重新启动 — 支持32／反例0 — BVF22RSFVBS9
+  - 触媒 — 增加毒触发次数，自身不施毒 — 支持23／反例0 — BVF22RSFVBS9
+  - 咕嘟冒泡 — 已中毒目标才兑现加毒 — 支持12／反例0 — BVF22RSFVBS9
+  - 致命毒药 — 施毒与实际结算分账 — 支持26／反例0 — BVF22RSFVBS9
+  - 带毒刺击 — 攻击被挡时仍可施毒 — 支持19／反例0 — BVF22RSFVBS9
+  - 尖啸 — 临时减力不关闭其他敌人的成长 — 支持26／反例0 — BVF22RSFVBS9
+  - 甲虫成长 — 醒后持续加力；四次失败不足以确定击杀顺序 — 支持11／反例0 — BVF22RSFVBS9
+  - 毒跨阈值 — 可取消当轮攻击，后段威胁仍须另算 — 支持13／反例0 — BVF22RSFVBS9
+  - 构筑兑现观察 — 前战启动与胜利不能预支为新战输出 — 支持61／反例0 — BVF22RSFVBS9
+- 改了的手写知识：无
+- 测试：源及合后 tsc 均退出 0；vitest 源 208 文件／2237 用例／退出0，合后 209 文件／2245 用例／退出0；均首轮通过
+- 切片大小：配对增量中位 +79 字；最大 6201 → 6152 字
+- 学习账本：新增无；改成 proposed：silent-0006、0007、0010、0011、0019、0020、0021、0027、0030、0046、0128、0133、0196；退役无；`ledger.py check` 退出码 0
+- 需要 Dai 定的事：无
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-06.29",
+  "commit": "4cf918b6ffa019945c2f99f2d6428ea5102f63be",
+  "merged": "3caa860b03e4ed76a2afd81635f9c52c18e456c4",
+  "added": 1,
+  "updated": 12,
+  "retired": 0,
+  "active": 126,
+  "mechanisms": ["石虫失衡", "力量逐击/敏捷背景", "毒雾启动/补毒", "触媒额外触发", "冒泡条件", "毒药施毒", "刺击直伤/施毒", "尖啸临时减力", "甲虫醒后成长/SL观察", "毒跨阈值/后段", "构筑兑现观察"],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2245},
+  "ledger": {
+    "added": [],
+    "proposed": ["silent-0006", "silent-0007", "silent-0010", "silent-0011", "silent-0019", "silent-0020", "silent-0021", "silent-0027", "silent-0030", "silent-0046", "silent-0128", "silent-0133", "silent-0196"],
+    "retired": [],
+    "check": 0
+  }
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a111c6-7adc-74d1-8fbb-f8c9f0ab80fc
+轮数：1；工具调用：command_execution×57
+token：输入 194.6k、输出 47.5k（其中推理 15.8k）、cache 读 6540.3k、cache 写 0（命中 97.1%）
+成本：未提供
+耗时：1606.0 s（墙钟）
+时间：首个事件 1.6 s、模型首个输出 7.0 s、首次工具 9.3 s、末次工具结束 1536.8 s；工具内共 984.0 s，其余（模型生成、推理、网络）620.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×48；/home/dw/.codex-sts2/sessions/2026/10/06/rollout-2026-10-06T23-13-02-01a111c6-7adc-74d1-8fbb-f8c9f0ab80fc.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261006-231302-experience-update.jsonl
