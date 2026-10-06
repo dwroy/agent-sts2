@@ -612,3 +612,11 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 来源：ops/codex-ops/learner/20261007-004301.out；notes/lessons.md本局正文及01:01:00勘误；paper/materials/learning/ledger.jsonl的0197。0198联合遗物净值为机制观察，留学习者处理；其他未核定推演差额不增列bug。
 
 - 2026-10-07 01:41 运维codex按01:34 fix-done核实源62b0e23f0a45b2f331261947cbc9168dde36e39a→实际live代码9e20ade95055b14ed77446313fd6e71e2f2ff2d5→固定发布a12bc862a77a191518c2854c3dbbd4348f02f0b4/唯一S1.fix38，main机械同步a1a7b937d4a3b753a0fcff81a5e1ab1ca26d6ef4；源及合后首轮沙箱tsc0/vitest0各210文件2254例，撤源4失败5通过／恢复相关3文件189例含新9通过，两次初稿和首次预合并追加冲突历史保留。仅CLI/by=ops登记0197 shipped并关闭本项，first_run=Y6GM2CHWJBEY/A0/prior=no、claim/支持/repeat/历史保持，0198独立S1.exp56及其他旧项不重置；三项自动知识刷新保留，不声称整场可转胜，完整外部待本批learner-checks。
+
+## 2026-10-07 02:20 A10复盘：重放附魔的额外打出漏入跨回合凋萎累计（交学习者）
+
+- [ ] **非阻塞计数bug，silent-0199，仅转录学习者定位**：DPYF2BAA3DKT SILENT A10/F48沙漏末次T1防御+重放同一步格挡0→24，现场cards_played_this_turn只4→5；手动7次、实际8次。前六轮手动累计25、含首轮重放26，T7串刺跨手动29／实际30门槛，新增第二张9伤凋萎。方案原报损26、28血剩2，重读实际手牌才报完整损35／剩−7，局部差9伤；末态玩家0血、敌117血。
+- 学习者只读live a12bc862定位combat-plan.ts:1485保留每轮原始计数最大值、:1521求和仅额外补投斧，turn-solver.ts:2918消费累计门槛，未保留本局已观测防御附魔重放。原局ad01f74a+dirty不声称复原；与已有投斧／音乐盒计数修复及余像格挡缺口分账，0172/S1.fix39、0173/S1.exp42等旧状态不重置。
+- 0199首个明确误判证据DPYF2BAA3DKT/A10、prior=unknown/status=observed；更早LRN0HPZ0FZS1/A0仅能确认实际重放／原始计数分离，未找到可单独归因的旧版生死误判，不改写先验。独立0200机制首证仍LRN/A0、prior=unknown，交学习者处理，不冒标shipped。
+- 该局六次沙漏尝试、前五次读档后末次正常阵亡，没有本项导致的卡死／崩溃／非法动作；没有修正后的替代整场实打，不声称修复可转胜。请学习者依本角色对局证据修计数状态并做固定红绿验证，自测后按live流程合入，铁甲及无关行为保持等价。运维不添加机制或打法。
+- 来源：ops/codex-ops/learner/20261007-014301.out、notes/lessons.md两局原正文、paper/materials/learning/ledger.jsonl的0199／0200；证据摘录learner/runs/20261007-014302-postmortem/。CRK2HNYKSCZC末轮least-loss余0与实际吻合；其他未核定推演差额和策略取舍不增列纯bug。
