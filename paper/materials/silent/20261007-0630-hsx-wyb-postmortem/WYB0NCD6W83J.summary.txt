@@ -1,0 +1,74 @@
+局 WYB0NCD6W83J 用时 581.065
+Jev总/低信心 37 5
+选线/最优 29 Counter({'True': 28, 'None': 1})
+护栏 []
+其他字段 Counter({'answers': 37, 'jev_context': 29, 'jev_hints': 29, 'rollout': 29, 'rollout_best_chosen': 29, 'timing': 29, 'route_review': 10, 'potions': 6, 'chosen_order': 4, 'focus': 4, 'thief': 2, 'route_plan': 1})
+大脑 1 event/plan {'choice': '奥术卷轴: 获得一张随机稀有牌。', 'reason': 'A free rare offers valuable damage or scaling without sacrificing starting health; two basic upgrades have limited long-term impact.'} Codex decided o0: A free rare offers valuable damage or scaling without sacrificing starting health; two basic upgrades have limited long-term impact. | Codex chose 奥术卷轴 (code's fallback order: 0, rank 1 of 3; not shown to Codex)
+大脑 1 map/route-plan {'choice': 'route r1c6 普通战 → r2c6 问号 → r3c5 普通战 → r4c6 普通战 → r5c6 普通战 → r6c5 问号 → r7c6 商店 → r8c6 休息 → r9c6 宝箱 → r10c5 问号 → r11c5 休息 → r12c6 问号 → r13c6 问号 → r14c6 精英 → r15c6 休息 → r16c3 Boss', 'reason': '前期战斗补输出，商店强化，三火保障后期精英与首领血量。'} Codex planned: 前期战斗补输出，商店强化，三火保障后期精英与首领血量。 | route plan: r1c6 普通战 → r2c6 问号 → r3c5 普通战 → r4c6 普通战 → r5c6 普通战 → r6c5 问号 → r7c6 商店 → r8c6 休息 → r9c6 宝箱 → r10c5 问号 → r11c5 休息 → r12c6 问号 → r13c6 问号 → r14c6 精英 → r15c6 休息 → r16c3 Boss
+大脑 2 reward/card {'choice': '斗篷与匕首', 'reason': 'Cloak and Dagger adds efficient defense and immediate damage; its upgrade supports future Shiv synergies. Accuracy lacks generators; Prepared lacks discard payoffs.'} Codex decided card1: Cloak and Dagger adds efficient defense and immediate damage; its upgrade supports future Shiv synergies. Accuracy lacks generators; Prepared lacks discard payoffs. | Codex chose 斗篷与匕首 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+大脑 3 event/choose {'choice': '装瓶: 获得一瓶发光水。', 'reason': 'Free glowing water preserves maximum HP; the lens only improves future additions and sacrifices valuable healing capacity before a punishing boss.'} Codex decided o0: Free glowing water preserves maximum HP; the lens only improves future additions and sacrifices valuable healing capacity before a punishing boss. | Codex chose 装瓶 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+喝药 4 1 {'potion': {'id': 'GLOWWATER_POTION'}, 'turn': 1, 'from': 'decision'} Jev chose to drink 发光水, then re-plan (confidence 0.68)
+喝药 4 2 {'potion': {'id': 'ATTACK_POTION'}, 'turn': 2, 'from': 'decision'} Jev chose to drink 攻击药水, then re-plan (confidence 0.22)
+大脑 4 reward/card {'choice': '致命毒药', 'reason': 'Deadly Poison adds efficient sustained damage, best improves projected boss damage, and establishes poison synergies; logged Act 1 outcomes support taking it.'} Codex decided card1: Deadly Poison adds efficient sustained damage, best improves projected boss damage, and establishes poison synergies; logged Act 1 outcomes support taking it. | Codex chose 致命毒药 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+大脑 5 reward/card {'choice': '偏折', 'reason': 'Deflect adds energy-free defense, supports future Dexterity scaling, and has the strongest observed Act 1 outcomes and boss simulation.'} Codex decided card0: Deflect adds energy-free defense, supports future Dexterity scaling, and has the strongest observed Act 1 outcomes and boss simulation. | Codex chose 偏折 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+喝药 6 1 {'potion': {'id': 'POWDERED_DEMISE'}, 'target': {'id': 'DAMP_CULTIST'}, 'turn': 1, 'from': 'line', 'hand': 'ASCENDERS_BANE,CLOAK_AND_DAGGER,DEFEND_SILENT,DEFEND_SILENT', 'enemies': '0:CALCIFIED_CULTIST|1:DAMP_CULTIST'} continuing the Jev-chosen plan: potion 消亡粉末 -> 潮湿邪教徒
+大脑 6 reward/card {'choice': '咕嘟冒泡', 'reason': 'Deadly Poison enables Bubble Bubble; Well-Laid Plans helps coordinate them. Its substantial simulated boss improvement outweighs Poisoned Stab’s immediate damage.'} Codex decided card2: Deadly Poison enables Bubble Bubble; Well-Laid Plans helps coordinate them. Its substantial simulated boss improvement outweighs Poisoned Stab’s immediate damage. | Codex chose 咕嘟冒泡 (Skill, 1E) (code's fallback order: 50, rank 2 of 4; not shown to Codex)
+喝药 7 1 {'potion': {'id': 'COLORLESS_POTION'}, 'turn': 1, 'from': 'decision'} Jev chose to drink 无色药水, then re-plan (confidence 0.85)
+大脑 7 reward/card {'choice': '切割', 'reason': 'Free damage improves hallway tempo without competing with poison or block. Its simulated boss difference is inconclusive; logged outcomes favor taking it.'} Codex decided card2: Free damage improves hallway tempo without competing with poison or block. Its simulated boss difference is inconclusive; logged outcomes favor taking it. | Codex chose 切割 (Attack, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+大脑 8 shop/plan {'choice': 'shop plan: buy 应急按钮 (87g), stop shopping', 'reason': 'Emergency Button adds crucial burst defense. Well-Laid Plans retains it for the giant’s post-kill explosion, where its subsequent blocking penalty becomes irrelevant.'} Codex planned: Emergency Button adds crucial burst defense. Well-Laid Plans retains it for the giant’s post-kill explosion, where its subsequent blocking penalty becomes irrelevant. | plan WYB0NCD6W83J:F8:shop#2: buy 应急按钮 (87g), stop shopping; step 1: buy 应急按钮 (87g)
+大脑 8 shop/buy {'choice': 'DeepSeek plan WYB0NCD6W83J:F8:shop#2 step 2: stop shopping', 'reason': ''} Codex plan WYB0NCD6W83J:F8:shop#2 step 2: stop shopping
+大脑 9 rest/plan {'choice': '锻造 (SMITH): upgrade 咕嘟冒泡', 'reason': 'Bubble Bubble improves lasting poison damage nearly as much as healing improves boss odds; no guaranteed fights before the next rest.'} Codex decided o1:c17: Bubble Bubble improves lasting poison damage nearly as much as healing improves boss odds; no guaranteed fights before the next rest. | Codex chose 锻造 (SMITH): upgrade 咕嘟冒泡 (code's fallback order: 6.05, rank 1 of 12; not shown to Codex)
+大脑 9 selection/upgrade {'choice': 'DeepSeek plan WYB0NCD6W83J:F9:rest#3 step 2: upgrade 咕嘟冒泡 (named with the rest choice)', 'reason': ''} Codex plan WYB0NCD6W83J:F9:rest#3 step 2: upgrade 咕嘟冒泡 (named with the rest choice)
+大脑 11 event/choose {'choice': '第一个箱子: 获得66金币。', 'reason': 'Take safe gold. No shop remains before the boss, so Greed cannot be removed and would burden an already fragile deck.'} Codex decided o0: Take safe gold. No shop remains before the boss, so Greed cannot be removed and would burden an already fragile deck. | Codex chose 第一个箱子 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+大脑 12 rest/plan {'choice': '休息: 回复最大生命值的30%（21）。', 'reason': 'Healing provides essential buffer before the forced elite and substantially better projected boss survival than any upgrade.'} Codex decided o0: Healing provides essential buffer before the forced elite and substantially better projected boss survival than any upgrade. | Codex chose 休息 (HEAL) (code's fallback order: 8, rank 1 of 11; not shown to Codex)
+喝药 13 1 {'potion': {'id': 'STRENGTH_POTION'}, 'turn': 1, 'from': 'decision'} Jev chose plan 1/3 (potion 力量药水) with confidence 0.53; code rank 1
+大脑 13 reward/card {'choice': '后空翻', 'reason': 'Backflip improves poison consistency, supplies block, and finds retained burst defense; strongest supported boss improvement and useful throughout the run.'} Codex decided card1: Backflip improves poison consistency, supplies block, and finds retained burst defense; strongest supported boss improvement and useful throughout the run. | Codex chose 后空翻 (Skill, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)
+大脑 14 event/choose {'choice': '敬而远之: 回复10点生命。', 'reason': 'Healing strengthens the forced-elite buffer and substantially improves projected boss survival; two maximum HP cannot justify sacrificing current health.'} Codex decided o1: Healing strengthens the forced-elite buffer and substantially improves projected boss survival; two maximum HP cannot justify sacrificing current health. | Codex chose 敬而远之 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+战斗 0 2 进 56 敌 [('淤泥旋螺', 'SLUDGE_SPINNER', 41)]
+轮 1 HP 56 56 需/尾 [(41, 0)] [(29, 0)] 挡 8 来袭 [[9, None]] 玩家势 [] 敌势 [[]]
+轮 2 HP 55 55 需/尾 [(29, 0)] [(25, 0)] 挡 10 来袭 [[7, None]] 玩家势 [('WEAK_POWER', 1)] 敌势 [[]]
+轮 3 HP 55 55 需/尾 [(25, 0)] [(16, 0)] 挡 10 来袭 [[11]] 玩家势 [] 敌势 [[('STRENGTH_POWER', 3), ('WEAK_POWER', 1)]]
+轮 4 HP 54 54 需/尾 [(16, 0)] [(10, 0)] 挡 13 来袭 [[12, None]] 玩家势 [] 敌势 [[('STRENGTH_POWER', 3)]]
+轮 5 HP 54 54 需/尾 [(10, 0)] [(2, 0)] 挡 0 来袭 [[15]] 玩家势 [('WEAK_POWER', 1)] 敌势 [[('STRENGTH_POWER', 3)]]
+末快照 2026-10-06T21:56:48.590Z COMBAT 54
+战斗 1 4 进 54 敌 [('海洋混混', 'SEAPUNK', 49)]
+轮 1 HP 54 54 需/尾 [(49, 0)] [(40, 0)] 挡 10 来袭 [[9]] 玩家势 [] 敌势 [[('WEAK_POWER', 1)]]
+轮 2 HP 54 54 需/尾 [(40, 0)] [(16, 0)] 挡 5 来袭 [[4]] 玩家势 [('DRAW_CARDS_NEXT_TURN_POWER', 2)] 敌势 [[('WEAK_POWER', 1)]]
+轮 3 HP 54 54 需/尾 [(16, 0)] [(4, 0)] 挡 0 来袭 [[None, None]] 玩家势 [] 敌势 [[]]
+末快照 2026-10-06T21:57:52.377Z COMBAT 54
+战斗 2 5 进 54 敌 [('噬尸蛞蝓', 'CORPSE_SLUG', 28), ('噬尸蛞蝓', 'CORPSE_SLUG', 29)]
+轮 1 HP 54 54 需/尾 [(28, 0), (29, 0)] [(28, 0), (29, 0)] 挡 10 来袭 [[6], [9]] 玩家势 [] 敌势 [[('RAVENOUS_POWER', 5)], [('RAVENOUS_POWER', 5), ('POISON_POWER', 5)]]
+轮 2 HP 49 49 需/尾 [(28, 0), (24, 0)] [(15, 0), (24, 0)] 挡 6 来袭 [[6], [None]] 玩家势 [] 敌势 [[('RAVENOUS_POWER', 5), ('WEAK_POWER', 1)], [('RAVENOUS_POWER', 5), ('POISON_POWER', 4)]]
+轮 3 HP 49 49 需/尾 [(15, 0), (20, 0)] [(3, 0), (20, 0)] 挡 6 来袭 [[None], [6]] 玩家势 [('FRAIL_POWER', 2)] 敌势 [[('RAVENOUS_POWER', 5)], [('RAVENOUS_POWER', 5), ('POISON_POWER', 3)]]
+轮 4 HP 49 49 需/尾 [(3, 0), (17, 0)] [(17, 0)] 挡 0 来袭 [[None]] 玩家势 [('FRAIL_POWER', 3), ('WELL_LAID_PLANS_POWER', 1)] 敌势 [[('RAVENOUS_POWER', 5), ('POISON_POWER', 7), ('STRENGTH_POWER', 5)]]
+轮 5 HP 49 49 需/尾 [(10, 0)] [(4, 0)] 挡 0 来袭 [[14]] 玩家势 [('FRAIL_POWER', 2), ('WELL_LAID_PLANS_POWER', 1)] 敌势 [[('RAVENOUS_POWER', 5), ('POISON_POWER', 6), ('STRENGTH_POWER', 5)]]
+末快照 2026-10-06T21:58:49.098Z COMBAT 49
+战斗 3 6 进 49 敌 [('钙化邪教徒', 'CALCIFIED_CULTIST', 42), ('潮湿邪教徒', 'DAMP_CULTIST', 54)]
+轮 1 HP 49 49 需/尾 [(42, 0), (54, 0)] [(30, 0), (54, 0)] 挡 0 来袭 [[None], [None]] 玩家势 [] 敌势 [[('POISON_POWER', 5)], [('DEMISE_POWER', 9)]]
+轮 2 HP 49 49 需/尾 [(25, 0), (45, 0)] [(10, 0), (45, 0)] 挡 5 来袭 [[8], [3]] 玩家势 [] 敌势 [[('POISON_POWER', 4), ('RITUAL_POWER', 2), ('WEAK_POWER', 1)], [('DEMISE_POWER', 9), ('RITUAL_POWER', 6)]]
+轮 3 HP 43 43 需/尾 [(6, 0), (36, 0)] [(36, 0)] 挡 12 来袭 [[9]] 玩家势 [] 敌势 [[('DEMISE_POWER', 9), ('RITUAL_POWER', 6), ('STRENGTH_POWER', 6)]]
+轮 4 HP 43 43 需/尾 [(27, 0)] [(21, 0)] 挡 10 来袭 [[15]] 玩家势 [] 敌势 [[('DEMISE_POWER', 9), ('RITUAL_POWER', 6), ('STRENGTH_POWER', 12)]]
+轮 5 HP 38 38 需/尾 [(12, 0)] [(6, 0)] 挡 0 来袭 [[21]] 玩家势 [] 敌势 [[('DEMISE_POWER', 9), ('RITUAL_POWER', 6), ('STRENGTH_POWER', 18)]]
+末快照 2026-10-06T21:59:48.820Z COMBAT 38
+战斗 4 7 进 38 敌 [('地精佣兵', 'GREMLIN_MERC', 52)]
+轮 1 HP 38 38 需/尾 [(52, 0)] [(41, 0)] 挡 14 来袭 [[16]] 玩家势 [] 敌势 [[('SURPRISE_POWER', 1), ('THIEVERY_POWER', 20), ('POISON_POWER', 5)]]
+轮 2 HP 36 36 需/尾 [(36, 0)] [(18, 0)] 挡 14 来袭 [[10, None]] 玩家势 [] 敌势 [[('SURPRISE_POWER', 1), ('THIEVERY_POWER', 20), ('POISON_POWER', 4), ('WEAK_POWER', 1)]]
+轮 3 HP 36 36 需/尾 [(14, 0)] [(12, 0), (17, 0)] 挡 0 来袭 [[None], [None]] 玩家势 [('WEAK_POWER', 2)] 敌势 [[], [('HEIST_POWER', 40)]]
+轮 4 HP 36 36 需/尾 [(12, 0), (17, 0)] [(12, 0), (9, 0)] 挡 0 来袭 [[10], [None]] 玩家势 [('WEAK_POWER', 1)] 敌势 [[('POISON_POWER', 14)], [('HEIST_POWER', 40)]]
+末快照 2026-10-06T22:00:45.188Z COMBAT 36
+战斗 5 13 进 57 敌 [('下水道蚌', 'SEWER_CLAM', 58)]
+轮 1 HP 57 57 需/尾 [(58, 9)] [(58, 9)] 挡 10 来袭 [[11]] 玩家势 [('WELL_LAID_PLANS_POWER', 1), ('STRENGTH_POWER', 2)] 敌势 [[('PLATING_POWER', 9), ('POISON_POWER', 5)]]
+轮 2 HP 56 56 需/尾 [(53, 9)] [(30, 0)] 挡 0 来袭 [[None]] 玩家势 [('WELL_LAID_PLANS_POWER', 1), ('STRENGTH_POWER', 2)] 敌势 [[('PLATING_POWER', 9), ('POISON_POWER', 4)]]
+轮 3 HP 56 56 需/尾 [(26, 8)] [(21, 0)] 挡 30 来袭 [[11]] 玩家势 [('WELL_LAID_PLANS_POWER', 1), ('STRENGTH_POWER', 2), ('NO_BLOCK_POWER', 2)] 敌势 [[('PLATING_POWER', 8), ('POISON_POWER', 15), ('STRENGTH_POWER', 4), ('WEAK_POWER', 1)]]
+轮 4 HP 56 56 需/尾 [(6, 7)] [(6, 7)] 挡 0 来袭 [[None]] 玩家势 [('WELL_LAID_PLANS_POWER', 1), ('STRENGTH_POWER', 2), ('NO_BLOCK_POWER', 1)] 敌势 [[('PLATING_POWER', 7), ('POISON_POWER', 14), ('STRENGTH_POWER', 4)]]
+末快照 2026-10-06T22:03:20.819Z COMBAT 56
+战斗 6 15 进 66 敌 [('花园幽灵鳗', 'PHANTASMAL_GARDENER', 31), ('花园幽灵鳗', 'PHANTASMAL_GARDENER', 32), ('花园幽灵鳗', 'PHANTASMAL_GARDENER', 27), ('花园幽灵鳗', 'PHANTASMAL_GARDENER', 28)]
+轮 1 HP 66 66 需/尾 [(31, 0), (32, 0), (27, 0), (28, 0)] [(25, 7), (32, 0), (27, 0), (22, 7)] 挡 15 来袭 [[3], [5], [7], [None]] 玩家势 [] 敌势 [[('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7)]]
+轮 2 HP 66 66 需/尾 [(25, 0), (32, 0), (27, 0), (22, 0)] [(19, 7), (32, 0), (27, 0), (22, 0)] 挡 14 来袭 [[None], [7], [3], [8]] 玩家势 [] 敌势 [[('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)]]
+轮 3 HP 62 62 需/尾 [(19, 0), (32, 0), (27, 0), (22, 0)] [(13, 7), (32, 0), (21, 7), (16, 7)] 挡 5 来袭 [[8], [3], [None], [10]] 玩家势 [] 敌势 [[('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)]]
+轮 4 HP 46 46 需/尾 [(13, 0), (32, 0), (21, 0), (16, 0)] [(10, 7), (32, 0), (21, 0), (16, 0)] 挡 8 来袭 [[7], [None], [8], [12]] 玩家势 [] 敌势 [[('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3), ('POISON_POWER', 5), ('WEAK_POWER', 1)], [('SKITTISH_POWER', 7)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)]]
+轮 5 HP 27 27 需/尾 [(5, 0), (32, 0), (21, 0), (16, 0)] [(26, 7), (21, 0), (16, 0)] 挡 14 来袭 [[8], [10], [None]] 玩家势 [] 敌势 [[('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)]]
+轮 6 HP 23 23 需/尾 [(26, 0), (21, 0), (16, 0)] [(22, 7), (15, 7), (16, 0)] 挡 36 来袭 [[10], [12], [11]] 玩家势 [('NO_BLOCK_POWER', 2)] 敌势 [[('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 6)]]
+轮 7 HP 23 23 需/尾 [(22, 0), (15, 0), (16, 0)] [(19, 7), (9, 7), (10, 7)] 挡 0 来袭 [[9], [None], [13]] 玩家势 [('NO_BLOCK_POWER', 1)] 敌势 [[('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3), ('WEAK_POWER', 1)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 6)]]
+轮 8 HP 1 1 需/尾 [(19, 0), (9, 0), (10, 0)] [(19, 0), (9, 0), (4, 7)] 挡 10 来袭 [[None], [11], [21]] 玩家势 [] 敌势 [[('SKITTISH_POWER', 7), ('STRENGTH_POWER', 3)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 6)], [('SKITTISH_POWER', 7), ('STRENGTH_POWER', 6), ('POISON_POWER', 5)]]
+末快照 2026-10-06T22:05:29.864Z COMBAT 1
