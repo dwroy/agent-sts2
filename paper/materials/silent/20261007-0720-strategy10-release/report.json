@@ -1,0 +1,68 @@
+{
+  "task": "strategy-proposal",
+  "base": "b8894feb36d805e13d15911830610e6bd3c8fec3",
+  "runs": [
+    "HUVEPWQAHWFU",
+    "UMVLWER4CD98",
+    "TU3XB4CAEDAW",
+    "V0383V5S9BCQ",
+    "8R5CXD5C8PW8",
+    "QNTW139MGECA",
+    "HSX4HYATB4E2",
+    "WYB0NCD6W83J",
+    "87LCSDR5P3DL",
+    "TKXQ6L4N9A6U"
+  ],
+  "fixes": [
+    {
+      "id": "silent-0215",
+      "proposal": "加湿器休息题分列回复、最大血增长与逐动作条件参考",
+      "commit": "2578e7d6f625cc8d8d08d9b14f10ca9e51cc7648",
+      "version": "S1.strategy10",
+      "evidence": [
+        {
+          "run": "UMVLWER4CD98",
+          "floors": [
+            7,
+            9,
+            16,
+            44,
+            47
+          ],
+          "turn": null,
+          "ledger": [
+            "silent-0215",
+            "silent-0204",
+            "silent-0020"
+          ]
+        }
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "items": [
+        "保血／全死权重",
+        "固定击杀顺序",
+        "巨兽拖延",
+        "SL范围／阈值",
+        "统一路线／休息血线",
+        "完整boss时钟校准"
+      ],
+      "reason": "缺受控替代的完整实打或阈值证据，不把局部收益或模拟当成确定整场胜负。"
+    },
+    {
+      "items": [
+        "其他回血遗物组合",
+        "未知营火动作"
+      ],
+      "reason": "本项没有实测分账，参考保持未知。"
+    }
+  ],
+  "merged": "5c2a0d4d9bd305cd3ebdf8f77773b77d3b7c350a",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2299
+  }
+}

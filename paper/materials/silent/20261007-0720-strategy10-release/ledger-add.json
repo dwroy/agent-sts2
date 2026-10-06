@@ -1,0 +1,20 @@
+{
+  "character": "silent",
+  "kind": "route",
+  "claim": "静默活动石炉加湿器的营火题分列回复与最大血增长，并按当前HEAL／SMITH动作列HP和最大HP条件参考：UMVL F7旧上限内只回18再增长5，F9锻造不增长，F16/44/47回血各增长5。参考最大HP相同仅该指标并列，未知动作不猜，不规定优先级或未来营火保证；沿既有模型、0204机制及0020缓冲观察。",
+  "evidence": [
+    {"run": "UMVLWER4CD98", "floor": 7, "note": "52/70→75/75，文本基础21、增长5；回复截成18，总增23。", "role": "support"},
+    {"run": "UMVLWER4CD98", "floor": 9, "note": "锻造中和，54/75保持；进入营火和SMITH没有增长。", "role": "support"},
+    {"run": "UMVLWER4CD98", "floor": 16, "note": "51/85→81/90，25回复加5增长。", "role": "support"},
+    {"run": "UMVLWER4CD98", "floor": 44, "note": "44/110→82/115，33回复加5增长。", "role": "support"},
+    {"run": "UMVLWER4CD98", "floor": 47, "note": "31/115→70/120，34回复加5增长；六次boss70进场仍全败，不推定路线胜负。", "role": "support"}
+  ],
+  "first_run": "UMVLWER4CD98",
+  "asc": 10,
+  "prior": "partly",
+  "prior_note": "原题面已有HEAL文字与统一hp_after_heal，原局十次执行回血并增长，0204经验已上线；本项新增无需boss模拟的动作表与截断分账，不证明旧大脑不知道增长。",
+  "status": "proposed",
+  "by": "learner:strategy-proposal",
+  "where": {"proposal": ["learner/runs/20261007-070020-strategy-proposal/proposal.md"], "lessons": ["UMVLWER4CD98"]},
+  "note": "独立代码参考提案；既有0204/0020首证、状态、版本和历史保持，实际shipped交运维核实后CLI登记。"
+}
