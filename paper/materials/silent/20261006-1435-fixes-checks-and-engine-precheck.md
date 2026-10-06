@@ -139,3 +139,5 @@ codex 用不了：/home/dw/.codex/AGENTS.md would be loaded into every brain cal
 两条原学习者proposed追加行逐字入档（工作账本其他行的排列不代提交），然后CLI/by=ops只写两条shipped，所有首次证据、先验、claim、evidence、repeat及旧历史保留。原行SHA256 `82fdef3b4868a53d601e6fca97b7b4a54bf7590702c28e72eb1e8bd819dc0f56`；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 173 item(s), 0 problem(s)。
 
 论文数据刷新完成后追加结果。
+
+- 2026-10-06 14:44 运维codex完成14:35九事件：四项学习者修复实际发布4fb81b17d099018d348942677bfe31dca333a4b1/树6d6ad56ba9a8c7bf86808cbee502df8e06ad74b3与第42批经验的两份完整外部检查均tsc/vitest0、251文件2986通过2跳过，队列四项关闭、CLI/by=ops仅0171/S1.fix29及0166/S1.fix30 shipped已提交bbe1464104b3ffe860b3793d22fb9be6fee8a756，原首次证据/先验/repeat和旧fix28历史保留、0172仍未实现。六批exit3同为全局AGENTS加载预检，收件箱已报、四个缺复盘局交调度器重派，14:31Roy隔离决定和观察者烟测记录保持；未绕过、未停局、未重复合并。nice19 paper_dataset.py --no-raw exit0，切点2026-10-06T06:41:19.996Z、五项一致性通过/决策计数差异为空/key scan CLEAN，行数{"commits.csv": 2844, "decisions_by_label.csv": 18011, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 540}；仅12项本轮生成变化及自身记录提交，后台产出保留。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 173 item(s), 0 problem(s)；详情paper/materials/silent/20261006-1435-fixes-checks-and-engine-precheck.md。
