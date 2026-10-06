@@ -1,0 +1,34 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.8 → 2026-10-07.9；提交：50de6fef（分支 exp-silent）；合入：98df162d；上线版本：S1.exp63。
+- 条数：新增 2、更新 19（加证据 19、只改数字 0）、退役 0；active 133 → 135，总字符 47737 → 49258。A8 适用 128 条/46151 字；A9 适用 129 条/46450 字。
+- 机制推理：
+  - 力量与共享撕咬 — 力量逐段增伤、成长共享 — 共享机制 2 局 — HSX4HYATB4E2。
+  - 敏捷/爆发/余像 — 逐挡牌、重放及出牌次数分别兑现 — 46/9/16 局 — HSX4HYATB4E2。
+  - 暴露清挡清制品 — 同一步清除已验证组合 — 清除机制 2 局 — 53FLQ68CETW0、HSX4HYATB4E2。
+  - 临时减力与成长 — 减力撤回，独立成长继续 — 36 局 — HSX4HYATB4E2。
+  - 滚石轮初成长 — 已建立后兑现，未建立贡献零 — 6 局 — HSX4HYATB4E2。
+  - 限损与凋萎 — 20 失血上限仍可能致死 — 限损 3 局/凋萎 12 局 — HSX4HYATB4E2。
+  - 胆小盾与退场 — 加挡、毒截断和实际减员分账 — 22 局 — T082DRCUHRRD、WYB0NCD6W83J。
+  - 应急卡牌禁挡 — 30 挡与后轮禁挡分别核 — 1 局 — WYB0NCD6W83J。
+  - 施毒/触媒 — 实际建立、触发次数与剩血截断分账 — 毒药 29/药瓶 15/触媒 28 局 — HSX4HYATB4E2、WYB0NCD6W83J。
+- 改了的手写知识：无。
+- 测试：源与合后均 tsc 退出 0；vitest 214 文件/2289 用例/退出 0。源因抽序项数更正重跑通过；合后首轮通过。
+- 切片大小：配对增量中位 +136 字；最大 5090 → 5298 字。
+- 学习账本：新增无；改成 proposed：silent-0005、0006、0007、0018、0019、0020、0021、0023、0024、0025、0027、0031、0046、0058、0073、0079、0093、0094、0115、0208、0209、0210、0211、0212（均带 silent- 前缀）；退役无；`ledger.py check` 退出 0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.9","commit":"50de6fefd40afae1f26838de7879198945acbc0b","merged":"98df162d756d3eca8d0b6383f2a2398d624ab074","added":2,"updated":19,"retired":0,"active":135,"mechanisms":["力量与共享撕咬","敏捷/爆发/余像","暴露清挡清制品","临时减力与敌成长","滚石轮初成长","限损与凋萎","胆小盾与退场","应急卡牌禁挡","施毒/触媒与剩血截断"],"tests":{"tsc":0,"vitest":0,"cases":2289},"ledger":{"added":[],"proposed":["silent-0005","silent-0006","silent-0007","silent-0018","silent-0019","silent-0020","silent-0021","silent-0023","silent-0024","silent-0025","silent-0027","silent-0031","silent-0046","silent-0058","silent-0073","silent-0079","silent-0093","silent-0094","silent-0115","silent-0208","silent-0209","silent-0210","silent-0211","silent-0212"],"retired":[],"check":0}}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11356-985d-7da3-b91e-b52b24bf837a
+轮数：1；工具调用：command_execution×93 file_change×9
+token：输入 268.6k、输出 58.4k（其中推理 21.0k）、cache 读 9535.1k、cache 写 0（命中 97.3%）
+成本：未提供
+耗时：1389.9 s（墙钟）
+时间：首个事件 1.6 s、模型首个输出 6.3 s、首次工具 8.5 s、末次工具结束 1360.3 s；工具内共 989.7 s，其余（模型生成、推理、网络）398.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×63 wait×1；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T06-30-04-01a11356-985d-7da3-b91e-b52b24bf837a.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-063003-experience-update.jsonl
