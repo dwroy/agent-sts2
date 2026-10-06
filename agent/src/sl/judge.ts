@@ -1297,6 +1297,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   if (ends.refuse) return verdict(false, null, `the enemies may be hit before they act: ${ends.refuse}`);
   const powersOf = (enemy: Record<string, unknown>) => asArray(enemy["powers"]).map(asRecord);
   const cruelty = powerAmount(player, "CRUELTY_POWER");
+  // Poison-trigger and threshold evidence is Silent's; preserve other characters' existing verdicts.
+  const silentPoison = str(run["character_id"]).toLowerCase() === "silent";
   // Each enemy's most damage before it acts (an upper bound: Vulnerable did not add to Stone Calendar's 52, K7G9M8K4DWFW
   // F17, Cruelty might; an attack's Vulnerable taken at Paper Phrog's 75%) and its poison.
   const before = living.map((enemy) => {
@@ -1304,8 +1306,11 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
     const amp = vulnerable && cruelty > 0 ? 1.5 * (1 + cruelty / 100) : 1;
     const attackAmp = vulnerable ? 1.75 * (1 + cruelty / 100) : 1;
     const hit = ends.sources.reduce((sum, source) => sum + source.damage * (source.attack ? attackAmp : amp), 0);
-    const poison = powersOf(enemy).filter((power) => str(power["power_id"]) === "POISON_POWER").reduce((sum, power) => sum + num(power["amount"]), 0);
-    return { hit, poison, hp: num(enemy["current_hp"]) };
+    const poison = Math.max(0, powerAmount(enemy, "POISON_POWER"));
+    // silent-0195: KUZVERN40NGK F17 final T6 loses 9 + 8 HP before attacking.
+    // As in the solver, each Accelerant trigger consumes one stack; caps ignored here keep an upper bound.
+    const triggers = Math.min(poison, 1 + (silentPoison ? Math.max(0, powerAmount(player, "ACCELERANT_POWER")) : 0));
+    return { hit, poison: triggers * (2 * poison - triggers + 1) / 2, hp: num(enemy["current_hp"]) };
   });
   // A hit before they act may stun an enemy without killing it: Shriek / Plow at their threshold (the Terror Eel at half HP;
   // turn-solver `shriek`), a counter the learned stun-on-strip rules see go (Flutter, Slippery, Curl Up on any hit; Artifact
@@ -1313,10 +1318,11 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   // out as a death's, without changing the others' (an ally's death does that, below).
   const stunned = living
     .map((enemy, i) => {
-      const { hit, hp: hpLeft } = before[i]!;
-      if (hit <= 0) return null;
+      const { hit, poison, hp: hpLeft } = before[i]!;
       const threshold = Math.max(powerAmount(enemy, "SHRIEK_POWER"), powerAmount(enemy, "PLOW_POWER"));
-      if (threshold > 0 && hpLeft > threshold && hpLeft - hit <= threshold) return { i, why: `its stun at ${threshold} HP` };
+      if (threshold > 0 && hpLeft > threshold && hpLeft - hit - (silentPoison ? poison : 0) <= threshold) return { i, why: `its stun at ${threshold} HP` };
+      // Poison crossing an HP threshold is observed; stripping these counters still needs a hit.
+      if (hit <= 0) return null;
       const counter = ["FLUTTER_POWER", "SLIPPERY_POWER", "CURL_UP_POWER", ...(ends.sources.some((source) => source.debuff) ? ["ARTIFACT_POWER"] : [])].find((id) => powerAmount(enemy, id) > 0);
       return counter ? { i, why: `its ${counter} going may stun it` } : null;
     })
