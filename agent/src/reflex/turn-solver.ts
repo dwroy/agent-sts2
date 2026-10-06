@@ -3705,6 +3705,16 @@ function outcomeVector(plan: Plan): number[] {
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
 export function dominates(a: Plan, b: Plan): boolean {
   if (a.outcome.unknownCards.length > 0 || b.outcome.unknownCards.length > 0) return false;
+  // Different residual poison is unresolved future state, not an all-axis improvement
+  // (TD1HVGS7H6LB SILENT A10 F17 T3, silent-0171: 21 damage/0 poison replaced 19 damage/3 poison).
+  // Keep both alternatives without pricing poison or changing the confidence/HP guard thresholds.
+  if (!a.outcome.winsFight && !b.outcome.winsFight) {
+    for (const enemy of a.outcome.enemyHpAfter) {
+      if (enemy.hp <= 0) continue;
+      const other = b.outcome.enemyHpAfter.find((entry) => entry.index === enemy.index && entry.hp > 0);
+      if (other && (enemy.poison ?? 0) !== (other.poison ?? 0)) return false;
+    }
+  }
   const va = vector(a);
   const vb = vector(b);
   let better = false;
