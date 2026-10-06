@@ -2842,6 +2842,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   }
   env.screenMemory.noEnemiesSince = undefined;
 
+  const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const playerSim: PlayerSim = {
     freeAttacks,
     exhaustPile: exhaustPileSize(state.raw),
@@ -2914,7 +2915,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     // No card Block yet this turn (block 0 is the proxy): Unmovable's doubling is still to come.
     // Vambrace doubles the first card Block of the fight, the same way: every Block card shows the doubled
     // number until one is played (G8YY F30 T3: Defend 12 and Shrug It Off 18 planned, 12 + 9 gained).
-    unmovableArmed: (powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0) || vambraceArmed(relicIds, asArray(combat["hand"]), powerAmount(player, "DEXTERITY_POWER")),
+    unmovableArmed: (powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0) || vambraceArmed(relicIds, asArray(combat["hand"]), powerAmount(player, "DEXTERITY_POWER")) || legionPreview,
+    ...(legionPreview ? { paelsLegionPreview: true } : {}),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
     hpLossCap: relicIds.includes("BEATING_REMNANT") ? BEATING_REMNANT_CAP : null,
@@ -4820,6 +4822,24 @@ export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: nu
     const own = (numOrNull(block["enchanted_value"]) ?? numOrNull(block["base_value"]) ?? 0) + dexterity;
     const shown = numOrNull(block["current_value"]) ?? own;
     return own > 0 && shown >= 2 * own - 1;
+  });
+}
+
+/** silent-0179/0180: consume the observed doubled preview once; no guessed cooldown or stacking model. */
+export function paelsLegionPreview(runRaw: unknown, combat: Record<string, unknown>): boolean {
+  const run = asRecord(runRaw);
+  if (str(run["character_id"]).toLowerCase() !== "silent") return false;
+  const relics = asArray(run["relics"]).map(asRecord);
+  const legion = relics.find((relic) => str(relic["relic_id"]) === "PAELS_LEGION");
+  if (!legion || num(legion["stack"]) > 0 || relics.some((relic) => str(relic["relic_id"]) === "VAMBRACE")) return false;
+  const player = asRecord(combat["player"]);
+  if (["FRAIL_POWER", "SHADOWMELD_POWER", "UNMOVABLE_POWER"].some((id) => powerAmount(player, id) > 0)) return false;
+  const dexterity = powerAmount(player, "DEXTERITY_POWER");
+  return asArray(combat["hand"]).map(asRecord).some((card) => {
+    // Both independent runs observed plain Defend with base five, no enchantment, and zero/three Dexterity.
+    if (str(card["card_id"]) !== "DEFEND_SILENT" || card["upgraded"] === true || (dexterity !== 0 && dexterity !== 3)) return false;
+    const block = asArray(card["dynamic_values"]).map(asRecord).find((value) => str(value["name"]) === "Block");
+    return block !== undefined && num(block["base_value"]) === 5 && num(block["enchanted_value"]) === 5 && num(block["current_value"]) === 2 * (5 + dexterity);
   });
 }
 
