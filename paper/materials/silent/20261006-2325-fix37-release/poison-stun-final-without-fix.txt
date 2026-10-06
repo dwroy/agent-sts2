@@ -1,0 +1,97 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-sl-poison-stun.test.ts (8 tests | 5 failed) 25ms
+   × F17 attempt3-turn5: poison crosses 160 HP, cancelling the attack in both judge and solver 14ms
+   × F17 attempt5-turn6: poison crosses 160 HP, cancelling the attack in both judge and solver 2ms
+   × F17 attempt6-turn6: poison crosses 160 HP, cancelling the attack in both judge and solver 3ms
+   × poison reaching the threshold exactly vetoes death, but one HP above it does not 1ms
+   × preserves poison-free verdicts and other characters' existing single-trigger judge 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-sl-poison-stun.test.ts > F17 attempt3-turn5: poison crosses 160 HP, cancelling the attack in both judge and solver
+ FAIL  tests/silent-sl-poison-stun.test.ts > F17 attempt5-turn6: poison crosses 160 HP, cancelling the attack in both judge and solver
+AssertionError: expected { certain: true, tier: 'rules', …(7) } to match object { certain: false, tier: null }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "certain": false,
+-   "tier": null,
++   "certain": true,
++   "tier": "rules",
+  }
+
+ ❯ tests/silent-sl-poison-stun.test.ts:53:22
+     51|   expect(outcome(raw)).toMatchObject({ damageDealt: damage, hpLoss: 0,…
+     52|     enemyHpAfter: [expect.objectContaining({ hp })] });
+     53|   expect(judge(raw)).toMatchObject({ certain: false, tier: null });
+       |                      ^
+     54|   expect(judge(raw).reason).toContain("its stun at 160 HP");
+     55| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-sl-poison-stun.test.ts > F17 attempt6-turn6: poison crosses 160 HP, cancelling the attack in both judge and solver
+AssertionError: expected '2 playable card(s) and 0 potion(s) le…' to contain 'its stun at 160 HP'
+
+Expected: "its stun at 160 HP"
+Received: "2 playable card(s) and 0 potion(s) left"
+
+ ❯ tests/silent-sl-poison-stun.test.ts:54:29
+     52|     enemyHpAfter: [expect.objectContaining({ hp })] });
+     53|   expect(judge(raw)).toMatchObject({ certain: false, tier: null });
+     54|   expect(judge(raw).reason).toContain("its stun at 160 HP");
+       |                             ^
+     55| });
+     56|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-sl-poison-stun.test.ts > poison reaching the threshold exactly vetoes death, but one HP above it does not
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/silent-sl-poison-stun.test.ts:67:30
+     65|   const raw = board("attempt3-turn5");
+     66|   raw.combat.enemies[0]!.current_hp = 171;
+     67|   expect(judge(raw).certain).toBe(false);
+       |                              ^
+     68|   raw.combat.enemies[0]!.current_hp = 172;
+     69|   expect(judge(raw).certain).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-sl-poison-stun.test.ts > preserves poison-free verdicts and other characters' existing single-trigger judge
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/silent-sl-poison-stun.test.ts:109:32
+    107|   expect(judge(other).certain).toBe(true);
+    108|   other.run.character_id = "SILENT";
+    109|   expect(judge(other).certain).toBe(false);
+       |                                ^
+    110| });
+    111|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 3 passed (8)
+   Start at  23:06:15
+   Duration  1.21s (transform 878ms, setup 275ms, import 779ms, tests 25ms, environment 0ms)
+
