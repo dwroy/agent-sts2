@@ -1,0 +1,9 @@
+# A10复盘、第39批完整补测与游戏退出说明
+
+- 2026-10-06 10:30 处理10:28 learner-done 20261006-101302/4D4J8USKCPAV：学习者exit0/success，SILENT A10/F17败局复盘齐全。原新增正文及10:24勘误共13903字节/SHA256 de8979405c94e356cf2dacc64d2f46dda43ded6c2753d74492dac028a81d7463，八项八行原账本4852字节/SHA256 fe70c8be91e14157e7c520e3c042507b0ae5a38dea342d3c46f332208d377624逐字归档；原回报、stderr和事件流保留。
+- 八项均support补证，无新增、repeat或新纯bug：silent-0005, silent-0012, silent-0013, silent-0019, silent-0020, silent-0021, silent-0027, silent-0134。已有claim/first_run/prior/status/version及全部上线历史保持；力量观察范围及T6换线差额沿学习者勘误，不增补机制或受控反事实。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 169 item(s), 0 problem(s)。无额度/登录错误、Roy新待定或新派任务。
+- manual按Roy说明结案：10:1x游戏退出由Roy误关造成，停止退出原因排查，队列追加关闭说明，10:15恢复证据及原SL失败/自动重启记录保留。launch-game成功判读与mod-state截断两项工具缺口继续由学习者处理；不新增代码修复、游戏知识、账本或eval版本。
+- learner-checks结案：20261006-100106-experience-update固定发布eabdd307b11199de406e5eed5f1dedad0a39f431/树fc98367e7c2304dcb49102ee2250c4dfd9602048完整沙箱外tsc + vitest exit0，246文件2926通过/2跳过（10:18:57起535.12秒）；原日志ops/codex-ops/learner/20261006-100106-experience-update.fallback-fc98367e7c2304dcb49102ee2250c4dfd9602048.checks.log，61896字节/SHA256 9ac2ba6d27056806d9eb7be956077b412ce183037aee6a718d142256ba43fa4a。checks_pending=false，checks/fallback_checks核对固定树rc0；源/实际合入/发布均为main/live祖先，1021项源码/测试blob同main，唯一S1.exp39及12项shipped保持。main同步da5b1802ea25ac8cf45cd46c9f31199aa5365ed6、台账登记605232e51a06fd6a74a39547f0a419c7fe6e2b82沿用；源与合后固定沙箱首过、首次临时publish.py错误和仅登记重试历史保留，不借用其他批次结果。
+- 本轮只归档原复盘/补证及追加结案记录，背景fix-batch的0166 proposed不代为提交或上线，对局和调度照常。随后nice19运行paper_dataset.py --no-raw，结果另记。
+
+- 2026-10-06 10:35 论文数据与学习曲线刷新完成：nice19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-06T02:31:27.521Z，五项一致性通过、runs.jsonl决策计数差异为空、key scan CLEAN，行数{"commits.csv": 2797, "decisions_by_label.csv": 17839, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 534}。复盘及10:24勘误/八项八行原补证、Roy误关游戏的关闭说明、S1.exp39完整补测结案已归档89c61f9af36d56310028ab28aa186c7f69ada5a0。仅实际生成变化的11项表与自身记录提交，其他后台修改保留。
