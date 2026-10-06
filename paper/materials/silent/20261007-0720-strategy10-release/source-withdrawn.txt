@@ -1,0 +1,86 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-humidifier-rest.test.ts (10 tests | 9 failed) 121ms
+   × exposes capped recovery and growth in the real rest question at F7 57ms
+   × exposes capped recovery and growth in the real rest question at F9 5ms
+   × exposes capped recovery and growth in the real rest question at F16 3ms
+   × exposes capped recovery and growth in the real rest question at F44 3ms
+   × exposes capped recovery and growth in the real rest question at F47 3ms
+   × does not credit F9's executed smith with the hypothetical heal's growth 2ms
+   × keeps original options, facts and actions equal to the board without this active relic 7ms
+   × uses current keys, marks only equal max HP and retains unobserved actions with unknown references 3ms
+   × omits disabled and invalid keys from the reference without changing offered actions 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F7
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F9
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F16
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F44
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F47
+TypeError: Cannot read properties of undefined (reading 'source')
+ ❯ tests/silent-humidifier-rest.test.ts:52:22
+     50|   for (const oneshot of [true, false]) {
+     51|     const { decision, rest, reference, options } = question(raw, onesh…
+     52|     expect(reference.source).toContain("UMVLWER4CD98");
+       |                      ^
+     53|     expect(reference.source).toContain("silent-0215/0204/0020");
+     54|     expect(reference.actions[0]).toMatchObject({ key: "o0", kind: "HEA…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > does not credit F9's executed smith with the hypothetical heal's growth
+TypeError: Cannot read properties of undefined (reading 'actions')
+ ❯ tests/silent-humidifier-rest.test.ts:72:20
+     70|   const { decision, reference } = question(board(9), false);
+     71|   const observed = fixture.observations.find((row: any) => row.floor =…
+     72|   expect(reference.actions[1]).toMatchObject({ after_action_hp_referen…
+       |                    ^
+     73|     after_action_max_hp_reference: observed.next.max, total_hp_gain_re…
+     74|   expect(decision.resolve({ pick: { type: "choice", choice: "o1", reas…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > keeps original options, facts and actions equal to the board without this active relic
+AssertionError: expected undefined to be defined
+ ❯ tests/silent-humidifier-rest.test.ts:89:34
+     87|   expect(original).toEqual(melted.rest);
+     88|   expect(melted.rest).not.toHaveProperty("humidifier_rest_growth");
+     89|   expect(humidifier_rest_growth).toBeDefined();
+       |                                  ^
+     90|   expect(active.decision.resolve({ pick: { type: "choice", choice: "o1…
+     91|     .toEqual(melted.decision.resolve({ pick: { type: "choice", choice:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > uses current keys, marks only equal max HP and retains unobserved actions with unknown references
+TypeError: Cannot read properties of undefined (reading 'max_hp_tied_option_groups')
+ ❯ tests/silent-humidifier-rest.test.ts:101:20
+     99|   const { reference, options } = question(raw, false);
+    100|   expect(Object.keys(options)).toEqual(["o4", "o7", "o8", "o9"]);
+    101|   expect(reference.max_hp_tied_option_groups).toEqual([["o7", "o8"]]);
+       |                    ^
+    102|   expect(reference.actions[3]).toMatchObject({ key: "o9", after_action…
+    103|     after_action_max_hp_reference: null, ordinary_hp_recovered_referen…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > omits disabled and invalid keys from the reference without changing offered actions
+TypeError: Cannot read properties of undefined (reading 'actions')
+ ❯ tests/silent-humidifier-rest.test.ts:114:20
+    112|   raw.rest.options.push({ ...raw.rest.options[1], index: 2.5 });
+    113|   const { reference } = question(raw, false);
+    114|   expect(reference.actions.map((a: any) => a.key)).toEqual(["o0", "o1"…
+       |                    ^
+    115| });
+    116|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 1 passed (10)
+   Start at  07:06:55
+   Duration  1.73s (transform 1.17s, setup 381ms, import 1.03s, tests 121ms, environment 0ms)
+

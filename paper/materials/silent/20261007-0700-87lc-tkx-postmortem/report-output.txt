@@ -1,0 +1,29 @@
+## 复盘回报
+
+- 已追加：87LCSDR5P3DL（A10，第9层，旧日雕像T3以2血、10挡对18攻击阵亡）；已补上线标记勘误。
+- 已追加：TKXQ6L4N9A6U（A10，第22层，误判毒斩杀，7血先被两张毒素的10伤杀死）；已补敌人ID及上线标记勘误。
+- 新的纯 bug：
+  - TKXQ6L4N9A6U：毒杀胜利分支把持牌伤害置零，误判斩杀并结束回合 — agent/src/reflex/turn-solver.ts:2939（新）
+- 写成「未记录」的项：
+  - 87LCSDR5P3DL：替代方案整场结果、完整原线执行比例、F8 T3输出差2的根因、boss时钟估值及实打对照、boss实到实打、Jev缓存。
+  - TKXQ6L4N9A6U：替代方案整场结果、完整原线执行比例、胖地精退场中间帧、boss时钟估值及比例、二幕boss实到实打、Jev缓存。
+- 学习账本：
+  - 87LCSDR5P3DL：新增无；更新 silent-0021、silent-0005、silent-0020、silent-0006、silent-0011（确认老错重犯无，均为support）。
+  - TKXQ6L4N9A6U：新增 silent-0213、silent-0214；更新 silent-0057、silent-0019、silent-0005、silent-0006、silent-0046、silent-0011、silent-0059（确认老错重犯无，均为support）。
+  - `ledger.py check` 退出码：0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["87LCSDR5P3DL","TKXQ6L4N9A6U"],"skipped":[],"bugs":[{"run":"TKXQ6L4N9A6U","where":"agent/src/reflex/turn-solver.ts:2939","what":"毒杀胜利分支把持牌毒素伤害置零，误判斩杀结束回合而先被毒素杀死","new":true}],"ledger":{"added":["silent-0213","silent-0214"],"updated":["silent-0021","silent-0005","silent-0020","silent-0006","silent-0011","silent-0057","silent-0019","silent-0046","silent-0059"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11362-8408-7200-ae07-e11bdf0f8e79
+轮数：1；工具调用：command_execution×53
+token：输入 247.5k、输出 44.6k（其中推理 17.3k）、cache 读 6250.1k、cache 写 0（命中 96.2%）
+成本：未提供
+耗时：1032.6 s（墙钟）
+时间：首个事件 3.1 s、模型首个输出 6.9 s、首次工具 11.4 s、末次工具结束 994.3 s；工具内共 34.5 s，其余（模型生成、推理、网络）995.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×39；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T06-43-05-01a11362-8408-7200-ae07-e11bdf0f8e79.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-064303-postmortem.jsonl

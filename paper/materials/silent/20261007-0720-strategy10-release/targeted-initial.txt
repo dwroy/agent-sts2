@@ -1,0 +1,129 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-humidifier-rest.test.ts (10 tests | 10 failed) 19ms
+   × exposes capped recovery and growth in the real rest question at F7 9ms
+   × exposes capped recovery and growth in the real rest question at F9 1ms
+   × exposes capped recovery and growth in the real rest question at F16 1ms
+   × exposes capped recovery and growth in the real rest question at F44 1ms
+   × exposes capped recovery and growth in the real rest question at F47 1ms
+   × does not credit F9's executed smith with the hypothetical heal's growth 1ms
+   × keeps original options, facts and actions equal to the board without this active relic 1ms
+   × uses current keys, marks only equal max HP and retains unobserved actions with unknown references 1ms
+   × omits disabled and invalid keys from the reference without changing offered actions 1ms
+   × leaves other characters, missing or melted relics, invalid HP and unobserved heal combinations alone 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F7
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F9
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F16
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F44
+ FAIL  tests/silent-humidifier-rest.test.ts > exposes capped recovery and growth in the real rest question at F47
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ envOf tests/silent-humidifier-rest.test.ts:29:17
+ ❯ question tests/silent-humidifier-rest.test.ts:37:29
+ ❯ tests/silent-humidifier-rest.test.ts:51:52
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > does not credit F9's executed smith with the hypothetical heal's growth
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ envOf tests/silent-humidifier-rest.test.ts:29:17
+ ❯ question tests/silent-humidifier-rest.test.ts:37:29
+ ❯ tests/silent-humidifier-rest.test.ts:70:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > keeps original options, facts and actions equal to the board without this active relic
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ envOf tests/silent-humidifier-rest.test.ts:29:17
+ ❯ question tests/silent-humidifier-rest.test.ts:37:29
+ ❯ tests/silent-humidifier-rest.test.ts:82:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > uses current keys, marks only equal max HP and retains unobserved actions with unknown references
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ envOf tests/silent-humidifier-rest.test.ts:29:17
+ ❯ question tests/silent-humidifier-rest.test.ts:37:29
+ ❯ tests/silent-humidifier-rest.test.ts:99:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > omits disabled and invalid keys from the reference without changing offered actions
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ envOf tests/silent-humidifier-rest.test.ts:29:17
+ ❯ question tests/silent-humidifier-rest.test.ts:37:29
+ ❯ tests/silent-humidifier-rest.test.ts:113:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/silent-humidifier-rest.test.ts > leaves other characters, missing or melted relics, invalid HP and unobserved heal combinations alone
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ envOf tests/silent-humidifier-rest.test.ts:29:17
+ ❯ question tests/silent-humidifier-rest.test.ts:37:29
+ ❯ tests/silent-humidifier-rest.test.ts:130:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed (10)
+   Start at  07:05:54
+   Duration  4.36s (transform 3.17s, setup 1.19s, import 2.64s, tests 19ms, environment 0ms)
+

@@ -1,0 +1,23 @@
+已实现并合入 live，版本 **S1.strategy10**：休息题分列回复、最大血增长及各动作的条件参考。
+
+- 证据：UMVLWER4CD98，F7/9/16/44/47（营火，无战斗回合）；账本 silent-0215，关联 0204/0020。
+- 源码提交：2578e7d6；live 合入：05800d48；发布记录：5c2a0d4d。
+- 撤源码：9 失败、1 通过；恢复：10 通过。源码和合后沙箱均 tsc/vitest=0，各 2299 例通过；gitleaks=0。
+- 保血权重、固定目标、SL 阈值、统一血线等因证据不足未实现。
+
+[提案](/home/dw/Projects/agent-sts2/learner/runs/20261007-070020-strategy-proposal/proposal.md)及[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-070020-strategy-proposal/handoff-ops.md)已落盘。账本保持 proposed，交启动器 strategy-done 通知运维核实 shipped；完整沙箱外检查待调度器。
+
+```json
+{"task":"strategy-proposal","base":"b8894feb36d805e13d15911830610e6bd3c8fec3","runs":["HUVEPWQAHWFU","UMVLWER4CD98","TU3XB4CAEDAW","V0383V5S9BCQ","8R5CXD5C8PW8","QNTW139MGECA","HSX4HYATB4E2","WYB0NCD6W83J","87LCSDR5P3DL","TKXQ6L4N9A6U"],"fixes":[{"id":"silent-0215","commit":"2578e7d6f625cc8d8d08d9b14f10ca9e51cc7648","version":"S1.strategy10"}],"skipped":["保血／全死权重、固定目标、巨兽拖延、SL范围／阈值、统一血线和完整时钟：证据不足","其他回血组合及未知营火动作：未实测"],"merged":"5c2a0d4d9bd305cd3ebdf8f77773b77d3b7c350a","tests":{"tsc":0,"vitest":0,"cases":2299}}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11372-512a-7992-bf48-b185bda47192
+轮数：1；工具调用：command_execution×69 file_change×12
+token：输入 177.0k、输出 40.3k（其中推理 16.0k）、cache 读 5570.7k、cache 写 0（命中 96.9%）
+成本：未提供
+耗时：1114.1 s（墙钟）
+时间：首个事件 2.4 s、模型首个输出 11.9 s、首次工具 13.2 s、末次工具结束 1074.9 s；工具内共 663.0 s，其余（模型生成、推理、网络）448.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×45；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T07-00-21-01a11372-512a-7992-bf48-b185bda47192.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-070020-strategy-proposal.jsonl
