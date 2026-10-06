@@ -8,3 +8,5 @@
 - 0193绷带模型待修及0194/S1.exp52上线独立保持；玩法和机制发现沿学习者复盘留存，无Roy待定。boss时钟等未记录项保持未知；仅本角色对局数据，未复原原运行dirty源码。
 
 随后刷新paper_dataset.py --no-raw并登记结果；对局继续。
+
+- 2026-10-06 22:38 运维codex完成22:30复盘批次20261006-221301/KUZVERN40NGK：学习者原12143字节正文及22:29:59两项勘误、九行台账归档14d5e22713c004147d6345e46d4fb3d95b6c4c35；新0195 bug-infra首证本局/A10、prior=unknown/observed；七项旧条目补证，0079三条repeat、其余support，0019另有note勘误；claim/首证/先验/状态/版本/原证据及历史保持。SL判官漏计毒越阈值两次提前读档为非阻塞，已追加fix-queue-v4交学习者依证据实现，运维未改模型或标shipped；0193待修与0194/S1.exp52上线独立保持，无Roy待定。nice19 paper_dataset.py --no-raw exit0，切点2026-10-06T14:33:27.117Z，五项一致性通过、决策计数差异为空、key scan CLEAN，行数{"commits.csv": 3008, "decisions_by_label.csv": 18392, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 552}；仅12项本轮生成变化及自身记录提交。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 195 item(s), 0 problem(s)；详情paper/materials/silent/20261006-2230-kuz-postmortem.md。原提取/检索失败后补查及草稿/两项勘误保留，未声称修复后整场转胜；只改记录和数据，无代码测试或新上线，后台经验/复盘/知识及成本刷新和对局照常。
