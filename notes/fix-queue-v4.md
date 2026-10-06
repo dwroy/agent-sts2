@@ -526,11 +526,13 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 11:33 A10复盘：永冻触发缺口与精确切击范围补证（交学习者）
 
-- [ ] **非阻塞机制模型缺口，仅转录学习者提案**：`agent/src/reflex/turn-solver.ts:1645`的能力触发与`agent/src/reflex/combat-plan.ts:2931`的遗物接线没有PERMAFROST；来源PJ2LL9KU7FHD SILENT A10 F17第三次T4、`ops/codex-ops/learner/20261006-111301.out`及原复盘，账本silent-0172（独立机制0173）。原题幻影之刃加敏捷药水及两防御预计损7，实际幻影一步0→7挡、两防御各7，合21挡覆盖21来袭，57血不变；更早已核25226ZFLNR1J F29 T1灵动步法一步实补7挡、原题没有block_gained。0172 first_run=25226ZFLNR1J/prior=no，0173同首见局/prior=yes，沿学习者原账本。
+- [x] **非阻塞机制模型缺口，仅转录学习者提案**：`agent/src/reflex/turn-solver.ts:1645`的能力触发与`agent/src/reflex/combat-plan.ts:2931`的遗物接线没有PERMAFROST；来源PJ2LL9KU7FHD SILENT A10 F17第三次T4、`ops/codex-ops/learner/20261006-111301.out`及原复盘，账本silent-0172（独立机制0173）。原题幻影之刃加敏捷药水及两防御预计损7，实际幻影一步0→7挡、两防御各7，合21挡覆盖21来袭，57血不变；更早已核25226ZFLNR1J F29 T1灵动步法一步实补7挡、原题没有block_gained。0172 first_run=25226ZFLNR1J/prior=no，0173同首见局/prior=yes，沿学习者原账本。
 - [x] **既有精确切击模型的范围补证**：`agent/src/reflex/turn-solver.ts:2002`及`agent/src/reflex/card-model.ts:1004`的已验证无力量五/六手分支未覆盖本局力量修正范围。PJ2LL9KU7FHD F17首试及末次T15五→四手、−2力量CalculatedDamage3→5，整线预计扣5、实际扣7；第三次T5五→三手、2力量7→11，整线预计36、实际40。原silent-0166/S1.fix28已关闭的已测范围和上线历史保持，新证据交学习者处理；0169仅机制support。学习者追加0166 repeat，但本局开局早于S1.fix28发布，不登记为补丁生效后的回归。
 - 两项虽在回报标bug，内容涉及游戏机制，按学习协议交学习者基于本角色证据实现并固定验证；本局正常结束，没有阻塞故障，运维不改模型或补规则。行号按学习者只读live 1103a83d取号，本局eabdd307+dirty不声称复原。只确认首次能力7挡，重复/重放未验证，不外推每轮触发或称修模型即可整场获胜；全部原复盘、首次证据/先验/状态及版本保留。
 
 - 2026-10-06 14:41 运维按14:35事件核实20261006-104301-fix-batch四项源码均为main/live祖先：launch-game判读db388125、完整mod-state/broker UTF8传输61a92184、余毒比较c9aef94d→51eb059e/S1.fix29、精确切击已观测力量范围995a345f→c2dd5064/S1.fix30；固定发布4fb81b17d099018d348942677bfe31dca333a4b1/树6d6ad56ba9a8c7bf86808cbee502df8e06ad74b3的两份独立完整外部tsc/vitest均exit0、251文件2986通过2跳过。main已由观察者合入，无重复合并；仅关闭上述四框，并CLI/by=ops登记0171/S1.fix29和0166/S1.fix30，原证据、先验、repeat和旧fix28历史保持。永冻0172未实现仍开放，0173经验和0169独立；其他策略、证据不足及性能专项保持。详情paper/materials/silent/20261006-1435-fixes-checks-and-engine-precheck.md。
+
+- 2026-10-07 02:14 运维codex按02:10 fix-done核实源157d635cd9e9880d7396e76a15594c6e7f0b0253→实际live代码da3250d3646a0530b0febe14e8a1a18766567e76→固定发布ebd920b46668fc63babae6a79359d926d3c620ad/唯一S1.fix39，main机械同步175ee9ec55bcaf4e990c69e7f8bf1870cb18591c；源及合后首轮沙箱tsc0/vitest0各211文件2266例。相关3文件28例含新12于01:54:42先通过，01:55:08最终撤六处源码6失败6通过，恢复源码后整套2266通过；原初稿/第一版红5及全部失败原文保留，不把28例记成最终撤后重跑。仅CLI/by=ops登记0172 shipped并关闭永冻框，0172首证25226ZFLNR1J/A10/prior=no与claim/支持/repeat/历史保持，0173独立机制10GPK5XGHCK3/A3/prior=yes/shipped/S1.exp42、精确切击既有版本/repeat和0197fix38/0198exp56不重置；三项自动知识刷新保留，live后续未提交刷新不覆盖，不声称整场转胜，完整外部待本批learner-checks。
 
 ## 2026-10-06 15:11 A10复盘：毒结算未应用已读入的伤害上限（交学习者）
 
@@ -610,3 +612,11 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 来源：ops/codex-ops/learner/20261007-004301.out；notes/lessons.md本局正文及01:01:00勘误；paper/materials/learning/ledger.jsonl的0197。0198联合遗物净值为机制观察，留学习者处理；其他未核定推演差额不增列bug。
 
 - 2026-10-07 01:41 运维codex按01:34 fix-done核实源62b0e23f0a45b2f331261947cbc9168dde36e39a→实际live代码9e20ade95055b14ed77446313fd6e71e2f2ff2d5→固定发布a12bc862a77a191518c2854c3dbbd4348f02f0b4/唯一S1.fix38，main机械同步a1a7b937d4a3b753a0fcff81a5e1ab1ca26d6ef4；源及合后首轮沙箱tsc0/vitest0各210文件2254例，撤源4失败5通过／恢复相关3文件189例含新9通过，两次初稿和首次预合并追加冲突历史保留。仅CLI/by=ops登记0197 shipped并关闭本项，first_run=Y6GM2CHWJBEY/A0/prior=no、claim/支持/repeat/历史保持，0198独立S1.exp56及其他旧项不重置；三项自动知识刷新保留，不声称整场可转胜，完整外部待本批learner-checks。
+
+## 2026-10-07 02:20 A10复盘：重放附魔的额外打出漏入跨回合凋萎累计（交学习者）
+
+- [ ] **非阻塞计数bug，silent-0199，仅转录学习者定位**：DPYF2BAA3DKT SILENT A10/F48沙漏末次T1防御+重放同一步格挡0→24，现场cards_played_this_turn只4→5；手动7次、实际8次。前六轮手动累计25、含首轮重放26，T7串刺跨手动29／实际30门槛，新增第二张9伤凋萎。方案原报损26、28血剩2，重读实际手牌才报完整损35／剩−7，局部差9伤；末态玩家0血、敌117血。
+- 学习者只读live a12bc862定位combat-plan.ts:1485保留每轮原始计数最大值、:1521求和仅额外补投斧，turn-solver.ts:2918消费累计门槛，未保留本局已观测防御附魔重放。原局ad01f74a+dirty不声称复原；与已有投斧／音乐盒计数修复及余像格挡缺口分账，0172/S1.fix39、0173/S1.exp42等旧状态不重置。
+- 0199首个明确误判证据DPYF2BAA3DKT/A10、prior=unknown/status=observed；更早LRN0HPZ0FZS1/A0仅能确认实际重放／原始计数分离，未找到可单独归因的旧版生死误判，不改写先验。独立0200机制首证仍LRN/A0、prior=unknown，交学习者处理，不冒标shipped。
+- 该局六次沙漏尝试、前五次读档后末次正常阵亡，没有本项导致的卡死／崩溃／非法动作；没有修正后的替代整场实打，不声称修复可转胜。请学习者依本角色对局证据修计数状态并做固定红绿验证，自测后按live流程合入，铁甲及无关行为保持等价。运维不添加机制或打法。
+- 来源：ops/codex-ops/learner/20261007-014301.out、notes/lessons.md两局原正文、paper/materials/learning/ledger.jsonl的0199／0200；证据摘录learner/runs/20261007-014302-postmortem/。CRK2HNYKSCZC末轮least-loss余0与实际吻合；其他未核定推演差额和策略取舍不增列纯bug。
