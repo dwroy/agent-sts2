@@ -551,3 +551,8 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 这是机制模型问题，交学习者依据静默证据实现与固定验证，运维不改翻倍公式或出牌规则。不把其他伤害差额、所有失败尝试或整场胜负归于本项；修复后的受控胜负未记录。源中player.unmovableArmed/next.unmovableSpent仅沿16:04勘误作为变量说明，不当卡名或本局增益；行号来自学习者只读live，未复原原局dirty源码。复盘及台账原行和16:01/16:04/16:05勘误全部保留。
 
 - 2026-10-06 17:01 运维codex按本批fix-done核对学习者源19e41a26648542b7ad0bce4e70b55f30be532d49→实际live代码286a20acb4ac43cd5fd6f88235dc493bf28fb96e→固定发布4087fb8c4547491093a763e9b8975f891eede0b2/唯一S1.fix33，最终发布4087fb8c4547491093a763e9b8975f891eede0b2已机械同步main 258c3f3666c2c7f0d9053e4b15c98579e2bb4654；源及合后沙箱通过，CLI/by=ops仅silent-0179 shipped，关闭本队列项。原证据、勘误、夹具/CLI失败及其他专项历史保持；完整外部等本批learner-checks。
+
+## 最高优先：S1.exp45 完整补测 boss-clock 断言失败（2026-10-06 17:45）
+
+- **未修，根因待核，非阻塞测试/数据隔离问题**：20261006-170126-experience-update 固定发布56c64ff8c32d6ef1cc0d2febb8252229f7e69133/树a6beac224eb8405df7466b457d08658e67bd54c3，完整tsc+vitest exit1，253文件3001例通过、1文件1例失败、2跳过；agent/tests/boss-clock.test.ts:191 的 ERPHN3SRCRC3 F14 既有铁甲夹具断言 >=9（<=10），实得8。源经验只改静默experience.json；相关源码/测试/铁甲两张统计与上一已测4087fb8c相同，common WATERFALL_GIANT子树亦相同；七项其他自动刷新保持，未证实经验回归。本轮主目录单跑一次33例通过不覆盖原完整失败、不冒报已修。证据及原字节日志见 paper/materials/silent/20261006-1739-experience45-full-check-failure.md、paper/materials/silent/20261006-1739-experience45-full-check.txt，SHA256 bff90c65f22978128219e6441f3678b09e821bf41cd05fb776d4ae869c002546。
+- 运维选择**保留上线、优先派修复**。先对固定发布复现并定位实际加载数据/环境/缓存/测试隔离差异；boss-clock.ts:199 和 monster-db.ts:174 会读取自动刷新表，固定板面未必固定全部输入。若仅夹具问题则据原测试证据固定输入，保持原断言含义；若是生产机制缺陷则按学习协议、用对应角色对局证据，不把铁甲测试内容灌入静默知识。不得把9改8、放宽/删断言、增加排除、改校准或倒退刷新数据来过测；必须保留红绿及原失败历史，源/合后固定沙箱通过、调度器再补完整套件；未定位明确未修。当前codex-dev为策略批次172732占用，不抢工作树；下一可派fix-batch先做本项。无对应新增bug-infra，不新建或冒标shipped。
