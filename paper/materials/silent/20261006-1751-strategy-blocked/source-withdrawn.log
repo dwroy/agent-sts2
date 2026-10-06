@@ -1,0 +1,93 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-candle-rest.test.ts (8 tests | 7 failed) 85ms
+   × shows extinguished refuelling on the real rest question (oneshot=true) 50ms
+   × shows extinguished refuelling on the real rest question (oneshot=false) 3ms
+   × keeps the executed UJ F29 0-to-5 observation separate from its HP and other energy relics 2ms
+   × does not extrapolate positive-charge refuelling from the extinguished observation 2ms
+   × keeps missing or invalid charges unknown and does not invent refuelling results 2ms
+   × preserves options, summaries, HP facts and actions with the added fact removed 4ms
+   × uses current indices and retains an unobserved extra action with unknown reference 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > shows extinguished refuelling on the real rest question (oneshot=true)
+ FAIL  tests/silent-candle-rest.test.ts > shows extinguished refuelling on the real rest question (oneshot=false)
+TypeError: Cannot read properties of undefined (reading 'current_charges')
+ ❯ tests/silent-candle-rest.test.ts:47:29
+     45|   const { decision, rest, options } = question(raw, oneshot);
+     46|   expect(rest.hp_after_heal).toBe("23/70");
+     47|   expect(rest.candle_refuel.current_charges).toBe(0);
+       |                             ^
+     48|   expect(rest.candle_refuel.actions).toEqual([
+     49|     { key: "o0", kind: "HEAL", charges_after_action_reference: 0 },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > keeps the executed UJ F29 0-to-5 observation separate from its HP and other energy relics
+TypeError: Cannot read properties of undefined (reading 'current_charges')
+ ❯ tests/silent-candle-rest.test.ts:66:29
+     64| it("keeps the executed UJ F29 0-to-5 observation separate from its HP …
+     65|   const { rest } = question(board("UJ0K3G10609Y_f29_3"));
+     66|   expect(rest.candle_refuel.current_charges).toBe(0);
+       |                             ^
+     67|   expect(rest.candle_refuel.observed).toContain("77血不变");
+     68|   expect(rest.candle_refuel.source).toContain("silent-0186/0184/0185/0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > does not extrapolate positive-charge refuelling from the extinguished observation
+TypeError: Cannot read properties of undefined (reading 'current_charges')
+ ❯ tests/silent-candle-rest.test.ts:77:31
+     75|   for (const [name, charges] of [["XBD8Z9XLPCPN_f24_3", 3], ["XBD8Z9XL…
+     76|     const { rest } = question(board(name));
+     77|     expect(rest.candle_refuel.current_charges).toBe(charges);
+       |                               ^
+     78|     expect(rest.candle_refuel.actions.map((a: any) => a.charges_after_…
+     79|     expect(rest.candle_refuel.charge_tied_option_groups).toEqual([["o0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > keeps missing or invalid charges unknown and does not invent refuelling results
+TypeError: Cannot read properties of undefined (reading 'current_charges')
+ ❯ tests/silent-candle-rest.test.ts:87:31
+     85|     const raw = board(); raw.run.relics[0].stack = stack;
+     86|     const { rest } = question(raw);
+     87|     expect(rest.candle_refuel.current_charges).toBeNull();
+       |                               ^
+     88|     expect(rest.candle_refuel.actions.map((a: any) => a.charges_after_…
+     89|     expect(rest.candle_refuel.charge_tied_option_groups).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > preserves options, summaries, HP facts and actions with the added fact removed
+AssertionError: expected undefined to be defined
+ ❯ tests/silent-candle-rest.test.ts:105:25
+    103|   const { candle_refuel, ...original } = present.rest;
+    104|   expect(original).toEqual(absent.rest);
+    105|   expect(candle_refuel).toBeDefined();
+       |                         ^
+    106| });
+    107|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > uses current indices and retains an unobserved extra action with unknown reference
+TypeError: Cannot read properties of undefined (reading 'charge_tied_option_groups')
+ ❯ tests/silent-candle-rest.test.ts:132:29
+    130|   const { rest, options } = question(raw);
+    131|   expect(Object.keys(options)).toEqual(["o4", "o7", "o8", "o9"]);
+    132|   expect(rest.candle_refuel.charge_tied_option_groups).toEqual([["o4",…
+       |                             ^
+    133|   expect(rest.candle_refuel.actions.at(-1)).toEqual({ key: "o9", kind:…
+    134| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed (8)
+   Start at  17:35:57
+   Duration  1.51s (transform 1.06s, setup 359ms, import 911ms, tests 85ms, environment 0ms)
+
