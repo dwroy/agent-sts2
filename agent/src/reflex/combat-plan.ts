@@ -41,6 +41,7 @@ import { liveSolverFields } from "./passive-pieces.js";
 import { infernoCopies, startTurnHpLossOf } from "./start-loss.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
+import { permafrostBlock } from "./permafrost.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../sim/boss-clock.js";
@@ -2843,7 +2844,9 @@ function planTurn(env: DecisionEnv): Decision | null {
   env.screenMemory.noEnemiesSince = undefined;
 
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
+  const firstPowerBlock = permafrostBlock(env.screenMemory, state);
   const playerSim: PlayerSim = {
+    ...(firstPowerBlock !== undefined ? { permafrostBlock: firstPowerBlock } : {}),
     freeAttacks,
     exhaustPile: exhaustPileSize(state.raw),
     ...(drawablePileSize(state.raw) !== undefined ? { drawable: drawablePileSize(state.raw) } : {}),

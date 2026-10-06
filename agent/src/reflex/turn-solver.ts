@@ -466,6 +466,8 @@ export interface PlayerSim {
   feelNoPain?: number;
   /** Afterimage already active: block for each subsequent card play, including replays. */
   afterImage?: number;
+  /** Observed Silent Permafrost's first-Power Block, only when availability is known. */
+  permafrostBlock?: number;
   /** Extra poison triggers granted by the observed Accelerant power. */
   poisonExtraTriggers?: number;
   /** Observed ENVENOM_POWER: poison for each attack hit that removes HP. */
@@ -918,6 +920,8 @@ export interface Outcome {
   attackPlays?: number;
   /** Tuning Fork's persistent counter after this line, when the relic is modelled. */
   tuningForkCount?: number;
+  /** Permafrost availability after this line, carried into later simulated turns. */
+  permafrostBlockLeft?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
   /**
@@ -1067,6 +1071,7 @@ interface Sim {
   potionHeal: number;
   /** Unmovable's doubling used by a Block card in this plan. */
   unmovableSpent: boolean;
+  permafrostBlock: number;
   /**
    * Attacks played in this plan, a card once (Stomp costs 1 less for each). A Strike Hellraiser plays when drawn counts:
    * the game's attacks_played_this_turn leaves those out, Stomp's cost does not (logged turn starts with Hellraiser up
@@ -1683,6 +1688,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     }
     if (card.type === "Attack") attackRelics(next, player);
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
+    if (card.type === "Power" && next.permafrostBlock > 0) {
+      gainBlock(next, next.permafrostBlock, player);
+      next.permafrostBlock = 0;
+      if (plays > 1) next.unknown = [...next.unknown, "永冻冰晶（能力重放触发未验证）"];
+    }
     if (card.type === "Skill" && (player.letterOpener || player.tuningFork)) skillRelics(next, player);
   }
   // T082DRCUHRRD F27 T1 / F9PP859XZ3RJ F37 T2: the old hand is gone before the replacement draw.
@@ -3353,6 +3363,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.freeAttacks > 0 ? { freeAttacksLeft: sim.freeAttacks } : {}),
       ...(sim.relicAttacks > 0 ? { attackPlays: sim.relicAttacks } : {}),
       ...(input.player.tuningFork && input.player.tuningFork.every > 0 ? { tuningForkCount: (input.player.tuningFork.count + sim.relicSkills) % input.player.tuningFork.every } : {}),
+      ...(input.player.permafrostBlock !== undefined ? { permafrostBlockLeft: sim.permafrostBlock } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),
@@ -3582,6 +3593,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     relicSkills: 0,
     freeAttacks: input.player.freeAttacks ?? 0,
     unmovableSpent: false,
+    permafrostBlock: input.player.permafrostBlock ?? 0,
     bombs: 0,
     gigantic: 0,
     pile: pileValue(input.drawPile, weights.hp, quietTurn(input) && !input.player.keepsBlock),
