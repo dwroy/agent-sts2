@@ -59,3 +59,5 @@
   }
 }
 ```
+
+- 2026-10-06 15:56 运维codex完成15:51 experience-done 20261006-150910-experience-update上线登记：源fbd7a45ff75aa66d2c9f52cf8d1b4bcba55a204d→实际live 9bc79a15954e97f00c333f512f802b473a480f23→固定发布da2ccb9230a65ae210b3aafe481d97f66b610141/树57e8952bb9ced9610745c3c18057afd494072f06/唯一S1.exp43；原第43节及11项proposed归档3f7c4946fe72075c95bf96ced362ed82667a54fd、main机械同步1cc11a07f92c4500afb634a9b2365db33f812703。源定稿tsc0/200文件2178例、合后tsc0/201文件2182例，两次草稿校正后的复验与全部日志保留；全部1031项已测源码/测试blob一致、其余2162项main最新blob及双方日志历史保持。CLI/by=ops仅11项shipped，首次证据/先验/claim/evidence/repeat和旧上线历史保持，0174独立S1.fix31及0172未实现项保持，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 178 item(s), 0 problem(s)。经验与七项已提交自动刷新逐blob同步，live实时刷新与后台产出保留，未新增live合并或运维游戏规则，完整外部checks_pending留本批后续事件。详情paper/materials/silent/20261006-1551-experience43-release.md。
