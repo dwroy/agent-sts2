@@ -54,6 +54,7 @@ def start_learner(argv, root, scripts, state_dir, label):
     proc = subprocess.Popen(argv, cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     return proc.pid, None
 WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
+FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
 
 
 def external_writer(worktree):
@@ -73,14 +74,61 @@ def external_writer(worktree):
 
 def available(root, task):
     worktree = os.path.join(root, ".worktrees", WORKTREES[task])
+    return available_worktree(worktree)
+
+
+def available_worktree(worktree):
     if not os.path.isfile(os.path.join(worktree, ".git")) or external_writer(worktree):
         return False
     result = subprocess.run(["git", "-C", worktree, "status", "--porcelain"], capture_output=True, text=True)
     return result.returncode == 0 and not result.stdout.strip()
 
 
+def requested_feature(state, root, scripts, character, reason, alive, stamp):
+    """Dispatch Roy's explicit calibration request without lending it a pure-bug prompt or worktree."""
+    if character != "silent" or reason != "ops":
+        return False, None
+    try:
+        with open(os.path.join(root, FEATURE_REQUEST), encoding="utf8") as handle:
+            request = json.load(handle)
+    except (OSError, ValueError):
+        return False, None
+    if (not isinstance(request, dict) or request.get("state") != "pending"
+            or request.get("task") != "silent-boss-calibration"
+            or request.get("character") != "silent" or request.get("authorized_by") != "Roy"
+            or not isinstance(request.get("request_id"), str)
+            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", request["request_id"])):
+        return False, None
+    key = "feature:" + request["request_id"]
+    prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request["request_id"]]
+    if (any(batch.get("state") == "done" or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
+            or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
+        return True, None
+    worktree = os.path.join(root, ".worktrees", "silent-boss-calibration")
+    if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
+            for batch in state["batches"].values()) or not available_worktree(worktree)):
+        return True, None
+    batch_id = stamp + "-fix-batch"
+    if batch_id in state["batches"]:
+        return True, None
+    state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
+    pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, "", character,
+                              "fix-batch", worktree, "silent-boss-calibration"], root, scripts, state_dir,
+                             "learner-" + batch_id)
+    batch = {"task": "fix-batch", "learner_task": "silent-boss-calibration", "character": character,
+             "runs": [], "key": key, "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
+             "feature_request": request["request_id"]}
+    if pane:
+        batch["pane"] = pane
+    state["batches"][batch_id] = batch
+    return True, (batch_id, pid)
+
+
 def busy(state, task, alive):
     for batch in state["batches"].values():
+        # The dedicated feature owns its own worktree, not the normal fix/proposal tree.
+        if batch.get("learner_task") == "silent-boss-calibration":
+            continue
         if WORKTREES.get(batch.get("task")) != WORKTREES[task] or batch.get("state") != "running":
             continue
         if alive(batch.get("pid")):
@@ -133,6 +181,10 @@ def fix_key(root, character):
 
 
 def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp):
+    if task == "fix-batch":
+        handled, result = requested_feature(state, root, scripts, character, reason, alive, stamp)
+        if handled:
+            return result
     if busy(state, task, alive) or not available(root, task) or (reason != "ops" and not retryable(state, task, key)):
         return None
     batch_id = stamp + "-" + task
