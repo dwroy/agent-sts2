@@ -601,3 +601,10 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 本局正常结束，五次读档均成功，无卡死/崩溃/非法动作；0195 first_run=KUZVERN40NGK/A10、prior=unknown/status=observed沿学习者原登记。交学习者依静默证据对判官与求解器路径做固定验证，保留原错判和撤源/恢复记录；不声称继续任一次就能赢整场，不外推未知后继招式或更改SL策略阈值。行号按复盘时只读live6ac57ea6，原局28e339fa+dirty未复原；22:29:59的路线旧上线及0力量无虚弱未直接观测两项勘误完整保留，0079的三条repeat保持代码SL替换与Jev原答责任分账。运维不改模型或冒标shipped。
 
 - 2026-10-06 23:30 运维codex按23:25 fix-done核实源f6ff3a9ce42337972b19ee227b2d51432e929f50→实际live代码65a7e115afa9baef94f1db0c100fe249ebcaba13→固定发布06b52ef8f3b19d288044acc91ca895fd29a53a7f/唯一S1.fix37，main机械同步442ef809afe812009599c5471c2fe91ec8424dab；源及合后首轮tsc0/vitest0各209文件2245例，最终撤源5失败3通过／恢复相关6文件56例（含新8）通过，第一版红绿与预合并历史冲突保持。仅CLI/by=ops登记silent-0195 shipped并关闭本项，误占位符PLACEHOLDER明确无效、原行与勘误保留；首证KUZVERN40NGK/A10、prior=unknown、claim/证据/repeat/history保持，不声称整场可转胜。旧0133/0127及0193/0194/0196不重置，完整外部待本批learner-checks。
+
+## 2026-10-07 01:07 A10复盘：生成牌即时评分遗漏收场使用条件（交学习者）
+
+- [ ] **非阻塞纯bug，silent-0197**：VPW8YH7A4QFM A10/F39 T1攻击药水选择题，代码以华丽收场60分对猎杀者15分直接选择；抽牌堆33张，入手后playable=false、unplayable_reason=unplayable，首轮没有抽牌，生成的收场实际贡献0伤。对局随后继续到T6正常死亡，无卡死；没有替代选牌的整场实打，不把15牌面伤当实际少打15或宣称修正会转胜。
+- 仅转录学习者定位：selection.ts:205调用thisTurnScore，card-model.ts:1492/1495的thisTurnDamage没有检查已观察的收场空抽牌堆条件，pick.ts:134按分差自动选择。行号对应只读live884c9f33；开局为3caa860b+dirty，不能将当前代码冒充开局快照。旧0110/0111机制文本上线不代表该评分入口覆盖。
+- 学习者回溯67个更早静默局，最早Y6GM2CHWJBEY A0/F17第2次T1以180分选收场，非空堆入手不可打；首证该局/A0、prior=no、observed，不重写成本局首证或标shipped。请按对局证据修评分入口并做固定夹具红绿验证，自测后依学习者live流程合入；铁甲与其他无关行为保持等价。运维未制定机制或打法。
+- 来源：ops/codex-ops/learner/20261007-004301.out；notes/lessons.md本局正文及01:01:00勘误；paper/materials/learning/ledger.jsonl的0197。0198联合遗物净值为机制观察，留学习者处理；其他未核定推演差额不增列bug。
