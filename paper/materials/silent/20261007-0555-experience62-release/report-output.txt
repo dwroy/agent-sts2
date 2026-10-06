@@ -1,0 +1,35 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.7 → 2026-10-07.8；提交：9bf7de2c（分支 exp-silent）；合入：9bf7de2c，已登记 S1.exp62。
+- 条数：新增 1、更新 11（加证据 11、只改数字 0）、退役 0；active 132 → 133；总字符 48258 → 47737。A8 适用 126 条／44630 字，A9 适用 127 条／44929 字。
+- 机制推理（支持／反例局数）：  
+  埋地 — 盾归零取消当轮攻击 — 7／0 — LRN0HPZ0FZS1  
+  步法 — 敏捷逐挡牌兑现，不补旧挡 — 45／0 — QNTW139MGECA  
+  力量与虚弱 — 逐击计算，穿挡与毒另计 — 72／0 — QNTW139MGECA  
+  非凡技艺 — 力敏收益由后续牌兑现 — 5／0 — QNTW139MGECA  
+  尖啸 — 临时减力次轮撤回 — 35／0 — QNTW139MGECA  
+  萎靡 — 减力不提供格挡，阶段变化另核 — 14／0 — QNTW139MGECA  
+  仪式兽 — 跨阈值清阶段，后段仍成长 — 14／0 — QNTW139MGECA  
+  永恒羽毛 — 到火回复与休息回血分账 — 8／0 — QNTW139MGECA  
+  棱柱 — 技能挡收益与污染血价合算 — 10／0 — QNTW139MGECA  
+  能力支付观察 — 持有能力不等实际建立 — 71／0 — QNTW139MGECA
+- 改了的手写知识：无。
+- 测试：tsc 退出 0；vitest 214 文件／2289 用例／退出 0。文字更正后，源分支及合后各复测一次，均通过，无测试失败。
+- 切片大小：配对增量中位 −4 字；最大 5075 → 5090 字。
+- 学习账本：新增无；改成 proposed：silent-0207、silent-0005、silent-0006、silent-0036、silent-0046、silent-0053、silent-0133、silent-0142、silent-0167、silent-0168、silent-0021、silent-0057、silent-0125、silent-0019、silent-0020；退役无；`ledger.py check` 退出 0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.8","commit":"9bf7de2c3b52c6c7ad2bdfb3c10734a91f88438f","merged":"9bf7de2c3b52c6c7ad2bdfb3c10734a91f88438f","added":1,"updated":11,"retired":0,"active":133,"mechanisms":["埋地盾归零眩晕","步法逐牌敏捷","力量与虚弱","非凡技艺力敏","尖啸临时减力","萎靡与阶段成长","仪式兽阈值清阶段","永恒羽毛到火回血","棱柱技能污染血价","能力实际支付观察"],"tests":{"tsc":0,"vitest":0,"cases":2289},"ledger":{"added":[],"proposed":["silent-0207","silent-0005","silent-0006","silent-0036","silent-0046","silent-0053","silent-0133","silent-0142","silent-0167","silent-0168","silent-0021","silent-0057","silent-0125","silent-0019","silent-0020"],"retired":[],"check":0}}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1131c-c66e-77f2-8098-baa45f17d82a
+轮数：1；工具调用：command_execution×65 file_change×7
+token：输入 232.3k、输出 59.6k（其中推理 22.2k）、cache 读 11836.9k、cache 写 0（命中 98.1%）
+成本：未提供
+耗时：1544.7 s（墙钟）
+时间：首个事件 1.6 s、模型首个输出 6.3 s、首次工具 8.5 s、末次工具结束 1503.0 s；工具内共 1174.9 s，其余（模型生成、推理、网络）368.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×71 wait×4；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T05-26-55-01a1131c-c66e-77f2-8098-baa45f17d82a.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-052654-experience-update.jsonl
