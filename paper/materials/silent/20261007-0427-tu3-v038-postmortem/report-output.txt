@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：TU3XB4CAEDAW（A10，第40层，青蛙骑士；末次T5以8血、0挡承受28攻击阵亡）。已追加勘误：F39遗物、F35推演数字及“专长”ID误写。
+- 已追加：V0383V5S9BCQ（A10，第11层，旧日雕像；T5以22血、0挡承受25攻击阵亡）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：
+  - TU3XB4CAEDAW：完整原线执行比例；替路线／休息的受控代价；知识恶魔毛伤及回血分项；推演差额原因；boss时钟及三幕boss实打；Jev缓存命中。
+  - V0383V5S9BCQ：保留中和／替路线／休息的受控代价；完整原线执行比例；雕像T3伤害预测差额原因；boss时钟及实打；Jev缓存命中。
+- 学习账本：TU3XB4CAEDAW：新增无；更新 silent-0005、silent-0006、silent-0019、silent-0027、silent-0030、silent-0046、silent-0057、silent-0083、silent-0132；老错repeat无。
+- 学习账本：V0383V5S9BCQ：新增 silent-0205；更新 silent-0006、silent-0020、silent-0021、silent-0046；老错repeat无。`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["TU3XB4CAEDAW","V0383V5S9BCQ"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0205"],"updated":["silent-0005","silent-0006","silent-0019","silent-0020","silent-0021","silent-0027","silent-0030","silent-0046","silent-0057","silent-0083","silent-0132"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a112d9-2214-7b52-81cc-26d91e799668
+轮数：1；工具调用：command_execution×44
+token：输入 225.9k、输出 36.6k（其中推理 11.2k）、cache 读 5294.2k、cache 写 0（命中 95.9%）
+成本：未提供
+耗时：843.1 s（墙钟）
+时间：首个事件 3.3 s、模型首个输出 7.6 s、首次工具 10.4 s、末次工具结束 831.6 s；工具内共 24.8 s，其余（模型生成、推理、网络）815.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×40；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T04-13-02-01a112d9-2214-7b52-81cc-26d91e799668.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-041301-postmortem.jsonl
