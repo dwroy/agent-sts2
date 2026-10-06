@@ -1,0 +1,21 @@
+import json,re,subprocess
+from pathlib import Path
+O=Path(__file__).parent;ROOT=O.parents[2];LIVE=ROOT/'.worktrees/live';M=json.load(open(O/'live-merge.json'));L=json.load(open(O/'ledger-result.json'));C=json.load(open(O/'changes.json'));S=json.load(open(O/'slice-summary.json'));source=(O/'commit.txt').read_text().strip()
+assert M['merged'] and M['test_rc']==0 and M['untouched_knowledge_blobs_preserved'] and L['check']==0
+def git(*args):return subprocess.check_output(['git','-C',str(LIVE),*args],text=True).strip()
+def tests(p):
+ s=p.read_text();return dict(tsc=0,vitest=0,files=sum(map(int,re.findall(r'Test Files\s+(\d+) passed',s))),cases=sum(map(int,re.findall(r'Tests\s+(\d+) passed',s))))
+st=tests(O/'test-source.log');lt=tests(O/('test-live-retry.log' if M.get('test_first_rc') else 'test-live.log'));assert st['cases'] and lt['cases'];assert git('rev-parse','HEAD')==M['merged']
+files=['paper/materials/decision-log.md','eval/versions.json'];assert not git('diff','--cached','--name-only') and not git('diff','--name-only','--',*files)
+v=json.load(open(LIVE/files[1]));name='S1.exp49';assert not any(x['name']==name for x in v['versions'])
+stamp=subprocess.check_output(['date','+%Y-%m-%d %H:%M'],text=True).strip()
+message=(f'Codex学习者经验自测后上线：静默经验2026-10-06.23→.24，源{source}→实际live合入{M["merged"]}，eval {name}。来源notes/lessons.md:5113的5X2GHKJ89PN1 SILENT A10/F48及19:29/19:32勘误、静默第四十九次增量和本角色历史；来源条目'+','.join(C['updated'])+'；账本'+','.join(L['proposed'])+'仅CLI/by=learner:experience-update proposed/check0，silent-0191纯单行动虚弱重复折减保持observed不给DS。'
+'旧60局七数组/血档/源节点/回血/SL逐行重算一致，61局975房51实死、A10二十一局261房21死，MCCK仅进数字；初稿旧基线指59局，改指60局重算通过、原初稿保持。新20房，六次女王49/70、T6止0赢，clean初38同序但到手轮不同；第4/5与末次同T4后空翻7血4挡3费、敌159血1力，末X3代扫腿+X1实多付6血、后光束33→27仍死，预测血价7分账，无单因转胜。'
+'敏捷1→3仅确认防御4→6多2，斗篷同条件差未记录；末12挡/3血对27需15、差12。群蛇末六触发名义24被女王挡吸8、净16，本体4+3+3另10，行动26；毒66后敌355/10未杀任一侧。水盆无攻击末补4、尖啸临时减力次轮恢复、萎靡后敌力继续成长；手里剑第三攻击后0→1、未再攻击不预支伤。巨兽首试T11清250本体、T12虚弱47→35与21挡使18→4；五营火实回148、事件回10另记，终38张、计划能力未取得/夜魇未复制与路线条件分账，无新用药规则或未选因果。'
+f'新增0更新13（全部补证、纯数字0）退役0，active123/57638→58835字，高56中40低27；开工压11条88字、数字/局号/旧用药句保持；A8/A9各117条56022字、A10 118条56438字。240切片配对中位+88、最大6420→6674。源首轮tsc0/{st["files"]}文件{st["cases"]}例、合后tsc0/{lt["files"]}文件{lt["cases"]}例/vitest0、合后首轮{M["test_first_rc"]}，完整沙箱外交调度器。'
+f'合前{M["base"]}，知识不同blob重叠0，刷新与其他知识blob保持，双方decision-log有序追加历史保持，无源码/生成器/其他角色/手写知识变更，不重建。first_run/prior/旧版本/repeat保持，交运维据experience-done及learner/runs/20261006-193318-experience-update/handoff-ops.md核实际合入后CLI登记shipped，不另审。主目录本节/账本只追加不提交，不停对局、不运行play、不推送。')
+with (LIVE/files[0]).open('a') as f:f.write('\n- '+stamp+' '+message+'\n')
+v['versions'].append(dict(name=name,family='Silent',commit=M['merged'],source=f'decision-log {stamp}（静默经验2026-10-06.24；源{source}；5X2GHKJ89PN1 A10及19:29/19:32勘误、本角色历史。新增0更新13退役0/active123/58835字；群蛇名义伤与挡/本体分账、敏捷脆弱、萎靡SL血价/临时减力/魂缚/条件挡/手里剑后续窗口、巨兽自爆与路线回血观察。旧60局完整重算、原用药句/其他角色不变，源/合后固定沙箱tsc/vitest通过；账本proposed交运维核实际合入登记shipped，完整外部交调度器。）')))
+(LIVE/files[1]).write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n');git('add',*files);git('diff','--cached','--check');patch=O/'release.patch';patch.write_text(git('diff','--cached','--binary')+'\n')
+with (O/'gitleaks-release.log').open('w') as f:subprocess.run(['nice','-n','19',str(Path.home()/'.local/bin/gitleaks'),'dir','--redact','--no-banner',str(patch)],stdout=f,stderr=subprocess.STDOUT,check=True)
+git('-c','user.name=dwroy','-c','user.email=roy.dongwei@gmail.com','commit','-m','Record Silent experience 2026-10-06.24 deployment','-m','Co-Authored-By: Codex GPT-6 <noreply@openai.com>');M.update(eval_version=name,release_commit=git('rev-parse','HEAD'),release_time=stamp,source_tests=st,live_tests=lt);(O/'live-merge.json').write_text(json.dumps(M,ensure_ascii=False,indent=2)+'\n');print('上线登记',M['release_commit'],name)

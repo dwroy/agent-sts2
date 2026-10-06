@@ -1,0 +1,82 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-reward-addition.test.ts (10 tests | 7 failed) 126ms
+   × matches the observed F28 card reward on the actual production question 49ms
+   × matches the observed F30 card reward on the actual production question 4ms
+   × matches the observed F31 card reward on the actual production question 5ms
+   × preserves every original option and HP fact while adding the conditional table 10ms
+   × leaves invalid and unobserved pre-choice counters unknown, including transient five 4ms
+   × does not invent capped healing at a nearly full board 5ms
+   × follows current sparse option indices and keeps an additional unknown action 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-reward-addition.test.ts > matches the observed F28 card reward on the actual production question
+ FAIL  tests/silent-reward-addition.test.ts > matches the observed F30 card reward on the actual production question
+ FAIL  tests/silent-reward-addition.test.ts > matches the observed F31 card reward on the actual production question
+TypeError: Cannot read properties of undefined (reading 'current_deck_size')
+ ❯ tests/silent-reward-addition.test.ts:48:19
+     46|   const observed = fixture.observations.filter((r: any) => r.floor ===…
+     47|   const start = observed[0], end = floor === 31 ? fixture.observations…
+     48|   expect(addition.current_deck_size).toBe(start.deck_size);
+       |                   ^
+     49|   expect(addition.current_hp).toBe(start.hp);
+     50|   expect(addition.current_five_rings_count).toBe(start.book_count);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/silent-reward-addition.test.ts > preserves every original option and HP fact while adding the conditional table
+AssertionError: expected undefined to be defined
+ ❯ tests/silent-reward-addition.test.ts:81:32
+     79|   // Relic text itself is unchanged by is_melted in the existing build…
+     80|   expect(original).toEqual(absent.facts.facts);
+     81|   expect(reward_card_addition).toBeDefined();
+       |                                ^
+     82| });
+     83|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/silent-reward-addition.test.ts > leaves invalid and unobserved pre-choice counters unknown, including transient five
+TypeError: Cannot read properties of undefined (reading 'options')
+ ❯ tests/silent-reward-addition.test.ts:88:32
+     86|     const raw = board(); book(raw).stack = stack;
+     87|     const { addition } = question(raw);
+     88|     for (const ref of addition.options.slice(0, 3)) {
+       |                                ^
+     89|       expect(ref.cards_added_reference).toBe(2);
+     90|       expect(ref.five_rings_count_after_reference).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/silent-reward-addition.test.ts > does not invent capped healing at a nearly full board
+TypeError: Cannot read properties of undefined (reading 'options')
+ ❯ tests/silent-reward-addition.test.ts:104:19
+    102|   const raw = board(); raw.run.current_hp = 80;
+    103|   const { addition } = question(raw);
+    104|   expect(addition.options[0].five_rings_count_after_reference).toBe(0);
+       |                   ^
+    105|   expect(addition.options[0].hp_gain_reference).toBeNull();
+    106|   expect(addition.options[0].hp_after_reference).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/silent-reward-addition.test.ts > follows current sparse option indices and keeps an additional unknown action
+TypeError: Cannot read properties of undefined (reading 'addition_reference_tied_option_groups')
+ ❯ tests/silent-reward-addition.test.ts:144:19
+    142|   const { addition, options } = question(raw);
+    143|   expect(Object.keys(options)).toEqual(["card4", "card6", "card8", "sk…
+    144|   expect(addition.addition_reference_tied_option_groups).toEqual([["ca…
+       |                   ^
+    145|   const picks = Object.keys(options).map((key): PickOption => ({ key, …
+    146|     intent: key === "skip" ? { action: "skip_reward_cards" } : { actio…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 3 passed (10)
+   Start at  19:21:28
+   Duration  726ms (transform 402ms, setup 261ms, import 231ms, tests 126ms, environment 0ms)
+

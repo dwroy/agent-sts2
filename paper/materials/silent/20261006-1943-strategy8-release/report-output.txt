@@ -1,0 +1,35 @@
+已实现并合入 live，版本 **S1.strategy8**：卡奖题展示宾邦复制、五轮书计数与回血的条件参考，并说明当前模拟的覆盖限制。
+
+- 证据：PU80F84P6HPN，A10，F28 T7、F30 T7、F31 T6；新提案 silent-0190，关联0187/0188。
+- 源码 `7f8bb5b9` → live 合入 `6939209e` → 发布 `71af5ec9`。
+- 撤生产接线：7失败、3通过；恢复：10通过。源与合后各 tsc/vitest 退出0，205文件、2213例通过；gitleaks通过，无超时重跑。
+- [提案与完整回报](/home/dw/Projects/agent-sts2/learner/runs/20261006-191302-strategy-proposal/proposal.md)；[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261006-191302-strategy-proposal/handoff-ops.md)。
+
+全局权重、SL、血线、完整时钟校准及通用复制模拟仍证据不足。0190保持 proposed，交运维核实并登记 shipped；沙箱外完整检查待调度器补跑。
+
+```json
+{
+  "task": "strategy-proposal",
+  "base": "370a09f872f1e2ac77e2b1b101a89a402ab8b32d",
+  "runs": ["D4LJ9QMGFB8Q","S9UZAK0JP0C0","UJ0K3G10609Y","U8K28UUGYP3U","MCCK2602T1SR","0NZXA12NLDMH","4ANT8D00TP72","XBD8Z9XLPCPN","PU80F84P6HPN","NB8KCF6HRGVF"],
+  "fixes": [{
+    "id": "silent-0190",
+    "commit": "7f8bb5b980c857b76fad4055e6e4793aaf01b793",
+    "version": "S1.strategy8"
+  }],
+  "skipped": ["全局权重、SL、血线、完整时钟校准及通用复制模拟：证据不足"],
+  "merged": "6939209e5ee34533f43b903d70bb8b3f3945df36",
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2213}
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a110ea-c771-74d0-92c7-ca227a9b3167
+轮数：1；工具调用：command_execution×56 file_change×10
+token：输入 187.1k、输出 40.1k（其中推理 15.5k）、cache 读 6098.2k、cache 写 0（命中 97.0%）
+成本：未提供
+耗时：1250.0 s（墙钟）
+时间：首个事件 1.9 s、模型首个输出 7.4 s、首次工具 9.7 s、末次工具结束 1218.7 s；工具内共 598.1 s，其余（模型生成、推理、网络）650.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×48；/home/dw/.codex-sts2/sessions/2026/10/06/rollout-2026-10-06T19-13-04-01a110ea-c771-74d0-92c7-ca227a9b3167.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261006-191302-strategy-proposal.jsonl

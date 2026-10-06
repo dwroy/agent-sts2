@@ -1,0 +1,125 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-single-action-weak.test.ts (8 tests | 6 failed) 37ms
+     × VLV F37 attempt 2 T5: Poisoned Stab reports the observed four damage, not three 19ms
+     × 5X2 F48 attempt 6 T6: Stab and two Shivs report ten body damage, keeping Serpent Form separate 4ms
+     × the next 5X2 Shiv matches the observed three HP loss 4ms
+     × Damage previews still resolve target Vulnerable and block 2ms
+     × CalculatedDamage previews still resolve target Vulnerable and block 2ms
+     × DamagePerHit previews still resolve target Vulnerable and block 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-single-action-weak.test.ts > single-action options count Weak once > VLV F37 attempt 2 T5: Poisoned Stab reports the observed four damage, not three
+AssertionError: expected { action: 'Play 带毒刺击 on 巨斧机器人', …(8) } to match object { damage: 4, …(2) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damage": 4,
+-   "damage_after_block": 4,
+-   "target_hp": "37 -> 33",
++   "damage": 3,
++   "damage_after_block": 3,
++   "target_hp": "37 -> 34",
+  }
+
+ ❯ tests/silent-single-action-weak.test.ts:56:18
+     54|     const observedLoss = before.combat.enemies[0].current_hp - after.c…
+     55|     expect(observedLoss).toBe(4);
+     56|     expect(stab).toMatchObject({ damage: observedLoss, damage_after_bl…
+       |                  ^
+     57|     expect(stab?.modifiers ?? "").not.toContain("Weak");
+     58|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/silent-single-action-weak.test.ts > single-action options count Weak once > 5X2 F48 attempt 6 T6: Stab and two Shivs report ten body damage, keeping Serpent Form separate
+AssertionError: expected { action: 'Play 带毒刺击 on 火炬头聚合体', …(8) } to match object { damage: 4, …(2) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damage": 4,
+-   "damage_after_block": 4,
+-   "target_hp": "73 -> 69",
++   "damage": 3,
++   "damage_after_block": 3,
++   "target_hp": "73 -> 70",
+  }
+
+ ❯ tests/silent-single-action-weak.test.ts:68:18
+     66|     const shiv2 = choices["c4->e0"]!;
+     67|     expect(before.combat.enemies[0].current_hp - afterStab.combat.enem…
+     68|     expect(stab).toMatchObject({ damage: 4, damage_after_block: 4, tar…
+       |                  ^
+     69|     expect(shiv1).toMatchObject({ damage: 3, damage_after_block: 3 });
+     70|     expect(shiv2).toMatchObject({ damage: 3, damage_after_block: 3 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/silent-single-action-weak.test.ts > single-action options count Weak once > the next 5X2 Shiv matches the observed three HP loss
+AssertionError: expected { action: 'Play 小刀 on 火炬头聚合体', …(8) } to match object { damage: 3, …(2) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damage": 3,
+-   "damage_after_block": 3,
+-   "target_hp": "65 -> 62",
++   "damage": 2,
++   "damage_after_block": 2,
++   "target_hp": "65 -> 63",
+  }
+
+ ❯ tests/silent-single-action-weak.test.ts:79:39
+     77|     const observedLoss = before.combat.enemies[0].current_hp - after.c…
+     78|     expect(observedLoss).toBe(3);
+     79|     expect(options(before)["c2->e0"]).toMatchObject({ damage: observed…
+       |                                       ^
+     80|   });
+     81|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/silent-single-action-weak.test.ts > single-action options count Weak once > Damage previews still resolve target Vulnerable and block
+ FAIL  tests/silent-single-action-weak.test.ts > single-action options count Weak once > CalculatedDamage previews still resolve target Vulnerable and block
+ FAIL  tests/silent-single-action-weak.test.ts > single-action options count Weak once > DamagePerHit previews still resolve target Vulnerable and block
+AssertionError: expected { action: 'Play 带毒刺击 on 火炬头聚合体', …(8) } to match object { damage: 6, …(2) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damage": 6,
+-   "damage_after_block": 4,
+-   "target_hp": "73 -> 69",
++   "damage": 4,
++   "damage_after_block": 2,
++   "target_hp": "73 -> 71",
+  }
+
+ ❯ tests/silent-single-action-weak.test.ts:91:18
+     89|     raw.combat.enemies[0].powers.push({ power_id: "VULNERABLE_POWER", …
+     90|     const stab = options(raw)["c0->e0"]!;
+     91|     expect(stab).toMatchObject({ damage: 6, damage_after_block: 4, tar…
+       |                  ^
+     92|     expect(stab.modifiers).toContain("Vulnerable");
+     93|     expect(stab.modifiers).not.toContain("Weak");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed (8)
+   Start at  19:47:50
+   Duration  709ms (transform 438ms, setup 332ms, import 194ms, tests 37ms, environment 0ms)
+
