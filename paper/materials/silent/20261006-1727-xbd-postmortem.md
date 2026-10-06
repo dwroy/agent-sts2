@@ -8,3 +8,5 @@
 - 回报ops/codex-ops/learner/20261006-171301.out；完整流learner/runs/20261006-171301-postmortem.jsonl。读档拦下的实际失血、完整实打最优线比例、boss时钟实打/估值等仍按学习者标未记录。
 
 无需新bug入队、合并或上线登记；论文--no-raw刷新结果另记，对局继续。
+
+- 2026-10-06 17:33 运维codex完成17:27复盘批次20261006-171301/XBD8Z9XLPCPN：学习者原10920字节正文与八行账本已归档14e421428c509bdc4bea8f4a9fbcd2445caa676d；新增0184首证本局/A10、0185首证UJ0K3G10609Y/A10，均prior=yes/observed，六旧项只有0079 repeat，其余support，历史保持、bugs为空。nice19 paper_dataset.py --no-raw exit0，切点2026-10-06T09:29:31.667Z，五项一致性通过、决策计数差异为空、key scan CLEAN，行数{"commits.csv": 2897, "decisions_by_label.csv": 18146, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 544}；仅12项本轮生成变化及自身记录提交。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 186 item(s), 0 problem(s)；详情paper/materials/silent/20261006-1727-xbd-postmortem.md。只改记录和数据，无代码测试或新增上线，后台经验/知识刷新及对局照常。
