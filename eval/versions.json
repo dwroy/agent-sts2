@@ -996,6 +996,12 @@
       "family": "Silent",
       "commit": "0b6e5c94f3bbbe0a936ced995f790987c57c4b88",
       "source": "decision-log 2026-10-07 03:05（fix-queue-v4 2026-10-07 02:20重放跨回合计数与02:31羽化即时抽牌；源码129853b817c0e985e222b09385a9bfeb0562ec7f/1ab1ba8dc446e5a12dec0396528c9b2a5b478fe8→实际live代码0b6e5c94f3bbbe0a936ced995f790987c57c4b88。来源notes/lessons.md的DPYF2BAA3DKT末次F48 T1/T7、HUVEPWQAHWFU F35 T2及首证C48LLXBGKXQ9 F24 T1；bug-infra silent-0199/silent-0202，独立mechanic silent-0200/silent-0203不冒记shipped。重放仅保存已接受动作的附魔额外次数，跨轮原始累计25加重放1为26，T7串刺达到30后新增9伤凋萎；完整需损35/28血差−7，持牌伤18，原始每轮均值保持25/6，投斧单独计数；续行/重读/重启/SL与失败动作固定覆盖。羽化仅静默已观察普通Cards=3分支不再抽3；随机生成的未来收益保留未建模，无虚构即时抽牌/随机牌收益。铁甲等价，不改保血/留药/时钟/路线/休息/SL阈值/无色估值，不增加药水代价、过滤或否决，全部选项保留，不声称整场转胜。羽化4例撤源码2失败2通过，重放10例撤全部源码9失败1通过；恢复相关回归3文件50例通过，源每提交及合后固定沙箱tsc/vitest0。敏感信息扫描0，知识刷新逐blob保留，无生成器改动不重建；仅decision-log追加冲突保留双方全部非空原文/重复次数。0202第一次where.commits误写a-placeholder已明确无效并CLI追加正式提交勘误，原历史保留；两bug条目仅CLI/by=learner:fix-batch proposed。交运维据fix-done和/home/dw/Projects/agent-sts2/learner/runs/20261007-024302-fix-batch/handoff-ops.md确认实际合入后CLI登记shipped/S1.fix40，完整外部套件交调度器；128项旧修复不重复提交，缓存实测/自愈根因/性能专项与策略待定保持，队列未改，不停对局、不运行play、不推送。）"
+    },
+    {
+      "name": "S1.exp58",
+      "family": "Silent",
+      "commit": "e39f07ec6d2fe4591313eee5c2a02feda17699f9",
+      "source": "decision-log 2026-10-07 03:35（静默经验2026-10-07.4；源9fea0539467459ee040991c616fb9ca3afabc21a；HUVEPWQAHWFU A10及勘误、本角色历史，羽化首证C48LLXBGKXQ9 A0。增1改13退0，active129/50536字；仪式成长、力敏与被动挡、毒雾/余像实际启动、羽化生成/即时抽牌分账、沙虫两试末胜与路线回血/护栏观察。旧70局重算一致，无新用药规则/源码变更；源定稿与合后沙箱tsc/vitest0，15项proposed交运维核实际合入后shipped，完整外部交调度器。）"
     }
   ]
 }
