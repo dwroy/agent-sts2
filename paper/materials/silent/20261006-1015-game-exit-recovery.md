@@ -1,0 +1,7 @@
+# 游戏退出后的对局恢复
+
+- 2026-10-06 10:19 处理10:15 stall：五分钟对局进程重启10次，当前局TD1HVGS7H6LB，run-config解析SILENT/A10；最后正常决策在F17。`bash ops/codex-ops-do.sh procs`退出0，原autoplay PID1734436仍存活；`win-procs`退出0，只见桌面Steam PID7248/RDP-Tcp#0/会话1及steamservice.exe PID23804/Services/会话0，没有游戏。`mod-state`退出1：mod unreachable (curl exit 7)。不是角色配置或经验问题。
+- 原控制台logs/console/20261006-095404-62b4caf8+dirty.log：10:09:08触发F17 T16读档，save_and_quit与continue_run先报告完成，10:10:13 back_in_fight等待60秒后连接拒绝，SL标记失败；随后连续三次连接错误触发circuit breaker。`ops/restarts.log`10:10:21至10:15:03记此局10次重启。只确认这个时间顺序，游戏退出根因未定位，不把退出归因于某条游戏规则或本次代码发布。
+- 按授权执行`bash ops/codex-ops-do.sh launch-game`退出0：桌面计划任务创建、运行、删除，游戏PID33748/RDP-Tcp#0/会话1。没有需清理的会话0 steam.exe或游戏；steamservice.exe未动，原autoplay未重启，没有执行kill、play-stop、改配置、放弃存档或更改角色。
+- 独立恢复确认：mod随后正常返回MAIN_MENU/TD1HVGS7H6LB；原autoplay自动起对局PID2933175。logs/console/20261006-101553-c1f61de9+dirty.log10:16:09记录从日志重建304 states/295 decisions/3 run plans/68 items，保留原SL失败禁用标记；continue_run动作曾超时，10:16:17短暂UNKNOWN后已回COMBAT，10:16:23起连续执行战斗动作，至少至10:17:06仍有动作。后续`mod-state`响应前缀为同局CARD_SELECTION/T6，证明仍在该局战斗中；该响应因broker截断未形成完整JSON，不把它记为完整JSON校验通过。恢复完成，无需Roy桌面操作。
+- 同轮发现两个非阻塞工具缺口，转录fix-queue-v4.md交学习者：`ops/codex-ops-actions.sh:127`至`:130`的launch-game只查curl传输完成，状态解析失败打印“mod answers: Traceback”仍退出0；`:67`按20000字符截断mod-state的JSON却退出0。本次截断响应20001字节/SHA256 8843f3779018124ff861150c794dc8630d1e698003cfa22d32fff6bcc1eb00fe，解析错误Invalid control character at: line 1 column 20001 (char 20000)；只归因broker截断，游戏恢复另由正常状态和新控制台动作确认。不新建游戏知识、bug-infra账本或eval版本。
