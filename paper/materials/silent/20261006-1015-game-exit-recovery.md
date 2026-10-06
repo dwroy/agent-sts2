@@ -5,3 +5,5 @@
 - 按授权执行`bash ops/codex-ops-do.sh launch-game`退出0：桌面计划任务创建、运行、删除，游戏PID33748/RDP-Tcp#0/会话1。没有需清理的会话0 steam.exe或游戏；steamservice.exe未动，原autoplay未重启，没有执行kill、play-stop、改配置、放弃存档或更改角色。
 - 独立恢复确认：mod随后正常返回MAIN_MENU/TD1HVGS7H6LB；原autoplay自动起对局PID2933175。logs/console/20261006-101553-c1f61de9+dirty.log10:16:09记录从日志重建304 states/295 decisions/3 run plans/68 items，保留原SL失败禁用标记；continue_run动作曾超时，10:16:17短暂UNKNOWN后已回COMBAT，10:16:23起连续执行战斗动作，至少至10:17:06仍有动作。后续`mod-state`响应前缀为同局CARD_SELECTION/T6，证明仍在该局战斗中；该响应因broker截断未形成完整JSON，不把它记为完整JSON校验通过。恢复完成，无需Roy桌面操作。
 - 同轮发现两个非阻塞工具缺口，转录fix-queue-v4.md交学习者：`ops/codex-ops-actions.sh:127`至`:130`的launch-game只查curl传输完成，状态解析失败打印“mod answers: Traceback”仍退出0；`:67`按20000字符截断mod-state的JSON却退出0。本次截断响应20001字节/SHA256 8843f3779018124ff861150c794dc8630d1e698003cfa22d32fff6bcc1eb00fe，解析错误Invalid control character at: line 1 column 20001 (char 20000)；只归因broker截断，游戏恢复另由正常状态和新控制台动作确认。不新建游戏知识、bug-infra账本或eval版本。
+
+- 2026-10-06 10:30 Roy在10:28 manual补充：10:1x退出是本人误关游戏；退出原因已澄清，排查关闭。原10:19当时未知的记录、SL失败/重启及恢复证据保留。launch-game成功判读与mod-state截断两项工具缺口继续处理，无需Roy另作操作。

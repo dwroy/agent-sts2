@@ -507,3 +507,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 - [ ] `ops/codex-ops-actions.sh:127`至`:130`：launch-game用curl传输成功当mod就绪，第二次状态读取的JSON解析错误经head只打印“mod answers: Traceback”，随后仍exit0。证据10:15 stall恢复TD1HVGS7H6LB SILENT A10/F17时，`bash ops/codex-ops-do.sh launch-game`真实返回0与该Traceback；游戏后来由独立mod-state和控制台动作确认恢复，不能借后来恢复掩盖动作的误报。交学习者用固定响应数据核对HTTP状态、空/坏JSON、ok/data/screen结构及真正就绪的区别，让返回值对应实际状态；不改游戏规则或需要Roy操作的桌面流程。
 - [ ] `ops/codex-ops-actions.sh:67`：mod-state将状态JSON机械截成20000字符后仍exit0，本次`bash ops/codex-ops-do.sh mod-state`战斗响应20001字节（含末换行），JSON解析在第20001列失败，SHA256 8843f3779018124ff861150c794dc8630d1e698003cfa22d32fff6bcc1eb00fe；响应前缀同局CARD_SELECTION/T6。交学习者保留可解析的完整状态或明确摘要/错误，不把中途切断的JSON冒充完整响应，固定数据覆盖小状态与超过20000字符的大状态。原日志、自动重启记录和失败返回历史保留；没有对应游戏知识或bug-infra id，不新建/冒标shipped，不提高游戏战斗预算。
+
+## 2026-10-06 10:30 游戏退出原因已澄清（停止排查）
+
+- [x] **游戏退出根因排查取消**：Roy在10:28 manual说明10:1x游戏退出是本人误关；停止将这次退出作为故障调查，不另派退出根因任务。10:15自动重启与恢复记录、原SL失败和时序保留；上节launch-game成功判读、mod-state截断两个未完成工具缺口照常交学习者。
