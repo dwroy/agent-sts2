@@ -365,3 +365,5 @@
 - 2026-10-07 07:04 [运维 codex] Roy：07:00复盘发现新非阻塞bug silent-0213（TKXQ6L4N9A6U/A10/F22/T6）：毒斩杀预测漏算持牌毒素伤害，7血、0挡留两张各5伤毒素而错误结束，玩家先死亡、敌毒未结算。学习者已定位turn-solver.ts:2939及combat-plan.ts:3278，已追加notes/fix-queue-v4.md交学习者实现；独立机制0214、旧0059及首证／版本历史保留，尚未修复，不声称修复可使整局转胜，对局继续。
 
 - 2026-10-07 07:29 [运维 codex] Roy 07:25校准新功能已单独派发20261007-072650-fix-batch（PID704287/pane wJ:p4A），专用任务notes/silent-boss-calibration-task-20261007.md、准备提交e0064f7cdff0202b4dc00bc3b21165a03fbc7866。借fix-batch通道，仅该功能，不混silent-0213：全部SILENT boss跨进阶、时间切分、仅静默Platt、分段/A10残差、沿原逐boss可信门槛、不足场数及定期重跑；结果写论文和台账，自测后自行live合入，完整检查交调度器。现阶段仅派发，未宣称校准或可信名单已完成；对局继续。
+
+- 2026-10-07 07:54 给Roy，07:25静默boss新功能已单独派发20261007-075131-fix-batch（专用silent-boss-calibration模板/同名独占工作树，PID 767463）。更正07:29旧072650批次的范围判断：它实际仍修silent-0213，原通知/回执保留；功能与bug分批。派发入口固定Python6例/撤路由1例失败，最终sandbox tsc0、215文件2299例，原失败及复验日志保留；S1.exp64经验登记完成、外部完整检查待调度器。交接paper/materials/silent/20261007-0725-calibration-dispatch.md；校准尚未完成，完成后按原标准登记实际报告/版本/台账，对局继续。
