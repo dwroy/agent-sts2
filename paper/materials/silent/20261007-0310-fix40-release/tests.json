@@ -1,0 +1,45 @@
+{
+  "source_checks": [
+    {
+      "name": "metamorphosis-suite",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 213,
+      "cases": 2279
+    },
+    {
+      "name": "replay-suite",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 214,
+      "cases": 2289
+    }
+  ],
+  "red_green": {
+    "silent-0202": {
+      "red_exit": 1,
+      "failed": 2,
+      "passed": 2,
+      "restored_passed": 4
+    },
+    "silent-0199": {
+      "red_exit": 1,
+      "failed": 9,
+      "passed": 1,
+      "restored_related_files": 3,
+      "restored_related_passed": 50
+    }
+  },
+  "initial_test_corrections": [
+    "HUVEPWQAHWFU固定卡牌index=2在合成板面重映射为0，初稿回放为null，已修正夹具接线。",
+    "T7蜥蜴尾巴完整消费历史未放入本项夹具；hpLoss复活字段不能代替完整需损，断言改为既有incomingAfterBlock=35/heldDamage=18/Wither新增1及28-35=-7，未改生产复活规则。"
+  ],
+  "timeout_retries": [],
+  "live": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 214,
+    "cases": 2289,
+    "timeout_retry": false
+  }
+}

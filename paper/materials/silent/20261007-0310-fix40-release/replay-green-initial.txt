@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-wither-replay.test.ts (8 tests | 1 failed) 126ms
+   × F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six 71ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six
+AssertionError: expected 28 to be 35 // Object.is equality
+
+- Expected
++ Received
+
+- 35
++ 28
+
+ ❯ tests/silent-wither-replay.test.ts:71:31
+     69|     upgraded: card.upgraded, target: 0 }])!;
+     70|   expect(input!.wither?.played).toBe(29);
+     71|   expect(plan.outcome.hpLoss).toBe(35);
+       |                               ^
+     72| });
+     73|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  02:53:09
+   Duration  1.87s (transform 1.35s, setup 287ms, import 1.34s, tests 126ms, environment 0ms)
+
