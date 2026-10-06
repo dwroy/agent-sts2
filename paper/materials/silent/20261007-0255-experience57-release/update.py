@@ -1,0 +1,50 @@
+import collections,json,re
+from pathlib import Path
+O=Path(__file__).parent;P=Path('/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/experience.json');old=json.load(open(O/'experience-before.json'));d=json.loads(json.dumps(old));E={e['id']:e for e in d['entries']};DP='DPYF2BAA3DKT';CR='CRK2HNYKSCZC';A=json.load(open(O/'audit.json'));RS=json.load(open(O/'rest-summary.json'));SL=json.load(open(O/'sl-summary.json'))
+assert (O/'mechanism-facts.json').exists() and (O/'baseline-check.json').exists()
+def conf(n,c):return 'high' if (n>=5 and c<=n/3) or (n>=4 and c==0) else 'med' if n>=2 else 'low'
+changes={}
+for compressed in json.load(open(O/'compression.json')):E[compressed['id']]['lesson']=compressed['after']
+def setentry(id,runs,text):
+ e=E[id];prior=next(x for x in old['entries'] if x['id']==id);add=[r for r in runs if r not in e['evidence']];e['evidence'].extend(add);e['n_support']=len(e['evidence']);n=e['n_support'];e['last_seen']='2026-10-07';e['confidence']=conf(n,e['n_contradict'])
+ # Keep every pre-existing clause mentioning medicines, including poison-card facts.
+ clauses=[x.strip() for x in re.split(r'(?<=[。；])',prior['lesson']) if '药' in x]
+ e['lesson']=text.replace('{n}',str(n))
+ for clause in clauses:
+  if clause not in e['lesson']:e['lesson']+=' '+clause
+ changes[id]=dict(added_evidence=add,before_n=prior['n_support'],after_n=n,before_chars=len(prior['lesson']),after_chars=len(e['lesson']))
+setentry('silent-strength-weak-observation',[DP,CR],'力量逐击改攻击，敏捷逐挡牌；虚弱/脆弱与被动分核。机制：2力三击多6，虚弱逐击取整，临时减力撤回不关敌成长；敏捷不补旧挡。搭配：多段放大力，多挡牌兑现敏，余像/遗物另核。决定胜负的战斗：{n}支持局、子公式/胜因分核（n={n}）。典型案例：LS8035TB32P3 A10同四击0/3力20/32、多12；DPYF2BAA3DKT A10沙漏力0/4/9，同EBB无弱26/30/35、有弱22/26，T5临时2敏使防御5→7但11挡对32仍损21，T6敏归零。CRK2HNYKSCZC A10劫掠者追踪手九击1各弱至0、总9→0，另斧手13未消失，2血11挡仍死；更早UACFSW4VDDLD A6同招八击1→0、39血保到次轮，取整逐击而非合并后取整。')
+setentry('silent-frail-card-block',[CR],'脆弱逐牌缩减格挡，被动挡另核。机制：先加敏捷/牌专属增量再乘0.75向下取整，不能先合挡再折减。搭配：重放逐次算，余像/覆甲不当卡牌挡。决定胜负的战斗：{n}支持局，整战未隔离（n={n}）。典型案例：HMVJKM56S4Q8 A9敏4三牌各6合18，非合27取20；4D4J8USKCPAV A10扫腿基础11＋敏2脆弱为9，后空翻5＋2为5。CRK2HNYKSCZC A10 F11 T3零敏防御5→3、扫腿11→8，共11比无脆弱16少5；扫腿令追踪手九击归零后仍有斧手13，2血不足13−11，未找到现有牌面存活线。')
+for id in ['silent-route-hp-observation','silent-rest-buffer-observation']:
+ if 'route' in id:
+  f=[x for x in A['fights'] if x['asc']==10];b=next(x for x in A['bands'] if (x['asc'],x['act'],x['type'],x['band'])==(10,1,'Monster','<25%'))
+  text=f'观察：血档/净损/回复按首COMBAT→末结算，问号不算Monster，不定安全线。70静默局{len(A["fights"])}房{sum(x["death"] for x in A["fights"])}死；A8一局25房0死、A9三局48房2死、A10三十局{len(f)}房{sum(x["death"] for x in f)}死，分档/节点见第57节。A10一幕<25%走廊{b["n"]}房{b["runs"]}局{b["deaths"]}死={100*b["deaths"]/b["n"]:.2f}%，活损中位{b["median_win"]}。典型案例：CRK2HNYKSCZC F7锻造39血，投影F11为35/p75为27，实际F8损28、F11以11血死；已取消精英、下一火未到。DPYF2BAA3DKT满74血沙漏六败。未实打替路线，只观察（n={{n}}）。'
+ else:
+  r=RS[10];text=f'观察：已回复增加血池，未来营火/模拟优势不预支。A8一局9火8回血7非回血回111、后战7/0死/中位10；A9三局21火16回血5非回血回341、后战15/1死/中位34；A10三十局{r["rests"]}火{r["heal"]}回血{r["smith"]}非回血回{sum(r["gains"])}，去重后战{r["nexts"]}/{r["deaths"]}死={100*r["deaths"]/r["nexts"]:.2f}%、活损中位{r["median"]}。典型案例：DPYF2BAA3DKT九火均回血共283、F47的36→74后沙漏仍死；CRK2HNYKSCZC F7以39/70锻造中和、可回血21至60但未实打，B2胜率0.728不保抵达下火；F8损28而下一走廊死，无回血/锻造受控胜因（n={{n}}）。'
+ setentry(id,[DP,CR],text)
+setentry('silent-deck-burst-observation',[DP,CR],'观察：取得/建立/触发/足额输出分核，牌数或单组件不单独定因。机制：能力须实建并活到触发，毒按触发次数/目标/剩血核，复活净回复不代表累计受伤小。搭配：费用/抽牌/初毒/防御一起验收。决定胜负的战斗：{n}支持局，A8一/A9三/A10二十六、低阶仅背景（n={n}）。典型案例：VPW8YH7A4QFM A10六轮本体扣50余105、未建毒雾等。DPYF2BAA3DKT A10终34张1打击5防御、3升级，无步法；沙漏末试触媒3兑现毒316＋其余102=418，仍余117/535；余像/临时敏已建仍终轮差7血，暗影本次未施放。知识恶魔触尾巴10→38，净损27不等全战血价。CRK2HNYKSCZC A10终17张4打击5防御、1升级，无毒源/力敏能力；买滚石和实启动分开，F8未建，F11实建仍死，无替构筑整战对照。')
+setentry('silent-accelerant-triggers',[DP],'触媒增加毒触发次数，不乘毒层；普通/升级建1/2，可叠，自身不施毒。机制：k层至多k+1次，每次减1、零停止；k=1且p≥2合2p−1，k=3且p≥4合4p−6，剩血/阶段限制实伤。搭配：施毒/毒雾补初层，费用和存活分账。决定胜负的战斗：{n}支持局、单卡胜因未控（n={n}）。典型案例：ZZMYZ5UBCG72 A2三层15/21毒扣54/78；VPW8YH7A4QFM A10三次触发截清8血电击、取消19攻击，本体只扣3。DPYF2BAA3DKT A10沙漏末试T1升级2＋T3普通1合3，T4—7初毒12/21/23/29实扣42/78/86/110合316，直伤102另计、仍缺117；最后25毒未发生不再补算，不能用成长代替当轮存活。')
+setentry('silent-afterimage-per-card-block',[DP],'余像建立后按实际出牌次数补挡，建立本身不触发自己的首次挡。机制：1层每次后续出牌加1，重放再触发；脆弱下被动仍1，卡牌/遗物挡另算，不按攻击段数算出牌。搭配：多牌兑现真实挡，未建/未打/新战归零不预支。决定胜负的战斗：{n}支持局、整战胜因未隔离（n={n}）。典型案例：LRN0HPZ0FZS1 A0重放翻越撑击同一步余像补2、挡13→15，原始计数只8→9；53FLQ68CETW0 A6两层余像配防御重放2→30。DPYF2BAA3DKT A10末T3建立0挡，T5四牌被动4＋防御7＝11，对32损21；T7四牌4＋后空翻5＝9，对26＋两9凋萎需损35、28血死。串刺补1被动但同时新增9持牌伤，不能只看补挡。')
+setentry('silent-anticipate-temporary-dexterity',[DP],'预判普通/升级只本轮建2/4敏捷，须后续挡牌兑现，不当永久防御。机制：DEXTERITY/ANTICIPATE同量、不补已有挡，次轮撤临时部分；先逐牌加敏后按脆弱折减。搭配：常驻步法/余像/遗物分账，没有后续挡牌不产生增量。决定胜负的战斗：{n}支持局、顺序整战胜因未控（n={n}）。典型案例：VPW8YH7A4QFM A10脆弱防御3→5，多2牌挡、余像1另计，末10挡仍不足。DPYF2BAA3DKT A10沙漏末T5建2敏，旧挡1→2只是余像；防御基础5→7，实际2→10含7＋余像1，整轮被动4＋牌挡7＝11、对32损21，T6临时2敏消失。')
+setentry('silent-snecko-skull-poison-application',[DP],'异蛇头骨使已见毒雾/直接毒牌每次施毒额外加1，能力层数不增加。机制：毒雾3补4，普通/升级致命毒药基础5/7补6/8，普通冒泡9补10；施毒当次不扣HP，阻挡分支不外推。搭配：持续补毒/卡牌触发与触媒次数分核，防御支持结算窗口。决定胜负的战斗：{n}支持局、遗物胜因未隔离（n={n}）。典型案例：9TG1RP5LFAAK A10毒药0→8、冒泡8→18，敌46血不变；DPYF2BAA3DKT A10沙漏末T7冒泡现场10毒、19→29，三层触媒实扣110而仍117血；遗物增毒真实，不能预支尚未结算的25毒。')
+setentry('silent-bubble-bubble-condition',[DP],'咕嘟冒泡仅对已中毒目标补毒，普通/升级9/12，不即时伤。机制：无毒仍耗费无效果；触媒次数、头骨与剩血另核。搭配：已有初毒才兑现，不把未来新增毒追补先前条件。决定胜负的战斗：{n}支持局、单卡胜因未控（n={n}）。典型案例：Y6GM2CHWJBEY A0 T2空打；ZZMYZ5UBCG72 A2毒3→15扣54、21→33扣126；VLV17NUSFS61 A7女王首/末T5聚合体无毒，耗1费175血/无毒不变，其他目标有毒不满足此目标。DPYF2BAA3DKT A10沙漏末T7已有19毒，头骨下普通文本10使19→29、施放敌血不变，三层触媒随后扣110；最终25毒不预支，六敗不是条件反例。')
+setentry('silent-aeonglass-artifact-growth-sl',[DP],'观察：沙漏制品/力量成长/挡/凋萎一起核，满血非保证。机制：制品耗完才施减益；敌力逐击、虚弱取整，持牌凋萎另计，临时减力不关成长。搭配：已建毒/余像/敏与存活窗口分账。决定胜负的战斗：11局44试3赢，真正重打9场42次2赢，A10三场18次0赢（n={n}）。典型案例：ZE8F192FKX24 A5滚石T3建、T12扣50后毒胜余3；25226ZFLNR1J A10六败末扣115余420、4血35挡对42＋18仍死；JMH5C51RLN4E A10前场组件重置、8血六败。DPYF2BAA3DKT A10六次74/77，前五T8/7/8/7/8判死，末改早建两触媒合3、余像T3，T4—7毒316＋其余102扣418余117/535；T7需26＋18−9=35、28血差7。SL首/末前9次未插入的抽牌ID相同，之后生成牌/探索/行动改变，六次零赢不提供单项转胜因果；前五未结束轮不预支毒伤。')
+setentry('silent-wither-end-turn-loss',[DP],'凋萎回合末伤与攻击/格挡合核，毒斩杀也可能留持牌失血。机制：按现场文本3/6/9/12核，不外推其他状态牌，攻击/状态逐项致死先后未完整记录。搭配：格挡/弃牌与实际结束窗口分核，既往多挡不跨轮、死后毒不预支。决定胜负的战斗：{n}支持局、整战胜因未控（n={n}）。典型案例：K3676LU8B0UH A1毒杀敌9血但两张12令29→5；2PVLGRBGUX9S A7无攻击但三12−9挡需27杀8血。DPYF2BAA3DKT A10末T1手动7、实际含重放8，T7串刺跨实际第30次新增第二张9凋萎；四牌余像4＋后空翻5＝9挡，26攻击＋18持牌伤−9=35，28血差7。新牌额外1被动挡不能盖新增9状态伤，不把原始手动计数当全部实际打出。')
+setentry('silent-infested-prism-tainted-skill-cost',[DP],'感染棱柱的技能血价按火花层数和攻击段数核，已有毒能力不免存活窗口。机制：活力火花N令每张技能加N污染，污染增加当前每段攻击、次玩家轮消失；能力毒雾不加污染。搭配：逐击弱/临时减力/格挡与毒实伤分账。决定胜负的战斗：{n}支持局、六胜两败，JQPT一场四次零赢，只有当轮同帧对照，整战胜因未控（n={n}）。典型案例：JQPT83P8KDSZ A10同T3首24血143敌血，额外毒药使弱三击18→27、同9挡损9→18而毒3→8。DPYF2BAA3DKT A10 F25 T3两题都提药瓶、同笔技能被护栏去掉，题面损18→9、伤12→3、余毒11→2；只算省9血，不能算两笔。实际尖啸后三擊合9、56→47，旧3毒＋消亡9合实扣12，不把题面3当全部实伤；本场八轮70→11损59仍胜，原药瓶整线未实打。')
+setentry('silent-rolling-boulder-start-growth',[CR],'滚石持续收益由实建立后的轮初次数兑现，早启动优势仍是观察。机制：普通/升级建5/10，后轮先按当前层数群伤再加5；k次理论(5或10)k＋5k(k−1)/2，敌挡/剩血/无实体限制实际扣量，未由这些帧确认力量加成。搭配：格挡维持成长窗口，未建/未活到不预支。决定胜负的战斗：{n}支持局，同盘改线1场两次1赢但弃牌/施毒同变，非单因（n={n}）。典型案例：ZE8F192FKX24 A5 T3建10/T12扣50使69→19后毒勝；CRK2HNYKSCZC A10 F11 T1建5，T2/3轮初基础群伤5/10、层10/15，三敌第一轮被挡后实扣2/0/5合7、第二轮两敌4/10合14；最终15层尚未兑现。F8护栏省13当轮血且伤0→6，但弃滚石九轮未建；原线整场代价未记录，购买不等本场已启动。')
+# Both new runs actually played this card; preserve the mechanism and add no potion advice.
+setentry('silent-piercing-wail-temporary-strength',[DP,CR],'尖啸临时减力只降当轮威胁，次轮重新核。机制：普通/升级减6/8，每段加减力后再核弱、制品/技能污染，临时部分撤回、萎靡永久部分保留。搭配：多段放大减力，牌/遗物挡与持牌伤另计。决定胜负的战斗：{n}支持局，当轮减伤不保整战（n={n}）。典型案例：10GPK5XGHCK3 A3四击40→16，萎靡X4再至0，次轮留−4力。VPW8YH7A4QFM A10双普通合−12，三敌42→6、9挡零损，后轮成长仍在。DPYF2BAA3DKT A10 F25 T3尖啸后力−6、三击合9，56→47损9；同轮护栏删一张药瓶的污染与毒量交换另核。CRK2HNYKSCZC A10实打过尖啸仍F8损28、F11低血死，不由持有牌推每轮全挡。')
+E['silent-footwork-block']['lesson']=E['silent-footwork-block']['lesson'].replace('（n=39）', '（n=40）')
+d['_about']='静默猎手独立经验库，只用本角色复盘/日志。截至2026-10-06T17:23:40.238Z共70完局，A0—A10各7/3/2/1/4/1/11/7/1/3/30局，1101战斗房60实死。旧68局七数组/血档/源节点/回血/SL重算一致；新增DPYF2BAA3DKT及CRK2HNYKSCZC均A10，MCCK2602T1SR仅进数字。净损＝首COMBAT帧HP−同房最终末结算HP，回复负值/实死/复活分账；Monster/Unknown分开，SL读档恢复不计回复、未结束轮不补毒伤。重放效果/原始手动计数分账、毒次数与存活窗口、力逐击/敏逐牌/脆弱逐牌及被动挡独立核；新沙漏六试零赢，只前9次未插入抽序可比，没有单项整场因果。无新用药规则。'
+new=dict(id='silent-replay-effect-counter-observation',scope='general:plan',asc=[0,20],lesson='观察：已见重放附魔的效果再次兑现，原始手动计数不等全部实际打出。机制：重放格挡/余像按实际再次打出触发，cards_played_this_turn在这两个窗口仅加1；凋萎门槛需核实际生成，不外推所有自动出牌。搭配：重放与逐牌被动有收益，也可能跨新增状态伤门槛，按当前挡与持牌文本合核。决定胜负的战斗：2支持局、0反例，未有修正后整战对照（n=2）。典型案例：LRN0HPZ0FZS1 A0 F48 T3翻越撑击重放使余像挡13→15、原始计数8→9；DPYF2BAA3DKT A10末T1防御重放0→24挡、计数4→5，T7实际第30次串刺新增9伤凋萎，28血9挡对26＋18需35、差7血。',evidence=['LRN0HPZ0FZS1',DP],n_support=2,n_contradict=0,confidence='med',last_seen='2026-10-07',status='active');d['entries'].append(new);d['version']='2026-10-07.3'
+for prior in old['entries']:
+ e=next(x for x in d['entries'] if x['id']==prior['id'])
+ if prior['scope'].startswith('potion:') or prior['scope']=='general:potion':assert e==prior
+ for clause in re.split(r'(?<=[。；])',prior['lesson']):
+  if '药' in clause:assert clause.strip() in e['lesson'],(e['id'],clause)
+active=[e for e in d['entries'] if e['status']=='active'];size=sum(len(e['lesson']) for e in active);assert size<=60000
+for e in active:
+ assert len(e['evidence'])==len(set(e['evidence']))==e['n_support'];assert e['n_contradict']==len(e.get('contradicting',[]))
+changed=[e['id'] for e in d['entries'] if e['id'] in E and e!=next(x for x in old['entries'] if x['id']==e['id'])]
+summary=dict(version_before=old['version'],version=d['version'],added=[new['id']],updated=changed,retired=[],evidence_updates=len(changes),only_numbers=1,compression=json.load(open(O/'compression.json')),changes=changes,active_before=sum(e['status']=='active' for e in old['entries']),active=len(active),chars_before=sum(len(e['lesson']) for e in old['entries'] if e['status']=='active'),chars=size,confidence=dict(collections.Counter(e['confidence'] for e in active)),applicable={str(a):dict(entries=len([e for e in active if e['asc'][0]<=a<=e['asc'][1]]),chars=sum(len(e['lesson']) for e in active if e['asc'][0]<=a<=e['asc'][1])) for a in [8,9,10]})
+(O/'changes.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n');P.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n');print({k:v for k,v in summary.items() if k not in ['changes','compression','updated']},'更新',len(changed))

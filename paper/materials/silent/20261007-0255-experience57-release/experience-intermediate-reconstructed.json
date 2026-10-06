@@ -1,0 +1,3179 @@
+{
+  "version": "2026-10-07.3",
+  "_about": "静默猎手独立经验库，仅本角色复盘/日志。截至2026-10-06T15:34:08.977Z共67完局，A0—A10各7/3/2/1/4/1/11/7/1/3/27局，1059战斗房57实死。旧66局七数组/全部血档/源节点/休息/SL逐行重算，新ZVYUL2YP3518及ID勘误；MCCK2602T1SR仅进数字。净损=首COMBAT帧HP−同房最终末结算HP，回复分来源/负值保留/实死另计；Monster/Unknown分开，五判死未派发不补毒/损/死。实验体技能激怒与能力、阶段清毒/能力保留、敏捷逐牌/临时敏捷、精准与消耗伤、遗物被动挡与营火回复分核；六试0赢、同抽时点仅部分可比，无单项整场因果。无新用药规则。",
+  "entries": [
+    {
+      "id": "silent-knife-trap-count",
+      "scope": "card:KNIFE_TRAP",
+      "name": "刀刃陷阱",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "刀刃陷阱的即时伤害依赖消耗堆小刀数量。机制：本局2费重放0/4/6张、每刀牌面4伤，合计0/16/24；4张实打16，6张足以打穿19格挡与5血，只验证这些数量及当时增益。搭配：已打出并消耗的小刀提供重放材料，空堆没有伤害。决定胜负的战斗：A0地道虫由重放结束，沙虫空堆重放实打0（n=1）。典型案例：C48LLXBGKXQ9 F19 T2敌29→13；T8六刀结束战斗；F33第1次T1零刀零伤。",
+      "evidence": [
+        "C48LLXBGKXQ9"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-04",
+      "status": "active"
+    },
+    {
+      "id": "silent-footwork-block",
+      "scope": "card:FOOTWORK",
+      "name": "灵动步法",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "步法普通/升级建2/3敏捷，逐挡牌兑现、不补旧挡。机制：基础挡加敏，再按脆弱逐牌取整；负敏减回、重放重复、被动挡另算；换阶段留而新战重置。搭配：多挡牌，未建/缺牌不预支。决定胜负的战斗：40局支持，胜因未控（n=39）。典型案例：JMH5C51RLN4E A10实验体T11四牌基础26加四次6敏=50、多24挡，10血零损；LS8035TB32P3 A10狂战士末T6四敏双防御18比基础10多8、损14，T8六敏防御11仍3血死。 L704TLETMZBM A10末T3步法+使开场石头1敏→4，T5两防御/后空翻各5+4=9合27，比仅1敏的18多9，对弱后32仍损5；绷带弃牌各3另算。 ZVYUL2YP3518 A10末T1石头1敏加步法3至4而旧17挡不补；T5偏折8/后空翻9/生存者12比零敏多12，T8两斗篷各10多8、钗7合27仍13血对55差15。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "K3676LU8B0UH",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "UACFSW4VDDLD",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "3KME36ADUE4U",
+        "VLV17NUSFS61",
+        "9YT51CK8RC39",
+        "2PVLGRBGUX9S",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "G403VCZ3BH1B",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "D4LJ9QMGFB8Q",
+        "0NZXA12NLDMH",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN",
+        "PU80F84P6HPN",
+        "5X2GHKJ89PN1",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 40,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-bouncing-flask-poison",
+      "scope": "card:BOUNCING_FLASK",
+      "name": "弹跳药瓶",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "弹跳药瓶按次数、分配与毒结算兑现，不把尚存毒当实伤。机制：普通3毒×3次=9、升级3毒×4次=12；制品逐次阻减益，实际补毒核前后帧，结算后减1；作为一张技能的污染与重放次数分账。搭配：挡延长结算窗口，毒雾/触媒/复活/无实体另核；多敌分配不保证均匀。决定胜负的战斗：14支持局、施毒不保证生存（n=14）。典型案例：ZZMYZ5UBCG72 A2普通三次两敌0/0→3/6毒、血不变；升级四次4/13→7/22，分配1次/3次。ENKYQMS9W4ZD A6升级药瓶叠爆发/复制三次，0→36毒、290血不变，末才结算36；HMVJKM56S4Q8 A9力−3/敏−2仍补12毒，28→40、末扣余40胜。JQPT83P8KDSZ A10普通药瓶2→11、153血不变，一技能增3污染，19→22来袭；本轮还删生存者/突然一拳，不把全轮多损归药瓶。 NB8KCF6HRGVF A10族母T2药瓶+按3×4实补12、233血不变，随后毒药另补7；T6再补12使22→34毒。T8直伤合9后剩32被39毒截扣32，整场毒183非单张药瓶收益。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "1NZ8FE5F34R9",
+        "1LMBFGSMCWKU",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "HMVJKM56S4Q8",
+        "JQPT83P8KDSZ",
+        "NB8KCF6HRGVF"
+      ],
+      "n_support": 14,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-finisher-attacks",
+      "scope": "card:FINISHER",
+      "name": "终结技",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "终结技按本回合已出攻击次数重复伤害，牌面每段值不是无条件单击。机制：零攻击实打0，小刀也增加计数；3次计数且当前每段11时实扣33，不以未说明的增伤来源推断力量公式。搭配：刀刃之舞与其他攻击累积次数，另算其他伤害来源。决定胜负的战斗：A0巨兽5次计数收尾，沙虫零计数空打；永世沙漏三段33仍未救活（n=2）。典型案例：C48LLXBGKXQ9 F33第4次T13敌25→25；LRN0HPZ0FZS1 F48 T3敌410→377。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "LRN0HPZ0FZS1"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-shockwave-duration",
+      "scope": "card:SHOCKWAVE",
+      "name": "震荡波",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "震荡波的虚弱和易伤是有层数变化的减益，不能把开场受益当作整场恒定增益。机制：本局打出建立3虚弱、3易伤，后续易伤3→2→1→消失；同时有其他虚弱来源，不能把全部层数归给这张牌。搭配：多张攻击可以在易伤仍存在的窗口获得收益，虚弱影响敌方攻击。决定胜负的战斗：A0沙虫开场爆发后伤害下降，只有观察，未隔离各因素的贡献（n=1）。典型案例：C48LLXBGKXQ9 F33第6次T1建立3/3，前三回合直伤22、63、61，T5易伤已消失。",
+      "evidence": [
+        "C48LLXBGKXQ9"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-04",
+      "status": "active"
+    },
+    {
+      "id": "silent-gorget-plating",
+      "scope": "relic:GORGET",
+      "name": "护喉甲",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "护喉甲的开场覆甲不能当作整场固定格挡。机制：两局开场PLATING_POWER=4，后段耗尽；只观察层数变化，未验证完整减层条件。搭配：覆甲、敏捷与卡牌格挡分别记录，后段按实际层数核算。决定胜负的战斗：A0沙虫和同族的末回合都已无覆甲，血量与格挡不足（n=4）。典型案例：C48LLXBGKXQ9 F33第6次T5覆甲已无，T11为2+26<32；Y6GM2CHWJBEY F17第6次T1覆甲4、T5耗尽，T10为3+0<23。 VLV17NUSFS61 A7 女王六次开场覆甲4，T2/T3/T4为3/2/1，T5已无；末次现存7血、卡牌12挡与水盆4需抵24，不能再预支覆甲4。只观察这些轮次消退，不外推完整减层条件。 9YT51CK8RC39 A7 仪式兽六次开场覆甲4，T2/T3/T4为3/2/1，T5起无；末次T14的7牌挡对18攻击不能再补开场4，6血不足需求11。只核层数耗尽，不推广完整减层条件。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "Y6GM2CHWJBEY",
+        "VLV17NUSFS61",
+        "9YT51CK8RC39"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-strength-weak-observation",
+      "scope": "general:plan",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "力量逐击改攻击，敏捷逐挡牌；虚弱/脆弱与被动分核。机制：2力三击多6，虚弱逐击取整，临时减力撤回不关敌成长；敏捷不补旧挡。搭配：多段放大力，多挡牌兑现敏，余像/遗物另核。决定胜负的战斗：66支持局、子公式/胜因分核（n=66）。典型案例：LS8035TB32P3 A10同四击0/3力20/32、多12；DPYF2BAA3DKT A10沙漏力0/4/9，同EBB无弱26/30/35、有弱22/26，T5临时2敏使防御5→7但11挡对32仍损21，T6敏归零。CRK2HNYKSCZC A10劫掠者追踪手九击1各弱至0、总9→0，另斧手13未消失，2血11挡仍死；更早UACFSW4VDDLD A6同招八击1→0、39血保到次轮，取整逐击而非合并后取整。 F3 T1肌肉药水已使用后实见玩家力量5/临时增益5，仅事实，不给使用建议。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "Y6GM2CHWJBEY",
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "E6AVMMVCSRPC",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "FH2HB2X17F2H",
+        "UACFSW4VDDLD",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "8CFMW9SAGFWQ",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "3KME36ADUE4U",
+        "VLV17NUSFS61",
+        "9YT51CK8RC39",
+        "2PVLGRBGUX9S",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "F4QKG4J1AJJZ",
+        "G403VCZ3BH1B",
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "L9SGRBB5R698",
+        "D4LJ9QMGFB8Q",
+        "0NZXA12NLDMH",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN",
+        "PU80F84P6HPN",
+        "NB8KCF6HRGVF",
+        "5X2GHKJ89PN1",
+        "TCFAHJ9K19VY",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "n_support": 66,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-giant-explosion-window",
+      "scope": "boss:WATERFALL_GIANT",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "巨兽本体归零后仍须承受自爆。机制：蒸汽/击杀时点/现场自爆分核，不定成长公式；血{@2:HP:WATERFALL_GIANT}，壳999999999不计需伤。搭配：收本体后血挡仍须盖自爆，战中回复另算。决定胜负的战斗：16支持局；重打低阶首局两试1赢、A10另一场两试1赢，非单因（n=16）。典型案例：CSBR5CRDWQNB A2本体12由31毒截清，47血16挡对33余30；53FLQ68CETW0 A6清240，33对6挡损27、57→26含血瓶2。JLN5SK17W4FQ A10两次T9清，首22血对41判死，重打36血尖啸41→35、13挡余14。TD1HVGS7H6LB A10两试48/80，首回血45扣295/T15清，T16四血对44判死未结算且读档失败；后回血30扣280/T14清，42自爆杀5血，预计4挡仍差33。L9SGRBB5R698 A10六试37/61、初20序同0赢，首/末T13/12清，末回血9扣259、50弱至37对3血5挡差29；早清一轮非胜因。4ANT8D00TP72 A10 T8毒清250，T9自爆38弱28、零挡57→29、净损41。PU80F84P6HPN A10五试57/70一赢，初24记录/clean22，前四T16/15/17/17清后判死，末T14清/T15自爆56弱42、24血20挡余2；T2防御换打击23→29伤、5→12损，多6伤付7血，后段也变。前四回血45需295、末30需280。5X2GHKJ89PN1 A10首47/70、T11毒清250、T12自爆47弱35，21挡18→4，净损43；归零不免自爆。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "R0HEV5E3QT6G",
+        "XYYQYBRM2A01",
+        "CSBR5CRDWQNB",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "VN7RQJMJEFMX",
+        "6EV5V6PJJS9D",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "JLN5SK17W4FQ",
+        "TD1HVGS7H6LB",
+        "L9SGRBB5R698",
+        "4ANT8D00TP72",
+        "PU80F84P6HPN",
+        "5X2GHKJ89PN1"
+      ],
+      "n_support": 16,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-insatiable-dual-clock",
+      "scope": "boss:THE_INSATIABLE",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "无厌沙虫的沙坑与攻击是独立结束线，延长沙坑不等于挡住攻击，满血也不保证过关。机制：沙坑1在敌方回合归零会判死，狂乱逃离实加1；存活须同时核沙坑、来袭与剩余敌血，不预支未来毒。搭配：已结算毒与行动推进击杀，爆发重复挡牌提供当轮缓冲，不把多毒当已保证生存。决定胜负的战斗：9支持局共27尝试6胜，真正重打5场23次2赢；跨局构筑/进场不同，赢线的局部效果已核、整战单因未隔离（n=9）。典型案例：XYYQYBRM2A01 A1第3次T9六血18挡可盖18攻击仍因沙坑1判死；ENKYQMS9W4ZD A6首试弃光逃离而判死、重打六轮扣321胜，后段抽弃与启动均变；2SU6XN2AEJRD A6 T8敌40血37毒，打击6后毒杀、净损59。4ANT8D00TP72 A10三次48/70进场、初33抽序相同但到手回合不同，前两次T7判死未结算；末次T6爆发重放生存者16挡盖14零损、17毒三次扣48，T7逃离沙坑2→3仍零挡对20损20，T9毒先杀而不受30攻击，9轮扣341、损42余6胜。首试T6扣89多于末试62仍失败，赢线毒雾未建立，不归运气、单组件或固定启动顺序。 XBD8Z9XLPCPN A10六次均23/70进场、初15抽序相同、0赢；第4/5次T2同手牌/23血，毒雾+与生存者线净扣15/8挡/损10，双打击线净扣27/0挡/损18，多12伤付8血且未建毒雾，两线推演24/24死。末T3逃离沙坑3→4、尖啸后25攻击对13血5挡，需损20差7，毒只扣3后敌284/341，实死于攻击而非沙坑归零。全败推演不表示换线没有血价，未有赢的那次或续火后胜线。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "R0HEV5E3QT6G",
+        "XYYQYBRM2A01",
+        "ZZMYZ5UBCG72",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "2PVLGRBGUX9S",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN"
+      ],
+      "n_support": 9,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-route-hp-observation",
+      "scope": "general:route",
+      "asc": [
+        8,
+        20
+      ],
+      "lesson": "观察：血档/净损/回复按首COMBAT→末结算，问号不算Monster，不定安全线。70静默局1101房60死；A8一局25房0死、A9三局48房2死、A10三十局387房30死，分档/节点见第57节。A10一幕<25%走廊4房4局1死=25.00%，活损中位6。典型案例：CRK2HNYKSCZC F7锻造39血，投影F11为35/p75为27，实际F8损28、F11以11血死；已取消精英、下一火未到。DPYF2BAA3DKT满74血沙漏六败。未实打替路线，只观察（n=70）。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "Y6GM2CHWJBEY",
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "E6AVMMVCSRPC",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "FH2HB2X17F2H",
+        "UACFSW4VDDLD",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "8CFMW9SAGFWQ",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "3KME36ADUE4U",
+        "VLV17NUSFS61",
+        "9YT51CK8RC39",
+        "2PVLGRBGUX9S",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "F4QKG4J1AJJZ",
+        "G403VCZ3BH1B",
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0",
+        "MCCK2602T1SR",
+        "UJ0K3G10609Y",
+        "U8K28UUGYP3U",
+        "L9SGRBB5R698",
+        "D4LJ9QMGFB8Q",
+        "0NZXA12NLDMH",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN",
+        "PU80F84P6HPN",
+        "NB8KCF6HRGVF",
+        "5X2GHKJ89PN1",
+        "TCFAHJ9K19VY",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "n_support": 70,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-rest-buffer-observation",
+      "scope": "general:rest",
+      "asc": [
+        8,
+        20
+      ],
+      "lesson": "观察：已回复增加血池，未来营火/模拟优势不预支。A8一局9火8回血7非回血回111、后战7/0死/中位10；A9三局21火16回血5非回血回341、后战15/1死/中位34；A10三十局183火119回血64非回血回2918，去重后战112/17死=15.18%、活损中位24。典型案例：DPYF2BAA3DKT九火均回血共283、F47的36→74后沙漏仍死；CRK2HNYKSCZC F7以39/70锻造中和、可回血21至60但未实打，B2胜率0.728不保抵达下火；F8损28而下一走廊死，无回血/锻造受控胜因（n=70）。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "Y6GM2CHWJBEY",
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "E6AVMMVCSRPC",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "FH2HB2X17F2H",
+        "UACFSW4VDDLD",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "8CFMW9SAGFWQ",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "3KME36ADUE4U",
+        "VLV17NUSFS61",
+        "9YT51CK8RC39",
+        "2PVLGRBGUX9S",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "F4QKG4J1AJJZ",
+        "G403VCZ3BH1B",
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "S9UZAK0JP0C0",
+        "MCCK2602T1SR",
+        "UJ0K3G10609Y",
+        "U8K28UUGYP3U",
+        "L9SGRBB5R698",
+        "D4LJ9QMGFB8Q",
+        "0NZXA12NLDMH",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN",
+        "PU80F84P6HPN",
+        "NB8KCF6HRGVF",
+        "5X2GHKJ89PN1",
+        "TCFAHJ9K19VY",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "n_support": 70,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-deck-burst-observation",
+      "scope": "general:deck",
+      "asc": [
+        8,
+        20
+      ],
+      "lesson": "观察：取得/建立/触发/足额输出分核，牌数或单组件不单独定因。机制：能力须实建并活到触发，毒按触发次数/目标/剩血核，复活净回复不代表累计受伤小。搭配：费用/抽牌/初毒/防御一起验收。决定胜负的战斗：65支持局，A8一/A9三/A10二十六、低阶仅背景（n=65）。典型案例：VPW8YH7A4QFM A10六轮本体扣50余105、未建毒雾等。DPYF2BAA3DKT A10终34张1打击5防御、3升级，无步法；沙漏末试触媒3兑现毒316＋其余102=418，仍余117/535；余像/临时敏已建仍终轮差7血，暗影本次未施放。知识恶魔触尾巴10→38，净损27不等全战血价。CRK2HNYKSCZC A10终17张4打击5防御、1升级，无毒源/力敏能力；买滚石和实启动分开，F8未建，F11实建仍死，无替构筑整战对照。 TD1HVGS7H6LB的23张全普通/毒药T10启、PU80F84P6HPN的F6无施毒触媒至F19毒药、NB8KCF6HRGVF的23张三打击五防御/计划步法触媒未得、TCFAHJ9K19VY的24张六打击六防御/计划毒雾步法尖啸余像精准未得，皆不能预支组件。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "Y6GM2CHWJBEY",
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "E6AVMMVCSRPC",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "FH2HB2X17F2H",
+        "UACFSW4VDDLD",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "8CFMW9SAGFWQ",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "3KME36ADUE4U",
+        "VLV17NUSFS61",
+        "9YT51CK8RC39",
+        "2PVLGRBGUX9S",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "F4QKG4J1AJJZ",
+        "G403VCZ3BH1B",
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "PJ2LL9KU7FHD",
+        "L9SGRBB5R698",
+        "D4LJ9QMGFB8Q",
+        "0NZXA12NLDMH",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN",
+        "PU80F84P6HPN",
+        "NB8KCF6HRGVF",
+        "5X2GHKJ89PN1",
+        "TCFAHJ9K19VY",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "n_support": 65,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-deadly-poison-application",
+      "scope": "card:DEADLY_POISON",
+      "name": "致命毒药",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "毒药普通/升级施5/7毒，不即时扣血。机制：触发按现层伤后减1，制品耗1可阻施毒；头骨补量、触媒次数、无实体/剩血/阶段另核。搭配：施毒与技能副作用分账。决定胜负的战斗：27支持局，败非公式反例（n=26）。典型案例：LRN0HPZ0FZS1 A0 F37制品1→0无毒；9TG1RP5LFAAK A10升级7加头骨补8、敌46不变；JQPT83P8KDSZ A10 T3毒3→8敌142不变、末多5毒而污染同9挡损9→18；4D4J8USKCPAV A10第2/5次T6施5扣5+4=9余3，T7判死未结算；JMH5C51RLN4E A10末32毒三触发截扣87、无实体三次3；TD1HVGS7H6LB A10巨兽两次T10施5不即时伤、触媒1扣9余3，T3启毒原答被换未执行；L9SGRBB5R698 A10巨兽19毒截扣7无触媒；D4LJ9QMGFB8Q A10外骨骼T4毒5→12敌11不变、单触发受9上限留2；NB8KCF6HRGVF A10族母T2补7毒12→19敌233不变，T7负2力仍33→40敌85不变、末扣40至41；TCFAHJ9K19VY A10同族T1施7神官199不变、触媒2扣18余4；BVF22RSFVBS9 A10兽T4毒雾补2至19再毒药5至24、末47扣176→129跨160，分来源。 ZVYUL2YP3518 A10雕像T3毒药+与尖啸/毒雾替代线实际8伤/19损；实验体换阶段清旧毒，重新施毒与毒雾补量分列，不能预支首段毒。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "KAY522KT5NXR",
+        "K3676LU8B0UH",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "2PVLGRBGUX9S",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "L9SGRBB5R698",
+        "D4LJ9QMGFB8Q",
+        "NB8KCF6HRGVF",
+        "TCFAHJ9K19VY",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 27,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-noxious-fumes-growth",
+      "scope": "card:NOXIOUS_FUMES",
+      "name": "毒雾",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "毒雾普通/升级建2/3层，后续玩家轮初给每敌补毒，打出不即时施毒。机制：无其他施毒/阻挡、单结算时补a毒后净增a−1；无加成a=s，头骨已见a=s+1、能力仍s；触媒每次减1，制品/复活/无实体/剩血/换阶段另核，能力跨阶段留、新战归零。搭配：防御支撑启动，其他毒源/遗物分账，未建/未存活不预支。决定胜负的战斗：34支持局，胜因未控（n=34）。典型案例：9YBKCNBFP0X5 A4女王末T5建3，后四轮双敌4/7/10/13合68；D4LJ9QMGFB8Q A10异鱼29毒受无实体限只扣1，减1后补3至31。 KUZVERN40NGK A10末T1建2，T2补2毒、刺击+3到5实扣5，T3旧4补2至6、T3/T4/T5各扣6/7/8；触媒建立后每轮补2与两次减1相抵，T6/T7/T8各9+8=17，启动真实仍败。 BVF22RSFVBS9 A10仪式兽T1建2层，T4轮初补2后毒药加5到24，实毒24+23=47跨160清力、31血零损；新战三虫末T5才建2、随即死亡无下一玩家轮补毒，前战增长不能预支。 ZVYUL2YP3518 A10末T3建3、首段T5旧19毒随阶段清除，能力留；新段T6/7/8轮初3/4/5毒，触媒1分别扣5/7/9，补3与每次减1分账，末段仍缺124。 VPW8YH7A4QFM A10墨影T1实建升级3层、十一轮胜；新战组装师T4升级毒雾在手未施放、全战无该能力，触媒的旧爪牙毒不能算本体已建立毒成长。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "E6AVMMVCSRPC",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "6EV5V6PJJS9D",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "2SU6XN2AEJRD",
+        "VLV17NUSFS61",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "F4QKG4J1AJJZ",
+        "G403VCZ3BH1B",
+        "25226ZFLNR1J",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "D4LJ9QMGFB8Q",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN",
+        "NB8KCF6HRGVF",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM"
+      ],
+      "n_support": 34,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-bubble-bubble-condition",
+      "scope": "card:BUBBLE_BUBBLE",
+      "name": "咕嘟冒泡",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "咕嘟冒泡仅对已中毒目标补毒，普通/升级9/12，不即时伤。机制：无毒仍耗费无效果；触媒次数、头骨与剩血另核。搭配：已有初毒才兑现，不把未来新增毒追补先前条件。决定胜负的战斗：13支持局、单卡胜因未控（n=13）。典型案例：Y6GM2CHWJBEY A0 T2空打；ZZMYZ5UBCG72 A2毒3→15扣54、21→33扣126；VLV17NUSFS61 A7女王首/末T5聚合体无毒，耗1费175血/无毒不变，其他目标有毒不满足此目标。DPYF2BAA3DKT A10沙漏末T7已有19毒，头骨下普通文本10使19→29、施放敌血不变，三层触媒随后扣110；最终25毒不预支，六敗不是条件反例。 毒雾、药瓶与致命毒药分核实际目标。 六次均败，之后新增毒不追补先前条件收益，不写用药顺序或规则。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1LMBFGSMCWKU",
+        "2SU6XN2AEJRD",
+        "VLV17NUSFS61",
+        "9TG1RP5LFAAK",
+        "TD1HVGS7H6LB",
+        "TCFAHJ9K19VY",
+        "BVF22RSFVBS9",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 13,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-vambrace-opening-block",
+      "scope": "relic:VAMBRACE",
+      "name": "臂甲",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "臂甲的开场首张格挡增益不能外推为每回合翻倍。机制：已见T1首张防御基础5变10，实挡0→10；后段同牌回到5，脆弱下首次与后续挡量另核。搭配：开场格挡、覆甲与后续能力分计，建立持续防御仍要看实际增益。决定胜负的战斗：A0/A7/A10三局，A0同族开场有翻倍与4覆甲，T10却无格挡、3血对23阵亡，不以开场缓冲代表后段防御（n=3）。典型案例：Y6GM2CHWJBEY F17首战T1防御实加10，T8两防御各加5；本局无玩家力量/敏捷能力。 VLV17NUSFS61 A7 女王首轮先建立2敏捷，首次扫腿基础11加2后实翻倍到26、已有20→46；后段防御按4敏捷与脆弱为6、重放两次12，未再翻倍。不将敏捷本身当26或把首次加成当每轮持续增益。 TCFAHJ9K19VY A10同族首试T1未取牌挡、首张增益留到脆弱T2：防御⌊5×2×0.75⌋=7，消费后生存者6、防御3，合16对21实损5；第二次T1先防御得10，T2三牌仅12。首次加成与持续防御分账。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "VLV17NUSFS61",
+        "TCFAHJ9K19VY"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-frail-card-block",
+      "scope": "general:plan",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "脆弱逐牌缩减格挡，被动挡另核。机制：先加敏捷/牌专属增量再乘0.75向下取整，不能先合挡再折减。搭配：重放逐次算，余像/覆甲不当卡牌挡。决定胜负的战斗：15支持局，整战未隔离（n=15）。典型案例：HMVJKM56S4Q8 A9敏4三牌各6合18，非合27取20；4D4J8USKCPAV A10扫腿基础11＋敏2脆弱为9，后空翻5＋2为5。CRK2HNYKSCZC A10 F11 T3零敏防御5→3、扫腿11→8，共11比无脆弱16少5；扫腿令追踪手九击归零后仍有斧手13，2血不足13−11，未找到现有牌面存活线。 T6速度药水仅作为临时增益事实，敏捷3→8使防御/残影各⌊(5+8)×0.75⌋=9，相比各6合多6而非10，T7回到3敏捷。 原药水事实不作为新增用药规则。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "1LMBFGSMCWKU",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "VLV17NUSFS61",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "G403VCZ3BH1B",
+        "JLN5SK17W4FQ",
+        "9TG1RP5LFAAK",
+        "4D4J8USKCPAV",
+        "CRK2HNYKSCZC"
+      ],
+      "n_support": 15,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-kin-poison-sl-observation",
+      "scope": "boss:THE_KIN",
+      "asc": [
+        10,
+        20
+      ],
+      "lesson": "观察：同族毒/能力须实建结算，候选focus非击杀，目标顺序胜因未控。机制：临时减力只降当轮多击，后轮成长另核。搭配：施毒、牌挡与血池。决定胜负的战斗：5场21试2赢，真正重打4场20试1赢，A0仅背景、策略仅A10（n=4）。典型案例：Y6GM2CHWJBEY A0初23同序，毒雾T8/T3建各扣6/60仍败；4D4J8USKCPAV A10六试35/70，末T8死均无减员；第2次T2触媒扣8损7、未走刺击题面同损多9伤，T6施5毒扣9；末T1步法双挡0损0伤、T3尖啸15→0、T7的23穿14损9、T8的3血7挡对26死，仅119/324、神官余110。TCFAHJ9K19VY A10六试65/70、初24序/到手轮同0赢，首/第2次T1扣45/18损14/4、T2损5/9合19/13；第3次T5同29血插攻击多11伤多5损；末T5毒杀首信徒、T7的12血13挡对29死余35+108=143。S9UZAK0JP0C0 A10两试65血、初22同序但到手轮变；赢次T1三牌15挡0损、次轮65对输次56、T4清信徒、T10神官4血18毒后胜余29；输次T11为2血敌63。后洗牌/生成/目标/抽牌/防御同变，无单项或运气胜因。 ZVYUL2YP3518 A10本场首试70→16九轮扣324、先两信徒后神官；不是新增重打赢例，无另一顺序整战对照。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "4D4J8USKCPAV",
+        "TCFAHJ9K19VY",
+        "S9UZAK0JP0C0",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 5,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-accelerant-triggers",
+      "scope": "card:ACCELERANT",
+      "name": "触媒",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "触媒增加毒触发次数，不乘毒层；普通/升级建1/2，可叠，自身不施毒。机制：k层至多k+1次，每次减1、零停止；k=1且p≥2合2p−1，k=3且p≥4合4p−6，剩血/阶段限制实伤。搭配：施毒/毒雾补初层，费用和存活分账。决定胜负的战斗：26支持局、单卡胜因未控（n=26）。典型案例：ZZMYZ5UBCG72 A2三层15/21毒扣54/78；VPW8YH7A4QFM A10三次触发截清8血电击、取消19攻击，本体只扣3。DPYF2BAA3DKT A10沙漏末试T1升级2＋T3普通1合3，T4—7初毒12/21/23/29实扣42/78/86/110合316，直伤102另计、仍缺117；最后25毒未发生不再补算，不能用成长代替当轮存活。 F33持有触媒/毒药/迷雾却四轮未启毒或建立触媒，持有非触发。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "SADL3CGYTGSR",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "4D4J8USKCPAV",
+        "TD1HVGS7H6LB",
+        "4ANT8D00TP72",
+        "PU80F84P6HPN",
+        "TCFAHJ9K19VY",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 26,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-outbreak-immediate-poison",
+      "scope": "card:OUTBREAK",
+      "name": "毒性爆发",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "毒性爆发加毒后立即触发，群体毒量与实际扣血逐敌算。机制：普通/升级加9/12；已有2加12到14、立即扣14再减1；触媒+可使当次三次，人工制品仍可阻止加毒，实伤按剩余敌血截断。搭配：已有毒放大即时伤害，毒雾/药瓶的后续结算分开计，额外触发不记成层数相乘。决定胜负的战斗：另有A3一局验证；A0帝王蟹胜与A2异螨胜/boss败均实有触发，未分离单牌胜因（n=4）。典型案例：T082DRCUHRRD F33 T4两敌各扣14共28；CSBR5CRDWQNB F29 T1两敌65/62→56/53，各新9毒结算后8，再打一次到39/36、各实17、剩16毒；两次共52实伤仍非击杀，整战就绪28→15。 10GPK5XGHCK3 F48 T3触媒2下升级爆发从0加12后即时12+11+10=33，敌45→12、剩9毒，回合末仅实扣余12并换阶段；T10旧13毒加12再三次触发，毒余22但无实体实扣3。 LLYSRQQ35AVW A8 F29 T1触媒2下普通爆发给无毒三段9，各立即9+8+7=24并余6毒；后升级爆发收尽、全轮扣146零损。F48 T6升级加12，聚合体10→22毒、三触发实扣59退场；女王22→34毒实扣99到102、余31毒，结束再扣90到12。行动即时158、全轮248分账，T7毒杀截断25攻击；没有不用爆发的整场对照（本条4支持局，触媒组合新增A8一局）。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "CSBR5CRDWQNB",
+        "10GPK5XGHCK3",
+        "LLYSRQQ35AVW"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-poisoned-stab-components",
+      "scope": "card:POISONED_STAB",
+      "name": "带毒刺击",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "带毒刺击的攻击与施毒分列，不把未来毒算即时伤。机制：普通/升级基础攻击6/8、施毒3/4；力量/虚弱/易伤改攻击，制品可阻毒，涂毒/触媒/剩血截断另核。搭配：已中毒可满足冒泡条件，被动挡不归牌本体。决定胜负的战斗：19支持局，无单卡整战因果（n=19）。典型案例：6EV5V6PJJS9D A6刺击+重放直16，首下消制品后只建4毒；TCFAHJ9K19VY A10刺击直6施3，冒泡9与触媒三结算33另计。 F33末次T4对火箭直伤5并加3毒，普通毒仅实触发3，药水事实与该牌施毒分账。 KUZVERN40NGK A10末T2刺击直6使227→221，再施3使毒2→5，实际末毒扣5，切割直6另计；T6末SL撤刺击后直伤10加毒17合27，原线未执行，不补受控胜负。 BVF22RSFVBS9 A10 F14 T1普通刺击直6使缩小甲虫40→34、另施3毒；F19 T4地道虫挡吸收直伤而50血不变，仍把已有5毒加到8。直伤/格挡/施毒/随后触发分账。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "4Y94N8RDPGPM",
+        "HMVJKM56S4Q8",
+        "4D4J8USKCPAV",
+        "TCFAHJ9K19VY",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9"
+      ],
+      "n_support": 19,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-well-laid-plans-retention",
+      "scope": "card:WELL_LAID_PLANS",
+      "name": "计划妥当",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "计划妥当让本局未打出的手牌跨回合保留，收益在条件就绪后才兑现。机制：牌文为回合结束不再丢弃手牌，打出建立WELL_LAID_PLANS=1；只确定本局实际版本，不套用其他游戏的保留数量。搭配：保留咕嘟冒泡直到目标有毒，也需支付建立能力的费用与当回合生存代价。决定胜负的战斗：A0族母获胜线使用保留与补毒；多次失败线也有能力，单卡胜因是观察（n=2）。典型案例：1HC609GTLGN3 F17/6 T4建立，T7/T11目标3/8毒时使用咕嘟冒泡到12/17，T12靠毒收尾。 PU80F84P6HPN A10蟹T1计划妥当+建立1层，跨轮实保留触媒/无尽刀刃/终结技等未打牌；四轮无毒/敏捷建立，终敌余316而死。保留≠施放或满足触发条件；A0保留补毒胜例与A10未兑现败例并存，未隔离能力整战胜因。",
+      "evidence": [
+        "1HC609GTLGN3",
+        "PU80F84P6HPN"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-afterimage-per-card-block",
+      "scope": "card:AFTERIMAGE",
+      "name": "余像",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "余像建立后按实际出牌次数补挡，建立本身不触发自己的首次挡。机制：1层每次后续出牌加1，重放再触发；脆弱下被动仍1，卡牌/遗物挡另算，不按攻击段数算出牌。搭配：多牌兑现真实挡，未建/未打/新战归零不预支。决定胜负的战斗：14支持局、整战胜因未隔离（n=14）。典型案例：LRN0HPZ0FZS1 A0重放翻越撑击同一步余像补2、挡13→15，原始计数只8→9；53FLQ68CETW0 A6两层余像配防御重放2→30。DPYF2BAA3DKT A10末T3建立0挡，T5四牌被动4＋防御7＝11，对32损21；T7四牌4＋后空翻5＝9，对26＋两9凋萎需损35、28血死。串刺补1被动但同时新增9持牌伤，不能只看补挡。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "9YBKCNBFP0X5",
+        "ZE8F192FKX24",
+        "ARKQLHG6RS4W",
+        "6EV5V6PJJS9D",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2PVLGRBGUX9S",
+        "LLYSRQQ35AVW",
+        "F4QKG4J1AJJZ",
+        "9TG1RP5LFAAK",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 14,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-sai-start-block",
+      "scope": "relic:SAI",
+      "name": "钗",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "钗的格挡发生在回合开始，不能代替后续全部防御。机制：两支持局每回合起始7挡，与敏捷、卡牌格挡分别记；只验证7挡与时点。搭配：为毒雾/触媒建立期提供底挡，攻击超过总挡仍会掉血。决定胜负的战斗：A0实验体末线T6总挡30抵30，T7总挡25对40损15，T8总挡17对35损18，第三阶段仍死亡（n=1）。典型案例：T082DRCUHRRD F48/6 T7起7挡，末25挡，48→33；不能把钗7挡推成整场每回合零损。 ZVYUL2YP3518 A10末T1钗7加锚10起17，T2以后钗起7；T8两斗篷各10合27，13血对55差15，敏捷牌挡与钗/锚分来源。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-beating-remnant-loss-cap",
+      "scope": "relic:BEATING_REMNANT",
+      "name": "律动残余",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "律动残余限制一回合失血20，不能保证剩余血量不足20时存活。机制：牌文是单回合生命损失上限，本局零挡对22/28实损20；显示来袭不是已经损失，死亡损血按剩余HP截断。搭配：限损与实际格挡分开，仍要削减来袭或在毒结算结束战斗。决定胜负的战斗：A0胧光怪T4少损8而暂活，T6仍死亡；两回合伤害不是全战上限（n=2）。典型案例：1HC609GTLGN3 F22 T2为41→21，T4为21→1，T6零挡对38、1→0。 另A6一局。ARKQLHG6RS4W F31 T4零挡对28实损20、少8；F33/6 T2零挡对31仍27→7、少11，T4六挡对33本需27、上限20仍大于6血，实扣到0仅6。限损与剩余生命截断不同，六次boss均失败、不因有遗物认定低血安全。",
+      "evidence": [
+        "1HC609GTLGN3",
+        "ARKQLHG6RS4W"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-captains-wheel-third-turn",
+      "scope": "relic:CAPTAINS_WHEEL",
+      "name": "舵盘",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "舵盘本局提供第三回合18格挡，不能外推成每回合底挡。机制：遗物牌文第三回合开始获得格挡，F22 T3实见18，后续T4/T6末挡0。搭配：前两回合与后段需要另有防御，能力建立时点和现有挡分别核对。决定胜负的战斗：A0胧光怪第三回合18覆盖幻象16，而后段力量增长仍致死（n=1）。典型案例：1HC609GTLGN3 F22 T3起18挡、实损0，T4零挡对28仍实损20；没有每回合恢复18的证据。",
+      "evidence": [
+        "1HC609GTLGN3"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-test-subject-phase-reset",
+      "scope": "boss:TEST_SUBJECT",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "实验体逐阶段重算敌状态/需伤，玩家能力留过阶段、新战重建。机制：第一阶段每技能加激怒层数力量，能力不加；换阶段清敌力/激怒/毒/减益，留玩家力敏/能力；无实体逐次限毒/被动伤。搭配：能力与实际挡牌/新毒核窗口，建立不等于当轮足挡。决定胜负的战斗：10局40次4赢，真正重打9场39次3赢，A3首试赢，胜因未控（n=9）。典型案例：JMH5C51RLN4E A10三阶段111/212/313合636，第5次13轮60→8胜；9TG1RP5LFAAK A10第二次16轮84→17胜，新战女王重置能力后六败；同抽前36但早期护栏/动作/生成牌同变，不归单项。 L704TLETMZBM A10三次均66/76实开战，初36同序、初24同到手轮，后轮不同；三次T3清111、T4刷新212清33敌力/22旧毒，留2我方力/4敏/2触媒/3毒雾（末试）。末T5实扣6损5，T6扣43而49血0挡对55差6死、敌余140；前两次T6/T7判死成功恢复非实死。无赢次/未知重抽不认胜线。 ZVYUL2YP3518 A10六试同50/83，五判死后恢复、末T8实死；clean40初序同、仅前7张到手轮同，生成/抽到/动作/后洗牌未控，无赢次。末T1步法/刀扇及T3毒雾/精准不加敌力，T4净化消耗贪婪仍技能令3→6；T5四技能6→18、36挡对45本不够，19毒截清29敌血取消攻击。新212段清19毒/18力/激怒，留4敏/1触媒/3毒雾/4精准/刀扇；T6—8扣23/23/42合88，第二段仍124、未进第三段。T7尖啸44→20挡22零损，T8恢复55挡27需损28、13血差15。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "10GPK5XGHCK3",
+        "UACFSW4VDDLD",
+        "2L1BNN9ZJEFU",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "L704TLETMZBM",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 10,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-lagavulin-siphon-poison-sl",
+      "scope": "boss:LAGAVULIN_MATRIARCH",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "族母吸取会同时压缩直伤与卡牌格挡，已建立毒按实际层数另算，收尾核敌血/可活轮。机制：每次我方力/敏各−2、敌力+2；负力不减施毒、负敏减牌挡，遗物挡另计。搭配：施毒、保留和能力均须已取得/启动；计划毒不当已结算输出。决定胜负的战斗：9支持局含A0/1/2/4/9/10，真正重打三场18次1赢，六次来自同场不当六局（n=9）。典型案例：HMVJKM56S4Q8 A9 F17 T7/T11力1→−1→−3、敏2→0→−2，T12药瓶+加12毒至40杀余40获胜；PJ2LL9KU7FHD A10 F17六次57/70均败，末T7/T11/T15后力/敏各2→0→−2→−4，T16打击2、双防御各1、20来袭需损18而仅4血，敌剩62/233。第3次T4早建幻影后T5/T6实扣40/48，相比首试24/28还混有抽弃/精确切击/选线，T14敌余17仍败；不能归单一卡时点的整战胜因。K3676LU8B0UH A1十轮实103行动伤+119毒＝222、余21胜；1NZ8FE5F34R9 A4六轮清222、36→4，未见吸取帧，不把该场算新验证削力。跨局进场、构筑不同，旧毒胜局不证明本局未取得毒即可补救。 NB8KCF6HRGVF A10 F17首试八轮胜、64→41；T7吸取后力/敏0→−2、敌力0→2，防御5→3/升级8→6，已建毒继续。T7补7后40毒使81→41，T8行动9后39毒截扣32避开18攻击；行动50+毒183=233。已施毒/结算与负力同帧可核，无去升级/回血整战对照。",
+      "evidence": [
+        "1HC609GTLGN3",
+        "E6AVMMVCSRPC",
+        "K3676LU8B0UH",
+        "ZZMYZ5UBCG72",
+        "1NZ8FE5F34R9",
+        "HMVJKM56S4Q8",
+        "9TG1RP5LFAAK",
+        "PJ2LL9KU7FHD",
+        "NB8KCF6HRGVF"
+      ],
+      "n_support": 9,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-obscura-summon-growth",
+      "scope": "general:plan",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "胧光怪活体召唤增加攻击者，幻象死亡后还能回来，不能按开场单敌算后段。机制：A0实见召唤21血寄生惧魔，1HC两次航行使敌力0→3→6、撞击16→19→22；R0幻象T2归零、T3又21血，主怪未死仍不算结束。搭配：主目标实伤、已结算毒与来袭合计分别核对；额外触发不能全归一张牌。决定胜负的战斗：A0三场2胜1死/A2两场均赢、净损1/13，高血与构筑未受控，不定统一击杀顺序（n=8）。典型案例：1HC609GTLGN3 F22主怪剩14而死；CSBR5CRDWQNB F25 T3毒性爆发使幻象11→2、主怪已有10毒后加9，77→58、剩18毒，最终57→56净损1；不据低损推出该敌恒定安全。ZZMYZ5UBCG72 F29八回合59→46，不能把CSBR的净损1外推为恒定安全或改线因果。 另A6雾菇观察：FH2HB2X17F2H F6主怪74，T1扣24后召6血利齿之眼；T2打眼至0、T3复活6，主怪仍47→35而玩家死。眼的当轮状态牌动作受压制不等于永久清除，且不能把胧光怪起航加力移给雾菇；没有另一目标顺序的受控对照。 另A6一局。ARKQLHG6RS4W F23本体123，寄生惧魔21血T4归零、T5再出现21，已见毛需伤165，T4扣21仍是已伤而非0；最终42→12损30。召唤额外需伤和主怪HP分账，不能由中途清掉召唤认定整战结束；改线未隔离整场胜因。 8CFMW9SAGFWQ A6 F24三次清21血幻象只停当轮攻击，T4/T5/T8各复活；主怪123→58，幻象已扣63不作永久清场或主怪需伤。已出现总血207、实扣132、尚75，结束主怪才过战；主怪T5/T6保持61。T9幻象虚弱18加主怪15=33，6血18挡仍死，无其他击杀顺序实打胜局。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "FH2HB2X17F2H",
+        "ARKQLHG6RS4W",
+        "8CFMW9SAGFWQ"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-regret-hand-loss",
+      "scope": "card:REGRET",
+      "name": "悔恨",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "悔恨留在手中会按手牌数量直接失血，阶段结束也不免除这项代价。机制：本局留4张含悔恨、敌无攻击时41→37；全弃悔恨后41→41；留5张时5失血加36攻击耗尽41血，两段先后未记录。搭配：弃牌能清掉本次持牌代价，也可能丢掉当回合攻防；未来商店删除只有实际执行才消除后续负担。决定胜负的战斗：A0实验体1场3尝试0赢，第三次少算5失血提前死，前两次过第一阶段仍未赢整场（n=1）。典型案例：R0HEV5E3QT6G F48 T3第1/2次损4/0，第3次五张手牌、41血零挡对36而归零；F38承诺商店删除、F43改休息，诅咒仍在。",
+      "evidence": [
+        "R0HEV5E3QT6G"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-shadow-step-delayed-damage",
+      "scope": "card:SHADOW_STEP",
+      "name": "暗影步",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "暗影步未升级时全弃手牌且不即时抽牌，下回合攻击翻倍，代价与收益分开核算。机制：全弃后手牌为空、建立SHADOW_STEP=1，下回合DOUBLE_DAMAGE=1，当前打击10→20；只确认本局未升级版本。搭配：力量先影响攻击数值再兑现翻倍，施毒仍单列；全弃也清悔恨，但本回合格挡和攻击会同时失去。决定胜负的战斗：A0实验体1场3尝试0赢，获得翻倍未补足输出与生存，不能从单局称它无用或保证获胜（n=1）。典型案例：R0HEV5E3QT6G F48/1 T4丢偏折+与投掷匕首+，11挡对30实损19；T5四击20+18+32+18=88，对191剩103。",
+      "evidence": [
+        "R0HEV5E3QT6G"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-prowess-strength-dexterity",
+      "scope": "card:PROWESS",
+      "name": "非凡技艺",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "非凡技艺建立力量与敏捷，收益由后续攻击和格挡兑现，建立不增加已有挡。机制：普通/升级实见各加1/2力敏；力量逐段增伤，敏捷逐张加卡牌挡。搭配：多段与多张格挡牌重复放大，建立后缺格挡牌时不能把敏捷当即时防御。决定胜负的战斗：A0实验体3次0赢/A1沙虫6次0赢，增益有效但没有隔离提前建立的胜因（n=4）。典型案例：R0HEV5E3QT6G F48/2 T5加2/2，三攻击34→40，灵动步法到4敏捷仍零挡；XYYQYBRM2A01 F33/6 T6加1/1、已有5挡不变，T9后空翻与两防御各6合18、比基础多3保住2血，T10仍死。 另A6一局：2L1BNN9ZJEFU F48/6 T2普通非凡技艺使力量0→1、敏捷1→2，已有8挡不变且作为能力不触发激怒；T4搭配精准4的小刀实9，换二阶段后1力/2敏捷保留。T6升级步法另加3到5，三牌36挡与虚弱配合零损，但T9仍死；非凡技艺的1力/1敏捷不与后续来源重复计。 另A6升级实证：53FLQ68CETW0 F48第5次T5非凡技艺+令力量1→3、敏捷2→4，已有0挡到2仅余像；后续步法另加3到7、防御基础5+7=12，爆发重放加额外12+余像2保住T12的5血。增加的是之后牌的收益，不把能力建立、余像与敏捷混算，也不据一轮存活断定早建必胜。",
+      "evidence": [
+        "R0HEV5E3QT6G",
+        "XYYQYBRM2A01",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-toasty-mittens-growth",
+      "scope": "relic:TOASTY_MITTENS",
+      "name": "烘焙手套",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "烘焙手套的持续力量可由多段和回返攻击反复兑现。机制：本局每回合开始消耗一张手牌并+1力量，实验体T1—T14为1→14，换阶段不清玩家力量；6力量让附魔后杀灭5×4变11×4=44，多24。搭配：消耗手牌有代价；多段放大力量，流星锤回返再兑现，但无实体把单次攻击压成1。决定胜负的战斗：A0实验体两尝试1赢，成长需与格挡共同覆盖600血和14回合，不由单胜规定固定构筑（n=2）。典型案例：KAY522KT5NXR F48/2 T6实44，T12流星锤+12力量实19；T13文本20实1，27挡保8血，T14有14力量收尾。 F4QKG4J1AJJZ A9 F38 T1—T6实见每轮消耗手牌并力1→6，虚弱下同类小刀T5各6、T6各7；本场无无实体。6轮已扣157/281、余124而败，持续成长真实但回合数和防御仍不足，不能由持有手套保证胜利。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "F4QKG4J1AJJZ"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-abrasive-thorns-dexterity",
+      "scope": "card:ABRASIVE",
+      "name": "磨蚀",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "磨蚀同时提供卡牌格挡增量与逐击荆棘，两种收益分别计算。机制：本局实建1敏捷/4荆棘，与灵动步法2敏捷合3；三张格挡牌各多3。敌每击反伤4，全挡仍触发，无实体每次仅1。搭配：多击扩大荆棘次数，格挡与毒分开计；不能把建立敏捷当即时已有挡。决定胜负的战斗：A0实验体第二尝试获胜，多来源伤害未隔离单卡胜因（n=1）。典型案例：KAY522KT5NXR F48/2 T5全挡28、四击荆棘16加7毒使99→76；T13三牌27挡过27攻击，无实体三击荆棘仅3。",
+      "evidence": [
+        "KAY522KT5NXR"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-speedster-draw-damage",
+      "scope": "card:SPEEDSTER",
+      "name": "速行者",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "速行者使回合中抽牌兼有逐次伤害，数值仍受目标无实体限制。机制：实建2层，每次回合中抽一牌对所有敌人造成2伤；目前只独立验证单目标，无实体每次仅1，未验证多目标总收益。搭配：早有准备/投掷匕首/后空翻的抽牌触发另计，攻击与格挡不能和触发重复相加。决定胜负的战斗：A0实验体胜线与A1珊瑚群胜战均兑现，整体胜因仍非单卡对照（n=3）。典型案例：E6AVMMVCSRPC F9 T3早有准备进入弃牌界面前敌39→37，实触发2；KAY522KT5NXR F48/2 T12投掷匕首21+抽牌2使93→70，T13后空翻抽两牌对无实体只扣2、同时实得8挡。 另A6一局：2L1BNN9ZJEFU F48/6 T1建立2层，T3后空翻抽2额外扣4，T6亮剑抽1、肾上腺素抽2、后空翻抽2分别额外2/4/4合10；攻击本体、毒及触发分别计，换阶段能力保留。T3实扣49比所选线45直伤多4仍损38，抽牌增伤已兑现但最终二阶段尚57而死，不把全轮伤害都归速行者或推出提前施放必胜。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "E6AVMMVCSRPC",
+        "2L1BNN9ZJEFU"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-piercing-wail-temporary-strength",
+      "scope": "card:PIERCING_WAIL",
+      "name": "尖啸",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "尖啸临时减力只降当轮威胁，次轮重新核。机制：普通/升级减6/8，每段加减力后再核弱、制品/技能污染，临时部分撤回、萎靡永久部分保留。搭配：多段放大减力，牌/遗物挡与持牌伤另计。决定胜负的战斗：30支持局，当轮减伤不保整战（n=30）。典型案例：10GPK5XGHCK3 A3四击40→16，萎靡X4再至0，次轮留−4力。VPW8YH7A4QFM A10双普通合−12，三敌42→6、9挡零损，后轮成长仍在。DPYF2BAA3DKT A10 F25 T3尖啸后力−6、三击合9，56→47损9；同轮护栏删一张药瓶的污染与毒量交换另核。CRK2HNYKSCZC A10实打过尖啸仍F8损28、F11低血死，不由持有牌推每轮全挡。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "LRN0HPZ0FZS1",
+        "KAY522KT5NXR",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "ZE8F192FKX24",
+        "UACFSW4VDDLD",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "2L1BNN9ZJEFU",
+        "3KME36ADUE4U",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "F4QKG4J1AJJZ",
+        "G403VCZ3BH1B",
+        "JLN5SK17W4FQ",
+        "JQPT83P8KDSZ",
+        "4D4J8USKCPAV",
+        "PJ2LL9KU7FHD",
+        "4ANT8D00TP72",
+        "XBD8Z9XLPCPN",
+        "5X2GHKJ89PN1",
+        "L704TLETMZBM",
+        "BVF22RSFVBS9",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "n_support": 30,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-orichalcum-zero-block",
+      "scope": "relic:ORICHALCUM",
+      "name": "奥利哈钢",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "奥利哈钢本局在结束回合零格挡时补6，已有挡不再另加6。机制：零牌面挡对12攻击实损6；非零27挡对27攻击实损0，不能重复把6加入已有格挡。搭配：逐项核对技能格挡与回合末遗物触发，不把潜在6挡当免死。决定胜负的战斗：A0实验体一次判死、一次赢，6挡只覆盖实际的一部分来袭（n=1）。典型案例：KAY522KT5NXR F48首战T11为23血+0挡+潜在6对34，未结算即读档；第2次T4为62→56，T13已有27挡保住8血。",
+      "evidence": [
+        "KAY522KT5NXR"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-ripple-basin-no-attack-block",
+      "scope": "relic:RIPPLE_BASIN",
+      "name": "波纹水盆",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "波纹水盆在已见不出攻击的回合末补4挡，负敏捷未削这4，不把不出攻击视为空过。机制：卡牌挡随敏捷变化，遗物条件挡另加；已建毒敌方回合结算。搭配：毒雾与防御可同时推进敌血和保血，但每轮核攻击/总挡/击杀缺口，不推导固定弃攻规则。决定胜负的战斗：另有A4一局验证；A1族母一场6尝试0赢，被动挡与毒有效仍未覆盖缺口（n=4）。典型案例：E6AVMMVCSRPC F17/6 T7敏捷−2，防御3+扫腿9+水盆4挡15、保16血；T11卡牌11+4对17损2，T12防御1+4对18需13血、11血死亡，12毒结算后敌仍92。 1NZ8FE5F34R9 A4 F29首战T2无攻击，7卡牌挡+4被动挡对24攻击实损13；第4次T2切割使水盆不触发，7挡对24实损17，T3精密瞄准杀中段仍无水盆挡，5血对20攻击死亡。两次其他施毒与前序血量也不同，不称整场只由4挡决定或推出固定弃攻规则。 VLV17NUSFS61 A7 女王末次T5未打攻击，防御重放已有12、水盆结束补4，97脆弱不削这4；对聚合体24仍需损8、仅7血死亡。毒已实扣聚合体6及女王11，不把末帧易伤清除后的16意图当死亡前攻击，局部被动挡有效不等于足够。 5X2GHKJ89PN1 A10女王末次T3无攻击，水盆末补4；与再生3合回挡贡献另计，使36血在36光束前后到7、净损29。T6三攻击不触发水盆，12卡牌挡对27仍死；不由局部条件挡推固定弃攻规则。",
+      "evidence": [
+        "E6AVMMVCSRPC",
+        "1NZ8FE5F34R9",
+        "VLV17NUSFS61",
+        "5X2GHKJ89PN1"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-vajra-opening-strength",
+      "scope": "relic:VAJRA",
+      "name": "金刚杵",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "金刚杵在已见战斗开场提供1力量，按实际攻击段数增伤，不提供格挡。机制：无其他修正时打击6→7、冲刺10→11；族母每次削2、金刚杵1不足抵消两次吸取。搭配：多段放大力，毒/被动/牌挡另核，无实体仍可压每击为1。决定胜负的战斗：8支持局，遗物整战胜因未控（n=8）。典型案例：E6AVMMVCSRPC F13打击7/冲刺11，F17吸取1→−1→−3；UACFSW4VDDLD A6小刀4→5，无实体两刀均1。53FLQ68CETW0 A6开场1力、非凡技艺+才1→3，余像不加力；2PVLGRBGUX9S A7科学再加2到3，打击10→12、升级13→15。HMVJKM56S4Q8 A9开场1力与木偶并存，打击牌面10、暴露实15；PU80F84P6HPN A10蟹升级打击9→10、四轮行动91＋荆棘21仍余316；NB8KCF6HRGVF A10棱柱普通/升级打击7/10、扣97/171仍死，不预支后续能力。",
+      "evidence": [
+        "R0HEV5E3QT6G",
+        "E6AVMMVCSRPC",
+        "UACFSW4VDDLD",
+        "53FLQ68CETW0",
+        "2PVLGRBGUX9S",
+        "HMVJKM56S4Q8",
+        "PU80F84P6HPN",
+        "NB8KCF6HRGVF"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-terror-eel-vigor-vulnerable",
+      "scope": "elite:TERROR_EEL",
+      "name": "骇鳗",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：骇鳗过阈值眩晕后仍有易伤与活力放大的攻击，短暂停攻不等于结束。机制：基伤按进阶读库（A0 {@0:DMG:TERROR_EEL:CRASH_MOVE}、A1 {@1:DMG:TERROR_EEL:CRASH_MOVE}），实见16，6活力时22、玩家易伤后33；A0/A1首次越过70血后STUNNED，再恐吓施99易伤，格挡逐项抵伤。搭配：虚弱减当前来袭，剩余敌血/下一招/实际挡一起核对；高进阶按现场。决定胜负的战斗：A0一场净损29、A1两场51/28均赢，路线与构筑未受控（n=5）。典型案例：E6AVMMVCSRPC F13 T7对33仅水盆4实损29、53→2；K3676LU8B0UH F15六回合净伤140、49→21，行动含毒与荆棘，不全归卡牌。 JQPT83P8KDSZ A10基伤{@10:DMG:TERROR_EEL:CRASH_MOVE}实见18，T3/T5的6活力到24，对9/15挡实损15/9；T6敌76→63跨实见75阈值眩晕，T7恐吓后T8易伤99、27攻击对13挡仍损14。59→13、九轮需150并赢；高阶阈值75不沿用低阶70，完整伤害含毒，不全归卡牌。 L9SGRBB5R698 A10 T6的90→72越75后眩晕，T7恐吓施99易伤；T8的27经虚弱到20，对13挡损7，T9三击18对5挡损13。58血入场实战损45、芝士战后回1，净58→14损44；高血及首轮额外能量/手牌未消除后段战损，不设安全线。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "E6AVMMVCSRPC",
+        "K3676LU8B0UH",
+        "JQPT83P8KDSZ",
+        "L9SGRBB5R698"
+      ],
+      "n_support": 5,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-malaise-x-debuff",
+      "scope": "card:MALAISE",
+      "name": "萎靡",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "萎靡普通按X、升级按X+1减力并加虚弱，普通零X无自身减益、升级零X各1。机制：尖啸撤临时减力后萎靡减力保留，敌成长/阶段另核；普通X0/1/2/3/4及升级X0/2/3实见。搭配：减力逐击、虚弱另算，零X遗物收益分账。决定胜负的战斗：12支持局、时点胜因未控（n=12）。典型案例：10GPK5XGHCK3 A3尖啸后X4至−10力/4弱、四击0，次轮仅−4力/3弱、五击20；LLYSRQQ35AVW A8升级X0/2/3各1/3/4，零X18→6。G403VCZ3BH1B A9 X4使女王力4→0、五击60→20，40血1挡损19；首试少4减力而判死，抽序同、其他行动变，不单归转胜。NB8KCF6HRGVF A10 X1减力保留仍被污染杀；5X2GHKJ89PN1 A10同T4后空翻后7血4挡3费，扫腿＋X1得13挡/0力后余8，改X3仅4挡/−2力后余2，少6血，后续敌力仍长；末3血12挡对27死，六败无单因转胜。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "10GPK5XGHCK3",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "VN7RQJMJEFMX",
+        "SADL3CGYTGSR",
+        "LLYSRQQ35AVW",
+        "G403VCZ3BH1B",
+        "NB8KCF6HRGVF",
+        "5X2GHKJ89PN1"
+      ],
+      "n_support": 12,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-accuracy-shiv-scaling",
+      "scope": "card:ACCURACY",
+      "name": "精准",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "精准收益按实打小刀数兑现。机制：普通/升级建4/6，基础4加精准及力后再核减伤/剩血，其他触发分账。搭配：刀刃之舞三/四刀使4/6精准多12/24，费用/抽到/存活另核。决定胜负的战斗：6支持局，单卡胜因未控（n=5）。典型案例：KAY522KT5NXR A0实验体两试1赢、T8为4精准+8力各16、235→219；XYYQYBRM2A01 A1沙虫六败末T1三刀各8合24非12、末缺63。8CFMW9SAGFWQ A6 F24 T1四刀4合16，T3精准+6、T4各10合40多24、幻象10/主怪30，T9败、群蛇未建两轮零伤。2L1BNN9ZJEFU A6末T3精准4不加敌激怒力，1我方力令T4两刀各9、实9+余4清阶段、过量5不计，能力留二阶段仍败。9YT51CK8RC39 A7仪式兽T1建4无正力、T3三刀8合24多12，后续0刀末余90，非每轮固定24。 ZVYUL2YP3518 A10末T3建4、无正力，小刀4→8；T8三刀攻击24加遗忘之魂各1合27，多12攻击与3遗物伤分账，毒9另计，第二段仍缺124。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "XYYQYBRM2A01",
+        "8CFMW9SAGFWQ",
+        "2L1BNN9ZJEFU",
+        "9YT51CK8RC39",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 6,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-letter-opener-third-skill",
+      "scope": "relic:LETTER_OPENER",
+      "name": "开信刀",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "开信刀在本回合第三张技能处额外造成5伤，技能自身与遗物伤分开计算。机制：零X萎靡无减益仍可触发，防御自身只加挡、第三技能另扣敌5；多敌案例敌血扣减受剩血和格挡截断，未验证所有减伤条件。搭配：抽牌与防御技能序列兼有伤害，不能把5伤归到萎靡减益或防御牌上。决定胜负的战斗：A1沙虫六次0赢，遗物有效仍未弥补剩余敌血与存活缺口（n=1）。典型案例：XYYQYBRM2A01 F33/1 T3零X萎靡使敌236→231而力量/虚弱不变；F33/6 T9后空翻与两防御到18挡、末防御使敌99→94，2血过18攻击后T10仍死。",
+      "evidence": [
+        "XYYQYBRM2A01"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-maul-shared-growth",
+      "scope": "card:MAUL",
+      "name": "撕咬",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "撕咬的战内增伤共享给其他同名牌，两段攻击与钢笔尖双倍窗口会放大已兑现成长。机制：普通/升级实见Increase2/3；升级施放后另一张基础每段5→8，普通再每段加2，不是只强化打出的那一张。搭配：同名牌循环与双倍窗口一起兑现，费用/抽到与存活另算，随机战内升级不当永久升级。决定胜负的战斗：A1沙漏两次1赢，末线12回合覆盖512血，未隔离单卡胜因（n=1）。典型案例：K3676LU8B0UH F48/2 T9两张分别13×2/15×2实26/30；T12首张17×2实34后另一张17→19、钢笔尖计数9进入双倍，38×2实76，共享成长在这张多8伤。",
+      "evidence": [
+        "K3676LU8B0UH"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-wither-end-turn-loss",
+      "scope": "card:WITHER",
+      "name": "凋萎",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "凋萎回合末伤与攻击/格挡合核，毒斩杀也可能留持牌失血。机制：按现场文本3/6/9/12核，不外推其他状态牌，攻击/状态逐项致死先后未完整记录。搭配：格挡/弃牌与实际结束窗口分核，既往多挡不跨轮、死后毒不预支。决定胜负的战斗：10支持局、整战胜因未控（n=10）。典型案例：K3676LU8B0UH A1毒杀敌9血但两张12令29→5；2PVLGRBGUX9S A7无攻击但三12−9挡需27杀8血。DPYF2BAA3DKT A10末T1手动7、实际含重放8，T7串刺跨实际第30次新增第二张9凋萎；四牌余像4＋后空翻5＝9挡，26攻击＋18持牌伤−9=35，28血差7。新牌额外1被动挡不能盖新增9状态伤，不把原始手动计数当全部实际打出。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "K3676LU8B0UH",
+        "ZE8F192FKX24",
+        "53FLQ68CETW0",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "2PVLGRBGUX9S",
+        "25226ZFLNR1J",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 10,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-forgotten-soul-exhaust-damage",
+      "scope": "relic:FORGOTTEN_SOUL",
+      "name": "遗忘之魂",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：本局遗忘之魂在消耗牌步骤另扣敌1血，整步损血不全归牌本体。机制：单敌小刀文本4、动作实扣5；尖啸无牌本体伤害却实扣1，符合消耗触发；未独立验证多敌分配与所有减伤条件。搭配：消耗的小刀/技能可兼有遗物伤，攻击、减益与毒分别计。决定胜负的战斗：A1沙漏两次1赢，末线附加1伤让毒前剩9血，未隔离遗物胜因（n=2）。典型案例：K3676LU8B0UH F48/2 T10尖啸+敌215→214；T12小刀消耗敌14→9，额外1不能算小刀基础伤。 G403VCZ3BH1B A9女王重打T10萎靡消耗使107→106、T11尖啸消耗42→41，各扣1且与牌本体减益/攻击、毒、滚石分账；仍只确认单敌，不补全体分配。 ZVYUL2YP3518 A10末T7尖啸消耗189→188；T8三刀文本8各实9合27=24攻击+3消耗伤，羽化消耗另1，毒9分列；仍仅单敌、不补群体分配。",
+      "evidence": [
+        "K3676LU8B0UH",
+        "G403VCZ3BH1B",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-aeonglass-artifact-growth-sl",
+      "scope": "boss:AEONGLASS",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：沙漏制品/力量成长/挡/凋萎一起核，满血非保证。机制：制品耗完才施减益；敌力逐击、虚弱取整，持牌凋萎另计，临时减力不关成长。搭配：已建毒/余像/敏与存活窗口分账。决定胜负的战斗：11局44试3赢，真正重打9场42次2赢，A10三场18次0赢（n=11）。典型案例：ZE8F192FKX24 A5滚石T3建、T12扣50后毒胜余3；25226ZFLNR1J A10六败末扣115余420、4血35挡对42＋18仍死；JMH5C51RLN4E A10前场组件重置、8血六败。DPYF2BAA3DKT A10六次74/77，前五T8/7/8/7/8判死，末改早建两触媒合3、余像T3，T4—7毒316＋其余102扣418余117/535；T7需26＋18−9=35、28血差7。SL首/末前9次未插入的抽牌ID相同，之后生成牌/探索/行动改变，六次零赢不提供单项转胜因果；前五未结束轮不预支毒伤。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "K3676LU8B0UH",
+        "ZE8F192FKX24",
+        "53FLQ68CETW0",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "2PVLGRBGUX9S",
+        "25226ZFLNR1J",
+        "JMH5C51RLN4E",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 11,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-daughter-wind-attack-block",
+      "scope": "relic:DAUGHTER_OF_THE_WIND",
+      "name": "风的女儿",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "风的女儿按打出的攻击牌张数补格挡，多段不等于多次触发。机制：A2实见每张攻击加1挡，四段连续反弹只加1；脆弱下中和仍加1，与被削到3的防御分开算。搭配：多张小刀同时兑现攻击挡与手里剑计数，敏捷卡牌挡另计。决定胜负的战斗：帝王蟹六次0赢，遗物已兑现但未覆盖408敌血与生存缺口（n=2）。典型案例：CSBR5CRDWQNB F33/6 T1四张小刀18→22挡，T2三攻击0→3、抵31仅实损28；T4攻击1加两防御各3共7，10血对24仍死，不能由3挡收益声称整战必胜。 G403VCZ3BH1B A9女王首试T3三攻击合3挡、重打六攻击合6挡；重打T11飞镖只一次4伤且挡9→10。按攻击牌张数计，攻击段数不当牌次数；减力/牌挡另算，未隔离遗物对SL转胜的作用。",
+      "evidence": [
+        "CSBR5CRDWQNB",
+        "G403VCZ3BH1B"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-shuriken-attack-count-strength",
+      "scope": "relic:SHURIKEN",
+      "name": "手里剑",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "手里剑按每回合攻击牌计数建立永久力量，增伤从随后攻击兑现。机制：A2第三、第六张攻击各加1力，连续反弹四段只计一张；T1第三张攻击完成后下一张小刀由4伤变5，第六张后永久力2跨回合保留。搭配：刀刃之舞提供多张攻击计数，力量逐段增伤，风的女儿按张补挡；这些力量不增加防御。决定胜负的战斗：A2/A3/A7/A10各一局验证；帝王蟹六次0赢，成长真实但末线仍差257敌血（n=4）。典型案例：CSBR5CRDWQNB F33/6 T1永久力0→1→2，T2三攻击后3、T3再4；T4玩家虚弱/脆弱2，打击文本7、两防御各3，不把增力当成攻防都成长。 10GPK5XGHCK3 F48 T6第三攻击后永久力2→3，下一小刀实扣7而前一刀6；终战积到6力，T3/T7换阶段玩家力量保留。累计攻击数与增伤窗口为实收益，不同时算作卡牌格挡。 Z6CFLDR3N4SB A7 F48/2 T6八张攻击中第三/第六张后力量3→4→5，T7第三张后5→6，永久部分跨轮保留；基础打击营养汤变0费9伤、小刀多张提供计数，敌力和凋萎也成长。末T11玩家6力却无敏捷、只有14挡对34+12而死，输出成长不增加格挡；移去遗物无整战对照。 5X2GHKJ89PN1 A10女王末T6第三张攻击后力量0→1，随后无攻击，本轮不加该1力的直伤；三张本体4+3+3=10、群蛇净16另计，12挡对27实死。计数建立与后续增伤窗口分账。",
+      "evidence": [
+        "CSBR5CRDWQNB",
+        "10GPK5XGHCK3",
+        "Z6CFLDR3N4SB",
+        "5X2GHKJ89PN1"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-reptile-trinket-temporary-strength",
+      "scope": "relic:REPTILE_TRINKET",
+      "name": "爬行动物饰品",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：爬行动物饰品本局因药水动作获得3点临时力量，下一回合撤去临时部分。机制：A2火焰药水动作建立REPTILE_TRINKET_POWER=3，总力由手里剑永久2变5，T2恢复2；没有敏捷增加，不外推所有药水与触发条件。搭配：临时力量与永久力量分账，只核实际窗口内攻击段数；药水仅为已发生事实。决定胜负的战斗：帝王蟹六次0赢，临时力收益没有单变量胜负对照（n=2）。典型案例：CSBR5CRDWQNB F33/6 T1末总力5含临时3，T2开局仅2，三张攻击后永久3，不能在后续回合沿用5。 另A5一局叠加事实：ZE8F192FKX24 F48两次T1两次药水动作后力量6/饰品临时6，T2消失；没有把临时力量算成滚石或毒的永久输出，也没有单独组件胜负对照。",
+      "evidence": [
+        "CSBR5CRDWQNB",
+        "ZE8F192FKX24"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-decimillipede-reattach-poison",
+      "scope": "elite:DECIMILLIPEDE_SEGMENT_MIDDLE",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "残杀千足虫重接增加需伤，复活毒不沿用死前值。机制：各段初始HP/实重接量分开，未发生的重接不预加；轮初净扣含回血抵销，不当毛需伤。搭配：按当前活段、毒层与结算重算，不设固定击杀顺序。决定胜负的战斗：六支持局，A4一场四次0赢，其他首战赢例构筑/血量不同（n=6）。典型案例：CSBR5CRDWQNB A2初三段42/46/44合132，中段实重接25、总需157，毒雾3重施3毒，70→26；10GPK5XGHCK3 A3初126、前段两重接25需176，57→20。1NZ8FE5F34R9 A4初130四次均未重接，30血进第四次杀中段后仍5血对20死；前20抽序同、T1触媒与双防御扣23/20损8/0，后线也变。LLYSRQQ35AVW A8当轮收146零损无重接；JLN5SK17W4FQ A10初150、轮初各损1后147，前段T4实重接21、五轮67→55，不沿低阶25。",
+      "evidence": [
+        "CSBR5CRDWQNB",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "VN7RQJMJEFMX",
+        "LLYSRQQ35AVW",
+        "JLN5SK17W4FQ"
+      ],
+      "n_support": 6,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-kaiser-crab-facing-sl",
+      "scope": "boss:KAISER_CRAB",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：帝王蟹朝向/减益/增伤/血价同核，击杀顺序未控。机制：A2无弱朝向火箭6+18/朝爪4+27符合后方基伤×1.5；基础读进阶库。搭配：毒/力/触发挡实际结算，未建不计。决定胜负的战斗：14支持局，重打6场32次1赢，A9两场8次1赢；后抽弃/行动未控（n=14）。典型案例：LLYSRQQ35AVW A8先爪后火箭胜、损19；9TG1RP5LFAAK A10先火箭后爪十轮428、损27胜；0NZXA12NLDMH A10末八轮直伤110+实毒220=330距428缺98、六败；LS8035TB32P3 A10十轮净损60胜，无重打不增分母。 T1伤53→114，T2伤20→35/损0→9，毒雾T9→T2，后段抽牌、多轮出牌和药水事实也变化，未隔离单项因果。 L704TLETMZBM A10首试76→42净损34，九轮扣428、T8毒杀火箭/T9结束爪；先两种顺序均有胜例，不新增重打分母。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "CSBR5CRDWQNB",
+        "ARKQLHG6RS4W",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "F4QKG4J1AJJZ",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "JLN5SK17W4FQ",
+        "9TG1RP5LFAAK",
+        "0NZXA12NLDMH",
+        "PU80F84P6HPN",
+        "LS8035TB32P3",
+        "L704TLETMZBM"
+      ],
+      "n_support": 14,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-expose-vulnerable",
+      "scope": "card:EXPOSE",
+      "name": "暴露",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "暴露实际施加易伤，作用由随后攻击兑现，不把未验证的其他效果补成规则。机制：普通/升级实见Power2/3，施放本身血量不变；易伤窗口内中和+4实际扣6，符合1.5倍。搭配：后续多张攻击利用尚存易伤，毒与剩血截断另计；去格挡、去人工制品的独立作用本轮未验证。决定胜负的战斗：A0五局/A2一局实见施加，单牌胜因未隔离（n=6）。典型案例：Y6GM2CHWJBEY F5 T2敌55血不变、新2易伤；R0HEV5E3QT6G F37 T2升级给炮手3易伤；ZZMYZ5UBCG72 F48 T2聚合体新增2易伤后，中和+使155→149。 HMVJKM56S4Q8 A9 F33 T1暴露使碾碎爪新增2易伤、血219不变；打击木偶/金刚杵下普通打击10→实15、背刺12→18，合48。施放也改变朝向，使敌意图21+4→14+6；易伤增伤与玩家朝向的受击代价分别计。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "ZZMYZ5UBCG72",
+        "HMVJKM56S4Q8"
+      ],
+      "n_support": 7,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-spiked-gauntlets-power-cost",
+      "scope": "relic:SPIKED_GAUNTLETS",
+      "name": "带刺手甲",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "带刺手甲的能量收益与能力加费须同时核对，不由加费推出能力整场不可用。机制：遗物文本能力费+1，新局取得后通常回合3→4能量，原1费触媒和毒雾实际2费；免费牌另算。搭配：支付建立费后，干瘪之手可让其他手牌本回合免费，仍须核实际目标与攻防。决定胜负的战斗：A0沙漏败/A2女王首战胜，组合与替代遗物未受控（n=3）。典型案例：LRN0HPZ0FZS1 F48 T1余像+需2、5能量支付后剩3，建立不加已有挡；ZZMYZ5UBCG72 F48 T2/T4分别付2建立触媒/毒雾，T6付2打触媒+后尖啸免费。 另A6一局：UACFSW4VDDLD F34实际取得后，幻影之刃在F35/F37均2能量建立、4→2或2→0；全局最终满66进实验体仍六败，能量收益和能力建立/攻防窗口不能互相替代；所谓无精英安全线仍含F39问号战。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "ZZMYZ5UBCG72",
+        "UACFSW4VDDLD"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-mummified-hand-free-card",
+      "scope": "relic:MUMMIFIED_HAND",
+      "name": "干瘪之手",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "干瘪之手让能力建立与另一张手牌本回合免费相连，不能预先指定随机免费目标。机制：观测牌文为每打出能力使随机一张手牌本回合免费，前后帧实见能量费下降；建立能力本身仍支付当前费。搭配：加费能力、抽牌和防御技能按实际免费牌算收益，未抽到或未施放不计。决定胜负的战斗：A0实验体SL胜/A2女王首战胜，免费效果明确、单遗物致胜未隔离（n=2）。典型案例：KAY522KT5NXR F48/1 T3灵动步法后带毒刺击1→0；ZZMYZ5UBCG72 F48 T6触媒+付2使能量2→0、一张尖啸1→0，实际追加减力。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "ZZMYZ5UBCG72"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-paper-krane-weak-multihit",
+      "scope": "relic:PAPER_KRANE",
+      "name": "纸鹤",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "纸鹤在场的虚弱使本局敌人攻击按逐段减少，和尖啸减力分别算。机制：观测牌文虚弱减伤40%，实见18×0.6向下取整为10、16为9；再减6力量时9×3→4×3，不能把两次变化全归一种来源。搭配：中和提供虚弱、尖啸在同回合临时减力，之后现有格挡再抵来袭。决定胜负的战斗：A2女王八回合胜，T6两次减益使48→27→12，留7挡和回合末2挡只损3，未做移除遗物的整战对照（n=1）。典型案例：ZZMYZ5UBCG72 F48 T2聚合体18→10；T6中和少21、尖啸再少15来袭，T7临时力恢复。",
+      "evidence": [
+        "ZZMYZ5UBCG72"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-sparkling-rouge-turn-three",
+      "scope": "relic:SPARKLING_ROUGE",
+      "name": "闪亮口红",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "闪亮口红本局第3回合开始提供1力量和1敏捷，不能当作开场或每回合增长。机制：T2只有来自意外光滑的石头的1敏捷，T3力0→1、敏捷1→2；同时99虚弱/脆弱存在，最终牌值须按当前状态。搭配：后续多段攻击与多张卡牌格挡兑现增益，遗物挡独立，建立敏捷不直接增加已有挡。决定胜负的战斗：A2女王首战胜，尚未隔离该遗物致胜作用（n=2）。典型案例：ZZMYZ5UBCG72 F48 T3偏折在2敏捷与脆弱下实补4挡，本局无灵动步法，不把敏捷归给能力牌。 G403VCZ3BH1B A9女王两次T3首次建1力/1敏，T6普通步法再使敏1→3，脆弱防御4→6；余烬茶已耗尽不虚加2力。T3有99虚弱/脆弱/易伤，当前牌面与实际增量优先；女王重打转胜未隔离口红贡献。",
+      "evidence": [
+        "ZZMYZ5UBCG72",
+        "G403VCZ3BH1B"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-tuning-fork-skill-block",
+      "scope": "relic:TUNING_FORK",
+      "name": "音叉",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "音叉技能计数与牌面挡分账。机制：已见9→10补7挡、4→5无7，现场计数非攻击段数；未补全触发条件。搭配：脆弱逐牌折挡、被动挡另核。决定胜负的战斗：6支持局，遗物非整战胜因（n=5）。典型案例：T082DRCUHRRD A0 F12 T7防御5+音叉7=12、挡4→16，实验体败；ZZMYZ5UBCG72 A2女王T6药瓶+计数9→10挡0→7、末斗篷扣2、对12损3后胜。6EV5V6PJJS9D A6 F39 T3生存者+脆弱下8、弃牌完计数9→10补7、防御3合18对32损14，T4未触发、16血10挡对44死。LLYSRQQ35AVW A8 F48 T2萎靡+计数9→10补7、攻击13→10使69→66；T3牌挡折减另核。9TG1RP5LFAAK A10首T3暗影后敏2偏折12、防御14、后步音叉基础7翻14使12→40；40非全牌挡，后轮未触发不预支。 ZVYUL2YP3518 A10末T7偏折牌面8、音叉9→10另7使挡7→22，15非全牌挡；T8未触发时钗7+两斗篷20=27，对55仍死，不跨轮预支音叉7。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "ZZMYZ5UBCG72",
+        "6EV5V6PJJS9D",
+        "LLYSRQQ35AVW",
+        "9TG1RP5LFAAK",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 6,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-cloak-clasp-end-turn-hand-block",
+      "scope": "relic:CLOAK_CLASP",
+      "name": "斗篷扣",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "斗篷扣本局在回合末按尚存手牌张数补挡，结束前零挡不等于实际零防御。机制：观测牌文每张手牌补挡，脆弱下两张实补2、五张补5；不是卡牌敏捷格挡，本次另核1/3/4张，其他数量和冲突条件未验证。搭配：保留有用手牌与持续毒可同时提供回合末攻防，但魂缚能限制部分牌，不能把未出牌一概称空过。决定胜负的战斗：A2/A4女王各首战胜，末两次受攻击仍损3/11，手牌收益未做替代行动对照（n=3）。典型案例：ZZMYZ5UBCG72 F48 T6音叉7加两手牌2抵12，使53→50；T7五手牌补5抵16，使50→39，未计额外敏捷。 1LMBFGSMCWKU A4 F17 T10三牌24挡、剩一手牌补1，对27自爆仅损2；F48 T6脆弱下两牌18挡、四手牌补4，对25损3，T9三手牌补3仍对50损20、T10四手牌补4对21损5。遗物挡按结束时手牌兑现，与敏捷和脆弱下的卡牌挡分账。 TD1HVGS7H6LB A10巨兽两次T2卡牌10挡、三手牌末补3，对16实损3；T13首试7挡加两手牌对11实损2，重启后7挡加三手牌实损1。末次四手牌预计4末挡的独立结算帧未记录，不冒充实测末挡；遗物收益不加敏捷，不保证抵住42自爆。",
+      "evidence": [
+        "ZZMYZ5UBCG72",
+        "1LMBFGSMCWKU",
+        "TD1HVGS7H6LB"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-queen-poison-main-target",
+      "scope": "boss:QUEEN",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：女王先杀本体/聚合体均有赢例，无固定击杀序因果。机制：进阶本体血{@2:HP:QUEEN}/{@4:HP:QUEEN}/{@8:HP:QUEEN}，本体死可终战；99弱/脆/易伤改变攻防，爪牙死不关成长。搭配：只核已建能力/实际毒窗口。决定胜负的战斗：10支持局、五首试赢；真正重打5场26试1赢（n=10）。典型案例：ZZMYZ5UBCG72 A2行动36＋毒364杀本体、爪余87；1LMBFGSMCWKU A4 T2杀爪/T11毒胜；4Y94N8RDPGPM A7先爪、末毒胜余9；LLYSRQQ35AVW A8 T6杀爪/T7毒胜余60。G403VCZ3BH1B A9同前36抽序，两试90血1赢，末T10萎靡60→20、T12滚石勝，其他生成/弃牌/目标/护栏也变。9TG1RP5LFAAK A10六次17血六败、末扣35缺595；5X2GHKJ89PN1 A10六次49血六败、末行动26＋毒66余365，99减益与可打牌限制另核。ZVYUL2YP3518 A10首试82→50十轮630，T9杀爪/T10毒本体，战损33后芝士回1净32、第二boss六败，前场满血不等后场满血。",
+      "evidence": [
+        "ZZMYZ5UBCG72",
+        "1LMBFGSMCWKU",
+        "9YBKCNBFP0X5",
+        "VLV17NUSFS61",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "G403VCZ3BH1B",
+        "9TG1RP5LFAAK",
+        "5X2GHKJ89PN1",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 10,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-corrosive-wave-draw-poison",
+      "scope": "card:CORROSIVE_WAVE",
+      "name": "腐蚀波",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "腐蚀波把仅本回合后续抽牌变为施毒，施毒与扣血分账。机制：普通建立CORROSIVE_WAVE_POWER 2，旧A0/A3两局实际抽1/2牌补2/4毒；升级建立3，A7一局实抽2补6毒。回合后增益消失，无后续抽牌便无自身施毒；升级子机制仅1局，不外推未验证人工制品分支。搭配：后空翻兼有卡牌挡、抽牌施毒与余像挡，按剩余实际抽牌兑现，不预支未来回合或未结算毒。决定胜负的战斗：普通A0骇鳗无后续抽牌、A3巨斧/实验体有效；升级A7狂战士施放两次后零净损胜、沙漏六败，单牌胜因未隔离（n=3）。典型案例：10GPK5XGHCK3 A3 F37 T8后空翻抽2令4→8毒；2PVLGRBGUX9S A7 F48首T11建3后后空翻抽2，敌毒36→42、HP212不变，随后42毒实扣至170，T12已无该增益。普通/升级分别计证据，不把加6毒写成即时6伤。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "10GPK5XGHCK3",
+        "2PVLGRBGUX9S"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-shadowmeld-new-block-double",
+      "scope": "card:SHADOWMELD",
+      "name": "融入暗影",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "融入暗影只翻本回合建立后新增格挡，已有挡不补。机制：SHADOWMELD_POWER 1使卡牌基础加敏捷后乘2，施放不自带挡、回合末消失；只验证已见被动/倍率组合。搭配：先付建立费，再兑现实际新增挡，未出手或0新增收益0。决定胜负的战斗：9支持局，局部收益不等于单卡整战胜因（n=9）。典型案例：1HC609GTLGN3 A0防御显示14未打；10GPK5XGHCK3 A3生存者8→16、敏5得26，旧16挡建后仍16，实验体T12零挡仍复活。ZE8F192FKX24 A5旧27挡建后29、步法后31：各余像1翻2，不是翻旧27。2L1BNN9ZJEFU A6升级版旧12不变、敏5生存者26得38，对42使11→7多13；T5先两防御14再建无新增仍14、损16。2SU6XN2AEJRD A6旧14不变、敏6防御22合36盖26+9、48血留到毒杀。SADL3CGYTGSR A7与士兵双2倍：无敏防御5→20、扫腿+14→56多42、当轮零损，次轮0挡仍死；Z6CFLDR3N4SB A7旧18末建仍18、T8后空翻5→10多5，对26仍损16使41→25。 JMH5C51RLN4E A10实验体赢线T12旧0挡建暗影仍0；敏6后空翻(5+6)×2=22、耸肩(8+6)×2=28合50、当轮零损。敌无实体，势不可当两次各1而非按50伤；T8旧14挡施放仍14。 9TG1RP5LFAAK A10实验体首T3敏2偏折(4+2)×2=12、防御(5+2)×2=14，音叉7另翻14而合40。女王末T3施暗影仍0、后来空栏敏+2仍无挡，只有建立后实际得挡才兑现；第4/5次末14挡仍不足27，未有换动作获胜对照。",
+      "evidence": [
+        "1HC609GTLGN3",
+        "10GPK5XGHCK3",
+        "ZE8F192FKX24",
+        "2L1BNN9ZJEFU",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK"
+      ],
+      "n_support": 9,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-anticipate-temporary-dexterity",
+      "scope": "card:ANTICIPATE",
+      "name": "预判",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "预判普通/升级只本轮建2/4敏捷，须后续挡牌兑现，不当永久防御。机制：DEXTERITY/ANTICIPATE同量、不补已有挡，次轮撤临时部分；先逐牌加敏后按脆弱折减。搭配：常驻步法/余像/遗物分账，没有后续挡牌不产生增量。决定胜负的战斗：10支持局、顺序整战胜因未控（n=10）。典型案例：VPW8YH7A4QFM A10脆弱防御3→5，多2牌挡、余像1另计，末10挡仍不足。DPYF2BAA3DKT A10沙漏末T5建2敏，旧挡1→2只是余像；防御基础5→7，实际2→10含7＋余像1，整轮被动4＋牌挡7＝11、对32损21，T6临时2敏消失。",
+      "evidence": [
+        "1NZ8FE5F34R9",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "2L1BNN9ZJEFU",
+        "9YT51CK8RC39",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "ZVYUL2YP3518",
+        "VPW8YH7A4QFM",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 10,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-devoted-sculptor-ritual-growth",
+      "scope": "hallway:DEVOTED_SCULPTOR",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "虔诚雕刻师的仪式持续加力量，弱化或一次萎靡降低当前来袭，不能当作停止成长。机制：禁忌唱诵建立{GAIN:DEVOTED_SCULPTOR:FORBIDDEN_INCANTATION_MOVE:RITUAL_POWER}层仪式，猛烈攻击基础{DMG:DEVOTED_SCULPTOR:SAVAGE_MOVE}加当前力量；实测A0/A3/A4后续每轮力增9，临时减力恢复与永久减力另计。搭配：持续毒与卡牌挡分别核实际输出/生存窗口，尚未结算毒不抵当前致死攻击。决定胜负的战斗：本角色六场，A0四场/A3一场均T4–T5结束、A4一场T7死；回合与构筑混杂，不把快杀的相关性称受控胜因（n=6）。典型案例：LRN0HPZ0FZS1 A0 F35 T2仪式9、T3/T4力9/18；F9PP859XZ3RJ A4 F37 T4萎靡X2使18→16、30→21，随后25→34→43，T7虚弱55→41，14挡加5血不足生存，敌13血/10毒的死亡后结算未记录。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "KAY522KT5NXR",
+        "10GPK5XGHCK3",
+        "F9PP859XZ3RJ"
+      ],
+      "n_support": 6,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-envenom-unblocked-attack-poison",
+      "scope": "card:ENVENOM",
+      "name": "涂毒",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "涂毒已建后，未挡攻击逐击加毒，施毒/毒伤分账。机制：普通/升级实建1/2层；建层不扣血。普通逐击四局、升级两局；升级双段匕首雨对每个无挡敌各加4毒，人工制品/其他分支未验。搭配：多段/小刀重复触发，带毒刺击自身毒另算；毒等结算、剩血/敌限制截断。决定胜负的战斗：六局支持，KAY仅升级建层、胜因未控（n=6）。典型案例：F9PP859XZ3RJ A4雕刻师T5刺击直接3+涂毒1，猎杀者再加1、末结算5；VLV17NUSFS61 A7 F35 T7打击使8→2血、0→1毒；D4LJ9QMGFB8Q A10 F19 T1两刀各4伤、毒12→13→14。0NZXA12NLDMH A10蟹末T1建2层、投掷匕首使爪219→210并加2毒，末扣2到208；T3双段匕首雨两侧各扣12、各增4毒。末八轮全来源毒实扣220、直伤110合330，仍缺98，220非全属涂毒升级。 LS8035TB32P3 A10狂战士第2次T7涂毒+2层/我方1力，三刀各5使敌157→152→147→142、毒0→2→4→6；末涂毒未建不计施毒。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "F9PP859XZ3RJ",
+        "VLV17NUSFS61",
+        "D4LJ9QMGFB8Q",
+        "0NZXA12NLDMH",
+        "LS8035TB32P3"
+      ],
+      "n_support": 6,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-kunai-attack-count-dexterity",
+      "scope": "relic:KUNAI",
+      "name": "苦无",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "苦无按本回合已出的攻击牌次数增加敏捷，收益从后续格挡牌兑现。机制：本局第三、第六次攻击各加1敏捷；多段匕首雨未按段数额外触发，计数按攻击牌，灵动步法另加2；已建敏捷跨回合保留但下一场不继承。搭配：先制打击及小刀增加攻击牌次数，多张后续格挡反复兑现敏捷；能力建立和攻击本身都不立即加挡。决定胜负的战斗：A4一局知识恶魔获胜、雕刻师失败，实际收益成立但未隔离遗物胜因（n=1）。典型案例：F9PP859XZ3RJ F33 T4第三攻击力敏中的敏捷1→2，T5第三/第六攻击各加1、步法另2，2→6；T7防御5+6=11对30损19。F37未触发苦无新增敏捷、只有本战步法2，T6三牌26挡对46损20，不能沿用上一场6敏捷。",
+      "evidence": [
+        "F9PP859XZ3RJ"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-mirage-poison-card-block",
+      "scope": "card:MIRAGE",
+      "name": "蜃景",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "蜃景的卡牌格挡以现场所有敌人的毒层总量为基础，敏捷和脆弱修正、遗物被动挡另算。机制：旧A0无毒无敏捷时新增0，A2三毒无敏捷实加3，三毒加1敏捷实加4；A4毒4加2敏捷实加6，施放不消耗毒，不把毒视为已造成伤害。搭配：直接施毒及涂毒先形成实际层数，后打蜃景才兑现；使用时更新牌面，不能固定沿用出牌前毒量。决定胜负的战斗：A0一局/A2两局/A4一局，既有空效果与有效格挡，未隔离单牌胜因（n=8）。典型案例：Y6GM2CHWJBEY A0 F17首战T1三敌无毒，10挡保持10；F9PP859XZ3RJ A4 F37 T5刺击后4毒与2敏捷使蜃景实0→6挡，随后猎杀者加到5毒不会追溯再加挡，对27攻击仍损21。 另A5一局：ZE8F192FKX24 F48/2 T9敌28毒、玩家4敏捷，蜃景实0→33，其中牌面28+4=32、余像另1；后续35挡足抵两张9伤凋萎而HP1不变，仍只留10跨回合，不能把33全称毒基础挡。 另A6一局。ARKQLHG6RS4W F33/4 T4仅碾碎爪7毒，脆弱下蜃景牌面⌊7×0.75⌋=5、余像另1，格挡7→13实增6；后续到14挡仍对33攻击判死。毒未被消耗，有效格挡不代表足够保10血，也不把计划毒量算入。 LLYSRQQ35AVW A8 F48 T3聚合体9毒+女王26毒合35、无敏捷；脆弱下牌文26挡，实际7→34=26+余像1，毒层不消耗。该战T6爆发即时杀聚合体、T7毒杀女王，蜃景只提供已兑现当轮缓冲，不把35原毒当35实挡或归整场单卡胜因。 4ANT8D00TP72 A10沙虫三次T3七毒、无敏捷，蜃景实加7挡，与防御5合12，对尖啸后25攻击仍损13；毒挡已兑现也未免伤。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "CSBR5CRDWQNB",
+        "ZZMYZ5UBCG72",
+        "F9PP859XZ3RJ",
+        "ZE8F192FKX24",
+        "ARKQLHG6RS4W",
+        "LLYSRQQ35AVW",
+        "4ANT8D00TP72"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-snecko-skull-poison-application",
+      "scope": "relic:SNECKO_SKULL",
+      "name": "异蛇头骨",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "异蛇头骨使已见毒雾/直接毒牌每次施毒额外加1，能力层数不增加。机制：毒雾3补4，普通/升级致命毒药基础5/7补6/8，普通冒泡9补10；施毒当次不扣HP，阻挡分支不外推。搭配：持续补毒/卡牌触发与触媒次数分核，防御支持结算窗口。决定胜负的战斗：4支持局、遗物胜因未隔离（n=4）。典型案例：9TG1RP5LFAAK A10毒药0→8、冒泡8→18，敌46血不变；DPYF2BAA3DKT A10沙漏末T7冒泡现场10毒、19→29，三层触媒实扣110而仍117血；遗物增毒真实，不能预支尚未结算的25毒。 机制：毒雾3实补4、普通/升级致命毒药基础5/7实补6/8，普通冒泡基础9实补10； JLN5SK17W4FQ A10普通毒药0→6毒/爪156血不变。 9TG1RP5LFAAK A10实验体首T5升级毒药0→8、普通冒泡8→18，敌46血不变；",
+      "evidence": [
+        "9YBKCNBFP0X5",
+        "JLN5SK17W4FQ",
+        "9TG1RP5LFAAK",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-ornamental-fan-attack-block",
+      "scope": "relic:ORNAMENTAL_FAN",
+      "name": "精致折扇",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "精致折扇按本回合攻击牌次数补被动挡，本局可与余像同次叠加。机制：A3/A4第三张攻击后实补4；A4零X串刺仍计一张，脆弱下遗物4挡和余像1挡分别兑现，卡牌挡另受敏捷/脆弱修正。搭配：小刀增加攻击牌次数；余像组合只在A4一局验证，不把两局都算组合证据。决定胜负的战斗：A3实验体首战胜、A4女王六次零赢，真实缓冲成立但未隔离遗物胜因（n=2，组合n=1）。典型案例：10GPK5XGHCK3 A3 F48 T6投掷匕首/打击/第一小刀为三次攻击，挡8→12，第二小刀不再加挡；9YBKCNBFP0X5 A4 F48/6 T6第一小刀18→23=余像1+折扇4，六牌合余像6+卡牌14+折扇4=24，对27仅损3。 JQPT83P8KDSZ A10棱柱第二次T3打击/精确切击/打击为三攻击，第三张挡5→9、另补4，中和第四张不再补；玩家没有敏捷/余像。第四次T4卡牌合20挡对22仍损2死、末剩94敌血；遗物真实缓冲不等同防御成长或整战胜因。",
+      "evidence": [
+        "10GPK5XGHCK3",
+        "9YBKCNBFP0X5",
+        "JQPT83P8KDSZ"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-queen-poison-window-sl-observation",
+      "scope": "boss:QUEEN",
+      "asc": [
+        4,
+        7
+      ],
+      "lesson": "观察：A4/A7/A10女王重打中毒防主轴是否实际启动及换线血价，比牌组拥有组件更能描述当场缺口；无胜利对照，不称提前建立必胜。机制：持续毒须建立后才逐轮兑现，少挡换攻击会缩短后续结算窗口；死亡模拟全饱和不能区分实际血价。搭配：按已建毒雾/余像/敏捷核后续伤挡，聚合体/女王净扣血分列。决定胜负的战斗：3场18次零赢，各成功读档5次、只末次实死；旧A4的37张初始牌序相同，后续重抽/生成未全部受控（n=3）。典型案例：9YBKCNBFP0X5 F48第4/6次T7同手牌/21血/3敏捷、敌126/305且各7毒，换线挡17→9、净扣29→38、损5→13，下一轮聚合体110→95但女王292→298；两线rollout均24/24死，T9分别14血判死/6血实死，仍未杀任一敌人。 VLV17NUSFS61 A7六次均42/77进场，前五次在T5/T5/T6/T5/T5判死；末次T5实死。首与末次T1净扣37→25，基础抽序相同但背刺被跳过、被动随机分配和后轮行为变化，末次T3损24、T4损11、T5理论8只实扣7。第3次较早建立群蛇/毒雾仍未胜，没有“赢的那次”，不能归胜运气或推出换顺序必胜。 5X2GHKJ89PN1 A10六次49/70、T6止、0赢，clean初38牌同序但到手回合不同。第4/5与末次T4同后空翻后7血4挡3费、聚合体159血1力；末改萎靡X3取代扫腿+X1，T5从8余血变2，实付6血，T6光束33→27仍死。候选五轮推演均24/24死，前五判死末项未结算，不计作零战损；无胜线及单因对照。",
+      "evidence": [
+        "9YBKCNBFP0X5",
+        "VLV17NUSFS61",
+        "5X2GHKJ89PN1"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-throwing-axe-first-card-replay",
+      "scope": "relic:THROWING_AXE",
+      "name": "投斧",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：投斧首牌重放与多段攻击、自损和失血抽牌同时兑现，首个牌面不能代替整段实际输出。机制：本局遗物重放首牌；飞镖手动动作前文字11伤×4、失2血，动作后扣121并失4，百年积木补三张手牌。缺内部重放帧，不能拆成两次已验证的逐段伤害，也不能全归开场1力量。搭配：多段攻击和补手牌可形成开场爆发，同时承担自损，后续需另有防御与毒结算窗口。决定胜负的战斗：A4女王一场首战11回合胜，开场迅速减少双敌阶段，未隔离单遗物胜因（n=3）。典型案例：1LMBFGSMCWKU F48 T1聚合体190→69、玩家64→60，随后攻击令其剩40、T2华彩猎杀者击杀；后段防御与补毒支撑到T11毒杀女王。 另A6一局。6EV5V6PJJS9D F39 T1面包使能量3→1，投斧实重放带毒刺击+，拳击人工制品消失、直扣16、建立4毒，回合末另扣4，共20；没有建立计划中的首牌余像。T2—T4能量4不能恢复已用首牌重放机会；无另一首牌实打胜局，不推重放目标优先级。 ENKYQMS9W4ZD A6 F43 T1投斧实际重放背刺，单次牌文11、拳击46→24扣22且余像尚未建立；随后余像只1层，原双余像计划未执行。T2仅补2挡而损26；重放能力的收益没有同盘整场实打对照，不推固定首牌优先级。",
+      "evidence": [
+        "1LMBFGSMCWKU",
+        "6EV5V6PJJS9D",
+        "ENKYQMS9W4ZD"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-rolling-boulder-start-growth",
+      "scope": "card:ROLLING_BOULDER",
+      "name": "滚石",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "滚石持续收益由实建立后的轮初次数兑现，早启动优势仍是观察。机制：普通/升级建5/10，后轮先按当前层数群伤再加5；k次理论(5或10)k＋5k(k−1)/2，敌挡/剩血/无实体限制实际扣量，未由这些帧确认力量加成。搭配：格挡维持成长窗口，未建/未活到不预支。决定胜负的战斗：5支持局，同盘改线1场两次1赢但弃牌/施毒同变，非单因（n=5）。典型案例：ZE8F192FKX24 A5 T3建10/T12扣50使69→19后毒勝；CRK2HNYKSCZC A10 F11 T1建5，T2/3轮初基础群伤5/10、层10/15，三敌第一轮被挡后实扣2/0/5合7、第二轮两敌4/10合14；最终15层尚未兑现。F8护栏省13当轮血且伤0→6，但弃滚石九轮未建；原线整场代价未记录，购买不等本场已启动。",
+      "evidence": [
+        "R0HEV5E3QT6G",
+        "ZE8F192FKX24",
+        "G403VCZ3BH1B",
+        "9TG1RP5LFAAK",
+        "CRK2HNYKSCZC"
+      ],
+      "n_support": 5,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-sturdy-clamp-retention-cap",
+      "scope": "relic:STURDY_CLAMP",
+      "name": "坚固钳子",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "坚固钳子本局跨回合最多保留10挡，不能把富余挡全部预支到下一轮。机制：两次相邻回合显示35挡足抵两张9伤凋萎却只带10，46挡抵34攻击余12也只带10；只验证本局上限与结算组合。搭配：敏捷/余像/蜃景提供当轮挡，先扣本轮攻击和持牌伤再核留挡；高挡不等于持续无伤。决定胜负的战斗：A5沙漏重打两次1赢，留挡贡献未隔离（n=1）。典型案例：ZE8F192FKX24 F48/2 T9 1血35挡对18凋萎不损血，T10仅留10；T10 46挡对34攻击不损血，T11仍仅10。",
+      "evidence": [
+        "ZE8F192FKX24"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-phantom-blades-first-shiv",
+      "scope": "card:PHANTOM_BLADES",
+      "name": "幻影之刃",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "幻影之刃本局9层只给当回合第一张小刀额外9伤，不能把每刀或文本伤害都计为实扣血。机制：能力使小刀保留；无敌防挡限制时首刀基础加力量再加9、同回合第二刀恢复基础加力量；无实体使已见两刀各实1，不外推升级/叠加。搭配：生成/保留小刀提供后续回合首刀，费用和能力实际建立另核；第6次实验体未建立便不算持续输出。决定胜负的战斗：A3异鱼、A6知识恶魔/实验体与A10族母验证，单卡整战胜因未隔离（n=3）。典型案例：10GPK5XGHCK3 A3 F17 T3首刀137→124实13、第二刀124→120实4；UACFSW4VDDLD A6 F33/2 T5第一刀222→208实14、第二刀208→203实5，F48/1 T9文本14/5却各实1。 PJ2LL9KU7FHD A10族母第3次T4建立9层，T6三刀实15/6/6＝基础4+2力各刀、首刀另9，合27比无能力多9。首试/第二/末次T11才建立，之后小刀施放0次，不能计为持续输出；第3次T5/T6比首试多16/20伤还含精确切击、抽弃和选线变化，T14余敌17仍败，不把全部36增伤归能力或认早建必胜。",
+      "evidence": [
+        "10GPK5XGHCK3",
+        "UACFSW4VDDLD",
+        "PJ2LL9KU7FHD"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-doubt-end-turn-weak",
+      "scope": "card:DOUBT",
+      "name": "疑虑",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "疑虑持牌回合末的虚弱会降低下一轮攻击，伤差与当前需伤分开判断。机制：本局手中疑虑文本给1虚弱，次轮WEAK_POWER1，打击6按现场修正为4，三张少6；只验证该文本和无力量打击组合。搭配：抽到不能打的牌与缺挡同时出现时，未来毒/协同没有实际施放便不能补当前窗口；不把6伤差单独认定为败因。决定胜负的战斗：A6走廊雾菇1场实际死（n=1）。典型案例：FH2HB2X17F2H F6 T2持疑虑、T3三打击47→43→39→35，13血0挡对15死；即使未弱三击18也低于回合初47需伤。",
+      "evidence": [
+        "FH2HB2X17F2H"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-precarious-shears-defense-observation",
+      "scope": "relic:PRECARIOUS_SHEARS",
+      "name": "松动羊毛剪",
+      "asc": [
+        6,
+        7
+      ],
+      "lesson": "观察：删基础挡、保留未来协同后，本局即时防御窗口不足，不能据未启动组件认定剩余挡够用。机制：本局羊毛剪失16血且删两防御，56→40、五防御变三；未打腐蚀波、没有后续抽牌便无该毒收益，没有同抽序删别牌对照。搭配：审查当前格挡和抽牌，而非把计划取得的配合当已有生存。决定胜负的战斗：仅A6一局，不能归因删两挡必败或保留必胜（n=1）。典型案例：FH2HB2X17F2H F2/F3损14/7，F6 T2/T3均无挡，T3以13血对15死；疑虑在两次删除之后才加入，当时不是可删选项。",
+      "evidence": [
+        "FH2HB2X17F2H"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-knowledge-demon-healing-sl-observation",
+      "scope": "boss:KNOWLEDGE_DEMON",
+      "asc": [
+        6,
+        7
+      ],
+      "lesson": "观察：知识恶魔回血会增加实际需伤，重打转胜要看输出与损血窗口，不由首血或单次改线归因。机制：A6本体379，T4/T8/T12各回27、共81，完整需460；SL两次起59、均T13复活到21，只有末线T14结束战斗。搭配：已建3敏捷和幻影首刀增益支撑攻防，持续输出要跨越回血；没有隔离抽牌/选线/其他增益的胜因。决定胜负的战斗：A6真重打1场2次1赢，前洗牌抽序一致、后段出牌和抽牌变化（n=1）。典型案例：UACFSW4VDDLD F33首战T14敌54、21血8挡对42判死；第2次T14累计扣460、敌0玩家10，不能只按379血算伤害需求。 4Y94N8RDPGPM A7 F33首战82→66、十轮存活，不计为重打赢线；T4结束到T5敌270→281，净回血11，十轮净扣[52,29,28,−11,43,50,48,21,61,58]合379。原始各次独立回血量/逐轮总伤未知，不能由净回血11推完整回血规则或说只需379原始伤害。两局各一存活，真正SL仍旧A6一场两次一赢，构筑与抽序不受控。",
+      "evidence": [
+        "UACFSW4VDDLD",
+        "4Y94N8RDPGPM"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-helical-dart-shiv-dexterity",
+      "scope": "relic:HELICAL_DART",
+      "name": "螺线飞镖",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "螺线飞镖在本局每打出一张小刀给1点本回合敏捷，弃牌不触发。机制：小刀后DEXTERITY_POWER和HELICAL_DART_POWER逐张+1，次轮两项消失；建立不增加此前已有挡。搭配：隐秘匕首生成两小刀，只能由其后格挡牌兑现临时敏捷；本局未验证调序必胜。决定胜负的战斗：A6草蜢四尝试均败，晚到的敏捷没有提供额外挡，不能据此归单一死因（n=1）。典型案例：75X1BARMNZ03 F20首战T1弃两牌仍0敏捷，生存者先给8挡、两小刀后敏捷1/2而挡仍8，17攻击损9；T2敏捷消失。",
+      "evidence": [
+        "75X1BARMNZ03"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-mad-science-custom-strangle",
+      "scope": "card:MAD_SCIENCE",
+      "name": "疯狂科学",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "疯狂科学须按现场定制牌文分模板核算，同ID不是固定效果。机制：六支持局四模板：R0HEV5E3QT6G A0能力费减1；K3676LU8B0UH A1与LLYSRQQ35AVW A8技能基础8格挡加当前敏捷并抽3；VN7RQJMJEFMX A6攻击12并建当轮紧勒6；2PVLGRBGUX9S A7专长建2力量2敏捷、无紧勒。技能模板2局/0反例，减费2/0，其余各1/0，六局不表示每模板都验证六局。搭配：抽牌提供后续实际动作，敏捷/力量分别由格挡牌/攻击段兑现，不把科学抽牌混成永久力敏。决定胜负的战斗：A8女王T1临时2敏使本牌8+2=10挡、8→18并抽3；本战无永久正力敏，七轮损10胜；旧A6三骑士仍缺55、A7沙漏六败，无移除科学的受控胜负（n=6）。典型案例：LLYSRQQ35AVW F48 T1上述技能模板；2PVLGRBGUX9S F48科学令金刚杵1力→3、0敏→2属于另一专长模板，不能套给本局。 JMH5C51RLN4E A10回到能力减费模板：T3科学建立好奇1，后续触媒+当前费0、能力2层，敏仍3/无力量，施放前后0挡不变。该模板现2局支持，技能抽3仍2局、其他各1，不将ID当固定力敏。",
+      "evidence": [
+        "VN7RQJMJEFMX",
+        "R0HEV5E3QT6G",
+        "K3676LU8B0UH",
+        "2PVLGRBGUX9S",
+        "LLYSRQQ35AVW",
+        "JMH5C51RLN4E"
+      ],
+      "n_support": 6,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-three-knights-output-buffer-observation",
+      "scope": "elite:FLAIL_KNIGHT",
+      "asc": [
+        5,
+        7
+      ],
+      "lesson": "观察：三骑士的首轮爆发和单轮减力不能代表后段击杀与生存时钟。A5/A6各1场，共2场1胜；A5满77进场净损74、仅剩3胜，A6以59/70进场实死。机制：各敌仍需伤与最终意图分别核对，暂减力恢复后不能沿用开场少伤；不据一败指定固定击杀顺序。搭配：毒的已结算输出、永久减力和当轮格挡分账，无另一目标顺序的受控结果。决定胜负的战斗：两局高血都需支付大血价，血量与胜负仅观察（n=3）。典型案例：VN7RQJMJEFMX F42初276，T1—T3扣104，T4尚172；T5连枷才死，T8还余31/24，20血+6挡对32攻击死亡。ZE8F192FKX24 A5 F42满77最后3胜，不能从高血判为轻松过关。 2PVLGRBGUX9S A7 三骑士F42以56/70进、5轮实扣57/36/71/97/15=276，净损29均在T3，存活27血；终局无触媒，不能因已持步法/毒/余像假定未来低损。累计3场2存活1败；相较旧A5损74与A6死亡，牌组/敌状态不同，只作观察，无改路线/目标顺序受控胜局。",
+      "evidence": [
+        "ZE8F192FKX24",
+        "VN7RQJMJEFMX",
+        "2PVLGRBGUX9S"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-thieving-hopper-poison-sl-observation",
+      "scope": "hallway:THIEVING_HOPPER",
+      "asc": [
+        0,
+        7
+      ],
+      "lesson": "观察：草蜢短生存窗口须按已结算毒和敌剩血核对，重打不能当额外血量或尚未兑现的伤害。A0/A1/A3/A4/A5/A6/A7各3/2/1/2/1/2/1局各一场；十一场高血胜、净损0–17，一场A6低血败；一场是问号战，不能全算走廊。SL仅A6一场4尝试0赢，前19张记录抽序一致。机制：末轮行动6+实际毒8=14，33→19仍未击杀；末存7毒不是已发生的下一次伤害。搭配：毒、直伤、当前挡与可活回合一起记，无更快输出或其他路线受控胜局。决定胜负的战斗：失败重打无胜线，观察不推统一血线（n=13）。典型案例：75X1BARMNZ03 F20四次均18/70；第2次T1少小刀少4伤，第3次T2少打击少6伤，损9与T3判死未改善；末次9血+10挡对21实死、敌19。VN7RQJMJEFMX A6 F19 61→54、T2胜，进场/构筑不同，比较非因果。 3KME36ADUE4U A7 F19高血56→39、四轮胜，开场被动先扣9、后续逐轮扣44/15/8/3合70，实际净损17；本场无重打。与旧A6低血四败构筑/敌盘面不同，不推安全血线。 PU80F84P6HPN A10 F19首次56→55、5轮胜；T2普通步法从牌组消失并见顺走，T3日志thief记携带灵动步法，直到F33仍只剩步法+。此前取得的能力不能按原牌组续算；本局没有毒或SL新胜线，不增加旧四次重打分母。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "T082DRCUHRRD",
+        "KAY522KT5NXR",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "10GPK5XGHCK3",
+        "9YBKCNBFP0X5",
+        "1LMBFGSMCWKU",
+        "ZE8F192FKX24",
+        "VN7RQJMJEFMX",
+        "75X1BARMNZ03",
+        "3KME36ADUE4U",
+        "PU80F84P6HPN"
+      ],
+      "n_support": 13,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-bread-energy-timing",
+      "scope": "relic:BREAD",
+      "name": "面包",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "面包本局首轮少2能量、后续轮多1，后轮收益不能预支到首牌能力建立。机制：基础max_energy=3，实见T1能量1、T2—T4能量4；仅核本局时序，不外推其他能量基数。搭配：投斧首牌重放与1费余像/刺击争用首轮资源，重放机会用后不因次轮加能量恢复。决定胜负的战斗：A6拳击/两方柱4回合死，未有另一首牌或无面包受控胜局，单遗物败因只是观察（n=1）。典型案例：6EV5V6PJJS9D F39 T1唯一1费打刺击+并重放、直伤16加已结算毒4，计划余像未建；T2—T4各4能量，T4仍16血10挡对44死。F35/F37/F38首轮也为1；更早23局无该遗物，不规定遗物或首牌优先级。",
+      "evidence": [
+        "6EV5V6PJJS9D"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-construct-artifact-growth",
+      "scope": "hallway:PUNCH_CONSTRUCT",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "构装体群的人工制品与方柱力量成长要分别计入毒/减益启动和多段来袭。机制：前五局开场每敌各1人工制品；方柱T2/T3实见2/4力量，多段按现场意图核，减益阻挡按目标分列，不能把去除人工制品当已施毒/虚弱。搭配：施毒与已建触媒推进实际输出、卡牌挡与被动挡分账；未建步法/余像/毒雾没有未来收益。决定胜负的战斗：A0三/A4一/A6两局，共6场4胜，胜负与构筑未受控，不能定统一血线或击杀顺序（n=8）。典型案例：LRN0HPZ0FZS1 A0 F37 T2致命毒药只消1人工制品无毒，方柱力2→4；6EV5V6PJJS9D A6 F39 T2中和消方柱人工制品而未留虚弱，T4两方柱6力各11×2、合44，50/79进场仍死、敌剩22/37/52，T4毒雾未有后续触发。 ENKYQMS9W4ZD A6 F43开场节日拉炮先各扣9、185→158；首决策已无人工制品，不能由该帧认定初始没有。T3毒结束拳击但两方柱仍25/45，T4各6力11×2，虚弱后合32、末12挡仅15血，最终方柱20/33。两场A6都死，不由先杀拳击定固定错误，缺另一目标顺序胜局。 Z6CFLDR3N4SB A7 F39三构装体首战60→53净损7、T5赢；两方柱分别T3/T5退出、拳击T5最后退出。首决策每敌实见1人工制品，毒/虚弱按目标消层后实际建立，方柱后轮增力仍按逐段意图核。与旧A6两局死是不同构筑/敌顺序，累计七局证据、其中三构装体群七场五胜，另本局F5单拳击49→47另记，不把胜局归为固定击杀次序。 LLYSRQQ35AVW A8 F38 T1拳击已无制品、萎靡+X2建−3力/3弱；T2尖啸+令拳击−3→−11并停当轮攻击，但两方柱各1制品只被消掉，力2和各9攻击不变；T3/T4方柱4/6力，末轮合44。T4爆发同时结束拳击/一方柱、另一随后毒死，49→28损21、四轮活，累计八场群战六胜。同次群伤内部顺序未记录，不推固定聚火规则。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "9YBKCNBFP0X5",
+        "6EV5V6PJJS9D",
+        "ENKYQMS9W4ZD",
+        "Z6CFLDR3N4SB",
+        "LLYSRQQ35AVW"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-grand-finale-empty-draw",
+      "scope": "card:GRAND_FINALE",
+      "name": "华丽收场",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "华丽收场零费也须抽牌堆为空，过牌设想不算已兑现伤害。机制：空堆可打/非空不可，普通60、负4力56，实伤核剩血/减伤。搭配：后空翻/计算下注须实际形成窗口，8CFMW9SAGFWQ未打计算下注。决定胜负的战斗：4支持局，构筑/购买胜因未控（n=4）。典型案例：ZZMYZ5UBCG72 A2 F17 T11空堆56斩36血族母；8CFMW9SAGFWQ A6 F24 T4/7各2张、T8折叠13行展开16张，均不可打、0伤败。SADL3CGYTGSR A7白星双奖取两张，知识恶魔模拟1000样本校准36.23%→68.19%→87.40%、十二轮胜而收场0次0伤；沙漏六试持牌均不可打，末T1抽堆29/T5仍31、牌面60，后空翻/早有准备/计算下注/铁棒过牌已执行仍未空，不能加成120伤或以二幕模拟保证三幕。无不取/删牌实胜，不定普遍坏牌。 VPW8YH7A4QFM A10 F25以三后空翻/逃脱计划/爆发设想取牌，F27复审列移除但未删；F39 T1抽堆33、生成收场牌面60却不可打、全轮无抽牌且贡献0，条件与持有/过牌规划分别核。",
+      "evidence": [
+        "ZZMYZ5UBCG72",
+        "8CFMW9SAGFWQ",
+        "SADL3CGYTGSR",
+        "VPW8YH7A4QFM"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-burst-next-skills-replay",
+      "scope": "card:BURST",
+      "name": "爆发",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "爆发只在当前回合给后续技能额外打出一次，普通下一张、升级下两张；攻击不消耗该技能次数，未使用不跨轮。机制：每张符合技能消耗一层BURST_POWER，重复让卡牌效果与余像再兑现一次，敏捷先计进每次格挡。搭配：实际能量/后续技能与逐牌增益一起核，不把持有或前轮施放当本轮收益。决定胜负的战斗：额外格挡真实，沙漏多活一轮仍败，未有隔离单组件的整战胜因（n=8）。典型案例：53FLQ68CETW0 A6 F48第5次T12防御12+余像2各两次使挡2→30，次防御到44，挡住36凋萎保5血；第6次T3打后结束，T4增益已消失。KAY522KT5NXR A0 F35 T2扫腿11重复成22；9YBKCNBFP0X5 A4 F46 T2防御9重复使挡9→27；VN7RQJMJEFMX A6 F27 T6升级爆发两层、究极防御15重复后5→35且剩一层。 ENKYQMS9W4ZD A6 F33/2 T1现场爆发2层、复制1层、余像1，单次12毒的药瓶+实际合计三次施放、毒0→36、挡4→7，爆发2→1且复制消失；升级两层表示后续两张技能各额外一次，不能当同一技能额外两次。余下一层T2消失，F43 T3建两层后仅打攻击、T4也消失；本局未验证同回合第二技能/其他层数组合。沙虫首战T11判死、第二次T6赢，顺序及后续行动一并改变，不把单组件当受控胜因；这里只记录复制药水产生的现场增益事实，不新增使用规则。 2SU6XN2AEJRD A6 F33 T1普通药瓶3毒×3次，爆发额外一次合18，施毒前后敌血316不变；F48 T4爆发后打击仍留1层，冒泡+两次各12令毒5→29、增益消失，本次未建立余像。攻击不耗技能次数、重复施毒不等于即时伤，实际回合末才结算；本局首战沙虫/沙漏赢但没有不重复技能的整场对照。 4ANT8D00TP72 A10沙虫末试T6普通爆发重放生存者8+8=16挡，无敏捷/余像，盖虚弱后7×2=14零损；同场三次1赢，后续选线也变。 VPW8YH7A4QFM A10组装师T3普通爆发1层，后空翻两次5挡使5→15、爆发层清；重抽后重问再建触媒毒杀电击而零损。原线尚未执行的第二后空翻不补算，重复收益与整场胜因分核。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "9YBKCNBFP0X5",
+        "VN7RQJMJEFMX",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "4ANT8D00TP72",
+        "VPW8YH7A4QFM"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-glitter-future-reward-replay",
+      "scope": "relic:GLITTER",
+      "name": "亮片",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "亮片给之后的卡牌奖励附魔华彩，本局奖励牌实见重放；已有牌不因此追溯获得相同重放，生成收益要按实际手牌核。机制：F34遗物原文限定后续奖励，F40刀刃之舞+现场4小刀、重放1、消耗；重放额外触发一次余像，理论生成8张不等于手里可用8张。搭配：奖励牌重放与双余像逐牌挡相乘，但手牌已有数量与生成结果分别计，不外推所有生成牌或遗物优先级。决定胜负的战斗：沙漏当轮输出/格挡增加仍六败，未隔离遗物整战胜因（n=1）。典型案例：53FLQ68CETW0 A6 F48第6次T4施放前含自身4张，施放后旧牌3+小刀7=10，双余像让挡4→8；已有咕嘟冒泡+无该重放，T4实扣85/64挡但T5挡归0。",
+      "evidence": [
+        "53FLQ68CETW0"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-belt-buckle-empty-slots-dexterity",
+      "scope": "relic:BELT_BUCKLE",
+      "name": "腰带扣",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：腰带扣在没有药水时额外提供2敏捷，按现场药栏和增益核对，不由能量增量推敏捷来源。机制：本局有一瓶时不生效，药栏全空后敏捷4→6；与已建步法和石头相加，已有挡不倒补，后续格挡每张多2。搭配：步法+3与石头1合4，空栏再2合6，生存者基础8→14；只实测两槽，无取新瓶后撤回或其他槽数对照。决定胜负的战斗：沙漏首战赢，额外格挡局部兑现，未隔离遗物整场胜因（n=2）。典型案例：2SU6XN2AEJRD A6 F48 T2空栏后生存者12→14，挡19→33、22攻击零损。这里只记录药栏条件和机制事实，不制定用药规则。 9TG1RP5LFAAK A10女王末T3空药栏后敏0→2，暗影/滚石已建但没有后续得挡动作，末挡仍0、3血对27死；新增敏捷不倒补挡。两局均只记药栏条件和机制，不推用药时点。",
+      "evidence": [
+        "2SU6XN2AEJRD",
+        "9TG1RP5LFAAK"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-lords-parasol-shop-acquisition",
+      "scope": "relic:LORDS_PARASOL",
+      "name": "领主阳伞",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "领主阳伞在遇见商人时自动取得所售物品，店面报价与大脑购买计划不能当实际支出。机制：本局两次打开商店后库存进入牌组/遗物/药栏，触发附魔与移除选择，金币不扣打印的购买/移除报价；只确认这些取得，不外推药栏溢出规则。搭配：新皇家枕头/腰带扣等效果按之后实帧核，取得牌不等于能力已建立；商店内容不同，收益需逐店核。决定胜负的战斗：三幕两店后沙漏首战获胜，多组件同时变化，无无阳伞对照（n=2）。典型案例：2SU6XN2AEJRD A6 F38净增七种牌/三遗物、金币178不变；F46六种牌/三遗物、移除笨拙后仍186。旧F9PP859XZ3RJ A4 F34已持阳伞但F37死亡、未到商店，不作自动取得实证。 Z6CFLDR3N4SB A7 F36自动取货牌28→35、遗物11→14，实际移除华丽收场后34，金币157不变；F45牌37→44、遗物16→19，移除匕首雨后43，金币121不变。打印删精确切击150金与另买两项共76金的计划未派发，不能计成支出。新增幽灵种子与旧营养汤同时生效，后段基础防御耗尽、沙漏两败；两局一胜一败，无同条件无阳伞对照。",
+      "evidence": [
+        "2SU6XN2AEJRD",
+        "Z6CFLDR3N4SB"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-iron-club-four-card-draw",
+      "scope": "relic:IRON_CLUB",
+      "name": "铁棒",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "铁棒在本战每累计出4张牌抽1张，计数跨回合；观察：与沙漏6牌凋萎门槛同轮相遇时，须按新增手牌重核持牌伤，不能只用出牌前张数。机制：F34选项原文每4牌抽1，沙漏末次T1第4牌后抽堆29→28，第8牌早有准备完成自身抽弃后24→23；前六轮出牌8/2/2/5/2/4合23，T7斗篷第24张18→17。搭配：提供过牌，但未保证两华丽收场空堆；抽牌与敌状态牌生成相遇的总风险按后帧核，两张新增来源没有独立中间帧，不能都归铁棒或指定一抽一生成。决定胜负的战斗：A7沙漏六尝试0赢，末次T7新增18持牌伤，当步存活需求改变；遗物或替代顺序的整战胜因未受控（n=1）。典型案例：SADL3CGYTGSR F48/6 T7斗篷后凋萎1→3各9、末26血11挡对21+27需37而亡；不是求解器最终误判能活。",
+      "evidence": [
+        "SADL3CGYTGSR"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-paels-legion-card-block-double",
+      "scope": "relic:PAELS_LEGION",
+      "name": "佩尔的士兵",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "佩尔的士兵可用时只翻倍第一张实际获得的卡牌格挡，随后休眠；同轮后续牌不能沿用初始翻倍预览。机制：三局支持，事件实见休眠2回合；待触发时多牌同时预览翻倍，首牌后其他牌立即回常态。与融入暗影已见首牌两倍乘两倍，敏捷先进入牌挡；其他来源/全部组合未验证。搭配：逐牌核一次触发、敏捷/脆弱及暗影，未打出或休眠期间不预支额外挡，不设固定出牌优先级。决定胜负的战斗：局部多挡已兑现，三局末战均败，未隔离整战因果（n=3）。典型案例：SADL3CGYTGSR A7沙漏第4次T4双防御初览各10、首实10后另牌变5、合15；末次T6暗影下扫腿14→56、T7重置挡后仍死。JLN5SK17W4FQ A10蟹末T5敏3/脆弱首防御6翻12、后偏折5不翻；T9休眠四牌33挡对47、1血死。0NZXA12NLDMH A10蟹末T8敏3双防御初览各16，实16+8=24，对碾碎爪15×2需损6、6血归零；火箭当轮蓄力。",
+      "evidence": [
+        "SADL3CGYTGSR",
+        "JLN5SK17W4FQ",
+        "0NZXA12NLDMH"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-ghost-seed-starter-ethereal",
+      "scope": "relic:GHOST_SEED",
+      "name": "幽灵种子",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "幽灵种子使基础打击/防御带虚无；观察：未打出的基础牌逐步耗尽，开场数量不代表长战循环资源。机制：本局遗物文本与牌文一致，回合末仍在手的基础牌进入消耗堆；已经打出的可以进弃牌堆再抽，未验证其他虚无牌或保留交互。搭配：营养汤使五打击0费基础9伤，配合手里剑计数增力，但不取消虚无；暗影需要之后仍有实际格挡牌，能力持有不补耗尽牌堆。决定胜负的战斗：A7沙漏两次0赢，第二次T8五防御全消耗，末只有扫腿14挡对34攻击加12凋萎；去掉遗物/替代顺序未实打，资源枯竭与整战败局只是观察（n=1）。典型案例：Z6CFLDR3N4SB F48/2 T3末一张5挡与一张8挡防御留手，T4均进消耗；T7末另一8挡防御留手，T8五防御全消耗，T10另两打击消耗。",
+      "evidence": [
+        "Z6CFLDR3N4SB"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-bronze-scales-per-hit-thorns",
+      "scope": "relic:BRONZE_SCALES",
+      "name": "铜质鳞片",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "铜质鳞片在已观察战斗开场提供3荆棘，敌方每次实际攻击反伤分别计，与毒伤和卡牌伤分账。机制：单击实反3、三击实反9，全挡也能触发；伤害截断与其他敌限制取现场，未验证全部特殊交互。搭配：多击增加反伤次数，格挡保护玩家且不取消已见反伤；敌方未出手、玩家先死亡或未触发的后续攻击不能预支。决定胜负的战斗：A0两局/A7一局验证，反伤真实但三局均终局败，单遗物胜因未受控（n=7）。典型案例：R0HEV5E3QT6G A0 F2 T2无毒敌15→6、三击共9，11挡全挡且70血不变；Z6CFLDR3N4SB A7 F48/2 T8敌230→208=16毒+两击6反伤，玩家41→25损16，按勘误分账。1HC609GTLGN3 A0 F8 T1无毒敌55→52、单击反3。 LLYSRQQ35AVW A8 F48 T2预计直接毒伤32、实轮扣35中多3来自实际单击荆棘反伤；T4预计108、实111亦含3。T7女王先毒死，五段攻击与预期15反伤都未兑现； JLN5SK17W4FQ A10末次T3两次全挡反击各3；T9火箭79→76仅荆棘3，玩家1血实际扣1到0、完整需损14。 JMH5C51RLN4E A10实验体赢线T11三次敌击各反3、与势不可当32及毒另计；T12无实体下反伤亦逐次受限。沙漏末T1敌535→532只为3荆棘，26−8挡需损18但只扣现有8血，无凋萎，不算Jev攻击或未来反击。 PU80F84P6HPN A10蟹四轮荆棘实扣6/6/6/3合21，行动9/54/20/8合91，总112；末T4火箭145→142是死亡结算3反伤，终两敌142/174仍活，不归小刀/毒或预支后续攻击。",
+      "evidence": [
+        "1HC609GTLGN3",
+        "R0HEV5E3QT6G",
+        "Z6CFLDR3N4SB",
+        "LLYSRQQ35AVW",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "PU80F84P6HPN"
+      ],
+      "n_support": 7,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-slumbering-beetle-wake-growth",
+      "scope": "hallway:SLUMBERING_BEETLE",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "熟睡甲虫睡层消失后恢复攻击并连续成长，直接失血唤醒时的当轮眩晕不等于后续停攻。机制：已见睡层3随回合下降，A6/A7两局失血唤醒当轮眩晕、随后覆甲消失；滚动基础按进阶读{@7:DMG:SLUMBERING_BEETLE:ROLL_OUT_MOVE}/{@10:DMG:SLUMBERING_BEETLE:ROLL_OUT_MOVE}再加现场力/修正虚弱。A0–A7实见16，A9/A10实见18。搭配：实伤/毒改变醒来窗口，格挡、虚弱、临时减力分轮核，不规定击杀顺序。决定胜负的战斗：11局11房9活2死，机制与胜因分账（n=11）。典型案例：3KME36ADUE4U A7重打T1失血唤醒眩晕，T2攻击16、T5力6为22；BVF22RSFVBS9 A10末T4睡/覆甲消失仍16当前挡，回响只少7挡；醒后滚动18，T5力2弱后15杀4血0挡，第3次T6力4无弱22。新场4次0赢、先杀石虫均败，未实打先丝/先甲虫胜线；前3次判死未结算不认实死。",
+      "evidence": [
+        "R0HEV5E3QT6G",
+        "XYYQYBRM2A01",
+        "ZZMYZ5UBCG72",
+        "10GPK5XGHCK3",
+        "F9PP859XZ3RJ",
+        "6EV5V6PJJS9D",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "3KME36ADUE4U",
+        "HMVJKM56S4Q8",
+        "BVF22RSFVBS9"
+      ],
+      "n_support": 11,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-diamond-diadem-opening-retention",
+      "scope": "relic:DIAMOND_DIADEM",
+      "name": "钻石头冠",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "钻石头冠只覆盖开场的有限保挡窗口。机制：本局牌文/实帧为开场20挡、残影1，T1产生的剩挡跨到T2，T3开局归0；未验证其他保挡时点。搭配：敏捷提高随后格挡牌、臂甲加倍首张挡，保留的是实际剩挡，不能把三者合成持续每轮增益。决定胜负的战斗：女王六次均42血进，两轮保护有效，后段99减益和敌成长仍导致六败，没有移除遗物的同盘面胜负对照（n=1）。典型案例：VLV17NUSFS61 A7 F48/6 T1步法2敏捷后扫腿实加26、20→46，T2留31并建4敏捷，T3开局0挡、末T5卡牌12加水盆4仍不足24攻击；F35取头冠后雕刻师65→11损54，开场保护不代表整战低损。",
+      "evidence": [
+        "VLV17NUSFS61"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-05",
+      "status": "active"
+    },
+    {
+      "id": "silent-serpent-form-per-card-damage",
+      "scope": "card:SERPENT_FORM",
+      "name": "群蛇形态",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "群蛇形态通过建立后实出牌补伤，取得不当输出。机制：四局普通/升级牌文每张牌向随机一敌造成4/6伤，建立层数4/6；防御后敌血实减4/6，仅计后续实触发，随机目标不预指定。A4负力量仍见4伤，只验证该窗口，不推广未见交互。搭配：后续防御/抽牌也推进敌血，牌数、费用、可活轮决定实触发数；未打出、无后续牌或死亡截断均不预支。决定胜负的战斗：四局实际建立18个房/尝试窗口，存活与boss败例均有，单项胜因未隔离（n=4）。典型案例：1NZ8FE5F34R9 A4 F22 T3玩家力−1，防御后敌82→78，4伤仍兑现；2L1BNN9ZJEFU A6 F19 T2防御后58→52、升级6伤；VLV17NUSFS61 A7 F48/3 T4建4层，T5两防御间聚合体162→158，T6仍判死。同局SL不增n，未施放只证零兑现。 5X2GHKJ89PN1 A10女王末次T3建立4层，T6六次实出牌名义24伤，其中女王挡吸收8、净扣16；三攻击本体4+3+3=10另计，行动合26。随机目标、格挡与实际血伤分账，六败不反驳逐牌触发，夜魇未复制不预支。",
+      "evidence": [
+        "1NZ8FE5F34R9",
+        "2L1BNN9ZJEFU",
+        "VLV17NUSFS61",
+        "5X2GHKJ89PN1"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-ceremonial-beast-threshold-growth-sl",
+      "scope": "boss:CEREMONIAL_BEAST",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "仪式兽跨现场阈值清横冲直撞和第一段力量，后段仍攻击/再加力；未跨不算解除机制反例。机制：A0/A4/A6/A7实见150阈值（{@7:POWER:CEREMONIAL_BEAST:PLOW_POWER}），A9/A10实见160（{@9:POWER:CEREMONIAL_BEAST:PLOW_POWER}）；横冲基础读{@10:DMG:CEREMONIAL_BEAST:PLOW_MOVE}再加现场力/修正虚弱，本体{@10:HP:CEREMONIAL_BEAST}。A0至A7横冲逐轮加2、碾碎后加3，A9后段加4。搭配：实际攻击/已结算毒推进阶段，格挡/减益只覆盖兑现窗口，清力非击杀。决定胜负的战斗：13局13房10活3死，真正重打4场20次1赢，整战因果未控（n=13）。典型案例：4Y94N8RDPGPM A7毒跨150清力、损19胜；0NZXA12NLDMH A10 T6到149清横冲/力，后段21对8挡仍损13，12轮51→3胜。 KUZVERN40NGK A10同34血六次0赢、前21抽序/到手轮同，后抽不同；末T6毒173→156清8力/横冲，T8弱跺地12对3血5挡差4死。首/第2次T4同25血敌200毒7，SL少5挡多6净伤、多损5；第3次T3换触媒多损5多毒伤5。局部血价非赢次对照，判死未结算不认实死。 BVF22RSFVBS9 A10首试63→19七轮扣262胜，T4直10后176/24毒，实扣47到129跨160、4力与横冲清、31血零损；后段T6仍损12。首胜不增加4场20次1赢重打分母。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "9YBKCNBFP0X5",
+        "75X1BARMNZ03",
+        "8CFMW9SAGFWQ",
+        "3KME36ADUE4U",
+        "9YT51CK8RC39",
+        "4Y94N8RDPGPM",
+        "LLYSRQQ35AVW",
+        "F4QKG4J1AJJZ",
+        "MGA0CZDDKC0P",
+        "0NZXA12NLDMH",
+        "KUZVERN40NGK",
+        "BVF22RSFVBS9"
+      ],
+      "n_support": 13,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-byrdonis-strength-multihit-observation",
+      "scope": "elite:BYRDONIS",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：多尼斯异鸟在领地意识持续存在时力量随轮数增加，具体成长触发条件未隔离。机制：逐段基础{@7:DMG:BYRDONIS:PECK_MOVE}加现场力量，再核虚弱；三击分别计，飞扑基础{@7:DMG:BYRDONIS:SWOOP_MOVE}同核。搭配：开场被动挡不能代替后轮牌挡/虚弱；未隔离单项胜因。决定胜负的战斗：七场均活，净损4/38/22/20/37/13/41，不据存活设安全线（n=7）。典型案例：9YT51CK8RC39 A7 F8力量1/3时三击12/18、多2力合多6；4D4J8USKCPAV A10 F11六轮力量0/1/2/3/4/5，T2/T6无弱啄击5×3/9×3、多4力合多12。T4虚弱7×3→5×3，11挡仍损4；T5无弱飞扑23对10挡损13，整战58→17损41。进阶基伤/现场力量分开，死亡未发生不证明进场血安全。",
+      "evidence": [
+        "Y6GM2CHWJBEY",
+        "F9PP859XZ3RJ",
+        "75X1BARMNZ03",
+        "3KME36ADUE4U",
+        "9YT51CK8RC39",
+        "LLYSRQQ35AVW",
+        "4D4J8USKCPAV"
+      ],
+      "n_support": 7,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-nightmare-next-turn-copies",
+      "scope": "card:NIGHTMARE",
+      "name": "夜魇",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "夜魇用当轮费用换下一回合三张所选牌复制品，启动血价与后轮兑现分账。机制：本局升级后费3→2，三次选择后建立NIGHTMARE_POWER 3、次轮加入三张；保留蛇咬原牌加复制共四张，突然一拳次轮三张。女王原致命毒药+为7毒/魂缚、无重放，三复制品均7毒且无魂缚/重放，每次实加7；只确认这三对象，不外推所有附魔继承。搭配：复制实际毒牌可造下一轮斩杀，须活到次轮并有费用打出，未来三牌不能预支。决定胜负的战斗：A7女王T10七候选均预计损23，选择夜魇后32→9；T11两复制毒把25血聚合体13→27毒，在攻击前杀死、免该轮24来袭；第三张给女王补7毒，共实扣54、损0，T15以9血首胜。没有不用夜魇的整战对照，不把23全归该牌独有成本或低推演胜率当实败（n=1）。典型案例：4Y94N8RDPGPM F33 T4选保留蛇咬+、T5四张；F48 T10/T11复制毒兑现上述窗口。",
+      "evidence": [
+        "4Y94N8RDPGPM"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-eternal-feather-rest-arrival-heal",
+      "scope": "relic:ETERNAL_FEATHER",
+      "name": "永恒羽毛",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "永恒羽毛到达营火时回血，与之后回血休息/锻造分账。机制：7局55次MAP→REST实回均符合min(HP缺口,3×⌊牌组/5⌋)，已见17–44张范围、上限截断，无反例；不外推未见范围。搭配：真实到达回复增加后续缓冲，未到火堆不预支、不据此为回血加牌。决定胜负的战斗：构筑/火堆/敌人混杂，无遗物或休息整场因果对照（n=6）。典型案例：LRN0HPZ0FZS1 A0二十张43→55；4Y94N8RDPGPM A7三十二张58→76后锻造、女王余9胜；JMH5C51RLN4E A10十一到火（一次满血回0）合131、唯一休息另21，末羽毛56→60仅4，实验体60→8后沙漏死。9TG1RP5LFAAK A10三十六张F47的43→64实回21，随后休息64→84另20；满血过实验体损67、17血直接进女王死。旧六局实回135/92/85/77/131/21、逐次明细见变更记录。 ZVYUL2YP3518 A10八到火实回124，F47四十张42→66回24后另休息66→82回16；九火四回血共108、三锻造两添火。女王后50直接进第二boss，不预支下一个营火。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "UACFSW4VDDLD",
+        "Z6CFLDR3N4SB",
+        "4Y94N8RDPGPM",
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 7,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-fasten-defend-extra-block",
+      "scope": "card:FASTEN",
+      "name": "勒紧",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "勒紧只增加“防御”牌的格挡，不能当所有格挡牌或已有挡的统一增量。机制：本局牌文额外4、F48 T1建立FASTEN_POWER 4；T12在9敏捷/脆弱下两防御各⌊(5+9+4)×0.75⌋=13，后空翻仍⌊(5+9)×0.75⌋=10；T13防御+实15，与⌊(8+9+4)×0.75⌋吻合。只验证此4层与当前组合，不外推其他层数/来源。搭配：步法敏捷与勒紧专属增量先合入防御、再受脆弱缩减，须有实际防御牌；两种增益不直接补现存挡。决定胜负的战斗：女王T12实36挡盖35，T13防御+15与斗篷11合26盖25、保持9血；没有移除勒紧的整场胜负对照（n=1）。典型案例：4Y94N8RDPGPM A7 F48 T12两防御实增13/13、T13防御+实增15；仅按9敏捷忽略勒紧会低估这三牌。",
+      "evidence": [
+        "4Y94N8RDPGPM"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-miniature-tent-two-rest-options",
+      "scope": "relic:MINIATURE_TENT",
+      "name": "微型帐篷",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "微型帐篷让已见营火的回血与锻造都能执行，实际回血仍受最大HP截断。机制：A8购入后六火均各选HEAL与SMITH一次；F24/28先回血再锻造，F32/40/43/47先锻造后仍可回血，两选完再离开。剩余选项索引会变，按选项名称核；未观察同一选项重复或其他营火动作，不外推。搭配：同火恢复血池并升级当前毒、防御或减益牌，取得升级与实际战斗启动另算。决定胜负的战斗：F21花177金购、另36金步法，224→11；六火实回21+21+0+21+1+5=69，升级触媒/两爆发/萎靡/步法/肾上腺素。F33/F48均70进、分别损19/10首胜，无不买帐篷或另一购法的受控胜负，177金不作普遍购买优先级（支持1局/反例0，A8；n=1）。典型案例：LLYSRQQ35AVW F24先38→59再升级触媒；F32满血先升级萎靡再HEAL、70→70实回0。",
+      "evidence": [
+        "LLYSRQQ35AVW"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-planisphere-unknown-arrival-heal",
+      "scope": "relic:PLANISPHERE",
+      "name": "活动星图",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：活动星图在已见问号进场、任何本房动作前自动回血，战斗问号也先回。机制：两局九次进问号，缺血八次各实回5、满血一次回0；A6两次首帧仍显示前事件，真实事件页刷新后才见+5，不能把过渡帧当未触发。缺口1至4、其他房型未验证，不外推全部截断公式。搭配：进入问号前血池与开战HP分账，问号仍可能三敌战，自动收益不证明择路更优。决定胜负的战斗：支持2/反例0，A6/A9各1局，收益与整战胜负未隔离（n=2）。典型案例：2SU6XN2AEJRD A6 F12 49→54后开战、F22真实布偶间34→39再付事件血价，F39满81仍81；HMVJKM56S4Q8 A9 F31星图10→15再三敌战损4至11、八轮赢。",
+      "evidence": [
+        "2SU6XN2AEJRD",
+        "HMVJKM56S4Q8"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-fan-of-knives-capacity",
+      "scope": "card:FAN_OF_KNIVES",
+      "name": "刀扇",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "刀扇建立小刀群伤增益，实际生成数量须核手牌容量。机制：普通/升级牌文添4/5小刀，打出牌先腾一格；已见10张手牌时普通仅添1、7张时添4至10，FAN_OF_KNIVES_POWER=1后新小刀也显示攻击所有敌人。搭配：力量加在每张小刀上，余像须已建立才按出牌次数补挡；满手少拿小刀不等于能力未建立。决定胜负的战斗：9局20次施放验证牌文/手牌/增益，实际伤害典型仅单敌、不外推多目标总伤或胜率（n=8）。典型案例：C48LLXBGKXQ9 A0 F17首试T1手牌10→原余9+1刀，巨兽209→205；F4QKG4J1AJJZ A9 F38 T5手牌7→原余6+4刀，力5/虚弱各6合24，T6刀刃之舞三刀也群伤、力6各7合21，无余像补挡而阵亡。2L1BNN9ZJEFU A6 F20升级添5，手牌4→8。 ZVYUL2YP3518 A10末T1建刀扇，T8生成小刀仍群伤牌文；实验体单敌三刀各8攻击+1消耗伤合27，其他伤分账，未新增多目标实伤证明。",
+      "evidence": [
+        "C48LLXBGKXQ9",
+        "10GPK5XGHCK3",
+        "F9PP859XZ3RJ",
+        "UACFSW4VDDLD",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "VLV17NUSFS61",
+        "F4QKG4J1AJJZ",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 9,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-flechettes-remaining-skills",
+      "scope": "card:FLECHETTES",
+      "name": "飞镖",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "飞镖次数随同轮仍在手中的技能数量变化，不能沿用出技能前的攻击次数。机制：已见技能离手后3→2、3→2→1次，当前每段伤害乘实际次数；力量/虚弱按现场每段值，未知抽牌、重放和能力牌计数未验证。搭配：技能提供计数同时提供防御/减益，先后调整须一起核伤害与血价，未有调序整战胜负对照。决定胜负的战斗：三局支持、零反例，A4一局/A9两局，不把游戏执行次数正确当模型已掌握（n=3）。典型案例：9YBKCNBFP0X5 A4 F43 T4净化PURITY后3次，防御后2次各3伤、敌135→129；HMVJKM56S4Q8 A9 F33/6 T3生存者/防御后只1次6伤、火箭195→189；G403VCZ3BH1B A9 F48/2 T11防御+/尖啸离手3→2→1、女王38→34仅4伤，风的女儿另补1挡。",
+      "evidence": [
+        "9YBKCNBFP0X5",
+        "HMVJKM56S4Q8",
+        "G403VCZ3BH1B"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-white-star-double-rewards",
+      "scope": "relic:WHITE_STAR",
+      "name": "白星",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察到白星持有期间精英战后有两次独立选牌，奖励数量与血价分账。机制：三局七场均连续两次成功选牌、共14次，不据此推断稀有率或所有房型的奖励规则。搭配：额外牌需实际取得且构筑能兑现，奖励不直接抵消本场损血，路线优劣无受控比较。决定胜负的战斗：A7/A8/A9各一支持局、零反例，三局包含失败与胜利，不把收益解释为改线更好（n=3）。典型案例：SADL3CGYTGSR A7 F31取两张华丽收场、净损7，boss虽胜却未施收场；LLYSRQQ35AVW A8 F13/27/29双选牌、净损5/4/0。G403VCZ3BH1B A9 F12取突然一拳/萎靡、损14，F14取回响斩击/狩猎、损41对投影20.5，F30取尖啸/萎靡、损32；一幕加回精英后boss实39对投影59.5，仅观察。",
+      "evidence": [
+        "SADL3CGYTGSR",
+        "LLYSRQQ35AVW",
+        "G403VCZ3BH1B"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-hidden-daggers-discard-shivs",
+      "scope": "card:HIDDEN_DAGGERS",
+      "name": "隐秘匕首",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "已观察的未升级隐秘匕首弃二并生成两张0费小刀，不能当抽二。机制：本体0费，施放离手后弃两原牌、加两小刀，已见五手牌→四手牌、能量3不变；无增益小刀各4实伤。搭配：弃牌可兑现铭记死亡同轮增伤，小刀是生成牌；被弃的原牌不再提供原计划收益，升级牌/缺牌情形未验证。决定胜负的战斗：两支持局，生成与弃牌真实，未隔离整战胜因（n=2）。典型案例：10GPK5XGHCK3 A3 F9 T5弃生存者/连续反弹，留下投掷匕首/防御/两小刀；MGA0CZDDKC0P A10 F17第6次T3弃打击+/防御，留铭记死亡/投掷匕首/两刀，实际零挡14血对16攻击死亡，不将生成刀当挡。",
+      "evidence": [
+        "10GPK5XGHCK3",
+        "MGA0CZDDKC0P"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-memento-mori-discard-scaling",
+      "scope": "card:MEMENTO_MORI",
+      "name": "铭记死亡",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "已观察的未升级铭记死亡在同轮弃牌后每弃一牌多4基础伤害；增伤不保证渡过敌攻。机制：本例基础9，弃一9→13、弃二9→17；玩家1力保持时10→14，增益交互另核。已打出后再弃牌不给既有伤害倒补；不外推升级牌/未知触发。搭配：已兑现的生存者或隐秘匕首弃牌与随后仍可施放的铭记死亡协同，保留牌的攻防机会成本独立。决定胜负的战斗：三支持局、零机制反例，未隔离整战胜因（n=3）。典型案例：R0HEV5E3QT6G A0 F44 T4生存者+弃防御，力量同为1时牌面10→14；E6AVMMVCSRPC A1 F5 T1一弃9→13。MGA0CZDDKC0P A10 F17末次T3两弃使9→17并实扣17，随后投掷匕首再弃时本牌已打出；整轮34直伤+6毒，14血承受16仍死。",
+      "evidence": [
+        "R0HEV5E3QT6G",
+        "E6AVMMVCSRPC",
+        "MGA0CZDDKC0P"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-fiddle-draw-lock",
+      "scope": "relic:FIDDLE",
+      "name": "小提琴",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "小提琴的轮初手牌与回合内抽牌须分账，既有抽牌组件不能继续按牌面抽数估收益。机制：持有后附魔毒雾的首次抽2、后空翻抽2均未发生；毒雾能力、后空翻格挡及斗篷生成小刀仍可执行，生成与抽牌不同。轮初额外2仅本局选项文本，未做移除同种子对照，不外推所有取牌效果。搭配：评估过牌、附魔与能力启动按实际兑现；不由一败判取遗物必错。决定胜负的战斗：A10一局沙漏六次零赢，封锁实测但整战因果未隔离（n=1）。典型案例：25226ZFLNR1J F35 T2毒雾建3、抽堆13→13；F48/6 T3毒雾抽堆12→12，T8后空翻6→6、实加10挡，斗篷另生成0费4伤刀，仍35挡对完整60威胁死亡。",
+      "evidence": [
+        "25226ZFLNR1J"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-smooth-stone-opening-dexterity",
+      "scope": "relic:ODDLY_SMOOTH_STONE",
+      "name": "意外光滑的石头",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "意外光滑的石头实见开场1敏捷，与步法后建敏捷叠加，收益由随后卡牌格挡兑现。机制：8支持局76个持有后战斗房的首帧均见1敏捷；普通防御5+1=6，脆弱逐牌折减、已有挡不补。搭配：多张挡牌重复兑现，步法另加2/3、其他遗物挡分账；换战开场重核，不把后段能力层数当遗物多给。决定胜负的战斗：A2一局/A4一局/A6三局/A9一局/A10两局，开场收益实见，未隔离遗物胜因（n=7）。典型案例：ZZMYZ5UBCG72 A2 F12起各战首帧1敏；25226ZFLNR1J A10 F46/F48开场1敏，沙漏两步法叠至5，末三牌增15挡仍需损25而死。 ZVYUL2YP3518 A10持有后的F43/44/48/49首帧均1敏；末实验体T1步法+加3至4旧挡不补，T8两斗篷各10，牌挡/遗物挡分核。",
+      "evidence": [
+        "ZZMYZ5UBCG72",
+        "9YBKCNBFP0X5",
+        "UACFSW4VDDLD",
+        "2L1BNN9ZJEFU",
+        "2SU6XN2AEJRD",
+        "HMVJKM56S4Q8",
+        "25226ZFLNR1J",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-mr-struggles-turn-start-damage",
+      "scope": "relic:MR_STRUGGLES",
+      "name": "抱抱先生",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "抱抱先生轮初自动伤与卡牌、毒、荆棘伤分账。机制：现场文本为轮初向全体造成当前回合数的伤害；首轮各1，T4各4，不是上轮攻击牌伤。搭配：逐轮存活敌人和实际触发窗口核对，过量按剩血截断，不预支玩家死亡后轮初。决定胜负的战斗：四局跨A0/A4/A6/A10，自动伤已兑现，尚无移除遗物的受控胜因（n=4）。典型案例：KAY522KT5NXR A0 F27 T1两异螨61/66→60/65，卡牌尚未出手；JLN5SK17W4FQ A10 F33末T3结束前无毒火箭171→T4首167，对应4轮初伤，末次仍败。",
+      "evidence": [
+        "KAY522KT5NXR",
+        "F9PP859XZ3RJ",
+        "2SU6XN2AEJRD",
+        "JLN5SK17W4FQ"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "contradicting": [],
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-whispering-earring-first-turn-control",
+      "scope": "relic:WHISPERING_EARRING",
+      "name": "低语耳环",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "低语耳环的回合能量收益与失去第一回合自主选择同时存在，不把额外能量当可自由启动。机制：现场文本写轮初获能量并由瓦库接管首轮，能量常数占位未解析；具体接管打牌/耗能顺序未记录，不认定Jev或代码主动挑了该启动线。搭配：构筑评估须区分持有能力、首轮已建状态和接管后剩余可执行动作，不设遗物禁取或必胜时点。决定胜负的战斗：A0/A10两局支持、零反例，无移除耳环受控整战胜因（n=2）。典型案例：R0HEV5E3QT6G A0 F35/37/39等首轮见0能量、派发仅结束，F48部分出牌因状态改变未派发；JMH5C51RLN4E A10 F49六次8血8挡0能量，手中科学/势不可当+/防御/触媒+费1/2/1/1，无Jev调用，末26攻击需损18实死。",
+      "evidence": [
+        "R0HEV5E3QT6G",
+        "JMH5C51RLN4E"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "contradicting": [],
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-juggernaut-block-gain-triggers",
+      "scope": "card:JUGGERNAUT",
+      "name": "势不可当",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "势不可当把每次实际得挡转为独立伤害，挡量与触发次数分账。机制：本局升级文本每得挡向随机敌8伤，已见单敌实际每次8；敏捷增挡/暗影翻挡不增单次伤或次数，无实体将每次实伤压1；建立能力本身无挡不触发。搭配：多次得挡可同时防御与触发，按已执行次数、敌剩血与增益状态算，随机多敌分配尚未验证。决定胜负的战斗：仅静默本局事件奖励所得，实验体一场五次尝试1赢，不能读其他角色知识或推整局必胜（n=1）。典型案例：JMH5C51RLN4E A10 F48/5 T6三牌得8/11/8挡各伤8；T11敏6四牌50挡仅四次共32伤、10血零损；T12暗影建立0挡/敌95血不变，后空翻22/耸肩28共50挡，无实体令两次各1、95→94→93；赢后8血进沙漏，该能力已重置。",
+      "evidence": [
+        "JMH5C51RLN4E"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "contradicting": [],
+      "confidence": "low",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-infested-prism-tainted-skill-cost",
+      "scope": "elite:INFESTED_PRISM",
+      "name": "感染棱柱",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "感染棱柱的技能血价按火花层数和攻击段数核，已有毒能力不免存活窗口。机制：活力火花N令每张技能加N污染，污染增加当前每段攻击、次玩家轮消失；能力毒雾不加污染。搭配：逐击弱/临时减力/格挡与毒实伤分账。决定胜负的战斗：8支持局、六胜两败，JQPT一场四次零赢，只有当轮同帧对照，整战胜因未控（n=8）。典型案例：JQPT83P8KDSZ A10同T3首24血143敌血，额外毒药使弱三击18→27、同9挡损9→18而毒3→8。DPYF2BAA3DKT A10 F25 T3两题都提药瓶、同笔技能被护栏去掉，题面损18→9、伤12→3、余毒11→2；只算省9血，不能算两笔。实际尖啸后三擊合9、56→47，旧3毒＋消亡9合实扣12，不把题面3当全部实伤；本场八轮70→11损59仍胜，原药瓶整线未实打。 JQPT83P8KDSZ A10 F25第二/三次T3同24血143敌血3毒，额外毒药使末毒伤3→8、污染3→6、弱三击18→27、同9挡损9→18，第三次T5判死；",
+      "evidence": [
+        "ZZMYZ5UBCG72",
+        "F9PP859XZ3RJ",
+        "ZE8F192FKX24",
+        "SADL3CGYTGSR",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "NB8KCF6HRGVF",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-precise-cut-hand-count-observation",
+      "scope": "card:PRECISE_CUT",
+      "name": "精确切击",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：普通精确切击伤害随实际手牌变化，抽牌与牌离手方向相反。机制：旧九局无力/弱修正的五/六手实5/3，牌文每张手牌少2；新增A10在−2力五→四手3→5、2力五→三手7→11，与每离手一张多2一致。只验证这些局部窗口，不推升级、其他手数或通用截断。搭配：按实际出牌时手数与现场修正核，敌挡先抵扣，旧读数不当固定输出。决定胜负的战斗：10局局部支持，修正后整战反事实未打（n=10）。典型案例：JQPT83P8KDSZ A10 F25/2 T3后空翻五→六手5→3、打击后六→五手3→5，抵4挡扣1；PJ2LL9KU7FHD A10族母首/末T15五手−2力先打击后切击实抵5挡而旧读数3，整线实7/预计5的差2独立可核；第3次T5两牌离手7→11、整线实40/预计36的差4同核，不归全部死亡于本牌。",
+      "evidence": [
+        "XYYQYBRM2A01",
+        "6EV5V6PJJS9D",
+        "8CFMW9SAGFWQ",
+        "2L1BNN9ZJEFU",
+        "ENKYQMS9W4ZD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "9TG1RP5LFAAK",
+        "JQPT83P8KDSZ",
+        "PJ2LL9KU7FHD"
+      ],
+      "n_support": 10,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-fishing-rod-random-upgrade",
+      "scope": "relic:FISHING_ROD",
+      "name": "钓鱼竿",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "钓鱼竿每三场普通战后随机升级一张牌，不保证核心能力或施毒牌升级。机制：四局共13次战后升级均在获得后普通战序号3/6/9（长局另12），问号开出的普通战同计，精英/boss与休息/事件升级分账。搭配：普通战提供升级机会，但战内掉血与未来血缓冲分别核；随机强化不能代替已取得牌的实际升级验收。决定胜负的战斗：A4一局/A10三局，机制4支持0反例，未隔离路线/随机牌/锻造的整战胜因（n=4）。典型案例：1NZ8FE5F34R9 A4普通战第9次含F15问号，F19升级精密瞄准，F23问号第12次再升级防御；4D4J8USKCPAV A10 F4/F8/F15三次分别升级打击/生存者/打击，终23张仅这三张升级，步法/触媒/两施毒牌仍普通，四次休息实回84后35血进同族六败。不从失败认定选择钓鱼竿或回血错误。",
+      "evidence": [
+        "1NZ8FE5F34R9",
+        "MGA0CZDDKC0P",
+        "25226ZFLNR1J",
+        "4D4J8USKCPAV"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-permafrost-first-power-block",
+      "scope": "relic:PERMAFROST",
+      "name": "永冻冰晶",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "永冻冰晶的每战首次能力实补7挡，是当轮一次收益，不能记成每轮7挡。机制：遗物文本限定首次能力；幻影/步法/触媒建立的逐牌增益与即时7挡分账，不把敏捷加到遗物挡上。搭配：能力若在有攻击的回合建立，这7可补当轮缺口；无攻击轮所得挡下轮归零，不预支未来收益或写固定建立顺序。决定胜负的战斗：三静默局局部触发支持，未隔离整战胜因（n=3）。典型案例：10GPK5XGHCK3 A3 F13 T4首次触媒0→7、F17 T2首次幻影0→7；25226ZFLNR1J A10 F29 T1首次步法0→7；PJ2LL9KU7FHD A10族母第3次T4幻影7＋两张防御各7＝21，抵21零损。首/末次T11幻影同补7但吸取无攻击、T12首挡0；重复/重放触发未验证，漏算局部挡不证明修复可赢。",
+      "evidence": [
+        "10GPK5XGHCK3",
+        "25226ZFLNR1J",
+        "PJ2LL9KU7FHD"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-exoskeleton-poison-hit-cap",
+      "scope": "hallway:EXOSKELETON",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "外骨骼虫已见的难以杀灭9也限制单次毒结算，毒超过剩血不保证斩杀。机制：已核三局四处实伤=min(剩血,毒层,9)，毒随后减1；只限这些9上限窗口，其他来源/上限变化/多次触发组合未验证。搭配：施毒牌与毒雾须按受限实伤核尚存敌威胁，不把毒层直接记成已伤。决定胜负的战斗：三局局部封顶支持、整战胜因未隔离（n=3）。典型案例：4Y94N8RDPGPM A7 F30 T2的12血14毒只扣9留3，玩家82→76；D4LJ9QMGFB8Q A10 F20 T4的11血12毒只扣9留2，存活敌11攻击令24→13，T5的14毒才按剩2截断结束；9TG1RP5LFAAK A10 F31 T1/T2的16/21毒分别使29→20、11→2，均只扣9。",
+      "evidence": [
+        "4Y94N8RDPGPM",
+        "9TG1RP5LFAAK",
+        "D4LJ9QMGFB8Q"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-beckon-held-end-turn-loss",
+      "scope": "card:BECKON",
+      "name": "呼唤",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "呼唤已见的末回合持牌生命代价先于后来毒杀兑现，挡与敌人死亡不消除已发生自损。机制：每张文本失去6生命，两局已核一/三张分别6/18；打出的那张离手，后来抽到另一张须重新核持牌，不外推其他状态。搭配：毒能先于敌攻击结束战斗，但不能抵销更早的持牌损血；抽牌与当轮手牌生命代价分账，不写固定出牌顺序。决定胜负的战斗：两局局部代价支持、无单牌整战对照（n=2）。典型案例：T082DRCUHRRD A0 F17 T12打出一张后又抽一张，49血4挡对24攻击，20净攻击+6持牌=26，实际到23；D4LJ9QMGFB8Q A10 F17 T12三张各6共18，37→19后33毒收28血敌，敌攻击实际0。该战总损45=敌攻击27+持牌18，T8的12是敌攻击。",
+      "evidence": [
+        "T082DRCUHRRD",
+        "D4LJ9QMGFB8Q"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-dowsing-rod-question-task",
+      "scope": "relic:DOWSING_ROD",
+      "name": "寻龙尺",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "寻龙尺加入的探寻是问号计数任务，不能按即时找牌评价。机制：已见普通探寻不能打出，进入5个问号后变富足；普通富足1费、消耗，从3张升级能力中选1张入手、该轮免费，战内富足+实见0费，不外推升级任务计数。搭配：问号进度决定何时取得生成能力，取得后仍须实际施放并活到触发。决定胜负的战斗：两局分别F15/F22完成，构筑与路线不同，遗物胜因未隔离（n=2）。典型案例：2L1BNN9ZJEFU A6 F1任务5，F3/4/5/7递减、F15成富足；4ANT8D00TP72 A10 F3/5/15/20递减，巨兽F17仍剩2、F22才变化。沙虫首试T6取得毒雾+并建3层，末试取同牌却未施放直到胜，生成不当已兑现增益。",
+      "evidence": [
+        "2L1BNN9ZJEFU",
+        "4ANT8D00TP72"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-lost-forgotten-possession",
+      "scope": "hallway:THE_LOST",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "失落／遗忘开场抢夺会削减玩家力量和敏捷，后续多段攻击与逐牌挡都须按当前值。机制：已见玩家各降2、失落增2力、遗忘增2敏并有8挡；原有力/敏及临时撤回分别核，不能要求结算总值恒为±2。搭配：负力逐段减攻击、负敏减卡牌挡，实见施毒仍能施加和结算；剩血、敌挡与当前威胁分账，不规定固定目标顺序。决定胜负的战斗：八局T1→T2支持、无反例，含A0一/A1一/A6三/A7二/A10一；仅开场及已见牌值，不外推后续周期（n=8）。典型案例：LRN0HPZ0FZS1 A0 F46我方0→−2力/−2敏、敌2力/2敏及8挡；VN7RQJMJEFMX A6失落原−2力被加2后为0、预判临时4敏撤回另算。4ANT8D00TP72 A10末T2斗篷6→4挡、匕首雨每段4→2，中和使遗忘17→10后两敌合24，1血4挡差19、毒后剩72/78；四次均0胜。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "K3676LU8B0UH",
+        "UACFSW4VDDLD",
+        "VN7RQJMJEFMX",
+        "2L1BNN9ZJEFU",
+        "SADL3CGYTGSR",
+        "2PVLGRBGUX9S",
+        "4ANT8D00TP72"
+      ],
+      "n_support": 8,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-pumpkin-candle-charge-energy",
+      "scope": "relic:PUMPKIN_CANDLE",
+      "name": "南瓜蜡烛",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "南瓜蜡烛额外能量只在实际充能正数时兑现，续火计划与执行分账。机制：初5充能，已见正数轮初基础3+1=4，每场战后扣1；归零后轮初3。已执行营火添火0→5且HP不变，回血/锻造不续火；正1充能添火到6已验证。搭配：额外1能量改变能力启动、攻击与挡牌的共同支付预算，未执行续火或熄灭后的能量不预支，不规定营火动作优先级。决定胜负的战斗：3支持局0反例，六次沙虫均败，没有续火后的受控整战胜负（n=2）。典型案例：UJ0K3G10609Y A10 F29添火充能0→5、77血不变，学习前已会续燃；XBD8Z9XLPCPN A10 F18计划“三营火路线便于续燃”，实一锻造两回血、添火0次，F19/23/27/30/31战后5→0，T2能量均4，F33六次开场仅3能量；F32仅2血，回血至23不因此被证明错误。 ZVYUL2YP3518 A10实际F32添火0→5、F42正1→6，各+5而HP不变；九火其余三锻造四回血不续火，正充能仍可续加已验证，仅此数值与时点。末实验体3充能、T2能量4，六次0赢非遗物单因。",
+      "evidence": [
+        "UJ0K3G10609Y",
+        "XBD8Z9XLPCPN",
+        "ZVYUL2YP3518"
+      ],
+      "n_support": 3,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-bing-bong-tooth-five-rings",
+      "scope": "relic:BING_BONG",
+      "name": "宾邦",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "宾邦复制本次返还牌和卡奖，回血与牌组增长同时登记。机制：佩尔之牙战后返还的升级打击、奖励选入的牌各实加两张；五轮书按实际加牌推进，已见每五张回20，返还/回血不取消加牌。只验证这组来源，不外推全部加牌交互。搭配：佩尔返还升级牌也被复制、五轮书计数兑现回血；复制组件未施放时不能预支战内能力收益。决定胜负的战斗：1支持0反例，回血真实，牌组增长未隔离为整战败因/胜因（n=1）。典型案例：PU80F84P6HPN A10 F28返还打击+25→27、手上技法卡奖27→29、五轮书0→2→4；F30再返还29→31触发20回血，战内14加芝士1到35、计数归1，斗篷卡奖至33/计数3；F31计算下注两张33→35、3血回20至23，计数见5后F32归0。终六打击五防御、F33只剩步法+且未建，四轮敌仍余316；大脑已指出双份奖励可能稀释牌组，未有跳奖或无宾邦整战对照。",
+      "evidence": [
+        "PU80F84P6HPN"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-paels-flesh-third-turn-energy",
+      "scope": "relic:PAELS_FLESH",
+      "name": "佩尔之肉",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "佩尔之肉从第三轮轮初额外获得1能量，前两轮不预支。机制：七静默支持局33个可行动轮初窗口为T1/T2/T3的3/3/4；其他开场能量来源另核。搭配：费用与已建立/实际触发分账，额外预算须核技能副作用和可活轮。决定胜负的战斗：有二幕走廊胜线与棱柱败线；只核能量/费用公式，遗物整战因果未受控（n=7）。典型案例：LRN0HPZ0FZS1 A0 F19 T1—T4为3/3/4/4，学习前已取得并兑现；NB8KCF6HRGVF A10二幕六战均3/3/4，棱柱T5用4能量支付三防御和突然一拳、零费偏折另计，22挡对污染后30损8，T7虽4能量只打零费中和。额外能量不消除技能血价。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "1HC609GTLGN3",
+        "10GPK5XGHCK3",
+        "F9PP859XZ3RJ",
+        "VLV17NUSFS61",
+        "4Y94N8RDPGPM",
+        "NB8KCF6HRGVF"
+      ],
+      "n_support": 7,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-berserker-growth-sl-observation",
+      "scope": "hallway:SLIMED_BERSERKER",
+      "asc": [
+        9,
+        20
+      ],
+      "lesson": "观察：狂战士换线须核输出/血价/后续敏捷，无胜次对照不立打法。机制：力量逐击、弱不清力；实建步法逐挡牌、毒等结算。搭配：建层与触发分核，相同五轮死样本不保证同收益。决定胜负的战斗：A9一局32/64死；A10三局12/64、56/60首试活，28/82重打1场4次0赢（n=4）。典型案例：LS8035TB32P3第2/3次T4同28血敌201血2敏；步法线16挡4敏扣10损11，SL毒线14挡2敏扣28损13，多18伤付2血少2敏，T6损2/4，两次T8判死。末3血11挡对29需18、敌余158；前三次未派发结算不计实死。F4QKG4J1AJJZ A9首试32血T6死；低阶胜例不定高阶血线。",
+      "evidence": [
+        "F4QKG4J1AJJZ",
+        "25226ZFLNR1J",
+        "JMH5C51RLN4E",
+        "LS8035TB32P3"
+      ],
+      "n_support": 4,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-tough-bandages-discard-block",
+      "scope": "relic:TOUGH_BANDAGES",
+      "name": "结实绷带",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "结实绷带按玩家回合实际弃牌数兑现格挡。机制：本局每弃一牌补3挡，已有4敏捷时仍各3，与牌面挡分账；不外推回合末弃牌/未知交互。搭配：杂技重放、计算下注、生存者/投掷匕首须实弃牌，不按持有预支固定轮初挡。决定胜负的战斗：1局3次实验体均败，格挡实际兑现、整战胜因未控（n=1）。典型案例：L704TLETMZBM A10末T3爆发+重放杂技两弃0→3→6，计算下注离手后弃9张再+27至33；T4两弃各3加生存者8+4=12，合18对24实损6；末T6未知重抽未打，不当已证胜线。",
+      "evidence": [
+        "L704TLETMZBM"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-bowlbug-rock-full-block-stun",
+      "scope": "hallway:BOWLBUG_ROCK",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "盛碗虫（石）的失衡已见：自身攻击被完整格挡后下一轮眩晕，即使玩家还被另一敌人打掉血。机制：仅核有IMBALANCED_POWER1、实际结束且石虫存活的完整挡窗口；59窗口均见下轮STUNNED，不要求整轮零损，零攻击/毒杀/被动新增挡等其他条件未据此推断。搭配：现场格挡与虚弱/临时减力能改变该次攻击的覆盖，其他敌仍另计。决定胜负的战斗：32支持局、0反例，局部机制非整场必胜（n=32）。典型案例：LRN0HPZ0FZS1 A0 F20 T1总挡13盖石虫11，卵虫仍打掉5、T2石虫眩晕；BVF22RSFVBS9 A10末F23 T1挡19盖12、T3挡10盖尖啸后的8，分别T2/T4眩晕，但T4甲虫/丝虫合23穿11挡损12，T5仍死。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "R0HEV5E3QT6G",
+        "XYYQYBRM2A01",
+        "K3676LU8B0UH",
+        "CSBR5CRDWQNB",
+        "10GPK5XGHCK3",
+        "1NZ8FE5F34R9",
+        "F9PP859XZ3RJ",
+        "9YBKCNBFP0X5",
+        "UACFSW4VDDLD",
+        "VN7RQJMJEFMX",
+        "6EV5V6PJJS9D",
+        "2L1BNN9ZJEFU",
+        "53FLQ68CETW0",
+        "ENKYQMS9W4ZD",
+        "2SU6XN2AEJRD",
+        "SADL3CGYTGSR",
+        "Z6CFLDR3N4SB",
+        "LLYSRQQ35AVW",
+        "HMVJKM56S4Q8",
+        "G403VCZ3BH1B",
+        "25226ZFLNR1J",
+        "JLN5SK17W4FQ",
+        "JMH5C51RLN4E",
+        "UJ0K3G10609Y",
+        "0NZXA12NLDMH",
+        "XBD8Z9XLPCPN",
+        "5X2GHKJ89PN1",
+        "LS8035TB32P3",
+        "L704TLETMZBM",
+        "BVF22RSFVBS9"
+      ],
+      "n_support": 32,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-06",
+      "status": "active"
+    },
+    {
+      "id": "silent-royal-poison-blood-vial-opening-net",
+      "scope": "relic:ROYAL_POISON",
+      "name": "王室猛毒",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：王室猛毒与小血瓶同持时，两场开战在出牌前各净失2血，逐战计入血池。机制：仅有组合前后帧，缺两遗物各自扣/回中间帧及内部顺序，不能拆成独立数值、不能外推缺任一遗物时净值。搭配：实际开场净变化与休息/茶回复分账，未发生的恢复不计当前血。决定胜负的战斗：A10一局两场确认净值，但未有不取遗物的受控胜负（n=1）。典型案例：VPW8YH7A4QFM F37茶38→80，F38开场80→78、操作损31至47；F39开场47→45、T6剩5血10挡对21需11、差6阵亡。更早67静默局未持有本遗物，无可比反例，不归遗物选择唯一败因。",
+      "evidence": [
+        "VPW8YH7A4QFM"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    },
+    {
+      "id": "silent-replay-effect-counter-observation",
+      "scope": "general:plan",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "观察：已见重放附魔的效果再次兑现，原始手动计数不等全部实际打出。机制：重放格挡/余像按实际再次打出触发，cards_played_this_turn在这两个窗口仅加1；凋萎门槛需核实际生成，不外推所有自动出牌。搭配：重放与逐牌被动有收益，也可能跨新增状态伤门槛，按当前挡与持牌文本合核。决定胜负的战斗：2支持局、0反例，未有修正后整战对照（n=2）。典型案例：LRN0HPZ0FZS1 A0 F48 T3翻越撑击重放使余像挡13→15、原始计数8→9；DPYF2BAA3DKT A10末T1防御重放0→24挡、计数4→5，T7实际第30次串刺新增9伤凋萎，28血9挡对26＋18需35、差7血。",
+      "evidence": [
+        "LRN0HPZ0FZS1",
+        "DPYF2BAA3DKT"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-07",
+      "status": "active"
+    }
+  ]
+}
