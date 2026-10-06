@@ -1,0 +1,106 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-permafrost.test.ts (11 tests | 5 failed) 290ms
+   × PJ2 F17 attempt 3 T4: Phantom Blades and two potion-adjusted Defends give 21 Block and zero loss 72ms
+   × 25226 F29 T1: the first Footwork gives seven Block before any defending card 78ms
+   × journal replay restores availability before a Power and consumption immediately after accepted dispatch 3ms
+   × rollout spends the trigger across turns and keeps it when this turn plays no Power 8ms
+   × unverified repeated Power triggers are explicitly uncertain 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-permafrost.test.ts > PJ2 F17 attempt 3 T4: Phantom Blades and two potion-adjusted Defends give 21 Block and zero loss
+AssertionError: expected undefined to be 7 // Object.is equality
+
+- Expected:
+7
+
++ Received:
+undefined
+
+ ❯ tests/silent-permafrost.test.ts:67:40
+     65| it("PJ2 F17 attempt 3 T4: Phantom Blades and two potion-adjusted Defen…
+     66|   const input = inputFor(frame("02:39:13"), remembered());
+     67|   expect(input.player.permafrostBlock).toBe(7);
+       |                                        ^
+     68|   const potion = input.hand.find((entry) => entry.cardId.startsWith("P…
+     69|   expect(potion).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > 25226 F29 T1: the first Footwork gives seven Block before any defending card
+AssertionError: expected +0 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 0
+
+ ❯ tests/silent-permafrost.test.ts:78:78
+     76|   const raw = frame("21:35:34");
+     77|   const input = inputFor(raw);
+     78|   expect(replaySteps(input, [step(input, "FOOTWORK")])!.outcome.blockG…
+       |                                                                              ^
+     79|   expect(replaySteps(input, [step(input, "FOOTWORK"), step(input, "FOO…
+     80| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > journal replay restores availability before a Power and consumption immediately after accepted dispatch
+TypeError: Cannot read properties of undefined (reading 'status')
+ ❯ tests/silent-permafrost.test.ts:130:37
+    128|   const last = states.at(-1)!;
+    129|   const logs = { runId: "PJ2LL9KU7FHD", states, decisions: [], runPlan…
+    130|   expect(replayRun(logs, knowledge).permafrost!.status).toBe("armed");
+       |                                     ^
+    131|   for (const result of ["completed: ok", "pending: accepted", "failed …
+    132|     const replay = replayRun({ ...logs, decisions: [{ ts: last.ts, fin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > rollout spends the trigger across turns and keeps it when this turn plays no Power
+AssertionError: expected +0 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 0
+
+ ❯ tests/silent-permafrost.test.ts:169:34
+    167|     const records = simulateFight(input, plan, 3, 1, false).records;
+    168|     expect(records).toHaveLength(3);
+    169|     expect(records[0]!.snap.blk).toBe(immediate ? 7 : 0);
+       |                                  ^
+    170|     expect(records[1]!.snap.blk).toBe(immediate ? 0 : 7);
+    171|     expect(records[2]!.snap.blk).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > unverified repeated Power triggers are explicitly uncertain
+AssertionError: expected +0 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 0
+
+ ❯ tests/silent-permafrost.test.ts:180:31
+    178|   input.hand = [card(0, "FOOTWORK", { type: "Power", target: "self", r…
+    179|   const outcome = replaySteps(input, [step(input, "FOOTWORK")])!.outco…
+    180|   expect(outcome.blockGained).toBe(7);
+       |                               ^
+    181|   expect(outcome.unknownCards).toContain("永冻冰晶（能力重放触发未验证）");
+    182| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 6 passed (11)
+   Start at  01:53:47
+   Duration  1.44s (transform 863ms, setup 257ms, import 776ms, tests 290ms, environment 0ms)
+
