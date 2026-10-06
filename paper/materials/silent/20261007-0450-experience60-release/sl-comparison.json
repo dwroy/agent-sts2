@@ -1,0 +1,4457 @@
+[
+  {
+    "floor": 30,
+    "attempts": 2,
+    "wins": 1,
+    "same_order": true,
+    "same_turns": true,
+    "cases": [
+      {
+        "floor": 30,
+        "attempt": 1,
+        "result": "predicted_death",
+        "turns": 7,
+        "direct_damage": [
+          0,
+          0,
+          26,
+          3,
+          21,
+          0,
+          6
+        ],
+        "terminal": {
+          "hp": 14,
+          "block": 0,
+          "energy": 2,
+          "powers": {
+            "DEXTERITY_POWER": 4,
+            "NOXIOUS_FUMES_POWER": 2,
+            "ACCELERANT_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "CHOMPER",
+              "hp": 21,
+              "block": 0,
+              "move": "CLAMP_MOVE",
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "9[font_size=18]×2[/font_size]",
+                  "damage": 9,
+                  "hits": 2,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "CHOMPER",
+              "hp": 31,
+              "block": 0,
+              "move": "SCREECH_MOVE",
+              "powers": {
+                "POISON_POWER": 8
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "StatusCard",
+                  "label": "3",
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": 3
+                }
+              ]
+            }
+          ]
+        },
+        "reload": {
+          "ok": true,
+          "ms": 7451,
+          "resumed_turn": 1
+        },
+        "explore": {
+          "points": [
+            {
+              "board": "4fdc16e41bc360ba",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "生存者, 毒雾, 后空翻",
+              "alternatives": [
+                "生存者, 后空翻",
+                "生存者, 打击 -> 啃咬机 #1, 后空翻",
+                "生存者, 毒雾",
+                "毒雾, 后空翻",
+                "生存者, 打击 -> 啃咬机 #1",
+                "生存者, 毒雾, 打击 -> 啃咬机 #1",
+                "打击 -> 啃咬机 #1, 后空翻",
+                "毒雾, 打击 -> 啃咬机 #1",
+                "毒雾, 杂技"
+              ],
+              "dead": {
+                "生存者, 毒雾, 后空翻": 0,
+                "生存者, 后空翻": 0.25,
+                "生存者, 打击 -> 啃咬机 #1, 后空翻": 0.25,
+                "生存者, 毒雾": 0.25,
+                "毒雾, 后空翻": 0,
+                "生存者, 打击 -> 啃咬机 #1": 0.25,
+                "生存者, 毒雾, 打击 -> 啃咬机 #1": 0.25,
+                "打击 -> 啃咬机 #1, 后空翻": 0.25,
+                "毒雾, 打击 -> 啃咬机 #1": 0.25,
+                "毒雾, 杂技": 0.5
+              },
+              "canon": {
+                "生存者, 毒雾, 后空翻": "BACKFLIP, NOXIOUS_FUMES, SURVIVOR",
+                "生存者, 后空翻": "BACKFLIP, SURVIVOR",
+                "生存者, 打击 -> 啃咬机 #1, 后空翻": "BACKFLIP, STRIKE_SILENT>啃咬机 #1, SURVIVOR",
+                "生存者, 毒雾": "NOXIOUS_FUMES, SURVIVOR",
+                "毒雾, 后空翻": "BACKFLIP, NOXIOUS_FUMES",
+                "生存者, 打击 -> 啃咬机 #1": "STRIKE_SILENT>啃咬机 #1, SURVIVOR",
+                "生存者, 毒雾, 打击 -> 啃咬机 #1": "NOXIOUS_FUMES, STRIKE_SILENT>啃咬机 #1, SURVIVOR",
+                "打击 -> 啃咬机 #1, 后空翻": "BACKFLIP, STRIKE_SILENT>啃咬机 #1",
+                "毒雾, 打击 -> 啃咬机 #1": "NOXIOUS_FUMES, STRIKE_SILENT>啃咬机 #1",
+                "毒雾, 杂技": "ACROBATICS, NOXIOUS_FUMES"
+              }
+            },
+            {
+              "board": "f4f1502eaa68196f",
+              "turn": 1,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "BACKFLIP, NOXIOUS_FUMES, SURVIVOR"
+              }
+            },
+            {
+              "board": "5856abdb8d3eb502",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "灵动步法+, 扫腿 -> 啃咬机 #1",
+              "alternatives": [
+                "致命毒药 -> 啃咬机 #2, 扫腿 -> 啃咬机 #2",
+                "扫腿 -> 啃咬机 #1",
+                "打击 -> 啃咬机 #1, 扫腿 -> 啃咬机 #1"
+              ],
+              "dead": {
+                "灵动步法+, 扫腿 -> 啃咬机 #1": 0.25,
+                "致命毒药 -> 啃咬机 #2, 扫腿 -> 啃咬机 #2": 0.375,
+                "扫腿 -> 啃咬机 #1": 0.75,
+                "打击 -> 啃咬机 #1, 扫腿 -> 啃咬机 #1": 0.625
+              },
+              "canon": {
+                "灵动步法+, 扫腿 -> 啃咬机 #1": "FOOTWORK+, LEG_SWEEP>啃咬机 #1",
+                "致命毒药 -> 啃咬机 #2, 扫腿 -> 啃咬机 #2": "DEADLY_POISON>啃咬机 #2, LEG_SWEEP>啃咬机 #2",
+                "扫腿 -> 啃咬机 #1": "LEG_SWEEP>啃咬机 #1",
+                "打击 -> 啃咬机 #1, 扫腿 -> 啃咬机 #1": "LEG_SWEEP>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "fd5776c8bb23e73a",
+              "turn": 2,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "FOOTWORK+, LEG_SWEEP>啃咬机 #1"
+              }
+            },
+            {
+              "board": "2db93d767ff797da",
+              "turn": 3,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "回响斩击, 打击 -> 啃咬机 #2",
+              "canon": {
+                "回响斩击, 打击 -> 啃咬机 #2": "ECHOING_SLASH, STRIKE_SILENT>啃咬机 #2"
+              }
+            },
+            {
+              "board": "5c5dc742743180fd",
+              "turn": 3,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "ECHOING_SLASH, STRIKE_SILENT>啃咬机 #2"
+              }
+            },
+            {
+              "board": "96acbedd44b1128f",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #2",
+              "alternatives": [
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #1",
+                "防御, 防御, 中和 -> 啃咬机 #1"
+              ],
+              "dead": {
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #2": 0.5,
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #1": 0.625,
+                "防御, 防御, 中和 -> 啃咬机 #1": 0.75
+              },
+              "canon": {
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #2": "ACCELERANT, ACCELERANT, DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #2",
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #1": "ACCELERANT, ACCELERANT, DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #1",
+                "防御, 防御, 中和 -> 啃咬机 #1": "DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #1"
+              }
+            },
+            {
+              "board": "01e8a4c9d681caf3",
+              "turn": 5,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "尖啸, 打击 -> 啃咬机 #1, 打击 -> 啃咬机 #1, 投掷匕首 -> 啃咬机 #1",
+              "canon": {
+                "尖啸, 打击 -> 啃咬机 #1, 打击 -> 啃咬机 #1, 投掷匕首 -> 啃咬机 #1": "DAGGER_THROW>啃咬机 #1, PIERCING_WAIL, STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "b3a3e55409221147",
+              "turn": 5,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "闪躲翻滚",
+              "alternatives": [
+                "end turn"
+              ],
+              "dead": {
+                "闪躲翻滚": 0.5,
+                "end turn": 0.625
+              },
+              "canon": {
+                "闪躲翻滚": "DAGGER_THROW>啃咬机 #1, DODGE_AND_ROLL, PIERCING_WAIL, STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1",
+                "end turn": "DAGGER_THROW>啃咬机 #1, PIERCING_WAIL, STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "a220b65badc7a4c3",
+              "turn": 6,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "防御, 防御",
+              "canon": {
+                "防御, 防御": "DEFEND_SILENT, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "954ea646d2c27125",
+              "turn": 7,
+              "kind": "code",
+              "label": "combat/least-loss",
+              "line": "打击 -> 啃咬机 #2, 弹跳药瓶",
+              "canon": {
+                "打击 -> 啃咬机 #2, 弹跳药瓶": "BOUNCING_FLASK, STRIKE_SILENT>啃咬机 #2"
+              }
+            }
+          ],
+          "target": null,
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "SURVIVOR",
+                "NOXIOUS_FUMES",
+                "BACKFLIP"
+              ],
+              "boards": [
+                {
+                  "board": "4fdc16e41bc360ba",
+                  "at": 0
+                },
+                {
+                  "board": "f520b36c29835b2c",
+                  "at": 1
+                },
+                {
+                  "board": "aed40a10b5173208",
+                  "at": 2
+                },
+                {
+                  "board": "f4f1502eaa68196f",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "FOOTWORK+",
+                "LEG_SWEEP>啃咬机 #1"
+              ],
+              "boards": [
+                {
+                  "board": "5856abdb8d3eb502",
+                  "at": 0
+                },
+                {
+                  "board": "e151989c5e391599",
+                  "at": 1
+                },
+                {
+                  "board": "fd5776c8bb23e73a",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "ECHOING_SLASH",
+                "STRIKE_SILENT>啃咬机 #2"
+              ],
+              "boards": [
+                {
+                  "board": "2db93d767ff797da",
+                  "at": 0
+                },
+                {
+                  "board": "5b8cae9989784006",
+                  "at": 1
+                },
+                {
+                  "board": "5c5dc742743180fd",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "ACCELERANT",
+                "ACCELERANT",
+                "DEFEND_SILENT",
+                "DEFEND_SILENT",
+                "NEUTRALIZE>啃咬机 #2"
+              ],
+              "boards": [
+                {
+                  "board": "96acbedd44b1128f",
+                  "at": 0
+                },
+                {
+                  "board": "36bdaa40fed46295",
+                  "at": 1
+                },
+                {
+                  "board": "d29347e7855e9427",
+                  "at": 2
+                },
+                {
+                  "board": "365c14853c3c3558",
+                  "at": 3
+                },
+                {
+                  "board": "9ab305bd034f7567",
+                  "at": 4
+                },
+                {
+                  "board": "aa49da778968257f",
+                  "at": 5
+                }
+              ]
+            },
+            {
+              "turn": 5,
+              "plays": [
+                "PIERCING_WAIL",
+                "STRIKE_SILENT>啃咬机 #1",
+                "STRIKE_SILENT>啃咬机 #1",
+                "DAGGER_THROW>啃咬机 #1",
+                "DODGE_AND_ROLL"
+              ],
+              "boards": [
+                {
+                  "board": "01e8a4c9d681caf3",
+                  "at": 0
+                },
+                {
+                  "board": "899ff8df0214590e",
+                  "at": 1
+                },
+                {
+                  "board": "4dcf0e04b0ee0f50",
+                  "at": 2
+                },
+                {
+                  "board": "47f22afc46fe88ee",
+                  "at": 3
+                },
+                {
+                  "board": "b3a3e55409221147",
+                  "at": 4
+                },
+                {
+                  "board": "91d049f8e652f27b",
+                  "at": 5
+                }
+              ]
+            },
+            {
+              "turn": 6,
+              "plays": [
+                "DEFEND_SILENT",
+                "DEFEND_SILENT"
+              ],
+              "boards": [
+                {
+                  "board": "a220b65badc7a4c3",
+                  "at": 0
+                },
+                {
+                  "board": "621ff01bb05a3b8a",
+                  "at": 1
+                },
+                {
+                  "board": "2ab5127099918478",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 7,
+              "plays": [
+                "STRIKE_SILENT>啃咬机 #2",
+                "BOUNCING_FLASK"
+              ],
+              "boards": [
+                {
+                  "board": "954ea646d2c27125",
+                  "at": 0
+                },
+                {
+                  "board": "ddfe5fdda3b633bc",
+                  "at": 1
+                }
+              ]
+            }
+          ]
+        },
+        "draws": {
+          "order": [
+            "SURVIVOR",
+            "NOXIOUS_FUMES",
+            "BOUNCING_FLASK",
+            "STRIKE_SILENT",
+            "ACROBATICS",
+            "HAZE",
+            "BACKFLIP",
+            "DEFEND_SILENT",
+            "POISONED_STAB",
+            "SERPENT_FORM",
+            "DEADLY_POISON",
+            "STRIKE_SILENT",
+            "FOOTWORK+",
+            "LEG_SWEEP",
+            "ECHOING_SLASH",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "DEFLECT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "DEFEND_SILENT",
+            "NEUTRALIZE",
+            "ASCENDERS_BANE",
+            "PIERCING_WAIL",
+            "STRIKE_SILENT",
+            "STRIKE_SILENT",
+            "DAGGER_THROW",
+            "DODGE_AND_ROLL"
+          ],
+          "names": [
+            "生存者",
+            "毒雾",
+            "弹跳药瓶",
+            "打击",
+            "杂技",
+            "迷雾",
+            "后空翻",
+            "防御",
+            "带毒刺击",
+            "群蛇形态",
+            "致命毒药",
+            "打击",
+            "灵动步法+",
+            "扫腿",
+            "回响斩击",
+            "打击",
+            "防御",
+            "偏折",
+            "防御",
+            "触媒",
+            "触媒",
+            "防御",
+            "防御",
+            "中和",
+            "进阶之灾",
+            "尖啸",
+            "打击",
+            "打击",
+            "投掷匕首",
+            "闪躲翻滚"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "clean": 30,
+          "broke": "T6: reshuffle (the discard pile shuffled into the draw pile)"
+        },
+        "run": "TU3XB4CAEDAW"
+      },
+      {
+        "floor": 30,
+        "attempt": 2,
+        "result": "won",
+        "turns": 9,
+        "direct_damage": [
+          0,
+          0,
+          26,
+          3,
+          21,
+          6,
+          12,
+          10,
+          0
+        ],
+        "terminal": {
+          "hp": 13,
+          "block": 0,
+          "energy": 3,
+          "powers": {
+            "DEXTERITY_POWER": 4,
+            "NOXIOUS_FUMES_POWER": 2,
+            "ACCELERANT_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "CHOMPER",
+              "hp": 3,
+              "block": 0,
+              "move": "SCREECH_MOVE",
+              "powers": {
+                "POISON_POWER": 11,
+                "WEAK_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "StatusCard",
+                  "label": "3",
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": 3
+                }
+              ]
+            }
+          ]
+        },
+        "reload": null,
+        "explore": {
+          "points": [
+            {
+              "board": "4fdc16e41bc360ba",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "生存者, 毒雾, 后空翻",
+              "alternatives": [
+                "生存者, 后空翻",
+                "生存者, 后空翻, 防御",
+                "生存者, 打击 -> 啃咬机 #1, 后空翻",
+                "生存者, 毒雾",
+                "生存者, 打击 -> 啃咬机 #1",
+                "生存者, 毒雾, 打击 -> 啃咬机 #1",
+                "毒雾, 后空翻",
+                "打击 -> 啃咬机 #1, 后空翻",
+                "打击 -> 啃咬机 #1, 后空翻, 带毒刺击 -> 啃咬机 #1"
+              ],
+              "dead": {
+                "生存者, 毒雾, 后空翻": 0,
+                "生存者, 后空翻": 0,
+                "生存者, 后空翻, 防御": 0,
+                "生存者, 打击 -> 啃咬机 #1, 后空翻": 0,
+                "生存者, 毒雾": 1,
+                "生存者, 打击 -> 啃咬机 #1": 1,
+                "生存者, 毒雾, 打击 -> 啃咬机 #1": 1,
+                "毒雾, 后空翻": 0,
+                "打击 -> 啃咬机 #1, 后空翻": 1,
+                "打击 -> 啃咬机 #1, 后空翻, 带毒刺击 -> 啃咬机 #1": 1
+              },
+              "canon": {
+                "生存者, 毒雾, 后空翻": "BACKFLIP, NOXIOUS_FUMES, SURVIVOR",
+                "生存者, 后空翻": "BACKFLIP, SURVIVOR",
+                "生存者, 后空翻, 防御": "BACKFLIP, DEFEND_SILENT, SURVIVOR",
+                "生存者, 打击 -> 啃咬机 #1, 后空翻": "BACKFLIP, STRIKE_SILENT>啃咬机 #1, SURVIVOR",
+                "生存者, 毒雾": "NOXIOUS_FUMES, SURVIVOR",
+                "生存者, 打击 -> 啃咬机 #1": "STRIKE_SILENT>啃咬机 #1, SURVIVOR",
+                "生存者, 毒雾, 打击 -> 啃咬机 #1": "NOXIOUS_FUMES, STRIKE_SILENT>啃咬机 #1, SURVIVOR",
+                "毒雾, 后空翻": "BACKFLIP, NOXIOUS_FUMES",
+                "打击 -> 啃咬机 #1, 后空翻": "BACKFLIP, STRIKE_SILENT>啃咬机 #1",
+                "打击 -> 啃咬机 #1, 后空翻, 带毒刺击 -> 啃咬机 #1": "BACKFLIP, POISONED_STAB>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "f4f1502eaa68196f",
+              "turn": 1,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "BACKFLIP, NOXIOUS_FUMES, SURVIVOR"
+              }
+            },
+            {
+              "board": "5856abdb8d3eb502",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "灵动步法+, 扫腿 -> 啃咬机 #1",
+              "alternatives": [
+                "致命毒药 -> 啃咬机 #2, 扫腿 -> 啃咬机 #2",
+                "扫腿 -> 啃咬机 #1",
+                "打击 -> 啃咬机 #1, 扫腿 -> 啃咬机 #1"
+              ],
+              "dead": {
+                "灵动步法+, 扫腿 -> 啃咬机 #1": 0.375,
+                "致命毒药 -> 啃咬机 #2, 扫腿 -> 啃咬机 #2": 0.375,
+                "扫腿 -> 啃咬机 #1": 0.667,
+                "打击 -> 啃咬机 #1, 扫腿 -> 啃咬机 #1": 0.625
+              },
+              "canon": {
+                "灵动步法+, 扫腿 -> 啃咬机 #1": "FOOTWORK+, LEG_SWEEP>啃咬机 #1",
+                "致命毒药 -> 啃咬机 #2, 扫腿 -> 啃咬机 #2": "DEADLY_POISON>啃咬机 #2, LEG_SWEEP>啃咬机 #2",
+                "扫腿 -> 啃咬机 #1": "LEG_SWEEP>啃咬机 #1",
+                "打击 -> 啃咬机 #1, 扫腿 -> 啃咬机 #1": "LEG_SWEEP>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "fd5776c8bb23e73a",
+              "turn": 2,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "FOOTWORK+, LEG_SWEEP>啃咬机 #1"
+              }
+            },
+            {
+              "board": "2db93d767ff797da",
+              "turn": 3,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "回响斩击, 打击 -> 啃咬机 #2",
+              "canon": {
+                "回响斩击, 打击 -> 啃咬机 #2": "ECHOING_SLASH, STRIKE_SILENT>啃咬机 #2"
+              }
+            },
+            {
+              "board": "5c5dc742743180fd",
+              "turn": 3,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "ECHOING_SLASH, STRIKE_SILENT>啃咬机 #2"
+              }
+            },
+            {
+              "board": "96acbedd44b1128f",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "触媒, 防御, 防御, 中和 -> 啃咬机 #2",
+              "alternatives": [
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #1",
+                "防御, 防御, 中和 -> 啃咬机 #1"
+              ],
+              "dead": {
+                "触媒, 防御, 防御, 中和 -> 啃咬机 #2": 0.708,
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #1": 0.708,
+                "防御, 防御, 中和 -> 啃咬机 #1": 0.708
+              },
+              "canon": {
+                "触媒, 防御, 防御, 中和 -> 啃咬机 #2": "ACCELERANT, DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #2",
+                "触媒, 触媒, 防御, 防御, 中和 -> 啃咬机 #1": "ACCELERANT, ACCELERANT, DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #1",
+                "防御, 防御, 中和 -> 啃咬机 #1": "DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #1"
+              }
+            },
+            {
+              "board": "c6912dd96c72d0ab",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "end turn",
+              "alternatives": [
+                "触媒"
+              ],
+              "dead": {
+                "end turn": 0.542,
+                "触媒": 0.583
+              },
+              "canon": {
+                "end turn": "ACCELERANT, DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #2",
+                "触媒": "ACCELERANT, ACCELERANT, DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>啃咬机 #2"
+              }
+            },
+            {
+              "board": "1f0b26db6510599f",
+              "turn": 5,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "尖啸, 打击 -> 啃咬机 #1, 打击 -> 啃咬机 #1, 投掷匕首 -> 啃咬机 #1",
+              "canon": {
+                "尖啸, 打击 -> 啃咬机 #1, 打击 -> 啃咬机 #1, 投掷匕首 -> 啃咬机 #1": "DAGGER_THROW>啃咬机 #1, PIERCING_WAIL, STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "4ff2566cb5ca45de",
+              "turn": 5,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "闪躲翻滚",
+              "alternatives": [
+                "end turn"
+              ],
+              "dead": {
+                "闪躲翻滚": 0.5,
+                "end turn": 0.708
+              },
+              "canon": {
+                "闪躲翻滚": "DAGGER_THROW>啃咬机 #1, DODGE_AND_ROLL, PIERCING_WAIL, STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1",
+                "end turn": "DAGGER_THROW>啃咬机 #1, PIERCING_WAIL, STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "3d63c6b5ce054fe5",
+              "turn": 6,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "防御, 打击 -> 啃咬机 #1",
+              "canon": {
+                "防御, 打击 -> 啃咬机 #1": "DEFEND_SILENT, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "9be447c406328032",
+              "turn": 7,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "打击 -> 啃咬机 #1, 打击 -> 啃咬机 #1",
+              "alternatives": [
+                "打击 -> 啃咬机 #2, 打击 -> 啃咬机 #2, 防御"
+              ],
+              "dead": {
+                "打击 -> 啃咬机 #1, 打击 -> 啃咬机 #1": 0.083,
+                "打击 -> 啃咬机 #2, 打击 -> 啃咬机 #2, 防御": 0.458
+              },
+              "canon": {
+                "打击 -> 啃咬机 #1, 打击 -> 啃咬机 #1": "STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1",
+                "打击 -> 啃咬机 #2, 打击 -> 啃咬机 #2, 防御": "DEFEND_SILENT, STRIKE_SILENT>啃咬机 #2, STRIKE_SILENT>啃咬机 #2"
+              }
+            },
+            {
+              "board": "f2dfc45be6aa1afb",
+              "turn": 7,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "STRIKE_SILENT>啃咬机 #1, STRIKE_SILENT>啃咬机 #1"
+              }
+            },
+            {
+              "board": "d00eff0ea89412a5",
+              "turn": 8,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "弹跳药瓶, 扫腿 -> 啃咬机, 回响斩击",
+              "alternatives": [
+                "弹跳药瓶, 扫腿 -> 啃咬机",
+                "扫腿 -> 啃咬机, 回响斩击, 杂技",
+                "弹跳药瓶, 防御, 回响斩击",
+                "弹跳药瓶, 防御, 杂技"
+              ],
+              "dead": {
+                "弹跳药瓶, 扫腿 -> 啃咬机, 回响斩击": 0,
+                "弹跳药瓶, 扫腿 -> 啃咬机": 0,
+                "扫腿 -> 啃咬机, 回响斩击, 杂技": 0.083,
+                "弹跳药瓶, 防御, 回响斩击": 0,
+                "弹跳药瓶, 防御, 杂技": 0
+              },
+              "canon": {
+                "弹跳药瓶, 扫腿 -> 啃咬机, 回响斩击": "BOUNCING_FLASK, ECHOING_SLASH, LEG_SWEEP>啃咬机",
+                "弹跳药瓶, 扫腿 -> 啃咬机": "BOUNCING_FLASK, LEG_SWEEP>啃咬机",
+                "扫腿 -> 啃咬机, 回响斩击, 杂技": "ACROBATICS, ECHOING_SLASH, LEG_SWEEP>啃咬机",
+                "弹跳药瓶, 防御, 回响斩击": "BOUNCING_FLASK, DEFEND_SILENT, ECHOING_SLASH",
+                "弹跳药瓶, 防御, 杂技": "ACROBATICS, BOUNCING_FLASK, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "94abaecee16a5265",
+              "turn": 8,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "BOUNCING_FLASK, ECHOING_SLASH, LEG_SWEEP>啃咬机"
+              }
+            },
+            {
+              "board": "c97eb743dcc59b26",
+              "turn": 9,
+              "kind": "code",
+              "label": "combat/lethal",
+              "line": "end turn",
+              "canon": {
+                "end turn": "nothing"
+              }
+            }
+          ],
+          "target": null,
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "SURVIVOR",
+                "NOXIOUS_FUMES",
+                "BACKFLIP"
+              ],
+              "boards": [
+                {
+                  "board": "4fdc16e41bc360ba",
+                  "at": 0
+                },
+                {
+                  "board": "f520b36c29835b2c",
+                  "at": 1
+                },
+                {
+                  "board": "aed40a10b5173208",
+                  "at": 2
+                },
+                {
+                  "board": "f4f1502eaa68196f",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "FOOTWORK+",
+                "LEG_SWEEP>啃咬机 #1"
+              ],
+              "boards": [
+                {
+                  "board": "5856abdb8d3eb502",
+                  "at": 0
+                },
+                {
+                  "board": "e151989c5e391599",
+                  "at": 1
+                },
+                {
+                  "board": "fd5776c8bb23e73a",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "ECHOING_SLASH",
+                "STRIKE_SILENT>啃咬机 #2"
+              ],
+              "boards": [
+                {
+                  "board": "2db93d767ff797da",
+                  "at": 0
+                },
+                {
+                  "board": "5b8cae9989784006",
+                  "at": 1
+                },
+                {
+                  "board": "5c5dc742743180fd",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "ACCELERANT",
+                "DEFEND_SILENT",
+                "DEFEND_SILENT",
+                "NEUTRALIZE>啃咬机 #2"
+              ],
+              "boards": [
+                {
+                  "board": "96acbedd44b1128f",
+                  "at": 0
+                },
+                {
+                  "board": "36bdaa40fed46295",
+                  "at": 1
+                },
+                {
+                  "board": "4fad135cafeb742b",
+                  "at": 2
+                },
+                {
+                  "board": "044856b2c115dc9c",
+                  "at": 3
+                },
+                {
+                  "board": "c6912dd96c72d0ab",
+                  "at": 4
+                }
+              ]
+            },
+            {
+              "turn": 5,
+              "plays": [
+                "PIERCING_WAIL",
+                "STRIKE_SILENT>啃咬机 #1",
+                "STRIKE_SILENT>啃咬机 #1",
+                "DAGGER_THROW>啃咬机 #1",
+                "DODGE_AND_ROLL"
+              ],
+              "boards": [
+                {
+                  "board": "1f0b26db6510599f",
+                  "at": 0
+                },
+                {
+                  "board": "40173ca831a76b6d",
+                  "at": 1
+                },
+                {
+                  "board": "e11b31f9df9e8580",
+                  "at": 2
+                },
+                {
+                  "board": "7d7910326366992d",
+                  "at": 3
+                },
+                {
+                  "board": "4ff2566cb5ca45de",
+                  "at": 4
+                },
+                {
+                  "board": "50083ae3db05d770",
+                  "at": 5
+                }
+              ]
+            },
+            {
+              "turn": 6,
+              "plays": [
+                "DEFEND_SILENT",
+                "STRIKE_SILENT>啃咬机 #1"
+              ],
+              "boards": [
+                {
+                  "board": "3d63c6b5ce054fe5",
+                  "at": 0
+                },
+                {
+                  "board": "f0e14502f6e216aa",
+                  "at": 1
+                },
+                {
+                  "board": "8b9a928147657409",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 7,
+              "plays": [
+                "STRIKE_SILENT>啃咬机 #1",
+                "STRIKE_SILENT>啃咬机 #1"
+              ],
+              "boards": [
+                {
+                  "board": "9be447c406328032",
+                  "at": 0
+                },
+                {
+                  "board": "bd65b80fd06c65b2",
+                  "at": 1
+                },
+                {
+                  "board": "f2dfc45be6aa1afb",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 8,
+              "plays": [
+                "BOUNCING_FLASK",
+                "LEG_SWEEP>啃咬机",
+                "ECHOING_SLASH"
+              ],
+              "boards": [
+                {
+                  "board": "d00eff0ea89412a5",
+                  "at": 0
+                },
+                {
+                  "board": "cad3bb1e760bb032",
+                  "at": 1
+                },
+                {
+                  "board": "cc8c64d4fccfe681",
+                  "at": 2
+                },
+                {
+                  "board": "94abaecee16a5265",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 9,
+              "plays": [],
+              "boards": [
+                {
+                  "board": "c97eb743dcc59b26",
+                  "at": 0
+                }
+              ]
+            }
+          ],
+          "second": {
+            "turn": 7,
+            "until": 7,
+            "weights": {
+              "T1": 4.7,
+              "T2": 3.4,
+              "T3": 0.9,
+              "T4": 1.8,
+              "T5": 3.5,
+              "T6": 7,
+              "T7": 14
+            }
+          }
+        },
+        "draws": {
+          "order": [
+            "SURVIVOR",
+            "NOXIOUS_FUMES",
+            "BOUNCING_FLASK",
+            "STRIKE_SILENT",
+            "ACROBATICS",
+            "HAZE",
+            "BACKFLIP",
+            "DEFEND_SILENT",
+            "POISONED_STAB",
+            "SERPENT_FORM",
+            "DEADLY_POISON",
+            "STRIKE_SILENT",
+            "FOOTWORK+",
+            "LEG_SWEEP",
+            "ECHOING_SLASH",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "DEFLECT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "DEFEND_SILENT",
+            "NEUTRALIZE",
+            "ASCENDERS_BANE",
+            "PIERCING_WAIL",
+            "STRIKE_SILENT",
+            "STRIKE_SILENT",
+            "DAGGER_THROW",
+            "DODGE_AND_ROLL"
+          ],
+          "names": [
+            "生存者",
+            "毒雾",
+            "弹跳药瓶",
+            "打击",
+            "杂技",
+            "迷雾",
+            "后空翻",
+            "防御",
+            "带毒刺击",
+            "群蛇形态",
+            "致命毒药",
+            "打击",
+            "灵动步法+",
+            "扫腿",
+            "回响斩击",
+            "打击",
+            "防御",
+            "偏折",
+            "防御",
+            "触媒",
+            "触媒",
+            "防御",
+            "防御",
+            "中和",
+            "进阶之灾",
+            "尖啸",
+            "打击",
+            "打击",
+            "投掷匕首",
+            "闪躲翻滚"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "clean": 30,
+          "broke": "T6: reshuffle (the discard pile shuffled into the draw pile)"
+        },
+        "run": "TU3XB4CAEDAW"
+      }
+    ]
+  },
+  {
+    "floor": 31,
+    "attempts": 2,
+    "wins": 1,
+    "same_order": true,
+    "same_turns": false,
+    "cases": [
+      {
+        "floor": 31,
+        "attempt": 1,
+        "result": "predicted_death",
+        "turns": 5,
+        "direct_damage": [
+          6,
+          0,
+          11,
+          11,
+          0
+        ],
+        "terminal": {
+          "hp": 10,
+          "block": 0,
+          "energy": 5,
+          "powers": {
+            "NOXIOUS_FUMES_POWER": 2,
+            "TENDER_POWER": 1,
+            "ACCELERANT_POWER": 1,
+            "DEXTERITY_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "HUNTER_KILLER",
+              "hp": 74,
+              "block": 0,
+              "move": "BITE_MOVE",
+              "powers": {
+                "POISON_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "19",
+                  "damage": 19,
+                  "hits": 1,
+                  "total_damage": 19,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "reload": {
+          "ok": true,
+          "ms": 6837,
+          "resumed_turn": 1
+        },
+        "explore": {
+          "points": [
+            {
+              "board": "396096bddad455cc",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "带毒刺击 -> 猎人杀手, 毒雾",
+              "alternatives": [
+                "毒雾, 致命毒药 -> 猎人杀手",
+                "毒雾, 后空翻",
+                "带毒刺击 -> 猎人杀手, 致命毒药 -> 猎人杀手",
+                "带毒刺击 -> 猎人杀手, 毒雾, 致命毒药 -> 猎人杀手",
+                "毒雾, 迷雾",
+                "带毒刺击 -> 猎人杀手, 迷雾",
+                "致命毒药 -> 猎人杀手, 迷雾"
+              ],
+              "dead": {
+                "带毒刺击 -> 猎人杀手, 毒雾": 0.5,
+                "毒雾, 致命毒药 -> 猎人杀手": 0.5,
+                "毒雾, 后空翻": 0.75,
+                "带毒刺击 -> 猎人杀手, 致命毒药 -> 猎人杀手": 0.5,
+                "带毒刺击 -> 猎人杀手, 毒雾, 致命毒药 -> 猎人杀手": 0.5,
+                "毒雾, 迷雾": 0.5,
+                "带毒刺击 -> 猎人杀手, 迷雾": 0.5,
+                "致命毒药 -> 猎人杀手, 迷雾": 0.5
+              },
+              "canon": {
+                "带毒刺击 -> 猎人杀手, 毒雾": "NOXIOUS_FUMES, POISONED_STAB>猎人杀手",
+                "毒雾, 致命毒药 -> 猎人杀手": "DEADLY_POISON>猎人杀手, NOXIOUS_FUMES",
+                "毒雾, 后空翻": "BACKFLIP, NOXIOUS_FUMES",
+                "带毒刺击 -> 猎人杀手, 致命毒药 -> 猎人杀手": "DEADLY_POISON>猎人杀手, POISONED_STAB>猎人杀手",
+                "带毒刺击 -> 猎人杀手, 毒雾, 致命毒药 -> 猎人杀手": "DEADLY_POISON>猎人杀手, NOXIOUS_FUMES, POISONED_STAB>猎人杀手",
+                "毒雾, 迷雾": "HAZE, NOXIOUS_FUMES",
+                "带毒刺击 -> 猎人杀手, 迷雾": "HAZE, POISONED_STAB>猎人杀手",
+                "致命毒药 -> 猎人杀手, 迷雾": "DEADLY_POISON>猎人杀手, HAZE"
+              }
+            },
+            {
+              "board": "a152fc8bf888a285",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "end turn",
+              "alternatives": [
+                "致命毒药 -> 猎人杀手"
+              ],
+              "dead": {
+                "end turn": 0.5,
+                "致命毒药 -> 猎人杀手": 0.5
+              },
+              "canon": {
+                "end turn": "NOXIOUS_FUMES, POISONED_STAB>猎人杀手",
+                "致命毒药 -> 猎人杀手": "DEADLY_POISON>猎人杀手, NOXIOUS_FUMES, POISONED_STAB>猎人杀手"
+              }
+            },
+            {
+              "board": "7ce1ef2c89715629",
+              "turn": 2,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "灵动步法+, 扫腿 -> 猎人杀手, 杂技",
+              "canon": {
+                "灵动步法+, 扫腿 -> 猎人杀手, 杂技": "ACROBATICS, FOOTWORK+, LEG_SWEEP>猎人杀手"
+              }
+            },
+            {
+              "board": "e7c39b0a429c2893",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "触媒",
+              "alternatives": [
+                "end turn"
+              ],
+              "dead": {
+                "触媒": 0.875,
+                "end turn": 0.875
+              },
+              "canon": {
+                "触媒": "ACCELERANT, ACROBATICS, FOOTWORK+, LEG_SWEEP>猎人杀手",
+                "end turn": "ACROBATICS, FOOTWORK+, LEG_SWEEP>猎人杀手"
+              }
+            },
+            {
+              "board": "710675fb8f22129a",
+              "turn": 2,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "ACCELERANT, ACROBATICS, FOOTWORK+, LEG_SWEEP>猎人杀手"
+              }
+            },
+            {
+              "board": "1fa7f9383b844414",
+              "turn": 3,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "打击 -> 猎人杀手, 打击 -> 猎人杀手",
+              "canon": {
+                "打击 -> 猎人杀手, 打击 -> 猎人杀手": "STRIKE_SILENT>猎人杀手, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "0307bce1ac69ca9a",
+              "turn": 3,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "STRIKE_SILENT>猎人杀手, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "31f1809d100a0d42",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手, 偏折, 防御",
+              "alternatives": [
+                "偏折, 防御, 群蛇形态, 中和 -> 猎人杀手",
+                "偏折, 防御, 投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手",
+                "偏折, 防御, 投掷匕首 -> 猎人杀手, 群蛇形态, 中和 -> 猎人杀手",
+                "投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手, 偏折, 防御, 群蛇形态",
+                "偏折, 投掷匕首 -> 猎人杀手, 群蛇形态, 中和 -> 猎人杀手"
+              ],
+              "dead": {
+                "投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手, 偏折, 防御": 1,
+                "偏折, 防御, 群蛇形态, 中和 -> 猎人杀手": 1,
+                "偏折, 防御, 投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手": 1,
+                "偏折, 防御, 投掷匕首 -> 猎人杀手, 群蛇形态, 中和 -> 猎人杀手": 1,
+                "投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手, 偏折, 防御, 群蛇形态": 1,
+                "偏折, 投掷匕首 -> 猎人杀手, 群蛇形态, 中和 -> 猎人杀手": 1
+              },
+              "canon": {
+                "投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手, 偏折, 防御": "DAGGER_THROW>猎人杀手, DEFEND_SILENT, DEFLECT, NEUTRALIZE>猎人杀手",
+                "偏折, 防御, 群蛇形态, 中和 -> 猎人杀手": "DEFEND_SILENT, DEFLECT, NEUTRALIZE>猎人杀手, SERPENT_FORM",
+                "偏折, 防御, 投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手": "DAGGER_THROW>猎人杀手, DEFEND_SILENT, DEFLECT, NEUTRALIZE>猎人杀手",
+                "偏折, 防御, 投掷匕首 -> 猎人杀手, 群蛇形态, 中和 -> 猎人杀手": "DAGGER_THROW>猎人杀手, DEFEND_SILENT, DEFLECT, NEUTRALIZE>猎人杀手, SERPENT_FORM",
+                "投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手, 偏折, 防御, 群蛇形态": "DAGGER_THROW>猎人杀手, DEFEND_SILENT, DEFLECT, NEUTRALIZE>猎人杀手, SERPENT_FORM",
+                "偏折, 投掷匕首 -> 猎人杀手, 群蛇形态, 中和 -> 猎人杀手": "DAGGER_THROW>猎人杀手, DEFLECT, NEUTRALIZE>猎人杀手, SERPENT_FORM"
+              }
+            },
+            {
+              "board": "122f96e629355eb4",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "end turn",
+              "alternatives": [
+                "群蛇形态"
+              ],
+              "dead": {
+                "end turn": 1,
+                "群蛇形态": 1
+              },
+              "canon": {
+                "end turn": "DAGGER_THROW>猎人杀手, DEFEND_SILENT, DEFLECT, NEUTRALIZE>猎人杀手",
+                "群蛇形态": "DAGGER_THROW>猎人杀手, DEFEND_SILENT, DEFLECT, NEUTRALIZE>猎人杀手, SERPENT_FORM"
+              }
+            }
+          ],
+          "target": null,
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "POISONED_STAB>猎人杀手",
+                "NOXIOUS_FUMES"
+              ],
+              "boards": [
+                {
+                  "board": "396096bddad455cc",
+                  "at": 0
+                },
+                {
+                  "board": "0ff8e726caddcec5",
+                  "at": 1
+                },
+                {
+                  "board": "a152fc8bf888a285",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "FOOTWORK+",
+                "LEG_SWEEP>猎人杀手",
+                "ACROBATICS",
+                "ACCELERANT"
+              ],
+              "boards": [
+                {
+                  "board": "7ce1ef2c89715629",
+                  "at": 0
+                },
+                {
+                  "board": "9c654090604abade",
+                  "at": 1
+                },
+                {
+                  "board": "4116101a389e647e",
+                  "at": 2
+                },
+                {
+                  "board": "e7c39b0a429c2893",
+                  "at": 3
+                },
+                {
+                  "board": "710675fb8f22129a",
+                  "at": 4
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "STRIKE_SILENT>猎人杀手",
+                "STRIKE_SILENT>猎人杀手"
+              ],
+              "boards": [
+                {
+                  "board": "1fa7f9383b844414",
+                  "at": 0
+                },
+                {
+                  "board": "af92d4a9d2d2aa92",
+                  "at": 1
+                },
+                {
+                  "board": "0307bce1ac69ca9a",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "DAGGER_THROW>猎人杀手",
+                "NEUTRALIZE>猎人杀手",
+                "DEFLECT",
+                "DEFEND_SILENT"
+              ],
+              "boards": [
+                {
+                  "board": "31f1809d100a0d42",
+                  "at": 0
+                },
+                {
+                  "board": "af98d3e880357057",
+                  "at": 1
+                },
+                {
+                  "board": "b8bd5405347a3463",
+                  "at": 2
+                },
+                {
+                  "board": "d5ab5ba271ea6af5",
+                  "at": 3
+                },
+                {
+                  "board": "122f96e629355eb4",
+                  "at": 4
+                }
+              ]
+            }
+          ]
+        },
+        "draws": {
+          "order": [
+            "POISONED_STAB",
+            "DEFEND_SILENT",
+            "NOXIOUS_FUMES",
+            "DODGE_AND_ROLL",
+            "DEADLY_POISON",
+            "HAZE",
+            "BACKFLIP",
+            "PIERCING_WAIL",
+            "SURVIVOR",
+            "ACROBATICS",
+            "LEG_SWEEP",
+            "FOOTWORK+",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "STRIKE_SILENT",
+            "STRIKE_SILENT",
+            "ASCENDERS_BANE",
+            "DEFEND_SILENT",
+            "DEFLECT",
+            "DEFEND_SILENT",
+            "DAGGER_THROW",
+            "SERPENT_FORM",
+            "NEUTRALIZE",
+            "STRIKE_SILENT",
+            "MIRAGE",
+            "STRIKE_SILENT",
+            "ACCELERANT",
+            "BOUNCING_FLASK",
+            "ECHOING_SLASH"
+          ],
+          "names": [
+            "带毒刺击",
+            "防御",
+            "毒雾",
+            "闪躲翻滚",
+            "致命毒药",
+            "迷雾",
+            "后空翻",
+            "尖啸",
+            "生存者",
+            "杂技",
+            "扫腿",
+            "灵动步法+",
+            "打击",
+            "防御",
+            "触媒",
+            "防御",
+            "打击",
+            "打击",
+            "进阶之灾",
+            "防御",
+            "偏折",
+            "防御",
+            "投掷匕首",
+            "群蛇形态",
+            "中和",
+            "打击",
+            "蜃景",
+            "打击",
+            "触媒",
+            "弹跳药瓶",
+            "回响斩击"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "clean": 31,
+          "broke": null
+        },
+        "run": "TU3XB4CAEDAW"
+      },
+      {
+        "floor": 31,
+        "attempt": 2,
+        "result": "won",
+        "turns": 6,
+        "direct_damage": [
+          6,
+          0,
+          11,
+          5,
+          9,
+          0
+        ],
+        "terminal": {
+          "hp": 13,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "NOXIOUS_FUMES_POWER": 2,
+            "TENDER_POWER": 1,
+            "ACCELERANT_POWER": 2,
+            "DEXTERITY_POWER": 3,
+            "STRENGTH_POWER": -1
+          },
+          "enemies": [
+            {
+              "id": "HUNTER_KILLER",
+              "hp": 21,
+              "block": 0,
+              "move": "PUNCTURE_MOVE",
+              "powers": {
+                "POISON_POWER": 10
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "8[font_size=18]×3[/font_size]",
+                  "damage": 8,
+                  "hits": 3,
+                  "total_damage": 24,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "reload": null,
+        "explore": {
+          "points": [
+            {
+              "board": "396096bddad455cc",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "带毒刺击 -> 猎人杀手, 毒雾, 致命毒药 -> 猎人杀手",
+              "alternatives": [
+                "带毒刺击 -> 猎人杀手, 毒雾",
+                "毒雾, 致命毒药 -> 猎人杀手",
+                "毒雾, 后空翻",
+                "带毒刺击 -> 猎人杀手, 致命毒药 -> 猎人杀手",
+                "毒雾, 迷雾",
+                "带毒刺击 -> 猎人杀手, 迷雾",
+                "致命毒药 -> 猎人杀手, 迷雾"
+              ],
+              "dead": {
+                "带毒刺击 -> 猎人杀手, 毒雾, 致命毒药 -> 猎人杀手": 1,
+                "带毒刺击 -> 猎人杀手, 毒雾": 1,
+                "毒雾, 致命毒药 -> 猎人杀手": 1,
+                "毒雾, 后空翻": 1,
+                "带毒刺击 -> 猎人杀手, 致命毒药 -> 猎人杀手": 1,
+                "毒雾, 迷雾": 1,
+                "带毒刺击 -> 猎人杀手, 迷雾": 1,
+                "致命毒药 -> 猎人杀手, 迷雾": 1
+              },
+              "canon": {
+                "带毒刺击 -> 猎人杀手, 毒雾, 致命毒药 -> 猎人杀手": "DEADLY_POISON>猎人杀手, NOXIOUS_FUMES, POISONED_STAB>猎人杀手",
+                "带毒刺击 -> 猎人杀手, 毒雾": "NOXIOUS_FUMES, POISONED_STAB>猎人杀手",
+                "毒雾, 致命毒药 -> 猎人杀手": "DEADLY_POISON>猎人杀手, NOXIOUS_FUMES",
+                "毒雾, 后空翻": "BACKFLIP, NOXIOUS_FUMES",
+                "带毒刺击 -> 猎人杀手, 致命毒药 -> 猎人杀手": "DEADLY_POISON>猎人杀手, POISONED_STAB>猎人杀手",
+                "毒雾, 迷雾": "HAZE, NOXIOUS_FUMES",
+                "带毒刺击 -> 猎人杀手, 迷雾": "HAZE, POISONED_STAB>猎人杀手",
+                "致命毒药 -> 猎人杀手, 迷雾": "DEADLY_POISON>猎人杀手, HAZE"
+              }
+            },
+            {
+              "board": "1c2f0d2661544190",
+              "turn": 1,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "DEADLY_POISON>猎人杀手, NOXIOUS_FUMES, POISONED_STAB>猎人杀手"
+              }
+            },
+            {
+              "board": "0e1e63482cefb3ab",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "灵动步法+, 扫腿 -> 猎人杀手",
+              "alternatives": [
+                "扫腿 -> 猎人杀手",
+                "灵动步法+, 生存者",
+                "生存者, 杂技, 触媒",
+                "生存者, 杂技, 打击 -> 猎人杀手"
+              ],
+              "dead": {
+                "灵动步法+, 扫腿 -> 猎人杀手": 1,
+                "扫腿 -> 猎人杀手": 1,
+                "灵动步法+, 生存者": 1,
+                "生存者, 杂技, 触媒": 1,
+                "生存者, 杂技, 打击 -> 猎人杀手": 1
+              },
+              "canon": {
+                "灵动步法+, 扫腿 -> 猎人杀手": "FOOTWORK+, LEG_SWEEP>猎人杀手",
+                "扫腿 -> 猎人杀手": "LEG_SWEEP>猎人杀手",
+                "灵动步法+, 生存者": "FOOTWORK+, SURVIVOR",
+                "生存者, 杂技, 触媒": "ACCELERANT, ACROBATICS, SURVIVOR",
+                "生存者, 杂技, 打击 -> 猎人杀手": "ACROBATICS, STRIKE_SILENT>猎人杀手, SURVIVOR"
+              }
+            },
+            {
+              "board": "e42ad706fb4d8940",
+              "turn": 2,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "FOOTWORK+, LEG_SWEEP>猎人杀手"
+              }
+            },
+            {
+              "board": "4ca5571c4ae3fe66",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "打击 -> 猎人杀手, 打击 -> 猎人杀手, 触媒",
+              "alternatives": [
+                "打击 -> 猎人杀手, 触媒",
+                "打击 -> 猎人杀手, 打击 -> 猎人杀手"
+              ],
+              "dead": {
+                "打击 -> 猎人杀手, 打击 -> 猎人杀手, 触媒": 1,
+                "打击 -> 猎人杀手, 触媒": 1,
+                "打击 -> 猎人杀手, 打击 -> 猎人杀手": 1
+              },
+              "canon": {
+                "打击 -> 猎人杀手, 打击 -> 猎人杀手, 触媒": "ACCELERANT, STRIKE_SILENT>猎人杀手, STRIKE_SILENT>猎人杀手",
+                "打击 -> 猎人杀手, 触媒": "ACCELERANT, STRIKE_SILENT>猎人杀手",
+                "打击 -> 猎人杀手, 打击 -> 猎人杀手": "STRIKE_SILENT>猎人杀手, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "26094125834af991",
+              "turn": 3,
+              "kind": "code",
+              "label": "combat/plan",
+              "line": "end turn",
+              "canon": {
+                "end turn": "ACCELERANT, STRIKE_SILENT>猎人杀手, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "12a0c43a820ae699",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "防御, 打击 -> 猎人杀手, 偏折, 防御",
+              "alternatives": [
+                "防御, 偏折, 防御",
+                "防御, 偏折, 打击 -> 猎人杀手, 防御",
+                "防御, 偏折, 打击 -> 猎人杀手"
+              ],
+              "dead": {
+                "防御, 打击 -> 猎人杀手, 偏折, 防御": 1,
+                "防御, 偏折, 防御": 1,
+                "防御, 偏折, 打击 -> 猎人杀手, 防御": 1,
+                "防御, 偏折, 打击 -> 猎人杀手": 1
+              },
+              "canon": {
+                "防御, 打击 -> 猎人杀手, 偏折, 防御": "DEFEND_SILENT, DEFEND_SILENT, DEFLECT, STRIKE_SILENT>猎人杀手",
+                "防御, 偏折, 防御": "DEFEND_SILENT, DEFEND_SILENT, DEFLECT",
+                "防御, 偏折, 打击 -> 猎人杀手, 防御": "DEFEND_SILENT, DEFEND_SILENT, DEFLECT, STRIKE_SILENT>猎人杀手",
+                "防御, 偏折, 打击 -> 猎人杀手": "DEFEND_SILENT, DEFLECT, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "c7d26f42812cdae6",
+              "turn": 5,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "蜃景, 投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手",
+              "alternatives": [
+                "蜃景, 投掷匕首 -> 猎人杀手, 打击 -> 猎人杀手, 中和 -> 猎人杀手"
+              ],
+              "dead": {
+                "蜃景, 投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手": 0,
+                "蜃景, 投掷匕首 -> 猎人杀手, 打击 -> 猎人杀手, 中和 -> 猎人杀手": 0
+              },
+              "canon": {
+                "蜃景, 投掷匕首 -> 猎人杀手, 中和 -> 猎人杀手": "DAGGER_THROW>猎人杀手, MIRAGE, NEUTRALIZE>猎人杀手",
+                "蜃景, 投掷匕首 -> 猎人杀手, 打击 -> 猎人杀手, 中和 -> 猎人杀手": "DAGGER_THROW>猎人杀手, MIRAGE, NEUTRALIZE>猎人杀手, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "72c2a36e5f1ead65",
+              "turn": 5,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "中和 -> 猎人杀手",
+              "alternatives": [
+                "打击 -> 猎人杀手, 中和 -> 猎人杀手"
+              ],
+              "dead": {
+                "中和 -> 猎人杀手": 0,
+                "打击 -> 猎人杀手, 中和 -> 猎人杀手": 0
+              },
+              "canon": {
+                "中和 -> 猎人杀手": "DAGGER_THROW>猎人杀手, MIRAGE, NEUTRALIZE>猎人杀手",
+                "打击 -> 猎人杀手, 中和 -> 猎人杀手": "DAGGER_THROW>猎人杀手, MIRAGE, NEUTRALIZE>猎人杀手, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "76854baf22bfc303",
+              "turn": 5,
+              "kind": "question",
+              "label": "combat/plan-choice",
+              "line": "end turn",
+              "alternatives": [
+                "打击 -> 猎人杀手"
+              ],
+              "dead": {
+                "end turn": 0,
+                "打击 -> 猎人杀手": 0
+              },
+              "canon": {
+                "end turn": "DAGGER_THROW>猎人杀手, MIRAGE, NEUTRALIZE>猎人杀手",
+                "打击 -> 猎人杀手": "DAGGER_THROW>猎人杀手, MIRAGE, NEUTRALIZE>猎人杀手, STRIKE_SILENT>猎人杀手"
+              }
+            },
+            {
+              "board": "bb3ec769151fa1ad",
+              "turn": 6,
+              "kind": "code",
+              "label": "combat/lethal",
+              "line": "触媒",
+              "canon": {
+                "触媒": "ACCELERANT"
+              }
+            },
+            {
+              "board": "acc40d6a7217d447",
+              "turn": 6,
+              "kind": "code",
+              "label": "combat/lethal",
+              "line": "end turn",
+              "canon": {
+                "end turn": "ACCELERANT"
+              }
+            }
+          ],
+          "target": null,
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "POISONED_STAB>猎人杀手",
+                "NOXIOUS_FUMES",
+                "DEADLY_POISON>猎人杀手"
+              ],
+              "boards": [
+                {
+                  "board": "396096bddad455cc",
+                  "at": 0
+                },
+                {
+                  "board": "0ff8e726caddcec5",
+                  "at": 1
+                },
+                {
+                  "board": "a152fc8bf888a285",
+                  "at": 2
+                },
+                {
+                  "board": "1c2f0d2661544190",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "FOOTWORK+",
+                "LEG_SWEEP>猎人杀手"
+              ],
+              "boards": [
+                {
+                  "board": "0e1e63482cefb3ab",
+                  "at": 0
+                },
+                {
+                  "board": "68983616a47b2b27",
+                  "at": 1
+                },
+                {
+                  "board": "e42ad706fb4d8940",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "STRIKE_SILENT>猎人杀手",
+                "STRIKE_SILENT>猎人杀手",
+                "ACCELERANT"
+              ],
+              "boards": [
+                {
+                  "board": "4ca5571c4ae3fe66",
+                  "at": 0
+                },
+                {
+                  "board": "ebb47132f27d4faa",
+                  "at": 1
+                },
+                {
+                  "board": "998f6c6d4e2eed3f",
+                  "at": 2
+                },
+                {
+                  "board": "26094125834af991",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "DEFEND_SILENT",
+                "STRIKE_SILENT>猎人杀手",
+                "DEFLECT",
+                "DEFEND_SILENT"
+              ],
+              "boards": [
+                {
+                  "board": "12a0c43a820ae699",
+                  "at": 0
+                },
+                {
+                  "board": "1266b552ad5dba2e",
+                  "at": 1
+                },
+                {
+                  "board": "6bf76bbe58d2e99a",
+                  "at": 2
+                },
+                {
+                  "board": "d43f27ca47c187dd",
+                  "at": 3
+                },
+                {
+                  "board": "0113cbb985b180ac",
+                  "at": 4
+                }
+              ]
+            },
+            {
+              "turn": 5,
+              "plays": [
+                "MIRAGE",
+                "DAGGER_THROW>猎人杀手",
+                "NEUTRALIZE>猎人杀手"
+              ],
+              "boards": [
+                {
+                  "board": "c7d26f42812cdae6",
+                  "at": 0
+                },
+                {
+                  "board": "3c63959c35ebc02b",
+                  "at": 1
+                },
+                {
+                  "board": "72c2a36e5f1ead65",
+                  "at": 2
+                },
+                {
+                  "board": "76854baf22bfc303",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 6,
+              "plays": [
+                "ACCELERANT"
+              ],
+              "boards": [
+                {
+                  "board": "bb3ec769151fa1ad",
+                  "at": 0
+                },
+                {
+                  "board": "acc40d6a7217d447",
+                  "at": 1
+                }
+              ]
+            }
+          ],
+          "second": {
+            "turn": 5,
+            "until": 5,
+            "weights": {
+              "T1": 1.1,
+              "T2": 2.3,
+              "T3": 4.5,
+              "T4": 9,
+              "T5": 10
+            }
+          }
+        },
+        "draws": {
+          "order": [
+            "POISONED_STAB",
+            "DEFEND_SILENT",
+            "NOXIOUS_FUMES",
+            "DODGE_AND_ROLL",
+            "DEADLY_POISON",
+            "HAZE",
+            "BACKFLIP",
+            "PIERCING_WAIL",
+            "SURVIVOR",
+            "ACROBATICS",
+            "LEG_SWEEP",
+            "FOOTWORK+",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "STRIKE_SILENT",
+            "STRIKE_SILENT",
+            "ASCENDERS_BANE",
+            "DEFEND_SILENT",
+            "DEFLECT",
+            "DEFEND_SILENT",
+            "DAGGER_THROW",
+            "SERPENT_FORM",
+            "NEUTRALIZE",
+            "STRIKE_SILENT",
+            "MIRAGE",
+            "STRIKE_SILENT",
+            "ACCELERANT",
+            "BOUNCING_FLASK",
+            "ECHOING_SLASH"
+          ],
+          "names": [
+            "带毒刺击",
+            "防御",
+            "毒雾",
+            "闪躲翻滚",
+            "致命毒药",
+            "迷雾",
+            "后空翻",
+            "尖啸",
+            "生存者",
+            "杂技",
+            "扫腿",
+            "灵动步法+",
+            "打击",
+            "防御",
+            "触媒",
+            "防御",
+            "打击",
+            "打击",
+            "进阶之灾",
+            "防御",
+            "偏折",
+            "防御",
+            "投掷匕首",
+            "群蛇形态",
+            "中和",
+            "打击",
+            "蜃景",
+            "打击",
+            "触媒",
+            "弹跳药瓶",
+            "回响斩击"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            6,
+            6,
+            6
+          ],
+          "clean": 31,
+          "broke": "T6: reshuffle (the discard pile shuffled into the draw pile)"
+        },
+        "run": "TU3XB4CAEDAW"
+      }
+    ]
+  },
+  {
+    "floor": 40,
+    "attempts": 4,
+    "wins": 0,
+    "same_order": false,
+    "same_turns": false,
+    "cases": [
+      {
+        "floor": 40,
+        "attempt": 1,
+        "result": "predicted_death",
+        "turns": 5,
+        "direct_damage": [
+          0,
+          0,
+          0,
+          0,
+          15
+        ],
+        "terminal": {
+          "hp": 7,
+          "block": 14,
+          "energy": 1,
+          "powers": {
+            "DEXTERITY_POWER": 6,
+            "STRENGTH_POWER": 2,
+            "NOXIOUS_FUMES_POWER": 2,
+            "TOOLS_OF_THE_TRADE_POWER": 1,
+            "ACCELERANT_POWER": 2,
+            "FRAIL_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "FROG_KNIGHT",
+              "hp": 139,
+              "block": 0,
+              "move": "STRIKE_DOWN_EVIL",
+              "powers": {
+                "PLATING_POWER": 16,
+                "POISON_POWER": 23,
+                "STRENGTH_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "28",
+                  "damage": 28,
+                  "hits": 1,
+                  "total_damage": 28,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "reload": {
+          "ok": true,
+          "ms": 9764,
+          "resumed_turn": 1
+        },
+        "explore": {
+          "points": [
+            {
+              "board": "d877eff4516aa66f",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "蜃景, 防御, 后空翻",
+              "alternatives": [
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击"
+              ],
+              "dead": {
+                "蜃景, 防御, 后空翻": 1,
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": 1
+              },
+              "canon": {
+                "蜃景, 防御, 后空翻": "BACKFLIP, DEFEND_SILENT, MIRAGE",
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": "BACKFLIP, DAGGER_THROW>青蛙骑士, DEFEND_SILENT, ECHOING_SLASH"
+              }
+            },
+            {
+              "board": "73907294e1cc783d",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "灵动步法+",
+              "alternatives": [
+                "end turn"
+              ],
+              "dead": {
+                "灵动步法+": 1,
+                "end turn": 1
+              },
+              "canon": {
+                "灵动步法+": "BACKFLIP, DEFEND_SILENT, FOOTWORK+, MIRAGE",
+                "end turn": "BACKFLIP, DEFEND_SILENT, MIRAGE"
+              }
+            },
+            {
+              "board": "62be42b5ffd073b7",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "BACKFLIP, DEFEND_SILENT, FOOTWORK+, MIRAGE"
+              }
+            },
+            {
+              "board": "04f905a7241cc805",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "疯狂科学, 后空翻, 后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士",
+              "alternatives": [
+                "疯狂科学, 后空翻, 后空翻, 中和 -> 青蛙骑士",
+                "后空翻, 后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士"
+              ],
+              "dead": {
+                "疯狂科学, 后空翻, 后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 0.75,
+                "疯狂科学, 后空翻, 后空翻, 中和 -> 青蛙骑士": 0.75,
+                "后空翻, 后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 1
+              },
+              "canon": {
+                "疯狂科学, 后空翻, 后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "疯狂科学, 后空翻, 后空翻, 中和 -> 青蛙骑士": "BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "810af6eacd4c96d2",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士",
+              "alternatives": [
+                "后空翻, 中和 -> 青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士, 防御"
+              ],
+              "dead": {
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 0.875,
+                "后空翻, 中和 -> 青蛙骑士": 0.875,
+                "后空翻, 中和 -> 青蛙骑士, 防御": 0.875
+              },
+              "canon": {
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士": "BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士, 防御": "BACKFLIP, BACKFLIP, DEFEND_SILENT, MAD_SCIENCE, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "0dfdee3c0690614f",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士, 偏折",
+              "alternatives": [
+                "中和 -> 青蛙骑士, 偏折"
+              ],
+              "dead": {
+                "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士, 偏折": 1,
+                "中和 -> 青蛙骑士, 偏折": 1
+              },
+              "canon": {
+                "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士, 偏折": "BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, DEFLECT, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "中和 -> 青蛙骑士, 偏折": "BACKFLIP, BACKFLIP, DEFLECT, MAD_SCIENCE, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "5ebb84f10f9c8211",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, DEFLECT, MAD_SCIENCE, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "1326fc548af0f8a1",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "毒雾, 弹跳药瓶, 必备工具",
+              "alternatives": [
+                "毒雾, 弹跳药瓶",
+                "毒雾, 必备工具"
+              ],
+              "dead": {
+                "毒雾, 弹跳药瓶, 必备工具": 1,
+                "毒雾, 弹跳药瓶": 1,
+                "毒雾, 必备工具": 1
+              },
+              "canon": {
+                "毒雾, 弹跳药瓶, 必备工具": "BOUNCING_FLASK, NOXIOUS_FUMES, TOOLS_OF_THE_TRADE",
+                "毒雾, 弹跳药瓶": "BOUNCING_FLASK, NOXIOUS_FUMES",
+                "毒雾, 必备工具": "NOXIOUS_FUMES, TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "eeede0377b710bee",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "BOUNCING_FLASK, NOXIOUS_FUMES, TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "2fb25e09c20c449e",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "防御, 触媒, 防御",
+              "alternatives": [
+                "防御, 防御"
+              ],
+              "dead": {
+                "防御, 触媒, 防御": 0.875,
+                "防御, 防御": 0.875
+              },
+              "canon": {
+                "防御, 触媒, 防御": "ACCELERANT, DEFEND_SILENT, DEFEND_SILENT",
+                "防御, 防御": "DEFEND_SILENT, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "c34e6a3b097fc1e9",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 0.875
+              },
+              "canon": {
+                "end turn": "ACCELERANT, DEFEND_SILENT, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "cc0c24b86523eec3",
+              "turn": 5,
+              "kind": "code",
+              "label": "combat/least-loss",
+              "line": "触媒",
+              "canon": {
+                "触媒": "ACCELERANT, DASH+>青蛙骑士, POISONED_STAB>青蛙骑士, STRIKE_SILENT>青蛙骑士, potion:POISON_POTION>青蛙骑士"
+              }
+            }
+          ],
+          "target": null,
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "MIRAGE",
+                "DEFEND_SILENT",
+                "BACKFLIP",
+                "FOOTWORK+"
+              ],
+              "boards": [
+                {
+                  "board": "d877eff4516aa66f",
+                  "at": 0
+                },
+                {
+                  "board": "a3b0cf47a33183c6",
+                  "at": 1
+                },
+                {
+                  "board": "af8fb47f0fa047bd",
+                  "at": 2
+                },
+                {
+                  "board": "73907294e1cc783d",
+                  "at": 3
+                },
+                {
+                  "board": "62be42b5ffd073b7",
+                  "at": 4
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "MAD_SCIENCE",
+                "BACKFLIP",
+                "BACKFLIP",
+                "DEADLY_POISON>青蛙骑士",
+                "NEUTRALIZE>青蛙骑士",
+                "DEFLECT"
+              ],
+              "boards": [
+                {
+                  "board": "04f905a7241cc805",
+                  "at": 0
+                },
+                {
+                  "board": "d4065c0e9b49b2cb",
+                  "at": 1
+                },
+                {
+                  "board": "810af6eacd4c96d2",
+                  "at": 2
+                },
+                {
+                  "board": "0dfdee3c0690614f",
+                  "at": 3
+                },
+                {
+                  "board": "9832033788fffa74",
+                  "at": 4
+                },
+                {
+                  "board": "ecb64f61c1dc769b",
+                  "at": 5
+                },
+                {
+                  "board": "5ebb84f10f9c8211",
+                  "at": 6
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "NOXIOUS_FUMES",
+                "BOUNCING_FLASK",
+                "TOOLS_OF_THE_TRADE"
+              ],
+              "boards": [
+                {
+                  "board": "1326fc548af0f8a1",
+                  "at": 0
+                },
+                {
+                  "board": "a470a2a74e8cb6ad",
+                  "at": 1
+                },
+                {
+                  "board": "1bc5faada20b13fc",
+                  "at": 2
+                },
+                {
+                  "board": "eeede0377b710bee",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "DEFEND_SILENT",
+                "ACCELERANT",
+                "DEFEND_SILENT"
+              ],
+              "boards": [
+                {
+                  "board": "2fb25e09c20c449e",
+                  "at": 0
+                },
+                {
+                  "board": "9198f9d559ae7313",
+                  "at": 1
+                },
+                {
+                  "board": "937c6de495993f88",
+                  "at": 2
+                },
+                {
+                  "board": "c34e6a3b097fc1e9",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 5,
+              "plays": [
+                "DASH+>青蛙骑士",
+                "POISONED_STAB>青蛙骑士",
+                "STRIKE_SILENT>青蛙骑士",
+                "potion:POISON_POTION>青蛙骑士",
+                "ACCELERANT"
+              ],
+              "boards": [
+                {
+                  "board": "e968675ee2a5e2e9",
+                  "at": 0
+                },
+                {
+                  "board": "9762b4cffa0c098c",
+                  "at": 1
+                },
+                {
+                  "board": "58e88ca46b3c1450",
+                  "at": 2
+                },
+                {
+                  "board": "d8d80b767346b581",
+                  "at": 3
+                },
+                {
+                  "board": "cc0c24b86523eec3",
+                  "at": 4
+                }
+              ]
+            }
+          ]
+        },
+        "draws": {
+          "order": [
+            "MIRAGE",
+            "DEFEND_SILENT",
+            "DAGGER_THROW",
+            "BACKFLIP",
+            "ECHOING_SLASH",
+            "FOOTWORK+",
+            "ACROBATICS",
+            "BACKFLIP",
+            "MAD_SCIENCE",
+            "BACKFLIP",
+            "DEADLY_POISON",
+            "NEUTRALIZE",
+            "DEFEND_SILENT",
+            "HAZE",
+            "DEFLECT",
+            "LEG_SWEEP",
+            "NOXIOUS_FUMES",
+            "BOUNCING_FLASK",
+            "DEFEND_SILENT",
+            "TOOLS_OF_THE_TRADE",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "PIERCING_WAIL",
+            "DODGE_AND_ROLL",
+            "DASH+",
+            "SERPENT_FORM",
+            "NOXIOUS_FUMES",
+            "POISONED_STAB",
+            "STRIKE_SILENT",
+            "ACCELERANT"
+          ],
+          "names": [
+            "蜃景",
+            "防御",
+            "投掷匕首",
+            "后空翻",
+            "回响斩击",
+            "灵动步法+",
+            "杂技",
+            "后空翻",
+            "疯狂科学",
+            "后空翻",
+            "致命毒药",
+            "中和",
+            "防御",
+            "迷雾",
+            "偏折",
+            "扫腿",
+            "毒雾",
+            "弹跳药瓶",
+            "防御",
+            "必备工具",
+            "打击",
+            "防御",
+            "触媒",
+            "防御",
+            "尖啸",
+            "闪躲翻滚",
+            "冲刺+",
+            "群蛇形态",
+            "毒雾",
+            "带毒刺击",
+            "打击",
+            "触媒"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "clean": 32,
+          "broke": null,
+          "inserted": [
+            {
+              "turn": 1,
+              "at": 0,
+              "cards": [
+                "DAZED",
+                "DAZED",
+                "DAZED"
+              ]
+            }
+          ]
+        },
+        "run": "TU3XB4CAEDAW"
+      },
+      {
+        "floor": 40,
+        "attempt": 2,
+        "result": "predicted_death",
+        "turns": 5,
+        "direct_damage": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal": {
+          "hp": 8,
+          "block": 0,
+          "energy": 6,
+          "powers": {
+            "DEXTERITY_POWER": 1,
+            "NOXIOUS_FUMES_POWER": 2,
+            "TOOLS_OF_THE_TRADE_POWER": 1,
+            "ACCELERANT_POWER": 1,
+            "FRAIL_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "FROG_KNIGHT",
+              "hp": 147,
+              "block": 16,
+              "move": "STRIKE_DOWN_EVIL",
+              "powers": {
+                "PLATING_POWER": 16,
+                "POISON_POWER": 21,
+                "STRENGTH_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "28",
+                  "damage": 28,
+                  "hits": 1,
+                  "total_damage": 28,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "reload": {
+          "ok": true,
+          "ms": 9815,
+          "resumed_turn": 1
+        },
+        "explore": {
+          "points": [
+            {
+              "board": "d877eff4516aa66f",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士",
+              "alternatives": [
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士",
+                "后空翻, 灵动步法+, 防御",
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击",
+                "后空翻, 杂技, 后空翻"
+              ],
+              "dead": {
+                "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士": 1,
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": 1,
+                "后空翻, 灵动步法+, 防御": 1,
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": 1,
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": 1,
+                "后空翻, 杂技, 后空翻": 1
+              },
+              "canon": {
+                "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士",
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 灵动步法+, 防御": "BACKFLIP, DEFEND_SILENT, FOOTWORK+",
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, ECHOING_SLASH, NEUTRALIZE>青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": "BACKFLIP, DAGGER_THROW>青蛙骑士, DEFEND_SILENT, ECHOING_SLASH",
+                "后空翻, 杂技, 后空翻": "ACROBATICS, BACKFLIP, BACKFLIP"
+              }
+            },
+            {
+              "board": "eec878e944593372",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "杂技, 后空翻, 致命毒药 -> 青蛙骑士",
+              "alternatives": [
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士",
+                "灵动步法+, 防御",
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击",
+                "杂技, 后空翻"
+              ],
+              "dead": {
+                "杂技, 后空翻, 致命毒药 -> 青蛙骑士": 1,
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": 1,
+                "灵动步法+, 防御": 1,
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": 1,
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击": 1,
+                "杂技, 后空翻": 1
+              },
+              "canon": {
+                "杂技, 后空翻, 致命毒药 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士",
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "灵动步法+, 防御": "BACKFLIP, DEFEND_SILENT, FOOTWORK+",
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, ECHOING_SLASH, NEUTRALIZE>青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击": "BACKFLIP, DAGGER_THROW>青蛙骑士, DEFEND_SILENT, ECHOING_SLASH",
+                "杂技, 后空翻": "ACROBATICS, BACKFLIP, BACKFLIP"
+              }
+            },
+            {
+              "board": "bd9997dd837b3759",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士",
+              "alternatives": [
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士"
+              ],
+              "dead": {
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 1,
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士": 1,
+                "后空翻, 中和 -> 青蛙骑士": 1
+              },
+              "canon": {
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士",
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "55e25ef9458abbb4",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士",
+              "alternatives": [
+                "疯狂科学, 中和 -> 青蛙骑士",
+                "中和 -> 青蛙骑士"
+              ],
+              "dead": {
+                "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 1,
+                "疯狂科学, 中和 -> 青蛙骑士": 1,
+                "中和 -> 青蛙骑士": 1
+              },
+              "canon": {
+                "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士",
+                "疯狂科学, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "9e88d4252648bd47",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "cce1a2c8486473a1",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "防御, 偏折, 扫腿 -> 青蛙骑士, 毒雾",
+              "alternatives": [
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾",
+                "防御, 偏折, 扫腿 -> 青蛙骑士",
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士"
+              ],
+              "dead": {
+                "防御, 偏折, 扫腿 -> 青蛙骑士, 毒雾": 1,
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾": 1,
+                "防御, 偏折, 扫腿 -> 青蛙骑士": 1,
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士": 1
+              },
+              "canon": {
+                "防御, 偏折, 扫腿 -> 青蛙骑士, 毒雾": "DEFEND_SILENT, DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES",
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾": "DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES",
+                "防御, 偏折, 扫腿 -> 青蛙骑士": "DEFEND_SILENT, DEFLECT, LEG_SWEEP>青蛙骑士",
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士": "DEFLECT, HAZE, LEG_SWEEP>青蛙骑士"
+              }
+            },
+            {
+              "board": "65cf708a9ae3fc21",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "DEFEND_SILENT, DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES"
+              }
+            },
+            {
+              "board": "2ee8c5671faf8960",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "弹跳药瓶, 必备工具",
+              "alternatives": [
+                "必备工具"
+              ],
+              "dead": {
+                "弹跳药瓶, 必备工具": 1,
+                "必备工具": 1
+              },
+              "canon": {
+                "弹跳药瓶, 必备工具": "BOUNCING_FLASK, TOOLS_OF_THE_TRADE",
+                "必备工具": "TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "c913f0c160d65c1d",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "BOUNCING_FLASK, TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "66a5f54dd89fb0de",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "触媒, 防御, 冲刺+ -> 青蛙骑士",
+              "alternatives": [
+                "防御, 冲刺+ -> 青蛙骑士"
+              ],
+              "dead": {
+                "触媒, 防御, 冲刺+ -> 青蛙骑士": 1,
+                "防御, 冲刺+ -> 青蛙骑士": 1
+              },
+              "canon": {
+                "触媒, 防御, 冲刺+ -> 青蛙骑士": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT",
+                "防御, 冲刺+ -> 青蛙骑士": "DASH+>青蛙骑士, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "f0975ec9a728ac9c",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              }
+            }
+          ],
+          "target": null,
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "BACKFLIP",
+                "ACROBATICS",
+                "BACKFLIP",
+                "DEADLY_POISON>青蛙骑士",
+                "NEUTRALIZE>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "d877eff4516aa66f",
+                  "at": 0
+                },
+                {
+                  "board": "eec878e944593372",
+                  "at": 1
+                },
+                {
+                  "board": "bd9997dd837b3759",
+                  "at": 2
+                },
+                {
+                  "board": "55e25ef9458abbb4",
+                  "at": 3
+                },
+                {
+                  "board": "30380f09896ec681",
+                  "at": 4
+                },
+                {
+                  "board": "9e88d4252648bd47",
+                  "at": 5
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "DEFEND_SILENT",
+                "DEFLECT",
+                "LEG_SWEEP>青蛙骑士",
+                "NOXIOUS_FUMES"
+              ],
+              "boards": [
+                {
+                  "board": "cce1a2c8486473a1",
+                  "at": 0
+                },
+                {
+                  "board": "0d284868e6ad9a6c",
+                  "at": 1
+                },
+                {
+                  "board": "ffb72683c126d754",
+                  "at": 2
+                },
+                {
+                  "board": "55e40039e1fc1aa6",
+                  "at": 3
+                },
+                {
+                  "board": "65cf708a9ae3fc21",
+                  "at": 4
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "BOUNCING_FLASK",
+                "TOOLS_OF_THE_TRADE"
+              ],
+              "boards": [
+                {
+                  "board": "2ee8c5671faf8960",
+                  "at": 0
+                },
+                {
+                  "board": "8c4028ac54a11625",
+                  "at": 1
+                },
+                {
+                  "board": "c913f0c160d65c1d",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "ACCELERANT",
+                "DEFEND_SILENT",
+                "DASH+>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "66a5f54dd89fb0de",
+                  "at": 0
+                },
+                {
+                  "board": "89130436e4b750d7",
+                  "at": 1
+                },
+                {
+                  "board": "e7b9f495e47db3f4",
+                  "at": 2
+                },
+                {
+                  "board": "f0975ec9a728ac9c",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 5,
+              "plays": [
+                "potion:POISON_POTION>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "2e05e969d09a2e21",
+                  "at": 0
+                }
+              ]
+            }
+          ],
+          "second": {
+            "turn": 5,
+            "until": 5,
+            "weights": {
+              "T1": 1.4,
+              "T2": 0.9,
+              "T3": 1.8,
+              "T4": 3.5,
+              "T5": 7
+            }
+          }
+        },
+        "draws": {
+          "order": [
+            "MIRAGE",
+            "DEFEND_SILENT",
+            "DAGGER_THROW",
+            "BACKFLIP",
+            "ECHOING_SLASH",
+            "FOOTWORK+",
+            "ACROBATICS",
+            "BACKFLIP",
+            "MAD_SCIENCE",
+            "BACKFLIP",
+            "DEADLY_POISON",
+            "NEUTRALIZE",
+            "DEFEND_SILENT",
+            "HAZE",
+            "DEFLECT",
+            "LEG_SWEEP",
+            "NOXIOUS_FUMES",
+            "BOUNCING_FLASK",
+            "DEFEND_SILENT",
+            "TOOLS_OF_THE_TRADE",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "PIERCING_WAIL",
+            "DODGE_AND_ROLL",
+            "DAZED",
+            "DASH+",
+            "SERPENT_FORM",
+            "NOXIOUS_FUMES",
+            "POISONED_STAB",
+            "STRIKE_SILENT",
+            "ACCELERANT",
+            "CLUMSY"
+          ],
+          "names": [
+            "蜃景",
+            "防御",
+            "投掷匕首",
+            "后空翻",
+            "回响斩击",
+            "灵动步法+",
+            "杂技",
+            "后空翻",
+            "疯狂科学",
+            "后空翻",
+            "致命毒药",
+            "中和",
+            "防御",
+            "迷雾",
+            "偏折",
+            "扫腿",
+            "毒雾",
+            "弹跳药瓶",
+            "防御",
+            "必备工具",
+            "打击",
+            "防御",
+            "触媒",
+            "防御",
+            "尖啸",
+            "闪躲翻滚",
+            "晕眩",
+            "冲刺+",
+            "群蛇形态",
+            "毒雾",
+            "带毒刺击",
+            "打击",
+            "触媒",
+            "笨拙"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "clean": 34,
+          "broke": null
+        },
+        "run": "TU3XB4CAEDAW"
+      },
+      {
+        "floor": 40,
+        "attempt": 3,
+        "result": "predicted_death",
+        "turns": 5,
+        "direct_damage": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal": {
+          "hp": 8,
+          "block": 0,
+          "energy": 6,
+          "powers": {
+            "DEXTERITY_POWER": 4,
+            "NOXIOUS_FUMES_POWER": 2,
+            "TOOLS_OF_THE_TRADE_POWER": 1,
+            "FRAIL_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "FROG_KNIGHT",
+              "hp": 176,
+              "block": 16,
+              "move": "STRIKE_DOWN_EVIL",
+              "powers": {
+                "PLATING_POWER": 16,
+                "POISON_POWER": 19,
+                "STRENGTH_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "28",
+                  "damage": 28,
+                  "hits": 1,
+                  "total_damage": 28,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "reload": {
+          "ok": true,
+          "ms": 9775,
+          "resumed_turn": 1
+        },
+        "explore": {
+          "points": [
+            {
+              "board": "d877eff4516aa66f",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士",
+              "alternatives": [
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士",
+                "后空翻, 灵动步法+, 防御",
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击",
+                "后空翻, 杂技, 后空翻"
+              ],
+              "dead": {
+                "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士": 1,
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": 1,
+                "后空翻, 灵动步法+, 防御": 1,
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": 1,
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": 1,
+                "后空翻, 杂技, 后空翻": 1
+              },
+              "canon": {
+                "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士",
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 灵动步法+, 防御": "BACKFLIP, DEFEND_SILENT, FOOTWORK+",
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, ECHOING_SLASH, NEUTRALIZE>青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": "BACKFLIP, DAGGER_THROW>青蛙骑士, DEFEND_SILENT, ECHOING_SLASH",
+                "后空翻, 杂技, 后空翻": "ACROBATICS, BACKFLIP, BACKFLIP"
+              }
+            },
+            {
+              "board": "eec878e944593372",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "杂技, 后空翻, 致命毒药 -> 青蛙骑士",
+              "alternatives": [
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士",
+                "灵动步法+, 防御",
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击",
+                "杂技, 后空翻"
+              ],
+              "dead": {
+                "杂技, 后空翻, 致命毒药 -> 青蛙骑士": 1,
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": 1,
+                "灵动步法+, 防御": 0.958,
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": 1,
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击": 1,
+                "杂技, 后空翻": 1
+              },
+              "canon": {
+                "杂技, 后空翻, 致命毒药 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士",
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "灵动步法+, 防御": "BACKFLIP, DEFEND_SILENT, FOOTWORK+",
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, ECHOING_SLASH, NEUTRALIZE>青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击": "BACKFLIP, DAGGER_THROW>青蛙骑士, DEFEND_SILENT, ECHOING_SLASH",
+                "杂技, 后空翻": "ACROBATICS, BACKFLIP, BACKFLIP"
+              }
+            },
+            {
+              "board": "8c08fa46405458ba",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "灵动步法+, 后空翻, 中和 -> 青蛙骑士",
+              "alternatives": [
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士",
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士"
+              ],
+              "dead": {
+                "灵动步法+, 后空翻, 中和 -> 青蛙骑士": 0.958,
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士": 1,
+                "后空翻, 中和 -> 青蛙骑士": 1,
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 1
+              },
+              "canon": {
+                "灵动步法+, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, FOOTWORK+, NEUTRALIZE>青蛙骑士",
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, NEUTRALIZE>青蛙骑士",
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "7c64c57935a0950a",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "中和 -> 青蛙骑士",
+              "alternatives": [],
+              "dead": {
+                "中和 -> 青蛙骑士": 0.958
+              },
+              "canon": {
+                "中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, FOOTWORK+, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "3dc19254e29492cd",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 0.958
+              },
+              "canon": {
+                "end turn": "ACROBATICS, BACKFLIP, BACKFLIP, FOOTWORK+, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "7e3bc39a3baa12c2",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "偏折, 扫腿 -> 青蛙骑士, 毒雾",
+              "alternatives": [
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士"
+              ],
+              "dead": {
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾": 0.833,
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士": 0.833
+              },
+              "canon": {
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾": "DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES",
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士": "DEFLECT, HAZE, LEG_SWEEP>青蛙骑士"
+              }
+            },
+            {
+              "board": "4d99f03d3e4d4dd4",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 0.833
+              },
+              "canon": {
+                "end turn": "DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES"
+              }
+            },
+            {
+              "board": "3dba7a8d6849f04f",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "弹跳药瓶, 必备工具",
+              "alternatives": [
+                "必备工具"
+              ],
+              "dead": {
+                "弹跳药瓶, 必备工具": 1,
+                "必备工具": 1
+              },
+              "canon": {
+                "弹跳药瓶, 必备工具": "BOUNCING_FLASK, TOOLS_OF_THE_TRADE",
+                "必备工具": "TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "88e1a1476700ebc0",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "BOUNCING_FLASK, TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "f8a6bfa5dede3b07",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "防御, 冲刺+ -> 青蛙骑士",
+              "alternatives": [
+                "触媒, 防御, 冲刺+ -> 青蛙骑士"
+              ],
+              "dead": {
+                "防御, 冲刺+ -> 青蛙骑士": 1,
+                "触媒, 防御, 冲刺+ -> 青蛙骑士": 1
+              },
+              "explored": true,
+              "canon": {
+                "防御, 冲刺+ -> 青蛙骑士": "DASH+>青蛙骑士, DEFEND_SILENT",
+                "触媒, 防御, 冲刺+ -> 青蛙骑士": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "4a29e2ca0bc74d0d",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [
+                "触媒"
+              ],
+              "dead": {
+                "end turn": 1,
+                "触媒": 1
+              },
+              "explored": true,
+              "canon": {
+                "end turn": "DASH+>青蛙骑士, DEFEND_SILENT",
+                "触媒": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              }
+            }
+          ],
+          "target": {
+            "board": "66a5f54dd89fb0de",
+            "turn": 4,
+            "reference": 2,
+            "back": 2,
+            "round": 0,
+            "excluded": [
+              "触媒, 防御, 冲刺+ -> 青蛙骑士"
+            ],
+            "attempts": [
+              2
+            ],
+            "point": "T4, the 2nd latest question before attempt 2's death on T5",
+            "tried": {
+              "canon": [
+                "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              ],
+              "loose": [],
+              "cards": [
+                {
+                  "cards": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT",
+                  "drunk": [
+                    "POISON_POTION"
+                  ]
+                }
+              ]
+            },
+            "where": {
+              "weight": 3.8,
+              "turnRound": 0,
+              "lost": {
+                "T1": 0.5,
+                "T2": 0,
+                "T3": 0,
+                "T4": 0,
+                "T5": 7.5
+              },
+              "weights": {
+                "T1": 1,
+                "T2": 0.9,
+                "T3": 1.9,
+                "T4": 3.8
+              }
+            },
+            "anchor": {
+              "why": "attempt 2's path, the failed attempt that lived longest (attempt 2 T5 (enemy HP 147), attempt 1 T5 (enemy HP 154))",
+              "ranked": [
+                {
+                  "attempt": 2,
+                  "turns": 5,
+                  "enemyHp": 147
+                },
+                {
+                  "attempt": 1,
+                  "turns": 5,
+                  "enemyHp": 154
+                }
+              ]
+            }
+          },
+          "replay": {
+            "replayed": 2,
+            "overridden": 2,
+            "stopped": "T1: the board is not on attempt 2's path"
+          },
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "BACKFLIP",
+                "ACROBATICS",
+                "FOOTWORK+",
+                "BACKFLIP",
+                "NEUTRALIZE>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "d877eff4516aa66f",
+                  "at": 0
+                },
+                {
+                  "board": "eec878e944593372",
+                  "at": 1
+                },
+                {
+                  "board": "8c08fa46405458ba",
+                  "at": 2
+                },
+                {
+                  "board": "a2d087b50e2ce8c1",
+                  "at": 3
+                },
+                {
+                  "board": "7c64c57935a0950a",
+                  "at": 4
+                },
+                {
+                  "board": "3dc19254e29492cd",
+                  "at": 5
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "DEFLECT",
+                "LEG_SWEEP>青蛙骑士",
+                "NOXIOUS_FUMES"
+              ],
+              "boards": [
+                {
+                  "board": "7e3bc39a3baa12c2",
+                  "at": 0
+                },
+                {
+                  "board": "0531e4c75445d47e",
+                  "at": 1
+                },
+                {
+                  "board": "8197be9e2dc184a1",
+                  "at": 2
+                },
+                {
+                  "board": "4d99f03d3e4d4dd4",
+                  "at": 3
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "BOUNCING_FLASK",
+                "TOOLS_OF_THE_TRADE"
+              ],
+              "boards": [
+                {
+                  "board": "3dba7a8d6849f04f",
+                  "at": 0
+                },
+                {
+                  "board": "bee4370b1813c0d7",
+                  "at": 1
+                },
+                {
+                  "board": "88e1a1476700ebc0",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "DEFEND_SILENT",
+                "DASH+>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "f8a6bfa5dede3b07",
+                  "at": 0
+                },
+                {
+                  "board": "45f303a8785674bb",
+                  "at": 1
+                },
+                {
+                  "board": "4a29e2ca0bc74d0d",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 5,
+              "plays": [
+                "potion:POISON_POTION>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "0ddde21001779cc1",
+                  "at": 0
+                }
+              ]
+            }
+          ],
+          "fallback": {
+            "reached": true,
+            "board": "f8a6bfa5dede3b07",
+            "point": "T4, after the replay of attempt 2's path stopped (T1: the board is not on attempt 2's path): the point's turn (T4, the 2nd latest question before attempt 2's death on T5), its lines and turns not again",
+            "attempts": [
+              2
+            ],
+            "tried": {
+              "canon": [
+                "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              ],
+              "loose": [],
+              "cards": [
+                {
+                  "cards": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT",
+                  "drunk": [
+                    "POISON_POTION"
+                  ]
+                }
+              ]
+            },
+            "original": "触媒, 防御, 冲刺+ -> 青蛙骑士",
+            "replacement": "防御, 冲刺+ -> 青蛙骑士",
+            "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+            "turn": 4,
+            "plays": "DASH+>青蛙骑士, DEFEND_SILENT",
+            "differs": true
+          }
+        },
+        "draws": {
+          "order": [
+            "MIRAGE",
+            "DEFEND_SILENT",
+            "DAGGER_THROW",
+            "BACKFLIP",
+            "ECHOING_SLASH",
+            "FOOTWORK+",
+            "ACROBATICS",
+            "BACKFLIP",
+            "MAD_SCIENCE",
+            "BACKFLIP",
+            "DEADLY_POISON",
+            "NEUTRALIZE",
+            "DEFEND_SILENT",
+            "HAZE",
+            "DEFLECT",
+            "LEG_SWEEP",
+            "NOXIOUS_FUMES",
+            "BOUNCING_FLASK",
+            "DEFEND_SILENT",
+            "TOOLS_OF_THE_TRADE",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "PIERCING_WAIL",
+            "DODGE_AND_ROLL",
+            "DAZED",
+            "DASH+",
+            "SERPENT_FORM",
+            "NOXIOUS_FUMES",
+            "POISONED_STAB",
+            "STRIKE_SILENT",
+            "ACCELERANT",
+            "CLUMSY"
+          ],
+          "names": [
+            "蜃景",
+            "防御",
+            "投掷匕首",
+            "后空翻",
+            "回响斩击",
+            "灵动步法+",
+            "杂技",
+            "后空翻",
+            "疯狂科学",
+            "后空翻",
+            "致命毒药",
+            "中和",
+            "防御",
+            "迷雾",
+            "偏折",
+            "扫腿",
+            "毒雾",
+            "弹跳药瓶",
+            "防御",
+            "必备工具",
+            "打击",
+            "防御",
+            "触媒",
+            "防御",
+            "尖啸",
+            "闪躲翻滚",
+            "晕眩",
+            "冲刺+",
+            "群蛇形态",
+            "毒雾",
+            "带毒刺击",
+            "打击",
+            "触媒",
+            "笨拙"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "clean": 34,
+          "broke": null
+        },
+        "run": "TU3XB4CAEDAW"
+      },
+      {
+        "floor": 40,
+        "attempt": 4,
+        "result": "died",
+        "turns": 5,
+        "direct_damage": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal": {
+          "hp": 8,
+          "block": 0,
+          "energy": 1,
+          "powers": {
+            "DEXTERITY_POWER": 1,
+            "NOXIOUS_FUMES_POWER": 4,
+            "TOOLS_OF_THE_TRADE_POWER": 1,
+            "FRAIL_POWER": 2,
+            "SERPENT_FORM_POWER": 4,
+            "ACCELERANT_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "FROG_KNIGHT",
+              "hp": 161,
+              "block": 8,
+              "move": "STRIKE_DOWN_EVIL",
+              "powers": {
+                "PLATING_POWER": 16,
+                "POISON_POWER": 22,
+                "STRENGTH_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "28",
+                  "damage": 28,
+                  "hits": 1,
+                  "total_damage": 28,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "reload": null,
+        "explore": {
+          "points": [
+            {
+              "board": "d877eff4516aa66f",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士",
+              "alternatives": [
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士",
+                "后空翻, 灵动步法+, 防御",
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击",
+                "后空翻, 杂技, 后空翻"
+              ],
+              "dead": {
+                "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士": 1,
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": 1,
+                "后空翻, 灵动步法+, 防御": 1,
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": 1,
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": 1,
+                "后空翻, 杂技, 后空翻": 1
+              },
+              "canon": {
+                "后空翻, 杂技, 后空翻, 致命毒药 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士",
+                "后空翻, 杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 灵动步法+, 防御": "BACKFLIP, DEFEND_SILENT, FOOTWORK+",
+                "后空翻, 回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, ECHOING_SLASH, NEUTRALIZE>青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 后空翻, 回响斩击": "BACKFLIP, DAGGER_THROW>青蛙骑士, DEFEND_SILENT, ECHOING_SLASH",
+                "后空翻, 杂技, 后空翻": "ACROBATICS, BACKFLIP, BACKFLIP"
+              }
+            },
+            {
+              "board": "eec878e944593372",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "杂技, 后空翻, 致命毒药 -> 青蛙骑士",
+              "alternatives": [
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士",
+                "灵动步法+, 防御",
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击",
+                "杂技, 后空翻"
+              ],
+              "dead": {
+                "杂技, 后空翻, 致命毒药 -> 青蛙骑士": 1,
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": 1,
+                "灵动步法+, 防御": 0.958,
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": 1,
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击": 1,
+                "杂技, 后空翻": 1
+              },
+              "canon": {
+                "杂技, 后空翻, 致命毒药 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士",
+                "杂技, 疯狂科学, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "灵动步法+, 防御": "BACKFLIP, DEFEND_SILENT, FOOTWORK+",
+                "回响斩击, 杂技, 后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, ECHOING_SLASH, NEUTRALIZE>青蛙骑士",
+                "防御, 投掷匕首 -> 青蛙骑士, 回响斩击": "BACKFLIP, DAGGER_THROW>青蛙骑士, DEFEND_SILENT, ECHOING_SLASH",
+                "杂技, 后空翻": "ACROBATICS, BACKFLIP, BACKFLIP"
+              }
+            },
+            {
+              "board": "bd9997dd837b3759",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士",
+              "alternatives": [
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士"
+              ],
+              "dead": {
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 1,
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士": 1,
+                "后空翻, 中和 -> 青蛙骑士": 1
+              },
+              "canon": {
+                "后空翻, 致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士",
+                "后空翻, 疯狂科学, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "后空翻, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "55e25ef9458abbb4",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士",
+              "alternatives": [
+                "疯狂科学, 中和 -> 青蛙骑士",
+                "中和 -> 青蛙骑士",
+                "灵动步法+, 中和 -> 青蛙骑士"
+              ],
+              "dead": {
+                "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": 1,
+                "疯狂科学, 中和 -> 青蛙骑士": 1,
+                "中和 -> 青蛙骑士": 1,
+                "灵动步法+, 中和 -> 青蛙骑士": 0.958
+              },
+              "canon": {
+                "致命毒药 -> 青蛙骑士, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士",
+                "疯狂科学, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, MAD_SCIENCE, NEUTRALIZE>青蛙骑士",
+                "中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, NEUTRALIZE>青蛙骑士",
+                "灵动步法+, 中和 -> 青蛙骑士": "ACROBATICS, BACKFLIP, BACKFLIP, FOOTWORK+, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "9e88d4252648bd47",
+              "turn": 1,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "ACROBATICS, BACKFLIP, BACKFLIP, DEADLY_POISON>青蛙骑士, NEUTRALIZE>青蛙骑士"
+              }
+            },
+            {
+              "board": "cce1a2c8486473a1",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "防御, 偏折, 扫腿 -> 青蛙骑士, 毒雾",
+              "alternatives": [
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾",
+                "防御, 偏折, 扫腿 -> 青蛙骑士",
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士"
+              ],
+              "dead": {
+                "防御, 偏折, 扫腿 -> 青蛙骑士, 毒雾": 1,
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾": 1,
+                "防御, 偏折, 扫腿 -> 青蛙骑士": 1,
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士": 1
+              },
+              "canon": {
+                "防御, 偏折, 扫腿 -> 青蛙骑士, 毒雾": "DEFEND_SILENT, DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES",
+                "偏折, 扫腿 -> 青蛙骑士, 毒雾": "DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES",
+                "防御, 偏折, 扫腿 -> 青蛙骑士": "DEFEND_SILENT, DEFLECT, LEG_SWEEP>青蛙骑士",
+                "迷雾, 偏折, 扫腿 -> 青蛙骑士": "DEFLECT, HAZE, LEG_SWEEP>青蛙骑士"
+              }
+            },
+            {
+              "board": "65cf708a9ae3fc21",
+              "turn": 2,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "DEFEND_SILENT, DEFLECT, LEG_SWEEP>青蛙骑士, NOXIOUS_FUMES"
+              }
+            },
+            {
+              "board": "2ee8c5671faf8960",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "弹跳药瓶, 必备工具",
+              "alternatives": [
+                "必备工具"
+              ],
+              "dead": {
+                "弹跳药瓶, 必备工具": 1,
+                "必备工具": 1
+              },
+              "canon": {
+                "弹跳药瓶, 必备工具": "BOUNCING_FLASK, TOOLS_OF_THE_TRADE",
+                "必备工具": "TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "c913f0c160d65c1d",
+              "turn": 3,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [],
+              "dead": {
+                "end turn": 1
+              },
+              "canon": {
+                "end turn": "BOUNCING_FLASK, TOOLS_OF_THE_TRADE"
+              }
+            },
+            {
+              "board": "66a5f54dd89fb0de",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "防御, 冲刺+ -> 青蛙骑士",
+              "alternatives": [
+                "触媒, 防御, 冲刺+ -> 青蛙骑士"
+              ],
+              "dead": {
+                "防御, 冲刺+ -> 青蛙骑士": 1,
+                "触媒, 防御, 冲刺+ -> 青蛙骑士": 1
+              },
+              "explored": true,
+              "canon": {
+                "防御, 冲刺+ -> 青蛙骑士": "DASH+>青蛙骑士, DEFEND_SILENT",
+                "触媒, 防御, 冲刺+ -> 青蛙骑士": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "fa426706f3f6c125",
+              "turn": 4,
+              "kind": "question",
+              "label": "combat/plan-choice+potion",
+              "line": "end turn",
+              "alternatives": [
+                "触媒"
+              ],
+              "dead": {
+                "end turn": 1,
+                "触媒": 1
+              },
+              "explored": true,
+              "canon": {
+                "end turn": "DASH+>青蛙骑士, DEFEND_SILENT",
+                "触媒": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              }
+            },
+            {
+              "board": "25e6fd5e17fd2db3",
+              "turn": 5,
+              "kind": "code",
+              "label": "combat/least-loss",
+              "line": "群蛇形态, 毒雾, 触媒",
+              "canon": {
+                "群蛇形态, 毒雾, 触媒": "ACCELERANT, NOXIOUS_FUMES, SERPENT_FORM, potion:POISON_POTION>青蛙骑士"
+              }
+            },
+            {
+              "board": "31a224411e27018b",
+              "turn": 5,
+              "kind": "code",
+              "label": "combat/least-loss",
+              "line": "end turn",
+              "canon": {
+                "end turn": "ACCELERANT, NOXIOUS_FUMES, SERPENT_FORM, potion:POISON_POTION>青蛙骑士"
+              }
+            }
+          ],
+          "target": {
+            "board": "66a5f54dd89fb0de",
+            "turn": 4,
+            "reference": 2,
+            "back": 2,
+            "round": 0,
+            "excluded": [
+              "触媒, 防御, 冲刺+ -> 青蛙骑士"
+            ],
+            "attempts": [
+              2
+            ],
+            "point": "T4, the 2nd latest question before attempt 2's death on T5",
+            "tried": {
+              "canon": [
+                "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT"
+              ],
+              "loose": [],
+              "cards": [
+                {
+                  "cards": "ACCELERANT, DASH+>青蛙骑士, DEFEND_SILENT",
+                  "drunk": [
+                    "POISON_POTION"
+                  ]
+                }
+              ]
+            },
+            "where": {
+              "weight": 3.8,
+              "turnRound": 0,
+              "lost": {
+                "T1": 0.3,
+                "T2": 0,
+                "T3": 0,
+                "T4": 0,
+                "T5": 7.7
+              },
+              "weights": {
+                "T1": 0.8,
+                "T2": 1,
+                "T3": 1.9,
+                "T4": 3.8
+              }
+            },
+            "anchor": {
+              "why": "attempt 2's path, the failed attempt that lived longest (attempt 2 T5 (enemy HP 147), attempt 1 T5 (enemy HP 154), attempt 3 T5 (enemy HP 176))",
+              "ranked": [
+                {
+                  "attempt": 2,
+                  "turns": 5,
+                  "enemyHp": 147
+                },
+                {
+                  "attempt": 1,
+                  "turns": 5,
+                  "enemyHp": 154
+                },
+                {
+                  "attempt": 3,
+                  "turns": 5,
+                  "enemyHp": 176
+                }
+              ]
+            }
+          },
+          "replay": {
+            "replayed": 9,
+            "overridden": 3,
+            "stopped": null
+          },
+          "turns": [
+            {
+              "turn": 1,
+              "plays": [
+                "BACKFLIP",
+                "ACROBATICS",
+                "BACKFLIP",
+                "DEADLY_POISON>青蛙骑士",
+                "NEUTRALIZE>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "d877eff4516aa66f",
+                  "at": 0
+                },
+                {
+                  "board": "eec878e944593372",
+                  "at": 1
+                },
+                {
+                  "board": "bd9997dd837b3759",
+                  "at": 2
+                },
+                {
+                  "board": "55e25ef9458abbb4",
+                  "at": 3
+                },
+                {
+                  "board": "30380f09896ec681",
+                  "at": 4
+                },
+                {
+                  "board": "9e88d4252648bd47",
+                  "at": 5
+                }
+              ]
+            },
+            {
+              "turn": 2,
+              "plays": [
+                "DEFEND_SILENT",
+                "DEFLECT",
+                "LEG_SWEEP>青蛙骑士",
+                "NOXIOUS_FUMES"
+              ],
+              "boards": [
+                {
+                  "board": "cce1a2c8486473a1",
+                  "at": 0
+                },
+                {
+                  "board": "0d284868e6ad9a6c",
+                  "at": 1
+                },
+                {
+                  "board": "ffb72683c126d754",
+                  "at": 2
+                },
+                {
+                  "board": "55e40039e1fc1aa6",
+                  "at": 3
+                },
+                {
+                  "board": "65cf708a9ae3fc21",
+                  "at": 4
+                }
+              ]
+            },
+            {
+              "turn": 3,
+              "plays": [
+                "BOUNCING_FLASK",
+                "TOOLS_OF_THE_TRADE"
+              ],
+              "boards": [
+                {
+                  "board": "2ee8c5671faf8960",
+                  "at": 0
+                },
+                {
+                  "board": "8c4028ac54a11625",
+                  "at": 1
+                },
+                {
+                  "board": "c913f0c160d65c1d",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 4,
+              "plays": [
+                "DEFEND_SILENT",
+                "DASH+>青蛙骑士"
+              ],
+              "boards": [
+                {
+                  "board": "66a5f54dd89fb0de",
+                  "at": 0
+                },
+                {
+                  "board": "99bb7f4882389bac",
+                  "at": 1
+                },
+                {
+                  "board": "fa426706f3f6c125",
+                  "at": 2
+                }
+              ]
+            },
+            {
+              "turn": 5,
+              "plays": [
+                "potion:POISON_POTION>青蛙骑士",
+                "SERPENT_FORM",
+                "NOXIOUS_FUMES",
+                "ACCELERANT"
+              ],
+              "boards": [
+                {
+                  "board": "37b5cf574a5a30e8",
+                  "at": 0
+                },
+                {
+                  "board": "25e6fd5e17fd2db3",
+                  "at": 1
+                },
+                {
+                  "board": "3093af8fc7a54594",
+                  "at": 2
+                },
+                {
+                  "board": "f1984a067b206f38",
+                  "at": 3
+                },
+                {
+                  "board": "31a224411e27018b",
+                  "at": 4
+                }
+              ]
+            }
+          ],
+          "deviation": {
+            "reached": true,
+            "original": "触媒, 防御, 冲刺+ -> 青蛙骑士",
+            "replacement": "防御, 冲刺+ -> 青蛙骑士",
+            "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+            "turn": 4,
+            "plays": "DASH+>青蛙骑士, DEFEND_SILENT",
+            "differs": true
+          }
+        },
+        "draws": {
+          "order": [
+            "MIRAGE",
+            "DEFEND_SILENT",
+            "DAGGER_THROW",
+            "BACKFLIP",
+            "ECHOING_SLASH",
+            "FOOTWORK+",
+            "ACROBATICS",
+            "BACKFLIP",
+            "MAD_SCIENCE",
+            "BACKFLIP",
+            "DEADLY_POISON",
+            "NEUTRALIZE",
+            "DEFEND_SILENT",
+            "HAZE",
+            "DEFLECT",
+            "LEG_SWEEP",
+            "NOXIOUS_FUMES",
+            "BOUNCING_FLASK",
+            "DEFEND_SILENT",
+            "TOOLS_OF_THE_TRADE",
+            "STRIKE_SILENT",
+            "DEFEND_SILENT",
+            "ACCELERANT",
+            "DEFEND_SILENT",
+            "PIERCING_WAIL",
+            "DODGE_AND_ROLL",
+            "DAZED",
+            "DASH+",
+            "SERPENT_FORM",
+            "NOXIOUS_FUMES",
+            "POISONED_STAB",
+            "STRIKE_SILENT",
+            "ACCELERANT",
+            "CLUMSY"
+          ],
+          "names": [
+            "蜃景",
+            "防御",
+            "投掷匕首",
+            "后空翻",
+            "回响斩击",
+            "灵动步法+",
+            "杂技",
+            "后空翻",
+            "疯狂科学",
+            "后空翻",
+            "致命毒药",
+            "中和",
+            "防御",
+            "迷雾",
+            "偏折",
+            "扫腿",
+            "毒雾",
+            "弹跳药瓶",
+            "防御",
+            "必备工具",
+            "打击",
+            "防御",
+            "触媒",
+            "防御",
+            "尖啸",
+            "闪躲翻滚",
+            "晕眩",
+            "冲刺+",
+            "群蛇形态",
+            "毒雾",
+            "带毒刺击",
+            "打击",
+            "触媒",
+            "笨拙"
+          ],
+          "turns": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            3,
+            3,
+            4,
+            4,
+            4,
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ],
+          "clean": 34,
+          "broke": null
+        },
+        "run": "TU3XB4CAEDAW"
+      }
+    ]
+  }
+]
