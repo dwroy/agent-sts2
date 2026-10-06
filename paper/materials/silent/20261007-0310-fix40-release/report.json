@@ -1,0 +1,42 @@
+{
+  "task": "fix-batch",
+  "base": "9b134d61e7cf4b4be2af6bbb51a57f72e315242b",
+  "fixes": [
+    {
+      "item": "重放附魔的额外打出漏入跨回合凋萎累计（silent-0199；DPYF2BAA3DKT F48末次T1/T7）",
+      "commit": "1ab1ba8dc446e5a12dec0396528c9b2a5b478fe8",
+      "test": "agent/tests/silent-wither-replay.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "羽化生成到抽牌堆被误算为即时抽牌（silent-0202；C48LLXBGKXQ9 F24 T1/HUVEPWQAHWFU F35 T2）",
+      "commit": "129853b817c0e985e222b09385a9bfeb0562ec7f",
+      "test": "agent/tests/silent-metamorphosis.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "mod选牌屏及其他屏幕请求超时自愈",
+      "reason": "证据不足：未定位mod内部根因；已修重复提问及稳定等待不重复修改。"
+    },
+    {
+      "item": "Codex大脑缓存命中偏低及实测对比",
+      "reason": "证据不足：离线任务不能调用真实LLM或网络，没有受控对比。"
+    },
+    {
+      "item": "boss整场模拟耗时、样本不足及CPU争用",
+      "reason": "太大：需独立固定性能基准和跨模拟器定位；已修预算截止不重复实现。"
+    },
+    {
+      "item": "保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值",
+      "reason": "策略类：交Dai或独立策略任务，本批不改；已批准事实子项保持。"
+    }
+  ],
+  "merged": "0b6e5c94f3bbbe0a936ced995f790987c57c4b88",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2289
+  }
+}

@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-metamorphosis.test.ts (4 tests | 2 failed) 33ms
+   × 'C48LLXBGKXQ9': generated attacks are not three immediate draws 19ms
+   × 'HUVEPWQAHWFU': generated attacks are not three immediate draws 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-metamorphosis.test.ts > 'C48LLXBGKXQ9': generated attacks are not three immediate draws
+ FAIL  tests/silent-metamorphosis.test.ts > 'HUVEPWQAHWFU': generated attacks are not three immediate draws
+AssertionError: expected { index: +0, key: 'c0', …(36) } to match object { draw: +0, known: false }
+(36 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "draw": 0,
+-   "known": false,
++   "draw": 3,
++   "known": true,
+  }
+
+ ❯ tests/silent-metamorphosis.test.ts:20:17
+     18|   input.hand = [model];
+     19|   const plan = replaySteps(input, [step])!;
+     20|   expect(model).toMatchObject({ draw: 0, known: false });
+       |                 ^
+     21|   expect(model.adds).toBeUndefined();
+     22|   expect(plan.outcome).toMatchObject({ cardsDrawn: 0, damageDealt: 0, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  02:46:22
+   Duration  723ms (transform 463ms, setup 323ms, import 231ms, tests 33ms, environment 0ms)
+
