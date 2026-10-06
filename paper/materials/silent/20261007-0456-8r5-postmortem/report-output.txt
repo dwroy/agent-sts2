@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：8R5CXD5C8PW8（A10，第35层，虔诚雕刻师 DEVOTED_SCULPTOR，T7以6血、13挡面对42攻击阵亡）；已追加敌人ID、仪式时点及勘误时间更正。
+- 新的纯 bug：无。
+- 写成「未记录」的项：8R5CXD5C8PW8：SL截断后的失血／死亡帧、替代方案的受控结果、整条最优原线最终执行比例、知识恶魔独立回血数、推演差额根因、boss时钟及实打／估值比例、三幕boss实况、Jev缓存命中。
+- 学习账本：8R5CXD5C8PW8：新增 silent-0206；更新 silent-0005、silent-0013、silent-0053、silent-0057、silent-0083、silent-0097、silent-0110、silent-0111、silent-0125、silent-0129、silent-0185；均为支持证据，老错重犯无；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["8R5CXD5C8PW8"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0206"],"updated":["silent-0005","silent-0013","silent-0053","silent-0057","silent-0083","silent-0097","silent-0110","silent-0111","silent-0125","silent-0129","silent-0185"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a112f4-9a4f-7902-ae05-9ebeb0bc8811
+轮数：1；工具调用：command_execution×60
+token：输入 221.0k、输出 32.6k（其中推理 10.2k）、cache 读 3907.7k、cache 写 0（命中 94.6%）
+成本：未提供
+耗时：783.3 s（墙钟）
+时间：首个事件 1.7 s、模型首个输出 6.0 s、首次工具 9.4 s、末次工具结束 769.0 s；工具内共 43.1 s，其余（模型生成、推理、网络）738.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×27；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T04-43-02-01a112f4-9a4f-7902-ae05-9ebeb0bc8811.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-044301-postmortem.jsonl
