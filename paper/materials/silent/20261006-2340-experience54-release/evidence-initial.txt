@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261006-231302-experience-update/evidence.py", line 33, in <module>
+    assert en(x['before'],'BOWLBUG_ROCK')['hp']==9 and en(x['after'],'BOWLBUG_ROCK')['hp']==0
+                                                       ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261006-231302-experience-update/evidence.py", line 10, in en
+    def en(b,ident):return next(e for e in b['enemies'] if e['id']==ident)
+                           ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
