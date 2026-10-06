@@ -1,0 +1,797 @@
+[
+  {
+    "run": "Y6GM2CHWJBEY",
+    "ts": "2026-10-04T15:00:33.366Z",
+    "offset": 6301263866,
+    "floor": 17,
+    "turn": 1,
+    "selection": {
+      "kind": "choose_card_select",
+      "prompt": "选择一张牌",
+      "min_select": 1,
+      "max_select": 1,
+      "selected_count": 0,
+      "requires_confirmation": false,
+      "can_confirm": false,
+      "cards": [
+        {
+          "index": 0,
+          "selected": false,
+          "card_id": "SKEWER",
+          "name": "串刺",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Uncommon",
+          "costs_x": true,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害X次。",
+          "resolved_rules_text": "造成8点伤害X次。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 8,
+              "current_value": 8,
+              "enchanted_value": 8,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "selected": false,
+          "card_id": "RICOCHET",
+          "name": "连续反弹",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "随机对敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+          "resolved_rules_text": "奇巧。 随机对敌人造成3点伤害4次。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Repeat",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "selected": false,
+          "card_id": "GRAND_FINALE",
+          "name": "华丽收场",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成60点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 60,
+              "current_value": 60,
+              "enchanted_value": 60,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ]
+    },
+    "draw": [
+      {
+        "line": "刀刃之舞 [1费]：添加3张小刀到你的手牌。 消耗。",
+        "card_ids": [
+          "BLADE_DANCE"
+        ],
+        "keywords": [
+          "消耗"
+        ],
+        "mods": [
+          "Exhaust"
+        ]
+      },
+      {
+        "line": "匕首雨+ [1费]：对所有敌人造成6点伤害两次。",
+        "card_ids": [
+          "DAGGER_SPRAY"
+        ],
+        "keywords": [],
+        "mods": []
+      },
+      {
+        "line": "咕嘟冒泡 [1费]：如果敌方拥有中毒，则给予9层中毒。",
+        "card_ids": [
+          "BUBBLE_BUBBLE"
+        ],
+        "keywords": [
+          "中毒"
+        ],
+        "mods": []
+      },
+      {
+        "line": "打击*6 [1费]：造成6点伤害。",
+        "card_ids": [
+          "STRIKE_SILENT"
+        ],
+        "keywords": [],
+        "mods": []
+      },
+      {
+        "line": "毒雾 [1费]：在你的回合开始时，给予所有敌人2层中毒。",
+        "card_ids": [
+          "NOXIOUS_FUMES"
+        ],
+        "keywords": [
+          "中毒"
+        ],
+        "mods": []
+      },
+      {
+        "line": "独门技术 [1费]：抽2张牌。 这些牌在本回合获得保留。",
+        "card_ids": [
+          "EXPERTISE"
+        ],
+        "keywords": [
+          "保留"
+        ],
+        "mods": []
+      },
+      {
+        "line": "生存者 [1费]：获得8点格挡。 丢弃1张牌。",
+        "card_ids": [
+          "SURVIVOR"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "防御*2 [1费]：获得5点格挡。",
+        "card_ids": [
+          "DEFEND_SILENT"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "防御+*2 [1费]：获得8点格挡。",
+        "card_ids": [
+          "DEFEND_SILENT"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      }
+    ],
+    "discard": [],
+    "player": {
+      "current_hp": 62,
+      "max_hp": 62,
+      "block": 0,
+      "energy": 3,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "PLATING_POWER",
+          "name": "覆甲",
+          "amount": 4,
+          "is_debuff": false
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 0,
+      "attacks_played_this_turn": 0,
+      "skills_played_this_turn": 0
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "KIN_FOLLOWER",
+        "name": "同族信徒",
+        "current_hp": 59,
+        "max_hp": 59,
+        "base_max_hp": 59,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "MINION_POWER",
+            "name": "爪牙",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "intent": "POWER_DANCE_MOVE",
+        "move_id": "POWER_DANCE_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "enemy_id": "KIN_FOLLOWER",
+        "name": "同族信徒",
+        "current_hp": 58,
+        "max_hp": 58,
+        "base_max_hp": 58,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "MINION_POWER",
+            "name": "爪牙",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "intent": "QUICK_SLASH_MOVE",
+        "move_id": "QUICK_SLASH_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "5",
+            "damage": 5,
+            "hits": 1,
+            "total_damage": 5,
+            "status_card_count": null
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "enemy_id": "KIN_PRIEST",
+        "name": "同族神官",
+        "current_hp": 190,
+        "max_hp": 190,
+        "base_max_hp": 190,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [],
+        "intent": "ORB_OF_FRAILTY_MOVE",
+        "move_id": "ORB_OF_FRAILTY_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "8",
+            "damage": 8,
+            "hits": 1,
+            "total_damage": 8,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Debuff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ],
+    "after": {
+      "ts": "2026-10-04T15:00:50.668Z",
+      "offset": 6301301003,
+      "finale": {
+        "index": 7,
+        "card_id": "GRAND_FINALE",
+        "name": "华丽收场",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成60点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 60,
+            "current_value": 60,
+            "enchanted_value": 60,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "unplayable",
+        "unplayable_reason_raw": "BlockedByCardLogic",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    }
+  },
+  {
+    "run": "VPW8YH7A4QFM",
+    "ts": "2026-10-06T16:17:39.441Z",
+    "offset": 7955289344,
+    "floor": 39,
+    "turn": 1,
+    "selection": {
+      "kind": "choose_card_select",
+      "prompt": "选择一张牌",
+      "min_select": 1,
+      "max_select": 1,
+      "selected_count": 0,
+      "requires_confirmation": false,
+      "can_confirm": false,
+      "cards": [
+        {
+          "index": 0,
+          "selected": false,
+          "card_id": "PRECISE_CUT",
+          "name": "精确切击",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
+          "resolved_rules_text": "造成13点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
+          "dynamic_values": [
+            {
+              "name": "CalculatedDamage",
+              "base_value": 13,
+              "current_value": 13,
+              "enchanted_value": 13,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 13,
+              "current_value": 13,
+              "enchanted_value": 13,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "ExtraDamage",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "selected": false,
+          "card_id": "PREDATOR",
+          "name": "猎杀者",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+          "resolved_rules_text": "造成15点伤害。 在下个回合抽2张牌。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 15,
+              "current_value": 15,
+              "enchanted_value": 15,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "selected": false,
+          "card_id": "GRAND_FINALE",
+          "name": "华丽收场",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成60点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 60,
+              "current_value": 60,
+              "enchanted_value": 60,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ]
+    },
+    "draw": [
+      {
+        "line": "万向斩 [0费]：造成8点伤害。 对所有其他敌人造成等量的伤害。",
+        "card_ids": [
+          "OMNISLICE"
+        ],
+        "keywords": [],
+        "mods": []
+      },
+      {
+        "line": "中和 [0费]：造成3点伤害。 给予1层虚弱。",
+        "card_ids": [
+          "NEUTRALIZE"
+        ],
+        "keywords": [
+          "虚弱"
+        ],
+        "mods": []
+      },
+      {
+        "line": "余像 [1费]：你每打出一张牌，都获得1点格挡。",
+        "card_ids": [
+          "AFTERIMAGE"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "刀刃之舞 [1费]：添加3张小刀到你的手牌。 消耗。",
+        "card_ids": [
+          "BLADE_DANCE"
+        ],
+        "keywords": [
+          "消耗"
+        ],
+        "mods": [
+          "Exhaust"
+        ]
+      },
+      {
+        "line": "华丽收场 [0费]：只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成60点伤害。",
+        "card_ids": [
+          "GRAND_FINALE"
+        ],
+        "keywords": [],
+        "mods": []
+      },
+      {
+        "line": "后空翻*4 [1费]：获得5点格挡。 抽2张牌。",
+        "card_ids": [
+          "BACKFLIP"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "回响斩击 [1费]：对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。",
+        "card_ids": [
+          "ECHOING_SLASH"
+        ],
+        "keywords": [],
+        "mods": []
+      },
+      {
+        "line": "尖啸*3 [1费]：所有敌人在本回合失去6点力量。 消耗。",
+        "card_ids": [
+          "PIERCING_WAIL"
+        ],
+        "keywords": [
+          "力量",
+          "消耗"
+        ],
+        "mods": [
+          "Exhaust"
+        ]
+      },
+      {
+        "line": "弹跳药瓶 [2费]：随机给予敌人3层中毒3次。",
+        "card_ids": [
+          "BOUNCING_FLASK"
+        ],
+        "keywords": [
+          "中毒"
+        ],
+        "mods": []
+      },
+      {
+        "line": "打击*3 [1费]：造成6点伤害。",
+        "card_ids": [
+          "STRIKE_SILENT"
+        ],
+        "keywords": [],
+        "mods": []
+      },
+      {
+        "line": "斗篷与匕首+ [1费]：获得6点格挡。 将2张小刀添加到你的手牌。",
+        "card_ids": [
+          "CLOAK_AND_DAGGER"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "毒性爆发 [3费]：给予所有敌人9层中毒。 立即触发中毒。",
+        "card_ids": [
+          "OUTBREAK"
+        ],
+        "keywords": [
+          "中毒"
+        ],
+        "mods": []
+      },
+      {
+        "line": "毒雾+ [1费]：在你的回合开始时，给予所有敌人3层中毒。",
+        "card_ids": [
+          "NOXIOUS_FUMES"
+        ],
+        "keywords": [
+          "中毒"
+        ],
+        "mods": []
+      },
+      {
+        "line": "爆发 [1费]：在这个回合，你打出的下一张技能牌会被额外打出一次。",
+        "card_ids": [
+          "BURST"
+        ],
+        "keywords": [],
+        "mods": []
+      },
+      {
+        "line": "生存者 [1费]：获得8点格挡。 丢弃1张牌。",
+        "card_ids": [
+          "SURVIVOR"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "疯狂科学 [1费]：获得2点力量。 获得2点敏捷。",
+        "card_ids": [
+          "MAD_SCIENCE"
+        ],
+        "keywords": [
+          "力量",
+          "敏捷"
+        ],
+        "mods": []
+      },
+      {
+        "line": "致命毒药*2 [1费]：给予5层中毒。",
+        "card_ids": [
+          "DEADLY_POISON"
+        ],
+        "keywords": [
+          "中毒"
+        ],
+        "mods": []
+      },
+      {
+        "line": "触媒+ [1费]：中毒会额外触发2次。",
+        "card_ids": [
+          "ACCELERANT"
+        ],
+        "keywords": [
+          "中毒"
+        ],
+        "mods": []
+      },
+      {
+        "line": "贪婪 [0费]：不能被打出。 永恒。",
+        "card_ids": [
+          "GREED"
+        ],
+        "keywords": [],
+        "mods": [
+          "Eternal",
+          "Unplayable"
+        ]
+      },
+      {
+        "line": "进阶之灾 [0费]：不能被打出。 虚无。 永恒。",
+        "card_ids": [
+          "ASCENDERS_BANE"
+        ],
+        "keywords": [],
+        "mods": [
+          "Eternal",
+          "Ethereal",
+          "Unplayable"
+        ]
+      },
+      {
+        "line": "逃脱计划 [0费]：抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+        "card_ids": [
+          "ESCAPE_PLAN"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "防御*3 [1费]：获得5点格挡。",
+        "card_ids": [
+          "DEFEND_SILENT"
+        ],
+        "keywords": [
+          "格挡"
+        ],
+        "mods": []
+      },
+      {
+        "line": "预判 [0费]：在本回合获得2点敏捷。",
+        "card_ids": [
+          "ANTICIPATE"
+        ],
+        "keywords": [
+          "敏捷"
+        ],
+        "mods": []
+      }
+    ],
+    "discard": [],
+    "player": {
+      "current_hp": 45,
+      "max_hp": 80,
+      "block": 0,
+      "energy": 3,
+      "stars": 0,
+      "focus": 0,
+      "powers": [],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 0,
+      "attacks_played_this_turn": 0,
+      "skills_played_this_turn": 0
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "enemy_id": "FABRICATOR",
+        "name": "组装师",
+        "current_hp": 155,
+        "max_hp": 155,
+        "base_max_hp": 155,
+        "block": 0,
+        "is_alive": true,
+        "is_hittable": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "WEAK_POWER",
+            "name": "虚弱",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "intent": "FABRICATING_STRIKE_MOVE",
+        "move_id": "FABRICATING_STRIKE_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "15",
+            "damage": 15,
+            "hits": 1,
+            "total_damage": 15,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Summon",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ],
+    "after": {
+      "ts": "2026-10-06T16:17:41.620Z",
+      "offset": 7955344966,
+      "finale": {
+        "index": 8,
+        "card_id": "GRAND_FINALE",
+        "name": "华丽收场",
+        "upgraded": false,
+        "target_type": "AllEnemies",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "只有当你的抽牌堆中没有牌时才能打出。对所有敌人造成60点伤害。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 60,
+            "current_value": 60,
+            "enchanted_value": 60,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": false,
+        "can_play_result": false,
+        "unplayable_reason": "unplayable",
+        "unplayable_reason_raw": "BlockedByCardLogic",
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    }
+  }
+]
