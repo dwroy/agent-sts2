@@ -1,0 +1,56 @@
+## 修 bug 回报
+
+- 合并基线：main → 591474129d4b8089b00e7edae450cd61db9e9138
+- 修复（每条一行）：无新增修复、无新增提交；撤修复验证不适用。
+- 已被别人修掉的：126项，条目及提交号见[逐项清单](/home/dw/Projects/agent-sts2/learner/runs/20261006-234302-fix-batch/already-fixed.md)，均已核实在基线和 live 中。
+- 没修的：永冻首次能力7挡（silent-0172；25226ZFLNR1J F29 T1、PJ2LL9KU7FHD F17第三次T4）— 太大，需要跨帧、重启和SL状态跟踪专项，交开发会话；mod超时、Codex缓存实测 — 证据不足；boss模拟性能 — 太大；策略项 — 策略类。
+- 测试：tsc 退出码0；vitest 209文件 / 2245用例 / 退出码0，首轮通过，无重跑。
+- 合入：未合入，无新增修复；当前源码与既有live一致，未生成空合并或重复版本。
+- 需要 Dai 定的事：保血、留药、boss时钟校准、路线预估、休息点选择、小偷优先、A10第三幕第二boss、无色牌估值；旧全死排序、巨兽拖延、SL范围及懒惰估值。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "591474129d4b8089b00e7edae450cd61db9e9138",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "永冻首次能力7挡未进入模型（silent-0172）",
+      "reason": "太大：需跨帧、续行、重启、SL及后续回合状态跟踪专项，交开发会话"
+    },
+    {
+      "item": "mod请求超时",
+      "reason": "证据不足：根因未定位"
+    },
+    {
+      "item": "Codex大脑缓存实测",
+      "reason": "证据不足：缺受控实测，本任务禁止网络和真实LLM调用"
+    },
+    {
+      "item": "boss模拟性能及样本不足",
+      "reason": "太大：需独立性能专项"
+    },
+    {
+      "item": "保血、留药、时钟校准、路线、休息、小偷优先、第二boss、无色牌等策略",
+      "reason": "策略类：需要Dai定"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2245
+  }
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a111e1-f61f-7f53-b835-fce9e9dae341
+轮数：1；工具调用：command_execution×41
+token：输入 200.5k、输出 12.7k（其中推理 5522）、cache 读 3163.0k、cache 写 0（命中 94.0%）
+成本：未提供
+耗时：467.3 s（墙钟）
+时间：首个事件 1.8 s、模型首个输出 8.1 s、首次工具 10.3 s、末次工具结束 440.9 s；工具内共 272.4 s，其余（模型生成、推理、网络）193.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×24 wait×2；/home/dw/.codex-sts2/sessions/2026/10/06/rollout-2026-10-06T23-43-03-01a111e1-f61f-7f53-b835-fce9e9dae341.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261006-234302-fix-batch.jsonl
