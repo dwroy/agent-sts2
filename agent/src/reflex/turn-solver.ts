@@ -1995,11 +1995,17 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     let shown = card.damage ?? 0;
     // JQPT83P8KDSZ F25 attempt 2 T3: six cards show 3 damage; Strike leaving makes five cards show 5.
     // Count the hand before this play, including held/locked cards, but never belt potions.
-    // Other hand sizes, upgrades and modified damage have no verified Precise Cut formula.
+    // PJ2LL9KU7FHD F17 T15/T5, silent-0166/0169: -2 Strength shows 3/5 at five/four cards;
+    // +2 Strength shows 7/11 at five/three cards. Keep other pairs unknown, without a general formula.
     if (card.cardId === "PRECISE_CUT" && !card.upgraded && card.preciseCutHandDamage) {
       const handSize = [...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").length + next.drawnInHand + 1;
-      const observed = handSize === 5 ? 5 : handSize === 6 ? 3 : null;
-      if (observed !== null && (card.damage === 3 || card.damage === 5) && !player.weak && !next.shrunk && (player.strengthNow ?? 0) === 0 && next.strength === 0) {
+      const strengthNow = player.strengthNow ?? 0;
+      const observed = strengthNow === 0 ? (handSize === 5 ? 5 : handSize === 6 ? 3 : null)
+        : strengthNow === -2 ? (handSize === 5 ? 3 : handSize === 4 ? 5 : null)
+        : strengthNow === 2 ? (handSize === 5 ? 7 : handSize === 3 ? 11 : null) : null;
+      const recordedShown = strengthNow === 2 ? card.damage === 7 || card.damage === 11
+        : (strengthNow === 0 || strengthNow === -2) && (card.damage === 3 || card.damage === 5);
+      if (observed !== null && recordedShown && !player.weak && !next.shrunk && next.strength === 0) {
         shown = observed;
       } else {
         next.unknown = [...next.unknown, `${card.name}（此手牌数或伤害修正未验证）`];
