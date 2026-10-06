@@ -342,6 +342,8 @@ export interface PlayerSim {
    */
   hpLossCap?: number | null;
   maxHp: number;
+  /** Silent UJ0K3G10609Y F48 T4/T7: one less HP per enemy hit past block; other loss interactions unverified. */
+  tungstenRod?: boolean;
   block: number;
   energy: number;
   weak: boolean;
@@ -2905,9 +2907,26 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ].filter((guard) => guard.amount > 0);
   const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
   const blockLeft = Math.max(0, blockAtEnd - disintegration);
+  // silent-0177/0178: only plain enemy hits against block were observed. Do not infer
+  // the order with Buffer, other reductions, self damage or damaging held cards.
+  const rodVerified = input.player.tungstenRod === true && (input.player.buffer ?? 0) === 0 && sim.buffer === 0 &&
+    sim.bufferSpent === 0 && sim.hpLossEvents === 0 &&
+    !input.player.intangible && !sim.intangible && input.player.hpLossCap == null &&
+    heldPenalty === 0 && heldHpLoss === 0 && disintegration === 0 && input.player.hp === sim.hp &&
+    (input.player.startTurnHpLoss ?? 0) + sim.mantles + sim.infernos === 0;
+  let rodLosses: number[] | null = null;
+  if (rodVerified) {
+    let pool = blockLeft;
+    rodLosses = hits.map((hit) => {
+      const absorbed = Math.min(pool, hit.amount);
+      pool -= absorbed;
+      return Math.max(0, hit.amount - absorbed - 1);
+    });
+  }
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
   // in order (a held Burn at the end of our turn first).
-  const incomingAfterBlock = sim.buffer > 0 && !winsFight ? bufferedLoss([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer) : Math.max(0, incomingRaw - blockLeft);
+  const incomingAfterBlock = rodLosses !== null ? rodLosses.reduce((sum, loss) => sum + loss, 0)
+    : sim.buffer > 0 && !winsFight ? bufferedLoss([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer) : Math.max(0, incomingRaw - blockLeft);
   // Imbalanced: an enemy whose every hit meets block (in attack order) is stunned for its next move.
   const stunned = winsFight ? [] : imbalanceStuns(sim, hits, blockLeft, sim.buffer);
   // Regen heals at the end of our turn, before the enemy attacks (never past max HP; no end of turn after a win).
@@ -2925,7 +2944,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // HP loss, Disintegration past block, each held Burn or enemy hit past block and Buffer) on top of what is owed.
   const clayEvents = winsFight
     ? 0
-    : sim.hpLossEvents + heldCards.filter((card) => heldLoss(card) > 0).length + (disintegration > blockAtEnd ? 1 : 0) + lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer);
+    : sim.hpLossEvents + heldCards.filter((card) => heldLoss(card) > 0).length + (disintegration > blockAtEnd ? 1 : 0) +
+      (rodLosses !== null ? rodLosses.filter((loss) => loss > 0).length : lossesPast([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer));
   const clayBlockNext = winsFight || (input.player.clayBlock ?? 0) <= 0 ? 0 : (input.player.clayPending ?? 0) + (input.player.clayBlock ?? 0) * clayEvents;
   const cap = input.player.hpLossCap;
   let hpLoss = (cap !== null && cap !== undefined ? Math.min(turnLoss, cap) : turnLoss) + startTurnLoss;
@@ -2941,8 +2961,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   let revived: Outcome["revived"];
   const revives = input.player.revives ?? [];
   if (hpAfter <= 0 && !otherDeath && revives.length > 0) {
-    const enemyTurn: number[] = [];
-    {
+    const enemyTurn: number[] = rodLosses !== null ? [...rodLosses] : [];
+    if (rodLosses === null) {
       let pool = blockLeft;
       let stacks = winsFight ? 0 : sim.buffer;
       for (const amount of [heldPenalty, ...hits.map((hit) => hit.amount)]) {
@@ -3267,7 +3287,8 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       weakApplied: sim.weakApplied,
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
-      unknownCards: sim.unknown,
+      unknownCards: input.player.tungstenRod && !rodVerified && !winsFight
+        ? [...sim.unknown, "钨合金棍（自身失血或其他减损交互未验证）"] : sim.unknown,
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
