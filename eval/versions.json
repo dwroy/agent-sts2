@@ -948,6 +948,12 @@
       "family": "Silent",
       "commit": "65a7e115afa9baef94f1db0c100fe249ebcaba13",
       "source": "2026-10-06 23:20 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 22:33 SL判官遗漏毒伤触发阈值眩晕；源码f6ff3a9ce42337972b19ee227b2d51432e929f50→实际live代码65a7e115afa9baef94f1db0c100fe249ebcaba13，eval S1.fix37。来源notes/lessons.md:5162及账本silent-0195，KUZVERN40NGK SILENT A10 F17第3次T5／第5次T6／末次T6-T7。前两次164血6毒/167血12毒、触媒1的11/23毒仅求解器预测，判官按26/28攻击错误读档；末次173血9毒实结算9+8=17到156、玩家仍3血，次轮横冲160与8力量清除，支持毒越阈值取消本轮攻击。仅静默判官沿既有每触发减1毒算法计攻击前毒伤上界，接入已有HP阈值眩晕检查；计数类眩晕仍需原hit，未知后继/SL策略不变，铁甲及无毒等价，不声称修复能赢整场。固定8例撤源码5失败3通过/exit1、恢复8通过，相关6文件56例通过；源及合后固定沙箱tsc0/vitest0，统计与红绿原日志保留，本批无高负载超时重跑，完整外部交调度器。gitleaks0，知识不同blob重叠0、全部live已提交知识blob保持；只合并decision-log冲突并验证双方全部非空历史行保持，后台notes不纳入提交，无生成器变化不重建。0195仅CLI/by=learner:fix-batch proposed/提交去向，first_run/prior/证据/旧历史保持；旧0133/0127不变，交运维据fix-done及learner/runs/20261006-225909-fix-batch/handoff-ops.md确认实际合入后CLI登记shipped。125项旧修复核查不重复提交，永冻0172及策略/证据不足/性能专项保持；队列不修改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.exp54",
+      "family": "Silent",
+      "commit": "3caa860b03e4ed76a2afd81635f9c52c18e456c4",
+      "source": "decision-log 2026-10-06 23:38（静默经验2026-10-06.29；源4cf918b6ffa019945c2f99f2d6428ea5102f63be；BVF22RSFVBS9 A10及本角色历史。新增1更新12退役0、126 active/55756字；石虫完整挡后眩晕32局/0反例、毒组件实际启动/毒跨160、尖啸与甲虫成长、SL血价和路线/营火/构筑观察；无新用药规则，旧65局逐行一致，源/合后固定沙箱tsc/vitest通过；13项proposed交运维据实际合入CLI登记shipped，完整沙箱外检查交调度器。）"
     }
   ]
 }
