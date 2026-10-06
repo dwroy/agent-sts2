@@ -1,6 +1,6 @@
 {
  "_about": "Outcome stats from our logs (tools/build-outcome-stats.py). Observational: a choice's numbers mix its effect with the situations it was made in. n = runs; low_n = n<5. boss_pass = share of those runs that beat the boss of the act the choice was made in; mean_floor = mean final floor of those runs. events: hp/max_hp/gold change = from the choice to the first decision on the next floor. by_ascension: one table per ascension (A8, A9 and each higher one with runs), each counted over that ascension's runs alone with its own baseline; a run reads its own ascension's table (before 2026-10-04 the file was the A8 table alone).",
- "generated": "2026-10-06T14:44:11",
+ "generated": "2026-10-06T15:39:48",
  "ascensions": [
   8,
   9,
@@ -3628,16 +3628,16 @@
   "10": {
    "ascension": 10,
    "baseline": {
-    "runs": 15,
-    "mean_floor": 27.3,
+    "runs": 16,
+    "mean_floor": 27.7,
     "boss_pass_by_act": {
      "1": {
-      "n": 15,
-      "boss_pass": 0.53
+      "n": 16,
+      "boss_pass": 0.56
      },
      "2": {
-      "n": 8,
-      "boss_pass": 0.5
+      "n": 9,
+      "boss_pass": 0.44
      },
      "3": {
       "n": 4,
@@ -3716,9 +3716,9 @@
         "low_n": true
        },
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 17.0,
-        "boss_pass": 0.0,
+        "n": 2,
+        "mean_floor": 25.0,
+        "boss_pass": 0.5,
         "low_n": true
        }
       }
@@ -3793,10 +3793,9 @@
       },
       "2": {
        "offered_not_picked": {
-        "n": 4,
-        "mean_floor": 32.0,
-        "boss_pass": 0.25,
-        "low_n": true
+        "n": 5,
+        "mean_floor": 32.2,
+        "boss_pass": 0.2
        }
       }
      },
@@ -3825,9 +3824,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 10,
-        "mean_floor": 27.2,
-        "boss_pass": 0.6
+        "n": 11,
+        "mean_floor": 27.7,
+        "boss_pass": 0.64
        },
        "offered_not_picked": {
         "n": 1,
@@ -3838,9 +3837,9 @@
       },
       "2": {
        "picked": {
-        "n": 7,
-        "mean_floor": 40.7,
-        "boss_pass": 0.57
+        "n": 8,
+        "mean_floor": 39.8,
+        "boss_pass": 0.5
        }
       },
       "3": {
@@ -3859,7 +3858,7 @@
       }
      },
      "sources": {
-      "REWARD": 10,
+      "REWARD": 12,
       "SHOP": 7,
       "EVENT": 1
      }
@@ -4042,24 +4041,24 @@
         "low_n": true
        },
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 22.0,
+        "n": 2,
+        "mean_floor": 27.5,
         "boss_pass": 1.0,
         "low_n": true
        }
       },
       "2": {
        "picked": {
-        "n": 2,
-        "mean_floor": 48.5,
-        "boss_pass": 1.0,
+        "n": 3,
+        "mean_floor": 43.3,
+        "boss_pass": 0.67,
         "low_n": true
        }
       }
      },
      "sources": {
       "SHOP": 2,
-      "REWARD": 1
+      "REWARD": 2
      }
     },
     "BULLY": {
@@ -4142,9 +4141,9 @@
         "low_n": true
        },
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 17.0,
-        "boss_pass": 0.0,
+        "n": 2,
+        "mean_floor": 25.0,
+        "boss_pass": 0.5,
         "low_n": true
        }
       },
@@ -4254,6 +4253,12 @@
        }
       },
       "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       },
        "offered_not_picked": {
         "n": 1,
         "mean_floor": 33.0,
@@ -4271,7 +4276,8 @@
       }
      },
      "sources": {
-      "REWARD": 2
+      "REWARD": 2,
+      "SHOP": 1
      }
     },
     "DAGGER_THROW": {
@@ -4279,9 +4285,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 6,
-        "mean_floor": 28.5,
-        "boss_pass": 0.67
+        "n": 7,
+        "mean_floor": 29.1,
+        "boss_pass": 0.71
        },
        "offered_not_picked": {
         "n": 3,
@@ -4292,7 +4298,7 @@
       },
       "2": {
        "offered_not_picked": {
-        "n": 2,
+        "n": 3,
         "mean_floor": 33.0,
         "boss_pass": 0.0,
         "low_n": true
@@ -4309,7 +4315,20 @@
      },
      "sources": {
       "REWARD": 5,
-      "SHOP": 1
+      "SHOP": 2
+     }
+    },
+    "DASH": {
+     "name": "冲刺",
+     "by_act": {
+      "2": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       }
+      }
      }
     },
     "DEADLY_POISON": {
@@ -4333,6 +4352,12 @@
         "n": 3,
         "mean_floor": 39.3,
         "boss_pass": 0.67,
+        "low_n": true
+       },
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 0.0,
         "low_n": true
        }
       },
@@ -4362,10 +4387,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 4,
-        "mean_floor": 27.5,
-        "boss_pass": 0.5,
-        "low_n": true
+        "n": 5,
+        "mean_floor": 28.6,
+        "boss_pass": 0.6
        },
        "offered_not_picked": {
         "n": 4,
@@ -4399,7 +4423,7 @@
      },
      "sources": {
       "SHOP": 4,
-      "REWARD": 3,
+      "REWARD": 4,
       "EVENT": 2
      }
     },
@@ -4421,9 +4445,9 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 6,
-        "mean_floor": 31.8,
-        "boss_pass": 0.67
+        "n": 7,
+        "mean_floor": 32.0,
+        "boss_pass": 0.71
        }
       },
       "2": {
@@ -4490,6 +4514,22 @@
      "sources": {
       "REWARD": 4,
       "SHOP": 3
+     }
+    },
+    "ENVENOM": {
+     "name": "涂毒",
+     "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     },
+     "sources": {
+      "SHOP": 1
      }
     },
     "ESCAPE_PLAN": {
@@ -4744,16 +4784,16 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 5,
-        "mean_floor": 30.6,
-        "boss_pass": 0.6
+        "n": 6,
+        "mean_floor": 31.0,
+        "boss_pass": 0.67
        }
       },
       "2": {
        "picked": {
-        "n": 5,
-        "mean_floor": 42.2,
-        "boss_pass": 0.6
+        "n": 6,
+        "mean_floor": 40.7,
+        "boss_pass": 0.5
        }
       },
       "3": {
@@ -4767,7 +4807,7 @@
      },
      "sources": {
       "SHOP": 8,
-      "REWARD": 4
+      "REWARD": 6
      }
     },
     "GRAND_FINALE": {
@@ -4872,10 +4912,18 @@
         "boss_pass": 0.0,
         "low_n": true
        }
+      },
+      "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       }
       }
      },
      "sources": {
-      "REWARD": 3
+      "REWARD": 4
      }
     },
     "INFINITE_BLADES": {
@@ -4961,9 +5009,9 @@
       },
       "2": {
        "offered_not_picked": {
-        "n": 3,
-        "mean_floor": 34.3,
-        "boss_pass": 0.33,
+        "n": 4,
+        "mean_floor": 34.0,
+        "boss_pass": 0.25,
         "low_n": true
        }
       },
@@ -5053,9 +5101,9 @@
       },
       "2": {
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 48.0,
-        "boss_pass": 1.0,
+        "n": 2,
+        "mean_floor": 40.5,
+        "boss_pass": 0.5,
         "low_n": true
        }
       },
@@ -5243,8 +5291,8 @@
         "boss_pass": 0.4
        },
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 22.0,
+        "n": 2,
+        "mean_floor": 27.5,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -5267,6 +5315,12 @@
      "name": "精密瞄准",
      "by_act": {
       "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       },
        "offered_not_picked": {
         "n": 5,
         "mean_floor": 28.4,
@@ -5289,6 +5343,9 @@
         "low_n": true
        }
       }
+     },
+     "sources": {
+      "REWARD": 1
      }
     },
     "POISONED_STAB": {
@@ -5296,9 +5353,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 6,
-        "mean_floor": 29.2,
-        "boss_pass": 0.5
+        "n": 7,
+        "mean_floor": 29.7,
+        "boss_pass": 0.57
        }
       },
       "2": {
@@ -5325,7 +5382,7 @@
       }
      },
      "sources": {
-      "REWARD": 7,
+      "REWARD": 8,
       "SHOP": 2
      }
     },
@@ -5557,6 +5614,12 @@
        }
       },
       "2": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       },
        "offered_not_picked": {
         "n": 2,
         "mean_floor": 36.5,
@@ -5574,7 +5637,8 @@
       }
      },
      "sources": {
-      "REWARD": 1
+      "REWARD": 1,
+      "SHOP": 1
      }
     },
     "ROLLING_BOULDER": {
@@ -5674,8 +5738,8 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 3,
-        "mean_floor": 48.3,
+        "n": 4,
+        "mean_floor": 44.5,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -5753,9 +5817,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 3,
-        "mean_floor": 22.3,
-        "boss_pass": 0.33,
+        "n": 4,
+        "mean_floor": 25.0,
+        "boss_pass": 0.5,
         "low_n": true
        },
        "offered_not_picked": {
@@ -5782,7 +5846,7 @@
       }
      },
      "sources": {
-      "REWARD": 2,
+      "REWARD": 3,
       "EVENT": 1
      }
     },
@@ -5856,6 +5920,12 @@
      "name": "钢铁风暴",
      "by_act": {
       "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       },
        "offered_not_picked": {
         "n": 1,
         "mean_floor": 22.0,
@@ -5871,6 +5941,9 @@
         "low_n": true
        }
       }
+     },
+     "sources": {
+      "REWARD": 1
      }
     },
     "STRANGLE": {
@@ -5915,9 +5988,9 @@
         "boss_pass": 0.33
        },
        "offered_not_picked": {
-        "n": 3,
-        "mean_floor": 34.7,
-        "boss_pass": 0.67,
+        "n": 4,
+        "mean_floor": 34.2,
+        "boss_pass": 0.75,
         "low_n": true
        }
       },
@@ -6048,6 +6121,19 @@
       "REWARD": 1
      }
     },
+    "TRACKING": {
+     "name": "跟踪",
+     "by_act": {
+      "1": {
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 33.0,
+        "boss_pass": 1.0,
+        "low_n": true
+       }
+      }
+     }
+    },
     "ULTIMATE_DEFEND": {
      "name": "究极防御",
      "by_act": {
@@ -6085,9 +6171,9 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 8,
-        "mean_floor": 24.8,
-        "boss_pass": 0.38
+        "n": 9,
+        "mean_floor": 25.7,
+        "boss_pass": 0.44
        }
       },
       "2": {
@@ -6113,8 +6199,8 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 1,
-        "mean_floor": 48.0,
+        "n": 2,
+        "mean_floor": 40.5,
         "boss_pass": 1.0,
         "low_n": true
        }
@@ -6159,6 +6245,17 @@
       "1": {
        "n": 1,
        "mean_floor": 49.0,
+       "boss_pass": 1.0,
+       "low_n": true
+      }
+     }
+    },
+    "AMETHYST_AUBERGINE": {
+     "name": "紫水晶茄子",
+     "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 33.0,
        "boss_pass": 1.0,
        "low_n": true
       }
@@ -6657,7 +6754,7 @@
      "name": "佩尔的士兵",
      "by_act": {
       "2": {
-       "n": 1,
+       "n": 2,
        "mean_floor": 33.0,
        "boss_pass": 0.0,
        "low_n": true
@@ -6834,7 +6931,7 @@
      "name": "草莓",
      "by_act": {
       "2": {
-       "n": 1,
+       "n": 2,
        "mean_floor": 33.0,
        "boss_pass": 0.0,
        "low_n": true
@@ -6937,6 +7034,12 @@
        "mean_floor": 25.0,
        "boss_pass": 1.0,
        "low_n": true
+      },
+      "2": {
+       "n": 1,
+       "mean_floor": 33.0,
+       "boss_pass": 0.0,
+       "low_n": true
       }
      }
     },
@@ -6983,8 +7086,8 @@
      "name": "羽翼之靴",
      "by_act": {
       "1": {
-       "n": 1,
-       "mean_floor": 49.0,
+       "n": 2,
+       "mean_floor": 41.0,
        "boss_pass": 1.0,
        "low_n": true
       }
@@ -7368,6 +7471,31 @@
       }
      }
     },
+    "FIELD_OF_MAN_SIZED_HOLES": {
+     "name": "人形洞穴之地",
+     "options": {
+      "ENTER_YOUR_HOLE": {
+       "title": "进入你的洞",
+       "n": 1,
+       "mean_floor": 33.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 33.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
     "HUNGRY_FOR_MUSHROOMS": {
      "name": "蘑菇饥渴",
      "options": {
@@ -7386,6 +7514,31 @@
        "n": 1,
        "mean_floor": 49.0,
        "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
+    "JUNGLE_MAZE_ADVENTURE": {
+     "name": "丛林迷宫奇遇",
+     "options": {
+      "JOIN_FORCES": {
+       "title": "结伴同行",
+       "n": 1,
+       "mean_floor": 33.0,
+       "boss_pass": 1.0,
+       "gold_change": 43.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 33.0,
+       "boss_pass": 1.0,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
@@ -7493,17 +7646,17 @@
       },
       "PROCEED": {
        "title": "Proceed",
-       "n": 15,
-       "mean_floor": 27.3,
-       "boss_pass": 0.53,
+       "n": 16,
+       "mean_floor": 27.7,
+       "boss_pass": 0.56,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0
       },
       "WINGED_BOOTS": {
        "title": "羽翼之靴",
-       "n": 1,
-       "mean_floor": 49.0,
+       "n": 2,
+       "mean_floor": 41.0,
        "boss_pass": 1.0,
        "gold_change": 0.0,
        "hp_change": 0.0,
@@ -7552,7 +7705,7 @@
      "options": {
       "PAELS_LEGION": {
        "title": "佩尔的士兵",
-       "n": 1,
+       "n": 2,
        "mean_floor": 33.0,
        "boss_pass": 0.0,
        "gold_change": 0.0,
@@ -7572,13 +7725,12 @@
       },
       "PROCEED": {
        "title": "Proceed",
-       "n": 4,
-       "mean_floor": 41.0,
-       "boss_pass": 0.5,
+       "n": 5,
+       "mean_floor": 39.4,
+       "boss_pass": 0.4,
        "gold_change": 0.0,
        "hp_change": 0.0,
-       "max_hp_change": 0.0,
-       "low_n": true
+       "max_hp_change": 0.0
       }
      }
     },
@@ -7597,9 +7749,9 @@
       },
       "PROCEED": {
        "title": "Proceed",
-       "n": 2,
-       "mean_floor": 35.5,
-       "boss_pass": 0.5,
+       "n": 3,
+       "mean_floor": 34.7,
+       "boss_pass": 0.33,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
@@ -7607,9 +7759,9 @@
       },
       "RANSACK": {
        "title": "洗劫",
-       "n": 1,
-       "mean_floor": 49.0,
-       "boss_pass": 1.0,
+       "n": 2,
+       "mean_floor": 41.0,
+       "boss_pass": 0.5,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
@@ -7920,9 +8072,9 @@
       },
       "PROCEED": {
        "title": "Proceed",
-       "n": 2,
-       "mean_floor": 28.0,
-       "boss_pass": 0.5,
+       "n": 3,
+       "mean_floor": 29.7,
+       "boss_pass": 0.67,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
@@ -7930,11 +8082,11 @@
       },
       "SMASH": {
        "title": "砸碎",
-       "n": 1,
-       "mean_floor": 49.0,
+       "n": 2,
+       "mean_floor": 41.0,
        "boss_pass": 1.0,
        "gold_change": 0.0,
-       "hp_change": 16.0,
+       "hp_change": 18.0,
        "max_hp_change": 0.0,
        "low_n": true
       }
@@ -8240,18 +8392,18 @@
      "options": {
       "BARGAIN_BIN": {
        "title": "旺购的打折货物",
-       "n": 1,
-       "mean_floor": 25.0,
+       "n": 2,
+       "mean_floor": 29.0,
        "boss_pass": 0.0,
        "gold_change": -100.0,
-       "hp_change": 0.0,
-       "max_hp_change": 0.0,
+       "hp_change": 3.5,
+       "max_hp_change": 3.5,
        "low_n": true
       },
       "PROCEED": {
        "title": "Proceed",
-       "n": 1,
-       "mean_floor": 25.0,
+       "n": 2,
+       "mean_floor": 29.0,
        "boss_pass": 0.0,
        "gold_change": 0.0,
        "hp_change": 0.0,
@@ -8278,6 +8430,31 @@
        "n": 1,
        "mean_floor": 49.0,
        "boss_pass": 1.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
+    "ZEN_WEAVER": {
+     "name": "修禅织网者",
+     "options": {
+      "EMOTIONAL_AWARENESS": {
+       "title": "情绪觉察",
+       "n": 1,
+       "mean_floor": 33.0,
+       "boss_pass": 0.0,
+       "gold_change": -125.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 33.0,
+       "boss_pass": 0.0,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
