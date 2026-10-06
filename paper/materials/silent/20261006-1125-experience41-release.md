@@ -52,3 +52,5 @@
   }
 }
 ```
+
+- 2026-10-06 11:31 运维codex完成11:25 experience-done 20261006-105531-experience-update登记：源27fb17e4f87c658265856e493f816a8de81ac622→实际live a5cbfe3d9e723b2e7c403b02ef5eac627f78c36b→固定发布ef3a3e17a94ff8ef58c3ef7dc9aaf20eb916909d/树0d33879283dc42bd9fbd0500aa0110162a402e3a/唯一S1.exp41，原第41节/十项proposed归档35d1f7569d6f2143802a3589e71d836d6d94c77f、main机械同步be8573654c85d446aa13009df03b0468665dd1e3。源及合后首轮tsc0/196文件2124例及198文件2166例；全部1026项已测源码/测试blob相同，其他2152项main最新blob和双方有序日志保持。CLI/by=ops仅十项shipped，first_run/prior/claim/evidence/repeat及旧历史保持，0171比较缺口保持学习者现有状态，后台0171/0172/0173新记录及新复盘未代提交，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 173 item(s), 0 problem(s)。旧重叠保护/CRLF中断及锁内恢复历史保留，不新增 live 合并或源码/知识规则；live实时知识刷新保留，完整外部由调度器本批learner-checks处理。详情paper/materials/silent/20261006-1125-experience41-release.md。
