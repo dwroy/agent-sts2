@@ -1503,10 +1503,10 @@ function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
 }
 
 /** Y6GM2CHWJBEY F17 T7 / T082DRCUHRRD F33 T4: each poison trigger loses one stack. */
-function triggerPoison(sim: Sim, enemy: Sim["enemies"][number], triggers: number): void {
+function triggerPoison(sim: Sim, enemy: Sim["enemies"][number], triggers: number, observedCap = Infinity): void {
   for (let k = 0; k < triggers && enemy.alive && (enemy.poison ?? 0) > 0; k += 1) {
     // T082DRCUHRRD F48 attempt 6 T10: three poison triggers into Intangible lose only three HP.
-    const lost = Math.min(enemy.hp, enemy.intangible ? 1 : enemy.poison ?? 0);
+    const lost = Math.min(enemy.hp, enemy.intangible ? 1 : enemy.poison ?? 0, observedCap);
     enemy.hp -= lost;
     enemy.poison = Math.max(0, (enemy.poison ?? 0) - 1);
     sim.damageDealt += lost;
@@ -2843,7 +2843,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Y6GM2CHWJBEY F17 T7 / T082DRCUHRRD F33 T9: poison resolves before the enemy attacks.
   if (sim.enemies.some((enemy) => enemy.alive && (enemy.poison ?? 0) > 0)) {
     sim = clone(sim);
-    for (const enemy of sim.enemies) triggerPoison(sim, enemy, 1 + sim.poisonExtraTriggers);
+    const triggers = 1 + sim.poisonExtraTriggers;
+    // silent-0174/0175: D4LJ9QMGFB8Q F20 T4 and 4Y94N8RDPGPM F30 T2 retain
+    // two/three HP after one enemy-turn poison trigger against Hard to Kill 9.
+    // Other caps, immediate triggers and multi-trigger combinations are unverified.
+    for (const enemy of sim.enemies) triggerPoison(sim, enemy, triggers, triggers === 1 && enemy.perHitCap === 9 ? 9 : Infinity);
   }
   const living = sim.enemies.filter((enemy) => enemy.alive);
   // A phase boss at 0 HP revives next turn (it does not attack that turn): a kill, not a win.
