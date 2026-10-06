@@ -12,3 +12,5 @@
 归档检查说明：原release.patch第24行是diff上下文的单空格，常规空白检查拒绝；原字节保持，其他记录常规空白检查通过，原始补丁只豁免行尾空白。此为归档检查中断，没有自测失败或重跑。
 
 审计数据归档说明：96,323,433字节的逐行原audit.json保留于learner/runs/20261006-205739-experience-update/audit.json，归档存audit-origin.json来源及SHA256。移除误复制的重复归档文件；原始报告、草稿、更正和自测日志保持。
+
+- 2026-10-06 21:37 运维codex完成21:30 experience-done 20261006-205739-experience-update上线登记：源d6704d506c5aa52d9fc0af7feea0e75a0949342f→实际live 02832f5d05ee5d831d4bf9c43097515bc7469553→固定发布28e339fa3ff7b39ed7f45397c621f47873b3c795/树ededfa5a22da377b168a940fcc11aa6606be5846/唯一S1.exp51；原第51节/9行proposed/源与合后自测归档3b30a3ae45d9cec25ef05066a7faf437cdeaa24c，main机械同步ab3b366a2ef2fd7832f34cc70b34d2f499eb3440。全部1045项源码/测试blob同固定发布，其他2466项main最新blob、双方decision-log和旧失败历史保持。源首轮tsc0/206文件2221例、合后首轮tsc0/207文件2227例通过，无测试失败重跑，预算草稿断言及更正原记录保留，完整外部待本批learner-checks。CLI/by=ops仅9项shipped/S1.exp51，first_run/prior/claim/证据/repeat和旧上线历史保持，S1.fix35/0192及所有其他条目不变；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 192 item(s), 0 problem(s)。经验.25→.26新增1更新8全补证退役0、active124/59995字；只登记实际产出，不另审或提供知识，不重复live合并、测试或论文刷新。后台新复盘/台账/notes/成本表及对局照常，详情paper/materials/silent/20261006-2130-experience51-release.md。
