@@ -505,8 +505,8 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 10:19 游戏重开动作的结果判读（非阻塞工具缺口）
 
-- [ ] `ops/codex-ops-actions.sh:127`至`:130`：launch-game用curl传输成功当mod就绪，第二次状态读取的JSON解析错误经head只打印“mod answers: Traceback”，随后仍exit0。证据10:15 stall恢复TD1HVGS7H6LB SILENT A10/F17时，`bash ops/codex-ops-do.sh launch-game`真实返回0与该Traceback；游戏后来由独立mod-state和控制台动作确认恢复，不能借后来恢复掩盖动作的误报。交学习者用固定响应数据核对HTTP状态、空/坏JSON、ok/data/screen结构及真正就绪的区别，让返回值对应实际状态；不改游戏规则或需要Roy操作的桌面流程。
-- [ ] `ops/codex-ops-actions.sh:67`：mod-state将状态JSON机械截成20000字符后仍exit0，本次`bash ops/codex-ops-do.sh mod-state`战斗响应20001字节（含末换行），JSON解析在第20001列失败，SHA256 8843f3779018124ff861150c794dc8630d1e698003cfa22d32fff6bcc1eb00fe；响应前缀同局CARD_SELECTION/T6。交学习者保留可解析的完整状态或明确摘要/错误，不把中途切断的JSON冒充完整响应，固定数据覆盖小状态与超过20000字符的大状态。原日志、自动重启记录和失败返回历史保留；没有对应游戏知识或bug-infra id，不新建/冒标shipped，不提高游戏战斗预算。
+- [x] `ops/codex-ops-actions.sh:127`至`:130`：launch-game用curl传输成功当mod就绪，第二次状态读取的JSON解析错误经head只打印“mod answers: Traceback”，随后仍exit0。证据10:15 stall恢复TD1HVGS7H6LB SILENT A10/F17时，`bash ops/codex-ops-do.sh launch-game`真实返回0与该Traceback；游戏后来由独立mod-state和控制台动作确认恢复，不能借后来恢复掩盖动作的误报。交学习者用固定响应数据核对HTTP状态、空/坏JSON、ok/data/screen结构及真正就绪的区别，让返回值对应实际状态；不改游戏规则或需要Roy操作的桌面流程。
+- [x] `ops/codex-ops-actions.sh:67`：mod-state将状态JSON机械截成20000字符后仍exit0，本次`bash ops/codex-ops-do.sh mod-state`战斗响应20001字节（含末换行），JSON解析在第20001列失败，SHA256 8843f3779018124ff861150c794dc8630d1e698003cfa22d32fff6bcc1eb00fe；响应前缀同局CARD_SELECTION/T6。交学习者保留可解析的完整状态或明确摘要/错误，不把中途切断的JSON冒充完整响应，固定数据覆盖小状态与超过20000字符的大状态。原日志、自动重启记录和失败返回历史保留；没有对应游戏知识或bug-infra id，不新建/冒标shipped，不提高游戏战斗预算。
 
 ## 2026-10-06 10:30 游戏退出原因已澄清（停止排查）
 
@@ -516,12 +516,20 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 11:12 A10复盘：支配比较的余毒维度（交学习者）
 
-- [ ] **非阻塞比较缺口，仅转录学习者提案**：学习者只读live定位`agent/src/reflex/turn-solver.ts:3684`只汇入易伤/虚弱，`:3702`比较向量没有余毒，`agent/src/reflex/combat-plan.ts:4260`据此替换低信心选线；来源TD1HVGS7H6LB SILENT A10 F17两次T3、`ops/codex-ops/learner/20261006-104301.out`及原复盘，账本silent-0171。
+- [x] **非阻塞比较缺口，仅转录学习者提案**：学习者只读live定位`agent/src/reflex/turn-solver.ts:3684`只汇入易伤/虚弱，`:3702`比较向量没有余毒，`agent/src/reflex/combat-plan.ts:4260`据此替换低信心选线；来源TD1HVGS7H6LB SILENT A10 F17两次T3、`ops/codex-ops/learner/20261006-104301.out`及原复盘，账本silent-0171。
 - 按学习者证据：Jev两次选择plan6致命毒药→投掷匕首→触媒，题面19伤/损9/敌余201及3毒；代码替成plan1投掷匕首→狩猎→触媒，21伤/同损9/敌余199且无毒。两次实际敌220→199、玩家45→36，启毒延至T10；原启毒线未实打，不声称保留或修复即可整场获胜。旧silent-0008的毒效果未建模与本项分别记。
 - 回报虽标新纯bug、0171 kind=bug-infra，内容涉及余毒机制，按学习协议交学习者依据本角色证据实现与固定验证，运维只转录、不改比较公式或其他游戏知识。0171 first_run=TD1HVGS7H6LB/prior=unknown/status=observed沿原账本；行号来自复盘时只读live be0ee6df，本局存在两个dirty进程版本，不声称复原历史dirty源码。两次行动和原推演差异、失败读档/重启记录及复盘勘误保留。
 
 ## 2026-10-06 11:33 A10复盘：永冻触发缺口与精确切击范围补证（交学习者）
 
 - [ ] **非阻塞机制模型缺口，仅转录学习者提案**：`agent/src/reflex/turn-solver.ts:1645`的能力触发与`agent/src/reflex/combat-plan.ts:2931`的遗物接线没有PERMAFROST；来源PJ2LL9KU7FHD SILENT A10 F17第三次T4、`ops/codex-ops/learner/20261006-111301.out`及原复盘，账本silent-0172（独立机制0173）。原题幻影之刃加敏捷药水及两防御预计损7，实际幻影一步0→7挡、两防御各7，合21挡覆盖21来袭，57血不变；更早已核25226ZFLNR1J F29 T1灵动步法一步实补7挡、原题没有block_gained。0172 first_run=25226ZFLNR1J/prior=no，0173同首见局/prior=yes，沿学习者原账本。
-- [ ] **既有精确切击模型的范围补证**：`agent/src/reflex/turn-solver.ts:2002`及`agent/src/reflex/card-model.ts:1004`的已验证无力量五/六手分支未覆盖本局力量修正范围。PJ2LL9KU7FHD F17首试及末次T15五→四手、−2力量CalculatedDamage3→5，整线预计扣5、实际扣7；第三次T5五→三手、2力量7→11，整线预计36、实际40。原silent-0166/S1.fix28已关闭的已测范围和上线历史保持，新证据交学习者处理；0169仅机制support。学习者追加0166 repeat，但本局开局早于S1.fix28发布，不登记为补丁生效后的回归。
+- [x] **既有精确切击模型的范围补证**：`agent/src/reflex/turn-solver.ts:2002`及`agent/src/reflex/card-model.ts:1004`的已验证无力量五/六手分支未覆盖本局力量修正范围。PJ2LL9KU7FHD F17首试及末次T15五→四手、−2力量CalculatedDamage3→5，整线预计扣5、实际扣7；第三次T5五→三手、2力量7→11，整线预计36、实际40。原silent-0166/S1.fix28已关闭的已测范围和上线历史保持，新证据交学习者处理；0169仅机制support。学习者追加0166 repeat，但本局开局早于S1.fix28发布，不登记为补丁生效后的回归。
 - 两项虽在回报标bug，内容涉及游戏机制，按学习协议交学习者基于本角色证据实现并固定验证；本局正常结束，没有阻塞故障，运维不改模型或补规则。行号按学习者只读live 1103a83d取号，本局eabdd307+dirty不声称复原。只确认首次能力7挡，重复/重放未验证，不外推每轮触发或称修模型即可整场获胜；全部原复盘、首次证据/先验/状态及版本保留。
+
+- 2026-10-06 14:41 运维按14:35事件核实20261006-104301-fix-batch四项源码均为main/live祖先：launch-game判读db388125、完整mod-state/broker UTF8传输61a92184、余毒比较c9aef94d→51eb059e/S1.fix29、精确切击已观测力量范围995a345f→c2dd5064/S1.fix30；固定发布4fb81b17d099018d348942677bfe31dca333a4b1/树6d6ad56ba9a8c7bf86808cbee502df8e06ad74b3的两份独立完整外部tsc/vitest均exit0、251文件2986通过2跳过。main已由观察者合入，无重复合并；仅关闭上述四框，并CLI/by=ops登记0171/S1.fix29和0166/S1.fix30，原证据、先验、repeat和旧fix28历史保持。永冻0172未实现仍开放，0173经验和0169独立；其他策略、证据不足及性能专项保持。详情paper/materials/silent/20261006-1435-fixes-checks-and-engine-precheck.md。
+
+## 2026-10-06 15:11 A10复盘：毒结算未应用已读入的伤害上限（交学习者）
+
+- [ ] **非阻塞机制模型缺口，仅转录学习者提案**：学习者只读live定位`agent/src/reflex/turn-solver.ts:1509`的triggerPoison仅取敌血、无实体和毒层数，没有应用perHitCap；`agent/src/reflex/combat-plan.ts:745`已接HARD_TO_KILL_POWER，`turn-solver.ts:1424`已对攻击应用。来源D4LJ9QMGFB8Q SILENT A10 F20 T4、`ops/codex-ops/learner/20261006-144301.out`、原复盘及账本silent-0174（独立机制0175）。11血12毒敌人被代码combat/lethal报死并结束，实际只扣9、剩2血，存活敌11攻击令玩家24→13，T5才结束剩敌；局部少算2伤并漏算存活威胁。
+- 学习者回查首证为4Y94N8RDPGPM SILENT A7 F30 T2：12血14毒原题预测击杀/损0，实际只扣9留3、玩家82→76。0174/0175 first_run仍4Y94N8RDPGPM、prior=no/status=observed，是首次登记的旧现象，不记成学习上线后重犯；更早1HC609GTLGN3毒仅4无同范围对照。与旧0008分账，0176持牌机制独立保留。
+- 回报虽列新纯bug、0174 kind=bug-infra，内容涉及游戏机制，按学习协议由学习者依据本角色证据实现与固定验证；两局均正常结束，无卡死/崩溃/非法动作，运维不改结算公式。只转录已见9上限与毒组合，不外推其他来源或未见多次触发，不把整场死亡或假定修复后的胜负归本项。行号按学习者只读live 0fd8e845定位，原局4fb81b17+dirty不声称复原。原复盘、名称/时间/伤害来源勘误及首次证据/先验/版本均保留，后续交学习者处理。
