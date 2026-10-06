@@ -1,6 +1,6 @@
 {
  "_about": "Outcome stats from our logs (tools/build-outcome-stats.py). Observational: a choice's numbers mix its effect with the situations it was made in. n = runs; low_n = n<5. boss_pass = share of those runs that beat the boss of the act the choice was made in; mean_floor = mean final floor of those runs. events: hp/max_hp/gold change = from the choice to the first decision on the next floor. by_ascension: one table per ascension (A8, A9 and each higher one with runs), each counted over that ascension's runs alone with its own baseline; a run reads its own ascension's table (before 2026-10-04 the file was the A8 table alone).",
- "generated": "2026-10-06T10:21:29",
+ "generated": "2026-10-06T10:51:19",
  "ascensions": [
   8,
   9,
@@ -3628,12 +3628,12 @@
   "10": {
    "ascension": 10,
    "baseline": {
-    "runs": 8,
-    "mean_floor": 31.9,
+    "runs": 9,
+    "mean_floor": 30.2,
     "boss_pass_by_act": {
      "1": {
-      "n": 8,
-      "boss_pass": 0.62
+      "n": 9,
+      "boss_pass": 0.56
      },
      "2": {
       "n": 5,
@@ -3787,9 +3787,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 5,
-        "mean_floor": 28.2,
-        "boss_pass": 0.6
+        "n": 6,
+        "mean_floor": 26.3,
+        "boss_pass": 0.5
        }
       },
       "2": {
@@ -3815,7 +3815,7 @@
       }
      },
      "sources": {
-      "REWARD": 7,
+      "REWARD": 8,
       "SHOP": 3,
       "EVENT": 1
      }
@@ -3839,6 +3839,14 @@
     "BLADE_DANCE": {
      "name": "刀刃之舞",
      "by_act": {
+      "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 17.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       }
+      },
       "2": {
        "offered_not_picked": {
         "n": 3,
@@ -3855,6 +3863,9 @@
         "low_n": true
        }
       }
+     },
+     "sources": {
+      "SHOP": 1
      }
     },
     "BLADE_OF_INK": {
@@ -4097,9 +4108,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 1,
-        "mean_floor": 33.0,
-        "boss_pass": 1.0,
+        "n": 2,
+        "mean_floor": 25.0,
+        "boss_pass": 0.5,
         "low_n": true
        },
        "offered_not_picked": {
@@ -4127,7 +4138,7 @@
       }
      },
      "sources": {
-      "REWARD": 1
+      "REWARD": 2
      }
     },
     "DAGGER_THROW": {
@@ -4176,6 +4187,12 @@
         "n": 7,
         "mean_floor": 29.4,
         "boss_pass": 0.57
+       },
+       "offered_not_picked": {
+        "n": 1,
+        "mean_floor": 17.0,
+        "boss_pass": 0.0,
+        "low_n": true
        }
       },
       "2": {
@@ -4380,7 +4397,7 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 1,
+        "n": 2,
         "mean_floor": 17.0,
         "boss_pass": 0.0,
         "low_n": true
@@ -4388,7 +4405,7 @@
       }
      },
      "sources": {
-      "REWARD": 1
+      "REWARD": 2
      }
     },
     "EXTERMINATE": {
@@ -4530,9 +4547,9 @@
         "low_n": true
        },
        "offered_not_picked": {
-        "n": 2,
-        "mean_floor": 41.0,
-        "boss_pass": 1.0,
+        "n": 3,
+        "mean_floor": 33.0,
+        "boss_pass": 0.67,
         "low_n": true
        }
       },
@@ -4630,9 +4647,9 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 3,
-        "mean_floor": 30.0,
-        "boss_pass": 0.67,
+        "n": 4,
+        "mean_floor": 26.8,
+        "boss_pass": 0.5,
         "low_n": true
        }
       },
@@ -4690,9 +4707,9 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 3,
-        "mean_floor": 33.0,
-        "boss_pass": 0.67,
+        "n": 4,
+        "mean_floor": 29.0,
+        "boss_pass": 0.5,
         "low_n": true
        }
       }
@@ -4739,6 +4756,12 @@
      "name": "先制打击",
      "by_act": {
       "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 17.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       },
        "offered_not_picked": {
         "n": 3,
         "mean_floor": 27.7,
@@ -4746,6 +4769,9 @@
         "low_n": true
        }
       }
+     },
+     "sources": {
+      "EVENT": 1
      }
     },
     "LEG_SWEEP": {
@@ -4930,6 +4956,12 @@
      "name": "幻影之刃",
      "by_act": {
       "1": {
+       "picked": {
+        "n": 1,
+        "mean_floor": 17.0,
+        "boss_pass": 0.0,
+        "low_n": true
+       },
        "offered_not_picked": {
         "n": 2,
         "mean_floor": 33.0,
@@ -4945,6 +4977,9 @@
         "low_n": true
        }
       }
+     },
+     "sources": {
+      "SHOP": 1
      }
     },
     "PIERCING_WAIL": {
@@ -4952,9 +4987,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 3,
-        "mean_floor": 22.3,
-        "boss_pass": 0.33,
+        "n": 4,
+        "mean_floor": 21.0,
+        "boss_pass": 0.25,
         "low_n": true
        }
       },
@@ -4968,7 +5003,8 @@
       }
      },
      "sources": {
-      "REWARD": 6
+      "REWARD": 6,
+      "EVENT": 1
      }
     },
     "PINPOINT": {
@@ -5065,9 +5101,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 1,
-        "mean_floor": 25.0,
-        "boss_pass": 1.0,
+        "n": 2,
+        "mean_floor": 21.0,
+        "boss_pass": 0.5,
         "low_n": true
        }
       },
@@ -5089,7 +5125,7 @@
       }
      },
      "sources": {
-      "REWARD": 1,
+      "REWARD": 2,
       "SHOP": 1
      }
     },
@@ -5142,9 +5178,9 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 3,
-        "mean_floor": 43.3,
-        "boss_pass": 1.0,
+        "n": 4,
+        "mean_floor": 36.8,
+        "boss_pass": 0.75,
         "low_n": true
        }
       },
@@ -5225,9 +5261,9 @@
      "by_act": {
       "1": {
        "offered_not_picked": {
-        "n": 2,
-        "mean_floor": 21.0,
-        "boss_pass": 0.5,
+        "n": 3,
+        "mean_floor": 19.7,
+        "boss_pass": 0.33,
         "low_n": true
        }
       },
@@ -5408,9 +5444,9 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 2,
-        "mean_floor": 25.0,
-        "boss_pass": 0.5,
+        "n": 3,
+        "mean_floor": 22.3,
+        "boss_pass": 0.33,
         "low_n": true
        },
        "offered_not_picked": {
@@ -5438,8 +5474,8 @@
       }
      },
      "sources": {
-      "EVENT": 1,
-      "REWARD": 1
+      "REWARD": 2,
+      "EVENT": 1
      }
     },
     "SNAKEBITE": {
@@ -5497,15 +5533,15 @@
      "by_act": {
       "1": {
        "picked": {
-        "n": 3,
-        "mean_floor": 32.7,
-        "boss_pass": 0.67,
+        "n": 4,
+        "mean_floor": 28.8,
+        "boss_pass": 0.5,
         "low_n": true
        }
       }
      },
      "sources": {
-      "EVENT": 3
+      "EVENT": 4
      }
     },
     "STORM_OF_STEEL": {
@@ -5841,6 +5877,12 @@
     "CHANDELIER": {
      "name": "吊灯",
      "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 17.0,
+       "boss_pass": 0.0,
+       "low_n": true
+      },
       "2": {
        "n": 1,
        "mean_floor": 33.0,
@@ -5986,9 +6028,9 @@
      "name": "失物盒",
      "by_act": {
       "1": {
-       "n": 1,
-       "mean_floor": 33.0,
-       "boss_pass": 1.0,
+       "n": 2,
+       "mean_floor": 25.0,
+       "boss_pass": 0.5,
        "low_n": true
       }
      }
@@ -6145,6 +6187,12 @@
     "PERMAFROST": {
      "name": "永冻冰晶",
      "by_act": {
+      "1": {
+       "n": 1,
+       "mean_floor": 17.0,
+       "boss_pass": 0.0,
+       "low_n": true
+      },
       "2": {
        "n": 1,
        "mean_floor": 48.0,
@@ -6354,26 +6402,51 @@
     }
    },
    "events": {
+    "ABYSSAL_BATHS": {
+     "name": "深渊浴场",
+     "options": {
+      "ABSTAIN": {
+       "title": "敬而远之",
+       "n": 1,
+       "mean_floor": 17.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 10.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      },
+      "PROCEED": {
+       "title": "Proceed",
+       "n": 1,
+       "mean_floor": 17.0,
+       "boss_pass": 0.0,
+       "gold_change": 0.0,
+       "hp_change": 0.0,
+       "max_hp_change": 0.0,
+       "low_n": true
+      }
+     }
+    },
     "BRAIN_LEECH": {
      "name": "脑蛭",
      "options": {
       "PROCEED": {
        "title": "Proceed",
-       "n": 1,
-       "mean_floor": 48.0,
-       "boss_pass": 1.0,
+       "n": 2,
+       "mean_floor": 32.5,
+       "boss_pass": 0.5,
        "gold_change": 0.0,
-       "hp_change": 2.0,
+       "hp_change": 1.0,
        "max_hp_change": 0.0,
        "low_n": true
       },
       "SHARE_KNOWLEDGE": {
        "title": "分享知识",
-       "n": 1,
-       "mean_floor": 48.0,
-       "boss_pass": 1.0,
+       "n": 2,
+       "mean_floor": 32.5,
+       "boss_pass": 0.5,
        "gold_change": 0.0,
-       "hp_change": 2.0,
+       "hp_change": 1.0,
        "max_hp_change": 0.0,
        "low_n": true
       }
@@ -6639,9 +6712,9 @@
       },
       "LOST_COFFER": {
        "title": "失物盒",
-       "n": 1,
-       "mean_floor": 33.0,
-       "boss_pass": 1.0,
+       "n": 2,
+       "mean_floor": 25.0,
+       "boss_pass": 0.5,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
@@ -6649,9 +6722,9 @@
       },
       "PROCEED": {
        "title": "Proceed",
-       "n": 8,
-       "mean_floor": 31.9,
-       "boss_pass": 0.62,
+       "n": 9,
+       "mean_floor": 30.2,
+       "boss_pass": 0.56,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0
@@ -7023,9 +7096,9 @@
      "options": {
       "NAB_THE_MAP": {
        "title": "顺走地图",
-       "n": 3,
-       "mean_floor": 32.7,
-       "boss_pass": 0.67,
+       "n": 4,
+       "mean_floor": 28.8,
+       "boss_pass": 0.5,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
@@ -7033,9 +7106,9 @@
       },
       "PROCEED": {
        "title": "Proceed",
-       "n": 3,
-       "mean_floor": 32.7,
-       "boss_pass": 0.67,
+       "n": 4,
+       "mean_floor": 28.8,
+       "boss_pass": 0.5,
        "gold_change": 0.0,
        "hp_change": 0.0,
        "max_hp_change": 0.0,
