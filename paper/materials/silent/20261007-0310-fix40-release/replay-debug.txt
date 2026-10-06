@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+stdout | tests/silent-wither-replay.test.ts > F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six
+{"player":{"freeAttacks":0,"duplicate":0,"duplicateAttacks":0,"regen":0,"buffer":0,"hp":28,"maxHp":77,"block":8,"energy":1,"weak":false,"vulnerable":false,"frail":false,"dexterityNow":0,"intangible":false,"shrunk":false,"juggernaut":0,"rage":0,"keepsBlock":false,"gambit":false,"endTurnBlock":0,"rupture":0,"maxPlays":null,"maxSkills":null,"endTurnHpLoss":0,"surrounded":false,"facing":null,"colossus":false,"startTurnHpLoss":0,"retaliate":0,"turnStartAoe":0,"inferno":0,"infernoCopies":0,"feelNoPain":0,"afterImage":1,"shadowmeldActive":false,"corrosiveWave":0,"poisonExtraTriggers":3,"envenom":0,"hellraiser":false,"darkEmbrace":0,"strengthNow":0,"unmovableArmed":false,"demonTongue":false,"helmetBlock":0,"hpLossCap":null,"vigor":0,"noBlock":false,"tender":0,"exhaustedThisTurn":false,"revives":[{"source":"LIZARD_TAIL","name":"蜥蜴尾巴","hp":38}]},"enemies":[{"index":0,"name":"永世沙漏","hp":239,"maxHp":535,"block":0,"vulnerable":1,"weak":2,"poison":29,"artifact":0,"intangible":false,"slippery":0,"hpLossCap":null,"thorns":0,"curlUp":0,"flutter":0,"perHitCap":null,"slow":false,"illusion":false,"minion":false,"reattach":false,"reattachHp":0,"crabRage":false,"eruption":0,"sandpit":0,"asleep":0,"slumber":0,"scaling":true,"halved":false,"skittish":0,"reflect":false,"demise":0,"shrink":0,"punishesUnblocked":0,"woundsPerHit":0,"enrage":0,"vitalSpark":0,"revives":false,"stock":0,"shriek":0,"burrowed":false,"ravenous":0,"dazedPerHit":0,"unmodelled":true,"attacks":[{"damage":26,"hits":1}]}],"hand":[{"index":0,"key":"c0","cardId":"SKEWER","name":"串刺","type":"Attack","upgraded":false,"cost":0,"xCost":true,"playable":true,"target":"single","validTargets":[0],"damage":8,"hits":0,"block":0,"vulnerable":0,"weak":0,"strength":0,"tempStrength":0,"damageBase":8,"enemyStrength":0,"enemyTempStrengthLoss":0,"hpLoss":0,"energyGain":0,"plating":0,"draw":0,"exhausts":false,"special":"whirlwind","known":true,"flatValue":0,"heldPenalty":0,"heldHpLoss":0,"retaliate":0,"delayedDamage":0,"inferno":0,"soulbound":false,"putsOnTop":false,"drawsUntil":false,"randomExhaust":false,"text":"造成8点伤害X次。"},{"index":1,"key":"c1","cardId":"WITHER","name":"凋萎+2","type":"","upgraded":false,"cost":-1,"xCost":false,"playable":false,"target":"none","validTargets":[],"damage":9,"hits":1,"block":0,"vulnerable":0,"weak":0,"strength":0,"tempStrength":0,"damageBase":9,"enemyStrength":0,"enemyTempStrengthLoss":0,"hpLoss":0,"energyGain":0,"plating":0,"draw":0,"exhausts":false,"special":null,"known":true,"flatValue":0,"heldPenalty":9,"heldHpLoss":0,"retaliate":0,"delayedDamage":0,"inferno":0,"soulbound":false,"putsOnTop":false,"drawsUntil":false,"randomExhaust":false,"text":"不能被打出。 在你的回合结束时，如果这张牌在你的手牌中，你受到9点伤害。"},{"index":2,"key":"c2","cardId":"NEUTRALIZE","name":"中和","type":"Attack","upgraded":false,"cost":0,"xCost":false,"playable":true,"target":"single","validTargets":[0],"damage":3,"hits":1,"block":0,"vulnerable":0,"weak":1,"strength":0,"tempStrength":0,"damageBase":3,"enemyStrength":0,"enemyTempStrengthLoss":0,"hpLoss":0,"energyGain":0,"plating":0,"draw":0,"exhausts":false,"special":null,"known":true,"flatValue":0,"heldPenalty":0,"heldHpLoss":0,"retaliate":0,"delayedDamage":0,"inferno":0,"soulbound":false,"putsOnTop":false,"drawsUntil":false,"randomExhaust":false,"text":"造成3点伤害。 给予1层虚弱。"},{"index":3,"key":"c3","cardId":"ACROBATICS","name":"杂技","type":"Skill","upgraded":false,"cost":1,"xCost":false,"playable":true,"target":"self","validTargets":[],"damage":null,"hits":1,"block":0,"vulnerable":0,"weak":0,"strength":0,"tempStrength":0,"enemyStrength":0,"enemyTempStrengthLoss":0,"hpLoss":0,"energyGain":0,"plating":0,"draw":3,"exhausts":false,"special":null,"discardAfterDraw":true,"known":true,"flatValue":0,"heldPenalty":0,"heldHpLoss":0,"retaliate":0,"delayedDamage":0,"inferno":0,"soulbound":false,"putsOnTop":false,"drawsUntil":false,"randomExhaust":false,"text":"抽3张牌。 丢弃1张牌。"}],"outcome":{"winsFight":false,"hpLoss":28,"hpAfter":0,"dies":false,"revived":{"names":["蜥蜴尾巴"],"sources":["LIZARD_TAIL"],"reviveHp":38,"hp":38,"ownLoss":0},"blockGained":1,"damageDealt":119,"kills":[],"restocked":[],"enemyHpAfter":[{"index":0,"name":"永世沙漏","hp":120,"vulnerable":1,"weak":2,"poison":25,"block":0,"artifact":0,"slippery":0,"curlUp":0,"flutter":0,"strengthGained":0,"shrink":0}],"incomingAfterBlock":35,"energyLeft":0,"vulnerableApplied":0,"weakApplied":0,"strengthGained":0,"cardsDrawn":0,"unknownCards":[],"sandpitAfter":null,"startTurnKills":[],"withersAdded":1,"sleepCost":0,"lasting":0,"blockWasted":0,"attackPlays":1,"heldDamage":18,"heldDamageFrom":["凋萎+2","Wither added by this turn's cards"]}}
+
+ ❯ tests/silent-wither-replay.test.ts (8 tests | 1 failed | 7 skipped) 88ms
+   × F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six 87ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six
+AssertionError: expected 28 to be 35 // Object.is equality
+
+- Expected
++ Received
+
+- 35
++ 28
+
+ ❯ tests/silent-wither-replay.test.ts:72:31
+     70|   expect(input!.wither?.played).toBe(29);
+     71|   console.log(JSON.stringify({player:input!.player,enemies:input!.enem…
+     72|   expect(plan.outcome.hpLoss).toBe(35);
+       |                               ^
+     73| });
+     74|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  02:53:47
+   Duration  1.81s (transform 1.32s, setup 264ms, import 1.33s, tests 88ms, environment 0ms)
+

@@ -1,0 +1,66 @@
+## 修 bug 回报
+
+- 合并基线：main → `9b134d61`
+- 修复：重放附魔漏入跨回合凋萎累计（silent-0199；DPYF2BAA3DKT F48末次T1/T7）— `1ab1ba8d` — 测试 `agent/tests/silent-wither-replay.test.ts:F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six` — 去掉修复时失败：是（9失败/1通过；恢复后相关50例通过）
+- 修复：羽化生成牌误算即时抽牌（silent-0202；C48LLXBGKXQ9 F24 T1、HUVEPWQAHWFU F35 T2）— `129853b8` — 测试 `agent/tests/silent-metamorphosis.test.ts:$run: generated attacks are not three immediate draws` — 去掉修复时失败：是（2失败/2通过；恢复4例通过）；台账占位提交已追补勘误
+- 已被别人修掉的：永冻首次能力7挡 — `157d635c`；收场使用条件 — `62b0e23f`；其余126项及对应提交见[128项核对清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-024302-fix-batch/already-fixed.md)
+- 没修的：mod请求超时自愈 — 证据不足，根因未定位；Codex缓存实测 — 证据不足，离线无法受控实测；boss模拟性能及样本不足 — 太大，需独立专项；策略取舍 — 策略类
+- 测试：源及合后tsc退出码0；最终沙箱vitest 214文件/2289用例/退出码0；无超时重跑。初稿卡牌索引、复活损伤断言修正后重跑通过。gitleaks退出码0；沙箱外完整套件交调度器补跑
+- 合入：live发布 `0068600d`，代码合入 `0b6e5c94`，版本 `S1.fix40`；[运维交接已落盘](/home/dw/Projects/agent-sts2/learner/runs/20261007-024302-fix-batch/handoff-ops.md)
+- 需要Dai定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息回血或锻造、小偷优先级、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值
+
+```json
+{
+  "task": "fix-batch",
+  "base": "9b134d61e7cf4b4be2af6bbb51a57f72e315242b",
+  "fixes": [
+    {
+      "item": "重放附魔的额外打出漏入跨回合凋萎累计（silent-0199；DPYF2BAA3DKT F48末次T1/T7）",
+      "commit": "1ab1ba8dc446e5a12dec0396528c9b2a5b478fe8",
+      "test": "agent/tests/silent-wither-replay.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "羽化生成到抽牌堆被误算为即时抽牌（silent-0202；C48LLXBGKXQ9 F24 T1/HUVEPWQAHWFU F35 T2）",
+      "commit": "129853b817c0e985e222b09385a9bfeb0562ec7f",
+      "test": "agent/tests/silent-metamorphosis.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "mod选牌屏及其他屏幕请求超时自愈",
+      "reason": "证据不足：未定位mod内部根因。"
+    },
+    {
+      "item": "Codex大脑缓存命中偏低及实测对比",
+      "reason": "证据不足：离线无法调用真实LLM或网络进行受控对比。"
+    },
+    {
+      "item": "boss整场模拟耗时、样本不足及CPU争用",
+      "reason": "太大：需独立固定性能基准和跨模拟器定位。"
+    },
+    {
+      "item": "保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值",
+      "reason": "策略类：交Dai或独立策略任务。"
+    }
+  ],
+  "merged": "0b6e5c94f3bbbe0a936ced995f790987c57c4b88",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2289
+  }
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11286-c014-7113-8af4-41377568d45a
+轮数：1；工具调用：command_execution×86 file_change×9
+token：输入 220.8k、输出 48.8k（其中推理 21.2k）、cache 读 9635.6k、cache 写 0（命中 97.8%）
+成本：未提供
+耗时：1494.1 s（墙钟）
+时间：首个事件 1.8 s、模型首个输出 7.2 s、首次工具 10.3 s、末次工具结束 1453.1 s；工具内共 827.9 s，其余（模型生成、推理、网络）664.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×66；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T02-43-03-01a11286-c014-7113-8af4-41377568d45a.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-024302-fix-batch.jsonl

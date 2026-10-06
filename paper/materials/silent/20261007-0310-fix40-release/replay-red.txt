@@ -1,0 +1,177 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-wither-replay.test.ts (10 tests | 9 failed) 266ms
+   × F48 final T7: the first-turn enchantment makes twenty-six plays, without changing the manual mean 51ms
+   × F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six 105ms
+   × failed (timeout): rejected adds no enchantment play 11ms
+   × not dispatched: changed adds no enchantment play 10ms
+   × a restart immediately after accepted dispatch retains one replay before the next state was logged 6ms
+   × duplicate logged source rows and later questions retain only one extra play 12ms
+   × a retry inside T1 and a new room clear extras while enemy-turn counter resets preserve them 14ms
+   × restart retains observed nine-damage Withers when the current hand contains none 13ms
+   × Throwing Axe is counted separately and Ironclad keeps the original raw-count behavior 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > F48 final T7: the first-turn enchantment makes twenty-six plays, without changing the manual mean
+AssertionError: expected { every: 6, played: +0, damage: 9 } to match object { every: 6, played: 26, damage: 9 }
+
+- Expected
++ Received
+
+  {
+    "damage": 9,
+    "every": 6,
+-   "played": 26,
++   "played": 0,
+  }
+
+ ❯ tests/silent-wither-replay.test.ts:56:29
+     54| it("F48 final T7: the first-turn enchantment makes twenty-six plays, w…
+     55|   const memory = restored(rows.filter((row) => row.ts <= t7.ts));
+     56|   expect(count(t7, memory)).toMatchObject({ every: 6, played: 26, dama…
+       |                             ^
+     57|   expect(fightPlaysPerTurn(env(t7, memory), 7)).toBe(25 / 6);
+     58|   expect(count(t7, memory).played).toBe(26); // A second question must…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > F48 final T7: Skewer reaches the thirtieth play and the complete loss is thirty-five, not twenty-six
+AssertionError: expected 3 to be 29 // Object.is equality
+
+- Expected
++ Received
+
+- 29
++ 3
+
+ ❯ tests/silent-wither-replay.test.ts:70:33
+     68|   const plan = replaySteps(input!, [{ cardIndex: card.index, cardId: c…
+     69|     upgraded: card.upgraded, target: 0 }])!;
+     70|   expect(input!.wither?.played).toBe(29);
+       |                                 ^
+     71|   expect(plan.outcome).toMatchObject({ withersAdded: 1, heldDamage: 18…
+     72|   // The required loss is not capped at the player's 28 HP or replaced…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > failed (timeout): rejected adds no enchantment play
+ FAIL  tests/silent-wither-replay.test.ts > not dispatched: changed adds no enchantment play
+AssertionError: expected +0 to be 25 // Object.is equality
+
+- Expected
++ Received
+
+- 25
++ 0
+
+ ❯ tests/silent-wither-replay.test.ts:77:85
+     75|
+     76| it.each(["failed (timeout): rejected", "not dispatched: changed"])("%s…
+     77|   expect(count(t7, restored(rows.filter((row) => row.ts <= t7.ts), res…
+       |                                                                                     ^
+     78| });
+     79|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > a restart immediately after accepted dispatch retains one replay before the next state was logged
+AssertionError: expected 4 to be 5 // Object.is equality
+
+- Expected
++ Received
+
+- 5
++ 4
+
+ ❯ tests/silent-wither-replay.test.ts:83:40
+     81|   const selected = rows.filter((row) => row.ts <= before.ts);
+     82|   const memory = restored(selected, "pending: accepted");
+     83|   expect(count(before, memory).played).toBe(5); // Four raw manual pla…
+       |                                        ^
+     84|   expect(Object.values(memory.fightCards!.replays ?? {})).toEqual([1]);
+     85| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > duplicate logged source rows and later questions retain only one extra play
+AssertionError: expected +0 to be 26 // Object.is equality
+
+- Expected
++ Received
+
+- 26
++ 0
+
+ ❯ tests/silent-wither-replay.test.ts:92:36
+     90|   const memory = createScreenMemory("COMBAT");
+     91|   memory.fightCards = replayRun(input, knowledge).fightCards ?? undefi…
+     92|   expect(count(t7, memory).played).toBe(26);
+       |                                    ^
+     93| });
+     94|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > a retry inside T1 and a new room clear extras while enemy-turn counter resets preserve them
+TypeError: Cannot read properties of undefined (reading 'replays')
+ ❯ tests/silent-wither-replay.test.ts:112:43
+    110|   enemyTurn.state.combat.action_readiness.can_use_combat_actions = fal…
+    111|   const memory = restored([...selection, enemyTurn]);
+    112|   expect(Object.values(memory.fightCards!.replays ?? {})).toEqual([1]);
+       |                                           ^
+    113|   const room = structuredClone(t7); room.state.run.floor = 49;
+    114|   expect(count(room, restored(rows.filter((row) => row.ts <= t7.ts))).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > restart retains observed nine-damage Withers when the current hand contains none
+AssertionError: expected { every: 6, played: +0, damage: 3 } to match object { played: 26, damage: 9 }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damage": 9,
+-   "played": 26,
++   "damage": 3,
++   "played": 0,
+  }
+
+ ❯ tests/silent-wither-replay.test.ts:119:73
+    117| it("restart retains observed nine-damage Withers when the current hand…
+    118|   const empty = structuredClone(t7); empty.state.combat.hand = [];
+    119|   expect(count(empty, restored(rows.filter((row) => row.ts <= t7.ts)))…
+       |                                                                         ^
+    120| });
+    121|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  tests/silent-wither-replay.test.ts > Throwing Axe is counted separately and Ironclad keeps the original raw-count behavior
+AssertionError: expected 1 to be 27 // Object.is equality
+
+- Expected
++ Received
+
+- 27
++ 1
+
+ ❯ tests/silent-wither-replay.test.ts:126:37
+    124|   const axe = structuredClone(t7);
+    125|   axe.state.run.relics.push({ relic_id: "THROWING_AXE" });
+    126|   expect(count(axe, memory).played).toBe(27);
+       |                                     ^
+    127|   const ironclad = rows.map((row) => {
+    128|     const copy = structuredClone(row); copy.state.run.character_id = "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 1 passed (10)
+   Start at  02:55:41
+   Duration  5.11s (transform 3.78s, setup 747ms, import 3.80s, tests 266ms, environment 0ms)
+
