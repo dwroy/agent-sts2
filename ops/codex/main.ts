@@ -137,8 +137,14 @@ export function runAction(root: string, action: string, args: string[], ms: numb
   return new Promise((done) => {
     const child = spawn("nice", ["-n", "5", "bash", join(root, "ops", "codex-ops-actions.sh"), action, ...args], { cwd: root, env: { ...process.env, CODEX_OPS_ROOT: root }, stdio: ["ignore", "pipe", "pipe"], detached: true });
     let out = "";
-    const take = (chunk: Buffer): void => {
-      if (out.length < OUT_MAX) out += chunk.toString("utf8");
+    let truncated = false;
+    // Decode each stream across chunk boundaries, including multibyte state text.
+    child.stdout.setEncoding("utf8");
+    child.stderr.setEncoding("utf8");
+    const take = (chunk: string): void => {
+      if (out.length < OUT_MAX) out += chunk;
+      else if (chunk.length) truncated = true;
+      if (out.length > OUT_MAX) truncated = true;
     };
     child.stdout.on("data", take);
     child.stderr.on("data", take);
@@ -156,6 +162,11 @@ export function runAction(root: string, action: string, args: string[], ms: numb
     });
     child.on("close", (code, signal) => {
       clearTimeout(timer);
+      if (action === "mod-state" && truncated) {
+        // A state is either complete JSON or an explicit failure, never a successful JSON prefix.
+        done({ code: 1, out: `${JSON.stringify({ ok: false, error: { code: "broker_output_limit", message: "状态响应超过显示上限，未输出截断JSON。" } })}\n` });
+        return;
+      }
       done({ code: code ?? (signal ? 128 : 1), out: out.length > OUT_MAX ? `${out.slice(0, OUT_MAX)}\n（输出截断）\n` : out });
     });
   });

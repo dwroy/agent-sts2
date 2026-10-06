@@ -8,7 +8,7 @@
 #
 #   procs              our processes: autoplay, stop-after, play, report.py, learner runs, the scheduler's wake
 #   stall-check        ops/stall-check.sh
-#   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), cut to 20 000 characters
+#   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), complete validated JSON
 #   autoplay-start     the ops prompt's start: refuses while autoplay / stop-after / play runs; rm ops/STOP; starts
 #                      ops/autoplay.sh with setsid nohup; prints its PID and live's commit (PID in ops/codex-ops/autoplay.pid)
 #   autoplay-stop      kill the autoplay bash started by autoplay-start (by PID, after checking its command line)
@@ -62,10 +62,12 @@ case "$action" in
   stall-check)
     exec bash "$ROOT/ops/stall-check.sh" ;;
   mod-state)
-    out=$(curl -s -m 10 "$MOD/state"); rc=$?
+    response=$(curl -fs -m 10 -w '\n%{http_code}' "$MOD/state"); rc=$?
     [ $rc -ne 0 ] && { echo "mod unreachable (curl exit $rc)"; exit 1; }
-    printf '%s\n' "${out:0:20000}"
-    exit 0 ;;
+    out="${response%$'\n'*}"; http="${response##*$'\n'}"
+    [ "$http" = 200 ] || { echo "mod state request failed (HTTP $http)"; exit 1; }
+    printf '%s' "$out" | python3 "$OPS/mod-state.py" --json
+    exit $? ;;
   autoplay-start)
     busy=$(pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ')
     play=$(play_pids)
@@ -124,8 +126,11 @@ case "$action" in
     sleep 10
     "$WIN/schtasks.exe" /delete /tn "$TASK" /f 2>&1 | tr -d '\r'
     for _ in $(seq 1 36); do
-      if curl -s -m 4 -o /dev/null "$MOD/state"; then
-        echo "mod answers: $(curl -s -m 5 "$MOD/state" | python3 -c 'import json,sys;d=json.load(sys.stdin)["data"];print(d.get("screen"))' 2>&1 | head -1)"
+      # Validate the same successful HTTP response we report; transport alone is not readiness.
+      response=$(curl -fs -m 4 -w '\n%{http_code}' "$MOD/state"); rc=$?
+      state="${response%$'\n'*}"; http="${response##*$'\n'}"
+      if [ $rc -eq 0 ] && [ "$http" = 200 ] && screen=$(printf '%s' "$state" | python3 "$OPS/mod-state.py" 2>/dev/null); then
+        echo "mod answers: $screen"
         tasklist | grep -i -E '"(steam|SlayTheSpire2)\.exe"'
         exit 0
       fi
