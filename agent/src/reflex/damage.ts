@@ -18,9 +18,10 @@
  *
  * The same call feeds `resolved_rules_text`, so a card's *text* is equally untargeted.
  *
- * UNVERIFIED: whether the untargeted preview already includes the attacker's Weak. No live state has
- * been captured with Weak on the player yet. We apply it, which errs toward under-estimating damage —
- * the safer direction for a lethal call. Worth confirming the first time the bot is Weak.
+ * Current previews include the attacker's Weak: VLV17NUSFS61 F37 attempt 2 T5 and
+ * 5X2GHKJ89PN1 F48 attempt 6 T6 (silent-0191) show 4-damage Poisoned Stab and 3-damage
+ * Shivs dealing exactly those amounts. Callers using current previews omit Weak from
+ * attackerPowers; raw/base inputs still apply it here.
  *
  * Multi-hit attacks are resolved hit by hit, because that is where rounding and block absorption
  * actually happen: 6 damage twice against 8 block removes the block and deals 4, not 0.

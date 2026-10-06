@@ -115,8 +115,9 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const pushCard = (card: (typeof hand)[number], targetIndex: number | null, into: Candidate[] = candidates, budget = energy): void => {
     const target = targetIndex === null ? null : enemyByIndex.get(targetIndex) ?? null;
     const perHit = card.damage;
-    // Modifier-aware: Vulnerable on the target, Weak on us, Intangible on the target, and block
-    // consumed hit by hit. The mod's own number excludes all of these.
+    // Current previews already include our Weak (VLV17NUSFS61 F37 attempt 2 T5,
+    // 5X2GHKJ89PN1 F48 attempt 6 T6; silent-0191). Base-value fallbacks still need it.
+    // Target modifiers and block remain resolution-time inputs.
     const outcome =
       perHit === null || target === null
         ? null
@@ -125,7 +126,7 @@ export function planCombat(env: DecisionEnv): Decision | null {
             hits: card.hits,
             targetBlock: target.block,
             targetPowers: target.power_lines,
-            attackerPowers: ourPowers,
+            attackerPowers: card.damageIsPreview ? ourPowers.filter((power) => power.id !== "WEAK_POWER") : ourPowers,
           });
     const totalDamage = outcome?.total ?? (perHit === null ? null : perHit * card.hits);
     const damageAfterBlock = outcome?.hpLoss ?? null;
