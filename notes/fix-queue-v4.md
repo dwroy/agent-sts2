@@ -584,9 +584,11 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 21:58 A10复盘：结实绷带弃牌格挡未接入方案推演（交学习者）
 
-- [ ] **非阻塞机制模型缺口，仅转录学习者提案**：学习者只读live定位`agent/src/reflex/combat-plan.ts:2846`构造PlayerSim没有接TOUGH_BANDAGES、`agent/src/reflex/turn-solver.ts:1605`全手弃牌只处理手牌与重抽。来源L704TLETMZBM SILENT A10 F48末次T4、`ops/codex-ops/learner/20261006-214301.out`、原复盘与账本silent-0193；独立机制0194保持。
+- [x] **非阻塞机制模型缺口，仅转录学习者提案**：学习者只读live定位`agent/src/reflex/combat-plan.ts:2846`构造PlayerSim没有接TOUGH_BANDAGES、`agent/src/reflex/turn-solver.ts:1605`全手弃牌只处理手牌与重抽。来源L704TLETMZBM SILENT A10 F48末次T4、`ops/codex-ops/learner/20261006-214301.out`、原复盘与账本silent-0193；独立机制0194保持。
 - 学习者记录同线投掷匕首→生存者→飞镖→中和+预计12挡/损12/扣敌23，实际投掷匕首弃贪婪、生存者弃暗影步各补3挡，合18挡/损6/实扣23，局部少算6挡。末次T3计算下注自身离手后弃9张实补27挡，爆发+重放杂技的两次实际弃牌各补3；只确认这些本角色帧，不外推回合末弃牌或未知交互，也不把下一帧重读格挡当整线模型。旧0081计算下注全弃/重抽模型单独保持。
 - 回报标新纯bug，但涉及机制接线，交学习者依静默证据实现并固定验证；0193/0194 first_run=L704TLETMZBM/A10、prior=unknown/status=observed沿原账本。该局正常结束，没有本项导致的卡死、崩溃或非法动作；未施放计算下注后的未知重抽及修复后整场结果未记录，不声称补模型可转胜。行号按复盘时只读live28e339fa，原局cc1bdc59+dirty不声称复原；21:54:40引文时间勘误与旧上线历史保留，运维不改模型或补规则。
+
+- 2026-10-06 22:57 运维codex按22:50 fix-done核实源3a4c5626434efc909122483769468bba953d63c1→实际live代码da78fee9739a8548827094e30cd2594362c526f4→固定发布8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522/唯一S1.fix36，main机械同步c0c963c224de649e8c8214696f2df7e38588bfd6；源及合后最终tsc0/vitest0、208文件2237例，撤源码8失败2通过／恢复新10及旧17合4文件27通过，初稿回归及首轮失败保持，修正后重跑通过。仅CLI/by=ops登记silent-0193 shipped并关闭本项；首证L704TLETMZBM/A10、prior=unknown、证据及历史保持，0194独立已shipped/S1.exp52不重置，完整外部待本批learner-checks。
 
 ## 2026-10-06 22:33 A10复盘：SL判官遗漏毒伤触发阈值眩晕（交学习者）
 
