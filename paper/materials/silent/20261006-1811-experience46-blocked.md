@@ -21,3 +21,5 @@
 - paper/materials/silent/20261006-1811-experience46-blocked/test-live.txt：1177字节，SHA256 1c51d607d9630411f21dc97a9146938cc906b9cba65b161a91db9f7f434ced4d。
 - paper/materials/silent/20261006-1811-experience46-blocked/test-live-retry.txt：1177字节，SHA256 ca75078dafe01742abbad08ce0398f29a2e154195e84b7fb1fe8a0a6c7dd3058。
 - paper/materials/silent/20261006-1811-experience46-blocked/baseline-live-case.txt：1163字节，SHA256 c4d245cd18932e131769781813f70d80d29cab4f4a59a762c1e751ac2b32ceea。
+
+- 2026-10-06 18:50 追加实际去向：原第46批620513afddeae6cf3cfc14cf0adabce4be7f9e40/.21已随第47批0723092c1d575122896945935e5b55d89983c57d/.22实际合入live a95d92ecee0152abcb433b00b3aa0305d3fa2e43、固定发布0020f8f5e720b274069e0102814ad45056e883fb/唯一S1.exp47，main同步6fb21697765cc012c44ee1d13dc75045e8a340fd。源203文件2194例及合后204文件2203例通过；原46的11项proposed映射机械核对后，同本批20项去重共23项由CLI/by=ops登记S1.exp47 shipped（原46独有0079/0184/0185）。未新增S1.exp46版本，以上失败/回退/基线复现历史完整保留，不改此前blocked事实；完整外部补测等第47批learner-checks，详情paper/materials/silent/20261006-1843-experience47-release.md。
