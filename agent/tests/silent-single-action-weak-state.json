@@ -1,0 +1,1607 @@
+[
+  {
+    "ts": "2026-10-05T15:17:50.653Z",
+    "state": {
+      "state_version": 16,
+      "run_id": "VLV17NUSFS61",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 5,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit",
+        "use_potion",
+        "discard_potion"
+      ],
+      "run": {
+        "floor": 37,
+        "current_hp": 4,
+        "max_hp": 70,
+        "gold": 288,
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "act_id": "2",
+        "ascension": 7
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "player": {
+          "current_hp": 4,
+          "max_hp": 70,
+          "block": 3,
+          "energy": 3,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "NOXIOUS_FUMES_POWER",
+              "name": "毒雾",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 2,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 2,
+              "is_debuff": true
+            }
+          ]
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SLICE",
+            "name": "切割",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0
+            ],
+            "resolved_rules_text": "造成4点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 4,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "FOOTWORK",
+            "name": "灵动步法",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得2点敏捷。",
+            "dynamic_values": [
+              {
+                "name": "DexterityPower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "ACCELERANT",
+            "name": "触媒+",
+            "upgraded": true,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "中毒会额外触发2次。",
+            "dynamic_values": [
+              {
+                "name": "Accelerant",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "card_id": "POISONED_STAB",
+            "name": "带毒刺击",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0
+            ],
+            "resolved_rules_text": "造成4点伤害。 给予3层中毒。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 4,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "PoisonPower",
+                "base_value": 3,
+                "current_value": 3,
+                "enchanted_value": 3,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "AXEBOT",
+            "name": "巨斧机器人",
+            "current_hp": 37,
+            "max_hp": 80,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "STOCK_POWER",
+                "name": "库存",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 3,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 3,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9[font_size=18]×2[/font_size]",
+                "damage": 9,
+                "hits": 2,
+                "total_damage": 18,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "ts": "2026-10-05T15:17:51.922Z",
+    "state": {
+      "state_version": 16,
+      "run_id": "VLV17NUSFS61",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 5,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit",
+        "use_potion",
+        "discard_potion"
+      ],
+      "run": {
+        "floor": 37,
+        "current_hp": 4,
+        "max_hp": 70,
+        "gold": 288,
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "act_id": "2",
+        "ascension": 7
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "player": {
+          "current_hp": 4,
+          "max_hp": 70,
+          "block": 3,
+          "energy": 2,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "NOXIOUS_FUMES_POWER",
+              "name": "毒雾",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 2,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 2,
+              "is_debuff": true
+            }
+          ]
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SLICE",
+            "name": "切割",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0
+            ],
+            "resolved_rules_text": "造成4点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 4,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "FOOTWORK",
+            "name": "灵动步法",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得2点敏捷。",
+            "dynamic_values": [
+              {
+                "name": "DexterityPower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "ACCELERANT",
+            "name": "触媒+",
+            "upgraded": true,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "中毒会额外触发2次。",
+            "dynamic_values": [
+              {
+                "name": "Accelerant",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "AXEBOT",
+            "name": "巨斧机器人",
+            "current_hp": 33,
+            "max_hp": 80,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "STOCK_POWER",
+                "name": "库存",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 3,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 6,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9[font_size=18]×2[/font_size]",
+                "damage": 9,
+                "hits": 2,
+                "total_damage": 18,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "ts": "2026-10-05T15:17:52.744Z",
+    "state": {
+      "state_version": 16,
+      "run_id": "VLV17NUSFS61",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 5,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit"
+      ],
+      "run": {
+        "floor": 37,
+        "current_hp": 4,
+        "max_hp": 70,
+        "gold": 288,
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "act_id": "2",
+        "ascension": 7
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "player": {
+          "current_hp": 4,
+          "max_hp": 70,
+          "block": 3,
+          "energy": 2,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "NOXIOUS_FUMES_POWER",
+              "name": "毒雾",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 2,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 2,
+              "is_debuff": true
+            }
+          ]
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SLICE",
+            "name": "切割",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0
+            ],
+            "resolved_rules_text": "造成4点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 4,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "FOOTWORK",
+            "name": "灵动步法",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得2点敏捷。",
+            "dynamic_values": [
+              {
+                "name": "DexterityPower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "ACCELERANT",
+            "name": "触媒+",
+            "upgraded": true,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "中毒会额外触发2次。",
+            "dynamic_values": [
+              {
+                "name": "Accelerant",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "AXEBOT",
+            "name": "巨斧机器人",
+            "current_hp": 33,
+            "max_hp": 80,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "STOCK_POWER",
+                "name": "库存",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 3,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 12,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9[font_size=18]×2[/font_size]",
+                "damage": 9,
+                "hits": 2,
+                "total_damage": 18,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "ts": "2026-10-06T11:09:38.912Z",
+    "state": {
+      "state_version": 16,
+      "run_id": "5X2GHKJ89PN1",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 6,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit",
+        "use_potion",
+        "discard_potion"
+      ],
+      "run": {
+        "floor": 48,
+        "current_hp": 3,
+        "max_hp": 70,
+        "gold": 38,
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "act_id": "2",
+        "ascension": 10
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "player": {
+          "current_hp": 3,
+          "max_hp": 70,
+          "block": 6,
+          "energy": 3,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "NOXIOUS_FUMES_POWER",
+              "name": "毒雾",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "CHAINS_OF_BINDING_POWER",
+              "name": "魂缚锁链",
+              "amount": 3,
+              "is_debuff": true
+            },
+            {
+              "index": 3,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 4,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 5,
+              "power_id": "VULNERABLE_POWER",
+              "name": "易伤",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 6,
+              "power_id": "SERPENT_FORM_POWER",
+              "name": "群蛇形态",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ]
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": false,
+            "unplayable_reason": "blocked_by_hook",
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 魂缚 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": false,
+            "unplayable_reason": "blocked_by_hook",
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 魂缚 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "POISONED_STAB",
+            "name": "带毒刺击",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成4点伤害。 给予3层中毒。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 4,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "PoisonPower",
+                "base_value": 3,
+                "current_value": 3,
+                "enchanted_value": 3,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 4,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TORCH_HEAD_AMALGAM",
+            "name": "火炬头聚合体",
+            "current_hp": 73,
+            "max_hp": 211,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 36,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9[font_size=18]×3[/font_size]",
+                "damage": 9,
+                "hits": 3,
+                "total_damage": 27,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "enemy_id": "QUEEN",
+            "name": "女王",
+            "current_hp": 376,
+            "max_hp": 419,
+            "block": 14,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 21,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Defend",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "ts": "2026-10-06T11:09:40.672Z",
+    "state": {
+      "state_version": 16,
+      "run_id": "5X2GHKJ89PN1",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 6,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit",
+        "use_potion",
+        "discard_potion"
+      ],
+      "run": {
+        "floor": 48,
+        "current_hp": 3,
+        "max_hp": 70,
+        "gold": 38,
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "act_id": "2",
+        "ascension": 10
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "player": {
+          "current_hp": 3,
+          "max_hp": 70,
+          "block": 6,
+          "energy": 2,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "NOXIOUS_FUMES_POWER",
+              "name": "毒雾",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "CHAINS_OF_BINDING_POWER",
+              "name": "魂缚锁链",
+              "amount": 3,
+              "is_debuff": true
+            },
+            {
+              "index": 3,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 4,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 5,
+              "power_id": "VULNERABLE_POWER",
+              "name": "易伤",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 6,
+              "power_id": "SERPENT_FORM_POWER",
+              "name": "群蛇形态",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ]
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": false,
+            "unplayable_reason": "blocked_by_hook",
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 魂缚 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": false,
+            "unplayable_reason": "blocked_by_hook",
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 魂缚 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TORCH_HEAD_AMALGAM",
+            "name": "火炬头聚合体",
+            "current_hp": 65,
+            "max_hp": 211,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 39,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9[font_size=18]×3[/font_size]",
+                "damage": 9,
+                "hits": 3,
+                "total_damage": 27,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "enemy_id": "QUEEN",
+            "name": "女王",
+            "current_hp": 376,
+            "max_hp": 419,
+            "block": 14,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 21,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Defend",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "ts": "2026-10-06T11:09:42.187Z",
+    "state": {
+      "state_version": 16,
+      "run_id": "5X2GHKJ89PN1",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 6,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit",
+        "use_potion",
+        "discard_potion"
+      ],
+      "run": {
+        "floor": 48,
+        "current_hp": 3,
+        "max_hp": 70,
+        "gold": 38,
+        "character_id": "SILENT",
+        "character_name": "静默猎手",
+        "act_id": "2",
+        "ascension": 10
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": true,
+        "player": {
+          "current_hp": 3,
+          "max_hp": 70,
+          "block": 6,
+          "energy": 2,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "NOXIOUS_FUMES_POWER",
+              "name": "毒雾",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "CHAINS_OF_BINDING_POWER",
+              "name": "魂缚锁链",
+              "amount": 3,
+              "is_debuff": true
+            },
+            {
+              "index": 3,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 4,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 5,
+              "power_id": "VULNERABLE_POWER",
+              "name": "易伤",
+              "amount": 96,
+              "is_debuff": true
+            },
+            {
+              "index": 6,
+              "power_id": "SERPENT_FORM_POWER",
+              "name": "群蛇形态",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ]
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": false,
+            "unplayable_reason": "blocked_by_hook",
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 魂缚 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": false,
+            "unplayable_reason": "blocked_by_hook",
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 魂缚 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "SHIV",
+            "name": "小刀",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "resolved_rules_text": "造成3点伤害。 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 3,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "TORCH_HEAD_AMALGAM",
+            "name": "火炬头聚合体",
+            "current_hp": 62,
+            "max_hp": 211,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 39,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9[font_size=18]×3[/font_size]",
+                "damage": 9,
+                "hits": 3,
+                "total_damage": 27,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "enemy_id": "QUEEN",
+            "name": "女王",
+            "current_hp": 376,
+            "max_hp": 419,
+            "block": 10,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 21,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Defend",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]

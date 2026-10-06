@@ -147,22 +147,24 @@ export interface HandCardView {
   text: string;
   /** Code-computed effect magnitudes, never left for the model to derive (PLAN.md §6.1). */
   damage: number | null;
+  /** Whether damage came from the mod's current preview rather than its base-value fallback. */
+  damageIsPreview: boolean;
   hits: number;
   block: number | null;
 }
 
-function dynamicValue(card: Record<string, unknown>, names: string[]): number | null {
+function dynamicValue(card: Record<string, unknown>, names: string[]): { value: number | null; isPreview: boolean } {
   for (const name of names) {
     for (const entry of asArray(card["dynamic_values"])) {
       const value = asRecord(entry);
       if (str(value["name"]) === name) {
         const current = numOrNull(value["current_value"]);
-        if (current !== null) return current;
-        return numOrNull(value["base_value"]);
+        if (current !== null) return { value: current, isPreview: true };
+        return { value: numOrNull(value["base_value"]), isPreview: false };
       }
     }
   }
-  return null;
+  return { value: null, isPreview: false };
 }
 
 export function handViews(state: { raw: Record<string, unknown> }, knowledge: Knowledge): HandCardView[] {
@@ -172,8 +174,8 @@ export function handViews(state: { raw: Record<string, unknown> }, knowledge: Kn
     const info = knowledge.card(cardId);
     const index = numOrNull(card["index"]) ?? fallbackIndex;
     const damage = dynamicValue(card, ["Damage", "CalculatedDamage", "DamagePerHit"]);
-    const hits = Math.max(1, Math.round(dynamicValue(card, ["Repeat", "Hits"]) ?? 1));
-    const block = dynamicValue(card, ["Block", "CalculatedBlock"]);
+    const hits = Math.max(1, Math.round(dynamicValue(card, ["Repeat", "Hits"]).value ?? 1));
+    const block = dynamicValue(card, ["Block", "CalculatedBlock"]).value;
     return {
       index,
       key: `c${index}`,
@@ -187,7 +189,8 @@ export function handViews(state: { raw: Record<string, unknown> }, knowledge: Kn
       requires_target: bool(card["requires_target"]),
       valid_targets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
       text: truncate(str(card["resolved_rules_text"]) || info?.description || "", 180),
-      damage,
+      damage: damage.value,
+      damageIsPreview: damage.isPreview,
       hits,
       block,
     };
