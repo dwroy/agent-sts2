@@ -1,0 +1,42 @@
+[live 495c2fd0] Refresh knowledge data
+ 7 files changed, 1877 insertions(+), 1511 deletions(-)
+Knowledge overlaps: 0 conflicts: 0
+Auto-merging paper/materials/decision-log.md
+Merge made by the 'ort' strategy.
+ agent/src/memory/narrow.ts                         |   17 +-
+ agent/src/reflex/combat.ts                         |    7 +-
+ agent/src/reflex/damage.ts                         |    7 +-
+ agent/tests/silent-single-action-weak-state.json   | 1607 ++++++++++++++++++++
+ agent/tests/silent-single-action-weak.test.ts      |  110 ++
+ notes/fix-queue-v4.md                              |    6 +
+ notes/lessons.md                                   |   15 +
+ notes/ops-handoff.md                               |    2 +
+ paper/materials/decision-log.md                    |    1 +
+ paper/materials/learning/ledger.jsonl              |    8 +
+ .../silent/20261006-1933-5x2-postmortem.md         |   10 +
+ 11 files changed, 1777 insertions(+), 13 deletions(-)
+ create mode 100644 agent/tests/silent-single-action-weak-state.json
+ create mode 100644 agent/tests/silent-single-action-weak.test.ts
+ create mode 100644 paper/materials/silent/20261006-1933-5x2-postmortem.md
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+
+ Test Files  205 passed (205)
+      Tests  2210 passed (2210)
+   Start at  19:54:11
+   Duration  235.16s (transform 7.24s, setup 10.17s, import 24.46s, tests 877.23s, environment 21ms)
+
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  19:58:07
+   Duration  1.58s (transform 1.19s, setup 292ms, import 1.13s, tests 51ms, environment 0ms)
+
+[live 2be2e791] Record single-action Weak preview fix release
+ 2 files changed, 8 insertions(+)
+ M notes/monster-db-check.md
+?? notes/fight-value-backtest-silent.md
