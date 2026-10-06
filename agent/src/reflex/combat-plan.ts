@@ -2915,7 +2915,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     // No card Block yet this turn (block 0 is the proxy): Unmovable's doubling is still to come.
     // Vambrace doubles the first card Block of the fight, the same way: every Block card shows the doubled
     // number until one is played (G8YY F30 T3: Defend 12 and Shrug It Off 18 planned, 12 + 9 gained).
-    unmovableArmed: (powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0) || vambraceArmed(relicIds, asArray(combat["hand"]), powerAmount(player, "DEXTERITY_POWER")) || legionPreview,
+    unmovableArmed: (powerAmount(player, "UNMOVABLE_POWER") > 0 && num(player["block"]) === 0) || vambraceArmed(relicIds, asArray(combat["hand"]), powerAmount(player, "DEXTERITY_POWER"), powerAmount(player, "FRAIL_POWER") > 0) || legionPreview,
     ...(legionPreview ? { paelsLegionPreview: true } : {}),
     demonTongue: relicIds.includes("DEMON_TONGUE") && env.screenMemory.demonTongueTurn !== `${hpGuardFight(env)}:${state.turn}`,
     helmetBlock: relicIds.includes("INTIMIDATING_HELMET") ? INTIMIDATING_HELMET_BLOCK : 0,
@@ -4814,14 +4814,15 @@ export function multiClawNext(enemy: Record<string, unknown>): number | null {
  * shows twice its own Block (base plus Dexterity). The relic carries no counter, so the shown numbers
  * tell: after the first Block, cards show their plain values (G8YY F30 T5: Defend 6).
  */
-export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: number): boolean {
+export function vambraceArmed(relicIds: string[], hand: unknown[], dexterity: number, frail = false): boolean {
   if (!relicIds.includes("VAMBRACE")) return false;
   return hand.some((entry) => {
     const block = asArray(asRecord(entry)["dynamic_values"]).map(asRecord).find((value) => str(value["name"]) === "Block");
     if (!block) return false;
     const own = (numOrNull(block["enchanted_value"]) ?? numOrNull(block["base_value"]) ?? 0) + dexterity;
     const shown = numOrNull(block["current_value"]) ?? own;
-    return own > 0 && shown >= 2 * own - 1;
+    // TCFAHJ9K19VY F17 T2, silent-0192: doubled previews already include Frail (5 -> 7, 8 -> 12).
+    return own > 0 && shown >= 2 * own * (frail ? 0.75 : 1) - 1;
   });
 }
 
