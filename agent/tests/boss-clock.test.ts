@@ -6,10 +6,29 @@
  */
 
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+
+// The setup imports planner modules; discard their caches before installing the historical reader.
+vi.hoisted(() => vi.resetModules());
+
+// These Ironclad board contracts use the already committed f5e05515 snapshot, never refreshed tables.
+vi.mock("node:fs", async (importOriginal) => {
+  const fs = await importOriginal<typeof import("node:fs")>();
+  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
+  const pinned = JSON.parse(fs.readFileSync(new URL("./boss-clock-knowledge.json", import.meta.url), "utf8")) as Record<string, unknown>;
+  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
+    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
+      const name = basename(path);
+      if (Object.hasOwn(pinned, name)) return JSON.stringify(pinned[name]);
+      throw Object.assign(new Error(`ENOENT: pinned boss-clock fixture, ${name}`), { code: "ENOENT" });
+    }
+    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
+  }) as typeof fs.readFileSync;
+  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
+});
 
 import { parseGameState } from "../src/hand/mod/schema.js";
 import {
@@ -46,7 +65,8 @@ import {
   type GiantKillRow,
   testSubjectPhase2Loss,
 } from "../src/sim/boss-clock.js";
-import { powerScheduleAt, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+import { mergeMonsterRecords, powerScheduleAt, readMonsterDbJson, setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+import { setKnowledgeCharacter } from "../src/knowledge/files.js";
 import { bossNote as journalBossNote } from "../src/memory/run-journal.js";
 import { loggedKnowledge } from "./logged.js";
 import { baseState, runPayload, testKnowledge } from "./scenarios.js";
@@ -72,6 +92,16 @@ const board = (key: string) => {
   if (!fx) throw new Error(`no board ${key}`);
   return parseGameState(baseState("MAP", { run: runPayload(fx.run) }));
 };
+
+beforeAll(() => setKnowledgeCharacter("ironclad"));
+afterAll(() => setKnowledgeCharacter(null));
+
+it("pins the historical monster DB and unblocked shares instead of reading refreshed tables", () => {
+  const pinned = JSON.parse(readFileSync(join(DIR, "..", "boss-clock-knowledge.json"), "utf8")) as Record<string, Record<string, unknown>>;
+  expect(readMonsterDbJson()).toEqual(mergeMonsterRecords(pinned["monster-db.json"]!, pinned["monster-records.json"]!));
+  const shares = pinned["boss-damage.json"] as Record<string, unknown>;
+  expect(unblockedShare("WATERFALL_GIANT")).toEqual(shares["WATERFALL_GIANT"]);
+});
 
 describe("boss clock", () => {
   it("uses A8 HP from ascension 8 (logged max_hp)", () => {
