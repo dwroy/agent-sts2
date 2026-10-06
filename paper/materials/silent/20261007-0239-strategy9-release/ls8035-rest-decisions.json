@@ -1,0 +1,797 @@
+[
+  {
+    "ts": "2026-10-06T12:03:48.955Z",
+    "mode": "play",
+    "screen": "REST",
+    "session": "singleplayer/run",
+    "floor": 16,
+    "turn": null,
+    "label": "rest/plan",
+    "decision_id": "70326571-03b1-4c4f-b92b-c4b723ca98a0",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":16,\"hand\":\"\",\"hp\":42,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"EXPLOSIVE_AMPOULE:true:false|:false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LS8035TB32P3\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "questions": {
+      "pick": {
+        "type": "choice",
+        "instructions": "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick. You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Each smith option names its card: code upgrades that card on the next screen without asking again. boss_sim on an option: this act's boss fought to the end in simulation with the deck (and HP) that option leaves, against your current deck on the same random seeds: the win rate (calibrated on logged boss fights), the difference ± its standard error, the median HP lost in the won fights and the turns. facts.act_boss_sim gives the start, the method and its limits; it replaces the act boss clock.",
+        "criteria": {
+          "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（23）。\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个（进场 65 血） 71%（+42.9 ± 1.4），赢局掉血中位 53，约 13 回合；boss 平均剩血 15（当前牌组 64，−49.2 ± 1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；回血后 HP 65/77，进场血量按它投影\"}",
+          "o1:c0": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 打击\",\"card\":\"打击\",\"copies\":5,\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 29%（+1.1 ± 0.8），赢局掉血中位 38，约 12 回合；boss 平均剩血 62（当前牌组 64，−1.9 ± 0.2）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c5": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 防御\",\"card\":\"防御\",\"copies\":5,\"upgrade\":\"获得5点格挡。 -> 获得8点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 34%（+6.3 ± 1.2），赢局掉血中位 37，约 13 回合；boss 平均剩血 58（当前牌组 64，−6.1 ± 0.6）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c11": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 生存者\",\"card\":\"生存者\",\"upgrade\":\"获得8点格挡。 丢弃1张牌。 -> 获得11点格挡。 丢弃1张牌。\",\"card_outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 35%（+6.9 ± 1.3），赢局掉血中位 36.5，约 13 回合；boss 平均剩血 57（当前牌组 64，−6.7 ± 0.6）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c13": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 计算下注\",\"card\":\"计算下注\",\"upgrade\":\"丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层49 / 给了没拿 n=4(少) 过本幕boss 75% 均终层28.8；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=2(少) 过本幕boss 50% 均终层40\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 38%（+10 ± 2.1），赢局掉血中位 37，约 12 回合；boss 平均剩血 48（当前牌组 64，−16.4 ± 1.4）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估\"}",
+          "o1:c14": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 带毒刺击\",\"card\":\"带毒刺击\",\"copies\":2,\"upgrade\":\"造成6点伤害。 给予3层中毒。 -> 造成8点伤害。 给予4层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=11 过本幕boss 64% 均终层31.2 / 给了没拿 n=1(少) 过本幕boss 100% 均终层31；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层40.5 / 给了没拿 n=2(少) 过本幕boss 100% 均终层43；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层49 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 39%（+11.2 ± 1.4），赢局掉血中位 36，约 11 回合；boss 平均剩血 54（当前牌组 64，−9.7 ± 0.3）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c15": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 回响斩击\",\"card\":\"回响斩击\",\"copies\":2,\"upgrade\":\"对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。 -> 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=7 过本幕boss 86% 均终层35.6 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 31%（+2.6 ± 0.8），赢局掉血中位 37，约 12 回合；boss 平均剩血 61（当前牌组 64，−2.7 ± 0.2）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c24\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c24的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c16": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 斗篷与匕首\",\"card\":\"斗篷与匕首\",\"upgrade\":\"获得6点格挡。 将1张小刀添加到你的手牌。 -> 获得6点格挡。 将2张小刀添加到你的手牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=5 过本幕boss 60% 均终层27.6 / 给了没拿 n=3(少) 过本幕boss 67% 均终层27；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层43 / 给了没拿 n=1(少) 过本幕boss 0% 均终层22；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=3(少) 过本幕boss 0% 均终层44.3\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 31%（+3.1 ± 2.1），赢局掉血中位 38，约 12 回合；boss 平均剩血 63（当前牌组 64，−1.4 ± 1.1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c19": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 背刺\",\"card\":\"背刺\",\"upgrade\":\"固有。 造成11点伤害。 消耗。 -> 造成15点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=2(少) 过本幕boss 100% 均终层35 / 给了没拿 n=2(少) 过本幕boss 50% 均终层32.5；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 29%（+0.7 ± 0.4），赢局掉血中位 38，约 12 回合；boss 平均剩血 63（当前牌组 64，−1.1 ± 0.1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c20": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 串刺\",\"card\":\"串刺\",\"upgrade\":\"造成8点伤害X次。 -> 造成11点伤害X次。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37.7 / 给了没拿 n=3(少) 过本幕boss 67% 均终层26.3；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层49；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 32%（+4.4 ± 1.1），赢局掉血中位 37，约 11.5 回合；boss 平均剩血 61（当前牌组 64，−3.1 ± 0.3）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c21": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 扫腿\",\"card\":\"扫腿\",\"copies\":2,\"upgrade\":\"给予2层虚弱。 获得11点格挡。 -> 给予3层虚弱。 获得14点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=4(少) 过本幕boss 50% 均终层26.5 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层42.7 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 36%（+8 ± 1.3），赢局掉血中位 36.5，约 13 回合；boss 平均剩血 56（当前牌组 64，−8.2 ± 0.7）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c23": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 致命毒药\",\"card\":\"致命毒药\",\"upgrade\":\"给予5层中毒。 -> 给予7层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=16 过本幕boss 69% 均终层30.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层17；第2幕 拿了 n=4(少) 过本幕boss 50% 均终层37.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层48.5 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48.5\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 47%（+19.3 ± 1.6），赢局掉血中位 35，约 11 回合；boss 平均剩血 49（当前牌组 64，−15.2 ± 0.4）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
+          "o1:c24": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 切割\",\"card\":\"切割\",\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=6 过本幕boss 67% 均终层27.3 / 给了没拿 n=7 过本幕boss 43% 均终层25.3；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=5 过本幕boss 20% 均终层34；第3幕 拿了 无数据 / 给了没拿 n=2(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 31%（+2.6 ± 0.8），赢局掉血中位 37，约 12 回合；boss 平均剩血 61（当前牌组 64，−2.7 ± 0.1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c15\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c15的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}"
+        }
+      }
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "rationale": "Codex decided o0: Heal to 65 HP before the forced boss; simulated survival reaches 71%, substantially better than even the strongest upgrade. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 13; not shown to Codex)",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 11540,
+      "jev": 0,
+      "action": 86,
+      "deepseek": 4417,
+      "planner": 8,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 129575,
+      "output_tokens": 62,
+      "cache_hit_tokens": 119040,
+      "reasoning_tokens": 17
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "choice": "o0",
+      "reason": "Heal to 65 HP before the forced boss; simulated survival reaches 71%, substantially better than even the strongest upgrade.",
+      "latency_ms": 4417,
+      "tokens": 129637,
+      "input_tokens": 129575,
+      "output_tokens": 62,
+      "cache_hit_tokens": 119040,
+      "reasoning_tokens": 17,
+      "effort": "",
+      "guide": "",
+      "handbook": "",
+      "memory_chars": 11724,
+      "memory_sections": {
+        "act": 2026,
+        "history": 5659,
+        "now": 0,
+        "this_floor": 0,
+        "route": 71,
+        "lookahead": 70,
+        "knowledge": 3898
+      },
+      "brain": {
+        "engine": "codex",
+        "model": "gpt-6.1-sol",
+        "attempts": 1,
+        "tool_calls": []
+      },
+      "plan_id": "LS8035TB32P3:F16:rest#5",
+      "plan": [
+        "o0"
+      ],
+      "plan_step": 1
+    },
+    "boss_sim": {
+      "boss": "VANTOM",
+      "asc": 10,
+      "entry_hp": 42,
+      "entry_source": "route",
+      "samples": 872,
+      "requested": 1000,
+      "timed_out": true,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 11112,
+      "ms": 11126,
+      "base": {
+        "win": 0.0654,
+        "win_cal": 0.2806,
+        "hp_loss_won": 38,
+        "turns": 12,
+        "boss_left": 63.9209
+      },
+      "options": {
+        "o0": {
+          "win": 0.5768,
+          "win_cal": 0.7093,
+          "diff_cal": 0.4287,
+          "se_cal": 0.0142,
+          "diff_raw": 0.5115,
+          "se_raw": 0.0169,
+          "hp_loss_won": 53,
+          "turns": 13,
+          "hp": 65,
+          "boss_left": 14.7282,
+          "boss_left_diff": -49.1927,
+          "boss_left_se": 0.9964
+        },
+        "o1:c0": {
+          "win": 0.0711,
+          "win_cal": 0.2919,
+          "diff_cal": 0.0114,
+          "se_cal": 0.0075,
+          "diff_raw": 0.0057,
+          "se_raw": 0.0038,
+          "hp_loss_won": 38,
+          "turns": 12,
+          "hp": 42,
+          "boss_left": 62.0596,
+          "boss_left_diff": -1.8612,
+          "boss_left_se": 0.1644
+        },
+        "o1:c5": {
+          "win": 0.1009,
+          "win_cal": 0.3431,
+          "diff_cal": 0.0625,
+          "se_cal": 0.0121,
+          "diff_raw": 0.0356,
+          "se_raw": 0.0069,
+          "hp_loss_won": 37,
+          "turns": 13,
+          "hp": 42,
+          "boss_left": 57.7901,
+          "boss_left_diff": -6.1307,
+          "boss_left_se": 0.5633
+        },
+        "o1:c11": {
+          "win": 0.1055,
+          "win_cal": 0.35,
+          "diff_cal": 0.0694,
+          "se_cal": 0.0125,
+          "diff_raw": 0.0401,
+          "se_raw": 0.0072,
+          "hp_loss_won": 36.5,
+          "turns": 13,
+          "hp": 42,
+          "boss_left": 57.2282,
+          "boss_left_diff": -6.6927,
+          "boss_left_se": 0.5625
+        },
+        "o1:c13": {
+          "win": 0.1273,
+          "win_cal": 0.3804,
+          "diff_cal": 0.0998,
+          "se_cal": 0.021,
+          "diff_raw": 0.0619,
+          "se_raw": 0.013,
+          "hp_loss_won": 37,
+          "turns": 12,
+          "hp": 42,
+          "boss_left": 47.5608,
+          "boss_left_diff": -16.3601,
+          "boss_left_se": 1.3885
+        },
+        "o1:c14": {
+          "win": 0.1365,
+          "win_cal": 0.3921,
+          "diff_cal": 0.1116,
+          "se_cal": 0.0137,
+          "diff_raw": 0.0711,
+          "se_raw": 0.0087,
+          "hp_loss_won": 36,
+          "turns": 11,
+          "hp": 42,
+          "boss_left": 54.2431,
+          "boss_left_diff": -9.6778,
+          "boss_left_se": 0.2991
+        },
+        "o1:c15": {
+          "win": 0.0791,
+          "win_cal": 0.3069,
+          "diff_cal": 0.0264,
+          "se_cal": 0.0075,
+          "diff_raw": 0.0138,
+          "se_raw": 0.0039,
+          "hp_loss_won": 37,
+          "turns": 12,
+          "hp": 42,
+          "boss_left": 61.1709,
+          "boss_left_diff": -2.75,
+          "boss_left_se": 0.1575
+        },
+        "o1:c16": {
+          "win": 0.0814,
+          "win_cal": 0.311,
+          "diff_cal": 0.0305,
+          "se_cal": 0.0207,
+          "diff_raw": 0.0161,
+          "se_raw": 0.0109,
+          "hp_loss_won": 38,
+          "turns": 12,
+          "hp": 42,
+          "boss_left": 62.555,
+          "boss_left_diff": -1.3658,
+          "boss_left_se": 1.0964
+        },
+        "o1:c19": {
+          "win": 0.0688,
+          "win_cal": 0.2875,
+          "diff_cal": 0.0069,
+          "se_cal": 0.004,
+          "diff_raw": 0.0034,
+          "se_raw": 0.002,
+          "hp_loss_won": 38,
+          "turns": 12,
+          "hp": 42,
+          "boss_left": 62.8452,
+          "boss_left_diff": -1.0757,
+          "boss_left_se": 0.0863
+        },
+        "o1:c20": {
+          "win": 0.0894,
+          "win_cal": 0.3248,
+          "diff_cal": 0.0442,
+          "se_cal": 0.0105,
+          "diff_raw": 0.0241,
+          "se_raw": 0.0057,
+          "hp_loss_won": 37,
+          "turns": 11.5,
+          "hp": 42,
+          "boss_left": 60.8222,
+          "boss_left_diff": -3.0986,
+          "boss_left_se": 0.2631
+        },
+        "o1:c21": {
+          "win": 0.1124,
+          "win_cal": 0.36,
+          "diff_cal": 0.0795,
+          "se_cal": 0.0134,
+          "diff_raw": 0.047,
+          "se_raw": 0.0079,
+          "hp_loss_won": 36.5,
+          "turns": 13,
+          "hp": 42,
+          "boss_left": 55.7557,
+          "boss_left_diff": -8.1651,
+          "boss_left_se": 0.6953
+        },
+        "o1:c23": {
+          "win": 0.2133,
+          "win_cal": 0.4738,
+          "diff_cal": 0.1932,
+          "se_cal": 0.0157,
+          "diff_raw": 0.1479,
+          "se_raw": 0.012,
+          "hp_loss_won": 35,
+          "turns": 11,
+          "hp": 42,
+          "boss_left": 48.7351,
+          "boss_left_diff": -15.1858,
+          "boss_left_se": 0.4474
+        },
+        "o1:c24": {
+          "win": 0.0791,
+          "win_cal": 0.3069,
+          "diff_cal": 0.0264,
+          "se_cal": 0.0075,
+          "diff_raw": 0.0138,
+          "se_raw": 0.0039,
+          "hp_loss_won": 37,
+          "turns": 12,
+          "hp": 42,
+          "boss_left": 61.1984,
+          "boss_left_diff": -2.7225,
+          "boss_left_se": 0.1294
+        }
+      },
+      "not_simulated": {}
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "LS8035TB32P3",
+    "observed_ts": "2026-10-06T12:03:32.989Z",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（23）。",
+      "reason": "Heal to 65 HP before the forced boss; simulated survival reaches 71%, substantially better than even the strongest upgrade."
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-06T12:03:49.134Z",
+    "mode": "play",
+    "screen": "REST",
+    "session": "singleplayer/run",
+    "floor": 16,
+    "turn": null,
+    "label": "rest/proceed",
+    "decision_id": "9459e1c8-e451-401e-945a-6ed13127265a",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"proceed\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":16,\"hand\":\"\",\"hp\":65,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"EXPLOSIVE_AMPOULE:true:false|:false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LS8035TB32P3\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "chosen": {
+      "action": "proceed"
+    },
+    "rationale": "nothing to choose at this rest site",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 34,
+      "planner": 0,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "LS8035TB32P3",
+    "observed_ts": "2026-10-06T12:03:49.133Z",
+    "journal": {
+      "choice": "nothing to choose at this rest site",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-06T12:23:03.145Z",
+    "mode": "play",
+    "screen": "MAP",
+    "session": "singleplayer/run",
+    "floor": 34,
+    "turn": null,
+    "label": "map/route-follow",
+    "decision_id": "d3f23a25-5294-4208-8b05-1d61500f7a5d",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_map_node\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":244,\"hand\":\"\",\"hp\":66,\"maxHp\":82,\"nodes\":\"0|1|2|3|4\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LS8035TB32P3\",\"screen\":\"MAP\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 1
+    },
+    "expect": {
+      "node": {
+        "row": 1,
+        "col": 2,
+        "type": "Monster"
+      },
+      "from": "decision"
+    },
+    "rationale": "following the brain's route plan (floor 34): step 1/15 Monster at row 1, col 2; plan r1c2 普通战 → r2c1 问号 → r3c2 商店 → r4c1 普通战 → r5c1 普通战 → r6c0 休息 → r7c0 宝箱 → r8c1 普通战 → r9c0 商店 → r10c0 休息 → r11c0 精英 → r12c0 问号 → r13c0 休息 → r14c3 Boss → r15c3 Boss",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 1834,
+      "planner": 0,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "reused": true,
+      "plan_ref": "LS8035TB32P3:F34:act#13",
+      "plan_step": 2,
+      "choice": "Monster at row 1, col 2"
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "LS8035TB32P3",
+    "observed_ts": "2026-10-06T12:23:03.144Z",
+    "journal": {
+      "choice": "following the brain's route plan (floor 34): step 1/15 Monster at row 1, col 2; plan r1c2 普通战 → r2c1 问号 → r3c2 商店 → r4c1 普通战 → r5c1 普通战 → r6c0 休息 → r7c0 宝箱 → r8c1 普通战 → r9c0 商店 → r10c0 休息 → r11c0 精英 → r12c0 问号 → r13c0 休息 → r14c3 Boss → r15c3 Boss",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-06T12:29:47.910Z",
+    "mode": "play",
+    "screen": "REST",
+    "session": "singleplayer/run",
+    "floor": 40,
+    "turn": null,
+    "label": "rest/plan",
+    "decision_id": "c0f73d24-3bf6-4753-9e72-ae1a14e53de8",
+    "decider": "codex",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":64,\"hand\":\"\",\"hp\":4,\"maxHp\":82,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LS8035TB32P3\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "questions": {
+      "pick": {
+        "type": "choice",
+        "instructions": "What should I do at this rest site? Heal, smith a named card (one option per card that can be upgraded, with what the upgrade changes), or another rest action; code plays the action and the card pick. You decide this yourself; no other model is asked first. Code does not score or rank the options: each lists its own facts (the game's text, cost, price, the HP it leaves, what an upgrade changes) and, for a card, relic, event option or rest action, outcome_stats: how our logged runs did after that choice, with n (basis and baseline in facts.outcome_stats_basis; observational, not a verdict). facts are exact: the deck, relics, potions, HP, gold, the act boss clock (damage a turn needed vs this deck's estimate) and your own run plan. Every option is listed, skipping or leaving included. Weigh them for the whole run. Each smith option names its card: code upgrades that card on the next screen without asking again. state.route_review 是本幕路线：完整地图（map，节点 id 规则见 map_legend）、你的位置和下一步可走的节点（next_nodes）、你的路线计划（plan，代码按它逐个节点走）和按现在 HP 算的计划事实（plan_facts）。先定路线，再定本题：在同一个 JSON 里加 \"route\"：\"keep\"（默认，照计划走）或新的节点序列（从 next_nodes 之一出发，沿连线或用飞行靴，一直到 boss，节点 id 用空格分隔），以及 \"route_reason\"（15 字以内）。next_rest 是保留（keep，你的计划）和换线（switch，经每个下一步节点）各自到下一个休息点的战斗数和到达 HP、下一只精英的进场 HP：改线前比一比。plan_facts.if_option 是本题每个选项之后的 HP 对应的下一只精英和 boss 前血量。 boss_sim on an option: this act's boss fought to the end in simulation with the deck (and HP) that option leaves, against your current deck on the same random seeds: the win rate (calibrated on logged boss fights), the difference ± its standard error, the median HP lost in the won fights and the turns. facts.act_boss_sim gives the start, the method and its limits; it replaces the act boss clock. ALSO DUE NOW: your run plan (state.run_plan_task says why, and where your current plan is). Settle it first, then decide this question with it in mind. You set the STRATEGY for the rest of this act and run; code and a small model will apply it to card rewards, shops, removals, map routes and rest sites, and will play every card themselves. Look at the deck, relics, HP, gold, potions, the act boss and the map ahead (memory.lookahead). Name what this deck needs to beat the act boss and survive the act. act_boss_clock gives the boss's HP at this ascension (heals and wasted hits included), the turns you survive at its logged damage and so the turns the fight can last, the damage a turn that needs, and code's estimate of this deck's damage a turn in that fight (calibrated on logged A8 boss fights; Strength growth and the boss mechanic in harder_because counted). If gap_per_turn > 0, closing it comes first: want Strength/scaling and high-damage cards (AoE for two-part bosses), remove Strikes/Defends that dilute them, smith attacks; state the gap in the summary. A gap of 0 is not a reason to stop adding damage: the estimate's typical error is ~25%. Reply to this question in its own JSON format as asked, with one more field in the same JSON object: \"run_plan\": {\"archetype\": \"<the deck direction, max 12 words>\", \"want\": [card ids to pick when offered, most important first, max 6], \"avoid\": [card ids not to take, max 6], \"remove\": [card ids in the deck to remove first, max 3], \"block_target\": <number of block cards the deck should hold by the act boss>, \"elites\": \"seek\" | \"normal\" | \"avoid\", \"rest\": \"heal\" | \"smith\" | \"auto\", \"boss_prep\": \"<max 30 words: what to have ready for the act boss>\", \"summary\": \"<max 40 words: the plan in plain words>\"}",
+        "criteria": {
+          "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（24）。\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 612（当前牌组 612，+0 ± 0）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；回血后 HP 28/82，进场血量按它投影\",\"boss_sim_win_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c0": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 打击\",\"card\":\"打击\",\"copies\":4,\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据\",\"not_on_selection_screen\":\"the game's upgrade screen lists only the first 25 eligible cards in deck order; these cannot be picked there: 后空翻, 灵动步法 x2, 投掷匕首, 谋划专家, 触媒, 刀刃之舞\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.2 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c4": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 防御\",\"card\":\"防御\",\"copies\":5,\"upgrade\":\"获得5点格挡。 -> 获得8点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 2 回合；boss 平均剩血 611（当前牌组 612，−0.4 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c10": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 生存者\",\"card\":\"生存者\",\"upgrade\":\"获得8点格挡。 丢弃1张牌。 -> 获得11点格挡。 丢弃1张牌。\",\"card_outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 2 回合；boss 平均剩血 611（当前牌组 612，−0.3 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c12": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 计算下注\",\"card\":\"计算下注\",\"upgrade\":\"丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层49 / 给了没拿 n=4(少) 过本幕boss 75% 均终层28.8；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=2(少) 过本幕boss 50% 均终层40\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.4 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c13": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 带毒刺击\",\"card\":\"带毒刺击\",\"copies\":2,\"upgrade\":\"造成6点伤害。 给予3层中毒。 -> 造成8点伤害。 给予4层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=11 过本幕boss 64% 均终层31.2 / 给了没拿 n=1(少) 过本幕boss 100% 均终层31；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层40.5 / 给了没拿 n=2(少) 过本幕boss 100% 均终层43；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层49 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.5 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c14": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 回响斩击\",\"card\":\"回响斩击\",\"copies\":2,\"upgrade\":\"对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。 -> 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=7 过本幕boss 86% 均终层35.6 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 610（当前牌组 612，−1.2 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c15": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 斗篷与匕首\",\"card\":\"斗篷与匕首\",\"copies\":2,\"upgrade\":\"获得6点格挡。 将1张小刀添加到你的手牌。 -> 获得6点格挡。 将2张小刀添加到你的手牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=5 过本幕boss 60% 均终层27.6 / 给了没拿 n=3(少) 过本幕boss 67% 均终层27；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层43 / 给了没拿 n=1(少) 过本幕boss 0% 均终层22；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=3(少) 过本幕boss 0% 均终层44.3\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.7 ± 0.3）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c18": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 背刺\",\"card\":\"背刺\",\"upgrade\":\"固有。 造成11点伤害。 消耗。 -> 造成15点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=2(少) 过本幕boss 100% 均终层35 / 给了没拿 n=2(少) 过本幕boss 50% 均终层32.5；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 610（当前牌组 612，−1.1 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c19": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 串刺\",\"card\":\"串刺\",\"upgrade\":\"造成8点伤害X次。 -> 造成11点伤害X次。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37.7 / 给了没拿 n=3(少) 过本幕boss 67% 均终层26.3；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层49；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 610（当前牌组 612，−1.1 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c20": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 扫腿\",\"card\":\"扫腿\",\"copies\":2,\"upgrade\":\"给予2层虚弱。 获得11点格挡。 -> 给予3层虚弱。 获得14点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=4(少) 过本幕boss 50% 均终层26.5 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层42.7 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−1 ± 0.3）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c22": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 致命毒药\",\"card\":\"致命毒药\",\"copies\":2,\"upgrade\":\"给予5层中毒。 -> 给予7层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=16 过本幕boss 69% 均终层30.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层17；第2幕 拿了 n=4(少) 过本幕boss 50% 均终层37.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层48.5 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48.5\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.4 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c23": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 切割\",\"card\":\"切割\",\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=6 过本幕boss 67% 均终层27.3 / 给了没拿 n=7 过本幕boss 43% 均终层25.3；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=5 过本幕boss 20% 均终层34；第3幕 拿了 无数据 / 给了没拿 n=2(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.7 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
+          "o1:c26": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 自动化\",\"card\":\"自动化\",\"upgrade\":\"你每抽10张牌，获得1点能量。 -> cost 1->0\",\"card_outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 612（当前牌组 612，+0.1 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}"
+        }
+      }
+    },
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "expect": {
+      "option": {
+        "id": "HEAL"
+      },
+      "from": "decision"
+    },
+    "rationale": "Codex decided o0: Heal to 28 HP; smithing leaves insufficient survival buffer for the forced hallway. Keep the shop route rather than adding another elite. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 14; not shown to Codex)",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 11965,
+      "jev": 0,
+      "action": 116,
+      "deepseek": 22800,
+      "planner": 9,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 141094,
+      "output_tokens": 514,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 275
+    },
+    "deepseek": {
+      "by": "deepseek",
+      "direct": true,
+      "choice": "o0",
+      "reason": "Heal to 28 HP; smithing leaves insufficient survival buffer for the forced hallway. Keep the shop route rather than adding another elite.",
+      "latency_ms": 22800,
+      "tokens": 141608,
+      "input_tokens": 141094,
+      "output_tokens": 514,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 275,
+      "effort": "",
+      "guide": "",
+      "handbook": "",
+      "memory_chars": 22627,
+      "memory_sections": {
+        "act": 2520,
+        "history": 14215,
+        "now": 0,
+        "this_floor": 0,
+        "route": 77,
+        "lookahead": 80,
+        "knowledge": 5735
+      },
+      "route": "keep",
+      "brain": {
+        "engine": "codex",
+        "model": "gpt-6.1-sol",
+        "attempts": 1,
+        "tool_calls": []
+      },
+      "plan_id": "LS8035TB32P3:F40:rest#15",
+      "plan": [
+        "o0"
+      ],
+      "plan_step": 1
+    },
+    "boss_sim": {
+      "boss": "QUEEN",
+      "asc": 10,
+      "entry_hp": 1,
+      "entry_source": "route",
+      "samples": 520,
+      "requested": 1000,
+      "timed_out": true,
+      "workers": 24,
+      "orders": 3,
+      "sim_ms": 11029,
+      "ms": 11041,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 1,
+        "boss_left": 611.5096
+      },
+      "options": {
+        "o0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 611.5096,
+          "boss_left_diff": 0,
+          "boss_left_se": 0
+        },
+        "o1:c0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 611.2827,
+          "boss_left_diff": -0.2269,
+          "boss_left_se": 0.0575
+        },
+        "o1:c4": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 611.0808,
+          "boss_left_diff": -0.4288,
+          "boss_left_se": 0.1524
+        },
+        "o1:c10": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 611.175,
+          "boss_left_diff": -0.3346,
+          "boss_left_se": 0.1565
+        },
+        "o1:c12": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 611.0962,
+          "boss_left_diff": -0.4135,
+          "boss_left_se": 0.1859
+        },
+        "o1:c13": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 611.0192,
+          "boss_left_diff": -0.4904,
+          "boss_left_se": 0.0913
+        },
+        "o1:c14": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 610.3154,
+          "boss_left_diff": -1.1942,
+          "boss_left_se": 0.1078
+        },
+        "o1:c15": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 610.8115,
+          "boss_left_diff": -0.6981,
+          "boss_left_se": 0.2659
+        },
+        "o1:c18": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 610.4212,
+          "boss_left_diff": -1.0885,
+          "boss_left_se": 0.0981
+        },
+        "o1:c19": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 610.3846,
+          "boss_left_diff": -1.125,
+          "boss_left_se": 0.2193
+        },
+        "o1:c20": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 610.525,
+          "boss_left_diff": -0.9846,
+          "boss_left_se": 0.273
+        },
+        "o1:c22": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 611.0846,
+          "boss_left_diff": -0.425,
+          "boss_left_se": 0.0781
+        },
+        "o1:c23": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 610.8423,
+          "boss_left_diff": -0.6673,
+          "boss_left_se": 0.0855
+        },
+        "o1:c26": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 1,
+          "hp": 1,
+          "boss_left": 611.6558,
+          "boss_left_diff": 0.1462,
+          "boss_left_se": 0.2308
+        }
+      },
+      "not_simulated": {}
+    },
+    "run_plan_merge": {
+      "trigger": "hp_drop",
+      "outcome": "stored"
+    },
+    "route_review": {
+      "answer": "keep",
+      "outcome": "keep"
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "LS8035TB32P3",
+    "observed_ts": "2026-10-06T12:29:13.136Z",
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（24）。",
+      "reason": "Heal to 28 HP; smithing leaves insufficient survival buffer for the forced hallway. Keep the shop route rather than adding another elite."
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-06T12:29:48.158Z",
+    "mode": "play",
+    "screen": "REST",
+    "session": "singleplayer/run",
+    "floor": 40,
+    "turn": null,
+    "label": "rest/proceed",
+    "decision_id": "8d652291-896b-483d-83c4-1746cff51031",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"proceed\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":64,\"hand\":\"\",\"hp\":28,\"maxHp\":82,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LS8035TB32P3\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+    "chosen": {
+      "action": "proceed"
+    },
+    "rationale": "nothing to choose at this rest site",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 62,
+      "planner": 0,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": null,
+    "sl_reloads": 0,
+    "run_id": "LS8035TB32P3",
+    "observed_ts": "2026-10-06T12:29:48.157Z",
+    "journal": {
+      "choice": "nothing to choose at this rest site",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  }
+]

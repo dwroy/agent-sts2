@@ -1,0 +1,26 @@
+已实现并上线 **S1.strategy9 / silent-0201**：休息题分列即时血量、路线耗尽节点和 boss 模拟输入，标注输入血量并列。
+
+证据：LS8035TB32P3，F40／F16休息题（无战斗回合）、F42末次T8；关联账本 silent-0019／0020／0139。
+
+- 实现提交：`b66dd551`
+- live 合入：`1f82f78f`；发布：`c19d0b3d`
+- 撤源码：6失败、3通过；恢复：9通过。
+- 合前／合后：tsc、vitest 均退出0，各2275例通过；gitleaks干净。
+- 首次记录预检冲突已通过正常同步 main 解决，原失败记录保留。
+
+[提案](/home/dw/Projects/agent-sts2/learner/runs/20261007-021220-strategy-proposal/proposal.md)与[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-021220-strategy-proposal/handoff-ops.md)已落盘。账本保持 proposed，交运维核实后登记 shipped；完整沙箱外检查待调度器。统一血线、保血权重、SL阈值和完整时钟校准因证据不足未实现。
+
+```json
+{"task":"strategy-proposal","base":"7d2fd04143226df74f2d4b77cf18764c1fe801ac","runs":["5X2GHKJ89PN1","TCFAHJ9K19VY","LS8035TB32P3","L704TLETMZBM","KUZVERN40NGK","BVF22RSFVBS9","ZVYUL2YP3518","VPW8YH7A4QFM","DPYF2BAA3DKT","CRK2HNYKSCZC"],"fixes":["silent-0201"],"skipped":["保血／全死权重、固定目标、巨兽拖延、SL阈值／范围、统一血线及完整时钟校准：证据不足"],"merged":"1f82f78f9965c4ca04944e72bb94b247bf192f04","tests":{"tsc":0,"vitest":0,"cases":2275}}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1126a-a4ee-7001-99f6-285e679d733e
+轮数：1；工具调用：command_execution×62 file_change×2
+token：输入 203.8k、输出 44.1k（其中推理 16.6k）、cache 读 9532.0k、cache 写 0（命中 97.9%）
+成本：未提供
+耗时：1461.0 s（墙钟）
+时间：首个事件 1.9 s、模型首个输出 7.1 s、首次工具 10.1 s、末次工具结束 1432.4 s；工具内共 690.7 s，其余（模型生成、推理、网络）768.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×63；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T02-12-21-01a1126a-a4ee-7001-99f6-285e679d733e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-021220-strategy-proposal.jsonl

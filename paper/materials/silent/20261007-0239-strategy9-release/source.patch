@@ -1,0 +1,984 @@
+diff --git a/agent/src/sim/build-sim-facts.ts b/agent/src/sim/build-sim-facts.ts
+index 96edef82..d5e511fe 100644
+--- a/agent/src/sim/build-sim-facts.ts
++++ b/agent/src/sim/build-sim-facts.ts
+@@ -79,6 +79,8 @@ export interface BuildSimSetup {
+ /** One option's simulation plan: its deck change, a per-card group (a removal, a smith), or why it is not simulated. */
+ interface OptionPlan {
+   key: string;
++  /** Silent rest facts only; never used by the simulator or option selection. */
++  restHpReference?: Record<string, JsonValue>;
+   change?: Partial<RolloutInput> | null;
+   mixture?: Partial<RolloutInput>[];
+   /** Per deck card (a shop removal, a step-by-step smith): card key -> the change. */
+@@ -94,7 +96,12 @@ const signed = (x: number) => `${x >= 0 ? "+" : "−"}${Math.abs(Math.round(x *
+ const one = (x: number) => String(Math.round(x * 10) / 10);
+ 
+ /** The entry HP the route facts project for the boss from `hp` (max `max`), and where it comes from. */
+-export function routeEntry(env: DecisionEnv): { project: (hp: number, max: number) => number; source: string; planned: boolean } {
++export function routeEntry(env: DecisionEnv): {
++  project: (hp: number, max: number) => number;
++  source: string;
++  planned: boolean;
++  inspect?: (hp: number, max: number) => { projected: number | null; exhaustedAt: JsonValue; assumedHealFloors: number[] };
++} {
+   const { state } = env;
+   const act = mapActOf(state);
+   const plan = actPlan(env, act);
+@@ -108,6 +115,15 @@ export function routeEntry(env: DecisionEnv): { project: (hp: number, max: numbe
+   const costs = routeCosts(env, act);
+   return {
+     project: (hp, max) => projectPath(types, hp, costs, max).arrival[bossAt]!,
++    inspect: (hp, max) => {
++      const projection = projectPath(types, hp, costs, max);
++      const exhausted = projection.runsOut === null ? null : ahead[projection.runsOut]!;
++      return {
++        projected: projection.arrival[bossAt]!,
++        exhaustedAt: exhausted ? { floor: first + exhausted.row, room: exhausted.type } : null,
++        assumedHealFloors: ahead.slice(0, bossAt).filter((step) => /^(RestSite|Rest)$/.test(step.type)).map((step) => first + step.row),
++      };
++    },
+     source: `本幕路线计划到 boss（F${first + ahead[bossAt]!.row}）的中位投影，和 route_review.plan_facts.boss 同一个算法`,
+     planned: true,
+   };
+@@ -197,6 +213,30 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
+     const solver = change?.solver ?? base.solver;
+     return { ...(change ?? {}), solver: { ...solver, player: { ...solver.player, hp: Math.min(max, entryHp), maxHp: max } } };
+   };
++  // LS8035TB32P3 F40, silent-0201/0019/0020/0139: +24 HP and equal 1-HP boss inputs are separate facts.
++  const restHpReference = (hp: number, max: number, simulatedHp: number): Record<string, JsonValue> | undefined => {
++    if (character !== "silent") return undefined;
++    const trace = entry.inspect?.(hp, max);
++    const projected = trace ? trace.projected : entry.project(hp, max);
++    const known = projected !== null && Number.isFinite(projected);
++    return {
++      current_hp: hpNow,
++      after_action_hp: hp,
++      after_action_max_hp: max,
++      immediate_hp_gain: hp - hpNow,
++      projected_boss_hp: known ? projected : null,
++      simulated_entry_hp: simulatedHp,
++      entry_source: entry.planned ? "route" : "hp_now",
++      projection_exhausted_at: trace?.exhaustedAt ?? null,
++      assumed_future_heal_floors: trace?.assumedHealFloors ?? [],
++      note: "这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。" +
++        (!known ? "boss进场投影未知；模拟输入不能当作已知进场血量。" : projected < 1
++          ? "boss前中位投影不足1血，模拟按下限1血计算；相同模拟输入或胜率不代表即时回血无用，也不是下一场走廊的胜率或确定死亡判断。"
++          : "boss模拟使用投影进场血量；这不是下一场走廊的胜率。") +
++        "全部选项保留，由DeepSeek选择。",
++      evidence: "LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。",
++    };
++  };
+   const relicOf = (id: string, name: string): OptionPlan | Omit<OptionPlan, "key"> => {
+     if (!FIGHT_START_RELICS[id] && !knownRelic(id)) return { none: "这件遗物在 boss 战里的效果没有建模：不模拟" };
+     return { change: rebuild((r) => void (r["relics"] = [...asArray(r["relics"]), { relic_id: id, name, stack: null, is_melted: false }])) };
+@@ -307,11 +347,13 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
+         if (kind === "HEAL") {
+           const heal = restHealHere(str(raw?.["description"]), maxNow, asArray(run["relics"]).map((r) => str(asRecord(r)["relic_id"])));
+           const healed = restedHp(hpNow, maxNow, heal.rest, heal.base);
+-          return { change: withHp(healed.hp, healed.max), note: `回血后 HP ${healed.hp}/${healed.max}，进场血量按它投影` };
++          const change = withHp(healed.hp, healed.max);
++          return { change, restHpReference: restHpReference(healed.hp, healed.max, change.solver!.player.hp), note: `回血后 HP ${healed.hp}/${healed.max}，进场血量按它投影` };
+         }
+         if (kind === "SMITH") {
+-          if (cardKey) return byTask("upgrade", positionOfKey(cardKey));
+-          return { group: removalGroup("升级", "upgrade") };
++          const reference = restHpReference(hpNow, maxNow, base.solver.player.hp);
++          if (cardKey) return { ...byTask("upgrade", positionOfKey(cardKey)), restHpReference: reference };
++          return { group: removalGroup("升级", "upgrade"), restHpReference: reference };
+         }
+         if (kind === "LIFT") return { change: rebuild((r) => void (r["relics"] = asArray(r["relics"]).map(asRecord).map((relic) => (str(relic["relic_id"]) === "GIRYA" ? { ...relic, stack: (numOrNull(relic["stack"]) ?? 0) + 1 } : relic)))), note: "举重：壶铃多一层（开场力量 +1）" };
+         const follow = raw ? deckFollowUp(str(raw["description"])) : null;
+@@ -487,6 +529,21 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+         if (sim) shown["boss_sim"] = `${simLine(head, result.base, sim, result.samples, lowWin)}${plan.note ? `；${plan.note}` : ""}`;
+         Object.assign(shown, winTies.get(k));
+       }
++      if (!plan.none && plan.restHpReference && (sims.has(k) || plan.group?.some((g) => sims.has(`${k}|${g.key}`)))) {
++        const reference = plan.restHpReference;
++        const peers = plans.filter((other) => other.key !== k && !other.none && question.criteria[other.key] != null
++          && other.restHpReference?.projected_boss_hp !== null && reference.projected_boss_hp !== null
++          && other.restHpReference?.simulated_entry_hp === reference.simulated_entry_hp
++          && other.restHpReference?.after_action_max_hp === reference.after_action_max_hp
++          && (sims.has(other.key) || other.group?.some((g) => sims.has(`${other.key}|${g.key}`)))).map((other) => other.key);
++        shown["boss_sim_hp_reference"] = {
++          ...reference,
++          ...(peers.length > 0 ? {
++            entry_hp_tied_with: peers,
++            entry_hp_tie_note: "仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。",
++          } : {}),
++        };
++      }
+       criteria[k] = JSON.stringify(shown);
+     }
+     const b = result.base;
+diff --git a/agent/tests/silent-rest-sim-hp-evidence.json b/agent/tests/silent-rest-sim-hp-evidence.json
+new file mode 100644
+index 00000000..b9576b7f
+--- /dev/null
++++ b/agent/tests/silent-rest-sim-hp-evidence.json
+@@ -0,0 +1,684 @@
++{
++  "source": "LS8035TB32P3 SILENT A10 F16/F40; silent-0201/0019/0020/0139",
++  "boards": {
++    "16": {
++      "state": {
++        "state_version": 16,
++        "run_id": "LS8035TB32P3",
++        "screen": "REST",
++        "session": {
++          "mode": "singleplayer",
++          "phase": "run",
++          "control_scope": "local_player"
++        },
++        "in_combat": false,
++        "turn": null,
++        "available_actions": [
++          "save_and_quit",
++          "choose_rest_option",
++          "discard_potion"
++        ],
++        "rest": {
++          "options": [
++            {
++              "index": 0,
++              "option_id": "HEAL",
++              "title": "休息",
++              "description": "回复最大生命值的30%（23）。",
++              "is_enabled": true,
++              "requires_target": false,
++              "target_index_space": null,
++              "valid_target_indices": [],
++              "valid_target_player_ids": []
++            },
++            {
++              "index": 1,
++              "option_id": "SMITH",
++              "title": "锻造",
++              "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
++              "is_enabled": true,
++              "requires_target": false,
++              "target_index_space": null,
++              "valid_target_indices": [],
++              "valid_target_player_ids": []
++            }
++          ]
++        },
++        "run": {
++          "character_id": "SILENT",
++          "character_name": "静默猎手",
++          "ascension": 10,
++          "floor": 16,
++          "current_hp": 42,
++          "max_hp": 77,
++          "gold": 16,
++          "max_energy": 3,
++          "act_id": "0",
++          "boss_id": "VANTOM_BOSS",
++          "potions": [],
++          "relics": [],
++          "deck": [
++            {
++              "index": 0,
++              "card_id": "STRIKE_SILENT",
++              "name": "打击",
++              "upgraded": false,
++              "card_type": "Attack",
++              "rarity": "Basic",
++              "costs_x": false,
++              "star_costs_x": false,
++              "energy_cost": 1,
++              "star_cost": 0,
++              "rules_text": "造成{Damage:diff()}点伤害。",
++              "resolved_rules_text": "造成6点伤害。",
++              "dynamic_values": [
++                {
++                  "name": "Damage",
++                  "base_value": 6,
++                  "current_value": 6,
++                  "enchanted_value": 6,
++                  "is_modified": false,
++                  "was_just_upgraded": false
++                }
++              ]
++            }
++          ]
++        }
++      },
++      "before_offset": 7802052760,
++      "after_offset": 7802074737,
++      "before_ts": "2026-10-06T12:03:32.989Z",
++      "after_ts": "2026-10-06T12:03:49.133Z",
++      "observed_after_hp": 65,
++      "boss_sim": {
++        "boss": "VANTOM",
++        "asc": 10,
++        "entry_hp": 42,
++        "entry_source": "route",
++        "samples": 872,
++        "requested": 1000,
++        "timed_out": true,
++        "workers": 24,
++        "orders": 1,
++        "sim_ms": 11112,
++        "ms": 11126,
++        "base": {
++          "win": 0.0654,
++          "win_cal": 0.2806,
++          "hp_loss_won": 38,
++          "turns": 12,
++          "boss_left": 63.9209
++        },
++        "options": {
++          "o0": {
++            "win": 0.5768,
++            "win_cal": 0.7093,
++            "diff_cal": 0.4287,
++            "se_cal": 0.0142,
++            "diff_raw": 0.5115,
++            "se_raw": 0.0169,
++            "hp_loss_won": 53,
++            "turns": 13,
++            "hp": 65,
++            "boss_left": 14.7282,
++            "boss_left_diff": -49.1927,
++            "boss_left_se": 0.9964
++          },
++          "o1:c0": {
++            "win": 0.0711,
++            "win_cal": 0.2919,
++            "diff_cal": 0.0114,
++            "se_cal": 0.0075,
++            "diff_raw": 0.0057,
++            "se_raw": 0.0038,
++            "hp_loss_won": 38,
++            "turns": 12,
++            "hp": 42,
++            "boss_left": 62.0596,
++            "boss_left_diff": -1.8612,
++            "boss_left_se": 0.1644
++          },
++          "o1:c5": {
++            "win": 0.1009,
++            "win_cal": 0.3431,
++            "diff_cal": 0.0625,
++            "se_cal": 0.0121,
++            "diff_raw": 0.0356,
++            "se_raw": 0.0069,
++            "hp_loss_won": 37,
++            "turns": 13,
++            "hp": 42,
++            "boss_left": 57.7901,
++            "boss_left_diff": -6.1307,
++            "boss_left_se": 0.5633
++          },
++          "o1:c11": {
++            "win": 0.1055,
++            "win_cal": 0.35,
++            "diff_cal": 0.0694,
++            "se_cal": 0.0125,
++            "diff_raw": 0.0401,
++            "se_raw": 0.0072,
++            "hp_loss_won": 36.5,
++            "turns": 13,
++            "hp": 42,
++            "boss_left": 57.2282,
++            "boss_left_diff": -6.6927,
++            "boss_left_se": 0.5625
++          },
++          "o1:c13": {
++            "win": 0.1273,
++            "win_cal": 0.3804,
++            "diff_cal": 0.0998,
++            "se_cal": 0.021,
++            "diff_raw": 0.0619,
++            "se_raw": 0.013,
++            "hp_loss_won": 37,
++            "turns": 12,
++            "hp": 42,
++            "boss_left": 47.5608,
++            "boss_left_diff": -16.3601,
++            "boss_left_se": 1.3885
++          },
++          "o1:c14": {
++            "win": 0.1365,
++            "win_cal": 0.3921,
++            "diff_cal": 0.1116,
++            "se_cal": 0.0137,
++            "diff_raw": 0.0711,
++            "se_raw": 0.0087,
++            "hp_loss_won": 36,
++            "turns": 11,
++            "hp": 42,
++            "boss_left": 54.2431,
++            "boss_left_diff": -9.6778,
++            "boss_left_se": 0.2991
++          },
++          "o1:c15": {
++            "win": 0.0791,
++            "win_cal": 0.3069,
++            "diff_cal": 0.0264,
++            "se_cal": 0.0075,
++            "diff_raw": 0.0138,
++            "se_raw": 0.0039,
++            "hp_loss_won": 37,
++            "turns": 12,
++            "hp": 42,
++            "boss_left": 61.1709,
++            "boss_left_diff": -2.75,
++            "boss_left_se": 0.1575
++          },
++          "o1:c16": {
++            "win": 0.0814,
++            "win_cal": 0.311,
++            "diff_cal": 0.0305,
++            "se_cal": 0.0207,
++            "diff_raw": 0.0161,
++            "se_raw": 0.0109,
++            "hp_loss_won": 38,
++            "turns": 12,
++            "hp": 42,
++            "boss_left": 62.555,
++            "boss_left_diff": -1.3658,
++            "boss_left_se": 1.0964
++          },
++          "o1:c19": {
++            "win": 0.0688,
++            "win_cal": 0.2875,
++            "diff_cal": 0.0069,
++            "se_cal": 0.004,
++            "diff_raw": 0.0034,
++            "se_raw": 0.002,
++            "hp_loss_won": 38,
++            "turns": 12,
++            "hp": 42,
++            "boss_left": 62.8452,
++            "boss_left_diff": -1.0757,
++            "boss_left_se": 0.0863
++          },
++          "o1:c20": {
++            "win": 0.0894,
++            "win_cal": 0.3248,
++            "diff_cal": 0.0442,
++            "se_cal": 0.0105,
++            "diff_raw": 0.0241,
++            "se_raw": 0.0057,
++            "hp_loss_won": 37,
++            "turns": 11.5,
++            "hp": 42,
++            "boss_left": 60.8222,
++            "boss_left_diff": -3.0986,
++            "boss_left_se": 0.2631
++          },
++          "o1:c21": {
++            "win": 0.1124,
++            "win_cal": 0.36,
++            "diff_cal": 0.0795,
++            "se_cal": 0.0134,
++            "diff_raw": 0.047,
++            "se_raw": 0.0079,
++            "hp_loss_won": 36.5,
++            "turns": 13,
++            "hp": 42,
++            "boss_left": 55.7557,
++            "boss_left_diff": -8.1651,
++            "boss_left_se": 0.6953
++          },
++          "o1:c23": {
++            "win": 0.2133,
++            "win_cal": 0.4738,
++            "diff_cal": 0.1932,
++            "se_cal": 0.0157,
++            "diff_raw": 0.1479,
++            "se_raw": 0.012,
++            "hp_loss_won": 35,
++            "turns": 11,
++            "hp": 42,
++            "boss_left": 48.7351,
++            "boss_left_diff": -15.1858,
++            "boss_left_se": 0.4474
++          },
++          "o1:c24": {
++            "win": 0.0791,
++            "win_cal": 0.3069,
++            "diff_cal": 0.0264,
++            "se_cal": 0.0075,
++            "diff_raw": 0.0138,
++            "se_raw": 0.0039,
++            "hp_loss_won": 37,
++            "turns": 12,
++            "hp": 42,
++            "boss_left": 61.1984,
++            "boss_left_diff": -2.7225,
++            "boss_left_se": 0.1294
++          }
++        },
++        "not_simulated": {}
++      },
++      "original_criteria": {
++        "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（23）。\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个（进场 65 血） 71%（+42.9 ± 1.4），赢局掉血中位 53，约 13 回合；boss 平均剩血 15（当前牌组 64，−49.2 ± 1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；回血后 HP 65/77，进场血量按它投影\"}",
++        "o1:c0": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 打击\",\"card\":\"打击\",\"copies\":5,\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 29%（+1.1 ± 0.8），赢局掉血中位 38，约 12 回合；boss 平均剩血 62（当前牌组 64，−1.9 ± 0.2）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c5": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 防御\",\"card\":\"防御\",\"copies\":5,\"upgrade\":\"获得5点格挡。 -> 获得8点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 34%（+6.3 ± 1.2），赢局掉血中位 37，约 13 回合；boss 平均剩血 58（当前牌组 64，−6.1 ± 0.6）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c11": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 生存者\",\"card\":\"生存者\",\"upgrade\":\"获得8点格挡。 丢弃1张牌。 -> 获得11点格挡。 丢弃1张牌。\",\"card_outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 35%（+6.9 ± 1.3），赢局掉血中位 36.5，约 13 回合；boss 平均剩血 57（当前牌组 64，−6.7 ± 0.6）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c13": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 计算下注\",\"card\":\"计算下注\",\"upgrade\":\"丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层49 / 给了没拿 n=4(少) 过本幕boss 75% 均终层28.8；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=2(少) 过本幕boss 50% 均终层40\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 38%（+10 ± 2.1），赢局掉血中位 37，约 12 回合；boss 平均剩血 48（当前牌组 64，−16.4 ± 1.4）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估\"}",
++        "o1:c14": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 带毒刺击\",\"card\":\"带毒刺击\",\"copies\":2,\"upgrade\":\"造成6点伤害。 给予3层中毒。 -> 造成8点伤害。 给予4层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=11 过本幕boss 64% 均终层31.2 / 给了没拿 n=1(少) 过本幕boss 100% 均终层31；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层40.5 / 给了没拿 n=2(少) 过本幕boss 100% 均终层43；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层49 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 39%（+11.2 ± 1.4），赢局掉血中位 36，约 11 回合；boss 平均剩血 54（当前牌组 64，−9.7 ± 0.3）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c15": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 回响斩击\",\"card\":\"回响斩击\",\"copies\":2,\"upgrade\":\"对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。 -> 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=7 过本幕boss 86% 均终层35.6 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 31%（+2.6 ± 0.8），赢局掉血中位 37，约 12 回合；boss 平均剩血 61（当前牌组 64，−2.7 ± 0.2）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c24\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c24的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c16": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 斗篷与匕首\",\"card\":\"斗篷与匕首\",\"upgrade\":\"获得6点格挡。 将1张小刀添加到你的手牌。 -> 获得6点格挡。 将2张小刀添加到你的手牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=5 过本幕boss 60% 均终层27.6 / 给了没拿 n=3(少) 过本幕boss 67% 均终层27；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层43 / 给了没拿 n=1(少) 过本幕boss 0% 均终层22；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=3(少) 过本幕boss 0% 均终层44.3\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 31%（+3.1 ± 2.1），赢局掉血中位 38，约 12 回合；boss 平均剩血 63（当前牌组 64，−1.4 ± 1.1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c19": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 背刺\",\"card\":\"背刺\",\"upgrade\":\"固有。 造成11点伤害。 消耗。 -> 造成15点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=2(少) 过本幕boss 100% 均终层35 / 给了没拿 n=2(少) 过本幕boss 50% 均终层32.5；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 29%（+0.7 ± 0.4），赢局掉血中位 38，约 12 回合；boss 平均剩血 63（当前牌组 64，−1.1 ± 0.1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c20": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 串刺\",\"card\":\"串刺\",\"upgrade\":\"造成8点伤害X次。 -> 造成11点伤害X次。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37.7 / 给了没拿 n=3(少) 过本幕boss 67% 均终层26.3；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层49；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 32%（+4.4 ± 1.1），赢局掉血中位 37，约 11.5 回合；boss 平均剩血 61（当前牌组 64，−3.1 ± 0.3）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c21": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 扫腿\",\"card\":\"扫腿\",\"copies\":2,\"upgrade\":\"给予2层虚弱。 获得11点格挡。 -> 给予3层虚弱。 获得14点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=4(少) 过本幕boss 50% 均终层26.5 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层42.7 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 36%（+8 ± 1.3），赢局掉血中位 36.5，约 13 回合；boss 平均剩血 56（当前牌组 64，−8.2 ± 0.7）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c23": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 致命毒药\",\"card\":\"致命毒药\",\"upgrade\":\"给予5层中毒。 -> 给予7层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=16 过本幕boss 69% 均终层30.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层17；第2幕 拿了 n=4(少) 过本幕boss 50% 均终层37.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层48.5 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48.5\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 47%（+19.3 ± 1.6），赢局掉血中位 35，约 11 回合；boss 平均剩血 49（当前牌组 64，−15.2 ± 0.4）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\"}",
++        "o1:c24": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 切割\",\"card\":\"切割\",\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=6 过本幕boss 67% 均终层27.3 / 给了没拿 n=7 过本幕boss 43% 均终层25.3；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=5 过本幕boss 20% 均终层34；第3幕 拿了 无数据 / 给了没拿 n=2(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（墨影幻灵，A10）的模拟：当前牌组胜率 28%；选这个 31%（+2.6 ± 0.8），赢局掉血中位 37，约 12 回合；boss 平均剩血 61（当前牌组 64，−2.7 ± 0.1）（872 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o1:c15\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c15的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}"
++      }
++    },
++    "40": {
++      "state": {
++        "state_version": 16,
++        "run_id": "LS8035TB32P3",
++        "screen": "REST",
++        "session": {
++          "mode": "singleplayer",
++          "phase": "run",
++          "control_scope": "local_player"
++        },
++        "in_combat": false,
++        "turn": null,
++        "available_actions": [
++          "save_and_quit",
++          "choose_rest_option"
++        ],
++        "rest": {
++          "options": [
++            {
++              "index": 0,
++              "option_id": "HEAL",
++              "title": "休息",
++              "description": "回复最大生命值的30%（24）。",
++              "is_enabled": true,
++              "requires_target": false,
++              "target_index_space": null,
++              "valid_target_indices": [],
++              "valid_target_player_ids": []
++            },
++            {
++              "index": 1,
++              "option_id": "SMITH",
++              "title": "锻造",
++              "description": "[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。",
++              "is_enabled": true,
++              "requires_target": false,
++              "target_index_space": null,
++              "valid_target_indices": [],
++              "valid_target_player_ids": []
++            }
++          ]
++        },
++        "run": {
++          "character_id": "SILENT",
++          "character_name": "静默猎手",
++          "ascension": 10,
++          "floor": 40,
++          "current_hp": 4,
++          "max_hp": 82,
++          "gold": 64,
++          "max_energy": 3,
++          "act_id": "2",
++          "boss_id": "QUEEN_BOSS",
++          "potions": [],
++          "relics": [],
++          "deck": [
++            {
++              "index": 0,
++              "card_id": "STRIKE_SILENT",
++              "name": "打击",
++              "upgraded": false,
++              "card_type": "Attack",
++              "rarity": "Basic",
++              "costs_x": false,
++              "star_costs_x": false,
++              "energy_cost": 1,
++              "star_cost": 0,
++              "rules_text": "造成{Damage:diff()}点伤害。",
++              "resolved_rules_text": "造成6点伤害。",
++              "dynamic_values": [
++                {
++                  "name": "Damage",
++                  "base_value": 6,
++                  "current_value": 6,
++                  "enchanted_value": 6,
++                  "is_modified": false,
++                  "was_just_upgraded": false
++                }
++              ]
++            }
++          ]
++        }
++      },
++      "before_offset": 7818634358,
++      "after_offset": 7818664450,
++      "before_ts": "2026-10-06T12:29:13.136Z",
++      "after_ts": "2026-10-06T12:29:48.157Z",
++      "observed_after_hp": 28,
++      "boss_sim": {
++        "boss": "QUEEN",
++        "asc": 10,
++        "entry_hp": 1,
++        "entry_source": "route",
++        "samples": 520,
++        "requested": 1000,
++        "timed_out": true,
++        "workers": 24,
++        "orders": 3,
++        "sim_ms": 11029,
++        "ms": 11041,
++        "base": {
++          "win": 0,
++          "win_cal": 0.0474,
++          "hp_loss_won": null,
++          "turns": 1,
++          "boss_left": 611.5096
++        },
++        "options": {
++          "o0": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 611.5096,
++            "boss_left_diff": 0,
++            "boss_left_se": 0
++          },
++          "o1:c0": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 611.2827,
++            "boss_left_diff": -0.2269,
++            "boss_left_se": 0.0575
++          },
++          "o1:c4": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 2,
++            "hp": 1,
++            "boss_left": 611.0808,
++            "boss_left_diff": -0.4288,
++            "boss_left_se": 0.1524
++          },
++          "o1:c10": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 2,
++            "hp": 1,
++            "boss_left": 611.175,
++            "boss_left_diff": -0.3346,
++            "boss_left_se": 0.1565
++          },
++          "o1:c12": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 611.0962,
++            "boss_left_diff": -0.4135,
++            "boss_left_se": 0.1859
++          },
++          "o1:c13": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 611.0192,
++            "boss_left_diff": -0.4904,
++            "boss_left_se": 0.0913
++          },
++          "o1:c14": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 610.3154,
++            "boss_left_diff": -1.1942,
++            "boss_left_se": 0.1078
++          },
++          "o1:c15": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 610.8115,
++            "boss_left_diff": -0.6981,
++            "boss_left_se": 0.2659
++          },
++          "o1:c18": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 610.4212,
++            "boss_left_diff": -1.0885,
++            "boss_left_se": 0.0981
++          },
++          "o1:c19": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 610.3846,
++            "boss_left_diff": -1.125,
++            "boss_left_se": 0.2193
++          },
++          "o1:c20": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 610.525,
++            "boss_left_diff": -0.9846,
++            "boss_left_se": 0.273
++          },
++          "o1:c22": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 611.0846,
++            "boss_left_diff": -0.425,
++            "boss_left_se": 0.0781
++          },
++          "o1:c23": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 610.8423,
++            "boss_left_diff": -0.6673,
++            "boss_left_se": 0.0855
++          },
++          "o1:c26": {
++            "win": 0,
++            "win_cal": 0.0474,
++            "diff_cal": 0,
++            "se_cal": 0,
++            "diff_raw": 0,
++            "se_raw": 0,
++            "hp_loss_won": null,
++            "turns": 1,
++            "hp": 1,
++            "boss_left": 611.6558,
++            "boss_left_diff": 0.1462,
++            "boss_left_se": 0.2308
++          }
++        },
++        "not_simulated": {}
++      },
++      "original_criteria": {
++        "o0": "{\"option\":\"休息\",\"kind\":\"HEAL\",\"description\":\"回复最大生命值的30%（24）。\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 612（当前牌组 612，+0 ± 0）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；回血后 HP 28/82，进场血量按它投影\",\"boss_sim_win_tied_with\":[\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c0": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 打击\",\"card\":\"打击\",\"copies\":4,\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据\",\"not_on_selection_screen\":\"the game's upgrade screen lists only the first 25 eligible cards in deck order; these cannot be picked there: 后空翻, 灵动步法 x2, 投掷匕首, 谋划专家, 触媒, 刀刃之舞\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.2 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c4": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 防御\",\"card\":\"防御\",\"copies\":5,\"upgrade\":\"获得5点格挡。 -> 获得8点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 0% 均终层17 / 给了没拿 无数据\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 2 回合；boss 平均剩血 611（当前牌组 612，−0.4 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c10": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 生存者\",\"card\":\"生存者\",\"upgrade\":\"获得8点格挡。 丢弃1张牌。 -> 获得11点格挡。 丢弃1张牌。\",\"card_outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 2 回合；boss 平均剩血 611（当前牌组 612，−0.3 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c12": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 计算下注\",\"card\":\"计算下注\",\"upgrade\":\"丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。 -> (upgrade not in code's data: see the card's text)\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=1(少) 过本幕boss 100% 均终层49 / 给了没拿 n=4(少) 过本幕boss 75% 均终层28.8；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=2(少) 过本幕boss 50% 均终层40\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.4 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c13": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 带毒刺击\",\"card\":\"带毒刺击\",\"copies\":2,\"upgrade\":\"造成6点伤害。 给予3层中毒。 -> 造成8点伤害。 给予4层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=11 过本幕boss 64% 均终层31.2 / 给了没拿 n=1(少) 过本幕boss 100% 均终层31；第2幕 拿了 n=2(少) 过本幕boss 50% 均终层40.5 / 给了没拿 n=2(少) 过本幕boss 100% 均终层43；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层49 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.5 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c14": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 回响斩击\",\"card\":\"回响斩击\",\"copies\":2,\"upgrade\":\"对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。 -> 对所有敌人造成13点伤害。 每有一名敌人被击杀，就重复此效果。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=7 过本幕boss 86% 均终层35.6 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 610（当前牌组 612，−1.2 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c15": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 斗篷与匕首\",\"card\":\"斗篷与匕首\",\"copies\":2,\"upgrade\":\"获得6点格挡。 将1张小刀添加到你的手牌。 -> 获得6点格挡。 将2张小刀添加到你的手牌。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=5 过本幕boss 60% 均终层27.6 / 给了没拿 n=3(少) 过本幕boss 67% 均终层27；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层43 / 给了没拿 n=1(少) 过本幕boss 0% 均终层22；第3幕 拿了 n=1(少) 过本幕boss 0% 均终层48 / 给了没拿 n=3(少) 过本幕boss 0% 均终层44.3\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.7 ± 0.3）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c18": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 背刺\",\"card\":\"背刺\",\"upgrade\":\"固有。 造成11点伤害。 消耗。 -> 造成15点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=2(少) 过本幕boss 100% 均终层35 / 给了没拿 n=2(少) 过本幕boss 50% 均终层32.5；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层37\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 610（当前牌组 612，−1.1 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c19、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c19": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 串刺\",\"card\":\"串刺\",\"upgrade\":\"造成8点伤害X次。 -> 造成11点伤害X次。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=3(少) 过本幕boss 67% 均终层37.7 / 给了没拿 n=3(少) 过本幕boss 67% 均终层26.3；第2幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 100% 均终层49；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 610（当前牌组 612，−1.1 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c20\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c20、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c20": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 扫腿\",\"card\":\"扫腿\",\"copies\":2,\"upgrade\":\"给予2层虚弱。 获得11点格挡。 -> 给予3层虚弱。 获得14点格挡。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=4(少) 过本幕boss 50% 均终层26.5 / 给了没拿 n=1(少) 过本幕boss 100% 均终层48；第2幕 拿了 n=3(少) 过本幕boss 67% 均终层42.7 / 给了没拿 无数据；第3幕 拿了 无数据 / 给了没拿 n=1(少) 过本幕boss 0% 均终层48\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−1 ± 0.3）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c22\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c22、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c22": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 致命毒药\",\"card\":\"致命毒药\",\"copies\":2,\"upgrade\":\"给予5层中毒。 -> 给予7层中毒。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=16 过本幕boss 69% 均终层30.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层17；第2幕 拿了 n=4(少) 过本幕boss 50% 均终层37.8 / 给了没拿 n=1(少) 过本幕boss 0% 均终层33；第3幕 拿了 n=2(少) 过本幕boss 0% 均终层48.5 / 给了没拿 n=2(少) 过本幕boss 0% 均终层48.5\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.4 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c23\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c23、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c23": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 切割\",\"card\":\"切割\",\"upgrade\":\"造成6点伤害。 -> 造成9点伤害。\",\"card_outcome_stats\":\"A10 第1幕 拿了 n=6 过本幕boss 67% 均终层27.3 / 给了没拿 n=7 过本幕boss 43% 均终层25.3；第2幕 拿了 n=1(少) 过本幕boss 0% 均终层33 / 给了没拿 n=5 过本幕boss 20% 均终层34；第3幕 拿了 无数据 / 给了没拿 n=2(少) 过本幕boss 0% 均终层49\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 611（当前牌组 612，−0.7 ± 0.1）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c26\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c26的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}",
++        "o1:c26": "{\"option\":\"锻造\",\"kind\":\"SMITH\",\"description\":\"[gold]升级[/gold]你[gold]牌组[/gold]中的1张牌。\",\"then\":\"upgrade 自动化\",\"card\":\"自动化\",\"upgrade\":\"你每抽10张牌，获得1点能量。 -> cost 1->0\",\"card_outcome_stats\":\"无数据\",\"boss_sim\":\"打本幕 boss（女王，A10；低可信，见 facts.act_boss_sim）的模拟：当前牌组胜率 5%；选这个 5%（+0 ± 0），赢局掉血中位 —，约 1 回合；boss 平均剩血 612（当前牌组 612，+0.1 ± 0.2）（520 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）\",\"boss_sim_win_tied_with\":[\"o0\",\"o1:c0\",\"o1:c4\",\"o1:c10\",\"o1:c12\",\"o1:c13\",\"o1:c14\",\"o1:c15\",\"o1:c18\",\"o1:c19\",\"o1:c20\",\"o1:c22\",\"o1:c23\"],\"boss_sim_win_tie_note\":\"本次模拟与o0、o1:c0、o1:c4、o1:c10、o1:c12、o1:c13、o1:c14、o1:c15、o1:c18、o1:c19、o1:c20、o1:c22、o1:c23的胜率指标并列：相同样本量下，精确原始胜率和校准胜率均相同。剩余boss血量、损血、回合与进场血量仍可能不同；不代表整局价值相同，全部选项仍交由DeepSeek选择。\"}"
++      },
++      "route_facts": {
++        "arrival": [
++          "F41 r7c0 宝箱：4/82（p75 4）",
++          "F42 r8c1 普通战：4/82（p75 4）",
++          "F43 r9c0 商店：0（血量耗尽）（p75 耗尽）",
++          "F44 r10c0 休息：0（血量耗尽）（p75 耗尽）",
++          "F45 r11c0 精英：0（血量耗尽）（p75 耗尽）",
++          "F46 r12c0 问号：0（血量耗尽）（p75 耗尽）",
++          "F47 r13c0 休息：0（血量耗尽）（p75 耗尽）",
++          "F48 r14c3 Boss：0（血量耗尽）（p75 耗尽）",
++          "F49 r15c3 Boss：0（血量耗尽）（p75 耗尽）"
++        ],
++        "rest_sites": [
++          "F44 r10c0 休息：到达 0（血量耗尽）（p75 耗尽）；回血 → 耗尽/82（p75 耗尽）；锻造（不回血）→ 耗尽/82（p75 耗尽）",
++          "F47 r13c0 休息：到达 0（血量耗尽）（p75 耗尽）；回血 → 耗尽/82（p75 耗尽）；锻造（不回血）→ 耗尽/82（p75 耗尽）"
++        ],
++        "fights_before_rest": "到下一个休息点 F44 r10c0 前：战斗 1 场（普通战 1、精英 0），问号 0 个，商店 1 个；本幕从上一个休息点（没有就从幕初）到当前节点已打普通战和精英 0 场（商店、问号不打断，问号不计），这一段到休息点 F44 r10c0 前共 1 场",
++        "next_elite": "F45 r11c0：到达 0（血量耗尽）（p75 耗尽）",
++        "boss": "F48 r14c3：到达 0（血量耗尽）（p75 耗尽）；之后还有第 2 个 boss（r15c3），中间不休息",
++        "hp_runs_out": "按中位数投影，血量在 F42 r8c1 普通战 耗尽",
++        "about": "从现在的 HP 4/82 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。",
++        "if_option": [
++          "o0 HEAL（HP 28/82）：下一只精英前 30/82（p75 耗尽），boss 前 0（血量耗尽）（p75 耗尽）",
++          "o1 SMITH（HP 4/82）：下一只精英前 0（血量耗尽）（p75 耗尽），boss 前 0（血量耗尽）（p75 耗尽）"
++        ]
++      }
++    }
++  },
++  "costs": {
++    "act": 3,
++    "maxHp": 82,
++    "monster": {
++      "median": 22.5,
++      "p75": 28,
++      "source": "frozen F40: A10 n=20"
++    },
++    "elite": {
++      "median": 57.4,
++      "p75": 57.4,
++      "source": "frozen F40: existing fallback"
++    },
++    "unknown": {
++      "median": 0,
++      "p75": 0,
++      "source": "frozen F40: A10 n=19"
++    }
++  }
++}
+diff --git a/agent/tests/silent-rest-sim-hp.test.ts b/agent/tests/silent-rest-sim-hp.test.ts
+new file mode 100644
+index 00000000..52773649
+--- /dev/null
++++ b/agent/tests/silent-rest-sim-hp.test.ts
+@@ -0,0 +1,175 @@
++/** LS8035TB32P3 F16/F40, silent-0201: fixed observed HP and logged boss simulation inputs. */
++import { readFileSync } from "node:fs";
++import { afterEach, expect, it, vi } from "vitest";
++import { loadConfig } from "../src/core/config.js";
++import type { JsonValue } from "../src/core/util/json.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { buildRunBrief } from "../src/memory/run-brief.js";
++import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
++import { withBossSim } from "../src/sim/build-sim-facts.js";
++import { compareOptions, type OptionSim } from "../src/sim/build-sim.js";
++import * as projection from "../src/sim/route-projection.js";
++
++vi.mock("../src/knowledge/files.js", async (original) => ({
++  ...await original<typeof import("../src/knowledge/files.js")>(),
++  knowledgeFile: (_dir: string, name: string) => `/__silent_rest_sim_hp_fixed__/${name}`,
++}));
++vi.mock("../src/knowledge/monster-db.js", async (original) => ({
++  ...await original<typeof import("../src/knowledge/monster-db.js")>(),
++  readMonsterDbJson: () => ({ monsters: {}, bosses: {}, encounters: {} }),
++}));
++vi.mock("../src/knowledge/card-upgrades.js", () => ({ cardUpgrade: () => null }));
++vi.mock("../src/sim/route-projection.js", async (original) => ({
++  ...await original<typeof import("../src/sim/route-projection.js")>(),
++  roomCostModel: () => structuredClone(fixture.costs),
++}));
++vi.mock("../src/sim/build-sim.js", async (original) => ({
++  ...await original<typeof import("../src/sim/build-sim.js")>(), compareOptions: vi.fn(),
++}));
++vi.mock("../src/sim/boss-start.js", async (original) => ({
++  ...await original<typeof import("../src/sim/boss-start.js")>(),
++  // Fixed simulation output is supplied below; this exercises option planning, not historic shuffles.
++  syntheticBossStart: (state: ReturnType<typeof parseGameState>, _knowledge: unknown, _boss: string, hp: number) => ({
++    entryHp: Math.min(state.run!.max_hp!, hp), maxHp: state.run!.max_hp,
++    boss: { name: "固定本局boss", asc: 10, exact: true, parts: [{ name: "固定本局boss", hp: 419 }] },
++    input: {
++      solver: { player: { hp: Math.min(state.run!.max_hp!, hp), maxHp: state.run!.max_hp }, hand: [] },
++      piles: { draw: [{ index: 900, name: "固定日志牌", known: true, type: "Attack", cost: 1, damage: 6, hits: 1 }], discard: [], exhaust: [] },
++    },
++    relics: { applied: [], unmodelled: [] },
++  }),
++}));
++
++const fixture = JSON.parse(readFileSync(new URL("./silent-rest-sim-hp-evidence.json", import.meta.url), "utf8"));
++afterEach(() => { vi.clearAllMocks(); vi.restoreAllMocks(); });
++
++function sim(key: string, row: Record<string, number | null>, samples: number): OptionSim {
++  return {
++    key, samples, win: row.win!, winCal: row.win_cal!, hp: row.hp ?? 1,
++    bossLeft: row.boss_left!, hpLossMean: 0, hpLossWon: row.hp_loss_won ?? null,
++    turns: row.turns ?? null, deathTurn: null, order: null,
++    diff: { raw: row.diff_raw ?? 0, se: row.se_raw ?? 0, cal: row.diff_cal ?? 0, calSe: row.se_cal ?? 0,
++      hpLoss: 0, hpLossSe: 0, bossLeft: row.boss_left_diff ?? 0, bossLeftSe: row.boss_left_se ?? 0 },
++  };
++}
++
++async function question(settings: { floor?: 16 | 40; character?: string; group?: boolean; route?: boolean; samples?: number; badSmith?: boolean } = {}) {
++  const floor = settings.floor ?? 40;
++  const board = fixture.boards[String(floor)];
++  const raw = structuredClone(board.state);
++  raw.run.character_id = settings.character ?? "SILENT";
++  const state = parseGameState(raw);
++  const knowledge = makeKnowledge({}, "cache");
++  const memory = createScreenMemory("REST");
++  if (settings.route !== false) {
++    const path = floor === 16 ? [{ row: 16, col: 3, type: "Boss", hpOnArrival: null }]
++      : ["Treasure", "Monster", "Shop", "RestSite", "Elite", "Unknown", "RestSite", "Boss", "Boss"]
++        .map((type, at) => ({ row: 7 + at, col: at === 1 ? 1 : at >= 7 ? 3 : 0, type, hpOnArrival: null }));
++    memory.routePlan = { runId: raw.run_id, act: floor === 16 ? 1 : 3, floor, hpPct: raw.run.current_hp / raw.run.max_hp, path, summary: "固定本局路线" };
++  }
++  const env: DecisionEnv = { state, knowledge, brief: buildRunBrief(state, knowledge),
++    thresholds: loadConfig({}).thresholds, runStart: "auto", characterPreference: null,
++    allowFtueModals: false, strictJev: true, screenMemory: memory, shopDiscardPotions: [] };
++  const smithKey = settings.badSmith ? "o1:missing" : settings.group ? "o1" : "o1:c0";
++  const entries = [
++    { key: "o0", intent: { action: "choose_rest_option" as const, option_index: 0 }, summary: { sentinel: "HEAL" } },
++    { key: smithKey, intent: { action: "choose_rest_option" as const, option_index: 1 }, summary: { sentinel: "SMITH" } },
++    { key: "o99", intent: { action: "choose_rest_option" as const, option_index: 99 }, summary: { sentinel: "unknown action" } },
++  ];
++  const ask: AskDecision = { kind: "ask", label: settings.group ? "rest/choose" : "rest/plan", state: { facts: { act_boss_clock: {} } },
++    questions: { pick: { type: "choice", instructions: "固定休息题", criteria: { ...Object.fromEntries(entries.map((e) => [e.key, JSON.stringify(e.summary)])), unavailable: null } } },
++    resolve: () => ({ intent: { action: "choose_rest_option", option_index: 0 }, rationale: "fixed", confidence: 1, fallback: false }),
++    deepseek: { question: "pick", baseline: { kind: "act", label: "rest/choose", intent: { action: "choose_rest_option", option_index: 0 }, rationale: "fixed" }, options: () => entries } };
++  const logged = board.boss_sim;
++  const samples = settings.samples ?? logged.samples;
++  const options = [sim("o0", logged.options.o0, samples), sim(settings.group ? "o1|c0" : smithKey, logged.options["o1:c0"], samples)];
++  const result = { base: sim("base", logged.base, samples), options, samples, requested: 1000,
++    timedOut: true, elapsedMs: 11_000, workers: 0, orders: 1, order: null };
++  vi.mocked(compareOptions).mockResolvedValue(result);
++  const outcome = await withBossSim(ask, env, { runner: { run: vi.fn() }, now: () => 100 });
++  const updated = outcome.decision as AskDecision;
++  const criteria = updated.questions.pick!.criteria!;
++  return { outcome, ask, criteria, result, reference: (key: string) => JSON.parse(criteria[key]!).boss_sim_hp_reference };
++}
++
++it("separates F40's observed +24 HP from two floored boss inputs and locates their different exhausted rooms", async () => {
++  const { reference } = await question();
++  expect(reference("o0")).toMatchObject({ current_hp: 4, after_action_hp: 28, immediate_hp_gain: 24,
++    after_action_max_hp: 82, simulated_entry_hp: 1, entry_source: "route",
++    projection_exhausted_at: { floor: 45, room: "Elite" }, assumed_future_heal_floors: [44, 47], entry_hp_tied_with: ["o1:c0"] });
++  expect(reference("o0").projected_boss_hp).toBeCloseTo(-27.9);
++  expect(reference("o1:c0")).toMatchObject({ after_action_hp: 4, immediate_hp_gain: 0, simulated_entry_hp: 1,
++    projection_exhausted_at: { floor: 42, room: "Monster" }, entry_hp_tied_with: ["o0"] });
++  expect(reference("o1:c0").projected_boss_hp).toBeCloseTo(-18.5);
++  expect(reference("o0").note).toContain("不代表即时回血无用");
++  expect(reference("o0").entry_hp_tie_note).toContain("仅boss模拟输入血量指标并列");
++});
++
++it("retains every original option, resolver and simulation value in the real question augmentation", async () => {
++  const { outcome, ask, criteria, result } = await question();
++  expect(outcome.record).not.toHaveProperty("error");
++  expect(Object.keys(criteria)).toEqual(Object.keys(ask.questions.pick!.criteria!));
++  expect((outcome.decision as AskDecision).deepseek).toBe(ask.deepseek);
++  expect((outcome.decision as AskDecision).resolve).toBe(ask.resolve);
++  expect(JSON.parse(criteria.o0!)).toMatchObject({ sentinel: "HEAL", boss_sim_win_tied_with: ["o1:c0"] });
++  expect(JSON.parse(criteria.o0!).boss_sim).toContain("5%");
++  expect((outcome.record!.options as Record<string, JsonValue>)).toMatchObject({ o0: { hp: 1, win: 0, win_cal: 0.0474, boss_left: 611.5096 } });
++  expect(result.options[0]!.hp).toBe(1);
++  expect(vi.mocked(compareOptions).mock.calls[0]![1].solver.player.hp).toBe(1);
++  const heal = vi.mocked(compareOptions).mock.calls[0]![2].find((o) => o.key === "o0")!;
++  expect(heal.change!.solver!.player.hp).toBe(1);
++  expect(JSON.parse(criteria.o99!)).not.toHaveProperty("boss_sim_hp_reference");
++  expect(criteria.unavailable).toBeNull();
++});
++
++it("keeps F16's non-exhausted 42 and 65 HP inputs distinct", async () => {
++  const { reference } = await question({ floor: 16 });
++  expect(reference("o0")).toMatchObject({ current_hp: 42, after_action_hp: 65, immediate_hp_gain: 23,
++    projected_boss_hp: 65, simulated_entry_hp: 65, projection_exhausted_at: null, assumed_future_heal_floors: [] });
++  expect(reference("o1:c0")).toMatchObject({ after_action_hp: 42, projected_boss_hp: 42, simulated_entry_hp: 42 });
++  expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
++  expect(reference("o0").note).not.toContain("按下限1血");
++});
++
++it("also annotates the step-by-step smith group without changing its per-card simulation", async () => {
++  const { criteria, reference } = await question({ group: true });
++  expect(reference("o1")).toMatchObject({ after_action_hp: 4, simulated_entry_hp: 1, entry_hp_tied_with: ["o0"] });
++  expect(reference("o0").entry_hp_tied_with).toEqual(["o1"]);
++  expect(JSON.parse(criteria.o1!).boss_sim_by_card.c0).toContain("5%");
++});
++
++it("shows current-HP provenance when no route plan is present", async () => {
++  const { reference } = await question({ route: false });
++  expect(reference("o0")).toMatchObject({ entry_source: "hp_now", projected_boss_hp: 28,
++    simulated_entry_hp: 28, projection_exhausted_at: null, assumed_future_heal_floors: [] });
++  expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
++});
++
++it("does not turn an unknown projection into a known 1-HP tie", async () => {
++  vi.spyOn(projection, "projectPath").mockImplementation((types, _hp, costs) => ({
++    arrival: types.map(() => null), riskAfter: types.map(() => null), runsOut: null, riskLow: null,
++    end: null, maxArrival: types.map(() => costs.maxHp), maxEnd: costs.maxHp,
++  }));
++  const { reference } = await question();
++  expect(reference("o0")).toMatchObject({ projected_boss_hp: null, simulated_entry_hp: 1, projection_exhausted_at: null });
++  expect(reference("o0").note).toContain("进场投影未知");
++  expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
++});
++
++it("does not attach a reference or tie to a smith target the planner could not find", async () => {
++  const { criteria, reference } = await question({ badSmith: true });
++  expect(JSON.parse(criteria["o1:missing"]!)).not.toHaveProperty("boss_sim_hp_reference");
++  expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
++});
++
++it("leaves the other character's question facts unchanged", async () => {
++  const { criteria } = await question({ character: "IRONCLAD" });
++  for (const value of Object.values(criteria)) if (value) expect(JSON.parse(value)).not.toHaveProperty("boss_sim_hp_reference");
++});
++
++it("keeps the existing sample minimum and adds no option facts for a suppressed simulation", async () => {
++  const { outcome, ask, criteria } = await question({ samples: 299 });
++  expect(outcome.record).toHaveProperty("error");
++  expect(criteria).toEqual(ask.questions.pick!.criteria!);
++});

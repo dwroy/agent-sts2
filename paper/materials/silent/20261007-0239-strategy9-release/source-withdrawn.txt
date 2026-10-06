@@ -1,0 +1,168 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-rest-sim-hp.test.ts (9 tests | 6 failed) 28ms
+   × separates F40's observed +24 HP from two floored boss inputs and locates their different exhausted rooms 14ms
+   × keeps F16's non-exhausted 42 and 65 HP inputs distinct 2ms
+   × also annotates the step-by-step smith group without changing its per-card simulation 2ms
+   × shows current-HP provenance when no route plan is present 1ms
+   × does not turn an unknown projection into a known 1-HP tie 2ms
+   × does not attach a reference or tie to a smith target the planner could not find 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > separates F40's observed +24 HP from two floored boss inputs and locates their different exhausted rooms
+AssertionError: expected undefined to match object { current_hp: 4, …(8) }
+
+- Expected:
+{
+  "after_action_hp": 28,
+  "after_action_max_hp": 82,
+  "assumed_future_heal_floors": [
+    44,
+    47,
+  ],
+  "current_hp": 4,
+  "entry_hp_tied_with": [
+    "o1:c0",
+  ],
+  "entry_source": "route",
+  "immediate_hp_gain": 24,
+  "projection_exhausted_at": {
+    "floor": 45,
+    "room": "Elite",
+  },
+  "simulated_entry_hp": 1,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:98:27
+     96| it("separates F40's observed +24 HP from two floored boss inputs and l…
+     97|   const { reference } = await question();
+     98|   expect(reference("o0")).toMatchObject({ current_hp: 4, after_action_…
+       |                           ^
+     99|     after_action_max_hp: 82, simulated_entry_hp: 1, entry_source: "rou…
+    100|     projection_exhausted_at: { floor: 45, room: "Elite" }, assumed_fut…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > keeps F16's non-exhausted 42 and 65 HP inputs distinct
+AssertionError: expected undefined to match object { current_hp: 42, …(6) }
+
+- Expected:
+{
+  "after_action_hp": 65,
+  "assumed_future_heal_floors": [],
+  "current_hp": 42,
+  "immediate_hp_gain": 23,
+  "projected_boss_hp": 65,
+  "projection_exhausted_at": null,
+  "simulated_entry_hp": 65,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:128:27
+    126| it("keeps F16's non-exhausted 42 and 65 HP inputs distinct", async () …
+    127|   const { reference } = await question({ floor: 16 });
+    128|   expect(reference("o0")).toMatchObject({ current_hp: 42, after_action…
+       |                           ^
+    129|     projected_boss_hp: 65, simulated_entry_hp: 65, projection_exhauste…
+    130|   expect(reference("o1:c0")).toMatchObject({ after_action_hp: 42, proj…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > also annotates the step-by-step smith group without changing its per-card simulation
+AssertionError: expected undefined to match object { after_action_hp: 4, …(2) }
+
+- Expected:
+{
+  "after_action_hp": 4,
+  "entry_hp_tied_with": [
+    "o0",
+  ],
+  "simulated_entry_hp": 1,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:137:27
+    135| it("also annotates the step-by-step smith group without changing its p…
+    136|   const { criteria, reference } = await question({ group: true });
+    137|   expect(reference("o1")).toMatchObject({ after_action_hp: 4, simulate…
+       |                           ^
+    138|   expect(reference("o0").entry_hp_tied_with).toEqual(["o1"]);
+    139|   expect(JSON.parse(criteria.o1!).boss_sim_by_card.c0).toContain("5%");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > shows current-HP provenance when no route plan is present
+AssertionError: expected undefined to match object { entry_source: 'hp_now', …(4) }
+
+- Expected:
+{
+  "assumed_future_heal_floors": [],
+  "entry_source": "hp_now",
+  "projected_boss_hp": 28,
+  "projection_exhausted_at": null,
+  "simulated_entry_hp": 28,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:144:27
+    142| it("shows current-HP provenance when no route plan is present", async …
+    143|   const { reference } = await question({ route: false });
+    144|   expect(reference("o0")).toMatchObject({ entry_source: "hp_now", proj…
+       |                           ^
+    145|     simulated_entry_hp: 28, projection_exhausted_at: null, assumed_fut…
+    146|   expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > does not turn an unknown projection into a known 1-HP tie
+AssertionError: expected undefined to match object { projected_boss_hp: null, …(2) }
+
+- Expected:
+{
+  "projected_boss_hp": null,
+  "projection_exhausted_at": null,
+  "simulated_entry_hp": 1,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:155:27
+    153|   }));
+    154|   const { reference } = await question();
+    155|   expect(reference("o0")).toMatchObject({ projected_boss_hp: null, sim…
+       |                           ^
+    156|   expect(reference("o0").note).toContain("进场投影未知");
+    157|   expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > does not attach a reference or tie to a smith target the planner could not find
+TypeError: Cannot convert undefined or null to object
+ ❯ tests/silent-rest-sim-hp.test.ts:163:31
+    161|   const { criteria, reference } = await question({ badSmith: true });
+    162|   expect(JSON.parse(criteria["o1:missing"]!)).not.toHaveProperty("boss…
+    163|   expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
+       |                               ^
+    164| });
+    165|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 3 passed (9)
+   Start at  02:20:47
+   Duration  1.29s (transform 952ms, setup 278ms, import 868ms, tests 28ms, environment 0ms)
+
