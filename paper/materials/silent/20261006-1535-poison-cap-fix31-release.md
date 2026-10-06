@@ -1,0 +1,5 @@
+# 毒结算上限修复上线记录
+
+- 2026-10-06 15:38 处理15:35 fix-done 20261006-151301-fix-batch：学习者exit0，源码084815374e747cccb3e74bb39002beb1be6ca9f6→代码合入30a60359d279636a43096d4719b2e98926c1f882→固定发布b219de68e6a8688573d9c739374bfc329a3d9743/树c297fbb2a2e7c7a594066a6dde901c1f5e2d5f5d/唯一S1.fix31，均为live祖先，三个源码/测试blob一致。来源D4LJ9QMGFB8Q SILENT A10 F20 T4/T5、4Y94N8RDPGPM SILENT A7 F30 T2，只转录学习者已观测的敌方回合单次毒结算9点上限范围，不外推其他上限或多次触发，不归因整场胜负。
+- 源及合后首轮沙箱tsc0、201文件2182例/vitest0；撤源码2失败2通过、恢复4通过，初稿击杀名称夹具错误及全部原测试历史保留，不把沙箱结果称为外部完整测试。日志校验：{"live-sandbox.log": {"bytes": 495, "cases": 2182, "files": 201, "sha256": "778e35d6a51132d4c6f1f073d9b1d8bf13353c6aad741c30ef0985de249d60f6"}, "poison-cap-sandbox.log": {"bytes": 504, "cases": 2182, "files": 201, "sha256": "fec012648e3da235800cdac3e5492907ba0fa2c2147c78ad8ddc5cd3f0acb824"}}。
+- 原学习者仅0174 proposed行逐字归档，首次证据4Y94N8RDPGPM/A7、prior=no及原证据保持；实际合入后仅经CLI/by=ops登记0174 shipped，0175独立机制和0172未实现项不冒标完成。无知识生成器改动、不重建；完整外部checks_pending交调度器后续事件。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 176 item(s), 0 problem(s)。
