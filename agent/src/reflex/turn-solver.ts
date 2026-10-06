@@ -1993,6 +1993,18 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // exact 28 lethal was dropped as 27 and we died with the Axebot at 1 HP). Unrounded here,
     // rounded in hitEnemy, when the base reproduces the shown number.
     let shown = card.damage ?? 0;
+    // JQPT83P8KDSZ F25 attempt 2 T3: six cards show 3 damage; Strike leaving makes five cards show 5.
+    // Count the hand before this play, including held/locked cards, but never belt potions.
+    // Other hand sizes, upgrades and modified damage have no verified Precise Cut formula.
+    if (card.cardId === "PRECISE_CUT" && !card.upgraded && card.preciseCutHandDamage) {
+      const handSize = [...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").length + next.drawnInHand + 1;
+      const observed = handSize === 5 ? 5 : handSize === 6 ? 3 : null;
+      if (observed !== null && (card.damage === 3 || card.damage === 5) && !player.weak && !next.shrunk && (player.strengthNow ?? 0) === 0 && next.strength === 0) {
+        shown = observed;
+      } else {
+        next.unknown = [...next.unknown, `${card.name}（此手牌数或伤害修正未验证）`];
+      }
+    }
     if (player.weak && card.damageBase !== undefined && card.special !== "body_slam") {
       const exact = (card.damageBase + (player.strengthNow ?? 0)) * 0.75;
       if (Math.floor(exact) === shown) shown = exact;
