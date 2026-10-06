@@ -1,0 +1,65 @@
+{
+ "id": "silent-0172",
+ "ts": "2026-10-06T11:25:33+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "永冻冰晶PERMAFROST在首次能力牌施放后实际补7挡，但求解器没有该触发。本局族母第三次T4幻影之刃加两防御被报损7，实得遗物7加两张敏捷后7挡，共21抵21、零损；该遗漏使能力线即时血价偏高。只读当前live turn-solver.ts:1645及combat-plan.ts:2931无此遗物接线，队列未见同项。不据此声称修复会转胜。",
+ "evidence": [
+  {
+   "run": "25226ZFLNR1J",
+   "floor": 29,
+   "turn": 1,
+   "role": "support",
+   "note": "21:35:35.958Z灵动步法前0挡，21:35:37.391Z建2敏捷且得7挡；原选plan2只含该能力、药水及攻击，block_gained缺失。该局F26已取永冻，最早已核同类模型遗漏。",
+   "added": "2026-10-06T11:25:33+08:00"
+  },
+  {
+   "run": "PJ2LL9KU7FHD",
+   "floor": 17,
+   "turn": 4,
+   "role": "support",
+   "note": "第三次02:39:14.954Z至16.470Z幻影一步0→7挡，之后敏捷药水及两防御各7，共21，57血不变；原题plan1损7。首试同类plan1也报损7。",
+   "added": "2026-10-06T11:25:33+08:00"
+  },
+  {
+   "run": "PJ2LL9KU7FHD",
+   "floor": 12,
+   "turn": 3,
+   "role": "support",
+   "note": "首次幻影在02:29:39.436Z至41.210Z独立使0→7挡、建立9层能力；同局宝箱F10已取PERMAFROST。",
+   "added": "2026-10-06T11:25:33+08:00"
+  }
+ ],
+ "first_run": "25226ZFLNR1J",
+ "prior": "no",
+ "prior_runs": [
+  "25226ZFLNR1J"
+ ],
+ "prior_note": "更早静默复盘唯一检出的可比持有局为25226，回查F29原题未计首次能力7挡，而状态实际得7；此前没有本遗物学习条目，已核可比模型均漏算，不以正确派发能力冒充正确推演。",
+ "status": "proposed",
+ "where": {
+  "lessons": [
+   "PJ2LL9KU7FHD"
+  ],
+  "commits": [
+   "157d635cd9e9880d7396e76a15594c6e7f0b0253"
+  ]
+ },
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-06T11:25:33+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T02:00:13+08:00",
+   "by": "learner:fix-batch",
+   "status": "proposed"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": []
+}

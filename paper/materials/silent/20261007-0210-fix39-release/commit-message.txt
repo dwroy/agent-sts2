@@ -1,0 +1,19 @@
+Fix Silent Permafrost first-Power Block in combat plans
+
+Track observed availability through accepted actions, journal replay, SL
+resets and later simulated turns. Preserve unknown availability when history
+is incomplete, and mark unverified Power replay triggers as uncertain.
+Count the observed first trigger once without re-counting current Block.
+
+Evidence: 25226ZFLNR1J SILENT A10 floor 29 turn 1 (Footwork: 0 to 7
+Block); PJ2LL9KU7FHD SILENT A10 floor 17 attempt 3 turn 4 (Phantom
+Blades: 0 to 7 Block; Dexterity Potion and two Defends: total 21, zero
+HP loss). Ledger: bug-infra silent-0172, mechanic silent-0173. No claim
+that the fix wins the whole fight or establishes repeated triggers.
+
+Fixed log fixture: 18 frames. Removing the six production integrations
+fails 6 of 12 regression cases; restoring passes all 12 plus related tests.
+Sandbox tsc exits 0; vitest passes 211 files and 2266 cases. Ironclad and
+boards without Permafrost retain their solver values.
+
+Co-Authored-By: Codex GPT-6 <noreply@openai.com>

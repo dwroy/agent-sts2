@@ -1,0 +1,29 @@
+## 复盘回报
+
+- 已追加：DPYF2BAA3DKT（A10，第48层，永世沙漏末次T7以28血、9挡面对完整35点损血阵亡）
+- 已追加：CRK2HNYKSCZC（A10，第11层，劫掠者战T3以2血、11挡面对斧手13攻击阵亡）
+- 新的纯 bug：
+  - DPYF2BAA3DKT：跨回合计数漏掉附魔重放，少算新增凋萎9伤 — agent/src/reflex/combat-plan.ts:1485（新）
+- 写成「未记录」的项：
+  - DPYF2BAA3DKT：知识恶魔独立回血、复活中间量及累计受伤；重抽后完整原线执行比例；替代路线、构筑、休息及护栏原线的整场代价；第二场boss实到；boss时钟需伤、估伤及比值；Jev缓存命中。
+  - CRK2HNYKSCZC：两小史莱姆退场内部顺序；重抽后完整原线执行比例；未选回血、滚石及替路线的整场代价；boss实到与实打；boss时钟需伤、估伤及比值；Jev缓存命中。
+- 学习账本：
+  - DPYF2BAA3DKT：新增 silent-0199、silent-0200；更新 silent-0167、silent-0021、silent-0023、silent-0024、silent-0027、silent-0080（老错：无）。
+  - CRK2HNYKSCZC：新增无；更新 silent-0020、silent-0125、silent-0013、silent-0093、silent-0094、silent-0012（老错：无）。
+  - `ledger.py check` 退出码：0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["DPYF2BAA3DKT","CRK2HNYKSCZC"],"skipped":[],"bugs":[{"run":"DPYF2BAA3DKT","where":"agent/src/reflex/combat-plan.ts:1485","what":"跨回合计数漏掉附魔重放，少算新增凋萎9伤","new":true}],"ledger":{"added":["silent-0199","silent-0200"],"updated":["silent-0167","silent-0021","silent-0023","silent-0024","silent-0027","silent-0080","silent-0020","silent-0125","silent-0013","silent-0093","silent-0094","silent-0012"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1124f-d004-74e0-a961-c46dc80e8465
+轮数：1；工具调用：command_execution×57
+token：输入 319.0k、输出 57.1k（其中推理 27.2k）、cache 读 6206.1k、cache 写 0（命中 95.1%）
+成本：未提供
+耗时：1755.7 s（墙钟）
+时间：首个事件 2.0 s、模型首个输出 6.7 s、首次工具 11.4 s、末次工具结束 1688.0 s；工具内共 25.1 s，其余（模型生成、推理、网络）1728.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×44；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T01-43-02-01a1124f-d004-74e0-a961-c46dc80e8465.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-014302-postmortem.jsonl

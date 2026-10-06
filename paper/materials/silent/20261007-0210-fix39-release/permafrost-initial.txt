@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-permafrost.test.ts (11 tests | 2 failed) 304ms
+   × rollout spends the trigger across turns and keeps it when this turn plays no Power 13ms
+   × unverified repeated Power triggers are explicitly uncertain 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-permafrost.test.ts > rollout spends the trigger across turns and keeps it when this turn plays no Power
+AssertionError: expected undefined to be 7 // Object.is equality
+
+- Expected:
+7
+
++ Received:
+undefined
+
+ ❯ tests/silent-permafrost.test.ts:169:29
+    167|     const records = simulateFight(input, plan, 3, 1, false).records;
+    168|     expect(records).toHaveLength(3);
+    169|     expect(records[0]!.blk).toBe(immediate ? 7 : 0);
+       |                             ^
+    170|     expect(records[1]!.blk).toBe(immediate ? 0 : 7);
+    171|     expect(records[2]!.blk).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > unverified repeated Power triggers are explicitly uncertain
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/silent-permafrost.test.ts:181:27
+    179|   const outcome = replaySteps(input, [step(input, "FOOTWORK")])!.outco…
+    180|   expect(outcome.blockGained).toBe(7);
+    181|   expect(outcome.unknown).toContain("永冻冰晶（能力重放触发未验证）");
+       |                           ^
+    182| });
+    183|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  01:50:16
+   Duration  2.03s (transform 1.23s, setup 674ms, import 782ms, tests 304ms, environment 0ms)
+
