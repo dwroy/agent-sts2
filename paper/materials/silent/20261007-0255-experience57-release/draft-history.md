@@ -1,0 +1,4 @@
+初轮测试期间将SL初稿比较口径修为前9次clean；中间轮期间将旧步法n=39修为40并同步_about。两个JSON由最终条目、原_about和已记录差异重建，只保留初稿文字，不冒称冻结被测树；正式提交凭据为tested-source-blob.txt及test-source-final。
+初始抽数角色null抛AttributeError；旧TD1重启标注遗漏导致attempts基线失败，原日志在summarize-initial；计数误取combat、应为combat.player导致NoneType相减，日志evidence-initial；draws字典索引0导致KeyError；update脚本重复执行追加新entry导致StopIteration，在写生产JSON前抛出；均修正且完整原始证据保持。
+发布辅助脚本预检发现publish.py末尾多一个右括号；在任何live动作前修正，ast语法检查通过。
+步法句内n替换初稿使用ASCII括号，未命中实际全角括号，计数仍18；校验发现后改用全角匹配、确认为19。冻结blob检测阻止旧树提交，数字修正后第四轮完整自测作为凭据。

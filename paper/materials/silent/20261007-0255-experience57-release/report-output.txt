@@ -1,0 +1,76 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.2 → 2026-10-07.3；提交：532af948（分支 exp-silent）；合入：b98c24f0；上线版本 S1.exp57。
+- 条数：新增 1、更新 19（加证据 15、只改数字 1、压缩 3：萎靡、金刚杵、女王）、退役 0；active 127 → 128。总字符 56154 → 51683；高/中/低置信度 61/39/28。A8 适用121条/48407字，A9 适用122条/48706字。
+- 机制推理（以下反例均为0）：
+
+  - 力量／敏捷／虚弱 — 力逐击、敏逐牌、弱逐击取整 — 66局 — DPYF2BAA3DKT、CRK2HNYKSCZC
+  - 脆弱 — 逐牌折减格挡 — 15局 — CRK2HNYKSCZC
+  - 触媒 — 三层额外触发兑现4p−6毒伤 — 26局 — DPYF2BAA3DKT
+  - 头骨／冒泡 — 施毒额外加1、冒泡须目标已有毒 — 分别4/13局 — DPYF2BAA3DKT
+  - 余像 — 按实际出牌触发，重放再次触发 — 14局 — DPYF2BAA3DKT
+  - 预判 — 临时敏捷须后续挡牌兑现，次轮撤回 — 10局 — DPYF2BAA3DKT
+  - 尖啸 — 临时减力逐击生效 — 30局 — DPYF2BAA3DKT
+  - 棱柱 — 技能污染与施毒收益须同时核算 — 8局 — DPYF2BAA3DKT
+  - 滚石 — 轮初结算后成长，敌挡限制实际伤害 — 5局 — CRK2HNYKSCZC
+  - 凋萎 — 攻击、持牌伤害、格挡共同核算 — 10局 — DPYF2BAA3DKT
+  - 重放计数观察 — 实际重放效果与原始手动计数分账 — 2局 — LRN0HPZ0FZS1、DPYF2BAA3DKT
+  - 构筑兑现观察 — 取得、建立与足额输出分别核验 — 65局 — DPYF2BAA3DKT、CRK2HNYKSCZC
+
+- 改了的手写知识：无。
+- 测试：源定稿 tsc 0；vitest 210文件/2254用例/退出0。源共跑4轮，前三轮前稿日志保留，以第四轮冻结定稿为凭据。live 首轮 tsc 0；vitest 212文件/2275用例/退出0。
+- 切片大小：配对增量中位 −127字；最大 5816 → 5673字。
+- 学习账本：新增无；改成 proposed：silent-0005、silent-0006、silent-0012、silent-0013、silent-0019、silent-0020、silent-0021、silent-0027、silent-0023、silent-0080、silent-0087、silent-0010、silent-0125、silent-0024、silent-0167、silent-0093、silent-0094、silent-0046、silent-0053、silent-0049、silent-0068、silent-0200；退役无；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-07.3",
+  "commit": "532af94889f4f9fccf6112a16175b4fe742fb142",
+  "merged": "b98c24f042896e0a0505d3ba805346c6371882ee",
+  "added": 1,
+  "updated": 19,
+  "retired": 0,
+  "active": 128,
+  "mechanisms": [
+    "力量/敏捷/逐击虚弱",
+    "脆弱逐牌",
+    "触媒毒次数",
+    "头骨施毒/冒泡条件",
+    "余像实际触发",
+    "预判临时敏捷",
+    "尖啸临时减力",
+    "棱柱技能污染",
+    "滚石启动/挡吸收",
+    "凋萎与格挡预算",
+    "重放效果/原始计数观察",
+    "构筑兑现观察"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2254},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0005", "silent-0006", "silent-0012", "silent-0013",
+      "silent-0019", "silent-0020", "silent-0021", "silent-0027",
+      "silent-0023", "silent-0080", "silent-0087", "silent-0010",
+      "silent-0125", "silent-0024", "silent-0167", "silent-0093",
+      "silent-0094", "silent-0046", "silent-0053", "silent-0049",
+      "silent-0068", "silent-0200"
+    ],
+    "retired": [],
+    "check": 0
+  }
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1126a-a2dd-7441-9f3f-5321aa1e83bb
+轮数：1；工具调用：command_execution×78
+token：输入 255.4k、输出 73.6k（其中推理 31.3k）、cache 读 9438.3k、cache 写 0（命中 97.4%）
+成本：未提供
+耗时：2272.0 s（墙钟）
+时间：首个事件 2.0 s、模型首个输出 7.4 s、首次工具 10.4 s、末次工具结束 2177.1 s；工具内共 1701.8 s，其余（模型生成、推理、网络）568.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×67；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T02-12-20-01a1126a-a2dd-7441-9f3f-5321aa1e83bb.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-021220-experience-update.jsonl

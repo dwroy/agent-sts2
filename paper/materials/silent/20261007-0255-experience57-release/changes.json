@@ -1,0 +1,216 @@
+{
+  "version_before": "2026-10-07.2",
+  "version": "2026-10-07.3",
+  "added": [
+    "silent-replay-effect-counter-observation"
+  ],
+  "updated": [
+    "silent-footwork-block",
+    "silent-strength-weak-observation",
+    "silent-route-hp-observation",
+    "silent-rest-buffer-observation",
+    "silent-deck-burst-observation",
+    "silent-bubble-bubble-condition",
+    "silent-frail-card-block",
+    "silent-accelerant-triggers",
+    "silent-afterimage-per-card-block",
+    "silent-piercing-wail-temporary-strength",
+    "silent-vajra-opening-strength",
+    "silent-malaise-x-debuff",
+    "silent-wither-end-turn-loss",
+    "silent-aeonglass-artifact-growth-sl",
+    "silent-queen-poison-main-target",
+    "silent-anticipate-temporary-dexterity",
+    "silent-snecko-skull-poison-application",
+    "silent-rolling-boulder-start-growth",
+    "silent-infested-prism-tainted-skill-cost"
+  ],
+  "retired": [],
+  "evidence_updates": 15,
+  "only_numbers": 1,
+  "compression": [
+    {
+      "id": "silent-malaise-x-debuff",
+      "before": "萎靡普通按X、升级按X+1减力并加虚弱，普通零X无自身减益，升级零X各1。机制：实见普通X0/1/2/3/4及升级X0/2/3；尖啸恢复后萎靡减力保留，敌成长/换阶段另核，减力不阻成长。搭配：减力逐段，虚弱另算；零X逐牌/消耗遗物另算。决定胜负的战斗：12支持局，施放时点无整战对照（n=12）。典型案例：XYYQYBRM2A01 A1 X3使−6→−9、弱1→4；K3676LU8B0UH A1七次X0无自身减益、F12 X1各1；10GPK5XGHCK3 A3尖啸后X4至−10力/4弱、四击0，次轮仅−4力/3弱、五击20。F9PP859XZ3RJ A4 X2使30→21但下轮仪式加9；9YBKCNBFP0X5 A4 X3使22→13仍损13、后轮增长。VN7RQJMJEFMX A6升级X0再减1、次轮保留−1/1弱；SADL3CGYTGSR A7普通X0不耗2制品、遗物另扣6不归牌伤。LLYSRQQ35AVW A8升级X0/2/3各1/3/4，F33零X18→6，女王X3力−4仍逐轮增长；升级非零X仅本A8支持。 G403VCZ3BH1B A9 F48/2 T10普通X4使女王力4→0、加4虚弱，五击60→20；40血1挡实损19至21，遗忘之魂另107→106不归牌伤。次轮尖啸临时再减6，跨过攻击后T12滚石胜；首试此前少4永久减力而T10判死，抽序同但其他行动也变，不能单归萎靡转胜。 NB8KCF6HRGVF A10棱柱T2普通X1使敌力0→−1、虚弱1，末T8仍−1；两技能污染使弱后6→15、10挡需损5而仅4血，永久减力不消除技能血价。F28 T3普通X3建−3力/3弱并保留至后轮，整战52→33胜；原选攻击线未实打，不归该牌单因。 5X2GHKJ89PN1 A10女王第4/5/末次同T4后空翻后7血4挡3费、聚合体159血1力；扫腿+萎靡X1得13挡/0力、T5余8，末改X3仅4挡/−2力、T5余2，实际少6血。后续敌力−2→−1→0继续成长；末T6光束27对前两次33少6，但3血12挡仍死。预测血价7与实测6分账，六次0赢无单因转胜。",
+      "after": "萎靡普通按X、升级按X+1减力并加虚弱，普通零X无自身减益、升级零X各1。机制：尖啸撤临时减力后萎靡减力保留，敌成长/阶段另核；普通X0/1/2/3/4及升级X0/2/3实见。搭配：减力逐击、虚弱另算，零X遗物收益分账。决定胜负的战斗：12支持局、时点胜因未控（n=12）。典型案例：10GPK5XGHCK3 A3尖啸后X4至−10力/4弱、四击0，次轮仅−4力/3弱、五击20；LLYSRQQ35AVW A8升级X0/2/3各1/3/4，零X18→6。G403VCZ3BH1B A9 X4使女王力4→0、五击60→20，40血1挡损19；首试少4减力而判死，抽序同、其他行动变，不单归转胜。NB8KCF6HRGVF A10 X1减力保留仍被污染杀；5X2GHKJ89PN1 A10同T4后空翻后7血4挡3费，扫腿＋X1得13挡/0力后余8，改X3仅4挡/−2力后余2，少6血，后续敌力仍长；末3血12挡对27死，六败无单因转胜。",
+      "saved": 474
+    },
+    {
+      "id": "silent-vajra-opening-strength",
+      "before": "金刚杵在已观察战斗开场提供1力量，按实攻击段数兑现增伤，不提供格挡。机制：无其他修正时打击6→7、冲刺10→11；力量可被族母每次削2，初始1不足抵消两次灵魂吸取。搭配：多段放大每点力量，持续毒与防御独立计算，增伤不等于整战战力。决定胜负的战斗：8支持局见开场1力，整战遗物胜因未受控（n=8）。典型案例：R0HEV5E3QT6G F12开场1力，F48/2非凡技艺再1→3；E6AVMMVCSRPC F13 T3打击实7、冲刺实11，F17 T6/T10后1→−1→−3，末线仍败。 另A6一局：UACFSW4VDDLD F48开场金刚杵1力量，未弱的小刀基础4→5，幻影首刀另9为14；有无实体时两刀均只实1，力量增量不保证突破敌限制。 另A6一局：53FLQ68CETW0 F48六次开场金刚杵1力量、双余像不加力量，非凡技艺+之后才1→3；T4八次手动小刀牌面基础4+1力=5，重放与卡牌数另计。该1力增量真实，仍须单列敌挡、毒、生成/重放及当轮手牌窗口，六次失败不当机制反例。 2PVLGRBGUX9S A7 沙漏六次开场金刚杵1力，专长科学再加2到3；免费普通打击牌面10→12、升级13→15，力量与抽牌施毒/余像卡牌挡分账。末六败只说明长战不足，不反驳开场1力或证明移除遗物的胜负。 HMVJKM56S4Q8 A9 F33开场1力，与打击木偶并存，普通打击牌面10、暴露后实15，两张及背刺18共48；F17两次吸取1→−1→−3，毒量不减。只确认开场1力及来源分账，不由T1增伤推整场胜率。 PU80F84P6HPN A10蟹开场1力量，打击+基础9实10；四轮行动91、荆棘21另计，余316而死。逐段加1已兑现，未建立能力/毒和未发生后续伤害不并入遗物收益。 NB8KCF6HRGVF A10 F26取得后战斗开场1力，普通打击6→7、升级9→10；棱柱八轮实扣97/171仍死，固定逐段+1不等于防御或整战胜因。",
+      "after": "金刚杵在已见战斗开场提供1力量，按实际攻击段数增伤，不提供格挡。机制：无其他修正时打击6→7、冲刺10→11；族母每次削2、金刚杵1不足抵消两次吸取。搭配：多段放大力，毒/被动/牌挡另核，无实体仍可压每击为1。决定胜负的战斗：8支持局，遗物整战胜因未控（n=8）。典型案例：E6AVMMVCSRPC F13打击7/冲刺11，F17吸取1→−1→−3；UACFSW4VDDLD A6小刀4→5，无实体两刀均1。53FLQ68CETW0 A6开场1力、非凡技艺+才1→3，余像不加力；2PVLGRBGUX9S A7科学再加2到3，打击10→12、升级13→15。HMVJKM56S4Q8 A9开场1力与木偶并存，打击牌面10、暴露实15；PU80F84P6HPN A10蟹升级打击9→10、四轮行动91＋荆棘21仍余316；NB8KCF6HRGVF A10棱柱普通/升级打击7/10、扣97/171仍死，不预支后续能力。",
+      "saved": 410
+    },
+    {
+      "id": "silent-queen-poison-main-target",
+      "before": "观察：女王先杀本体/聚合体均有赢例，无固定击杀序因果。机制：进阶本体血{@2:HP:QUEEN}/{@4:HP:QUEEN}/{@8:HP:QUEEN}，本体死可终战；99弱/脆/易伤改变攻防，爪牙死不关成长。搭配：按已建能力/实际毒窗口核。决定胜负的战斗：10支持局、五首试赢；真正重打5场26试1赢（n=9）。典型案例：ZZMYZ5UBCG72 A2行动36+毒364=400杀本体、爪牙余87；1LMBFGSMCWKU A4 T2杀爪牙、T11铜钹3令35→32后毒杀、未建毒雾/触媒；9YBKCNBFP0X5 A4/VLV17NUSFS61 A7的99减益，后者六败余169/365；4Y94N8RDPGPM A7 T11杀爪牙后女王2力、T12/13挡36/26盖35/25、T15在五击50前毒杀损67余9；LLYSRQQ35AVW A8 T6爆发杀爪牙且本体201→102→12，T7五击25前毒杀、损10余60。G403VCZ3BH1B A9两试90/90、419+211，输次T6杀爪牙、T10女王27血7毒、32血12挡对45差1判死；赢次T5末毒/次轮滚石清爪牙，T10萎靡X4的60→20损19，T11尖啸20→13挡10损3，18血T12滚石胜净损72；初36同序但生成/弃牌/目标/护栏同变。9TG1RP5LFAAK A10后场六试17/84需630、末T3扣35缺595两敌193/402、3血0挡对弱27死，初18同序末T2转本体不补挡多损8。5X2GHKJ89PN1 A10六试49/70、T6止0赢，炮开场各10后需610，末行动26+毒66=92余355/10=365；T3的99减益/魂缚3，T4后空翻后速行者/防御不可打、扫腿/萎靡可，3能非任意挡可用。后段未控。 ZVYUL2YP3518 A10首试82→50十轮630，T9先聚合体/T10毒杀本体；战斗损33、芝士后回复1净32，50血直接进第二boss六败。无替顺序对照，不把前场满血当后场满血。",
+      "after": "观察：女王先杀本体/聚合体均有赢例，无固定击杀序因果。机制：进阶本体血{@2:HP:QUEEN}/{@4:HP:QUEEN}/{@8:HP:QUEEN}，本体死可终战；99弱/脆/易伤改变攻防，爪牙死不关成长。搭配：只核已建能力/实际毒窗口。决定胜负的战斗：10支持局、五首试赢；真正重打5场26试1赢（n=10）。典型案例：ZZMYZ5UBCG72 A2行动36＋毒364杀本体、爪余87；1LMBFGSMCWKU A4 T2杀爪/T11毒胜；4Y94N8RDPGPM A7先爪、末毒胜余9；LLYSRQQ35AVW A8 T6杀爪/T7毒胜余60。G403VCZ3BH1B A9同前36抽序，两试90血1赢，末T10萎靡60→20、T12滚石勝，其他生成/弃牌/目标/护栏也变。9TG1RP5LFAAK A10六次17血六败、末扣35缺595；5X2GHKJ89PN1 A10六次49血六败、末行动26＋毒66余365，99减益与可打牌限制另核。ZVYUL2YP3518 A10首试82→50十轮630，T9杀爪/T10毒本体，战损33后芝士回1净32、第二boss六败，前场满血不等后场满血。",
+      "saved": 349
+    }
+  ],
+  "changes": {
+    "silent-strength-weak-observation": {
+      "added_evidence": [
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "before_n": 64,
+      "after_n": 66,
+      "before_chars": 671,
+      "after_chars": 366
+    },
+    "silent-frail-card-block": {
+      "added_evidence": [
+        "CRK2HNYKSCZC"
+      ],
+      "before_n": 14,
+      "after_n": 15,
+      "before_chars": 871,
+      "after_chars": 340
+    },
+    "silent-route-hp-observation": {
+      "added_evidence": [
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "before_n": 68,
+      "after_n": 70,
+      "before_chars": 275,
+      "after_chars": 241
+    },
+    "silent-rest-buffer-observation": {
+      "added_evidence": [
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "before_n": 68,
+      "after_n": 70,
+      "before_chars": 254,
+      "after_chars": 265
+    },
+    "silent-deck-burst-observation": {
+      "added_evidence": [
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "before_n": 63,
+      "after_n": 65,
+      "before_chars": 476,
+      "after_chars": 493
+    },
+    "silent-accelerant-triggers": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 25,
+      "after_n": 26,
+      "before_chars": 673,
+      "after_chars": 354
+    },
+    "silent-afterimage-per-card-block": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 13,
+      "after_n": 14,
+      "before_chars": 635,
+      "after_chars": 308
+    },
+    "silent-anticipate-temporary-dexterity": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 9,
+      "after_n": 10,
+      "before_chars": 549,
+      "after_chars": 274
+    },
+    "silent-snecko-skull-poison-application": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 3,
+      "after_n": 4,
+      "before_chars": 332,
+      "after_chars": 376
+    },
+    "silent-bubble-bubble-condition": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 12,
+      "after_n": 13,
+      "before_chars": 623,
+      "after_chars": 348
+    },
+    "silent-aeonglass-artifact-growth-sl": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 10,
+      "after_n": 11,
+      "before_chars": 741,
+      "after_chars": 398
+    },
+    "silent-wither-end-turn-loss": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 9,
+      "after_n": 10,
+      "before_chars": 786,
+      "after_chars": 319
+    },
+    "silent-infested-prism-tainted-skill-cost": {
+      "added_evidence": [
+        "DPYF2BAA3DKT"
+      ],
+      "before_n": 7,
+      "after_n": 8,
+      "before_chars": 570,
+      "after_chars": 432
+    },
+    "silent-rolling-boulder-start-growth": {
+      "added_evidence": [
+        "CRK2HNYKSCZC"
+      ],
+      "before_n": 4,
+      "after_n": 5,
+      "before_chars": 612,
+      "after_chars": 347
+    },
+    "silent-piercing-wail-temporary-strength": {
+      "added_evidence": [
+        "DPYF2BAA3DKT",
+        "CRK2HNYKSCZC"
+      ],
+      "before_n": 28,
+      "after_n": 30,
+      "before_chars": 640,
+      "after_chars": 312
+    }
+  },
+  "active_before": 127,
+  "active": 128,
+  "chars_before": 56154,
+  "chars": 51683,
+  "confidence": {
+    "low": 28,
+    "high": 61,
+    "med": 39
+  },
+  "applicable": {
+    "8": {
+      "entries": 121,
+      "chars": 48407
+    },
+    "9": {
+      "entries": 122,
+      "chars": 48706
+    },
+    "10": {
+      "entries": 123,
+      "chars": 49286
+    }
+  }
+}
