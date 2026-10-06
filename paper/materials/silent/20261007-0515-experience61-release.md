@@ -1,0 +1,13 @@
+# 静默经验第61批上线记录
+
+2026-10-07 05:16，处理05:15 experience-done 20261007-045606-experience-update。
+
+- 学习者来源8R5CXD5C8PW8 SILENT A10/F35及04:55:17有效勘误、本角色历史；源3da1a93c04efa46f73fc2522af56bb1e4aff726e→实际live 34daf93c3f7ed93de7469d58b59ca7811041ca6e→固定发布60808f9eafe12529e78645616874f23db8e3beb8/树8723cae5ecac47db5661556f01f719013aeef20d，唯一S1.exp61指向实际合入。
+- 沿学习者产出：经验2026-10-07.6→.7，新增1、更新14（14补证、純数字0，并压短重复叙述）、退役0，active131→132、50163→48258字，高63中40低29。A8 125条45151字、A9 126条45450字、A10 127条46030字，无新用药规则，无源码/生成器/手写知识/其他角色变动。
+- 源与合后首轮均tsc0/vitest0、214文件2289例通过，无失败或超时重跑。最终经验blob b8c43e7b93cc95fb89b1b89e2707dd17e594d96a、185368字节/SHA256 e8c2de0ffffbf637bcc11ca3d786dd75b66ace47e2e03f593f2f7c3049b43fe5与实际合入及固定发布完全一致。学习者提供约490字节过滤摘要按原字节保存，不冒称完整逐例原日志；完整事件流留原路径，完整外部检查待本批learner-checks。
+- 合前09ac8004aabfb0957e8fbacaa018dfd9046dafdd，锁内保存七项自动知识刷新02d80d37faef0add27c3fd56023050ebf6a243d5，实际base为保存点；知识重叠/冲突0、其他知识逐blob保持，live预检rc0，无追加历史冲突。main随后同步固定发布中的七项刷新原blob及本角色experience.json，不重建、不取后来的live刷新；main双方决定记录保留原文和重复次数。
+- 原第61节25981字节和scratch节25980字节分别按原字节归档，18行proposed、回报/自测/脚本与小型证据归档；manifest.json列来源、字节、SHA256。大型审计/原始采样/合并补丁/状态事实/完整事件流留原目录，remaining-originals.json记指纹，历史不截断或删除。
+- 旧74局七数组复算一致，新75局1177房65实死；首COMBAT与小血瓶后操作HP差2分项原文保留、统计口径未改。固定240配对切片增量中位−100、最大配对增量+2；整体中位2715→2646.5字、最大5351→5075字，沿学习者口径记录，不把配对增量中位当总体中位差。新灵体机制沿既有0206，首证8R5CXD5C8PW8/A10/prior=unknown及两份本局support、空prior_runs保持。
+- 离线初稿旧runs.character为空、SL draws.clean整数、抽牌堆误读draw_pile和初次读取未生成other-knowledge.json的错误及更正、首COMBAT/操作HP差2口径说明，draft-corrections.md、prepare.log/verify.log与更正日志、脚本和完整事件流按原件保留。均为离线取证草稿及口径说明，不当生产代码/自测失败。既有未核定推演及受控替代结果保持“未记录”，无新纯bug、队列或Roy待定。
+- 随后仅CLI/by=ops登记本批18项shipped/S1.exp61，覆盖15经验主题，无重复add；0206首证/先验/claim及全部support/repeat/历史保持。0199/0202独立S1.fix40、0203/S1.exp58、0204/S1.exp59、0205/S1.exp60、0200/S1.exp57、0201/S1.strategy9、0172/S1.fix39、0197/S1.fix38及其他旧状态/版本不重置；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 206 item(s), 0 problem(s)。
+- main机械同步固定发布，全部源码同已测树；其他main最新记录、并行台账、成本/收件箱及后台产出保持。无Roy待定，不重复live合并、测试或论文刷新，对局继续。

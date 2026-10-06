@@ -1,0 +1,55 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.6 → 2026-10-07.7；提交：3da1a93c（分支 exp-silent）；合入：live 34daf93c，登记 S1.exp61。
+- 条数：新增 1、更新 14（加证据 14、只改数字 0）、退役 0；active 131 → 132，总字符 50163 → 48258；A8 适用 125 条/45151 字，A9 适用 126 条/45450 字。
+- 机制推理（证据为支持/反例局数）：
+  - 灵体 — 15/24攻击压至1，零挡仍损1 — 1/0 — 8R5CXD5C8PW8
+  - 步法 — 敏捷逐挡牌兑现，建立不补已有挡 — 44/0 — 8R5CXD5C8PW8
+  - 力量与虚弱 — 逐击计算，减力不关闭独立成长 — 71/0 — 8R5CXD5C8PW8
+  - 脆弱 — 三牌19挡逐牌折减为13 — 16/0 — 8R5CXD5C8PW8
+  - 疑虑 — 持牌虚弱使16直伤降至11 — 2/0 — 8R5CXD5C8PW8
+  - 萎靡 — 升级X3减4力、加4弱，仪式继续增长 — 13/0 — 8R5CXD5C8PW8
+  - 雕刻师仪式 — 每轮增9力，保护不停止成长 — 9/0 — 8R5CXD5C8PW8
+  - 华丽收场 — 空堆实打75，非空不可用 — 5/0 — 8R5CXD5C8PW8
+  - 铜质鳞片 — 全挡仍逐击反3，六击共18 — 8/0 — 8R5CXD5C8PW8
+  - 南瓜蜡烛 — 正充能增加能量，不等能力已支付 — 4/0 — 8R5CXD5C8PW8
+  - 巨兽 — 本体归零后仍须承受爆炸 — 17/0 — 8R5CXD5C8PW8
+  - 知识恶魔 — 回血增加需伤，SL转胜存在多项变化 — 3/0 — 8R5CXD5C8PW8
+  - 能力启动观察 — 持有、保护与实际建立分别核对 — 70/0 — 8R5CXD5C8PW8
+- 改了的手写知识：无。
+- 测试：源及合后 tsc 退出码均 0；vitest 均 214 文件/2289 用例/退出码 0，首轮通过。
+- 切片大小：240 对，配对增量中位 −100 字；最大 5351 → 5075 字。
+- 学习账本：新增无；改成 proposed：silent-0206、silent-0005、silent-0006、silent-0013、silent-0097、silent-0053、silent-0083、silent-0110、silent-0111、silent-0129、silent-0185、silent-0017、silent-0102、silent-0021、silent-0057、silent-0125、silent-0019、silent-0020；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-07.7",
+  "commit": "3da1a93c04efa46f73fc2522af56bb1e4aff726e",
+  "merged": "34daf93c3f7ed93de7469d58b59ca7811041ca6e",
+  "added": 1,
+  "updated": 14,
+  "retired": 0,
+  "active": 132,
+  "mechanisms": ["灵体玩家无实体", "步法逐牌敏捷", "力量与虚弱", "脆弱逐牌取整", "疑虑持牌虚弱", "萎靡与独立成长", "雕刻师仪式增长", "华丽收场空堆条件", "铜质鳞片逐击反伤", "南瓜蜡烛充能能量", "巨兽本体与爆炸", "知识恶魔回血与SL观察", "能力实际支付与保护窗口观察"],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2289},
+  "ledger": {
+    "added": [],
+    "proposed": ["silent-0206", "silent-0005", "silent-0006", "silent-0013", "silent-0097", "silent-0053", "silent-0083", "silent-0110", "silent-0111", "silent-0129", "silent-0185", "silent-0017", "silent-0102", "silent-0021", "silent-0057", "silent-0125", "silent-0019", "silent-0020"],
+    "retired": [],
+    "check": 0
+  }
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11300-960b-7542-9a4f-1959c4df5101
+轮数：1；工具调用：command_execution×60 file_change×12
+token：输入 191.3k、输出 44.8k（其中推理 11.8k）、cache 读 7447.3k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：1053.2 s（墙钟）
+时间：首个事件 1.6 s、模型首个输出 5.6 s、首次工具 10.2 s、末次工具结束 1004.0 s；工具内共 733.0 s，其余（模型生成、推理、网络）318.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×56；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T04-56-07-01a11300-960b-7542-9a4f-1959c4df5101.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-045607-experience-update.jsonl
