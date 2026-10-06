@@ -37,3 +37,5 @@
 ```
 
 - 2026-10-06 08:04 上线登记完成：原第36节和19项proposed归档5e35991b595db01adba1bd596d4b26033d1b0558，main同步5706f2664b8cd841d5c402cdade4a83bb05d794f，全部1020项已测源码/测试blob相同，其他2138项main最新blob及双方日志保持。19项经CLI/by=ops追加shipped/S1.exp36：silent-0005, silent-0006, silent-0017, silent-0046, silent-0013, silent-0123, silent-0007, silent-0087, silent-0027, silent-0129, silent-0064, silent-0062, silent-0065, silent-0021, silent-0019, silent-0020, silent-0160, silent-0161, silent-0162；原first_run/prior/claim/evidence/repeat与历史保持，0159/S1.strategy6、0153/S1.fix26及其他未纳入项未改。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 162 item(s), 0 problem(s)。随后paper --no-raw刷新论文曲线；完整外部检查留后续事件。
+
+- 2026-10-06 08:08 论文数据及学习曲线刷新完成：nice19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-06T00:04:49.106Z；五项一致性通过、runs.jsonl决策计数差异为空、key scan CLEAN，行数{"commits.csv": 2747, "decisions_by_label.csv": 17712, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 530}。本轮19项shipped提交081efd03236ef75627c13e3c4b138f7023f88fa8；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 162 item(s), 0 problem(s)。仅提交实际生成变化的12项文件及自身记录，其他后台修改保留；S1.exp36完整外部补测仍留后续事件，原草稿、校验和切片日志保持。
