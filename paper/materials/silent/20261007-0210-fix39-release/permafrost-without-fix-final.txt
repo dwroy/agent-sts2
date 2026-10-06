@@ -1,0 +1,133 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-permafrost.test.ts (12 tests | 6 failed) 284ms
+   × PJ2 F17 attempt 3 T4: Phantom Blades and two potion-adjusted Defends give 21 Block and zero loss 66ms
+   × 25226 F29 T1: the first Footwork gives seven Block before any defending card 80ms
+   × journal replay restores availability before a Power and consumption immediately after accepted dispatch 3ms
+   × the loop's successful SL reset restores availability even before a post-Power frame was read 1ms
+   × rollout spends the trigger across turns and keeps it when this turn plays no Power 7ms
+   × unverified repeated Power triggers are explicitly uncertain 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-permafrost.test.ts > PJ2 F17 attempt 3 T4: Phantom Blades and two potion-adjusted Defends give 21 Block and zero loss
+AssertionError: expected undefined to be 7 // Object.is equality
+
+- Expected:
+7
+
++ Received:
+undefined
+
+ ❯ tests/silent-permafrost.test.ts:68:40
+     66| it("PJ2 F17 attempt 3 T4: Phantom Blades and two potion-adjusted Defen…
+     67|   const input = inputFor(frame("02:39:13"), remembered());
+     68|   expect(input.player.permafrostBlock).toBe(7);
+       |                                        ^
+     69|   const potion = input.hand.find((entry) => entry.cardId.startsWith("P…
+     70|   expect(potion).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > 25226 F29 T1: the first Footwork gives seven Block before any defending card
+AssertionError: expected +0 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 0
+
+ ❯ tests/silent-permafrost.test.ts:79:78
+     77|   const raw = frame("21:35:34");
+     78|   const input = inputFor(raw);
+     79|   expect(replaySteps(input, [step(input, "FOOTWORK")])!.outcome.blockG…
+       |                                                                              ^
+     80|   expect(replaySteps(input, [step(input, "FOOTWORK"), step(input, "FOO…
+     81| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > journal replay restores availability before a Power and consumption immediately after accepted dispatch
+AssertionError: expected undefined to be 'armed' // Object.is equality
+
+- Expected:
+"armed"
+
++ Received:
+undefined
+
+ ❯ tests/silent-permafrost.test.ts:131:57
+    129|   const last = states.at(-1)!;
+    130|   const logs = { runId: "PJ2LL9KU7FHD", states, decisions: [], runPlan…
+    131|   expect(replayRun(logs, knowledge).permafrost?.status).toBe("armed");
+       |                                                         ^
+    132|   for (const result of ["completed: ok", "pending: accepted", "failed …
+    133|     const replay = replayRun({ ...logs, decisions: [{ ts: last.ts, fin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > the loop's successful SL reset restores availability even before a post-Power frame was read
+AssertionError: expected undefined to be 7 // Object.is equality
+
+- Expected:
+7
+
++ Received:
+undefined
+
+ ❯ tests/silent-permafrost.test.ts:145:44
+    143|   expect(memory.permafrost?.status).toBe("spent");
+    144|   resetFightMemory(memory);
+    145|   expect(permafrostBlock(memory, start())).toBe(7);
+       |                                            ^
+    146| });
+    147|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > rollout spends the trigger across turns and keeps it when this turn plays no Power
+AssertionError: expected +0 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 0
+
+ ❯ tests/silent-permafrost.test.ts:179:34
+    177|     const records = simulateFight(input, plan, 3, 1, false).records;
+    178|     expect(records).toHaveLength(3);
+    179|     expect(records[0]!.snap.blk).toBe(immediate ? 7 : 0);
+       |                                  ^
+    180|     expect(records[1]!.snap.blk).toBe(immediate ? 0 : 7);
+    181|     expect(records[2]!.snap.blk).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/silent-permafrost.test.ts > unverified repeated Power triggers are explicitly uncertain
+AssertionError: expected +0 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 0
+
+ ❯ tests/silent-permafrost.test.ts:190:31
+    188|   input.hand = [card(0, "FOOTWORK", { type: "Power", target: "self", r…
+    189|   const outcome = replaySteps(input, [step(input, "FOOTWORK")])!.outco…
+    190|   expect(outcome.blockGained).toBe(7);
+       |                               ^
+    191|   expect(outcome.unknownCards).toContain("永冻冰晶（能力重放触发未验证）");
+    192| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 6 passed (12)
+   Start at  01:55:08
+   Duration  1.86s (transform 1.21s, setup 247ms, import 1.21s, tests 284ms, environment 0ms)
+
