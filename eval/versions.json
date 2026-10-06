@@ -942,6 +942,12 @@
       "family": "Silent",
       "commit": "8785c28a4b1ca2dc5858b39979ba010042d0b8d5",
       "source": "decision-log 2026-10-06 23:03（静默经验2026-10-06.28；源6cf1de0efdbbfd4482c7c5f8795d37eff17e3caf；KUZVERN40NGK A10/22:29:59勘误与本角色历史。新增0更新8退役0，125 active/54968字；毒雾/刺击/触媒实结算、毒跨160清力与后段攻击、力敏逐牌/SL血价、构筑/飞靴路线/恢复分账，无新用药规则；旧64局逐行一致，源/合后固定沙箱tsc/vitest通过，十项proposed交运维据实际合入CLI登记shipped，完整外部套件交调度器。）"
+    },
+    {
+      "name": "S1.fix37",
+      "family": "Silent",
+      "commit": "65a7e115afa9baef94f1db0c100fe249ebcaba13",
+      "source": "2026-10-06 23:20 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 22:33 SL判官遗漏毒伤触发阈值眩晕；源码f6ff3a9ce42337972b19ee227b2d51432e929f50→实际live代码65a7e115afa9baef94f1db0c100fe249ebcaba13，eval S1.fix37。来源notes/lessons.md:5162及账本silent-0195，KUZVERN40NGK SILENT A10 F17第3次T5／第5次T6／末次T6-T7。前两次164血6毒/167血12毒、触媒1的11/23毒仅求解器预测，判官按26/28攻击错误读档；末次173血9毒实结算9+8=17到156、玩家仍3血，次轮横冲160与8力量清除，支持毒越阈值取消本轮攻击。仅静默判官沿既有每触发减1毒算法计攻击前毒伤上界，接入已有HP阈值眩晕检查；计数类眩晕仍需原hit，未知后继/SL策略不变，铁甲及无毒等价，不声称修复能赢整场。固定8例撤源码5失败3通过/exit1、恢复8通过，相关6文件56例通过；源及合后固定沙箱tsc0/vitest0，统计与红绿原日志保留，本批无高负载超时重跑，完整外部交调度器。gitleaks0，知识不同blob重叠0、全部live已提交知识blob保持；只合并decision-log冲突并验证双方全部非空历史行保持，后台notes不纳入提交，无生成器变化不重建。0195仅CLI/by=learner:fix-batch proposed/提交去向，first_run/prior/证据/旧历史保持；旧0133/0127不变，交运维据fix-done及learner/runs/20261006-225909-fix-batch/handoff-ops.md确认实际合入后CLI登记shipped。125项旧修复核查不重复提交，永冻0172及策略/证据不足/性能专项保持；队列不修改，不停对局、不运行play、不推送。"
     }
   ]
 }
