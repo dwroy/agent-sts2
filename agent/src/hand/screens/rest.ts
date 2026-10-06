@@ -129,6 +129,7 @@ export function planRest(env: DecisionEnv): Decision | null {
     rest_site: {
       heal_amount: heal.text,
       hp_after_heal: `${healed.hp}/${healed.max}`,
+      ...silentHumidifierRestFacts(state, heal, healed),
       ...silentTentRestFacts(state, healed),
       ...silentCandleRestFacts(state),
       upgradable_cards: entries.filter((entry) => !entry.upgraded && entry.type !== "Curse" && entry.type !== "Status").map((entry) => entry.name),
@@ -199,6 +200,51 @@ export function planRest(env: DecisionEnv): Decision | null {
       },
     }),
   );
+}
+
+/** UMVLWER4CD98 F7/9/16/44/47, silent-0215/0204/0020: recovery and max-HP growth are separate. */
+function silentHumidifierRestFacts(state: GameState, heal: { base: number; rest: RestHeal }, healed: { hp: number; max: number }): Record<string, JsonValue> {
+  const run = asRecord(state.run?.raw);
+  if (str(run["character_id"]).toLowerCase() !== "silent"
+    || !asArray(run["relics"]).map(asRecord).some((relic) => str(relic["relic_id"]) === "STONE_HUMIDIFIER" && !bool(relic["is_melted"]))) return {};
+  const hp = state.run?.current_hp;
+  const max = state.run?.max_hp;
+  if (hp == null || max == null || !Number.isInteger(hp) || !Number.isInteger(max) || hp <= 0 || max < hp
+    || !Number.isInteger(heal.base) || heal.base < 0 || heal.rest.maxGain !== 5 || heal.rest.bonus !== 0
+    || (heal.rest.enterHeal ?? 0) !== 0 || healed.max !== max + 5 || healed.hp !== Math.min(max, hp + heal.base) + 5) return {};
+  const actions = asArray(asRecord(state.raw["rest"])["options"]).map(asRecord)
+    .filter((option) => bool(option["is_enabled"]) && typeof option["index"] === "number"
+      && Number.isInteger(option["index"]) && num(option["index"]) >= 0)
+    .map((option) => {
+      const kind = str(option["option_id"]).toUpperCase();
+      const known = kind === "HEAL" || kind === "SMITH";
+      const after = kind === "HEAL" ? healed : { hp, max };
+      return {
+        key: `o${num(option["index"])}`, kind,
+        after_action_hp_reference: known ? after.hp : null,
+        after_action_max_hp_reference: known ? after.max : null,
+        ordinary_hp_recovered_reference: kind === "HEAL" ? healed.hp - hp - 5 : kind === "SMITH" ? 0 : null,
+        growth_hp_reference: kind === "HEAL" ? 5 : kind === "SMITH" ? 0 : null,
+        total_hp_gain_reference: known ? after.hp - hp : null,
+      };
+    });
+  if (!actions.some((action) => action.after_action_max_hp_reference !== null)) return {};
+  const groups = new Map<number, string[]>();
+  for (const action of actions) {
+    const afterMax = action.after_action_max_hp_reference;
+    if (afterMax === null) continue;
+    groups.set(afterMax, [...(groups.get(afterMax) ?? []), action.key]);
+  }
+  return {
+    humidifier_rest_growth: {
+      source: "UMVLWER4CD98 SILENT A10 F7/9/16/44/47（营火，无战斗回合）；silent-0215/0204/0020。",
+      current_hp: hp, current_max_hp: max, base_heal_before_cap: heal.base, actions,
+      max_hp_tied_option_groups: [...groups.values()].filter((keys) => keys.length > 1),
+      trigger: "本局十次实际选择回血均增加5最大HP并补5当前HP；F9锻造54/75不变。进入营火本身不算增长，只有实际选择并成功执行的动作才兑现。",
+      reference_scope: "按当前既有HEAL结果分列旧最大HP内的回复与增长带来的5血，回复可能被旧最大HP截断。SMITH保持当前HP及最大HP；其他动作未验证，参考为null。动作键展开锻造时共享此前缀，相同最大HP只在该指标并列，牌组收益与整场价值仍由DeepSeek比较。",
+      limits: "F7的52/70→75/75总增23，不能把文本21与增长5之和26当实增；F47回到70/120后六次boss仍全败。未到达或未选择回血的未来营火不预支增长，不据此规定路线或休息优先级；全部选项保留。其他回血遗物组合未在此分账。",
+    },
+  };
 }
 
 /** UJ0K3G10609Y F29 and XBD8Z9XLPCPN F24/28/32, silent-0186/0184/0185/0020. */
