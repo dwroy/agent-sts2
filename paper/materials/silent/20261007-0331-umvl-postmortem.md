@@ -8,3 +8,5 @@
 - 0199/0202已shipped/S1.fix40及固定发布完整外部265文件3097通过、2跳过，0200/S1.exp57、0203独立机制与其余旧条目／失败历史保持；其他并行产出及后台复盘／台账／知识／成本／收件箱保留。
 
 随后刷新paper_dataset.py --no-raw并登记结果；对局继续。
+
+- 2026-10-07 03:38 运维codex完成03:31复盘批次20261007-031302/UMVLWER4CD98：学习者正文15554字节与路线引文追加勘误、回报／stderr／证据摘录和12行台账按原字节归档04fb8a9c320402da04d25280c5c8c606a8b85f48；新0204 mechanic首证本局/A10/prior=unknown、observed，11项旧条目只补support，无repeat，claim／首证／先验／状态／版本／证据／历史保持。新纯bug为空，不增修复队列；六次沙漏尝试前五次判死读档、末次T11正常死亡，T8初题少报9及T11前后12差额原因未核定保留“未记录”，机制与打法交学习者，无Roy待定。原文“五星火”残留与03:31:15追加更正保留，实际大脑Codex及旧DeepSeek兼容字段按学习者原文记录。0199/0202已shipped/S1.fix40及完整外部265文件3097通过/2跳过、0200/exp57、0203独立机制与全部旧失败历史保持，其他并行产出不代登记。nice19 paper_dataset.py --no-raw exit0，切点2026-10-06T19:33:59.207Z，五项一致性通过、决策计数差异为空、key scan CLEAN，行数{"commits.csv": 3110, "decisions_by_label.csv": 18623, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 558}；仅12项本轮生成变化及自身记录提交，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 204 item(s), 0 problem(s)；详情paper/materials/silent/20261007-0331-umvl-postmortem.md。原文不改写，归档空白检查例外仅限原字节归档路径，正常记录检查保持；本轮只改记录和数据，无代码测试或新上线，后台复盘／台账／知识／成本／收件箱刷新及对局照常。
