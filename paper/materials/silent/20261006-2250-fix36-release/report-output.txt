@@ -1,0 +1,63 @@
+## 修 bug 回报
+
+- 合并基线：main → b9d0fb62a779ab876b0159abc80ace487942c3b4
+- 修复（每条一行）：结实绷带弃牌格挡未接入推演（L704TLETMZBM，F48末次T3/T4；silent-0193） — 3a4c5626434efc909122483769468bba953d63c1 — 测试 agent/tests/silent-tough-bandages.test.ts：`F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss` — 去掉修复时失败：是（8失败、2通过；恢复10通过）。
+- 已被别人修掉的：124项已修，条目及对应提交逐项见[核验清单](/home/dw/Projects/agent-sts2/learner/runs/20261006-221304-fix-batch/already-fixed.md)。
+- 没修的：永冻首次能力7挡 — 太大、证据不足；mod超时自愈、Codex缓存实测 — 证据不足；boss模拟性能 — 太大；策略项 — 策略类。详见[未修清单](/home/dw/Projects/agent-sts2/learner/runs/20261006-221304-fix-batch/skipped.json)。
+- 测试：源与live各 tsc退出码0；vitest 208文件 / 2237用例 / 退出码0。初稿 silent-hidden-daggers.test.ts 弃牌组合用例回归已修正并重跑通过；无高负载超时重跑。完整外部套件待调度器补跑。
+- 合入：8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522（S1.fix36；知识刷新完整保留；[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261006-221304-fix-batch/handoff-ops.md)已落盘，账本保持proposed）。
+- 需要 Dai 定的事：保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌及懒惰平均出牌估值。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "b9d0fb62a779ab876b0159abc80ace487942c3b4",
+  "fixes": [
+    {
+      "item": "结实绷带弃牌格挡未接入推演（silent-0193；L704TLETMZBM F48末次T3/T4）",
+      "commit": "3a4c5626434efc909122483769468bba953d63c1",
+      "test": "agent/tests/silent-tough-bandages.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "永冻首次能力7挡（silent-0172）",
+      "reason": "太大、证据不足：跨帧、续行、重启和SL使用状态需专项验证。"
+    },
+    {
+      "item": "mod选牌及其他屏幕超时自愈",
+      "reason": "证据不足：尚未定位根因，旧事件及CARDS_VIEW重复提问已修。"
+    },
+    {
+      "item": "Codex缓存命中实测",
+      "reason": "证据不足：离线无法完成受控LLM实测，会话隔离误拒已修。"
+    },
+    {
+      "item": "boss模拟耗时、样本不足及CPU争用",
+      "reason": "太大：需专项性能基准，已证实硬截止问题已修。"
+    },
+    {
+      "item": "保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线、休息、小偷优先、A10第三幕第二boss、无色牌及懒惰估值",
+      "reason": "策略类：交Dai决定。"
+    }
+  ],
+  "merged": "8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2237
+  }
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1118f-9e31-7f01-91f0-cd9527382f16
+轮数：1；工具调用：command_execution×81 file_change×10
+token：输入 281.3k、输出 54.0k（其中推理 27.0k）、cache 读 9815.9k、cache 写 0（命中 97.2%）
+成本：未提供
+耗时：2117.0 s（墙钟）
+时间：首个事件 4.9 s、模型首个输出 10.1 s、首次工具 13.2 s、末次工具结束 2082.0 s；工具内共 890.3 s，其余（模型生成、推理、网络）1221.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×63；/home/dw/.codex-sts2/sessions/2026/10/06/rollout-2026-10-06T22-13-07-01a1118f-9e31-7f01-91f0-cd9527382f16.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261006-221304-fix-batch.jsonl

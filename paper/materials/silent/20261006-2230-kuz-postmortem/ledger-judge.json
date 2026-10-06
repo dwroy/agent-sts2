@@ -1,0 +1,387 @@
+[
+ {
+  "id": "silent-0032",
+  "ts": "2026-10-05T03:31:55+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "悔恨按手牌数造成失血，求解器的固定数字持牌代价解析却给它0；SL探索因此可以将预计可活的出牌线换成实际即时致死的结束回合。判官已经认识手牌数量，但有可打牌时不会把整盘判成必死，不能指望判官补偿求解器漏算。",
+  "evidence": [
+   {
+    "run": "R0HEV5E3QT6G",
+    "floor": 48,
+    "turn": 3,
+    "role": "support",
+    "note": "第3次：41血0挡、5张手牌含REGRET、意图36；结束选项预测损36剩5，Jev选后空翻+→紧勒+，代码探索改成结束，实际归零。card-model.ts:534只认固定数字，turn-solver.ts:2636只加已解析heldHpLoss；判官终记录4张可打牌不确定。",
+    "added": "2026-10-05T03:31:55+08:00"
+   }
+  ],
+  "first_run": "R0HEV5E3QT6G",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "逐局检查较早五局静默决策指纹与静默复盘，未出现REGRET手牌或同一计数不一致局面；未使用其他角色的观察判断先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "R0HEV5E3QT6G"
+   ],
+   "commits": [
+    "3fcb1f5f0c373a04feb807aa9b2bedebe403edcc",
+    "ccf1fcde1f456c92ab4542710a54338e4bcdcd5c",
+    "00fa8f79aefd590f3ab076090deee0a8e4346c73"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T03:31:55+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T04:21:25+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T05:22:46+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix3",
+  "effect": null,
+  "notes": [
+   "依据fix-done批次20261005-041302-fix-batch及live提交祖先关系确认实际上线；学习者自测后自行合入，运维登记，不另设审核。"
+  ],
+  "shipped_at": "2026-10-05T05:22:46+08:00"
+ },
+ {
+  "id": "silent-0047",
+  "ts": "2026-10-05T04:32:57+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局奥利哈钢在结束回合牌面格挡为0时补6挡，但不会把已有格挡再加6。实验体获胜线T4为0挡对尖啸后的12攻击，实际62→56，体现6挡；T13已有27挡对27攻击，保持8血。首战T11虽有潜在回合末6挡，23血+6仍不足34，判死后读档。仅确认本局触发条件与数值。",
+  "evidence": [
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 48,
+    "turn": 4,
+    "note": "第2次末态0挡、12攻击，实际血62→56；6点回合末补挡与血损核对。",
+    "role": "support",
+    "added": "2026-10-05T04:32:57+08:00"
+   },
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 48,
+    "turn": 11,
+    "note": "首战判官明确34来袭对23血+0挡+6回合末挡，确定必死；没有实际结算死亡。",
+    "role": "support",
+    "added": "2026-10-05T04:32:57+08:00"
+   }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "unknown",
+  "prior_runs": [
+   "T082DRCUHRRD"
+  ],
+  "prior_note": "T082已取得奥利哈钢，但其决定胜负的战斗有钗每回合7挡，没有已核对的相同零牌面格挡触发局面。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "KAY522KT5NXR"
+   ],
+   "experience": [
+    "silent-orichalcum-zero-block"
+   ],
+   "commits": [
+    "6ff9e1a44aaa36ae8a852b8d076572de42d126c7",
+    "a4bf77d2d969e793b8c8a8a0aa7d3d097d2f4cb8",
+    "b3b446b9b089a4c54c0eb4fbe582f684545aac5b",
+    "809a90f424a2668f186e80bea32e41e44865606c"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第四次增量：1 局 A0（version 2026-10-05.4，分支 exp-silent，6ff9e1a4）",
+    "2026-10-05 静默猎手 第四次增量：1 局 A0（version 2026-10-05.4，分支 exp-silent，a4bf77d2）"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T04:32:57+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T04:46:41+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T04:52:52+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T05:07:37+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp5",
+  "effect": null,
+  "notes": [
+   "两条经验中的实验体总尝试数更正为6+3+2=11；同一沙箱名单复验通过，追加最终提交出处，保留此前登记历史。",
+   "运维依据experience-done批次20261005-043344-experience-update及live提交祖先关系确认实际合入，登记S1.exp5，不另设审核。本条为2026-10-05.4产出，本批合入live。"
+  ],
+  "shipped_at": "2026-10-05T05:07:37+08:00"
+ },
+ {
+  "id": "silent-0048",
+  "ts": "2026-10-05T04:56:13+08:00",
+  "character": "silent",
+  "by": "learner:postmortem",
+  "kind": "mechanic",
+  "claim": "本局波纹水盆在没有打出攻击的回合末补4格挡，玩家负敏捷时仍补同样的4；与毒雾的已结算伤害配合可在防御回合推进敌血，但不能弥补全部防御与击杀缺口。族母第6次T11扫腿7加生存者4再加水盆4，对17攻击只损2；T12防御1加水盆4，对18攻击需13血，11血仍死，12毒结算后敌剩92。仅确认本局实际数值与组合，不外推固定弃攻规则。",
+  "evidence": [
+   {
+    "run": "E6AVMMVCSRPC",
+    "floor": 13,
+    "turn": 7,
+    "role": "support",
+    "note": "骇鳗意图33、玩家35血0牌面挡，回合没有攻击，实到6血，差额4与波纹水盆触发一致。",
+    "added": "2026-10-05T04:56:13+08:00"
+   },
+   {
+    "run": "E6AVMMVCSRPC",
+    "floor": 17,
+    "turn": 7,
+    "role": "support",
+    "note": "第6次敏捷−2，防御3加扫腿9共12、回合末水盆4，抵15攻击，玩家16血保留；同回合7毒结算。",
+    "added": "2026-10-05T04:56:13+08:00"
+   },
+   {
+    "run": "E6AVMMVCSRPC",
+    "floor": 17,
+    "turn": 11,
+    "role": "support",
+    "note": "第6次敏捷−4，扫腿7、生存者4、回合末4，敌23攻击经虚弱降17，13→11；当回合11毒结算。",
+    "added": "2026-10-05T04:56:13+08:00"
+   },
+   {
+    "run": "E6AVMMVCSRPC",
+    "floor": 17,
+    "turn": 12,
+    "role": "support",
+    "note": "第6次只打防御得1挡、没有攻击；判官精确记18 incoming vs 11 HP + 1 block + 4 end-of-turn block，随后死亡，敌104→92。",
+    "added": "2026-10-05T04:56:13+08:00"
+   },
+   {
+    "run": "1NZ8FE5F34R9",
+    "role": "support",
+    "note": "本角色复盘及日志支持该条目的基本机制/观察；新A4典型案例和历史证据范围见第十一次增量。历史局不作为A4同盘面交换的独立证据。",
+    "added": "2026-10-05T10:10:43+08:00"
+   },
+   {
+    "run": "VLV17NUSFS61",
+    "floor": 48,
+    "turn": 5,
+    "note": "末次只打防御、毒雾、咕嘟冒泡并喝药，无攻击；水盆回合末补4，防御重放已有12，24来袭需8而仅7血阵亡。与脆弱并存仍按4补挡。",
+    "role": "support",
+    "added": "2026-10-06T00:00:01+08:00"
+   },
+   {
+    "run": "5X2GHKJ89PN1",
+    "floor": 48,
+    "turn": 3,
+    "role": "support",
+    "note": "末次T3只群蛇/毒雾，无攻击；水盆4与再生3组合，36光束先抵4，36血到下一轮7，净损29。T6三攻击后无水盆补挡，实际12挡对27致死。",
+    "added": "2026-10-06T19:31:06+08:00"
+   }
+  ],
+  "first_run": "E6AVMMVCSRPC",
+  "prior": "unknown",
+  "prior_runs": [
+   "C48LLXBGKXQ9",
+   "Y6GM2CHWJBEY",
+   "LRN0HPZ0FZS1",
+   "T082DRCUHRRD",
+   "1HC609GTLGN3",
+   "R0HEV5E3QT6G",
+   "KAY522KT5NXR"
+  ],
+  "prior_note": "按七局更早静默复盘检索波纹／涟漪／RIPPLE_BASIN，及本角色账本检索水盆、RIPPLE、不出攻击，未找到可比的水盆与毒雾防御回合记录；不借其他角色判断此前是否已做对。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "E6AVMMVCSRPC",
+    "VLV17NUSFS61",
+    "5X2GHKJ89PN1"
+   ],
+   "experience": [
+    "silent-ripple-basin-no-attack-block"
+   ],
+   "commits": [
+    "cf3de82416d6b831cb36d5ce3869e424f88566ba",
+    "c5b9123b6e553cef7f41eb52c6f22c24c41d9947",
+    "69630ae678818447c19da1afa02602e8c2a53863",
+    "a1d6ccc2d40b744c4ae24fa107239a46d41fea55",
+    "536e37d9f86b19ffc7afcfa11d71a41803a7cc09",
+    "c2aba14f9a7a51fa3867360ac996a1e57b336463",
+    "c7ca5d01614905357803b9c644f18ff80d9df703",
+    "8b2688581394344419420a0c341c498d07f03efc",
+    "2472ffd921fe356e1ae5baf9adf8c73913e2759e",
+    "664fda4f42109645630ccf2dbc2aab58a786c9e2",
+    "74f824130c2b9d60cdda8c398590fee394f7e7db",
+    "cc1bdc598777acec145622aac6567593c4559dff",
+    "f28e1fbfd572627818e92f9307ae7382c1161407"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第五次增量：1 局 A1（version 2026-10-05.5，分支 exp-silent，cf3de824）",
+    "2026-10-05 静默猎手 第十一次增量：1 局 A4（version 2026-10-05.11，分支 exp-silent，a1d6ccc2）",
+    "2026-10-06 静默猎手 第二十六次增量：1 局 A7（version 2026-10-06.1，分支 exp-silent，c2aba14f）",
+    "2026-10-06 静默猎手 第四十九次增量：1 局 A10（version 2026-10-06.24，分支 exp-silent，664fda4f）"
+   ]
+  },
+  "asc": 1,
+  "history": [
+   {
+    "ts": "2026-10-05T04:56:13+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T05:32:59+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T05:44:29+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T10:10:43+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T10:20:34+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T00:00:01+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T00:17:50+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T01:13:01+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T19:31:06+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T19:48:09+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T20:11:20+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp49",
+  "effect": null,
+  "notes": [
+   "经验2026-10-05.5：F17第6次T7负敏捷−2、卡牌12挡与水盆4保16血；T11卡牌11+4对17损2，T12卡牌1+4仍死。；本轮只标proposed，实际合入后的shipped交运维。",
+   "2026-10-05 05:44核实经验2026-10-05.5已兜底合入live；保留双方decision-log及刷新2d541005，live沙箱tsc 0、vitest145文件1888用例通过。依据学习者产出登记，不另设审核。",
+   "经验2026-10-05.11已提交；只登记proposed，实际合入后由运维据完成事件登记shipped。A4本局逐帧核对，临时敏捷、条件挡及毒按实际兑现；SL仅T1交换受控，整场胜因未隔离。",
+   "运维核实20261005-095918-experience-update已实际合入，live经验.9直接到.11，包含此前待上线的.10内容；按对应学习者批次登记经验状态，不虚构.10中间上线时刻，不将预判代码bug0078称为已修。合后固定沙箱通过；已保留七项最新刷新及旧模型/经验上线历史。",
+   "静默经验2026-10-06.1：VLV17NUSFS61 A7及旧32静默局重新抽取；净损/实死、取得/建立/已兑现分账。只proposed，实际合入后交运维登记shipped，保留历史first_run/prior与repeat。",
+   "01:01 experience-done运维机械兜底，静默经验2026-10-06.1实际合live c7ca5d01614905357803b9c644f18ff80d9df703/发布8b2688581394344419420a0c341c498d07f03efc，源tsc0/179文件2030例、合后tsc0/181文件2038例首过；本条仅对应已合入experience文本，源码机制覆盖和0130单行动题缺陷不随经验冒记实现，保留prior/first_run/repeat及所有旧上线历史，不另设审核。",
+   "只补已见水盆条件与其他增益分账，不增加固定弃攻或用药规则。",
+   "静默经验2026-10-06.24；5X2GHKJ89PN1 A10及19:29/19:32勘误，旧60局明细逐行一致；61局975房51实死。silent-ripple-basin-no-attack-block仅对应实见局部机制/统计，综合n非每个子公式n，独立局与SL尝试分账；无用药规则/源码改动。仅proposed，交运维按实际live/完成事件登记shipped，首次证据/先验/旧版本/repeat保持。",
+   "20:05 experience-done机械确认20261006-193317-experience-update：源664fda4f→实际live74f82413→固定发布cc1bdc59/唯一S1.exp49，main已同步。学习者从5X2GHKJ89PN1 SILENT A10及19:29/19:32勘误与本角色历史更新经验.23→.24，新增0更新13（全部补证/纯数字0）退役0/active123/58835字，开工11条压88字，240配对中位+88/最大6420→6674。源首轮tsc0/204文件2203例、合后首轮tsc0/205文件2213例，原自测/第49节/13行proposed归档。发布初稿Python括号解析失败及修正登记成功原历史保留，不当测试失败或重跑；初稿59局字样及旧60局完整重算/61局池更正保持。经验原blob已随20:00 S1.fix34同步，当前仅补S1.exp49版本/追加记录，修复34及七份刷新保留。只经CLI/by=ops标本批13项shipped，不另审策略，first_run/prior/claim/evidence/repeat和旧上线历史保持；0191仍独立S1.fix34 shipped，不代经验修改该bug。完整外部待本批learner-checks，无重复live合入或源码/知识改写；后台产出及对局继续。"
+  ],
+  "shipped_at": "2026-10-06T20:11:20+08:00"
+ },
+ {
+  "id": "silent-0177",
+  "ts": "2026-10-06T15:38:54+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "first_run": "UJ0K3G10609Y",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按钨合金棍/TUNGSTEN_ROD查询silent账本，并按静默猎手标题筛更早复盘，未检出更早持有该遗物且可比较实际失血的场景；不借用其他角色判断先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "UJ0K3G10609Y"
+   ],
+   "commits": [
+    "4367250b5fbf1484ca7ea8f312d13e4ce9d327a2",
+    "25937859a683493d7d75276dfd5a2fb74cbd9491",
+    "4128aa171248b29c3fe791d4f8ccfdb5500d085a",
+    "4087fb8c4547491093a763e9b8975f891eede0b2",
+    "258c3f3666c2c7f0d9053e4b15c98579e2bb4654"
+   ]
+  },
+  "kind": "bug-infra",
+  "claim": "钨合金棍未接入求解器回合失血：完整同线29血、13当前挡加斗篷扣1，对11×4攻击，代码预计损30/余-1，实际三次穿透各减1、损27/余2。turn-solver.ts:2910、2923、2931缺这个逐次减损；SL判官已识别不代表求解器实现。只定位单局多击失血高估，不声称修复能赢整场。",
+  "evidence": [
+   {
+    "run": "UJ0K3G10609Y",
+    "floor": 48,
+    "turn": 7,
+    "note": "第6次完整余像→防御+→致命毒药+→打击线与结束题均预计余-1；29血13挡，夜魇留手给斗篷扣1，实际29→2，对11×4三次穿透，差3。",
+    "role": "support",
+    "added": "2026-10-06T15:38:54+08:00"
+   },
+   {
+    "run": "UJ0K3G10609Y",
+    "floor": 48,
+    "turn": 4,
+    "note": "第6次结束题估损15，14当前挡加斗篷扣1对30，钨棍减1后实损14，43→29；单击补证。",
+    "role": "support",
+    "added": "2026-10-06T15:38:54+08:00"
+   }
+  ],
+  "note": "新的机制模型缺口；notes/fix-queue.md及fix-queue-v4.md未列钨合金棍，当前只读live b219de68 turn-solver.ts:2910/2923/2931、combat-plan.ts:2577、sl/judge.ts:1165。没有修改代码或队列。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-06T15:38:54+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T16:25:59+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T17:01:45+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix32",
+  "effect": null,
+  "notes": [
+   "新的机制模型缺口；notes/fix-queue.md及fix-queue-v4.md未列钨合金棍，当前只读live b219de68 turn-solver.ts:2910/2923/2931、combat-plan.ts:2577、sl/judge.ts:1165。没有修改代码或队列。",
+   "16:55 fix-done机械确认20261006-160711-fix-batch实际合入live并同步main；本项唯一S1.fix32，源4367250b5fbf1484ca7ea8f312d13e4ce9d327a2→实际代码25937859a683493d7d75276dfd5a2fb74cbd9491→固定发布4128aa171248b29c3fe791d4f8ccfdb5500d085a，最终发布4087fb8c/树9eae9fcc。证据UJ0K3G10609Y SILENT A10 F48 attempt6 T4/T7/T8；源及合后固定沙箱tsc0/vitest0/202文件2188例，原红绿撤源失败/恢复通过与夹具错误/边界补测/CLI拒绝历史保持。仅经CLI/by=ops登记本项shipped、首次证据/先验/claim/evidence/repeat/旧上线历史保持，0178/0180机制、0123经验独立，0172未实现保持。运维机械同步全部1035项已测源码/测试blob一致、未改机制或策略、未重复live合入、不覆盖七项后台知识刷新；只关闭对应队列，完整外部待learner-checks。"
+  ],
+  "shipped_at": "2026-10-06T17:01:45+08:00"
+ }
+]
