@@ -1,0 +1,75 @@
+{
+  "task": "strategy-proposal",
+  "base": "7a12f63eacd5c1c07ac43d9091e972333a78593b",
+  "runs": [
+    "PJ2LL9KU7FHD",
+    "L9SGRBB5R698",
+    "D4LJ9QMGFB8Q",
+    "S9UZAK0JP0C0",
+    "UJ0K3G10609Y",
+    "U8K28UUGYP3U",
+    "MCCK2602T1SR",
+    "0NZXA12NLDMH",
+    "4ANT8D00TP72",
+    "XBD8Z9XLPCPN"
+  ],
+  "fixes": [
+    {
+      "id": "silent-0186",
+      "proposal": "休息题南瓜蜡烛现场充能与续火条件参考",
+      "commit": "9a865dbe87b4e64a5d50c59b389d99ed73bebb52",
+      "version": null,
+      "evidence": [
+        {
+          "run": "UJ0K3G10609Y",
+          "ascension": 10,
+          "floors": [
+            29
+          ],
+          "turn": null
+        },
+        {
+          "run": "XBD8Z9XLPCPN",
+          "ascension": 10,
+          "floors": [
+            24,
+            28,
+            32
+          ],
+          "turn": null
+        },
+        {
+          "run": "XBD8Z9XLPCPN",
+          "ascension": 10,
+          "floors": [
+            19,
+            23,
+            27,
+            30,
+            31,
+            33
+          ],
+          "turn": 2
+        }
+      ],
+      "related_ledger": [
+        "silent-0184",
+        "silent-0185",
+        "silent-0020"
+      ]
+    }
+  ],
+  "skipped": [
+    "未上线：合后既有boss-clock.test.ts:191期望fightTurns>=9实际8；已回退保留刷新，回退基线同断言失败，根因待运维核查",
+    "统一保血/全死权重、固定击杀顺序、巨兽拖延、SL范围和路线/休息血线：缺充分受控替代胜负或阈值证据",
+    "完整boss时钟及续火路径模拟、正充能再添火/上限/其他触发组合：覆盖证据不足",
+    "永冻silent-0172：独立跨帧首次触发模型专项，本策略子项不处理",
+    "提前喝药/留药/药水代价规则：任务明确禁止"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 1,
+    "cases": 8
+  }
+}
