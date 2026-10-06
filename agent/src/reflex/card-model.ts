@@ -1473,6 +1473,8 @@ export function thisTurnScore(card: CardModel, incoming: number, enemies: number
 
 /** What the board lets a card deal this turn (thisTurnScore). */
 export interface ThisTurnBoard {
+  /** Current draw pile emptiness; unknown piles must not be treated as empty. */
+  drawPileEmpty?: boolean;
   /**
    * Cards the exhaust pile can hold this turn: its size now plus the exhausting cards in hand. Pact's
    * End needs 3 (the solver's PACTS_END_EXHAUST); below that it deals nothing (9LSQ F17 T1, H1FA twice:
@@ -1490,6 +1492,8 @@ const BULLY_PER_VULNERABLE = 2;
 
 /** A card's damage per hit this turn on this board. */
 export function thisTurnDamage(card: CardModel, board: ThisTurnBoard = {}): number {
+  // silent-0197: Y6GM2CHWJBEY F17 attempt 2 T1 / VPW8YH7A4QFM F39 T1.
+  if (card.cardId === "GRAND_FINALE" && board.drawPileEmpty === false) return 0;
   if (card.cardId === "PACTS_END" && board.exhaustReach !== undefined && board.exhaustReach < PACTS_END_CARDS) return 0;
   if (card.cardId === "BULLY") return (card.damage ?? 0) + BULLY_PER_VULNERABLE * (board.vulnerable ?? 0);
   return card.damage ?? 0;

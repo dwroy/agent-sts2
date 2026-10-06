@@ -917,11 +917,13 @@ function incomingDamage(combat: Record<string, unknown>): number {
 
 /**
  * The combat board a card picked for this turn is scored on (ThisTurnBoard): the exhaust pile plus the
- * exhausting cards in hand, and the most Vulnerable on a living enemy. The exhaust pile is left unknown
- * when the state carries no piles.
+ * exhausting cards in hand, and the most Vulnerable on a living enemy. Missing piles stay unknown.
+ * Silent's observed Grand Finale condition uses the draw pile alone, without the discard pile.
  */
 export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionEnv["knowledge"]): ThisTurnBoard {
   const combat = asRecord(raw["combat"]);
+  const draw = asRecord(asRecord(raw["agent_view"])["combat"])["draw"];
+  const silent = str(asRecord(raw["run"])["character_id"]).toLowerCase() === "silent";
   const pile = exhaustPileSize(raw);
   const exhaustingInHand = asArray(combat["hand"]).map(asRecord).filter((card, index) => modelHandCard(card, numOrNull(card["index"]) ?? index, knowledge, str(asRecord(raw["run"])["character_id"])).exhausts).length;
   const vulnerable = Math.max(
@@ -931,7 +933,8 @@ export function thisTurnBoard(raw: Record<string, unknown>, knowledge: DecisionE
       .filter((enemy) => enemy["is_alive"] !== false)
       .map((enemy) => asArray(enemy["powers"]).map(asRecord).filter((power) => str(power["power_id"]) === "VULNERABLE_POWER").reduce((sum, power) => sum + (numOrNull(power["amount"]) ?? 0), 0)),
   );
-  return { ...(pile === undefined ? {} : { exhaustReach: pile + exhaustingInHand }), vulnerable };
+  return { ...(pile === undefined ? {} : { exhaustReach: pile + exhaustingInHand }), vulnerable,
+    ...(silent && Array.isArray(draw) ? { drawPileEmpty: draw.length === 0 } : {}) };
 }
 
 export { thisTurnDamage, thisTurnScore, type ThisTurnBoard } from "../../reflex/card-model.js";
