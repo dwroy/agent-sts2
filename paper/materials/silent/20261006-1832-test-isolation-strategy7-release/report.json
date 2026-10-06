@@ -1,0 +1,40 @@
+{
+  "task": "fix-batch",
+  "base": "9f09e2b648a456a82ece6a7847c874863b25acd1",
+  "fixes": [
+    {
+      "item": "boss-clock历史测试未隔离自动刷新知识表",
+      "commit": "38e95b24efafb862fc09b1fd026626acf481c47d",
+      "test": "agent/tests/boss-clock.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "永冻首次能力7挡未进入模型（silent-0172）",
+      "reason": "太大：当前仍无PERMAFROST接线，公开状态没有首次能力已触发字段，需要跨帧、续行、重启和SL重置跟踪；重复及重放证据未验证"
+    },
+    {
+      "item": "mod选牌屏及其他屏幕请求超时自愈",
+      "reason": "证据不足：离线固定响应无法确认mod内部超时根因"
+    },
+    {
+      "item": "Codex大脑缓存命中偏低及实测对比",
+      "reason": "证据不足：缺少在线受控实测，本任务禁止实际LLM与网络"
+    },
+    {
+      "item": "boss整场模拟耗时、样本不足及CPU争用",
+      "reason": "太大：需要独立性能基准和跨模拟器定位；已定位的预算硬截止已修"
+    },
+    {
+      "item": "保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第二boss、无色牌估值",
+      "reason": "策略类：本任务不改，交Dai及独立策略任务；蜡烛已提交事实提案仅按队列授权另行合入"
+    }
+  ],
+  "merged": "fc17d02d464c803162f551f08dba97a09d91f7c7",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2203
+  }
+}

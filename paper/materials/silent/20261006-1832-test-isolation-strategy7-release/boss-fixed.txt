@@ -1,0 +1,119 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/boss-clock.test.ts (34 tests | 6 failed) 93ms
+     × 64ZB Vantom: A8 HP plus Slippery's 1-damage turns; F7 reads short (old: gap 1) 13ms
+     × ERPH Waterfall Giant: the eruption caps the fight at ~T10; F14 still short 2ms
+     × 02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0) 3ms
+     × D3X1 Test Subject: per-phase deadlines (phase 2 ~42 a turn, phase 3 ~104 under Nemesis), not a flat 600/14 6ms
+     × HP: the DB's parts at this ascension (else the nearest logged), plus what the mechanic adds 2ms
+     × HP loss a turn: its own attack at this ascension times the logged unblocked share; the A8 constant only without DB data 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-clock.test.ts > boss clock > 64ZB Vantom: A8 HP plus Slippery's 1-damage turns; F7 reads short (old: gap 1)
+AssertionError: expected '183 (A8, hand-set) + 113 (Slippery: ~…' to match /183 \(A8\) \+ \d+ \(Slippery/
+
+- Expected:
+/183 \(A8\) \+ \d+ \(Slippery/
+
++ Received:
+"183 (A8, hand-set) + 113 (Slippery: ~5.1 turns of hits dealing 1)"
+
+ ❯ tests/boss-clock.test.ts:207:23
+    205|     const f7 = bossClock(board("64ZBJGP6MYZ3:7"), loggedKnowledge)!;
+    206|     expect(f7.boss).toBe("VANTOM");
+    207|     expect(f7.hpNote).toMatch(/183 \(A8\) \+ \d+ \(Slippery/);
+       |                       ^
+    208|     // 66/87 plus the F16 rest's 26: a full-HP entry (the fights befor…
+    209|     expect(f7.entryHp).toBe(87);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/boss-clock.test.ts > boss clock > ERPH Waterfall Giant: the eruption caps the fight at ~T10; F14 still short
+AssertionError: expected 8 to be greater than or equal to 9
+ ❯ tests/boss-clock.test.ts:221:30
+    219|     // T8, ~5.5 HP a turn, gap 10 while the Giant gained +1 Strength a…
+    220|     // consistency #11); logged A8 Giant fights: 9.5 turns (median of …
+    221|     expect(clock.fightTurns).toBeGreaterThanOrEqual(9);
+       |                              ^
+    222|     expect(clock.fightTurns).toBeLessThanOrEqual(10);
+    223|     expect(clock.turnsNote).toMatch(/eruption/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/boss-clock.test.ts > boss clock > 02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0)
+AssertionError: expected 8 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 8
+
+ ❯ tests/boss-clock.test.ts:233:30
+    231|     // unblocked; the A8 constant 6.2 read 8) (it was read as 68, 10 t…
+    232|     expect(clock.entryHp).toBe(50);
+    233|     expect(clock.fightTurns).toBe(7);
+       |                              ^
+    234|     expect(clock.need).toBe(37);
+    235|     expect(clock.gap).toBeGreaterThan(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/boss-clock.test.ts > boss clock > D3X1 Test Subject: per-phase deadlines (phase 2 ~42 a turn, phase 3 ~104 under Nemesis), not a flat 600/14
+AssertionError: expected 'three phases 111/212/313 (A8, hand-se…' to match /111\/212\/313 \(A8\)/212\
+
+- Expected:
+/111\/212\/313 \(A8\)/
+
++ Received:
+"three phases 111/212/313 (A8, hand-set)"
+
+ ❯ tests/boss-clock.test.ts:255:26
+    253|     expect(phase3.need).toBe(104);
+    254|     expect(clock.need).toBe(104);
+    255|     expect(clock.hpNote).toMatch(/111\/212\/313 \(A8\)/);
+       |                          ^
+    256|     expect(clock.turnsNote).toMatch(/3 of them without Nemesis' Intang…
+    257|     expect(String(json["harder_because"])).toMatch(/Multi Claw/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/boss-clock.test.ts > boss HP and HP loss a turn from the monster DB at the run's ascension > HP: the DB's parts at this ascension (else the nearest logged), plus what the mechanic adds
+AssertionError: expected 260 to be 259 // Object.is equality
+
+- Expected
++ Received
+
+- 259
++ 260
+
+ ❯ tests/boss-clock.test.ts:410:43
+    408|     // Logged at A9: as logged; the Kin counts the priest plus ~60 of …
+    409|     expect(bossHp(profile("KNOWLEDGE_DEMON"), 9)).toBe(399);
+    410|     expect(bossHp(profile("THE_KIN"), 9)).toBe(199 + 60);
+       |                                           ^
+    411|     expect(bossHp(profile("THE_KIN"), 7)).toBe(190 + 60);
+    412|     expect(bossHp(profile("QUEEN"), 8)).toBe(419 + 60);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/boss-clock.test.ts > boss HP and HP loss a turn from the monster DB at the run's ascension > HP loss a turn: its own attack at this ascension times the logged unblocked share; the A8 constant only without DB data
+AssertionError: expected 6.3 to be greater than 6.3
+ ❯ tests/boss-clock.test.ts:439:22
+    437|     const a9 = bossLossPerTurn(demon, 9);
+    438|     // A9 moves hit harder (Slap 17 -> 18, Overwhelming 11 -> 13 a hit…
+    439|     expect(a9.value).toBeGreaterThan(a8.value);
+       |                      ^
+    440|     expect(a9.source).toMatch(/unblocked/);
+    441|     const share = unblockedShare("KNOWLEDGE_DEMON")!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 28 passed (34)
+   Start at  17:58:22
+   Duration  1.49s (transform 767ms, setup 722ms, import 256ms, tests 93ms, environment 0ms)
+

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/boss-clock.test.ts (33 tests | 1 failed | 32 skipped) 56ms
+     × ERPH Waterfall Giant: the eruption caps the fight at ~T10; F14 still short 54ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-clock.test.ts > boss clock > ERPH Waterfall Giant: the eruption caps the fight at ~T10; F14 still short
+AssertionError: expected 8 to be greater than or equal to 9
+ ❯ tests/boss-clock.test.ts:191:30
+    189|     // T8, ~5.5 HP a turn, gap 10 while the Giant gained +1 Strength a…
+    190|     // consistency #11); logged A8 Giant fights: 9.5 turns (median of …
+    191|     expect(clock.fightTurns).toBeGreaterThanOrEqual(9);
+       |                              ^
+    192|     expect(clock.fightTurns).toBeLessThanOrEqual(10);
+    193|     expect(clock.turnsNote).toMatch(/eruption/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 32 skipped (33)
+   Start at  18:04:44
+   Duration  882ms (transform 542ms, setup 440ms, import 222ms, tests 56ms, environment 0ms)
+

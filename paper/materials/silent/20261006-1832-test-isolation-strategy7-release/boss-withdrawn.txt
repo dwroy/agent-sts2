@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/boss-clock.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-clock.test.ts [ tests/boss-clock.test.ts ]
+Error: There are some problems in resolving the mocks API.
+You may encounter this issue when importing the mocks API from another module other than 'vitest'.
+To fix this issue you can either:
+- import the mocks API directly from 'vitest'
+- enable the 'globals' option
+ ❯ ../../../learner/runs/20261006-175455-fix-batch/reproduce-setup.ts:2:54
+      1| import { vi } from "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/…
+      2| import { basename, resolve } from "node:path";
+      3| vi.hoisted(() => vi.resetModules());
+       |       ^
+      4| vi.mock("node:fs", async (importOriginal) => {
+      5|   const fs = await importOriginal<typeof import("node:fs")>();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  18:00:36
+   Duration  515ms (transform 309ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
