@@ -13,7 +13,7 @@
  *           (engines/codex.ts: program lookup, CODEX_HOME, disabled features, the start-up check).
  * The child environment never carries our keys (childEnv).
  */
-import { accessSync, constants, readdirSync, statSync } from "node:fs";
+import { accessSync, constants, readdirSync, realpathSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import { delimiter, join } from "node:path";
 
@@ -327,9 +327,21 @@ export function keyRoots(projectRoot: string, repo: string = REPO_ROOT): string[
  * each of them.
  */
 export function codexKeyFiles(projectRoot: string, home: string = homedir(), codexHome: string = join(home, ".codex"), repo: string = REPO_ROOT): string[] {
-  const files = [...HOME_KEY_FILES.map((name) => join(home, name)), ...entriesOf(home).filter((name) => name.startsWith(".sts2-jev-env")).map((name) => join(home, name)), join(codexHome, "auth.json")];
+  // codex's login: the home's own auth.json, where a symlinked one really is (an isolated home such as ~/.codex-sts2
+  // links it to ~/.codex, 2026-10-06), and the default ~/.codex/auth.json.
+  // A symlink itself cannot be masked by the sandbox (bwrap: "Can't create file"), so only its target is listed.
+  const auth = realPathOf(join(codexHome, "auth.json"));
+  const files = [...HOME_KEY_FILES.map((name) => join(home, name)), ...entriesOf(home).filter((name) => name.startsWith(".sts2-jev-env")).map((name) => join(home, name)), auth, join(home, ".codex", "auth.json")];
   for (const root of keyRoots(projectRoot, repo)) files.push(...envFilesUnder(root));
   return [...new Set(files)].filter(isFile);
+}
+
+function realPathOf(path: string): string {
+  try {
+    return realpathSync(path);
+  } catch {
+    return path;
+  }
 }
 
 function envFilesUnder(projectRoot: string): string[] {
@@ -381,7 +393,7 @@ export function codexPermissions(request: EngineRequest): FilesystemRules {
   const homeRules: Record<string, Access> = { ".sts2-jev-env*": "none" };
   for (const name of HOME_KEY_FILES) homeRules[name] = "none";
   rules[home] = homeRules;
-  rules[join(codexHome, "auth.json")] = "none";
+  rules[realPathOf(join(codexHome, "auth.json"))] = "none"; // a symlinked login: its target (the link itself cannot be masked)
   for (const file of request.keyFiles ?? []) if (!(file in rules)) rules[file] = "none";
   return rules;
 }
