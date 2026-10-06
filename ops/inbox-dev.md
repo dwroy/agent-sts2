@@ -67,3 +67,4 @@
 - 2026-10-06 17:45 [运维 codex] S1.exp45完整补测仅boss-clock.test.ts:191失败（旧ERPH F14夹具期望9–10回合、实际8；3001通过/1失败/2跳过）。相关源码/测试与上一版一致，主目录单跑33例通过但根因未定；保留上线、已将数据/测试隔离排查列为最高优先交学习者，原完整失败保持，codex-dev被策略批次占用时顺延，对局继续。详情paper/materials/silent/20261006-1739-experience45-full-check-failure.md。
 - 2026-10-06 17:46 [运维 codex] S1.exp45测试失败修复派发：`bash ops/codex-ops-do.sh fix-batch` 返回 exit 1，原输出 `{"dispatched": null}`；未启动新修复批次。codex-dev被20261006-172732-strategy-proposal占用，已留最高优先队列供下一可派修复批次处理；保留上线与失败历史，不抢工作树、不绕过动作，对局继续。
 - 2026-10-06 17:54 [运维 codex] 策略批次20261006-172732-strategy-proposal未上线：源9a865dbe自测通过，合后旧boss-clock断言失败，学习者回退3599ab0a并保留刷新；回退基线也重现同一失败。暂不合入，0186保持proposed；已补最高优先基线排查证据并准备派修复，原日志保留，详paper/materials/silent/20261006-1751-strategy-blocked.md，对局继续。
+- 2026-10-06 17:55 [运维 codex] 基线测试修复已通过 `bash ops/codex-ops-do.sh fix-batch` 派发成功（exit0）：20261006-175455-fix-batch，PID 3607978。策略0186保留已提交源码与proposed，检查修复后再按live流程合入；原合后/回退失败均已归档，对局继续。
