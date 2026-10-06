@@ -68,3 +68,4 @@
 - 2026-10-06 17:46 [运维 codex] S1.exp45测试失败修复派发：`bash ops/codex-ops-do.sh fix-batch` 返回 exit 1，原输出 `{"dispatched": null}`；未启动新修复批次。codex-dev被20261006-172732-strategy-proposal占用，已留最高优先队列供下一可派修复批次处理；保留上线与失败历史，不抢工作树、不绕过动作，对局继续。
 - 2026-10-06 17:54 [运维 codex] 策略批次20261006-172732-strategy-proposal未上线：源9a865dbe自测通过，合后旧boss-clock断言失败，学习者回退3599ab0a并保留刷新；回退基线也重现同一失败。暂不合入，0186保持proposed；已补最高优先基线排查证据并准备派修复，原日志保留，详paper/materials/silent/20261006-1751-strategy-blocked.md，对局继续。
 - 2026-10-06 17:55 [运维 codex] 基线测试修复已通过 `bash ops/codex-ops-do.sh fix-batch` 派发成功（exit0）：20261006-175455-fix-batch，PID 3607978。策略0186保留已提交源码与proposed，检查修复后再按live流程合入；原合后/回退失败均已归档，对局继续。
+- 2026-10-06 18:15 [运维 codex] 第46批经验620513af因既有boss-clock基线断言（要求≥9、实8）两次合后失败而回退，尚未上线；原产出和失败记录已归档，现有175455修复批次正在处理，修复通过后续合入。对局继续。
