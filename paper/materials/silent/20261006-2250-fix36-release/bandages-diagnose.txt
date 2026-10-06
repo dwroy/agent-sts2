@@ -1,0 +1,21 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-tough-bandages.test.ts (8 tests | 1 failed) 154ms
+   × F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss 93ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss
+AssertionError: {"n":2,"hand":[{"cardId":"DAGGER_THROW","draw":0,"discardAfterDraw":true},{"cardId":"SURVIVOR","draw":0,"discardAfterDraw":true},{"cardId":"FLECHETTES","draw":0},{"cardId":"SHADOW_STEP","draw":0},{"cardId":"NEUTRALIZE","draw":0}]}: expected null not to be null
+ ❯ tests/silent-tough-bandages.test.ts:64:252
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  22:22:15
+   Duration  1.42s (transform 958ms, setup 272ms, import 872ms, tests 154ms, environment 0ms)
+

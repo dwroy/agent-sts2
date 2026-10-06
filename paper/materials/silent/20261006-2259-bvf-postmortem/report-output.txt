@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：BVF22RSFVBS9（A10，第23层，末次T5以4血、0挡被熟睡甲虫15伤攻击击杀，差11血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：BVF22RSFVBS9：前三次读档末轮未执行的结算、完整实际最优线执行比例、替代选择的受控胜负与整场代价、F24／F33实到血量、boss时钟需要／估计及比值、Jev缓存命中。
+- 学习账本：BVF22RSFVBS9：新增 silent-0196；更新 silent-0011、silent-0019、silent-0021、silent-0027、silent-0046、silent-0091、silent-0128（均补证，无老错重犯）；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["BVF22RSFVBS9"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0196"],"updated":["silent-0011","silent-0019","silent-0021","silent-0027","silent-0046","silent-0091","silent-0128"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a111ab-068a-7c50-bcb6-d3bb566881ac
+轮数：1；工具调用：command_execution×50
+token：输入 177.9k、输出 30.6k（其中推理 10.7k）、cache 读 2672.6k、cache 写 0（命中 93.8%）
+成本：未提供
+耗时：964.4 s（墙钟）
+时间：首个事件 1.8 s、模型首个输出 9.2 s、首次工具 13.7 s、末次工具结束 935.4 s；工具内共 25.9 s，其余（模型生成、推理、网络）936.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×23；/home/dw/.codex-sts2/sessions/2026/10/06/rollout-2026-10-06T22-43-03-01a111ab-068a-7c50-bcb6-d3bb566881ac.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261006-224302-postmortem.jsonl

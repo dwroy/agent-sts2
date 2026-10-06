@@ -1,0 +1,252 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-tough-bandages.test.ts (10 tests | 8 failed) 131ms
+   × F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss 70ms
+   × F48 final T3: Calculated Gamble discards nine cards for twenty-seven Block before replacement draws 10ms
+   × F48 final T3: Burst replays Acrobatics and each actual discard adds three Block 6ms
+   × continuation frames count only new discards and do not charge the eighteen existing Block again 9ms
+   × unseen discard choices stop continuation and leave the live discard choice to Jev 2ms
+   × whole-hand discard includes unknown drawn slots and held curses, excluding the played card and potion belt 3ms
+   × later rollout turns keep the observed discard relic instead of losing its solver field 7ms
+   × the three observed one-card discard texts are recognized only for Silent 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss
+AssertionError: expected undefined to be 3 // Object.is equality
+
+- Expected:
+3
+
++ Received:
+undefined
+
+ ❯ tests/silent-tough-bandages.test.ts:61:43
+     59| it("F48 final T4: Dagger Throw and Survivor discard twice for eighteen…
+     60|   const { input } = observed(2);
+     61|   expect(input.player.toughBandagesBlock).toBe(3);
+       |                                           ^
+     62|   input.knownTop = [card(600, "GREED", { type: "Curse", playable: fals…
+     63|   const steps = [step(input, "DAGGER_THROW", ["GREED"]), step(input, "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T3: Calculated Gamble discards nine cards for twenty-seven Block before replacement draws
+AssertionError: expected { winsFight: false, hpLoss: +0, …(20) } to match object { blockGained: 27, cardsDrawn: 9 }
+(20 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "blockGained": 27,
++   "blockGained": 0,
+    "cardsDrawn": 9,
+  }
+
+ ❯ tests/silent-tough-bandages.test.ts:74:24
+     72|   const plan = replaySteps(input, [step(input, "CALCULATED_GAMBLE")])!;
+     73|   expect(plan.steps[0]!.discards).toHaveLength(9);
+     74|   expect(plan.outcome).toMatchObject({ blockGained: 27, cardsDrawn: 9 …
+       |                        ^
+     75|   expect(input.player.block + plan.outcome.blockGained).toBe(33);
+     76| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T3: Burst replays Acrobatics and each actual discard adds three Block
+AssertionError: expected +0 to be 6 // Object.is equality
+
+- Expected
++ Received
+
+- 6
++ 0
+
+ ❯ tests/silent-tough-bandages.test.ts:82:36
+     80|   expect(input.player.duplicateSkills).toBe(2);
+     81|   const plan = replaySteps(input, [step(input, "ACROBATICS", ["SHAME",…
+     82|   expect(plan.outcome.blockGained).toBe(6);
+       |                                    ^
+     83|   expect(plan.steps[0]!.discards).toEqual(["SHAME", "GREED"]);
+     84| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > continuation frames count only new discards and do not charge the eighteen existing Block again
+AssertionError: expected { winsFight: false, hpLoss: 9, …(22) } to match object { blockGained: 15, hpLoss: 6 }
+(22 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "blockGained": 15,
+-   "hpLoss": 6,
++   "blockGained": 12,
++   "hpLoss": 9,
+  }
+
+ ❯ tests/silent-tough-bandages.test.ts:90:6
+     88|   expect(input.player.block).toBe(3);
+     89|   expect(replaySteps(input, [step(input, "SURVIVOR", ["SHADOW_STEP"]),…
+     90|     .toMatchObject({ blockGained: 15, hpLoss: 6 });
+       |      ^
+     91|   const end = observed(4).input;
+     92|   expect(end.player.block).toBe(18);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > unseen discard choices stop continuation and leave the live discard choice to Jev
+AssertionError: expected { steps: [ { …(7) }, { …(7) } ], …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "outcome": {
+    "blockGained": 13,
+    "blockWasted": 3,
+    "cardsDrawn": 0,
+    "damageDealt": 0,
+    "dies": false,
+    "enemyHpAfter": [
+      {
+        "artifact": 0,
+        "block": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "hp": 120,
+        "index": 0,
+        "name": "Boss",
+        "shrink": 0,
+        "slippery": 0,
+        "strengthGained": 0,
+        "vulnerable": 0,
+        "weak": 0,
+      },
+    ],
+    "energyLeft": 1,
+    "hpAfter": 70,
+    "hpLoss": 0,
+    "incomingAfterBlock": 0,
+    "kills": [],
+    "lasting": 0,
+    "restocked": [],
+    "sandpitAfter": null,
+    "sleepCost": 0,
+    "startTurnKills": [],
+    "strengthGained": 0,
+    "unknownCards": [],
+    "vulnerableApplied": 0,
+    "weakApplied": 0,
+    "winsFight": false,
+    "withersAdded": 0,
+  },
+  "score": 0,
+  "steps": [
+    {
+      "cardId": "SURVIVOR",
+      "cardIndex": 0,
+      "cost": 1,
+      "name": "SURVIVOR",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+    {
+      "cardId": "DEFEND",
+      "cardIndex": 1,
+      "cost": 1,
+      "name": "DEFEND",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+  ],
+}
+
+ ❯ tests/silent-tough-bandages.test.ts:111:80
+    109|   input.player.toughBandagesBlock = 3;
+    110|   input.hand = [card(0, "SURVIVOR", { type: "Skill", target: "self", b…
+    111|   expect(replaySteps(input, [step(input, "SURVIVOR"), step(input, "DEF…
+       |                                                                                ^
+    112|   const plans = solveTurn(input).plans.filter((plan) => plan.steps[0]?…
+    113|   expect(plans.some((plan) => plan.outcome.blockGained === 11)).toBe(t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > whole-hand discard includes unknown drawn slots and held curses, excluding the played card and potion belt
+AssertionError: expected { winsFight: false, hpLoss: 10, …(20) } to match object { blockGained: 9, cardsDrawn: 5 }
+(20 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "blockGained": 9,
++   "blockGained": 0,
+    "cardsDrawn": 5,
+  }
+
+ ❯ tests/silent-tough-bandages.test.ts:126:24
+    124|     card(-1, "POTION", { type: "Potion", target: "self", cost: 0 })];
+    125|   const plan = replaySteps(input, [step(input, "DRAW"), step(input, "C…
+    126|   expect(plan.outcome).toMatchObject({ blockGained: 9, cardsDrawn: 5 }…
+       |                        ^
+    127|   expect(plan.steps[1]!.discards).toEqual(["GREED"]);
+    128| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > later rollout turns keep the observed discard relic instead of losing its solver field
+AssertionError: expected [ 15, 12, 12 ] to deeply equal [ 15, 9, 9 ]
+
+- Expected
++ Received
+
+  [
+    15,
+-   9,
+-   9,
++   12,
++   12,
+  ]
+
+ ❯ tests/silent-tough-bandages.test.ts:142:88
+    140|   const plan = replaySteps(input.solver, [step(input.solver, "DEFEND")…
+    141|   input.plans = [plan];
+    142|   expect(simulateFight(input, plan, 3, 1, false).records.map((record) …
+       |                                                                                        ^
+    143| });
+    144|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > the three observed one-card discard texts are recognized only for Silent
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/silent-tough-bandages.test.ts:148:73
+    146|   for (const id of ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"]) {
+    147|     const raw = { card_id: id, energy_cost: 1, playable: true, target_…
+    148|     expect(modelHandCard(raw, 0, knowledge, "silent").discardAfterDraw…
+       |                                                                         ^
+    149|     expect(modelHandCard(raw, 0, knowledge, "ironclad").discardAfterDr…
+    150|     expect(modelHandCard({ ...raw, upgraded: true }, 0, knowledge, "si…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 2 passed (10)
+   Start at  22:33:20
+   Duration  1.29s (transform 869ms, setup 257ms, import 781ms, tests 131ms, environment 0ms)
+

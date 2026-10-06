@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-tough-bandages.test.ts (10 tests | 1 failed) 145ms
+   × later rollout turns keep the observed discard relic instead of losing its solver field 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > later rollout turns keep the observed discard relic instead of losing its solver field
+AssertionError: expected [ 15, 9, 10 ] to deeply equal [ 15, 4, 4 ]
+
+- Expected
++ Received
+
+  [
+    15,
+-   4,
+-   4,
++   9,
++   10,
+  ]
+
+ ❯ tests/silent-tough-bandages.test.ts:141:88
+    139|   const plan = replaySteps(input.solver, [step(input.solver, "DEFEND")…
+    140|   input.plans = [plan];
+    141|   expect(simulateFight(input, plan, 3, 1, false).records.map((record) …
+       |                                                                                        ^
+    142| });
+    143|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  22:25:24
+   Duration  1.46s (transform 998ms, setup 319ms, import 864ms, tests 145ms, environment 0ms)
+

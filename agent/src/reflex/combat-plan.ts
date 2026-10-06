@@ -2872,6 +2872,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(relicIds.includes("SHURIKEN") ? { shuriken: { every: SHURIKEN_ATTACKS, strength: SHURIKEN_STRENGTH, count: relicStack(state.run?.raw, "SHURIKEN") % SHURIKEN_ATTACKS } } : {}),
     // Silent evidence only: CSBR5CRDWQNB F33 attempt 6 T1/T2/T4, ledger silent-0061/0063. Ironclad stays unchanged.
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && relicIds.includes("DAUGHTER_OF_THE_WIND") ? { daughterWindBlock: 1 } : {}),
+    // L704TLETMZBM F48 T3/T4, silent-0193/0194: three Block per observed explicit discard.
+    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && relicIds.includes("TOUGH_BANDAGES") ? { toughBandagesBlock: 3 } : {}),
     // Music Box: the turn's first Attack card comes back as an Ethereal copy (armed while none is played yet).
     ...(relicIds.includes("MUSIC_BOX") ? { musicBox: { count: num(player["attacks_played_this_turn"]) } } : {}),
     rage: powerAmount(player, "RAGE_POWER"),

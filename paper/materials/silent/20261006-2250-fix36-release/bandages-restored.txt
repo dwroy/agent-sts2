@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-hidden-daggers.test.ts (6 tests | 1 failed) 112ms
+   × the solver offers discard pairs and replay reproduces its generated-card reference outcomes 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-hidden-daggers.test.ts > the solver offers discard pairs and replay reproduces its generated-card reference outcomes
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/silent-hidden-daggers.test.ts:89:37
+     87|   for (const plan of plans) {
+     88|     expect(plan.steps[0]!.discards).toHaveLength(2);
+     89|     expect(plan.outcome.cardsDrawn).toBe(0);
+       |                                     ^
+     90|     expect(replaySteps(input, plan.steps)?.outcome).toEqual(plan.outco…
+     91|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 26 passed (27)
+   Start at  22:27:21
+   Duration  1.62s (transform 3.73s, setup 1.45s, import 3.30s, tests 383ms, environment 0ms)
+

@@ -1,0 +1,55 @@
+{
+  "base": "b9d0fb62a779ab876b0159abc80ace487942c3b4",
+  "source": "3a4c5626434efc909122483769468bba953d63c1",
+  "live_knowledge_checkpoint": "b75e1076afbabab562dc56798c2955b210cc04a0",
+  "live_code_merge": "da78fee9739a8548827094e30cd2594362c526f4",
+  "live_release": "8aead9fa447e76f6a36bdf0a5d5214ccc5aeb522",
+  "live_release_tree": "d03d1bf45fc5f4ffa87825d07c318f3fff5e570a",
+  "version": "S1.fix36",
+  "source_clean": true,
+  "source_ancestor_of_release": true,
+  "fixed_paths_identical": {
+    "agent/src/reflex/card-model.ts": "4962c2935e547efa5f876ac43149a617e0d03134",
+    "agent/src/reflex/combat-plan.ts": "14b80da795b33464c6e4fdb5a664e8b96245caee",
+    "agent/src/reflex/turn-solver.ts": "3c3b807cb2e20761b5d4fed53b1780f6c6c4cb7d",
+    "agent/tests/silent-tough-bandages.test.ts": "08fd0506c445bf955d2c634c4aece8db03bfb3cc",
+    "agent/tests/silent-tough-bandages-state.json": "1ae808ca2bb047cf3a34d4a6e4cf2dfa4fe8dd56"
+  },
+  "knowledge_preserved": true,
+  "append_history_preserved": true,
+  "queue_sha256": "e626119eb353cde45890a0768b7c7ea0838b37df008c860bd4835d025b3eb409",
+  "queue_unchanged": true,
+  "tests": {
+    "source": {
+      "tsc": 0,
+      "files": 208,
+      "cases": 2237,
+      "vitest": 0
+    },
+    "live": {
+      "tsc": 0,
+      "files": 208,
+      "cases": 2237,
+      "vitest": 0
+    },
+    "ablation": {
+      "failed": 8,
+      "passed": 2,
+      "exit": 1
+    },
+    "restored_related": {
+      "files": 4,
+      "cases": 27,
+      "exit": 0
+    }
+  },
+  "exits": {
+    "source-suite-final": 0,
+    "live-suite": 0,
+    "live-merge": 0,
+    "bandages-final-without-fix": 1,
+    "bandages-final-restored": 0,
+    "gitleaks-source": 0
+  },
+  "full_external_suite": "待调度器在沙箱外补跑"
+}
