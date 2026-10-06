@@ -18,6 +18,7 @@ import { buildPickDecision, type PickOption } from "./pick.js";
 import { cardOutcome } from "../../knowledge/outcome-facts.js";
 import { CARD_REWARD_ROOMS } from "./map.js";
 import { routeReviewBlock, withRouteReview } from "./route-review.js";
+import { silentRewardAdditionFacts } from "./silent-reward-addition.js";
 
 /**
  * Special card rewards that put their card straight into the deck, with no choice to make: the stolen card's return
@@ -146,7 +147,7 @@ export function planReward(env: DecisionEnv): Decision | null {
         ...params,
         state: review ? { ...deepseekState, route_review: review.state } : deepseekState,
         options,
-        deepseek: { facts: buildFacts(env), baseline, note: review ? `${note} ${review.note}` : note },
+        deepseek: { facts: buildFacts(env, silentRewardAdditionFacts(state, options)), baseline, note: review ? `${note} ${review.note}` : note },
       }),
       review,
     );
