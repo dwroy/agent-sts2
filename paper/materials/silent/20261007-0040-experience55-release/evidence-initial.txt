@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261007-000343-experience-update/evidence.py", line 14, in <module>
+    x=c(5,ident);assert x['after']['block']-x['before']['block']==want
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261007-000343-experience-update/evidence.py", line 7, in c
+    def c(t,ident):return next(x for x in C if (x['floor'],x['turn'],x['card'],x['attempt'])==(49,t,ident,6))
+                          ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
