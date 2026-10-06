@@ -15,8 +15,8 @@ export interface RoutePlanStep {
   row: number;
   col: number;
   type: string;
-  /** Projected HP fraction on arrival at this node when the plan was made (median room costs, resting at rest sites). */
-  hpOnArrival: number;
+  /** Projected HP fraction on arrival; null after an unmodelled boss loss. */
+  hpOnArrival: number | null;
 }
 
 export interface RoutePlan {
@@ -192,7 +192,7 @@ export function makeRoutePlan(env: DecisionEnv, map: RouteMap, ids: string[], st
     act: map.act,
     floor: env.state.run?.floor ?? null,
     hpPct: start.max > 0 ? Math.max(0, Math.min(1, start.hp / start.max)) : 1,
-    path: nodes.map((node, at) => ({ row: node.row, col: node.col, type: node.type, hpOnArrival: Math.max(0, Math.min(1, projection.arrival[at]! / (projection.maxArrival[at]! || start.max || 1))) })),
+    path: nodes.map((node, at) => ({ row: node.row, col: node.col, type: node.type, hpOnArrival: projection.arrival[at] === null ? null : Math.max(0, Math.min(1, projection.arrival[at]! / (projection.maxArrival[at]! || start.max || 1))) })),
     summary: routeText(map, ids),
     ...(why ? { why } : {}),
   };
