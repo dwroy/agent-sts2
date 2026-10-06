@@ -61,3 +61,4 @@
 - 2026-10-06 05:24 [运维 codex] Roy：A9小结已写notes/silent-climb-report.md；3局，首试0胜3负、最终SL后1胜2负，平均终层39.67（首试38），共7次成功读档；败局为F33火箭/碾碎爪、F38史莱姆狂战士各1。复盘2/3，窗口新增6项账本（首次证据属A0/A6/A8），上线S1.exp30/fix24/exp31/exp32，0148策略仍proposed；完整评估、条目ID和CSV原行已留档。再次上线导致重犯计数漏计已入非阻塞修复队列，保留原CSV，三局样本不作因果归因。
 - 2026-10-06 10:19 [运维 codex] 卡死已恢复：TD1HVGS7H6LB（静默猎手A10/F17）读档过程中游戏退出，导致5分钟对局重启10次；经win-procs确认游戏消失后用launch-game重开桌面游戏PID33748，原autoplay PID1734436自动续上同局，对局PID2933175已从日志重建并继续战斗。无需Roy操作；游戏退出根因未定位，launch-game成功判读及mod-state截断两个非阻塞工具缺口已入队交学习者。
 - 2026-10-06 10:30 [运维 codex] 10:15游戏退出按Roy说明已确认为本人误关，退出根因排查关闭；原同局恢复、SL失败及重启记录保留，launch-game成功判读和mod-state截断两个工具缺口继续交学习者。
+- 2026-10-06 14:41 [运维 codex] 引擎预检失败已核实：121301/124301/134301/141301四批复盘及121301-fix-batch/134301-fix-batch两批修复均exit3，原因是全局~/.codex/AGENTS.md会被加载；缺复盘S9UZAK0JP0C0、MCCK2602T1SR、UJ0K3G10609Y、U8K28UUGYP3U。观察者14:31已按Roy决定隔离运行目录并报告烟测通过；保留原失败、交调度器重派，不绕过预检，对局照常。详情paper/materials/silent/20261006-1435-fixes-checks-and-engine-precheck.md。
