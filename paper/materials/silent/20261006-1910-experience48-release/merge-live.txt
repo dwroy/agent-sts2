@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261006-184302-experience-update/merge-live.py", line 114, in <module>
+    git('-c', 'core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol', 'diff', '--cached', '--check')
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261006-184302-experience-update/merge-live.py", line 23, in git
+    return run(*args).stdout.strip()
+           ~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261006-184302-experience-update/merge-live.py", line 19, in run
+    raise RuntimeError(p.stdout + p.stderr)
+RuntimeError: paper/materials/silent/20261006-1811-experience46-blocked/baseline-live-case.txt:26: new blank line at EOF.
+paper/materials/silent/20261006-1811-experience46-blocked/test-live-retry.txt:26: new blank line at EOF.
+paper/materials/silent/20261006-1811-experience46-blocked/test-live.txt:26: new blank line at EOF.
+paper/materials/silent/20261006-1811-experience46-blocked/test-source.txt:18: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/boss-baseline.txt:9: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/boss-fixed-v2.txt:59: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/boss-fixed-v3.txt:9: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/boss-fixed.txt:119: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/boss-restored.txt:9: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/boss-withdrawn-v2.txt:57580: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/boss-withdrawn.txt:29: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/fix-live-suite.txt:18: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/fix-only-source-suite.txt:18: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/full-external-check.txt:513: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/source-suite.txt:18: new blank line at EOF.
+paper/materials/silent/20261006-1832-test-isolation-strategy7-release/strategy-live-suite.txt:18: new blank line at EOF.
+

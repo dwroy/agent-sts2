@@ -1,0 +1,11 @@
+# 静默经验第48批上线记录
+
+2026-10-06 19:12，处理19:10 experience-done 20261006-184302-experience-update。
+
+- 来源NB8KCF6HRGVF SILENT A10/F31败局及18:22勘误和学习者本角色历史。源eb27d74600ba881d8c9e19c4c68fcf45f7400640→实际live 0266b8aa40ea7d648ff42458d618e3e1c10da6ec→固定发布d4026dbbda334bb607f5df269d9bd9a0c6a7fa7d/树b3692090dd324947f9538cc5c9803d164a07815e，唯一S1.exp48。源首轮和合后首轮沙箱均tsc0/vitest0、204文件2203例，无重跑；完整外部补测由调度器进行。
+- 学习者报告经验.22→.23，新增1、更新12（补证11、纯数字0、只压缩1）、退役0，active122→123/56362→57638字；开工7条压58字。240配对中位+141、总体中位3434→3513、最大6413→6705，A8/A9各117条54983字、A10 118条55399字。运维只确认自测及实际合入，不另审或提供游戏规则。
+- 原第48节含收尾23875字节与原13行proposed归档同名目录，指纹见manifest.json；first_run/prior/claim/repeat/旧上线版本历史保持，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 189 item(s), 0 problem(s)。0189原首证LRN0HPZ0FZS1/A0和prior=yes保持，学习者追加5个旧静默支持证据；0010仅沿用压缩、不追加该局未使用牌的证据。只按原登记CLI标13项shipped，其他项保持。
+- 7个源/live重叠刷新文件blob完全一致，经验外全部知识blob保持，无新刷新提交。decision-log追加冲突已保留双方原文及顺序；合并初轮广域diff-check被main原16份归档末空行拦下（rc1），保留原字节及原失败，锁内改查本次经验/追加历史后继续（rc0）。这是归档格式检查，源/合后测试首轮均通过，不记作测试失败或超时重跑。
+- 随后机械同步main，保留其余最新产出、知识、论文表及收件箱；无生产源码/生成器/其他角色变更，原完整测试失败历史保持，对局照常。
+
+- 2026-10-06 19:13 运维codex完成19:10 experience-done 20261006-184302-experience-update上线登记：源eb27d74600ba881d8c9e19c4c68fcf45f7400640→实际live 0266b8aa40ea7d648ff42458d618e3e1c10da6ec→固定发布d4026dbbda334bb607f5df269d9bd9a0c6a7fa7d/树b3692090dd324947f9538cc5c9803d164a07815e/唯一S1.exp48；原第48节含收尾23875字节与13项proposed归档04ae3f75607b19d4e1ef5cbfb0d67b5bfd429097，main机械同步9f49a10551abb155af025b1d00b16ccd5f4e5b7b。源和合后首轮tsc0、204文件2203例，无重跑、原日志保留；全部1038项源码/测试blob同固定发布且无源码改动，其余2267项main最新blob和双方日志历史保持。CLI/by=ops仅13项shipped，first_run/prior/claim/证据/repeat和旧上线历史保持，0189首证LRN0HPZ0FZS1/A0、prior=yes和5旧局支持保持，0010仅压缩/不新增该局未使用证据，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 189 item(s), 0 problem(s)。经验.22→.23新增1更新12、active123/57638字，7重叠刷新blob相同、经验外知识保持、无新刷新；原16归档EOF检查rc1及锁内续合rc0保持原字节，不记作测试失败。完整外部补测待本批learner-checks，不重复live合并、版本、论文刷新或测试；后台新产出与对局照常。详情paper/materials/silent/20261006-1910-experience48-release.md。
