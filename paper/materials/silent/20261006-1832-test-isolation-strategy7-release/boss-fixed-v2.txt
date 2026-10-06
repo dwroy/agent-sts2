@@ -1,0 +1,59 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/boss-clock.test.ts (34 tests | 3 failed) 97ms
+     × ERPH Waterfall Giant: the eruption caps the fight at ~T10; F14 still short 8ms
+     × 02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0) 4ms
+     × HP loss a turn: its own attack at this ascension times the logged unblocked share; the A8 constant only without DB data 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-clock.test.ts > boss clock > ERPH Waterfall Giant: the eruption caps the fight at ~T10; F14 still short
+AssertionError: expected 8 to be greater than or equal to 9
+ ❯ tests/boss-clock.test.ts:221:30
+    219|     // T8, ~5.5 HP a turn, gap 10 while the Giant gained +1 Strength a…
+    220|     // consistency #11); logged A8 Giant fights: 9.5 turns (median of …
+    221|     expect(clock.fightTurns).toBeGreaterThanOrEqual(9);
+       |                              ^
+    222|     expect(clock.fightTurns).toBeLessThanOrEqual(10);
+    223|     expect(clock.turnsNote).toMatch(/eruption/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/boss-clock.test.ts > boss clock > 02L4 Ceremonial Beast: 262 HP over ~10 turns, ~26 a turn; F6 reads short (old: 19, gap 0)
+AssertionError: expected 8 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 8
+
+ ❯ tests/boss-clock.test.ts:233:30
+    231|     // unblocked; the A8 constant 6.2 read 8) (it was read as 68, 10 t…
+    232|     expect(clock.entryHp).toBe(50);
+    233|     expect(clock.fightTurns).toBe(7);
+       |                              ^
+    234|     expect(clock.need).toBe(37);
+    235|     expect(clock.gap).toBeGreaterThan(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/boss-clock.test.ts > boss HP and HP loss a turn from the monster DB at the run's ascension > HP loss a turn: its own attack at this ascension times the logged unblocked share; the A8 constant only without DB data
+AssertionError: expected 6.3 to be greater than 6.3
+ ❯ tests/boss-clock.test.ts:439:22
+    437|     const a9 = bossLossPerTurn(demon, 9);
+    438|     // A9 moves hit harder (Slap 17 -> 18, Overwhelming 11 -> 13 a hit…
+    439|     expect(a9.value).toBeGreaterThan(a8.value);
+       |                      ^
+    440|     expect(a9.source).toMatch(/unblocked/);
+    441|     const share = unblockedShare("KNOWLEDGE_DEMON")!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 31 passed (34)
+   Start at  17:59:22
+   Duration  824ms (transform 462ms, setup 345ms, import 238ms, tests 97ms, environment 0ms)
+
