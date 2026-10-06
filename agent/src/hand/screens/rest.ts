@@ -130,6 +130,7 @@ export function planRest(env: DecisionEnv): Decision | null {
       heal_amount: heal.text,
       hp_after_heal: `${healed.hp}/${healed.max}`,
       ...silentTentRestFacts(state, healed),
+      ...silentCandleRestFacts(state),
       upgradable_cards: entries.filter((entry) => !entry.upgraded && entry.type !== "Curse" && entry.type !== "Status").map((entry) => entry.name),
       floors_to_act_boss: nextBoss - floor,
       next_nodes: nextNodeTypes(env.screenMemory, state),
@@ -198,6 +199,47 @@ export function planRest(env: DecisionEnv): Decision | null {
       },
     }),
   );
+}
+
+/** UJ0K3G10609Y F29 and XBD8Z9XLPCPN F24/28/32, silent-0186/0184/0185/0020. */
+export function silentCandleRestFacts(state: GameState): Record<string, JsonValue> {
+  const run = asRecord(state.run?.raw);
+  if (str(run["character_id"]).toLowerCase() !== "silent") return {};
+  const candle = asArray(run["relics"]).map(asRecord)
+    .find((relic) => str(relic["relic_id"]) === "PUMPKIN_CANDLE" && !bool(relic["is_melted"]));
+  if (!candle) return {};
+  const enabled = asArray(asRecord(state.raw["rest"])["options"]).map(asRecord)
+    .filter((option) => bool(option["is_enabled"]) && Number.isInteger(numOrNull(option["index"])) && num(option["index"]) >= 0);
+  if (!enabled.some((option) => str(option["option_id"]).toUpperCase() === "KINDLE")) return {};
+  const stack = candle["stack"];
+  const charges = typeof stack === "number" && Number.isInteger(stack) && stack >= 0 ? stack : null;
+  const observedRange = charges !== null && charges <= 5;
+  const actions = enabled.map((option) => {
+    const kind = str(option["option_id"]).toUpperCase();
+    // Only extinguished refuelling was executed in these runs; do not infer a positive-stack cap or sum.
+    const after = kind === "KINDLE" ? (charges === 0 ? 5 : null)
+      : observedRange && (kind === "HEAL" || kind === "SMITH") ? charges : null;
+    return { key: `o${num(option["index"])}`, kind, charges_after_action_reference: after };
+  });
+  const groups = new Map<number, string[]>();
+  for (const action of actions) {
+    if (action.charges_after_action_reference === null) continue;
+    const keys = groups.get(action.charges_after_action_reference) ?? [];
+    keys.push(action.key);
+    groups.set(action.charges_after_action_reference, keys);
+  }
+  return {
+    candle_refuel: {
+      source: "UJ0K3G10609Y SILENT A10 F29；XBD8Z9XLPCPN SILENT A10 F24/28/32（回合不适用）、F19/23/27/30/31/33 T2；silent-0186/0184/0185/0020。",
+      current_charges: charges,
+      actions,
+      charge_tied_option_groups: [...groups.values()].filter((keys) => keys.length > 1),
+      observed: "UJ局F29实际添火使0→5充能、77血不变。XBD局F24锻造仍3充能，F28回血30→51仍2，F32回血2→23仍0；回血与锻造没有续火。XBD五战T2正充能时能量4、基础3，各战后消耗1充能；熄灭后F33 T2只有3能量。",
+      reference_scope: "动作键为当前营火动作键，展开锻造牌选项共享此前缀。数字仅按已见机制给出动作成功后的充能参考，未知为null；同值只在充能指标并列，不代表HP、升级收益或整场推演相同。添火本身不回血，其他营火触发组合未验证。",
+      simulation_scope: "当前route_review的HP投影与boss_sim没有模拟KINDLE的续火收益，也没有沿路线消耗蜡烛充能；未模拟不等于没有能量收益。不得把未选择的添火或计划中的续燃当成已执行，不按持有遗物承诺整个后续路线都有额外能量。",
+      limits: "正充能再次添火、充能上限与其他组合未验证，不猜充能结果或总能量。XBD F32仅2血，回血至23后仍败，没有添火后的受控胜负，不规定添火优先级或安全血线；全部选项保留，由大脑选择。",
+    },
+  };
 }
 
 /** LLYSRQQ35AVW F24/28/32/40/43/47, silent-0159/0145/0146/0020: two actions, not one whole-visit result. */
