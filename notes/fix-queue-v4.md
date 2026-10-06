@@ -502,3 +502,8 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 - [ ] **非阻塞机制模型提案**：学习者只读live定位`agent/src/reflex/card-model.ts:813`固定读取CalculatedDamage，`agent/src/reflex/turn-solver.ts:1995`及`:2004`沿用该damage。来源JQPT83P8KDSZ SILENT A10 F25第二次尝试T3、`ops/codex-ops/learner/20261006-094301.out`及原复盘，账本silent-0166（独立机制0169）。后空翻后六手CalculatedDamage为3；先出打击后五手变5，随后精确切击实际抵4挡扣1血，敌143→142，本前缀独立少算2伤。整线预测14、实际行动19加已结算毒3为22，其他6伤差额未隔离，不将全部差额或死亡归本项。
 - 学习者回报虽标新纯bug、0166 kind=bug-infra，内容涉及游戏机制，按学习协议交学习者依本角色证据实现与固定验证，运维只转录、不改模型。只确认原普通牌与本次六→五手证据，升级及其他手牌数规则未记录；不补公式或宣称修正能转胜。本局运行3cbc6955+dirty，行号按复盘时只读live f90ba577，不声称复原旧局源码；0166/0169保持原first_run及prior=unknown、observed，与0167打法、0168污染机制及完整前缀勘误独立。
+
+## 2026-10-06 10:19 游戏重开动作的结果判读（非阻塞工具缺口）
+
+- [ ] `ops/codex-ops-actions.sh:127`至`:130`：launch-game用curl传输成功当mod就绪，第二次状态读取的JSON解析错误经head只打印“mod answers: Traceback”，随后仍exit0。证据10:15 stall恢复TD1HVGS7H6LB SILENT A10/F17时，`bash ops/codex-ops-do.sh launch-game`真实返回0与该Traceback；游戏后来由独立mod-state和控制台动作确认恢复，不能借后来恢复掩盖动作的误报。交学习者用固定响应数据核对HTTP状态、空/坏JSON、ok/data/screen结构及真正就绪的区别，让返回值对应实际状态；不改游戏规则或需要Roy操作的桌面流程。
+- [ ] `ops/codex-ops-actions.sh:67`：mod-state将状态JSON机械截成20000字符后仍exit0，本次`bash ops/codex-ops-do.sh mod-state`战斗响应20001字节（含末换行），JSON解析在第20001列失败，SHA256 8843f3779018124ff861150c794dc8630d1e698003cfa22d32fff6bcc1eb00fe；响应前缀同局CARD_SELECTION/T6。交学习者保留可解析的完整状态或明确摘要/错误，不把中途切断的JSON冒充完整响应，固定数据覆盖小状态与超过20000字符的大状态。原日志、自动重启记录和失败返回历史保留；没有对应游戏知识或bug-infra id，不新建/冒标shipped，不提高游戏战斗预算。
