@@ -1,0 +1,7 @@
+# A10复盘与第40批完整补测记录
+
+- 2026-10-06 11:12 处理11:10 learner-done 20261006-104301/TD1HVGS7H6LB：学习者exit0，SILENT A10/F17败局复盘齐全；原正文及10:53:50勘误共15069字节/SHA256 8c2ded9e013c43e047bfbf904f8299dc897e05f7f6ae72de610ea67b04daf1d0逐字归档，保留13金原误记及40金勘误。原回报、stderr和事件流不改写。
+- 八项八行原账本6025字节/SHA256 122da5a1cc5a15c4b7933e7635807e712a1de613c0703f6b3cd8bc6be7f1740f：新增silent-0171（observed、first_run=TD1HVGS7H6LB、prior=unknown），七项support补证，无repeat；原首次证据、先验、状态及版本保持。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 171 item(s), 0 problem(s)。其他后台经验批次行留在工作区，不代为提交或改状态。
+- 学习者报告的新比较缺口位于agent/src/reflex/turn-solver.ts:3702及combat-plan.ts:4260，证据本局F17两次T3；非阻塞，按原分析转录入fix-queue-v4交学习者处理。内容涉及余毒机制，运维不改比较维度或补游戏规则；原线没有实打，不称修复即可获胜。旧本体/自爆、路线风险及其他机制补证沿原复盘，不登记老错重犯或增补策略。
+- learner-checks 20261006-102554-experience-update结案：固定发布ce8338fb50ff1f8c6b68d872d556b9a3818a4632/树62a597d8acbd11b70226dc84188fc639133c1125沙箱外完整tsc + vitest exit0，247文件2932通过、2跳过（10:58:43起683.24秒）；原日志ops/codex-ops/learner/20261006-102554-experience-update.fallback-62a597d8acbd11b70226dc84188fc639133c1125.checks.log，67530字节/SHA256 2881dcdc081dcd456cf00ed861982331e3877f61af0122a59a53b678324ec0f7，fallback_checks固定树rc0核对。源26ae625bb01700cc56b7d96084294109e0e97f0b→实际合入50014d54985a3a72ca7761476db8761cca3721a1及发布均为main/live祖先，唯一S1.exp40指向实际合入，main 1023项源码/测试blob同已测发布；17项原shipped历史及独立0166/S1.fix28保持。
+- 原merged=null、decision-log预检冲突和流程退出3及调度器原state=failed历史保留；补测追加fallback_checks而不重写原回报。本轮只归档原产出、转录队列与登记补测，不新增合并或重测。随后nice19运行paper_dataset.py --no-raw，结果另记。
