@@ -1,0 +1,61 @@
+局 87LCSDR5P3DL 用时 405.996
+Jev总/低信心 36 4
+选线/最优 29 Counter({'True': 28, 'False': 1})
+护栏 []
+其他字段 Counter({'answers': 36, 'jev_context': 29, 'jev_hints': 29, 'rollout': 29, 'rollout_best_chosen': 29, 'timing': 29, 'focus': 15, 'potions': 14, 'chosen_order': 9, 'route_review': 7, 'route_plan': 1})
+大脑 1 event/plan {'choice': '沉重石板: 从3张稀有牌中选择1张加入你的牌组。将1张受伤加入你的牌组。', 'reason': 'Choosing among three rares offers powerful long-term scaling; one Wound is a manageable draw tax and removal priority.'} Codex decided o2: Choosing among three rares offers powerful long-term scaling; one Wound is a manageable draw tax and removal priority. | Codex chose 沉重石板 (code's fallback order: 0, rank 5 of 6; not shown to Codex)
+大脑 1 selection/choose {'choice': '刀扇', 'reason': 'Fan of Knives supplies immediate area damage the starter deck lacks, improves early fights, and gives future Shiv cards lasting multi-target value.'} Codex decided card2: Fan of Knives supplies immediate area damage the starter deck lacks, improves early fights, and gives future Shiv cards lasting multi-target value. | Codex chose 刀扇 (code's fallback order: 0, rank 1 of 3; not shown to Codex)
+大脑 1 map/route-plan {'choice': 'route r1c3 普通战 → r2c3 问号 → r3c4 问号 → r4c4 普通战 → r5c4 普通战 → r6c3 休息 → r7c3 普通战 → r8c3 精英 → r9c2 宝箱 → r10c2 休息 → r11c2 问号 → r12c1 休息 → r13c0 商店 → r14c0 普通战 → r15c1 休息 → r16c3 Boss', 'reason': '四火一精英，先整备再挑战，商店删咒保启动。'} Codex planned: 四火一精英，先整备再挑战，商店删咒保启动。 | route plan: r1c3 普通战 → r2c3 问号 → r3c4 问号 → r4c4 普通战 → r5c4 普通战 → r6c3 休息 → r7c3 普通战 → r8c3 精英 → r9c2 宝箱 → r10c2 休息 → r11c2 问号 → r12c1 休息 → r13c0 商店 → r14c0 普通战 → r15c1 休息 → r16c3 Boss
+大脑 2 reward/card {'choice': '致命毒药', 'reason': 'Deadly Poison adds efficient single-target damage alongside Fan of Knives, supports future poison scaling, and has strong Act 1 results.'} Codex decided card2: Deadly Poison adds efficient single-target damage alongside Fan of Knives, supports future poison scaling, and has strong Act 1 results. | Codex chose 致命毒药 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+大脑 3 event/plan {'choice': '读完整本书: enchant 刀扇', 'reason': 'Fan of Knives gains valuable draw and improves future cycling. Thin the hand before playing it to preserve capacity.'} Codex decided o2:c13: Fan of Knives gains valuable draw and improves future cycling. Thin the hand before playing it to preserve capacity. | Codex chose 读完整本书: enchant 刀扇 (code's fallback order: 0, rank 1 of 6; not shown to Codex)
+喝药 4 1 {'potion': {'id': 'REGEN_POTION'}, 'turn': 1, 'from': 'line', 'hand': 'DEADLY_POISON,DEFEND_SILENT,STRIKE_SILENT,SURVIVOR', 'enemies': '0:SHRINKER_BEETLE'} continuing the Jev-chosen plan: potion 再生药水
+大脑 4 reward/card {'choice': '灵动步法', 'reason': 'Footwork strengthens six block cards, supports poison scaling, and offers lasting defense. Predator helps damage, but Footwork is the stronger foundation.'} Codex decided card0: Footwork strengthens six block cards, supports poison scaling, and offers lasting defense. Predator helps damage, but Footwork is the stronger foundation. | Codex chose 灵动步法 (Power, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)
+大脑 5 reward/card {'choice': '匕首雨', 'reason': 'Dagger Spray adds reliable early damage and immediate area coverage without Fan of Knives setup; the deck needs offense more than additional defense.'} Codex decided card0: Dagger Spray adds reliable early damage and immediate area coverage without Fan of Knives setup; the deck needs offense more than additional defense. | Codex chose 匕首雨 (Attack, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+大脑 6 reward/card {'choice': '毒雾', 'reason': 'Noxious Fumes supplies sustained poison scaling alongside Footwork, has strong supported outcomes, and reduces simulated boss remaining HP most.'} Codex decided card0: Noxious Fumes supplies sustained poison scaling alongside Footwork, has strong supported outcomes, and reduces simulated boss remaining HP most. | Codex chose 毒雾 (Power, 1E) (code's fallback order: 70, rank 1 of 4; not shown to Codex)
+大脑 7 rest/plan {'choice': '休息: 回复最大生命值的30%（21）。', 'reason': 'Heal to 44 HP before the forced elite. No upgrade compensates for this immediate survival risk; keep the earliest recovery route.'} Codex decided o0: Heal to 44 HP before the forced elite. No upgrade compensates for this immediate survival risk; keep the earliest recovery route. | Codex chose 休息 (HEAL) (code's fallback order: 10, rank 1 of 10; not shown to Codex)
+大脑 8 reward/card {'choice': '闪躲翻滚', 'reason': 'Dodge and Roll synergizes with Footwork and protects consecutive turns. At 2 HP before a forced elite, preventing chip damage is essential.'} Codex decided card1: Dodge and Roll synergizes with Footwork and protects consecutive turns. At 2 HP before a forced elite, preventing chip damage is essential. | Codex chose 闪躲翻滚 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+喝药 9 1 {'potion': {'id': 'EXPLOSIVE_AMPOULE'}, 'turn': 1, 'from': 'line', 'hand': 'DEADLY_POISON,DEFEND_SILENT,DEFEND_SILENT,FAN_OF_KNIVES', 'enemies': '0:BYGONE_EFFIGY'} continuing the Jev-chosen plan: potion 爆炸安瓿
+喝药 9 1 {'potion': {'id': 'POISON_POTION'}, 'target': {'id': 'BYGONE_EFFIGY'}, 'turn': 1, 'from': 'decision'} Jev chose to drink 毒药水 (confidence 0.21)
+战斗 0 2 进 56 敌 [('毛绒伏地虫', 'FUZZY_WURM_CRAWLER', 59)]
+轮 1 HP 56 56 需/尾 [(59, 0)] [(50, 0)] 挡 5 来袭 [[4]] 玩家势 [] 敌势 [[('WEAK_POWER', 1)]]
+轮 2 HP 56 56 需/尾 [(50, 0)] [(32, 0)] 挡 0 来袭 [[None]] 玩家势 [] 敌势 [[]]
+轮 3 HP 56 56 需/尾 [(32, 0)] [(32, 0)] 挡 15 来袭 [[13]] 玩家势 [] 敌势 [[('STRENGTH_POWER', 7)]]
+轮 4 HP 56 56 需/尾 [(32, 0)] [(26, 0)] 挡 10 来袭 [[13]] 玩家势 [] 敌势 [[('STRENGTH_POWER', 7)]]
+轮 5 HP 53 53 需/尾 [(26, 0)] [(11, 0)] 挡 0 来袭 [[None]] 玩家势 [] 敌势 [[('STRENGTH_POWER', 7), ('WEAK_POWER', 1)]]
+轮 6 HP 53 53 需/尾 [(11, 0)] [(5, 0)] 挡 13 来袭 [[20]] 玩家势 [] 敌势 [[('STRENGTH_POWER', 14)]]
+轮 7 HP 46 46 需/尾 [(5, 0)] [(5, 0)] 挡 0 来袭 [[20]] 玩家势 [] 敌势 [[('STRENGTH_POWER', 14)]]
+末快照 2026-10-06T22:10:34.043Z COMBAT 46
+战斗 1 4 进 46 敌 [('缩小甲虫', 'SHRINKER_BEETLE', 40)]
+轮 1 HP 46 46 需/尾 [(40, 0)] [(22, 0)] 挡 0 来袭 [[None]] 玩家势 [('REGEN_POWER', 5)] 敌势 [[]]
+轮 2 HP 51 51 需/尾 [(22, 0)] [(18, 0)] 挡 10 来袭 [[8]] 玩家势 [('REGEN_POWER', 4), ('SHRINK_POWER', -1)] 敌势 [[]]
+轮 3 HP 55 55 需/尾 [(18, 0)] [(12, 0)] 挡 10 来袭 [[10]] 玩家势 [('REGEN_POWER', 3), ('SHRINK_POWER', -1)] 敌势 [[('WEAK_POWER', 1)]]
+轮 4 HP 58 58 需/尾 [(12, 0)] [(4, 0)] 挡 0 来袭 [[8]] 玩家势 [('REGEN_POWER', 2), ('SHRINK_POWER', -1)] 敌势 [[('POISON_POWER', 5)]]
+末快照 2026-10-06T22:11:33.149Z COMBAT 58
+战斗 2 5 进 60 敌 [('树叶史莱姆（小）', 'LEAF_SLIME_S', 13), ('树枝史莱姆（中）', 'TWIG_SLIME_M', 28), ('树枝史莱姆（小）', 'TWIG_SLIME_S', 12)]
+轮 1 HP 60 60 需/尾 [(13, 0), (28, 0), (12, 0)] [(9, 0)] 挡 0 来袭 [[None]] 玩家势 [('FAN_OF_KNIVES_POWER', 1)] 敌势 [[('POISON_POWER', 5), ('WEAK_POWER', 1)]]
+轮 2 HP 60 60 需/尾 [(4, 0)] [(4, 0)] 挡 0 来袭 [[12]] 玩家势 [('FAN_OF_KNIVES_POWER', 1)] 敌势 [[('POISON_POWER', 4)]]
+末快照 2026-10-06T22:12:04.921Z COMBAT 60
+战斗 3 6 进 60 敌 [('缩小甲虫', 'SHRINKER_BEETLE', 40), ('毛绒伏地虫', 'FUZZY_WURM_CRAWLER', 58)]
+轮 1 HP 60 60 需/尾 [(40, 0), (58, 0)] [(28, 0), (58, 0)] 挡 5 来袭 [[None], [6]] 玩家势 [] 敌势 [[], []]
+轮 2 HP 59 59 需/尾 [(28, 0), (58, 0)] [(24, 0), (54, 0)] 挡 5 来袭 [[8], [None]] 玩家势 [('SHRINK_POWER', -1)] 敌势 [[('POISON_POWER', 5)], []]
+轮 3 HP 56 56 需/尾 [(19, 0), (54, 0)] [(15, 0), (52, 0)] 挡 13 来袭 [[14], [9]] 玩家势 [('SHRINK_POWER', -1)] 敌势 [[('POISON_POWER', 4)], [('STRENGTH_POWER', 7), ('WEAK_POWER', 1)]]
+轮 4 HP 46 46 需/尾 [(11, 0), (52, 0)] [(7, 0), (50, 0)] 挡 10 来袭 [[8], [9]] 玩家势 [('SHRINK_POWER', -1)] 敌势 [[('POISON_POWER', 3)], [('STRENGTH_POWER', 7), ('WEAK_POWER', 1)]]
+轮 5 HP 39 39 需/尾 [(4, 0), (50, 0)] [(4, 0), (50, 0)] 挡 15 来袭 [[14], [None]] 玩家势 [('SHRINK_POWER', -1), ('DEXTERITY_POWER', 2)] 敌势 [[('POISON_POWER', 2)], [('STRENGTH_POWER', 7)]]
+轮 6 HP 39 39 需/尾 [(2, 0), (50, 0)] [(44, 0)] 挡 7 来袭 [[20]] 玩家势 [('DEXTERITY_POWER', 2)] 敌势 [[('STRENGTH_POWER', 14), ('POISON_POWER', 5)]]
+轮 7 HP 26 26 需/尾 [(39, 0)] [(33, 0)] 挡 17 来袭 [[20]] 玩家势 [('DEXTERITY_POWER', 2)] 敌势 [[('STRENGTH_POWER', 14), ('POISON_POWER', 4)]]
+轮 8 HP 23 23 需/尾 [(29, 0)] [(15, 0)] 挡 0 来袭 [[None]] 玩家势 [('DEXTERITY_POWER', 2)] 敌势 [[('STRENGTH_POWER', 14), ('POISON_POWER', 3)]]
+轮 9 HP 23 23 需/尾 [(12, 0)] [(3, 0)] 挡 0 来袭 [[20]] 玩家势 [('DEXTERITY_POWER', 2)] 敌势 [[('STRENGTH_POWER', 21), ('POISON_POWER', 7), ('WEAK_POWER', 1)]]
+末快照 2026-10-06T22:13:47.911Z COMBAT 23
+战斗 4 8 进 44 敌 [('树枝史莱姆（中）', 'TWIG_SLIME_M', 29), ('飞蝇菌子', 'FLYCONID', 53)]
+轮 1 HP 44 44 需/尾 [(29, 0), (53, 0)] [(21, 0), (45, 0)] 挡 8 来袭 [[None], [9, None]] 玩家势 [('DEXTERITY_POWER', 2)] 敌势 [[], []]
+轮 2 HP 43 43 需/尾 [(21, 0), (45, 0)] [(18, 0), (45, 0)] 挡 10 来袭 [[9], [None]] 玩家势 [('DEXTERITY_POWER', 2), ('FRAIL_POWER', 2)] 敌势 [[('WEAK_POWER', 1)], [('POISON_POWER', 5)]]
+轮 3 HP 43 43 需/尾 [(18, 0), (40, 0)] [(18, 0), (34, 0)] 挡 5 来袭 [[18], [18]] 玩家势 [('DEXTERITY_POWER', 2), ('FRAIL_POWER', 1), ('VULNERABLE_POWER', 2), ('NOXIOUS_FUMES_POWER', 2)] 敌势 [[], [('POISON_POWER', 4)]]
+轮 4 HP 12 12 需/尾 [(18, 0), (30, 0)] [(6, 0), (30, 0)] 挡 10 来袭 [[None], [13, None]] 玩家势 [('DEXTERITY_POWER', 2), ('VULNERABLE_POWER', 1), ('NOXIOUS_FUMES_POWER', 2)] 敌势 [[('POISON_POWER', 2)], [('POISON_POWER', 5)]]
+轮 5 HP 9 9 需/尾 [(4, 0), (25, 0)] [(25, 0)] 挡 5 来袭 [[12]] 玩家势 [('DEXTERITY_POWER', 2), ('NOXIOUS_FUMES_POWER', 2), ('FRAIL_POWER', 2)] 敌势 [[('POISON_POWER', 6)]]
+轮 6 HP 2 2 需/尾 [(19, 0)] [(11, 0)] 挡 0 来袭 [[None]] 玩家势 [('DEXTERITY_POWER', 2), ('NOXIOUS_FUMES_POWER', 2), ('FRAIL_POWER', 1)] 敌势 [[('POISON_POWER', 12)]]
+末快照 2026-10-06T22:15:19.266Z COMBAT 2
+战斗 5 9 进 2 敌 [('旧日雕像', 'BYGONE_EFFIGY', 132)]
+轮 1 HP 2 2 需/尾 [(132, 0)] [(103, 0)] 挡 0 来袭 [[None]] 玩家势 [] 敌势 [[('SLOW_POWER', 1), ('POISON_POWER', 6)]]
+轮 2 HP 2 2 需/尾 [(97, 0)] [(90, 0)] 挡 5 来袭 [[None]] 玩家势 [('DEXTERITY_POWER', 2)] 敌势 [[('SLOW_POWER', 1), ('POISON_POWER', 5)]]
+轮 3 HP 2 2 需/尾 [(85, 0)] [(72, 0)] 挡 10 来袭 [[18]] 玩家势 [('DEXTERITY_POWER', 2), ('NOXIOUS_FUMES_POWER', 2)] 敌势 [[('SLOW_POWER', 1), ('POISON_POWER', 4), ('STRENGTH_POWER', 10), ('WEAK_POWER', 1)]]
+末快照 2026-10-06T22:16:04.556Z COMBAT 2

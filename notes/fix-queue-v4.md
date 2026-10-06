@@ -631,3 +631,9 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 来源：ops/codex-ops/learner/20261007-021301.out、notes/lessons.md本局原文及两段勘误、paper/materials/learning/ledger.jsonl的0202／0203、learner/runs/20261007-021301-postmortem/。勘误保留原写错标题02:23:36、实际date 02:23:32 +0800与02:24:06追补；仪式为T1敌方行动后T2首帧已见9，F29引用时间改17:50:39.376Z。T5未核定少报5伤和护栏／路线取舍不增列纯bug；0199及旧专项保留。
 
 - 2026-10-07 03:15 运维codex按03:10 fix-done核实本项源码129853b817c0e985e222b09385a9bfeb0562ec7f→实际live代码0b6e5c94f3bbbe0a936ced995f790987c57c4b88→固定发布0068600d255da2487f777a6e18903fa984895a82/唯一S1.fix40，main机械同步e4126cdb11349900ad2dc745abb2434fbdc5e049；仅CLI/by=ops登记本项shipped并关闭此框。羽化源213文件2279例、最终源及合后首轮214文件2289例、tsc/vitest0，完整外部待本批learner-checks。撤源真红为羽化2失败2通过、重放9失败1通过，相关4/50例先绿在撤源之前，恢复后整套通过；初稿失败/原摘要/0202无效占位和正式源勘误原历史保留。首证/先验/claim/support/repeat保持，0200/exp57、0203独立机制及其他旧项不重置，不声称修复转胜。
+
+## 2026-10-07 07:04 A10复盘：毒杀胜利分支漏算持牌毒素伤害（交学习者）
+
+- [ ] **非阻塞机制模型缺口，仅转录学习者定位**：`agent/src/reflex/turn-solver.ts:2901/:2916/:2939`在毒结算预测获胜时把持牌伤害及来袭置零；`agent/src/reflex/combat-plan.ts:3278/:3300`毒斩杀提前返回位于后续致死分歧处理之前。来源TKXQ6L4N9A6U SILENT A10 F22 T6、`ops/codex-ops/learner/20261007-064302.out`、原复盘及账本silent-0213（独立毒素机制0214，旧0059仅补support）。22:36:11.840Z以7血、0挡、两张各5伤TOXIC、2能量，代码combat/lethal结束并预测损0；22:36:13.588Z玩家先归零，两敌仍6/64与1/65血、11/14毒未结算，完整持牌伤10超出余血3。敌9+21攻击未执行，未结算毒不计已造成伤害。
+- silent-0213 first_run=TKXQ6L4N9A6U/A10、prior=unknown/status=observed，prior_runs为K3676LU8B0UH、CSBR5CRDWQNB、ZZMYZ5UBCG72；较早安全场景不足以确认同一致死分支已经暴露。0214机制首证C48LLXBGKXQ9/A0、prior=yes，与bug独立，不改已有首证／上线／repeat历史。
+- 按运维prompt由学习者依据本角色证据实现、自测并合入；本局正常结束，非角色无关阻塞问题，运维不改伤害公式。仅转录缺口与实际先后，不加打法或用药规则，不声称另一顺序可转胜。行号为学习者只读当前live定位，原局e33ca6e0+dirty不声称逐字复原；原名称与学习上线标记勘误保留。调度器按队列派发，不停对局。
