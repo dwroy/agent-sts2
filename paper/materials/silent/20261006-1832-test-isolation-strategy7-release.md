@@ -116,3 +116,5 @@
   }
 ]
 ```
+
+- 2026-10-06 18:37 运维codex完成18:32 fix-done 20261006-175455-fix-batch登记：测试隔离38e95b24→ae8008c9/59c9a75a，无行为版本/新bug-infra；原蜡烛9a865dbe→633f3312→固定fc17d02d464c803162f551f08dba97a09d91f7c7/树63bbe08bbad921c549443c51fff4bd42fb93a86e/唯一S1.strategy7，产出归档71ede893f546be5b09df5f51206d5a4f80eb0265、main机械同步b7570e033933af564b6df71cac0b7d39f1432904，全部1038项已测源码/测试blob一致、七项df08已提交刷新及其余2217项main最新blob保持。纯测试源/合后tsc0/203文件2195例，含策略源/合后tsc0/204文件2203例；原红绿、初稿及exp45/策略/exp46失败和回退历史完整保留，完整外部待本批learner-checks。CLI/by=ops仅0186 shipped/策略7，首证/先验/claim/evidence/repeat/旧状态历史保持，仅关闭同一测试输入隔离队列；第46批620513af已在运行经验181302分支，当前不合/不派/不冒记exp46或其shipped。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 189 item(s), 0 problem(s)，后台台账/notes与对局继续，无重复live合入、运维规则或论文刷新。详情paper/materials/silent/20261006-1832-test-isolation-strategy7-release.md。

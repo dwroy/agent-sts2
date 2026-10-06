@@ -554,7 +554,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 最高优先：S1.exp45 完整补测 boss-clock 断言失败（2026-10-06 17:45）
 
-- **未修，根因待核，非阻塞测试/数据隔离问题**：20261006-170126-experience-update 固定发布56c64ff8c32d6ef1cc0d2febb8252229f7e69133/树a6beac224eb8405df7466b457d08658e67bd54c3，完整tsc+vitest exit1，253文件3001例通过、1文件1例失败、2跳过；agent/tests/boss-clock.test.ts:191 的 ERPHN3SRCRC3 F14 既有铁甲夹具断言 >=9（<=10），实得8。源经验只改静默experience.json；相关源码/测试/铁甲两张统计与上一已测4087fb8c相同，common WATERFALL_GIANT子树亦相同；七项其他自动刷新保持，未证实经验回归。本轮主目录单跑一次33例通过不覆盖原完整失败、不冒报已修。证据及原字节日志见 paper/materials/silent/20261006-1739-experience45-full-check-failure.md、paper/materials/silent/20261006-1739-experience45-full-check.txt，SHA256 bff90c65f22978128219e6441f3678b09e821bf41cd05fb776d4ae869c002546。
+- [x] **已修：历史测试输入隔离，以下原失败证据保留**：20261006-170126-experience-update 固定发布56c64ff8c32d6ef1cc0d2febb8252229f7e69133/树a6beac224eb8405df7466b457d08658e67bd54c3，完整tsc+vitest exit1，253文件3001例通过、1文件1例失败、2跳过；agent/tests/boss-clock.test.ts:191 的 ERPHN3SRCRC3 F14 既有铁甲夹具断言 >=9（<=10），实得8。源经验只改静默experience.json；相关源码/测试/铁甲两张统计与上一已测4087fb8c相同，common WATERFALL_GIANT子树亦相同；七项其他自动刷新保持，未证实经验回归。本轮主目录单跑一次33例通过不覆盖原完整失败、不冒报已修。证据及原字节日志见 paper/materials/silent/20261006-1739-experience45-full-check-failure.md、paper/materials/silent/20261006-1739-experience45-full-check.txt，SHA256 bff90c65f22978128219e6441f3678b09e821bf41cd05fb776d4ae869c002546。
 - 运维选择**保留上线、优先派修复**。先对固定发布复现并定位实际加载数据/环境/缓存/测试隔离差异；boss-clock.ts:199 和 monster-db.ts:174 会读取自动刷新表，固定板面未必固定全部输入。若仅夹具问题则据原测试证据固定输入，保持原断言含义；若是生产机制缺陷则按学习协议、用对应角色对局证据，不把铁甲测试内容灌入静默知识。不得把9改8、放宽/删断言、增加排除、改校准或倒退刷新数据来过测；必须保留红绿及原失败历史，源/合后固定沙箱通过、调度器再补完整套件；未定位明确未修。当前codex-dev为策略批次172732占用，不抢工作树；下一可派fix-batch先做本项。无对应新增bug-infra，不新建或冒标shipped。
 
 ### 同一boss-clock基线失败追加证据／待合策略（2026-10-06 17:54）
@@ -563,3 +563,5 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - 当前codex-dev在干净源分支strategy-proposal-20261006-172733；**保留这个待合源码分支**。下一修复批次先处理基线测试问题；测试修复和待合策略0186必须分别登记，不能默合提案漏版本或把已回退6b2a当发布。0186保持proposed；基础测试修复及合后检查通过后，再按live流程合入已提交策略、登记行为版本，并由运维根据实际合入CLI shipped。无须另设策略审核，不改游戏机制/校准/阈值来消除旧测试失败，不覆盖刷新或后台notes。
 
 - 2026-10-06 18:15 同一基线阻塞追加：经验第46批20261006-174301-experience-update源620513afddeae6cf3cfc14cf0adabce4be7f9e40只改静默experience.json，源tsc0/203文件2194例；尝试a6e7c05d合后两轮均202文件2183例中2182通过1失败，boss-clock.test.ts:191 >=9实8，回退3599ab0a后同单例rc1仍现。未发布S1.exp46，11项保持学习者proposed、旧上线历史保留。既有20261006-175455-fix-batch/PID3607978读取为running，不另派或抢工作树；基线检查修复完成后续办固定源及独立0186策略，先核是否已携带，实际合后通过才登记。原字节/摘要见paper/materials/silent/20261006-1811-experience46-blocked.md及同名目录，不放宽断言/排除/知识数据或预算来过测。
+
+- 2026-10-06 18:37 运维codex按18:32 fix-done关闭本历史测试隔离项：源38e95b24→实际ae8008c9→独立发布59c9a75a，源/合后tsc0/203文件2195例；固定3599输入撤源2失败/恢复34通过，没有改生产时钟/阈值/校准或知识生成器。旧状态“未修，根因待核”及17:39完整失败、策略/经验回退、初稿错误历史沿本节与归档保持，当前自测结案不覆盖原失败，完整外部待本批learner-checks。原蜡烛提案9a865dbe另行实际合入633f3312→fc17d02d464c803162f551f08dba97a09d91f7c7/S1.strategy7、合后204文件2203例，CLI仅0186 shipped；第46批620513af已在运行中的181302经验源分支，留该批合后通过才单独登记版本和shipped，不抢工作树或重复派发。详情paper/materials/silent/20261006-1832-test-isolation-strategy7-release.md。
