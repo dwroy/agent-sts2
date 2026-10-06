@@ -34,3 +34,9 @@
   }
 }
 ```
+
+- 2026-10-06 10:58 上线登记完成：原第40节和17项proposed归档d967edbc168426395f0e9284e5435d427da97119，main同步9f54642309922358771dbd0d8036ff7ccc1a64d2，全部1023项已测源码/测试blob相同，其他2145项main最新blob及双方日志保持。17项经CLI/by=ops追加shipped/S1.exp40：silent-0170, silent-0005, silent-0006, silent-0019, silent-0020, silent-0021, silent-0007, silent-0013, silent-0027, silent-0046, silent-0030, silent-0012, silent-0134, silent-0011, silent-0017, silent-0064, silent-0080；原first_run/prior/claim/evidence/repeat与历史保持，0166 shipped/S1.fix28、0009原状态及其他未纳入项未改；0170最早1NZ8FE5F34R9 A4及prior=yes保持。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 171 item(s), 0 problem(s)。随后paper --no-raw刷新论文曲线；完整外部检查留后续事件。
+
+- 2026-10-06 11:03 论文表与学习曲线刷新：nice19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-06T02:59:01.059Z，五项一致性通过、runs.jsonl决策计数差异为空、key scan CLEAN，行数{"commits.csv": 2812, "decisions_by_label.csv": 17867, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 535}。原回报归档d967edbc168426395f0e9284e5435d427da97119，固定发布机械同步main 9f54642309922358771dbd0d8036ff7ccc1a64d2，17项shipped登记c1fd9898e28067caf7b890f91df10e421a37f58e；本轮仅实际生成变化的12项表及自身记录提交。沙箱外完整测试仍待调度器本批learner-checks，不冒用其他批次通过结果。
+
+- 2026-10-06 11:12 11:10 learner-checks结案：20261006-102554-experience-update固定发布ce8338fb50ff1f8c6b68d872d556b9a3818a4632/树62a597d8acbd11b70226dc84188fc639133c1125完整外部tsc + vitest exit0，247文件2932通过、2跳过（10:58:43起683.24秒）；原日志ops/codex-ops/learner/20261006-102554-experience-update.fallback-62a597d8acbd11b70226dc84188fc639133c1125.checks.log，67530字节/SHA256 2881dcdc081dcd456cf00ed861982331e3877f61af0122a59a53b678324ec0f7。fallback_checks固定树rc0、唯一S1.exp40和17项原shipped历史核对；原merged=null/预检冲突/流程退出3及调度器failed历史保留。只追加补测记录，不新增合并或测试；详情paper/materials/silent/20261006-1110-a10-postmortem-and-exp40-checks.md。
