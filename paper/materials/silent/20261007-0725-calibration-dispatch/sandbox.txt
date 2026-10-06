@@ -1,0 +1,48 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-silent-boss-dispatch/agent
+
+ ❯ tests/rollout-live.test.ts (15 tests | 1 failed) 219049ms
+     × the real clock: every logged board's rollout stays inside the budget 24961ms
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 56ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > the real clock: every logged board's rollout stays inside the budget
+AssertionError: qug1-f23-t5-replay: expected 2090 to be less than or equal to 1800
+ ❯ tests/rollout-live.test.ts:249:40
+    247|       // The clock is checked between samples, so the last sample may …
+    248|       // takes 100–200 ms (overruns of 1–110 ms were logged at load 15…
+    249|       expect(Number(log!["ms"]), name).toBeLessThanOrEqual(ROLLOUT_BUD…
+       |                                        ^
+    250|     }
+    251|   }, 120_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 212 passed (214)
+      Tests  2 failed | 2286 passed (2288)
+   Start at  07:35:16
+   Duration  338.22s (transform 12.54s, setup 18.49s, import 46.06s, tests 1238.96s, environment 32ms)
+
