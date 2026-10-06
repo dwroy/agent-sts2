@@ -375,6 +375,8 @@ export interface PlayerSim {
   shuriken?: { every: number; strength: number; count: number };
   /** Daughter of the Wind: block per Attack play, not per hit (CSBR5CRDWQNB F33 attempt 6 T1/T2/T4). */
   daughterWindBlock?: number;
+  /** Silent L704TLETMZBM F48 T3/T4: Block per explicit discard; end-turn discard is unverified. */
+  toughBandagesBlock?: number;
   /**
    * Music Box (「将你每回合打出的第一张攻击牌的一张虚无复制品加入你的手牌」): the first Attack card played in a turn
    * adds an Ethereal copy of itself to the hand (after its own effects, draws included). `count`: the Attacks already
@@ -1117,6 +1119,8 @@ interface Sim {
   rage: number;
   /** Soulbound cards Chains of Binding locked this line: out of the sim's hand, still in the game's (CARD_CONDITIONS' hand checks). */
   locked: CardModel[];
+  /** Guaranteed discards with an unresolved identity; no continuation is allowed after them. */
+  unresolvedDiscards?: number;
   /** A card was put on top of the draw pile this turn (Headbutt): the next draw would take it back. */
   topPlaced: boolean;
   /** Vigor not yet spent: added to the next Attack's first hit. */
@@ -1287,6 +1291,32 @@ function hiddenDaggerWays(sim: Sim, card: CardModel): CardModel[] {
   }
   // Short hands and absent Shiv metadata have no verified continuation; still offer the card itself.
   return ways.length > 0 ? ways : [card];
+}
+
+/** Resolve a verified single discard after drawing, including each observed Acrobatics replay. */
+function bandagesDiscard(sim: Sim, selection: string | undefined, player: PlayerSim): string | null {
+  const pool = [...sim.hand, ...sim.held, ...sim.locked].filter((entry) => entry.type !== "Potion");
+  const picked = selection === undefined ? undefined : pool.find((entry) => entry.key === selection || entry.cardId === selection);
+  if (picked) {
+    sim.hand = sim.hand.filter((entry) => entry !== picked);
+    sim.held = sim.held.filter((entry) => entry !== picked);
+    sim.locked = sim.locked.filter((entry) => entry !== picked);
+    gainBlock(sim, player.toughBandagesBlock ?? 0, player);
+    return picked.cardId;
+  }
+  if (pool.length + sim.drawnInHand - (sim.unresolvedDiscards ?? 0) <= 0) return null;
+  // A discard is available, but its identity is unknown. Do not plan to play those cards afterwards.
+  sim.pendingSelection = true;
+  sim.unknown = [...sim.unknown, "弃牌选择未确定"];
+  if (sim.drawnInHand > 0) {
+    sim.drawnInHand -= 1;
+    gainBlock(sim, player.toughBandagesBlock ?? 0, player);
+  } else if (selection === undefined) {
+    // Keep held penalties conservative without inventing which known card Jev will discard.
+    gainBlock(sim, player.toughBandagesBlock ?? 0, player);
+    sim.unresolvedDiscards = (sim.unresolvedDiscards ?? 0) + 1;
+  }
+  return null;
 }
 
 /**
@@ -1604,6 +1634,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   let redraw = 0;
   if (card.discardsHand) {
     discarded.push(...[...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").map((entry) => entry.cardId));
+    // The played card and potion slots are not discarded; unknown drawn cards are actual hand slots.
+    if ((player.toughBandagesBlock ?? 0) > 0) gainBlock(next, (discarded.length + next.drawnInHand) * player.toughBandagesBlock!, player);
     if (card.drawDiscardedHand) redraw = discarded.length + next.drawnInHand;
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
@@ -1645,6 +1677,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(card) : card, target, player, cost);
+    if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw) {
+      const id = bandagesDiscard(next, card.discards?.[play], player);
+      if (id !== null) discarded.push(id);
+    }
     if (card.type === "Attack") attackRelics(next, player);
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
     if (card.type === "Skill" && (player.letterOpener || player.tuningFork)) skillRelics(next, player);
@@ -2185,6 +2221,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // Do not guess how repeated Wave plays stack; an already observed larger amount remains a fact.
   next.corrosiveWave = Math.max(next.corrosiveWave, card.corrosiveWave ?? 0);
   if (card.draw > 0) drawExpected(next, card.draw, player);
+  else if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw && (card.discardDraw ?? 0) > 0) drawExpected(next, card.discardDraw!, player);
   // Damage to us (Foul Potion, Galvanic's 「受到6点伤害」): like an enemy hit, block first, Intangible caps it at 1, the
   // rest is HP lost. Last, as the card text puts it: a Power played under Galvanic is up when its 6 lands (8L29N792FA45
   // F37 T2: Rupture+ played at block 0, its own 6 gave +2 Strength).
@@ -3431,6 +3468,7 @@ function replay(input: SolverInput, weights: Weights, steps: Step[]): Plan | nul
     const card = sim.hand.find((entry) => entry.index === step.cardIndex);
     if (!card) return null;
     let chosen = card;
+    if ((input.player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw && step.discards) chosen = { ...card, discards: step.discards };
     if (hiddenDaggers(card) && step.discards) {
       const pool = [...sim.hand, ...sim.held, ...sim.locked].filter((entry) => entry.key !== card.key && entry.type !== "Potion");
       const discards: string[] = [];
