@@ -449,6 +449,8 @@ export interface PlayerSim {
   infernoCopies?: number;
   /** Unmovable up and not yet used this turn: shown Block values are doubled, only the first one is real. */
   unmovableArmed?: boolean;
+  /** The once-only doubled preview was observed on Pael's Legion; new Dexterity/stacking is unverified. */
+  paelsLegionPreview?: boolean;
   /** Shadowmeld already up: hand card Block is already doubled in the mod's values. */
   shadowmeldActive?: boolean;
   /** Current CORROSIVE_WAVE_POWER from the observed player state; expires this turn. */
@@ -3287,8 +3289,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       weakApplied: sim.weakApplied,
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
-      unknownCards: input.player.tungstenRod && !rodVerified && !winsFight
-        ? [...sim.unknown, "钨合金棍（自身失血或其他减损交互未验证）"] : sim.unknown,
+      unknownCards: [
+        ...sim.unknown,
+        ...(input.player.tungstenRod && !rodVerified && !winsFight ? ["钨合金棍（自身失血或其他减损交互未验证）"] : []),
+        ...(input.player.paelsLegionPreview && sim.tempDex !== 0 ? ["佩尔的士兵（方案内新增敏捷组合未验证）"] : []),
+      ],
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
