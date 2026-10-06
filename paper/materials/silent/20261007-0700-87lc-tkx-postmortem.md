@@ -9,3 +9,5 @@
 - 87LC实际10次大脑、TKX22次均Codex；173/367条decisions、179/378帧、2/3条run-plans，TKX31条大脑决策另含9条计划续步。用时6分45.996秒／16分17.271秒。DeepSeek及ds_*为兼容字段。替代整场、完整原线执行比例、87LC F8 T3输出差2、胖地精中间帧、boss时钟／未抵达boss实打／Jev缓存等依原文留未记录，不据缺项另增纯bug。原局e33ca6e0+dirty不声称复原；S1.exp63及0211首证更正、既有上线／失败历史和并行知识／台账／成本／收件箱刷新保持。
 
 随后刷新paper_dataset.py --no-raw并登记结果；对局继续。
+
+- 2026-10-07 07:09 运维codex完成07:00复盘批次20261007-064302/87LCSDR5P3DL,TKXQ6L4N9A6U：双局原文22662字节及两次名称／学习上线标记勘误、回报／stderr／证据原件和14行台账归档26f1a79257b8ac0ad6d18c3024c1873f0136c06b；2add／12update，9个旧条目仅补support，无repeat，首证／先验／旧状态／版本／证据／历史保持；新非阻塞bug0213毒斩杀漏算持牌毒素已排队交学习者、开发收件箱/Roy已报，独立机制0214及其他打法机制由学习者处理，尚未修复，不声称整局转胜。87LC A10 F9雕像正常阵亡；TKX A10 F22异螨T6留两张各5伤毒素，以7血0挡错误结束、先死亡而毒未结算，均无SL；未记录项及勘误历史保持，S1.exp63不倒算两局版本，旧上线／失败历史和并行产出保持。nice19 paper_dataset.py --no-raw exit0，切点2026-10-06T23:04:41.714Z，五项一致性通过、决策计数差异为空、key scan CLEAN，行数{"commits.csv": 3165, "decisions_by_label.csv": 18894, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 568}；仅12项本轮生成变化及自身记录提交，/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 215 item(s), 0 problem(s)；详情paper/materials/silent/20261007-0700-87lc-tkx-postmortem.md。只改记录和数据，后台复盘／台账／知识／成本／收件箱刷新保留，对局照常。
