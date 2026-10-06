@@ -1,0 +1,52 @@
+{
+ "id": "silent-0197",
+ "ts": "2026-10-07T00:58:35+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "战内生成牌的即时评分没有检查华丽收场GRAND_FINALE的空抽牌堆条件，按牌面群伤直接给高分并让代码选择不能打的牌。应把已观察的使用条件接入生成牌评分；已上线的收场机制文本不等于这个入口已覆盖，不声称修正会赢整场。",
+ "evidence": [
+  {
+   "run": "Y6GM2CHWJBEY",
+   "floor": 17,
+   "turn": 1,
+   "role": "support",
+   "note": "第2次尝试15:00:33.366Z代码以收场180分对连续反弹12分直接选择；按字节偏移6301193619附近抽取状态，抽牌堆非空，入手后playable=false，不能兑现群伤。",
+   "added": "2026-10-07T00:58:35+08:00"
+  },
+  {
+   "run": "VPW8YH7A4QFM",
+   "floor": 39,
+   "turn": 1,
+   "role": "support",
+   "note": "16:17:39.441Z攻击药水选择题代码以收场60分胜猎杀者15分；心灵震慑显示堆33张，收场入手明确不可打，首轮无抽牌、该生成牌贡献0伤。当前live884c9f33 selection.ts:205调用thisTurnScore，card-model.ts:1492/1495没有收场条件，pick.ts:134以分差自动选择。",
+   "added": "2026-10-07T00:58:35+08:00"
+  }
+ ],
+ "first_run": "Y6GM2CHWJBEY",
+ "prior": "no",
+ "prior_runs": [
+  "Y6GM2CHWJBEY"
+ ],
+ "prior_note": "按67个更早静默局号筛选战内收场选择，最早A0 Y6GM第2次T1已在非空堆时误选；这是学习前已有的同入口错误。旧复盘及账本0110/0111只记录收场机制／构筑，未定位生成牌评分入口。",
+ "status": "observed",
+ "where": {
+  "lessons": [
+   "VPW8YH7A4QFM"
+  ]
+ },
+ "note": "新识别纯bug，first_run回溯A0；notes/fix-queue.md及fix-queue-v4.md无同项。开局3caa860b+dirty，行号引用当前只读live884c9f33。没有代码改动或替代选牌的受控胜局，不记学习后repeat。",
+ "asc": 0,
+ "history": [
+  {
+   "ts": "2026-10-07T00:58:35+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "新识别纯bug，first_run回溯A0；notes/fix-queue.md及fix-queue-v4.md无同项。开局3caa860b+dirty，行号引用当前只读live884c9f33。没有代码改动或替代选牌的受控胜局，不记学习后repeat。"
+ ]
+}

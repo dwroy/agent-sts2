@@ -24,6 +24,7 @@ import type { BrainDecider } from "../brain/types.js";
 import { deciderLabel, engineLabel } from "../brain/labels.js";
 import { moveModel } from "../knowledge/move-model.js";
 import { facingFightOf, fightKind, leastLossFactsOf, noteFacing, noteLizardTailEndTurn, plannerTiming, trackLizardTail } from "../reflex/combat-plan.js";
+import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
 import { computeMemoOptions } from "../sim/compute-memo.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger, type RunPlanTrigger } from "../memory/run-plan.js";
@@ -626,6 +627,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           if (replay.routePlan && replay.routePlan.runId === runId) screenMemory.routePlan = replay.routePlan;
           if (replay.lastMap && !screenMemory.lastMap) screenMemory.lastMap = replay.lastMap;
           if (replay.lizardTail && replay.lizardTail.runId === runId) screenMemory.lizardTail = replay.lizardTail;
+          if (replay.permafrost) screenMemory.permafrost = replay.permafrost;
           // The turn's first logged frame: a card exhausted before the restart still counts this turn (Evil Eye).
           if (replay.turnStartExhaust && !screenMemory.turnStartExhaust) screenMemory.turnStartExhaust = replay.turnStartExhaust;
           // ... and our HP at it: HP lost before the restart still counts this turn (CARD_CONDITIONS, Spite).
@@ -665,6 +667,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come. The state that
     // marks it is logged (an enemy-turn read is not otherwise), so the journal replay after a restart reads it too.
     const tailSeen = trackLizardTail(screenMemory, state);
+    if (observePermafrost(screenMemory, state)) observedStates.touched(state, observedFp, observedTs);
     if (tailSeen) {
       observedStates.touched(state, observedFp, observedTs);
       onEvent({ type: "note", message: `Lizard Tail seen to fire at F${state.run?.floor ?? "?"} T${state.turn ?? "?"} (${tailSeen}): no longer counted as a revive this run` });
@@ -1719,6 +1722,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     rememberChosenNode(screenMemory, state, resolved.intent);
     // Surrounded: every targeted action that went through turns us (the per-card fallback's plays too).
     noteFacing(screenMemory, state, resolved.intent);
+    notePermafrostPlay(screenMemory, state, resolved.intent, knowledge);
     // Lizard Tail: a fight won before our next turn after this end of turn was won in the enemy turn.
     noteLizardTailEndTurn(screenMemory, state, resolved.intent);
     // The potion or card a card choice that follows comes from (its offer may be free this turn).
@@ -1781,6 +1785,7 @@ export function resetFightMemory(screenMemory: ScreenMemory): void {
   screenMemory.facing = undefined;
   screenMemory.facingFight = undefined;
   screenMemory.fightCards = undefined;
+  screenMemory.permafrost = undefined;
   screenMemory.planBeforeSelection = undefined;
   screenMemory.gambleDiscards = undefined;
   screenMemory.potionTake = undefined;
