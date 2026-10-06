@@ -92,7 +92,7 @@ export interface RouteRecord {
   act: number;
   floor: number | null;
   hpPct: number;
-  steps: { row: number; col: number; type: string; hpOnArrival: number }[];
+  steps: { row: number; col: number; type: string; hpOnArrival: number | null }[];
   why: string | null;
 }
 
@@ -736,7 +736,7 @@ export class RunJournal {
     const next = left[0];
     return (
       `本幕进度（按 F${plan.floor ?? "?"} 的路线）: 已走 ${done.length}/${plan.steps.length}${done.length > 0 ? ` [${done.map((step) => ROOM_SHORT[step.type] ?? step.type).join("")}]` : ""}${off}` +
-      (next ? ` | 下一步 ${ROOM_SHORT[next.type] ?? next.type}（预计 HP ${Math.round(next.hpOnArrival * 100)}%）` : "") +
+      (next ? ` | 下一步 ${ROOM_SHORT[next.type] ?? next.type}（预计 HP ${next.hpOnArrival === null ? "未知（前场 Boss 损血未建模）" : `${Math.round(next.hpOnArrival * 100)}%`}）` : "") +
       ` | 剩余 ${left.length}: ${routeText(left)}`
     );
   }

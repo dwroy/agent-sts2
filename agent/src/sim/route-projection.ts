@@ -180,27 +180,30 @@ export function roomCost(type: string, model: RoomCostModel, which: "median" | "
 
 const isRest = (type: string): boolean => type === "RestSite" || type === "Rest";
 
-/** HP after a room entered with `hp` (absolute) at max HP `max`. Rests heal (with the rest relics), but never raise the dead. */
-export function hpAfterRoom(type: string, hp: number, model: RoomCostModel, which: "median" | "p75", max = model.maxHp): number {
+/** HP after a room; null after an unmodelled boss loss. Rests never raise the dead or resolve unknown HP. */
+export function hpAfterRoom(type: string, hp: number | null, model: RoomCostModel, which: "median" | "p75", max = model.maxHp): number | null {
+  if (hp === null) return null;
   if (hp <= 0) return hp;
+  // silent-0163: JMH5C51RLN4E F48 T13 left 8/60 for F49, not the projected entry 60/60.
+  if (type === "Boss") return null;
   if (isRest(type)) return restedHp(hp, max, model.rest).hp;
   return hp - roomCost(type, model, which);
 }
 
 export interface PathProjection {
-  /** HP on arrival at each step, at median room costs (<= 0: ran out before this step). */
-  arrival: number[];
+  /** HP on arrival at each step (null: a preceding boss loss is unmodelled; <= 0: ran out). */
+  arrival: (number | null)[];
   /**
    * HP after each room if that one room costs its p75 (every room before it at the median): the risk of
    * a single bad fight. p75 is not compounded over the path (a sum of p75s is far rarer than p75).
    */
-  riskAfter: number[];
+  riskAfter: (number | null)[];
   /** Step index (0-based) of the room at which the median projection runs out, else null. */
   runsOut: number | null;
   /** The room whose p75 cost leaves the least HP (fights and "?" rooms only), else null. */
   riskLow: { hp: number; step: number } | null;
-  /** HP after the last room (median). */
-  end: number;
+  /** HP after the last room (median), or null when a boss loss is unmodelled. */
+  end: number | null;
   /** Max HP on arrival at each step and after the last room: the start's, raised by rests with Stone Humidifier. */
   maxArrival: number[];
   maxEnd: number;
@@ -208,24 +211,24 @@ export interface PathProjection {
 
 /** `startMax`: max HP at the start (an option that changes it); the model's by default. */
 export function projectPath(types: string[], startHp: number, model: RoomCostModel, startMax = model.maxHp): PathProjection {
-  const arrival: number[] = [];
-  const riskAfter: number[] = [];
+  const arrival: (number | null)[] = [];
+  const riskAfter: (number | null)[] = [];
   const maxArrival: number[] = [];
-  let hp = startHp;
+  let hp: number | null = startHp;
   let max = startMax;
   let runsOut: number | null = null;
   let riskLow: { hp: number; step: number } | null = null;
   types.forEach((type, step) => {
     // The boss fight starts with the boss-start heal (Pantograph): the HP the path reaches the boss with.
-    if (type === "Boss") hp = bossEntryHp(hp, max, model.bossStartHeal ?? 0);
+    if (type === "Boss" && hp !== null) hp = bossEntryHp(hp, max, model.bossStartHeal ?? 0);
     arrival.push(hp);
     maxArrival.push(max);
     const after = hpAfterRoom(type, hp, model, "median", max);
-    const risky = hp > 0 ? hpAfterRoom(type, hp, model, "p75", max) : hp;
+    const risky = hpAfterRoom(type, hp, model, "p75", max);
     riskAfter.push(risky);
-    if (hp > 0 && roomCost(type, model, "p75") > 0 && (riskLow === null || risky < riskLow.hp)) riskLow = { hp: risky, step };
-    if (runsOut === null && hp > 0 && after <= 0) runsOut = step;
-    if (hp > 0 && isRest(type)) max = restedHp(hp, max, model.rest).max;
+    if (hp !== null && hp > 0 && risky !== null && roomCost(type, model, "p75") > 0 && (riskLow === null || risky < riskLow.hp)) riskLow = { hp: risky, step };
+    if (runsOut === null && hp !== null && hp > 0 && after !== null && after <= 0) runsOut = step;
+    if (hp !== null && hp > 0 && isRest(type)) max = restedHp(hp, max, model.rest).max;
     hp = after;
   });
   return { arrival, riskAfter, runsOut, riskLow, end: hp, maxArrival, maxEnd: max };
