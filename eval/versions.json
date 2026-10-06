@@ -978,6 +978,12 @@
       "family": "Silent",
       "commit": "da3250d3646a0530b0febe14e8a1a18766567e76",
       "source": "2026-10-07 02:04 Codex学习者纯bug自测后上线：fix-queue-v4 2026-10-06 11:33永冻首次能力漏7挡；源码157d635cd9e9880d7396e76a15594c6e7f0b0253→实际live代码da3250d3646a0530b0febe14e8a1a18766567e76，eval S1.fix39。证据25226ZFLNR1J SILENT A10 F29 T1（首次灵动步法0→7挡）及PJ2LL9KU7FHD SILENT A10 F17第3次T4（幻影0→7挡，敏捷药水后两防御各7，合21抵21、57血不变）；账本bug-infra silent-0172、机制silent-0173。0172首证25226/A10、prior=no保持；0173首证10GPK5XGHCK3/A3、prior=yes及既有shipped/S1.exp42不改。只补已观察首次能力7挡，ScreenMemory及日志回放跟踪已用/可用/未知，成功SL重置；跨回合rollout携带剩余触发，续行不重算已有7挡，缺历史/计数/跨越未观察回合保留未知，能力重放触发未验证显式标注未知。固定夹具取两局18帧，不依赖刷新知识；铁甲与无遗物数值等价，不调整保血、留药、时钟、路线、休息、SL阈值或小偷优先级，不过滤或否决任何药水/动作；没有受控替代整场，不声称修复转胜。最终撤6处生产源码6失败6通过/exit1，恢复新12例及相关3文件28例通过；源tsc0/211文件2266例、合后tsc0/211文件2266例/vitest0。合后首轮沙箱通过，无超时重跑。初稿类型导入、断言字段及抽牌夹具错误已修正，失败记录保留。刷新提交0f256b60287f52305c0d0b7dbe1f75b00851822c、合前0f256b60287f52305c0d0b7dbe1f75b00851822c，知识不同blob重叠0，非incoming知识逐blob保留；无生成器改动不重建，gitleaks0。0172仅经CLI/by=learner:fix-batch追加源码提交和proposed；交运维据fix-done及learner/runs/20261007-014302-fix-batch/handoff-ops.md核实际发布后登记shipped，完整外部套件由调度器补跑。127项既有修复未重复提交，mod自愈/缓存缺证、boss性能专项及策略项保持；队列未改，不停对局、不运行play、不推送。"
+    },
+    {
+      "name": "S1.strategy9",
+      "family": "Silent",
+      "commit": "1f82f78f9965c4ca04944e72bb94b247bf192f04",
+      "source": "decision-log 2026-10-07 02:34（静默休息题逐选项即时HP／路线耗尽／boss模拟输入事实；来源/home/dw/Projects/agent-sts2/learner/runs/20261007-021220-strategy-proposal/proposal.md、fix-queue-v4 2026-10-05 08:33授权，LS8035TB32P3 SILENT A10 F40及F16休息题（回合不适用）、F42末试T8，账本silent-0201，既有0019／0020／0139保持。源码645e405709378608ab1151eeebd0047ad753db29→实际live代码1f82f78f9965c4ca04944e72bb94b247bf192f04；F40实回4→28，两线首次中位耗尽F42／F45，原投影−18.5／−27.9均按1血模拟，不把相同输入或胜率读为即时回血无用；F16保留42／65的正常投影。只为HEAL／SMITH单列当前／动作后HP、增量、未下限投影、实际模拟输入、首次耗尽节点和未来默认回血营火，相同输入HP指标并列；未知保持未知，不预支后续营火或定确定死亡。全部原选项、动作、模拟／校准／样本门槛及铁甲行为保持，无新增药水代价／过滤／否决／提前或留药规则，无统一血线或整战转胜结论。固定9例撤源码6失败3通过exit1、恢复9通过exit0；源及合后固定沙箱tsc/vitest0，gitleaks0，首轮通过、无高负载超时重跑。知识刷新逐blob保持，无生成器改动、不重建。0201仅CLI/by=learner:strategy-proposal proposed；交strategy-done与handoff-ops.md通知运维核实际合入后CLI shipped，完整外部由调度器补跑；不停对局、不运行play、不推送。）"
     }
   ]
 }

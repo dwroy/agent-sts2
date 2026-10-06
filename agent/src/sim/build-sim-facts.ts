@@ -79,6 +79,8 @@ export interface BuildSimSetup {
 /** One option's simulation plan: its deck change, a per-card group (a removal, a smith), or why it is not simulated. */
 interface OptionPlan {
   key: string;
+  /** Silent rest facts only; never used by the simulator or option selection. */
+  restHpReference?: Record<string, JsonValue>;
   change?: Partial<RolloutInput> | null;
   mixture?: Partial<RolloutInput>[];
   /** Per deck card (a shop removal, a step-by-step smith): card key -> the change. */
@@ -94,7 +96,12 @@ const signed = (x: number) => `${x >= 0 ? "+" : "−"}${Math.abs(Math.round(x * 
 const one = (x: number) => String(Math.round(x * 10) / 10);
 
 /** The entry HP the route facts project for the boss from `hp` (max `max`), and where it comes from. */
-export function routeEntry(env: DecisionEnv): { project: (hp: number, max: number) => number; source: string; planned: boolean } {
+export function routeEntry(env: DecisionEnv): {
+  project: (hp: number, max: number) => number;
+  source: string;
+  planned: boolean;
+  inspect?: (hp: number, max: number) => { projected: number | null; exhaustedAt: JsonValue; assumedHealFloors: number[] };
+} {
   const { state } = env;
   const act = mapActOf(state);
   const plan = actPlan(env, act);
@@ -108,6 +115,15 @@ export function routeEntry(env: DecisionEnv): { project: (hp: number, max: numbe
   const costs = routeCosts(env, act);
   return {
     project: (hp, max) => projectPath(types, hp, costs, max).arrival[bossAt]!,
+    inspect: (hp, max) => {
+      const projection = projectPath(types, hp, costs, max);
+      const exhausted = projection.runsOut === null ? null : ahead[projection.runsOut]!;
+      return {
+        projected: projection.arrival[bossAt]!,
+        exhaustedAt: exhausted ? { floor: first + exhausted.row, room: exhausted.type } : null,
+        assumedHealFloors: ahead.slice(0, bossAt).filter((step) => /^(RestSite|Rest)$/.test(step.type)).map((step) => first + step.row),
+      };
+    },
     source: `本幕路线计划到 boss（F${first + ahead[bossAt]!.row}）的中位投影，和 route_review.plan_facts.boss 同一个算法`,
     planned: true,
   };
@@ -196,6 +212,30 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
     const entryHp = Math.max(1, Math.round(entry.project(Math.max(0, hp), max)));
     const solver = change?.solver ?? base.solver;
     return { ...(change ?? {}), solver: { ...solver, player: { ...solver.player, hp: Math.min(max, entryHp), maxHp: max } } };
+  };
+  // LS8035TB32P3 F40, silent-0201/0019/0020/0139: +24 HP and equal 1-HP boss inputs are separate facts.
+  const restHpReference = (hp: number, max: number, simulatedHp: number): Record<string, JsonValue> | undefined => {
+    if (character !== "silent") return undefined;
+    const trace = entry.inspect?.(hp, max);
+    const projected = trace ? trace.projected : entry.project(hp, max);
+    const known = projected !== null && Number.isFinite(projected);
+    return {
+      current_hp: hpNow,
+      after_action_hp: hp,
+      after_action_max_hp: max,
+      immediate_hp_gain: hp - hpNow,
+      projected_boss_hp: known ? projected : null,
+      simulated_entry_hp: simulatedHp,
+      entry_source: entry.planned ? "route" : "hp_now",
+      projection_exhausted_at: trace?.exhaustedAt ?? null,
+      assumed_future_heal_floors: trace?.assumedHealFloors ?? [],
+      note: "这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。" +
+        (!known ? "boss进场投影未知；模拟输入不能当作已知进场血量。" : projected < 1
+          ? "boss前中位投影不足1血，模拟按下限1血计算；相同模拟输入或胜率不代表即时回血无用，也不是下一场走廊的胜率或确定死亡判断。"
+          : "boss模拟使用投影进场血量；这不是下一场走廊的胜率。") +
+        "全部选项保留，由DeepSeek选择。",
+      evidence: "LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。",
+    };
   };
   const relicOf = (id: string, name: string): OptionPlan | Omit<OptionPlan, "key"> => {
     if (!FIGHT_START_RELICS[id] && !knownRelic(id)) return { none: "这件遗物在 boss 战里的效果没有建模：不模拟" };
@@ -307,11 +347,13 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
         if (kind === "HEAL") {
           const heal = restHealHere(str(raw?.["description"]), maxNow, asArray(run["relics"]).map((r) => str(asRecord(r)["relic_id"])));
           const healed = restedHp(hpNow, maxNow, heal.rest, heal.base);
-          return { change: withHp(healed.hp, healed.max), note: `回血后 HP ${healed.hp}/${healed.max}，进场血量按它投影` };
+          const change = withHp(healed.hp, healed.max);
+          return { change, restHpReference: restHpReference(healed.hp, healed.max, change.solver!.player.hp), note: `回血后 HP ${healed.hp}/${healed.max}，进场血量按它投影` };
         }
         if (kind === "SMITH") {
-          if (cardKey) return byTask("upgrade", positionOfKey(cardKey));
-          return { group: removalGroup("升级", "upgrade") };
+          const reference = restHpReference(hpNow, maxNow, base.solver.player.hp);
+          if (cardKey) return { ...byTask("upgrade", positionOfKey(cardKey)), restHpReference: reference };
+          return { group: removalGroup("升级", "upgrade"), restHpReference: reference };
         }
         if (kind === "LIFT") return { change: rebuild((r) => void (r["relics"] = asArray(r["relics"]).map(asRecord).map((relic) => (str(relic["relic_id"]) === "GIRYA" ? { ...relic, stack: (numOrNull(relic["stack"]) ?? 0) + 1 } : relic)))), note: "举重：壶铃多一层（开场力量 +1）" };
         const follow = raw ? deckFollowUp(str(raw["description"])) : null;
@@ -486,6 +528,21 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
         const sim = sims.get(k);
         if (sim) shown["boss_sim"] = `${simLine(head, result.base, sim, result.samples, lowWin)}${plan.note ? `；${plan.note}` : ""}`;
         Object.assign(shown, winTies.get(k));
+      }
+      if (!plan.none && plan.restHpReference && (sims.has(k) || plan.group?.some((g) => sims.has(`${k}|${g.key}`)))) {
+        const reference = plan.restHpReference;
+        const peers = plans.filter((other) => other.key !== k && !other.none && question.criteria[other.key] != null
+          && other.restHpReference?.projected_boss_hp !== null && reference.projected_boss_hp !== null
+          && other.restHpReference?.simulated_entry_hp === reference.simulated_entry_hp
+          && other.restHpReference?.after_action_max_hp === reference.after_action_max_hp
+          && (sims.has(other.key) || other.group?.some((g) => sims.has(`${other.key}|${g.key}`)))).map((other) => other.key);
+        shown["boss_sim_hp_reference"] = {
+          ...reference,
+          ...(peers.length > 0 ? {
+            entry_hp_tied_with: peers,
+            entry_hp_tie_note: "仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。",
+          } : {}),
+        };
       }
       criteria[k] = JSON.stringify(shown);
     }
