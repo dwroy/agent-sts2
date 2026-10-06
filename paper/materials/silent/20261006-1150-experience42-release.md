@@ -35,3 +35,5 @@
   }
 }
 ```
+
+- 2026-10-06 11:52 运维codex完成11:50 experience-done 20261006-112702-experience-update登记：源d673c6a7e270ef770f19d9ced3d3edef79f24e31→实际live 8224bcc9ef8f825bbdca7ca6ec3b03535cf81725→固定发布b449544f0116b3f32cdf14582c61df0a7940e8bb/树5b17216458edb6ec5e6d60c4831befd141faf8e5/唯一S1.exp42，原第42节与十项proposed归档650a7a645278e7e2ee7d72f79ef804481631d981、main机械同步aea59901ae3cd7a79685e0e2dfe1679c865ab0e0。源及合后首轮tsc0/196文件2124例及199文件2172例；全部1027项已测源码/测试blob同发布，其他2158项main最新blob和双方有序日志保持。CLI/by=ops仅十项shipped，0173最早证据沿学习者追加更正25226/A10→10G/A3、prior=yes及原add历史保留，first_run/prior/claim/evidence/repeat保持；0172纯bug、0166原repeat和其他修复状态独立，后台其他任务原行未代提交。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 173 item(s), 0 problem(s)；不新增live合并或源码/知识规则，live实时刷新保持，完整外部等本批learner-checks。详情paper/materials/silent/20261006-1150-experience42-release.md。
