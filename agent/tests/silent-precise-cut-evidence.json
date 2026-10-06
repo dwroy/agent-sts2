@@ -1,0 +1,935 @@
+[
+  {
+    "run": "JQPT83P8KDSZ",
+    "floor": 25,
+    "turn": 3,
+    "attempt": 2,
+    "ts": "2026-10-06T01:11:54.480Z",
+    "offset": 7491101379,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "BACKFLIP",
+        "name": "后空翻",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。 抽2张牌。",
+        "resolved_rules_text": "获得5点格挡。 抽2张牌。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "Cards",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成9点伤害。 永恒。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "PRECISE_CUT",
+        "name": "精确切击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
+        "resolved_rules_text": "造成5点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
+        "dynamic_values": [
+          {
+            "name": "CalculatedDamage",
+            "base_value": 13,
+            "current_value": 5,
+            "enchanted_value": 13,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 13,
+            "current_value": 13,
+            "enchanted_value": 13,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "ExtraDamage",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予5层中毒。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成9点伤害。 永恒。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "player": {
+      "current_hp": 24,
+      "max_hp": 70,
+      "block": 0,
+      "energy": 3,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 0,
+      "attacks_played_this_turn": 0,
+      "skills_played_this_turn": 0
+    },
+    "enemy": {
+      "hp": 143,
+      "block": 13
+    }
+  },
+  {
+    "run": "JQPT83P8KDSZ",
+    "floor": 25,
+    "turn": 3,
+    "attempt": 2,
+    "ts": "2026-10-06T01:11:56.432Z",
+    "offset": 7491138392,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成9点伤害。 永恒。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "PRECISE_CUT",
+        "name": "精确切击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
+        "resolved_rules_text": "造成3点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
+        "dynamic_values": [
+          {
+            "name": "CalculatedDamage",
+            "base_value": 13,
+            "current_value": 3,
+            "enchanted_value": 13,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 13,
+            "current_value": 13,
+            "enchanted_value": 13,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "ExtraDamage",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予5层中毒。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成9点伤害。 永恒。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 5,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "player": {
+      "current_hp": 24,
+      "max_hp": 70,
+      "block": 5,
+      "energy": 2,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "TAINTED_POWER",
+          "name": "污染",
+          "amount": 3,
+          "is_debuff": true
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 1,
+      "attacks_played_this_turn": 0,
+      "skills_played_this_turn": 1
+    },
+    "enemy": {
+      "hp": 143,
+      "block": 13
+    }
+  },
+  {
+    "run": "JQPT83P8KDSZ",
+    "floor": 25,
+    "turn": 3,
+    "attempt": 2,
+    "ts": "2026-10-06T01:11:57.297Z",
+    "offset": 7491176330,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "PRECISE_CUT",
+        "name": "精确切击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
+        "resolved_rules_text": "造成5点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
+        "dynamic_values": [
+          {
+            "name": "CalculatedDamage",
+            "base_value": 13,
+            "current_value": 5,
+            "enchanted_value": 13,
+            "is_modified": true,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "CalculationBase",
+            "base_value": 13,
+            "current_value": 13,
+            "enchanted_value": 13,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "ExtraDamage",
+            "base_value": 2,
+            "current_value": 2,
+            "enchanted_value": 2,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予5层中毒。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成9点伤害。 永恒。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 4,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "player": {
+      "current_hp": 24,
+      "max_hp": 70,
+      "block": 5,
+      "energy": 2,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "TAINTED_POWER",
+          "name": "污染",
+          "amount": 3,
+          "is_debuff": true
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 2,
+      "attacks_played_this_turn": 1,
+      "skills_played_this_turn": 1
+    },
+    "enemy": {
+      "hp": 143,
+      "block": 4
+    }
+  },
+  {
+    "run": "JQPT83P8KDSZ",
+    "floor": 25,
+    "turn": 3,
+    "attempt": 2,
+    "ts": "2026-10-06T01:11:58.163Z",
+    "offset": 7491213186,
+    "hand": [
+      {
+        "index": 0,
+        "card_id": "DEADLY_POISON",
+        "name": "致命毒药",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "给予{PoisonPower:diff()}层中毒。",
+        "resolved_rules_text": "给予5层中毒。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "PoisonPower",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 1,
+        "card_id": "STRIKE_SILENT",
+        "name": "打击",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。",
+        "resolved_rules_text": "造成9点伤害。 永恒。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 9,
+            "enchanted_value": 9,
+            "is_modified": true,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 2,
+        "card_id": "NEUTRALIZE",
+        "name": "中和",
+        "upgraded": false,
+        "target_type": "AnyEnemy",
+        "requires_target": true,
+        "target_index_space": "enemies",
+        "valid_target_indices": [
+          0
+        ],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 0,
+        "star_cost": 0,
+        "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+        "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+        "dynamic_values": [
+          {
+            "name": "Damage",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "WeakPower",
+            "base_value": 1,
+            "current_value": 1,
+            "enchanted_value": 1,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      },
+      {
+        "index": 3,
+        "card_id": "DEFEND_SILENT",
+        "name": "防御",
+        "upgraded": false,
+        "target_type": "Self",
+        "requires_target": false,
+        "target_index_space": null,
+        "valid_target_indices": [],
+        "costs_x": false,
+        "star_costs_x": false,
+        "energy_cost": 1,
+        "star_cost": 0,
+        "rules_text": "获得{Block:diff()}点格挡。",
+        "resolved_rules_text": "获得5点格挡。 获得3层污染。",
+        "dynamic_values": [
+          {
+            "name": "Block",
+            "base_value": 5,
+            "current_value": 5,
+            "enchanted_value": 5,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "playable": true,
+        "can_play_result": true,
+        "unplayable_reason": null,
+        "unplayable_reason_raw": null,
+        "unplayable_preventer_id": null,
+        "unplayable_preventer_type": null
+      }
+    ],
+    "player": {
+      "current_hp": 24,
+      "max_hp": 70,
+      "block": 5,
+      "energy": 2,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "TAINTED_POWER",
+          "name": "污染",
+          "amount": 3,
+          "is_debuff": true
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 3,
+      "attacks_played_this_turn": 2,
+      "skills_played_this_turn": 1
+    },
+    "enemy": {
+      "hp": 142,
+      "block": 0
+    }
+  }
+]

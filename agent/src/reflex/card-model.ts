@@ -52,6 +52,8 @@ export interface CardModel {
   hits: number;
   /** Observed plain Silent Flechettes: remove hits as skills from the observed hand leave (silent-0150/0151). */
   hitsLoseHandSkills?: boolean;
+  /** Plain Silent Precise Cut: only the observed five/six-card hand damage is verified (silent-0166/0169). */
+  preciseCutHandDamage?: boolean;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -999,6 +1001,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     target,
     validTargets: asArray(card["valid_target_indices"]).map((value) => num(value)).filter((value) => Number.isFinite(value)),
     damage,
+    ...(character.toLowerCase() === "silent" && cardId === "PRECISE_CUT" && !bool(card["upgraded"]) &&
+      dyn(card, "CalculationBase") === 13 && dyn(card, "ExtraDamage") === 2 && (damage === 3 || damage === 5) &&
+      /你的手牌中每有一张牌，此牌的伤害就降低/.test(template) ? { preciseCutHandDamage: true } : {}),
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
     ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
