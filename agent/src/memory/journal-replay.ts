@@ -28,6 +28,7 @@ import { noteFacing, noteLizardTailEndTurn, noteTurnStartExhaust, noteTurnStartH
 import { rememberChosenNode, rememberMap } from "../hand/screens/rest.js";
 import { runPlanLine, type RunPlan } from "./run-plan.js";
 import { noteFightStart } from "../reflex/thief.js";
+import { notePermafrostPlay, observePermafrost } from "../reflex/permafrost.js";
 import { asArray, asRecord, num, str, type JsonValue } from "../core/util/json.js";
 import { describeChoice, RunJournal, type JournalChange, type JournalEntry } from "./run-journal.js";
 import { createScreenMemory, type AskDecision, type Decision, type RememberedMap, type ScreenMemory } from "./types.js";
@@ -212,6 +213,8 @@ export interface ReplayResult {
   lastMap: RememberedMap | null;
   /** Lizard Tail seen to trigger this run (combat-plan trackLizardTail): the relic carries no used mark. */
   lizardTail: ScreenMemory["lizardTail"] | null;
+  /** Permafrost's first-Power availability in the last observed fight, including accepted plays. */
+  permafrost: ScreenMemory["permafrost"] | null;
   /** The exhaust pile at the first logged frame of the last combat turn (combat-plan noteTurnStartExhaust). */
   turnStartExhaust: ScreenMemory["turnStartExhaust"] | null;
   /** Our HP at the first logged frame of the last combat turn (combat-plan noteTurnStartHp; CARD_CONDITIONS, Spite). */
@@ -274,6 +277,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     if (state.screen === "MAP") rememberMap(memory, state);
     journal.observe(state, { knowledge, screenMemory: memory });
     trackLizardTail(memory, state);
+    observePermafrost(memory, state);
     noteTurnStartExhaust(memory, state);
     noteTurnStartHp(memory, state);
     noteFightStart(memory, state);
@@ -310,6 +314,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
       // The node a logged map move chose (the rooms after it have no map position), as the live loop notes it.
       rememberChosenNode(memory, state, entry.intent);
       noteFacing(memory, state, entry.intent);
+      notePermafrostPlay(memory, state, entry.intent, knowledge);
       noteLizardTailEndTurn(memory, state, entry.intent);
       counts.recorded += 1;
       const plan = routePlanOf(decision, state, memory.routePlan);
@@ -320,7 +325,7 @@ export function replayRun(logs: RunLogs, knowledge: Knowledge, options: ReplayOp
     }
   }
   const facing = typeof memory.facing === "number" && memory.facingFight ? { fight: memory.facingFight, index: memory.facing } : null;
-  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, turnStartPlayerHp: memory.turnStartPlayerHp ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
+  return { journal, routePlan: memory.routePlan ?? null, lastMap: memory.lastMap ?? null, lizardTail: memory.lizardTail ?? null, permafrost: memory.permafrost ?? null, turnStartExhaust: memory.turnStartExhaust ?? null, turnStartPlayerHp: memory.turnStartPlayerHp ?? null, thiefStart: memory.thiefStart ?? null, thiefCardValue: memory.thiefCardValue ?? null, facing, counts };
 }
 
 /** The journal entry of a logged decision: as logged (`journal`), else re-derived from the row. */
