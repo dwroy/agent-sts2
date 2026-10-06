@@ -1,0 +1,1 @@
+最终附加只读核查的flock -w 10返回1（锁忙），没有合并或修改live；先前锁内核查已通过，原证明见no-change-proof.json。改用现有verify_empty_fix固定双方提交只读核查返回非空，见completion-proof.json。不将这次锁忙记为代码或测试失败。
