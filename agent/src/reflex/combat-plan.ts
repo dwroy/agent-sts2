@@ -42,6 +42,7 @@ import { infernoCopies, startTurnHpLossOf } from "./start-loss.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
 import { permafrostBlock } from "./permafrost.js";
+import { recordStateFightPlays } from "./fight-plays.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../sim/boss-clock.js";
@@ -1471,7 +1472,6 @@ export function turnStartAoe(relicIds: string[], player: Record<string, unknown>
   return hourglass + inferno * lossEvents + powerAmount(player, "ROLLING_BOULDER_POWER");
 }
 const WITHER_EVERY = 6;
-const WITHER_BASE_DAMAGE = 3;
 
 /**
  * Cards played per turn in this fight, sampled on every combat decision (the highest
@@ -1479,12 +1479,7 @@ const WITHER_BASE_DAMAGE = 3;
  * (Hellraiser's Strikes; Y3XT F33: 0 at T6 with a Strike already auto-played).
  */
 export function recordFightPlays(env: DecisionEnv, playedThisTurn: number): NonNullable<DecisionEnv["screenMemory"]["fightCards"]> {
-  const fight = hpGuardFight(env);
-  if (env.screenMemory.fightCards?.fight !== fight) env.screenMemory.fightCards = { fight, perTurn: {}, witherDamage: WITHER_BASE_DAMAGE };
-  const memo = env.screenMemory.fightCards;
-  const turn = String(env.state.turn ?? "?");
-  memo.perTurn[turn] = Math.max(memo.perTurn[turn] ?? 0, playedThisTurn);
-  return memo;
+  return recordStateFightPlays(env.screenMemory, env.state, playedThisTurn);
 }
 
 /**
@@ -1519,7 +1514,10 @@ export function witherInput(env: DecisionEnv, combat: Record<string, unknown>, h
   // plan stopped at two cards "before the 3rd adds a Wither", the 2nd added it). Counted from the start:
   // before any card the first one is already two.
   const axe = asArray(asRecord(env.state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "THROWING_AXE");
-  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0) + (axe ? 1 : 0);
+  // DPYF2BAA3DKT F48 final T1/T7, silent-0199: the replay enchantment also advances this count,
+  // without changing the raw per-turn mean used by curse selection.
+  const replayed = Object.values(memo.replays ?? {}).reduce((sum, count) => sum + count, 0);
+  const played = Object.values(memo.perTurn).reduce((sum, count) => sum + count, 0) + replayed + (axe ? 1 : 0);
   return { every, played, damage: memo.witherDamage };
 }
 
