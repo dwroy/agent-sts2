@@ -1,0 +1,7 @@
+# A10复盘与经验第38批完整补测
+
+- 2026-10-06 10:07 运维处理10:03 learner-done 20261006-094301/JQPT83P8KDSZ：学习者exit0/success，SILENT A10/F25败局复盘齐全。原新增正文及09:59勘误共13965字节/SHA256 f17a51a18c2427674371854745c94c89e0aa98407866ef435256571a993b8662，九项十行原账本8672字节/SHA256 db37b628dbb2c163de22a6da0e5cfb2e9555fb3b2a72d91a3d764a8f5fb8357d逐字归档；原回报、stderr和分析事件流保留。
+- 账本新增0166/0167/0168/0169四项，更新0011/0019/0020/0046/0050及新0168六行，无repeat。四项observed保持；0168首见仍ZZMYZ5UBCG72/A2、prior=yes，完整前缀归因勘误保持；0166与0169首见JQPT83P8KDSZ/prior=unknown不重写。五个已有条目的首次证据、先验、状态、版本和上线历史保持，0163/S1.fix27也独立保留。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 169 item(s), 0 problem(s)。
+- 唯一新回报bug为精确切击方案内动态手牌伤害缺口（0166）。虽然学习者标bug-infra，这项涉及游戏机制，按学习协议只转录到fix-queue-v4.md，交学习者按本角色证据实现与测试；运维不改模型，不把本次2伤与其他未隔离差额或整场胜负混归因。机制与打法沿原复盘，未记录项和学习者勘误保持，无Roy新待定、无额度或登录错误。
+- 同轮关闭20261006-092705-experience-update完整补测：固定发布62b4caf85ded558e5d07ef840ae882d82bc7ae2c/树0a56f09473c57f5c0a504ce1ae7f5b9965a57462沙箱外完整tsc + vitest exit0，246文件2926通过/2跳过（09:53:03起522.61秒）。原日志ops/codex-ops/learner/20261006-092705-experience-update.fallback-0a56f09473c57f5c0a504ce1ae7f5b9965a57462.checks.log共63046字节/SHA256 4a2e272887e37fec0d74309686600e8d093a80ccedbff78647acbc625a865675；checks_pending=false、checks/fallback_checks对应固定树rc0。源、实际live合入与固定发布均为main/live祖先，1021项源码/测试blob同main，S1.exp38唯一，既有20项shipped登记保持。main同步ee3f13cdb7b79f9f315d596e1b4c90d77e30f344、CLI shipped提交9bbd3416ead8e256c0a0c8fd1488ed54938194fa沿用；源草稿通过后最终复测、合后首过及decision-log合并冲突历史保留，不借用别批结果。
+- 本轮只归档学习者原文/台账、追加机制提案与完整检查记录。其他后台修改保留，对局照常。随后nice19运行paper_dataset.py --no-raw，结果另记。
