@@ -124,8 +124,11 @@ case "$action" in
     sleep 10
     "$WIN/schtasks.exe" /delete /tn "$TASK" /f 2>&1 | tr -d '\r'
     for _ in $(seq 1 36); do
-      if curl -s -m 4 -o /dev/null "$MOD/state"; then
-        echo "mod answers: $(curl -s -m 5 "$MOD/state" | python3 -c 'import json,sys;d=json.load(sys.stdin)["data"];print(d.get("screen"))' 2>&1 | head -1)"
+      # Validate the same successful HTTP response we report; transport alone is not readiness.
+      response=$(curl -fs -m 4 -w '\n%{http_code}' "$MOD/state"); rc=$?
+      state="${response%$'\n'*}"; http="${response##*$'\n'}"
+      if [ $rc -eq 0 ] && [ "$http" = 200 ] && screen=$(printf '%s' "$state" | python3 "$OPS/mod-state.py" 2>/dev/null); then
+        echo "mod answers: $screen"
         tasklist | grep -i -E '"(steam|SlayTheSpire2)\.exe"'
         exit 0
       fi
