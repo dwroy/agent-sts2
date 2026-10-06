@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-tough-bandages.test.ts (8 tests | 1 failed) 146ms
+   × F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss 83ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss
+TypeError: Cannot read properties of null (reading 'outcome')
+ ❯ tests/silent-tough-bandages.test.ts:64:15
+     62|   const plan = replaySteps(input, [step(input, "DAGGER_THROW", ["GREED…
+     63|     step(input, "FLECHETTES"), step(input, "NEUTRALIZE")])!;
+     64|   expect(plan.outcome).toMatchObject({ blockGained: 18, hpLoss: 6, dam…
+       |               ^
+     65|   expect(plan.steps.slice(0, 2).map((entry) => entry.discards)).toEqua…
+     66| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  22:21:38
+   Duration  1.33s (transform 899ms, setup 279ms, import 790ms, tests 146ms, environment 0ms)
+

@@ -1,0 +1,133 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-tough-bandages.test.ts (8 tests | 6 failed) 27ms
+   × F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss 6ms
+   × F48 final T3: Calculated Gamble discards nine cards for twenty-seven Block before replacement draws 1ms
+   × F48 final T3: Burst replays Acrobatics and each actual discard adds three Block 1ms
+   × continuation frames count only new discards and do not charge the eighteen existing Block again 1ms
+   × the three observed one-card discard texts are recognized only for Silent 4ms
+   × Ironclad and Silent without Tough Bandages preserve the previous solver input 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T4: Dagger Throw and Survivor discard twice for eighteen Block and six HP loss
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ observed tests/silent-tough-bandages.test.ts:41:17
+ ❯ tests/silent-tough-bandages.test.ts:59:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T3: Calculated Gamble discards nine cards for twenty-seven Block before replacement draws
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ observed tests/silent-tough-bandages.test.ts:41:17
+ ❯ tests/silent-tough-bandages.test.ts:69:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > F48 final T3: Burst replays Acrobatics and each actual discard adds three Block
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ observed tests/silent-tough-bandages.test.ts:41:17
+ ❯ tests/silent-tough-bandages.test.ts:77:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > continuation frames count only new discards and do not charge the eighteen existing Block again
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ observed tests/silent-tough-bandages.test.ts:41:17
+ ❯ tests/silent-tough-bandages.test.ts:85:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > the three observed one-card discard texts are recognized only for Silent
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/silent-tough-bandages.test.ts:118:73
+    116|   for (const id of ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"]) {
+    117|     const raw = { card_id: id, energy_cost: 1, playable: true, target_…
+    118|     expect(modelHandCard(raw, 0, knowledge, "silent").discardAfterDraw…
+       |                                                                         ^
+    119|     expect(modelHandCard(raw, 0, knowledge, "ironclad").discardAfterDr…
+    120|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/silent-tough-bandages.test.ts > Ironclad and Silent without Tough Bandages preserve the previous solver input
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ observed tests/silent-tough-bandages.test.ts:41:17
+ ❯ tests/silent-tough-bandages.test.ts:125:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed (8)
+   Start at  22:21:00
+   Duration  1.24s (transform 915ms, setup 268ms, import 825ms, tests 27ms, environment 0ms)
+
