@@ -1,0 +1,1226 @@
+{
+  "before": {
+    "evidence": {
+      "run": "TCFAHJ9K19VY",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-06T11:28:54.636Z",
+      "offset": 7790509233
+    },
+    "state": {
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "run_id": "TCFAHJ9K19VY",
+      "screen": "COMBAT",
+      "in_combat": true,
+      "turn": 2,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit"
+      ],
+      "run": {
+        "floor": 17,
+        "current_hp": 51,
+        "max_hp": 70,
+        "gold": 247,
+        "character_id": "SILENT",
+        "act_id": "0",
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null
+          },
+          {
+            "index": 1,
+            "relic_id": "LARGE_CAPSULE",
+            "name": "巨大扭蛋",
+            "description": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]遗物[/gold]。额外将一对[gold]打击[/gold]和[gold]防御[/gold]，加入你的[gold]牌组[/gold]。",
+            "stack": null
+          },
+          {
+            "index": 2,
+            "relic_id": "VAMBRACE",
+            "name": "臂甲",
+            "description": "每场战斗中，你第一次从卡牌中获得的[gold]格挡[/gold]值翻倍。",
+            "stack": null
+          },
+          {
+            "index": 3,
+            "relic_id": "BOOK_OF_FIVE_RINGS",
+            "name": "五轮书",
+            "description": "你每将[blue]{Cards}[/blue]张牌加入你的[gold]牌组[/gold]时，回复[green]{Heal}[/green]点生命。",
+            "stack": 1
+          },
+          {
+            "index": 4,
+            "relic_id": "TINGSHA",
+            "name": "铜钹",
+            "description": "你每在你的回合丢弃一张牌，就对一名随机敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null
+          },
+          {
+            "index": 5,
+            "relic_id": "PANTOGRAPH",
+            "name": "缩放仪",
+            "description": "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
+            "stack": null
+          }
+        ]
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": false,
+        "player": {
+          "current_hp": 51,
+          "max_hp": 70,
+          "block": 0,
+          "energy": 3,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "cards_played_this_turn": 0,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 0
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "EXPOSE",
+            "name": "暴露",
+            "upgraded": false,
+            "energy_cost": 0,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": true,
+            "target_type": "AnyEnemy",
+            "valid_target_indices": [
+              0,
+              1,
+              2
+            ],
+            "resolved_rules_text": "去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。",
+            "dynamic_values": [
+              {
+                "name": "Power",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得7点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 7,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "SURVIVOR",
+            "name": "生存者",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得12点格挡。 丢弃1张牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 8,
+                "current_value": 12,
+                "enchanted_value": 8,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得7点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 7,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 4,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得7点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 7,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 54,
+            "max_hp": 63,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "QUICK_SLASH_MOVE"
+          },
+          {
+            "index": 1,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 53,
+            "max_hp": 62,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×2[/font_size]",
+                "damage": 2,
+                "hits": 2,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "BOOMERANG_MOVE"
+          },
+          {
+            "index": 2,
+            "enemy_id": "KIN_PRIEST",
+            "name": "同族神官",
+            "current_hp": 172,
+            "max_hp": 199,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9",
+                "damage": 9,
+                "hits": 1,
+                "total_damage": 9,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "ORB_OF_WEAKNESS_MOVE"
+          }
+        ]
+      }
+    }
+  },
+  "after-first": {
+    "evidence": {
+      "run": "TCFAHJ9K19VY",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-06T11:28:56.403Z",
+      "offset": 7790576155
+    },
+    "state": {
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "run_id": "TCFAHJ9K19VY",
+      "screen": "COMBAT",
+      "in_combat": true,
+      "turn": 2,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit"
+      ],
+      "run": {
+        "floor": 17,
+        "current_hp": 51,
+        "max_hp": 70,
+        "gold": 247,
+        "character_id": "SILENT",
+        "act_id": "0",
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null
+          },
+          {
+            "index": 1,
+            "relic_id": "LARGE_CAPSULE",
+            "name": "巨大扭蛋",
+            "description": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]遗物[/gold]。额外将一对[gold]打击[/gold]和[gold]防御[/gold]，加入你的[gold]牌组[/gold]。",
+            "stack": null
+          },
+          {
+            "index": 2,
+            "relic_id": "VAMBRACE",
+            "name": "臂甲",
+            "description": "每场战斗中，你第一次从卡牌中获得的[gold]格挡[/gold]值翻倍。",
+            "stack": null
+          },
+          {
+            "index": 3,
+            "relic_id": "BOOK_OF_FIVE_RINGS",
+            "name": "五轮书",
+            "description": "你每将[blue]{Cards}[/blue]张牌加入你的[gold]牌组[/gold]时，回复[green]{Heal}[/green]点生命。",
+            "stack": 1
+          },
+          {
+            "index": 4,
+            "relic_id": "TINGSHA",
+            "name": "铜钹",
+            "description": "你每在你的回合丢弃一张牌，就对一名随机敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null
+          },
+          {
+            "index": 5,
+            "relic_id": "PANTOGRAPH",
+            "name": "缩放仪",
+            "description": "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
+            "stack": null
+          }
+        ]
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": false,
+        "player": {
+          "current_hp": 51,
+          "max_hp": 70,
+          "block": 7,
+          "energy": 2,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "cards_played_this_turn": 2,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 2
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SURVIVOR",
+            "name": "生存者",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得6点格挡。 丢弃1张牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 8,
+                "current_value": 6,
+                "enchanted_value": 8,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得3点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 3,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得3点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 3,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 54,
+            "max_hp": 63,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 2,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "QUICK_SLASH_MOVE"
+          },
+          {
+            "index": 1,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 53,
+            "max_hp": 62,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×2[/font_size]",
+                "damage": 2,
+                "hits": 2,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "BOOMERANG_MOVE"
+          },
+          {
+            "index": 2,
+            "enemy_id": "KIN_PRIEST",
+            "name": "同族神官",
+            "current_hp": 172,
+            "max_hp": 199,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9",
+                "damage": 9,
+                "hits": 1,
+                "total_damage": 9,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "ORB_OF_WEAKNESS_MOVE"
+          }
+        ]
+      }
+    }
+  },
+  "after-survivor": {
+    "evidence": {
+      "run": "TCFAHJ9K19VY",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-06T11:28:57.683Z",
+      "offset": 7790608266
+    },
+    "state": {
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "run_id": "TCFAHJ9K19VY",
+      "screen": "CARD_SELECTION",
+      "in_combat": true,
+      "turn": 2,
+      "available_actions": [
+        "save_and_quit",
+        "select_deck_card"
+      ],
+      "run": {
+        "floor": 17,
+        "current_hp": 51,
+        "max_hp": 70,
+        "gold": 247,
+        "character_id": "SILENT",
+        "act_id": "0",
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null
+          },
+          {
+            "index": 1,
+            "relic_id": "LARGE_CAPSULE",
+            "name": "巨大扭蛋",
+            "description": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]遗物[/gold]。额外将一对[gold]打击[/gold]和[gold]防御[/gold]，加入你的[gold]牌组[/gold]。",
+            "stack": null
+          },
+          {
+            "index": 2,
+            "relic_id": "VAMBRACE",
+            "name": "臂甲",
+            "description": "每场战斗中，你第一次从卡牌中获得的[gold]格挡[/gold]值翻倍。",
+            "stack": null
+          },
+          {
+            "index": 3,
+            "relic_id": "BOOK_OF_FIVE_RINGS",
+            "name": "五轮书",
+            "description": "你每将[blue]{Cards}[/blue]张牌加入你的[gold]牌组[/gold]时，回复[green]{Heal}[/green]点生命。",
+            "stack": 1
+          },
+          {
+            "index": 4,
+            "relic_id": "TINGSHA",
+            "name": "铜钹",
+            "description": "你每在你的回合丢弃一张牌，就对一名随机敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null
+          },
+          {
+            "index": 5,
+            "relic_id": "PANTOGRAPH",
+            "name": "缩放仪",
+            "description": "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
+            "stack": null
+          }
+        ]
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": false,
+          "reason": "hand_in_card_selection",
+          "actions_settled": false,
+          "running_action_type": "MegaCrit.Sts2.Core.GameActions.PlayCardAction",
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": true,
+          "hand_mode": "SimpleSelect",
+          "local_turn_ready": true,
+          "snapshot_stable": false,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": false,
+        "player": {
+          "current_hp": 51,
+          "max_hp": 70,
+          "block": 13,
+          "energy": 1,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "cards_played_this_turn": 3,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 3
+        },
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得3点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 3,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "energy_cost": 1,
+            "playable": true,
+            "unplayable_reason": null,
+            "requires_target": false,
+            "target_type": "Self",
+            "valid_target_indices": [],
+            "resolved_rules_text": "获得3点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 3,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ]
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 54,
+            "max_hp": 63,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 2,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "QUICK_SLASH_MOVE"
+          },
+          {
+            "index": 1,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 53,
+            "max_hp": 62,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×2[/font_size]",
+                "damage": 2,
+                "hits": 2,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "BOOMERANG_MOVE"
+          },
+          {
+            "index": 2,
+            "enemy_id": "KIN_PRIEST",
+            "name": "同族神官",
+            "current_hp": 172,
+            "max_hp": 199,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9",
+                "damage": 9,
+                "hits": 1,
+                "total_damage": 9,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "ORB_OF_WEAKNESS_MOVE"
+          }
+        ]
+      }
+    }
+  },
+  "end": {
+    "evidence": {
+      "run": "TCFAHJ9K19VY",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 1,
+      "ts": "2026-10-06T11:29:01.677Z",
+      "offset": 7790671305
+    },
+    "state": {
+      "state_version": 16,
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "run_id": "TCFAHJ9K19VY",
+      "screen": "COMBAT",
+      "in_combat": true,
+      "turn": 2,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "run": {
+        "floor": 17,
+        "current_hp": 51,
+        "max_hp": 70,
+        "gold": 247,
+        "character_id": "SILENT",
+        "act_id": "0",
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null
+          },
+          {
+            "index": 1,
+            "relic_id": "LARGE_CAPSULE",
+            "name": "巨大扭蛋",
+            "description": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]遗物[/gold]。额外将一对[gold]打击[/gold]和[gold]防御[/gold]，加入你的[gold]牌组[/gold]。",
+            "stack": null
+          },
+          {
+            "index": 2,
+            "relic_id": "VAMBRACE",
+            "name": "臂甲",
+            "description": "每场战斗中，你第一次从卡牌中获得的[gold]格挡[/gold]值翻倍。",
+            "stack": null
+          },
+          {
+            "index": 3,
+            "relic_id": "BOOK_OF_FIVE_RINGS",
+            "name": "五轮书",
+            "description": "你每将[blue]{Cards}[/blue]张牌加入你的[gold]牌组[/gold]时，回复[green]{Heal}[/green]点生命。",
+            "stack": 1
+          },
+          {
+            "index": 4,
+            "relic_id": "TINGSHA",
+            "name": "铜钹",
+            "description": "你每在你的回合丢弃一张牌，就对一名随机敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null
+          },
+          {
+            "index": 5,
+            "relic_id": "PANTOGRAPH",
+            "name": "缩放仪",
+            "description": "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
+            "stack": null
+          }
+        ]
+      },
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "end_turn_will_kill_player": false,
+        "player": {
+          "current_hp": 51,
+          "max_hp": 70,
+          "block": 16,
+          "energy": 0,
+          "stars": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "ACCELERANT_POWER",
+              "name": "触媒",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "FRAIL_POWER",
+              "name": "脆弱",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "cards_played_this_turn": 4,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 4
+        },
+        "hand": [],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 54,
+            "max_hp": 63,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "VULNERABLE_POWER",
+                "name": "易伤",
+                "amount": 2,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "QUICK_SLASH_MOVE"
+          },
+          {
+            "index": 1,
+            "enemy_id": "KIN_FOLLOWER",
+            "name": "同族信徒",
+            "current_hp": 53,
+            "max_hp": 62,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "MINION_POWER",
+                "name": "爪牙",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×2[/font_size]",
+                "damage": 2,
+                "hits": 2,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "BOOMERANG_MOVE"
+          },
+          {
+            "index": 2,
+            "enemy_id": "KIN_PRIEST",
+            "name": "同族神官",
+            "current_hp": 169,
+            "max_hp": 199,
+            "block": 0,
+            "is_alive": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9",
+                "damage": 9,
+                "hits": 1,
+                "total_damage": 9,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ],
+            "move_id": "ORB_OF_WEAKNESS_MOVE"
+          }
+        ]
+      }
+    }
+  }
+}
