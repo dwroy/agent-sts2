@@ -88,6 +88,10 @@ export interface CardModel {
   drawDiscardedHand?: boolean;
   /** Observed plain Silent Hidden Daggers: discard two before adding two Shivs (silent-0153/0154). */
   discardCount?: number;
+  /** L704TLETMZBM F48 T3/T4: one chosen discard after this card's draw/effects. */
+  discardAfterDraw?: boolean;
+  /** Fixed draw in the observed Dagger Throw text, used only by the discard relic model. */
+  discardDraw?: number;
   doubleDamageNext?: boolean;
   /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
   poison?: number;
@@ -884,6 +888,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const calculatedGamble = cardId === "CALCULATED_GAMBLE" && !bool(card["upgraded"]);
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
+  // L704TLETMZBM F48 T4: Dagger Throw's fixed draw has no Cards variable in the observed frame.
+  const daggerDraw = character.toLowerCase() === "silent" && cardId === "DAGGER_THROW" && !bool(card["upgraded"]) && /抽1张牌/.test(renderedText.replace(/\s+/g, "")) ? 1 : 0;
   const draw = hiddenDaggers || shadowStep || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
@@ -1039,6 +1045,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
     ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
     ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
+    ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
+      /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
