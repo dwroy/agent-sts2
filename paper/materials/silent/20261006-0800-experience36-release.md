@@ -35,3 +35,5 @@
   }
 ]
 ```
+
+- 2026-10-06 08:04 上线登记完成：原第36节和19项proposed归档5e35991b595db01adba1bd596d4b26033d1b0558，main同步5706f2664b8cd841d5c402cdade4a83bb05d794f，全部1020项已测源码/测试blob相同，其他2138项main最新blob及双方日志保持。19项经CLI/by=ops追加shipped/S1.exp36：silent-0005, silent-0006, silent-0017, silent-0046, silent-0013, silent-0123, silent-0007, silent-0087, silent-0027, silent-0129, silent-0064, silent-0062, silent-0065, silent-0021, silent-0019, silent-0020, silent-0160, silent-0161, silent-0162；原first_run/prior/claim/evidence/repeat与历史保持，0159/S1.strategy6、0153/S1.fix26及其他未纳入项未改。/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 162 item(s), 0 problem(s)。随后paper --no-raw刷新论文曲线；完整外部检查留后续事件。
