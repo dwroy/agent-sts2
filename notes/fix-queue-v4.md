@@ -645,3 +645,5 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - **分段检查**：按进阶分段（A0–4、A5–9、A10）看校准残差；有系统偏差就在校准里加进阶项，不拆开单独校准。A10 单独看（最终 boss 后还有 F49；数值部分由 A9 估），偏差明显就 A10 先标低信度。
 - **可信名单**：仍按原标准逐个 boss 判——验证集 ≥ 10 场、校准 Brier ≤ 整体 1.25 倍、预测与实际胜率差 ≤ 15 个百分点、被打穿的血模拟/日志 0.7–1.3。达标的进 knowledge/characters/silent/boss-trust.json（tools/boss-sim/trust.py 加 --character silent），不达标的保持低可信并写明还差多少场；之后按每批新 boss 战定期重跑（例如每升一级或每 20 场 boss 战），新达标的自动进名单。
 - 这是用 agent 自己对局数据做的校准，符合学习协议；不引入人写的打法知识。结果写 paper/materials/silent/boss-sim-calibration.md，台账登记，自测通过按 live 流程合入，改变题面的上线加 eval 版本。
+
+- **Roy已授权的独立高优先功能批次（2026-10-07 07:26运维转录07:25 manual）**：只做上节静默boss模拟校准，任务详见`notes/silent-boss-calibration-task-20261007.md`。借现有fix-batch调度通道启动，任务是新功能／架构，不能归为纯bug或与silent-0213及其他修复混批。本轮Roy明确授权该校准方式、可信标准、定期重跑、论文报告和台账/live上线，按专用任务说明执行；不改运维prompt。其他队列仍保持待处理，完成事件由运维据实际发布登记和结案。
