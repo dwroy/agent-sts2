@@ -500,7 +500,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-06 10:07 A10复盘：精确切击方案内手牌重算（交学习者）
 
-- [ ] **非阻塞机制模型提案**：学习者只读live定位`agent/src/reflex/card-model.ts:813`固定读取CalculatedDamage，`agent/src/reflex/turn-solver.ts:1995`及`:2004`沿用该damage。来源JQPT83P8KDSZ SILENT A10 F25第二次尝试T3、`ops/codex-ops/learner/20261006-094301.out`及原复盘，账本silent-0166（独立机制0169）。后空翻后六手CalculatedDamage为3；先出打击后五手变5，随后精确切击实际抵4挡扣1血，敌143→142，本前缀独立少算2伤。整线预测14、实际行动19加已结算毒3为22，其他6伤差额未隔离，不将全部差额或死亡归本项。
+- [x] **非阻塞机制模型提案**：学习者只读live定位`agent/src/reflex/card-model.ts:813`固定读取CalculatedDamage，`agent/src/reflex/turn-solver.ts:1995`及`:2004`沿用该damage。来源JQPT83P8KDSZ SILENT A10 F25第二次尝试T3、`ops/codex-ops/learner/20261006-094301.out`及原复盘，账本silent-0166（独立机制0169）。后空翻后六手CalculatedDamage为3；先出打击后五手变5，随后精确切击实际抵4挡扣1血，敌143→142，本前缀独立少算2伤。整线预测14、实际行动19加已结算毒3为22，其他6伤差额未隔离，不将全部差额或死亡归本项。
 - 学习者回报虽标新纯bug、0166 kind=bug-infra，内容涉及游戏机制，按学习协议交学习者依本角色证据实现与固定验证，运维只转录、不改模型。只确认原普通牌与本次六→五手证据，升级及其他手牌数规则未记录；不补公式或宣称修正能转胜。本局运行3cbc6955+dirty，行号按复盘时只读live f90ba577，不声称复原旧局源码；0166/0169保持原first_run及prior=unknown、observed，与0167打法、0168污染机制及完整前缀勘误独立。
 
 ## 2026-10-06 10:19 游戏重开动作的结果判读（非阻塞工具缺口）
@@ -511,3 +511,5 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 ## 2026-10-06 10:30 游戏退出原因已澄清（停止排查）
 
 - [x] **游戏退出根因排查取消**：Roy在10:28 manual说明10:1x游戏退出是本人误关；停止将这次退出作为故障调查，不另派退出根因任务。10:15自动重启与恢复记录、原SL失败和时序保留；上节launch-game成功判读、mod-state截断两个未完成工具缺口照常交学习者。
+
+- 2026-10-06 10:40 运维按10:35 fix-done核实精确切击方案内手牌重算模型已由学习者实现并实际合入live、机械同步main：源8b9bacbebb20eaaa1133a9945da6c7abfcda745d→代码4f4d11a7e4ce4d42ce14536817fc63a1d48b8fde/S1.fix28，固定发布be0ee6df1395b2373a88e0bf222a6e89312b0945/树b71d2d537b2e6a140f2a98f813c418b2306f0243，main同步e581f129b4f611ffe5c1b79a971e2f8548bf19e0。源/合后沙箱tsc0/196文件2124例；固定六例撤源码5失败1通过、恢复6通过、旧回归3文件17例，初稿作用域失败另留历史。仅关闭10:07本模型项，经CLI/by=ops登记0166 shipped；0169/S1.exp39及所有其他条目、首次证据/先验/repeat保持。范围仅已观测普通牌五/六手，不外推或称能转胜，其他队列项保持。完整外部待本批learner-checks；详情paper/materials/silent/20261006-1035-precise-cut-fix28-release.md。

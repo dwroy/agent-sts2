@@ -44,3 +44,5 @@
   }
 }
 ```
+
+- 2026-10-06 10:40 原proposed归档42ee525b4573863ee4c400216dcb5bec3b02ec98，main同步e581f129b4f611ffe5c1b79a971e2f8548bf19e0，全部1023源码/测试blob相同，其余2141项main最新blob、双方日志与七项刷新保持。CLI/by=ops仅0166追加shipped/S1.fix28，first_run/prior/原证据/repeat保持，其他全部既有条目逐项不变（含0169/S1.exp39）；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 170 item(s), 0 problem(s)。只关闭10:07模型复选框，随后刷新学习曲线。
