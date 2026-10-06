@@ -1,0 +1,12 @@
+# 静默经验第64批上线记录
+
+2026-10-07 07:29，处理07:25 experience-done 20261007-070019-experience-update；同轮Roy校准功能独立派发。
+
+- 学习者源e9acfb0cdd118f0a5d0544917f43d313e5628bae→实际live 3527d6115bd479e0cf3b72045a46b7f0e496ea6f→固定发布f8e01696b9fa4dc863ad6377118962d7c1c22710/树323b264e69c5b1caec5d98f48b2d26840bdb376c，唯一S1.exp64指向实际合入。来源87LCSDR5P3DL/TKXQ6L4N9A6U SILENT A10、有效复盘勘误及本角色历史；经验2026-10-07.9→.10新增1更新8（全补证）退役0，active135→136、49258→49920字，高66中41低29。沿原产出记录，不添加新机制或用药规则，无源码／生成器／手写知识／其他角色改动。
+- 源沙箱tsc0/vitest0、214文件2289例，合后固定发布215文件2299例；均首轮通过，无超时重跑。合后已含同日S1.strategy10三项已测代码，源经验blobaa81295fc2936c247aa0864d63acffe6d4241102、192942字节/SHA256 6c4ed481a3037201bacd4add0a7da9e494d3b5d7654e909158fbb20d80b7d49f同实际合入及固定发布。完整外部待本批learner-checks。
+- 合前固定strategy10发布5c2a0d4d，无本批刷新；incoming仅experience.json、知识重叠／冲突0、预检0、其他知识逐blob保持。main随后仅机械同步固定经验／唯一版本／双方decision-log，不取后来的live刷新，保留Roy校准任务及其他main记录。
+- 主目录第64节21862字节/SHA256 14e574c1989ac0ecd08103b3ebd54f31eec2cf7097867f62549bd1acf76e15de含收尾追加，scratch初节20557字节分别按原字节归档；原11行proposed、回报／离线初稿失败及更正／自测／小型证据原件归档，manifest列来源／字节／SHA256。大件和完整事件流留原目录并记指纹，嵌套临时目录保留。
+- 旧78局七数组与血档／节点／回血／SL一致，80局56746角色帧不混入其他角色，新80局1233房70实死。240配对切片增量中位0、最大181；整体中位2696.5→2687.5，最大5302→5293，原口径保持。毒素17支持局与16局51次付费/末伤子证据分开保留，未执行敌毒或未建立能力不预支。
+- 离线初稿空character.lower的AttributeError、取错started字段KeyError及后续修正日志保留，不当生产故障或沙箱失败。回报mechanisms文字与report措辞各自保存，其他结构化字段一致；不修改学习者原回报。
+- 随后仅CLI/by=ops登记11项shipped/S1.exp64，0214首证C48LLXBGKXQ9/A0/prior=yes、四旧support加13份support共17、claim/repeat/先验/旧版本与历史保持。0213纯bugobserved及0215/S1.strategy10等其他旧状态不代改；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 216 item(s), 0 problem(s)。
+- 同轮Roy已授权新功能仅独立批20261007-072650-fix-batch（PID704287，pane wJ:p4A，fix-batch启动通道）：专用说明notes/silent-boss-calibration-task-20261007.md和队列指令已提交e0064f7cdff0202b4dc00bc3b21165a03fbc7866；只做静默跨进阶boss胜率校准/分段残差/原门槛可信名单/不足场数/定期重跑与论文台账，不归bug、不混0213。broker实际派发及状态快照归档，收件箱/for-dai沿Roy称呼；不停止对局、运维不改ops prompt或模型。

@@ -363,3 +363,5 @@
 - 2026-10-06 17:37 [运维 codex] Roy：本轮只读命令 `rg --files learner/runs/20261006-170126-experience-update -g '*sandbox*.log' -g '*report*' -g '*ledger*'` 在沙箱初始化时被拒、exit1，完整原因 `error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/wow-jev/.codex: No such file or directory (os error 2)`。未执行该检索，未改权限或绕过沙箱；其余原权限下正常读写命令成功，经验批次登记继续。请检查沙箱初始化对失效路径的扫描，原失败记录保留。
 
 - 2026-10-07 07:04 [运维 codex] Roy：07:00复盘发现新非阻塞bug silent-0213（TKXQ6L4N9A6U/A10/F22/T6）：毒斩杀预测漏算持牌毒素伤害，7血、0挡留两张各5伤毒素而错误结束，玩家先死亡、敌毒未结算。学习者已定位turn-solver.ts:2939及combat-plan.ts:3278，已追加notes/fix-queue-v4.md交学习者实现；独立机制0214、旧0059及首证／版本历史保留，尚未修复，不声称修复可使整局转胜，对局继续。
+
+- 2026-10-07 07:29 [运维 codex] Roy 07:25校准新功能已单独派发20261007-072650-fix-batch（PID704287/pane wJ:p4A），专用任务notes/silent-boss-calibration-task-20261007.md、准备提交e0064f7cdff0202b4dc00bc3b21165a03fbc7866。借fix-batch通道，仅该功能，不混silent-0213：全部SILENT boss跨进阶、时间切分、仅静默Platt、分段/A10残差、沿原逐boss可信门槛、不足场数及定期重跑；结果写论文和台账，自测后自行live合入，完整检查交调度器。现阶段仅派发，未宣称校准或可信名单已完成；对局继续。
