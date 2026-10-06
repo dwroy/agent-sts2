@@ -67,3 +67,5 @@
 ```
 
 - 2026-10-06 09:07 原proposed归档b923590b12c6c548e59c73d9899656cf397cf782，main同步388688333229e92f4544f1d208c69e7e4e75cf9f，全部1021源码/测试blob一致、其他2130项main最新blob及双方日志保持，七项生成知识保留。CLI/by=ops仅silent-0163追加shipped/S1.fix27；first_run/prior/evidence/repeat不变，0164/0165/0150独立保持；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 165 item(s), 0 problem(s)。只关闭队列对应模型项，其他任务保留，随后论文数据刷新。
+
+- 2026-10-06 09:12 论文数据和学习曲线刷新完成：nice19 python3 ops/paper_dataset.py --no-raw exit0，切点2026-10-06T01:07:58.495Z，五项一致性通过、runs.jsonl决策计数差异为空、key scan CLEAN；行数{"commits.csv": 2767, "decisions_by_label.csv": 17757, "escalations.csv": 3600, "fight_plans.csv": 1461, "runs.csv": 531}。0163 shipped提交648570c3c004f55700ef76c8cb35212377d41c08；/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 165 item(s), 0 problem(s)。仅提交实际生成变化的12项文件及自身记录，其他后台工作保留；完整外部检查待learner-checks，旧失败历史保持。
