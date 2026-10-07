@@ -1,0 +1,51 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "7X0W3U8TVA2A"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "7X0W3U8TVA2A",
+      "where": "agent/src/reflex/rollout-live.ts:801",
+      "what": "推演重建时过滤已死亡且等待接续的千足虫段，T5只模拟后段而误报8/8赢、后续损0",
+      "new": true
+    },
+    {
+      "run": "7X0W3U8TVA2A",
+      "where": "agent/src/reflex/turn-solver.ts:1736",
+      "what": "旧silent-0268重复：无绷带时未消费生存者强制弃牌，虚构后继防御5挡",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0273"
+    ],
+    "updated": [
+      "silent-0268",
+      "silent-0020",
+      "silent-0064",
+      "silent-0005",
+      "silent-0046",
+      "silent-0053",
+      "silent-0087",
+      "silent-0243"
+    ],
+    "repeats": [
+      "silent-0268"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-0f0904256806281a",
+    "silent-proposal-5c259b0e17f8ff10",
+    "silent-proposal-292f6731bdb9b669",
+    "silent-proposal-e09a3905a3922b95"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-044302-postmortem/report.md"
+}

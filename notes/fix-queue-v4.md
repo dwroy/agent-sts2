@@ -818,3 +818,10 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 - 沿原proposal-selection.md/json和silent-proposal-c32b04d610b1f62d自动链，先核租约及现有实现，避免重复派发。按原提案把未见现场的名单标为预测；进入真实CARD_SELECTION后核对当帧完整名单，事实不一致保留原计划和差异，由原删牌大脑重选，当帧索引执行。固定原帧验证真实不可选、重复卡和旧无差异流程；不硬编码悔恨优先、诅咒前置或其他页面排序。
 - 首证9Z9H2EXKLF3T／prior=unknown／observed及14项原support不变；旧第7项只涉及升级页，不推广到本次移除页。运行6c3d8187+dirty完整历史源码未保存，当前源码仅用于定位。同局两问题和一页面不是三局独立样本，缺替代删牌受控实盘；F48三次开场均弃悔恨，不把本项当boss死亡原因或承诺改删转胜。其他角色和未观察范围保持等价，扩大范围由学习者另核证据。
 - 原复盘及25所属PM原CLI：paper/materials/silent/20261008-0452-events；SL审计提案silent-proposal-8f62129d7da70b94沿原自动链，运维不补打法或调整规则。
+
+## 2026-10-08 05:15 非阻塞纯 bug：五回合推演遗漏等待接续的死亡段（silent-0273）
+
+- 原复盘 `7X0W3U8TVA2A` / 静默猎手 A10 F31 T5：state 288426 前、中段 HP0/is_alive=false，仍带 REATTACH_POWER25/REATTACH_MOVE，后段35HP；decision 281977 当回合三张牌预计损0/伤14与实打一致，但五回合误报8/8赢、后续损0、2.5回合结束。state 288430 接续后前、中各25HP、后段21HP，共71HP。该局仍正常打到T13结束（1HP/14挡面对21攻击），不是卡死。
+- 学习者定位 `agent/src/reflex/rollout-live.ts:801` 重建输入过滤死亡段；已有 `rollout.ts` 接续处理无法恢复未进入输入的部件。修复按原提案 `silent-proposal-0f0904256806281a` 由调度器自动派策略学习者：保留待接续的身份、0HP、原意图/恢复量与等待进度，死亡部件不可作为当前攻击者或攻击目标；固定 T5/T13、全段0及永久死亡控制，保持当回合损0/伤14。原运行dirty源码未完整保存，当前源码只作定位；未证明更换线路可整战获胜，不修改SL、药水或终局权重。
+- 旧 `silent-0268` 只补此局重复证据，不另立新bug：T1 decision 281953 生存者后防御预计21挡/损1，state 288407只有这两张牌、288408强制弃后空手，实际臂甲16挡；288409 HP67→61损6，虚构后继防御5挡对应多损5。仍走原普通队列及本局提案 `silent-proposal-5c259b0e17f8ff10`，保留首证/prior/历史；T9重问后换线不算原线误差，不把29/37伤差归因于弃牌。
+- 原证据：`learner/runs/20261008-044302-postmortem/report.md`、`proposal-reattach-input.md`、`proposal-survivor-discard.md`；归档 `paper/materials/silent/20261008-0510-events/postmortem/`。其他药水/机制发现沿原自动提案链，由学习者处理。
