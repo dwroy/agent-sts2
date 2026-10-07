@@ -43,7 +43,7 @@ import { infernoCopies, startTurnHpLossOf } from "./start-loss.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
 import { permafrostBlock } from "./permafrost.js";
-import { recordStateFightPlays } from "./fight-plays.js";
+import { observedSlothReplay, recordStateFightPlays } from "./fight-plays.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
 import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../sim/boss-clock.js";
@@ -2891,7 +2891,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     endTurnBlock: powerAmount(player, "PLATING_POWER") + powerAmount(player, "METALLICIZE_POWER"),
     rupture: powerAmount(player, "RUPTURE_POWER"),
     // Sloth caps cards per turn; Disintegration deals its amount at the end of every turn.
-    maxPlays: playCap(player),
+    maxPlays: playCap(player, env),
+    ...(observedSlothReplay(state) && powerAmount(player, "RINGING_POWER") === 0 ? { slothDefendReplay: true } : {}),
     // Smoggy: one Skill a turn, less the Skills already played.
     maxSkills: powerAmount(player, "SMOGGY_POWER") > 0 ? Math.max(0, 1 - num(player["skills_played_this_turn"])) : null,
     // Constrict (Slithering Strangler) is the same end-of-turn damage (BHMP F6: 12 HP unpredicted).
@@ -4716,9 +4717,17 @@ export function phaseSetupCard(hand: CardModel[], energy: number, keepsBlock: bo
  * Cards still playable this turn: Sloth caps plays at its amount; Ringing (Ceremonial Beast's
  * 昏眩, 8LQGV1EFQDVX) allows one card this turn. null = no cap.
  */
-function playCap(player: Record<string, unknown>): number | null {
+function playCap(player: Record<string, unknown>, env: DecisionEnv): number | null {
   const caps: number[] = [];
-  if (powerAmount(player, "SLOTH_POWER") > 0) caps.push(powerAmount(player, "SLOTH_POWER"));
+  if (powerAmount(player, "SLOTH_POWER") > 0) {
+    let extra = 0;
+    if (observedSlothReplay(env.state)) {
+      const memo = recordFightPlays(env, num(player["cards_played_this_turn"]));
+      extra = Object.entries(memo.slothReplays ?? {}).filter(([key]) => key.startsWith(`${env.state.turn}:`))
+        .reduce((sum, [, count]) => sum + count, 0);
+    }
+    caps.push(Math.max(0, powerAmount(player, "SLOTH_POWER") - extra));
+  }
   if (powerAmount(player, "RINGING_POWER") > 0) caps.push(1);
   if (caps.length === 0) return null;
   return Math.max(0, Math.min(...caps) - num(player["cards_played_this_turn"]));
