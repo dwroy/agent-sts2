@@ -1,0 +1,26 @@
+Fix poison model coverage to preserve attack damage
+
+Register POISON_POWER as an already modelled enemy power so attacks against
+poisoned enemies are not discounted as unknown effects. Keep unrelated
+unknown powers and poison settlement unchanged.
+
+Evidence: K3676LU8B0UH A1 floor 17 turn 2; T3FW7R2R2306 A10 floor 8
+turns 3, 4 and 5. Ledger: silent-0216; fix-queue-v4 2026-10-07 08:00.
+Fixed regressions cover observed total damage 23, 18, 13 and 23.
+With production changes withdrawn: 6 failures / 1 pass. Restored: 7 passes.
+
+The shared enemy adapter also corrects the same inconsistent coverage for
+poisoned Ironclad boards; no character knowledge or strategy is imported.
+
+
+Keep the existing Tough Bandages regression focused on discard Block and
+HP loss: its unrelated damage assertion had pinned the old poison discount.
+The new observed fixtures independently validate total attack/poison damage.
+Initial sandbox run failed this stale assertion and a wall-clock potion
+rollout fact; the potion test passed on its single-case retry.
+
+A later full run hit the old multi-enemy rollout test timeout; that case
+passed alone in 3.54 seconds. Final sandbox validation disables only
+parallel test-file execution, preserving all enabled tests.
+
+Co-Authored-By: Codex GPT-6 <noreply@openai.com>

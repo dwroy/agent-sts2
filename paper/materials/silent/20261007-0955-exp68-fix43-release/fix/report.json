@@ -1,0 +1,60 @@
+{
+  "task": "fix-batch",
+  "base": "e7d1d9c27e7edc6db0d59facd3edbe3cc667e990",
+  "fixes": [
+    {
+      "item": "升级预览丢失消耗关键词（silent-0217；KAY522KT5NXR F44/F47；P5HT1272P5SB F24/F25 T2）",
+      "commit": "62ee292c7a66466e996424910338aaea8aae6308",
+      "test": "agent/tests/silent-upgrade-preview.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "勒紧未增加同方案后续防御格挡（silent-0218；HSX4HYATB4E2 F31 T2；P5HT1272P5SB F25 T9）",
+      "commit": "1912b5e0c2c9d87622f6915d8a299f0ef6222588",
+      "test": "agent/tests/silent-fasten.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "蛇咬施毒模型遗漏（silent-0219；KAY522KT5NXR F14 T1；KQQELQSZ382Z F17第6次T7）",
+      "commit": "06bb4617e92d4ea5cf75287186223a5b185e4ae3",
+      "test": "agent/tests/silent-snakebite.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "mod选牌屏及其他屏幕请求超时自愈",
+      "reason": "证据不足：未定位mod内部根因；已修重复提问及稳定等待不重复修改。"
+    },
+    {
+      "item": "Codex大脑缓存命中偏低及实测对比",
+      "reason": "证据不足：离线任务不能调用真实LLM或网络，没有受控对比。"
+    },
+    {
+      "item": "boss整场模拟耗时、样本不足及CPU争用",
+      "reason": "太大：需独立固定性能基准和跨模拟器定位；已修预算截止不重复实现。"
+    },
+    {
+      "item": "保血、留药、全死排序/巨兽拖延、SL范围、boss时钟校准、路线预估、休息、小偷优先、A10第三幕第二boss、无色牌估值、懒惰平均出牌估值",
+      "reason": "策略类：交Dai或独立策略任务，本批不改；已批准事实子项保持。"
+    },
+    {
+      "item": "静默boss模拟跨进阶校准",
+      "reason": "太大：队列明确要求独立高优先功能批次；本次授权仅批量纯bug，交专用任务。"
+    },
+    {
+      "item": "Codex不可用时暂停与引擎统计口径",
+      "reason": "太大：已授权独立功能在独立工作树执行，不混入本轮纯bug。"
+    },
+    {
+      "item": "合入live",
+      "reason": "锁内合入预检发现20项并行记录/论文冲突，按任务第5节停止；刷新数据已保存为f6722e87d36f039103d09ba51b679f6554af309b；knowledge实际冲突0，其他未提交数据保持。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2331
+  }
+}
