@@ -1,0 +1,126 @@
+{
+ "id": "silent-0255",
+ "ts": "2026-10-07T22:01:02+08:00",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "静默A10本局王室猛毒ROYAL_POISON在无小血瓶BLOOD_VIAL时，五场新战斗于出牌前各净失4血；连续第二boss以4血进房会在可操作前耗尽生命，敌攻击没有执行。仅确认本局遗物组合和开场时点，不能把旧局王室猛毒＋小血瓶净失2血当单件数值，也不推断未知回血／复活组合顺序或改选事件可赢。",
+ "evidence": [
+  {
+   "run": "TXZ6RVMQA09D",
+   "floor": 43,
+   "turn": 1,
+   "role": "support",
+   "note": "states:281312→281313，70/70→66/70、出牌0；持王室猛毒而无小血瓶。",
+   "added": "2026-10-07T22:01:02+08:00"
+  },
+  {
+   "run": "TXZ6RVMQA09D",
+   "floor": 45,
+   "turn": 1,
+   "role": "support",
+   "note": "states:281338→281339，52/62→48/62、出牌0。",
+   "added": "2026-10-07T22:01:02+08:00"
+  },
+  {
+   "run": "TXZ6RVMQA09D",
+   "floor": 46,
+   "turn": 1,
+   "role": "support",
+   "note": "states:281367→281368，62/62→58/62、出牌0。",
+   "added": "2026-10-07T22:01:02+08:00"
+  },
+  {
+   "run": "TXZ6RVMQA09D",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "states:281399→281400，60/62→56/62、出牌0；后续SL从56血存档恢复，不能重复算开场成本。",
+   "added": "2026-10-07T22:01:02+08:00"
+  },
+  {
+   "run": "TXZ6RVMQA09D",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "states:281565→281566，4/62→0/62、cards_played=0、敌TEST_SUBJECT 111/111、22攻击未执行，无可出牌帧；F48空奖励没有中间回血。",
+   "added": "2026-10-07T22:01:02+08:00"
+  }
+ ],
+ "first_run": "TXZ6RVMQA09D",
+ "prior": "unknown",
+ "prior_runs": [
+  "VPW8YH7A4QFM"
+ ],
+ "prior_note": "查本角色更早复盘及ROYAL_POISON／王室猛毒账本，仅silent-0198的VPW8YH7A4QFM联合持有小血瓶、两场净失2；该组合与本局无小血瓶入口不可等同，未找到相同4血开场的学习前选择。",
+ "status": "shipped",
+ "by": "learner:postmortem",
+ "where": {
+  "lessons": [
+   "TXZ6RVMQA09D"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-214301-postmortem/proposal-opening-resource.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-214301-postmortem/proposal-sl-continuation-validation.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-continuation-sl.md"
+  ],
+  "experience": [
+   "silent-royal-poison-blood-vial-opening-net"
+  ],
+  "commits": [
+   "ab065d0a4fc067cb6a6d529da2706ab7ef508f85",
+   "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+   "fd4c8e52341c31cad606c0a4b96a43663843e201",
+   "148a9d2a1de7c01fd052aa70bc20feba25405043"
+  ],
+  "changelog": [
+   "## 2026-10-07 静默猎手 第八十二次增量：2 局 A10（version 2026-10-07.28，分支 exp-silent，ab065d0a）"
+  ]
+ },
+ "note": "三条主经验的第二条，同时是机制观察的新机制；大脑末复审已识别4血入口风险，但实际奖励为空。出牌／终局入口提案另经CLI登记，保持原行为至独立实现验证。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-07T22:01:02+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T22:03:37+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T22:03:38+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T22:50:20+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T22:50:20+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T23:19:12+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T23:50:46+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp82",
+ "effect": null,
+ "notes": [
+  "三条主经验的第二条，同时是机制观察的新机制；大脑末复审已识别4血入口风险，但实际奖励为空。出牌／终局入口提案另经CLI登记，保持原行为至独立实现验证。",
+  "代码提案 silent-proposal-33ebbb1d904f7511 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-92920295a648b540 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第82次静默经验提交前链接，首证/先验/旧上线记录保持，独立strategy-proposal实现；无accepted/shipped。",
+  "代码提案 silent-proposal-47910f82a1fdd98f → task=strategy-proposal；Roy-2026-10-07-learning",
+  "第82次静默经验更新，首证/先验/claim/旧support/repeat/version和全部上线历史保持；仅追加实际核对来源，代码提案独立strategy-proposal实现，未accepted/shipped。旧王室+小血瓶2血与新无小血瓶4血分支、狡诈基本生成与首次满手0257分开。",
+  "经验第82次原数据实际发布.28/156 active；仅按原ledger-map登记本所属经验数据shipped，源原沙箱240文件2525例、实际组合合后242文件2540例tsc/vitest0。首证/prior/claim/support/repeat及旧上线历史保持；三个combat/potion/SL代码提案沿独立策略链，数据发布不等于代码实现；完整外部原批续验另登记。"
+ ],
+ "shipped_at": "2026-10-07T23:50:46+08:00"
+}

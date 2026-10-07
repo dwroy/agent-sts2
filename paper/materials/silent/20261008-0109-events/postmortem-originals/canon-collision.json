@@ -1,0 +1,124 @@
+{
+  "decision_lines": [
+    277909,
+    277954,
+    278032
+  ],
+  "sl_lines": [
+    995,
+    996,
+    998
+  ],
+  "collision_points": {
+    "board": "5759e4eebbd5c5d7",
+    "turn": 1,
+    "kind": "question",
+    "label": "combat/plan-choice+potion",
+    "line": "闪亮登场+, 余像+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+    "alternatives": [
+      "余像+, 闪亮登场+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+      "防御, 余像+, 闪亮登场+, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+      "闪亮登场+, 余像+, 防御, 打击 -> 火炬头聚合体, 中和+ -> 火炬头聚合体, 打击 -> 火炬头聚合体, 生产制造",
+      "drink 能力药水, then re-plan"
+    ],
+    "dead": {
+      "闪亮登场+, 余像+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造": 0,
+      "余像+, 闪亮登场+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造": 0,
+      "防御, 余像+, 闪亮登场+, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造": 0,
+      "闪亮登场+, 余像+, 防御, 打击 -> 火炬头聚合体, 中和+ -> 火炬头聚合体, 打击 -> 火炬头聚合体, 生产制造": 0,
+      "drink 能力药水, then re-plan": 0
+    },
+    "canon": {
+      "闪亮登场+, 余像+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造": "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+      "余像+, 闪亮登场+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造": "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+      "防御, 余像+, 闪亮登场+, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造": "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+      "闪亮登场+, 余像+, 防御, 打击 -> 火炬头聚合体, 中和+ -> 火炬头聚合体, 打击 -> 火炬头聚合体, 生产制造": "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>火炬头聚合体, PRODUCTION, STRIKE_SILENT>火炬头聚合体, STRIKE_SILENT>火炬头聚合体",
+      "drink 能力药水, then re-plan": "potion:POWER_POTION"
+    }
+  },
+  "fourth_target": {
+    "board": "5759e4eebbd5c5d7",
+    "turn": 1,
+    "reference": 1,
+    "back": 6,
+    "round": 0,
+    "excluded": [
+      "闪亮登场+, 余像+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+      "drink 能力药水, then re-plan"
+    ],
+    "attempts": [
+      1,
+      2,
+      3
+    ],
+    "point": "T1, the 6th latest question before attempt 1's death on T9",
+    "tried": {
+      "canon": [
+        "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+        "AFTERIMAGE, AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王, potion:POWER_POTION",
+        "potion:POWER_POTION"
+      ],
+      "loose": [],
+      "cards": [
+        {
+          "cards": "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+          "drunk": []
+        },
+        {
+          "cards": "AFTERIMAGE, AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+          "drunk": [
+            "POWER_POTION"
+          ]
+        },
+        {
+          "cards": "nothing",
+          "drunk": [
+            "POWER_POTION"
+          ]
+        }
+      ]
+    },
+    "where": {
+      "weight": 26.1,
+      "turnRound": 0,
+      "lost": {
+        "T1": 11.3,
+        "T2": 13.3,
+        "T3": 26,
+        "T4": 6.3,
+        "T5": 6,
+        "T6": 10.7,
+        "T7": 3.3,
+        "T8": 6.3,
+        "T9": 11.5
+      },
+      "weights": {
+        "T1": 26.1,
+        "T2": 29.6,
+        "T3": 32.6,
+        "T4": 13.2,
+        "T5": 13.7
+      }
+    },
+    "anchor": {
+      "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T9 (enemy HP 221), attempt 3 T9 (enemy HP 270), attempt 2 T8 (enemy HP 301))",
+      "ranked": [
+        {
+          "attempt": 1,
+          "turns": 9,
+          "enemyHp": 221
+        },
+        {
+          "attempt": 3,
+          "turns": 9,
+          "enemyHp": 270
+        },
+        {
+          "attempt": 2,
+          "turns": 8,
+          "enemyHp": 301
+        }
+      ]
+    }
+  }
+}
