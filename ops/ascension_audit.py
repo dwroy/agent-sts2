@@ -105,6 +105,26 @@ def read_report(path):
     return {}
 
 
+def report_path(report, batch, request, root):
+    """Resolve only reports preserved under this request's registered worktree."""
+    raw_tree = batch.get('worktree')
+    raw_request = request.get('worktree')
+    raw_path = report.get('report')
+    if not all(isinstance(value, str) and Path(value).is_absolute()
+               for value in (raw_tree, raw_request, raw_path)): return None
+    try:
+        tree = Path(raw_tree).resolve()
+        if tree != Path(raw_request).resolve() or not tree.is_relative_to(Path(root).resolve()/'.worktrees'):
+            return None
+        allowed = (tree/'learner/runs').resolve()
+        path = Path(raw_path).resolve()
+        if (not allowed.is_relative_to(tree) or not path.is_relative_to(allowed)
+                or path.suffix != '.md' or not path.is_file()): return None
+        return path
+    except (OSError, ValueError, RuntimeError):
+        return None
+
+
 def finish(state, batch_id, rc, root, out_dir, enqueue, inbox, proposal_check=lambda report,batch:[]):
     batch=state['batches'][batch_id];request=state['ascension_audits'][batch['audit_key']]
     if batch.get('state') == 'done': return
@@ -116,9 +136,8 @@ def finish(state, batch_id, rc, root, out_dir, enqueue, inbox, proposal_check=la
     if rc: errors.append('learner exit '+str(rc))
     if report.get('character') != batch['character'] or report.get('level') != request['level'] or report.get('complete') is not True:
         errors.append('missing matching completed audit report')
-    path=Path(str(report.get('report',''))).resolve()
-    allowed=Path(root,'learner/runs').resolve()
-    if not path.is_relative_to(allowed) or path.suffix != '.md' or not path.is_file(): errors.append('missing preserved report inside learner/runs')
+    path=report_path(report,batch,request,root)
+    if path is None: errors.append('missing preserved report inside learner/runs')
     runs = report.get('runs')
     if not isinstance(runs,list) or not runs or not all(isinstance(r,str) for r in runs) or not set(runs) <= set(batch['runs']):
         errors.append('missing dispatched evidence runs')

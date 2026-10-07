@@ -122,7 +122,9 @@ class ClimbAudits(Fixture):
         self.launch('again');self.assertEqual(len(self.notices),1)
 
     def report(self, **updates):
-        path=self.write('learner/runs/audit/report.md','Fixed learner audit; unknown fields listed.')
+        path=Path(self.state['batches']['first-ascension-audit']['worktree'])/'learner/runs/audit/report.md'
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_text('Fixed learner audit; unknown fields listed.')
         report={'task':'ascension-audit','character':'silent','level':10,'runs':[RUN],'complete':True,
                 'coverage':['floors','combat_counts','healing','campfires','rules','assumptions'],
                 'report':str(path),'code_proposals':[],'implementation_domains':[]}
