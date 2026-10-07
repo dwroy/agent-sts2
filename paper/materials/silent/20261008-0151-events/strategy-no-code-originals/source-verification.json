@@ -1,0 +1,82 @@
+{
+  "base": "88693c08d8c418b694805eecfbf6ec11ecde35ab",
+  "live": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+  "partial_source_proofs": [
+    {
+      "commit": "5e80e683daa08ae2569733b3b541cb523d7fe861",
+      "live": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+      "live_ancestor_rc": 0,
+      "subject": "Model observed upgraded Fasten in Silent A10 combat",
+      "paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/rollout-live.ts",
+        "agent/tests/silent-fasten-upgrade-evidence.json",
+        "agent/tests/silent-fasten-upgrade.test.ts"
+      ]
+    },
+    {
+      "commit": "45161a51c2c6b7e4a499b13cf749c4108193bbf5",
+      "live": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+      "live_ancestor_rc": 0,
+      "subject": "Expose observed simulation scope in Silent combat choices",
+      "paths": [
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/silent-simulation-reference.ts",
+        "agent/tests/silent-simulation-reference-evidence.json",
+        "agent/tests/silent-simulation-reference.test.ts"
+      ]
+    },
+    {
+      "commit": "3f69541b5d3259dac94d3395bfe3da47936b4de9",
+      "live": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+      "live_ancestor_rc": 0,
+      "subject": "Audit observed enemy HP changes in Silent replays",
+      "paths": [
+        "learner/resource_chain.py",
+        "learner/tests/silent-summon-hp-evidence.json",
+        "learner/tests/test_enemy_hp_audit.py"
+      ]
+    },
+    {
+      "commit": "c7578f37608526591edd86041cee5a28c3894fee",
+      "live": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+      "live_ancestor_rc": 0,
+      "subject": "Next-turn enemy damage from the monster DB at the current ascension",
+      "paths": [
+        "src/knowledge/move-model.ts",
+        "src/screens/combat-plan.ts",
+        "src/screens/selection.ts",
+        "src/strategy/rollout.ts",
+        "tests/move-model-damage.test.ts",
+        "tests/rollout-live.test.ts"
+      ]
+    }
+  ],
+  "files": {
+    "agent/src/reflex/card-model.ts": {
+      "exists": true,
+      "sha256": "5f4c48dc9bd633f4158a4ac69d5fbe9faa73c5fae990114f727d76ae23939d40"
+    },
+    "agent/src/reflex/turn-solver.ts": {
+      "exists": true,
+      "sha256": "f3bdab53fdd8fbbdaa94364a274307965a6b5ff345a62c96200d3314ccfdf81a"
+    },
+    "agent/src/reflex/rollout.ts": {
+      "exists": true,
+      "sha256": "c7dfb4c31b2da253d14be21cd17c1d4642270b52c25c11eaedac2241c1c36c48"
+    },
+    "agent/src/reflex/combat-plan.ts": {
+      "exists": true,
+      "sha256": "82e8f96a327d18bc18a541a0df1eb3d448bd32cc2c29e8a92d6371174d38e4e4"
+    },
+    "agent/src/sl/explore.ts": {
+      "exists": true,
+      "sha256": "f2618b42c4708691a4af5c1051f94e6be568686dfdf22e741c5090fe257a5563"
+    },
+    "learner/enemy_hp_audit.py": {
+      "exists": false,
+      "sha256": null
+    }
+  }
+}
