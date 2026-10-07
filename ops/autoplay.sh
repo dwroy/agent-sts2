@@ -21,7 +21,20 @@ while [ ! -f "$OPS/STOP" ]; do
     while kill -0 "$WAIT_PID" 2>/dev/null; do sleep 5; done
     WAIT_PID=""
   else
+    # A terminal brain fault/cancellation leaves the saved decision untouched. Clear the marker after repair to
+    # resume the same saved run; never turn a fault into an automatic stream of fresh play processes.
+    if python3 "$OPS/brain_wait.py" "$LOGS" --hold 2>/dev/null; then
+      sleep 5
+      continue
+    fi
     "$OPS/run.sh" "$@"
+    play_exit=$?
+    if [ "$play_exit" -eq 75 ] || [ "$play_exit" -eq 78 ]; then
+      echo "$(date '+%F %T') brain blocked (exit $play_exit); saved run retained; awaiting explicit recovery" >> "$OPS/autoplay.log"
+      # The marker is normally present. A missing marker must not cause a restart storm either.
+      while [ ! -f "$OPS/STOP" ] && ! python3 "$OPS/brain_wait.py" "$LOGS" --hold 2>/dev/null; do sleep 5; done
+      continue
+    fi
   fi
   rid=$(python3 - <<'PY'
 import json, os

@@ -17,7 +17,7 @@ import { noteTurnActed, settlePowersOf, TURN_START_SETTLE_MS, turnKeyOf, turnSta
 import { loadConfig, type AppConfig } from "../src/core/config.js";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
-import { resetFightMemory, runLoop } from "../src/hand/loop.js";
+import { resetFightMemory, runLoop } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
 import { createScreenMemory } from "../src/memory/types.js";

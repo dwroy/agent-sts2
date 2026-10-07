@@ -14,7 +14,7 @@ import type { AppConfig } from "../src/core/config.js";
 import { loadConfig } from "../src/core/config.js";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
-import { runLoop } from "../src/hand/loop.js";
+import { runLoop } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import { gameOverPayload, testKnowledge } from "./scenarios.js";

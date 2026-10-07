@@ -11,6 +11,9 @@ import datetime as dt
 import json
 import itertools
 import pathlib
+import sys
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import brain_source
 
 FIELDS = ("input_tokens", "cache_hit_tokens", "cache_write_tokens", "output_tokens", "reasoning_tokens", "total_tokens")
 
@@ -268,6 +271,8 @@ def collect(root, config, claude_dir=None, codex_home=None):
         if total:
             for e in matching:
                 e["subscription_usd"] = (e["subscription_usd"] or 0) + p["usd"] * e["total_tokens"] / total
+    brain_path = root / "logs/brain.jsonl"
+    brain_source.annotate(runs.values(), brain_source.load_sources(root / "logs", runs.keys(), sources.cuts.get(str(brain_path), 0)))
     return events, runs, sources, periods
 
 
@@ -333,8 +338,11 @@ def write_outputs(events, runs, sources, periods, config, out):
             have_cost |= bool(known)
             cumulative += cost or 0
             cumulative_tokens += total
-            wins = sum(r.get("victory") is True for r in rr)
-            curve.append({"ascension": asc, "runs": len(rr), "wins": wins, "total_tokens": total,
+            selected = [r for r in rr if brain_source.eligible(r)]
+            wins = sum(r.get("victory") is True for r in selected)
+            curve.append({"ascension": asc, "runs": len(rr), "wins": wins, "raw_wins": sum(r.get("victory") is True for r in rr),
+                          "performance_runs": len(selected), "performance_policy": brain_source.POLICY,
+                          "cost_scope": "all_engines_all_runs", "raw_cohorts": brain_source.cohorts(rr), "total_tokens": total,
                           "known_estimated_usd": cost, "cost_coverage": "partial" if any(not r["cost_complete"] for r in entries) else "recorded",
                           "usd_per_run": None if cost is None or not rr else cost / len(rr),
                           "usd_per_win": None if cost is None or not wins else cost / wins,
@@ -345,7 +353,7 @@ def write_outputs(events, runs, sources, periods, config, out):
             with (data / f"cost-curve-{character}.csv").open("w", newline="") as handle:
                 writer = csv.DictWriter(handle, list(curve[0]), lineterminator="\n")
                 writer.writeheader()
-                writer.writerows([{**r, "component_token_share": json.dumps(r["component_token_share"], sort_keys=True)} for r in curve])
+                writer.writerows([{**r, "component_token_share": json.dumps(r["component_token_share"], sort_keys=True), "raw_cohorts": json.dumps(r["raw_cohorts"], sort_keys=True)} for r in curve])
         report = out / f"paper/materials/{character}/cost.md"
         report.parent.mkdir(parents=True, exist_ok=True)
         def money(v):
@@ -355,7 +363,8 @@ def write_outputs(events, runs, sources, periods, config, out):
                  "订阅为共享账户周额度估算，按月费 × 12 / 52 折周、按同一重置窗口内已记录 token 分摊；未观测到的账户外部用量无法单独扣除。",
                  "未知价格、失败/过期/未校验窗口不补零。金额只汇总已知部分，不能当作完整账单；每胜费用在零胜时未知。",
                  "Jev 优先取 jev-prompts 的逐请求输入/输出（按 request_id 去重，缓存不另加），仅输入收费；runs 未覆盖余额只有总 token，拆分与费用未知。失败请求用量未知，未结束局有请求日志也计入。大脑仅归集 brain/codex-calls 留存请求，早期调用仍缺失。", "",
-                 "| 进阶 | 局 | 胜 | token | 已知估算 | 每局 | 每胜 | 累计已知 | 覆盖 |", "|---|---:|---:|---:|---:|---:|---:|---:|---|"]
+                 f"战绩口径：{brain_source.POLICY}。局数、费用、token 和每局费用覆盖全部引擎；胜数仅 Codex，raw_wins/各引擎原始成绩在 CSV 中保留；每胜费用为全部实验费用除以 Codex 胜数。", "",
+                 "| 进阶 | 原始局 | Codex 胜 | token（全部） | 已知估算 | 每原始局 | 每 Codex 胜 | 累计已知 | 覆盖 |", "|---|---:|---:|---:|---:|---:|---:|---:|---|"]
         for r in curve:
             lines.append(f"| A{r['ascension']} | {r['runs']} | {r['wins']} | {r['total_tokens']:.0f} | {money(r['known_estimated_usd'])} | {money(r['usd_per_run'])} | {money(r['usd_per_win'])} | {money(r['cumulative_known_usd'])} | {r['cost_coverage']} |")
         jev_price = config["api"]["jev"]
@@ -382,7 +391,16 @@ def write_outputs(events, runs, sources, periods, config, out):
 def build(root, out=None, config_path=None, claude_dir=None):
     config = json.loads((pathlib.Path(config_path) if config_path else pathlib.Path(__file__).with_name("cost-config.json")).read_text())
     events, runs, sources, periods = collect(root, config, claude_dir)
-    return write_outputs(events, runs, sources, periods, config, out or root)
+    output = pathlib.Path(out or root)
+    import shutil
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    prior = list((output / "paper/data").glob("cost*")) + list((output / "paper/materials").glob("*/cost.md"))
+    for path in prior:
+        if path.is_file():
+            saved = output / "paper/data/history" / stamp / path.relative_to(output)
+            saved.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, saved)
+    return write_outputs(events, runs, sources, periods, config, output)
 
 
 if __name__ == "__main__":

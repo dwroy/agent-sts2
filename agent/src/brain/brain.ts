@@ -1,4 +1,6 @@
 /**
+ * Production createRouter always uses Codex. Legacy engine adapters remain for historical fixed-data tests.
+ *
  * The brain as the game loop calls it: the v3 DeepSeek call signatures (choose, choosePlan, askJson), now
  * answered through the router by whichever engine the environment names (docs/v4-architecture.md §2).
  *
@@ -18,7 +20,7 @@
 import { dirname, join } from "node:path";
 
 import { brainLogPath, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type AppConfig } from "../core/config.js";
-import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "./llm/deepseek.js";
+import { brainSystemPrompt, DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "./llm/deepseek.js";
 import { buildTools } from "./tools/registry.js";
 import type { ToolContext, ToolDef } from "./tools/types.js";
 import type { JsonValue } from "../core/util/json.js";
@@ -28,11 +30,13 @@ import type { CodexUsageGuard } from "./engines/codex-usage.js";
 import { DeepSeekEngine } from "./engines/deepseek.js";
 import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
 import { frozenFacts } from "../knowledge/render/facts.js";
-import { BrainRouter, type BrainLogRow, type FallbackBudget } from "./router.js";
+import { BrainRouter, EngineFailure, type BrainLogRow, type FallbackBudget } from "./router.js";
+import type { BrainWait } from "./wait.js";
 import { carriesRunPlan, fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "./specs.js";
 import { routeAnswerText } from "../sim/route-map.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
+import { knowledgeFile } from "../knowledge/files.js";
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
 export { KNOWLEDGE_DIR };
@@ -85,12 +89,14 @@ export function codexTracePath(config: AppConfig): string | null {
 }
 
 /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
-export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget } = {}): BrainRouter {
+export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): BrainRouter {
   const engines = new Map<EngineName, BrainEngine>();
   // An engine's own notes (codex: a usage read that failed) go where the router's go (Brain.onNote).
   const note = (message: string): void => router.say(message);
   const router: BrainRouter = new BrainRouter({
-    config: { ...config.brain, log: brainLogPath(config) },
+    config: { ...config.brain, engine: "codex", byPrefix: {}, fallback: null, log: brainLogPath(config) },
+    codexOnly: true,
+    ...(options.wait ? { wait: options.wait } : {}),
     engine: (name) => {
       let engine = engines.get(name);
       if (!engine) {
@@ -111,11 +117,16 @@ export function brainUses(brain: AppConfig["brain"], engine: EngineName): boolea
 }
 
 /** The loop's brain; `fallbackBudget` is the loop's DEEPSEEK_MAX_CALLS for DeepSeek asked as the fallback. */
-export function createBrain(config: AppConfig, deepseek: DeepSeekClient, options: { fallbackBudget?: FallbackBudget } = {}): Brain {
+export function createBrain(config: AppConfig, deepseek: DeepSeekClient | null, options: { fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): Brain {
   // KNOWLEDGE_PREFIX=full: the prefix's data facts frozen for the day in the directory v3 keeps its guide snapshots in.
   // MECH_RULES=off: the prefix's monster blocks without the observed mechanics (as before them); MECH_MOVE_RULES=off: without
   // the learned move changes (as with MECH_RULES alone).
-  return new Brain(createRouter(config, deepseek, options), deepseek, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
+  const prompt = deepseek ?? brainSystemPrompt({
+    guideFile: knowledgeFile(KNOWLEDGE_DIR, `${config.run.characterId}-guide.md`, config.run.characterId),
+    handbookFile: knowledgeFile(KNOWLEDGE_DIR, "ds-handbook.md", config.run.characterId),
+    factsSnapshotDir: config.deepseek?.factsSnapshotDir,
+  });
+  return new Brain(createRouter(config, deepseek, options), prompt, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
 }
 
 /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */
@@ -161,7 +172,7 @@ export class Brain {
 
   constructor(
     readonly router: BrainRouter,
-    readonly deepseek: DeepSeekClient,
+    readonly deepseek: Pick<DeepSeekClient, "systemPrompt">,
     private readonly tools: (ctx: ToolContext) => ToolDef[] = buildTools,
     /** KNOWLEDGE_PREFIX=full: the rendered prompt, kept while the ascension and the data hold. */
     readonly knowledge: KnowledgePrompt = new KnowledgePrompt(),
@@ -193,7 +204,15 @@ export class Brain {
   async preflight(check: (bin: string) => Promise<ClaudeCheck> = checkClaudeBin, codexCheck: typeof checkCodex = checkCodex): Promise<string[]> {
     const config = this.router.config;
     const problems: string[] = [];
-    if (brainUses(config, "claude")) {
+    if (this.router.codexOnly) this.router.onRecovery(async () => {
+      const settings = config.engines.codex;
+      const result = await codexCheck(config.codex, settings.model ?? DEFAULT_CODEX_MODEL, settings.effort ?? DEFAULT_CODEX_EFFORT);
+      this.codexCheck = { bin: config.codex.bin, ...result };
+      if (!result.ok) throw new EngineFailure(`Codex preflight: ${result.error}`, "unavailable");
+      const engine = this.router.engineOf("codex");
+      if (engine instanceof CodexEngine) await engine.usage.recover();
+    });
+    if (!this.router.codexOnly && brainUses(config, "claude")) {
       const bin = config.claude.bin;
       const result = await check(bin);
       this.claudeCheck = { bin, ...result };
@@ -205,13 +224,13 @@ export class Brain {
         problems.push(message);
       }
     }
-    if (brainUses(config, "codex")) {
+    if (this.router.codexOnly || brainUses(config, "codex")) {
       const settings = config.engines.codex;
       const model = settings.model ?? DEFAULT_CODEX_MODEL;
       const effort = settings.effort ?? DEFAULT_CODEX_EFFORT;
       const result = await codexCheck(config.codex, model, effort);
       this.codexCheck = { bin: config.codex.bin, ...result };
-      const then = config.fallback && config.fallback !== "codex" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
+      const then = this.router.codexOnly ? "the current question waits for Codex recovery" : config.fallback && config.fallback !== "codex" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
       if (!result.ok) {
         const message = `codex is unavailable for this run: ${result.error}; ${then} (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)`;
         this.router.markUnavailable("codex", result.error);
@@ -261,7 +280,9 @@ export class Brain {
       question,
       ...(options ? { options } : {}),
       payload,
-      spec,
+      spec: this.router.codexOnly && isObject(payload) && carriesRunPlan(payload) ? {
+        ...spec, validate: (answer) => [...spec.validate(answer), ...runPlanSpec().validate(isObject(answer) ? answer["run_plan"] : null).map((p) => `run_plan: ${p}`)],
+      } : spec,
       ...this.toolsFor(label),
     };
     if (this.router.config.knowledgePrefix !== "full") return req;
@@ -293,7 +314,7 @@ export class Brain {
       const detail = (error instanceof Error ? error.message : String(error)).slice(0, 200);
       const reason = `the full-knowledge prompt did not fit the context, v3 prompt sent: ${detail}`;
       this.notify?.(`KNOWLEDGE_PREFIX=full: ${req.label}: ${reason}`);
-      return this.router.decide({ ...v3, knowledge: { mode: "off", ...(req.knowledge?.ascension === undefined ? {} : { ascension: req.knowledge.ascension }), error: reason } });
+      return this.router.decide({ ...v3, questionId: req.questionId, knowledge: { mode: "off", ...(req.knowledge?.ascension === undefined ? {} : { ascension: req.knowledge.ascension }), error: reason } });
     }
   }
 

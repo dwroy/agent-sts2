@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { createBrain } from "../src/brain/brain.js";
+import { createBrain } from "./legacy-brain.js";
 import { loadConfig } from "../src/core/config.js";
 import { loadPostmortems } from "../src/knowledge/render/data.js";
 import { freshFacts, frozenFacts } from "../src/knowledge/render/facts.js";

@@ -11,7 +11,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { createBrain, createRouter } from "../src/brain/brain.js";
+import { createRouter } from "../src/brain/brain.js";
+import { createBrain } from "./legacy-brain.js";
 import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, ROUTE_PATTERN, strictSchema } from "../src/brain/engines/codex.js";
 import { isContextOverflow } from "../src/brain/knowledge.js";
 import { answeredBy, deciderLabel, engineLabel } from "../src/hand/loop.js";

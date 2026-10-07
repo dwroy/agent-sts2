@@ -53,6 +53,8 @@ import sys
 from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import brain_source  # noqa: E402
 ROOT = str(Path(__file__).resolve().parents[1])  # the project root (docs/layout.md)
 sys.path.insert(0, os.path.join(ROOT, "agent", "tools", "logdb"))
 sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
@@ -614,7 +616,7 @@ def group_runs(rows, how, versions=None, characters=None):
             key = strip_code(row["code"]) or "(no code)"
             order.setdefault(key, (0, row["started"]))
         elif how == "ascension":
-            key = f"A{row['ascension']}"
+            key = f"A{row['ascension']}" if row["ascension"] is not None else "进阶未知"
             order.setdefault(key, (row["ascension"] if row["ascension"] is not None else -1, row["started"]))
         elif how == "character":
             key = (characters or {}).get(row["run_id"]) or "ironclad"
@@ -624,6 +626,9 @@ def group_runs(rows, how, versions=None, characters=None):
             order.setdefault(key, (0, key))
         else:
             raise ValueError(f"unknown --group-by {how}")
+        if how != "character" and len(set((characters or {}).values())) > 1:
+            key = f"{(characters or {}).get(row['run_id'], 'ironclad')} · {key}"
+            order.setdefault(key, order.get(key.split(" · ", 1)[1], (0, row["started"])))
         groups.setdefault(key, []).append(row)
     return [(key, groups[key]) for key in sorted(groups, key=lambda k: order[k])]
 
@@ -785,6 +790,7 @@ def main(argv=None):
     parser.add_argument("--no-sync", action="store_true", help="do not bring the log database up to date first")
     parser.add_argument("--no-calibration", action="store_true", help="leave out the calibration columns (eval/calibration.py)")
     parser.add_argument("--boss-clocks", help="calibration: JSONL of boss-clock-recompute.ts output instead of recomputing")
+    parser.add_argument("--include-non-codex", action="store_true", help="explicit raw performance cohort including DeepSeek/mixed/unknown; costs always retain every run")
     args = parser.parse_args(argv)
 
     import query as logquery  # noqa: E402  (needs duckdb: run with .cache/logdb-venv/bin/python)
@@ -807,19 +813,42 @@ def main(argv=None):
         for row in rows:
             entry, row["version_how"] = versions.assign(row["code"], row["started"])
             row["version"] = entry["name"]
+    for row in rows:
+        row["character"] = characters.get(row["run_id"]) or run_character(row)
+        characters[row["run_id"]] = row["character"]
+    brain_source.annotate(rows, brain_source.load_sources(logs, [r["run_id"] for r in rows]))
+    raw_rows = rows
+    raw_characters = {c: [r for r in raw_rows if r["character"] == c] for c in sorted(set(characters.values()))}
+    rows = [r for r in raw_rows if brain_source.eligible(r, args.include_non_codex)]
     groups = group_runs(rows, args.group_by, versions, characters)
     if args.total and rows:
-        groups.append(("全部", rows))
+        totals = {c: [r for r in rows if r["character"] == c] for c in sorted({r["character"] for r in rows})}
+        groups.extend((("全部" if len(totals) == 1 else f"全部 · {c}"), rs) for c, rs in totals.items())
     if args.json:
         print(json.dumps({"groups": [{"name": name, "run_ids": [r["run_id"] for r in rs], "summary": plain(summarize(rs))} for name, rs in groups],
-                          "runs": plain(rows), "strength_sets": {"cards": sorted(sets["cards"]), "relics": sorted(sets["relics"])}},
+                          "runs": plain(raw_rows), "performance_policy": brain_source.POLICY,
+                          "include_non_codex": args.include_non_codex, "raw_cohorts": brain_source.cohorts(raw_rows),
+                          "excluded_run_ids": [r["run_id"] for r in raw_rows if not brain_source.eligible(r, args.include_non_codex)],
+                          "all_run_usage_summary": plain(summarize(raw_rows)),
+                          "raw_cohorts_by_character": {c: brain_source.cohorts(rs) for c, rs in raw_characters.items()},
+                          "raw_usage_by_character": {c: plain(summarize(rs)) for c, rs in raw_characters.items()},
+                          "strength_sets": {"cards": sorted(sets["cards"]), "relics": sorted(sets["relics"])}},
                          ensure_ascii=False, indent=1))
         return 0
+    sys.stdout.write(f"战绩口径：{brain_source.POLICY}；{'显式包含非 Codex 局' if args.include_non_codex else '仅有成功 Codex 脑题且无其他成功引擎的局'}。原始 {len(raw_rows)} 局，纳入 {len(rows)} 局；旧报告保留。\n\n")
     sys.stdout.write(render(groups, args.min_n, args.md))
+    sys.stdout.write("\n来源原始成绩（不影响费用、用量或学习证据）：\n")
+    for character, rs in raw_characters.items():
+        for source, cohort in brain_source.cohorts(rs).items():
+            sys.stdout.write(f"{character}/{source}: {cohort['runs']} 局 / {cohort['wins']} 胜\n")
+    sys.stdout.write("\n全部原始局费用/用量口径：\n" + render([(f"原始全部 {c}（含非 Codex）", rs) for c, rs in raw_characters.items()], args.min_n, args.md))
     if args.min_n > 1 and any(len(rs) < args.min_n for _, rs in groups):
         sys.stdout.write(f"\n* 局数 < {args.min_n}（或该指标的 n < {args.min_n}）：样本不足，区间只作参考。\n")
     if args.per_run:
-        sys.stdout.write("\n" + render_runs(rows, args.md))
+        sys.stdout.write("\n" + render_runs(raw_rows, args.md))
+        for r in raw_rows:
+            source = r["brain_source"]
+            sys.stdout.write(f"{r['run_id']}: {source['source']} / {source['exclusion_reason'] or 'included'} / {json.dumps(source['successful_answers'])}\n")
     return 0
 
 

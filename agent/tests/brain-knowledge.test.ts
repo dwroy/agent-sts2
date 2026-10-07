@@ -10,7 +10,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { Brain, createBrain } from "../src/brain/brain.js";
+import { Brain } from "../src/brain/brain.js";
+import { createBrain } from "./legacy-brain.js";
 import { FULL_KNOWLEDGE_NOTE, isContextOverflow, KnowledgePrompt, fullSystemPrompt, memoryWithoutLessons, PREFIX_WARN_TOKENS, prefixSizeWarning, sliceWithoutLessons } from "../src/brain/knowledge.js";
 import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
 import { pickSpec } from "../src/brain/specs.js";
