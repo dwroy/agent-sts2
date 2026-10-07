@@ -128,6 +128,7 @@ describe("TARGET_ASCENSION=climb", () => {
   const runs = (rows: object[]) => {
     const path = join(mkdtempSync(join(tmpdir(), "climb-")), "runs.jsonl");
     writeFileSync(path, rows.map((row) => JSON.stringify(row)).join("\n") + "\n");
+    writeFileSync(join(path, "..", "brain.jsonl"), rows.map((row) => JSON.stringify({ run_id: (row as { run_id: string }).run_id, engine: "codex", label: "run-plan", answer: {}, problems: [] })).join("\n") + "\n");
     return path;
   };
 

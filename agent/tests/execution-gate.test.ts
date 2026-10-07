@@ -15,7 +15,7 @@ import { checkIdentity, handSignatureOf, identityAt, wireIntent, withExpect } fr
 import { loadConfig, type AppConfig } from "../src/core/config.js";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
-import { runLoop } from "../src/hand/loop.js";
+import { runLoop } from "./legacy-brain.js";
 import { ModClient, type ActionRequest } from "../src/hand/mod/client.js";
 import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
 import { buildRunBrief } from "../src/memory/run-brief.js";

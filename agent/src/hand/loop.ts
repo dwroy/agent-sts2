@@ -7,7 +7,7 @@
  */
 
 import { randomUUID } from "node:crypto";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 
 import { classifyFailure, dispatch } from "./act/dispatch.js";
 import { fingerprint, gate, type GateResult } from "./act/gate.js";
@@ -18,8 +18,10 @@ import type { AnswerSet } from "../reflex/jev/answers.js";
 import { withJevRetry, type JevClient } from "../reflex/jev/client.js";
 import type { Escalator } from "../brain/llm/file-escalation.js";
 import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "../brain/llm/deepseek.js";
-import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "../brain/brain.js";
+import { Brain, createBrain, toolContextOf, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "../brain/brain.js";
 import { fallbackOf } from "../brain/router.js";
+import { BrainBlockedError, fileBrainWait, isBrainBlocked, type BrainWait } from "../brain/wait.js";
+import { workspaceRoot } from "../core/paths.js";
 import type { BrainDecider } from "../brain/types.js";
 import { deciderLabel, engineLabel } from "../brain/labels.js";
 import { moveModel } from "../knowledge/move-model.js";
@@ -108,6 +110,11 @@ export interface LoopOptions {
   thiefSim?: ThiefCardSetup | null;
   /** SL (SL_ENABLED): the reload's poll interval (default 500 ms; tests make it short). */
   slPollMs?: number;
+  /** Fixed-data tests inject a brain (or null), avoiding all real model/preflight calls. */
+  brain?: Brain | null;
+  brainFactory?: typeof createBrain;
+  brainWait?: BrainWait;
+  signal?: AbortSignal;
 }
 
 export interface LoopStats {
@@ -132,6 +139,8 @@ export interface LoopStats {
   runsCompleted: number;
   stoppedBecause: string;
   elapsedMs: number;
+  brainPausedMs?: number;
+  activeElapsedMs?: number;
   logPath: string;
 }
 
@@ -144,6 +153,12 @@ export interface RunTokenSummary {
   outputTokens: number;
   maxFloor: number | null;
   elapsedMs: number;
+}
+
+/** A resolution/storage fault must also park autoplay and reach the operator inbox. */
+function brainFault(brain: Brain, label: string, runId: string | undefined, reason: string, cause?: unknown): never {
+  brain.router.wait.finish("fault", { label, runId, questionId: randomUUID(), system: "", question: "", payload: {}, spec: { label, kind: "plan", schema: {}, validate: () => [] } }, reason);
+  throw new BrainBlockedError("fault", reason, cause);
 }
 
 export type LoopEvent =
@@ -368,10 +383,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       if (engine === "deepseek") stats.deepseekCalls += 1;
     },
   };
-  const brain: Brain | null = deepseekClient ? createBrain(config, deepseekClient, { fallbackBudget }) : null;
+  const wait = options.brainWait ?? fileBrainWait(dirname(config.log.decisionLog), join(workspaceRoot(), "ops"), {
+    signal: options.signal, originalBudgetMs: maxMinutes * 60_000,
+    notify: (event) => onEvent({ type: "note", message: `Codex brain ${event.state}: run ${event.run_id ?? "?"}, ${event.decision_type}, question ${event.question_id}, ${event.reason}; outage time excluded from ${maxMinutes} min budget` }),
+  });
+  const brain: Brain | null = options.brain !== undefined ? options.brain : options.brainFactory ? options.brainFactory(config, deepseekClient, { fallbackBudget, wait }) : createBrain(config, deepseekClient, { fallbackBudget, wait });
   brain?.onNote((message) => onEvent({ type: "note", message }));
   // Before play: a configured engine that cannot run is said once, loudly, and rested for the process (Brain.preflight).
-  for (const problem of brain ? await brain.preflight() : []) onEvent({ type: "note", message: `ERROR: ${problem}` });
+  for (const problem of options.brain === undefined && brain ? await brain.preflight() : []) onEvent({ type: "note", message: `ERROR: ${problem}` });
   // One row per run with the configuration it is played with (logs/run-config.jsonl; eval metrics --group-by config).
   // SL (docs/sl.md): null when SL_ENABLED is off, and then nothing below differs from a loop without it.
   const sl = config.sl?.enabled
@@ -385,6 +404,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
    * it is used up the router asks BRAIN_FALLBACK, and DeepSeek's budget applies again.
    */
   const brainBudgetLeft = (label: string): boolean => {
+    if (brain?.router.codexOnly) return true;
     if (!brain) return deepseekBudgetLeft();
     const engine = brain.engineFor(label);
     return (engine !== "deepseek" && brain.router.budgetLeft(engine)) || deepseekBudgetLeft();
@@ -395,7 +415,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
    * (BRAIN_ENGINE_RUN_PLAN other than BRAIN_ENGINE keeps its own call at the map, as before).
    */
   const runPlanMerges = (): boolean =>
-    config.runPlan === "v1" && config.runPlanMerge && config.buildDecider === "deepseek" && deepseekClient !== null && (!brain || brain.engineFor("run-plan") === config.brain.engine);
+    config.runPlan === "v1" && config.runPlanMerge && brain !== null && brain.engineFor("run-plan") === brain.router.config.engine;
   /** Whether DeepSeek is asked first for this label (its call is counted up front, as v3 did). */
   const deepseekFirst = (label: string): boolean => !brain || brain.engineFor(label) === "deepseek";
   /** The router's re-ask on a question DeepSeek was asked first (a route checked by its AnswerSpec: M2): its calls. */
@@ -456,15 +476,17 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   };
 
   const budgetReason = (): string | null => {
+    if (options.signal?.aborted) return "cancelled by stop signal";
     if (stats.decisions >= maxDecisions) return `decision cap reached (${maxDecisions})`;
     if (stats.jevCalls >= config.budgets.maxRequests) return `request cap reached (${config.budgets.maxRequests})`;
     if (stats.inputTokens + stats.outputTokens >= config.budgets.maxTokens) {
       return `token cap reached (${config.budgets.maxTokens})`;
     }
-    if (Date.now() > deadline) {
+    const activeNow = Date.now() - (brain?.router.wait.suspendedMs ?? 0);
+    if (activeNow > deadline) {
       const busy = inCombatTracked || runEndPhase === "finalizing";
       if (!busy) return `time cap reached (${maxMinutes} min)`;
-      if (Date.now() > hardDeadline) return `time cap reached (${maxMinutes} min, still ${inCombatTracked ? "in combat" : "finishing the run"} after the grace period)`;
+      if (activeNow > hardDeadline) return `time cap reached (${maxMinutes} min, still ${inCombatTracked ? "in combat" : "finishing the run"} after the grace period)`;
     }
     if (consecutiveFailures >= 3) return "circuit breaker: 3 consecutive failures";
     return null;
@@ -665,6 +687,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const gateStuck = gateRejectedFp === observedFp && gateRejections >= GATE_REJECTION_LIMIT;
     const endTurnInstead = gateStuck && state.screen === "COMBAT" && state.available_actions.includes("end_turn");
     const gateCodeBaseline = gateStuck && !endTurnInstead;
+    if (gateCodeBaseline && !state.in_combat && brain?.router.codexOnly) {
+      const error = new BrainBlockedError("fault", "Repeated safety gate refusal on a brain decision; no replacement option dispatched");
+      brain.router.wait.finish("fault", { label: "safety-gate", runId: str(state.raw["run_id"]), questionId: `gate-${observedFp}`, system: "", question: "", payload: {}, spec: { label: "safety-gate", kind: "plan", schema: {}, validate: () => [] } }, error.message);
+      throw error;
+    }
     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
     // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come. The state that
     // marks it is logged (an enemy-turn read is not otherwise), so the journal replay after a restart reads it too.
@@ -700,7 +727,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       jevContext: config.jevContext,
       fightPlan: config.fightPlan,
       // BUILD_DECIDER=deepseek needs a DeepSeek client; without one the screens make the baseline decision.
-      buildDecider: config.buildDecider === "deepseek" && deepseekClient ? "deepseek" : "jev",
+      buildDecider: brain?.router.codexOnly || (config.buildDecider === "deepseek" && deepseekClient) ? "deepseek" : "jev",
       oneshot: config.buildOneshot,
       ...(slEnv ? { sl: slEnv } : {}),
       ...(slRecord ? { slRecord } : {}),
@@ -815,6 +842,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     }
 
     let decision = planned.decision;
+    if (brain?.router.codexOnly && decision.label === "map/route-fallback" && asArray(asRecord(state.raw["map"])["available_nodes"]).length !== 1) {
+      const reason = "Codex route question could not be constructed; no code route choice dispatched";
+      brain.router.wait.finish("fault", { label: "map/route-plan", runId, questionId: randomUUID(), system: "", question: "", payload: {}, spec: { label: "map/route-plan", kind: "plan", schema: {}, validate: () => [] } }, reason);
+      throw new BrainBlockedError("fault", reason);
+    }
     const planStarted = Date.now();
     const stateFingerprint = observedFp;
     const codeBaseline = gateCodeBaseline && decision.kind === "ask";
@@ -894,6 +926,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               }
             }
           } catch (error) {
+            if (brain.router.codexOnly) brainFault(brain, "run-plan", runId, "Due run-plan question could not be constructed", error);
             onEvent({ type: "note", message: `the run plan could not ride on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}): asked without it, still due` });
           }
         }
@@ -917,6 +950,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             runPlanRideLog = { trigger: ride.trigger, outcome, why: why.slice(0, 200) };
             logRunPlan(config.runPlanLog, { run: runId, floor, trigger: ride.trigger, merged_into: ask.label, decision_id: decisionId, error: why.slice(0, 200), question: call });
             const since = screenMemory.runPlanPending?.floor;
+            if (brain?.router.codexOnly) brainFault(brain, "run-plan", runId, `Codex run-plan answer could not be stored: ${why}`);
             onEvent({ type: "note", message: `${ask.label}: no usable run plan in the answer (${why.slice(0, 120)}); still due${since === undefined ? "" : ` since floor ${since}`}, the next question carries it` });
           };
           if ("missing" in found) return fail("missing", found.missing);
@@ -952,8 +986,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", decider: brainDecider(answer.brain), ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}), ...(answer.discard ? { discard: answer.discard } : {}) } },
           } as AnswerSet);
           // A one-shot resolution that fell back in code means the choice named no option.
-          if (!picked.intent || (spec.oneshot && picked.fallback)) {
-            onEvent({ type: "note", message: `${answeredBy(answer.brain)}'s ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
+          if (!picked.intent || ((spec.oneshot || brain?.router.codexOnly) && picked.fallback) || (brain?.router.codexOnly && picked.guard)) {
+            onEvent({ type: "note", message: `${answeredBy(answer.brain)}'s ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); ${brain?.router.codexOnly ? "no action dispatched; resolution fault" : "falling back to Jev/code"}` });
             deepseekAnswerUnusable = `${answer.choice} did not resolve`;
             return false;
           }
@@ -1065,6 +1099,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             if (!accept(answer, null)) deepseekFailed = true;
           }
         } catch (error) {
+          if (brain?.router.codexOnly) {
+            if (isBrainBlocked(error)) throw error;
+            brainFault(brain, decision.label, runId, `Brain decision resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+          }
           deepseekFailed = true;
           if (error instanceof DeepSeekInconsistentError) {
             deepseekAnswerUnusable = "inconsistent after re-ask";
@@ -1109,6 +1147,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         const engine = brain.engineFor(decision.label);
         const spent = `(${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0})`;
         onEvent({ type: "note", message: `${engine === "deepseek" ? `DeepSeek budget used up ${spent}` : `${engineLabel(engine)} call budget used up, and DeepSeek's as its fallback ${spent}`}; ${decision.label} goes to Jev/code` });
+      }
+      if (!deepseekResolved && brain?.router.codexOnly) {
+        const reason = `Codex brain decision did not resolve on ${decision.label}: ${deepseekAnswerUnusable ?? "no usable brain question"}`;
+        brain.router.wait.finish("fault", { label: decision.label, runId, questionId: decisionId, system: "", question: "", payload: {}, spec: { label: decision.label, kind: "plan", schema: {}, validate: () => [] } }, reason);
+        throw new BrainBlockedError("fault", reason);
       }
       if (!deepseekResolved && deepseekFailed && spec.oneshot && deepseekAnswerUnusable !== null) {
         // A one-shot question whose answer was unusable: the screen asks its step-by-step questions (logged:
@@ -1264,6 +1307,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           // per-turn escalation), and DeepSeek is not asked again right after it failed on this question.
           const deepseekBarred = deepseekFailed || (config.buildDecider === "deepseek" && config.combatDeepseek !== "on" && (state.in_combat || decision.label.startsWith("combat/")));
           for (const escalator of options.escalators ?? []) {
+            if (brain?.router.codexOnly && escalator.name === "claude") continue;
             const capped =
               escalator.name === "claude"
                 ? stats.claudeCalls >= config.escalation.claudeMaxCalls
@@ -1292,6 +1336,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 ...result.answers,
                 [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name, decider: escalatedBy, ...("discard" in answer && Array.isArray(answer.discard) ? { discard: answer.discard } : {}) } },
               } as AnswerSet);
+              if (brain?.router.codexOnly && (override.guard || override.fallback || !override.intent)) brainFault(brain, decision.label, runId, "Safety resolution refused Codex's escalation answer; no replacement choice dispatched");
               if (!override.intent) continue;
               const agreed = answer.choice === jevAnswer.choice;
               const who = deciderLabel(escalatedBy);
@@ -1314,6 +1359,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
               break;
             } catch (error) {
+              if (isBrainBlocked(error)) throw error;
               // The DeepSeek escalator is asked through the brain: named by the engine the brain asks for this label.
               onEvent({ type: "note", message: `${escalator.name === "deepseek" && brain ? engineLabel(brain.engineFor(decision.label)) : escalator.name} escalation failed: ${error instanceof Error ? error.message : String(error)}` });
             }
@@ -1359,6 +1405,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           }
         }
       } catch (error) {
+        if (isBrainBlocked(error)) throw error;
         const failure = classifyFailure(error);
         stats.errors += 1;
         consecutiveFailures += 1;
@@ -1778,6 +1825,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
   observedStates.flush();
   stats.elapsedMs = Date.now() - startedAt;
+  stats.brainPausedMs = brain?.router.wait.suspendedMs ?? 0;
+  stats.activeElapsedMs = stats.elapsedMs - stats.brainPausedMs;
   log.close();
   return stats;
 }
@@ -1943,6 +1992,8 @@ async function ensureFightPlan(
     });
     onEvent({ type: "note", message: `fight plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
   } catch (error) {
+    if (isBrainBlocked(error)) throw error;
+    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "fight-plan", runId, `Fight-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
     screenMemory.fightPlanFailed = fight;
     const message = error instanceof Error ? error.message : String(error);
     // An unparseable reply was still paid for: its usage and raw reply are logged with the error.
@@ -2011,6 +2062,8 @@ async function ensureRunPlan(
     });
     onEvent({ type: "note", message: `run plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
   } catch (error) {
+    if (isBrainBlocked(error)) throw error;
+    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "run-plan", runId, `Run-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);
     if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens, (error.meta as BrainMetaUsage).brain);

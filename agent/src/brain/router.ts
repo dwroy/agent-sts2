@@ -1,4 +1,7 @@
 /**
+ * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
+ * The configurable fallback path below remains for historical engine adapters and fixed regression fixtures.
+ *
  * The brain router (docs/v4-architecture.md §2): picks the engine for a question from the environment, validates
  * the answer (AnswerSpec.validate), re-asks at most once with the specific problems, falls back to another
  * engine when one fails or times out, and writes one row per question to logs/brain.jsonl.
@@ -45,6 +48,8 @@ import { dirname } from "node:path";
 
 import type { BrainConfig } from "../core/config.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, KnowledgeNote } from "./types.js";
+import { BrainBlockedError, BrainWait } from "./wait.js";
+import { isContextOverflow } from "./knowledge.js";
 
 /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */
 export function labelPrefix(label: string): string {
@@ -185,6 +190,8 @@ export interface BrainLogRow {
    * window's used %, length and reset time, the credit balance, when it was read.
    */
   limits?: object;
+  /** Explicit validation verdict; historical rows use answer/error/problems. */
+  accepted?: boolean;
 }
 
 export interface RouterDeps {
@@ -200,6 +207,9 @@ export interface RouterDeps {
    * each fallback call (none left: no fallback) and spent when the call is made.
    */
   fallbackBudget?: FallbackBudget;
+  /** Production policy (Roy 2026-10-07); omitted by historical router fixtures. */
+  codexOnly?: boolean;
+  wait?: BrainWait;
 }
 
 export interface FallbackBudget {
@@ -216,6 +226,8 @@ function message(error: unknown): string {
 }
 
 export class BrainRouter {
+  readonly wait: BrainWait;
+  private recover: (() => Promise<void>) | null = null;
   /** Engines resting after a quota / rate-limit / login failure: until when, and why. */
   private readonly resting = new Map<EngineName, { until: number; reason: string; kind: FailureKind }>();
   /** Calls made to each engine in this process (re-asks included), for BRAIN_<ENGINE>_MAX_CALLS. */
@@ -230,7 +242,9 @@ export class BrainRouter {
   private readonly idPrefix = `${Date.now().toString(36)}-${process.pid}`;
   private questions = 0;
 
-  constructor(private readonly deps: RouterDeps) {}
+  constructor(private readonly deps: RouterDeps) { this.wait = deps.wait ?? new BrainWait(); }
+  get codexOnly(): boolean { return this.deps.codexOnly === true; }
+  onRecovery(recover: () => Promise<void>): void { this.recover = recover; }
 
   /** A new question id (BrainRequest.questionId): unique across processes. */
   private nextQuestionId(): string {
@@ -262,6 +276,7 @@ export class BrainRouter {
 
   /** The engine configured for this label. */
   engineFor(label: string): EngineName {
+    if (this.codexOnly) return "codex";
     return this.deps.config.byPrefix[labelPrefix(label)] ?? this.deps.config.engine;
   }
 
@@ -345,6 +360,7 @@ export class BrainRouter {
     try {
       return this.deps.engine(name);
     } catch (error) {
+      if (this.codexOnly) throw error;
       throw new EngineFailure(message(error), "unavailable");
     }
   }
@@ -369,7 +385,9 @@ export class BrainRouter {
    * an answer failure as the engine threw it.
    */
   async decide(request: BrainRequest): Promise<BrainAnswer> {
-    const req: BrainRequest = request.questionId ? request : { ...request, questionId: this.nextQuestionId() };
+    request.questionId ??= this.nextQuestionId();
+    const req = request;
+    if (this.codexOnly) return this.decideCodex(req);
     const primary = this.engineFor(req.label);
     const fallback = this.deps.config.fallback && this.deps.config.fallback !== primary ? this.deps.config.fallback : null;
     const rest = this.resting.get(primary);
@@ -430,6 +448,60 @@ export class BrainRouter {
     return result;
   }
 
+  /** Recoverable model failures suspend; programming errors retain their cause and reach the operator. */
+  private async decideCodex(request: BrainRequest): Promise<BrainAnswer> {
+    const validate = request.spec.validate;
+    const req: BrainRequest = { ...request, spec: { ...request.spec, softValidate: undefined,
+      validate: (answer) => [...validate(answer), ...(request.spec.softValidate?.(answer) ?? [])],
+    } };
+    let retrying = false;
+    for (;;) {
+      const began = this.now();
+      try {
+        this.wait.check();
+        if (retrying && this.recover) await this.recover();
+        const rest = this.resting.get("codex");
+        if (rest && rest.until > this.now() && (!retrying || Number.isFinite(rest.until))) throw new EngineFailure(rest.reason, rest.kind, rest.until - this.now());
+        if (retrying) this.resting.delete("codex");
+        const result = await this.attempt("codex", req);
+        if (result.engine !== "codex") throw new Error(`Codex engine returned ${result.engine}`);
+        this.write("codex", req, result);
+        if (BrainRouter.unusable(req, result)) throw new EngineFailure("Codex answer empty or invalid after validation/re-ask", "invalid");
+        this.wait.check();
+        if (retrying) this.wait.finish("resumed");
+        return result;
+      } catch (error) {
+        if (error instanceof BrainBlockedError) {
+          this.wait.finish(error.state, req, error.message);
+          throw error;
+        }
+        const kind = isAnswerFailure(error) ? "invalid" : failureKind(error);
+        // Existing context repair still asks Codex, with the smaller prompt.
+        if (kind === "error" && req.knowledge?.mode === "full" && isContextOverflow(error)) throw error;
+        if (!(error instanceof EngineFailure || isAnswerFailure(error)) || kind === "error") {
+          this.wait.finish("fault", req, message(error).slice(0, 300));
+          this.write("codex", req, null, error, undefined, this.spent(error, began));
+          throw new BrainBlockedError("fault", `Codex brain program failure on ${req.label}: ${message(error)}`, error);
+        }
+        this.wait.pause(req, `${kind}: ${message(error).slice(0, 300)}`, began);
+        if (kind !== "invalid") {
+          try { this.write("codex", req, null, error, undefined, this.spent(error, began), undefined, errorNotes(error)); }
+          catch (loggingError) { this.wait.finish("fault", req, message(loggingError)); throw new BrainBlockedError("fault", "Codex brain log could not be written", loggingError); }
+        }
+        retrying = true;
+        const resting = this.resting.get("codex");
+        const cooldown = error instanceof EngineFailure ? error.cooldownMs : 0;
+        if (Number.isFinite(cooldown) && cooldown > 0 && !resting) this.resting.set("codex", { until: this.now() + cooldown, reason: message(error), kind });
+        try { await this.wait.retry(Math.max(cooldown, resting ? resting.until - this.now() : 0)); }
+        catch (cancelled) {
+          const state = cancelled instanceof BrainBlockedError ? cancelled.state : "fault";
+          this.wait.finish(state, req, message(cancelled));
+          throw cancelled instanceof BrainBlockedError ? cancelled : new BrainBlockedError("fault", "Codex retry timer failed", cancelled);
+        }
+      }
+    }
+  }
+
   /** Whether an engine's answer is unusable after its re-ask: none, or one with hard problems. */
   private static unusable(req: BrainRequest, result: BrainAnswer): boolean {
     return result.answer === null || req.spec.validate(result.answer).length > 0;
@@ -476,6 +548,12 @@ export class BrainRouter {
     try {
       second = await this.call(engine, { ...req, reask: { answer: previous || "(no answer)", problems: firstProblems } }, asFallback);
     } catch (error) {
+      if (this.codexOnly) {
+        const secondUsage = errorUsage(error);
+        throw withUsage(error, { inputTokens: first.usage.inputTokens + (secondUsage?.inputTokens ?? 0), outputTokens: first.usage.outputTokens + (secondUsage?.outputTokens ?? 0),
+          cacheHitTokens: (first.usage.cacheHitTokens ?? 0) + (secondUsage?.cacheHitTokens ?? 0),
+          ...(first.usage.costUsd === undefined && secondUsage?.costUsd === undefined ? {} : { costUsd: (first.usage.costUsd ?? 0) + (secondUsage?.costUsd ?? 0) }) });
+      }
       if (isAnswerFailure(error)) throw error;
       const problems = [...firstProblems, `re-ask failed: ${message(error).slice(0, 200)}`];
       return { ...first, answer: usableFirst ? first.answer : null, problems, first: { answer: first.answer, problems: firstProblems }, reasks: 1, reaskCalls: 1 };
@@ -507,6 +585,7 @@ export class BrainRouter {
 
   /** engine.decide within the engine's call budget (and, as the fallback, the caller's) and under its timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
   private async call(engine: BrainEngine, req: BrainRequest, asFallback = false): Promise<BrainAnswer> {
+    if (this.codexOnly) this.wait.check();
     if (!this.budgetLeft(engine.name)) {
       const field = `BRAIN_${engine.name.toUpperCase()}_MAX_CALLS`;
       throw new EngineFailure(`${engine.name} call budget used up (${this.callsMade(engine.name)}/${this.deps.config.engines[engine.name].maxCalls}, ${field})`, "budget");
@@ -517,25 +596,41 @@ export class BrainRouter {
     }
     this.calls.set(engine.name, this.callsMade(engine.name) + 1);
     const ms = req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
-    if (!ms) return engine.decide(req);
+    if (!ms && !this.codexOnly) return engine.decide(req);
     const controller = new AbortController();
+    const outer = this.codexOnly ? this.wait.signal : undefined;
+    let rejectCancel: ((error: BrainBlockedError) => void) | undefined;
+    const cancellation = new Promise<never>((_, reject) => { rejectCancel = reject; });
+    const cancel = (): void => { controller.abort(); rejectCancel?.(new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
+    outer?.addEventListener("abort", cancel, { once: true });
+    if (outer?.aborted) cancel();
     let timer: NodeJS.Timeout | undefined;
+    const stopPoll = this.codexOnly ? setInterval(() => {
+      try { this.wait.check(); }
+      catch (error) {
+        controller.abort();
+        rejectCancel?.(error instanceof BrainBlockedError ? error : new BrainBlockedError("fault", "Codex wait check failed", error));
+      }
+    }, 1_000) : undefined;
     const timeout = new Promise<never>((_, reject) => {
-      timer = setTimeout(() => {
+      if (ms) timer = setTimeout(() => {
         controller.abort();
         reject(new BrainTimeoutError(engine.name, ms));
       }, ms);
     });
     try {
-      const answer = await Promise.race([engine.decide({ ...req, timeoutMs: ms }, controller.signal), timeout]);
+      const answer = await Promise.race([engine.decide({ ...req, ...(ms ? { timeoutMs: ms } : {}) }, controller.signal), timeout, cancellation]);
       this.timeouts.delete(engine.name);
       return answer;
     } catch (error) {
-      if (error instanceof BrainTimeoutError) this.noteTimeout(engine.name, ms);
+      if (outer?.aborted) throw new BrainBlockedError("cancelled", "Codex brain call cancelled by stop signal", error);
+      if (error instanceof EngineFailure && error.kind === "timeout") this.noteTimeout(engine.name, ms ?? 0);
       else this.timeouts.delete(engine.name);
       throw error;
     } finally {
       clearTimeout(timer);
+      clearInterval(stopPoll);
+      outer?.removeEventListener("abort", cancel);
     }
   }
 
@@ -589,6 +684,7 @@ export class BrainRouter {
       tools: (this.toolsFor(engine) ? req.tools ?? [] : []).map((tool) => tool.name),
       tool_calls: result?.toolCalls ?? [],
       answer: result?.answer ?? null,
+      accepted: result !== null && !BrainRouter.unusable(req, result),
       problems: result?.problems ?? [],
       reasks: result?.reasks ?? 0,
       attempts: result?.attempts ?? 0,
@@ -611,7 +707,8 @@ export class BrainRouter {
         mkdirSync(dirname(this.deps.config.log), { recursive: true });
         appendFileSync(this.deps.config.log, `${JSON.stringify(row)}\n`, "utf8");
       }
-    } catch {
+    } catch (error) {
+      if (this.codexOnly) throw error;
       // logging must never break play
     }
   }

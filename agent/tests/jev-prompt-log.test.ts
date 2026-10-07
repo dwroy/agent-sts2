@@ -12,7 +12,7 @@ import { loadConfig, type AppConfig } from "../src/core/config.js";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { JevClient, JevError, type JevAskResult } from "../src/reflex/jev/client.js";
 import type { QuestionSet } from "../src/reflex/jev/questions.js";
-import { runLoop } from "../src/hand/loop.js";
+import { runLoop } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { askJevLogged, createJevPromptLog, jevPromptLogPath, resolveJevPromptLog, type JevPromptMeta } from "../src/eye/jev-prompt-log.js";
 import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";

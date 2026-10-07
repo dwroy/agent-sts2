@@ -547,6 +547,8 @@ export function codexFailure(stream: CodexStream, run: { code: number | null; si
   else if (/\b429\b|rate.?limit|too many requests/i.test(text)) kind = "rate_limit";
   else if (/\b50[234]\b|overloaded|server is busy|at capacity/i.test(text)) kind = "overloaded";
   else if (/\b401\b|\b403\b|unauthori[sz]ed|not logged in|log ?in again|codex login|refresh token|authenticat/i.test(text)) kind = "auth";
+  else if (/connection (?:failed|reset|closed)|stream disconnected|websocket|network|ECONNRESET|ETIMEDOUT/i.test(text)) kind = "unavailable";
+  if (stream.completed && stream.messages.length === 0 && stream.errors.length === 0) kind = "invalid";
   const what = stream.completed && stream.messages.length === 0 && stream.errors.length === 0 ? "codex gave no answer" : `codex exited ${run.code ?? run.signal}`;
   return new EngineFailure(`${what} [${kind}]: ${(text || "no error message").slice(0, 400)}`, kind, CODEX_REST_MS[kind] ?? 0);
 }
@@ -736,6 +738,7 @@ export function sessionFailure(turn: SessionTurn): { error: EngineFailure; trans
   else if (tag === "unauthorized" || /\b401\b|unauthori[sz]ed|not logged in/i.test(message)) kind = "auth";
   const overflow = tag === "contextWindowExceeded" ? " (context window exceeded)" : "";
   const transport = kind === "error" && (TRANSPORT_INFO.includes(tag) || /stream disconnected|connection (failed|reset|closed)|websocket/i.test(message));
+  if (transport) kind = "unavailable";
   return { error: new EngineFailure(`codex session turn ${turn.status} [${kind}]: ${message.slice(0, 400)}${overflow}`, kind, CODEX_REST_MS[kind] ?? 0), transport };
 }
 
@@ -1096,7 +1099,7 @@ export class CodexEngine implements BrainEngine {
           native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none" },
         });
       }
-      if (turn.status === "completed") throw new EngineFailure("codex gave no answer [error] (session turn completed without an agent message)", "error");
+      if (turn.status === "completed") throw new EngineFailure("codex gave no answer [invalid] (session turn completed without an agent message)", "invalid");
       if (turn.status === "aborted") throw new Error(`codex session turn aborted after ${turn.ms} ms`);
       if (turn.status === "stalled") {
         if (attempt <= stallRetries && !signal?.aborted) {
