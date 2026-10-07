@@ -1,0 +1,33 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.26 → 2026-10-07.27；提交：e7552663（分支 exp-silent）；合入：未合入，21 份并行记录冲突，按第 8 节停止，交运维兜底。
+- 条数：新增 1、更新 10（加证据 10、只改数字 0）、退役 0；active 154 → 155。正文 48,539 字；A8 适用 147 条/45,345 字，A9 适用 148 条/45,629 字。
+- 机制推理：
+  - 步法 — 敏捷逐张挡牌兑现 — 62 局 — KEN58SH9SLZ6
+  - 力量与仪式 — 逐击增伤，成长与临时恢复分账 — 101 局 — KEN58SH9SLZ6
+  - 速度药水 — 本轮增加 5 临时敏捷 — 32 局、38 次饮用 — KEN58SH9SLZ6
+  - 精致折扇 — 第三张攻击补 4 挡 — 4 局 — KEN58SH9SLZ6
+  - 迷雾 — 施毒、虚弱与结算分别核算 — 11 局 — KEN58SH9SLZ6
+  - 带毒刺击 — 直伤与施毒分列 — 26 局 — KEN58SH9SLZ6
+  - 呼唤 — 每张持牌先失去 6 生命 — 5 局 — KEN58SH9SLZ6
+  - 能力兑现观察 — 计划和能力分数不能预支为伤挡 — 100 局 — KEN58SH9SLZ6
+- 改了的手写知识：无。
+- 测试：tsc 退出 0；Vitest 239 文件/2511 用例/退出 0。正式未重跑；诊断角色配置造成 2 例失败，恢复默认后 10/10 通过。
+- 切片大小：整体中位下降 19 字；最大 5337 字，增加 2 字。
+- 学习账本：新增 silent-0253；改成 proposed：silent-0005、0006、0007、0019、0020、0021、0079、0083、0088、0091、0125、0176、0253；退役无；`ledger.py check` 退出 0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.27","commit":"e7552663cdcbfad33a1e348bdd13842fce7e3c41","merged":null,"added":1,"updated":10,"retired":0,"active":155,"mechanisms":["步法逐牌敏捷","力量与仪式分源","速度药水临时敏捷","折扇第三攻击被动挡","迷雾施毒与虚弱","带毒刺击双组件","呼唤持牌生命代价","能力实际兑现观察"],"tests":{"tsc":0,"vitest":0,"cases":2511},"ledger":{"added":["silent-0253"],"proposed":["silent-0005","silent-0006","silent-0007","silent-0019","silent-0020","silent-0021","silent-0079","silent-0083","silent-0088","silent-0091","silent-0125","silent-0176","silent-0253"],"retired":[],"check":0},"code_proposals":["silent-proposal-5927843203da25f7","silent-proposal-e282a9131b99129a","silent-proposal-08eaa60bcc449852"],"implementation_domains":["combat","potion","sl"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1169a-7637-73c1-a74d-fb0b63249548
+轮数：1；工具调用：command_execution×91
+token：输入 232.1k、输出 52.6k（其中推理 19.5k）、cache 读 10026.4k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：2088.0 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 9.4 s、首次工具 13.4 s、末次工具结束 2015.7 s；工具内共 1216.5 s，其余（模型生成、推理、网络）868.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×64；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T21-43-03-01a1169a-7637-73c1-a74d-fb0b63249548.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update.jsonl

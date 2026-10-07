@@ -1,0 +1,139 @@
+{
+  "task": "strategy-proposal",
+  "base": "c4d9bfce4dc960420cfe89e60aa2b28bfb708e56",
+  "runs": [
+    "JMH5C51RLN4E",
+    "9TG1RP5LFAAK",
+    "VLZ6CCT8AQ0A",
+    "T082DRCUHRRD",
+    "10GPK5XGHCK3",
+    "VN7RQJMJEFMX",
+    "VLV17NUSFS61",
+    "UMVLWER4CD98",
+    "P5HT1272P5SB",
+    "YLYLZWHA0GKU"
+  ],
+  "fixes": [
+    {
+      "id": "silent-0252",
+      "summary": "静默A10升级勒紧6点持续格挡",
+      "commit": "5e80e683daa08ae2569733b3b541cb523d7fe861",
+      "runs": [
+        "VLZ6CCT8AQ0A"
+      ],
+      "floor": 43,
+      "turn": 1,
+      "ledger": [
+        "silent-0252",
+        "silent-0143"
+      ],
+      "code_proposal": "silent-proposal-833f22d3d888f03a",
+      "live": false
+    }
+  ],
+  "skipped": [
+    {
+      "id": "silent-proposal-4cc200cc9747f4a8",
+      "reason": "阶段游戏证据充分，已测源码6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4仍不是实际live祖先；本轮锁内预演21处版本/并行记录冲突，缺实际上线证明，保留源码待运维兜底。"
+    },
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "reason": "神化已见手牌升级成立，729帧有agent_view.piles聚合文本；缺逐卡完整动态值/稳定实例及确定抽序、未知卡升级差值。升级勒紧6已单独补模型，未覆盖神化同线与后续各堆升级传播。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "reason": "推演成熟度已有live源码45161a51；预算/药价/目标规则仍缺同一总预算、同盘种子和随机样本的受控对照，神化覆盖修复后结果与另一focus完整实打。保留现预算和护栏。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "reason": "同一神化缺口的经验链；已有聚合牌堆文本，仍缺逐卡升级/附魔动态数值、稳定实例与确定抽序的完整传播对照。不能以升级勒紧子项或经验提交称整个神化实现。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "reason": "升级勒紧6子项本轮源码5e80e683daa08ae2569733b3b541cb523d7fe861/silent-0252已自测但未live；综合条目尚缺神化传播与各属性/持续毒/成长/实际资源共同冻结的完整调用输入和源码对照，路线/休息/focus整场反事实未保存，不能标整项implemented。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "reason": "8JRE同指纹实打证实多12血换7伤；缺Jev原答→HP护栏→SL替换→实际派发/重问四阶段统一候选机器标识及完整原调用关联。无另一完整胜线，不从理由文本倒造全链，保留原探索选择。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "reason": "CA5 F13T5成长未被虚弱取消已核；未取得步法不能充作敏捷样本，缺力量/敏捷/虚弱/独立成长四路径同时冻结的本角色调用输入及源码对照，不能把单子机制称复合经验全部实现。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "reason": "5PM F39T2未建立毒雾、对无毒目标冒泡零效果已核；缺同起始HP/构筑/抽序下不同启动顺序的完整胜负对照和可复现收益函数，另一F33胜局不能拟合启动/构筑阈值。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "reason": "61E F17T5/T6吸取、负敏捷与毒的原帧已核；缺同起始HP/构筑/完整已知抽序下可救活的另一完整SL路线，首试获胜不足以改SL范围、阈值或换线偏好。"
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 38
+  },
+  "code_proposals": [
+    "silent-proposal-833f22d3d888f03a"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-4cc200cc9747f4a8",
+      "state": "waiting",
+      "reason": "阶段游戏证据充分，已测源码6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4仍不是实际live祖先；本轮锁内预演21处版本/并行记录冲突，缺实际上线证明，保留源码待运维兜底。"
+    },
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "神化已见手牌升级成立，729帧有agent_view.piles聚合文本；缺逐卡完整动态值/稳定实例及确定抽序、未知卡升级差值。升级勒紧6已单独补模型，未覆盖神化同线与后续各堆升级传播。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "推演成熟度已有live源码45161a51；预算/药价/目标规则仍缺同一总预算、同盘种子和随机样本的受控对照，神化覆盖修复后结果与另一focus完整实打。保留现预算和护栏。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "同一神化缺口的经验链；已有聚合牌堆文本，仍缺逐卡升级/附魔动态数值、稳定实例与确定抽序的完整传播对照。不能以升级勒紧子项或经验提交称整个神化实现。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "升级勒紧6子项本轮源码5e80e683daa08ae2569733b3b541cb523d7fe861/silent-0252已自测但未live；综合条目尚缺神化传播与各属性/持续毒/成长/实际资源共同冻结的完整调用输入和源码对照，路线/休息/focus整场反事实未保存，不能标整项implemented。"
+    },
+    {
+      "id": "silent-proposal-7ef28c3cb0160972",
+      "state": "duplicate",
+      "reason": "14次已保存使用前后数据、8局支持+1能/抽2/不回血，当前模型调用一致；CURE_ALL源9f0babde与成熟度展示45161a51均为实际live祖先。按原提案允许模型一致记duplicate；满手、时机和预算规则无对照，保持原行为。",
+      "commit": "45161a51c2c6b7e4a499b13cf749c4108193bbf5"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "8JRE同指纹实打证实多12血换7伤；缺Jev原答→HP护栏→SL替换→实际派发/重问四阶段统一候选机器标识及完整原调用关联。无另一完整胜线，不从理由文本倒造全链，保留原探索选择。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "CA5 F13T5成长未被虚弱取消已核；未取得步法不能充作敏捷样本，缺力量/敏捷/虚弱/独立成长四路径同时冻结的本角色调用输入及源码对照，不能把单子机制称复合经验全部实现。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "5PM F39T2未建立毒雾、对无毒目标冒泡零效果已核；缺同起始HP/构筑/抽序下不同启动顺序的完整胜负对照和可复现收益函数，另一F33胜局不能拟合启动/构筑阈值。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "61E F17T5/T6吸取、负敏捷与毒的原帧已核；缺同起始HP/构筑/完整已知抽序下可救活的另一完整SL路线，首试获胜不足以改SL范围、阈值或换线偏好。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-214302-strategy-proposal/report.md"
+}

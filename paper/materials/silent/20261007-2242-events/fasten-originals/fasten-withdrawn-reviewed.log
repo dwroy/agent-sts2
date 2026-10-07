@@ -1,0 +1,93 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-fasten-upgrade.test.ts (6 tests | 4 failed) 32ms
+   × uses the observed six-point establishment, including the hand-to-pile model 9ms
+   × propagates the actual level through deckModels for later-turn and boss simulation inputs 2ms
+   × adds six only to Defends played after it, without changing another block skill 12ms
+   × persists the newly established six into later draws while leaving the input state unchanged 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-fasten-upgrade.test.ts > uses the observed six-point establishment, including the hand-to-pile model
+AssertionError: expected undefined to be 6 // Object.is equality
+
+- Expected:
+6
+
++ Received:
+undefined
+
+ ❯ tests/silent-fasten-upgrade.test.ts:36:27
+     34| it("uses the observed six-point establishment, including the hand-to-p…
+     35|   expect(evidence.power_after.find((power) => power.power_id === "FAST…
+     36|   expect(fasten().fasten).toBe(6);
+       |                           ^
+     37|   expect(offHandCardModel(evidence.fasten, "FASTEN", true, 0, knowledg…
+     38| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-fasten-upgrade.test.ts > propagates the actual level through deckModels for later-turn and boss simulation inputs
+AssertionError: expected undefined to be 6 // Object.is equality
+
+- Expected:
+6
+
++ Received:
+undefined
+
+ ❯ tests/silent-fasten-upgrade.test.ts:44:51
+     42|     session: { mode: "singleplayer", phase: "run" }, available_actions…
+     43|     run: { character_id: "SILENT", ascension: 10, floor: 43, deck: [ev…
+     44|   expect(deckModels(state, knowledge)[0]?.fasten).toBe(6);
+       |                                                   ^
+     45|   const other = parseGameState({ ...state.raw, run: { ...state.run?.ra…
+     46|   expect(deckModels(other, knowledge)[0]?.fasten).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/silent-fasten-upgrade.test.ts > adds six only to Defends played after it, without changing another block skill
+AssertionError: expected 24 to be 30 // Object.is equality
+
+- Expected
++ Received
+
+- 30
++ 24
+
+ ❯ tests/silent-fasten-upgrade.test.ts:54:111
+     52|   input.hand = [defend(0), { ...fasten(), index: 1, key: "c1" }, defen…
+     53|     card(3, "TEST_BLOCK_SKILL", { type: "Skill", target: "self", block…
+     54|   expect(replaySteps(input, input.hand.map((entry) => step(entry.index…
+       |                                                                                                               ^
+     55| });
+     56|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/silent-fasten-upgrade.test.ts > persists the newly established six into later draws while leaving the input state unchanged
+AssertionError: expected 8 to be 14 // Object.is equality
+
+- Expected
++ Received
+
+- 14
++ 8
+
+ ❯ tests/silent-fasten-upgrade.test.ts:72:36
+     70|   const before = JSON.stringify(input);
+     71|   const plan = replaySteps(input.solver, [step(0, "FASTEN"), step(1, "…
+     72|   expect(plan.outcome.blockGained).toBe(14);
+       |                                    ^
+     73|   const records = simulateFight(input, plan, 2, 1, false).records;
+     74|   expect(records[0]!.snap.pw.FASTEN_POWER).toBe(6);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 2 passed (6)
+   Start at  22:02:31
+   Duration  817ms (transform 551ms, setup 314ms, import 345ms, tests 32ms, environment 0ms)
+

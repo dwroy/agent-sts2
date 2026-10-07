@@ -1,0 +1,239 @@
+[
+ {
+  "id": "silent-0026",
+  "ts": "2026-10-05T02:01:13+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "灵动步法给予的敏捷没有在出牌方案内部生效，也未列入rollout持续能力表；已存在于输入状态的敏捷能读到。T082DRCUHRRD F23 T3同一段灵动步法后防御预测5、实际7；更早静默首局也预测10而实际12。需要把本局已经观察的2／3敏捷应用到后续格挡牌及后续回合，不能用默认8分能力价值代替。",
+  "evidence": [
+   {
+    "run": "C48LLXBGKXQ9",
+    "floor": 12,
+    "turn": 2,
+    "note": "所选灵动步法→速度药水→防御整条线预测10格挡；实际灵动步法建立2敏捷，速度药水再加5，共7敏捷，防御实际12。",
+    "role": "support",
+    "added": "2026-10-05T02:01:13+08:00"
+   },
+   {
+    "run": "T082DRCUHRRD",
+    "floor": 23,
+    "turn": 3,
+    "note": "棘刺蟾蜍SPINY_TOAD；打击→灵动步法→防御预测新增5格挡、损2；实际2敏捷使防御10→17，回合实损0。",
+    "role": "support",
+    "added": "2026-10-05T02:01:13+08:00"
+   },
+   {
+    "run": "T082DRCUHRRD",
+    "floor": 48,
+    "turn": 3,
+    "note": "第6次候选包含灵动步法+，但未来增益未模拟；实际到T10才建立3敏捷，T11防御加8、6血+26挡仍挡不住33，不认定提前建立必胜。",
+    "role": "support",
+    "added": "2026-10-05T02:01:13+08:00"
+   }
+  ],
+  "first_run": "C48LLXBGKXQ9",
+  "prior": "no",
+  "prior_runs": [
+   "C48LLXBGKXQ9"
+  ],
+  "prior_note": "首局尚无学习时，F12 T2已选出该能力和格挡方案，但模型始终漏掉新获得的2敏捷；更早复盘仅记录实际机制，未识别此模型缺口。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "T082DRCUHRRD"
+   ],
+   "commits": [
+    "COMMIT",
+    "d8a2b0090ba8145c0b6d20bcae700006f01e2c79",
+    "ccf1fcde1f456c92ab4542710a54338e4bcdcd5c",
+    "00fa8f79aefd590f3ab076090deee0a8e4346c73"
+   ]
+  },
+  "note": "新纯代码缺口；复盘时live agent/src/reflex/card-model.ts:749、816；agent/src/reflex/rollout.ts:992、1852。notes/fix-queue.md及fix-queue-v4.md均未列；原复盘SPINY_TOAD名称与F33即时毒数字已追加勘误。",
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T02:01:13+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T04:25:10+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T04:25:53+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T05:22:46+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix3",
+  "effect": null,
+  "notes": [
+   "新纯代码缺口；复盘时live agent/src/reflex/card-model.ts:749、816；agent/src/reflex/rollout.ts:992、1852。notes/fix-queue.md及fix-queue-v4.md均未列；原复盘SPINY_TOAD名称与F33即时毒数字已追加勘误。",
+   "更正上一行的 where.commits 占位符 COMMIT：它不是提交号，应忽略；本次实际修复提交为 d8a2b0090ba8145c0b6d20bcae700006f01e2c79。",
+   "依据fix-done批次20261005-041302-fix-batch及live提交祖先关系确认实际上线；学习者自测后自行合入，运维登记，不另设审核。"
+  ],
+  "shipped_at": "2026-10-05T05:22:46+08:00"
+ },
+ {
+  "id": "silent-0089",
+  "ts": "2026-10-05T11:53:59+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "脆弱下，方案中新增敏捷被直接加到已折减的牌面格挡上，造成高估。本局速度药水后防御与残影预测共22挡、实际18挡；应按现场脆弱处理新增敏捷，不能只加5。当前只读live定位agent/src/reflex/turn-solver.ts:1804、:1812。旧能力敏捷遗漏修复不等于已覆盖这个组合。",
+  "evidence": [
+   {
+    "run": "1LMBFGSMCWKU",
+    "floor": 48,
+    "turn": 6,
+    "note": "敏捷3→8，脆弱96；方案预测22挡0损，实际两牌各9挡、末另4遗物挡，对25攻击损3。T3灵动步法后偏折与后空翻预测14挡、实际13。",
+    "role": "support",
+    "added": "2026-10-05T11:53:59+08:00"
+   }
+  ],
+  "first_run": "1LMBFGSMCWKU",
+  "prior": "unknown",
+  "prior_runs": [
+   "C48LLXBGKXQ9",
+   "XYYQYBRM2A01"
+  ],
+  "prior_note": "核对更早静默两次速度药水实际使用决策指纹：C48 F12 T2有2敏捷与虚弱、无脆弱；XYY F17 T5无玩家增益。未找到脆弱与方案内新增敏捷同在的旧可比差额，不把旧0026缺口当本项。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "1LMBFGSMCWKU"
+   ],
+   "commits": [
+    "71af970600794f87a993df428cdde14dd7809dd7",
+    "ef76ce1233381df370050a818dfd22edeb6bbbc9",
+    "8f97aaef76e0ebe8b918b3218429cfd6cd8d9c5a"
+   ]
+  },
+  "asc": 4,
+  "history": [
+   {
+    "ts": "2026-10-05T11:53:59+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T12:23:37+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T12:37:35+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix14",
+  "effect": null,
+  "notes": [
+   "运维依据fix-done 20261005-121301及学习者handoff核实实际合入；源及合后固定沙箱tsc0、168文件1964用例通过，不另设审核，完整外部检查由调度器后续事件归档。"
+  ],
+  "shipped_at": "2026-10-05T12:37:35+08:00"
+ },
+ {
+  "id": "silent-0091",
+  "ts": "2026-10-05T11:53:59+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局速度药水给予当回合5敏捷，脆弱下实际格挡增量不是每牌直接加5。女王战已有3敏捷时防御与残影各6挡，喝药敏捷变8后各9、合多6；下一回合恢复3敏捷。只记录本局脆弱组合与临时时序。",
+  "evidence": [
+   {
+    "run": "1LMBFGSMCWKU",
+    "floor": 48,
+    "turn": 6,
+    "note": "速度药水后DEXTERITY_POWER3→8、SPEED_POTION_POWER5，防御实增9、残影再增9；T7两牌动作后的临时敏捷已消失，玩家敏捷3。",
+    "role": "support",
+    "added": "2026-10-05T11:53:59+08:00"
+   },
+   {
+    "run": "BVF22RSFVBS9",
+    "floor": 20,
+    "turn": 2,
+    "role": "support",
+    "note": "速度药水实建5敏捷及临时药水增益，先前防御已给5挡不回补，随后防御5→10、共15挡，本轮零损；T3敏捷与药水增益消失。只补本局已见临时敏捷作用，不制定用药建议。",
+    "added": "2026-10-06T22:58:01+08:00"
+   },
+   {
+    "run": "KEN58SH9SLZ6",
+    "floor": 5,
+    "turn": 2,
+    "role": "support",
+    "note": "速度药水T2建立DEXTERITY_POWER5及SPEED_POTION_POWER5，斗篷6→11挡；虚弱敌8+4=12攻击仅损1，T3敏捷/药水增益消失。此例无脆弱，不外推旧脆弱组合；states:280262—280266。",
+    "added": "2026-10-07T20:59:06+08:00"
+   }
+  ],
+  "first_run": "1LMBFGSMCWKU",
+  "prior": "unknown",
+  "prior_runs": [
+   "C48LLXBGKXQ9",
+   "XYYQYBRM2A01"
+  ],
+  "prior_note": "更早速度药水使用时无脆弱，本局首次核实这个组合的敏捷与格挡增量。未以其他角色的机制或代码注释作为游戏证据。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "1LMBFGSMCWKU",
+    "BVF22RSFVBS9",
+    "KEN58SH9SLZ6"
+   ],
+   "experience": [
+    "silent-frail-card-block"
+   ],
+   "commits": [
+    "7cff846db518f2d505f471e2fccd185ab7724c93",
+    "103fd5ff1d7e592a6ab1b1817e1188b5747fba9c",
+    "a6900b81adb92a0af2a9a1e9d1b95d853a3cd377"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第十四次增量：1 局 A4（version 2026-10-05.14，分支 exp-silent，7cff846d）"
+   ]
+  },
+  "asc": 4,
+  "history": [
+   {
+    "ts": "2026-10-05T11:53:59+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T12:26:06+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T12:50:20+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T22:58:01+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T20:59:06+08:00",
+    "by": "learner:postmortem"
+   }
+  ],
+  "version": "S1.exp14",
+  "effect": null,
+  "notes": [
+   "经验2026-10-05.14固定沙箱自测提交，tsc0/167文件1961用例；证据与分阶数字见第十四次增量。仅proposed，实际合入后交运维按experience-done核实shipped；不登记0089模型bug已修。",
+   "运维核实experience-done 20261005-121301固定源与实际live合入/发布，源及合后自测通过；保留首次CHARACTER设置失配、回退及完整重跑一次成功历史，不重复审核。仅经验范围，0089模型修复由S1.fix14登记。"
+  ],
+  "shipped_at": "2026-10-05T12:50:20+08:00"
+ }
+]

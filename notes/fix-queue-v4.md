@@ -783,3 +783,7 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 
 - [ ] **silent-0254：无出牌决策的死亡战斗漏记，death_fight误用上一胜战**。学习者定位ops/report.py:130以COMBAT决策开窗口，:337/:380取fights[-1]归因。静默A10 TXZ6RVMQA09D：runs.jsonl:587及自动局报误写F48 AEONGLASS，states:281563是F48胜后奖励4/62；281565—281566为F49 TEST_SUBJECT #C65开场4→0、敌111/111；本场0出牌/0COMBAT决策，只有275405 GAME_OVER finalize，22攻击未执行。证据和原始报告见learner/runs/20261007-214301-postmortem/bug-death-fight.md及本轮归档。
 - 本局正常结束，此项只影响战斗窗口和死因统计，按普通纯工具fix-batch排队，不按卡死修对局。沿学习者建议用同run状态流补无动作死亡窗口，保持SL尝试、实际死亡房间/敌人和可观察失血来源，未知敌攻击不补；固定验证本局F48胜后→F49开场死亡，并保持普通死亡/胜局口径。原logs/旧runs/旧自动局报只读，历史勘误留在可追溯派生或追加记录。首证/prior/observed沿原CLI，不把机制0255或已测阶段事实0251当0254修复，不重复派游戏规则提案。
+
+## 2026-10-07 22:50 学习闭环新增非阻塞模型 bug（WQZVENQ7DTRP）
+
+- [ ] **silent-0256：狡诈药水确定生成未建模，容量及出刀顺序未参与方案比较**。学习者定位agent/src/reflex/card-model.ts:1556—1558，POTION_EFFECTS缺CUNNING_POTION导致modelPotion返回null；combat-plan.ts:3159排除模型、:3844仅直接饮用。较早首证SADL3CGYTGSR A7 F8 T1手3→6实添3升级刀，NB8KCF6HRGVF F31 T5手5→8实添3刀；WQZVENQ7DTRP A10 F33 T11第5次手8→10→10→10添2/0/0、第6次手5→8→10→10添3/2/0。按原学习者cunning-model-proposal.md/json补固定药水模型及可观察容量，验证顺序和未知边界；仅是模型缺口，正常对局已结束，不按卡死修游戏，不声称补模必能赢整场。0257容量机制及a327449c331efbc1 SL血价边界由独立策略链处理，不由运维补玩法。保留首证A7/prior=no与旧日志，原证据见learner/runs/20261007-221303-postmortem及本轮归档。已有4111ed10f08739cb提案由调度器续办，不重复派发。

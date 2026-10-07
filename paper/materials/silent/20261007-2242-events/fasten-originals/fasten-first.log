@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-fasten-upgrade.test.ts (6 tests | 1 failed) 31ms
+   × propagates the actual level through deckModels for later-turn and boss simulation inputs 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-fasten-upgrade.test.ts > propagates the actual level through deckModels for later-turn and boss simulation inputs
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+  - data.session: expected an object, got missing
+  - data.session.mode: expected a string, got missing
+  - data.session.phase: expected a string, got missing
+  - data.available_actions: expected an array, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ tests/silent-fasten-upgrade.test.ts:41:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  21:51:36
+   Duration  890ms (transform 602ms, setup 322ms, import 399ms, tests 31ms, environment 0ms)
+
