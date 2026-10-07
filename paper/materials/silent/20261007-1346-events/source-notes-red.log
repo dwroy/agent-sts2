@@ -1,0 +1,52 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/legacy-brain-notes.test.ts (2 tests | 2 failed) 18ms
+     × delivers an unreadable-usage WARNING once to Brain.onNote 13ms
+     × delivers a successful token-refresh note without account data 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/legacy-brain-notes.test.ts > historical brain engine notes > delivers an unreadable-usage WARNING once to Brain.onNote
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "WARNING: codex usage could not be read (account/rateLimits/read failed: service unavailable); codex stays on without the usage guard until a read works (BRAIN_CODEX_USAGE_REQUIRED=on keeps it off until then instead)",
+- ]
++ []
+
+ ❯ tests/legacy-brain-notes.test.ts:52:19
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/legacy-brain-notes.test.ts > historical brain engine notes > delivers a successful token-refresh note without account data
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "codex usage read was refused on the login (401 Unauthorized; Provided authentication token is expired); codex refreshed its token (account/read) and the read works",
+- ]
++ []
+
+ ❯ tests/legacy-brain-notes.test.ts:62:19
+     60|     const { brain, notes } = fixture();
+     61|     await expect(brain.preflight(undefined, async () => ({ ok: true, v…
+     62|     expect(notes).toEqual([`codex usage read was refused on the login …
+       |                   ^
+     63|     expect(readCodexUsage).toHaveBeenCalledTimes(2);
+     64|     expect(refreshCodexAuth).toHaveBeenCalledTimes(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  13:03:23
+   Duration  1.91s (transform 1.48s, setup 331ms, import 1.44s, tests 18ms, environment 0ms)
+

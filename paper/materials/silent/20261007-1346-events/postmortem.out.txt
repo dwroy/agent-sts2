@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：ULP4TN1GNHMK（A10，第17层，墨影幻灵 VANTOM：末次T7以15血、14挡承受32攻击，差3血阵亡）。
+- 新的纯 bug（file:line，每条一行）：
+  - ULP4TN1GNHMK：毒结算漏算滑溜限伤及减层，分别多报14、6伤害 — agent/src/reflex/turn-solver.ts:1550（新，fix-queue未见同项）。
+- 写成「未记录」的项：ULP4TN1GNHMK：读档截断轮完整结算、完整最优原线执行比例、旧boss时钟指标、Jev缓存、未选方案及修复后的受控整场结果、各能力／遗物独立收益。
+- 学习账本：ULP4TN1GNHMK：新增 silent-0226、silent-0227；更新 silent-0005、silent-0011、silent-0019、silent-0079、silent-0204、silent-0224（老错 silent-0079）；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["ULP4TN1GNHMK"],"skipped":[],"bugs":[{"run":"ULP4TN1GNHMK","where":"agent/src/reflex/turn-solver.ts:1550","what":"毒结算未应用滑溜的1血上限，也未消费滑溜层数，实测多报14及6伤害","new":true}],"ledger":{"added":["silent-0226","silent-0227"],"updated":["silent-0019","silent-0079","silent-0005","silent-0011","silent-0204","silent-0224"],"repeats":["silent-0079"],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a114c7-87c8-70e3-933c-076e6e5adbfd
+轮数：1；工具调用：command_execution×41
+token：输入 200.0k、输出 33.1k（其中推理 11.9k）、cache 读 3558.9k、cache 写 0（命中 94.7%）
+成本：未提供
+耗时：862.8 s（墙钟）
+时间：首个事件 2.0 s、模型首个输出 5.9 s、首次工具 8.3 s、末次工具结束 841.7 s；工具内共 26.1 s，其余（模型生成、推理、网络）834.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×27；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T13-13-03-01a114c7-87c8-70e3-933c-076e6e5adbfd.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-131302-postmortem.jsonl
