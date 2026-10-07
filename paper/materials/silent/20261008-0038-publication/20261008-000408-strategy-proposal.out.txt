@@ -1,0 +1,133 @@
+完成 1 项离线分账工具源码，提交 `3f69541b`；确认 1 项重复，8 项待补证据。
+
+撤源码后 7 项错误，恢复后 15 项通过；沙箱 tsc/vitest 通过（2540 项），gitleaks 干净。live 锁内预检有 20 个记录冲突，已按要求停止合入，保留知识刷新和源码，未登记 shipped。
+
+运维交接：[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/proposal.md)、[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/report.md)。
+
+```json
+{
+  "task": "strategy-proposal",
+  "base": "d4ec5b6d867bbc11e38cc336e54081569e20f223",
+  "runs": [
+    "CA5KE8GFJ9X2",
+    "61E2QS63Y9WU",
+    "5PM6JAQG6FNQ",
+    "DUZUBAJ3A8GP",
+    "8JRE1C4H4Z2W",
+    "YF0LXT1QSTGG",
+    "XP2SL33HT0D9"
+  ],
+  "fixes": [
+    {
+      "id": "silent-proposal-5a40291d1a3e80ca",
+      "ledger": ["silent-0039"],
+      "commit": "3f69541b5d3259dac94d3395bfe3da47936b4de9",
+      "description": "离线分列可见HP扣减、净活敌血差和新增/复活HP，缺帧保留未知；待实际合入live。"
+    }
+  ],
+  "skipped": [
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-f6d98c52fdc345b0",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-1c51f79f5b69bf37",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9"
+  ],
+  "commit": "3f69541b5d3259dac94d3395bfe3da47936b4de9",
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 15,
+    "sandbox_files": 242,
+    "sandbox_cases": 2540,
+    "withdrawn": 1,
+    "restored": 0,
+    "post_merge": null
+  },
+  "code_proposals": [
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-f6d98c52fdc345b0",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-1c51f79f5b69bf37",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9",
+    "silent-proposal-5a40291d1a3e80ca"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-52f1e1bd2e7db0ed",
+      "state": "waiting",
+      "reason": "缺覆甲减层触发的独立逐步证据；9/9/8/7/6不能区分攻击、破挡和回合边界条件。"
+    },
+    {
+      "id": "silent-proposal-f6d98c52fdc345b0",
+      "state": "waiting",
+      "reason": "已见负敏捷时当前/下轮各5挡；缺延迟挡发放与属性恢复的独立边界、其他修正组合及另一顺序完整结果。"
+    },
+    {
+      "id": "silent-proposal-6dd8bbff876be528",
+      "state": "waiting",
+      "reason": "已有逐实体高电压接线；缺原在线召唤模板与高电压建立时点的冻结输入，不能按名称补新召唤状态。"
+    },
+    {
+      "id": "silent-proposal-1c51f79f5b69bf37",
+      "state": "duplicate",
+      "commit": "20b04517393708c73912326bb35d8448d1b3f77e",
+      "reason": "实际live祖先已实现普通/升级HAZE群体施毒与结算，两个固定测试文件blob与原提交相同。"
+    },
+    {
+      "id": "silent-proposal-578e415a259e6835",
+      "state": "waiting",
+      "reason": "缺同抽序原线/替线完整胜局、独立后置验证，以及候选到最终派发和重规划的完整机器关联。"
+    },
+    {
+      "id": "silent-proposal-c0767768bf6a7ab1",
+      "state": "waiting",
+      "reason": "同存档配对不构成独立验证；缺完整原线胜局与未执行续步关联，不能拟血价系数或禁止探索。"
+    },
+    {
+      "id": "silent-proposal-a46bdb7fe711d79a",
+      "state": "waiting",
+      "reason": "阶段重置与零毒收益已有机制；缺能力已建/持有/未派发的统一记录及独立后置验证，不调整先手或终局权重。"
+    },
+    {
+      "id": "silent-proposal-1044224808015e5c",
+      "state": "waiting",
+      "reason": "双蟹六试均同存档且无完整胜线；缺独立后续局、同抽序胜负及永久成长兑现对照，B2零差不证明安全。"
+    },
+    {
+      "id": "silent-proposal-7cbc6005db712ba9",
+      "state": "waiting",
+      "reason": "现场挡、减力与朝向已核；缺额外触发条件、候选到最终派发关联和另一目标/能力顺序完整胜负。"
+    },
+    {
+      "id": "silent-proposal-5a40291d1a3e80ca",
+      "state": "waiting",
+      "source_commit": "3f69541b5d3259dac94d3395bfe3da47936b4de9",
+      "reason": "源码及固定验证完成；锁内整枝预检有20个并行记录冲突，尚无实际live祖先与合后检查证据，交运维兜底后再登记implemented/shipped。"
+    }
+  ],
+  "refresh_commit": "c009dbf896817f251b4b85ac85f56caa7ffb2821",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1171b-a535-7f31-9679-c27fac4570d6
+轮数：1；工具调用：command_execution×71 file_change×7
+token：输入 215.2k、输出 51.7k（其中推理 24.2k）、cache 读 6382.5k、cache 写 0（命中 96.7%）
+成本：未提供
+耗时：2030.2 s（墙钟）
+时间：首个事件 2.6 s、模型首个输出 8.5 s、首次工具 12.3 s、末次工具结束 1883.1 s；工具内共 1109.1 s，其余（模型生成、推理、网络）918.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×46 wait×2；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T00-04-10-01a1171b-a535-7f31-9679-c27fac4570d6.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-000409-strategy-proposal.jsonl
