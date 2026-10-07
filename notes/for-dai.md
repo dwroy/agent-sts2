@@ -394,3 +394,7 @@
 经验71固定发布 33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f / 树 e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be 沙箱外完整检查退出 1：tsc 0、vitest 1，1 failed | 274 passed (275)，2 failed | 3180 passed | 2 skipped (3184)。失败仍仅 brain-codex-usage.test.ts:548/:570 的旧辅助器漏传 note 回调；生产回调正确，沿用12:40已入队的修复，保留Codex-only与经验71，不回滚、不削弱断言。原日志 /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-121301-experience-update.fallback-e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be.checks.log 已按原字节存 paper/materials/silent/20261007-1235-events/ops-full-check-raw.txt，exp70原失败也保留。
 
 两项新功能已实际独立派发 A=20261007-130408-fix-batch、B4/B5=20261007-130415-fix-batch；首次启动请求因串行完整检查等待300秒超时，保留原回执并660秒重试后核实启动，未等待学习者未来完成事件。论文切点 2026-10-07T04:54:15.290Z 刷新成功，五校验通过，未纳入并行他人账本/notes修改；详情 paper/materials/silent/20261007-1235-events.md。
+
+## 2026-10-07 13:08 — Roy：经验71完整检查结果已核对，沿用已入队修复
+
+33f02a6f/树e30f7a95，tsc0/vitest1：3180通过、2失败、2跳过，失败仅旧测试入口漏传note回调（brain-codex-usage.test.ts:548/:570），生产回调正常。与上一轮原件完全相同，继续采用12:40队列的学习者修复，不回滚、不重复补测；原失败日志及历史均保留。两局复盘无新增纯bug，14条本批账本原行与勘误提交，打法机制交学习者；论文刷新随后登记。详情paper/materials/silent/20261007-1305-events.md。
