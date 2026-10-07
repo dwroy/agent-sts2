@@ -1,0 +1,25 @@
+## 修 bug 回报
+
+- 合并基线：main → cf31d63c8a96795f263fcb5dc9dabb44617b0cbf
+- 修复：无新增纯 bug 修复。
+- 已被别人修掉的：旧130项 — [逐项提交映射](/home/dw/Projects/agent-sts2/learner/runs/20261007-104302-fix-batch/already-fixed.json)；其中 herdr 注册表竞态 — 526b71cc。
+- 已被别人修掉的：毒杀漏算持牌伤 — 2e6fa2e5；中毒触发攻击八折 — ffa23c2f；升级预览漏关键词 — 62ee292c；勒紧漏挡 — 1912b5e0；蛇咬漏毒 — 06bb4617。均已在基线和 live。
+- 没修的：mod 超时根因、缓存实测 — 证据不足；boss 模拟性能 — 太大；策略项 — 策略类；boss 校准、Codex-only 大脑 — 独立功能任务。
+- 测试：tsc 退出码0；vitest 220文件 / 2331用例 / 退出码0，首轮通过，无重跑。
+- 合入：未合入（无新增修复）。既有135项已在所核 live 0061f599；独立功能源码差异使空批自动核验返回 null，已写[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-104302-fix-batch/handoff-ops.md)，供核对结案。
+- 需要 Dai 定的事：原保血、留药、全死排序／巨兽拖延、SL范围、路线、休息、目标优先及估值策略；已授权独立功能按专用任务执行。
+
+```json
+{"task":"fix-batch","base":"cf31d63c8a96795f263fcb5dc9dabb44617b0cbf","fixes":[],"skipped":[{"item":"mod超时根因、Codex缓存实测","reason":"证据不足"},{"item":"boss模拟性能","reason":"太大，需独立性能专项"},{"item":"保血、留药、全死排序、SL范围、时钟、路线、休息、目标优先、A10第二boss及估值","reason":"策略类"},{"item":"静默boss校准、Codex-only大脑","reason":"独立功能任务，不混入纯bug批"}],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":2331}}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1143e-34c5-7ee3-a2fe-bfd872fead9d
+轮数：1；工具调用：command_execution×36 file_change×3
+token：输入 183.2k、输出 18.7k（其中推理 8068）、cache 读 4564.4k、cache 写 0（命中 96.1%）
+成本：未提供
+耗时：495.4 s（墙钟）
+时间：首个事件 2.1 s、模型首个输出 7.0 s、首次工具 8.1 s、末次工具结束 478.0 s；工具内共 282.4 s，其余（模型生成、推理、网络）211.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×35 wait×3；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T10-43-03-01a1143e-34c5-7ee3-a2fe-bfd872fead9d.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-104302-fix-batch.jsonl
