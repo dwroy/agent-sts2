@@ -86,3 +86,23 @@
 
 - 2026-10-07 12:09 给Roy / 开发：Codex-only代码已实际上线910604a4/V4.codex-only1，main/live54文件相同，当前01H1533KSS5C从发布f8dd742d启动、Codex/fallback=null。完整命令 `bash ops/codex-ops-do.sh learner-recheck 20261007-091118-fix-batch` 返回exit2（JSON rc2/fallback_checks=[]）：原回报是合法裸JSON加运行器尾注，无围栏，read_report解析为空而漏认上线。保留原.out/err及failed/merged=null，不改原件绕过；已入纯基础设施修复队列，经验70合入后的固定代码树完整检查会覆盖该功能，结果另事件登记。
 - 运行保护尚有一项未激活：autoplay PID1734436是长期旧bash，while体预解析后不会热读新ops/autoplay.sh；当前对局已用新代码并正常Codex作答，但终止脑故障退出75/78后的循环保护不能冒报已加载。现有broker `autoplay-start` 明确拒绝有play的情形，且没有WAIT_PID热交接动作；直接herdr外部启动不在白名单，我不能用该路径。已交学习者补安全热交接动作后续办，保持原循环和当前对局。本机终端若提前处理，应按docs/codex-ops.md:125现有迁移流程：先确认精确autoplay/play PID和无report.py，仅替换旧autoplay bash，用WAIT_PID接管同一play，留下新PID/版本回执；不能用play-stop或重开游戏代替。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
+
+## 2026-10-07 12:40 — Roy：exp70 完整检查失败，保留上线并派修
+
+固定树 b37c82f6 完整外部 tsc0/vitest1，3180通过、2失败、2跳过；失败是旧测试入口漏传额度日志回调，生产回调仍在。保留 Codex-only/经验70，测试辅助入口修复入队，不回滚，不削弱断言。原失败见 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log；普通121034批次占用 codex-dev，下一可用批次处理。两项12:11/12:22授权准备独立模板和工作树，A10双boss优先，派发后补具体批次。
+
+## 2026-10-07 13:04 — Roy：两项高优先新功能已独立派学习者
+
+- A10双boss A–D：20261007-130408-fix-batch，PID 1563687，工作树 /home/dw/Projects/agent-sts2/.worktrees/silent-double-boss；A 优先，连续资源/合计通关率、资源追溯、升阶审计及有数据时修改Roy规则并双通知、协议/AGENTS/任务同步由本批实现。数据与SL条件交学习者核实。
+- B4/B5自动触发验收：20261007-130415-fix-batch，PID 1564623，工作树 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation；实现每局/校准后检查、冷却/互斥、自动验收和任务模板，机制完成后第一批真实派静默永世沙漏B4；不再逐次请求Roy。
+- 派发入口源 b367c6019f771bce0913eb81d85c43d2512210cd、main fce5576efc926017ba56a72802346b3b6594f4d7，沙箱tsc0/224文件2374例、Python20/撤源真红/两模板实际渲染验证通过。两批均已实际启动，功能尚在实现，后续完成事件续办；exp70历史测试note回调修复已入队（12:40首次普通派发因121034占用返回null），原完整失败保持。详情 paper/materials/silent/20261007-1235-events.md。
+
+## 2026-10-07 13:05 — Roy：经验71完整补测与本轮结案
+
+经验71固定发布 33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f / 树 e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be 沙箱外完整检查退出 1：tsc 0、vitest 1，1 failed | 274 passed (275)，2 failed | 3180 passed | 2 skipped (3184)。失败仍仅 brain-codex-usage.test.ts:548/:570 的旧辅助器漏传 note 回调；生产回调正确，沿用12:40已入队的修复，保留Codex-only与经验71，不回滚、不削弱断言。原日志 /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-121301-experience-update.fallback-e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be.checks.log 已按原字节存 paper/materials/silent/20261007-1235-events/ops-full-check-raw.txt，exp70原失败也保留。
+
+两项新功能已实际独立派发 A=20261007-130408-fix-batch、B4/B5=20261007-130415-fix-batch；首次启动请求因串行完整检查等待300秒超时，保留原回执并660秒重试后核实启动，未等待学习者未来完成事件。论文切点 2026-10-07T04:54:15.290Z 刷新成功，五校验通过，未纳入并行他人账本/notes修改；详情 paper/materials/silent/20261007-1235-events.md。
+
+## 2026-10-07 13:08 — Roy：经验71完整检查结果已核对，沿用已入队修复
+
+33f02a6f/树e30f7a95，tsc0/vitest1：3180通过、2失败、2跳过，失败仅旧测试入口漏传note回调（brain-codex-usage.test.ts:548/:570），生产回调正常。与上一轮原件完全相同，继续采用12:40队列的学习者修复，不回滚、不重复补测；原失败日志及历史均保留。两局复盘无新增纯bug，14条本批账本原行与勘误提交，打法机制交学习者；论文刷新随后登记。详情paper/materials/silent/20261007-1305-events.md。
