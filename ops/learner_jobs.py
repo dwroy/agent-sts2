@@ -84,15 +84,16 @@ def available_worktree(worktree):
     return result.returncode == 0 and not result.stdout.strip()
 
 
-def requested_feature(state, root, scripts, character, reason, alive, stamp):
+def requested_feature(state, root, scripts, character, reason, alive, stamp, request=None):
     """Dispatch Roy's explicit calibration request without lending it a pure-bug prompt or worktree."""
-    if character != "silent" or reason != "ops":
+    if character != "silent" or reason not in ("ops", "calibration-refresh"):
         return False, None
-    try:
-        with open(os.path.join(root, FEATURE_REQUEST), encoding="utf8") as handle:
-            request = json.load(handle)
-    except (OSError, ValueError):
-        return False, None
+    if request is None:
+        try:
+            with open(os.path.join(root, FEATURE_REQUEST), encoding="utf8") as handle:
+                request = json.load(handle)
+        except (OSError, ValueError):
+            return False, None
     if (not isinstance(request, dict) or request.get("state") != "pending"
             or request.get("task") != "silent-boss-calibration"
             or request.get("character") != "silent" or request.get("authorized_by") != "Roy"
@@ -205,7 +206,36 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     key = fix_key(root, character)
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
     strategy = strategy_job(state, root, scripts, character, alive, stamp)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy}
+    calibration = calibration_job(state, root, scripts, character, alive, stamp)
+    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration}
+
+
+def calibration_job(state, root, scripts, character, alive, stamp):
+    """Roy-authorized periodic calibration; read live data, never overwrite refreshing knowledge."""
+    if character != "silent":
+        return None
+    try:
+        with open(os.path.join(root, ".worktrees/live/knowledge/characters/silent/boss-trust.json"), encoding="utf8") as handle:
+            previous = json.load(handle)
+        if previous.get("character") != "silent" or not previous.get("refresh"):
+            return None  # The initial batch must publish before any automatic rerun.
+        spec = importlib.util.spec_from_file_location("boss_refresh_cadence", os.path.join(scripts, "../agent/tools/boss-sim/cadence.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with open(os.path.join(root, "logs/runs.jsonl"), encoding="utf8") as handle:
+            runs = [json.loads(line) for line in handle if line.strip()]
+        with open(os.path.join(root, "logs/sl-attempts.jsonl"), encoding="utf8") as handle:
+            attempts = [json.loads(line) for line in handle if line.strip()]
+        trigger = module.cadence(runs, attempts, previous["refresh"])
+    except (OSError, ValueError, KeyError):
+        return None
+    if not trigger["due"]:
+        return None
+    identity = hashlib.sha256(json.dumps({"keys": trigger["keys"], "asc": trigger["max_asc"]}, sort_keys=True).encode()).hexdigest()[:24]
+    request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
+               "authorized_by": "Roy", "request_id": "silent-calibration-" + identity}
+    _, result = requested_feature(state, root, scripts, character, "calibration-refresh", alive, stamp, request=request)
+    return result
 
 
 def strategy_job(state, root, scripts, character, alive, stamp):

@@ -13,6 +13,8 @@ default.merge_dir: {{project_root}}/.worktrees/live
 
 本任务已经 Roy 明确授权，是独立的新功能批次。只完成本任务，不修其他队列 bug（包括 silent-0213），不要因 fix-batch 通道名称而换回纯 bug 任务。没有需要再次向 Roy 请示的校准方式；缺数据时保留低可信并量化不足。
 
+定期批次：若 live 已有静默 `boss-trust.json`，先读取其 `refresh` 和固定 `split`；用 `nice -n 19 {{project_root}}/data/logdb-venv/bin/python agent/tools/boss-sim/refresh-silent.py --scratch {{scratch}} --logs {{logs_dir}} --db {{project_root}}/data/logdb --game-data {{project_root}}/data/game-data.json --previous {{merge_dir}}/knowledge/characters/silent/boss-trust.json --out knowledge/characters/silent/boss-trust.json --report paper/materials/silent/boss-sim-calibration.md`。使用已有 venv（不安装依赖），首次不传 `--previous`。新样本只延伸验证，切点和调参 keys 不移动；保存新内容指纹目录到 `experiments/boss-sim/silent/`，旧目录不覆盖。若实际不足升阶/20次结局事件则报告幂等跳过，勿另拟合或发布空版本。最终仍按本任务测试/live/台账流程完成，任务性质是授权新功能的校准刷新。
+
 - 独占工作树：{{worktree}}
 - 根目录：{{project_root}}
 - 本角色：{{character}}；日志只读：{{logs_dir}}

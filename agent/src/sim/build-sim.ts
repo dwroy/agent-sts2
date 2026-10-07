@@ -105,11 +105,11 @@ function bossLeftDiff(a: BossSimLineResult, b: BossSimLineResult): { bossLeft: n
 }
 
 /** The calibrated difference and its standard error: the raw paired SE times the Platt map's slope between the two rates. */
-export function calibratedDiff(pOption: number, pBase: number, rawSe: number, samples: number): { cal: number; calSe: number } {
-  const cal = calibratedWinProb(pOption, samples, "pre") - calibratedWinProb(pBase, samples, "pre");
+export function calibratedDiff(pOption: number, pBase: number, rawSe: number, samples: number, asc = 0): { cal: number; calSe: number } {
+  const cal = calibratedWinProb(pOption, samples, "pre", asc) - calibratedWinProb(pBase, samples, "pre", asc);
   const dp = pOption - pBase;
   const h = 0.5 / (samples + 1);
-  const slope = Math.abs(dp) > 1e-9 ? cal / dp : (calibratedWinProb(Math.min(1, pBase + h), samples, "pre") - calibratedWinProb(Math.max(0, pBase - h), samples, "pre")) / Math.max(1e-9, Math.min(1, pBase + h) - Math.max(0, pBase - h));
+  const slope = Math.abs(dp) > 1e-9 ? cal / dp : (calibratedWinProb(Math.min(1, pBase + h), samples, "pre", asc) - calibratedWinProb(Math.max(0, pBase - h), samples, "pre", asc)) / Math.max(1e-9, Math.min(1, pBase + h) - Math.max(0, pBase - h));
   return { cal: r4(cal), calSe: r4(Math.abs(slope) * rawSe) };
 }
 
@@ -168,8 +168,8 @@ export async function compareOptions(
       key,
       samples: n,
       win: r4(line.winProb),
-      winCal: r4(calibratedWinProb(line.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre")),
-      diff: d ? { raw: d.winDiff, se: d.winSe, ...calibratedDiff(line.winProb, baseLine.winProb, d.winSe, BUILD_SIM_CALIBRATION_SAMPLES), hpLoss: d.hpLossDiff, hpLossSe: d.hpLossSe, ...bossLeftDiff(line, baseLine) } : null,
+      winCal: r4(calibratedWinProb(line.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc)),
+      diff: d ? { raw: d.winDiff, se: d.winSe, ...calibratedDiff(line.winProb, baseLine.winProb, d.winSe, BUILD_SIM_CALIBRATION_SAMPLES, base.meta.asc), hpLoss: d.hpLossDiff, hpLossSe: d.hpLossSe, ...bossLeftDiff(line, baseLine) } : null,
       bossLeft: r4(mean(line.outcomes.map((o) => o.enemyHpLeft))),
       hpLossMean: r4(line.hpLoss.mean),
       hpLossWon: line.hpLossWon ? line.hpLossWon.median : null,

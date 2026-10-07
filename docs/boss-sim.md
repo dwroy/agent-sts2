@@ -1199,3 +1199,28 @@ b5-base 是同样的回测在 B5 之前的代码（edd66ae）上跑的；两组�
 4. **无厌沙虫**：Brier 0.154 只比门槛高 0.004，仍偏乐观（0.60 对 0.48）；**瀑布巨兽**偏乐观 18 个百分点（调参集是准的：0.68 对 0.69），模拟比日志打得快（第 8 回合巨兽剩血 52 对 80），没找到机制差异（数字是修前的）。
 5. 调参集上更防守的打法每次都让被打穿的血对上日志、预测略差（B1.5、B4、B5 三次），而 V4.x 的 Jev 在帝王蟹上比早期挡得多（被打穿比日志：调参集上模拟 / 日志 1.14，val_ext 1.35）。Jev 的打法随版本在变，策略在调参集上定、在后来的对局上验，这个漂移会一直在。
 6. 永世沙漏（7 场）、实验体（6 场）仍是场数不够。
+
+## 15. 静默的独立校准和定期刷新（Roy 2026-10-07 授权）
+
+这是独立新功能，沿用既有 boss 模型和 §6/§8 的方法；胜率校准只学静默已结束的对局，不复用铁甲 Platt 参数或角色统计。入口 `agent/tools/boss-sim/refresh-silent.py`，结果见 `paper/materials/silent/boss-sim-calibration.md`；每个批次的来源、固定开场、切分、原始结果和旧报告保存在 `experiments/boss-sim/silent/<内容指纹>/`。
+
+```bash
+nice -n 19 data/logdb-venv/bin/python agent/tools/boss-sim/refresh-silent.py \
+  --scratch <本批scratch> --logs <根目录>/logs --db <根目录>/data/logdb \
+  --game-data <根目录>/data/game-data.json \
+  --previous <live>/knowledge/characters/silent/boss-trust.json \
+  --out knowledge/characters/silent/boss-trust.json \
+  --report paper/materials/silent/boss-sim-calibration.md
+```
+
+首次不传 `--previous`。命令在独占工作树运行，只生成候选；学习者自测、锁内保存刷新/检查重叠/预检/合入/合后测试后发布，运维确认实际发布再登记 `shipped`。不直接覆盖 live 刷新中的知识，不运行对局或真实 LLM，不安装依赖。单进程模拟加转译器/协调器至多四个进程，均 `nice`。
+
+提取器 `extract.py --character silent --ascension 0 1 2 3 4 5 6 7 8 9 10` 按 `runs.jsonl` 的显式 `character=SILENT` 和 `ended` 筛选，按 SL 实际结束区间分尝试，含区间开始前的开场观测帧。`predicted_death` 是截断，不是假造实际死亡；保留全部来源但不进胜率拟合。B2 用首回合已抽手牌的决策帧，B3 用 §6 的 `pre/redeal` 起点，双方资源取实际状态，boss 数值取按进阶的 DB（缺级最近观测），初始命中修正复用 `syntheticBossStart` 的现有规则。
+
+按整局首场可用、具有实际结局的 boss 开场时间固定早约 2/3 调参、晚约 1/3 验证，SL 和同局其他 boss 不跨边。只在调参集选择整体 Platt 的进阶项（调参进阶段 n≥10 且残差超过15个百分点，再要求三折整局交叉验证 Brier 改善≥0.005）；每个消费者一条整体映射，没有独立进阶映射。B2 中途使用同一首回合映射，独立中途校准仍未验证。A0–4、A5–9、A10 残差分别报告，A10 不足或残差超过15个百分点则附加低信度。F49 独立记战，F48 胜利不冒充整局通关。
+
+F49 用同一整体映射单列调参/验证指标，沿原四指标检验这段的适用范围；不足或超标时，消费端在 F49 追加低信度，不能靠其他层的 boss 样本凑成第二场已验证。新进阶没有验证记录也保持低信度。没有另拟合 F49 模型，不改 boss 目标选择或联合通关策略。
+
+`trust.py --character silent` 必须提供 `--fights --provenance --split --turns --results`；逐 boss 的原准入门槛不变：验证≥10、Brier≤整体1.25倍、胜率差≤15个百分点、敌人回合打穿比0.7–1.3。缺打穿比或整体校准也不能准入。文件中的 `trusted_b2/trusted_b3` 只列达标项；失败指标、实际场数、还差场数和低信度理由一同保留供审计。B2/B3 只读取静默自己的参数；铁甲行为和数据保持原值。
+
+定期入口是 `ops/learner_jobs.py:calibration_job`：学习 tick 每小时 :13/:43，以及学习批次完成事件检查。静默升阶或累计20次新的实胜/实死 boss 尝试后，使用专用任务/工作树，以 `fix-batch` 通道启动，性质仍是授权新功能刷新。没有发布初始校准时不自动重跑。重复事件和重复输入幂等，正在写工作树时保留触发；后续新场只进验证，旧调参 keys/切点固定，模型/来源/报告有独立指纹。新达标项自动由同一标准生成，发布仍走完整 live 流程并登记唯一 eval 版本。
