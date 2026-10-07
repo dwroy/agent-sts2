@@ -7,6 +7,92 @@ from pathlib import Path
 
 RUN_ID = re.compile(r'^[A-Z0-9]{12}$')
 
+def enemy_observation(state, current):
+    """Retain every body; enemy_id identifies a type, not a persistent instance."""
+    enemies = (state.get('combat') or {}).get('enemies')
+    return {'line': current['line'], 'ts': current['ts'], 'turn': current['turn'],
+            'enemies': None if enemies is None else [
+                {k: enemy.get(k) for k in ('index', 'enemy_id', 'current_hp', 'max_hp', 'is_alive')}
+                for enemy in enemies]}
+
+
+def observed_enemy_hp(observation):
+    enemies = observation['enemies']
+    if enemies is None or any(type(e['current_hp']) is not int or type(e['is_alive']) is not bool for e in enemies):
+        return None
+    return sum(e['current_hp'] for e in enemies if e['is_alive'])
+
+
+def enemy_hp_audit(observations):
+    """Separate visible HP decreases from net live HP; never fill unobserved deaths."""
+    turns = []
+    for before, after in zip(observations, observations[1:]):
+        if not turns or turns[-1]['turn'] != before['turn']:
+            turns.append({'turn': before['turn'], 'start_line': before['line'],
+                          'live_enemy_hp_start': observed_enemy_hp(before),
+                          'visible_enemy_hp_loss_lower_bound': 0, 'observed_hp_added': 0,
+                          'damage_total': None, 'gaps': [], 'transitions': []})
+        turn = turns[-1]
+        start, end = observed_enemy_hp(before), observed_enemy_hp(after)
+        transition = {'from_line': before['line'], 'to_line': after['line'],
+                      'visible_enemy_hp_loss_lower_bound': 0, 'observed_hp_added': 0,
+                      'net_live_enemy_hp_loss': start - end if start is not None and end is not None else None,
+                      'events': [], 'gaps': []}
+        if before['enemies'] is None or after['enemies'] is None:
+            transition['gaps'].append('missing_enemy_frame')
+        else:
+            def groups(enemies):
+                result = {}
+                for enemy in enemies:
+                    result.setdefault(enemy['enemy_id'], []).append(enemy)
+                return result
+            old, new = groups(before['enemies']), groups(after['enemies'])
+            for ident in sorted(set(old) | set(new), key=str):
+                left, right = old.get(ident, []), new.get(ident, [])
+                event = {'enemy_id': ident, 'before': left, 'after': right}
+                if not ident or len(left) > 1 or len(right) > 1:
+                    event['kind'] = 'identity_ambiguous'
+                    transition['gaps'].append('ambiguous_enemy_identity')
+                elif any(type(e['current_hp']) is not int or type(e['is_alive']) is not bool for e in left + right):
+                    event['kind'] = 'unknown_hp'
+                    transition['gaps'].append('unknown_enemy_hp')
+                elif not left:
+                    event['kind'] = 'newly_observed_body'
+                    transition['observed_hp_added'] += right[0]['current_hp'] if right[0]['is_alive'] else 0
+                elif not right:
+                    event['kind'] = 'removed_body'
+                    if left[0]['is_alive'] and left[0]['current_hp'] > 0:
+                        transition['gaps'].append('body_removed_without_death_frame')
+                elif left[0]['max_hp'] != right[0]['max_hp']:
+                    event['kind'] = 'identity_ambiguous'
+                    transition['gaps'].append('changed_max_hp_identity_unknown')
+                else:
+                    delta = left[0]['current_hp'] - right[0]['current_hp']
+                    event['kind'] = 'visible_hp_decrease' if delta > 0 else 'hp_increase' if delta < 0 else 'unchanged'
+                    transition['visible_enemy_hp_loss_lower_bound'] += max(0, delta)
+                    transition['observed_hp_added'] += max(0, -delta)
+                    if delta < 0:
+                        if not left[0]['is_alive'] and right[0]['is_alive']:
+                            event['kind'] = 'observed_revival'
+                        else:
+                            transition['gaps'].append('hp_increase_without_intermediate_death_frame')
+                if event['kind'] != 'unchanged':
+                    transition['events'].append(event)
+        turn['transitions'].append(transition)
+        turn['end_line'] = after['line']
+        turn['live_enemy_hp_end'] = end
+        initial = turn['live_enemy_hp_start']
+        turn['net_live_enemy_hp_loss'] = initial - end if initial is not None and end is not None else None
+        for key in ('visible_enemy_hp_loss_lower_bound', 'observed_hp_added'):
+            turn[key] += transition[key]
+        turn['gaps'] = sorted(set(turn['gaps'] + transition['gaps']))
+    return {'observations': observations, 'turns': turns,
+            'limitations': ['Visible HP decreases are a lower bound, not a complete damage log.',
+                            'New bodies and HP increases are observed additions, not inferred healing or summon counts.',
+                            'Unique enemy types can be aligned across index changes; repeated types remain ambiguous.',
+                            'Missing deaths, revival intermediate frames and damage sources are not reconstructed.']}
+
+
 def resources(state):
     run = state.get('run') or {}
     hp = run.get('current_hp')
@@ -35,6 +121,10 @@ def resource_chain(entries, run_id, character, attempt_starts=None):
                    type(turn) is int and turn == 1 and type(active['last'].get('turn')) is int and active['last']['turn'] > 1) or sl_restart
         closed = None
         if active is not None and (not combat or floor != active['floor'] or restart):
+            if character == 'silent':
+                if not combat and floor == active['floor']:
+                    active['enemy_observations'].append(enemy_observation(state, current))
+                active['enemy_hp_audit'] = enemy_hp_audit(active.pop('enemy_observations'))
             active['exit'] = current if not combat and floor == active['floor'] else None
             active['end'] = 'observed_exit' if active['exit'] else 'restart_observed' if restart else 'missing_exit'
             active['observed_net_hp_loss'] = (active['entry']['hp'] - active['exit']['hp']
@@ -48,6 +138,8 @@ def resource_chain(entries, run_id, character, attempt_starts=None):
             active = {'sequence': sequence, 'floor': floor, 'entry': current, 'entry_is_turn_one': turn == 1,
                       'enemies': sorted({e.get('enemy_id') for e in enemies if e.get('enemy_id')}),
                       'last': current, 'changes': [], 'outcome': 'unclassified; verify combat/SL evidence'}
+            if character == 'silent':
+                active['enemy_observations'] = []
         if previous and (current['hp'] != previous['hp'] or current['potions'] != previous['potions']):
             owner = closed or (active if not opened and not restart else None)
             event = {'from': previous, 'to': current, 'combat_sequence': owner['sequence'] if owner else None,
@@ -57,8 +149,12 @@ def resource_chain(entries, run_id, character, attempt_starts=None):
                 owner['changes'].append(event)
         if active:
             active['last'] = current
+            if character == 'silent':
+                active['enemy_observations'].append(enemy_observation(state, current))
         previous = current
     if active:
+        if character == 'silent':
+            active['enemy_hp_audit'] = enemy_hp_audit(active.pop('enemy_observations'))
         active.update(exit=None, end='missing_exit', observed_net_hp_loss=None)
         windows.append(active)
     return {'run': run_id, 'character': character, 'combats': windows, 'resource_changes': changes,
