@@ -1,0 +1,131 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-serpent-form.test.ts (15 tests | 14 failed) 18ms
+   × T1 establishes four points without attributing damage to the power itself or a held second copy 6ms
+   × frame 274202: 274203 separates the card's damage and four-point trigger 1ms
+   × frame 274203: 274204 separates the card's damage and four-point trigger 1ms
+   × frame 274205: 274206 separates the card's damage and four-point trigger 1ms
+   × frame 274207: 274208 separates the card's damage and four-point trigger 1ms
+   × frame 274208: 274209 separates the card's damage and four-point trigger 1ms
+   × frame 274209: 274210 separates the card's damage and four-point trigger 0ms
+   × a complete fixed defense prefix keeps poison settlement separate from the two card triggers 0ms
+   × the rollout carries a newly established power into the next turn, without a self-trigger 1ms
+   × IRONCLAD A10 preserves the old outcome on the identical evidence frame 1ms
+   × SILENT A9 preserves the old outcome on the identical evidence frame 1ms
+   × unobserved two-enemies keeps the option and marks its extra damage unknown 1ms
+   × unobserved replay keeps the option and marks its extra damage unknown 0ms
+   × unobserved stacking keeps the option and marks its extra damage unknown 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-serpent-form.test.ts > T1 establishes four points without attributing damage to the power itself or a held second copy
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ inputFor tests/silent-serpent-form.test.ts:48:17
+ ❯ tests/silent-serpent-form.test.ts:66:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  tests/silent-serpent-form.test.ts > frame 274202: 274203 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274203: 274204 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274205: 274206 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274207: 274208 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274208: 274209 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274209: 274210 separates the card's damage and four-point trigger
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ inputFor tests/silent-serpent-form.test.ts:48:17
+ ❯ tests/silent-serpent-form.test.ts:81:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  tests/silent-serpent-form.test.ts > a complete fixed defense prefix keeps poison settlement separate from the two card triggers
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ inputFor tests/silent-serpent-form.test.ts:48:17
+ ❯ tests/silent-serpent-form.test.ts:95:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  tests/silent-serpent-form.test.ts > the rollout carries a newly established power into the next turn, without a self-trigger
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ inputFor tests/silent-serpent-form.test.ts:48:17
+ ❯ tests/silent-serpent-form.test.ts:103:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  tests/silent-serpent-form.test.ts > IRONCLAD A10 preserves the old outcome on the identical evidence frame
+ FAIL  tests/silent-serpent-form.test.ts > SILENT A9 preserves the old outcome on the identical evidence frame
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ inputFor tests/silent-serpent-form.test.ts:48:17
+ ❯ tests/silent-serpent-form.test.ts:125:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  tests/silent-serpent-form.test.ts > unobserved two-enemies keeps the option and marks its extra damage unknown
+ FAIL  tests/silent-serpent-form.test.ts > unobserved replay keeps the option and marks its extra damage unknown
+ FAIL  tests/silent-serpent-form.test.ts > unobserved stacking keeps the option and marks its extra damage unknown
+PayloadShapeError: /state did not match the expected shape:
+  - data.state_version: expected a number, got missing
+ ❯ Checker.done src/hand/mod/schema.ts:37:39
+     35|
+     36|   done(): void {
+     37|     if (this.issues.length > 0) throw new PayloadShapeError(this.what,…
+       |                                       ^
+     38|   }
+     39| }
+ ❯ Module.parseGameState src/hand/mod/schema.ts:318:11
+ ❯ inputFor tests/silent-serpent-form.test.ts:48:17
+ ❯ tests/silent-serpent-form.test.ts:133:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 1 passed (15)
+   Start at  03:51:35
+   Duration  1.58s (transform 1.18s, setup 355ms, import 1.05s, tests 18ms, environment 0ms)
+

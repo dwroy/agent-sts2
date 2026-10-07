@@ -1,0 +1,62 @@
+{
+  "state": "published",
+  "batch": "20261008-033314-strategy-proposal",
+  "source": "de62bf7cb3feaa6c71e877a3fe76ea18ec427ed2",
+  "source_tests": {
+    "exit": 0,
+    "files": 245,
+    "cases": 2586,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-033315-strategy-proposal/source-sandbox.log"
+  },
+  "paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-serpent-form-state.json",
+    "agent/tests/silent-serpent-form.test.ts"
+  ],
+  "source_blobs": {
+    "agent/src/reflex/card-model.ts": "a2bc449321f986976e7464257eded7baff1e6576",
+    "agent/src/reflex/combat-plan.ts": "475c3001d7fdb1211414306046d8102366c4391f",
+    "agent/src/reflex/rollout.ts": "efdf7d4bb6cbc4947282376222830cec4df02963",
+    "agent/src/reflex/turn-solver.ts": "4cf770214053841bf397d0dedd24b641d4deea97",
+    "agent/tests/silent-serpent-form-state.json": "033cb45f01c34c7267c1bc7aa71a2b2f2ec5ea7e",
+    "agent/tests/silent-serpent-form.test.ts": "029a750b82fa2990d38fca10e17bf0f99ce33dbf"
+  },
+  "main_code_sync": "466acfc7f5b5a791b336b97db7cd5c2746eb67da",
+  "main_record": "b9946fc0eda18c45824bdd2e99d44762afbe1242",
+  "full_external_passed": false,
+  "actual_code": "76b00247cf48abd8ec4662db25a5f32951af19cd",
+  "live_before": "ceb74207f90ed2e2f94f96570e70d00d84290081",
+  "combined": "a2af88695e1aa20b465ff9618d60c86d82fa03f7",
+  "preserved_refresh": "3b9a20e2ef6b12a6efb91d280c5f3240b55fb20f",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "2a90f41fa59748641ee05a26bb1e5175995cf3ead0c93b2d381b40ae00be4672",
+    "knowledge/characters/silent/fight-value-gates.json": "c1474353b57f0b59b7796d8c2c7909140c35e98032ae92a5e90db8950f5e7270",
+    "knowledge/characters/silent/fight-value.json": "a7ccb0cd04d6c3ef0737799549aa17a88cfc1f673014c2dca0e9a58fa52805f7",
+    "knowledge/characters/silent/monster-records.json": "d0c6fdde76b5f37df2d868611ad779d7a51d4f603861a071db98b166978104fa",
+    "knowledge/characters/silent/outcome-stats.json": "adfc6f6aa06d593f21146792c32967ed1d2e202c82d6550463a06c5b95248d35",
+    "knowledge/characters/silent/room-costs.json": "60f7260b087d767ac72fe1241ba62212e88aa8af911e612b246431f929ad2566",
+    "knowledge/common/card-upgrades.json": "c332bf6cd008cf8e8791c1c49d15dbffd10cac25ad1c38db4964e8bf32d7aeec",
+    "knowledge/common/monster-db.json": "b40502c45540d08a01726c0acbef2993457e8bfb9e1d9a3fc74e260566b71701",
+    "knowledge/common/move-model.json": "da8fddc9952f890f421a4349e730f093ea08238a998c9a9c27577c1be21f4f67",
+    "notes/fight-value-backtest-silent.md": "b622291f03b0066e022bc32b957699a7d3ac42c3b1df01b2344ff8d6b7bd2884"
+  },
+  "lock_attempts": 1,
+  "publication": "a73ce7ccbcfd09a9f9679dc4bddaf3dacb56b253",
+  "publication_tree": "ec02984e42679a85b3a868cd64c7088f85bf7143",
+  "version_entry": {
+    "name": "S1.serpent-form1",
+    "family": "Silent",
+    "commit": "76b00247cf48abd8ec4662db25a5f32951af19cd",
+    "source": "decision-log 2026-10-08 04:41: 033314策略18记录冲突兜底，源de62bf7c净6源码/固定夹具；5PM6JAQG6FNQ A10 F33T1-T3/silent-0132单敌普通群蛇四层，建立无自身伤、一次手动出牌另计4点、已建量跨回合保留；未观察多敌/自动/重放/升级/叠加保持未知。源245文件2586例0、撤源码15败/恢复18过；实际合后245文件2586例tsc/vitest0，完整外部待原批续验。"
+  },
+  "record_line": "- 2026-10-08 04:41 运维codex04:33策略兜底：原033314源de62bf7cb3feaa6c71e877a3fe76ea18ec427ed2→实际live76b00247cf48abd8ec4662db25a5f32951af19cd，18项整分支并行记录冲突原件保留，净6源码/固定夹具原blob与真实祖先核实。5PM6JAQG6FNQ A10 F33T1-T3/silent-0132仅单敌普通群蛇四层范围，建立无自身触发、一次手动出牌补4伤及已建量跨回合；未知自动/重放/多敌/升级/叠加不推广，铁甲及静默A9控制保持，不改SL/药水/终局权重或排序。原源245文件2586例tsc/vitest0、最终撤源码15败/恢复18过/gitleaks0及全部中间失败保持；实际合后原入口245文件2586例tsc/vitest0/nice19/4workers，唯一S1.serpent-form1，当前经验87/校准3/并行代码/刷新逐blob保持。main/所属1条上线台账/2实际combat提案/Roy双通知随后机械登记，另九项继续待补证；完整外部原批只请求一次，不冒报0，无复盘/论文或重派，不停对局/调度、不运行play/env不改；回执paper/materials/silent/20261008-0433-strategy。\n",
+  "post_merge_sandbox": {
+    "exit": 0,
+    "files": 245,
+    "cases": 2586,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261008-0433-strategy/post-merge-sandbox.log"
+  }
+}
