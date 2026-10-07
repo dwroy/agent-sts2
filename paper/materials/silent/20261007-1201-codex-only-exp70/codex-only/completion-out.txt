@@ -1,0 +1,102 @@
+{
+  "task": "fix-batch",
+  "base": "c3732c7f49b6f42385ad12d4ecad015eac16c335",
+  "fixes": [{
+    "item": "Roy 已授权独立功能：Codex-only 大脑等待与统计口径",
+    "commit": "88fe83e50b254853748a45ecc8a10de370c82f08",
+    "source_results": [
+      {
+        "commit": "856007edb088f572e5eabcf2e833df15c32ac649",
+        "test": "tsc 0；Vitest 216 文件、2331 例及 paths 11 项通过；Python 136 项通过",
+        "fails_without_fix": true
+      },
+      {
+        "commit": "a3071b24b601b26436418dee0e528235c53ed596",
+        "test": "移植后 tsc 0；Vitest 220 文件、2354 例及 paths 11 项通过；Python 136 项通过",
+        "fails_without_fix": "沿用原功能撤源验证；本提交为功能移植、文档和测试 worker 配置"
+      },
+      {
+        "commit": "88fe83e50b254853748a45ecc8a10de370c82f08",
+        "test": "tsc 0；Vitest 220 文件、2356 例及 paths 11 项通过",
+        "fails_without_fix": true
+      }
+    ],
+    "fails_without_fix": true,
+    "ablation": {
+      "runtime_failed": 9,
+      "metrics_failed": 1,
+      "logging_failed": 2,
+      "restored_identically": true
+    }
+  }],
+  "skipped": [
+    "其他队列 bug、boss 校准",
+    "真实 LLM、play、key/.env、依赖安装、推送",
+    "游戏知识或 bug-infra 台账登记、改写旧报告"
+  ],
+  "merged": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+  "tests": {
+    "live": "tsc 0；Vitest 223 文件、2363 例及 paths 11 项通过；Python 136 项通过",
+    "main_candidate": "tsc 0；Vitest 223 文件、2363 例及 paths 11 项通过",
+    "workers": 1,
+    "gitleaks": 0,
+    "feature_blobs_identical_between_live_and_main": 54,
+    "full_external": "pending",
+    "failure_history": "全部检查失败、重试、合入受阻及撤源验证记录保留于报告"
+  },
+  "commits": {
+    "original_source": "856007edb088f572e5eabcf2e833df15c32ac649",
+    "curated_source": "a3071b24b601b26436418dee0e528235c53ed596",
+    "final_source": "88fe83e50b254853748a45ecc8a10de370c82f08",
+    "refresh": "4647cf35df3e1602fd2d69100e09eb04b02253ce",
+    "actual_live_merge": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+    "release": "f8dd742d64b073225cf54f221a9b24cfc6612fdd",
+    "main_runtime_activation": "42eb0fa7bd03a44fdaa972b4008e02e2db7b0023",
+    "main_tested_candidate": "43847ae4af6ebbf012f4e019679853649e0566e9",
+    "main_records_merge": "d6f05cdabc17b3b82df06bf96d76a2745436da8f",
+    "main_registration": "c8e477d356fc805a2ca24bc07fab4d974f378490"
+  },
+  "release": {
+    "commit": "f8dd742d64b073225cf54f221a9b24cfc6612fdd",
+    "tree": "e038ea3001db752d4d4749dfe2c781c77464e8fb",
+    "checked_commit": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+    "checked_tree": "8b15e0550339fc9399a035a94d70e9729315c418",
+    "version": "V4.codex-only1",
+    "shipped": false,
+    "checks_pending": true
+  },
+  "statistics_fixed_cut": {
+    "policy": "codex-successful-brain-v1",
+    "silent": {"raw_runs": 86, "raw_wins": 10, "codex_runs": 78, "codex_wins": 10},
+    "ironclad": {"raw_runs": 481, "raw_wins": 24, "codex_runs": 7, "codex_wins": 1},
+    "named_five": "五局实际成功回答均为 DeepSeek",
+    "KQQELQSZ382Z": "混合：Codex 9 / DeepSeek 7，默认排除",
+    "unknown_history": 389,
+    "preserved": "全部原始局、首次/SL、学习证据、费用与旧快照"
+  },
+  "latest_quota_audit": {
+    "cut_time": "2026-10-07T03:51:35.970833+00:00",
+    "oct7_runs": 24,
+    "quota_events": 7
+  },
+  "reports": {
+    "md": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/report.md",
+    "json": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/report.json",
+    "classification": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/run-classification.csv"
+  },
+  "remaining": [
+    "调度器在固定发布树补跑完整沙箱外 tsc/vitest；运维核实 shipped 和运行中脚本加载版本。",
+    "未记载的历史脑题来源无法补造，保留未知标记和显式全引擎兼容口径。"
+  ]
+}
+
+== 学习者 codex / codex-only-brain ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a113ea-3a00-7210-85c9-5cb39515d505
+轮数：1；工具调用：command_execution×280 file_change×64
+token：输入 933.8k、输出 307.8k（其中推理 187.3k）、cache 读 36954.9k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：9945.6 s（墙钟）
+时间：首个事件 2.2 s、模型首个输出 6.7 s、首次工具 9.2 s、末次工具结束 9909.3 s；工具内共 6574.9 s，其余（模型生成、推理、网络）3368.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-only-brain）；模型的工具调用 exec×258 wait×7；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T09-11-19-01a113ea-3a00-7210-85c9-5cb39515d505.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain.jsonl
