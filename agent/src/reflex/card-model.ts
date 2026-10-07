@@ -78,6 +78,8 @@ export interface CardModel {
   strength: number;
   /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
   dexterity?: number;
+  /** Observed plain Fasten: extra Block for later Silent Defends (silent-0218/0143). */
+  fasten?: number;
   /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
   temporaryDexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
@@ -901,7 +903,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // The Bomb (1ZQJ: in hand four turns, never played, scored 0 as unmodelled): 40 to every enemy at
   // the end of the 3rd turn.
   const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
-  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) ? dyn(card, "PoisonPower") ?? 0 : 0;
+  // KQQELQSZ382Z F17 attempt 6 T7 / KAY522KT5NXR F14 T1, silent-0219: the observed plain card adds seven poison.
+  const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
+    !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7;
+  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite ? dyn(card, "PoisonPower") ?? 0 : 0;
   // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
   const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
   // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
@@ -909,6 +914,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
   // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
   const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
+  // P5HT1272P5SB F25 T9 / HSX4HYATB4E2 F31 T2: only the observed plain Fasten is wired.
+  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" &&
+    !bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
@@ -1028,6 +1036,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     weak,
     ...(weakFirst ? { weakFirst } : {}),
     strength,
+    ...(fasten > 0 ? { fasten } : {}),
     ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
