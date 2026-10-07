@@ -1,0 +1,44 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.3 → 2026-10-08.4；提交：dbeb2683（分支 exp-silent）；合入：未合入，live 预检发现 18 个记录文件冲突，已按要求停止，保留原状。
+- 条数：新增 0、更新 21（加证据 21、只改数字 0）、退役 0；active 159 → 159；总字符 51598 → 53187。A8 适用 151 条／49637 字，A9 适用 152 条／49921 字。
+- 机制推理：
+  - 灵动步法 — 敏捷逐张挡牌兑现，不补旧挡 — 66 局 — BTSRF7JL1W1Y
+  - 护喉甲 — 覆甲按现场层数计 — 9 局 — BTSRF7JL1W1Y
+  - 力量与敏捷 — 逐击加伤、逐牌加挡，各来源分账 — 111 局 — BTSRF7JL1W1Y
+  - 能力启动 — 未建立的能力不能预支收益 — 110 局 — XTSV1U9JD34T
+  - 毒雾 — 后续轮初补毒，建立不即时施毒 — 56 局 — BTSRF7JL1W1Y
+  - 脆弱 — 逐牌折减格挡，被动挡另算 — 21 局 — XTSV1U9JD34T
+  - 同族重打 — 胜利伴随后续动作与抽牌变化，单因未控 — 6 局 — BTSRF7JL1W1Y
+  - 触媒 — 增加毒结算次数，每次减毒 — 42 局 — XTSV1U9JD34T
+  - 尖啸 — 临时降力不能代替后轮防御 — 52 局 — XTSV1U9JD34T
+  - 凋萎 — 毒胜前仍可能支付持牌血价 — 14 局 — XTSV1U9JD34T
+  - 女王目标 — 没有固定击杀顺序的胜因证据 — 13 局 — XTSV1U9JD34T
+  - 女王 SL — 五场三十次重打零赢，不推出必胜顺序 — 5 局 — XTSV1U9JD34T
+  - 坚固钳子 — 留挡上限 10，剩量不足只留剩量 — 2 局 — XTSV1U9JD34T
+  - 熟睡甲虫 — 唤醒眩晕不停止后续力量成长 — 16 局 — BTSRF7JL1W1Y
+  - 夜魇 — 次轮复制须先活到兑现 — 3 局 — XTSV1U9JD34T
+  - 低语耳环 — 接管首轮与额外能量分开评价 — 3 局 — XTSV1U9JD34T
+  - 盛碗虫（石） — 完整挡住自身攻击后眩晕，不要求整轮零损 — 34 局 — BTSRF7JL1W1Y
+  - 生存者 — 被弃后继牌不兑现原计划效果 — 6 局 — BTSRF7JL1W1Y
+  - 黑暗镣铐 — 临时减力与下一轮成长分账 — 5 局 — BTSRF7JL1W1Y
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 244 文件／2568 用例／退出码 0，未重跑；gitleaks 通过。
+- 切片大小：整体中位增加 172.5 字；配对增量中位 167 字；最大 6108 字。
+- 学习账本：新增无；改成 proposed：silent-0005、silent-0006、silent-0009、silent-0011、silent-0013、silent-0016、silent-0019、silent-0020、silent-0021、silent-0024、silent-0027、silent-0046、silent-0057、silent-0069、silent-0079、silent-0090、silent-0095、silent-0128、silent-0140、silent-0164、silent-0196、silent-0205、silent-0241；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-08.4","commit":"dbeb26835b1792befcfe28d713df4086d85d90c7","merged":null,"added":0,"updated":21,"retired":0,"active":159,"mechanisms":["silent-footwork-block","silent-gorget-plating","silent-strength-weak-observation","silent-deck-burst-observation","silent-noxious-fumes-growth","silent-frail-card-block","silent-kin-poison-sl-observation","silent-accelerant-triggers","silent-piercing-wail-temporary-strength","silent-wither-end-turn-loss","silent-queen-poison-main-target","silent-queen-poison-window-sl-observation","silent-sturdy-clamp-retention-cap","silent-slumbering-beetle-wake-growth","silent-nightmare-next-turn-copies","silent-whispering-earring-first-turn-control","silent-bowlbug-rock-full-block-stun","silent-survivor-neutralize-discard","silent-dark-shackles-temporary-strength"],"tests":{"tsc":0,"vitest":0,"cases":2568},"ledger":{"added":[],"proposed":["silent-0005","silent-0006","silent-0009","silent-0011","silent-0013","silent-0016","silent-0019","silent-0020","silent-0021","silent-0024","silent-0027","silent-0046","silent-0057","silent-0069","silent-0079","silent-0090","silent-0095","silent-0128","silent-0140","silent-0164","silent-0196","silent-0205","silent-0241"],"retired":[],"check":0},"code_proposals":["silent-proposal-0129c465c6f5bd79","silent-proposal-abe9d5d0be109a9f","silent-proposal-f16527e59b5cc1e0"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a117db-1671-7b20-93cf-3c88971e6b08
+轮数：1；工具调用：command_execution×65 file_change×11
+token：输入 210.1k、输出 48.5k（其中推理 17.0k）、cache 读 9536.3k、cache 写 0（命中 97.8%）
+成本：未提供
+耗时：1700.2 s（墙钟）
+时间：首个事件 3.0 s、模型首个输出 7.9 s、首次工具 11.5 s、末次工具结束 1650.8 s；工具内共 1389.5 s，其余（模型生成、推理、网络）307.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×63；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T03-33-16-01a117db-1671-7b20-93cf-3c88971e6b08.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update.jsonl

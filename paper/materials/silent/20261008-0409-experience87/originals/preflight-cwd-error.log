@@ -1,0 +1,11 @@
+从开测前命令的工具回显保存；当时工作目录为 agent/。
+cat: learner/runs/20261008-033315-experience-update/verify.log: No such file or directory
+cat: learner/runs/20261008-033315-experience-update/check-experience.log: No such file or directory
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json; json.load(open("knowledge/characters/silent/experience.json"))
+                           ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'knowledge/characters/silent/experience.json'
+
+随后在工作树根目录读取原回执并执行 JSON 合法性检查，退出 0。
+这次路径读取错误发生于测试脚本之前，不是 tsc/vitest 失败；原测试没有重跑。
