@@ -672,3 +672,5 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 Roy：「不要让 ds 做，重新让 codex 来做」。live .env 已去掉 BRAIN_FALLBACK=deepseek（下一局起）。但没有兜底时，大脑答不了的题会退到 Jev/代码，仍不是 codex。要做成：
 - **codex 不可用时对局暂停等待，不由别的引擎代答**：大脑判定 codex 不可用（额度用完、登录失效、预检失败、连续超时休息）时，对局在安全点暂停（例如在当前决策前等待并定时重试 codex，或通知 autoplay 停在局间），恢复后由 codex 接着答；暂停和恢复写日志、写收件箱。不要让 Jev/代码替大脑的路线、选牌、事件、商店、休息、整局计划作答。
 - **统计口径**：大脑主要由 DeepSeek 回答的局（已知 MCCK2602T1SR、UJ0K3G10609Y、U8K28UUGYP3U、L9SGRBB5R698、D4LJ9QMGFB8Q；以及 10-07 额度用尽期间的局，按 brain.jsonl 的 engine 判）在爬塔统计、学习曲线和论文表里单独标注、默认不计入 A10 战绩；学习者复盘照常可用作证据。
+
+- 2026-10-07 11:06 独立功能075131-fix-batch结案：Roy授权静默boss校准固定源cdf75af64fb5b118a5a808ecb3b05e2a05991c36已实际合live75ba3f6ec0ef27cdd73f10d1e9e91200437722b4，唯一S1.boss-calibration1，外部0061f599/583ad9 tsc0/274文件3146例2跳过通过。main同步ed174ac01583b02eb2bd4a50c11f923f93c20c25保留Codex-only派发并激活升阶/20新实际boss结局的周期检查；18项Python调度及组合沙箱已过。silent-0223仅fight由CLI追加shipped，12个boss仍低可信及缺口按原报告保持，不冒标其他提案或bug。07:54尚在执行记录留史；详情paper/materials/silent/20261007-1051-boss-exp69-release.md。
