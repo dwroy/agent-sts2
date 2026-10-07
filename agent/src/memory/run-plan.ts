@@ -24,6 +24,7 @@ import type { GameState } from "../hand/mod/schema.js";
 import { deckEntries } from "./deck.js";
 import { deckProfileLine } from "./deck-profile.js";
 import { bossClockJson } from "../sim/boss-clock.js";
+import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
@@ -128,6 +129,7 @@ export const RUN_PLAN_TASK_KEY = "run_plan_task";
 /** What DeepSeek is shown: the deck grouped, relics, potions, HP/gold, act boss and the trigger. */
 export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger, deckLines: string[], relics: string[], potions: string[]): Record<string, JsonValue> {
   const raw = asRecord(state.run?.raw);
+  const phase = observedBossPhase(state);
   return {
     trigger,
     act: actOf(state),
@@ -135,7 +137,8 @@ export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: Ru
     ascension: state.run?.ascension ?? 0,
     hp: `${state.run?.current_hp ?? "?"}/${state.run?.max_hp ?? "?"}`,
     gold: state.run?.gold ?? null,
-    act_boss: str(raw["boss_id"]),
+    act_boss: phase ? bossIdForFacts(state) : str(raw["boss_id"]),
+    ...(phase ? { boss_phase: phase } : {}),
     act_boss_clock: bossClockJson(state, knowledge),
     deck_size: deckEntries(state, knowledge).length,
     deck_profile: deckProfileLine(state, knowledge),
