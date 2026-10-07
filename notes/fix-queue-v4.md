@@ -791,3 +791,7 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 ## 2026-10-07 23:37 学习闭环新增非阻塞模型 bug（Q6M2Y34MWKRE）
 
 - [ ] **silent-0260：普通紧勒后续逐牌失血漏模**。学习者定位agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252，缺普通STRANGLE效果/真实STRANGLE_POWER读取/卡牌完成触发接线。Q6M2Y34MWKRE A10 F8 T4同完整三牌预测19、实际23、玩家损1相同；首证Y6GM2CHWJBEY A0 F4 T1预测27、实际29。按原proposal-strangle-bug.md/json补固定证据模型，核真实中途接续、技能选择完成及轮末消失；保留未观察升级/叠加/重放/其他角色边界，不凭模型漏4断言导致本局死亡或修后必胜。正常完局，无阻塞，沿既有silent-proposal-1b9e29122364fa68自动策略链处理，不重复派发。0261机制与0259再生/0262蛞蝓机制交学习者，运维不补游戏知识；原证据learner/runs/20261007-224302-postmortem及本轮归档。
+
+## 2026-10-08 00:21 学习闭环新增非阻塞推演 bug（NHA2KW0RB7VP）
+
+- [ ] **silent-0263：已有虚弱的意图转向后少算1伤**。学习者定位agent/src/reflex/turn-solver.ts:2493/2546/2585；NHA2KW0RB7VP A10 F33 T2碾碎爪相同力量−2/虚弱1/同招转向后显示1→2，首战防御＋冲刺15挡预测损6、实际损7，第2次16挡预测5、实际6。保留ledger-input-rounding-bug.json、proposal-back-attack-rounding.md及六个同局固定转换；六次不当六局，原运行dirty树未存不以当前树冒充。按原提案先核底值和取整接线，底值不可追溯则明示未精确/保留waiting，不全局floor改ceil或凭显示值猜公式。末次38攻/6挡死亡预测正确，不把1点差额归为整局死因。正常完局，普通非阻塞队列，沿既有silent-proposal-cfecb5580938873d自动策略链，不重复派发。0264朝向机制、0265油灯机制及SL/精准切割提案由学习者处理，运维不补知识；原证据learner/runs/20261007-234302-postmortem和本轮归档。
