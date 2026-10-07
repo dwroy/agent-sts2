@@ -1,0 +1,53 @@
+## 修 bug 回报
+
+- 合并基线：main → `3cb3c7cf0a8d09c198bf89caf9b95aa3f3fef61f`
+- 修复：升阶审计裸 JSON 兼容 — `0605d15ac09966a6d34ba96ef29be03312195ccd` — 测试 `ascension-audit-report.test.ts:reads the leading audit JSON before the launcher summary` — 去掉修复时失败：是
+- 修复：升阶审计工作树报告目录 — `b522f1fbd624b260db0f565689272d16c3f3a633` — 测试 `ascension-audit-path.test.ts:accepts the preserved report in this batch's registered independent worktree` — 去掉修复时失败：是
+- 修复：rollout 固定时钟夹具 — `955941fa54e7787576baa47e0669308284f89543` — 测试 `rollout-live-clock.test.ts:keeps the fixture budget assertion after a simulated wall-clock pause` — 去掉修复时失败：是
+- 修复：铁蒺藜荆棘及后续轮接线（CA5KE8GFJ9X2，F9T6/F13T1，silent-0229）— `db6e32d2ee101af6b53f8228c27165bb41f04811` — 测试 `silent-caltrops.test.ts:CA5 F9 T6: the seven action damage and three enemy-turn damage stay separate` — 去掉修复时失败：是
+- 修复：HAZE 群体施毒（DUZUBAJ3A8GP，F6T1/F27T4–5，silent-0234）— `20b04517393708c73912326bb35d8448d1b3f77e` — 测试 `silent-haze.test.ts:F6 T1: plain Haze applies four poison independently to both enemies` — 去掉修复时失败：是
+- 修复：无源码策略报告工作树目录 — `2b68fe48b607e58a83137d08c6c59dbd25275f98` — 测试 `strategy-no-change-path.test.ts:accepts the observed 28 dispositions under the batch worktree` — 去掉修复时失败：是
+- 已被别人修掉的：142 项，逐项提交号见[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-173847-fix-batch/report.md)。
+- 没修的：缓存实测、mod 超时根因—证据不足；boss 性能—独立大项；策略、神化、B4/B5、A10 专项—沿已有独立任务，不重复实现。
+- 测试：tsc 退出码 0；vitest 239 文件 / 2511 用例 / 退出码 0。首轮临时初稿导入失败已处理；`rollout-live.test.ts:253` 在 4 worker 下超时，2 worker 整套重跑通过。原失败日志保留。
+- 合入：`f9db52c1ed7af16d019e32528953e5ffcc8e08f0`，版本 `S1.fix45`；双通知及代码提案已登记，账本 shipped 交运维核实。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "3cb3c7cf0a8d09c198bf89caf9b95aa3f3fef61f",
+  "fixes": [
+    {"item": "升阶审计完成报告裸JSON兼容", "commit": "0605d15ac09966a6d34ba96ef29be03312195ccd", "test": "agent/tests/ascension-audit-report.test.ts", "fails_without_fix": true},
+    {"item": "升阶审计独立工作树报告目录", "commit": "b522f1fbd624b260db0f565689272d16c3f3a633", "test": "agent/tests/ascension-audit-path.test.ts", "fails_without_fix": true},
+    {"item": "恢复rollout固定时钟夹具", "commit": "955941fa54e7787576baa47e0669308284f89543", "test": "agent/tests/rollout-live-clock.test.ts", "fails_without_fix": true},
+    {"item": "恢复silent-0229铁蒺藜荆棘接线及后续轮", "commit": "db6e32d2ee101af6b53f8228c27165bb41f04811", "test": "agent/tests/silent-caltrops.test.ts", "fails_without_fix": true},
+    {"item": "silent-0234 HAZE群体施毒漏入卡牌模型", "commit": "20b04517393708c73912326bb35d8448d1b3f77e", "test": "agent/tests/silent-haze.test.ts", "fails_without_fix": true},
+    {"item": "无新增源码策略报告误限主检出目录", "commit": "2b68fe48b607e58a83137d08c6c59dbd25275f98", "test": "agent/tests/strategy-no-change-path.test.ts", "fails_without_fix": true}
+  ],
+  "skipped": [
+    {"item": "Codex缓存命中及实测", "reason": "离线限制，缺固定根因及实测数据"},
+    {"item": "mod请求超时自愈", "reason": "缺固定可复现根因"},
+    {"item": "boss模拟性能及CPU争用", "reason": "独立性能分析，范围太大"},
+    {"item": "出牌、药水、SL、终局、路线、休息策略", "reason": "沿已有独立strategy-proposal处理"},
+    {"item": "B4/B5及A10专项", "reason": "独立已授权功能，不重复实现"},
+    {"item": "silent-0237神化状态传播", "reason": "已有独立待办提案，遵守共享租约，不重复派发"}
+  ],
+  "merged": "f9db52c1ed7af16d019e32528953e5ffcc8e08f0",
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2511},
+  "code_proposals": ["silent-proposal-64053b2a68241a20", "silent-proposal-461611b6b36e2d4c"],
+  "implementation_domains": ["combat"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-173847-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a115ba-d971-7642-87f1-9da84fea91e7
+轮数：1；工具调用：command_execution×197 file_change×16
+token：输入 453.8k、输出 131.2k（其中推理 72.0k）、cache 读 37585.8k、cache 写 0（命中 98.8%）
+成本：未提供
+耗时：7499.9 s（墙钟）
+时间：首个事件 2.9 s、模型首个输出 8.4 s、首次工具 10.9 s、末次工具结束 7371.4 s；工具内共 6181.3 s，其余（模型生成、推理、网络）1315.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×212 wait×46；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T17-38-49-01a115ba-d971-7642-87f1-9da84fea91e7.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-173847-fix-batch.jsonl

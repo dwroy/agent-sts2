@@ -1,0 +1,19 @@
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+2567120 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-200254-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-200254-experience-update.pid 1 - /home/dw/Projects
+2567122 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-200254-experience-update KV0JHNJCKXLS silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+2567144 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+2567186 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2588200 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261007-201301-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261007-201301-postmortem.pid 1 - /home/dw/Projects/agent-sts2/op
+2588201 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261007-201301 YQL8RZ8BWN1E silent
+2588211 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --task postmortem --character silent --cwd /home/dw/Projects/agent-sts2 --set runs=YQL8RZ8B
+2588223 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2597252 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+2597263 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2616882 python3 /home/dw/Projects/agent-sts2/ops/report.py KEN58SH9SLZ6
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261007-200254-experience-update  wJ:p64  yes    yes   2567120:bash 2567122:bash 2567143:tail 2567144:node 2567186:node
+learner-20261007-201301-postmortem         wJ:p66  yes    yes   2588200:bash 2588201:bash 2588210:tail 2588211:node 2588223:node 2588233:esbuild
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex
