@@ -9,7 +9,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { createBrain } from "../src/brain/brain.js";
+import { createBrain } from "./legacy-brain.js";
 import { checkClaudeBin, CLAUDE_REST_MS, claudeFailure, ClaudeEngine, claudeModelId } from "../src/brain/engines/claude.js";
 import { agentEnv, EXIT_CLOSE_GRACE_MS, runAgent } from "../src/brain/engines/process.js";
 import { EngineFailure } from "../src/brain/router.js";

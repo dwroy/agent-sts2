@@ -7,6 +7,7 @@ LOGDIR="$LOGS"
 now=$(date +%s)
 
 [ -f "$ROOT/ops/STOP" ] && { echo "OK (STOP file present, autoplay paused on purpose)"; exit 0; }
+if python3 "$(dirname "$0")/brain_wait.py" "$LOGDIR" 2>/dev/null; then exit 0; fi
 
 console=$(ls -t "$LOGDIR"/console/*.log 2>/dev/null | head -1)
 if [ -z "$console" ]; then echo "STALL: no console log"; exit 0; fi

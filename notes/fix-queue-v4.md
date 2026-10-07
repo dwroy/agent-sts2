@@ -674,3 +674,8 @@ Roy：「不要让 ds 做，重新让 codex 来做」。live .env 已去掉 BRAI
 - **统计口径**：大脑主要由 DeepSeek 回答的局（已知 MCCK2602T1SR、UJ0K3G10609Y、U8K28UUGYP3U、L9SGRBB5R698、D4LJ9QMGFB8Q；以及 10-07 额度用尽期间的局，按 brain.jsonl 的 engine 判）在爬塔统计、学习曲线和论文表里单独标注、默认不计入 A10 战绩；学习者复盘照常可用作证据。
 
 - 2026-10-07 11:06 独立功能075131-fix-batch结案：Roy授权静默boss校准固定源cdf75af64fb5b118a5a808ecb3b05e2a05991c36已实际合live75ba3f6ec0ef27cdd73f10d1e9e91200437722b4，唯一S1.boss-calibration1，外部0061f599/583ad9 tsc0/274文件3146例2跳过通过。main同步ed174ac01583b02eb2bd4a50c11f923f93c20c25保留Codex-only派发并激活升阶/20新实际boss结局的周期检查；18项Python调度及组合沙箱已过。silent-0223仅fight由CLI追加shipped，12个boss仍低可信及缺口按原报告保持，不冒标其他提案或bug。07:54尚在执行记录留史；详情paper/materials/silent/20261007-1051-boss-exp69-release.md。
+
+## 2026-10-07 12:07 — Codex-only 完成事件的运维工具缺口（纯基础设施）
+
+- **完成报告裸JSON兼容**：20261007-091118-fix-batch.out是合法task=fix-batch的完整开头JSON对象加运行器尾注，没有Markdown围栏；ops/learner_checks.py:read_report只匹配围栏，返回空字典，实际910604a4/V4.codex-only1却被登记failed/merged=null，独立learner-recheck也不能识别。保留原.out/err和原failed状态，不用改写模型回报绕过；学习者补安全raw_decode兼容及固定夹具，仍限制合法任务/对象/源码祖先，不从任意散文猜JSON。无游戏账本ID，不冒标知识shipped。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
+- **autoplay安全热交接动作**：新ops/autoplay.sh的退出75/78保局保护已测/已在main，但长期bash1734436预解析旧while体；当前play已加载f8dd742d功能，不停止它。现有broker autoplay-start因play存在拒绝，禁止停旧循环后留空窗、直接在沙箱外启动herdr绕过白名单。学习者补独立安全reload动作，验证属主/精确旧autoplay PID及当前play PID、无report.py，用WAIT_PID接管同一局并回执新PID/版本，动作失败保持旧循环或明确恢复；固定数据测试，最多4进程/nice。Roy可按docs/codex-ops.md已有迁移流程先手工交接，最终激活另记，不把磁盘同步冒报为已加载。

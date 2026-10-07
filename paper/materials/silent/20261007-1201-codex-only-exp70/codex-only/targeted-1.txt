@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-only-brain/agent
+
+ ❯ tests/turn-start-settle.test.ts (5 tests | 1 failed) 278ms
+     × not held: neither power up (Crimson Mantle alone), a later action of the turn, a choice screen's action, or out of combat 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/turn-start-settle.test.ts > turnStartSettleMs on C4F14F3XPN0N F33 attempt 5 T7 (Hellraiser + two Inferno+, the least-loss Anger 2 ms after the read) > not held: neither power up (Crimson Mantle alone), a later action of the turn, a choice screen's action, or out of combat
+TypeError: resetFightMemory is not a function
+ ❯ tests/turn-start-settle.test.ts:74:5
+     72|     next["turn"] = 8;
+     73|     expect(turnStartSettleMs(parseGameState(next), PLAY, memory, read,…
+     74|     resetFightMemory(memory);
+       |     ^
+     75|     expect(turnStartSettleMs(held, PLAY, memory, read, decided)).toBe(…
+     76|     expect(turnStartSettleMs(held, { action: "select_deck_card", optio…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 79 passed (80)
+   Start at  09:25:00
+   Duration  7.11s (transform 5.66s, setup 1.52s, import 6.30s, tests 7.74s, environment 1ms)
+

@@ -23,6 +23,7 @@ import { style } from "./util/format.js";
 import { acquireLock } from "./util/lock.js";
 import { BuildSimPool } from "../sim/build-sim-pool.js";
 import { setKnowledgeCharacter } from "../knowledge/files.js";
+import { isBrainBlocked } from "../brain/wait.js";
 
 const USAGE = `jev-sts2 — play Slay the Spire 2 with Jev (TypeSafe System One)
 
@@ -309,6 +310,12 @@ async function main(argv: string[]): Promise<number> {
         );
       }
       const reporter = createReporter();
+      const stopController = new AbortController();
+      const stopSignal = (): void => stopController.abort();
+      let buildSim: BuildSimPool | null = null;
+      let thiefPool: BuildSimPool | null = null;
+      process.on("SIGINT", stopSignal);
+      process.on("SIGTERM", stopSignal);
       try {
         const runtime = await buildRuntime({
           config,
@@ -319,13 +326,14 @@ async function main(argv: string[]): Promise<number> {
         process.stdout.write(
           `${style.bold(mode === "shadow" ? "shadow mode" : "PLAY mode")}: ${runtime.baseUrl}, model ${config.jev.model}` +
             `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
-            `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
+            `${skipJev ? style.yellow(" | NO-JEV: combat uses code; brain decisions still require Codex") : ""}\n`,
         );
-        const buildSim = config.bossSimBuild === "on" && config.buildDecider === "deepseek" ? new BuildSimPool() : null;
+        buildSim = config.bossSimBuild === "on" && config.buildDecider === "deepseek" ? new BuildSimPool() : null;
         // THIEF_COST: the Hopper's stolen card simulated against the act boss (thief-card-value.ts): B3's pool when it
         // runs, else one of its own (its workers start on the first Hopper fight).
-        const thiefPool = config.thiefFacts && config.thiefCost ? (buildSim ?? new BuildSimPool()) : null;
+        thiefPool = config.thiefFacts && config.thiefCost ? (buildSim ?? new BuildSimPool()) : null;
         const stats = await runLoop({
+          signal: stopController.signal,
           config,
           mode,
           client: runtime.client,
@@ -349,11 +357,18 @@ async function main(argv: string[]): Promise<number> {
           buildSim: buildSim ? { runner: buildSim } : null,
           thiefSim: thiefPool ? { runner: thiefPool } : null,
         });
-        await buildSim?.close();
-        if (thiefPool && thiefPool !== buildSim) await thiefPool.close();
         reporter.summary(stats);
         return stats.errors > 0 && stats.acts === 0 ? 1 : 0;
+      } catch (error) {
+        if (!isBrainBlocked(error)) throw error;
+        process.stderr.write(`${error.state}: ${error.message}\n`);
+        // autoplay parks these statuses; restarting is an explicit operator recovery, not a model fallback.
+        return error.state === "cancelled" ? 75 : 78;
       } finally {
+        await buildSim?.close();
+        if (thiefPool && thiefPool !== buildSim) await thiefPool.close();
+        process.removeListener("SIGINT", stopSignal);
+        process.removeListener("SIGTERM", stopSignal);
         lock.release();
       }
     }

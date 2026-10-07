@@ -425,7 +425,8 @@ export function runConfigRow(
 ): RunConfigRow {
   const { config, brain, env } = opts;
   const engines: Partial<Record<EngineName, EngineSnapshot>> = {};
-  const used = enginesInUse(config.brain);
+  const actualBrain = brain?.router.config ?? config.brain;
+  const used = enginesInUse(actualBrain);
   for (const name of used) engines[name] = engineSnapshot(name, config, brain);
   const deepseek = config.deepseek
     ? {
@@ -440,9 +441,9 @@ export function runConfigRow(
   const setup = {
     brain: {
       active: brain !== null,
-      engine: config.brain.engine,
-      by_prefix: Object.fromEntries(Object.keys(config.brain.byPrefix).sort().map((prefix) => [prefix, config.brain.byPrefix[prefix]!])) as Record<string, EngineName>,
-      fallback: config.brain.fallback,
+      engine: actualBrain.engine,
+      by_prefix: Object.fromEntries(Object.keys(actualBrain.byPrefix).sort().map((prefix) => [prefix, actualBrain.byPrefix[prefix]!])) as Record<string, EngineName>,
+      fallback: actualBrain.fallback,
       reask: config.brain.reask,
       tools: config.brain.tools,
       log: brain ? (brain.router.config.log || null) : null,

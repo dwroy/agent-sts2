@@ -26,7 +26,7 @@
 ```
 
 - **Jev**（TypeSafe System One）：在接近的选项之间快速挑选，单次 70 到 500 ms。
-- **大脑**：可以切换引擎，现在是 Codex（GPT），DeepSeek 作为回退。知识整份放进系统提示。
+- **大脑**：Roy 2026-10-07 授权后仅由 Codex 回答。额度、登录或服务不可用时在原题等待恢复；没有其他引擎、Jev 或代码代答。知识整份放进系统提示。战斗执行继续由 Jev 和代码负责。
 - **SL**：只在真正必死时读档。统计时第一次尝试和 SL 之后的结果分开记。
 
 架构的完整说明见 [docs/v4-architecture.md](docs/v4-architecture.md)，目录怎么分见 [docs/layout.md](docs/layout.md)。
@@ -63,7 +63,7 @@ npm run shadow -- --max-decisions 20              # 只决策不动手
 
 - `CHARACTER`：选哪个角色。
 - `TARGET_ASCENSION`：进阶，可以填固定数字，或者设成随胜利升阶。
-- `BRAIN_ENGINE`：大脑用哪个引擎。
+- `BRAIN_ENGINE`／分题引擎／`BRAIN_FALLBACK`：保留历史配置解析；生产大脑固定为 Codex，实际配置写入 run-config。Codex 的模型、超时和额度保护设置仍生效。
 - `SL_*`：读档相关的开关。
 
 学习者：

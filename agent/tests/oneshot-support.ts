@@ -17,7 +17,7 @@ import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
 import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
 import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
-import { runLoop, type LoopOptions } from "../src/hand/loop.js";
+import { runLoop, type LoopOptions } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
 import { buildRunBrief } from "../src/memory/run-brief.js";

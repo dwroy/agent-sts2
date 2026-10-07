@@ -11,7 +11,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { createBrain, type Brain } from "../src/brain/brain.js";
+import { type Brain } from "../src/brain/brain.js";
+import { createBrain } from "./legacy-brain.js";
 import { loadConfig, type AppConfig } from "../src/core/config.js";
 import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
 import { LOGS_DIR } from "../src/core/paths.js";

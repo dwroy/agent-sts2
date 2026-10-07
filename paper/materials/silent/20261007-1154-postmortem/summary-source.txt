@@ -1,0 +1,14 @@
+import json,collections
+from pathlib import Path
+p=Path('learner/runs/20261007-114302-postmortem');d=[json.loads(l) for l in (p/'decisions.jsonl').open()];s=[json.loads(l) for l in (p/'states.jsonl').open()]
+def hp(x):return x['state']['run']['current_hp']
+def en(st):return [(e['name'],e['enemy_id'],e['current_hp'],e['block'],[(p['power_id'],p['amount']) for p in e['powers']],e.get('move_id'),e.get('intents')) for e in st['combat']['enemies']]
+for x in d:
+ if x['decider']=='codex' and x['floor']>=12:print(x['ts'],x['floor'],x['label'],x.get('chosen'),x['rationale'])
+seen=set()
+for x in s:
+ st=x['state'];f=st.get('run',{}).get('floor')
+ if not st.get('in_combat') or f in seen:continue
+ seen.add(f);print('首状态',f,st['turn'],hp(x),en(st))
+x=next(x for x in d if x.get('journal') and 'plan-choice' in x['label']);print('journal',json.dumps(x['journal'],ensure_ascii=False));print('usage',x['usage'])
+print('终状态',hp(s[-1]),en(s[-1]['state']));print('末玩家',s[-2]['state']['combat']['player'])

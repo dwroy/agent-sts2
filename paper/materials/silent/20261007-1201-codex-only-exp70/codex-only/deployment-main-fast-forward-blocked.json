@@ -1,0 +1,143 @@
+{
+  "status": "released_ops_verification_pending",
+  "integration_source": "88fe83e50b254853748a45ecc8a10de370c82f08",
+  "version": "V4.codex-only1",
+  "original_source": "856007edb088f572e5eabcf2e833df15c32ac649",
+  "tests": {
+    "sandbox": {
+      "rc": 0,
+      "log": "test-live.log",
+      "tsc": 0,
+      "workers": 1,
+      "summary": [
+        [
+          "223 passed (223)",
+          ""
+        ],
+        [
+          "",
+          "2363 passed (2363)"
+        ],
+        [
+          "1 passed (1)",
+          ""
+        ],
+        [
+          "",
+          "11 passed (11)"
+        ]
+      ],
+      "sha256": "79b4102f4b6dca0a7970dede512900e5130b639ec1b90df2f0c797149b80a1fb"
+    },
+    "python": {
+      "rc": 0,
+      "log": "python-live.log",
+      "sha256": "ef468aaa3718536bd72add6d45ff6ed945e14eefbeed47d2bf3f7b04ea4dcadf"
+    },
+    "main_publication": {
+      "rc": 0,
+      "workers": 1,
+      "log": "test-main-publication.log",
+      "sha256": "bcca1bc7e373677f17601a1100a3d862c55348f0e0300f5e80b0527abda39c2d"
+    }
+  },
+  "shipped": false,
+  "checks_pending": true,
+  "lock_acquired": "2026-10-07T03:17:02.596204+00:00",
+  "refresh_confirmation": {
+    "stable_seconds": 3,
+    "paths": [
+      "notes/monster-db-check.md",
+      "notes/fight-value-backtest-silent.md"
+    ],
+    "fingerprints": {
+      "notes/monster-db-check.md": "d85d1ef78d8a6e79f18371e1a6313025eebac71338ea28290d821b58c15a4db4",
+      "notes/fight-value-backtest-silent.md": "7e24123ccc8ac83ef4cd56753c6ff9050c439fb4b5d3394933525cc1044150f1"
+    },
+    "process_scope": "sandbox process namespace only; not a claim of complete host process inspection",
+    "lock": "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+  },
+  "overlap": [],
+  "refresh_commit": "4647cf35df3e1602fd2d69100e09eb04b02253ce",
+  "before_code": "4647cf35df3e1602fd2d69100e09eb04b02253ce",
+  "before_tree": "5b6b9d74667367ab5afb90a6e60a5aaa9975bd3c",
+  "preflight": {
+    "rc": 0,
+    "log": "preflight-live.txt"
+  },
+  "actual_merge": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+  "merged_tree": "8b15e0550339fc9399a035a94d70e9729315c418",
+  "knowledge_blobs_preserved": true,
+  "fixed_check_commit": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+  "fixed_check_tree": "8b15e0550339fc9399a035a94d70e9729315c418",
+  "release_date_command": "2026-10-07 11:32",
+  "release_entry": {
+    "name": "V4.codex-only1",
+    "family": "V4",
+    "commit": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+    "source": "decision-log 2026-10-07 11:32: Roy authorized Codex-only waiting and codex-successful-brain-v1 performance/climb policy; global engine/source behavior only"
+  },
+  "decision_log_line": "- 2026-10-07 11:32 Codex学习者上线Roy09:00已授权独立功能：Codex-only大脑等待与统计口径；原源码856007edb088f572e5eabcf2e833df15c32ac649、仅本功能最终源88fe83e50b254853748a45ecc8a10de370c82f08→实际live代码910604a4471ad4470e563d6d4e16d05bdcb78758，唯一V4.codex-only1。路线/选牌/事件/商店/休息/整局及既有战斗计划不可用在原题有界退避等待，恢复仍Codex；取消/程序故障保留原局，首次/终止日志写失败也保留原因并退出脑故障78，心跳/收件箱/stall/autoplay禁止代答与重启风暴，Jev战斗执行/代码求解原职责保持。brain.jsonl实际成功引擎为统一绩效/论文/学习曲线/climb口径，DeepSeek/混合/未知默认排除但原战绩/证据/成本全部保留、旧快照不改；固定切点静默86局10胜→78局10胜，五点名局均DeepSeek，额度回退KQQELQSZ382Z为Codex9/DeepSeek7混合。源tsc/vitest0、Python136通过；集成两轮旧rollout排名/SL搜索各1失败、单项及未含功能基线核验后单worker全套通过，原历史/重复worker参数拒绝保留；日志故障保护撤源2失败/恢复36通过，live合后沙箱/Python通过（完整日志和固定树见报告）。根锁内全部刷新4647cf35df3e1602fd2d69100e09eb04b02253ce、重叠空/预检0、已提交知识逐blob保持；铁甲仅Roy指定全局引擎等待/来源差异，无策略/知识改变，不混其他修复或boss校准。新架构不冒标游戏知识或bug-infra；shipped及完整外部固定树检查由运维/调度核实，主检出同步随后登记。报告/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/report.md与report.json；不停当前对局、不运行play、不改env/key/prompt、不推送。\n",
+  "release_commit": "f8dd742d64b073225cf54f221a9b24cfc6612fdd",
+  "release_tree": "e038ea3001db752d4d4749dfe2c781c77464e8fb",
+  "refresh_files_retained": false,
+  "refresh_after_tests": {
+    "notes/monster-db-check.md": "3d1b673f6d6b9feac7c1f74bf4907c726fb3c5cc057b5660af59b0a20c2a403e",
+    "notes/fight-value-backtest-silent.md": "7e24123ccc8ac83ef4cd56753c6ff9050c439fb4b5d3394933525cc1044150f1"
+  },
+  "main_runtime_activation": {
+    "before": "555dc09590361bd4e0570b78c722fd2815951ecf",
+    "main_runtime_merge": "42eb0fa7bd03a44fdaa972b4008e02e2db7b0023",
+    "source": "856007edb088f572e5eabcf2e833df15c32ac649",
+    "dirty_paths_before": [
+      "notes/monster-db-check.md",
+      "ops/autoplay.log",
+      "ops/inbox-dev.md",
+      "ops/restarts.log",
+      "ops/win-notified",
+      "paper/materials/ironclad/cost.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/none/cost.md",
+      "paper/materials/unattributed/cost.md"
+    ],
+    "dirty_paths_after": [
+      "notes/monster-db-check.md",
+      "ops/autoplay.log",
+      "ops/inbox-dev.md",
+      "ops/restarts.log",
+      "ops/win-notified",
+      "paper/materials/ironclad/cost.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/none/cost.md",
+      "paper/materials/unattributed/cost.md"
+    ],
+    "preflight": 0,
+    "gitleaks": 0,
+    "source_tests": "source-manifest.json",
+    "latest_wait_guard_and_worker_profile_pending_publication_sync": true
+  },
+  "main_before": "9d753e50317b8185e7dde28855f54b1158f56e8c",
+  "main_dirty_preserved_paths": [
+    "notes/lessons.md",
+    "notes/monster-db-check.md",
+    "ops/autoplay.log",
+    "ops/inbox-dev.md",
+    "ops/restarts.log",
+    "ops/win-notified",
+    "paper/data/cost-curve-ironclad.csv",
+    "paper/data/cost-curve-silent.csv",
+    "paper/data/cost-silent.csv",
+    "paper/data/cost-sources.json",
+    "paper/data/cost-unattributed.csv",
+    "paper/materials/ironclad/cost.md",
+    "paper/materials/learning/ledger.jsonl",
+    "paper/materials/none/cost.md",
+    "paper/materials/silent/cost.md",
+    "paper/materials/unattributed/cost.md"
+  ],
+  "main_source_merge": "9d753e50317b8185e7dde28855f54b1158f56e8c",
+  "main_record_date_command": "2026-10-07 11:33",
+  "main_sync_phase": "checking_publication_candidate",
+  "main_records_source": "43847ae4af6ebbf012f4e019679853649e0566e9",
+  "main_sync_blocked": "['git', 'merge', '--ff-only'] exit 128:  hint: Diverging branches can't be fast-forwarded, you need to either:\nhint:\nhint: \tgit merge --no-ff\nhint:\nhint: or:\nhint:\nhint: \tgit rebase\nhint:\nhint: Disable this message with \"git config set advice.diverging false\"\nfatal: Not possible to fast-forward, aborting.\n"
+}

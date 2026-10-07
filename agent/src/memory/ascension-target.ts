@@ -10,6 +10,7 @@
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { brainSources } from "../brain/source.js";
 
 import { LOGS_DIR } from "../core/paths.js";
 import { characterKey, DEFAULT_CHARACTER } from "../knowledge/files.js";
@@ -34,7 +35,7 @@ export function fixedAscension(raw: string | undefined | null): number | null {
 export const ascensionClimbOptions = { runsPath: join(LOGS_DIR, "runs.jsonl") };
 
 /** The highest ascension `character` (a knowledge id) has won in the runs file, or null before its first win. */
-export function highestWon(character: string, runsPath: string = ascensionClimbOptions.runsPath): number | null {
+export function highestWon(character: string, runsPath: string = ascensionClimbOptions.runsPath, includeNonCodex = false): number | null {
   let text: string;
   try {
     text = readFileSync(runsPath, "utf8");
@@ -42,9 +43,10 @@ export function highestWon(character: string, runsPath: string = ascensionClimbO
     return null;
   }
   let best: number | null = null;
+  const sources = includeNonCodex ? null : brainSources(join(runsPath, "..", "brain.jsonl"));
   for (const line of text.split("\n")) {
     if (!line.trim()) continue;
-    let row: { victory?: unknown; ascension?: unknown; character?: unknown };
+    let row: { run_id?: string; victory?: unknown; ascension?: unknown; character?: unknown };
     try {
       row = JSON.parse(line) as typeof row;
     } catch {
@@ -52,6 +54,7 @@ export function highestWon(character: string, runsPath: string = ascensionClimbO
     }
     const of = characterKey(typeof row.character === "string" ? row.character : null) ?? DEFAULT_CHARACTER;
     if (row.victory !== true || of !== character || typeof row.ascension !== "number") continue;
+    if (!includeNonCodex && (!row.run_id || !sources?.get(row.run_id)?.eligible)) continue;
     best = best === null ? row.ascension : Math.max(best, row.ascension);
   }
   return best;
