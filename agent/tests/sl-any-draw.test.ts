@@ -81,7 +81,9 @@ function envOf(raw: Raw): DecisionEnv {
 }
 
 /** The planner's decision on a board, its least-loss facts and bound, and the judge with the switch off (no bound) and on. */
-function judged(raw: Raw) {
+function judged(raw: Raw, now: () => number = () => 0) {
+  // Semantic fixtures must not inherit the production wall-clock deadline.
+  vi.spyOn(Date, "now").mockImplementation(now);
   rolloutLiveOptions.now = () => 0;
   potionMcOptions.now = () => 0;
   const env = envOf(raw);
@@ -98,6 +100,7 @@ function judged(raw: Raw) {
 
 const saved = { ...anyDrawOptions };
 afterEach(() => {
+  vi.restoreAllMocks();
   rolloutLiveOptions.now = null;
   potionMcOptions.now = null;
   Object.assign(anyDrawOptions, saved);
@@ -191,6 +194,30 @@ describe("the superset board: every card of the draw pile in hand once a drawing
     expect(bound?.superset?.aliveAfterDraw).toEqual(["祭品"]);
     expect(on.certain).toBe(false);
     expect(on.reason).toContain("MYSTERY_CARD is not modelled not simulated exactly, and a line has HP left after 祭品");
+  }, 120_000);
+
+  it("keeps the unmodelled-card reason after a simulated wall-clock pause", () => {
+    // Simulate a scheduler pause before any semantic fixture installs its clock.
+    let wall = 0;
+    vi.spyOn(Date, "now").mockImplementation(() => (wall += anyDrawOptions.budgetMs + 1));
+    const raw = offeringBoard(noBlock);
+    (((raw["agent_view"] as Raw)["combat"] as Raw)["draw"] as Raw[]).push({ line: "神秘之牌 [1费]：发生了一些事。", card_ids: ["MYSTERY_CARD"], keywords: [], mods: [] });
+    const { bound, on, early } = judged(raw);
+    expect(bound?.superset).toMatchObject({ truncated: false, timedOut: false, aliveAfterDraw: ["祭品"] });
+    expect(bound?.superset?.inexact).toContain("MYSTERY_CARD is not modelled");
+    expect(on.certain).toBe(false);
+    expect(on.reason).toContain("MYSTERY_CARD is not modelled not simulated exactly, and a line has HP left after 祭品");
+    expect(early(true).certain).toBe(false);
+  }, 120_000);
+
+  it("keeps a deadline-truncated bound uncertain with a controlled advancing clock", () => {
+    let wall = 0;
+    const { bound, on, early } = judged(offeringBoard(noBlock), () => (wall += anyDrawOptions.budgetMs + 1));
+    expect(anyDrawOptions.budgetMs).toBe(2_000);
+    expect(bound?.superset).toMatchObject({ truncated: true, timedOut: true });
+    expect(on.certain).toBe(false);
+    expect(on.reason).toContain("not with any draw: the superset board's search was cut short (over 2000 ms;");
+    expect(early(true).certain).toBe(false);
   }, 120_000);
 
   it("the pile's own numbers (NJSZDS6U5X9G F25 T9: Perfected Strike 18 in the pile, 6 in the deck entry; Battle Trance drew it and the Beetle died): not certain", () => {
