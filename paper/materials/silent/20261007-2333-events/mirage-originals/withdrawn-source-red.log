@@ -1,0 +1,78 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-mirage.test.ts (9 tests | 4 failed) 42ms
+   × frame 528: the complete played prefix gains 22 Block rather than the entry's 17 11ms
+   × frame 612: the complete played prefix gains 22 Block rather than the entry's 17 3ms
+   × the same total poison on the other target gives the same Block 7ms
+   × zero displayed Block can become five within the same line, without consuming poison 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-mirage.test.ts > frame 528: the complete played prefix gains 22 Block rather than the entry's 17
+ FAIL  tests/silent-mirage.test.ts > frame 612: the complete played prefix gains 22 Block rather than the entry's 17
+AssertionError: expected { index: 3, key: 'c3', …(36) } to match object { block: 8, blockFromPoison: true }
+(37 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "block": 8,
+-   "blockFromPoison": true,
+  }
+
+ ❯ tests/silent-mirage.test.ts:47:25
+     45| it.each([528, 612])("frame %i: the complete played prefix gains 22 Blo…
+     46|   const input = inputAt(index);
+     47|   expect(input.hand[3]).toMatchObject({ block: 8, blockFromPoison: tru…
+       |                         ^
+     48|   const plan = replaySteps(input, [step(input, 0), step(input, 1, 1), …
+     49|   expect(plan.outcome.blockGained).toBe(22);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-mirage.test.ts > the same total poison on the other target gives the same Block
+AssertionError: expected 17 to be 22 // Object.is equality
+
+- Expected
++ Received
+
+- 22
++ 17
+
+ ❯ tests/silent-mirage.test.ts:57:36
+     55|   const input = inputAt(528);
+     56|   const plan = replaySteps(input, [step(input, 0), step(input, 1, 0), …
+     57|   expect(plan.outcome.blockGained).toBe(22);
+       |                                    ^
+     58| });
+     59|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/silent-mirage.test.ts > zero displayed Block can become five within the same line, without consuming poison
+AssertionError: expected +0 to be 5 // Object.is equality
+
+- Expected
++ Received
+
+- 5
++ 0
+
+ ❯ tests/silent-mirage.test.ts:82:37
+     80|   const after = replaySteps(input, [step(input, 1, 1), step(input, 3)]…
+     81|   expect(before.outcome.blockGained).toBe(0);
+     82|   expect(after.outcome.blockGained).toBe(5);
+       |                                     ^
+     83|   expect(after.outcome.enemyHpAfter.find((e) => e.index === 1)!.poison…
+     84| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  22:45:53
+   Duration  1.36s (transform 993ms, setup 295ms, import 890ms, tests 42ms, environment 0ms)
+
