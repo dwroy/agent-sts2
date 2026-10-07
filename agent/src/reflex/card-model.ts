@@ -78,7 +78,7 @@ export interface CardModel {
   strength: number;
   /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
   dexterity?: number;
-  /** Observed plain Fasten: extra Block for later Silent Defends (silent-0218/0143). */
+  /** Observed Fasten: extra Block for later Silent Defends (silent-0218/0143; VLZ F43 T1). */
   fasten?: number;
   /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
   temporaryDexterity?: number;
@@ -800,7 +800,7 @@ export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
   return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
 }
 
-export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = ""): CardModel {
+export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = "", ascension: number | null = null): CardModel {
   const card = asRecord(entry);
   const cardId = str(card["card_id"]);
   const info = knowledge.card(cardId);
@@ -917,9 +917,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
   // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
   const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
-  // P5HT1272P5SB F25 T9 / HSX4HYATB4E2 F31 T2: only the observed plain Fasten is wired.
-  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" &&
-    !bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4 : 0;
+  // VLZ6CCT8AQ0A A10 F43 T1: upgraded Fasten establishes six; later Defend+ shows 14/18.
+  // Keep the plain model and every unobserved character, level and upgrade value unchanged.
+  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" ?
+    (!bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4
+      : bool(card["upgraded"]) && ascension === 10 && dyn(card, "ExtraBlock") === 6 ? 6 : 0) : 0;
   // CA5KE8GFJ9X2 F9 T6 / F13 T1, silent-0229: the observed plain Caltrops establishes three Thorns.
   const thorns = character.toLowerCase() === "silent" && cardId === "CALTROPS" &&
     !bool(card["upgraded"]) && dyn(card, "ThornsPower") === 3 ? 3 : 0;
@@ -1156,7 +1158,7 @@ export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow:
  * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
  * escaped the Insatiable's Sandpit nor cleared a Beckon).
  */
-export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0, character = ""): CardModel {
+export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0, character = "", ascension: number | null = null): CardModel {
   const info = knowledge.card(cardId);
   const raw = own ?? {
     card_id: cardId,
@@ -1168,7 +1170,7 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
     energy_cost: info?.cost ?? 0,
     costs_x: info?.xCost ?? false,
   };
-  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character);
+  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
   // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
   const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;

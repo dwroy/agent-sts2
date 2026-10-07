@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-mirage.test.ts (9 tests | 1 failed) 33ms
+   × a later rollout turn reads current poison even when the pile's shown Block is stale 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-mirage.test.ts > a later rollout turn reads current poison even when the pile's shown Block is stale
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ tests/silent-mirage.test.ts:99:30
+     97|   for (const fullFight of [false, true]) {
+     98|     const records = simulateFight(input, plan, 2, 1, fullFight).record…
+     99|     expect(records[1]!.steps.map((s) => s.cardId)).toEqual(["DEADLY_PO…
+       |                              ^
+    100|     expect(records[1]!.snap.blk).toBe(8);
+    101|     expect(records[1]!.snap.E[0]![9].POISON_POWER).toBe(7);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 15 passed (16)
+   Start at  22:44:04
+   Duration  1.61s (transform 959ms, setup 310ms, import 994ms, tests 69ms, environment 0ms)
+

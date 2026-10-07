@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ ../learner/runs/20261007-223545-strategy-proposal/existing.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  ../learner/runs/20261007-223545-strategy-proposal/existing.test.ts [ ../learner/runs/20261007-223545-strategy-proposal/existing.test.ts ]
+Error: There are some problems in resolving the mocks API.
+You may encounter this issue when importing the mocks API from another module other than 'vitest'.
+To fix this issue you can either:
+- import the mocks API directly from 'vitest'
+- enable the 'globals' option
+ ❯ ../learner/runs/20261007-223545-strategy-proposal/existing.test.ts:2:54
+      1| import { readFileSync } from "node:fs";
+      2| import { resolve } from "node:path";
+      3| import { expect, it, vi } from "/home/dw/Projects/agent-sts2/.worktree…
+       |                 ^
+      4| import { makeKnowledge } from "/home/dw/Projects/agent-sts2/.worktrees…
+      5| import { modelHandCard } from "/home/dw/Projects/agent-sts2/.worktrees…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  23:01:24
+   Duration  458ms (transform 272ms, setup 309ms, import 0ms, tests 0ms, environment 0ms)
+

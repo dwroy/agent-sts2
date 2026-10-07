@@ -1,0 +1,249 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-mirage.test.ts (9 tests | 9 failed) 26ms
+   × frame 528: the complete played prefix gains 22 Block rather than the entry's 17 8ms
+   × frame 612: the complete played prefix gains 22 Block rather than the entry's 17 1ms
+   × the same total poison on the other target gives the same Block 0ms
+   × a fresh frame displaying thirteen does not add that poison a second time 0ms
+   × Mirage before a later poison play cannot receive the later five Block 0ms
+   × zero displayed Block can become five within the same line, without consuming poison 0ms
+   × a later rollout turn reads current poison even when the pile's shown Block is stale 8ms
+   × unobserved modifiers retain the prior displayed-Block behavior 4ms
+   × other characters, levels, upgrades and unexplained calculation values keep their previous model 3ms
+ ❯ tests/silent-caltrops.test.ts (7 tests | 7 failed) 20ms
+   × CA5 F9 T6: Caltrops exposes the observed three Thorns 7ms
+   × CA5 F9 T6: the seven action damage and three enemy-turn damage stay separate 1ms
+   × CA5 F13 T1: fifteen action damage excludes the new three Thorns 1ms
+   × new Thorns persists in the later turns of both rollout paths 8ms
+   × reading existing Thorns does not add it again in later turns 2ms
+   × non-attacking turns do not trigger the newly established Thorns 1ms
+   × unobserved upgrades and other characters keep their existing Caltrops model 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-caltrops.test.ts > CA5 F9 T6: Caltrops exposes the observed three Thorns
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ caltrops tests/silent-caltrops.test.ts:29:24
+ ❯ tests/silent-caltrops.test.ts:43:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/silent-caltrops.test.ts > CA5 F9 T6: the seven action damage and three enemy-turn damage stay separate
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-caltrops.test.ts:49:33
+ ❯ tests/silent-caltrops.test.ts:49:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  tests/silent-caltrops.test.ts > CA5 F13 T1: fifteen action damage excludes the new three Thorns
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-caltrops.test.ts:61:33
+ ❯ tests/silent-caltrops.test.ts:61:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/silent-caltrops.test.ts > new Thorns persists in the later turns of both rollout paths
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ caltrops tests/silent-caltrops.test.ts:29:24
+ ❯ persistentBoard tests/silent-caltrops.test.ts:35:24
+ ❯ tests/silent-caltrops.test.ts:74:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  tests/silent-caltrops.test.ts > reading existing Thorns does not add it again in later turns
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ caltrops tests/silent-caltrops.test.ts:29:24
+ ❯ persistentBoard tests/silent-caltrops.test.ts:35:24
+ ❯ tests/silent-caltrops.test.ts:89:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  tests/silent-caltrops.test.ts > non-attacking turns do not trigger the newly established Thorns
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ caltrops tests/silent-caltrops.test.ts:29:24
+ ❯ persistentBoard tests/silent-caltrops.test.ts:35:24
+ ❯ tests/silent-caltrops.test.ts:100:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  tests/silent-caltrops.test.ts > unobserved upgrades and other characters keep their existing Caltrops model
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-caltrops.test.ts:109:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > frame 528: the complete played prefix gains 22 Block rather than the entry's 17
+ FAIL  tests/silent-mirage.test.ts > frame 612: the complete played prefix gains 22 Block rather than the entry's 17
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:33:29
+ ❯ inputAt tests/silent-mirage.test.ts:33:18
+ ❯ tests/silent-mirage.test.ts:46:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > the same total poison on the other target gives the same Block
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:33:29
+ ❯ inputAt tests/silent-mirage.test.ts:33:18
+ ❯ tests/silent-mirage.test.ts:55:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > a fresh frame displaying thirteen does not add that poison a second time
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:33:29
+ ❯ inputAt tests/silent-mirage.test.ts:33:18
+ ❯ tests/silent-mirage.test.ts:61:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > Mirage before a later poison play cannot receive the later five Block
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:33:29
+ ❯ inputAt tests/silent-mirage.test.ts:33:18
+ ❯ tests/silent-mirage.test.ts:68:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > zero displayed Block can become five within the same line, without consuming poison
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:33:29
+ ❯ inputAt tests/silent-mirage.test.ts:33:18
+ ❯ tests/silent-mirage.test.ts:76:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > a later rollout turn reads current poison even when the pile's shown Block is stale
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:33:29
+ ❯ inputAt tests/silent-mirage.test.ts:33:18
+ ❯ tests/silent-mirage.test.ts:88:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > unobserved modifiers retain the prior displayed-Block behavior
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:33:29
+ ❯ inputAt tests/silent-mirage.test.ts:33:18
+ ❯ tests/silent-mirage.test.ts:106:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  tests/silent-mirage.test.ts > other characters, levels, upgrades and unexplained calculation values keep their previous model
+ReferenceError: ascension is not defined
+ ❯ Module.modelHandCard src/reflex/card-model.ts:827:58
+    825|   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(templa…
+    826|   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn…
+    827|   const mirage = character.toLowerCase() === "silent" && ascension ===…
+       |                                                          ^
+    828|     !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && d…
+    829|   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+ ❯ tests/silent-mirage.test.ts:117:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  16 failed (16)
+   Start at  22:47:04
+   Duration  1.74s (transform 1.06s, setup 348ms, import 1.08s, tests 47ms, environment 0ms)
+

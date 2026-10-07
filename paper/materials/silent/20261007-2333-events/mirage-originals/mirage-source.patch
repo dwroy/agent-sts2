@@ -1,0 +1,62 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index 972fb2be..a35c90a9 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -64,6 +64,8 @@ export interface CardModel {
+   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
+   corrosiveWave?: number;
+   block: number;
++  /** DUZUBAJ3A8GP A10 F30 T5, silent-0010: plain Mirage reads living poison at play time. */
++  blockFromPoison?: boolean;
+   /** Block before player modifiers, from the observed enchanted/base dynamic value. */
+   blockBase?: number;
+   /** Debuffs applied to the target (or every enemy for `all`). */
+@@ -822,6 +824,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+   let hits = dyn(card, "CalculatedHits") ?? dyn(card, "Repeat") ?? 1;
+   if (dyn(card, "Repeat") === null && /伤害两次|damage twice/i.test(template)) hits = 2;
+   const block = madExpertise ? 0 : dyn(card, "CalculatedBlock") ?? dyn(card, "Block") ?? 0;
++  const mirage = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
++    !bool(card["upgraded"]) && dyn(card, "CalculationBase") === 0 && dyn(card, "CalculationExtra") === 1;
+   let vulnerable = dyn(card, "VulnerablePower") ?? 0;
+   let weak = dyn(card, "WeakPower") ?? 0;
+   let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
+@@ -929,7 +933,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
+   const hasModelledEffect =
+     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
+-    damage !== null || block > 0 || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers;
++    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers;
+   let flatValue = 0;
+   let known = hasModelledEffect;
+   let immediatePlays: CardModel["immediatePlays"];
+@@ -1039,6 +1043,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
+     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
+     block,
++    ...(mirage ? { blockFromPoison: true } : {}),
+     ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
+     vulnerable,
+     weak,
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index 990d8fc3..9f90c8af 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -1906,10 +1906,16 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
+ 
+   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
+   // *earlier* cards only, which is what we simulate).
+-  if (card.block > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) {
++  // DUZUBAJ3A8GP F30 T5: poison 4+4 -> 4+9 before plain Mirage, eight shown -> thirteen gained.
++  // Modifier combinations lack an isolated observation; retain their displayed-block model.
++  const poisonBlock = card.blockFromPoison && !card.upgraded && !player.frail &&
++    (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 && !player.unmovableArmed &&
++    !player.shadowmeldActive && !next.shadowmeld;
++  const cardBlock = poisonBlock ? next.enemies.reduce((sum, enemy) => sum + (enemy.alive ? enemy.poison ?? 0 : 0), 0) : card.block;
++  if (cardBlock > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) {
+     // Unmovable doubles only the first card Block of the turn, but every Block card shows the doubled
+     // number until then (92MW F33 T2: 22 planned, 16 gained; T7 -9 planned, -14).
+-    let shown = card.block;
++    let shown = cardBlock;
+     // Evil Eye: double Block when a card was exhausted this turn, before this turn's decision or earlier
+     // in this line (Q97B F23 T3: doubled from the state flag only, so "True Grit, Evil Eye" read 8, and a
+     // line exhausting only after it was never told apart).
