@@ -539,7 +539,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     expect(notes).toEqual([expect.stringContaining("codex usage guard: credits are being spent: the balance fell from 500 to 487.25 in this process [quota]")]);
   });
 
-  it("usage that cannot be read: said once, codex stays on; with BRAIN_CODEX_USAGE_REQUIRED=on codex is off for the run", async () => {
+  it("usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes", async () => {
     const open = brainWith("loop-unreadable", { BRAIN_CODEX_USAGE_EVERY_CALLS: "1" });
     open.fake.setMode({ error: "chatgpt authentication required to read rate limits" });
     await expect(open.brain.preflight()).resolves.toEqual([]);
@@ -548,7 +548,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     expect(open.notes).toEqual([expect.stringMatching(/^WARNING: codex usage could not be read \(account\/rateLimits\/read failed: chatgpt authentication required to read rate limits\); codex stays on/)]);
     expect(open.brain.warnings).toEqual([expect.stringContaining("codex usage could not be read at the start")]);
     expect(open.rows()[0]).not.toHaveProperty("limits");
-    // BRAIN_CODEX_USAGE_REQUIRED=on: off until a read works, not for the run (a warning, not a problem); DeepSeek answers.
+    // The historical adapter records the guard's fresh-read warning while its fake fallback answers.
     const closed = brainWith("loop-required", { BRAIN_CODEX_USAGE_REQUIRED: "on" });
     closed.fake.setMode({ exitEarly: true });
     await expect(closed.brain.preflight()).resolves.toEqual([]);
@@ -556,7 +556,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and 
     await expect(ask(closed.brain)).resolves.toMatchObject({ choice: "a", brain: { engine: "deepseek" } });
     expect(closed.fake.execCalls()).toBe(0);
     expect(closed.rows()[0]!.fell_back_from).toMatchObject({ engine: "codex", kind: "unavailable" });
-    expect(closed.rows()[0]!.notes).toEqual([expect.stringMatching(/^codex usage could not be read .* codex is off until a read works/)]);
+    expect(closed.rows()[0]!.notes).toEqual([expect.stringMatching(/^codex usage could not be read .* with BRAIN_CODEX_USAGE_REQUIRED=on Codex cannot answer until a fresh read passes: the next read in 30 s \(then 2, 5, every 10 minutes\)$/)]);
     expect(closed.notes.filter((note) => /off for the rest of this process/.test(note))).toEqual([]);
   });
 
