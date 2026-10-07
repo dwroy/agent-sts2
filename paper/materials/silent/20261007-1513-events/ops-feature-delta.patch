@@ -1,0 +1,782 @@
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index 9e4510a4..990d8fc3 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -1550,7 +1550,12 @@ function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
+ function triggerPoison(sim: Sim, enemy: Sim["enemies"][number], triggers: number, observedCap = Infinity): void {
+   for (let k = 0; k < triggers && enemy.alive && (enemy.poison ?? 0) > 0; k += 1) {
+     // T082DRCUHRRD F48 attempt 6 T10: three poison triggers into Intangible lose only three HP.
+-    const lost = Math.min(enemy.hp, enemy.intangible ? 1 : enemy.poison ?? 0, observedCap);
++    let lost = Math.min(enemy.hp, enemy.intangible ? 1 : enemy.poison ?? 0, observedCap);
++    // ULP4TN1GNHMK F17 first T4 / third T3: poison loses one HP and consumes one Slippery layer.
++    if (lost > 0 && (enemy.slippery ?? 0) > 0) {
++      lost = 1;
++      enemy.slippery = (enemy.slippery ?? 0) - 1;
++    }
+     enemy.hp -= lost;
+     enemy.poison = Math.max(0, (enemy.poison ?? 0) - 1);
+     sim.damageDealt += lost;
+diff --git a/agent/tests/brain-codex-usage-contract.test.ts b/agent/tests/brain-codex-usage-contract.test.ts
+new file mode 100644
+index 00000000..e2600608
+--- /dev/null
++++ b/agent/tests/brain-codex-usage-contract.test.ts
+@@ -0,0 +1,47 @@
++/** Audit the historical CLI fixture with fixed usage responses, without spawning a CLI. */
++import { readFileSync } from "node:fs";
++import { afterEach, expect, it, vi } from "vitest";
++
++vi.mock("../src/brain/engines/codex-usage.js", async (original) => ({
++  ...await original<typeof import("../src/brain/engines/codex-usage.js")>(),
++  readCodexUsage: vi.fn(),
++  refreshCodexAuth: vi.fn(),
++}));
++
++import { createBrain } from "./legacy-brain.js";
++import { loadConfig } from "../src/core/config.js";
++import { readCodexUsage } from "../src/brain/engines/codex-usage.js";
++import type { BrainLogRow } from "../src/brain/router.js";
++import type { DeepSeekClient } from "../src/brain/llm/deepseek.js";
++
++afterEach(() => { vi.restoreAllMocks(); vi.mocked(readCodexUsage).mockReset(); });
++
++it("the historical unreadable-usage row assertion accepts the fresh-read warning and keeps Codex blocked", async () => {
++  // Exercise the actual assertion from the subprocess suite, which the sandbox cannot run.
++  const source = readFileSync(new URL("./brain-codex-usage.test.ts", import.meta.url), "utf8");
++  const assertion = source.split("\n").find((line) => line.includes("expect(closed.rows()[0]!.notes)"));
++  const literal = assertion?.match(/stringMatching\(\/(.*)\/([gimsuy]*)\)/);
++  expect(literal).not.toBeNull();
++  const pattern = new RegExp(literal![1]!, literal![2]);
++  vi.spyOn(Date, "now").mockReturnValue(10_000_000);
++  vi.mocked(readCodexUsage).mockRejectedValue(new Error("codex app-server ended before answering (fixed fixture)"));
++  const choose = vi.fn().mockResolvedValue({ choice: "a", reason: "固定历史适配器回答", latencyMs: 1, inputTokens: 1, outputTokens: 1 });
++  const rows: BrainLogRow[] = [];
++  const notes: string[] = [];
++  const config = loadConfig({ BRAIN_ENGINE: "codex", BRAIN_FALLBACK: "deepseek", BRAIN_LOG: "off", BRAIN_CODEX_USAGE_REQUIRED: "on" });
++  const brain = createBrain(config, { choose, systemPrompt: "固定测试" } as unknown as DeepSeekClient, { log: (row) => rows.push(row) });
++  brain.onNote((note) => notes.push(note));
++  await expect(brain.preflight(undefined, async () => ({ ok: true, version: "fixed" }))).resolves.toEqual([]);
++  expect(brain.warnings).toEqual([expect.stringMatching(/^codex usage could not be read at the start .* codex is off until a read works: its questions go to deepseek$/)]);
++  for (let i = 0; i < 2; i += 1) {
++    await expect(brain.choose({ hp: 20 }, "固定题目", { a: "heal", b: "smith" }, { label: "rest/plan" }))
++      .resolves.toMatchObject({ choice: "a", brain: { engine: "deepseek" } });
++  }
++  expect(rows[0]!.notes).toEqual([expect.stringMatching(pattern)]);
++  expect(rows[0]!.fell_back_from).toMatchObject({ engine: "codex", kind: "unavailable" });
++  expect(rows[1]!.notes ?? []).toEqual([]);
++  expect(notes).toEqual([expect.stringMatching(/^WARNING: .*fresh read passes: the next read in 30 s \(then 2, 5, every 10 minutes\)$/)]);
++  expect(readCodexUsage).toHaveBeenCalledTimes(1);
++  expect(choose).toHaveBeenCalledTimes(2);
++  expect(brain.codexUsage!.status().blocked).toMatchObject({ failures: 1 });
++});
+diff --git a/agent/tests/brain-codex-usage.test.ts b/agent/tests/brain-codex-usage.test.ts
+index 429be5d8..14c40d6c 100644
+--- a/agent/tests/brain-codex-usage.test.ts
++++ b/agent/tests/brain-codex-usage.test.ts
+@@ -539,7 +539,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and
+     expect(notes).toEqual([expect.stringContaining("codex usage guard: credits are being spent: the balance fell from 500 to 487.25 in this process [quota]")]);
+   });
+ 
+-  it("usage that cannot be read: said once, codex stays on; with BRAIN_CODEX_USAGE_REQUIRED=on codex is off for the run", async () => {
++  it("usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes", async () => {
+     const open = brainWith("loop-unreadable", { BRAIN_CODEX_USAGE_EVERY_CALLS: "1" });
+     open.fake.setMode({ error: "chatgpt authentication required to read rate limits" });
+     await expect(open.brain.preflight()).resolves.toEqual([]);
+@@ -548,7 +548,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and
+     expect(open.notes).toEqual([expect.stringMatching(/^WARNING: codex usage could not be read \(account\/rateLimits\/read failed: chatgpt authentication required to read rate limits\); codex stays on/)]);
+     expect(open.brain.warnings).toEqual([expect.stringContaining("codex usage could not be read at the start")]);
+     expect(open.rows()[0]).not.toHaveProperty("limits");
+-    // BRAIN_CODEX_USAGE_REQUIRED=on: off until a read works, not for the run (a warning, not a problem); DeepSeek answers.
++    // The historical adapter records the guard's fresh-read warning while its fake fallback answers.
+     const closed = brainWith("loop-required", { BRAIN_CODEX_USAGE_REQUIRED: "on" });
+     closed.fake.setMode({ exitEarly: true });
+     await expect(closed.brain.preflight()).resolves.toEqual([]);
+@@ -556,7 +556,7 @@ describe("the loop's brain with BRAIN_ENGINE=codex, BRAIN_FALLBACK=deepseek and
+     await expect(ask(closed.brain)).resolves.toMatchObject({ choice: "a", brain: { engine: "deepseek" } });
+     expect(closed.fake.execCalls()).toBe(0);
+     expect(closed.rows()[0]!.fell_back_from).toMatchObject({ engine: "codex", kind: "unavailable" });
+-    expect(closed.rows()[0]!.notes).toEqual([expect.stringMatching(/^codex usage could not be read .* codex is off until a read works/)]);
++    expect(closed.rows()[0]!.notes).toEqual([expect.stringMatching(/^codex usage could not be read .* with BRAIN_CODEX_USAGE_REQUIRED=on Codex cannot answer until a fresh read passes: the next read in 30 s \(then 2, 5, every 10 minutes\)$/)]);
+     expect(closed.notes.filter((note) => /off for the rest of this process/.test(note))).toEqual([]);
+   });
+ 
+diff --git a/agent/tests/silent-slippery-poison-evidence.json b/agent/tests/silent-slippery-poison-evidence.json
+new file mode 100644
+index 00000000..763c83ae
+--- /dev/null
++++ b/agent/tests/silent-slippery-poison-evidence.json
+@@ -0,0 +1,565 @@
++{
++  "full-turn": {
++    "ts": "2026-10-07T04:51:20.801Z",
++    "run_id": "ULP4TN1GNHMK",
++    "screen": "COMBAT",
++    "turn": 4,
++    "combat": {
++      "player": {
++        "current_hp": 18,
++        "max_hp": 80,
++        "block": 0,
++        "energy": 3,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "NOXIOUS_FUMES_POWER",
++            "name": "毒雾",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 2,
++            "power_id": "RETAIN_HAND_POWER",
++            "name": "保留手牌",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 0,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 0
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "VANTOM",
++          "name": "墨影幻灵",
++          "current_hp": 177,
++          "max_hp": 183,
++          "base_max_hp": 183,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "SLIPPERY_POWER",
++              "name": "滑溜",
++              "amount": 3,
++              "is_debuff": false
++            },
++            {
++              "index": 1,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 2,
++              "is_debuff": true
++            }
++          ],
++          "intent": "PREPARE_MOVE",
++          "move_id": "PREPARE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            }
++          ]
++        }
++      ],
++      "hand": [
++        {
++          "index": 1,
++          "card_id": "DEADLY_POISON",
++          "name": "致命毒药+",
++          "upgraded": true,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "给予7层中毒。",
++          "dynamic_values": [
++            {
++              "name": "PoisonPower",
++              "base_value": 7,
++              "current_value": 7,
++              "enchanted_value": 7,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 2,
++          "card_id": "POISONED_STAB",
++          "name": "带毒刺击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "造成6点伤害。 给予3层中毒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "PoisonPower",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        },
++        {
++          "index": 3,
++          "card_id": "POISONED_STAB",
++          "name": "带毒刺击",
++          "upgraded": false,
++          "target_type": "AnyEnemy",
++          "requires_target": true,
++          "target_index_space": "enemies",
++          "valid_target_indices": [
++            0
++          ],
++          "costs_x": false,
++          "star_costs_x": false,
++          "energy_cost": 1,
++          "star_cost": 0,
++          "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
++          "resolved_rules_text": "造成6点伤害。 给予3层中毒。",
++          "dynamic_values": [
++            {
++              "name": "Damage",
++              "base_value": 6,
++              "current_value": 6,
++              "enchanted_value": 6,
++              "is_modified": false,
++              "was_just_upgraded": false
++            },
++            {
++              "name": "PoisonPower",
++              "base_value": 3,
++              "current_value": 3,
++              "enchanted_value": 3,
++              "is_modified": false,
++              "was_just_upgraded": false
++            }
++          ],
++          "playable": true,
++          "can_play_result": true,
++          "unplayable_reason": null,
++          "unplayable_reason_raw": null,
++          "unplayable_preventer_id": null,
++          "unplayable_preventer_type": null
++        }
++      ]
++    },
++    "floor": 17
++  },
++  "first-end": {
++    "ts": "2026-10-07T04:51:26.669Z",
++    "run_id": "ULP4TN1GNHMK",
++    "screen": "COMBAT",
++    "turn": 4,
++    "combat": {
++      "player": {
++        "current_hp": 18,
++        "max_hp": 80,
++        "block": 0,
++        "energy": 0,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "NOXIOUS_FUMES_POWER",
++            "name": "毒雾",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 2,
++            "power_id": "RETAIN_HAND_POWER",
++            "name": "保留手牌",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 3,
++        "attacks_played_this_turn": 2,
++        "skills_played_this_turn": 1
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "VANTOM",
++          "name": "墨影幻灵",
++          "current_hp": 175,
++          "max_hp": 183,
++          "base_max_hp": 183,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "SLIPPERY_POWER",
++              "name": "滑溜",
++              "amount": 1,
++              "is_debuff": false
++            },
++            {
++              "index": 1,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 15,
++              "is_debuff": true
++            }
++          ],
++          "intent": "PREPARE_MOVE",
++          "move_id": "PREPARE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            }
++          ]
++        }
++      ]
++    },
++    "floor": 17
++  },
++  "first-next": {
++    "ts": "2026-10-07T04:51:35.400Z",
++    "run_id": "ULP4TN1GNHMK",
++    "screen": "COMBAT",
++    "turn": 5,
++    "combat": {
++      "player": {
++        "current_hp": 18,
++        "max_hp": 80,
++        "block": 0,
++        "energy": 3,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "NOXIOUS_FUMES_POWER",
++            "name": "毒雾",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 0,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 0
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "VANTOM",
++          "name": "墨影幻灵",
++          "current_hp": 174,
++          "max_hp": 183,
++          "base_max_hp": 183,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 16,
++              "is_debuff": true
++            },
++            {
++              "index": 1,
++              "power_id": "STRENGTH_POWER",
++              "name": "力量",
++              "amount": 2,
++              "is_debuff": false
++            }
++          ],
++          "intent": "INK_BLOT_MOVE",
++          "move_id": "INK_BLOT_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "10",
++              "damage": 10,
++              "hits": 1,
++              "total_damage": 10,
++              "status_card_count": null
++            }
++          ]
++        }
++      ]
++    },
++    "floor": 17
++  },
++  "third-end": {
++    "ts": "2026-10-07T04:55:41.060Z",
++    "run_id": "ULP4TN1GNHMK",
++    "screen": "COMBAT",
++    "turn": 3,
++    "combat": {
++      "player": {
++        "current_hp": 33,
++        "max_hp": 80,
++        "block": 7,
++        "energy": 0,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 3,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 2
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "VANTOM",
++          "name": "墨影幻灵",
++          "current_hp": 177,
++          "max_hp": 183,
++          "base_max_hp": 183,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "SLIPPERY_POWER",
++              "name": "滑溜",
++              "amount": 3,
++              "is_debuff": false
++            },
++            {
++              "index": 1,
++              "power_id": "WEAK_POWER",
++              "name": "虚弱",
++              "amount": 1,
++              "is_debuff": true
++            },
++            {
++              "index": 2,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 7,
++              "is_debuff": true
++            }
++          ],
++          "intent": "DISMEMBER_MOVE",
++          "move_id": "DISMEMBER_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Attack",
++              "label": "22",
++              "damage": 22,
++              "hits": 1,
++              "total_damage": 22,
++              "status_card_count": null
++            },
++            {
++              "index": 1,
++              "intent_type": "StatusCard",
++              "label": "3",
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": 3
++            }
++          ]
++        }
++      ]
++    },
++    "floor": 17
++  },
++  "third-next": {
++    "ts": "2026-10-07T04:56:31.411Z",
++    "run_id": "ULP4TN1GNHMK",
++    "screen": "COMBAT",
++    "turn": 4,
++    "combat": {
++      "player": {
++        "current_hp": 18,
++        "max_hp": 80,
++        "block": 0,
++        "energy": 3,
++        "stars": 0,
++        "focus": 0,
++        "powers": [
++          {
++            "index": 0,
++            "power_id": "DEXTERITY_POWER",
++            "name": "敏捷",
++            "amount": 2,
++            "is_debuff": false
++          },
++          {
++            "index": 1,
++            "power_id": "RETAIN_HAND_POWER",
++            "name": "保留手牌",
++            "amount": 1,
++            "is_debuff": false
++          }
++        ],
++        "base_orb_slots": 0,
++        "orb_capacity": 0,
++        "empty_orb_slots": 0,
++        "orbs": [],
++        "pets": [],
++        "pet_missing": false,
++        "cards_played_this_turn": 0,
++        "attacks_played_this_turn": 0,
++        "skills_played_this_turn": 0
++      },
++      "enemies": [
++        {
++          "index": 0,
++          "enemy_id": "VANTOM",
++          "name": "墨影幻灵",
++          "current_hp": 176,
++          "max_hp": 183,
++          "base_max_hp": 183,
++          "block": 0,
++          "is_alive": true,
++          "is_hittable": true,
++          "powers": [
++            {
++              "index": 0,
++              "power_id": "SLIPPERY_POWER",
++              "name": "滑溜",
++              "amount": 2,
++              "is_debuff": false
++            },
++            {
++              "index": 1,
++              "power_id": "POISON_POWER",
++              "name": "中毒",
++              "amount": 6,
++              "is_debuff": true
++            }
++          ],
++          "intent": "PREPARE_MOVE",
++          "move_id": "PREPARE_MOVE",
++          "intents": [
++            {
++              "index": 0,
++              "intent_type": "Buff",
++              "label": null,
++              "damage": null,
++              "hits": null,
++              "total_damage": null,
++              "status_card_count": null
++            }
++          ]
++        }
++      ]
++    },
++    "floor": 17
++  }
++}
+diff --git a/agent/tests/silent-slippery-poison.test.ts b/agent/tests/silent-slippery-poison.test.ts
+new file mode 100644
+index 00000000..5f9ac5be
+--- /dev/null
++++ b/agent/tests/silent-slippery-poison.test.ts
+@@ -0,0 +1,103 @@
++/** ULP4TN1GNHMK A10 F17 first T4 and third T3; ledger silent-0226, first evidence 2SU6XN2AEJRD A6 F17 T1. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-slippery-poison-evidence.json";
++import { enemySims } from "../src/reflex/combat-plan.js";
++import { modelHandCard } from "../src/reflex/card-model.js";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { replaySteps, solveTurn, type SolverInput, type Step } from "../src/reflex/turn-solver.js";
++import { card } from "./boss-sim-fixture.js";
++
++// All reference reads are isolated from the background knowledge refresh.
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed slippery/poison references"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++const knowledge = makeKnowledge({ cards: [
++  { id: "DEADLY_POISON", type: "Skill" }, { id: "POISONED_STAB", type: "Attack" },
++], monsters: [{ id: "VANTOM", type: "Monster" }] }, "cache");
++
++function inputAt(key: keyof typeof evidence): SolverInput {
++  const frame = structuredClone(evidence[key]);
++  const player = frame.combat.player;
++  return { hand: [], turn: frame.turn, fightKind: "boss",
++    player: { hp: player.current_hp, maxHp: player.max_hp, block: player.block,
++      energy: player.energy, weak: false, vulnerable: false, intangible: false },
++    // Without asc only the frozen intents are used, never the monster database.
++    enemies: enemySims(frame.combat) };
++}
++
++function plays(input: SolverInput): Step[] {
++  return input.hand.map((hand) => ({ cardIndex: hand.index, cardId: hand.cardId, name: hand.name,
++    upgraded: hand.upgraded, target: 0, targetName: input.enemies[0]!.name }));
++}
++
++it.each([
++  ["first-end", "first-next", 15, 1, 174, 0, 14],
++  ["third-end", "third-next", 7, 3, 176, 2, 6],
++] as const)("%s: poison loses one HP and consumes exactly one Slippery layer", (before, after, poison, slippery, hp, left, poisonLeft) => {
++  const input = inputAt(before);
++  expect(input.enemies[0]).toMatchObject({ poison, slippery });
++  const outcome = replaySteps(input, [])!.outcome;
++  expect(outcome.damageDealt).toBe(1);
++  expect(outcome.enemyHpAfter[0]).toMatchObject({ hp, slippery: left, poison: poisonLeft });
++  expect(evidence[after].combat.enemies[0]!.current_hp).toBe(hp);
++  const actualSlippery = evidence[after].combat.enemies[0]!.powers.find((power) => power.power_id === "SLIPPERY_POWER")?.amount ?? 0;
++  expect(actualSlippery).toBe(left);
++  expect(solveTurn(input).plans[0]!.outcome.damageDealt).toBe(1);
++});
++
++it("first T4: two stabs and fifteen poison consume three layers for three total HP", () => {
++  const input = inputAt("full-turn");
++  input.hand = evidence["full-turn"].combat.hand.map((hand) => modelHandCard(hand, hand.index, knowledge));
++  const outcome = replaySteps(input, plays(input))!.outcome;
++  expect(outcome).toMatchObject({ damageDealt: 3, hpLoss: 0, winsFight: false });
++  expect(outcome.enemyHpAfter[0]).toMatchObject({ hp: 174, slippery: 0, poison: 14 });
++});
++
++it("an attack consumes the last layer so the following poison is uncapped", () => {
++  const input = inputAt("first-end");
++  input.player.energy = 1;
++  input.hand = [card(0, "FIXED_ATTACK", { damage: 6 })];
++  const outcome = replaySteps(input, plays(input))!.outcome;
++  expect(outcome.damageDealt).toBe(16);
++  expect(outcome.enemyHpAfter[0]).toMatchObject({ hp: 159, slippery: 0, poison: 14 });
++});
++
++it("a fully blocked attack preserves the layer for poison, which bypasses block", () => {
++  const input = inputAt("first-end");
++  input.player.energy = 1;
++  input.enemies[0]!.block = 10;
++  input.hand = [card(0, "FIXED_ATTACK", { damage: 6 })];
++  const outcome = replaySteps(input, plays(input))!.outcome;
++  expect(outcome.damageDealt).toBe(1);
++  expect(outcome.enemyHpAfter[0]).toMatchObject({ hp: 174, block: 4, slippery: 0, poison: 14 });
++});
++
++it("the shared immediate poison entry consumes one layer before the enemy-turn trigger", () => {
++  const input = inputAt("first-end");
++  input.player.energy = 1;
++  input.hand = [card(0, "FIXED_POISON_TRIGGER", { type: "Skill", poisonNow: true })];
++  const outcome = replaySteps(input, plays(input))!.outcome;
++  expect(outcome.damageDealt).toBe(15);
++  expect(outcome.enemyHpAfter[0]).toMatchObject({ hp: 160, slippery: 0, poison: 13 });
++});
++
++it("keeps poison-free Slippery and uncapped poison outcomes unchanged", () => {
++  const noPoison = inputAt("first-end");
++  noPoison.enemies[0]!.poison = 0;
++  const poisonFree = replaySteps(noPoison, [])!.outcome.enemyHpAfter[0]!;
++  expect(poisonFree).toMatchObject({ hp: 175, slippery: 1 });
++  expect(poisonFree.poison ?? 0).toBe(0);
++  const noSlippery = inputAt("first-end");
++  noSlippery.enemies[0]!.slippery = 0;
++  expect(replaySteps(noSlippery, [])!.outcome.enemyHpAfter[0]).toMatchObject({ hp: 160, slippery: 0, poison: 14 });
++});
