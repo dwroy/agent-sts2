@@ -996,6 +996,8 @@ interface Sim {
   flat: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
+  /** Only Fasten gained within this line; existing Fasten is already in displayed Block. */
+  fasten: number;
   /** Shadowmeld newly played within this line; never carried into a later turn. */
   shadowmeld: boolean;
   corrosiveWave: number;
@@ -1914,7 +1916,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if ((card.perStrengthBlock ?? 0) > 0 && next.strength !== 0) shown = Math.max(0, shown + (card.perStrengthBlock ?? 0) * next.strength * (unmovableDoubles ? 2 : 1));
     // 1LMBFGSMCWKU F48 T3/T6, silent-0089/0091: round after adding new Dexterity under Frail.
     // Keep the displayed Block intact; only the change from this line's new Dexterity is added.
-    let dexBlock = card.type === "Potion" ? 0 : next.tempDex;
+    // P5HT1272P5SB F25 T9 / HSX4HYATB4E2 F31 T2: Fasten enhances Defends only.
+    let dexBlock = card.type === "Potion" ? 0 : next.tempDex + (card.cardId === "DEFEND_SILENT" ? next.fasten : 0);
     if (player.frail && dexBlock !== 0) {
       const raw = (card.blockBase ?? 0) + (player.dexterityNow ?? 0);
       // Use the observed base only when it reproduces the displayed value. Otherwise use the
@@ -1931,6 +1934,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
   if (card.special === "temp_dex") next.tempDex += 5;
+  next.fasten += card.fasten ?? 0;
   next.tempDex += card.dexterity ?? 0;
   next.tempDex += card.temporaryDexterity ?? 0;
   if (card.special === "dexterity") {
@@ -3443,7 +3447,7 @@ function simKey(sim: Sim): string {
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}${sim.fasten > 0 ? `#fasten${sim.fasten}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3566,6 +3570,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     weakApplied: 0,
     flat: 0,
     tempDex: 0,
+    fasten: 0,
     shadowmeld: false,
     corrosiveWave: input.player.corrosiveWave ?? 0,
     envenom: input.player.envenom ?? 0,

@@ -78,6 +78,8 @@ export interface CardModel {
   strength: number;
   /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
   dexterity?: number;
+  /** Observed plain Fasten: extra Block for later Silent Defends (silent-0218/0143). */
+  fasten?: number;
   /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
   temporaryDexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
@@ -910,6 +912,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
   const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
+  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" &&
+    !bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4 : 0;
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
@@ -1028,6 +1032,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     weak,
     ...(weakFirst ? { weakFirst } : {}),
     strength,
+    ...(fasten > 0 ? { fasten } : {}),
     ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
