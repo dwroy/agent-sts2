@@ -679,3 +679,23 @@ Roy：「不要让 ds 做，重新让 codex 来做」。live .env 已去掉 BRAI
 
 - **完成报告裸JSON兼容**：20261007-091118-fix-batch.out是合法task=fix-batch的完整开头JSON对象加运行器尾注，没有Markdown围栏；ops/learner_checks.py:read_report只匹配围栏，返回空字典，实际910604a4/V4.codex-only1却被登记failed/merged=null，独立learner-recheck也不能识别。保留原.out/err和原failed状态，不用改写模型回报绕过；学习者补安全raw_decode兼容及固定夹具，仍限制合法任务/对象/源码祖先，不从任意散文猜JSON。无游戏账本ID，不冒标知识shipped。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
 - **autoplay安全热交接动作**：新ops/autoplay.sh的退出75/78保局保护已测/已在main，但长期bash1734436预解析旧while体；当前play已加载f8dd742d功能，不停止它。现有broker autoplay-start因play存在拒绝，禁止停旧循环后留空窗、直接在沙箱外启动herdr绕过白名单。学习者补独立安全reload动作，验证属主/精确旧autoplay PID及当前play PID、无report.py，用WAIT_PID接管同一局并回执新PID/版本，动作失败保持旧循环或明确恢复；固定数据测试，最多4进程/nice。Roy可按docs/codex-ops.md已有迁移流程先手工交接，最终激活另记，不把磁盘同步冒报为已加载。
+
+### B4 / B5 纳入标准流程，自动触发（Roy 2026-10-07 12:11，高优先，新功能）
+Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最多的 boss）不用他拍板，满足条件就自动做；现在永世沙漏就该做。方法照 docs/boss-sim.md §13（B4）、§14（B5），工具 agent/tools/boss-sim/（per-turn.py、split.py --extend、trust.py --character）。要做成：
+
+**触发（调度器在每次 boss 校准重跑后、以及每局结束后检查，按角色、按 boss）**
+- **B4 修模拟**：同时满足
+  1. 该 boss 在最新 boss-trust 里是低可信，且至少一项是**模型偏差**（校准 Brier > 整体 1.25 倍、预测与实际胜率差 > 15 个百分点、被打穿比不在 0.7–1.3），不是只因验证场数不够；
+  2. **一直打不过**：本角色死在该 boss 手上累计 ≥ 5 次，或当前进阶最近 20 局里 ≥ 3 次；
+  3. 有逐回合日志的该 boss 战 ≥ 8 场（够逐回合对照）。
+  冷却：同一 boss 一次 B4 结束后，再积累 ≥ 10 场新战斗且下次校准仍偏差才再触发；同一时刻最多一个 B4/B5 批次。
+- **B5 让 B2 用上**：某 boss 是当前进阶最近 20 局的前两大死因（且 ≥ 3 次），但 B2 仍不用它（低可信）——B4 已做过或只差场数时触发：扩验证集（新局只进验证）、核对实盘整场预测、试模拟策略调整、评估 B2 排序收益；达标就进名单，B2 自动生效。
+
+**验收（自动，不再请 Roy 定）**
+- 只改整场模拟（fullFight 及模拟专用字段），实盘 solver 和 5 回合推演逐字节不变（照 §13 的做法有测试）。
+- 修正上线条件：在验证集上该 boss 的偏差指标改善（打穿比 / 胜率差 / Brier 至少一项进入或接近标准、其余不变差），整体第 1 回合起和战前 Brier 不变差超过 0.005；不满足就像 §14 的女王那样留在分支、台账记 rejected 写原因，冷却后再试。
+- 上线后自动重跑校准、更新 knowledge/characters/<角色>/boss-trust.json，记 decision-log、eval 版本、台账（kind=fight 或 mechanic，证据为对照的局和回合）。
+- 报告写 paper/materials/<角色>/boss-sim-b4-<boss>-<日期>.md / b5-…，并在升级小结里引用。
+
+**现在就满足 B4 的**：永世沙漏 AEONGLASS（静默猎手死于它 10 次，最多；验证 3 场；打穿比 2.24、预测 71% 对实际 0%）。触发机制做好后第一批就做它。
+这是用 agent 自己的对局日志修模拟器，符合学习协议；流程本身属于架构，Roy 已批准。
