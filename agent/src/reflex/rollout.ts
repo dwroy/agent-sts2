@@ -47,7 +47,7 @@ import { continuationCost, continuationUtility, type ContinuationValue } from ".
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { withAddedAtRandom } from "../sl/draws.js";
-import { cardConditionOptions, isStrikeCard, type CardModel } from "./card-model.js";
+import { applyApotheosisUpgrade, cardConditionOptions, isStrikeCard, type CardModel } from "./card-model.js";
 import { bossLossPerTurn, bossProfile, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../sim/boss-clock.js";
 import { valueOf, type FightValueModel } from "./fight-value.js";
 import { solverFieldsOf, type SolverPieces } from "./passive-pieces.js";
@@ -2036,6 +2036,7 @@ function applyPlan(
   const knownPlayed = new Set<number>();
   // Thrashes that took one of several Attacks at random: put back once the pick is made (below).
   const thrashPending: { back: CardModel; grown: number; picks: { strength: number }[] }[] = [];
+  let apotheosisApplied = false;
   for (const step of plan.steps) {
     if (isPotion(step)) {
       player.potions = Math.max(0, player.potions - 1);
@@ -2061,7 +2062,9 @@ function applyPlan(
       const drawn = known?.get(step.cardIndex);
       if (drawn && drawn.card.cardId === step.cardId && !knownPlayed.has(step.cardIndex)) {
         knownPlayed.add(step.cardIndex);
-        applyLasting(drawn.card, player, playerPowers);
+        const card = apotheosisApplied ? applyApotheosisUpgrade(drawn.card) : drawn.card;
+        applyLasting(card, player, playerPowers);
+        if (card.apotheosis && o.apotheosisApplied) apotheosisApplied = true;
         if (drawn.card.exhausts || drawn.card.type === "Power") knownGone.add(drawn.base);
         continue;
       }
@@ -2073,8 +2076,9 @@ function applyPlan(
       continue;
     }
     played.add(at);
-    const card = hand[at]!;
+    const card = apotheosisApplied ? applyApotheosisUpgrade(hand[at]!) : hand[at]!;
     applyLasting(card, player, playerPowers);
+    if (card.apotheosis && o.apotheosisApplied) apotheosisApplied = true;
     if (card.exhausts || card.type === "Power") continue;
     // Frantic Escape: 「这张牌的耗能加1」, for the fight: it comes back dearer.
     const back = handBase[at] ?? card;
@@ -2135,6 +2139,13 @@ function applyPlan(
   for (let k = 0; k < etherealEnd * player.darkEmbrace; k += 1) {
     const card = drawOne(piles, random);
     if (card) piles.discard.push(card);
+  }
+  // The same fight's later draws retain certified upgrades; the input deck and piles remain untouched.
+  // Apply after removing known draws so their object identities still match knownGone.
+  if (apotheosisApplied) {
+    piles.draw = piles.draw.map(applyApotheosisUpgrade);
+    piles.discard = piles.discard.map(applyApotheosisUpgrade);
+    player.retained = player.retained.map(applyApotheosisUpgrade);
   }
   // Status cards the line's turn made (the solver priced them, the piles never got them): Dazed from hits
   // on a Personal Hive into the draw pile, Wounds from unblocked Painful Stabs and the Withers held at the
