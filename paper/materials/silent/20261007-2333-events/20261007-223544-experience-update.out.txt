@@ -1,0 +1,118 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.27 → 2026-10-07.28；提交：ab065d0a（分支 exp-silent）；合入：未合入，live 预检有19处冲突，按任务要求停止；刷新提交710dc4dc已保留，交运维兜底。
+- 条数：新增1、更新19（加证据19、只改数字0）、退役0；active 155 → 156，总字符48291。A8适用148条/45097字；A9适用149条/45381字。
+- 机制推理（证据为支持/反例局数）：
+
+  - 王室猛毒 — 开场血价按遗物组合核算，无小血瓶实失4 — 2/0 — TXZ6RVMQA09D
+  - 灵动步法 — 敏捷逐张增加牌挡 — 63/0 — WQZVENQ7DTRP
+  - 力量与敏捷 — 攻击、牌挡及临时增益分源 — 103/0 — WQZVENQ7DTRP
+  - 构筑兑现观察 — 持有和计划能力不能预支战内收益 — 102/0 — TXZ6RVMQA09D
+  - 毒雾 — 后续轮初补毒，建立不即时施毒 — 49/0 — TXZ6RVMQA09D
+  - 触媒 — 增加结算次数，39毒三结114 — 39/0 — TXZ6RVMQA09D
+  - 余像 — 建立后逐牌补挡 — 23/0 — TXZ6RVMQA09D
+  - 钗 — 轮初7挡与牌挡分账 — 3/0 — TXZ6RVMQA09D
+  - 波纹水盆 — 已见无攻击轮末补4挡 — 6/0 — TXZ6RVMQA09D
+  - 凋萎 — 毒斩杀仍可能留下持牌失血 — 13/0 — TXZ6RVMQA09D
+  - 沙漏连战观察 — 首战胜仍须核续战入口血价 — 14/0 — TXZ6RVMQA09D
+  - 沙虫双时钟 — 延长沙坑不等于挡攻击，SL同指纹多伤15也多损9 — 15/0 — WQZVENQ7DTRP
+  - 计划妥当 — 保留手牌不增加空手位 — 3/0 — WQZVENQ7DTRP
+  - 感染棱柱 — 技能收益须合算污染逐击血价 — 12/0 — WQZVENQ7DTRP
+  - 尖啸 — 临时减力只按当前攻击兑现 — 49/0 — WQZVENQ7DTRP
+  - 迷雾 — 毒与当轮虚弱分别核算 — 13/0 — WQZVENQ7DTRP
+  - 爬行动物饰品观察 — 药后临时力量次轮撤去 — 3/0 — TXZ6RVMQA09D
+  - 狡诈药水 — 生成升级小刀受实际空位限制 — 9/0，容量不足直接观察1局 — WQZVENQ7DTRP
+
+- 改了的手写知识：无。
+- 测试：tsc退出码0；vitest 240文件/2525用例/退出码0。定稿补数后复测1次，两轮均通过；冲突停止后未执行live测试。
+- 切片大小：整体中位减少52字；最大5343字，比改前增加6字；配对增量中位0。
+- 学习账本：新增silent-0258；改成proposed：silent-0005、silent-0006、silent-0007、silent-0011、silent-0018、silent-0019、silent-0020、silent-0021、silent-0023、silent-0024、silent-0025、silent-0027、silent-0030、silent-0038、silent-0046、silent-0048、silent-0059、silent-0063、silent-0079、silent-0168、silent-0198、silent-0228、silent-0255、silent-0257、silent-0258；退役无；`ledger.py check`退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-07.28",
+  "commit": "ab065d0a4fc067cb6a6d529da2706ab7ef508f85",
+  "merged": null,
+  "added": 1,
+  "updated": 19,
+  "retired": 0,
+  "active": 156,
+  "mechanisms": [
+    "王室猛毒开场净血价",
+    "灵动步法与敏捷牌挡",
+    "力量与敏捷分源",
+    "构筑兑现窗口观察",
+    "毒雾轮初补毒",
+    "触媒多次结算",
+    "余像逐牌格挡",
+    "钗轮初格挡",
+    "波纹水盆末轮格挡",
+    "凋萎末回合失血",
+    "沙漏制品与连战观察",
+    "沙虫双时钟与SL血价",
+    "计划妥当与保留手牌",
+    "感染棱柱技能污染血价",
+    "尖啸临时减力",
+    "迷雾群毒与虚弱",
+    "爬行动物饰品临时力观察",
+    "狡诈药水与手牌容量"
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2525
+  },
+  "ledger": {
+    "added": ["silent-0258"],
+    "proposed": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0007",
+      "silent-0011",
+      "silent-0018",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0023",
+      "silent-0024",
+      "silent-0025",
+      "silent-0027",
+      "silent-0030",
+      "silent-0038",
+      "silent-0046",
+      "silent-0048",
+      "silent-0059",
+      "silent-0063",
+      "silent-0079",
+      "silent-0168",
+      "silent-0198",
+      "silent-0228",
+      "silent-0255",
+      "silent-0257",
+      "silent-0258"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-99a2f178e01a391c",
+    "silent-proposal-47910f82a1fdd98f"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a116ca-b515-71c1-958d-c1c093815f15
+轮数：1；工具调用：command_execution×81 file_change×1
+token：输入 278.5k、输出 75.2k（其中推理 36.3k）、cache 读 12487.6k、cache 写 0（命中 97.8%）
+成本：未提供
+耗时：3221.8 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 8.7 s、首次工具 12.0 s、末次工具结束 3160.3 s；工具内共 2291.5 s，其余（模型生成、推理、网络）927.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×76 wait×5；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T22-35-45-01a116ca-b515-71c1-958d-c1c093815f15.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update.jsonl

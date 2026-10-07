@@ -1,0 +1,49 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "1913SE84AXQF",
+    "Q6M2Y34MWKRE"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "Q6M2Y34MWKRE",
+      "where": "agent/src/reflex/card-model.ts:1043",
+      "what": "普通紧勒STRANGLE_POWER2及后续逐牌失血漏模，F8 T4相同完整方案报19实23，少算4；新缺口，另见combat-plan.ts:745和turn-solver.ts:2252。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0259",
+      "silent-0260",
+      "silent-0261",
+      "silent-0262"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0064",
+      "silent-0044",
+      "silent-0011",
+      "silent-0020",
+      "silent-0050",
+      "silent-0025",
+      "silent-0253"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-ee1fb17b1f3244d2",
+    "silent-proposal-f11a16415cfafe62",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-1b9e29122364fa68",
+    "silent-proposal-a579007274b41d20"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/report.md"
+}

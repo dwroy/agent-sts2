@@ -1,0 +1,43 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
+
+ ❯ tests/experience.test.ts (10 tests | 2 failed) 287ms
+     × gives Jev crab-kill-order on a crab board 29ms
+     × the real files: an act-1 card reward before Vantom gets the Vantom lessons and the offered card's lesson and stats 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/experience.test.ts > boss lessons on a board of boss parts > gives Jev crab-kill-order on a crab board
+AssertionError: expected [ 'silent-kaiser-crab-facing-sl' ] to include 'crab-kill-order'
+ ❯ tests/experience.test.ts:134:19
+    132|     for (const bossId of ["KAISER_CRAB_BOSS", null]) {
+    133|       const ids = fightLessons(crabBoard(bossId)).map((entry) => entry…
+    134|       expect(ids).toContain("crab-kill-order");
+       |                   ^
+    135|       expect(ids.every((id) => id.startsWith("crab"))).toBe(true);
+    136|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/experience.test.ts > experience.json > the real files: an act-1 card reward before Vantom gets the Vantom lessons and the offered card's lesson and stats
+AssertionError: expected 'silent-vantom-slippery-growth' to be 'card-rupture' // Object.is equality
+
+Expected: "card-rupture"
+Received: "silent-vantom-slippery-growth"
+
+ ❯ tests/experience.test.ts:193:30
+    191|     );
+    192|     const slice = knowledgeSlice(state, "reward/card");
+    193|     expect(slice.lessons[0]).toBe("card-rupture");
+       |                              ^
+    194|     expect(slice.lessons).toEqual(expect.arrayContaining(["vantom-mult…
+    195|     expect(slice.lessons.length).toBeLessThanOrEqual(25);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  22:08:55
+   Duration  5.03s (transform 3.70s, setup 993ms, import 3.50s, tests 287ms, environment 0ms)
+

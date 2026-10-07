@@ -1,0 +1,392 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index 673d21ca..972fb2be 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -78,7 +78,7 @@ export interface CardModel {
+   strength: number;
+   /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
+   dexterity?: number;
+-  /** Observed plain Fasten: extra Block for later Silent Defends (silent-0218/0143). */
++  /** Observed Fasten: extra Block for later Silent Defends (silent-0218/0143; VLZ F43 T1). */
+   fasten?: number;
+   /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
+   temporaryDexterity?: number;
+@@ -800,7 +800,7 @@ export function isStrikeCard(card: Pick<CardModel, "cardId">): boolean {
+   return /STRIKE/.test(card.cardId) && !card.cardId.startsWith("GEN:");
+ }
+ 
+-export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = ""): CardModel {
++export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: Knowledge, character = "", ascension: number | null = null): CardModel {
+   const card = asRecord(entry);
+   const cardId = str(card["card_id"]);
+   const info = knowledge.card(cardId);
+@@ -917,9 +917,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+   const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
+   // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
+   const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
+-  // P5HT1272P5SB F25 T9 / HSX4HYATB4E2 F31 T2: only the observed plain Fasten is wired.
+-  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" &&
+-    !bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4 : 0;
++  // VLZ6CCT8AQ0A A10 F43 T1: upgraded Fasten establishes six; later Defend+ shows 14/18.
++  // Keep the plain model and every unobserved character, level and upgrade value unchanged.
++  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" ?
++    (!bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4
++      : bool(card["upgraded"]) && ascension === 10 && dyn(card, "ExtraBlock") === 6 ? 6 : 0) : 0;
+   // CA5KE8GFJ9X2 F9 T6 / F13 T1, silent-0229: the observed plain Caltrops establishes three Thorns.
+   const thorns = character.toLowerCase() === "silent" && cardId === "CALTROPS" &&
+     !bool(card["upgraded"]) && dyn(card, "ThornsPower") === 3 ? 3 : 0;
+@@ -1156,7 +1158,7 @@ export function giantRockFrom(attack: CardModel, upgraded: boolean, strengthNow:
+  * Escape and Debris cost 1 and can be played away (every Status was unplayable here, so the rollout never
+  * escaped the Insatiable's Sandpit nor cleared a Beckon).
+  */
+-export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0, character = ""): CardModel {
++export function offHandCardModel(own: Record<string, unknown> | null, cardId: string, upgraded: boolean, index: number, knowledge: Knowledge, cost: number | null = null, powerExtraCost = 0, character = "", ascension: number | null = null): CardModel {
+   const info = knowledge.card(cardId);
+   const raw = own ?? {
+     card_id: cardId,
+@@ -1168,7 +1170,7 @@ export function offHandCardModel(own: Record<string, unknown> | null, cardId: st
+     energy_cost: info?.cost ?? 0,
+     costs_x: info?.xCost ?? false,
+   };
+-  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character);
++  const model = modelHandCard({ ...raw, ...(cost !== null ? { energy_cost: cost } : {}), target_type: info?.target ?? "", requires_target: info?.target === "AnyEnemy", playable: true, index }, index, knowledge, character, ascension);
+   const unplayable = (info?.keywords ?? []).some((keyword) => /unplayable/i.test(keyword));
+   // The deck's (the game data's) cost, with a relic's change on Powers (pilePowerExtraCost); a line's own cost has it.
+   const relicCost = cost === null ? withPowerExtraCost(model, powerExtraCost) : model;
+diff --git a/agent/src/reflex/combat-plan.ts b/agent/src/reflex/combat-plan.ts
+index 618479c2..fd794f13 100644
+--- a/agent/src/reflex/combat-plan.ts
++++ b/agent/src/reflex/combat-plan.ts
+@@ -1670,7 +1670,7 @@ export function deckDrawPool(state: GameState, knowledge: Knowledge, ctx: { enem
+       inHand.splice(at, 1);
+       return [];
+     }
+-    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge, null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]));
++    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge, null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]), state.run?.ascension ?? null);
+     return [{ ...model, validTargets: model.target === "single" ? ctx.enemyTargets : [], damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)) }];
+   });
+ }
+@@ -1712,7 +1712,7 @@ export function pileEntries(state: GameState, knowledge: Knowledge, pile: "disca
+     const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? null;
+     // Not in the deck (a status an enemy added): the game data's card at the line's cost (Frantic Escape's grows).
+     const lineCost = /\[(-?\d+)费\]/.exec(line)?.[1];
+-    const model = offHandCardModel(own, cardId, upgraded, 900 + position, knowledge, own === null && lineCost !== undefined ? Number(lineCost) : null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]));
++    const model = offHandCardModel(own, cardId, upgraded, 900 + position, knowledge, own === null && lineCost !== undefined ? Number(lineCost) : null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]), state.run?.ascension ?? null);
+     const card: CardModel = {
+       ...model,
+       validTargets: model.target === "single" ? ctx.enemyTargets : [],
+@@ -2788,7 +2788,7 @@ function planTurn(env: DecisionEnv): Decision | null {
+   // Shrink on us (the Shrinker Beetle's: always -1, 1448 logged frames): the hand's numbers already carry it.
+   const shrunk = powerAmount(player, "SHRINK_POWER") !== 0;
+   const hand = asArray(combat["hand"]).map((entry, index) => {
+-    const modelled = modelHandCard(entry, index, env.knowledge, str(asRecord(state.run?.raw)["character_id"]));
++    const modelled = modelHandCard(entry, index, env.knowledge, str(asRecord(state.run?.raw)["character_id"]), state.run?.ascension ?? null);
+     const model = shrunk && modelled.damage !== null ? { ...modelled, shownShrunk: true } : modelled;
+     const base = env.knowledge.card(model.cardId)?.cost ?? null;
+     return freeAttacks > 0 && model.type === "Attack" && model.cost === 0 && base !== null && base > 0 ? { ...model, cost: base } : model;
+diff --git a/agent/src/reflex/rollout-live.ts b/agent/src/reflex/rollout-live.ts
+index 8329bf0d..80f63e71 100644
+--- a/agent/src/reflex/rollout-live.ts
++++ b/agent/src/reflex/rollout-live.ts
+@@ -465,7 +465,7 @@ export function deckModels(state: GameState, knowledge: Knowledge): CardModel[]
+   const powerExtraCost = pilePowerExtraCost(asArray(asRecord(state.run?.raw)["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
+   return asArray(asRecord(state.run?.raw)["deck"]).map((raw, i) => {
+     const own = asRecord(raw);
+-    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge, null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]));
++    return offHandCardModel(own, str(own["card_id"]), own["upgraded"] === true, 900 + i, knowledge, null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]), state.run?.ascension ?? null);
+   });
+ }
+ 
+diff --git a/agent/tests/silent-fasten-upgrade-evidence.json b/agent/tests/silent-fasten-upgrade-evidence.json
+new file mode 100644
+index 00000000..5c17bf53
+--- /dev/null
++++ b/agent/tests/silent-fasten-upgrade-evidence.json
+@@ -0,0 +1,186 @@
++{
++  "run": "VLZ6CCT8AQ0A",
++  "ascension": 10,
++  "provenance": [
++    {
++      "key": "before",
++      "line": 275682,
++      "offset": 8488494563,
++      "sha256": "921b46da928153928044aa7412add7f6659cb0e7aa8cea6312d243e5ab7605d6",
++      "run": "VLZ6CCT8AQ0A",
++      "floor": 43,
++      "turn": 1
++    },
++    {
++      "key": "after",
++      "line": 275683,
++      "offset": 8488536708,
++      "sha256": "f9e041fe2cf2d495c5b80d3b90750e1f21a35babff9335370c51ee070e289cc9",
++      "run": "VLZ6CCT8AQ0A",
++      "floor": 43,
++      "turn": 1
++    },
++    {
++      "key": "later14",
++      "line": 275687,
++      "offset": 8488697041,
++      "sha256": "103e80d5394dc75726db1420e44627125ae8be5b8643c97cc7b89693d71786a0",
++      "run": "VLZ6CCT8AQ0A",
++      "floor": 43,
++      "turn": 2
++    },
++    {
++      "key": "later18",
++      "line": 275696,
++      "offset": 8489071855,
++      "sha256": "6cee52b64850338b880e1dfcc68be1e3cae76f77061fdcc9c16c1efffe696f6d",
++      "run": "VLZ6CCT8AQ0A",
++      "floor": 43,
++      "turn": 4
++    },
++    {
++      "key": "plain",
++      "line": 275722,
++      "offset": 8490106074,
++      "sha256": "c5aad5c3ca0e7d3551f5a91b5880152f2e39f40c10a2cf9ba53b6d5c7acf737a",
++      "run": "VLZ6CCT8AQ0A",
++      "floor": 45,
++      "turn": 1
++    }
++  ],
++  "fasten": {
++    "index": 0,
++    "card_id": "FASTEN",
++    "name": "勒紧+",
++    "upgraded": true,
++    "target_type": "Self",
++    "requires_target": false,
++    "target_index_space": null,
++    "valid_target_indices": [],
++    "costs_x": false,
++    "star_costs_x": false,
++    "energy_cost": 1,
++    "star_cost": 0,
++    "rules_text": "从“防御”牌中额外获得{ExtraBlock:diff()}点格挡。",
++    "resolved_rules_text": "从“防御”牌中额外获得6点格挡。",
++    "dynamic_values": [
++      {
++        "name": "ExtraBlock",
++        "base_value": 6,
++        "current_value": 6,
++        "enchanted_value": 6,
++        "is_modified": false,
++        "was_just_upgraded": false
++      }
++    ],
++    "playable": true,
++    "can_play_result": true,
++    "unplayable_reason": null,
++    "unplayable_reason_raw": null,
++    "unplayable_preventer_id": null,
++    "unplayable_preventer_type": null
++  },
++  "defend14": {
++    "index": 4,
++    "card_id": "DEFEND_SILENT",
++    "name": "防御+",
++    "upgraded": true,
++    "target_type": "Self",
++    "requires_target": false,
++    "target_index_space": null,
++    "valid_target_indices": [],
++    "costs_x": false,
++    "star_costs_x": false,
++    "energy_cost": 1,
++    "star_cost": 0,
++    "rules_text": "获得{Block:diff()}点格挡。",
++    "resolved_rules_text": "获得14点格挡。",
++    "dynamic_values": [
++      {
++        "name": "Block",
++        "base_value": 8,
++        "current_value": 14,
++        "enchanted_value": 8,
++        "is_modified": true,
++        "was_just_upgraded": false
++      }
++    ],
++    "playable": true,
++    "can_play_result": true,
++    "unplayable_reason": null,
++    "unplayable_reason_raw": null,
++    "unplayable_preventer_id": null,
++    "unplayable_preventer_type": null
++  },
++  "defend18": {
++    "index": 0,
++    "card_id": "DEFEND_SILENT",
++    "name": "防御+",
++    "upgraded": true,
++    "target_type": "Self",
++    "requires_target": false,
++    "target_index_space": null,
++    "valid_target_indices": [],
++    "costs_x": false,
++    "star_costs_x": false,
++    "energy_cost": 1,
++    "star_cost": 0,
++    "rules_text": "获得{Block:diff()}点格挡。",
++    "resolved_rules_text": "获得18点格挡。",
++    "dynamic_values": [
++      {
++        "name": "Block",
++        "base_value": 8,
++        "current_value": 18,
++        "enchanted_value": 8,
++        "is_modified": true,
++        "was_just_upgraded": false
++      }
++    ],
++    "playable": true,
++    "can_play_result": true,
++    "unplayable_reason": null,
++    "unplayable_reason_raw": null,
++    "unplayable_preventer_id": null,
++    "unplayable_preventer_type": null
++  },
++  "power_before": [
++    {
++      "index": 0,
++      "power_id": "PLATING_POWER",
++      "name": "覆甲",
++      "amount": 4,
++      "is_debuff": false
++    },
++    {
++      "index": 1,
++      "power_id": "STRENGTH_POWER",
++      "name": "力量",
++      "amount": 1,
++      "is_debuff": false
++    }
++  ],
++  "power_after": [
++    {
++      "index": 0,
++      "power_id": "PLATING_POWER",
++      "name": "覆甲",
++      "amount": 4,
++      "is_debuff": false
++    },
++    {
++      "index": 1,
++      "power_id": "STRENGTH_POWER",
++      "name": "力量",
++      "amount": 1,
++      "is_debuff": false
++    },
++    {
++      "index": 2,
++      "power_id": "FASTEN_POWER",
++      "name": "勒紧",
++      "amount": 6,
++      "is_debuff": false
++    }
++  ]
++}
+diff --git a/agent/tests/silent-fasten-upgrade.test.ts b/agent/tests/silent-fasten-upgrade.test.ts
+new file mode 100644
+index 00000000..1f6561a7
+--- /dev/null
++++ b/agent/tests/silent-fasten-upgrade.test.ts
+@@ -0,0 +1,95 @@
++/** VLZ6CCT8AQ0A A10 F43 T1/T2/T4: upgraded Fasten, independent of Apotheosis propagation. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-fasten-upgrade-evidence.json";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { modelHandCard, offHandCardModel } from "../src/reflex/card-model.js";
++import { deckModels } from "../src/reflex/rollout-live.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { replaySteps } from "../src/reflex/turn-solver.js";
++import { simulateFight } from "../src/reflex/rollout.js";
++import { board, card } from "./boss-sim-fixture.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed upgrade references"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++const knowledge = makeKnowledge({ cards: [
++  { id: "FASTEN", type: "Power", target: "Self" }, { id: "DEFEND_SILENT", type: "Skill" },
++] }, "cache");
++const fasten = () => modelHandCard({ ...evidence.fasten, index: 0 }, 0, knowledge, "silent", 10);
++const defend = (index: number) => card(index, "DEFEND_SILENT", {
++  type: "Skill", target: "self", validTargets: [], block: 8, blockBase: 8, upgraded: true,
++});
++const step = (cardIndex: number, cardId: string) => ({ cardIndex, cardId, name: cardId, upgraded: true });
++
++it("uses the observed six-point establishment, including the hand-to-pile model", () => {
++  expect(evidence.power_after.find((power) => power.power_id === "FASTEN_POWER")?.amount).toBe(6);
++  expect(fasten().fasten).toBe(6);
++  expect(offHandCardModel(evidence.fasten, "FASTEN", true, 0, knowledge, null, 0, "silent", 10).fasten).toBe(6);
++});
++
++it("propagates the actual level through deckModels for later-turn and boss simulation inputs", () => {
++  const state = parseGameState({ state_version: 16, run_id: evidence.run, screen: "MAP", in_combat: false,
++    session: { mode: "singleplayer", phase: "run" }, available_actions: [], combat: null,
++    run: { character_id: "SILENT", ascension: 10, floor: 43, deck: [evidence.fasten] } });
++  expect(deckModels(state, knowledge)[0]?.fasten).toBe(6);
++  const other = parseGameState({ ...state.raw, run: { ...state.run?.raw, ascension: 9 } });
++  expect(deckModels(other, knowledge)[0]?.fasten).toBeUndefined();
++});
++
++it("adds six only to Defends played after it, without changing another block skill", () => {
++  const input = board().solver;
++  input.player.energy = 4;
++  input.hand = [defend(0), { ...fasten(), index: 1, key: "c1" }, defend(2),
++    card(3, "TEST_BLOCK_SKILL", { type: "Skill", target: "self", block: 8 })];
++  expect(replaySteps(input, input.hand.map((entry) => step(entry.index, entry.cardId)))!.outcome.blockGained).toBe(30);
++});
++
++it("keeps T2/T4's already displayed 14/18 block instead of counting the established six twice", () => {
++  for (const [raw, expected] of [[evidence.defend14, 14], [evidence.defend18, 18]] as const) {
++    const input = board().solver;
++    input.hand = [modelHandCard({ ...raw, index: 0 }, 0, knowledge, "silent", 10)];
++    expect(replaySteps(input, [step(0, "DEFEND_SILENT")])!.outcome.blockGained).toBe(expected);
++  }
++});
++
++it("persists the newly established six into later draws while leaving the input state unchanged", () => {
++  const input = board();
++  input.solver.hand = [fasten(), defend(1)];
++  input.piles = { handBase: input.solver.hand, draw: Array.from({ length: 6 }, (_, i) => defend(i + 10)), discard: [] };
++  input.tables = { TEST_BOSS: { moves: { HIT: { damage: 40, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } } };
++  const before = JSON.stringify(input);
++  const plan = replaySteps(input.solver, [step(0, "FASTEN"), step(1, "DEFEND_SILENT")])!;
++  expect(plan.outcome.blockGained).toBe(14);
++  const records = simulateFight(input, plan, 2, 1, false).records;
++  expect(records[0]!.snap.pw.FASTEN_POWER).toBe(6);
++  expect(records[1]!.snap.pw.FASTEN_POWER).toBe(6);
++  expect(records[1]!.loss).toBe(0);
++  expect(JSON.stringify(input)).toBe(before);
++});
++
++it("preserves plain four and every unobserved level, character and upgraded value", () => {
++  const plain = { ...evidence.fasten, upgraded: false,
++    dynamic_values: [{ name: "ExtraBlock", base_value: 4, current_value: 4, enchanted_value: 4 }] };
++  for (const asc of [null, 0, 7, 9, 10, 11]) {
++    expect(modelHandCard(plain, 0, knowledge, "silent", asc).fasten).toBe(4);
++    if (asc !== 10) expect(modelHandCard(evidence.fasten, 0, knowledge, "silent", asc).fasten).toBeUndefined();
++  }
++  for (const character of ["ironclad", "", "necrobinder"]) {
++    expect(modelHandCard(evidence.fasten, 0, knowledge, character, 10).fasten).toBeUndefined();
++  }
++  for (const value of [4, 5, 7]) {
++    const other = { ...evidence.fasten,
++      dynamic_values: [{ name: "ExtraBlock", base_value: value, current_value: value, enchanted_value: value }] };
++    expect(modelHandCard(other, 0, knowledge, "silent", 10).fasten).toBeUndefined();
++  }
++});
