@@ -1,0 +1,45 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "GXNKW8X1XYJP"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "GXNKW8X1XYJP",
+      "where": "agent/src/sl/draws.ts:568",
+      "what": "抑制改升级标记被SL抽序误记为插牌及旧牌消失，错误截断已知前缀",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0279",
+      "silent-0280"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0079",
+      "silent-0005",
+      "silent-0016",
+      "silent-0030",
+      "silent-0087",
+      "silent-0027"
+    ],
+    "repeats": [
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-5a95725089f53cd8",
+    "silent-proposal-51fa8bc34774f72d"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-064304-postmortem/report.md"
+}
