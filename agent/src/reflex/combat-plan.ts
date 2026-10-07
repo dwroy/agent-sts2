@@ -55,6 +55,7 @@ import { clearedWith, deathRulesOf, moveRulesOf, stripStunRules, type DeathRule,
 import { jevExperience, jevLessonLine } from "./jev-experience.js";
 import type { RunPlan } from "../memory/run-plan.js";
 import { BOSS_LINES_TIE_SE, bossLineSim, bossLinesOptions, lowTrustOfState, releaseBossLinesPool, simCompare, simLog, simNote, simWinsLess, wonLoss, type BossLineSim } from "../sim/boss-lines.js";
+import { doubleBossFor, firstDoubleBoss } from "../knowledge/double-boss.js";
 import { computeMemoFor, dropComputeMemo, type ComputeMemo } from "../sim/compute-memo.js";
 import { loadavg } from "node:os";
 import { killsThief, lastTurnKillLine, lastTurnLoot, lootText, shownKillLine, thiefContextJson, thiefFact, thiefTag, thievesOf, withLoot, type Thief } from "./thief.js";
@@ -498,6 +499,8 @@ export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind
   if (kind === "boss") out["act_boss"] = "this fight";
   else if (floor !== null && bossFloor !== null) out["act_boss"] = `in ${bossFloor - floor} floors (floor ${bossFloor})`;
   const elite = eliteAhead(env);
+  const continuation = firstDoubleBoss(state);
+  if (continuation) out["continuation_objective"] = `F48后仍要打F49：HP/药水连续，留存资源按F49估值；${continuation.limitation}。证据：${continuation.value.source}`;
   if (elite) out["elite_ahead"] = elite;
   if (kind !== "boss") {
     const gap = damageGap(state, env.knowledge);
@@ -521,7 +524,9 @@ export function potionCostContext(costs: Map<string, PotionCost>, kind: SolverIn
   if (costs.size === 0 || !potionCostOptions.enabled) return {};
   const out: Record<string, JsonValue> = {
     potion_cost:
-      kind === "boss"
+      [...costs.values()].some((cost) => cost.continuation !== undefined)
+        ? "F48是已观察双boss的第一战：药水按F49的剩余价值计价，胜F48不等于通关；保命选项和所有可喝药水仍保留。"
+        : kind === "boss"
         ? "boss fight: potions cost 0 here (the fight they are kept for)"
         : "a potion drunk now is HP paid later: each option's potion_cost counts its potions (this turn and the rollout's later turns) at their held value (the 血 of the worth lines: HP worth in this act's boss); total = fight HP loss + that. Ranked by deaths, then total. Boss fights: 0.",
   };
@@ -3030,7 +3035,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   // What each potion held costs to drink here (potion-cost.ts, Dai 2026-09-30): its held value in the potion table for
   // this act and ascension; 0 in a boss fight. Carried by the potion cards (the solver's score, the rollout's later
   // turns, the random potions' samples) and shown on every option.
-  const costs = potionCosts(potionsAll.map((potion) => potion.potion_id), state.run?.ascension ?? 0, Number(str(asRecord(state.run?.raw)["act_id"]) || 0) + 1, kind);
+  const continuation = kind === "boss" ? firstDoubleBoss(state) : null;
+  const observedDouble = kind === "boss" ? doubleBossFor(state) : null;
+  const costs = potionCosts(potionsAll.map((potion) => potion.potion_id), state.run?.ascension ?? 0, Number(str(asRecord(state.run?.raw)["act_id"]) || 0) + 1, kind,
+    continuation ? { potionHp: continuation.potionHp, source: continuation.value.source } : undefined);
   const playable = hand.filter((card) => card.playable);
   if (playable.length === 0) {
     // A hand of Dazed is not the end of the options: a potion can still block, draw or kill (CY8U F25
@@ -3113,6 +3121,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
   const potionContext: PotionContext = {
     ...pileContext,
+    ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
     ...(beltIds.has("SOLDIERS_STEW")
@@ -3168,6 +3177,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       player: playerSim,
       enemies,
       fightKind: kind,
+      ...(continuation ? { continuationValue: continuation.value } : {}),
       turn: state.turn ?? 1,
       cardsPlayedThisTurn: num(player["cards_played_this_turn"]),
       raceEruption,
