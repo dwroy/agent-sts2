@@ -804,3 +804,10 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 
 - 学习者复盘 RC61MFQM63Y6（静默 A10/F33/第3次尝试T4，decision 279117、state 285411–285415）：普通生存者后唯一剩余打击实际被弃，求解器仍预支打击及朝向；首证53FLQ68CETW0 F2/T4（decision224374–224378）也观察到后继中和被弃。原件见 paper/materials/silent/20261008-0207-events/postmortem-originals/report.md。
 - 位置：agent/src/reflex/turn-solver.ts:1695；card-model.ts输出discardAfterDraw，但单弃目前与结实绷带格挡收益绑在一起。非阻塞，交普通修复链；原提案silent-proposal-eecf671192557465已由调度器保存，不再手动复派。仅已观察普通单弃范围，未知选牌边界重新规划；未观察叠加、最后名额及SL反事实仍未知，不扩写打法或SL规则。
+
+## 2026-10-08 04:03 非阻塞纯 bug：毒必胜提前返回遗漏连战保血候选（silent-0271）
+
+- [ ] 学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8：decision280547直接end_turn；states286893—286896中32HP／0挡、5能量与手持凋萎，胜前实际受9伤后23HP进入F49。定位turn-solver.ts:3764在evaluate.winsFight立即返回，combat-plan.ts:3293/3296选首个无药必胜候选；已有连战估值无法比较未生成的防御候选。正常完局，交普通非阻塞修复链。
+- 沿原proposal-poison-win-search.md/json及silent-proposal-d60691b060dfc40a自动链，先核共享租约和现有源码，避免重复派发或实现。按学习者原提案，在已观察的静默A10第一boss／后场存在范围区分即时击杀和结束回合毒胜，于原节点／时间预算内继续枚举合法无药防御，并使用已有持牌伤害及资源／生存估值；未知边界保留，其他角色和非连战行为等价。固定原帧撤码红／恢复绿，自测通过后按实际live登记。
+- 首证XTSV1U9JD34T／prior=unknown／observed及原support保持；旧silent-0213已修的是毒胜持牌伤害生存检查，本项是存活时保血候选未生成，不把旧修复判失败。实际运行03f4ffe0+dirty完整树未保存，6c3d8187仅只读定位；六次F49失败来自同一局，不当六个独立样本。没有F48替代方案实际HP或F49胜局对照，不声称必能避免9伤或转胜；回放不能确认缺口则保留待证。
+- 原证据及17条所属PM原台账：paper/materials/silent/20261008-0349-events；0164/0140等打法、药水与SL提案由学习者沿原链处理，运维不补知识或改规则。
