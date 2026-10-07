@@ -825,3 +825,10 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 - 学习者定位 `agent/src/reflex/rollout-live.ts:801` 重建输入过滤死亡段；已有 `rollout.ts` 接续处理无法恢复未进入输入的部件。修复按原提案 `silent-proposal-0f0904256806281a` 由调度器自动派策略学习者：保留待接续的身份、0HP、原意图/恢复量与等待进度，死亡部件不可作为当前攻击者或攻击目标；固定 T5/T13、全段0及永久死亡控制，保持当回合损0/伤14。原运行dirty源码未完整保存，当前源码只作定位；未证明更换线路可整战获胜，不修改SL、药水或终局权重。
 - 旧 `silent-0268` 只补此局重复证据，不另立新bug：T1 decision 281953 生存者后防御预计21挡/损1，state 288407只有这两张牌、288408强制弃后空手，实际臂甲16挡；288409 HP67→61损6，虚构后继防御5挡对应多损5。仍走原普通队列及本局提案 `silent-proposal-5c259b0e17f8ff10`，保留首证/prior/历史；T9重问后换线不算原线误差，不把29/37伤差归因于弃牌。
 - 原证据：`learner/runs/20261008-044302-postmortem/report.md`、`proposal-reattach-input.md`、`proposal-survivor-discard.md`；归档 `paper/materials/silent/20261008-0510-events/postmortem/`。其他药水/机制发现沿原自动提案链，由学习者处理。
+
+## 2026-10-08 07:21 非阻塞纯 bug：SL抽序把升级改标误判为插牌／旧牌离堆（silent-0279）
+
+- [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3：sl-attempts1053—1056将原抽牌堆BLADE_DANCE、ACCELERANT、OUTBREAK、SUCKER_PUNCH列为inserted，旧升级键未入手离堆，已知前缀截到19/18/19/18；states290201→290206及290214核战内改标／出口恢复，瞬时完整中间帧未记录。当前draws.ts:568/569整堆作差、:602/:657/:674归新牌／离堆；行号取复盘只读live，运行b1714285+dirty完整源码未保存。正常完局，交普通非阻塞队列，未证明影响胜负。
+- 沿原proposal-dampen-identity.md/json及silent-proposal-51fa8bc34774f72d自动链，实施前核租约及live是否已有实现。仅按原提案在已核角色／进阶及明确改标窗口用同基ID与守恒数量唯一配对版本变化，再处理真实抽取／插入／洗牌；同ID多副本、混合版本、缺帧或同帧多动作仍保守断序。场外牌组与战内实际版本分账，固定原帧验证真假插牌／离堆、歧义、恢复及无抑制路径，不改评分、判死或编造未见抽序。
+- 首证GXNKW8X1XYJP／prior=unknown／observed及原support保持；四次同局追踪不是四个独立样本，更早ZE8F192FKX24只作原提案机制／文本证据。其他角色和未观察范围保持等价。silent-0280机制及资源血价提案silent-proposal-5a95725089f53cd8由学习者自动链处理，运维不补游戏知识。
+- 原复盘／18所属PM原CLI及首次审计脚本失败原件：paper/materials/silent/20261008-0717-events；无手动复派、源码实现、shipped或新版本。
