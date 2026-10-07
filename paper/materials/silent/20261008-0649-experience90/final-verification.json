@@ -1,0 +1,61 @@
+{
+  "source_ancestor_and_blob_verified": true,
+  "unique_version": "S1.exp90",
+  "refresh_preserved_commit": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+  "all_other_tracked_blobs_preserved": true,
+  "original_cli": 48,
+  "new_data_shipped_cli": 15,
+  "unmapped_structure_item_proposed": [],
+  "physical_and_index_ledger_check": 0,
+  "original_changelog_not_duplicated": true,
+  "source_originals_sha256_unchanged": true,
+  "source_sandbox": {
+    "exit": 0,
+    "files": 245,
+    "cases": 2586,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/test-source.log"
+  },
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 297,
+      "passed": 3406,
+      "skipped": 2
+    },
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 245,
+      "cases": 2586,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "source_vs_actual_six_preserved_bullet_time_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-bullet-time-states.json",
+      "agent/tests/silent-bullet-time.test.ts"
+    ],
+    "reason": "The source commit changes only experience data and passed its original self-tests. Current live retains the six already published Bullet Time source/test paths and is identical in code/tests/tasks to the pinned full external pass. The data-only test exemption applies; no test success is claimed for this new tree. Full outside checks are requested separately."
+  },
+  "code_proposals_not_implemented_by_data_publication": true,
+  "external_rechecks_requested": 1,
+  "full_external_passed": false,
+  "paper_refreshes": 0,
+  "no_play_stop_env_or_scheduler_change": true
+}
