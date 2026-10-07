@@ -197,6 +197,32 @@ describe("engine provenance and climb", () => {
       expect(highestWon("silent", runPath, true)).toBe(12);
     } finally { rmSync(dir, { recursive: true, force: true }); }
   });
+  it("initial logging or notice failures are terminal brain faults without heartbeat timers", async () => {
+    vi.useFakeTimers();
+    for (const sink of ["event", "notify"] as const) {
+      const cause = new Error(`${sink} sink unavailable`);
+      const wait = new BrainWait({ [sink]: () => { throw cause; } });
+      try { wait.pause({ ...request("rest/plan"), questionId: "fixed" }, "quota"); throw new Error("expected fault"); }
+      catch (error) { expect(error).toBeInstanceOf(BrainBlockedError); expect(error).toMatchObject({ state: "fault", cause }); }
+      expect(vi.getTimerCount()).toBe(0);
+      await expect(wait.retry()).rejects.toThrow("without a paused question");
+    }
+  });
+  it("terminal logging failures preserve fault exit type and release all heartbeat timers", async () => {
+    vi.useFakeTimers();
+    for (const terminal of ["resumed", "cancelled", "fault"] as const) {
+      for (const sink of ["event", "notify"] as const) {
+        const cause = new Error(`${sink} terminal sink unavailable`);
+        const wait = new BrainWait({ [sink]: (event: BrainWaitEvent) => { if (event.state === terminal) throw cause; } });
+        wait.pause({ ...request("rest/plan"), questionId: "fixed" }, "quota");
+        expect(vi.getTimerCount()).toBe(1);
+        try { wait.finish(terminal); throw new Error("expected fault"); }
+        catch (error) { expect(error).toBeInstanceOf(BrainBlockedError); expect(error).toMatchObject({ state: "fault", cause }); }
+        expect(vi.getTimerCount()).toBe(0);
+        await expect(wait.retry()).rejects.toThrow("without a paused question");
+      }
+    }
+  });
   it("runtime notification files are confined to fixed fixtures", () => {
     const dir = mkdtempSync(join(tmpdir(), "brain-inbox-fixed-"));
     try {
