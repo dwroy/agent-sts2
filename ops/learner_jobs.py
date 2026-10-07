@@ -89,24 +89,32 @@ def available_worktree(worktree):
     return result.returncode == 0 and not result.stdout.strip()
 
 
-def requested_feature(state, root, scripts, character, reason, alive, stamp):
+def requested_feature(state, root, scripts, character, reason, alive, stamp, request=None):
     """Dispatch Roy's explicit feature requests with isolated templates and worktrees."""
-    if character != "silent" or reason != "ops":
+    if character != "silent" or reason not in ("ops", "calibration-refresh"):
         return False, None
-    request = None
     learner_task = None
-    for candidate, path in FEATURE_REQUESTS.items():
-        try:
-            with open(os.path.join(root, path), encoding="utf8") as handle:
-                value = json.load(handle)
-        except (OSError, ValueError):
-            continue
-        if (isinstance(value, dict) and value.get("state") == "pending"
-                and value.get("task") == candidate and value.get("character") == "silent"
-                and value.get("authorized_by") == "Roy" and isinstance(value.get("request_id"), str)
-                and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", value["request_id"])):
-            request, learner_task = value, candidate
-            break
+    if request is None:
+        for candidate, path in FEATURE_REQUESTS.items():
+            try:
+                with open(os.path.join(root, path), encoding="utf8") as handle:
+                    value = json.load(handle)
+            except (OSError, ValueError):
+                continue
+            if (isinstance(value, dict) and value.get("state") == "pending"
+                    and value.get("task") == candidate and value.get("character") == "silent"
+                    and value.get("authorized_by") == "Roy" and isinstance(value.get("request_id"), str)
+                    and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", value["request_id"])):
+                request, learner_task = value, candidate
+                break
+    elif (reason == "calibration-refresh" and isinstance(request, dict)
+          and request.get("state") == "pending" and request.get("task") == "silent-boss-calibration"
+          and request.get("character") == "silent" and request.get("authorized_by") == "Roy"
+          and isinstance(request.get("request_id"), str)
+          and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", request["request_id"])):
+        learner_task = "silent-boss-calibration"
+    else:
+        return False, None
     if request is None:
         return False, None
     key = "feature:" + request["request_id"]
@@ -215,7 +223,36 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     key = fix_key(root, character)
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
     strategy = strategy_job(state, root, scripts, character, alive, stamp)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy}
+    calibration = calibration_job(state, root, scripts, character, alive, stamp)
+    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration}
+
+
+def calibration_job(state, root, scripts, character, alive, stamp):
+    """Roy-authorized periodic calibration; read live data, never overwrite refreshing knowledge."""
+    if character != "silent":
+        return None
+    try:
+        with open(os.path.join(root, ".worktrees/live/knowledge/characters/silent/boss-trust.json"), encoding="utf8") as handle:
+            previous = json.load(handle)
+        if previous.get("character") != "silent" or not previous.get("refresh"):
+            return None  # The initial batch must publish before any automatic rerun.
+        spec = importlib.util.spec_from_file_location("boss_refresh_cadence", os.path.join(scripts, "../agent/tools/boss-sim/cadence.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with open(os.path.join(root, "logs/runs.jsonl"), encoding="utf8") as handle:
+            runs = [json.loads(line) for line in handle if line.strip()]
+        with open(os.path.join(root, "logs/sl-attempts.jsonl"), encoding="utf8") as handle:
+            attempts = [json.loads(line) for line in handle if line.strip()]
+        trigger = module.cadence(runs, attempts, previous["refresh"])
+    except (OSError, ValueError, KeyError):
+        return None
+    if not trigger["due"]:
+        return None
+    identity = hashlib.sha256(json.dumps({"keys": trigger["keys"], "asc": trigger["max_asc"]}, sort_keys=True).encode()).hexdigest()[:24]
+    request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
+               "authorized_by": "Roy", "request_id": "silent-calibration-" + identity}
+    _, result = requested_feature(state, root, scripts, character, "calibration-refresh", alive, stamp, request=request)
+    return result
 
 
 def strategy_job(state, root, scripts, character, alive, stamp):
