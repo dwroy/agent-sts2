@@ -1,0 +1,55 @@
+{
+  "main_commit": "ad939c4d0b21d352ae840cc3d6029695df7729e5",
+  "tested_integration_commit": "1bea40ab96d2b1ace8d5461a92984aec180110c5",
+  "main_before": "fa06a5f504aea042ec2388a422e77438323fbd0a",
+  "original_sources": [
+    "6f86ff6b6b971fb38b96308ebdd34dec574e5b13",
+    "71b835a3150704548fab2ad46e74bde240ccf1f9",
+    "ccd8bb8e017da9c30b408138d04e6d2bc985836d"
+  ],
+  "fixed_live": "7816e15670ba678009c279a0aea5f0063345cf59",
+  "paths": [
+    "agent/tests/autoplay_reload_test.py",
+    "agent/tests/learner-raw-report.test.ts",
+    "agent/tests/legacy-brain-notes.test.ts",
+    "agent/tests/legacy-brain.ts",
+    "agent/tests/ops-autoplay-reload.test.ts",
+    "docs/codex-ops.md",
+    "ops/autoplay-reload.py",
+    "ops/autoplay.sh",
+    "ops/codex-ops-actions.sh",
+    "ops/codex-ops-do.sh",
+    "ops/codex/lib.ts",
+    "ops/learner_checks.py"
+  ],
+  "preserved_dispatcher_blobs": {
+    "ops/learner_jobs.py": "5b33e9a94ed192f2acb56ee29337b969cc18edd0",
+    "learner/tasks/silent-double-boss.md": "a3575d82f77a4e4286c9cec5b6ed80af3645b325",
+    "learner/tasks/boss-sim-automation.md": "70a777e43e9cedb5403d7f2af5c2e4fe889f2db8"
+  },
+  "sandbox": {
+    "rc": 1,
+    "log": "/tmp/sts2-20261007-1346-main-sandbox.log",
+    "sha256": "f8c353f468699e33ce993aef762eabe9db9d0c242fdfdacab511830e9e1ff72f",
+    "workers": 1,
+    "fixed_exclusions_unchanged": true
+  },
+  "checks": {
+    "exit": 1,
+    "original_first_stage_files_passed": 225,
+    "original_first_stage_cases_passed": 2394,
+    "original_first_stage_failed": 1,
+    "supplemental": {
+      "exit": 0,
+      "files": 2,
+      "cases": 26,
+      "log": "/tmp/sts2-20261007-1346-main-focused.log"
+    },
+    "split_coverage_files": 227,
+    "split_coverage_cases": 2406,
+    "full_suite_pass_not_claimed": true,
+    "failed_test_code_unchanged": true
+  },
+  "validation_note": "三项工具源/合后原沙箱tsc0/vitest0、227文件2406例；main组合原tsc0/vitest1、225文件2394例过/rollout-live实钟1814>1800ms一败，源码/测试逐blob未变；同树单worker复测rollout-live+paths 2文件26例exit0，分次覆盖227文件2406例，原整套1保留且不冒报整套0",
+  "activation": "must inspect actual broker action receipt; disk sync alone is not activation"
+}
