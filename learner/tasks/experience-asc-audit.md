@@ -41,7 +41,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
    - A8+ 没有数据、只有低进阶证据的，写上限 [lo, 7]，回报里列出来。
 
 **不改的部分**：
-- 药水：`potion:*` 和 `general:potion` 只改句内数字，可以按进阶分开写数字；其他条目里原有的喝药/留药分句一字不改；不许新增或加强任何喝药规则。
+- 本任务不直接改打法源码；涉及出牌/药水/SL/终局的新结论须同步证据、账本与代码提案，交独立 strategy-proposal 按 Roy 新授权实现。
 - scope 类型只用已有的几种。
 
 ## 3. 合并和压缩
@@ -55,7 +55,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 ## 5. 测试和提交
 - `export PATH=$HOME/.local/node/bin:$PATH`，`npx tsc -p tsconfig.json --noEmit` 和 `npx vitest run --maxWorkers=4` 退出码都要是 0（高负载时战斗测试可能超时，先单独重跑一次再下结论）。
 - 用 `agent/tools/knowledge-slice.ts` 和知识前缀的渲染（agent/src/knowledge/render/knowledge-prefix.ts）比较 A8、A9 两个进阶前缀里经验部分的字数，改前、改后各一次。
-- 在 {{worktree}} 提交：`git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，英文提交信息，写明版本号和三类各改了多少条。不推送。version 改成下一个版本号。
+- 在 {{worktree}} 提交：`git commit`（使用本机全局身份，不设仓库级 user.*），英文提交信息，写明版本号和三类各改了多少条。不推送。version 改成下一个版本号。
 - 变更记录末尾追加一节：`## <日期> 进阶审核（version …，分支 …，<提交号>）`，小节依次是：方法、三类各自的处理和数字、合并和退役、A8 / A9 前缀字数（改前→改后）、需要 Dai 定的事。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交。
 
 ## 6. 安全和资源
@@ -81,5 +81,13 @@ default.merge_dir: {{project_root}}/.worktrees/live
 最后单独给一个 json 代码块：
 
 ```json
-{"task": "experience-asc-audit", "version": "...", "commit": "...", "merged": null, "active": 0, "retired": 0, "merged_entries": 0, "a9_entries": 0, "a9_chars": 0, "tests": {"tsc": 0, "vitest": 0, "cases": 0}}
+{"task": "experience-asc-audit", "version": "...", "commit": "...", "merged": null, "active": 0, "retired": 0, "merged_entries": 0, "a9_entries": 0, "a9_chars": 0, "tests": {"tsc": 0, "vitest": 0, "cases": 0}, "code_proposals": [], "implementation_domains": [], "report": "{{scratch}}/report.md"}
 ```
+
+
+## Roy 2026-10-07 学习授权与代码提案
+先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+
+最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。

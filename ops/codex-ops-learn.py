@@ -33,8 +33,11 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths  # noqa: E402
 from learner_checks import finish_write_batch, recheck_write_batch  # noqa: E402
-from learner_jobs import check_jobs, dispatch_write, pending, start_learner  # noqa: E402
+from learner_jobs import available_worktree, check_jobs, dispatch_write, pending, start_learner  # noqa: E402
 import boss_sim_jobs  # noqa: E402
+import ascension_audit  # noqa: E402
+import proposal_dispatch  # noqa: E402
+from learner_checks import read_report  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
@@ -160,7 +163,8 @@ def dispatch(state, runs, character, reason):
     os.makedirs(out_dir, exist_ok=True)
     pid, pane = start_learner(["bash", os.path.join(SCRIPTS, "codex-ops-learner.sh"), batch_id, ",".join(runs), character],
                               ROOT, SCRIPTS, DIR, f"learner-{batch_id}-postmortem")
-    state["batches"][batch_id] = {"runs": runs, "pid": pid, "started": now_local(), "state": "running", "reason": reason, "character": character}
+    state["batches"][batch_id] = {"runs": runs, "pid": pid, "started": now_local(), "state": "running", "reason": reason, "character": character,
+                                 "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     for run in runs:
@@ -201,7 +205,9 @@ def run_ascension(row):
 
 def check_ascension(state, character):
     latest = None
-    for row in jsonl(os.path.join(LOGS, "run-config.jsonl")):
+    configs = list(jsonl(os.path.join(LOGS, "run-config.jsonl")))
+    ascension_audit.observe(state, configs, character, run_character, run_ascension)
+    for row in configs:
         if run_character(row) == character and run_ascension(row) is not None:
             latest = row
     if latest is None:
@@ -216,6 +222,12 @@ def check_ascension(state, character):
         f"按「每过一级」写 A{seen} 的小结（eval/metrics.py --character {character} --group-by ascension --md → notes/silent-climb-report.md 新一节），"
         f"五行以内的摘要写进 ops/inbox-dev.md。"
     ))]
+
+
+def check_ascension_audits(state, character):
+    return ascension_audit.dispatch(state, ROOT, SCRIPTS, character, finished_runs(character), alive,
+                                    dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner, available_worktree,
+                                    persist=save_state, notice=inbox)
 
 
 def check_postmortems(state, character):
@@ -266,6 +278,7 @@ def cmd_tick(args):
     report["dispatched"] = batch
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    report["ascension_audit"] = check_ascension_audits(state, character)
     save_state(state)
     print(json.dumps(report, ensure_ascii=False))
 
@@ -321,6 +334,12 @@ def cmd_finish(args):
     if batch is None:
         print(f"unknown batch {args.batch}")
         return 1
+    if batch.get("task") == "ascension-audit":
+        ascension_audit.finish(state, args.batch, args.rc, ROOT, os.path.join(DIR,"learner"), enqueue, inbox,
+                              proposal_check=lambda report, current: proposal_dispatch.links(report, current, ROOT, SCRIPTS))
+        check_jobs(state, ROOT, SCRIPTS, batch["character"], alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        save_state(state)
+        return 0
     if batch.get("task", "postmortem") != "postmortem":
         if batch.get("state") in ("done", "failed", "rejected") and "rc" in batch:
             return 0
@@ -338,12 +357,20 @@ def cmd_finish(args):
         if batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch"):
             boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
                                 dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
+        if batch.get("proposal_repair_needed"):
+            state.setdefault("proposal_repairs",{})[args.batch] = {"character":batch["character"],"runs":batch.get("runs",[]),"state":"pending","reason":"experience/proposal link audit failed"}
+
         save_state(state)
         return 0
     have = postmortem_ids()
     done = [run for run in batch["runs"] if run in have]
     missing = [run for run in batch["runs"] if run not in have]
-    batch.update({"state": "done" if args.rc == 0 and not missing else "failed", "rc": args.rc, "finished": now_local(), "done": done, "missing": missing})
+    proposal_errors = proposal_dispatch.links(read_report(os.path.join(DIR,"learner",args.batch+".out")), batch, ROOT, SCRIPTS)
+    batch.update({"state": "done" if args.rc == 0 and not missing and not proposal_errors else "failed", "rc": args.rc, "finished": now_local(), "done": done, "missing": missing,
+                  "proposal_audit_errors": proposal_errors})
+    if proposal_errors:
+        inbox("复盘代码提案链未通过：" + "; ".join(proposal_errors) + "；保留已写复盘，补提案后重报，不改已结束局或游戏规则。")
+        state.setdefault("proposal_repairs",{})[args.batch] = {"character":batch["character"],"runs":done,"state":"pending","reason":"postmortem proposal link audit failed"}
     retry_note = []
     for run in missing:
         info = state["runs"].setdefault(run, {"attempts": 1})
@@ -366,6 +393,7 @@ def cmd_finish(args):
         + "。",
         f"学习者的回报（最后有 json 块）：{out}；stderr：{err}" + (f"；完整事件流：{log_path}" if log_path else "") + "。",
         *ledger_lines(done),
+        "代码提案链：" + ("; ".join(proposal_errors) if proposal_errors else "通过或旧批次无新增协议；待派提案由调度器保存并自动派策略学习者。"),
         "按「学习闭环」处理回报：新的纯 bug 里阻塞性的按「卡死」的修法，其他追加到 notes/fix-queue-v4.md；打法或机制上的发现不用你处理。"
         "然后 python3 ops/paper_dataset.py --no-raw，decision-log 记一行，提交主目录仓库（只 add 自己改的文件，加上 notes/lessons.md 和 paper/materials/learning/ledger.jsonl）。",
     ]
@@ -375,6 +403,7 @@ def cmd_finish(args):
         lines.append("如果 stderr 或回报里是额度或登录错误：decision-log 记一行，复盘往后顺延，对局照常。")
     enqueue("learner-done", "\n".join(lines))
     check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    check_ascension_audits(state, batch.get("character", args.character))
     save_state(state)
     print("\n".join(lines))
     return 0
@@ -441,6 +470,7 @@ def cmd_status(args):
     waiting = [row["run_id"] for row in finished_runs(args.character) if row["run_id"] not in have]
     print(f"running batch: {busy or 'none'}; finished {args.character} runs without a post-mortem: {','.join(waiting) or 'none'}")
     print(f"ascension seen: {state['ascension']}")
+    print("ascension audits: " + json.dumps(state.get("ascension_audits",{}),ensure_ascii=False))
     save_state(state)
     return 0
 

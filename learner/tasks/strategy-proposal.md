@@ -20,17 +20,22 @@ Dai 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 - 读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
 - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
 
+## 1.1 派发提案与补链
+只读本次调度 batch 的 proposal_ids / proposal_repair。逐项读取专用队列的角色、证据、账本和保存的 Markdown，不忽略其他待处理 id。补链任务要核对原经验或已追加复盘，补提案与账本链接，不重复写历史复盘。最终每个派来的 id 都有 proposal_results：implemented/duplicate 带实际 live 祖先源码 commit 与理由；waiting 带具体缺数据理由，保留待新局重派。
+
+没有源码改动时保存 {{scratch}}/report.md，回报完整40位 base、fixes=[]、merged=null、report 路径以及逐项处置；工作树保持干净。合法的证据不足/已有实现不冒造合入、eval 版本或测试成功。代码实现按下一节验证上线。
+
 ## 2. 边界与实现
 - 依据已有证据提出并实现策略；涉及 Dai 尚未授权的架构调整先回报，不猜测批准。不得把待定项当成既定游戏规则。
 - 怪物血量与伤害按当前进阶从数据库取，第一个样本起就用；房间代价保留 5 个样本门槛。
-- 药水等同 0 费一次性牌：不加代价、不过滤、不否决，不加入提前喝药或留药代码规则。
+- 出牌、药水、SL、终局价值规则按本角色实盘证据决定；Roy 2026-10-07 已授权学习者有理由和数据时修改既有人定规则，原规则不是不可修改的前提。
 - 推演相同的选项标并列；DeepSeek 负责构筑、路线和休息，Jev 执行战斗；代码提供事实及参考排名，不删选项。
 - 每项实现单独提交，写明局号、层、回合、账本 id。代码注释英文，模型知识文本中文；铁甲行为若变化说明证据和原因。
 
 ## 3. 验证与记录
 - 用固定局面测试，不依赖刷新的知识 JSON，不调 LLM 或网络。源码撤掉时测试必须失败，恢复后通过，两次结果写回报。
 - mkdir -p "{{scratch}}"；export TMPDIR="{{scratch}}"；export PATH=$HOME/.local/node/bin:$PATH；每次代码提交前在 agent/ 跑 bash tools/test-sandbox.sh，退出码为 0。高负载超时重跑一次并报告。
-- 提交前 gitleaks 扫描，git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit，Co-Authored-By 写真实引擎和模型；不推送。
+- 提交前 gitleaks 扫描，git commit（使用本机全局身份，不设仓库级 user.*），Co-Authored-By 写真实引擎和模型；不推送。
 - 往文件写时间前先 date。只经 {{project_root}}/learner/ledger.py add/update 登记本角色提案、证据与提交；status=proposed，by=learner:strategy-proposal；不得直接改账本或标 shipped。
 
 ## 4. 合入（只有 merge = live 时做）
@@ -55,5 +60,15 @@ Dai 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 回报列出提案、证据局号/层/回合/账本 id、提交、撤源码失败与恢复通过、tsc/vitest结果、合入提交和版本、未实现原因。把 {{scratch}}/proposal.md 路径交运维；实际上线后由运维核实并登记 shipped。最后单独给 JSON：
 
 ```json
-{"task":"strategy-proposal","base":"...","runs":[],"fixes":[],"skipped":[],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":0}}
+{"task":"strategy-proposal","base":"...","runs":[],"fixes":[],"skipped":[],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":0}, "code_proposals": [], "implementation_domains": [], "report": "{{scratch}}/report.md"}
 ```
+
+
+## Roy 2026-10-07 学习授权与代码提案
+先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+
+最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。
+
+消费队列最终 JSON 还须加 `proposal_results:[{"id":"<派发id>","state":"waiting","reason":"具体缺数据原因"}]` 和 `report:"{{scratch}}/report.md"`；implemented/duplicate 另带实际 commit。
