@@ -19,7 +19,7 @@ A10 的 F48 胜只算该战胜利，不算整局通关；F49 是另一场独立 
 
 ## A10 数值与 F49 范围
 
-数值审计：`{"A10_fights": 89, "A10_opening_parts": 117, "A10_exact_hp_parts": 117, "A10_attack_definitions": 49, "A10_nearest_estimates": [{"enemy": "TEST_SUBJECT", "move": "BIG_POUNCE", "damage": {"perHit": 45, "hits": 1, "estimated": true, "from": 9, "ratio": 1, "logged": 45, "ratioN": 4, "ratioOwn": true, "ratioTo": 10}}], "all_simulated_opening_sources_match_audit": true, "all_successful_results_samples": 200, "result_pairs": 360}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
+数值审计：`{}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
 
 F49 实际结局 4 场；这个数量不足单独验证第二场 boss 的可靠性，仍只评估实际进入每战时的资源和单战胜败，没有评估 F48→F49 联合通关胜率。
 
@@ -559,11 +559,3 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 | VLZ6CCT8AQ0A | KNOWLEDGE_DEMON | 10 | 33 | 1 | 11 | ac321b1f+dirty | val | won |
 
 模拟失败原件：`[{"key": "K3676LU8B0UH:48:2:6525158984", "start": "t1", "error": "board: Error: no solve"}, {"key": "K3676LU8B0UH:48:2:6525158984", "start": "pre", "error": "board: Error: no solve"}]`。
-
-## 本次定期刷新与输入核验
-
-触发为新增 20 次实际 boss 结局；此前发布指纹为 `590b644745e0d8b341bae1b21e866a0e808a45e6999c4ab0be1fe6e3b23a84d2`，本次为 `77a99507591f214838210917aa6c2c53e4654e8a7d3aa8f582071869a3e0555d`。旧切点、107个调参 keys、160个旧样本的首回合状态/实际胜败/回合/种子索引逐项相同，新增20个样本全部进入验证，验证53→73；新增来源元数据只补 source.last_logged_hp / sl.reported_end_hp。原始帧按 byte offset/len/SHA256 全部180项核验，250次SL截断仍排除，未造实际死亡。
-
-A10输入审计：`{"A10_fights": 89, "A10_opening_parts": 117, "A10_exact_hp_parts": 117, "A10_attack_definitions": 49, "A10_nearest_estimates": [{"enemy": "TEST_SUBJECT", "move": "BIG_POUNCE", "damage": {"perHit": 45, "hits": 1, "estimated": true, "from": 9, "ratio": 1, "logged": 45, "ratioN": 4, "ratioOwn": true, "ratioTo": 10}}], "all_simulated_opening_sources_match_audit": true, "all_successful_results_samples": 200, "result_pairs": 360}`。当前固定模型已观察到的进阶数值与首批模型可不同；估值来源如上，完整逐招定义在 model-input-audit.json。26个原日志首击与数据库规范化值不同的开场已经由现有 normalizeCalibrationOpening 在本次重放时转换，全部成功模拟的 bossSource 均与审计相同，不是补做验证调参。F48/F49适用范围及低信度按上表保留；本次仍评估单战，并未拟合两场联合通关率。
-
-可复核档案：[本批固定目录](../../../experiments/boss-sim/silent/77a99507591f214838210917aa6c2c53e4654e8a7d3aa8f582071869a3e0555d/README.md)。其中 report.md 保留刷新入口的原始报告，published-report.md 是含本节输入审计的发布报告；completed.json 仍核验入口原件，audit-manifest.json 另外固定本节与补充审计，不改写旧归档。模拟代码与参数未在本批修改，来源模型为 `4c691142c099ac0e3505abbec5d04afec9ee796c`；这份校准不冒称之后的代码或知识刷新已经验证。
