@@ -1949,6 +1949,10 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
     player.fasten += card.fasten;
     playerPowers["FASTEN_POWER"] = player.fasten;
   }
+  if (card.thorns && card.type === "Power") {
+    player.thorns += card.thorns;
+    playerPowers["THORNS_POWER"] = player.thorns;
+  }
   if (card.dexterity) {
     player.dexterity += card.dexterity;
     playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + card.dexterity;
