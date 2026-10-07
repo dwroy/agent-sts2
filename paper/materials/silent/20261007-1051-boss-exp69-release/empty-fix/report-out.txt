@@ -1,0 +1,42 @@
+## 修 bug 回报
+
+- 合并基线：main → `0a0fe965780fd428fa3ba4647d033a55d0fc1192`
+- 修复：无新增，工作区干净。
+- 已被别人修掉的：升级预览丢“消耗”（0217）— `62ee292c`
+- 已被别人修掉的：勒紧后续防御格挡漏算（0218）— `1912b5e0`
+- 已被别人修掉的：蛇咬施毒遗漏（0219）— `06bb4617`
+- 已被别人修掉的：其余132项对应提交见[逐项核验清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-101303-fix-batch/already-fixed.md)。
+- 没修的：mod超时根因、Codex缓存实测 — 证据不足；boss模拟性能专项 — 太大；策略项 — 策略类；boss校准和Codex-only功能 — 已有独立任务。
+- 测试：tsc 退出码0；vitest 220文件 / 2331用例 / 退出码0；首轮通过，无重跑。
+- 合入：未新增合入。整枝预检发现20项记录、台账及论文冲突，按要求停止；135项既有修复均已在 live `75ba3f6e`。
+- 需要 Dai 定的事：保血、留药、全死排序与巨兽拖延、SL范围、完整boss时钟校准、路线预估、回血或锻造、小偷优先、A10第三幕第二boss、无色牌及懒惰估值。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "0a0fe965780fd428fa3ba4647d033a55d0fc1192",
+  "fixes": [],
+  "skipped": [
+    {"item": "mod请求超时根因", "reason": "证据不足"},
+    {"item": "Codex缓存命中实测", "reason": "证据不足：离线任务不调用真实LLM"},
+    {"item": "boss模拟性能及样本不足", "reason": "太大：需独立性能基准"},
+    {"item": "保血、留药、时钟、路线、休息等策略项", "reason": "策略类"},
+    {"item": "静默boss模拟校准", "reason": "已有独立授权任务"},
+    {"item": "Codex-only暂停及统计功能", "reason": "已有独立授权任务"},
+    {"item": "整枝合入live", "reason": "预检20项记录冲突；135项既有修复均已在live"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2331}
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11422-c4ca-7e20-8970-85943346f201
+轮数：1；工具调用：command_execution×44
+token：输入 152.5k、输出 14.5k（其中推理 6288）、cache 读 2792.6k、cache 写 0（命中 94.8%）
+成本：未提供
+耗时：471.7 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 8.5 s、首次工具 10.8 s、末次工具结束 446.2 s；工具内共 357.7 s，其余（模型生成、推理、网络）111.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×23 wait×2；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T10-13-05-01a11422-c4ca-7e20-8970-85943346f201.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-101303-fix-batch.jsonl
