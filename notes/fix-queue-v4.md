@@ -721,3 +721,14 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 - **非阻塞测试缺口**：20261007-113604-experience-update 固定发布92376ca3、树b37c82f6，tsc0/vitest1；274文件通过/1失败，3180通过/2失败/2跳过。agent/tests/brain-codex-usage.test.ts:548/:570 的 console WARNING/refresh note 数组为[]。tests/legacy-brain.ts createEngine 未传 note，而生产 src/brain/brain.ts createRouter 已传 note=(m)=>router.say(m)。学习者修固定测试辅助入口回调，保留两断言与 token/redaction 约束，固定夹具红绿、原入口沙箱和完整外部补测；不要改生产路由恢复回退或降低测试标准。无游戏账本 ID，不冒标 bug-infra/shipped。原失败日志 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log 永久保留，详情 paper/materials/silent/20261007-1235-events.md。普通 codex-dev 当前121034批次在跑，交队列由下一可用批次处理，不占用两项独立功能工作树。
 
 - 2026-10-07 13:08 同项补证：经验71固定发布33f02a6f/树e30f7a95完整tsc0/vitest1仍仅:548/:570旧note回调两断言；3180通过/2失败/2跳过。13:05事件与上一轮已经归档的原始日志按字节/SHA完全相同，沿用本项修复，不新开重复单、不回滚、不再请求完整补测。详情paper/materials/silent/20261007-1305-events.md及paper/materials/silent/20261007-1305-events/checks-dedup-pointer.json；生产Codex-only保持，测试修复保留断言与安全约束。
+
+## 2026-10-07 13:31 — 合后固定测试真实时钟缺口（非阻塞、纯测试基础设施）
+
+- 经验72固定合后03d50f0b2ae81f6f1b8800c6471c145580eb4668/树74ce797d1b74e52aab3e7b5d45b738e9e23e9303，原沙箱两worker tsc0/vitest1，225文件2394例通过、sl-any-draw.test.ts:193一失败；预期未知牌未建模说明，实际因真实时钟超过2000ms先返回搜索截断。经验源908a2ddd只改silent experience.json，相关测试/combat-plan/judge/turn-solver与源父逐字节相同。相同树、相同断言单worker复测sl-any-draw和paths两文件22例exit0、3.55s；原套件set -e导致paths未执行，由此次补齐。分次覆盖227文件2406例，首轮整套exit1不能改写为整套exit0，完整外部另交learner-recheck。
+- 学习者修固定测试的计时控制，区分未知牌语义与deadline截断；用固定时钟/预算夹具分别验证，保留原断言及真实超时/SL保守不确定保护，不加排除、不提升生产预算、不改游戏行为。仅纯测试缺口，无游戏账本ID，不冒标bug-infra/shipped。首失败paper/materials/silent/20261007-1315-events/ops-live-original-sandbox.txt与复测原件永久保留。
+
+## 2026-10-07 13:52 — 13:46完整检查与复盘新增纯bug（普通修复批次）
+
+- **非阻塞测试契约**：fix121034固定03d50f0b/74ce797d、经验72固定f56da22b/e2c64201，两份完整外部检查均tsc0/vitest1，3213通过/1失败/2跳过。旧helper note传递ccd8bb8e已修并实际合live；现在仅brain-codex-usage.test.ts:559的旧regex“codex is off until a read works”与现行“Codex cannot answer until a fresh read passes...30 s (then 2, 5, every 10 minutes)”不符。学习者修固定夹具契约及陈旧测试名称，保留警告只报一次、阻止Codex在未获新额度时答题、重试阶梯、token刷新和账户脱敏断言，禁止修改生产行为恢复DeepSeek/Jev/代码回退。无游戏账本ID；不冒标bug-infra/shipped。两份原失败永存，定位与SHA见paper/materials/silent/20261007-1346-events/checks-summary.json；与13:31真实时钟夹具项一并修，之后新树交调度器完整补测，不复跑相同旧树。
+- **非阻塞纯bug silent-0226（有对局证据）**：ULP4TN1GNHMK/F17首试T4、第三次T3，毒结算漏SLIPPERY_POWER本次1血限伤及消费1层，预测多报14/6伤；回溯首证2SU6XN2AEJRD/F17T1。学习者定位当前turn-solver.ts:1550/1552/2944、按原复盘证据修建模并补固定回归（撤源码失败/恢复通过），验证攻击/毒的限伤及减层分别正确、铁甲保持等价，勿把silent-0174难以杀灭9混为此项。账本保留0226原首证/先验/证据，修后自测自行合live，再由CLI登记shipped；本轮仍observed，不宣称整场转胜。原文paper/materials/silent/20261007-1346-events/postmortem.out.txt及ledger-original.jsonl。打法/机制条目0227由学习者闭环。
+- 普通132727-fix-batch仍运行，新证据交下一可用普通批次；A10和B4/B5独立批次保持，不抢工作树、不重复创建同项。

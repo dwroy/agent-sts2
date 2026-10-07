@@ -1,0 +1,132 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/ops-autoplay-reload.test.ts (14 tests | 14 failed) 1112ms
+     × same_play_is_transferred_after_new_shell_acknowledges_and_receipt_pins_versions 130ms
+     × rejects_foreign_owners_wrong_paths_and_missing_exact_processes 120ms
+     × refuses_report_stop_after_and_duplicate_loops_or_play 123ms
+     × pidfile_mismatch_and_preflight_failure_leave_old_loop_running 120ms
+     × precommit_failures_restore_old_loop_and_preserve_play 121ms
+     × a_late_old_exit_keeps_old_owner_and_stages_takeover_with_an_explicit_failure 119ms
+     × identity_checks_reject_pid_reuse_before_signalling 126ms
+     × a_new_exit_after_retiring_old_explicitly_recovers_the_same_play 120ms
+     × old_loop_resumes_even_if_restoring_the_pidfile_fails 125ms
+     × allows exactly two explicit PIDs through the broker 2ms
+     × forwards the exact PIDs and configured paths through the dedicated action 1ms
+     × acknowledges WAIT_PID before entering the loop and refuses a missing or ended play PID 0ms
+     × keeps the new shell behind its barrier until the permitted old shell has exited 2ms
+     × restores the verified old shell when its broker dies before permitting takeover 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > same_play_is_transferred_after_new_shell_acknowledges_and_receipt_pins_versions
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > rejects_foreign_owners_wrong_paths_and_missing_exact_processes
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > refuses_report_stop_after_and_duplicate_loops_or_play
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > pidfile_mismatch_and_preflight_failure_leave_old_loop_running
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > precommit_failures_restore_old_loop_and_preserve_play
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > a_late_old_exit_keeps_old_owner_and_stages_takeover_with_an_explicit_failure
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > identity_checks_reject_pid_reuse_before_signalling
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > a_new_exit_after_retiring_old_explicitly_recovers_the_same_play
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > old_loop_resumes_even_if_restoring_the_pidfile_fails
+AssertionError: Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent/tests/autoplay_reload_test.py", line 10, in <module>
+    SPEC.loader.exec_module(MODULE)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/codex-dev/ops/autoplay-reload.py'
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ops-autoplay-reload.test.ts:26:58
+     24|       encoding: "utf8", timeout: 5000,
+     25|     });
+     26|     expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                          ^
+     27|     expect(result.stderr).toContain("OK");
+     28|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > allows exactly two explicit PIDs through the broker
+AssertionError: expected undefined to deeply equal { args: 2, ms: 30000 }
+
+- Expected:
+{
+  "args": 2,
+  "ms": 30000,
+}
+
++ Received:
+undefined
+
+ ❯ tests/ops-autoplay-reload.test.ts:31:40
+     29|
+     30|   it("allows exactly two explicit PIDs through the broker", () => {
+     31|     expect(ACTIONS["autoplay-reload"]).toEqual({ args: 2, ms: 30_000 }…
+       |                                        ^
+     32|     expect(validateRequest({ action: "autoplay-reload", args: ["10", "…
+     33|     for (const args of [[], ["10"], ["10", "20", "30"], ["1", "20"], […
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > forwards the exact PIDs and configured paths through the dedicated action
+TypeError: Cannot read properties of undefined (reading 'split')
+ ❯ tests/ops-autoplay-reload.test.ts:40:59
+     38|   it("forwards the exact PIDs and configured paths through the dedicat…
+     39|     const source = readFileSync("../ops/codex-ops-actions.sh", "utf8");
+     40|     const branch = source.split("  autoplay-reload)\n")[1]!.split("  a…
+       |                                                           ^
+     41|     const script = `
+     42| ROOT=/fixture; OPS=/fixture/ops; LIVE=/fixture/.worktrees/live; DIR=/f…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > acknowledges WAIT_PID before entering the loop and refuses a missing or ended play PID
+TypeError: Cannot read properties of undefined (reading 'split')
+ ❯ tests/ops-autoplay-reload.test.ts:63:67
+     61|   it("acknowledges WAIT_PID before entering the loop and refuses a mis…
+     62|     const source = readFileSync("../ops/autoplay.sh", "utf8");
+     63|     const block = source.split("# AUTOPLAY_READY: acknowledge")[1]!.sp…
+       |                                                                   ^
+     64|     const prelude = block.slice(block.indexOf("\n") + 1);
+     65|     for (const [waitPid, alive, expected] of [["20", true, 0], ["", tr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > keeps the new shell behind its barrier until the permitted old shell has exited
+TypeError: Cannot read properties of undefined (reading 'split')
+ ❯ tests/ops-autoplay-reload.test.ts:83:67
+     81|   it("keeps the new shell behind its barrier until the permitted old s…
+     82|     const source = readFileSync("../ops/autoplay.sh", "utf8");
+     83|     const block = source.split("# AUTOPLAY_READY: acknowledge")[1]!.sp…
+       |                                                                   ^
+     84|     const fixture = join(scratch, "barrier");
+     85|     mkdirSync(join(fixture, "proc", "10"), { recursive: true });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  tests/ops-autoplay-reload.test.ts > autoplay reload with a continuing play process > restores the verified old shell when its broker dies before permitting takeover
+TypeError: Cannot read properties of undefined (reading 'split')
+ ❯ tests/ops-autoplay-reload.test.ts:109:67
+    107|   it("restores the verified old shell when its broker dies before perm…
+    108|     const source = readFileSync("../ops/autoplay.sh", "utf8");
+    109|     const block = source.split("# AUTOPLAY_READY: acknowledge")[1]!.sp…
+       |                                                                   ^
+    110|     const fixture = join(scratch, "broker-exit");
+    111|     mkdirSync(join(fixture, "proc", "10"), { recursive: true });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed (14)
+   Start at  12:40:31
+   Duration  1.81s (transform 477ms, setup 285ms, import 292ms, tests 1.11s, environment 0ms)
+
