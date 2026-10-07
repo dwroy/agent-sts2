@@ -1,0 +1,1762 @@
+commit 3f69541b5d3259dac94d3395bfe3da47936b4de9
+Author:     Roy <me@dwroy.com>
+AuthorDate: Thu Oct 8 00:33:05 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Thu Oct 8 00:33:05 2026 +0800
+
+    Audit observed enemy HP changes in Silent replays
+    
+    Evidence: XP2SL33HT0D9 A10 F31 T1-T8; ledger silent-0039; proposal silent-proposal-5a40291d1a3e80ca. Separate visible HP loss, net live HP and newly observed or revived HP; preserve unknown death frames and repeated-type identities. Keep existing resource fields and other character output unchanged.
+    
+    Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+    Agent: codex@xdwin1
+
+diff --git a/learner/resource_chain.py b/learner/resource_chain.py
+index beac3778..11cfe9fa 100644
+--- a/learner/resource_chain.py
++++ b/learner/resource_chain.py
+@@ -7,6 +7,92 @@ from pathlib import Path
+ 
+ RUN_ID = re.compile(r'^[A-Z0-9]{12}$')
+ 
++def enemy_observation(state, current):
++    """Retain every body; enemy_id identifies a type, not a persistent instance."""
++    enemies = (state.get('combat') or {}).get('enemies')
++    return {'line': current['line'], 'ts': current['ts'], 'turn': current['turn'],
++            'enemies': None if enemies is None else [
++                {k: enemy.get(k) for k in ('index', 'enemy_id', 'current_hp', 'max_hp', 'is_alive')}
++                for enemy in enemies]}
++
++
++def observed_enemy_hp(observation):
++    enemies = observation['enemies']
++    if enemies is None or any(type(e['current_hp']) is not int or type(e['is_alive']) is not bool for e in enemies):
++        return None
++    return sum(e['current_hp'] for e in enemies if e['is_alive'])
++
++
++def enemy_hp_audit(observations):
++    """Separate visible HP decreases from net live HP; never fill unobserved deaths."""
++    turns = []
++    for before, after in zip(observations, observations[1:]):
++        if not turns or turns[-1]['turn'] != before['turn']:
++            turns.append({'turn': before['turn'], 'start_line': before['line'],
++                          'live_enemy_hp_start': observed_enemy_hp(before),
++                          'visible_enemy_hp_loss_lower_bound': 0, 'observed_hp_added': 0,
++                          'damage_total': None, 'gaps': [], 'transitions': []})
++        turn = turns[-1]
++        start, end = observed_enemy_hp(before), observed_enemy_hp(after)
++        transition = {'from_line': before['line'], 'to_line': after['line'],
++                      'visible_enemy_hp_loss_lower_bound': 0, 'observed_hp_added': 0,
++                      'net_live_enemy_hp_loss': start - end if start is not None and end is not None else None,
++                      'events': [], 'gaps': []}
++        if before['enemies'] is None or after['enemies'] is None:
++            transition['gaps'].append('missing_enemy_frame')
++        else:
++            def groups(enemies):
++                result = {}
++                for enemy in enemies:
++                    result.setdefault(enemy['enemy_id'], []).append(enemy)
++                return result
++            old, new = groups(before['enemies']), groups(after['enemies'])
++            for ident in sorted(set(old) | set(new), key=str):
++                left, right = old.get(ident, []), new.get(ident, [])
++                event = {'enemy_id': ident, 'before': left, 'after': right}
++                if not ident or len(left) > 1 or len(right) > 1:
++                    event['kind'] = 'identity_ambiguous'
++                    transition['gaps'].append('ambiguous_enemy_identity')
++                elif any(type(e['current_hp']) is not int or type(e['is_alive']) is not bool for e in left + right):
++                    event['kind'] = 'unknown_hp'
++                    transition['gaps'].append('unknown_enemy_hp')
++                elif not left:
++                    event['kind'] = 'newly_observed_body'
++                    transition['observed_hp_added'] += right[0]['current_hp'] if right[0]['is_alive'] else 0
++                elif not right:
++                    event['kind'] = 'removed_body'
++                    if left[0]['is_alive'] and left[0]['current_hp'] > 0:
++                        transition['gaps'].append('body_removed_without_death_frame')
++                elif left[0]['max_hp'] != right[0]['max_hp']:
++                    event['kind'] = 'identity_ambiguous'
++                    transition['gaps'].append('changed_max_hp_identity_unknown')
++                else:
++                    delta = left[0]['current_hp'] - right[0]['current_hp']
++                    event['kind'] = 'visible_hp_decrease' if delta > 0 else 'hp_increase' if delta < 0 else 'unchanged'
++                    transition['visible_enemy_hp_loss_lower_bound'] += max(0, delta)
++                    transition['observed_hp_added'] += max(0, -delta)
++                    if delta < 0:
++                        if not left[0]['is_alive'] and right[0]['is_alive']:
++                            event['kind'] = 'observed_revival'
++                        else:
++                            transition['gaps'].append('hp_increase_without_intermediate_death_frame')
++                if event['kind'] != 'unchanged':
++                    transition['events'].append(event)
++        turn['transitions'].append(transition)
++        turn['end_line'] = after['line']
++        turn['live_enemy_hp_end'] = end
++        initial = turn['live_enemy_hp_start']
++        turn['net_live_enemy_hp_loss'] = initial - end if initial is not None and end is not None else None
++        for key in ('visible_enemy_hp_loss_lower_bound', 'observed_hp_added'):
++            turn[key] += transition[key]
++        turn['gaps'] = sorted(set(turn['gaps'] + transition['gaps']))
++    return {'observations': observations, 'turns': turns,
++            'limitations': ['Visible HP decreases are a lower bound, not a complete damage log.',
++                            'New bodies and HP increases are observed additions, not inferred healing or summon counts.',
++                            'Unique enemy types can be aligned across index changes; repeated types remain ambiguous.',
++                            'Missing deaths, revival intermediate frames and damage sources are not reconstructed.']}
++
++
+ def resources(state):
+     run = state.get('run') or {}
+     hp = run.get('current_hp')
+@@ -35,6 +121,10 @@ def resource_chain(entries, run_id, character, attempt_starts=None):
+                    type(turn) is int and turn == 1 and type(active['last'].get('turn')) is int and active['last']['turn'] > 1) or sl_restart
+         closed = None
+         if active is not None and (not combat or floor != active['floor'] or restart):
++            if character == 'silent':
++                if not combat and floor == active['floor']:
++                    active['enemy_observations'].append(enemy_observation(state, current))
++                active['enemy_hp_audit'] = enemy_hp_audit(active.pop('enemy_observations'))
+             active['exit'] = current if not combat and floor == active['floor'] else None
+             active['end'] = 'observed_exit' if active['exit'] else 'restart_observed' if restart else 'missing_exit'
+             active['observed_net_hp_loss'] = (active['entry']['hp'] - active['exit']['hp']
+@@ -48,6 +138,8 @@ def resource_chain(entries, run_id, character, attempt_starts=None):
+             active = {'sequence': sequence, 'floor': floor, 'entry': current, 'entry_is_turn_one': turn == 1,
+                       'enemies': sorted({e.get('enemy_id') for e in enemies if e.get('enemy_id')}),
+                       'last': current, 'changes': [], 'outcome': 'unclassified; verify combat/SL evidence'}
++            if character == 'silent':
++                active['enemy_observations'] = []
+         if previous and (current['hp'] != previous['hp'] or current['potions'] != previous['potions']):
+             owner = closed or (active if not opened and not restart else None)
+             event = {'from': previous, 'to': current, 'combat_sequence': owner['sequence'] if owner else None,
+@@ -57,8 +149,12 @@ def resource_chain(entries, run_id, character, attempt_starts=None):
+                 owner['changes'].append(event)
+         if active:
+             active['last'] = current
++            if character == 'silent':
++                active['enemy_observations'].append(enemy_observation(state, current))
+         previous = current
+     if active:
++        if character == 'silent':
++            active['enemy_hp_audit'] = enemy_hp_audit(active.pop('enemy_observations'))
+         active.update(exit=None, end='missing_exit', observed_net_hp_loss=None)
+         windows.append(active)
+     return {'run': run_id, 'character': character, 'combats': windows, 'resource_changes': changes,
+diff --git a/learner/tests/silent-summon-hp-evidence.json b/learner/tests/silent-summon-hp-evidence.json
+new file mode 100644
+index 00000000..f0f99ecd
+--- /dev/null
++++ b/learner/tests/silent-summon-hp-evidence.json
+@@ -0,0 +1,1490 @@
++{
++  "run": "XP2SL33HT0D9",
++  "character": "silent",
++  "ascension": 10,
++  "floor": 31,
++  "ledger": [
++    "silent-0039"
++  ],
++  "source": "logs/states.jsonl:277971-278013; raw frames verified in task scratch",
++  "snapshots": [
++    {
++      "_line": 277971,
++      "ts": "2026-10-07T09:43:23.141Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 1,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 129,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277972,
++      "ts": "2026-10-07T09:43:26.986Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 1,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 129,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277973,
++      "ts": "2026-10-07T09:43:27.884Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 1,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 114,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277974,
++      "ts": "2026-10-07T09:43:29.231Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 1,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 114,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277975,
++      "ts": "2026-10-07T09:43:30.229Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 1,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 104,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277976,
++      "ts": "2026-10-07T09:43:32.020Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 1,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 104,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277977,
++      "ts": "2026-10-07T09:43:36.087Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 2,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 104,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277978,
++      "ts": "2026-10-07T09:43:39.564Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 2,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 104,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277979,
++      "ts": "2026-10-07T09:43:40.434Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 2,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 48,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 15,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 104,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277980,
++      "ts": "2026-10-07T09:43:47.841Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 3,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 45,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 9,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 98,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277981,
++      "ts": "2026-10-07T09:43:48.711Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 3,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 45,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 3,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 98,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277982,
++      "ts": "2026-10-07T09:43:49.567Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 3,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 45,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 3,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 92,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277983,
++      "ts": "2026-10-07T09:43:50.463Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 3,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 45,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 3,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 92,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277984,
++      "ts": "2026-10-07T09:43:51.599Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 3,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 45,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 3,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 88,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277985,
++      "ts": "2026-10-07T09:43:59.155Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 4,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 35,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 76,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277986,
++      "ts": "2026-10-07T09:44:00.283Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 4,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 35,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 11,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 66,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277987,
++      "ts": "2026-10-07T09:44:01.263Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 4,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 35,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 4,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 66,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277988,
++      "ts": "2026-10-07T09:44:02.232Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 4,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 35,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 66,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277989,
++      "ts": "2026-10-07T09:44:09.782Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 5,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 28,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 55,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277990,
++      "ts": "2026-10-07T09:44:10.673Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 5,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 28,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 55,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277991,
++      "ts": "2026-10-07T09:44:11.695Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 5,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 28,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 4,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 55,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277992,
++      "ts": "2026-10-07T09:44:20.324Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 6,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 28,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 45,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277993,
++      "ts": "2026-10-07T09:44:21.103Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 6,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 28,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 45,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277994,
++      "ts": "2026-10-07T09:44:22.140Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 6,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 28,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 45,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277995,
++      "ts": "2026-10-07T09:44:23.189Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 6,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 28,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 45,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277996,
++      "ts": "2026-10-07T09:44:30.677Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 7,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 27,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 21,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 36,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277997,
++      "ts": "2026-10-07T09:44:31.541Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 7,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 27,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 13,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 36,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277998,
++      "ts": "2026-10-07T09:44:32.369Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 7,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 27,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 13,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 36,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 277999,
++      "ts": "2026-10-07T09:44:33.414Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 7,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 27,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 13,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 36,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278000,
++      "ts": "2026-10-07T09:44:34.270Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 7,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 27,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 7,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 36,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278001,
++      "ts": "2026-10-07T09:44:40.375Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 7,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 28,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278002,
++      "ts": "2026-10-07T09:44:41.254Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 7,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 20,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278003,
++      "ts": "2026-10-07T09:44:42.640Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 7,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 15,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278004,
++      "ts": "2026-10-07T09:44:43.805Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 7,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 15,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278005,
++      "ts": "2026-10-07T09:44:44.838Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 1,
++              "max_hp": 21,
++              "is_alive": true
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 15,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278006,
++      "ts": "2026-10-07T09:44:45.708Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 15,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278007,
++      "ts": "2026-10-07T09:44:46.626Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 8,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278008,
++      "ts": "2026-10-07T09:44:47.639Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": true,
++        "turn": 8,
++        "screen": "COMBAT",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            },
++            {
++              "index": 1,
++              "enemy_id": "THE_OBSCURA",
++              "current_hp": 1,
++              "max_hp": 129,
++              "is_alive": true
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278009,
++      "ts": "2026-10-07T09:44:49.830Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": false,
++        "turn": 8,
++        "screen": "REWARD",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278010,
++      "ts": "2026-10-07T09:44:50.030Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": false,
++        "turn": 8,
++        "screen": "REWARD",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278011,
++      "ts": "2026-10-07T09:45:09.688Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": false,
++        "turn": 8,
++        "screen": "REWARD",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278012,
++      "ts": "2026-10-07T09:45:09.862Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": false,
++        "turn": 8,
++        "screen": "REWARD",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            }
++          ]
++        }
++      }
++    },
++    {
++      "_line": 278013,
++      "ts": "2026-10-07T09:45:10.105Z",
++      "state": {
++        "run_id": "XP2SL33HT0D9",
++        "in_combat": false,
++        "turn": 8,
++        "screen": "MAP",
++        "run": {
++          "character_id": "SILENT",
++          "ascension": 10,
++          "floor": 31,
++          "current_hp": 25,
++          "max_hp": 76,
++          "potions": []
++        },
++        "combat": {
++          "enemies": [
++            {
++              "index": 0,
++              "enemy_id": "PARAFRIGHT",
++              "current_hp": 0,
++              "max_hp": 21,
++              "is_alive": false
++            }
++          ]
++        }
++      }
++    }
++  ]
++}
+diff --git a/learner/tests/test_enemy_hp_audit.py b/learner/tests/test_enemy_hp_audit.py
+new file mode 100644
+index 00000000..31603ef1
+--- /dev/null
++++ b/learner/tests/test_enemy_hp_audit.py
+@@ -0,0 +1,117 @@
++"""Fixed Silent observations; damage gaps are not filled by a simulator."""
++import copy
++import importlib.util
++import json
++from pathlib import Path
++import unittest
++
++spec = importlib.util.spec_from_file_location('resources', Path(__file__).parents[1] / 'resource_chain.py')
++module = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(module)
++EVIDENCE = json.loads(Path(__file__).with_name('silent-summon-hp-evidence.json').read_text())
++
++
++def observation(line, enemies, turn=1):
++    return {'line': line, 'ts': str(line), 'turn': turn, 'enemies': enemies}
++
++
++def enemy(ident, hp, index=0, alive=True, max_hp=30):
++    return {'index': index, 'enemy_id': ident, 'current_hp': hp, 'max_hp': max_hp, 'is_alive': alive}
++
++
++class EnemyHpAudit(unittest.TestCase):
++    def fight(self):
++        return module.resource_chain(EVIDENCE['snapshots'], EVIDENCE['run'], 'silent')['combats'][0]
++
++    def test_f31_separates_damage_summon_and_revival_from_net_hp(self):
++        fight = self.fight()
++        turns = fight['enemy_hp_audit']['turns']
++        self.assertEqual([t['turn'] for t in turns], list(range(1, 9)))
++        self.assertEqual([t['net_live_enemy_hp_loss'] for t in turns], [4, 18, 10, 21, 10, 9, 22, 35])
++        self.assertEqual([t['visible_enemy_hp_loss_lower_bound'] for t in turns], [25, 18, 28, 42, 27, 9, 22, 34])
++        self.assertEqual([t['observed_hp_added'] for t in turns], [21, 0, 18, 21, 17, 0, 0, 0])
++        self.assertEqual(fight['observed_net_hp_loss'], 23)
++        self.assertEqual(fight['entry']['hp'], 48)
++        self.assertEqual(fight['exit']['hp'], 25)
++        self.assertEqual(fight['entry']['potions'], [])
++        self.assertEqual(fight['enemies'], ['THE_OBSCURA'])
++        # The first reward frame closes the window; later reward refreshes are outside it.
++        self.assertEqual(len(fight['enemy_hp_audit']['observations']), 39)
++        self.assertEqual(fight['enemy_hp_audit']['observations'][-1]['line'], 278009)
++
++    def test_missing_poison_death_frames_and_last_hp_are_unknown(self):
++        turns = self.fight()['enemy_hp_audit']['turns']
++        for idx in (2, 4):
++            self.assertIn('hp_increase_without_intermediate_death_frame', turns[idx]['gaps'])
++            self.assertIsNone(turns[idx]['damage_total'])
++        self.assertIn('body_removed_without_death_frame', turns[7]['gaps'])
++        self.assertIsNone(turns[7]['damage_total'])
++        revival = [e for t in turns[3]['transitions'] for e in t['events'] if e['kind'] == 'observed_revival']
++        self.assertEqual(len(revival), 1)
++        self.assertEqual(revival[0]['before'][0]['current_hp'], 0)
++        self.assertEqual(revival[0]['after'][0]['current_hp'], 21)
++
++    def test_unique_type_alignment_survives_index_reordering(self):
++        turns = module.enemy_hp_audit([
++            observation(1, [enemy('MAIN', 30)]),
++            observation(2, [enemy('SUMMON', 21), enemy('MAIN', 20, 1)])])['turns']
++        self.assertEqual(turns[0]['visible_enemy_hp_loss_lower_bound'], 10)
++        self.assertEqual(turns[0]['observed_hp_added'], 21)
++        self.assertEqual(turns[0]['net_live_enemy_hp_loss'], -11)
++        self.assertEqual(turns[0]['gaps'], [])
++
++    def test_repeated_types_keep_both_bodies_and_do_not_guess_identity(self):
++        before = [enemy('SAME', 10), enemy('SAME', 20, 1)]
++        after = [enemy('SAME', 8), enemy('SAME', 9, 1)]
++        turns = module.enemy_hp_audit([observation(1, before), observation(2, after)])['turns']
++        self.assertEqual(turns[0]['net_live_enemy_hp_loss'], 13)
++        self.assertEqual(turns[0]['visible_enemy_hp_loss_lower_bound'], 0)
++        self.assertIn('ambiguous_enemy_identity', turns[0]['gaps'])
++        event = turns[0]['transitions'][0]['events'][0]
++        self.assertEqual(event['before'], before)
++        self.assertEqual(event['after'], after)
++
++    def test_missing_enemy_frame_and_changed_max_hp_are_not_damage(self):
++        for after in (None, [enemy('MAIN', 10, max_hp=40)]):
++            turn = module.enemy_hp_audit([
++                observation(1, [enemy('MAIN', 30)]), observation(2, after)])['turns'][0]
++            self.assertEqual(turn['visible_enemy_hp_loss_lower_bound'], 0)
++            self.assertTrue(turn['gaps'])
++            self.assertIsNone(turn['damage_total'])
++
++    def test_absent_hp_does_not_become_zero(self):
++        turn = module.enemy_hp_audit([
++            observation(1, [enemy('MAIN', 30)]), observation(2, [enemy('MAIN', None)])])['turns'][0]
++        self.assertIsNone(turn['net_live_enemy_hp_loss'])
++        self.assertEqual(turn['visible_enemy_hp_loss_lower_bound'], 0)
++        self.assertIn('unknown_enemy_hp', turn['gaps'])
++
++    def test_restart_and_other_floor_do_not_create_damage_transitions(self):
++        rows = copy.deepcopy(EVIDENCE['snapshots'][:4])
++        restart = copy.deepcopy(rows[0])
++        restart['_line'] = 300000
++        restart['ts'] = '2026-10-07T12:00:00.000Z'
++        result = module.resource_chain(rows + [restart], EVIDENCE['run'], 'silent',
++                                       {31: ['2026-10-07T11:00:00.000Z']})
++        self.assertEqual(len(result['combats']), 2)
++        self.assertEqual(result['combats'][0]['end'], 'restart_observed')
++        self.assertEqual(result['combats'][0]['enemy_hp_audit']['turns'][0]['observed_hp_added'], 0)
++        self.assertEqual(result['combats'][1]['enemy_hp_audit']['turns'], [])
++        restart['state']['run']['floor'] = 32
++        result = module.resource_chain(rows + [restart], EVIDENCE['run'], 'silent')
++        self.assertEqual(result['combats'][0]['end'], 'missing_exit')
++        self.assertEqual(result['combats'][0]['enemy_hp_audit']['turns'][0]['observed_hp_added'], 0)
++
++    def test_other_characters_retain_original_resource_output(self):
++        rows = copy.deepcopy(EVIDENCE['snapshots'][:2])
++        for row in rows:
++            row['state']['run']['character_id'] = 'IRONCLAD'
++        fight = module.resource_chain(rows, EVIDENCE['run'], 'ironclad')['combats'][0]
++        self.assertNotIn('enemy_hp_audit', fight)
++        self.assertNotIn('enemy_observations', fight)
++        self.assertEqual(fight['entry']['hp'], 48)
++        self.assertEqual(fight['enemies'], ['THE_OBSCURA'])
++
++
++if __name__ == '__main__':
++    unittest.main()
