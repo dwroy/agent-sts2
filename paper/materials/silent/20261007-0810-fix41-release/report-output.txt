@@ -1,0 +1,66 @@
+## 修 bug 回报
+
+- 合并基线：main → `e0064f7cdff0202b4dc00bc3b21165a03fbc7866`
+- 修复：毒杀胜利分支漏算持牌毒素伤害（TKXQ6L4N9A6U F22 T6，silent-0213） — `2e6fa2e5` — 测试 [silent-poison-held.test.ts](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent/tests/silent-poison-held.test.ts:46)：`F22 T6: two held Toxic cards kill the player before either poison or enemy attack` — 去掉修复时失败：是；撤源码7败2过，恢复9过。共用模型对其他角色的同型毒终结也修正，原因已记录。
+- 已被别人修掉的：旧队列130项 — 逐项提交及祖先校验见[已修清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-072650-fix-batch/already-fixed.json)。
+- 没修的：mod 超时自愈、Codex 缓存命中实测 — 证据不足。
+- 没修的：boss 整场模拟性能 — 太大，需独立性能专项。
+- 没修的：静默跨进阶 boss 模拟校准 — 队列明确要求独立功能批次，本批仅修纯 bug。
+- 没修的：保血、留药、时钟、路线、休息等策略项 — 策略类。
+- 测试：源及合后 tsc 退出码0；vitest 均216文件／2308用例／退出码0。旧稿回血边界失败后，冻结定稿整套重跑通过；无超时重跑。完整外部套件待调度器补跑。
+- 合入：`f65cbfac6c4aeeccbe4a0dffd19a86e6087b30b7`，版本 `S1.fix41`；账本仅登记 proposed，上线记录和[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-072650-fix-batch/handoff-ops.md)已完成。
+- 需要 Dai 定的事：保血、留药、全死排序、巨兽拖延、SL范围、boss时钟校准、路线／休息、小偷优先、A10第三幕第二boss、无色牌及懒惰平均出牌估值。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "e0064f7cdff0202b4dc00bc3b21165a03fbc7866",
+  "fixes": [
+    {
+      "item": "毒杀胜利分支漏算持牌毒素伤害（silent-0213；TKXQ6L4N9A6U F22 T6）",
+      "commit": "2e6fa2e5c68be70efb2ee87bee58f2cb3128bfb2",
+      "test": "agent/tests/silent-poison-held.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "mod请求超时自愈",
+      "reason": "证据不足：内部根因未定位"
+    },
+    {
+      "item": "Codex缓存命中实测",
+      "reason": "证据不足：离线环境没有受控实测"
+    },
+    {
+      "item": "boss整场模拟性能",
+      "reason": "太大：需要独立性能专项"
+    },
+    {
+      "item": "保血、留药、全死排序、时钟、路线、休息等",
+      "reason": "策略类：本批不改"
+    },
+    {
+      "item": "静默跨进阶boss模拟校准",
+      "reason": "独立功能批次：队列明确禁止与纯bug混批"
+    }
+  ],
+  "merged": "f65cbfac6c4aeeccbe4a0dffd19a86e6087b30b7",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2308
+  }
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1138a-941e-7d31-af4e-9a5ff0236a69
+轮数：1；工具调用：command_execution×67 file_change×12
+token：输入 220.4k、输出 70.5k（其中推理 47.1k）、cache 读 9080.1k、cache 写 0（命中 97.6%）
+成本：未提供
+耗时：1881.5 s（墙钟）
+时间：首个事件 1.8 s、模型首个输出 6.5 s、首次工具 7.3 s、末次工具结束 1743.7 s；工具内共 1073.3 s，其余（模型生成、推理、网络）806.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×64；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T07-26-51-01a1138a-941e-7d31-af4e-9a5ff0236a69.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-072650-fix-batch.jsonl
