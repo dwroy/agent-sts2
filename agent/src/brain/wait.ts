@@ -78,14 +78,23 @@ export class BrainWait {
       next_retry: a.next === null ? null : new Date(a.next).toISOString(), suspended_ms: this.suspendedMs,
       budget_policy: "outage_time_excluded", original_budget_ms: this.options.originalBudgetMs ?? null,
     };
-    this.options.event?.(event);
-    if (state !== "heartbeat") this.options.notify?.(event);
+    try {
+      this.options.event?.(event);
+      if (state !== "heartbeat") this.options.notify?.(event);
+    } catch (error) {
+      throw new BrainBlockedError("fault", `Codex wait ${state} could not be recorded (run ${event.run_id ?? "unknown"}, question ${event.question_id}): ${error instanceof Error ? error.message : String(error)}`, error);
+    }
   }
 
   pause(req: BrainRequest, reason: string, began = this.now()): void {
     if (this.active) { this.active.reason = reason; return; }
     this.active = { req, began, reason, retries: 0, next: null };
-    this.emit("paused");
+    try { this.emit("paused"); }
+    catch (error) {
+      this.completedMs += Math.max(0, this.now() - this.active.began);
+      this.active = null;
+      throw error;
+    }
     this.timer = setInterval(() => {
       try { this.emit("heartbeat"); }
       catch (error) { this.heartbeatFailure = error; clearInterval(this.timer); }
@@ -113,9 +122,11 @@ export class BrainWait {
     if (!this.active && req) this.active = { req, began: this.now(), reason: reason ?? state, retries: 0, next: null };
     if (reason && this.active) this.active.reason = reason;
     clearInterval(this.timer);
-    this.emit(state);
-    if (this.active) this.completedMs += Math.max(0, this.now() - this.active.began);
-    this.active = null;
+    try { this.emit(state); }
+    finally {
+      if (this.active) this.completedMs += Math.max(0, this.now() - this.active.began);
+      this.active = null;
+    }
   }
 }
 

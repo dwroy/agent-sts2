@@ -3,13 +3,16 @@
 # Local HTTP server suites also cannot run: the sandbox denies listen(127.0.0.1) with EPERM.
 # The scheduler runs every excluded file in the full suite outside the sandbox after a live merge.
 # execFileSync wrappers receive EPERM even after exit 0; config tests read denied .env fixtures.
-# Four threads keep the runner within four OS processes; all other tests remain enabled.
+# Up to four threads keep the runner within four OS processes; all other tests remain enabled.
+# A single worker avoids test-to-test CPU contention in wall-clock-bounded planner fixtures.
 set -eu
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export PATH="$HOME/.local/node/bin:$PATH"
 export npm_config_offline=true
+workers="${SANDBOX_WORKERS:-4}"
+case "$workers" in 1|2|3|4) ;; *) echo "SANDBOX_WORKERS must be 1, 2, 3 or 4" >&2; exit 2 ;; esac
 nice -n 19 npx tsc -p tsconfig.json --noEmit
-nice -n 19 npx vitest run --pool=threads --maxWorkers=4 --exclude tests/paths.test.ts \
+nice -n 19 npx vitest run --pool=threads --maxWorkers="$workers" --exclude tests/paths.test.ts \
   --exclude tests/brain-codex.test.ts \
   --exclude tests/brain-codex-session.test.ts \
   --exclude tests/brain-codex-usage.test.ts \
