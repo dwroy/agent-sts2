@@ -646,4 +646,12 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - **可信名单**：仍按原标准逐个 boss 判——验证集 ≥ 10 场、校准 Brier ≤ 整体 1.25 倍、预测与实际胜率差 ≤ 15 个百分点、被打穿的血模拟/日志 0.7–1.3。达标的进 knowledge/characters/silent/boss-trust.json（tools/boss-sim/trust.py 加 --character silent），不达标的保持低可信并写明还差多少场；之后按每批新 boss 战定期重跑（例如每升一级或每 20 场 boss 战），新达标的自动进名单。
 - 这是用 agent 自己对局数据做的校准，符合学习协议；不引入人写的打法知识。结果写 paper/materials/silent/boss-sim-calibration.md，台账登记，自测通过按 live 流程合入，改变题面的上线加 eval 版本。
 
-- **Roy已授权的独立高优先功能批次（2026-10-07 07:26运维转录07:25 manual）**：只做上节静默boss模拟校准，任务详见`notes/silent-boss-calibration-task-20261007.md`。借现有fix-batch调度通道启动，任务是新功能／架构，不能归为纯bug或与silent-0213及其他修复混批。本轮Roy明确授权该校准方式、可信标准、定期重跑、论文报告和台账/live上线，按专用任务说明执行；不改运维prompt。其他队列仍保持待处理，完成事件由运维据实际发布登记和结案。
+- Roy已授权的独立高优先功能批次（2026-10-07 07:26运维转录07:25 manual）：只做上节静默boss模拟校准，任务详见`notes/silent-boss-calibration-task-20261007.md`。借现有fix-batch调度通道启动，任务是新功能／架构，不能归为纯bug或与silent-0213及其他修复混批。本轮Roy明确授权该校准方式、可信标准、定期重跑、论文报告和台账/live上线，按专用任务说明执行；不改运维prompt。其他队列仍保持待处理，完成事件由运维据实际发布登记和结案。
+
+- 2026-10-07 07:54 派发更正：072650-fix-batch实际执行silent-0213纯bug，旧07:29校准已派判断有误，原记录保留；静默boss新功能现已独立派到20261007-075131-fix-batch，模板learner/tasks/silent-boss-calibration.md，独占.worktrees/silent-boss-calibration，request=20261007-0725-roy-boss-calibration。本功能仍在执行，未完成/未shipped；不作为默认纯bug队列触发，不与原修复混批。完整交接paper/materials/silent/20261007-0725-calibration-dispatch.md。
+
+## 2026-10-07 08:00 静默复盘：已建模中毒仍触发攻击八折（交学习者）
+
+- [ ] **非阻塞纯 bug，silent-0216，仅转录学习者定位**：`agent/src/reflex/combat-plan.ts:80/:135/:739/:793`已建模敌增益名单漏`POISON_POWER`，毒已进入结算预测，却仍标未知；`agent/src/reflex/turn-solver.ts:1460`因而将该敌攻击伤害逐击乘0.8。来源T3FW7R2R2306 SILENT A10 F8，多尼斯异鸟末战T3/T4/T5预测14/10/17、实18/13/23，少报4/3/6；毒结算本身正确。原回报`ops/codex-ops/learner/20261007-071301.out`，证据/原文及勘误归档`paper/materials/silent/20261007-0755-02hb-t3fw-postmortem.md`。
+- 首证按学习者勘误为K3676LU8B0UH SILENT A1 F15 T1（已有7毒结算且仍列未知）；F17 T2仅中毒被列未知，两打击实际各6、毒11，实伤23、预测19。台账first_run=K3676LU8B0UH、prior=no、prior_runs=[K3676LU8B0UH]、status=observed；C48当时尚无毒模型，只保留背景，不作为此一致性bug首证或先验。原C48草稿和时间标题07:28:15→date实际07:28:01更正均保留，不回改历史。
+- 与旧0008漏施毒/结算、0174毒上限、0213毒杀屏蔽持牌伤分账。交学习者按证据修模型覆盖声明的一致性、固定验证后自行合入；本局已正常结束，运维不改机制公式、不声称修复可保证整局转胜。Roy独立boss校准功能075131-fix-batch不混此bug，0213原纯bug批072650不由运维改任务；调度器按队列处理，对局照常。

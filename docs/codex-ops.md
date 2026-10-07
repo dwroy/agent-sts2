@@ -78,6 +78,8 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 
 学习者回报 `merged=null`，随后由运维实际兜底合入时，调用 `bash ops/codex-ops-do.sh learner-recheck <批次 id>` 触发上述完整补测。调度器执行检查并登记结果，运维根据 learner-checks 处理失败；该动作不会重写原完成回报，也不会自动回滚或重复合入。
 
+Roy 授权的静默 boss 校准使用独立模板 `learner/tasks/silent-boss-calibration.md` 和工作树 `.worktrees/silent-boss-calibration`。运维先准备干净工作树，再在 `notes/silent-boss-calibration-dispatch.json` 记录 `state=pending`、`task=silent-boss-calibration`、`character=silent`、`authorized_by=Roy` 和唯一 `request_id`，然后调用既有 `fix-batch` broker 动作；仅此次手动请求走专用模板，普通修复和 tick 的任务不变。批次状态保存 `learner_task` 和 `feature_request`，按请求去重、拒绝忙或脏的专用工作树，失败沿用一小时退避与三次上限。取得实际批号后把请求改为 `dispatched` 并保留批号；完成仍发 `fix-done` 并补完整检查，通道名称不把功能归类为 bug。它与原修复工作树互不占用，live 合入仍串行持锁。
+
 实测（2026-10-04，真实 codex，测试会话）：init 5 s；一次叫醒里模型依次调了 procs（0）、mod-state（0，拿到 mod 的 JSON）、`kill 1`（2，被动作脚本拒绝：不是我们的进程）、`rm-rf`（2，broker 拒绝：没有这个动作），31 s，会话记得第一轮的暗号。没有在真实游戏上测 autoplay-start / launch-game / win-kill（按要求没碰对局）。
 
 **剩下的风险**：模型能改 live 和 step 里的代码（修阻塞 bug 本来就要），也能改 ops/autoplay.sh、run.sh、report.py，这些都在沙箱外运行、能读 key。所以权限配置挡的是「模型直接读到、打印出 key」，不是对一个恶意模型的隔离——和原来 Claude 运维会话的处境一样。

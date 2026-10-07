@@ -363,3 +363,9 @@
 - 2026-10-06 17:37 [运维 codex] Roy：本轮只读命令 `rg --files learner/runs/20261006-170126-experience-update -g '*sandbox*.log' -g '*report*' -g '*ledger*'` 在沙箱初始化时被拒、exit1，完整原因 `error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/wow-jev/.codex: No such file or directory (os error 2)`。未执行该检索，未改权限或绕过沙箱；其余原权限下正常读写命令成功，经验批次登记继续。请检查沙箱初始化对失效路径的扫描，原失败记录保留。
 
 - 2026-10-07 07:04 [运维 codex] Roy：07:00复盘发现新非阻塞bug silent-0213（TKXQ6L4N9A6U/A10/F22/T6）：毒斩杀预测漏算持牌毒素伤害，7血、0挡留两张各5伤毒素而错误结束，玩家先死亡、敌毒未结算。学习者已定位turn-solver.ts:2939及combat-plan.ts:3278，已追加notes/fix-queue-v4.md交学习者实现；独立机制0214、旧0059及首证／版本历史保留，尚未修复，不声称修复可使整局转胜，对局继续。
+
+- 2026-10-07 07:29 [运维 codex] Roy 07:25校准新功能已单独派发20261007-072650-fix-batch（PID704287/pane wJ:p4A），专用任务notes/silent-boss-calibration-task-20261007.md、准备提交e0064f7cdff0202b4dc00bc3b21165a03fbc7866。借fix-batch通道，仅该功能，不混silent-0213：全部SILENT boss跨进阶、时间切分、仅静默Platt、分段/A10残差、沿原逐boss可信门槛、不足场数及定期重跑；结果写论文和台账，自测后自行live合入，完整检查交调度器。现阶段仅派发，未宣称校准或可信名单已完成；对局继续。
+
+- 2026-10-07 07:54 给Roy，07:25静默boss新功能已单独派发20261007-075131-fix-batch（专用silent-boss-calibration模板/同名独占工作树，PID 767463）。更正07:29旧072650批次的范围判断：它实际仍修silent-0213，原通知/回执保留；功能与bug分批。派发入口固定Python6例/撤路由1例失败，最终sandbox tsc0、215文件2299例，原失败及复验日志保留；S1.exp64经验登记完成、外部完整检查待调度器。交接paper/materials/silent/20261007-0725-calibration-dispatch.md；校准尚未完成，完成后按原标准登记实际报告/版本/台账，对局继续。
+
+- 2026-10-07 08:00 [运维 codex] Roy：07:55复盘确认新非阻塞bug silent-0216，已建模中毒仍被判未知并使攻击逐击八折，T3FW7R2R2306/A10/F8/T3–5分别少报4/3/6伤害；已写修复队列交学习者，尚未修复。首证依追加勘误为K3676LU8B0UH/A1，C48未知模型阶段仅背景，原文/时间勘误全部保留。独立于0213毒杀持牌伤与专用boss校准批075131；不作打法深入分析或整局转胜结论，对局继续。
