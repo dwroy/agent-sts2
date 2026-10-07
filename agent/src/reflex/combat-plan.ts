@@ -1670,7 +1670,7 @@ export function deckDrawPool(state: GameState, knowledge: Knowledge, ctx: { enem
       inHand.splice(at, 1);
       return [];
     }
-    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge, null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]));
+    const model = offHandCardModel(own, cardId, bool(own["upgraded"]), 900 + position, knowledge, null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]), state.run?.ascension ?? null);
     return [{ ...model, validTargets: model.target === "single" ? ctx.enemyTargets : [], damage: model.damage === null ? null : Math.floor((model.damage + ctx.strength) * (ctx.weak ? 0.75 : 1)) }];
   });
 }
@@ -1712,7 +1712,7 @@ export function pileEntries(state: GameState, knowledge: Knowledge, pile: "disca
     const own = deck.find((card) => str(card["card_id"]) === cardId && bool(card["upgraded"]) === upgraded) ?? deck.find((card) => str(card["card_id"]) === cardId) ?? null;
     // Not in the deck (a status an enemy added): the game data's card at the line's cost (Frantic Escape's grows).
     const lineCost = /\[(-?\d+)费\]/.exec(line)?.[1];
-    const model = offHandCardModel(own, cardId, upgraded, 900 + position, knowledge, own === null && lineCost !== undefined ? Number(lineCost) : null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]));
+    const model = offHandCardModel(own, cardId, upgraded, 900 + position, knowledge, own === null && lineCost !== undefined ? Number(lineCost) : null, powerExtraCost, str(asRecord(state.run?.raw)["character_id"]), state.run?.ascension ?? null);
     const card: CardModel = {
       ...model,
       validTargets: model.target === "single" ? ctx.enemyTargets : [],
@@ -2788,7 +2788,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   // Shrink on us (the Shrinker Beetle's: always -1, 1448 logged frames): the hand's numbers already carry it.
   const shrunk = powerAmount(player, "SHRINK_POWER") !== 0;
   const hand = asArray(combat["hand"]).map((entry, index) => {
-    const modelled = modelHandCard(entry, index, env.knowledge, str(asRecord(state.run?.raw)["character_id"]));
+    const modelled = modelHandCard(entry, index, env.knowledge, str(asRecord(state.run?.raw)["character_id"]), state.run?.ascension ?? null);
     const model = shrunk && modelled.damage !== null ? { ...modelled, shownShrunk: true } : modelled;
     const base = env.knowledge.card(model.cardId)?.cost ?? null;
     return freeAttacks > 0 && model.type === "Attack" && model.cost === 0 && base !== null && base > 0 ? { ...model, cost: base } : model;
