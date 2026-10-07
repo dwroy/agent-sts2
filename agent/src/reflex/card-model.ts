@@ -906,7 +906,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // KQQELQSZ382Z F17 attempt 6 T7 / KAY522KT5NXR F14 T1, silent-0219: the observed plain card adds seven poison.
   const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
     !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7;
-  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite ? dyn(card, "PoisonPower") ?? 0 : 0;
+  // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
+  const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
+    (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
+  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite || haze ? dyn(card, "PoisonPower") ?? 0 : 0;
   // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
   const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
   // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
