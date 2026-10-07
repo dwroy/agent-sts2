@@ -10,6 +10,7 @@
  */
 
 import { applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, ourAttackScaled, thisTurnScore, type CardModel } from "./card-model.js";
+import { continuationCost } from "./continuation-value.js";
 
 /** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
 export const SHRINK_DAMAGE_FACTOR = 0.7;
@@ -617,6 +618,8 @@ export function reviveThrough(startHp: number, losses: number[], revives: Revive
 }
 
 export interface SolverInput {
+  /** Extra value of HP carried into an observed following fight (character evidence only). */
+  continuationValue?: import("./continuation-value.js").ContinuationValue;
   hand: CardModel[];
   player: PlayerSim;
   enemies: EnemySim[];
@@ -3101,6 +3104,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     else score -= weights.hp * -(margin + ERUPTION_NEXT_BLOCK);
   }
   score -= weights.hp * hpLoss;
+  if (input.continuationValue && !dies) score -= weights.hp * continuationCost(input.continuationValue, input.player.hp, revived?.hp ?? hpAfter);
   // Whole boss fights (nextHit, never live): the enemies' next attacks are known a turn ahead from the move model (the
   // Rocket's Laser after Charge Up, the Torch Head's Beam). HP lost now that leaves us below what the next hit takes
   // through a fresh hand's block is HP the next turn cannot spare, as the Giant's eruption rule below counts it.

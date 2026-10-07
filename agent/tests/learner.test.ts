@@ -141,11 +141,13 @@ describe("the task files in learner/tasks", () => {
     });
   }
 
-  it("postmortem and experience-update need runs; the write tasks say no drinking rules / no pushing", () => {
+  it("requires runs and evidence-linked proposals under Roy's rule-change authorization", () => {
     expect(() => renderTask(loadTask("postmortem", TASKS), {}, BUILTINS)).toThrow(/缺少参数：runs/);
     expect(() => renderTask(loadTask("experience-update", TASKS), {}, BUILTINS)).toThrow(/缺少参数：runs/);
     const experience = renderTask(loadTask("experience-update", TASKS), { runs: "A" }, BUILTINS).prompt;
-    expect(experience).toContain("不许写喝药规则");
+    expect(experience).not.toContain("不许写喝药规则");
+    expect(experience).toContain("同步代码提案");
+    expect(experience).toContain("check-experience --character");
     expect(experience).toContain("机制推理");
     expect(experience).toMatch(/推理[\s\S]*证据[\s\S]*典型案例/);
     const fix = renderTask(loadTask("fix-batch", TASKS), {}, BUILTINS).prompt;
@@ -153,6 +155,11 @@ describe("the task files in learner/tasks", () => {
     expect(fix).toContain("去掉修复时失败");
     expect(fix).toContain("/p/notes/fix-queue-v4.md");
     for (const prompt of [experience, fix]) expect(prompt).toContain("不推送");
+    for (const prompt of [experience, fix]) {
+      expect(prompt).toContain("Roy 已授权");
+      expect(prompt).toContain("code_proposals");
+      expect(prompt).toContain("notes/for-dai.md 与 ops/inbox-dev.md");
+    }
   });
 
   it("fix-batch uses the current queue and an explicit live merge with evidence and release records", () => {

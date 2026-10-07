@@ -58,6 +58,8 @@ import { knowledgeDataDirs } from "../knowledge/files.js";
 import { LOW_TRUST_B2, bossTrustReason } from "./boss-trust.js";
 import { identityToken, memoKey, type ComputeMemo } from "./compute-memo.js";
 import { claimSimCores, leaveSimCores } from "./sim-pools.js";
+import { withDoubleBossStart } from "./double-boss-start.js";
+import { firstDoubleBoss } from "../knowledge/double-boss.js";
 
 /** Samples per line (docs/boss-sim.md §8: 600 give a paired win-rate standard error of ~1-2 points). */
 export const BOSS_LINES_SAMPLES = 600;
@@ -178,7 +180,7 @@ export function bossSimInput(args: BossSimInputArgs): RolloutInput {
   const meta = fightMetaOf(args.state, args.knowledge, args.memory);
   const { handBase, ...board } = boardRolloutInput(args.state, args.knowledge, args.solver, meta.asc);
   const runRaw = (args.state.run?.raw ?? {}) as Record<string, unknown>;
-  return {
+  const input: RolloutInput = {
     ...board,
     plans: [],
     piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.piles.drawTop && args.piles.drawTop.length > 0 ? { drawTop: args.piles.drawTop, ...(args.piles.drawAdded && args.piles.drawAdded.length > 0 ? { drawAdded: args.piles.drawAdded } : {}) } : {}) },
@@ -187,8 +189,10 @@ export function bossSimInput(args: BossSimInputArgs): RolloutInput {
     model: null,
     gates: null,
     fightRelics: fightRelicsOf(runRaw, args.solver.turn ?? meta.t),
-    ...(args.randomPotions.length > 0 ? { randomPotions: args.randomPotions.map((source) => ({ ...source, cost: 0 })) } : {}),
+    ...(args.randomPotions.length > 0 ? { randomPotions: args.randomPotions.map((source) => ({ ...source, cost: args.solver.continuationValue ? source.cost ?? 0 : 0 })) } : {}),
   };
+  const model = firstDoubleBoss(args.state);
+  return model ? withDoubleBossStart(args.state, args.knowledge, input, model) : input;
 }
 
 // ---------------------------------------------------------------- the synchronous worker pool
@@ -399,6 +403,7 @@ function fightSampleOf(input: RolloutInput, pair: { plan: Plan | null; order: Ki
 // ---------------------------------------------------------------- lines, best orders, ranking
 
 export interface LinesResult {
+  continuation?: { source: string; limitation: string };
   /** Per line (the order given): its numbers under its best kill order. */
   lines: (BossSimLineResult & { order: string | null })[];
   /** Samples every line finished, and how many were asked for. */
@@ -449,7 +454,8 @@ export function runLines(
     }
     return pick!;
   });
-  return { lines: out, samples: run.complete.length, requested: opts.samples, timedOut: run.timedOut, elapsedMs: run.elapsedMs, workers: run.workers, orders: orders.length, pairs: pairs.length, done: run.done };
+  return { lines: out, samples: run.complete.length, requested: opts.samples, timedOut: run.timedOut, elapsedMs: run.elapsedMs, workers: run.workers, orders: orders.length, pairs: pairs.length, done: run.done,
+    ...(input.continuation ? { continuation: { source: input.continuation.source, limitation: input.continuation.limitation } } : {}) };
 }
 
 export interface LinesRank {
@@ -508,6 +514,7 @@ function modeOf(counts: Record<number, number>): number | null {
 
 /** One line's whole-fight fact, e.g. "win 62% (vs the best line −3 ± 2 pts), HP lost when won median 18, ~6 turns to win; ...; 600 samples". */
 export function lineSimText(line: BossSimLineResult, calibrated: number, vs: LineComparison | null, run: Pick<LinesResult, "samples" | "requested" | "timedOut">, turnNow: number, flags: { best: boolean; winTied: boolean; lowTrust: string | null }): string {
+  if (line.sequence) return `低可信连战模拟：F48→F49连续通关 ${pct(line.winProb)}%（原始、未校准）；胜F48 ${line.sequence.firstWins}/${line.samples}，其中死F49 ${line.sequence.firstWinSecondDeaths}、未完成F49 ${line.sequence.secondUnfinished}；每条样本传递实际剩余HP/药水，${line.samples}样本；不是必死或SL判据。`;
   const vsText = vs === null ? (flags.lowTrust ? "the simulation's best line" : "the best line") : `vs the ${flags.lowTrust ? "simulation's " : ""}best line ${pts(vs.winDiff)} ± ${Math.max(1, Math.round(vs.winSe * 100))} pts${flags.winTied ? ", tied on win rate" : ""}`;
   const won = line.hpLossWon ? `HP lost when won median ${Math.round(line.hpLossWon.median)}` : "no winning sample";
   const turns = line.turnsWon ? `, ~${Math.round(line.turnsWon.median)} turn${Math.round(line.turnsWon.median) === 1 ? "" : "s"} to win (this one included)` : "";
@@ -535,6 +542,7 @@ function namesOf(input: RolloutInput): { card: (id: string) => string } {
  * only.
  */
 export function fightPlanText(input: RolloutInput, line: BossSimLineResult, turnNow: number): string | null {
+  if (line.sequence) return null;
   const won = line.outcomes.filter((o) => o.won);
   const base = won.length >= 10 ? won : line.outcomes;
   if (base.length === 0) return null;
@@ -653,7 +661,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     if (left < bossLinesOptions.minMs) return { available: false, reason: `this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`, ms: ms() };
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
-    const lowTrust = boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null;
+    const lowTrust = input.continuation?.limitation ?? (boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null);
     const samples = args.samples ?? bossLinesOptions.samples;
     const memoed = args.memo ? recallLines(args.memo, input, args.lines, samples, left) : null;
     let run: LinesResult;
@@ -683,7 +691,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const start = turnNow <= 1 ? "start" : "mid";
     const byPlan = new Map<Plan, LineSim>();
     run.lines.forEach((line, i) => {
-      const calibrated = calibratedWinProb(line.winProb, line.samples, start, args.state.run?.ascension ?? 0);
+      const calibrated = line.sequence ? line.winProb : calibratedWinProb(line.winProb, line.samples, start, args.state.run?.ascension ?? 0);
       const vsBest = rank.vsBest[i] ?? null;
       const winTied = rank.winTied[i] ?? false;
       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied, text: lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
@@ -776,6 +784,7 @@ export function simWinsLess(sim: BossLineSim | null, plan: Plan, pick: Plan): bo
 /** The question's note on the numbers (state.whole_fight_sim; a low-trust boss's question has none). */
 export function simNote(sim: BossLineSim): string {
   if (!sim.available) return `whole-fight simulation unavailable (${sim.reason})`;
+  if (sim.run.continuation) return `F48→F49连续通关模拟：每条第一战胜利样本以实际剩余HP、药水和复活资源进入第二战，第二boss按已观察分布抽样；${sim.run.samples}配对样本，未经两战校准。${sim.run.continuation.limitation}；不是必死或SL判据。证据：${sim.run.continuation.source}`;
   const how = `each option's whole_fight_sim: that line this turn, then the simulator's own play to the fight's end, ${sim.run.samples} samples per line on the same random numbers (${sim.run.timedOut ? `cut from ${sim.run.requested} by the time limit, ` : ""}${(sim.run.elapsedMs / 1000).toFixed(1)} s); the win rate is calibrated on logged boss fights, the difference to the best line is paired (± standard error)`;
   return `${how}. rollout_best is the line with the highest simulated win rate (lines within ${BOSS_LINES_TIE_SE} standard errors of it count as tied), then the least HP lost when won (median); the 5-turn rollout's numbers stay for reference`;
 }
@@ -795,10 +804,12 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
       loss: line.result.hpLoss.mean,
       won_loss: line.result.hpLossWon?.median ?? null,
       order: line.result.order,
+      ...(line.result.sequence ? { sequence: { first_wins: line.result.sequence.firstWins, won_first_died_second: line.result.sequence.firstWinSecondDeaths, second_unfinished: line.result.sequence.secondUnfinished } } : {}),
     };
   }
   return {
     available: true,
+    ...(sim.run.continuation ? { objective: "F48_F49_continuous", calibration: "none", continuation: { source: sim.run.continuation.source, limitation: sim.run.continuation.limitation } } : {}),
     // The question's own wall clock (an SL retry memo hit: the lookup's; the decision row's timing.memo has the stored run's).
     ms: sim.run.memo ? sim.run.memo.wallMs : sim.run.elapsedMs,
     samples: sim.run.samples,

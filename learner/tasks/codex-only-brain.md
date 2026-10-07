@@ -35,3 +35,11 @@ Roy 2026-10-07 09:00 manual 已明确授权本任务：决策不要让 DeepSeek 
 自测通过自行按 live 流程合入，不另设审核：持根目录 ops/live-merge.lock，确认知识刷新结束，保存 live 的全部刷新（含新增文件），查重叠、预检再合本任务源码，记合入前提交；合后沙箱检查通过后登记发布。失败保留原检查及合入受阻历史，按流程回退本次代码并保留原刷新。先 date 再写 decision-log；改变对局行为须唯一 eval 版本。源码、实际合入、发布及固定树都写清楚，shipped 由运维核实登记。
 
 完成报告放 {{scratch}}/report.md 和 report.json；最终沿 fix-batch JSON 协议回报 task=fix-batch，fixes 的 item 明确“Roy 已授权独立功能：Codex-only 大脑等待与统计口径”，给 base、逐源码 commit／test／fails_without_fix、skipped、merged、tests、全部提交／固定发布树／版本／报告路径。fix-batch 只是完成事件和外部检查通道名，本任务是新功能。提交或合入受阻写清楚事实供运维兜底，不能假称成功、绕过引擎／key 自检或等待未经要求的新审批。
+
+
+## Roy 2026-10-07 学习授权与代码提案
+先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+
+最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。

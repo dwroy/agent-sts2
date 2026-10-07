@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import time
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
 # Environment names passed into a herdr pane (its shell has the herdr server's environment, not ours); never key-like ones.
@@ -52,6 +53,11 @@ def start_learner(argv, root, scripts, state_dir, label):
         except (OSError, subprocess.SubprocessError) as error:
             sys.stderr.write(f"herdr-host run {label} failed ({error}); starting with setsid\n")
     proc = subprocess.Popen(argv, cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    if "boss-sim-batch" in argv:
+        pidfile = os.path.join(state_dir, "learner", label + ".pid")
+        os.makedirs(os.path.dirname(pidfile), exist_ok=True)
+        with open(pidfile, "w", encoding="utf8") as handle:
+            handle.write(str(proc.pid) + "\n")
     return proc.pid, None
 WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
@@ -137,7 +143,7 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
                              "learner-" + batch_id)
     batch = {"task": "fix-batch", "learner_task": learner_task, "character": character,
              "runs": [], "key": key, "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
-             "feature_request": request["request_id"]}
+             "feature_request": request["request_id"], "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
         batch["pane"] = pane
     state["batches"][batch_id] = batch
@@ -147,7 +153,7 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
 def busy(state, task, alive):
     for batch in state["batches"].values():
         # The dedicated feature owns its own worktree, not the normal fix/proposal tree.
-        if batch.get("learner_task") in FEATURE_REQUESTS:
+        if batch.get("learner_task") in FEATURE_REQUESTS or batch.get("boss_sim"):
             continue
         if WORKTREES.get(batch.get("task")) != WORKTREES[task] or batch.get("state") != "running":
             continue
@@ -213,7 +219,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree],
                               root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
-                                 "pid": pid, "state": "running", "reason": reason, "worktree": worktree}
+                                 "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
+                                 "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     return batch_id, pid
@@ -222,11 +229,20 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
 def check_jobs(state, root, scripts, character, alive, stamp):
     runs = pending(root, scripts, character)
     experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    # Load by this file's path so fixed dispatch fixtures need no global Python search path.
+    spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
+    proposals = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(proposals)
+    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, dispatch_write)
+    # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
     key = fix_key(root, character)
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    strategy = strategy_job(state, root, scripts, character, alive, stamp)
+    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal else None
     calibration = calibration_job(state, root, scripts, character, alive, stamp)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration}
+    from boss_sim_jobs import check
+    boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
+    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
+            "code_proposal": proposal, "boss_sim": boss_sim}
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):

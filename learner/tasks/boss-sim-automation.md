@@ -40,3 +40,11 @@ B4/B5 后续校正只改 fullFight/模拟专用字段，实盘 solver 和5回合
 自测通过按任务 live 流程自行合入，无须另设审核：根目录 ops/live-merge.lock 内检查无知识刷新/report.py，保存 live 全部刷新（包括新增未跟踪知识），查重叠、预检合本任务源码，记合前提交。合后原沙箱通过再登记唯一 eval/versions.json 发布和 decision-log（先 date），无行为变更的纯派发记录不冒造版本。失败保留原日志并按流程回退本次代码、保留刷新；提交/合入受阻明确写回报由运维兜底。
 
 完成报告写 {{scratch}}/report.md 和 report.json，最终 JSON 沿 fix-batch 协议 task=fix-batch，fixes.item 明确本独立功能名，列 base、每项源码 commit、test、fails_without_fix、skipped、merged、tests、所有实际源码/合入/发布/固定树和报告路径；不把未做的工作写成成功。游戏条目 kind=fight/mechanic 依证据和 ledger CLI，不冒称 shipped；运维核实登记。
+
+
+## Roy 2026-10-07 学习授权与代码提案
+先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+
+最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。

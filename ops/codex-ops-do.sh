@@ -9,6 +9,7 @@
 # autoplay-reload <old-autoplay-pid> <current-play-pid> (keeps the same play process),
 # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
 # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
+# boss-sim-check (check B4/B5 triggers with the live scheduler),
 # eval-metrics <character> <ascension> (writes a new Markdown report under paper/materials/<character>/).
 # The broker only runs while a wake runs: outside a wake this times out (exit 124).
 set -u

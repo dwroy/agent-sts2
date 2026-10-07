@@ -37,6 +37,8 @@ import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES
 import type { DeckSimRunner } from "./build-sim-pool.js";
 import { LOW_CONFIDENCE_B3, bossTrustReason } from "./boss-trust.js";
 import { silentBuildWinTies } from "./silent-build-win-ties.js";
+import { doubleBossPreparation } from "../knowledge/double-boss.js";
+import { withDoubleBossStart } from "./double-boss-start.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -173,7 +175,8 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
   const maxNow = state.run?.max_hp ?? start.maxHp;
   const character = str(run["character_id"]).toLowerCase();
   let added = 0;
-  const withDraw = (draw: CardModel[]): Partial<RolloutInput> => ({ piles: { ...base.piles, draw } });
+  const withDraw = (draw: CardModel[]): Partial<RolloutInput> => ({ piles: { ...base.piles, draw },
+    ...(base.continuation ? { continuation: { ...base.continuation, variants: base.continuation.variants.map((v) => ({ ...v, input: { ...v.input, piles: { ...v.input.piles, draw } } })) } } : {}) });
   // Spiked Gauntlets: an added or upgraded Power 1 more, as the deck's (rollout-live deckModels).
   const powerExtraCost = pilePowerExtraCost(asArray(run["relics"]).map((relic) => str(asRecord(relic)["relic_id"])));
   const newCard = (own: Record<string, unknown> | null, cardId: string, upgraded: boolean): CardModel => offHandCardModel(own, cardId, upgraded, 990 + (added += 1), knowledge, null, powerExtraCost, character);
@@ -211,7 +214,9 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
   const withHp = (hp: number, max: number, change?: Partial<RolloutInput>): Partial<RolloutInput> => {
     const entryHp = Math.max(1, Math.round(entry.project(Math.max(0, hp), max)));
     const solver = change?.solver ?? base.solver;
-    return { ...(change ?? {}), solver: { ...solver, player: { ...solver.player, hp: Math.min(max, entryHp), maxHp: max } } };
+    const next = change?.continuation ?? base.continuation;
+    return { ...(change ?? {}), solver: { ...solver, player: { ...solver.player, hp: Math.min(max, entryHp), maxHp: max } },
+      ...(next ? { continuation: { ...next, variants: next.variants.map((v) => ({ ...v, input: { ...v.input, solver: { ...v.input.solver, player: { ...v.input.solver.player, maxHp: max } } } })) } } : {}) };
   };
   // LS8035TB32P3 F40, silent-0201/0019/0020/0139: +24 HP and equal 1-HP boss inputs are separate facts.
   const restHpReference = (hp: number, max: number, simulatedHp: number): Record<string, JsonValue> | undefined => {
@@ -479,10 +484,15 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const projected = entry.project(hpNow, maxNow);
     const entryHp = Math.max(1, Math.round(projected));
     const start = syntheticBossStart(state, knowledge, bossId, entryHp, { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) });
+    const continuation = doubleBossPreparation(state);
+    const startOpts = { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) };
+    if (continuation) start.input = withDoubleBossStart(state, knowledge, start.input, continuation, startOpts);
     const rebuild = (edit: (run: Record<string, unknown>) => void): RolloutInput => {
       const raw = JSON.parse(JSON.stringify(state.raw)) as Record<string, unknown>;
       edit(asRecord(raw["run"]));
-      return syntheticBossStart(parseGameState(raw) as GameState, knowledge, bossId, entryHp, { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) }).input;
+      const changed = parseGameState(raw) as GameState;
+      const rebuilt = syntheticBossStart(changed, knowledge, bossId, entryHp, startOpts).input;
+      return continuation ? withDoubleBossStart(changed, knowledge, rebuilt, continuation, startOpts) : rebuilt;
     };
     const plans = planOptions(decision.label, spec.options!(), env, start, entry, rebuild);
     const deckOptions: DeckOption[] = [];
@@ -500,9 +510,9 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`);
     const sims = new Map(result.options.map((sim) => [sim.key, sim]));
     const key = bossKey(bossId);
-    const low = bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
+    const low = continuation?.limitation ?? bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
     const boss = `${start.boss.name}，A${state.run?.ascension ?? start.boss.asc}`;
-    const head = `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
+    const head = continuation ? `F48→F49连续通关（第一boss ${boss}；低可信、未经两战校准）：` : `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
     // Mostly lost: the raw rate under 10% (the calibrated one never reads under the map's floor at 0 wins: calibratedFloor).
     const lowWin = result.base.win < 0.1;
     const winTies = silentBuildWinTies(str(asRecord(state.run?.raw)["character_id"]), result.options.filter((sim) => {
@@ -544,7 +554,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
           } : {}),
         };
       }
-      criteria[k] = JSON.stringify(shown);
+      criteria[k] = continuation ? JSON.stringify(shown).replaceAll("校准后", "未校准连战") : JSON.stringify(shown);
     }
     const b = result.base;
     const ms = Math.round(now() - started);
@@ -582,11 +592,21 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       options: Object.fromEntries(result.options.map((sim) => [sim.key, { win: sim.win, win_cal: sim.winCal, diff_cal: sim.diff?.cal ?? 0, se_cal: sim.diff?.calSe ?? 0, diff_raw: sim.diff?.raw ?? 0, se_raw: sim.diff?.se ?? 0, hp_loss_won: sim.hpLossWon, turns: sim.turns, hp: sim.hp, boss_left: sim.bossLeft, boss_left_diff: sim.diff?.bossLeft ?? 0, boss_left_se: sim.diff?.bossLeftSe ?? 0 }])),
       not_simulated: Object.fromEntries(plans.filter((p) => p.none).map((p) => [p.key, p.none!])),
     };
+    if (continuation) {
+      simFacts["objective"] = "F48→F49连续通关；第一战每条实际模拟剩余HP/药水/复活资源传入第二战，第二boss按本角色已观察分布抽样，不透露本局未来身份。";
+      simFacts["current_deck"] = `两战原始通关率 ${pct(b.win)}，${result.samples}配对样本；未经两战校准，不是必死或SL判据。`;
+      simFacts["method"] = "第一战获胜的同一条样本继续第二战，没有独立胜率相乘，没有补满HP或补回喝掉的药水；差及标准误均来自两战原始配对结果。";
+      simFacts["limits"] = continuation.limitation;
+      simFacts["evidence"] = continuation.value.source;
+      if (lowWin) simFacts["low_win_rate"] = "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。";
+      record["objective"] = "F48_F49_continuous";
+      record["calibration"] = "none";
+    }
     return {
       decision: {
         ...ask,
         state: { ...ask.state, facts: withSimFacts(facts, simFacts, false) },
-        questions: { ...ask.questions, [spec.question]: { ...question, instructions: `${question.instructions} ${BOSS_SIM_NOTE}`, criteria } },
+        questions: { ...ask.questions, [spec.question]: { ...question, instructions: `${question.instructions} ${continuation ? "boss_sim为F48→F49连续两战原始通关率及配对差，未经两战校准；HP/药水由第一战实际样本传递，全部选项保留，由Codex选择。" : BOSS_SIM_NOTE}`, criteria } },
       },
       record,
     };
