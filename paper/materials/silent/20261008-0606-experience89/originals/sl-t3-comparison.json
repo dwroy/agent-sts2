@@ -1,0 +1,1842 @@
+[
+  {
+    "attempt": 1,
+    "start": {
+      "hp": 10,
+      "max_hp": 70,
+      "block": 0,
+      "energy": 4,
+      "powers": {},
+      "hand": [
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "text": "造成6点伤害。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "FINESSE",
+          "text": "获得4点格挡。 抽1张牌。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "HAZE",
+          "text": "给予所有敌人6层中毒和2层虚弱。",
+          "dynamic": [
+            {
+              "name": "PoisonPower",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "WeakPower",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "MYTE",
+          "hp": 61,
+          "alive": true,
+          "powers": {
+            "WEAK_POWER": 1
+          },
+          "move": "SUCK_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "MYTE",
+          "hp": 41,
+          "alive": true,
+          "powers": {
+            "STRENGTH_POWER": 3,
+            "POISON_POWER": 1
+          },
+          "move": "BITE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "18",
+              "damage": 18,
+              "hits": 1,
+              "total_damage": 18,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "end": {
+      "ts": "2026-10-07T20:50:12.315Z",
+      "run": "MTQ0EUBJ3R6T",
+      "floor": 23,
+      "turn": 3,
+      "attempt": 1,
+      "card": null,
+      "action": "end_turn",
+      "result": "completed: Action completed.",
+      "before": {
+        "hp": 10,
+        "max_hp": 70,
+        "block": 29,
+        "energy": 0,
+        "powers": {
+          "DEXTERITY_POWER": 5,
+          "SPEED_POTION_POWER": 5
+        },
+        "hand": [
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "text": "造成6点伤害。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "PREDATOR",
+            "text": "造成15点伤害。 在下个回合抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 15,
+                "enchanted_value": 15,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 61,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 3,
+              "POISON_POWER": 6
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "4",
+                "damage": 4,
+                "hits": 1,
+                "total_damage": 4,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 41,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 7,
+              "WEAK_POWER": 2
+            },
+            "move": "BITE_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "13",
+                "damage": 13,
+                "hits": 1,
+                "total_damage": 13,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "hp": 10,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 4,
+        "powers": {},
+        "hand": [
+          {
+            "id": "ASCENDERS_BANE",
+            "text": "不能被打出。 虚无。 永恒。",
+            "dynamic": [],
+            "blocked": "unplayable"
+          },
+          {
+            "id": "BACKFLIP",
+            "text": "获得5点格挡。 抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "text": "获得5点格挡。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "NOXIOUS_FUMES",
+            "text": "在你的回合开始时，给予所有敌人2层中毒。",
+            "dynamic": [
+              {
+                "name": "PoisonPerTurn",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "text": "造成6点伤害。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 55,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 2,
+              "POISON_POWER": 5,
+              "STRENGTH_POWER": 3
+            },
+            "move": "TOXIC_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 34,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 6,
+              "WEAK_POWER": 1
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "6",
+                "damage": 6,
+                "hits": 1,
+                "total_damage": 6,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "net": 13
+  },
+  {
+    "attempt": 2,
+    "start": {
+      "hp": 10,
+      "max_hp": 70,
+      "block": 0,
+      "energy": 4,
+      "powers": {},
+      "hand": [
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "text": "造成6点伤害。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "FINESSE",
+          "text": "获得4点格挡。 抽1张牌。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "HAZE",
+          "text": "给予所有敌人6层中毒和2层虚弱。",
+          "dynamic": [
+            {
+              "name": "PoisonPower",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "WeakPower",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "MYTE",
+          "hp": 61,
+          "alive": true,
+          "powers": {
+            "WEAK_POWER": 1
+          },
+          "move": "SUCK_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "MYTE",
+          "hp": 41,
+          "alive": true,
+          "powers": {
+            "STRENGTH_POWER": 3,
+            "POISON_POWER": 1
+          },
+          "move": "BITE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "18",
+              "damage": 18,
+              "hits": 1,
+              "total_damage": 18,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "end": {
+      "ts": "2026-10-07T20:51:29.375Z",
+      "run": "MTQ0EUBJ3R6T",
+      "floor": 23,
+      "turn": 3,
+      "attempt": 2,
+      "card": null,
+      "action": "end_turn",
+      "result": "completed: Action completed.",
+      "before": {
+        "hp": 10,
+        "max_hp": 70,
+        "block": 29,
+        "energy": 0,
+        "powers": {
+          "DEXTERITY_POWER": 5,
+          "SPEED_POTION_POWER": 5
+        },
+        "hand": [
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "text": "造成6点伤害。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "PREDATOR",
+            "text": "造成15点伤害。 在下个回合抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 15,
+                "enchanted_value": 15,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 61,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 3,
+              "POISON_POWER": 6
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "4",
+                "damage": 4,
+                "hits": 1,
+                "total_damage": 4,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 41,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 7,
+              "WEAK_POWER": 2
+            },
+            "move": "BITE_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "13",
+                "damage": 13,
+                "hits": 1,
+                "total_damage": 13,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "hp": 10,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 4,
+        "powers": {},
+        "hand": [
+          {
+            "id": "ASCENDERS_BANE",
+            "text": "不能被打出。 虚无。 永恒。",
+            "dynamic": [],
+            "blocked": "unplayable"
+          },
+          {
+            "id": "BACKFLIP",
+            "text": "获得5点格挡。 抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "text": "获得5点格挡。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "NOXIOUS_FUMES",
+            "text": "在你的回合开始时，给予所有敌人2层中毒。",
+            "dynamic": [
+              {
+                "name": "PoisonPerTurn",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "text": "造成6点伤害。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 55,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 2,
+              "POISON_POWER": 5,
+              "STRENGTH_POWER": 3
+            },
+            "move": "TOXIC_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 34,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 6,
+              "WEAK_POWER": 1
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "6",
+                "damage": 6,
+                "hits": 1,
+                "total_damage": 6,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "net": 13
+  },
+  {
+    "attempt": 3,
+    "start": {
+      "hp": 10,
+      "max_hp": 70,
+      "block": 0,
+      "energy": 4,
+      "powers": {},
+      "hand": [
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "text": "造成6点伤害。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "FINESSE",
+          "text": "获得4点格挡。 抽1张牌。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "HAZE",
+          "text": "给予所有敌人6层中毒和2层虚弱。",
+          "dynamic": [
+            {
+              "name": "PoisonPower",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "WeakPower",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "MYTE",
+          "hp": 61,
+          "alive": true,
+          "powers": {
+            "WEAK_POWER": 1
+          },
+          "move": "SUCK_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "MYTE",
+          "hp": 41,
+          "alive": true,
+          "powers": {
+            "STRENGTH_POWER": 3,
+            "POISON_POWER": 1
+          },
+          "move": "BITE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "18",
+              "damage": 18,
+              "hits": 1,
+              "total_damage": 18,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "end": {
+      "ts": "2026-10-07T20:52:39.047Z",
+      "run": "MTQ0EUBJ3R6T",
+      "floor": 23,
+      "turn": 3,
+      "attempt": 3,
+      "card": null,
+      "action": "end_turn",
+      "result": "completed: Action completed.",
+      "before": {
+        "hp": 10,
+        "max_hp": 70,
+        "block": 29,
+        "energy": 0,
+        "powers": {
+          "DEXTERITY_POWER": 5,
+          "SPEED_POTION_POWER": 5
+        },
+        "hand": [
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "text": "造成6点伤害。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "PREDATOR",
+            "text": "造成15点伤害。 在下个回合抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 15,
+                "enchanted_value": 15,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 61,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 3,
+              "POISON_POWER": 6
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "4",
+                "damage": 4,
+                "hits": 1,
+                "total_damage": 4,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 41,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 7,
+              "WEAK_POWER": 2
+            },
+            "move": "BITE_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "13",
+                "damage": 13,
+                "hits": 1,
+                "total_damage": 13,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "hp": 10,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 4,
+        "powers": {},
+        "hand": [
+          {
+            "id": "ASCENDERS_BANE",
+            "text": "不能被打出。 虚无。 永恒。",
+            "dynamic": [],
+            "blocked": "unplayable"
+          },
+          {
+            "id": "BACKFLIP",
+            "text": "获得5点格挡。 抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "text": "获得5点格挡。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "NOXIOUS_FUMES",
+            "text": "在你的回合开始时，给予所有敌人2层中毒。",
+            "dynamic": [
+              {
+                "name": "PoisonPerTurn",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "text": "造成6点伤害。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 55,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 2,
+              "POISON_POWER": 5,
+              "STRENGTH_POWER": 3
+            },
+            "move": "TOXIC_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 34,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 6,
+              "WEAK_POWER": 1
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "6",
+                "damage": 6,
+                "hits": 1,
+                "total_damage": 6,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "net": 13
+  },
+  {
+    "attempt": 4,
+    "start": {
+      "hp": 10,
+      "max_hp": 70,
+      "block": 0,
+      "energy": 4,
+      "powers": {},
+      "hand": [
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "TOXIC",
+          "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "STRIKE_SILENT",
+          "text": "造成6点伤害。",
+          "dynamic": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "FINESSE",
+          "text": "获得4点格挡。 抽1张牌。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Cards",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "HAZE",
+          "text": "给予所有敌人6层中毒和2层虚弱。",
+          "dynamic": [
+            {
+              "name": "PoisonPower",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "WeakPower",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        },
+        {
+          "id": "DEFEND_SILENT",
+          "text": "获得5点格挡。",
+          "dynamic": [
+            {
+              "name": "Block",
+              "base_value": 5,
+              "current_value": 5,
+              "enchanted_value": 5,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "blocked": null
+        }
+      ],
+      "enemies": [
+        {
+          "id": "MYTE",
+          "hp": 61,
+          "alive": true,
+          "powers": {
+            "WEAK_POWER": 1
+          },
+          "move": "SUCK_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "4",
+              "damage": 4,
+              "hits": 1,
+              "total_damage": 4,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        },
+        {
+          "id": "MYTE",
+          "hp": 41,
+          "alive": true,
+          "powers": {
+            "STRENGTH_POWER": 3,
+            "POISON_POWER": 1
+          },
+          "move": "BITE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "18",
+              "damage": 18,
+              "hits": 1,
+              "total_damage": 18,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "end": {
+      "ts": "2026-10-07T20:53:46.948Z",
+      "run": "MTQ0EUBJ3R6T",
+      "floor": 23,
+      "turn": 3,
+      "attempt": 4,
+      "card": null,
+      "action": "end_turn",
+      "result": "completed: Action completed.",
+      "before": {
+        "hp": 10,
+        "max_hp": 70,
+        "block": 19,
+        "energy": 0,
+        "powers": {
+          "DEXTERITY_POWER": 5,
+          "SPEED_POTION_POWER": 5
+        },
+        "hand": [
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "TOXIC",
+            "text": "在你的回合结束时，如果这张牌在你的手牌中，你受到5点伤害。 消耗。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "text": "获得10点格挡。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 10,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          },
+          {
+            "id": "PREDATOR",
+            "text": "造成15点伤害。 在下个回合抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 15,
+                "enchanted_value": 15,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": "not_enough_energy"
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 61,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 3,
+              "POISON_POWER": 6
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "4",
+                "damage": 4,
+                "hits": 1,
+                "total_damage": 4,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 35,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 7,
+              "WEAK_POWER": 2
+            },
+            "move": "BITE_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "13",
+                "damage": 13,
+                "hits": 1,
+                "total_damage": 13,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "hp": 2,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 4,
+        "powers": {},
+        "hand": [
+          {
+            "id": "ASCENDERS_BANE",
+            "text": "不能被打出。 虚无。 永恒。",
+            "dynamic": [],
+            "blocked": "unplayable"
+          },
+          {
+            "id": "BACKFLIP",
+            "text": "获得5点格挡。 抽2张牌。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "DEFEND_SILENT",
+            "text": "获得5点格挡。",
+            "dynamic": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "NOXIOUS_FUMES",
+            "text": "在你的回合开始时，给予所有敌人2层中毒。",
+            "dynamic": [
+              {
+                "name": "PoisonPerTurn",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          },
+          {
+            "id": "STRIKE_SILENT",
+            "text": "造成6点伤害。",
+            "dynamic": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "blocked": null
+          }
+        ],
+        "enemies": [
+          {
+            "id": "MYTE",
+            "hp": 55,
+            "alive": true,
+            "powers": {
+              "WEAK_POWER": 2,
+              "POISON_POWER": 5,
+              "STRENGTH_POWER": 3
+            },
+            "move": "TOXIC_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          },
+          {
+            "id": "MYTE",
+            "hp": 28,
+            "alive": true,
+            "powers": {
+              "STRENGTH_POWER": 3,
+              "POISON_POWER": 6,
+              "WEAK_POWER": 1
+            },
+            "move": "SUCK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "6",
+                "damage": 6,
+                "hits": 1,
+                "total_damage": 6,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "net": 19
+  }
+]

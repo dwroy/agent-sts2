@@ -1,0 +1,59 @@
+{
+  "state": "published",
+  "batch": "20261008-053104-experience-update",
+  "source": "b1a9cbdd01f899373e097ad9fd53b54992f1b96a",
+  "source_tests": {
+    "exit": 0,
+    "files": 245,
+    "cases": 2586,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-053105-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "617d12525379dfe359501147885e21a098b4fc09",
+  "parent_blob": "f5d84ecf09d332ee4bfc243d545723211502325e",
+  "main_code_sync": "3967a731a828411afce7121b50b3861043c90ab3",
+  "main_record": "311d3e3efdccf223063d6441221f6a22ffbfbeac",
+  "full_external_passed": false,
+  "actual_code": "21b5842d0804d4b7a9772f1a417cf2b6024eb7e5",
+  "live_before": "535ed2fc106f539f7eb639ef47ed0b1dc3dacdae",
+  "combined": "f1b0a1c2797a82c8ef342875c75d54b4bcb44391",
+  "preserved_refresh": "47606f597db29cdd33e628299120a3e0830aaf93",
+  "refresh_sha256": {
+    "notes/fight-value-backtest-silent.md": "cc74425c991fd91798919f386b4557774bc121b0202bcb38fbbd4aec99e4b197"
+  },
+  "lock_attempts": 1,
+  "all_other_tracked_blobs_preserved": true,
+  "publication": "7f6d5b4b6a1d1563ebf662db806eb9f3d18b6172",
+  "publication_tree": "4d5aca7d14a26044d2acc19690e369061aef2d22",
+  "version_entry": {
+    "name": "S1.exp89",
+    "family": "Silent",
+    "commit": "21b5842d0804d4b7a9772f1a417cf2b6024eb7e5",
+    "source": "decision-log 2026-10-08 06:09: 原053104经验整分支17项记录冲突兜底，源b1a9cbdd唯一experience.json净blob，2026-10-08.5→.6/161 active/增1改20退0；7X0W3U8TVA2A及MTQ0EUBJ3R6T A10补证，三项combat/potion/SL/terminal/structure代码提案沿原自动链。源245文件2586例tsc/vitest0；源码/测试/任务与实际live逐blob等价，仅合原经验数据并保留刷新，不重复沙箱检查，原批完整外部续验另办，数据发布不表示代码提案实现。"
+  },
+  "record_line": "- 2026-10-08 06:09 运维codex06:06经验兜底：原053104源b1a9cbdd01f899373e097ad9fd53b54992f1b96a整分支17份并行记录冲突保持；单次空闲非阻塞锁内从最新live535ed2fc106f539f7eb639ef47ed0b1dc3dacdae集成唯一experience.json原blob，实际合入21b5842d0804d4b7a9772f1a417cf2b6024eb7e5，刷新47606f597db29cdd33e628299120a3e0830aaf93及全部并行代码/数据逐blob保持，源真实祖先。静默经验2026-10-08.5→.6/161 active/增1改20退0，7X0W3U8TVA2A及MTQ0EUBJ3R6T A10补证；源245文件2586例tsc/vitest0，源码/测试/任务与实际live逐blob等价，仅合原数据不重复沙箱检查，唯一S1.exp89。三项combat/potion/SL/terminal/structure提案沿原自动链；main/22所属数据台账随后机械同步，完整外部按原批另续验，不冒报合后整套通过。原out/err/report/failed/17冲突保持，无生产操作；回执paper/materials/silent/20261008-0606-experience89。\n",
+  "code_equivalence": {
+    "source_code_test_and_task_blobs_identical_to_live": true,
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 245,
+      "cases": 2586,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-053105-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "reason": "The source commit changes only experience data; original self-tests already passed and live code/test/task blobs match. Generated knowledge refreshes are retained. Full outside checks are requested separately."
+  }
+}
