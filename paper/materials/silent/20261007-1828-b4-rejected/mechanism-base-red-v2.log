@@ -1,0 +1,103 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261007-153133/agent
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts (6 tests | 4 failed) 118ms
+     × uses the observed successive Strength gains in A0 and A10 42ms
+     × upgrades existing and subsequently created Withers and adds two in observed A10 9ms
+     × initializes an observed mid-fight start without resetting the intensity count 5ms
+     × prices a new card-play Wither at the current intensity from a mid-fight start 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass whole-fight log corrections > uses the observed successive Strength gains in A0 and A10
+AssertionError: expected [ 22, 22, +0, 26, 30, +0, 30 ] to deeply equal [ 22, 22, +0, 25, 28, +0, 29 ]
+
+- Expected
++ Received
+
+  [
+    22,
+    22,
+    0,
+-   25,
+-   28,
++   26,
++   30,
+    0,
+-   29,
++   30,
+  ]
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:34:51
+     32|     for (const [asc, expected] of [[0, [22, 22, 0, 25, 28, 0, 29]], [1…
+     33|       const records = simulateFight(fixture(asc), null, 7, 3).records;
+     34|       expect(records.map((r) => r.snap.E[0]![7])).toEqual(expected);
+       |                                                   ^
+     35|     }
+     36|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass whole-fight log corrections > upgrades existing and subsequently created Withers and adds two in observed A10
+AssertionError: expected 6 to be 18 // Object.is equality
+
+- Expected
++ Received
+
+- 18
++ 6
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:43:58
+     41|     const records = simulateFight(input, null, 7, 3).records;
+     42|     // The first intensity upgrades the old card and its two new cards…
+     43|     expect(records[3]!.loss - records[3]!.snap.E[0]![7]).toBe(18);
+       |                                                          ^
+     44|     // The second intensity upgrades the same three and two new cards …
+     45|     expect(records[6]!.loss - records[6]!.snap.E[0]![7]).toBe(45);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass whole-fight log corrections > initializes an observed mid-fight start without resetting the intensity count
+AssertionError: expected 30 to be 32 // Object.is equality
+
+- Expected
++ Received
+
+- 32
++ 30
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:50:39
+     48|   it("initializes an observed mid-fight start without resetting the in…
+     49|     const records = simulateFight(fixture(10, "SILENT", 7), null, 4, 3…
+     50|     expect(records[3]!.snap.E[0]![7]).toBe(32);
+       |                                       ^
+     51|   });
+     52|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/boss-sim-silent-aeonglass.test.ts > Silent Aeonglass whole-fight log corrections > prices a new card-play Wither at the current intensity from a mid-fight start
+AssertionError: expected 29 to be 32 // Object.is equality
+
+- Expected
++ Received
+
+- 32
++ 29
+
+ ❯ tests/boss-sim-silent-aeonglass.test.ts:59:30
+     57|     input.solver.wither = { every: 6, played: 5, damage: 3 };
+     58|     const records = simulateFight(input, null, 1, 3).records;
+     59|     expect(records[0]!.loss).toBe(26 + 6);
+       |                              ^
+     60|   });
+     61|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 2 passed (6)
+   Start at  15:44:43
+   Duration  1.21s (transform 792ms, setup 395ms, import 543ms, tests 118ms, environment 0ms)
+
