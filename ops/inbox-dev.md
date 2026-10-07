@@ -155,3 +155,4 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
   - 回退：A可停用本角色double-boss.json或按第一父撤A merge，保留0163/并行刷新；B/C/D机械故障只回退本次ops/learner调度/校验代码，保留Roy授权文档与模板，原入口验证，不回退A或知识数据。
   - 全原日志/失败/初稿/固定树/合入发布/报告：learner/runs/20261007-130409-silent-double-boss（report.md/report.json）；来源paper/materials/silent/double-boss.md和double-boss-learning-flow.md。根目录其他并行记录不覆盖。
 - 2026-10-07 16:29 [运维 codex] 16:10闭环完成：VLZ神化模型bug0237已入队；双boss源/实际版本核实，0228登记shipped，main补已测数据及既有S1.double-boss1，模型低可信/SL现状沿学习者双通知。普通151301修复组合tsc0/234文件2439例全过，但单次合入锁busy，源码尚未上线、0229仍proposed，等已有完成事件续办。另首次A10审计154303引擎0但验收failed：裸JSON解析及本批工作树报告路径两工具缺口已入队，原失败/冷却保持、不复派。论文五校验通过，旧3批同树外部0不重复；详情paper/materials/silent/20261007-1610-events.md。
+- 2026-10-07 16:38 [运维 codex] 153133经验批引擎0但提案链未过：缺code_proposals字段及28条经验关联，已核调度器补链pending；原7453c2cc/.20与31条proposed记录保留，尚未上线。发现main遗漏已上线B/C/D的AGENTS/学习协议/代码提案说明三文档，现已原字节同步，其他占用工作树不动；A10审计failed沿既有裸JSON/报告工作树路径两工具缺口队列续修，不强行验收、不阻塞对局。父框架原完整检查在跑/结果待事件，报告副本record_merge_conflict_pending留实际回执。
