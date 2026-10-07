@@ -34,6 +34,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import paths  # noqa: E402
 from learner_checks import finish_write_batch, recheck_write_batch  # noqa: E402
 from learner_jobs import check_jobs, dispatch_write, pending, start_learner  # noqa: E402
+import boss_sim_jobs  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
@@ -321,12 +322,22 @@ def cmd_finish(args):
         print(f"unknown batch {args.batch}")
         return 1
     if batch.get("task", "postmortem") != "postmortem":
-        if batch.get("state") in ("done", "failed") and "rc" in batch:
+        if batch.get("state") in ("done", "failed", "rejected") and "rc" in batch:
+            return 0
+        if batch.get("boss_sim") and batch.get("state") == "lost":
+            boss_sim_jobs.finish(state, args.batch, args.rc, ROOT, DIR, enqueue)
+            save_state(state)
             return 0
         batch["finished"] = now_local()
-        finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
+        if batch.get("boss_sim"):
+            boss_sim_jobs.finish(state, args.batch, args.rc, ROOT, DIR, enqueue)
+        else:
+            finish_write_batch(args.batch, batch, args.rc, ROOT, os.path.join(DIR, "learner"), enqueue, inbox, run_checks=False)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
+        if batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch"):
+            boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
+                                dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
         save_state(state)
         return 0
     have = postmortem_ids()
@@ -434,9 +445,19 @@ def cmd_status(args):
     return 0
 
 
+def cmd_boss_check(args):
+    state = load_state()
+    result = boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
+                                 dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
+    save_state(state)
+    print(json.dumps({"boss_sim": result, "observed": state.get("boss_sim_observed", {}).get(args.character),
+                      "errors": state.get("boss_sim_errors", [])[-1:]}, ensure_ascii=False))
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck"])
+    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check"])
     parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default="silent")
@@ -446,7 +467,7 @@ def main():
     args = parser.parse_args()
     args.character = character_key(args.character) or "silent"
     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
-               "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck}[args.command]
+               "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck, "boss-check": cmd_boss_check}[args.command]
     os.makedirs(DIR, exist_ok=True)
     # A merge request only appends an event; full checks manage their own short state transactions.
     if args.command in ("request-merge", "recheck"):

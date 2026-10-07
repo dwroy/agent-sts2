@@ -35,7 +35,7 @@ action="${1:-}"; arg="${2:-}"
 
 # Our processes (never this script): pid + command line.
 ours() {
-  pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh|index\.ts pla[y]|ops/report\.py|learner/run\.ts|codex-ops-learner\.sh|ops/codex/main\.ts' 2>/dev/null \
+  pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh|index\.ts pla[y]|ops/report\.py|knowledge/builders/|learner/run\.ts|codex-ops-learner\.sh|ops/codex/main\.ts' 2>/dev/null \
     | grep -v -E '^[0-9]+ (pgrep|grep) ' | cut -c1-220
 }
 play_pids() {
@@ -165,6 +165,8 @@ for row in csv.reader(sys.stdin):
     exec python3 "$OPS/codex-ops-learn.py" write --task experience-update --runs "$arg" ;;
   fix-batch)
     exec python3 "$OPS/codex-ops-learn.py" write --task fix-batch ;;
+  boss-sim-check)
+    CODEX_OPS_ROOT="$ROOT" exec nice -n 19 python3 "$ROOT/.worktrees/live/ops/codex-ops-learn.py" boss-check ;;
   strategy-proposal)
     [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}(,[0-9A-Z]{12}){0,9}$ ]] || exit 2
     exec python3 "$OPS/codex-ops-learn.py" write --task strategy-proposal --runs "$arg" ;;

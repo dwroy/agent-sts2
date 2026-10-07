@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import time
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
 # Environment names passed into a herdr pane (its shell has the herdr server's environment, not ours); never key-like ones.
@@ -52,6 +53,11 @@ def start_learner(argv, root, scripts, state_dir, label):
         except (OSError, subprocess.SubprocessError) as error:
             sys.stderr.write(f"herdr-host run {label} failed ({error}); starting with setsid\n")
     proc = subprocess.Popen(argv, cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    if "boss-sim-batch" in argv:
+        pidfile = os.path.join(state_dir, "learner", label + ".pid")
+        os.makedirs(os.path.dirname(pidfile), exist_ok=True)
+        with open(pidfile, "w", encoding="utf8") as handle:
+            handle.write(str(proc.pid) + "\n")
     return proc.pid, None
 WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
@@ -147,7 +153,7 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
 def busy(state, task, alive):
     for batch in state["batches"].values():
         # The dedicated feature owns its own worktree, not the normal fix/proposal tree.
-        if batch.get("learner_task") in FEATURE_REQUESTS:
+        if batch.get("learner_task") in FEATURE_REQUESTS or batch.get("boss_sim"):
             continue
         if WORKTREES.get(batch.get("task")) != WORKTREES[task] or batch.get("state") != "running":
             continue
@@ -226,7 +232,9 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
     strategy = strategy_job(state, root, scripts, character, alive, stamp)
     calibration = calibration_job(state, root, scripts, character, alive, stamp)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration}
+    from boss_sim_jobs import check
+    boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
+    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration, "boss_sim": boss_sim}
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):

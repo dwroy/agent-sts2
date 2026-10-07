@@ -13,9 +13,15 @@ task="${4:-postmortem}"; worktree="${5:-$ROOT}"
 case "$task" in postmortem|experience-update|fix-batch|strategy-proposal) ;; *) exit 2 ;; esac
 learner_task="${6:-$task}"
 if [ "$learner_task" != "$task" ]; then
+  if [ "$learner_task" = boss-sim-batch ]; then
+    [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [ "$task" = fix-batch ] \
+      && [[ "$worktree" =~ ^$ROOT/\.worktrees/boss-sim-$character-[a-z0-9_]+-[0-9]{8}-[0-9]{6}$ ]] \
+      && [ "${7:-}" = "$DIR/learner/$batch.boss-evidence.json" ] || exit 2
+  else
   case "$learner_task" in silent-boss-calibration|codex-only-brain|silent-double-boss|boss-sim-automation) ;; *) exit 2 ;; esac
   [ "$task" = fix-batch ] && [ "$character" = silent ] \
     && [ "$worktree" = "$ROOT/.worktrees/$learner_task" ] || exit 2
+  fi
 fi
 mkdir -p "$DIR/learner"
 out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"
@@ -35,12 +41,13 @@ if [ -n "${LEARNER_CMD:-}" ]; then
   nice -n 10 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
 else
   args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
+  [ "$learner_task" != boss-sim-batch ] || args+=(--set "evidence=${7}" --set "batch=$batch")
   if [ "$task" = postmortem ]; then args+=(--set "runs=$runs");
   else
     args+=(--set merge=live)
     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
   fi
-  nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" learner/run.ts "${args[@]}" > "$out" 2> "$err"
+  nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" "$worktree/learner/run.ts" "${args[@]}" > "$out" 2> "$err"
 fi
 rc=$?
 [ -n "$tailer" ] && { sleep 1; kill "$tailer" 2>/dev/null; }
