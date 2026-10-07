@@ -297,6 +297,8 @@ export interface EnemySim {
 }
 
 export interface PlayerSim {
+  /** Observed Silent Bullet Time's current-turn draw lock; no other character's input changes. */
+  noDraw?: boolean;
   hp: number;
   /** Attacks that cost 0 this turn (Free Attack from Unrelenting). */
   freeAttacks?: number;
@@ -987,6 +989,7 @@ export interface Plan {
 
 interface Sim {
   pendingSelection?: boolean;
+  noDraw: boolean;
   hand: CardModel[];
   energy: number;
   hp: number;
@@ -1643,7 +1646,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // Shrug It Off+ kept for a 24-damage turn was drawn by Pommel Strike and discarded unplayed). Which
   // card goes on top is chosen later, so no plan draws after one; drawing first, then Headbutt, is fine.
   // CARD_CONDITIONS: a card whose draw waits on the hand (Restlessness) draws only when the rest of the hand meets it.
-  if (sim.topPlaced && (card.draw > 0 || card.drawsUntil || card.drawDiscardedHand) && (card.handCondition === undefined || handConditionMet(sim, card, card.handCondition))) return null;
+  if (!sim.noDraw && sim.topPlaced && (card.draw > 0 || card.drawsUntil || card.drawDiscardedHand) && (card.handCondition === undefined || handConditionMet(sim, card, card.handCondition))) return null;
   const next = clone(sim);
   if (automatic && card.serpentForm !== undefined && next.serpentForm !== null) {
     next.serpentForm = null;
@@ -1718,6 +1721,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.pendingSelection = true;
     next.unknown = [...next.unknown, `${card.name}（重放弃牌未验证）`];
   }
+  if (card.bulletTime && (plays > 1 || automatic)) next.unknown = [...next.unknown, "子弹时间（自动出牌或重放未验证）"];
   for (let play = 0; play < plays; play += 1) {
     const serpent = next.serpentForm;
     const serpentTargets = next.enemies.filter((enemy) => enemy.alive);
@@ -1830,7 +1834,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
     const room = bottled ? Number.POSITIVE_INFINITY : (player.drawable ?? Number.POSITIVE_INFINITY) - next.cardsDrawn;
-    const count = Math.max(0, Math.min(bottled ? BOTTLED_DRAW : GLOWWATER_DRAW, player.handLimit ?? HAND_LIMIT, room));
+    const count = next.noDraw ? 0 : Math.max(0, Math.min(bottled ? BOTTLED_DRAW : GLOWWATER_DRAW, player.handLimit ?? HAND_LIMIT, room));
     const draw = card.generates;
     if (card.drawn) drawCards(next, card.drawn.slice(0, count), player, bottled);
     else if (draw) {
@@ -1944,6 +1948,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     next.infernos += 1;
   }
   if (card.energyGain > 0) next.energy += card.energyGain;
+  if (card.bulletTime) {
+    next.noDraw = true;
+    // Only cards already legal in this hand are observed; do not unlock curses, hooks or unobserved X costs.
+    next.hand = next.hand.map((entry) => entry.type !== "Potion" && entry.playable && !entry.xCost && entry.cost >= 0
+      ? { ...entry, cost: 0 } : entry);
+  }
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
   // *earlier* cards only, which is what we simulate).
@@ -2060,7 +2070,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     const swapped = next.hand.filter((entry) => discards.has(entry.key)).length;
     next.hand = next.hand.filter((entry) => !discards.has(entry.key));
     if (card.drawn) drawCards(next, card.drawn.slice(0, swapped), player);
-    else if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
+    else if (draw && !next.noDraw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
   } else if (card.special === "chaos" && (card.generates || card.drawn)) {
     if ((next.serpentForm ?? 0) > 0) next.unknown = [...next.unknown, "群蛇形态（自动出牌未验证）"];
     // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card (or a
@@ -2328,6 +2338,7 @@ function damagePlayer(sim: Sim, amount: number, player: PlayerSim): void {
 
 /** `count` cards drawn from the pile as expected values (what they are is not known). */
 function drawExpected(next: Sim, count: number, player: PlayerSim): void {
+  if (next.noDraw) return;
   // SL_RETRY_KNOWN_DRAWS: the pile's known top cards come first, as the cards themselves (VNKN9952ZNA0 F25: the three
   // attempts drew the same 25 cards in the same order whatever was played); only the draws past them are expected values.
   if (next.known !== null && next.pileDrawn < next.known.length && count > 0) {
@@ -2463,6 +2474,7 @@ function addToHand(sim: Sim, cards: CardModel[], limit = HAND_LIMIT): void {
  * from the known pile, so later expected-value draws come from below them.
  */
 function drawCards(sim: Sim, cards: CardModel[], player: PlayerSim, reshuffled = false): void {
+  if (sim.noDraw) return;
   const room = reshuffled ? cards.length : Math.max(0, (player.drawable ?? Number.POSITIVE_INFINITY) - sim.cardsDrawn);
   // Hellraiser: a Strike drawn plays itself, free, at a random enemy (the rollout's hellraised card, a4f3795).
   const taken = cards.slice(0, Math.min(cards.length, room)).map((card) => (sim.hellraiser && isStrikeCard(card) ? hellraised(card) : card));
@@ -3521,7 +3533,8 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",")
     + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "")
-    + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "");
+    + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "")
+    + (sim.noDraw ? "#noDraw" : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");
@@ -3631,6 +3644,7 @@ export function drawFirst(plan: Plan, input: SolverInput, weights: Weights = wei
 
 function rootSim(input: SolverInput, weights: Weights): Sim {
   return {
+    noDraw: input.player.noDraw === true,
     hand: input.hand.filter((card) => card.playable),
     energy: input.player.energy,
     hp: input.player.hp,
