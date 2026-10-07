@@ -1906,10 +1906,16 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
 
   // Block before damage (Iron Wave order does not matter; Body Slam reads block after gains of
   // *earlier* cards only, which is what we simulate).
-  if (card.block > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) {
+  // DUZUBAJ3A8GP F30 T5: poison 4+4 -> 4+9 before plain Mirage, eight shown -> thirteen gained.
+  // Modifier combinations lack an isolated observation; retain their displayed-block model.
+  const poisonBlock = card.blockFromPoison && !card.upgraded && !player.frail &&
+    (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 && !player.unmovableArmed &&
+    !player.shadowmeldActive && !next.shadowmeld;
+  const cardBlock = poisonBlock ? next.enemies.reduce((sum, enemy) => sum + (enemy.alive ? enemy.poison ?? 0 : 0), 0) : card.block;
+  if (cardBlock > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) {
     // Unmovable doubles only the first card Block of the turn, but every Block card shows the doubled
     // number until then (92MW F33 T2: 22 planned, 16 gained; T7 -9 planned, -14).
-    let shown = card.block;
+    let shown = cardBlock;
     // Evil Eye: double Block when a card was exhausted this turn, before this turn's decision or earlier
     // in this line (Q97B F23 T3: doubled from the state flag only, so "True Grit, Evil Eye" read 8, and a
     // line exhausting only after it was never told apart).
