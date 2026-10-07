@@ -2863,6 +2863,14 @@ function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { ethe
   return { etherealBlock, platingNow, claspBlock, blockAtEnd };
 }
 
+function fightEnded(sim: Sim, input: SolverInput): boolean {
+  const pending = sim.enemies.some((enemy) => !enemy.alive && (enemy.revives ||
+    (input.enemies.find((start) => start.index === enemy.index)!.hp > 0 &&
+      ((enemy.stock ?? 0) > 0 || enemy.spawnsOnDeath || ((enemy.eruption ?? 0) > 0 && enemy.maxHp < 1_000_000)))));
+  const living = sim.enemies.filter((enemy) => enemy.alive);
+  return !pending && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
+}
+
 function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // A Howl from Beyond exhausted this turn plays itself at the end of the turn, before the enemies act.
   const howls = sim.exhausted.filter((card) => card.cardId === "HOWL_FROM_BEYOND");
@@ -2891,8 +2899,39 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const victim = randomVictim(sim);
     if (victim) hitEnemyRaw(sim, victim, parry.damage);
   }
+  // silent-0213: TKXQ6L4N9A6U F22 T6 dies to two held Toxic cards before poison.
+  // An immediate win skips the turn's end; an enemy-turn poison win must pay it.
+  const wonBeforePoison = fightEnded(sim, input);
+  // Damage-type held penalties meet block; held HP-loss effects bypass it.
+  const heldCards = [...sim.hand, ...sim.held];
+  const heldCount = heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand;
+  const heldLoss = (card: CardModel): number => (card.heldHpLoss ?? 0) + (card.heldHpLossPerCard ?? 0) * heldCount;
+  const heldHpLoss = wonBeforePoison ? 0 : heldCards.reduce((sum, card) => sum + heldLoss(card), 0);
+  // Withering Presence can add another held penalty while playing this line.
+  const wither = input.wither;
+  const withersAdded =
+    wither && wither.every > 0
+      ? Math.floor((wither.played + sim.played - (input.cardsPlayedThisTurn ?? 0)) / wither.every) - Math.floor(wither.played / wither.every)
+      : 0;
+  const heldPenalty = wonBeforePoison ? 0 :
+    heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + withersAdded * (wither?.damage ?? 0);
+  const { etherealBlock, platingNow, claspBlock, blockAtEnd } = endBlockParts(sim, input, wonBeforePoison);
+  const disintegration = wonBeforePoison ? 0 : input.player.endTurnHpLoss ?? 0;
+  const blockLeft = Math.max(0, blockAtEnd - disintegration);
+  // Reuse the existing block, Buffer, HP-cap and revive arithmetic for this prefix.
+  const pendingPoison = sim.enemies.some((enemy) => enemy.alive && (enemy.poison ?? 0) > 0);
+  const diesBeforePoison = pendingPoison && !wonBeforePoison && (() => {
+    let room = input.player.hpLossCap ?? Infinity;
+    const losses = [input.player.hp - sim.hp, heldHpLoss, Math.max(0, disintegration - blockAtEnd),
+      bufferedLoss([heldPenalty], blockLeft, sim.buffer)].map((loss) => {
+        const landed = loss < 0 ? loss : Math.max(0, Math.min(loss, room));
+        room -= landed;
+        return landed;
+      });
+    return reviveThrough(input.player.hp, losses, input.player.revives ?? []).hp <= 0;
+  })();
   // Y6GM2CHWJBEY F17 T7 / T082DRCUHRRD F33 T9: poison resolves before the enemy attacks.
-  if (sim.enemies.some((enemy) => enemy.alive && (enemy.poison ?? 0) > 0)) {
+  if (!diesBeforePoison && pendingPoison) {
     sim = clone(sim);
     const triggers = 1 + sim.poisonExtraTriggers;
     // silent-0174/0175: D4LJ9QMGFB8Q F20 T4 and 4Y94N8RDPGPM F30 T2 retain
@@ -2906,45 +2945,28 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   const restocked = sim.enemies.filter((enemy) => !enemy.alive && (enemy.stock ?? 0) > 0 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
   // An enemy that spawns others on death (Phrog Parasite, Gremlin Merc): a kill, not a win.
   const spawning = sim.enemies.filter((enemy) => !enemy.alive && enemy.spawnsOnDeath && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
-  const nextPhase = restocked.length > 0 || spawning.length > 0 || sim.enemies.some((enemy) => !enemy.alive && enemy.revives);
   // Waterfall Giant (Steam Eruption, 「被击杀时，在你的下一回合结束时造成伤害」): killed, it stays as a husk
   // (999,999,999 HP) that explodes for its eruption stacks at the end of our NEXT turn, through that
   // turn's block (N7SAK F17: killed on T14 at eruption 51, T15 24 HP + 18 block, dead 9 short). A kill,
   // not a win: the fight goes on until the explosion is survived.
   const erupting = sim.enemies.filter((enemy) => !enemy.alive && (enemy.eruption ?? 0) > 0 && enemy.maxHp < 1_000_000 && input.enemies.find((start) => start.index === enemy.index)!.hp > 0);
   const explodesNext = erupting.reduce((sum, enemy) => sum + (enemy.eruption ?? 0), 0);
-  const winsFight = !nextPhase && erupting.length === 0 && (living.length === 0 || (living.every((enemy) => enemy.minion) && sim.enemies.some((enemy) => !enemy.minion)));
-  // Status cards still in hand at end of turn (Toxic, Burn, …) hurt; unplayable ones always stay.
-  // Damage-type penalties (Burn) meet block like an attack; HP-loss ones (Beckon) go straight to HP.
-  const heldCards = [...sim.hand, ...sim.held];
-  const heldCount = heldCards.filter((card) => card.type !== "Potion").length + sim.drawnInHand;
-  const heldLoss = (card: CardModel): number => (card.heldHpLoss ?? 0) + (card.heldHpLossPerCard ?? 0) * heldCount;
-  const heldHpLoss = winsFight ? 0 : heldCards.reduce((sum, card) => sum + heldLoss(card), 0);
-  // Withering Presence: a Wither added by this turn's cards is held at the end of it (TQX5 T5: planned
-  // -3, the 6th card added a Wither and the turn cost 9).
-  const wither = input.wither;
-  const withersAdded =
-    wither && wither.every > 0
-      ? Math.floor((wither.played + sim.played - (input.cardsPlayedThisTurn ?? 0)) / wither.every) - Math.floor(wither.played / wither.every)
-      : 0;
-  const heldPenalty =
-    heldCards.reduce((sum, card) => sum + (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0), 0) + (winsFight ? 0 : withersAdded * (wither?.damage ?? 0));
+  const winsFight = !diesBeforePoison && fightEnded(sim, input);
   // The cards that damage: named in the notes (a Wither, Toxic x2 were all "Burn": YVYZ F48 T6, 3RME F30, NH8A F31).
   const heldDamageFrom = countedNames([
     ...heldCards.filter((card) => (card.heldPenalty ?? 0) - (card.heldHpLoss ?? 0) > 0).map((card) => card.name),
-    ...(winsFight || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
+    ...(wonBeforePoison || (wither?.damage ?? 0) <= 0 ? [] : Array.from({ length: withersAdded }, () => "Wither added by this turn's cards")),
   ]);
   const heldHpLossFrom = countedNames(heldCards.filter((card) => heldLoss(card) > 0).map((card) => card.name));
-  const hits = winsFight ? [] : incomingHits(sim, input);
-  const incomingRaw = winsFight ? 0 : hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
+  const hits = winsFight || diesBeforePoison ? [] : incomingHits(sim, input);
+  const incomingRaw = hits.reduce((sum, hit) => sum + hit.amount, 0) + heldPenalty;
   // Disintegration lands at the end of our turn and hits block first (DG1 T5: block 8 -> 2, HP
   // unchanged); what block it leaves then meets the enemy attacks.
   // Plating's later turns: the HP it can absorb (a potion's part like a card's).
   const platingHp = winsFight ? 0 : platingAbsorbed(sim.plating, input);
   const platingValue = sim.plating > 0 ? weights.hp * platingHp : 0;
-  const { etherealBlock, platingNow, claspBlock, blockAtEnd } = endBlockParts(sim, input, winsFight);
   // What the mod's lethal flag (the intents against the block up now) leaves out (Outcome.endTurnGuards).
-  const endTurnGuards = winsFight
+  const endTurnGuards = wonBeforePoison
     ? []
     : [
         { what: "Plating/Metallicize block at the turn's end", amount: input.player.endTurnBlock ?? 0 },
@@ -2954,8 +2976,6 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
         { what: "Regen healing before the enemy acts", amount: Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp)) },
         { what: "Buffer stacks, each preventing a whole HP loss", amount: sim.buffer },
       ].filter((guard) => guard.amount > 0);
-  const disintegration = winsFight ? 0 : input.player.endTurnHpLoss ?? 0;
-  const blockLeft = Math.max(0, blockAtEnd - disintegration);
   // silent-0177/0178: only plain enemy hits against block were observed. Do not infer
   // the order with Buffer, other reductions, self damage or damaging held cards.
   const rodVerified = input.player.tungstenRod === true && (input.player.buffer ?? 0) === 0 && sim.buffer === 0 &&
@@ -2975,11 +2995,11 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Buffer: each stack left prevents the next HP loss, whole: the first hits that get past the block,
   // in order (a held Burn at the end of our turn first).
   const incomingAfterBlock = rodLosses !== null ? rodLosses.reduce((sum, loss) => sum + loss, 0)
-    : sim.buffer > 0 && !winsFight ? bufferedLoss([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer) : Math.max(0, incomingRaw - blockLeft);
+    : sim.buffer > 0 && !wonBeforePoison ? bufferedLoss([heldPenalty, ...hits.map((hit) => hit.amount)], blockLeft, sim.buffer) : Math.max(0, incomingRaw - blockLeft);
   // Imbalanced: an enemy whose every hit meets block (in attack order) is stunned for its next move.
   const stunned = winsFight ? [] : imbalanceStuns(sim, hits, blockLeft, sim.buffer);
   // Regen heals at the end of our turn, before the enemy attacks (never past max HP; no end of turn after a win).
-  const regenHeal = winsFight ? 0 : Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp));
+  const regenHeal = winsFight || diesBeforePoison ? 0 : Math.max(0, Math.min(sim.regen, input.player.maxHp - sim.hp));
   const selfLoss = input.player.hp - sim.hp - regenHeal;
   // Crimson Mantle takes its HP at the start of our next turn, before any block (YP9 T5: 1 HP left,
   // no attack coming, the Mantle killed us). The mod's lethal warning does not see it either. It is
@@ -2987,7 +3007,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Mantle plan showed hp_lost 0).
   // Each Inferno played this turn adds its own 1 HP at the start of every later turn, a second one too (the copies up
   // are in startTurnHpLoss: C4F14F3XPN0N F33, two Inferno+ took 2; a second Inferno had looked free).
-  const startTurnLoss = winsFight ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + sim.infernos;
+  const startTurnLoss = winsFight || diesBeforePoison ? 0 : (input.player.startTurnHpLoss ?? 0) + sim.mantles + sim.infernos;
   const turnLoss = selfLoss + incomingAfterBlock + Math.max(0, disintegration - blockAtEnd) + heldHpLoss;
   // Self-Forming Clay: next turn's block, CLAY_BLOCK for each HP loss of this turn (ours so far, a held card's
   // HP loss, Disintegration past block, each held Burn or enemy hit past block and Buffer) on top of what is owed.
@@ -3013,7 +3033,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
     const enemyTurn: number[] = rodLosses !== null ? [...rodLosses] : [];
     if (rodLosses === null) {
       let pool = blockLeft;
-      let stacks = winsFight ? 0 : sim.buffer;
+      let stacks = wonBeforePoison ? 0 : sim.buffer;
       for (const amount of [heldPenalty, ...hits.map((hit) => hit.amount)]) {
         if (amount <= 0) continue;
         const absorbed = Math.min(pool, amount);
@@ -3298,7 +3318,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       hpAfter,
       dies,
       // Dead on our own turn, by our own cards (Blood Wall's cost at 2 HP: JSA5K8YZ9RXV F48 T6), before the enemy acts.
-      ...(dies && !winsFight && sim.hp <= 0 ? { diesOwnTurn: true as const } : {}),
+      ...(dies && !winsFight && (sim.hp <= 0 || diesBeforePoison) ? { diesOwnTurn: true as const } : {}),
       ...(revived ? { revived } : {}),
       blockGained: sim.blockGained + etherealBlock,
       // Damage into a Giant husk is worth nothing (scored so above) and is not shown as dealt either (YQL8D59999AX
