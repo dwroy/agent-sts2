@@ -64,6 +64,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 |---|---|
 | procs / stall-check / mod-state | 我们的进程（pgrep）/ ops/stall-check.sh / mod 的 GET /state |
 | autoplay-start | prompt 的开工步骤：有残留的 autoplay / stop-after / 对局就拒绝；删 ops/STOP；setsid nohup ops/autoplay.sh；打印 PID 和 live 的提交号 |
+| autoplay-reload <旧 autoplay PID> <当前 play PID> | 核对属主、精确脚本路径、进程身份和 autoplay.pid；有 report.py、stop-after 或重复进程时拒绝。暂时暂停旧循环，启动带 WAIT_PID 的独立新循环，确认就绪再终止旧循环；确认前失败恢复旧循环。回执给新 PID、ops/live 提交和脚本 SHA256；不停止 play、不改 STOP，不改变 hosting 配置 |
 | autoplay-stop / play-stop / kill <PID> | 停 autoplay-start 起的 autoplay（先核对命令行）/ ops/stop.sh / 按 PID 停我们自己的 autoplay、stop-after、对局、report.py、学习者（核对属主和命令行） |
 | launch-game | 记忆卡 launch-game-on-desktop 的做法：`cd /mnt/c`，schtasks /create … /it、/run、/delete，再等 mod 最多 3 分钟；游戏在跑时拒绝 |
 | win-procs / win-kill <PID> | tasklist 里的 steam / 游戏进程和所在会话 / 只关会话 0（Services）里的 steam.exe 或游戏 |

@@ -11,6 +11,33 @@
 # instead of starting one, so the loop can be restarted mid-run.
 set -u
 . "$(dirname "$0")/paths.sh"
+# AUTOPLAY_READY: acknowledge WAIT_PID before a reload can retire the old shell.
+if [ -n "${AUTOPLAY_READY:-}" ]; then
+  [ -n "${WAIT_PID:-}" ] && kill -0 "$WAIT_PID" 2>/dev/null || exit 1
+  [ -n "${AUTOPLAY_RELEASE:-}" ] && [ -n "${AUTOPLAY_ACTIVE:-}" ] \
+    && [ -n "${AUTOPLAY_RELOAD_PARENT:-}" ] && [ -n "${AUTOPLAY_RELOAD_OLD:-}" ] \
+    && [ -n "${AUTOPLAY_RELOAD_OLD_START:-}" ] || exit 1
+  reload_old_alive() {
+    local stat_text fields
+    [ -r "/proc/$AUTOPLAY_RELOAD_OLD/stat" ] || return 1
+    stat_text=$(<"/proc/$AUTOPLAY_RELOAD_OLD/stat")
+    read -r -a fields <<< "${stat_text##*) }"
+    [ "${fields[19]:-}" = "$AUTOPLAY_RELOAD_OLD_START" ] && [ "${fields[0]:-}" != Z ]
+  }
+  printf '%s\n' "$$" > "$AUTOPLAY_READY" || exit 1
+  # Never report or start a run until the caller permits takeover and the old shell is gone.
+  while [ ! -f "$AUTOPLAY_RELEASE" ] || reload_old_alive; do
+    if [ ! -f "$AUTOPLAY_RELEASE" ] && ! kill -0 "$AUTOPLAY_RELOAD_PARENT" 2>/dev/null; then
+      # Restore the old shell if the broker disappeared before committing the handoff.
+      reload_old_alive && kill -CONT "$AUTOPLAY_RELOAD_OLD" 2>/dev/null
+      exit 1
+    fi
+    sleep 0.05
+  done
+  printf '%s\n' "$$" > "$AUTOPLAY_ACTIVE" || exit 1
+  unset AUTOPLAY_READY AUTOPLAY_RELEASE AUTOPLAY_ACTIVE AUTOPLAY_RELOAD_PARENT AUTOPLAY_RELOAD_OLD AUTOPLAY_RELOAD_OLD_START
+  unset -f reload_old_alive
+fi
 CONSOLE="$LOGS/console"
 RUNS="$LOGS/runs.jsonl"
 export LOGS
