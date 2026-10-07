@@ -77,6 +77,8 @@ import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
 /** Enemy powers the solver models, or that do not change this turn's numbers. */
 const MODELLED_ENEMY_POWERS = new Set([
   "VULNERABLE_POWER", "WEAK_POWER", "STRENGTH_POWER", "ARTIFACT_POWER", "INTANGIBLE_POWER", "SLIPPERY_POWER",
+  // silent-0216: poison is already carried by enemySims and resolved by the solver.
+  "POISON_POWER",
   "HARDENED_SHELL_POWER", "THORNS_POWER", "CURL_UP_POWER", "FLUTTER_POWER", "HARD_TO_KILL_POWER", "SLOW_POWER",
   "ILLUSION_POWER", "MINION_POWER", "TERRITORIAL_POWER", "PLOW_POWER", "ESCAPE_ARTIST_POWER", "PLATING_POWER",
   "SLUMBER_POWER", "INFESTED_POWER", "SWIPE_POWER", "IMBALANCED_POWER", "RITUAL_POWER", "SHRINK_POWER",
