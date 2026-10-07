@@ -1,0 +1,335 @@
+{
+  "task": "fix-batch",
+  "feature": "silent-double-boss",
+  "character": "silent",
+  "base": "536713b82bd74bb347224dd26a5719f24894c1bf",
+  "fixes": [
+    {
+      "item": "Roy已授权独立功能 silent-double-boss A1/A2/A3：续战终局价值与同样本连续双boss",
+      "commit": "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+      "test": "agent/tests/silent-double-boss.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "Roy已授权独立功能 silent-double-boss B：包括赢的战斗的实盘资源链",
+      "commit": "f58add31e0250f2733f9a264f09dfe186ad57824",
+      "test": "learner/tests/test_resource_chain.py",
+      "fails_without_fix": true
+    },
+    {
+      "item": "Roy已授权独立功能 silent-double-boss C：独立升阶审计去重/重试/租约",
+      "commit": "f58add31e0250f2733f9a264f09dfe186ad57824",
+      "test": "ops/tests/test_learning_flow.py:ClimbAudits",
+      "fails_without_fix": true
+    },
+    {
+      "item": "Roy已授权独立功能 silent-double-boss D：授权同步与经验-代码提案闭环",
+      "commit": "f58add31e0250f2733f9a264f09dfe186ad57824",
+      "test": "ops/tests/test_learning_flow.py:CodeProposals/ProposalConsumption; agent/tests/learner-learning-flow.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "A4新增必死/SL重打F48条件",
+      "reason": "实盘F49仅4局全败、缺反事实和正例校准；学习者明确保留现有条件，低可信连续模型不作为SL判据。"
+    },
+    {
+      "item": "C首次新审计batch/PID",
+      "reason": "并行集成已接通根目录调用点并核f58源码为main祖先、四个helper逐字节相同；当前无新审计batch/PID，正式tick实际派发待运维核验。"
+    },
+    {
+      "item": "沙箱外完整tsc+vitest",
+      "reason": "按fix-batch完成事件交调度器；原固定排除不修改，外部结果待完成事件。"
+    }
+  ],
+  "merged": "c9b0f8a95c1125377da1f81c9312d50e7889b3eb",
+  "merges": [
+    "ac076f8a71f101de62d5345fa6b4fca248fd928c",
+    "c9b0f8a95c1125377da1f81c9312d50e7889b3eb"
+  ],
+  "source_commits": [
+    "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+    "f58add31e0250f2733f9a264f09dfe186ad57824"
+  ],
+  "release_commits": [
+    "7478ff107b335af503e31727f36c3f7a33430a6b",
+    "c11bb53ad6804ab8007c3b6744d92130a326a9dd"
+  ],
+  "version": "S1.double-boss1",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 229,
+    "cases": 2421,
+    "failed": 0,
+    "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/live-bcd-sandbox.log"
+  },
+  "checks": {
+    "A_draft": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 225,
+      "cases": 2383,
+      "failed": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/source-a-sandbox.log"
+    },
+    "A_source": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 225,
+      "cases": 2384,
+      "failed": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/source-a-final-sandbox.log"
+    },
+    "A_live": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 228,
+      "cases": 2416,
+      "failed": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/live-a-sandbox.log"
+    },
+    "BCD_initial": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 226,
+      "cases": 2387,
+      "failed": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/source-bcd-sandbox-1.log"
+    },
+    "BCD_original_failure": {
+      "tsc": 0,
+      "vitest": 1,
+      "files": 225,
+      "cases": 2376,
+      "failed": 1,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/source-bcd-sandbox-final.log"
+    },
+    "BCD_source": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 226,
+      "cases": 2387,
+      "failed": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/source-bcd-sandbox-retry.log"
+    },
+    "BCD_live": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 229,
+      "cases": 2421,
+      "failed": 0,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/live-bcd-sandbox.log"
+    },
+    "python_source_ops": {
+      "rc": 0,
+      "cases": 44,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/cd-workflow-tests-final.log"
+    },
+    "python_source_resources": {
+      "rc": 0,
+      "cases": 7,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/b-resource-tests-final.log"
+    },
+    "python_live_ops": {
+      "rc": 0,
+      "cases": 32,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/live-bcd-python-ops.log"
+    },
+    "python_live_resources": {
+      "rc": 0,
+      "cases": 7,
+      "log": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/live-bcd-python-learner.log"
+    }
+  },
+  "checked_trees": {
+    "A_draft": "734216a9f0ce32cc16d7df64b53386664251e75d",
+    "A_source": "ed84bd8206356a2de3850840eefe3687e188b059",
+    "A_live": "db5b25870bf50131a5f5744ccc3d49e8c788974e",
+    "BCD_initial": "aa944a299c73c546aac289ae2cf311f45d80633d",
+    "BCD_source": "7bfd60aafc42d58c4a690d3d87558cbf33958cd1",
+    "BCD_original_failure_and_retry": "7bfd60aafc42d58c4a690d3d87558cbf33958cd1",
+    "BCD_live": "919f184719284ae22667a5d401f616e6eb06fe21"
+  },
+  "code_proposals": [
+    "silent-proposal-9239d549c2679861"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal"
+  ],
+  "ledger": {
+    "ids": [
+      "silent-0228"
+    ],
+    "status": "proposed; shipped由运维核实际版本",
+    "proposal_queue_state": "implemented（CLI核实A源码为实际live祖先；不代替ledger shipped）"
+  },
+  "evidence": {
+    "runs": [
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "ZVYUL2YP3518",
+      "TDLBRNA0R05B"
+    ],
+    "states_bytes_cutoff": 8405204707,
+    "silent_completed": 93,
+    "a10_completed": 53,
+    "f48_runs": 11,
+    "f49_runs": 4,
+    "f49_wins": 0,
+    "sl_attempts_are_independent_runs": false,
+    "simulations": 8192,
+    "split": "前2整局调参/后2整局留出；验证后4局重拟合，固定基础知识的回顾性切分，不是在线因果试验",
+    "hp_extra_value": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        8,
+        0
+      ],
+      [
+        17,
+        0
+      ],
+      [
+        25,
+        0.15625
+      ],
+      [
+        40,
+        1.25
+      ],
+      [
+        50,
+        3.203125
+      ],
+      [
+        60,
+        4.921875
+      ]
+    ],
+    "poison_extra_holding_hp": 0.36439732142857145,
+    "observed_poison": 6,
+    "heldout_continuous": {
+      "ZVYUL2YP3518": {
+        "samples": 32,
+        "first_wins": 28,
+        "first_win_second_death": 26,
+        "joint_wins": 2
+      },
+      "TDLBRNA0R05B": {
+        "samples": 32,
+        "first_wins": 31,
+        "first_win_second_death": 31,
+        "joint_wins": 0
+      }
+    },
+    "joint_brier_two_negative_runs": 0.001953125,
+    "f49_actual_two_sided_95_upper": 0.6023646356164747,
+    "post_baseline_finished_runs": [
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "ascension": 10,
+        "floor": 13,
+        "victory": false,
+        "ended": "2026-10-07T05:17:57.587Z"
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "ascension": 10,
+        "floor": 28,
+        "victory": false,
+        "ended": "2026-10-07T05:43:43.383Z"
+      },
+      {
+        "run_id": "5PM6JAQG6FNQ",
+        "ascension": 10,
+        "floor": 39,
+        "victory": false,
+        "ended": "2026-10-07T06:21:09.408Z"
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "ascension": 10,
+        "floor": 30,
+        "victory": false,
+        "ended": "2026-10-07T06:57:27.794Z"
+      }
+    ],
+    "limitations": [
+      "4独立局与大量SL截断；模拟种子不增加实盘样本量",
+      "基础牌/药水/跨战计数器模型仍不完整；单场校准不用于连续结果",
+      "实际0/4胜，没有证明上线提高实盘通关率",
+      "HP>60夹边界，其他药水不添参数；其余角色/等级保持等价",
+      "资源链净HP变化不等于敌人伤害，缺首尾帧与饮用/丢弃来源需学习者核证"
+    ]
+  },
+  "deployment": {
+    "A": {
+      "pre_merge": "c3b308f5a3d7a5f4d4bef1478965e1142cda9d54",
+      "merged": "ac076f8a71f101de62d5345fa6b4fca248fd928c",
+      "test_tree": "db5b25870bf50131a5f5744ccc3d49e8c788974e",
+      "release_commit": "7478ff107b335af503e31727f36c3f7a33430a6b",
+      "version": "S1.double-boss1",
+      "release_time": "2026-10-07 14:08",
+      "refresh_paths": [
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ]
+    },
+    "BCD": {
+      "pre_merge": "6181c683724a17bd23e4bf7b1b2b3f83fbd832d8",
+      "merged": "c9b0f8a95c1125377da1f81c9312d50e7889b3eb",
+      "test_tree": "919f184719284ae22667a5d401f616e6eb06fe21",
+      "release_commit": "c11bb53ad6804ab8007c3b6744d92130a326a9dd",
+      "release_time": "2026-10-07 15:20",
+      "refresh_paths": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md"
+      ],
+      "all_knowledge_preserved": true,
+      "versions_preserved": true
+    },
+    "ops_main_sync": "并行集成已完成；ops-main-activation-proof.json核main祖先与四个helper逐字节相同。首次正式审计派发/PID待核，本任务未写根目录源码或启动联网学习者"
+  },
+  "paths": {
+    "report_md": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/report.md",
+    "report_json": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/report.json",
+    "A_proposal": "/home/dw/Projects/agent-sts2/.worktrees/silent-double-boss/paper/materials/silent/double-boss.md",
+    "BCD_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-double-boss/paper/materials/silent/double-boss-learning-flow.md",
+    "A_preserved_code_proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/a-code-proposal.md",
+    "A_merge_record": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/merge-a.json",
+    "BCD_merge_record": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/merge-bcd.json",
+    "logs_and_initial_drafts": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss",
+    "withdraw_record": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/withdraw-bcd.json",
+    "failures": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/development-failures.md",
+    "source_fixed_patch": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/source-bcd-fixed.patch",
+    "live_fixed_patch": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/live-bcd-preview.patch",
+    "root_code_proposals": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+    "root_ledger": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+    "notifications": [
+      "/home/dw/Projects/agent-sts2/notes/for-dai.md",
+      "/home/dw/Projects/agent-sts2/ops/inbox-dev.md"
+    ],
+    "ops_activation_proof": "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/ops-main-activation-proof.json",
+    "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-double-boss",
+    "live_worktree": "/home/dw/Projects/agent-sts2/.worktrees/live"
+  }
+}

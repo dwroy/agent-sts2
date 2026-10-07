@@ -1,0 +1,51 @@
+## 修 bug 回报
+
+- 合并基线：main → 324b5ef29910ff52010a82c45094ac5f9f6f5782
+- 修复：铁蒺藜新建荆棘接线（CA5KE8GFJ9X2，F9 T6／F13 T1，silent-0229）— be0df8cd — 测试 agent/tests/silent-caltrops.test.ts:new Thorns persists in the later turns of both rollout paths — 去掉修复时失败：是（5败2过；恢复7过）
+- 修复：rollout 实钟预算测试夹具 — 93c253fb — 测试 agent/tests/rollout-live-clock.test.ts:keeps the fixture budget assertion after a simulated wall-clock pause — 去掉修复时失败：是（2败；恢复2过）
+- 已被别人修掉的：额度提示 — 1cf04904；滑溜毒 — 9c19ce71；SL 时钟 — 3d6340e0；其他条目及提交见[已修清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-151302-fix-batch/already-fixed.md)。
+- 没修的：缓存、mod 超时 — 证据不足；boss 性能 — 太大；策略及 B4/B5、A10 专项 — 非纯 bug，交专用任务。
+- 测试：两次 tsc 均退出0；vitest 分别230文件／2423用例／退出0、231文件／2425用例／退出0；无超时重跑。
+- 合入：未合入。8次申请 live 锁均 busy；只读三方预检发现21项记录冲突。live 刷新数据保持原样，详见[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-151302-fix-batch/handoff-ops.md)。
+- 需要 Dai 定的事：保血、留药、boss 时钟校准、路线／休息、小偷优先、A10 第二 boss、无色估值；已授权专项另行处理。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "324b5ef29910ff52010a82c45094ac5f9f6f5782",
+  "fixes": [
+    {
+      "item": "silent-0229：铁蒺藜新建荆棘漏模型/后续推演",
+      "commit": "be0df8cd17319dbae0d51c421ccad62b2cb8228b",
+      "test": "agent/tests/silent-caltrops.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "14:13 rollout-live 实钟预算测试夹具",
+      "commit": "93c253fbccef6b3e482eca661cbcf546ed1bd788",
+      "test": "agent/tests/rollout-live-clock.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {"item": "Codex 缓存命中偏低", "reason": "证据不足；离线任务不能进行 LLM 实测"},
+    {"item": "mod 请求超时自愈", "reason": "证据不足；未定位可固定复现的根因"},
+    {"item": "boss 模拟性能与 CPU 争用", "reason": "太大；需要独立性能分析"},
+    {"item": "保血、留药、时钟、路线、休息等策略", "reason": "策略类"},
+    {"item": "B4/B5 与 A10 专项", "reason": "非纯 bug；由专用任务处理"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2425}
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11535-653e-7602-852a-e79e4a1cb931
+轮数：1；工具调用：command_execution×94 file_change×12
+token：输入 229.5k、输出 56.3k（其中推理 29.8k）、cache 读 13182.7k、cache 写 0（命中 98.3%）
+成本：未提供
+耗时：2624.1 s（墙钟）
+时间：首个事件 2.5 s、模型首个输出 10.5 s、首次工具 11.7 s、末次工具结束 2583.8 s；工具内共 1938.3 s，其余（模型生成、推理、网络）683.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×84 wait×1；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T15-13-03-01a11535-653e-7602-852a-e79e4a1cb931.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-151302-fix-batch.jsonl

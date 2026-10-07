@@ -746,3 +746,8 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 
 - **silent-0234：迷雾HAZE群体施毒漏入卡牌模型**。学习者证据DUZUBAJ3A8GP/SILENT A10 F27 T4，迷雾+→勒紧→防御原线预测伤2/血损3，实毒2→8、结算8/损3；T5生存者→防御→迷雾+原线预测伤7/损9，实毒7→13、结算13/损9，两条各独立漏6毒伤，污染血价正确。当前live只读定位card-model.ts:909施毒ID名单缺HAZE、:1063仅输出非零poison，turn-solver.ts:2182已有全体目标施毒路径，缺口在上游。首证T082DRCUHRRD/A0 F46 T4原线含HAZE+却预计0伤，实际毒6→12；first_run=T082、prior=no、observed保持，与0008常规毒及0219蛇咬漏毒分账。
 - 交学习者按这两条原线及首证补接线，固定回归撤源码失败/恢复通过，核验多目标、普通/升级及毒结算不重复，保持铁甲等价；源码自测通过自行合live后再CLI登记shipped。此局正常结束，不按卡死处理，不据6毒差声称能转胜；机制0235由学习者闭环，不追加打法。原文、15:30:12出牌顺序勘误与11所属账本行见paper/materials/silent/20261007-1531-events/lessons-original.md及ledger-original.jsonl。普通151301修复工作树占用中，调度器按队列交可用批次，不重复派同项。
+
+## 2026-10-07 16:20 — VLZ复盘新增非阻塞纯bug（神化模型；不重复代码提案派发）
+
+- **silent-0237：APOTHEOSIS升级效果未传播同一出牌方案和后续抽牌**。学习者证据VLZ6CCT8AQ0A/SILENT A10 F43 T1 decisions269706/269707、states275679—275687：神化后同一后续牌序原预测43伤/损14，实打神化后重问51伤/损13且兑现，独立少报8伤、多报1血损；F45 T1仍未建模并未施放。只读b0f41f03 card-model.ts:922、945—948和turn-solver.ts:1974—1976缺APOTHEOSIS状态变换。首证VPW8YH7A4QFM/A10 F35 T1原候选未建模，first_run=VPW、prior=no、observed，不把不施放本身当普遍错误。
+- 已有独立代码提案silent-proposal-89354805ee4d7e77及学习者固定帧方案paper/materials/silent/20261007-1610-events/proposal-apotheosis.md，调度器待办自动派策略学习者；普通批处理前须查共享提案租约/实际源码，避免并发或重复实现。证据及未知升级差值按该提案，由学习者完成红绿/角色隔离/原入口自测、实际live后再shipped，运维不补游戏机制。此局正常结束、不按卡死处理，不据8伤差承诺末战可赢；0238机制沿学习者闭环，rollout预算提案f2bfcedd独立处理，旧项只support无repeat。
