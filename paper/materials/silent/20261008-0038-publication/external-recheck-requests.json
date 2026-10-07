@@ -1,0 +1,53 @@
+{
+  "observed_at_cst": "2026-10-08 00:49",
+  "publication": "0d6c1a82ac0b7ec2b5134e2f650070bdeba7e56a",
+  "registration_commit": "90ebf830fe475b5f26cb9de2bec42d20c563d31e",
+  "rechecks": [
+    {
+      "batch": "20261008-000408-strategy-proposal",
+      "source": "3f69541b5d3259dac94d3395bfe3da47936b4de9",
+      "actual_source_ancestor": true,
+      "action": "bash ops/codex-ops-do.sh learner-recheck 20261008-000408-strategy-proposal",
+      "requests_this_wake": 1,
+      "observed_live": "0d6c1a82ac0b7ec2b5134e2f650070bdeba7e56a",
+      "observed_tree": "3155f2857271545026d7e21241c0b6e30c31d0e5",
+      "scheduler_lines": [
+        "2026-10-08 00:49 broker learner-recheck 20261008-000408-strategy-proposal"
+      ],
+      "request": [],
+      "state": "running",
+      "full_external_passed": false,
+      "old_failure_and_report_history_preserved": true,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-000408-strategy-proposal.fallback-3155f2857271545026d7e21241c0b6e30c31d0e5.checks.log",
+      "prefix_bytes": 116,
+      "prefix_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa"
+    },
+    {
+      "batch": "20261007-234302-experience-update",
+      "source": "18f23638951e5dea6c0bd557303c20d5ae2a88dd",
+      "actual_source_ancestor": true,
+      "action": "bash ops/codex-ops-do.sh learner-recheck 20261007-234302-experience-update",
+      "requests_this_wake": 1,
+      "observed_live": "0d6c1a82ac0b7ec2b5134e2f650070bdeba7e56a",
+      "observed_tree": "3155f2857271545026d7e21241c0b6e30c31d0e5",
+      "scheduler_lines": [],
+      "request": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/broker/1791391749639032270-3.req",
+          "sha256": "b3cf589f425a080389420e9289b690b5564ab914e96a1476939ca5dd87de9cd7",
+          "content": {
+            "action": "learner-recheck",
+            "args": [
+              "20261007-234302-experience-update"
+            ]
+          }
+        }
+      ],
+      "state": "broker_request_queued",
+      "full_external_passed": false,
+      "old_failure_and_report_history_preserved": true
+    }
+  ],
+  "full_external_passed": false,
+  "finish_without_waiting_for_future_event": true
+}
