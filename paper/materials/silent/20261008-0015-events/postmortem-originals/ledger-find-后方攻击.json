@@ -1,0 +1,332 @@
+[
+ {
+  "id": "silent-0065",
+  "ts": "2026-10-05T07:27:01+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局两只帝王蟹部件都活着时，朝向改变后方攻击的显示伤害：同一T2第4次面向火箭时为碾碎爪6加火箭18，第6次面向碾碎爪为4加27，分别符合4或18的1.5倍后方攻击。最终火箭蓄力后力量0→2，T4背向激光49，中和转向并施虚弱后24；这次25点下降同时含朝向与虚弱，不能独立归因。六次均没有杀死一侧，不能从本局推断蟹之怒在同伴死亡后的效果。",
+  "evidence": [
+   {
+    "run": "CSBR5CRDWQNB",
+    "floor": 33,
+    "turn": 2,
+    "role": "support",
+    "note": "第4次切割+目标ROCKET后显示6+18，第6次目标CRUSHER后4+27；各3挡，实际损21/28，敌方BACK_ATTACK_LEFT/RIGHT_POWER均存在。",
+    "added": "2026-10-05T07:27:01+08:00"
+   },
+   {
+    "run": "CSBR5CRDWQNB",
+    "floor": 33,
+    "turn": 4,
+    "role": "support",
+    "note": "第6次火箭STRENGTH_POWER2，LASER_MOVE49；中和目标火箭后WEAK_POWER1、意图24；两部件CRAB_RAGE_POWER1始终在场但没有同伴死亡样本。",
+    "added": "2026-10-05T07:27:01+08:00"
+   },
+   {
+    "run": "T082DRCUHRRD",
+    "role": "support",
+    "note": "本轮只用静默复盘与日志复核；数值、进阶、机制与观察限制见第八次增量及所链接经验。",
+    "added": "2026-10-05T07:41:13+08:00"
+   },
+   {
+    "run": "ARKQLHG6RS4W",
+    "floor": 33,
+    "turn": 4,
+    "role": "support",
+    "note": "末次火箭蓄力后力量2、背向激光49；投掷匕首攻击它后意图变33，火箭前后都无虚弱、力量仍2，只改变朝向，独立实见少16。第3/6次T2末朝向对应6+18与4+27。两部件均未死，没有同伴死亡后的蟹之怒效果证据。",
+    "added": "2026-10-05T15:57:25+08:00"
+   },
+   {
+    "run": "HMVJKM56S4Q8",
+    "floor": 33,
+    "turn": 1,
+    "role": "support",
+    "note": "首战T1末碾碎爪14+火箭6，改打火箭的第2次末为21+4，零挡相应损20/25。T4火箭力量3、现场背向57与转向38分别记录，末次已有18挡但2血仍死；六次同伴未死，不推蟹之怒后果。",
+    "added": "2026-10-06T04:01:19+08:00"
+   },
+   {
+    "run": "JLN5SK17W4FQ",
+    "floor": 33,
+    "turn": 4,
+    "note": "末次T4原背向火箭57，打击转向后38；之后尖啸+再令38→30。19朝向差与8暂减力差分别核对，不把27全归减力。单侧死亡增益另立账。",
+    "role": "support",
+    "added": "2026-10-06T07:31:46+08:00"
+   },
+   {
+    "run": "9TG1RP5LFAAK",
+    "role": "support",
+    "note": "静默A10原始日志及复盘核对；数值/机制条件/观察限制见第38节及silent-kaiser-crab-facing-sl",
+    "added": "2026-10-06T09:47:05+08:00"
+   },
+   {
+    "run": "0NZXA12NLDMH",
+    "floor": 33,
+    "turn": 2,
+    "role": "support",
+    "note": "首试T2面向火箭、后方碾碎爪显示6攻击；末试T2中和+面向碾碎爪、后方火箭显示18攻击；同轮净扣均23但损11/19，不能将朝向变化忽略或单独当胜因。",
+    "added": "2026-10-06T16:02:44+08:00"
+   },
+   {
+    "run": "0NZXA12NLDMH",
+    "floor": 33,
+    "turn": 2,
+    "role": "support",
+    "note": "首试07:09:11.236Z，面向火箭，后方碾碎爪6、火箭虚弱后15，合21，10挡损11；末次07:33:31.872Z面向碾碎爪，碾碎爪虚弱后4、后方火箭20，合24，5挡损19。两轮净扣均23，不外推其他进阶数值。",
+    "added": "2026-10-06T16:06:16+08:00"
+   },
+   {
+    "run": "PU80F84P6HPN",
+    "floor": 33,
+    "turn": 4,
+    "role": "support",
+    "note": "火箭激光在背向时显示57；切割打火箭改变朝向后显示38，小刀后仍38，差19。玩家10血10挡，完整需损28仍死；两侧都未死，不计蟹之怒死亡触发。",
+    "added": "2026-10-06T18:00:01+08:00"
+   },
+   {
+    "run": "LLYSRQQ35AVW",
+    "role": "support",
+    "note": "静默第47节逐帧复核；silent-kaiser-crab-facing-sl；仅对应已观察机制/统计，非其他组合公式或整战因果。",
+    "added": "2026-10-06T18:33:56+08:00"
+   },
+   {
+    "run": "F4QKG4J1AJJZ",
+    "role": "support",
+    "note": "静默第47节逐帧复核；silent-kaiser-crab-facing-sl；仅对应已观察机制/统计，非其他组合公式或整战因果。",
+    "added": "2026-10-06T18:33:56+08:00"
+   },
+   {
+    "run": "2L1BNN9ZJEFU",
+    "role": "support",
+    "note": "静默第47节逐帧复核；silent-kaiser-crab-facing-sl；仅对应已观察机制/统计，非其他组合公式或整战因果。",
+    "added": "2026-10-06T18:33:56+08:00"
+   },
+   {
+    "run": "53FLQ68CETW0",
+    "role": "support",
+    "note": "静默第47节逐帧复核；silent-kaiser-crab-facing-sl；仅对应已观察机制/统计，非其他组合公式或整战因果。",
+    "added": "2026-10-06T18:33:56+08:00"
+   },
+   {
+    "run": "XP2SL33HT0D9",
+    "floor": 33,
+    "turn": 4,
+    "note": "末次火箭准备后3力量；背向57，打击转向38，中和施虚弱后28，减19和10分账。T2小刀候选打火箭损0/打碾碎爪损10，实选火箭零损；两侧均存活，不推单边击杀后的规则。",
+    "role": "support",
+    "added": "2026-10-07T18:31:14+08:00"
+   }
+  ],
+  "first_run": "CSBR5CRDWQNB",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "同角色此前复盘及账本没有帝王蟹、ROCKET、CRUSHER或朝向的可比记录。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "CSBR5CRDWQNB",
+    "ARKQLHG6RS4W",
+    "HMVJKM56S4Q8",
+    "JLN5SK17W4FQ",
+    "0NZXA12NLDMH",
+    "PU80F84P6HPN",
+    "XP2SL33HT0D9"
+   ],
+   "experience": [
+    "silent-kaiser-crab-facing-sl"
+   ],
+   "commits": [
+    "267128cdd633134b614d3ff91392a5ec7128d8ff",
+    "972303c55c0b1ab55453c8f44d967ccf5f53a3f6",
+    "62faa08a848fa97d38c810dd1294e2511db17dfe",
+    "a5604585226af696fdc6e01e19f6959fe73425d0",
+    "5f17e4b397490cefd18d2970852f1ea439a7ca00",
+    "2480e1a3435d40808c972b5247e126f42fd8f6c8",
+    "16a691d1513abe828ad8dab3a352c2cd693d2f14",
+    "fef46e7e842ba8216f6220ace845d8e9f4f01d84",
+    "cf6fae73003337e346c73b600d6c3fc0c791c039",
+    "62d6edc5543682a7289d52263d6294b934366f4b",
+    "2d5846a2a309fd8b9e7231e96cef923cb07f1778",
+    "141df6140cada59c3ad4960fd69aebf0a0749eeb",
+    "5706f2664b8cd841d5c402cdade4a83bb05d794f",
+    "5f0c0515a9dc4de8696f1172af9da17000a79a65",
+    "f90ba577c3111a9cda7bf1cbfebc645c3d036a01",
+    "62b4caf85ded558e5d07ef840ae882d82bc7ae2c",
+    "ee3f13cdb7b79f9f315d596e1b4c90d77e30f344",
+    "aad6faef5872395489abd80bdbeaa5d0934621b7",
+    "4ff1755188589da29114a6a3ffd3078ca790f89c",
+    "f09267bad642eb4dc2987b2b08ad8b2aff231bde",
+    "52e2451ad5a48cd5f614935dd76975881287d859",
+    "0723092c1d575122896945935e5b55d89983c57d",
+    "a95d92ecee0152abcb433b00b3aa0305d3fa2e43",
+    "0020f8f5e720b274069e0102814ad45056e883fb",
+    "6fb21697765cc012c44ee1d13dc75045e8a340fd",
+    "ad20957345fa54777705dd00a75ab4d60d1d4b49",
+    "c10209e14d2a1a2f3463555fa088684ccdecf856",
+    "31914e4ba652d6e8466a4a99f04128005166ecf2"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第八次增量：1 局 A2（version 2026-10-05.8，分支 exp-silent，267128cd）",
+    "2026-10-05 静默猎手 第十七次增量：2 局 A6（version 2026-10-05.17，分支 exp-silent，a5604585）",
+    "2026-10-06 静默猎手 第三十一次增量：1 局 A9（version 2026-10-06.6，分支 exp-silent，16a691d1）",
+    "2026-10-06 静默猎手 第三十六次增量：1 局 A10（version 2026-10-06.11，分支 exp-silent，2d5846a2）",
+    "2026-10-06 静默猎手 第三十八次增量：1 局 A10（version 2026-10-06.13，分支 exp-silent，5f0c0515）",
+    "2026-10-06 静默猎手 第四十四次增量：1 局 A10（version 2026-10-06.19，分支 exp-silent，aad6faef）",
+    "2026-10-06 静默猎手 第四十七次增量：1 局 A10（version 2026-10-06.22，分支 exp-silent，0723092c）",
+    "2026-10-07 静默猎手 第七十七次增量：2 局 A10（version 2026-10-07.23，分支 exp-silent，ad209573）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-181302-postmortem/proposal-combat-realized-window.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-184216-experience-update/proposal-mechanisms-sl-resources.md"
+   ]
+  },
+  "asc": 2,
+  "history": [
+   {
+    "ts": "2026-10-05T07:27:01+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T07:41:13+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T08:02:10+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T15:57:25+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T16:48:42+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T17:08:51+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T04:01:19+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T04:18:56+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T04:35:35+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T07:31:46+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T07:49:54+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T08:04:36+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T09:47:05+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T09:59:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T16:02:44+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T16:06:16+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T16:23:30+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T16:44:58+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T18:00:01+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T18:33:56+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T18:50:08+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T18:31:14+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T18:33:59+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T18:57:26+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T19:11:49+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T20:51:44+08:00",
+    "by": "ops:codex",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp79",
+  "effect": null,
+  "notes": [
+   "经验2026-10-05.8提议更新；保留纯bug条目状态，实际合入后的shipped由运维据完成事件登记。",
+   "按本轮完成事件及锁内实际合入登记；保留学习者证据、先前上线及后续提案历史，固定沙箱自测通过，无额外知识审核。经验版本2026-10-05.8。",
+   "静默经验.17：旧二十二局日志七数组逐行复算一致，新增两局均A6；公式/逐帧数字、进阶及整战因果限制见第十七次增量。仅proposed，实际合入后由运维据完成事件登记shipped，不登记独立音叉模型bug0108已修。",
+   "17:05 experience-done核实实际live合入及S1.exp17唯一；经验.17新增2/更新17/退役0，源tsc0/173文件1988例、合后tsc0/174文件1993例首过，无新增刷新/冲突，保留fix18七项刷新。仅经验发布，0108独立S1.fix18模型上线不混记；本批独立完整外部检查待其learner-checks，不用fix-batch检查替代。",
+   "静默经验2026-10-06.6；HMVJKM56S4Q8 A9及旧37静默局同口径复算。仅proposed交运维据实际合入登记shipped；不改first_run/prior/旧repeat，不冒记路线因果或药水规则。",
+   "04:28 experience-done机械核实第31批经验2026-10-06.6已实际合入live，登记唯一S1.exp31；HMVJKM56S4Q8 SILENT A9及旧37本角色完局，草稿/最终源/合后均tsc0、188文件2068例。只登记学习者已合入的经验文字，不重写claim/evidence/first_run/prior/repeat；0147最早证据仍归2SU6XN2AEJRD A6，旧0009重犯历史保留，不倒算本经验在已结束HMV局中生效或导致胜利。完整外部checks_pending等后续learner-checks，不借别批结果、不另审。",
+   "静默第三十六次经验增量2026-10-06.11：仅proposed，交运维核实际合入后经CLI登记shipped；保留first_run/prior/repeat及历史。新局JLN5SK17W4FQ A10、旧42局汇总逐行复算；巨兽自爆减力仅一具体分支，单侧蟹增益和轮初自动伤有本角色旧帧；药水使用原文不变，不作整战因果外推。",
+   "08:00 experience-done机械核实第36批经验2026-10-06.11已实际合入live并登记唯一S1.exp36；来源JLN5SK17W4FQ SILENT A10及旧42本角色完局。草稿tsc0/193文件2105例，最终源码及合后tsc0/194文件2112例，原草稿和文字校正历史保留，合后首过。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，0159/S1.strategy6与0153/S1.fix26独立。完整外部补测留后续事件。",
+   "静默第38次增量2026-10-06.13；9TG1RP5LFAAK A10与旧44静默局逐行复算一致。只登记proposed，实际合入由运维据完成事件核实后CLI登记shipped；first_run/prior/repeat及旧上线历史保持。机制分支、可比帧、阶段/换战、SL与血档分母见变更记录。药水原句保持，无新用药规则，无单项整战胜因外推。",
+   "09:55 experience-done机械核实第38批经验2026-10-06.13已实际合入live并登记唯一S1.exp38；来源9TG1RP5LFAAK SILENT A10及旧44本角色完局。源及合后tsc0/195文件2118例（源草稿通过后最终复测、合后首过），七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原shipped/S1.fix27，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。",
+   "勘误：本任务上一条0NZXA12NLDMH F33 T2补证把末次后方火箭写成18，应为20。正确首试结束前碾碎爪6+火箭15=21、10挡损11；末次碾碎爪4+火箭20=24、5挡损19。旧说明保留，以本条及新增逐帧证据为准。",
+   "静默经验2026-10-06.19，来源0NZXA12NLDMH SILENT A10及本角色历史；旧55局七数组/分阶统计一致，56局899房46实死。按两段勘误核，末T8实际为碾碎爪15×2、火箭蓄力，24挡/6HP实死，纠正复盘敌方招式描述。保留首次局、先验、旧版本及repeat；仅proposed，实际合入交运维据experience-done登记shipped；0179纯bug仍observed，未修源码，不证明未选线/升级或固定击杀顺序必胜。",
+   "16:40 experience-done机械确认第44批2026-10-06.19已实际合入live并同步main，唯一S1.exp44；源aad6faef→实际live 4ff17551→固定发布f09267ba。来源0NZXA12NLDMH SILENT A10及学习者本角色历史，新增0更新9（全补证/纯数字0）退役0、active118。源首轮固定沙箱tsc0/201文件2182例，合后首轮tsc0/202文件2188例，原日志保持。仅本批12项经CLI/by=ops登记shipped，首次证据/先验/claim/evidence/repeat和全部旧上线历史保持；0179纯模型bug不由经验登记算实现，独立钨合金棍修复状态留其对应fix-done。已测合后代码与七项已提交自动刷新保持，按学习者handoff给0NZX末T8敌方招式追加勘误；生成900房与本批899房口径沿原审计保留，完整外部等本批learner-checks，不另设审核、不新增游戏规则。",
+   "静默经验2026-10-06.22，PU80F84P6HPN A10及本角色历史，按17:57/18:02勘误；旧58局全部逐行一致、新59局942房49实死。宾邦/佩尔返还/五轮书联动合一条，只一支持局；旧条目压缩保持数字/局号/用药句。巨兽五次1赢、clean22抽序，生成牌到手回合不同；产卵虫四次1赢、clean25同序同回合，后段未受控，不归单步骤因果。仅proposed，实际合入交运维CLI登记shipped；保留first_run/prior/旧version/repeat，无新喝药规则/纯bug修复。",
+   "本项来自原47批proposed；0030证据范围、0187/0188同条目映射沿用学习者原登记。18:43 experience-done机械确认静默第47批2026-10-06.22实际合入live并同步main，唯一S1.exp47；源0723092c→实际a95d92ec→固定发布0020f8f5。源初轮和最终沙箱tsc0/vitest0、203文件2194例，合后首轮tsc0/vitest0、204文件2203例；原日志保留。合前live .20、本次实际同时带入原46源码620513af/.21，原46失败/回退/基线复现历史保留，无独立exp46。CLI/by=ops仅本批20项加继承3项共23项shipped，first_run/prior/claim/证据/repeat和旧上线历史保持，无额外支持或repeat；无生成器/源码/其他角色变更，不另审、不提供游戏规则，完整外部等本批learner-checks。",
+   "来源20261007-181302-postmortem；仅追加核实证据，保留状态、首证、先验和历史版本。正文按开局前已登记S1.exp73标记。",
+   "代码提案 silent-proposal-7cbc6005db712ba9 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-c59f592f1427a67e → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第77批静默经验仅关联核实证据及源提交；保留claim、先验、旧repeat及历史版本，未登记implemented/shipped。各子公式独立分母，不把整战死亡当机制反例。",
+   "20:34兜底将经验.23/.24累计到.25原blob，真实合入后登记唯一S1.exp79；这里只登记该条经验数据的实际发布，出牌/药水/SL代码提案独立续办，未宣称实现；首证、先验、claim及所有旧历史保持。"
+  ],
+  "shipped_at": "2026-10-07T20:51:44+08:00"
+ }
+]

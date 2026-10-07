@@ -1,0 +1,48 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "NHA2KW0RB7VP"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "NHA2KW0RB7VP",
+      "where": "agent/src/reflex/turn-solver.ts:2493",
+      "what": "已有虚弱的碾碎爪意图1转向后实际2，已取整值再乘1.5使推演少算1伤",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0263",
+      "silent-0264",
+      "silent-0265"
+    ],
+    "updated": [
+      "silent-0020",
+      "silent-0079",
+      "silent-0166",
+      "silent-0169",
+      "silent-0133",
+      "silent-0011",
+      "silent-0005",
+      "silent-0065",
+      "silent-0189"
+    ],
+    "repeats": [
+      "silent-0079",
+      "silent-0166"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-cfecb5580938873d",
+    "silent-proposal-7f820c02d39bfaea",
+    "silent-proposal-a5e12fbdb1aca576"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261007-234302-postmortem/report.md"
+}

@@ -1,0 +1,91 @@
+[
+ {
+  "id": "silent-0166",
+  "ts": "2026-10-06T09:57:40+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "JQPT83P8KDSZ",
+    "PJ2LL9KU7FHD"
+   ],
+   "commits": [
+    "8b9bacbebb20eaaa1133a9945da6c7abfcda745d",
+    "4f4d11a7e4ce4d42ce14536817fc63a1d48b8fde",
+    "be0ee6df1395b2373a88e0bf222a6e89312b0945",
+    "e581f129b4f611ffe5c1b79a971e2f8548bf19e0",
+    "995a345f935efd6d8ae9f67d16bd2653833344d0",
+    "c2dd5064804cb932850a04624020def3b6bddc5f",
+    "4fb81b17d099018d348942677bfe31dca333a4b1"
+   ]
+  },
+  "kind": "bug-infra",
+  "claim": "未升级精确切击PRECISE_CUT的CalculatedDamage被读成固定伤害，同一方案前面的抽牌或牌离手没有重算。本局六手3伤，经打击离手变五手5伤，实际抵4挡扣1血，固定读数独立少算2伤；整线另6伤差额未隔离，不归本项或宣称修正能转胜。只读live定位agent/src/reflex/card-model.ts:813、turn-solver.ts:1995及:2004，队列无同项。",
+  "evidence": [
+   {
+    "run": "JQPT83P8KDSZ",
+    "floor": 25,
+    "turn": 3,
+    "note": "第二次尝试01:11:56.432Z：六手CalculatedDamage3；01:11:57.297Z出打击后五手5；随后精确切击敌挡4→0、血143→142。原题整线14，实际行动19加毒3为22，只隔离本牌2伤。",
+    "role": "support",
+    "added": "2026-10-06T09:57:40+08:00"
+   },
+   {
+    "run": "PJ2LL9KU7FHD",
+    "floor": 17,
+    "turn": 15,
+    "note": "首试与末次普通精确切击在−2力量下五手3，出打击后四手5；首试挡10→5，整线预测扣5而83→76实扣7，独立少算2。第三次T5五→三手且2力量7→11，整线36→实40。本局02:22开局早于S1.fix28发布；当前无力量五/六手补丁不覆盖此范围，不计发布后回归。",
+    "role": "repeat",
+    "added": "2026-10-06T11:26:06+08:00"
+   }
+  ],
+  "first_run": "JQPT83P8KDSZ",
+  "prior": "unknown",
+  "prior_runs": [
+   "R0HEV5E3QT6G",
+   "ENKYQMS9W4ZD"
+  ],
+  "prior_note": "更早静默复盘出现精确切击与暗影步或隐秘匕首，但那些弃光手牌或弃光逃离的案例不是本次六手变五手的独立伤差对照；按牌名、ID和CalculatedDamage查账本与早期静默复盘未见此重算规则，不能据旧弃牌缺口判断已做对。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-06T09:57:40+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T10:22:44+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T10:40:19+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T11:26:06+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T11:48:48+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T14:41:06+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix30",
+  "effect": null,
+  "notes": [
+   "10:35 fix-done机械核实学习者精确切击方案内手牌重算已实际合入live并同步main，唯一S1.fix28；只转录JQPT83P8KDSZ SILENT A10 F25第二次T3原普通牌五/六手证据，不外推其他数量、升级、变形或修正规则、不归因未隔离的其余伤差或整场胜负。最终源及合后tsc0/196文件2124例；撤源码5失败1通过、恢复6通过、含旧回归3文件17例；初稿作用域定向失败及撤源证明分开保留。保留first_run/prior/原证据/repeat及全部状态历史；0169机制经验仍shipped/S1.exp39，其他条目保持。无另设审核，沙箱外完整检查等本批后续事件。",
+   "追加PJ2LL9KU7FHD SILENT A10 F17首/末T15和第三T5的已观测力量/手数范围；原S1.fix28已测范围及发布历史、first_run/prior保留，该补证局早于fix28开局，不算生效后回归。待运维核实际新范围合入后登记。",
+   "14:35 fix-done核实际上线与main/live祖先、原固定发布树完整tsc/vitest通过（251文件2986通过2跳过）；仅登记学习者已实现范围。首次证据、先验、repeat、旧S1.fix28与既有上线历史保持；0172未实现，0173/0169独立。不把整场胜负归本项；14:31隔离目录修复为后续独立源码，不冒用旧发布完整检查。"
+  ],
+  "shipped_at": "2026-10-06T14:41:06+08:00"
+ }
+]

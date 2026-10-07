@@ -1,0 +1,25 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局帝王蟹两部件都活着时，碾碎爪同ENLARGING_STRIKE_MOVE、力量−2和虚弱1保持不变，正面显示1，转向火箭后显示2；火箭同轮30变20。不能把已有虚弱下已取整的显示1再乘后方系数1.5当作实际2。仅记录六次同一局现场，不推通用取整顺序或其他力量/招式。",
+  "evidence": [
+    {
+      "run": "NHA2KW0RB7VP",
+      "floor": 33,
+      "turn": 2,
+      "note": "首战283398—283400实际2＋20、15挡损7；第二次283418—283422实际2＋20、16挡损6；六次1→2同增益转换的源行/时间保存prior-rounding.json。",
+      "role": "support"
+    }
+  ],
+  "first_run": "NHA2KW0RB7VP",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "与纯bug同一冻结证据；此前同角色账本0065只有其他数字的朝向机制，未有该1/2取整现场，流式检查无更早可比转换。",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "NHA2KW0RB7VP"
+    ]
+  }
+}
