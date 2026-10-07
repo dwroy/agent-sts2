@@ -2856,6 +2856,8 @@ function simulate(
     const carried = fullFight && input.fightRelics?.iceCream ? Math.max(0, Math.floor(last.snap.en)) : 0;
     const pSim: PlayerSim = {
       ...base,
+      // KV0JHNJCKXLS T1 -> T2: the transient lock expires; base pile cards retain their original costs.
+      ...(base.noDraw !== undefined ? { noDraw: false } : {}),
       ...(base.tuningFork ? { tuningFork: { ...base.tuningFork, count: player.tuningForkCount ?? 0 } } : {}),
       ...(base.permafrostBlock !== undefined ? { permafrostBlock: player.permafrostBlock ?? 0 } : {}),
       // 10GPK5XGHCK3 F42, silent-0075: the decision turn's Shadowmeld has expired.

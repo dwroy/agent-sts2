@@ -61,6 +61,8 @@ export interface CardModel {
   /** Observed Burst: each of the next armed Skills this turn is played once more (silent-0114/0115). */
   burst?: boolean;
   burstSkills?: number;
+  /** KV0JHNJCKXLS A10 F33 T1: plain Bullet Time frees the existing hand and stops this turn's draws. */
+  bulletTime?: boolean;
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
   block: number;
@@ -935,9 +937,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     !bool(card["upgraded"]) && dyn(card, "ThornsPower") === 3 ? 3 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
+  const bulletTime = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BULLET_TIME" &&
+    !bool(card["upgraded"]) && template.replace(/\s+/g, "") === "你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。";
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
-    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers;
+    damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bulletTime;
   let flatValue = 0;
   let known = hasModelledEffect;
   let immediatePlays: CardModel["immediatePlays"];
@@ -1045,6 +1049,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),
     ...(shadowmeld ? { shadowmeld: true } : {}),
     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
+    ...(bulletTime ? { bulletTime: true } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
     ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "DODGE_AND_ROLL" && bool(card["upgraded"]) &&
