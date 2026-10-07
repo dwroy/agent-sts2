@@ -96,3 +96,9 @@
 - A10双boss A–D：20261007-130408-fix-batch，PID 1563687，工作树 /home/dw/Projects/agent-sts2/.worktrees/silent-double-boss；A 优先，连续资源/合计通关率、资源追溯、升阶审计及有数据时修改Roy规则并双通知、协议/AGENTS/任务同步由本批实现。数据与SL条件交学习者核实。
 - B4/B5自动触发验收：20261007-130415-fix-batch，PID 1564623，工作树 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation；实现每局/校准后检查、冷却/互斥、自动验收和任务模板，机制完成后第一批真实派静默永世沙漏B4；不再逐次请求Roy。
 - 派发入口源 b367c6019f771bce0913eb81d85c43d2512210cd、main fce5576efc926017ba56a72802346b3b6594f4d7，沙箱tsc0/224文件2374例、Python20/撤源真红/两模板实际渲染验证通过。两批均已实际启动，功能尚在实现，后续完成事件续办；exp70历史测试note回调修复已入队（12:40首次普通派发因121034占用返回null），原完整失败保持。详情 paper/materials/silent/20261007-1235-events.md。
+
+## 2026-10-07 13:05 — Roy：经验71完整补测与本轮结案
+
+经验71固定发布 33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f / 树 e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be 沙箱外完整检查退出 1：tsc 0、vitest 1，1 failed | 274 passed (275)，2 failed | 3180 passed | 2 skipped (3184)。失败仍仅 brain-codex-usage.test.ts:548/:570 的旧辅助器漏传 note 回调；生产回调正确，沿用12:40已入队的修复，保留Codex-only与经验71，不回滚、不削弱断言。原日志 /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-121301-experience-update.fallback-e30f7a95d36f6d83f33df7f4c9e84bd9fa5ea8be.checks.log 已按原字节存 paper/materials/silent/20261007-1235-events/ops-full-check-raw.txt，exp70原失败也保留。
+
+两项新功能已实际独立派发 A=20261007-130408-fix-batch、B4/B5=20261007-130415-fix-batch；首次启动请求因串行完整检查等待300秒超时，保留原回执并660秒重试后核实启动，未等待学习者未来完成事件。论文切点 2026-10-07T04:54:15.290Z 刷新成功，五校验通过，未纳入并行他人账本/notes修改；详情 paper/materials/silent/20261007-1235-events.md。
