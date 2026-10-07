@@ -1,0 +1,94 @@
+[
+ {
+  "command": [
+   "python3",
+   "agent/tools/boss-sim/per-turn.py",
+   "--results",
+   "learner/runs/20261007-215924-boss-sim-batch/target-replay-results/results-0.jsonl",
+   "--split",
+   "learner/runs/20261007-215924-boss-sim-batch/split.json",
+   "--turns",
+   "learner/runs/20261007-215924-boss-sim-batch/dataset/turns.jsonl",
+   "--set",
+   "tune",
+   "--start",
+   "t1",
+   "--enc",
+   "THE_INSATIABLE",
+   "--max-turn",
+   "16",
+   "--json",
+   "learner/runs/20261007-215924-boss-sim-batch/per-turn-tune-t1.json"
+  ],
+  "rc": 0
+ },
+ {
+  "command": [
+   "python3",
+   "agent/tools/boss-sim/per-turn.py",
+   "--results",
+   "learner/runs/20261007-215924-boss-sim-batch/target-replay-results/results-0.jsonl",
+   "--split",
+   "learner/runs/20261007-215924-boss-sim-batch/split.json",
+   "--turns",
+   "learner/runs/20261007-215924-boss-sim-batch/dataset/turns.jsonl",
+   "--set",
+   "tune",
+   "--start",
+   "pre",
+   "--enc",
+   "THE_INSATIABLE",
+   "--max-turn",
+   "16",
+   "--json",
+   "learner/runs/20261007-215924-boss-sim-batch/per-turn-tune-pre.json"
+  ],
+  "rc": 0
+ },
+ {
+  "command": [
+   "python3",
+   "agent/tools/boss-sim/per-turn.py",
+   "--results",
+   "learner/runs/20261007-215924-boss-sim-batch/target-replay-results/results-0.jsonl",
+   "--split",
+   "learner/runs/20261007-215924-boss-sim-batch/split.json",
+   "--turns",
+   "learner/runs/20261007-215924-boss-sim-batch/dataset/turns.jsonl",
+   "--set",
+   "val",
+   "--start",
+   "t1",
+   "--enc",
+   "THE_INSATIABLE",
+   "--max-turn",
+   "16",
+   "--json",
+   "learner/runs/20261007-215924-boss-sim-batch/per-turn-val-t1.json"
+  ],
+  "rc": 0
+ },
+ {
+  "command": [
+   "python3",
+   "agent/tools/boss-sim/per-turn.py",
+   "--results",
+   "learner/runs/20261007-215924-boss-sim-batch/target-replay-results/results-0.jsonl",
+   "--split",
+   "learner/runs/20261007-215924-boss-sim-batch/split.json",
+   "--turns",
+   "learner/runs/20261007-215924-boss-sim-batch/dataset/turns.jsonl",
+   "--set",
+   "val",
+   "--start",
+   "pre",
+   "--enc",
+   "THE_INSATIABLE",
+   "--max-turn",
+   "16",
+   "--json",
+   "learner/runs/20261007-215924-boss-sim-batch/per-turn-val-pre.json"
+  ],
+  "rc": 0
+ }
+]
