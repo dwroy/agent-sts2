@@ -85,6 +85,40 @@ class CalibrationDispatch(unittest.TestCase):
                 self.assertIsNone(self.launch())
                 start.assert_not_called()
 
+    def test_periodic_refresh_only_after_threshold_and_then_deduplicates(self):
+        live = Path(self.root, ".worktrees/live/knowledge/characters/silent")
+        live.mkdir(parents=True)
+        (live / "boss-trust.json").write_text(json.dumps({"character": "silent", "refresh": {"keys": [], "max_asc": 9}}))
+        logs = Path(self.root, "logs")
+        logs.mkdir()
+        (logs / "runs.jsonl").write_text(json.dumps({"run_id": "s", "character": "SILENT", "ended": "date", "ascension": 9}) + "\n")
+        events = [{"run_id": "s", "floor": n, "attempt": 1, "ended_at": str(n), "fight_kind": "boss", "result": "won"} for n in range(20)]
+        scripts = str(Path(__file__).parents[1])
+        (logs / "sl-attempts.jsonl").write_text("\n".join(json.dumps(r) for r in events[:19]))
+        with patch.object(jobs, "start_learner") as start:
+            self.assertIsNone(jobs.calibration_job(self.state, self.root, scripts, "silent", lambda pid: True, "nineteen"))
+            self.assertIsNone(jobs.calibration_job(self.state, self.root, scripts, "ironclad", lambda pid: True, "iron"))
+            start.assert_not_called()
+        (logs / "sl-attempts.jsonl").write_text("\n".join(json.dumps(r) for r in events))
+        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
+            self.assertEqual(jobs.calibration_job(self.state, self.root, scripts, "silent", lambda pid: True, "twenty"), ("twenty-fix-batch", 20))
+            self.assertIsNone(jobs.calibration_job(self.state, self.root, scripts, "silent", lambda pid: True, "repeat"))
+            start.assert_called_once()
+            batch = self.state["batches"]["twenty-fix-batch"]
+            self.assertEqual(batch["reason"], "calibration-refresh")
+            self.assertEqual(batch["learner_task"], "silent-boss-calibration")
+
+    def test_periodic_refresh_starts_on_ascension_without_20_bosses(self):
+        live = Path(self.root, ".worktrees/live/knowledge/characters/silent")
+        live.mkdir(parents=True)
+        (live / "boss-trust.json").write_text(json.dumps({"character": "silent", "refresh": {"keys": [], "max_asc": 9}}))
+        logs = Path(self.root, "logs")
+        logs.mkdir()
+        (logs / "runs.jsonl").write_text(json.dumps({"run_id": "s", "character": "SILENT", "ended": "date", "ascension": 10}) + "\n")
+        (logs / "sl-attempts.jsonl").write_text("")
+        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)):
+            self.assertEqual(jobs.calibration_job(self.state, self.root, str(Path(__file__).parents[1]), "silent", lambda pid: True, "asc"), ("asc-fix-batch", 20))
+
 
 if __name__ == "__main__":
     unittest.main()
