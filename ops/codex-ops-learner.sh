@@ -11,6 +11,11 @@ DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 batch="$1"; runs="$2"; character="${3:-silent}"
 task="${4:-postmortem}"; worktree="${5:-$ROOT}"
 case "$task" in postmortem|experience-update|fix-batch|strategy-proposal) ;; *) exit 2 ;; esac
+learner_task="${6:-$task}"
+if [ "$learner_task" != "$task" ]; then
+  [ "$task" = fix-batch ] && [ "$learner_task" = silent-boss-calibration ] && [ "$character" = silent ] \
+    && [ "$worktree" = "$ROOT/.worktrees/silent-boss-calibration" ] || exit 2
+fi
 mkdir -p "$DIR/learner"
 out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"
 export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
@@ -28,7 +33,7 @@ fi
 if [ -n "${LEARNER_CMD:-}" ]; then
   nice -n 10 bash -c "$LEARNER_CMD" learner "$runs" "$character" > "$out" 2> "$err"
 else
-  args=(--engine codex --task "$task" --character "$character" --cwd "$worktree")
+  args=(--engine codex --task "$learner_task" --character "$character" --cwd "$worktree")
   if [ "$task" = postmortem ]; then args+=(--set "runs=$runs");
   else
     args+=(--set merge=live)

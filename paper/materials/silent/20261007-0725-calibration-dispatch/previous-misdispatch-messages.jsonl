@@ -1,0 +1,3 @@
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"我先确认工作区并合并 main，再读项目协议和修复队列。每条纯 bug 会单独提交，验证测试在撤掉修复时失败，最后按指定流程合入 live。\n"}}
+{"type":"item.completed","item":{"id":"item_7","type":"agent_message","text":"main 已快进合并到 `e0064f7c`，工作区干净。队列末尾的 boss 校准要求独立功能批次，我会留给专用任务；当前待修的明确 bug 是毒杀分支漏算持牌毒素伤害，我继续核对其证据和代码。\n"}}
+{"type":"item.completed","item":{"id":"item_14","type":"agent_message","text":"`silent-0213` 的证据确认了先后顺序：TKX 局 F22 T6，7 血先被两张毒素的 10 点持牌伤害杀死，敌方毒尚未结算。当前求解器确实先模拟毒杀，再将胜利线的持牌伤害归零。我会区分即时击杀和回合末后的毒杀，并覆盖安全毒杀、先死亡、移走毒素这几种情况。\n"}}
