@@ -634,7 +634,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-07 07:04 A10复盘：毒杀胜利分支漏算持牌毒素伤害（交学习者）
 
-- [ ] **非阻塞机制模型缺口，仅转录学习者定位**：`agent/src/reflex/turn-solver.ts:2901/:2916/:2939`在毒结算预测获胜时把持牌伤害及来袭置零；`agent/src/reflex/combat-plan.ts:3278/:3300`毒斩杀提前返回位于后续致死分歧处理之前。来源TKXQ6L4N9A6U SILENT A10 F22 T6、`ops/codex-ops/learner/20261007-064302.out`、原复盘及账本silent-0213（独立毒素机制0214，旧0059仅补support）。22:36:11.840Z以7血、0挡、两张各5伤TOXIC、2能量，代码combat/lethal结束并预测损0；22:36:13.588Z玩家先归零，两敌仍6/64与1/65血、11/14毒未结算，完整持牌伤10超出余血3。敌9+21攻击未执行，未结算毒不计已造成伤害。
+- [x] **非阻塞机制模型缺口，仅转录学习者定位**：`agent/src/reflex/turn-solver.ts:2901/:2916/:2939`在毒结算预测获胜时把持牌伤害及来袭置零；`agent/src/reflex/combat-plan.ts:3278/:3300`毒斩杀提前返回位于后续致死分歧处理之前。来源TKXQ6L4N9A6U SILENT A10 F22 T6、`ops/codex-ops/learner/20261007-064302.out`、原复盘及账本silent-0213（独立毒素机制0214，旧0059仅补support）。22:36:11.840Z以7血、0挡、两张各5伤TOXIC、2能量，代码combat/lethal结束并预测损0；22:36:13.588Z玩家先归零，两敌仍6/64与1/65血、11/14毒未结算，完整持牌伤10超出余血3。敌9+21攻击未执行，未结算毒不计已造成伤害。 已由本批20261007-072650-fix-batch合入c4156ed07219f26d4e74883e193676623ad539a3并发布f65cbfac6c4aeeccbe4a0dffd19a86e6087b30b7／S1.fix41，定稿沙箱216文件2308例通过；原测试失败历史留存，运维CLI登记shipped，详见paper/materials/silent/20261007-0810-fix41-release.md。
 - silent-0213 first_run=TKXQ6L4N9A6U/A10、prior=unknown/status=observed，prior_runs为K3676LU8B0UH、CSBR5CRDWQNB、ZZMYZ5UBCG72；较早安全场景不足以确认同一致死分支已经暴露。0214机制首证C48LLXBGKXQ9/A0、prior=yes，与bug独立，不改已有首证／上线／repeat历史。
 - 按运维prompt由学习者依据本角色证据实现、自测并合入；本局正常结束，非角色无关阻塞问题，运维不改伤害公式。仅转录缺口与实际先后，不加打法或用药规则，不声称另一顺序可转胜。行号为学习者只读当前live定位，原局e33ca6e0+dirty不声称逐字复原；原名称与学习上线标记勘误保留。调度器按队列派发，不停对局。
 
