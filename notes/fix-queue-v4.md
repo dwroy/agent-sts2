@@ -655,3 +655,9 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - [ ] **非阻塞纯 bug，silent-0216，仅转录学习者定位**：`agent/src/reflex/combat-plan.ts:80/:135/:739/:793`已建模敌增益名单漏`POISON_POWER`，毒已进入结算预测，却仍标未知；`agent/src/reflex/turn-solver.ts:1460`因而将该敌攻击伤害逐击乘0.8。来源T3FW7R2R2306 SILENT A10 F8，多尼斯异鸟末战T3/T4/T5预测14/10/17、实18/13/23，少报4/3/6；毒结算本身正确。原回报`ops/codex-ops/learner/20261007-071301.out`，证据/原文及勘误归档`paper/materials/silent/20261007-0755-02hb-t3fw-postmortem.md`。
 - 首证按学习者勘误为K3676LU8B0UH SILENT A1 F15 T1（已有7毒结算且仍列未知）；F17 T2仅中毒被列未知，两打击实际各6、毒11，实伤23、预测19。台账first_run=K3676LU8B0UH、prior=no、prior_runs=[K3676LU8B0UH]、status=observed；C48当时尚无毒模型，只保留背景，不作为此一致性bug首证或先验。原C48草稿和时间标题07:28:15→date实际07:28:01更正均保留，不回改历史。
 - 与旧0008漏施毒/结算、0174毒上限、0213毒杀屏蔽持牌伤分账。交学习者按证据修模型覆盖声明的一致性、固定验证后自行合入；本局已正常结束，运维不改机制公式、不声称修复可保证整局转胜。Roy独立boss校准功能075131-fix-batch不混此bug，0213原纯bug批072650不由运维改任务；调度器按队列处理，对局照常。
+
+## 2026-10-07 08:14 静默复盘：升级预览关键词与勒紧方案格挡（交学习者）
+
+- [ ] **非阻塞纯 bug，silent-0217，仅转录学习者定位**：`agent/src/hand/screens/oneshot.ts:324/:340/:343`升级前使用带关键词的resolved_rules_text，升级后改用不含关键词的rules_text，暴露EXPOSE升级预览丢“消耗”。P5HT1272P5SB SILENT A10 F24呈现“给予2层易伤。消耗。 → 给予3层易伤。”，大脑明确按可反复使用评价并锻造；F25实际暴露+仍“给予3层易伤。消耗。”。首证KAY522KT5NXR/A0 F44/F47错误题面，当时未选升级；first_run=KAY、prior=no、observed。与旧0066易伤模型分账，不认定更正后整局可赢。
+- [ ] **非阻塞纯 bug，silent-0218，仅转录学习者定位**：`agent/src/reflex/card-model.ts:932–935/:1031`的FASTEN未接入同方案后续防御，`agent/src/reflex/turn-solver.ts:1925`未带新增勒紧增量。P5HT1272P5SB A10 F25 T9打击→勒紧→防御，原预报余血−14、实际防御9→13，重读后余血−10，少算4挡；更早HSX4HYATB4E2 A10 F20 T1候选同缺口、F31 T2勒紧→坚韧之环→爆发→防御，预报15挡损2，实23挡损0，两次防御少报8。first_run=HSX、prior=no、observed；与0143真实机制分账，4挡修正仍救不了3血对26攻击。
+- 原回报`ops/codex-ops/learner/20261007-074301.out`，原文/台账及取证归档`paper/materials/silent/20261007-0810-p5ht-postmortem.md`；行号为复盘时只读live定位，不冒称复原开局dirty源码。两项均交学习者按证据实现、固定验证后自行合入，运维不改知识公式、不做打法分析。0213修复第41批、0216中毒折扣、075131独立boss校准另行；调度器按队列处理，对局继续。
