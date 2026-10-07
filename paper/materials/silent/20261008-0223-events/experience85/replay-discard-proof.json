@@ -1,0 +1,179 @@
+{
+  "canon_collisions": [
+    {
+      "attempt": 1,
+      "board": "5759e4eebbd5c5d7",
+      "turn": 1,
+      "canon": "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+      "lines": [
+        "闪亮登场+, 余像+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+        "余像+, 闪亮登场+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+        "防御, 余像+, 闪亮登场+, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造"
+      ]
+    },
+    {
+      "attempt": 2,
+      "board": "5759e4eebbd5c5d7",
+      "turn": 1,
+      "canon": "AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王",
+      "lines": [
+        "余像+, 闪亮登场+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+        "闪亮登场+, 余像+, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+        "防御, 余像+, 闪亮登场+, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造"
+      ]
+    },
+    {
+      "attempt": 2,
+      "board": "af19eea094b42f34",
+      "turn": 1,
+      "canon": "AFTERIMAGE, AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+, NEUTRALIZE+>女王, PRODUCTION, STRIKE_SILENT>女王, STRIKE_SILENT>女王, potion:POWER_POTION",
+      "lines": [
+        "闪亮登场+, 余像+, 余像, 防御, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+        "余像+, 闪亮登场+, 防御, 余像, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造",
+        "防御, 余像+, 余像, 闪亮登场+, 打击 -> 女王, 中和+ -> 女王, 打击 -> 女王, 生产制造"
+      ]
+    }
+  ],
+  "discard": [
+    {
+      "ts": "2026-10-07T16:43:42.485Z",
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 2
+      },
+      "expect": {
+        "option": {
+          "id": "PRECISE_CUT"
+        },
+        "from": "decision"
+      },
+      "selection": {
+        "kind": "combat_hand_select",
+        "prompt": "[center]选择[blue]1[/blue]张牌来[gold]丢弃[/gold]。[/center]",
+        "min_select": 1,
+        "max_select": 1,
+        "selected_count": 0,
+        "requires_confirmation": false,
+        "can_confirm": false,
+        "cards": [
+          {
+            "index": 0,
+            "selected": false,
+            "card_id": "STRANGLE",
+            "name": "紧勒",
+            "upgraded": false,
+            "card_type": "Attack",
+            "rarity": "Uncommon",
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 你在这个回合内每出一张牌，该名敌人都会失去{StranglePower:diff()}点生命。",
+            "resolved_rules_text": "造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 8,
+                "current_value": 8,
+                "enchanted_value": 8,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "StranglePower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "selected": false,
+            "card_id": "NOXIOUS_FUMES",
+            "name": "毒雾+",
+            "upgraded": true,
+            "card_type": "Power",
+            "rarity": "Uncommon",
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "在你的回合开始时，给予所有敌人{PoisonPerTurn:diff()}层中毒。",
+            "resolved_rules_text": "在你的回合开始时，给予所有敌人3层中毒。",
+            "dynamic_values": [
+              {
+                "name": "PoisonPerTurn",
+                "base_value": 3,
+                "current_value": 3,
+                "enchanted_value": 3,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "selected": false,
+            "card_id": "PRECISE_CUT",
+            "name": "精确切击",
+            "upgraded": false,
+            "card_type": "Attack",
+            "rarity": "Uncommon",
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 0,
+            "star_cost": 0,
+            "rules_text": "造成{CalculatedDamage:diff()}点伤害。 你的手牌中每有一张牌，此牌的伤害就降低{ExtraDamage:inverseDiff()}点。",
+            "resolved_rules_text": "造成7点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。",
+            "dynamic_values": [
+              {
+                "name": "CalculatedDamage",
+                "base_value": 13,
+                "current_value": 7,
+                "enchanted_value": 13,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "CalculationBase",
+                "base_value": 13,
+                "current_value": 13,
+                "enchanted_value": 13,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "ExtraDamage",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "selected": false,
+            "card_id": "GREED",
+            "name": "贪婪",
+            "upgraded": false,
+            "card_type": "Curse",
+            "rarity": "Curse",
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 永恒。",
+            "dynamic_values": []
+          }
+        ]
+      },
+      "rationale": "Jev chose 精确切击 with confidence 0.52"
+    }
+  ]
+}

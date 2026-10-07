@@ -1,0 +1,4 @@
+Post-isolation whole-model equality assertion failed (read-only check; no replay or production changes):
+model_inputs_changed_by_source_isolation: knowledge/characters/silent/boss-damage.json, knowledge/characters/silent/fight-value-gates.json, knowledge/characters/silent/fight-value.json, knowledge/characters/silent/monster-records.json, knowledge/characters/silent/outcome-stats.json, knowledge/characters/silent/room-costs.json, knowledge/common/card-upgrades.json, knowledge/common/monster-db.json, knowledge/common/move-model.json
+AssertionError: expected the fixed live source parent to contain all newer main knowledge blobs.
+The chosen live source parent has identical implementation/tests, but older generated knowledge. Replay used and verified the frozen 270d8dd5 inputs before isolation. This check does not invalidate those results. Publication must preserve the latest live knowledge; this calibration does not claim subsequent input versions were replayed.

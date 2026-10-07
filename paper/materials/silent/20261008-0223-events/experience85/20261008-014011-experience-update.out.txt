@@ -1,0 +1,93 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.1 → 2026-10-08.2；提交：cf32a914（分支 exp-silent）；合入：未合入（锁申请超时；锁外预览有21个记录冲突，待运维续办）
+- 条数：新增0、更新20（加证据20、只改数字0）、退役0；active 159 → 159；正文50368字；A8适用151条／47001字，A9适用152条／47285字。
+- 机制推理（局数为支持／反例）：
+  - 力量与临时减力 — 逐击核算，临时减力不覆盖后轮 — 108／0 — G33HU22H2543
+  - 能力兑现 — 观察：持有和计划不等于实际建立 — 107／0 — G33HU22H2543
+  - 毒雾 — 建立后轮初补毒 — 53／0 — P74C04AEPL1F
+  - 臂甲 — 首次增挡不延续至每轮 — 4／0 — P74C04AEPL1F
+  - 脆弱 — 牌挡折减、被动挡另算 — 19／0 — G33HU22H2543
+  - 触媒 — 增加结算次数，滑溜限制实际扣血 — 40／0 — P74C04AEPL1F
+  - 余像 — 按已建层数逐牌补挡 — 24／0 — G33HU22H2543
+  - 胧光怪 — 召唤、复活及力量成长分别核算 — 12／0 — P74C04AEPL1F
+  - 尖啸 — 当轮减力、次轮恢复 — 51／0 — P74C04AEPL1F
+  - 千足虫 — 再拼接增加全场需伤 — 8／0 — G33HU22H2543
+  - 女王阶段 — 减益与击杀顺序改变后续威胁 — 12／0 — G33HU22H2543
+  - 女王SL窗口 — 四场24试零胜，无固定顺序胜因 — 4／0 — G33HU22H2543
+  - 投斧 — 已消费的首牌重放不能补回 — 4／0 — G33HU22H2543
+  - 佩尔的士兵 — 核当前待触发牌挡 — 4／0 — P74C04AEPL1F
+  - 石虫 — 全挡后眩晕，其余敌人仍可攻击 — 33／0 — P74C04AEPL1F
+  - 王室猛毒 — 开场血价按遗物组合核算 — 3／0 — G33HU22H2543
+  - 石炉加湿器 — 实际休息增血，锻造不触发 — 4／0 — G33HU22H2543
+  - 生存者 — 弃掉计划牌后重核生存 — 4／0 — P74C04AEPL1F
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 242文件／2540用例／退出0，无重跑。
+- 切片大小：整体中位增加337.5字；最大5097字，单片最大增长1408字。
+- 学习账本：新增无；改成proposed：silent-0006、0011、0013、0019、0020、0021、0023、0027、0039、0046、0057、0064、0069、0079、0090、0092、0180、0196、0198、0204、0205、0255；退役无；`ledger.py check`退出0。
+- 需要Dai定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.2",
+  "commit": "cf32a914f24bf03eedaff69156e6db51a16a1341",
+  "merged": null,
+  "added": 0,
+  "updated": 20,
+  "retired": 0,
+  "active": 159,
+  "mechanisms": [
+    "力量与临时减力",
+    "能力计划与实际兑现",
+    "毒雾",
+    "臂甲",
+    "脆弱牌挡与被动挡",
+    "触媒",
+    "余像",
+    "胧光怪召唤与力量成长",
+    "尖啸",
+    "千足虫再拼接",
+    "女王减益与击杀阶段",
+    "女王SL持续能力窗口",
+    "投斧",
+    "佩尔的士兵",
+    "石虫失衡眩晕",
+    "王室猛毒",
+    "石炉加湿器",
+    "生存者"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2540},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0006", "silent-0011", "silent-0013", "silent-0019",
+      "silent-0020", "silent-0021", "silent-0023", "silent-0027",
+      "silent-0039", "silent-0046", "silent-0057", "silent-0064",
+      "silent-0069", "silent-0079", "silent-0090", "silent-0092",
+      "silent-0180", "silent-0196", "silent-0198", "silent-0204",
+      "silent-0205", "silent-0255"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-bc4b92d590f2c4ce",
+    "silent-proposal-f52fbbab4dccc3b4",
+    "silent-proposal-10f37c0edd3d24a6"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11773-95cd-72d2-b4a7-e70c3dabdb58
+轮数：1；工具调用：command_execution×77 file_change×9
+token：输入 301.4k、输出 67.1k（其中推理 29.6k）、cache 读 10468.9k、cache 写 0（命中 97.2%）
+成本：未提供
+耗时：2561.5 s（墙钟）
+时间：首个事件 3.3 s、模型首个输出 8.4 s、首次工具 13.4 s、末次工具结束 2434.0 s；工具内共 1632.4 s，其余（模型生成、推理、网络）925.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×64 wait×2；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T01-40-13-01a11773-95cd-72d2-b4a7-e70c3dabdb58.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update.jsonl

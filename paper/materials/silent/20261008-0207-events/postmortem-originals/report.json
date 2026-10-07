@@ -1,0 +1,43 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "RC61MFQM63Y6"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "RC61MFQM63Y6",
+      "where": "agent/src/reflex/turn-solver.ts:1695",
+      "what": "无结实绷带时未消费普通生存者单弃，预支会被弃掉的后继攻击及朝向",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0268"
+    ],
+    "updated": [
+      "silent-0020",
+      "silent-0205",
+      "silent-0079",
+      "silent-0065",
+      "silent-0027",
+      "silent-0080",
+      "silent-0088"
+    ],
+    "repeats": [
+      "silent-0205",
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-eecf671192557465",
+    "silent-proposal-3f82387e2e179703"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-014304-postmortem/report.md"
+}

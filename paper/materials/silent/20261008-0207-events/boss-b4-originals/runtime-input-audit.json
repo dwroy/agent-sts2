@@ -1,0 +1,31 @@
+{
+ "at": "2026-10-07T22:57:58.672512+08:00",
+ "base": "734c08608055167fd220800439dbf7407cff6e57",
+ "runtime_character": "silent",
+ "calibration_input_sha256": "aafe3290770bacf9f195c90a55b60666507be4ac3bd69061891728b98626c2a0",
+ "calibration_matches_dispatch": true,
+ "model_fingerprint_note": "Original helper excludes boss-trust to avoid output circularity; the unchanged runtime trust input is separately frozen here. Generated before/after trust files never replace this runtime input.",
+ "backtest_options": {
+  "samples": 200,
+  "seed": 1,
+  "starts": [
+   "t1",
+   "pre"
+  ],
+  "damage_scale": 0.5,
+  "hp_scale": 1,
+  "threat": 0,
+  "potion_hold": 0.5,
+  "policy_nodes": 1500,
+  "max_turns": 30,
+  "scripts": true,
+  "random_potions": true,
+  "best_order": true,
+  "start_line": "policy",
+  "rollout": false,
+  "lookahead": {
+   "lethal": 1,
+   "threat": 1
+  }
+ }
+}

@@ -1,0 +1,753 @@
+{
+  "projections": [
+    {
+      "line": 8202,
+      "floor": 2,
+      "arrival": [
+        "F3 r2c4 普通战：56/70（p75 56）",
+        "F4 r3c5 普通战：53/70（p75 47）",
+        "F5 r4c6 普通战：50/70（p75 38）",
+        "F6 r5c6 商店：47/70（p75 30）",
+        "F7 r6c6 精英：47/70（p75 30）",
+        "F8 r7c5 休息：22/70（p75 耗尽）",
+        "F9 r8c4 问号：43/70（p75 耗尽）",
+        "F10 r9c3 宝箱：43/70（p75 耗尽）",
+        "F11 r10c3 休息：43/70（p75 耗尽）",
+        "F12 r11c3 普通战：64/70（p75 耗尽）",
+        "F13 r12c4 休息：61/70（p75 耗尽）",
+        "F14 r13c3 普通战：70/70（p75 耗尽）",
+        "F15 r14c2 商店：67/70（p75 耗尽）",
+        "F16 r15c3 休息：67/70（p75 耗尽）",
+        "F17 r16c3 Boss：70/70（p75 耗尽）"
+      ],
+      "boss": "F17 r16c3：到达 70/70（p75 耗尽）",
+      "if_option": null
+    },
+    {
+      "line": 8223,
+      "floor": 24,
+      "arrival": [
+        "F25 r7c3 问号：20/70（p75 20）",
+        "F26 r8c3 宝箱：20/70（p75 20）",
+        "F27 r9c2 休息：20/70（p75 20）",
+        "F28 r10c1 问号：41/70（p75 41）",
+        "F29 r11c2 普通战：41/70（p75 41）",
+        "F30 r12c2 问号：31/70（p75 24）",
+        "F31 r13c3 问号：31/70（p75 24）",
+        "F32 r14c3 休息：31/70（p75 24）",
+        "F33 r15c3 Boss：52/70（p75 45）"
+      ],
+      "boss": "F33 r15c3：到达 52/70（p75 45）",
+      "if_option": [
+        "o0 HEAL（HP 41/70）：boss 前 70/70（p75 66）",
+        "o1 SMITH（HP 20/70）：boss 前 52/70（p75 45）"
+      ]
+    },
+    {
+      "line": 8225,
+      "floor": 27,
+      "arrival": [
+        "F28 r10c1 问号：41/70（p75 41）",
+        "F29 r11c2 普通战：41/70（p75 41）",
+        "F30 r12c2 问号：31/70（p75 24）",
+        "F31 r13c3 问号：31/70（p75 24）",
+        "F32 r14c3 休息：31/70（p75 24）",
+        "F33 r15c3 Boss：52/70（p75 45）"
+      ],
+      "boss": "F33 r15c3：到达 52/70（p75 45）",
+      "if_option": [
+        "o0 HEAL（HP 62/70）：boss 前 70/70（p75 66）",
+        "o1 SMITH（HP 41/70）：boss 前 52/70（p75 45）"
+      ]
+    },
+    {
+      "line": 8226,
+      "floor": 28,
+      "arrival": [
+        "F29 r11c2 普通战：62/70（p75 62）",
+        "F30 r12c2 问号：52/70（p75 45）",
+        "F31 r13c3 问号：52/70（p75 45）",
+        "F32 r14c3 休息：52/70（p75 45）",
+        "F33 r15c3 Boss：70/70（p75 66）"
+      ],
+      "boss": "F33 r15c3：到达 70/70（p75 66）",
+      "if_option": null
+    },
+    {
+      "line": 8227,
+      "floor": 29,
+      "arrival": [
+        "F30 r12c2 问号：31/70（p75 31）",
+        "F31 r13c3 问号：31/70（p75 31）",
+        "F32 r14c3 休息：31/70（p75 31）",
+        "F33 r15c3 Boss：52/70（p75 52）"
+      ],
+      "boss": "F33 r15c3：到达 52/70（p75 52）",
+      "if_option": null
+    }
+  ],
+  "mechanics": [
+    {
+      "line": 285283,
+      "hp": 61,
+      "block": 5,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "PHANTOM_BLADES_POWER",
+          "name": "幻影之刃",
+          "amount": 9,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "STRIKE_SILENT",
+          "造成6点伤害。"
+        ],
+        [
+          "ANTICIPATE",
+          "在本回合获得2点敏捷。"
+        ],
+        [
+          "SURVIVOR",
+          "获得8点格挡。 丢弃1张牌。"
+        ]
+      ]
+    },
+    {
+      "line": 285284,
+      "hp": 61,
+      "block": 5,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "PHANTOM_BLADES_POWER",
+          "name": "幻影之刃",
+          "amount": 9,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 2,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 3,
+          "power_id": "ANTICIPATE_POWER",
+          "name": "预判",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "STRIKE_SILENT",
+          "造成6点伤害。"
+        ],
+        [
+          "SURVIVOR",
+          "获得10点格挡。 丢弃1张牌。"
+        ]
+      ]
+    },
+    {
+      "line": 285285,
+      "hp": 61,
+      "block": 15,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "PHANTOM_BLADES_POWER",
+          "name": "幻影之刃",
+          "amount": 9,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 2,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 3,
+          "power_id": "ANTICIPATE_POWER",
+          "name": "预判",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "hand": []
+    },
+    {
+      "line": 285336,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        }
+      ],
+      "hand": [
+        [
+          "NOXIOUS_FUMES",
+          "在你的回合开始时，给予所有敌人3层中毒。 完美契合。"
+        ],
+        [
+          "POISONED_STAB",
+          "造成4点伤害。 给予3层中毒。"
+        ],
+        [
+          "ANTICIPATE",
+          "在本回合获得2点敏捷。"
+        ],
+        [
+          "SURVIVOR",
+          "获得6点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285337,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "POISONED_STAB",
+          "造成4点伤害。 给予3层中毒。"
+        ],
+        [
+          "ANTICIPATE",
+          "在本回合获得2点敏捷。"
+        ],
+        [
+          "SURVIVOR",
+          "获得6点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285338,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "ANTICIPATE",
+          "在本回合获得2点敏捷。"
+        ],
+        [
+          "SURVIVOR",
+          "获得6点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285339,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 4,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 5,
+          "power_id": "ANTICIPATE_POWER",
+          "name": "预判",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "SURVIVOR",
+          "获得7点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285340,
+      "hp": 45,
+      "block": 7,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 4,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 5,
+          "power_id": "ANTICIPATE_POWER",
+          "name": "预判",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "hand": []
+    },
+    {
+      "line": 285411,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        }
+      ],
+      "hand": [
+        [
+          "NOXIOUS_FUMES",
+          "在你的回合开始时，给予所有敌人3层中毒。 完美契合。"
+        ],
+        [
+          "POISONED_STAB",
+          "造成4点伤害。 给予3层中毒。"
+        ],
+        [
+          "ANTICIPATE",
+          "在本回合获得2点敏捷。"
+        ],
+        [
+          "SURVIVOR",
+          "获得6点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285412,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "POISONED_STAB",
+          "造成4点伤害。 给予3层中毒。"
+        ],
+        [
+          "ANTICIPATE",
+          "在本回合获得2点敏捷。"
+        ],
+        [
+          "SURVIVOR",
+          "获得6点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285413,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "ANTICIPATE",
+          "在本回合获得2点敏捷。"
+        ],
+        [
+          "SURVIVOR",
+          "获得6点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285414,
+      "hp": 45,
+      "block": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 4,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 5,
+          "power_id": "ANTICIPATE_POWER",
+          "name": "预判",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "hand": [
+        [
+          "SURVIVOR",
+          "获得7点格挡。 丢弃1张牌。"
+        ],
+        [
+          "STRIKE_SILENT",
+          "造成4点伤害。"
+        ]
+      ]
+    },
+    {
+      "line": 285415,
+      "hp": 45,
+      "block": 7,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "SURROUNDED_POWER",
+          "name": "遭到包围",
+          "amount": 1,
+          "is_debuff": true
+        },
+        {
+          "index": 1,
+          "power_id": "WEAK_POWER",
+          "name": "虚弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 2,
+          "power_id": "FRAIL_POWER",
+          "name": "脆弱",
+          "amount": 2,
+          "is_debuff": true
+        },
+        {
+          "index": 3,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        },
+        {
+          "index": 4,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 5,
+          "power_id": "ANTICIPATE_POWER",
+          "name": "预判",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "hand": []
+    }
+  ],
+  "potion_events": [],
+  "jev": {
+    "plan_questions": 135,
+    "code_rank1": 53,
+    "rollout_best_available": 68,
+    "rollout_best_chosen": 63,
+    "selected_focus": 29,
+    "focus": {
+      "钙化邪教徒": 3,
+      "海洋混混": 3,
+      "气态炸弹": 1,
+      "活雾": 1,
+      "结实的卵 x3": 1,
+      "直飞产卵虫": 5,
+      "幼虫": 4,
+      "盛碗虫（石）": 12,
+      "盛碗虫（蜜）": 11,
+      "盛碗虫（丝）": 13,
+      "盛碗虫（石）, 盛碗虫（蜜）": 1,
+      "碾碎爪": 54,
+      "火箭": 55,
+      "碾碎爪, 火箭": 2
+    }
+  }
+}
