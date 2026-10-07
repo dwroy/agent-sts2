@@ -2884,6 +2884,7 @@ function simulate(
       // (another's for its turns). The hand's cards (withStrength) carry Strength and Weak, not Shrink: the solver shrinks
       // them once (a decision hand card kept or put back unbased carries its own: CardModel.shownShrunk).
       maxPlays: player.ringingNext ? Math.min(player.playCap ?? Infinity, 1) : player.playCap,
+      slothDefendReplay: base.slothDefendReplay === true && player.playCap === 3 && !player.ringingNext,
       intangible: player.intangibleTurns > h,
       shrunk: player.shrinkTurns > 0 && (player.shrinkTurns !== Infinity || !enemies.some((e) => e.id === SHRINKER) || enemies.some((e) => e.alive && e.id === SHRINKER)),
       endTurnHpLoss: player.disintegration + (player.constrict > 0 && enemies.some((e) => e.alive && e.id === CONSTRICTOR) ? player.constrict : 0),
