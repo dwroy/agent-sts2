@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：MCT1GPTL8D35（A10，第42层，史莱姆狂战士T6，7血8挡对32攻击阵亡）；已追加寄生惧魔ID勘误，关键数字复核一致。
+- 新的纯 bug：无。
+- 写成「未记录」的项：MCT1GPTL8D35：截断轮完整结算、召唤战毛伤与内部退场顺序、未选方案整场结果、SL后最优原线执行比例、boss时钟伤害估值、F29／40有效模拟比较、能力独立增益、Jev缓存。
+- 学习账本：MCT1GPTL8D35：新增无；更新 silent-0079、silent-0019、silent-0021、silent-0020、silent-0006、silent-0007、silent-0023、silent-0046、silent-0120（老错 silent-0079）；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["MCT1GPTL8D35"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0079","silent-0019","silent-0021","silent-0020","silent-0006","silent-0007","silent-0023","silent-0046","silent-0120"],"repeats":["silent-0079"],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11475-2268-7032-867a-9721631c2df2
+轮数：1；工具调用：command_execution×32
+token：输入 172.7k、输出 29.5k（其中推理 9202）、cache 读 2432.5k、cache 写 0（命中 93.4%）
+成本：未提供
+耗时：662.7 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 6.8 s、首次工具 10.2 s、末次工具结束 641.2 s；工具内共 30.3 s，其余（模型生成、推理、网络）629.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×22；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T11-43-03-01a11475-2268-7032-867a-9721631c2df2.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-114302-postmortem.jsonl
