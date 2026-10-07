@@ -22,6 +22,7 @@
 import { choiceQ } from "./jev/questions.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentLossReference } from "./silent-loss-reference.js";
+import { silentSimulationReference } from "./silent-simulation-reference.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import type { ActionExpect } from "../hand/act/identity.js";
 import { enemyPowerText, playerJson, potionViews } from "../memory/narrow.js";
@@ -3892,6 +3893,10 @@ function planTurn(env: DecisionEnv): Decision | null {
         ...(unmodelledEnemyPowers(enemy).length > 0 ? { not_modelled: `${unmodelledEnemyPowers(enemy).join(", ")}: not simulated, so the options count damage into this enemy at 80%` } : {}),
       })),
     note: "Each option is a whole turn, already simulated by code; its numbers are exact for this turn. Choose the one that is best for winning the whole fight, not just this turn.",
+    ...silentSimulationReference(state, [
+      ...shown.map((plan, index) => ({ key: `plan${index + 1}`, plan })),
+      ...mcShown.flatMap((mc) => mc.median ? [{ key: mcKey(mc), plan: mc.median }] : []),
+    ], rollout, mcShown),
     // Facts for judging a potion (Jev's call): belt, act boss, Elite ahead, boss clock, run plan.
     potion_context: { ...potionContextJson(env, kind), ...potionCostContext(costs, kind, costsOn && kind !== "boss" && noPotionBase === undefined) },
     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
