@@ -1,0 +1,48 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "9Z9H2EXKLF3T"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "9Z9H2EXKLF3T",
+      "where": "agent/src/hand/screens/oneshot.ts:217",
+      "what": "商店按原牌组前25张预测移除名单，将实际可选的悔恨误报为不可选，影响大脑删牌选择。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0272"
+    ],
+    "updated": [
+      "silent-0020",
+      "silent-0079",
+      "silent-0019",
+      "silent-0021",
+      "silent-0005",
+      "silent-0024",
+      "silent-0027",
+      "silent-0034",
+      "silent-0077",
+      "silent-0123",
+      "silent-0129",
+      "silent-0180",
+      "silent-0221",
+      "silent-0243"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-c32b04d610b1f62d",
+    "silent-proposal-8f62129d7da70b94"
+  ],
+  "implementation_domains": [
+    "structure",
+    "combat",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-041302-postmortem/report.md"
+}

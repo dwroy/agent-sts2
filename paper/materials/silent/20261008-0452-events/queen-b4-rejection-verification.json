@@ -1,0 +1,91 @@
+{
+  "recorded_at_cst": "2026-10-08 05:00",
+  "batch": "20261008-015926-fix-batch",
+  "evidence_identity": "4d1a7f95933875031344dd7afb41b6cebd3a87dd2d9a79d5ca4c7d97e23e32b7",
+  "source": "35341d5ac54bb1f8668edb69fb08171be8620ae3",
+  "state": "rejected",
+  "exit": 0,
+  "merged": null,
+  "acceptance": {
+    "accepted": false,
+    "reasons": [
+      "live solver/5-turn byte isolation unproven"
+    ],
+    "improved": [],
+    "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+    "isolation": {
+      "passed": false,
+      "base": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+      "head": "35341d5ac54bb1f8668edb69fb08171be8620ae3",
+      "protected_changes": [
+        "agent/src/memory/types.ts",
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/fight-plays.ts",
+        "agent/src/reflex/turn-solver.ts"
+      ]
+    },
+    "character": "silent",
+    "boss": "QUEEN",
+    "mode": "b4",
+    "inputs": {
+      "before": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-015926/learner/runs/20261008-015928-boss-sim-batch/before-trust.json",
+        "sha256": "2c7f852a5a5ceae3648ce035a74daa83dbbfe26adbc07686b5c64a28b37ae044"
+      },
+      "after": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-015926/learner/runs/20261008-015928-boss-sim-batch/after-combined-trust.json",
+        "sha256": "4e37677917da2f59ac7d6f8838d2e925611b8b75fcd178aa174020bb006ff9ae"
+      }
+    }
+  },
+  "scheduler_acceptance": {
+    "accepted": false,
+    "reasons": [
+      "live solver/5-turn byte isolation unproven"
+    ],
+    "improved": [],
+    "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+    "isolation": {
+      "passed": false,
+      "base": "28f7f8ecfaaf04a33882ba73cba15c783063b0b9",
+      "head": "35341d5ac54bb1f8668edb69fb08171be8620ae3",
+      "protected_changes": [
+        "agent/src/memory/types.ts",
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/fight-plays.ts",
+        "agent/src/reflex/turn-solver.ts"
+      ]
+    },
+    "published_validation": "20d39ed92255ceeb2e52baafbfebe5606900095fc5ce169f0715eb19038be047"
+  },
+  "cooldown": {
+    "batch": "20261008-015926-fix-batch",
+    "outcome": "rejected",
+    "at": 1791405763.0283928,
+    "fight_keys": [
+      "1LMBFGSMCWKU:48:1:2026-10-05T03:35:51.036Z",
+      "4Y94N8RDPGPM:48:1:2026-10-05T17:57:20.140Z",
+      "5X2GHKJ89PN1:48:6:2026-10-06T11:09:49.060Z",
+      "9TG1RP5LFAAK:49:6:2026-10-06T00:47:20.019Z",
+      "9YBKCNBFP0X5:48:6:2026-10-05T02:54:22.714Z",
+      "G33HU22H2543:48:6:2026-10-07T16:20:52.858Z",
+      "G403VCZ3BH1B:48:2:2026-10-05T20:51:16.941Z",
+      "LLYSRQQ35AVW:48:1:2026-10-05T18:42:14.966Z",
+      "TDLBRNA0R05B:48:4:2026-10-07T02:39:09.730Z",
+      "VLV17NUSFS61:48:6:2026-10-05T15:40:43.619Z",
+      "XTSV1U9JD34T:49:6:2026-10-07T19:05:16.704Z",
+      "ZVYUL2YP3518:48:1:2026-10-06T15:19:05.183Z",
+      "ZZMYZ5UBCG72:48:1:2026-10-04T23:39:15.333Z"
+    ],
+    "calibration": "ce68287e4a93c11f743096a6ebcb12162e38a509a6d232332175e2dac18d2bbd"
+  },
+  "owned_original_cli": 2,
+  "last_cli_status": "rejected",
+  "source_not_ancestor_main_live": true,
+  "original_report_out_err_failure_history_retained": true,
+  "scheduler_cooldown_bounded_retry_unchanged": true,
+  "manual_dispatch": false,
+  "new_version_shipped_or_full_recheck": false
+}
