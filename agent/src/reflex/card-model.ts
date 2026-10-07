@@ -917,6 +917,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // P5HT1272P5SB F25 T9 / HSX4HYATB4E2 F31 T2: only the observed plain Fasten is wired.
   const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" &&
     !bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4 : 0;
+  // CA5KE8GFJ9X2 F9 T6 / F13 T1, silent-0229: the observed plain Caltrops establishes three Thorns.
+  const thorns = character.toLowerCase() === "silent" && cardId === "CALTROPS" &&
+    !bool(card["upgraded"]) && dyn(card, "ThornsPower") === 3 ? 3 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
@@ -1037,6 +1040,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(weakFirst ? { weakFirst } : {}),
     strength,
     ...(fasten > 0 ? { fasten } : {}),
+    ...(thorns > 0 ? { thorns } : {}),
     ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
