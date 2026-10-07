@@ -13,8 +13,9 @@ task="${4:-postmortem}"; worktree="${5:-$ROOT}"
 case "$task" in postmortem|experience-update|fix-batch|strategy-proposal) ;; *) exit 2 ;; esac
 learner_task="${6:-$task}"
 if [ "$learner_task" != "$task" ]; then
-  [ "$task" = fix-batch ] && [ "$learner_task" = silent-boss-calibration ] && [ "$character" = silent ] \
-    && [ "$worktree" = "$ROOT/.worktrees/silent-boss-calibration" ] || exit 2
+  case "$learner_task" in silent-boss-calibration|codex-only-brain) ;; *) exit 2 ;; esac
+  [ "$task" = fix-batch ] && [ "$character" = silent ] \
+    && [ "$worktree" = "$ROOT/.worktrees/$learner_task" ] || exit 2
 fi
 mkdir -p "$DIR/learner"
 out="$DIR/learner/$batch.out"; err="$DIR/learner/$batch.err"

@@ -373,3 +373,5 @@
 - 2026-10-07 08:14 [运维 codex] Roy：08:10复盘确认两项非阻塞纯 bug，silent-0217暴露升级预览漏“消耗”，silent-0218勒紧未进入同方案后续防御、末战少报4挡；已入notes/fix-queue-v4.md交学习者。首证分别KAY522KT5NXR/A0、HSX4HYATB4E2/A10，prior=no、observed；原文/13行台账/取证留存，4挡补足仍不足救活该末战，不作整局转胜推断。与已合毒杀持牌傷修复0213及0216毒折扣、独立075131 boss校准分账，对局照常。
 
 - 2026-10-07 08:30 [运维 codex] Roy：KQQELQSZ382Z复盘确认一项新非阻塞纯 bug（silent-0219）：蛇咬新增7毒未进同方案推演，已入notes/fix-queue-v4.md交学习者；旧0216攻击八折追加一次repeat，未重复开单或改首证/版本。首证新项KAY522KT5NXR/A0、prior=no，末次族母T7独立少报7毒；T4总差9拆为漏毒7和旧攻击折扣2。六次同64/75血尝试末次T13仍以5血6挡对20攻击阵亡、敌剩32，不能据此保证修后整场转胜。原文/三项勘误/10行台账/核对原件归档paper/materials/silent/20261007-0827-kqq-postmortem.md；机制发现留学习者，对局照常。
+
+- 2026-10-07 09:12 [运维 codex] Roy：已按09:00要求单独派发Codex-only大脑等待与统计口径功能，批次20261007-091118-fix-batch，模板learner/tasks/codex-only-brain.md，独占.worktrees/codex-only-brain；已核实真实Codex学习者运行。任务含不可用时同题暂停/恢复、禁止非Codex代答、DeepSeek/混合局单独标注并默认排除爬塔绩效、保留学习证据和成本。派发代码14项固定验证、tsc及216文件2308例通过；普通修复和boss校准继续。当前是已启动、尚未上线，完成后核实实际发布；live env移除回退为用户提供事实，本轮未读改env、未重启对局。交接paper/materials/silent/20261007-0900-codex-only-dispatch.md。
