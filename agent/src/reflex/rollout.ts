@@ -1194,6 +1194,7 @@ interface SimPlayer {
   demonForm: number;
   /** Block at the end of every turn that does not wear off (Metallicize). */
   endTurnBlock: number;
+  nextTurnBlock: number | null;
   /**
    * Plating (PLATING_POWER, 「在你的回合结束时获得格挡。覆甲会在你的回合开始时减少1层。」): block at the
    * end of our turn, one stack less at the start of each of our turns.
@@ -1596,6 +1597,10 @@ function snapshotOf(player: SimPlayer, enemies: SimEnemy[], hpEnd: number, block
     if (v !== 0) pw[id] = v;
     else delete pw[id];
   }
+  if (player.nextTurnBlock !== null) {
+    if (player.nextTurnBlock > 0) pw["BLOCK_NEXT_TURN_POWER"] = player.nextTurnBlock;
+    else delete pw["BLOCK_NEXT_TURN_POWER"];
+  }
   return {
     hp: hpEnd,
     mhp: player.maxHp,
@@ -1754,6 +1759,11 @@ function startOfTurn(turn: number, player: SimPlayer, enemies: SimEnemy[], input
   // Self-Forming Clay's block for the last turn's HP losses.
   player.block += player.clayNext;
   player.clayNext = 0;
+  // 61E2QS63Y9WU F28 T3: use the captured amount once, without restored Dexterity.
+  if (player.nextTurnBlock !== null) {
+    player.block += player.nextTurnBlock;
+    player.nextTurnBlock = 0;
+  }
   // Red Skull: on at or below half HP, off above it (the HP the enemy turn left).
   if (player.redSkull > 0 && (player.hp * 2 <= player.maxHp) !== player.skullUp) {
     player.skullUp = !player.skullUp;
@@ -2144,6 +2154,7 @@ function applyPlan(
   if (o.permafrostBlockLeft !== undefined) player.permafrostBlock = o.permafrostBlockLeft;
   // Pael's Tear: this turn's unspent energy gives the next turn its extra energy.
   player.paelsNext = o.nextTurnEnergy ?? 0;
+  player.nextTurnBlock = o.nextTurnBlock ?? (player.nextTurnBlock !== null ? 0 : null);
   // Self-Forming Clay: this turn's HP losses give the next turn's block.
   player.clayNext = o.clayBlockNext ?? 0;
   const after = new Map(o.enemyHpAfter.map((e) => [e.index, e]));
@@ -2568,6 +2579,7 @@ function simulate(
     demonForm: input.playerPowers["DEMON_FORM_POWER"] ?? 0,
     // The decision's end-of-turn block is Plating + Metallicize (combat-plan): Plating wears off, split it out.
     endTurnBlock: Math.max(0, (base.endTurnBlock ?? 0) - (input.playerPowers["PLATING_POWER"] ?? 0)),
+    nextTurnBlock: base.nextTurnBlock ?? null,
     plating: Math.min(base.endTurnBlock ?? 0, input.playerPowers["PLATING_POWER"] ?? 0),
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
@@ -2845,6 +2857,7 @@ function simulate(
       corrosiveWave: 0,
       hp: player.hp,
       block: player.block,
+      ...(player.nextTurnBlock !== null ? { nextTurnBlock: 0 } : {}),
       energy: Math.max(0, input.meta.max_en + relicEnergyAt(input, (s.turn ?? input.meta.t) + h) + (fullFight ? fightRelicEnergyAt(input, (s.turn ?? input.meta.t) + h) + carried : 0) + player.pyre + (player.radiance > 0 ? 1 : 0) + player.paelsNext - player.wasteAway),
       weak: player.weakTurns > 0,
       vulnerable: player.vulnTurns > 0,

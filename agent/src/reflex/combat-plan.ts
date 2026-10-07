@@ -2938,6 +2938,10 @@ function planTurn(env: DecisionEnv): Decision | null {
     ...(penNib !== undefined ? { penNib } : {}),
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
+    // 61E2QS63Y9WU F28 T2-T3, silent-0232: preserve already captured Block when replanning.
+    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10 &&
+      powerAmount(player, "TENDER_POWER") === 1 && [3, 5].includes(powerAmount(player, "BLOCK_NEXT_TURN_POWER"))
+      ? { nextTurnBlock: powerAmount(player, "BLOCK_NEXT_TURN_POWER") } : {}),
     exhaustedThisTurn,
     // CARD_CONDITIONS: HP already lost this turn before this decision (Spite's second hit; hpLostSinceTurnStart).
     ...(hpLostEarlier ? { hpLostThisTurn: true } : {}),
