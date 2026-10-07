@@ -116,3 +116,7 @@
 fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示regex（brain-codex-usage.test.ts:559；各3213通过、1失败、2跳过），生产Codex-only保留、不回滚；之前空日志数组问题已修。新旧失败日志全部保留，陈旧断言及13:31计时夹具交普通学习者修复，完整检查待新树。ULP4TN1GNHMK复盘另报毒/滑溜限伤减层bug silent-0226，F17T4/T3多报14/6伤，已按证据入队。三项运维工具已有源/合后沙箱通过，main同步及实际加载回执本轮续办；论文刷新后登记。详情paper/materials/silent/20261007-1346-events.md。
 
 - 2026-10-07 14:13 给Roy：fix121034裸JSON报告兼容、安全autoplay交接和旧note测试入口已机械同步main ad939c4d，源/合后原沙箱227文件2406例通过；三项工具源/合后原沙箱tsc0/vitest0、227文件2406例；main组合原tsc0/vitest1、225文件2394例过/rollout-live实钟1814>1800ms一败，源码/测试逐blob未变；同树单worker复测rollout-live+paths 2文件26例exit0，分次覆盖227文件2406例，原整套1保留且不冒报整套0。两份外部完整检查的旧:559文案断言失败保留并已入队修复，继续保留Codex-only，不回滚。本轮运行中的broker仍缓存旧白名单，autoplay-reload实际调用被拒绝且未改变任何进程；已留单次下轮事件，重新核实时PID后安全热交接并独立续验旧091118，不冒报已激活。ULP复盘、新非阻塞滑溜毒bug入队和论文五校验闭环均已提交；详见paper/materials/silent/20261007-1346-events.md。
+
+## 2026-10-07 14:23 — Roy：autoplay热交接已核实、SL夹具兜底与新建模bug
+
+白名单procs核对当前PID后，autoplay-reload成功，新1746959、原play1681557仍存活、旧循环退出，ops/live/脚本SHA实际回执已归档；不停游戏和调度，生产Codex-only保持。fix132727源3d6340e0的单项已测SL时钟夹具实际合live 93298980fd59963328e824286d1c3cf277c78e4b、同步main aa892594ea8bd8a1d83c3ac7b80d870a1638bbb0，原源码祖先与定稿blob核验，所有并行刷新/代码保留，不新增游戏版本或台账ID。CA5复盘新非阻塞铁蒺藜荆棘模型bug silent-0229（F9T6/F13T1）已入普通队列，11所属账本原行提交、校验0问题；机制交学习者。091118旧功能独立完整续验和本局论文刷新随后记回执，原回报/failed/失败日志永存。详情paper/materials/silent/20261007-1414-events.md。
