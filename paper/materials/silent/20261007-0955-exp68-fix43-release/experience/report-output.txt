@@ -1,0 +1,33 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.13 → 2026-10-07.14；提交：71ddbb8e（分支 exp-silent）；合入：未合入（锁未取得，7份知识版本重叠，已交运维兜底）。
+- 条数：新增1、更新9（加证据9、只改数字0）、退役0；active 137 → 138，共49,357字符；A8适用131条／46,250字符，A9适用132条／46,549字符。
+- 机制推理：
+  - 纸伤难愈 — 按漏伤攻击次数降上限 — 3支持／0反例 — K3676LU8B0UH、YLYLZWHA0GKU
+  - 毒雾 — 轮初施毒，死亡余毒不预支 — 41支持／0反例 — YLYLZWHA0GKU
+  - 触媒 — 增加逐次减1的结算次数 — 29支持／0反例 — YLYLZWHA0GKU
+  - 余像 — 按实际后续出牌补挡 — 17支持／0反例 — YLYLZWHA0GKU
+  - 预判 — 敏捷仅当轮兑现 — 12支持／0反例 — YLYLZWHA0GKU
+  - 力量与虚弱 — 逐击增伤、逐击取整 — 81支持／0反例 — YLYLZWHA0GKU
+  - 尖啸 — 临时减力次轮撤回 — 39支持／0反例 — KQQELQSZ382Z
+  - 能力组合观察 — 取得、建立与实际输出分账 — 80支持／0反例 — YLYLZWHA0GKU
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 216文件／2308用例／退出0。补回旧案例局号后再次检查，两轮均通过。
+- 切片大小：配对增量中位−20字；总体中位2656 → 2634字，最大5401 → 5531字。
+- 学习账本：新增无；改成proposed：silent-0006、silent-0007、silent-0011、silent-0019、silent-0020、silent-0021、silent-0023、silent-0027、silent-0046、silent-0080、silent-0221；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.14","commit":"71ddbb8ea08c7af9aed6cd29826d2e3d4c495300","merged":null,"added":1,"updated":9,"retired":0,"active":138,"mechanisms":["纸伤难愈按漏伤攻击次数降上限","毒雾轮初施毒","触媒增加逐次结算","余像逐牌补挡","预判临时敏捷","力量与虚弱逐击计算","尖啸临时减力","能力取得与兑现分账"],"tests":{"tsc":0,"vitest":0,"cases":2308},"ledger":{"added":[],"proposed":["silent-0006","silent-0007","silent-0011","silent-0019","silent-0020","silent-0021","silent-0023","silent-0027","silent-0046","silent-0080","silent-0221"],"retired":[],"check":0}}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a113eb-eaba-7732-8d40-309e1493e109
+轮数：1；工具调用：command_execution×63
+token：输入 250.2k、输出 63.5k（其中推理 32.2k）、cache 读 8153.2k、cache 写 0（命中 97.0%）
+成本：未提供
+耗时：1814.4 s（墙钟）
+时间：首个事件 4.5 s、模型首个输出 10.6 s、首次工具 13.6 s、末次工具结束 1786.2 s；工具内共 1888.6 s，其余（模型生成、推理、网络）-78.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×61；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T09-13-10-01a113eb-eaba-7732-8d40-309e1493e109.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-091304-experience-update.jsonl

@@ -1,0 +1,77 @@
+## 修 bug 回报
+
+- 合并基线：main → e7d1d9c27e7edc6db0d59facd3edbe3cc667e990
+- 修复：升级预览丢失消耗（silent-0217；P5HT1272P5SB F24/F25 T2）— 62ee292c — 测试 agent/tests/silent-upgrade-preview.test.ts:P5HT F24 — 去掉修复时失败：是（3 失败，恢复 4 通过）
+- 修复：勒紧遗漏后续防御格挡（silent-0218；HSX4HYATB4E2 F31 T2、P5HT1272P5SB F25 T9）— 1912b5e0 — 测试 agent/tests/silent-fasten.test.ts:P5HT F25 T9 — 去掉修复时失败：是（5 失败，恢复 7 通过）
+- 修复：蛇咬施毒遗漏（silent-0219；KQQELQSZ382Z F17 第6次 T7）— 06bb4617 — 测试 agent/tests/silent-snakebite.test.ts:KQQ F17 T7 — 去掉修复时失败：是（4 失败，恢复 5 通过）
+- 已被别人修掉的：中毒触发攻击八折（silent-0216）— ffa23c2f，已上线 S1.fix42
+- 没修的：mod 超时根因、缓存实测 — 证据不足；boss 模拟性能 — 太大；boss 校准、Codex-only 大脑 — 独立功能任务；策略项 — 策略类
+- 测试：每次提交前 tsc/vitest 均退出 0；最终 220 文件 / 2331 用例 / 退出码 0。无超时重跑；勒紧夹具初稿错误已更正，预备套件中断记录保留。
+- 合入：未合入；锁内预检发现 20 项记录和论文冲突，按第 5 节停止。刷新数据已保存为 f6722e87；[运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-091305-fix-batch/handoff-ops.md)
+- 需要 Dai 定的事：保血、留药、boss 时钟校准、路线预估、休息选择、小偷优先、A10 第三幕第二 boss、无色牌估值。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "e7d1d9c27e7edc6db0d59facd3edbe3cc667e990",
+  "fixes": [
+    {
+      "item": "升级预览丢失消耗关键词（silent-0217）",
+      "commit": "62ee292c7a66466e996424910338aaea8aae6308",
+      "test": "agent/tests/silent-upgrade-preview.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "勒紧未增加同方案后续防御格挡（silent-0218）",
+      "commit": "1912b5e0c2c9d87622f6915d8a299f0ef6222588",
+      "test": "agent/tests/silent-fasten.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "蛇咬施毒模型遗漏（silent-0219）",
+      "commit": "06bb4617e92d4ea5cf75287186223a5b185e4ae3",
+      "test": "agent/tests/silent-snakebite.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "mod超时根因、Codex缓存实测",
+      "reason": "证据不足"
+    },
+    {
+      "item": "boss模拟性能",
+      "reason": "太大，需独立性能任务"
+    },
+    {
+      "item": "静默boss校准、Codex-only大脑",
+      "reason": "独立功能任务，不混入纯bug批次"
+    },
+    {
+      "item": "保血、留药、时钟、路线、休息、目标优先和估值",
+      "reason": "策略类"
+    },
+    {
+      "item": "合入live",
+      "reason": "锁内预检发现20项记录和论文冲突；刷新数据已保存为f6722e87d36f039103d09ba51b679f6554af309b"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2331
+  }
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a113eb-e7c0-75e2-b7a4-9323cd343759
+轮数：1；工具调用：command_execution×130 file_change×8
+token：输入 241.9k、输出 56.4k（其中推理 27.2k）、cache 读 12991.0k、cache 写 0（命中 98.2%）
+成本：未提供
+耗时：2265.2 s（墙钟）
+时间：首个事件 4.4 s、模型首个输出 12.7 s、首次工具 15.1 s、末次工具结束 2191.7 s；工具内共 1786.8 s，其余（模型生成、推理、网络）474.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×80；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T09-13-09-01a113eb-e7c0-75e2-b7a4-9323cd343759.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-091305-fix-batch.jsonl
