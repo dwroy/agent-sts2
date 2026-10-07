@@ -146,6 +146,7 @@ class LearningCurveTest(unittest.TestCase):
             logs = os.path.join(d, "logs")
             os.makedirs(logs)
             write_jsonl(os.path.join(logs, "runs.jsonl"), RUNS)
+            write_jsonl(os.path.join(logs, "brain.jsonl"), [{"run_id": r["run_id"], "engine": "codex", "label": "run-plan", "answer": {}, "accepted": True} for r in RUNS])
             write_jsonl(os.path.join(logs, "run-config.jsonl"), CONFIG)
             write_jsonl(os.path.join(logs, "sl-attempts.jsonl"), SL)
             ledger = os.path.join(d, "ledger.jsonl")

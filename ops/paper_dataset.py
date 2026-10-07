@@ -32,6 +32,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import LOGS, ROOT  # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
 from characters import run_character  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
+import brain_source  # noqa: E402
 JEV = ROOT  # the one repo since 2026-10-04 (code history included, hashes kept)
 NOTES = os.path.join(ROOT, "notes")
 AUTOPLAY = os.path.join(ROOT, "ops/autoplay.log")
@@ -48,7 +50,7 @@ UPSTREAM_AUTHOR = "DiscreteTom"
 RUN_ID_RE = re.compile(r"^[0-9A-Z]{12}$")
 KEY_RE = re.compile(r"(?<![A-Za-z])sk-[A-Za-z0-9_-]{12,}")
 
-JSONL_SOURCES = ["decisions.jsonl", "deepseek-reasoning.jsonl", "runs.jsonl", "states.jsonl", "fight-plans.jsonl", "run-plans.jsonl"]
+JSONL_SOURCES = ["decisions.jsonl", "deepseek-reasoning.jsonl", "runs.jsonl", "states.jsonl", "fight-plans.jsonl", "run-plans.jsonl", "brain.jsonl", "sl-attempts.jsonl", "run-config.jsonl"]
 
 
 # ---------------------------------------------------------------- helpers
@@ -116,7 +118,7 @@ def write_csv(path, header, rows):
         w = csv.writer(fh)
         w.writerow(header)
         for row in rows:
-            w.writerow(["" if row.get(h) is None else row.get(h) for h in header])
+            w.writerow(["" if row.get(h) is None else json.dumps(row[h], ensure_ascii=False, sort_keys=True) if isinstance(row[h], (dict, list)) else row[h] for h in header])
     return len(rows)
 
 
@@ -412,11 +414,44 @@ def act_from_floor(f):
     return 1 if f <= 17 else 2 if f <= 33 else 3
 
 
+def preserve_previous():
+    """Never silently replace a published snapshot when changing the performance cohort."""
+    files = [os.path.join(DATA, n) for n in os.listdir(DATA) if os.path.isfile(os.path.join(DATA, n))] if os.path.isdir(DATA) else []
+    if not files:
+        return None
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    target = os.path.join(DATA, "history", stamp)
+    os.makedirs(target)
+    for path in files:
+        shutil.copy2(path, target)
+    return target
+
+
+def performance_group(rows, include_non_codex=False):
+    """The same eligibility as metrics/learning curve/climb; raw cohorts remain visible."""
+    selected = [r for r in rows if brain_source.eligible(r, include_non_codex)]
+    finished = [r for r in selected if r.get("finished", True)]
+    floors = [r.get("floor_max", r.get("floor")) for r in finished]
+    floors = [f for f in floors if f is not None]
+    first = [r.get("first_attempt", {"victory": r.get("victory")}) for r in finished]
+    return {"runs": len(selected), "finished": len(finished), "wins": sum(bool(r.get("victory")) for r in finished),
+            "first_try_wins": sum(bool(f.get("victory")) for f in first),
+            "sl_wins": sum(bool(r.get("victory")) and not bool(f.get("victory")) for r, f in zip(finished, first)),
+            "win_rate_finished": round(sum(bool(r.get("victory")) for r in finished) / len(finished), 3) if finished else None,
+            "mean_floor_finished": round(statistics.mean(floors), 2) if floors else None, "median_floor_finished": median(floors),
+            "reached_act2": sum(1 for r in selected if (r.get("floor_max", r.get("floor")) or 0) >= 18),
+            "reached_act3": sum(1 for r in selected if (r.get("floor_max", r.get("floor")) or 0) >= 34),
+            "run_ids": [r["run_id"] for r in selected], "raw_runs": len(rows), "raw_wins": sum(bool(r.get("victory")) for r in rows if r.get("finished", True)),
+            "raw_cohorts": brain_source.cohorts(rows),
+            "excluded": {r["run_id"]: r["brain_source"]["exclusion_reason"] for r in rows if not brain_source.eligible(r, include_non_codex)}}
+
+
 def build():
     os.makedirs(DATA, exist_ok=True)
     limits = snapshot_limits()
     cut_time = dt.datetime.now(dt.timezone.utc)
     print(f"cut at {iso(cut_time)}: " + ", ".join(f"{k} {v:,} B" for k, v in limits.items()), flush=True)
+    previous = preserve_previous()
 
     runs, label_counts, esc_rows, totals = load_decisions(limits["decisions.jsonl"])
     print(f"decisions: {totals['records']:,} records, {len(runs)} runs", flush=True)
@@ -563,6 +598,19 @@ def build():
     for r in rows:
         r["learning_loop"] = int(bool(first_pm) and r["start_ts"] >= first_pm)
 
+    brain_source.annotate(rows, brain_source.load_sources(LOGS, [r["run_id"] for r in rows], limits.get("brain.jsonl", 0)))
+    sl_by_run = collections.defaultdict(list)
+    for slrow in brain_source.jsonl(os.path.join(LOGS, "sl-attempts.jsonl"), limits.get("sl-attempts.jsonl", 0)):
+        sl_by_run[slrow.get("run_id")].append(slrow)
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("dataset_eval_metrics", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval", "metrics.py"))
+    metrics = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(metrics)
+    for r in rows:
+        r["first_attempt"] = metrics.first_attempt(sl_by_run[r["run_id"]], r["floor_max"], r["victory"], {1: False, 2: False}, {})
+        r["performance_policy"] = brain_source.POLICY
+        r["performance_included"] = int(brain_source.eligible(r, "--include-non-codex" in sys.argv))
+        r["performance_exclusion_reason"] = r["brain_source"]["exclusion_reason"]
     run_header = list(rows[0].keys())
     n_runs = write_csv(os.path.join(DATA, "runs.csv"), run_header, rows)
 
@@ -590,29 +638,23 @@ def build():
 
     # ------------------------------------------------ summary
     fin = [r for r in rows if r["finished"]]
-    wins = [r for r in rows if r["outcome"] == "victory"]
+    wins = [r for r in rows if r["outcome"] == "victory" and brain_source.eligible(r, "--include-non-codex" in sys.argv)]
 
     def group(rs):
-        f = [r for r in rs if r["finished"]]
-        floors = [r["floor_max"] for r in f if r["floor_max"] is not None]
-        return {"runs": len(rs), "finished": len(f), "wins": sum(1 for r in f if r["victory"]),
-                "win_rate_finished": round(sum(1 for r in f if r["victory"]) / len(f), 3) if f else None,
-                "mean_floor_finished": round(statistics.mean(floors), 2) if floors else None,
-                "median_floor_finished": median(floors),
-                "reached_act2": sum(1 for r in rs if (r["floor_max"] or 0) >= 18),
-                "reached_act3": sum(1 for r in rs if (r["floor_max"] or 0) >= 34),
-                "run_ids": [r["run_id"] for r in rs]}
+        return performance_group(rs, "--include-non-codex" in sys.argv)
 
     eras = ["no_fallback", "claude", "deepseek_nonthinking", "deepseek_thinking", "deepseek_memory"]
     by_asc = collections.defaultdict(list)
     for r in rows:
-        by_asc[str(r["ascension"])].append(r)
+        by_asc[f"{run_character(r)}:A{r['ascension'] if r['ascension'] is not None else 'unknown'}"].append(r)
     dec_total = collections.Counter()
     for r in rows:
         for d in DECIDERS:
             dec_total[d] += r["n_" + d.replace("-", "_")]
     ds_all = [e for e in esc_rows if e["by"] == "deepseek"]
     summary = {
+        "performance_policy": brain_source.POLICY, "include_non_codex": "--include-non-codex" in sys.argv,
+        "previous_snapshot": previous, "performance": group(rows), "raw_cohorts": brain_source.cohorts(rows),
         "generated_at": iso(cut_time),
         "source_cut_bytes": limits,
         "runs_total": len(rows),
@@ -622,17 +664,18 @@ def build():
         "wins": [{"run_id": r["run_id"], "ascension": r["ascension"], "floor": r["floor_max"], "end_ts": r["end_ts"],
                   "code_version": r["code_version"], "code_version_console": r["code_version_console"], "era": r["era"],
                   "outcome_source": r["outcome_source"]} for r in wins],
-        "best_floors": sorted(({"run_id": r["run_id"], "floor": r["floor_max"], "outcome": r["outcome"], "ascension": r["ascension"]}
-                               for r in rows if r["floor_max"] is not None), key=lambda x: -x["floor"])[:10],
-        "floor_max_distribution": dict(sorted(collections.Counter(r["floor_max"] for r in rows).items(), key=lambda kv: kv[0] or 0)),
+        "best_floors": {c: sorted(({"run_id": r["run_id"], "floor": r["floor_max"], "outcome": r["outcome"], "ascension": r["ascension"]}
+                               for r in rows if r["floor_max"] is not None and run_character(r) == c and brain_source.eligible(r, "--include-non-codex" in sys.argv)), key=lambda x: -x["floor"])[:10] for c in sorted({run_character(r) for r in rows})},
+        "raw_floor_max_distribution": dict(sorted(collections.Counter(r["floor_max"] for r in rows).items(), key=lambda kv: kv[0] or 0)),
+        "floor_max_distribution": {c: dict(sorted(collections.Counter(r["floor_max"] for r in rows if run_character(r) == c and brain_source.eligible(r, "--include-non-codex" in sys.argv)).items(), key=lambda kv: kv[0] or 0)) for c in sorted({run_character(r) for r in rows})},
         "per_ascension": {k: {kk: vv for kk, vv in group(v).items()} for k, v in sorted(by_asc.items())},
         # Per character (multi-character, 2026-10-04), once there is more than one: the Ironclad-only dataset stays as it
         # was. A run naming no character is the Ironclad's (every run before the Silent).
         **({"per_character": {c: group([r for r in rows if run_character(r) == c]) for c in sorted({run_character(r) for r in rows})}}
            if len({run_character(r) for r in rows}) > 1 else {}),
-        "per_era": {e: group([r for r in rows if r["era"] == e]) for e in eras},
-        "per_learning_loop": {"before": group([r for r in rows if not r["learning_loop"]]),
-                              "after": group([r for r in rows if r["learning_loop"]])},
+        "raw_eras": {e: sum(r["era"] == e for r in rows) for e in eras},
+        "per_era": {f"{c}:{e}": group([r for r in rows if r["era"] == e and run_character(r) == c]) for c in sorted({run_character(r) for r in rows}) for e in eras},
+        "per_learning_loop": {f"{c}:{name}": group([r for r in rows if bool(r["learning_loop"]) == active and run_character(r) == c]) for c in sorted({run_character(r) for r in rows}) for name, active in [("before", False), ("after", True)]},
         "api": {
             "jev": {"calls": sum(r["jev_calls"] for r in rows), "in_tokens": sum(r["jev_in_tokens"] for r in rows),
                     "out_tokens": sum(r["jev_out_tokens"] for r in rows),
@@ -922,20 +965,24 @@ Headline at this cut: {runs_total} runs, {finished} finished, {n_wins} wins ({wi
 
 
 def write_readme(s, counts):
-    eras = s["per_era"]
+    eras = s["raw_eras"]
     cut = "\n".join(f"  - `{k}`: {v:,} bytes" for k, v in s["source_cut_bytes"].items())
     text = README.format(
         generated_at=s["generated_at"], cut=cut, n_runs=counts["runs.csv"], n_lab=counts["decisions_by_label.csv"],
         n_esc=counts["escalations.csv"], n_commits=counts["commits.csv"],
-        **{f"era_{k}": v["runs"] for k, v in eras.items()},
+        **{f"era_{k}": v for k, v in eras.items()},
         jev_price=JEV_PRICE, ds_miss=DS_MISS, ds_hit=DS_HIT, ds_out=DS_OUT,
         unattributed=s["decisions"]["unattributed_menu_timeline"], runs_total=s["runs_total"], finished=s["runs_finished"],
         n_wins=len(s["wins"]), wins=", ".join(f"{w['run_id']} A{w['ascension']}" for w in s["wins"]),
         jev_calls=s["api"]["jev"]["calls"], jev_cost=s["api"]["jev"]["cost_usd"], ds_calls=s["api"]["deepseek"]["calls"],
         ds_cost=s["api"]["deepseek"]["cost_usd"], cl_calls=s["api"]["claude"]["calls"],
         no_split=s["api"]["deepseek"]["calls_without_token_split"], n_exp_commits=s["commits"]["experiment"])
+    policy = (f"Performance policy changed: {s['performance_policy']}; include_non_codex={s['include_non_codex']}.\n"
+              "Only actual successful Codex brain answers enter default performance. DeepSeek, mixed and unknown runs are excluded and retained in runs.csv with per-run basis/reason/counts. Roles are separate in per_ascension and per_era.\n"
+              "Runs/finished/API costs and era counts below are raw accounting; wins and performance summaries use the selected cohort. Legacy ds_* / deepseek_calls and configuration eras do not identify the answering engine. api.deepseek retains the historical compatibility estimate, not actual engine pricing; cost-*.csv/cost-sources.json provide actual logged engine attribution and coverage. First attempts and SL wins are separate. All learning evidence and costs remain available.\n"
+              f"Previous snapshots: {s['previous_snapshot'] or 'none'}.\n\n")
     with open(os.path.join(DATA, "README.md"), "w", encoding="utf8") as fh:
-        fh.write(text)
+        fh.write(policy + text)
 
 
 def scan_for_keys():
@@ -943,6 +990,8 @@ def scan_for_keys():
     for base in [b for b in (DATA, RAW) if os.path.isdir(b)]:
         for name in sorted(os.listdir(base)):
             p = os.path.join(base, name)
+            if not os.path.isfile(p):
+                continue
             if name.endswith(".tar.gz"):
                 with tarfile.open(p, "r:gz") as tf:
                     for m in tf.getmembers():
@@ -960,7 +1009,7 @@ def scan_for_keys():
     return hits
 
 
-def learning_curve():
+def learning_curve(limits=None):
     """paper/data/learning-curve-<character>.csv (eval/learning-curve.py: per ascension, first try vs SL, the
     learning ledger's items). True when it ran."""
     import importlib.util
@@ -968,7 +1017,7 @@ def learning_curve():
         spec = importlib.util.spec_from_file_location("learning_curve", os.path.join(ROOT, "eval", "learning-curve.py"))
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        return mod.main(["--logs", LOGS, "--out-dir", DATA]) == 0
+        return mod.main(["--logs", LOGS, "--out-dir", DATA] + (["--include-non-codex"] if "--include-non-codex" in sys.argv else []), limits=limits) == 0
     except Exception as error:  # the dataset itself is still written; the exit code reports it
         print(f"learning curve failed: {type(error).__name__}: {error}")
         return False
@@ -993,7 +1042,7 @@ if __name__ == "__main__":
     if "--no-raw" not in sys.argv:
         raw_snapshot(lim)
     write_readme(summ, counts)
-    curve_ok = learning_curve()
+    curve_ok = learning_curve(lim)
     cost_ok = component_costs()
     hits = scan_for_keys()
     print("key scan: " + ("CLEAN (no sk-<key> patterns)" if not hits else "FOUND in " + ", ".join(hits)))

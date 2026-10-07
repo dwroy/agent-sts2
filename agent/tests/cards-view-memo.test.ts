@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
 
 import { loadConfig } from "../src/core/config.js";
-import { runLoop } from "../src/hand/loop.js";
+import { runLoop } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
 import { setExperienceForTests } from "../src/knowledge/experience.js";

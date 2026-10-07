@@ -338,7 +338,7 @@ class FixtureTest(unittest.TestCase):
         if None in git.resolve(["17ac095", "0c93138"]).values():
             self.skipTest("the V3 commits are not in this repository")
         # The calibration rows are tested in tests/eval_calibration_test.py (with a fixed boss clock, no tsx).
-        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"), "--no-calibration"]
+        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"), "--no-calibration", "--include-non-codex"]
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(metrics.main(args + ["--json"]), 0)

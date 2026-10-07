@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { loadConfig } from "../src/core/config.js";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import { JevError, isTransientJevError, withJevRetry, type JevAskResult, type JevClient } from "../src/reflex/jev/client.js";
-import { runLoop, type LoopEvent } from "../src/hand/loop.js";
+import { runLoop, type LoopEvent } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
 import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
