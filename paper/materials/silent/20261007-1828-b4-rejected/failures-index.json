@@ -1,0 +1,141 @@
+{
+ "initial_unused_import": {
+  "rc": 1,
+  "artifact": "initial-extraction-failure.txt"
+ },
+ "initial_withdrawal_wrong_cwd": {
+  "artifact": "initial-withdrawal-failure.txt",
+  "actual_test": "candidate v1, 2 failed/2 passed; no withdrawal occurred"
+ },
+ "initial_fixture_metric": {
+  "rc": 1,
+  "log": "mechanism-candidate-v1-fixture-failure.log",
+  "reason": "enemyPart includes blockable held damage; assert total loss minus attack intent instead"
+ },
+ "true_base_red_v1": {
+  "rc": 1,
+  "log": "mechanism-base-red.log",
+  "failed": 3,
+  "passed": 1
+ },
+ "true_base_red_v2": {
+  "rc": 1,
+  "log": "mechanism-base-red-v2.log",
+  "failed": 4,
+  "passed": 2
+ },
+ "candidate_green_v1": {
+  "rc": 0,
+  "log": "mechanism-candidate-green.log",
+  "passed": 4
+ },
+ "candidate_green_v2": {
+  "rc": 0,
+  "log": "mechanism-candidate-green-v2.log",
+  "passed": 6
+ },
+ "trigger_key_initial": {
+  "rc": 1,
+  "artifact": "trigger-verification-initial-failure.txt",
+  "reason": "dispatch fight keys use SL ended_at, not opening first_ts"
+ },
+ "scope_initial": {
+  "rc": 1,
+  "logs": [
+   "scope-audit.log",
+   "scope-audit-esm.log"
+  ],
+  "reason": "existing K3676LU8B0UH no-solve; metadata audit subsequently records it, predicts nothing for it"
+ },
+ "scope_v2_shell": {
+  "rc": 2,
+  "log": "scope-audit-v2.log",
+  "reason": "unterminated shell quote after successful audit; JSON retains no-solve board error and scope only"
+ },
+ "raw_target_import": {
+  "python_rc": 1,
+  "wrapper_rc": 0,
+  "artifact": "raw-target-diagnostic-initial-failure.txt"
+ },
+ "original_sandbox": {
+  "tsc": 0,
+  "vitest": 1,
+  "rc": 1,
+  "log": "sandbox-source.log",
+  "passed": 2416,
+  "failed": 1,
+  "reason": "temporary visible snapshots traversed through a dangling read-only logs symlink; relocation under existing hidden-directory skip, no checker/old tests/exclusions changed"
+ },
+ "ledger_source_link_initial": {
+  "cli_rc": 2,
+  "wrapper_rc": 0,
+  "input": "ledger-source-link-initial.json",
+  "artifact": "ledger-source-link-initial-failure.txt",
+  "reason": "ledger update requires id inside JSON; no entry was changed by initial command"
+ },
+ "original_sandbox_relocated_v2": {
+  "tsc": 0,
+  "vitest": 0,
+  "rc": 0,
+  "log": "sandbox-source-v2.log",
+  "files": 231,
+  "cases": 2428,
+  "workers": 2,
+  "exclusions_changed": false
+ },
+ "scope_passed_limits": {
+  "artifact": "scope-audit.json",
+  "purpose": "metadata-only isolation",
+  "simulation_error_preserved": "K3676LU8B0UH:48:2:6525158984 board: Error: no solve"
+ },
+ "formal_acceptance_precheck": {
+  "artifact": "isolation-precheck.json",
+  "passed": true,
+  "formal_metrics_gate": "pending full paired calibration"
+ },
+ "process_visibility": {
+  "artifact": "process-visibility-limit.json",
+  "matching_pids": 0,
+  "processes_signalled": false,
+  "meaning": "ongoing tool sessions are not exposed by later exec /proc; no rc or completion inferred from this observation"
+ },
+ "fixed_data_gitleaks": {
+  "rc": 1,
+  "findings": 2,
+  "log": "gitleaks-fixed-data.log",
+  "redacted_report": "gitleaks-fixed-data.json",
+  "classification": "gitleaks-fixed-data-classification.json",
+  "reason": "two generic-api-key matches are the public scheduler SHA256 content digest, recomputed from dispatch evidence; no scanner rules changed"
+ },
+ "paired_assembly_incomplete_v1": {
+  "rc": 1,
+  "log": "paired-assembly-incomplete-v1.log",
+  "reason": "fail closed with 3 unfinished baseline starts; no paired output or trust created"
+ },
+ "formal_acceptance": {
+  "rc": 1,
+  "artifact": "acceptance.json",
+  "reasons": [
+   "t1 leak worsened",
+   "pre leak worsened",
+   "no bias entered/approached its fixed standard"
+  ],
+  "isolation_passed": true
+ },
+ "paired_assembly_v2": {
+  "rc": 0,
+  "log": "paired-assembly-v2.log",
+  "covered": 356,
+  "missing": 0
+ },
+ "ledger_rejected_initial": {
+  "rc": 2,
+  "input": "ledger-rejected-initial.json",
+  "artifact": "ledger-rejected-initial.result",
+  "reason": "where.tests is not in ledger schema; nothing written; paths subsequently retained in note, no CLI/schema changes"
+ },
+ "turn_diagnostic_labels": {
+  "artifact": "paired-target-turn-diagnostics-initial-labels.jsonl",
+  "reason": "raw_start labels incorrectly implied canonical start; last observed raw frames are now explicitly phase-labelled; canonical actual metrics, samples and trust/acceptance inputs unchanged"
+ }
+}

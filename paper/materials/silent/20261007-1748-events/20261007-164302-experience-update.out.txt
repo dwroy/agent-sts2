@@ -1,0 +1,42 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.20 → 2026-10-07.21；提交：91d49f82（分支 exp-silent）；合入：未合入，锁内确认 10 个知识文件版本重叠，已停止并保留 live 数据。
+- 条数：新增 2、更新 15（加证据 15、只改数字 0）、退役 0；active 146 → 148，总长 49478 字；A8 适用 140 条/46248 字，A9 适用 141 条/46532 字。
+- 机制推理：
+
+  - 神化 — 战内升级须实际施放 — 1支持/0反例 — VLZ6CCT8AQ0A
+  - 痊愈药水 — 加1能量抽2牌，HP不变 — 8支持/0反例 — VLZ6CCT8AQ0A、T082DRCUHRRD
+  - 力量/敏捷 — 力量逐击、敏捷逐张挡牌 — 94支持/0反例 — VLZ6CCT8AQ0A
+  - 灵动步法 — 建2/3敏捷，后续挡牌兑现 — 56支持/0反例 — VLZ6CCT8AQ0A
+  - 护喉甲 — 覆甲耗尽后不沿用开场4 — 7支持/0反例 — VLZ6CCT8AQ0A
+  - 金刚杵 — 开场1力量按攻击段兑现 — 9支持/0反例 — VLZ6CCT8AQ0A
+  - 闪亮口红 — T3一次加1力量/1敏捷 — 3支持/0反例 — VLZ6CCT8AQ0A
+  - 勒紧 — 普通/升级4/6只加防御牌 — 5支持/0反例 — VLZ6CCT8AQ0A
+  - 尖啸 — 逐段临时减力，后轮重新核算 — 44支持/0反例 — VLZ6CCT8AQ0A
+  - 萎靡 — 升级按X+1减力并加弱 — 16支持/0反例 — VLZ6CCT8AQ0A
+  - 触媒 — 增加结算次数，每次毒减1 — 35支持/0反例 — VLZ6CCT8AQ0A
+  - 毒雾 — 实际建立后轮初补毒 — 46支持/0反例 — VLZ6CCT8AQ0A
+  - 加湿器 — 实际回血补5并加5上限 — 3支持/0反例 — VLZ6CCT8AQ0A
+  - 构筑兑现（观察） — 持有、计划与施放分账 — 93支持/0反例 — VLZ6CCT8AQ0A
+  - 三骑士时钟（观察） — 当轮减力不保证后段存活 — 4支持/0反例 — VLZ6CCT8AQ0A
+
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 232 文件 / 2430 用例 / 退出码 0；未重跑。
+- 切片大小：整体中位增加 79 字，配对增量中位 5.5 字；最大 5238 字。
+- 学习账本：新增 silent-0240；改成 proposed：silent-0005、silent-0016、silent-0049、silent-0071、silent-0143、silent-0046、silent-0053、silent-0027、silent-0011、silent-0021、silent-0106、silent-0204、silent-0020、silent-0019、silent-0238；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.21","commit":"91d49f827f3d429955d63f0b11c5944731759264","merged":null,"added":2,"updated":15,"retired":0,"active":148,"mechanisms":["神化战内升级","痊愈药水","力量/敏捷分源","灵动步法","护喉甲","金刚杵","闪亮口红","勒紧","尖啸","萎靡","触媒","毒雾","石炉加湿器","构筑兑现（观察）","三骑士时钟（观察）"],"tests":{"tsc":0,"vitest":0,"cases":2430},"ledger":{"added":["silent-0240"],"proposed":["silent-0005","silent-0016","silent-0049","silent-0071","silent-0143","silent-0046","silent-0053","silent-0027","silent-0011","silent-0021","silent-0106","silent-0204","silent-0020","silent-0019","silent-0238"],"retired":[],"check":0},"code_proposals":["silent-proposal-283a164780d11e69","silent-proposal-ebbfe3b97548756d","silent-proposal-7ef28c3cb0160972"],"implementation_domains":["combat","potion","structure"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11587-cdfe-70e1-a677-5922919ee7d9
+轮数：1；工具调用：command_execution×70 file_change×1
+token：输入 375.7k、输出 62.3k（其中推理 27.1k）、cache 读 9438.5k、cache 写 0（命中 96.2%）
+成本：未提供
+耗时：2147.3 s（墙钟）
+时间：首个事件 2.6 s、模型首个输出 9.0 s、首次工具 12.6 s、末次工具结束 2101.4 s；工具内共 1457.9 s，其余（模型生成、推理、网络）686.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×61 wait×4；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T16-43-04-01a11587-cdfe-70e1-a677-5922919ee7d9.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update.jsonl

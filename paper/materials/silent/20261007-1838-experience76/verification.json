@@ -1,0 +1,128 @@
+{
+  "final": {
+    "hp": 5,
+    "block": 22,
+    "attack": 37,
+    "full_loss": 15,
+    "shortfall": 10,
+    "actual_hp_loss": 5,
+    "card_block": 18,
+    "dexterity_increment": 4,
+    "afterimage_block": 4,
+    "attack_damage": 12,
+    "strength_increment": 2,
+    "poison_actual": 24,
+    "enemy_after": 130
+  },
+  "poison": [
+    {
+      "turn": 4,
+      "poison": 8,
+      "actual": 15,
+      "after_poison": 6
+    },
+    {
+      "turn": 5,
+      "poison": 15,
+      "actual": 29,
+      "after_poison": 13
+    }
+  ],
+  "same_fingerprint": [
+    {
+      "attempt": 1,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "loss": 3,
+      "damage": 10,
+      "original": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan3": 0.02,
+            "plan1": 0.95,
+            "plan5": 0,
+            "plan2": 0.02,
+            "plan4": 0.01
+          },
+          "confidence": 0.94,
+          "raw": {
+            "type": "choice",
+            "choice": "plan1",
+            "confidence": 0.94,
+            "probabilities": {
+              "plan3": 0.02,
+              "plan1": 0.95,
+              "plan5": 0,
+              "plan2": 0.02,
+              "plan4": 0.01
+            }
+          }
+        }
+      },
+      "executed": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl_explore": null
+    },
+    {
+      "attempt": 3,
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+      "loss": 15,
+      "damage": 17,
+      "original": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan2": 0.03,
+            "plan1": 0.74,
+            "plan5": 0.01,
+            "plan3": 0.2,
+            "plan4": 0.02
+          },
+          "confidence": 0.68,
+          "raw": {
+            "type": "choice",
+            "choice": "plan1",
+            "confidence": 0.68,
+            "probabilities": {
+              "plan2": 0.03,
+              "plan1": 0.74,
+              "plan5": 0.01,
+              "plan3": 0.2,
+              "plan4": 0.02
+            }
+          }
+        }
+      },
+      "executed": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "sl_explore": {
+        "point": "T2, after the replay of attempt 2's path stopped (T1: the board is not on attempt 2's path)",
+        "original": "狂乱逃离, 带毒刺击 -> 无厌沙虫, 尖啸",
+        "replacement": "狂乱逃离, 带毒刺击 -> 无厌沙虫, 打击 -> 无厌沙虫",
+        "reason": "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)",
+        "played_in": [
+          1
+        ],
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 47, win ~36%; whole-fight sim win 0%; this turn hp -3, dmg 10",
+          "replacement": "rollout dead 5/24, further loss 47, win ~22%; whole-fight sim win 0%; this turn hp -15, dmg 17"
+        },
+        "gate": "rollout",
+        "turn": "FRANTIC_ESCAPE, PIERCING_WAIL, POISONED_STAB>无厌沙虫",
+        "turn_instead": "FRANTIC_ESCAPE, POISONED_STAB>无厌沙虫, STRIKE_SILENT>无厌沙虫"
+      }
+    }
+  ],
+  "brain_engines": {
+    "codex": 31
+  },
+  "decisions": 659,
+  "states": 676,
+  "deepseek_window": 0
+}

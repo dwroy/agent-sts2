@@ -1,0 +1,18 @@
+date: 2026-10-07 18:10
+Traceback (most recent call last):
+  File "/tmp/sts2-20261007-1748-paper-commit.py", line 44, in <module>
+    commit = c.commit('ops: commit the single verified paper snapshot for the 1748 wake', root)
+  File "/tmp/sts2-0907-deploy-common.py", line 36, in commit
+    scan(cwd)
+    ~~~~^^^^^
+  File "/tmp/sts2-0907-deploy-common.py", line 30, in scan
+    git('-c', 'core.whitespace=cr-at-eol', 'diff', '--cached', '--check', cwd=cwd)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/sts2-0907-deploy-common.py", line 22, in git
+    return run(['git', *args], cwd=cwd, check=check).stdout
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/sts2-0907-deploy-common.py", line 18, in run
+    raise RuntimeError(f'{args!r}: exit {r.returncode}: {r.stdout}')
+RuntimeError: ['git', '-c', 'core.whitespace=cr-at-eol', 'diff', '--cached', '--check']: exit 2: paper/materials/silent/20261007-1748-events/paper-commit-ignored-log.txt:14: new blank line at EOF.
+paper/materials/silent/20261007-1748-events/paper-run.txt:16: new blank line at EOF.
+

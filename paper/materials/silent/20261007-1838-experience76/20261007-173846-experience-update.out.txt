@@ -1,0 +1,33 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.21 → 2026-10-07.22；提交：7077d238（分支 exp-silent）；合入：未合入，6份并行记录冲突，已保存知识刷新并留运维交接。
+- 条数：新增0、更新10（加证据10、只改数字0）、退役0；active 148 → 148；正文49478 → 50126字；A8适用140条/46896字，A9适用141条/47180字。
+- 机制推理：  
+  力量/敏捷 — 逐击增伤、逐牌加挡，被动另算 — 95局 — 8JRE1C4H4Z2W  
+  灵动步法 — 两敏两牌多4挡，仍不足致死攻击 — 57局 — 8JRE1C4H4Z2W  
+  金刚杵 — 两次攻击各多1伤，毒另算 — 10局 — 8JRE1C4H4Z2W  
+  余像 — 四次出牌补4挡 — 21局 — 8JRE1C4H4Z2W  
+  尖啸/敌增力 — 两段威胁少12，次轮恢复力量 — 45局 — 8JRE1C4H4Z2W  
+  触媒 — 已建立才重复毒结算 — 36局 — 8JRE1C4H4Z2W  
+  沙虫双时钟/SL血价 — 延长沙坑不挡攻击；同指纹换线多伤7、多损12 — 13局 — 8JRE1C4H4Z2W  
+  持续能力兑现（观察） — 持有与实际建立分账 — 94局 — 8JRE1C4H4Z2W
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 233文件/2441用例/退出0；未重跑。
+- 切片大小：中位增加87字，最大5325字。
+- 学习账本：新增无；改成proposed silent-0005、silent-0006、silent-0018、silent-0079、silent-0019、silent-0020、silent-0021、silent-0125、silent-0023、silent-0027、silent-0046、silent-0016；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.22","commit":"7077d238b77f7e64d26d6bfda2aa48cb63e2f1be","merged":null,"added":0,"updated":10,"retired":0,"active":148,"mechanisms":["力量/敏捷分源","灵动步法","金刚杵","余像","尖啸/敌增力","触媒","沙虫双时钟/SL血价","持续能力兑现（观察）"],"tests":{"tsc":0,"vitest":0,"cases":2441},"ledger":{"added":[],"proposed":["silent-0005","silent-0006","silent-0018","silent-0079","silent-0019","silent-0020","silent-0021","silent-0125","silent-0023","silent-0027","silent-0046","silent-0016"],"retired":[],"check":0},"code_proposals":["silent-proposal-578e415a259e6835"],"implementation_domains":["combat","sl","structure"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-173847-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a115ba-d64e-76a2-b26a-1c20a6472ec0
+轮数：1；工具调用：command_execution×62 file_change×6
+token：输入 168.1k、输出 36.9k（其中推理 10.7k）、cache 读 4728.3k、cache 写 0（命中 96.6%）
+成本：未提供
+耗时：3022.6 s（墙钟）
+时间：首个事件 3.1 s、模型首个输出 28.1 s、首次工具 34.3 s、末次工具结束 2859.2 s；工具内共 1637.3 s，其余（模型生成、推理、网络）1382.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×40；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T17-38-48-01a115ba-d64e-76a2-b26a-1c20a6472ec0.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-173847-experience-update.jsonl

@@ -1,0 +1,984 @@
+{
+  "originals": {
+    "20261007-164301.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-164301.out",
+      "bytes": 2263,
+      "sha256": "5d3ba2002fe942c1a8de23c1641498b337665314d8c8b6e59b5798bafc1704e2",
+      "archive_bytes": 2263,
+      "archive_sha256": "5d3ba2002fe942c1a8de23c1641498b337665314d8c8b6e59b5798bafc1704e2"
+    },
+    "20261007-164301.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-164301.err",
+      "bytes": 9251,
+      "sha256": "2252765cd0f1648617a45b5d140561120ada933f15559c1cbf9492bd43804e72",
+      "archive_bytes": 9251,
+      "archive_sha256": "2252765cd0f1648617a45b5d140561120ada933f15559c1cbf9492bd43804e72"
+    },
+    "20261007-164302-experience-update.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-164302-experience-update.out",
+      "bytes": 4273,
+      "sha256": "50c11bfd8c76ba1570d0a4d2cfd4317020a7482d0de1823d144cb56ed09addf7",
+      "archive_bytes": 4273,
+      "archive_sha256": "50c11bfd8c76ba1570d0a4d2cfd4317020a7482d0de1823d144cb56ed09addf7"
+    },
+    "20261007-164302-experience-update.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-164302-experience-update.err",
+      "bytes": 14359,
+      "sha256": "6db46beb0304b7108a662ec859ce0e9eb6b6fda61522fdfcaf4e4c32ff8925a1",
+      "archive_bytes": 14359,
+      "archive_sha256": "6db46beb0304b7108a662ec859ce0e9eb6b6fda61522fdfcaf4e4c32ff8925a1"
+    },
+    "20261007-170244-strategy-proposal.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-170244-strategy-proposal.out",
+      "bytes": 9760,
+      "sha256": "689c6826c3f3ff2039b66af60af69392e0e7f6c3b4886c8728686d952df90743",
+      "archive_bytes": 9760,
+      "archive_sha256": "689c6826c3f3ff2039b66af60af69392e0e7f6c3b4886c8728686d952df90743"
+    },
+    "20261007-170244-strategy-proposal.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-170244-strategy-proposal.err",
+      "bytes": 10059,
+      "sha256": "39271f4ce89413408ed8b9a2b2edf9cf50f966f8c273f962a1da4f5a84ac827b",
+      "archive_bytes": 10059,
+      "archive_sha256": "39271f4ce89413408ed8b9a2b2edf9cf50f966f8c273f962a1da4f5a84ac827b"
+    },
+    "20261007-171303-ascension-audit.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-171303-ascension-audit.out",
+      "bytes": 3313,
+      "sha256": "15799002a21a4a8af95899536455304d5a9148eb2332413f9643f1cfdcc02843",
+      "archive_bytes": 3313,
+      "archive_sha256": "15799002a21a4a8af95899536455304d5a9148eb2332413f9643f1cfdcc02843"
+    },
+    "20261007-171303-ascension-audit.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-171303-ascension-audit.err",
+      "bytes": 12267,
+      "sha256": "29445c1549f902157968818dd095d97efdd32a441eaf44b66384200f9e6fdd7b",
+      "archive_bytes": 12267,
+      "archive_sha256": "29445c1549f902157968818dd095d97efdd32a441eaf44b66384200f9e6fdd7b"
+    },
+    "20261007-160418-strategy-proposal.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-160418-strategy-proposal.out",
+      "bytes": 2399,
+      "sha256": "534a694d65c8622d2108603e2b4fe99e5edacaee2f6a47b2b7bc9a7fbbdeeedb",
+      "archive_bytes": 2399,
+      "archive_sha256": "534a694d65c8622d2108603e2b4fe99e5edacaee2f6a47b2b7bc9a7fbbdeeedb"
+    },
+    "20261007-160418-strategy-proposal.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-160418-strategy-proposal.err",
+      "bytes": 18531,
+      "sha256": "15e7e6541e027bbc17cc05bc17ed3177d6cba3c51a3c4a577eb7893db6386f64",
+      "archive_bytes": 18531,
+      "archive_sha256": "15e7e6541e027bbc17cc05bc17ed3177d6cba3c51a3c4a577eb7893db6386f64"
+    },
+    "batch-states.json": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learn.json",
+      "bytes": 18069,
+      "sha256": "f091e5ff3c8e813ec515d7b3467f2081eae03ff856cb8245544b1d5953aed949",
+      "archive_bytes": 18069,
+      "archive_sha256": "f091e5ff3c8e813ec515d7b3467f2081eae03ff856cb8245544b1d5953aed949"
+    },
+    "procs.txt": {
+      "path": "/tmp/sts2-20261007-1748-procs.txt",
+      "bytes": 6026,
+      "sha256": "4611e7446950078f5c95ce9591065424b0da6cd62c3b7d3ca2360580bdc64270",
+      "archive_bytes": 6026,
+      "archive_sha256": "4611e7446950078f5c95ce9591065424b0da6cd62c3b7d3ca2360580bdc64270"
+    },
+    "stall.txt": {
+      "path": "/tmp/sts2-20261007-1748-stall.txt",
+      "bytes": 44,
+      "sha256": "c7016f5c9d81c123e9483b486822fc6d90447a3e175b71ff245902a0f6d1fbd5",
+      "archive_bytes": 44,
+      "archive_sha256": "c7016f5c9d81c123e9483b486822fc6d90447a3e175b71ff245902a0f6d1fbd5"
+    },
+    "mod.txt": {
+      "path": "/tmp/sts2-20261007-1748-mod.txt",
+      "bytes": 40513,
+      "sha256": "21df205386c9fb86fa2a3b203a37afb081ad0e07117adab7996f5545a5078ab4",
+      "archive_bytes": 40513,
+      "archive_sha256": "21df205386c9fb86fa2a3b203a37afb081ad0e07117adab7996f5545a5078ab4"
+    },
+    "postmortem-lesson-draft.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem/lesson-draft.md",
+      "bytes": 14156,
+      "sha256": "470155abe7bf22a95122228ef62e693918ee0eed9f911a7b9b2b9c5cf95d7402",
+      "archive_bytes": 14156,
+      "archive_sha256": "470155abe7bf22a95122228ef62e693918ee0eed9f911a7b9b2b9c5cf95d7402"
+    },
+    "postmortem-proposal-combat-sl-audit.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem/proposal-combat-sl-audit.md",
+      "bytes": 6215,
+      "sha256": "5e713a9a6a50830d4ff7c2aba1c2af90487cc8d03e4881555257b43161632709",
+      "archive_bytes": 6215,
+      "archive_sha256": "5e713a9a6a50830d4ff7c2aba1c2af90487cc8d03e4881555257b43161632709"
+    },
+    "postmortem-report.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem/report.json",
+      "bytes": 665,
+      "sha256": "87bff95d86559ad9f5e23860ccd1ec5dd9dc1ba2e994bf09a0809f253169fb5a",
+      "archive_bytes": 665,
+      "archive_sha256": "87bff95d86559ad9f5e23860ccd1ec5dd9dc1ba2e994bf09a0809f253169fb5a"
+    },
+    "postmortem-report.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem/report.md",
+      "bytes": 1524,
+      "sha256": "e89e483ea9d72fdd1777bdf1d62fb4af636f9af60c11115eea971d4d81130ad4",
+      "archive_bytes": 1524,
+      "archive_sha256": "e89e483ea9d72fdd1777bdf1d62fb4af636f9af60c11115eea971d4d81130ad4"
+    },
+    "postmortem-original-index.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem",
+      "bytes": 5589,
+      "sha256": "104dca81fedbcc89e4076bb1f6254ec97f6369c0993a8239fe098bd52a70ed36",
+      "archive_bytes": 5589,
+      "archive_sha256": "104dca81fedbcc89e4076bb1f6254ec97f6369c0993a8239fe098bd52a70ed36"
+    },
+    "experience75-changelog-section.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/changelog-section.md",
+      "bytes": 27490,
+      "sha256": "5145d1806b6d3c8bedca520b58b09a439b6dafb6d4d321958063b70001a789c8",
+      "archive_bytes": 27490,
+      "archive_sha256": "5145d1806b6d3c8bedca520b58b09a439b6dafb6d4d321958063b70001a789c8"
+    },
+    "experience75-handoff-ops.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/handoff-ops.md",
+      "bytes": 1805,
+      "sha256": "6efb459b20d92d61e0aa1b3d714cc574d82a641860c5f84dd62f2928048ef2a9",
+      "archive_bytes": 1805,
+      "archive_sha256": "6efb459b20d92d61e0aa1b3d714cc574d82a641860c5f84dd62f2928048ef2a9"
+    },
+    "experience75-proposal-apotheosis.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-apotheosis.md",
+      "bytes": 4874,
+      "sha256": "78e23dae4213fa5b07bda1a0799bbbe0c94567c889db235b40560f523608e637",
+      "archive_bytes": 4874,
+      "archive_sha256": "78e23dae4213fa5b07bda1a0799bbbe0c94567c889db235b40560f523608e637"
+    },
+    "experience75-proposal-cure-all-and-budget.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-cure-all-and-budget.md",
+      "bytes": 2602,
+      "sha256": "2d7b4b07d5cff4b7372a139c0ea2ae0dbb5361e971717eb5aa093f6b01c3b874",
+      "archive_bytes": 2602,
+      "archive_sha256": "2d7b4b07d5cff4b7372a139c0ea2ae0dbb5361e971717eb5aa093f6b01c3b874"
+    },
+    "experience75-proposal-mechanisms-and-resources.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-mechanisms-and-resources.md",
+      "bytes": 4696,
+      "sha256": "08eaeed02365ece6b99ec54adb8ead6688d7323d6f59f30c1cb5996f41c552e2",
+      "archive_bytes": 4696,
+      "archive_sha256": "08eaeed02365ece6b99ec54adb8ead6688d7323d6f59f30c1cb5996f41c552e2"
+    },
+    "experience75-report.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/report.json",
+      "bytes": 1373,
+      "sha256": "dfc33b7eeb276647737e05d3268bec83ab4fdf4a516c2d879afaead990f32ed0",
+      "archive_bytes": 1373,
+      "archive_sha256": "dfc33b7eeb276647737e05d3268bec83ab4fdf4a516c2d879afaead990f32ed0"
+    },
+    "experience75-report.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/report.md",
+      "bytes": 3441,
+      "sha256": "8e68ac8a4718436b162127769020daed3ff4358e0127792d729cf1043afa11b8",
+      "archive_bytes": 3441,
+      "archive_sha256": "8e68ac8a4718436b162127769020daed3ff4358e0127792d729cf1043afa11b8"
+    },
+    "experience75-original-index.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update",
+      "bytes": 343886,
+      "sha256": "f335bfa60a64b9fcaa841497dfe01d1f0682447caf4dc2412b0fe03a249c126d",
+      "archive_bytes": 225,
+      "archive_sha256": "6a51a444b38fbd3904537b945ff5f84ca6dd09b53c0860978c068a3e52995347"
+    },
+    "proposal-repair-handoff-ops.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/handoff-ops.md",
+      "bytes": 1073,
+      "sha256": "d4b54e03634c0ee323f111b0254deaa576cdf5d07310ab3f042b63288246949a",
+      "archive_bytes": 1073,
+      "archive_sha256": "d4b54e03634c0ee323f111b0254deaa576cdf5d07310ab3f042b63288246949a"
+    },
+    "proposal-repair-no-change-acceptance.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/no-change-acceptance.json",
+      "bytes": 371,
+      "sha256": "2a5cdbb6a25222c20e3e7eaea793e8a07606fcd120a72000b45bb00176ea8299",
+      "archive_bytes": 371,
+      "archive_sha256": "2a5cdbb6a25222c20e3e7eaea793e8a07606fcd120a72000b45bb00176ea8299"
+    },
+    "proposal-repair-proposal.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/proposal.md",
+      "bytes": 7056,
+      "sha256": "0be52a13480044b352932d3aabe97b7ce89324fe956e37eb2b7e53dc693d4067",
+      "archive_bytes": 7056,
+      "archive_sha256": "0be52a13480044b352932d3aabe97b7ce89324fe956e37eb2b7e53dc693d4067"
+    },
+    "proposal-repair-report.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/report.json",
+      "bytes": 9782,
+      "sha256": "722fd6fe2d6b4ee342ce6f7b865c13a370ae70a1e9bdd1779398a4395b4fe9d0",
+      "archive_bytes": 9782,
+      "archive_sha256": "722fd6fe2d6b4ee342ce6f7b865c13a370ae70a1e9bdd1779398a4395b4fe9d0"
+    },
+    "proposal-repair-report.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/report.md",
+      "bytes": 22352,
+      "sha256": "f266598f140f2b18d6b6d03e478c68695c0552cd1528ee804f75b46b8d78885a",
+      "archive_bytes": 22352,
+      "archive_sha256": "f266598f140f2b18d6b6d03e478c68695c0552cd1528ee804f75b46b8d78885a"
+    },
+    "proposal-repair-silent-accelerant-triggers.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-accelerant-triggers.md",
+      "bytes": 2368,
+      "sha256": "090a2b13d6e357d0c77c49c645846bdd6ec55d21c8d6afd74af0f30a161be117",
+      "archive_bytes": 2368,
+      "archive_sha256": "090a2b13d6e357d0c77c49c645846bdd6ec55d21c8d6afd74af0f30a161be117"
+    },
+    "proposal-repair-silent-afterimage-per-card-block.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-afterimage-per-card-block.md",
+      "bytes": 2400,
+      "sha256": "668806c9d9c5f283c392357ff7284b3ce3686abe37f6c541000fb4d77fa51db6",
+      "archive_bytes": 2400,
+      "archive_sha256": "668806c9d9c5f283c392357ff7284b3ce3686abe37f6c541000fb4d77fa51db6"
+    },
+    "proposal-repair-silent-anticipate-temporary-dexterity.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-anticipate-temporary-dexterity.md",
+      "bytes": 2347,
+      "sha256": "2ab9a52d3f250711fa2562c352232738541d9ba4558cb3573a535228638ce633",
+      "archive_bytes": 2347,
+      "archive_sha256": "2ab9a52d3f250711fa2562c352232738541d9ba4558cb3573a535228638ce633"
+    },
+    "proposal-repair-silent-bronze-scales-per-hit-thorns.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-bronze-scales-per-hit-thorns.md",
+      "bytes": 2521,
+      "sha256": "bc4635a4109dcef98d3f168e048c2a592e2c6a76960be3a5519b8cd63e464274",
+      "archive_bytes": 2521,
+      "archive_sha256": "bc4635a4109dcef98d3f168e048c2a592e2c6a76960be3a5519b8cd63e464274"
+    },
+    "proposal-repair-silent-bubble-bubble-condition.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-bubble-bubble-condition.md",
+      "bytes": 2484,
+      "sha256": "c0dcd09f8b87f85b49be5992901c655767f5b9e6e72abf6e7fcc1d51593dd849",
+      "archive_bytes": 2484,
+      "archive_sha256": "c0dcd09f8b87f85b49be5992901c655767f5b9e6e72abf6e7fcc1d51593dd849"
+    },
+    "proposal-repair-silent-burst-next-skills-replay.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-burst-next-skills-replay.md",
+      "bytes": 2403,
+      "sha256": "132f0a8cd2d104ce2125edc5d6f10f1e671967150461527f846b62dee4230d49",
+      "archive_bytes": 2403,
+      "archive_sha256": "132f0a8cd2d104ce2125edc5d6f10f1e671967150461527f846b62dee4230d49"
+    },
+    "proposal-repair-silent-caltrops-thorns.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-caltrops-thorns.md",
+      "bytes": 2550,
+      "sha256": "b7e62994e0252c9890a820ced7cd8471dfc41281738074d3227df7b0d4e05207",
+      "archive_bytes": 2550,
+      "archive_sha256": "b7e62994e0252c9890a820ced7cd8471dfc41281738074d3227df7b0d4e05207"
+    },
+    "proposal-repair-silent-deck-burst-observation.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-deck-burst-observation.md",
+      "bytes": 2501,
+      "sha256": "56a0a04049f43aa425242d11caa305a1bb869fc6b4fc38d0138e9f6edad44831",
+      "archive_bytes": 2501,
+      "archive_sha256": "56a0a04049f43aa425242d11caa305a1bb869fc6b4fc38d0138e9f6edad44831"
+    },
+    "proposal-repair-silent-fasten-defend-extra-block.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-fasten-defend-extra-block.md",
+      "bytes": 2329,
+      "sha256": "0c1196afadf2f5c3507fb6f6db644617121a9ebd1ad2ee64110194ed8440f4db",
+      "archive_bytes": 2329,
+      "archive_sha256": "0c1196afadf2f5c3507fb6f6db644617121a9ebd1ad2ee64110194ed8440f4db"
+    },
+    "proposal-repair-silent-footwork-block.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-footwork-block.md",
+      "bytes": 2465,
+      "sha256": "f35d18e3b36facdc1077b83c39c1de33daa275e70255448c20765171764aa2b5",
+      "archive_bytes": 2465,
+      "archive_sha256": "f35d18e3b36facdc1077b83c39c1de33daa275e70255448c20765171764aa2b5"
+    },
+    "proposal-repair-silent-gardener-skittish-shield.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-gardener-skittish-shield.md",
+      "bytes": 2565,
+      "sha256": "c6ccfab96f933327a126d2b98010b37cae6a54609b8beb93ff23860bb1583b3a",
+      "archive_bytes": 2565,
+      "archive_sha256": "c6ccfab96f933327a126d2b98010b37cae6a54609b8beb93ff23860bb1583b3a"
+    },
+    "proposal-repair-silent-haze-group-poison-weak.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-haze-group-poison-weak.md",
+      "bytes": 2752,
+      "sha256": "1c1aa78ad779341b8cc68539ab0afe28764b937da6a768243646a3377a796ca0",
+      "archive_bytes": 2752,
+      "archive_sha256": "1c1aa78ad779341b8cc68539ab0afe28764b937da6a768243646a3377a796ca0"
+    },
+    "proposal-repair-silent-hunter-tender-card-attributes.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-hunter-tender-card-attributes.md",
+      "bytes": 2591,
+      "sha256": "63d2b6596f205a49a3f73cabbefc6956d9c0c1250a9468762198c16d286f5ce0",
+      "archive_bytes": 2591,
+      "archive_sha256": "63d2b6596f205a49a3f73cabbefc6956d9c0c1250a9468762198c16d286f5ce0"
+    },
+    "proposal-repair-silent-infested-prism-tainted-skill-cost.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-infested-prism-tainted-skill-cost.md",
+      "bytes": 2612,
+      "sha256": "bed21b409432a70aeba53c8cbf1ce31a5e83113f5208f144766b259c4f9a0c3c",
+      "archive_bytes": 2612,
+      "archive_sha256": "bed21b409432a70aeba53c8cbf1ce31a5e83113f5208f144766b259c4f9a0c3c"
+    },
+    "proposal-repair-silent-lagavulin-siphon-poison-sl.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-lagavulin-siphon-poison-sl.md",
+      "bytes": 2543,
+      "sha256": "f4a38e2d7ee0b5d205a3168cc58dfec442046d7be3a89701054b3dcb7fdf0a6c",
+      "archive_bytes": 2543,
+      "archive_sha256": "f4a38e2d7ee0b5d205a3168cc58dfec442046d7be3a89701054b3dcb7fdf0a6c"
+    },
+    "proposal-repair-silent-letter-opener-third-skill.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-letter-opener-third-skill.md",
+      "bytes": 2396,
+      "sha256": "fbbe5d0ea9f7e26637280275f365feea47f6c39c13aef67bec09c6664d7669f3",
+      "archive_bytes": 2396,
+      "archive_sha256": "fbbe5d0ea9f7e26637280275f365feea47f6c39c13aef67bec09c6664d7669f3"
+    },
+    "proposal-repair-silent-lost-forgotten-possession.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-lost-forgotten-possession.md",
+      "bytes": 2634,
+      "sha256": "b30fb59d7407c7226d4d67196479a4e2cc9322e478ab8314fa4a7ead7ea6c3b5",
+      "archive_bytes": 2634,
+      "archive_sha256": "b30fb59d7407c7226d4d67196479a4e2cc9322e478ab8314fa4a7ead7ea6c3b5"
+    },
+    "proposal-repair-silent-mirage-poison-card-block.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-mirage-poison-card-block.md",
+      "bytes": 2635,
+      "sha256": "f3192a3658e932b0ab147e9c57be9132b128e11a1180f3f3f02bd67c3e6449ed",
+      "archive_bytes": 2635,
+      "archive_sha256": "f3192a3658e932b0ab147e9c57be9132b128e11a1180f3f3f02bd67c3e6449ed"
+    },
+    "proposal-repair-silent-noxious-fumes-growth.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-noxious-fumes-growth.md",
+      "bytes": 2335,
+      "sha256": "1d939e32cc9189347c17c669a9fefa8e708eba31c08743994fa2a3d3a1225b2a",
+      "archive_bytes": 2335,
+      "archive_sha256": "1d939e32cc9189347c17c669a9fefa8e708eba31c08743994fa2a3d3a1225b2a"
+    },
+    "proposal-repair-silent-obscura-summon-growth.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-obscura-summon-growth.md",
+      "bytes": 2541,
+      "sha256": "b32fb321d95e941c095993cdde0d011354c689718ffe2a3b2428fe68c444ec02",
+      "archive_bytes": 2541,
+      "archive_sha256": "b32fb321d95e941c095993cdde0d011354c689718ffe2a3b2428fe68c444ec02"
+    },
+    "proposal-repair-silent-outbreak-immediate-poison.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-outbreak-immediate-poison.md",
+      "bytes": 2406,
+      "sha256": "40cfd9d02ba6b2f3290db3ace88cde5b37336a3a4d675bae79ba50fea2584cf1",
+      "archive_bytes": 2406,
+      "archive_sha256": "40cfd9d02ba6b2f3290db3ace88cde5b37336a3a4d675bae79ba50fea2584cf1"
+    },
+    "proposal-repair-silent-permafrost-first-power-block.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-permafrost-first-power-block.md",
+      "bytes": 2415,
+      "sha256": "ff9a4c97b1db452a686cbf1cdadab6bd5880409b18b49b3edb530f898a3e3f8e",
+      "archive_bytes": 2415,
+      "archive_sha256": "ff9a4c97b1db452a686cbf1cdadab6bd5880409b18b49b3edb530f898a3e3f8e"
+    },
+    "proposal-repair-silent-piercing-wail-temporary-strength.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-piercing-wail-temporary-strength.md",
+      "bytes": 2568,
+      "sha256": "48195a11174981ba57a8354909482e11fc30e4b347692baea37b1762b48b4208",
+      "archive_bytes": 2568,
+      "archive_sha256": "48195a11174981ba57a8354909482e11fc30e4b347692baea37b1762b48b4208"
+    },
+    "proposal-repair-silent-serpent-form-per-card-damage.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-serpent-form-per-card-damage.md",
+      "bytes": 2613,
+      "sha256": "58dd2ec843e8050886923b6ee316805ba184ab66601429c330bd2b8caa6f16d4",
+      "archive_bytes": 2613,
+      "archive_sha256": "58dd2ec843e8050886923b6ee316805ba184ab66601429c330bd2b8caa6f16d4"
+    },
+    "proposal-repair-silent-sewer-clam-pressure-growth.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-sewer-clam-pressure-growth.md",
+      "bytes": 2587,
+      "sha256": "651f0bdcdb88c5cd511aae9b4744b0d60852b08a67d67d0bcb76d52bd5ce8376",
+      "archive_bytes": 2587,
+      "archive_sha256": "651f0bdcdb88c5cd511aae9b4744b0d60852b08a67d67d0bcb76d52bd5ce8376"
+    },
+    "proposal-repair-silent-slumbering-beetle-wake-growth.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-slumbering-beetle-wake-growth.md",
+      "bytes": 2582,
+      "sha256": "b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780",
+      "archive_bytes": 2582,
+      "archive_sha256": "b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780"
+    },
+    "proposal-repair-silent-strength-weak-observation.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-strength-weak-observation.md",
+      "bytes": 2611,
+      "sha256": "aac4fddf0f24862a3fb8e289d000a312358c3bb9ee3d624602bf755d0b5409a2",
+      "archive_bytes": 2611,
+      "archive_sha256": "aac4fddf0f24862a3fb8e289d000a312358c3bb9ee3d624602bf755d0b5409a2"
+    },
+    "proposal-repair-silent-zapbot-high-voltage-growth.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-zapbot-high-voltage-growth.md",
+      "bytes": 2577,
+      "sha256": "48b2be77326bb54c99a17547f0499b91bca9816e1ff9f0761baded11ddeccde5",
+      "archive_bytes": 2577,
+      "archive_sha256": "48b2be77326bb54c99a17547f0499b91bca9816e1ff9f0761baded11ddeccde5"
+    },
+    "proposal-repair-original-index.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal",
+      "bytes": 188017,
+      "sha256": "3d98fb742e7d4426b6004e956b155f7bf543ea2d6e52c836d24b4ec3e8244fc4",
+      "archive_bytes": 188017,
+      "archive_sha256": "3d98fb742e7d4426b6004e956b155f7bf543ea2d6e52c836d24b4ec3e8244fc4"
+    },
+    "ascension-audit-proposal-boss-phase-facts.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/proposal-boss-phase-facts.md",
+      "bytes": 3996,
+      "sha256": "e5c1691cfbc1ff672cbc3a1463b8fe34335761fa1572469457fd9b03c0a4435d",
+      "archive_bytes": 3996,
+      "archive_sha256": "e5c1691cfbc1ff672cbc3a1463b8fe34335761fa1572469457fd9b03c0a4435d"
+    },
+    "ascension-audit-proposal-continuation.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/proposal-continuation.md",
+      "bytes": 3424,
+      "sha256": "338000f3b37b3980f7638558da5f6dcc018a5e9fee9e1449eb042b15ec89ea74",
+      "archive_bytes": 3424,
+      "archive_sha256": "338000f3b37b3980f7638558da5f6dcc018a5e9fee9e1449eb042b15ec89ea74"
+    },
+    "ascension-audit-proposal-route-unknown.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/proposal-route-unknown.md",
+      "bytes": 2560,
+      "sha256": "5bcacbe59af83ed1d7157bd6237c88d8a498e37508ffd58e45db4bda87987fd5",
+      "archive_bytes": 2560,
+      "archive_sha256": "5bcacbe59af83ed1d7157bd6237c88d8a498e37508ffd58e45db4bda87987fd5"
+    },
+    "ascension-audit-report.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/report.json",
+      "bytes": 474863,
+      "sha256": "b9e2583467fbb46bb9c07b2b2d3c41730bbce4b497c29917a1492940bba07f3e",
+      "archive_bytes": 260,
+      "archive_sha256": "d95fe3c760c667b47b3e4b844a9f16ae099474f141417a0142688edd757fffa5"
+    },
+    "ascension-audit-report.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/report.md",
+      "bytes": 27706,
+      "sha256": "c78597029e56ffb31cc852d82c09bfbc4b0038681059ba2e22723ab9cecfa221",
+      "archive_bytes": 27706,
+      "archive_sha256": "c78597029e56ffb31cc852d82c09bfbc4b0038681059ba2e22723ab9cecfa221"
+    },
+    "ascension-audit-resource-chain.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/resource-chain.md",
+      "bytes": 102279,
+      "sha256": "05f2ea0b55376dc342850f99eb6f4a7abcbfc7743f099461a345b26a3a81ecb7",
+      "archive_bytes": 102279,
+      "archive_sha256": "05f2ea0b55376dc342850f99eb6f4a7abcbfc7743f099461a345b26a3a81ecb7"
+    },
+    "ascension-audit-original-index.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit",
+      "bytes": 37291,
+      "sha256": "c24be93199be1af416a16c21b5fd37eb002a36490b6c9acebae397e2add62ebc",
+      "archive_bytes": 37291,
+      "archive_sha256": "c24be93199be1af416a16c21b5fd37eb002a36490b6c9acebae397e2add62ebc"
+    },
+    "postmortem-stream.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem.jsonl",
+      "bytes": 1344788,
+      "sha256": "4d12363e2a82f8e17ed49865bfeea6d89a4ae16af1e7dab542b79f1127f1f969",
+      "archive_bytes": 210,
+      "archive_sha256": "d2b2a585a162625a98ac90f5dbe4194624d0e326c7ce745dde07aa6278be79c9"
+    },
+    "previous-strategy-full-check.log": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-160418-strategy-proposal.fallback-10b647a14a05ba1c7024fe63cc178190388ea02b.checks.log",
+      "bytes": 71889,
+      "sha256": "6c833bf6ff6bc77168606742a21c58fad3b0589c6b532c60b2cb347173363d7e",
+      "archive_bytes": 71889,
+      "archive_sha256": "6c833bf6ff6bc77168606742a21c58fad3b0589c6b532c60b2cb347173363d7e"
+    },
+    "ledger-pm-original.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+      "bytes": 6444,
+      "sha256": "2bc7578316ede429a2a4a8a18c5adb396bcc96895966d7fd23e687ece09c44db",
+      "archive_bytes": 6444,
+      "archive_sha256": "2bc7578316ede429a2a4a8a18c5adb396bcc96895966d7fd23e687ece09c44db"
+    },
+    "ledger-exp75-original.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+      "bytes": 12604,
+      "sha256": "244e3f626e70e3695cace1827af1da1013e3fee6d612edea08a74cafe439f990",
+      "archive_bytes": 12604,
+      "archive_sha256": "244e3f626e70e3695cace1827af1da1013e3fee6d612edea08a74cafe439f990"
+    },
+    "ledger-repair-original.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+      "bytes": 31590,
+      "sha256": "b470fb911da562f87f004e965251bed24408c52bf636352a1ee4c60db29e4161",
+      "archive_bytes": 31590,
+      "archive_sha256": "b470fb911da562f87f004e965251bed24408c52bf636352a1ee4c60db29e4161"
+    },
+    "lessons-original.md": {
+      "path": "/home/dw/Projects/agent-sts2/notes/lessons.md",
+      "bytes": 14155,
+      "sha256": "d332c9ef1f641f055a105f28f4eccc1f2bdc0a12952a3d56b2b347a13a7235ec",
+      "archive_bytes": 14155,
+      "archive_sha256": "d332c9ef1f641f055a105f28f4eccc1f2bdc0a12952a3d56b2b347a13a7235ec"
+    },
+    "experience75-changelog-original.md": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/experience-changelog-silent.md",
+      "bytes": 27490,
+      "sha256": "5145d1806b6d3c8bedca520b58b09a439b6dafb6d4d321958063b70001a789c8",
+      "archive_bytes": 27490,
+      "archive_sha256": "5145d1806b6d3c8bedca520b58b09a439b6dafb6d4d321958063b70001a789c8"
+    },
+    "proposal-registry-original.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/learning/code-proposals.jsonl",
+      "bytes": 25923,
+      "sha256": "b1197c6a6a1f7436f72ca8ec9c0f0a80fa8c27ebdf91505dadda41795a0c52e1",
+      "archive_bytes": 25923,
+      "archive_sha256": "b1197c6a6a1f7436f72ca8ec9c0f0a80fa8c27ebdf91505dadda41795a0c52e1"
+    },
+    "record-first-failure.txt": {
+      "path": "/tmp/sts2-20261007-1748-record-run.txt",
+      "bytes": 364,
+      "sha256": "2ded61852eea63d5993ff1c87607339de4b7b88f6943dc888edbcebe7b44637d",
+      "archive_bytes": 364,
+      "archive_sha256": "2ded61852eea63d5993ff1c87607339de4b7b88f6943dc888edbcebe7b44637d"
+    }
+  },
+  "ledger_rows": {
+    "pm": 15,
+    "exp75": 34,
+    "repair": 76
+  },
+  "ledger_check": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 240 item(s), 0 problem(s)",
+  "source": "91d49f827f3d429955d63f0b11c5944731759264",
+  "original_states_retained": true,
+  "stall_now": "OK",
+  "audit_registration_only": true,
+  "final": {
+    "verified_at": "2026-10-07 18:18",
+    "files": {
+      "20261007-160418-strategy-proposal.err.txt": {
+        "bytes": 18531,
+        "sha256": "15e7e6541e027bbc17cc05bc17ed3177d6cba3c51a3c4a577eb7893db6386f64"
+      },
+      "20261007-160418-strategy-proposal.out.txt": {
+        "bytes": 2399,
+        "sha256": "534a694d65c8622d2108603e2b4fe99e5edacaee2f6a47b2b7bc9a7fbbdeeedb"
+      },
+      "20261007-164301.err.txt": {
+        "bytes": 9251,
+        "sha256": "2252765cd0f1648617a45b5d140561120ada933f15559c1cbf9492bd43804e72"
+      },
+      "20261007-164301.out.txt": {
+        "bytes": 2263,
+        "sha256": "5d3ba2002fe942c1a8de23c1641498b337665314d8c8b6e59b5798bafc1704e2"
+      },
+      "20261007-164302-experience-update.err.txt": {
+        "bytes": 14359,
+        "sha256": "6db46beb0304b7108a662ec859ce0e9eb6b6fda61522fdfcaf4e4c32ff8925a1"
+      },
+      "20261007-164302-experience-update.out.txt": {
+        "bytes": 4273,
+        "sha256": "50c11bfd8c76ba1570d0a4d2cfd4317020a7482d0de1823d144cb56ed09addf7"
+      },
+      "20261007-170244-strategy-proposal.err.txt": {
+        "bytes": 10059,
+        "sha256": "39271f4ce89413408ed8b9a2b2edf9cf50f966f8c273f962a1da4f5a84ac827b"
+      },
+      "20261007-170244-strategy-proposal.out.txt": {
+        "bytes": 9760,
+        "sha256": "689c6826c3f3ff2039b66af60af69392e0e7f6c3b4886c8728686d952df90743"
+      },
+      "20261007-171303-ascension-audit.err.txt": {
+        "bytes": 12267,
+        "sha256": "29445c1549f902157968818dd095d97efdd32a441eaf44b66384200f9e6fdd7b"
+      },
+      "20261007-171303-ascension-audit.out.txt": {
+        "bytes": 3313,
+        "sha256": "15799002a21a4a8af95899536455304d5a9148eb2332413f9643f1cfdcc02843"
+      },
+      "ascension-audit-original-index.json": {
+        "bytes": 37291,
+        "sha256": "c24be93199be1af416a16c21b5fd37eb002a36490b6c9acebae397e2add62ebc"
+      },
+      "ascension-audit-proposal-boss-phase-facts.md": {
+        "bytes": 3996,
+        "sha256": "e5c1691cfbc1ff672cbc3a1463b8fe34335761fa1572469457fd9b03c0a4435d"
+      },
+      "ascension-audit-proposal-continuation.md": {
+        "bytes": 3424,
+        "sha256": "338000f3b37b3980f7638558da5f6dcc018a5e9fee9e1449eb042b15ec89ea74"
+      },
+      "ascension-audit-proposal-route-unknown.md": {
+        "bytes": 2560,
+        "sha256": "5bcacbe59af83ed1d7157bd6237c88d8a498e37508ffd58e45db4bda87987fd5"
+      },
+      "ascension-audit-report.json.pointer.json": {
+        "bytes": 260,
+        "sha256": "d95fe3c760c667b47b3e4b844a9f16ae099474f141417a0142688edd757fffa5"
+      },
+      "ascension-audit-report.md": {
+        "bytes": 27706,
+        "sha256": "c78597029e56ffb31cc852d82c09bfbc4b0038681059ba2e22723ab9cecfa221"
+      },
+      "ascension-audit-resource-chain.md": {
+        "bytes": 102279,
+        "sha256": "05f2ea0b55376dc342850f99eb6f4a7abcbfc7743f099461a345b26a3a81ecb7"
+      },
+      "batch-states.json": {
+        "bytes": 18069,
+        "sha256": "f091e5ff3c8e813ec515d7b3467f2081eae03ff856cb8245544b1d5953aed949"
+      },
+      "execution-script-index.json": {
+        "bytes": 1740,
+        "sha256": "7ca1cc7ea703ca2114c781d52add4fead2cdd4cae0535525bf74d4184bb47e18"
+      },
+      "experience75-changelog-original.md": {
+        "bytes": 27490,
+        "sha256": "5145d1806b6d3c8bedca520b58b09a439b6dafb6d4d321958063b70001a789c8"
+      },
+      "experience75-changelog-section.md": {
+        "bytes": 27490,
+        "sha256": "5145d1806b6d3c8bedca520b58b09a439b6dafb6d4d321958063b70001a789c8"
+      },
+      "experience75-full-check.log": {
+        "bytes": 73802,
+        "sha256": "0bd6494a1c32f3699ffd82ccaef7a6277466e0c382508122cf6d31ea0af131fc"
+      },
+      "experience75-handoff-ops.md": {
+        "bytes": 1805,
+        "sha256": "6efb459b20d92d61e0aa1b3d714cc574d82a641860c5f84dd62f2928048ef2a9"
+      },
+      "experience75-original-index.json.pointer.json": {
+        "bytes": 225,
+        "sha256": "6a51a444b38fbd3904537b945ff5f84ca6dd09b53c0860978c068a3e52995347"
+      },
+      "experience75-proposal-apotheosis.md": {
+        "bytes": 4874,
+        "sha256": "78e23dae4213fa5b07bda1a0799bbbe0c94567c889db235b40560f523608e637"
+      },
+      "experience75-proposal-cure-all-and-budget.md": {
+        "bytes": 2602,
+        "sha256": "2d7b4b07d5cff4b7372a139c0ea2ae0dbb5361e971717eb5aa093f6b01c3b874"
+      },
+      "experience75-proposal-mechanisms-and-resources.md": {
+        "bytes": 4696,
+        "sha256": "08eaeed02365ece6b99ec54adb8ead6688d7323d6f59f30c1cb5996f41c552e2"
+      },
+      "experience75-report.json": {
+        "bytes": 1373,
+        "sha256": "dfc33b7eeb276647737e05d3268bec83ab4fdf4a516c2d879afaead990f32ed0"
+      },
+      "experience75-report.md": {
+        "bytes": 3441,
+        "sha256": "8e68ac8a4718436b162127769020daed3ff4358e0127792d729cf1043afa11b8"
+      },
+      "external-recheck-before.json": {
+        "bytes": 2863,
+        "sha256": "12c01ff045fc785d7d76ba54990166b6fa37b95978cff1c042b7c4df376bf59b"
+      },
+      "external-recheck-result.json": {
+        "bytes": 2883,
+        "sha256": "86051fa3864ef636625cf390bcd981bdaed193deb9674f7beb8eecca232097cc"
+      },
+      "external-recheck.txt": {
+        "bytes": 407,
+        "sha256": "8842c91e1cf96b1a7f4387ebee293b51a27305224e7b9c9dc3d07cf747eff793"
+      },
+      "final-verification.json": {
+        "bytes": 3777,
+        "sha256": "2380cb4cf1a879d44cd2f386824c3b1aec904dd52270113af00457197a709195"
+      },
+      "full-check-summary.json": {
+        "bytes": 457,
+        "sha256": "fbd5e41ade2a1266ca3d3261afc69e390131991cb2bdea3d565bfbf0aa6e6ee2"
+      },
+      "integration-preparation.json": {
+        "bytes": 956,
+        "sha256": "af4b68e97c0f7ae178e739a5a4e95a96abbff5bd485f9ce246376c956a8636ff"
+      },
+      "intermediate-verification.json": {
+        "bytes": 2807,
+        "sha256": "f3025254e4f863cc8e4205c0c40764d82147c335e99ac4a525c7496c5784925c"
+      },
+      "ledger-exp75-commit-original.jsonl": {
+        "bytes": 6194,
+        "sha256": "23c217d3833df5c4f03a3ec06fe0cb9dcad2442ea3256b5cd261774e2bb7d966"
+      },
+      "ledger-exp75-original.jsonl": {
+        "bytes": 12604,
+        "sha256": "244e3f626e70e3695cace1827af1da1013e3fee6d612edea08a74cafe439f990"
+      },
+      "ledger-pm-original.jsonl": {
+        "bytes": 6444,
+        "sha256": "2bc7578316ede429a2a4a8a18c5adb396bcc96895966d7fd23e687ece09c44db"
+      },
+      "ledger-repair-original.jsonl": {
+        "bytes": 31590,
+        "sha256": "b470fb911da562f87f004e965251bed24408c52bf636352a1ee4c60db29e4161"
+      },
+      "ledger-shipped-original.jsonl": {
+        "bytes": 51441,
+        "sha256": "a1015217ced4f907f1814bc79cbc7c4837e6f611ed18e315ecc2fba7f39d3a4d"
+      },
+      "lessons-original.md": {
+        "bytes": 14155,
+        "sha256": "d332c9ef1f641f055a105f28f4eccc1f2bdc0a12952a3d56b2b347a13a7235ec"
+      },
+      "mod.txt": {
+        "bytes": 40513,
+        "sha256": "21df205386c9fb86fa2a3b203a37afb081ad0e07117adab7996f5545a5078ab4"
+      },
+      "paper-commit-byte-guard.txt": {
+        "bytes": 297,
+        "sha256": "627bc33a756ac13708a0aaf6fb0a8d632e29c1d7d55a3bea8cc0285664dc2336"
+      },
+      "paper-commit-ignored-log.txt": {
+        "bytes": 1173,
+        "sha256": "92fb757381eb7cb68907811d052dd27a40dd8eef45f538284e9ebd21dd3eec6f"
+      },
+      "paper-commit-raw-whitespace.txt": {
+        "bytes": 1120,
+        "sha256": "2fc84d04483146576d4b77b2eb62a1c7c1631ee313e66acd389ddc805941c3c2"
+      },
+      "paper-commit.json": {
+        "bytes": 594,
+        "sha256": "ac6e985209a2a136d4643e00f8757aff190dd6db95dd2139ad38d0a6d7ef9bc2"
+      },
+      "paper-dataset.log": {
+        "bytes": 879,
+        "sha256": "5a7bc05d3f7fff470d068ed8b3b4314052b83a66c4f1e0cec3fb15a336a2a334"
+      },
+      "paper-run.txt": {
+        "bytes": 1337,
+        "sha256": "ceeb4f52285c8d4d869096f80c9bf1c369d8415ca53e0dceb4d90b589eb2ff43"
+      },
+      "paper-snapshot.json": {
+        "bytes": 6027,
+        "sha256": "b9d0ccc50502dc44075863447a74723057648809c57b86aee402db9b415cd521"
+      },
+      "postmortem-lesson-draft.md": {
+        "bytes": 14156,
+        "sha256": "470155abe7bf22a95122228ef62e693918ee0eed9f911a7b9b2b9c5cf95d7402"
+      },
+      "postmortem-original-index.json": {
+        "bytes": 5589,
+        "sha256": "104dca81fedbcc89e4076bb1f6254ec97f6369c0993a8239fe098bd52a70ed36"
+      },
+      "postmortem-proposal-combat-sl-audit.md": {
+        "bytes": 6215,
+        "sha256": "5e713a9a6a50830d4ff7c2aba1c2af90487cc8d03e4881555257b43161632709"
+      },
+      "postmortem-report.json": {
+        "bytes": 665,
+        "sha256": "87bff95d86559ad9f5e23860ccd1ec5dd9dc1ba2e994bf09a0809f253169fb5a"
+      },
+      "postmortem-report.md": {
+        "bytes": 1524,
+        "sha256": "e89e483ea9d72fdd1777bdf1d62fb4af636f9af60c11115eea971d4d81130ad4"
+      },
+      "postmortem-stream.jsonl.pointer.json": {
+        "bytes": 210,
+        "sha256": "d2b2a585a162625a98ac90f5dbe4194624d0e326c7ce745dde07aa6278be79c9"
+      },
+      "previous-strategy-full-check.log": {
+        "bytes": 71889,
+        "sha256": "6c833bf6ff6bc77168606742a21c58fad3b0589c6b532c60b2cb347173363d7e"
+      },
+      "procs-final.txt": {
+        "bytes": 6026,
+        "sha256": "6b65a3ca2312238c0dabdb447cb6b765b39390bcf47ccacd4cc5c320183ba3f0"
+      },
+      "procs.txt": {
+        "bytes": 6026,
+        "sha256": "4611e7446950078f5c95ce9591065424b0da6cd62c3b7d3ca2360580bdc64270"
+      },
+      "proposal-registry-original.jsonl": {
+        "bytes": 25923,
+        "sha256": "b1197c6a6a1f7436f72ca8ec9c0f0a80fa8c27ebdf91505dadda41795a0c52e1"
+      },
+      "proposal-repair-handoff-ops.md": {
+        "bytes": 1073,
+        "sha256": "d4b54e03634c0ee323f111b0254deaa576cdf5d07310ab3f042b63288246949a"
+      },
+      "proposal-repair-no-change-acceptance.json": {
+        "bytes": 371,
+        "sha256": "2a5cdbb6a25222c20e3e7eaea793e8a07606fcd120a72000b45bb00176ea8299"
+      },
+      "proposal-repair-original-index.json": {
+        "bytes": 188017,
+        "sha256": "3d98fb742e7d4426b6004e956b155f7bf543ea2d6e52c836d24b4ec3e8244fc4"
+      },
+      "proposal-repair-proposal.md": {
+        "bytes": 7056,
+        "sha256": "0be52a13480044b352932d3aabe97b7ce89324fe956e37eb2b7e53dc693d4067"
+      },
+      "proposal-repair-report.json": {
+        "bytes": 9782,
+        "sha256": "722fd6fe2d6b4ee342ce6f7b865c13a370ae70a1e9bdd1779398a4395b4fe9d0"
+      },
+      "proposal-repair-report.md": {
+        "bytes": 22352,
+        "sha256": "f266598f140f2b18d6b6d03e478c68695c0552cd1528ee804f75b46b8d78885a"
+      },
+      "proposal-repair-silent-accelerant-triggers.md": {
+        "bytes": 2368,
+        "sha256": "090a2b13d6e357d0c77c49c645846bdd6ec55d21c8d6afd74af0f30a161be117"
+      },
+      "proposal-repair-silent-afterimage-per-card-block.md": {
+        "bytes": 2400,
+        "sha256": "668806c9d9c5f283c392357ff7284b3ce3686abe37f6c541000fb4d77fa51db6"
+      },
+      "proposal-repair-silent-anticipate-temporary-dexterity.md": {
+        "bytes": 2347,
+        "sha256": "2ab9a52d3f250711fa2562c352232738541d9ba4558cb3573a535228638ce633"
+      },
+      "proposal-repair-silent-bronze-scales-per-hit-thorns.md": {
+        "bytes": 2521,
+        "sha256": "bc4635a4109dcef98d3f168e048c2a592e2c6a76960be3a5519b8cd63e464274"
+      },
+      "proposal-repair-silent-bubble-bubble-condition.md": {
+        "bytes": 2484,
+        "sha256": "c0dcd09f8b87f85b49be5992901c655767f5b9e6e72abf6e7fcc1d51593dd849"
+      },
+      "proposal-repair-silent-burst-next-skills-replay.md": {
+        "bytes": 2403,
+        "sha256": "132f0a8cd2d104ce2125edc5d6f10f1e671967150461527f846b62dee4230d49"
+      },
+      "proposal-repair-silent-caltrops-thorns.md": {
+        "bytes": 2550,
+        "sha256": "b7e62994e0252c9890a820ced7cd8471dfc41281738074d3227df7b0d4e05207"
+      },
+      "proposal-repair-silent-deck-burst-observation.md": {
+        "bytes": 2501,
+        "sha256": "56a0a04049f43aa425242d11caa305a1bb869fc6b4fc38d0138e9f6edad44831"
+      },
+      "proposal-repair-silent-fasten-defend-extra-block.md": {
+        "bytes": 2329,
+        "sha256": "0c1196afadf2f5c3507fb6f6db644617121a9ebd1ad2ee64110194ed8440f4db"
+      },
+      "proposal-repair-silent-footwork-block.md": {
+        "bytes": 2465,
+        "sha256": "f35d18e3b36facdc1077b83c39c1de33daa275e70255448c20765171764aa2b5"
+      },
+      "proposal-repair-silent-gardener-skittish-shield.md": {
+        "bytes": 2565,
+        "sha256": "c6ccfab96f933327a126d2b98010b37cae6a54609b8beb93ff23860bb1583b3a"
+      },
+      "proposal-repair-silent-haze-group-poison-weak.md": {
+        "bytes": 2752,
+        "sha256": "1c1aa78ad779341b8cc68539ab0afe28764b937da6a768243646a3377a796ca0"
+      },
+      "proposal-repair-silent-hunter-tender-card-attributes.md": {
+        "bytes": 2591,
+        "sha256": "63d2b6596f205a49a3f73cabbefc6956d9c0c1250a9468762198c16d286f5ce0"
+      },
+      "proposal-repair-silent-infested-prism-tainted-skill-cost.md": {
+        "bytes": 2612,
+        "sha256": "bed21b409432a70aeba53c8cbf1ce31a5e83113f5208f144766b259c4f9a0c3c"
+      },
+      "proposal-repair-silent-lagavulin-siphon-poison-sl.md": {
+        "bytes": 2543,
+        "sha256": "f4a38e2d7ee0b5d205a3168cc58dfec442046d7be3a89701054b3dcb7fdf0a6c"
+      },
+      "proposal-repair-silent-letter-opener-third-skill.md": {
+        "bytes": 2396,
+        "sha256": "fbbe5d0ea9f7e26637280275f365feea47f6c39c13aef67bec09c6664d7669f3"
+      },
+      "proposal-repair-silent-lost-forgotten-possession.md": {
+        "bytes": 2634,
+        "sha256": "b30fb59d7407c7226d4d67196479a4e2cc9322e478ab8314fa4a7ead7ea6c3b5"
+      },
+      "proposal-repair-silent-mirage-poison-card-block.md": {
+        "bytes": 2635,
+        "sha256": "f3192a3658e932b0ab147e9c57be9132b128e11a1180f3f3f02bd67c3e6449ed"
+      },
+      "proposal-repair-silent-noxious-fumes-growth.md": {
+        "bytes": 2335,
+        "sha256": "1d939e32cc9189347c17c669a9fefa8e708eba31c08743994fa2a3d3a1225b2a"
+      },
+      "proposal-repair-silent-obscura-summon-growth.md": {
+        "bytes": 2541,
+        "sha256": "b32fb321d95e941c095993cdde0d011354c689718ffe2a3b2428fe68c444ec02"
+      },
+      "proposal-repair-silent-outbreak-immediate-poison.md": {
+        "bytes": 2406,
+        "sha256": "40cfd9d02ba6b2f3290db3ace88cde5b37336a3a4d675bae79ba50fea2584cf1"
+      },
+      "proposal-repair-silent-permafrost-first-power-block.md": {
+        "bytes": 2415,
+        "sha256": "ff9a4c97b1db452a686cbf1cdadab6bd5880409b18b49b3edb530f898a3e3f8e"
+      },
+      "proposal-repair-silent-piercing-wail-temporary-strength.md": {
+        "bytes": 2568,
+        "sha256": "48195a11174981ba57a8354909482e11fc30e4b347692baea37b1762b48b4208"
+      },
+      "proposal-repair-silent-serpent-form-per-card-damage.md": {
+        "bytes": 2613,
+        "sha256": "58dd2ec843e8050886923b6ee316805ba184ab66601429c330bd2b8caa6f16d4"
+      },
+      "proposal-repair-silent-sewer-clam-pressure-growth.md": {
+        "bytes": 2587,
+        "sha256": "651f0bdcdb88c5cd511aae9b4744b0d60852b08a67d67d0bcb76d52bd5ce8376"
+      },
+      "proposal-repair-silent-slumbering-beetle-wake-growth.md": {
+        "bytes": 2582,
+        "sha256": "b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780"
+      },
+      "proposal-repair-silent-strength-weak-observation.md": {
+        "bytes": 2611,
+        "sha256": "aac4fddf0f24862a3fb8e289d000a312358c3bb9ee3d624602bf755d0b5409a2"
+      },
+      "proposal-repair-silent-zapbot-high-voltage-growth.md": {
+        "bytes": 2577,
+        "sha256": "48b2be77326bb54c99a17547f0499b91bca9816e1ff9f0761baded11ddeccde5"
+      },
+      "publication-preview.txt": {
+        "bytes": 41,
+        "sha256": "ccbfc51f9b75e672f651a94e6f610b83c61db5924e51c2340f6d4f52cd9e9681"
+      },
+      "publication.json": {
+        "bytes": 2777,
+        "sha256": "4c2585014a6bbad043064aabc0c0e709db27db3f5118aed7f559bca98acc8adc"
+      },
+      "record-first-failure.txt": {
+        "bytes": 364,
+        "sha256": "2ded61852eea63d5993ff1c87607339de4b7b88f6943dc888edbcebe7b44637d"
+      },
+      "report.md": {
+        "bytes": 2146,
+        "sha256": "d98ee72bb96e29bc44d5e25e43776f2dd8b53cb5b09b6cb341a08567dff0a35a"
+      },
+      "shipment-first-guard.txt": {
+        "bytes": 299,
+        "sha256": "031aac2caacaed43892032de3230442b249683bb3fb19353802ccaa09d911ee7"
+      },
+      "shipment-run.txt": {
+        "bytes": 1487,
+        "sha256": "37c70d58dc5adafc7ef56fa069f430f7ca98e592d1d292dc22d02cf4ea5565eb"
+      },
+      "shipment.json": {
+        "bytes": 1013,
+        "sha256": "663fb6580cfa1bb6c7164392022067618297a84b0ced1d2aeba9fda0231cdfba"
+      },
+      "stall.txt": {
+        "bytes": 44,
+        "sha256": "c7016f5c9d81c123e9483b486822fc6d90447a3e175b71ff245902a0f6d1fbd5"
+      }
+    },
+    "publication": "79bee0fc11793a410218ae50ca43e41474eec19e",
+    "version": "S1.exp75",
+    "full_check": {
+      "merged": "79bee0fc11793a410218ae50ca43e41474eec19e",
+      "tree": "75aa1c58cf15b9b86ebfb3ab52c3cc0c3b6ce70d",
+      "rc": 0,
+      "tsc": 0,
+      "vitest": 0,
+      "files": 284,
+      "cases": 3249,
+      "skipped": 2,
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-164302-experience-update.fallback-75aa1c58cf15b9b86ebfb3ab52c3cc0c3b6ce70d.checks.log",
+      "bytes": 73802,
+      "sha256": "0bd6494a1c32f3699ffd82ccaef7a6277466e0c382508122cf6d31ea0af131fc"
+    },
+    "paper_commit": "939b6d5187a4636b7ca59327f2049ae4adeb76cb",
+    "ledger_check": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 240 item(s), 0 problem(s)",
+    "originals_unchanged": true
+  }
+}

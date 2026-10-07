@@ -1,0 +1,64 @@
+{
+  "state": "published",
+  "timestamp": "2026-10-07 17:34",
+  "source": "45161a51c2c6b7e4a499b13cf749c4108193bbf5",
+  "live_before": "606855106dfb90ca8ffe27b985ed3c3b3f2424a2",
+  "preserved_refresh_commit": "baa4428070e53c54dda29f18154c208388df7d87",
+  "refresh_paths": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "898fcae2daac2e0712277f9b5586df32d15bd1cee80d0af1cbbe3706533dd96a",
+    "knowledge/characters/silent/monster-records.json": "0659656848de4128c732646abc954e21521c8bf5c729f20bf9f2c0065b29e33c",
+    "knowledge/characters/silent/outcome-stats.json": "74c218d0caf10b4a8ce693780dc1e38239e76428a70e34289d3b8cd6855e6fba",
+    "knowledge/characters/silent/room-costs.json": "35859b88527775bb3c140dde75d0c71576ddea98ef78c965940c6cadb798ec14",
+    "knowledge/common/card-upgrades.json": "9b9e6c9826a1fd54af858542abb586dc3f2b232cda9eb7b6acddeefbafa2dbe8",
+    "knowledge/common/monster-db.json": "7d874ee7b8877aa24cd000baa133dadccb45579fad8f81ccdfeade06bc80ce25",
+    "knowledge/common/move-model.json": "31f561f5912a82a59d330dc5c72afc407c480bef85a666b0af67006d77f3b4f4"
+  },
+  "untracked_preserved": true,
+  "actual_code": "777f861c27a1a1a89c9aba736709801b5cc3f481",
+  "publication": "05b4f233472928698cd11fee4a8fb182a3da2736",
+  "publication_tree": "10b647a14a05ba1c7024fe63cc178190388ea02b",
+  "version": "S1.strategy11",
+  "main_code_sync": "aa7219ac91bc37ff33967e1bf321c96327c64fd7",
+  "main_publication": "fb0795dc049d90c961096edaa4b3a1f6aced7a02",
+  "checks": {
+    "rc": 0,
+    "started": "2026-10-07T17:17:40+08:00",
+    "duration_sec": 985.5,
+    "commit": "3fb758b609376ed56717c4c2b5e227e5c192ac5b",
+    "tree": "e9fec609478166400cb1a975b903b0d58f4860a4",
+    "workers": 1,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261007-1702-strategy/combined-sandbox-single-worker.log",
+    "log_sha256": "64774f22c1e291ffab787662fe0adde58f15dfd9f8f176b8ba8e496275c5af3c",
+    "passed_files": 233,
+    "passed_cases": 2441,
+    "command": "nice19 SANDBOX_WORKERS=1 bash tools/test-sandbox.sh --reporter=verbose"
+  },
+  "checked_commit": "3fb758b609376ed56717c4c2b5e227e5c192ac5b",
+  "checked_base": "606855106dfb90ca8ffe27b985ed3c3b3f2424a2",
+  "code_paths": [
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/silent-simulation-reference.ts",
+    "agent/tests/silent-simulation-reference-evidence.json",
+    "agent/tests/silent-simulation-reference.test.ts"
+  ],
+  "source_blobs": {
+    "agent/src/reflex/combat-plan.ts": "618479c277d6fea94cdbeabc9105f21612950255",
+    "agent/src/reflex/silent-simulation-reference.ts": "4eafd3383a114aa6bb919b563660243ea89eef6c",
+    "agent/tests/silent-simulation-reference-evidence.json": "93eda9de0a89731f680c6ece1c8beb6ff68c7cf0",
+    "agent/tests/silent-simulation-reference.test.ts": "5f0dfd041a78e8972d5384de11eb26973aac6429"
+  },
+  "all_four_source_blobs_equal": true,
+  "one_attempt_this_wake": true,
+  "record_line": "- 2026-10-07 17:34 运维codex17:02策略160418合入受阻兜底实际发布：已测源45161a51c2c6b7e4a499b13cf749c4108193bbf5为live777f861c27a1a1a89c9aba736709801b5cc3f481真实祖先，唯一S1.strategy11指向实际代码；仅四源码/测试文件，逐blob等独立最新组合3fb758b609376ed56717c4c2b5e227e5c192ac5b/树e9fec609478166400cb1a975b903b0d58f4860a4，原入口tsc0/233文件2441例exit0/1worker。静默0239证据VLZ6CCT8AQ0A A10F45T1/T4，源撤实现8败3过/恢复新增11及相关87合98过，只补覆盖/样本/未知与参考排名事实，预算、目标、药水/SL规则及其他角色保持；保留生成刷新baa4428070e53c54dda29f18154c208388df7d87与并行B4B5/双boss/BCD/Codex-only。原32路径merge失败及本轮所有检查原件留史；最终完整外部沿160418原批独立learner-recheck，原failed/回报缺三个proposal_results保持，不将预算/神化/结构提案全标implemented。main随后机械同步，仅0239经CLI shipped，不停对局/调度、不运行play/env不改。\n",
+  "proposal_results": "missing; original failed state and proposal queue retained; only factual display shipped",
+  "full_external_checks": "original-batch independent recheck pending"
+}
