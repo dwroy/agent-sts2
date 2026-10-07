@@ -1,0 +1,212 @@
+diff --git a/agent/src/memory/types.ts b/agent/src/memory/types.ts
+index 5dd5501e..b18689ba 100644
+--- a/agent/src/memory/types.ts
++++ b/agent/src/memory/types.ts
+@@ -264,6 +264,8 @@ export interface ScreenMemory {
+     fight: string; perTurn: Record<string, number>; witherDamage: number;
+     /** Silent Wither: accepted enchantment replays keyed by the source play's turn and manual counter. */
+     replays?: Record<string, number>;
++    /** Silent A10 Sloth: accepted ordinary Defend replay1, separate from other play counters. */
++    slothReplays?: Record<string, number>;
+     runId?: string;
+     last?: { turn: number; played: number };
+   };
+diff --git a/agent/src/reflex/combat-plan.ts b/agent/src/reflex/combat-plan.ts
+index fd794f13..59ce29a6 100644
+--- a/agent/src/reflex/combat-plan.ts
++++ b/agent/src/reflex/combat-plan.ts
+@@ -43,7 +43,7 @@ import { infernoCopies, startTurnHpLossOf } from "./start-loss.js";
+ import { planCombat as planCombatPerCard } from "./combat.js";
+ import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
+ import { permafrostBlock } from "./permafrost.js";
+-import { recordStateFightPlays } from "./fight-plays.js";
++import { observedSlothReplay, recordStateFightPlays } from "./fight-plays.js";
+ import { RELIC_VALUES } from "../knowledge/relic-values.js";
+ import { forcedEliteWithin } from "../hand/screens/rest.js";
+ import { bossLossPerTurn, bossProfile, damageGap, eruptionAt, eruptionSchedule, laterPhaseHps, SIPHON_HEAL } from "../sim/boss-clock.js";
+@@ -2891,7 +2891,8 @@ function planTurn(env: DecisionEnv): Decision | null {
+     endTurnBlock: powerAmount(player, "PLATING_POWER") + powerAmount(player, "METALLICIZE_POWER"),
+     rupture: powerAmount(player, "RUPTURE_POWER"),
+     // Sloth caps cards per turn; Disintegration deals its amount at the end of every turn.
+-    maxPlays: playCap(player),
++    maxPlays: playCap(player, env),
++    ...(observedSlothReplay(state) && powerAmount(player, "RINGING_POWER") === 0 ? { slothDefendReplay: true } : {}),
+     // Smoggy: one Skill a turn, less the Skills already played.
+     maxSkills: powerAmount(player, "SMOGGY_POWER") > 0 ? Math.max(0, 1 - num(player["skills_played_this_turn"])) : null,
+     // Constrict (Slithering Strangler) is the same end-of-turn damage (BHMP F6: 12 HP unpredicted).
+@@ -4716,9 +4717,17 @@ export function phaseSetupCard(hand: CardModel[], energy: number, keepsBlock: bo
+  * Cards still playable this turn: Sloth caps plays at its amount; Ringing (Ceremonial Beast's
+  * 昏眩, 8LQGV1EFQDVX) allows one card this turn. null = no cap.
+  */
+-function playCap(player: Record<string, unknown>): number | null {
++function playCap(player: Record<string, unknown>, env: DecisionEnv): number | null {
+   const caps: number[] = [];
+-  if (powerAmount(player, "SLOTH_POWER") > 0) caps.push(powerAmount(player, "SLOTH_POWER"));
++  if (powerAmount(player, "SLOTH_POWER") > 0) {
++    let extra = 0;
++    if (observedSlothReplay(env.state)) {
++      const memo = recordFightPlays(env, num(player["cards_played_this_turn"]));
++      extra = Object.entries(memo.slothReplays ?? {}).filter(([key]) => key.startsWith(`${env.state.turn}:`))
++        .reduce((sum, [, count]) => sum + count, 0);
++    }
++    caps.push(Math.max(0, powerAmount(player, "SLOTH_POWER") - extra));
++  }
+   if (powerAmount(player, "RINGING_POWER") > 0) caps.push(1);
+   if (caps.length === 0) return null;
+   return Math.max(0, Math.min(...caps) - num(player["cards_played_this_turn"]));
+diff --git a/agent/src/reflex/fight-plays.ts b/agent/src/reflex/fight-plays.ts
+index d1553ae6..043f531a 100644
+--- a/agent/src/reflex/fight-plays.ts
++++ b/agent/src/reflex/fight-plays.ts
+@@ -13,11 +13,21 @@ function observedWither(state: GameState): boolean {
+     });
+ }
+ 
++/** KV0JHNJCKXLS A10 F33 T8, silent-0245/0247: only the observed three-play Sloth scope. */
++export function observedSlothReplay(state: GameState): boolean {
++  const run = asRecord(state.run?.raw);
++  return state.in_combat && str(run["character_id"]).toLowerCase() === "silent" && num(run["ascension"]) === 10 &&
++    asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).some((entry) => {
++      const power = asRecord(entry);
++      return str(power["power_id"]) === "SLOTH_POWER" && num(power["amount"]) === 3;
++    });
++}
++
+ /** Keep the raw per-turn mean separate from extra plays that Withering Presence counts. */
+ export function recordStateFightPlays(memory: ScreenMemory, state: GameState, played: number): NonNullable<ScreenMemory["fightCards"]> {
+   const fight = `${str(asRecord(state.run?.raw)["act_id"])}:${state.run?.floor ?? "?"}`;
+   const runId = str(state.raw["run_id"]);
+-  const tracked = observedWither(state);
++  const tracked = observedWither(state) || observedSlothReplay(state);
+   const previous = memory.fightCards;
+   const last = previous?.last;
+   const actionable = state.combat?.can_use_combat_actions !== false && state.turn !== null;
+@@ -45,14 +55,14 @@ export function recordStateFightPlays(memory: ScreenMemory, state: GameState, pl
+   return memo;
+ }
+ 
+-/** Sample every actionable Silent Wither frame, including frames logged without a decision. */
++/** Sample actionable observed Silent replay-counter frames, including frames without a decision. */
+ export function observeFightPlays(memory: ScreenMemory, state: GameState): boolean {
+   if (!state.in_combat) {
+     const had = memory.fightCards !== undefined;
+     memory.fightCards = undefined;
+     return had;
+   }
+-  if (!observedWither(state) || state.combat?.can_use_combat_actions === false || state.turn === null) return false;
++  if (!(observedWither(state) || observedSlothReplay(state)) || state.combat?.can_use_combat_actions === false || state.turn === null) return false;
+   const played = asRecord(asRecord(state.raw["combat"])["player"])["cards_played_this_turn"];
+   if (typeof played !== "number" || !Number.isInteger(played) || played < 0) return false;
+   const previous = JSON.stringify(memory.fightCards);
+@@ -62,15 +72,23 @@ export function observeFightPlays(memory: ScreenMemory, state: GameState): boole
+ 
+ /** Only an accepted dispatch (or its logged replay) adds the card's observed enchantment replays. */
+ export function noteFightReplay(memory: ScreenMemory, state: GameState, intent: ActionRequest | null | undefined): void {
+-  if (!observedWither(state) || intent?.action !== "play_card" || typeof intent.card_index !== "number") return;
++  const wither = observedWither(state);
++  const sloth = observedSlothReplay(state);
++  if (!(wither || sloth) || intent?.action !== "play_card" || typeof intent.card_index !== "number") return;
+   observeFightPlays(memory, state);
+   const memo = memory.fightCards;
+   const played = asRecord(asRecord(state.raw["combat"])["player"])["cards_played_this_turn"];
+   if (!memo || state.turn === null || typeof played !== "number" || !Number.isInteger(played) || played < 0) return;
+   const raw = asArray(asRecord(state.raw["combat"])["hand"])
+     .find((entry, index) => (asRecord(entry)["index"] ?? index) === intent.card_index);
+-  const count = replayOf(str(asRecord(raw)["resolved_rules_text"]));
++  const card = asRecord(raw);
++  const count = replayOf(str(card["resolved_rules_text"]));
+   if (count <= 0) return;
+   // The manual counter identifies this accepted source play; re-reading or replaying its row is idempotent.
+-  (memo.replays ??= {})[`${state.turn}:${played}`] = count;
++  const key = `${state.turn}:${played}`;
++  if (wither) (memo.replays ??= {})[key] = count;
++  // Keep this evidence-specific cap counter separate from Wither and the manual per-turn mean.
++  if (sloth && str(card["card_id"]) === "DEFEND_SILENT" && card["upgraded"] !== true && count === 1) {
++    (memo.slothReplays ??= {})[key] = 1;
++  }
+ }
+diff --git a/agent/src/reflex/rollout.ts b/agent/src/reflex/rollout.ts
+index fdab8b41..c1a6bc2d 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -2884,6 +2884,7 @@ function simulate(
+       // (another's for its turns). The hand's cards (withStrength) carry Strength and Weak, not Shrink: the solver shrinks
+       // them once (a decision hand card kept or put back unbased carries its own: CardModel.shownShrunk).
+       maxPlays: player.ringingNext ? Math.min(player.playCap ?? Infinity, 1) : player.playCap,
++      slothDefendReplay: base.slothDefendReplay === true && player.playCap === 3 && !player.ringingNext,
+       intangible: player.intangibleTurns > h,
+       shrunk: player.shrinkTurns > 0 && (player.shrinkTurns !== Infinity || !enemies.some((e) => e.id === SHRINKER) || enemies.some((e) => e.alive && e.id === SHRINKER)),
+       endTurnHpLoss: player.disintegration + (player.constrict > 0 && enemies.some((e) => e.alive && e.id === CONSTRICTOR) ? player.constrict : 0),
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index 9f90c8af..5aed6da0 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -401,6 +401,8 @@ export interface PlayerSim {
+   rupture?: number;
+   /** Sloth: at most this many more cards can be played this turn. */
+   maxPlays?: number | null;
++  /** Silent A10 Sloth3: ordinary Defend replay1 consumes an extra cap slot (KV0 F33 T8). */
++  slothDefendReplay?: boolean;
+   /**
+    * Smoggy (SMOGGY_POWER: 「每回合你只能打出1张技能牌」): at most this many more Skills this turn; null for no
+    * cap. The solver planned two and the game refused the second (Living Fog, 51 logged fights).
+@@ -1029,6 +1031,8 @@ interface Sim {
+   colossus: boolean;
+   /** Cards played this turn so far (for Slow). */
+   played: number;
++  /** This line's cap consumption, independent of Slow and the raw manual-play counter. */
++  slothPlays: number;
+   /** Each card drawn this turn, valued with and without an energy left at the end to use it. */
+   draws: DrawValue[];
+   cardsDrawn: number;
+@@ -1609,6 +1613,8 @@ function unconditioned(card: CardModel): CardModel {
+ /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
+ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
+   if (sim.pendingSelection) return null;
++  // Apply the observed cap to fixed-line replay and search alike; potion dispatches consume no slot.
++  if (player.slothDefendReplay && card.type !== "Potion" && player.maxPlays != null && sim.slothPlays >= player.maxPlays) return null;
+   // Stomp: 1 less per Attack played earlier in this plan (8XQM F48 T8: Pommel Strike+ and Strike
+   // first make it cost 1; played first at 3, the lethal line was never found).
+   const cost =
+@@ -1683,6 +1689,14 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
+   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
+   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
+   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
++  if (player.slothDefendReplay && card.type !== "Potion") {
++    const observed = card.cardId === "DEFEND_SILENT" && !card.upgraded && card.replay === 1 && plays === 2;
++    next.slothPlays += observed ? 2 : 1;
++    // The final-slot replay and other automatic plays have no isolated Sloth evidence yet.
++    if ((observed && player.maxPlays != null && next.slothPlays > player.maxPlays) || (!observed && plays > 1)) {
++      next.unknown = [...next.unknown, "懒惰（重放名额边界未验证）"];
++    }
++  }
+   // The evidence covers one play; repeated discard/generation selections need their own observation.
+   if (hidden && plays > 1) {
+     next.pendingSelection = true;
+@@ -3458,7 +3472,8 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
+ 
+ function simKey(sim: Sim): string {
+   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",")
+-    + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "");
++    + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "")
++    + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "");
+   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
+   const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
+   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
+@@ -3603,6 +3618,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
+     // A Colossus already up is in the intents (2WUM T7: 10x7 shown as 5x7, then halved again to 2x7).
+     colossus: false,
+     played: input.cardsPlayedThisTurn ?? 0,
++    slothPlays: 0,
+     draws: [],
+     cardsDrawn: 0,
+     drawnInHand: 0,
+@@ -3732,7 +3748,7 @@ export function solveTurn(input: SolverInput): SolveResult {
+     if (ownDeathEnds && sim.hp <= 0) return;
+ 
+     const tried = new Set<string>();
+-    const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
++    const cardPlays = input.player.slothDefendReplay ? sim.slothPlays : sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
+     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
+     const skillsLeft = input.player.maxSkills === null || input.player.maxSkills === undefined ? Infinity : input.player.maxSkills - sim.skillsPlayed;
+     for (const card of sim.hand.flatMap((entry) => (hiddenDaggers(entry) ? hiddenDaggerWays(sim, entry) : entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {

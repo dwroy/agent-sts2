@@ -1,0 +1,202 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-sloth-replay.test.ts (14 tests | 7 failed) 93ms
+   × final T8: rejects Defend replay, Strike, Neutralize and preserves the actually executed prefix 36ms
+   × replanning after accepted Defend leaves one slot, without changing the raw manual count 4ms
+   × accepted source rows restore the same cap after restart and duplicate rows count once 5ms
+   × raw count two after replay plus Strike leaves no remaining cap and the actual death is retained 3ms
+   × a last-slot replay remains offered with an explicit unverified boundary 3ms
+   × later-turn rollout preserves the observed cap (whole fight=false) 9ms
+   × later-turn rollout preserves the observed cap (whole fight=true) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-sloth-replay.test.ts > final T8: rejects Defend replay, Strike, Neutralize and preserves the actually executed prefix
+AssertionError: expected { freeAttacks: +0, …(51) } to match object { Object (maxPlays, slothDefendReplay) }
+(51 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "maxPlays": 3,
+-   "slothDefendReplay": true,
+  }
+
+ ❯ tests/silent-sloth-replay.test.ts:72:24
+     70| it("final T8: rejects Defend replay, Strike, Neutralize and preserves …
+     71|   const input = inputFor();
+     72|   expect(input.player).toMatchObject({ maxPlays: 3, slothDefendReplay:…
+       |                        ^
+     73|   const steps = [step(input, "DEFEND_SILENT"), step(input, "STRIKE_SIL…
+     74|   expect(replaySteps(input, steps)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/silent-sloth-replay.test.ts > replanning after accepted Defend leaves one slot, without changing the raw manual count
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/silent-sloth-replay.test.ts:90:33
+     88|   noteFightReplay(memory, parseGameState(frame()), { action: "play_car…
+     89|   const input = inputFor(frame(1), memory);
+     90|   expect(input.player.maxPlays).toBe(1);
+       |                                 ^
+     91|   expect(memory.fightCards!.perTurn["8"]).toBe(1);
+     92|   expect(replaySteps(input, [step(input, "STRIKE_SILENT"), step(input,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/silent-sloth-replay.test.ts > accepted source rows restore the same cap after restart and duplicate rows count once
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/silent-sloth-replay.test.ts:101:56
+     99|   for (const duplicate of [false, true]) {
+    100|     const memory = restored("completed: ok", duplicate);
+    101|     expect(inputFor(frame(1), memory).player.maxPlays).toBe(1);
+       |                                                        ^
+    102|     expect(memory.fightCards!.slothReplays).toEqual({ "8:0": 1 });
+    103|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/silent-sloth-replay.test.ts > raw count two after replay plus Strike leaves no remaining cap and the actual death is retained
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/silent-sloth-replay.test.ts:129:33
+    127|   raw.combat.hand[1].unplayable_reason = null;
+    128|   const input = inputFor(raw, memory);
+    129|   expect(input.player.maxPlays).toBe(0);
+       |                                 ^
+    130|   expect(replaySteps(input, [step(input, "NEUTRALIZE")])).toBeNull();
+    131|   expect(rows[3]!.state.combat.player.current_hp).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/silent-sloth-replay.test.ts > a last-slot replay remains offered with an explicit unverified boundary
+AssertionError: expected [] to include '懒惰（重放名额边界未验证）'
+ ❯ tests/silent-sloth-replay.test.ts:139:37
+    137|   const plan = replaySteps(input, [step(input, "DEFEND_SILENT")])!;
+    138|   expect(plan).not.toBeNull();
+    139|   expect(plan.outcome.unknownCards).toContain("懒惰（重放名额边界未验证）");
+       |                                     ^
+    140| });
+    141|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/silent-sloth-replay.test.ts > later-turn rollout preserves the observed cap (whole fight=false)
+ FAIL  tests/silent-sloth-replay.test.ts > later-turn rollout preserves the observed cap (whole fight=true)
+AssertionError: expected { steps: [ { …(7) }, …(2) ], …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "outcome": {
+    "attackPlays": 2,
+    "blockGained": 14,
+    "blockWasted": 5,
+    "cardsDrawn": 0,
+    "damageDealt": 9,
+    "dies": false,
+    "enemyHpAfter": [
+      {
+        "artifact": 0,
+        "block": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "hp": 111,
+        "index": 0,
+        "name": "Boss",
+        "shrink": 0,
+        "slippery": 0,
+        "strengthGained": 0,
+        "vulnerable": 0,
+        "weak": 1,
+      },
+    ],
+    "energyLeft": 3,
+    "hpAfter": 60,
+    "hpLoss": 0,
+    "incomingAfterBlock": 0,
+    "kills": [],
+    "lasting": 0,
+    "restocked": [],
+    "sandpitAfter": null,
+    "sleepCost": 0,
+    "startTurnKills": [],
+    "strengthGained": 0,
+    "unknownCards": [],
+    "vulnerableApplied": 0,
+    "weakApplied": 1,
+    "winsFight": false,
+    "withersAdded": 0,
+  },
+  "score": 8.7,
+  "steps": [
+    {
+      "cardId": "DEFEND_SILENT",
+      "cardIndex": 0,
+      "cost": 0,
+      "name": "DEFEND_SILENT",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+    {
+      "cardId": "STRIKE_SILENT",
+      "cardIndex": 1,
+      "cost": 0,
+      "name": "STRIKE_SILENT",
+      "target": 0,
+      "targetName": "Boss",
+      "upgraded": false,
+    },
+    {
+      "cardId": "NEUTRALIZE",
+      "cardIndex": 2,
+      "cost": 0,
+      "name": "NEUTRALIZE",
+      "target": 0,
+      "targetName": "Boss",
+      "upgraded": false,
+    },
+  ],
+}
+
+ ❯ tests/silent-sloth-replay.test.ts:168:119
+    166|   expect(captures.some((s) => s.turn === 2 && s.player.slothDefendRepl…
+    167|   const later = captures.find((s) => s.turn === 2)!;
+    168|   expect(replaySteps(later, [step(later, "DEFEND_SILENT"), step(later,…
+       |                                                                                                                       ^
+    169| });
+    170|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 7 passed (14)
+   Start at  01:13:49
+   Duration  1.61s (transform 1.15s, setup 320ms, import 1.05s, tests 93ms, environment 0ms)
+
