@@ -1,0 +1,143 @@
+{
+  "commit": "536713b82bd74bb347224dd26a5719f24894c1bf",
+  "a": {
+    "state": "dispatched",
+    "task": "silent-double-boss",
+    "character": "silent",
+    "authorized_by": "Roy",
+    "request_id": "roy-20261007-1235-silent-double-boss",
+    "requested_at": "2026-10-07 12:42:09 +0800",
+    "authorization": "2026-10-07 12:35 manual; notes/fix-queue-v4.md explicit Roy authorization",
+    "brief": "learner/tasks/silent-double-boss.md",
+    "batch": "20261007-130408-fix-batch",
+    "pid": 1563687,
+    "pane": "wJ:p54",
+    "dispatched_at": "2026-10-07 13:04",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-double-boss",
+    "transport_source": "b367c6019f771bce0913eb81d85c43d2512210cd",
+    "transport_main": "fce5576efc926017ba56a72802346b3b6594f4d7",
+    "receipt": {
+      "dispatched": [
+        "20261007-130408-fix-batch",
+        1563687
+      ]
+    },
+    "batch_snapshot": {
+      "task": "fix-batch",
+      "learner_task": "silent-double-boss",
+      "character": "silent",
+      "runs": [],
+      "key": "feature:roy-20261007-1235-silent-double-boss",
+      "pid": 1563687,
+      "state": "running",
+      "reason": "ops",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-double-boss",
+      "feature_request": "roy-20261007-1235-silent-double-boss",
+      "pane": "wJ:p54"
+    }
+  },
+  "b": {
+    "state": "dispatched",
+    "task": "boss-sim-automation",
+    "character": "silent",
+    "authorized_by": "Roy",
+    "request_id": "roy-20261007-1235-boss-sim-automation",
+    "requested_at": "2026-10-07 12:42:09 +0800",
+    "authorization": "2026-10-07 12:35 manual; notes/fix-queue-v4.md explicit Roy authorization",
+    "brief": "learner/tasks/boss-sim-automation.md",
+    "batch": "20261007-130415-fix-batch",
+    "pid": 1564623,
+    "pane": "wJ:p55",
+    "dispatched_at": "2026-10-07 13:04",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation",
+    "transport_source": "b367c6019f771bce0913eb81d85c43d2512210cd",
+    "transport_main": "fce5576efc926017ba56a72802346b3b6594f4d7",
+    "receipt": {
+      "dispatched": [
+        "20261007-130415-fix-batch",
+        1564623
+      ]
+    },
+    "batch_snapshot": {
+      "task": "fix-batch",
+      "learner_task": "boss-sim-automation",
+      "character": "silent",
+      "runs": [],
+      "key": "feature:roy-20261007-1235-boss-sim-automation",
+      "pid": 1564623,
+      "state": "running",
+      "reason": "ops",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation",
+      "feature_request": "roy-20261007-1235-boss-sim-automation",
+      "pane": "wJ:p55"
+    }
+  },
+  "transport": {
+    "source": "b367c6019f771bce0913eb81d85c43d2512210cd",
+    "main": "fce5576efc926017ba56a72802346b3b6594f4d7",
+    "paths": [
+      "ops/learner_jobs.py",
+      "ops/codex-ops-learner.sh",
+      "ops/tests/test_silent_calibration_dispatch.py",
+      "learner/tasks/silent-double-boss.md",
+      "learner/tasks/boss-sim-automation.md",
+      "notes/silent-double-boss-dispatch.json",
+      "notes/boss-sim-automation-dispatch.json"
+    ],
+    "sandbox": {
+      "exit": 0,
+      "files": 224,
+      "cases": 2374,
+      "log": "/tmp/sts2-1235-transport-sandbox.log",
+      "sha256": "0148fba33da92a3ae5e89d4dc7817df863277df44842d3f52acaed7e169f1580",
+      "workers": 2
+    },
+    "python_tests": 20,
+    "task_render": [
+      {
+        "task": "silent-double-boss",
+        "characters": [
+          "silent"
+        ],
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Bash",
+          "Edit",
+          "Write"
+        ],
+        "timeoutMin": 240,
+        "merge": "live",
+        "rendered": true
+      },
+      {
+        "task": "boss-sim-automation",
+        "characters": [
+          "silent"
+        ],
+        "tools": [
+          "Read",
+          "Grep",
+          "Glob",
+          "Bash",
+          "Edit",
+          "Write"
+        ],
+        "timeoutMin": 240,
+        "merge": "live",
+        "rendered": true
+      }
+    ],
+    "task_render_log": "/tmp/sts2-1235-task-render.log",
+    "without_source": {
+      "rc": 1,
+      "log": "/tmp/sts2-1235-transport-without-source.log"
+    },
+    "unit_log": "/tmp/sts2-1235-transport-unit.log",
+    "a_first": true,
+    "new_features_not_complete": true
+  },
+  "ordinary_repair": "queued; codex-dev occupied by 121034; broker dispatched=null",
+  "feature_status": "both actually dispatched, not implemented yet"
+}

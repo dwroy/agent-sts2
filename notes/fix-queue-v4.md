@@ -719,3 +719,5 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 ## 2026-10-07 12:40 — exp70 完整外部检查失败：历史测试入口漏传日志回调（纯测试基础设施）
 
 - **非阻塞测试缺口**：20261007-113604-experience-update 固定发布92376ca3、树b37c82f6，tsc0/vitest1；274文件通过/1失败，3180通过/2失败/2跳过。agent/tests/brain-codex-usage.test.ts:548/:570 的 console WARNING/refresh note 数组为[]。tests/legacy-brain.ts createEngine 未传 note，而生产 src/brain/brain.ts createRouter 已传 note=(m)=>router.say(m)。学习者修固定测试辅助入口回调，保留两断言与 token/redaction 约束，固定夹具红绿、原入口沙箱和完整外部补测；不要改生产路由恢复回退或降低测试标准。无游戏账本 ID，不冒标 bug-infra/shipped。原失败日志 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log 永久保留，详情 paper/materials/silent/20261007-1235-events.md。普通 codex-dev 当前121034批次在跑，交队列由下一可用批次处理，不占用两项独立功能工作树。
+
+- 2026-10-07 13:08 同项补证：经验71固定发布33f02a6f/树e30f7a95完整tsc0/vitest1仍仅:548/:570旧note回调两断言；3180通过/2失败/2跳过。13:05事件与上一轮已经归档的原始日志按字节/SHA完全相同，沿用本项修复，不新开重复单、不回滚、不再请求完整补测。详情paper/materials/silent/20261007-1305-events.md及paper/materials/silent/20261007-1305-events/checks-dedup-pointer.json；生产Codex-only保持，测试修复保留断言与安全约束。
