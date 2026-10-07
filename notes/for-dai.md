@@ -461,3 +461,5 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 ## 2026-10-07 20:51 — 静默经验79累计发布
 
 经验2026-10-07.25已兜底合入live c10209e1，唯一版本S1.exp79；包含先前待合的.23/.24，154项active。源及合后原沙箱tsc/vitest通过，239文件2511例；保留并行代码、刷新和原冲突历史，main机械同步，31项所属经验通过CLI登记实际发布。3个出牌/药水/SL代码提案由调度器独立续办，未把bug0245/0246记已修；完整外部检查沿原批续验，结果等learner-checks。回执paper/materials/silent/20261007-2034-experience79/。
+
+2026-10-07 20:53 续验回执：三批原经验任务200254/184215/193250的完整外部learner-recheck请求已发出，本批已开始检查固定树37eeafcf，另外两批在broker队列；结果待learner-checks，尚未宣称完整套通过。发布/台账记录953665e0，回执paper/materials/silent/20261007-2034-experience79/external-recheck-requests.json。
