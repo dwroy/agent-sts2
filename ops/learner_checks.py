@@ -25,6 +25,14 @@ def read_report(path):
             continue
         if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal"):
             return report
+    # A report can be the leading JSON object followed by the launcher's summary.
+    # Never search prose for braces: embedded examples are not completion reports.
+    try:
+        report, _ = json.JSONDecoder().raw_decode(text.lstrip())
+    except ValueError:
+        return {}
+    if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal"):
+        return report
     return {}
 
 

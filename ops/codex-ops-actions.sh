@@ -11,6 +11,7 @@
 #   mod-state          GET 127.0.0.1:8080/state (the STS2-Agent mod), complete validated JSON
 #   autoplay-start     the ops prompt's start: refuses while autoplay / stop-after / play runs; rm ops/STOP; starts
 #                      ops/autoplay.sh with setsid nohup; prints its PID and live's commit (PID in ops/codex-ops/autoplay.pid)
+#   autoplay-reload <old PID> <play PID>  replace the verified old loop with WAIT_PID; preserve play and return versions
 #   autoplay-stop      kill the autoplay bash started by autoplay-start (by PID, after checking its command line)
 #   play-stop          ops/stop.sh (stops the play node process by PID; autoplay starts the next one)
 #   kill <pid>         kill one of our processes by PID: autoplay.sh, stop-after*.sh, index.ts play, report.py, learner/run.ts
@@ -93,6 +94,16 @@ case "$action" in
     kill -0 "$pid" 2>/dev/null || { echo "autoplay (PID $pid) exited at once; see ops/autoplay.log"; exit 1; }
     echo "autoplay started: PID $pid$where; live $(git -C "$LIVE" rev-parse --short HEAD 2>/dev/null); $(date '+%F %T')"
     exit 0 ;;
+  autoplay-reload)
+    [ $# -eq 3 ] || { echo "autoplay-reload 需要旧 autoplay PID 和当前 play PID"; exit 2; }
+    old_pid="$2"; play_pid="$3"
+    for pid in "$old_pid" "$play_pid"; do
+      [[ "$pid" =~ ^[1-9][0-9]{0,9}$ ]] && [ "$pid" -gt 1 ] && [ "$pid" -le 2147483647 ] \
+        || { echo "autoplay-reload 需要有效 PID"; exit 2; }
+    done
+    [ "$old_pid" != "$play_pid" ] || { echo "两个 PID 必须不同"; exit 2; }
+    exec nice -n 19 python3 "$OPS/autoplay-reload.py" "$ROOT" "$LIVE" "$DIR" "$old_pid" "$play_pid"
+    ;;
   autoplay-stop)
     pid=$(cat "$DIR/autoplay.pid" 2>/dev/null)
     if [ -z "$pid" ] || ! cmdline "$pid" | grep -q 'ops/autoplay\.sh'; then

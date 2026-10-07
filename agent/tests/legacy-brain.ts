@@ -12,14 +12,16 @@ export * from "../src/hand/loop.js";
 
 export function createBrain(config: AppConfig, ds: DeepSeekClient, options: { log?: (row: BrainLogRow) => void; fallbackBudget?: FallbackBudget } = {}): Brain {
   const engines = new Map<EngineName, BrainEngine>();
-  return new Brain(new BrainRouter({
+  const note = (message: string): void => router.say(message);
+  const router: BrainRouter = new BrainRouter({
     config: { ...config.brain, log: brainLogPath(config) },
     engine: (name) => {
       let engine = engines.get(name);
-      if (!engine) { engine = createEngine(name, config, ds); engines.set(name, engine); }
+      if (!engine) { engine = createEngine(name, config, ds, { note }); engines.set(name, engine); }
       return engine;
     }, ...options,
-  }), ds, undefined, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
+  });
+  return new Brain(router, ds, undefined, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
 }
 
 export async function runLoop(options: LoopOptions): Promise<LoopStats> {
