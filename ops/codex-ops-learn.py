@@ -36,6 +36,8 @@ from learner_checks import finish_write_batch, recheck_write_batch  # noqa: E402
 from learner_jobs import check_jobs, dispatch_write, pending, start_learner  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
+import brain_source  # noqa: E402
 SCRIPTS = os.path.dirname(os.path.abspath(__file__))  # this file's ops/ (the scripts)
 OPS = os.path.join(ROOT, "ops")  # the project's ops/ (win-notified, inbox-dev.md, codex-ops/)
 LOGS = os.environ.get("CODEX_OPS_LOGS") or os.path.join(ROOT, "logs")
@@ -173,7 +175,9 @@ def check_victories(character):
     if os.path.exists(WIN_NOTIFIED):
         notified = {line.strip() for line in open(WIN_NOTIFIED, encoding="utf8") if line.strip()}
     events = []
-    for row in finished_runs(character):
+    runs = finished_runs(character)
+    sources = brain_source.load_sources(LOGS, [r["run_id"] for r in runs]) if any(r.get("victory") is True and r["run_id"] not in notified for r in runs) else {}
+    for row in runs:
         run = row["run_id"]
         if row.get("victory") is True and run not in notified:
             notified.add(run)
@@ -181,6 +185,7 @@ def check_victories(character):
                 handle.write(run + "\n")
             events.append(enqueue("victory", (
                 f"通关：{run}（{NAMES_ZH.get(character, character)}，A{row.get('ascension')}，第 {row.get('floor')} 层，结束于 {row.get('ended')}）。"
+                f"实际脑来源={sources[run]['source']}；Codex战绩纳入={sources[run]['eligible']}；排除原因={sources[run]['exclusion_reason']}（{brain_source.POLICY}，全部原始成绩/复盘/成本保留）。"
                 f"调度器已把 run id 写进 ops/win-notified。按「汇报规则 1」查清第一次尝试赢还是 SL 后赢、用时、下一局打第几级，写进 ops/inbox-dev.md。"
             )))
     return events

@@ -528,6 +528,19 @@ export function questionEffort(label: string, state: Record<string, unknown>, co
   return (EFFORT_RANK[plan] ?? 0) > (EFFORT_RANK[own] ?? 0) ? plan : own;
 }
 
+/** Shared prompt construction needs no transport or credential. */
+export function brainSystemPrompt(config: Pick<DeepSeekConfig, "guideFile" | "handbookFile" | "factsSnapshotDir" | "systemPrompt"> = {}): { systemPrompt: string; guideId: string; handbookId: string } {
+  const guide = frozenGuideFacts(readOptional(config.guideFile), config.factsSnapshotDir);
+  const handbook = frozenGuideFacts(readOptional(config.handbookFile), config.factsSnapshotDir);
+  const handbookId = shortHash(handbook);
+  const guideId = [shortHash(guide), handbookId].filter(Boolean).join("+");
+  const character = knowledgeCharacter();
+  let system = systemRules(character);
+  if (guide) system += `\n\n# ${characterName(character, "en")} strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
+  if (handbook) system += `\n\n# 经验手册（来自过往对局复盘）\n\n${handbook}`;
+  return { systemPrompt: config.systemPrompt ?? system, guideId, handbookId };
+}
+
 export class DeepSeekClient implements Escalator {
   readonly name = "deepseek" as const;
 
@@ -536,18 +549,10 @@ export class DeepSeekClient implements Escalator {
   readonly handbookId: string;
 
   constructor(private readonly config: DeepSeekConfig) {
-    // The guides' data facts (the Giant's kill record) are filled from the fight data, frozen for the day.
-    const guide = frozenGuideFacts(readOptional(config.guideFile), config.factsSnapshotDir);
-    const handbook = frozenGuideFacts(readOptional(config.handbookFile), config.factsSnapshotDir);
-    this.handbookId = shortHash(handbook);
-    this.guideId = [shortHash(guide), this.handbookId].filter(Boolean).join("+");
-    // The run's character's rules and guide (the guide file is the character's own: config.ts guideFile).
-    const character = knowledgeCharacter();
-    let system = systemRules(character);
-    if (guide) system += `\n\n# ${characterName(character, "en")} strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
-    // Static text only: the system prompt must stay byte-identical across calls so DeepSeek caches it.
-    if (handbook) system += `\n\n# 经验手册（来自过往对局复盘）\n\n${handbook}`;
-    this.system = config.systemPrompt ?? system;
+    const prompt = brainSystemPrompt(config);
+    this.handbookId = prompt.handbookId;
+    this.guideId = prompt.guideId;
+    this.system = prompt.systemPrompt;
   }
 
   /** The system prompt as sent (for tools and tests). */

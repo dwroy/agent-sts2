@@ -9,7 +9,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { createBrain, type Brain } from "../src/brain/brain.js";
+import { type Brain } from "../src/brain/brain.js";
+import { createBrain } from "./legacy-brain.js";
 import { DeepSeekEngine } from "../src/brain/engines/deepseek.js";
 import { pickSpec } from "../src/brain/specs.js";
 import { loadConfig } from "../src/core/config.js";

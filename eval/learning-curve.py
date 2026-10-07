@@ -35,6 +35,8 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
 from characters import character_key, run_character  # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "eval"))
+import brain_source  # noqa: E402
 
 
 def load(name, path):
@@ -49,14 +51,19 @@ ledger_tools = load("ledger_tools", os.path.join(ROOT, "learner", "ledger.py"))
 
 COLUMNS = ["character", "ascension", "runs", "wins", "first_try_wins", "sl_wins", "mean_floor", "mean_first_try_floor",
            "first_run", "last_run", "started", "ended", "items_found", "items_found_prior_yes", "items_shipped",
-           "items_shipped_ids", "repeats", "repeats_after_ship"]
+           "items_shipped_ids", "repeats", "repeats_after_ship", "performance_policy", "include_non_codex", "raw_runs", "raw_wins",
+           "excluded_runs", "excluded_run_ids", "raw_engine_cohorts", "source_by_run"]
 
 
-def jsonl(path):
+def jsonl(path, limit=None):
     if not os.path.exists(path):
         return
-    with open(path, encoding="utf8") as handle:
+    with open(path, "rb") as handle:
+        used = 0
         for line in handle:
+            used += len(line)
+            if limit is not None and used > limit:
+                break
             try:
                 row = json.loads(line)
             except ValueError:
@@ -81,22 +88,22 @@ def mean(values):
     return round(statistics.mean(values), 2) if values else None
 
 
-def curve(character, logs, items):
+def curve(character, logs, items, include_non_codex=False, sources=None, limits=None):
     """The rows for one character (oldest ascension first)."""
-    runs = [r for r in jsonl(os.path.join(logs, "runs.jsonl")) if r.get("run_id") and run_character(r) == character]
+    limits = limits or {}
+    runs = [r for r in jsonl(os.path.join(logs, "runs.jsonl"), limits.get("runs.jsonl")) if r.get("run_id") and run_character(r) == character]
+    brain_source.annotate(runs, sources if sources is not None else brain_source.load_sources(logs, [r["run_id"] for r in runs], limits.get("brain.jsonl")))
     sl = {}
-    for row in jsonl(os.path.join(logs, "sl-attempts.jsonl")):
+    for row in jsonl(os.path.join(logs, "sl-attempts.jsonl"), limits.get("sl-attempts.jsonl")):
         if row.get("run_id"):
             sl.setdefault(row["run_id"], []).append(row)
-    starts = ledger_tools.run_starts(runs, jsonl(os.path.join(logs, "run-config.jsonl")))
+    starts = ledger_tools.run_starts(runs, jsonl(os.path.join(logs, "run-config.jsonl"), limits.get("run-config.jsonl")))
     timeline = [(starts.get(run["run_id"]), run) for run in runs]
-    asc_of = {run["run_id"]: run.get("ascension") for run in runs}
+    asc_of = {run["run_id"]: run.get("ascension") if isinstance(run.get("ascension"), int) else "unknown" for run in runs}
 
     by_asc = {}
     for start, run in timeline:
-        asc = run.get("ascension")
-        if not isinstance(asc, int):
-            continue
+        asc = asc_of[run["run_id"]]
         first = metrics.first_attempt(sl.get(run["run_id"], []), run.get("floor"), run.get("victory"), {1: False, 2: False}, {})
         g = by_asc.setdefault(asc, {"runs": [], "first": [], "starts": []})
         g["runs"].append(run)
@@ -112,10 +119,11 @@ def curve(character, logs, items):
             shipped_at[item["id"]] = later[0]["ascension"] if later else ""
 
     rows = []
-    for asc in sorted(by_asc):
+    for asc in sorted(by_asc, key=lambda value: (value == "unknown", value)):
         g = by_asc[asc]
-        wins = [r for r in g["runs"] if r.get("victory") is True]
-        first_wins = sum(1 for f in g["first"] if f["victory"])
+        selected = [(r, f) for r, f in zip(g["runs"], g["first"]) if brain_source.eligible(r, include_non_codex)]
+        wins = [r for r, f in selected if r.get("victory") is True]
+        first_wins = sum(1 for r, f in selected if f["victory"])
         found = [i for i in mine if i.get("asc") == asc]
         shipped = sorted(i for i, a in shipped_at.items() if a == asc)
         reps = [(item, e) for item in mine for e in item.get("evidence", []) if e.get("role") == "repeat" and asc_of.get(e.get("run")) == asc]
@@ -123,15 +131,21 @@ def curve(character, logs, items):
         starts_known = [s for s in g["starts"] if s]
         ends = [when(r.get("ended")) for r in g["runs"] if when(r.get("ended"))]
         rows.append({
-            "character": character, "ascension": asc, "runs": len(g["runs"]), "wins": len(wins),
+            "character": character, "ascension": asc, "runs": len(selected), "wins": len(wins),
             "first_try_wins": first_wins, "sl_wins": len(wins) - first_wins,
-            "mean_floor": mean([r.get("floor") for r in g["runs"]]), "mean_first_try_floor": mean([f["floor"] for f in g["first"]]),
+            "mean_floor": mean([r.get("floor") for r, f in selected]), "mean_first_try_floor": mean([f["floor"] for r, f in selected]),
             "first_run": g["runs"][0]["run_id"], "last_run": g["runs"][-1]["run_id"],
             "started": min(starts_known).isoformat(timespec="seconds") if starts_known else "",
             "ended": max(ends).isoformat(timespec="seconds") if ends else "",
             "items_found": len(found), "items_found_prior_yes": sum(1 for i in found if i.get("prior") == "yes"),
             "items_shipped": len(shipped), "items_shipped_ids": " ".join(shipped),
             "repeats": len(reps), "repeats_after_ship": len(late),
+            "performance_policy": brain_source.POLICY, "include_non_codex": include_non_codex,
+            "raw_runs": len(g["runs"]), "raw_wins": sum(r.get("victory") is True for r in g["runs"]),
+            "excluded_runs": len(g["runs"]) - len(selected),
+            "excluded_run_ids": " ".join(r["run_id"] for r in g["runs"] if not brain_source.eligible(r, include_non_codex)),
+            "raw_engine_cohorts": json.dumps(brain_source.cohorts(g["runs"]), ensure_ascii=False, sort_keys=True),
+            "source_by_run": json.dumps({r["run_id"]: {k: r["brain_source"][k] for k in ["source", "eligible", "exclusion_reason", "successful_answers", "unresolved_questions"]} for r in g["runs"]}, ensure_ascii=False, sort_keys=True),
         })
     pending = sorted(i for i, a in shipped_at.items() if a == "")
     if pending:
@@ -141,6 +155,9 @@ def curve(character, logs, items):
 
 def write(rows, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    if os.path.exists(path):
+        import shutil
+        shutil.copy2(path, path + ".before-" + dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))
     with open(path, "w", newline="", encoding="utf8") as handle:
         writer = csv.DictWriter(handle, fieldnames=COLUMNS)
         writer.writeheader()
@@ -148,13 +165,14 @@ def write(rows, path):
             writer.writerow({k: ("" if row.get(k) is None else row.get(k)) for k in COLUMNS})
 
 
-def main(argv=None):
+def main(argv=None, limits=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--character")
     parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
     parser.add_argument("--ledger", default=os.environ.get("LEDGER_FILE") or os.path.join(ROOT, "paper", "materials", "learning", "ledger.jsonl"))
     parser.add_argument("--out-dir", default=os.path.join(ROOT, "paper", "data"))
     parser.add_argument("--print", action="store_true", help="print the rows as well")
+    parser.add_argument("--include-non-codex", action="store_true")
     args = parser.parse_args(argv)
     os.environ["LEDGER_FILE"] = args.ledger
     ledger = load("ledger", os.path.join(ROOT, "learner", "ledger.py"))
@@ -162,10 +180,11 @@ def main(argv=None):
     if args.character:
         characters = [character_key(args.character)]
     else:
-        characters = sorted({run_character(r) for r in jsonl(os.path.join(args.logs, "runs.jsonl")) if r.get("run_id")})
+        characters = sorted({run_character(r) for r in jsonl(os.path.join(args.logs, "runs.jsonl"), (limits or {}).get("runs.jsonl")) if r.get("run_id")})
+    sources = brain_source.load_sources(args.logs, limit=(limits or {}).get("brain.jsonl"))
     for character in characters:
-        rows = curve(character, args.logs, items)
-        path = os.path.join(args.out_dir, f"learning-curve-{character}.csv")
+        rows = curve(character, args.logs, items, args.include_non_codex, sources, limits)
+        path = os.path.join(args.out_dir, f"learning-curve-{character}{'-all-engines' if args.include_non_codex else ''}.csv")
         write(rows, path)
         print(f"{path}: {len(rows)} row(s)")
         if args.print:

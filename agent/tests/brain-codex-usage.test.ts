@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { createBrain } from "../src/brain/brain.js";
+import { createBrain } from "./legacy-brain.js";
 import { CodexEngine } from "../src/brain/engines/codex.js";
 import { AUTH_REFRESH_EVERY_MS, CODEX_USAGE_DISABLED_FEATURES, CodexUsageGuard, parseRateLimits, readCodexUsage, refreshCodexAuth, usageNote, USAGE_RETRY_MS, type CodexUsage } from "../src/brain/engines/codex-usage.js";
 import { codexEnv } from "../src/brain/engines/codex.js";
@@ -340,7 +340,7 @@ describe("the guard", () => {
     const first = (await guard.beforeCall().catch((e: unknown) => e)) as EngineFailure;
     expect(first).toMatchObject({ kind: "unavailable", cooldownMs: 30_000 });
     // The change is said once on the console and rides on the question's row (the router reads errorNotes).
-    expect(notes).toEqual([expect.stringMatching(/^WARNING: codex usage could not be read \(no answer within 20000 ms\); with BRAIN_CODEX_USAGE_REQUIRED=on codex is off until a read works: its questions go to the fallback, the next read in 30 s/)]);
+    expect(notes).toEqual([expect.stringMatching(/^WARNING: codex usage could not be read \(no answer within 20000 ms\); with BRAIN_CODEX_USAGE_REQUIRED=on Codex cannot answer until a fresh read passes: the next read in 30 s/)]);
     expect(errorNotes(first)).toEqual([notes[0]!.replace(/^WARNING: /, "")]);
     // Within the wait no read is made (the router rests codex meanwhile; a call that comes anyway is refused at once).
     clock += 10_000;
@@ -363,7 +363,7 @@ describe("the guard", () => {
     clock = guard.blocked!.nextReadAt;
     await expect(guard.beforeCall()).resolves.toBeUndefined();
     expect(guard.blocked).toBeNull();
-    expect(notes[1]).toBe(`codex usage can be read again after 6 failed read(s) (plan prolite, codex/primary 7-day window 3% used, resets ${RESETS}): codex answers again`);
+    expect(notes[1]).toBe(`codex usage can be read again after 6 failed read(s) (plan prolite, codex/primary 7-day window 3% used, resets ${RESETS}): quota checks still apply`);
     expect(guard.takeNotes()).toEqual([notes[1]]);
     expect(guard.status()).not.toHaveProperty("blocked");
     // The quota stop rules still stop codex for the process.

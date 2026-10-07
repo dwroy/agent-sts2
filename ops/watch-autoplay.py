@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Milestones of back-to-back runs: new run, every 5th floor, boss floors, game over, stalls, loop exit."""
 import json, os, subprocess, time, urllib.request
+from brain_wait import live_wait
 L = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs", "decisions.jsonl")
 seen = sum(1 for _ in open(L)) if os.path.exists(L) else 0
 run = None; floor = None; last_new = time.time(); stalled = False; idle_since = None
@@ -26,7 +27,7 @@ while True:
             if f % 5 == 0 or f in (17, 34, 51): print(f"run {run} floor {f} ({r['screen']})", flush=True)
         if r["screen"] == "GAME_OVER": print(f"GAME_OVER run {run} at floor {floor}", flush=True)
     seen = len(lines)
-    if time.time() - last_new > 150 and not stalled:
+    if time.time() - last_new > 150 and not stalled and not live_wait(os.path.dirname(L)):
         try:
             d = json.load(urllib.request.urlopen("http://127.0.0.1:8080/state", timeout=5))["data"]
             print(f"stalled 150s: screen={d['screen']} actions={d['available_actions']} loop_alive={loop_alive()}", flush=True)

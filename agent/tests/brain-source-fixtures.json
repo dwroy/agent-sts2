@@ -1,0 +1,23 @@
+[
+  {"name":"codex","source":"codex","eligible":true,"counts":{"codex":2},"rows":[
+    {"run_id":"C","engine":"codex","label":"reward/card","question_id":"1","answer":{"choice":"a"},"problems":[]},
+    {"run_id":"C","engine":"deepseek","label":"reward/card","question_id":"1","answer":null,"error":"quota"},
+    {"run_id":"C","engine":"codex","label":"run-plan","question_id":"2","answer":{},"accepted":true,"problems":[]},
+    {"run_id":"C","engine":"codex","label":"run-plan","question_id":"2","answer":{},"accepted":true}]},
+  {"name":"deepseek","source":"deepseek","eligible":false,"counts":{"deepseek":1},"rows":[
+    {"run_id":"D","engine":"codex","question_id":"1","answer":null,"error":"quota"},
+    {"run_id":"D","engine":"deepseek","question_id":"1","label":"event/plan","answer":{"choice":"b"},"problems":[]}]},
+  {"name":"mixed","source":"mixed","eligible":false,"counts":{"codex":1,"deepseek":1},"rows":[
+    {"run_id":"M","engine":"codex","label":"shop/plan","answer":{},"problems":[]},
+    {"run_id":"M","engine":"deepseek","label":"rest/plan","answer":{},"accepted":true}]},
+  {"name":"missing","source":"unknown","eligible":false,"counts":{},"rows":[]},
+  {"name":"unknown engine","source":"unknown","eligible":false,"counts":{"unknown":1},"rows":[
+    {"run_id":"U","label":"run-plan","answer":{},"problems":[]}]},
+  {"name":"ambiguous historical answer","source":"unknown","eligible":false,"counts":{},"rows":[
+    {"run_id":"U","engine":"codex","answer":{},"problems":["missing route"]},
+    {"run_id":"U","engine":"codex","answer":{},"accepted":false}]},
+  {"name":"explicit accepted soft notes","source":"codex","eligible":true,"counts":{"codex":1},"rows":[
+    {"run_id":"C","engine":"codex","label":"event/plan","answer":{"run_plan":{},"route":"keep"},"accepted":true,"problems":["soft note"]}]},
+  {"name":"claude","source":"other","eligible":false,"counts":{"claude":1},"rows":[
+    {"run_id":"O","engine":"claude","answer":{},"problems":[]}]}
+]

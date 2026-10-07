@@ -20,7 +20,7 @@ import { loadConfig } from "../src/core/config.js";
 import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
 import { choiceMessage } from "../src/brain/llm/deepseek-message.js";
 import { DeepSeekClient, pickJsonObject, questionEffort, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
-import { runLoop, type LoopOptions } from "../src/hand/loop.js";
+import { runLoop, type LoopOptions } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
 import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";

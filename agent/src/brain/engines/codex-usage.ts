@@ -1,4 +1,6 @@
 /**
+ * Production Codex-only recovery retries fresh reads and suspends the current question until this guard passes.
+ *
  * The codex brain's usage guard (Dai 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
  * itself, so the brain stops before it eats Dai's weekly Codex window (shared with Dai's own Codex use) and never
  * spends credits. Measured on codex-cli 0.160.0 (experiments/brain-replay/codex-usage.md).
@@ -505,7 +507,7 @@ export class CodexUsageGuard {
     }
     if (was) {
       const top = fullestWindow(usage);
-      this.say(`codex usage can be read again after ${was.failures} failed read(s) (plan ${usage.plan ?? "?"}${top ? `, ${describeWindow(top)}` : ""}): codex answers again`);
+      this.say(`codex usage can be read again after ${was.failures} failed read(s) (plan ${usage.plan ?? "?"}${top ? `, ${describeWindow(top)}` : ""}): quota checks still apply`);
     }
   }
 
@@ -544,7 +546,7 @@ export class CodexUsageGuard {
       const wait = USAGE_RETRY_MS[Math.min(failures, USAGE_RETRY_MS.length) - 1]!;
       const first = this.blocked === null;
       this.blocked = { reason: message, since: this.blocked?.since ?? this.now(), failures, nextReadAt: this.now() + wait };
-      if (first) this.say(`WARNING: codex usage could not be read (${message}); with BRAIN_CODEX_USAGE_REQUIRED=on codex is off until a read works: its questions go to the fallback, the next read in ${wait / 1000} s (then 2, 5, every 10 minutes)`);
+      if (first) this.say(`WARNING: codex usage could not be read (${message}); with BRAIN_CODEX_USAGE_REQUIRED=on Codex cannot answer until a fresh read passes: the next read in ${wait / 1000} s (then 2, 5, every 10 minutes)`);
       return;
     }
     if (!this.saidUnreadable) {
@@ -575,6 +577,15 @@ export class CodexUsageGuard {
   async start(): Promise<string | null> {
     if (this.lastReadAt === null) await this.refresh();
     return this.stopped;
+  }
+
+  /** A suspended question requires a fresh reading; no stale stop is cleared before the guard passes. */
+  async recover(): Promise<void> {
+    await this.refresh();
+    const why = this.unreadable ?? (this.last ? this.verdict(this.last) : "no Codex usage reading");
+    if (why) throw new EngineFailure(`codex usage guard: ${why}`, this.unreadable ? "unavailable" : "quota");
+    this.stopped = null;
+    this.blocked = null;
   }
 
   /**

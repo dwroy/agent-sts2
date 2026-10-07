@@ -316,7 +316,7 @@ class FixtureTest(unittest.TestCase):
             self.assertEqual(json.loads(out.getvalue())["groups"], {"V3 · 未记录配置": ["RUNE00000005"], "V3.oneshot · 未记录配置": ["RUNF00000006"]})
         # The metrics table carries the three calibration rows (and leaves them out on request).
         margs = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(ROOT, "agent", "tests", "eval-data", "strength-sets.json"),
-                 "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--group-by", "ascension", "--md"]
+                 "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--group-by", "ascension", "--md", "--include-non-codex"]
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(metrics.main(margs), 0)
