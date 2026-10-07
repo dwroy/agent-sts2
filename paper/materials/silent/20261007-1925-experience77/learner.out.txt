@@ -1,0 +1,45 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.22 → 2026-10-07.23；提交：ad209573（分支 exp-silent）；合入：未合入，20 个并行记录文件冲突，清单已保存。
+- 条数：新增 2、更新 18（加证据 18、只改数字 0）、退役 0；active 148 → 150，共 48581 字；A8 适用 142 条/45351 字，A9 适用 143 条/45635 字。
+- 机制推理：
+
+  - 力量/敏捷 — 逐击增伤、逐牌加挡 — 97 局 — YF0LXT1QSTGG
+  - 灵动步法 — 建立敏捷后由挡牌兑现 — 59 局 — XP2SL33HT0D9
+  - 能力兑现（观察） — 持有不等于本阶段已建立 — 96 局 — YF0LXT1QSTGG
+  - 实验体 — 技能触发激怒，换阶段清敌状态 — 12 局 — YF0LXT1QSTGG
+  - 触媒 — 增加结算次数，自身不施毒 — 37 局 — YF0LXT1QSTGG
+  - 尖啸 — 临时减力，后轮恢复 — 46 局 — YF0LXT1QSTGG
+  - 苦无 — 按攻击牌计数加敏，不倒补已有挡 — 2 局 — YF0LXT1QSTGG
+  - 遗忘之魂 — 消耗额外伤害与牌伤分账 — 4 局 — YF0LXT1QSTGG
+  - 手里剑 — 增力从后续攻击兑现 — 5 局 — XP2SL33HT0D9
+  - 帝王蟹 — 朝向、虚弱与 SL 血价分别核算 — 15 局 — XP2SL33HT0D9
+  - 胧光怪 — 复活新增血不能抵消已发生伤害 — 11 局 — XP2SL33HT0D9
+  - 脆弱 — 加敏后逐牌折减、取整 — 17 局 — XP2SL33HT0D9
+  - 毒雾 — 建立后在后续轮初补毒 — 47 局 — YF0LXT1QSTGG
+  - 余像 — 按实际后续出牌补挡 — 22 局 — YF0LXT1QSTGG
+  - 沙虫 — 沙坑与攻击两条死线分别核算 — 14 局 — YF0LXT1QSTGG
+  - 异蛇头骨 — 已观察施毒额外加 1 — 5 局 — YF0LXT1QSTGG
+  - 黑暗镣铐 — 普通/升级临时减力 9/15 — 4 局 — XP2SL33HT0D9
+  - 船夹板（观察） — 第二回合轮初 14 挡 — 5 局 — XP2SL33HT0D9
+
+- 改了的手写知识：无。
+- 测试：tsc 退出 0；vitest 233 文件/2441 用例/退出 0，无重跑。
+- 切片大小：整体中位减少 218 字；配对增量中位 −131 字；最大 5044 字（原 5325）。
+- 学习账本：新增无；改成 proposed：silent-0005、silent-0006、silent-0019、silent-0020、silent-0021、silent-0028、silent-0027、silent-0079、silent-0046、silent-0085、silent-0060、silent-0063、silent-0065、silent-0062、silent-0039、silent-0013、silent-0011、silent-0023、silent-0018、silent-0087、silent-0241、silent-0242；退役无；`ledger.py check` 退出 0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.23","commit":"ad20957345fa54777705dd00a75ab4d60d1d4b49","merged":null,"added":2,"updated":18,"retired":0,"active":150,"mechanisms":["力量/敏捷","灵动步法","能力兑现（观察）","实验体激怒与换阶段","触媒","尖啸","苦无","遗忘之魂","手里剑","帝王蟹朝向/SL（观察）","胧光怪召唤/复活","脆弱","毒雾","余像","沙虫双时钟/SL","异蛇头骨","黑暗镣铐","船夹板（观察）"],"tests":{"tsc":0,"vitest":0,"cases":2441},"ledger":{"added":[],"proposed":["silent-0005","silent-0006","silent-0019","silent-0020","silent-0021","silent-0028","silent-0027","silent-0079","silent-0046","silent-0085","silent-0060","silent-0063","silent-0065","silent-0062","silent-0039","silent-0013","silent-0011","silent-0023","silent-0018","silent-0087","silent-0241","silent-0242"],"retired":[],"check":0},"code_proposals":["silent-proposal-c59f592f1427a67e"],"implementation_domains":["combat","sl"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-184216-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a115f4-f313-77d0-9eb7-165e887c2d09
+轮数：1；工具调用：command_execution×72
+token：输入 242.0k、输出 69.2k（其中推理 32.5k）、cache 读 10649.2k、cache 写 0（命中 97.8%）
+成本：未提供
+耗时：2600.0 s（墙钟）
+时间：首个事件 2.4 s、模型首个输出 7.0 s、首次工具 12.0 s、末次工具结束 2462.9 s；工具内共 1768.0 s，其余（模型生成、推理、网络）829.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×65 wait×1；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T18-42-16-01a115f4-f313-77d0-9eb7-165e887c2d09.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-184216-experience-update.jsonl
