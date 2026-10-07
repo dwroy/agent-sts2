@@ -1,0 +1,60 @@
+{
+  "source_commit": "d73417544e071deaff6eb01f73dde3b87f29fa0e",
+  "branch": "exp-silent",
+  "merged": null,
+  "test_rc": null,
+  "base": null,
+  "refresh_commit": null,
+  "initial_head": "92376ca3b3b2a9e7e895b3b7b312e2e7e98325b7",
+  "readonly_head": "92376ca3b3b2a9e7e895b3b7b312e2e7e98325b7",
+  "readonly_fork": "f688ce9c6ba39a25f2c4b1a9b15e8ccd245f1ace",
+  "incoming": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "overlap": [],
+  "conflicting_overlap": [],
+  "refresh": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "lock_attempts": [
+    {
+      "seconds": 45,
+      "rc": 1
+    },
+    {
+      "seconds": 45,
+      "rc": 1
+    }
+  ],
+  "preflight_rc": 1,
+  "preflight_conflicts": [
+    "CONFLICT (content): Merge conflict in eval/versions.json",
+    "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+    "CONFLICT (content): Merge conflict in notes/for-dai.md",
+    "CONFLICT (content): Merge conflict in notes/lessons.md",
+    "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+    "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+    "CONFLICT (content): Merge conflict in paper/data/README.md",
+    "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+    "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+    "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+    "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+    "CONFLICT (content): Merge conflict in paper/data/summary.json",
+    "CONFLICT (content): Merge conflict in paper/data/verification.json",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+    "CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md",
+    "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+    "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+  ],
+  "reason": "两次各45秒未取得live合并锁；只读预检仍有记录/论文数据冲突，按第8节停止，不覆盖、不硬解。未进入锁内，未提交刷新、未实际合并，也未新增本批eval/上线记录。"
+}

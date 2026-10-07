@@ -699,3 +699,23 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 
 **现在就满足 B4 的**：永世沙漏 AEONGLASS（静默猎手死于它 10 次，最多；验证 3 场；打穿比 2.24、预测 71% 对实际 0%）。触发机制做好后第一批就做它。
 这是用 agent 自己的对局日志修模拟器，符合学习协议；流程本身属于架构，Roy 已批准。
+
+### A10 连打两场 boss 的针对性优化 + 学习流程四处补强（Roy 2026-10-07 12:22 同意，高优先）
+**证据（本角色日志）**：A10 打赢 F48 的 4 局（JMH5C51RLN4E、9TG1RP5LFAAK、TDLBRNA0R05B、ZVYUL2YP3518）全部死在 F49；F48 赛后血量 = F49 进场血量（8、17、2、50），中间无营火、不回血；F48 多把药水用光。silent-0163（S1.fix27）只修了路线投影。
+**A. 针对性优化**（数值和权重由学习者用数据拟合）
+1. A10 的 F48：战后剩余血量和药水按「F49 还要用」计价——求解 / 推演的终局 HP 价值、药水持有价值（现行 boss 战为 0）改为以 F49 为准。
+2. B2 / boss 模拟对 A10 的 F48 评估改看两场合计通关率（F48 赢且以剩余资源打过 F49），不只看 F48 单场。
+3. 三幕 boss 前的路线 / 休息规划按连打两场准备（在 S1.fix27 基础上）。
+4. SL：「A10 赢了 F48 但按模拟剩余资源打不过 F49」是否算必死、是否读档重打 F48——按下面 D 的授权由学习者凭数据决定，改了就通知 Roy。
+**B. 复盘追溯病根**：复盘不只写死在哪一战，要追溯进场血量 / 药水被哪一战耗掉，包括打赢的那一场（learner/tasks/postmortem.md）。
+**C. 升阶审计**：每次升一级（climb 升级事件），派学习者对比新一级实际观察到的结构（层数、战斗场次、回血 / 营火、新规则）与代码假设，列不一致并提修复。
+**D. 经验落到出牌层 + 可以改 Roy 的规则**：
+- 涉及出牌、药水、SL、终局价值的经验，除写进经验库外必须同时出代码提案（经验库只到大脑，小脑和药水规则读不到）。
+- **Roy 授权**：有足够理由和数据支持时，学习者可以直接修改 Roy 定的规则（如药水持有价值、SL 读档条件、只在必死时读档等），按 live 流程自测上线，然后**通知 Roy**：写进 notes/for-dai.md 和 ops/inbox-dev.md，写明旧规则、新规则、数据和证据局号、预期影响、怎么回退；台账登记。无数据支持的改动仍不允许。
+- 同步改 docs/learning-protocol.md、AGENTS.md、learner/tasks/*（fix-batch / strategy-proposal 不再把「人定规则」一律当作不可动）。
+
+- 2026-10-07 12:23 Roy授权Codex-only功能代码实际源88fe83e5→live910604a4/发布f8dd742d/唯一V4.codex-only1及main54文件一致已核实；本轮main同步0b1417c563cd5929e0aedbfeb22453b40b8eb176补全live最终源码/发布祖先，并登记经验70的19项原提案shipped。当前对局已加载新代码，固定合后沙箱tsc0/224文件2374例通过，完整外部另经经验70最终树覆盖；没有游戏知识账本ID，不冒建bug-infra。裸JSON报告解析及旧autoplay安全WAIT_PID加载缺口已交20261007-121034-fix-batch/PID1440022，运行保护尚未全激活，原功能报告shipped=false/调度failed及拒绝留史，后续完成事件续办，不重复派整个功能。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
+
+## 2026-10-07 12:40 — exp70 完整外部检查失败：历史测试入口漏传日志回调（纯测试基础设施）
+
+- **非阻塞测试缺口**：20261007-113604-experience-update 固定发布92376ca3、树b37c82f6，tsc0/vitest1；274文件通过/1失败，3180通过/2失败/2跳过。agent/tests/brain-codex-usage.test.ts:548/:570 的 console WARNING/refresh note 数组为[]。tests/legacy-brain.ts createEngine 未传 note，而生产 src/brain/brain.ts createRouter 已传 note=(m)=>router.say(m)。学习者修固定测试辅助入口回调，保留两断言与 token/redaction 约束，固定夹具红绿、原入口沙箱和完整外部补测；不要改生产路由恢复回退或降低测试标准。无游戏账本 ID，不冒标 bug-infra/shipped。原失败日志 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log 永久保留，详情 paper/materials/silent/20261007-1235-events.md。普通 codex-dev 当前121034批次在跑，交队列由下一可用批次处理，不占用两项独立功能工作树。

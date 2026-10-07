@@ -378,3 +378,7 @@
 
 - 2026-10-07 12:09 给Roy / 开发：Codex-only代码已实际上线910604a4/V4.codex-only1，main/live54文件相同，当前01H1533KSS5C从发布f8dd742d启动、Codex/fallback=null。完整命令 `bash ops/codex-ops-do.sh learner-recheck 20261007-091118-fix-batch` 返回exit2（JSON rc2/fallback_checks=[]）：原回报是合法裸JSON加运行器尾注，无围栏，read_report解析为空而漏认上线。保留原.out/err及failed/merged=null，不改原件绕过；已入纯基础设施修复队列，经验70合入后的固定代码树完整检查会覆盖该功能，结果另事件登记。
 - 运行保护尚有一项未激活：autoplay PID1734436是长期旧bash，while体预解析后不会热读新ops/autoplay.sh；当前对局已用新代码并正常Codex作答，但终止脑故障退出75/78后的循环保护不能冒报已加载。现有broker `autoplay-start` 明确拒绝有play的情形，且没有WAIT_PID热交接动作；直接herdr外部启动不在白名单，我不能用该路径。已交学习者补安全热交接动作后续办，保持原循环和当前对局。本机终端若提前处理，应按docs/codex-ops.md:125现有迁移流程：先确认精确autoplay/play PID和无report.py，仅替换旧autoplay bash，用WAIT_PID接管同一play，留下新PID/版本回执；不能用play-stop或重开游戏代替。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
+
+## 2026-10-07 12:40 — Roy：exp70 完整检查失败，保留上线并派修
+
+固定树 b37c82f6 完整外部 tsc0/vitest1，3180通过、2失败、2跳过；失败是旧测试入口漏传额度日志回调，生产回调仍在。保留 Codex-only/经验70，测试辅助入口修复入队，不回滚，不削弱断言。原失败见 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log；普通121034批次占用 codex-dev，下一可用批次处理。两项12:11/12:22授权准备独立模板和工作树，A10双boss优先，派发后补具体批次。

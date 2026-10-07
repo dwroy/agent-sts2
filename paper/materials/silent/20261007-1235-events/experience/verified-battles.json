@@ -1,0 +1,390 @@
+{
+  "turns": [
+    {
+      "floor": 17,
+      "attempt": 1,
+      "result": "won",
+      "needs": [
+        221,
+        189,
+        175,
+        144,
+        108,
+        104,
+        66,
+        42,
+        28
+      ],
+      "hps": [
+        70,
+        70,
+        58,
+        55,
+        55,
+        55,
+        55,
+        32,
+        28
+      ],
+      "dealt": [
+        32,
+        14,
+        31,
+        36,
+        4,
+        38,
+        24,
+        14
+      ],
+      "loss": [
+        0,
+        12,
+        3,
+        0,
+        0,
+        0,
+        23,
+        4
+      ]
+    },
+    {
+      "floor": 33,
+      "attempt": 1,
+      "result": "predicted_death",
+      "needs": [
+        341,
+        253,
+        234,
+        199,
+        185,
+        148,
+        90
+      ],
+      "hps": [
+        63,
+        63,
+        63,
+        36,
+        36,
+        22,
+        18
+      ],
+      "dealt": [
+        88,
+        19,
+        35,
+        14,
+        37,
+        58
+      ],
+      "loss": [
+        0,
+        0,
+        27,
+        0,
+        14,
+        4
+      ]
+    },
+    {
+      "floor": 33,
+      "attempt": 2,
+      "result": "won",
+      "needs": [
+        341,
+        270,
+        247,
+        213,
+        171,
+        144,
+        93,
+        48,
+        9
+      ],
+      "hps": [
+        63,
+        63,
+        54,
+        35,
+        35,
+        34,
+        30,
+        9,
+        9
+      ],
+      "dealt": [
+        71,
+        23,
+        34,
+        42,
+        27,
+        51,
+        45,
+        39
+      ],
+      "loss": [
+        0,
+        9,
+        19,
+        0,
+        1,
+        4,
+        21,
+        0
+      ]
+    },
+    {
+      "floor": 42,
+      "attempt": 1,
+      "result": "predicted_death",
+      "needs": [
+        281,
+        248,
+        211,
+        184,
+        132,
+        73
+      ],
+      "hps": [
+        34,
+        34,
+        34,
+        34,
+        15,
+        15
+      ],
+      "dealt": [
+        33,
+        37,
+        27,
+        52,
+        59
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        19,
+        0
+      ]
+    },
+    {
+      "floor": 42,
+      "attempt": 2,
+      "result": "predicted_death",
+      "needs": [
+        281,
+        248,
+        211,
+        184,
+        132,
+        73
+      ],
+      "hps": [
+        34,
+        34,
+        34,
+        34,
+        7,
+        7
+      ],
+      "dealt": [
+        33,
+        37,
+        27,
+        52,
+        59
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        27,
+        0
+      ]
+    },
+    {
+      "floor": 42,
+      "attempt": 3,
+      "result": "predicted_death",
+      "needs": [
+        281,
+        248,
+        211,
+        184,
+        135,
+        60
+      ],
+      "hps": [
+        34,
+        34,
+        34,
+        34,
+        7,
+        7
+      ],
+      "dealt": [
+        33,
+        37,
+        27,
+        49,
+        75
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        27,
+        0
+      ]
+    },
+    {
+      "floor": 42,
+      "attempt": 4,
+      "result": "died",
+      "needs": [
+        281,
+        248,
+        211,
+        196,
+        148,
+        103
+      ],
+      "hps": [
+        34,
+        34,
+        34,
+        34,
+        7,
+        7
+      ],
+      "dealt": [
+        33,
+        37,
+        15,
+        48,
+        45
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        27,
+        0
+      ]
+    }
+  ],
+  "draws": [
+    {
+      "floor": 33,
+      "attempts": 2,
+      "wins": 1,
+      "initial_order": 28,
+      "arrival_turn_prefix": 10
+    },
+    {
+      "floor": 42,
+      "attempts": 4,
+      "wins": 0,
+      "initial_order": 34,
+      "arrival_turn_prefix": 18
+    }
+  ],
+  "sl_overrides": [
+    {
+      "ts": "2026-10-07T03:20:12.040Z",
+      "floor": 42,
+      "turn": 4,
+      "attempt": 2,
+      "detail": {
+        "point": "T4, attempt 2 still on attempt 1's path (from T4, where attempt 1 lost the most HP)",
+        "original": "带毒刺击 -> 史莱姆狂战士, 防御+, 打击 -> 史莱姆狂战士, 投掷匕首 -> 史莱姆狂战士",
+        "replacement": "带毒刺击 -> 史莱姆狂战士, 谋划专家, 打击 -> 史莱姆狂战士, 投掷匕首 -> 史莱姆狂战士",
+        "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+        "played_in": [
+          1
+        ],
+        "numbers": {
+          "original": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -19, dmg 33",
+          "replacement": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -27, dmg 33"
+        },
+        "turn": "DAGGER_THROW>史莱姆狂战士, DEFEND_SILENT+, POISONED_STAB>史莱姆狂战士, STRIKE_SILENT>史莱姆狂战士",
+        "turn_instead": "DAGGER_THROW>史莱姆狂战士, MASTER_PLANNER, POISONED_STAB>史莱姆狂战士, STRIKE_SILENT>史莱姆狂战士"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:21:07.171Z",
+      "floor": 42,
+      "turn": 3,
+      "attempt": 3,
+      "detail": {
+        "point": "T3, the 2nd latest question before attempt 2's death on T6",
+        "original": "究极防御, 弹跳药瓶+",
+        "replacement": "究极防御, 杂技, 先制打击 -> 史莱姆狂战士",
+        "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 5,
+        "numbers": {
+          "original": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -0, dmg 18",
+          "replacement": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -0, dmg 12"
+        },
+        "turn": "BOUNCING_FLASK+, ULTIMATE_DEFEND",
+        "turn_instead": "ACROBATICS, LEADING_STRIKE>史莱姆狂战士, ULTIMATE_DEFEND"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:22:12.981Z",
+      "floor": 42,
+      "turn": 3,
+      "attempt": 4,
+      "detail": {
+        "point": "T3, after the replay of attempt 3's path stopped (T1: the board is not on attempt 3's path)",
+        "original": "究极防御, 弹跳药瓶+",
+        "replacement": "究极防御, 杂技",
+        "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+        "played_in": [
+          1,
+          2,
+          3
+        ],
+        "numbers": {
+          "original": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -0, dmg 18",
+          "replacement": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -0, dmg 6"
+        },
+        "turn": "BOUNCING_FLASK+, ULTIMATE_DEFEND",
+        "turn_instead": "ACROBATICS, ULTIMATE_DEFEND"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:22:17.219Z",
+      "floor": 42,
+      "turn": 3,
+      "attempt": 4,
+      "detail": {
+        "avoid": {
+          "point": "T3, after the replay of attempt 3's path stopped (T1: the board is not on attempt 3's path)",
+          "original": "带毒刺击 -> 史莱姆狂战士",
+          "replacement": "end turn",
+          "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+          "played_in": [
+            1,
+            2,
+            3
+          ],
+          "turn": "ACROBATICS, POISONED_STAB>史莱姆狂战士, ULTIMATE_DEFEND",
+          "turn_instead": "ACROBATICS, ULTIMATE_DEFEND",
+          "numbers": {
+            "original": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -0, dmg 15",
+            "replacement": "rollout dead 24/24, further loss 34, win ~0%; this turn hp -0, dmg 6"
+          }
+        }
+      }
+    }
+  ],
+  "local_cost": 8,
+  "final_full_loss": 24,
+  "final_shortfall": 17
+}
