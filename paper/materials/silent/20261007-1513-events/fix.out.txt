@@ -1,0 +1,78 @@
+## 修 bug 回报
+
+- 合并基线：main → `300b4047603626d4c8d820cf5c7fd55bade5838a`
+- 修复：Codex 额度提示陈旧断言 — `1cf04904` — 测试 [brain-codex-usage-contract.test.ts](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent/tests/brain-codex-usage-contract.test.ts)：额度警告契约 — 去掉修复时失败：是，1 败；恢复 1 过。
+- 修复：毒结算漏滑溜限伤及减层 — `9c19ce71` — 测试 [silent-slippery-poison.test.ts](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent/tests/silent-slippery-poison.test.ts)：毒扣 1 血并消费一层滑溜 — 去掉修复时失败：是，5 败 2 过；恢复 7 过。证据：ULP4TN1GNHMK/F17 首试 T4、第三次 T3；首证 2SU6XN2AEJRD/F17 T1；账本 `silent-0226` 已登记 `proposed`。
+- 已被别人修掉的：时钟夹具 — `3d6340e0`；裸 JSON 解析 — `6f86ff6b`；安全热交接 — `71b835a3`；日志回调 — `ccd8bb8e`。含其余历史修复共 140 项，逐项提交见[清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-141302-fix-batch/already-fixed.md)。
+- 没修的：缓存命中、mod 超时根因 — 证据不足；可信 boss 模拟性能 — 太大，需专项；策略及 B4/B5、A10 独立功能 — 非本批纯 bug。开工后追加的 rollout 实钟问题待定位，铁蒺藜 `silent-0229` 按队列交下一批。
+- 测试：最终沙箱 tsc 退出码 0；vitest 229 文件 / 2416 用例 / 退出码 0。首轮 `rollout-live.test.ts` 的“code's ranking, options and auto-acts are unchanged by the rollout”超时，单 worker 整套重跑通过；预算、断言和排除名单未改。gitleaks 全通过。
+- 合入：未合入。锁内保留知识刷新提交 `ac321b1f`，仍有 7 项知识数据冲突，按第 5 节停止。运维交接见[handoff-ops.md](/home/dw/Projects/agent-sts2/learner/runs/20261007-141302-fix-batch/handoff-ops.md)。
+- 需要 Dai 定的事：保血、留药、boss 时钟校准方式、路线预估、休息回血或锻造、小偷优先、A10 第二 boss、无色牌估值；本批未改策略。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "300b4047603626d4c8d820cf5c7fd55bade5838a",
+  "fixes": [
+    {
+      "item": "Codex额度提示陈旧测试契约",
+      "commit": "1cf0490492bd8a430b85f95f3fdee91eba251191",
+      "test": "agent/tests/brain-codex-usage-contract.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "毒结算漏滑溜限伤及减层（silent-0226）",
+      "commit": "9c19ce71a149300442b01adcfa50df543bc8a7f1",
+      "test": "agent/tests/silent-slippery-poison.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "codex大脑缓存命中偏低",
+      "reason": "证据不足：受控实测需要LLM或网络"
+    },
+    {
+      "item": "mod请求超时自愈",
+      "reason": "证据不足：尚无固定复现的代码根因"
+    },
+    {
+      "item": "可信boss模拟超时及CPU争用",
+      "reason": "太大：需要独立性能专项"
+    },
+    {
+      "item": "保血、留药、排序、路线、休息、SL、时钟、A10第二boss及无色估值",
+      "reason": "策略类：本批只修纯bug"
+    },
+    {
+      "item": "B4/B5、A10针对性优化及学习流程补强",
+      "reason": "非纯bug：按独立任务处理"
+    },
+    {
+      "item": "14:13追加rollout实钟超额定位",
+      "reason": "开工队列快照外，仍需固定时钟定位；未宣称已修"
+    },
+    {
+      "item": "14:23新入队silent-0229铁蒺藜",
+      "reason": "队列明确交下一可用批次"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2416
+  }
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a114fe-797a-79f2-9d80-e5f2cc753113
+轮数：1；工具调用：command_execution×86 file_change×4
+token：输入 240.7k、输出 71.7k（其中推理 44.7k）、cache 读 15463.3k、cache 写 0（命中 98.5%）
+成本：未提供
+耗时：3095.2 s（墙钟）
+时间：首个事件 2.4 s、模型首个输出 7.3 s、首次工具 8.6 s、末次工具结束 2962.2 s；工具内共 2359.3 s，其余（模型生成、推理、网络）733.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×83 wait×14；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T14-13-04-01a114fe-797a-79f2-9d80-e5f2cc753113.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-141302-fix-batch.jsonl

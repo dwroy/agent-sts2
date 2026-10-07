@@ -1,0 +1,44 @@
+## 修 bug 回报
+
+- 合并基线：main → e2c935ba3e6770ea09d4ed60f345d6bbb840eb83
+- 修复：sl-any-draw 真实时钟夹具 — 3d6340e00f3ca05dd526012ccede35268b65eda8 — 测试 [sl-any-draw.test.ts](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent/tests/sl-any-draw.test.ts:199)：停顿语义及截止截断两项回归 — 去掉修复时失败：是（2 失败，恢复后 13 通过）
+- 已被别人修掉的：裸 JSON 解析 — 6f86ff6b；autoplay 热交接 — 71b835a3；历史日志回调 — ccd8bb8e；其他 136 项见[逐项清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-132728-fix-batch/already-fixed.md)。
+- 没修的：缓存实测、mod 超时根因 — 证据不足；boss 模拟性能 — 太大；策略及专项功能 — 独立批次；13:52 新增 usage 测试契约、silent-0226 — 队列明确交下一批，本批合并预检冲突后停止。
+- 测试：tsc 退出码 0；vitest 227 文件 / 2408 用例 / 退出码 0；无失败重跑；gitleaks 0。
+- 合入：未合入，锁内预检发现 26 处冲突；9 项知识刷新已保存为 859adf45。修复尚未上线，见[冲突与运维交接](/home/dw/Projects/agent-sts2/learner/runs/20261007-132728-fix-batch/handoff-ops.md)。
+- 需要 Dai 定的事：保血、留药、时钟校准、路线/休息、小偷优先、A10 第二 boss、无色牌估值；已授权专项由专用批次处理。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "e2c935ba3e6770ea09d4ed60f345d6bbb840eb83",
+  "fixes": [
+    {
+      "item": "sl-any-draw语义测试真实时钟污染与deadline截断区分",
+      "commit": "3d6340e00f3ca05dd526012ccede35268b65eda8",
+      "test": "agent/tests/sl-any-draw.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {"item": "Codex缓存实测及mod超时根因", "reason": "证据不足"},
+    {"item": "可信boss模拟性能", "reason": "太大，需独立批次"},
+    {"item": "策略及B4/B5、A10专项功能", "reason": "策略类或独立功能"},
+    {"item": "13:52新增usage测试契约", "reason": "队列明确交下一批；本批合并预检冲突后停止"},
+    {"item": "13:52新增SLIPPERY_POWER毒限伤及消费层数（silent-0226）", "reason": "队列明确交下一批；本批合并预检冲突后停止"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2408}
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a114d4-bfdf-7fe0-bd8a-538c1b03966b
+轮数：1；工具调用：command_execution×64 file_change×2
+token：输入 227.4k、输出 45.8k（其中推理 26.7k）、cache 读 10529.4k、cache 写 0（命中 97.9%）
+成本：未提供
+耗时：1826.2 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 7.8 s、首次工具 8.7 s、末次工具结束 1778.5 s；工具内共 1478.7 s，其余（模型生成、推理、网络）344.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×68；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T13-27-29-01a114d4-bfdf-7fe0-bd8a-538c1b03966b.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-132728-fix-batch.jsonl

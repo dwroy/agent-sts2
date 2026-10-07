@@ -1,0 +1,77 @@
+## 修 bug 回报
+
+- 合并基线：main → `4137f6b862e979b06f4a6b66342dbd44e0c44f0e`
+- 修复：完成报告裸 JSON 兼容 — `6f86ff6b` — 测试 `agent/tests/learner-raw-report.test.ts:accepts the complete leading object before a launcher summary` — 去掉修复时失败：是；撤码6失败，恢复15通过。
+- 修复：autoplay 安全热交接动作 — `71b835a3` — 测试 `agent/tests/ops-autoplay-reload.test.ts:same_play_is_transferred_after_new_shell_acknowledges_and_receipt_pins_versions` — 去掉修复时失败：是；撤码15失败，恢复15通过。
+- 修复：历史测试入口漏传日志回调 — `ccd8bb8e` — 测试 `agent/tests/legacy-brain-notes.test.ts:delivers an unreadable-usage WARNING once to Brain.onNote` — 去掉修复时失败：是；撤码2失败，恢复2通过。
+- 已被别人修掉的：136项 — 逐项提交号见[清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-121034-fix-batch/already-fixed.md)，包括 herdr 注册表竞态 `526b71cc`。
+- 没修的：Codex 缓存命中对比、mod 选牌屏超时 — 证据不足；boss 整场模拟性能 — 太大；打法调整 — 策略类；B4/B5、A10流程补强 — 独立功能任务。
+- 测试：tsc退出码0；最终源分支及合后沙箱vitest均227文件／2406用例／退出码0。裸JSON测试初稿改用argv夹具后重跑；热交接补包装进程用例后重跑完整检查。原CLI/IPC套件待外部补测。
+- 合入：live `7816e15670ba678009c279a0aea5f0063345cf59`；上线记录 `37241dcb`。纯工具和测试改动，无新增eval版本；实际热交接及外部补测交运维，[交接文件](/home/dw/Projects/agent-sts2/learner/runs/20261007-121034-fix-batch/handoff-ops.md)已保存。
+- 需要 Dai 定的事：本批不作保血、留药、全死排序、路线／休息、小偷优先、SL范围、时钟校准及无色牌估值的策略判断；A10优化和B4/B5已有独立授权。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "4137f6b862e979b06f4a6b66342dbd44e0c44f0e",
+  "fixes": [
+    {
+      "item": "完成报告裸JSON兼容",
+      "commit": "6f86ff6b6b971fb38b96308ebdd34dec574e5b13",
+      "test": "agent/tests/learner-raw-report.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "autoplay安全热交接动作",
+      "commit": "71b835a3150704548fab2ad46e74bde240ccf1f9",
+      "test": "agent/tests/ops-autoplay-reload.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "历史测试入口漏传日志回调",
+      "commit": "ccd8bb8e017da9c30b408138d04e6d2bc985836d",
+      "test": "agent/tests/legacy-brain-notes.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "Codex缓存命中受控比较",
+      "reason": "证据不足，离线任务无法完成LLM实测对比"
+    },
+    {
+      "item": "mod选牌屏超时自愈",
+      "reason": "证据不足，缺少固定复现和代码根因"
+    },
+    {
+      "item": "boss整场模拟性能",
+      "reason": "太大，需要独立性能批次"
+    },
+    {
+      "item": "保血、留药及其他打法调整",
+      "reason": "策略类"
+    },
+    {
+      "item": "B4/B5自动触发与A10优化、学习流程补强",
+      "reason": "独立功能或策略任务，非本批纯bug"
+    }
+  ],
+  "merged": "7816e15670ba678009c279a0aea5f0063345cf59",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2406
+  }
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1148e-5dbf-7be0-8cac-9dcabf8374e1
+轮数：1；工具调用：command_execution×116 file_change×23
+token：输入 465.4k、输出 121.6k（其中推理 78.3k）、cache 读 18481.8k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：4365.1 s（墙钟）
+时间：首个事件 2.0 s、模型首个输出 7.2 s、首次工具 8.3 s、末次工具结束 4311.0 s；工具内共 3184.5 s，其余（模型生成、推理、网络）1178.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×124 wait×12；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T12-10-36-01a1148e-5dbf-7be0-8cac-9dcabf8374e1.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-121034-fix-batch.jsonl

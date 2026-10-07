@@ -24,13 +24,9 @@ default.merge_dir: {{project_root}}/.worktrees/live
 1. 往任何文件里写时间之前，先跑 `date`。
 2. 在 {{worktree}} 里 `git status` 确认工作区干净，然后**先** `git merge --no-edit {{base_branch}}`。有冲突就停下，在回报里写明。
 3. 读「要修的」指定的队列和条目（默认 {{project_root}}/notes/fix-queue-v4.md）。每条先在当前代码里确认 bug 还在（可能已被别的提交修掉）：已经修掉的不重复修，回报里写「已修，提交 …」。
-   先读 README.md、最新的 paper/materials/STATE-*.md、decision-log.md 末尾和 docs/learning-protocol.md。改变打法的修复只能依据学习者已有的提案和对局证据，回报及提交写明证据局号、层、回合和对应的学习账本条目；没有证据先交回开发会话审核，不补入自己的游戏知识。
-4. **只修纯 bug**。下面这些属于策略，由 Dai 决定，看到了也不许改，只在回报里列为「需要 Dai 定」：保血规则、留药、boss 时钟的校准方式、路线预估、休息点回血还是锻造、小偷怪要不要优先打、A10 第三幕的第二个 boss、无色牌估值。
-5. Dai 定下的规矩，修的时候不许违反：
-   - 怪物的血量和伤害按当前进阶从数据库取，第一个样本起就用；房间代价保留 5 个样本的门槛；
-   - 药水等同于 0 费一次性牌：代码不给药水加代价、不过滤、不否决；提前喝药不写成代码规则；
-   - 推演结果相同的几条标「并列」，不挑其中一条标最优；
-   - DeepSeek 负责构筑、路线和休息，战斗由 Jev 执行，代码只提供事实和参考排名、不删选项。
+   先读 README.md、最新的 paper/materials/STATE-*.md、decision-log.md 末尾和 docs/learning-protocol.md。改变打法的修复只能依据学习者已有的提案和对局证据，回报及提交写明证据局号、层、回合和对应的学习账本条目；没有证据保留原行为，报告缺数据并派策略学习者核实，不补入自己的游戏知识。
+4. **普通批次只修纯 bug**，不临时混入其他角色或独立功能。策略类出牌/药水/SL/终局/路线/休息证据保存代码提案，交独立 strategy-proposal；已有明确授权的专用功能依任务说明实施，不能因完成事件 task=fix-batch 错当普通 bug 批次。
+5. Roy 2026-10-07 已授权学习者有充分理由和数据时修改既有人定出牌、药水、SL、终局价值规则；不再一律写“需要 Dai 定”。纯 bug 修复仍维持无关角色等价，不能凭开发者知识添加游戏判断。规则更改证据与双通知按下文。
 
 ## 2. 每个修复
 - **每个修复单独提交**，英文提交信息写清楚改了什么、证据（run id、floor、turn）。
@@ -44,7 +40,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 - 测试里不许真的调用任何 LLM 或网络。
 
 ## 4. 提交
-- `git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，不推送。
+- `git commit`（使用本机全局身份，不设仓库级 user.*），不推送。
 - 修复队列不要改（划掉条目由调用方做），只在回报里给出每条对应的提交号。
 - 学习账本（`{{project_root}}/paper/materials/learning/ledger.jsonl`，字段见同目录 README.md）：修掉的条目在账本里有对应的 `bug-infra` 条目的（`python3 {{project_root}}/learner/ledger.py find --kind bug-infra --text <关键词或局号>`），用 `python3 {{project_root}}/learner/ledger.py update`（JSON 从标准输入传入）给它追加 `{"where": {"commits": ["<提交号>"]}, "status": "proposed", "by": "learner:fix-batch"}`；没有的不用新建。不许直接改账本文件，不许改成 `shipped`（实际合入后由运维 codex 据完成事件登记）。
 
@@ -82,5 +78,13 @@ default.merge_dir: {{project_root}}/.worktrees/live
 最后再单独给一个 json 代码块：
 
 ```json
-{"task": "fix-batch", "base": "...", "fixes": [{"item": "...", "commit": "...", "test": "agent/tests/...", "fails_without_fix": true}], "skipped": [{"item": "...", "reason": "..."}], "merged": null, "tests": {"tsc": 0, "vitest": 0, "cases": 0}}
+{"task": "fix-batch", "base": "...", "fixes": [{"item": "...", "commit": "...", "test": "agent/tests/...", "fails_without_fix": true}], "skipped": [{"item": "...", "reason": "..."}], "merged": null, "tests": {"tsc": 0, "vitest": 0, "cases": 0}, "code_proposals": [], "implementation_domains": [], "report": "{{scratch}}/report.md"}
 ```
+
+
+## Roy 2026-10-07 学习授权与代码提案
+先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+
+最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。

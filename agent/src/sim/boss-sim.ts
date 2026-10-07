@@ -121,6 +121,8 @@ export interface BossSimOptions {
 
 /** One sample of one line, played to the fight's end. */
 export interface FightSampleResult {
+  resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
+  sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
   won: boolean;
   died: boolean;
   /** Stopped at maxTurns (or the policy had no line) with the fight still on: neither won nor lost. */
@@ -170,6 +172,7 @@ export interface Dist {
 }
 
 export interface BossSimLineResult {
+  sequence?: { firstWins: number; firstWinSecondDeaths: number; secondUnfinished: number };
   /** Index of the line in the lines given. */
   line: number;
   samples: number;
@@ -244,6 +247,7 @@ export function slimInput(
   }) : input.solver.hand;
   return {
     ...input,
+    ...(input.continuation ? { continuation: { ...input.continuation, variants: input.continuation.variants.map((v) => ({ ...v, input: slimInput(v.input, policyNodes, damageScale, hpScale, threat, potionHold, holdHp) })) } } : {}),
     solver: hand === input.solver.hand ? input.solver : { ...input.solver, hand },
     plans: [],
     model: null,
@@ -267,7 +271,7 @@ export function tableHoldHp(potionId: string, input: RolloutInput): number | nul
 }
 
 /** One sample of one line to the fight's end. `input` as slimInput makes it (options.policyNodes is the policy's cap). */
-export function fightSample(input: RolloutInput, plan: Plan | null, seed: number, maxTurns = BOSS_SIM_MAX_TURNS, scripts = true, order: KillOrder | null = null): FightSampleResult {
+function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number, maxTurns: number, scripts: boolean, order: KillOrder | null): FightSampleResult {
   const { records, policyTurns, policyNodes } = simulateFight(input, plan, maxTurns, seed, scripts, order);
   const startHp = input.solver.player.hp;
   const lossCap = startHp + (input.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
@@ -279,6 +283,7 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   const enemyHpLeft = won || !last ? 0 : last.hpLeft ? Object.values(last.hpLeft).reduce((sum, hp) => sum + hp, 0) : last.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
   return {
     won,
+    ...(last?.resources ? { resources: { ...last.resources, drunkKeys: records.flatMap((r) => r.resources?.drunkKeys ?? []) } } : {}),
     died,
     capped: !won && !died && !timeUp,
     timeUp,
@@ -298,6 +303,52 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
     kills: killsOf(input, records),
     policyTurns,
     policyNodes,
+  };
+}
+
+/** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
+export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput): { input: RolloutInput; potions: string[] } {
+  if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) throw new Error("missing successful first-fight resources");
+  const used = new Set(first.resources.drunkKeys);
+  let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
+    - first.resources.revives.filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length;
+  const remaining = input.continuation.potions.filter((p) => {
+    if (used.has(p.key)) return false;
+    if (p.id === "FAIRY_IN_A_BOTTLE" && fairies > 0) { fairies -= 1; return false; }
+    return true;
+  });
+  const keys = new Set(remaining.map((p) => p.key));
+  const hand = template.solver.hand.filter((p) => p.type !== "Potion" || keys.has(p.cardId));
+  const randomPotions = template.randomPotions?.filter((p) => keys.has(`POTION:${p.potionId}:${p.slot}`));
+  return { potions: [...keys], input: { ...template, continuation: undefined,
+    solver: { ...template.solver, hand, player: { ...template.solver.player, hp: first.resources.hp, revives: first.resources.revives.slice() }, continuationValue: undefined },
+    piles: { ...template.piles, handBase: hand.map(() => null) }, potions: keys.size, ...(randomPotions ? { randomPotions } : {}),
+  } };
+}
+
+/** Each successful first fight continues on that very sample's remaining resources. */
+export function fightSample(input: RolloutInput, plan: Plan | null, seed: number, maxTurns = BOSS_SIM_MAX_TURNS, scripts = true, order: KillOrder | null = null): FightSampleResult {
+  const first = singleFightSample(input, plan, seed, maxTurns, scripts, order);
+  const next = input.continuation;
+  if (!next) return first;
+  const initial = { firstWon: first.won, firstHp: first.resources?.hp ?? null, firstPotions: [] as string[], secondBoss: null as string | null, firstTurns: first.turns, secondWon: null as boolean | null, secondDied: null as boolean | null };
+  if (!first.won) return { ...first, sequence: initial };
+  const total = next.variants.reduce((s,v) => s + v.count, 0);
+  if (total <= 0) throw new Error("empty second-boss distribution");
+  let position = sampleSeed(seed, 0) / 0x100000000 * total;
+  const variant = next.variants.find((v) => (position -= v.count) < 0) ?? next.variants.at(-1)!;
+  const transferred = continuationInput(input, first, variant.input);
+  const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
+  return { ...second,
+    turns: first.turns + second.turns, hpLoss: first.hpLoss + second.hpLoss, revived: first.revived + second.revived,
+    drunk: [...first.drunk, ...second.drunk], policyTurns: first.policyTurns + second.policyTurns, policyNodes: first.policyNodes + second.policyNodes,
+    lossByTurn: [...first.lossByTurn, ...second.lossByTurn], dmgByTurn: [...first.dmgByTurn, ...second.dmgByTurn],
+    incomingByTurn: [...first.incomingByTurn, ...second.incomingByTurn], enemyLossByTurn: [...first.enemyLossByTurn, ...second.enemyLossByTurn],
+    enemyHpByTurn: [...(first.enemyHpByTurn ?? []), ...(second.enemyHpByTurn ?? [])], blockByTurn: [...(first.blockByTurn ?? []), ...(second.blockByTurn ?? [])],
+    powers: [...(first.powers ?? []), ...(second.powers ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
+    drinks: [...(first.drinks ?? []), ...(second.drinks ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
+    kills: [...(first.kills ?? []), ...(second.kills ?? []).map(([t,id,index]): [number,string,number] => [t+first.turns,id,index])],
+    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died },
   };
 }
 
@@ -395,6 +446,11 @@ export function summarizeLine(line: number, outcomes: FightSampleResult[]): Boss
   const unwon = outcomes.filter((o) => !o.won);
   return {
     line,
+    ...(outcomes.some((o) => o.sequence) ? { sequence: {
+      firstWins: outcomes.filter((o) => o.sequence?.firstWon).length,
+      firstWinSecondDeaths: outcomes.filter((o) => o.sequence?.firstWon && o.sequence.secondDied).length,
+      secondUnfinished: outcomes.filter((o) => o.sequence?.firstWon && !o.won && !o.died).length,
+    } } : {}),
     samples: outcomes.length,
     wins: won.length,
     deaths: dead.length,

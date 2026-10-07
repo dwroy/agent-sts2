@@ -9,6 +9,7 @@ import collections
 import json
 import os
 import re
+import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -440,6 +441,18 @@ def refresh_costs() -> None:
                          stdout=log, stderr=log, start_new_session=True)
 
 
+def boss_sim_check(character):
+    """Dispatch only; the child scheduler owns the shared state lock and learner lifecycle."""
+    with open(os.path.join(ROOT, "ops", "boss-sim-dispatch.log"), "a") as log:
+        try:
+            subprocess.run(["nice", "-n", "19", sys.executable, os.path.join(LIVE, "ops", "codex-ops-learn.py"),
+                            "boss-check", "--character", character.lower()],
+                           env={**os.environ, "CODEX_OPS_ROOT": ROOT}, stdout=log, stderr=subprocess.STDOUT,
+                           timeout=120)
+        except (OSError, subprocess.TimeoutExpired) as error:
+            log.write(f"{type(error).__name__}: {error}\n")
+
+
 if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]:
         selftest()
@@ -453,3 +466,7 @@ if __name__ == "__main__":
         refresh_costs()
     except Exception:
         pass
+    # Check the latest character calibration after every completed run, under learn.lock.
+    # This is synchronous dispatch only; the learner remains a tracked scheduler batch.
+    if run_char and any(row.get("run_id") == sys.argv[1] for row in load(RUNS)):
+        boss_sim_check(run_char)

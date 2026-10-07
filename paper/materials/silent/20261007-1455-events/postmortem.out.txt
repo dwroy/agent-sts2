@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：61E2QS63Y9WU（A10，第28层，猎人杀手战末次T3以2血、20挡面对24攻击阵亡）；已追加4项勘误：出牌顺序、遗物取得层数、额外3伤来源、毒伤合计。
+- 新的纯 bug（file:line，每条一行；没有写「无」）：无
+- 写成「未记录」的项：61E2QS63Y9WU：完整最优方案执行比例、Jev缓存、boss时钟及二幕boss实打、替代方案整场对照、读档截断后的结算、各组件独立整场收益、产卵虫战同动作内退场顺序。
+- 学习账本：61E2QS63Y9WU：新增 silent-0232；更新 silent-0019、silent-0209、silent-0027、silent-0030、silent-0039、silent-0044、silent-0046、silent-0016；老错重犯无；`ledger.py check` 退出码0。
+- 需要 Dai 定的事（策略类证据，没有写「无」）：无
+
+```json
+{"task":"postmortem","appended":["61E2QS63Y9WU"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0232"],"updated":["silent-0019","silent-0209","silent-0027","silent-0030","silent-0039","silent-0044","silent-0046","silent-0016"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a114fe-7696-7812-8dc4-50cb5c95165e
+轮数：1；工具调用：command_execution×51
+token：输入 173.0k、输出 27.4k（其中推理 7977）、cache 读 3090.8k、cache 写 0（命中 94.7%）
+成本：未提供
+耗时：724.8 s（墙钟）
+时间：首个事件 2.5 s、模型首个输出 7.5 s、首次工具 11.6 s、末次工具结束 707.5 s；工具内共 25.9 s，其余（模型生成、推理、网络）696.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×28；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T14-13-03-01a114fe-7696-7812-8dc4-50cb5c95165e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-141302-postmortem.jsonl

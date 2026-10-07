@@ -43,6 +43,7 @@
  */
 
 import { readFileSync } from "node:fs";
+import { continuationCost, continuationUtility, type ContinuationValue } from "./continuation-value.js";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
 import { withAddedAtRandom } from "../sl/draws.js";
@@ -419,6 +420,7 @@ export function blend(w: number, model: number, current: number): number {
 }
 
 export interface TerminalContext {
+  continuation?: { value: ContinuationValue; hp: number };
   meta: FightMeta;
   mm: MoveModelData;
   model: FightValueModel | null;
@@ -618,6 +620,14 @@ export interface RolloutOptions {
 }
 
 export interface RolloutInput {
+  captureResources?: boolean;
+  /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
+  continuation?: {
+    variants: { boss: string; count: number; input: RolloutInput }[];
+    potions: { key: string; id: string }[];
+    source: string;
+    limitation: string;
+  };
   /** This turn's solver input (as the live planner built it). */
   solver: SolverInput;
   /** The solver's plans for it, best first. */
@@ -1324,6 +1334,8 @@ interface Piles {
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
 export interface TurnRecord {
+  /** Exact resources after the turn, used only by an observed following-fight objective. */
+  resources?: { hp: number; revives: Revive[]; drunkKeys: string[] };
   /** HP lost this turn (our own + the enemy turn), as the solver outcome counts it. */
   loss: number;
   /** Of it, the enemy turn's hits after block. */
@@ -2443,6 +2455,7 @@ function applyPlan(
   const gone = input.escapes ? enemies.filter((e) => e.gone).map((e) => e.index) : [];
   return {
     loss: startHp - player.hp + (o.revived?.reviveHp ?? 0),
+    ...(input.captureResources || input.continuation || input.solver.continuationValue ? { resources: { hp: player.hp, revives: player.revives.slice(), drunkKeys: plan.steps.filter(isPotion).map((step) => step.cardId) } } : {}),
     enemyPart: o.incomingAfterBlock,
     dmg: o.damageDealt + carried,
     snap,
@@ -3057,6 +3070,7 @@ export function simulateFight(input: RolloutInput, plan: Plan | null, maxTurns: 
 }
 
 interface SampleValue {
+  reserveCost: number;
   loss: number;
   win: number;
   turns: number;
@@ -3157,15 +3171,16 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
   for (let i = 0; i < upto; i += 1) {
     const r = records[i]!;
     // A sample that dies pays nothing for its potions (nor its loot): there is no later for them (the run is over).
-    if (r.died) return { loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0, cost: 0, loot: 0, lost: [] };
+    if (r.died) return { reserveCost: 0, loss: lossCap, win: 0, turns: i + 1, died: true, lossModel: lossCap, winModel: 0, n: 0, cost: 0, loot: 0, lost: [] };
     if (r.won) {
       loss += r.loss;
-      return { loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0, cost: costOf(records, i + 1), ...lootOf(r, lootHp, h > 1) };
+      return { reserveCost: ctx.continuation ? continuationCost(ctx.continuation.value, ctx.continuation.hp, r.resources?.hp ?? ctx.continuation.hp - loss) : 0,
+        loss, win: 1, turns: i + 1, died: false, lossModel: loss, winModel: 1, n: 0, cost: costOf(records, i + 1), ...lootOf(r, lootHp, h > 1) };
     }
     // Out of time (Battleworn Dummy): the fight is over, not won, and costs nothing more.
     if (r.timeUp) {
       loss += r.loss;
-      return { loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0, cost: costOf(records, i + 1), ...lootOf(r, lootHp, h > 1) };
+      return { reserveCost: 0, loss, win: 0, turns: i + 1, died: false, lossModel: loss, winModel: 0, n: 0, cost: costOf(records, i + 1), ...lootOf(r, lootHp, h > 1) };
     }
     if (i < upto - 1) loss += r.loss;
   }
@@ -3175,6 +3190,8 @@ function valueAt(records: TurnRecord[], h: number, ctx: TerminalContext, t0: num
   const base = loss + Math.max(0, own);
   return {
     // No line loses more than the HP we have (GG0Y F33: 144.9 "further loss" at 59 HP), revives included.
+    reserveCost: ctx.continuation ? continuationUtility(ctx.continuation.value, ctx.continuation.hp)
+      - term.gated.winProb * continuationUtility(ctx.continuation.value, Math.max(0, ctx.continuation.hp - base - term.gated.hpLoss)) : 0,
     loss: Math.min(lossCap, base + term.gated.hpLoss),
     win: term.gated.winProb,
     turns: upto + term.gated.turns,
@@ -3378,7 +3395,8 @@ function evaluateRollout(input: RolloutInput): RolloutResult {
   // The board's leader (its death ends the fight; the same in every kill order of the board), if any.
   const boardLeader = (opts.orders ?? []).find((order) => order.leader)?.leader?.indices ?? null;
   const gate = gateFor(input.gates, input.meta.enc, input.meta.act, input.meta.kind);
-  const ctx: TerminalContext = { meta: input.meta, mm: input.mm, model: input.model, gates: input.gates, w: gate.w };
+  const ctx: TerminalContext = { meta: input.meta, mm: input.mm, model: input.model, gates: input.gates, w: gate.w,
+    ...(input.solver.continuationValue ? { continuation: { value: input.solver.continuationValue, hp: input.solver.player.hp } } : {}) };
   const ctxModel: TerminalContext = { ...ctx, w: 1 };
   const t0 = input.meta.t;
   const startHp = input.solver.player.hp;
@@ -3402,10 +3420,12 @@ function evaluateRollout(input: RolloutInput): RolloutResult {
     const vm = valueAt(records, 1, ctxModel, t0, lossCap, lootHp);
     // The drink's cost: in the solver's score already (current), taken off the model's value here; the loot's too
     // (THIEF_COST: not in the solver's score, so off the model's value only).
-    const modelValue = vm.lossModel === null ? null : -vm.lossModel - v.cost - v.loot - DEATH_HP * (1 - (vm.winModel ?? 0));
+    const modelValue = vm.lossModel === null ? null : -vm.lossModel - v.cost - v.loot - vm.reserveCost - DEATH_HP * (1 - (vm.winModel ?? 0));
     const current = plan.score / hpWeight;
     return {
       cost: v.cost,
+      reserveCost: v.reserveCost,
+      modelReserveCost: vm.reserveCost,
       loot: v.loot,
       lost: v.lost,
       hpLoss: v.loss,
@@ -3567,6 +3587,8 @@ function evaluateRollout(input: RolloutInput): RolloutResult {
     const model = valsM.every((v) => v.lossModel !== null) ? { hpLoss: mean(valsM.map((v) => v.lossModel!)), winProb: mean(valsM.map((v) => v.winModel!)) } : null;
     // The potions drunk (this turn and later, up to the fight's end or the horizon), at their cost: off the value.
     const cost = mean(vals.map((v) => v.cost));
+    const reserveCost = mean(vals.map((v) => v.reserveCost));
+    const modelReserveCost = mean(valsM.map((v) => v.reserveCost));
     // THIEF_COST: the loot lost, off the value like the potions' cost (0 without lootHp).
     const loot = lootHp ? mean(vals.map((v) => v.loot)) : 0;
     const laterDrinks: Record<string, number> = {};
@@ -3577,6 +3599,7 @@ function evaluateRollout(input: RolloutInput): RolloutResult {
     const thieves = thiefCounts(kept.map((records) => records[Math.min(horizon, records.length) - 1]!));
     return {
       potionCost: cost,
+      ...(ctx.continuation ? { continuationCost: reserveCost } : {}),
       laterDrinks,
       ...(thieves ? { thieves } : {}),
       ...(lootHp ? { thiefCost: loot, thiefLost: lostCounts(vals) } : {}),
@@ -3587,8 +3610,8 @@ function evaluateRollout(input: RolloutInput): RolloutResult {
       winProb: win,
       wins,
       timeUps,
-      value: -loss - cost - loot - DEATH_HP * (1 - win),
-      valueModelTerminal: model === null ? null : -model.hpLoss - cost - loot - DEATH_HP * (1 - model.winProb),
+      value: -loss - cost - loot - reserveCost - DEATH_HP * (1 - win),
+      valueModelTerminal: model === null ? null : -model.hpLoss - cost - loot - modelReserveCost - DEATH_HP * (1 - model.winProb),
       modelForecast: model,
       perTurn: turnSpreads(kept, horizon),
       firstDown,
@@ -3635,8 +3658,9 @@ function evaluateRollout(input: RolloutInput): RolloutResult {
         turnsToDeath: null,
         winProb: o.winProb,
         wins,
-        value: -o.hpLoss - o.cost - o.loot - DEATH_HP * (1 - o.winProb),
-        valueModelTerminal: o.lossModel === null ? null : -o.lossModel - o.cost - o.loot - DEATH_HP * (1 - (o.winModel ?? 0)),
+        ...(ctx.continuation ? { continuationCost: o.reserveCost } : {}),
+        value: -o.hpLoss - o.cost - o.loot - o.reserveCost - DEATH_HP * (1 - o.winProb),
+        valueModelTerminal: o.lossModel === null ? null : -o.lossModel - o.cost - o.loot - o.modelReserveCost - DEATH_HP * (1 - (o.winModel ?? 0)),
         modelForecast: { oneTurn: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 }, rollout: o.lossModel === null ? null : { hpLoss: o.lossModel, winProb: o.winModel ?? 0 } },
         perTurn: [],
       };

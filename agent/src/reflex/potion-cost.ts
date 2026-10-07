@@ -26,6 +26,8 @@ export const potionCostOptions: { enabled: boolean } = { enabled: process.env["P
 
 /** What drinking one potion costs on this board. */
 export interface PotionCost {
+  /** An observed following fight supplies the held value even when this fight is a boss. */
+  continuation?: string;
   id: string;
   /** HP the drink costs: the table's held value; 0 in a boss fight, without a value, or with the switch off. */
   hp: number;
@@ -50,10 +52,14 @@ const round1 = (value: number): number => Math.round(value * 10) / 10;
  * The cost of drinking `id` at `ascension` in act `act` (1-3; the table clamps it) in a fight of `fightKind`, from a
  * loaded table (null: it did not load, `error` says why). Pure: the tests pass a fixed table.
  */
-export function potionCostFrom(file: PotionEquivalentsFile | null, id: string, ascension: number, act: number | null | undefined, fightKind: PotionFightKind, error?: string): PotionCost {
+export function potionCostFrom(file: PotionEquivalentsFile | null, id: string, ascension: number, act: number | null | undefined, fightKind: PotionFightKind, error?: string, reserve?: { potionHp: Record<string, number>; source: string }): PotionCost {
   const eq = file ? potionEquivalentFrom(file, id, act, ascension) : null;
   const base = { id, name: eq?.name ?? file?.potions[id]?.name ?? id, holdHp: eq ? eq.holdHp : null, source: eq ? sourceLabel(eq, true) : null };
   if (!potionCostOptions.enabled) return { ...base, hp: 0, zero: "off" };
+  const next = reserve?.potionHp[id];
+  if (fightKind === "boss" && next !== undefined && Number.isFinite(next) && next >= 0) {
+    return { ...base, hp: next, holdHp: next, source: reserve!.source, continuation: reserve!.source, zero: next > 0 ? null : "worthless" };
+  }
   if (!file) return { ...base, hp: 0, zero: "no_table", ...(error ? { error } : {}) };
   if (!eq) return { ...base, hp: 0, zero: "no_value" };
   if (fightKind === "boss") return { ...base, hp: 0, zero: "boss" };
@@ -80,9 +86,9 @@ export function potionCost(id: string, ascension: number, act: number | null | u
 }
 
 /** Each distinct potion id's cost on this board. */
-export function potionCosts(ids: string[], ascension: number, act: number | null | undefined, fightKind: PotionFightKind): Map<string, PotionCost> {
+export function potionCosts(ids: string[], ascension: number, act: number | null | undefined, fightKind: PotionFightKind, reserve?: { potionHp: Record<string, number>; source: string }): Map<string, PotionCost> {
   const { file, error } = table();
-  return new Map([...new Set(ids)].map((id) => [id, potionCostFrom(file, id, ascension, act, fightKind, error)]));
+  return new Map([...new Set(ids)].map((id) => [id, potionCostFrom(file, id, ascension, act, fightKind, error, reserve)]));
 }
 
 /** The potion id of a potion card or step ("POTION:<id>:<slot>"), or null. */
