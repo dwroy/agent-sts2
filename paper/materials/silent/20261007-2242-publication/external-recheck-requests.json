@@ -1,0 +1,59 @@
+{
+  "observed_at_cst": "2026-10-07 23:11",
+  "rechecks": [
+    {
+      "batch": "20261007-214301-strategy-proposal",
+      "source": "5e80e683daa08ae2569733b3b541cb523d7fe861",
+      "source_actual_live_ancestor": true,
+      "action": "bash ops/codex-ops-do.sh learner-recheck 20261007-214301-strategy-proposal",
+      "requests_this_wake": 1,
+      "scheduler_action_lines": [
+        "2026-10-07 23:10 broker learner-recheck 20261007-214301-strategy-proposal"
+      ],
+      "queued_request": [],
+      "observed_live": "4f5ca8cb07fd023433d59b52a34cde0144889e61",
+      "observed_tree": "a549515fd0ac218212cba4d9c86ec3d428c8352d",
+      "log_created": true,
+      "state": "running",
+      "full_external_passed": false,
+      "original_reports_failed_states_and_check_history_preserved": true,
+      "no_repeat_merge_version_or_shipped": true,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-214301-strategy-proposal.fallback-a549515fd0ac218212cba4d9c86ec3d428c8352d.checks.log",
+      "log_prefix_bytes": 116,
+      "log_prefix_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa"
+    },
+    {
+      "batch": "20261007-214301-experience-update",
+      "source": "e7552663cdcbfad33a1e348bdd13842fce7e3c41",
+      "source_actual_live_ancestor": true,
+      "action": "bash ops/codex-ops-do.sh learner-recheck 20261007-214301-experience-update",
+      "requests_this_wake": 1,
+      "scheduler_action_lines": [],
+      "queued_request": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/broker/1791385855674589789-3.req",
+          "bytes": 77,
+          "sha256": "19320fea2359b4df8d0d8635731d337f997bb61e06d52eaef34c87d320622818",
+          "content": {
+            "action": "learner-recheck",
+            "args": [
+              "20261007-214301-experience-update"
+            ]
+          }
+        }
+      ],
+      "observed_live": "4f5ca8cb07fd023433d59b52a34cde0144889e61",
+      "observed_tree": "a549515fd0ac218212cba4d9c86ec3d428c8352d",
+      "log_created": false,
+      "state": "broker_request_queued",
+      "full_external_passed": false,
+      "original_reports_failed_states_and_check_history_preserved": true,
+      "no_repeat_merge_version_or_shipped": true
+    }
+  ],
+  "publication": "4f5ca8cb07fd023433d59b52a34cde0144889e61",
+  "registration_commit": "c428864d66ccd657892ee1de1cf8de30aeca335a",
+  "pm_commit": "2d8bbac8d5271ae499f6bf0468042b9b94987ceb",
+  "paper_commit": "e624adb590dfcc449bfbbcf2c5f9abf4fdbc2088",
+  "continuation": "Scheduler sends learner-checks; finish this wake without waiting for future complete-check events."
+}
