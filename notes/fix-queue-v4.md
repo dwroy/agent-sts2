@@ -661,3 +661,9 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - [ ] **非阻塞纯 bug，silent-0217，仅转录学习者定位**：`agent/src/hand/screens/oneshot.ts:324/:340/:343`升级前使用带关键词的resolved_rules_text，升级后改用不含关键词的rules_text，暴露EXPOSE升级预览丢“消耗”。P5HT1272P5SB SILENT A10 F24呈现“给予2层易伤。消耗。 → 给予3层易伤。”，大脑明确按可反复使用评价并锻造；F25实际暴露+仍“给予3层易伤。消耗。”。首证KAY522KT5NXR/A0 F44/F47错误题面，当时未选升级；first_run=KAY、prior=no、observed。与旧0066易伤模型分账，不认定更正后整局可赢。
 - [ ] **非阻塞纯 bug，silent-0218，仅转录学习者定位**：`agent/src/reflex/card-model.ts:932–935/:1031`的FASTEN未接入同方案后续防御，`agent/src/reflex/turn-solver.ts:1925`未带新增勒紧增量。P5HT1272P5SB A10 F25 T9打击→勒紧→防御，原预报余血−14、实际防御9→13，重读后余血−10，少算4挡；更早HSX4HYATB4E2 A10 F20 T1候选同缺口、F31 T2勒紧→坚韧之环→爆发→防御，预报15挡损2，实23挡损0，两次防御少报8。first_run=HSX、prior=no、observed；与0143真实机制分账，4挡修正仍救不了3血对26攻击。
 - 原回报`ops/codex-ops/learner/20261007-074301.out`，原文/台账及取证归档`paper/materials/silent/20261007-0810-p5ht-postmortem.md`；行号为复盘时只读live定位，不冒称复原开局dirty源码。两项均交学习者按证据实现、固定验证后自行合入，运维不改知识公式、不做打法分析。0213修复第41批、0216中毒折扣、075131独立boss校准另行；调度器按队列处理，对局继续。
+
+## 2026-10-07 08:30 静默复盘：蛇咬施毒模型遗漏（交学习者）
+
+- [ ] **非阻塞纯 bug，silent-0219，仅转录学习者定位**：`agent/src/reflex/card-model.ts:904`施毒名单遗漏SNAKEBITE，`:1054`仅输出非零poison，新增7毒未进入同方案推演。KQQELQSZ382Z SILENT A10 F17末次族母T7只出蛇咬，原预测旧9毒，实际9→16、回合末扣16，独立少报7；T4切割→防御→蛇咬原预测9伤/损16、实18/16，差9中蛇咬7与旧攻击八折2分账。首证KAY522KT5NXR/A0 F2 T1候选无毒且列未建模，F14 T1实际0费给7毒、末25→18余6，免费来源未核定；first_run=KAY、prior=no、observed，不称常规毒模型已修分支回归，与0008分账，不保证整场转胜。
+- **旧silent-0216追加repeat证据，不重复开单**：KQQ首试F17 T4打击→切割→防御→匕首雨原19伤/损16、实25/16，直接6+6+4+4=20被逐击八折成4+4+3+3=14，旧5毒结算正确，独立少报6；`combat-plan.ts:78/:135`覆盖名单缺POISON_POWER和`turn-solver.ts:1460`定位由学习者给出。原首证K3676LU8B0UH/A1、prior=no、observed及原claim/版本/历史保留，仅台账repeat证据增加1。
+- 原回报`ops/codex-ops/learner/20261007-081301.out`及原文/10行台账/数字核对/三项追加勘误见`paper/materials/silent/20261007-0827-kqq-postmortem.md`；行号为复盘时只读live定位，不冒称复原f8e01696+dirty开局源码。新0220是蛇咬机制，留学习者，不入纯bug队列；075131独立boss校准继续按原任务，对局照常。
