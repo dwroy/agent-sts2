@@ -13,11 +13,21 @@ function observedWither(state: GameState): boolean {
     });
 }
 
+/** KV0JHNJCKXLS A10 F33 T8, silent-0245/0247: only the observed three-play Sloth scope. */
+export function observedSlothReplay(state: GameState): boolean {
+  const run = asRecord(state.run?.raw);
+  return state.in_combat && str(run["character_id"]).toLowerCase() === "silent" && num(run["ascension"]) === 10 &&
+    asArray(asRecord(asRecord(state.raw["combat"])["player"])["powers"]).some((entry) => {
+      const power = asRecord(entry);
+      return str(power["power_id"]) === "SLOTH_POWER" && num(power["amount"]) === 3;
+    });
+}
+
 /** Keep the raw per-turn mean separate from extra plays that Withering Presence counts. */
 export function recordStateFightPlays(memory: ScreenMemory, state: GameState, played: number): NonNullable<ScreenMemory["fightCards"]> {
   const fight = `${str(asRecord(state.run?.raw)["act_id"])}:${state.run?.floor ?? "?"}`;
   const runId = str(state.raw["run_id"]);
-  const tracked = observedWither(state);
+  const tracked = observedWither(state) || observedSlothReplay(state);
   const previous = memory.fightCards;
   const last = previous?.last;
   const actionable = state.combat?.can_use_combat_actions !== false && state.turn !== null;
@@ -45,14 +55,14 @@ export function recordStateFightPlays(memory: ScreenMemory, state: GameState, pl
   return memo;
 }
 
-/** Sample every actionable Silent Wither frame, including frames logged without a decision. */
+/** Sample actionable observed Silent replay-counter frames, including frames without a decision. */
 export function observeFightPlays(memory: ScreenMemory, state: GameState): boolean {
   if (!state.in_combat) {
     const had = memory.fightCards !== undefined;
     memory.fightCards = undefined;
     return had;
   }
-  if (!observedWither(state) || state.combat?.can_use_combat_actions === false || state.turn === null) return false;
+  if (!(observedWither(state) || observedSlothReplay(state)) || state.combat?.can_use_combat_actions === false || state.turn === null) return false;
   const played = asRecord(asRecord(state.raw["combat"])["player"])["cards_played_this_turn"];
   if (typeof played !== "number" || !Number.isInteger(played) || played < 0) return false;
   const previous = JSON.stringify(memory.fightCards);
@@ -62,15 +72,23 @@ export function observeFightPlays(memory: ScreenMemory, state: GameState): boole
 
 /** Only an accepted dispatch (or its logged replay) adds the card's observed enchantment replays. */
 export function noteFightReplay(memory: ScreenMemory, state: GameState, intent: ActionRequest | null | undefined): void {
-  if (!observedWither(state) || intent?.action !== "play_card" || typeof intent.card_index !== "number") return;
+  const wither = observedWither(state);
+  const sloth = observedSlothReplay(state);
+  if (!(wither || sloth) || intent?.action !== "play_card" || typeof intent.card_index !== "number") return;
   observeFightPlays(memory, state);
   const memo = memory.fightCards;
   const played = asRecord(asRecord(state.raw["combat"])["player"])["cards_played_this_turn"];
   if (!memo || state.turn === null || typeof played !== "number" || !Number.isInteger(played) || played < 0) return;
   const raw = asArray(asRecord(state.raw["combat"])["hand"])
     .find((entry, index) => (asRecord(entry)["index"] ?? index) === intent.card_index);
-  const count = replayOf(str(asRecord(raw)["resolved_rules_text"]));
+  const card = asRecord(raw);
+  const count = replayOf(str(card["resolved_rules_text"]));
   if (count <= 0) return;
   // The manual counter identifies this accepted source play; re-reading or replaying its row is idempotent.
-  (memo.replays ??= {})[`${state.turn}:${played}`] = count;
+  const key = `${state.turn}:${played}`;
+  if (wither) (memo.replays ??= {})[key] = count;
+  // Keep this evidence-specific cap counter separate from Wither and the manual per-turn mean.
+  if (sloth && str(card["card_id"]) === "DEFEND_SILENT" && card["upgraded"] !== true && count === 1) {
+    (memo.slothReplays ??= {})[key] = 1;
+  }
 }

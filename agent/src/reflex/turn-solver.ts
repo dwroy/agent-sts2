@@ -401,6 +401,8 @@ export interface PlayerSim {
   rupture?: number;
   /** Sloth: at most this many more cards can be played this turn. */
   maxPlays?: number | null;
+  /** Silent A10 Sloth3: ordinary Defend replay1 consumes an extra cap slot (KV0 F33 T8). */
+  slothDefendReplay?: boolean;
   /**
    * Smoggy (SMOGGY_POWER: 「每回合你只能打出1张技能牌」): at most this many more Skills this turn; null for no
    * cap. The solver planned two and the game refused the second (Living Fog, 51 logged fights).
@@ -1029,6 +1031,8 @@ interface Sim {
   colossus: boolean;
   /** Cards played this turn so far (for Slow). */
   played: number;
+  /** This line's cap consumption, independent of Slow and the raw manual-play counter. */
+  slothPlays: number;
   /** Each card drawn this turn, valued with and without an energy left at the end to use it. */
   draws: DrawValue[];
   cardsDrawn: number;
@@ -1609,6 +1613,8 @@ function unconditioned(card: CardModel): CardModel {
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
 function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
   if (sim.pendingSelection) return null;
+  // Apply the observed cap to fixed-line replay and search alike; potion dispatches consume no slot.
+  if (player.slothDefendReplay && card.type !== "Potion" && player.maxPlays != null && sim.slothPlays >= player.maxPlays) return null;
   // Stomp: 1 less per Attack played earlier in this plan (8XQM F48 T8: Pommel Strike+ and Strike
   // first make it cost 1; played first at 3, the lethal line was never found).
   const cost =
@@ -1683,6 +1689,14 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  if (player.slothDefendReplay && card.type !== "Potion") {
+    const observed = card.cardId === "DEFEND_SILENT" && !card.upgraded && card.replay === 1 && plays === 2;
+    next.slothPlays += observed ? 2 : 1;
+    // The final-slot replay and other automatic plays have no isolated Sloth evidence yet.
+    if ((observed && player.maxPlays != null && next.slothPlays > player.maxPlays) || (!observed && plays > 1)) {
+      next.unknown = [...next.unknown, "懒惰（重放名额边界未验证）"];
+    }
+  }
   // The evidence covers one play; repeated discard/generation selections need their own observation.
   if (hidden && plays > 1) {
     next.pendingSelection = true;
@@ -3458,7 +3472,8 @@ const TURN_ONLY_SPECIALS = new Set(["", "temp_dex", "triple_block", "heal"]);
 
 function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",")
-    + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "");
+    + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "")
+    + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
@@ -3603,6 +3618,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     // A Colossus already up is in the intents (2WUM T7: 10x7 shown as 5x7, then halved again to 2x7).
     colossus: false,
     played: input.cardsPlayedThisTurn ?? 0,
+    slothPlays: 0,
     draws: [],
     cardsDrawn: 0,
     drawnInHand: 0,
@@ -3732,7 +3748,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     if (ownDeathEnds && sim.hp <= 0) return;
 
     const tried = new Set<string>();
-    const cardPlays = sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
+    const cardPlays = input.player.slothDefendReplay ? sim.slothPlays : sim.steps.filter((step) => !step.cardId.startsWith("POTION:")).length;
     const playsLeft = input.player.maxPlays === null || input.player.maxPlays === undefined ? Infinity : input.player.maxPlays - cardPlays;
     const skillsLeft = input.player.maxSkills === null || input.player.maxSkills === undefined ? Infinity : input.player.maxSkills - sim.skillsPlayed;
     for (const card of sim.hand.flatMap((entry) => (hiddenDaggers(entry) ? hiddenDaggerWays(sim, entry) : entry.special === "gamble" ? gambleWays(sim, entry) : entry.choices ? choiceWays(entry) : [entry]))) {
