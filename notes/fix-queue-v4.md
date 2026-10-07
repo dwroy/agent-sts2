@@ -746,3 +746,14 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 
 - **silent-0234：迷雾HAZE群体施毒漏入卡牌模型**。学习者证据DUZUBAJ3A8GP/SILENT A10 F27 T4，迷雾+→勒紧→防御原线预测伤2/血损3，实毒2→8、结算8/损3；T5生存者→防御→迷雾+原线预测伤7/损9，实毒7→13、结算13/损9，两条各独立漏6毒伤，污染血价正确。当前live只读定位card-model.ts:909施毒ID名单缺HAZE、:1063仅输出非零poison，turn-solver.ts:2182已有全体目标施毒路径，缺口在上游。首证T082DRCUHRRD/A0 F46 T4原线含HAZE+却预计0伤，实际毒6→12；first_run=T082、prior=no、observed保持，与0008常规毒及0219蛇咬漏毒分账。
 - 交学习者按这两条原线及首证补接线，固定回归撤源码失败/恢复通过，核验多目标、普通/升级及毒结算不重复，保持铁甲等价；源码自测通过自行合live后再CLI登记shipped。此局正常结束，不按卡死处理，不据6毒差声称能转胜；机制0235由学习者闭环，不追加打法。原文、15:30:12出牌顺序勘误与11所属账本行见paper/materials/silent/20261007-1531-events/lessons-original.md及ledger-original.jsonl。普通151301修复工作树占用中，调度器按队列交可用批次，不重复派同项。
+
+## 2026-10-07 16:20 — VLZ复盘新增非阻塞纯bug（神化模型；不重复代码提案派发）
+
+- **silent-0237：APOTHEOSIS升级效果未传播同一出牌方案和后续抽牌**。学习者证据VLZ6CCT8AQ0A/SILENT A10 F43 T1 decisions269706/269707、states275679—275687：神化后同一后续牌序原预测43伤/损14，实打神化后重问51伤/损13且兑现，独立少报8伤、多报1血损；F45 T1仍未建模并未施放。只读b0f41f03 card-model.ts:922、945—948和turn-solver.ts:1974—1976缺APOTHEOSIS状态变换。首证VPW8YH7A4QFM/A10 F35 T1原候选未建模，first_run=VPW、prior=no、observed，不把不施放本身当普遍错误。
+- 已有独立代码提案silent-proposal-89354805ee4d7e77及学习者固定帧方案paper/materials/silent/20261007-1610-events/proposal-apotheosis.md，调度器待办自动派策略学习者；普通批处理前须查共享提案租约/实际源码，避免并发或重复实现。证据及未知升级差值按该提案，由学习者完成红绿/角色隔离/原入口自测、实际live后再shipped，运维不补游戏机制。此局正常结束、不按卡死处理，不据8伤差承诺末战可赢；0238机制沿学习者闭环，rollout预算提案f2bfcedd独立处理，旧项只support无repeat。
+
+## 2026-10-07 16:29 — 首次升阶审计完成验收工具缺口（普通学习者纯运维修复）
+
+- **ops/ascension_audit.py:94完成报告仍只读围栏JSON**：真实批20261007-154303-ascension-audit/PID1967474/pane wJ:p5N引擎exit0，out开头是唯一合法task=ascension-audit裸JSON加运行器尾注、无围栏。报告character=silent/level=10/complete=true、10个已派证据局、六coverage及3个CLI提案俱在；只读调用read_report原样返回空字典，learn.json据此state=failed/rc0/report={}并六项缺失。这与已修ops/learner_checks.py裸JSON兼容的入口分开，不声称审计accepted，不修改旧out/err/failed状态或人为放行。固定原件索引paper/materials/silent/20261007-1610-events/ascension-audit-parser-evidence.json。
+- **同文件:117根目录报告路径检查与独立批次工作树不符**：原报告实际存在.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/report.md，resolved合法属于本批worktree/learner/runs，却不属于根learner/runs。仅修JSON后仍会被路径检查拦下；必须以已登记批次独立工作树的受限报告目录验收，resolve防越界、保留md/存在/证据局/coverage/提案链/当前租约检查，不扩大到任意文件。
+- 非阻塞游戏、无游戏台账ID，由普通修复学习者补两个固定原日志/路径夹具与恶意/迟到反例，撤源码红/恢复绿、原入口自测后自行合live；随后通过正式完成验收或新增历史续验，不改写原failed/out/err、不重复游戏知识提案或当前审计。当前codex-dev由160418策略批占用，队列交调度器空闲批次；沿现有冷却/租约，不手动重派、不重新派A/B/C/D整功能。
