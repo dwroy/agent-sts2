@@ -906,7 +906,10 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // KQQELQSZ382Z F17 attempt 6 T7 / KAY522KT5NXR F14 T1, silent-0219: the observed plain card adds seven poison.
   const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
     !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7;
-  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite ? dyn(card, "PoisonPower") ?? 0 : 0;
+  // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
+  const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
+    (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
+  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite || haze ? dyn(card, "PoisonPower") ?? 0 : 0;
   // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
   const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
   // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
@@ -917,6 +920,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   // P5HT1272P5SB F25 T9 / HSX4HYATB4E2 F31 T2: only the observed plain Fasten is wired.
   const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" &&
     !bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4 : 0;
+  // CA5KE8GFJ9X2 F9 T6 / F13 T1, silent-0229: the observed plain Caltrops establishes three Thorns.
+  const thorns = character.toLowerCase() === "silent" && cardId === "CALTROPS" &&
+    !bool(card["upgraded"]) && dyn(card, "ThornsPower") === 3 ? 3 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const hasModelledEffect =
@@ -1037,6 +1043,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(weakFirst ? { weakFirst } : {}),
     strength,
     ...(fasten > 0 ? { fasten } : {}),
+    ...(thorns > 0 ? { thorns } : {}),
     ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
