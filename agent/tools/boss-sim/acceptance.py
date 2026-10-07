@@ -53,7 +53,7 @@ def evaluate(before, after, character, boss, mode, isolation):
             a, b = before["bosses"][boss][start], after["bosses"][boss][start]
             if number(a["n"]) <= 0 or a["n"] != b["n"] or number(a.get("leak_turns")) <= 0 or a["leak_turns"] != b.get("leak_turns"):
                 raise ValueError("boss validation/leak coverage mismatch")
-            values = (("brier", number(a["brier"]), number(b["brier"]), number(old["brier"]) * 1.25),
+            values = (("brier", number(a["brier"]), number(b["brier"]), number(new["brier"]) * 1.25),
                       ("gap", abs(number(a["mean_pred"]) - number(a["actual_win"])),
                        abs(number(b["mean_pred"]) - number(b["actual_win"])), .15),
                       ("leak", distance(number(a["leak_ratio"]), .7, 1.3), distance(number(b["leak_ratio"]), .7, 1.3), 0))

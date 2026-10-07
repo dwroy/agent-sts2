@@ -239,6 +239,15 @@ class Acceptance(unittest.TestCase):
         return gate.evaluate(old,new,"silent","AEONGLASS",mode,self.isolation if iso is None else iso)
     def test_accepts_improved_bias(self):
         self.assertTrue(self.evaluate(*self.good())["accepted"])
+
+    def test_brier_must_enter_the_candidate_global_standard(self):
+        old,new=self.good()
+        for start in ("t1","pre"):
+            new["overall"][start]["brier"]=.05
+            new["bosses"]["AEONGLASS"][start].update(mean_pred=.6,leak_ratio=2.)
+        self.assertFalse(self.evaluate(old,new)["accepted"])
+        for start in ("t1","pre"):new["bosses"]["AEONGLASS"][start]["brier"] = .06
+        self.assertTrue(self.evaluate(old,new)["accepted"])
     def test_global_boundary(self):
         old,new=self.good()
         for start in ("t1","pre"):
