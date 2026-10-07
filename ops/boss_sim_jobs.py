@@ -65,7 +65,7 @@ def candidates(character, trust, runs, attempts, sources, turns, level, complete
         return tuple(sorted(r.get("death_fight") or [])) if r.get("victory") is False else ()
     counts = collections.Counter(cause(r) for r in recent if cause(r))
     top = {key for key, _ in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:2]}
-    logged = {r["key"] for r in turns if len(r.get("turns") or []) >= 2}
+    logged = {r["key"] for r in turns if r.get("turns")}
     calibration = digest(trust)
     out = []
     for boss, entry in trust.get("bosses", {}).items():

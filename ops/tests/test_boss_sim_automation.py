@@ -86,6 +86,10 @@ class Trigger(unittest.TestCase):
         d=list(data()); d[2] += d[2]; self.assertEqual(len(self.call(d=d)[0]["logged_keys"]),8)
         d[2][0]["excluded"]="censored"; self.assertFalse(self.call(d=d))
 
+    def test_single_turn_actual_fights_are_valid_turn_logs(self):
+        d=list(data());d[3]=[dict(r,turns=r["turns"][:1]) for r in d[3]]
+        self.assertEqual(len(self.call(d=d)[0]["logged_keys"]),8)
+
     def test_missing_bias_numbers_fail_closed(self):
         for field in ("brier", "leak_ratio", "actual_win", "mean_pred"):
             t=trust(); t["bosses"]["AEONGLASS"]["t1"][field]=None; self.assertFalse(self.call(t=t))
