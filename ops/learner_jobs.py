@@ -137,7 +137,7 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
                              "learner-" + batch_id)
     batch = {"task": "fix-batch", "learner_task": learner_task, "character": character,
              "runs": [], "key": key, "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
-             "feature_request": request["request_id"]}
+             "feature_request": request["request_id"], "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
         batch["pane"] = pane
     state["batches"][batch_id] = batch
@@ -213,7 +213,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, ",".join(runs), character, task, worktree],
                               root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
-                                 "pid": pid, "state": "running", "reason": reason, "worktree": worktree}
+                                 "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
+                                 "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     return batch_id, pid
@@ -222,11 +223,17 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
 def check_jobs(state, root, scripts, character, alive, stamp):
     runs = pending(root, scripts, character)
     experience = dispatch_write(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    # Load by this file's path so fixed dispatch fixtures need no global Python search path.
+    spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
+    proposals = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(proposals)
+    proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, dispatch_write)
+    # Evidence-linked proposals get the shared writer before a continually refreshed bug queue.
     key = fix_key(root, character)
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    strategy = strategy_job(state, root, scripts, character, alive, stamp)
+    strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal else None
     calibration = calibration_job(state, root, scripts, character, alive, stamp)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration}
+    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration, "code_proposal": proposal}
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):

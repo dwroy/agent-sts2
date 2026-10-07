@@ -4,6 +4,14 @@ import json
 import os
 import re
 import subprocess
+import importlib.util
+
+
+def proposal_tools():
+    spec = importlib.util.spec_from_file_location("check_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 FULL_CHECK_COMMAND = 'export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ "$a" = 0 ] && [ "$b" = 0 ]'
 
@@ -23,7 +31,7 @@ def read_report(path):
             report = json.loads(block)
         except ValueError:
             continue
-        if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal"):
+        if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "postmortem", "ascension-audit"):
             return report
     return {}
 
@@ -73,15 +81,29 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
         verified = subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", merged, "HEAD"],
                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
     task = batch["task"]
+    proposals = proposal_tools()
+    proposal_errors = proposals.links(report,batch,root,os.path.dirname(__file__))
+    proposal_errors += proposals.experience_audit(report,batch,root,os.path.dirname(__file__))
     empty = verify_empty_fix(report, batch, root) if rc == 0 and not verified else None
-    batch.update(state="done" if rc == 0 and (verified or empty) else "failed", rc=rc, merged=merged if verified else None)
+    proposal_only = proposals.no_change(report,batch,root) if rc == 0 and not verified else None
+    if not proposal_errors and rc == 0 and (verified or proposal_only):
+        try: proposals.resolve(report,batch,root,os.path.dirname(__file__))
+        except (OSError,ValueError,ImportError) as error: proposal_errors.append(str(error))
+    batch.update(state="done" if rc == 0 and not proposal_errors and (verified or empty or proposal_only) else "failed", rc=rc, merged=merged if verified else None,
+                 proposal_audit_errors=proposal_errors, report=report)
+    if proposal_only: batch["no_change_proposals"] = proposal_only
+    if proposal_errors:
+        inbox("学习代码提案链未通过：" + "; ".join(proposal_errors) + "；原产出/合入事实保留，派学习者补链，不自动改游戏知识或回退。")
+        batch["proposal_repair_needed"] = True
     if empty:
         batch["no_changes"] = empty
     enqueue({"experience-update": "experience-done", "strategy-proposal": "strategy-done"}.get(task, "fix-done"),
             f"{task} 批次 {batch_id} 结束：exit {rc}；已核实合入 live：{merged if verified else '无'}。"
             f"回报：{out_dir}/{batch_id}.out。"
             + (f"已核实无新增产出、自测通过，源码与 live {empty['live']} 一致；正常结案，无新增合并或完整补测。"
-               if empty else "学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。"))
+               if empty else "已核实无源码修改的提案处置；证据不足保留待新局，不冒造合入、版本或补测。" if proposal_only
+               else "学习者自测后自行合入，无需另设审核；未合入时查回报，提交受阻由运维兜底。")
+            + ("；提案链待补：" + "; ".join(proposal_errors) if proposal_errors else ""))
     if not verified:
         return
     if not run_checks:
