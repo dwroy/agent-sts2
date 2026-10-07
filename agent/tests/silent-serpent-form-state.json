@@ -1,0 +1,2916 @@
+[
+  {
+    "line": 274199,
+    "sha256": "04871689a495bf0a828b721b470e2432a7e37ba77b7cdefbe0ab469e8cac9374",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 1,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 4,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ENERGY_NEXT_TURN_POWER",
+                "name": "下回合能量",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 6,
+            "attacks_played_this_turn": 3,
+            "skills_played_this_turn": 1
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 0,
+              "energy": 4,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "name": "防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得5点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "SERPENT_FORM",
+              "name": "群蛇形态",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 0,
+              "star_cost": 0,
+              "rules_text": "你每打出一张牌，就对随机一名敌人造成{SerpentFormPower:diff()}点伤害。",
+              "resolved_rules_text": "你每打出一张牌，就对随机一名敌人造成4点伤害。",
+              "dynamic_values": [
+                {
+                  "name": "SerpentFormPower",
+                  "base_value": 4,
+                  "current_value": 4,
+                  "enchanted_value": 4,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 375,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 1,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "CURSE_OF_KNOWLEDGE_MOVE",
+              "move_id": "CURSE_OF_KNOWLEDGE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274200,
+    "sha256": "f38c2490ca9e08bcb8bdef7e058999e5f12ca2f35e9b472ffe9110d6af022241",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 1,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 4,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ENERGY_NEXT_TURN_POWER",
+                "name": "下回合能量",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 7,
+            "attacks_played_this_turn": 3,
+            "skills_played_this_turn": 1
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 0,
+              "energy": 4,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "name": "防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得5点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 375,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "WEAK_POWER",
+                  "name": "虚弱",
+                  "amount": 1,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "CURSE_OF_KNOWLEDGE_MOVE",
+              "move_id": "CURSE_OF_KNOWLEDGE_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274202,
+    "sha256": "2c0a8672bd45388a6a400c4319c8c711c4b156760472e751643be04b5669db0c",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 2,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 4,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 0,
+            "attacks_played_this_turn": 0,
+            "skills_played_this_turn": 0
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 0,
+              "energy": 4,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "ASCENDERS_BANE",
+              "name": "进阶之灾",
+              "upgraded": false,
+              "target_type": "None",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": -1,
+              "star_cost": 0,
+              "rules_text": "",
+              "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+              "dynamic_values": [],
+              "playable": false,
+              "can_play_result": false,
+              "unplayable_reason": "unplayable",
+              "unplayable_reason_raw": "HasUnplayableKeyword",
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "DEFEND_SILENT",
+              "name": "防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得5点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 2,
+              "card_id": "ULTIMATE_DEFEND",
+              "name": "究极防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得11点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 11,
+                  "current_value": 11,
+                  "enchanted_value": 11,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 3,
+              "card_id": "CALCULATED_GAMBLE",
+              "name": "计算下注",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 0,
+              "star_cost": 0,
+              "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
+              "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+              "dynamic_values": [],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 375,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 3,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "SLAP_MOVE",
+              "move_id": "SLAP_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274203,
+    "sha256": "40c6f92f92a98294dd87f62ad3eb96c514bfd9137f33505c43fdcf1a504cad5b",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 2,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 5,
+            "energy": 3,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 1,
+            "attacks_played_this_turn": 0,
+            "skills_played_this_turn": 1
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 5,
+              "energy": 3,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "ASCENDERS_BANE",
+              "name": "进阶之灾",
+              "upgraded": false,
+              "target_type": "None",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": -1,
+              "star_cost": 0,
+              "rules_text": "",
+              "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+              "dynamic_values": [],
+              "playable": false,
+              "can_play_result": false,
+              "unplayable_reason": "unplayable",
+              "unplayable_reason_raw": "HasUnplayableKeyword",
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "ULTIMATE_DEFEND",
+              "name": "究极防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得11点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 11,
+                  "current_value": 11,
+                  "enchanted_value": 11,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 2,
+              "card_id": "CALCULATED_GAMBLE",
+              "name": "计算下注",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 0,
+              "star_cost": 0,
+              "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
+              "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+              "dynamic_values": [],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 371,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 3,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "SLAP_MOVE",
+              "move_id": "SLAP_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274204,
+    "sha256": "1ffe56d2292664b76f07a0bbda2dab9256e642d744150b55c1b00ec5edc84628",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 2,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 16,
+            "energy": 2,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 2,
+            "attacks_played_this_turn": 0,
+            "skills_played_this_turn": 2
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 16,
+              "energy": 2,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "ASCENDERS_BANE",
+              "name": "进阶之灾",
+              "upgraded": false,
+              "target_type": "None",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": -1,
+              "star_cost": 0,
+              "rules_text": "",
+              "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+              "dynamic_values": [],
+              "playable": false,
+              "can_play_result": false,
+              "unplayable_reason": "unplayable",
+              "unplayable_reason_raw": "HasUnplayableKeyword",
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "CALCULATED_GAMBLE",
+              "name": "计算下注",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 0,
+              "star_cost": 0,
+              "rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。",
+              "resolved_rules_text": "丢弃你的所有手牌, 然后抽相同数量的牌。 消耗。",
+              "dynamic_values": [],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 367,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 3,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "SLAP_MOVE",
+              "move_id": "SLAP_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274205,
+    "sha256": "8f40e8ad24146f5917a4cd11439893119160f940d3ae66baa08b7e0f58004fd5",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 2,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 16,
+            "energy": 2,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 3,
+            "attacks_played_this_turn": 0,
+            "skills_played_this_turn": 3
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 16,
+              "energy": 2,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "name": "防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得5点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 358,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 3,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "SLAP_MOVE",
+              "move_id": "SLAP_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274206,
+    "sha256": "d915946cd00c8f73b381925c36bc60032d67c84b1aa07eb4c0bd15db17349680",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 2,
+        "available_actions": [
+          "end_turn",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 21,
+            "energy": 1,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 4,
+            "attacks_played_this_turn": 0,
+            "skills_played_this_turn": 4
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 21,
+              "energy": 1,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 354,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 3,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "SLAP_MOVE",
+              "move_id": "SLAP_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274207,
+    "sha256": "081d76d6cecca9e252bd23396f215d4c16515f78f5745b1ca88d3bfef25cf396",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 3,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 4,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 0,
+            "attacks_played_this_turn": 0,
+            "skills_played_this_turn": 0
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 0,
+              "energy": 4,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "PREDATOR",
+              "name": "猎杀者",
+              "upgraded": false,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 2,
+              "star_cost": 0,
+              "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+              "resolved_rules_text": "造成15点伤害。 在下个回合抽2张牌。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 15,
+                  "current_value": 15,
+                  "enchanted_value": 15,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "DAGGER_SPRAY",
+              "name": "匕首雨+",
+              "upgraded": true,
+              "target_type": "AllEnemies",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
+              "resolved_rules_text": "对所有敌人造成6点伤害两次。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 2,
+              "card_id": "DEFEND_SILENT",
+              "name": "防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得5点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 3,
+              "card_id": "STRIKE_SILENT",
+              "name": "打击",
+              "upgraded": false,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "造成{Damage:diff()}点伤害。",
+              "resolved_rules_text": "造成6点伤害。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 349,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "move_id": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "9[font_size=18]×3[/font_size]",
+                  "damage": 9,
+                  "hits": 3,
+                  "total_damage": 27,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274208,
+    "sha256": "366a8e95f5b684bea9d0ba51fb0cee7f52796c8a649389e684d282bc323168e7",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 3,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 2,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 4,
+                "power_id": "DRAW_CARDS_NEXT_TURN_POWER",
+                "name": "下回合抽牌",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 1,
+            "attacks_played_this_turn": 1,
+            "skills_played_this_turn": 0
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 0,
+              "energy": 2,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DAGGER_SPRAY",
+              "name": "匕首雨+",
+              "upgraded": true,
+              "target_type": "AllEnemies",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
+              "resolved_rules_text": "对所有敌人造成6点伤害两次。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "DEFEND_SILENT",
+              "name": "防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得5点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 2,
+              "card_id": "STRIKE_SILENT",
+              "name": "打击",
+              "upgraded": false,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "造成{Damage:diff()}点伤害。",
+              "resolved_rules_text": "造成6点伤害。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 330,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "move_id": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "9[font_size=18]×3[/font_size]",
+                  "damage": 9,
+                  "hits": 3,
+                  "total_damage": 27,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274209,
+    "sha256": "c0be3949271163585a6c656a4d594135a1d6e7a12569979bb4a941b1f6189af0",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 3,
+        "available_actions": [
+          "end_turn",
+          "play_card",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 1,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 4,
+                "power_id": "DRAW_CARDS_NEXT_TURN_POWER",
+                "name": "下回合抽牌",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 2,
+            "attacks_played_this_turn": 2,
+            "skills_played_this_turn": 0
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 0,
+              "energy": 1,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "DEFEND_SILENT",
+              "name": "防御",
+              "upgraded": false,
+              "target_type": "Self",
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "获得{Block:diff()}点格挡。",
+              "resolved_rules_text": "获得5点格挡。",
+              "dynamic_values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            },
+            {
+              "index": 1,
+              "card_id": "STRIKE_SILENT",
+              "name": "打击",
+              "upgraded": false,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "造成{Damage:diff()}点伤害。",
+              "resolved_rules_text": "造成6点伤害。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": true,
+              "can_play_result": true,
+              "unplayable_reason": null,
+              "unplayable_reason_raw": null,
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 314,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "move_id": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "9[font_size=18]×3[/font_size]",
+                  "damage": 9,
+                  "hits": 3,
+                  "total_damage": 27,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  },
+  {
+    "line": 274210,
+    "sha256": "24cdf107e773b71fdc17ee547290a77e58d0e175bbbd184113547a8566e16c71",
+    "row": {
+      "state": {
+        "run_id": "5PM6JAQG6FNQ",
+        "screen": "COMBAT",
+        "session": {
+          "mode": "singleplayer",
+          "phase": "run",
+          "control_scope": "local_player"
+        },
+        "in_combat": true,
+        "turn": 3,
+        "available_actions": [
+          "end_turn",
+          "save_and_quit",
+          "use_potion",
+          "discard_potion"
+        ],
+        "combat": {
+          "action_readiness": {
+            "can_use_combat_actions": true,
+            "reason": "ready",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": false,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": true,
+            "combat_over_or_ending": false,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": true,
+            "player_action_phase": true
+          },
+          "player": {
+            "current_hp": 67,
+            "max_hp": 70,
+            "block": 5,
+            "energy": 0,
+            "stars": 0,
+            "focus": 0,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "NOXIOUS_FUMES_POWER",
+                "name": "毒雾",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "ACCELERANT_POWER",
+                "name": "触媒",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "SERPENT_FORM_POWER",
+                "name": "群蛇形态",
+                "amount": 4,
+                "is_debuff": false
+              },
+              {
+                "index": 3,
+                "power_id": "MIND_ROT_POWER",
+                "name": "心灵腐化",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 4,
+                "power_id": "DRAW_CARDS_NEXT_TURN_POWER",
+                "name": "下回合抽牌",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "base_orb_slots": 0,
+            "orb_capacity": 0,
+            "empty_orb_slots": 0,
+            "orbs": [],
+            "pets": [],
+            "pet_missing": false,
+            "cards_played_this_turn": 3,
+            "attacks_played_this_turn": 2,
+            "skills_played_this_turn": 1
+          },
+          "players": [
+            {
+              "player_id": "1",
+              "slot_index": 0,
+              "is_local": true,
+              "is_connected": true,
+              "character_id": "SILENT",
+              "character_name": "静默猎手",
+              "current_hp": 67,
+              "max_hp": 70,
+              "block": 5,
+              "energy": 0,
+              "stars": 0,
+              "focus": 0,
+              "is_alive": true
+            }
+          ],
+          "hand": [
+            {
+              "index": 0,
+              "card_id": "STRIKE_SILENT",
+              "name": "打击",
+              "upgraded": false,
+              "target_type": "AnyEnemy",
+              "requires_target": true,
+              "target_index_space": "enemies",
+              "valid_target_indices": [
+                0
+              ],
+              "costs_x": false,
+              "star_costs_x": false,
+              "energy_cost": 1,
+              "star_cost": 0,
+              "rules_text": "造成{Damage:diff()}点伤害。",
+              "resolved_rules_text": "造成6点伤害。",
+              "dynamic_values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ],
+              "playable": false,
+              "can_play_result": false,
+              "unplayable_reason": "not_enough_energy",
+              "unplayable_reason_raw": "EnergyCostTooHigh",
+              "unplayable_preventer_id": null,
+              "unplayable_preventer_type": null
+            }
+          ],
+          "enemies": [
+            {
+              "index": 0,
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "name": "知识恶魔",
+              "current_hp": 310,
+              "max_hp": 399,
+              "base_max_hp": 399,
+              "block": 0,
+              "is_alive": true,
+              "is_hittable": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 4,
+                  "is_debuff": true
+                }
+              ],
+              "intent": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "move_id": "KNOWLEDGE_OVERWHELMING_MOVE",
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "9[font_size=18]×3[/font_size]",
+                  "damage": 9,
+                  "hits": 3,
+                  "total_damage": 27,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "end_turn_will_kill_player": false,
+          "lethal_risks": []
+        },
+        "run": {
+          "character_id": "SILENT",
+          "ascension": 10,
+          "floor": 33,
+          "current_hp": 67,
+          "max_hp": 70,
+          "gold": 0,
+          "max_energy": 3,
+          "act_id": "1",
+          "boss_id": "KNOWLEDGE_DEMON_BOSS",
+          "potions": [
+            {
+              "index": 0,
+              "potion_id": null,
+              "name": null,
+              "description": null,
+              "rarity": null,
+              "occupied": false,
+              "usage": null,
+              "target_type": null,
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": false,
+              "can_discard": false
+            },
+            {
+              "index": 1,
+              "potion_id": "FORTIFIER",
+              "name": "固化药水",
+              "description": "将你的[gold]格挡[/gold]变为三倍。",
+              "rarity": "Uncommon",
+              "occupied": true,
+              "usage": "CombatOnly",
+              "target_type": "AnyPlayer",
+              "is_queued": false,
+              "requires_target": false,
+              "target_index_space": null,
+              "valid_target_indices": [],
+              "can_use": true,
+              "can_discard": true
+            }
+          ]
+        },
+        "selection": null,
+        "state_version": 16
+      }
+    }
+  }
+]

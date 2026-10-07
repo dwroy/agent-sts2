@@ -1203,6 +1203,7 @@ interface SimPlayer {
   juggernaut: number;
   feelNoPain: number;
   afterImage: number;
+  serpentForm: number | null;
   poisonPerTurn: number;
   poisonExtraTriggers: number;
   envenom: number;
@@ -2237,6 +2238,11 @@ function applyPlan(
   }
   const handLeft = Math.max(0, hand.filter((c) => c.type !== "Potion").length - played.size + o.cardsDrawn);
   const blockEnd = player.block + o.blockGained;
+  // Carry only the solver's observed establishment; replay/stacking stay marked unknown there.
+  if (o.serpentFormAfter !== undefined) {
+    player.serpentForm = o.serpentFormAfter;
+    if (player.serpentForm !== null && player.serpentForm > 0) playerPowers["SERPENT_FORM_POWER"] = player.serpentForm;
+  }
   const snap = snapshotOf(player, enemies, startHp - ownLoss, blockEnd, o.energyLeft, handLeft, playerPowers);
   const hpLeft = Object.fromEntries(enemies.map((e) => [e.index, remainingHp(e, input)]));
   // Regen healed at this turn's end (in the outcome): one less next turn. Ritual: Strength at the end of it.
@@ -2584,6 +2590,7 @@ function simulate(
     juggernaut: base.juggernaut ?? 0,
     feelNoPain: base.feelNoPain ?? 0,
     afterImage: base.afterImage ?? input.playerPowers["AFTERIMAGE_POWER"] ?? 0,
+    serpentForm: base.serpentForm ?? null,
     poisonPerTurn: input.playerPowers["NOXIOUS_FUMES_POWER"] ?? 0,
     poisonExtraTriggers: base.poisonExtraTriggers ?? input.playerPowers["ACCELERANT_POWER"] ?? 0,
     envenom: base.envenom ?? input.playerPowers["ENVENOM_POWER"] ?? 0,
@@ -2906,6 +2913,7 @@ function simulate(
       juggernaut: player.juggernaut,
       feelNoPain: player.feelNoPain,
       afterImage: player.afterImage,
+      ...(player.serpentForm !== null ? { serpentForm: player.serpentForm } : {}),
       poisonExtraTriggers: player.poisonExtraTriggers,
       envenom: player.envenom,
       // UACFSW4VDDLD F33 T5 / F48 T9: each fresh turn has one bonus, before enemy damage caps.
