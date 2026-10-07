@@ -1,0 +1,186 @@
+{
+  "run": "VLZ6CCT8AQ0A",
+  "ascension": 10,
+  "provenance": [
+    {
+      "key": "before",
+      "line": 275682,
+      "offset": 8488494563,
+      "sha256": "921b46da928153928044aa7412add7f6659cb0e7aa8cea6312d243e5ab7605d6",
+      "run": "VLZ6CCT8AQ0A",
+      "floor": 43,
+      "turn": 1
+    },
+    {
+      "key": "after",
+      "line": 275683,
+      "offset": 8488536708,
+      "sha256": "f9e041fe2cf2d495c5b80d3b90750e1f21a35babff9335370c51ee070e289cc9",
+      "run": "VLZ6CCT8AQ0A",
+      "floor": 43,
+      "turn": 1
+    },
+    {
+      "key": "later14",
+      "line": 275687,
+      "offset": 8488697041,
+      "sha256": "103e80d5394dc75726db1420e44627125ae8be5b8643c97cc7b89693d71786a0",
+      "run": "VLZ6CCT8AQ0A",
+      "floor": 43,
+      "turn": 2
+    },
+    {
+      "key": "later18",
+      "line": 275696,
+      "offset": 8489071855,
+      "sha256": "6cee52b64850338b880e1dfcc68be1e3cae76f77061fdcc9c16c1efffe696f6d",
+      "run": "VLZ6CCT8AQ0A",
+      "floor": 43,
+      "turn": 4
+    },
+    {
+      "key": "plain",
+      "line": 275722,
+      "offset": 8490106074,
+      "sha256": "c5aad5c3ca0e7d3551f5a91b5880152f2e39f40c10a2cf9ba53b6d5c7acf737a",
+      "run": "VLZ6CCT8AQ0A",
+      "floor": 45,
+      "turn": 1
+    }
+  ],
+  "fasten": {
+    "index": 0,
+    "card_id": "FASTEN",
+    "name": "勒紧+",
+    "upgraded": true,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "从“防御”牌中额外获得{ExtraBlock:diff()}点格挡。",
+    "resolved_rules_text": "从“防御”牌中额外获得6点格挡。",
+    "dynamic_values": [
+      {
+        "name": "ExtraBlock",
+        "base_value": 6,
+        "current_value": 6,
+        "enchanted_value": 6,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "defend14": {
+    "index": 4,
+    "card_id": "DEFEND_SILENT",
+    "name": "防御+",
+    "upgraded": true,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "获得{Block:diff()}点格挡。",
+    "resolved_rules_text": "获得14点格挡。",
+    "dynamic_values": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 14,
+        "enchanted_value": 8,
+        "is_modified": true,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "defend18": {
+    "index": 0,
+    "card_id": "DEFEND_SILENT",
+    "name": "防御+",
+    "upgraded": true,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "获得{Block:diff()}点格挡。",
+    "resolved_rules_text": "获得18点格挡。",
+    "dynamic_values": [
+      {
+        "name": "Block",
+        "base_value": 8,
+        "current_value": 18,
+        "enchanted_value": 8,
+        "is_modified": true,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "power_before": [
+    {
+      "index": 0,
+      "power_id": "PLATING_POWER",
+      "name": "覆甲",
+      "amount": 4,
+      "is_debuff": false
+    },
+    {
+      "index": 1,
+      "power_id": "STRENGTH_POWER",
+      "name": "力量",
+      "amount": 1,
+      "is_debuff": false
+    }
+  ],
+  "power_after": [
+    {
+      "index": 0,
+      "power_id": "PLATING_POWER",
+      "name": "覆甲",
+      "amount": 4,
+      "is_debuff": false
+    },
+    {
+      "index": 1,
+      "power_id": "STRENGTH_POWER",
+      "name": "力量",
+      "amount": 1,
+      "is_debuff": false
+    },
+    {
+      "index": 2,
+      "power_id": "FASTEN_POWER",
+      "name": "勒紧",
+      "amount": 6,
+      "is_debuff": false
+    }
+  ]
+}
