@@ -1174,6 +1174,7 @@ interface SimPlayer {
   maxHp: number;
   strength: number;
   dexterity: number;
+  fasten: number;
   weakTurns: number;
   vulnTurns: number;
   /** Frail: block from cards is 25% less while it lasts (enemy turns left, like Weak and Vulnerable). */
@@ -1560,14 +1561,15 @@ function laterDeathMoves(e: SimEnemy, enemies: SimEnemy[], table: EnemyTable | u
 
 function withStrength(card: CardModel, player: SimPlayer, index: number, targets: number[]): CardModel {
   const weak = player.weakTurns > 0;
+  const baseBlock = card.block + (card.cardId === "DEFEND_SILENT" ? player.fasten : 0);
   return {
     ...card,
     index,
     damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)) * (card.type === "Attack" && player.doubleDamage ? 2 : 1),
     // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
     // Frail: 25% less block from cards, after Dexterity.
-    ...(card.block > 0 ? { blockBase: card.block } : {}),
-    block: card.block > 0 ? Math.floor(Math.max(0, card.block + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
+    ...(card.block > 0 ? { blockBase: baseBlock } : {}),
+    block: card.block > 0 ? Math.floor(Math.max(0, baseBlock + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
     validTargets: card.target === "single" ? targets : [],
   };
 }
@@ -1930,6 +1932,10 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
   if (card.afterImage) {
     player.afterImage += card.afterImage;
     playerPowers["AFTERIMAGE_POWER"] = (playerPowers["AFTERIMAGE_POWER"] ?? 0) + card.afterImage;
+  }
+  if (card.fasten) {
+    player.fasten += card.fasten;
+    playerPowers["FASTEN_POWER"] = player.fasten;
   }
   if (card.dexterity) {
     player.dexterity += card.dexterity;
@@ -2535,6 +2541,7 @@ function simulate(
     maxHp: base.maxHp,
     strength: base.strengthNow ?? input.playerPowers["STRENGTH_POWER"] ?? 0,
     dexterity: input.playerPowers["DEXTERITY_POWER"] ?? 0,
+    fasten: input.playerPowers["FASTEN_POWER"] ?? 0,
     weakTurns: input.playerPowers["WEAK_POWER"] ?? (base.weak ? 1 : 0),
     vulnTurns: input.playerPowers["VULNERABLE_POWER"] ?? (base.vulnerable ? 1 : 0),
     frailTurns: input.playerPowers["FRAIL_POWER"] ?? 0,

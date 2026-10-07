@@ -325,11 +325,13 @@ export function upgradePreview(raw: Record<string, unknown>, knowledge: Knowledg
   const upgrade = cardUpgrade(cardId);
   if (!upgrade) return `${before} -> (upgrade not in code's data: see the card's text)`;
   const values: Record<string, number> = {};
+  const currentValues: Record<string, number> = {};
   const changes: string[] = [];
   for (const entry of asArray(raw["dynamic_values"]).map(asRecord)) {
     const name = str(entry["name"]);
     const now = numOrNull(entry["current_value"]) ?? numOrNull(entry["base_value"]);
     if (!name || now === null) continue;
+    currentValues[name] = now;
     const change = upgrade.vars[name];
     values[name] = change ? now + change[1] - change[0] : now;
     if (change) changes.push(`${name} ${now}->${values[name]}`);
@@ -337,7 +339,17 @@ export function upgradePreview(raw: Record<string, unknown>, knowledge: Knowledg
   for (const [name, change] of Object.entries(upgrade.vars)) if (!(name in values)) changes.push(`${name} ${change[0]}->${change[1]}`);
   const cost = numOrNull(raw["energy_cost"]);
   if (upgrade.cost && cost !== null) changes.push(`cost ${cost}->${cost + upgrade.cost[1] - upgrade.cost[0]}`);
-  const after = str(raw["rules_text"]) ? renderUpgraded(str(raw["rules_text"]), values) : null;
+  const template = str(raw["rules_text"]);
+  let after = template ? renderUpgraded(template, values) : null;
+  // P5HT1272P5SB F24/F25, silent-0217: resolved text includes keyword decorations absent from the template.
+  // Preserve those decorations only when the current template matches exactly; never copy stale numbers
+  // or decorations across an unverified conditional upgrade branch.
+  if (after && !template.includes("{IfUpgraded:")) {
+    const current = renderUpgraded(template, currentValues);
+    const at = current ? before.indexOf(current) : -1;
+    if (current && at >= 0) after = before.slice(0, at) + after + before.slice(at + current.length);
+    else after = null;
+  }
   const numbers = changes.length > 0 ? changes.join(", ") : "text only";
   // Plating's decay said for both stack counts (QBCV838592ZQ F16: Stone Armor smithed as "4 -> 6 block every turn").
   return annotatePlating(after && after !== before ? `${before} -> ${after}${upgrade.cost ? ` (${numbers})` : ""}` : `${before} -> ${numbers}`);
