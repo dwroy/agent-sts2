@@ -90,3 +90,9 @@
 ## 2026-10-07 12:40 — Roy：exp70 完整检查失败，保留上线并派修
 
 固定树 b37c82f6 完整外部 tsc0/vitest1，3180通过、2失败、2跳过；失败是旧测试入口漏传额度日志回调，生产回调仍在。保留 Codex-only/经验70，测试辅助入口修复入队，不回滚，不削弱断言。原失败见 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log；普通121034批次占用 codex-dev，下一可用批次处理。两项12:11/12:22授权准备独立模板和工作树，A10双boss优先，派发后补具体批次。
+
+## 2026-10-07 13:04 — Roy：两项高优先新功能已独立派学习者
+
+- A10双boss A–D：20261007-130408-fix-batch，PID 1563687，工作树 /home/dw/Projects/agent-sts2/.worktrees/silent-double-boss；A 优先，连续资源/合计通关率、资源追溯、升阶审计及有数据时修改Roy规则并双通知、协议/AGENTS/任务同步由本批实现。数据与SL条件交学习者核实。
+- B4/B5自动触发验收：20261007-130415-fix-batch，PID 1564623，工作树 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-automation；实现每局/校准后检查、冷却/互斥、自动验收和任务模板，机制完成后第一批真实派静默永世沙漏B4；不再逐次请求Roy。
+- 派发入口源 b367c6019f771bce0913eb81d85c43d2512210cd、main fce5576efc926017ba56a72802346b3b6594f4d7，沙箱tsc0/224文件2374例、Python20/撤源真红/两模板实际渲染验证通过。两批均已实际启动，功能尚在实现，后续完成事件续办；exp70历史测试note回调修复已入队（12:40首次普通派发因121034占用返回null），原完整失败保持。详情 paper/materials/silent/20261007-1235-events.md。
