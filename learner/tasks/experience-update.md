@@ -39,7 +39,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 ## 2. 方法（照变更记录）
 - **来源**：这几局的复盘，加上日志里重新抽出来的数字。日志文件很大，只能按 run id grep 或按字节偏移 seek 流式读；`deepseek-reasoning.jsonl`、`states.jsonl` 没有 run id，按时间窗定位。可以沿用变更记录里写过的抽取脚本和工具（`agent/tools/boss-fights-extract.py`、`agent/tools/boss-clock-calibrate.ts --rows`、`agent/tools/knowledge-slice.ts` 等），在 {{worktree}} 里跑。
 - **口径**沿用上一节（「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房，问号另算；汇总截至哪个时间、哪些局只进数字，都写明）。用同样的口径把上一节的数字重算一遍，对上了再加新局；对不上的，先找原因并写进本节。
-- **合并原则**：同一件事只留一条；单局事实并入汇总条目作证据；丢掉纯代码 bug 和战斗里的出牌细节（带真实游戏数据的 bug 记录，把数据留下）。
+- **合并原则**：同一件事只留一条；单局事实并入汇总条目作证据；纯代码 bug 留在修复记录；可复现的出牌/药水/SL/终局经验要保留并同步代码提案，逐回合明细留报告（带真实游戏数据的 bug 记录，把数据留下）。
 - **字段**：
   - evidence 用 12 位 run id，n_support = 证据局数；结论相反的局进 contradicting / n_contradict；反例多过支持时退役；
   - confidence：high = n ≥ 5 且反例 ≤ n/3，或 n ≥ 4、原文就是规则、没有反例；med = n ≥ 2；low = 其余；
@@ -53,10 +53,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
   - 确实放不下就在回报里写「需要 Dai 定」，**不许改测试的预算**；
   - 回报里写 active 条数、总字符数，以及在 A8、A9 各适用多少条、多少字符。
 - **只用已有的 scope 类型**（boss、elite、hallway、act、general:<话题>、card、relic、potion、event）。v3 的切片（agent/src/knowledge/experience.ts 的 relevance）不认识的类型会被整条丢掉。
-- **药水**（照上一节）：
-  - `potion:*` 和 `general:potion` 条目只改句内数字，不加证据局（n 不变）；
-  - 其他条目里原有的喝药/留药分句一字不改，新加的证据只写非药水的部分；
-  - **不许新增或加强任何「什么时候喝 / 别喝」的说法，不许写喝药规则**。
+- **药水与打法**：依据本角色实盘证据更新结论、局数与反例，涉及喝药/留药/出牌/SL/终局规则同时登记代码提案；不以旧的人定限制拒绝已授权的数据提案，也不在本经验任务里直接改打法源码。
 {{#is_ironclad}}
 - **知识库一视同仁**：攻略（knowledge/characters/ironclad/ironclad-guide.md）、DeepSeek 手册（ds-handbook.md）、Jev 提示（jev-hints.json）、代码的卡牌参考分（card-value.ts 的 TIER 表和角色分类）、boss 笔记（run-journal.ts 的 BOSS_NOTES）都算知识库。每次更新都要核对：和复盘数据冲突的，改成数据版本（写明局数）；数据说明无效的删掉；还没有数据覆盖的先保留。改了什么、没改什么都记进本节（照上一节「和手写知识、代码冲突」的写法）。
 {{/is_ironclad}}
@@ -77,7 +74,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
   3. **典型案例**：一两个 run id + 一句话（哪场战斗、哪回合、数字）。
 - 写进 experience.json：能对应到具体牌或遗物的，写进（或新建）那张牌 / 遗物的 `card:*` / `relic:*` 条目；跨牌的综合结论写进 `general:deck` 或 `general:plan`。条目文字的结构：「结论。机制：…。搭配：…。决定胜负的战斗：…（n=…）。典型案例：<run id> …」。
 - 变更记录本节里加一小节 `### 机制推理`，每个机制一行：「机制 | 推理 | 证据（支持/反例局数、进阶） | 典型案例 | 进了哪个条目」。
-- 机制推理同样**不许写喝药规则**；药水只能作为事实出现在推理里（例：力量药水 = 一回合的临时力量）。
+- 机制和药水判断只来自本角色观察；新增或改变打法结论须同步代码提案，不用预训练知识补机制。
 - 说不清机制、只有相关性的，写成「观察」，不要写成因果。
 
 ## 4.1 V4 的重点（Dai 2026-10-03）
@@ -95,10 +92,12 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 2. **SL 重打的对照**（同一场战斗、同样抽牌的多次尝试是天然的对照实验）：logs/sl-attempts.jsonl 里这个角色的局的每场多次尝试，哪一次赢了、和输的几次差在哪（`explore`、`sl_explore`、decisions 的 sl_attempt）。能归纳成 boss / 精英打法经验的，写进 `boss:*` / `elite:*` 条目（区分「赢的那次改了什么」和「运气」），每条写明几场重打、几次赢。
 3. **进阶**：这个角色从 A0 往上爬（赢一局进阶 +1）。asc 按证据所在的进阶写；进阶升高后被反驳的，写进阶上限或退役，写明是哪个进阶的数据。
 {{/is_ironclad}}
-- 机制推理（第 4 节）照做；药水规则限制（第 2 节）照旧。
+- 机制推理（第 4 节）照做；第 2 节的证据与同步代码提案要求照做。
 - **CPU**：对局在跑（boss 模拟会占满核），抽数据、跑工具只用单进程或最多 4 个 `nice -n 19` 进程，不跑 boss 模拟池。
 
 ## 5. 更新 experience.json
+- 改前把本角色 experience.json 保存 {{scratch}}/experience-before.json。新/改的相关 active 条目必须登记 source_task=experience-update 且 experience=[条目id] 的提案，证据与账本互相关联。
+- 提交前跑 `python3 {{project_root}}/learner/code_proposals.py check-experience --character {{character}} --before {{scratch}}/experience-before.json --after {{worktree}}/{{experience_path}}`，退出0；完成事件还会按实际 source commit 前后核验。
 - 只改 {{worktree}}/{{experience_path}}（和第 2 节里核对后需要改的手写知识文件）。JSON 格式、字段顺序、缩进照原文件。
 - 改完跑 `python3 -c 'import json; json.load(open("{{experience_path}}"))'` 确认合法。
 
@@ -112,7 +111,7 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 
 ## 7. 测试和提交
 - `mkdir -p "{{scratch}}"`，`export TMPDIR="{{scratch}}"`，`export PATH=$HOME/.local/node/bin:$PATH`，`bash tools/test-sandbox.sh`（内含 tsc 和沙箱可跑的 vitest；固定排除名单及子进程限制原因见脚本注释，合入后由调度器在沙箱外补跑完整套件） 退出码都要是 0（高负载时战斗测试可能超时，先重跑一次再下结论）。测试用固定数据。
-- 在 {{worktree}} 提交：`git -c user.name=dwroy -c user.email=roy.dongwei@gmail.com commit`，英文提交信息，写明版本号和增删改条数。不推送。
+- 在 {{worktree}} 提交：`git commit`（使用本机全局身份，不设仓库级 user.*），英文提交信息，写明版本号和增删改条数。不推送。
 {{#is_ironclad}}
 - 在变更记录末尾追加一节（标题照上一节：`## <日期> 第N次增量：<局数> 局 A几（version …，分支 …，<提交号>）`），小节依次是：来源、对照数据检查的主题、经验库自己带偏或写了没被执行的地方、**机制推理**、新增、更新、退役、和手写知识及代码冲突、代码问题（不给 DS）、测试、切片大小。只追加，不改前面的内容；工作区仓库（{{project_root}}）不要提交，由调用方提交。
 {{/is_ironclad}}
@@ -166,5 +165,13 @@ Dai：「我更倾向于通过总结归纳历史战斗，沉淀下来的经验�
 最后再单独给一个 json 代码块：
 
 ```json
-{"task": "experience-update", "version": "...", "commit": "...", "merged": null, "added": 0, "updated": 0, "retired": 0, "active": 0, "mechanisms": ["..."], "tests": {"tsc": 0, "vitest": 0, "cases": 0}, "ledger": {"added": ["<id>"], "proposed": ["<id>"], "retired": ["<id>"], "check": 0}}
+{"task": "experience-update", "version": "...", "commit": "...", "merged": null, "added": 0, "updated": 0, "retired": 0, "active": 0, "mechanisms": ["..."], "tests": {"tsc": 0, "vitest": 0, "cases": 0}, "ledger": {"added": ["<id>"], "proposed": ["<id>"], "retired": ["<id>"], "check": 0}, "code_proposals": [], "implementation_domains": [], "report": "{{scratch}}/report.md"}
 ```
+
+
+## Roy 2026-10-07 学习授权与代码提案
+先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+
+最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。

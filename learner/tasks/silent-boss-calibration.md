@@ -43,3 +43,11 @@ default.merge_dir: {{project_root}}/.worktrees/live
 merge=live 时持有根目录 ops/live-merge.lock，等待刷新结束，先保存 live 中刷新知识（含新增数据文件），查双方改动重叠、预检，再合入自己的源码分支；记下合入前提交。合后 sandbox 测试通过、必要时按本角色重建并再次测试后登记发布。若失败，保留日志并回退本次代码合入，保留原刷新。date 后追加 decision-log；改变对局行为时写唯一 eval 版本。实际源码／合入／发布树、来源证据与台账交给运维，自己只经 learner/ledger.py 写 proposed，不冒标 shipped 或 bug-infra。
 
 最后使用 fix-batch 回报 JSON，包含 base、fixes（item 明确“Roy 已授权新功能：静默 boss 模拟校准”、commit、test、fails_without_fix）、skipped、merged、tests；另给具体 boss 可信表、不足场数、A10 残差、定期刷新入口、报告路径、全部提交和固定发布树。task 字段保持 fix-batch 是为了接入现有完成事件与完整外部检查；任务性质仍是新功能。
+
+
+## Roy 2026-10-07 学习授权与代码提案
+先读 docs/learning-code-proposals.md。出牌、药水、SL、终局价值的经验及结构不一致，除了经验/账本必须同时保存代码提案，关联本角色证据局号/层/回合、账本 id、来源任务与 strategy-proposal 实现任务。只经 `python3 {{project_root}}/learner/code_proposals.py add --character {{character}}` 登记；专用提案队列与账本 CLI 是本任务明确的根目录记录例外，提案 Markdown 和 JSON 保存 {{scratch}}，不覆盖无关记录。
+
+Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-dai.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
+
+最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。
