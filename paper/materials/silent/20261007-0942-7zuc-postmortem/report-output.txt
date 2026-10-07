@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：7ZUC4VPMDS41（A10，第17层，仪式兽 CEREMONIAL_BEAST；末次T14以8血、5挡面对25攻击阵亡）。已追加动作统计、药水来源及上线状态勘误。
+- 新的纯 bug：
+  - 无。7ZUC4VPMDS41 补证已有中毒八折问题，冲刺少报2伤 — agent/src/reflex/turn-solver.ts:1460（fix-queue 已有，后续S1.fix42已上线）。
+- 写成「未记录」的项：7ZUC4VPMDS41：读档末轮完整伤害／损血、重问及SL后的完整最优线执行比例、未选方案受控整场结果、boss时钟估值及实打比值、零胜模拟赢样本损血中位、Jev缓存。
+- 学习账本：7ZUC4VPMDS41：新增 silent-0222；更新 silent-0216、silent-0021、silent-0079、silent-0020、silent-0019、silent-0133、silent-0006、silent-0007（老错 silent-0216、silent-0079）；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["7ZUC4VPMDS41"],"skipped":[],"bugs":[{"run":"7ZUC4VPMDS41","where":"agent/src/reflex/turn-solver.ts:1460","what":"已有中毒攻击八折问题，本局冲刺少报2伤；后续S1.fix42已上线","new":false}],"ledger":{"added":["silent-0222"],"updated":["silent-0216","silent-0021","silent-0079","silent-0020","silent-0019","silent-0133","silent-0006","silent-0007"],"repeats":["silent-0216","silent-0079"],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a113eb-dc79-7211-b63c-f14817506969
+轮数：1；工具调用：command_execution×46
+token：输入 192.3k、输出 42.1k（其中推理 17.9k）、cache 读 4302.3k、cache 写 0（命中 95.7%）
+成本：未提供
+耗时：985.3 s（墙钟）
+时间：首个事件 6.6 s、模型首个输出 11.4 s、首次工具 15.4 s、末次工具结束 950.4 s；工具内共 30.1 s，其余（模型生成、推理、网络）948.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×37；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T09-13-06-01a113eb-dc79-7211-b63c-f14817506969.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-091302-postmortem.jsonl
