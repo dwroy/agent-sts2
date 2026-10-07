@@ -1,0 +1,68 @@
+{
+  "state": "published",
+  "batch": "20261008-053104-strategy-proposal",
+  "source": "a6ed582e8c26e1cc7d51fd21459d1c46481bfa10",
+  "paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-bullet-time-states.json",
+    "agent/tests/silent-bullet-time.test.ts"
+  ],
+  "version": "S1.bullet-time1",
+  "source_tests": {
+    "exit": 0,
+    "files": 246,
+    "cases": 2598,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-053105-strategy-proposal/source-sandbox-final.log"
+  },
+  "main_code_sync": "4a38585e10e6af0b269a5dff1ac6a7e39f275dc2",
+  "main_record": "9133beba0e60995a42e2232eb76bbfc68961be36",
+  "full_external_passed": false,
+  "live_before": "7f6d5b4b6a1d1563ebf662db806eb9f3d18b6172",
+  "preserved_refresh": "36672fccb1ee24bb294d52324f619181f75489bb",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "7f9ae8a2ef9ded4557f3da82790004bd16fb209288981ce4237448a33dd7dd20",
+    "knowledge/characters/silent/fight-value-gates.json": "622e8154403458272b81ad3ab3940507bcc1babb574ebf37e1ace5dcc42c3467",
+    "knowledge/characters/silent/fight-value.json": "e0c14fe061e8c9949feba75c4b1f2349e1617cdd7222db7d92f060622a3e5f0a",
+    "knowledge/characters/silent/monster-records.json": "a9400e04e4c171c8c91bb3a878729f8ef4b7799179636b04cd13c620b421337e",
+    "knowledge/characters/silent/outcome-stats.json": "f909d18521625394b10ed8adb87ac4270c00e7a3de1f49efd09d23f027fd4cdc",
+    "knowledge/characters/silent/room-costs.json": "1199a528cfbd6cb9bb0b8fe12f47203a0354d7c8c353302b70e9d56825a66f45",
+    "knowledge/common/card-upgrades.json": "55a295748cca16db72a4cdc410d07fe5662931d2478be51560b2f5b07b32a365",
+    "knowledge/common/monster-db.json": "d8a86c9a658cffdbb74d65ac42138fa48669f1f07ce85e69beee792c8066c723",
+    "knowledge/common/move-model.json": "eeef271e76ff9cee34d41e0c91705c7d35908936af2a1a1a2ebdb1f1c164ef09",
+    "notes/fight-value-backtest-silent.md": "6ad0f164c6fb7dfa89f426b341b0506301ba6cc9a2a6103f02299f7e2fb13cce"
+  },
+  "combined": "339e1bf25ead90e34f7d7a7432d093bf04800bc3",
+  "actual_code": "d9885488ae1dd57407c12d1c4310459edce800e6",
+  "actual_tree": "3a67b1e98528a0a6ebfea181734908b4b7c086ec",
+  "all_other_tracked_blobs_preserved": true,
+  "lock_attempts": 2,
+  "first_sandbox_failure_kept": true,
+  "environment_correction": {
+    "first_rc": 1,
+    "reason": "Integration worktree did not link the existing local data/logdb-venv, so component-usage could not launch its fixed Python fixtures (127). Source/tests/fixtures unchanged.",
+    "first_log_sha256": "26315c0f8e4709881db434d3a44e9b2e12aea1d852692eb7e971d6d7146d26ca",
+    "first_main_files_passed": 244,
+    "first_main_cases_passed": 2586,
+    "first_failure": "component-usage.test.ts",
+    "correction": "link the existing local test virtualenv only; rerun the unchanged original sandbox entrypoint",
+    "source_tree_unchanged": true,
+    "first_failure_kept": true
+  },
+  "publication": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+  "version_entry": {
+    "name": "S1.bullet-time1",
+    "family": "Silent",
+    "commit": "d9885488ae1dd57407c12d1c4310459edce800e6",
+    "source": "decision-log 2026-10-08 06:36: 原053104策略源a6ed582e兜底；KV0JHNJCKXLS A10 F33 T1—T5/0246、0248、0249，普通子弹时间当前合法手牌零费和本轮封抽传播，限定静默A10/普通文本，铁甲/未知范围保持等价；源及合后原沙箱tsc/vitest0、246文件2598例，固定撤源码5红/恢复12绿；实际六blob/源祖先，保留17记录冲突及知识刷新，外部完整续验另办。"
+  },
+  "record_line": "- 2026-10-08 06:36 运维codex06:21策略兜底：原053104源a6ed582e8c26e1cc7d51fd21459d1c46481bfa10普通子弹时间六blob实际合入d9885488ae1dd57407c12d1c4310459edce800e6/树3a67b1e98528a0a6ebfea181734908b4b7c086ec，原main/live17处记录冲突不覆盖，最新刷新36672fccb1ee24bb294d52324f619181f75489bb及所有其他代码/知识数据保持；源真实祖先，唯一S1.bullet-time1。仅学习者KV0JHNJCKXLS静默A10 F33 T1—T5/0246、0248、0249证据实现当前合法普通手牌零费与本轮封抽，挡/能保留、未知角色/进阶/升级等价，不增药水/SL门槛或冒称胜率收益。源及合后固定原入口tsc/vitest0、246文件2598例，撤源码5红/恢复12绿原件保持；随后机械同步main、CLI登记实际源码上线及原提案处置，原批完整外部续验只请求一次，未冒报外部通过。原out/err/report/failed/17冲突保留，无生产操作；回执paper/materials/silent/20261008-0621-events。\n",
+  "merged_tests": {
+    "exit": 0,
+    "files": 246,
+    "cases": 2598,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261008-0621-events/merged-sandbox-fixed-env.log"
+  }
+}

@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-0621-bullet-time/agent
+
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 77ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 75ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 244 passed (245)
+      Tests  1 failed | 2586 passed (2587)
+   Start at  06:26:17
+   Duration  285.88s (transform 9.68s, setup 18.33s, import 41.47s, tests 1036.24s, environment 40ms)
+

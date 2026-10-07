@@ -1,0 +1,201 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-bullet-time.test.ts (12 tests | 5 failed) 329ms
+   × the final T1 prefix pays three, draws zero and preserves five Block plus both energy gains 70ms
+   × three starting energy can pay Bullet Time and then the formerly unaffordable hand 24ms
+   × known pile cards cannot be borrowed after the lock, while a draw made before it remains 25ms
+   × a replan on the actual locked frame retains energy and never invents draws 15ms
+   × the draw lock also stops an existing expected-draw adapter without granting new cards a free cost 23ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-bullet-time.test.ts > the final T1 prefix pays three, draws zero and preserves five Block plus both energy gains
+AssertionError: expected { winsFight: false, hpLoss: +0, …(23) } to match object { Object (cardsDrawn, blockGained, ...) }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "blockGained": 5,
+-   "cardsDrawn": 0,
+-   "energyLeft": 7,
+-   "unknownCards": [],
++   "cardsDrawn": 4,
++   "energyLeft": 4,
++   "unknownCards": [
++     "子弹时间",
++   ],
+  }
+
+ ❯ tests/silent-bullet-time.test.ts:63:24
+     61|   const input = inputFor();
+     62|   const plan = replaySteps(input, prefix.map((id) => step(input, id)))…
+     63|   expect(plan.outcome).toMatchObject({ cardsDrawn: 0, blockGained: 5, …
+       |                        ^
+     64|   expect(plan.steps.map((s) => s.cost)).toEqual([3, 0, 0, 0, 0]);
+     65|   expect(frame(279541).combat.player).toMatchObject({ energy: 7, block…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-bullet-time.test.ts > three starting energy can pay Bullet Time and then the formerly unaffordable hand
+TypeError: Cannot read properties of null (reading 'outcome')
+ ❯ tests/silent-bullet-time.test.ts:77:15
+     75|   const input = inputFor(); input.player.energy = 3;
+     76|   const plan = replaySteps(input, prefix.slice(0, 4).map((id) => step(…
+     77|   expect(plan.outcome).toMatchObject({ cardsDrawn: 0, blockGained: 5, …
+       |               ^
+     78|   const narrow = { ...input, hand: input.hand.filter((c) => ["BULLET_T…
+     79|   narrow.hand.push({ ...narrow.hand.find((c) => c.cardId === "BACKFLIP…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-bullet-time.test.ts > known pile cards cannot be borrowed after the lock, while a draw made before it remains
+AssertionError: expected 2 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 2
+
+ ❯ tests/silent-bullet-time.test.ts:94:37
+     92|   input.knownTop = [footwork];
+     93|   const locked = replaySteps(input, [step(input, "BULLET_TIME"), step(…
+     94|   expect(locked.outcome.cardsDrawn).toBe(0);
+       |                                     ^
+     95|   expect(replaySteps(input, [...locked.steps, { cardIndex: 777, cardId…
+     96|   const before = replaySteps(input, [step(input, "BACKFLIP"), step(inp…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-bullet-time.test.ts > a replan on the actual locked frame retains energy and never invents draws
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/silent-bullet-time.test.ts:104:31
+    102| it("a replan on the actual locked frame retains energy and never inven…
+    103|   const input = inputFor(frame(279537));
+    104|   expect(input.player.noDraw).toBe(true);
+       |                               ^
+    105|   const plan = replaySteps(input, [step(input, "BACKFLIP"), step(input…
+    106|   expect(plan.outcome).toMatchObject({ cardsDrawn: 0, blockGained: 5, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-bullet-time.test.ts > the draw lock also stops an existing expected-draw adapter without granting new cards a free cost
+AssertionError: expected { steps: [ { …(7) }, …(2) ], …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "outcome": {
+    "attackPlays": 1,
+    "blockGained": 0,
+    "blockWasted": 4,
+    "cardsDrawn": 0,
+    "damageDealt": 16,
+    "dies": false,
+    "endTurnGuards": [
+      {
+        "amount": 4,
+        "what": "Plating/Metallicize block at the turn's end",
+      },
+    ],
+    "enemyHpAfter": [
+      {
+        "artifact": 0,
+        "block": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "hp": 383,
+        "index": 0,
+        "name": "知识恶魔",
+        "poison": 6,
+        "shrink": 0,
+        "slippery": 0,
+        "strengthGained": 0,
+        "vulnerable": 0,
+        "weak": 0,
+      },
+    ],
+    "energyLeft": 3,
+    "hpAfter": 46,
+    "hpLoss": 0,
+    "incomingAfterBlock": 0,
+    "kills": [],
+    "lasting": 9,
+    "lastingDrinks": 1,
+    "restocked": [],
+    "sandpitAfter": null,
+    "serpentFormAfter": 0,
+    "sleepCost": 0,
+    "startTurnKills": [],
+    "strengthGained": 0,
+    "unknownCards": [
+      "子弹时间",
+    ],
+    "vulnerableApplied": 0,
+    "weakApplied": 0,
+    "winsFight": false,
+    "withersAdded": 0,
+  },
+  "score": 14.4,
+  "steps": [
+    {
+      "cardId": "BULLET_TIME",
+      "cardIndex": 1,
+      "cost": 3,
+      "name": "子弹时间",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+    {
+      "cardId": "POTION:FIXED_DRAW:1",
+      "cardIndex": 222,
+      "cost": 0,
+      "discards": [
+        "BACKFLIP",
+      ],
+      "name": "POTION:FIXED_DRAW:1",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+    {
+      "cardId": "FIXED_DRAW",
+      "cardIndex": 7770,
+      "cost": 2,
+      "name": "FIXED_DRAW",
+      "target": 0,
+      "targetName": "知识恶魔",
+      "upgraded": false,
+    },
+  ],
+}
+
+ ❯ tests/silent-bullet-time.test.ts:117:96
+    115|   input.hand.push(potion);
+    116|   const steps = [step(input, "BULLET_TIME"), step(input, potion.cardId…
+    117|   expect(replaySteps(input, [...steps, { cardIndex: 7770, cardId: "FIX…
+       |                                                                                                ^
+    118|   // This is a protocol control, not a new potion or an observed drink…
+    119|   const put = { ...potion, special: null, discards: undefined, generat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 7 passed (12)
+   Start at  05:59:05
+   Duration  3.42s (transform 2.13s, setup 1.19s, import 1.47s, tests 329ms, environment 0ms)
+

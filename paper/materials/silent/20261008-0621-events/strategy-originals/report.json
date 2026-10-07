@@ -1,0 +1,154 @@
+{
+  "task": "strategy-proposal",
+  "base": "5f84502c913aee7e8461da8022a874855c26e6dd",
+  "runs": [
+    "YF0LXT1QSTGG",
+    "XP2SL33HT0D9",
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "C48LLXBGKXQ9",
+    "KAY522KT5NXR",
+    "10GPK5XGHCK3",
+    "Z6CFLDR3N4SB",
+    "G403VCZ3BH1B",
+    "JLN5SK17W4FQ"
+  ],
+  "fixes": [
+    {
+      "id": "silent-0246",
+      "commit": "a6ed582e8c26e1cc7d51fd21459d1c46481bfa10",
+      "runs": [
+        "KV0JHNJCKXLS"
+      ],
+      "ledger": [
+        "silent-0246",
+        "silent-0248",
+        "silent-0249"
+      ],
+      "description": "静默A10普通子弹时间的本轮费用与封抽传播"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "silent-proposal-c59f592f1427a67e",
+      "reason": "已有原答/替换 numbers 及 B2 基本记录；缺未决弃牌真值、完整同抽序胜线与执行截断后续，不能从全败局拟 SL 血价门槛，待新增受控局。"
+    },
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "reason": "异鱼 T2/T7/T13 同盘局部血价已核；缺各线确定弃呼唤结果及完整同抽序后续，未将保守损血上界改为实际值，未拟探索门槛。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "reason": "F13 肌肉药的无药整战和留药到 boss 实盘对照缺失，F17 未决弃牌尚无逐候选确定值；holdHp=null 不能记为零价值，保留原药水/护栏规则。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "reason": "与 366288801d9150d9 同证据范围但来源任务不同；缺完整同抽序后续及确定弃牌数据，不能把重复 Markdown 当实际源码 duplicate。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "reason": "与 85929bdfc8a3fc1b 相同持有价值和未决弃牌缺口；已有敏捷/毒事实未冒称新增诊断已实现，等待无药/留药和逐线弃牌对照。"
+    },
+    {
+      "id": "silent-proposal-c1af3217fb055ad0",
+      "reason": "子弹时间源码已完成并固定自测；main/live 的 17 处记录冲突阻止规定的整分支合入，源 a6ed582e8c26e1cc7d51fd21459d1c46481bfa10 尚非 live 祖先，等待运维保留并行记录兜底，不能登记 implemented。"
+    },
+    {
+      "id": "silent-proposal-e50a24aadfa84fe6",
+      "reason": "子弹时间共享本次源 a6ed582e8c26e1cc7d51fd21459d1c46481bfa10，仍未合入 live；懒惰重放额度已有源 790b76d00dc23dedb970cb82a00cb3db6ff1cbb7、明耀已有实现。未把经验数据 shipped 当本次源码上线，待运维兜底。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "reason": "知识恶魔去掉毒药后的完整同抽序胜线、毛/净输出与敌回血逐轮配对、SL 截断后的真实后续缺失，不能把当轮零损说成保血收益，待后续控制数据。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "reason": "原帧确认占位体毒 2→8 而自爆仍 41；SL summary 缺敌身份/阶段结构字段，同轮 30/34/31 自爆缺口无受控排序后续，不能安全把占位血归零后声称排序有效，待阶段与后续资源控制。"
+    }
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 12
+  },
+  "code_proposals": [
+    "silent-proposal-c59f592f1427a67e",
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-c1af3217fb055ad0",
+    "silent-proposal-e50a24aadfa84fe6",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-146a96e9f1d4a770",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-905b5ce2c69bc372"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c59f592f1427a67e",
+      "state": "waiting",
+      "reason": "已有原答/替换 numbers 及 B2 基本记录；缺未决弃牌真值、完整同抽序胜线与执行截断后续，不能从全败局拟 SL 血价门槛，待新增受控局。"
+    },
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "异鱼 T2/T7/T13 同盘局部血价已核；缺各线确定弃呼唤结果及完整同抽序后续，未将保守损血上界改为实际值，未拟探索门槛。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "F13 肌肉药的无药整战和留药到 boss 实盘对照缺失，F17 未决弃牌尚无逐候选确定值；holdHp=null 不能记为零价值，保留原药水/护栏规则。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "与 366288801d9150d9 同证据范围但来源任务不同；缺完整同抽序后续及确定弃牌数据，不能把重复 Markdown 当实际源码 duplicate。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "与 85929bdfc8a3fc1b 相同持有价值和未决弃牌缺口；已有敏捷/毒事实未冒称新增诊断已实现，等待无药/留药和逐线弃牌对照。"
+    },
+    {
+      "id": "silent-proposal-c1af3217fb055ad0",
+      "state": "waiting",
+      "reason": "子弹时间源码已完成并固定自测；main/live 的 17 处记录冲突阻止规定的整分支合入，源 a6ed582e8c26e1cc7d51fd21459d1c46481bfa10 尚非 live 祖先，等待运维保留并行记录兜底，不能登记 implemented。"
+    },
+    {
+      "id": "silent-proposal-e50a24aadfa84fe6",
+      "state": "waiting",
+      "reason": "子弹时间共享本次源 a6ed582e8c26e1cc7d51fd21459d1c46481bfa10，仍未合入 live；懒惰重放额度已有源 790b76d00dc23dedb970cb82a00cb3db6ff1cbb7、明耀已有实现。未把经验数据 shipped 当本次源码上线，待运维兜底。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "知识恶魔去掉毒药后的完整同抽序胜线、毛/净输出与敌回血逐轮配对、SL 截断后的真实后续缺失，不能把当轮零损说成保血收益，待后续控制数据。"
+    },
+    {
+      "id": "silent-proposal-146a96e9f1d4a770",
+      "state": "duplicate",
+      "reason": "现有明耀源 d3d5c8b2c46f47facbb4bda6533b5d38f08b85e7 为实际 live 祖先；本批用静默 KV0 F33 T1—T5 固定验证即时 +1 和后三轮各 +1，不新增喝药或持有价值规则。",
+      "commit": "d3d5c8b2c46f47facbb4bda6533b5d38f08b85e7"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "原帧确认占位体毒 2→8 而自爆仍 41；SL summary 缺敌身份/阶段结构字段，同轮 30/34/31 自爆缺口无受控排序后续，不能安全把占位血归零后声称排序有效，待阶段与后续资源控制。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-053105-strategy-proposal/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-053105-strategy-proposal/proposal.md",
+  "initial_sandbox": {
+    "tsc": 0,
+    "vitest": 1,
+    "passed": 2586,
+    "failed": 1,
+    "reason": "首轮运行期间追加适配器控制，混用修改前后文件；原失败保留，最终固定版本独立重跑"
+  }
+}
