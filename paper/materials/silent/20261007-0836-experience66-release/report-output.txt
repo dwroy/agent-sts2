@@ -1,0 +1,35 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.11 → 2026-10-07.12；提交：cd5ca6dd（分支 exp-silent）；合入：未合入。锁内 [decision-log.md](/home/dw/Projects/agent-sts2/.worktrees/live/paper/materials/decision-log.md) 冲突，按第 8 节停止；刷新提交 f0c9dfbf 已保留，待运维兜底。
+- 条数：新增 0、更新 12（加证据 12、只改数字 0）、退役 0；active 136 → 136。总字符 49822 → 49049；A8 适用 129 条／45942 字，A9 适用 130 条／46241 字。
+- 机制推理：
+  - 步法敏捷 — 逐挡牌兑现，不追补已有挡 — 49 支持／0 反例 — P5HT1272P5SB。
+  - 力量与虚弱 — 逐击增伤、逐击取整，独立成长继续 — 79／0 — P5HT1272P5SB。
+  - 覆甲耗尽观察 — 后段不能预支开场覆甲 — 5／0 — P5HT1272P5SB。
+  - 磨蚀 — 实际施放的复制品累积敏捷与荆棘 — 2／0 — P5HT1272P5SB。
+  - 夜魇 — 次轮三张复制品，到手与施放分账 — 2／0 — P5HT1272P5SB。
+  - 勒紧 — 专属防御增量，爆发重复兑现 — 3／0 — HSX4HYATB4E2。
+  - 探寻与富足 — 任务完成、生成、施放分别验收 — 3／0 — P5HT1272P5SB。
+  - 召唤复活观察 — 临时清召唤不等永久清场 — 9／0（胧光 8、雾菇 1）— P5HT1272P5SB。
+  - 暴露 — 升级仍保留消耗 — 10／0 — P5HT1272P5SB。
+  - 能力组合观察 — 计划收益按实际建立和结算验收 — 78／0 — P5HT1272P5SB。
+- 改了的手写知识：无。
+- 测试：tsc 退出 0；vitest 215 文件／2299 用例／退出 0。三轮均通过，第三轮验证定稿；未合入，合后测试未执行。
+- 切片大小：配对增量中位 0 字；最大 5294 → 5276 字。
+- 学习账本：新增无；改成 proposed：silent-0005、0006、0012、0013、0019、0020、0021、0039、0044、0073、0140、0141、0143、0182；退役无；`ledger.py check` 退出 0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-07.12","commit":"cd5ca6dd3c4c514baf83b8492f1b6b649dba85f2","merged":null,"added":0,"updated":12,"retired":0,"active":136,"mechanisms":["步法逐牌敏捷","力量与虚弱","覆甲耗尽观察","磨蚀敏捷与荆棘","夜魇次轮复制","勒紧专属防御增量","探寻任务与能力生成","召唤复活与起航成长观察","暴露易伤与保留消耗","能力组合兑现观察"],"tests":{"tsc":0,"vitest":0,"cases":2299},"ledger":{"added":[],"proposed":["silent-0005","silent-0006","silent-0012","silent-0013","silent-0019","silent-0020","silent-0021","silent-0039","silent-0044","silent-0073","silent-0140","silent-0141","silent-0143","silent-0182"],"retired":[],"check":0}}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a113a5-ed78-70a3-9995-80441dd5bcd9
+轮数：1；工具调用：command_execution×74 file_change×11
+token：输入 245.8k、输出 76.7k（其中推理 36.2k）、cache 读 11223.4k、cache 写 0（命中 97.9%）
+成本：未提供
+耗时：1925.9 s（墙钟）
+时间：首个事件 1.9 s、模型首个输出 6.5 s、首次工具 7.5 s、末次工具结束 1862.8 s；工具内共 1302.6 s，其余（模型生成、推理、网络）621.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×73；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T07-56-43-01a113a5-ed78-70a3-9995-80441dd5bcd9.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-075642-experience-update.jsonl
