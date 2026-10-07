@@ -1,0 +1,25 @@
+## 复盘回报
+
+- 已追加：YQL8RZ8BWN1E（A10，第17层，瀑布巨兽本体已死，末次T10以26血、13挡对41自爆，差2血阵亡）。
+- 新的纯 bug：
+  - YQL8RZ8BWN1E：SL将不可击杀的自爆占位血用于残血排序 — agent/src/sl/explore.ts:896、:913（新）。
+- 写成「未记录」的项：YQL8RZ8BWN1E：前五次SL截断战斗的完整净损、完整最优执行比例、改线后逐节点投影、旧boss时钟、Jev缓存命中及未执行分支的整场结果。
+- 学习账本：YQL8RZ8BWN1E：新增 silent-0250；更新 silent-0017、silent-0205、silent-0011、silent-0027、silent-0046（均为support，老错repeat无）；`ledger.py check` 退出码 0。
+- 代码提案（均关联 strategy-proposal，未实现或上线）：
+  - F17阶段与SL证据／账本0017、0250、0011、0027、0046／CLI silent-proposal-e18d3f18e6cac2a0：分列自爆阶段、药水收益和有效残血；缺受控后续，保留原排序规则。
+  - F17六次T3弃牌证据／账本0205／CLI silent-proposal-1697e17b9ae127ca：补充方案后继上下文；保留猎杀者的整场效果未记录，不强制留牌。
+
+```json
+{"task":"postmortem","appended":["YQL8RZ8BWN1E"],"skipped":[],"bugs":[{"run":"YQL8RZ8BWN1E","where":"agent/src/sl/explore.ts:896","what":"SL残血统计将不可击杀自爆占位血用于参考路径排序（排序使用点:913）","new":true}],"ledger":{"added":["silent-0250"],"updated":["silent-0017","silent-0205","silent-0011","silent-0027","silent-0046"],"repeats":[],"check":0},"code_proposals":["silent-proposal-e18d3f18e6cac2a0","silent-proposal-1697e17b9ae127ca"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261007-201301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11648-0b4e-7202-bd33-15cf9351c7c5
+轮数：1；工具调用：command_execution×59
+token：输入 207.1k、输出 42.2k（其中推理 14.8k）、cache 读 3456.8k、cache 写 0（命中 94.3%）
+成本：未提供
+耗时：1430.2 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 7.7 s、首次工具 12.1 s、末次工具结束 1395.1 s；工具内共 42.8 s，其余（模型生成、推理、网络）1384.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×27；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T20-13-02-01a11648-0b4e-7202-bd33-15cf9351c7c5.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-201301-postmortem.jsonl

@@ -1,0 +1,40 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "YQL8RZ8BWN1E"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "YQL8RZ8BWN1E",
+      "where": "agent/src/sl/explore.ts:896",
+      "what": "SL残血统计将不可击杀自爆占位血用于参考路径排序（排序使用点:913）",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0250"
+    ],
+    "updated": [
+      "silent-0017",
+      "silent-0205",
+      "silent-0011",
+      "silent-0027",
+      "silent-0046"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-1697e17b9ae127ca"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261007-201301-postmortem/report.md"
+}
