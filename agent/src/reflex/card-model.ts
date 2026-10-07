@@ -12,6 +12,7 @@
  */
 
 import { cardUpgrade } from "../knowledge/card-upgrades.js";
+import { observedApotheosisUpgrade } from "./silent-apotheosis.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup } from "../core/util/json.js";
 
@@ -63,6 +64,9 @@ export interface CardModel {
   burstSkills?: number;
   /** KV0JHNJCKXLS A10 F33 T1: plain Bullet Time frees the existing hand and stops this turn's draws. */
   bulletTime?: boolean;
+  /** VLZ6CCT8AQ0A A10: ordinary Apotheosis, with unverified upgrades kept unknown. */
+  apotheosis?: boolean;
+  apotheosisUpgrade?: UpgradeDelta;
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
   block: number;
@@ -724,6 +728,11 @@ export function replayOf(rendered: string): number {
 
 /** The numbers upgrading a card changes, as CardModel fields (the solver adds them: Blessing of the Forge). */
 export interface UpgradeDelta {
+  damageBase?: number;
+  blockBase?: number;
+  fasten?: number;
+  enemyTempStrengthLoss?: number;
+  poisonPerTurn?: number;
   damage?: number;
   hits?: number;
   maulIncrease?: number;
@@ -785,10 +794,14 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
     upgraded: true,
     name: card.name.endsWith("+") ? card.name : `${card.name}+`,
     damage: card.damage === null && !delta.damage ? null : add(card.damage ?? 0, delta.damage),
-    ...(card.damageBase !== undefined && delta.damage ? { damageBase: card.damageBase + delta.damage } : {}),
+    ...(card.damageBase !== undefined && (delta.damageBase ?? delta.damage) ? { damageBase: card.damageBase + (delta.damageBase ?? delta.damage)! } : {}),
     hits: Math.max(0, add(card.hits, delta.hits)),
     ...(card.maulIncrease !== undefined || delta.maulIncrease !== undefined ? { maulIncrease: add(card.maulIncrease, delta.maulIncrease) } : {}),
     block: Math.max(0, add(card.block, delta.block)),
+    ...(delta.blockBase !== undefined ? { blockBase: add(card.blockBase, delta.blockBase) } : {}),
+    ...(delta.fasten !== undefined ? { fasten: add(card.fasten, delta.fasten) } : {}),
+    ...(delta.enemyTempStrengthLoss !== undefined ? { enemyTempStrengthLoss: add(card.enemyTempStrengthLoss, delta.enemyTempStrengthLoss) } : {}),
+    ...(delta.poisonPerTurn !== undefined ? { poisonPerTurn: add(card.poisonPerTurn, delta.poisonPerTurn) } : {}),
     vulnerable: add(card.vulnerable, delta.vulnerable),
     weak: add(card.weak, delta.weak),
     strength: add(card.strength, delta.strength),
@@ -801,6 +814,13 @@ export function applyUpgrade(card: CardModel, delta: UpgradeDelta): CardModel {
     ...(card.retaliate !== undefined || delta.retaliate ? { retaliate: add(card.retaliate, delta.retaliate) } : {}),
     ...(card.powerAmount !== undefined || delta.powerAmount ? { powerAmount: add(card.powerAmount, delta.powerAmount) } : {}),
   };
+}
+
+/** Apply only a certified own-character pair; absent coverage must remain visible to the solver. */
+export function applyApotheosisUpgrade(card: CardModel): CardModel {
+  const upgraded = card.type === "Potion" || card.upgraded || card.cardId === "ASCENDERS_BANE" ? card
+    : card.apotheosisUpgrade ? applyUpgrade(card, card.apotheosisUpgrade) : { ...card, known: false };
+  return card.drawn ? { ...upgraded, drawn: card.drawn.map(applyApotheosisUpgrade) } : upgraded;
 }
 
 /** A Strike card (「名字中有打击」: the game data's Strike tag, the same cards as STRIKE in the id). */
@@ -1013,7 +1033,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     known = true;
   }
 
-  return {
+  const model: CardModel = {
     index,
     key: `c${index}`,
     cardId,
@@ -1120,6 +1140,26 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(hitPerHpLoss ? { hitPerHpLoss } : {}),
     text: str(card["resolved_rules_text"]) || info?.description || "",
   };
+  if (character.toLowerCase() === "silent" && ascension === 10) {
+    if (cardId === "APOTHEOSIS" && !model.upgraded && model.cost === 2 && !model.xCost &&
+      template === "升级你的全部卡牌。" && str(card["resolved_rules_text"]).replace(/\s+/g, "") === "固有。升级你的全部卡牌。消耗。" && !model.replay) {
+      model.apotheosis = true;
+      model.known = true;
+      model.flatValue = 0;
+      model.exhausts = true;
+    }
+    const rawUpgrade = observedApotheosisUpgrade(card);
+    if (rawUpgrade) {
+      const upgraded = modelHandCard(rawUpgrade, fallbackIndex, knowledge, character, ascension);
+      const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn"] as const;
+      model.apotheosisUpgrade = {};
+      for (const field of fields) {
+        const change = (upgraded[field] ?? 0) - (model[field] ?? 0);
+        if (change) model.apotheosisUpgrade[field] = change;
+      }
+    }
+  }
+  return model;
 }
 
 /**
