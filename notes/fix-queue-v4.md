@@ -713,3 +713,5 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 - 涉及出牌、药水、SL、终局价值的经验，除写进经验库外必须同时出代码提案（经验库只到大脑，小脑和药水规则读不到）。
 - **Roy 授权**：有足够理由和数据支持时，学习者可以直接修改 Roy 定的规则（如药水持有价值、SL 读档条件、只在必死时读档等），按 live 流程自测上线，然后**通知 Roy**：写进 notes/for-dai.md 和 ops/inbox-dev.md，写明旧规则、新规则、数据和证据局号、预期影响、怎么回退；台账登记。无数据支持的改动仍不允许。
 - 同步改 docs/learning-protocol.md、AGENTS.md、learner/tasks/*（fix-batch / strategy-proposal 不再把「人定规则」一律当作不可动）。
+
+- 2026-10-07 12:23 Roy授权Codex-only功能代码实际源88fe83e5→live910604a4/发布f8dd742d/唯一V4.codex-only1及main54文件一致已核实；本轮main同步0b1417c563cd5929e0aedbfeb22453b40b8eb176补全live最终源码/发布祖先，并登记经验70的19项原提案shipped。当前对局已加载新代码，固定合后沙箱tsc0/224文件2374例通过，完整外部另经经验70最终树覆盖；没有游戏知识账本ID，不冒建bug-infra。裸JSON报告解析及旧autoplay安全WAIT_PID加载缺口已交20261007-121034-fix-batch/PID1440022，运行保护尚未全激活，原功能报告shipped=false/调度failed及拒绝留史，后续完成事件续办，不重复派整个功能。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
