@@ -1,0 +1,480 @@
+[
+  {
+    "line": 2611,
+    "row": {
+      "ts": "2026-10-07T20:58:52.494Z",
+      "run": "KFRDELW2TH2P",
+      "floor": 1,
+      "trigger": "start",
+      "observed_ts": "2026-10-07T20:58:27.569Z",
+      "merged_into": "event/plan",
+      "decision_id": "76e3c2aa-ab90-4381-bfb0-b46c79a13a22",
+      "plan": {
+        "runId": "KFRDELW2TH2P",
+        "act": 1,
+        "floor": 1,
+        "hpPct": 0.8,
+        "trigger": "start",
+        "archetype": "Poison scaling with efficient attacks and dexterity defense",
+        "want": [
+          "POISONED_STAB",
+          "NOXIOUS_FUMES",
+          "DEADLY_POISON",
+          "FOOTWORK",
+          "ACCELERANT",
+          "BACKFLIP"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "NIGHTMARE",
+          "ACCURACY",
+          "FINISHER",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT",
+          "DEFEND_SILENT"
+        ],
+        "blockTarget": 8,
+        "elites": "normal",
+        "rest": "auto",
+        "bossPrep": "Establish poison and dexterity during sleep. Upgrade key poison sources, retain reliable block, and bring potions to withstand attacks and repeated attribute drains.",
+        "summary": "Take efficient damage early, then build poison and dexterity with draw. Add useful area damage, remove basics gradually, and fight elites only with adequate health and potions."
+      },
+      "raw": {
+        "archetype": "Poison scaling with efficient attacks and dexterity defense",
+        "want": [
+          "POISONED_STAB",
+          "NOXIOUS_FUMES",
+          "DEADLY_POISON",
+          "FOOTWORK",
+          "ACCELERANT",
+          "BACKFLIP"
+        ],
+        "avoid": [
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "NIGHTMARE",
+          "ACCURACY",
+          "FINISHER",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT",
+          "DEFEND_SILENT"
+        ],
+        "block_target": 8,
+        "elites": "normal",
+        "rest": "auto",
+        "boss_prep": "Establish poison and dexterity during sleep. Upgrade key poison sources, retain reliable block, and bring potions to withstand attacks and repeated attribute drains.",
+        "summary": "Take efficient damage early, then build poison and dexterity with draw. Add useful area damage, remove basics gradually, and fight elites only with adequate health and potions."
+      },
+      "question": {
+        "label": "event/plan",
+        "latency_ms": 18171,
+        "input_tokens": 127493,
+        "output_tokens": 456,
+        "reasoning_tokens": 226,
+        "effort": ""
+      },
+      "memory_chars": 5797
+    }
+  },
+  {
+    "line": 2612,
+    "row": {
+      "ts": "2026-10-07T21:04:50.289Z",
+      "run": "KFRDELW2TH2P",
+      "floor": 8,
+      "trigger": "hp_drop",
+      "observed_ts": "2026-10-07T21:04:20.199Z",
+      "merged_into": "rest/plan",
+      "decision_id": "7107b0c9-38ef-460c-9dbb-8592ca48a074",
+      "plan": {
+        "runId": "KFRDELW2TH2P",
+        "act": 1,
+        "floor": 8,
+        "hpPct": 0.34285714285714286,
+        "trigger": "hp_drop",
+        "archetype": "Poison scaling with efficient defense and draw",
+        "want": [
+          "NOXIOUS_FUMES",
+          "FOOTWORK",
+          "ACCELERANT",
+          "BACKFLIP",
+          "DEADLY_POISON",
+          "MIRAGE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "blockTarget": 9,
+        "elites": "normal",
+        "rest": "auto",
+        "bossPrep": "Build poison and dexterity during sleep. Upgrade poison scaling or Neutralize when healthy; preserve reliable block and bring potions for attacks after attribute drains.",
+        "summary": "Recover now and delay the elite until after another rest. Two Snakebites provide initial poison; prioritize sustained poison, dexterity, and draw. Avoid more expensive attacks, remove Strikes, and upgrade core cards when safe."
+      },
+      "raw": {
+        "archetype": "Poison scaling with efficient defense and draw",
+        "want": [
+          "NOXIOUS_FUMES",
+          "FOOTWORK",
+          "ACCELERANT",
+          "BACKFLIP",
+          "DEADLY_POISON",
+          "MIRAGE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 9,
+        "elites": "normal",
+        "rest": "auto",
+        "boss_prep": "Build poison and dexterity during sleep. Upgrade poison scaling or Neutralize when healthy; preserve reliable block and bring potions for attacks after attribute drains.",
+        "summary": "Recover now and delay the elite until after another rest. Two Snakebites provide initial poison; prioritize sustained poison, dexterity, and draw. Avoid more expensive attacks, remove Strikes, and upgrade core cards when safe."
+      },
+      "question": {
+        "label": "rest/plan",
+        "latency_ms": 20206,
+        "input_tokens": 139809,
+        "output_tokens": 513,
+        "reasoning_tokens": 276,
+        "effort": ""
+      },
+      "memory_chars": 9942
+    }
+  },
+  {
+    "line": 2613,
+    "row": {
+      "ts": "2026-10-07T21:09:06.251Z",
+      "run": "KFRDELW2TH2P",
+      "floor": 16,
+      "trigger": "review",
+      "observed_ts": "2026-10-07T21:08:46.128Z",
+      "plan": {
+        "runId": "KFRDELW2TH2P",
+        "act": 1,
+        "floor": 16,
+        "hpPct": 0.6428571428571429,
+        "trigger": "review",
+        "archetype": "Poison scaling with efficient defense and draw",
+        "want": [
+          "FOOTWORK",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "MIRAGE",
+          "PIERCING_WAIL",
+          "ADRENALINE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "blockTarget": 9,
+        "elites": "avoid",
+        "rest": "auto",
+        "bossPrep": "Establish Accelerant during sleep, then stack poison and Bubble Bubble. Use poison potion to accelerate damage, shivs before strength drains, and block to preserve the poison window.",
+        "summary": "Existing poison supplies scaling; prioritize defense and draw rather than more expensive poison cards. Remove Strikes, upgrade core powers when safe, and avoid elites until survival improves. Boss damage estimates remain unavailable."
+      },
+      "raw": {
+        "archetype": "Poison scaling with efficient defense and draw",
+        "want": [
+          "FOOTWORK",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "MIRAGE",
+          "PIERCING_WAIL",
+          "ADRENALINE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 9,
+        "elites": "avoid",
+        "rest": "auto",
+        "boss_prep": "Establish Accelerant during sleep, then stack poison and Bubble Bubble. Use poison potion to accelerate damage, shivs before strength drains, and block to preserve the poison window.",
+        "summary": "Existing poison supplies scaling; prioritize defense and draw rather than more expensive poison cards. Remove Strikes, upgrade core powers when safe, and avoid elites until survival improves. Boss damage estimates remain unavailable."
+      },
+      "latency_ms": 18808,
+      "input_tokens": 126929,
+      "output_tokens": 544,
+      "cache_hit_tokens": 0,
+      "reasoning_tokens": 346,
+      "effort": "",
+      "memory_chars": 13337
+    }
+  },
+  {
+    "line": 2614,
+    "row": {
+      "ts": "2026-10-07T21:10:47.880Z",
+      "run": "KFRDELW2TH2P",
+      "floor": 18,
+      "trigger": "act",
+      "observed_ts": "2026-10-07T21:10:24.297Z",
+      "merged_into": "event/act-plan",
+      "decision_id": "758cc37c-c2ff-4463-887a-745b0d6ad93a",
+      "plan": {
+        "runId": "KFRDELW2TH2P",
+        "act": 2,
+        "floor": 18,
+        "hpPct": 0.8571428571428571,
+        "trigger": "act",
+        "archetype": "Poison scaling with dexterity, efficient defense, and draw",
+        "want": [
+          "FOOTWORK",
+          "MIRAGE",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "PIERCING_WAIL",
+          "ADRENALINE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "blockTarget": 9,
+        "elites": "avoid",
+        "rest": "auto",
+        "bossPrep": "Establish Accelerant and Footwork early. Burst poison to overcome healing; preserve defensive potions and Piercing Wail for multihits. Respect any card-play limit.",
+        "summary": "Take reliable extra energy and the three-rest, no-elite route. Buy defense and draw, remove Strikes, and prioritize Accelerant upgrades when healthy. Existing poison needs stronger survival support, not more expensive sources."
+      },
+      "raw": {
+        "archetype": "Poison scaling with dexterity, efficient defense, and draw",
+        "want": [
+          "FOOTWORK",
+          "MIRAGE",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "PIERCING_WAIL",
+          "ADRENALINE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 9,
+        "elites": "avoid",
+        "rest": "auto",
+        "boss_prep": "Establish Accelerant and Footwork early. Burst poison to overcome healing; preserve defensive potions and Piercing Wail for multihits. Respect any card-play limit.",
+        "summary": "Take reliable extra energy and the three-rest, no-elite route. Buy defense and draw, remove Strikes, and prioritize Accelerant upgrades when healthy. Existing poison needs stronger survival support, not more expensive sources."
+      },
+      "question": {
+        "label": "event/act-plan",
+        "latency_ms": 23009,
+        "input_tokens": 133590,
+        "output_tokens": 557,
+        "reasoning_tokens": 257,
+        "effort": ""
+      },
+      "memory_chars": 16112
+    }
+  },
+  {
+    "line": 2615,
+    "row": {
+      "ts": "2026-10-07T21:13:14.139Z",
+      "run": "KFRDELW2TH2P",
+      "floor": 22,
+      "trigger": "hp_drop",
+      "observed_ts": "2026-10-07T21:12:52.198Z",
+      "merged_into": "event/choose",
+      "decision_id": "39a9aea0-fb77-41dd-9024-fe67e734c3fd",
+      "plan": {
+        "runId": "KFRDELW2TH2P",
+        "act": 2,
+        "floor": 22,
+        "hpPct": 0.35714285714285715,
+        "trigger": "hp_drop",
+        "archetype": "Poison scaling supported by dexterity, mitigation, and draw",
+        "want": [
+          "FOOTWORK",
+          "PIERCING_WAIL",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "MALAISE",
+          "ADRENALINE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "blockTarget": 9,
+        "elites": "avoid",
+        "rest": "auto",
+        "bossPrep": "Upgrade Accelerant when safe. Establish poison and dexterity, use Burst with Mirage or poison, and reserve strength reduction for multihits. Respect card-play limits.",
+        "summary": "Keep the three-rest route and heal at the next fire. Spend shop gold on defense, mitigation, and draw. Existing poison needs survival support; upgrade Accelerant when health permits."
+      },
+      "raw": {
+        "archetype": "Poison scaling supported by dexterity, mitigation, and draw",
+        "want": [
+          "FOOTWORK",
+          "PIERCING_WAIL",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "MALAISE",
+          "ADRENALINE"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 9,
+        "elites": "avoid",
+        "rest": "auto",
+        "boss_prep": "Upgrade Accelerant when safe. Establish poison and dexterity, use Burst with Mirage or poison, and reserve strength reduction for multihits. Respect card-play limits.",
+        "summary": "Keep the three-rest route and heal at the next fire. Spend shop gold on defense, mitigation, and draw. Existing poison needs survival support; upgrade Accelerant when health permits."
+      },
+      "question": {
+        "label": "event/choose",
+        "latency_ms": 19304,
+        "input_tokens": 132661,
+        "output_tokens": 569,
+        "reasoning_tokens": 332,
+        "effort": ""
+      },
+      "memory_chars": 13430
+    }
+  },
+  {
+    "line": 2616,
+    "row": {
+      "ts": "2026-10-07T21:19:23.672Z",
+      "run": "KFRDELW2TH2P",
+      "floor": 31,
+      "trigger": "review",
+      "observed_ts": "2026-10-07T21:18:52.375Z",
+      "merged_into": "reward/card",
+      "decision_id": "f7e90ab8-1e46-4ed2-98a7-02dd777ee4ea",
+      "plan": {
+        "runId": "KFRDELW2TH2P",
+        "act": 2,
+        "floor": 31,
+        "hpPct": 0.21428571428571427,
+        "trigger": "review",
+        "archetype": "Poison scaling with efficient defense and draw",
+        "want": [
+          "FOOTWORK",
+          "PIERCING_WAIL",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "ADRENALINE",
+          "ACROBATICS"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "blockTarget": 9,
+        "elites": "avoid",
+        "rest": "heal",
+        "bossPrep": "Heal at the final fire. Establish Accelerant and poison, use Iron Heart before attacks, and Burst poison or Mirage. Respect Sloth’s play limit.",
+        "summary": "Existing poison needs survival support and faster setup. Add defense now, heal before the boss, then prioritize dexterity and draw. Remove Strikes and upgrade Accelerant when safe."
+      },
+      "raw": {
+        "archetype": "Poison scaling with efficient defense and draw",
+        "want": [
+          "FOOTWORK",
+          "PIERCING_WAIL",
+          "BACKFLIP",
+          "NOXIOUS_FUMES",
+          "ADRENALINE",
+          "ACROBATICS"
+        ],
+        "avoid": [
+          "SNAKEBITE",
+          "GRAND_FINALE",
+          "KNIFE_TRAP",
+          "FINISHER",
+          "ACCURACY",
+          "METAMORPHOSIS"
+        ],
+        "remove": [
+          "STRIKE_SILENT"
+        ],
+        "block_target": 9,
+        "elites": "avoid",
+        "rest": "heal",
+        "boss_prep": "Heal at the final fire. Establish Accelerant and poison, use Iron Heart before attacks, and Burst poison or Mirage. Respect Sloth’s play limit.",
+        "summary": "Existing poison needs survival support and faster setup. Add defense now, heal before the boss, then prioritize dexterity and draw. Remove Strikes and upgrade Accelerant when safe."
+      },
+      "question": {
+        "label": "reward/card",
+        "latency_ms": 25297,
+        "input_tokens": 131313,
+        "output_tokens": 696,
+        "reasoning_tokens": 472,
+        "effort": ""
+      },
+      "memory_chars": 16896
+    }
+  }
+]
