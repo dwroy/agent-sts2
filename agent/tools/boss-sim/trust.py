@@ -113,10 +113,25 @@ def main():
     parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-trust.json")
     parser.add_argument("--md")
     parser.add_argument("--source", default="")
+    parser.add_argument("--fights", help="Silent: strictly extracted finished fights (required)")
+    parser.add_argument("--provenance", help="Silent: immutable model/data provenance JSON")
     args = parser.parse_args()
     character = character_key(args.character)
     args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-trust.json")
     split = json.load(open(args.split))
+    if character == "silent":
+        if not args.fights or not args.provenance:
+            parser.error("Silent calibration requires --fights and --provenance; no legacy parameters")
+        from character_extract import read_jsonl
+        from silent_calibration import calibrate
+        out = calibrate(load(args.results), read_jsonl(args.fights), turns_of(args.turns), split,
+                        json.load(open(args.provenance)))
+        os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
+        with open(args.out, "w", encoding="utf8") as handle:
+            json.dump(out, handle, ensure_ascii=False, indent=1)
+            handle.write("\n")
+        print(json.dumps({"character": character, "trusted_b2": out["trusted_b2"], "trusted_b3": out["trusted_b3"]}))
+        return
     val, tune = character_keys(split[args.set], args.runs, character), character_keys(split["tune"], args.runs, character)
     if not val:
         print(json.dumps({"character": character, "error": f"no {character} fights in {args.set}; nothing written"}))

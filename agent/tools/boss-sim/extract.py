@@ -83,7 +83,14 @@ def main(argv=None):
     parser.add_argument("--no-sync", action="store_true")
     parser.add_argument("--db")
     parser.add_argument("--logs")
+    parser.add_argument("--character", help="strict finished-run character extraction, including censored SL attempts")
     args = parser.parse_args(argv)
+    if args.character:
+        from character_extract import extract
+        db = args.db or os.path.join(ROOT, "data", "logdb")
+        logs = args.logs or os.path.join(ROOT, "logs")
+        print(json.dumps(extract(logs, db, Path(args.out).parent, args.character.lower(), args.ascension), ensure_ascii=False))
+        return 0
     import query as logquery  # noqa: E402
     import sync as logsync  # noqa: E402
     db = os.path.abspath(args.db or os.environ.get("LOGDB_DIR", logsync.DEFAULT_DB))

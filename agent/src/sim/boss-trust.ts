@@ -7,9 +7,14 @@
  * than 15 points off its win rate, or HP through block outside 0.7-1.3x the log's; the reason says which.
  */
 import { readFileSync } from "node:fs";
-import { KNOWLEDGE_DIR, knowledgeFile, onKnowledgeCharacterChange } from "../knowledge/files.js";
+import { KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile, onKnowledgeCharacterChange } from "../knowledge/files.js";
 
 export interface BossTrustData {
+  character?: string;
+  source?: { completed_max_asc?: number };
+  overall?: Record<string, { platt?: { a: number; b: number; c?: number } | null }>;
+  ascension_low?: Record<string, Record<string, string>>;
+  stage_low?: Record<string, Record<string, string>>;
   criteria: { min_fights: number; brier_ratio: number; max_gap: number; leak_range: [number, number]; starts: Record<string, string> };
   /** Boss key (boss-lines bossKeyOf, boss-start bossKey) -> why its B2 numbers are information only (English). */
   low_trust_b2: Record<string, string>;
@@ -35,6 +40,8 @@ export const BOSS_TRUST_PATH = bossTrustPath();
 export function loadBossTrust(path = bossTrustPath()): BossTrustData | null {
   try {
     const data = JSON.parse(readFileSync(path, "utf8")) as Partial<BossTrustData>;
+    if (knowledgeCharacter() === "silent" && data.character !== "silent") return null;
+    if (data.character && data.character !== knowledgeCharacter()) return null;
     return data.low_trust_b2 && data.low_confidence_b3 && data.criteria ? (data as BossTrustData) : null;
   } catch {
     return null;
@@ -46,16 +53,41 @@ export const LOW_TRUST_B2: Record<string, string> = {};
 
 /** B3's low-confidence bosses and why (Chinese): the data file's, or every boss when it is missing. */
 export const LOW_CONFIDENCE_B3: Record<string, string> = {};
+let activeTrust: BossTrustData | null = null;
+
+/** Silent's own calibration only; no fallback to another character's parameters. */
+export function silentBossCalibration(start: "start" | "mid" | "pre"): { a: number; b: number; c?: number } | null {
+  if (knowledgeCharacter() !== "silent") return null;
+  const fit = activeTrust?.overall?.[start === "pre" ? "pre" : "t1"]?.platt;
+  return fit && Number.isFinite(fit.a) && Number.isFinite(fit.b) && fit.b > 0
+    && (fit.c === undefined || Number.isFinite(fit.c)) ? fit : null;
+}
+
+/** The consumer's overall and ascension-specific validation limitations. */
+export function bossTrustReason(key: string, use: "b2" | "b3", asc?: number | null, floor?: number | null): string | null {
+  const low = use === "b2" ? LOW_TRUST_B2 : LOW_CONFIDENCE_B3;
+  if (knowledgeCharacter() !== "silent") return low[key] ?? null;
+  const scope = asc == null ? null : activeTrust?.ascension_low?.[use]?.[String(asc)]
+    ?? (activeTrust?.source?.completed_max_asc !== undefined && asc > activeTrust.source.completed_max_asc
+      ? `A${asc} 本进阶暂无静默验证样本` : null);
+  const stage = floor == null ? null : activeTrust?.stage_low?.[use]?.[String(floor)];
+  return [low[key], scope, stage].filter(Boolean).join("; ") || null;
+}
 
 /** Fills the two tables in place (other modules hold them by reference) from the current character's file. */
 function fillTrust(): void {
   const trust = loadBossTrust();
+  activeTrust = trust;
   for (const table of [LOW_TRUST_B2, LOW_CONFIDENCE_B3]) for (const key of Object.keys(table)) delete table[key];
   Object.assign(
     LOW_TRUST_B2,
     trust ? trust.low_trust_b2 : Object.fromEntries(BOSS_KEYS.map((key) => [key, "the simulator's validation data (src/sim/boss-trust.json) could not be read"])),
   );
   Object.assign(LOW_CONFIDENCE_B3, trust ? trust.low_confidence_b3 : Object.fromEntries(BOSS_KEYS.map((key) => [key, "模拟器的验证数据（src/sim/boss-trust.json）读不到"])));
+  if (knowledgeCharacter() === "silent") {
+    if (!silentBossCalibration("start")) Object.assign(LOW_TRUST_B2, Object.fromEntries(BOSS_KEYS.map((key) => [key, "静默整体校准不足"])));
+    if (!silentBossCalibration("pre")) Object.assign(LOW_CONFIDENCE_B3, Object.fromEntries(BOSS_KEYS.map((key) => [key, "静默整体校准不足"])));
+  }
 }
 
 fillTrust();

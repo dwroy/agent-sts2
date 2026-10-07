@@ -25,6 +25,8 @@ import { Worker } from "node:worker_threads";
 import { killOrders, simulateFight, type KillGroup, type KillOrder, type RolloutInput } from "../reflex/rollout.js";
 import { potionCost, potionIdOf } from "../reflex/potion-cost.js";
 import type { Plan } from "../reflex/turn-solver.js";
+import { knowledgeCharacter } from "../knowledge/files.js";
+import { silentBossCalibration } from "./boss-trust.js";
 
 /** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
 export const BOSS_SIM_MAX_TURNS = 30;
@@ -433,11 +435,16 @@ export const BOSS_SIM_PLATT: Record<"start" | "mid" | "pre", { a: number; b: num
 };
 
 /** A line's calibrated win rate (BOSS_SIM_PLATT), its raw rate clipped to half a sample from 0 and 1 first. */
-export function calibratedWinProb(winProb: number, samples: number, start: keyof typeof BOSS_SIM_PLATT): number {
+export function calibratedWinProb(winProb: number, samples: number, start: keyof typeof BOSS_SIM_PLATT, asc = 0): number {
   const eps = 0.5 / (samples + 1);
   const p = Math.min(1 - eps, Math.max(eps, winProb));
-  const { a, b } = BOSS_SIM_PLATT[start];
-  const z = Math.max(-30, Math.min(30, a + b * Math.log(p / (1 - p))));
+  const silent = knowledgeCharacter() === "silent";
+  const fit: { a: number; b: number; c?: number } | null = silent ? silentBossCalibration(start) : BOSS_SIM_PLATT[start];
+  // A missing Silent fit stays raw/low confidence instead of borrowing Ironclad's Platt map.
+  if (!fit) return winProb;
+  const { a, b } = fit;
+  const base = a + b * Math.log(p / (1 - p));
+  const z = Math.max(-30, Math.min(30, silent ? base + (fit.c ?? 0) * (asc - 5) / 5 : base));
   return 1 / (1 + Math.exp(-z));
 }
 

@@ -55,7 +55,7 @@ import {
   type LineComparison,
 } from "./boss-sim.js";
 import { knowledgeDataDirs } from "../knowledge/files.js";
-import { LOW_TRUST_B2 } from "./boss-trust.js";
+import { LOW_TRUST_B2, bossTrustReason } from "./boss-trust.js";
 import { identityToken, memoKey, type ComputeMemo } from "./compute-memo.js";
 import { claimSimCores, leaveSimCores } from "./sim-pools.js";
 
@@ -152,7 +152,7 @@ export function lowTrustOfState(state: GameState): string | null {
   const enemies = (state.raw["combat"] as { enemies?: unknown } | null | undefined)?.enemies;
   const ids = Array.isArray(enemies) ? enemies.map((e) => String((e as Record<string, unknown> | null)?.["enemy_id"] ?? "")) : [];
   const boss = bossKeyOf(ids);
-  return boss ? (LOW_TRUST_BOSSES[boss] ?? null) : null;
+  return boss ? bossTrustReason(boss, "b2", state.run?.ascension, state.run?.floor) : null;
 }
 
 // ---------------------------------------------------------------- input
@@ -653,7 +653,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     if (left < bossLinesOptions.minMs) return { available: false, reason: `this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`, ms: ms() };
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
-    const lowTrust = boss ? (LOW_TRUST_BOSSES[boss] ?? null) : null;
+    const lowTrust = boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null;
     const samples = args.samples ?? bossLinesOptions.samples;
     const memoed = args.memo ? recallLines(args.memo, input, args.lines, samples, left) : null;
     let run: LinesResult;
@@ -683,7 +683,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const start = turnNow <= 1 ? "start" : "mid";
     const byPlan = new Map<Plan, LineSim>();
     run.lines.forEach((line, i) => {
-      const calibrated = calibratedWinProb(line.winProb, line.samples, start);
+      const calibrated = calibratedWinProb(line.winProb, line.samples, start, args.state.run?.ascension ?? 0);
       const vsBest = rank.vsBest[i] ?? null;
       const winTied = rank.winTied[i] ?? false;
       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied, text: lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
