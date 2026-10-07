@@ -98,6 +98,10 @@ def read_report(path):
         try: report=json.loads(block)
         except ValueError: continue
         if isinstance(report,dict) and report.get('task') == 'ascension-audit': return report
+    # The launcher may append its summary to a leading JSON report; never scan prose for braces.
+    try: report,_=json.JSONDecoder().raw_decode(text.lstrip())
+    except ValueError: return {}
+    if isinstance(report,dict) and report.get('task') == 'ascension-audit': return report
     return {}
 
 
