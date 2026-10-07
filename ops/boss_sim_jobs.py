@@ -93,6 +93,7 @@ def candidates(character, trust, runs, attempts, sources, turns, level, complete
                 evidence = {"character": character, "boss": boss, "mode": mode, "calibration": calibration,
                             "artifact": trust.get("refresh", {}).get("artifact"), "metrics": entry["t1"],
                             "overall": trust["overall"]["t1"]["brier"], "bias": bias, "ascension": level,
+                            "split": trust.get("split"),
                             "death_runs": deaths, "recent_death_runs": last20, "logged_keys": source_keys,
                             "fight_keys": fight_keys, "calibrated_keys": trust.get("refresh", {}).get("keys", [])}
                 evidence["key"] = digest(evidence)
@@ -260,7 +261,7 @@ def check(state, root, scripts, character, alive, stamp, start):
         return None
 
 
-def load_gate(root, worktree, gate_path):
+def load_gate(root, worktree, gate_path, evidence):
     import importlib.util
     spec = importlib.util.spec_from_file_location("boss_acceptance", Path(__file__).resolve().parents[1] / "agent/tools/boss-sim/acceptance.py")
     gate = importlib.util.module_from_spec(spec)
@@ -275,6 +276,7 @@ def load_gate(root, worktree, gate_path):
             raise ValueError("acceptance input changed")
         snapshots.append(json.loads(raw))
     isolation = receipt["isolation"]
+    gate.verify_dispatch(evidence, snapshots[0], receipt["character"], receipt["boss"], receipt["mode"], isolation["base"])
     fresh = gate.isolate(worktree, isolation["base"], isolation["head"], Path(gate_path).parent / "scheduler-isolation")
     result = gate.evaluate(*snapshots, receipt["character"], receipt["boss"], receipt["mode"], fresh)
     if result["accepted"] != receipt["accepted"]:
@@ -353,7 +355,7 @@ def finish(state, bid, rc, root, directory, enqueue):
     try:
         if rc or report.get("task") != "fix-batch" or result.get("evidence_key") != evidence["key"]:
             raise ValueError("failed learner or mismatched evidence")
-        gate, replay = load_gate(root, batch["worktree"], result["acceptance"])
+        gate, replay = load_gate(root, batch["worktree"], result["acceptance"], evidence)
         if any(gate.get(k) != evidence[k] for k in ("character", "boss", "mode")):
             raise ValueError("foreign acceptance receipt")
         if gate.get("isolation", {}).get("base") != batch.get("base") or not batch.get("base"):

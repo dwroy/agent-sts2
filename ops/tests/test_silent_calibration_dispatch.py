@@ -12,15 +12,13 @@ spec.loader.exec_module(jobs)
 
 
 class CalibrationDispatch(unittest.TestCase):
-    task = "silent-boss-calibration"
-    request_file = jobs.FEATURE_REQUEST
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = self.temp.name
-        self.request = {"state": "pending", "task": self.task, "character": "silent",
+        self.request = {"state": "pending", "task": "silent-boss-calibration", "character": "silent",
                         "authorized_by": "Roy", "request_id": "fixed-roy-request"}
-        path = Path(self.root, self.request_file)
+        path = Path(self.root, jobs.FEATURE_REQUEST)
         path.parent.mkdir()
         path.write_text(json.dumps(self.request))
         self.state = {"batches": {"old-fix": {"task": "fix-batch", "state": "running", "pid": 10,
@@ -34,9 +32,9 @@ class CalibrationDispatch(unittest.TestCase):
         with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, "pane")) as start:
             self.assertEqual(self.launch(), ("first-fix-batch", 20))
             argv = start.call_args.args[0]
-            self.assertEqual(argv[-3:], ["fix-batch", str(Path(self.root, ".worktrees", self.task)), self.task])
+            self.assertEqual(argv[-3:], ["fix-batch", str(Path(self.root, ".worktrees/silent-boss-calibration")), "silent-boss-calibration"])
             batch = self.state["batches"]["first-fix-batch"]
-            self.assertEqual(batch["learner_task"], self.task)
+            self.assertEqual(batch["learner_task"], "silent-boss-calibration")
             self.assertEqual(batch["feature_request"], "fixed-roy-request")
             self.assertEqual(batch["pane"], "pane")
             self.assertIsNone(self.launch(stamp="second"))
@@ -54,7 +52,7 @@ class CalibrationDispatch(unittest.TestCase):
             self.assertIsNone(self.launch())
             start.assert_not_called()
         self.state["batches"]["other"] = {"task": "fix-batch", "state": "running", "pid": 30,
-                       "worktree": str(Path(self.root, ".worktrees", self.task))}
+                       "worktree": str(Path(self.root, ".worktrees/silent-boss-calibration"))}
         with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner") as start:
             self.assertIsNone(self.launch())
             start.assert_not_called()
@@ -67,7 +65,7 @@ class CalibrationDispatch(unittest.TestCase):
             start.assert_not_called()
 
     def test_completed_and_backoff_and_maximum_attempts_refuse(self):
-        prior = {"feature_request": "fixed-roy-request", "task": "fix-batch", "learner_task": self.task,
+        prior = {"feature_request": "fixed-roy-request", "task": "fix-batch", "learner_task": "silent-boss-calibration",
                  "state": "done", "pid": 20}
         self.state["batches"]["prior"] = prior
         with patch.object(jobs, "start_learner") as start:
@@ -80,7 +78,7 @@ class CalibrationDispatch(unittest.TestCase):
             start.assert_not_called()
 
     def test_request_cannot_choose_another_template_or_character(self):
-        path = Path(self.root, self.request_file)
+        path = Path(self.root, jobs.FEATURE_REQUEST)
         for field, value in (("task", "../../other"), ("character", "ironclad"), ("authorized_by", "unknown"), ("request_id", "bad;command")):
             path.write_text(json.dumps({**self.request, field: value}))
             with patch.object(jobs, "start_learner") as start:
@@ -120,66 +118,6 @@ class CalibrationDispatch(unittest.TestCase):
         (logs / "sl-attempts.jsonl").write_text("")
         with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)):
             self.assertEqual(jobs.calibration_job(self.state, self.root, str(Path(__file__).parents[1]), "silent", lambda pid: True, "asc"), ("asc-fix-batch", 20))
-
-
-class CodexOnlyDispatch(CalibrationDispatch):
-    task = "codex-only-brain"
-    request_file = jobs.FEATURE_REQUESTS[task]
-
-    def test_independent_of_running_calibration_and_normal_fixes(self):
-        self.state["batches"]["boss"] = {
-            "task": "fix-batch", "learner_task": "silent-boss-calibration",
-            "feature_request": "boss-request", "state": "running", "pid": 30,
-            "worktree": str(Path(self.root, ".worktrees/silent-boss-calibration"))}
-        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)):
-            self.assertEqual(self.launch(), ("first-fix-batch", 20))
-        self.assertEqual(self.state["batches"]["boss"]["pid"], 30)
-        self.assertEqual(self.state["batches"]["old-fix"]["pid"], 10)
-
-    def test_mismatched_whitelisted_template_does_not_use_another_tree(self):
-        Path(self.root, self.request_file).write_text(json.dumps({**self.request, "task": "silent-boss-calibration"}))
-        with patch.object(jobs, "start_learner") as start:
-            self.assertIsNone(self.launch())
-            start.assert_not_called()
-
-
-class NewFeatureDispatch(unittest.TestCase):
-    def test_a_first_then_independent_b4_beside_normal_fixes(self):
-        with tempfile.TemporaryDirectory() as root:
-            Path(root, "notes").mkdir()
-            state = {"batches": {"normal": {"task": "fix-batch", "state": "running", "pid": 10}}}
-            for task in ("boss-sim-automation", "silent-double-boss"):
-                Path(root, jobs.FEATURE_REQUESTS[task]).write_text(json.dumps({
-                    "state": "pending", "task": task, "character": "silent", "authorized_by": "Roy", "request_id": task}))
-            with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
-                def dispatch(stamp):
-                    return jobs.dispatch_write(state, root, "/scripts", "fix-batch", "silent", [], "ordinary", "ops", lambda pid: True, stamp)
-                self.assertEqual(dispatch("a"), ("a-fix-batch", 20))
-                self.assertEqual(start.call_args.args[0][-1], "silent-double-boss")
-                self.assertIsNone(dispatch("duplicate"))
-                request = Path(root, jobs.FEATURE_REQUESTS["silent-double-boss"])
-                value = json.loads(request.read_text()); value["state"] = "dispatched"; request.write_text(json.dumps(value))
-                self.assertEqual(dispatch("b"), ("b-fix-batch", 20))
-                self.assertEqual(start.call_args.args[0][-3:], ["fix-batch", str(Path(root, ".worktrees/boss-sim-automation")), "boss-sim-automation"])
-                self.assertEqual(state["batches"]["normal"]["pid"], 10)
-                self.assertEqual(start.call_count, 2)
-                del state["batches"]["normal"]
-                self.assertFalse(jobs.busy(state, "fix-batch", lambda pid: True))
-
-    def test_new_requests_refuse_dirty_tree_or_mismatched_scope(self):
-        for task in ("silent-double-boss", "boss-sim-automation"):
-            with self.subTest(task=task), tempfile.TemporaryDirectory() as root:
-                Path(root, "notes").mkdir(); path = Path(root, jobs.FEATURE_REQUESTS[task])
-                value = {"state": "pending", "task": task, "character": "silent", "authorized_by": "Roy", "request_id": task}
-                path.write_text(json.dumps(value)); state = {"batches": {}}
-                with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
-                    self.assertEqual(jobs.requested_feature(state, root, "/scripts", "silent", "ops", lambda pid: True, "dirty"), (True, None))
-                    start.assert_not_called()
-                for field, bad in (("task", "../../escape"), ("character", "ironclad"), ("authorized_by", "unknown"), ("request_id", "bad;command")):
-                    path.write_text(json.dumps({**value, field: bad}))
-                    with patch.object(jobs, "start_learner") as start:
-                        self.assertEqual(jobs.requested_feature(state, root, "/scripts", "silent", "ops", lambda pid: True, "bad"), (False, None))
-                        start.assert_not_called()
 
 
 if __name__ == "__main__":

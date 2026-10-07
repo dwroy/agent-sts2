@@ -10,7 +10,7 @@ default.merge_dir: {{project_root}}/.worktrees/live
 # 自动批次 {{batch}}：只从本角色日志核实、校正和验收
 
 角色 {{character}}，独占工作树 {{worktree}}，只读日志 {{logs_dir}}，临时目录 {{scratch}}。
-触发证据文件：{{evidence}}。先保存文件副本与 SHA256，核实 character/boss/mode/key；这不是人提供的游戏机制。授权：Roy 2026-10-07 12:11/12:35，notes/fix-queue-v4.md「B4 / B5 纳入标准流程」和 docs/boss-sim.md §13/14。不需要 Roy 再拍板。不得通过其他工作树另起后台批次。先确认干净、保存 base=HEAD、合 {{base_branch}}，读 README、最新 STATE、decision-log 末尾、学习协议及上述授权原节。
+触发证据文件：{{evidence}}。先保存文件副本与 SHA256，核实 character/boss/mode/key；这不是人提供的游戏机制。授权：Roy 2026-10-07 12:11/12:35，{{project_root}}/notes/fix-queue-v4.md「B4 / B5 纳入标准流程」和 docs/boss-sim.md §13/14。不需要 Roy 再拍板。不得通过其他工作树另起后台批次。先确认干净、保存 base=HEAD、合 {{base_branch}}，读 README、最新 STATE、decision-log 末尾、学习协议及上述授权原节。
 
 1. 从本角色原日志核实触发局号、回合、偏差和逐回合场数，记录原始字节偏移/哈希与 SL 实际结局及截尾口径。角色/boss 分账，不读其他角色知识。缺证据不补机制。B4 对照逐回合的来袭、打穿、血量、意图/状态和模拟，定位可证实的偏差。B5 保持原 tune keys/切点，新局只进 val；核对实盘整场预测、只在 tune 试模拟策略、评估 B2 排序潜在收益（配对种子、并列口径），全部固定输入留档，验证集不能调参。
 2. 校正范围严格限制为 fullFight 分支/模拟专用字段：agent/src/sim/boss-sim.ts、agent/src/reflex/rollout.ts、agent/src/reflex/rollout-live.ts。其他实盘源码不可改，新增字段必须证明实盘和五回合路径不读。不得把本任务调度器/验收工具和断言改弱以通过验收；需要扩范围则本批 rejected，保留分支/原因交运维。铁甲行为保持等价；跨角色整场变化必须有理由和记录，不复制铁甲经验。

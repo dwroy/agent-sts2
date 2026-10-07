@@ -256,6 +256,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "stall-check": { args: 0, ms: 60_000 },
   "mod-state": { args: 0, ms: 30_000 },
   "autoplay-start": { args: 0, ms: 60_000 },
+  "autoplay-reload": { args: 2, ms: 30_000 },
   "autoplay-stop": { args: 0, ms: 30_000 },
   "play-stop": { args: 0, ms: 30_000 },
   kill: { args: 1, ms: 30_000 },
@@ -291,6 +292,10 @@ export function validateRequest(raw: unknown): BrokerRequest {
   if (list.length !== spec.args) return { ok: false, error: `${action} 要 ${spec.args} 个参数，给了 ${list.length} 个` };
   const bad = list.find((arg) => !ARG.test(arg));
   if (bad !== undefined) return { ok: false, error: `参数不合格：${bad.slice(0, 40)}` };
+  if (action === "autoplay-reload" && (list.some((arg) => !/^[1-9][0-9]{0,9}$/.test(arg)
+      || Number(arg) <= 1 || Number(arg) > 2_147_483_647) || list[0] === list[1])) {
+    return { ok: false, error: "autoplay-reload 要两个不同的有效 PID：旧 autoplay、当前 play" };
+  }
   if (action === "eval-metrics") {
     if (!/^(ironclad|silent|regent|necrobinder|defect)$/.test(list[0]!)) return { ok: false, error: "eval-metrics 要一个已知角色的知识 id" };
     if (!/^(0|[1-9][0-9]{0,2})$/.test(list[1]!)) return { ok: false, error: "eval-metrics 进阶要是 0–999 的整数（不带前导零）" };

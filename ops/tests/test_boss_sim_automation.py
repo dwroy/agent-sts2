@@ -298,6 +298,16 @@ class Acceptance(unittest.TestCase):
             isolate.assert_not_called();receipt=json.loads((root/"receipt.json").read_text())
             self.assertFalse(receipt["accepted"]);self.assertIn("dispatch evidence",receipt["reasons"][0])
 
+    def test_extension_keeps_dispatch_tune_cutoff_and_all_old_validation(self):
+        before=trust();e=dict(evidence(),dispatch_base="a"*40)
+        before["split"]["val"].append("new-only-validation")
+        gate.verify_dispatch(e,before,"silent","AEONGLASS","b4","a"*40)
+        for mutation in (lambda t:t["split"].update(tune=["new-only-validation"]),
+                         lambda t:t["split"].update(cutoff="moved"),lambda t:t["split"].update(val=["new-only-validation"])):
+            candidate=copy.deepcopy(before);mutation(candidate)
+            with self.assertRaises(ValueError):gate.verify_dispatch(e,candidate,"silent","AEONGLASS","b4","a"*40)
+        with self.assertRaises(ValueError):gate.verify_dispatch(dict(e,split=None),before,"silent","AEONGLASS","b4","a"*40)
+
 
 class Integration(unittest.TestCase):
     def test_host_process_check_includes_background_knowledge_writers(self):

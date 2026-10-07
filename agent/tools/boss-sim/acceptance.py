@@ -88,6 +88,17 @@ def git(root, *args):
     return subprocess.check_output(["git", "-C", str(root), *args], text=True).strip()
 
 
+def verify_dispatch(evidence, before, character, boss, mode, base):
+    if (base != evidence.get("dispatch_base") or
+            any(evidence.get(k) != value for k, value in (("character", character), ("boss", boss), ("mode", mode)))):
+        raise ValueError("baseline/character/boss/mode differs from dispatch evidence")
+    old, extended = evidence.get("split"), before.get("split")
+    if (not isinstance(old, dict) or not isinstance(extended, dict) or not old.get("tune") or not old.get("val")
+            or old["tune"] != extended.get("tune") or old.get("cutoff") != extended.get("cutoff")
+            or not set(old["val"]) <= set(extended.get("val") or [])):
+        raise ValueError("dispatch tune/cutoff changed, validation dropped, or split evidence missing")
+
+
 def isolate(root, base, head, scratch):
     """Replay baseline's immutable fixed runner against both committed sources."""
     root, scratch = Path(root).resolve(), Path(scratch).resolve()
@@ -135,9 +146,7 @@ def main():
     try:
         evidence = json.loads(Path(args.evidence).read_text())
         base = git(args.root, "rev-parse", args.base + "^{commit}")
-        if (base != evidence.get("dispatch_base") or
-                any(evidence.get(k) != getattr(args, k) for k in ("character", "boss", "mode"))):
-            raise ValueError("baseline/character/boss/mode differs from dispatch evidence")
+        verify_dispatch(evidence, json.loads(Path(args.before).read_text()), args.character, args.boss, args.mode, base)
         isolation = isolate(args.root, args.base, args.head, args.scratch)
         result = evaluate(json.loads(Path(args.before).read_text()), json.loads(Path(args.after).read_text()),
                           args.character, args.boss, args.mode, isolation)

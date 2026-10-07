@@ -64,6 +64,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 |---|---|
 | procs / stall-check / mod-state | 我们的进程（pgrep）/ ops/stall-check.sh / mod 的 GET /state |
 | autoplay-start | prompt 的开工步骤：有残留的 autoplay / stop-after / 对局就拒绝；删 ops/STOP；setsid nohup ops/autoplay.sh；打印 PID 和 live 的提交号 |
+| autoplay-reload <旧 autoplay PID> <当前 play PID> | 核对属主、精确脚本路径、进程身份和 autoplay.pid；有 report.py、stop-after 或重复进程时拒绝。暂时暂停旧循环，启动带 WAIT_PID 的独立新循环，确认就绪再终止旧循环；确认前失败恢复旧循环。回执给新 PID、ops/live 提交和脚本 SHA256；不停止 play、不改 STOP，不改变 hosting 配置 |
 | autoplay-stop / play-stop / kill <PID> | 停 autoplay-start 起的 autoplay（先核对命令行）/ ops/stop.sh / 按 PID 停我们自己的 autoplay、stop-after、对局、report.py、学习者（核对属主和命令行） |
 | launch-game | 记忆卡 launch-game-on-desktop 的做法：`cd /mnt/c`，schtasks /create … /it、/run、/delete，再等 mod 最多 3 分钟；游戏在跑时拒绝 |
 | win-procs / win-kill <PID> | tasklist 里的 steam / 游戏进程和所在会话 / 只关会话 0（Services）里的 steam.exe 或游戏 |
@@ -80,8 +81,6 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 学习者回报 `merged=null`，随后由运维实际兜底合入时，调用 `bash ops/codex-ops-do.sh learner-recheck <批次 id>` 触发上述完整补测。调度器执行检查并登记结果，运维根据 learner-checks 处理失败；该动作不会重写原完成回报，也不会自动回滚或重复合入。
 
 Roy 授权的静默 boss 校准使用独立模板 `learner/tasks/silent-boss-calibration.md` 和工作树 `.worktrees/silent-boss-calibration`。运维先准备干净工作树，再在 `notes/silent-boss-calibration-dispatch.json` 记录 `state=pending`、`task=silent-boss-calibration`、`character=silent`、`authorized_by=Roy` 和唯一 `request_id`，然后调用既有 `fix-batch` broker 动作；仅此次手动请求走专用模板，普通修复和 tick 的任务不变。批次状态保存 `learner_task` 和 `feature_request`，按请求去重、拒绝忙或脏的专用工作树，失败沿用一小时退避与三次上限。取得实际批号后把请求改为 `dispatched` 并保留批号；完成仍发 `fix-done` 并补完整检查，通道名称不把功能归类为 bug。它与原修复工作树互不占用，live 合入仍串行持锁。
-
-Roy 授权的 Codex 大脑等待与统计口径功能同样独立派发：模板 `learner/tasks/codex-only-brain.md`，工作树 `.worktrees/codex-only-brain`，请求 `notes/codex-only-brain-dispatch.json` 的 task 固定为 `codex-only-brain`，其余授权、去重和占用规则同上。运维调用现有 `fix-batch` 动作只负责派发，不把功能当纯 bug；手动请求优先处理此高优先功能，普通 tick 不派专用任务。它可与 boss 校准和普通修复并行，三者合 live 时仍串行持锁。
 
 实测（2026-10-04，真实 codex，测试会话）：init 5 s；一次叫醒里模型依次调了 procs（0）、mod-state（0，拿到 mod 的 JSON）、`kill 1`（2，被动作脚本拒绝：不是我们的进程）、`rm-rf`（2，broker 拒绝：没有这个动作），31 s，会话记得第一轮的暗号。没有在真实游戏上测 autoplay-start / launch-game / win-kill（按要求没碰对局）。
 

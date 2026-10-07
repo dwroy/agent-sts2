@@ -12,6 +12,7 @@ import { deckProfileLine } from "../memory/deck-profile.js";
 import type { DecisionEnv } from "../memory/types.js";
 import { asArray, asRecord, bool, str, type JsonValue } from "../core/util/json.js";
 import { bossClockJson } from "../sim/boss-clock.js";
+import { doubleBossPreparation } from "../knowledge/double-boss.js";
 import { fightPlanInput } from "../memory/fight-plan.js";
 import { actOf } from "../memory/run-plan.js";
 
@@ -71,6 +72,14 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
         }
       : null,
     ...extra,
+  };
+  const continuation = doubleBossPreparation(state);
+  if (continuation) facts["double_boss_preparation"] = {
+    objective: "第三幕路线和休息按F48→F49连续两战备战：第一战剩余HP/药水是第二战进场资源，四局观察没有中间营火或回血。",
+    projection: "沿用silent-0163/S1.fix27：F48之后路线血量仍未知，不把进F48的血量当进F49血量；连战模拟才传递每条样本实际余量。",
+    evidence: continuation.evidence,
+    limits: continuation.limitation,
+    choice: "全部路线、休息和锻造选项保留，由Codex结合即时血量、牌组及连续两战原始模拟选择。",
   };
   // silent-0148/0147: 2SU6XN2AEJRD F12 T1 and four events; HMVJKM56S4Q8 F31 T1.
   // Keep the entry-heal observation separate from room costs, which already include in-room healing.
