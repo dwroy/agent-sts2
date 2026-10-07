@@ -19,9 +19,9 @@ A10 的 F48 胜只算该战胜利，不算整局通关；F49 是另一场独立 
 
 ## A10 数值与 F49 范围
 
-数值审计：`{"A10_fights": 109, "A10_opening_parts": 139, "A10_exact_hp_parts": 139, "A10_attack_definitions": 49, "A10_nearest_estimates": [{"enemy": "TEST_SUBJECT", "move": "BIG_POUNCE", "damage": {"perHit": 45, "hits": 1, "estimated": true, "from": 9, "ratio": 1, "logged": 45, "ratioN": 4, "ratioOwn": true, "ratioTo": 10}}], "all_simulated_opening_sources_match_audit": true, "all_successful_results_samples": 200, "result_pairs": 400, "duplicate_pairs": 0, "normalized_first_hit_openings": 28}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
+数值审计：`{}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
 
-F49 有实际结局且取得首回合帧的候选 4 场，固定切分为调参2/验证2；另有TXZ6RVMQA09D的实际死亡因缺首回合帧排除并留存来源。这个数量不足单独验证第二场 boss 的可靠性，仍只评估实际进入每战时的资源和单战胜败，没有评估 F48→F49 联合通关胜率。
+F49 实际结局 4 场；这个数量不足单独验证第二场 boss 的可靠性，仍只评估实际进入每战时的资源和单战胜败，没有评估 F48→F49 联合通关胜率。
 
 | 局号 | boss | 尝试 | 回合 | 结局 | 代码 |
 |---|---|---|---|---|---|
@@ -629,15 +629,3 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 | NHA2KW0RB7VP | CRUSHER+ROCKET | 10 | 33 | 6 | 4 | b8ca9311+dirty | val | died |
 
 模拟失败原件：`[{"key": "K3676LU8B0UH:48:2:6525158984", "start": "t1", "error": "board: Error: no solve"}, {"key": "K3676LU8B0UH:48:2:6525158984", "start": "pre", "error": "board: Error: no solve"}]`。
-
-## 本次定期刷新与输入核验
-
-新增 21 次实际 boss 结局触发本批；此前发布指纹 `77a99507591f214838210917aa6c2c53e4654e8a7d3aa8f582071869a3e0555d`，本批 `b07024e8d3061b66f691bee4d779ccea96501b7376eee370ee231e6c54f8da58`。旧180场的全部提取字段、首回合状态、实际胜败、回合和种子行号逐项相同；107个调参keys和UTC切点不动，验证73→93，新增20场可用开场全部进入验证。21个新结局事件中TXZ6RVMQA09D F49首试是无首回合决策帧的实际死亡，保留在来源清单但不补造开场、不进拟合；事件计数21与可用新增20的差异由此产生。不是幂等阈值跳过，不用缺帧事件凑可信场数。
-
-全部200个首回合原始帧按byte offset/len/SHA256核验，我方完整状态相等。298次SL predicted_death截断保留为无实际end_hp，不计真实死亡。A10输入审计：`{"A10_fights": 109, "A10_opening_parts": 139, "A10_exact_hp_parts": 139, "A10_attack_definitions": 49, "A10_nearest_estimates": [{"enemy": "TEST_SUBJECT", "move": "BIG_POUNCE", "damage": {"perHit": 45, "hits": 1, "estimated": true, "from": 9, "ratio": 1, "logged": 45, "ratioN": 4, "ratioOwn": true, "ratioTo": 10}}], "all_simulated_opening_sources_match_audit": true, "all_successful_results_samples": 200, "result_pairs": 400, "duplicate_pairs": 0, "normalized_first_hit_openings": 28}`。28个需要首击规范化的开场沿现有代码处理；成功模拟的全部bossSource与审计相等。TEST_SUBJECT BIG_POUNCE A10仍由A9的45点观测经现有ratio=1估计，完整数值来源、观测数和已观察适用范围在model-input-audit.json。F49可用验证仍2场、还差8场；另有缺帧的实际死亡，不能用它证明模拟已准。单战胜率不表示F48→F49联合通关率。
-
-本批使用固定模型 `270d8dd577f1380419c6dcd0b9bbf12e9a99f59b`，全部输入SHA256见provenance.json。未改模拟代码或游戏策略阈值。报告只验证该固定模型；随后并行模型或知识更新保留，下一批按当时冻结的版本重放。本批早期两次重叠重放、相对路径失败与后来保存的串行参考原件均保留于任务scratch，未参加拟合。最终沿现有backtest.ts的--shard/--shards分两片，每片Node及转译器、合计最多4进程，均nice19；种子仍由原始行号生成，合并后恢复原始顺序。39条串行参考逐字段核验相等（仅忽略耗时），模型全部输入指纹复核相同；两个分片实际退出码和完整日志在shard-exits.json/shard-0.log/shard-1.log。每个key/start恰好一条、每条200样本。
-
-可复核档案：[本批固定目录](../../../experiments/boss-sim/silent/b07024e8d3061b66f691bee4d779ccea96501b7376eee370ee231e6c54f8da58/README.md)。report.md为入口原件，published-report.md含本节审计；completed.json校验入口原件，audit-manifest.json校验补充文件。旧目录逐字节保留。自测、实际源码/合入/固定发布树及账本proposed记录交完成事件；shipped由运维核实后登记。
-
-来源分支为避免带入无关主分支记录，取固定live祖先710dc4dc的等价实现；其生成知识有9个文件与重放模型270d8dd5不同，路径和完整检查见model-parent-scope.json。重放前全部208个输入指纹相同已核实；本次合入只带静默校准数据/报告，不将旧或冻结的其他知识覆盖live刷新，不能将本表误认为后续知识版本已重新验证。
