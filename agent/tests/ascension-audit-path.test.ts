@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
+import secondEvidence from "./ascension-audit-second-evidence.json";
 
 // All files and leases belong to temporary fixed fixtures, never the real scheduler.
 function finish(scenario: string) {
@@ -18,6 +19,15 @@ with tempfile.TemporaryDirectory(prefix="audit-path-") as d:
     state={"batches":{"fixed":batch},"ascension_audits":{"silent:A10":request}}
     report={"task":"ascension-audit","character":"silent","level":10,"complete":True,"runs":batch["runs"],"code_proposals":[],
             "coverage":["floors","combat_counts","healing","campfires","rules","assumptions"],"report":str(path)}
+    if scenario=="second_original":
+        report=json.loads(sys.argv[2])
+        original=Path(report["report"]);parts=original.parts
+        path=root.joinpath(*parts[parts.index(".worktrees"):]);path.parent.mkdir(parents=True)
+        path.write_text("固定第二次审计报告，未验证项保留。")
+        tree=root/".worktrees/ascension-audit-silent-a10-2"
+        report["report"]=str(path)
+        batch.update(worktree=str(tree),runs=report["runs"])
+        request["worktree"]=str(tree)
     check=lambda r,b:[];rc=0
     if scenario in ("root", "sibling", "outside", "wrong_suffix", "symlink_file", "traversal"):
         other={"root":root/"learner/runs/report.md","sibling":root/".worktrees/other/learner/runs/report.md",
@@ -49,7 +59,7 @@ with tempfile.TemporaryDirectory(prefix="audit-path-") as d:
     events=[];mod.finish(state,"fixed",rc,str(root),str(out),lambda k,t:events.append(k),lambda t:None,proposal_check=check)
     print(json.dumps({"batch":batch,"request":request,"before":before,"events":events}))
 `;
-  const result = spawnSync("python3", ["-B", "-c", script, scenario], { encoding: "utf8", timeout: 5000 });
+  const result = spawnSync("python3", ["-B", "-c", script, scenario, JSON.stringify(secondEvidence)], { encoding: "utf8", timeout: 5000 });
   expect(result.status, result.stderr).toBe(0);
   return JSON.parse(result.stdout);
 }
@@ -58,6 +68,14 @@ describe("registered ascension audit report directory", () => {
   it("accepts the preserved report in this batch's registered independent worktree", () => {
     const result = finish("valid");
     expect(result.batch.state).toBe("done");
+    expect(result.request).toMatchObject({ state: "done", report_sha256: expect.stringMatching(/^[a-f0-9]{64}$/) });
+  });
+
+  it("accepts the preserved second audit output from batch 20261007-171303", () => {
+    const result = finish("second_original");
+    expect(result.batch.state).toBe("done");
+    expect(result.batch.report.runs).toEqual(secondEvidence.runs);
+    expect(result.batch.report.code_proposals).toEqual(secondEvidence.code_proposals);
     expect(result.request).toMatchObject({ state: "done", report_sha256: expect.stringMatching(/^[a-f0-9]{64}$/) });
   });
 

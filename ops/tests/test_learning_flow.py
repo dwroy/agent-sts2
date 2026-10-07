@@ -289,7 +289,10 @@ class ProposalConsumption(Fixture):
         return live,git('rev-parse','HEAD')
 
     def test_no_change_requires_clean_actual_base_report_and_all_dispositions(self):
-        live,base=self.git_fixture();path=self.write('learner/runs/task/report.md','No source change; evidence insufficient.')
+        live,base=self.git_fixture();path=self.write('.worktrees/live/learner/runs/task/report.md','No source change; evidence insufficient.')
+        subprocess.check_call(['git','-C',str(live),'add','learner/runs/task/report.md'],stdout=subprocess.DEVNULL)
+        subprocess.check_call(['git','-C',str(live),'commit','-q','-m','Preserve fixed report'],stdout=subprocess.DEVNULL)
+        base=subprocess.check_output(['git','-C',str(live),'rev-parse','HEAD'],text=True).strip()
         batch={'task':'strategy-proposal','character':'silent','worktree':str(live),'proposal_ids':['p']}
         report={'base':base,'fixes':[],'merged':None,'report':str(path),
                 'proposal_results':[{'id':'p','state':'waiting','reason':'needs independent runs'}]}
@@ -314,7 +317,10 @@ class ProposalConsumption(Fixture):
         self.assertTrue(dispatch.links({}, {'character':'silent','proposal_policy':proposals.POLICY},str(self.root),self.scripts))
 
     def test_finish_records_waiting_without_fake_merge_or_full_checks(self):
-        live,base=self.git_fixture();path=self.write('learner/runs/task/report.md','Observed evidence incomplete; keep original rules.')
+        live,base=self.git_fixture();path=self.write('.worktrees/live/learner/runs/task/report.md','Observed evidence incomplete; keep original rules.')
+        subprocess.check_call(['git','-C',str(live),'add','learner/runs/task/report.md'],stdout=subprocess.DEVNULL)
+        subprocess.check_call(['git','-C',str(live),'commit','-q','-m','Preserve fixed report'],stdout=subprocess.DEVNULL)
+        base=subprocess.check_output(['git','-C',str(live),'rev-parse','HEAD'],text=True).strip()
         report={'task':'strategy-proposal','base':base,'fixes':[],'merged':None,'report':str(path),
                 'code_proposals':['p'],'implementation_domains':['combat'],
                 'proposal_results':[{'id':'p','state':'waiting','reason':'requires new independent runs'}]}
