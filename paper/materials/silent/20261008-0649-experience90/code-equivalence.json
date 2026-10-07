@@ -1,0 +1,38 @@
+{
+  "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+  "checked_pin": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+  "checked_pin_full_external": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 297,
+    "passed": 3406,
+    "skipped": 2
+  },
+  "paths_compared": [
+    "agent",
+    "learner",
+    "knowledge/builders",
+    "eval",
+    ":(exclude)eval/versions.json",
+    "ops",
+    ":(exclude)ops/inbox-dev.md",
+    "tools",
+    "docs"
+  ],
+  "source_sandbox": {
+    "exit": 0,
+    "files": 245,
+    "cases": 2586,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/test-source.log"
+  },
+  "post_merge_sandbox_repeated": false,
+  "source_vs_actual_six_preserved_bullet_time_paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-bullet-time-states.json",
+    "agent/tests/silent-bullet-time.test.ts"
+  ],
+  "reason": "The source commit changes only experience data and passed its original self-tests. Current live retains the six already published Bullet Time source/test paths and is identical in code/tests/tasks to the pinned full external pass. The data-only test exemption applies; no test success is claimed for this new tree. Full outside checks are requested separately."
+}

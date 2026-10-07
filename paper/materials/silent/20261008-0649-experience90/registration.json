@@ -1,0 +1,59 @@
+{
+  "actual_code": "ad42585dcdd8b7b0ca0cce5a8f7bd35ea188ecf4",
+  "publication": "c1dd721fe682910095768eb4007cb836b6991152",
+  "main_record": "6830b0b46db1e9575b4ff5274297770270d285ad",
+  "original_cli": 48,
+  "original_experience_cli": 48,
+  "new_shipped_cli": 15,
+  "ledger_check": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 278 item(s), 0 problem(s)\n",
+  "index_ledger_check": 0,
+  "changelog_physical_not_repeated": true,
+  "source_originals_unchanged": true,
+  "proposal_states_observed": {
+    "silent-proposal-8fb51933639faf90": "pending",
+    "silent-proposal-b3bc0eb09211af6c": "pending",
+    "silent-proposal-fdc3a505fe5e1a55": "pending"
+  },
+  "full_external_passed": false,
+  "paper_invocations_this_wake": 0,
+  "unowned_physical_rows_preserved": true,
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "49c01a0280347a29b6ef1ae2bf79b4b964bed4a0",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 297,
+      "passed": 3406,
+      "skipped": 2
+    },
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 245,
+      "cases": 2586,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-061302-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "source_vs_actual_six_preserved_bullet_time_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-bullet-time-states.json",
+      "agent/tests/silent-bullet-time.test.ts"
+    ],
+    "reason": "The source commit changes only experience data and passed its original self-tests. Current live retains the six already published Bullet Time source/test paths and is identical in code/tests/tasks to the pinned full external pass. The data-only test exemption applies; no test success is claimed for this new tree. Full outside checks are requested separately."
+  },
+  "unmapped_structure_item_proposed": []
+}
