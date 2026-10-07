@@ -1,0 +1,11 @@
+{
+  "phase": "before any main mutation",
+  "exit": 1,
+  "protected_unexpected": [
+    "ops/inbox-dev.md"
+  ],
+  "reason": "orchestrator included ops records in its executable-source guard; own committed operator note is intentionally preserved",
+  "main_mutation_executed": false,
+  "original_script": "/tmp/sts2-1201-main-before-record-scope-guard.py",
+  "correction": "restrict comparison to executable source/test/task paths; keep inbox and other root records byte-for-byte"
+}
