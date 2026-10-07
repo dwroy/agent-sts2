@@ -1,0 +1,161 @@
+{
+ "id": "silent-0204",
+ "ts": "2026-10-07T03:28:38+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "mechanic",
+ "claim": "本局石炉加湿器STONE_HUMIDIFIER在实际选择休息回血时增加5最大血，并补5当前血：F16基础回复25后51/85→81/90，F47基础回复34后31/115→70/120；F9锻造54/75不变。全局10次回血将最大血70→120，实际净回复合321。只确认这些已发生的休息与锻造，不把进入火堆本身当触发，也不据此规定路线优先级。",
+ "evidence": [
+  {
+   "run": "UMVLWER4CD98",
+   "floor": 16,
+   "role": "support",
+   "note": "休息选项描述回复25并增加5最大血；相邻状态51/85→81/90，实际增加30当前血，额外5与最大血5同时兑现。",
+   "added": "2026-10-07T03:28:38+08:00"
+  },
+  {
+   "run": "UMVLWER4CD98",
+   "floor": 47,
+   "role": "support",
+   "note": "31/115休息后70/120，回复34加5；六次boss均由此70血开场。",
+   "added": "2026-10-07T03:28:38+08:00"
+  },
+  {
+   "run": "UMVLWER4CD98",
+   "floor": 9,
+   "role": "support",
+   "note": "选择锻造中和，54/75保持；不是每次进休息房都增长5。",
+   "added": "2026-10-07T03:28:38+08:00"
+  },
+  {
+   "run": "ULP4TN1GNHMK",
+   "floor": 9,
+   "role": "support",
+   "note": "休息40/70→66/75，基础21及加湿器当前/最大血各5，净回26；F7锻造中和43/70不变。",
+   "added": "2026-10-07T13:26:30+08:00"
+  },
+  {
+   "run": "ULP4TN1GNHMK",
+   "floor": 16,
+   "role": "support",
+   "note": "休息6/75→33/80，基础22及加湿器当前/最大血各5，净回27；F12锻造毒药65/75不变。四营火只两次实际回血，上限70→80，不预支全部回血。",
+   "added": "2026-10-07T13:26:30+08:00"
+  },
+  {
+   "run": "VLZ6CCT8AQ0A",
+   "floor": 44,
+   "note": "八次休息净补26/27/29/30/32/31/33/34合242，每次最大HP+5；F44 33/99→67/104含基础回复29与增长5，F16锻造不增长，F35战内额外减6上限单列。",
+   "role": "support",
+   "added": "2026-10-07T15:59:10+08:00"
+  }
+ ],
+ "first_run": "UMVLWER4CD98",
+ "prior": "unknown",
+ "prior_runs": [],
+ "prior_note": "已按更早71局静默复盘标题及对应局号流式查decisions和brain；未找到持有加湿器的题面或实际选择记录，无可比的先验休息行为。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "UMVLWER4CD98",
+   "ULP4TN1GNHMK",
+   "VLZ6CCT8AQ0A"
+  ],
+  "experience": [
+   "silent-stone-humidifier-rest-growth"
+  ],
+  "commits": [
+   "23080aa4018c2f093cea52a270ba2770a0934b1e",
+   "fcfc0bf95579ad7bc4aae49813b1914caf4413d6",
+   "e8a6fb714b9fde4ed85e5cc76e3fbb839e6b83c7",
+   "8c5d6a30d55f3b8f993c26337f4046944cca98c0",
+   "fa87ca9aca5774033a997b58528e6328607cb09c",
+   "0cfb9a2a51cf8eb0e89309325a6a16686fbc5c93",
+   "b0f41f039b136e69485027ecbf9042c23170b4ab",
+   "2b97e69d97d80a51464a8375174cdef4a36c34fc",
+   "91d49f827f3d429955d63f0b11c5944731759264",
+   "7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a",
+   "586ff2db0de4a841555c2e838f3e7f17e8165307",
+   "79bee0fc11793a410218ae50ca43e41474eec19e",
+   "1bf53e5fe631e7a7836001f463f8561d1a875bc6"
+  ],
+  "changelog": [
+   "2026-10-07 静默猎手 第五十九次增量：1 局 A10（version 2026-10-07.5，分支 exp-silent，23080aa4）",
+   "2026-10-07 静默猎手 第七十三次增量：3 局 A10（version 2026-10-07.19，分支 exp-silent，fa87ca9a）",
+   "## 2026-10-07 静默猎手 第七十五次增量：1 局 A10（version 2026-10-07.21，分支 exp-silent，91d49f82）"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-mechanisms-and-resources.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-234303-strategy-proposal/proposal.md"
+  ]
+ },
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-07T03:28:38+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T03:56:33+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T04:10:29+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T13:26:30+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T14:05:52+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T15:36:50+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T15:59:10+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-07T16:52:07+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T16:53:46+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-07T17:14:16+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T18:06:53+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T23:57:34+08:00",
+   "by": "learner:strategy-proposal"
+  }
+ ],
+ "version": "S1.exp75",
+ "effect": null,
+ "notes": [
+  "静默经验2026-10-07.5：只登记proposed；首证/先验/原claim/旧version/repeat保持，交运维核实际合入登记shipped；未确认可避免的同一策略失误，不添repeat。",
+  "04:05 experience-done机械确认20261007-034302-experience-update：源23080aa4→实际live fcfc0bf9→固定发布e8a6fb71/唯一S1.exp59，main已同步经验2026-10-07.5与七项自动知识刷新保存点6635abf7原blob。沿学习者UMVLWER4CD98 SILENT A10及03:31:15路线勘误、本角色历史；新增1更新11（全部补证）退役0、active130/50696字，无新用药规则。源与合后首轮均tsc0/vitest0、214文件2289例通过，无失败或超时重跑。锁内保存七项自动刷新后git预检rc1仅decision-log追加冲突，保留双方有序原文并集；知识重叠/冲突0、其他知识逐blob保持，无源码/生成器/其他角色变更。离线取证初稿从敌方powers读TAINTED_POWER错误，改读实际玩家powers后最终断言通过；空initial-evidence.log、初稿说明/脚本及完整事件流保存，不当生产故障或冒称有独立完整失败日志。源经验blob与合入/固定发布一致。本批仅CLI/by=ops十三项shipped覆盖十二经验主题，既有0204首证UMVL/A10/prior=unknown及全部旧first_run/asc/prior/claim/support/repeat/历史保持；0199/0202独立fix40已shipped、0203/exp58、0200/exp57、0201/strategy9、0172/fix39、0197/fix38及0002旧proposed不重置。完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。",
+  "第73批已测静默经验关联；新三局原support/repeat已由复盘登记，保持原claim、首证、先验和历史上线版本；新增历史局只补实际验证的机制support。实际合入与shipped由运维据完成事件核实。",
+  "15:31续办完成通知运维兜底源fa87ca9aca5774033a997b58528e6328607cb09c→实际live0cfb9a2a51cf8eb0e89309325a6a16686fbc5c93→发布b0f41f039b136e69485027ecbf9042c23170b4ab/S1.exp73，main机械同步2b97e69d97d80a51464a8375174cdef4a36c34fc，5代码路径与经验blob逐项等于已测组合2eb5dfcbbeaf6d3f50d1f1e1c8c519ac4861fbfb。固定c9组合原沙箱tsc0/231文件2429例exit0；实际发布保留随后B4/B5及A10/B/C/D代码和自动刷新，不冒报最新树合后全套通过，两个原批完整外部独立learner-recheck待事件。源契约228文件2409例与毒229文件2416例/固定红绿通过，之前rollout120秒、usage、SL失败全部留史；经验源两轮224文件2374例。只CLI所属状态追加，首证/先验/claim/support/repeat及其他ID不改，无毒铁甲等价、同型毒滑溜共享引擎缺陷修正原因沿源码说明；没有重置其他已shipped项。",
+  "代码提案 silent-proposal-ebbfe3b97548756d → task=strategy-proposal；Roy-2026-10-07-learning",
+  "17:48机械经验兜底：原.21源91d49f827f3d429955d63f0b11c5944731759264及未独立发布的.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a已实际成为live586ff2db0de4a841555c2e838f3e7f17e8165307祖先，最终发布79bee0fc11793a410218ae50ca43e41474eec19e/唯一S1.exp75，main1bf53e5fe631e7a7836001f463f8561d1a875bc6经验原blob相等。仅对应经验数据已吸收，原第74批28提案11duplicate/17waiting及.21三pending保留、不当代码implemented；0237/0229等纯bug不在本经验shipment范围。源.21原沙箱tsc0/232文件2430例0，.20原230文件2422例0；本轮数据组合无新源码、不冒称最新整套已过，最终完整外部独立原批续验。旧源merged=null/failed/缺array/路径拒绝/冷却/测试历史保留，CLI只这些经验所属项追加shipped，claim/首证/prior/support/repeat/旧历史及并行未发布经验不改，本状态不宣称后续.22或策略源码上线。",
+  "20261007-234302派发核证：silent-proposal-ebbfe3b97548756d；处置详见提案/report，1duplicate/9waiting，无新源码或上线；保留旧首证/先验/支持/重复及shipment历史。"
+ ],
+ "shipped_at": "2026-10-07T18:06:53+08:00"
+}

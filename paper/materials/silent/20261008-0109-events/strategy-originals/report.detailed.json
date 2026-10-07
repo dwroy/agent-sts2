@@ -1,0 +1,127 @@
+{
+  "task": "strategy-proposal",
+  "base": "c2930ff9130766ab242233853fd0c2a1eff934f0",
+  "runs": [
+    "VLZ6CCT8AQ0A",
+    "8JRE1C4H4Z2W",
+    "CA5KE8GFJ9X2",
+    "5PM6JAQG6FNQ",
+    "61E2QS63Y9WU",
+    "DUZUBAJ3A8GP"
+  ],
+  "fixes": [],
+  "skipped": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "reason": "已核7→5能量、突然一拳9伤/1弱→11伤/2弱、勒紧4→6、尖啸6→8，场外deck不变。631帧有抽牌堆聚合文本，4761个聚合条目均无逐卡dynamic_values；缺未知升级/附魔的逐卡转换及抽弃后的完整传播验证。当前源码只有forge手牌升级路径，未找到APOTHEOSIS接线；不能只把known改true当完整实现。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "reason": "模拟成熟度展示已有live祖先45161a51c2c6b7e4a499b13cf749c4108193bbf5；缺同总预算、同盘固定随机输入的MC对照、样本收益/候选稳定性曲线，且神化完整传播未覆盖。不能据单次707ms和1/12样本拟合预算、药价或目标规则。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "reason": "与89354805共享silent-0237/0238的源码缺口；经验文本上线与升级勒紧子项均不等于神化完整传播。缺逐卡未知升级/附魔输入和跨抽弃传播验收，沿原实现链等待，不重复造提案。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "reason": "升级勒紧子项已有live源码5e80e683daa08ae2569733b3b541cb523d7fe861；14账本/15经验的整体请求仍缺神化完整传播与持续输出/资源共同冻结的复合验收。局部源码祖先不能关闭全部请求；原本已上线的机制和版本保持。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "reason": "原答同fingerprint已核，第三试多损12血只多7当轮伤。缺原答→HP护栏→SL替换→实际前缀→抽弃/重规划的统一候选身份与完整配对记录，不能用候选省血当实际收益；本批固定日志未补齐该链。新增敌HP审计源码3f69541b5d3259dac94d3395bfe3da47936b4de9仅覆盖血量口径，不覆盖整个决策审计。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "reason": "加压力量0→4→8、无弱喷水11→15→19及虚弱后11/14可核；该局计划步法未取得，不能补敏捷收益。缺四条属性/减益/成长路径共同冻结的本角色调用与完整源码对照；未核出需要新增统一攻防权重的证据。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "reason": "重新核原帧：F39向无毒目标打冒泡，能量5→4、玩家29HP及敌状态不变。缺同血量、构筑、抽序下不同启动顺序的完整结局与可复现收益函数；不能据未兑现组件拟合构筑/启动权重。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "reason": "负敏捷−2、两防御各3共6挡及17毒成立；本局60HP首试七轮胜。缺相同起始资源和完整抽序下另一可救活SL线路，不能用首试胜调整SL范围/换线偏好。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "reason": "T4本体线47伤/15损兑现，幻象14→2仍可攻击；另一focus幻象39伤/零损只为未实打候选。缺A10召唤/航行/复活完整组合调用及另一目标序后续实打。3f69541b已有敌HP审计不能证明召唤/复活模拟和目标排序全部完成。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "reason": "睡3/2/1、T4醒、T5尖啸、T6恢复成长至4力/22攻击可核，四试均败；c7578f37608526591edd86041cee5a28c3894fee已有当前进阶后轮伤害子项。缺同抽同资源的另一完整获胜线及睡眠/眩晕/醒来组合验收，不能以全败样本拟合少挡换伤的血价。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": 0
+  },
+  "code_proposals": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa",
+    "silent-proposal-5264153a4a4b0e5c",
+    "silent-proposal-bddfa690a84e03d0"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "已核7→5能量、突然一拳9伤/1弱→11伤/2弱、勒紧4→6、尖啸6→8，场外deck不变。631帧有抽牌堆聚合文本，4761个聚合条目均无逐卡dynamic_values；缺未知升级/附魔的逐卡转换及抽弃后的完整传播验证。当前源码只有forge手牌升级路径，未找到APOTHEOSIS接线；不能只把known改true当完整实现。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "模拟成熟度展示已有live祖先45161a51c2c6b7e4a499b13cf749c4108193bbf5；缺同总预算、同盘固定随机输入的MC对照、样本收益/候选稳定性曲线，且神化完整传播未覆盖。不能据单次707ms和1/12样本拟合预算、药价或目标规则。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "与89354805共享silent-0237/0238的源码缺口；经验文本上线与升级勒紧子项均不等于神化完整传播。缺逐卡未知升级/附魔输入和跨抽弃传播验收，沿原实现链等待，不重复造提案。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "升级勒紧子项已有live源码5e80e683daa08ae2569733b3b541cb523d7fe861；14账本/15经验的整体请求仍缺神化完整传播与持续输出/资源共同冻结的复合验收。局部源码祖先不能关闭全部请求；原本已上线的机制和版本保持。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "原答同fingerprint已核，第三试多损12血只多7当轮伤。缺原答→HP护栏→SL替换→实际前缀→抽弃/重规划的统一候选身份与完整配对记录，不能用候选省血当实际收益；本批固定日志未补齐该链。新增敌HP审计源码3f69541b5d3259dac94d3395bfe3da47936b4de9仅覆盖血量口径，不覆盖整个决策审计。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "加压力量0→4→8、无弱喷水11→15→19及虚弱后11/14可核；该局计划步法未取得，不能补敏捷收益。缺四条属性/减益/成长路径共同冻结的本角色调用与完整源码对照；未核出需要新增统一攻防权重的证据。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "重新核原帧：F39向无毒目标打冒泡，能量5→4、玩家29HP及敌状态不变。缺同血量、构筑、抽序下不同启动顺序的完整结局与可复现收益函数；不能据未兑现组件拟合构筑/启动权重。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "负敏捷−2、两防御各3共6挡及17毒成立；本局60HP首试七轮胜。缺相同起始资源和完整抽序下另一可救活SL线路，不能用首试胜调整SL范围/换线偏好。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "T4本体线47伤/15损兑现，幻象14→2仍可攻击；另一focus幻象39伤/零损只为未实打候选。缺A10召唤/航行/复活完整组合调用及另一目标序后续实打。3f69541b已有敌HP审计不能证明召唤/复活模拟和目标排序全部完成。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "睡3/2/1、T4醒、T5尖啸、T6恢复成长至4力/22攻击可核，四试均败；c7578f37608526591edd86041cee5a28c3894fee已有当前进阶后轮伤害子项。缺同抽同资源的另一完整获胜线及睡眠/眩晕/醒来组合验收，不能以全败样本拟合少挡换伤的血价。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-004303-strategy-proposal/report.md"
+}
