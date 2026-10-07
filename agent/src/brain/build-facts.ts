@@ -13,6 +13,7 @@ import type { DecisionEnv } from "../memory/types.js";
 import { asArray, asRecord, bool, str, type JsonValue } from "../core/util/json.js";
 import { bossClockJson } from "../sim/boss-clock.js";
 import { doubleBossPreparation } from "../knowledge/double-boss.js";
+import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import { fightPlanInput } from "../memory/fight-plan.js";
 import { actOf } from "../memory/run-plan.js";
 
@@ -41,7 +42,10 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
   const relics = relicFacts(env);
   const potions = asArray(shown["potions"]).map(String);
   const plan = env.screenMemory.runPlan && env.screenMemory.runPlan.runId === str(state.raw["run_id"]) ? env.screenMemory.runPlan : null;
-  const nextBoss = floor === null ? null : (BOSS_FLOORS.find((bossFloor) => bossFloor >= floor) ?? null);
+  const phase = observedBossPhase(state);
+  const nextBoss = phase && (state.in_combat || phase["first_boss_defeated"] && floor === 48)
+    ? phase["first_boss_defeated"] ? 49 : 48
+    : floor === null ? null : (BOSS_FLOORS.find((bossFloor) => bossFloor >= floor) ?? null);
   const facts: Record<string, JsonValue> = {
     act: actOf(state),
     floor,
@@ -49,7 +53,8 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
     ascension: state.run?.ascension ?? 0,
     hp: env.brief.hp,
     gold: state.run?.gold ?? null,
-    act_boss: str(run["boss_id"]) || state.run?.boss_id || null,
+    act_boss: bossIdForFacts(state),
+    ...(phase ? { boss_phase: phase } : {}),
     deck_size: asArray(run["deck"]).length,
     deck_profile: deckProfileLine(state, knowledge),
     deck: asArray(shown["deck"]).map(String),

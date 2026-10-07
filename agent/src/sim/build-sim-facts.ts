@@ -18,6 +18,7 @@
  */
 
 import { cardUpgrade } from "../knowledge/card-upgrades.js";
+import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import type { MonsterDb } from "../knowledge/monster-db.js";
 import type { ActionRequest } from "../hand/mod/client.js";
 import { parseGameState, type GameState } from "../hand/mod/schema.js";
@@ -437,7 +438,8 @@ export function calibratedFloor(asc = 0): number {
 const ACT_BOSS_FLOORS = [17, 33, 48];
 
 /**
- * Whether the act's boss is already dead: its floor, out of combat (the reward, the next screens), still in its act.
+ * Whether the scheduled boss is already dead: its floor, out of combat, still in its act.
+ * For observed Silent A10 F48 this is only the first boss; it still prevents re-simulating that defeated boss.
  * run.boss_id moves on only when the next act starts (GBBBMVCPA7R1 F17: THE_KIN_BOSS on the reward, act_id 0;
  * THE_INSATIABLE_BOSS on the act 2 map, act_id 1), and the next act's boss is not in the state before that.
  */
@@ -461,7 +463,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   if (question?.type !== "choice") return { decision, record: null };
   const facts = asRecord(ask.state["facts"]) as Record<string, JsonValue>;
   const { state, knowledge } = env;
-  const bossId = str(asRecord(state.run?.raw)["boss_id"]) || state.run?.boss_id || "";
+  const bossId = bossIdForFacts(state) ?? (actBossDefeated(state) ? str(asRecord(state.run?.raw)["boss_id"]) : "");
   const fail = (why: string): BossSimOutcome => ({
     decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
     record: { error: why, ms: Math.round(now() - started) },
@@ -472,10 +474,13 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     // boss was simulated against it, 7PWU4CD3QCP3 F17 and 5DFX/VNKN/THR/GBBB F17; the brain quoted those deltas), and the
     // next act's boss is not known before its act starts: no simulation. The clock stays (bossClockJson marks it stale).
     if (actBossDefeated(state)) {
-      const note = "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
+      const phase = observedBossPhase(state);
+      const note = phase
+        ? String(phase["note"])
+        : "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
       return {
         decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
-        record: { skipped: "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
+        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
       };
     }
     const entry = routeEntry(env);
