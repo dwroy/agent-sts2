@@ -25,6 +25,7 @@ import { readFileSync } from "node:fs";
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
 import { OUTCOME_BASE_ASC, hasAscensionTables, outcomeView, pairHelps, pairThin, referenceNote, referenceRow } from "../knowledge/outcome-tables.js";
 import type { Knowledge } from "../knowledge/index.js";
+import { bossIdForFacts } from "../knowledge/boss-phase.js";
 import { bossDamageByTurn, bossHitsByTurn, bossHpAt, bossHpLoss, bossPartIds, fillDbNumbers, monsterHpAt, monsterMoves, moveBaseDamages, moveDamageAt, powerAmountByAscText, powerScheduleAt, selfGainAt, shownDamageAt } from "../knowledge/monster-db.js";
 import { measuredRoomExact } from "../knowledge/room-costs.js";
 import type { GameState } from "../hand/mod/schema.js";
@@ -1797,7 +1798,7 @@ function silentBossFacts(boss: BossProfile & { id: string }, ascension: number):
 export function bossClockJson(state: GameState, knowledge: Knowledge): Record<string, JsonValue> | null {
   const character = clockCharacter(state);
   if (character !== DEFAULT_CHARACTER) {
-    const boss = bossProfile(str(asRecord(state.run?.raw)["boss_id"]));
+    const boss = bossProfile(bossIdForFacts(state) ?? "");
     if (!boss) return null;
     return { boss: boss.id, ...(character === "silent" ? silentBossFacts(boss, state.run?.ascension ?? 0) : {
       boss_hp: bossHp(boss, state.run?.ascension ?? 0), boss_hp_note: bossHpSource(boss, state.run?.ascension ?? 0),
