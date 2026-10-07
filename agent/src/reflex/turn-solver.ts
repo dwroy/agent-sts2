@@ -397,6 +397,8 @@ export interface PlayerSim {
   gambit?: boolean;
   /** Block gained at the end of the player's turn, before the enemy acts (Plating, Metallicize). */
   endTurnBlock?: number;
+  /** Observed Silent A10 delayed Block already established this turn (silent-0232). */
+  nextTurnBlock?: number;
   /** Rupture N: +N Strength whenever the player loses HP on their own turn. */
   rupture?: number;
   /** Sloth: at most this many more cards can be played this turn. */
@@ -941,6 +943,8 @@ export interface Outcome {
   potionHeal?: number;
   /** Energy the next turn gets for this line's unspent energy (Pael's Tear), when it does; the rollout gives it. */
   nextTurnEnergy?: number;
+  /** Block captured on play, owed once at the next turn's start; never current-turn Block. */
+  nextTurnBlock?: number;
   /**
    * Retaliation (Flame Barrier, Thorns) dealt back on the enemy turn, by attacker (enemy index): not in
    * enemyHpAfter (our turn's end); the rollout takes it off their HP.
@@ -1049,6 +1053,7 @@ interface Sim {
   axeReplay: boolean;
   /** Plating gained this turn (Stone Armor, a Plating potion: Heart of Iron). */
   plating: number;
+  nextTurnBlock: number;
   unknown: string[];
   feedKills: number;
   /** Dazed our hits put into the draw pile this turn (Personal Hive). */
@@ -1689,6 +1694,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  const unverifiedDodgeReplay = card.dodgeRollNextBlock && plays > 1;
+  if (unverifiedDodgeReplay) next.unknown = [...next.unknown, `${card.name}（下回合格挡重放未验证）`];
   if (player.slothDefendReplay && card.type !== "Potion") {
     const observed = card.cardId === "DEFEND_SILENT" && !card.upgraded && card.replay === 1 && plays === 2;
     next.slothPlays += observed ? 2 : 1;
@@ -1705,7 +1712,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   for (let play = 0; play < plays; play += 1) {
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
-    resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(card) : card, target, player, cost);
+    const effects = unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
+    resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost);
     if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw) {
       const id = bandagesDiscard(next, card.discards?.[play], player);
       if (id !== null) discarded.push(id);
@@ -1955,6 +1963,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
     const block = Math.max(0, shown + dexBlock);
     gainBlock(next, block * (next.shadowmeld && card.type !== "Potion" ? 2 : 1), player);
+    // silent-0232: Tender reduces attributes after play; the queued 3/5 Block survives their reset.
+    // Frail, Shadowmeld, Unmovable and multiple applications have no isolated delayed-Block evidence.
+    if (card.dodgeRollNextBlock) {
+      if (player.tender === 1 && !player.frail && !player.shadowmeldActive && !next.shadowmeld &&
+        !player.unmovableArmed && next.nextTurnBlock === 0 && [3, 5].includes(block)) next.nextTurnBlock = block;
+      else next.unknown = [...next.unknown, `${card.name}（下回合格挡条件未验证）`];
+    }
   }
   // 10GPK5XGHCK3 F42 T2/T7, silent-0075: only later card gains, not Block already held.
   // Existing shown values already contain this buff; no unobserved stacking or passive-block rule.
@@ -3425,6 +3440,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(heldPenalty > 0 && !winsFight ? { heldDamage: heldPenalty, heldDamageFrom } : {}),
       ...(heldHpLoss > 0 ? { heldHpLoss, heldHpLossFrom } : {}),
       ...(!winsFight && nextTurnEnergyOf(sim, input) > 0 ? { nextTurnEnergy: nextTurnEnergyOf(sim, input) } : {}),
+      ...(!winsFight && sim.nextTurnBlock > 0 ? { nextTurnBlock: sim.nextTurnBlock } : {}),
     },
   };
 }
@@ -3477,7 +3493,7 @@ function simKey(sim: Sim): string {
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}${sim.fasten > 0 ? `#fasten${sim.fasten}` : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}${sim.fasten > 0 ? `#fasten${sim.fasten}` : ""}${sim.nextTurnBlock > 0 ? `#nextBlock${sim.nextTurnBlock}` : ""}`;
 }
 
 export interface SolveResult {
@@ -3624,6 +3640,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     drawnInHand: 0,
     regen: input.player.regen ?? 0,
     plating: 0,
+    nextTurnBlock: input.player.nextTurnBlock ?? 0,
     strikeReplay: input.player.strikeReplay ?? 0,
     axeReplay: input.player.firstCardReplay === true,
     unknown: [],

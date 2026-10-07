@@ -64,6 +64,8 @@ export interface CardModel {
   /** Observed unupgraded Corrosive Wave: Poison per actual draw this turn. */
   corrosiveWave?: number;
   block: number;
+  /** 61E2QS63Y9WU A10 F28 T2-T3: upgraded Dodge and Roll captures Block for the next turn. */
+  dodgeRollNextBlock?: boolean;
   /** DUZUBAJ3A8GP A10 F30 T5, silent-0010: plain Mirage reads living poison at play time. */
   blockFromPoison?: boolean;
   /** Block before player modifiers, from the observed enchanted/base dynamic value. */
@@ -1043,6 +1045,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "DODGE_AND_ROLL" && bool(card["upgraded"]) &&
+      dynBase(card, "Block", true) === 6 && template.replace(/\s+/g, "") === "获得{Block:diff()}点格挡。在下个回合，获得{Block:diff()}点格挡。"
+      ? { dodgeRollNextBlock: true } : {}),
     ...(mirage ? { blockFromPoison: true } : {}),
     ...(!madExpertise && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
