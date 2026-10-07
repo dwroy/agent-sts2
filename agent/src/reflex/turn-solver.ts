@@ -1550,7 +1550,12 @@ function killEnemy(sim: Sim, enemy: Sim["enemies"][number]): void {
 function triggerPoison(sim: Sim, enemy: Sim["enemies"][number], triggers: number, observedCap = Infinity): void {
   for (let k = 0; k < triggers && enemy.alive && (enemy.poison ?? 0) > 0; k += 1) {
     // T082DRCUHRRD F48 attempt 6 T10: three poison triggers into Intangible lose only three HP.
-    const lost = Math.min(enemy.hp, enemy.intangible ? 1 : enemy.poison ?? 0, observedCap);
+    let lost = Math.min(enemy.hp, enemy.intangible ? 1 : enemy.poison ?? 0, observedCap);
+    // ULP4TN1GNHMK F17 first T4 / third T3: poison loses one HP and consumes one Slippery layer.
+    if (lost > 0 && (enemy.slippery ?? 0) > 0) {
+      lost = 1;
+      enemy.slippery = (enemy.slippery ?? 0) - 1;
+    }
     enemy.hp -= lost;
     enemy.poison = Math.max(0, (enemy.poison ?? 0) - 1);
     sim.damageDealt += lost;

@@ -1,0 +1,565 @@
+{
+  "full-turn": {
+    "ts": "2026-10-07T04:51:20.801Z",
+    "run_id": "ULP4TN1GNHMK",
+    "screen": "COMBAT",
+    "turn": 4,
+    "combat": {
+      "player": {
+        "current_hp": 18,
+        "max_hp": 80,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "NOXIOUS_FUMES_POWER",
+            "name": "毒雾",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "RETAIN_HAND_POWER",
+            "name": "保留手牌",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "VANTOM",
+          "name": "墨影幻灵",
+          "current_hp": 177,
+          "max_hp": 183,
+          "base_max_hp": 183,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "SLIPPERY_POWER",
+              "name": "滑溜",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 2,
+              "is_debuff": true
+            }
+          ],
+          "intent": "PREPARE_MOVE",
+          "move_id": "PREPARE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ],
+      "hand": [
+        {
+          "index": 1,
+          "card_id": "DEADLY_POISON",
+          "name": "致命毒药+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "给予7层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 7,
+              "current_value": 7,
+              "enchanted_value": 7,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "POISONED_STAB",
+          "name": "带毒刺击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "造成6点伤害。 给予3层中毒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "PoisonPower",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "POISONED_STAB",
+          "name": "带毒刺击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "造成6点伤害。 给予3层中毒。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "PoisonPower",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ]
+    },
+    "floor": 17
+  },
+  "first-end": {
+    "ts": "2026-10-07T04:51:26.669Z",
+    "run_id": "ULP4TN1GNHMK",
+    "screen": "COMBAT",
+    "turn": 4,
+    "combat": {
+      "player": {
+        "current_hp": 18,
+        "max_hp": 80,
+        "block": 0,
+        "energy": 0,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "NOXIOUS_FUMES_POWER",
+            "name": "毒雾",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "RETAIN_HAND_POWER",
+            "name": "保留手牌",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 3,
+        "attacks_played_this_turn": 2,
+        "skills_played_this_turn": 1
+      },
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "VANTOM",
+          "name": "墨影幻灵",
+          "current_hp": 175,
+          "max_hp": 183,
+          "base_max_hp": 183,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "SLIPPERY_POWER",
+              "name": "滑溜",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 15,
+              "is_debuff": true
+            }
+          ],
+          "intent": "PREPARE_MOVE",
+          "move_id": "PREPARE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "floor": 17
+  },
+  "first-next": {
+    "ts": "2026-10-07T04:51:35.400Z",
+    "run_id": "ULP4TN1GNHMK",
+    "screen": "COMBAT",
+    "turn": 5,
+    "combat": {
+      "player": {
+        "current_hp": 18,
+        "max_hp": 80,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "NOXIOUS_FUMES_POWER",
+            "name": "毒雾",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "VANTOM",
+          "name": "墨影幻灵",
+          "current_hp": 174,
+          "max_hp": 183,
+          "base_max_hp": 183,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 16,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "intent": "INK_BLOT_MOVE",
+          "move_id": "INK_BLOT_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "10",
+              "damage": 10,
+              "hits": 1,
+              "total_damage": 10,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "floor": 17
+  },
+  "third-end": {
+    "ts": "2026-10-07T04:55:41.060Z",
+    "run_id": "ULP4TN1GNHMK",
+    "screen": "COMBAT",
+    "turn": 3,
+    "combat": {
+      "player": {
+        "current_hp": 33,
+        "max_hp": 80,
+        "block": 7,
+        "energy": 0,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 3,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 2
+      },
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "VANTOM",
+          "name": "墨影幻灵",
+          "current_hp": 177,
+          "max_hp": 183,
+          "base_max_hp": 183,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "SLIPPERY_POWER",
+              "name": "滑溜",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 2,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 7,
+              "is_debuff": true
+            }
+          ],
+          "intent": "DISMEMBER_MOVE",
+          "move_id": "DISMEMBER_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "22",
+              "damage": 22,
+              "hits": 1,
+              "total_damage": 22,
+              "status_card_count": null
+            },
+            {
+              "index": 1,
+              "intent_type": "StatusCard",
+              "label": "3",
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": 3
+            }
+          ]
+        }
+      ]
+    },
+    "floor": 17
+  },
+  "third-next": {
+    "ts": "2026-10-07T04:56:31.411Z",
+    "run_id": "ULP4TN1GNHMK",
+    "screen": "COMBAT",
+    "turn": 4,
+    "combat": {
+      "player": {
+        "current_hp": 18,
+        "max_hp": 80,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "focus": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "RETAIN_HAND_POWER",
+            "name": "保留手牌",
+            "amount": 1,
+            "is_debuff": false
+          }
+        ],
+        "base_orb_slots": 0,
+        "orb_capacity": 0,
+        "empty_orb_slots": 0,
+        "orbs": [],
+        "pets": [],
+        "pet_missing": false,
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "index": 0,
+          "enemy_id": "VANTOM",
+          "name": "墨影幻灵",
+          "current_hp": 176,
+          "max_hp": 183,
+          "base_max_hp": 183,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "SLIPPERY_POWER",
+              "name": "滑溜",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 6,
+              "is_debuff": true
+            }
+          ],
+          "intent": "PREPARE_MOVE",
+          "move_id": "PREPARE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Buff",
+              "label": null,
+              "damage": null,
+              "hits": null,
+              "total_damage": null,
+              "status_card_count": null
+            }
+          ]
+        }
+      ]
+    },
+    "floor": 17
+  }
+}
