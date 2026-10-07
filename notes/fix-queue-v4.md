@@ -634,7 +634,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-07 07:04 A10复盘：毒杀胜利分支漏算持牌毒素伤害（交学习者）
 
-- [ ] **非阻塞机制模型缺口，仅转录学习者定位**：`agent/src/reflex/turn-solver.ts:2901/:2916/:2939`在毒结算预测获胜时把持牌伤害及来袭置零；`agent/src/reflex/combat-plan.ts:3278/:3300`毒斩杀提前返回位于后续致死分歧处理之前。来源TKXQ6L4N9A6U SILENT A10 F22 T6、`ops/codex-ops/learner/20261007-064302.out`、原复盘及账本silent-0213（独立毒素机制0214，旧0059仅补support）。22:36:11.840Z以7血、0挡、两张各5伤TOXIC、2能量，代码combat/lethal结束并预测损0；22:36:13.588Z玩家先归零，两敌仍6/64与1/65血、11/14毒未结算，完整持牌伤10超出余血3。敌9+21攻击未执行，未结算毒不计已造成伤害。
+- [x] **非阻塞机制模型缺口，仅转录学习者定位**：`agent/src/reflex/turn-solver.ts:2901/:2916/:2939`在毒结算预测获胜时把持牌伤害及来袭置零；`agent/src/reflex/combat-plan.ts:3278/:3300`毒斩杀提前返回位于后续致死分歧处理之前。来源TKXQ6L4N9A6U SILENT A10 F22 T6、`ops/codex-ops/learner/20261007-064302.out`、原复盘及账本silent-0213（独立毒素机制0214，旧0059仅补support）。22:36:11.840Z以7血、0挡、两张各5伤TOXIC、2能量，代码combat/lethal结束并预测损0；22:36:13.588Z玩家先归零，两敌仍6/64与1/65血、11/14毒未结算，完整持牌伤10超出余血3。敌9+21攻击未执行，未结算毒不计已造成伤害。 已由本批20261007-072650-fix-batch合入c4156ed07219f26d4e74883e193676623ad539a3并发布f65cbfac6c4aeeccbe4a0dffd19a86e6087b30b7／S1.fix41，定稿沙箱216文件2308例通过；原测试失败历史留存，运维CLI登记shipped，详见paper/materials/silent/20261007-0810-fix41-release.md。
 - silent-0213 first_run=TKXQ6L4N9A6U/A10、prior=unknown/status=observed，prior_runs为K3676LU8B0UH、CSBR5CRDWQNB、ZZMYZ5UBCG72；较早安全场景不足以确认同一致死分支已经暴露。0214机制首证C48LLXBGKXQ9/A0、prior=yes，与bug独立，不改已有首证／上线／repeat历史。
 - 按运维prompt由学习者依据本角色证据实现、自测并合入；本局正常结束，非角色无关阻塞问题，运维不改伤害公式。仅转录缺口与实际先后，不加打法或用药规则，不声称另一顺序可转胜。行号为学习者只读当前live定位，原局e33ca6e0+dirty不声称逐字复原；原名称与学习上线标记勘误保留。调度器按队列派发，不停对局。
 
@@ -655,3 +655,20 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - [ ] **非阻塞纯 bug，silent-0216，仅转录学习者定位**：`agent/src/reflex/combat-plan.ts:80/:135/:739/:793`已建模敌增益名单漏`POISON_POWER`，毒已进入结算预测，却仍标未知；`agent/src/reflex/turn-solver.ts:1460`因而将该敌攻击伤害逐击乘0.8。来源T3FW7R2R2306 SILENT A10 F8，多尼斯异鸟末战T3/T4/T5预测14/10/17、实18/13/23，少报4/3/6；毒结算本身正确。原回报`ops/codex-ops/learner/20261007-071301.out`，证据/原文及勘误归档`paper/materials/silent/20261007-0755-02hb-t3fw-postmortem.md`。
 - 首证按学习者勘误为K3676LU8B0UH SILENT A1 F15 T1（已有7毒结算且仍列未知）；F17 T2仅中毒被列未知，两打击实际各6、毒11，实伤23、预测19。台账first_run=K3676LU8B0UH、prior=no、prior_runs=[K3676LU8B0UH]、status=observed；C48当时尚无毒模型，只保留背景，不作为此一致性bug首证或先验。原C48草稿和时间标题07:28:15→date实际07:28:01更正均保留，不回改历史。
 - 与旧0008漏施毒/结算、0174毒上限、0213毒杀屏蔽持牌伤分账。交学习者按证据修模型覆盖声明的一致性、固定验证后自行合入；本局已正常结束，运维不改机制公式、不声称修复可保证整局转胜。Roy独立boss校准功能075131-fix-batch不混此bug，0213原纯bug批072650不由运维改任务；调度器按队列处理，对局照常。
+
+## 2026-10-07 08:14 静默复盘：升级预览关键词与勒紧方案格挡（交学习者）
+
+- [ ] **非阻塞纯 bug，silent-0217，仅转录学习者定位**：`agent/src/hand/screens/oneshot.ts:324/:340/:343`升级前使用带关键词的resolved_rules_text，升级后改用不含关键词的rules_text，暴露EXPOSE升级预览丢“消耗”。P5HT1272P5SB SILENT A10 F24呈现“给予2层易伤。消耗。 → 给予3层易伤。”，大脑明确按可反复使用评价并锻造；F25实际暴露+仍“给予3层易伤。消耗。”。首证KAY522KT5NXR/A0 F44/F47错误题面，当时未选升级；first_run=KAY、prior=no、observed。与旧0066易伤模型分账，不认定更正后整局可赢。
+- [ ] **非阻塞纯 bug，silent-0218，仅转录学习者定位**：`agent/src/reflex/card-model.ts:932–935/:1031`的FASTEN未接入同方案后续防御，`agent/src/reflex/turn-solver.ts:1925`未带新增勒紧增量。P5HT1272P5SB A10 F25 T9打击→勒紧→防御，原预报余血−14、实际防御9→13，重读后余血−10，少算4挡；更早HSX4HYATB4E2 A10 F20 T1候选同缺口、F31 T2勒紧→坚韧之环→爆发→防御，预报15挡损2，实23挡损0，两次防御少报8。first_run=HSX、prior=no、observed；与0143真实机制分账，4挡修正仍救不了3血对26攻击。
+- 原回报`ops/codex-ops/learner/20261007-074301.out`，原文/台账及取证归档`paper/materials/silent/20261007-0810-p5ht-postmortem.md`；行号为复盘时只读live定位，不冒称复原开局dirty源码。两项均交学习者按证据实现、固定验证后自行合入，运维不改知识公式、不做打法分析。0213修复第41批、0216中毒折扣、075131独立boss校准另行；调度器按队列处理，对局继续。
+
+## 2026-10-07 08:30 静默复盘：蛇咬施毒模型遗漏（交学习者）
+
+- [ ] **非阻塞纯 bug，silent-0219，仅转录学习者定位**：`agent/src/reflex/card-model.ts:904`施毒名单遗漏SNAKEBITE，`:1054`仅输出非零poison，新增7毒未进入同方案推演。KQQELQSZ382Z SILENT A10 F17末次族母T7只出蛇咬，原预测旧9毒，实际9→16、回合末扣16，独立少报7；T4切割→防御→蛇咬原预测9伤/损16、实18/16，差9中蛇咬7与旧攻击八折2分账。首证KAY522KT5NXR/A0 F2 T1候选无毒且列未建模，F14 T1实际0费给7毒、末25→18余6，免费来源未核定；first_run=KAY、prior=no、observed，不称常规毒模型已修分支回归，与0008分账，不保证整场转胜。
+- **旧silent-0216追加repeat证据，不重复开单**：KQQ首试F17 T4打击→切割→防御→匕首雨原19伤/损16、实25/16，直接6+6+4+4=20被逐击八折成4+4+3+3=14，旧5毒结算正确，独立少报6；`combat-plan.ts:78/:135`覆盖名单缺POISON_POWER和`turn-solver.ts:1460`定位由学习者给出。原首证K3676LU8B0UH/A1、prior=no、observed及原claim/版本/历史保留，仅台账repeat证据增加1。
+- 原回报`ops/codex-ops/learner/20261007-081301.out`及原文/10行台账/数字核对/三项追加勘误见`paper/materials/silent/20261007-0827-kqq-postmortem.md`；行号为复盘时只读live定位，不冒称复原f8e01696+dirty开局源码。新0220是蛇咬机制，留学习者，不入纯bug队列；075131独立boss校准继续按原任务，对局照常。
+
+### 大脑只用 codex，不用 DeepSeek 兜底（Roy 2026-10-07 08:44，高优先）
+Roy：「不要让 ds 做，重新让 codex 来做」。live .env 已去掉 BRAIN_FALLBACK=deepseek（下一局起）。但没有兜底时，大脑答不了的题会退到 Jev/代码，仍不是 codex。要做成：
+- **codex 不可用时对局暂停等待，不由别的引擎代答**：大脑判定 codex 不可用（额度用完、登录失效、预检失败、连续超时休息）时，对局在安全点暂停（例如在当前决策前等待并定时重试 codex，或通知 autoplay 停在局间），恢复后由 codex 接着答；暂停和恢复写日志、写收件箱。不要让 Jev/代码替大脑的路线、选牌、事件、商店、休息、整局计划作答。
+- **统计口径**：大脑主要由 DeepSeek 回答的局（已知 MCCK2602T1SR、UJ0K3G10609Y、U8K28UUGYP3U、L9SGRBB5R698、D4LJ9QMGFB8Q；以及 10-07 额度用尽期间的局，按 brain.jsonl 的 engine 判）在爬塔统计、学习曲线和论文表里单独标注、默认不计入 A10 战绩；学习者复盘照常可用作证据。
