@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import time
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
 # Environment names passed into a herdr pane (its shell has the herdr server's environment, not ours); never key-like ones.
@@ -52,9 +53,21 @@ def start_learner(argv, root, scripts, state_dir, label):
         except (OSError, subprocess.SubprocessError) as error:
             sys.stderr.write(f"herdr-host run {label} failed ({error}); starting with setsid\n")
     proc = subprocess.Popen(argv, cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    if "boss-sim-batch" in argv:
+        pidfile = os.path.join(state_dir, "learner", label + ".pid")
+        os.makedirs(os.path.dirname(pidfile), exist_ok=True)
+        with open(pidfile, "w", encoding="utf8") as handle:
+            handle.write(str(proc.pid) + "\n")
     return proc.pid, None
 WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
+# Explicit, approved templates and paths only; Roy requested A10 optimization first.
+FEATURE_REQUESTS = {
+    "silent-double-boss": "notes/silent-double-boss-dispatch.json",
+    "boss-sim-automation": "notes/boss-sim-automation-dispatch.json",
+    "codex-only-brain": "notes/codex-only-brain-dispatch.json",
+    "silent-boss-calibration": FEATURE_REQUEST,
+}
 
 
 def external_writer(worktree):
@@ -85,27 +98,39 @@ def available_worktree(worktree):
 
 
 def requested_feature(state, root, scripts, character, reason, alive, stamp, request=None):
-    """Dispatch Roy's explicit calibration request without lending it a pure-bug prompt or worktree."""
+    """Dispatch Roy's explicit feature requests with isolated templates and worktrees."""
     if character != "silent" or reason not in ("ops", "calibration-refresh"):
         return False, None
+    learner_task = None
     if request is None:
-        try:
-            with open(os.path.join(root, FEATURE_REQUEST), encoding="utf8") as handle:
-                request = json.load(handle)
-        except (OSError, ValueError):
-            return False, None
-    if (not isinstance(request, dict) or request.get("state") != "pending"
-            or request.get("task") != "silent-boss-calibration"
-            or request.get("character") != "silent" or request.get("authorized_by") != "Roy"
-            or not isinstance(request.get("request_id"), str)
-            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", request["request_id"])):
+        for candidate, path in FEATURE_REQUESTS.items():
+            try:
+                with open(os.path.join(root, path), encoding="utf8") as handle:
+                    value = json.load(handle)
+            except (OSError, ValueError):
+                continue
+            if (isinstance(value, dict) and value.get("state") == "pending"
+                    and value.get("task") == candidate and value.get("character") == "silent"
+                    and value.get("authorized_by") == "Roy" and isinstance(value.get("request_id"), str)
+                    and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", value["request_id"])):
+                request, learner_task = value, candidate
+                break
+    elif (reason == "calibration-refresh" and isinstance(request, dict)
+          and request.get("state") == "pending" and request.get("task") == "silent-boss-calibration"
+          and request.get("character") == "silent" and request.get("authorized_by") == "Roy"
+          and isinstance(request.get("request_id"), str)
+          and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,99}", request["request_id"])):
+        learner_task = "silent-boss-calibration"
+    else:
+        return False, None
+    if request is None:
         return False, None
     key = "feature:" + request["request_id"]
     prior = [batch for batch in state["batches"].values() if batch.get("feature_request") == request["request_id"]]
     if (any(batch.get("state") == "done" or (batch.get("state") == "running" and alive(batch.get("pid"))) for batch in prior)
             or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
         return True, None
-    worktree = os.path.join(root, ".worktrees", "silent-boss-calibration")
+    worktree = os.path.join(root, ".worktrees", learner_task)
     if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
             for batch in state["batches"].values()) or not available_worktree(worktree)):
         return True, None
@@ -114,9 +139,9 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
         return True, None
     state_dir = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops", "codex-ops")
     pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, "", character,
-                              "fix-batch", worktree, "silent-boss-calibration"], root, scripts, state_dir,
+                              "fix-batch", worktree, learner_task], root, scripts, state_dir,
                              "learner-" + batch_id)
-    batch = {"task": "fix-batch", "learner_task": "silent-boss-calibration", "character": character,
+    batch = {"task": "fix-batch", "learner_task": learner_task, "character": character,
              "runs": [], "key": key, "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
              "feature_request": request["request_id"], "proposal_policy": "Roy-2026-10-07-learning"}
     if pane:
@@ -128,7 +153,7 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
 def busy(state, task, alive):
     for batch in state["batches"].values():
         # The dedicated feature owns its own worktree, not the normal fix/proposal tree.
-        if batch.get("learner_task") == "silent-boss-calibration":
+        if batch.get("learner_task") in FEATURE_REQUESTS or batch.get("boss_sim"):
             continue
         if WORKTREES.get(batch.get("task")) != WORKTREES[task] or batch.get("state") != "running":
             continue
@@ -214,7 +239,10 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     fixes = dispatch_write(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
     strategy = strategy_job(state, root, scripts, character, alive, stamp) if not proposal else None
     calibration = calibration_job(state, root, scripts, character, alive, stamp)
-    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration, "code_proposal": proposal}
+    from boss_sim_jobs import check
+    boss_sim = check(state, root, scripts, character, alive, stamp, start_learner)
+    return {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
+            "code_proposal": proposal, "boss_sim": boss_sim}
 
 
 def calibration_job(state, root, scripts, character, alive, stamp):

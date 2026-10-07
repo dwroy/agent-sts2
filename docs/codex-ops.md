@@ -70,6 +70,7 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 | win-procs / win-kill <PID> | tasklist 里的 steam / 游戏进程和所在会话 / 只关会话 0（Services）里的 steam.exe 或游戏 |
 | postmortem <ids> / learner-status / scheduler-status | 马上派一批复盘 / 批次状态 / 调度器状态 |
 | experience-update <ids> / fix-batch | 手动派经验 / 修复批次，一律 merge=live；工作树占用时拒绝 |
+| boss-sim-check | 用live调度器检查B4/B5触发条件并实际派发；证据、独立树、互斥租约和冷却进入learn.json，完成发fix-done |
 | strategy-proposal <ids> | 手动派学习者策略提案；只接收 1–10 个本角色已结束的 12 位局号，沿用学习任务的证据要求和工作树占用保护 |
 | learner-merge <branch> | 发合入兜底事件，由运维执行 live 流程；只接收 codex-dev / exp-silent |
 | learner-recheck <批次 id> | 兜底合入后补跑完整 tsc + vitest；只接收 YYYYMMDD-HHMMSS-experience-update / fix-batch / strategy-proposal 格式的批次 id。锁内核实回报中所有源提交均在 live，固定检查树、去重同批次同树，保留原失败及兜底检查历史；归档日志并发送 learner-checks，失败写收件箱。broker 限时 3700 秒，请求端默认等 3760 秒 |
