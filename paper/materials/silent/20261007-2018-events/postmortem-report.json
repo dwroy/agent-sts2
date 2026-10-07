@@ -1,0 +1,49 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "KV0JHNJCKXLS"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "KV0JHNJCKXLS",
+      "where": "agent/src/reflex/turn-solver.ts:3730",
+      "what": "懒惰额度漏算防御重放，预支被封锁的中和而报零损血",
+      "new": true
+    },
+    {
+      "run": "KV0JHNJCKXLS",
+      "where": "agent/src/reflex/card-model.ts:836",
+      "what": "子弹时间未在同一方案传播免费手牌和抽牌封锁",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0245",
+      "silent-0246",
+      "silent-0247",
+      "silent-0248",
+      "silent-0249"
+    ],
+    "updated": [
+      "silent-0102",
+      "silent-0005",
+      "silent-0006",
+      "silent-0013",
+      "silent-0010"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-a0853bed869d77fa",
+    "silent-proposal-c1af3217fb055ad0"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261007-194301-postmortem/report.md"
+}

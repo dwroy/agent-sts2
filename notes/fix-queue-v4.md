@@ -767,3 +767,9 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 
 - [x] 20261007-173846批六项实际完成：升阶审计裸JSON和受限工作树报告、rollout固定时钟、silent-0229铁蒺藜及0234 HAZE、无新源码策略报告目录。六源及S1.fix45真实live祖先，原红绿保持；完整外部290文件3319过/2跳过、exit0。旧三次审计failed/exhausted保留，不人为改成accepted；神化、性能/缓存、mod瞬时超时及策略专项不在本次关闭范围。
 - **非阻塞完成回报工具缺口（无游戏账本ID）**：专用校准20261007-154302-fix-batch外层124，但源e86c8b2a→live b0b0e679→发布a59421ec/S1.boss-calibration2已存在，独立注册工作树内final-report.json含task=fix-batch、code_proposals=[]。原.out仅结束散文，因此调度report={}且learner-recheck白名单动作返回2/空fallback_checks。学习者修有限结束报告/补验交接：以已注册batch/worktree、确切源码祖先和固定发布核实补充标准JSON，拒绝越界、迟到或不匹配源；保留原124/out/err/failed及所有旧检查，新增独立回执，不覆盖原件、不重复合入或校准。固定原件paper/materials/silent/20261007-1944-events。禁止把本数据刷新冒归bug-infra或伪造游戏提案；仍未取得校准批完整外部结果。
+
+## 2026-10-07 20:28 — KV0复盘新增非阻塞模型bug（沿自动提案链）
+
+- **silent-0245：懒惰额度漏算防御重放，方案预支被锁的中和**。学习者证据KV0JHNJCKXLS/SILENT A10 F33末试T8，decisions273512—273514、states279574—279577；turn-solver.ts:3729—3730按手动步数扣额度、:1713只计一次played，combat-plan.ts:4724现场只减原计数。重放防御→打击→中和原计划零损/34伤，现场手动计数2时中和已被SLOTH_POWER锁；1血14挡对16而死，实际31伤。首证KV0/prior=unknown保持，第2/3次T8为SL截断不记实死；与0199跨轮计数项分账，不据局部差承诺能转胜。交学习者依固定原帧修合法动作计数、验证求解/推演/判死及铁甲等价，撤码红/恢复绿、自测实际live后再CLI登记shipped。已有独立提案silent-proposal-a0853bed869d77fa，调度器续办；普通批先核租约/源码避免重复实现。
+- **silent-0246：子弹时间的免费手牌与本回合抽牌封锁未在同方案传播**。学习者证据同局F33 T1，重点decisions273474—273480、states279535—279553；card-model.ts:836缺BULLET_TIME特殊模型，combat-plan.ts:2802—2807仅清入口已有NO_DRAW。题面预支后空翻/肾上腺素共4抽及能力启动，实际六试子弹时间后抽0，格挡和能量仍兑现；手牌6→5→4→3、牌堆22不变。更早5PM只奖励取得未打出，first_run=KV0/prior=unknown，不补成功先验、不强定先抽后打或新喝药规则。交学习者按未升级本角色已观察条件做固定红绿、临时状态/不可打牌边界与其他角色等价；已有提案silent-proposal-c1af3217fb055ad0，按共享租约续办，不重复派发。
+- 本局已正常结束，两项不按卡死处理；0247—0249机制由学习者处理。原复盘、两份完整提案及20条所属PM原账本行见paper/materials/silent/20261007-2018-events/，首证、先验、support及旧失败全保留；运维不补游戏公式或改Roy规则。
