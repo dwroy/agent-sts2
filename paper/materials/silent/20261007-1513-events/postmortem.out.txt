@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：5PM6JAQG6FNQ（A10，第39层，末次T4以8血、0挡承受遗忘之物19攻击阵亡）；已追加施毒卡牌来源与毒性爆发结算过程的勘误。
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：5PM6JAQG6FNQ：旧boss时钟指标、三幕boss实打、Jev缓存、首试读档截断后的结算、完整原线执行比例、未选方案的受控结果、群伤内部死亡先后、能力及药水独立收益、F25有效模拟比较、1题最优标记。
+- 学习账本：5PM6JAQG6FNQ：新增 silent-0233；更新 silent-0019、silent-0209、silent-0009、silent-0010、silent-0027、silent-0011、silent-0132、silent-0005、silent-0183、silent-0055、silent-0044、silent-0037（老错 silent-0009）；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无
+
+```json
+{"task":"postmortem","appended":["5PM6JAQG6FNQ"],"skipped":[],"bugs":[],"ledger":{"added":["silent-0233"],"updated":["silent-0019","silent-0209","silent-0009","silent-0010","silent-0027","silent-0011","silent-0132","silent-0005","silent-0183","silent-0055","silent-0044","silent-0037"],"repeats":["silent-0009"],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11519-edba-7a53-86c5-8e1eb6778642
+轮数：1；工具调用：command_execution×48
+token：输入 211.8k、输出 34.6k（其中推理 11.0k）、cache 读 4454.8k、cache 写 0（命中 95.5%）
+成本：未提供
+耗时：1022.2 s（墙钟）
+时间：首个事件 2.4 s、模型首个输出 7.3 s、首次工具 12.1 s、末次工具结束 1005.7 s；工具内共 42.4 s，其余（模型生成、推理、网络）977.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×32；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T14-43-03-01a11519-edba-7a53-86c5-8e1eb6778642.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-144302-postmortem.jsonl
