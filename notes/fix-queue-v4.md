@@ -715,3 +715,7 @@ Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最�
 - 同步改 docs/learning-protocol.md、AGENTS.md、learner/tasks/*（fix-batch / strategy-proposal 不再把「人定规则」一律当作不可动）。
 
 - 2026-10-07 12:23 Roy授权Codex-only功能代码实际源88fe83e5→live910604a4/发布f8dd742d/唯一V4.codex-only1及main54文件一致已核实；本轮main同步0b1417c563cd5929e0aedbfeb22453b40b8eb176补全live最终源码/发布祖先，并登记经验70的19项原提案shipped。当前对局已加载新代码，固定合后沙箱tsc0/224文件2374例通过，完整外部另经经验70最终树覆盖；没有游戏知识账本ID，不冒建bug-infra。裸JSON报告解析及旧autoplay安全WAIT_PID加载缺口已交20261007-121034-fix-batch/PID1440022，运行保护尚未全激活，原功能报告shipped=false/调度failed及拒绝留史，后续完成事件续办，不重复派整个功能。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
+
+## 2026-10-07 12:40 — exp70 完整外部检查失败：历史测试入口漏传日志回调（纯测试基础设施）
+
+- **非阻塞测试缺口**：20261007-113604-experience-update 固定发布92376ca3、树b37c82f6，tsc0/vitest1；274文件通过/1失败，3180通过/2失败/2跳过。agent/tests/brain-codex-usage.test.ts:548/:570 的 console WARNING/refresh note 数组为[]。tests/legacy-brain.ts createEngine 未传 note，而生产 src/brain/brain.ts createRouter 已传 note=(m)=>router.say(m)。学习者修固定测试辅助入口回调，保留两断言与 token/redaction 约束，固定夹具红绿、原入口沙箱和完整外部补测；不要改生产路由恢复回退或降低测试标准。无游戏账本 ID，不冒标 bug-infra/shipped。原失败日志 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log 永久保留，详情 paper/materials/silent/20261007-1235-events.md。普通 codex-dev 当前121034批次在跑，交队列由下一可用批次处理，不占用两项独立功能工作树。
