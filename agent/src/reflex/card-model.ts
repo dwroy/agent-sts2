@@ -88,6 +88,8 @@ export interface CardModel {
   temporaryDexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
   afterImage?: number;
+  /** Silent A10 plain Serpent Form: observed four-point power, not damage on establishment. */
+  serpentForm?: number;
   /** Observed whole-hand discard (Shadow Step or Calculated Gamble). */
   discardsHand?: boolean;
   /** Calculated Gamble draws as many cards as it actually discarded (silent-0081). */
@@ -1059,6 +1061,9 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
+    // 5PM6JAQG6FNQ F33 T1, silent-0132: the generated plain power establishes four without hitting.
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "SERPENT_FORM" &&
+      !bool(card["upgraded"]) && dyn(card, "SerpentFormPower") === 4 ? { serpentForm: 4 } : {}),
     tempStrength,
     ...(strengthPerVulnerable > 0 ? { strengthPerVulnerable } : {}),
     ...(!madExpertise && dynBase(card, "Damage") !== null ? { damageBase: dynBase(card, "Damage")! } : {}),

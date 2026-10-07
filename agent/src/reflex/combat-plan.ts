@@ -2915,6 +2915,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     infernoCopies: infernoCopies(state, powerAmount(player, "INFERNO_POWER")),
     feelNoPain: powerAmount(player, "FEEL_NO_PAIN_POWER"),
     afterImage: powerAmount(player, "AFTERIMAGE_POWER"),
+    // 5PM6JAQG6FNQ F33 T1-T3, silent-0132: only the observed Silent A10 scope is enabled.
+    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10
+      ? { serpentForm: powerAmount(player, "SERPENT_FORM_POWER") } : {}),
     shadowmeldActive: powerAmount(player, "SHADOWMELD_POWER") > 0,
     corrosiveWave: powerAmount(player, "CORROSIVE_WAVE_POWER"),
     poisonExtraTriggers: powerAmount(player, "ACCELERANT_POWER"),

@@ -471,6 +471,8 @@ export interface PlayerSim {
   feelNoPain?: number;
   /** Afterimage already active: block for each subsequent card play, including replays. */
   afterImage?: number;
+  /** Present only for Silent A10; four points with one living enemy is observed (silent-0132). */
+  serpentForm?: number;
   /** Observed Silent Permafrost's first-Power Block, only when availability is known. */
   permafrostBlock?: number;
   /** Extra poison triggers granted by the observed Accelerant power. */
@@ -779,6 +781,8 @@ export interface Step {
 }
 
 export interface Outcome {
+  /** Established Serpent Form after this line; absent outside the observed character/ascension. */
+  serpentFormAfter?: number | null;
   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
   winsFight: boolean;
   /** Waterfall Giant killed this turn: its husk explodes for this much at the end of our next turn. */
@@ -1072,6 +1076,7 @@ interface Sim {
   infernos: number;
   feelNoPain: number;
   afterImage: number;
+  serpentForm: number | null;
   poisonExtraTriggers: number;
   /** Hellraiser up (already, or played this turn): drawn Strikes play themselves. */
   hellraiser: boolean;
@@ -1616,7 +1621,7 @@ function unconditioned(card: CardModel): CardModel {
 }
 
 /** Plays one card (with a chosen target) on a copy of the sim. Returns null if it is not legal. */
-function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim): Sim | null {
+function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSim, automatic = false): Sim | null {
   if (sim.pendingSelection) return null;
   // Apply the observed cap to fixed-line replay and search alike; potion dispatches consume no slot.
   if (player.slothDefendReplay && card.type !== "Potion" && player.maxPlays != null && sim.slothPlays >= player.maxPlays) return null;
@@ -1640,6 +1645,10 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // CARD_CONDITIONS: a card whose draw waits on the hand (Restlessness) draws only when the rest of the hand meets it.
   if (sim.topPlaced && (card.draw > 0 || card.drawsUntil || card.drawDiscardedHand) && (card.handCondition === undefined || handConditionMet(sim, card, card.handCondition))) return null;
   const next = clone(sim);
+  if (automatic && card.serpentForm !== undefined && next.serpentForm !== null) {
+    next.serpentForm = null;
+    next.unknown = [...next.unknown, "群蛇形态（自动建立未验证）"];
+  }
   // A Gambler's Brew way (or a card-choice potion's pick) is a copy of the belt's potion: the potion
   // leaves the hand by its key.
   const hidden = hiddenDaggers(card);
@@ -1710,10 +1719,20 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.unknown = [...next.unknown, `${card.name}（重放弃牌未验证）`];
   }
   for (let play = 0; play < plays; play += 1) {
+    const serpent = next.serpentForm;
+    const serpentTargets = next.enemies.filter((enemy) => enemy.alive);
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
     const effects = unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost);
+    // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
+    // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
+    if (card.type !== "Potion" && serpent !== null && serpent > 0) {
+      if (serpent === 4 && plays === 1 && serpentTargets.length === 1 && !automatic && card.target !== "random" && card.serpentForm === undefined) {
+        const victim = serpentTargets[0]!;
+        if (victim.alive) hitEnemyRaw(next, victim, 4);
+      } else next.unknown = [...next.unknown, "群蛇形态（随机目标、自动出牌、重放或叠加未验证）"];
+    }
     if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw) {
       const id = bandagesDiscard(next, card.discards?.[play], player);
       if (id !== null) discarded.push(id);
@@ -1902,7 +1921,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       const base = automatic.damageBase ?? automatic.damage;
       const generated: CardModel = { ...automatic, key: `${card.key}~auto${i}`, cost: 0,
         damage: base === null ? null : Math.floor(ourAttackScaled(base + (player.strengthNow ?? 0), player.weak, false)) };
-      const resolved = play(next, generated, target, player);
+      const resolved = play(next, generated, target, player, true);
       if (!resolved) break;
       // Keep the attack/exhaust triggers, but the mod performs these plays itself: no extra hand actions.
       const steps = next.steps;
@@ -2043,12 +2062,17 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     if (card.drawn) drawCards(next, card.drawn.slice(0, swapped), player);
     else if (draw) next.hand = [...next.hand, ...Array.from({ length: swapped }, (_, i) => ({ ...draw, index: draw.index * 10 + i, key: `${draw.key}.${i}` }))];
   } else if (card.special === "chaos" && (card.generates || card.drawn)) {
+    if ((next.serpentForm ?? 0) > 0) next.unknown = [...next.unknown, "群蛇形态（自动出牌未验证）"];
     // Distilled Chaos: the top cards of the draw pile played for free, each the pile's expected card (or a
     // sample's real top cards), at a random enemy (worst case: randomVictim). They leave the pile: later
     // draws come from below them.
     const tops = card.drawn ? card.drawn.slice(0, card.playsTop ?? 0) : Array.from({ length: card.playsTop ?? 0 }, () => card.generates!);
     for (const drawn of tops) {
       if (!drawn.playable || drawn.type === "Status" || drawn.type === "Curse") continue;
+      if (drawn.serpentForm !== undefined && next.serpentForm !== null) {
+        next.serpentForm = null;
+        next.unknown = [...next.unknown, "群蛇形态（自动建立未验证）"];
+      }
       const top: CardModel = { ...drawn, cost: 0, target: drawn.damage !== null ? "random" : "self", validTargets: [] };
       resolveEffects(next, top, null, player, 0);
     }
@@ -2285,6 +2309,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if ((card.selfDamage ?? 0) > 0) damagePlayer(next, card.selfDamage ?? 0, player);
   // LRN0HPZ0FZS1 F48 T1: the power itself gives no first block; later plays and replays do.
   next.afterImage += card.afterImage ?? 0;
+  if (card.serpentForm !== undefined && next.serpentForm !== null) {
+    if (next.serpentForm === 0) next.serpentForm = card.serpentForm;
+    else {
+      next.serpentForm = null;
+      next.unknown = [...next.unknown, "群蛇形态（叠加未验证）"];
+    }
+  }
 }
 
 /** Damage to us on our own turn: block first, Intangible caps it at 1, only the rest is HP lost (loseHp). */
@@ -3372,6 +3403,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       // Damage into a Giant husk is worth nothing (scored so above) and is not shown as dealt either (YQL8D59999AX
       // F17 T8: every line on the blast turn read "dmg 88", "瀑布巨兽 999999889 HP").
       damageDealt: sim.damageDealt - huskDamage,
+      ...(input.player.serpentForm !== undefined ? { serpentFormAfter: sim.serpentForm } : {}),
       kills: kills.map((enemy) => enemy.name),
       restocked: restocked.map((enemy) => enemy.name),
       ...(spawning.length > 0 ? { spawns: spawning.map((enemy) => `${enemy.name}: ${enemy.spawnsOnDeath}`) } : {}),
@@ -3491,7 +3523,8 @@ function simKey(sim: Sim): string {
     + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "")
     + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
-  const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
+  const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
+    + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
   return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}${sim.fasten > 0 ? `#fasten${sim.fasten}` : ""}${sim.nextTurnBlock > 0 ? `#nextBlock${sim.nextTurnBlock}` : ""}`;
 }
@@ -3654,6 +3687,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     inferno: input.player.inferno ?? 0,
     feelNoPain: input.player.feelNoPain ?? 0,
     afterImage: input.player.afterImage ?? 0,
+    serpentForm: input.player.serpentForm ?? null,
     poisonExtraTriggers: input.player.poisonExtraTriggers ?? 0,
     hellraiser: input.player.hellraiser === true,
     darkEmbrace: input.player.darkEmbrace ?? 0,
