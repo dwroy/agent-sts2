@@ -98,14 +98,20 @@ def no_change(report,batch,root):
         if batch.get('proposal_repair') and not report.get('code_proposals'): return None
         if any(r['state']=='implemented' for r in rows): return None
         tree=batch['worktree'];base=report['base']
+        raw_path=report.get('report')
+        if not all(isinstance(value,str) and Path(value).is_absolute() for value in (tree,raw_path)): return None
+        resolved_tree=Path(tree).resolve()
+        worktrees=Path(root,'.worktrees').resolve()
+        if resolved_tree==worktrees or not resolved_tree.is_relative_to(worktrees): return None
         if not isinstance(base,str) or not re.fullmatch('[0-9a-f]{40}',base): return None
         head=subprocess.check_output(['git','-C',tree,'rev-parse','HEAD'],text=True).strip()
         status=subprocess.check_output(['git','-C',tree,'status','--porcelain'],text=True).strip()
         if head!=base or status: return None
-        path=Path(str(report.get('report',''))).resolve()
-        if not path.is_relative_to(Path(root,'learner/runs').resolve()) or path.suffix!='.md' or not path.is_file(): return None
+        allowed=(resolved_tree/'learner/runs').resolve()
+        path=Path(raw_path).resolve()
+        if not allowed.is_relative_to(resolved_tree) or not path.is_relative_to(allowed) or path.suffix!='.md' or not path.is_file(): return None
         return {'base':base,'report':str(path),'dispositions':rows}
-    except (OSError,ValueError,KeyError,subprocess.SubprocessError): return None
+    except (OSError,ValueError,KeyError,RuntimeError,subprocess.SubprocessError): return None
 
 
 def resolve(report,batch,root,scripts):
