@@ -35,7 +35,7 @@ import { FIGHT_START_RELICS, bossKey, passiveSimRelic, syntheticBossStart, type 
 import { calibratedWinProb } from "./boss-sim.js";
 import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
-import { LOW_CONFIDENCE_B3 } from "./boss-trust.js";
+import { LOW_CONFIDENCE_B3, bossTrustReason } from "./boss-trust.js";
 import { silentBuildWinTies } from "./silent-build-win-ties.js";
 
 /** The deck-building questions that get the simulation. */
@@ -424,8 +424,8 @@ export interface BossSimOutcome {
  * count): the floor of every boss_sim number. From the map itself, not written in the note (fix-queue-v4: the note said
  * "约 8%" from B1.5's fit while the live floor was 6.24%; after the B5 refit 4.7%).
  */
-export function calibratedFloor(): number {
-  return calibratedWinProb(0, BUILD_SIM_CALIBRATION_SAMPLES, "pre");
+export function calibratedFloor(asc = 0): number {
+  return calibratedWinProb(0, BUILD_SIM_CALIBRATION_SAMPLES, "pre", asc);
 }
 
 /** The act boss floors (boss-clock BOSS_FLOORS), by act (1-based). */
@@ -500,7 +500,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`);
     const sims = new Map(result.options.map((sim) => [sim.key, sim]));
     const key = bossKey(bossId);
-    const low = LOW_CONFIDENCE[key];
+    const low = bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
     const boss = `${start.boss.name}，A${state.run?.ascension ?? start.boss.asc}`;
     const head = `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
     // Mostly lost: the raw rate under 10% (the calibrated one never reads under the map's floor at 0 wins: calibratedFloor).
@@ -564,7 +564,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(start.relics.applied.length > 0 ? { relics_at_start: `开场生效：${start.relics.applied.join("、")}` } : {}),
       ...(start.relics.unmodelled.length > 0 ? { relics_not_modelled: start.relics.unmodelled.join("、") } : {}),
       ...(low ? { low_confidence: low } : {}),
-      ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor() * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
+      ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     const record: Record<string, JsonValue> = {
       boss: key,
