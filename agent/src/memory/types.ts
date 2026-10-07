@@ -264,6 +264,8 @@ export interface ScreenMemory {
     fight: string; perTurn: Record<string, number>; witherDamage: number;
     /** Silent Wither: accepted enchantment replays keyed by the source play's turn and manual counter. */
     replays?: Record<string, number>;
+    /** Silent A10 Sloth: accepted ordinary Defend replay1, separate from other play counters. */
+    slothReplays?: Record<string, number>;
     runId?: string;
     last?: { turn: number; played: number };
   };
