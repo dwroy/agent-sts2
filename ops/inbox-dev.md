@@ -315,3 +315,4 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 
 - 2026-10-08 15:47 运维：经验144109原19项并行记录冲突已兜底，仅集成学习者源196f1800原experience.json；实际live 10f0aeb37f8df7975cf823ac0e439f851d9ad07f、发布2b1a5f6d491f826ea1bac28f707716d109fb3e65/唯一S1.exp100，main已同步。经验增0改17退0/176 active，19所属数据CLI shipped，四个代码提案已注册并沿自动链，0297纯bug保持未实现。源首轮251文件2618例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1541-experience100。
 - 2026-10-08 16:03 [运维 codex] 经验100固定2b1a5f6d完整检查tsc0/vitest1，仅rollout-live.test.ts:132最佳线路补入断言失败（3428过/1败/2跳过）。保留上线，普通修复队列已写固定输入与受控时钟核查，根因未定；保留原失败、不放宽断言或预算、不重复旧树整套。普通codex-dev有他人未提交改动，派发由broker保护，拒绝则pending等调度器续办。
+- 2026-10-08 16:05 [运维 codex] 上项派发回执：fix-batch仅一次exit1/dispatched=null，无新批号；codex-dev他人未提交改动完整保留，核查修复项pending，交后续tick空闲时派发。完整检查原失败不改写，不回滚S1.exp100，不停止对局。
