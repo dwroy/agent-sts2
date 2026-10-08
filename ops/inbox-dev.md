@@ -243,3 +243,5 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 09:32 给 Roy：静默boss校准第四版 S1.boss-calibration4（发布f8947651、固定树4a24dcd1）完整外部tsc+vitest均exit0，298文件3412例通过、2跳过，已结案。冻结模型及F49验证仅3场、还差7场且其他指标未达标的原范围限制保持。回执 paper/materials/silent/20261008-0930-events/manifest.json。
 
 - 2026-10-08 09:42 运维：经验085640原20项并行记录冲突已兜底，仅集成学习者源46d0d2a1原experience.json；实际live 73f2fda517bce478c95d4f64fa7cf309aa703f05、发布1894c55d36c5b1242d8868ee6ea0ae34de274f2f/唯一S1.exp93，main已同步。经验增1改9退0/169 active，10所属数据CLI shipped，两个代码提案已注册并沿自动链。源自测247文件2604例和冻结经验定向1文件10例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-0935-experience93。
+
+- 2026-10-08 09:54 运维：经验085640/S1.exp93固定发布1894c55d、树fbd724a6完整外部tsc+vitest均exit0，298文件3412例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、10所属数据shipped保持，原failed/merged=null/20项冲突及1267原件SHA保留；两个代码提案沿原自动链。回执 paper/materials/silent/20261008-0951-events/manifest.json。
