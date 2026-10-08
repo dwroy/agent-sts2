@@ -1,0 +1,218 @@
+[
+  {
+    "ts": "2026-10-08T12:11:49.528Z",
+    "run": "2H311EAD34GD",
+    "floor": 1,
+    "trigger": "start",
+    "observed_ts": "2026-10-08T12:11:19.546Z",
+    "merged_into": "event/choose",
+    "decision_id": "8bd2d937-9a03-4eb3-896e-36b3c7d0d884",
+    "plan": {
+      "runId": "2H311EAD34GD",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "trigger": "start",
+      "archetype": "Poison scaling with efficient attacks and dexterity defense",
+      "want": [
+        "NOXIOUS_FUMES",
+        "POISONED_STAB",
+        "FOOTWORK",
+        "DAGGER_SPRAY",
+        "DEADLY_POISON",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "ENVENOM"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Establish poison and Footwork during sleep. Upgrade core scaling, maintain reliable block, and reserve useful potions for attacks after awakening.",
+      "summary": "The starter deck lacks damage. Add efficient attacks and poison first, then stronger defense and draw. Take supported elites, avoid consecutive risky fights, and heal when necessary."
+    },
+    "raw": {
+      "archetype": "Poison scaling with efficient attacks and dexterity defense",
+      "want": [
+        "NOXIOUS_FUMES",
+        "POISONED_STAB",
+        "FOOTWORK",
+        "DAGGER_SPRAY",
+        "DEADLY_POISON",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "ENVENOM"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Establish poison and Footwork during sleep. Upgrade core scaling, maintain reliable block, and reserve useful potions for attacks after awakening.",
+      "summary": "The starter deck lacks damage. Add efficient attacks and poison first, then stronger defense and draw. Take supported elites, avoid consecutive risky fights, and heal when necessary."
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 26265,
+      "input_tokens": 125621,
+      "output_tokens": 518,
+      "reasoning_tokens": 310,
+      "effort": ""
+    },
+    "memory_chars": 4322,
+    "_line": 2754
+  },
+  {
+    "ts": "2026-10-08T12:15:48.179Z",
+    "run": "2H311EAD34GD",
+    "floor": 5,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-08T12:15:24.299Z",
+    "merged_into": "reward/card",
+    "decision_id": "d118ed9f-f814-4db7-9053-1477c0e360df",
+    "plan": {
+      "runId": "2H311EAD34GD",
+      "act": 1,
+      "floor": 5,
+      "hpPct": 0.4857142857142857,
+      "trigger": "hp_drop",
+      "archetype": "Efficient attacks into poison scaling with dexterity defense",
+      "want": [
+        "NOXIOUS_FUMES",
+        "DEADLY_POISON",
+        "POISONED_STAB",
+        "DAGGER_SPRAY",
+        "FOOTWORK",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "ENVENOM"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 7,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Establish poison and Footwork during sleep. Upgrade poison scaling, maintain attack-turn defense, and bring useful potions. Avoid relying on direct damage after repeated siphons.",
+      "summary": "Current boss simulations show zero wins: urgently buy damage and poison scaling. Heal before the planned elite, then upgrade key cards when safe. Avoid adding redundant basic defense."
+    },
+    "raw": {
+      "archetype": "Efficient attacks into poison scaling with dexterity defense",
+      "want": [
+        "NOXIOUS_FUMES",
+        "DEADLY_POISON",
+        "POISONED_STAB",
+        "DAGGER_SPRAY",
+        "FOOTWORK",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "ENVENOM"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 7,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Establish poison and Footwork during sleep. Upgrade poison scaling, maintain attack-turn defense, and bring useful potions. Avoid relying on direct damage after repeated siphons.",
+      "summary": "Current boss simulations show zero wins: urgently buy damage and poison scaling. Heal before the planned elite, then upgrade key cards when safe. Avoid adding redundant basic defense."
+    },
+    "question": {
+      "label": "reward/card",
+      "latency_ms": 18131,
+      "input_tokens": 130302,
+      "output_tokens": 332,
+      "reasoning_tokens": 112,
+      "effort": ""
+    },
+    "memory_chars": 7126,
+    "_line": 2755
+  },
+  {
+    "ts": "2026-10-08T12:19:26.060Z",
+    "run": "2H311EAD34GD",
+    "floor": 9,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-08T12:18:55.823Z",
+    "merged_into": "rest/plan",
+    "decision_id": "ba01b373-51f8-4bd9-8202-d6208cc36c55",
+    "plan": {
+      "runId": "2H311EAD34GD",
+      "act": 1,
+      "floor": 9,
+      "hpPct": 0.05714285714285714,
+      "trigger": "hp_drop",
+      "archetype": "Poison scaling with efficient attacks and defensive support",
+      "want": [
+        "NOXIOUS_FUMES",
+        "DEADLY_POISON",
+        "BOUNCING_FLASK",
+        "FOOTWORK",
+        "LEG_SWEEP",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "ENVENOM"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Acquire reliable poison and defensive support. Establish powers during sleep, upgrade poison when safe, and bring defensive potions. Preserve enough health for attack turns.",
+      "summary": "Heal now and retain the campfire-rich, elite-free route. Current boss simulations show no wins: prioritize repeatable poison damage, then stronger defense and draw. Spend shop gold on essential scaling before removals."
+    },
+    "raw": {
+      "archetype": "Poison scaling with efficient attacks and defensive support",
+      "want": [
+        "NOXIOUS_FUMES",
+        "DEADLY_POISON",
+        "BOUNCING_FLASK",
+        "FOOTWORK",
+        "LEG_SWEEP",
+        "PIERCING_WAIL"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "ENVENOM"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Acquire reliable poison and defensive support. Establish powers during sleep, upgrade poison when safe, and bring defensive potions. Preserve enough health for attack turns.",
+      "summary": "Heal now and retain the campfire-rich, elite-free route. Current boss simulations show no wins: prioritize repeatable poison damage, then stronger defense and draw. Spend shop gold on essential scaling before removals."
+    },
+    "question": {
+      "label": "rest/plan",
+      "latency_ms": 20303,
+      "input_tokens": 137428,
+      "output_tokens": 380,
+      "reasoning_tokens": 156,
+      "effort": ""
+    },
+    "memory_chars": 9520,
+    "_line": 2756
+  }
+]

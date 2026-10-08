@@ -1,0 +1,16 @@
+本批 rejected：已证实的取帧修正超出授权范围，未合入 live、未建版本。508 个起点已重放，原沙箱 2627 例通过；原验收未达 B5 标准。证据、失败历史和报告已归档，账本为 `silent-0303`。
+
+```json
+{"task":"fix-batch","base":"69a7b4414cdbaade679427d96af1a2cbbd04062d","fixes":[{"item":"Roy 已授权独立功能：silent/THE_INSATIABLE B5 校正（范围拒绝，无候选）","commit":"69a7b4414cdbaade679427d96af1a2cbbd04062d","test":"/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/learner/runs/20261008-174304-boss-sim-batch/sandbox-retry.log; /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/learner/runs/20261008-174304-boss-sim-batch/acceptance.json","fails_without_fix":true}],"skipped":[],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":2627},"boss_sim":{"evidence_key":"1848c22b377e05c0aa95012da9ec73911d0f1ca73689bea49a758214d6b94019","outcome":"rejected","acceptance":"/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/learner/runs/20261008-174304-boss-sim-batch/acceptance.json","ledger_ids":["silent-0303"]},"version":"","reports":["/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/paper/materials/silent/boss-sim-b5-the_insatiable-20261008-174301.md","/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/learner/runs/20261008-174304-boss-sim-batch/report.md","/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/learner/runs/20261008-174304-boss-sim-batch/report.json"]}
+```
+
+== 学习者 codex / boss-sim-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11ae5-1cf5-7961-bef9-633f4c14cb03
+轮数：1；工具调用：command_execution×276 file_change×25
+token：输入 480.0k、输出 193.4k（其中推理 131.3k）、cache 读 34822.9k、cache 写 0（命中 98.6%）
+成本：未提供
+耗时：14390.2 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 10.1 s、首次工具 16.4 s、末次工具结束 14342.0 s；工具内共 17132.7 s，其余（模型生成、推理、网络）-2745.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301）；模型的工具调用 exec×145 wait×99；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T17-43-05-01a11ae5-1cf5-7961-bef9-633f4c14cb03.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261008-174301/learner/runs/20261008-174304-boss-sim-batch.jsonl
