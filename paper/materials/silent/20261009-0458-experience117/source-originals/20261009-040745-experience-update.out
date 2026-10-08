@@ -1,0 +1,91 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.5 → 2026-10-09.6；提交：e6d12c26（分支 exp-silent）；合入：未合入，预检发现 19 处冲突；保留 live 刷新提交 7f3ce5ad，详见[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update/report.md)。
+- 条数：新增 1、更新 18（加证据 18、只改数字 0）、退役 0；active 190 → 191，共 51680 字符；A8 适用 178 条、48034 字符，A9 适用 179 条、48318 字符。
+- 机制推理（局数为支持/反例，案例均 A10）：
+  - 力量、敏捷与倍率 — 逐段伤害、逐张挡牌与倍率分账 — 149/0 — FU8ZUQHBHNV9
+  - 构筑组件兑现 — 只计实际取得、建成和已结收益 — 148/0 — 456MRNGCPD8E
+  - 灵动步法 — 2 敏使双防御合计 14 挡 — 89/0 — FU8ZUQHBHNV9
+  - 毒雾 — 轮初补毒，能力不即时施毒 — 75/0 — 456MRNGCPD8E
+  - 尖啸 — 临时减力，次轮恢复 — 73/0 — FU8ZUQHBHNV9
+  - 骇鳗活力与易伤 — 36 攻虚弱后为 27 — 8/0 — FU8ZUQHBHNV9
+  - 融入暗影 — 翻倍本轮新增挡，轮末撤 — 15/0 — 456MRNGCPD8E
+  - 触媒 — 升级后三结，10 毒理论扣 27 — 56/0 — 456MRNGCPD8E
+  - 熟睡甲虫与同伴死亡 — 同伴毒死后仍可攻击 — 18/0，其中同伴死亡验证 2 局 — 456MRNGCPD8E
+  - 猎人柔嫩 — 牌效果后削减力敏 — 20/0 — 456MRNGCPD8E
+  - 虱虫成长 — A10 每次加 7 力，猛扑 23→30 — 23/0 — 456MRNGCPD8E
+  - 罐装幽灵 — 仅覆盖实建无实体当轮 — 6/0 — 456MRNGCPD8E
+  - 敏捷药水 — 加 2 敏，已有挡不补 — 60/0 — 456MRNGCPD8E
+  - 跨幕回血 — A9/A10 按缺血 80% 向下取整回复 — 38/0 — 456MRNGCPD8E
+  - 巨兽自爆 — 本体结束后仍须处理自爆 — 24/0 — 456MRNGCPD8E
+  - 脆弱 — 卡牌挡乘 0.75 后向下取整 — 33/0 — 456MRNGCPD8E
+  - 石化蟾蜍 — 新战空槽生石，无遮拦投石扣 15 — 5/0 — 456MRNGCPD8E
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 251 文件 / 2627 用例 / 退出码 0；完整重跑一次，两次通过。未合入，未运行 live 合后测试。
+- 切片大小：中位增加 33.5 字，最大 5705 字。
+- 学习账本：新增无；改成 proposed：silent-0012、silent-0019、silent-0020、silent-0021、silent-0005、silent-0011、silent-0046、silent-0050、silent-0077、silent-0027、silent-0128、silent-0326、silent-0232、silent-0316、silent-0301、silent-0276、silent-0243、silent-0017、silent-0013、silent-0327；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.6",
+  "commit": "e6d12c26f0713448684489396470e6596d353117",
+  "merged": null,
+  "added": 1,
+  "updated": 18,
+  "retired": 0,
+  "active": 191,
+  "mechanisms": [
+    "力量、敏捷与倍率",
+    "构筑组件兑现",
+    "灵动步法",
+    "毒雾",
+    "尖啸",
+    "骇鳗活力与易伤",
+    "融入暗影",
+    "触媒",
+    "熟睡甲虫与同伴死亡",
+    "猎人柔嫩",
+    "虱虫成长",
+    "罐装幽灵",
+    "敏捷药水",
+    "跨幕回血",
+    "巨兽自爆",
+    "脆弱",
+    "石化蟾蜍"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0019", "silent-0020", "silent-0021",
+      "silent-0005", "silent-0011", "silent-0046", "silent-0050",
+      "silent-0077", "silent-0027", "silent-0128", "silent-0326",
+      "silent-0232", "silent-0316", "silent-0301", "silent-0276",
+      "silent-0243", "silent-0017", "silent-0013", "silent-0327"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-c99563720f3efe72",
+    "silent-proposal-f6f27a4e9301d1f9",
+    "silent-proposal-a9c0bfa7e34da37d",
+    "silent-proposal-f35501885edc7aa1"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11d21-1042-7782-b236-e656055cd6b7
+轮数：1；工具调用：command_execution×191 file_change×4
+token：输入 591.7k、输出 76.8k（其中推理 34.0k）、cache 读 11854.7k、cache 写 0（命中 95.2%）
+成本：未提供
+耗时：3022.3 s（墙钟）
+时间：首个事件 3.0 s、模型首个输出 9.5 s、首次工具 12.2 s、末次工具结束 2969.0 s；工具内共 3250.9 s，其余（模型生成、推理、网络）-231.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×93 wait×13；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T04-07-48-01a11d21-1042-7782-b236-e656055cd6b7.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-040746-experience-update.jsonl

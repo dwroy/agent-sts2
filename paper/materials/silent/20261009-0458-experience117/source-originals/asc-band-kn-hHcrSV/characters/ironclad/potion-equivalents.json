@@ -1,0 +1,631 @@
+{
+ "meta": {
+  "ascensions": [
+   8,
+   9
+  ],
+  "constants": {
+   "DRAW_PLAY_SHARE": 0.5
+  },
+  "doc": "docs/potion-equivalents.md",
+  "generated": "2026-09-30T00:00:00Z",
+  "generator": "tests/gkb-data (hand-written fixture)",
+  "logs": {
+   "all_fights": 1000,
+   "boss_fights": 83,
+   "last_fight": "2026-09-30 00:00:00"
+  },
+  "min_n": 5,
+  "note": "fixture"
+ },
+ "potions": {
+  "BLOCK_POTION": {
+   "by_asc": {
+    "8": {
+     "1": {
+      "block": 7.0,
+      "damage": 28.0,
+      "formula": "fixture 8/1",
+      "hold_hp": 7.0,
+      "hp": 7.0,
+      "n": 40,
+      "source": "公式"
+     },
+     "2": {
+      "block": 8.0,
+      "damage": 40.0,
+      "formula": "fixture 8/2",
+      "hold_hp": 8.0,
+      "hp": 8.0,
+      "n": 20,
+      "source": "公式"
+     },
+     "3": {
+      "block": 9.0,
+      "damage": 45.0,
+      "formula": "fixture 8/3",
+      "hold_hp": 9.0,
+      "hp": 9.0,
+      "n": 6,
+      "source": "公式"
+     }
+    },
+    "9": {
+     "1": {
+      "block": 8.0,
+      "damage": 26.7,
+      "formula": "fixture 9/1",
+      "hold_hp": 8.0,
+      "hp": 8.0,
+      "n": 12,
+      "source": "公式"
+     },
+     "2": {
+      "block": 10.0,
+      "damage": 40.0,
+      "formula": "fixture 9/2",
+      "hold_hp": 10.0,
+      "hp": 10.0,
+      "n": 5,
+      "source": "公式"
+     },
+     "3": {
+      "block": 9.0,
+      "damage": 45.0,
+      "formula": "fixture 9/3",
+      "hold_hp": 9.0,
+      "hp": 9.0,
+      "inputs_asc": 8,
+      "n": 6,
+      "source": "公式"
+     }
+    }
+   },
+   "category": "block",
+   "description": "获得[blue]{Block}[/blue]点格挡。",
+   "ironclad": true,
+   "kind": "block",
+   "log": {
+    "boss_drinks": {
+     "8": 3,
+     "9": 1
+    },
+    "drinks": 12,
+    "runs_seen": 10
+   },
+   "name": "格挡药水",
+   "pool": "shared",
+   "rarity": "Common",
+   "solver": "exact",
+   "target": "AnyPlayer",
+   "timing_free": false,
+   "usage": "CombatOnly",
+   "values": {
+    "Block": 12
+   }
+  },
+  "FIRE_POTION": {
+   "by_asc": {
+    "8": {
+     "1": {
+      "block": 5.0,
+      "check": {
+       "median": 0.0,
+       "n": 3
+      },
+      "damage": 20.0,
+      "formula": "fixture 8/1",
+      "hold_hp": 5.0,
+      "hp": 5.0,
+      "n": 40,
+      "source": "公式"
+     },
+     "2": {
+      "block": 4.0,
+      "damage": 20.0,
+      "formula": "fixture 8/2",
+      "hold_hp": 4.0,
+      "hp": 4.0,
+      "n": 20,
+      "source": "公式"
+     },
+     "3": {
+      "block": 4.0,
+      "damage": 20.0,
+      "formula": "fixture 8/3",
+      "hold_hp": 4.0,
+      "hp": 4.0,
+      "n": 6,
+      "source": "公式"
+     }
+    },
+    "9": {
+     "1": {
+      "block": 6.0,
+      "damage": 20.0,
+      "formula": "fixture 9/1",
+      "hold_hp": 6.0,
+      "hp": 6.0,
+      "n": 12,
+      "source": "公式"
+     },
+     "2": {
+      "block": 5.0,
+      "damage": 20.0,
+      "formula": "fixture 9/2",
+      "hold_hp": 5.0,
+      "hp": 5.0,
+      "n": 5,
+      "source": "公式"
+     },
+     "3": {
+      "block": 4.0,
+      "damage": 20.0,
+      "formula": "fixture 9/3",
+      "hold_hp": 4.0,
+      "hp": 4.0,
+      "inputs_asc": 8,
+      "n": 6,
+      "source": "公式"
+     }
+    }
+   },
+   "category": "damage",
+   "check_all": {
+    "median": 0.0,
+    "n": 3
+   },
+   "description": "造成[blue]{Damage}[/blue]点伤害。",
+   "ironclad": true,
+   "kind": "damage",
+   "log": {
+    "boss_drinks": {
+     "8": 3,
+     "9": 1
+    },
+    "drinks": 12,
+    "runs_seen": 10
+   },
+   "name": "火焰药水",
+   "pool": "shared",
+   "rarity": "Common",
+   "solver": "exact",
+   "target": "AnyEnemy",
+   "timing_free": false,
+   "usage": "CombatOnly",
+   "values": {
+    "Damage": 20
+   }
+  },
+  "FOUL_POTION": {
+   "by_asc": {
+    "8": {
+     "1": {
+      "block": -9.0,
+      "damage": -36.0,
+      "formula": "fixture 8/1",
+      "hold_hp": 0,
+      "hp": -9.0,
+      "n": 40,
+      "source": "公式"
+     },
+     "2": {
+      "block": -9.6,
+      "damage": -48.0,
+      "formula": "fixture 8/2",
+      "hold_hp": 0,
+      "hp": -9.6,
+      "n": 20,
+      "source": "公式"
+     },
+     "3": {
+      "block": -9.6,
+      "damage": -48.0,
+      "formula": "fixture 8/3",
+      "hold_hp": 0,
+      "hp": -9.6,
+      "n": 6,
+      "source": "公式"
+     }
+    },
+    "9": {
+     "1": {
+      "block": -8.4,
+      "damage": -28.0,
+      "formula": "fixture 9/1",
+      "hold_hp": 0,
+      "hp": -8.4,
+      "n": 12,
+      "source": "公式"
+     },
+     "2": {
+      "block": -9.0,
+      "damage": -36.0,
+      "formula": "fixture 9/2",
+      "hold_hp": 0,
+      "hp": -9.0,
+      "n": 5,
+      "source": "公式"
+     },
+     "3": {
+      "block": -9.6,
+      "damage": -48.0,
+      "formula": "fixture 9/3",
+      "hold_hp": 0,
+      "hp": -9.6,
+      "inputs_asc": 8,
+      "n": 6,
+      "source": "公式"
+     }
+    }
+   },
+   "category": "damage",
+   "description": "对所有玩家和敌人造成[blue]{Damage}[/blue]点伤害。",
+   "ironclad": true,
+   "kind": "damage",
+   "log": {
+    "boss_drinks": {
+     "8": 3,
+     "9": 1
+    },
+    "drinks": 12,
+    "runs_seen": 10
+   },
+   "name": "污浊药水",
+   "pool": "event",
+   "rarity": "Event",
+   "solver": "exact",
+   "target": "AnyPlayer",
+   "timing_free": false,
+   "usage": "AnyTime",
+   "values": {
+    "Damage": 12
+   }
+  },
+  "FRUIT_JUICE": {
+   "by_asc": {
+    "8": {
+     "1": {
+      "block": 5,
+      "damage": 20.0,
+      "formula": "fixture 8/1",
+      "hold_hp": 5,
+      "hp": 5,
+      "n": 40,
+      "source": "公式"
+     },
+     "2": {
+      "block": 5,
+      "damage": 25.0,
+      "formula": "fixture 8/2",
+      "hold_hp": 5,
+      "hp": 5,
+      "n": 20,
+      "source": "公式"
+     },
+     "3": {
+      "block": 5,
+      "damage": 25.0,
+      "formula": "fixture 8/3",
+      "hold_hp": 5,
+      "hp": 5,
+      "n": 6,
+      "source": "公式"
+     }
+    },
+    "9": {
+     "1": {
+      "block": 5,
+      "damage": 16.7,
+      "formula": "fixture 9/1",
+      "hold_hp": 5,
+      "hp": 5,
+      "n": 12,
+      "source": "公式"
+     },
+     "2": {
+      "block": 5,
+      "damage": 20.0,
+      "formula": "fixture 9/2",
+      "hold_hp": 5,
+      "hp": 5,
+      "n": 5,
+      "source": "公式"
+     },
+     "3": {
+      "block": 5,
+      "damage": 25.0,
+      "formula": "fixture 9/3",
+      "hold_hp": 5,
+      "hp": 5,
+      "inputs_asc": 8,
+      "n": 6,
+      "source": "公式"
+     }
+    }
+   },
+   "category": "heal",
+   "description": "获得[blue]{MaxHp}[/blue]点最大生命值。",
+   "ironclad": true,
+   "kind": "max_hp",
+   "log": {
+    "boss_drinks": {
+     "8": 3,
+     "9": 1
+    },
+    "drinks": 12,
+    "runs_seen": 10
+   },
+   "name": "果汁",
+   "pool": "shared",
+   "rarity": "Rare",
+   "solver": "none",
+   "target": "AnyPlayer",
+   "timing_free": true,
+   "usage": "AnyTime",
+   "values": {
+    "MaxHp": 5
+   }
+  },
+  "POISON_POTION": {
+   "by_asc": {},
+   "category": "damage",
+   "description": "给予[blue]{PoisonPower}[/blue]层中毒。",
+   "ironclad": false,
+   "kind": null,
+   "log": {
+    "boss_drinks": {},
+    "drinks": 0,
+    "runs_seen": 0
+   },
+   "name": "毒药水",
+   "note": "不在铁甲战士的药水池，日志里没出现",
+   "pool": "silent",
+   "rarity": "Common",
+   "solver": "none",
+   "target": "AnyPlayer",
+   "timing_free": false,
+   "usage": "CombatOnly",
+   "values": {}
+  },
+  "SWIFT_POTION": {
+   "by_asc": {
+    "8": {
+     "1": {
+      "block": 4.0,
+      "damage": 16.0,
+      "formula": "fixture 8/1",
+      "hold_hp": 4.0,
+      "hp": 4.0,
+      "n": 40,
+      "source": "估"
+     },
+     "2": {
+      "block": 5.0,
+      "damage": 25.0,
+      "formula": "fixture 8/2",
+      "hold_hp": 5.0,
+      "hp": 5.0,
+      "n": 20,
+      "source": "估"
+     },
+     "3": {
+      "block": 6.0,
+      "damage": 30.0,
+      "formula": "fixture 8/3",
+      "hold_hp": 6.0,
+      "hp": 6.0,
+      "n": 6,
+      "source": "估"
+     }
+    },
+    "9": {
+     "1": {
+      "block": 5.0,
+      "damage": 16.7,
+      "formula": "fixture 9/1",
+      "hold_hp": 5.0,
+      "hp": 5.0,
+      "mc": {
+       "hp": 2.5,
+       "n": 30
+      },
+      "n": 12,
+      "source": "估"
+     },
+     "2": {
+      "block": 6.0,
+      "damage": 24.0,
+      "formula": "fixture 9/2",
+      "hold_hp": 6.0,
+      "hp": 6.0,
+      "n": 5,
+      "source": "估"
+     },
+     "3": {
+      "block": 6.0,
+      "damage": 30.0,
+      "formula": "fixture 9/3",
+      "hold_hp": 6.0,
+      "hp": 6.0,
+      "inputs_asc": 8,
+      "n": 6,
+      "source": "估"
+     }
+    }
+   },
+   "category": "draw",
+   "description": "抽[blue]{Cards}[/blue]张牌。",
+   "ironclad": true,
+   "kind": "draw",
+   "log": {
+    "boss_drinks": {
+     "8": 3,
+     "9": 1
+    },
+    "drinks": 12,
+    "runs_seen": 10
+   },
+   "name": "迅捷药水",
+   "pool": "shared",
+   "rarity": "Common",
+   "solver": "mc",
+   "target": "AnyPlayer",
+   "timing_free": false,
+   "usage": "CombatOnly",
+   "values": {
+    "Cards": 3
+   }
+  }
+ },
+ "rates": {
+  "8": {
+   "1": {
+    "B": 8.0,
+    "C": 3.0,
+    "D": 20,
+    "E": 3.0,
+    "I": 10,
+    "L": 5,
+    "L_hit": 8.333,
+    "T": 10,
+    "a": 1.5,
+    "b": 1.0,
+    "deck": 20,
+    "fights": 40,
+    "from_asc": 8,
+    "h": 2.0,
+    "hit_share": 0.6,
+    "max_hp": 80,
+    "r": 0.25,
+    "s": 0.8,
+    "sd": 7.0,
+    "turns_n": 400,
+    "v_card": 3.0,
+    "v_energy": 3.0
+   },
+   "2": {
+    "B": 8.0,
+    "C": 3.0,
+    "D": 30,
+    "E": 3.0,
+    "I": 12,
+    "L": 6,
+    "L_hit": 10.0,
+    "T": 8,
+    "a": 1.5,
+    "b": 1.0,
+    "deck": 20,
+    "fights": 20,
+    "from_asc": 8,
+    "h": 2.0,
+    "hit_share": 0.6,
+    "max_hp": 80,
+    "r": 0.2,
+    "s": 0.8,
+    "sd": 7.0,
+    "turns_n": 160,
+    "v_card": 3.0,
+    "v_energy": 3.0
+   },
+   "3": {
+    "B": 8.0,
+    "C": 3.0,
+    "D": 40,
+    "E": 3.0,
+    "I": 16,
+    "L": 8,
+    "L_hit": 13.333,
+    "T": 7,
+    "a": 1.5,
+    "b": 1.0,
+    "deck": 20,
+    "fights": 6,
+    "from_asc": 8,
+    "h": 2.0,
+    "hit_share": 0.6,
+    "max_hp": 80,
+    "r": 0.2,
+    "s": 0.8,
+    "sd": 7.0,
+    "turns_n": 42,
+    "v_card": 3.0,
+    "v_energy": 3.0
+   }
+  },
+  "9": {
+   "1": {
+    "B": 8.0,
+    "C": 3.0,
+    "D": 20,
+    "E": 3.0,
+    "I": 12,
+    "L": 6,
+    "L_hit": 10.0,
+    "T": 9,
+    "a": 1.5,
+    "b": 1.0,
+    "deck": 20,
+    "fights": 12,
+    "from_asc": 9,
+    "h": 2.0,
+    "hit_share": 0.6,
+    "max_hp": 80,
+    "r": 0.3,
+    "s": 0.8,
+    "sd": 7.0,
+    "turns_n": 108,
+    "v_card": 3.0,
+    "v_energy": 3.0
+   },
+   "2": {
+    "B": 8.0,
+    "C": 3.0,
+    "D": 40,
+    "E": 3.0,
+    "I": 20,
+    "L": 10,
+    "L_hit": 16.667,
+    "T": 6,
+    "a": 1.5,
+    "b": 1.0,
+    "deck": 20,
+    "fights": 5,
+    "from_asc": 9,
+    "h": 2.0,
+    "hit_share": 0.6,
+    "max_hp": 80,
+    "r": 0.25,
+    "s": 0.8,
+    "sd": 7.0,
+    "turns_n": 30,
+    "v_card": 3.0,
+    "v_energy": 3.0
+   },
+   "3": {
+    "B": 8.0,
+    "C": 3.0,
+    "D": 40,
+    "E": 3.0,
+    "I": 16,
+    "L": 8,
+    "L_hit": 13.333,
+    "T": 7,
+    "a": 1.5,
+    "b": 1.0,
+    "deck": 20,
+    "fights": 6,
+    "from_asc": 8,
+    "h": 2.0,
+    "hit_share": 0.6,
+    "max_hp": 80,
+    "r": 0.2,
+    "s": 0.8,
+    "sd": 7.0,
+    "turns_n": 42,
+    "v_card": 3.0,
+    "v_energy": 3.0
+   }
+  }
+ }
+}

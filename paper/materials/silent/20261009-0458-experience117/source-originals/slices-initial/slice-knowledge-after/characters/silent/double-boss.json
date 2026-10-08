@@ -1,0 +1,427 @@
+{
+  "character": "silent",
+  "ascension": 10,
+  "act": 3,
+  "firstFloor": 48,
+  "secondFloor": 49,
+  "effect": "LEVEL_10",
+  "evidence": [
+    {
+      "run": "JMH5C51RLN4E",
+      "floor": 49,
+      "turn": 1
+    },
+    {
+      "run": "9TG1RP5LFAAK",
+      "floor": 49,
+      "turn": 1
+    },
+    {
+      "run": "ZVYUL2YP3518",
+      "floor": 49,
+      "turn": 1
+    },
+    {
+      "run": "TDLBRNA0R05B",
+      "floor": 49,
+      "turn": 1
+    }
+  ],
+  "value": {
+    "hp": [
+      [
+        0,
+        0.0
+      ],
+      [
+        1,
+        0.0
+      ],
+      [
+        8,
+        0.0
+      ],
+      [
+        17,
+        0.0
+      ],
+      [
+        25,
+        0.15625
+      ],
+      [
+        40,
+        1.25
+      ],
+      [
+        50,
+        3.203125
+      ],
+      [
+        60,
+        4.921875
+      ]
+    ],
+    "source": "silent-double-boss:4runs/8192samples; JMH5C51RLN4E,9TG1RP5LFAAK,ZVYUL2YP3518,TDLBRNA0R05B"
+  },
+  "potionHp": {
+    "POISON_POTION": 0.36439732142857145
+  },
+  "poisonPotionAmount": 6,
+  "secondBosses": [
+    {
+      "boss": "AEONGLASS",
+      "count": 1
+    },
+    {
+      "boss": "QUEEN",
+      "count": 1
+    },
+    {
+      "boss": "TEST_SUBJECT",
+      "count": 2
+    }
+  ],
+  "limitation": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+  "fit": {
+    "samplesTotal": 8192,
+    "conditions": 64,
+    "commonGrid": [
+      1,
+      8,
+      17,
+      25,
+      40,
+      50,
+      60
+    ],
+    "seed": 7,
+    "samplesPerCondition": 128,
+    "split": {
+      "tune": [
+        "JMH5C51RLN4E",
+        "9TG1RP5LFAAK"
+      ],
+      "validation": [
+        "ZVYUL2YP3518",
+        "TDLBRNA0R05B"
+      ]
+    },
+    "train": {
+      "hp": [
+        [
+          0,
+          0.0
+        ],
+        [
+          1,
+          0.0
+        ],
+        [
+          8,
+          0.0
+        ],
+        [
+          17,
+          0.0
+        ],
+        [
+          25,
+          0.3125
+        ],
+        [
+          40,
+          2.5
+        ],
+        [
+          50,
+          6.40625
+        ],
+        [
+          60,
+          9.84375
+        ]
+      ],
+      "poisonHp": 0.7287946428571429,
+      "paired": [
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 1,
+          "mean": 0.0
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 8,
+          "mean": 0.0
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 17,
+          "mean": 0.0
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 25,
+          "mean": 0.3203125
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 40,
+          "mean": 3.75
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 50,
+          "mean": 3.203125
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 60,
+          "mean": 2.9296875
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 1,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 8,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 17,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 25,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 40,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 50,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 60,
+          "mean": 0.0
+        }
+      ]
+    },
+    "productionRefitAfterValidation": {
+      "hp": [
+        [
+          0,
+          0.0
+        ],
+        [
+          1,
+          0.0
+        ],
+        [
+          8,
+          0.0
+        ],
+        [
+          17,
+          0.0
+        ],
+        [
+          25,
+          0.15625
+        ],
+        [
+          40,
+          1.25
+        ],
+        [
+          50,
+          3.203125
+        ],
+        [
+          60,
+          4.921875
+        ]
+      ],
+      "poisonHp": 0.36439732142857145,
+      "paired": [
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 1,
+          "mean": 0.0
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 8,
+          "mean": 0.0
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 17,
+          "mean": 0.0
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 25,
+          "mean": 0.3203125
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 40,
+          "mean": 3.75
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 50,
+          "mean": 3.203125
+        },
+        {
+          "run": "JMH5C51RLN4E",
+          "hp": 60,
+          "mean": 2.9296875
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 1,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 8,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 17,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 25,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 40,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 50,
+          "mean": 0.0
+        },
+        {
+          "run": "9TG1RP5LFAAK",
+          "hp": 60,
+          "mean": 0.0
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "hp": 1,
+          "mean": 0.0
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "hp": 8,
+          "mean": 0.0
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "hp": 17,
+          "mean": 0.0
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "hp": 25,
+          "mean": 0.0
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "hp": 40,
+          "mean": 0.0
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "hp": 50,
+          "mean": 0.0
+        },
+        {
+          "run": "ZVYUL2YP3518",
+          "hp": 60,
+          "mean": 0.0
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "hp": 1,
+          "mean": 0.0
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "hp": 8,
+          "mean": 0.0
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "hp": 17,
+          "mean": 0.0
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "hp": 25,
+          "mean": 0.0
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "hp": 40,
+          "mean": 0.0
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "hp": 50,
+          "mean": 0.0
+        },
+        {
+          "run": "TDLBRNA0R05B",
+          "hp": 60,
+          "mean": 0.0
+        }
+      ]
+    },
+    "heldoutActual": [
+      {
+        "run": "ZVYUL2YP3518",
+        "actualF49Hp": 50,
+        "actualPoison": true,
+        "actualWon": false,
+        "trainPredictedWin": 0.16015625
+      },
+      {
+        "run": "TDLBRNA0R05B",
+        "actualF49Hp": 2,
+        "actualPoison": true,
+        "actualWon": false,
+        "trainPredictedWin": 0.0
+      }
+    ],
+    "heldoutBrier": 0.01282501220703125,
+    "actualSecondWins": 0,
+    "actualSecondRuns": 4,
+    "actualSuccessExact95Upper": 0.6023646356164747,
+    "limitations": [
+      "Only four whole runs; seeds do not increase the number of independent runs.",
+      "HP grid and potion comparisons are simulator counterfactuals, not observed wins.",
+      "Same fixed base model for retrospective time split; this is not an online causal validation.",
+      "Held-out two Test Subject runs have zero simulated wins throughout the grid.",
+      "HP above 60 clamps at the last value because all four decks only overlap to 60.",
+      "Unsupported potion/card/relic effects and counters are not inferred. No second-fight calibration or SL change."
+    ]
+  }
+}
