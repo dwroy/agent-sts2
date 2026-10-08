@@ -1,6 +1,8 @@
-import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
-import { doubleQuestion, approvedFixture } from "../../ops/codex-brain-cache-probe.js";
+import { readFileSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { describe, expect, it, vi } from "vitest";
+import { doubleQuestion, approvedFixture, probeUsageKnown, preserveProbeResult } from "../../ops/codex-brain-cache-probe.js";
 import { validateRequest } from "../../ops/codex/lib.js";
 import { pickSpec } from "../src/brain/specs.js";
 import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
@@ -10,6 +12,39 @@ const answer: BrainAnswer = { engine: "codex", model: "gpt-6.1-sol", effort: "hi
   latencyMs: 10, usage: { inputTokens: 100, cacheHitTokens: 80, outputTokens: 10 }, toolCalls: [], raw: "{}", native: { mode: "session", reverted: true } };
 
 describe("restricted Codex cache probe (offline)", () => {
+  it("keeps the original ten-minute per-call timeout and stops before a second call", async () => {
+    vi.useFakeTimers();
+    let calls = 0;
+    try {
+      const pending = doubleQuestion(request, { decide: async (_request, signal) => {
+        calls += 1;
+        return new Promise<BrainAnswer>((_resolve, reject) => signal.addEventListener("abort", () => reject(new Error("timed out")), { once: true }));
+      } }, new AbortController().signal);
+      const rejected = expect(pending).rejects.toThrow("timed out");
+      await vi.advanceTimersByTimeAsync(600_000);
+      await rejected;
+      expect(calls).toBe(1);
+      expect(vi.getTimerCount()).toBe(0);
+    } finally { vi.useRealTimers(); }
+  });
+  it("keeps the original result byte-for-byte while preserving every later attempt", () => {
+    const directory = mkdtempSync(join(tmpdir(), "probe-history-"));
+    try {
+      const first = preserveProbeResult(directory, { status: "completed", cached: 80 });
+      const original = readFileSync(first, "utf8");
+      const later = preserveProbeResult(directory, { status: "pending", error: "usage unavailable" });
+      expect(first).not.toBe(later);
+      expect(readFileSync(first, "utf8")).toBe(original);
+      expect(readFileSync(join(directory, "probe-result.json"), "utf8")).toBe(original);
+      expect(JSON.parse(readFileSync(later, "utf8"))).toEqual({ status: "pending", error: "usage unavailable" });
+    } finally { rmSync(directory, { recursive: true, force: true }); }
+  });
+  it("treats missing cache usage as unknown and accepts a real zero", () => {
+    const measured = { usage: { inputTokens: 100, cachedInputTokens: 80 } };
+    expect(probeUsageKnown([measured, { usage: { inputTokens: 100, cachedInputTokens: 0 } }])).toBe(true);
+    for (const missing of [{}, { usage: {} }, { usage: { inputTokens: 100 } }, { usage: { inputTokens: 100, cachedInputTokens: null } },
+      { usage: { inputTokens: 100, cachedInputTokens: 101 } }]) expect(probeUsageKnown([measured, missing])).toBe(false);
+  });
   it("only permits the fixed no-argument action and rejects mutated fixtures", () => {
     expect(validateRequest({ action: "codex-brain-cache-probe", args: [] }).ok).toBe(true);
     for (const args of [["--model=other"], ["/tmp/request.json"], ["https://example.com"], ["high"]]) {
