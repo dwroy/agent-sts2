@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-10-08 16:47",
+  "action": "bash ops/codex-ops-do.sh codex-brain-cache-probe",
+  "requests_this_wake": 1,
+  "broker_exit": 0,
+  "status": "completed",
+  "source_agent_tree": "08dd9a59bb69317f447d770fe6207474b4c82c6f",
+  "fixture_sha256": "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98",
+  "source_originals": {
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/probe-attempt-1791448946155-391749-f1ac5207-fbaf-462f-9efb-77bfe8921535.json": {
+      "bytes": 4308,
+      "sha256": "0d716df8b13b5cf5edab45fdb5b31f74544971c74812b8c7b48db8e2df5a7559"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/probe-codex-calls.jsonl": {
+      "bytes": 8112,
+      "sha256": "4c94441636a82b267073f110796113022dbd313a815a4324361b15fcb1897d73"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/probe-physical-claim-1.json": {
+      "bytes": 322,
+      "sha256": "30eddda9af2fd206c6a26ad34c80d0e66056d51800bdb007582046263e1ea903"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/probe-physical-claim-2.json": {
+      "bytes": 322,
+      "sha256": "24dfdcead7defdf41e61929b05063449589d5cac59981adce9d18ab76319a091"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/probe-reserved.json": {
+      "bytes": 635,
+      "sha256": "2a23bffea090aa8ef963435dcaa45cc2ac782cf59e889cab9553be9c977c4430"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/probe-result.json": {
+      "bytes": 4308,
+      "sha256": "0d716df8b13b5cf5edab45fdb5b31f74544971c74812b8c7b48db8e2df5a7559"
+    },
+    "/tmp/sts2-20261008-1640-cache-probe.out": {
+      "bytes": 216,
+      "sha256": "05eb97f71a646a4975ce8739b2a4fee1bc40101ad94860d1420037f859f4e009"
+    },
+    "/tmp/sts2-20261008-1640-cache-probe.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "new_physical_model_calls": 2,
+  "total_allocated_calls": 4,
+  "physical_claims_permanent": true,
+  "same_thread": true,
+  "both_reverted": true,
+  "request_schema_byte_equivalent": true,
+  "model": "gpt-6.1-sol",
+  "effort": "high",
+  "input_tokens_per_question": [
+    146674,
+    146674
+  ],
+  "cached_input_tokens_per_question": [
+    0,
+    146432
+  ],
+  "first_hit_ratio": 0,
+  "repeat_hit_ratio": 0.9983500824958752,
+  "combined_hit_ratio": 0.4991750412479376,
+  "wall_ms": [
+    13951,
+    12612
+  ],
+  "quota_used_pct_before": 46,
+  "quota_used_pct_after": 46,
+  "quota_guard_pct_unchanged": 80,
+  "quota_consumption_rate_known": false,
+  "cache_transport_root_cause": "unknown",
+  "production_improvement_claimed": false,
+  "production_behavior_changed_this_wake": false,
+  "knowledge_or_game_ledger_added": false,
+  "fees_known": false,
+  "no_further_controlled_calls_authorized": true,
+  "old_baseline_history_preserved": true,
+  "observation": "Cold first question had no cache; identical repeated question under the unchanged session/revert transport cached 99.8350% of input. Capability observation only; historical 0.3732% to 53.2549% is an accounting correction, not a causal performance improvement."
+}

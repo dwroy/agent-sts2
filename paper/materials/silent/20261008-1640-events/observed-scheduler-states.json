@@ -1,0 +1,208 @@
+{
+  "20261008-161301": {
+    "runs": [
+      "BJLTVSYXCSGS"
+    ],
+    "pid": 336041,
+    "started": "2026-10-08 16:13",
+    "state": "done",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p8Q",
+    "rc": 0,
+    "finished": "2026-10-08 16:36",
+    "done": [
+      "BJLTVSYXCSGS"
+    ],
+    "missing": [],
+    "proposal_audit_errors": []
+  },
+  "20261008-153528-fix-batch": {
+    "task": "fix-batch",
+    "learner_task": "codex-brain-cache",
+    "character": "silent",
+    "runs": [],
+    "key": "feature:roy-20261008-1342-codex-brain-cache-probe-home",
+    "pid": 271862,
+    "state": "failed",
+    "reason": "ops",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache",
+    "feature_request": "roy-20261008-1342-codex-brain-cache-probe-home",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p8M",
+    "finished": "2026-10-08 16:00",
+    "rc": 0,
+    "merged": null,
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "fix-batch",
+      "base": "6e427e001bf72d14bb097a75986834276724c7eb",
+      "fixes": [
+        {
+          "item": "codex-brain-cache",
+          "commit": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+          "test": [
+            "agent/tests/codex-cache-probe.test.ts",
+            "agent/tests/codex-cache-engine.test.ts",
+            "ops/tests/test_codex_cache_probe_broker.py"
+          ],
+          "fails_without_fix": true,
+          "status": "tested-source-committed; live/probe pending"
+        }
+      ],
+      "skipped": [
+        {
+          "item": "live-publication",
+          "reason": "Nonblocking live-merge.lock acquisition failed with EAGAIN; live unchanged."
+        },
+        {
+          "item": "controlled-probe",
+          "reason": "Pending source integration and next broker wake; zero new model calls."
+        }
+      ],
+      "merged": null,
+      "published": null,
+      "version": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 251,
+        "cases": 2627,
+        "python_exit": 0,
+        "python_cases": 48,
+        "withdrawn_failed_cases": 2,
+        "restored_passed_cases": 2,
+        "actual_merged_tree_tsc": null,
+        "actual_merged_tree_vitest": null,
+        "external_full_tsc": null,
+        "external_full_vitest": null
+      },
+      "source_commits": [
+        "548b53ca211231ab5f1079a16fe9ad65f62b3c6c"
+      ],
+      "source_tree": "b713cfe9957519b07f1b6705f9dff0d8ab7375a8",
+      "source_agent_tree": "08dd9a59bb69317f447d770fe6207474b4c82c6f",
+      "fixed_live_tree": null,
+      "records_commit": "5460da22721ff3dcc23c08489b7f18bfb0bb4ae3",
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/report.md",
+      "report_json": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/report.json",
+      "original_logs": "/home/dw/Projects/agent-sts2/logs",
+      "cache_transport_cause": "unknown",
+      "controlled_probe_result": null
+    },
+    "retry_at": 1791450056.2037268,
+    "fallback_checks": [
+      {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-153528-fix-batch.fallback-caecade147fd983b4606dee31e1d8415fccbf711.checks.log",
+        "merged": "650a6a84c82351faef30462e87b82d7fbd0dae78",
+        "tree": "caecade147fd983b4606dee31e1d8415fccbf711",
+        "commits": [
+          "548b53ca211231ab5f1079a16fe9ad65f62b3c6c"
+        ]
+      }
+    ]
+  },
+  "20261008-153439-experience-update": {
+    "task": "experience-update",
+    "character": "silent",
+    "runs": [
+      "AD3QSC3P41JU"
+    ],
+    "key": "AD3QSC3P41JU",
+    "pid": 269598,
+    "state": "failed",
+    "reason": "tick",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/exp",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p8K",
+    "finished": "2026-10-08 16:02",
+    "rc": 0,
+    "merged": null,
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "experience-update",
+      "version": "2026-10-08.18",
+      "commit": "f2ce61432a35dcfc96e9ea651f59712ca6a2021f",
+      "merged": null,
+      "added": 0,
+      "updated": 17,
+      "retired": 0,
+      "active": 176,
+      "mechanisms": [
+        "力量逐击加伤，敏捷逐张加牌挡，乘区与来源分账",
+        "蜃景按施放时存活敌毒总量给牌挡，后施毒不追补",
+        "毒雾普通/升级建立2/3层，后续玩家轮初补毒",
+        "臂甲翻倍战内首张实际格挡，不当每轮恒定翻倍",
+        "实验体按现场激怒层数计技能成本，换阶段重核敌状态",
+        "族母吸取压缩直接伤/牌挡，已建毒按现场层数结算",
+        "尖啸临时降力按攻击段兑现，次轮恢复重核",
+        "爆发本轮使普通下一张、升级下两张技能各额外打出一次，攻击不耗层、未用不跨轮",
+        "波纹水盆在已见无攻击回合末补4挡，敏捷/脆弱不改这4",
+        "观察：女王两种击杀序均有赢例，不定固定顺序或提前能力必胜",
+        "王室猛毒开场净血价按实际遗物组合核，出牌前失血须算可操作入口",
+        "观察：A10首Boss获胜后直接接续实际血药，开场失血另扣，能力换战重建",
+        "已见A9/A10跨幕按缺失HP的80%向下取整回复",
+        "敏捷药水实饮建2敏捷，已有挡不倒补",
+        "观察：能力、当前胜率与后场血药分账"
+      ],
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 2621
+      },
+      "ledger": {
+        "added": [],
+        "proposed": [
+          "silent-0012",
+          "silent-0010",
+          "silent-0011",
+          "silent-0013",
+          "silent-0028",
+          "silent-0079",
+          "silent-0030",
+          "silent-0046",
+          "silent-0115",
+          "silent-0048",
+          "silent-0069",
+          "silent-0255",
+          "silent-0228",
+          "silent-0243",
+          "silent-0276",
+          "silent-0020",
+          "silent-0019",
+          "silent-0021"
+        ],
+        "retired": [],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-cb23be067a5f04c1",
+        "silent-proposal-53ed69feeb9898fe",
+        "silent-proposal-1f34e9d37b21ba71"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/report.md"
+    },
+    "retry_at": 1791450161.7663486,
+    "fallback_checks": [
+      {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-153439-experience-update.fallback-caecade147fd983b4606dee31e1d8415fccbf711.checks.log",
+        "merged": "650a6a84c82351faef30462e87b82d7fbd0dae78",
+        "tree": "caecade147fd983b4606dee31e1d8415fccbf711",
+        "commits": [
+          "f2ce61432a35dcfc96e9ea651f59712ca6a2021f"
+        ]
+      }
+    ]
+  }
+}
