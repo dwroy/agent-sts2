@@ -934,3 +934,8 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] **silent-0322**：仅转录学习者回报，`agent/src/reflex/card-model.ts:1144/:1146` APOTHEOSIS仍限未升级2费，已升级1费神化未接同线升级。PBUBM0LRTEDD/A10/F49第6次T1 d303529、s311342—311347完整神化+／暗影／步法／后空翻候选报14挡、实22挡，独立少报8挡；预测损11与实损1还含攻击预算差，不全归单因。普通神化0237／S1.apotheosis1已修分账，0322首证本局/A10/prior unknown/observed及0323机制原记录保持。沿 `silent-proposal-53b3db220508b3d9` 自动strategy-proposal链，学习者核对已见1费、固有升级全部牌、消耗模板并复用普通传播，自测合入；已升级牌不重复提升，保持当前技能触发敌力血价，未知费用修改、附魔、重放、其他角色及未观察进阶保持原范围。缺修后整场胜负对照，不承诺转胜，运维不实现机制。
 - 本局正常结束，模型缺口不阻塞对局；先查自动链共享租约，避免重复派发。SL全败换线血价与连王资源接续沿84d4c469867ba70e／46ebe0b559d993ce，由学习者处理；缺受控证据保持原规则。旧0079 repeat沿原队列，不重加；本轮不标implemented、shipped或新版本。只读live a7c2a411定位，实际运行8149e4ca+dirty完整源码未复原；SL截断、部分退场伤害、F49投影、boss时钟、最优执行比例、受控胜负对照、Jev缓存及费用等原未记录限制保持，源证据见 `paper/materials/silent/20261009-0304-events/pm-originals/report.md`。
+
+## 2026-10-09 03:33 — FU8ZUQHBHNV9复盘新增非阻塞纯bug（普通刀刃之舞生成模型）
+
+- [ ] **silent-0324**：转录学习者原回报，`agent/src/reflex/card-model.ts:929/:1104/:1109` 普通 BLADE_DANCE 的 Cards=3 被读为即时抽3，未接生成3张SHIV。FU8ZUQHBHNV9/A10/F8T3 d303671饮技能药水、d303672取牌，s311492显示0费且playable=true，d303673代码结束；T4 s311495→311496实付1能量添三张0费4伤小刀，311496→311499各扣4。首证按原台账为 C48LLXBGKXQ9/A0/F2T1 d205321候选抽3，F6T3 d205402/s209322→209323实际添三刀，prior no/observed保持；不是上线后repeat。本局正常阵亡，非阻塞，追加普通队列。
+- 沿原 `silent-proposal-e7ed37db21fc698a` 自动strategy-proposal链，学习者按已观察普通版核确定生成、容量/费用传播、技能药水临时零费与跨回合恢复，以及候选执行后真实手位；未知组合、升级和其他角色保持原证据边界。缺修后整场对照，不承诺转胜，运维不实现机制、不重复派发或标implemented/shipped。骇鳗尾段与路线/回血提案 `silent-proposal-2f91d21607a578e9` 沿自动链处理，原规则与估值保持。原证据、两处追加勘误及未记录限制见 `paper/materials/silent/20261009-0330-events/pm-originals/report.md` 和 `owned-lessons-addition-original.md`。
