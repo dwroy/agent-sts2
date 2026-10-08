@@ -42,9 +42,9 @@ beforeEach(() => {
 });
 afterEach(async () => { for (const engine of engines) await engine.close(); rmSync(directory, { recursive: true, force: true }); setKnowledgeCharacter(null); });
 
-function engine(physicalCallLimit?: number) {
+function engine(physicalCallLimit?: number, beforePhysicalCall?: (call: { mode: "session" | "exec"; questionId?: string }) => void) {
   const config = loadConfig({ BRAIN_CODEX_BIN: "/fixed/fake-codex", BRAIN_CODEX_HOME: directory, BRAIN_CODEX_MODE: "session", BRAIN_CODEX_EFFORT: "high" });
-  const instance = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: directory, traceFile: join(directory, "trace.jsonl"), physicalCallLimit,
+  const instance = new CodexEngine({ settings: config.brain.engines.codex, codex: config.brain.codex, stateDir: directory, traceFile: join(directory, "trace.jsonl"), physicalCallLimit, beforePhysicalCall,
     readUsage: async () => ({ readAt: new Date().toISOString(), ms: 1, plan: null, windows: [{ name: "codex/primary", usedPct: 1, windowMins: 10080, resetsAt: null }], credits: null, ordinaryUsageAllowed: true, reachedType: null, spendControlReached: false }) });
   engines.push(instance); return instance;
 }
@@ -52,6 +52,22 @@ function request(overrides: Partial<BrainRequest> = {}): BrainRequest {
   return { label: "event/choose", runId: "fixed-run", question: "fixed complete question", system: "complete fixed knowledge", memory: { act: "fixed" }, payload: { hp: 10 }, options: { a: "fixed option" }, spec: pickSpec("event/choose", { a: "fixed option" }, {}), ...overrides };
 }
 function traces() { return readFileSync(join(directory, "trace.jsonl"), "utf8").trim().split('\n').map(line => JSON.parse(line)); }
+
+it("persists a bounded probe claim before sending and refuses dispatch if the persistent ledger fails", async () => {
+  const seen: Record<string, unknown>[] = [];
+  const e = engine(2, call => { seen.push(call); expect(state.turns).toHaveLength(seen.length - 1); });
+  await e.decide(request({ questionId: "cache-probe-repair-1" }));
+  await e.decide(request({ questionId: "cache-probe-repair-2" }));
+  await expect(e.decide(request())).rejects.toThrow(/budget exhausted/);
+  expect(seen).toEqual([{ mode: "session", questionId: "cache-probe-repair-1" }, { mode: "session", questionId: "cache-probe-repair-2" }]);
+  const refused = engine(2, () => { throw new Error("persistent ledger unavailable"); });
+  await expect(refused.decide(request())).rejects.toThrow(/ledger unavailable/);
+  expect(state.turns).toHaveLength(2);
+});
+
+it("never enables a persistent probe callback for the uncapped production engine", () => {
+  expect(() => engine(undefined, () => {})).toThrow(/isolated probe limit/);
+});
 
 it("preserves full model inputs, model/effort/schema and revert while measuring repeated/dynamic requests", async () => {
   const e = engine();
