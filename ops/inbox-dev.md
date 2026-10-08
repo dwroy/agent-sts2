@@ -275,3 +275,4 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 13:44 运维：经验130539/S1.exp97固定发布f4c35b90、树924e0ecc完整外部tsc+vitest均exit0，299文件3416例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、19所属数据shipped保持，原failed/merged=null/19项冲突及1259原件SHA保留；四份代码提案沿原自动链。回执 paper/materials/silent/20261008-1342-events/manifest.json。
 
 - 2026-10-08 13:46 运维：G8NHLL09DLBX复盘新纯bug silent-0295（随机施毒伪确定斩杀）非阻塞，已按原证据追加fix-queue-v4；两原代码提案982c9908/aaefd918核注册及SHA后沿自动链，7旧support与原首证保持，不标实现或承诺修后获胜。回执paper/materials/silent/20261008-1342-postmortem。
+- 2026-10-08 14:01 [运维codex] Roy高优先Codex大脑缓存排查与修复：已实际单独派发 20261008-140042-fix-batch，PID 107937，pane=wJ:p8D，任务和宿主进程已核实；独立codex-brain-cache工作树与模板，保留完整题面和现有模型/推理强度，要求查真实缓存原因、做已授权同题固定前缀对照，并给实际修前/修后命中率、token、耗时和额度对比。当前仅派发，尚无缓存原因或修复结论；后续按真实完成事件登记，回执paper/materials/silent/20261008-1342-cache-dispatch/dispatch-receipt.json。
