@@ -1,0 +1,51 @@
+{
+  "observed_at": "2026-10-08 09:05",
+  "dispatch": {
+    "dispatched": [
+      "20261008-090447-fix-batch",
+      3922958
+    ]
+  },
+  "job": {
+    "task": "fix-batch",
+    "learner_task": "silent-a10-regression",
+    "character": "silent",
+    "runs": [],
+    "key": "feature:roy-20261008-0851-silent-a10-regression",
+    "pid": 3922958,
+    "state": "running",
+    "reason": "ops",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression",
+    "feature_request": "roy-20261008-0851-silent-a10-regression",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p70"
+  },
+  "source": {
+    "commit": "2e2b48aa6e954daf02aa7cfc6a82eddc58bcc5cf",
+    "base": "f60e6668310c1765905582f04ec4a06d09f2b39a",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression",
+    "sandbox": {
+      "exit": 0,
+      "files": 247,
+      "cases": 2604,
+      "log": "/tmp/sts2-20261008-0851-dispatch-sandbox.log"
+    },
+    "dispatch_fixed_tests": 31,
+    "without_route_rc": 1,
+    "restored_route_rc": 0,
+    "source_paths": [
+      "docs/codex-ops.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py",
+      "learner/tasks/silent-a10-regression.md",
+      "notes/silent-a10-regression-dispatch.json"
+    ],
+    "scope": "mechanical main dispatch only; no gameplay release"
+  },
+  "main": "2e2b48aa6e954daf02aa7cfc6a82eddc58bcc5cf",
+  "live": "775a51367b76aec570e1b49ec8da1436cc7bb89d",
+  "procs": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261008-0851-events/dispatched-procs.txt",
+  "procs_sha256": "c1c474cb54de1f2fe229fd25b4addc2d32f91573d8ceed190b66f3329acf52c6",
+  "scope": "Roy A10 independent audit; no gameplay conclusion or deployment; existing normal candidate/calibration/B4-B5 retained"
+}
