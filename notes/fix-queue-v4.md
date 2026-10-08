@@ -894,3 +894,10 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 仅原codex-brain-cache独立续批处理，普通fix/strategy不实现本节。继承Roy原授权，先核已有安全生产run-config/日志中的大脑home与隔离入口，修probe home/启动前检查；不读或复制登录令牌、key、.env，不改全局AGENTS/中央记忆/生产配置，不绕过知识隔离。保留冻结夹具SHA 6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98、完整题面/schema、gpt-6.1-sol/high、额度/超时与固定源码门控。
 - 原pair永久预约保留。另建修复pair须独立结果/预约、可验证跨尝试物理调用账本，最多再2次、原总授权最多4次；超时、缺usage或历史不明不能无限重试。固定离线回归核全局home拒绝、安全入口、预约不重开、预算及失败保留；原入口自测合main/live后，下一次白名单加载经固定broker动作实际触发，不接受任意命令/路径/模型。
 - 复用原report/baseline/reconciled及本轮20题生产取样（59.2996%、原high；不同题型/进行中小样本，不作性能/额度因果对比），不重做全历史调查或重复论文/游戏知识台账。受控双问pending，冷缓存原因、费用/额度改善unknown。回执paper/materials/silent/20261008-1507-cache；新续办请求roy-20261008-1342-codex-brain-cache-probe-home，不复派原done请求。
+
+## 2026-10-08 16:03 — S1.exp100 完整检查：rollout 最佳线路补入断言失败（普通学习者，优先核查）
+
+- [ ] **非阻塞系统／测试缺口，根因未核定**：批次20261008-144109-experience-update固定发布2b1a5f6d491f826ea1bac28f707716d109fb3e65/树bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7完整tsc0/vitest1；301文件3428例通过、1文件1例失败、2跳过。`agent/tests/rollout-live.test.ts:132:28` 的 `addedSomewhere` 预期true实得false（未展示的rollout最佳线路应被补入题面）。原日志/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-144109-experience-update.fallback-bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7.checks.log，SHA256=c75b7f764d641ca8ebe3c3f3291f12c6723175b0a2769fcb570008145d0c725d，15:46:39开始652.42秒，原字节归档paper/materials/silent/20261008-1558-exp100-checks/full-check-original.txt。
+- 运维决定**保留S1.exp100，交普通fix-batch核查修复**。相关源码、测试和logged-states与此前完整通过722518cd逐blob相同；另有十项知识数据变化（经验及设计内自动刷新），不能据此断言只是负载波动或经验回归。固定原输入并冻结可刷新模型，分别受控核对候选补入契约、时钟截止退化与知识数据依赖；若确有源码缺陷，只修已证实系统问题。
+- 保留最佳线路补入/最后标记/resolve日志与截止退化断言；不得删除或放宽断言、提升生产预算、增加排除、以单次重跑通过冒报已修，亦不得改游戏估值／SL／药水／Codex-only来消除测试失败。固定夹具撤源码失败／恢复通过，源及合后沙箱通过后再交原完整外部检查。证据不足明确待证、保留原整套exit1；无游戏局号或bug-infra条目，不造台账或标shipped。
+- 普通codex-dev工作树有他人未提交修复，保持原字节和归属；仅尝试既有fix-batch动作，由调度器保护拒绝忙／脏树。拒绝则队列pending，等已有调度事件／tick续办，不等锁、不清树、不抢独立缓存或boss批次。
