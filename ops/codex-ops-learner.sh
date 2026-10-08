@@ -18,7 +18,7 @@ if [ "$learner_task" != "$task" ]; then
       && [[ "$worktree" =~ ^$ROOT/\.worktrees/boss-sim-$character-[a-z0-9_]+-[0-9]{8}-[0-9]{6}$ ]] \
       && [ "${7:-}" = "$DIR/learner/$batch.boss-evidence.json" ] || exit 2
   else
-  case "$learner_task" in silent-boss-calibration|codex-only-brain|silent-double-boss|boss-sim-automation) ;; *) exit 2 ;; esac
+  case "$learner_task" in silent-a10-regression|silent-boss-calibration|codex-only-brain|silent-double-boss|boss-sim-automation) ;; *) exit 2 ;; esac
   [ "$task" = fix-batch ] && [ "$character" = silent ] \
     && [ "$worktree" = "$ROOT/.worktrees/$learner_task" ] || exit 2
   fi
