@@ -331,3 +331,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 
 9DAS5L8YM1CN复盘无新增纯bug；0256/0260已在原队列，回报“未列”误判仅记录去重，不改游戏知识。四提案由自动链续办，紧勒以f979修正版为准、ec2b初稿保留。原exp100完整rollout候选补入断言失败仍待普通工作树可用时核查，未因沙箱通过关闭。论文一次刷新、五校验通过；原文/台账/快照已纳入当前提交。证据：paper/materials/silent/20261008-1607-events/paper-snapshot.json。
 - 2026-10-08 16:51 [运维 codex] Roy缓存任务续办：隔离双问已通过固定broker完成，授权两次物理调用已用完（旧预约保留，总分配4）。同一thread/revert、完整题面/schema、gpt-6.1-sol/high均保持；首问146674入/缓存0，第二问146674入/缓存146432（99.835%），两问合计49.9175%，用时13.951/12.612秒。历史0.4%→53.2549%是漏计修正；本次仅验证重复请求缓存能力，生产前后因果改善、费用及额度消耗速度仍未知，quota前后均46%，80%保护保持。两个原批完整外部302文件3435过2跳已核实，旧失败原件不改、无新游戏版本/规则。证据：paper/materials/silent/20261008-1640-events/cache-probe-closure.json；不再重跑该双问。
+
+- 2026-10-08 17:05 运维 codex：160331 经验合入的32项并行记录冲突已兜底；仅原 experience.json .18→.19 实际上线 3e5637f6 / S1.exp102，主仓库同步。源自测 tsc/vitest0（251文件2621例），所属16项仅登记数据 shipped，四项代码提案仍 pending 走自动链；完整外部检查已请求一次，结果待事件，原报告和失败历史保持。回执 paper/materials/silent/20261008-1655-experience102/external-check-request.json。
