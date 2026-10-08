@@ -1,0 +1,100 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.2 → 2026-10-09.3；提交：4aca285e（分支 exp-silent）；合入：未合入，预检出现17项并行记录冲突，已停止；刷新数据已保存为2088d067。
+- 条数：新增1、更新22（加证据22、只改数字0）、退役0；active 188 → 189。正文51252字符；A8适用176条/47578字符，A9适用177条/47862字符；置信度高118、中46、低25。压缩了女王重复案例，完整历史保留。
+- 机制推理：  
+  力量与虚弱 — 逐击核加成，减力不停止成长 — 145局 — HEMND3SMQYB8  
+  能力兑现 — 持有、实建、已结收益分核 — 144局 — HEMND3SMQYB8  
+  脆弱 — 逐张折减牌挡 — 31局 — HEMND3SMQYB8  
+  步法 — 后续牌挡兑现敏捷 — 85局 — HEMND3SMQYB8  
+  毒雾 — 建层后次轮补毒 — 72局 — HEMND3SMQYB8  
+  触媒 — 增加毒结算次数 — 55局 — HEMND3SMQYB8  
+  毒性爆发 — 22毒加9后立即三结90 — 7局 — HEMND3SMQYB8  
+  干瘪之手 — 能力后随机手牌免费 — 3局 — HEMND3SMQYB8  
+  永冻冰晶 — 每战首次能力补7挡 — 7局 — HEMND3SMQYB8  
+  凋萎 — 持牌伤与攻击合核 — 18局 — HEMND3SMQYB8  
+  尖啸 — 临时减力，后轮重核 — 71局 — HEMND3SMQYB8  
+  失落／遗忘 — 负力敏与回复分账 — 10局 — HEMND3SMQYB8  
+  双boss接续 — 实际血药接续、能力重建 — 10局 — HEMND3SMQYB8  
+  女王SL观察 — 全败推演仍有真实血价 — 7局 — HEMND3SMQYB8  
+  敏捷药 — 加2敏，不补旧挡 — 58局 — HEMND3SMQYB8  
+  再生 — 逐轮回复，净损不等攻击伤 — 20局 — HEMND3SMQYB8  
+  跨幕回复 — 缺血80%向下取整 — 35局 — HEMND3SMQYB8  
+  紧勒 — 后续每牌失血；升级子集仅1局 — 5局 — HEMND3SMQYB8  
+  黑暗镣铐 — 临时降力，次轮恢复 — 6局 — HEMND3SMQYB8  
+  沙漏观察 — 毒、凋萎与续战资源合核 — 18局 — HEMND3SMQYB8  
+  计算下注+ — 全弃等量重抽并消耗，32次吻合 — 6局 — R0HEV5E3QT6G、HEMND3SMQYB8
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件/2627用例/退出0，未重跑；提案关联检查及gitleaks通过。
+- 切片大小：整体中位减少5字；最大5431字，单片最多增加93字。
+- 学习账本：新增无；改成proposed：silent-0012、silent-0019、silent-0020、silent-0021、silent-0013、silent-0005、silent-0011、silent-0027、silent-0037、silent-0067、silent-0173、silent-0024、silent-0046、silent-0183、silent-0228、silent-0079、silent-0276、silent-0259、silent-0243、silent-0261、silent-0241、silent-0318；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。合入待运维兜底；变更记录已追加第114节，完整[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update/report.md)已保存。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.3",
+  "commit": "4aca285e251f888ba5b8c75eb40047c0e0deaa6c",
+  "merged": null,
+  "added": 1,
+  "updated": 22,
+  "retired": 0,
+  "active": 189,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-deck-burst-observation",
+    "silent-frail-card-block",
+    "silent-footwork-block",
+    "silent-noxious-fumes-growth",
+    "silent-accelerant-triggers",
+    "silent-outbreak-immediate-poison",
+    "silent-mummified-hand-free-card",
+    "silent-permafrost-first-power-block",
+    "silent-wither-end-turn-loss",
+    "silent-piercing-wail-temporary-strength",
+    "silent-lost-forgotten-possession",
+    "silent-double-boss-resource-handoff",
+    "silent-queen-poison-window-sl-observation",
+    "silent-dexterity-potion-card-block",
+    "silent-regen-potion-decay-heal",
+    "silent-act-transition-missing-hp-heal",
+    "silent-strangle-following-card-hp-loss",
+    "silent-dark-shackles-temporary-strength",
+    "silent-aeonglass-artifact-growth-sl",
+    "silent-calculated-gamble-upgraded-hand-reset"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0019", "silent-0020", "silent-0021",
+      "silent-0013", "silent-0005", "silent-0011", "silent-0027",
+      "silent-0037", "silent-0067", "silent-0173", "silent-0024",
+      "silent-0046", "silent-0183", "silent-0228", "silent-0079",
+      "silent-0276", "silent-0259", "silent-0243", "silent-0261",
+      "silent-0241", "silent-0318"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-a65ae6b794cf6cd2",
+    "silent-proposal-5b170224e062e88f",
+    "silent-proposal-9d03e13f7a8424cd",
+    "silent-proposal-144a45719fb56478"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11c9b-69a1-7920-995f-ae7a6c46bf6f
+轮数：1；工具调用：command_execution×68 file_change×3
+token：输入 228.5k、输出 47.2k（其中推理 15.1k）、cache 读 9780.7k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：1932.2 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 8.1 s、首次工具 12.6 s、末次工具结束 1848.3 s；工具内共 1259.6 s，其余（模型生成、推理、网络）669.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×57 wait×4；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T01-41-49-01a11c9b-69a1-7920-995f-ae7a6c46bf6f.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update.jsonl
