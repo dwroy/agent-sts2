@@ -1,0 +1,86 @@
+[
+  [
+    "b9676.payload.route_review.plan_facts.arrival",
+    [
+      "F43 r9c4 精英：50/81（p75 50）",
+      "F44 r10c5 休息：6/81（p75 耗尽）",
+      "F45 r11c6 普通战：30/81（p75 耗尽）",
+      "F46 r12c5 普通战：14/81（p75 耗尽）",
+      "F47 r13c4 休息：0（血量耗尽）（p75 耗尽）",
+      "F48 r14c3 Boss：0（血量耗尽）（p75 耗尽）",
+      "F49 r15c3 Boss：0（血量耗尽）（p75 耗尽）"
+    ]
+  ],
+  [
+    "b9676.payload.facts.floors_to_act_boss",
+    6
+  ],
+  [
+    "b9676.payload.facts.act_boss",
+    "AEONGLASS_BOSS"
+  ],
+  [
+    "b9676.payload.facts.act_boss_clock",
+    {
+      "boss": "AEONGLASS",
+      "boss_hp": 535,
+      "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+      "boss_hp_parts": [
+        "AEONGLASS"
+      ],
+      "boss_enemies": [
+        {
+          "enemy": "AEONGLASS",
+          "hp": 535,
+          "hp_samples": 12,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "EBB_MOVE",
+              "per_hit": 26,
+              "hits": 1,
+              "basis": "base",
+              "samples": 25,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "EYE_LASERS_MOVE",
+              "per_hit": 12,
+              "hits": 2,
+              "basis": "base",
+              "samples": 24,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        }
+      ],
+      "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+      "deck_damage_per_turn_estimate": null,
+      "hp_loss_per_turn": null,
+      "survivable_turns": null,
+      "gap_per_turn": null,
+      "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+    }
+  ],
+  [
+    "b9676.payload.facts.act_boss_sim",
+    "boss 模拟没有结果（只跑完 168 次模拟（不足 300 次），选项之间的差噪声太大，不给数字）：act_boss_clock 仍是 boss 时钟的估计"
+  ],
+  [
+    "b9676.payload.facts.rest_site.floors_to_act_boss",
+    6
+  ],
+  [
+    "b9676.payload.facts.double_boss_preparation.projection",
+    "沿用silent-0163/S1.fix27：F48之后路线血量仍未知，不把进F48的血量当进F49血量；连战模拟才传递每条样本实际余量。"
+  ],
+  [
+    "b9676.payload.facts.route_relic_observations[0].projection_note",
+    "这是六次进房实回5的观察。当前血量保持现场值；房间代价按进房前到离房后的净血量变化统计，已包含进房回血，不在路线投影上再加5。现有房间统计没有按是否持有星图区分。"
+  ]
+]

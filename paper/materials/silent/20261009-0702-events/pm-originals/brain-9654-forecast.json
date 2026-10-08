@@ -1,0 +1,122 @@
+[
+  [
+    "b9654.payload.facts.floors_to_act_boss",
+    15
+  ],
+  [
+    "b9654.payload.facts.act_boss",
+    "KAISER_CRAB_BOSS"
+  ],
+  [
+    "b9654.payload.facts.act_boss_clock",
+    {
+      "boss": "KAISER_CRAB",
+      "boss_hp": 428,
+      "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+      "boss_hp_parts": [
+        "CRUSHER",
+        "ROCKET"
+      ],
+      "boss_enemies": [
+        {
+          "enemy": "CRUSHER",
+          "hp": 219,
+          "hp_samples": 19,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "BUG_STING_MOVE",
+              "per_hit": 10,
+              "hits": 2,
+              "basis": "base",
+              "samples": 17,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "ENLARGING_STRIKE_MOVE",
+              "per_hit": 4,
+              "hits": 1,
+              "basis": "base",
+              "samples": 20,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "GUARDED_STRIKE_MOVE",
+              "per_hit": 20,
+              "hits": 1,
+              "basis": "base",
+              "samples": 6,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "THRASH_MOVE",
+              "per_hit": 18,
+              "hits": 1,
+              "basis": "base",
+              "samples": 18,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        },
+        {
+          "enemy": "ROCKET",
+          "hp": 209,
+          "hp_samples": 21,
+          "hp_from_ascension": 10,
+          "hp_estimated": false,
+          "attacks": [
+            {
+              "move": "LASER_MOVE",
+              "per_hit": 47,
+              "hits": 1,
+              "basis": "base",
+              "samples": 13,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "PRECISION_BEAM_MOVE",
+              "per_hit": 28,
+              "hits": 1,
+              "basis": "base",
+              "samples": 21,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            },
+            {
+              "move": "TARGETING_RETICLE_MOVE",
+              "per_hit": 5,
+              "hits": 1,
+              "basis": "base",
+              "samples": 24,
+              "from_ascension": 10,
+              "estimated": false,
+              "scaled_through_ascension": 10
+            }
+          ]
+        }
+      ],
+      "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+      "deck_damage_per_turn_estimate": null,
+      "hp_loss_per_turn": null,
+      "survivable_turns": null,
+      "gap_per_turn": null,
+      "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+    }
+  ],
+  [
+    "b9654.payload.facts.route_relic_observations[0].projection_note",
+    "这是六次进房实回5的观察。当前血量保持现场值；房间代价按进房前到离房后的净血量变化统计，已包含进房回血，不在路线投影上再加5。现有房间统计没有按是否持有星图区分。"
+  ]
+]
