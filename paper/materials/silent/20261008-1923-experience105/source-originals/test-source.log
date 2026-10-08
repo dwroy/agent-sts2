@@ -1,0 +1,2653 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
+
+ ❯ tests/boss-lines-planner.test.ts (7 tests | 2 failed) 86582ms
+     × BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte 12877ms
+     × a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log 1363ms
+ ❯ tests/sl-explore-b2.test.ts (5 tests | 2 failed) 78176ms
+     × a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's 27114ms
+     × The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would 5739ms
+ ❯ tests/sl-retry-planner.test.ts (9 tests | 3 failed) 57465ms
+     × every logged retry board's decision is 3488dc5's, byte for byte 13179ms
+     × known draws the pile does not hold: none used, the decision as with the switch off 5967ms
+     × a retry step that throws leaves the decision exactly as with both switches off 5410ms
+ ❯ tests/sl-explore.test.ts (33 tests | 3 failed) 19488ms
+     × recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte 6351ms
+     × every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's 5855ms
+     × the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not 6132ms
+ ❯ tests/death-move-planner.test.ts (8 tests | 4 failed) 26741ms
+     × MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte 8436ms
+     × MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off 6671ms
+     × on, a monster DB without the ally-death counters (built before them): as before 5496ms
+     × on, reading the rules fails: the switch off (fail safe) 1435ms
+ ❯ tests/potions-jev-call.test.ts (14 tests | 1 failed) 29963ms
+     × each held potion's worth in this act's boss fight (potion-equivalents.json), facts only: the options are the same 32ms
+ ❯ tests/template-target.test.ts (12 tests | 1 failed) 8199ms
+     × the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte 6554ms
+ ❯ tests/mech-move-planner.test.ts (8 tests | 4 failed) 9696ms
+     × MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte 3233ms
+     × MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off 2083ms
+     × on, reading the rules fails: the switch off (fail safe), the Crab's back attack included 1945ms
+     × on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule) 528ms
+ ❯ tests/thief.test.ts (11 tests | 3 failed) 7786ms
+     × every logged thief board's decision is the pre-change one, byte for byte 6242ms
+     × its Escape turn: this turn is the last; the lines that leave it alive say it leaves with the card 18ms
+     × a thief step that throws (a broken first-frame note) leaves the decision exactly as with the switch off 127ms
+ ❯ tests/thief-cost.test.ts (11 tests | 3 failed) 4519ms
+     × every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false) 3471ms
+     × fail safe: a value that throws when read leaves the decision exactly as with THIEF_COST off 89ms
+     × the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn 200ms
+ ❯ tests/mech-rules-planner.test.ts (5 tests | 3 failed) 4144ms
+     × with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte 1813ms
+     × on, but a monster DB without the observed data: the same 1150ms
+     × on, and reading the rules fails: the same (fail safe) 928ms
+ ❯ tests/boss-sim.test.ts (16 tests | 1 failed) 3427ms
+     × the Platt map: monotone, 0 and 1 pulled in by half a sample 5ms
+ ❯ tests/passive-pieces.test.ts (20 tests | 1 failed) 2421ms
+     × 8D8DZ9K680C2 F48 T1 (Sai, Hourglass, Bronze Scales, Inferno+, Flame Barrier): more damage a turn, the passive part not cut by the Queen's Weak; the passive block counted at its share 14ms
+ ❯ tests/batch-g.test.ts (22 tests | 1 failed) 511ms
+     × the handbook's act-1 boss entry HP per ascension (the pooled 88%/81% came from 41 early fights; at A9 wins and losses both enter near 90%) 8ms
+ ❯ tests/screens.test.ts (153 tests | 4 failed) 508ms
+     × says the offers were below the skip bar instead of 'only one legal option' (0NG Act 2) 15ms
+     × Toasty Mittens keeps Strength-scaled attacks, AoE into two bodies, Fight Me and debuffs under Artifact (6HRZ F33 T6, XWPV F48 T4) 2ms
+     × embarks once a character is chosen 1ms
+     × holds the ascension at TARGET_ASCENSION: steps down after a win unlocked the next level, no index (Dai 2026-09-28) 0ms
+ ❯ tests/silent-double-boss.test.ts (10 tests | 1 failed) 359ms
+     × builds the observed second-boss mixture with the physical poison belt, independent of a stale boss id 125ms
+ ❯ tests/fight-plan.test.ts (28 tests | 1 failed) 274ms
+     × shows the whole deck, the potions by id and each enemy with its type 9ms
+ ❯ tests/prefix-facts.test.ts (9 tests | 3 failed) 221ms
+     × the guide, the handbook, the hints and the lessons read the day's table; nothing is left unfilled 7ms
+     × a data refresh changes the prefix from the data-version block on; everything before it is byte-identical 3ms
+     × the brain renders with the day's table in DEEPSEEK_FACTS_SNAPSHOT_DIR 68ms
+ ❯ tests/shop-potions.test.ts (6 tests | 5 failed) 61ms
+     × block, heal and regen potions are worth their HP; damage potions shorten the boss fight 49ms
+     × SFCE F11 (1 of 2 slots empty): Blood Potion carries the free-slot fact, no code value or expected HP saved 3ms
+     × SFCE F15: every potion is listed the same way, modelled or not 1ms
+     × with every slot full the fact says a discard comes first 1ms
+     × the Jev/code path keeps its old potion score and shows no DeepSeek facts 3ms
+ ❯ tests/multi-character.test.ts (13 tests | 2 failed) 180ms
+     × CHARACTER unset plays the Ironclad, as before 7ms
+     × leaves the Ironclad's text byte for byte 2ms
+ ❯ tests/silent-route-relic.test.ts (6 tests | 1 failed) 86ms
+   × delivers the observation in the production reward question, keeping all original options 20ms
+ ❯ tests/jev-context.test.ts (15 tests | 4 failed) 165ms
+     × every hint is short, conditional, unique and backed by 2+ runs 6ms
+     × retrieves by enemy id and enemy power: the Matriarch's sleep hints only while it sleeps 5ms
+     × gives hallway fights with no keyed enemy nothing, and caps boss fights at 5 1ms
+     × v1 sends the matching fight hints and logs their ids 16ms
+ ❯ tests/run-journal.test.ts (19 tests | 5 failed) 151ms
+     × every question gets the same sections, including the boss's monster-DB entry and the act's threats 13ms
+     × counts node types min–max over the paths to the boss 3ms
+     × follows the chosen node until the next map, and says when the next node is forced 13ms
+     × the Beast keeps its stun threshold and the Matriarch its wake-up rule: nothing is regex-stripped 1ms
+     × the crab's Laser, the Queen's HP and the Test Subject's Pounce at this ascension, marked when estimated 0ms
+ ❯ tests/sl.test.ts (42 tests | 3 failed) 101ms
+     × lists the hardest non-boss fights by A8+ deaths (any room), plus Soul Nexus by rate, with their enemy ids, source and date 10ms
+     × listed elites get SL_ELITE_RETRIES; other elites and hallway fights are not tracked 2ms
+     × describe() is what run-config records 3ms
+ ❯ tests/knowledge-check-facts.test.ts (9 tests | 5 failed) 16ms
+     × the crab's kill order: Rocket first, Crusher first, neither; all ascensions, A8 and A9 (was "51 场…39 场赢 8") 8ms
+     × the Matriarch's sleep: decks without lasting Strength by ascension, bursts vs chip damage that woke it 2ms
+     × the crab record is counted, the Laser comes with Charge Up's Strength 1ms
+     × the Matriarch: sleep turns pay off only with powers; a 25%+ burst may wake it; no count left unfilled 0ms
+     × hp-trade-boss has the Vantom Slippery exception (3SBP T1) 1ms
+ ❯ tests/experience.test.ts (10 tests | 2 failed) 111ms
+     × gives Jev crab-kill-order on a crab board 9ms
+     × the real files: an act-1 card reward before Vantom gets the Vantom lessons and the offered card's lesson and stats 9ms
+ ❯ tests/route-projection.test.ts (9 tests | 4 failed) 44ms
+     × QZQU F18 (69/80): every node of the act's map with its lines, where we stand, the next nodes and the boss 9ms
+     × QZQU F18: a legal route with an elite becomes the act's plan, projected from HP now (the boss at 71/80; the old model had every route at ~0/80) 2ms
+     × SFCE F18 (72/87): the path the run took, projected as the route facts project it, reaches the boss near what happened (82/97), not 46/87 3ms
+     × SFCE F1 (act 1): the question's options are the next nodes; the map starts on the Neow node 2ms
+ ❯ tests/asc-band-facts.test.ts (8 tests | 3 failed) 69ms
+     × Jev's hints, the experience lessons (v3 slice and Jev's lines) and the kb_old_knowledge keyword search read the band 51ms
+     × a table filled earlier the day with the all-ascension text: the A9 run takes its band, the A7 run the old values 3ms
+     × byte-stable within the day: a data refresh and a new process leave the band records as first filled; the next day refills them 3ms
+ ❯ tests/monster-db-context.test.ts (17 tests | 1 failed) 88ms
+     × uses the ascension asked for, else says n=0 and labels the nearest logged one 44ms
+ ❯ tests/gkb-render.test.ts (26 tests | 16 failed) 111ms
+     × renders the same bytes twice, from a fresh copy of the files, and with the JSON keys in another order 31ms
+     × has every block in a fixed order with its heading, old knowledge first and marked as below the data 8ms
+     × throws, never renders empty knowledge, when a file is missing, malformed or empty 8ms
+     × reloads a file changed on disk (the files are refreshed after every run) 3ms
+     × only active lessons whose ascension range holds this one 5ms
+     × scopes map to themes by a constant table; an unmapped scope falls back to 机制/综合, not dropped 3ms
+     × each lesson: support and contradiction counts, confidence, and 1-2 cases with the post-mortem heading's summary 4ms
+     × without the post-mortem file: bare run ids, and the text says the case notes are missing 2ms
+     × queries by theme, id and keyword; explains a retired id, an id out of range and an unknown theme 2ms
+     × every source whole, under the note that the data wins; headings moved under the source; hint numbers from the DB 3ms
+     × a keyword returns the matching lines under their heading; unknown source or keyword says what exists 1ms
+     × room costs by act (from the data) and ascension, median/p75/p90, death rate, n; few rooms marked 1ms
+     × room-cost legends describe post-combat healing without a character-specific relic 5ms
+     × says p90 is missing when the room-cost file has none 3ms
+     × the ? rooms that were a fight get their own named column and a room's in-fight HP loss is shown (v3 337074d data) 5ms
+     × elite and boss records by act; rest-site choices by HP band, saying when the stats are another ascension's 1ms
+ ❯ tests/knowledge-check-guides.test.ts (2 tests | 1 failed) 6ms
+     × no hand-written count or single-ascension number the data contradicts is left 3ms
+ ❯ tests/gkb-tools.test.ts (18 tests | 9 failed) 37ms
+     × by theme, id or keyword, with cases from the post-mortems 8ms
+     × no filter, a retired id, an id outside this ascension, a keyword found nowhere, a bad theme: isError with the reason 2ms
+     × each table, one act or all 1ms
+     × an act with no data: isError with the acts that exist 1ms
+     × a source whole or by keyword, always under the note that the data wins 2ms
+     × the whole section by run id or a unique prefix of 4+ characters 1ms
+     × ambiguous, unknown, malformed, or no post-mortem file: isError with the reason 0ms
+     × filters by ascension, floors, death and outcome; newest first; bad lines counted 1ms
+     × no match, inverted floors or no run log: isError with the reason 1ms
+ ❯ tests/knowledge-check-a8w-experience.test.ts (1 test | 1 failed) 39ms
+     × every active lesson renders with no placeholder left, and the counts the data holds are placeholders 38ms
+ ❯ tests/card-value.test.ts (12 tests | 12 failed) 16ms
+     × starts the bloat penalty past 22 cards, not 18 (0NG took no card in Act 2) 6ms
+     × Waterfall Giant favours block and front-loaded damage 1ms
+     × Fight Me! is valued like Inflame from our own outcome stats, not the F tier (RBJ4, 6189: code rank last) 1ms
+     × Knowledge Demon favours Strength/scaling 1ms
+     × boss HP in the reasons is the A8 table's (RWWG: the crab said 408, it is 428 at A8) 1ms
+     × Aeonglass: the big-hit bonus goes to real big hits only (L34T: Setup Strike, a 3rd Pommel Strike) 1ms
+     × Test Subject favours Strength scaling (7DFB, ZANM: 16 Strength or none, both died in phase 2-3) 1ms
+     × Kaiser Crab favours AoE, then scaling (WLY1 F31: Thunderclap skipped, 21.6 damage a turn into 408 HP) 0ms
+     × Dark Embrace / Feel No Pain only pay with 3+ exhausting cards (Z2H3 F12: Dark Embrace 67 over True Grit, one exhauster) 1ms
+     × Act 1 boss stats: AoE and permanent Strength earlier (wins 81% vs 47% AoE, 50% vs 27% Strength) 1ms
+     × Soul Fysh: exhaust and damage up, Battle Trance down; Matriarch: scaling and damage up 1ms
+     × Kin priest, Aeonglass, Test Subject, Matriarch and crab at A7/A9 from the DB, not their A0 or A8 numbers 1ms
+ ❯ tests/knowledge-check-a8w-guides.test.ts (6 tests | 6 failed) 11ms
+     × the Queen: single-target into the Amalgam from turn 1, with its record (DeepSeek zh, the boss clock en) 6ms
+     × the Insatiable: compare the Sandpit and HP death lines, with the losses by line 1ms
+     × a Queen hint while the Amalgam lives: single-target into it from turn 1, the record filled 1ms
+     × the Sandpit hints compare the two death lines; no 'Escape before extra damage' 1ms
+     × the guide 1ms
+     × the handbook 0ms
+ ❯ tests/fight-value.test.ts (5 tests | 1 failed) 29ms
+     × reproduces the builder's golden examples from the committed model 7ms
+ ❯ tests/knowledge-text.test.ts (9 tests | 9 failed) 17ms
+     × the handbook no longer says code forces a rest before the boss, or guards event HP for DeepSeek 5ms
+     × elite, rest, shop and event lines carry no HP% threshold and point to the knowledge slice 1ms
+     × the guide no longer excuses HP trades with Burning Blood 0ms
+     × every experience entry the text cites by id exists and is active 3ms
+     × the Giant: A8/A9 numbers and the early-kill evidence, not the A0 upgrade counts or "fight slowly" 1ms
+     × the Test Subject: A8 phases, and phase 3 is big hits on the open turns, not many small ones 0ms
+     × every boss experience entry the texts cite exists and is active 3ms
+     × the guide and handbook carry no unlabelled A0 boss HP; §9 defers its numbers to the DB 1ms
+     × Jev's hints: no HP figures, damage filled from the DB at this ascension 2ms
+ ❯ tests/knowledge-check-a8w-cards.test.ts (1 test | 1 failed) 9ms
+     × Anger 50 -> 58, Feel No Pain 54 -> 46 (its exhaust payoff still +10), Sword Boomerang 46 -> 54 8ms
+ ❯ tests/knowledge-check-cards.test.ts (2 tests | 2 failed) 11ms
+     × Taunt 62 -> 50, Molten Fist 54 -> 44, Twin Strike 58 -> 64 8ms
+     × Aeonglass: plain True Grit gets no Wither bonus (random exhaust); Burning Pact still does 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 134 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/asc-band-facts.test.ts > each record by the band, the old text below A8 > Jev's hints, the experience lessons (v3 slice and Jev's lines) and the kb_old_knowledge keyword search read the band
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/asc-band-kn-3YwZpo/characters/silent/ironclad-guide.md'
+ ❯ tests/asc-band-facts.test.ts:174:72
+    172|     const knowledgeDir = mkdtempSync(join(tmpdir(), "asc-band-kn-"));
+    173|     cpSync(FIXTURE, knowledgeDir, { recursive: true });
+    174|     writeFileSync(knowledgeFile(knowledgeDir, "ironclad-guide.md"), `$…
+       |                                                                        ^
+    175|     expect(queryOldKnowledge({ ascension: 9, knowledgeDir }, "guide", …
+    176|     expect(queryOldKnowledge({ ascension: 7, knowledgeDir }, "guide", …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/134]⎯
+
+ FAIL  tests/asc-band-facts.test.ts > the prefix with the day's frozen table > a table filled earlier the day with the all-ascension text: the A9 run takes its band, the A7 run the old values
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/asc-band-kn-HcYIMG/characters/silent/ironclad-guide.md'
+ ❯ withBandPlaceholders tests/asc-band-facts.test.ts:185:63
+    183|     const dir = mkdtempSync(join(tmpdir(), "asc-band-kn-"));
+    184|     cpSync(FIXTURE, dir, { recursive: true });
+    185|     writeFileSync(knowledgeFile(dir, "ironclad-guide.md"), `${readFile…
+       |                                                               ^
+    186|     writeFileSync(knowledgeFile(dir, "ds-handbook.md"), `${readFileSyn…
+    187|     const hints = JSON.parse(readFileSync(knowledgeFile(dir, "jev-hint…
+ ❯ tests/asc-band-facts.test.ts:200:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/134]⎯
+
+ FAIL  tests/asc-band-facts.test.ts > the prefix with the day's frozen table > byte-stable within the day: a data refresh and a new process leave the band records as first filled; the next day refills them
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/asc-band-kn-GyZ9Nz/characters/silent/ironclad-guide.md'
+ ❯ withBandPlaceholders tests/asc-band-facts.test.ts:185:63
+    183|     const dir = mkdtempSync(join(tmpdir(), "asc-band-kn-"));
+    184|     cpSync(FIXTURE, dir, { recursive: true });
+    185|     writeFileSync(knowledgeFile(dir, "ironclad-guide.md"), `${readFile…
+       |                                                               ^
+    186|     writeFileSync(knowledgeFile(dir, "ds-handbook.md"), `${readFileSyn…
+    187|     const hints = JSON.parse(readFileSync(knowledgeFile(dir, "jev-hint…
+ ❯ tests/asc-band-facts.test.ts:225:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/134]⎯
+
+ FAIL  tests/batch-g.test.ts > 2. Hand-written facts from the data: the Giant's kill-turn record (A9 killed by T10 1/3 -> 2/4 after Y36HXZ80A8LL) and act-1 boss entry HP per ascension > the handbook's act-1 boss entry HP per ascension (the pooled 88%/81% came from 41 early fights; at A9 wins and losses both enter near 90%)
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ tests/batch-g.test.ts:227:22
+    225|
+    226|   it("the handbook's act-1 boss entry HP per ascension (the pooled 88%…
+    227|     const handbook = readFileSync(knowledgeFile(join(dirname(fileURLTo…
+       |                      ^
+    228|     expect(handbook).not.toContain("赢局平均 88%，输局 81%");
+    229|     // Knowledge check 2026-09-29: the per-ascension figures ("A8 90%/…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/134]⎯
+
+ FAIL  tests/boss-lines-planner.test.ts > B2 off: the boss question as before > BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte
+AssertionError: expected { …(11) } to deeply equal { …(11) }
+
+- Expected
++ Received
+
+  {
+    "2mk4-f8-t2-ask:v1": "a8c6b59e8bca465e9e48beac868692c2",
+-   "3sbp-f17-t3-flex:off": "dccd163df08174647e3c1cdcd4bcf9c4",
+-   "3sbp-f17-t3-flex:v1": "ab67ba3e9749da3925216e5fd2386a20",
+-   "8v0h-f17-t2-saturated:off": "80908008461d9547ac0e1eb6d45d59ec",
+-   "8v0h-f17-t2-saturated:v1": "a301ee7d690a1acaf1eee1ae11d317f1",
+-   "ez2l-f48-t2:off": "ed6434d0ca7c66378126f7ca04ab0eff",
+-   "ez2l-f48-t2:v1": "ad895638c297e80c4b1d1157e24fd470",
+-   "k8tc-f17-t5:off": "5596bcc903bff54b339142bbb803f04f",
+-   "k8tc-f17-t5:v1": "f384927f7a7eb8ea80042a0997231940",
+-   "xmy2-f17-t1:off": "ccf70183bb58499c1e90534f573e3ec3",
+-   "xmy2-f17-t1:v1": "d8ef465061a61dd7ae4326cf65e80e33",
++   "3sbp-f17-t3-flex:off": "d5753653f7a464bb1d93aa463a1c4c7c",
++   "3sbp-f17-t3-flex:v1": "3c6ce313e40d1c945805981f8984dce7",
++   "8v0h-f17-t2-saturated:off": "fae292aed355731ec0e1dd9eb3da76aa",
++   "8v0h-f17-t2-saturated:v1": "5ddcdaa84d071abc27c90518d2c23e8b",
++   "ez2l-f48-t2:off": "de623695c7f9d6be30fb814e450a0dc2",
++   "ez2l-f48-t2:v1": "c7b480b42b68da9d324fc2e48c300e5d",
++   "k8tc-f17-t5:off": "1608327e9474421cc5e4de6976e82508",
++   "k8tc-f17-t5:v1": "189d0b4e196fbc74315dd6b2b62edb08",
++   "xmy2-f17-t1:off": "4d20c9fe783eb6ae0ff62f000dace493",
++   "xmy2-f17-t1:v1": "5a366e7cda5564d0bdb2c28a90dcfcfe",
+  }
+
+ ❯ tests/boss-lines-planner.test.ts:160:17
+    158|     got["2mk4-f8-t2-ask:v1"] = digestOf("2mk4-f8-t2-ask", "v1");
+    159|     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got…
+    160|     expect(got).toEqual(GOLDEN);
+       |                 ^
+    161|     // Every pinned file was read through the mock, the rest of the kn…
+    162|     // the digests never follow the refreshed data), and no log or cac…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/134]⎯
+
+ FAIL  tests/boss-lines-planner.test.ts > B2 on: the boss question > a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log
+AssertionError: expected 'undefined' to match /^win \d+% \((the best line|vs the bes…/
+
+- Expected:
+/^win \d+% \((the best line|vs the best line [−+±]\d+ ± \d+ pts(, tied on win rate)?)\), .*; 16 samples$/
+
++ Received:
+"undefined"
+
+ ❯ tests/boss-lines-planner.test.ts:209:83
+    207|     const { decision, criteria } = ask("k8tc-f17-t5", true);
+    208|     const planKeys = Object.keys(criteria).filter((key) => key.startsW…
+    209|     for (const key of planKeys) expect(String(criteria[key]!["whole_fi…
+       |                                                                                   ^
+    210|     expect(String(decision.state["whole_fight_sim"])).toContain("rollo…
+    211|     // The 5-turn rollout's numbers stay.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/134]⎯
+
+ FAIL  tests/boss-sim.test.ts > boss sim B1.5: the policy knobs change the whole-fight sim only > the Platt map: monotone, 0 and 1 pulled in by half a sample
+AssertionError: expected 0.9068190817126016 to be close to 0.6683429529034832, received difference is 0.2384761288091184, but expected 5e-11
+ ❯ tests/boss-sim.test.ts:286:48
+    284|     for (const [lo, hi] of [[0, 0.1], [0.1, 0.5], [0.5, 0.9], [0.9, 1]…
+    285|     const { a, b } = BOSS_SIM_PLATT.pre;
+    286|     expect(calibratedWinProb(0.5, 200, "pre")).toBeCloseTo(1 / (1 + Ma…
+       |                                                ^
+    287|     expect(b).toBeGreaterThan(0);
+    288|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > starts the bloat penalty past 22 cards, not 18 (0NG took no card in Act 2)
+AssertionError: expected 50 to be 64 // Object.is equality
+
+- Expected
++ Received
+
+- 64
++ 50
+
+ ❯ tests/card-value.test.ts:13:81
+     11|   it("starts the bloat penalty past 22 cards, not 18 (0NG took no card…
+     12|     // Twin Strike's tier: 64 since the 2026-09-29 knowledge check (58…
+     13|     expect(cardValue("TWIN_STRIKE", "Common", "Attack", deck(22), 2, 2…
+       |                                                                                 ^
+     14|     expect(cardValue("TWIN_STRIKE", "Common", "Attack", deck(24), 2, 2…
+     15|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Waterfall Giant favours block and front-loaded damage
+AssertionError: expected 50 to be 56 // Object.is equality
+
+- Expected
++ Received
+
+- 56
++ 50
+
+ ❯ tests/card-value.test.ts:19:103
+     17|   it("Waterfall Giant favours block and front-loaded damage", () => {
+     18|     const plain = cardValue("FLAME_BARRIER", "Uncommon", "Skill", deck…
+     19|     expect(cardValue("FLAME_BARRIER", "Uncommon", "Skill", deck(15), 1…
+       |                                                                                                       ^
+     20|     const hit = cardValue("HEADBUTT", "Common", "Attack", deck(15), 1,…
+     21|     expect(cardValue("HEADBUTT", "Common", "Attack", deck(15), 1, 10, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Fight Me! is valued like Inflame from our own outcome stats, not the F tier (RBJ4, 6189: code rank last)
+AssertionError: expected [ 'no card values for Silent yet' ] to include 'no scaling for bosses'
+ ❯ tests/card-value.test.ts:28:82
+     26|     expect(fightMe).toBeGreaterThanOrEqual(cardValue("INFLAME", "Uncom…
+     27|     const noScaling = { ...deck(15), scaling: 0 };
+     28|     expect(cardValue("FIGHT_ME", "Uncommon", "Attack", noScaling, 1, 6…
+       |                                                                                  ^
+     29|     // In the deck it counts as scaling.
+     30|     expect(deckProfile([{ index: 0, card_id: "FIGHT_ME", name: "Fight …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Knowledge Demon favours Strength/scaling
+AssertionError: expected 50 to be 60 // Object.is equality
+
+- Expected
++ Received
+
+- 60
++ 50
+
+ ❯ tests/card-value.test.ts:35:97
+     33|   it("Knowledge Demon favours Strength/scaling", () => {
+     34|     const plain = cardValue("INFLAME", "Uncommon", "Power", deck(15), …
+     35|     expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20, …
+       |                                                                                                 ^
+     36|     expect(cardValue("HEADBUTT", "Common", "Attack", deck(15), 2, 20, …
+     37|     expect(cardValue("SHRUG_IT_OFF", "Common", "Skill", deck(15), 2, 2…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > boss HP in the reasons is the A8 table's (RWWG: the crab said 408, it is 428 at A8)
+AssertionError: expected [ 'no card values for Silent yet' ] to include 'scaling for the Kaiser Crab\'s 428 HP'
+ ❯ tests/card-value.test.ts:42:61
+     40|   it("boss HP in the reasons is the A8 table's (RWWG: the crab said 40…
+     41|     const reasons = (cardId: string, type: string, bossId: string) => …
+     42|     expect(reasons("INFLAME", "Power", "KAISER_CRAB_BOSS")).toContain(…
+       |                                                             ^
+     43|     expect(reasons("HEADBUTT", "Attack", "KAISER_CRAB_BOSS")).toContai…
+     44|     expect(reasons("INFLAME", "Power", "KNOWLEDGE_DEMON_BOSS")).toCont…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Aeonglass: the big-hit bonus goes to real big hits only (L34T: Setup Strike, a 3rd Pommel Strike)
+AssertionError: expected 50 to be 54 // Object.is equality
+
+- Expected
++ Received
+
+- 54
++ 50
+
+ ❯ tests/card-value.test.ts:54:98
+     52|     expect(cardValue("POMMEL_STRIKE", "Common", "Attack", deck(15), 3,…
+     53|     const bludgeon = cardValue("BLUDGEON", "Uncommon", "Attack", deck(…
+     54|     expect(cardValue("BLUDGEON", "Uncommon", "Attack", deck(15), 3, 40…
+       |                                                                                                  ^
+     55|   });
+     56|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Test Subject favours Strength scaling (7DFB, ZANM: 16 Strength or none, both died in phase 2-3)
+AssertionError: expected 50 to be 60 // Object.is equality
+
+- Expected
++ Received
+
+- 60
++ 50
+
+ ❯ tests/card-value.test.ts:59:99
+     57|   it("Test Subject favours Strength scaling (7DFB, ZANM: 16 Strength o…
+     58|     const plain = cardValue("INFLAME", "Uncommon", "Power", deck(15), …
+     59|     expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 3, 40, …
+       |                                                                                                   ^
+     60|   });
+     61|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Kaiser Crab favours AoE, then scaling (WLY1 F31: Thunderclap skipped, 21.6 damage a turn into 408 HP)
+AssertionError: expected 50 to be 62 // Object.is equality
+
+- Expected
++ Received
+
+- 62
++ 50
+
+ ❯ tests/card-value.test.ts:64:96
+     62|   it("Kaiser Crab favours AoE, then scaling (WLY1 F31: Thunderclap ski…
+     63|     const plain = cardValue("THUNDERCLAP", "Common", "Attack", deck(15…
+     64|     expect(cardValue("THUNDERCLAP", "Common", "Attack", deck(15), 2, 2…
+       |                                                                                                ^
+     65|     const inflame = cardValue("INFLAME", "Uncommon", "Power", deck(15)…
+     66|     expect(cardValue("INFLAME", "Uncommon", "Power", deck(15), 2, 20, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Dark Embrace / Feel No Pain only pay with 3+ exhausting cards (Z2H3 F12: Dark Embrace 67 over True Grit, one exhauster)
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/card-value.test.ts:73:26
+     71|     const thin = deckProfile([entry("MOLTEN_FIST", 0), entry("STRIKE_R…
+     72|     const fed = deckProfile([entry("TRUE_GRIT", 0), entry("BURNING_PAC…
+     73|     expect(thin.exhaust).toBe(1);
+       |                          ^
+     74|     expect(fed.exhaust).toBe(3);
+     75|     const embraceThin = cardValue("DARK_EMBRACE", "Uncommon", "Power",…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Act 1 boss stats: AoE and permanent Strength earlier (wins 81% vs 47% AoE, 50% vs 27% Strength)
+AssertionError: expected 50 to be 76 // Object.is equality
+
+- Expected
++ Received
+
+- 76
++ 50
+
+ ❯ tests/card-value.test.ts:87:77
+     85|   it("Act 1 boss stats: AoE and permanent Strength earlier (wins 81% v…
+     86|     const bare = { ...deck(15), aoe: 0, scaling: 0 };
+     87|     expect(cardValue("BREAKTHROUGH", "Common", "Attack", bare, 1, 2).v…
+       |                                                                             ^
+     88|     expect(cardValue("INFLAME", "Uncommon", "Power", bare, 1, 3).value…
+     89|     expect(cardValue("INFLAME", "Uncommon", "Power", bare, 1, 4).value…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/134]⎯
+
+ FAIL  tests/card-value.test.ts > cardValue > Soul Fysh: exhaust and damage up, Battle Trance down; Matriarch: scaling and damage up
+AssertionError: expected 50 to be 58 // Object.is equality
+
+- Expected
++ Received
+
+- 58
++ 50
+
+ ❯ tests/card-value.test.ts:97:59
+     95|   it("Soul Fysh: exhaust and damage up, Battle Trance down; Matriarch:…
+     96|     const at = (cardId: string, type: string, boss = "") => cardValue(…
+     97|     expect(at("BURNING_PACT", "Skill", "SOUL_FYSH_BOSS")).toBe(at("BUR…
+       |                                                           ^
+     98|     expect(at("HEADBUTT", "Attack", "SOUL_FYSH_BOSS")).toBe(at("HEADBU…
+     99|     expect(at("BATTLE_TRANCE", "Skill", "SOUL_FYSH_BOSS")).toBe(at("BA…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/134]⎯
+
+ FAIL  tests/card-value.test.ts > boss HP in the card reasons DeepSeek reads is the current ascension's (review 2026-09-29 #18) > Kin priest, Aeonglass, Test Subject, Matriarch and crab at A7/A9 from the DB, not their A0 or A8 numbers
+AssertionError: expected [ 'no card values for Silent yet' ] to include 'scaling for the Kin Priest\'s 199 HP'
+ ❯ tests/card-value.test.ts:122:62
+    120|     try {
+    121|       const reasons = (cardId: string, type: string, bossId: string, a…
+    122|       expect(reasons("INFLAME", "Power", "THE_KIN_BOSS", 9)).toContain…
+       |                                                              ^
+    123|       expect(reasons("INFLAME", "Power", "THE_KIN_BOSS", 7)).toContain…
+    124|       expect(reasons("INFLAME", "Power", "AEONGLASS_BOSS", 9)).toConta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/134]⎯
+
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte
+AssertionError: expected { …(8) } to deeply equal { …(8) }
+
+- Expected
++ Received
+
+  {
+    "0u96-f48-t5-queen-kill:off": "0b65fa9f3dcda0acbf0dbf9dc28b4c98",
+    "0u96-f48-t5-queen-kill:v1": "f63ffd6a5bc569645a517a2812f6f7f2",
+-   "5gka-f48-t2-queen-mine:off": "03f5f863c244274e1ada2b2f659db6b0",
+-   "5gka-f48-t2-queen-mine:v1": "22188743afba4cbb2fc437d3c59441f5",
++   "5gka-f48-t2-queen-mine:off": "1dcf9f57cbcd1173233d355d8cbfd9c1",
++   "5gka-f48-t2-queen-mine:v1": "2b5356ce77e46d4969a1fb2b4008f270",
+    "nx48-f33-t7-crab:off": "0ff11129271d04e4821689c48a8e496d",
+    "nx48-f33-t7-crab:v1": "6976e5f93c3c4aa668386a731db32b38",
+-   "y3xt-f37-t1-shield:off": "99fa9d304089373588a420e810956b13",
+-   "y3xt-f37-t1-shield:v1": "866cff99296cb892e28b46ad4ebedb05",
++   "y3xt-f37-t1-shield:off": "ab3b8332f7ef4c2090a24a63939a147d",
++   "y3xt-f37-t1-shield:v1": "79be6ae4f4c8185bc3a73eebb580d3f5",
+  }
+
+ ❯ tests/death-move-planner.test.ts:186:47
+    184|       return;
+    185|     }
+    186|     expect(digests({ mechDeathMove: false })).toEqual(GOLDEN_ON);
+       |                                               ^
+    187|     expect([...touched]).toEqual([]);
+    188|   }, 900_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/134]⎯
+
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off
+AssertionError: expected { …(8) } to deeply equal { …(8) }
+
+- Expected
++ Received
+
+  {
+    "0u96-f48-t5-queen-kill:off": "0b65fa9f3dcda0acbf0dbf9dc28b4c98",
+    "0u96-f48-t5-queen-kill:v1": "f63ffd6a5bc569645a517a2812f6f7f2",
+-   "5gka-f48-t2-queen-mine:off": "03f5f863c244274e1ada2b2f659db6b0",
+-   "5gka-f48-t2-queen-mine:v1": "22188743afba4cbb2fc437d3c59441f5",
++   "5gka-f48-t2-queen-mine:off": "1dcf9f57cbcd1173233d355d8cbfd9c1",
++   "5gka-f48-t2-queen-mine:v1": "2b5356ce77e46d4969a1fb2b4008f270",
+    "nx48-f33-t7-crab:off": "b6eda93fc803be1a66b868c9a1d8f5fb",
+    "nx48-f33-t7-crab:v1": "4de59f7b9d5c5b549c64d8d9a0bb1a37",
+-   "y3xt-f37-t1-shield:off": "99fa9d304089373588a420e810956b13",
+-   "y3xt-f37-t1-shield:v1": "866cff99296cb892e28b46ad4ebedb05",
++   "y3xt-f37-t1-shield:off": "ab3b8332f7ef4c2090a24a63939a147d",
++   "y3xt-f37-t1-shield:v1": "79be6ae4f4c8185bc3a73eebb580d3f5",
+  }
+
+ ❯ tests/death-move-planner.test.ts:192:43
+    190|   it("MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MEC…
+    191|     if (process.env["CAPTURE"] === "1") return;
+    192|     expect(digests({ mechRules: false })).toEqual(GOLDEN_OFF);
+       |                                           ^
+    193|   }, 900_000);
+    194|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/134]⎯
+
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, a monster DB without the ally-death counters (built before them): as before
+AssertionError: expected { …(6) } to deeply equal { …(6) }
+
+- Expected
++ Received
+
+  {
+    "0u96-f48-t5-queen-kill:off": "0b65fa9f3dcda0acbf0dbf9dc28b4c98",
+    "0u96-f48-t5-queen-kill:v1": "f63ffd6a5bc569645a517a2812f6f7f2",
+-   "5gka-f48-t2-queen-mine:off": "03f5f863c244274e1ada2b2f659db6b0",
+-   "5gka-f48-t2-queen-mine:v1": "22188743afba4cbb2fc437d3c59441f5",
+-   "y3xt-f37-t1-shield:off": "99fa9d304089373588a420e810956b13",
+-   "y3xt-f37-t1-shield:v1": "866cff99296cb892e28b46ad4ebedb05",
++   "5gka-f48-t2-queen-mine:off": "1dcf9f57cbcd1173233d355d8cbfd9c1",
++   "5gka-f48-t2-queen-mine:v1": "2b5356ce77e46d4969a1fb2b4008f270",
++   "y3xt-f37-t1-shield:off": "ab3b8332f7ef4c2090a24a63939a147d",
++   "y3xt-f37-t1-shield:v1": "79be6ae4f4c8185bc3a73eebb580d3f5",
+  }
+
+ ❯ tests/death-move-planner.test.ts:211:32
+    209|     };
+    210|     setMonsterDbForTests(bare as unknown as Parameters<typeof setMonst…
+    211|     expect(digests({}, RULED)).toEqual(only(GOLDEN_ON, RULED));
+       |                                ^
+    212|   }, 900_000);
+    213|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/134]⎯
+
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, reading the rules fails: the switch off (fail safe)
+AssertionError: expected { …(4) } to deeply equal { …(4) }
+
+- Expected
++ Received
+
+  {
+    "0u96-f48-t5-queen-kill:off": "0b65fa9f3dcda0acbf0dbf9dc28b4c98",
+    "0u96-f48-t5-queen-kill:v1": "f63ffd6a5bc569645a517a2812f6f7f2",
+-   "5gka-f48-t2-queen-mine:off": "03f5f863c244274e1ada2b2f659db6b0",
+-   "5gka-f48-t2-queen-mine:v1": "22188743afba4cbb2fc437d3c59441f5",
++   "5gka-f48-t2-queen-mine:off": "1dcf9f57cbcd1173233d355d8cbfd9c1",
++   "5gka-f48-t2-queen-mine:v1": "2b5356ce77e46d4969a1fb2b4008f270",
+  }
+
+ ❯ tests/death-move-planner.test.ts:226:33
+    224|     setMonsterDbForTests({ ...db, monsters: { ...db.monsters, QUEEN: {…
+    225|     const queens = RULED.filter((name) => name.includes("queen"));
+    226|     expect(digests({}, queens)).toEqual(only(GOLDEN_ON, queens));
+       |                                 ^
+    227|   }, 900_000);
+    228| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/134]⎯
+
+ FAIL  tests/experience.test.ts > boss lessons on a board of boss parts > gives Jev crab-kill-order on a crab board
+AssertionError: expected [ 'silent-kaiser-crab-facing-sl' ] to include 'crab-kill-order'
+ ❯ tests/experience.test.ts:134:19
+    132|     for (const bossId of ["KAISER_CRAB_BOSS", null]) {
+    133|       const ids = fightLessons(crabBoard(bossId)).map((entry) => entry…
+    134|       expect(ids).toContain("crab-kill-order");
+       |                   ^
+    135|       expect(ids.every((id) => id.startsWith("crab"))).toBe(true);
+    136|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/134]⎯
+
+ FAIL  tests/experience.test.ts > experience.json > the real files: an act-1 card reward before Vantom gets the Vantom lessons and the offered card's lesson and stats
+AssertionError: expected 'silent-vantom-slippery-growth' to be 'card-rupture' // Object.is equality
+
+Expected: "card-rupture"
+Received: "silent-vantom-slippery-growth"
+
+ ❯ tests/experience.test.ts:193:30
+    191|     );
+    192|     const slice = knowledgeSlice(state, "reward/card");
+    193|     expect(slice.lessons[0]).toBe("card-rupture");
+       |                              ^
+    194|     expect(slice.lessons).toEqual(expect.arrayContaining(["vantom-mult…
+    195|     expect(slice.lessons.length).toBeLessThanOrEqual(25);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/134]⎯
+
+ FAIL  tests/fight-plan.test.ts > fightPlanInput > shows the whole deck, the potions by id and each enemy with its type
+AssertionError: expected 'undefined' to contain '222'
+
+Expected: "222"
+Received: "undefined"
+
+ ❯ tests/fight-plan.test.ts:155:46
+    153|     const enemies = input["enemies"] as Raw[];
+    154|     expect(enemies[0]).toMatchObject({ enemy_id: "LAGAVULIN_MATRIARCH"…
+    155|     expect(String(enemies[0]!["boss_note"])).toContain("222");
+       |                                              ^
+    156|   });
+    157| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/134]⎯
+
+ FAIL  tests/fight-value.test.ts > fight value (offline stub) > reproduces the builder's golden examples from the committed model
+AssertionError: expected 0.9999233764913177 to be close to 0.999686, received difference is 0.0002373764913177201, but expected 0.000049999999999999996
+ ❯ tests/fight-value.test.ts:78:25
+     76|       const v = valueOf(example.input, model)!;
+     77|       expect(v.hpLoss).toBeCloseTo(example.output.hpLoss, 4);
+     78|       expect(v.winProb).toBeCloseTo(example.output.winProb, 4);
+       |                         ^
+     79|       expect(v.turns).toBeCloseTo(example.output.turns, 4);
+     80|       expect(v.n).toBe(example.output.n);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > knowledge prefix: deterministic and complete > renders the same bytes twice, from a fresh copy of the files, and with the JSON keys in another order
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/gkb-EwPo7h/characters/silent/room-costs.json'
+ ❯ tests/gkb-render.test.ts:60:61
+     58|     for (const name of ["monster-db.json", "room-costs.json", "outcome…
+     59|       const path = knowledgeFile(copy, name);
+     60|       writeFileSync(path, JSON.stringify(reverse(JSON.parse(readFileSy…
+       |                                                             ^
+     61|     }
+     62|     const experience = JSON.parse(readFileSync(knowledgeFile(copy, "ex…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > knowledge prefix: deterministic and complete > has every block in a fixed order with its heading, old knowledge first and marked as below the data
+AssertionError: expected [ 'header', 'old', 'old.guide', …(10) ] to deeply equal [ 'header', 'old', 'old.guide', …(15) ]
+
+- Expected
++ Received
+
+@@ -3,15 +3,10 @@
+    "old",
+    "old.guide",
+    "old.handbook",
+    "old.jev_hints",
+    "experience",
+-   "experience.monster",
+-   "experience.deck",
+-   "experience.route",
+-   "experience.potion",
+-   "experience.mechanics",
+    "potions",
+    "data",
+    "monsters",
+    "encounters",
+    "stats.rooms",
+
+ ❯ tests/gkb-render.test.ts:70:52
+     68|   it("has every block in a fixed order with its heading, old knowledge…
+     69|     const sections = renderKnowledgeSections(ctx, withLessons());
+     70|     expect(sections.map((section) => section.key)).toEqual([
+       |                                                    ^
+     71|       "header",
+     72|       "old",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > knowledge prefix: deterministic and complete > throws, never renders empty knowledge, when a file is missing, malformed or empty
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/gkb-FdoGps/characters/silent/room-costs.json'
+ ❯ tests/gkb-render.test.ts:106:5
+    104|
+    105|     const broken = copyData();
+    106|     writeFileSync(knowledgeFile(broken, "room-costs.json"), "{ not jso…
+       |     ^
+    107|     expect(() => loadKnowledgeData(broken)).toThrow(/不是合法 JSON/);
+    108|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > knowledge prefix: deterministic and complete > reloads a file changed on disk (the files are refreshed after every run)
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/gkb-m0QBfh/characters/silent/room-costs.json'
+ ❯ tests/gkb-render.test.ts:125:30
+    123|     const dir = copyData();
+    124|     const before = renderRoomCosts({ ...ctx, knowledgeDir: dir });
+    125|     const rooms = JSON.parse(readFileSync(knowledgeFile(dir, "room-cos…
+       |                              ^
+    126|     rooms.by_asc["9"]["1"]["Monster"].median = 99;
+    127|     writeFileSync(knowledgeFile(dir, "room-costs.json"), JSON.stringif…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > experience text > only active lessons whose ascension range holds this one
+AssertionError: expected '经验库 无：A9 适用的有效条目 0 条（共 0 条）。每条：[id｜范围…' to contain '[bossy-slippery｜boss:BOSSY 大老板｜适用 A0–…'
+
+Expected: "[bossy-slippery｜boss:BOSSY 大老板｜适用 A0–20]"
+Received: "经验库 无：A9 适用的有效条目 0 条（共 0 条）。每条：[id｜范围｜适用进阶] 结论；支持/反对的局数和置信度；一两个典型案例（run id 和复盘标题里的一句话，全文可用 kb_postmortem 查）。经验是证据不是命令，和统计数据冲突时以数据为准。"
+
+ ❯ tests/gkb-render.test.ts:220:18
+    218|   it("only active lessons whose ascension range holds this one", () =>…
+    219|     const text = renderExperience(ctx, withLessons());
+    220|     expect(text).toContain("[bossy-slippery｜boss:BOSSY 大老板｜适用 A0–20]");
+       |                  ^
+    221|     expect(text).toContain("[card-bash｜");
+    222|     expect(text).not.toContain("rest-low");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > experience text > scopes map to themes by a constant table; an unmapped scope falls back to 机制/综合, not dropped
+AssertionError: expected -1 to be less than -1
+ ❯ tests/gkb-render.test.ts:237:42
+    235|     for (const theme of Object.values(SCOPE_THEMES)) expect(THEME_KEYS…
+    236|     const text = renderExperience(ctx, withLessons());
+    237|     expect(text.indexOf("### 经验：机制/综合")).toBeLessThan(text.indexOf("[o…
+       |                                          ^
+    238|   });
+    239|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > experience text > each lesson: support and contradiction counts, confidence, and 1-2 cases with the post-mortem heading's summary
+AssertionError: expected '经验库 无：A9 适用的有效条目 0 条（共 0 条）。每条：[id｜范围…' to contain '支持 3 局，反对 1 局，置信 高；案例: RUNAAAAAAAA1（A…'
+
+Expected: "支持 3 局，反对 1 局，置信 高；案例: RUNAAAAAAAA1（A9，第33层，死于二幕 boss 大老板 BOSSY）；RUNBBBBBBBB2（A8，第17层，死于钳子怪 CLAW）"
+Received: "经验库 无：A9 适用的有效条目 0 条（共 0 条）。每条：[id｜范围｜适用进阶] 结论；支持/反对的局数和置信度；一两个典型案例（run id 和复盘标题里的一句话，全文可用 kb_postmortem 查）。经验是证据不是命令，和统计数据冲突时以数据为准。"
+
+ ❯ tests/gkb-render.test.ts:242:18
+    240|   it("each lesson: support and contradiction counts, confidence, and 1…
+    241|     const text = renderExperience(ctx, withLessons());
+    242|     expect(text).toContain("支持 3 局，反对 1 局，置信 高；案例: RUNAAAAAAAA1（A9，第33…
+       |                  ^
+    243|     expect(text).toContain("案例: RUNCCCCCCCC3（复盘里没有这一局）");
+    244|     expect(caseSummary("A9，第24层，死于棘刺蟾蜍 SPINY_TOAD：9/80 进场；0 瓶药")).toBe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > experience text > without the post-mortem file: bare run ids, and the text says the case notes are missing
+AssertionError: expected '经验库 无：A9 适用的有效条目 0 条（共 0 条）。每条：[id｜范围…' to contain '案例: RUNAAAAAAAA1；RUNAAAAAAAB9'
+
+- Expected
++ Received
+
+- 案例: RUNAAAAAAAA1；RUNAAAAAAAB9
++ 经验库 无：A9 适用的有效条目 0 条（共 0 条）。每条：[id｜范围｜适用进阶] 结论；支持/反对的局数和置信度；一两个典型案例（run id 和复盘标题里的一句话，全文可用 kb_postmortem 查）。经验是证据不是命令，和统计数据冲突时以数据为准。
++ （案例说明缺失：找不到复盘文件 /home/dw/Projects/agent-sts2/.worktrees/exp/agent/tests/gkb-data/no-such-lessons.md（ENOENT）；案例只列 run id）
+
+ ❯ tests/gkb-render.test.ts:252:18
+    250|     expect(text).toContain("案例说明缺失");
+    251|     expect(text).toContain("no-such-lessons.md");
+    252|     expect(text).toContain("案例: RUNAAAAAAAA1；RUNAAAAAAAB9");
+       |                  ^
+    253|     const prefix = renderKnowledgePrefix(ctx, noLessons());
+    254|     expect(prefix).toContain("案例说明缺失");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > experience text > queries by theme, id and keyword; explains a retired id, an id out of range and an unknown theme
+KnowledgeLookupError: A9 适用的经验里没有符合 主题 potion 的条目。可用的主题: monster, deck, route, shop_event, potion, mechanics
+ ❯ queryExperience src/knowledge/render/experience-text.ts:186:11
+    184|   if (matched.length === 0) {
+    185|     const what = [filter.theme ? `主题 ${filter.theme}` : "", filter.key…
+    186|     throw new KnowledgeLookupError(`A${asc} 适用的经验里没有符合 ${what || "条件"}…
+       |           ^
+    187|   }
+    188|   const note = missingNote(postmortems);
+ ❯ tests/gkb-render.test.ts:258:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > old knowledge > every source whole, under the note that the data wins; headings moved under the source; hint numbers from the DB
+AssertionError: expected '以下是早期手写的旧知识（攻略、DeepSeek 手册、Jev 战斗提示），…' to contain '### 旧知识：铁甲战士攻略（ironclad-guide.md，待数据验…'
+
+- Expected
++ Received
+
+- ### 旧知识：铁甲战士攻略（ironclad-guide.md，待数据验证）
+- ### 攻略
++ 以下是早期手写的旧知识（攻略、DeepSeek 手册、Jev 战斗提示），整份放入，未按数据逐条验证，标「旧知识、待数据验证」。和数据冲突时以数据为准：其中的数字、阈值和评级若与统计表、怪物数据库或经验库不同，以后者为准。
++
++ ### 旧知识：静默猎手攻略（silent-guide.md，待数据验证）
++ （本角色还没有）
++
++ ### 旧知识：DeepSeek 经验手册（ds-handbook.md，待数据验证）
++ （本角色还没有）
+
+- #### 1. 总体
+- - 删打击。
++ ### 旧知识：Jev 战斗提示（jev-hints.json ，待数据验证；原文英文，{…} 占位的数字已按 A9 怪物数据库填入）
++ （本角色还没有）
+
+ ❯ tests/gkb-render.test.ts:284:18
+    282|     expect(text.startsWith("以下是早期手写的旧知识")).toBe(true);
+    283|     expect(text).toContain("和数据冲突时以数据为准");
+    284|     expect(text).toContain("### 旧知识：铁甲战士攻略（ironclad-guide.md，待数据验证）\n#…
+       |                  ^
+    285|     expect(text).toContain("#### 路线\n- 连续三场战斗的路线不走。");
+    286|     expect(text).toContain("- [claw-snip] 条件 {\"enemies\":[\"CLAW\"]}：…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > old knowledge > a keyword returns the matching lines under their heading; unknown source or keyword says what exists
+KnowledgeLookupError: 旧知识 guide里没有「休息」。可用的来源: guide, handbook, jev_hints；不带关键词可取整份
+ ❯ queryOldKnowledge src/knowledge/render/old-knowledge.ts:93:34
+     91|     if (lines.length > 0) blocks.push([sourceTitle(key, data, ctx.asce…
+     92|   }
+     93|   if (blocks.length === 0) throw new KnowledgeLookupError(`旧知识${source…
+       |                                  ^
+     94|   return [OLD_KNOWLEDGE_NOTE, ...blocks].join("\n\n");
+     95| }
+ ❯ tests/gkb-render.test.ts:291:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > statistics tables > room costs by act (from the data) and ascension, median/p75/p90, death rate, n; few rooms marked
+AssertionError: expected '每个房间的血量变化 = 进房血量 − 下一层地图上的血量（正数=掉血，负数…' to contain '#### 第1幕\n| 进阶 | 走廊 | 精英 | 休息 |'
+
+- Expected
++ Received
+
+- #### 第1幕
+- | 进阶 | 走廊 | 精英 | 休息 |
++ 每个房间的血量变化 = 进房血量 − 下一层地图上的血量（正数=掉血，负数=回血；战斗房含战后回血；死在房间里的按进房血量全掉计）。格子: 中位/p75/p90 死亡率 n=房间数；n<5 标(少)。p90 暂缺（room-costs.json 还没有 p90 字段，要用新版 tools/build-room-costs.py 重建），记为 —。数据 ? 局，最后 ?。
+
+ ❯ tests/gkb-render.test.ts:303:18
+    301|   it("room costs by act (from the data) and ascension, median/p75/p90,…
+    302|     const text = renderRoomCosts(ctx);
+    303|     expect(text).toContain("#### 第1幕\n| 进阶 | 走廊 | 精英 | 休息 |");
+       |                  ^
+    304|     expect(text).toContain("| A9（本局） | 2/7/— 死0% n=30 | — | -20/0/— 死0…
+    305|     expect(text).toContain("| A8 | 3/8/— 死5% n=20 | 20/30/— 死0% n=4(少)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > statistics tables > room-cost legends describe post-combat healing without a character-specific relic
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/gkb-PkGhAp/characters/silent/room-costs.json'
+ ❯ tests/gkb-render.test.ts:314:30
+    312|     const dir = copyData();
+    313|     const path = knowledgeFile(dir, "room-costs.json");
+    314|     const rooms = JSON.parse(readFileSync(path, "utf8"));
+       |                              ^
+    315|     Object.assign(rooms.by_asc["9"]["1"]["Monster"], { fight_median: 9…
+    316|     writeFileSync(path, JSON.stringify(rooms));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > statistics tables > says p90 is missing when the room-cost file has none
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/gkb-iLWrIy/characters/silent/room-costs.json'
+ ❯ tests/gkb-render.test.ts:327:30
+    325|   it("says p90 is missing when the room-cost file has none", () => {
+    326|     const dir = copyData();
+    327|     const rooms = JSON.parse(readFileSync(knowledgeFile(dir, "room-cos…
+       |                              ^
+    328|     delete rooms.by_asc["9"]["2"]["Monster"].p90;
+    329|     writeFileSync(knowledgeFile(dir, "room-costs.json"), JSON.stringif…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > statistics tables > the ? rooms that were a fight get their own named column and a room's in-fight HP loss is shown (v3 337074d data)
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/gkb-6PGbxp/characters/silent/room-costs.json'
+ ❯ tests/gkb-render.test.ts:336:30
+    334|   it("the ? rooms that were a fight get their own named column and a r…
+    335|     const dir = copyData();
+    336|     const rooms = JSON.parse(readFileSync(knowledgeFile(dir, "room-cos…
+       |                              ^
+    337|     Object.assign(rooms.by_asc["9"]["1"]["Monster"], { fight_median: 9…
+    338|     rooms.by_asc["9"]["1"]["UnknownFight"] = { n: 6, deaths: 0, median…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/134]⎯
+
+ FAIL  tests/gkb-render.test.ts > statistics tables > elite and boss records by act; rest-site choices by HP band, saying when the stats are another ascension's
+AssertionError: expected '结果统计（outcome-stats.json，A9 的局，生成于 ?；观…' to contain '注意：这是 A8 的数据，不是本局的 A9。'
+
+- Expected
++ Received
+
+- 注意：这是 A8 的数据，不是本局的 A9。
++ 结果统计（outcome-stats.json，A9 的局，生成于 ?；观察数据：一个选择的数字混有「在什么局面下选它」的影响；n=局数，n<5 标(少)）。
++ 基线 0 局：均终层 ?；过本幕 boss 比例 ?。
++ 休息点选择（按到达时的血量段）：n 局，均终层，过本幕 boss 比例。实际回血多少见房间代价表「休息」列（负数=回血）。
+
+ ❯ tests/gkb-render.test.ts:352:18
+    350|     expect(fights).toContain("- boss BOSSY（大老板 BOSSY）〔第2幕〕 A9 3场 胜33% …
+    351|     const rest = renderRestStats(ctx);
+    352|     expect(rest).toContain("注意：这是 A8 的数据，不是本局的 A9。");
+       |                  ^
+    353|     expect(rest).toContain("- 回血 HEAL：<40% n=3(少) 均终层 15 过boss 33%；40-…
+    354|     expect(rest).toContain("- 锻造 SMITH：>=80% n=6 均终层 30 过boss 50%");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_experience > by theme, id or keyword, with cases from the post-mortems
+AssertionError: expected 'A9 适用的经验里没有符合 主题 monster 的条目。可用的主题: m…' to contain '### 经验：怪物/boss（1 条）'
+
+Expected: "### 经验：怪物/boss（1 条）"
+Received: "A9 适用的经验里没有符合 主题 monster 的条目。可用的主题: monster, deck, route, shop_event, potion, mechanics"
+
+ ❯ tests/gkb-tools.test.ts:115:24
+    113|   it("by theme, id or keyword, with cases from the post-mortems", asyn…
+    114|     const theme = await call("kb_experience", { theme: "monster" });
+    115|     expect(theme.text).toContain("### 经验：怪物/boss（1 条）");
+       |                        ^
+    116|     expect(theme.text).toContain("RUNAAAAAAAA1（A9，第33层，死于二幕 boss 大老板 B…
+    117|     expect((await call("kb_experience", { id: "potion-keep" })).text).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_experience > no filter, a retired id, an id outside this ascension, a keyword found nowhere, a bad theme: isError with the reason
+AssertionError: expected '没有经验条目「old-retired」。A9 适用的 id: ' to match /已退役/
+
+- Expected:
+/已退役/
+
++ Received:
+"没有经验条目「old-retired」。A9 适用的 id: "
+
+ ❯ tests/gkb-tools.test.ts:123:71
+    121|   it("no filter, a retired id, an id outside this ascension, a keyword…
+    122|     expect((await call("kb_experience", {})).text).toMatch(/至少给 theme、…
+    123|     expect((await call("kb_experience", { id: "old-retired" })).text).…
+       |                                                                       ^
+    124|     expect((await call("kb_experience", { id: "rest-low" })).text).toM…
+    125|     expect((await call("kb_experience", { keyword: "没有这个词" })).isError…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_stats > each table, one act or all
+AssertionError: expected '房间代价表没有第 2 幕。可用的幕: ' to contain '| A9（本局） | 10/18/30 死25% n=8 |'
+
+Expected: "| A9（本局） | 10/18/30 死25% n=8 |"
+Received: "房间代价表没有第 2 幕。可用的幕: "
+
+ ❯ tests/gkb-tools.test.ts:132:76
+    130| describe("kb_stats", () => {
+    131|   it("each table, one act or all", async () => {
+    132|     expect((await call("kb_stats", { table: "room_costs", act: 2 })).t…
+       |                                                                            ^
+    133|     expect((await call("kb_stats", { table: "fights", act: 2 })).text)…
+    134|     expect((await call("kb_stats", { table: "fights", act: 2 })).text)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_stats > an act with no data: isError with the acts that exist
+AssertionError: expected '房间代价表没有第 3 幕。可用的幕: ' to match /可用的幕: 1, 2/
+
+- Expected:
+/可用的幕: 1, 2/
+
++ Received:
+"房间代价表没有第 3 幕。可用的幕: "
+
+ ❯ tests/gkb-tools.test.ts:141:25
+    139|     const result = await call("kb_stats", { table: "room_costs", act: …
+    140|     expect(result.isError).toBe(true);
+    141|     expect(result.text).toMatch(/可用的幕: 1, 2/);
+       |                         ^
+    142|     expect((await call("kb_stats", { table: "fights", act: 3 })).text)…
+    143|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_old_knowledge > a source whole or by keyword, always under the note that the data wins
+AssertionError: expected '以下是早期手写的旧知识（攻略、DeepSeek 手册、Jev 战斗提示），…' to contain '连续三场战斗的路线不走'
+
+- Expected
++ Received
+
+- 连续三场战斗的路线不走
++ 以下是早期手写的旧知识（攻略、DeepSeek 手册、Jev 战斗提示），整份放入，未按数据逐条验证，标「旧知识、待数据验证」。和数据冲突时以数据为准：其中的数字、阈值和评级若与统计表、怪物数据库或经验库不同，以后者为准。
++
++ ### 旧知识：DeepSeek 经验手册（ds-handbook.md，待数据验证）
++ （本角色还没有）
+
+ ❯ tests/gkb-tools.test.ts:150:24
+    148|     const whole = await call("kb_old_knowledge", { source: "handbook" …
+    149|     expect(whole.text).toContain("和数据冲突时以数据为准");
+    150|     expect(whole.text).toContain("连续三场战斗的路线不走");
+       |                        ^
+    151|     expect(whole.text).not.toContain("删打击");
+    152|     expect((await call("kb_old_knowledge", { keyword: "Snip" })).text)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_postmortem > the whole section by run id or a unique prefix of 4+ characters
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/gkb-tools.test.ts:167:61
+    165|   it("the whole section by run id or a unique prefix of 4+ characters"…
+    166|     const full = await call("kb_postmortem", { run_id: "RUNAAAAAAAA1" …
+    167|     expect(full.text.startsWith("## RUNAAAAAAAA1（A9，第33层")).toBe(true);
+       |                                                             ^
+    168|     expect(full.text).toContain("### 小节\n- 细节二");
+    169|     expect(full.text).not.toContain("RUNBBBBBBBB2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_postmortem > ambiguous, unknown, malformed, or no post-mortem file: isError with the reason
+AssertionError: expected '复盘里没有以「RUNA」开头的局（共 3 局有复盘；用 kb_runs 查…' to match /对应多局.*RUNAAAAAAAA1, RUNAAAAAAAB9/
+
+- Expected:
+/对应多局.*RUNAAAAAAAA1, RUNAAAAAAAB9/
+
++ Received:
+"复盘里没有以「RUNA」开头的局（共 3 局有复盘；用 kb_runs 查 run id）"
+
+ ❯ tests/gkb-tools.test.ts:174:68
+    172|
+    173|   it("ambiguous, unknown, malformed, or no post-mortem file: isError w…
+    174|     expect((await call("kb_postmortem", { run_id: "RUNA" })).text).toM…
+       |                                                                    ^
+    175|     expect((await call("kb_postmortem", { run_id: "ZZZZ" })).text).toM…
+    176|     expect((await call("kb_postmortem", { run_id: "AB" })).text).toMat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_runs > filters by ascension, floors, death and outcome; newest first; bad lines counted
+AssertionError: expected '没有符合（A9）的对局。记录共 0 局，进阶有 ' to contain '符合（A9）的对局 3 局：赢 1，终层中位 33；死因最多: 史莱姆 1…'
+
+Expected: "符合（A9）的对局 3 局：赢 1，终层中位 33；死因最多: 史莱姆 1，大老板 1（跳过 1 行坏记录）"
+Received: "没有符合（A9）的对局。记录共 0 局，进阶有 "
+
+ ❯ tests/gkb-tools.test.ts:192:16
+    190|   it("filters by ascension, floors, death and outcome; newest first; b…
+    191|     const a9 = (await call("kb_runs", { ascension: 9 })).text;
+    192|     expect(a9).toContain("符合（A9）的对局 3 局：赢 1，终层中位 33；死因最多: 史莱姆 1，大老板 1（…
+       |                ^
+    193|     expect(a9.indexOf("RUNAAAAAAAB9")).toBeLessThan(a9.indexOf("RUNAAA…
+    194|     expect(a9).toContain("- RUNWIN000001 2026-09-27 A9 第48层 赢（代码 abd）"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/134]⎯
+
+ FAIL  tests/gkb-tools.test.ts > kb_runs > no match, inverted floors or no run log: isError with the reason
+AssertionError: expected '没有符合（A5）的对局。记录共 0 局，进阶有 ' to match /记录共 4 局，进阶有 A8, A9/
+
+- Expected:
+/记录共 4 局，进阶有 A8, A9/
+
++ Received:
+"没有符合（A5）的对局。记录共 0 局，进阶有 "
+
+ ❯ tests/gkb-tools.test.ts:205:23
+    203|     const none = await call("kb_runs", { ascension: 5 });
+    204|     expect(none.isError).toBe(true);
+    205|     expect(none.text).toMatch(/记录共 4 局，进阶有 A8, A9/);
+       |                       ^
+    206|     expect((await call("kb_runs", { floor_min: 20, floor_max: 10 })).t…
+    207|     const missing = await call("kb_runs", {}, { ...ctx, logsDir: join(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/134]⎯
+
+ FAIL  tests/jev-context.test.ts > fight hints > every hint is short, conditional, unique and backed by 2+ runs
+AssertionError: expected 0 to be greater than or equal to 15
+ ❯ tests/jev-context.test.ts:151:26
+    149|   it("every hint is short, conditional, unique and backed by 2+ runs",…
+    150|     const hints = loadHints();
+    151|     expect(hints.length).toBeGreaterThanOrEqual(15);
+       |                          ^
+    152|     expect(hints.length).toBeLessThanOrEqual(30);
+    153|     expect(new Set(hints.map((hint) => hint.id)).size).toBe(hints.leng…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/134]⎯
+
+ FAIL  tests/jev-context.test.ts > fight hints > retrieves by enemy id and enemy power: the Matriarch's sleep hints only while it sleeps
+AssertionError: expected [] to deeply equal [ 'matriarch-asleep', …(2) ]
+
+- Expected
++ Received
+
+- [
+-   "matriarch-asleep",
+-   "matriarch-sleep-turns",
+-   "matriarch-siphon",
+- ]
++ []
+
+ ❯ tests/jev-context.test.ts:163:32
+    161|   it("retrieves by enemy id and enemy power: the Matriarch's sleep hin…
+    162|     const asleep = selectHints(query({ enemyIds: ["LAGAVULIN_MATRIARCH…
+    163|     expect(asleep.slice(0, 3)).toEqual(["matriarch-asleep", "matriarch…
+       |                                ^
+    164|     expect(asleep.length).toBeLessThanOrEqual(MAX_HINTS);
+    165|     const awake = selectHints(query({ enemyIds: ["LAGAVULIN_MATRIARCH"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/134]⎯
+
+ FAIL  tests/jev-context.test.ts > fight hints > gives hallway fights with no keyed enemy nothing, and caps boss fights at 5
+AssertionError: expected +0 to be 5 // Object.is equality
+
+- Expected
++ Received
+
+- 5
++ 0
+
+ ❯ tests/jev-context.test.ts:173:23
+    171|     expect(selectHints(query({ enemyIds: ["JAW_WORM"] }))).toEqual([]);
+    172|     const kd = selectHints(query({ enemyIds: ["KNOWLEDGE_DEMON"], figh…
+    173|     expect(kd.length).toBe(MAX_HINTS);
+       |                       ^
+    174|     expect(kd.map((hint) => hint.id).slice(0, 3)).toEqual(["kd-curse-t…
+    175|     const kdAttacking = selectHints(query({ enemyIds: ["KNOWLEDGE_DEMO…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/134]⎯
+
+ FAIL  tests/jev-context.test.ts > plan-choice question with JEV_CONTEXT > v1 sends the matching fight hints and logs their ids
+AssertionError: expected [] to deeply equal [ 'fysh-beckon', 'fysh-draw-energy' ]
+
+- Expected
++ Received
+
+- [
+-   "fysh-beckon",
+-   "fysh-draw-energy",
+- ]
++ []
+
+ ❯ tests/jev-context.test.ts:262:30
+    260|     const v1 = planCombatTurn(env(raw, { jevContext: "v1" }));
+    261|     if (v1?.kind !== "ask" || !v1.jevView) throw new Error("expected a…
+    262|     expect(v1.jevView.hints).toEqual(["fysh-beckon", "fysh-draw-energy…
+       |                              ^
+    263|     expect(v1.jevView.state["fight_hints"]).toEqual(loadHints().filter…
+    264|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[56/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-cards.test.ts > card tiers from the A8 outcome data > Anger 50 -> 58, Feel No Pain 54 -> 46 (its exhaust payoff still +10), Sword Boomerang 46 -> 54
+AssertionError: expected 50 to be 58 // Object.is equality
+
+- Expected
++ Received
+
+- 58
++ 50
+
+ ❯ tests/knowledge-check-a8w-cards.test.ts:20:71
+     18|
+     19|   it("Anger 50 -> 58, Feel No Pain 54 -> 46 (its exhaust payoff still …
+     20|     expect(cardValue("ANGER", "Common", "Attack", deck, 2, 20).value).…
+       |                                                                       ^
+     21|     expect(cardValue("FEEL_NO_PAIN", "Uncommon", "Power", deck, 2, 20)…
+     22|     expect(cardValue("FEEL_NO_PAIN", "Uncommon", "Power", { ...deck, e…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[57/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-experience.test.ts > the experience base: data counts as placeholders, filled when shown > every active lesson renders with no placeholder left, and the counts the data holds are placeholders
+TypeError: Cannot read properties of undefined (reading 'lesson')
+ ❯ byId tests/knowledge-check-a8w-experience.test.ts:21:74
+     19|     expect(entries.length).toBeLessThanOrEqual(200);
+     20|     for (const entry of entries) expect(lessonText(entry), entry.id).n…
+     21|     const byId = (id: string) => entries.find((entry) => entry.id === …
+       |                                                                          ^
+     22|     expect(byId("giant-explode")).toContain("{GIANT_KILLS_A8}；{GIANT_K…
+     23|     expect(byId("giant-explode")).toContain("{GIANT_BLOCK_RECORD}");
+ ❯ tests/knowledge-check-a8w-experience.test.ts:22:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[58/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-guides.test.ts > the boss notes carry the records > the Queen: single-target into the Amalgam from turn 1, with its record (DeepSeek zh, the boss clock en)
+AssertionError: the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/knowledge-check-a8w-guides.test.ts:53:39
+     51|     // From A8 up A8's fights and A9's apart (2026-10-04, recordBand: …
+     52|     // the text over every ascension.
+     53|     expect(bossNote("QUEEN_BOSS", 8)).toContain(`单体伤害从第 1 回合起就给它，女王只吃群…
+       |                                       ^
+     54|     expect(bossNote("QUEEN_BOSS", 7)).toContain(`单体伤害从第 1 回合起就给它，女王只吃群…
+     55|     expect(bossNote("QUEEN_BOSS", 8)).not.toContain("A8 5 场输局");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[59/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-guides.test.ts > the boss notes carry the records > the Insatiable: compare the Sandpit and HP death lines, with the losses by line
+AssertionError: the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/knowledge-check-a8w-guides.test.ts:63:18
+     61|     setUnblockedSharesForTests({ THE_INSATIABLE: { unblocked_share: 0.…
+     62|     const note = bossNote("THE_INSATIABLE_BOSS", 8)!;
+     63|     expect(note).toContain("先比沙坑和 HP 哪条死线先到");
+       |                  ^
+     64|     expect(note).toContain(sandpitDeathText(SAND, "zh", [8, 9]));
+     65|     expect(bossNote("THE_INSATIABLE_BOSS", 7)!).toContain(sandpitDeath…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[60/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-guides.test.ts > Jev's hints: the Queen and the Sandpit > a Queen hint while the Amalgam lives: single-target into it from turn 1, the record filled
+TypeError: Cannot read properties of undefined (reading 'when')
+ ❯ tests/knowledge-check-a8w-guides.test.ts:76:17
+     74|   it("a Queen hint while the Amalgam lives: single-target into it from…
+     75|     const hint = byId("queen-amalgam-first")!;
+     76|     expect(hint.when.enemies).toEqual(["TORCH_HEAD_AMALGAM"]);
+       |                 ^
+     77|     expect(hint.text).toContain("turns 1-2 included");
+     78|     expect(hint.evidence).toEqual(expect.arrayContaining(["5LRZ7HJ7YGS…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[61/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-guides.test.ts > Jev's hints: the Queen and the Sandpit > the Sandpit hints compare the two death lines; no 'Escape before extra damage'
+TypeError: Cannot read properties of undefined (reading 'text')
+ ❯ tests/knowledge-check-a8w-guides.test.ts:86:32
+     84|   it("the Sandpit hints compare the two death lines; no 'Escape before…
+     85|     expect(byId("sandpit-no-race")).toBeUndefined();
+     86|     expect(byId("sandpit-zero")!.text).toContain("Play Escape when the…
+       |                                ^
+     87|     const hpFirst = byId("sandpit-hp-first")!;
+     88|     expect(hpFirst.evidence).toContain("NH8A3VBDRDZW");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[62/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-guides.test.ts > the guides: this batch's conflicts rewritten to the data's version > the guide
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ironclad-guide.md'
+ ❯ read tests/knowledge-check-a8w-guides.test.ts:33:32
+
+ ❯ tests/knowledge-check-a8w-guides.test.ts:98:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[63/134]⎯
+
+ FAIL  tests/knowledge-check-a8w-guides.test.ts > the guides: this batch's conflicts rewritten to the data's version > the handbook
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ read tests/knowledge-check-a8w-guides.test.ts:33:32
+
+ ❯ tests/knowledge-check-a8w-guides.test.ts:110:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[64/134]⎯
+
+ FAIL  tests/knowledge-check-cards.test.ts > card tiers the outcome data contradicts (A8 outcome-stats, n >= 15 each way) > Taunt 62 -> 50, Molten Fist 54 -> 44, Twin Strike 58 -> 64
+AssertionError: expected 50 to be 44 // Object.is equality
+
+- Expected
++ Received
+
+- 44
++ 50
+
+ ❯ tests/knowledge-check-cards.test.ts:16:77
+     14|   it("Taunt 62 -> 50, Molten Fist 54 -> 44, Twin Strike 58 -> 64", () …
+     15|     expect(cardValue("TAUNT", "Common", "Skill", deck, 2, 20).value).t…
+     16|     expect(cardValue("MOLTEN_FIST", "Common", "Attack", deck, 2, 20).v…
+       |                                                                             ^
+     17|     expect(cardValue("TWIN_STRIKE", "Common", "Attack", deck, 2, 20).v…
+     18|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[65/134]⎯
+
+ FAIL  tests/knowledge-check-cards.test.ts > card tiers the outcome data contradicts (A8 outcome-stats, n >= 15 each way) > Aeonglass: plain True Grit gets no Wither bonus (random exhaust); Burning Pact still does
+AssertionError: expected [ 'no card values for Silent yet' ] to include 'exhausts Aeonglass\'s Withers'
+ ❯ tests/knowledge-check-cards.test.ts:24:97
+     22|     expect(cardValue("TRUE_GRIT", "Common", "Skill", deck, 3, 40, "AEO…
+     23|     expect(cardValue("TRUE_GRIT", "Common", "Skill", deck, 3, 40, "AEO…
+     24|     expect(cardValue("BURNING_PACT", "Common", "Skill", deck, 3, 40, "…
+       |                                                                                                 ^
+     25|   });
+     26| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[66/134]⎯
+
+ FAIL  tests/knowledge-check-facts.test.ts > counted records instead of hand-written ones > the crab's kill order: Rocket first, Crusher first, neither; all ascensions, A8 and A9 (was "51 场…39 场赢 8")
+AssertionError: the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/knowledge-check-facts.test.ts:69:45
+     67|     );
+     68|     expect(crabKillShort(CRAB, [8, 9])).toBe("A8 Rocket died first 1/2…
+     69|     expect(bossNote("KAISER_CRAB_BOSS", 9)).toContain(`（${crabKillText…
+       |                                             ^
+     70|     expect(bossNote("KAISER_CRAB_BOSS", 7)).toContain(`（${crabKillText…
+     71|     expect(clockBossNote(bossProfile("KAISER_CRAB")!, 9)).toContain(`(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[67/134]⎯
+
+ FAIL  tests/knowledge-check-facts.test.ts > counted records instead of hand-written ones > the Matriarch's sleep: decks without lasting Strength by ascension, bursts vs chip damage that woke it
+AssertionError: the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/knowledge-check-facts.test.ts:90:18
+     88|     expect(lagSleepRecord("zh", 7)).toBe(lagSleepText(LAG, "zh"));
+     89|     const note = bossNote("LAGAVULIN_MATRIARCH_BOSS", 9)!;
+     90|     expect(note).toContain("牌组没有持续力量牌时沉睡回合几乎白过");
+       |                  ^
+     91|     expect(note).toContain(lagSleepText(LAG, "zh", [8, 9]));
+     92|     expect(bossNote("LAGAVULIN_MATRIARCH_BOSS", 7)!).toContain(lagSlee…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[68/134]⎯
+
+ FAIL  tests/knowledge-check-facts.test.ts > Jev's hints > the crab record is counted, the Laser comes with Charge Up's Strength
+TypeError: Cannot read properties of undefined (reading 'text')
+ ❯ tests/knowledge-check-facts.test.ts:145:37
+    143|
+    144|   it("the crab record is counted, the Laser comes with Charge Up's Str…
+    145|     expect(byId("crab-rocket-first").text).toContain("({CRAB_KILLS_EN}…
+       |                                     ^
+    146|     expect(byId("crab-rocket-first").text).not.toMatch(/9\/12|8\/39/);
+    147|     setUnblockedSharesForTests({ KAISER_CRAB: { unblocked_share: 0.35,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[69/134]⎯
+
+ FAIL  tests/knowledge-check-facts.test.ts > Jev's hints > the Matriarch: sleep turns pay off only with powers; a 25%+ burst may wake it; no count left unfilled
+TypeError: Cannot read properties of undefined (reading 'text')
+ ❯ tests/knowledge-check-facts.test.ts:155:41
+    153|
+    154|   it("the Matriarch: sleep turns pay off only with powers; a 25%+ burs…
+    155|     expect(byId("matriarch-sleep-turns").text).toContain("pay off only…
+       |                                         ^
+    156|     expect(byId("matriarch-asleep").text).toContain("a 25%+ HP burst i…
+    157|     setUnblockedSharesForTests({ LAGAVULIN_MATRIARCH: { unblocked_shar…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[70/134]⎯
+
+ FAIL  tests/knowledge-check-facts.test.ts > Jev's hints > hp-trade-boss has the Vantom Slippery exception (3SBP T1)
+TypeError: Cannot read properties of undefined (reading 'text')
+ ❯ tests/knowledge-check-facts.test.ts:163:17
+    161|   it("hp-trade-boss has the Vantom Slippery exception (3SBP T1)", () =…
+    162|     const hint = byId("hp-trade-boss");
+    163|     expect(hint.text).toContain("Exception: against Vantom's Slippery,…
+       |                 ^
+    164|     expect(hint.evidence).toContain("3SBPKG9603WD");
+    165|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[71/134]⎯
+
+ FAIL  tests/knowledge-check-guides.test.ts > the guides: conflicts with the data rewritten, counts as placeholders > no hand-written count or single-ascension number the data contradicts is left
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ironclad-guide.md'
+ ❯ read tests/knowledge-check-guides.test.ts:17:32
+     15|
+     16| const KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "..", …
+     17| const read = (name: string) => readFileSync(knowledgeFile(KNOWLEDGE, n…
+       |                                ^
+     18|
+     19| describe("the guides: conflicts with the data rewritten, counts as pla…
+ ❯ tests/knowledge-check-guides.test.ts:21:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[72/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > knowledge text: no hand-set HP thresholds where the experience base has evidence > the handbook no longer says code forces a rest before the boss, or guards event HP for DeepSeek
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:21:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[73/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > knowledge text: no hand-set HP thresholds where the experience base has evidence > elite, rest, shop and event lines carry no HP% threshold and point to the knowledge slice
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:30:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[74/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > knowledge text: no hand-set HP thresholds where the experience base has evidence > the guide no longer excuses HP trades with Burning Blood
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ironclad-guide.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:39:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[75/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > knowledge text: no hand-set HP thresholds where the experience base has evidence > every experience entry the text cites by id exists and is active
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:47:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[76/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > boss numbers per ascension, advice as the experience base has it (Waterfall Giant, Test Subject) > the Giant: A8/A9 numbers and the early-kill evidence, not the A0 upgrade counts or "fight slowly"
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:56:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[77/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > boss numbers per ascension, advice as the experience base has it (Waterfall Giant, Test Subject) > the Test Subject: A8 phases, and phase 3 is big hits on the open turns, not many small ones
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ironclad-guide.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:76:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[78/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > boss numbers per ascension, advice as the experience base has it (Waterfall Giant, Test Subject) > every boss experience entry the texts cite exists and is active
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:89:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[79/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > no A0/A8 boss HP or damage stated as fact in the guide, the handbook or Jev's hints (review 2026-09-29 #11) > the guide and handbook carry no unlabelled A0 boss HP; §9 defers its numbers to the DB
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/ds-handbook.md'
+ ❯ read tests/knowledge-text.test.ts:14:40
+     12|
+     13| const DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", …
+     14| const read = (name: string): string => readFileSync(knowledgeFile(DIR,…
+       |                                        ^
+     15| const lines = (text: string, topic: RegExp): string[] => text.split("\…
+     16| /** An HP threshold written as a number: "HP>60%", "HP≥75%", "HP<50%".…
+ ❯ tests/knowledge-text.test.ts:103:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[80/134]⎯
+
+ FAIL  tests/knowledge-text.test.ts > no A0/A8 boss HP or damage stated as fact in the guide, the handbook or Jev's hints (review 2026-09-29 #11) > Jev's hints: no HP figures, damage filled from the DB at this ascension
+TypeError: Cannot read properties of undefined (reading 'text')
+ ❯ hintText src/knowledge/jev-hints.ts:91:44
+     89|  */
+     90| export function hintText(hint: JevHint, ascension: number): string {
+     91|   return fillGuideFacts(fillDbNumbers(hint.text, ascension), ascension…
+       |                                            ^
+     92| }
+     93|
+ ❯ tests/knowledge-text.test.ts:136:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[81/134]⎯
+
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte
+AssertionError: expected { …(8) } to deeply equal { …(8) }
+
+- Expected
++ Received
+
+@@ -3,8 +3,8 @@
+    "8l29-f33-t5-crab-alone:v1": "76ff44399ce497a3bc3f22ec49b186c1",
+    "8l29-f39-t3-axebot-stock2:off": "71009ab06986ebeb3cd29453338e4d5b",
+    "8l29-f39-t3-axebot-stock2:v1": "f33b7b050f05afe75c809e0db7d686c2",
+    "nx48-f33-t7-crab-death:off": "1e916a66856f00fbeef0ec59d3168d15",
+    "nx48-f33-t7-crab-death:v1": "58f682b783ec4fb6cb190c594f077683",
+-   "y3xt-f45-t5-axebot-stock1:off": "40399a49c414cf8c9768f1802bcbfbd6",
+-   "y3xt-f45-t5-axebot-stock1:v1": "55148044f38ebd91f93c25280b10de6a",
++   "y3xt-f45-t5-axebot-stock1:off": "c49280dee685dad46ce895361ee6dec3",
++   "y3xt-f45-t5-axebot-stock1:v1": "ae11db91ced0181810703e2a2f4d266b",
+  }
+
+ ❯ tests/mech-move-planner.test.ts:174:47
+    172|       return;
+    173|     }
+    174|     expect(digests({ mechMoveRules: false })).toEqual(GOLDEN_ON);
+       |                                               ^
+    175|     expect([...touched]).toEqual([]);
+    176|   }, 600_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[82/134]⎯
+
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off
+AssertionError: expected { …(8) } to deeply equal { …(8) }
+
+- Expected
++ Received
+
+@@ -3,8 +3,8 @@
+    "8l29-f33-t5-crab-alone:v1": "76ff44399ce497a3bc3f22ec49b186c1",
+    "8l29-f39-t3-axebot-stock2:off": "71009ab06986ebeb3cd29453338e4d5b",
+    "8l29-f39-t3-axebot-stock2:v1": "f33b7b050f05afe75c809e0db7d686c2",
+    "nx48-f33-t7-crab-death:off": "1e916a66856f00fbeef0ec59d3168d15",
+    "nx48-f33-t7-crab-death:v1": "58f682b783ec4fb6cb190c594f077683",
+-   "y3xt-f45-t5-axebot-stock1:off": "40399a49c414cf8c9768f1802bcbfbd6",
+-   "y3xt-f45-t5-axebot-stock1:v1": "55148044f38ebd91f93c25280b10de6a",
++   "y3xt-f45-t5-axebot-stock1:off": "c49280dee685dad46ce895361ee6dec3",
++   "y3xt-f45-t5-axebot-stock1:v1": "ae11db91ced0181810703e2a2f4d266b",
+  }
+
+ ❯ tests/mech-move-planner.test.ts:180:43
+    178|   it("MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MEC…
+    179|     if (process.env["CAPTURE"] === "1") return;
+    180|     expect(digests({ mechRules: false })).toEqual(GOLDEN_OFF);
+       |                                           ^
+    181|   }, 600_000);
+    182|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[83/134]⎯
+
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > on, reading the rules fails: the switch off (fail safe), the Crab's back attack included
+AssertionError: expected { …(8) } to deeply equal { …(8) }
+
+- Expected
++ Received
+
+@@ -3,8 +3,8 @@
+    "8l29-f33-t5-crab-alone:v1": "76ff44399ce497a3bc3f22ec49b186c1",
+    "8l29-f39-t3-axebot-stock2:off": "71009ab06986ebeb3cd29453338e4d5b",
+    "8l29-f39-t3-axebot-stock2:v1": "f33b7b050f05afe75c809e0db7d686c2",
+    "nx48-f33-t7-crab-death:off": "1e916a66856f00fbeef0ec59d3168d15",
+    "nx48-f33-t7-crab-death:v1": "58f682b783ec4fb6cb190c594f077683",
+-   "y3xt-f45-t5-axebot-stock1:off": "40399a49c414cf8c9768f1802bcbfbd6",
+-   "y3xt-f45-t5-axebot-stock1:v1": "55148044f38ebd91f93c25280b10de6a",
++   "y3xt-f45-t5-axebot-stock1:off": "c49280dee685dad46ce895361ee6dec3",
++   "y3xt-f45-t5-axebot-stock1:v1": "ae11db91ced0181810703e2a2f4d266b",
+  }
+
+ ❯ tests/mech-move-planner.test.ts:201:25
+    199|     };
+    200|     setMonsterDbForTests(broken as unknown as Parameters<typeof setMon…
+    201|     expect(digests({})).toEqual(GOLDEN_ON);
+       |                         ^
+    202|   }, 600_000);
+    203|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[84/134]⎯
+
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule)
+AssertionError: expected { …(4) } to deeply equal { …(4) }
+
+- Expected
++ Received
+
+  {
+    "8l29-f39-t3-axebot-stock2:off": "71009ab06986ebeb3cd29453338e4d5b",
+    "8l29-f39-t3-axebot-stock2:v1": "f33b7b050f05afe75c809e0db7d686c2",
+-   "y3xt-f45-t5-axebot-stock1:off": "40399a49c414cf8c9768f1802bcbfbd6",
+-   "y3xt-f45-t5-axebot-stock1:v1": "55148044f38ebd91f93c25280b10de6a",
++   "y3xt-f45-t5-axebot-stock1:off": "c49280dee685dad46ce895361ee6dec3",
++   "y3xt-f45-t5-axebot-stock1:v1": "ae11db91ced0181810703e2a2f4d266b",
+  }
+
+ ❯ tests/mech-move-planner.test.ts:211:34
+    209|     setMonsterDbForTests(bare as unknown as Parameters<typeof setMonst…
+    210|     const axebots = BOARDS.filter((name) => name.includes("axebot"));
+    211|     expect(digests({}, axebots)).toEqual(only(GOLDEN_ON, axebots));
+       |                                  ^
+    212|   }, 600_000);
+    213| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[85/134]⎯
+
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES off: the combat question as at v4 ffed0d4 > with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte
+AssertionError: expected { …(12) } to deeply equal { …(12) }
+
+- Expected
++ Received
+
+  {
+-   "4lc3-f21-t4-hopper:off": "3df091c621b1f89949cb2e4c320588b3",
+-   "4lc3-f21-t4-hopper:v1": "7d8b9007a258dfe3fe13c3ef2ad36624",
+-   "8v0h-f19-t5-hopper-escape:off": "a4fd37500760c817b46e117f94b5d053",
+-   "8v0h-f19-t5-hopper-escape:v1": "81eb906e12075d55a889771021ee3d32",
+-   "jf8n-f9-t3-gremlins:off": "1d23cf0e0867217387209b2d72860b8f",
+-   "jf8n-f9-t3-gremlins:v1": "9660f4117a48657ce5d254e906c11c20",
+-   "rpc6-f20-t3-hopper:off": "5c205aa8cb08ac26f726b3a3c03da85f",
+-   "rpc6-f20-t3-hopper:v1": "6ba59423258646b2272db82709ae6687",
+-   "rpc6-f20-t4-hopper:off": "2941865d9f864b4b8f7936113634e342",
+-   "rpc6-f20-t4-hopper:v1": "e4fd7f95d063a98fd41d13697b433df7",
+-   "rpc6-f20-t5-hopper-escape:off": "f7f2e4ce610c5f8ad081eb7085e61602",
+-   "rpc6-f20-t5-hopper-escape:v1": "03e5ab3b9b98f09ced6fbe27ca405de3",
++   "4lc3-f21-t4-hopper:off": "640c2039ad287b1e37fe6c9bfc97d5c0",
++   "4lc3-f21-t4-hopper:v1": "455b269df66ac3bfe349d720e84f502e",
++   "8v0h-f19-t5-hopper-escape:off": "92a5409139e6a7d3ddd8518d546502c6",
++   "8v0h-f19-t5-hopper-escape:v1": "03f679a79aef68612de20021d1dba11b",
++   "jf8n-f9-t3-gremlins:off": "b5e23d0c3606620ef6d2f080dbc52e14",
++   "jf8n-f9-t3-gremlins:v1": "55850dbd190606bb9d16f1e5971a2a82",
++   "rpc6-f20-t3-hopper:off": "84e59c00a0bad9136e30d1ccffe15a99",
++   "rpc6-f20-t3-hopper:v1": "2e1af7fa8cc6a5524e565651b5c7974a",
++   "rpc6-f20-t4-hopper:off": "d3b3b1590728493a2f156228732ac749",
++   "rpc6-f20-t4-hopper:v1": "626cec21fb6874dad82bb90ff52bd5d3",
++   "rpc6-f20-t5-hopper-escape:off": "372bf12c165be598fcc5be64b2d089f9",
++   "rpc6-f20-t5-hopper-escape:v1": "75ddbe39516ba9d3b17476ddefea2626",
+  }
+
+ ❯ tests/mech-rules-planner.test.ts:175:17
+    173|     const got = digests({ mechRules: false });
+    174|     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got…
+    175|     expect(got).toEqual(GOLDEN);
+       |                 ^
+    176|     expect([...touched]).toEqual([]);
+    177|   }, 600_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[86/134]⎯
+
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES off: the combat question as at v4 ffed0d4 > on, but a monster DB without the observed data: the same
+AssertionError: expected { …(12) } to deeply equal { …(12) }
+
+- Expected
++ Received
+
+  {
+-   "4lc3-f21-t4-hopper:off": "3df091c621b1f89949cb2e4c320588b3",
+-   "4lc3-f21-t4-hopper:v1": "7d8b9007a258dfe3fe13c3ef2ad36624",
+-   "8v0h-f19-t5-hopper-escape:off": "a4fd37500760c817b46e117f94b5d053",
+-   "8v0h-f19-t5-hopper-escape:v1": "81eb906e12075d55a889771021ee3d32",
+-   "jf8n-f9-t3-gremlins:off": "1d23cf0e0867217387209b2d72860b8f",
+-   "jf8n-f9-t3-gremlins:v1": "9660f4117a48657ce5d254e906c11c20",
+-   "rpc6-f20-t3-hopper:off": "5c205aa8cb08ac26f726b3a3c03da85f",
+-   "rpc6-f20-t3-hopper:v1": "6ba59423258646b2272db82709ae6687",
+-   "rpc6-f20-t4-hopper:off": "2941865d9f864b4b8f7936113634e342",
+-   "rpc6-f20-t4-hopper:v1": "e4fd7f95d063a98fd41d13697b433df7",
+-   "rpc6-f20-t5-hopper-escape:off": "f7f2e4ce610c5f8ad081eb7085e61602",
+-   "rpc6-f20-t5-hopper-escape:v1": "03e5ab3b9b98f09ced6fbe27ca405de3",
++   "4lc3-f21-t4-hopper:off": "640c2039ad287b1e37fe6c9bfc97d5c0",
++   "4lc3-f21-t4-hopper:v1": "455b269df66ac3bfe349d720e84f502e",
++   "8v0h-f19-t5-hopper-escape:off": "92a5409139e6a7d3ddd8518d546502c6",
++   "8v0h-f19-t5-hopper-escape:v1": "03f679a79aef68612de20021d1dba11b",
++   "jf8n-f9-t3-gremlins:off": "b5e23d0c3606620ef6d2f080dbc52e14",
++   "jf8n-f9-t3-gremlins:v1": "55850dbd190606bb9d16f1e5971a2a82",
++   "rpc6-f20-t3-hopper:off": "84e59c00a0bad9136e30d1ccffe15a99",
++   "rpc6-f20-t3-hopper:v1": "2e1af7fa8cc6a5524e565651b5c7974a",
++   "rpc6-f20-t4-hopper:off": "d3b3b1590728493a2f156228732ac749",
++   "rpc6-f20-t4-hopper:v1": "626cec21fb6874dad82bb90ff52bd5d3",
++   "rpc6-f20-t5-hopper-escape:off": "372bf12c165be598fcc5be64b2d089f9",
++   "rpc6-f20-t5-hopper-escape:v1": "75ddbe39516ba9d3b17476ddefea2626",
+  }
+
+ ❯ tests/mech-rules-planner.test.ts:182:42
+    180|     const pinned = JSON.parse(readFileSync(join(DATA, "pinned-knowledg…
+    181|     setMonsterDbForTests(pinned["monster-db.json"]!);
+    182|     expect(digests({ mechRules: true })).toEqual(GOLDEN);
+       |                                          ^
+    183|   }, 600_000);
+    184|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[87/134]⎯
+
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES off: the combat question as at v4 ffed0d4 > on, and reading the rules fails: the same (fail safe)
+AssertionError: expected { …(12) } to deeply equal { …(12) }
+
+- Expected
++ Received
+
+  {
+-   "4lc3-f21-t4-hopper:off": "3df091c621b1f89949cb2e4c320588b3",
+-   "4lc3-f21-t4-hopper:v1": "7d8b9007a258dfe3fe13c3ef2ad36624",
+-   "8v0h-f19-t5-hopper-escape:off": "a4fd37500760c817b46e117f94b5d053",
+-   "8v0h-f19-t5-hopper-escape:v1": "81eb906e12075d55a889771021ee3d32",
+-   "jf8n-f9-t3-gremlins:off": "1d23cf0e0867217387209b2d72860b8f",
+-   "jf8n-f9-t3-gremlins:v1": "9660f4117a48657ce5d254e906c11c20",
+-   "rpc6-f20-t3-hopper:off": "5c205aa8cb08ac26f726b3a3c03da85f",
+-   "rpc6-f20-t3-hopper:v1": "6ba59423258646b2272db82709ae6687",
+-   "rpc6-f20-t4-hopper:off": "2941865d9f864b4b8f7936113634e342",
+-   "rpc6-f20-t4-hopper:v1": "e4fd7f95d063a98fd41d13697b433df7",
+-   "rpc6-f20-t5-hopper-escape:off": "f7f2e4ce610c5f8ad081eb7085e61602",
+-   "rpc6-f20-t5-hopper-escape:v1": "03e5ab3b9b98f09ced6fbe27ca405de3",
++   "4lc3-f21-t4-hopper:off": "640c2039ad287b1e37fe6c9bfc97d5c0",
++   "4lc3-f21-t4-hopper:v1": "455b269df66ac3bfe349d720e84f502e",
++   "8v0h-f19-t5-hopper-escape:off": "92a5409139e6a7d3ddd8518d546502c6",
++   "8v0h-f19-t5-hopper-escape:v1": "03f679a79aef68612de20021d1dba11b",
++   "jf8n-f9-t3-gremlins:off": "b5e23d0c3606620ef6d2f080dbc52e14",
++   "jf8n-f9-t3-gremlins:v1": "55850dbd190606bb9d16f1e5971a2a82",
++   "rpc6-f20-t3-hopper:off": "84e59c00a0bad9136e30d1ccffe15a99",
++   "rpc6-f20-t3-hopper:v1": "2e1af7fa8cc6a5524e565651b5c7974a",
++   "rpc6-f20-t4-hopper:off": "d3b3b1590728493a2f156228732ac749",
++   "rpc6-f20-t4-hopper:v1": "626cec21fb6874dad82bb90ff52bd5d3",
++   "rpc6-f20-t5-hopper-escape:off": "372bf12c165be598fcc5be64b2d089f9",
++   "rpc6-f20-t5-hopper-escape:v1": "75ddbe39516ba9d3b17476ddefea2626",
+  }
+
+ ❯ tests/mech-rules-planner.test.ts:196:25
+    194|     };
+    195|     setMonsterDbForTests(broken as unknown as Parameters<typeof setMon…
+    196|     expect(digests({})).toEqual(GOLDEN);
+       |                         ^
+    197|   }, 600_000);
+    198| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[88/134]⎯
+
+ FAIL  tests/monster-db-context.test.ts > monster DB facts for DeepSeek > uses the ascension asked for, else says n=0 and labels the nearest logged one
+AssertionError: expected 'boss 数据库 墨影幻灵 (VANTOM) A8 无记录 (n=0)，以…' to match /A8: HP .*\(n=\d+\)/
+
+- Expected:
+/A8: HP .*\(n=\d+\)/
+
++ Received:
+"boss 数据库 墨影幻灵 (VANTOM) A8 无记录 (n=0)，以下为最近的 A7: HP 墨影幻灵 173 (n=1)
+我方战绩: 1 场，胜率 100% (n=1)，阵亡 0；赢局失血 中位/p75 43/43 (n=1)；赢局回合 8/8 (n=1)；每回合失血 5.4/5.4 (n=1)
+墨影幻灵 招式: 墨迹 7 → 墨水长枪 6×2 → 肢解 26 塞3张状态牌 → 准备 (Buff) +2力 →循环回 墨迹 | 能力: 滑溜 9, 力量 2"
+
+ ❯ tests/monster-db-context.test.ts:19:43
+     17|     expect(nearestAscension({ "0": 1, "7": 1, "8": 1 }, 9)).toEqual({ …
+     18|     expect(nearestAscension({ "6": 1, "8": 1 }, 7)).toEqual({ key: "8"…
+     19|     expect(bossDossier("VANTOM_BOSS", 8)).toMatch(/A8: HP .*\(n=\d+\)/…
+       |                                           ^
+     20|     // An ascension no run has reached (the logged ones grow with ever…
+     21|     expect(bossDossier("VANTOM_BOSS", 20)).toMatch(/A20 无记录 \(n=0\)，以下…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[89/134]⎯
+
+ FAIL  tests/multi-character.test.ts > character select > CHARACTER unset plays the Ironclad, as before
+AssertionError: expected { action: 'select_character', …(1) } to deeply equal { action: 'select_character', …(1) }
+
+- Expected
++ Received
+
+  {
+    "action": "select_character",
+-   "option_index": 0,
++   "option_index": 2,
+  }
+
+ ❯ tests/multi-character.test.ts:93:69
+     91|
+     92|   it("CHARACTER unset plays the Ironclad, as before", () => {
+     93|     expect(intentOf(plan(selectState("IRONCLAD", false, 0), null))).to…
+       |                                                                     ^
+     94|     expect(intentOf(plan(selectState("IRONCLAD", true, 0), null))).toE…
+     95|     expect(intentOf(plan(selectState("SILENT", true, 0), null))).toEqu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[90/134]⎯
+
+ FAIL  tests/multi-character.test.ts > a character with no knowledge yet > leaves the Ironclad's text byte for byte
+AssertionError: expected 'silent' to be 'ironclad' // Object.is equality
+
+Expected: "ironclad"
+Received: "silent"
+
+ ❯ tests/multi-character.test.ts:194:34
+    192|
+    193|   it("leaves the Ironclad's text byte for byte", () => {
+    194|     expect(knowledgeCharacter()).toBe(DEFAULT_CHARACTER);
+       |                                  ^
+    195|     expect(systemRules()).toBe(SYSTEM);
+    196|     expect(fullSystemPrompt("P")).toBe(`${SYSTEM}\n\n${FULL_KNOWLEDGE_…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[91/134]⎯
+
+ FAIL  tests/passive-pieces.test.ts > the boss clock > 8D8DZ9K680C2 F48 T1 (Sai, Hourglass, Bronze Scales, Inferno+, Flame Barrier): more damage a turn, the passive part not cut by the Queen's Weak; the passive block counted at its share
+AssertionError: expected 6.300000000000001 to be 11 // Object.is equality
+
+- Expected
++ Received
+
+- 11
++ 6.300000000000001
+
+ ❯ tests/passive-pieces.test.ts:332:31
+    330|       // Sai (7) is one of the passive blocks now, counted at CLOCK_PA…
+    331|       // fight's passive block in it): 45 x 0.4 = 18 a turn less 3.5, …
+    332|       expect(off.lossPerTurn).toBe(11);
+       |                               ^
+    333|       expect(on.lossPerTurn).toBe(18 - 7 * CLOCK_PASSIVE_BLOCK_SHARE);
+    334|       expect(on.lossNote).toMatch(/Sai 7/);
+ ❯ withQueenDb tests/passive-pieces.test.ts:282:12
+ ❯ tests/passive-pieces.test.ts:306:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[92/134]⎯
+
+ FAIL  tests/potions-jev-call.test.ts > potion_context on the combat question > each held potion's worth in this act's boss fight (potion-equivalents.json), facts only: the options are the same
+AssertionError: expected undefined to deeply equal [ …(2) ]
+
+- Expected:
+[
+  "火焰药水：约等于 4 血 / 20 伤害 / 4 格挡（本幕 boss，A8 公式 n=20）",
+  "格挡药水：约等于 8 血 / 40 伤害 / 8 格挡（本幕 boss，A8 公式 n=20）",
+]
+
++ Received:
+undefined
+
+ ❯ tests/potions-jev-call.test.ts:231:41
+    229|       const context = decision.state["potion_context"] as Record<strin…
+    230|       // The payload's act_id "1" is act 2; ascension 0 reads the tabl…
+    231|       expect(context[POTION_WORTH_KEY]).toEqual(["火焰药水：约等于 4 血 / 20 伤害…
+       |                                         ^
+    232|       expect((decision.jevView?.state ?? decision.state)["potion_conte…
+    233|       expect(decision.questions).toEqual(before.questions);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[93/134]⎯
+
+ FAIL  tests/prefix-facts.test.ts > the full prefix with frozen facts > the guide, the handbook, the hints and the lessons read the day's table; nothing is left unfilled
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/prefix-facts-kn-w0eRlJ/characters/silent/ironclad-guide.md'
+ ❯ withPlaceholders tests/prefix-facts.test.ts:74:63
+     72|     const dir = mkdtempSync(join(tmpdir(), "prefix-facts-kn-"));
+     73|     cpSync(FIXTURE, dir, { recursive: true });
+     74|     writeFileSync(knowledgeFile(dir, "ironclad-guide.md"), `${readFile…
+       |                                                               ^
+     75|     writeFileSync(knowledgeFile(dir, "ds-handbook.md"), `${readFileSyn…
+     76|     const experience = JSON.parse(readFileSync(knowledgeFile(dir, "exp…
+ ❯ tests/prefix-facts.test.ts:84:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[94/134]⎯
+
+ FAIL  tests/prefix-facts.test.ts > the full prefix with frozen facts > a data refresh changes the prefix from the data-version block on; everything before it is byte-identical
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/prefix-facts-kn-fwi4ZW/characters/silent/ironclad-guide.md'
+ ❯ withPlaceholders tests/prefix-facts.test.ts:74:63
+     72|     const dir = mkdtempSync(join(tmpdir(), "prefix-facts-kn-"));
+     73|     cpSync(FIXTURE, dir, { recursive: true });
+     74|     writeFileSync(knowledgeFile(dir, "ironclad-guide.md"), `${readFile…
+       |                                                               ^
+     75|     writeFileSync(knowledgeFile(dir, "ds-handbook.md"), `${readFileSyn…
+     76|     const experience = JSON.parse(readFileSync(knowledgeFile(dir, "exp…
+ ❯ tests/prefix-facts.test.ts:102:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[95/134]⎯
+
+ FAIL  tests/prefix-facts.test.ts > the full prefix with frozen facts > the brain renders with the day's table in DEEPSEEK_FACTS_SNAPSHOT_DIR
+Error: ENOENT: no such file or directory, scandir '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/prefix-facts-brain-oedz2z/guide-facts'
+ ❯ tests/prefix-facts.test.ts:129:20
+    127|     expect(system).toContain("## 数据版本");
+    128|     // The fixture's one placeholder (a Jev hint's monster-DB number) …
+    129|     const tables = readdirSync(factsDir).filter((name) => name.endsWit…
+       |                    ^
+    130|     expect(tables).toHaveLength(1);
+    131|     expect(Object.keys(JSON.parse(readFileSync(join(factsDir, tables[0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[96/134]⎯
+
+ FAIL  tests/route-projection.test.ts > the route-plan question on logged boards (M2: the whole map, no candidate routes, no scores) > QZQU F18 (69/80): every node of the act's map with its lines, where we stand, the next nodes and the boss
+Error: expected a route-plan question
+ ❯ routeQuestion tests/route-projection.test.ts:69:77
+     67|   const env: DecisionEnv = loggedEnv(logged(name), { buildDecider: "de…
+     68|   const outcome = planDecision(env);
+     69|   if (outcome.kind !== "decision" || outcome.decision.kind !== "ask") …
+       |                                                                             ^
+     70|   expect(outcome.decision.label).toBe("map/route-plan");
+     71|   return { env, question: outcome.decision };
+ ❯ tests/route-projection.test.ts:86:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[97/134]⎯
+
+ FAIL  tests/route-projection.test.ts > the route-plan question on logged boards (M2: the whole map, no candidate routes, no scores) > QZQU F18: a legal route with an elite becomes the act's plan, projected from HP now (the boss at 71/80; the old model had every route at ~0/80)
+Error: expected a route-plan question
+ ❯ routeQuestion tests/route-projection.test.ts:69:77
+     67|   const env: DecisionEnv = loggedEnv(logged(name), { buildDecider: "de…
+     68|   const outcome = planDecision(env);
+     69|   if (outcome.kind !== "decision" || outcome.decision.kind !== "ask") …
+       |                                                                             ^
+     70|   expect(outcome.decision.label).toBe("map/route-plan");
+     71|   return { env, question: outcome.decision };
+ ❯ tests/route-projection.test.ts:104:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[98/134]⎯
+
+ FAIL  tests/route-projection.test.ts > the route-plan question on logged boards (M2: the whole map, no candidate routes, no scores) > SFCE F18 (72/87): the path the run took, projected as the route facts project it, reaches the boss near what happened (82/97), not 46/87
+Error: expected a route-plan question
+ ❯ routeQuestion tests/route-projection.test.ts:69:77
+     67|   const env: DecisionEnv = loggedEnv(logged(name), { buildDecider: "de…
+     68|   const outcome = planDecision(env);
+     69|   if (outcome.kind !== "decision" || outcome.decision.kind !== "ask") …
+       |                                                                             ^
+     70|   expect(outcome.decision.label).toBe("map/route-plan");
+     71|   return { env, question: outcome.decision };
+ ❯ tests/route-projection.test.ts:126:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[99/134]⎯
+
+ FAIL  tests/route-projection.test.ts > the route-plan question on logged boards (M2: the whole map, no candidate routes, no scores) > SFCE F1 (act 1): the question's options are the next nodes; the map starts on the Neow node
+Error: expected a route-plan question
+ ❯ routeQuestion tests/route-projection.test.ts:69:77
+     67|   const env: DecisionEnv = loggedEnv(logged(name), { buildDecider: "de…
+     68|   const outcome = planDecision(env);
+     69|   if (outcome.kind !== "decision" || outcome.decision.kind !== "ask") …
+       |                                                                             ^
+     70|   expect(outcome.decision.label).toBe("map/route-plan");
+     71|   return { env, question: outcome.decision };
+ ❯ tests/route-projection.test.ts:130:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[100/134]⎯
+
+ FAIL  tests/run-journal.test.ts > run journal: the complete run context > every question gets the same sections, including the boss's monster-DB entry and the act's threats
+AssertionError: expected '第1幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/…' to match /VANTOM\) A8: HP .* \(n=\d+\)/
+
+- Expected:
+/VANTOM\) A8: HP .* \(n=\d+\)/
+
++ Received:
+"第1幕的精英与危险小怪（monster DB 实测；失血 = 赢局 中位/p75；n = 场次）:
+旧日雕像 [精英] A8: HP 132 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 5/5 (n=1) | 招式 旧日雕像: 沉睡 (Sleep) → 苏醒 (Buff) +10力 → 斩击 13 →循环回 斩击
+多尼斯异鸟 [精英] A8: HP 90 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 13/13 (n=1) | 招式 多尼斯异鸟: 飞扑 17 → 啄击 3×3 →循环回 飞扑
+花园幽灵鳗×4 [精英] A8 无记录 (n=0)，以下为最近的 A9: HP 116 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 52/52 (n=1) | 招式 花园幽灵鳗: 啃咬 5 → 甩动 7 → 猛晃 1×3 → 变大 (Buff) +2力 →循环回 啃咬
+异蛙寄生虫 [精英] A8: HP 68 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 2/2 (n=1) | 招式 异蛙寄生虫: 感染 (StatusCard) 塞3张状态牌 → 甩动 4×4 →循环回 感染
+鬼祟珊瑚群 [精英] A8 无记录 (n=0)，以下为最近的 A9: HP 80 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 14/14 (n=1) | 招式 鬼祟珊瑚群: 猛冲 14 → ZOOM_MOVE_2 14 → 惯性 9 +2力 → 穿刺戳击 7×2 →循环回 猛冲
+骇鳗 [精英] A8 无记录 (n=0)，以下为最近的 A9: HP 150 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 41/41 (n=1) | 招式 骇鳗: 撞击 16 → 撕扯 3×3 →循环回 撞击；其他: STUNNED (Stun), 恐吓 (Debuff)
+树叶史莱姆（中）+树叶史莱姆（小）+树枝史莱姆（中）+树枝史莱姆（小） [小怪] A8 无记录 (n=0)，以下为最近的 A7: HP 81.5 (n=2) | 2 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 4.5/6.8 (n=2) | 招式 树叶史莱姆（中）: 黏糊射击 (StatusCard) 塞2张状态牌 → 团块射击 8 →循环回 黏糊射击；树叶史莱姆（小）: 冲撞 3 → 黏液 (StatusCard) 塞1张状态牌 →循环回 冲撞；树枝史莱姆（中）: 黏糊射击 (StatusCard) 塞1张状态牌 → 戳刺扑击 11 →循环回 黏糊射击；树枝史莱姆（小）: 冲撞 4 →循环回 冲撞
+下水道蚌 [小怪] A8 无记录 (n=0)，以下为最近的 A10: HP 58 (n=11) | 11 场 胜率 91% 阵亡 1 | 赢局失血 中位/p75 3.5/6.5 (n=10) | 招式 下水道蚌: 喷射 10 → 增压 (Buff) +4力 →循环回 喷射
+雾菇 [小怪] A8 无记录 (n=0)，以下为最近的 A9: HP 78 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 0/0 (n=1) | 招式 雾菇: 虚幻孢子 (Summon) → 重击 8 +1力 → HEADBUTT_MOVE 14 →循环回 重击；其他: SWIPE_RANDOM_MOVE 8 +1力
+飞蝇菌子+闪光贾克斯果 [小怪] A8 无记录 (n=0)，以下为最近的 A7: HP 81 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 29/29 (n=1) | 招式 飞蝇菌子: 猛砸 11 → 易伤孢子 (Debuff) →循环回 猛砸；其他: 脆弱孢子 8；闪光贾克斯果: 能量球 3 +2力 →循环回 能量球
+蛇行扼杀者+闪光贾克斯果 [小怪] A8 无记录 (n=0)，以下为最近的 A10: HP 91 (n=3) | 3 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 16/27 (n=3) | 招式 蛇行扼杀者: 缠身 (Debuff) → 重击 7 →循环回 缠身；其他: 甩动 12；闪光贾克斯果: 能量球 3 +2力 →循环回 能量球
+飞蝇菌子+树枝史莱姆（中） [小怪] A8 无记录 (n=0)，以下为最近的 A10: HP 81 (n=5) | 5 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 22/25 (n=5) | 招式 飞蝇菌子: 猛砸 11 → 易伤孢子 (Debuff) →循环回 猛砸；其他: 脆弱孢子 8；树枝史莱姆（中）: 黏糊射击 (StatusCard) 塞1张状态牌 → 戳刺扑击 11 →循环回 黏糊射击
+劫掠者刺客+劫掠者弩手+劫掠者追踪手 [小怪] A8 无记录 (n=0)，以下为最近的 A10: HP 62 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 22/22 (n=1) | 招式 劫掠者刺客: 致命射击 10 →循环回 致命射击；劫掠者弩手: 装填 (Defend) → 射击！ 14 →循环回 装填；劫掠者追踪手: 追踪 (Debuff) → 放狗 1×8 →循环回 放狗
+藤蔓蹒跚者 [小怪] A8 无记录 (n=0)，以下为最近的 A9: HP 64 (n=1) | 1 场 胜率 100% 阵亡 0 | 赢局失血 中位/p75 20/20 (n=1) | 招式 藤蔓蹒跚者: 挥击 6×2 → 紧绕藤蔓 8 → 大啃 16 →循环回 挥击
+第1幕 boss: VANTOM_BOSS
+boss 数据库 墨影幻灵 (VANTOM) A8 无记录 (n=0)，以下为最近的 A7: HP 墨影幻灵 173 (n=1)
+我方战绩: 1 场，胜率 100% (n=1)，阵亡 0；赢局失血 中位/p75 43/43 (n=1)；赢局回合 8/8 (n=1)；每回合失血 5.4/5.4 (n=1)
+墨影幻灵 招式: 墨迹 7 → 墨水长枪 6×2 → 肢解 26 塞3张状态牌 → 准备 (Buff) +2力 →循环回 墨迹 | 能力: 滑溜 9, 力量 2"
+
+ ❯ tests/run-journal.test.ts:182:24
+    180|     expect(memory.now).toContain("牌组 5 张: STRIKE_R×2, DEFEND_R, BASH+,…
+    181|     expect(memory.now).toContain("构筑: 5 张 (攻击 3/技能 1/能力 1) | 升级 1 |");
+    182|     expect(memory.act).toMatch(/VANTOM\) A8: HP .* \(n=\d+\)/);
+       |                        ^
+    183|     expect(memory.act).toContain("我方战绩");
+    184|     expect(memory.act).toContain("第1幕 boss: ");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[101/134]⎯
+
+ FAIL  tests/run-journal.test.ts > lookahead > counts node types min–max over the paths to the boss
+AssertionError: expected '距 boss 3 层 | 到 boss 前各路线: 精英 0–1, 休息 …' to match /boss 要点: \d+ 血，开场 \d+ 层滑溜/
+
+- Expected:
+/boss 要点: \d+ 血，开场 \d+ 层滑溜/
+
++ Received:
+"距 boss 3 层 | 到 boss 前各路线: 精英 0–1, 休息 0–1, 商店 0–1, 问号 0, 宝箱 0 | 下一个节点可选: Monster/Shop"
+
+ ❯ tests/run-journal.test.ts:312:18
+    310|     expect(text).toContain("下一个节点可选: Monster/Shop");
+    311|     // The note's numbers are the monster DB's at this ascension, not …
+    312|     expect(text).toMatch(/boss 要点: \d+ 血，开场 \d+ 层滑溜/);
+       |                  ^
+    313|     expect(text).not.toMatch(/\{[A-Z]+:/);
+    314|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[102/134]⎯
+
+ FAIL  tests/run-journal.test.ts > lookahead > follows the chosen node until the next map, and says when the next node is forced
+AssertionError: expected '' to match /^boss 要点: /
+
+- Expected:
+/^boss 要点: /
+
++ Received:
+""
+
+ ❯ tests/run-journal.test.ts:328:80
+    326|     // A map from another act says nothing about this one.
+    327|     const nextAct = parseGameState(baseState("SHOP", { run: runPayload…
+    328|     expect(journal.render(nextAct, testKnowledge, { lastMap: map }).lo…
+       |                                                                                ^
+    329|   });
+    330|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[103/134]⎯
+
+ FAIL  tests/run-journal.test.ts > boss notes carry the monster DB's numbers at this ascension, and every mechanic (review 2026-09-29 #9) > the Beast keeps its stun threshold and the Matriarch its wake-up rule: nothing is regex-stripped
+AssertionError: the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/run-journal.test.ts:418:21
+    416|     withDb(() => {
+    417|       const beast = bossNote("CEREMONIAL_BEAST_BOSS", 9)!;
+    418|       expect(beast).toContain("262 血");
+       |                     ^
+    419|       // Plow and Plating logged at A8 only (nothing here measures an …
+    420|       expect(beast).toContain("首次跌破 ≈150 血被击晕一回合");
+ ❯ withDb tests/run-journal.test.ts:409:14
+ ❯ tests/run-journal.test.ts:416:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[104/134]⎯
+
+ FAIL  tests/run-journal.test.ts > boss notes carry the monster DB's numbers at this ascension, and every mechanic (review 2026-09-29 #9) > the crab's Laser, the Queen's HP and the Test Subject's Pounce at this ascension, marked when estimated
+AssertionError: the given combination of arguments (null and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/run-journal.test.ts:436:47
+    434|   it("the crab's Laser, the Queen's HP and the Test Subject's Pounce a…
+    435|     withDb(() => {
+    436|       expect(bossNote("KAISER_CRAB_BOSS", 9)).toContain("激光 35，在背后 52"…
+       |                                               ^
+    437|       expect(bossNote("KAISER_CRAB_BOSS", 9)).not.toContain("47–49");
+    438|       expect(bossNote("QUEEN_BOSS", 9)).toContain("女王 419 + 聚合体 211");
+ ❯ withDb tests/run-journal.test.ts:409:14
+ ❯ tests/run-journal.test.ts:435:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[105/134]⎯
+
+ FAIL  tests/screens.test.ts > reward > says the offers were below the skip bar instead of 'only one legal option' (0NG Act 2)
+AssertionError: expected 'ask' to be 'act' // Object.is equality
+
+Expected: "act"
+Received: "ask"
+
+ ❯ tests/screens.test.ts:485:27
+    483|     ];
+    484|     const decision = mustDecision(plan(raw, { combatPlanner: "turn" })…
+    485|     expect(decision.kind).toBe("act");
+       |                           ^
+    486|     if (decision.kind !== "act") return;
+    487|     expect(decision.intent).toEqual({ action: "skip_reward_cards" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[106/134]⎯
+
+ FAIL  tests/screens.test.ts > in-combat selections > Toasty Mittens keeps Strength-scaled attacks, AoE into two bodies, Fight Me and debuffs under Artifact (6HRZ F33 T6, XWPV F48 T4)
+AssertionError: expected [ 'SPITE', 'BATTLE_TRANCE' ] to include 'BLUDGEON'
+ ❯ tests/screens.test.ts:978:40
+    976|       ["BATTLE_TRANCE", "Skill", {}, true],
+    977|     ];
+    978|     expect(["SPITE", "BATTLE_TRANCE"]).toContain(pick(aeon, t4));
+       |                                        ^
+    979|     expect(combatExhaustScore("BASH", "Attack", { attacks: 12, incomin…
+    980|     // A plain Strike is still the first attack to go.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[107/134]⎯
+
+ FAIL  tests/screens.test.ts > menus and overlays > embarks once a character is chosen
+Error: expected a decision, got blocked: character SILENT is locked on character select (IRONCLAD, SILENT (locked))
+ ❯ mustDecision tests/screens.test.ts:68:42
+     66|
+     67| function mustDecision(outcome: PlanOutcome): Decision {
+     68|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     69|   return outcome.decision;
+     70| }
+ ❯ tests/screens.test.ts:1057:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[108/134]⎯
+
+ FAIL  tests/screens.test.ts > menus and overlays > holds the ascension at TARGET_ASCENSION: steps down after a win unlocked the next level, no index (Dai 2026-09-28)
+Error: expected a decision, got blocked: character SILENT is locked on character select (IRONCLAD, SILENT (locked))
+ ❯ mustDecision tests/screens.test.ts:68:42
+     66|
+     67| function mustDecision(outcome: PlanOutcome): Decision {
+     68|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     69|   return outcome.decision;
+     70| }
+ ❯ tests/screens.test.ts:1071:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[109/134]⎯
+
+ FAIL  tests/shop-potions.test.ts > potionHpSaved > block, heal and regen potions are worth their HP; damage potions shorten the boss fight
+AssertionError: expected '20 damage = 0.8 turns of this deck\'s…' to match /20 damage = [\d.]+ turns .* HP lost a…/
+
+- Expected:
+/20 damage = [\d.]+ turns .* HP lost a turn there \(monster DB A8, n=\d+\)/
+
++ Received:
+"20 damage = 0.8 turns of this deck's ~25 damage a turn vs SOUL_FYSH, × ~4.6 HP lost a turn there (monster DB A9, n=1)"
+
+ ❯ tests/shop-potions.test.ts:39:22
+     37|     const fire = potionHpSaved("FIRE_POTION", state, loggedKnowledge)!;
+     38|     expect(fire.hp).toBeGreaterThan(0);
+     39|     expect(fire.why).toMatch(/20 damage = [\d.]+ turns .* HP lost a tu…
+       |                      ^
+     40|   });
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[110/134]⎯
+
+ FAIL  tests/shop-potions.test.ts > shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth) > SFCE F11 (1 of 2 slots empty): Blood Potion carries the free-slot fact, no code value or expected HP saved
+Error: expected a shop question
+ ❯ shopOptions tests/shop-potions.test.ts:22:77
+     20|   memory.shopOpened = true;
+     21|   const outcome = planDecision(loggedEnv(fx, { ...over, screenMemory: …
+     22|   if (outcome.kind !== "decision" || outcome.decision.kind !== "ask") …
+       |                                                                             ^
+     23|   const question = Object.values(outcome.decision.questions)[0] as { c…
+     24|   return Object.fromEntries(Object.entries(question.criteria).map(([ke…
+ ❯ tests/shop-potions.test.ts:50:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[111/134]⎯
+
+ FAIL  tests/shop-potions.test.ts > shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth) > SFCE F15: every potion is listed the same way, modelled or not
+Error: expected a shop question
+ ❯ shopOptions tests/shop-potions.test.ts:22:77
+     20|   memory.shopOpened = true;
+     21|   const outcome = planDecision(loggedEnv(fx, { ...over, screenMemory: …
+     22|   if (outcome.kind !== "decision" || outcome.decision.kind !== "ask") …
+       |                                                                             ^
+     23|   const question = Object.values(outcome.decision.questions)[0] as { c…
+     24|   return Object.fromEntries(Object.entries(question.criteria).map(([ke…
+ ❯ tests/shop-potions.test.ts:58:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[112/134]⎯
+
+ FAIL  tests/shop-potions.test.ts > shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth) > with every slot full the fact says a discard comes first
+Error: expected a shop question
+ ❯ shopOptions tests/shop-potions.test.ts:22:77
+     20|   memory.shopOpened = true;
+     21|   const outcome = planDecision(loggedEnv(fx, { ...over, screenMemory: …
+     22|   if (outcome.kind !== "decision" || outcome.decision.kind !== "ask") …
+       |                                                                             ^
+     23|   const question = Object.values(outcome.decision.questions)[0] as { c…
+     24|   return Object.fromEntries(Object.entries(question.criteria).map(([ke…
+ ❯ tests/shop-potions.test.ts:66:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[113/134]⎯
+
+ FAIL  tests/shop-potions.test.ts > shop potions when DeepSeek decides (V4 M2: the belt fact only, no code estimate of a potion's worth) > the Jev/code path keeps its old potion score and shows no DeepSeek facts
+AssertionError: expected 'blocked' to be 'decision' // Object.is equality
+
+Expected: "decision"
+Received: "blocked"
+
+ ❯ tests/shop-potions.test.ts:78:26
+     76|     memory.shopOpened = true;
+     77|     const outcome = planDecision(loggedEnv(fx, { screenMemory: memory …
+     78|     expect(outcome.kind).toBe("decision");
+       |                          ^
+     79|     expect(JSON.stringify(outcome.kind === "decision" ? outcome.decisi…
+     80|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[114/134]⎯
+
+ FAIL  tests/silent-double-boss.test.ts > Silent observed double boss > builds the observed second-boss mixture with the physical poison belt, independent of a stale boss id
+AssertionError: expected { index: 100, key: 'p0', …(28) } to match object { poison: 6, potionCost: +0 }
+(29 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "poison": 6,
+-   "potionCost": 0,
+  }
+
+ ❯ tests/silent-double-boss.test.ts:146:83
+    144|     expect(paired.solver.hand.find((c) => c.cardId === "POTION:POISON_…
+    145|     const second = paired.continuation!.variants[0]!.input;
+    146|     expect(second.solver.hand.find((c) => c.cardId === "POTION:POISON_…
+       |                                                                                   ^
+    147|     expect(second.solver.continuationValue).toBeUndefined();
+    148|     expect(paired.continuation?.potions).toEqual([{ key:"POTION:POISON…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[115/134]⎯
+
+ FAIL  tests/silent-route-relic.test.ts > delivers the observation in the production reward question, keeping all original options
+AssertionError: expected '{"kind":"ask","label":"reward/card","…' to be '{"kind":"ask","label":"reward/card","…' // Object.is equality
+
+Expected: "{"kind":"ask","label":"reward/card","state":{"run_brief":{"character":"静默猎手","act":"2","floor":31,"hp":"11/77 (14%)","gold":185,"ascension":9,"deck":"31 cards | 12 attacks / 14 skills / 3 powers | 3 upgraded | 2 curses/statuses | avg cost 0.77","relics":["蛇之戒指","巨大扭蛋","怀表","草莓","石之剑","百年积木","打击木偶","金刚杵","烫嘴可可","意外光滑的石头"],"relic_effects":["蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。","巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。","怀表: 当你在本回合打出的牌少于等于?(数值未知)张时，则在你的下个回合开始时额外抽?(数值未知)张牌。","草莓: 拾起时，将你的最大生命值提升?(数值未知)。","石之剑: 在击败?(数值未知)名精英敌人之后将变化为一件强力遗物。","百年积木: 你在每场战斗中第一次损失生命值时，抽?(数值未知)张牌。","打击木偶: 名字中有“打击”的卡牌造成?(数值未知)点额外伤害。","金刚杵: 在每场战斗开始时，获得?(数值未知)点力量。","烫嘴可可: 在每场战斗的第一回合额外获得?(数值未知)。","意外光滑的石头: 在每场战斗开始时，获得?(数值未知)点敏捷。"],"potions":["毒药水: 给予?(数值未知)层中毒。"],"notes":[],"relic_effects_note":"?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"},"deck_stats":"31 cards | 12 attacks / 14 skills / 3 powers | 3 upgraded | 2 curses/statuses | avg cost 0.77","deck_needs":{"act_boss":null,"act":2,"size":31,"aoe_cards":0,"draw_cards":0,"scaling_cards":0,"damage_cards":0,"block_cards":0},"deck":"打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n背刺 (Attack, 0E): 固有。 造成11点伤害。 消耗。\n带毒刺击 (Attack, 1E): 造成6点伤害。 给予3层中毒。\n暴露 (Skill, 0E): 去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。\n灵动步法+ (Power, 1E): 获得3点敏捷。\n后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\n闪躲翻滚 (Skill, 1E): 获得4点格挡。 在下个回合，获得4点格挡。\n匕首雨 (Attack, 1E): 对所有敌人造成4点伤害两次。\n笨拙 (Curse, -1E): 不能被打出。 虚无。\n后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\n弹跳药瓶+ (Skill, 2E): 随机给予敌人3层中毒4次。 完美契合。\n爆发 (Skill, 1E): 在这个回合，你打出的下一张技能牌会被额外打出一次。\n带毒刺击 (Attack, 1E): 造成6点伤害。 给予3层中毒。\n飞镖 (Attack, 1E): 手牌中每有一张技能牌，造成5点伤害。\n毒雾 (Power, 1E): 在你的回合开始时，给予所有敌人2层中毒。\n触媒 (Power, 1E): 中毒会额外触发1次。\n预判+ (Skill, 0E): 在本回合获得4点敏捷。","note":"skipping is a legitimate choice: a card that does not fit the plan makes the deck worse."},"questions":{"pick":{"type":"choice","instructions":"Which of these card rewards should I take, if any?","criteria":{"card0":"{\"code_value\":50,\"why\":\"no card values for Silent yet\",\"card\":\"先制打击\",\"type\":null,\"rarity\":null,\"cost\":null,\"text\":\"造成3点伤害。 将2张小刀加入你的手牌。\"}","card1":"{\"code_value\":50,\"why\":\"no card values for Silent yet\",\"card\":\"匕首雨\",\"type\":null,\"rarity\":null,\"cost\":null,\"text\":\"对所有敌人造成4点伤害两次。\"}","card2":"{\"code_value\":50,\"why\":\"no card values for Silent yet\",\"card\":\"偏折\",\"type\":null,\"rarity\":null,\"cost\":null,\"text\":\"获得4点格挡。\"}","skip":"{\"card\":\"skip\",\"code_value\":50,\"note\":\"take no card\"}"}}},"escalate":{"question":"pick","below":0.45,"why":"reward/card"}}"
+Received: "{"kind":"ask","label":"reward/card","state":{"run_brief":{"character":"静默猎手","act":"2","floor":31,"hp":"11/77 (14%)","gold":185,"ascension":9,"deck":"31 cards | 12 attacks / 14 skills / 3 powers | 3 upgraded | 2 curses/statuses | avg cost 0.77","relics":["蛇之戒指","巨大扭蛋","怀表","草莓","石之剑","百年积木","打击木偶","金刚杵","烫嘴可可","意外光滑的石头","活动星图"],"relic_effects":["蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。","巨大扭蛋: 拾起时，获得?(数值未知)件随机遗物。额外将一对打击和防御，加入你的牌组。","怀表: 当你在本回合打出的牌少于等于?(数值未知)张时，则在你的下个回合开始时额外抽?(数值未知)张牌。","草莓: 拾起时，将你的最大生命值提升?(数值未知)。","石之剑: 在击败?(数值未知)名精英敌人之后将变化为一件强力遗物。","百年积木: 你在每场战斗中第一次损失生命值时，抽?(数值未知)张牌。","打击木偶: 名字中有“打击”的卡牌造成?(数值未知)点额外伤害。","金刚杵: 在每场战斗开始时，获得?(数值未知)点力量。","烫嘴可可: 在每场战斗的第一回合额外获得?(数值未知)。","意外光滑的石头: 在每场战斗开始时，获得?(数值未知)点敏捷。"],"potions":["毒药水: 给予?(数值未知)层中毒。"],"notes":[],"relic_effects_note":"?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"},"deck_stats":"31 cards | 12 attacks / 14 skills / 3 powers | 3 upgraded | 2 curses/statuses | avg cost 0.77","deck_needs":{"act_boss":null,"act":2,"size":31,"aoe_cards":0,"draw_cards":0,"scaling_cards":0,"damage_cards":0,"block_cards":0},"deck":"打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n背刺 (Attack, 0E): 固有。 造成11点伤害。 消耗。\n带毒刺击 (Attack, 1E): 造成6点伤害。 给予3层中毒。\n暴露 (Skill, 0E): 去除敌人身上的所有格挡值和人工制品。 并给予2层易伤。 消耗。\n灵动步法+ (Power, 1E): 获得3点敏捷。\n后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\n闪躲翻滚 (Skill, 1E): 获得4点格挡。 在下个回合，获得4点格挡。\n匕首雨 (Attack, 1E): 对所有敌人造成4点伤害两次。\n笨拙 (Curse, -1E): 不能被打出。 虚无。\n后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\n弹跳药瓶+ (Skill, 2E): 随机给予敌人3层中毒4次。 完美契合。\n爆发 (Skill, 1E): 在这个回合，你打出的下一张技能牌会被额外打出一次。\n带毒刺击 (Attack, 1E): 造成6点伤害。 给予3层中毒。\n飞镖 (Attack, 1E): 手牌中每有一张技能牌，造成5点伤害。\n毒雾 (Power, 1E): 在你的回合开始时，给予所有敌人2层中毒。\n触媒 (Power, 1E): 中毒会额外触发1次。\n预判+ (Skill, 0E): 在本回合获得4点敏捷。","note":"skipping is a legitimate choice: a card that does not fit the plan makes the deck worse."},"questions":{"pick":{"type":"choice","instructions":"Which of these card rewards should I take, if any?","criteria":{"card0":"{\"code_value\":50,\"why\":\"no card values for Silent yet\",\"card\":\"先制打击\",\"type\":null,\"rarity\":null,\"cost\":null,\"text\":\"造成3点伤害。 将2张小刀加入你的手牌。\"}","card1":"{\"code_value\":50,\"why\":\"no card values for Silent yet\",\"card\":\"匕首雨\",\"type\":null,\"rarity\":null,\"cost\":null,\"text\":\"对所有敌人造成4点伤害两次。\"}","card2":"{\"code_value\":50,\"why\":\"no card values for Silent yet\",\"card\":\"偏折\",\"type\":null,\"rarity\":null,\"cost\":null,\"text\":\"获得4点格挡。\"}","skip":"{\"card\":\"skip\",\"code_value\":50,\"note\":\"take no card\"}"}}},"escalate":{"question":"pick","below":0.45,"why":"reward/card"}}"
+
+ ❯ tests/silent-route-relic.test.ts:89:56
+     87|   expect(asRecord(withoutRelic.state.facts)).not.toHaveProperty("route…
+     88|   expect(withRelic.questions).toEqual(withoutRelic.questions);
+     89|   expect(JSON.stringify(withRelic.deepseek?.baseline)).toBe(JSON.strin…
+       |                                                        ^
+     90|   // Relic inventory changes; the numeric route blocks and original de…
+     91|   const { facts: _withFacts, ...withState } = withRelic.state;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[116/134]⎯
+
+ FAIL  tests/sl-explore-b2.test.ts > the sub-switches off: the explore part as at bc8c9bc, B2 on > a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's
+AssertionError: expected { …(3) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+-   "ez2l-f48-t2": "b51b5e905b9269d08905e93ae65a5ccb",
+-   "k8tc-f17-t5": "9a1d0eaed10d97b8159ca0a91917c104",
+-   "xmy2-f17-t1": "7e3219eff659ae1a723d3fa2635018f9",
++   "ez2l-f48-t2": "4b8758ad26e3dd579e5006964b28323d",
++   "k8tc-f17-t5": "897448d41d02a2e1e4bc115b1813f3ac",
++   "xmy2-f17-t1": "dbe276a2533eb8603e1dce03e93121ce",
+  }
+
+ ❯ tests/sl-explore-b2.test.ts:125:17
+    123|     for (const name of ["k8tc-f17-t5", "xmy2-f17-t1", "ez2l-f48-t2"]) …
+    124|     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got…
+    125|     expect(got).toEqual(GOLDEN);
+       |                 ^
+    126|     expect([...touched]).toEqual([]);
+    127|   }, 300_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[117/134]⎯
+
+ FAIL  tests/sl-explore-b2.test.ts > SL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight the replacement may drink a potion the pick does not > The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would
+AssertionError: expected { point: 'T?', …(6) } to match object { …(2) }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "gate": "b2",
++   "gate": "rollout",
+    "replacement": "drink 异蛇之油, then re-plan",
+  }
+
+ ❯ tests/sl-explore-b2.test.ts:199:20
+    197|   it("The Kin T5: B2 ranks Snecko Oil (a random potion) first; the rep…
+    198|     const on = deviated("k8tc-f17-t5", { b2Gate: true, bossPotions: tr…
+    199|     expect(on.log).toMatchObject({ replacement: "drink 异蛇之油, then re-p…
+       |                    ^
+    200|     const potionPick = on.ask.resolve(pick("p1"));
+    201|     expect(on.resolved.intent).toEqual(potionPick.intent);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[118/134]⎯
+
+ FAIL  tests/sl-explore.test.ts > the planner: the switch recording changes nothing; on the deviation point's board the failed line gives way > recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte
+AssertionError: vnkn-f25-a2-t1:off: expected '5cf90dfb5b68f51ac54e8a609cbe7898' to be '50274c5794d364f2585fb7a21915da0a' // Object.is equality
+
+Expected: "50274c5794d364f2585fb7a21915da0a"
+Received: "5cf90dfb5b68f51ac54e8a609cbe7898"
+
+ ❯ tests/sl-explore.test.ts:484:150
+    482|   it("recording (env.sl.explore without a deviation): every logged boa…
+    483|     frozen();
+    484|     for (const name of BOARDS) for (const ctx of ["off", "v1"] as cons…
+       |                                                                                                                                                      ^
+    485|     expect([...touched]).toEqual([]);
+    486|   }, 300_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[119/134]⎯
+
+ FAIL  tests/sl-explore.test.ts > the sub-switches off: the explore part as at bc8c9bc > every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's
+AssertionError: expected { …(3) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+    "jw92-f48-a2-t3-offering": "1db00f9e87590d011addcda89c6a032a",
+-   "vnkn-f25-a2-t1": "1c2ecb1f6cbc04ba9a6790739d51f9a7",
+-   "vnkn-f25-a2-t3-pact": "7d95133378a86a77ef6059be23478a95",
++   "vnkn-f25-a2-t1": "30236cf1ac3ea870e00ed66674d847cd",
++   "vnkn-f25-a2-t3-pact": "c9125fa19aa6d3b32af76ee7f5f971f9",
+  }
+
+ ❯ tests/sl-explore.test.ts:595:17
+    593|     for (const name of ["vnkn-f25-a2-t1", "vnkn-f25-a2-t3-pact", "jw92…
+    594|     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got…
+    595|     expect(got).toEqual(EXPLORE_GOLDEN);
+       |                 ^
+    596|     expect([...touched]).toEqual([]);
+    597|   }, 300_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[120/134]⎯
+
+ FAIL  tests/sl-explore.test.ts > the sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink > the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not
+AssertionError: vnkn-f25-a2-t1: expected '30236cf1ac3ea870e00ed66674d847cd' to be '1c2ecb1f6cbc04ba9a6790739d51f9a7' // Object.is equality
+
+Expected: "1c2ecb1f6cbc04ba9a6790739d51f9a7"
+Received: "30236cf1ac3ea870e00ed66674d847cd"
+
+ ❯ tests/sl-explore.test.ts:605:151
+    603|   it("the Decimillipede (a listed elite): every point and deviation is…
+    604|     frozen();
+    605|     for (const name of ["vnkn-f25-a2-t1", "vnkn-f25-a2-t3-pact"]) expe…
+       |                                                                                                                                                       ^
+    606|     // T1: plan2 drinks the Speed Potion; with every dry line played t…
+    607|     const plain = planCombatTurn(envOf("vnkn-f25-a2-t1", "off", { expl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[121/134]⎯
+
+ FAIL  tests/sl-retry-planner.test.ts > SL retry switches off: the combat question as v4 3488dc5 asked it > every logged retry board's decision is 3488dc5's, byte for byte
+AssertionError: expected { …(8) } to deeply equal { …(8) }
+
+- Expected
++ Received
+
+  {
+-   "jw92-f48-a2-t3-offering:off": "1ba734936934487606db07981da88e0d",
+-   "jw92-f48-a2-t3-offering:v1": "4bf5f7a2421257b1a2d4203f18cff8e6",
+-   "vnkn-f25-a2-t1:off": "50274c5794d364f2585fb7a21915da0a",
+-   "vnkn-f25-a2-t1:v1": "35b605a22b4008a0a6c3c6e26d3c6312",
+-   "vnkn-f25-a2-t3-pact:off": "02c3ab4fb8490827e24ccf91790533be",
+-   "vnkn-f25-a2-t3-pact:v1": "e08897c0859c33c6025269b01ce81611",
++   "jw92-f48-a2-t3-offering:off": "44797b69f44a02f724881e8b359bbf6a",
++   "jw92-f48-a2-t3-offering:v1": "4a238e14e0a89560bd123e6c59ebb1e0",
++   "vnkn-f25-a2-t1:off": "5cf90dfb5b68f51ac54e8a609cbe7898",
++   "vnkn-f25-a2-t1:v1": "cf59b2f169cb5fff0c7516f1996edf7c",
++   "vnkn-f25-a2-t3-pact:off": "c2a3225b96667e7db86ecc66bf66252b",
++   "vnkn-f25-a2-t3-pact:v1": "82264477356e86fd14ee703064913252",
+    "vnkn-f33-a2-t4-shrug:off": "34e66aac3fed416a4d9a37acb6ff23ed",
+    "vnkn-f33-a2-t4-shrug:v1": "34e66aac3fed416a4d9a37acb6ff23ed",
+  }
+
+ ❯ tests/sl-retry-planner.test.ts:189:17
+    187|     for (const name of BOARDS) for (const ctx of ["off", "v1"] as cons…
+    188|     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got…
+    189|     expect(got).toEqual(GOLDEN);
+       |                 ^
+    190|     expect([...pinnedRead].sort()).toEqual(["boss-damage.json", "exper…
+    191|     // monster-records.json: the character's monster records beside th…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[122/134]⎯
+
+ FAIL  tests/sl-retry-planner.test.ts > SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew > known draws the pile does not hold: none used, the decision as with the switch off
+AssertionError: expected 'cf59b2f169cb5fff0c7516f1996edf7c' to be '35b605a22b4008a0a6c3c6e26d3c6312' // Object.is equality
+
+Expected: "35b605a22b4008a0a6c3c6e26d3c6312"
+Received: "cf59b2f169cb5fff0c7516f1996edf7c"
+
+ ❯ tests/sl-retry-planner.test.ts:258:63
+    256|     frozen();
+    257|     const sl = { knownDraws: { cards: ["NOT_A_CARD"], names: ["?"], at…
+    258|     expect(digest(viewOf(envOf("vnkn-f25-a2-t1", "v1", sl)))).toBe(GOL…
+       |                                                               ^
+    259|   }, 120_000);
+    260| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[123/134]⎯
+
+ FAIL  tests/sl-retry-planner.test.ts > SL retry fail safe (live play) > a retry step that throws leaves the decision exactly as with both switches off
+AssertionError: expected 'c2a3225b96667e7db86ecc66bf66252b' to be '02c3ab4fb8490827e24ccf91790533be' // Object.is equality
+
+Expected: "02c3ab4fb8490827e24ccf91790533be"
+Received: "c2a3225b96667e7db86ecc66bf66252b"
+
+ ❯ tests/sl-retry-planner.test.ts:320:84
+    318|     const fx = board("vnkn-f25-a2-t3-pact");
+    319|     for (const ctx of ["off", "v1"] as const) {
+    320|       expect(digest(viewOf(envOf("vnkn-f25-a2-t3-pact", ctx, { compute…
+       |                                                                                    ^
+    321|       expect(digest(viewOf(envOf("vnkn-f25-a2-t3-pact", ctx, { compute…
+    322|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[124/134]⎯
+
+ FAIL  tests/sl.test.ts > the hard elite list (src/sl/sl-elites.json) > lists the hardest non-boss fights by A8+ deaths (any room), plus Soul Nexus by rate, with their enemy ids, source and date
+AssertionError: expected [] to deeply equal [ 'Decimillipede', 'Entomancer', …(7) ]
+
+- Expected
++ Received
+
+- [
+-   "Decimillipede",
+-   "Entomancer",
+-   "Slumbering Beetle + Bowlbugs",
+-   "The Obscura",
+-   "Infested Prism",
+-   "Soul Nexus",
+-   "Mecha Knight",
+-   "Three Knights",
+-   "Axebot",
+- ]
++ []
+
+ ❯ tests/sl.test.ts:181:52
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[125/134]⎯
+
+ FAIL  tests/sl.test.ts > SlController > listed elites get SL_ELITE_RETRIES; other elites and hallway fights are not tracked
+AssertionError: expected null to be 1 // Object.is equality
+
+- Expected:
+1
+
++ Received:
+null
+
+ ❯ tests/sl.test.ts:429:46
+    427|     const t = setup(tempLog(), bossBoard({ turn: 1, enemyIds: ["ENTOMA…
+    428|     t.sl.observe(state(bossBoard({ turn: 1, enemyIds: ["ENTOMANCER"], …
+    429|     expect(t.sl.decisionFields().sl_attempt).toBe(1);
+       |                                              ^
+    430|     expect(t.notes.join("\n")).toMatch(/listed elite \(Entomancer\).*a…
+    431|     const other = setup(tempLog());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[126/134]⎯
+
+ FAIL  tests/sl.test.ts > SlController > describe() is what run-config records
+AssertionError: expected { enabled: true, …(43) } to match object { Object (enabled, boss_retries, ...) }
+(43 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "act3_low_hp": true,
+    "act3_low_hp_pct": 40,
+    "boss_retries": 3,
+    "elite_retries": 1,
+-   "elites": [
+-     "Decimillipede",
+-     "Entomancer",
+-     "Slumbering Beetle + Bowlbugs",
+-     "The Obscura",
+-     "Infested Prism",
+-     "Soul Nexus",
+-     "Mecha Knight",
+-     "Three Knights",
+-     "Axebot",
+-   ],
++   "elites": [],
+    "enabled": true,
+    "retry_show_sim": true,
+  }
+
+ ❯ tests/sl.test.ts:449:29
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[127/134]⎯
+
+ FAIL  tests/template-target.test.ts > control boards: no changed card, the question as on v4 without the fix (6bd48a9; b9473ed for True Grit) > the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte
+AssertionError: expected { …(3) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+-   "jw92-f30-t1-primal-force": "b17e335fd5d7d74d5f14db7af64d01c5",
+-   "pw7y-f44-t1-true-grit": "1b306012724d4c6e1d961009af0320ba",
+-   "rntv-f30-t1-cloak": "05d30f6afd4a87d6736014079b96015b",
++   "jw92-f30-t1-primal-force": "aefb43f34853e7bd8da77b54a43ff96f",
++   "pw7y-f44-t1-true-grit": "8862861a5e6ccb0b4a396e391cb8b031",
++   "rntv-f30-t1-cloak": "20b7a04ffc9cae7faf7a0f137ffc19e3",
+  }
+
+ ❯ tests/template-target.test.ts:253:17
+    251|       return;
+    252|     }
+    253|     expect(got).toEqual(GOLDEN);
+       |                 ^
+    254|     expect([...touched]).toEqual([]);
+    255|   }, 900_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[128/134]⎯
+
+ FAIL  tests/thief-cost.test.ts > THIEF_COST off: the combat question as with THIEF_FACTS alone (ffed0d4) > every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)
+AssertionError: expected { …(18) } to deeply equal { …(18) }
+
+- Expected
++ Received
+
+  {
+-   "4lc3-f21-t4-hopper:off": "3df091c621b1f89949cb2e4c320588b3",
+-   "4lc3-f21-t4-hopper:v1": "7d8b9007a258dfe3fe13c3ef2ad36624",
+-   "8v0h-f19-t5-hopper-escape:off": "a4fd37500760c817b46e117f94b5d053",
+-   "8v0h-f19-t5-hopper-escape:v1": "81eb906e12075d55a889771021ee3d32",
+-   "jf8n-f9-t3-gremlins:off": "1d23cf0e0867217387209b2d72860b8f",
+-   "jf8n-f9-t3-gremlins:v1": "9660f4117a48657ce5d254e906c11c20",
+-   "rpc6-f20-t2-hopper:off": "b595a87357e349a0f0ca3e56a29ff1c6",
+-   "rpc6-f20-t2-hopper:v1": "805866fca41fc0380222b65ce1b93546",
+-   "rpc6-f20-t3-hopper:off": "5c205aa8cb08ac26f726b3a3c03da85f",
+-   "rpc6-f20-t3-hopper:v1": "6ba59423258646b2272db82709ae6687",
+-   "rpc6-f20-t4-hopper:off": "2941865d9f864b4b8f7936113634e342",
+-   "rpc6-f20-t4-hopper:v1": "e4fd7f95d063a98fd41d13697b433df7",
+-   "rpc6-f20-t5-hopper-escape:off": "f7f2e4ce610c5f8ad081eb7085e61602",
+-   "rpc6-f20-t5-hopper-escape:v1": "03e5ab3b9b98f09ced6fbe27ca405de3",
+-   "rpc6-f8-t2-merc:off": "ac2c94dc5bfa8df34aadfd15d5cf2ec6",
+-   "rpc6-f8-t2-merc:v1": "45bb471b382bc89b737207655702ccf2",
+-   "rpc6-f8-t4-gremlins:off": "fcd465247a280103578dcde147b97b71",
+-   "rpc6-f8-t4-gremlins:v1": "8e96a7fc8ddf440e2adab4b931b63ac6",
++   "4lc3-f21-t4-hopper:off": "640c2039ad287b1e37fe6c9bfc97d5c0",
++   "4lc3-f21-t4-hopper:v1": "455b269df66ac3bfe349d720e84f502e",
++   "8v0h-f19-t5-hopper-escape:off": "92a5409139e6a7d3ddd8518d546502c6",
++   "8v0h-f19-t5-hopper-escape:v1": "03f679a79aef68612de20021d1dba11b",
++   "jf8n-f9-t3-gremlins:off": "b5e23d0c3606620ef6d2f080dbc52e14",
++   "jf8n-f9-t3-gremlins:v1": "55850dbd190606bb9d16f1e5971a2a82",
++   "rpc6-f20-t2-hopper:off": "1f86d08c478f221df1c2ed9980c1fae3",
++   "rpc6-f20-t2-hopper:v1": "f131fb84b9030e363181e0c8d72dbc65",
++   "rpc6-f20-t3-hopper:off": "84e59c00a0bad9136e30d1ccffe15a99",
++   "rpc6-f20-t3-hopper:v1": "2e1af7fa8cc6a5524e565651b5c7974a",
++   "rpc6-f20-t4-hopper:off": "d3b3b1590728493a2f156228732ac749",
++   "rpc6-f20-t4-hopper:v1": "626cec21fb6874dad82bb90ff52bd5d3",
++   "rpc6-f20-t5-hopper-escape:off": "372bf12c165be598fcc5be64b2d089f9",
++   "rpc6-f20-t5-hopper-escape:v1": "75ddbe39516ba9d3b17476ddefea2626",
++   "rpc6-f8-t2-merc:off": "b01cd20552447647d9284ca9d38c2d67",
++   "rpc6-f8-t2-merc:v1": "97febbad2c04a803cd705611d9bb2098",
++   "rpc6-f8-t4-gremlins:off": "f27f21a1d789fb206c3c150f615f0a9b",
++   "rpc6-f8-t4-gremlins:v1": "be2c87f47be3454470ab215237f1c93b",
+  }
+
+ ❯ tests/thief-cost.test.ts:195:17
+    193|     for (const name of BOARDS) for (const ctx of ["off", "v1"] as cons…
+    194|     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got…
+    195|     expect(got).toEqual(GOLDEN_FACTS_ON);
+       |                 ^
+    196|     const off: Record<string, string> = {};
+    197|     for (const name of BOARDS) off[`${name}:v1`] = digest(viewOf(envOf…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[129/134]⎯
+
+ FAIL  tests/thief-cost.test.ts > THIEF_COST on: the Hopper's card > fail safe: a value that throws when read leaves the decision exactly as with THIEF_COST off
+AssertionError: expected '2e1af7fa8cc6a5524e565651b5c7974a' to be '6ba59423258646b2272db82709ae6687' // Object.is equality
+
+Expected: "6ba59423258646b2272db82709ae6687"
+Received: "2e1af7fa8cc6a5524e565651b5c7974a"
+
+ ❯ tests/thief-cost.test.ts:293:134
+    291|     for (const name of ["rpc6-f20-t3-hopper", "8v0h-f19-t5-hopper-esca…
+    292|       frozen();
+    293|       expect(digest(viewOf(envOf(name, { jevContext: "v1", thiefCost: …
+       |                                                                                                                                      ^
+    294|     }
+    295|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[130/134]⎯
+
+ FAIL  tests/thief-cost.test.ts > THIEF_COST on: the gold > the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn
+AssertionError: expected 'no HP value: the potion table did not…' to be '20 gold ≈ 2.2 HP: 20 ÷ 51 gold a poti…' // Object.is equality
+
+Expected: "20 gold ≈ 2.2 HP: 20 ÷ 51 gold a potion (median shop price, A8+ n=2031), a potion's held value 5.7 HP in act 1 (A8)"
+Received: "no HP value: the potion table did not load (药水换算表读取失败 /home/dw/Projects/agent-sts2/.worktrees/exp/knowledge/characters/silent/potion-equivalents.json: ENOENT: no such file or directory, stat '/home/dw/Pro)"
+
+ ❯ tests/thief-cost.test.ts:304:106
+    302|     const rate = GOLD_HP.by_asc[String(asc) as "8" | "9"]["1"];
+    303|     const hp = Math.round(20 * rate.per_gold * 10) / 10;
+    304|     expect((merc.state["thief_context"] as Record<string, Record<strin…
+       |                                                                                                          ^
+    305|       `20 gold ≈ ${hp} HP: 20 ÷ 51 gold a potion (median shop price, A…
+    306|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[131/134]⎯
+
+ FAIL  tests/thief.test.ts > THIEF_FACTS off: the combat question as before > every logged thief board's decision is the pre-change one, byte for byte
+AssertionError: expected { …(18) } to deeply equal { …(18) }
+
+- Expected
++ Received
+
+  {
+-   "4lc3-f21-t4-hopper:off": "71cf857eec957ca3f67b55bd1bdeb625",
+-   "4lc3-f21-t4-hopper:v1": "e559259763a5b3691fbd9dce7bc8f7a8",
+-   "8v0h-f19-t5-hopper-escape:off": "dd7cb595e0725206391c4f22e582959e",
+-   "8v0h-f19-t5-hopper-escape:v1": "67cde2d01f7751b757bb926e2bbeae33",
+-   "jf8n-f9-t3-gremlins:off": "01d7fbe9a929cec11e10e4c606f2da86",
+-   "jf8n-f9-t3-gremlins:v1": "1a7c01185219bd4a461f487b536e7118",
+-   "rpc6-f20-t2-hopper:off": "bbeb3e9d8e11e2a5584f4512f847af3a",
+-   "rpc6-f20-t2-hopper:v1": "95a78375dd9fb9cb64dc7cce43dfb67c",
+-   "rpc6-f20-t3-hopper:off": "55da5a71377f822be079e44789580725",
+-   "rpc6-f20-t3-hopper:v1": "23ce9973e8e8df02c91e31ed53197071",
+-   "rpc6-f20-t4-hopper:off": "277713e71df22fde2d4b66f727024d94",
+-   "rpc6-f20-t4-hopper:v1": "1bc2ed5be499bc16776cb773f4dcf715",
+-   "rpc6-f20-t5-hopper-escape:off": "9562f6dab38409ab7689d6084ea39e8e",
+-   "rpc6-f20-t5-hopper-escape:v1": "9e769628db5d163053a6f2ba40ac32f3",
+-   "rpc6-f8-t2-merc:off": "ad9c4d95dfafdf445b2eef2183e9ec39",
+-   "rpc6-f8-t2-merc:v1": "73e2dbb49c848b86a946aeeedad38435",
+-   "rpc6-f8-t4-gremlins:off": "c0859e071aefde70cd9fcef0addf87d5",
+-   "rpc6-f8-t4-gremlins:v1": "3b60df447400a2b42288dcdbba574631",
++   "4lc3-f21-t4-hopper:off": "839909f9694454b73bf8c468c748a73b",
++   "4lc3-f21-t4-hopper:v1": "075bfdfb1471767c26cd13f1e24f4199",
++   "8v0h-f19-t5-hopper-escape:off": "11cf0595bad73913bc01b53edc6a8b48",
++   "8v0h-f19-t5-hopper-escape:v1": "d30f0e7a05906ad3e894df8d1fa638fc",
++   "jf8n-f9-t3-gremlins:off": "ea16ddee252165fa66733be61959453c",
++   "jf8n-f9-t3-gremlins:v1": "e00fa2b2501fd97dddea5b6bf8fd704d",
++   "rpc6-f20-t2-hopper:off": "6d7f2a06b469af906ad1f011f48fc3ec",
++   "rpc6-f20-t2-hopper:v1": "1a1840b4a89c3714271001ce47f19b57",
++   "rpc6-f20-t3-hopper:off": "ada9fe04c1dd6de7cc2f52ea56fd2926",
++   "rpc6-f20-t3-hopper:v1": "da2bd161af815b4c9b20491e16a779c2",
++   "rpc6-f20-t4-hopper:off": "448e1b1133c0f937a143fdd84176323c",
++   "rpc6-f20-t4-hopper:v1": "1dd725f28d4a8ad12f930c1ceed0e1d1",
++   "rpc6-f20-t5-hopper-escape:off": "05cac9f1a45fe6803aa47f4fa57fe71e",
++   "rpc6-f20-t5-hopper-escape:v1": "78243f1a879a88e87aab6431feb78b10",
++   "rpc6-f8-t2-merc:off": "5ebe7c23673f8e117f55fd6187ca3949",
++   "rpc6-f8-t2-merc:v1": "a6c8a824764fae49b8565ad4e72daee0",
++   "rpc6-f8-t4-gremlins:off": "10feff8629475d1b6a37079ba4083225",
++   "rpc6-f8-t4-gremlins:v1": "23c01064bff4d897961b609c102b44e2",
+  }
+
+ ❯ tests/thief.test.ts:197:17
+    195|     for (const name of BOARDS) for (const ctx of ["off", "v1"] as cons…
+    196|     if (process.env["CAPTURE"] === "1") console.log(JSON.stringify(got…
+    197|     expect(got).toEqual(GOLDEN);
+       |                 ^
+    198|     expect([...touched]).toEqual([]);
+    199|   }, 300_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[132/134]⎯
+
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Thieving Hopper > its Escape turn: this turn is the last; the lines that leave it alive say it leaves with the card
+AssertionError: expected '偷窃草蜢 left at 34 HP, leaves at the end…' to be '偷窃草蜢 left at 37 HP, leaves at the end…' // Object.is equality
+
+Expected: "偷窃草蜢 left at 37 HP, leaves at the end of this turn with 岩石铠甲; rollout: killed before it leaves in 0/8 samples, left with it in 8/8"
+Received: "偷窃草蜢 left at 34 HP, leaves at the end of this turn with 岩石铠甲; rollout: killed before it leaves in 0/8 samples, left with it in 8/8"
+
+ ❯ tests/thief.test.ts:256:53
+    254|     expect(context["偷窃草蜢"]!["turns_left"]).toBe("1: this turn is the l…
+    255|     expect(context["偷窃草蜢"]!["flutter"]).toBe("5: each attack hit remov…
+    256|     expect(jevOptions(decision)["plan1"]!["thief"]).toBe("偷窃草蜢 left at…
+       |                                                     ^
+    257|   });
+    258|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[133/134]⎯
+
+ FAIL  tests/thief.test.ts > THIEF_FACTS fail safe (live play) > a thief step that throws (a broken first-frame note) leaves the decision exactly as with the switch off
+AssertionError: expected 'da2bd161af815b4c9b20491e16a779c2' to be '23ce9973e8e8df02c91e31ed53197071' // Object.is equality
+
+Expected: "23ce9973e8e8df02c91e31ed53197071"
+Received: "da2bd161af815b4c9b20491e16a779c2"
+
+ ❯ tests/thief.test.ts:335:73
+    333|       const fight = board(name).fightStart.fight;
+    334|       const broken = { thiefStart: { fight, deck: null as never, gold:…
+    335|       expect(digest(viewOf(envOf(name, { jevContext: "v1" }, broken)))…
+       |                                                                         ^
+    336|     }
+    337|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[134/134]⎯
+
+
+ Test Files  39 failed | 211 passed (250)
+      Tests  134 failed | 2482 passed (2616)
+   Start at  18:48:43
+   Duration  799.92s (transform 5.33s, setup 10.43s, import 26.72s, tests 730.84s, environment 26ms)
+
