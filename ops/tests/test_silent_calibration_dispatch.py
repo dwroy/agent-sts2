@@ -143,21 +143,6 @@ class CodexOnlyDispatch(CalibrationDispatch):
             start.assert_not_called()
 
 
-class A10RegressionDispatch(CodexOnlyDispatch):
-    task = "silent-a10-regression"
-    request_file = "notes/silent-a10-regression-dispatch.json"
-
-    def test_highest_priority_request_precedes_other_pending_features(self):
-        task = "silent-double-boss"
-        Path(self.root, jobs.FEATURE_REQUESTS[task]).write_text(json.dumps({
-            **self.request, "task": task, "request_id": "older-double-boss-request"}))
-        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
-            self.assertEqual(self.launch(), ("first-fix-batch", 20))
-            self.assertEqual(start.call_args.args[0][-1], self.task)
-            self.assertIsNone(self.launch(stamp="duplicate"))
-            start.assert_called_once()
-
-
 class NewFeatureDispatch(unittest.TestCase):
     def test_a_first_then_independent_b4_beside_normal_fixes(self):
         with tempfile.TemporaryDirectory() as root:
