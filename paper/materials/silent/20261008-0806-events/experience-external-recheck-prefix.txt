@@ -1,0 +1,29 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/compute-memo.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 158999[2mms[22m[39m
+     [33m[2m✓[22m[39m the same question and every resolution as without it; the board planned again comes from it, rollout and B2 [33m 113826[2mms[22m[39m
+     [33m[2m✓[22m[39m on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again [33m 10844[2mms[22m[39m
+     [33m[2m✓[22m[39m a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept [33m 16163[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo [33m 12650[2mms[22m[39m
+     [33m[2m✓[22m[39m with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut [33m 5461[2mms[22m[39m
+ [32m✓[39m tests/rollout-live.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 210744[2mms[22m[39m
+     [33m[2m✓[22m[39m every option of a logged board carries the rollout and history facts; the decision log gets the rollout [33m 3472[2mms[22m[39m
+     [33m[2m✓[22m[39m with a modelled potion held, the rollout fact says later turns may use it [33m 1352[2mms[22m[39m
+     [33m[2m✓[22m[39m a drink-first potion option says it is not rolled out [33m 606[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout's best line is added, last and marked, when code did not show it [33m 50515[2mms[22m[39m
+     [33m[2m✓[22m[39m up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board) [33m 38995[2mms[22m[39m
+     [33m[2m✓[22m[39m the controlled clock: every logged board's rollout stays inside the budget [33m 20819[2mms[22m[39m
+     [33m[2m✓[22m[39m code's ranking, options and auto-acts are unchanged by the rollout [33m 90156[2mms[22m[39m
+     [33m[2m✓[22m[39m logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left [33m 1420[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it [33m 1482[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright's hit next turn is in every line's enemy_threat_next [33m 1496[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-b2.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 126481[2mms[22m[39m
+     [33m[2m✓[22m[39m a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's [33m 45012[2mms[22m[39m
+     [33m[2m✓[22m[39m Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often [33m 11032[2mms[22m[39m
+     [33m[2m✓[22m[39m a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch [33m 47950[2mms[22m[39m
+     [33m[2m✓[22m[39m Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks [33m 8357[2mms[22m[39m
+     [33m[2m✓[22m[39m The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would [33m 14127[2mms[22m[39m
+ [32m✓[39m tests/boss-lines-planner.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 102113[2mms[22m[39m
+     [33m[2m✓[22m[39m BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte [33m 19718[2mms[22m[39m
+     [33m[2m✓[22m[39m a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the si

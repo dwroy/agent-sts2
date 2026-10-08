@@ -1,0 +1,58 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-c873d6543c414f92",
+    "ts": "2026-10-08T07:53:26+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0125",
+      "silent-0005",
+      "silent-0044",
+      "silent-0253"
+    ],
+    "runs": [
+      "L2TSFU62Z57Z"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "sl",
+      "structure"
+    ],
+    "summary": "逐段保存Jev/支配/护栏/SL/抽牌重问的候选与实线身份，核对9条护栏中4条被SL撤回及药水饮用/恢复，保持打法参数。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-074302-postmortem/proposal-control-trace.md",
+    "rule_changes": false,
+    "proposal_sha256": "6b1f8de019e4e4af3ed55d07c0b8d7ecc2902637e244b866f7c320cfa42e1a0d",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-dfbf51502f30c9b1",
+    "ts": "2026-10-08T07:53:27+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0021",
+      "silent-0133",
+      "silent-0222",
+      "silent-0049",
+      "silent-0020"
+    ],
+    "runs": [
+      "L2TSFU62Z57Z"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "terminal"
+    ],
+    "summary": "核验仪式兽160阈值后的全败并列和昏眩一牌额度，对照T6结束与7伤/侧步候选的完整代价；缺少受控胜线时保留策略，不预支能量或候选伤害。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-074302-postmortem/proposal-ringing-terminal.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "b05bf09cf80e5f6d21801f79db38f3853f5af4a466bb256ca139299045556282",
+    "state": "pending"
+  }
+]
