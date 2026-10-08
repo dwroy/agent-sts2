@@ -1,7 +1,8 @@
 /** One authorized baseline pair. Fixed paths/settings; no game controller and no production state. */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { randomUUID } from "node:crypto";
 import { CodexEngine, codexKindSchema, codexSchema, redact } from "../agent/src/brain/engines/codex.js";
 import { segmentDigest } from "../agent/src/brain/engines/codex-cache.js";
 import { pickSpec } from "../agent/src/brain/specs.js";
@@ -23,15 +24,43 @@ export async function doubleQuestion(request: BrainRequest, engine: { decide: (r
   const results: BrainAnswer[] = [];
   for (let i = 0; i < 2; i += 1) {
     if (signal.aborted) throw new Error("probe cancelled");
-    const result = await engine.decide({ ...request, questionId: `cache-probe-baseline-${i + 1}` }, signal);
+    const call = new AbortController();
+    const cancel = () => call.abort();
+    signal.addEventListener("abort", cancel, { once: true });
+    const timer = setTimeout(cancel, 600_000);
+    let result: BrainAnswer;
+    try {
+      result = await engine.decide({ ...request, questionId: `cache-probe-baseline-${i + 1}` }, call.signal);
+    } finally {
+      clearTimeout(timer);
+      signal.removeEventListener("abort", cancel);
+    }
     results.push(result);
     if (result.native?.["mode"] !== "session") throw new Error("probe did not use the approved session transport");
   }
   return results;
 }
 
+export function probeUsageKnown(rows: Array<{ usage?: Record<string, unknown> }>): boolean {
+  return rows.length === 2 && rows.every(({ usage }) => {
+    const input = usage?.["inputTokens"], cached = usage?.["cachedInputTokens"];
+    return typeof input === "number" && Number.isFinite(input) && input > 0
+      && typeof cached === "number" && Number.isFinite(cached) && cached >= 0 && cached <= input;
+  });
+}
+
+export function preserveProbeResult(directory: string, output: Record<string, unknown>): string {
+  const resultFile = join(directory, `probe-attempt-${Date.now()}-${process.pid}-${randomUUID()}.json`);
+  const text = JSON.stringify(output, null, 2);
+  writeFileSync(resultFile, text, { flag: "wx" });
+  const canonical = join(directory, "probe-result.json");
+  if (!existsSync(canonical)) writeFileSync(canonical, text, { flag: "wx" });
+  return resultFile;
+}
+
 async function main(): Promise<void> {
   if (process.argv.length !== 2) throw new Error("codex-brain-cache-probe takes no arguments");
+  if (existsSync(join(PROBE_DIRECTORY, "probe-reserved.json"))) throw new Error("probe pair already reserved; preserve all existing results and traces");
   setKnowledgeCharacter("silent");
   const fixture = approvedFixture(readFileSync(join(PROBE_DIRECTORY, "probe-fixture.json"), "utf8"));
   const config = loadConfig({ CHARACTER: "silent", BRAIN_CODEX_BIN: "/home/dw/.local/node/bin/codex", BRAIN_CODEX_HOME: "/home/dw/.codex",
@@ -61,6 +90,11 @@ async function main(): Promise<void> {
     writeFileSync(join(PROBE_DIRECTORY, "probe-reserved.json"), JSON.stringify({ fixture_sha256: PROBE_FIXTURE_SHA, max_physical_calls: 2 }), { flag: "wx" });
     output["results"] = await doubleQuestion(request, engine, controller.signal);
     output["limits_after"] = engine.limits();
+    const trace = readFileSync(join(PROBE_DIRECTORY, "probe-codex-calls.jsonl"), "utf8").trim().split('\n').map(line => JSON.parse(line));
+    const pair = trace.filter(row => row.mode === "session" && row.outcome === "answered"
+      && ["cache-probe-baseline-1", "cache-probe-baseline-2"].includes(row.question_id));
+    output["raw_usage"] = pair.map(row => row.usage ?? null);
+    if (!probeUsageKnown(pair)) throw new Error("probe answered but input/cache usage is missing or invalid; cache result remains unknown");
     output["status"] = "completed";
   } catch (error) {
     output["error"] = redact(error instanceof Error ? error.message : String(error));
@@ -68,8 +102,8 @@ async function main(): Promise<void> {
   } finally {
     clearTimeout(timeout);
     await engine.close();
-    writeFileSync(join(PROBE_DIRECTORY, "probe-result.json"), JSON.stringify(output, null, 2));
-    console.log(JSON.stringify({ status: output["status"], result: join(PROBE_DIRECTORY, "probe-result.json"), error: output["error"] }));
+    const resultFile = preserveProbeResult(PROBE_DIRECTORY, output);
+    console.log(JSON.stringify({ status: output["status"], result: resultFile, error: output["error"] }));
   }
 }
 
