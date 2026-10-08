@@ -1,0 +1,40 @@
+{
+  "index": 1,
+  "card_id": "EXTERMINATE",
+  "name": "杀灭+",
+  "upgraded": true,
+  "target_type": "AllEnemies",
+  "requires_target": false,
+  "target_index_space": null,
+  "valid_target_indices": [],
+  "costs_x": false,
+  "star_costs_x": false,
+  "energy_cost": 1,
+  "star_cost": 0,
+  "rules_text": "对所有敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
+  "resolved_rules_text": "对所有敌人造成10点伤害4次。",
+  "dynamic_values": [
+    {
+      "name": "Damage",
+      "base_value": 4,
+      "current_value": 10,
+      "enchanted_value": 6,
+      "is_modified": true,
+      "was_just_upgraded": false
+    },
+    {
+      "name": "Repeat",
+      "base_value": 4,
+      "current_value": 4,
+      "enchanted_value": 4,
+      "is_modified": false,
+      "was_just_upgraded": false
+    }
+  ],
+  "playable": true,
+  "can_play_result": true,
+  "unplayable_reason": null,
+  "unplayable_reason_raw": null,
+  "unplayable_preventer_id": null,
+  "unplayable_preventer_type": null
+}

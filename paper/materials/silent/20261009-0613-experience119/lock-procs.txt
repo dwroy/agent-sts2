@@ -1,0 +1,17 @@
+1349628 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+1349699 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+1349700 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+1349711 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+1409075 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-061302-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-061302-experience-update.pid 1 - /home/dw/Projects
+1409076 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-061302-experience-update KSX97DF5H3NY silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+1409085 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+1409118 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1409879 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+1409890 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261009-061302-experience-update  wJ:pA1  yes    yes   1409075:bash 1409076:bash 1409084:tail 1409085:node 1409118:node
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex
