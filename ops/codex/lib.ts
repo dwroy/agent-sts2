@@ -267,6 +267,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "experience-update": { args: 1, ms: 30_000 },
   "fix-batch": { args: 0, ms: 30_000 },
   "boss-sim-check": { args: 0, ms: 120_000 },
+  "codex-brain-cache-probe": { args: 0, ms: 1_260_000 },
   "strategy-proposal": { args: 1, ms: 30_000 },
   "learner-merge": { args: 1, ms: 30_000 },
   "learner-recheck": { args: 1, ms: 3_700_000 },

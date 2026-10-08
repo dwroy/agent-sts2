@@ -16,6 +16,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import brain_source
 
 FIELDS = ("input_tokens", "cache_hit_tokens", "cache_write_tokens", "output_tokens", "reasoning_tokens", "total_tokens")
+CACHE_INPUT_NAMES = ("input", "input_tokens", "inputTokens")
+CACHE_HIT_NAMES = ("cacheRead", "cached_input_tokens", "cachedInputTokens", "cache_hit_tokens", "cacheHitTokens", "cache_read_input_tokens")
 
 
 def time(value):
@@ -34,17 +36,22 @@ def tokens(raw, exclusive=False, creation_extra=False):
     raw = raw or {}
     def pick(*names):
         return next((num(raw[n]) for n in names if n in raw), 0)
-    inp = pick("input", "input_tokens", "inputTokens")
-    cached = pick("cacheRead", "cached_input_tokens", "cache_hit_tokens", "cacheHitTokens", "cache_read_input_tokens")
-    create = pick("cacheCreation", "cache_write_input_tokens", "cacheWriteTokens", "cache_creation_input_tokens")
+    inp = pick(*CACHE_INPUT_NAMES)
+    cached = pick(*CACHE_HIT_NAMES)
+    create = pick("cacheCreation", "cache_write_input_tokens", "cacheWriteInputTokens", "cacheWriteTokens", "cache_creation_input_tokens")
     out = pick("output", "output_tokens", "outputTokens")
-    reasoning = pick("reasoning", "reasoning_output_tokens", "reasoning_tokens", "reasoningTokens")
+    reasoning = pick("reasoning", "reasoning_output_tokens", "reasoningOutputTokens", "reasoning_tokens", "reasoningTokens")
     if exclusive:
         inp += cached
     # Claude reports cache creation as a disjoint input bucket; Codex already includes it in input.
     if creation_extra:
         inp += create
-    return dict(zip(FIELDS, (inp, min(cached, inp), create, out, min(reasoning, out), inp + out)))
+    result = dict(zip(FIELDS, (inp, min(cached, inp), create, out, min(reasoning, out), inp + out)))
+    def present(names):
+        return any(n in raw and isinstance(raw[n], (int, float)) and not isinstance(raw[n], bool)
+                   and 0 <= raw[n] < float("inf") for n in names)
+    result["cache_usage_recorded"] = present(CACHE_INPUT_NAMES) and present(CACHE_HIT_NAMES)
+    return result
 
 
 class Sources:
@@ -142,16 +149,20 @@ def collect(root, config, claude_dir=None, codex_home=None):
                            "character": str(run.get("character") or character or "unattributed").lower(), "ascension": run.get("ascension"),
                            "ts": when, "calls": calls / len(targets), "latency_ms": num(ms) / len(targets),
                            **{k: usage.get(k, 0) / len(targets) for k in FIELDS}, "api_usd": None if cost is None else cost / len(targets),
-                           "subscription_usd": None, "usage_recorded": known})
+                           "subscription_usd": None, "usage_recorded": known,
+                           "cache_usage_recorded": usage.get("cache_usage_recorded", known),
+                           "cache_observed_input_tokens": usage.get("input_tokens", 0) / len(targets) if usage.get("cache_usage_recorded", known) else 0,
+                           "cache_observed_hit_tokens": usage.get("cache_hit_tokens", 0) / len(targets) if usage.get("cache_usage_recorded", known) else 0})
 
-    traced = set()
+    traced, traced_calls = set(), set()
     for r in sources.rows(root / "logs/codex-calls.jsonl"):
         qid = r.get("question_id")
+        traced_calls.add((r.get("run_id"), qid))
         recorded = isinstance(r.get("usage"), dict)
         if recorded:
             traced.add((r.get("run_id"), qid))
         # Failed attempts still consumed wall time; their absent token usage is unknown, not an absent call.
-        add("brain:codex", "codex", r.get("ts"), tokens(r.get("usage")), rid=r.get("run_id"), ms=r.get("call_ms", r.get("ms")),
+        add("brain:codex", "codex", r.get("ts"), tokens(r.get("usage")), rid=r.get("run_id"), ms=r.get("ms", r.get("call_ms")),
             known=recorded, identity=("codex-call", r.get("ts"), qid, r.get("attempt"), r.get("thread_id")))
     for r in sources.rows(root / "logs/brain.jsonl"):
         engine = str(r.get("engine", "unknown")).lower()
@@ -163,7 +174,8 @@ def collect(root, config, claude_dir=None, codex_home=None):
         if price and r.get("usage"):
             cost = ((usage["input_tokens"] - usage["cache_hit_tokens"]) * price["input_miss_per_million"] +
                     usage["cache_hit_tokens"] * price["input_hit_per_million"] + usage["output_tokens"] * price["output_per_million"]) / 1e6
-        add("brain:" + provider, provider, r.get("ts"), usage, rid=r.get("run_id"), ms=r.get("latency_ms"), cost=cost,
+        trace_exists = engine == "codex" and (r.get("run_id"), r.get("question_id")) in traced_calls
+        add("brain:" + provider, provider, r.get("ts"), usage, rid=r.get("run_id"), ms=0 if trace_exists else r.get("latency_ms"), calls=0 if trace_exists else 1, cost=cost,
             known=bool(r.get("usage")), identity=("brain", r.get("ts"), r.get("question_id"), engine))
     # Request traces split paid input from free output. Run totals alone cannot determine input cost.
     jev_recorded = collections.defaultdict(lambda: {"tokens": 0, "calls": 0})
@@ -303,12 +315,13 @@ def write_outputs(events, runs, sources, periods, config, out):
         key = tuple(e[k] for k in ("character", "ascension", "run", "component", "batch"))
         if key not in groups:
             groups[key] = dict(zip(("character", "ascension", "run", "component", "batch"), key))
-            groups[key].update({k: 0 for k in ("calls", "latency_ms", *FIELDS)})
-            groups[key].update(usage_recorded=True, api_usd=None, subscription_usd=None, cost_complete=True)
+            groups[key].update({k: 0 for k in ("calls", "latency_ms", *FIELDS, "cache_observed_input_tokens", "cache_observed_hit_tokens")})
+            groups[key].update(usage_recorded=True, cache_usage_recorded=True, api_usd=None, subscription_usd=None, cost_complete=True)
         row = groups[key]
-        for k in ("calls", "latency_ms", *FIELDS):
+        for k in ("calls", "latency_ms", *FIELDS, "cache_observed_input_tokens", "cache_observed_hit_tokens"):
             row[k] += e[k]
         row["usage_recorded"] &= e["usage_recorded"]
+        row["cache_usage_recorded"] &= e["cache_usage_recorded"]
         row["cost_complete"] &= e["usage_recorded"] and (e["api_usd"] is not None or e["subscription_usd"] is not None)
         for k in ("api_usd", "subscription_usd"):
             if e[k] is not None:
@@ -316,12 +329,14 @@ def write_outputs(events, runs, sources, periods, config, out):
     for row in groups.values():
         values = [row[k] for k in ("api_usd", "subscription_usd") if row[k] is not None]
         row["estimated_usd"] = sum(values) if values else None
+        row["cache_hit_ratio_observed"] = row["cache_observed_hit_tokens"] / row["cache_observed_input_tokens"] if row["cache_observed_input_tokens"] else None
     characters = sorted({e["character"] for e in events} | {str(r.get("character", "unknown")).lower() for r in runs.values()})
     summaries = {}
     for character in characters:
         rows = [r for r in groups.values() if r["character"] == character]
         header = ["character", "ascension", "run", "component", "batch", "calls", "latency_ms", *FIELDS,
-                  "usage_recorded", "api_usd", "subscription_usd", "cost_complete", "estimated_usd"]
+                  "usage_recorded", "api_usd", "subscription_usd", "cost_complete", "estimated_usd",
+                  "cache_usage_recorded", "cache_observed_input_tokens", "cache_observed_hit_tokens", "cache_hit_ratio_observed"]
         with (data / f"cost-{character}.csv").open("w", newline="") as handle:
             writer = csv.DictWriter(handle, header, lineterminator="\n")
             writer.writeheader()
@@ -362,6 +377,7 @@ def write_outputs(events, runs, sources, periods, config, out):
                  "学习批次服务多局时等分，不代表逐局实测；未记录服务局号的批次保持未归属。运维和观察按对局时间窗归属，窗外单列 unattributed。",
                  "订阅为共享账户周额度估算，按月费 × 12 / 52 折周、按同一重置窗口内已记录 token 分摊；未观测到的账户外部用量无法单独扣除。",
                  "未知价格、失败/过期/未校验窗口不补零。金额只汇总已知部分，不能当作完整账单；每胜费用在零胜时未知。",
+                 "缓存命中率只用同时记录输入和缓存字段的样本（cache_observed_*）；cache_usage_recorded=False 表示有缺字段，不能当真实零命中。Codex session 的 camelCase 与 exec 的 snake_case 用同一口径。",
                  "Jev 优先取 jev-prompts 的逐请求输入/输出（按 request_id 去重，缓存不另加），仅输入收费；runs 未覆盖余额只有总 token，拆分与费用未知。失败请求用量未知，未结束局有请求日志也计入。大脑仅归集 brain/codex-calls 留存请求，早期调用仍缺失。", "",
                  f"战绩口径：{brain_source.POLICY}。局数、费用、token 和每局费用覆盖全部引擎；胜数仅 Codex，raw_wins/各引擎原始成绩在 CSV 中保留；每胜费用为全部实验费用除以 Codex 胜数。", "",
                  "| 进阶 | 原始局 | Codex 胜 | token（全部） | 已知估算 | 每原始局 | 每 Codex 胜 | 累计已知 | 覆盖 |", "|---|---:|---:|---:|---:|---:|---:|---:|---|"]
