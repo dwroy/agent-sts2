@@ -1,0 +1,90 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.26 → 2026-10-08.27；提交：64ed5d5c2ec47d854f41958111d5f746d8916dad（分支 exp-silent）；合入：未合入
+- 条数：新增1、更新17（加证据17、只改数字0）、退役0；active 185→186；总50783字符。A8适用173条/46378字符，A9适用174条/46662字符；置信度高114、中47、低25。
+- 机制推理：
+  - 灵动步法 — 建立敏捷后逐张兑现牌挡 — 82支持/0反例 — R3AJCGQGGMR4
+  - 脆弱 — 逐张折减牌挡 — 29支持/0反例 — R3AJCGQGGMR4
+  - 力量与敏捷 — 逐击加伤、逐张加挡 — 141支持/0反例 — R3AJCGQGGMR4
+  - 能力启动 — 持有不等于实际收益 — 140支持/0反例 — R3AJCGQGGMR4
+  - 毒雾 — 建层后轮初补毒 — 71支持/0反例 — R3AJCGQGGMR4
+  - 触媒 — 增加结算次数，不倍增毒层 — 54支持/0反例 — R3AJCGQGGMR4
+  - 尖啸 — 临时减力，次轮恢复 — 68支持/0反例 — R3AJCGQGGMR4
+  - 涂毒 — 未挡攻击逐击施毒 — 8支持/0反例 — R3AJCGQGGMR4
+  - 永恒羽毛 — 到火回复与休息分账 — 10支持/0反例 — R3AJCGQGGMR4
+  - 光滑石头 — 开场1敏；11局99个持有后战斗房验证 — 11支持/0反例 — R3AJCGQGGMR4
+  - 奥利哈钢 — 零挡补6，已有挡不叠加 — 3支持/0反例 — R3AJCGQGGMR4
+  - 爬行动物饰品 — 药水建立临时力量 — 4支持/0反例 — R3AJCGQGGMR4
+  - 沙坑 — 延长截止不等于挡住攻击 — 21支持/0反例 — R3AJCGQGGMR4
+  - 同族 — 启毒与真实战耗分别核验 — 9支持/0反例 — R3AJCGQGGMR4
+  - 跨幕回复 — 已见A9/A10按缺失HP的80%取整 — 32支持/0反例 — R3AJCGQGGMR4
+  - 巨斧库存 — 恢复后重核血上限，首次归零不等于胜利 — 13支持/0反例 — R3AJCGQGGMR4
+- 改了的手写知识：无
+- 测试：tsc退出0；vitest 251文件/2627用例/退出0；勘误后补跑经验测试1文件/10用例/退出0。
+- 切片大小：中位涨2.5字，最大5056字。
+- 学习账本：新增无；改成proposed：silent-0005、silent-0012、silent-0019、silent-0020、silent-0021、silent-0011、silent-0027、silent-0046、silent-0084、silent-0142、silent-0158、silent-0047、silent-0063、silent-0018、silent-0117、silent-0009、silent-0243、silent-0312；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。live合并预检出现20处并行记录冲突，按任务要求停止，保留知识刷新，待调用方/运维兜底；详见[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update/report.md)。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.27",
+  "commit": "64ed5d5c2ec47d854f41958111d5f746d8916dad",
+  "merged": null,
+  "added": 1,
+  "updated": 17,
+  "retired": 0,
+  "active": 186,
+  "mechanisms": [
+    "灵动步法 — 步法普通/升级建立2/3敏捷，后续每张挡牌兑现。 — 82支持/0反例 — R3AJCGQGGMR4",
+    "脆弱逐张牌挡 — 脆弱逐张折减牌挡，被动挡另核。 — 29支持/0反例 — R3AJCGQGGMR4",
+    "力量与敏捷 — 力量逐击加伤，敏捷逐张加牌挡，弱与易伤另核。 — 141支持/0反例 — R3AJCGQGGMR4",
+    "能力启动与收益兑现 — 观察：取得能力、实际建立、收益兑现与整战结果分核，不由数量推输出闭环。 — 140支持/0反例 — R3AJCGQGGMR4",
+    "毒雾 — 毒雾普通/升级建立2/3层，后续玩家轮初补毒。 — 71支持/0反例 — R3AJCGQGGMR4",
+    "触媒 — 触媒增加毒结算次数，不倍增毒层；普通/升级建1/2且不即时施毒。 — 54支持/0反例 — R3AJCGQGGMR4",
+    "尖啸 — 尖啸临时降力按攻击段兑现，次轮恢复须重核。 — 68支持/0反例 — R3AJCGQGGMR4",
+    "涂毒 — 涂毒实建后未挡攻击逐击施毒，施毒不等毒伤。 — 8支持/0反例 — R3AJCGQGGMR4",
+    "永恒羽毛 — 永恒羽毛实际到营火才回血，与之后休息/锻造分账。 — 10支持/0反例 — R3AJCGQGGMR4",
+    "意外光滑的石头 — 意外光滑的石头实见开场1敏捷，与步法叠加，收益由随后牌挡兑现。 — 11支持/0反例 — R3AJCGQGGMR4",
+    "奥利哈钢 — 奥利哈钢已见结束回合零挡补6，已有挡不另加6。 — 3支持/0反例 — R3AJCGQGGMR4",
+    "爬行动物饰品 — 观察：爬行动物饰品药水动作建立临时力量，次轮撤临时部分。 — 4支持/0反例 — R3AJCGQGGMR4",
+    "沙坑与攻击双截止 — 沙虫沙坑与攻击分别核，延长不等挡攻击，未来毒不预支。 — 21支持/0反例 — R3AJCGQGGMR4",
+    "同族真实输出与战耗 — 观察：同族毒/能力须实建结算，固定杀序胜因未控。 — 9支持/0反例 — R3AJCGQGGMR4",
+    "跨幕按缺失HP回复 — 已见A9/A10跨幕按缺失HP的80%向下取整回复。 — 32支持/0反例 — R3AJCGQGGMR4",
+    "库存分阶段需求 — 巨斧库存归零恢复不等战斗结束，后体血上限按实况重核，不能固定当前maxHP乘库存。 — 13支持/0反例 — R3AJCGQGGMR4"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0005", "silent-0012", "silent-0019", "silent-0020",
+      "silent-0021", "silent-0011", "silent-0027", "silent-0046",
+      "silent-0084", "silent-0142", "silent-0158", "silent-0047",
+      "silent-0063", "silent-0018", "silent-0117", "silent-0009",
+      "silent-0243", "silent-0312"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-574d0359cc102419",
+    "silent-proposal-8e5765c4bfbaba5b",
+    "silent-proposal-267864aef9c1f322",
+    "silent-proposal-bc357cb8bcee3b22",
+    "silent-proposal-0337be0b6a07fbdc"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11bf7-c838-7042-909d-ec64bc41494c
+轮数：1；工具调用：command_execution×52
+token：输入 189.0k、输出 47.0k（其中推理 15.0k）、cache 读 6425.9k、cache 写 0（命中 97.1%）
+成本：未提供
+耗时：1922.8 s（墙钟）
+时间：首个事件 4.2 s、模型首个输出 11.5 s、首次工具 14.2 s、末次工具结束 1841.4 s；工具内共 1267.3 s，其余（模型生成、推理、网络）651.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×51；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T22-43-05-01a11bf7-c838-7042-909d-ec64bc41494c.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-224303-experience-update.jsonl
