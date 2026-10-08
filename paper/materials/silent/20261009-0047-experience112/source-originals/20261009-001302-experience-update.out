@@ -1,0 +1,83 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.28 → 2026-10-09.1；提交：3ae5a3c2（分支 exp-silent）；合入：未合入，预检发现16处记录冲突；刷新数据已保存。
+- 条数：新增0、更新15（加证据15、只改数字0）、退役0；active 186 → 186。正文50976字符；A8适用173条/46587字符，A9适用174条/46871字符；high/med/low＝115/46/25。
+- 机制推理：
+  - 步法 — 3敏使两防御共16挡 — 84支持/0反例 — Z91JN3S3PQX2
+  - 力量与虚弱 — 力量逐击体现，临时降力须重核 — 143/0 — Z91JN3S3PQX2
+  - 能力兑现 — 未施放、未结算不预支 — 142/0 — Z91JN3S3PQX2
+  - 余像 — 建立后每牌补1挡 — 31/0 — Z91JN3S3PQX2
+  - 滚石 — 四轮实际兑现70伤 — 10/0 — Z91JN3S3PQX2
+  - 抱抱先生 — 同四轮兑现46伤，分源计算 — 7/0 — Z91JN3S3PQX2
+  - 钨合金棍 — 逐击减损，沙坑归零仍死 — 5/0，组合仅1/0 — Z91JN3S3PQX2
+  - 双截止 — 逃离续时不挡攻击 — 22/0 — Z91JN3S3PQX2
+  - 尖啸 — 临时减6力，次轮恢复 — 69/0 — Z91JN3S3PQX2
+  - 跨幕回复 — 缺43血实回34 — 33/0 — Z91JN3S3PQX2
+  - 敏捷药 — 加2敏，不补旧挡 — 57/0 — Z91JN3S3PQX2
+  - 毒药 — 施6毒后实结6＋5 — 37/0 — Z91JN3S3PQX2
+  - 痊愈 — 加1能抽2牌，不回血 — 9/0 — Z91JN3S3PQX2
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件/2627用例/退出0，未重跑；gitleaks通过。
+- 切片大小：整体中位增加10.5字，最大5096字。
+- 学习账本：新增无；改成proposed：silent-0005、silent-0012、silent-0019、silent-0020、silent-0021、silent-0125、silent-0023、silent-0093、silent-0094、silent-0162、silent-0178、silent-0313、silent-0018、silent-0046、silent-0243、silent-0276、silent-0278、silent-0240；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。变更记录已追加一节；合入受阻交调用方及运维兜底。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.1",
+  "commit": "3ae5a3c23f9a4aa6dba8a26629dfdc72e71931a4",
+  "merged": null,
+  "added": 0,
+  "updated": 15,
+  "retired": 0,
+  "active": 186,
+  "mechanisms": [
+    "灵动步法/敏捷牌挡",
+    "力量与虚弱覆盖",
+    "能力启动与收益兑现",
+    "余像逐牌被动挡",
+    "滚石轮初增长",
+    "抱抱先生轮初伤",
+    "钨棍逐击/沙坑特殊截止",
+    "沙坑与攻击双截止",
+    "尖啸临时降力",
+    "跨幕按缺血回复",
+    "敏捷药2敏",
+    "毒药施毒与实结",
+    "痊愈加能/抽牌"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0005", "silent-0012", "silent-0019", "silent-0020",
+      "silent-0021", "silent-0125", "silent-0023", "silent-0093",
+      "silent-0094", "silent-0162", "silent-0178", "silent-0313",
+      "silent-0018", "silent-0046", "silent-0243", "silent-0276",
+      "silent-0278", "silent-0240"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-ab3bf902b22662f4",
+    "silent-proposal-6330c4ade7528ec9",
+    "silent-proposal-089bd208926f8962",
+    "silent-proposal-9849e537607099bd"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11c4a-2cdd-7440-ade1-2a1675cb6f57
+轮数：1；工具调用：command_execution×102 file_change×8
+token：输入 209.3k、输出 55.6k（其中推理 20.7k）、cache 读 8475.3k、cache 写 0（命中 97.6%）
+成本：未提供
+耗时：2045.5 s（墙钟）
+时间：首个事件 3.9 s、模型首个输出 9.4 s、首次工具 13.9 s、末次工具结束 1994.6 s；工具内共 1326.8 s，其余（模型生成、推理、网络）714.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×57；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T00-13-05-01a11c4a-2cdd-7440-ade1-2a1675cb6f57.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-001303-experience-update.jsonl
