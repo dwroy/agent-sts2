@@ -1,0 +1,16 @@
+node:fs:2430
+    return binding.writeFileUtf8(
+                   ^
+
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/results/results-0.jsonl'
+    at Object.writeFileSync (node:fs:2430:20)
+    at appendFileSync (node:fs:2512:6)
+    at main (/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent/tools/boss-sim/backtest-runner.ts:269:7)
+    at async <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent/tools/boss-sim/backtest-runner.ts:276:1) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-064306-silent-boss-calibration/96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887/results/results-0.jsonl'
+}
+
+Node.js v22.23.3

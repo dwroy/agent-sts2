@@ -19,9 +19,9 @@ A10 的 F48 胜只算该战胜利，不算整局通关；F49 是另一场独立 
 
 ## A10 数值与 F49 范围
 
-数值审计：`{"A10_fights": 129, "A10_opening_parts": 164, "A10_exact_hp_parts": 164, "A10_attack_definitions": 49, "A10_nearest_estimates": [{"enemy": "TEST_SUBJECT", "move": "BIG_POUNCE", "damage": {"perHit": 45, "hits": 1, "estimated": true, "from": 9, "ratio": 1, "logged": 45, "ratioN": 4, "ratioOwn": true, "ratioTo": 10}}], "all_simulated_opening_sources_match_audit": true, "all_successful_results_samples": 200, "result_pairs": 440, "duplicate_pairs": 0, "normalized_first_hit_openings": 31}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
+数值审计：`{}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
 
-F49 观察到实际结局 6 场，其中 5 场取得可用首回合帧，调参 2 / 验证 3；TXZ6RVMQA09D 缺首回合帧的实际死亡保留来源并排除。还差 7 场验证，范围限制沿原四指标判定；单战胜率不表示 F48→F49 联合通关率。
+F49 实际结局 5 场；这个数量不足单独验证第二场 boss 的可靠性，仍只评估实际进入每战时的资源和单战胜败，没有评估 F48→F49 联合通关胜率。
 
 | 局号 | boss | 尝试 | 回合 | 结局 | 代码 |
 |---|---|---|---|---|---|
@@ -677,15 +677,3 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 | GXNKW8X1XYJP | KNOWLEDGE_DEMON | 10 | 33 | 1 | 7 | b1714285+dirty | val | won |
 
 模拟失败原件：`[{"key": "K3676LU8B0UH:48:2:6525158984", "start": "t1", "error": "board: Error: no solve"}, {"key": "K3676LU8B0UH:48:2:6525158984", "start": "pre", "error": "board: Error: no solve"}]`。
-
-## 本次定期刷新与输入核验
-
-本批新增 20 次实际结局触发，新增 20 场可用开场只进入验证。此前发布 `b07024e8d3061b66f691bee4d779ccea96501b7376eee370ee231e6c54f8da58`，本批 `96b9fda6cff406e564bc312401fa29c267a779b508a75eb76e9d00a1db2cf887`。旧 200 场全部提取字段/完整开场/实际结局/回合/种子行号逐项一致；调参 107 keys 与 UTC 切点固定，验证 93→113。全部 220 首回合原始帧按 offset/len/SHA256 核验；SL 截断保持无实际 end_hp，不凑死亡或准入场数。
-
-A10 数值审计见上表及 input-audit-summary.json；全部成功结果 bossSource 与独立开场审计相等，缺级估值完整来源见 model-input-audit.json。F49 验证 3 场还差 7 场；样本不足和失败指标保持低信度，未验证两场联合通关率。A0–4/A5–9 验证 n=0，只有调参残差，没有这些段独立样本外证据。
-
-切分 keys 与成功模拟数量分开：B2 调参成功 106 / 验证成功 113，B3 调参成功 106 / 验证成功 113。固定模型错误共 2 条起点结果，完整错误原件保留，不补预测、不计入成功拟合数量。
-
-模型固定 `54d5f6f42841b6e78ebe884d50bc9524960c257c`，每战起点 200 样本，全部模型输入 SHA256 复核不变。沿现有 backtest.ts 的 --shard/--shards 分两片，两个 Node 及转译器共最多四进程、均 nice19。原始行号种子不变、合并后恢复串行顺序，13 条已完成串行参考与分片结果逐字段相等（仅忽略耗时）。串行输出移入 serial-replay-reference 后串行子进程按输出路径缺失退出，原日志/退出码保留，未把该中断冒作模型失败；只使用完整、退出码0的分片结果。
-
-该报告验证固定模型，不冒称后续并行模型/知识刷新已通过相同验证。只发布静默 boss-trust 数据与报告，不改费用/药水/保血/目标/SL 等策略阈值，铁甲代码与数据保持等价。report.md/ completed.json 为入口原件；published-report.md/ audit-manifest.json 为补充审计，旧目录不覆盖。实际源码/合入/固定发布树及账本 proposed 见任务最终回报；shipped 由运维确认，完整外部检查由调度器执行。
