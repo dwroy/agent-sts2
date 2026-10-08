@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/agent
+
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > every option of a logged board carries the rollout and history facts; the decision log gets the rollout 2093ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > with a modelled potion held, the rollout fact says later turns may use it 619ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > a drink-first potion option says it is not rolled out 291ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > the rollout's best line is added, last and marked, when code did not show it 39497ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line) 133ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board) 34727ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > keeps to the time budget under a mock clock, degrading the horizon/samples, and says so 99ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > the controlled clock: every logged board's rollout stays inside the budget 12526ms
+ ✓ tests/rollout-live.test.ts > rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout 63873ms
+ ✓ tests/rollout-live.test.ts > enemy tables > the Tunneler's Burrow is marked as gaining Burrowed (RWWG F20) 15ms
+ ✓ tests/rollout-live.test.ts > the rollout's best line when every line loses all the HP (HEACJRY5LEVD F17, 8V0HD9Y207WY F17) > saturated: the value says nothing; the least enemy HP left, then the most turns alive, else no best 0ms
+ ✓ tests/rollout-live.test.ts > the rollout's best line when every line loses all the HP (HEACJRY5LEVD F17, 8V0HD9Y207WY F17) > not saturated: the highest value; exact ties by enemy HP left, then code's order 0ms
+ ✓ tests/rollout-live.test.ts > the rollout's best line when every line loses all the HP (HEACJRY5LEVD F17, 8V0HD9Y207WY F17) > logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left 785ms
+ ✓ tests/rollout-live.test.ts > an illusion killed before the decision revives in the rollout (QUG1DSDARAXU F23 T3) > the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it 843ms
+ ✓ tests/rollout-live.test.ts > enemy_threat_next counts a reviving illusion (QUG1DSDARAXU F23 T3) > the dead Parafright's hit next turn is in every line's enemy_threat_next 862ms
+ ✓ tests/compute-memo.test.ts > the key > equal values, equal text, however their strings were built; what JSON merges is told apart 4ms
+ ✓ tests/compute-memo.test.ts > the key > B2's pool runs are keyed by the data its workers load: one signature of the data files' contents; no pool, none 8ms
+ ✓ tests/compute-memo.test.ts > the key > the process-wide switches and a test's data swap give another key 1ms
+ ✓ tests/compute-memo.test.ts > the store > a fresh copy each time, the oldest out past the byte cap, one fight at a time, off with the switch 1ms
+ ✓ tests/compute-memo.test.ts > the planner with the memo (The Kin T5, B2 in this thread) > the same question and every resolution as without it; the board planned again comes from it, rollout and B2 61943ms
+ ✓ tests/compute-memo.test.ts > the planner with the memo (The Kin T5, B2 in this thread) > on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again 5921ms
+ ✓ tests/compute-memo.test.ts > the planner with the memo (The Kin T5, B2 in this thread) > a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept 9320ms
+ ✓ tests/compute-memo.test.ts > the planner with the memo (The Kin T5, B2 in this thread) > the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo 7324ms
+ ✓ tests/compute-memo.test.ts > the rollout's least budget (budgetNeedMs) > with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut 3348ms
+ ✓ tests/sl-explore-b2.test.ts > the sub-switches off: the explore part as at bc8c9bc, B2 on > a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's 25746ms

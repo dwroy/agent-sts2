@@ -1,0 +1,89 @@
+{
+  "task": "fix-batch",
+  "learner_task": "silent-a10-regression",
+  "character": "silent",
+  "runs": [],
+  "key": "feature:roy-20261008-0851-silent-a10-regression",
+  "pid": 3922958,
+  "state": "done",
+  "reason": "ops",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression",
+  "feature_request": "roy-20261008-0851-silent-a10-regression",
+  "proposal_policy": "Roy-2026-10-07-learning",
+  "pane": "wJ:p70",
+  "finished": "2026-10-08 10:03",
+  "rc": 0,
+  "merged": "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3",
+  "proposal_audit_errors": [],
+  "report": {
+    "task": "fix-batch",
+    "base": "2e2b48aa6e954daf02aa7cfc6a82eddc58bcc5cf",
+    "fixes": [
+      {
+        "item": "silent-a10-regression",
+        "commit": "693318efb3a72061c53ccdc06802c380ed3ff54a",
+        "test": "agent/tests/silent-potion-provenance.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "merged": "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3",
+    "release_commit": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+    "version": "S1.a10-regression1",
+    "conclusion": "原38/45分组对应早八小时的完局切点。实际Codex-only到F48为10/50→6/27，不能确认double导致下降或断言随机波动。只修已直接核实、早已存在的跨角色药水上下文污染；Roy双通知已追加。",
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 248,
+      "cases": 2608,
+      "source_sandbox": 0,
+      "live_sandbox": 0,
+      "initial_sandbox": 1,
+      "withdrawn_fix": 1,
+      "restored_fix": 0,
+      "gitleaks": 0,
+      "full_outside_sandbox": null
+    },
+    "skipped": [
+      {
+        "item": "double-boss/fix45/bullet-time/sloth/experience回退",
+        "reason": "未确认新增有害改动，保留行为及待证限制。"
+      }
+    ],
+    "code_proposals": [
+      "silent-proposal-ce40c2c455bb12d5"
+    ],
+    "implementation_domains": [
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/report.md",
+    "report_json": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/report.json",
+    "paper_report": "/home/dw/Projects/agent-sts2/paper/materials/silent/a10-regression-2026-10-08.md",
+    "fixed_tree": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/checked-tree.json",
+    "original_logs": "/home/dw/Projects/agent-sts2/logs",
+    "failure_inventory": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/error-inventory.md",
+    "handoff": "提案已CLI登记implemented；运维核实silent-0285 shipped，调度器补跑完整外部检查。初合继承的六个派发变化已恢复，净差仅三文件，失败历史保留。"
+  },
+  "checks_pending": false,
+  "fallback_checks": [
+    {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-090447-fix-batch.fallback-ba9620d64392b26933a24639646d509c9fb7a52d.checks.log",
+      "merged": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+      "tree": "ba9620d64392b26933a24639646d509c9fb7a52d",
+      "commits": [
+        "693318efb3a72061c53ccdc06802c380ed3ff54a",
+        "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3"
+      ]
+    }
+  ],
+  "checks": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-090447-fix-batch.fallback-ba9620d64392b26933a24639646d509c9fb7a52d.checks.log",
+    "merged": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+    "tree": "ba9620d64392b26933a24639646d509c9fb7a52d",
+    "commits": [
+      "693318efb3a72061c53ccdc06802c380ed3ff54a",
+      "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3"
+    ]
+  }
+}

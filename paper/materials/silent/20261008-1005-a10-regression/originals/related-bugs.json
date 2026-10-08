@@ -1,0 +1,202 @@
+[
+  {
+    "id": "silent-0174",
+    "claim": "外骨骼虫的难以杀灭9已被读入攻击上限，但triggerPoison没有应用它。D4LJ9QMGFB8Q F20 T4把11血12毒敌人预测为已死，实际只扣9留2并攻击11，玩家24→13；毒结算少考虑2血及存活敌威胁。当前只读live turn-solver.ts:1509仅对敌血/无实体/毒取最小值，combat-plan.ts:745已接perHitCap。不是原毒未建模缺口，队列无同项，不证明修正就可整场获胜。",
+    "first_run": "4Y94N8RDPGPM",
+    "evidence": [
+      {
+        "run": "4Y94N8RDPGPM",
+        "floor": 30,
+        "turn": 2,
+        "role": "support",
+        "note": "早期同型原题plan2预计14毒杀12血第3虫、损0；实际12→3只扣9，玩家82→76，第一处已核above-cap毒预测缺口。"
+      },
+      {
+        "run": "D4LJ9QMGFB8Q",
+        "floor": 20,
+        "turn": 4,
+        "role": "support",
+        "note": "06:38:27.551Z combat/lethal结束，第一只11血12毒只扣9剩2，另一只5血5毒死亡；玩家24→13实损11，T5才杀剩敌。"
+      }
+    ]
+  },
+  {
+    "id": "silent-0213",
+    "claim": "毒结算胜利分支会屏蔽足以先杀死玩家的持牌伤害。求解器先按11/14毒模拟异螨6/1血被清掉，再把winsFight下incomingRaw置0，代码以combat/lethal结束；实际7血0挡、两张各5伤毒素先致死，毒未结算。应区分即刻结束战斗与还要经过玩家回合末的毒终结，并按本角色证据核对玩家存活。",
+    "first_run": "TKXQ6L4N9A6U",
+    "evidence": [
+      {
+        "run": "TKXQ6L4N9A6U",
+        "floor": 22,
+        "turn": 6,
+        "note": "22:36:11.840Z代码结束原话注明enemy turn takes 0 of 7 HP；两毒素各5、0挡、2能量，22:36:13.588Z玩家0，敌仍6/64、1/65且11/14毒未减。当前live turn-solver.ts:2901/:2916/:2939及combat-plan.ts:3278/:3300定位胜利免损及分支先后。",
+        "role": "support"
+      }
+    ]
+  },
+  {
+    "id": "silent-0216",
+    "claim": "POISON_POWER已进入毒结算模型，却没有进入已建模敌增益名单，导致有毒敌人的攻击伤害仍被逐击乘0.8，题面还误称中毒未模拟。T3FW末战T3/T4/T5分别预测14/10/17、实际18/13/23；毒结算本身正确，少报来自攻击折扣。应使已有模型覆盖声明与实际模型一致，不以此保证整场转胜。",
+    "first_run": "K3676LU8B0UH",
+    "evidence": [
+      {
+        "run": "K3676LU8B0UH",
+        "floor": 15,
+        "turn": 1,
+        "note": "更早首证：题面已把7毒结算为7伤、余6毒，却同时把POISON_POWER列not_modelled、攻击按80%计。C48尚无毒模型的保守折扣另作背景，不充当本项首证。",
+        "role": "support"
+      },
+      {
+        "run": "K3676LU8B0UH",
+        "floor": 17,
+        "turn": 2,
+        "note": "只有中毒被列未知，11毒已经正确预测；两打击实际210→204→198，毒后187，总伤23，题面19并预报191，两个6伤攻击各被折为4，少报4。",
+        "role": "support"
+      },
+      {
+        "run": "T3FW7R2R2306",
+        "floor": 8,
+        "turn": 3,
+        "note": "3毒已建模；防御、打击、投掷匕首同线预测14、实际6+9+3=18，少报4。当前live combat-plan.ts:80/:135/:739/:793与turn-solver.ts:1460确认已建模名单漏中毒。",
+        "role": "support"
+      },
+      {
+        "run": "T3FW7R2R2306",
+        "floor": 8,
+        "turn": 5,
+        "note": "T4预测10对实际13；T5匕首雨两击、打击及5毒预测17、实际23，逐击0.8分别使两轮少报3/6。不是旧施毒遗漏、毒上限或毒杀漏持牌伤。",
+        "role": "support"
+      }
+    ]
+  },
+  {
+    "id": "silent-0217",
+    "claim": "升级预览用无关键词的rules_text渲染升级后全文，丢失暴露EXPOSE升级后依然保留的消耗，把一次性牌误呈现成可反复使用。P5HT1272P5SB F24大脑明确按可复用评价并锻造，F25实际暴露+仍显示消耗。只读live定位agent/src/hand/screens/oneshot.ts:324、340、343；这是题面事实错误，与旧silent-0066的易伤模型缺口分账，不证明更正后能转胜。",
+    "first_run": "KAY522KT5NXR",
+    "evidence": [
+      {
+        "run": "KAY522KT5NXR",
+        "floor": 44,
+        "role": "support",
+        "note": "rest/plan o1:c29完整预览从2易伤且消耗变为3易伤但省去消耗；这是静默历史最早可核对的同型完整错误预览。当时选择升级萎靡，没有实际选暴露。"
+      },
+      {
+        "run": "KAY522KT5NXR",
+        "floor": 47,
+        "role": "support",
+        "note": "同型暴露升级预览再现，实际选择回血；不能将该局选择归为暴露误用。"
+      },
+      {
+        "run": "P5HT1272P5SB",
+        "floor": 24,
+        "role": "support",
+        "note": "rest/plan o1:c14升级后省去消耗，大脑理由明确称暴露变得可复用，选择锻造暴露，40血不变。"
+      },
+      {
+        "run": "P5HT1272P5SB",
+        "floor": 25,
+        "turn": 2,
+        "role": "support",
+        "note": "run.deck及实际手牌暴露+均显示3易伤、消耗，随后施放；与F24升级后预览不一致。"
+      }
+    ]
+  },
+  {
+    "id": "silent-0218",
+    "claim": "勒紧FASTEN未接入同一出牌方案中后续防御DEFEND_SILENT的额外格挡，只按未知具体效果的能力牌固定价值处理。P5HT1272P5SB F25 T9先勒紧再防御的原线预计余血-14，实际防御9变13、结束题余血-10，少算4挡。agent/src/reflex/card-model.ts:932—935及1031缺FASTEN接线，turn-solver.ts:1925不增加该增量。与silent-0143已知真实机制分账；修正4挡仍不足救活3血对26攻击。",
+    "first_run": "HSX4HYATB4E2",
+    "evidence": [
+      {
+        "run": "HSX4HYATB4E2",
+        "floor": 20,
+        "turn": 1,
+        "role": "support",
+        "note": "选线候选勒紧→防御→后空翻报10格挡，遗漏已观察勒紧的防御增量；原选plan1没有防御，不把未选候选写成实际执行。"
+      },
+      {
+        "run": "HSX4HYATB4E2",
+        "floor": 31,
+        "turn": 2,
+        "role": "support",
+        "note": "Jev完整执行勒紧→坚韧之环→爆发→防御；预计15挡损2，真实先5挡再两次9挡至23，45血维持45。双次防御合少报8，勒紧建立FASTEN_POWER4后防御牌面5→9。"
+      },
+      {
+        "run": "P5HT1272P5SB",
+        "floor": 25,
+        "turn": 9,
+        "role": "support",
+        "note": "同线打击→勒紧→防御，3血面对幻象26撞击；原题余血-14，勒紧实建4使防御9→13，真实得13挡，重读结束题余血-10；完整需损13、仍差10血。"
+      }
+    ]
+  },
+  {
+    "id": "silent-0234",
+    "claim": "迷雾HAZE未进入card-model的施毒ID名单，已有全体目标施毒路径收不到它的PoisonPower。DUZUBAJ3A8GP F27 T4/T5原线分别预测2/7、实际结算8/13，各独立漏6毒伤，损血3/9均正确。当前live agent/src/reflex/card-model.ts:909及1063定位；与已修常规毒模型silent-0008及蛇咬漏毒silent-0219分账，不以此保证整场转胜。",
+    "first_run": "T082DRCUHRRD",
+    "evidence": [
+      {
+        "run": "T082DRCUHRRD",
+        "floor": 46,
+        "turn": 4,
+        "note": "最早静默在手HAZE+证据：原线毒雾/迷雾+/暴露预计0伤，实际迷雾使猫头鹰法官毒6→12、本体61不变，建立2虚弱。",
+        "role": "support"
+      },
+      {
+        "run": "DUZUBAJ3A8GP",
+        "floor": 27,
+        "turn": 4,
+        "note": "迷雾+→勒紧→防御预计扣2损3，实际毒2→8、扣8损3，独立漏6。",
+        "role": "support"
+      },
+      {
+        "run": "DUZUBAJ3A8GP",
+        "floor": 27,
+        "turn": 5,
+        "note": "生存者→防御→迷雾+预计扣7损9，实际毒7→13、扣13损9，再独立漏6。",
+        "role": "support"
+      }
+    ]
+  },
+  {
+    "id": "silent-0237",
+    "claim": "神化APOTHEOSIS在出牌模型中只得到未建模技能的固定价值，没有将已观察升级效果传播到同一方案的剩余手牌和后续抽牌。VLZ F43同一后续牌序原预测43伤/损14，神化实打后重问51伤/损13且兑现，独立少报8伤、多报1血损；F45首题仍标未建模并未施放。修复不等于本局整场可获胜。",
+    "first_run": "VPW8YH7A4QFM",
+    "evidence": [
+      {
+        "run": "VPW8YH7A4QFM",
+        "floor": 35,
+        "turn": 1,
+        "note": "2026-10-06T16:13:28.862Z，带神化候选标unmodelled_cards；F38/F39仍如此。旧复盘只记未施放，未独立登记模型缺口。",
+        "role": "support"
+      },
+      {
+        "run": "VLZ6CCT8AQ0A",
+        "floor": 43,
+        "turn": 1,
+        "note": "decisions269706/269707；states275679→275687。同一后续牌序43/14→51/13并实际兑现。",
+        "role": "support"
+      },
+      {
+        "run": "VLZ6CCT8AQ0A",
+        "floor": 45,
+        "turn": 1,
+        "note": "decisions269748，神化候选未建模；实选不打神化，喝痊愈药水后代码执行必备工具/生存者，states275731→275732仅余神化被弃掉。",
+        "role": "support"
+      }
+    ]
+  },
+  {
+    "id": "silent-0254",
+    "claim": "自动局报只由COMBAT决策建立战斗窗口，静默开场尚未出牌便死亡的新战斗会漏掉，death_fight与死亡小节误用上一场已获胜战斗。应以同局原始状态与GAME_OVER定位无动作战斗，保留死亡房间、敌人及开场损失来源，不能以最后出牌对象替代致死场景。",
+    "first_run": "TXZ6RVMQA09D",
+    "evidence": [
+      {
+        "run": "TXZ6RVMQA09D",
+        "floor": 49,
+        "turn": 1,
+        "role": "support",
+        "note": "runs:587误记AEONGLASS；states:281563 F48胜后4/62，281565—281566 F49 TEST_SUBJECT #C65 111/111、4→0，决策仅275405 GAME_OVER finalize。live ops/report.py:130/:337/:380按最后有决策战斗写死因。"
+      }
+    ]
+  }
+]

@@ -1,0 +1,179 @@
+非战变化
+290219 F 1 56 [] → 290220 F 1 56 [[0, 'ATTACK_POTION']] SL False
+290284 F 6 43 [] → 290285 F 6 43 [[0, 'ENERGY_POTION']] SL False
+290289 F 7 43 [[0, 'ENERGY_POTION']] → 290290 F 7 64 [[0, 'ENERGY_POTION']] SL False
+290313 F 8 64 [] → 290314 F 8 64 [[0, 'STRENGTH_POTION']] SL False
+290355 F 12 51 [] → 290356 F 12 51 [[0, 'GLOWWATER_POTION']] SL False
+290384 F 13 47 [] → 290385 F 13 47 [[0, 'SWIFT_POTION']] SL False
+290429 F 15 33 [] → 290430 F 15 33 [[0, 'BLOCK_POTION']] SL False
+290434 F 16 33 [[0, 'BLOCK_POTION']] → 290435 F 16 54 [[0, 'BLOCK_POTION']] SL False
+290487 F 17 15 [] → 290488 F 17 15 [[0, 'REGEN_POTION']] SL False
+290491 F 17 15 [[0, 'REGEN_POTION']] → 290492 F 18 59 [[0, 'REGEN_POTION']] SL False
+290583 F 24 46 [] → 290584 F 24 46 [[0, 'FOUL_POTION']] SL False
+290584 F 24 46 [[0, 'FOUL_POTION']] → 290585 F 24 46 [[0, 'FOUL_POTION'], [1, 'FOUL_POTION']] SL False
+290589 F 25 46 [[0, 'FOUL_POTION'], [1, 'FOUL_POTION']] → 290590 F 25 46 [[1, 'FOUL_POTION']] SL False
+290598 F 27 46 [[1, 'FOUL_POTION']] → 290599 F 27 46 [] SL False
+290604 F 27 46 [] → 290605 F 27 46 [[0, 'DEXTERITY_POTION']] SL False
+290605 F 27 46 [[0, 'DEXTERITY_POTION']] → 290606 F 27 46 [[0, 'DEXTERITY_POTION'], [1, 'FIRE_POTION']] SL False
+290650 F 29 45 [] → 290651 F 29 45 [[0, 'OROBIC_ACID']] SL False
+290681 F 30 44 [] → 290682 F 30 44 [[0, 'DEXTERITY_POTION']] SL False
+290691 F 32 44 [[0, 'DEXTERITY_POTION']] → 290692 F 32 65 [[0, 'DEXTERITY_POTION']] SL False
+290771 F 33 5 [] → 290772 F 34 57 [] SL False
+290813 F 35 10 [] → 290814 F 35 10 [[0, 'EXPLOSIVE_AMPOULE']] SL False
+290822 F 36 10 [[0, 'EXPLOSIVE_AMPOULE']] → 290823 F 36 10 [] SL False
+290823 F 36 10 [] → 290824 F 36 10 [[0, 'DEXTERITY_POTION']] SL False
+290824 F 36 10 [[0, 'DEXTERITY_POTION']] → 290825 F 36 10 [[0, 'DEXTERITY_POTION'], [1, 'FORTIFIER']] SL False
+290904 F 39 9 [] → 290905 F 39 9 [[0, 'POWER_POTION']] SL False
+290909 F 40 9 [[0, 'POWER_POTION']] → 290910 F 40 30 [[0, 'POWER_POTION']] SL False
+290916 F 42 30 [[0, 'POWER_POTION']] → 290917 F 42 51 [[0, 'POWER_POTION']] SL False
+290966 F 47 37 [] → 290967 F 47 58 [] SL False
+291087 F 49 3 [] → 291088 F 49 10 [] SL True
+291120 F 49 1 [] → 291121 F 49 10 [] SL True
+291161 F 49 1 [] → 291162 F 49 10 [] SL True
+291211 F 49 1 [] → 291212 F 49 10 [] SL True
+291274 F 49 4 [] → 291275 F 49 10 [] SL True
+战内药水
+F/T 2 1 lines 290228 290229 [[0, 'ATTACK_POTION']] → []
+F/T 8 1 lines 290298 290299 [[0, 'ENERGY_POTION']] → []
+F/T 9 1 lines 290323 290324 [[0, 'STRENGTH_POTION']] → []
+F/T 13 2 lines 290368 290369 [[0, 'GLOWWATER_POTION']] → []
+F/T 14 1 lines 290392 290393 [[0, 'SWIFT_POTION']] → []
+F/T 17 2 lines 290445 290446 [[0, 'BLOCK_POTION']] → []
+F/T 19 1 lines 290501 290502 [[0, 'REGEN_POTION']] → []
+F/T 29 1 lines 290618 290619 [[0, 'DEXTERITY_POTION'], [1, 'FIRE_POTION']] → [[1, 'FIRE_POTION']]
+F/T 29 2 lines 290623 290624 [[1, 'FIRE_POTION']] → []
+F/T 30 1 lines 290658 290659 [[0, 'OROBIC_ACID']] → []
+F/T 33 2 lines 290703 290704 [[0, 'DEXTERITY_POTION']] → []
+F/T 37 1 lines 290835 290836 [[0, 'DEXTERITY_POTION'], [1, 'FORTIFIER']] → [[1, 'FORTIFIER']]
+F/T 37 4 lines 290849 290850 [[1, 'FORTIFIER']] → []
+F/T 46 3 lines 290941 290942 [[0, 'POWER_POTION']] → []
+boss逐轮：轮初敌剩/至下一轮初净敌HP变化/玩家净损，包含轮初被动、结算和回血，不是毛伤
+seq 9 F 17
+1 need 221 netdmg 25 hp 54 → 54 lines 290437 290442
+2 need 196 netdmg 18 hp 54 → 53 lines 290442 290447
+3 need 178 netdmg 14 hp 53 → 47 lines 290447 290451
+4 need 164 netdmg 20 hp 47 → 47 lines 290451 290455
+5 need 144 netdmg 4 hp 47 → 47 lines 290455 290460
+6 need 140 netdmg 34 hp 47 → 47 lines 290460 290463
+7 need 106 netdmg 15 hp 47 → 25 lines 290463 290467
+8 need 91 netdmg 15 hp 25 → 25 lines 290467 290473
+9 need 76 netdmg 21 hp 25 → 25 lines 290473 290475
+10 need 55 netdmg 2 hp 25 → 15 lines 290475 290479
+11 need 53 netdmg 31 hp 15 → 15 lines 290479 290483
+12 need 22 netdmg 22 hp 15 → 15 lines 290483 290486
+seq 15 F 33
+1 need 399 netdmg 64 hp 65 → 65 lines 290694 290700
+2 need 335 netdmg 22 hp 65 → 57 lines 290700 290706
+3 need 313 netdmg 12 hp 57 → 57 lines 290706 290712
+4 need 301 netdmg -30 hp 57 → 54 lines 290712 290714
+5 need 331 netdmg 9 hp 54 → 54 lines 290714 290721
+6 need 322 netdmg 5 hp 54 → 40 lines 290721 290726
+7 need 317 netdmg 12 hp 40 → 28 lines 290726 290733
+8 need 305 netdmg 12 hp 28 → 28 lines 290733 290738
+9 need 293 netdmg 48 hp 28 → 28 lines 290738 290745
+10 need 245 netdmg 64 hp 28 → 21 lines 290745 290751
+11 need 181 netdmg 41 hp 21 → 10 lines 290751 290757
+12 need 140 netdmg 95 hp 10 → 5 lines 290757 290764
+13 need 45 netdmg 45 hp 5 → 5 lines 290764 290767
+seq 16 F 35
+1 need 172 netdmg 52 hp 57 → 57 lines 290775 290781
+2 need 120 netdmg 0 hp 57 → 57 lines 290781 290785
+3 need 120 netdmg 15 hp 57 → 57 lines 290785 290790
+4 need 105 netdmg 15 hp 57 → 47 lines 290790 290795
+5 need 90 netdmg 43 hp 47 → 21 lines 290795 290799
+6 need 47 netdmg 17 hp 21 → 21 lines 290799 290806
+7 need 30 netdmg 28 hp 21 → 10 lines 290806 290811
+8 need 2 netdmg 2 hp 10 → 10 lines 290811 290812
+seq 20 F 48
+1 need 630 netdmg 64 hp 58 → 58 lines 290969 290977
+2 need 566 netdmg 50 hp 58 → 58 lines 290977 290980
+3 need 516 netdmg 15 hp 58 → 48 lines 290980 290984
+4 need 501 netdmg 26 hp 48 → 48 lines 290984 290990
+5 need 475 netdmg 79 hp 48 → 48 lines 290990 290995
+6 need 396 netdmg 90 hp 48 → 18 lines 290995 290999
+7 need 306 netdmg 99 hp 18 → 18 lines 290999 291005
+8 need 207 netdmg 82 hp 18 → 14 lines 291005 291009
+9 need 125 netdmg 69 hp 14 → 10 lines 291009 291016
+10 need 56 netdmg 56 hp 10 → 10 lines 291016 291019
+seq 21 F 49
+1 need 535 netdmg 12 hp 10 → 8 lines 291021 291035
+2 need 523 netdmg 15 hp 8 → 8 lines 291035 291044
+3 need 508 netdmg 41 hp 8 → 8 lines 291044 291050
+4 need 467 netdmg 8 hp 8 → 7 lines 291050 291056
+5 need 459 netdmg 35 hp 7 → 6 lines 291056 291064
+6 need 424 netdmg 15 hp 6 → 6 lines 291064 291067
+7 need 409 netdmg 45 hp 6 → 3 lines 291067 291072
+8 need 364 netdmg 53 hp 3 → 3 lines 291072 291080
+9 need 311 netdmg 51 hp 3 → 3 lines 291080 291084
+10 need 260 netdmg None hp 3 → None lines 291084 None
+seq 22 F 49
+1 need 535 netdmg 28 hp 10 → 3 lines 291088 291099
+2 need 507 netdmg 0 hp 3 → 1 lines 291099 291109
+3 need 507 netdmg 32 hp 1 → 1 lines 291109 291115
+4 need 475 netdmg None hp 1 → None lines 291115 None
+seq 23 F 49
+1 need 535 netdmg 20 hp 10 → 10 lines 291121 291132
+2 need 515 netdmg 5 hp 10 → 2 lines 291132 291141
+3 need 510 netdmg 36 hp 2 → 2 lines 291141 291148
+4 need 474 netdmg 23 hp 2 → 1 lines 291148 291154
+5 need 451 netdmg None hp 1 → None lines 291154 None
+seq 24 F 49
+1 need 535 netdmg 12 hp 10 → 8 lines 291162 291173
+2 need 523 netdmg 0 hp 8 → 8 lines 291173 291182
+3 need 523 netdmg 32 hp 8 → 8 lines 291182 291188
+4 need 491 netdmg 20 hp 8 → 1 lines 291188 291194
+5 need 471 netdmg 28 hp 1 → 1 lines 291194 291200
+6 need 443 netdmg 12 hp 1 → 1 lines 291200 291203
+7 need 431 netdmg 40 hp 1 → 1 lines 291203 291208
+8 need 391 netdmg None hp 1 → None lines 291208 None
+seq 25 F 49
+1 need 535 netdmg 12 hp 10 → 8 lines 291212 291224
+2 need 523 netdmg 5 hp 8 → 8 lines 291224 291233
+3 need 518 netdmg 51 hp 8 → 8 lines 291233 291239
+4 need 467 netdmg 8 hp 8 → 7 lines 291239 291245
+5 need 459 netdmg 35 hp 7 → 6 lines 291245 291253
+6 need 424 netdmg 15 hp 6 → 6 lines 291253 291256
+7 need 409 netdmg 46 hp 6 → 4 lines 291256 291262
+8 need 363 netdmg 58 hp 4 → 4 lines 291262 291270
+9 need 305 netdmg None hp 4 → None lines 291270 None
+seq 26 F 49
+1 need 535 netdmg 12 hp 10 → 8 lines 291275 291287
+2 need 523 netdmg 5 hp 8 → 8 lines 291287 291296
+3 need 518 netdmg 51 hp 8 → 8 lines 291296 291302
+4 need 467 netdmg 8 hp 8 → 7 lines 291302 291308
+5 need 459 netdmg 31 hp 7 → 7 lines 291308 291315
+6 need 428 netdmg 15 hp 7 → 7 lines 291315 291318
+7 need 413 netdmg 46 hp 7 → 7 lines 291318 291323
+8 need 367 netdmg 58 hp 7 → 3 lines 291323 291332
+9 need 309 netdmg 53 hp 3 → 3 lines 291332 291336
+10 need 256 netdmg 12 hp 3 → 0 lines 291336 291342
+选项投影/整场模拟
+283701 1 boss_sim {}
+chosen  None None None
+283764 7 boss_sim {"boss": "SOUL_FYSH", "asc": 10, "entry_hp": 48, "entry_source": "route", "samples": 632, "requested": 1000, "timed_out": true, "workers": 24, "orders": 1, "sim_ms": 11092, "ms": 11110, "base": {"win": 0, "win_cal": 0, "hp_loss_won": null, "turns": 12, "boss_left": 74.8006}, "options": {"o0": {"win": 0.0079, "win_cal": 0.0079, "diff_cal": 0.0079, "se_cal": 0.0035, "diff_raw": 0.0079, "se_raw": 0.0035, "hp_loss_won": 66, "turns": 17, "hp": 69, "boss_left": 54.4272, "boss_left_diff": -20.3734, "boss_left_se": 0.539}, "o1:c0": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 12, "hp": 48, "boss_left": 69.5253, "boss_left_diff": -5.2753, "boss_left_se": 0.1467}, "o1:c5": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 12, "hp": 48, "boss_left": 70.9921, "boss_left_diff": -3.8085, "boss_left_se": 0.3441}, "o1:c10": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "
+chosen o0 休息 打本幕 boss（灵魂异鱼，A10）的模拟：当前牌组胜率 0%；选这个（进场 69 血） 1%（+0.8 ± 0.4），赢局掉血中位 66，约 17 回合；boss 平均剩血 54（当前牌组 75，−20.4 ± 0.5）（632 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；回血后 HP 64/70，进场血量按它投影 {'current_hp': 43, 'after_action_hp': 64, 'after_action_max_hp': 70, 'immediate_hp_gain': 21, 'projected_boss_hp': 69, 'simulated_entry_hp': 69, 'entry_source': 'route', 'projection_exhausted_at': None, 'assumed_future_heal_floors': [12, 16], 'note': '这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。', 'evidence': 'LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。'}
+283823 11 boss_sim {"boss": "SOUL_FYSH", "asc": 10, "entry_hp": 38, "entry_source": "route", "samples": 824, "requested": 1000, "timed_out": true, "workers": 24, "orders": 1, "sim_ms": 11088, "ms": 11096, "base": {"win": 0.0316, "win_cal": 0.0316, "hp_loss_won": 34.5, "turns": 12, "boss_left": 77.9697}, "options": {"o0": {"win": 0.3374, "win_cal": 0.3374, "diff_cal": 0.3058, "se_cal": 0.0161, "diff_raw": 0.3058, "se_raw": 0.0161, "hp_loss_won": 51, "turns": 12, "hp": 57, "boss_left": 25.5874, "boss_left_diff": -52.3823, "boss_left_se": 0.8736}, "o1:c0": {"win": 0.0425, "win_cal": 0.0425, "diff_cal": 0.0109, "se_cal": 0.0036, "diff_raw": 0.0109, "se_raw": 0.0036, "hp_loss_won": 34, "turns": 12, "hp": 38, "boss_left": 74.1505, "boss_left_diff": -3.8192, "boss_left_se": 0.2494}, "o1:c5": {"win": 0.057, "win_cal": 0.057, "diff_cal": 0.0255, "se_cal": 0.006, "diff_raw": 0.0255, "se_raw": 0.006, "hp_loss_won": 35, "turns": 12, "hp": 38, "boss_left": 69.0862, "boss_left_diff": -8.8835, "boss_left_se": 0.6099}, "o1:c10": {"win": 0.074, "win_cal": 0.074, "diff_c
+chosen o1:c21 锻造 打本幕 boss（灵魂异鱼，A10）的模拟：当前牌组胜率 3%；选这个 13%（+9.5 ± 1），赢局掉血中位 35，约 12 回合；boss 平均剩血 62（当前牌组 78，−15.8 ± 0.3）（824 次模拟，校准后；当前牌组胜率很低，胜率的差信息少） {'current_hp': 51, 'after_action_hp': 51, 'after_action_max_hp': 70, 'immediate_hp_gain': 0, 'projected_boss_hp': 38, 'simulated_entry_hp': 38, 'entry_source': 'route', 'projection_exhausted_at': None, 'assumed_future_heal_floors': [16], 'note': '这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。', 'evidence': 'LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。', 'entry_hp_tied_with': ['o1:c0', 'o1:c5', 'o1:c10', 'o1:c11', 'o1:c13', 'o1:c14', 'o1:c15', 'o1:c16', 'o1:c17', 'o1:c18', 'o1:c19', 'o1:c20'], 'entry_hp_tie_note': '仅boss模拟输入血量指标并列；即时血量、牌组、路线风险和整局价值仍可能不同。'}
+283902 16 boss_sim {"boss": "SOUL_FYSH", "asc": 10, "entry_hp": 33, "entry_source": "route", "samples": 408, "requested": 1000, "timed_out": true, "workers": 24, "orders": 1, "sim_ms": 11098, "ms": 11105, "base": {"win": 0.5196, "win_cal": 0.5196, "hp_loss_won": 27, "turns": 11, "boss_left": 24.6078}, "options": {"o0": {"win": 0.9681, "win_cal": 0.9681, "diff_cal": 0.4485, "se_cal": 0.0247, "diff_raw": 0.4485, "se_raw": 0.0247, "hp_loss_won": 34, "turns": 11, "hp": 54, "boss_left": 0.7843, "boss_left_diff": -23.8235, "boss_left_se": 1.5709}, "o1:c0": {"win": 0.5539, "win_cal": 0.5539, "diff_cal": 0.0343, "se_cal": 0.0119, "diff_raw": 0.0343, "se_raw": 0.0119, "hp_loss_won": 27, "turns": 11, "hp": 33, "boss_left": 22.8505, "boss_left_diff": -1.7574, "boss_left_se": 0.4406}, "o1:c5": {"win": 0.5858, "win_cal": 0.5858, "diff_cal": 0.0662, "se_cal": 0.015, "diff_raw": 0.0662, "se_raw": 0.015, "hp_loss_won": 27, "turns": 11, "hp": 33, "boss_left": 21.5147, "boss_left_diff": -3.0931, "boss_left_se": 0.8765}, "o1:c10": {"win": 0.6642, "win_cal": 0.6642, "diff_
+chosen o0 休息 打本幕 boss（灵魂异鱼，A10）的模拟：当前牌组胜率 52%；选这个（进场 54 血） 97%（+44.9 ± 2.5），赢局掉血中位 34，约 11 回合（408 次模拟，校准后）；回血后 HP 54/70，进场血量按它投影 {'current_hp': 33, 'after_action_hp': 54, 'after_action_max_hp': 70, 'immediate_hp_gain': 21, 'projected_boss_hp': 54, 'simulated_entry_hp': 54, 'entry_source': 'route', 'projection_exhausted_at': None, 'assumed_future_heal_floors': [], 'note': '这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。', 'evidence': 'LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。'}
+283959 18 boss_sim {}
+chosen o2 黄金印 None None
+284071 28 boss_sim {"error": "只跑完 288 次模拟（不足 300 次），选项之间的差噪声太大，不给数字", "ms": 11047}
+chosen o1:c24 锻造 None None
+284150 32 boss_sim {"boss": "KNOWLEDGE_DEMON", "asc": 10, "entry_hp": 44, "entry_source": "route", "samples": 360, "requested": 1000, "timed_out": true, "workers": 24, "orders": 1, "sim_ms": 11053, "ms": 11072, "base": {"win": 0.3778, "win_cal": 0.3778, "hp_loss_won": 35, "turns": 10, "boss_left": 93.4}, "options": {"o0": {"win": 0.6972, "win_cal": 0.6972, "diff_cal": 0.3194, "se_cal": 0.0252, "diff_raw": 0.3194, "se_raw": 0.0252, "hp_loss_won": 47, "turns": 10, "hp": 65, "boss_left": 27.5361, "boss_left_diff": -65.8639, "boss_left_se": 3.9971}, "o1:c0": {"win": 0.3778, "win_cal": 0.3778, "diff_cal": 0, "se_cal": 0.0039, "diff_raw": 0, "se_raw": 0.0039, "hp_loss_won": 35, "turns": 10, "hp": 44, "boss_left": 92.3333, "boss_left_diff": -1.0667, "boss_left_se": 0.3491}, "o1:c4": {"win": 0.3861, "win_cal": 0.3861, "diff_cal": 0.0083, "se_cal": 0.0048, "diff_raw": 0.0083, "se_raw": 0.0048, "hp_loss_won": 34, "turns": 10, "hp": 44, "boss_left": 89.1417, "boss_left_diff": -4.2583, "boss_left_se": 1.3174}, "o1:c9": {"win": 0.4111, "win_cal": 0.4111, "diff_cal":
+chosen o0 休息 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 38%；选这个（进场 65 血） 70%（+31.9 ± 2.5），赢局掉血中位 47，约 10 回合（360 次模拟，校准后）；回血后 HP 65/70，进场血量按它投影 {'current_hp': 44, 'after_action_hp': 65, 'after_action_max_hp': 70, 'immediate_hp_gain': 21, 'projected_boss_hp': 65, 'simulated_entry_hp': 65, 'entry_source': 'route', 'projection_exhausted_at': None, 'assumed_future_heal_floors': [], 'note': '这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。', 'evidence': 'LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。'}
+284216 34 boss_sim {}
+chosen o2 宝石面具 None None
+284350 40 boss_sim {"boss": "QUEEN", "asc": 10, "entry_hp": 51, "entry_source": "route", "samples": 392, "requested": 1000, "timed_out": true, "workers": 24, "orders": 3, "sim_ms": 10664, "ms": 11069, "base": {"win": 0, "win_cal": 0, "hp_loss_won": null, "turns": 3, "boss_left": 520.9796}, "options": {"o0": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 4, "hp": 70, "boss_left": 496.4847, "boss_left_diff": -24.4949, "boss_left_se": 2.0886}, "o1:c0": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 51, "boss_left": 520.4847, "boss_left_diff": -0.4949, "boss_left_se": 0.064}, "o1:c4": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 51, "boss_left": 520.5918, "boss_left_diff": -0.3878, "boss_left_se": 0.4867}, "o1:c9": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 51, "boss_left":
+chosen o0 休息 F48→F49连续通关（第一boss 女王，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个（进场 70 血） 0%（+0 ± 0），赢局掉血中位 —，约 4 回合；boss 平均剩血 496（当前牌组 521，−24.5 ± 2.1）（392 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少）；回血后 HP 30/70，进场血量按它投影 {'current_hp': 9, 'after_action_hp': 30, 'after_action_max_hp': 70, 'immediate_hp_gain': 21, 'projected_boss_hp': 70, 'simulated_entry_hp': 70, 'entry_source': 'route', 'projection_exhausted_at': None, 'assumed_future_heal_floors': [42, 47], 'note': '这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。', 'evidence': 'LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。'}
+284357 42 boss_sim {"boss": "QUEEN", "asc": 10, "entry_hp": 51, "entry_source": "route", "samples": 304, "requested": 1000, "timed_out": true, "workers": 24, "orders": 3, "sim_ms": 10504, "ms": 11067, "base": {"win": 0, "win_cal": 0, "hp_loss_won": null, "turns": 3, "boss_left": 511.4112}, "options": {"o0": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 4, "hp": 70, "boss_left": 484.7566, "boss_left_diff": -26.6546, "boss_left_se": 2.3618}, "o1:c0": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 51, "boss_left": 510.7796, "boss_left_diff": -0.6316, "boss_left_se": 0.0736}, "o1:c4": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 51, "boss_left": 510.7533, "boss_left_diff": -0.6579, "boss_left_se": 0.6536}, "o1:c9": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 51, "boss_left"
+chosen o0 休息 F48→F49连续通关（第一boss 女王，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个（进场 70 血） 0%（+0 ± 0），赢局掉血中位 —，约 4 回合；boss 平均剩血 485（当前牌组 511，−26.7 ± 2.4）（304 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少）；回血后 HP 51/70，进场血量按它投影 {'current_hp': 30, 'after_action_hp': 51, 'after_action_max_hp': 70, 'immediate_hp_gain': 21, 'projected_boss_hp': 70, 'simulated_entry_hp': 70, 'entry_source': 'route', 'projection_exhausted_at': None, 'assumed_future_heal_floors': [47], 'note': '这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。', 'evidence': 'LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。'}
+284404 47 boss_sim {"boss": "QUEEN", "asc": 10, "entry_hp": 37, "entry_source": "route", "samples": 312, "requested": 1000, "timed_out": true, "workers": 24, "orders": 3, "sim_ms": 10987, "ms": 11058, "base": {"win": 0, "win_cal": 0, "hp_loss_won": null, "turns": 3, "boss_left": 522.8814}, "options": {"o0": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 4, "hp": 58, "boss_left": 500.234, "boss_left_diff": -22.6474, "boss_left_se": 2.2698}, "o1:c0": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 37, "boss_left": 522.3429, "boss_left_diff": -0.5385, "boss_left_se": 0.0699}, "o1:c4": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 37, "boss_left": 522.0545, "boss_left_diff": -0.8269, "boss_left_se": 0.7099}, "o1:c9": {"win": 0, "win_cal": 0, "diff_cal": 0, "se_cal": 0, "diff_raw": 0, "se_raw": 0, "hp_loss_won": null, "turns": 3, "hp": 37, "boss_left":
+chosen o0 休息 F48→F49连续通关（第一boss 女王，A10；低可信、未经两战校准）：当前牌组胜率 0%；选这个（进场 58 血） 0%（+0 ± 0），赢局掉血中位 —，约 4 回合；boss 平均剩血 500（当前牌组 523，−22.6 ± 2.3）（312 次模拟，未校准连战；当前牌组胜率很低，胜率的差信息少）；回血后 HP 58/70，进场血量按它投影 {'current_hp': 37, 'after_action_hp': 58, 'after_action_max_hp': 70, 'immediate_hp_gain': 21, 'projected_boss_hp': 58, 'simulated_entry_hp': 58, 'entry_source': 'route', 'projection_exhausted_at': None, 'assumed_future_heal_floors': [], 'note': '这是该动作既有血量模型的条件参考，后续营火默认回血，未选动作尚未兑现。boss模拟使用投影进场血量；这不是下一场走廊的胜率。全部选项保留，由DeepSeek选择。', 'evidence': 'LS8035TB32P3 F40/F16（休息题，无回合），silent-0201；关联silent-0019/0020/0139。'}
+用量
+jev n 182 usage {'input_tokens': 969556, 'output_tokens': 8599, 'cache_hit_tokens': 0}
+brain decisions n 54 usage {'input_tokens': 7196250, 'output_tokens': 13968, 'cache_hit_tokens': 5163776}
+independent plans [(2634, 132210, 623, 0)]
+elapsed 3055.59
+reasoning timewindow 2026-10-07T22:20:03.359Z 2026-10-07T23:10:58.949Z
+reasoning matches 0 last 2026-10-06T23:38:26.270Z

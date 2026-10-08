@@ -1,0 +1,2364 @@
+[
+  {
+    "item": "旧V4.1纯bug批次",
+    "commit": "531d15444f5e9c29d85d36ff098f3fbf33e647af",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "fight-value wrapper",
+    "commit": "aba384cc503e53001933fceb688e9d2c24442b19",
+    "historical_paths": [
+      "tests/fight-value-observe.test.ts",
+      "tests/fight_value_observe_test.py",
+      "tools/build-fight-value.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/fight-value-observe.test.ts",
+      "agent/tests/fight_value_observe_test.py",
+      "knowledge/builders/build-fight-value.py"
+    ]
+  },
+  {
+    "item": "旧大脑失败日志及JSON解析",
+    "commit": "6d2ce32a6bf3b7771d93355d7a55eff634785870",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "旧大脑解析补项",
+    "commit": "81de842c8459b425059cf8bc7c1df920d0164ef9",
+    "historical_paths": [
+      "ops/brain-latency.py",
+      "ops/report.py",
+      "ops/stats.py",
+      "ops/version_compare.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tools/boss-sim/report.py",
+      "ops/brain-latency.py",
+      "ops/report.py",
+      "ops/stats.py",
+      "ops/version_compare.py"
+    ]
+  },
+  {
+    "item": "执迷锁牌",
+    "commit": "8f1106a122c871d28b038fe464f9d9a2f2b106d8",
+    "historical_paths": [
+      "experiments/enthralled/control-frames.json",
+      "experiments/enthralled/frames.json",
+      "experiments/enthralled/results.jsonl",
+      "experiments/enthralled/summary.txt",
+      "src/screens/combat-plan.ts",
+      "src/screens/combat.ts",
+      "src/sl/judge.ts",
+      "src/strategy/card-model.ts",
+      "src/strategy/turn-solver.ts",
+      "tests/fix-queue-v4-fix6.test.ts",
+      "tests/logged-states/fix6/enthralled.json",
+      "tools/enthralled-replay.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/combat.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sl/judge.ts",
+      "agent/tests/fix-queue-v4-fix6.test.ts",
+      "agent/tests/logged-states/fix6/enthralled.json",
+      "agent/tools/enthralled-replay.ts"
+    ]
+  },
+  {
+    "item": "波纹水盆",
+    "commit": "d561ecde5ed8e537653ef544c8c9fd44f8cba37e",
+    "historical_paths": [
+      ".gitignore",
+      "docs/sl.md",
+      "experiments/sl-judge-bounds/summary.md",
+      "src/sl/controller.ts",
+      "src/sl/judge.ts",
+      "tests/sl-early-planner.test.ts",
+      "tests/sl-early.test.ts",
+      "tests/sl-giant-judge.test.ts",
+      "tests/sl-judge-bounds-data/boards.json",
+      "tests/sl-judge-bounds-data/game-data.json",
+      "tests/sl-judge-bounds-data/make-fixtures.ts",
+      "tests/sl-judge-bounds.test.ts",
+      "tests/sl-revive-judge.test.ts",
+      "tests/sl-sandpit-judge.test.ts",
+      "tests/sl.test.ts",
+      "tools/sl-judge-bounds-replay.ts",
+      "tools/sl-judge-bounds-summary.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/sl/controller.ts",
+      "agent/src/sl/judge.ts",
+      "agent/tests/death-move-data/game-data.json",
+      "agent/tests/free-offer-data/game-data.json",
+      "agent/tests/free-offer-data/make-fixtures.ts",
+      "agent/tests/inferno-planner-data/game-data.json",
+      "agent/tests/inferno-planner-data/make-fixtures.ts",
+      "agent/tests/logged-states/card-conditions/boards.json",
+      "agent/tests/logged-states/game-data.json",
+      "agent/tests/logged-states/passive/boards.json",
+      "agent/tests/mech-move-data/game-data.json",
+      "agent/tests/pile-power-cost-data/game-data.json",
+      "agent/tests/pile-power-cost-data/make-fixtures.ts",
+      "agent/tests/potion-card-cost-data/game-data.json",
+      "agent/tests/potion-card-cost-data/make-fixtures.ts",
+      "agent/tests/sl-any-draw-data/game-data.json",
+      "agent/tests/sl-any-draw-data/make-fixtures.ts",
+      "agent/tests/sl-draws-data/make-fixtures.ts",
+      "agent/tests/sl-early-data/game-data.json",
+      "agent/tests/sl-early-data/make-fixtures.ts",
+      "agent/tests/sl-early-planner.test.ts",
+      "agent/tests/sl-early.test.ts",
+      "agent/tests/sl-explore-canon-data/game-data.json",
+      "agent/tests/sl-explore-canon-data/make-fixtures.ts",
+      "agent/tests/sl-explore-gaps-data/game-data.json",
+      "agent/tests/sl-explore-gaps-data/make-fixtures.ts",
+      "agent/tests/sl-explore-potion-data/game-data.json",
+      "agent/tests/sl-explore-potion-data/make-fixtures.ts",
+      "agent/tests/sl-explore-whole-data/game-data.json",
+      "agent/tests/sl-explore-whole-data/make-fixtures.ts",
+      "agent/tests/sl-giant-judge.test.ts",
+      "agent/tests/sl-inferno-judge-data/boards.json",
+      "agent/tests/sl-inferno-judge-data/game-data.json",
+      "agent/tests/sl-inferno-judge-data/make-fixtures.ts",
+      "agent/tests/sl-judge-bounds-data/boards.json",
+      "agent/tests/sl-judge-bounds-data/game-data.json",
+      "agent/tests/sl-judge-bounds-data/make-fixtures.ts",
+      "agent/tests/sl-judge-bounds.test.ts",
+      "agent/tests/sl-replay-data/game-data.json",
+      "agent/tests/sl-replay-data/make-fixtures.ts",
+      "agent/tests/sl-retry-data/game-data.json",
+      "agent/tests/sl-retry-data/make-fixtures.ts",
+      "agent/tests/sl-revive-judge-data/boards.json",
+      "agent/tests/sl-revive-judge-data/game-data.json",
+      "agent/tests/sl-revive-judge-data/make-fixtures.ts",
+      "agent/tests/sl-revive-judge.test.ts",
+      "agent/tests/sl-sandpit-judge.test.ts",
+      "agent/tests/sl-second-data/make-fixtures.ts",
+      "agent/tests/sl.test.ts",
+      "agent/tests/template-target-data/game-data.json",
+      "agent/tests/thief-data/game-data.json",
+      "agent/tools/restructure-check/boards.json",
+      "agent/tools/sl-judge-bounds-replay.ts",
+      "agent/tools/sl-judge-bounds-summary.py"
+    ]
+  },
+  {
+    "item": "Codex完整剪裁答案",
+    "commit": "a296b309fe28e189bc925c8c5472616ec29fe37d",
+    "historical_paths": [
+      "src/brain/engines/codex.ts",
+      "tests/brain-codex-session.test.ts",
+      "tests/codex-cut-data/et3v-f42-rest.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/brain/engines/codex.ts",
+      "agent/tests/brain-codex-session.test.ts",
+      "agent/tests/codex-cut-data/et3v-f42-rest.json"
+    ]
+  },
+  {
+    "item": "SL统计及状态闭合",
+    "commit": "af6f07adfee1ad62ec85d613ab36a7b11857ce89",
+    "historical_paths": [
+      ".env.example",
+      "docs/logdb.md",
+      "docs/sl.md",
+      "src/config.ts",
+      "src/project/run-journal.ts",
+      "src/sl/attempts.ts",
+      "src/sl/controller.ts",
+      "src/sl/explore.ts",
+      "tests/logdb_test.py",
+      "tests/sl-explore-second.test.ts",
+      "tests/sl-second-data/7tqf-f33-t4.json",
+      "tests/sl-second-data/7tqf-rows.json",
+      "tests/sl-second-data/make-fixtures.ts",
+      "tests/sl.test.ts",
+      "tools/logdb/extract.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/core/config.ts",
+      "agent/src/memory/run-journal.ts",
+      "agent/src/sl/attempts.ts",
+      "agent/src/sl/controller.ts",
+      "agent/src/sl/explore.ts",
+      "agent/tests/free-offer-data/make-fixtures.ts",
+      "agent/tests/inferno-planner-data/make-fixtures.ts",
+      "agent/tests/logdb_test.py",
+      "agent/tests/pile-power-cost-data/make-fixtures.ts",
+      "agent/tests/potion-card-cost-data/make-fixtures.ts",
+      "agent/tests/sl-any-draw-data/make-fixtures.ts",
+      "agent/tests/sl-draws-data/make-fixtures.ts",
+      "agent/tests/sl-early-data/make-fixtures.ts",
+      "agent/tests/sl-explore-canon-data/make-fixtures.ts",
+      "agent/tests/sl-explore-gaps-data/make-fixtures.ts",
+      "agent/tests/sl-explore-potion-data/make-fixtures.ts",
+      "agent/tests/sl-explore-second.test.ts",
+      "agent/tests/sl-explore-whole-data/make-fixtures.ts",
+      "agent/tests/sl-inferno-judge-data/make-fixtures.ts",
+      "agent/tests/sl-judge-bounds-data/make-fixtures.ts",
+      "agent/tests/sl-replay-data/make-fixtures.ts",
+      "agent/tests/sl-retry-data/make-fixtures.ts",
+      "agent/tests/sl-revive-judge-data/make-fixtures.ts",
+      "agent/tests/sl-second-data/7tqf-f33-t4.json",
+      "agent/tests/sl-second-data/7tqf-rows.json",
+      "agent/tests/sl-second-data/make-fixtures.ts",
+      "agent/tests/sl.test.ts",
+      "agent/tools/boss-sim/extract.py",
+      "agent/tools/logdb/extract.py"
+    ]
+  },
+  {
+    "item": "沙坑连续斩杀",
+    "commit": "85d1e70744489411a597b0b2b6710a45fbe52aa1",
+    "historical_paths": [
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-lethal-continuation.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/brain/tools/types.ts",
+      "agent/src/brain/types.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-lethal-continuation.test.ts"
+    ]
+  },
+  {
+    "item": "刀刃陷阱",
+    "commit": "066f91599bc45161acd0b741a2d3fd8e39af8bfc",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-knife-trap.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-knife-trap.test.ts"
+    ]
+  },
+  {
+    "item": "boss时钟角色隔离",
+    "commit": "8948a2fb87ab90949b2464c59bf6569bd5f3931d",
+    "historical_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/tests/silent-boss-clock.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/tests/silent-boss-clock.test.ts"
+    ]
+  },
+  {
+    "item": "fix-batch任务模板",
+    "commit": "5805dd187b7913a53b9e2645f40db1657eb5213c",
+    "historical_paths": [
+      "agent/tests/learner.test.ts",
+      "learner/tasks/fix-batch.md"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner.test.ts",
+      "learner/tasks/fix-batch.md"
+    ]
+  },
+  {
+    "item": "经验模板及默认live",
+    "commit": "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+    "historical_paths": [
+      "agent/tests/learner-live-tasks.test.ts",
+      "agent/tests/learner.test.ts",
+      "learner/tasks/experience-update.md",
+      "learner/tasks/fix-batch.md"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-live-tasks.test.ts",
+      "agent/tests/learner.test.ts",
+      "learner/tasks/experience-update.md",
+      "learner/tasks/fix-batch.md"
+    ]
+  },
+  {
+    "item": "角色中性前缀",
+    "commit": "6d2de57ceae3def4caf073951ed9d2f9d1544cd7",
+    "historical_paths": [
+      "agent/src/knowledge/render/stats-text.ts",
+      "agent/tests/gkb-render.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/knowledge/render/stats-text.ts",
+      "agent/tests/gkb-render.test.ts"
+    ]
+  },
+  {
+    "item": "流式大日志prompt dump",
+    "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+    "historical_paths": [
+      "agent/tests/deepseek-prompt-dump.test.ts",
+      "agent/tools/deepseek-prompt-dump.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/deepseek-prompt-dump.test.ts",
+      "agent/tools/deepseek-prompt-dump.ts"
+    ]
+  },
+  {
+    "item": "自动经验派发",
+    "commit": "32c3f998bd3dc218f3fcafce5e48ced986445b7e",
+    "historical_paths": [
+      "agent/tests/learner-jobs.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex-ops-learn.py",
+      "ops/codex/lib.ts",
+      "ops/learner_checks.py",
+      "ops/learner_jobs.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-jobs.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex-ops-learn.py",
+      "ops/codex/lib.ts",
+      "ops/learner_checks.py",
+      "ops/learner_jobs.py"
+    ]
+  },
+  {
+    "item": "沙箱测试/完成事件及Inferno夹具",
+    "commit": "5c307224cd7ca34b249acd24f5c050a418a32c6f",
+    "historical_paths": [
+      "agent/package.json",
+      "agent/tests/learner-self-check.test.ts",
+      "agent/tests/turn-start-settle.test.ts",
+      "agent/tools/test-sandbox.sh",
+      "learner/tasks/experience-update.md",
+      "learner/tasks/fix-batch.md",
+      "ops/codex-ops-learn.py",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_checks.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-self-check.test.ts",
+      "agent/tests/turn-start-settle.test.ts",
+      "agent/tools/test-sandbox.sh",
+      "learner/package.json",
+      "learner/tasks/experience-update.md",
+      "learner/tasks/fix-batch.md",
+      "ops/codex-ops-learn.py",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/package.json",
+      "ops/learner_checks.py"
+    ]
+  },
+  {
+    "item": "eval-metrics动作",
+    "commit": "ef46d720c74909aecff9a09ff7e6d443e06cd9d7",
+    "historical_paths": [
+      "agent/tests/learner-jobs.test.ts",
+      "agent/tests/ops-eval-metrics.test.ts",
+      "agent/tests/ops_eval_metrics_test.py",
+      "docs/codex-ops.md",
+      "learner/tasks/fix-batch.md",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex/lib.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-jobs.test.ts",
+      "agent/tests/ops-eval-metrics.test.ts",
+      "agent/tests/ops_eval_metrics_test.py",
+      "learner/tasks/fix-batch.md",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex/lib.ts"
+    ]
+  },
+  {
+    "item": "暴露易伤",
+    "commit": "62e1166475a715f84c4bfe8acd102762b5a3e50e",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-expose.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-expose.test.ts"
+    ]
+  },
+  {
+    "item": "boss跨SL统计",
+    "commit": "3f40af6fffbb37a06e258c0e4b314a9fe8faaede",
+    "historical_paths": [
+      "agent/tests/boss-damage-attempts.test.ts",
+      "agent/tests/boss_damage_attempts_test.py",
+      "knowledge/builders/build-boss-damage.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/boss-damage-attempts.test.ts",
+      "agent/tests/boss_damage_attempts_test.py",
+      "knowledge/builders/build-boss-damage.py"
+    ]
+  },
+  {
+    "item": "融入暗影",
+    "commit": "82c50cc0e41d4206ae272c76a97fbcbe783827a9",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-shadowmeld.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-shadowmeld.test.ts"
+    ]
+  },
+  {
+    "item": "腐蚀波",
+    "commit": "53cc31f453ef441d3770dd7598e3b7f071ea14c5",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-corrosive-wave.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-corrosive-wave.test.ts"
+    ]
+  },
+  {
+    "item": "悔恨",
+    "commit": "3fcb1f5f0c373a04feb807aa9b2bedebe403edcc",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-regret.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-regret.test.ts"
+    ]
+  },
+  {
+    "item": "灵动步法",
+    "commit": "d8a2b0090ba8145c0b6d20bcae700006f01e2c79",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-footwork.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-footwork.test.ts"
+    ]
+  },
+  {
+    "item": "余像",
+    "commit": "e0541ebc4a8786250d08869731fa07d303c0c8b8",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-afterimage.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-afterimage.test.ts"
+    ]
+  },
+  {
+    "item": "暗影步",
+    "commit": "90b1fbebf38f9896ad14ffa1ace80ce9e3feb013",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-shadow-step.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-shadow-step.test.ts"
+    ]
+  },
+  {
+    "item": "胧光怪召唤",
+    "commit": "1e076b173c6874cef4bf90fd13cd3eb33355827a",
+    "historical_paths": [
+      "agent/src/knowledge/monster-db.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/silent-obscura-summon.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/knowledge/monster-db.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/silent-obscura-summon.test.ts"
+    ]
+  },
+  {
+    "item": "毒模型",
+    "commit": "f6c5504a73b2ee3702812a5217dfcda8b14e18aa",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison.test.ts"
+    ]
+  },
+  {
+    "item": "跨SL实验体阶段",
+    "commit": "4ed3c72df30f27b881da637aebf528b97440e0bb",
+    "historical_paths": [
+      "agent/src/knowledge/monster-db.ts",
+      "agent/src/knowledge/render/monster-text.ts",
+      "agent/tests/silent-phase-sequences.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/knowledge/monster-db.ts",
+      "agent/src/knowledge/render/monster-text.ts",
+      "agent/tests/silent-phase-sequences.test.ts"
+    ]
+  },
+  {
+    "item": "tsc运行归档排除",
+    "commit": "7bc835803f2efd44a5cc6f2009933f3c3bee7653",
+    "historical_paths": [
+      "agent/tests/tsconfig-scope.test.ts",
+      "agent/tsconfig.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/tsconfig-scope.test.ts"
+    ]
+  },
+  {
+    "item": "outcome-stats刷新缓存",
+    "commit": "2650aed8baa84b8cf26e1e98b975582a6d5ab537",
+    "historical_paths": [
+      "agent/src/knowledge/experience.ts",
+      "agent/tests/outcome-stats-refresh.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/knowledge/experience.ts",
+      "agent/tests/outcome-stats-refresh.test.ts"
+    ]
+  },
+  {
+    "item": "萎靡X减益",
+    "commit": "0d7465a0962f4e0234530bb390da6ab0fcd5f8e2",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-malaise.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-malaise.test.ts"
+    ]
+  },
+  {
+    "item": "首次开局时间判断重犯",
+    "commit": "2610945b6a2f9ea02cf3a7cd4b5980d24814ac39",
+    "historical_paths": [
+      "agent/tests/learning_ledger_test.py",
+      "agent/tests/ledger-repeats.test.ts",
+      "agent/tests/ledger_repeats_test.py",
+      "eval/learning-curve.py",
+      "learner/ledger.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learning_ledger_test.py",
+      "agent/tests/ledger-repeats.test.ts",
+      "agent/tests/ledger_repeats_test.py",
+      "learner/ledger.py"
+    ]
+  },
+  {
+    "item": "撕咬共享成长",
+    "commit": "8ffd62ef082e59d53440ca9f9eb34184df832157",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-maul.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-maul.test.ts"
+    ]
+  },
+  {
+    "item": "风的女儿",
+    "commit": "907a19f8d03ede74ed135c0395d120ed84232358",
+    "historical_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/tests/silent-daughter-wind-state.json",
+      "agent/tests/silent-daughter-wind.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/tests/silent-daughter-wind-state.json",
+      "agent/tests/silent-daughter-wind.test.ts"
+    ]
+  },
+  {
+    "item": "奖励屏较低终帧",
+    "commit": "098a54719bae87b909b25174a73ccebd68a17a61",
+    "historical_paths": [
+      "agent/tests/monster-terminal-hp.test.ts",
+      "agent/tests/monster_terminal_hp_test.py",
+      "knowledge/builders/build-monster-db.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/monster-terminal-hp.test.ts",
+      "agent/tests/monster_terminal_hp_test.py",
+      "knowledge/builders/build-monster-db.py"
+    ]
+  },
+  {
+    "item": "策略任务及派发",
+    "commit": "afd652a3f75df6e7403439f01c565220327884da",
+    "historical_paths": [
+      "agent/tests/learner-self-check.test.ts",
+      "agent/tests/learner-strategy.test.ts",
+      "learner/tasks/strategy-proposal.md",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-learn.py",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/lib.ts",
+      "ops/learner_checks.py",
+      "ops/learner_jobs.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-self-check.test.ts",
+      "agent/tests/learner-strategy.test.ts",
+      "learner/tasks/strategy-proposal.md",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-learn.py",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/lib.ts",
+      "ops/learner_checks.py",
+      "ops/learner_jobs.py"
+    ]
+  },
+  {
+    "item": "兜底完整补测",
+    "commit": "f670884a188a047bbd3f7f007c260ade62fae36a",
+    "historical_paths": [
+      "agent/tests/learner-fallback-checks.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex-ops-learn.py",
+      "ops/codex/lib.ts",
+      "ops/learner_checks.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-fallback-checks.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-do.sh",
+      "ops/codex-ops-learn.py",
+      "ops/codex/lib.ts",
+      "ops/learner_checks.py"
+    ]
+  },
+  {
+    "item": "单次超时卡死误报",
+    "commit": "a4f4ec868d122dc92af510862c6240cf2eaff2b6",
+    "historical_paths": [
+      "agent/tests/ops-stall-recovery.test.ts",
+      "ops/stall-check.sh"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/ops-stall-recovery.test.ts",
+      "ops/stall-check.sh"
+    ]
+  },
+  {
+    "item": "学习状态锁",
+    "commit": "233ede56047274ba53a4e1191a245fac816c37a8",
+    "historical_paths": [
+      "agent/tests/learner-check-locks.test.ts",
+      "ops/codex-ops-learn.py",
+      "ops/learner_checks.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-check-locks.test.ts",
+      "ops/codex-ops-learn.py",
+      "ops/learner_checks.py"
+    ]
+  },
+  {
+    "item": "账本来源更正接口",
+    "commit": "87c89b7aea90c7275e0fbb04b1e4148a4209630c",
+    "historical_paths": [
+      "agent/tests/learning-ledger-metadata.test.ts",
+      "learner/ledger.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learning-ledger-metadata.test.ts",
+      "learner/ledger.py"
+    ]
+  },
+  {
+    "item": "预判临时敏捷",
+    "commit": "cd55a88517ed1d44c3f8bf64e0c9f2ab14ccb2e2",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-anticipate.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-anticipate.test.ts"
+    ]
+  },
+  {
+    "item": "计算下注",
+    "commit": "3cd9fc6c6b6bfa378508f7bd5ca2219c1088ad39",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-calculated-gamble.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-calculated-gamble.test.ts"
+    ]
+  },
+  {
+    "item": "涂毒",
+    "commit": "e3e7068b028e9d9bb75441b99a973161e9d90f4d",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-envenom.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-envenom.test.ts"
+    ]
+  },
+  {
+    "item": "动作说明与静态回归",
+    "commit": "ed86d537bc1d6f91364abb77156060edb13ab4ba",
+    "historical_paths": [
+      "agent/tests/ops-action-list.test.ts",
+      "docs/codex-ops.md",
+      "ops/codex-ops-do.sh"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/ops-action-list.test.ts",
+      "ops/codex-ops-do.sh"
+    ]
+  },
+  {
+    "item": "药水测试数据隔离",
+    "commit": "e78352f784d39cf25671446348daaada6ef2060b",
+    "historical_paths": [
+      "agent/tests/potion-cost-knowledge.json",
+      "agent/tests/potion-cost.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/potion-cost-knowledge.json",
+      "agent/tests/potion-cost.test.ts"
+    ]
+  },
+  {
+    "item": "异蛇头骨毒雾触发",
+    "commit": "166594ed6b0a0fb206a6cee40bfb208da142d5f1",
+    "historical_paths": [
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/silent-snecko-fumes.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/silent-snecko-fumes.test.ts"
+    ]
+  },
+  {
+    "item": "脆弱下新增敏捷格挡取整",
+    "commit": "71af970600794f87a993df428cdde14dd7809dd7",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-frail-dexterity.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-frail-dexterity.test.ts"
+    ]
+  },
+  {
+    "item": "Codex会话模式隔离误拒子项",
+    "commit": "35565208b4eaae0039daa30abd964c8ef8b0d66a",
+    "historical_paths": [
+      "agent/src/brain/engines/codex-session.ts",
+      "agent/tests/brain-codex-session.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/brain/engines/codex-session.ts",
+      "agent/tests/brain-codex-session.test.ts"
+    ]
+  },
+  {
+    "item": "boss后构筑模拟与低胜率题面",
+    "commit": "de5dd9f17b9bec09934fc3ed2b63082f5d520b5d",
+    "historical_paths": [
+      "docs/boss-sim.md",
+      "src/loop.ts",
+      "src/sim/build-sim-facts.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/7pwu-f17-boss-reward.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/src/sim/build-sim-facts.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/7pwu-f17-boss-reward.json"
+    ]
+  },
+  {
+    "item": "钢笔尖",
+    "commit": "26c1e77269e098f52e215b98f5d4127d17c4fc95",
+    "historical_paths": [
+      "src/screens/combat-plan.ts",
+      "src/sim/boss-start.ts",
+      "src/sim/build-sim-facts.ts",
+      "src/strategy/card-model.ts",
+      "src/strategy/rollout.ts",
+      "src/strategy/turn-solver.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/gsg0-f33-t2-pen-nib.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/src/sim/build-sim-facts.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/gsg0-f33-t2-pen-nib.json"
+    ]
+  },
+  {
+    "item": "魂缚锁牌",
+    "commit": "2864d3612722571bfaf69382435acc4c8800f8c3",
+    "historical_paths": [
+      "src/strategy/card-model.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/4jgp-f48-t2-chains.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/4jgp-f48-t2-chains.json"
+    ]
+  },
+  {
+    "item": "X费串刺零能量",
+    "commit": "7e69e6731b2e66268991b6cd82928a165139bc56",
+    "historical_paths": [
+      "src/strategy/card-model.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/zryr-f39-t1-skewer.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/zryr-f39-t1-skewer.json"
+    ]
+  },
+  {
+    "item": "滚石回合开始稳定等待",
+    "commit": "c301574ee9cfb2018a39b6a15692efb2948241b4",
+    "historical_paths": [
+      "src/project/types.ts",
+      "src/screens/combat-plan.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/jj75-f25-t2-boulder.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/brain/tools/types.ts",
+      "agent/src/brain/types.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/jj75-f25-t2-boulder.json"
+    ]
+  },
+  {
+    "item": "SL重载接受战中选牌屏",
+    "commit": "0660f9972e2edce46b637713863acb62a3400f20",
+    "historical_paths": [
+      "src/sl/reload.ts",
+      "tests/sl.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/sl/reload.ts",
+      "agent/tests/sl.test.ts"
+    ]
+  },
+  {
+    "item": "SL敌人分节名字",
+    "commit": "7564be3661d759ddb6c0595dc940f57567f32807",
+    "historical_paths": [
+      "src/sl/controller.ts",
+      "src/sl/judge.ts",
+      "tests/sl.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/sl/controller.ts",
+      "agent/src/sl/judge.ts",
+      "agent/tests/sl.test.ts"
+    ]
+  },
+  {
+    "item": "无惧疼痛判官虚无格挡",
+    "commit": "a677f159027f3d761067d07d5fe6f41f23e1a70b",
+    "historical_paths": [
+      "docs/sl.md",
+      "src/sl/controller.ts",
+      "src/sl/judge.ts",
+      "src/strategy/card-model.ts",
+      "tests/sl.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/sl/controller.ts",
+      "agent/src/sl/judge.ts",
+      "agent/tests/sl.test.ts"
+    ]
+  },
+  {
+    "item": "果汁持有时B3合成开局",
+    "commit": "7f4759dd3f863ab989ad25f1e6c35699a3979c60",
+    "historical_paths": [
+      "src/sim/boss-start.ts",
+      "tests/boss-sim-build.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/sim/boss-start.ts",
+      "agent/tests/boss-sim-build.test.ts"
+    ]
+  },
+  {
+    "item": "蜥蜴尾巴首次路径",
+    "commit": "8c93fa43927760be3088e1e7fc7dbdd7c0851edf",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL手牌回合末伤害",
+    "commit": "491eaeb5bfb6e779cfe853e1e0e5faddf9f29ef3",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL已知抽牌与随机目标",
+    "commit": "3c95965ce77827b5864254ea46dc25275dff5810",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL下回合自身失血判官",
+    "commit": "fcc89d85209f7855845fc99f315fa1d08cbfd2f7",
+    "historical_paths": [
+      "src/sl/judge.ts",
+      "tests/sl.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/sl/judge.ts",
+      "agent/tests/sl.test.ts"
+    ]
+  },
+  {
+    "item": "SL探寻打击与回放",
+    "commit": "914515cf46390020ff8da4c8a2f1bc50ef0e4652",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "抽牌自身失血/上限判官",
+    "commit": "79ef4eb0446ef3c15d65689c3de756261da19456",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "least-loss回合内自杀",
+    "commit": "08ec8f98fcd9a43df332a5d858c50faf9e9d214a",
+    "historical_paths": [
+      "src/screens/combat-plan.ts",
+      "src/strategy/turn-solver.ts",
+      "tests/batch-b.test.ts",
+      "tests/logged-states/jsa5-f48-t6-blood-wall.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/batch-b.test.ts",
+      "agent/tests/logged-states/jsa5-f48-t6-blood-wall.json"
+    ]
+  },
+  {
+    "item": "SL抽牌换线与首战去重",
+    "commit": "cab3c3f4f4b9d669a091ed7581c34299e2e92b52",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "缩小伤害",
+    "commit": "b0e96183a8798c77676fe83f386042abf2851254",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL整回合去重与护手药水费用",
+    "commit": "f4f4b0d3b666b3802114380bf3a7a4ca6df7cb70",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "尾巴复活后继续受伤",
+    "commit": "91e2219b47f9fc57cede5bf6465111e27a192319",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "巨兽自爆与沙坑判官",
+    "commit": "0727c1cd2d44801b02ed82a36056e166d2ef200f",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL药水位置去重",
+    "commit": "61d236ceeb38a0752da47e15a9d35bd7fc0cf12f",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "小刀出牌目标",
+    "commit": "7023574b375743bb02ff8150952ac9ee5904723b",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL重放/混沌牌堆顶",
+    "commit": "554951daa4908ad2a0116fa9ac928cfbc82a8508",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "狱火判官多层失血",
+    "commit": "3dfc2af7438ce075d80044a7ce4f2675193dab7f",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "狱火求解器多层失血与开局稳定",
+    "commit": "03eedec0b340e6f67363f59d14e3342811af53ff",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL剑柄打击断序与引擎题面",
+    "commit": "ed03f4cee65e1ace987b0aa772b503180b90cabd",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "SL换线执行/最佳参照",
+    "commit": "8939eb0e7511559a765f393a3adf8cc7512d5492",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "乱码路线字段与换线实际一致性",
+    "commit": "0b12aa1a34c6403cdf64e9f92ac7f09c2617ab0f",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "进程扫描竞态假stall",
+    "commit": "9692ea6d632162edbd674fa6d83344e380d15e1b",
+    "historical_paths": [
+      "ops/codex-ops.sh",
+      "ops/stall-check.sh",
+      "paper/materials/decision-log.md"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "ops/codex-ops.sh",
+      "ops/stall-check.sh"
+    ]
+  },
+  {
+    "item": "知识前缀变化误判配置变化",
+    "commit": "d6af9894e4d990db6bbffe08ab4e01044605c52c",
+    "historical_paths": [
+      "src/telemetry/run-config.ts",
+      "tests/run-config.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/eye/run-config.ts",
+      "agent/tests/run-config.test.ts"
+    ]
+  },
+  {
+    "item": "旧事件选项屏重问",
+    "commit": "25ce09bee5576b1adff8baf196fbe8b197a5ef11",
+    "historical_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/tests/event-settle.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/tests/event-settle.test.ts"
+    ]
+  },
+  {
+    "item": "未校准静默时钟事实子项",
+    "commit": "79f7579e29e39e1dcae9e1ea3bdceb53bf9a734b",
+    "historical_paths": [
+      "agent/src/sim/boss-clock.ts",
+      "agent/tests/silent-boss-facts.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/sim/boss-clock.ts",
+      "agent/tests/silent-boss-facts.test.ts"
+    ]
+  },
+  {
+    "item": "CARDS_VIEW覆盖层重复决策",
+    "commit": "518b6880b46db88752f3666ff8471267c3f6638d",
+    "historical_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/tests/cards-view-memo.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/tests/cards-view-memo.test.ts"
+    ]
+  },
+  {
+    "item": "静默阶段结束事实子项",
+    "commit": "1d57f9d0dbbb63603e9ce9768e74cb2021478464",
+    "historical_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/silent-phase-reference.ts",
+      "agent/tests/silent-phase-reference.test.ts",
+      "agent/tests/silent-phase-window-state.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/silent-phase-reference.ts",
+      "agent/tests/silent-phase-reference.test.ts",
+      "agent/tests/silent-phase-window-state.json"
+    ]
+  },
+  {
+    "item": "幻影之刃同方案首刀增伤",
+    "commit": "d65609ff2bc98ec5ec2e06b558159aba89d93032",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-phantom-blades-state.json",
+      "agent/tests/silent-phantom-blades.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-phantom-blades-state.json",
+      "agent/tests/silent-phantom-blades.test.ts"
+    ]
+  },
+  {
+    "item": "音叉技能计数漏算7挡（6EV5V6PJJS9D F39 T3；T082DRCUHRRD F12 T7；silent-0108/0072）",
+    "commit": "dba8d7caf9f2b44dd2fd11fd8861ecc14be4c09b",
+    "historical_paths": [
+      "agent/src/reflex/passive-pieces.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/tests/silent-tuning-fork-state.json",
+      "agent/tests/silent-tuning-fork.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/passive-pieces.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/tests/silent-tuning-fork-state.json",
+      "agent/tests/silent-tuning-fork.test.ts"
+    ]
+  },
+  {
+    "item": "融入暗影+升级分支",
+    "commit": "2184caaab265ebf86c0627aaef39c2e7a170a990",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-shadowmeld.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-shadowmeld.test.ts"
+    ]
+  },
+  {
+    "item": "预判+升级分支",
+    "commit": "d91f9600286a67480b5044e019dbb1041e2239af",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-anticipate.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-anticipate.test.ts"
+    ]
+  },
+  {
+    "item": "策略任务xhigh测试契约",
+    "commit": "d73a29ad5185ae2669260f3e4b1b9e693a122e97",
+    "historical_paths": [
+      "agent/tests/learner-strategy.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-strategy.test.ts"
+    ]
+  },
+  {
+    "item": "爆发增益未进入后续技能推演（silent-0114）",
+    "commit": "dce7dc19c15f8cd1de57a5fffb2011ca1aac2187",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-burst-state.json",
+      "agent/tests/silent-burst.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-burst-state.json",
+      "agent/tests/silent-burst.test.ts"
+    ]
+  },
+  {
+    "item": "持续安全订阅额度采样及周/五小时窗口映射（Roy批准架构）",
+    "commit": "bd41843192173de8344e805de45bfde74b9cfa5c",
+    "historical_paths": [
+      "agent/tests/subscription-usage.test.ts",
+      "ops/codex-ops.sh",
+      "ops/codex/lib.ts",
+      "ops/codex/main.ts",
+      "ops/sample-subscription-usage.ts",
+      "ops/subscription-usage.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/subscription-usage.test.ts",
+      "ops/codex-ops.sh",
+      "ops/codex/lib.ts",
+      "ops/codex/main.ts",
+      "ops/sample-subscription-usage.ts",
+      "ops/subscription-usage.ts"
+    ]
+  },
+  {
+    "item": "五组件token与成本归集、论文表和累计曲线（Roy批准架构）",
+    "commit": "637ed9dc0ef71177cdb480eceacbf7ab2c8988e4",
+    "historical_paths": [
+      "agent/tests/cost-accounting.test.ts",
+      "agent/tests/cost_accounting_test.py",
+      "eval/cost-config.json",
+      "eval/cost.py",
+      "ops/codex-ops.sh",
+      "ops/paper_dataset.py",
+      "paper/data/cost-curve-ironclad.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-ironclad.csv",
+      "paper/data/cost-none.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/materials/ironclad/cost.md",
+      "paper/materials/none/cost.md",
+      "paper/materials/silent/cost.md",
+      "paper/materials/unattributed/cost.md"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/cost-accounting.test.ts",
+      "agent/tests/cost_accounting_test.py",
+      "ops/codex-ops.sh",
+      "ops/paper_dataset.py"
+    ]
+  },
+  {
+    "item": "升级爆发2层技能重复漏入推演；VN7RQJMJEFMX A6 F27 T6、机制silent-0115",
+    "commit": "dafd280bc04f10573cf4205d55e5b80e1400be03",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-burst-upgraded-state.json",
+      "agent/tests/silent-burst.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-burst-upgraded-state.json",
+      "agent/tests/silent-burst.test.ts"
+    ]
+  },
+  {
+    "item": "额度/成本测试在未设置TMPDIR时失败",
+    "commit": "6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a",
+    "historical_paths": [
+      "agent/tests/cost-accounting.test.ts",
+      "agent/tests/cost_accounting_test.py",
+      "agent/tests/subscription-usage.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/cost-accounting.test.ts",
+      "agent/tests/cost_accounting_test.py",
+      "agent/tests/subscription-usage.test.ts"
+    ]
+  },
+  {
+    "item": "补齐成本分层：日志库组件用量/规范额度日志/每局刷新/未归属学习批次（Roy批准架构）",
+    "commit": "83b73312a420f4aff612f017a95dfebace562a4d",
+    "historical_paths": [
+      "agent/tests/component-usage.test.ts",
+      "agent/tests/component_usage_test.py",
+      "agent/tools/logdb/component_usage.py",
+      "agent/tools/logdb/extract.py",
+      "agent/tools/logdb/query.py",
+      "agent/tools/logdb/sync.py",
+      "agent/tools/logdb/views.sql",
+      "docs/logdb.md",
+      "eval/cost.py",
+      "ops/paper_dataset.py",
+      "ops/refresh-costs.py",
+      "ops/report.py",
+      "ops/sample-subscription-usage.ts",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/materials/ironclad/cost.md",
+      "paper/materials/none/cost.md",
+      "paper/materials/silent/cost.md",
+      "paper/materials/unattributed/cost.md"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/component-usage.test.ts",
+      "agent/tests/component_usage_test.py",
+      "agent/tools/boss-sim/extract.py",
+      "agent/tools/boss-sim/report.py",
+      "agent/tools/logdb/component_usage.py",
+      "agent/tools/logdb/extract.py",
+      "agent/tools/logdb/query.py",
+      "agent/tools/logdb/sync.py",
+      "agent/tools/logdb/views.sql",
+      "ops/paper_dataset.py",
+      "ops/refresh-costs.py",
+      "ops/report.py",
+      "ops/sample-subscription-usage.ts"
+    ]
+  },
+  {
+    "item": "旧血量护栏 setup 例外失效子项",
+    "commit": "984b950b3a1f8e099f4a199041eb49635f210a0d",
+    "historical_paths": [
+      "src/screens/combat-plan.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/gtu2-f33-t1-demon-form.json",
+      "tests/rollout-live.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/gtu2-f33-t1-demon-form.json",
+      "agent/tests/rollout-live.test.ts"
+    ]
+  },
+  {
+    "item": "钗 SAI 格挡漏建模",
+    "commit": "16e0b16a3f0c11f6837e02cd9b8e22be841af19b",
+    "historical_paths": [
+      "src/sim/boss-start.ts",
+      "src/sim/build-sim-facts.ts",
+      "src/strategy/boss-clock.ts",
+      "src/strategy/rollout-live.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/8d8d-f48-t1-sai.json"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/src/sim/build-sim-facts.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/8d8d-f48-t1-sai.json"
+    ]
+  },
+  {
+    "item": "迷失鬼火逐能力伤害漏建模",
+    "commit": "c68bf255a5ca8da5806ec89f6f4f1e704590d3f4",
+    "historical_paths": [
+      "src/screens/combat-plan.ts",
+      "src/sim/boss-start.ts",
+      "src/sim/build-sim-facts.ts",
+      "src/strategy/turn-solver.ts",
+      "tests/fix-queue-v4-fix2.test.ts",
+      "tests/logged-states/fix2/8l29-f33-t4-lost-wisp.json",
+      "tests/mech-move-planner.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/src/sim/build-sim-facts.ts",
+      "agent/tests/fix-queue-v4-fix2.test.ts",
+      "agent/tests/logged-states/fix2/8l29-f33-t4-lost-wisp.json",
+      "agent/tests/mech-move-planner.test.ts"
+    ]
+  },
+  {
+    "item": "尾巴回合末复活追踪与 GAME_OVER 虚假 SL 记录",
+    "commit": "e32c8b7584181486ffcf3b70c0ec4f9a5608c17d",
+    "historical_paths": [],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": []
+  },
+  {
+    "item": "Jev计价及TypeSafe全部角色日志核对",
+    "commit": "80199dcc3f7a66bfceeb7d8c028c6c3bad935b7c",
+    "historical_paths": [
+      "agent/tests/jev-cost.test.ts",
+      "agent/tests/jev_cost_test.py",
+      "eval/cost-config.json",
+      "eval/cost.py",
+      "paper/data/cost-curve-ironclad.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-ironclad.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/materials/ironclad/cost.md",
+      "paper/materials/none/cost.md",
+      "paper/materials/silent/cost.md",
+      "paper/materials/unattributed/cost.md"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/jev-cost.test.ts",
+      "agent/tests/jev_cost_test.py"
+    ]
+  },
+  {
+    "item": "缺眩晕后继/伤害预测标未知（silent-0127）",
+    "commit": "631f94856702772a4bc5e27d38ddfc140fb0d714",
+    "historical_paths": [
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/silent-stun-gap.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/silent-stun-gap.test.ts"
+    ]
+  },
+  {
+    "item": "Inferno测试首次读取/真实时间竞态",
+    "commit": "195869aa77dc216de08e6d1c5842782b239cb670",
+    "historical_paths": [
+      "agent/tests/turn-start-settle.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/turn-start-settle.test.ts"
+    ]
+  },
+  {
+    "item": "单行动重复扣挡",
+    "commit": "779c954876d56d08dab92f89f27345c9788e3d87",
+    "historical_paths": [
+      "agent/src/reflex/combat.ts",
+      "agent/tests/silent-single-action-block-state.json",
+      "agent/tests/silent-single-action-block.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat.ts",
+      "agent/tests/silent-single-action-block-state.json",
+      "agent/tests/silent-single-action-block.test.ts"
+    ]
+  },
+  {
+    "item": "herdr关闭注册表竞态",
+    "commit": "526b71cc316bc1824b76500b7003a9c02a725b60",
+    "historical_paths": [
+      "agent/tests/fixtures-herdr/fake-herdr.py",
+      "agent/tests/ops-herdr.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/fixtures-herdr/fake-herdr.py",
+      "agent/tests/ops-herdr.test.ts"
+    ]
+  },
+  {
+    "item": "02:40/03:00预算硬截止与单调时钟传播",
+    "commit": "9889436c3b332a3984cdb7f850a1349f464182d1",
+    "historical_paths": [
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/batch-g.test.ts",
+      "agent/tests/rollout-deadline.test.ts",
+      "agent/tests/target-options.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/batch-g.test.ts",
+      "agent/tests/rollout-deadline.test.ts",
+      "agent/tests/target-options.test.ts"
+    ]
+  },
+  {
+    "item": "升级腐蚀波3层抽牌施毒（2PVLGRBGUX9S F48首T11；silent-0076/0137）",
+    "commit": "a62cf381f26435693ce30548c9433d219f750b02",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-upgraded-wave-card.json",
+      "agent/tests/silent-upgraded-wave.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-upgraded-wave-card.json",
+      "agent/tests/silent-upgraded-wave.test.ts"
+    ]
+  },
+  {
+    "item": "静默专长科学2力2敏捷（2PVLGRBGUX9S F48首T2/T4；silent-0136/0138）",
+    "commit": "32daefc69239c5d23741f35e2f5ce71bef25ebce",
+    "historical_paths": [
+      "agent/src/hand/screens/selection.ts",
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/combat.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/src/sim/build-sim-facts.ts",
+      "agent/src/sim/thief-card-value.ts",
+      "agent/tests/silent-expertise-card.json",
+      "agent/tests/silent-expertise.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/hand/screens/selection.ts",
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/combat.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/src/sim/build-sim-facts.ts",
+      "agent/src/sim/thief-card-value.ts",
+      "agent/tests/silent-expertise-card.json",
+      "agent/tests/silent-expertise.test.ts"
+    ]
+  },
+  {
+    "item": "升级萎靡X+1（LLYSRQQ35AVW F33 T3/F38 T1/F48 T2；silent-0144）",
+    "commit": "d48d16129b10e5060dc9d33a1b96e3340c7b82b8",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-malaise.test.ts",
+      "agent/tests/silent-upgraded-malaise-cards.json",
+      "agent/tests/silent-upgraded-malaise.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-malaise.test.ts",
+      "agent/tests/silent-upgraded-malaise-cards.json",
+      "agent/tests/silent-upgraded-malaise.test.ts"
+    ]
+  },
+  {
+    "item": "空批次被误标失败",
+    "commit": "01b560ef4966da945511bfccd41abd09440fb0e9",
+    "historical_paths": [
+      "agent/tests/learner-empty-fix.test.ts",
+      "ops/learner_checks.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/learner-empty-fix.test.ts",
+      "ops/learner_checks.py"
+    ]
+  },
+  {
+    "item": "再次上线后的重犯统计",
+    "commit": "af5c0fa041fbc5b97174490137301a6f6291d92d",
+    "historical_paths": [
+      "agent/tests/ledger-rerelease.test.ts",
+      "agent/tests/ledger_rerelease_test.py",
+      "learner/ledger.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/ledger-rerelease.test.ts",
+      "agent/tests/ledger_rerelease_test.py",
+      "learner/ledger.py"
+    ]
+  },
+  {
+    "item": "隐秘匕首弃牌/小刀语义",
+    "commit": "b7f081fcc26da4506cb775739bb118cb6cbe4ecc",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-hidden-daggers-evidence.json",
+      "agent/tests/silent-hidden-daggers.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-hidden-daggers-evidence.json",
+      "agent/tests/silent-hidden-daggers.test.ts"
+    ]
+  },
+  {
+    "item": "连续Boss后场血量投影",
+    "commit": "3fe6251b746cebe816b9db3c0d8aa9d6090bec0a",
+    "historical_paths": [
+      "agent/src/hand/screens/route-plan.ts",
+      "agent/src/hand/screens/route-review.ts",
+      "agent/src/memory/run-journal.ts",
+      "agent/src/sim/route-map.ts",
+      "agent/src/sim/route-projection.ts",
+      "agent/tests/route-boss-unknown.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/hand/screens/route-plan.ts",
+      "agent/src/hand/screens/route-review.ts",
+      "agent/src/memory/run-journal.ts",
+      "agent/src/sim/route-map.ts",
+      "agent/src/sim/route-projection.ts",
+      "agent/tests/route-boss-unknown.test.ts"
+    ]
+  },
+  {
+    "item": "精确切击五/六手",
+    "commit": "8b9bacbebb20eaaa1133a9945da6c7abfcda745d",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-precise-cut-evidence.json",
+      "agent/tests/silent-precise-cut.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-precise-cut-evidence.json",
+      "agent/tests/silent-precise-cut.test.ts"
+    ]
+  },
+  {
+    "item": "launch-game成功判读",
+    "commit": "db388125843120321c420cc001503928e17cb5da",
+    "historical_paths": [
+      "agent/tests/ops-mod-state.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/mod-state.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/ops-mod-state.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/mod-state.py"
+    ]
+  },
+  {
+    "item": "mod-state截断及broker UTF8",
+    "commit": "61a921844ff5eb6c08c2e209b9f39ef42cc0d9d3",
+    "historical_paths": [
+      "agent/tests/ops-mod-state-broker.test.ts",
+      "agent/tests/ops-mod-state.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex/main.ts",
+      "ops/mod-state.py"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/ops-mod-state-broker.test.ts",
+      "agent/tests/ops-mod-state.test.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex/main.ts",
+      "ops/mod-state.py"
+    ]
+  },
+  {
+    "item": "余毒支配比较",
+    "commit": "c9aef94df27d100a7e3d32e100d555248dd6be97",
+    "historical_paths": [
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison-dominance.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison-dominance.test.ts"
+    ]
+  },
+  {
+    "item": "精确切击已观测力量范围",
+    "commit": "995a345f935efd6d8ae9f67d16bd2653833344d0",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-precise-cut-strength-evidence.json",
+      "agent/tests/silent-precise-cut-strength.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-precise-cut-strength-evidence.json",
+      "agent/tests/silent-precise-cut-strength.test.ts"
+    ]
+  },
+  {
+    "item": "毒结算9点上限",
+    "commit": "084815374e747cccb3e74bb39002beb1be6ca9f6",
+    "historical_paths": [
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison-cap-evidence.json",
+      "agent/tests/silent-poison-cap.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison-cap-evidence.json",
+      "agent/tests/silent-poison-cap.test.ts"
+    ]
+  },
+  {
+    "item": "钨合金棍逐次减损",
+    "commit": "4367250b5fbf1484ca7ea8f312d13e4ce9d327a2",
+    "historical_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-tungsten-rod-evidence.json",
+      "agent/tests/silent-tungsten-rod.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-tungsten-rod-evidence.json",
+      "agent/tests/silent-tungsten-rod.test.ts"
+    ]
+  },
+  {
+    "item": "士兵翻倍预览消费",
+    "commit": "19e41a26648542b7ad0bce4e70b55f30be532d49",
+    "historical_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-paels-legion-evidence.json",
+      "agent/tests/silent-paels-legion.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-paels-legion-evidence.json",
+      "agent/tests/silent-paels-legion.test.ts"
+    ]
+  },
+  {
+    "item": "飞镖方案内技能离手计数",
+    "commit": "72c1640b3271352e1a744d3997ede4c5fe10e2bd",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-flechettes-evidence.json",
+      "agent/tests/silent-flechettes.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-flechettes-evidence.json",
+      "agent/tests/silent-flechettes.test.ts"
+    ]
+  },
+  {
+    "item": "boss-clock历史测试输入隔离",
+    "commit": "38e95b24efafb862fc09b1fd026626acf481c47d",
+    "historical_paths": [
+      "agent/tests/boss-clock-knowledge.json",
+      "agent/tests/boss-clock.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/tests/boss-clock-knowledge.json",
+      "agent/tests/boss-clock.test.ts"
+    ]
+  },
+  {
+    "item": "单行动题重复折减现场虚弱伤害（silent-0191）",
+    "commit": "c39102521f91e1e95b886935cf27cc8c23d0bf65",
+    "historical_paths": [
+      "agent/src/memory/narrow.ts",
+      "agent/src/reflex/combat.ts",
+      "agent/src/reflex/damage.ts",
+      "agent/tests/silent-single-action-weak-state.json",
+      "agent/tests/silent-single-action-weak.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/memory/narrow.ts",
+      "agent/src/reflex/combat.ts",
+      "agent/src/reflex/damage.ts",
+      "agent/tests/silent-single-action-weak-state.json",
+      "agent/tests/silent-single-action-weak.test.ts"
+    ]
+  },
+  {
+    "item": "臂甲在脆弱下的待触发识别失败（TCFAHJ9K19VY F17首战T2；silent-0192）",
+    "commit": "ec1ceef3acbc168cf03c73c9fb38226b4a0b63b8",
+    "historical_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-vambrace-frail-evidence.json",
+      "agent/tests/silent-vambrace-frail.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-vambrace-frail-evidence.json",
+      "agent/tests/silent-vambrace-frail.test.ts"
+    ]
+  },
+  {
+    "item": "结实绷带弃牌格挡未接入方案推演（silent-0193）",
+    "commit": "3a4c5626434efc909122483769468bba953d63c1",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-tough-bandages-state.json",
+      "agent/tests/silent-tough-bandages.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-tough-bandages-state.json",
+      "agent/tests/silent-tough-bandages.test.ts"
+    ]
+  },
+  {
+    "item": "SL判官遗漏毒伤触发阈值眩晕（silent-0195；KUZVERN40NGK F17第3次T5／第5次T6／末次T6–T7）",
+    "commit": "f6ff3a9ce42337972b19ee227b2d51432e929f50",
+    "historical_paths": [
+      "agent/src/sl/judge.ts",
+      "agent/tests/silent-sl-poison-stun-evidence.json",
+      "agent/tests/silent-sl-poison-stun.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/sl/judge.ts",
+      "agent/tests/silent-sl-poison-stun-evidence.json",
+      "agent/tests/silent-sl-poison-stun.test.ts"
+    ]
+  },
+  {
+    "item": "生成牌即时评分遗漏收场使用条件（silent-0197）",
+    "commit": "62b0e23f0a45b2f331261947cbc9168dde36e39a",
+    "historical_paths": [
+      "agent/src/hand/screens/selection.ts",
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-finale-selection-evidence.json",
+      "agent/tests/silent-finale-selection.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/hand/screens/selection.ts",
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-finale-selection-evidence.json",
+      "agent/tests/silent-finale-selection.test.ts"
+    ]
+  },
+  {
+    "item": "永冻首次能力7挡（silent-0172）",
+    "commit": "157d635cd9e9880d7396e76a15594c6e7f0b0253",
+    "historical_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/src/memory/journal-replay.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/permafrost.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-permafrost-state.json",
+      "agent/tests/silent-permafrost.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/brain/tools/types.ts",
+      "agent/src/brain/types.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/memory/journal-replay.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/permafrost.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-permafrost-state.json",
+      "agent/tests/silent-permafrost.test.ts"
+    ]
+  },
+  {
+    "item": "重放附魔的额外打出漏入跨回合凋萎累计（silent-0199）",
+    "commit": "1ab1ba8dc446e5a12dec0396528c9b2a5b478fe8",
+    "historical_paths": [
+      "agent/src/hand/loop.ts",
+      "agent/src/memory/journal-replay.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/fight-plays.ts",
+      "agent/tests/silent-wither-replay-state.json",
+      "agent/tests/silent-wither-replay.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/brain/tools/types.ts",
+      "agent/src/brain/types.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/memory/journal-replay.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/fight-plays.ts",
+      "agent/tests/silent-wither-replay-state.json",
+      "agent/tests/silent-wither-replay.test.ts"
+    ]
+  },
+  {
+    "item": "羽化生成到抽牌堆被误算为即时抽牌（silent-0202）",
+    "commit": "129853b817c0e985e222b09385a9bfeb0562ec7f",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-metamorphosis-state.json",
+      "agent/tests/silent-metamorphosis.test.ts"
+    ],
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-metamorphosis-state.json",
+      "agent/tests/silent-metamorphosis.test.ts"
+    ]
+  },
+  {
+    "item": "毒杀胜利分支漏算持牌毒素伤害（silent-0213；TKXQ6L4N9A6U F22 T6）",
+    "commit": "2e6fa2e5c68be70efb2ee87bee58f2cb3128bfb2",
+    "historical_paths": [
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison-held-evidence.json",
+      "agent/tests/silent-poison-held.test.ts"
+    ],
+    "test": "agent/tests/silent-poison-held.test.ts",
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-poison-held-evidence.json",
+      "agent/tests/silent-poison-held.test.ts"
+    ]
+  },
+  {
+    "item": "已建模中毒仍触发攻击八折（silent-0216；K3676LU8B0UH F17 T2；T3FW7R2R2306 F8 T3–T5）",
+    "commit": "ffa23c2fba13c1fad114bbdc27dbc8c32f2d8fab",
+    "historical_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-poison-coverage-evidence.json",
+      "agent/tests/silent-poison-coverage.test.ts",
+      "agent/tests/silent-tough-bandages.test.ts"
+    ],
+    "test": "agent/tests/silent-poison-coverage.test.ts",
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-poison-coverage-evidence.json",
+      "agent/tests/silent-poison-coverage.test.ts",
+      "agent/tests/silent-tough-bandages.test.ts"
+    ]
+  },
+  {
+    "item": "升级预览丢失消耗关键词（silent-0217；KAY522KT5NXR F44/F47；P5HT1272P5SB F24/F25 T2）",
+    "commit": "62ee292c7a66466e996424910338aaea8aae6308",
+    "historical_paths": [
+      "agent/src/hand/screens/oneshot.ts",
+      "agent/tests/silent-upgrade-preview.test.ts"
+    ],
+    "test": "agent/tests/silent-upgrade-preview.test.ts",
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/hand/screens/oneshot.ts",
+      "agent/tests/silent-upgrade-preview.test.ts"
+    ]
+  },
+  {
+    "item": "勒紧未增加同方案后续防御格挡（silent-0218；HSX4HYATB4E2 F31 T2；P5HT1272P5SB F25 T9）",
+    "commit": "1912b5e0c2c9d87622f6915d8a299f0ef6222588",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-fasten-evidence.json",
+      "agent/tests/silent-fasten.test.ts"
+    ],
+    "test": "agent/tests/silent-fasten.test.ts",
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-fasten-evidence.json",
+      "agent/tests/silent-fasten.test.ts"
+    ]
+  },
+  {
+    "item": "蛇咬施毒模型遗漏（silent-0219；KAY522KT5NXR F14 T1；KQQELQSZ382Z F17第6次T7）",
+    "commit": "06bb4617e92d4ea5cf75287186223a5b185e4ae3",
+    "historical_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-snakebite-evidence.json",
+      "agent/tests/silent-snakebite.test.ts"
+    ],
+    "test": "agent/tests/silent-snakebite.test.ts",
+    "base_ancestor": true,
+    "live_ancestor": true,
+    "current_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/tests/silent-snakebite-evidence.json",
+      "agent/tests/silent-snakebite.test.ts"
+    ]
+  }
+]

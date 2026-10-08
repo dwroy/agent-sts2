@@ -1,0 +1,83 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/check-imports.test.ts (1 test | 1 failed) 146ms
+     × all resolve 144ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(49) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/brain/build-facts.ts: ../knowledge/relic-values.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/brain/build-facts.ts: ../knowledge/potion-values.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/brain/build-facts.ts: ../memory/deck-profile.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/brain/build-facts.ts: ../memory/types.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/brain/build-facts.ts: ../core/util/json.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/brain/build-facts.ts: ../knowledge/double-boss.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/brain/build-facts.ts: ../memory/fight-plan.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/knowledge/boss-phase.ts: ../hand/mod/schema.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/knowledge/boss-phase.ts: ../core/util/json.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/memory/run-plan.ts: ../knowledge/index.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/memory/run-plan.ts: ../hand/mod/schema.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/memory/run-plan.ts: ./deck.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/memory/run-plan.ts: ./deck-profile.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/memory/run-plan.ts: ../core/util/json.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../knowledge/experience.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../knowledge/outcome-tables.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../knowledge/index.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../knowledge/monster-db.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../knowledge/room-costs.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../hand/mod/schema.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../core/util/json.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../reflex/card-model.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../hand/screens/card-value.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../reflex/passive-pieces.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ./route-projection.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../core/util/data-version.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/boss-clock.ts: ../knowledge/files.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../knowledge/card-upgrades.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../knowledge/monster-db.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../hand/mod/client.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../hand/mod/schema.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../memory/types.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../hand/screens/event.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../hand/screens/oneshot.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../hand/screens/rest.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../hand/screens/route-plan.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../reflex/card-model.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../reflex/rollout.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./route-map.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./route-projection.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../core/util/json.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./boss-start.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./boss-sim.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./build-sim.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./build-sim-pool.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./boss-trust.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./silent-build-win-ties.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ../knowledge/double-boss.js",
++   "learner/runs/20261007-203654-strategy-proposal/phase-source/agent/src/sim/build-sim-facts.ts: ./double-boss-start.js",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 238 passed (239)
+      Tests  1 failed | 2513 passed (2514)
+   Start at  20:47:31
+   Duration  930.94s (transform 6.59s, setup 12.30s, import 29.74s, tests 854.46s, environment 26ms)
+

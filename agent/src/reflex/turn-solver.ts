@@ -9,7 +9,7 @@
  * values, intents); the scoring weights are heuristics tuned from run logs.
  */
 
-import { applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, ourAttackScaled, thisTurnScore, type CardModel } from "./card-model.js";
+import { applyApotheosisUpgrade, applyUpgrade, freeCardPick, giantRockFrom, isStrikeCard, ourAttackScaled, thisTurnScore, type CardModel } from "./card-model.js";
 import { continuationCost } from "./continuation-value.js";
 
 /** Shrink (Beetle Juice on an enemy, SHRINK_POWER): its attacks deal 70% (states.jsonl 23 -> 16, 20 -> 14). */
@@ -874,6 +874,8 @@ export interface Outcome {
   strengthGained: number;
   cardsDrawn: number;
   unknownCards: string[];
+  /** A verified ordinary Silent Apotheosis was actually played on this line. */
+  apotheosisApplied?: true;
   /** Sandpit count after the enemy turn (null when no enemy has one). */
   sandpitAfter: number | null;
   /** Imbalanced enemies whose attack this line fully blocks: stunned, they skip their next move. */
@@ -1154,6 +1156,7 @@ interface Sim {
   vigor: number;
   /** Cards give no Block (NO_BLOCK_POWER already up, or Panic Button played this turn). */
   noBlock: boolean;
+  apotheosisApplied?: true;
 }
 
 /** A known pile's expected value per card drawn, with a spare energy to use it and without. */
@@ -1728,7 +1731,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
     const effects = unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false } : card;
-    resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost);
+    resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
     if (card.type !== "Potion" && serpent !== null && serpent > 0) {
@@ -1912,7 +1915,7 @@ export function musicBoxCopy(card: CardModel): CardModel {
 }
 
 /** A card's effects on the sim (energy and hand already paid). Called twice under Duplication. */
-function resolveEffects(next: Sim, card: CardModel, target: number | null, player: PlayerSim, cost: number): void {
+function resolveEffects(next: Sim, card: CardModel, target: number | null, player: PlayerSim, cost: number, apotheosisAllowed = false): void {
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
   if (card.type !== "Potion" && next.afterImage > 0) gainBlock(next, next.afterImage, player);
@@ -2038,6 +2041,27 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   if (card.special === "forge" && card.upgrades) {
     const upgrades = card.upgrades;
     next.hand = next.hand.map((entry) => (entry.type === "Potion" || entry.upgraded || !upgrades[entry.cardId] ? entry : applyUpgrade(entry, upgrades[entry.cardId]!)));
+  }
+  // VLZ6CCT8AQ0A F35/F43: upgrades are state changes, not a flat bonus for holding the card.
+  if (card.apotheosis) {
+    if (!apotheosisAllowed || player.weak || player.frail || next.shrunk || next.shadowmeld) {
+      next.unknown = [...next.unknown, "神化（重放、自动出牌或属性组合未验证）"];
+    } else {
+      const upgrade = (entry: CardModel) => {
+        const upgraded = applyApotheosisUpgrade(entry);
+        if (!upgraded.upgraded && entry.type !== "Potion" && entry.cardId !== "ASCENDERS_BANE") {
+          next.unknown = [...next.unknown, `${entry.name}（神化升级未验证）`];
+        }
+        return upgraded;
+      };
+      next.hand = next.hand.map(upgrade);
+      next.held = next.held.map(upgrade);
+      next.locked = next.locked.map(upgrade);
+      next.known = next.known?.map(upgrade) ?? null;
+      next.apotheosisApplied = true;
+      // Expected draws have no identity to upgrade; they cannot become a verified continuation.
+      if (!next.known) next.unknown = [...next.unknown, "神化（未知后续抽牌升级未验证）"];
+    }
   }
   // Soldier's Stew: the Strikes played from now on replay; the piles' Strikes later are lasting value.
   if (card.special === "stew") {
@@ -3448,8 +3472,10 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       weakApplied: sim.weakApplied,
       strengthGained: sim.permStrength,
       cardsDrawn: sim.cardsDrawn,
+      ...(sim.apotheosisApplied ? { apotheosisApplied: true as const } : {}),
       unknownCards: [
         ...sim.unknown,
+        ...(sim.apotheosisApplied && sim.drewUnknown ? ["神化（未知后续抽牌升级未验证）"] : []),
         ...(input.player.tungstenRod && !rodVerified && !winsFight ? ["钨合金棍（自身失血或其他减损交互未验证）"] : []),
         ...(input.player.paelsLegionPreview && sim.tempDex !== 0 ? ["佩尔的士兵（方案内新增敏捷组合未验证）"] : []),
       ],
@@ -3534,7 +3560,8 @@ function simKey(sim: Sim): string {
   const hand = sim.hand.map((card) => `${card.cardId}${card.upgraded ? "+" : ""}:${card.cost}`).sort().join(",")
     + (sim.duplicateSkills > 0 ? `#bs${sim.duplicateSkills}` : "")
     + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "")
-    + (sim.noDraw ? "#noDraw" : "");
+    + (sim.noDraw ? "#noDraw" : "")
+    + (sim.apotheosisApplied ? "#apotheosis" : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");

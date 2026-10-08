@@ -1,0 +1,66 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/sl-any-draw.test.ts (13 tests | 2 failed | 11 skipped) 286ms
+     × keeps the unmodelled-card reason after a simulated wall-clock pause 69ms
+     × keeps a deadline-truncated bound uncertain with a controlled advancing clock 215ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sl-any-draw.test.ts > the superset board: every card of the draw pile in hand once a drawing card is played > keeps the unmodelled-card reason after a simulated wall-clock pause
+AssertionError: expected { cards: 15, drawPile: 15, …(7) } to match object { truncated: false, …(2) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "aliveAfterDraw": [
+      "祭品",
+    ],
+-   "timedOut": false,
+-   "truncated": false,
++   "timedOut": true,
++   "truncated": true,
+  }
+
+ ❯ tests/sl-any-draw.test.ts:204:29
+    202|     (((raw["agent_view"] as Raw)["combat"] as Raw)["draw"] as Raw[]).p…
+    203|     const { bound, on, early } = judged(raw);
+    204|     expect(bound?.superset).toMatchObject({ truncated: false, timedOut…
+       |                             ^
+    205|     expect(bound?.superset?.inexact).toContain("MYSTERY_CARD is not mo…
+    206|     expect(on.certain).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/sl-any-draw.test.ts > the superset board: every card of the draw pile in hand once a drawing card is played > keeps a deadline-truncated bound uncertain with a controlled advancing clock
+AssertionError: expected { cards: 14, drawPile: 14, …(7) } to match object { truncated: true, timedOut: true }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "timedOut": true,
+-   "truncated": true,
++   "timedOut": false,
++   "truncated": false,
+  }
+
+ ❯ tests/sl-any-draw.test.ts:215:29
+    213|     const { bound, on, early } = judged(offeringBoard(noBlock), () => …
+    214|     expect(anyDrawOptions.budgetMs).toBe(2_000);
+    215|     expect(bound?.superset).toMatchObject({ truncated: true, timedOut:…
+       |                             ^
+    216|     expect(on.certain).toBe(false);
+    217|     expect(on.reason).toContain("not with any draw: the superset board…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 skipped (13)
+   Start at  13:47:39
+   Duration  2.14s (transform 1.39s, setup 381ms, import 1.29s, tests 286ms, environment 0ms)
+

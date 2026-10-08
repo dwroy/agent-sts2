@@ -1,0 +1,22 @@
+{
+  "source_code_test_and_task_blobs_identical_to_live": true,
+  "paths_compared": [
+    "agent",
+    "learner",
+    "knowledge/builders",
+    "eval",
+    ":(exclude)eval/versions.json",
+    "ops",
+    ":(exclude)ops/inbox-dev.md",
+    "tools",
+    "docs"
+  ],
+  "source_sandbox": {
+    "exit": 0,
+    "files": 245,
+    "cases": 2586,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-053105-experience-update/test-source.log"
+  },
+  "post_merge_sandbox_repeated": false,
+  "reason": "The source commit changes only experience data; original self-tests already passed and live code/test/task blobs match. Generated knowledge refreshes are retained. Full outside checks are requested separately."
+}

@@ -1,0 +1,188 @@
+{
+ "id": "silent-0228",
+ "ts": "2026-10-07T13:32:43+08:00",
+ "character": "silent",
+ "kind": "fight",
+ "claim": "静默A10四局实际赢F48后以8/17/50/2HP及原剩药水进入F49并全败；F48不等于终战。实现同样本实际剩余HP/药水/复活接续、终局HP价值及毒药水持有价，三幕按两战备战；模拟未校准、样本不足，不改变必死/SL规则，也不声称实盘提升。",
+ "evidence": [
+  {
+   "run": "JMH5C51RLN4E",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "F48胜后8HP空药栏进入永世沙漏；最终第6次T1实死。",
+   "added": "2026-10-07T13:32:43+08:00"
+  },
+  {
+   "run": "9TG1RP5LFAAK",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "F48胜后17HP毒药水槽0进入女王；第6次T3实死。",
+   "added": "2026-10-07T13:32:43+08:00"
+  },
+  {
+   "run": "ZVYUL2YP3518",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "F48胜后50HP毒药水槽1进入实验体；第6次T8实死。",
+   "added": "2026-10-07T13:32:43+08:00"
+  },
+  {
+   "run": "TDLBRNA0R05B",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "F48胜后2HP毒药水槽0进入实验体；第6次T2实死。",
+   "added": "2026-10-07T13:32:43+08:00"
+  },
+  {
+   "run": "JMH5C51RLN4E",
+   "floor": 49,
+   "turn": 1,
+   "note": "states L243532—243534：F48空奖励8/60→MAP第二Boss→F49沙漏8/60；boss_id仍TEST_SUBJECT_BOSS。六次T1尝试经decisions L238551—238556/SL L626—631分开。",
+   "role": "support",
+   "added": "2026-10-07T16:00:11+08:00"
+  },
+  {
+   "run": "9TG1RP5LFAAK",
+   "floor": 49,
+   "turn": 1,
+   "note": "states L244372—244374：F48空奖励17/84→MAP→F49女王17/84，同槽毒药水保留，boss_id仍首Boss。此前敏捷/余像/毒雾不延续；未见中间营火/回血。",
+   "role": "support",
+   "added": "2026-10-07T16:00:11+08:00"
+  },
+  {
+   "run": "G403VCZ3BH1B",
+   "floor": 48,
+   "turn": 11,
+   "note": "A9边界对照：states L240511战后18/90、L240514实际GAME_OVER胜利；不作为A10字段或后场机制的反例。",
+   "role": "support",
+   "added": "2026-10-07T16:00:11+08:00"
+  },
+  {
+   "run": "JMH5C51RLN4E",
+   "floor": 49,
+   "role": "support",
+   "note": "本次原states L243532/243533→L243534 @7443430835，HP8/60、金119空药；F48 reward为空、同幕后Boss沙漏，run.boss_id仍TEST_SUBJECT_BOSS。F49六尝试一场。",
+   "turn": 1,
+   "added": "2026-10-07T17:25:30+08:00"
+  },
+  {
+   "run": "9TG1RP5LFAAK",
+   "floor": 49,
+   "role": "support",
+   "note": "本次原states L244372/244373→L244374 @7473672603，HP17/84、金177、槽0毒药连续，实际女王/聚合体、boss_id仍首Boss。两次F48 reward空，阶段字段损害未知。",
+   "turn": 1,
+   "added": "2026-10-07T17:25:30+08:00"
+  },
+  {
+   "run": "JMH5C51RLN4E",
+   "floor": 48,
+   "turn": 13,
+   "role": "support",
+   "note": "独立审计-3重新读原日志 states.jsonl:L243532 @byte 7443348142；首战胜后8/60与余药进入F49；F48非终局。D3静态阶段/身份语义缺口仍存在，决策损害未知",
+   "added": "2026-10-07T18:56:20+08:00"
+  },
+  {
+   "run": "9TG1RP5LFAAK",
+   "floor": 48,
+   "turn": 16,
+   "role": "support",
+   "note": "独立审计-3重新读原日志 states.jsonl:L244372 @byte 7473583198；首战胜后17/84与余药进入F49；F48非终局。D3静态阶段/身份语义缺口仍存在，决策损害未知",
+   "added": "2026-10-07T18:56:20+08:00"
+  }
+ ],
+ "first_run": "JMH5C51RLN4E",
+ "prior": "no",
+ "prior_note": "基线源码F48胜仍用单场终局和boss药价0；silent-0163已修未知后续路线投影，本次保持其shipped历史，不将其当本功能已完成。",
+ "status": "shipped",
+ "by": "learner:silent-double-boss",
+ "where": {
+  "knowledge": [
+   "knowledge/characters/silent/double-boss.json"
+  ],
+  "proposal": [
+   "paper/materials/silent/double-boss.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-130409-silent-double-boss/a-code-proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/proposal-continuation.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/proposal-boss-phase-facts.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/proposal-continuation.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/proposal-boss-phase-facts.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-3/learner/runs/20261007-184218-ascension-audit/proposal-boss-phase-facts.md"
+  ],
+  "lessons": [
+   "JMH5C51RLN4E",
+   "9TG1RP5LFAAK",
+   "ZVYUL2YP3518",
+   "TDLBRNA0R05B"
+  ],
+  "commits": [
+   "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+   "ac076f8a71f101de62d5345fa6b4fca248fd928c",
+   "7478ff107b335af503e31727f36c3f7a33430a6b",
+   "b1bef3e4ee251b14c1ff71a8f08c8ae82e73838b"
+  ]
+ },
+ "note": "Roy2026-10-07已授权独立功能；逐帧/固定时间切分和所有失败见learner/runs/20261007-130409-silent-double-boss；源码合入后由运维核实登记shipped。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-07T13:32:43+08:00",
+   "by": "learner:silent-double-boss",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T14:11:45+08:00",
+   "by": "learner:silent-double-boss",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T14:39:26+08:00",
+   "by": "learner:silent-double-boss"
+  },
+  {
+   "ts": "2026-10-07T16:00:11+08:00",
+   "by": "learner:ascension-audit"
+  },
+  {
+   "ts": "2026-10-07T16:00:13+08:00",
+   "by": "learner:ascension-audit"
+  },
+  {
+   "ts": "2026-10-07T16:00:14+08:00",
+   "by": "learner:ascension-audit"
+  },
+  {
+   "ts": "2026-10-07T16:20:24+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T17:25:30+08:00",
+   "by": "learner:ascension-audit"
+  },
+  {
+   "ts": "2026-10-07T18:56:20+08:00",
+   "by": "learner:ascension-audit"
+  }
+ ],
+ "version": "S1.double-boss1",
+ "effect": null,
+ "notes": [
+  "Roy2026-10-07已授权独立功能；逐帧/固定时间切分和所有失败见learner/runs/20261007-130409-silent-double-boss；源码合入后由运维核实登记shipped。",
+  "A已实际live上线S1.double-boss1；源/合后原沙箱通过；task=silent-double-boss，B/C/D继续，等待运维核实shipped；具体旧/新规则、独立4局及不确定性已双通知Roy。",
+  "代码提案 silent-proposal-9239d549c2679861 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "独立审计D2已有e1a467e actual-live实现；D3仅复现通用阶段/身份字段仍不符，两个F48奖励均空，未证明选择损害。保留原claim/首次/先验/状态；不登记shipped。",
+  "代码提案 silent-proposal-09d5c7776e88d756 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-4cc200cc9747f4a8 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "16:10完成事件核实A源/BCD源均实际live及main祖先；A原源225/2384、合后228/2416沙箱0，BCD源226/2387、合后229/2421、Python51/39例0；本批固定b0f41f03/树0549b0eb完整外部tsc0/283文件3238过2跳过exit0。main仅补同步live既有唯一S1.double-boss1指向ac076f8a，不新造版本。CLI只0228追加shipped，保留首证JMH/先验no/claim和全部新审计support/提案/其他ID，模型仍低可信/真实胜率影响未知；A4证据不足SL保持，旧失败原件保留。已核A10首审计真实batch154303/PID1967474并完成，不重复派发；B4首批153133仍running，不冒称boss校正已发布。",
+  "本轮D2已有核心实现按duplicate保留，D3仍为通用阶段/身份语义缺口；静态谓词代入而非实盘因果证明。原shipped只属于旧功能，不能代替D3 pending。",
+  "第三次独立审计重新核证；仅support与本轮报告链接，保留原claim/kind/first_run/prior/status/version及历史；没有新shipped或实现。"
+ ],
+ "shipped_at": "2026-10-07T16:20:24+08:00"
+}

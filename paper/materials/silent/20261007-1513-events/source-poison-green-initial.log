@@ -1,0 +1,37 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-slippery-poison.test.ts (7 tests | 1 failed) 27ms
+   × keeps poison-free Slippery and uncapped poison outcomes unchanged 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-slippery-poison.test.ts > keeps poison-free Slippery and uncapped poison outcomes unchanged
+AssertionError: expected { index: +0, name: '墨影幻灵', …(10) } to match object { hp: 175, slippery: 1, poison: +0 }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "hp": 175,
+-   "poison": 0,
+    "slippery": 1,
+  }
+
+ ❯ tests/silent-slippery-poison.test.ts:97:62
+     95|   const noPoison = inputAt("first-end");
+     96|   noPoison.enemies[0]!.poison = 0;
+     97|   expect(replaySteps(noPoison, [])!.outcome.enemyHpAfter[0]).toMatchOb…
+       |                                                              ^
+     98|   const noSlippery = inputAt("first-end");
+     99|   noSlippery.enemies[0]!.slippery = 0;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  14:34:04
+   Duration  1.33s (transform 984ms, setup 294ms, import 879ms, tests 27ms, environment 0ms)
+

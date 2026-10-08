@@ -1,0 +1,169 @@
+deciders Counter({'code': 578, 'jev': 281, 'codex': 73})
+JEV 281 低 37 plans 219 rank1 104 rolloutflag Counter({True: 209, False: 6, None: 4}) nojev 0 fallback 0
+JEVusage 1568134 16195
+time 2974.624
+code combat acts 179 active 118 active rounds 92 including end 98 no Jev combat round 33
+modelcontinuations raw code 231 codecont 46
+FOCUS
+280722 6 1 plan1 selected 劫掠者刺客 choices {'plan1': '劫掠者刺客', 'plan3': '劫掠者追踪手', 'plan4': '劫掠者弩手'}
+280727 6 2 plan6 selected None choices {'plan2': '劫掠者追踪手', 'plan4': '劫掠者弩手'}
+280734 6 3 plan3 selected None choices {'plan4': '劫掠者追踪手', 'plan7': '劫掠者弩手'}
+281047 29 1 plan1 selected None choices {'plan2': '熟睡甲虫', 'plan6': '盛碗虫（石）', 'plan10': '盛碗虫（丝）'}
+281049 29 1 plan1 selected None choices {'plan2': '熟睡甲虫', 'plan5': '盛碗虫（石）', 'plan9': '盛碗虫（丝）'}
+281055 29 2 plan1 selected None choices {'plan2': '盛碗虫（石）', 'plan4': '盛碗虫（丝）'}
+281059 29 3 plan2 selected None choices {'plan1': '盛碗虫（石）', 'plan9': '盛碗虫（丝）', 'plan10': '熟睡甲虫'}
+281065 29 4 plan1 selected 盛碗虫（石） choices {'plan1': '盛碗虫（石）', 'plan5': '熟睡甲虫', 'plan7': '盛碗虫（丝）'}
+281070 29 5 plan2 selected None choices {'plan1': '盛碗虫（丝）, 熟睡甲虫'}
+281288 39 2 plan4 selected None choices {'plan1': '噪音机器人, 戳刺机器人, 组装师'}
+281290 39 2 plan6 selected None choices {'plan2': '噪音机器人', 'plan3': '戳刺机器人', 'plan4': '组装师'}
+281292 39 2 plan3 selected 戳刺机器人 choices {'plan1': '组装师', 'plan2': '噪音机器人', 'plan3': '戳刺机器人'}
+281294 39 2 plan1 selected 噪音机器人, 戳刺机器人, 组装师 choices {'plan1': '噪音机器人, 戳刺机器人, 组装师'}
+281295 39 3 plan3 selected None choices {'plan1': '噪音机器人, 戳刺机器人 x2', 'plan4': '守护机器人', 'plan5': '组装师'}
+281299 39 3 p0 selected None choices {'plan1': '戳刺机器人 x2', 'plan2': '噪音机器人', 'plan3': '组装师', 'plan4': '守护机器人'}
+281301 39 3 plan1 selected 戳刺机器人 x2 choices {'plan1': '戳刺机器人 x2', 'plan2': '噪音机器人', 'plan3': '组装师', 'plan6': '守护机器人'}
+281306 39 4 plan3 selected None choices {'plan1': '噪音机器人, 组装师, 守护机器人'}
+ARRAYS
+F 17 sequence 8 hp [53, 53, 46, 40, 40, 40, 40, 28, 24] end 24 hp net [0, 7, 6, 0, 0, 0, 12, 4, 0] need [262, 241, 221, 203, 188, 155, 104, 65, 22] enemy net [21, 20, 18, 15, 33, 51, 39, 43, 22] gaps [(9, ['body_removed_without_death_frame'])]
+F 31 sequence 14 hp [38, 35, 31, 20, 19, 16, 5] end 5 hp net [3, 4, 11, 1, 3, 11, 0] need [171, 171, 151, 144, 104, 79, 35] enemy net [0, 20, 7, 40, 25, 44, 35] gaps [(7, ['body_removed_without_death_frame'])]
+F 33 sequence 15 hp [28, 28, 28, 28, 22, 22, 2, 23, 23] end 23 hp net [0, 0, 0, 6, 0, 20, -21, 0, 0] need [399, 360, 349, 309, 290, 247, 196, 127, 84] enemy net [39, 11, 40, 19, 43, 51, 69, 43, 84] gaps [(4, ['hp_increase_without_intermediate_death_frame']), (9, ['body_removed_without_death_frame'])]
+F 35 sequence 16 hp [66, 48, 36, 36, 30] end 30 hp net [18, 12, 0, 6, 0] need [103, 48, 26, 10, 1] enemy net [55, 22, 16, 9, 1] gaps [(1, ['ambiguous_enemy_identity']), (2, ['ambiguous_enemy_identity']), (3, ['ambiguous_enemy_identity']), (5, ['body_removed_without_death_frame'])]
+F 38 sequence 17 hp [30, 30, 30, 30, 19] end 19 hp net [0, 0, 0, 11, 0] need [172, 146, 138, 83, 32] enemy net [26, 8, 55, 51, 32] gaps [(5, ['body_removed_without_death_frame'])]
+F 39 sequence 18 hp [19, 19, 19, 19, 19, 11] end 11 hp net [0, 0, 0, 0, 8, 0] need [155, 169, 156, 81, 88, 48] enemy net [-14, 13, 75, -7, 40, 48] gaps [(2, ['ambiguous_enemy_identity']), (3, ['ambiguous_enemy_identity', 'body_removed_without_death_frame']), (4, ['body_removed_without_death_frame', 'changed_max_hp_identity_unknown']), (5, ['body_removed_without_death_frame']), (6, ['body_removed_without_death_frame'])]
+F 45 sequence 19 hp [31, 31, 31, 28, 10, 7] end 7 hp net [0, 0, 3, 18, 3, 0] need [247, 187, 159, 124, 98, 46] enemy net [60, 28, 35, 26, 52, 46] gaps [(6, ['body_removed_without_death_frame'])]
+F 48 sequence 20 hp [27, 27, 21, 21, 17, 11, 11] end 11 hp net [0, 6, 0, 4, 6, 0, 0] need [535, 486, 477, 472, 430, 411, 377] enemy net [49, 9, 5, 42, 19, 34, 9] gaps []
+F 48 sequence 21 hp [27, 27, 25, 25, 24, 24, 20, 9, 20, 15] end 15 hp net [0, 2, 0, 1, 0, 4, 11, -11, 5, 0] need [535, 494, 488, 483, 473, 452, 393, 344, 299, 237] enemy net [41, 6, 5, 10, 21, 59, 49, 45, 62, 23] gaps []
+F 48 sequence 22 hp [27, 27, 25, 25, 24, 24, 20, 11, 20, 18, 3] end 0 hp net [0, 2, 0, 1, 0, 4, 9, -9, 2, 15, 3] need [535, 494, 488, 483, 473, 452, 393, 322, 269, 198, 112] enemy net [41, 6, 5, 10, 21, 59, 71, 53, 71, 86, 80] gaps []
+PROJECTIONS
+280756 8 rest/plan o0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个（进场 66 血） 41%（+17.6 ± 2），赢局掉血中位 66，约 11 回合（488 次模拟，校准后）；回血后 HP 64/70，进场血量按它投影
+280756 8 rest/plan o1:c0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 27%（+4.3 ± 1.4），赢局掉血中位 63，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c5 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 28%（+4.5 ± 1.2），赢局掉血中位 60，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c10 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 35%（+12.1 ± 1.6），赢局掉血中位 58，约 11 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c11 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 30%（+7 ± 1.3），赢局掉血中位 59，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c13 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 31%（+7.8 ± 2.1），赢局掉血中位 63，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c14 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 28%（+5.3 ± 1.3），赢局掉血中位 65，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c15 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 9%（−14.3 ± 1.7），赢局掉血中位 62，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c16 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 31%（+7.6 ± 1.7），赢局掉血中位 63，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c17 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 56%（+32.8 ± 2.2），赢局掉血中位 61，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c19 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 72%（+48.4 ± 2.3），赢局掉血中位 58，约 9 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c20 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 30%（+6.4 ± 1.2），赢局掉血中位 62.5，约 10 回合（488 次模拟，校准后）
+280756 8 rest/plan o1:c21 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 23%；选这个 16%（−7 ± 1.7），赢局掉血中位 65，约 11 回合（488 次模拟，校准后）；暴露的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280797 11 rest/plan o0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个（进场 64 血） 93%（+22 ± 1.8），赢局掉血中位 61，约 10 回合（560 次模拟，校准后）；回血后 HP 50/70，进场血量按它投影
+280797 11 rest/plan o1:c0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 75%（+3.8 ± 1.1），赢局掉血中位 45，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c5 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 77%（+6.3 ± 1.1），赢局掉血中位 44，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c10 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 85%（+13.8 ± 1.5），赢局掉血中位 43，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c11 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 78%（+6.8 ± 1.1），赢局掉血中位 43，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c13 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 75%（+3.6 ± 1.9），赢局掉血中位 44，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c14 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 76%（+4.5 ± 1），赢局掉血中位 44，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c15 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 63%（−8 ± 1.4），赢局掉血中位 46，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c16 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 76%（+4.6 ± 1.2），赢局掉血中位 44，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c17 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 78%（+7.3 ± 1.3），赢局掉血中位 43，约 9 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c20 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 77%（+6.3 ± 1.1），赢局掉血中位 44，约 10 回合（560 次模拟，校准后）
+280797 11 rest/plan o1:c21 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 61%（−10.4 ± 1.5），赢局掉血中位 46，约 10 回合（560 次模拟，校准后）；暴露的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280797 11 rest/plan o1:c22 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 71%；选这个 82%（+10.9 ± 1.4），赢局掉血中位 43，约 10 回合（560 次模拟，校准后）
+280824 13 rest/plan o0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个（进场 66 血） 93%（+19.4 ± 1.6），赢局掉血中位 60，约 10 回合（592 次模拟，校准后）；回血后 HP 70/70，进场血量按它投影
+280824 13 rest/plan o1:c0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 76%（+1.7 ± 1），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c5 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 78%（+3.7 ± 0.9），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c10 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 83%（+9.6 ± 1.4），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c11 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 80%（+5.7 ± 1），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c13 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 77%（+3 ± 1.8），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c14 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 76%（+2 ± 1），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c15 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 67%（−7.1 ± 1.3），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c16 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 76%（+2 ± 1.2），赢局掉血中位 46，约 9 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c17 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 79%（+5.4 ± 1.2），赢局掉血中位 46，约 9 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c20 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 78%（+4.2 ± 0.9），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c21 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 66%（−7.9 ± 1.4），赢局掉血中位 49，约 10 回合（592 次模拟，校准后）；暴露的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280824 13 rest/plan o1:c22 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 81%（+7.1 ± 1.1），赢局掉血中位 46，约 10 回合（592 次模拟，校准后）
+280824 13 rest/plan o1:c23 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 74%；选这个 72%（−2.2 ± 2），赢局掉血中位 47，约 10 回合（592 次模拟，校准后）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280859 16 rest/plan o0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个（进场 70 血） 90%（+11.7 ± 1.5），赢局掉血中位 60，约 10 回合（512 次模拟，校准后）；回血后 HP 70/70，进场血量按它投影
+280859 16 rest/plan o1:c0 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 79%（+0.6 ± 0.6），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c5 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 83%（+4.5 ± 1.2），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c10 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 88%（+9.8 ± 1.4），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c11 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 84%（+5.9 ± 1.1），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c13 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 85%（+6.5 ± 1.8），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c14 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 82%（+3.7 ± 1），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c15 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 68%（−10.5 ± 1.5），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c16 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 81%（+2.7 ± 1.3），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c17 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 84%（+5.9 ± 1.1），赢局掉血中位 53，约 9 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c20 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 84%（+5.1 ± 1.2），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c21 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 75%（−3.1 ± 1.3），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）；暴露的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280859 16 rest/plan o1:c22 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 85%（+6.8 ± 1.3），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280859 16 rest/plan o1:c23 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 80%（+1.2 ± 2.1），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280859 16 rest/plan o1:c24 boss_sim 打本幕 boss（仪式兽，A10）的模拟：当前牌组胜率 79%；选这个 85%（+6.6 ± 1.4），赢局掉血中位 53，约 10 回合（512 次模拟，校准后）
+280991 24 rest/plan o0 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个（进场 39 血） 37%（+35.1 ± 2），赢局掉血中位 47，约 10 回合；boss 平均剩血 75（当前牌组 261，−185.8 ± 3.4）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；回血后 HP 67/70，进场血量按它投影
+280991 24 rest/plan o1:c0 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（+0.4 ± 0.4），赢局掉血中位 20，约 10 回合；boss 平均剩血 259（当前牌组 261，−1.8 ± 0.9）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c5 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 3%（+0.9 ± 0.4），赢局掉血中位 19，约 10 回合；boss 平均剩血 253（当前牌组 261，−8.6 ± 1.4）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c11 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（+0.5 ± 0.3），赢局掉血中位 18，约 10 回合；boss 平均剩血 255（当前牌组 261，−5.7 ± 1.1）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c13 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（+0.4 ± 0.9），赢局掉血中位 19，约 10 回合；boss 平均剩血 255（当前牌组 261，−6.2 ± 2.6）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c14 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（−0.2 ± 0.2），赢局掉血中位 18，约 10 回合；boss 平均剩血 258（当前牌组 261，−3.1 ± 0.5）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c15 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 4%（+1.8 ± 0.6），赢局掉血中位 19，约 10 回合；boss 平均剩血 250（当前牌组 261，−11 ± 0.9）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c16 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（−0.2 ± 0.2），赢局掉血中位 20，约 10 回合；boss 平均剩血 259（当前牌组 261，−2.2 ± 0.6）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c17 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 3%（+0.7 ± 0.4），赢局掉血中位 20，约 10 回合；boss 平均剩血 254（当前牌组 261，−6.9 ± 0.8）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c20 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 3%（+1.1 ± 0.4），赢局掉血中位 19，约 10 回合；boss 平均剩血 254（当前牌组 261，−7.1 ± 1.3）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c21 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（+0 ± 0.3），赢局掉血中位 19.5，约 10 回合；boss 平均剩血 268（当前牌组 261，+7.3 ± 1）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；暴露的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280991 24 rest/plan o1:c22 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 6%（+3.8 ± 0.8），赢局掉血中位 18，约 10 回合；boss 平均剩血 243（当前牌组 261，−18.4 ± 2）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c23 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（+0.4 ± 0.7），赢局掉血中位 17，约 10 回合；boss 平均剩血 254（当前牌组 261，−6.8 ± 2.5）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280991 24 rest/plan o1:c24 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（+0 ± 0.4），赢局掉血中位 17，约 10 回合；boss 平均剩血 257（当前牌组 261，−3.7 ± 1.1）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c25 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 0%（−1.8 ± 0.6），赢局掉血中位 —，约 6 回合；boss 平均剩血 289（当前牌组 261，+27.5 ± 2.4）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）；这张牌的升级数值没有记录，按未升级的数值算；萎靡的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+280991 24 rest/plan o1:c27 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 4%（+2 ± 0.6），赢局掉血中位 19，约 10 回合；boss 平均剩血 246（当前牌组 261，−14.8 ± 0.8）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+280991 24 rest/plan o1:c28 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 2%；选这个 2%（+0.4 ± 0.4），赢局掉血中位 17，约 10 回合；boss 平均剩血 253（当前牌组 261，−7.8 ± 1.2）（552 次模拟，校准后；当前牌组胜率很低，胜率的差信息少）
+281043 28 rest/plan o0 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个（进场 65 血） 76%（+12.7 ± 1.8），赢局掉血中位 65，约 11 回合（440 次模拟，校准后）；回血后 HP 77/77，进场血量按它投影
+281043 28 rest/plan o1:c0 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 64%（+0.9 ± 0.6），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c5 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 68%（+4.8 ± 1.3），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c11 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 67%（+3.9 ± 1.1），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c13 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 68%（+5 ± 2.3），赢局掉血中位 56，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c14 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 64%（+1.1 ± 0.8），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c15 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 71%（+8.4 ± 1.4），赢局掉血中位 54，约 10 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c16 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 64%（+1.4 ± 1.1），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c17 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 69%（+6.4 ± 1.3），赢局掉血中位 54，约 10 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c20 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 66%（+2.7 ± 1），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c21 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 61%（−1.8 ± 1.2），赢局掉血中位 61，约 11 回合（440 次模拟，校准后）；暴露的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+281043 28 rest/plan o1:c22 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 74%（+11.1 ± 1.6），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c23 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 69%（+5.7 ± 2.1），赢局掉血中位 59.5，约 11 回合（440 次模拟，校准后）；这张牌的升级数值没有记录，按未升级的数值算；计算下注的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+281043 28 rest/plan o1:c24 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 64%（+1.4 ± 1），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c25 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 45%（−18.4 ± 2.2），赢局掉血中位 62，约 10 回合（440 次模拟，校准后）；这张牌的升级数值没有记录，按未升级的数值算；萎靡的效果模拟里没有完全建模（只算了已建模的部分），这张牌的作用可能被低估
+281043 28 rest/plan o1:c27 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 79%（+15.7 ± 1.7），赢局掉血中位 54，约 10 回合（440 次模拟，校准后）
+281043 28 rest/plan o1:c28 boss_sim 打本幕 boss（知识恶魔，A10）的模拟：当前牌组胜率 63%；选这个 67%（+4.1 ± 1.2），赢局掉血中位 54，约 11 回合（440 次模拟，校准后）
+BELT
+L 287023 → 287024 F/T 2 5 slot [] → [[0, 'BLOCK_POTION']] hp 56 → 56 restart False
+L 287038 → 287039 F/T 3 2 slot [[0, 'BLOCK_POTION']] → [] hp 56 → 56 restart False
+L 287067 → 287068 F/T 5 4 slot [] → [[0, 'ENERGY_POTION']] hp 47 → 47 restart False
+L 287087 → 287088 F/T 6 3 slot [[0, 'ENERGY_POTION']] → [] hp 43 → 43 restart False
+L 287096 → 287097 F/T 6 4 slot [] → [[0, 'ENERGY_POTION']] hp 43 → 43 restart False
+L 287104 → 287105 F/T 7 None slot [[0, 'ENERGY_POTION']] → [[0, 'ENERGY_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] hp 43 → 43 restart False
+L 287115 → 287116 F/T 9 1 slot [[0, 'ENERGY_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] → [[1, 'FAIRY_IN_A_BOTTLE']] hp 43 → 43 restart False
+L 287185 → 287186 F/T 14 None slot [[1, 'FAIRY_IN_A_BOTTLE']] → [[0, 'POWDERED_DEMISE'], [1, 'FAIRY_IN_A_BOTTLE']] hp 70 → 70 restart False
+L 287196 → 287197 F/T 15 1 slot [[0, 'POWDERED_DEMISE'], [1, 'FAIRY_IN_A_BOTTLE']] → [[1, 'FAIRY_IN_A_BOTTLE']] hp 70 → 70 restart False
+L 287262 → 287263 F/T 17 9 slot [[1, 'FAIRY_IN_A_BOTTLE']] → [[0, 'SKILL_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] hp 24 → 24 restart False
+L 287286 → 287287 F/T 19 4 slot [[0, 'SKILL_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] → [[1, 'FAIRY_IN_A_BOTTLE']] hp 57 → 57 restart False
+L 287315 → 287316 F/T 22 None slot [[1, 'FAIRY_IN_A_BOTTLE']] → [[0, 'DEXTERITY_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] hp 46 → 46 restart False
+L 287322 → 287323 F/T 23 1 slot [[0, 'DEXTERITY_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] → [[1, 'FAIRY_IN_A_BOTTLE']] hp 46 → 46 restart False
+L 287441 → 287442 F/T 29 6 slot [[1, 'FAIRY_IN_A_BOTTLE']] → [[0, 'FIRE_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] hp 44 → 44 restart False
+L 287452 → 287453 F/T 30 1 slot [[0, 'FIRE_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] → [[1, 'FAIRY_IN_A_BOTTLE']] hp 44 → 44 restart False
+L 287469 → 287470 F/T 30 4 slot [[1, 'FAIRY_IN_A_BOTTLE']] → [[0, 'VULNERABLE_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] hp 38 → 38 restart False
+L 287480 → 287481 F/T 31 1 slot [[0, 'VULNERABLE_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] → [[1, 'FAIRY_IN_A_BOTTLE']] hp 38 → 38 restart False
+L 287505 → 287506 F/T 31 7 slot [[1, 'FAIRY_IN_A_BOTTLE']] → [[0, 'STRENGTH_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] hp 5 → 5 restart False
+L 287519 → 287520 F/T 33 1 slot [[0, 'STRENGTH_POTION'], [1, 'FAIRY_IN_A_BOTTLE']] → [[1, 'FAIRY_IN_A_BOTTLE']] hp 28 → 28 restart False
+L 287559 → 287560 F/T 33 7 slot [[1, 'FAIRY_IN_A_BOTTLE']] → [] hp 2 → 0 restart False
+L 287608 → 287609 F/T 35 5 slot [] → [[0, 'TOUCH_OF_INSANITY']] hp 30 → 30 restart False
+L 287623 → 287624 F/T 37 None slot [[0, 'TOUCH_OF_INSANITY']] → [[0, 'TOUCH_OF_INSANITY'], [1, 'DISTILLED_CHAOS']] hp 30 → 30 restart False
+L 287644 → 287645 F/T 38 3 slot [[0, 'TOUCH_OF_INSANITY'], [1, 'DISTILLED_CHAOS']] → [[0, 'TOUCH_OF_INSANITY']] hp 30 → 30 restart False
+L 287649 → 287650 F/T 38 4 slot [[0, 'TOUCH_OF_INSANITY']] → [] hp 30 → 30 restart False
+L 287656 → 287657 F/T 38 5 slot [] → [[0, 'POWER_POTION']] hp 19 → 19 restart False
+L 287681 → 287682 F/T 39 3 slot [[0, 'POWER_POTION']] → [] hp 19 → 19 restart False
+L 287706 → 287707 F/T 40 None slot [] → [[0, 'ENTROPIC_BREW']] hp 11 → 11 restart False
+L 287707 → 287708 F/T 40 None slot [[0, 'ENTROPIC_BREW']] → [[0, 'ENTROPIC_BREW'], [1, 'FIRE_POTION']] hp 11 → 11 restart False
+L 287743 → 287744 F/T 45 1 slot [[0, 'ENTROPIC_BREW'], [1, 'FIRE_POTION']] → [[0, 'ENTROPIC_BREW']] hp 31 → 31 restart False
+L 287768 → 287769 F/T 45 6 slot [[0, 'ENTROPIC_BREW']] → [[0, 'ENTROPIC_BREW'], [1, 'SKILL_POTION']] hp 7 → 7 restart False
+L 287789 → 287790 F/T 48 1 slot [[0, 'ENTROPIC_BREW'], [1, 'SKILL_POTION']] → [[0, 'ENTROPIC_BREW']] hp 27 → 27 restart False
+L 287836 → 287837 F/T 48 7 slot [[0, 'ENTROPIC_BREW']] → [[0, 'FAIRY_IN_A_BOTTLE'], [1, 'BLESSING_OF_THE_FORGE']] hp 11 → 11 restart False
+L 287838 → 287839 F/T 48 7 slot [[0, 'FAIRY_IN_A_BOTTLE'], [1, 'BLESSING_OF_THE_FORGE']] → [[0, 'FAIRY_IN_A_BOTTLE']] hp 11 → 11 restart False
+L 287840 → 287841 F/T 48 1 slot [[0, 'FAIRY_IN_A_BOTTLE']] → [[0, 'ENTROPIC_BREW'], [1, 'SKILL_POTION']] hp 11 → 27 restart True
+L 287876 → 287877 F/T 48 5 slot [[0, 'ENTROPIC_BREW'], [1, 'SKILL_POTION']] → [[0, 'ENTROPIC_BREW']] hp 24 → 24 restart False
+L 287895 → 287896 F/T 48 7 slot [[0, 'ENTROPIC_BREW']] → [[0, 'FAIRY_IN_A_BOTTLE'], [1, 'BLESSING_OF_THE_FORGE']] hp 20 → 20 restart False
+L 287903 → 287904 F/T 48 8 slot [[0, 'FAIRY_IN_A_BOTTLE'], [1, 'BLESSING_OF_THE_FORGE']] → [[0, 'FAIRY_IN_A_BOTTLE']] hp 9 → 9 restart False
+L 287904 → 287905 F/T 48 8 slot [[0, 'FAIRY_IN_A_BOTTLE']] → [] hp 9 → 0 restart False
+L 287923 → 287924 F/T 48 1 slot [] → [[0, 'ENTROPIC_BREW'], [1, 'SKILL_POTION']] hp 15 → 27 restart True
+L 287959 → 287960 F/T 48 5 slot [[0, 'ENTROPIC_BREW'], [1, 'SKILL_POTION']] → [[0, 'ENTROPIC_BREW']] hp 24 → 24 restart False
+L 287982 → 287983 F/T 48 7 slot [[0, 'ENTROPIC_BREW']] → [[0, 'FAIRY_IN_A_BOTTLE'], [1, 'BLESSING_OF_THE_FORGE']] hp 20 → 20 restart False
+L 287989 → 287990 F/T 48 8 slot [[0, 'FAIRY_IN_A_BOTTLE'], [1, 'BLESSING_OF_THE_FORGE']] → [[1, 'BLESSING_OF_THE_FORGE']] hp 11 → 0 restart False
+L 288000 → 288001 F/T 48 10 slot [[1, 'BLESSING_OF_THE_FORGE']] → [] hp 18 → 18 restart False

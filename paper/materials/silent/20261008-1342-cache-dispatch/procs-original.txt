@@ -1,0 +1,28 @@
+52054 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+52300 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+52301 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+52312 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play -
+77655 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+77666 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects/a
+78749 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261008-134301-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-134301-postmortem.pid 1 - /home/dw/Projects/agent-sts2/ops/
+78751 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261008-134301 LYBHQ1X230ZB silent
+78760 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --task postmortem --character silent --cwd /home/dw/Projects/agent-sts2 --set runs=LYBHQ1X230
+78772 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects/a
+107937 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261008-140042-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-140042-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/c
+107938 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261008-140042-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache codex-brain-cache
+107947 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/run.ts --engine codex --task codex-brain-cache --character silent --cwd /home/dw/Proj
+107959 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects/
+109378 /home/dw/.codex-sts2/tmp/arg0/codex-arg0NHrEKT/codex-linux-sandbox --sandbox-policy-cwd /home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache --command-cwd /home/dw/Projects/agent-sts2/.worktrees/codex-brain-c
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+4110758 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/herdr-exec.sh learner-20261008-112135-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261008-112135-fix-batch.pid 1 - /home/dw/Projects
+4110759 bash /home/dw/Projects/agent-sts2/.worktrees/live/ops/codex-ops-learner.sh 20261008-112135-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135 boss-sim-batch 
+4110768 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/run.ts --engine codex --task boss-sim-batch --character silent -
+4110780 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 1746959
+herdr panes:
+label                               pane    alive  busy  foreground
+autoplay                            wJ:p2   yes    no    
+learner-20261008-112135-fix-batch   wJ:p85  yes    yes   4110758:bash 4110759:bash 4110767:tail 4110768:node 4110780:node 4110788:esbuild
+learner-20261008-134301-postmortem  wJ:p8C  yes    yes   78749:bash 78751:bash 78759:tail 78760:node 78772:node
+learner-20261008-140042-fix-batch   wJ:p8D  yes    yes   107937:bash 107938:bash 107946:tail 107947:node 107959:node 107967:esbuild
+ops                                 wJ:p5   yes    yes   1753575:node 1753583:codex

@@ -1,0 +1,24 @@
+## 修 bug 回报
+
+- 合并基线：main → 019287944c729922c4095f38893192cb3d67bd70
+- 修复（每条一行）：无新增；队列中的纯 bug 均已有修复。
+- 已被别人修掉的：135 项，[逐条提交清单](/home/dw/Projects/agent-sts2/learner/runs/20261007-111302-fix-batch/already-fixed.md)。近期项：中毒折扣 — ffa23c2f；升级预览 — 62ee292c；勒紧 — 1912b5e0；蛇咬 — 06bb4617。
+- 没修的：mod 超时根因、缓存实测 — 证据不足；模拟性能专项 — 太大；Codex 大脑功能 — 独立任务；策略取舍 — 策略类。
+- 测试：tsc 退出码 0；vitest 223 文件 / 2338 用例 / 退出码 0，首轮通过，无重跑。无新增修复，撤码验证不适用。
+- 合入：未新增合入；135 项既有修复已在 live 910604a4471ad4470e563d6d4e16d05bdcb78758。
+- 需要 Dai 定的事：保血、留药、全死排序与巨兽拖延、SL 范围、时钟校准、路线、休息、小偷优先、A10 第二 boss、无色牌及懒惰估值，沿独立策略任务处理。
+
+```json
+{"task":"fix-batch","base":"019287944c729922c4095f38893192cb3d67bd70","fixes":[],"skipped":[{"item":"mod请求超时根因、Codex缓存实测","reason":"证据不足"},{"item":"boss模拟耗时、样本不足及CPU争用","reason":"太大，需要独立性能基准"},{"item":"Codex不可用时暂停与引擎统计口径","reason":"独立功能任务，本批不混入"},{"item":"保血、留药、全死排序／巨兽拖延、SL范围、boss时钟校准、路线、休息、小偷优先、A10第二boss、无色牌与懒惰估值","reason":"策略类"}],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":2338}}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11459-ad36-7492-b377-d03ae9a0393e
+轮数：1；工具调用：command_execution×53
+token：输入 160.1k、输出 15.6k（其中推理 6924）、cache 读 3326.3k、cache 写 0（命中 95.4%）
+成本：未提供
+耗时：447.6 s（墙钟）
+时间：首个事件 8.2 s、模型首个输出 12.8 s、首次工具 16.4 s、末次工具结束 425.3 s；工具内共 325.8 s，其余（模型生成、推理、网络）113.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×27 wait×2；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T11-13-03-01a11459-ad36-7492-b377-d03ae9a0393e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-111302-fix-batch.jsonl

@@ -1,0 +1,134 @@
+{
+  "task": "fix-batch",
+  "character": "silent",
+  "base": "2e2b48aa6e954daf02aa7cfc6a82eddc58bcc5cf",
+  "source_commit": "693318efb3a72061c53ccdc06802c380ed3ff54a",
+  "fixes": [
+    {
+      "item": "silent-a10-regression",
+      "commit": "693318efb3a72061c53ccdc06802c380ed3ff54a",
+      "test": "agent/tests/silent-potion-provenance.test.ts: Silent potion prompt provenance, MGA0CZDDKC0P F2 T1",
+      "fails_without_fix": true,
+      "evidence_runs": [
+        "C48LLXBGKXQ9",
+        "MGA0CZDDKC0P"
+      ],
+      "ledger": [
+        "silent-0285"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "item": "double-boss/fix45/bullet-time/sloth/experience rollback",
+      "reason": "没有证据确认新增有害改动；保留现状及样本/历史题面限制，不能归为已证随机波动。"
+    },
+    {
+      "item": "full outside-sandbox suite",
+      "reason": "按原完成通道交调度器补跑，本会话未执行。"
+    },
+    {
+      "item": "strategy optimization/boss calibration/ordinary fix queue",
+      "reason": "不属本独立调查，未扩展任务。"
+    }
+  ],
+  "merged": "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3",
+  "release_commit": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+  "version": "S1.a10-regression1",
+  "tests": {
+    "source": {
+      "entry": "bash tools/test-sandbox.sh",
+      "exit": 0,
+      "tsc": 0,
+      "vitest_files": 248,
+      "vitest_tests": 2608,
+      "workers": 4,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/source-sandbox-2.log",
+      "sha256": "dbb66ec565e9c8b375499dfef744ff2373d6b0ca8aa93dc216963b490cdd850c"
+    },
+    "live": {
+      "entry": "bash tools/test-sandbox.sh",
+      "exit": 0,
+      "tsc": 0,
+      "vitest_files": 248,
+      "vitest_tests": 2608,
+      "workers": 4,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/live-sandbox.log",
+      "sha256": "f6e8234bd91bc49abcd7be985948ae1d1256d3821501bee83faf06e2227a59a3"
+    },
+    "targeted_audit": {
+      "files": 10,
+      "tests": 114,
+      "exit": 0,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/targeted-tests-2.log"
+    },
+    "initial_red": {
+      "passed": 3,
+      "failed": 1,
+      "exit": 1,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/provenance-initial-red.log"
+    },
+    "withdrawn_red": {
+      "passed": 3,
+      "failed": 1,
+      "exit": 1,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/provenance-withdrawn-red.log"
+    },
+    "restored_green": {
+      "passed": 4,
+      "exit": 0,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/provenance-restored-green.log"
+    },
+    "first_source_sandbox": {
+      "exit": 1,
+      "tsc": 0,
+      "passed": 2596,
+      "failed": 1,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/source-sandbox.log",
+      "reason": "archived partial sources were scanned as executable imports; bytes retained as .ts.txt"
+    },
+    "gitleaks_source": {
+      "exit": 0,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/gitleaks-source.log"
+    },
+    "full_outside_sandbox": null,
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2608,
+    "files": 248
+  },
+  "code_proposals": [
+    "silent-proposal-ce40c2c455bb12d5"
+  ],
+  "implementation_domains": [
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/report.md",
+  "report_json": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/report.json",
+  "paper_report": "/home/dw/Projects/agent-sts2/paper/materials/silent/a10-regression-2026-10-08.md",
+  "fixed_tree": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/checked-tree.json",
+  "net_live_tree": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/net-live-preservation.json",
+  "original_logs": "/home/dw/Projects/agent-sts2/logs",
+  "frozen_logs": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/scratch/frozen-logs",
+  "raw_frames": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/scratch/raw-cases",
+  "failure_inventory": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/error-inventory.md",
+  "first_merge_failure": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/publication-first-merge.json",
+  "frozen_cutoff_utc": "2026-10-08T01:05:21Z",
+  "runs": {
+    "all": 83,
+    "codex": 77,
+    "deepseek": 5,
+    "mixed": 1
+  },
+  "conclusion": "原切点早8小时。实际Codex F48 10/50→6/27，不能归因double或断言随机波动；只修直接可证、早已存在的跨角色药水上下文污染。",
+  "limits": [
+    "Historical full dirty knowledge trees and complete brain system-prefix text unavailable.",
+    "Bullet-time has no actual card plays or act2 samples; sloth has no act2 corridor trigger samples.",
+    "No counterfactual win-rate or exact historical-lesson substitution evidence.",
+    "Some temporary interactive analysis errors lack separate raw stderr files; recorded explicitly in failure inventory."
+  ],
+  "ops_handoff": [
+    "Confirm actual source/version and ledger silent-0285 shipped through CLI.",
+    "Run standard full tsc + vitest outside the sandbox on the fixed release through the scheduler."
+  ]
+}

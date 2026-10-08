@@ -1,0 +1,78 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.29 → 2026-10-08.1；提交：4a90d357（分支 exp-silent）；合入：未合入，19 个记录文件预检冲突，已保留 live 刷新 6ad5584f，详见[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/report.md)。
+- 条数：新增 1、更新 13（加证据 13、只改数字 0）、退役 0；active 158 → 159；总字符 47828 → 47952；A8 适用 151 条／44758 字，A9 适用 152 条／45042 字。
+- 机制推理（以下反例均为 0）：
+  - 灵动步法 — 敏捷逐牌兑现，已有挡不追补 — 64 局 — NHA2KW0RB7VP
+  - 力量／敏捷 — 攻击段数、牌挡、朝向与虚弱合核 — 106 局 — NHA2KW0RB7VP
+  - 能力兑现观察 — 持有、施放和触发分账 — 105 局 — NHA2KW0RB7VP
+  - 毒雾 — 下一玩家轮才补毒 — 51 局 — NHA2KW0RB7VP
+  - 帝王蟹观察 — 换线多16伤也多损6血 — 16 局 — NHA2KW0RB7VP
+  - 仪式兽 — 跨阈值停攻，后段仍成长 — 17 局 — NHA2KW0RB7VP
+  - 精确切击观察 — 七／六／五手牌面1／3／5 — 11 局 — NHA2KW0RB7VP
+  - 佩尔之肉 — 第三轮起额外1能量 — 8 局 — NHA2KW0RB7VP
+  - 脆弱 — 卡牌格挡逐张折减取整 — 18 局 — NHA2KW0RB7VP
+  - 萎靡 — X／X+1减益，油灯倍率另计 — 17 局 — NHA2KW0RB7VP
+  - 抱抱先生 — 轮初伤害与卡牌、毒分账 — 5 局 — NHA2KW0RB7VP
+  - 不安油灯 — 已见首次负面牌数值翻倍 — 3 局 — K3676LU8B0UH、NHA2KW0RB7VP
+- 改了的手写知识：无。
+- 测试：本分支 tsc 退出码 0；vitest 242 文件／2540 用例／退出码 0，无重跑；因预检冲突，未运行合后测试。
+- 切片大小：整体中位减少19字，配对增量中位+2字；最大4970字。
+- 学习账本：新增无；改成 proposed：silent-0005、silent-0006、silent-0011、silent-0013、silent-0019、silent-0020、silent-0021、silent-0053、silent-0065、silent-0079、silent-0133、silent-0162、silent-0169、silent-0189、silent-0264、silent-0265；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.1",
+  "commit": "4a90d3570607a56e34e1dc6924d74987c06926b5",
+  "merged": null,
+  "added": 1,
+  "updated": 13,
+  "retired": 0,
+  "active": 159,
+  "mechanisms": [
+    "灵动步法逐牌兑现敏捷",
+    "力量、敏捷、朝向与虚弱合核",
+    "能力持有、施放和触发分账",
+    "毒雾后续轮初补毒",
+    "帝王蟹SL即时血价观察",
+    "仪式兽跨阈值停攻与后段成长",
+    "精确切击手牌数观察",
+    "佩尔之肉第三轮增能",
+    "脆弱逐牌折减格挡",
+    "萎靡X减益与遗物倍率",
+    "抱抱先生轮初自动伤",
+    "不安油灯首次负面放大"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2540},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0005", "silent-0006", "silent-0011", "silent-0013",
+      "silent-0019", "silent-0020", "silent-0021", "silent-0053",
+      "silent-0065", "silent-0079", "silent-0133", "silent-0162",
+      "silent-0169", "silent-0189", "silent-0264", "silent-0265"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-04b6b430759815ed",
+    "silent-proposal-9952ee8e8df9a0fe"
+  ],
+  "implementation_domains": ["combat", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1173f-4390-7303-aa67-ae5acd66b6cc
+轮数：1；工具调用：command_execution×66 file_change×7
+token：输入 223.5k、输出 66.2k（其中推理 31.6k）、cache 读 8585.7k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：2408.2 s（墙钟）
+时间：首个事件 3.6 s、模型首个输出 10.6 s、首次工具 14.1 s、末次工具结束 2338.4 s；工具内共 1469.5 s，其余（模型生成、推理、网络）935.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×58 wait×2；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T00-43-04-01a1173f-4390-7303-aa67-ae5acd66b6cc.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update.jsonl

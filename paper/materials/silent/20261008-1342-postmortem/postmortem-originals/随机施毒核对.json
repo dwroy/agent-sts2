@@ -1,0 +1,249 @@
+{
+  "范围": "只复现原始帧297418中弹跳药瓶的施毒与当前回合评估；不重建整场、不引入其他角色数据。",
+  "输入": {
+    "hand": [
+      {
+        "index": 0,
+        "key": "c0",
+        "cardId": "BOUNCING_FLASK",
+        "name": "弹跳药瓶",
+        "type": "Skill",
+        "upgraded": false,
+        "cost": 2,
+        "xCost": false,
+        "playable": true,
+        "target": "random",
+        "validTargets": [],
+        "damage": null,
+        "hits": 3,
+        "block": 0,
+        "vulnerable": 0,
+        "weak": 0,
+        "strength": 0,
+        "tempStrength": 0,
+        "enemyStrength": 0,
+        "enemyTempStrengthLoss": 0,
+        "hpLoss": 0,
+        "energyGain": 0,
+        "plating": 0,
+        "draw": 0,
+        "exhausts": false,
+        "special": null,
+        "poison": 3,
+        "known": true,
+        "flatValue": 0,
+        "heldPenalty": 0,
+        "heldHpLoss": 0,
+        "retaliate": 0,
+        "delayedDamage": 0,
+        "inferno": 0,
+        "soulbound": false,
+        "putsOnTop": false,
+        "drawsUntil": false,
+        "randomExhaust": false,
+        "text": "随机给予敌人3层中毒3次。"
+      }
+    ],
+    "fightKind": "monster",
+    "turn": 5,
+    "player": {
+      "hp": 1,
+      "maxHp": 76,
+      "block": 0,
+      "energy": 2,
+      "weak": false,
+      "vulnerable": true,
+      "intangible": false
+    },
+    "enemies": [
+      {
+        "index": 0,
+        "name": "幼虫",
+        "hp": 12,
+        "maxHp": 23,
+        "block": 0,
+        "vulnerable": 0,
+        "weak": 0,
+        "poison": 0,
+        "artifact": 0,
+        "intangible": false,
+        "minion": true,
+        "attacks": [
+          {
+            "damage": 7,
+            "hits": 1
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "name": "幼虫",
+        "hp": 7,
+        "maxHp": 21,
+        "block": 0,
+        "vulnerable": 0,
+        "weak": 0,
+        "poison": 7,
+        "artifact": 0,
+        "intangible": false,
+        "minion": true,
+        "attacks": [
+          {
+            "damage": 7,
+            "hits": 1
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "name": "幼虫",
+        "hp": 13,
+        "maxHp": 21,
+        "block": 0,
+        "vulnerable": 0,
+        "weak": 0,
+        "poison": 0,
+        "artifact": 0,
+        "intangible": false,
+        "minion": true,
+        "attacks": [
+          {
+            "damage": 7,
+            "hits": 1
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "name": "直飞产卵虫",
+        "hp": 29,
+        "maxHp": 132,
+        "block": 0,
+        "vulnerable": 0,
+        "weak": 0,
+        "poison": 20,
+        "artifact": 0,
+        "intangible": false,
+        "minion": false,
+        "attacks": [
+          {
+            "damage": 31,
+            "hits": 1
+          }
+        ]
+      }
+    ]
+  },
+  "模拟": {
+    "winsFight": true,
+    "hpLoss": 0,
+    "hpAfter": 1,
+    "dies": false,
+    "blockGained": 0,
+    "damageDealt": 36,
+    "kills": [
+      "幼虫",
+      "直飞产卵虫"
+    ],
+    "restocked": [],
+    "enemyHpAfter": [
+      {
+        "index": 0,
+        "name": "幼虫",
+        "hp": 12,
+        "vulnerable": 0,
+        "weak": 0,
+        "block": 0,
+        "artifact": 0,
+        "slippery": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "strengthGained": 0,
+        "shrink": 0
+      },
+      {
+        "index": 1,
+        "name": "幼虫",
+        "hp": 0,
+        "vulnerable": 0,
+        "weak": 0,
+        "poison": 6,
+        "block": 0,
+        "artifact": 0,
+        "slippery": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "strengthGained": 0,
+        "shrink": 0
+      },
+      {
+        "index": 2,
+        "name": "幼虫",
+        "hp": 13,
+        "vulnerable": 0,
+        "weak": 0,
+        "block": 0,
+        "artifact": 0,
+        "slippery": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "strengthGained": 0,
+        "shrink": 0
+      },
+      {
+        "index": 3,
+        "name": "直飞产卵虫",
+        "hp": 0,
+        "vulnerable": 0,
+        "weak": 0,
+        "poison": 28,
+        "block": 0,
+        "artifact": 0,
+        "slippery": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "strengthGained": 0,
+        "shrink": 0
+      }
+    ],
+    "incomingAfterBlock": 0,
+    "energyLeft": 0,
+    "vulnerableApplied": 0,
+    "weakApplied": 0,
+    "strengthGained": 0,
+    "cardsDrawn": 0,
+    "unknownCards": [],
+    "sandpitAfter": null,
+    "startTurnKills": [],
+    "withersAdded": 0,
+    "sleepCost": 0,
+    "lasting": 0,
+    "blockWasted": 0
+  },
+  "实际施毒后": [
+    {
+      "index": 0,
+      "id": "TOUGH_EGG",
+      "hp": 12,
+      "poison": 3
+    },
+    {
+      "index": 1,
+      "id": "TOUGH_EGG",
+      "hp": 7,
+      "poison": 10
+    },
+    {
+      "index": 2,
+      "id": "TOUGH_EGG",
+      "hp": 13,
+      "poison": 3
+    },
+    {
+      "index": 3,
+      "id": "OVICOPTER",
+      "hp": 29,
+      "poison": 20
+    }
+  ]
+}

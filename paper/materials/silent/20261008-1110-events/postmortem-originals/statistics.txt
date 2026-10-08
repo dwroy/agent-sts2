@@ -1,0 +1,60 @@
+统计 658 state 675 plans 6
+总决策者 Counter({'code': 477, 'jev': 139, 'codex': 42}) 仅combat Counter({('code', 'combat/plan-continue'): 236, ('jev', 'combat/plan-choice'): 114, ('code', 'combat/plan'): 80, ('code', 'combat/end_turn'): 21, ('code', 'combat/lethal'): 19, ('code', 'combat/least-loss'): 11, ('jev', 'combat/plan-choice+potion'): 9})
+低信心 15 [(286763, 3, 2, 0.14), (286764, 3, 2, 0.22), (286809, 7, 1, 0.28), (286890, 11, 5, 0.28), (287030, 19, 3, 0.16), (287055, 21, 1, 0.23), (287118, 23, 1, 0.2), (287184, 28, 5, 0), (287198, 28, 1, 0.18), (287292, 31, 1, 0.18), (287317, 31, 1, 0.3), (287335, 31, 1, 0.22), (287352, 31, 4, 0.19), (287353, 31, 4, 0.3), (287360, 31, 1, 0.16)]
+推演选优 123 121 116
+code rank 104 61
+护栏 []
+自主回合
+动作 131 去重轮 103 全自主 23 混合 80 keys [(11, None, 1), (11, None, 2), (11, None, 3), (11, None, 4), (11, None, 5), (12, None, 1), (12, None, 2), (12, None, 3), (12, None, 4), (12, None, 5), (14, None, 1), (14, None, 2), (14, None, 3), (15, None, 1), (15, None, 2), (15, None, 3), (15, None, 4), (17, 1, 3), (17, 1, 4), (17, 1, 5), (17, 1, 6), (17, 1, 7), (19, None, 1), (19, None, 2), (19, None, 3), (19, None, 4), (19, None, 5), (2, None, 1), (2, None, 2), (2, None, 3), (2, None, 4), (2, None, 5), (2, None, 6), (21, None, 1), (21, None, 2), (21, None, 3), (21, None, 4), (22, None, 1), (22, None, 2), (22, None, 3), (22, None, 4), (22, None, 5), (22, None, 6), (23, 1, 1), (23, 1, 2), (23, 1, 3), (23, 1, 4), (23, 1, 5), (23, 1, 6), (28, 1, 1), (28, 1, 3), (28, 1, 4), (28, 1, 5), (28, 1, 6), (28, 1, 7), (28, 2, 2), (28, 2, 3), (28, 2, 4), (28, 2, 6), (28, 2, 7), (28, 3, 1), (28, 3, 3), (28, 3, 5), (28, 3, 6), (28, 3, 7), (28, 4, 1), (28, 4, 3), (28, 4, 4), (28, 4, 5), (28, 4, 6), (28, 4, 7), (3, None, 2), (3, None, 3), (3, None, 4), (31, 1, 1), (31, 1, 2), (31, 1, 3), (31, 1, 4), (31, 1, 5), (31, 2, 1), (31, 2, 2), (31, 2, 3), (31, 2, 4), (31, 3, 1), (31, 3, 2), (31, 3, 3), (31, 3, 4), (31, 3, 5), (31, 4, 1), (31, 4, 3), (31, 4, 4), (4, None, 1), (4, None, 2), (4, None, 3), (7, None, 1), (7, None, 2), (7, None, 3), (7, None, 4), (9, None, 1), (9, None, 2), (9, None, 3), (9, None, 4), (9, None, 5)]
+喝药/丢药
+286763 3 2 None {'action': 'use_potion', 'option_index': 0} Jev chose to drink 痊愈药水, then re-plan (confidence 0.14)
+286812 7 1 None {'action': 'use_potion', 'option_index': 0, 'target_index': 2} Jev chose plan 2/3 (potion 消亡粉末 -> 扭动虫 #3) with confidence 0.49; code rank 2
+286874 11 1 None {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 铁心药水
+286934 14 1 None {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 能量药水
+286937 14 1 None {'action': 'use_potion', 'option_index': 1} Jev chose to drink 技能药水, then re-plan (confidence 0.97)
+286990 17 3 1 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} continuing the Jev-chosen plan: potion 易伤药水 -> 仪式兽
+287031 19 3 None {'action': 'use_potion', 'option_index': 0} Jev chose plan 1/4 (potion 肌肉药水, 带毒刺击 -> 偷窃草蜢, 打击 -> 偷窃草蜢) with confidence 0.95; code rank 1
+287054 21 1 None {'action': 'use_potion', 'option_index': 0} Jev chose to drink 能力药水, then re-plan (confidence 0.35)
+287081 22 1 None {'action': 'use_potion', 'option_index': 0, 'target_index': 0} Jev chose plan 2/5 (potion 易伤药水 -> 虱虫之祖, 匕首雨, 中和 -> 虱虫之祖, 打击 -> 虱虫之祖, 打击 -> 虱虫之祖) with confidence 0.96; code rank 2
+287117 23 1 1 {'action': 'use_potion', 'option_index': 0} Jev chose to drink 能力药水, then re-plan (confidence 0.40)
+287168 28 1 1 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 敏捷药水
+287201 28 2 2 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 敏捷药水
+287226 28 1 3 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 敏捷药水
+287253 28 1 4 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 敏捷药水
+287294 31 1 1 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 力量药水
+287318 31 1 2 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 力量药水
+287337 31 1 3 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 力量药水
+287362 31 1 4 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 力量药水
+逐轮损
+1 2 [[1, 0], [2, 0], [3, 0], [4, 4], [5, 0], [6, 0]]
+2 3 [[1, 0], [2, 0], [3, 0], [4, 0]]
+3 4 [[1, 0], [2, 1], [3, 0]]
+4 7 [[1, 0], [2, 0], [3, 0], [4, 0]]
+5 9 [[1, 9], [2, 1], [3, 0], [4, 0], [5, 0]]
+6 11 [[1, 0], [2, 6], [3, 0], [4, 0], [5, 0]]
+7 12 [[1, 0], [2, 11], [3, 11], [4, 2], [5, 0]]
+8 14 [[1, 0], [2, 2], [3, 0]]
+9 15 [[1, 0], [2, 0], [3, 7], [4, 0]]
+10 17 [[1, 0], [2, 15], [3, 8], [4, 0], [5, 0], [6, 0], [7, 0]]
+11 19 [[1, 4], [2, 0], [3, 1], [4, 1], [5, 0]]
+12 21 [[1, 15], [2, 0], [3, 1], [4, 0]]
+13 22 [[1, 7], [2, 0], [3, 0], [4, 7], [5, 0], [6, 0]]
+14 23 [[1, 0], [2, 5], [3, 0], [4, 5], [5, 0], [6, 0]]
+15 28 [[1, 0], [2, 0], [3, 0], [4, 18], [5, 8], [6, 0], [7, 0]]
+16 28 [[1, 0], [2, 0], [3, 0], [4, 10], [5, 14], [6, 0], [7, 0]]
+17 28 [[1, 0], [2, 0], [3, 0], [4, 18], [5, 15], [6, 0], [7, 0]]
+18 28 [[1, 0], [2, 0], [3, 0], [4, 18], [5, 8], [6, 0], [7, 0]]
+19 31 [[1, 1], [2, 3], [3, 15], [4, 8], [5, 0]]
+20 31 [[1, 0], [2, 10], [3, 17], [4, 0]]
+21 31 [[1, 1], [2, 3], [3, 16], [4, 8], [5, 0]]
+22 31 [[1, 1], [2, 8], [3, 17], [4, 3]]
+末牌组
+牌 32 Counter({('STRIKE_SILENT', False): 5, ('DEFEND_SILENT', False): 5, ('SLICE', False): 2, ('DEADLY_POISON', True): 2, ('ENLIGHTENMENT', False): 2, ('NEUTRALIZE', False): 1, ('SURVIVOR', False): 1, ('ASCENDERS_BANE', False): 1, ('BACKFLIP', False): 1, ('SUCKER_PUNCH', False): 1, ('MIRAGE', False): 1, ('CALCULATED_GAMBLE', False): 1, ('POISONED_STAB', False): 1, ('ENVENOM', False): 1, ('DAGGER_SPRAY', False): 1, ('SKEWER', False): 1, ('DEADLY_POISON', False): 1, ('ANTICIPATE', True): 1, ('PIERCING_WAIL', True): 1, ('SHOCKWAVE', False): 1, ('CLOAK_AND_DAGGER', False): 1})
+遗物 [('RING_OF_THE_SNAKE', '蛇之戒指', '在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。', None), ('SCROLL_BOXES', '卷轴箱', '拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。', None), ('STRIKE_DUMMY', '打击木偶', '名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。', None), ('STONE_CALENDAR', '历石', '在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。', None), ('PAELS_LEGION', '佩尔的士兵', '将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。', None), ('LUCKY_FYSH', '招财异鱼', '每当你将一张卡牌加入你的[gold]牌组[/gold]时，获得[blue]{Gold}[/blue][gold]金币[/gold]。', None), ('MINIATURE_CANNON', '微型大炮', '[gold]升级[/gold]的攻击牌额外造成[blue]{ExtraDamage}[/blue]点伤害。', None)]
+宠物 [{'index': 0, 'pet_id': 'PAELS_LEGION', 'name': '佩尔的士兵', 'current_hp': 9999, 'max_hp': 9999, 'block': 0, 'powers': []}]
+focus
+28 34 Counter({'None': 34})
+31 19 Counter({'None': 19})
+用时 1833.935
+token按usage Counter({'input_tokens': 4783373, 'cache_hit_tokens': 2040704, 'output_tokens': 17420, 'cache_miss_tokens': 0})
+usage样例 {'input_tokens': 127008, 'output_tokens': 484, 'cache_hit_tokens': 0, 'reasoning_tokens': 256}

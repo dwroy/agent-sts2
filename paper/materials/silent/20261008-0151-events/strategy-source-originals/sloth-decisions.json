@@ -1,0 +1,159 @@
+[
+  {
+    "line": 273512,
+    "ts": "2026-10-07T11:22:09.321Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 8,
+    "label": "combat/plan",
+    "decision_id": "d152c916-c036-4024-931a-694821e076ea",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:254:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:DEFEND_SILENT:true|1:STRIKE_SILENT:true|2:BULLET_TIME:true|3:NEUTRALIZE:true\",\"hp\":1,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:2|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":8}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "DEFEND_SILENT",
+        "upgraded": false
+      },
+      "turn": 8,
+      "from": "decision"
+    },
+    "rationale": "code plan (only distinct line): 防御, 打击 -> 知识恶魔, 中和 -> 知识恶魔; hp -0, dmg 34",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 771,
+      "planner": 2,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 6,
+    "sl_reloads": 5,
+    "run_id": "KV0JHNJCKXLS",
+    "observed_ts": "2026-10-07T11:22:09.319Z",
+    "journal": {
+      "choice": "code plan (only distinct line): 防御, 打击 -> 知识恶魔, 中和 -> 知识恶魔; hp -0, dmg 34",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "line": 273513,
+    "ts": "2026-10-07T11:22:10.653Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 8,
+    "label": "combat/plan-continue",
+    "decision_id": "8d7e547a-d6b0-4fcc-ab2e-dc34bd580b86",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:254:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:STRIKE_SILENT:true|1:BULLET_TIME:false|2:NEUTRALIZE:true\",\"hp\":1,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:14:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:2|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":8}",
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "KNOWLEDGE_DEMON"
+      },
+      "turn": 8,
+      "from": "line",
+      "hand": "BULLET_TIME,NEUTRALIZE,STRIKE_SILENT",
+      "enemies": "0:KNOWLEDGE_DEMON"
+    },
+    "rationale": "continuing the code-chosen plan: 打击 -> 知识恶魔",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 300,
+      "planner": 1,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 6,
+    "sl_reloads": 5,
+    "run_id": "KV0JHNJCKXLS",
+    "observed_ts": "2026-10-07T11:22:10.651Z",
+    "journal": {
+      "choice": "continuing the code-chosen plan: 打击 -> 知识恶魔",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "line": 273514,
+    "ts": "2026-10-07T11:22:11.519Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 33,
+    "turn": 8,
+    "label": "combat/end_turn",
+    "decision_id": "a3f67026-ecef-4fac-ac82-308fa7534e31",
+    "decider": "code",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:248:0:true\",\"event\":\"\",\"gold\":15,\"hand\":\"0:BULLET_TIME:false|1:NEUTRALIZE:false\",\"hp\":1,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:14:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"MIND_ROT_POWER:1|DEXTERITY_POWER:2|SLOTH_POWER:3\",\"rewards\":\"\",\"run\":\"KV0JHNJCKXLS\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":8}",
+    "chosen": {
+      "action": "end_turn"
+    },
+    "expect": {
+      "turn": 8,
+      "from": "decision"
+    },
+    "rationale": "no playable cards; ending the turn",
+    "confidence": null,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [],
+    "latency_ms": {
+      "plan": 0,
+      "jev": 0,
+      "action": 767,
+      "planner": 1,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "sl_attempt": 6,
+    "sl_reloads": 5,
+    "run_id": "KV0JHNJCKXLS",
+    "observed_ts": "2026-10-07T11:22:11.518Z",
+    "journal": {
+      "choice": "no playable cards; ending the turn",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  }
+]

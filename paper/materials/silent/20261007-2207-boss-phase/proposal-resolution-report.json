@@ -1,0 +1,115 @@
+{
+  "task": "strategy-proposal",
+  "base": "37e54b08304f3af5a9d664eee42049de96756551",
+  "runs": [
+    "JMH5C51RLN4E",
+    "9TG1RP5LFAAK",
+    "VLZ6CCT8AQ0A",
+    "T082DRCUHRRD",
+    "10GPK5XGHCK3",
+    "VN7RQJMJEFMX",
+    "VLV17NUSFS61",
+    "UMVLWER4CD98",
+    "P5HT1272P5SB",
+    "YLYLZWHA0GKU"
+  ],
+  "fixes": [
+    {
+      "id": "silent-proposal-4cc200cc9747f4a8",
+      "commit": "6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4",
+      "ledger": [
+        "silent-0228",
+        "silent-0251"
+      ],
+      "description": "静默A10 F48首战胜利/本幕完成/F49现场Boss事实分列；未知身份保持未知。"
+    }
+  ],
+  "skipped": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2525
+  },
+  "code_proposals": [
+    "silent-proposal-4cc200cc9747f4a8",
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-7ef28c3cb0160972",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa"
+  ],
+  "implementation_domains": [
+    "structure",
+    "terminal",
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-4cc200cc9747f4a8",
+      "state": "implemented",
+      "reason": "原学习者源码6f2b90a3自测通过，运维保留刷新并只合7原blob兜底；实际live/main祖先已核实，合后原沙箱240文件2525例0，唯一S1.double-boss-phase1；阶段/现场身份子项已上线，原报告/失败历史保留，完整外部另续验。",
+      "commit": "6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4"
+    },
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "已核VLZ F35/F43手牌升级与51伤/13损差值，但729份保存state均无实际/piles快照，run.deck仍为永久未升级牌组；缺可冻结的战内各堆卡实例/升级状态、完整确定抽牌输入，以及尚未观察升级/附魔变化的差值，不能以默认空角色的共用upgradeDelta宣称同方案和后续抽牌已完整实现。保留未建模并待神化专项补齐，不新增必打规则。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "事实成熟度子项已有live源码45161a51c2c6b7e4a499b13cf749c4108193bbf5；改变MC先行/最低推演预算、药价或目标规则仍缺同总预算同盘输入/随机样本的受控对照、神化覆盖修复后结果与另一focus完整实打，保留预算和护栏。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "与89354805ee4d7e77是同一神化缺口的经验链；缺战内牌堆/确定抽牌复合输入和未知升级差值，未实现项不能用经验91d49f82或两份相同提案冒称源码duplicate。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "原提案复合覆盖14账本/15经验，VLZ F43升级勒紧6等依赖尚未实现的神化/升级牌路径；缺各属性、持续毒、成长、实际资源共同冻结的完整调用输入和源码对照，路线/休息/focus的完整同盘反事实也未保存。已有子机制不等于整个提案已实现。"
+    },
+    {
+      "id": "silent-proposal-7ef28c3cb0160972",
+      "state": "duplicate",
+      "commit": "45161a51c2c6b7e4a499b13cf749c4108193bbf5",
+      "reason": "核8局14次饮用，现有CURE_ALL=+1能/抽2/不回血（源码9f0babde8915d770a4313ebcaeb22259cb024d38）；已有45161a51补静默推演覆盖、MC样本/用时和并列事实，二源码均实际live祖先。满手与预算参数/时机缺对照，本提案允许模型一致记duplicate，本轮保留原行为。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "8JRE的同指纹实打证明多12血换7伤，但原日志没有四阶段统一候选机器标识/完整原始调用输入和后续重规划整条动作关联；缺可冻结的Jev原答→HP护栏→SL替换→实际前缀/重问全链输入，不用理由文本倒造各阶段记录。另缺另一完整胜线，保持原选择规则。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "CA5 F13 T5能证明成长未被弱取消；缺力量、敏捷、弱与独立成长四路径同时冻结的本角色调用输入/源码对照，未取得步法不能当敏捷样本；不凭单子项源码证明复合经验全实现。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "5PM F39 T2未建立雾、对无毒目标冒泡零效果的事实保留；缺同起始HP/构筑/抽序下不同启动顺序的整场胜负对照及可复现收益函数，不能用持有组件或另一F33胜局拟合启动阈值。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "61E F17 T6吸取/负敏捷/毒事实保留；缺同起始HP/构筑/完整已知抽序下可救活的另一完整SL路线，单局首试胜不支持更改SL范围、阈值或换线偏好。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-203654-strategy-proposal/report.md"
+}

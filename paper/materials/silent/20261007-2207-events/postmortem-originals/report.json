@@ -1,0 +1,44 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "TXZ6RVMQA09D"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "TXZ6RVMQA09D",
+      "where": "ops/report.py:380",
+      "what": "无出牌决策的F49开场死亡漏记，death_fight误用已获胜的F48永世沙漏。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0254",
+      "silent-0255"
+    ],
+    "updated": [
+      "silent-0228",
+      "silent-0011",
+      "silent-0023",
+      "silent-0024",
+      "silent-0025",
+      "silent-0027",
+      "silent-0038",
+      "silent-0048",
+      "silent-0059"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-33ebbb1d904f7511",
+    "silent-proposal-92920295a648b540"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261007-214301-postmortem/report.md"
+}

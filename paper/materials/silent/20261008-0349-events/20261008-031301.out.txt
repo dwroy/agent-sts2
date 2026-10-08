@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：XTSV1U9JD34T（A10，第49层，女王／火炬头聚合体；末次T4以1血、6挡承受16攻击阵亡）。
+- 新的纯 bug：
+  - XTSV1U9JD34T：毒必胜提前停止搜索，遗漏连战前的保血候选 — agent/src/reflex/turn-solver.ts:3764（新）。
+- 写成「未记录」的项：XTSV1U9JD34T：替代行动的受控胜线、首轮接管完整动作、6次截断尝试退出结算、完整毛伤事件账、boss时钟指标及比值、Jev缓存、dirty完整源码。
+- 学习账本：XTSV1U9JD34T：新增 silent-0271；更新 silent-0164、silent-0140、silent-0228、silent-0069、silent-0005、silent-0027、silent-0024、silent-0095、silent-0206；均补支持证据，老错复现无；`ledger.py check`退出码0。
+- 代码提案：实现任务均为 strategy-proposal，尚未实施。
+  - silent-proposal-d60691b060dfc40a：F48T8毒胜剪枝及9血代价，关联0271／0228；替代保血量与后场胜负待验证。
+  - silent-proposal-e5ea36df117ca9b7：F34／F36／F49T1接管边界，关联0164；自动动作缺失，先核既有实现。
+  - silent-proposal-ab055ef7dfbb44e5：F49幽灵效果与复制兑现，关联0140／0069／0005／0206；延后用药无实盘对照，保留原时点与药价规则。
+
+```json
+{"task":"postmortem","appended":["XTSV1U9JD34T"],"skipped":[],"bugs":[{"run":"XTSV1U9JD34T","where":"agent/src/reflex/turn-solver.ts:3764","what":"毒必胜后搜索立即返回，遗漏保血候选；F48T8直接结束先受9伤凋萎，32血降至23进入第二boss。","new":true}],"ledger":{"added":["silent-0271"],"updated":["silent-0164","silent-0140","silent-0228","silent-0069","silent-0005","silent-0027","silent-0024","silent-0095","silent-0206"],"repeats":[],"check":0},"code_proposals":["silent-proposal-d60691b060dfc40a","silent-proposal-e5ea36df117ca9b7","silent-proposal-ab055ef7dfbb44e5"],"implementation_domains":["combat","potion","terminal","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-031301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a117c8-917f-78f2-b1ff-1b97039ca85f
+轮数：1；工具调用：command_execution×53
+token：输入 226.3k、输出 41.3k（其中推理 13.2k）、cache 读 4772.7k、cache 写 0（命中 95.5%）
+成本：未提供
+耗时：1211.0 s（墙钟）
+时间：首个事件 2.5 s、模型首个输出 7.3 s、首次工具 11.1 s、末次工具结束 1183.7 s；工具内共 63.8 s，其余（模型生成、推理、网络）1144.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×34；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T03-13-02-01a117c8-917f-78f2-b1ff-1b97039ca85f.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-031301-postmortem.jsonl

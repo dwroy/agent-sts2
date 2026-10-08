@@ -1,0 +1,136 @@
+[
+ {
+  "id": "silent-0171",
+  "ts": "2026-10-06T10:54:06+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "瀑布巨兽两次T3的低信心支配替换只比即时伤害等轴，未比较剩余毒。Jev选致命毒药／投掷匕首／触媒，题面19伤、损9、余3毒；代码改投掷匕首／狩猎／触媒，21伤、同损9、无毒。当前turn-solver.ts:3702没有余毒轴，combat-plan.ts:4260据此执行。实际多2当轮伤且启毒拖到T10，原线没有实打，不声称保留就能赢。与旧毒效果未建模bug分别记。",
+  "evidence": [
+   {
+    "run": "TD1HVGS7H6LB",
+    "floor": 17,
+    "turn": 3,
+    "role": "support",
+    "note": "首试02:07:07.544Z与重启后02:16:40.827Z，Jev信心0.25／0.31均选plan6，被替成plan1；两次实际敌220→199、玩家45→36，触媒1层而无毒。原plan6题面敌201／毒3，plan1敌199／无毒，五轮推演末敌约180／197。",
+    "added": "2026-10-06T10:54:06+08:00"
+   }
+  ],
+  "first_run": "TD1HVGS7H6LB",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按角色回查47个更早静默复盘及其决策：见过保留同毒或增加毒的支配替换，未找到用多即时伤害替掉更高余毒的可比取舍；不能由其他替换已做对认定这一缺口已有正确先验。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "TD1HVGS7H6LB"
+   ],
+   "commits": [
+    "c9aef94df27d100a7e3d32e100d555248dd6be97",
+    "51eb059e875ca33ec1e24a394ad2ee0db626d38c",
+    "4fb81b17d099018d348942677bfe31dca333a4b1"
+   ]
+  },
+  "note": "新的纯代码比较缺口；notes/fix-queue.md及fix-queue-v4.md未列此项。定位为只读live当前be0ee6df，runs汇总c1f61de9+dirty；run-config开局62b4caf+dirty、重启c1f61de+dirty，不冒称复原dirty源码。只复盘，不改代码。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-06T10:54:06+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T11:29:30+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T14:41:06+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix29",
+  "effect": null,
+  "notes": [
+   "新的纯代码比较缺口；notes/fix-queue.md及fix-queue-v4.md未列此项。定位为只读live当前be0ee6df，runs汇总c1f61de9+dirty；run-config开局62b4caf+dirty、重启c1f61de+dirty，不冒称复原dirty源码。只复盘，不改代码。",
+   "14:35 fix-done核实际上线与main/live祖先、原固定发布树完整tsc/vitest通过（251文件2986通过2跳过）；仅登记学习者已实现范围。首次证据、先验、repeat、旧S1.fix28与既有上线历史保持；0172未实现，0173/0169独立。不把整场胜负归本项；14:31隔离目录修复为后续独立源码，不冒用旧发布完整检查。"
+  ],
+  "shipped_at": "2026-10-06T14:41:06+08:00"
+ },
+ {
+  "id": "silent-0202",
+  "ts": "2026-10-07T02:24:07+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "羽化METAMORPHOSIS的Cards=3表示向抽牌堆加入三张随机免费攻击，却被当前卡牌模型读为即时draw=3，并在rollout按抽牌消费牌堆。本局雕刻师T2题面报抽3、实况手牌只减去羽化且抽牌堆增加3；应把已观察的生成效果与即时抽牌分别处理，不声称修正足以赢整场。只读当前live定位agent/src/reflex/card-model.ts:893、agent/src/reflex/rollout.ts:2094，fix-queue无同项。",
+  "evidence": [
+   {
+    "run": "C48LLXBGKXQ9",
+    "floor": 24,
+    "turn": 1,
+    "note": "14:10:06.072Z含羽化方案cards_drawn=3；14:10:06.923Z实际打羽化后至14:10:12.229Z，手牌9→8、抽牌堆18→21、能量6→4，未抽牌。旧复盘未识别该独立误报，现回溯首证。",
+    "role": "support",
+    "added": "2026-10-07T02:24:07+08:00"
+   },
+   {
+    "run": "HUVEPWQAHWFU",
+    "floor": 35,
+    "turn": 2,
+    "note": "17:59:48.730Z Jev0.89选羽化→致命毒药，题面cards_drawn=3、五轮2/8获胜；只打羽化后手牌5→4、抽牌堆17→20，随后重问改打步法，本轮0伤。",
+    "role": "support",
+    "added": "2026-10-07T02:24:07+08:00"
+   }
+  ],
+  "first_run": "C48LLXBGKXQ9",
+  "prior": "no",
+  "prior_runs": [
+   "C48LLXBGKXQ9"
+  ],
+  "prior_note": "最早静默首局F24 T1已把加入抽牌堆误报成抽3，实际没有当轮抽牌；学习账本和更早静默复盘未登记此项，没有此前正确建模的可比证据。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "HUVEPWQAHWFU"
+   ],
+   "commits": [
+    "a-placeholder",
+    "129853b817c0e985e222b09385a9bfeb0562ec7f",
+    "0b6e5c94f3bbbe0a936ced995f790987c57c4b88",
+    "0068600d255da2487f777a6e18903fa984895a82",
+    "e4126cdb11349900ad2dc745abb2434fbdc5e049"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-07T02:24:07+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T02:50:41+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T02:50:52+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T03:15:22+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix40",
+  "effect": null,
+  "notes": [
+   "本批第一次where.commits误写a-placeholder；该占位不是git提交且无效，以本行正式提交129853b8为准，原追加历史保留。",
+   "03:10 fix-done确认20261007-024301-fix-batch：羽化源129853b8、重放源1ab1ba8d→实际live代码0b6e5c94→固定发布0068600d/树467e2ab2/唯一S1.fix40，main已机械同步。沿学习者0199重放次数漏入跨回合凋萎、0202羽化虚构即时抽牌两个纯bug，无运维新增游戏知识；0199证据DPYF2BAA3DKT/A10/F48末次T1/T7，0202首证C48LLXBGKXQ9/A0/F24 T1、HUVEPWQAHWFU/A10/F35 T2支持。只计已接受动作的已观察附魔重放，保留失败动作/续行/重启/日志/SL固定覆盖，原始均值与投斧分账；羽化生成未来收益保留未建模，不虚构抽牌/随机牌收益，不改策略、用药或生产复活规则，铁甲等价，不声称整场转胜。羽化源tsc/vitest0、213文件2279例，最终源及合后首轮各214文件2289例、tsc/vitest0，无超时重跑。按原时间戳明确：羽化4例02:46:06先绿→02:46:22撤源2失败2通过→恢复整套2279；重放相关3文件50例02:55:18先绿→02:55:41撤全部源码9失败1通过→恢复整套2289；不把此前4/50例说成撤后单独重跑或重复相加。初稿index接线/复活字段断言失败、原恢复摘要及全部原文/真红保持。无新增知识刷新、重叠[]，全部知识blob及经验.3保持，10个修复blob同已测发布，双方decision-log原行及重复次数保持。128项旧修复祖先与原proposed三行已归档；0202 a-placeholder明确是无效占位、不当git源码提交，正式129853b8勘误保留，追加历史不抹除。本次仅CLI/by=ops两项shipped/S1.fix40并关闭02:20/02:31两个队列框；0199首证DPY/A10/prior=unknown、0202首证C48/A0/prior=no及claim/全部support/repeat/历史保持，0200独立机制LRN/A0/prior=unknown/S1.exp57、0203独立机制C48/A0/prior=no、0201/strategy9、0172/fix39、0197/fix38及全部旧状态不重置。完整外部待本批learner-checks，旧mod/缓存/性能与策略专项保持，无新Roy待定，后台产出及对局继续。"
+  ],
+  "shipped_at": "2026-10-07T03:15:22+08:00"
+ }
+]

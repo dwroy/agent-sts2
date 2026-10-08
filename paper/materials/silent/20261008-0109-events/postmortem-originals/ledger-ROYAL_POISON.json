@@ -1,0 +1,241 @@
+[
+ {
+  "id": "silent-0198",
+  "ts": "2026-10-07T01:01:00+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默本局持有王室猛毒ROYAL_POISON与小血瓶BLOOD_VIAL时，两场开战过渡均净失2血：80→78、47→45，发生在出牌之前。只确认这个组合的实际净值；缺各遗物结算中间帧，不能分别指定扣血/回血量或内部顺序，也不推广缺任一遗物时的净值。",
+  "evidence": [
+   {
+    "run": "VPW8YH7A4QFM",
+    "floor": 38,
+    "turn": 1,
+    "role": "support",
+    "note": "F37喝茶获王室猛毒，38→80；16:16:19.731Z/16:16:21.106Z尚80血，16:16:24.685Z首个可操作战斗帧78血、出牌计数0，与小血瓶同持。",
+    "added": "2026-10-07T01:01:00+08:00"
+   },
+   {
+    "run": "VPW8YH7A4QFM",
+    "floor": 39,
+    "turn": 1,
+    "role": "support",
+    "note": "16:17:33.195Z及工具箱选择帧47血，16:17:38.484Z首个可操作帧45血、出牌计数0；之后该战T6阵亡。只登记开战净减2，不把之后战斗失血归给遗物。",
+    "added": "2026-10-07T01:01:00+08:00"
+   },
+   {
+    "run": "TXZ6RVMQA09D",
+    "role": "support",
+    "floor": 49,
+    "turn": 1,
+    "note": "本角色原始日志逐帧核验 silent-royal-poison-blood-vial-opening-net；局部公式/实际资源与整战因果分账，完整证据在第82次增量及任务审计。",
+    "added": "2026-10-07T23:19:12+08:00"
+   }
+  ],
+  "first_run": "VPW8YH7A4QFM",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "查静默账本王室猛毒/ROYAL_POISON、同角色更早复盘及67个更早静默局的遗物取得/事件决策，未找到这个组合的可比先验；不能用其他角色代替。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "VPW8YH7A4QFM"
+   ],
+   "experience": [
+    "silent-royal-poison-blood-vial-opening-net"
+   ],
+   "commits": [
+    "63e53c86dd449289f8e1b68decb716c4bf1b3dd4",
+    "02b87e7c2365eaf48acc3fe46a0d83c33a80deb5",
+    "714cefc76dc84dbd8368d4702c5d220ece205cb4",
+    "3493092a4ced1e31972490b5ef15d25e1658f5b5",
+    "ab065d0a4fc067cb6a6d529da2706ab7ef508f85",
+    "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+    "fd4c8e52341c31cad606c0a4b96a43663843e201",
+    "148a9d2a1de7c01fd052aa70bc20feba25405043"
+   ],
+   "changelog": [
+    "2026-10-07 静默猎手 第五十六次增量：1 局 A10（version 2026-10-07.2，分支 exp-silent，63e53c86）",
+    "## 2026-10-07 静默猎手 第八十二次增量：2 局 A10（version 2026-10-07.28，分支 exp-silent，ab065d0a）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-continuation-sl.md"
+   ]
+  },
+  "note": "新增机制观察，限定联合持有状态和已见两场过渡，未制定取遗物或回血策略。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-07T01:01:00+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T01:19:15+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T01:33:03+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T22:50:20+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T22:50:20+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T23:19:12+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T23:50:46+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp82",
+  "effect": null,
+  "notes": [
+   "新增机制观察，限定联合持有状态和已见两场过渡，未制定取遗物或回血策略。",
+   "静默经验2026-10-07.2：VPW8YH7A4QFM A10及01:01勘误、本角色历史。机制/实际触发/本体输出/开场遗物/净损与操作损分账；王室猛毒仅组合净值观察，不拆独立数值。无新用药规则/源码变更，仅proposed；首证/先验/claim/旧version/repeat保持，交运维核实际合入后登记shipped。",
+   "01:30 experience-done机械确认20261007-010232-experience-update：源63e53c86→实际live02b87e7c→固定发布714cefc7/唯一S1.exp56，main已同步经验2026-10-07.2及七份已测合前自动刷新。沿VPW8YH7A4QFM SILENT A10、01:01 F14勘误及本角色历史，新增1更新14（11补证/0只数字/3压缩）退役0、active127/56154字，无新用药规则。源压缩稿初轮、定稿重跑及合后首轮均tsc0/vitest0、209文件2245例，非失败/超时重跑；知识重叠/冲突0，其他知识保持。临时powers列表误当字典、开场净血取帧断言和收尾0197并行状态耦合失败原稿、修正、原第56节/15行proposed/全部自测保存，非生产代码失败。本批仅CLI/by=ops十五项shipped，首证/先验/claim/全部证据/repeat与历史保持。0198 VPW/A10/prior=unknown，0197 Y6GM/A0/prior=no及独立fix-batch状态不重置或代登记；0193/fix36、0195/fix37、0194/exp52、0196 LRN/A0/prior=yes/exp54和0172待修保持。完整外部待本批learner-checks，无Roy待定，后台产出及对局继续。",
+   "第82次静默经验提交前链接，首证/先验/旧上线记录保持，独立strategy-proposal实现；无accepted/shipped。",
+   "代码提案 silent-proposal-47910f82a1fdd98f → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第82次静默经验更新，首证/先验/claim/旧support/repeat/version和全部上线历史保持；仅追加实际核对来源，代码提案独立strategy-proposal实现，未accepted/shipped。旧王室+小血瓶2血与新无小血瓶4血分支、狡诈基本生成与首次满手0257分开。",
+   "经验第82次原数据实际发布.28/156 active；仅按原ledger-map登记本所属经验数据shipped，源原沙箱240文件2525例、实际组合合后242文件2540例tsc/vitest0。首证/prior/claim/support/repeat及旧上线历史保持；三个combat/potion/SL代码提案沿独立策略链，数据发布不等于代码实现；完整外部原批续验另登记。"
+  ],
+  "shipped_at": "2026-10-07T23:50:46+08:00"
+ },
+ {
+  "id": "silent-0255",
+  "ts": "2026-10-07T22:01:02+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默A10本局王室猛毒ROYAL_POISON在无小血瓶BLOOD_VIAL时，五场新战斗于出牌前各净失4血；连续第二boss以4血进房会在可操作前耗尽生命，敌攻击没有执行。仅确认本局遗物组合和开场时点，不能把旧局王室猛毒＋小血瓶净失2血当单件数值，也不推断未知回血／复活组合顺序或改选事件可赢。",
+  "evidence": [
+   {
+    "run": "TXZ6RVMQA09D",
+    "floor": 43,
+    "turn": 1,
+    "role": "support",
+    "note": "states:281312→281313，70/70→66/70、出牌0；持王室猛毒而无小血瓶。",
+    "added": "2026-10-07T22:01:02+08:00"
+   },
+   {
+    "run": "TXZ6RVMQA09D",
+    "floor": 45,
+    "turn": 1,
+    "role": "support",
+    "note": "states:281338→281339，52/62→48/62、出牌0。",
+    "added": "2026-10-07T22:01:02+08:00"
+   },
+   {
+    "run": "TXZ6RVMQA09D",
+    "floor": 46,
+    "turn": 1,
+    "role": "support",
+    "note": "states:281367→281368，62/62→58/62、出牌0。",
+    "added": "2026-10-07T22:01:02+08:00"
+   },
+   {
+    "run": "TXZ6RVMQA09D",
+    "floor": 48,
+    "turn": 1,
+    "role": "support",
+    "note": "states:281399→281400，60/62→56/62、出牌0；后续SL从56血存档恢复，不能重复算开场成本。",
+    "added": "2026-10-07T22:01:02+08:00"
+   },
+   {
+    "run": "TXZ6RVMQA09D",
+    "floor": 49,
+    "turn": 1,
+    "role": "support",
+    "note": "states:281565→281566，4/62→0/62、cards_played=0、敌TEST_SUBJECT 111/111、22攻击未执行，无可出牌帧；F48空奖励没有中间回血。",
+    "added": "2026-10-07T22:01:02+08:00"
+   }
+  ],
+  "first_run": "TXZ6RVMQA09D",
+  "prior": "unknown",
+  "prior_runs": [
+   "VPW8YH7A4QFM"
+  ],
+  "prior_note": "查本角色更早复盘及ROYAL_POISON／王室猛毒账本，仅silent-0198的VPW8YH7A4QFM联合持有小血瓶、两场净失2；该组合与本局无小血瓶入口不可等同，未找到相同4血开场的学习前选择。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "TXZ6RVMQA09D"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-214301-postmortem/proposal-opening-resource.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261007-214301-postmortem/proposal-sl-continuation-validation.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-continuation-sl.md"
+   ],
+   "experience": [
+    "silent-royal-poison-blood-vial-opening-net"
+   ],
+   "commits": [
+    "ab065d0a4fc067cb6a6d529da2706ab7ef508f85",
+    "9ede80593818dd8cdbc5a10e28f8cd79edc7b613",
+    "fd4c8e52341c31cad606c0a4b96a43663843e201",
+    "148a9d2a1de7c01fd052aa70bc20feba25405043"
+   ],
+   "changelog": [
+    "## 2026-10-07 静默猎手 第八十二次增量：2 局 A10（version 2026-10-07.28，分支 exp-silent，ab065d0a）"
+   ]
+  },
+  "note": "三条主经验的第二条，同时是机制观察的新机制；大脑末复审已识别4血入口风险，但实际奖励为空。出牌／终局入口提案另经CLI登记，保持原行为至独立实现验证。",
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-07T22:01:02+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T22:03:37+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T22:03:38+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T22:50:20+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T22:50:20+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T23:19:12+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T23:50:46+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp82",
+  "effect": null,
+  "notes": [
+   "三条主经验的第二条，同时是机制观察的新机制；大脑末复审已识别4血入口风险，但实际奖励为空。出牌／终局入口提案另经CLI登记，保持原行为至独立实现验证。",
+   "代码提案 silent-proposal-33ebbb1d904f7511 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-92920295a648b540 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第82次静默经验提交前链接，首证/先验/旧上线记录保持，独立strategy-proposal实现；无accepted/shipped。",
+   "代码提案 silent-proposal-47910f82a1fdd98f → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第82次静默经验更新，首证/先验/claim/旧support/repeat/version和全部上线历史保持；仅追加实际核对来源，代码提案独立strategy-proposal实现，未accepted/shipped。旧王室+小血瓶2血与新无小血瓶4血分支、狡诈基本生成与首次满手0257分开。",
+   "经验第82次原数据实际发布.28/156 active；仅按原ledger-map登记本所属经验数据shipped，源原沙箱240文件2525例、实际组合合后242文件2540例tsc/vitest0。首证/prior/claim/support/repeat及旧上线历史保持；三个combat/potion/SL代码提案沿独立策略链，数据发布不等于代码实现；完整外部原批续验另登记。"
+  ],
+  "shipped_at": "2026-10-07T23:50:46+08:00"
+ }
+]

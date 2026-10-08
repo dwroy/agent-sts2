@@ -1,0 +1,2521 @@
+[
+  {
+    "run_id": "BVF22RSFVBS9",
+    "ascension": 10,
+    "character": "SILENT",
+    "started": "2026-10-06 14:02:15.843000",
+    "ended": "2026-10-06 14:25:14.176000",
+    "floor": 23,
+    "max_floor": 23,
+    "max_act": 2,
+    "finished": true,
+    "victory": false,
+    "death_fight": [
+      "熟睡甲虫",
+      "盛碗虫（丝）",
+      "盛碗虫（石）"
+    ],
+    "death_encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+    "death_room": "hallway",
+    "code": "28e339fa+dirty",
+    "decisions": 424,
+    "jev_calls": 111,
+    "deepseek_calls": 23,
+    "claude_calls": 0,
+    "tokens": 499991,
+    "ds_tokens_in": 2965721,
+    "ds_tokens_out": 8835,
+    "ds_cache_hit": 1540608,
+    "deciders": "{\"codex\":33,\"code\":179,\"jev\":111,\"jev-plan\":101}",
+    "arm": null,
+    "frames": 434,
+    "cfg_code": "28e339f+dirty",
+    "cfg_branch": "live",
+    "cfg_worktree": "live",
+    "brain_engine": "codex",
+    "brain_by_prefix": "{}",
+    "brain_fallback": "deepseek",
+    "brain_label": "codex:gpt-6.1-sol",
+    "knowledge_prefix": "full",
+    "prefix_sha": "d645c92cd9bd",
+    "prefix_tokens_deepseek": 107682,
+    "jev_model": "jev-latest",
+    "jev_context": "v1",
+    "target_ascension": 10,
+    "config_sha": "17438886a8e8",
+    "config_rows": 1,
+    "config_changed": false,
+    "start_commit": "28e339fa3ff7b39ed7f45397c621f47873b3c795",
+    "start_code": {
+      "commit": "28e339fa3ff7b39ed7f45397c621f47873b3c795",
+      "code": "28e339f+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "start_version": "S1.exp51",
+    "version_how": "git",
+    "end_label_version": "S1.exp51",
+    "start_process": {
+      "pid": 4002592,
+      "started": "2026-10-06T14:01:40.789Z"
+    },
+    "config_count": 1,
+    "brain_config": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": "deepseek",
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "high",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        },
+        "deepseek": {
+          "model": "deepseek-flash",
+          "model_by_prefix": {},
+          "timeout_ms": null,
+          "effort": null,
+          "reask": null,
+          "tools": false,
+          "max_calls": 300
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": null,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "sl_config": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "loop_config": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "experience_version": "2026-10-06.26",
+    "brain_source": {
+      "policy": "codex-successful-brain-v1",
+      "source": "codex",
+      "eligible": true,
+      "exclusion_reason": null,
+      "successful_answers": {
+        "codex": 23
+      },
+      "successful_by_label": {
+        "event/act-plan": {
+          "codex": 1
+        },
+        "event/choose": {
+          "codex": 1
+        },
+        "event/plan": {
+          "codex": 4
+        },
+        "map/route-plan": {
+          "codex": 1
+        },
+        "rest/plan": {
+          "codex": 3
+        },
+        "reward/card": {
+          "codex": 11
+        },
+        "selection/add": {
+          "codex": 1
+        },
+        "shop/plan": {
+          "codex": 1
+        }
+      },
+      "embedded_answers": {
+        "run-plan": 4,
+        "map/route": 18
+      },
+      "brain_rows": 23,
+      "failed_or_unaccepted_rows": 0,
+      "unknown_successes": 0,
+      "first_success": "2026-10-06T14:02:15.839Z",
+      "last_success": "2026-10-06T14:19:02.825Z",
+      "unresolved_questions": 0,
+      "coverage": "all_logged_questions_resolved",
+      "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"
+    },
+    "exposures": {
+      "V4.codex-only1": false,
+      "S1.double-boss1": false,
+      "S1.fix45": false,
+      "S1.double-boss-phase1": false,
+      "S1.mirage-poison1": false,
+      "S1.sloth-replay1": false,
+      "S1.bullet-time1": false
+    },
+    "post_double_walltime": false,
+    "actual_max_floor": 23,
+    "reach33": false,
+    "reach48": false,
+    "first_reach33": false,
+    "first_reach48": false,
+    "sl_rows": 6,
+    "reloads": 3,
+    "first_death_floor": 23,
+    "death_frame": {
+      "off": 7884704601,
+      "len": 32142,
+      "ts": "2026-10-06 14:25:10.657000",
+      "run_id": "BVF22RSFVBS9",
+      "act": 2,
+      "floor": 23,
+      "turn": 5,
+      "screen": "COMBAT",
+      "hp": 4,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "DAGGER_THROW",
+        "SLICE",
+        "POISONED_STAB",
+        "ACCELERANT",
+        "BUBBLE_BUBBLE",
+        "DEADLY_POISON+",
+        "NOXIOUS_FUMES",
+        "ECHOING_SLASH",
+        "DEADLY_POISON",
+        "LEG_SWEEP",
+        "CALCULATED_GAMBLE+",
+        "PIERCING_WAIL+"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "WINGED_BOOTS",
+        "STRIKE_DUMMY",
+        "VERY_HOT_COCOA"
+      ],
+      "potions": [],
+      "player_hp": 4,
+      "block": 0,
+      "energy": 0,
+      "player_powers": [
+        {
+          "id": "ACCELERANT_POWER",
+          "amount": 1
+        },
+        {
+          "id": "NOXIOUS_FUMES_POWER",
+          "amount": 2
+        }
+      ],
+      "enemies": [
+        {
+          "idx": 0,
+          "id": "BOWLBUG_ROCK",
+          "hp": 9,
+          "max_hp": 49,
+          "block": 0,
+          "alive": true,
+          "move": "HEADBUTT_MOVE",
+          "intent_dmg": 16,
+          "minion": false
+        },
+        {
+          "idx": 1,
+          "id": "BOWLBUG_SILK",
+          "hp": 23,
+          "max_hp": 42,
+          "block": 0,
+          "alive": true,
+          "move": "TOXIC_SPIT_MOVE",
+          "intent_dmg": 0,
+          "minion": false
+        },
+        {
+          "idx": 2,
+          "id": "SLUMBERING_BEETLE",
+          "hp": 71,
+          "max_hp": 89,
+          "block": 0,
+          "alive": true,
+          "move": "ROLL_OUT_MOVE",
+          "intent_dmg": 15,
+          "minion": false
+        }
+      ],
+      "incoming": 31
+    },
+    "act2_hall_death": true,
+    "act2_road_death": true,
+    "entry2": {
+      "off": 7879056852,
+      "len": 21194,
+      "ts": "2026-10-06 14:15:20.874000",
+      "run_id": "BVF22RSFVBS9",
+      "act": 2,
+      "floor": 18,
+      "turn": null,
+      "screen": "EVENT",
+      "hp": 59,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "DAGGER_THROW",
+        "SLICE",
+        "POISONED_STAB",
+        "ACCELERANT",
+        "BUBBLE_BUBBLE",
+        "DEADLY_POISON+",
+        "NOXIOUS_FUMES",
+        "ECHOING_SLASH",
+        "DEADLY_POISON",
+        "LEG_SWEEP"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "WINGED_BOOTS",
+        "STRIKE_DUMMY"
+      ],
+      "potions": [],
+      "player_hp": null,
+      "block": null,
+      "energy": null,
+      "player_powers": null,
+      "enemies": null,
+      "incoming": null
+    },
+    "elite_floors": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "rests": {
+      "1": {
+        "choose_rest_option": 3,
+        "proceed": 3
+      },
+      "2": {},
+      "3": {}
+    },
+    "reward_choices": {
+      "choose_reward_card": 9,
+      "skip_reward_cards": 2
+    }
+  },
+  {
+    "run_id": "2Y27VAYZDA02",
+    "ascension": 10,
+    "character": "SILENT",
+    "started": "2026-10-07 01:07:59.017000",
+    "ended": "2026-10-07 01:40:06.660000",
+    "floor": 22,
+    "max_floor": 22,
+    "max_act": 2,
+    "finished": true,
+    "victory": false,
+    "death_fight": [
+      "熟睡甲虫",
+      "盛碗虫（丝）",
+      "盛碗虫（石）"
+    ],
+    "death_encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+    "death_room": "hallway",
+    "code": "1a5e1217+dirty",
+    "decisions": 654,
+    "jev_calls": 267,
+    "deepseek_calls": 21,
+    "claude_calls": 0,
+    "tokens": 1116121,
+    "ds_tokens_in": 2617692,
+    "ds_tokens_out": 7874,
+    "ds_cache_hit": 1349248,
+    "deciders": "{\"codex\":34,\"code\":129,\"jev\":267,\"jev-plan\":224}",
+    "arm": null,
+    "frames": 663,
+    "cfg_code": "1a5e121+dirty",
+    "cfg_branch": "live",
+    "cfg_worktree": "live",
+    "brain_engine": "codex",
+    "brain_by_prefix": "{}",
+    "brain_fallback": null,
+    "brain_label": "codex:gpt-6.1-sol",
+    "knowledge_prefix": "full",
+    "prefix_sha": "5a48214cfef6",
+    "prefix_tokens_deepseek": 101707,
+    "jev_model": "jev-latest",
+    "jev_context": "v1",
+    "target_ascension": 10,
+    "config_sha": "27817cfd497b",
+    "config_rows": 1,
+    "config_changed": false,
+    "start_commit": "1a5e1217a024ffa10321660028f65b602d7d9296",
+    "start_code": {
+      "commit": "1a5e1217a024ffa10321660028f65b602d7d9296",
+      "code": "1a5e121+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "start_version": "S1.exp66",
+    "version_how": "git",
+    "end_label_version": "S1.exp66",
+    "start_process": {
+      "pid": 979894,
+      "started": "2026-10-07T01:07:33.369Z"
+    },
+    "config_count": 1,
+    "brain_config": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "high",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": null,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "sl_config": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "loop_config": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "experience_version": "2026-10-07.12",
+    "brain_source": {
+      "policy": "codex-successful-brain-v1",
+      "source": "codex",
+      "eligible": true,
+      "exclusion_reason": null,
+      "successful_answers": {
+        "codex": 21
+      },
+      "successful_by_label": {
+        "event/act-plan": {
+          "codex": 1
+        },
+        "event/choose": {
+          "codex": 2
+        },
+        "map/route-plan": {
+          "codex": 1
+        },
+        "rest/plan": {
+          "codex": 5
+        },
+        "reward/card": {
+          "codex": 10
+        },
+        "shop/plan": {
+          "codex": 2
+        }
+      },
+      "embedded_answers": {
+        "run-plan": 4,
+        "map/route": 16
+      },
+      "brain_rows": 21,
+      "failed_or_unaccepted_rows": 0,
+      "unknown_successes": 0,
+      "first_success": "2026-10-07T01:07:59.012Z",
+      "last_success": "2026-10-07T01:34:14.743Z",
+      "unresolved_questions": 0,
+      "coverage": "all_logged_questions_resolved",
+      "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"
+    },
+    "exposures": {
+      "V4.codex-only1": false,
+      "S1.double-boss1": false,
+      "S1.fix45": false,
+      "S1.double-boss-phase1": false,
+      "S1.mirage-poison1": false,
+      "S1.sloth-replay1": false,
+      "S1.bullet-time1": false
+    },
+    "post_double_walltime": false,
+    "actual_max_floor": 22,
+    "reach33": false,
+    "reach48": false,
+    "first_reach33": false,
+    "first_reach48": false,
+    "sl_rows": 8,
+    "reloads": 6,
+    "first_death_floor": 17,
+    "death_frame": {
+      "off": 8292985360,
+      "len": 43491,
+      "ts": "2026-10-07 01:40:02.994000",
+      "run_id": "2Y27VAYZDA02",
+      "act": 2,
+      "floor": 22,
+      "turn": 5,
+      "screen": "COMBAT",
+      "hp": 1,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "SLICE",
+        "CLOAK_AND_DAGGER",
+        "GREED",
+        "SUCKER_PUNCH",
+        "PIERCING_WAIL",
+        "POISONED_STAB+",
+        "SCRAWL",
+        "DEFLECT",
+        "DISCOVERY",
+        "DEADLY_POISON",
+        "SUCKER_PUNCH",
+        "POISONED_STAB",
+        "SERPENT_FORM",
+        "LEG_SWEEP+",
+        "ACCELERANT",
+        "DAGGER_SPRAY",
+        "BOUNCING_FLASK"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "WINGED_BOOTS",
+        "ODDLY_SMOOTH_STONE",
+        "VERY_HOT_COCOA"
+      ],
+      "potions": [],
+      "player_hp": 1,
+      "block": 5,
+      "energy": 0,
+      "player_powers": [
+        {
+          "id": "DEXTERITY_POWER",
+          "amount": 1
+        }
+      ],
+      "enemies": [
+        {
+          "idx": 0,
+          "id": "BOWLBUG_SILK",
+          "hp": 19,
+          "max_hp": 42,
+          "block": 0,
+          "alive": true,
+          "move": "TOXIC_SPIT_MOVE",
+          "intent_dmg": 0,
+          "minion": false
+        },
+        {
+          "idx": 1,
+          "id": "SLUMBERING_BEETLE",
+          "hp": 80,
+          "max_hp": 89,
+          "block": 0,
+          "alive": true,
+          "move": "ROLL_OUT_MOVE",
+          "intent_dmg": 16,
+          "minion": false
+        }
+      ],
+      "incoming": 16
+    },
+    "act2_hall_death": true,
+    "act2_road_death": true,
+    "entry2": {
+      "off": 8286485089,
+      "len": 23018,
+      "ts": "2026-10-07 01:31:23.978000",
+      "run_id": "2Y27VAYZDA02",
+      "act": 2,
+      "floor": 18,
+      "turn": null,
+      "screen": "EVENT",
+      "hp": 56,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "SLICE",
+        "CLOAK_AND_DAGGER",
+        "GREED",
+        "SUCKER_PUNCH",
+        "PIERCING_WAIL",
+        "POISONED_STAB+",
+        "SCRAWL",
+        "DEFLECT",
+        "DISCOVERY",
+        "DEADLY_POISON",
+        "SUCKER_PUNCH",
+        "POISONED_STAB",
+        "SERPENT_FORM"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "WINGED_BOOTS",
+        "ODDLY_SMOOTH_STONE"
+      ],
+      "potions": [
+        "VULNERABLE_POTION",
+        "POISON_POTION"
+      ],
+      "player_hp": null,
+      "block": null,
+      "energy": null,
+      "player_powers": null,
+      "enemies": null,
+      "incoming": null
+    },
+    "elite_floors": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "rests": {
+      "1": {
+        "choose_rest_option": 5,
+        "null": 2,
+        "proceed": 5
+      },
+      "2": {},
+      "3": {}
+    },
+    "reward_choices": {
+      "choose_reward_card": 10
+    }
+  },
+  {
+    "run_id": "2K4H3JEJHRSB",
+    "ascension": 10,
+    "character": "SILENT",
+    "started": "2026-10-07 04:17:22.314000",
+    "ended": "2026-10-07 04:34:39.749000",
+    "floor": 23,
+    "max_floor": 23,
+    "max_act": 2,
+    "finished": true,
+    "victory": false,
+    "death_fight": [
+      "熟睡甲虫",
+      "盛碗虫（丝）",
+      "盛碗虫（石）"
+    ],
+    "death_encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+    "death_room": "hallway",
+    "code": "2518c73d+dirty",
+    "decisions": 326,
+    "jev_calls": 97,
+    "deepseek_calls": 25,
+    "claude_calls": 0,
+    "tokens": 355739,
+    "ds_tokens_in": 3080826,
+    "ds_tokens_out": 7522,
+    "ds_cache_hit": 2145152,
+    "deciders": "{\"codex\":34,\"code\":115,\"jev\":97,\"jev-plan\":80}",
+    "arm": null,
+    "frames": 336,
+    "cfg_code": "2518c73+dirty",
+    "cfg_branch": "live",
+    "cfg_worktree": "live",
+    "brain_engine": "codex",
+    "brain_by_prefix": "{}",
+    "brain_fallback": null,
+    "brain_label": "codex:gpt-6.1-sol",
+    "knowledge_prefix": "full",
+    "prefix_sha": "a10d1e0ebc1c",
+    "prefix_tokens_deepseek": 102480,
+    "jev_model": "jev-latest",
+    "jev_context": "v1",
+    "target_ascension": 10,
+    "config_sha": "ca3a7662984e",
+    "config_rows": 1,
+    "config_changed": false,
+    "start_commit": "2518c73d745023219b3d32820bd31c8f117d0575",
+    "start_code": {
+      "commit": "2518c73d745023219b3d32820bd31c8f117d0575",
+      "code": "2518c73+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "start_version": "S1.exp70",
+    "version_how": "git",
+    "end_label_version": "S1.exp70",
+    "start_process": {
+      "pid": 1453841,
+      "started": "2026-10-07T04:16:50.300Z"
+    },
+    "config_count": 1,
+    "brain_config": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "high",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": null,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "sl_config": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "loop_config": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "experience_version": "2026-10-07.16",
+    "brain_source": {
+      "policy": "codex-successful-brain-v1",
+      "source": "codex",
+      "eligible": true,
+      "exclusion_reason": null,
+      "successful_answers": {
+        "codex": 25
+      },
+      "successful_by_label": {
+        "event/act-plan": {
+          "codex": 1
+        },
+        "event/choose": {
+          "codex": 4
+        },
+        "map/route-plan": {
+          "codex": 1
+        },
+        "rest/plan": {
+          "codex": 4
+        },
+        "reward/card": {
+          "codex": 10
+        },
+        "selection/add": {
+          "codex": 2
+        },
+        "shop/plan": {
+          "codex": 3
+        }
+      },
+      "embedded_answers": {
+        "run-plan": 4,
+        "map/route": 16
+      },
+      "brain_rows": 25,
+      "failed_or_unaccepted_rows": 0,
+      "unknown_successes": 0,
+      "first_success": "2026-10-07T04:17:22.311Z",
+      "last_success": "2026-10-07T04:33:09.446Z",
+      "unresolved_questions": 0,
+      "coverage": "all_logged_questions_resolved",
+      "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"
+    },
+    "exposures": {
+      "V4.codex-only1": true,
+      "S1.double-boss1": false,
+      "S1.fix45": false,
+      "S1.double-boss-phase1": false,
+      "S1.mirage-poison1": false,
+      "S1.sloth-replay1": false,
+      "S1.bullet-time1": false
+    },
+    "post_double_walltime": false,
+    "actual_max_floor": 23,
+    "reach33": false,
+    "reach48": false,
+    "first_reach33": false,
+    "first_reach48": false,
+    "sl_rows": 1,
+    "reloads": 0,
+    "first_death_floor": null,
+    "death_frame": {
+      "off": 8390524363,
+      "len": 38782,
+      "ts": "2026-10-07 04:34:35.425000",
+      "run_id": "2K4H3JEJHRSB",
+      "act": 2,
+      "floor": 23,
+      "turn": 6,
+      "screen": "COMBAT",
+      "hp": 1,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "PREDATOR",
+        "BACKFLIP",
+        "BOUNCING_FLASK",
+        "NOXIOUS_FUMES+",
+        "BACKSTAB",
+        "BACKFLIP",
+        "CLOAK_AND_DAGGER",
+        "SUCKER_PUNCH",
+        "NOXIOUS_FUMES",
+        "FOOTWORK",
+        "DEFLECT",
+        "SERPENT_FORM",
+        "ACCELERANT",
+        "FISTICUFFS",
+        "EXPOSE"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "WINGED_BOOTS",
+        "BAG_OF_MARBLES",
+        "DREAM_CATCHER",
+        "VERY_HOT_COCOA"
+      ],
+      "potions": [],
+      "player_hp": 1,
+      "block": 21,
+      "energy": 0,
+      "player_powers": [
+        {
+          "id": "DEXTERITY_POWER",
+          "amount": 2
+        },
+        {
+          "id": "NOXIOUS_FUMES_POWER",
+          "amount": 3
+        },
+        {
+          "id": "ACCELERANT_POWER",
+          "amount": 1
+        },
+        {
+          "id": "WEAK_POWER",
+          "amount": 1
+        }
+      ],
+      "enemies": [
+        {
+          "idx": 0,
+          "id": "BOWLBUG_SILK",
+          "hp": 30,
+          "max_hp": 41,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "intent_dmg": 10,
+          "minion": false
+        },
+        {
+          "idx": 1,
+          "id": "SLUMBERING_BEETLE",
+          "hp": 47,
+          "max_hp": 89,
+          "block": 0,
+          "alive": true,
+          "move": "ROLL_OUT_MOVE",
+          "intent_dmg": 24,
+          "minion": false
+        }
+      ],
+      "incoming": 34
+    },
+    "act2_hall_death": true,
+    "act2_road_death": true,
+    "entry2": {
+      "off": 8387452404,
+      "len": 23227,
+      "ts": "2026-10-07 04:30:30.751000",
+      "run_id": "2K4H3JEJHRSB",
+      "act": 2,
+      "floor": 18,
+      "turn": null,
+      "screen": "EVENT",
+      "hp": 64,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "PREDATOR",
+        "BACKFLIP",
+        "BOUNCING_FLASK",
+        "NOXIOUS_FUMES+",
+        "BACKSTAB",
+        "BACKFLIP",
+        "CLOAK_AND_DAGGER",
+        "SUCKER_PUNCH",
+        "NOXIOUS_FUMES",
+        "FOOTWORK",
+        "DEFLECT",
+        "SERPENT_FORM"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "WINGED_BOOTS",
+        "BAG_OF_MARBLES",
+        "DREAM_CATCHER"
+      ],
+      "potions": [
+        "POISON_POTION"
+      ],
+      "player_hp": null,
+      "block": null,
+      "energy": null,
+      "player_powers": null,
+      "enemies": null,
+      "incoming": null
+    },
+    "elite_floors": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "rests": {
+      "1": {
+        "choose_rest_option": 4,
+        "proceed": 4,
+        "null": 1
+      },
+      "2": {},
+      "3": {}
+    },
+    "reward_choices": {
+      "choose_reward_card": 9,
+      "skip_reward_cards": 1
+    }
+  },
+  {
+    "run_id": "DUZUBAJ3A8GP",
+    "ascension": 10,
+    "character": "SILENT",
+    "started": "2026-10-07 06:25:38.708000",
+    "ended": "2026-10-07 06:57:27.794000",
+    "floor": 30,
+    "max_floor": 30,
+    "max_act": 2,
+    "finished": true,
+    "victory": false,
+    "death_fight": [
+      "熟睡甲虫",
+      "盛碗虫（丝）",
+      "盛碗虫（石）"
+    ],
+    "death_encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+    "death_room": "hallway",
+    "code": "93298980+dirty",
+    "decisions": 602,
+    "jev_calls": 84,
+    "deepseek_calls": 28,
+    "claude_calls": 0,
+    "tokens": 430724,
+    "ds_tokens_in": 3480565,
+    "ds_tokens_out": 8926,
+    "ds_cache_hit": 2140672,
+    "deciders": "{\"codex\":41,\"code\":306,\"jev\":84,\"jev-plan\":171}",
+    "arm": null,
+    "frames": 623,
+    "cfg_code": "9329898+dirty",
+    "cfg_branch": "live",
+    "cfg_worktree": "live",
+    "brain_engine": "codex",
+    "brain_by_prefix": "{}",
+    "brain_fallback": null,
+    "brain_label": "codex:gpt-6.1-sol",
+    "knowledge_prefix": "full",
+    "prefix_sha": "b6e050f218ae",
+    "prefix_tokens_deepseek": 102314,
+    "jev_model": "jev-latest",
+    "jev_context": "v1",
+    "target_ascension": 10,
+    "config_sha": "a6685456e46e",
+    "config_rows": 1,
+    "config_changed": false,
+    "start_commit": "93298980fd59963328e824286d1c3cf277c78e4b",
+    "start_code": {
+      "commit": "93298980fd59963328e824286d1c3cf277c78e4b",
+      "code": "9329898+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "start_version": "S1.double-boss1",
+    "version_how": "git",
+    "end_label_version": "S1.double-boss1",
+    "start_process": {
+      "pid": 1766865,
+      "started": "2026-10-07T06:25:02.186Z"
+    },
+    "config_count": 1,
+    "brain_config": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "high",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": null,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "sl_config": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "loop_config": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "experience_version": "2026-10-07.18",
+    "brain_source": {
+      "policy": "codex-successful-brain-v1",
+      "source": "codex",
+      "eligible": true,
+      "exclusion_reason": null,
+      "successful_answers": {
+        "codex": 29
+      },
+      "successful_by_label": {
+        "event/act-plan": {
+          "codex": 1
+        },
+        "event/choose": {
+          "codex": 2
+        },
+        "event/plan": {
+          "codex": 3
+        },
+        "map/route-plan": {
+          "codex": 1
+        },
+        "rest/plan": {
+          "codex": 5
+        },
+        "reward/card": {
+          "codex": 13
+        },
+        "run-plan": {
+          "codex": 1
+        },
+        "shop/plan": {
+          "codex": 3
+        }
+      },
+      "embedded_answers": {
+        "run-plan": 5,
+        "map/route": 21
+      },
+      "brain_rows": 29,
+      "failed_or_unaccepted_rows": 0,
+      "unknown_successes": 0,
+      "first_success": "2026-10-07T06:25:38.704Z",
+      "last_success": "2026-10-07T06:52:29.984Z",
+      "unresolved_questions": 0,
+      "coverage": "all_logged_questions_resolved",
+      "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"
+    },
+    "exposures": {
+      "V4.codex-only1": true,
+      "S1.double-boss1": true,
+      "S1.fix45": false,
+      "S1.double-boss-phase1": false,
+      "S1.mirage-poison1": false,
+      "S1.sloth-replay1": false,
+      "S1.bullet-time1": false
+    },
+    "post_double_walltime": true,
+    "actual_max_floor": 30,
+    "reach33": false,
+    "reach48": false,
+    "first_reach33": false,
+    "first_reach48": false,
+    "sl_rows": 6,
+    "reloads": 3,
+    "first_death_floor": 30,
+    "death_frame": {
+      "off": 8467395798,
+      "len": 38976,
+      "ts": "2026-10-07 06:57:25.158000",
+      "run_id": "DUZUBAJ3A8GP",
+      "act": 2,
+      "floor": 30,
+      "turn": 6,
+      "screen": "COMBAT",
+      "hp": 1,
+      "max_hp": 84,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "BACKFLIP",
+        "SLICE",
+        "PIERCING_WAIL",
+        "BACKSTAB",
+        "HAZE+",
+        "DEADLY_POISON",
+        "CLOAK_AND_DAGGER",
+        "ECHOING_SLASH",
+        "PREDATOR",
+        "FASTEN",
+        "DEADLY_POISON",
+        "BURST",
+        "POISONED_STAB",
+        "ULTIMATE_STRIKE",
+        "PIERCING_WAIL",
+        "ANTICIPATE",
+        "MIRAGE",
+        "PINPOINT",
+        "BOUNCING_FLASK",
+        "DEADLY_POISON"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "LARGE_CAPSULE",
+        "PLANISPHERE",
+        "LANTERN",
+        "GAMBLING_CHIP",
+        "CHOSEN_CHEESE",
+        "PAELS_FLESH",
+        "ETERNAL_FEATHER",
+        "STRAWBERRY",
+        "BOOK_OF_FIVE_RINGS",
+        "BRONZE_SCALES"
+      ],
+      "potions": [],
+      "player_hp": 1,
+      "block": 16,
+      "energy": 0,
+      "player_powers": [
+        {
+          "id": "THORNS_POWER",
+          "amount": 3
+        },
+        {
+          "id": "FASTEN_POWER",
+          "amount": 4
+        }
+      ],
+      "enemies": [
+        {
+          "idx": 0,
+          "id": "SLUMBERING_BEETLE",
+          "hp": 43,
+          "max_hp": 89,
+          "block": 0,
+          "alive": true,
+          "move": "ROLL_OUT_MOVE",
+          "intent_dmg": 22,
+          "minion": false
+        }
+      ],
+      "incoming": 22
+    },
+    "act2_hall_death": true,
+    "act2_road_death": true,
+    "entry2": {
+      "off": 8454423891,
+      "len": 23897,
+      "ts": "2026-10-07 06:42:45.877000",
+      "run_id": "DUZUBAJ3A8GP",
+      "act": 2,
+      "floor": 18,
+      "turn": null,
+      "screen": "EVENT",
+      "hp": 64,
+      "max_hp": 72,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "BACKFLIP",
+        "SLICE",
+        "PIERCING_WAIL",
+        "BACKSTAB",
+        "HAZE+",
+        "DEADLY_POISON",
+        "CLOAK_AND_DAGGER",
+        "ECHOING_SLASH",
+        "PREDATOR",
+        "FASTEN",
+        "DEADLY_POISON",
+        "BURST"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "LARGE_CAPSULE",
+        "PLANISPHERE",
+        "LANTERN",
+        "GAMBLING_CHIP",
+        "CHOSEN_CHEESE"
+      ],
+      "potions": [],
+      "player_hp": null,
+      "block": null,
+      "energy": null,
+      "player_powers": null,
+      "enemies": null,
+      "incoming": null
+    },
+    "elite_floors": {
+      "1": 0,
+      "2": 2,
+      "3": 0
+    },
+    "rests": {
+      "1": {
+        "choose_rest_option": 3,
+        "proceed": 3
+      },
+      "2": {
+        "choose_rest_option": 2,
+        "null": 1,
+        "proceed": 2
+      },
+      "3": {}
+    },
+    "reward_choices": {
+      "choose_reward_card": 13
+    }
+  },
+  {
+    "run_id": "P74C04AEPL1F",
+    "ascension": 10,
+    "character": "SILENT",
+    "started": "2026-10-07 16:25:46.194000",
+    "ended": "2026-10-07 16:43:50.303000",
+    "floor": 23,
+    "max_floor": 23,
+    "max_act": 2,
+    "finished": true,
+    "victory": false,
+    "death_fight": [
+      "盛碗虫（丝）",
+      "盛碗虫（卵）",
+      "盛碗虫（石）"
+    ],
+    "death_encounter": "BOWLBUG_EGG+BOWLBUG_ROCK+BOWLBUG_SILK",
+    "death_room": "hallway",
+    "code": "fd4c8e52+dirty",
+    "decisions": 395,
+    "jev_calls": 70,
+    "deepseek_calls": 23,
+    "claude_calls": 0,
+    "tokens": 362729,
+    "ds_tokens_in": 2871652,
+    "ds_tokens_out": 5958,
+    "ds_cache_hit": 1724160,
+    "deciders": "{\"codex\":34,\"code\":188,\"jev\":70,\"jev-plan\":103}",
+    "arm": null,
+    "frames": 410,
+    "cfg_code": "fd4c8e5+dirty",
+    "cfg_branch": "live",
+    "cfg_worktree": "live",
+    "brain_engine": "codex",
+    "brain_by_prefix": "{}",
+    "brain_fallback": null,
+    "brain_label": "codex:gpt-6.1-sol",
+    "knowledge_prefix": "full",
+    "prefix_sha": "1494ea0c25c8",
+    "prefix_tokens_deepseek": 104970,
+    "jev_model": "jev-latest",
+    "jev_context": "v1",
+    "target_ascension": 10,
+    "config_sha": "2c7a5cab382a",
+    "config_rows": 1,
+    "config_changed": false,
+    "start_commit": "fd4c8e52341c31cad606c0a4b96a43663843e201",
+    "start_code": {
+      "commit": "fd4c8e52341c31cad606c0a4b96a43663843e201",
+      "code": "fd4c8e5+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "start_version": "S1.exp82",
+    "version_how": "git",
+    "end_label_version": "S1.exp82",
+    "start_process": {
+      "pid": 3052430,
+      "started": "2026-10-07T16:25:16.757Z"
+    },
+    "config_count": 1,
+    "brain_config": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "high",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": null,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "sl_config": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "loop_config": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "experience_version": "2026-10-07.28",
+    "brain_source": {
+      "policy": "codex-successful-brain-v1",
+      "source": "codex",
+      "eligible": true,
+      "exclusion_reason": null,
+      "successful_answers": {
+        "codex": 23
+      },
+      "successful_by_label": {
+        "event/act-plan": {
+          "codex": 1
+        },
+        "event/choose": {
+          "codex": 3
+        },
+        "event/plan": {
+          "codex": 2
+        },
+        "map/route-plan": {
+          "codex": 1
+        },
+        "rest/plan": {
+          "codex": 3
+        },
+        "reward/card": {
+          "codex": 11
+        },
+        "selection/add": {
+          "codex": 1
+        },
+        "shop/plan": {
+          "codex": 1
+        }
+      },
+      "embedded_answers": {
+        "run-plan": 3,
+        "map/route": 16
+      },
+      "brain_rows": 23,
+      "failed_or_unaccepted_rows": 0,
+      "unknown_successes": 0,
+      "first_success": "2026-10-07T16:25:46.189Z",
+      "last_success": "2026-10-07T16:41:10.556Z",
+      "unresolved_questions": 0,
+      "coverage": "all_logged_questions_resolved",
+      "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"
+    },
+    "exposures": {
+      "V4.codex-only1": true,
+      "S1.double-boss1": true,
+      "S1.fix45": true,
+      "S1.double-boss-phase1": true,
+      "S1.mirage-poison1": true,
+      "S1.sloth-replay1": false,
+      "S1.bullet-time1": false
+    },
+    "post_double_walltime": true,
+    "actual_max_floor": 23,
+    "reach33": false,
+    "reach48": false,
+    "first_reach33": false,
+    "first_reach48": false,
+    "sl_rows": 5,
+    "reloads": 3,
+    "first_death_floor": 23,
+    "death_frame": {
+      "off": 8793496294,
+      "len": 37071,
+      "ts": "2026-10-07 16:43:45.436000",
+      "run_id": "P74C04AEPL1F",
+      "act": 2,
+      "floor": 23,
+      "turn": 3,
+      "screen": "COMBAT",
+      "hp": 1,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "GREED",
+        "STRANGLE",
+        "NOXIOUS_FUMES+",
+        "PRECISE_CUT",
+        "SUCKER_PUNCH",
+        "SPOILS_MAP",
+        "POISONED_STAB",
+        "DEFLECT",
+        "MIRAGE",
+        "BUBBLE_BUBBLE",
+        "PIERCING_WAIL",
+        "BURST",
+        "DAGGER_SPRAY",
+        "BACKFLIP",
+        "ACCELERANT",
+        "POISONED_STAB",
+        "BLUR"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "CURSED_PEARL",
+        "VAMBRACE",
+        "STRIKE_DUMMY",
+        "PAELS_LEGION"
+      ],
+      "potions": [],
+      "player_hp": 1,
+      "block": 16,
+      "energy": 0,
+      "player_powers": [
+        {
+          "id": "NOXIOUS_FUMES_POWER",
+          "amount": 3
+        }
+      ],
+      "enemies": [
+        {
+          "idx": 0,
+          "id": "BOWLBUG_ROCK",
+          "hp": 47,
+          "max_hp": 47,
+          "block": 0,
+          "alive": true,
+          "move": "HEADBUTT_MOVE",
+          "intent_dmg": 16,
+          "minion": false
+        },
+        {
+          "idx": 1,
+          "id": "BOWLBUG_SILK",
+          "hp": 24,
+          "max_hp": 44,
+          "block": 0,
+          "alive": true,
+          "move": "TOXIC_SPIT_MOVE",
+          "intent_dmg": 0,
+          "minion": false
+        },
+        {
+          "idx": 2,
+          "id": "BOWLBUG_EGG",
+          "hp": 3,
+          "max_hp": 23,
+          "block": 8,
+          "alive": true,
+          "move": "BITE_MOVE",
+          "intent_dmg": 8,
+          "minion": false
+        }
+      ],
+      "incoming": 24
+    },
+    "act2_hall_death": true,
+    "act2_road_death": true,
+    "entry2": {
+      "off": 8787804004,
+      "len": 23566,
+      "ts": "2026-10-07 16:37:21.510000",
+      "run_id": "P74C04AEPL1F",
+      "act": 2,
+      "floor": 18,
+      "turn": null,
+      "screen": "EVENT",
+      "hp": 61,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "GREED",
+        "STRANGLE",
+        "NOXIOUS_FUMES+",
+        "PRECISE_CUT",
+        "SUCKER_PUNCH",
+        "SPOILS_MAP",
+        "POISONED_STAB",
+        "ACCELERANT",
+        "DEFLECT",
+        "MIRAGE",
+        "BUBBLE_BUBBLE",
+        "PIERCING_WAIL",
+        "BURST"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "CURSED_PEARL",
+        "VAMBRACE",
+        "STRIKE_DUMMY"
+      ],
+      "potions": [],
+      "player_hp": null,
+      "block": null,
+      "energy": null,
+      "player_powers": null,
+      "enemies": null,
+      "incoming": null
+    },
+    "elite_floors": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "rests": {
+      "1": {
+        "choose_rest_option": 3,
+        "proceed": 3
+      },
+      "2": {},
+      "3": {}
+    },
+    "reward_choices": {
+      "choose_reward_card": 11
+    }
+  },
+  {
+    "run_id": "BTSRF7JL1W1Y",
+    "ascension": 10,
+    "character": "SILENT",
+    "started": "2026-10-07 17:31:20.252000",
+    "ended": "2026-10-07 18:15:04.461000",
+    "floor": 31,
+    "max_floor": 31,
+    "max_act": 2,
+    "finished": true,
+    "victory": false,
+    "death_fight": [
+      "熟睡甲虫",
+      "盛碗虫（丝）",
+      "盛碗虫（石）"
+    ],
+    "death_encounter": "BOWLBUG_ROCK+BOWLBUG_SILK+SLUMBERING_BEETLE",
+    "death_room": "hallway",
+    "code": "6ad5584f+dirty",
+    "decisions": 635,
+    "jev_calls": 139,
+    "deepseek_calls": 28,
+    "claude_calls": 0,
+    "tokens": 744490,
+    "ds_tokens_in": 3537590,
+    "ds_tokens_out": 8267,
+    "ds_cache_hit": 1959040,
+    "deciders": "{\"codex\":45,\"code\":290,\"jev\":139,\"jev-plan\":161}",
+    "arm": null,
+    "frames": 653,
+    "cfg_code": "6ad5584+dirty",
+    "cfg_branch": "live",
+    "cfg_worktree": "live",
+    "brain_engine": "codex",
+    "brain_by_prefix": "{}",
+    "brain_fallback": null,
+    "brain_label": "codex:gpt-6.1-sol",
+    "knowledge_prefix": "full",
+    "prefix_sha": "f440db83b114",
+    "prefix_tokens_deepseek": 105110,
+    "jev_model": "jev-latest",
+    "jev_context": "v1",
+    "target_ascension": 10,
+    "config_sha": "ccdd83455430",
+    "config_rows": 1,
+    "config_changed": false,
+    "start_commit": "6ad5584f709579d8f379f91b763504e8cc96e468",
+    "start_code": {
+      "commit": "6ad5584f709579d8f379f91b763504e8cc96e468",
+      "code": "6ad5584+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "start_version": "S1.exp83",
+    "version_how": "git",
+    "end_label_version": "S1.exp83",
+    "start_process": {
+      "pid": 3156395,
+      "started": "2026-10-07T17:30:34.213Z"
+    },
+    "config_count": 1,
+    "brain_config": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "high",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": null,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "sl_config": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "loop_config": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "experience_version": "2026-10-07.29",
+    "brain_source": {
+      "policy": "codex-successful-brain-v1",
+      "source": "codex",
+      "eligible": true,
+      "exclusion_reason": null,
+      "successful_answers": {
+        "codex": 28
+      },
+      "successful_by_label": {
+        "event/act-plan": {
+          "codex": 1
+        },
+        "event/choose": {
+          "codex": 3
+        },
+        "event/plan": {
+          "codex": 5
+        },
+        "map/route-plan": {
+          "codex": 1
+        },
+        "rest/plan": {
+          "codex": 4
+        },
+        "reward/card": {
+          "codex": 11
+        },
+        "shop/plan": {
+          "codex": 3
+        }
+      },
+      "embedded_answers": {
+        "run-plan": 5,
+        "map/route": 20
+      },
+      "brain_rows": 28,
+      "failed_or_unaccepted_rows": 0,
+      "unknown_successes": 0,
+      "first_success": "2026-10-07T17:31:20.249Z",
+      "last_success": "2026-10-07T18:14:03.140Z",
+      "unresolved_questions": 0,
+      "coverage": "all_logged_questions_resolved",
+      "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"
+    },
+    "exposures": {
+      "V4.codex-only1": true,
+      "S1.double-boss1": true,
+      "S1.fix45": true,
+      "S1.double-boss-phase1": true,
+      "S1.mirage-poison1": true,
+      "S1.sloth-replay1": false,
+      "S1.bullet-time1": false
+    },
+    "post_double_walltime": true,
+    "actual_max_floor": 31,
+    "reach33": false,
+    "reach48": false,
+    "first_reach33": false,
+    "first_reach48": false,
+    "sl_rows": 4,
+    "reloads": 3,
+    "first_death_floor": 17,
+    "death_frame": {
+      "off": 8834981179,
+      "len": 41116,
+      "ts": "2026-10-07 18:15:01.693000",
+      "run_id": "BTSRF7JL1W1Y",
+      "act": 2,
+      "floor": 31,
+      "turn": 4,
+      "screen": "COMBAT",
+      "hp": 14,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "SUCKER_PUNCH",
+        "FLICK_FLACK",
+        "HIDDEN_DAGGERS",
+        "INFINITE_BLADES",
+        "DARK_SHACKLES",
+        "BACKSTAB",
+        "BACKFLIP",
+        "ECHOING_SLASH+",
+        "FOOTWORK+",
+        "DEADLY_POISON",
+        "PREDATOR",
+        "ADRENALINE",
+        "ULTIMATE_STRIKE",
+        "ACCURACY",
+        "BACKSTAB",
+        "PHANTOM_BLADES+",
+        "DAGGER_THROW",
+        "METAMORPHOSIS",
+        "NOXIOUS_FUMES",
+        "CLOAK_AND_DAGGER+"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "GOLDEN_PEARL",
+        "JUZU_BRACELET",
+        "FESTIVE_POPPER",
+        "GORGET",
+        "VERY_HOT_COCOA",
+        "HAPPY_FLOWER"
+      ],
+      "potions": [],
+      "player_hp": 14,
+      "block": 5,
+      "energy": 0,
+      "player_powers": [
+        {
+          "id": "PLATING_POWER",
+          "amount": 1
+        },
+        {
+          "id": "NOXIOUS_FUMES_POWER",
+          "amount": 2
+        },
+        {
+          "id": "WEAK_POWER",
+          "amount": 1
+        },
+        {
+          "id": "DRAW_CARDS_NEXT_TURN_POWER",
+          "amount": 2
+        },
+        {
+          "id": "INFINITE_BLADES_POWER",
+          "amount": 1
+        }
+      ],
+      "enemies": [
+        {
+          "idx": 0,
+          "id": "BOWLBUG_SILK",
+          "hp": 2,
+          "max_hp": 42,
+          "block": 0,
+          "alive": true,
+          "move": "THRASH_MOVE",
+          "intent_dmg": 10,
+          "minion": false
+        },
+        {
+          "idx": 1,
+          "id": "SLUMBERING_BEETLE",
+          "hp": 17,
+          "max_hp": 89,
+          "block": 0,
+          "alive": true,
+          "move": "ROLL_OUT_MOVE",
+          "intent_dmg": 22,
+          "minion": false
+        }
+      ],
+      "incoming": 32
+    },
+    "act2_hall_death": true,
+    "act2_road_death": true,
+    "entry2": {
+      "off": 8829540305,
+      "len": 23755,
+      "ts": "2026-10-07 18:06:39.816000",
+      "run_id": "BTSRF7JL1W1Y",
+      "act": 2,
+      "floor": 18,
+      "turn": null,
+      "screen": "EVENT",
+      "hp": 60,
+      "max_hp": 70,
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "SUCKER_PUNCH",
+        "FLICK_FLACK",
+        "HIDDEN_DAGGERS",
+        "INFINITE_BLADES",
+        "DARK_SHACKLES",
+        "BACKSTAB",
+        "BACKFLIP",
+        "ECHOING_SLASH+",
+        "FOOTWORK+",
+        "DEADLY_POISON",
+        "PREDATOR",
+        "POOR_SLEEP",
+        "ADRENALINE"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "GOLDEN_PEARL",
+        "JUZU_BRACELET",
+        "FESTIVE_POPPER",
+        "GORGET"
+      ],
+      "potions": [],
+      "player_hp": null,
+      "block": null,
+      "energy": null,
+      "player_powers": null,
+      "enemies": null,
+      "incoming": null
+    },
+    "elite_floors": {
+      "1": 2,
+      "2": 0,
+      "3": 0
+    },
+    "rests": {
+      "1": {
+        "choose_rest_option": 3,
+        "proceed": 3
+      },
+      "2": {
+        "choose_rest_option": 1,
+        "proceed": 1
+      },
+      "3": {}
+    },
+    "reward_choices": {
+      "choose_reward_card": 11
+    }
+  }
+]

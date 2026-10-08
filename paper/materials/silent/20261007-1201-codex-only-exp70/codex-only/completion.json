@@ -1,0 +1,137 @@
+{
+  "task": "fix-batch",
+  "base": "c3732c7f49b6f42385ad12d4ecad015eac16c335",
+  "fixes": [
+    {
+      "item": "Roy 已授权独立功能：Codex-only 大脑等待与统计口径",
+      "commit": "88fe83e50b254853748a45ecc8a10de370c82f08",
+      "source_commits": [
+        "856007edb088f572e5eabcf2e833df15c32ac649",
+        "a3071b24b601b26436418dee0e528235c53ed596",
+        "88fe83e50b254853748a45ecc8a10de370c82f08"
+      ],
+      "test": {
+        "tsc": 0,
+        "vitest": 0,
+        "python": 0,
+        "source_files": 220,
+        "source_cases": 2356,
+        "serial_paths": 11,
+        "live_files": 223,
+        "live_cases": 2363,
+        "python_cases": 136,
+        "workers": 1
+      },
+      "fails_without_fix": true,
+      "ablation": {
+        "runtime_failed": 9,
+        "metrics_failed": 1,
+        "logging_failed": 2,
+        "restored_identically": true
+      },
+      "source_tests": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/source-manifest.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/integration-manifest.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/sink-source-manifest.json"
+      ]
+    }
+  ],
+  "skipped": [
+    "其他队列 bug、boss 校准",
+    "真实 LLM、play、key/.env、依赖安装和推送",
+    "游戏知识/bug-infra 台账登记、改写旧报告"
+  ],
+  "merged": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "python": 0,
+    "live": {
+      "rc": 0,
+      "log": "test-live.log",
+      "tsc": 0,
+      "workers": 1,
+      "summary": [
+        [
+          "223 passed (223)",
+          ""
+        ],
+        [
+          "",
+          "2363 passed (2363)"
+        ],
+        [
+          "1 passed (1)",
+          ""
+        ],
+        [
+          "",
+          "11 passed (11)"
+        ]
+      ],
+      "sha256": "79b4102f4b6dca0a7970dede512900e5130b639ec1b90df2f0c797149b80a1fb"
+    },
+    "main": {
+      "rc": 0,
+      "workers": 1,
+      "log": "test-main-publication.log",
+      "sha256": "bcca1bc7e373677f17601a1100a3d862c55348f0e0300f5e80b0527abda39c2d"
+    },
+    "full_external": "pending",
+    "failure_and_retry_history": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/report.json"
+  },
+  "commits": {
+    "original_source": "856007edb088f572e5eabcf2e833df15c32ac649",
+    "curated_source": "a3071b24b601b26436418dee0e528235c53ed596",
+    "final_source": "88fe83e50b254853748a45ecc8a10de370c82f08",
+    "refresh": "4647cf35df3e1602fd2d69100e09eb04b02253ce",
+    "actual_merge": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+    "release": "f8dd742d64b073225cf54f221a9b24cfc6612fdd",
+    "main_runtime_activation": "42eb0fa7bd03a44fdaa972b4008e02e2db7b0023",
+    "main_tested_candidate": "43847ae4af6ebbf012f4e019679853649e0566e9",
+    "main_records_merge": "d6f05cdabc17b3b82df06bf96d76a2745436da8f",
+    "main_records_source": "c8e477d356fc805a2ca24bc07fab4d974f378490",
+    "main": "c8e477d356fc805a2ca24bc07fab4d974f378490"
+  },
+  "release": {
+    "commit": "f8dd742d64b073225cf54f221a9b24cfc6612fdd",
+    "tree": "e038ea3001db752d4d4749dfe2c781c77464e8fb",
+    "checked_commit": "910604a4471ad4470e563d6d4e16d05bdcb78758",
+    "checked_tree": "8b15e0550339fc9399a035a94d70e9729315c418",
+    "version": "V4.codex-only1",
+    "shipped": false,
+    "checks_pending": true
+  },
+  "statistics_fixed_cut": {
+    "silent": {
+      "raw_runs": 86,
+      "raw_wins": 10,
+      "codex_runs": 78,
+      "codex_wins": 10
+    },
+    "ironclad": {
+      "raw_runs": 481,
+      "raw_wins": 24,
+      "codex_runs": 7,
+      "codex_wins": 1
+    },
+    "named_five": "全部实际成功回答为 DeepSeek",
+    "KQQELQSZ382Z": "mixed: Codex 9 / DeepSeek 7，默认排除",
+    "policy": "codex-successful-brain-v1"
+  },
+  "latest_quota_audit": {
+    "cut_time": "2026-10-07T03:51:35.970833+00:00",
+    "oct7_runs": 24,
+    "quota_events": 7
+  },
+  "reports": {
+    "md": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/report.md",
+    "json": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/report.json",
+    "classification": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/run-classification.csv",
+    "latest_quota_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/quota-followup.json"
+  },
+  "remaining": [
+    "调度器固定发布树完整沙箱外 tsc/vitest；运维核实 shipped 与已运行脚本加载版本。",
+    "未记载的历史脑题不能补造来源；显式全引擎口径和全部原始数据/费用/证据保留。"
+  ]
+}

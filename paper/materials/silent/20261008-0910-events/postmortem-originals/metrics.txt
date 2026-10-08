@@ -1,0 +1,45 @@
+用时秒 2216.38
+usage Counter({'input_tokens': 3231184, 'cache_hit_tokens': 1087488, 'output_tokens': 12131, 'reasoning_tokens': 3010})
+deepseekkeys {'by': 'deepseek', 'direct': True, 'choice': 'o1', 'reason': '150 gold can buy meaningful damage, AoE, or defensive scaling; one starter upgrade offers less flexibility, and the curse weakens future draws.', 'latency_ms': 20845, 'tokens': 128402, 'input_tokens': 127805, 'output_tokens': 597, 'cache_hit_tokens': 0, 'reasoning_tokens': 371, 'effort': '', 'guide': '', 'handbook': '', 'memory_chars': 5732, 'memory_sections': {'act': 2569, 'history': 0, 'now': 0, 'this_floor': 0, 'route': 28, 'lookahead': 0, 'knowledge': 3135}, 'brain': {'engine': 'codex', 'model': 'gpt-6.1-sol', 'attempts': 1, 'tool_calls': []}, 'plan_id': 'ZTRGYYMLR8SC:F1:event#1', 'plan': ['o1'], 'plan_step': 1}
+实际code决策 246
+code labels Counter({'combat/plan-continue': 210, 'combat/plan': 111, 'combat/least-loss': 18, 'combat/lethal': 8, 'combat/end_turn': 1})
+plan choices 130 ranked 90 rank1 39
+显示推演最优分母 118 唯一best选择 97 并列选择 14
+focus Counter({'无focus': 53, '同族信徒 x2': 17, '同族信徒': 7, '同族神官': 6, '树枝史莱姆（中）': 4, '毛绒伏地虫': 2, '树叶史莱姆（小）': 1}) 例 [[285183, 3, 1, None, 'plan5', {'plan1': '树枝史莱姆（小）', 'plan3': '树叶史莱姆（中）', 'plan4': '树叶史莱姆（小）'}, "Jev chose plan 5/5 (打击 -> 树枝史莱姆（小）, 打击 -> 树枝史莱姆（小）, 打击 -> 树叶史莱姆（小）) with confidence 0.99; code rank - (rollout's best line, added)"], [285185, 3, 1, None, 'plan2', {'plan1': '树叶史莱姆（中）', 'plan2': '树叶史莱姆（小）'}, 'Jev chose plan 2/2 (打击 -> 树叶史莱姆（小）) with confidence 0.76; code rank 2'], [285187, 3, 2, None, 'plan5', {'plan1': '树叶史莱姆（小）', 'plan4': '树叶史莱姆（中）'}, "Jev chose plan 5/5 (防御, 中和 -> 树叶史莱姆（小）, 打击 -> 树叶史莱姆（小）, 防御) with confidence 0.57; code rank - (rollout's best line, added)"], [285238, 6, 1, None, 'plan3', {'plan4': '飞蝇菌子', 'plan5': '树枝史莱姆（中）'}, 'Jev chose plan 3/6 (带毒刺击 -> 树枝史莱姆（中）, 斗篷与匕首, 中和 -> 树枝史莱姆（中）, potion 铁心药水) with confidence 0.96; code rank 3'], [285240, 6, 1, None, 'plan2', {'plan3': '树枝史莱姆（中）', 'plan4': '飞蝇菌子'}, 'Jev chose plan 2/5 (中和 -> 飞蝇菌子, 投掷匕首 -> 树枝史莱姆（中）, 小刀 -> 树枝史莱姆（中）) with confidence 0.97; code rank 2'], [285243, 6, 1, None, 'plan2', {'plan2': '树枝史莱姆（中）', 'plan3': '飞蝇菌子'}, 'Jev chose plan 2/4 (小刀 -> 树枝史莱姆（中）) with confidence 0.61; code rank 2'], [285244, 6, 1, None, 'plan2', {'plan2': '树枝史莱姆（中）'}, 'Jev chose plan 2/3 (end turn) with confidence 0.97; code rank 2']]
+每次实盘资源/伤害
+序 1 F 2 损血 [13, 0, 0, 0] 逐轮敌HP净扣 [18, 15, 9, 3] 合计 45 剩 3
+代码主导轮 [1, 2, 3, 4] 初始决定 Counter({'combat/plan': 5, 'combat/lethal': 1})
+序 2 F 3 损血 [0, 4, 0, 3, 0] 逐轮敌HP净扣 [18, 13, 3, 16, 8] 合计 58 剩 2
+代码主导轮 [1, 2, 3, 4, 5] 初始决定 Counter({'combat/plan': 6, 'combat/lethal': 1})
+序 3 F 4 损血 [0, 0, 0] 逐轮敌HP净扣 [18, 11, 12] 合计 41 剩 4
+代码主导轮 [1, 2, 3] 初始决定 Counter({'combat/plan': 4, 'combat/lethal': 1})
+序 4 F 6 损血 [0, 0, 5, 0, 0] 逐轮敌HP净扣 [25, 19, 10, 15, 12] 合计 81 剩 6
+代码主导轮 [3, 4, 5] 初始决定 Counter({'combat/plan': 2, 'combat/lethal': 1})
+序 5 F 11 损血 [0, 0, 20, 0] 逐轮敌HP净扣 [68, 24, 18, 22] 合计 132 剩 11
+代码主导轮 [1, 2, 3, 4] 初始决定 Counter({'combat/plan': 7, 'combat/lethal': 2})
+序 6 F 14 损血 [4, 2, 0, 0, 0] 逐轮敌HP净扣 [48, 23, 8, 7, 13] 合计 99 剩 2
+代码主导轮 [3, 4, 5] 初始决定 Counter({'combat/plan': 3, 'combat/lethal': 2})
+序 7 F 17 损血 [0, 4, 5, 3, 18, 6, 7, 0, 4, 12, 0, 0, 0, 7, None] 逐轮敌HP净扣 [12, 45, 18, 18, 30, 15, 22, 21, 13, 21, 2, 17, 0, 15, 13] 合计 262 剩 62
+代码主导轮 [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] 初始决定 Counter({'combat/plan': 17, 'combat/least-loss': 2})
+序 8 F 17 损血 [0, 0, 3, 0, 21, 26, 10, 4, 0, None] 逐轮敌HP净扣 [12, 29, 11, 48, 17, 19, 27, 18, 13, 14] 合计 208 剩 116
+代码主导轮 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] 初始决定 Counter({'combat/plan': 12, 'combat/least-loss': 3})
+序 9 F 17 损血 [0, 4, 5, 3, 2, 6, 7, 0, 5, 8, 13, 0, 13, None] 逐轮敌HP净扣 [12, 45, 18, 18, 24, 15, 22, 14, 9, 16, 10, 7, 34, 9] 合计 253 剩 71
+代码主导轮 [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] 初始决定 Counter({'combat/plan': 13, 'combat/least-loss': 3})
+序 10 F 17 损血 [0, 4, 5, 0, 0, 6, 7, 5, 5, 12, 13, 0, 9, None] 逐轮敌HP净扣 [12, 45, 18, 12, 24, 15, 20, 19, 9, 19, 10, 13, 28, 9] 合计 253 剩 71
+代码主导轮 [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] 初始决定 Counter({'combat/plan': 14, 'combat/least-loss': 3, 'combat/end_turn': 1})
+序 11 F 17 损血 [0, 4, 5, 3, 18, 6, 7, 0, 4, 15, 0, 0, 0, None] 逐轮敌HP净扣 [12, 45, 18, 18, 30, 15, 22, 21, 13, 27, 2, 21, 0, 15] 合计 259 剩 65
+代码主导轮 [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] 初始决定 Counter({'combat/plan': 15, 'combat/least-loss': 3})
+序 12 F 17 损血 [0, 4, 4, 3, 7, 6, 19, 5, 10, 6, 0, 0, 0, 4] 逐轮敌HP净扣 [12, 45, 18, 18, 27, 13, 29, 15, 40, 14, 4, 16, 0, 15] 合计 266 剩 58
+代码主导轮 [2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14] 初始决定 Counter({'combat/plan': 13, 'combat/least-loss': 4})
+route/clock检索
+决策 285163
+.latency_ms.deepseek 13966
+.deepseek {'by': 'deepseek', 'direct': True, 'choice': '', 'reason': '早店兑现金币，营火护航单精英，保血备战同族。', 'latency_ms': 13966, 'tokens': 127451, 'input_tokens': 127018, 'output_tokens': 433, 'cache_hit_tokens': 0, 'reason
+.deepseek.memory_sections.route 28
+.deepseek.brain {'engine': 'codex', 'model': 'gpt-6.1-sol', 'attempts': 1, 'tool_calls': []}
+.route_plan {"runId": "ZTRGYYMLR8SC", "act": 1, "floor": 1, "hpPct": 0.8, "path": [{"row": 1, "col": 3, "type": "Monster", "hpOnArrival": 0.8}, {"row": 2, "col": 4, "type": "Monster", "hpOnArrival": 0.7571428571428571}, {"row": 3, "col": 5, "type": "Unknown", "hpOnArrival": 0.7142857142857143}, {"row": 4, "col": 6, "type": "Shop", "hpOnArrival": 0.7142857142857143}, {"row": 5, "col": 6, "type": "Monster", "hpOnArrival": 0.7142857142857143}, {"row": 6, "col": 6, "type": "Unknown", "hpOnArrival": 0.6714285714285714}, {"row": 7, "col": 6, "type": "Shop", "hpOnArrival": 0.6714285714285714}, {"row": 8, "col": 6, "type": "RestSite", "hpOnArrival": 0.6714285714285714}, {"row": 9, "col": 6, "type": "Treasure", "hpOnArrival": 0.9714285714285714}, {"row": 10, "col": 6, "type": "Elite", "hpOnArrival": 0.9714285714285714}, {"row": 11, "col": 5, "type": "Unknown", "hpOnArrival": 0.6142857142857143}, {"row": 12, "col": 4, "type": "RestSite", "hpOnArrival": 0.6142857142857143}, {"row": 13, "col": 3, "type": "Monster", "hpOnArrival": 0.9142857142857143}, {"row": 14, "col": 3, "type": "Unknown", "hpOnArrival": 0.8714285714285714}, {"row": 15, "col": 2, "type": "RestSite", "hpOnArrival": 0.8714285714285714}, {"row": 16, "col": 3, "type": "Boss", "hpOnArrival": 1}], "summary": "r1c3 普通战 → r2c4 普通战 → r3c5 问号 → r4c6 商店 → r5c6 普通战 → r6c6 问号 → r7c6 商店 → r8c6 休息 → r9c6 宝箱 → r10c6 精英 → r11c5 问号 → r12c4 休息 → r13c3 普通战 → r14c3 问号 → r15c2 休息 → r16c3 Boss"}
+决策 285357
+.latency_ms.deepseek 15525
+.deepseek {'by': 'deepseek', 'direct': True, 'choice': 'o0', 'reason': 'Heal to 68 HP: the Kin commonly costs 47 HP, and this deck lacks defensive scaling. One upgrade provides less reliable protection.', 'late
+.deepseek.memory_sections.route 72
+.deepseek.brain {'engine': 'codex', 'model': 'gpt-6.1-sol', 'attempts': 1, 'tool_calls': []}

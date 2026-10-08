@@ -1,0 +1,76 @@
+## 经验库更新回报
+
+- 版本：2026-10-07.28 → 2026-10-07.29；提交：18f23638（分支 exp-silent）；合入：未合入，live 预检发现 21 个记录文件冲突，待调用方兜底。
+- 条数：新增 2、更新 11（加证据 11、只改数字 0）、退役 0；active 156 → 158；正文 47828 字。A8 适用 150 条／44634 字，A9 151 条／44918 字。
+- 机制推理（局数为支持／反例）：
+  - 力量／敏捷 — 逐击增伤、逐牌加挡，活力分源 — 105／0局 — Q6M2Y34MWKRE
+  - 能力兑现 — 计划与实际建立分账，结论为观察 — 104／0局 — 1913SE84AXQF
+  - 毒雾 — 后续轮初补毒，建立不即时施毒 — 50／0局 — 1913SE84AXQF
+  - 磨蚀 — 敏捷与逐击荆棘分别兑现，反杀发生在攻击后 — 8／0局 — 1913SE84AXQF
+  - 仪式兽 — 跨阈值清第一段力量，后段仍有威胁 — 16／0局 — 1913SE84AXQF
+  - 千足虫 — 实际重接增加需伤，旧毒／力量不沿用 — 7／0局 — 1913SE84AXQF
+  - 骇鳗 — 眩晕只取消当前攻击，后续活力／易伤另核 — 7／0局 — Q6M2Y34MWKRE
+  - 速度药水 — 本轮加5临时敏捷，次轮撤回 — 34／0局 — Q6M2Y34MWKRE
+  - 人工制品 — 剥层后才施减益，存活须严格余血大于0 — 10／0局 — Q6M2Y34MWKRE
+  - 再生 — 逐轮衰减、回复受上限截断 — 12／0局（完整期限4局、封顶先后2局）— 1913SE84AXQF
+  - 普通紧勒 — 后续攻击和技能完成各触发2失血 — 2／0局 — Q6M2Y34MWKRE
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 241 文件／2531 用例／退出码 0，无重跑。
+- 切片大小：整体中位减少248字，配对增量中位−125字；最大4968字，原5343字。
+- 学习账本：新增无；改成 proposed：silent-0006、0011、0019、0020、0021、0025、0044、0050、0064、0133、0253、0259、0261、0262；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-07.29",
+  "commit": "18f23638951e5dea6c0bd557303c20d5ae2a88dd",
+  "merged": null,
+  "added": 2,
+  "updated": 11,
+  "retired": 0,
+  "active": 158,
+  "mechanisms": [
+    "力量/敏捷与活力分源 — 力量逐击影响攻击、敏捷逐张影响牌挡，活力与临时增减分源 — 105局 — Q6M2Y34MWKRE",
+    "已建能力与计划（观察） — 观察：持有、计划与本战已建能力分账，支付和生存窗口限制持续攻防兑现 — 104局 — 1913SE84AXQF",
+    "毒雾 — 毒雾普通/升级建2/3层，后续玩家轮初补毒，建立不即时施毒且可叠加 — 50局 — 1913SE84AXQF",
+    "磨蚀 — 磨蚀的敏捷与逐击荆棘分别兑现，生成能力不等于已建立 — 8局 — 1913SE84AXQF",
+    "仪式兽阶段 — 仪式兽跨现场阈值清横冲直撞与第一段力量，后段仍攻击并再成长 — 16局 — 1913SE84AXQF",
+    "千足虫重接 — 残杀千足虫重接增加需伤，复活毒与旧力量不沿用死前值 — 7局 — 1913SE84AXQF",
+    "骇鳗 — 骇鳗跨惊叫阈值取消当前攻击，仍须完成剩余击杀并支付后战入口血价 — 7局 — Q6M2Y34MWKRE",
+    "速度药水 — 速度药水当步加5临时敏捷，须在本轮格挡牌兑现 — 34局 — Q6M2Y34MWKRE",
+    "人工制品/严格存活 — 构装体人工制品与方柱力量成长分别核，毒进度不代替严格存活余量 — 10局 — Q6M2Y34MWKRE",
+    "再生药水 — 再生逐轮回复且受最大生命截断，不能把名义15当即时回血 — 12局 — 1913SE84AXQF",
+    "紧勒 — 普通紧勒先攻击再建立当轮逐牌失血，技能也能兑现后续伤害 — 2局 — Q6M2Y34MWKRE"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2531},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0006", "silent-0011", "silent-0019", "silent-0020",
+      "silent-0021", "silent-0025", "silent-0044", "silent-0050",
+      "silent-0064", "silent-0133", "silent-0253", "silent-0259",
+      "silent-0261", "silent-0262"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-ef0e38a5dbd3bc07"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11708-538a-7550-a333-c52d2b8ee607
+轮数：1；工具调用：command_execution×65 file_change×11
+token：输入 229.7k、输出 53.0k（其中推理 16.9k）、cache 读 9090.7k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：2127.2 s（墙钟）
+时间：首个事件 3.3 s、模型首个输出 9.9 s、首次工具 12.8 s、末次工具结束 2068.9 s；工具内共 1689.6 s，其余（模型生成、推理、网络）434.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×61 wait×3；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T23-43-04-01a11708-538a-7550-a333-c52d2b8ee607.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update.jsonl

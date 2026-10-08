@@ -1,0 +1,80 @@
+{
+  "timestamp_cst": "2026-10-07 22:02",
+  "state": "pending_refresh_and_active_strategy_learner",
+  "batch": "20261007-203653-strategy-proposal",
+  "source": "6f2b90a311644960fcfd1e2b7a4ce96fb41d65b4",
+  "observed_live": "734c08608055167fd220800439dbf7407cff6e57",
+  "paths": {
+    "agent/src/brain/build-facts.ts": {
+      "blob": "20d959fbe141174f0e78f45775e7c3345a899293",
+      "sha256": "a81b9f854ebd0e90529ca1e3945da862cc02fc74e4299992f99d6410f15c525e"
+    },
+    "agent/src/knowledge/boss-phase.ts": {
+      "blob": "9529bbc741c4b5f8e8ae7a7d2725c79516c98ad5",
+      "sha256": "4e84d7b11e1d37e04df9375c0a0ddf1285689776d8728353b61135466b32e73b"
+    },
+    "agent/src/memory/run-plan.ts": {
+      "blob": "bb70f6d9ce5f2a66571bb87818aeb672c381aaa6",
+      "sha256": "ddb97d5afe7d259848629ca39869b5d93d29c576b7c45356ff14ac8b7db17b5e"
+    },
+    "agent/src/sim/boss-clock.ts": {
+      "blob": "a844ba698456c5fc825dec22b92c1233b295cb95",
+      "sha256": "5a4ce39fe711b234448fbb465f4bb9f7ba258cc57a56904e88aba9b38cfe81e8"
+    },
+    "agent/src/sim/build-sim-facts.ts": {
+      "blob": "f48fcd5655f87b33d7b3c815b0421a0b965c3dcf",
+      "sha256": "7557d781da01014c915d5ee65f1c51af81cfa16f9dbf7ef4ac737c82401c8303"
+    },
+    "agent/tests/silent-boss-phase-states.json": {
+      "blob": "c59d6b6440e759f96a68a165e6e045abfe933f47",
+      "sha256": "d78673686b2a4ff74534b430758f6bb94157c4293dea8c48f1217e62d9319332"
+    },
+    "agent/tests/silent-boss-phase.test.ts": {
+      "blob": "a07e8aefa622284e3fc3cd7d7e99c1d491ac771e",
+      "sha256": "1d0051c45600e4385ab2de9abbae4a2ac76f6c6e1c3b690699dadc960e802159"
+    }
+  },
+  "source_tests": {
+    "exit": 0,
+    "files": 240,
+    "cases": 2525,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-203654-strategy-proposal/phase-sandbox-reviewed.log"
+  },
+  "source_red_green": {
+    "withdrawn": "1 file: 9 failed / 5 passed (14)",
+    "restored": "2 files: 15 passed; original logs preserved"
+  },
+  "broker_procs_observed_this_wake": {
+    "autoplay": 1746959,
+    "report": 2809676,
+    "refresh_shells": [
+      2810036,
+      2810037,
+      2810038
+    ],
+    "builders": [
+      2810050,
+      2810678
+    ],
+    "strategy_batch": "20261007-214301-strategy-proposal",
+    "strategy_pid": 2781706,
+    "note": "Actual procs response in this wake; no stale PID action or process signal."
+  },
+  "live_merge_lock_attempted": false,
+  "reason": "Ops prompt requires procs without report.py before live integration; fresh broker snapshot still showed report and refresh builders. Same proposal is already in an active newer strategy batch.",
+  "live_or_main_code_mutated": false,
+  "new_version_or_shipped_added": false,
+  "new_recheck_requested": false,
+  "paper_refreshed": false,
+  "proposal_dispositions": {
+    "waiting": 9,
+    "duplicate": 1
+  },
+  "next_existing_completion_event": [
+    "Read the active newer strategy result and actual latest live ancestors first; if the original source is already live, close without duplicate publication.",
+    "Use one fresh broker procs check and one nonblocking live-merge.lock attempt only after refresh completes. Busy means pending, without waiting or creating a duplicate event.",
+    "Integrate only the seven unchanged source blobs on the latest live, retaining refreshed knowledge, current experience .26 and all parallel code. Preserve actual source ancestry.",
+    "Run the original post-merge sandbox entry. Only after actual release, record one version, mechanically synchronize main, append appropriate CLI shipped/proposal disposition, then request learner-recheck for the original batch.",
+    "Preserve original out/err/failed, all proposal waiting reasons, prior/first-run/ledger history, and failed test artifacts. Do not duplicate the active proposal dispatch or previous paper cut."
+  ]
+}

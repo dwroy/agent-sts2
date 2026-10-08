@@ -1,0 +1,1752 @@
+[
+  {
+    "ts": "2026-10-06T22:40:20.266Z",
+    "floor": 1,
+    "turn": null,
+    "label": "event/choose",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "journal": {
+      "choice": "药瓶皮套: 获得1个药水栏位并获得2瓶随机药水。",
+      "reason": "Two potions strengthen early fights immediately; the permanent extra slot supports elites and bosses without adding a curse."
+    },
+    "rationale": "Codex decided o1: Two potions strengthen early fights immediately; the permanent extra slot supports elites and bosses without adding a curse. | Codex chose 药瓶皮套 (code's fallback order: 0, rank 1 of 3; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 56,
+      "entry_source": "hp_now",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 3411,
+      "ms": 3499,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 20,
+        "boss_left": 163.436
+      },
+      "options": {
+        "o0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 67,
+          "boss_left": 153.607,
+          "boss_left_diff": -9.829,
+          "boss_left_se": 0.3239
+        }
+      },
+      "not_simulated": {
+        "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+        "o2": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    },
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:40:20.580Z",
+    "floor": 1,
+    "turn": null,
+    "label": "event/leave",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "the event is finished; taking the proceed option",
+      "reason": ""
+    },
+    "rationale": "the event is finished; taking the proceed option",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:40:27.825Z",
+    "floor": 1,
+    "turn": null,
+    "label": "map/route-plan",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 2
+    },
+    "journal": {
+      "choice": "route r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": "四火保血与升级，延后精英待构筑成形，商店补强巨兽战。"
+    },
+    "rationale": "Codex planned: 四火保血与升级，延后精英待构筑成形，商店补强巨兽战。 | route plan: r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:40:51.152Z",
+    "floor": 2,
+    "turn": 2,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Gold (8金币)",
+      "reason": ""
+    },
+    "rationale": "claiming Gold (8金币)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:40:51.322Z",
+    "floor": 2,
+    "turn": 2,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Potion (稳定血清)",
+      "reason": ""
+    },
+    "rationale": "claiming Potion (稳定血清)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:40:51.483Z",
+    "floor": 2,
+    "turn": 2,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Card (将一张牌添加到你的牌组。)",
+      "reason": ""
+    },
+    "rationale": "claiming Card (将一张牌添加到你的牌组。)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:41:09.673Z",
+    "floor": 2,
+    "turn": 2,
+    "label": "reward/card",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "刀刃之舞",
+      "reason": "Blade Dance supplies efficient early damage the starter deck lacks and supports future shiv synergies; defensive options do not solve that immediate weakness."
+    },
+    "rationale": "Codex decided card0: Blade Dance supplies efficient early damage the starter deck lacks and supports future shiv synergies; defensive options do not solve that immediate weakness. | Codex chose 刀刃之舞 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 70,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 10859,
+      "ms": 10868,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 20,
+        "boss_left": 150.822
+      },
+      "options": {
+        "card0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 146.173,
+          "boss_left_diff": -4.649,
+          "boss_left_se": 0.6513
+        },
+        "card1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 142.256,
+          "boss_left_diff": -8.566,
+          "boss_left_se": 0.6829
+        },
+        "card2": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 165.931,
+          "boss_left_diff": 15.109,
+          "boss_left_se": 0.6379
+        },
+        "skip": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 150.822,
+          "boss_left_diff": 0,
+          "boss_left_se": 0
+        }
+      },
+      "not_simulated": {}
+    },
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:41:09.850Z",
+    "floor": 2,
+    "turn": 2,
+    "label": "reward/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "collect_rewards_and_proceed"
+    },
+    "journal": {
+      "choice": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+      "reason": ""
+    },
+    "rationale": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:41:10.085Z",
+    "floor": 2,
+    "turn": 2,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 2/16 Unknown at row 2, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 2/16 Unknown at row 2, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 56
+  },
+  {
+    "ts": "2026-10-06T22:41:52.985Z",
+    "floor": 3,
+    "turn": 5,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Gold (14金币)",
+      "reason": ""
+    },
+    "rationale": "claiming Gold (14金币)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 50
+  },
+  {
+    "ts": "2026-10-06T22:41:53.178Z",
+    "floor": 3,
+    "turn": 5,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Potion (明晰提取物)",
+      "reason": ""
+    },
+    "rationale": "claiming Potion (明晰提取物)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 50
+  },
+  {
+    "ts": "2026-10-06T22:41:53.345Z",
+    "floor": 3,
+    "turn": 5,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Card (将一张牌添加到你的牌组。)",
+      "reason": ""
+    },
+    "rationale": "claiming Card (将一张牌添加到你的牌组。)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 50
+  },
+  {
+    "ts": "2026-10-06T22:42:07.180Z",
+    "floor": 3,
+    "turn": 5,
+    "label": "reward/card",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "journal": {
+      "choice": "偏折",
+      "reason": "Deflect adds free defense without competing with damage or future powers; Act 1 outcomes and remaining-boss-HP simulations favor it."
+    },
+    "rationale": "Codex decided card2: Deflect adds free defense without competing with damage or future powers; Act 1 outcomes and remaining-boss-HP simulations favor it. | Codex chose 偏折 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 70,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 5912,
+      "ms": 5925,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 20,
+        "boss_left": 152.88
+      },
+      "options": {
+        "card0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 25,
+          "hp": 70,
+          "boss_left": 156.612,
+          "boss_left_diff": 3.732,
+          "boss_left_se": 0.6524
+        },
+        "card1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 168.447,
+          "boss_left_diff": 15.567,
+          "boss_left_se": 0.6368
+        },
+        "card2": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 143.88,
+          "boss_left_diff": -9,
+          "boss_left_se": 0.6777
+        },
+        "skip": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 152.88,
+          "boss_left_diff": 0,
+          "boss_left_se": 0
+        }
+      },
+      "not_simulated": {}
+    },
+    "route_change": null,
+    "hp": 50
+  },
+  {
+    "ts": "2026-10-06T22:42:07.376Z",
+    "floor": 3,
+    "turn": 5,
+    "label": "reward/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "collect_rewards_and_proceed"
+    },
+    "journal": {
+      "choice": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+      "reason": ""
+    },
+    "rationale": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 50
+  },
+  {
+    "ts": "2026-10-06T22:42:07.605Z",
+    "floor": 3,
+    "turn": 5,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 3/16 Monster at row 3, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 3/16 Monster at row 3, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 50
+  },
+  {
+    "ts": "2026-10-06T22:43:00.813Z",
+    "floor": 4,
+    "turn": 6,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Gold (10金币)",
+      "reason": ""
+    },
+    "rationale": "claiming Gold (10金币)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 48
+  },
+  {
+    "ts": "2026-10-06T22:43:00.970Z",
+    "floor": 4,
+    "turn": 6,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Card (将一张牌添加到你的牌组。)",
+      "reason": ""
+    },
+    "rationale": "claiming Card (将一张牌添加到你的牌组。)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 48
+  },
+  {
+    "ts": "2026-10-06T22:43:13.872Z",
+    "floor": 4,
+    "turn": 6,
+    "label": "reward/card",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 2
+    },
+    "journal": {
+      "choice": "精密瞄准",
+      "reason": "Precise Aim rewards our many skills, especially Deflect and Blade Dance, providing needed efficient damage without adding another defensive card."
+    },
+    "rationale": "Codex decided card2: Precise Aim rewards our many skills, especially Deflect and Blade Dance, providing needed efficient damage without adding another defensive card. | Codex chose 精密瞄准 (Attack, 3E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 70,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 5873,
+      "ms": 5880,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 20,
+        "boss_left": 143.88
+      },
+      "options": {
+        "card0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 170.859,
+          "boss_left_diff": 26.979,
+          "boss_left_se": 0.7181
+        },
+        "card1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 159.31,
+          "boss_left_diff": 15.43,
+          "boss_left_se": 0.7182
+        },
+        "card2": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 142.301,
+          "boss_left_diff": -1.579,
+          "boss_left_se": 0.6939
+        },
+        "skip": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 70,
+          "boss_left": 143.88,
+          "boss_left_diff": 0,
+          "boss_left_se": 0
+        }
+      },
+      "not_simulated": {}
+    },
+    "route_change": null,
+    "hp": 48
+  },
+  {
+    "ts": "2026-10-06T22:43:14.070Z",
+    "floor": 4,
+    "turn": 6,
+    "label": "reward/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "collect_rewards_and_proceed"
+    },
+    "journal": {
+      "choice": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+      "reason": ""
+    },
+    "rationale": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 48
+  },
+  {
+    "ts": "2026-10-06T22:43:14.283Z",
+    "floor": 4,
+    "turn": 6,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 4/16 Monster at row 4, col 4; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 4/16 Monster at row 4, col 4; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 48
+  },
+  {
+    "ts": "2026-10-06T22:44:24.027Z",
+    "floor": 5,
+    "turn": 8,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Card (将一张牌添加到你的牌组。)",
+      "reason": ""
+    },
+    "rationale": "claiming Card (将一张牌添加到你的牌组。)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 19
+  },
+  {
+    "ts": "2026-10-06T22:44:35.182Z",
+    "floor": 5,
+    "turn": 8,
+    "label": "reward/card",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "投掷匕首",
+      "reason": "Dagger Throw adds immediate damage and hand filtering; strongest supported outcomes and lowest simulated boss remaining HP among these options."
+    },
+    "rationale": "Codex decided card0: Dagger Throw adds immediate damage and hand filtering; strongest supported outcomes and lowest simulated boss remaining HP among these options. | Codex chose 投掷匕首 (Attack, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 66,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 4691,
+      "ms": 4704,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 20,
+        "boss_left": 146.106
+      },
+      "options": {
+        "card0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 17,
+          "hp": 66,
+          "boss_left": 128.724,
+          "boss_left_diff": -17.382,
+          "boss_left_se": 0.695
+        },
+        "card1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 17.5,
+          "hp": 66,
+          "boss_left": 153.617,
+          "boss_left_diff": 7.511,
+          "boss_left_se": 0.6555
+        },
+        "card2": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 66,
+          "boss_left": 157.895,
+          "boss_left_diff": 11.789,
+          "boss_left_se": 0.64
+        },
+        "skip": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 20,
+          "hp": 66,
+          "boss_left": 146.106,
+          "boss_left_diff": 0,
+          "boss_left_se": 0
+        }
+      },
+      "not_simulated": {}
+    },
+    "route_change": null,
+    "hp": 19
+  },
+  {
+    "ts": "2026-10-06T22:44:35.360Z",
+    "floor": 5,
+    "turn": 8,
+    "label": "reward/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "collect_rewards_and_proceed"
+    },
+    "journal": {
+      "choice": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+      "reason": ""
+    },
+    "rationale": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 19
+  },
+  {
+    "ts": "2026-10-06T22:44:35.578Z",
+    "floor": 5,
+    "turn": 8,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 5/16 Monster at row 5, col 4; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 5/16 Monster at row 5, col 4; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 19
+  },
+  {
+    "ts": "2026-10-06T22:45:19.016Z",
+    "floor": 6,
+    "turn": 5,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Gold (10金币)",
+      "reason": ""
+    },
+    "rationale": "claiming Gold (10金币)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 4
+  },
+  {
+    "ts": "2026-10-06T22:45:19.176Z",
+    "floor": 6,
+    "turn": 5,
+    "label": "reward/claim",
+    "decider": "code",
+    "chosen": {
+      "action": "claim_reward",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "claiming Card (将一张牌添加到你的牌组。)",
+      "reason": ""
+    },
+    "rationale": "claiming Card (将一张牌添加到你的牌组。)",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 4
+  },
+  {
+    "ts": "2026-10-06T22:45:38.865Z",
+    "floor": 6,
+    "turn": 5,
+    "label": "reward/card",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_reward_card",
+      "option_index": 1
+    },
+    "journal": {
+      "choice": "切割",
+      "reason": "Slice adds damage without competing with defense for energy; supported Act 1 outcomes and substantially lower simulated boss remaining HP favor it."
+    },
+    "rationale": "Codex decided card1: Slice adds damage without competing with defense for energy; supported Act 1 outcomes and substantially lower simulated boss remaining HP favor it. | Codex chose 切割 (Attack, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 55,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 4062,
+      "ms": 4070,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 15,
+        "boss_left": 143.164
+      },
+      "options": {
+        "card0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 17,
+          "hp": 55,
+          "boss_left": 143.258,
+          "boss_left_diff": 0.094,
+          "boss_left_se": 0.6913
+        },
+        "card1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 15,
+          "hp": 55,
+          "boss_left": 123.94,
+          "boss_left_diff": -19.224,
+          "boss_left_se": 0.6787
+        },
+        "card2": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 15,
+          "hp": 55,
+          "boss_left": 151.314,
+          "boss_left_diff": 8.15,
+          "boss_left_se": 0.6344
+        },
+        "skip": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 15,
+          "hp": 55,
+          "boss_left": 143.164,
+          "boss_left_diff": 0,
+          "boss_left_se": 0
+        }
+      },
+      "not_simulated": {}
+    },
+    "route_change": null,
+    "hp": 4
+  },
+  {
+    "ts": "2026-10-06T22:45:39.041Z",
+    "floor": 6,
+    "turn": 5,
+    "label": "reward/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "collect_rewards_and_proceed"
+    },
+    "journal": {
+      "choice": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+      "reason": ""
+    },
+    "rationale": "no rewards left to claim; advancing with collect_rewards_and_proceed",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 4
+  },
+  {
+    "ts": "2026-10-06T22:45:39.256Z",
+    "floor": 6,
+    "turn": 5,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 1
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 6/16 RestSite at row 6, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 6/16 RestSite at row 6, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 4
+  },
+  {
+    "ts": "2026-10-06T22:45:47.650Z",
+    "floor": 7,
+    "turn": null,
+    "label": "rest/plan",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（21）。",
+      "reason": "At 4 HP with no potions, healing to 25 HP is essential to survive upcoming encounters; upgrades cannot replace this immediate buffer."
+    },
+    "rationale": "Codex decided o0: At 4 HP with no potions, healing to 25 HP is essential to survive upcoming encounters; upgrades cannot replace this immediate buffer. | Codex chose 休息 (HEAL) (code's fallback order: 13, rank 1 of 10; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 1,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 2894,
+      "ms": 2907,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 2,
+        "boss_left": 222.113
+      },
+      "options": {
+        "o0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 15,
+          "hp": 55,
+          "boss_left": 123.94,
+          "boss_left_diff": -98.173,
+          "boss_left_se": 0.4895
+        },
+        "o1:c0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 220.403,
+          "boss_left_diff": -1.71,
+          "boss_left_se": 0.0587
+        },
+        "o1:c5": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 219.529,
+          "boss_left_diff": -2.584,
+          "boss_left_se": 0.2036
+        },
+        "o1:c10": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 218.942,
+          "boss_left_diff": -3.171,
+          "boss_left_se": 0.2108
+        },
+        "o1:c11": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 220.233,
+          "boss_left_diff": -1.88,
+          "boss_left_se": 0.1613
+        },
+        "o1:c13": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 221.167,
+          "boss_left_diff": -0.946,
+          "boss_left_se": 0.1548
+        },
+        "o1:c14": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 220.343,
+          "boss_left_diff": -1.77,
+          "boss_left_se": 0.1722
+        },
+        "o1:c15": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 221.001,
+          "boss_left_diff": -1.112,
+          "boss_left_se": 0.0657
+        },
+        "o1:c16": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 220.136,
+          "boss_left_diff": -1.977,
+          "boss_left_se": 0.0568
+        },
+        "o1:c17": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 219.869,
+          "boss_left_diff": -2.244,
+          "boss_left_se": 0.0502
+        }
+      },
+      "not_simulated": {}
+    },
+    "route_change": null,
+    "hp": 4
+  },
+  {
+    "ts": "2026-10-06T22:45:47.860Z",
+    "floor": 7,
+    "turn": null,
+    "label": "rest/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "proceed"
+    },
+    "journal": {
+      "choice": "nothing to choose at this rest site",
+      "reason": ""
+    },
+    "rationale": "nothing to choose at this rest site",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 25
+  },
+  {
+    "ts": "2026-10-06T22:45:48.078Z",
+    "floor": 7,
+    "turn": null,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 7/16 Unknown at row 7, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 7/16 Unknown at row 7, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 25
+  },
+  {
+    "ts": "2026-10-06T22:45:57.577Z",
+    "floor": 8,
+    "turn": null,
+    "label": "event/choose",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "journal": {
+      "choice": "潜水: 获得115金币。失去7点生命.",
+      "reason": "Gold enables meaningful shop purchases; Stone Sword requires dangerous elite fights before helping. Upcoming rests cushion the seven-HP cost."
+    },
+    "rationale": "Codex decided o1: Gold enables meaningful shop purchases; Stone Sword requires dangerous elite fights before helping. Upcoming rests cushion the seven-HP cost. | Codex chose 潜水 (code's fallback order: 0, rank 1 of 2; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 55,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 1849,
+      "ms": 1856,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 15,
+        "boss_left": 123.94
+      },
+      "options": {
+        "o1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 15,
+          "hp": 48,
+          "boss_left": 134.94,
+          "boss_left_diff": 11,
+          "boss_left_se": 0.4025
+        }
+      },
+      "not_simulated": {
+        "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    },
+    "route_change": null,
+    "hp": 25
+  },
+  {
+    "ts": "2026-10-06T22:45:58.023Z",
+    "floor": 8,
+    "turn": null,
+    "label": "event/leave",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "the event is finished; taking the proceed option",
+      "reason": ""
+    },
+    "rationale": "the event is finished; taking the proceed option",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 18
+  },
+  {
+    "ts": "2026-10-06T22:45:58.472Z",
+    "floor": 8,
+    "turn": null,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 8/16 Unknown at row 8, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 8/16 Unknown at row 8, col 5; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 18
+  },
+  {
+    "ts": "2026-10-06T22:46:09.269Z",
+    "floor": 9,
+    "turn": null,
+    "label": "event/choose",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "journal": {
+      "choice": "再撑一会: 失去3点生命。重新随机上方选项中的卡牌。",
+      "reason": "Preserve Pinpoint’s efficient damage in this skill-heavy deck. Reroll toward a starter card; the upcoming rest helps absorb the small HP cost."
+    },
+    "rationale": "Codex decided o1: Preserve Pinpoint’s efficient damage in this skill-heavy deck. Reroll toward a starter card; the upcoming rest helps absorb the small HP cost. | Codex chose 再撑一会 (code's fallback order: 0, rank 1 of 2; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 48,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 1771,
+      "ms": 1777,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 15,
+        "boss_left": 134.94
+      },
+      "options": {
+        "o1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 12,
+          "hp": 45,
+          "boss_left": 140.268,
+          "boss_left_diff": 5.328,
+          "boss_left_se": 0.2889
+        }
+      },
+      "not_simulated": {
+        "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    },
+    "route_change": null,
+    "hp": 18
+  },
+  {
+    "ts": "2026-10-06T22:46:15.328Z",
+    "floor": 9,
+    "turn": null,
+    "label": "event/choose",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "跨越: 打击将从你的牌组中被移除。",
+      "reason": "Remove the Strike for free, improving draws toward stronger attacks and defense. Further rerolling wastes scarce HP before the forced elite."
+    },
+    "rationale": "Codex decided o0: Remove the Strike for free, improving draws toward stronger attacks and defense. Further rerolling wastes scarce HP before the forced elite. | Codex chose 跨越 (code's fallback order: 0, rank 1 of 2; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 45,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 1566,
+      "ms": 1574,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 12,
+        "boss_left": 140.268
+      },
+      "options": {
+        "o1": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 11,
+          "hp": 41,
+          "boss_left": 147.292,
+          "boss_left_diff": 7.024,
+          "boss_left_se": 0.342
+        }
+      },
+      "not_simulated": {
+        "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    },
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:15.654Z",
+    "floor": 9,
+    "turn": null,
+    "label": "event/leave",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "the event is finished; taking the proceed option",
+      "reason": ""
+    },
+    "rationale": "the event is finished; taking the proceed option",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:16.072Z",
+    "floor": 9,
+    "turn": null,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 9/16 Treasure at row 9, col 6; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 9/16 Treasure at row 9, col 6; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:17.138Z",
+    "floor": 10,
+    "turn": null,
+    "label": "chest/open",
+    "decider": "code",
+    "chosen": {
+      "action": "open_chest"
+    },
+    "journal": {
+      "choice": "opening the chest",
+      "reason": ""
+    },
+    "rationale": "opening the chest",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:17.305Z",
+    "floor": 10,
+    "turn": null,
+    "label": "chest/relic",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_treasure_relic",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "only one relic offered",
+      "reason": ""
+    },
+    "rationale": "only one relic offered",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:17.505Z",
+    "floor": 10,
+    "turn": null,
+    "label": "chest/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "proceed"
+    },
+    "journal": {
+      "choice": "chest handled",
+      "reason": ""
+    },
+    "rationale": "chest handled",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:17.738Z",
+    "floor": 10,
+    "turn": null,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 10/16 RestSite at row 10, col 6; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 10/16 RestSite at row 10, col 6; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:26.544Z",
+    "floor": 11,
+    "turn": null,
+    "label": "rest/plan",
+    "decider": "codex",
+    "chosen": {
+      "action": "choose_rest_option",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "休息: 回复最大生命值的30%（21）。",
+      "reason": "Heal to 36 HP. At 15 HP without potions before a forced elite, immediate survival outweighs any single upgrade."
+    },
+    "rationale": "Codex decided o0: Heal to 36 HP. At 15 HP without potions before a forced elite, immediate survival outweighs any single upgrade. | Codex chose 休息 (HEAL) (code's fallback order: 13, rank 1 of 10; not shown to Codex)",
+    "boss_sim": {
+      "boss": "WATERFALL_GIANT",
+      "asc": 10,
+      "entry_hp": 1,
+      "entry_source": "route",
+      "samples": 1000,
+      "requested": 1000,
+      "timed_out": false,
+      "workers": 24,
+      "orders": 1,
+      "sim_ms": 2847,
+      "ms": 2855,
+      "base": {
+        "win": 0,
+        "win_cal": 0.0474,
+        "hp_loss_won": null,
+        "turns": 2,
+        "boss_left": 222.153
+      },
+      "options": {
+        "o0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 15,
+          "hp": 45,
+          "boss_left": 137.776,
+          "boss_left_diff": -84.377,
+          "boss_left_se": 0.5267
+        },
+        "o1:c0": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 220.292,
+          "boss_left_diff": -1.861,
+          "boss_left_se": 0.0631
+        },
+        "o1:c4": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 219.32,
+          "boss_left_diff": -2.833,
+          "boss_left_se": 0.2194
+        },
+        "o1:c9": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 217.936,
+          "boss_left_diff": -4.217,
+          "boss_left_se": 0.2397
+        },
+        "o1:c10": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 220.553,
+          "boss_left_diff": -1.6,
+          "boss_left_se": 0.1506
+        },
+        "o1:c12": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 221.361,
+          "boss_left_diff": -0.792,
+          "boss_left_se": 0.1828
+        },
+        "o1:c13": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 219.869,
+          "boss_left_diff": -2.284,
+          "boss_left_se": 0.1905
+        },
+        "o1:c14": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 220.826,
+          "boss_left_diff": -1.327,
+          "boss_left_se": 0.0775
+        },
+        "o1:c15": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 219.971,
+          "boss_left_diff": -2.182,
+          "boss_left_se": 0.0627
+        },
+        "o1:c16": {
+          "win": 0,
+          "win_cal": 0.0474,
+          "diff_cal": 0,
+          "se_cal": 0,
+          "diff_raw": 0,
+          "se_raw": 0,
+          "hp_loss_won": null,
+          "turns": 2,
+          "hp": 1,
+          "boss_left": 219.544,
+          "boss_left_diff": -2.609,
+          "boss_left_se": 0.0579
+        }
+      },
+      "not_simulated": {}
+    },
+    "route_change": null,
+    "hp": 15
+  },
+  {
+    "ts": "2026-10-06T22:46:26.770Z",
+    "floor": 11,
+    "turn": null,
+    "label": "rest/proceed",
+    "decider": "code",
+    "chosen": {
+      "action": "proceed"
+    },
+    "journal": {
+      "choice": "nothing to choose at this rest site",
+      "reason": ""
+    },
+    "rationale": "nothing to choose at this rest site",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 36
+  },
+  {
+    "ts": "2026-10-06T22:46:26.981Z",
+    "floor": 11,
+    "turn": null,
+    "label": "map/route-follow",
+    "decider": "code",
+    "chosen": {
+      "action": "choose_map_node",
+      "option_index": 0
+    },
+    "journal": {
+      "choice": "following the brain's route plan (floor 1): step 11/16 Elite at row 11, col 6; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+      "reason": ""
+    },
+    "rationale": "following the brain's route plan (floor 1): step 11/16 Elite at row 11, col 6; plan r1c6 普通战 → r2c5 问号 → r3c5 普通战 → r4c4 普通战 → r5c4 普通战 → r6c5 休息 → r7c5 问号 → r8c5 问号 → r9c6 宝箱 → r10c6 休息 → r11c6 精英 → r12c6 休息 → r13c6 普通战 → r14c5 商店 → r15c4 休息 → r16c3 Boss",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 36
+  },
+  {
+    "ts": "2026-10-06T22:47:37.843Z",
+    "floor": 12,
+    "turn": 8,
+    "label": "run/finalize",
+    "decider": "code",
+    "chosen": {
+      "action": "continue_game_over"
+    },
+    "journal": {
+      "choice": "defeat: saving the result with continue_game_over before stopping",
+      "reason": ""
+    },
+    "rationale": "defeat: saving the result with continue_game_over before stopping",
+    "boss_sim": null,
+    "route_change": null,
+    "hp": 0
+  }
+]

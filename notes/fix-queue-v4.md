@@ -634,7 +634,7 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 
 ## 2026-10-07 07:04 A10复盘：毒杀胜利分支漏算持牌毒素伤害（交学习者）
 
-- [ ] **非阻塞机制模型缺口，仅转录学习者定位**：`agent/src/reflex/turn-solver.ts:2901/:2916/:2939`在毒结算预测获胜时把持牌伤害及来袭置零；`agent/src/reflex/combat-plan.ts:3278/:3300`毒斩杀提前返回位于后续致死分歧处理之前。来源TKXQ6L4N9A6U SILENT A10 F22 T6、`ops/codex-ops/learner/20261007-064302.out`、原复盘及账本silent-0213（独立毒素机制0214，旧0059仅补support）。22:36:11.840Z以7血、0挡、两张各5伤TOXIC、2能量，代码combat/lethal结束并预测损0；22:36:13.588Z玩家先归零，两敌仍6/64与1/65血、11/14毒未结算，完整持牌伤10超出余血3。敌9+21攻击未执行，未结算毒不计已造成伤害。
+- [x] **非阻塞机制模型缺口，仅转录学习者定位**：`agent/src/reflex/turn-solver.ts:2901/:2916/:2939`在毒结算预测获胜时把持牌伤害及来袭置零；`agent/src/reflex/combat-plan.ts:3278/:3300`毒斩杀提前返回位于后续致死分歧处理之前。来源TKXQ6L4N9A6U SILENT A10 F22 T6、`ops/codex-ops/learner/20261007-064302.out`、原复盘及账本silent-0213（独立毒素机制0214，旧0059仅补support）。22:36:11.840Z以7血、0挡、两张各5伤TOXIC、2能量，代码combat/lethal结束并预测损0；22:36:13.588Z玩家先归零，两敌仍6/64与1/65血、11/14毒未结算，完整持牌伤10超出余血3。敌9+21攻击未执行，未结算毒不计已造成伤害。 已由本批20261007-072650-fix-batch合入c4156ed07219f26d4e74883e193676623ad539a3并发布f65cbfac6c4aeeccbe4a0dffd19a86e6087b30b7／S1.fix41，定稿沙箱216文件2308例通过；原测试失败历史留存，运维CLI登记shipped，详见paper/materials/silent/20261007-0810-fix41-release.md。
 - silent-0213 first_run=TKXQ6L4N9A6U/A10、prior=unknown/status=observed，prior_runs为K3676LU8B0UH、CSBR5CRDWQNB、ZZMYZ5UBCG72；较早安全场景不足以确认同一致死分支已经暴露。0214机制首证C48LLXBGKXQ9/A0、prior=yes，与bug独立，不改已有首证／上线／repeat历史。
 - 按运维prompt由学习者依据本角色证据实现、自测并合入；本局正常结束，非角色无关阻塞问题，运维不改伤害公式。仅转录缺口与实际先后，不加打法或用药规则，不声称另一顺序可转胜。行号为学习者只读当前live定位，原局e33ca6e0+dirty不声称逐字复原；原名称与学习上线标记勘误保留。调度器按队列派发，不停对局。
 
@@ -646,4 +646,228 @@ Roy：「论文的材料，要能算出消耗的 token 以及对应的钱；订�
 - **可信名单**：仍按原标准逐个 boss 判——验证集 ≥ 10 场、校准 Brier ≤ 整体 1.25 倍、预测与实际胜率差 ≤ 15 个百分点、被打穿的血模拟/日志 0.7–1.3。达标的进 knowledge/characters/silent/boss-trust.json（tools/boss-sim/trust.py 加 --character silent），不达标的保持低可信并写明还差多少场；之后按每批新 boss 战定期重跑（例如每升一级或每 20 场 boss 战），新达标的自动进名单。
 - 这是用 agent 自己对局数据做的校准，符合学习协议；不引入人写的打法知识。结果写 paper/materials/silent/boss-sim-calibration.md，台账登记，自测通过按 live 流程合入，改变题面的上线加 eval 版本。
 
-- **Roy已授权的独立高优先功能批次（2026-10-07 07:26运维转录07:25 manual）**：只做上节静默boss模拟校准，任务详见`notes/silent-boss-calibration-task-20261007.md`。借现有fix-batch调度通道启动，任务是新功能／架构，不能归为纯bug或与silent-0213及其他修复混批。本轮Roy明确授权该校准方式、可信标准、定期重跑、论文报告和台账/live上线，按专用任务说明执行；不改运维prompt。其他队列仍保持待处理，完成事件由运维据实际发布登记和结案。
+- Roy已授权的独立高优先功能批次（2026-10-07 07:26运维转录07:25 manual）：只做上节静默boss模拟校准，任务详见`notes/silent-boss-calibration-task-20261007.md`。借现有fix-batch调度通道启动，任务是新功能／架构，不能归为纯bug或与silent-0213及其他修复混批。本轮Roy明确授权该校准方式、可信标准、定期重跑、论文报告和台账/live上线，按专用任务说明执行；不改运维prompt。其他队列仍保持待处理，完成事件由运维据实际发布登记和结案。
+
+- 2026-10-07 07:54 派发更正：072650-fix-batch实际执行silent-0213纯bug，旧07:29校准已派判断有误，原记录保留；静默boss新功能现已独立派到20261007-075131-fix-batch，模板learner/tasks/silent-boss-calibration.md，独占.worktrees/silent-boss-calibration，request=20261007-0725-roy-boss-calibration。本功能仍在执行，未完成/未shipped；不作为默认纯bug队列触发，不与原修复混批。完整交接paper/materials/silent/20261007-0725-calibration-dispatch.md。
+
+## 2026-10-07 08:00 静默复盘：已建模中毒仍触发攻击八折（交学习者）
+
+- [x] **非阻塞纯 bug，silent-0216，仅转录学习者定位**：`agent/src/reflex/combat-plan.ts:80/:135/:739/:793`已建模敌增益名单漏`POISON_POWER`，毒已进入结算预测，却仍标未知；`agent/src/reflex/turn-solver.ts:1460`因而将该敌攻击伤害逐击乘0.8。来源T3FW7R2R2306 SILENT A10 F8，多尼斯异鸟末战T3/T4/T5预测14/10/17、实18/13/23，少报4/3/6；毒结算本身正确。原回报`ops/codex-ops/learner/20261007-071301.out`，证据/原文及勘误归档`paper/materials/silent/20261007-0755-02hb-t3fw-postmortem.md`。 已由20261007-081301-fix-batch固定源ffa23c2fba13c1fad114bbdc27dbc8c32f2d8fab兜底合入14364072535fae162e24f53de80646ffdd8b9333并发布dc899f95af670e66bd0735bc3c868aeff60d682e/唯一S1.fix42；撤码6败1过、恢复7过、最终源沙箱217文件2315例通过，原失败和超时历史留存，完整外部经learner-recheck。
+- 首证按学习者勘误为K3676LU8B0UH SILENT A1 F15 T1（已有7毒结算且仍列未知）；F17 T2仅中毒被列未知，两打击实际各6、毒11，实伤23、预测19。台账first_run=K3676LU8B0UH、prior=no、prior_runs=[K3676LU8B0UH]、status=observed；C48当时尚无毒模型，只保留背景，不作为此一致性bug首证或先验。原C48草稿和时间标题07:28:15→date实际07:28:01更正均保留，不回改历史。
+- 与旧0008漏施毒/结算、0174毒上限、0213毒杀屏蔽持牌伤分账。交学习者按证据修模型覆盖声明的一致性、固定验证后自行合入；本局已正常结束，运维不改机制公式、不声称修复可保证整局转胜。Roy独立boss校准功能075131-fix-batch不混此bug，0213原纯bug批072650不由运维改任务；调度器按队列处理，对局照常。
+
+## 2026-10-07 08:14 静默复盘：升级预览关键词与勒紧方案格挡（交学习者）
+
+- [x] **非阻塞纯 bug，silent-0217，仅转录学习者定位**：`agent/src/hand/screens/oneshot.ts:324/:340/:343`升级前使用带关键词的resolved_rules_text，升级后改用不含关键词的rules_text，暴露EXPOSE升级预览丢“消耗”。P5HT1272P5SB SILENT A10 F24呈现“给予2层易伤。消耗。 → 给予3层易伤。”，大脑明确按可反复使用评价并锻造；F25实际暴露+仍“给予3层易伤。消耗。”。首证KAY522KT5NXR/A0 F44/F47错误题面，当时未选升级；first_run=KAY、prior=no、observed。与旧0066易伤模型分账，不认定更正后整局可赢。 已由20261007-091302-fix-batch固定源62ee292c7a66466e996424910338aaea8aae6308兜底合入36db32170f3c5962f2911ab991d65c3cbfba7c3d并发布b51af17aad3587f8c163004c01febc77b66bc897/唯一S1.fix43；撤3败1过恢复4过，最终源及固定合后沙箱tsc0/220文件2331例退出0，原初稿失败/勘误/中断130保持，最终发布完整外部经learner-recheck。
+- [x] **非阻塞纯 bug，silent-0218，仅转录学习者定位**：`agent/src/reflex/card-model.ts:932–935/:1031`的FASTEN未接入同方案后续防御，`agent/src/reflex/turn-solver.ts:1925`未带新增勒紧增量。P5HT1272P5SB A10 F25 T9打击→勒紧→防御，原预报余血−14、实际防御9→13，重读后余血−10，少算4挡；更早HSX4HYATB4E2 A10 F20 T1候选同缺口、F31 T2勒紧→坚韧之环→爆发→防御，预报15挡损2，实23挡损0，两次防御少报8。first_run=HSX、prior=no、observed；与0143真实机制分账，4挡修正仍救不了3血对26攻击。 已由20261007-091302-fix-batch固定源1912b5e0c2c9d87622f6915d8a299f0ef6222588兜底合入36db32170f3c5962f2911ab991d65c3cbfba7c3d并发布b51af17aad3587f8c163004c01febc77b66bc897/唯一S1.fix43；撤5败2过恢复7过，最终源及固定合后沙箱tsc0/220文件2331例退出0，原初稿失败/勘误/中断130保持，最终发布完整外部经learner-recheck。
+- 原回报`ops/codex-ops/learner/20261007-074301.out`，原文/台账及取证归档`paper/materials/silent/20261007-0810-p5ht-postmortem.md`；行号为复盘时只读live定位，不冒称复原开局dirty源码。两项均交学习者按证据实现、固定验证后自行合入，运维不改知识公式、不做打法分析。0213修复第41批、0216中毒折扣、075131独立boss校准另行；调度器按队列处理，对局继续。
+
+## 2026-10-07 08:30 静默复盘：蛇咬施毒模型遗漏（交学习者）
+
+- [x] **非阻塞纯 bug，silent-0219，仅转录学习者定位**：`agent/src/reflex/card-model.ts:904`施毒名单遗漏SNAKEBITE，`:1054`仅输出非零poison，新增7毒未进入同方案推演。KQQELQSZ382Z SILENT A10 F17末次族母T7只出蛇咬，原预测旧9毒，实际9→16、回合末扣16，独立少报7；T4切割→防御→蛇咬原预测9伤/损16、实18/16，差9中蛇咬7与旧攻击八折2分账。首证KAY522KT5NXR/A0 F2 T1候选无毒且列未建模，F14 T1实际0费给7毒、末25→18余6，免费来源未核定；first_run=KAY、prior=no、observed，不称常规毒模型已修分支回归，与0008分账，不保证整场转胜。 已由20261007-091302-fix-batch固定源06bb4617e92d4ea5cf75287186223a5b185e4ae3兜底合入36db32170f3c5962f2911ab991d65c3cbfba7c3d并发布b51af17aad3587f8c163004c01febc77b66bc897/唯一S1.fix43；撤4败1过恢复5过，最终源及固定合后沙箱tsc0/220文件2331例退出0，原初稿失败/勘误/中断130保持，最终发布完整外部经learner-recheck。
+- **旧silent-0216追加repeat证据，不重复开单**：KQQ首试F17 T4打击→切割→防御→匕首雨原19伤/损16、实25/16，直接6+6+4+4=20被逐击八折成4+4+3+3=14，旧5毒结算正确，独立少报6；`combat-plan.ts:78/:135`覆盖名单缺POISON_POWER和`turn-solver.ts:1460`定位由学习者给出。原首证K3676LU8B0UH/A1、prior=no、observed及原claim/版本/历史保留，仅台账repeat证据增加1。
+- 原回报`ops/codex-ops/learner/20261007-081301.out`及原文/10行台账/数字核对/三项追加勘误见`paper/materials/silent/20261007-0827-kqq-postmortem.md`；行号为复盘时只读live定位，不冒称复原f8e01696+dirty开局源码。新0220是蛇咬机制，留学习者，不入纯bug队列；075131独立boss校准继续按原任务，对局照常。
+
+### 大脑只用 codex，不用 DeepSeek 兜底（Roy 2026-10-07 08:44，高优先）
+Roy：「不要让 ds 做，重新让 codex 来做」。live .env 已去掉 BRAIN_FALLBACK=deepseek（下一局起）。但没有兜底时，大脑答不了的题会退到 Jev/代码，仍不是 codex。要做成：
+- **codex 不可用时对局暂停等待，不由别的引擎代答**：大脑判定 codex 不可用（额度用完、登录失效、预检失败、连续超时休息）时，对局在安全点暂停（例如在当前决策前等待并定时重试 codex，或通知 autoplay 停在局间），恢复后由 codex 接着答；暂停和恢复写日志、写收件箱。不要让 Jev/代码替大脑的路线、选牌、事件、商店、休息、整局计划作答。
+- **统计口径**：大脑主要由 DeepSeek 回答的局（已知 MCCK2602T1SR、UJ0K3G10609Y、U8K28UUGYP3U、L9SGRBB5R698、D4LJ9QMGFB8Q；以及 10-07 额度用尽期间的局，按 brain.jsonl 的 engine 判）在爬塔统计、学习曲线和论文表里单独标注、默认不计入 A10 战绩；学习者复盘照常可用作证据。
+
+- 2026-10-07 11:06 独立功能075131-fix-batch结案：Roy授权静默boss校准固定源cdf75af64fb5b118a5a808ecb3b05e2a05991c36已实际合live75ba3f6ec0ef27cdd73f10d1e9e91200437722b4，唯一S1.boss-calibration1，外部0061f599/583ad9 tsc0/274文件3146例2跳过通过。main同步ed174ac01583b02eb2bd4a50c11f923f93c20c25保留Codex-only派发并激活升阶/20新实际boss结局的周期检查；18项Python调度及组合沙箱已过。silent-0223仅fight由CLI追加shipped，12个boss仍低可信及缺口按原报告保持，不冒标其他提案或bug。07:54尚在执行记录留史；详情paper/materials/silent/20261007-1051-boss-exp69-release.md。
+
+## 2026-10-07 12:07 — Codex-only 完成事件的运维工具缺口（纯基础设施）
+
+- **完成报告裸JSON兼容**：20261007-091118-fix-batch.out是合法task=fix-batch的完整开头JSON对象加运行器尾注，没有Markdown围栏；ops/learner_checks.py:read_report只匹配围栏，返回空字典，实际910604a4/V4.codex-only1却被登记failed/merged=null，独立learner-recheck也不能识别。保留原.out/err和原failed状态，不用改写模型回报绕过；学习者补安全raw_decode兼容及固定夹具，仍限制合法任务/对象/源码祖先，不从任意散文猜JSON。无游戏账本ID，不冒标知识shipped。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
+- **autoplay安全热交接动作**：新ops/autoplay.sh的退出75/78保局保护已测/已在main，但长期bash1734436预解析旧while体；当前play已加载f8dd742d功能，不停止它。现有broker autoplay-start因play存在拒绝，禁止停旧循环后留空窗、直接在沙箱外启动herdr绕过白名单。学习者补独立安全reload动作，验证属主/精确旧autoplay PID及当前play PID、无report.py，用WAIT_PID接管同一局并回执新PID/版本，动作失败保持旧循环或明确恢复；固定数据测试，最多4进程/nice。Roy可按docs/codex-ops.md已有迁移流程先手工交接，最终激活另记，不把磁盘同步冒报为已加载。
+
+### B4 / B5 纳入标准流程，自动触发（Roy 2026-10-07 12:11，高优先，新功能）
+Roy：B4（逐 boss 对照日志修模拟器）和 B5（让 B2 用到死得最多的 boss）不用他拍板，满足条件就自动做；现在永世沙漏就该做。方法照 docs/boss-sim.md §13（B4）、§14（B5），工具 agent/tools/boss-sim/（per-turn.py、split.py --extend、trust.py --character）。要做成：
+
+**触发（调度器在每次 boss 校准重跑后、以及每局结束后检查，按角色、按 boss）**
+- **B4 修模拟**：同时满足
+  1. 该 boss 在最新 boss-trust 里是低可信，且至少一项是**模型偏差**（校准 Brier > 整体 1.25 倍、预测与实际胜率差 > 15 个百分点、被打穿比不在 0.7–1.3），不是只因验证场数不够；
+  2. **一直打不过**：本角色死在该 boss 手上累计 ≥ 5 次，或当前进阶最近 20 局里 ≥ 3 次；
+  3. 有逐回合日志的该 boss 战 ≥ 8 场（够逐回合对照）。
+  冷却：同一 boss 一次 B4 结束后，再积累 ≥ 10 场新战斗且下次校准仍偏差才再触发；同一时刻最多一个 B4/B5 批次。
+- **B5 让 B2 用上**：某 boss 是当前进阶最近 20 局的前两大死因（且 ≥ 3 次），但 B2 仍不用它（低可信）——B4 已做过或只差场数时触发：扩验证集（新局只进验证）、核对实盘整场预测、试模拟策略调整、评估 B2 排序收益；达标就进名单，B2 自动生效。
+
+**验收（自动，不再请 Roy 定）**
+- 只改整场模拟（fullFight 及模拟专用字段），实盘 solver 和 5 回合推演逐字节不变（照 §13 的做法有测试）。
+- 修正上线条件：在验证集上该 boss 的偏差指标改善（打穿比 / 胜率差 / Brier 至少一项进入或接近标准、其余不变差），整体第 1 回合起和战前 Brier 不变差超过 0.005；不满足就像 §14 的女王那样留在分支、台账记 rejected 写原因，冷却后再试。
+- 上线后自动重跑校准、更新 knowledge/characters/<角色>/boss-trust.json，记 decision-log、eval 版本、台账（kind=fight 或 mechanic，证据为对照的局和回合）。
+- 报告写 paper/materials/<角色>/boss-sim-b4-<boss>-<日期>.md / b5-…，并在升级小结里引用。
+
+**现在就满足 B4 的**：永世沙漏 AEONGLASS（静默猎手死于它 10 次，最多；验证 3 场；打穿比 2.24、预测 71% 对实际 0%）。触发机制做好后第一批就做它。
+这是用 agent 自己的对局日志修模拟器，符合学习协议；流程本身属于架构，Roy 已批准。
+
+### A10 连打两场 boss 的针对性优化 + 学习流程四处补强（Roy 2026-10-07 12:22 同意，高优先）
+**证据（本角色日志）**：A10 打赢 F48 的 4 局（JMH5C51RLN4E、9TG1RP5LFAAK、TDLBRNA0R05B、ZVYUL2YP3518）全部死在 F49；F48 赛后血量 = F49 进场血量（8、17、2、50），中间无营火、不回血；F48 多把药水用光。silent-0163（S1.fix27）只修了路线投影。
+**A. 针对性优化**（数值和权重由学习者用数据拟合）
+1. A10 的 F48：战后剩余血量和药水按「F49 还要用」计价——求解 / 推演的终局 HP 价值、药水持有价值（现行 boss 战为 0）改为以 F49 为准。
+2. B2 / boss 模拟对 A10 的 F48 评估改看两场合计通关率（F48 赢且以剩余资源打过 F49），不只看 F48 单场。
+3. 三幕 boss 前的路线 / 休息规划按连打两场准备（在 S1.fix27 基础上）。
+4. SL：「A10 赢了 F48 但按模拟剩余资源打不过 F49」是否算必死、是否读档重打 F48——按下面 D 的授权由学习者凭数据决定，改了就通知 Roy。
+**B. 复盘追溯病根**：复盘不只写死在哪一战，要追溯进场血量 / 药水被哪一战耗掉，包括打赢的那一场（learner/tasks/postmortem.md）。
+**C. 升阶审计**：每次升一级（climb 升级事件），派学习者对比新一级实际观察到的结构（层数、战斗场次、回血 / 营火、新规则）与代码假设，列不一致并提修复。
+**D. 经验落到出牌层 + 可以改 Roy 的规则**：
+- 涉及出牌、药水、SL、终局价值的经验，除写进经验库外必须同时出代码提案（经验库只到大脑，小脑和药水规则读不到）。
+- **Roy 授权**：有足够理由和数据支持时，学习者可以直接修改 Roy 定的规则（如药水持有价值、SL 读档条件、只在必死时读档等），按 live 流程自测上线，然后**通知 Roy**：写进 notes/for-dai.md 和 ops/inbox-dev.md，写明旧规则、新规则、数据和证据局号、预期影响、怎么回退；台账登记。无数据支持的改动仍不允许。
+- 同步改 docs/learning-protocol.md、AGENTS.md、learner/tasks/*（fix-batch / strategy-proposal 不再把「人定规则」一律当作不可动）。
+
+- 2026-10-07 12:23 Roy授权Codex-only功能代码实际源88fe83e5→live910604a4/发布f8dd742d/唯一V4.codex-only1及main54文件一致已核实；本轮main同步0b1417c563cd5929e0aedbfeb22453b40b8eb176补全live最终源码/发布祖先，并登记经验70的19项原提案shipped。当前对局已加载新代码，固定合后沙箱tsc0/224文件2374例通过，完整外部另经经验70最终树覆盖；没有游戏知识账本ID，不冒建bug-infra。裸JSON报告解析及旧autoplay安全WAIT_PID加载缺口已交20261007-121034-fix-batch/PID1440022，运行保护尚未全激活，原功能报告shipped=false/调度failed及拒绝留史，后续完成事件续办，不重复派整个功能。详情paper/materials/silent/20261007-1201-codex-only-exp70.md。
+
+## 2026-10-07 12:40 — exp70 完整外部检查失败：历史测试入口漏传日志回调（纯测试基础设施）
+
+- **非阻塞测试缺口**：20261007-113604-experience-update 固定发布92376ca3、树b37c82f6，tsc0/vitest1；274文件通过/1失败，3180通过/2失败/2跳过。agent/tests/brain-codex-usage.test.ts:548/:570 的 console WARNING/refresh note 数组为[]。tests/legacy-brain.ts createEngine 未传 note，而生产 src/brain/brain.ts createRouter 已传 note=(m)=>router.say(m)。学习者修固定测试辅助入口回调，保留两断言与 token/redaction 约束，固定夹具红绿、原入口沙箱和完整外部补测；不要改生产路由恢复回退或降低测试标准。无游戏账本 ID，不冒标 bug-infra/shipped。原失败日志 ops/codex-ops/learner/20261007-113604-experience-update.fallback-b37c82f611c7ccedf245333715333a566820001b.checks.log 永久保留，详情 paper/materials/silent/20261007-1235-events.md。普通 codex-dev 当前121034批次在跑，交队列由下一可用批次处理，不占用两项独立功能工作树。
+
+- 2026-10-07 13:08 同项补证：经验71固定发布33f02a6f/树e30f7a95完整tsc0/vitest1仍仅:548/:570旧note回调两断言；3180通过/2失败/2跳过。13:05事件与上一轮已经归档的原始日志按字节/SHA完全相同，沿用本项修复，不新开重复单、不回滚、不再请求完整补测。详情paper/materials/silent/20261007-1305-events.md及paper/materials/silent/20261007-1305-events/checks-dedup-pointer.json；生产Codex-only保持，测试修复保留断言与安全约束。
+
+## 2026-10-07 13:31 — 合后固定测试真实时钟缺口（非阻塞、纯测试基础设施）
+
+- 经验72固定合后03d50f0b2ae81f6f1b8800c6471c145580eb4668/树74ce797d1b74e52aab3e7b5d45b738e9e23e9303，原沙箱两worker tsc0/vitest1，225文件2394例通过、sl-any-draw.test.ts:193一失败；预期未知牌未建模说明，实际因真实时钟超过2000ms先返回搜索截断。经验源908a2ddd只改silent experience.json，相关测试/combat-plan/judge/turn-solver与源父逐字节相同。相同树、相同断言单worker复测sl-any-draw和paths两文件22例exit0、3.55s；原套件set -e导致paths未执行，由此次补齐。分次覆盖227文件2406例，首轮整套exit1不能改写为整套exit0，完整外部另交learner-recheck。
+- 学习者修固定测试的计时控制，区分未知牌语义与deadline截断；用固定时钟/预算夹具分别验证，保留原断言及真实超时/SL保守不确定保护，不加排除、不提升生产预算、不改游戏行为。仅纯测试缺口，无游戏账本ID，不冒标bug-infra/shipped。首失败paper/materials/silent/20261007-1315-events/ops-live-original-sandbox.txt与复测原件永久保留。
+
+## 2026-10-07 13:52 — 13:46完整检查与复盘新增纯bug（普通修复批次）
+
+- **非阻塞测试契约**：fix121034固定03d50f0b/74ce797d、经验72固定f56da22b/e2c64201，两份完整外部检查均tsc0/vitest1，3213通过/1失败/2跳过。旧helper note传递ccd8bb8e已修并实际合live；现在仅brain-codex-usage.test.ts:559的旧regex“codex is off until a read works”与现行“Codex cannot answer until a fresh read passes...30 s (then 2, 5, every 10 minutes)”不符。学习者修固定夹具契约及陈旧测试名称，保留警告只报一次、阻止Codex在未获新额度时答题、重试阶梯、token刷新和账户脱敏断言，禁止修改生产行为恢复DeepSeek/Jev/代码回退。无游戏账本ID；不冒标bug-infra/shipped。两份原失败永存，定位与SHA见paper/materials/silent/20261007-1346-events/checks-summary.json；与13:31真实时钟夹具项一并修，之后新树交调度器完整补测，不复跑相同旧树。
+- **非阻塞纯bug silent-0226（有对局证据）**：ULP4TN1GNHMK/F17首试T4、第三次T3，毒结算漏SLIPPERY_POWER本次1血限伤及消费1层，预测多报14/6伤；回溯首证2SU6XN2AEJRD/F17T1。学习者定位当前turn-solver.ts:1550/1552/2944、按原复盘证据修建模并补固定回归（撤源码失败/恢复通过），验证攻击/毒的限伤及减层分别正确、铁甲保持等价，勿把silent-0174难以杀灭9混为此项。账本保留0226原首证/先验/证据，修后自测自行合live，再由CLI登记shipped；本轮仍observed，不宣称整场转胜。原文paper/materials/silent/20261007-1346-events/postmortem.out.txt及ledger-original.jsonl。打法/机制条目0227由学习者闭环。
+- 普通132727-fix-batch仍运行，新证据交下一可用普通批次；A10和B4/B5独立批次保持，不抢工作树、不重复创建同项。
+
+- 2026-10-07 14:13 补充既有计时检查项：fix121034运维工具main组合原沙箱tsc0/vitest1，仅rollout-live.test.ts:249实钟固定板0nzb-f25-t1-brand的1814ms超过1800ms断言，225文件2394例过。该测试与rollout-live.ts/rollout.ts/原测试入口均逐blob等于main旧代码和已测live7816e156；同树单worker原文件及paths复测通过，三项工具原源/合后整套227文件2406例通过，本次整套1原件paper/materials/silent/20261007-1346-events/ops-main-original-sandbox.txt永久保持。学习者核查真实截止/最后样本边界与测试的负载计时；用固定时钟保留截止退化回归，不提升1500ms生产预算或1800ms阈值、不加排除，不把瞬时负载超额解释为已解决或必然游戏故障。与13:31 SL计时夹具及:559陈旧测试契约合并处理，无真实对局证据时不造bug-infra/不冒标shipped。
+
+## 2026-10-07 14:23 — CA5复盘新增非阻塞纯bug（普通学习者修复）
+
+- [x] 已修（S1.fix45及完整外部exit0；原失败/证据保留）：**silent-0229：铁蒺藜新建荆棘漏模型/后续推演**。证据CA5KE8GFJ9X2/F9T6和F13T1，变量ThornsPower=3与实盘THORNS_POWER=3，actions.damage为7/15，敌方攻击后的3反伤分别单独结算，不混为出牌伤害。学习者原定位card-model.ts:941默认power8、:1074只接DamageBack反击，turn-solver.ts:2024已支持card.thorns但CALTROPS没赋值，rollout.ts:1921持久力量缺CALTROPS；combat-plan.ts:2901读取已有THORNS_POWER正常。依原复盘证据补新建荆棘接线及固定回归（撤源码失败/恢复通过），核验两层求解/推演、避免重复算已有荆棘，铁甲等价。首证CA5/prior=unknown、observed保持，修后自测自行合live再CLI登记shipped；不能仅填经验，不能将建模缺口当卡死或宣称能转胜。原文与11账本原行：paper/materials/silent/20261007-1414-events/postmortem.out.txt、ledger-original.jsonl。0230/0231为机制，由学习者处理。
+- 13:31 SL夹具仅测试修复3d6340e0已兜底live 93298980fd59963328e824286d1c3cf277c78e4b、main aa892594ea8bd8a1d83c3ac7b80d870a1638bbb0，源tsc0/227文件2408例及红绿保持；原项实际代码完成、外部完整待续验。此前rollout实钟边界及usage :559旧断言继续开放，不冒报已解决；普通141302批次已占codex-dev，本项交下一可用批次，不重复派发或占工作树。
+
+- 2026-10-07 14:49 14:14两批独立续验补证：20261007-091118-fix-batch 固定93298980fd59963328e824286d1c3cf277c78e4b/4d59fb97ee44919e6da51c5891ddb7e08b2a9142：tsc0/vitest1，3225通过/1失败/2跳过；20261007-132727-fix-batch 固定93298980fd59963328e824286d1c3cf277c78e4b/4d59fb97ee44919e6da51c5891ddb7e08b2a9142：tsc0/vitest1，3225通过/1失败/2跳过；各只失败已开放的brain-codex-usage :559旧提示regex，SL夹具13例通过，13:31单项时钟夹具3d6340e0已实际完成，既有rollout边界排查不关闭。原failed与全部原件留史，保持生产Codex-only，不回滚、不降标准；普通141302批次续修同项，不另造游戏账本ID。SHA及原日志见paper/materials/silent/20261007-1414-events/ops-full-check-summary.json。
+
+## 2026-10-07 15:39 — DUZ复盘新增非阻塞纯bug（普通学习者修复）
+
+- [x] 已修（S1.fix45及完整外部exit0；原失败/证据保留）：**silent-0234：迷雾HAZE群体施毒漏入卡牌模型**。学习者证据DUZUBAJ3A8GP/SILENT A10 F27 T4，迷雾+→勒紧→防御原线预测伤2/血损3，实毒2→8、结算8/损3；T5生存者→防御→迷雾+原线预测伤7/损9，实毒7→13、结算13/损9，两条各独立漏6毒伤，污染血价正确。当前live只读定位card-model.ts:909施毒ID名单缺HAZE、:1063仅输出非零poison，turn-solver.ts:2182已有全体目标施毒路径，缺口在上游。首证T082DRCUHRRD/A0 F46 T4原线含HAZE+却预计0伤，实际毒6→12；first_run=T082、prior=no、observed保持，与0008常规毒及0219蛇咬漏毒分账。
+- 交学习者按这两条原线及首证补接线，固定回归撤源码失败/恢复通过，核验多目标、普通/升级及毒结算不重复，保持铁甲等价；源码自测通过自行合live后再CLI登记shipped。此局正常结束，不按卡死处理，不据6毒差声称能转胜；机制0235由学习者闭环，不追加打法。原文、15:30:12出牌顺序勘误与11所属账本行见paper/materials/silent/20261007-1531-events/lessons-original.md及ledger-original.jsonl。普通151301修复工作树占用中，调度器按队列交可用批次，不重复派同项。
+
+## 2026-10-07 16:20 — VLZ复盘新增非阻塞纯bug（神化模型；不重复代码提案派发）
+
+- **silent-0237：APOTHEOSIS升级效果未传播同一出牌方案和后续抽牌**。学习者证据VLZ6CCT8AQ0A/SILENT A10 F43 T1 decisions269706/269707、states275679—275687：神化后同一后续牌序原预测43伤/损14，实打神化后重问51伤/损13且兑现，独立少报8伤、多报1血损；F45 T1仍未建模并未施放。只读b0f41f03 card-model.ts:922、945—948和turn-solver.ts:1974—1976缺APOTHEOSIS状态变换。首证VPW8YH7A4QFM/A10 F35 T1原候选未建模，first_run=VPW、prior=no、observed，不把不施放本身当普遍错误。
+- 已有独立代码提案silent-proposal-89354805ee4d7e77及学习者固定帧方案paper/materials/silent/20261007-1610-events/proposal-apotheosis.md，调度器待办自动派策略学习者；普通批处理前须查共享提案租约/实际源码，避免并发或重复实现。证据及未知升级差值按该提案，由学习者完成红绿/角色隔离/原入口自测、实际live后再shipped，运维不补游戏机制。此局正常结束、不按卡死处理，不据8伤差承诺末战可赢；0238机制沿学习者闭环，rollout预算提案f2bfcedd独立处理，旧项只support无repeat。
+
+## 2026-10-07 16:29 — 首次升阶审计完成验收工具缺口（普通学习者纯运维修复）
+
+- [x] 已修（S1.fix45及完整外部exit0；原失败/证据保留）：**ops/ascension_audit.py:94完成报告仍只读围栏JSON**：真实批20261007-154303-ascension-audit/PID1967474/pane wJ:p5N引擎exit0，out开头是唯一合法task=ascension-audit裸JSON加运行器尾注、无围栏。报告character=silent/level=10/complete=true、10个已派证据局、六coverage及3个CLI提案俱在；只读调用read_report原样返回空字典，learn.json据此state=failed/rc0/report={}并六项缺失。这与已修ops/learner_checks.py裸JSON兼容的入口分开，不声称审计accepted，不修改旧out/err/failed状态或人为放行。固定原件索引paper/materials/silent/20261007-1610-events/ascension-audit-parser-evidence.json。
+- [x] 已修（S1.fix45及完整外部exit0；原失败/证据保留）：**同文件:117根目录报告路径检查与独立批次工作树不符**：原报告实际存在.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/report.md，resolved合法属于本批worktree/learner/runs，却不属于根learner/runs。仅修JSON后仍会被路径检查拦下；必须以已登记批次独立工作树的受限报告目录验收，resolve防越界、保留md/存在/证据局/coverage/提案链/当前租约检查，不扩大到任意文件。
+- 非阻塞游戏、无游戏台账ID，由普通修复学习者补两个固定原日志/路径夹具与恶意/迟到反例，撤源码红/恢复绿、原入口自测后自行合live；随后通过正式完成验收或新增历史续验，不改写原failed/out/err、不重复游戏知识提案或当前审计。当前codex-dev由160418策略批占用，队列交调度器空闲批次；沿现有冷却/租约，不手动重派、不重新派A/B/C/D整功能。
+
+## 2026-10-07 17:59 — 完成验收报告路径缺口补证（普通运维工具修复）
+
+- [x] 已修（S1.fix45及完整外部exit0；原失败/证据保留）：**ops/proposal_dispatch.py:106 无新增源码的策略验收只允许主检出 learner/runs**，与任务指定独立工作树冲突。真实20261007-170244-strategy-proposal在任务指定.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/report.md完整保存；原取证head_equals_base=true/git_status空、fixes=[]/merged=null、28项逐项duplicate/waiting、8文件50固定例通过。no_change-acceptance.json显示root_report_scope_allowed=false，合法报告被拒绝。交普通学习者按本批worktree的受限learner/runs验收，resolve防越界、md/存在/准确base/干净树/完整逐项处置/租约检查保持，拒绝外部文件及迟到回报；不扩大到任意路径。原failed/out/err/冷却/提案补链pending保留，运维不补策略理由或手动完成队列。
+- [x] 已修（S1.fix45及完整外部exit0；原失败/证据保留）：**ops/ascension_audit.py:117 既有路径缺口再次复现**：171303审计引擎0、围栏JSON完整、complete=true、六coverage与3原提案俱在，调度唯一错误missing preserved report inside learner/runs，实际位于该批.worktrees/ascension-audit-silent-a10-2/learner/runs/20261007-171305-ascension-audit/report.md。沿16:29原项修复并加第二原回报固定夹具，保留裸JSON兼容和本批worktree/租约边界；不重新派审计或改变原failed，不阻塞对局。两个原件索引paper/materials/silent/20261007-1748-events/manifest.json；当前普通173846批占用，由调度器已有队列续办，不重复派发。
+
+## 2026-10-07 20:14 — 已发布修复核实及完成回报工具缺口
+
+- [x] 20261007-173846批六项实际完成：升阶审计裸JSON和受限工作树报告、rollout固定时钟、silent-0229铁蒺藜及0234 HAZE、无新源码策略报告目录。六源及S1.fix45真实live祖先，原红绿保持；完整外部290文件3319过/2跳过、exit0。旧三次审计failed/exhausted保留，不人为改成accepted；神化、性能/缓存、mod瞬时超时及策略专项不在本次关闭范围。
+- **非阻塞完成回报工具缺口（无游戏账本ID）**：专用校准20261007-154302-fix-batch外层124，但源e86c8b2a→live b0b0e679→发布a59421ec/S1.boss-calibration2已存在，独立注册工作树内final-report.json含task=fix-batch、code_proposals=[]。原.out仅结束散文，因此调度report={}且learner-recheck白名单动作返回2/空fallback_checks。学习者修有限结束报告/补验交接：以已注册batch/worktree、确切源码祖先和固定发布核实补充标准JSON，拒绝越界、迟到或不匹配源；保留原124/out/err/failed及所有旧检查，新增独立回执，不覆盖原件、不重复合入或校准。固定原件paper/materials/silent/20261007-1944-events。禁止把本数据刷新冒归bug-infra或伪造游戏提案；仍未取得校准批完整外部结果。
+
+## 2026-10-07 20:28 — KV0复盘新增非阻塞模型bug（沿自动提案链）
+
+- **silent-0245：懒惰额度漏算防御重放，方案预支被锁的中和**。学习者证据KV0JHNJCKXLS/SILENT A10 F33末试T8，decisions273512—273514、states279574—279577；turn-solver.ts:3729—3730按手动步数扣额度、:1713只计一次played，combat-plan.ts:4724现场只减原计数。重放防御→打击→中和原计划零损/34伤，现场手动计数2时中和已被SLOTH_POWER锁；1血14挡对16而死，实际31伤。首证KV0/prior=unknown保持，第2/3次T8为SL截断不记实死；与0199跨轮计数项分账，不据局部差承诺能转胜。交学习者依固定原帧修合法动作计数、验证求解/推演/判死及铁甲等价，撤码红/恢复绿、自测实际live后再CLI登记shipped。已有独立提案silent-proposal-a0853bed869d77fa，调度器续办；普通批先核租约/源码避免重复实现。
+- **silent-0246：子弹时间的免费手牌与本回合抽牌封锁未在同方案传播**。学习者证据同局F33 T1，重点decisions273474—273480、states279535—279553；card-model.ts:836缺BULLET_TIME特殊模型，combat-plan.ts:2802—2807仅清入口已有NO_DRAW。题面预支后空翻/肾上腺素共4抽及能力启动，实际六试子弹时间后抽0，格挡和能量仍兑现；手牌6→5→4→3、牌堆22不变。更早5PM只奖励取得未打出，first_run=KV0/prior=unknown，不补成功先验、不强定先抽后打或新喝药规则。交学习者按未升级本角色已观察条件做固定红绿、临时状态/不可打牌边界与其他角色等价；已有提案silent-proposal-c1af3217fb055ad0，按共享租约续办，不重复派发。
+- 本局已正常结束，两项不按卡死处理；0247—0249机制由学习者处理。原复盘、两份完整提案及20条所属PM原账本行见paper/materials/silent/20261007-2018-events/，首证、先验、support及旧失败全保留；运维不补游戏公式或改Roy规则。
+
+## 2026-10-07 21:34 — YQL复盘新增非阻塞SL统计bug（沿已有提案链）
+
+- **silent-0250：SL残血统计把不可击杀自爆占位血用于参考路径排序**。学习者定位agent/src/sl/explore.ts:896求和、:913排序。静默首证L9SGRBB5R698 F17 T14，sl-attempts:681记录999999999；PU80F84P6HPN F17 T17，sl-attempts:717两条参考路径999999981／999999989；本次YQL8RZ8BWN1E F17，sl-attempts:960—963含999999990／999999999／999999971／999999996，六次均本体已结束。这些差额不表示本体击杀进度；改变排序后的整场胜负未记录，不能承诺改后获胜。首证/先验/observed与原失败保留。
+- 本局正常结束，不按卡死处理；交学习者在已有silent-proposal-e18d3f18e6cac2a0及silent-proposal-9733bb80f445aeae链中依据原帧修统计口径、验证参考路径/阶段边界和铁甲等价，固定红绿及原入口自测后按实际live登记。调度器已保存提案，普通修复批先核共享租约/源码避免重复派发或实现。原复盘、提案及原CLI行见paper/materials/silent/20261007-2123-events/；经验80的数据发布不代表0250已修。
+
+## 2026-10-07 22:10 学习闭环新增非阻塞统计 bug（TXZ6RVMQA09D）
+
+- [ ] **silent-0254：无出牌决策的死亡战斗漏记，death_fight误用上一胜战**。学习者定位ops/report.py:130以COMBAT决策开窗口，:337/:380取fights[-1]归因。静默A10 TXZ6RVMQA09D：runs.jsonl:587及自动局报误写F48 AEONGLASS，states:281563是F48胜后奖励4/62；281565—281566为F49 TEST_SUBJECT #C65开场4→0、敌111/111；本场0出牌/0COMBAT决策，只有275405 GAME_OVER finalize，22攻击未执行。证据和原始报告见learner/runs/20261007-214301-postmortem/bug-death-fight.md及本轮归档。
+- 本局正常结束，此项只影响战斗窗口和死因统计，按普通纯工具fix-batch排队，不按卡死修对局。沿学习者建议用同run状态流补无动作死亡窗口，保持SL尝试、实际死亡房间/敌人和可观察失血来源，未知敌攻击不补；固定验证本局F48胜后→F49开场死亡，并保持普通死亡/胜局口径。原logs/旧runs/旧自动局报只读，历史勘误留在可追溯派生或追加记录。首证/prior/observed沿原CLI，不把机制0255或已测阶段事实0251当0254修复，不重复派游戏规则提案。
+
+## 2026-10-07 22:50 学习闭环新增非阻塞模型 bug（WQZVENQ7DTRP）
+
+- [ ] **silent-0256：狡诈药水确定生成未建模，容量及出刀顺序未参与方案比较**。学习者定位agent/src/reflex/card-model.ts:1556—1558，POTION_EFFECTS缺CUNNING_POTION导致modelPotion返回null；combat-plan.ts:3159排除模型、:3844仅直接饮用。较早首证SADL3CGYTGSR A7 F8 T1手3→6实添3升级刀，NB8KCF6HRGVF F31 T5手5→8实添3刀；WQZVENQ7DTRP A10 F33 T11第5次手8→10→10→10添2/0/0、第6次手5→8→10→10添3/2/0。按原学习者cunning-model-proposal.md/json补固定药水模型及可观察容量，验证顺序和未知边界；仅是模型缺口，正常对局已结束，不按卡死修游戏，不声称补模必能赢整场。0257容量机制及a327449c331efbc1 SL血价边界由独立策略链处理，不由运维补玩法。保留首证A7/prior=no与旧日志，原证据见learner/runs/20261007-221303-postmortem及本轮归档。已有4111ed10f08739cb提案由调度器续办，不重复派发。
+
+## 2026-10-07 23:37 学习闭环新增非阻塞模型 bug（Q6M2Y34MWKRE）
+
+- [ ] **silent-0260：普通紧勒后续逐牌失血漏模**。学习者定位agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252，缺普通STRANGLE效果/真实STRANGLE_POWER读取/卡牌完成触发接线。Q6M2Y34MWKRE A10 F8 T4同完整三牌预测19、实际23、玩家损1相同；首证Y6GM2CHWJBEY A0 F4 T1预测27、实际29。按原proposal-strangle-bug.md/json补固定证据模型，核真实中途接续、技能选择完成及轮末消失；保留未观察升级/叠加/重放/其他角色边界，不凭模型漏4断言导致本局死亡或修后必胜。正常完局，无阻塞，沿既有silent-proposal-1b9e29122364fa68自动策略链处理，不重复派发。0261机制与0259再生/0262蛞蝓机制交学习者，运维不补游戏知识；原证据learner/runs/20261007-224302-postmortem及本轮归档。
+
+## 2026-10-08 00:21 学习闭环新增非阻塞推演 bug（NHA2KW0RB7VP）
+
+- [ ] **silent-0263：已有虚弱的意图转向后少算1伤**。学习者定位agent/src/reflex/turn-solver.ts:2493/2546/2585；NHA2KW0RB7VP A10 F33 T2碾碎爪相同力量−2/虚弱1/同招转向后显示1→2，首战防御＋冲刺15挡预测损6、实际损7，第2次16挡预测5、实际6。保留ledger-input-rounding-bug.json、proposal-back-attack-rounding.md及六个同局固定转换；六次不当六局，原运行dirty树未存不以当前树冒充。按原提案先核底值和取整接线，底值不可追溯则明示未精确/保留waiting，不全局floor改ceil或凭显示值猜公式。末次38攻/6挡死亡预测正确，不把1点差额归为整局死因。正常完局，普通非阻塞队列，沿既有silent-proposal-cfecb5580938873d自动策略链，不重复派发。0264朝向机制、0265油灯机制及SL/精准切割提案由学习者处理，运维不补知识；原证据learner/runs/20261007-234302-postmortem和本轮归档。
+
+## 2026-10-08 01:14 学习闭环新增非阻塞SL去重 bug（G33HU22H2543）
+
+- [ ] **silent-0266：SL已尝试键排序整轮牌，丢失投斧首牌身份**。学习者定位agent/src/sl/explore.ts:357规范排序、:390相等判重及combat-plan.ts:2151—2152保存候选/续步身份。证据G33HU22H2543/SILENT A10 F48 T1、decisions277909/277954/278032、sl-attempts995/996/998：余像+先打与闪亮登场+先打被保存为同一canon，第四次已试集合仍排除该键，六次未实际先余像。保留canon-collision.json、raw-verification.json和proposal-sl-first-card.md/json；旧对局710dc4dc+dirty树未存，当前0d6c1a82仅定位，不冒称对局源码。正常完局，普通非阻塞队列，沿既有silent-proposal-9b4049b484730143自动策略链，先核共享租约/源码避免重复派发或实现。按原提案限定已观察的首牌未消费条件，统一候选/实际前缀/续步/饮药/tried.cards/规范及宽松判重，保留数量和目标；固定红绿及角色等价后自测实际合live再CLI登记。六次为同一局，缺余像先打整场实盘或胜局，不改变首牌偏好/HP护栏，不承诺修后通关，不把本项当整局死因；打法/机制由学习者闭环，运维不补知识。原证据learner/runs/20261008-004302-postmortem及本轮归档。
+
+## 2026-10-08 02:15 非阻塞纯 bug：普通生存者单弃未消费（silent-0268）
+
+- 学习者复盘 RC61MFQM63Y6（静默 A10/F33/第3次尝试T4，decision 279117、state 285411–285415）：普通生存者后唯一剩余打击实际被弃，求解器仍预支打击及朝向；首证53FLQ68CETW0 F2/T4（decision224374–224378）也观察到后继中和被弃。原件见 paper/materials/silent/20261008-0207-events/postmortem-originals/report.md。
+- 位置：agent/src/reflex/turn-solver.ts:1695；card-model.ts输出discardAfterDraw，但单弃目前与结实绷带格挡收益绑在一起。非阻塞，交普通修复链；原提案silent-proposal-eecf671192557465已由调度器保存，不再手动复派。仅已观察普通单弃范围，未知选牌边界重新规划；未观察叠加、最后名额及SL反事实仍未知，不扩写打法或SL规则。
+
+## 2026-10-08 04:03 非阻塞纯 bug：毒必胜提前返回遗漏连战保血候选（silent-0271）
+
+- [ ] 学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8：decision280547直接end_turn；states286893—286896中32HP／0挡、5能量与手持凋萎，胜前实际受9伤后23HP进入F49。定位turn-solver.ts:3764在evaluate.winsFight立即返回，combat-plan.ts:3293/3296选首个无药必胜候选；已有连战估值无法比较未生成的防御候选。正常完局，交普通非阻塞修复链。
+- 沿原proposal-poison-win-search.md/json及silent-proposal-d60691b060dfc40a自动链，先核共享租约和现有源码，避免重复派发或实现。按学习者原提案，在已观察的静默A10第一boss／后场存在范围区分即时击杀和结束回合毒胜，于原节点／时间预算内继续枚举合法无药防御，并使用已有持牌伤害及资源／生存估值；未知边界保留，其他角色和非连战行为等价。固定原帧撤码红／恢复绿，自测通过后按实际live登记。
+- 首证XTSV1U9JD34T／prior=unknown／observed及原support保持；旧silent-0213已修的是毒胜持牌伤害生存检查，本项是存活时保血候选未生成，不把旧修复判失败。实际运行03f4ffe0+dirty完整树未保存，6c3d8187仅只读定位；六次F49失败来自同一局，不当六个独立样本。没有F48替代方案实际HP或F49胜局对照，不声称必能避免9伤或转胜；回放不能确认缺口则保留待证。
+- 原证据及17条所属PM原台账：paper/materials/silent/20261008-0349-events；0164/0140等打法、药水与SL提案由学习者沿原链处理，运维不补知识或改规则。
+
+## 2026-10-08 05:00 非阻塞纯 bug：商店移除预判误报现场可选卡（silent-0272）
+
+- [ ] 学习者复盘9Z9H2EXKLF3T／静默A10 F37：decisions281240/281241将REGRET悔恨写进not_on_selection_screen，大脑据此改删STRIKE_SILENT；states287619牌组索引33、287620实际移除页25项且悔恨位于索引0，281242选索引1后287621仍留悔恨。oneshot.ts:212/217按原牌组顺序截取前25份，shop.ts:520输出不可选事实、:357拒绝该目标。正常完局，交普通非阻塞队列。
+- 沿原proposal-selection.md/json和silent-proposal-c32b04d610b1f62d自动链，先核租约及现有实现，避免重复派发。按原提案把未见现场的名单标为预测；进入真实CARD_SELECTION后核对当帧完整名单，事实不一致保留原计划和差异，由原删牌大脑重选，当帧索引执行。固定原帧验证真实不可选、重复卡和旧无差异流程；不硬编码悔恨优先、诅咒前置或其他页面排序。
+- 首证9Z9H2EXKLF3T／prior=unknown／observed及14项原support不变；旧第7项只涉及升级页，不推广到本次移除页。运行6c3d8187+dirty完整历史源码未保存，当前源码仅用于定位。同局两问题和一页面不是三局独立样本，缺替代删牌受控实盘；F48三次开场均弃悔恨，不把本项当boss死亡原因或承诺改删转胜。其他角色和未观察范围保持等价，扩大范围由学习者另核证据。
+- 原复盘及25所属PM原CLI：paper/materials/silent/20261008-0452-events；SL审计提案silent-proposal-8f62129d7da70b94沿原自动链，运维不补打法或调整规则。
+
+## 2026-10-08 05:15 非阻塞纯 bug：五回合推演遗漏等待接续的死亡段（silent-0273）
+
+- 原复盘 `7X0W3U8TVA2A` / 静默猎手 A10 F31 T5：state 288426 前、中段 HP0/is_alive=false，仍带 REATTACH_POWER25/REATTACH_MOVE，后段35HP；decision 281977 当回合三张牌预计损0/伤14与实打一致，但五回合误报8/8赢、后续损0、2.5回合结束。state 288430 接续后前、中各25HP、后段21HP，共71HP。该局仍正常打到T13结束（1HP/14挡面对21攻击），不是卡死。
+- 学习者定位 `agent/src/reflex/rollout-live.ts:801` 重建输入过滤死亡段；已有 `rollout.ts` 接续处理无法恢复未进入输入的部件。修复按原提案 `silent-proposal-0f0904256806281a` 由调度器自动派策略学习者：保留待接续的身份、0HP、原意图/恢复量与等待进度，死亡部件不可作为当前攻击者或攻击目标；固定 T5/T13、全段0及永久死亡控制，保持当回合损0/伤14。原运行dirty源码未完整保存，当前源码只作定位；未证明更换线路可整战获胜，不修改SL、药水或终局权重。
+- 旧 `silent-0268` 只补此局重复证据，不另立新bug：T1 decision 281953 生存者后防御预计21挡/损1，state 288407只有这两张牌、288408强制弃后空手，实际臂甲16挡；288409 HP67→61损6，虚构后继防御5挡对应多损5。仍走原普通队列及本局提案 `silent-proposal-5c259b0e17f8ff10`，保留首证/prior/历史；T9重问后换线不算原线误差，不把29/37伤差归因于弃牌。
+- 原证据：`learner/runs/20261008-044302-postmortem/report.md`、`proposal-reattach-input.md`、`proposal-survivor-discard.md`；归档 `paper/materials/silent/20261008-0510-events/postmortem/`。其他药水/机制发现沿原自动提案链，由学习者处理。
+
+## 2026-10-08 07:21 非阻塞纯 bug：SL抽序把升级改标误判为插牌／旧牌离堆（silent-0279）
+
+- [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3：sl-attempts1053—1056将原抽牌堆BLADE_DANCE、ACCELERANT、OUTBREAK、SUCKER_PUNCH列为inserted，旧升级键未入手离堆，已知前缀截到19/18/19/18；states290201→290206及290214核战内改标／出口恢复，瞬时完整中间帧未记录。当前draws.ts:568/569整堆作差、:602/:657/:674归新牌／离堆；行号取复盘只读live，运行b1714285+dirty完整源码未保存。正常完局，交普通非阻塞队列，未证明影响胜负。
+- 沿原proposal-dampen-identity.md/json及silent-proposal-51fa8bc34774f72d自动链，实施前核租约及live是否已有实现。仅按原提案在已核角色／进阶及明确改标窗口用同基ID与守恒数量唯一配对版本变化，再处理真实抽取／插入／洗牌；同ID多副本、混合版本、缺帧或同帧多动作仍保守断序。场外牌组与战内实际版本分账，固定原帧验证真假插牌／离堆、歧义、恢复及无抑制路径，不改评分、判死或编造未见抽序。
+- 首证GXNKW8X1XYJP／prior=unknown／observed及原support保持；四次同局追踪不是四个独立样本，更早ZE8F192FKX24只作原提案机制／文本证据。其他角色和未观察范围保持等价。silent-0280机制及资源血价提案silent-proposal-5a95725089f53cd8由学习者自动链处理，运维不补游戏知识。
+- 原复盘／18所属PM原CLI及首次审计脚本失败原件：paper/materials/silent/20261008-0717-events；无手动复派、源码实现、shipped或新版本。
+
+### A10 回退排查：双 boss 规则上线后到 F48 的比例减半（Roy 2026-10-08 08:36，最高优先）
+Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。」观察者初步拆分（logs/runs.jsonl，A10 共 83 局，以 S1.double-boss1 上线 2026-10-07 14:11 为界）：到 F48 26%（10/38）→ 16%（7/45）；到 F33 55% → 42%；**二幕路上死亡 13% → 24%**（上线后死因：熟睡甲虫/盛碗虫 4、火箭/碾碎爪 3、异螨 2、无厌沙虫 2、知识恶魔 2、残杀千足虫 2）；一幕、三幕路上变化不大。双 boss 规则本身只管 F48，回落更可能来自同期其他改动。请：
+1. 用 eval/metrics.py（--character silent --ascension 10 --group-by version / config）和日志库，按上线版本把 A10 局分段，找出到 F33 / F48 比例下降从哪个版本开始；看样本是否足以区分随机波动。
+2. 重点核对：(a) S1.double-boss1 的「三幕路线 / 营火 / 构筑按连续两战」是否影响到一、二幕的路线与构筑（精英数、休息选择、拿牌、进二幕时牌组和血量）；(b) 去掉 DeepSeek 兜底后 codex 答题失败的比例，以及失败时由 Jev / 代码代答的题数和类型；(c) 同期出牌层修正（S1.fix45 铁蒺藜/HAZE、S1.bullet-time1、S1.sloth-replay1、毒相关修复）在二幕走廊战中的执行闸拒绝、求解失败、预测与实际偏差；(d) 经验 .70→.90 期间新增或改写、和二幕走廊 / 构筑相关的条目。
+3. 找到有害改动就按 live 流程回退或修正（按 Roy 授权可直接改，上线后通知 Roy：旧 / 新、数据、证据局号、回退方法）；确属随机波动就写明数据和置信区间。
+结论写 paper/materials/silent/a10-regression-<日期>.md，并在收件箱用一句话给 Roy 结论。
+
+- 2026-10-08 10:16 原最高优先独立批090447已完成并通知Roy；原要求及38/45统计原文保留，切点早8小时的纠正和五项排查见paper/materials/silent/a10-regression-2026-10-08.md。按实际启动源码/77局Codex口径F48 10/50→6/27，现证据未确认新增有害改动，亦未证正常波动；只修原直接证据0285的既有跨角色题面污染（5454/12353请求），上线S1.a10-regression1。原始失败与证据缺口保留，既有0268/0271/0273等普通项沿原队列；源/合后沙箱248文件2608例及固定发布完整外部299文件3416过2跳、tsc/vitest0已核实。
+
+## 2026-10-08 11:12 — NEWR复盘新增非阻塞纯bug（SL判官联合伤害上界）
+
+- **silent-0287：历石与毒伤已有上界未合计，提前判死读档**。学习者证据NEWRFAYKTQHR/SILENT A10 F28前两试T7：敌57/59血、13/22毒，判官已有历石52上界，合计65/74足以使攻击者可能先退场；当前live `agent/src/sl/judge.ts:562/:1312/:1333`分别取得hit和poison却只比较单项。原sl-attempts:1085/1086与d287191/287221结束被SL截断；两次未实际结算，不记已胜。末试s294040→294041以8血0挡、敌52血9毒对40意图结束后获胜，另有F17T7对照，见学习者原提案。与已修0195毒越眩晕阈值分开，不新增52游戏常量。
+- 已登记独立代码提案silent-proposal-767c8776e042972a（0287/0288），由调度器自动派strategy-proposal；普通批次先查共享提案租约和实际源码，不重复派发或并发实现。按原提案仅Silent门控合计既有攻击前上界，固定首两试拒绝确死、第三试73血2毒仍判死、末试保持可结束、F31死线保持；保留持牌失血/次轮失血/复活/换招/未知目标等保护及其他角色等价，撤源码红/恢复绿和原入口自测后实际合live再shipped。不能把可能先结束写成已获胜或承诺后场过关，原dirty完整源码和独立伤害顺序未记录。
+- 本局正常结束、非卡死；0288机制和0079旧SL即时资源repeat仅保留学习者原账本。第二项提案silent-proposal-aff5ac3bb7cdb81b记录原答/实线即时差额，沿原自动链，不由运维改探索准入或补打法。原回报与16所属CLI：paper/materials/silent/20261008-1110-events。
+
+## 2026-10-08 12:11 — 9R916WW0V65N复盘新增两项非阻塞纯bug（禁抽传播／苦无新敏捷）
+
+- **silent-0290：战斗专注自身抽牌后的禁抽未进入同一方案**。学习者定位当前只读live `agent/src/reflex/card-model.ts:929/:1072`、`turn-solver.ts:1954/:2365`、`combat-plan.ts:2802`。9R916WW0V65N/SILENT A10 F49第2试T2 d288467原题预支抽9，s295458→295459专注自身添3并建立NO_DRAW1，s295460步法不加抽；d288468重问伤4/损7并实际兑现。魂缚及重规划也参与撤线，不把全部差额归此一因。更早首证LRN0HPZ0FZS1/A0 F35T2 d207477、s211456—211458专注后匕首不添牌，以及F46T2对照；原首证/进阶0/先验partly保留。独立代码提案silent-proposal-68322129f031077b关联0290/0292，原提案要求先核自身3抽、后继封锁及下一轮解除；子弹时间旧0246分开，升级/重放/其他取牌未核实不外推，不改SL真正必死要求。
+- **silent-0291：苦无同线新增敏捷未进入后继格挡**。学习者定位当前只读live `agent/src/reflex/combat-plan.ts:2883`与`turn-solver.ts:2433`，无苦无入口及攻击触发增敏分支。证据9R916WW0V65N/SILENT A10 F49T1前五试s295427—295432三攻0→1敏、步法1→3、普通防御8与重放16；末试s295533—295538实为后空翻8／生存者11，原复盘勘误保留。末试T2 s295547—295550第三刀敏捷5→6、已有挡0仍0，随后16攻击对12血实死；不能把不同牌序24/31差全归苦无，也不承诺新增敏捷能让无挡牌的末试转胜。独立代码提案silent-proposal-8df611363cd82fc9关联0291/0085/0005；按原提案只核已观察A10手动攻击与可靠计数，既有挡不倒补，未观察计数/自动重放保持明确未知；旧0085机制与新定位前瞻bug分账。
+- 两项均非角色无关的阻塞错误，本局正常结束；由调度器原strategy-proposal自动链处理。普通fix批次先查提案租约与实际源码，避免重复派发或并发实现；固定证据、铁甲等价、撤源码红/恢复绿和原入口自测后实际合live再shipped，运维不改游戏模型。第三提案silent-proposal-6353ffbadaaac619只保留学习者F42—F49资源审计及配对验证要求，暂不改留药/终局权重，不补未记录复活参数；0292机制和七项support由学习者闭环。原回报/勘误/18所属CLI回执paper/materials/silent/20261008-1209-events。
+
+## 2026-10-08 13:08 — T0DGVABPV60U复盘新增非阻塞纯bug（螺线飞镖同线增敏／跨轮失效）
+
+- **silent-0293**：学习者在只读live5925a43d定位 `agent/src/reflex/combat-plan.ts:2883/:2896` 缺螺线飞镖入口，`turn-solver.ts:2433/:2013` 缺普通／升级小刀新触发增敏传播，`rollout.ts:1325/:2645` 临时敏捷列表遗漏HELICAL_DART_POWER。证据T0DGVABPV60U/SILENT A10 F48末试T4 d289605、s296655—296660：小刀敏捷3→4，后继偏折8、防御+12；学习者隔离新增敏捷在两张后继挡牌各贡献1，共2挡，后继防御升级另多3，不将原15挡与实20挡全部差额归遗物。T2 s296633—296642四刀敏捷0→4且临时量4，T3两者消失。先挡后刀不倒补；末T5已有8敏捷、无挡牌而实死，修模型不表示本局能赢。首证本局A10／prior unknown，旧0104/0105已知机制与当前独立模型缺口分账，完整261af56e+dirty源码未记录。
+- 本局正常结束，非角色无关的阻塞错误；按原独立提案silent-proposal-9c3554ff02a3119c沿调度器strategy-proposal自动链处理，普通fix批先核租约及实际源码避免重复并发实现。提案仅覆盖已核实静默A10普通／升级小刀、后继挡牌与次轮清除；重复／自动／随机或多敌交互未验证。固定原证据，铁甲等价与原入口自测通过后实际合live再登记shipped，运维不自行改游戏模型。
+- 另两项为学习者策略／药水提案：f35a311b35f2b12a关联旧0079重复，4f7d4e424337cb58关联0125 support；已有原注册和原SHA，保持真正必死才SL判据及现有护栏／药水规则，受控胜线与随机产物不足，不由运维改打法或复派。回执paper/materials/silent/20261008-1305-events，含原CLI拒绝／未写入与后续补id成功历史。
+
+### codex 大脑缓存几乎为零（Roy 2026-10-08 13:31，高优先，单独派）
+证据：A10 期间 brain:codex 输入 3.29 亿 token，缓存命中只有 127 万（约 0.4%）；学习者和运维会话同期约 95%。logs/codex-calls.jsonl 最近各行：mode=session、reverted=true、同一 thread（例 01a119fc-33a…），每题 inputTokens 约 12.7–13.2 万、cachedInputTokens 恒为 0。每题都按全价付十几万 token 的知识前缀，额度和时间（单次约 14 秒）都浪费在这里。请：
+1. 查明原因：可能的方向——每题前缀是否在变（知识前缀在知识文件或 notes/lessons.md 变化时重渲染，复盘每局都改 lessons.md；前缀里有没有每题变化的内容排在不变内容之前）；会话模式 thread + revert 的用法是否让服务端每次都当成新请求；service tier / prompt_cache_key / 前缀长度上限等；用一次受控实验（同一题连问两次、固定前缀）确认缓存能不能命中。
+2. 修复，让稳定的知识前缀能命中缓存（例如把每局 / 每题变化的部分放到最后、前缀只在批次边界更新、给 prompt_cache_key），不降低推理强度、不删题面内容；改动对铁甲保持等价或说明。
+3. 上线后在 codex-calls / brain.jsonl 和成本统计里核对命中率，并报告前后对比（命中率、每题 token、单次耗时、额度消耗速度）。
+
+## 2026-10-08 13:46 — G8NHLL09DLBX复盘新增非阻塞纯bug（随机施毒伪确定斩杀）
+
+- **silent-0295**：学习者定位只读live `agent/src/reflex/turn-solver.ts:2284/:2536—2541` 复用随机直伤的最高HP目标，`combat-plan.ts:3301` 自动走确定斩杀。证据G8NHLL09DLBX/SILENT A10 F24末试T5 d290345—290348、s297416—297420：母体29血20毒，普通弹跳药瓶实际三份3毒落在幼虫，母体不获新毒、结算后仍9血，玩家1血0挡死亡；原固定帧297418用当前live单步replaySteps核winsFight=true。核对为机制隔离，不冒称完整旧dirty源码重放或修后整场必胜；源运行d61bf0ec+dirty完整树未保存。首证本局A10/prior unknown，原数字30项复核及SL口径勘误保留。
+- 本局正常结束、非角色无关的阻塞错误，交普通队列，沿原silent-proposal-982c99080350f43e自动策略链，不重复派发或并发实现。按学习者原提案将随机施毒和确定目标分开，已观察分配边界均保证同轮生存并结束才可称确定斩杀；未核实边界回到既有非确定选线，不能用均值或抽样当保证。固定实际三份给幼虫反例与单敌控制，保留升级、多目标交互、重放及其他角色限制；原入口沙箱、撤源码红/恢复绿后实际合live才登记实现。
+- 第二提案aaefd918a706de14关联7项旧support，核胜战资源、药水兑现和SL自爆处理；缺受控对照，保留原参数与规则。运维不补游戏知识、不改留药/SL/终局权重、不把同局重试当独立样本。原件paper/materials/silent/20261008-1342-postmortem，含首次IPC核对失败、提案包装失败和后续成功历史。

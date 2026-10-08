@@ -1,0 +1,664 @@
+{
+  "turns": [
+    {
+      "floor": 17,
+      "attempt": 1,
+      "result": "predicted_death",
+      "needs": [
+        233,
+        233,
+        233,
+        226,
+        189
+      ],
+      "hps": [
+        24,
+        24,
+        24,
+        24,
+        3
+      ],
+      "dealt": [
+        0,
+        0,
+        7,
+        37
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        21
+      ]
+    },
+    {
+      "floor": 17,
+      "attempt": 2,
+      "result": "predicted_death",
+      "needs": [
+        233,
+        233,
+        233,
+        226,
+        203
+      ],
+      "hps": [
+        24,
+        24,
+        24,
+        24,
+        3
+      ],
+      "dealt": [
+        0,
+        0,
+        7,
+        23
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        21
+      ]
+    },
+    {
+      "floor": 17,
+      "attempt": 3,
+      "result": "predicted_death",
+      "needs": [
+        233,
+        233,
+        233,
+        233,
+        208,
+        193,
+        182,
+        180
+      ],
+      "hps": [
+        24,
+        24,
+        24,
+        24,
+        9,
+        7,
+        7,
+        7
+      ],
+      "dealt": [
+        0,
+        0,
+        0,
+        25,
+        15,
+        11,
+        2
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        15,
+        2,
+        0,
+        0
+      ]
+    },
+    {
+      "floor": 17,
+      "attempt": 4,
+      "result": "predicted_death",
+      "needs": [
+        233,
+        233,
+        233,
+        233,
+        208,
+        199,
+        188,
+        186,
+        178
+      ],
+      "hps": [
+        24,
+        24,
+        24,
+        24,
+        9,
+        7,
+        7,
+        7,
+        1
+      ],
+      "dealt": [
+        0,
+        0,
+        0,
+        25,
+        9,
+        11,
+        2,
+        8
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        15,
+        2,
+        0,
+        0,
+        6
+      ]
+    },
+    {
+      "floor": 17,
+      "attempt": 5,
+      "result": "predicted_death",
+      "needs": [
+        233,
+        233,
+        233,
+        233,
+        208,
+        199,
+        185,
+        184,
+        180
+      ],
+      "hps": [
+        24,
+        24,
+        24,
+        24,
+        9,
+        7,
+        7,
+        7,
+        2
+      ],
+      "dealt": [
+        0,
+        0,
+        0,
+        25,
+        9,
+        14,
+        1,
+        4
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        15,
+        2,
+        0,
+        0,
+        5
+      ]
+    },
+    {
+      "floor": 17,
+      "attempt": 6,
+      "result": "died",
+      "needs": [
+        233,
+        233,
+        233,
+        233,
+        214,
+        202,
+        188,
+        184,
+        179
+      ],
+      "hps": [
+        24,
+        24,
+        24,
+        24,
+        9,
+        7,
+        7,
+        7,
+        2
+      ],
+      "dealt": [
+        0,
+        0,
+        0,
+        19,
+        12,
+        14,
+        4,
+        5
+      ],
+      "loss": [
+        0,
+        0,
+        0,
+        15,
+        2,
+        0,
+        0,
+        5
+      ]
+    }
+  ],
+  "draws": {
+    "initial_order": 21,
+    "arrival_turn_prefix": 21
+  },
+  "sl_overrides": [
+    {
+      "ts": "2026-10-07T03:38:21.945Z",
+      "floor": 17,
+      "turn": 4,
+      "attempt": 2,
+      "detail": {
+        "point": "T4, attempt 2 still on attempt 1's path (from T4, where attempt 1 lost the most HP)",
+        "original": "切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 触媒, 蛇咬 -> 乐加维林族母",
+        "replacement": "切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 触媒",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1
+        ],
+        "numbers": {
+          "original": "rollout dead 20/24, further loss 24, win ~0%; whole-fight sim win 0.1%; this turn hp -21, dmg 37",
+          "replacement": "rollout dead 20/24, further loss 24, win ~0%; whole-fight sim win 0%; this turn hp -21, dmg 23"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.001,
+          "replacement": 0,
+          "diff": -0.0008,
+          "se": 0.0008
+        },
+        "turn": "ACCELERANT, SLICE>乐加维林族母, SLICE>乐加维林族母, SNAKEBITE>乐加维林族母",
+        "turn_instead": "ACCELERANT, SLICE>乐加维林族母, SLICE>乐加维林族母"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:38:27.053Z",
+      "floor": 17,
+      "turn": 4,
+      "attempt": 2,
+      "detail": {
+        "avoid": {
+          "point": "T4, attempt 2 still on attempt 1's path (from T4, where attempt 1 lost the most HP)",
+          "original": "蛇咬 -> 乐加维林族母",
+          "replacement": "end turn",
+          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+          "played_in": [
+            1
+          ],
+          "turn": "ACCELERANT, SLICE>乐加维林族母, SLICE>乐加维林族母, SNAKEBITE>乐加维林族母",
+          "turn_instead": "ACCELERANT, SLICE>乐加维林族母, SLICE>乐加维林族母",
+          "numbers": {
+            "original": "rollout dead 20/24, further loss 24, win ~0%; whole-fight sim win 0.1%; this turn hp -21, dmg 25",
+            "replacement": "rollout dead 20/24, further loss 24, win ~0%; whole-fight sim win 0%; this turn hp -21, dmg 11"
+          },
+          "gate": "b2",
+          "b2": {
+            "original": 0.001,
+            "replacement": 0,
+            "diff": -0.0008,
+            "se": 0.0008
+          }
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:38:54.656Z",
+      "floor": 17,
+      "turn": 3,
+      "attempt": 3,
+      "detail": {
+        "point": "T3, the 2nd latest question before attempt 1's death on T5",
+        "original": "蛇咬 -> 乐加维林族母",
+        "replacement": "end turn",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 3,
+        "numbers": {
+          "original": "rollout dead 5/24, further loss 20.4, win ~22%; whole-fight sim win 0%; this turn hp -0, dmg 7",
+          "replacement": "rollout dead 3/24, further loss 20.5, win ~21%; whole-fight sim win 0%; this turn hp -0, dmg 0"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "SNAKEBITE>乐加维林族母",
+        "turn_instead": "nothing"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:40:14.616Z",
+      "floor": 17,
+      "turn": 3,
+      "attempt": 4,
+      "detail": {
+        "replay": {
+          "point": "T5, the 2nd latest question before attempt 3's death on T8",
+          "reference": 3,
+          "line": "end turn",
+          "original": "蛇咬 -> 乐加维林族母",
+          "overridden": true,
+          "reason": "attempt 3's line on this board, replayed to reach T5"
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:40:21.355Z",
+      "floor": 17,
+      "turn": 4,
+      "attempt": 4,
+      "detail": {
+        "replay": {
+          "point": "T5, the 2nd latest question before attempt 3's death on T8",
+          "reference": 3,
+          "line": "蛇咬 -> 乐加维林族母, 切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 触媒, 尖啸",
+          "original": "蛇咬 -> 乐加维林族母, 切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 触媒, 尖啸",
+          "overridden": false,
+          "reason": "the answer is attempt 3's line"
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:40:31.978Z",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 4,
+      "detail": {
+        "point": "T5, the 2nd latest question before attempt 3's death on T8",
+        "original": "防御, 防御, 生存者, 打击 -> 乐加维林族母",
+        "replacement": "防御, 生存者, 打击 -> 乐加维林族母, 打击 -> 乐加维林族母",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          3
+        ],
+        "replayed": 5,
+        "numbers": {
+          "original": "rollout dead 24/24, further loss 9, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 15",
+          "replacement": "rollout dead 24/24, further loss 9, win ~0%; whole-fight sim win 0%; this turn hp -7, dmg 21"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "DEFEND_SILENT, DEFEND_SILENT, STRIKE_SILENT>乐加维林族母, SURVIVOR",
+        "turn_instead": "DEFEND_SILENT, STRIKE_SILENT>乐加维林族母, STRIKE_SILENT>乐加维林族母, SURVIVOR"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:40:36.907Z",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 4,
+      "detail": {
+        "avoid": {
+          "point": "T5, the 2nd latest question before attempt 3's death on T8",
+          "original": "防御, 打击 -> 乐加维林族母",
+          "replacement": "防御",
+          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+          "played_in": [
+            3
+          ],
+          "turn": "DEFEND_SILENT, DEFEND_SILENT, STRIKE_SILENT>乐加维林族母, SURVIVOR",
+          "turn_instead": "DEFEND_SILENT, DEFEND_SILENT, SURVIVOR",
+          "numbers": {
+            "original": "rollout dead 23/24, further loss 9, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 15",
+            "replacement": "rollout dead 23/24, further loss 9, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 9"
+          },
+          "gate": "b2",
+          "b2": {
+            "original": 0,
+            "replacement": 0,
+            "diff": 0,
+            "se": 0
+          }
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:40:39.746Z",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 4,
+      "detail": {
+        "avoid": {
+          "point": "T5, the 2nd latest question before attempt 3's death on T8",
+          "original": "打击 -> 乐加维林族母",
+          "replacement": "end turn",
+          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+          "played_in": [
+            3
+          ],
+          "turn": "DEFEND_SILENT, DEFEND_SILENT, STRIKE_SILENT>乐加维林族母, SURVIVOR",
+          "turn_instead": "DEFEND_SILENT, DEFEND_SILENT, SURVIVOR",
+          "numbers": {
+            "original": "rollout dead 23/24, further loss 9, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 15",
+            "replacement": "rollout dead 23/24, further loss 9, win ~0%; whole-fight sim win 0%; this turn hp -2, dmg 9"
+          },
+          "gate": "b2",
+          "b2": {
+            "original": 0,
+            "replacement": 0,
+            "diff": 0,
+            "se": 0
+          }
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:41:39.021Z",
+      "floor": 17,
+      "turn": 3,
+      "attempt": 5,
+      "detail": {
+        "replay": {
+          "point": "T6, the 2nd latest question before attempt 4's death on T9",
+          "reference": 4,
+          "line": "end turn",
+          "original": "蛇咬 -> 乐加维林族母",
+          "overridden": true,
+          "reason": "attempt 4's line on this board, replayed to reach T6"
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:41:46.239Z",
+      "floor": 17,
+      "turn": 4,
+      "attempt": 5,
+      "detail": {
+        "replay": {
+          "point": "T6, the 2nd latest question before attempt 4's death on T9",
+          "reference": 4,
+          "line": "蛇咬 -> 乐加维林族母, 切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 触媒, 尖啸",
+          "original": "蛇咬 -> 乐加维林族母, 切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 触媒, 尖啸",
+          "overridden": false,
+          "reason": "the answer is attempt 4's line"
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:41:56.905Z",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 5,
+      "detail": {
+        "replay": {
+          "point": "T6, the 2nd latest question before attempt 4's death on T9",
+          "reference": 4,
+          "line": "防御, 生存者, 打击 -> 乐加维林族母, 打击 -> 乐加维林族母",
+          "original": "防御, 防御, 生存者, 打击 -> 乐加维林族母",
+          "overridden": true,
+          "reason": "attempt 4's line on this board, replayed to reach T6"
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:41:59.369Z",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 5,
+      "detail": {
+        "replay": {
+          "point": "T6, the 2nd latest question before attempt 4's death on T9",
+          "reference": 4,
+          "line": "防御",
+          "original": "防御, 打击 -> 乐加维林族母",
+          "overridden": true,
+          "reason": "code's own line (防御, 打击 -> 乐加维林族母) is not attempt 4's here: its plays from this board (DEFEND_SILENT), replayed to reach T6",
+          "logged": true,
+          "code": true,
+          "plays": [
+            "DEFEND_SILENT"
+          ]
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:42:00.186Z",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 5,
+      "detail": {
+        "replay": {
+          "point": "T6, the 2nd latest question before attempt 4's death on T9",
+          "reference": 4,
+          "line": "end turn",
+          "original": "打击 -> 乐加维林族母",
+          "overridden": true,
+          "reason": "code's own line (打击 -> 乐加维林族母) is not attempt 4's here: its plays from this board (end turn), replayed to reach T6",
+          "logged": true,
+          "code": true,
+          "plays": []
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:42:05.554Z",
+      "floor": 17,
+      "turn": 6,
+      "attempt": 5,
+      "detail": {
+        "point": "T6, the 2nd latest question before attempt 4's death on T9",
+        "original": "扫腿 -> 乐加维林族母, 打击 -> 乐加维林族母",
+        "replacement": "杂技, 扫腿 -> 乐加维林族母",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          4
+        ],
+        "replayed": 8,
+        "numbers": {
+          "original": "rollout dead 24/24, further loss 7, win ~0%; whole-fight sim win 0%; this turn hp -0, dmg 11",
+          "replacement": "rollout dead 24/24, further loss 7, win ~0%; whole-fight sim win 0%; this turn hp -0, dmg 5"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "LEG_SWEEP>乐加维林族母, STRIKE_SILENT>乐加维林族母",
+        "turn_instead": "ACROBATICS, LEG_SWEEP>乐加维林族母"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:42:52.967Z",
+      "floor": 17,
+      "turn": 3,
+      "attempt": 6,
+      "detail": {
+        "replay": {
+          "point": "T4, the 6th latest question before attempt 4's death on T9 (T4 deviated at 1 other question before)",
+          "reference": 4,
+          "line": "end turn",
+          "original": "蛇咬 -> 乐加维林族母",
+          "overridden": true,
+          "reason": "attempt 4's line on this board, replayed to reach T4"
+        }
+      }
+    },
+    {
+      "ts": "2026-10-07T03:42:59.704Z",
+      "floor": 17,
+      "turn": 4,
+      "attempt": 6,
+      "detail": {
+        "point": "T4, the 6th latest question before attempt 4's death on T9 (T4 deviated at 1 other question before)",
+        "original": "蛇咬 -> 乐加维林族母, 切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 触媒, 尖啸",
+        "replacement": "蛇咬 -> 乐加维林族母, 切割 -> 乐加维林族母, 切割 -> 乐加维林族母, 尖啸",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          3,
+          4,
+          5
+        ],
+        "replayed": 4,
+        "numbers": {
+          "original": "rollout dead 21/24, further loss 24, win ~0%; whole-fight sim win 0%; this turn hp -15, dmg 25",
+          "replacement": "rollout dead 21/24, further loss 24, win ~0%; whole-fight sim win 0%; this turn hp -15, dmg 19"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "ACCELERANT, PIERCING_WAIL, SLICE>乐加维林族母, SLICE>乐加维林族母, SNAKEBITE>乐加维林族母",
+        "turn_instead": "PIERCING_WAIL, SLICE>乐加维林族母, SLICE>乐加维林族母, SNAKEBITE>乐加维林族母"
+      }
+    },
+    {
+      "ts": "2026-10-07T03:43:06.127Z",
+      "floor": 17,
+      "turn": 4,
+      "attempt": 6,
+      "detail": {
+        "avoid": {
+          "point": "T4, the 6th latest question before attempt 4's death on T9 (T4 deviated at 1 other question before)",
+          "original": "触媒",
+          "replacement": "end turn",
+          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+          "played_in": [
+            3,
+            4,
+            5
+          ],
+          "turn": "ACCELERANT, PIERCING_WAIL, SLICE>乐加维林族母, SLICE>乐加维林族母, SNAKEBITE>乐加维林族母",
+          "turn_instead": "PIERCING_WAIL, SLICE>乐加维林族母, SLICE>乐加维林族母, SNAKEBITE>乐加维林族母",
+          "numbers": {
+            "original": "rollout dead 21/24, further loss 24, win ~0%; whole-fight sim win 0%; this turn hp -15, dmg 13",
+            "replacement": "rollout dead 21/24, further loss 24, win ~0%; whole-fight sim win 0%; this turn hp -15, dmg 7"
+          },
+          "gate": "b2",
+          "b2": {
+            "original": 0,
+            "replacement": 0,
+            "diff": 0,
+            "se": 0
+          }
+        }
+      }
+    }
+  ],
+  "local_damage_cost": 6,
+  "final_full_loss": 15,
+  "final_shortfall": 13
+}

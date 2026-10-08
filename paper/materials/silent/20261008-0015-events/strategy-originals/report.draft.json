@@ -1,0 +1,124 @@
+{
+  "task": "strategy-proposal",
+  "base": "ef8009e0fcd9c70874cca5b0407d08d820e4daf1",
+  "runs": [
+    "VLZ6CCT8AQ0A",
+    "8JRE1C4H4Z2W",
+    "CA5KE8GFJ9X2",
+    "5PM6JAQG6FNQ",
+    "61E2QS63Y9WU",
+    "DUZUBAJ3A8GP"
+  ],
+  "fixes": [],
+  "skipped": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "reason": "神化手牌升级成立，state.agent_view.combat.draw/discard/exhaust亦有聚合牌堆文本；不能沿用“729帧均无牌堆”的旧理由。729帧中631帧含draw，4761条draw记录均只有card_ids/keywords/line/mods，没有逐卡dynamic_values或稳定实例。完整传播仍缺未知升级/附魔及同回合抽弃/后续牌的复合输入；当前applyUpgrade也未覆盖所需所有模型字段。升级勒紧子项已经上线，不能据此宣布整项神化完成。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "reason": "成熟度展示子项已有实际live祖先45161a51c2c6b7e4a499b13cf749c4108193bbf5。调整随机药水MC先行、非药候选预算或药价仍缺同总预算、同盘、固定随机输入的受控结果与候选稳定性曲线；神化未完整传播，不能将其漏算归为预算收益。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "reason": "同一神化缺口的经验链接，不能把经验发布或升级勒紧子项当完整源码实现。聚合牌堆确实存在，缺口是未知升级/附魔及抽弃后的完整模型输入和字段传播；与89354805ee4d7e77合并后续实现，不重复造新提案。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "reason": "14账本/15经验的复合请求中，升级勒紧有实际源码5e80e683daa08ae2569733b3b541cb523d7fe861，尖啸和成熟度亦有局部实现；神化完整传播和持续输出/资源共同冻结的调用仍不齐。逐项经验支持不能代替整个复合模型的验证，不能据局部提交关闭整项。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "reason": "本批确认同指纹原答/SL替换事实，但历史日志缺跨Jev原答、HP护栏、SL替换、实际前缀及重规划的统一候选标识和完整冻结调用。抽牌/选择重规划后原候选差额不能直接作为实际收益；缺这种全过程配对数据和另一完整线结果，不调整探索/成长规则。审计请求仍开放，不能凭已有文本理由声称完整审计已实现。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "reason": "两次加压后的力量0→4→8、喷水11→15→19及弱后11/14可从原帧确认。该提案还覆盖敏捷与独立成长的组合验证；本局未取得步法，不能填入不存在的敏捷实测。现有分项接线不是该四路径共同冻结调用的实盘证明，本批没有补足此复合输入。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "reason": "F39无毒目标上咕嘟冒泡消耗1能而不建立毒可核，F33建立成长并赢也可核；两战敌人、资源及启动条件不同。缺同起始血量/构筑/抽序下不同启动顺序的整场对照和收益函数，不拟合构筑或启动优先级，也不把持有/计划当已建立。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "reason": "吸取、负敏捷和毒的分项实盘成立，但本局首试60血七轮胜。缺同起始血量/构筑/完整抽序下可救活的另一SL线路，不能用首试胜或其他不同局失败调整本条SL范围/换线偏好。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "reason": "本体线47伤/损15及两次航行增长可核，另一focus幻象39伤零损只是候选，未完整实打。旧召唤源码不足以证明A10召唤/航行/复活完整组合及目标排序收益；本批仍缺该组合完整冻结调用和另一目标序后续证据，保留所有目标与现有排名。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": 0,
+    "cases": 3
+  },
+  "code_proposals": [
+    "silent-proposal-89354805ee4d7e77",
+    "silent-proposal-f2bfceddb1898dca",
+    "silent-proposal-283a164780d11e69",
+    "silent-proposal-ebbfe3b97548756d",
+    "silent-proposal-e5b87be50f28f311",
+    "silent-proposal-49632bc4878fb597",
+    "silent-proposal-66532328a585941f",
+    "silent-proposal-43a76a31ba7bdcfa",
+    "silent-proposal-5264153a4a4b0e5c",
+    "silent-proposal-e0275838dbb45d18"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "神化手牌升级成立，state.agent_view.combat.draw/discard/exhaust亦有聚合牌堆文本；不能沿用“729帧均无牌堆”的旧理由。729帧中631帧含draw，4761条draw记录均只有card_ids/keywords/line/mods，没有逐卡dynamic_values或稳定实例。完整传播仍缺未知升级/附魔及同回合抽弃/后续牌的复合输入；当前applyUpgrade也未覆盖所需所有模型字段。升级勒紧子项已经上线，不能据此宣布整项神化完成。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "成熟度展示子项已有实际live祖先45161a51c2c6b7e4a499b13cf749c4108193bbf5。调整随机药水MC先行、非药候选预算或药价仍缺同总预算、同盘、固定随机输入的受控结果与候选稳定性曲线；神化未完整传播，不能将其漏算归为预算收益。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "同一神化缺口的经验链接，不能把经验发布或升级勒紧子项当完整源码实现。聚合牌堆确实存在，缺口是未知升级/附魔及抽弃后的完整模型输入和字段传播；与89354805ee4d7e77合并后续实现，不重复造新提案。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "14账本/15经验的复合请求中，升级勒紧有实际源码5e80e683daa08ae2569733b3b541cb523d7fe861，尖啸和成熟度亦有局部实现；神化完整传播和持续输出/资源共同冻结的调用仍不齐。逐项经验支持不能代替整个复合模型的验证，不能据局部提交关闭整项。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "本批确认同指纹原答/SL替换事实，但历史日志缺跨Jev原答、HP护栏、SL替换、实际前缀及重规划的统一候选标识和完整冻结调用。抽牌/选择重规划后原候选差额不能直接作为实际收益；缺这种全过程配对数据和另一完整线结果，不调整探索/成长规则。审计请求仍开放，不能凭已有文本理由声称完整审计已实现。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "两次加压后的力量0→4→8、喷水11→15→19及弱后11/14可从原帧确认。该提案还覆盖敏捷与独立成长的组合验证；本局未取得步法，不能填入不存在的敏捷实测。现有分项接线不是该四路径共同冻结调用的实盘证明，本批没有补足此复合输入。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "F39无毒目标上咕嘟冒泡消耗1能而不建立毒可核，F33建立成长并赢也可核；两战敌人、资源及启动条件不同。缺同起始血量/构筑/抽序下不同启动顺序的整场对照和收益函数，不拟合构筑或启动优先级，也不把持有/计划当已建立。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "吸取、负敏捷和毒的分项实盘成立，但本局首试60血七轮胜。缺同起始血量/构筑/完整抽序下可救活的另一SL线路，不能用首试胜或其他不同局失败调整本条SL范围/换线偏好。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "本体线47伤/损15及两次航行增长可核，另一focus幻象39伤零损只是候选，未完整实打。旧召唤源码不足以证明A10召唤/航行/复活完整组合及目标排序收益；本批仍缺该组合完整冻结调用和另一目标序后续证据，保留所有目标与现有排名。"
+    },
+    {
+      "id": "silent-proposal-e0275838dbb45d18",
+      "state": "duplicate",
+      "reason": "普通尖啸逐击临时−6、次轮恢复并继续独立增长已实现。本批重新提取原帧，与旧哈希一致；固定重放得到当轮14攻击、次轮力量4/攻击22。c7578f37608526591edd86041cee5a28c3894fee为实际live源码祖先，相关五个现用源文件与核验时live逐字节一致，不重复实现或发布。",
+      "commit": "c7578f37608526591edd86041cee5a28c3894fee"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-234303-strategy-proposal/report.md"
+}

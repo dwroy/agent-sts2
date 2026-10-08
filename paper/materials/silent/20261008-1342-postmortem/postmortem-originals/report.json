@@ -1,0 +1,41 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "G8NHLL09DLBX"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "G8NHLL09DLBX",
+      "where": "agent/src/reflex/turn-solver.ts:2284",
+      "what": "随机施毒复用最高HP目标，误把弹跳药瓶分配至母体并判为确定整场斩杀。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0295"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0017",
+      "silent-0005",
+      "silent-0046",
+      "silent-0253",
+      "silent-0007",
+      "silent-0021"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-982c99080350f43e",
+    "silent-proposal-aaefd918a706de14"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/report.md"
+}

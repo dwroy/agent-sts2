@@ -1,0 +1,45 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "XTSV1U9JD34T"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "XTSV1U9JD34T",
+      "where": "agent/src/reflex/turn-solver.ts:3764",
+      "what": "毒必胜后搜索立即返回，未生成可保留后场HP的防御候选；F48T8直接结束先受9伤凋萎，32血降至23进入第二boss。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0271"
+    ],
+    "updated": [
+      "silent-0164",
+      "silent-0140",
+      "silent-0228",
+      "silent-0069",
+      "silent-0005",
+      "silent-0027",
+      "silent-0024",
+      "silent-0095",
+      "silent-0206"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-d60691b060dfc40a",
+    "silent-proposal-e5ea36df117ca9b7",
+    "silent-proposal-ab055ef7dfbb44e5"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-031301-postmortem/report.md"
+}

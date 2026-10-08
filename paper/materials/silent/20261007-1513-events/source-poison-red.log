@@ -1,0 +1,118 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-dev/agent
+
+ ❯ tests/silent-slippery-poison.test.ts (7 tests | 5 failed) 54ms
+   × first-end: poison loses one HP and consumes exactly one Slippery layer 21ms
+   × third-end: poison loses one HP and consumes exactly one Slippery layer 3ms
+   × first T4: two stabs and fifteen poison consume three layers for three total HP 17ms
+   × a fully blocked attack preserves the layer for poison, which bypasses block 3ms
+   × the shared immediate poison entry consumes one layer before the enemy-turn trigger 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-slippery-poison.test.ts > first-end: poison loses one HP and consumes exactly one Slippery layer
+AssertionError: expected 15 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 15
+
+ ❯ tests/silent-slippery-poison.test.ts:50:31
+     48|   expect(input.enemies[0]).toMatchObject({ poison, slippery });
+     49|   const outcome = replaySteps(input, [])!.outcome;
+     50|   expect(outcome.damageDealt).toBe(1);
+       |                               ^
+     51|   expect(outcome.enemyHpAfter[0]).toMatchObject({ hp, slippery: left, …
+     52|   expect(evidence[after].combat.enemies[0]!.current_hp).toBe(hp);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-slippery-poison.test.ts > third-end: poison loses one HP and consumes exactly one Slippery layer
+AssertionError: expected 7 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 7
+
+ ❯ tests/silent-slippery-poison.test.ts:50:31
+     48|   expect(input.enemies[0]).toMatchObject({ poison, slippery });
+     49|   const outcome = replaySteps(input, [])!.outcome;
+     50|   expect(outcome.damageDealt).toBe(1);
+       |                               ^
+     51|   expect(outcome.enemyHpAfter[0]).toMatchObject({ hp, slippery: left, …
+     52|   expect(evidence[after].combat.enemies[0]!.current_hp).toBe(hp);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-slippery-poison.test.ts > first T4: two stabs and fifteen poison consume three layers for three total HP
+AssertionError: expected { winsFight: false, hpLoss: +0, …(21) } to match object { damageDealt: 3, hpLoss: +0, …(1) }
+(20 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damageDealt": 3,
++   "damageDealt": 17,
+    "hpLoss": 0,
+    "winsFight": false,
+  }
+
+ ❯ tests/silent-slippery-poison.test.ts:62:19
+     60|   input.hand = evidence["full-turn"].combat.hand.map((hand) => modelHa…
+     61|   const outcome = replaySteps(input, plays(input))!.outcome;
+     62|   expect(outcome).toMatchObject({ damageDealt: 3, hpLoss: 0, winsFight…
+       |                   ^
+     63|   expect(outcome.enemyHpAfter[0]).toMatchObject({ hp: 174, slippery: 0…
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-slippery-poison.test.ts > a fully blocked attack preserves the layer for poison, which bypasses block
+AssertionError: expected 15 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 15
+
+ ❯ tests/silent-slippery-poison.test.ts:81:31
+     79|   input.hand = [card(0, "FIXED_ATTACK", { damage: 6 })];
+     80|   const outcome = replaySteps(input, plays(input))!.outcome;
+     81|   expect(outcome.damageDealt).toBe(1);
+       |                               ^
+     82|   expect(outcome.enemyHpAfter[0]).toMatchObject({ hp: 174, block: 4, s…
+     83| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-slippery-poison.test.ts > the shared immediate poison entry consumes one layer before the enemy-turn trigger
+AssertionError: expected 29 to be 15 // Object.is equality
+
+- Expected
++ Received
+
+- 15
++ 29
+
+ ❯ tests/silent-slippery-poison.test.ts:90:31
+     88|   input.hand = [card(0, "FIXED_POISON_TRIGGER", { type: "Skill", poiso…
+     89|   const outcome = replaySteps(input, plays(input))!.outcome;
+     90|   expect(outcome.damageDealt).toBe(15);
+       |                               ^
+     91|   expect(outcome.enemyHpAfter[0]).toMatchObject({ hp: 160, slippery: 0…
+     92| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 2 passed (7)
+   Start at  14:34:30
+   Duration  5.18s (transform 3.91s, setup 1.28s, import 3.38s, tests 54ms, environment 0ms)
+

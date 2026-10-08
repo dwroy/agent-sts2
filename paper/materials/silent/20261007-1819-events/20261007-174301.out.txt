@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：YF0LXT1QSTGG（A10，第48层，实验体 #C64 第二阶段T5以18血、23挡面对44攻击阵亡，差3血）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：YF0LXT1QSTGG：SL截断后的完整结算、原线完整执行率、F1路线分段投影、boss时钟伤害估值及实打比、Jev缓存、巨兽结算中间帧、替代打法与组件独立收益。
+- 学习账本：YF0LXT1QSTGG：新增无；更新 silent-0019、silent-0079、silent-0021、silent-0005、silent-0085、silent-0028、silent-0027、silent-0046、silent-0060（老错 silent-0079）；`ledger.py check` 退出码0。
+- 代码提案：证据为本局F48 T1／T4／T5，关联账本 silent-0079、silent-0021、silent-0027、silent-0028、silent-0085；CLI id 为 silent-proposal-c0767768bf6a7ab1、silent-proposal-a46bdb7fe711d79a，实现任务均为 strategy-proposal。核验SL资源代价及阶段收益；缺受控获胜分支，不规定禁止探索、强制出牌或新参数。
+
+```json
+{"task":"postmortem","appended":["YF0LXT1QSTGG"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0019","silent-0079","silent-0021","silent-0005","silent-0085","silent-0028","silent-0027","silent-0046","silent-0060"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-c0767768bf6a7ab1","silent-proposal-a46bdb7fe711d79a"],"implementation_domains":["combat","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261007-174301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a115be-b8a6-79d0-984b-3fc264d02361
+轮数：1；工具调用：command_execution×54
+token：输入 223.4k、输出 36.6k（其中推理 10.7k）、cache 读 3788.0k、cache 写 0（命中 94.4%）
+成本：未提供
+耗时：1222.6 s（墙钟）
+时间：首个事件 3.5 s、模型首个输出 8.4 s、首次工具 13.2 s、末次工具结束 1185.6 s；工具内共 83.2 s，其余（模型生成、推理、网络）1135.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×27；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T17-43-03-01a115be-b8a6-79d0-984b-3fc264d02361.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-174301-postmortem.jsonl

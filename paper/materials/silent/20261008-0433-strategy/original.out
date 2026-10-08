@@ -1,0 +1,116 @@
+已提交单敌群蛇模型 `de62bf7c`：撤源码 15 项失败，恢复后 18 项通过；tsc、沙箱测试 2586 项及 gitleaks 均通过。
+
+**未合入 live**：预检发现 18 个并行记录文件冲突，按要求停止，待运维兜底。其余 9 项保留待补证。[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-033315-strategy-proposal/proposal.md) · [完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-033315-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "base": "543cca7a243f0a8e49e6e4cff49eb802813436af",
+  "runs": ["5PM6JAQG6FNQ", "DUZUBAJ3A8GP", "CA5KE8GFJ9X2", "8JRE1C4H4Z2W", "YF0LXT1QSTGG", "XP2SL33HT0D9"],
+  "fixes": [{
+    "id": "silent-serpent-form-single-enemy",
+    "commit": "de62bf7cb3feaa6c71e877a3fe76ea18ec427ed2",
+    "proposal": "silent-proposal-60930500313a651d",
+    "runs": ["5PM6JAQG6FNQ"],
+    "ledger": ["silent-0132"]
+  }],
+  "skipped": [
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-246daedaa3021847",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 2586,
+    "fixed_cases": 18,
+    "withdrawn": 1,
+    "restored": 0
+  },
+  "code_proposals": [
+    "silent-proposal-60930500313a651d",
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-246daedaa3021847",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-ea4d83db68e3c827"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-60930500313a651d",
+      "state": "waiting",
+      "reason": "单敌普通四层已本地实现并测试；尚缺实际live祖先源码证明，18个并行记录预检冲突，按任务停止合入。"
+    },
+    {
+      "id": "silent-proposal-c20b5139dd0dff71",
+      "state": "waiting",
+      "reason": "缺火花成长／临时污染消失的独立完整链，以及同资源抽序下技能收益与完整替线对照。"
+    },
+    {
+      "id": "silent-proposal-ae9e692d680e3819",
+      "state": "waiting",
+      "reason": "缺各抢夺来源独立返还、同轮毒杀返力后出牌与遗忘死亡返敏的前后帧；死亡清场不能替代返还证据。"
+    },
+    {
+      "id": "silent-proposal-246daedaa3021847",
+      "state": "waiting",
+      "reason": "缺同敌同轮连续两次非致死失血后的触发／消费证据；后续只破挡不证明再次补挡。"
+    },
+    {
+      "id": "silent-proposal-52f1e1bd2e7db0ed",
+      "state": "waiting",
+      "reason": "当前进阶首样本读取已有；完整覆甲减层条件及逐步独立验证不足，不把部分接线认领为整项实现。"
+    },
+    {
+      "id": "silent-proposal-6dd8bbff876be528",
+      "state": "waiting",
+      "reason": "已有逐实体增长；缺新召唤者建立高电压时点的连续帧和原在线模板输入，不猜新实体初始状态。"
+    },
+    {
+      "id": "silent-proposal-578e415a259e6835",
+      "state": "waiting",
+      "reason": "缺候选至首次派发及重规划的完整机器关联、同抽序完整原线与独立后置对照；不拟新SL／成长权重。"
+    },
+    {
+      "id": "silent-proposal-c0767768bf6a7ab1",
+      "state": "waiting",
+      "reason": "缺未执行续步与最终动作的统一关联及独立完整原线对照；同存档复用不能拟血价或禁止探索。"
+    },
+    {
+      "id": "silent-proposal-a46bdb7fe711d79a",
+      "state": "waiting",
+      "reason": "机制子项已有；缺已建／持有／未派发跨重规划的统一阶段记录与独立后置反例，不强制能力先手。"
+    },
+    {
+      "id": "silent-proposal-1044224808015e5c",
+      "state": "waiting",
+      "reason": "缺独立后续双蟹局、同抽序原线与换线完整胜负及永久成长兑现对照；B2零差不等于安全。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-033315-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a117db-18b8-7370-8167-96a4b723378d
+轮数：1；工具调用：command_execution×66 file_change×7
+token：输入 227.9k、输出 48.8k（其中推理 18.2k）、cache 读 8296.7k、cache 写 0（命中 97.3%）
+成本：未提供
+耗时：2815.5 s（墙钟）
+时间：首个事件 3.1 s、模型首个输出 11.2 s、首次工具 18.6 s、末次工具结束 2716.1 s；工具内共 414.4 s，其余（模型生成、推理、网络）2398.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-dev）；模型的工具调用 exec×55；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T03-33-17-01a117db-18b8-7370-8167-96a4b723378d.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-033315-strategy-proposal.jsonl

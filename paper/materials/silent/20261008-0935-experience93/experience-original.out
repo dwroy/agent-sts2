@@ -1,0 +1,75 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.9 → 2026-10-08.10；提交：46d0d2a1（分支 exp-silent）；合入：未合入，锁内预检发现20处并行记录冲突。[第93节](/home/dw/Projects/agent-sts2/paper/materials/experience-changelog-silent.md:24742)已追加，根目录记录由调用方提交。
+- 条数：新增1、更新9（加证据9、只改数字0）、退役0；active 168 → 169（高101、中43、低25）。正文51016字符；A8适用158条/47012字，A9适用159条/47296字。压缩：脆弱、尖啸、刀扇、休息、路线、同族；合并无。
+- 机制推理：
+
+  - 力量/敏捷 — 逐击伤、逐牌挡分源 — 119支持/0反例 — ZTRGYYMLR8SC
+  - 脆弱 — 两防御合6挡，完整净损7杀4血 — 22/0 — ZTRGYYMLR8SC
+  - 尖啸 — 当轮33攻降11，次轮恢复 — 55/0 — ZTRGYYMLR8SC
+  - 铁心 — 建7覆甲，末试T9耗尽 — 17/0 — ZTRGYYMLR8SC
+  - 刀扇 — 8手实际添3刀，力量逐刀加伤 — 10/0 — ZTRGYYMLR8SC
+  - 铜钹 — 弃牌附伤分账，保留滑溜同现1伤的限制 — 7/0 — ZTRGYYMLR8SC
+  - 能力/护栏 — 未建不预支，候选省血不当整场胜因 — 118/0 — ZTRGYYMLR8SC
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；沙箱vitest 247文件/2604用例/退出0，无失败重跑；最终经验定向1文件/10例/退出0。
+- 切片大小：中位下降65.5字，最大5290字；单片最多增加358字。
+- 学习账本：新增silent-0284；改成proposed：silent-0012、0013、0019、0020、0021、0046、0125、0149、0277；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。合入冲突待运维续办，刷新数据已保留。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.10",
+  "commit": "46d0d2a19f5ab0830d9c32d2b8f64ae4286d7721",
+  "merged": null,
+  "added": 1,
+  "updated": 9,
+  "retired": 0,
+  "active": 169,
+  "mechanisms": [
+    "力量/敏捷",
+    "脆弱",
+    "尖啸暂减力",
+    "铁心覆甲",
+    "刀扇容量/力量",
+    "铜钹弃牌附伤",
+    "能力/护栏血价"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2604},
+  "ledger": {
+    "added": ["silent-0284"],
+    "proposed": [
+      "silent-0012",
+      "silent-0013",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0046",
+      "silent-0125",
+      "silent-0149",
+      "silent-0277"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-5367449b857450a7",
+    "silent-proposal-9b8890c2649a2734"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-085641-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11903-375c-76b3-aa70-35d99e8acf33
+轮数：1；工具调用：command_execution×72
+token：输入 246.6k、输出 70.9k（其中推理 30.6k）、cache 读 9721.7k、cache 写 0（命中 97.5%）
+成本：未提供
+耗时：2307.6 s（墙钟）
+时间：首个事件 3.8 s、模型首个输出 9.3 s、首次工具 12.4 s、末次工具结束 2268.1 s；工具内共 2164.8 s，其余（模型生成、推理、网络）139.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×65 wait×4；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T08-56-43-01a11903-375c-76b3-aa70-35d99e8acf33.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-085641-experience-update.jsonl

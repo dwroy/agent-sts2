@@ -1,0 +1,122 @@
+{
+  "batch": "20261007-154303-ascension-audit",
+  "observed_scheduler_state": {
+    "task": "ascension-audit",
+    "learner_task": "ascension-audit",
+    "character": "silent",
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "state": "failed",
+    "task_fingerprint": "silent:A10",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "attempt": 1,
+    "started": 1791358983.0995092,
+    "pid": 1967474,
+    "pane": "wJ:p5N",
+    "rc": 0,
+    "report": {},
+    "errors": [
+      "missing matching completed audit report",
+      "missing preserved report inside learner/runs",
+      "missing dispatched evidence runs",
+      "missing code proposal links",
+      "incomplete observed structure coverage",
+      "missing string code_proposals array"
+    ],
+    "retry_at": 1791364260.4478152
+  },
+  "request": {
+    "task_fingerprint": "silent:A10",
+    "character": "silent",
+    "previous": 9,
+    "level": 10,
+    "anchor_run": "VLZ6CCT8AQ0A",
+    "requested_at": "2026-10-07T07:01:38.049Z",
+    "state": "failed",
+    "attempts": 1,
+    "batch": "20261007-154303-ascension-audit",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1",
+    "pid": 1967474,
+    "retry_at": 1791364260.4478152,
+    "last_failure": "missing matching completed audit report; missing preserved report inside learner/runs; missing dispatched evidence runs; missing code proposal links; incomplete observed structure coverage; missing string code_proposals array"
+  },
+  "bare_json_report": {
+    "task": "ascension-audit",
+    "character": "silent",
+    "level": 10,
+    "runs": [
+      "MGA0CZDDKC0P",
+      "25226ZFLNR1J",
+      "JLN5SK17W4FQ",
+      "JMH5C51RLN4E",
+      "9TG1RP5LFAAK",
+      "JQPT83P8KDSZ",
+      "4D4J8USKCPAV",
+      "TD1HVGS7H6LB",
+      "PJ2LL9KU7FHD",
+      "S9UZAK0JP0C0"
+    ],
+    "complete": true,
+    "coverage": [
+      "floors",
+      "combat_counts",
+      "healing",
+      "campfires",
+      "rules",
+      "assumptions"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/ascension-audit-silent-a10-1/learner/runs/20261007-154306-ascension-audit/report.md",
+    "code_proposals": [
+      "silent-proposal-aab73fcff1c56b8e",
+      "silent-proposal-09d5c7776e88d756",
+      "silent-proposal-4cc200cc9747f4a8"
+    ],
+    "implementation_domains": [
+      "structure",
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "missing": [
+      "F49两局均败，胜后结构、未到楼层和未来规则未知。",
+      "部分进阶效果的频率、比例及低等级对照未验证。",
+      "TD1HVGS7H6LB重启后的第二次SL汇总缺失。",
+      "部分动作与状态时间不完全对应，资源变动原因需保留未知。",
+      "Boss首帧可能尚未完成开场效果，不能直接作为完整入口资源。",
+      "其他药水续战价、复活跨场消耗及未见回血和营火组合未知。",
+      "已有连续模拟参数未重新拟合或校准。",
+      "阶段与身份字段差异已复现，实际决策损害未验证。",
+      "来源局早于当前live实现，不能验证上线后效果或全等级覆盖。"
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0163",
+        "silent-0228",
+        "silent-0020",
+        "silent-0142"
+      ],
+      "check": 0
+    }
+  },
+  "fenced_json_blocks": 0,
+  "only_fenced_parser_result": {},
+  "valid_batch_report_path": true,
+  "root_only_report_check_would_fail": true,
+  "original_out_sha256": "01f8c56ce12986a47d6c6acc1c719ee79bfc37c5dfc417d922673f3bf9ab7031",
+  "source_path": "ops/ascension_audit.py:94/117",
+  "no_original_output_or_state_mutation": true,
+  "no_repeat_dispatch": true,
+  "completed_engine_is_not_accepted_audit": true
+}

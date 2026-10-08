@@ -1,0 +1,119 @@
+{
+  "ts": "2026-10-08T00:21:53.236Z",
+  "run": "ZTRGYYMLR8SC",
+  "floor": 17,
+  "turn": 14,
+  "attempt": 6,
+  "card": null,
+  "action": "end_turn",
+  "result": "completed: Action completed.",
+  "before": {
+    "hp": 4,
+    "max_hp": 70,
+    "block": 6,
+    "energy": 0,
+    "powers": {
+      "FRAIL_POWER": 1
+    },
+    "hand": [
+      {
+        "id": "POISONED_STAB",
+        "text": "造成6点伤害。 给予3层中毒。",
+        "dynamic": [
+          {
+            "name": "Damage",
+            "base_value": 6,
+            "current_value": 6,
+            "enchanted_value": 6,
+            "is_modified": false,
+            "was_just_upgraded": false
+          },
+          {
+            "name": "PoisonPower",
+            "base_value": 3,
+            "current_value": 3,
+            "enchanted_value": 3,
+            "is_modified": false,
+            "was_just_upgraded": false
+          }
+        ],
+        "blocked": "not_enough_energy"
+      }
+    ],
+    "enemies": [
+      {
+        "id": "KIN_PRIEST",
+        "hp": 58,
+        "alive": true,
+        "powers": {
+          "STRENGTH_POWER": 9,
+          "WEAK_POWER": 3
+        },
+        "move": "ORB_OF_WEAKNESS_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "13",
+            "damage": 13,
+            "hits": 1,
+            "total_damage": 13,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Debuff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "hp": 0,
+    "max_hp": 70,
+    "block": 0,
+    "energy": 0,
+    "powers": {},
+    "hand": [],
+    "enemies": [
+      {
+        "id": "KIN_PRIEST",
+        "hp": 58,
+        "alive": true,
+        "powers": {
+          "STRENGTH_POWER": 9,
+          "WEAK_POWER": 3
+        },
+        "move": "ORB_OF_WEAKNESS_MOVE",
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "13",
+            "damage": 13,
+            "hits": 1,
+            "total_damage": 13,
+            "status_card_count": null
+          },
+          {
+            "index": 1,
+            "intent_type": "Debuff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  "full_attack": 13,
+  "full_loss": 7,
+  "strict_extra_hp": 4
+}

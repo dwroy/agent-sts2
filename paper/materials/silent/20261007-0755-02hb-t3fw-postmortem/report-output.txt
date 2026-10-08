@@ -1,0 +1,31 @@
+## 复盘回报
+
+- 已追加：02HB4L0C3C67（A10，第12层，骇鳗 T8：6血、15挡不足抵挡27伤）。
+- 已追加：T3FW7R2R2306（A10，第8层，多尼斯异鸟 T6：16血、10挡不足抵挡27伤）。已追加首证及勘误时间更正。
+- 新的纯 bug：
+
+  - T3FW7R2R2306：已建模中毒仍触发攻击伤害0.8折扣 — agent/src/reflex/combat-plan.ts:135、agent/src/reflex/turn-solver.ts:1460（新）。
+
+- 写成「未记录」的项：
+  - 02HB4L0C3C67：替代路线／事件／休息／focus的受控结果、完整原线执行比例、boss时钟及实打比较、赢样本损血中位数、Jev缓存。
+  - T3FW7R2R2306：护栏原线及替代策略的受控结果、完整原线执行比例、boss时钟及实打比较、赢样本损血中位数、Jev缓存。
+- 学习账本：
+  - 02HB4L0C3C67：新增无；更新 silent-0006、silent-0019、silent-0020、silent-0050。
+  - T3FW7R2R2306：新增 silent-0216，首证为 K3676LU8B0UH；更新 silent-0011、silent-0019、silent-0125、silent-0134。
+  - 既有条目均补证，本批老错无；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["02HB4L0C3C67","T3FW7R2R2306"],"skipped":[],"bugs":[{"run":"T3FW7R2R2306","where":"agent/src/reflex/combat-plan.ts:135","what":"已建模中毒仍被判未知，攻击逐击乘0.8，末战T3至T5少报4、3、6伤害。","new":true}],"ledger":{"added":["silent-0216"],"updated":["silent-0006","silent-0019","silent-0020","silent-0050","silent-0011","silent-0125","silent-0134"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1137d-f4e4-7110-a958-e621693e6af2
+轮数：1；工具调用：command_execution×51
+token：输入 361.6k、输出 46.2k（其中推理 19.9k）、cache 读 5827.1k、cache 写 0（命中 94.2%）
+成本：未提供
+耗时：1041.0 s（墙钟）
+时间：首个事件 1.8 s、模型首个输出 6.5 s、首次工具 10.9 s、末次工具结束 1001.7 s；工具内共 38.7 s，其余（模型生成、推理、网络）1000.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×37；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T07-13-04-01a1137d-f4e4-7110-a958-e621693e6af2.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-071302-postmortem.jsonl

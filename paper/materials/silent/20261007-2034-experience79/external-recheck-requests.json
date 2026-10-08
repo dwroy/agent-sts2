@@ -1,0 +1,52 @@
+{
+  "recorded_at_cst": "2026-10-07 20:53",
+  "record_commit": "953665e062232a7e850b0aefd78549db6682bec2",
+  "requests": [
+    {
+      "batch": "20261007-200254-experience-update",
+      "exec_session": 11943,
+      "accepted_scheduler_line": "2026-10-07 20:52 broker learner-recheck 20261007-200254-experience-update",
+      "state": "running",
+      "pinned_live": "31914e4ba652d6e8466a4a99f04128005166ecf2",
+      "pinned_tree": "37eeafcf9ca483d0db100bbbbf35ac8bda5f230b",
+      "check_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-200254-experience-update.fallback-37eeafcf9ca483d0db100bbbbf35ac8bda5f230b.checks.log",
+      "action": "bash ops/codex-ops-do.sh learner-recheck 20261007-200254-experience-update",
+      "client_output": "/tmp/sts2-20261007-2034-20261007-200254-experience-update-recheck.txt"
+    },
+    {
+      "batch": "20261007-184215-experience-update",
+      "exec_session": 37724,
+      "request_file": "1791377527059183799-3.req",
+      "state": "queued",
+      "action": "bash ops/codex-ops-do.sh learner-recheck 20261007-184215-experience-update",
+      "client_output": "/tmp/sts2-20261007-2034-20261007-184215-experience-update-recheck.txt",
+      "request_sha256": "f3a90242fad85684af03eca20dba255c64e210a621c36b0058164e05d5ccd743",
+      "request": {
+        "action": "learner-recheck",
+        "args": [
+          "20261007-184215-experience-update"
+        ]
+      }
+    },
+    {
+      "batch": "20261007-193250-experience-update",
+      "exec_session": 66332,
+      "request_file": "1791377528173689074-3.req",
+      "state": "queued",
+      "action": "bash ops/codex-ops-do.sh learner-recheck 20261007-193250-experience-update",
+      "client_output": "/tmp/sts2-20261007-2034-20261007-193250-experience-update-recheck.txt",
+      "request_sha256": "3e20bdfb0eb100d769a9f575eb3411b747e557e7368c29050b49631c25067dae",
+      "request": {
+        "action": "learner-recheck",
+        "args": [
+          "20261007-193250-experience-update"
+        ]
+      }
+    }
+  ],
+  "all_three_sources_actual_live_ancestors": true,
+  "external_checks_not_yet_claimed_passed": true,
+  "original_out_err_failed_history_unchanged": true,
+  "no_manual_scheduler_state_changes": true,
+  "broker_stop_drains_accepted_queue": "ops/codex/main.ts startBroker stop awaits busy; no polling for future events by ops"
+}

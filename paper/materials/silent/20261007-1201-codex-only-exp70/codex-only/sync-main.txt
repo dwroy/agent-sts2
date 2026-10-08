@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/sync-main.py", line 103, in <module>
+    run(['git', 'merge', '--ff-only', STATE['main_records_source']])
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261007-091119-codex-only-brain/sync-main.py", line 23, in run
+    raise RuntimeError(f'{args[:3]} exit {result.returncode}: {result.stdout[-1500:]} {result.stderr[-1500:]}')
+RuntimeError: ['git', 'merge', '--ff-only'] exit 128:  hint: Diverging branches can't be fast-forwarded, you need to either:
+hint:
+hint: 	git merge --no-ff
+hint:
+hint: or:
+hint:
+hint: 	git rebase
+hint:
+hint: Disable this message with "git config set advice.diverging false"
+fatal: Not possible to fast-forward, aborting.
+

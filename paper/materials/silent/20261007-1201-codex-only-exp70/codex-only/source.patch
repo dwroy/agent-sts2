@@ -1,0 +1,2894 @@
+diff --git a/README.md b/README.md
+index 2554f45b..5c580016 100644
+--- a/README.md
++++ b/README.md
+@@ -26,7 +26,7 @@
+ ```
+ 
+ - **Jev**（TypeSafe System One）：在接近的选项之间快速挑选，单次 70 到 500 ms。
+-- **大脑**：可以切换引擎，现在是 Codex（GPT），DeepSeek 作为回退。知识整份放进系统提示。
++- **大脑**：Roy 2026-10-07 授权后仅由 Codex 回答。额度、登录或服务不可用时在原题等待恢复；没有其他引擎、Jev 或代码代答。知识整份放进系统提示。战斗执行继续由 Jev 和代码负责。
+ - **SL**：只在真正必死时读档。统计时第一次尝试和 SL 之后的结果分开记。
+ 
+ 架构的完整说明见 [docs/v4-architecture.md](docs/v4-architecture.md)，目录怎么分见 [docs/layout.md](docs/layout.md)。
+@@ -63,7 +63,7 @@ npm run shadow -- --max-decisions 20              # 只决策不动手
+ 
+ - `CHARACTER`：选哪个角色。
+ - `TARGET_ASCENSION`：进阶，可以填固定数字，或者设成随胜利升阶。
+-- `BRAIN_ENGINE`：大脑用哪个引擎。
++- `BRAIN_ENGINE`／分题引擎／`BRAIN_FALLBACK`：保留历史配置解析；生产大脑固定为 Codex，实际配置写入 run-config。Codex 的模型、超时和额度保护设置仍生效。
+ - `SL_*`：读档相关的开关。
+ 
+ 学习者：
+diff --git a/agent/src/brain/brain.ts b/agent/src/brain/brain.ts
+index 38bdcf09..2b0acb3e 100644
+--- a/agent/src/brain/brain.ts
++++ b/agent/src/brain/brain.ts
+@@ -1,4 +1,6 @@
+ /**
++ * Production createRouter always uses Codex. Legacy engine adapters remain for historical fixed-data tests.
++ *
+  * The brain as the game loop calls it: the v3 DeepSeek call signatures (choose, choosePlan, askJson), now
+  * answered through the router by whichever engine the environment names (docs/v4-architecture.md §2).
+  *
+@@ -18,7 +20,7 @@
+ import { dirname, join } from "node:path";
+ 
+ import { brainLogPath, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type AppConfig } from "../core/config.js";
+-import { DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "./llm/deepseek.js";
++import { brainSystemPrompt, DeepSeekAnswerError, type DeepSeekAnswer, type DeepSeekClient } from "./llm/deepseek.js";
+ import { buildTools } from "./tools/registry.js";
+ import type { ToolContext, ToolDef } from "./tools/types.js";
+ import type { JsonValue } from "../core/util/json.js";
+@@ -28,11 +30,13 @@ import type { CodexUsageGuard } from "./engines/codex-usage.js";
+ import { DeepSeekEngine } from "./engines/deepseek.js";
+ import { isContextOverflow, KnowledgePrompt, prefixSizeWarning } from "./knowledge.js";
+ import { frozenFacts } from "../knowledge/render/facts.js";
+-import { BrainRouter, type BrainLogRow, type FallbackBudget } from "./router.js";
++import { BrainRouter, EngineFailure, type BrainLogRow, type FallbackBudget } from "./router.js";
++import type { BrainWait } from "./wait.js";
+ import { carriesRunPlan, fightPlanFromSchema, fightPlanSpec, freeSpec, pickSpec, routePlanSpec, runPlanSpec, shopPlanSpec, withRunPlanField } from "./specs.js";
+ import { routeAnswerText } from "../sim/route-map.js";
+ import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, EngineName } from "./types.js";
+ import { KNOWLEDGE_DIR } from "../core/paths.js";
++import { knowledgeFile } from "../knowledge/files.js";
+ 
+ /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
+ export { KNOWLEDGE_DIR };
+@@ -85,12 +89,14 @@ export function codexTracePath(config: AppConfig): string | null {
+ }
+ 
+ /** A router over lazily created engines, logging to BRAIN_LOG (default: brain.jsonl next to the decision log). */
+-export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget } = {}): BrainRouter {
++export function createRouter(config: AppConfig, deepseek: DeepSeekClient | null, options: { log?: (row: BrainLogRow) => void; claudeToolsModule?: string; fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): BrainRouter {
+   const engines = new Map<EngineName, BrainEngine>();
+   // An engine's own notes (codex: a usage read that failed) go where the router's go (Brain.onNote).
+   const note = (message: string): void => router.say(message);
+   const router: BrainRouter = new BrainRouter({
+-    config: { ...config.brain, log: brainLogPath(config) },
++    config: { ...config.brain, engine: "codex", byPrefix: {}, fallback: null, log: brainLogPath(config) },
++    codexOnly: true,
++    ...(options.wait ? { wait: options.wait } : {}),
+     engine: (name) => {
+       let engine = engines.get(name);
+       if (!engine) {
+@@ -111,11 +117,16 @@ export function brainUses(brain: AppConfig["brain"], engine: EngineName): boolea
+ }
+ 
+ /** The loop's brain; `fallbackBudget` is the loop's DEEPSEEK_MAX_CALLS for DeepSeek asked as the fallback. */
+-export function createBrain(config: AppConfig, deepseek: DeepSeekClient, options: { fallbackBudget?: FallbackBudget } = {}): Brain {
++export function createBrain(config: AppConfig, deepseek: DeepSeekClient | null, options: { fallbackBudget?: FallbackBudget; wait?: BrainWait } = {}): Brain {
+   // KNOWLEDGE_PREFIX=full: the prefix's data facts frozen for the day in the directory v3 keeps its guide snapshots in.
+   // MECH_RULES=off: the prefix's monster blocks without the observed mechanics (as before them); MECH_MOVE_RULES=off: without
+   // the learned move changes (as with MECH_RULES alone).
+-  return new Brain(createRouter(config, deepseek, options), deepseek, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
++  const prompt = deepseek ?? brainSystemPrompt({
++    guideFile: knowledgeFile(KNOWLEDGE_DIR, `${config.run.characterId}-guide.md`, config.run.characterId),
++    handbookFile: knowledgeFile(KNOWLEDGE_DIR, "ds-handbook.md", config.run.characterId),
++    factsSnapshotDir: config.deepseek?.factsSnapshotDir,
++  });
++  return new Brain(createRouter(config, deepseek, options), prompt, buildTools, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
+ }
+ 
+ /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */
+@@ -161,7 +172,7 @@ export class Brain {
+ 
+   constructor(
+     readonly router: BrainRouter,
+-    readonly deepseek: DeepSeekClient,
++    readonly deepseek: Pick<DeepSeekClient, "systemPrompt">,
+     private readonly tools: (ctx: ToolContext) => ToolDef[] = buildTools,
+     /** KNOWLEDGE_PREFIX=full: the rendered prompt, kept while the ascension and the data hold. */
+     readonly knowledge: KnowledgePrompt = new KnowledgePrompt(),
+@@ -193,7 +204,15 @@ export class Brain {
+   async preflight(check: (bin: string) => Promise<ClaudeCheck> = checkClaudeBin, codexCheck: typeof checkCodex = checkCodex): Promise<string[]> {
+     const config = this.router.config;
+     const problems: string[] = [];
+-    if (brainUses(config, "claude")) {
++    if (this.router.codexOnly) this.router.onRecovery(async () => {
++      const settings = config.engines.codex;
++      const result = await codexCheck(config.codex, settings.model ?? DEFAULT_CODEX_MODEL, settings.effort ?? DEFAULT_CODEX_EFFORT);
++      this.codexCheck = { bin: config.codex.bin, ...result };
++      if (!result.ok) throw new EngineFailure(`Codex preflight: ${result.error}`, "unavailable");
++      const engine = this.router.engineOf("codex");
++      if (engine instanceof CodexEngine) await engine.usage.recover();
++    });
++    if (!this.router.codexOnly && brainUses(config, "claude")) {
+       const bin = config.claude.bin;
+       const result = await check(bin);
+       this.claudeCheck = { bin, ...result };
+@@ -205,13 +224,13 @@ export class Brain {
+         problems.push(message);
+       }
+     }
+-    if (brainUses(config, "codex")) {
++    if (this.router.codexOnly || brainUses(config, "codex")) {
+       const settings = config.engines.codex;
+       const model = settings.model ?? DEFAULT_CODEX_MODEL;
+       const effort = settings.effort ?? DEFAULT_CODEX_EFFORT;
+       const result = await codexCheck(config.codex, model, effort);
+       this.codexCheck = { bin: config.codex.bin, ...result };
+-      const then = config.fallback && config.fallback !== "codex" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
++      const then = this.router.codexOnly ? "the current question waits for Codex recovery" : config.fallback && config.fallback !== "codex" ? `its questions go to ${config.fallback}` : "its questions go to Jev/code";
+       if (!result.ok) {
+         const message = `codex is unavailable for this run: ${result.error}; ${then} (BRAIN_CODEX_BIN / BRAIN_CODEX_HOME)`;
+         this.router.markUnavailable("codex", result.error);
+@@ -261,7 +280,9 @@ export class Brain {
+       question,
+       ...(options ? { options } : {}),
+       payload,
+-      spec,
++      spec: this.router.codexOnly && isObject(payload) && carriesRunPlan(payload) ? {
++        ...spec, validate: (answer) => [...spec.validate(answer), ...runPlanSpec().validate(isObject(answer) ? answer["run_plan"] : null).map((p) => `run_plan: ${p}`)],
++      } : spec,
+       ...this.toolsFor(label),
+     };
+     if (this.router.config.knowledgePrefix !== "full") return req;
+@@ -293,7 +314,7 @@ export class Brain {
+       const detail = (error instanceof Error ? error.message : String(error)).slice(0, 200);
+       const reason = `the full-knowledge prompt did not fit the context, v3 prompt sent: ${detail}`;
+       this.notify?.(`KNOWLEDGE_PREFIX=full: ${req.label}: ${reason}`);
+-      return this.router.decide({ ...v3, knowledge: { mode: "off", ...(req.knowledge?.ascension === undefined ? {} : { ascension: req.knowledge.ascension }), error: reason } });
++      return this.router.decide({ ...v3, questionId: req.questionId, knowledge: { mode: "off", ...(req.knowledge?.ascension === undefined ? {} : { ascension: req.knowledge.ascension }), error: reason } });
+     }
+   }
+ 
+diff --git a/agent/src/brain/engines/codex-usage.ts b/agent/src/brain/engines/codex-usage.ts
+index f9e29e0e..61fa49bd 100644
+--- a/agent/src/brain/engines/codex-usage.ts
++++ b/agent/src/brain/engines/codex-usage.ts
+@@ -577,6 +577,15 @@ export class CodexUsageGuard {
+     return this.stopped;
+   }
+ 
++  /** A suspended question requires a fresh reading; no stale stop is cleared before the guard passes. */
++  async recover(): Promise<void> {
++    await this.refresh();
++    const why = this.unreadable ?? (this.last ? this.verdict(this.last) : "no Codex usage reading");
++    if (why) throw new EngineFailure(`codex usage guard: ${why}`, this.unreadable ? "unavailable" : "quota");
++    this.stopped = null;
++    this.blocked = null;
++  }
++
+   /**
+    * Before a codex call: a read when one is due (while reads fail under BRAIN_CODEX_USAGE_REQUIRED: when the wait is
+    * over); throws instead of letting the call go out: the stop (EngineFailure "quota", resting codex for the rest of the
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index 786ac525..f9d14409 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -547,6 +547,8 @@ export function codexFailure(stream: CodexStream, run: { code: number | null; si
+   else if (/\b429\b|rate.?limit|too many requests/i.test(text)) kind = "rate_limit";
+   else if (/\b50[234]\b|overloaded|server is busy|at capacity/i.test(text)) kind = "overloaded";
+   else if (/\b401\b|\b403\b|unauthori[sz]ed|not logged in|log ?in again|codex login|refresh token|authenticat/i.test(text)) kind = "auth";
++  else if (/connection (?:failed|reset|closed)|stream disconnected|websocket|network|ECONNRESET|ETIMEDOUT/i.test(text)) kind = "unavailable";
++  if (stream.completed && stream.messages.length === 0 && stream.errors.length === 0) kind = "invalid";
+   const what = stream.completed && stream.messages.length === 0 && stream.errors.length === 0 ? "codex gave no answer" : `codex exited ${run.code ?? run.signal}`;
+   return new EngineFailure(`${what} [${kind}]: ${(text || "no error message").slice(0, 400)}`, kind, CODEX_REST_MS[kind] ?? 0);
+ }
+@@ -736,6 +738,7 @@ export function sessionFailure(turn: SessionTurn): { error: EngineFailure; trans
+   else if (tag === "unauthorized" || /\b401\b|unauthori[sz]ed|not logged in/i.test(message)) kind = "auth";
+   const overflow = tag === "contextWindowExceeded" ? " (context window exceeded)" : "";
+   const transport = kind === "error" && (TRANSPORT_INFO.includes(tag) || /stream disconnected|connection (failed|reset|closed)|websocket/i.test(message));
++  if (transport) kind = "unavailable";
+   return { error: new EngineFailure(`codex session turn ${turn.status} [${kind}]: ${message.slice(0, 400)}${overflow}`, kind, CODEX_REST_MS[kind] ?? 0), transport };
+ }
+ 
+@@ -1096,7 +1099,7 @@ export class CodexEngine implements BrainEngine {
+           native: { mode: "session", thread_id: turn.threadId, turn_id: turn.turnId, retries: turn.retries, runs: attempt, reverted: turn.reverted, schema: c.schema ? "strict" : "none" },
+         });
+       }
+-      if (turn.status === "completed") throw new EngineFailure("codex gave no answer [error] (session turn completed without an agent message)", "error");
++      if (turn.status === "completed") throw new EngineFailure("codex gave no answer [invalid] (session turn completed without an agent message)", "invalid");
+       if (turn.status === "aborted") throw new Error(`codex session turn aborted after ${turn.ms} ms`);
+       if (turn.status === "stalled") {
+         if (attempt <= stallRetries && !signal?.aborted) {
+diff --git a/agent/src/brain/llm/deepseek.ts b/agent/src/brain/llm/deepseek.ts
+index 39284c50..c4cee5e0 100644
+--- a/agent/src/brain/llm/deepseek.ts
++++ b/agent/src/brain/llm/deepseek.ts
+@@ -528,6 +528,19 @@ export function questionEffort(label: string, state: Record<string, unknown>, co
+   return (EFFORT_RANK[plan] ?? 0) > (EFFORT_RANK[own] ?? 0) ? plan : own;
+ }
+ 
++/** Shared prompt construction needs no transport or credential. */
++export function brainSystemPrompt(config: Pick<DeepSeekConfig, "guideFile" | "handbookFile" | "factsSnapshotDir" | "systemPrompt"> = {}): { systemPrompt: string; guideId: string; handbookId: string } {
++  const guide = frozenGuideFacts(readOptional(config.guideFile), config.factsSnapshotDir);
++  const handbook = frozenGuideFacts(readOptional(config.handbookFile), config.factsSnapshotDir);
++  const handbookId = shortHash(handbook);
++  const guideId = [shortHash(guide), handbookId].filter(Boolean).join("+");
++  const character = knowledgeCharacter();
++  let system = systemRules(character);
++  if (guide) system += `\n\n# ${characterName(character, "en")} strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
++  if (handbook) system += `\n\n# 经验手册（来自过往对局复盘）\n\n${handbook}`;
++  return { systemPrompt: config.systemPrompt ?? system, guideId, handbookId };
++}
++
+ export class DeepSeekClient implements Escalator {
+   readonly name = "deepseek" as const;
+ 
+@@ -536,18 +549,10 @@ export class DeepSeekClient implements Escalator {
+   readonly handbookId: string;
+ 
+   constructor(private readonly config: DeepSeekConfig) {
+-    // The guides' data facts (the Giant's kill record) are filled from the fight data, frozen for the day.
+-    const guide = frozenGuideFacts(readOptional(config.guideFile), config.factsSnapshotDir);
+-    const handbook = frozenGuideFacts(readOptional(config.handbookFile), config.factsSnapshotDir);
+-    this.handbookId = shortHash(handbook);
+-    this.guideId = [shortHash(guide), this.handbookId].filter(Boolean).join("+");
+-    // The run's character's rules and guide (the guide file is the character's own: config.ts guideFile).
+-    const character = knowledgeCharacter();
+-    let system = systemRules(character);
+-    if (guide) system += `\n\n# ${characterName(character, "en")} strategy guide (background knowledge; the state and computed numbers take precedence)\n\n${guide}`;
+-    // Static text only: the system prompt must stay byte-identical across calls so DeepSeek caches it.
+-    if (handbook) system += `\n\n# 经验手册（来自过往对局复盘）\n\n${handbook}`;
+-    this.system = config.systemPrompt ?? system;
++    const prompt = brainSystemPrompt(config);
++    this.handbookId = prompt.handbookId;
++    this.guideId = prompt.guideId;
++    this.system = prompt.systemPrompt;
+   }
+ 
+   /** The system prompt as sent (for tools and tests). */
+diff --git a/agent/src/brain/router.ts b/agent/src/brain/router.ts
+index 4eddcab8..9d8dd4ea 100644
+--- a/agent/src/brain/router.ts
++++ b/agent/src/brain/router.ts
+@@ -1,4 +1,7 @@
+ /**
++ * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
++ * The configurable fallback path below remains for historical engine adapters and fixed regression fixtures.
++ *
+  * The brain router (docs/v4-architecture.md §2): picks the engine for a question from the environment, validates
+  * the answer (AnswerSpec.validate), re-asks at most once with the specific problems, falls back to another
+  * engine when one fails or times out, and writes one row per question to logs/brain.jsonl.
+@@ -45,6 +48,8 @@ import { dirname } from "node:path";
+ 
+ import type { BrainConfig } from "../core/config.js";
+ import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, KnowledgeNote } from "./types.js";
++import { BrainBlockedError, BrainWait } from "./wait.js";
++import { isContextOverflow } from "./knowledge.js";
+ 
+ /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */
+ export function labelPrefix(label: string): string {
+@@ -185,6 +190,8 @@ export interface BrainLogRow {
+    * window's used %, length and reset time, the credit balance, when it was read.
+    */
+   limits?: object;
++  /** Explicit validation verdict; historical rows use answer/error/problems. */
++  accepted?: boolean;
+ }
+ 
+ export interface RouterDeps {
+@@ -200,6 +207,9 @@ export interface RouterDeps {
+    * each fallback call (none left: no fallback) and spent when the call is made.
+    */
+   fallbackBudget?: FallbackBudget;
++  /** Production policy (Roy 2026-10-07); omitted by historical router fixtures. */
++  codexOnly?: boolean;
++  wait?: BrainWait;
+ }
+ 
+ export interface FallbackBudget {
+@@ -216,6 +226,8 @@ function message(error: unknown): string {
+ }
+ 
+ export class BrainRouter {
++  readonly wait: BrainWait;
++  private recover: (() => Promise<void>) | null = null;
+   /** Engines resting after a quota / rate-limit / login failure: until when, and why. */
+   private readonly resting = new Map<EngineName, { until: number; reason: string; kind: FailureKind }>();
+   /** Calls made to each engine in this process (re-asks included), for BRAIN_<ENGINE>_MAX_CALLS. */
+@@ -230,7 +242,9 @@ export class BrainRouter {
+   private readonly idPrefix = `${Date.now().toString(36)}-${process.pid}`;
+   private questions = 0;
+ 
+-  constructor(private readonly deps: RouterDeps) {}
++  constructor(private readonly deps: RouterDeps) { this.wait = deps.wait ?? new BrainWait(); }
++  get codexOnly(): boolean { return this.deps.codexOnly === true; }
++  onRecovery(recover: () => Promise<void>): void { this.recover = recover; }
+ 
+   /** A new question id (BrainRequest.questionId): unique across processes. */
+   private nextQuestionId(): string {
+@@ -262,6 +276,7 @@ export class BrainRouter {
+ 
+   /** The engine configured for this label. */
+   engineFor(label: string): EngineName {
++    if (this.codexOnly) return "codex";
+     return this.deps.config.byPrefix[labelPrefix(label)] ?? this.deps.config.engine;
+   }
+ 
+@@ -345,6 +360,7 @@ export class BrainRouter {
+     try {
+       return this.deps.engine(name);
+     } catch (error) {
++      if (this.codexOnly) throw error;
+       throw new EngineFailure(message(error), "unavailable");
+     }
+   }
+@@ -369,7 +385,9 @@ export class BrainRouter {
+    * an answer failure as the engine threw it.
+    */
+   async decide(request: BrainRequest): Promise<BrainAnswer> {
+-    const req: BrainRequest = request.questionId ? request : { ...request, questionId: this.nextQuestionId() };
++    request.questionId ??= this.nextQuestionId();
++    const req = request;
++    if (this.codexOnly) return this.decideCodex(req);
+     const primary = this.engineFor(req.label);
+     const fallback = this.deps.config.fallback && this.deps.config.fallback !== primary ? this.deps.config.fallback : null;
+     const rest = this.resting.get(primary);
+@@ -430,6 +448,60 @@ export class BrainRouter {
+     return result;
+   }
+ 
++  /** Recoverable model failures suspend; programming errors retain their cause and reach the operator. */
++  private async decideCodex(request: BrainRequest): Promise<BrainAnswer> {
++    const validate = request.spec.validate;
++    const req: BrainRequest = { ...request, spec: { ...request.spec, softValidate: undefined,
++      validate: (answer) => [...validate(answer), ...(request.spec.softValidate?.(answer) ?? [])],
++    } };
++    let retrying = false;
++    for (;;) {
++      const began = this.now();
++      try {
++        this.wait.check();
++        if (retrying && this.recover) await this.recover();
++        const rest = this.resting.get("codex");
++        if (rest && rest.until > this.now() && (!retrying || Number.isFinite(rest.until))) throw new EngineFailure(rest.reason, rest.kind, rest.until - this.now());
++        if (retrying) this.resting.delete("codex");
++        const result = await this.attempt("codex", req);
++        if (result.engine !== "codex") throw new Error(`Codex engine returned ${result.engine}`);
++        this.write("codex", req, result);
++        if (BrainRouter.unusable(req, result)) throw new EngineFailure("Codex answer empty or invalid after validation/re-ask", "invalid");
++        this.wait.check();
++        if (retrying) this.wait.finish("resumed");
++        return result;
++      } catch (error) {
++        if (error instanceof BrainBlockedError) {
++          this.wait.finish(error.state, req, error.message);
++          throw error;
++        }
++        const kind = isAnswerFailure(error) ? "invalid" : failureKind(error);
++        // Existing context repair still asks Codex, with the smaller prompt.
++        if (kind === "error" && req.knowledge?.mode === "full" && isContextOverflow(error)) throw error;
++        if (!(error instanceof EngineFailure || isAnswerFailure(error)) || kind === "error") {
++          this.wait.finish("fault", req, message(error).slice(0, 300));
++          this.write("codex", req, null, error, undefined, this.spent(error, began));
++          throw new BrainBlockedError("fault", `Codex brain program failure on ${req.label}: ${message(error)}`, error);
++        }
++        this.wait.pause(req, `${kind}: ${message(error).slice(0, 300)}`, began);
++        if (kind !== "invalid") {
++          try { this.write("codex", req, null, error, undefined, this.spent(error, began), undefined, errorNotes(error)); }
++          catch (loggingError) { this.wait.finish("fault", req, message(loggingError)); throw new BrainBlockedError("fault", "Codex brain log could not be written", loggingError); }
++        }
++        retrying = true;
++        const resting = this.resting.get("codex");
++        const cooldown = error instanceof EngineFailure ? error.cooldownMs : 0;
++        if (Number.isFinite(cooldown) && cooldown > 0 && !resting) this.resting.set("codex", { until: this.now() + cooldown, reason: message(error), kind });
++        try { await this.wait.retry(Math.max(cooldown, resting ? resting.until - this.now() : 0)); }
++        catch (cancelled) {
++          const state = cancelled instanceof BrainBlockedError ? cancelled.state : "fault";
++          this.wait.finish(state, req, message(cancelled));
++          throw cancelled instanceof BrainBlockedError ? cancelled : new BrainBlockedError("fault", "Codex retry timer failed", cancelled);
++        }
++      }
++    }
++  }
++
+   /** Whether an engine's answer is unusable after its re-ask: none, or one with hard problems. */
+   private static unusable(req: BrainRequest, result: BrainAnswer): boolean {
+     return result.answer === null || req.spec.validate(result.answer).length > 0;
+@@ -476,6 +548,12 @@ export class BrainRouter {
+     try {
+       second = await this.call(engine, { ...req, reask: { answer: previous || "(no answer)", problems: firstProblems } }, asFallback);
+     } catch (error) {
++      if (this.codexOnly) {
++        const secondUsage = errorUsage(error);
++        throw withUsage(error, { inputTokens: first.usage.inputTokens + (secondUsage?.inputTokens ?? 0), outputTokens: first.usage.outputTokens + (secondUsage?.outputTokens ?? 0),
++          cacheHitTokens: (first.usage.cacheHitTokens ?? 0) + (secondUsage?.cacheHitTokens ?? 0),
++          ...(first.usage.costUsd === undefined && secondUsage?.costUsd === undefined ? {} : { costUsd: (first.usage.costUsd ?? 0) + (secondUsage?.costUsd ?? 0) }) });
++      }
+       if (isAnswerFailure(error)) throw error;
+       const problems = [...firstProblems, `re-ask failed: ${message(error).slice(0, 200)}`];
+       return { ...first, answer: usableFirst ? first.answer : null, problems, first: { answer: first.answer, problems: firstProblems }, reasks: 1, reaskCalls: 1 };
+@@ -507,6 +585,7 @@ export class BrainRouter {
+ 
+   /** engine.decide within the engine's call budget (and, as the fallback, the caller's) and under its timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
+   private async call(engine: BrainEngine, req: BrainRequest, asFallback = false): Promise<BrainAnswer> {
++    if (this.codexOnly) this.wait.check();
+     if (!this.budgetLeft(engine.name)) {
+       const field = `BRAIN_${engine.name.toUpperCase()}_MAX_CALLS`;
+       throw new EngineFailure(`${engine.name} call budget used up (${this.callsMade(engine.name)}/${this.deps.config.engines[engine.name].maxCalls}, ${field})`, "budget");
+@@ -517,25 +596,41 @@ export class BrainRouter {
+     }
+     this.calls.set(engine.name, this.callsMade(engine.name) + 1);
+     const ms = req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
+-    if (!ms) return engine.decide(req);
++    if (!ms && !this.codexOnly) return engine.decide(req);
+     const controller = new AbortController();
++    const outer = this.codexOnly ? this.wait.signal : undefined;
++    let rejectCancel: ((error: BrainBlockedError) => void) | undefined;
++    const cancellation = new Promise<never>((_, reject) => { rejectCancel = reject; });
++    const cancel = (): void => { controller.abort(); rejectCancel?.(new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
++    outer?.addEventListener("abort", cancel, { once: true });
++    if (outer?.aborted) cancel();
+     let timer: NodeJS.Timeout | undefined;
++    const stopPoll = this.codexOnly ? setInterval(() => {
++      try { this.wait.check(); }
++      catch (error) {
++        controller.abort();
++        rejectCancel?.(error instanceof BrainBlockedError ? error : new BrainBlockedError("fault", "Codex wait check failed", error));
++      }
++    }, 1_000) : undefined;
+     const timeout = new Promise<never>((_, reject) => {
+-      timer = setTimeout(() => {
++      if (ms) timer = setTimeout(() => {
+         controller.abort();
+         reject(new BrainTimeoutError(engine.name, ms));
+       }, ms);
+     });
+     try {
+-      const answer = await Promise.race([engine.decide({ ...req, timeoutMs: ms }, controller.signal), timeout]);
++      const answer = await Promise.race([engine.decide({ ...req, ...(ms ? { timeoutMs: ms } : {}) }, controller.signal), timeout, cancellation]);
+       this.timeouts.delete(engine.name);
+       return answer;
+     } catch (error) {
+-      if (error instanceof BrainTimeoutError) this.noteTimeout(engine.name, ms);
++      if (outer?.aborted) throw new BrainBlockedError("cancelled", "Codex brain call cancelled by stop signal", error);
++      if (error instanceof EngineFailure && error.kind === "timeout") this.noteTimeout(engine.name, ms ?? 0);
+       else this.timeouts.delete(engine.name);
+       throw error;
+     } finally {
+       clearTimeout(timer);
++      clearInterval(stopPoll);
++      outer?.removeEventListener("abort", cancel);
+     }
+   }
+ 
+@@ -589,6 +684,7 @@ export class BrainRouter {
+       tools: (this.toolsFor(engine) ? req.tools ?? [] : []).map((tool) => tool.name),
+       tool_calls: result?.toolCalls ?? [],
+       answer: result?.answer ?? null,
++      accepted: result !== null && !BrainRouter.unusable(req, result),
+       problems: result?.problems ?? [],
+       reasks: result?.reasks ?? 0,
+       attempts: result?.attempts ?? 0,
+@@ -611,7 +707,8 @@ export class BrainRouter {
+         mkdirSync(dirname(this.deps.config.log), { recursive: true });
+         appendFileSync(this.deps.config.log, `${JSON.stringify(row)}\n`, "utf8");
+       }
+-    } catch {
++    } catch (error) {
++      if (this.codexOnly) throw error;
+       // logging must never break play
+     }
+   }
+diff --git a/agent/src/brain/source.ts b/agent/src/brain/source.ts
+new file mode 100644
+index 00000000..73ffd6cd
+--- /dev/null
++++ b/agent/src/brain/source.ts
+@@ -0,0 +1,111 @@
++/** Keep this classification identical to eval/brain_source.py (shared fixed fixtures verify both). */
++import { closeSync, openSync, readSync } from "node:fs";
++
++export const BRAIN_SOURCE_POLICY = "codex-successful-brain-v1";
++type Row = Record<string, unknown>;
++export interface BrainSource {
++  policy: string;
++  source: "codex" | "deepseek" | "mixed" | "unknown" | "other";
++  eligible: boolean;
++  exclusion_reason: string | null;
++  successful_answers: Record<string, number>;
++  successful_by_label: Record<string, Record<string, number>>;
++  embedded_answers: Record<string, number>;
++  brain_rows: number;
++  failed_or_unaccepted_rows: number;
++  unknown_successes: number;
++  unresolved_questions: number;
++  coverage: string;
++  first_success: string | null;
++  last_success: string | null;
++  basis: string;
++}
++
++export function successfulBrain(row: Row): boolean {
++  if (row.answer === undefined || row.answer === null || row.error) return false;
++  if (typeof row.accepted === "boolean") return row.accepted;
++  return row.problems == null || (Array.isArray(row.problems) && row.problems.length === 0);
++}
++
++export function classifyBrain(rows: Row[]): BrainSource {
++  const counts: Record<string, number> = {};
++  const kinds: Record<string, Record<string, number>> = {};
++  const embedded: Record<string, number> = {};
++  const seen = new Set<string>();
++  const rejected = new Set<string>();
++  const answered = new Set<string>();
++  let failed = 0;
++  let first: string | null = null;
++  let last: string | null = null;
++  for (const [i, row] of rows.entries()) {
++    if (!successfulBrain(row)) { failed += 1; rejected.add(String(row.question_id || `unidentified-row-${i + 1}`)); continue; }
++    if (row.question_id) answered.add(String(row.question_id));
++    const engine = ["codex", "deepseek", "claude", "dsh"].includes(String(row.engine)) ? String(row.engine) : "unknown";
++    const key = JSON.stringify([row.question_id, engine]);
++    if (row.question_id && seen.has(key)) continue;
++    if (row.question_id) seen.add(key);
++    counts[engine] = (counts[engine] ?? 0) + 1;
++    const label = String(row.label || "unknown");
++    const kind = kinds[label] ??= {};
++    kind[engine] = (kind[engine] ?? 0) + 1;
++    const answer = row.answer as Row;
++    if (typeof answer === "object" && answer !== null) {
++      if (typeof answer.run_plan === "object" && answer.run_plan !== null && !Array.isArray(answer.run_plan)) embedded["run-plan"] = (embedded["run-plan"] ?? 0) + 1;
++      if (answer.route && !["map/route-plan", "map/route-review"].includes(label)) embedded["map/route"] = (embedded["map/route"] ?? 0) + 1;
++    }
++    if (typeof row.ts === "string" && row.ts) {
++      first = first === null || row.ts.localeCompare(first) < 0 ? row.ts : first;
++      last = last === null || row.ts.localeCompare(last) > 0 ? row.ts : last;
++    }
++  }
++  const known = Object.keys(counts).filter((e) => e !== "unknown");
++  const unresolved = [...rejected].filter((key) => !answered.has(key)).length;
++  const source: BrainSource["source"] = known.length > 1 ? "mixed" : counts.unknown || unresolved || known.length === 0 ? "unknown" : known[0] === "codex" || known[0] === "deepseek" ? known[0] : "other";
++  const reason = source === "codex" ? null : source === "unknown" ? unresolved ? "unresolved_brain_questions" : rows.length ? "missing_successful_brain_engine" : "missing_brain_log" : `successful_${source === "other" ? "non_codex" : source}_brain`;
++  return { policy: BRAIN_SOURCE_POLICY, source, eligible: source === "codex", exclusion_reason: reason,
++    successful_answers: counts, successful_by_label: kinds, embedded_answers: embedded, brain_rows: rows.length,
++    failed_or_unaccepted_rows: failed, unknown_successes: counts.unknown ?? 0, first_success: first, last_success: last,
++    unresolved_questions: unresolved, coverage: rows.length && !unresolved ? "all_logged_questions_resolved" : "missing_or_unresolved_logged_questions",
++    basis: "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine" };
++}
++
++/** Stream complete JSONL rows: climb must not load the full prompt log into one huge string. */
++export function readJsonl(path: string): Row[] {
++  const rows: Row[] = [];
++  let fd: number;
++  try { fd = openSync(path, "r"); } catch { return rows; }
++  const buffer = Buffer.alloc(64 * 1024);
++  let pending = Buffer.alloc(0);
++  try {
++    let n: number;
++    while ((n = readSync(fd, buffer, 0, buffer.length, null)) > 0) {
++      const data = Buffer.concat([pending, buffer.subarray(0, n)]);
++      let start = 0;
++      let end: number;
++      while ((end = data.indexOf(10, start)) >= 0) {
++        try {
++          const row = JSON.parse(data.subarray(start, end).toString("utf8")) as Row;
++          if (row && typeof row === "object" && !Array.isArray(row)) {
++            const answer = row.answer as Row | null;
++            rows.push({ ...Object.fromEntries(["run_id", "engine", "ts", "question_id", "label", "error", "problems", "accepted"].map((k) => [k, row[k]])),
++              answer: answer === undefined || answer === null ? null : typeof answer === "object" ? { run_plan: answer.run_plan, route: answer.route } : true });
++          }
++        } catch { /* A torn active append has no accepted verdict. */ }
++        start = end + 1;
++      }
++      pending = data.subarray(start);
++    }
++  } finally { closeSync(fd); }
++  return rows;
++}
++
++export function brainSources(path: string): Map<string, BrainSource> {
++  const byRun = new Map<string, Row[]>();
++  for (const row of readJsonl(path)) {
++    if (typeof row.run_id !== "string" || !row.run_id) continue;
++    const rows = byRun.get(row.run_id) ?? [];
++    rows.push(row);
++    byRun.set(row.run_id, rows);
++  }
++  return new Map([...byRun].map(([run, rows]) => [run, classifyBrain(rows)]));
++}
+diff --git a/agent/src/brain/wait.ts b/agent/src/brain/wait.ts
+new file mode 100644
+index 00000000..9e981b8c
+--- /dev/null
++++ b/agent/src/brain/wait.ts
+@@ -0,0 +1,143 @@
++/** A model outage suspends the current question, never the game's saved run. */
++import { appendFileSync, existsSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
++import { dirname, join } from "node:path";
++import type { BrainRequest } from "./types.js";
++
++export type WaitState = "paused" | "heartbeat" | "resumed" | "cancelled" | "fault";
++export interface BrainWaitEvent {
++  ts: string;
++  state: WaitState;
++  pid: number;
++  run_id: string | null;
++  question_id: string;
++  decision_type: string;
++  reason: string;
++  since: string;
++  retries: number;
++  next_retry: string | null;
++  suspended_ms: number;
++  budget_policy: "outage_time_excluded";
++  original_budget_ms: number | null;
++}
++
++/** Terminal errors must cross every legacy Jev/code recovery catch. */
++export class BrainBlockedError extends Error {
++  constructor(readonly state: "cancelled" | "fault", message: string, override readonly cause?: unknown) {
++    super(message);
++    this.name = "BrainBlockedError";
++  }
++}
++export function isBrainBlocked(error: unknown): error is BrainBlockedError {
++  return error instanceof BrainBlockedError;
++}
++
++export const BRAIN_RETRY_DELAYS = [5_000, 15_000, 30_000, 60_000, 120_000, 300_000] as const;
++export const BRAIN_HEARTBEAT_MS = 15_000;
++
++export interface BrainWaitOptions {
++  signal?: AbortSignal;
++  stop?: () => boolean;
++  now?: () => number;
++  sleep?: (ms: number, signal?: AbortSignal) => Promise<void>;
++  event?: (event: BrainWaitEvent) => void;
++  notify?: (event: BrainWaitEvent) => void;
++  originalBudgetMs?: number;
++}
++
++function sleep(ms: number, signal?: AbortSignal): Promise<void> {
++  return new Promise((resolve, reject) => {
++    const aborted = (): void => { clearTimeout(timer); reject(new BrainBlockedError("cancelled", "brain wait cancelled by stop signal")); };
++    const timer = setTimeout(() => { signal?.removeEventListener("abort", aborted); resolve(); }, ms);
++    if (signal?.aborted) aborted();
++    else signal?.addEventListener("abort", aborted, { once: true });
++  });
++}
++
++export class BrainWait {
++  private active: { req: BrainRequest; began: number; reason: string; retries: number; next: number | null } | null = null;
++  private timer: ReturnType<typeof setInterval> | undefined;
++  private completedMs = 0;
++  private heartbeatFailure: unknown;
++  constructor(private readonly options: BrainWaitOptions = {}) {}
++  get signal(): AbortSignal | undefined { return this.options.signal; }
++  now(): number { return this.options.now?.() ?? Date.now(); }
++  get suspendedMs(): number { return this.completedMs + (this.active ? Math.max(0, this.now() - this.active.began) : 0); }
++
++  check(): void {
++    if (this.heartbeatFailure) throw new BrainBlockedError("fault", "Codex wait heartbeat could not be recorded", this.heartbeatFailure);
++    if (this.signal?.aborted || this.options.stop?.()) throw new BrainBlockedError("cancelled", "brain wait cancelled by stop signal/ops STOP; saved decision left untouched");
++  }
++
++  private emit(state: WaitState): void {
++    const a = this.active;
++    if (!a) return;
++    const event: BrainWaitEvent = {
++      ts: new Date(this.now()).toISOString(), state, pid: process.pid,
++      run_id: a.req.runId ?? null, question_id: a.req.questionId ?? "", decision_type: a.req.label,
++      reason: a.reason, since: new Date(a.began).toISOString(), retries: a.retries,
++      next_retry: a.next === null ? null : new Date(a.next).toISOString(), suspended_ms: this.suspendedMs,
++      budget_policy: "outage_time_excluded", original_budget_ms: this.options.originalBudgetMs ?? null,
++    };
++    this.options.event?.(event);
++    if (state !== "heartbeat") this.options.notify?.(event);
++  }
++
++  pause(req: BrainRequest, reason: string, began = this.now()): void {
++    if (this.active) { this.active.reason = reason; return; }
++    this.active = { req, began, reason, retries: 0, next: null };
++    this.emit("paused");
++    this.timer = setInterval(() => {
++      try { this.emit("heartbeat"); }
++      catch (error) { this.heartbeatFailure = error; clearInterval(this.timer); }
++    }, BRAIN_HEARTBEAT_MS);
++  }
++
++  async retry(cooldownMs = 0): Promise<void> {
++    this.check();
++    const a = this.active;
++    if (!a) throw new Error("brain retry without a paused question");
++    // Each sleep and retry delay is bounded. An outage has no attempt cap: only Codex can answer it.
++    const backoff = BRAIN_RETRY_DELAYS[Math.min(a.retries, BRAIN_RETRY_DELAYS.length - 1)]!;
++    const delay = Math.min(300_000, Math.max(backoff, Number.isFinite(cooldownMs) ? cooldownMs : 0));
++    a.next = this.now() + delay;
++    while (this.now() < a.next) {
++      this.check();
++      await (this.options.sleep ?? sleep)(Math.min(1_000, a.next - this.now()), this.signal);
++    }
++    this.check();
++    a.retries += 1;
++    a.next = null;
++  }
++
++  finish(state: "resumed" | "cancelled" | "fault", req?: BrainRequest, reason?: string): void {
++    if (!this.active && req) this.active = { req, began: this.now(), reason: reason ?? state, retries: 0, next: null };
++    if (reason && this.active) this.active.reason = reason;
++    clearInterval(this.timer);
++    this.emit(state);
++    if (this.active) this.completedMs += Math.max(0, this.now() - this.active.began);
++    this.active = null;
++  }
++}
++
++/** Runtime files are outside source control. Tests pass a private fixture directory. */
++export function fileBrainWait(logDir: string, opsDir: string, options: BrainWaitOptions = {}): BrainWait {
++  const marker = join(logDir, "brain-wait.json");
++  const timeline = join(logDir, "brain-wait.jsonl");
++  return new BrainWait({
++    ...options, stop: options.stop ?? (() => existsSync(join(opsDir, "STOP"))),
++    event: (event) => {
++      mkdirSync(logDir, { recursive: true });
++      const temp = `${marker}.${process.pid}.tmp`;
++      writeFileSync(temp, JSON.stringify(event) + "\n");
++      renameSync(temp, marker);
++      appendFileSync(timeline, JSON.stringify(event) + "\n");
++      options.event?.(event);
++    },
++    notify: (event) => {
++      const inbox = join(opsDir, "inbox-dev.md");
++      mkdirSync(dirname(inbox), { recursive: true });
++      appendFileSync(inbox, `\n- ${event.ts} Codex 大脑 ${event.state}；局 ${event.run_id ?? "未知"}；题 ${event.question_id} / ${event.decision_type}；原因 ${event.reason}；暂停时间不计原预算，恢复后回答同题。\n`);
++      options.notify?.(event);
++    },
++  });
++}
+diff --git a/agent/src/core/index.ts b/agent/src/core/index.ts
+index 5328774b..640bc754 100644
+--- a/agent/src/core/index.ts
++++ b/agent/src/core/index.ts
+@@ -23,6 +23,7 @@ import { style } from "./util/format.js";
+ import { acquireLock } from "./util/lock.js";
+ import { BuildSimPool } from "../sim/build-sim-pool.js";
+ import { setKnowledgeCharacter } from "../knowledge/files.js";
++import { isBrainBlocked } from "../brain/wait.js";
+ 
+ const USAGE = `jev-sts2 — play Slay the Spire 2 with Jev (TypeSafe System One)
+ 
+@@ -309,6 +310,12 @@ async function main(argv: string[]): Promise<number> {
+         );
+       }
+       const reporter = createReporter();
++      const stopController = new AbortController();
++      const stopSignal = (): void => stopController.abort();
++      let buildSim: BuildSimPool | null = null;
++      let thiefPool: BuildSimPool | null = null;
++      process.on("SIGINT", stopSignal);
++      process.on("SIGTERM", stopSignal);
+       try {
+         const runtime = await buildRuntime({
+           config,
+@@ -319,13 +326,14 @@ async function main(argv: string[]): Promise<number> {
+         process.stdout.write(
+           `${style.bold(mode === "shadow" ? "shadow mode" : "PLAY mode")}: ${runtime.baseUrl}, model ${config.jev.model}` +
+             `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
+-            `${skipJev ? style.yellow(" | NO-JEV: every decision uses the deterministic fallback") : ""}\n`,
++            `${skipJev ? style.yellow(" | NO-JEV: combat uses code; brain decisions still require Codex") : ""}\n`,
+         );
+-        const buildSim = config.bossSimBuild === "on" && config.buildDecider === "deepseek" ? new BuildSimPool() : null;
++        buildSim = config.bossSimBuild === "on" && config.buildDecider === "deepseek" ? new BuildSimPool() : null;
+         // THIEF_COST: the Hopper's stolen card simulated against the act boss (thief-card-value.ts): B3's pool when it
+         // runs, else one of its own (its workers start on the first Hopper fight).
+-        const thiefPool = config.thiefFacts && config.thiefCost ? (buildSim ?? new BuildSimPool()) : null;
++        thiefPool = config.thiefFacts && config.thiefCost ? (buildSim ?? new BuildSimPool()) : null;
+         const stats = await runLoop({
++          signal: stopController.signal,
+           config,
+           mode,
+           client: runtime.client,
+@@ -349,11 +357,18 @@ async function main(argv: string[]): Promise<number> {
+           buildSim: buildSim ? { runner: buildSim } : null,
+           thiefSim: thiefPool ? { runner: thiefPool } : null,
+         });
+-        await buildSim?.close();
+-        if (thiefPool && thiefPool !== buildSim) await thiefPool.close();
+         reporter.summary(stats);
+         return stats.errors > 0 && stats.acts === 0 ? 1 : 0;
++      } catch (error) {
++        if (!isBrainBlocked(error)) throw error;
++        process.stderr.write(`${error.state}: ${error.message}\n`);
++        // autoplay parks these statuses; restarting is an explicit operator recovery, not a model fallback.
++        return error.state === "cancelled" ? 75 : 78;
+       } finally {
++        await buildSim?.close();
++        if (thiefPool && thiefPool !== buildSim) await thiefPool.close();
++        process.removeListener("SIGINT", stopSignal);
++        process.removeListener("SIGTERM", stopSignal);
+         lock.release();
+       }
+     }
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index a59d993c..3aa808cc 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -425,7 +425,8 @@ export function runConfigRow(
+ ): RunConfigRow {
+   const { config, brain, env } = opts;
+   const engines: Partial<Record<EngineName, EngineSnapshot>> = {};
+-  const used = enginesInUse(config.brain);
++  const actualBrain = brain?.router.config ?? config.brain;
++  const used = enginesInUse(actualBrain);
+   for (const name of used) engines[name] = engineSnapshot(name, config, brain);
+   const deepseek = config.deepseek
+     ? {
+@@ -440,9 +441,9 @@ export function runConfigRow(
+   const setup = {
+     brain: {
+       active: brain !== null,
+-      engine: config.brain.engine,
+-      by_prefix: Object.fromEntries(Object.keys(config.brain.byPrefix).sort().map((prefix) => [prefix, config.brain.byPrefix[prefix]!])) as Record<string, EngineName>,
+-      fallback: config.brain.fallback,
++      engine: actualBrain.engine,
++      by_prefix: Object.fromEntries(Object.keys(actualBrain.byPrefix).sort().map((prefix) => [prefix, actualBrain.byPrefix[prefix]!])) as Record<string, EngineName>,
++      fallback: actualBrain.fallback,
+       reask: config.brain.reask,
+       tools: config.brain.tools,
+       log: brain ? (brain.router.config.log || null) : null,
+diff --git a/agent/src/hand/loop.ts b/agent/src/hand/loop.ts
+index 15bc307b..73c41756 100644
+--- a/agent/src/hand/loop.ts
++++ b/agent/src/hand/loop.ts
+@@ -7,7 +7,7 @@
+  */
+ 
+ import { randomUUID } from "node:crypto";
+-import { dirname } from "node:path";
++import { dirname, join } from "node:path";
+ 
+ import { classifyFailure, dispatch } from "./act/dispatch.js";
+ import { fingerprint, gate, type GateResult } from "./act/gate.js";
+@@ -18,8 +18,10 @@ import type { AnswerSet } from "../reflex/jev/answers.js";
+ import { withJevRetry, type JevClient } from "../reflex/jev/client.js";
+ import type { Escalator } from "../brain/llm/file-escalation.js";
+ import { DeepSeekAnswerError, DeepSeekClient, DeepSeekInconsistentError } from "../brain/llm/deepseek.js";
+-import { createBrain, toolContextOf, type Brain, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "../brain/brain.js";
++import { Brain, createBrain, toolContextOf, type BrainChoice, type BrainMeta, type BrainMetaUsage } from "../brain/brain.js";
+ import { fallbackOf } from "../brain/router.js";
++import { BrainBlockedError, fileBrainWait, isBrainBlocked, type BrainWait } from "../brain/wait.js";
++import { workspaceRoot } from "../core/paths.js";
+ import type { BrainDecider } from "../brain/types.js";
+ import { deciderLabel, engineLabel } from "../brain/labels.js";
+ import { moveModel } from "../knowledge/move-model.js";
+@@ -108,6 +110,11 @@ export interface LoopOptions {
+   thiefSim?: ThiefCardSetup | null;
+   /** SL (SL_ENABLED): the reload's poll interval (default 500 ms; tests make it short). */
+   slPollMs?: number;
++  /** Fixed-data tests inject a brain (or null), avoiding all real model/preflight calls. */
++  brain?: Brain | null;
++  brainFactory?: typeof createBrain;
++  brainWait?: BrainWait;
++  signal?: AbortSignal;
+ }
+ 
+ export interface LoopStats {
+@@ -132,6 +139,8 @@ export interface LoopStats {
+   runsCompleted: number;
+   stoppedBecause: string;
+   elapsedMs: number;
++  brainPausedMs?: number;
++  activeElapsedMs?: number;
+   logPath: string;
+ }
+ 
+@@ -146,6 +155,12 @@ export interface RunTokenSummary {
+   elapsedMs: number;
+ }
+ 
++/** A resolution/storage fault must also park autoplay and reach the operator inbox. */
++function brainFault(brain: Brain, label: string, runId: string | undefined, reason: string, cause?: unknown): never {
++  brain.router.wait.finish("fault", { label, runId, questionId: randomUUID(), system: "", question: "", payload: {}, spec: { label, kind: "plan", schema: {}, validate: () => [] } }, reason);
++  throw new BrainBlockedError("fault", reason, cause);
++}
++
+ export type LoopEvent =
+   | { type: "note"; message: string }
+   | { type: "wait"; screen: string; reason: string }
+@@ -368,10 +383,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       if (engine === "deepseek") stats.deepseekCalls += 1;
+     },
+   };
+-  const brain: Brain | null = deepseekClient ? createBrain(config, deepseekClient, { fallbackBudget }) : null;
++  const wait = options.brainWait ?? fileBrainWait(dirname(config.log.decisionLog), join(workspaceRoot(), "ops"), {
++    signal: options.signal, originalBudgetMs: maxMinutes * 60_000,
++    notify: (event) => onEvent({ type: "note", message: `Codex brain ${event.state}: run ${event.run_id ?? "?"}, ${event.decision_type}, question ${event.question_id}, ${event.reason}; outage time excluded from ${maxMinutes} min budget` }),
++  });
++  const brain: Brain | null = options.brain !== undefined ? options.brain : options.brainFactory ? options.brainFactory(config, deepseekClient, { fallbackBudget, wait }) : createBrain(config, deepseekClient, { fallbackBudget, wait });
+   brain?.onNote((message) => onEvent({ type: "note", message }));
+   // Before play: a configured engine that cannot run is said once, loudly, and rested for the process (Brain.preflight).
+-  for (const problem of brain ? await brain.preflight() : []) onEvent({ type: "note", message: `ERROR: ${problem}` });
++  for (const problem of options.brain === undefined && brain ? await brain.preflight() : []) onEvent({ type: "note", message: `ERROR: ${problem}` });
+   // One row per run with the configuration it is played with (logs/run-config.jsonl; eval metrics --group-by config).
+   // SL (docs/sl.md): null when SL_ENABLED is off, and then nothing below differs from a loop without it.
+   const sl = config.sl?.enabled
+@@ -385,6 +404,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+    * it is used up the router asks BRAIN_FALLBACK, and DeepSeek's budget applies again.
+    */
+   const brainBudgetLeft = (label: string): boolean => {
++    if (brain?.router.codexOnly) return true;
+     if (!brain) return deepseekBudgetLeft();
+     const engine = brain.engineFor(label);
+     return (engine !== "deepseek" && brain.router.budgetLeft(engine)) || deepseekBudgetLeft();
+@@ -395,7 +415,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+    * (BRAIN_ENGINE_RUN_PLAN other than BRAIN_ENGINE keeps its own call at the map, as before).
+    */
+   const runPlanMerges = (): boolean =>
+-    config.runPlan === "v1" && config.runPlanMerge && config.buildDecider === "deepseek" && deepseekClient !== null && (!brain || brain.engineFor("run-plan") === config.brain.engine);
++    config.runPlan === "v1" && config.runPlanMerge && brain !== null && brain.engineFor("run-plan") === brain.router.config.engine;
+   /** Whether DeepSeek is asked first for this label (its call is counted up front, as v3 did). */
+   const deepseekFirst = (label: string): boolean => !brain || brain.engineFor(label) === "deepseek";
+   /** The router's re-ask on a question DeepSeek was asked first (a route checked by its AnswerSpec: M2): its calls. */
+@@ -456,15 +476,17 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+   };
+ 
+   const budgetReason = (): string | null => {
++    if (options.signal?.aborted) return "cancelled by stop signal";
+     if (stats.decisions >= maxDecisions) return `decision cap reached (${maxDecisions})`;
+     if (stats.jevCalls >= config.budgets.maxRequests) return `request cap reached (${config.budgets.maxRequests})`;
+     if (stats.inputTokens + stats.outputTokens >= config.budgets.maxTokens) {
+       return `token cap reached (${config.budgets.maxTokens})`;
+     }
+-    if (Date.now() > deadline) {
++    const activeNow = Date.now() - (brain?.router.wait.suspendedMs ?? 0);
++    if (activeNow > deadline) {
+       const busy = inCombatTracked || runEndPhase === "finalizing";
+       if (!busy) return `time cap reached (${maxMinutes} min)`;
+-      if (Date.now() > hardDeadline) return `time cap reached (${maxMinutes} min, still ${inCombatTracked ? "in combat" : "finishing the run"} after the grace period)`;
++      if (activeNow > hardDeadline) return `time cap reached (${maxMinutes} min, still ${inCombatTracked ? "in combat" : "finishing the run"} after the grace period)`;
+     }
+     if (consecutiveFailures >= 3) return "circuit breaker: 3 consecutive failures";
+     return null;
+@@ -665,6 +687,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+     const gateStuck = gateRejectedFp === observedFp && gateRejections >= GATE_REJECTION_LIMIT;
+     const endTurnInstead = gateStuck && state.screen === "COMBAT" && state.available_actions.includes("end_turn");
+     const gateCodeBaseline = gateStuck && !endTurnInstead;
++    if (gateCodeBaseline && !state.in_combat && brain?.router.codexOnly) {
++      const error = new BrainBlockedError("fault", "Repeated safety gate refusal on a brain decision; no replacement option dispatched");
++      brain.router.wait.finish("fault", { label: "safety-gate", runId: str(state.raw["run_id"]), questionId: `gate-${observedFp}`, system: "", question: "", payload: {}, spec: { label: "safety-gate", kind: "plan", schema: {}, validate: () => [] } }, error.message);
++      throw error;
++    }
+     observedStates.observed(state, observedFp, observedTs, journal.observe(state, { knowledge, screenMemory }));
+     // Lizard Tail's one use this run (no used mark on the relic): read from the states as they come. The state that
+     // marks it is logged (an enemy-turn read is not otherwise), so the journal replay after a restart reads it too.
+@@ -700,7 +727,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+       jevContext: config.jevContext,
+       fightPlan: config.fightPlan,
+       // BUILD_DECIDER=deepseek needs a DeepSeek client; without one the screens make the baseline decision.
+-      buildDecider: config.buildDecider === "deepseek" && deepseekClient ? "deepseek" : "jev",
++      buildDecider: brain?.router.codexOnly || (config.buildDecider === "deepseek" && deepseekClient) ? "deepseek" : "jev",
+       oneshot: config.buildOneshot,
+       ...(slEnv ? { sl: slEnv } : {}),
+       ...(slRecord ? { slRecord } : {}),
+@@ -815,6 +842,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+     }
+ 
+     let decision = planned.decision;
++    if (brain?.router.codexOnly && decision.label === "map/route-fallback" && asArray(asRecord(state.raw["map"])["available_nodes"]).length !== 1) {
++      const reason = "Codex route question could not be constructed; no code route choice dispatched";
++      brain.router.wait.finish("fault", { label: "map/route-plan", runId, questionId: randomUUID(), system: "", question: "", payload: {}, spec: { label: "map/route-plan", kind: "plan", schema: {}, validate: () => [] } }, reason);
++      throw new BrainBlockedError("fault", reason);
++    }
+     const planStarted = Date.now();
+     const stateFingerprint = observedFp;
+     const codeBaseline = gateCodeBaseline && decision.kind === "ask";
+@@ -894,6 +926,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+               }
+             }
+           } catch (error) {
++            if (brain.router.codexOnly) brainFault(brain, "run-plan", runId, "Due run-plan question could not be constructed", error);
+             onEvent({ type: "note", message: `the run plan could not ride on ${decision.label} (${error instanceof Error ? error.message.slice(0, 160) : String(error)}): asked without it, still due` });
+           }
+         }
+@@ -917,6 +950,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+             runPlanRideLog = { trigger: ride.trigger, outcome, why: why.slice(0, 200) };
+             logRunPlan(config.runPlanLog, { run: runId, floor, trigger: ride.trigger, merged_into: ask.label, decision_id: decisionId, error: why.slice(0, 200), question: call });
+             const since = screenMemory.runPlanPending?.floor;
++            if (brain?.router.codexOnly) brainFault(brain, "run-plan", runId, `Codex run-plan answer could not be stored: ${why}`);
+             onEvent({ type: "note", message: `${ask.label}: no usable run plan in the answer (${why.slice(0, 120)}); still due${since === undefined ? "" : ` since floor ${since}`}, the next question carries it` });
+           };
+           if ("missing" in found) return fail("missing", found.missing);
+@@ -952,8 +986,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+             [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", decider: brainDecider(answer.brain), ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}), ...(answer.discard ? { discard: answer.discard } : {}) } },
+           } as AnswerSet);
+           // A one-shot resolution that fell back in code means the choice named no option.
+-          if (!picked.intent || (spec.oneshot && picked.fallback)) {
+-            onEvent({ type: "note", message: `${answeredBy(answer.brain)}'s ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); falling back to Jev/code` });
++          if (!picked.intent || ((spec.oneshot || brain?.router.codexOnly) && picked.fallback) || (brain?.router.codexOnly && picked.guard)) {
++            onEvent({ type: "note", message: `${answeredBy(answer.brain)}'s ${answer.choice} on ${ask.label} did not resolve (${picked.rationale}); ${brain?.router.codexOnly ? "no action dispatched; resolution fault" : "falling back to Jev/code"}` });
+             deepseekAnswerUnusable = `${answer.choice} did not resolve`;
+             return false;
+           }
+@@ -1065,6 +1099,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+             if (!accept(answer, null)) deepseekFailed = true;
+           }
+         } catch (error) {
++          if (brain?.router.codexOnly) {
++            if (isBrainBlocked(error)) throw error;
++            brainFault(brain, decision.label, runId, `Brain decision resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
++          }
+           deepseekFailed = true;
+           if (error instanceof DeepSeekInconsistentError) {
+             deepseekAnswerUnusable = "inconsistent after re-ask";
+@@ -1110,6 +1148,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+         const spent = `(${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0})`;
+         onEvent({ type: "note", message: `${engine === "deepseek" ? `DeepSeek budget used up ${spent}` : `${engineLabel(engine)} call budget used up, and DeepSeek's as its fallback ${spent}`}; ${decision.label} goes to Jev/code` });
+       }
++      if (!deepseekResolved && brain?.router.codexOnly) {
++        const reason = `Codex brain decision did not resolve on ${decision.label}: ${deepseekAnswerUnusable ?? "no usable brain question"}`;
++        brain.router.wait.finish("fault", { label: decision.label, runId, questionId: decisionId, system: "", question: "", payload: {}, spec: { label: decision.label, kind: "plan", schema: {}, validate: () => [] } }, reason);
++        throw new BrainBlockedError("fault", reason);
++      }
+       if (!deepseekResolved && deepseekFailed && spec.oneshot && deepseekAnswerUnusable !== null) {
+         // A one-shot question whose answer was unusable: the screen asks its step-by-step questions (logged:
+         // the call was paid). Transport failures and an empty budget still play the baseline below.
+@@ -1264,6 +1307,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+           // per-turn escalation), and DeepSeek is not asked again right after it failed on this question.
+           const deepseekBarred = deepseekFailed || (config.buildDecider === "deepseek" && config.combatDeepseek !== "on" && (state.in_combat || decision.label.startsWith("combat/")));
+           for (const escalator of options.escalators ?? []) {
++            if (brain?.router.codexOnly && escalator.name === "claude") continue;
+             const capped =
+               escalator.name === "claude"
+                 ? stats.claudeCalls >= config.escalation.claudeMaxCalls
+@@ -1292,6 +1336,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+                 ...result.answers,
+                 [esc.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: escalator.name, decider: escalatedBy, ...("discard" in answer && Array.isArray(answer.discard) ? { discard: answer.discard } : {}) } },
+               } as AnswerSet);
++              if (brain?.router.codexOnly && (override.guard || override.fallback || !override.intent)) brainFault(brain, decision.label, runId, "Safety resolution refused Codex's escalation answer; no replacement choice dispatched");
+               if (!override.intent) continue;
+               const agreed = answer.choice === jevAnswer.choice;
+               const who = deciderLabel(escalatedBy);
+@@ -1314,6 +1359,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+               if (override.guard) escalation = { ...escalation, guard: override.guard.kind, used_choice: override.guard.choice, used_plan: override.guard.plan };
+               break;
+             } catch (error) {
++              if (isBrainBlocked(error)) throw error;
+               // The DeepSeek escalator is asked through the brain: named by the engine the brain asks for this label.
+               onEvent({ type: "note", message: `${escalator.name === "deepseek" && brain ? engineLabel(brain.engineFor(decision.label)) : escalator.name} escalation failed: ${error instanceof Error ? error.message : String(error)}` });
+             }
+@@ -1359,6 +1405,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+           }
+         }
+       } catch (error) {
++        if (isBrainBlocked(error)) throw error;
+         const failure = classifyFailure(error);
+         stats.errors += 1;
+         consecutiveFailures += 1;
+@@ -1778,6 +1825,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+ 
+   observedStates.flush();
+   stats.elapsedMs = Date.now() - startedAt;
++  stats.brainPausedMs = brain?.router.wait.suspendedMs ?? 0;
++  stats.activeElapsedMs = stats.elapsedMs - stats.brainPausedMs;
+   log.close();
+   return stats;
+ }
+@@ -1943,6 +1992,8 @@ async function ensureFightPlan(
+     });
+     onEvent({ type: "note", message: `fight plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
+   } catch (error) {
++    if (isBrainBlocked(error)) throw error;
++    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "fight-plan", runId, `Fight-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+     screenMemory.fightPlanFailed = fight;
+     const message = error instanceof Error ? error.message : String(error);
+     // An unparseable reply was still paid for: its usage and raw reply are logged with the error.
+@@ -2011,6 +2062,8 @@ async function ensureRunPlan(
+     });
+     onEvent({ type: "note", message: `run plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
+   } catch (error) {
++    if (isBrainBlocked(error)) throw error;
++    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "run-plan", runId, `Run-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+     screenMemory.runPlanFailed = failKey;
+     const message = error instanceof Error ? error.message : String(error);
+     if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens, (error.meta as BrainMetaUsage).brain);
+diff --git a/agent/src/memory/ascension-target.ts b/agent/src/memory/ascension-target.ts
+index a817aa89..c99e64f3 100644
+--- a/agent/src/memory/ascension-target.ts
++++ b/agent/src/memory/ascension-target.ts
+@@ -10,6 +10,7 @@
+  */
+ import { readFileSync } from "node:fs";
+ import { join } from "node:path";
++import { brainSources } from "../brain/source.js";
+ 
+ import { LOGS_DIR } from "../core/paths.js";
+ import { characterKey, DEFAULT_CHARACTER } from "../knowledge/files.js";
+@@ -34,7 +35,7 @@ export function fixedAscension(raw: string | undefined | null): number | null {
+ export const ascensionClimbOptions = { runsPath: join(LOGS_DIR, "runs.jsonl") };
+ 
+ /** The highest ascension `character` (a knowledge id) has won in the runs file, or null before its first win. */
+-export function highestWon(character: string, runsPath: string = ascensionClimbOptions.runsPath): number | null {
++export function highestWon(character: string, runsPath: string = ascensionClimbOptions.runsPath, includeNonCodex = false): number | null {
+   let text: string;
+   try {
+     text = readFileSync(runsPath, "utf8");
+@@ -42,9 +43,10 @@ export function highestWon(character: string, runsPath: string = ascensionClimbO
+     return null;
+   }
+   let best: number | null = null;
++  const sources = includeNonCodex ? null : brainSources(join(runsPath, "..", "brain.jsonl"));
+   for (const line of text.split("\n")) {
+     if (!line.trim()) continue;
+-    let row: { victory?: unknown; ascension?: unknown; character?: unknown };
++    let row: { run_id?: string; victory?: unknown; ascension?: unknown; character?: unknown };
+     try {
+       row = JSON.parse(line) as typeof row;
+     } catch {
+@@ -52,6 +54,7 @@ export function highestWon(character: string, runsPath: string = ascensionClimbO
+     }
+     const of = characterKey(typeof row.character === "string" ? row.character : null) ?? DEFAULT_CHARACTER;
+     if (row.victory !== true || of !== character || typeof row.ascension !== "number") continue;
++    if (!includeNonCodex && (!row.run_id || !sources?.get(row.run_id)?.eligible)) continue;
+     best = best === null ? row.ascension : Math.max(best, row.ascension);
+   }
+   return best;
+diff --git a/agent/tests/brain-claude.test.ts b/agent/tests/brain-claude.test.ts
+index 3a63f748..34ae22c9 100644
+--- a/agent/tests/brain-claude.test.ts
++++ b/agent/tests/brain-claude.test.ts
+@@ -9,7 +9,7 @@ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { describe, expect, it } from "vitest";
+ 
+-import { createBrain } from "../src/brain/brain.js";
++import { createBrain } from "./legacy-brain.js";
+ import { checkClaudeBin, CLAUDE_REST_MS, claudeFailure, ClaudeEngine, claudeModelId } from "../src/brain/engines/claude.js";
+ import { agentEnv, EXIT_CLOSE_GRACE_MS, runAgent } from "../src/brain/engines/process.js";
+ import { EngineFailure } from "../src/brain/router.js";
+diff --git a/agent/tests/brain-codex-usage.test.ts b/agent/tests/brain-codex-usage.test.ts
+index b448b1f3..cc123243 100644
+--- a/agent/tests/brain-codex-usage.test.ts
++++ b/agent/tests/brain-codex-usage.test.ts
+@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { describe, expect, it } from "vitest";
+ 
+-import { createBrain } from "../src/brain/brain.js";
++import { createBrain } from "./legacy-brain.js";
+ import { CodexEngine } from "../src/brain/engines/codex.js";
+ import { AUTH_REFRESH_EVERY_MS, CODEX_USAGE_DISABLED_FEATURES, CodexUsageGuard, parseRateLimits, readCodexUsage, refreshCodexAuth, usageNote, USAGE_RETRY_MS, type CodexUsage } from "../src/brain/engines/codex-usage.js";
+ import { codexEnv } from "../src/brain/engines/codex.js";
+diff --git a/agent/tests/brain-codex.test.ts b/agent/tests/brain-codex.test.ts
+index e86a6aae..79a39150 100644
+--- a/agent/tests/brain-codex.test.ts
++++ b/agent/tests/brain-codex.test.ts
+@@ -11,7 +11,8 @@ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { describe, expect, it } from "vitest";
+ 
+-import { createBrain, createRouter } from "../src/brain/brain.js";
++import { createRouter } from "../src/brain/brain.js";
++import { createBrain } from "./legacy-brain.js";
+ import { brainCatalogEntry, checkCodex, closeCutAnswer, CODEX_DISABLED_FEATURES, CODEX_RUST_LOG, codexFailure, CodexEngine, codexKindSchema, codexSchema, dropNulls, parseCodexStream, redact, ROUTE_PATTERN, strictSchema } from "../src/brain/engines/codex.js";
+ import { isContextOverflow } from "../src/brain/knowledge.js";
+ import { answeredBy, deciderLabel, engineLabel } from "../src/hand/loop.js";
+diff --git a/agent/tests/brain-deepseek.test.ts b/agent/tests/brain-deepseek.test.ts
+index 248db7aa..2611260d 100644
+--- a/agent/tests/brain-deepseek.test.ts
++++ b/agent/tests/brain-deepseek.test.ts
+@@ -9,7 +9,8 @@ import { tmpdir } from "node:os";
+ import { join } from "node:path";
+ import { afterEach, beforeEach, describe, expect, it } from "vitest";
+ 
+-import { createBrain, type Brain } from "../src/brain/brain.js";
++import { type Brain } from "../src/brain/brain.js";
++import { createBrain } from "./legacy-brain.js";
+ import { DeepSeekEngine } from "../src/brain/engines/deepseek.js";
+ import { pickSpec } from "../src/brain/specs.js";
+ import { loadConfig } from "../src/core/config.js";
+diff --git a/agent/tests/brain-knowledge.test.ts b/agent/tests/brain-knowledge.test.ts
+index c3c2fff7..ac113677 100644
+--- a/agent/tests/brain-knowledge.test.ts
++++ b/agent/tests/brain-knowledge.test.ts
+@@ -10,7 +10,8 @@ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+ 
+-import { Brain, createBrain } from "../src/brain/brain.js";
++import { Brain } from "../src/brain/brain.js";
++import { createBrain } from "./legacy-brain.js";
+ import { FULL_KNOWLEDGE_NOTE, isContextOverflow, KnowledgePrompt, fullSystemPrompt, memoryWithoutLessons, PREFIX_WARN_TOKENS, prefixSizeWarning, sliceWithoutLessons } from "../src/brain/knowledge.js";
+ import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
+ import { pickSpec } from "../src/brain/specs.js";
+diff --git a/agent/tests/brain-router.test.ts b/agent/tests/brain-router.test.ts
+index 34dbe146..f5a51761 100644
+--- a/agent/tests/brain-router.test.ts
++++ b/agent/tests/brain-router.test.ts
+@@ -96,7 +96,8 @@ describe("engine choice", () => {
+ 
+   it("an engine that is not built yet says so; the fallback answers", async () => {
+     const config = loadConfig({ BRAIN_ENGINE: "dsh", BRAIN_LOG: "off" } as unknown as NodeJS.ProcessEnv);
+-    await expect(createRouter(config, null).decide(request())).rejects.toThrow("brain engine dsh is not implemented yet (implemented: deepseek, claude, codex)");
++    expect(createRouter(config, null).engineFor("rest/plan")).toBe("codex");
++    expect(createRouter(config, null).config.fallback).toBeNull();
+     const deepseek = new FakeEngine("deepseek", [{ choice: "a", reason: "heal" }]);
+     const { router: r, rows } = router({ BRAIN_ENGINE: "dsh", BRAIN_FALLBACK: "deepseek" }, { deepseek });
+     const answer = await r.decide(request());
+diff --git a/agent/tests/brain-source-fixtures.json b/agent/tests/brain-source-fixtures.json
+new file mode 100644
+index 00000000..107e6c27
+--- /dev/null
++++ b/agent/tests/brain-source-fixtures.json
+@@ -0,0 +1,23 @@
++[
++  {"name":"codex","source":"codex","eligible":true,"counts":{"codex":2},"rows":[
++    {"run_id":"C","engine":"codex","label":"reward/card","question_id":"1","answer":{"choice":"a"},"problems":[]},
++    {"run_id":"C","engine":"deepseek","label":"reward/card","question_id":"1","answer":null,"error":"quota"},
++    {"run_id":"C","engine":"codex","label":"run-plan","question_id":"2","answer":{},"accepted":true,"problems":[]},
++    {"run_id":"C","engine":"codex","label":"run-plan","question_id":"2","answer":{},"accepted":true}]},
++  {"name":"deepseek","source":"deepseek","eligible":false,"counts":{"deepseek":1},"rows":[
++    {"run_id":"D","engine":"codex","question_id":"1","answer":null,"error":"quota"},
++    {"run_id":"D","engine":"deepseek","question_id":"1","label":"event/plan","answer":{"choice":"b"},"problems":[]}]},
++  {"name":"mixed","source":"mixed","eligible":false,"counts":{"codex":1,"deepseek":1},"rows":[
++    {"run_id":"M","engine":"codex","label":"shop/plan","answer":{},"problems":[]},
++    {"run_id":"M","engine":"deepseek","label":"rest/plan","answer":{},"accepted":true}]},
++  {"name":"missing","source":"unknown","eligible":false,"counts":{},"rows":[]},
++  {"name":"unknown engine","source":"unknown","eligible":false,"counts":{"unknown":1},"rows":[
++    {"run_id":"U","label":"run-plan","answer":{},"problems":[]}]},
++  {"name":"ambiguous historical answer","source":"unknown","eligible":false,"counts":{},"rows":[
++    {"run_id":"U","engine":"codex","answer":{},"problems":["missing route"]},
++    {"run_id":"U","engine":"codex","answer":{},"accepted":false}]},
++  {"name":"explicit accepted soft notes","source":"codex","eligible":true,"counts":{"codex":1},"rows":[
++    {"run_id":"C","engine":"codex","label":"event/plan","answer":{"run_plan":{},"route":"keep"},"accepted":true,"problems":["soft note"]}]},
++  {"name":"claude","source":"other","eligible":false,"counts":{"claude":1},"rows":[
++    {"run_id":"O","engine":"claude","answer":{},"problems":[]}]}
++]
+diff --git a/agent/tests/build-decider.test.ts b/agent/tests/build-decider.test.ts
+index eb4e5aa9..56991bbe 100644
+--- a/agent/tests/build-decider.test.ts
++++ b/agent/tests/build-decider.test.ts
+@@ -16,7 +16,7 @@ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+ import { fillRelicText } from "../src/knowledge/relic-values.js";
+ import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+-import { runLoop } from "../src/hand/loop.js";
++import { runLoop } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+ import { buildRunBrief } from "../src/memory/run-brief.js";
+diff --git a/agent/tests/cards-view-memo.test.ts b/agent/tests/cards-view-memo.test.ts
+index 34432110..d4d94377 100644
+--- a/agent/tests/cards-view-memo.test.ts
++++ b/agent/tests/cards-view-memo.test.ts
+@@ -5,7 +5,7 @@ import { join } from "node:path";
+ import { afterEach, expect, it, vi } from "vitest";
+ 
+ import { loadConfig } from "../src/core/config.js";
+-import { runLoop } from "../src/hand/loop.js";
++import { runLoop } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
+ import { setExperienceForTests } from "../src/knowledge/experience.js";
+diff --git a/agent/tests/codex-only-brain.test.ts b/agent/tests/codex-only-brain.test.ts
+new file mode 100644
+index 00000000..c4899b01
+--- /dev/null
++++ b/agent/tests/codex-only-brain.test.ts
+@@ -0,0 +1,274 @@
++import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, describe, expect, it, vi } from "vitest";
++import { Brain, createRouter } from "../src/brain/brain.js";
++import { BrainRouter, EngineFailure, type BrainLogRow } from "../src/brain/router.js";
++import { BRAIN_RETRY_DELAYS, BrainBlockedError, BrainWait, fileBrainWait, type BrainWaitEvent } from "../src/brain/wait.js";
++import { classifyBrain, brainSources } from "../src/brain/source.js";
++import { CodexUsageGuard, type CodexUsage } from "../src/brain/engines/codex-usage.js";
++import { pickSpec } from "../src/brain/specs.js";
++import type { BrainAnswer, BrainEngine, BrainRequest } from "../src/brain/types.js";
++import { loadConfig } from "../src/core/config.js";
++import { climbTarget, highestWon } from "../src/memory/ascension-target.js";
++import fixtures from "./brain-source-fixtures.json";
++import { runLoop } from "../src/hand/loop.js";
++import { ModClient } from "../src/hand/mod/client.js";
++import { restPayload, rewardCardPayload, eventPayload, mapPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
++import { envelope } from "./support.js";
++import type { JevClient } from "../src/reflex/jev/client.js";
++
++afterEach(() => vi.useRealTimers());
++const config = () => loadConfig({ BRAIN_ENGINE: "deepseek", BRAIN_ENGINE_MAP: "claude", BRAIN_FALLBACK: "deepseek", BRAIN_LOG: "off" } as NodeJS.ProcessEnv).brain;
++const request = (label: string): BrainRequest => ({ runId: "SAME-RUN", label, system: "固定题面", question: "固定问题", options: { a: "A", b: "B" }, payload: { fixture: 1 }, spec: pickSpec(label, { a: "A", b: "B" }, {}) });
++const answer = (value: unknown): BrainAnswer => ({ engine: "codex", model: "fixture", answer: value, problems: [], attempts: 1, latencyMs: 1, usage: { inputTokens: 5, outputTokens: 3 }, toolCalls: [] });
++
++function harness(steps: (unknown | Error)[], label = "rest/plan") {
++  let now = 0;
++  const events: BrainWaitEvent[] = [], notices: BrainWaitEvent[] = [], sleeps: number[] = [], rows: BrainLogRow[] = [], requests: BrainRequest[] = [];
++  const wait = new BrainWait({ now: () => now, originalBudgetMs: 60_000,
++    sleep: async (ms) => { sleeps.push(ms); now += ms; }, event: (e) => events.push(e), notify: (e) => notices.push(e) });
++  const engine: BrainEngine = { name: "codex", model: "fixture", decide: async (req) => {
++    requests.push(req); const step = steps.shift(); if (step instanceof Error) throw step; return answer(step);
++  } };
++  const r = new BrainRouter({ config: config(), codexOnly: true, wait, now: () => now,
++    engine: (name) => { expect(name).toBe("codex"); return engine; }, log: (row) => rows.push(row) });
++  return { r, wait, req: request(label), events, notices, sleeps, rows, requests };
++}
++
++describe("Roy's production Codex-only brain", () => {
++  it("overrides all engine selectors and fallback without a DeepSeek client", () => {
++    const cfg = loadConfig({ BRAIN_ENGINE: "deepseek", BRAIN_ENGINE_MAP: "claude", BRAIN_FALLBACK: "deepseek" } as NodeJS.ProcessEnv);
++    const r = createRouter(cfg, null);
++    for (const label of ["map/route-plan", "reward/card", "event/plan", "shop/plan", "rest/plan", "run-plan", "fight-plan"]) expect(r.engineFor(label)).toBe("codex");
++    expect(r.config).toMatchObject({ engine: "codex", fallback: null, byPrefix: {} });
++  });
++
++  it.each(["map/route-plan", "reward/card", "event/plan", "shop/plan", "rest/plan", "run-plan", "fight-plan"])("%s quota waits and recovers on the same question without any substitute", async (label) => {
++    const h = harness([new EngineFailure("quota", "quota", Infinity), { choice: "b" }], label);
++    const executed = vi.fn();
++    const result = await h.r.decide(h.req); executed(result.answer);
++    expect(h.requests).toHaveLength(2);
++    expect(h.requests[0]!.questionId).toBe(h.requests[1]!.questionId);
++    expect(h.requests[0]!.payload).toBe(h.requests[1]!.payload);
++    expect(executed).toHaveBeenCalledExactlyOnceWith({ choice: "b" });
++    expect(h.notices.map((e) => e.state)).toEqual(["paused", "resumed"]);
++    expect(h.rows.map((row) => [row.engine, row.accepted])).toEqual([["codex", false], ["codex", true]]);
++    expect(h.wait.suspendedMs).toBe(5_000);
++  });
++
++  it("empty/invalid answers retry the same question after the validation re-ask", async () => {
++    const h = harness([null, { choice: "unknown" }, { choice: "b" }]);
++    expect((await h.r.decide(h.req)).answer).toEqual({ choice: "b" });
++    expect(new Set(h.requests.map((r) => r.questionId)).size).toBe(1);
++    expect(h.notices.map((e) => e.state)).toEqual(["paused", "resumed"]);
++  });
++
++  it("does not drop a due embedded route or run-plan field", async () => {
++    const h = harness([{ choice: "a" }, { choice: "a" }, { choice: "b", route: "keep" }]);
++    h.req.spec.softValidate = (a) => (a as { route?: string }).route ? [] : ["missing route"];
++    expect((await h.r.decide(h.req)).answer).toEqual({ choice: "b", route: "keep" });
++    expect(h.requests).toHaveLength(3);
++  });
++
++  it("typed auth/unavailable/overload and preflight failures recover without resetting the run", async () => {
++    const h = harness([new EngineFailure("login expired", "auth"), new EngineFailure("read failed", "unavailable"), new EngineFailure("busy", "overloaded"), { choice: "b" }]);
++    h.r.markUnavailable("codex", "preflight failed");
++    let probes = 0;
++    h.r.onRecovery(async () => { probes += 1; if (probes === 1) throw new EngineFailure("preflight still down", "unavailable"); });
++    await h.r.decide(h.req);
++    expect(probes).toBe(5);
++    expect(h.requests).toHaveLength(4);
++    expect(h.notices).toHaveLength(2);
++  });
++
++  it("does not swallow programming errors or authorize a fallback", async () => {
++    const bug = new TypeError("bad schema code");
++    const h = harness([bug]);
++    await expect(h.r.decide(h.req)).rejects.toMatchObject({ state: "fault", cause: bug });
++    expect(h.requests).toHaveLength(1);
++    expect(h.notices.map((e) => e.state)).toEqual(["fault"]);
++  });
++
++  it("two consecutive timeouts honor the existing ten-minute rest with bounded polling", async () => {
++    const h = harness([new EngineFailure("slow", "timeout"), new EngineFailure("slow again", "timeout"), { choice: "b" }]);
++    await h.r.decide(h.req);
++    expect(h.requests).toHaveLength(3);
++    expect(h.wait.suspendedMs).toBeGreaterThanOrEqual(605_000);
++    expect(Math.max(...h.sleeps)).toBeLessThanOrEqual(1_000);
++    expect(h.notices).toHaveLength(2);
++  });
++
++  it("call budget remains enforced, cancellation leaves no answer/action and emits once", async () => {
++    let now = 0;
++    const abort = new AbortController();
++    const events: BrainWaitEvent[] = [];
++    const wait = new BrainWait({ signal: abort.signal, now: () => now, sleep: async (ms) => { now += ms; abort.abort(); }, notify: (e) => events.push(e) });
++    const engine = vi.fn();
++    const cfg = config(); cfg.engines.codex.maxCalls = 0;
++    const r = new BrainRouter({ config: cfg, codexOnly: true, wait, engine: () => ({ name: "codex", model: "fixture", decide: engine }) });
++    await expect(r.decide(request("run-plan"))).rejects.toMatchObject({ state: "cancelled" });
++    expect(engine).not.toHaveBeenCalled();
++    expect(events.map((e) => e.state)).toEqual(["paused", "cancelled"]);
++  });
++
++  it("heartbeats remain fresh during backoff, bounded sleeps and all retries; notices are idempotent", async () => {
++    vi.useFakeTimers(); vi.setSystemTime(0);
++    const events: BrainWaitEvent[] = [], notices: BrainWaitEvent[] = [];
++    const wait = new BrainWait({ event: (e) => events.push(e), notify: (e) => notices.push(e), originalBudgetMs: 123 });
++    wait.pause({ ...request("rest/plan"), questionId: "fixed" }, "quota");
++    for (let i = 0; i < 8; i++) {
++      const retry = wait.retry();
++      await vi.advanceTimersByTimeAsync(BRAIN_RETRY_DELAYS[Math.min(i, 5)]!);
++      await retry;
++    }
++    wait.finish("resumed"); wait.finish("resumed");
++    expect(notices.map((e) => e.state)).toEqual(["paused", "resumed"]);
++    expect(events.filter((e) => e.state === "heartbeat").length).toBeGreaterThan(30);
++    expect(events.at(-1)).toMatchObject({ original_budget_ms: 123, budget_policy: "outage_time_excluded", retries: 8, question_id: "fixed" });
++    expect(wait.suspendedMs).toBe(1_130_000);
++  });
++
++  it("a long-timeout cancellation propagates while the engine is in flight", async () => {
++    const abort = new AbortController();
++    const wait = new BrainWait({ signal: abort.signal });
++    const r = new BrainRouter({ config: config(), codexOnly: true, wait, engine: () => ({ name: "codex", model: "fixture", decide: async (_r, signal) => new Promise((_, reject) => {
++      signal?.addEventListener("abort", () => reject(new Error("cancelled")), { once: true }); abort.abort();
++    }) }) });
++    await expect(r.decide(request("rest/plan"))).rejects.toBeInstanceOf(BrainBlockedError);
++  });
++
++  it("ops STOP interrupts an in-flight call even when the call timeout is disabled", async () => {
++    vi.useFakeTimers();
++    let stopped = false;
++    const cfg = config(); cfg.engines.codex.timeoutMs = null;
++    const wait = new BrainWait({ stop: () => stopped });
++    const r = new BrainRouter({ config: cfg, codexOnly: true, wait, engine: () => ({ name: "codex", model: "fixture", decide: async () => new Promise(() => {}) }) });
++    const pending = r.decide(request("rest/plan"));
++    const checked = expect(pending).rejects.toMatchObject({ state: "cancelled" });
++    stopped = true;
++    await vi.advanceTimersByTimeAsync(1_000);
++    await checked;
++  });
++
++  it("preflight probe is retried, preserving engine/isolation checks", async () => {
++    const h = harness([{ choice: "b" }]);
++    const b = new Brain(h.r, { systemPrompt: "fixed" });
++    const check = vi.fn().mockResolvedValueOnce({ ok: false, error: "not logged in" }).mockResolvedValue({ ok: true });
++    await b.preflight(undefined, check);
++    await h.r.decide(h.req);
++    expect(check).toHaveBeenCalledTimes(2);
++  });
++
++  it("usage guard waits for a fresh passing quota reading rather than clearing a stop", async () => {
++    const reading = (pct: number): CodexUsage => ({ readAt: "2026-10-07T00:00:00Z", ms: 1, plan: "plus", windows: [{ name: "primary", usedPct: pct, windowMins: 300, resetsAt: null }], credits: null, ordinaryUsageAllowed: true, reachedType: null, spendControlReached: false });
++    const read = vi.fn().mockResolvedValueOnce(reading(100)).mockResolvedValueOnce(reading(95)).mockResolvedValueOnce(reading(1));
++    const guard = new CodexUsageGuard({ stopPct: 80, everyCalls: 5, everyMin: 5, required: true }, read);
++    await guard.start();
++    await expect(guard.recover()).rejects.toMatchObject({ kind: "quota" });
++    expect(guard.stopped).toBeTruthy();
++    await guard.recover();
++    await guard.beforeCall();
++    expect(guard.stopped).toBeNull();
++    expect(read).toHaveBeenCalledTimes(3);
++  });
++});
++
++describe("engine provenance and climb", () => {
++  it.each(fixtures)("classifies $name by actual successes", (f) => {
++    expect(classifyBrain(f.rows)).toMatchObject({ source: f.source, eligible: f.eligible, successful_answers: f.counts });
++  });
++  it("streaming preserves Unicode, complete records and role/SL isolation; compatibility fields cannot promote", () => {
++    const dir = mkdtempSync(join(tmpdir(), "source-fixed-"));
++    try {
++      const runs = [
++        { run_id: "C", character: "SILENT", ascension: 2, victory: true, sl: true, deepseek_calls: 99 },
++        { run_id: "D", character: "SILENT", ascension: 10, victory: true },
++        { run_id: "M", character: "SILENT", ascension: 11, victory: true },
++        { run_id: "U", character: "SILENT", ascension: 12, victory: true, ds_calls: 0 },
++        { run_id: "I", character: "IRONCLAD", ascension: 5, victory: true },
++      ];
++      const runPath = join(dir, "runs.jsonl");
++      writeFileSync(runPath, runs.map((r) => JSON.stringify(r)).join("\n") + "\n");
++      writeFileSync(join(dir, "brain.jsonl"), [...fixtures.flatMap((f) => f.rows).filter((r) => r.run_id !== "U"), { run_id: "I", engine: "codex", label: "run-plan", answer: {}, accepted: true, question: "中文".repeat(70_000) }].map((r) => JSON.stringify(r)).join("\n") + '\n{"run_id":"TORN"');
++      expect(brainSources(join(dir, "brain.jsonl")).get("I")?.source).toBe("codex");
++      expect(climbTarget("silent", null, runPath)).toBe(3);
++      expect(climbTarget("ironclad", null, runPath)).toBe(6);
++      expect(highestWon("silent", runPath, true)).toBe(12);
++    } finally { rmSync(dir, { recursive: true, force: true }); }
++  });
++  it("runtime notification files are confined to fixed fixtures", () => {
++    const dir = mkdtempSync(join(tmpdir(), "brain-inbox-fixed-"));
++    try {
++      mkdirSync(join(dir, "ops"));
++      const wait = fileBrainWait(join(dir, "logs"), join(dir, "ops"));
++      wait.pause({ ...request("rest/plan"), questionId: "fixed" }, "quota");
++      wait.pause(request("rest/plan"), "quota");
++      wait.finish("resumed"); wait.finish("resumed");
++      expect(readFileSync(join(dir, "ops/inbox-dev.md"), "utf8").match(/Codex 大脑/g)).toHaveLength(2);
++      expect(JSON.parse(readFileSync(join(dir, "logs/brain-wait.json"), "utf8"))).toMatchObject({ state: "resumed", run_id: "SAME-RUN", question_id: "fixed" });
++    } finally { rmSync(dir, { recursive: true, force: true }); }
++  });
++});
++
++describe("production loop with fixed in-memory transport", () => {
++  async function fixture(raw: Record<string, unknown>, fault = false) {
++    const dir = mkdtempSync(join(tmpdir(), "codex-loop-fixed-"));
++    const actions: unknown[] = [], asked: BrainRequest[] = [];
++    let current = raw;
++    let now = 0;
++    const clock = vi.spyOn(Date, "now").mockImplementation(() => now);
++    const wait = new BrainWait({ now: () => now, sleep: async (ms) => { now += ms; } });
++    const cfg = loadConfig({ BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" } as NodeJS.ProcessEnv);
++    cfg.log.decisionLog = join(dir, "decisions.jsonl");
++    cfg.runPlanLog = join(dir, "run-plans.jsonl"); cfg.fightPlanLog = join(dir, "fight-plans.jsonl");
++    const r = new BrainRouter({ config: cfg.brain, codexOnly: true, wait, engine: (name) => {
++      expect(name).toBe("codex");
++      return { name, model: "fixture", decide: async (req) => {
++        asked.push(req);
++        if (fault) throw new TypeError("fixture program fault");
++        if (asked.length === 1) throw new EngineFailure("quota", "quota");
++        return answer({ choice: Object.keys(req.options ?? {})[0], reason: "固定夹具" });
++      } };
++    } });
++    const jevAsk = vi.fn().mockRejectedValue(new Error("Jev must not replace the brain"));
++    const client = new ModClient({ baseUrl: "http://fixture.invalid", fetchImpl: (async (url, options) => {
++      if (String(url).endsWith("/state")) return Response.json(envelope(current));
++      if (String(url).endsWith("/action")) {
++        const intent = JSON.parse(String(options?.body)); actions.push(intent);
++        current = mainMenuPayload();
++        return Response.json(envelope({ action: intent.action, status: "completed", stable: true, message: "fixture", state: current }));
++      }
++      throw new Error(`unexpected fixture transport ${String(url)}`);
++    }) as typeof fetch });
++    try {
++      const result = await runLoop({ config: cfg, mode: "play", client, jev: { ask: jevAsk } as unknown as JevClient,
++        brain: new Brain(r, { systemPrompt: "固定知识夹具" }), knowledge: testKnowledge,
++        maxDecisions: 1, maxMinutes: 0.001, pollIntervalMs: 0 });
++      return { result, asked, actions, jevAsk };
++    } catch (error) { return { error, asked, actions, jevAsk }; }
++    finally { clock.mockRestore(); rmSync(dir, { recursive: true, force: true }); }
++  }
++  it.each([["rest", restPayload], ["reward", rewardCardPayload], ["event", eventPayload]] as const)("%s outage resumes the same real screen question and dispatches once", async (_name, board) => {
++    const h = await fixture(board());
++    expect(h).not.toHaveProperty("error");
++    expect(h.asked).toHaveLength(2);
++    expect(h.asked[0]!.questionId).toBe(h.asked[1]!.questionId);
++    expect(h.actions).toHaveLength(1);
++    expect(h.jevAsk).not.toHaveBeenCalled();
++    if ("result" in h) {
++      expect(h.result?.brainPausedMs).toBe(5_000);
++      expect(h.result?.activeElapsedMs).toBe(0);
++    }
++  });
++  it("a genuine brain program fault crosses the loop's legacy fallback catches without dispatch", async () => {
++    const h = await fixture(restPayload(), true);
++    expect(h).toHaveProperty("error.state", "fault");
++    expect(h.actions).toHaveLength(0); expect(h.jevAsk).not.toHaveBeenCalled();
++  });
++  it("missing route facts cannot silently select the code route fallback", async () => {
++    const h = await fixture(mapPayload());
++    expect(h).toHaveProperty("error.state", "fault");
++    expect(h.actions).toHaveLength(0); expect(h.jevAsk).not.toHaveBeenCalled();
++  });
++});
+diff --git a/agent/tests/codex_only_stats_test.py b/agent/tests/codex_only_stats_test.py
+new file mode 100644
+index 00000000..93cdc21c
+--- /dev/null
++++ b/agent/tests/codex_only_stats_test.py
+@@ -0,0 +1,191 @@
++"""Fixed-data cohort, snapshots, accounting/evidence and operator wait tests. No game/LLM/network."""
++import contextlib
++import copy
++import datetime as dt
++import importlib.util
++import io
++import json
++from pathlib import Path
++import sys
++import tempfile
++import types
++import subprocess
++import os
++import shutil
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / "eval"))
++import brain_source
++import metrics
++sys.path.insert(0, str(ROOT / "ops"))
++import brain_wait
++import paper_dataset
++
++
++def load(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    return mod
++
++
++curve = load("codex_curve", ROOT / "eval/learning-curve.py")
++
++
++def write(path, rows):
++    Path(path).write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows))
++
++
++class SourceTest(unittest.TestCase):
++    def test_shared_engine_fixtures(self):
++        fixtures = json.loads((ROOT / "agent/tests/brain-source-fixtures.json").read_text())
++        for fixture in fixtures:
++            with self.subTest(fixture["name"]):
++                actual = brain_source.classify(fixture["rows"])
++                self.assertEqual(actual["source"], fixture["source"])
++                self.assertEqual(actual["eligible"], fixture["eligible"])
++                self.assertEqual(actual["successful_answers"], fixture["counts"])
++
++    def test_unresolved_questions_are_not_assumed_to_have_codex_answers(self):
++        rows = [{"engine": "codex", "question_id": "good", "answer": {}, "accepted": True},
++                {"engine": "codex", "question_id": "bad", "answer": None, "error": "quota"}]
++        source = brain_source.classify(rows)
++        self.assertEqual(source["source"], "unknown")
++        self.assertEqual(source["exclusion_reason"], "unresolved_brain_questions")
++        self.assertEqual(source["successful_answers"], {"codex": 1})
++        self.assertFalse(source["eligible"])
++
++
++class CohortTest(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix="codex-stats-fixed-")
++        self.addCleanup(self.temp.cleanup)
++        self.logs = Path(self.temp.name)
++        self.runs = [{"run_id": rid, "character": who, "ascension": asc, "floor": 48, "victory": True,
++                      "ended": "2026-10-07T01:00:00Z", "deepseek_calls": 99, "ds_cost_usd": 7, "code": "fixture"}
++                     for rid, who, asc in [("C", "SILENT", 2), ("SL", "SILENT", 2), ("D", "SILENT", 10), ("M", "SILENT", 10), ("U", "SILENT", 10), ("I", "IRONCLAD", 5)]]
++        self.brain = [{"run_id": rid, "engine": engine, "question_id": rid+engine, "label": "run-plan", "answer": {}, "accepted": True, "usage": {"costUsd": 7}}
++                      for rid, engine in [("C", "codex"), ("SL", "codex"), ("D", "deepseek"), ("M", "codex"), ("M", "deepseek"), ("I", "codex")]]
++        write(self.logs / "runs.jsonl", self.runs)
++        write(self.logs / "brain.jsonl", self.brain)
++        write(self.logs / "sl-attempts.jsonl", [{"run_id": "SL", "result": "predicted_death", "floor": 17, "attempt": 1, "reload_ok": True}])
++        self.sources = brain_source.load_sources(self.logs, [r["run_id"] for r in self.runs])
++
++    def test_curve_and_paper_share_codex_default_and_explicit_raw_scope(self):
++        evidence = [{"id": "silent-one", "character": "silent", "asc": 10, "prior": "no", "status": "observed", "evidence": [{"run": "D", "role": "repeat"}]}]
++        rows = curve.curve("silent", str(self.logs), evidence)
++        self.assertEqual([(r["ascension"], r["runs"], r["wins"], r["first_try_wins"], r["sl_wins"]) for r in rows], [(2, 2, 2, 1, 1), (10, 0, 0, 0, 0)])
++        self.assertEqual(rows[1]["raw_runs"], 3)
++        self.assertEqual(rows[1]["items_found"], 1)
++        self.assertEqual(rows[1]["repeats"], 1)
++        self.assertIn('"D"', rows[1]["source_by_run"])
++        self.assertEqual(curve.curve("ironclad", str(self.logs), evidence)[0]["runs"], 1)
++        raw = curve.curve("silent", str(self.logs), evidence, True)
++        self.assertEqual([r["wins"] for r in raw], [2, 3])
++        silent = brain_source.annotate(copy.deepcopy(self.runs[:5]), self.sources)
++        silent[1]["first_attempt"] = {"victory": False}
++        group = paper_dataset.performance_group(silent)
++        self.assertEqual((group["runs"], group["wins"], group["first_try_wins"], group["sl_wins"]), (2, 2, 1, 1))
++        self.assertEqual(group["raw_wins"], 5)
++        self.assertEqual(paper_dataset.performance_group(silent, True)["wins"], 5)
++        self.assertEqual(sum(r["ds_cost_usd"] for r in silent), 35)
++        self.assertEqual([r["run_id"] for r in silent], ["C", "SL", "D", "M", "U"])
++
++    def test_metrics_main_filters_performance_but_json_retains_all_runs_and_usage(self):
++        evaluated = [metrics.run_metrics({**r, "started": dt.datetime(2026, 10, 7)}, [], [], {},
++                         [{"engine": "fixture", "calls": 1, "with_usage": 1, "input": 100, "output": 10}], {"cards": set(), "relics": set()},
++                         [{"result": "predicted_death", "floor": 17, "attempt": 1, "reload_ok": True}] if r["run_id"] == "SL" else []) for r in self.runs[:5]]
++        query = types.SimpleNamespace(connect=lambda *a, **k: object())
++        sync = types.SimpleNamespace(DEFAULT_DB="fixture", DEFAULT_LOGS=str(self.logs), be_gentle=lambda: None,
++                                     read_lock=lambda *a, **k: contextlib.nullcontext())
++        class Versions:
++            def __init__(self, *a): pass
++            def assign(self, *a): return {"name": "fixture"}, "fixture"
++        def run(extra):
++            with patch.dict(sys.modules, {"query": query, "sync": sync}), patch.object(metrics, "load_runs", return_value=copy.deepcopy(evaluated)), patch.object(metrics, "strength_sets", return_value={"cards": set(), "relics": set()}), patch.object(metrics, "VersionMap", Versions), contextlib.redirect_stdout(io.StringIO()) as stdout:
++                self.assertEqual(metrics.main(["--json", "--no-sync", "--no-calibration", "--group-by", "ascension", "--logs", str(self.logs)] + extra), 0)
++                return json.loads(stdout.getvalue())
++        selected, raw = run([]), run(["--include-non-codex"])
++        self.assertEqual(sum(g["summary"]["runs"] for g in selected["groups"]), 2)
++        self.assertEqual(sum(g["summary"]["runs"] for g in raw["groups"]), 5)
++        self.assertEqual(len(selected["runs"]), 5)
++        self.assertEqual(selected["excluded_run_ids"], ["D", "M", "U"])
++        self.assertEqual(selected["all_run_usage_summary"]["llm_input"], raw["all_run_usage_summary"]["llm_input"])
++        self.assertEqual(selected["all_run_usage_summary"]["runs"], 5)
++
++    def test_byte_cut_and_old_snapshots_are_retained(self):
++        limit = (self.logs / "brain.jsonl").stat().st_size
++        with (self.logs / "brain.jsonl").open("a") as f:
++            f.write(json.dumps({"run_id": "C", "engine": "deepseek", "answer": {}, "accepted": True}) + "\n")
++        self.assertEqual(brain_source.load_sources(self.logs, limit=limit)["C"]["source"], "codex")
++        self.assertEqual(brain_source.load_sources(self.logs)["C"]["source"], "mixed")
++        data = self.logs / "paper"; data.mkdir()
++        (data / "old.md").write_text("原始旧报告\n")
++        with patch.object(paper_dataset, "DATA", str(data)):
++            saved = paper_dataset.preserve_previous()
++            self.assertEqual((Path(saved) / "old.md").read_text(), "原始旧报告\n")
++            self.assertEqual((data / "old.md").read_text(), "原始旧报告\n")
++
++    def test_cost_curve_keeps_excluded_run_spending_and_raw_wins(self):
++        cost = load("codex_cost_fixture", ROOT / "eval/cost.py")
++        runs = copy.deepcopy(self.runs[:5]); brain_source.annotate(runs, self.sources)
++        rows = []
++        for r in runs:
++            rows.append(dict(character="silent", ascension=r["ascension"], run=r["run_id"], component="brain:fixture", batch="", provider="fixture",
++                             calls=1, latency_ms=1, usage_recorded=True, api_usd=7, subscription_usd=None,
++                             **{key: 100 if key in ("input_tokens", "total_tokens") else 0 for key in cost.FIELDS}))
++        result = cost.write_outputs(rows, {r["run_id"]: r for r in runs}, types.SimpleNamespace(cuts={}, bad_lines={}), [],
++                                   json.loads((ROOT / "eval/cost-config.json").read_text()), self.logs)
++        self.assertEqual(sum(r["runs"] for r in result["silent"]), 5)
++        self.assertEqual(sum(r["wins"] for r in result["silent"]), 2)
++        self.assertEqual(sum(r["raw_wins"] for r in result["silent"]), 5)
++        self.assertEqual(sum(r["known_estimated_usd"] for r in result["silent"]), 35)
++        self.assertEqual(sum(r["total_tokens"] for r in result["silent"]), 500)
++        self.assertEqual(brain_source.cohorts([{**r, "victory": 1} for r in runs])["mixed"]["wins"], 1)
++
++
++class WaitRecognitionTest(unittest.TestCase):
++    def test_autoplay_parks_terminal_exit_without_reporting_or_starting_another_run(self):
++        with tempfile.TemporaryDirectory(prefix="autoplay-fixed-") as directory:
++            root = Path(directory); ops = root / "ops"; ops.mkdir()
++            (root / "logs").mkdir(); (root / "notes").mkdir(); (root / "bin").mkdir()
++            for name in ["autoplay.sh", "paths.sh", "brain_wait.py"]:
++                shutil.copy2(ROOT / "ops" / name, ops / name)
++            (root / "logs/brain-wait.json").write_text(json.dumps({"state": "fault", "question_id": "same", "run_id": "C"}))
++            # First call simulates the play return; the marker is published at that safe point.
++            (root / "logs/brain-wait.json").unlink()
++            runner = ops / "run.sh"
++            runner.write_text('#!/bin/bash\nprintf "run\\n" >> "$(dirname "$0")/calls"\nprintf \'{"state":"fault","question_id":"same","run_id":"C"}\' > "$(dirname "$0")/../logs/brain-wait.json"\nexit 78\n')
++            runner.chmod(0o755)
++            sleeper = root / "bin/sleep"
++            sleeper.write_text('#!/bin/bash\nprintf "sleep\\n" >> "$FIXTURE_ROOT/sleeps"\n[ "$(wc -l < "$FIXTURE_ROOT/sleeps")" -lt 3 ] || touch "$FIXTURE_ROOT/ops/STOP"\nexit 0\n')
++            sleeper.chmod(0o755)
++            result = subprocess.run(["nice", "-n", "19", "bash", str(ops / "autoplay.sh")], timeout=10, capture_output=True, text=True,
++                                    env={**os.environ, "FIXTURE_ROOT": str(root), "PATH": str(root / "bin")+":"+os.environ["PATH"]})
++            self.assertEqual(result.returncode, 0, result.stderr)
++            self.assertEqual((ops / "calls").read_text(), "run\n")
++            self.assertNotIn("finished run", (ops / "autoplay.log").read_text())
++            self.assertFalse((ops / "restarts.log").exists())
++
++    def test_only_fresh_live_heartbeats_suppress_stall_and_terminal_markers_park_restart(self):
++        with tempfile.TemporaryDirectory(prefix="wait-marker-fixed-") as directory:
++            marker = Path(directory) / "brain-wait.json"
++            row = {"state": "heartbeat", "pid": 123, "question_id": "same", "run_id": "C", "decision_type": "rest/plan", "ts": "2026-10-07T00:00:00Z", "reason": "quota"}
++            marker.write_text(json.dumps(row))
++            now = dt.datetime(2026, 10, 7, tzinfo=dt.timezone.utc).timestamp()
++            self.assertTrue(brain_wait.live_wait(directory, now+30, lambda pid: pid == 123))
++            self.assertIsNone(brain_wait.live_wait(directory, now+46, lambda pid: True))
++            self.assertIsNone(brain_wait.live_wait(directory, now+30, lambda pid: False))
++            self.assertFalse(brain_wait.hold(directory))
++            for state in ["fault", "cancelled"]:
++                marker.write_text(json.dumps({**row, "state": state}))
++                self.assertTrue(brain_wait.hold(directory))
++                self.assertIsNone(brain_wait.live_wait(directory, now, lambda pid: True))
++            marker.unlink()
++            self.assertFalse(brain_wait.hold(directory))
++
++
++if __name__ == "__main__":
++    unittest.main(verbosity=2)
+diff --git a/agent/tests/eval_calibration_test.py b/agent/tests/eval_calibration_test.py
+index ce94f8d2..80c63a01 100644
+--- a/agent/tests/eval_calibration_test.py
++++ b/agent/tests/eval_calibration_test.py
+@@ -316,7 +316,7 @@ class FixtureTest(unittest.TestCase):
+             self.assertEqual(json.loads(out.getvalue())["groups"], {"V3 · 未记录配置": ["RUNE00000005"], "V3.oneshot · 未记录配置": ["RUNF00000006"]})
+         # The metrics table carries the three calibration rows (and leaves them out on request).
+         margs = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(ROOT, "agent", "tests", "eval-data", "strength-sets.json"),
+-                 "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--group-by", "ascension", "--md"]
++                 "--boss-clocks", os.path.join(DATA, "boss-clocks.jsonl"), "--group-by", "ascension", "--md", "--include-non-codex"]
+         out = io.StringIO()
+         with contextlib.redirect_stdout(out):
+             self.assertEqual(metrics.main(margs), 0)
+diff --git a/agent/tests/eval_metrics_test.py b/agent/tests/eval_metrics_test.py
+index 4d5cf0a8..b36d88c6 100644
+--- a/agent/tests/eval_metrics_test.py
++++ b/agent/tests/eval_metrics_test.py
+@@ -338,7 +338,7 @@ class FixtureTest(unittest.TestCase):
+         if None in git.resolve(["17ac095", "0c93138"]).values():
+             self.skipTest("the V3 commits are not in this repository")
+         # The calibration rows are tested in tests/eval_calibration_test.py (with a fixed boss clock, no tsx).
+-        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"), "--no-calibration"]
++        args = ["--db", self.db, "--logs", DATA, "--no-sync", "--strength-sets", os.path.join(DATA, "strength-sets.json"), "--no-calibration", "--include-non-codex"]
+         out = io.StringIO()
+         with contextlib.redirect_stdout(out):
+             self.assertEqual(metrics.main(args + ["--json"]), 0)
+diff --git a/agent/tests/event-settle.test.ts b/agent/tests/event-settle.test.ts
+index 71661651..e10f222d 100644
+--- a/agent/tests/event-settle.test.ts
++++ b/agent/tests/event-settle.test.ts
+@@ -5,7 +5,7 @@ import { join } from "node:path";
+ import { afterEach, expect, it, vi } from "vitest";
+ 
+ import { loadConfig } from "../src/core/config.js";
+-import { runLoop } from "../src/hand/loop.js";
++import { runLoop } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { setExperienceForTests } from "../src/knowledge/experience.js";
+ import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+diff --git a/agent/tests/execution-gate.test.ts b/agent/tests/execution-gate.test.ts
+index 737e35c3..2f4c36b8 100644
+--- a/agent/tests/execution-gate.test.ts
++++ b/agent/tests/execution-gate.test.ts
+@@ -15,7 +15,7 @@ import { checkIdentity, handSignatureOf, identityAt, wireIntent, withExpect } fr
+ import { loadConfig, type AppConfig } from "../src/core/config.js";
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+-import { runLoop } from "../src/hand/loop.js";
++import { runLoop } from "./legacy-brain.js";
+ import { ModClient, type ActionRequest } from "../src/hand/mod/client.js";
+ import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+ import { buildRunBrief } from "../src/memory/run-brief.js";
+diff --git a/agent/tests/jev-prompt-log.test.ts b/agent/tests/jev-prompt-log.test.ts
+index 87bde3a5..3cc1bd0a 100644
+--- a/agent/tests/jev-prompt-log.test.ts
++++ b/agent/tests/jev-prompt-log.test.ts
+@@ -12,7 +12,7 @@ import { loadConfig, type AppConfig } from "../src/core/config.js";
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import { JevClient, JevError, type JevAskResult } from "../src/reflex/jev/client.js";
+ import type { QuestionSet } from "../src/reflex/jev/questions.js";
+-import { runLoop } from "../src/hand/loop.js";
++import { runLoop } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { askJevLogged, createJevPromptLog, jevPromptLogPath, resolveJevPromptLog, type JevPromptMeta } from "../src/eye/jev-prompt-log.js";
+ import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
+diff --git a/agent/tests/jev-retry.test.ts b/agent/tests/jev-retry.test.ts
+index 70d6f3c0..864da407 100644
+--- a/agent/tests/jev-retry.test.ts
++++ b/agent/tests/jev-retry.test.ts
+@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it } from "vitest";
+ import { loadConfig } from "../src/core/config.js";
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import { JevError, isTransientJevError, withJevRetry, type JevAskResult, type JevClient } from "../src/reflex/jev/client.js";
+-import { runLoop, type LoopEvent } from "../src/hand/loop.js";
++import { runLoop, type LoopEvent } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+ import { combatPayload, mainMenuPayload, testKnowledge } from "./scenarios.js";
+diff --git a/agent/tests/journal-replay.test.ts b/agent/tests/journal-replay.test.ts
+index 5d304104..13b91615 100644
+--- a/agent/tests/journal-replay.test.ts
++++ b/agent/tests/journal-replay.test.ts
+@@ -13,7 +13,7 @@ import { loadConfig, type AppConfig } from "../src/core/config.js";
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+ import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+-import { runLoop } from "../src/hand/loop.js";
++import { runLoop } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { parseGameState, type GameState } from "../src/hand/mod/schema.js";
+ import { isMenuRunId, ObservedStateLog, readRunLogs, replayRun, scanBackward } from "../src/memory/journal-replay.js";
+diff --git a/agent/tests/learning_ledger_test.py b/agent/tests/learning_ledger_test.py
+index 4d1c03de..9956b508 100644
+--- a/agent/tests/learning_ledger_test.py
++++ b/agent/tests/learning_ledger_test.py
+@@ -146,6 +146,7 @@ class LearningCurveTest(unittest.TestCase):
+             logs = os.path.join(d, "logs")
+             os.makedirs(logs)
+             write_jsonl(os.path.join(logs, "runs.jsonl"), RUNS)
++            write_jsonl(os.path.join(logs, "brain.jsonl"), [{"run_id": r["run_id"], "engine": "codex", "label": "run-plan", "answer": {}, "accepted": True} for r in RUNS])
+             write_jsonl(os.path.join(logs, "run-config.jsonl"), CONFIG)
+             write_jsonl(os.path.join(logs, "sl-attempts.jsonl"), SL)
+             ledger = os.path.join(d, "ledger.jsonl")
+diff --git a/agent/tests/legacy-brain.ts b/agent/tests/legacy-brain.ts
+new file mode 100644
+index 00000000..8cbfeb57
+--- /dev/null
++++ b/agent/tests/legacy-brain.ts
+@@ -0,0 +1,30 @@
++/** Historical engine fixtures exercise the generic adapter, never the production Codex-only factory. */
++import { Brain, createEngine } from "../src/brain/brain.js";
++import { BrainRouter, type BrainLogRow, type FallbackBudget } from "../src/brain/router.js";
++import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
++import { KnowledgePrompt } from "../src/brain/knowledge.js";
++import { frozenFacts } from "../src/knowledge/render/facts.js";
++import { brainLogPath, type AppConfig } from "../src/core/config.js";
++import { runLoop as productionRunLoop, type LoopOptions, type LoopStats } from "../src/hand/loop.js";
++import type { BrainEngine, EngineName } from "../src/brain/types.js";
++export type { LoopOptions, LoopStats, LoopEvent } from "../src/hand/loop.js";
++export * from "../src/hand/loop.js";
++
++export function createBrain(config: AppConfig, ds: DeepSeekClient, options: { log?: (row: BrainLogRow) => void; fallbackBudget?: FallbackBudget } = {}): Brain {
++  const engines = new Map<EngineName, BrainEngine>();
++  return new Brain(new BrainRouter({
++    config: { ...config.brain, log: brainLogPath(config) },
++    engine: (name) => {
++      let engine = engines.get(name);
++      if (!engine) { engine = createEngine(name, config, ds); engines.set(name, engine); }
++      return engine;
++    }, ...options,
++  }), ds, undefined, new KnowledgePrompt({ facts: frozenFacts(config.deepseek?.factsSnapshotDir), mechanics: config.mechRules, moveRules: config.mechMoveRules }));
++}
++
++export async function runLoop(options: LoopOptions): Promise<LoopStats> {
++  if (options.brain !== undefined) return productionRunLoop(options);
++  const ds = options.escalators?.find((e): e is DeepSeekClient => e instanceof DeepSeekClient);
++  if (!ds) return productionRunLoop({ ...options, brain: null });
++  return productionRunLoop({ ...options, brainFactory: (config, client, deps) => createBrain(config, client!, deps) });
++}
+diff --git a/agent/tests/loop.test.ts b/agent/tests/loop.test.ts
+index ba9c9e71..bc21e9c0 100644
+--- a/agent/tests/loop.test.ts
++++ b/agent/tests/loop.test.ts
+@@ -14,7 +14,7 @@ import type { AppConfig } from "../src/core/config.js";
+ import { loadConfig } from "../src/core/config.js";
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+-import { runLoop, type LoopEvent } from "../src/hand/loop.js";
++import { runLoop, type LoopEvent } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { envelope, errorEnvelope, sendJson, startTestServer, type TestServer } from "./support.js";
+ import {
+diff --git a/agent/tests/multi-character.test.ts b/agent/tests/multi-character.test.ts
+index f8e2eb58..e5e86078 100644
+--- a/agent/tests/multi-character.test.ts
++++ b/agent/tests/multi-character.test.ts
+@@ -128,6 +128,7 @@ describe("TARGET_ASCENSION=climb", () => {
+   const runs = (rows: object[]) => {
+     const path = join(mkdtempSync(join(tmpdir(), "climb-")), "runs.jsonl");
+     writeFileSync(path, rows.map((row) => JSON.stringify(row)).join("\n") + "\n");
++    writeFileSync(join(path, "..", "brain.jsonl"), rows.map((row) => JSON.stringify({ run_id: (row as { run_id: string }).run_id, engine: "codex", label: "run-plan", answer: {}, problems: [] })).join("\n") + "\n");
+     return path;
+   };
+ 
+diff --git a/agent/tests/oneshot-support.ts b/agent/tests/oneshot-support.ts
+index 426ce436..b48ebe87 100644
+--- a/agent/tests/oneshot-support.ts
++++ b/agent/tests/oneshot-support.ts
+@@ -17,7 +17,7 @@ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+ import { setCardUpgradesForTests } from "../src/knowledge/card-upgrades.js";
+ import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+-import { runLoop, type LoopOptions } from "../src/hand/loop.js";
++import { runLoop, type LoopOptions } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { parseGameState } from "../src/hand/mod/schema.js";
+ import { buildRunBrief } from "../src/memory/run-brief.js";
+diff --git a/agent/tests/prefix-facts.test.ts b/agent/tests/prefix-facts.test.ts
+index 0b79f8bb..c5e7b7b3 100644
+--- a/agent/tests/prefix-facts.test.ts
++++ b/agent/tests/prefix-facts.test.ts
+@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
+ 
+ import { describe, expect, it } from "vitest";
+ 
+-import { createBrain } from "../src/brain/brain.js";
++import { createBrain } from "./legacy-brain.js";
+ import { loadConfig } from "../src/core/config.js";
+ import { loadPostmortems } from "../src/knowledge/render/data.js";
+ import { freshFacts, frozenFacts } from "../src/knowledge/render/facts.js";
+diff --git a/agent/tests/run-config.test.ts b/agent/tests/run-config.test.ts
+index 526297a7..565a3aab 100644
+--- a/agent/tests/run-config.test.ts
++++ b/agent/tests/run-config.test.ts
+@@ -11,7 +11,8 @@ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+ import { afterAll, beforeAll, describe, expect, it } from "vitest";
+ 
+-import { createBrain, type Brain } from "../src/brain/brain.js";
++import { type Brain } from "../src/brain/brain.js";
++import { createBrain } from "./legacy-brain.js";
+ import { loadConfig, type AppConfig } from "../src/core/config.js";
+ import { DeepSeekClient } from "../src/brain/llm/deepseek.js";
+ import { LOGS_DIR } from "../src/core/paths.js";
+diff --git a/agent/tests/run-plan-merge.test.ts b/agent/tests/run-plan-merge.test.ts
+index 1bc00c2a..353fa97e 100644
+--- a/agent/tests/run-plan-merge.test.ts
++++ b/agent/tests/run-plan-merge.test.ts
+@@ -20,7 +20,7 @@ import { loadConfig } from "../src/core/config.js";
+ import { setRoomCostsForTests } from "../src/knowledge/room-costs.js";
+ import { choiceMessage } from "../src/brain/llm/deepseek-message.js";
+ import { DeepSeekClient, pickJsonObject, questionEffort, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
+-import { runLoop, type LoopOptions } from "../src/hand/loop.js";
++import { runLoop, type LoopOptions } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { parseGameState } from "../src/hand/mod/schema.js";
+ import { createScreenMemory, type ScreenMemory } from "../src/memory/types.js";
+diff --git a/agent/tests/sl-loop.test.ts b/agent/tests/sl-loop.test.ts
+index 6482b91c..c0529c9e 100644
+--- a/agent/tests/sl-loop.test.ts
++++ b/agent/tests/sl-loop.test.ts
+@@ -14,7 +14,7 @@ import type { AppConfig } from "../src/core/config.js";
+ import { loadConfig } from "../src/core/config.js";
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+-import { runLoop } from "../src/hand/loop.js";
++import { runLoop } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { envelope, sendJson, startTestServer, type TestServer } from "./support.js";
+ import { gameOverPayload, testKnowledge } from "./scenarios.js";
+diff --git a/agent/tests/turn-start-settle.test.ts b/agent/tests/turn-start-settle.test.ts
+index 930baddf..1d26cf54 100644
+--- a/agent/tests/turn-start-settle.test.ts
++++ b/agent/tests/turn-start-settle.test.ts
+@@ -17,7 +17,7 @@ import { noteTurnActed, settlePowersOf, TURN_START_SETTLE_MS, turnKeyOf, turnSta
+ import { loadConfig, type AppConfig } from "../src/core/config.js";
+ import type { AnswerSet } from "../src/reflex/jev/answers.js";
+ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+-import { resetFightMemory, runLoop } from "../src/hand/loop.js";
++import { resetFightMemory, runLoop } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { parseGameState } from "../src/hand/mod/schema.js";
+ import { createScreenMemory } from "../src/memory/types.js";
+diff --git a/docs/codex-only-brain.md b/docs/codex-only-brain.md
+new file mode 100644
+index 00000000..a35b442c
+--- /dev/null
++++ b/docs/codex-only-brain.md
+@@ -0,0 +1,19 @@
++# Codex 大脑等待与战绩口径
++
++Roy 2026-10-07 09:00 授权的独立架构功能；没有新增游戏知识。全局引擎政策适用于所有角色，铁甲的策略、求解器和知识数据保持原样。
++
++生产入口 `createRouter` 强制 Codex，忽略历史引擎选择和回退配置。路线、选牌、事件、商店、休息、整局计划及既有战斗计划经过相同路由。Jev 战斗执行、代码推演和安全执行闸继续按既有职责工作；闸拒绝脑答案不能选择另一个选项。
++
++可恢复的额度、登录、预检、限流、服务故障和超时会暂停原题。退避为 5、15、30、60、120、300 秒，此后最多 300 秒一次；每段睡眠不超过一秒，等待没有耗尽后代答的出口。连续两次超时保留既有十分钟休息，每次探测/睡眠有上限。预检与使用额度保护必须重新通过，才重新询问原输入/题号。空答案、验证失败和合并题遗漏的路线/整局计划重新由 Codex 回答。程序错误保留原因并停止该决策，不循环吞掉。
++
++暂停后每 15 秒写 `logs/brain-wait.json` 和 `brain-wait.jsonl` 心跳；记录 pid、run_id、question_id、decision_type、原因、时间、重试次数、暂停时长和原预算。`ops/inbox-dev.md` 每次暂停/恢复/取消/程序故障各一条，重试及心跳不重复通知。普通额度恢复全自动，继续同一题/同一局；等待中没有游戏动作。暂停时长（包括失败的请求）从原 max-minutes 与 combat grace 中扣除，正常思考、成功调用及其他原预算照常计时；总墙钟时间另保留。显式 Codex 调用数上限不会自行重置，耗尽后等待或由运维在保留原局的情况下调整后重启。
++
++SIGINT/SIGTERM 和 `ops/STOP` 可取消等待；留下原决策、存档和日志。CLI 退出 75（取消）或 78（程序错误），autoplay 停在原局，避免自动重启风暴。修复后清除终止的 `brain-wait.json` 标记可恢复同一存档；进程内额度/登录恢复不需要清除文件。不能用清标记绕过登录、隔离或额度自检。心跳超过 45 秒或进程身份不符时仍报警；终止标记不冒充活跃心跳。运维脚本来自主检出，合入 live 后需由运维核实主检出同步和运行脚本版本。
++
++战绩政策 `codex-successful-brain-v1`：只根据 brain.jsonl 实际成功回答。新日志显式 `accepted=true`；旧日志需要 answer 非 null、无 error、无 problems。每个 `(question_id, engine)` 成功只计一次；历史无题号逐行计。主标签按题型计成功数量，附带路线/整局计划数量另外列出，不重复加入主题总数。失败调用、兼容 deepseek_calls/ds_*、启动配置和 fell_back_from 都不能当作成功引擎。
++
++成功引擎只有 Codex 且所有已记脑题都有成功答案才默认纳入。只有 DeepSeek 为 deepseek；两种以上成功引擎为 mixed；缺成功回答/引擎、缺脑日志或未解决的脑题为 unknown；其他单一引擎为 other。归类保留成功数、题型、时间范围、覆盖声明和排除原因。旧日志无题号的失败不能证明后来成功的是同题，保守列为未知。已有日志之外的遗漏题无法复原；“完整”仅指可核验的已记脑题，不能假称完整历史。
++
++metrics、学习曲线、论文和自动 climb 采用相同默认口径；混合及未知不会升阶。`--include-non-codex` 显式显示全部原始战绩（不改变自动升阶）。首次尝试与 SL、角色隔离继续保持；复盘、学习证据、成功/失败请求及成本始终保留。成本曲线的原始局数/token/费用覆盖所有引擎，胜数用 Codex 口径，原始胜数及来源分组另外显示。每 Codex 胜费用包括整个实验已知费用，不能解释为该局的边际费用。
++
++论文输出在重建前归档旧快照；旧报告不回改。来源未知的历史可用显式全引擎口径重现原成绩，不能补造引擎。固定夹具测试不调用真实模型、网络或 play；旧引擎适配测试通过测试专用历史适配器保留。
+diff --git a/docs/learning-protocol.md b/docs/learning-protocol.md
+index d583e932..1045bce8 100644
+--- a/docs/learning-protocol.md
++++ b/docs/learning-protocol.md
+@@ -53,6 +53,7 @@
+ 
+ - 默认每个角色赢一局升一级（`TARGET_ASCENSION` 的自动升阶模式），从 A0 开始。
+ - SL 之后的胜利也算赢。统计时第一次尝试和 SL 之后的结果分开记。
++- Roy 2026-10-07 授权后，默认爬塔战绩与自动升阶只纳入可追溯的纯 Codex 脑局；DeepSeek、混合和未知来源单列原始成绩。复盘证据、费用和全部原始日志保持，显式全引擎口径可重现旧统计。具体定义见 [Codex 大脑等待与战绩口径](codex-only-brain.md)。
+ 
+ ## 7. 引擎无关
+ 
+diff --git a/eval/brain_source.py b/eval/brain_source.py
+new file mode 100644
+index 00000000..a546f3a0
+--- /dev/null
++++ b/eval/brain_source.py
+@@ -0,0 +1,148 @@
++"""Codex performance cohort v1: successful brain.jsonl answers, never ds_* compatibility counters.
++
++An explicit accepted verdict wins. Historical rows need a non-null answer, no error and no problems.
++Known successful engines classify as codex/deepseek/mixed/other; missing successful engine labels or
++no successful answers classify as unknown. Repeated (question_id, engine) rows count once; rows
++without an id count individually. Costs, failed calls and learning evidence are never filtered here.
++"""
++import argparse
++import collections
++import json
++from pathlib import Path
++
++POLICY = "codex-successful-brain-v1"
++ENGINES = {"codex", "deepseek", "claude", "dsh"}
++
++
++def jsonl(path, limit=None):
++    try:
++        handle = open(path, "rb")
++    except FileNotFoundError:
++        return
++    with handle:
++        used = 0
++        for raw in handle:
++            used += len(raw)
++            if limit is not None and used > limit:
++                break
++            try:
++                row = json.loads(raw)
++            except ValueError:
++                continue
++            if isinstance(row, dict):
++                yield row
++
++
++def successful(row):
++    if row.get("answer") is None or row.get("error"):
++        return False
++    if isinstance(row.get("accepted"), bool):
++        return row["accepted"]
++    problems = row.get("problems")
++    return problems is None or isinstance(problems, list) and len(problems) == 0
++
++
++def classify(rows):
++    counts = collections.Counter()
++    kinds = {}
++    embedded = collections.Counter()
++    seen = set()
++    rejected = set()
++    answered = set()
++    total = failed = unknown = 0
++    first = last = None
++    for row in rows:
++        total += 1
++        if not successful(row):
++            failed += 1
++            rejected.add(row.get("question_id") or f"unidentified-row-{total}")
++            continue
++        if row.get("question_id"):
++            answered.add(row["question_id"])
++        engine = row.get("engine") if row.get("engine") in ENGINES else "unknown"
++        qid = row.get("question_id")
++        if qid and (qid, engine) in seen:
++            continue
++        if qid:
++            seen.add((qid, engine))
++        counts[engine] += 1
++        label = row.get("label") or "unknown"
++        kinds.setdefault(label, collections.Counter())[engine] += 1
++        answer = row.get("answer")
++        if isinstance(answer, dict):
++            if isinstance(answer.get("run_plan"), dict):
++                embedded["run-plan"] += 1
++            if answer.get("route") and label not in ("map/route-plan", "map/route-review"):
++                embedded["map/route"] += 1
++        unknown += int(engine == "unknown")
++        stamp = row.get("ts")
++        if stamp:
++            first = min(first, stamp) if first else stamp
++            last = max(last, stamp) if last else stamp
++    known = sorted(e for e in counts if e != "unknown")
++    unresolved = len(rejected - answered)
++    source = "mixed" if len(known) > 1 else "unknown" if unknown or unresolved or not known else known[0] if known[0] in ("codex", "deepseek") else "other"
++    reason = None if source == "codex" else {
++        "deepseek": "successful_deepseek_brain", "mixed": "successful_mixed_brain",
++        "other": "successful_non_codex_brain", "unknown": "missing_successful_brain_engine" if total else "missing_brain_log",
++    }[source]
++    if source == "unknown" and unresolved:
++        reason = "unresolved_brain_questions"
++    return {"policy": POLICY, "source": source, "eligible": source == "codex", "exclusion_reason": reason,
++            "successful_answers": dict(sorted(counts.items())), "successful_by_label": {k: dict(sorted(v.items())) for k, v in sorted(kinds.items())},
++            "embedded_answers": dict(embedded), "brain_rows": total, "failed_or_unaccepted_rows": failed,
++            "unknown_successes": unknown, "first_success": first, "last_success": last,
++            "unresolved_questions": unresolved, "coverage": "all_logged_questions_resolved" if total and not unresolved else "missing_or_unresolved_logged_questions",
++            "basis": "brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine"}
++
++
++def load_sources(logs, run_ids=(), limit=None):
++    # Retain only classification fields, so multi-hundred-MB prompts/answers do not accumulate in memory.
++    by_run = collections.defaultdict(list)
++    for row in jsonl(Path(logs) / "brain.jsonl", limit):
++        rid = row.get("run_id")
++        if not rid:
++            continue
++        answer = row.get("answer")
++        lean = {k: row.get(k) for k in ("engine", "ts", "question_id", "label", "error", "problems", "accepted")}
++        lean["answer"] = None if answer is None else {k: answer.get(k) for k in ("route", "run_plan")} if isinstance(answer, dict) else True
++        by_run[rid].append(lean)
++    return {rid: classify(by_run.get(rid, [])) for rid in sorted(set(run_ids) | set(by_run))}
++
++
++def annotate(runs, sources):
++    for run in runs:
++        run["brain_source"] = sources.get(run["run_id"], classify([]))
++    return runs
++
++
++def eligible(run, include_non_codex=False):
++    return include_non_codex or bool(run.get("brain_source", {}).get("eligible"))
++
++
++def cohorts(runs):
++    result = {}
++    for source in ("codex", "deepseek", "mixed", "unknown", "other"):
++        rows = [r for r in runs if r.get("brain_source", {}).get("source", "unknown") == source]
++        result[source] = {"runs": len(rows), "wins": sum(r.get("victory") in (True, 1) for r in rows), "run_ids": [r["run_id"] for r in rows]}
++    return result
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--logs", required=True)
++    parser.add_argument("--out")
++    args = parser.parse_args()
++    runs = list(jsonl(Path(args.logs) / "runs.jsonl"))
++    sources = load_sources(args.logs, [r["run_id"] for r in runs])
++    annotate(runs, sources)
++    result = {"policy": POLICY, "cohorts": cohorts(runs), "runs": [{"run_id": r["run_id"], "character": r.get("character") or "IRONCLAD", "ascension": r.get("ascension"), "floor": r.get("floor"), "victory": r.get("victory"), "ended": r.get("ended"), "brain_source": r["brain_source"]} for r in runs]}
++    text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
++    if args.out:
++        Path(args.out).write_text(text)
++    else:
++        print(text, end="")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/eval/cost.py b/eval/cost.py
+index d5de44cc..540f4e95 100644
+--- a/eval/cost.py
++++ b/eval/cost.py
+@@ -11,6 +11,9 @@ import datetime as dt
+ import json
+ import itertools
+ import pathlib
++import sys
++sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
++import brain_source
+ 
+ FIELDS = ("input_tokens", "cache_hit_tokens", "cache_write_tokens", "output_tokens", "reasoning_tokens", "total_tokens")
+ 
+@@ -268,6 +271,8 @@ def collect(root, config, claude_dir=None, codex_home=None):
+         if total:
+             for e in matching:
+                 e["subscription_usd"] = (e["subscription_usd"] or 0) + p["usd"] * e["total_tokens"] / total
++    brain_path = root / "logs/brain.jsonl"
++    brain_source.annotate(runs.values(), brain_source.load_sources(root / "logs", runs.keys(), sources.cuts.get(str(brain_path), 0)))
+     return events, runs, sources, periods
+ 
+ 
+@@ -333,8 +338,11 @@ def write_outputs(events, runs, sources, periods, config, out):
+             have_cost |= bool(known)
+             cumulative += cost or 0
+             cumulative_tokens += total
+-            wins = sum(r.get("victory") is True for r in rr)
+-            curve.append({"ascension": asc, "runs": len(rr), "wins": wins, "total_tokens": total,
++            selected = [r for r in rr if brain_source.eligible(r)]
++            wins = sum(r.get("victory") is True for r in selected)
++            curve.append({"ascension": asc, "runs": len(rr), "wins": wins, "raw_wins": sum(r.get("victory") is True for r in rr),
++                          "performance_runs": len(selected), "performance_policy": brain_source.POLICY,
++                          "cost_scope": "all_engines_all_runs", "raw_cohorts": brain_source.cohorts(rr), "total_tokens": total,
+                           "known_estimated_usd": cost, "cost_coverage": "partial" if any(not r["cost_complete"] for r in entries) else "recorded",
+                           "usd_per_run": None if cost is None or not rr else cost / len(rr),
+                           "usd_per_win": None if cost is None or not wins else cost / wins,
+@@ -345,7 +353,7 @@ def write_outputs(events, runs, sources, periods, config, out):
+             with (data / f"cost-curve-{character}.csv").open("w", newline="") as handle:
+                 writer = csv.DictWriter(handle, list(curve[0]), lineterminator="\n")
+                 writer.writeheader()
+-                writer.writerows([{**r, "component_token_share": json.dumps(r["component_token_share"], sort_keys=True)} for r in curve])
++                writer.writerows([{**r, "component_token_share": json.dumps(r["component_token_share"], sort_keys=True), "raw_cohorts": json.dumps(r["raw_cohorts"], sort_keys=True)} for r in curve])
+         report = out / f"paper/materials/{character}/cost.md"
+         report.parent.mkdir(parents=True, exist_ok=True)
+         def money(v):
+@@ -355,7 +363,8 @@ def write_outputs(events, runs, sources, periods, config, out):
+                  "订阅为共享账户周额度估算，按月费 × 12 / 52 折周、按同一重置窗口内已记录 token 分摊；未观测到的账户外部用量无法单独扣除。",
+                  "未知价格、失败/过期/未校验窗口不补零。金额只汇总已知部分，不能当作完整账单；每胜费用在零胜时未知。",
+                  "Jev 优先取 jev-prompts 的逐请求输入/输出（按 request_id 去重，缓存不另加），仅输入收费；runs 未覆盖余额只有总 token，拆分与费用未知。失败请求用量未知，未结束局有请求日志也计入。大脑仅归集 brain/codex-calls 留存请求，早期调用仍缺失。", "",
+-                 "| 进阶 | 局 | 胜 | token | 已知估算 | 每局 | 每胜 | 累计已知 | 覆盖 |", "|---|---:|---:|---:|---:|---:|---:|---:|---|"]
++                 f"战绩口径：{brain_source.POLICY}。局数、费用、token 和每局费用覆盖全部引擎；胜数仅 Codex，raw_wins/各引擎原始成绩在 CSV 中保留；每胜费用为全部实验费用除以 Codex 胜数。", "",
++                 "| 进阶 | 原始局 | Codex 胜 | token（全部） | 已知估算 | 每原始局 | 每 Codex 胜 | 累计已知 | 覆盖 |", "|---|---:|---:|---:|---:|---:|---:|---:|---|"]
+         for r in curve:
+             lines.append(f"| A{r['ascension']} | {r['runs']} | {r['wins']} | {r['total_tokens']:.0f} | {money(r['known_estimated_usd'])} | {money(r['usd_per_run'])} | {money(r['usd_per_win'])} | {money(r['cumulative_known_usd'])} | {r['cost_coverage']} |")
+         jev_price = config["api"]["jev"]
+@@ -382,7 +391,16 @@ def write_outputs(events, runs, sources, periods, config, out):
+ def build(root, out=None, config_path=None, claude_dir=None):
+     config = json.loads((pathlib.Path(config_path) if config_path else pathlib.Path(__file__).with_name("cost-config.json")).read_text())
+     events, runs, sources, periods = collect(root, config, claude_dir)
+-    return write_outputs(events, runs, sources, periods, config, out or root)
++    output = pathlib.Path(out or root)
++    import shutil
++    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
++    prior = list((output / "paper/data").glob("cost*")) + list((output / "paper/materials").glob("*/cost.md"))
++    for path in prior:
++        if path.is_file():
++            saved = output / "paper/data/history" / stamp / path.relative_to(output)
++            saved.parent.mkdir(parents=True, exist_ok=True)
++            shutil.copy2(path, saved)
++    return write_outputs(events, runs, sources, periods, config, output)
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/eval/learning-curve.py b/eval/learning-curve.py
+index 7c97460f..90f7753e 100755
+--- a/eval/learning-curve.py
++++ b/eval/learning-curve.py
+@@ -35,6 +35,8 @@ import sys
+ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+ from characters import character_key, run_character  # noqa: E402
++sys.path.insert(0, os.path.join(ROOT, "eval"))
++import brain_source  # noqa: E402
+ 
+ 
+ def load(name, path):
+@@ -49,14 +51,19 @@ ledger_tools = load("ledger_tools", os.path.join(ROOT, "learner", "ledger.py"))
+ 
+ COLUMNS = ["character", "ascension", "runs", "wins", "first_try_wins", "sl_wins", "mean_floor", "mean_first_try_floor",
+            "first_run", "last_run", "started", "ended", "items_found", "items_found_prior_yes", "items_shipped",
+-           "items_shipped_ids", "repeats", "repeats_after_ship"]
++           "items_shipped_ids", "repeats", "repeats_after_ship", "performance_policy", "include_non_codex", "raw_runs", "raw_wins",
++           "excluded_runs", "excluded_run_ids", "raw_engine_cohorts", "source_by_run"]
+ 
+ 
+-def jsonl(path):
++def jsonl(path, limit=None):
+     if not os.path.exists(path):
+         return
+-    with open(path, encoding="utf8") as handle:
++    with open(path, "rb") as handle:
++        used = 0
+         for line in handle:
++            used += len(line)
++            if limit is not None and used > limit:
++                break
+             try:
+                 row = json.loads(line)
+             except ValueError:
+@@ -81,14 +88,16 @@ def mean(values):
+     return round(statistics.mean(values), 2) if values else None
+ 
+ 
+-def curve(character, logs, items):
++def curve(character, logs, items, include_non_codex=False, sources=None, limits=None):
+     """The rows for one character (oldest ascension first)."""
+-    runs = [r for r in jsonl(os.path.join(logs, "runs.jsonl")) if r.get("run_id") and run_character(r) == character]
++    limits = limits or {}
++    runs = [r for r in jsonl(os.path.join(logs, "runs.jsonl"), limits.get("runs.jsonl")) if r.get("run_id") and run_character(r) == character]
++    brain_source.annotate(runs, sources if sources is not None else brain_source.load_sources(logs, [r["run_id"] for r in runs], limits.get("brain.jsonl")))
+     sl = {}
+-    for row in jsonl(os.path.join(logs, "sl-attempts.jsonl")):
++    for row in jsonl(os.path.join(logs, "sl-attempts.jsonl"), limits.get("sl-attempts.jsonl")):
+         if row.get("run_id"):
+             sl.setdefault(row["run_id"], []).append(row)
+-    starts = ledger_tools.run_starts(runs, jsonl(os.path.join(logs, "run-config.jsonl")))
++    starts = ledger_tools.run_starts(runs, jsonl(os.path.join(logs, "run-config.jsonl"), limits.get("run-config.jsonl")))
+     timeline = [(starts.get(run["run_id"]), run) for run in runs]
+     asc_of = {run["run_id"]: run.get("ascension") for run in runs}
+ 
+@@ -114,8 +123,9 @@ def curve(character, logs, items):
+     rows = []
+     for asc in sorted(by_asc):
+         g = by_asc[asc]
+-        wins = [r for r in g["runs"] if r.get("victory") is True]
+-        first_wins = sum(1 for f in g["first"] if f["victory"])
++        selected = [(r, f) for r, f in zip(g["runs"], g["first"]) if brain_source.eligible(r, include_non_codex)]
++        wins = [r for r, f in selected if r.get("victory") is True]
++        first_wins = sum(1 for r, f in selected if f["victory"])
+         found = [i for i in mine if i.get("asc") == asc]
+         shipped = sorted(i for i, a in shipped_at.items() if a == asc)
+         reps = [(item, e) for item in mine for e in item.get("evidence", []) if e.get("role") == "repeat" and asc_of.get(e.get("run")) == asc]
+@@ -123,15 +133,21 @@ def curve(character, logs, items):
+         starts_known = [s for s in g["starts"] if s]
+         ends = [when(r.get("ended")) for r in g["runs"] if when(r.get("ended"))]
+         rows.append({
+-            "character": character, "ascension": asc, "runs": len(g["runs"]), "wins": len(wins),
++            "character": character, "ascension": asc, "runs": len(selected), "wins": len(wins),
+             "first_try_wins": first_wins, "sl_wins": len(wins) - first_wins,
+-            "mean_floor": mean([r.get("floor") for r in g["runs"]]), "mean_first_try_floor": mean([f["floor"] for f in g["first"]]),
++            "mean_floor": mean([r.get("floor") for r, f in selected]), "mean_first_try_floor": mean([f["floor"] for r, f in selected]),
+             "first_run": g["runs"][0]["run_id"], "last_run": g["runs"][-1]["run_id"],
+             "started": min(starts_known).isoformat(timespec="seconds") if starts_known else "",
+             "ended": max(ends).isoformat(timespec="seconds") if ends else "",
+             "items_found": len(found), "items_found_prior_yes": sum(1 for i in found if i.get("prior") == "yes"),
+             "items_shipped": len(shipped), "items_shipped_ids": " ".join(shipped),
+             "repeats": len(reps), "repeats_after_ship": len(late),
++            "performance_policy": brain_source.POLICY, "include_non_codex": include_non_codex,
++            "raw_runs": len(g["runs"]), "raw_wins": sum(r.get("victory") is True for r in g["runs"]),
++            "excluded_runs": len(g["runs"]) - len(selected),
++            "excluded_run_ids": " ".join(r["run_id"] for r in g["runs"] if not brain_source.eligible(r, include_non_codex)),
++            "raw_engine_cohorts": json.dumps(brain_source.cohorts(g["runs"]), ensure_ascii=False, sort_keys=True),
++            "source_by_run": json.dumps({r["run_id"]: r["brain_source"] for r in g["runs"]}, ensure_ascii=False, sort_keys=True),
+         })
+     pending = sorted(i for i, a in shipped_at.items() if a == "")
+     if pending:
+@@ -141,6 +157,9 @@ def curve(character, logs, items):
+ 
+ def write(rows, path):
+     os.makedirs(os.path.dirname(path), exist_ok=True)
++    if os.path.exists(path):
++        import shutil
++        shutil.copy2(path, path + ".before-" + dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))
+     with open(path, "w", newline="", encoding="utf8") as handle:
+         writer = csv.DictWriter(handle, fieldnames=COLUMNS)
+         writer.writeheader()
+@@ -148,13 +167,14 @@ def write(rows, path):
+             writer.writerow({k: ("" if row.get(k) is None else row.get(k)) for k in COLUMNS})
+ 
+ 
+-def main(argv=None):
++def main(argv=None, limits=None):
+     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+     parser.add_argument("--character")
+     parser.add_argument("--logs", default=os.path.join(ROOT, "logs"))
+     parser.add_argument("--ledger", default=os.environ.get("LEDGER_FILE") or os.path.join(ROOT, "paper", "materials", "learning", "ledger.jsonl"))
+     parser.add_argument("--out-dir", default=os.path.join(ROOT, "paper", "data"))
+     parser.add_argument("--print", action="store_true", help="print the rows as well")
++    parser.add_argument("--include-non-codex", action="store_true")
+     args = parser.parse_args(argv)
+     os.environ["LEDGER_FILE"] = args.ledger
+     ledger = load("ledger", os.path.join(ROOT, "learner", "ledger.py"))
+@@ -162,10 +182,11 @@ def main(argv=None):
+     if args.character:
+         characters = [character_key(args.character)]
+     else:
+-        characters = sorted({run_character(r) for r in jsonl(os.path.join(args.logs, "runs.jsonl")) if r.get("run_id")})
++        characters = sorted({run_character(r) for r in jsonl(os.path.join(args.logs, "runs.jsonl"), (limits or {}).get("runs.jsonl")) if r.get("run_id")})
++    sources = brain_source.load_sources(args.logs, limit=(limits or {}).get("brain.jsonl"))
+     for character in characters:
+-        rows = curve(character, args.logs, items)
+-        path = os.path.join(args.out_dir, f"learning-curve-{character}.csv")
++        rows = curve(character, args.logs, items, args.include_non_codex, sources, limits)
++        path = os.path.join(args.out_dir, f"learning-curve-{character}{'-all-engines' if args.include_non_codex else ''}.csv")
+         write(rows, path)
+         print(f"{path}: {len(rows)} row(s)")
+         if args.print:
+diff --git a/eval/metrics.py b/eval/metrics.py
+index 6e5a3a3b..aa3de82b 100644
+--- a/eval/metrics.py
++++ b/eval/metrics.py
+@@ -53,6 +53,8 @@ import sys
+ from pathlib import Path
+ 
+ HERE = os.path.dirname(os.path.abspath(__file__))
++sys.path.insert(0, HERE)
++import brain_source  # noqa: E402
+ ROOT = str(Path(__file__).resolve().parents[1])  # the project root (docs/layout.md)
+ sys.path.insert(0, os.path.join(ROOT, "agent", "tools", "logdb"))
+ sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+@@ -624,6 +626,9 @@ def group_runs(rows, how, versions=None, characters=None):
+             order.setdefault(key, (0, key))
+         else:
+             raise ValueError(f"unknown --group-by {how}")
++        if how != "character" and len(set((characters or {}).values())) > 1:
++            key = f"{(characters or {}).get(row['run_id'], 'ironclad')} · {key}"
++            order.setdefault(key, order.get(key.split(" · ", 1)[1], (0, row["started"])))
+         groups.setdefault(key, []).append(row)
+     return [(key, groups[key]) for key in sorted(groups, key=lambda k: order[k])]
+ 
+@@ -785,6 +790,7 @@ def main(argv=None):
+     parser.add_argument("--no-sync", action="store_true", help="do not bring the log database up to date first")
+     parser.add_argument("--no-calibration", action="store_true", help="leave out the calibration columns (eval/calibration.py)")
+     parser.add_argument("--boss-clocks", help="calibration: JSONL of boss-clock-recompute.ts output instead of recomputing")
++    parser.add_argument("--include-non-codex", action="store_true", help="explicit raw performance cohort including DeepSeek/mixed/unknown; costs always retain every run")
+     args = parser.parse_args(argv)
+ 
+     import query as logquery  # noqa: E402  (needs duckdb: run with .cache/logdb-venv/bin/python)
+@@ -807,19 +813,34 @@ def main(argv=None):
+         for row in rows:
+             entry, row["version_how"] = versions.assign(row["code"], row["started"])
+             row["version"] = entry["name"]
++    brain_source.annotate(rows, brain_source.load_sources(logs, [r["run_id"] for r in rows]))
++    raw_rows = rows
++    rows = [r for r in raw_rows if brain_source.eligible(r, args.include_non_codex)]
+     groups = group_runs(rows, args.group_by, versions, characters)
+     if args.total and rows:
+         groups.append(("全部", rows))
+     if args.json:
+         print(json.dumps({"groups": [{"name": name, "run_ids": [r["run_id"] for r in rs], "summary": plain(summarize(rs))} for name, rs in groups],
+-                          "runs": plain(rows), "strength_sets": {"cards": sorted(sets["cards"]), "relics": sorted(sets["relics"])}},
++                          "runs": plain(raw_rows), "performance_policy": brain_source.POLICY,
++                          "include_non_codex": args.include_non_codex, "raw_cohorts": brain_source.cohorts(raw_rows),
++                          "excluded_run_ids": [r["run_id"] for r in raw_rows if not brain_source.eligible(r, args.include_non_codex)],
++                          "all_run_usage_summary": plain(summarize(raw_rows)),
++                          "strength_sets": {"cards": sorted(sets["cards"]), "relics": sorted(sets["relics"])}},
+                          ensure_ascii=False, indent=1))
+         return 0
++    sys.stdout.write(f"战绩口径：{brain_source.POLICY}；{'显式包含非 Codex 局' if args.include_non_codex else '仅有成功 Codex 脑题且无其他成功引擎的局'}。原始 {len(raw_rows)} 局，纳入 {len(rows)} 局；旧报告保留。\n\n")
+     sys.stdout.write(render(groups, args.min_n, args.md))
++    sys.stdout.write("\n来源原始成绩（不影响费用、用量或学习证据）：\n")
++    for source, cohort in brain_source.cohorts(raw_rows).items():
++        sys.stdout.write(f"{source}: {cohort['runs']} 局 / {cohort['wins']} 胜\n")
++    sys.stdout.write("\n全部原始局费用/用量口径：\n" + render([("原始全部（含非 Codex）", raw_rows)], args.min_n, args.md))
+     if args.min_n > 1 and any(len(rs) < args.min_n for _, rs in groups):
+         sys.stdout.write(f"\n* 局数 < {args.min_n}（或该指标的 n < {args.min_n}）：样本不足，区间只作参考。\n")
+     if args.per_run:
+-        sys.stdout.write("\n" + render_runs(rows, args.md))
++        sys.stdout.write("\n" + render_runs(raw_rows, args.md))
++        for r in raw_rows:
++            source = r["brain_source"]
++            sys.stdout.write(f"{r['run_id']}: {source['source']} / {source['exclusion_reason'] or 'included'} / {json.dumps(source['successful_answers'])}\n")
+     return 0
+ 
+ 
+diff --git a/ops/autoplay.sh b/ops/autoplay.sh
+index be039159..112c50ee 100755
+--- a/ops/autoplay.sh
++++ b/ops/autoplay.sh
+@@ -21,7 +21,20 @@ while [ ! -f "$OPS/STOP" ]; do
+     while kill -0 "$WAIT_PID" 2>/dev/null; do sleep 5; done
+     WAIT_PID=""
+   else
++    # A terminal brain fault/cancellation leaves the saved decision untouched. Clear the marker after repair to
++    # resume the same saved run; never turn a fault into an automatic stream of fresh play processes.
++    if python3 "$OPS/brain_wait.py" "$LOGS" --hold 2>/dev/null; then
++      sleep 5
++      continue
++    fi
+     "$OPS/run.sh" "$@"
++    play_exit=$?
++    if [ "$play_exit" -eq 75 ] || [ "$play_exit" -eq 78 ]; then
++      echo "$(date '+%F %T') brain blocked (exit $play_exit); saved run retained; awaiting explicit recovery" >> "$OPS/autoplay.log"
++      # The marker is normally present. A missing marker must not cause a restart storm either.
++      while [ ! -f "$OPS/STOP" ] && ! python3 "$OPS/brain_wait.py" "$LOGS" --hold 2>/dev/null; do sleep 5; done
++      continue
++    fi
+   fi
+   rid=$(python3 - <<'PY'
+ import json, os
+diff --git a/ops/brain_wait.py b/ops/brain_wait.py
+new file mode 100644
+index 00000000..fa86779e
+--- /dev/null
++++ b/ops/brain_wait.py
+@@ -0,0 +1,62 @@
++#!/usr/bin/env python3
++"""Recognize a live Codex wait, and terminal decisions requiring an explicit same-run restart."""
++import argparse
++import datetime as dt
++import json
++import os
++import time
++from pathlib import Path
++
++
++def read_marker(logs):
++    try:
++        row = json.loads((Path(logs) / "brain-wait.json").read_text())
++        return row if isinstance(row, dict) else {}
++    except (OSError, ValueError):
++        return {}
++
++
++def play_alive(pid):
++    if not isinstance(pid, int) or pid <= 0:
++        return False
++    try:
++        os.kill(pid, 0)
++        command = Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ")
++        return b"index.ts play" in command
++    except (OSError, ValueError):
++        return False
++
++
++def live_wait(logs, now=None, alive=play_alive):
++    row = read_marker(logs)
++    if row.get("state") not in ("paused", "heartbeat") or not row.get("question_id"):
++        return None
++    try:
++        stamp = dt.datetime.fromisoformat(row["ts"].replace("Z", "+00:00")).timestamp()
++    except (KeyError, TypeError, ValueError):
++        return None
++    age = (time.time() if now is None else now) - stamp
++    return row if -5 <= age <= 45 and alive(row.get("pid")) else None
++
++
++def hold(logs):
++    row = read_marker(logs)
++    return row.get("state") in ("fault", "cancelled") and bool(row.get("question_id"))
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("logs")
++    parser.add_argument("--hold", action="store_true")
++    args = parser.parse_args()
++    if args.hold:
++        return 0 if hold(args.logs) else 1
++    row = live_wait(args.logs)
++    if not row:
++        return 1
++    print(f"OK (Codex waiting: run {row.get('run_id')}, {row['decision_type']}, question {row['question_id']}; {row['reason']}; heartbeat {row['ts']})")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index 6e99b658..b7eae4dd 100755
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -36,6 +36,8 @@ from learner_checks import finish_write_batch, recheck_write_batch  # noqa: E402
+ from learner_jobs import check_jobs, dispatch_write, pending, start_learner  # noqa: E402
+ 
+ ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
++sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
++import brain_source  # noqa: E402
+ SCRIPTS = os.path.dirname(os.path.abspath(__file__))  # this file's ops/ (the scripts)
+ OPS = os.path.join(ROOT, "ops")  # the project's ops/ (win-notified, inbox-dev.md, codex-ops/)
+ LOGS = os.environ.get("CODEX_OPS_LOGS") or os.path.join(ROOT, "logs")
+@@ -173,7 +175,9 @@ def check_victories(character):
+     if os.path.exists(WIN_NOTIFIED):
+         notified = {line.strip() for line in open(WIN_NOTIFIED, encoding="utf8") if line.strip()}
+     events = []
+-    for row in finished_runs(character):
++    runs = finished_runs(character)
++    sources = brain_source.load_sources(LOGS, [r["run_id"] for r in runs]) if any(r.get("victory") is True and r["run_id"] not in notified for r in runs) else {}
++    for row in runs:
+         run = row["run_id"]
+         if row.get("victory") is True and run not in notified:
+             notified.add(run)
+@@ -181,6 +185,7 @@ def check_victories(character):
+                 handle.write(run + "\n")
+             events.append(enqueue("victory", (
+                 f"通关：{run}（{NAMES_ZH.get(character, character)}，A{row.get('ascension')}，第 {row.get('floor')} 层，结束于 {row.get('ended')}）。"
++                f"实际脑来源={sources[run]['source']}；Codex战绩纳入={sources[run]['eligible']}；排除原因={sources[run]['exclusion_reason']}（{brain_source.POLICY}，全部原始成绩/复盘/成本保留）。"
+                 f"调度器已把 run id 写进 ops/win-notified。按「汇报规则 1」查清第一次尝试赢还是 SL 后赢、用时、下一局打第几级，写进 ops/inbox-dev.md。"
+             )))
+     return events
+diff --git a/ops/metrics.py b/ops/metrics.py
+index 823283b5..0cf19b2b 100644
+--- a/ops/metrics.py
++++ b/ops/metrics.py
+@@ -27,6 +27,8 @@ import sys
+ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+ from characters import character_key, env_character, run_character  # noqa: E402
++sys.path.insert(0, os.path.join(ROOT, "eval"))
++import brain_source  # noqa: E402
+ LOGS = os.path.join(ROOT, "logs")
+ BOSS_FLOORS = (17, 33, 48)
+ ARCH_START = "2026-09-25T12:10"  # FIGHT_PLAN=v1 went live (UTC)
+@@ -129,12 +131,16 @@ def main():
+     ap.add_argument("--character", default=env_character(), help="only this character's runs (default: $CHARACTER, else all)")
+     ap.add_argument("--last", type=int, default=None, help="only the last N runs of each group")
+     ap.add_argument("--out", default=os.path.join(ROOT, "paper", "data", "metrics.md"))
++    ap.add_argument("--include-non-codex", action="store_true")
+     args = ap.parse_args()
+ 
+     runs = load_runs()
+     character = character_key(args.character)
+     if character:
+         runs = [r for r in runs if run_character(r) == character]
++    brain_source.annotate(runs, brain_source.load_sources(LOGS, [r["run_id"] for r in runs]))
++    raw_runs = runs
++    runs = [r for r in runs if brain_source.eligible(r, args.include_non_codex)]
+     several = len({run_character(r) for r in runs}) > 1
+     splits = sorted([ARCH_START] + args.split)
+     ids = {r["run_id"] for r in runs}
+@@ -153,7 +159,11 @@ def main():
+         if args.asc is not None and str(args.asc) != r["ascension"]:
+             continue
+         groups.setdefault((era(r), r["ascension"], run_character(r) if several else None), []).append(r)
+-    lines = ["# Run metrics", "", f"Generated by ops/metrics.py; eras split at {', '.join(splits)} (UTC).", ""]
++    lines = ["# Run metrics", "", f"Generated by ops/metrics.py; eras split at {', '.join(splits)} (UTC).", "",
++             f"Performance policy: {brain_source.POLICY}; include_non_codex={args.include_non_codex}; raw {len(raw_runs)}, selected {len(runs)}. All costs and learning evidence retained.", ""]
++    for source, cohort in brain_source.cohorts([{**r, "victory": r.get("victory") == "1"} for r in raw_runs]).items():
++        lines.append(f"- Raw {source}: {cohort['runs']} runs / {cohort['wins']} wins")
++    lines.extend(f"- {r['run_id']}: {r['brain_source']['source']} / {r['brain_source']['exclusion_reason'] or 'included'}" for r in raw_runs)
+     for (name, asc, who), rs in groups.items():
+         if args.last:
+             rs = rs[-args.last:]
+@@ -163,6 +173,10 @@ def main():
+         lines.append("")
+     text = "\n".join(lines)
+     print(text)
++    if os.path.exists(args.out):
++        import shutil
++        import datetime
++        shutil.copy2(args.out, args.out + ".before-" + datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))
+     with open(args.out, "w") as fh:
+         fh.write(text + "\n")
+ 
+diff --git a/ops/paper_dataset.py b/ops/paper_dataset.py
+index 94af1d4c..38ac3910 100644
+--- a/ops/paper_dataset.py
++++ b/ops/paper_dataset.py
+@@ -32,6 +32,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ from paths import LOGS, ROOT  # noqa: E402
+ sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
+ from characters import run_character  # noqa: E402
++sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
++import brain_source  # noqa: E402
+ JEV = ROOT  # the one repo since 2026-10-04 (code history included, hashes kept)
+ NOTES = os.path.join(ROOT, "notes")
+ AUTOPLAY = os.path.join(ROOT, "ops/autoplay.log")
+@@ -48,7 +50,7 @@ UPSTREAM_AUTHOR = "DiscreteTom"
+ RUN_ID_RE = re.compile(r"^[0-9A-Z]{12}$")
+ KEY_RE = re.compile(r"(?<![A-Za-z])sk-[A-Za-z0-9_-]{12,}")
+ 
+-JSONL_SOURCES = ["decisions.jsonl", "deepseek-reasoning.jsonl", "runs.jsonl", "states.jsonl", "fight-plans.jsonl", "run-plans.jsonl"]
++JSONL_SOURCES = ["decisions.jsonl", "deepseek-reasoning.jsonl", "runs.jsonl", "states.jsonl", "fight-plans.jsonl", "run-plans.jsonl", "brain.jsonl", "sl-attempts.jsonl", "run-config.jsonl"]
+ 
+ 
+ # ---------------------------------------------------------------- helpers
+@@ -116,7 +118,7 @@ def write_csv(path, header, rows):
+         w = csv.writer(fh)
+         w.writerow(header)
+         for row in rows:
+-            w.writerow(["" if row.get(h) is None else row.get(h) for h in header])
++            w.writerow(["" if row.get(h) is None else json.dumps(row[h], ensure_ascii=False, sort_keys=True) if isinstance(row[h], (dict, list)) else row[h] for h in header])
+     return len(rows)
+ 
+ 
+@@ -412,11 +414,44 @@ def act_from_floor(f):
+     return 1 if f <= 17 else 2 if f <= 33 else 3
+ 
+ 
++def preserve_previous():
++    """Never silently replace a published snapshot when changing the performance cohort."""
++    files = [os.path.join(DATA, n) for n in os.listdir(DATA) if os.path.isfile(os.path.join(DATA, n))] if os.path.isdir(DATA) else []
++    if not files:
++        return None
++    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
++    target = os.path.join(DATA, "history", stamp)
++    os.makedirs(target)
++    for path in files:
++        shutil.copy2(path, target)
++    return target
++
++
++def performance_group(rows, include_non_codex=False):
++    """The same eligibility as metrics/learning curve/climb; raw cohorts remain visible."""
++    selected = [r for r in rows if brain_source.eligible(r, include_non_codex)]
++    finished = [r for r in selected if r.get("finished", True)]
++    floors = [r.get("floor_max", r.get("floor")) for r in finished]
++    floors = [f for f in floors if f is not None]
++    first = [r.get("first_attempt", {"victory": r.get("victory")}) for r in finished]
++    return {"runs": len(selected), "finished": len(finished), "wins": sum(bool(r.get("victory")) for r in finished),
++            "first_try_wins": sum(bool(f.get("victory")) for f in first),
++            "sl_wins": sum(bool(r.get("victory")) and not bool(f.get("victory")) for r, f in zip(finished, first)),
++            "win_rate_finished": round(sum(bool(r.get("victory")) for r in finished) / len(finished), 3) if finished else None,
++            "mean_floor_finished": round(statistics.mean(floors), 2) if floors else None, "median_floor_finished": median(floors),
++            "reached_act2": sum(1 for r in selected if (r.get("floor_max", r.get("floor")) or 0) >= 18),
++            "reached_act3": sum(1 for r in selected if (r.get("floor_max", r.get("floor")) or 0) >= 34),
++            "run_ids": [r["run_id"] for r in selected], "raw_runs": len(rows), "raw_wins": sum(bool(r.get("victory")) for r in rows if r.get("finished", True)),
++            "raw_cohorts": brain_source.cohorts(rows),
++            "excluded": {r["run_id"]: r["brain_source"]["exclusion_reason"] for r in rows if not brain_source.eligible(r, include_non_codex)}}
++
++
+ def build():
+     os.makedirs(DATA, exist_ok=True)
+     limits = snapshot_limits()
+     cut_time = dt.datetime.now(dt.timezone.utc)
+     print(f"cut at {iso(cut_time)}: " + ", ".join(f"{k} {v:,} B" for k, v in limits.items()), flush=True)
++    previous = preserve_previous()
+ 
+     runs, label_counts, esc_rows, totals = load_decisions(limits["decisions.jsonl"])
+     print(f"decisions: {totals['records']:,} records, {len(runs)} runs", flush=True)
+@@ -563,6 +598,19 @@ def build():
+     for r in rows:
+         r["learning_loop"] = int(bool(first_pm) and r["start_ts"] >= first_pm)
+ 
++    brain_source.annotate(rows, brain_source.load_sources(LOGS, [r["run_id"] for r in rows], limits.get("brain.jsonl", 0)))
++    sl_by_run = collections.defaultdict(list)
++    for slrow in brain_source.jsonl(os.path.join(LOGS, "sl-attempts.jsonl"), limits.get("sl-attempts.jsonl", 0)):
++        sl_by_run[slrow.get("run_id")].append(slrow)
++    import importlib.util
++    spec = importlib.util.spec_from_file_location("dataset_eval_metrics", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval", "metrics.py"))
++    metrics = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(metrics)
++    for r in rows:
++        r["first_attempt"] = metrics.first_attempt(sl_by_run[r["run_id"]], r["floor_max"], r["victory"], {1: False, 2: False}, {})
++        r["performance_policy"] = brain_source.POLICY
++        r["performance_included"] = int(brain_source.eligible(r, "--include-non-codex" in sys.argv))
++        r["performance_exclusion_reason"] = r["brain_source"]["exclusion_reason"]
+     run_header = list(rows[0].keys())
+     n_runs = write_csv(os.path.join(DATA, "runs.csv"), run_header, rows)
+ 
+@@ -590,29 +638,23 @@ def build():
+ 
+     # ------------------------------------------------ summary
+     fin = [r for r in rows if r["finished"]]
+-    wins = [r for r in rows if r["outcome"] == "victory"]
++    wins = [r for r in rows if r["outcome"] == "victory" and brain_source.eligible(r, "--include-non-codex" in sys.argv)]
+ 
+     def group(rs):
+-        f = [r for r in rs if r["finished"]]
+-        floors = [r["floor_max"] for r in f if r["floor_max"] is not None]
+-        return {"runs": len(rs), "finished": len(f), "wins": sum(1 for r in f if r["victory"]),
+-                "win_rate_finished": round(sum(1 for r in f if r["victory"]) / len(f), 3) if f else None,
+-                "mean_floor_finished": round(statistics.mean(floors), 2) if floors else None,
+-                "median_floor_finished": median(floors),
+-                "reached_act2": sum(1 for r in rs if (r["floor_max"] or 0) >= 18),
+-                "reached_act3": sum(1 for r in rs if (r["floor_max"] or 0) >= 34),
+-                "run_ids": [r["run_id"] for r in rs]}
++        return performance_group(rs, "--include-non-codex" in sys.argv)
+ 
+     eras = ["no_fallback", "claude", "deepseek_nonthinking", "deepseek_thinking", "deepseek_memory"]
+     by_asc = collections.defaultdict(list)
+     for r in rows:
+-        by_asc[str(r["ascension"])].append(r)
++        by_asc[f"{run_character(r)}:A{r['ascension']}"].append(r)
+     dec_total = collections.Counter()
+     for r in rows:
+         for d in DECIDERS:
+             dec_total[d] += r["n_" + d.replace("-", "_")]
+     ds_all = [e for e in esc_rows if e["by"] == "deepseek"]
+     summary = {
++        "performance_policy": brain_source.POLICY, "include_non_codex": "--include-non-codex" in sys.argv,
++        "previous_snapshot": previous, "performance": group(rows), "raw_cohorts": brain_source.cohorts(rows),
+         "generated_at": iso(cut_time),
+         "source_cut_bytes": limits,
+         "runs_total": len(rows),
+@@ -622,17 +664,18 @@ def build():
+         "wins": [{"run_id": r["run_id"], "ascension": r["ascension"], "floor": r["floor_max"], "end_ts": r["end_ts"],
+                   "code_version": r["code_version"], "code_version_console": r["code_version_console"], "era": r["era"],
+                   "outcome_source": r["outcome_source"]} for r in wins],
+-        "best_floors": sorted(({"run_id": r["run_id"], "floor": r["floor_max"], "outcome": r["outcome"], "ascension": r["ascension"]}
+-                               for r in rows if r["floor_max"] is not None), key=lambda x: -x["floor"])[:10],
+-        "floor_max_distribution": dict(sorted(collections.Counter(r["floor_max"] for r in rows).items(), key=lambda kv: kv[0] or 0)),
++        "best_floors": {c: sorted(({"run_id": r["run_id"], "floor": r["floor_max"], "outcome": r["outcome"], "ascension": r["ascension"]}
++                               for r in rows if r["floor_max"] is not None and run_character(r) == c and brain_source.eligible(r, "--include-non-codex" in sys.argv)), key=lambda x: -x["floor"])[:10] for c in sorted({run_character(r) for r in rows})},
++        "raw_floor_max_distribution": dict(sorted(collections.Counter(r["floor_max"] for r in rows).items(), key=lambda kv: kv[0] or 0)),
++        "floor_max_distribution": {c: dict(sorted(collections.Counter(r["floor_max"] for r in rows if run_character(r) == c and brain_source.eligible(r, "--include-non-codex" in sys.argv)).items(), key=lambda kv: kv[0] or 0)) for c in sorted({run_character(r) for r in rows})},
+         "per_ascension": {k: {kk: vv for kk, vv in group(v).items()} for k, v in sorted(by_asc.items())},
+         # Per character (multi-character, 2026-10-04), once there is more than one: the Ironclad-only dataset stays as it
+         # was. A run naming no character is the Ironclad's (every run before the Silent).
+         **({"per_character": {c: group([r for r in rows if run_character(r) == c]) for c in sorted({run_character(r) for r in rows})}}
+            if len({run_character(r) for r in rows}) > 1 else {}),
+-        "per_era": {e: group([r for r in rows if r["era"] == e]) for e in eras},
+-        "per_learning_loop": {"before": group([r for r in rows if not r["learning_loop"]]),
+-                              "after": group([r for r in rows if r["learning_loop"]])},
++        "raw_eras": {e: sum(r["era"] == e for r in rows) for e in eras},
++        "per_era": {f"{c}:{e}": group([r for r in rows if r["era"] == e and run_character(r) == c]) for c in sorted({run_character(r) for r in rows}) for e in eras},
++        "per_learning_loop": {f"{c}:{name}": group([r for r in rows if bool(r["learning_loop"]) == active and run_character(r) == c]) for c in sorted({run_character(r) for r in rows}) for name, active in [("before", False), ("after", True)]},
+         "api": {
+             "jev": {"calls": sum(r["jev_calls"] for r in rows), "in_tokens": sum(r["jev_in_tokens"] for r in rows),
+                     "out_tokens": sum(r["jev_out_tokens"] for r in rows),
+@@ -922,20 +965,24 @@ Headline at this cut: {runs_total} runs, {finished} finished, {n_wins} wins ({wi
+ 
+ 
+ def write_readme(s, counts):
+-    eras = s["per_era"]
++    eras = s["raw_eras"]
+     cut = "\n".join(f"  - `{k}`: {v:,} bytes" for k, v in s["source_cut_bytes"].items())
+     text = README.format(
+         generated_at=s["generated_at"], cut=cut, n_runs=counts["runs.csv"], n_lab=counts["decisions_by_label.csv"],
+         n_esc=counts["escalations.csv"], n_commits=counts["commits.csv"],
+-        **{f"era_{k}": v["runs"] for k, v in eras.items()},
++        **{f"era_{k}": v for k, v in eras.items()},
+         jev_price=JEV_PRICE, ds_miss=DS_MISS, ds_hit=DS_HIT, ds_out=DS_OUT,
+         unattributed=s["decisions"]["unattributed_menu_timeline"], runs_total=s["runs_total"], finished=s["runs_finished"],
+         n_wins=len(s["wins"]), wins=", ".join(f"{w['run_id']} A{w['ascension']}" for w in s["wins"]),
+         jev_calls=s["api"]["jev"]["calls"], jev_cost=s["api"]["jev"]["cost_usd"], ds_calls=s["api"]["deepseek"]["calls"],
+         ds_cost=s["api"]["deepseek"]["cost_usd"], cl_calls=s["api"]["claude"]["calls"],
+         no_split=s["api"]["deepseek"]["calls_without_token_split"], n_exp_commits=s["commits"]["experiment"])
++    policy = (f"Performance policy changed: {s['performance_policy']}; include_non_codex={s['include_non_codex']}.\n"
++              "Only actual successful Codex brain answers enter default performance. DeepSeek, mixed and unknown runs are excluded and retained in runs.csv with per-run basis/reason/counts. Roles are separate in per_ascension and per_era.\n"
++              "Runs/finished/API costs and era counts below are raw accounting; wins and performance summaries use the selected cohort. Legacy ds_* / deepseek_calls and configuration eras do not identify the answering engine. First attempts and SL wins are separate. All learning evidence and costs remain available.\n"
++              f"Previous snapshots: {s['previous_snapshot'] or 'none'}.\n\n")
+     with open(os.path.join(DATA, "README.md"), "w", encoding="utf8") as fh:
+-        fh.write(text)
++        fh.write(policy + text)
+ 
+ 
+ def scan_for_keys():
+@@ -943,6 +990,8 @@ def scan_for_keys():
+     for base in [b for b in (DATA, RAW) if os.path.isdir(b)]:
+         for name in sorted(os.listdir(base)):
+             p = os.path.join(base, name)
++            if not os.path.isfile(p):
++                continue
+             if name.endswith(".tar.gz"):
+                 with tarfile.open(p, "r:gz") as tf:
+                     for m in tf.getmembers():
+@@ -960,7 +1009,7 @@ def scan_for_keys():
+     return hits
+ 
+ 
+-def learning_curve():
++def learning_curve(limits=None):
+     """paper/data/learning-curve-<character>.csv (eval/learning-curve.py: per ascension, first try vs SL, the
+     learning ledger's items). True when it ran."""
+     import importlib.util
+@@ -968,7 +1017,7 @@ def learning_curve():
+         spec = importlib.util.spec_from_file_location("learning_curve", os.path.join(ROOT, "eval", "learning-curve.py"))
+         mod = importlib.util.module_from_spec(spec)
+         spec.loader.exec_module(mod)
+-        return mod.main(["--logs", LOGS, "--out-dir", DATA]) == 0
++        return mod.main(["--logs", LOGS, "--out-dir", DATA] + (["--include-non-codex"] if "--include-non-codex" in sys.argv else []), limits=limits) == 0
+     except Exception as error:  # the dataset itself is still written; the exit code reports it
+         print(f"learning curve failed: {type(error).__name__}: {error}")
+         return False
+@@ -993,7 +1042,7 @@ if __name__ == "__main__":
+     if "--no-raw" not in sys.argv:
+         raw_snapshot(lim)
+     write_readme(summ, counts)
+-    curve_ok = learning_curve()
++    curve_ok = learning_curve(lim)
+     cost_ok = component_costs()
+     hits = scan_for_keys()
+     print("key scan: " + ("CLEAN (no sk-<key> patterns)" if not hits else "FOUND in " + ", ".join(hits)))
+diff --git a/ops/stall-check.sh b/ops/stall-check.sh
+index e8233fb9..8cd532d1 100755
+--- a/ops/stall-check.sh
++++ b/ops/stall-check.sh
+@@ -7,6 +7,7 @@ LOGDIR="$LOGS"
+ now=$(date +%s)
+ 
+ [ -f "$ROOT/ops/STOP" ] && { echo "OK (STOP file present, autoplay paused on purpose)"; exit 0; }
++if python3 "$(dirname "$0")/brain_wait.py" "$LOGDIR" 2>/dev/null; then exit 0; fi
+ 
+ console=$(ls -t "$LOGDIR"/console/*.log 2>/dev/null | head -1)
+ if [ -z "$console" ]; then echo "STALL: no console log"; exit 0; fi
+diff --git a/ops/watch-autoplay.py b/ops/watch-autoplay.py
+index 3f27a649..574d7755 100755
+--- a/ops/watch-autoplay.py
++++ b/ops/watch-autoplay.py
+@@ -1,6 +1,7 @@
+ #!/usr/bin/env python3
+ """Milestones of back-to-back runs: new run, every 5th floor, boss floors, game over, stalls, loop exit."""
+ import json, os, subprocess, time, urllib.request
++from brain_wait import live_wait
+ L = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs", "decisions.jsonl")
+ seen = sum(1 for _ in open(L)) if os.path.exists(L) else 0
+ run = None; floor = None; last_new = time.time(); stalled = False; idle_since = None
+@@ -26,7 +27,7 @@ while True:
+             if f % 5 == 0 or f in (17, 34, 51): print(f"run {run} floor {f} ({r['screen']})", flush=True)
+         if r["screen"] == "GAME_OVER": print(f"GAME_OVER run {run} at floor {floor}", flush=True)
+     seen = len(lines)
+-    if time.time() - last_new > 150 and not stalled:
++    if time.time() - last_new > 150 and not stalled and not live_wait(os.path.dirname(L)):
+         try:
+             d = json.load(urllib.request.urlopen("http://127.0.0.1:8080/state", timeout=5))["data"]
+             print(f"stalled 150s: screen={d['screen']} actions={d['available_actions']} loop_alive={loop_alive()}", flush=True)

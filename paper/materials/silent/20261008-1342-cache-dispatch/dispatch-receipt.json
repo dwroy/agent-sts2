@@ -1,0 +1,269 @@
+{
+  "observed_at": "2026-10-08 14:01",
+  "dispatch_rc": 0,
+  "dispatch": {
+    "dispatched": [
+      "20261008-140042-fix-batch",
+      107937
+    ]
+  },
+  "request": {
+    "state": "dispatched",
+    "task": "codex-brain-cache",
+    "character": "silent",
+    "authorized_by": "Roy",
+    "request_id": "roy-20261008-1342-codex-brain-cache",
+    "priority": "high",
+    "requested_at": "2026-10-08 14:00",
+    "source": "Roy 2026-10-08 13:31 request / 13:42 manual event",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache",
+    "dispatch_source": "577b8bb4514d28282146e131d20a4ffff5c2f5ac",
+    "main_dispatch_commit": "a9e9586338be9c74842fc535bdc31c6478c9cb91",
+    "scope": "independent infrastructure investigation and authorized cache fix; keep reasoning strength and full prompt",
+    "production_changes": false,
+    "batch": "20261008-140042-fix-batch",
+    "pid": 107937,
+    "pane": "wJ:p8D",
+    "dispatched_at": "2026-10-08 14:01"
+  },
+  "job": {
+    "task": "fix-batch",
+    "learner_task": "codex-brain-cache",
+    "character": "silent",
+    "runs": [],
+    "key": "feature:roy-20261008-1342-codex-brain-cache",
+    "pid": 107937,
+    "state": "running",
+    "reason": "ops",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache",
+    "feature_request": "roy-20261008-1342-codex-brain-cache",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p8D"
+  },
+  "host_process_and_task_verified": true,
+  "startup_events_if_already_present": [],
+  "source": {
+    "at": "2026-10-08T13:59:38+08:00",
+    "source": "577b8bb4514d28282146e131d20a4ffff5c2f5ac",
+    "source_tree": "8d21d61de3c5789f498511880664dcf690fd6c84",
+    "base": "b62c676c8450d569835159f0216a0a1f47582256",
+    "branch": "ops-codex-brain-cache-dispatch",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch",
+    "changed_paths": [
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "changed_blobs": {
+      "docs/codex-ops.md": "588cb02a3fc7cedd99ef6021c2006662e2b0af43",
+      "learner/tasks/codex-brain-cache.md": "af2b99f1a713167409d9fd38c806c07704bee8cc",
+      "ops/codex-ops-learner.sh": "60f9006657b30bb20f520af4266b0bd0653adaf5",
+      "ops/learner_jobs.py": "996d0f8fa2bc11f91325724b6b793c49bb955a91",
+      "ops/tests/test_silent_calibration_dispatch.py": "b469ec2a45d37540f7c776b852fa620dc5c2bd86"
+    },
+    "sandbox": {
+      "command": "nice -n 19 bash agent/tools/test-sandbox.sh",
+      "rc": 0,
+      "tsc": 0,
+      "vitest": 0,
+      "workers": 4,
+      "files": 248,
+      "cases": 2608,
+      "parts": {
+        "files": [
+          247,
+          1
+        ],
+        "cases": [
+          2597,
+          11
+        ]
+      },
+      "log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox.log",
+        "bytes": 546,
+        "sha256": "c4516af207dddf360ba66cc7abf869d8692cc8ef63bb0db8574738781c85c127"
+      },
+      "rc_file": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox.rc",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      }
+    },
+    "python": {
+      "dispatch_cases": 44,
+      "ops_all_cases": 113,
+      "rc": 0,
+      "dispatch_log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/python.log",
+        "bytes": 143,
+        "sha256": "5aac2e360b80c3532f3b1212b2648444ada51607173ab2a27adb429e46762e2f"
+      },
+      "all_log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/python-ops-all.log",
+        "bytes": 893,
+        "sha256": "caa86a557190e60df8ed0a4c4c96955ff83f918b002c1d7602741aacf1f91b51"
+      },
+      "withdrawal_red_cases": 3,
+      "withdrawal_red_failures": 2,
+      "withdrawal_rc": 1,
+      "withdrawal_log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/withdrawal-red.log",
+        "bytes": 1680,
+        "sha256": "a4041438848102b9e1fae7cb13d2531ba4b9affbcda505998d3d74d9813188a3"
+      },
+      "restore_cases": 44,
+      "restore_rc": 0,
+      "restore_log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/restored-green.log",
+        "bytes": 143,
+        "sha256": "75e176f676c8eb34b843df1fa031acd8b3aaca3662ac2815659d01c0cc243c71"
+      }
+    },
+    "gitleaks": {
+      "rc": 0,
+      "log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/gitleaks.log",
+        "bytes": 143,
+        "sha256": "0b80cce543d1ae42de155bc2dfb4f34bf7de6da2e2f33f65640fc85cdacd9f42"
+      }
+    },
+    "preserved_setup_failure": {
+      "rc": 1,
+      "tsc": 0,
+      "passed_files": 246,
+      "passed_cases": 2596,
+      "failed_files": 1,
+      "failed_cases": 1,
+      "reason": "Fresh worktree lacked ignored data/logdb-venv symlink; component-usage fixed fixture returned 127 ENOENT. Existing root venv linked locally; no dependency install, source/assertion/exclusion change. Original full sandbox rerun required.",
+      "log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox-setup-failed.log",
+        "bytes": 1216,
+        "sha256": "440057cd955eb1d240ac28e699f5cb763bdb4c60c452c096409f2a7462dee0bd"
+      },
+      "rc_file": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/ops-codex-brain-cache-dispatch/learner/runs/ops-codex-brain-cache-dispatch-checks/sandbox-setup-failed.rc",
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+      }
+    },
+    "scope": "Pure explicit dispatch transport, independent learner template and fixed offline tests. Parent integrates main only, prepares isolated learner worktree/request and uses original broker fix-batch; no source-only gameplay version or game ledger.",
+    "unchanged": [
+      "agent source",
+      "production Codex model/effort",
+      "production prompt content",
+      "production game/config/processes",
+      "root/main/live indexes and files",
+      "request file"
+    ],
+    "protected": [
+      "exact shell task allowlist",
+      "Roy-request validation",
+      "highest pending manual cache priority without interrupting running tasks",
+      "same-request dedupe",
+      "dirty/busy tree refusal",
+      "existing retry history/backoff/three attempts",
+      "normal fix/strategy tree independence"
+    ],
+    "future_experiment": "Roy already authorized same-question fixed-prefix comparison, max4 baseline/candidate calls with original model/effort/usage guards. Learner owns tested constrained broker action if absent; next wake whitelist; pending if instrumentation/usage missing; no repeat permission gate or sandbox bypass.",
+    "actual_cache_fix": null,
+    "cache_improvement_claim": null,
+    "merged_live": null,
+    "commit": "577b8bb4514d28282146e131d20a4ffff5c2f5ac"
+  },
+  "main_dispatch_commit": "a9e9586338be9c74842fc535bdc31c6478c9cb91",
+  "main_observed": "a9e9586338be9c74842fc535bdc31c6478c9cb91",
+  "live_observed": "f4c35b907643239ac7169a739f4baa3934103bff",
+  "scope": "mechanical main dispatch only; no gameplay release",
+  "no_gameplay_release": true,
+  "no_cache_fix_claim": true,
+  "cache_cause_and_before_after": "pending independent learner result",
+  "no_new_version_or_game_knowledge": true,
+  "production_model_and_effort_changed": false,
+  "no_play_stop_env_or_scheduler_restart": true,
+  "dispatch_attempts_this_wake": 1,
+  "originals": {
+    "broker-dispatch-original.err.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "broker-dispatch-original.out.txt": {
+      "sha256": "05e3666647f018c249fefa5c6d132bf0e3dd183146adcf9f4a4936a1f5055cd9",
+      "bytes": 54
+    },
+    "source-receipt-original.json": {
+      "sha256": "26cc19e4a0efc5e1f3d9370649a1e5346c1d13c9186e195b6037d90b6be6930b",
+      "bytes": 5687
+    },
+    "source-sandbox-setup-failed.rc.txt": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "source-sandbox-setup-failed.log.txt": {
+      "sha256": "440057cd955eb1d240ac28e699f5cb763bdb4c60c452c096409f2a7462dee0bd",
+      "bytes": 1216
+    },
+    "request-pending-original.json": {
+      "sha256": "d455f29a1998329991634d10202816a2d416498bd3d52c7c0e4db5fcca0b59f8",
+      "bytes": 649
+    },
+    "roy-request-original.md": {
+      "sha256": "03a0224d1cc875f96eed8f2d2f7725564044cff50730091f2038eca4791e5cc2",
+      "bytes": 1416
+    },
+    "task-render-original.err.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "source-sandbox.log.txt": {
+      "sha256": "c4516af207dddf360ba66cc7abf869d8692cc8ef63bb0db8574738781c85c127",
+      "bytes": 546
+    },
+    "task-template-original.md": {
+      "sha256": "bc6c3d3fb8e698fa74e215bdcc8f06b7e90ffc7a05aff2089756d596da469c4c",
+      "bytes": 9383
+    },
+    "source-sandbox.rc.txt": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "source-python-ops-all.log.txt": {
+      "sha256": "caa86a557190e60df8ed0a4c4c96955ff83f918b002c1d7602741aacf1f91b51",
+      "bytes": 893
+    },
+    "source-withdrawal-red.log.txt": {
+      "sha256": "a4041438848102b9e1fae7cb13d2531ba4b9affbcda505998d3d74d9813188a3",
+      "bytes": 1680
+    },
+    "source.patch": {
+      "sha256": "1d924b6031067d023640876eb5f312e118a1db199ddd8bb254be1f9c53c7f40e",
+      "bytes": 19184
+    },
+    "task-render-original.json": {
+      "sha256": "9b038203e485fea0d5af996dbe72660608941715715e603db2544bca1e5f78fc",
+      "bytes": 545
+    },
+    "broker-dispatch-original.exit.txt": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "source-restored-green.log.txt": {
+      "sha256": "75e176f676c8eb34b843df1fa031acd8b3aaca3662ac2815659d01c0cc243c71",
+      "bytes": 143
+    },
+    "procs-original.txt": {
+      "sha256": "278dc4455c0abaa437cf5fb2d3cb65a857d476c57e83d7395f7521e869afb106",
+      "bytes": 4238
+    },
+    "source-python.log.txt": {
+      "sha256": "5aac2e360b80c3532f3b1212b2648444ada51607173ab2a27adb429e46762e2f",
+      "bytes": 143
+    },
+    "source-gitleaks.log.txt": {
+      "sha256": "0b80cce543d1ae42de155bc2dfb4f34bf7de6da2e2f33f65640fc85cdacd9f42",
+      "bytes": 143
+    }
+  }
+}

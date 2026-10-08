@@ -1,0 +1,111 @@
+{
+  "source": "1ac1b33b6f752ad5aa7e82429d85ebc20e2021a1",
+  "publication": "7ed2bb0a60e6631541b470d851964d6794b42db1",
+  "unique_version": "S1.exp91",
+  "data_only": true,
+  "own_original_cli": 42,
+  "new_data_shipped_cli": 14,
+  "ledger_map": {
+    "silent-footwork-block": [
+      "silent-0005"
+    ],
+    "silent-gorget-plating": [
+      "silent-0016"
+    ],
+    "silent-strength-weak-observation": [
+      "silent-0005",
+      "silent-0006"
+    ],
+    "silent-route-hp-observation": [
+      "silent-0019"
+    ],
+    "silent-rest-buffer-observation": [
+      "silent-0020"
+    ],
+    "silent-deck-burst-observation": [
+      "silent-0021"
+    ],
+    "silent-noxious-fumes-growth": [
+      "silent-0011"
+    ],
+    "silent-accelerant-triggers": [
+      "silent-0027"
+    ],
+    "silent-snecko-skull-poison-application": [
+      "silent-0087"
+    ],
+    "silent-lagavulin-siphon-poison-sl": [
+      "silent-0030"
+    ],
+    "silent-act-transition-missing-hp-heal": [
+      "silent-0243"
+    ],
+    "silent-poison-potion-observed-application": [
+      "silent-0278"
+    ],
+    "silent-dampen-battle-upgrade-observation": [
+      "silent-0280"
+    ],
+    "silent-three-knights-revival-blood-price": [
+      "silent-0079"
+    ]
+  },
+  "changed_experience_entries": [
+    "silent-accelerant-triggers",
+    "silent-act-transition-missing-hp-heal",
+    "silent-dampen-battle-upgrade-observation",
+    "silent-deck-burst-observation",
+    "silent-footwork-block",
+    "silent-gorget-plating",
+    "silent-lagavulin-siphon-poison-sl",
+    "silent-noxious-fumes-growth",
+    "silent-poison-potion-observed-application",
+    "silent-rest-buffer-observation",
+    "silent-route-hp-observation",
+    "silent-snecko-skull-poison-application",
+    "silent-strength-weak-observation",
+    "silent-three-knights-revival-blood-price"
+  ],
+  "unmapped_pure_bug_kept": "silent-0279",
+  "originals_preserved": 1398,
+  "no_code_proposals_marked_implemented": true,
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "903a1efcb4456e448b5e64f8c915397d1c585d98",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 298,
+      "passed": 3412,
+      "skipped": 2
+    },
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 246,
+      "cases": 2598,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-071205-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "source_vs_actual_six_preserved_apotheosis_paths": [
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/src/reflex/silent-apotheosis.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-apotheosis-evidence.json",
+      "agent/tests/silent-apotheosis.test.ts"
+    ],
+    "reason": "Only the original tested experience data blob changes. Current code/tests/tasks retain Apotheosis and match the fixed complete external pass. Data-only exemption applies; no whole-tree test pass is claimed. Original-batch external continuation is separate."
+  },
+  "rollback": "Inverse the one original experience data delta in an isolated current-live worktree, keep all newer evidence and generated knowledge; record a separate rollback version if used. Never reset production."
+}

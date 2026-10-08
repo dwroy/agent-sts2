@@ -1,0 +1,18 @@
+Fix upgrade previews losing resolved keyword text
+
+Keep the resolved text decorations when its current numeric template matches
+exactly, and report numeric changes when the template cannot reproduce the
+observed text. Do not copy decorations across conditional upgrade branches.
+
+Evidence: KAY522KT5NXR A0 floors 44 and 47 (rest, turn not applicable);
+P5HT1272P5SB A10 floor 24 (rest) and floor 25 turn 2. Ledger: silent-0217.
+Expose still exhausts after upgrading; the preview had dropped that fact.
+
+With production changes withdrawn: 3 failures / 1 pass. Restored: 4 passes.
+Sandbox tsc and vitest pass: 218 files, 2319 cases; gitleaks clean.
+
+The shared formatter also restores omitted decorations in equivalent
+Ironclad previews. Numeric upgrades and strategy stay unchanged; this is
+the same presentation defect, without importing character knowledge.
+
+Co-Authored-By: Codex GPT-6 <noreply@openai.com>

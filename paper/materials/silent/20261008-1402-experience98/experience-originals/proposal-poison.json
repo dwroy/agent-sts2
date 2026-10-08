@@ -1,0 +1,24 @@
+{
+  "character": "silent",
+  "ledger": [
+    "silent-0007",
+    "silent-0295"
+  ],
+  "runs": [
+    "G8NHLL09DLBX"
+  ],
+  "source_task": "experience-update",
+  "target_task": "strategy-proposal",
+  "domains": [
+    "combat"
+  ],
+  "summary": "旧规则：randomVictim按最高HP选目标并将随机施毒重复落在同一目标，可能触发确定combat/lethal。新行为提案：针对已观察静默普通多敌弹跳药瓶，将未证实分配保留为不确定，只有能够证实随机落点不影响收尾时才给确定斩杀；否则回到正常选线与实际后继帧重规划。施毒不即时扣血、爪牙死不等母体死、荆棘血价与毒结算分别核。升级/重放/未知分配组合未核不外推，其他角色保持等价。独立策略任务有足够数据可按Roy授权实",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-poison.md",
+  "experience": [
+    "silent-bouncing-flask-poison",
+    "silent-deadly-poison-application",
+    "silent-poisoned-stab-components"
+  ],
+  "rule_changes": true,
+  "authorization": "Roy-2026-10-07-learning"
+}

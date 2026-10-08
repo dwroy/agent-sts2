@@ -1,0 +1,32 @@
+..................EEE
+======================================================================
+ERROR: test_a_first_then_independent_b4_beside_normal_fixes (test_silent_calibration_dispatch.NewFeatureDispatch.test_a_first_then_independent_b4_beside_normal_fixes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-roy1235-dispatch/ops/tests/test_silent_calibration_dispatch.py", line 152, in test_a_first_then_independent_b4_beside_normal_fixes
+    Path(root, jobs.FEATURE_REQUESTS[task]).write_text(json.dumps({
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'boss-sim-automation'
+
+======================================================================
+ERROR: test_new_requests_refuse_dirty_tree_or_mismatched_scope (test_silent_calibration_dispatch.NewFeatureDispatch.test_new_requests_refuse_dirty_tree_or_mismatched_scope) (task='silent-double-boss')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-roy1235-dispatch/ops/tests/test_silent_calibration_dispatch.py", line 172, in test_new_requests_refuse_dirty_tree_or_mismatched_scope
+    Path(root, "notes").mkdir(); path = Path(root, jobs.FEATURE_REQUESTS[task])
+                                                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'silent-double-boss'
+
+======================================================================
+ERROR: test_new_requests_refuse_dirty_tree_or_mismatched_scope (test_silent_calibration_dispatch.NewFeatureDispatch.test_new_requests_refuse_dirty_tree_or_mismatched_scope) (task='boss-sim-automation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/ops-roy1235-dispatch/ops/tests/test_silent_calibration_dispatch.py", line 172, in test_new_requests_refuse_dirty_tree_or_mismatched_scope
+    Path(root, "notes").mkdir(); path = Path(root, jobs.FEATURE_REQUESTS[task])
+                                                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+KeyError: 'boss-sim-automation'
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.014s
+
+FAILED (errors=3)

@@ -1,0 +1,57 @@
+{
+ "character": "silent",
+ "kind": "fight",
+ "claim": "THE_INSATIABLE B4 整场预测在冻结扩充验证8场中打穿比T1=1.461/pre=1.483仍超1.3；本角色98攻击、128沙坑/128力量转换及17场逃离分布未否定现有模型，尚无允许范围内可证实的机制校正。无候选BASE/BASE配对没有严格改善，按原门槛拒绝，不发布。",
+ "first_run": "C48LLXBGKXQ9",
+ "prior": "unknown",
+ "status": "rejected",
+ "by": "learner:codex:boss-sim-b4:20261007-215921",
+ "evidence": [
+  {
+   "run": "C48LLXBGKXQ9",
+   "floor": 33,
+   "turn": 7,
+   "note": "原触发logged_key C48LLXBGKXQ9:33:6:6290069057；HP48、boss HP107、力量2，敌回合打穿14；原帧offset/length/SHA及模型对照在本批target-audit/target-frames。"
+  },
+  {
+   "run": "C48LLXBGKXQ9",
+   "floor": 33,
+   "turn": 11,
+   "note": "同一实际attempt6：开场HP2，SL result=died/end_hp0；没有下一回合敌方扣血帧，leak保留null，不补2。"
+  },
+  {
+   "run": "XBD8Z9XLPCPN",
+   "floor": 33,
+   "turn": 3,
+   "note": "A10 attempt6从HP23进入，T3实际died；原SL事件与字节SHA核实，非predicted_death。"
+  },
+  {
+   "run": "8JRE1C4H4Z2W",
+   "floor": 33,
+   "turn": 11,
+   "note": "A10 attempt6实际died/end_hp0；新数据只进val，并同时重放两侧。"
+  },
+  {
+   "run": "WQZVENQ7DTRP",
+   "floor": 33,
+   "turn": 11,
+   "note": "A10 attempt6实际died/end_hp0；新数据只进val，33次目标SL predicted_death另作截尾。"
+  }
+ ],
+ "where": {
+  "lessons": [
+   "C48LLXBGKXQ9",
+   "XBD8Z9XLPCPN",
+   "8JRE1C4H4Z2W",
+   "WQZVENQ7DTRP"
+  ],
+  "proposal": [
+   ".worktrees/boss-sim-silent-the_insatiable-20261007-215921/paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261007-215921.md",
+   ".worktrees/boss-sim-silent-the_insatiable-20261007-215921/learner/runs/20261007-215924-boss-sim-batch/policy-grid-selection.json"
+  ],
+  "changelog": [
+   ".worktrees/boss-sim-silent-the_insatiable-20261007-215921/paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261007-215921.md"
+  ]
+ },
+ "note": "批次20261007-215921-fix-batch，evidence_key=010652ecf447bc280eac0162adfbe26531eb3f7a5c9aaff70d718dee251f306f，dispatch_base=734c08608055167fd220800439dbf7407cff6e57不可替换。197可用实际尝试/491来源，293 SL截尾、1实际缺T1；tune107和cutoff_ts固定，val73→90，全量200样本/原始行号seed/T1-pre。两份原trust.py档案同SHA d62fe3e7e13e73f3eb7a3e196b709718586979dbda26520721fa2e8cde8c7f14；验证90成功、tune106成功，K3676LU8B0UH F48两起点board:no solve原件保留。before/after dataset/source SHA和逐回合覆盖一致。原验收rc1、accepted=false：no bias entered/approached its fixed standard；BASE/BASE实盘/五回合原runner逐字节隔离passed=true。验收路径 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261007-215921/learner/runs/20261007-215924-boss-sim-batch/acceptance.json，数据/前后/隔离/失败史 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261007-215921/learner/runs/20261007-215924-boss-sim-batch，报告 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261007-215921/paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261007-215921.md。live在批次运行中改七个保护源，最终组合需范围外重验；不换base、不扩范围。tune .7仅9场的模拟策略假设，未用于after或验证选参，未实现源码。无候选源、无撤实现红/恢复绿、无合入、无版本；源码commit=base。真实fight偏差拒绝，不是bug-infra；旧silent-0244不改。"
+}

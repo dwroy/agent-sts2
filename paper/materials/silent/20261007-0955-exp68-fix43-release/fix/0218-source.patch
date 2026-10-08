@@ -1,0 +1,467 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index da03c1f8..ca4c059a 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -78,6 +78,8 @@ export interface CardModel {
+   strength: number;
+   /** Dexterity gained on play, from observed Footwork or Expertise vars (silent-0026/0136). */
+   dexterity?: number;
++  /** Observed plain Fasten: extra Block for later Silent Defends (silent-0218/0143). */
++  fasten?: number;
+   /** Dexterity for this turn only, from observed Anticipate (silent-0078 / silent-0080 / silent-0113). */
+   temporaryDexterity?: number;
+   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
+@@ -910,6 +912,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+   // 2PVLGRBGUX9S F48 first T11, silent-0137: the observed upgrade establishes three poison per later draw.
+   const corrosiveWave = cardId === "CORROSIVE_WAVE" && (!bool(card["upgraded"]) || dyn(card, "CorrosiveWave") === 3) ? dyn(card, "CorrosiveWave") ?? 0 : 0;
+   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
++  const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" &&
++    !bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4 : 0;
+   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
+   const hasModelledEffect =
+     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
+@@ -1028,6 +1032,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+     weak,
+     ...(weakFirst ? { weakFirst } : {}),
+     strength,
++    ...(fasten > 0 ? { fasten } : {}),
+     ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
+     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
+     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
+diff --git a/agent/src/reflex/rollout.ts b/agent/src/reflex/rollout.ts
+index 9abd8f16..e37ae800 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -1174,6 +1174,7 @@ interface SimPlayer {
+   maxHp: number;
+   strength: number;
+   dexterity: number;
++  fasten: number;
+   weakTurns: number;
+   vulnTurns: number;
+   /** Frail: block from cards is 25% less while it lasts (enemy turns left, like Weak and Vulnerable). */
+@@ -1560,14 +1561,15 @@ function laterDeathMoves(e: SimEnemy, enemies: SimEnemy[], table: EnemyTable | u
+ 
+ function withStrength(card: CardModel, player: SimPlayer, index: number, targets: number[]): CardModel {
+   const weak = player.weakTurns > 0;
++  const baseBlock = card.block + (card.cardId === "DEFEND_SILENT" ? player.fasten : 0);
+   return {
+     ...card,
+     index,
+     damage: card.damage === null ? null : Math.floor((card.damage + player.strength) * (weak ? 0.75 : 1)) * (card.type === "Attack" && player.doubleDamage ? 2 : 1),
+     // Unmovable: the hand shows every Block card doubled (the solver halves all but the first; combat-plan).
+     // Frail: 25% less block from cards, after Dexterity.
+-    ...(card.block > 0 ? { blockBase: card.block } : {}),
+-    block: card.block > 0 ? Math.floor(Math.max(0, card.block + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
++    ...(card.block > 0 ? { blockBase: baseBlock } : {}),
++    block: card.block > 0 ? Math.floor(Math.max(0, baseBlock + player.dexterity) * (player.frailTurns > 0 ? 0.75 : 1)) * (player.unmovable ? 2 : 1) : card.block,
+     validTargets: card.target === "single" ? targets : [],
+   };
+ }
+@@ -1931,6 +1933,10 @@ function applyLasting(card: CardModel, player: SimPlayer, playerPowers: Record<s
+     player.afterImage += card.afterImage;
+     playerPowers["AFTERIMAGE_POWER"] = (playerPowers["AFTERIMAGE_POWER"] ?? 0) + card.afterImage;
+   }
++  if (card.fasten) {
++    player.fasten += card.fasten;
++    playerPowers["FASTEN_POWER"] = player.fasten;
++  }
+   if (card.dexterity) {
+     player.dexterity += card.dexterity;
+     playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + card.dexterity;
+@@ -2535,6 +2541,7 @@ function simulate(
+     maxHp: base.maxHp,
+     strength: base.strengthNow ?? input.playerPowers["STRENGTH_POWER"] ?? 0,
+     dexterity: input.playerPowers["DEXTERITY_POWER"] ?? 0,
++    fasten: input.playerPowers["FASTEN_POWER"] ?? 0,
+     weakTurns: input.playerPowers["WEAK_POWER"] ?? (base.weak ? 1 : 0),
+     vulnTurns: input.playerPowers["VULNERABLE_POWER"] ?? (base.vulnerable ? 1 : 0),
+     frailTurns: input.playerPowers["FRAIL_POWER"] ?? 0,
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index 2651602e..40c73745 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -996,6 +996,8 @@ interface Sim {
+   flat: number;
+   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
+   tempDex: number;
++  /** Only Fasten gained within this line; existing Fasten is already in displayed Block. */
++  fasten: number;
+   /** Shadowmeld newly played within this line; never carried into a later turn. */
+   shadowmeld: boolean;
+   corrosiveWave: number;
+@@ -1914,7 +1916,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
+     if ((card.perStrengthBlock ?? 0) > 0 && next.strength !== 0) shown = Math.max(0, shown + (card.perStrengthBlock ?? 0) * next.strength * (unmovableDoubles ? 2 : 1));
+     // 1LMBFGSMCWKU F48 T3/T6, silent-0089/0091: round after adding new Dexterity under Frail.
+     // Keep the displayed Block intact; only the change from this line's new Dexterity is added.
+-    let dexBlock = card.type === "Potion" ? 0 : next.tempDex;
++    // P5HT1272P5SB F25 T9 / HSX4HYATB4E2 F31 T2: Fasten enhances Defends only.
++    let dexBlock = card.type === "Potion" ? 0 : next.tempDex + (card.cardId === "DEFEND_SILENT" ? next.fasten : 0);
+     if (player.frail && dexBlock !== 0) {
+       const raw = (card.blockBase ?? 0) + (player.dexterityNow ?? 0);
+       // Use the observed base only when it reproduces the displayed value. Otherwise use the
+@@ -1931,6 +1934,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
+   // Panic Button: its own Block lands, then no card gives Block for the rest of this turn and two more.
+   if (card.cardId === "PANIC_BUTTON") next.noBlock = true;
+   if (card.special === "temp_dex") next.tempDex += 5;
++  next.fasten += card.fasten ?? 0;
+   next.tempDex += card.dexterity ?? 0;
+   next.tempDex += card.temporaryDexterity ?? 0;
+   if (card.special === "dexterity") {
+@@ -3443,7 +3447,7 @@ function simKey(sim: Sim): string {
+   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}`).join("|");
+   const phantomKey = sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "";
+   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
+-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}`;
++  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}${sim.fasten > 0 ? `#fasten${sim.fasten}` : ""}`;
+ }
+ 
+ export interface SolveResult {
+@@ -3566,6 +3570,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
+     weakApplied: 0,
+     flat: 0,
+     tempDex: 0,
++    fasten: 0,
+     shadowmeld: false,
+     corrosiveWave: input.player.corrosiveWave ?? 0,
+     envenom: input.player.envenom ?? 0,
+diff --git a/agent/tests/silent-fasten-evidence.json b/agent/tests/silent-fasten-evidence.json
+new file mode 100644
+index 00000000..4a94445f
+--- /dev/null
++++ b/agent/tests/silent-fasten-evidence.json
+@@ -0,0 +1,229 @@
++{
++  "run": "P5HT1272P5SB",
++  "floor": 25,
++  "turn": 9,
++  "ts": "2026-10-06T23:23:33.050Z",
++  "player": {
++    "current_hp": 3,
++    "max_hp": 77,
++    "block": 0,
++    "energy": 3,
++    "stars": 0,
++    "focus": 0,
++    "powers": [
++      {
++        "index": 0,
++        "power_id": "DEXTERITY_POWER",
++        "name": "敏捷",
++        "amount": 4,
++        "is_debuff": false
++      },
++      {
++        "index": 1,
++        "power_id": "THORNS_POWER",
++        "name": "荆棘",
++        "amount": 6,
++        "is_debuff": false
++      }
++    ],
++    "base_orb_slots": 0,
++    "orb_capacity": 0,
++    "empty_orb_slots": 0,
++    "orbs": [],
++    "pets": [],
++    "pet_missing": false,
++    "cards_played_this_turn": 0,
++    "attacks_played_this_turn": 0,
++    "skills_played_this_turn": 0
++  },
++  "hand": [
++    {
++      "index": 0,
++      "card_id": "STRIKE_SILENT",
++      "name": "打击",
++      "upgraded": false,
++      "target_type": "AnyEnemy",
++      "requires_target": true,
++      "target_index_space": "enemies",
++      "valid_target_indices": [
++        0,
++        1
++      ],
++      "costs_x": false,
++      "star_costs_x": false,
++      "energy_cost": 1,
++      "star_cost": 0,
++      "rules_text": "造成{Damage:diff()}点伤害。",
++      "resolved_rules_text": "造成6点伤害。",
++      "dynamic_values": [
++        {
++          "name": "Damage",
++          "base_value": 6,
++          "current_value": 6,
++          "enchanted_value": 6,
++          "is_modified": false,
++          "was_just_upgraded": false
++        }
++      ],
++      "playable": true,
++      "can_play_result": true,
++      "unplayable_reason": null,
++      "unplayable_reason_raw": null,
++      "unplayable_preventer_id": null,
++      "unplayable_preventer_type": null
++    },
++    {
++      "index": 3,
++      "card_id": "FASTEN",
++      "name": "勒紧",
++      "upgraded": false,
++      "target_type": "Self",
++      "requires_target": false,
++      "target_index_space": null,
++      "valid_target_indices": [],
++      "costs_x": false,
++      "star_costs_x": false,
++      "energy_cost": 1,
++      "star_cost": 0,
++      "rules_text": "从“防御”牌中额外获得{ExtraBlock:diff()}点格挡。",
++      "resolved_rules_text": "从“防御”牌中额外获得4点格挡。",
++      "dynamic_values": [
++        {
++          "name": "ExtraBlock",
++          "base_value": 4,
++          "current_value": 4,
++          "enchanted_value": 4,
++          "is_modified": false,
++          "was_just_upgraded": false
++        }
++      ],
++      "playable": true,
++      "can_play_result": true,
++      "unplayable_reason": null,
++      "unplayable_reason_raw": null,
++      "unplayable_preventer_id": null,
++      "unplayable_preventer_type": null
++    },
++    {
++      "index": 4,
++      "card_id": "DEFEND_SILENT",
++      "name": "防御",
++      "upgraded": false,
++      "target_type": "Self",
++      "requires_target": false,
++      "target_index_space": null,
++      "valid_target_indices": [],
++      "costs_x": false,
++      "star_costs_x": false,
++      "energy_cost": 1,
++      "star_cost": 0,
++      "rules_text": "获得{Block:diff()}点格挡。",
++      "resolved_rules_text": "获得9点格挡。",
++      "dynamic_values": [
++        {
++          "name": "Block",
++          "base_value": 5,
++          "current_value": 9,
++          "enchanted_value": 5,
++          "is_modified": true,
++          "was_just_upgraded": false
++        }
++      ],
++      "playable": true,
++      "can_play_result": true,
++      "unplayable_reason": null,
++      "unplayable_reason_raw": null,
++      "unplayable_preventer_id": null,
++      "unplayable_preventer_type": null
++    }
++  ],
++  "enemies": [
++    {
++      "index": 0,
++      "enemy_id": "PARAFRIGHT",
++      "name": "寄生惧魔",
++      "current_hp": 21,
++      "max_hp": 21,
++      "base_max_hp": 21,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "ILLUSION_POWER",
++          "name": "幻象",
++          "amount": 1,
++          "is_debuff": false
++        },
++        {
++          "index": 1,
++          "power_id": "MINION_POWER",
++          "name": "爪牙",
++          "amount": 1,
++          "is_debuff": false
++        },
++        {
++          "index": 2,
++          "power_id": "STRENGTH_POWER",
++          "name": "力量",
++          "amount": 9,
++          "is_debuff": false
++        }
++      ],
++      "intent": "SLAM_MOVE",
++      "move_id": "SLAM_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Attack",
++          "label": "26",
++          "damage": 26,
++          "hits": 1,
++          "total_damage": 26,
++          "status_card_count": null
++        }
++      ]
++    },
++    {
++      "index": 1,
++      "enemy_id": "THE_OBSCURA",
++      "name": "胧光怪",
++      "current_hp": 31,
++      "max_hp": 129,
++      "base_max_hp": 129,
++      "block": 0,
++      "is_alive": true,
++      "is_hittable": true,
++      "powers": [
++        {
++          "index": 0,
++          "power_id": "STRENGTH_POWER",
++          "name": "力量",
++          "amount": 9,
++          "is_debuff": false
++        },
++        {
++          "index": 1,
++          "power_id": "POISON_POWER",
++          "name": "中毒",
++          "amount": 2,
++          "is_debuff": true
++        }
++      ],
++      "intent": "SAIL_MOVE",
++      "move_id": "SAIL_MOVE",
++      "intents": [
++        {
++          "index": 0,
++          "intent_type": "Buff",
++          "label": null,
++          "damage": null,
++          "hits": null,
++          "total_damage": null,
++          "status_card_count": null
++        }
++      ]
++    }
++  ]
++}
+diff --git a/agent/tests/silent-fasten.test.ts b/agent/tests/silent-fasten.test.ts
+new file mode 100644
+index 00000000..18e54e66
+--- /dev/null
++++ b/agent/tests/silent-fasten.test.ts
+@@ -0,0 +1,99 @@
++/** HSX4HYATB4E2 F31 T2; P5HT1272P5SB F25 T9; ledgers silent-0218 / silent-0143. */
++import { resolve } from "node:path";
++import { expect, it, vi } from "vitest";
++import evidence from "./silent-fasten-evidence.json";
++import { makeKnowledge } from "../src/knowledge/index.js";
++import { modelHandCard } from "../src/reflex/card-model.js";
++import { enemySims } from "../src/reflex/combat-plan.js";
++import { replaySteps, type SolverInput } from "../src/reflex/turn-solver.js";
++import { simulateFight } from "../src/reflex/rollout.js";
++import { board, card } from "./boss-sim-fixture.js";
++
++vi.mock("node:fs", async (original) => {
++  const fs = await original<typeof import("node:fs")>();
++  const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
++  const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
++    if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
++      throw Object.assign(new Error("ENOENT: fixed Fasten references"), { code: "ENOENT" });
++    }
++    return (fs.readFileSync as (...args: unknown[]) => unknown)(path, ...args);
++  }) as typeof fs.readFileSync;
++  return { ...fs, readFileSync, default: { ...fs, readFileSync } };
++});
++
++const knowledge = makeKnowledge({ cards: [
++  { id: "FASTEN", type: "Power" }, { id: "DEFEND_SILENT", type: "Skill" },
++  { id: "STRIKE_SILENT", type: "Attack" },
++] }, "cache");
++const rawFasten = evidence.hand.find((entry) => entry.card_id === "FASTEN")!;
++const fasten = (index = 0) => modelHandCard({ ...rawFasten, index }, index, knowledge, "silent");
++const defend = (index: number, block = 5) => card(index, "DEFEND_SILENT", {
++  type: "Skill", target: "self", validTargets: [], block, blockBase: 5,
++});
++const step = (cardIndex: number, cardId: string, target?: number) => ({ cardIndex, cardId, name: cardId, upgraded: false, target });
++
++it("P5HT F25 T9: Fasten then Defend gains 13 Block and still loses 13 HP", () => {
++  const input: SolverInput = {
++    hand: evidence.hand.map((raw) => modelHandCard(raw, raw.index, knowledge, "silent")),
++    player: { hp: 3, maxHp: 77, energy: 3, block: 0, dexterityNow: 4,
++      weak: false, vulnerable: false, intangible: false },
++    enemies: enemySims({ enemies: evidence.enemies }), fightKind: "monster", turn: 9,
++  };
++  const plan = replaySteps(input, [step(0, "STRIKE_SILENT", 1), step(3, "FASTEN"), step(4, "DEFEND_SILENT")])!;
++  expect(plan.outcome).toMatchObject({ blockGained: 13, hpLoss: 13 });
++});
++
++it("HSX F31 T2: Burst repeats the newly enhanced Defend for the observed 23 Block", () => {
++  const input = board().solver;
++  input.hand = [fasten(), card(1, "RING_OF_FORTITUDE", { type: "Skill", target: "self", block: 5 }),
++    card(2, "BURST", { type: "Skill", target: "self", cost: 0, burst: true, burstSkills: 1 }), defend(3)];
++  expect(replaySteps(input, input.hand.map((c) => step(c.index, c.cardId)))!.outcome.blockGained).toBe(23);
++});
++
++it("only Defends after Fasten gain the new Block; another Skill remains unchanged", () => {
++  const input = board().solver;
++  input.player.energy = 4;
++  input.hand = [defend(0), fasten(1), defend(2), card(3, "TEST_BLOCK_SKILL", { type: "Skill", target: "self", block: 5 })];
++  expect(replaySteps(input, input.hand.map((c) => step(c.index, c.cardId)))!.outcome.blockGained).toBe(19);
++});
++
++it("0143: Frail rounds after adding Fasten, for plain and upgraded Defends", () => {
++  for (const [base, shown, expected] of [[5, 10, 13], [8, 12, 15]]) {
++    const input = board().solver;
++    input.player.frail = true;
++    input.player.dexterityNow = 9;
++    input.hand = [fasten(), { ...defend(1, shown), blockBase: base, upgraded: base === 8 }];
++    const plan = replaySteps(input, [step(0, "FASTEN"), { ...step(1, "DEFEND_SILENT"), upgraded: base === 8 }]);
++    expect(plan).not.toBeNull();
++    expect(plan!.outcome.blockGained).toBe(expected);
++  }
++});
++
++it("existing Fasten in the displayed Defend is not added again", () => {
++  const input = board().solver;
++  input.hand = [defend(0, 13)];
++  expect(replaySteps(input, [step(0, "DEFEND_SILENT")])!.outcome.blockGained).toBe(13);
++});
++
++it("Fasten persists to later rollout turns without adding the current display twice", () => {
++  const input = board();
++  input.solver.hand = [fasten(), defend(1)];
++  const plan = replaySteps(input.solver, [step(0, "FASTEN"), step(1, "DEFEND_SILENT")])!;
++  input.piles = { handBase: input.solver.hand, draw: Array.from({ length: 6 }, (_, i) => defend(10 + i)), discard: [] };
++  input.tables = { TEST_BOSS: { moves: { HIT: { damage: 27, hits: 1, strength: 0, block: 0 } }, next: { HIT: { HIT: 1 } } } };
++  const records = simulateFight(input, plan, 3, 1, false).records;
++  expect(records[0]!.snap.pw.FASTEN_POWER).toBe(4);
++  expect(records[1]!.loss).toBe(0);
++  expect(records[2]!.loss).toBe(0);
++  input.playerPowers = { FASTEN_POWER: 4 };
++  input.solver.hand = [defend(0, 9)];
++  input.piles.handBase = [defend(0)];
++  const active = simulateFight(input, replaySteps(input.solver, [])!, 2, 1, false).records;
++  expect(active[1]!.loss).toBe(0);
++  expect(active[1]!.snap.pw.FASTEN_POWER).toBe(4);
++});
++
++it("unobserved Fasten upgrades and other characters do not gain this model", () => {
++  expect(modelHandCard({ ...rawFasten, upgraded: true }, 0, knowledge, "silent").fasten).toBeUndefined();
++  expect(modelHandCard(rawFasten, 0, knowledge, "ironclad").fasten).toBeUndefined();
++});

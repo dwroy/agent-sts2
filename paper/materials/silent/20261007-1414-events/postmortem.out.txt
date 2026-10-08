@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：CA5KE8GFJ9X2（A10，第13层，死于下水道蚌 SEWER_CLAM：T5以2血、10挡对14攻击，差2血）。
+- 新的纯 bug：
+  - CA5KE8GFJ9X2：铁蒺藜新建的3层荆棘未接入卡牌模型及后续推演 — agent/src/reflex/card-model.ts:1074（新）
+- 写成「未记录」的项：CA5KE8GFJ9X2：Jev缓存、重问后原计划完整执行比例、安瓿同次击杀内部顺序、boss实打及旧时钟指标、未执行方案的整场反事实、能力与遗物独立整场收益。
+- 学习账本：CA5KE8GFJ9X2：新增 silent-0229、silent-0230、silent-0231；更新 silent-0019、silent-0020、silent-0021、silent-0044、silent-0173、silent-0201、silent-0209、silent-0211（均为support，老错重犯无）；`ledger.py check` 退出码0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"postmortem","appended":["CA5KE8GFJ9X2"],"skipped":[],"bugs":[{"run":"CA5KE8GFJ9X2","where":"agent/src/reflex/card-model.ts:1074","what":"铁蒺藜新建的3层荆棘未接入卡牌模型及后续推演","new":true}],"ledger":{"added":["silent-0229","silent-0230","silent-0231"],"updated":["silent-0019","silent-0020","silent-0021","silent-0044","silent-0173","silent-0201","silent-0209","silent-0211"],"repeats":[],"check":0}}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a114e3-0090-7343-b301-7ea648b277b1
+轮数：1；工具调用：command_execution×53
+token：输入 183.3k、输出 30.4k（其中推理 9947）、cache 读 2778.1k、cache 写 0（命中 93.8%）
+成本：未提供
+耗时：855.3 s（墙钟）
+时间：首个事件 2.3 s、模型首个输出 7.7 s、首次工具 13.0 s、末次工具结束 829.8 s；工具内共 35.6 s，其余（模型生成、推理、网络）817.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×25；/home/dw/.codex-sts2/sessions/2026/10/07/rollout-2026-10-07T13-43-03-01a114e3-0090-7343-b301-7ea648b277b1.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261007-134302-postmortem.jsonl

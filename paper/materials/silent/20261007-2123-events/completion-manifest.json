@@ -1,0 +1,173 @@
+{
+  "source_files_verified_unchanged": 72,
+  "timestamp_cst": "2026-10-07 21:42",
+  "events": 6,
+  "publication": {
+    "source": "4b6396bd462ca61bb13d082fdc73fdf5d0cf610a",
+    "previous_source": "6579082a9e6bc643a0186c5a8a092422d6937f4e",
+    "one_lock_attempt_this_wake": true,
+    "state": "published",
+    "timestamp": "2026-10-07 21:42",
+    "actual_code": "bcfdfd8a8d419c99d167cb8da52012767d2b70c1",
+    "publication": "734c08608055167fd220800439dbf7407cff6e57",
+    "publication_tree": "6e76d6db5df5d4645a5fd17a3d13a15cea92f8d1",
+    "version": "S1.exp80",
+    "version_entry": {
+      "name": "S1.exp80",
+      "family": "Silent",
+      "commit": "bcfdfd8a8d419c99d167cb8da52012767d2b70c1",
+      "source": "decision-log 2026-10-07 21:42（源4b6396bd462ca61bb13d082fdc73fdf5d0cf610a/经验前源6579082a9e6bc643a0186c5a8a092422d6937f4e，经验2026-10-07.26/154 active；源原沙箱tsc0/239文件2511例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。仅经验原blob，保留全部并行代码与刷新；仅本源10项所属经验由CLI追加数据shipped，代码提案独立续办。原失败历史保留，原批完整外部续验。）"
+    },
+    "main_code_sync": "43a71eeeff12a86193ef5ce12bc0c77fb199bbbf",
+    "main_record": "67bed6da0ef2e1dec9c7c61eecc71f4831154590",
+    "live_before": "31914e4ba652d6e8466a4a99f04128005166ecf2",
+    "combined": "5c7edf5979e5c83935e4b942f28916a4d50c2b2e",
+    "preserved_refresh_commit": "c272cb858a87d0538819286dacd4edf72e391cce",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md"
+    ],
+    "refresh_sha256": {
+      "knowledge/characters/silent/boss-damage.json": "830d27e0b39be728d9a5f30f7b615202fb76c2b059bec244c110ec486af3f612",
+      "knowledge/characters/silent/fight-value-gates.json": "a50a0077355c4580808d1a517ec8b4446d731f5e1186ae579ac0986860f6e5b5",
+      "knowledge/characters/silent/fight-value.json": "9d5532710c023c8bfd84aeb71d0b0d5519b78f0b79e6b7c71111e36991423631",
+      "knowledge/characters/silent/monster-records.json": "2f7c78c3646dc07d3b5185418a2b9e0403121b45d37dd21693dd528da69e45d6",
+      "knowledge/characters/silent/outcome-stats.json": "d6303240b4a2777eebc2480c7067c90e60f9ce605011bf85a46417633a23e5b3",
+      "knowledge/characters/silent/room-costs.json": "21a69e77df8e54680f0920f043fa75d0d17d175bb0dc82b83936196c4315a9dc",
+      "knowledge/common/card-upgrades.json": "ac67572ec9fc20b921539cb17dd155b67d665cfa5eaee9708048a9e361a0ae78",
+      "knowledge/common/monster-db.json": "a6c20e48faac8a4d9fed96b3e486fe6508ea418e956827faecb1d30b380bade8",
+      "knowledge/common/move-model.json": "1502c95fe113ea08d8155b8b62734484581507c45249a340d2ec8eee378965e8",
+      "notes/fight-value-backtest-silent.md": "a70b79e9647c000498e93f29d26ea87557830000dbe23b5743a12049ea7a103d"
+    },
+    "source_blob": "8444e62f3ae6f2327227be15a530f967156e73ac",
+    "data_only": true,
+    "untracked_preserved": true,
+    "source_tests": {
+      "exit": 0,
+      "files": 239,
+      "cases": 2511,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-203654-experience-update/test-source-final.log"
+    },
+    "post_merge_sandbox": {
+      "exit": 0,
+      "files": 239,
+      "cases": 2511,
+      "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261007-2123-experience80/post-merge-sandbox.log"
+    },
+    "full_external": "Original-batch independent recheck pending",
+    "record_line": "- 2026-10-07 21:42 运维codex21:23经验80合入受阻兜底实际发布：源4b6396bd462ca61bb13d082fdc73fdf5d0cf610a及经验前源6579082a9e6bc643a0186c5a8a092422d6937f4e均成为live bcfdfd8a8d419c99d167cb8da52012767d2b70c1真实祖先，唯一S1.exp80/经验.26/154 active；源原沙箱tsc0/239文件2511例exit0，实际合后原入口tsc0/vitest0/239文件2511例exit0/1worker。只合源experience.json原blob，保存刷新c272cb858a87d0538819286dacd4edf72e391cce及全部并行代码/数据/记录；既有S1.exp79不重复登记、本源10项所属经验按CLI追加数据shipped，代码提案独立续办。原out/err/failed/冲突历史保持，沿原批learner-recheck完整外部续验；main机械同步，不停对局/不运行play/env不改，回执paper/materials/silent/20261007-2123-experience80。\n"
+  },
+  "full_external_checks_closed": [
+    {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-200254-experience-update.fallback-37eeafcf9ca483d0db100bbbbf35ac8bda5f230b.checks.log",
+      "merged": "31914e4ba652d6e8466a4a99f04128005166ecf2",
+      "tree": "37eeafcf9ca483d0db100bbbbf35ac8bda5f230b",
+      "commits": [
+        "6579082a9e6bc643a0186c5a8a092422d6937f4e"
+      ],
+      "tsc": 0,
+      "vitest": 0,
+      "files": 290,
+      "cases_passed": 3319,
+      "cases_skipped": 2,
+      "original": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-200254-experience-update.fallback-37eeafcf9ca483d0db100bbbbf35ac8bda5f230b.checks.log",
+        "bytes": 70932,
+        "sha256": "e8dcf178ccc81ae692cd7de1f78bf40db55ed9adcf0ae87e9f085a1ca70fc428"
+      },
+      "no_repeat_merge_version_shipped_or_check": true
+    },
+    {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-184215-experience-update.fallback-37eeafcf9ca483d0db100bbbbf35ac8bda5f230b.checks.log",
+      "merged": "31914e4ba652d6e8466a4a99f04128005166ecf2",
+      "tree": "37eeafcf9ca483d0db100bbbbf35ac8bda5f230b",
+      "commits": [
+        "ad20957345fa54777705dd00a75ab4d60d1d4b49"
+      ],
+      "tsc": 0,
+      "vitest": 0,
+      "files": 290,
+      "cases_passed": 3319,
+      "cases_skipped": 2,
+      "original": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-184215-experience-update.fallback-37eeafcf9ca483d0db100bbbbf35ac8bda5f230b.checks.log",
+        "bytes": 77591,
+        "sha256": "7713bf13bbbbadc1d5ff978b6615e7d227c97cf56ad44cf0a02c08fd25e6c1de"
+      },
+      "no_repeat_merge_version_shipped_or_check": true
+    },
+    {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-193250-experience-update.fallback-37eeafcf9ca483d0db100bbbbf35ac8bda5f230b.checks.log",
+      "merged": "31914e4ba652d6e8466a4a99f04128005166ecf2",
+      "tree": "37eeafcf9ca483d0db100bbbbf35ac8bda5f230b",
+      "commits": [
+        "2a3f0188a9b087d19d16239ff88279d1b1e9f39c"
+      ],
+      "tsc": 0,
+      "vitest": 0,
+      "files": 290,
+      "cases_passed": 3319,
+      "cases_skipped": 2,
+      "original": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261007-193250-experience-update.fallback-37eeafcf9ca483d0db100bbbbf35ac8bda5f230b.checks.log",
+        "bytes": 72801,
+        "sha256": "c2054352c564f40cce69c0c1dd502f59438c216493c7f3021719189166a187b0"
+      },
+      "no_repeat_merge_version_shipped_or_check": true
+    }
+  ],
+  "groups": {
+    "20261007-201301": 12,
+    "experience80": 31,
+    "20261007-204301": 17,
+    "shipped80": 10
+  },
+  "owned_ledger_rows": 70,
+  "physical_ledger_check": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 251 item(s), 0 problem(s)",
+  "candidate_index_problems": [],
+  "new_nonblocking_bug": [
+    {
+      "run": "YQL8RZ8BWN1E",
+      "where": "agent/src/sl/explore.ts:896",
+      "what": "SL残血统计将不可击杀自爆占位血用于参考路径排序（排序使用点:913）",
+      "new": true
+    }
+  ],
+  "code_proposals": [
+    "silent-proposal-1697e17b9ae127ca",
+    "silent-proposal-7a0d3e7d219d6661",
+    "silent-proposal-7f6b8dd004796c82",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-e18d3f18e6cac2a0"
+  ],
+  "data_ids_shipped": [
+    "silent-0011",
+    "silent-0027",
+    "silent-0007",
+    "silent-0046",
+    "silent-0006",
+    "silent-0021",
+    "silent-0017",
+    "silent-0205",
+    "silent-0019",
+    "silent-0020"
+  ],
+  "new_bug_not_shipped": true,
+  "KEN_final_errata_preserved": true,
+  "source_originals_unchanged": true,
+  "no_play_env_scheduler_mutation": true,
+  "full_external_exp80": "not yet requested, not claimed passed"
+}

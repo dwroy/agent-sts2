@@ -1,0 +1,98 @@
+{
+  "strategy_source": "790b76d00dc23dedb970cb82a00cb3db6ff1cbb7",
+  "experience_source": "cf32a914f24bf03eedaff69156e6db51a16a1341",
+  "source_paths": [
+    "agent/src/memory/types.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/fight-plays.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-sloth-replay-state.json",
+    "agent/tests/silent-sloth-replay.test.ts",
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blobs": {
+    "agent/src/memory/types.ts": "b18689ba094c7080f2267fd2ab7b80c2d27c8e5d",
+    "agent/src/reflex/combat-plan.ts": "59ce29a68e0b5ff7ec3c8173244ef7b9b89d33fe",
+    "agent/src/reflex/fight-plays.ts": "043f531ae84ca622c6a1a2d1e555e30b581018f0",
+    "agent/src/reflex/rollout.ts": "c1a6bc2d1172591c5fdceafa563dcaf1d77bf46b",
+    "agent/src/reflex/turn-solver.ts": "5aed6da0bcf0eccdc39047946dfc1e0d022aba96",
+    "agent/tests/silent-sloth-replay-state.json": "e4c43906554c6b9f98c6b56701db3c9b63c946b8",
+    "agent/tests/silent-sloth-replay.test.ts": "6f310bde6e17a90e2f17e750cb5c0eae102f3da9",
+    "knowledge/characters/silent/experience.json": "6ac87956908659679f39c8bd71c15da3df97da9a"
+  },
+  "strategy_source_tests": {
+    "exit": 0,
+    "files": 243,
+    "cases": 2554,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/pre-commit-sandbox.log"
+  },
+  "experience_source_tests": {
+    "exit": 0,
+    "files": 242,
+    "cases": 2540,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-014012-experience-update/test-source.log"
+  },
+  "source_failures_preserved": true,
+  "state": "published",
+  "main_code_sync": "3bdb3a37b106e80790bbe177bc05a226729f674c",
+  "main_record": "58e5824848be2ddab7f6e59a165b5429ba015c31",
+  "full_external": "Original-batch rechecks pending",
+  "actual_code": "a16518c4201bfc324b185cb2b75eb34ff309676e",
+  "live_before": "03f4ffe017f886f9ee92be50911a318f5f90f4bd",
+  "combined": "d6b7f1b6be157fd43e23ef9de471ae95cba634f5",
+  "net_paths": [
+    "agent/src/memory/types.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/fight-plays.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-sloth-replay-state.json",
+    "agent/tests/silent-sloth-replay.test.ts",
+    "knowledge/characters/silent/experience.json"
+  ],
+  "preserved_refresh": "3c77e01059be43975e08c1726b8552436bbeded1",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "0acfe24b652e0280a142367d8158729022e7b9a63fc9c7bd13ac36dad46a91d0",
+    "knowledge/characters/silent/fight-value-gates.json": "695bb74cec09e59791f1c069c71f7d6c899411f383073bf9a2f5bc984eb0a2d3",
+    "knowledge/characters/silent/fight-value.json": "d6e8f05a819cc884e9a94938d012befc743881495b114a5fbb163e38a0a5606f",
+    "knowledge/characters/silent/monster-records.json": "09b59a5b668f0c86659f635dca7e2588ba527e388aaed812d5a414f40e67ef62",
+    "knowledge/characters/silent/outcome-stats.json": "bf6206600ac74a7c00e5333afc0bc12b59a0f39feaaf3c5de9ca35acde5e20c2",
+    "knowledge/characters/silent/room-costs.json": "141712440acd49d0ee7a0a5d92f4e0b04c5217afd7692d64701acdf2dd0eca6b",
+    "knowledge/common/card-upgrades.json": "59fca2b25f2c7c20392fe20c3803de8f91ea0ffb91b56a86d4684f044f19cea3",
+    "knowledge/common/monster-db.json": "ee9e2f303402dd899b08fc897f2f821afecfcaddbad9b6492bb34e3b6cf5dcda",
+    "knowledge/common/move-model.json": "c698dbe52cf8cf08f082be1468e4dcd35187bc34bde4f0600340f327c6b215ea",
+    "notes/fight-value-backtest-silent.md": "b2b53a85c938795162bd247a6695c65d9c30fc6519330f01ba13bf0561f0c86c"
+  },
+  "preserved_calibration3_blob": "b73f2c55cc2bbc72f786a1b0e46b38fc68808a37",
+  "merge_lock_attempted": true,
+  "lock_attempts": 1,
+  "timestamp": "2026-10-08 02:40",
+  "publication": "f631c31b7a388a663676a7d691c5df0202ca05ea",
+  "publication_tree": "249c2782765003571b108adc90b596ec713021e1",
+  "versions": [
+    "S1.sloth-replay1",
+    "S1.exp85"
+  ],
+  "version_entries": [
+    {
+      "name": "S1.sloth-replay1",
+      "family": "Silent",
+      "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e",
+      "source": "decision-log 2026-10-08 02:40: 原策略010309源790b76d0记录冲突受阻兜底；只silent A10已观察懒惰3+普通防御重放1额度，KV0JHNJCKXLS F33末试T8/silent-0245/0247，原提案a0853bed；最后名额及未观察牌/叠加边界未知，不改SL权重/药水/终局规则。源原沙箱243文件2554例0、最终撤碼7红恢复14绿/旧凋萎10绿；合后原入口243文件2554例tsc/vitest0，完整外部待原批续验。"
+    },
+    {
+      "name": "S1.exp85",
+      "family": "S1",
+      "commit": "a16518c4201bfc324b185cb2b75eb34ff309676e",
+      "source": "decision-log 2026-10-08 02:40: 原经验014011源cf32a914 .1→2026-10-08.2净blob受锁30秒超时/21记录冲突兜底；增0改20退0/159 active，G33HU22H2543/P74C04AEPL1F，22所属台账，3代码提案独立链不冒称实现。源原沙箱242文件2540例0，合后原入口243文件2554例tsc/vitest0；并行代码/校准3/知识刷新保持，完整外部待原批续验。"
+    }
+  ],
+  "post_merge_sandbox": {
+    "exit": 0,
+    "files": 243,
+    "cases": 2554,
+    "log": "/home/dw/Projects/agent-sts2/paper/materials/silent/20261008-0234-events/post-merge-sandbox.log"
+  },
+  "record_line": "- 2026-10-08 02:40 运维codex02:34受阻兜底：固定策略源790b76d00dc23dedb970cb82a00cb3db6ff1cbb7及经验85源cf32a914f24bf03eedaff69156e6db51a16a1341实际成为livea16518c4201bfc324b185cb2b75eb34ff309676e祖先，净7源码/固定输入+1经验路径逐blob同源；只沿学习者已测观察范围合入，策略KV0JHNJCKXLS A10 F33末试T8懒惰3/普通防御重放1额度，最后名额/其他未知边界保持，SL权重/药水/终局不改；经验.1→.2增0改20退0/159 active，三个代码提案原独立自动链。源原沙箱243文件2554例/242文件2540例0、策略最终撤码7红恢复14绿与旧凋萎10绿；实际合后原入口243文件2554例tsc/vitest0/nice19/4workers，唯一S1.sloth-replay1/S1.exp85，全部并行代码/校准3/知识刷新及原失败/冲突/out/err保留。main机械同步、2策略+22经验本所属CLI shipped、a085提案机械登记及Roy旧新规则/数据/局号/预期/回退双通知随后办理，不承诺通关；两个原批独立完整外部续验待登记、不冒报通过。不停对局/调度、不运行play/env不改；回执paper/materials/silent/20261008-0234-events。\n"
+}
