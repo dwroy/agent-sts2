@@ -1,0 +1,596 @@
+[
+  {
+    "line": 9227,
+    "label": "map/route-plan",
+    "fields": [
+      [
+        ".route_map.candidate_routes",
+        {
+          "about": "代码列出的到 boss 的路线（事实，不是选项）：boss 前 HP 最高的 3 条、最稳的（休息点、精英进场和 boss 前最低的 p75 最高）、精英最多、商店最多的。按休息点分段：每段房间、精英进场、到达休息点和 boss 的 HP（从现在的 HP 56/70 起；中位数；p75 = 这一段的房间都按 p75；休息点按回血算，锻造就少这一次回血）。",
+          "routes": [
+            "【boss 前 HP 第 1；最稳（路上最低点最高）；商店最多（3）】r1c3 r2c2 r3c1 r4c0 r5c1 r6c2 r7c2 r8c1 r9c0 r10c0 r11c0 r12c1 r13c1 r14c1 r15c0 r16c3：F2–F6 普通战 3、问号 1、商店 1 → F7 休息 47/70（p75 28）；F8 问号 1 → F9 休息 68/70（p75 65）；F10–F11 商店 1、宝箱 1 → F12 休息 70/70（p75 70）；F13–F15 普通战 2、商店 1 → F16 休息 64/70（p75 53）；F17 boss 70/70（p75 70）",
+            "【boss 前 HP 第 2】r1c3 r2c2 r3c1 r4c0 r5c1 r6c2 r7c2 r8c1 r9c0 r10c0 r11c1 r12c1 r13c1 r14c1 r15c0 r16c3：F2–F6 普通战 3、问号 1、商店 1 → F7 休息 47/70（p75 28）；F8 问号 1 → F9 休息 68/70（p75 65）；F10–F15 普通战 2、问号 1、商店 2、宝箱 1 → F16 休息 64/70（p75 50）；F17 boss 70/70（p75 70）",
+            "【boss 前 HP 第 3】r1c3 r2c2 r3c1 r4c0 r5c1 r6c2 r7c2 r8c1 r9c2 r10c2 r11c2 r12c1 r13c1 r14c1 r15c0 r16c3：F2–F6 普通战 3、问号 1、商店 1 → F7 休息 47/70（p75 28）；F8 问号 1 → F9 休息 68/70（p75 65）；F10 宝箱 1 → F11 休息 70/70（p75 70）；F12–F15 普通战 3、商店 1 → F16 休息 61/70（p75 45）；F17 boss 70/70（p75 70）",
+            "【精英最多（3）】r1c3 r2c2 r3c1 r4c0 r5c1 r6c1 r7c2 r8c1 r9c1 r10c1 r11c2 r12c3 r13c3 r14c3 r15c3 r16c3：F2–F8 普通战 3、精英 1（F7 进场 47/70，p75 28）、问号 2、商店 1 → F9 休息 22/70（p75 耗尽）；F10–F12 普通战 1、精英 1（F11 进场 43/70，p75 43）、宝箱 1 → F13 休息 15/70（p75 耗尽）；F14–F15 普通战 1、精英 1（F14 进场 36/70，p75 36） → F16 休息 8/70（p75 耗尽）；F17 boss 29/70（p75 29）"
+          ]
+        }
+      ],
+      [
+        ".facts.act_boss_clock",
+        {
+          "boss": "CEREMONIAL_BEAST",
+          "boss_hp": 262,
+          "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+          "boss_hp_parts": [
+            "CEREMONIAL_BEAST"
+          ],
+          "boss_enemies": [
+            {
+              "enemy": "CEREMONIAL_BEAST",
+              "hp": 262,
+              "hp_samples": 19,
+              "hp_from_ascension": 10,
+              "hp_estimated": false,
+              "attacks": [
+                {
+                  "move": "CRUSH_MOVE",
+                  "per_hit": 19,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 18,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "PLOW_MOVE",
+                  "per_hit": 20,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 52,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "STOMP_MOVE",
+                  "per_hit": 17,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 16,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                }
+              ]
+            }
+          ],
+          "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+          "deck_damage_per_turn_estimate": null,
+          "hp_loss_per_turn": null,
+          "survivable_turns": null,
+          "gap_per_turn": null,
+          "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+        }
+      ]
+    ]
+  },
+  {
+    "line": 9233,
+    "label": "rest/plan",
+    "fields": [
+      [
+        ".route_review",
+        {
+          "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+          "map": [
+            "F1 r0c3 远古（已走） → r1c1 r1c3",
+            "F2 r1c1 普通战 → r2c0",
+            "F2 r1c3 普通战（已走） → r2c2",
+            "F3 r2c0 普通战 → r3c0",
+            "F3 r2c2 普通战（已走） → r3c1 r3c3",
+            "F4 r3c0 问号 → r4c0",
+            "F4 r3c1 商店 → r4c0 r4c2",
+            "F4 r3c3 普通战（已走） → r4c2 r4c4",
+            "F5 r4c0 问号 → r5c1",
+            "F5 r4c2 普通战（已走） → r5c1 r5c3",
+            "F5 r4c4 问号 → r5c3 r5c5",
+            "F6 r5c1 普通战（已走） → r6c0 r6c1 r6c2",
+            "F6 r5c3 问号 → r6c3 r6c4",
+            "F6 r5c5 普通战 → r6c6",
+            "F7 r6c0 问号 → r7c0",
+            "F7 r6c1 精英 → r7c1 r7c2",
+            "F7 r6c2 休息（当前） → r7c2",
+            "F7 r6c3 精英 → r7c2",
+            "F7 r6c4 问号 → r7c4",
+            "F7 r6c6 问号 → r7c6",
+            "F8 r7c0 普通战 → r8c1",
+            "F8 r7c1 普通战 → r8c1",
+            "F8 r7c2 问号 → r8c1",
+            "F8 r7c4 精英 → r8c5",
+            "F8 r7c6 问号 → r8c6",
+            "F9 r8c1 休息 → r9c0 r9c1 r9c2",
+            "F9 r8c5 休息 → r9c6",
+            "F9 r8c6 精英 → r9c6",
+            "F10 r9c0 宝箱 → r10c0",
+            "F10 r9c1 宝箱 → r10c1",
+            "F10 r9c2 宝箱 → r10c2",
+            "F10 r9c6 宝箱 → r10c5 r10c6",
+            "F11 r10c0 商店 → r11c0 r11c1",
+            "F11 r10c1 精英 → r11c2",
+            "F11 r10c2 休息 → r11c2",
+            "F11 r10c5 普通战 → r11c5",
+            "F11 r10c6 普通战 → r11c6",
+            "F12 r11c0 休息 → r12c1",
+            "F12 r11c1 问号 → r12c1",
+            "F12 r11c2 普通战 → r12c1 r12c3",
+            "F12 r11c5 问号 → r12c5",
+            "F12 r11c6 休息 → r12c5",
+            "F13 r12c1 普通战 → r13c0 r13c1",
+            "F13 r12c3 休息 → r13c3",
+            "F13 r12c5 精英 → r13c6",
+            "F14 r13c0 精英 → r14c0 r14c1",
+            "F14 r13c1 普通战 → r14c1",
+            "F14 r13c3 精英 → r14c3",
+            "F14 r13c6 普通战 → r14c6",
+            "F15 r14c0 普通战 → r15c0",
+            "F15 r14c1 商店 → r15c0",
+            "F15 r14c3 普通战 → r15c3",
+            "F15 r14c6 问号 → r15c6",
+            "F16 r15c0 休息 → r16c3",
+            "F16 r15c3 休息 → r16c3",
+            "F16 r15c6 休息 → r16c3",
+            "F17 r16c3 Boss（本幕 boss）"
+          ],
+          "position": "你在 r6c2（F7 休息）；下一步可走：r7c2",
+          "next_nodes": [
+            "r7c2"
+          ],
+          "winged_boots_left": 0,
+          "boss": "r16c3（F17 Boss）",
+          "walked": "r0c3 → r1c3 → r2c2 → r3c3 → r4c2 → r5c1 → r6c2",
+          "plan": "r7c2 问号 → r8c1 休息 → r9c0 宝箱 → r10c0 商店 → r11c0 休息 → r12c1 普通战 → r13c0 精英 → r14c1 商店 → r15c0 休息 → r16c3 Boss",
+          "plan_facts": {
+            "arrival": [
+              "F8 r7c2 问号：2/70（p75 2）",
+              "F9 r8c1 休息：2/70（p75 耗尽）",
+              "F10 r9c0 宝箱：23/70（p75 耗尽）",
+              "F11 r10c0 商店：23/70（p75 耗尽）",
+              "F12 r11c0 休息：23/70（p75 耗尽）",
+              "F13 r12c1 普通战：44/70（p75 耗尽）",
+              "F14 r13c0 精英：41/70（p75 耗尽）",
+              "F15 r14c1 商店：16/70（p75 耗尽）",
+              "F16 r15c0 休息：16/70（p75 耗尽）",
+              "F17 r16c3 Boss：37/70（p75 耗尽）"
+            ],
+            "rest_sites": [
+              "F9 r8c1 休息：到达 2/70（p75 耗尽）；回血 → 23/70（p75 耗尽）；锻造（不回血）→ 2/70（p75 耗尽）",
+              "F12 r11c0 休息：到达 23/70（p75 耗尽）；回血 → 44/70（p75 耗尽）；锻造（不回血）→ 23/70（p75 耗尽）",
+              "F16 r15c0 休息：到达 16/70（p75 耗尽）；回血 → 37/70（p75 耗尽）；锻造（不回血）→ 16/70（p75 耗尽）"
+            ],
+            "fights_before_rest": "到下一个休息点 F9 r8c1 前：战斗 0 场（普通战 0、精英 0），问号 1 个，商店 0 个；到当前节点为止已连续战斗 0 场",
+            "next_elite": "F14 r13c0：到达 41/70（p75 耗尽）",
+            "boss": "F17 r16c3：到达 37/70（p75 耗尽）",
+            "about": "从现在的 HP 2/70 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。",
+            "if_option": [
+              "o0 HEAL（HP 23/70）：下一只精英前 62/70（p75 54），boss 前 58/70（p75 39）",
+              "o1 SMITH（HP 2/70）：下一只精英前 41/70（p75 耗尽），boss 前 37/70（p75 耗尽）"
+            ]
+          },
+          "next_rest": {
+            "about": "从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（从本休息点 o0 HEAL 后的 HP 23/70 起；不回血就从现在的 2/70 起，中位数和 p75，同 plan_facts）。keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥10% 最大生命、p75 低 ≥15% 或耗尽）的写明。",
+            "keep": "r7c2 问号 → F9 r8c1 休息：普通战 0、精英 0、问号 1，没有商店；到达 23/70（p75 20）；下一只精英 F14 r13c0 进场 62/70（p75 54）",
+            "switch": [
+              "没有别的路线：从下一步到下一个休息点只有计划这一段"
+            ]
+          },
+          "room_costs": "第 1 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 3/8.5（logged A10 act-1 Monster rooms, n=519 incl. 4 deaths）；精英 25/36（logged A10 act-1 Elite rooms, n=91 incl. 8 deaths）；问号 0/3（logged A10 act-1 Unknown rooms, n=314）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。",
+          "vs_plan": "计划在 F1 定（当时 HP 80%），当时预计到达：下一节点 F8 问号 62/70，精英 F14 精英 67/70，boss F17 Boss 63/70；现在 HP 2/70（本休息点的选项还没算进去）",
+          "run_plan_hp": "Take elites with adequate damage and potions, preserving enough HP for the boss. Develop reliable damage to cross the 160-HP stun threshold, sustained poison, upgraded Neutralize, strong single-card defense for Ringing, and healthy boss-entry HP."
+        }
+      ],
+      [
+        ".facts.act_boss_sim",
+        {
+          "boss": "仪式兽，A10：仪式兽 262 血",
+          "entry_hp": "37/70：本幕路线计划到 boss（F17）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+          "current_deck": "胜率 0%（校准后；原始 0%），赢局掉血中位 —，赢局约 6 回合，输的样本中位死在第 6 回合",
+          "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 7.0 秒",
+          "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+          "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+          "relics_not_modelled": "蛇之戒指、钓鱼竿",
+          "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 0%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多"
+        }
+      ],
+      [
+        ".run_plan_task.act_boss_clock",
+        {
+          "boss": "CEREMONIAL_BEAST",
+          "boss_hp": 262,
+          "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+          "boss_hp_parts": [
+            "CEREMONIAL_BEAST"
+          ],
+          "boss_enemies": [
+            {
+              "enemy": "CEREMONIAL_BEAST",
+              "hp": 262,
+              "hp_samples": 19,
+              "hp_from_ascension": 10,
+              "hp_estimated": false,
+              "attacks": [
+                {
+                  "move": "CRUSH_MOVE",
+                  "per_hit": 19,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 18,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "PLOW_MOVE",
+                  "per_hit": 20,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 52,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "STOMP_MOVE",
+                  "per_hit": 17,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 16,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                }
+              ]
+            }
+          ],
+          "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+          "deck_damage_per_turn_estimate": null,
+          "hp_loss_per_turn": null,
+          "survivable_turns": null,
+          "gap_per_turn": null,
+          "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+        }
+      ]
+    ]
+  },
+  {
+    "line": 9235,
+    "label": "rest/plan",
+    "fields": [
+      [
+        ".route_review",
+        {
+          "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+          "map": [
+            "F1 r0c3 远古（已走） → r1c1 r1c3",
+            "F2 r1c1 普通战 → r2c0",
+            "F2 r1c3 普通战（已走） → r2c2",
+            "F3 r2c0 普通战 → r3c0",
+            "F3 r2c2 普通战（已走） → r3c1 r3c3",
+            "F4 r3c0 问号 → r4c0",
+            "F4 r3c1 商店 → r4c0 r4c2",
+            "F4 r3c3 普通战（已走） → r4c2 r4c4",
+            "F5 r4c0 问号 → r5c1",
+            "F5 r4c2 普通战（已走） → r5c1 r5c3",
+            "F5 r4c4 问号 → r5c3 r5c5",
+            "F6 r5c1 普通战（已走） → r6c0 r6c1 r6c2",
+            "F6 r5c3 问号 → r6c3 r6c4",
+            "F6 r5c5 普通战 → r6c6",
+            "F7 r6c0 问号 → r7c0",
+            "F7 r6c1 精英 → r7c1 r7c2",
+            "F7 r6c2 休息（已走） → r7c2",
+            "F7 r6c3 精英 → r7c2",
+            "F7 r6c4 问号 → r7c4",
+            "F7 r6c6 问号 → r7c6",
+            "F8 r7c0 普通战 → r8c1",
+            "F8 r7c1 普通战 → r8c1",
+            "F8 r7c2 问号（已走） → r8c1",
+            "F8 r7c4 精英 → r8c5",
+            "F8 r7c6 问号 → r8c6",
+            "F9 r8c1 休息（当前） → r9c0 r9c1 r9c2",
+            "F9 r8c5 休息 → r9c6",
+            "F9 r8c6 精英 → r9c6",
+            "F10 r9c0 宝箱 → r10c0",
+            "F10 r9c1 宝箱 → r10c1",
+            "F10 r9c2 宝箱 → r10c2",
+            "F10 r9c6 宝箱 → r10c5 r10c6",
+            "F11 r10c0 商店 → r11c0 r11c1",
+            "F11 r10c1 精英 → r11c2",
+            "F11 r10c2 休息 → r11c2",
+            "F11 r10c5 普通战 → r11c5",
+            "F11 r10c6 普通战 → r11c6",
+            "F12 r11c0 休息 → r12c1",
+            "F12 r11c1 问号 → r12c1",
+            "F12 r11c2 普通战 → r12c1 r12c3",
+            "F12 r11c5 问号 → r12c5",
+            "F12 r11c6 休息 → r12c5",
+            "F13 r12c1 普通战 → r13c0 r13c1",
+            "F13 r12c3 休息 → r13c3",
+            "F13 r12c5 精英 → r13c6",
+            "F14 r13c0 精英 → r14c0 r14c1",
+            "F14 r13c1 普通战 → r14c1",
+            "F14 r13c3 精英 → r14c3",
+            "F14 r13c6 普通战 → r14c6",
+            "F15 r14c0 普通战 → r15c0",
+            "F15 r14c1 商店 → r15c0",
+            "F15 r14c3 普通战 → r15c3",
+            "F15 r14c6 问号 → r15c6",
+            "F16 r15c0 休息 → r16c3",
+            "F16 r15c3 休息 → r16c3",
+            "F16 r15c6 休息 → r16c3",
+            "F17 r16c3 Boss（本幕 boss）"
+          ],
+          "position": "你在 r8c1（F9 休息）；下一步可走：r9c0、r9c1、r9c2",
+          "next_nodes": [
+            "r9c0",
+            "r9c1",
+            "r9c2"
+          ],
+          "winged_boots_left": 0,
+          "boss": "r16c3（F17 Boss）",
+          "walked": "r0c3 → r1c3 → r2c2 → r3c3 → r4c2 → r5c1 → r6c2 → r7c2 → r8c1",
+          "plan": "r9c0 宝箱 → r10c0 商店 → r11c0 休息 → r12c1 普通战 → r13c1 普通战 → r14c1 商店 → r15c0 休息 → r16c3 Boss",
+          "plan_facts": {
+            "arrival": [
+              "F10 r9c0 宝箱：14/70（p75 14）",
+              "F11 r10c0 商店：14/70（p75 14）",
+              "F12 r11c0 休息：14/70（p75 14）",
+              "F13 r12c1 普通战：35/70（p75 35）",
+              "F14 r13c1 普通战：32/70（p75 27）",
+              "F15 r14c1 商店：29/70（p75 18）",
+              "F16 r15c0 休息：29/70（p75 18）",
+              "F17 r16c3 Boss：50/70（p75 39）"
+            ],
+            "rest_sites": [
+              "F12 r11c0 休息：到达 14/70（p75 14）；回血 → 35/70（p75 35）；锻造（不回血）→ 14/70（p75 14）",
+              "F16 r15c0 休息：到达 29/70（p75 18）；回血 → 50/70（p75 39）；锻造（不回血）→ 29/70（p75 18）"
+            ],
+            "fights_before_rest": "到下一个休息点 F12 r11c0 前：战斗 0 场（普通战 0、精英 0），问号 0 个，商店 1 个；到当前节点为止已连续战斗 0 场",
+            "next_elite": "路线上没有精英",
+            "boss": "F17 r16c3：到达 50/70（p75 39）",
+            "about": "从现在的 HP 14/70 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。",
+            "if_option": [
+              "o0 HEAL（HP 35/70）：boss 前 70/70（p75 60）",
+              "o1 SMITH（HP 14/70）：boss 前 50/70（p75 39）"
+            ]
+          },
+          "next_rest": {
+            "about": "从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（从本休息点 o0 HEAL 后的 HP 35/70 起；不回血就从现在的 14/70 起，中位数和 p75，同 plan_facts）。keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥10% 最大生命、p75 低 ≥15% 或耗尽）的写明。",
+            "keep": "r9c0 宝箱 → r10c0 商店 → F12 r11c0 休息：普通战 0、精英 0、问号 0，经过商店；到达 35/70（p75 35）",
+            "switch": [
+              "r9c0 宝箱 → r10c0 商店 → r11c1 问号 → r12c1 普通战 → r13c1 普通战 → r14c1 商店 → F16 r15c0 休息：普通战 2、精英 0、问号 1，经过商店；到达 29/70（p75 15）；比保留路线明显低：到 F16 时这条约 29/70，保留路线约 50/70（p75 15 对 39）",
+              "r9c1 宝箱 → r10c1 精英 → r11c2 普通战 → F13 r12c3 休息：普通战 1、精英 1、问号 0，没有商店；到达 7/70（p75 耗尽）；下一只精英 F11 r10c1 进场 35/70（p75 35）",
+              "r9c1 宝箱 → r10c1 精英 → r11c2 普通战 → r12c1 普通战 → r13c1 普通战 → r14c1 商店 → F16 r15c0 休息：普通战 3、精英 1、问号 0，经过商店；到达 1/70（p75 耗尽）；下一只精英 F11 r10c1 进场 35/70（p75 35）",
+              "r9c2 宝箱 → F11 r10c2 休息：普通战 0、精英 0、问号 0，没有商店；到达 35/70（p75 35）；下一只精英 F14 r13c3 进场 70/70（p75 69）"
+            ]
+          },
+          "room_costs": "第 1 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 3/8.5（logged A10 act-1 Monster rooms, n=519 incl. 4 deaths）；精英 25/36（logged A10 act-1 Elite rooms, n=91 incl. 8 deaths）；问号 0/3（logged A10 act-1 Unknown rooms, n=314）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。",
+          "vs_plan": "计划在 F7 定（当时 HP 33%），当时预计到达：下一节点 F10 宝箱 44/70，boss F17 Boss 70/70；现在 HP 14/70（本休息点的选项还没算进去）",
+          "run_plan_hp": "establish both Fumes, obtain strong single-card block for Ringing, accelerate poison, and enter with healthy HP and defensive potions."
+        }
+      ],
+      [
+        ".facts.act_boss_sim",
+        {
+          "boss": "仪式兽，A10：仪式兽 262 血",
+          "entry_hp": "50/70：本幕路线计划到 boss（F17）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+          "current_deck": "胜率 1%（校准后；原始 1%），赢局掉血中位 47，赢局约 9 回合，输的样本中位死在第 8 回合",
+          "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 8.7 秒",
+          "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+          "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+          "relics_not_modelled": "蛇之戒指、钓鱼竿",
+          "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 1%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多"
+        }
+      ]
+    ]
+  },
+  {
+    "line": 9237,
+    "label": "rest/plan",
+    "fields": [
+      [
+        ".route_review",
+        {
+          "map_legend": "节点 id = r<行>c<列>，行 r 是本幕第 r+1 层（F 是全局层号）。每行「F层 id 类型 → 下一层与它有连线的节点」；类型：普通战（走廊战斗）、精英、休息（休息点）、商店、问号（事件，可能是战斗）、宝箱、远古、Boss。（当前）是你所在的节点，（已走）是本幕走过的节点。路线只能沿连线每次走到下一层；有飞行靴时，每用 1 次可以从一个节点跳到下一层的任意节点（不沿连线）。",
+          "map": [
+            "F1 r0c3 远古（已走） → r1c1 r1c3",
+            "F2 r1c1 普通战 → r2c0",
+            "F2 r1c3 普通战（已走） → r2c2",
+            "F3 r2c0 普通战 → r3c0",
+            "F3 r2c2 普通战（已走） → r3c1 r3c3",
+            "F4 r3c0 问号 → r4c0",
+            "F4 r3c1 商店 → r4c0 r4c2",
+            "F4 r3c3 普通战（已走） → r4c2 r4c4",
+            "F5 r4c0 问号 → r5c1",
+            "F5 r4c2 普通战（已走） → r5c1 r5c3",
+            "F5 r4c4 问号 → r5c3 r5c5",
+            "F6 r5c1 普通战（已走） → r6c0 r6c1 r6c2",
+            "F6 r5c3 问号 → r6c3 r6c4",
+            "F6 r5c5 普通战 → r6c6",
+            "F7 r6c0 问号 → r7c0",
+            "F7 r6c1 精英 → r7c1 r7c2",
+            "F7 r6c2 休息（已走） → r7c2",
+            "F7 r6c3 精英 → r7c2",
+            "F7 r6c4 问号 → r7c4",
+            "F7 r6c6 问号 → r7c6",
+            "F8 r7c0 普通战 → r8c1",
+            "F8 r7c1 普通战 → r8c1",
+            "F8 r7c2 问号（已走） → r8c1",
+            "F8 r7c4 精英 → r8c5",
+            "F8 r7c6 问号 → r8c6",
+            "F9 r8c1 休息（已走） → r9c0 r9c1 r9c2",
+            "F9 r8c5 休息 → r9c6",
+            "F9 r8c6 精英 → r9c6",
+            "F10 r9c0 宝箱（已走） → r10c0",
+            "F10 r9c1 宝箱 → r10c1",
+            "F10 r9c2 宝箱 → r10c2",
+            "F10 r9c6 宝箱 → r10c5 r10c6",
+            "F11 r10c0 商店（已走） → r11c0 r11c1",
+            "F11 r10c1 精英 → r11c2",
+            "F11 r10c2 休息 → r11c2",
+            "F11 r10c5 普通战 → r11c5",
+            "F11 r10c6 普通战 → r11c6",
+            "F12 r11c0 休息（当前） → r12c1",
+            "F12 r11c1 问号 → r12c1",
+            "F12 r11c2 普通战 → r12c1 r12c3",
+            "F12 r11c5 问号 → r12c5",
+            "F12 r11c6 休息 → r12c5",
+            "F13 r12c1 普通战 → r13c0 r13c1",
+            "F13 r12c3 休息 → r13c3",
+            "F13 r12c5 精英 → r13c6",
+            "F14 r13c0 精英 → r14c0 r14c1",
+            "F14 r13c1 普通战 → r14c1",
+            "F14 r13c3 精英 → r14c3",
+            "F14 r13c6 普通战 → r14c6",
+            "F15 r14c0 普通战 → r15c0",
+            "F15 r14c1 商店 → r15c0",
+            "F15 r14c3 普通战 → r15c3",
+            "F15 r14c6 问号 → r15c6",
+            "F16 r15c0 休息 → r16c3",
+            "F16 r15c3 休息 → r16c3",
+            "F16 r15c6 休息 → r16c3",
+            "F17 r16c3 Boss（本幕 boss）"
+          ],
+          "position": "你在 r11c0（F12 休息）；下一步可走：r12c1",
+          "next_nodes": [
+            "r12c1"
+          ],
+          "winged_boots_left": 0,
+          "boss": "r16c3（F17 Boss）",
+          "walked": "r0c3 → r1c3 → r2c2 → r3c3 → r4c2 → r5c1 → r6c2 → r7c2 → r8c1 → r9c0 → r10c0 → r11c0",
+          "plan": "r12c1 普通战 → r13c1 普通战 → r14c1 商店 → r15c0 休息 → r16c3 Boss",
+          "plan_facts": {
+            "arrival": [
+              "F13 r12c1 普通战：35/70（p75 35）",
+              "F14 r13c1 普通战：32/70（p75 27）",
+              "F15 r14c1 商店：29/70（p75 18）",
+              "F16 r15c0 休息：29/70（p75 18）",
+              "F17 r16c3 Boss：50/70（p75 39）"
+            ],
+            "rest_sites": [
+              "F16 r15c0 休息：到达 29/70（p75 18）；回血 → 50/70（p75 39）；锻造（不回血）→ 29/70（p75 18）"
+            ],
+            "fights_before_rest": "到下一个休息点 F16 r15c0 前：战斗 2 场（普通战 2、精英 0），问号 0 个，商店 1 个；到当前节点为止已连续战斗 0 场",
+            "next_elite": "路线上没有精英",
+            "boss": "F17 r16c3：到达 50/70（p75 39）",
+            "about": "从现在的 HP 35/70 起按实测房间掉血投影（route-projection，算法未改）：中位数 = 每个房间按中位数代价；p75 = 每个战斗和问号房都按 p75 代价连续累计（偏悲观）；之后的休息点按回血算（锻造的情况单独列出）；死亡不会被后面的休息点救回。",
+            "if_option": [
+              "o0 HEAL（HP 56/70）：boss 前 70/70（p75 60）",
+              "o1 SMITH（HP 35/70）：boss 前 50/70（p75 39）"
+            ]
+          },
+          "next_rest": {
+            "about": "从下一步到下一个休息点（之前没有就到 boss）的战斗、问号、商店和到达 HP，及 boss 前下一只精英的进场 HP（从本休息点 o0 HEAL 后的 HP 56/70 起；不回血就从现在的 35/70 起，中位数和 p75，同 plan_facts）。keep = 你的计划；switch = 从每个下一步节点到最近两层休息点各 HP 最高的一条（精英按之后沿计划，不在计划上就沿每段 HP 最高的线）；和保留路线比：两条的下一个休息点中较晚的那层的 HP（这条的精英不比保留路线这一段多时），两条都有精英时比各自的精英进场 HP，明显低（中位数低 ≥10% 最大生命、p75 低 ≥15% 或耗尽）的写明。",
+            "keep": "r12c1 普通战 → r13c1 普通战 → r14c1 商店 → F16 r15c0 休息：普通战 2、精英 0、问号 0，经过商店；到达 50/70（p75 39）",
+            "switch": [
+              "没有别的路线：从下一步到下一个休息点只有计划这一段"
+            ]
+          },
+          "room_costs": "第 1 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 3/8.5（logged A10 act-1 Monster rooms, n=519 incl. 4 deaths）；精英 25/36（logged A10 act-1 Elite rooms, n=91 incl. 8 deaths）；问号 0/3（logged A10 act-1 Unknown rooms, n=314）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。",
+          "vs_plan": "计划在 F7 定（当时 HP 33%），当时预计到达：下一节点 F13 普通战 65/70，boss F17 Boss 70/70；现在 HP 35/70（本休息点的选项还没算进去）",
+          "run_plan_hp": "establish both Fumes, obtain strong single-card block for Ringing, accelerate poison, and enter with healthy HP and defensive potions."
+        }
+      ],
+      [
+        ".facts.act_boss_sim",
+        {
+          "boss": "仪式兽，A10：仪式兽 262 血",
+          "entry_hp": "50/70：本幕路线计划到 boss（F17）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+          "current_deck": "胜率 33%（校准后；原始 33%），赢局掉血中位 44，赢局约 10 回合，输的样本中位死在第 9 回合",
+          "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 11.0 秒",
+          "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+          "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+          "relics_at_start": "开场生效：铜质鳞片",
+          "relics_not_modelled": "蛇之戒指、钓鱼竿"
+        }
+      ]
+    ]
+  },
+  {
+    "line": 9240,
+    "label": "rest/plan",
+    "fields": [
+      [
+        ".facts.act_boss_sim",
+        {
+          "boss": "仪式兽，A10：仪式兽 262 血",
+          "entry_hp": "19/70：本幕路线计划到 boss（F17）的中位投影，和 route_review.plan_facts.boss 同一个算法",
+          "current_deck": "胜率 0%（校准后；原始 0%），赢局掉血中位 —，赢局约 5 回合，输的样本中位死在第 5 回合",
+          "samples": "每个选项 1000 次；所有选项同一组随机种子，按样本配对比较；用时 8.6 秒",
+          "method": "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
+          "limits": "格挡牌和防守能力牌的价值可能被低估（模拟策略跨回合的防守不如实际）；模拟的战斗比实际更确定，单张牌带来的差可能被放大（校准只把绝对胜率拉准）；随机药水不在模拟里；进场血量是投影的中位数，实际会有高低；离本幕 boss 还远时，现在的牌组和到 boss 时的牌组差得多",
+          "relics_at_start": "开场生效：铜质鳞片",
+          "relics_not_modelled": "蛇之戒指、钓鱼竿",
+          "low_win_rate": "当前牌组在模拟里多半打不过（原始胜率 0%，校准后的数不会低于 0.0%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多"
+        }
+      ],
+      [
+        ".run_plan_task.act_boss_clock",
+        {
+          "boss": "CEREMONIAL_BEAST",
+          "boss_hp": 262,
+          "boss_hp_note": "数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。",
+          "boss_hp_parts": [
+            "CEREMONIAL_BEAST"
+          ],
+          "boss_enemies": [
+            {
+              "enemy": "CEREMONIAL_BEAST",
+              "hp": 262,
+              "hp_samples": 19,
+              "hp_from_ascension": 10,
+              "hp_estimated": false,
+              "attacks": [
+                {
+                  "move": "CRUSH_MOVE",
+                  "per_hit": 19,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 18,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "PLOW_MOVE",
+                  "per_hit": 20,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 52,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                },
+                {
+                  "move": "STOMP_MOVE",
+                  "per_hit": 17,
+                  "hits": 1,
+                  "basis": "base",
+                  "samples": 16,
+                  "from_ascension": 10,
+                  "estimated": false,
+                  "scaled_through_ascension": 10
+                }
+              ]
+            }
+          ],
+          "boss_enemy_note": "攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。",
+          "deck_damage_per_turn_estimate": null,
+          "hp_loss_per_turn": null,
+          "survivable_turns": null,
+          "gap_per_turn": null,
+          "estimate_note": "尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"
+        }
+      ]
+    ]
+  }
+]

@@ -1,0 +1,1 @@
+抽取初稿中曾出现缺chosen的KeyError、非战斗combat=null的AttributeError，以及show输出截断造成BrokenPipeError；均发生在只读检查，没有改日志或账本。后续采用get及完整输出文件修正，原始抽取和初稿保留。工具编排另一次语法错误未执行任何命令。
