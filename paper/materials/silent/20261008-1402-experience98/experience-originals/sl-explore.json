@@ -1,0 +1,2551 @@
+[
+  {
+    "ts": "2026-10-08T04:40:41.154Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "6e85ea20-5ab6-40f3-bc99-9b847c802bb6",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:250:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:BACKFLIP:true|1:DEFEND_SILENT:true|2:DEFEND_SILENT:true|3:SURVIVOR:true|4:SLICE:true|5:STRIKE_SILENT:true|6:DEADLY_POISON:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"SPEED_POTION:true:true|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"后空翻, then 切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":19,\"enemies_after\":\"瀑布巨兽 231 HP, 中毒 6\",\"block_gained\":5,\"cards_drawn\":2,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":5,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 75.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~13; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~147, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 19; T2: hp -16 [16-16], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 22 [22-22], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 25 [12-41], alive 24/24, won 0/24; T5: hp -4.1 [0-17], dmg 22.1 [6-43], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 32% (vs the simulation's best line −7 ± 2 pts), HP lost when won median 70, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 69%); 1200 samples\",\"potion_cost\":\"fight HP loss 75.9; potions used 1 (later turns: SPEED_POTION in 23/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 75.9\"}",
+          "plan2": "{\"plays\":\"后空翻, then 切割 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":13,\"enemies_after\":\"瀑布巨兽 237 HP, 中毒 6\",\"block_gained\":5,\"cards_drawn\":2,\"energy_unused\":1,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":5,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~13.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~152, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 13; T2: hp -16 [16-16], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 22 [22-22], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 25.4 [12-41], alive 24/24, won 0/24; T5: hp -4.6 [0-13], dmg 22.9 [11-43], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 88% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 26% (vs the simulation's best line −13 ± 2 pts), HP lost when won median 70, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 74%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 0.9 (later turns: SPEED_POTION in 21/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}",
+          "plan3": "{\"plays\":\"后空翻, then 切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽, then potion 速度药水\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":19,\"enemies_after\":\"瀑布巨兽 231 HP, 中毒 6\",\"block_gained\":5,\"cards_drawn\":2,\"potion_no_effect\":\"速度药水: no effect in this line (this turn is the same as 后空翻, 切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽 without it)\",\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":5,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 75.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~13; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~147, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 19; T2: hp -16 [16-16], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 22 [22-22], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 25 [12-41], alive 24/24, won 0/24; T5: hp -4.1 [0-17], dmg 22.1 [6-43], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 16% (vs the simulation's best line −23 ± 2 pts), HP lost when won median 70, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 85%); 1200 samples\",\"potion_cost\":\"fight HP loss 75.9; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 75.9\"}",
+          "plan4": "{\"plays\":\"切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":19,\"enemies_after\":\"瀑布巨兽 231 HP, 中毒 6\",\"energy_unused\":1,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~143, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 19; T2: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -3 [3-3], dmg 15 [15-15], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 36.5 [33-41], alive 24/24, won 0/24; T5: hp -15.8 [0-23], dmg 21.9 [3-33], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 51, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 39% (the simulation's best line), HP lost when won median 68, ~14 turns to win (this one included); the losing samples die most often on T16 (dead in 62%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (later turns: SPEED_POTION in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan2": 0.01,
+          "plan3": 0.01,
+          "plan4": 0.92,
+          "plan1": 0.06
+        },
+        "confidence": 0.89,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.89,
+          "probabilities": {
+            "plan2": 0.01,
+            "plan3": 0.01,
+            "plan4": 0.92,
+            "plan1": 0.06
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 4,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SLICE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/4 (切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽) with confidence 0.89; code rank - (rollout's best line, added)",
+    "confidence": 0.89,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d05ca5741f8bb8f772211a0ce9"
+    ],
+    "latency_ms": {
+      "plan": 35,
+      "jev": 584,
+      "action": 296,
+      "planner": 97,
+      "pre": 4
+    },
+    "usage": {
+      "input_tokens": 8127,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 3,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan4",
+      "best_added": true,
+      "saturated": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 14,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 42,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan4",
+        "plan1",
+        "plan2",
+        "plan3"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.315,
+          "cal": 0.315,
+          "d": -0.07,
+          "se": 0.019,
+          "loss": 73.61,
+          "won_loss": 70,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.259,
+          "cal": 0.259,
+          "d": -0.126,
+          "se": 0.019,
+          "loss": 74.15,
+          "won_loss": 70,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.155,
+          "cal": 0.155,
+          "d": -0.23,
+          "se": 0.017,
+          "loss": 74.95,
+          "won_loss": 70,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.385,
+          "cal": 0.385,
+          "d": 0,
+          "se": 0,
+          "loss": 72.26,
+          "won_loss": 67.5,
+          "order": null
+        }
+      },
+      "plan": "T5, T10, T12 the enemies hit hardest (incoming ~23, ~27, ~27); drink 速度药水 ~T2; the boss dies ~T14 (median of 462 winning samples)",
+      "rollout_own_best": "plan4",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T5, the 14th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽",
+        "original": "切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 94,
+      "solve_ms": 26,
+      "mc_ms": 0,
+      "rollout_ms": 3,
+      "boss_sim_ms": 42,
+      "other_ms": 23,
+      "cpu_ms": 128,
+      "load1": 8.1,
+      "probe_ms": 2.86,
+      "memo": {
+        "rollout_ms": 905,
+        "boss_sim_ms": 12334,
+        "hits": 2,
+        "stored": 34
+      }
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:40:40.434Z",
+    "journal": {
+      "choice": "切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:40:49.249Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 2,
+    "label": "combat/plan-choice",
+    "decision_id": "cc1a6aeb-842b-4d37-bbf9-cb92a40b200a",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:231:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:DEFEND_SILENT:true|1:DEFLECT:true|2:SKEWER:true|3:STRIKE_SILENT:true|4:STRIKE_SILENT:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"SPEED_POTION:true:true|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"串刺 -> 瀑布巨兽, then potion 速度药水, then 偏折\",\"result\":\"survives with 69/76 HP before healing\",\"hp_lost\":7,\"damage_dealt\":30,\"enemies_after\":\"瀑布巨兽 201 HP, 中毒 5\",\"block_gained\":9,\"hp_after\":69,\"hp_after_pct\":91,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~122, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 30; T2: hp -3 [3-3], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 35.1 [33-40], alive 24/24, won 0/24; T4: hp -16.2 [4-23], dmg 21.9 [13-34], alive 24/24, won 0/24; T5: hp -6.2 [0-14], dmg 22.2 [8-36], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 61, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 27% (vs the simulation's best line −14 ± 2 pts), HP lost when won median 69, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 73%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 76\"}",
+          "plan2": "{\"plays\":\"potion 速度药水, then 防御, then 偏折, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":22,\"enemies_after\":\"瀑布巨兽 209 HP, 中毒 5\",\"block_gained\":19,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":3,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 75.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~131, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 22; T2: hp -3 [3-3], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 37.1 [33-41], alive 24/24, won 0/24; T4: hp -15.5 [3-23], dmg 21.1 [13-36], alive 24/24, won 0/24; T5: hp -5.4 [0-14], dmg 20.1 [2-39], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 91% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 41% (the simulation's best line), HP lost when won median 68, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 59%); 1200 samples\",\"potion_cost\":\"fight HP loss 75.9; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 75.9\"}",
+          "plan3": "{\"plays\":\"偏折, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 64/76 HP before healing\",\"hp_lost\":12,\"damage_dealt\":30,\"enemies_after\":\"瀑布巨兽 201 HP, 中毒 5\",\"block_gained\":4,\"hp_after\":64,\"hp_after_pct\":84,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~123, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 30; T2: hp -0 [0-0], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 35.7 [33-41], alive 24/24, won 0/24; T4: hp -15.7 [5-23], dmg 20.8 [10-37], alive 24/24, won 0/24; T5: hp -6.3 [0-14], dmg 21.7 [8-42], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 63, win 88% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 17% (vs the simulation's best line −24 ± 2 pts), HP lost when won median 71, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 83%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (later turns: SPEED_POTION in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}",
+          "plan4": "{\"plays\":\"防御, then 偏折, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 69/76 HP before healing\",\"hp_lost\":7,\"damage_dealt\":22,\"enemies_after\":\"瀑布巨兽 209 HP, 中毒 5\",\"block_gained\":9,\"hp_after\":69,\"hp_after_pct\":91,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~131, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 22; T2: hp -0 [0-0], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 37.3 [33-41], alive 24/24, won 0/24; T4: hp -15.8 [3-23], dmg 20.7 [10-33], alive 24/24, won 0/24; T5: hp -5.8 [0-14], dmg 19.8 [5-39], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 59, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 23% (vs the simulation's best line −18 ± 2 pts), HP lost when won median 69, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 77%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (later turns: SPEED_POTION in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan3": 0.01,
+          "plan4": 0.02,
+          "plan1": 0.34,
+          "plan2": 0.63
+        },
+        "confidence": 0.51,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.51,
+          "probabilities": {
+            "plan3": 0.01,
+            "plan4": 0.02,
+            "plan1": 0.34,
+            "plan2": 0.63
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "use_potion",
+      "option_index": 0
+    },
+    "expect": {
+      "potion": {
+        "id": "SPEED_POTION"
+      },
+      "turn": 2,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/4 (potion 速度药水, 防御, 偏折, 串刺 -> 瀑布巨兽) with confidence 0.51; code rank 2",
+    "confidence": 0.51,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d07c197c79a5ea2db739fe9ab3"
+    ],
+    "latency_ms": {
+      "plan": 41,
+      "jev": 592,
+      "action": 861,
+      "planner": 74,
+      "pre": 4
+    },
+    "usage": {
+      "input_tokens": 7962,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 4,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 7,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "sl_retry": {
+      "known_draws": 9,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 44,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan1",
+        "plan4",
+        "plan3"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.266,
+          "cal": 0.266,
+          "d": -0.142,
+          "se": 0.017,
+          "loss": 73.79,
+          "won_loss": 69,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.408,
+          "cal": 0.408,
+          "d": 0,
+          "se": 0,
+          "loss": 72.19,
+          "won_loss": 68,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.168,
+          "cal": 0.168,
+          "d": -0.239,
+          "se": 0.017,
+          "loss": 74.91,
+          "won_loss": 71,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.226,
+          "cal": 0.226,
+          "d": -0.182,
+          "se": 0.017,
+          "loss": 74.15,
+          "won_loss": 69,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T5, the 14th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "potion 速度药水, 防御, 偏折, 串刺 -> 瀑布巨兽",
+        "original": "potion 速度药水, 防御, 偏折, 串刺 -> 瀑布巨兽",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 71,
+      "solve_ms": 7,
+      "mc_ms": 0,
+      "rollout_ms": 4,
+      "boss_sim_ms": 44,
+      "other_ms": 17,
+      "cpu_ms": 147,
+      "load1": 7.71,
+      "probe_ms": 2.95,
+      "memo": {
+        "rollout_ms": 706,
+        "boss_sim_ms": 8623,
+        "hits": 4,
+        "stored": 34
+      }
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:40:48.538Z",
+    "journal": {
+      "choice": "potion 速度药水, then 防御, then 偏折, then 串刺 -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:40:59.012Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 3,
+    "label": "combat/plan-choice",
+    "decision_id": "7a388533-80b8-4c2f-bda7-b42bf063f8bb",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:209:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:STRIKE_SILENT:true|1:STRIKE_SILENT:true|2:DEFEND_SILENT:true|3:DEFEND_SILENT:true|4:NEUTRALIZE:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"WEAK_POWER:1\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"打击 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 防御, then 中和 -> 瀑布巨兽\",\"result\":\"survives with 73/76 HP before healing\",\"hp_lost\":3,\"damage_dealt\":15,\"enemies_after\":\"瀑布巨兽 194 HP, Weak 1, 中毒 4\",\"block_gained\":5,\"hp_after\":73,\"hp_after_pct\":96,\"dmg\":15,\"lethal_now\":\"no\",\"enemy_threat_next\":3,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~108, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 3)\",\"rollout_turns\":\"T1 exact: hp -3, dmg 15; T2: hp -0 [0-0], dmg 36.5 [33-41], alive 24/24, won 0/24; T3: hp -15.8 [3-23], dmg 22.1 [9-40], alive 24/24, won 0/24; T4: hp -8.5 [0-14], dmg 23.9 [14-39], alive 24/24, won 0/24; T5: hp -7.4 [0-16], dmg 18.5 [7-32], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 61, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 34% (vs the simulation's best line −6 ± 1 pts), HP lost when won median 69, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 66%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"打击 -> 瀑布巨兽, then 防御, then 防御, then 中和 -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":11,\"enemies_after\":\"瀑布巨兽 198 HP, Weak 1, 中毒 4\",\"block_gained\":10,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":11,\"lethal_now\":\"no\",\"enemy_threat_next\":3,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~113, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 11; T2: hp -0 [0-0], dmg 36.5 [33-41], alive 24/24, won 0/24; T3: hp -16.2 [3-23], dmg 22.6 [9-40], alive 24/24, won 0/24; T4: hp -7.5 [0-14], dmg 22.4 [9-39], alive 24/24, won 0/24; T5: hp -7.5 [0-16], dmg 18.5 [7-32], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 59, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 40% (the simulation's best line), HP lost when won median 68, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 60%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan1": 0.38,
+          "plan2": 0.62
+        },
+        "confidence": 0.24,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.24,
+          "probabilities": {
+            "plan1": 0.38,
+            "plan2": 0.62
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 3,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/2 (打击 -> 瀑布巨兽, 防御, 防御, 中和 -> 瀑布巨兽) with confidence 0.24; code rank 2",
+    "confidence": 0.24,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d0a25f71abab2ddf7ab7ba58fa"
+    ],
+    "latency_ms": {
+      "plan": 22,
+      "jev": 607,
+      "action": 298,
+      "planner": 41,
+      "pre": 3
+    },
+    "usage": {
+      "input_tokens": 5979,
+      "output_tokens": 34
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 3,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "sl_retry": {
+      "known_draws": 4,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 20,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan1"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.339,
+          "cal": 0.339,
+          "d": -0.065,
+          "se": 0.015,
+          "loss": 73.06,
+          "won_loss": 69,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.404,
+          "cal": 0.404,
+          "d": 0,
+          "se": 0,
+          "loss": 72.19,
+          "won_loss": 68,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T5, the 14th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "打击 -> 瀑布巨兽, 防御, 防御, 中和 -> 瀑布巨兽",
+        "original": "打击 -> 瀑布巨兽, 防御, 防御, 中和 -> 瀑布巨兽",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 38,
+      "solve_ms": 1,
+      "mc_ms": 0,
+      "rollout_ms": 3,
+      "boss_sim_ms": 20,
+      "other_ms": 14,
+      "cpu_ms": 61,
+      "load1": 7.54,
+      "probe_ms": 2.82,
+      "memo": {
+        "rollout_ms": 526,
+        "boss_sim_ms": 3555,
+        "hits": 6,
+        "stored": 34
+      }
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:40:58.339Z",
+    "journal": {
+      "choice": "打击 -> 瀑布巨兽, then 防御, then 防御, then 中和 -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:41:18.952Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 5,
+    "label": "combat/plan-choice",
+    "decision_id": "4be67efb-19aa-4fd4-beee-cb96abc03f7e",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:182:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:NEUTRALIZE:true|1:SKEWER:true|2:STRIKE_SILENT:true|3:SURVIVOR:true|4:DEFEND_SILENT:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"中和 -> 瀑布巨兽, then 生存者, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 67/76 HP before healing\",\"hp_lost\":9,\"damage_dealt\":22,\"enemies_after\":\"瀑布巨兽 160 HP, Weak 1, 中毒 2\",\"block_gained\":8,\"hp_after\":67,\"hp_after_pct\":88,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 74.4, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~47% (fights won in the samples, the others by the end-of-horizon estimate), value -95.6\",\"rollout_turns\":\"T1 exact: hp -9, dmg 22; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.5 [0-11], dmg 18.8 [11-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 31.6 [18-46], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 48, win 95% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 33% (vs the simulation's best line −6 ± 2 pts), HP lost when won median 68, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 67%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"中和 -> 瀑布巨兽, then 生存者, then 防御, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 72/76 HP before healing\",\"hp_lost\":4,\"damage_dealt\":14,\"enemies_after\":\"瀑布巨兽 168 HP, Weak 1, 中毒 2\",\"block_gained\":13,\"hp_after\":72,\"hp_after_pct\":95,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 74.1, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~48% (fights won in the samples, the others by the end-of-horizon estimate), value -95.1\",\"rollout_turns\":\"T1 exact: hp -4, dmg 14; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.8 [0-7], dmg 19.5 [11-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 32.2 [12-50], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 45, win 94% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 39% (the simulation's best line), HP lost when won median 67, ~11 turns to win (this one included); the losing samples die most often on T18 (dead in 61%); 1200 samples\"}",
+          "plan3": "{\"plays\":\"中和 -> 瀑布巨兽, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 59/76 HP before healing\",\"hp_lost\":17,\"damage_dealt\":30,\"enemies_after\":\"瀑布巨兽 152 HP, Weak 1, 中毒 2\",\"hp_after\":59,\"hp_after_pct\":78,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 75.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~36% (fights won in the samples, the others by the end-of-horizon estimate), value -101.2\",\"rollout_turns\":\"T1 exact: hp -17, dmg 30; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.3 [0-11], dmg 18.7 [11-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 35 [18-50], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 52, win 95% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 18% (vs the simulation's best line −20 ± 2 pts), HP lost when won median 71, ~10 turns to win (this one included); the losing samples die most often on T16 (dead in 82%); 1200 samples\"}",
+          "plan4": "{\"plays\":\"中和 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 生存者, then 防御\",\"result\":\"survives with 72/76 HP before healing\",\"hp_lost\":4,\"damage_dealt\":12,\"enemies_after\":\"瀑布巨兽 170 HP, Weak 1, 中毒 2\",\"block_gained\":13,\"hp_after\":72,\"hp_after_pct\":95,\"dmg\":12,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 73.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~49% (fights won in the samples, the others by the end-of-horizon estimate), value -93.8\",\"rollout_turns\":\"T1 exact: hp -4, dmg 12; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.1 [0-6], dmg 18.6 [9-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 32.5 [12-50], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 45, win 94% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 38% (vs the simulation's best line −0 ± 2 pts, tied on win rate), HP lost when won median 68, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 62%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan2": 0.2,
+          "plan3": 0.01,
+          "plan4": 0.77,
+          "plan1": 0.02
+        },
+        "confidence": 0.69,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.69,
+          "probabilities": {
+            "plan2": 0.2,
+            "plan3": 0.01,
+            "plan4": 0.77,
+            "plan1": 0.02
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "NEUTRALIZE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 5,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/4 (中和 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 生存者, 防御) with confidence 0.69; code rank - (rollout's best line, added); SL explore (T5, the 14th latest question before attempt 2's death on T21): playing 中和 -> 瀑布巨兽, 生存者, 防御, 串刺 -> 瀑布巨兽 instead of 中和 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 生存者, 防御, played on this board in attempt 2 (the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+    "confidence": 0.69,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d0f02f74a1af3cff93226904bb"
+    ],
+    "latency_ms": {
+      "plan": 29,
+      "jev": 583,
+      "action": 460,
+      "planner": 71,
+      "pre": 1
+    },
+    "usage": {
+      "input_tokens": 7115,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 4,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan4",
+      "best_added": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 36,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan4",
+        "plan1",
+        "plan3"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.326,
+          "cal": 0.326,
+          "d": -0.062,
+          "se": 0.016,
+          "loss": 72.99,
+          "won_loss": 68,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.388,
+          "cal": 0.388,
+          "d": 0,
+          "se": 0,
+          "loss": 71.95,
+          "won_loss": 67,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.184,
+          "cal": 0.184,
+          "d": -0.203,
+          "se": 0.016,
+          "loss": 74.82,
+          "won_loss": 71,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.383,
+          "cal": 0.383,
+          "d": -0.004,
+          "se": 0.016,
+          "loss": 72.2,
+          "won_loss": 68,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan4",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "point": "T5, the 14th latest question before attempt 2's death on T21",
+      "original": "中和 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 生存者, 防御",
+      "replacement": "中和 -> 瀑布巨兽, 生存者, 防御, 串刺 -> 瀑布巨兽",
+      "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+      "played_in": [
+        2
+      ],
+      "replayed": 7,
+      "numbers": {
+        "original": "rollout dead 0/24, further loss 73.5, win ~49%; whole-fight sim win 38.3%; this turn hp -4, dmg 12",
+        "replacement": "rollout dead 0/24, further loss 74.1, win ~48%; whole-fight sim win 38.8%; this turn hp -4, dmg 14"
+      },
+      "gate": "rollout",
+      "turn": "DEFEND_SILENT, NEUTRALIZE>瀑布巨兽, STRIKE_SILENT>瀑布巨兽, SURVIVOR",
+      "turn_instead": "DEFEND_SILENT, NEUTRALIZE>瀑布巨兽, SKEWER>瀑布巨兽, SURVIVOR"
+    },
+    "timing": {
+      "planner_ms": 69,
+      "solve_ms": 4,
+      "mc_ms": 0,
+      "rollout_ms": 4,
+      "boss_sim_ms": 36,
+      "other_ms": 25,
+      "cpu_ms": 99,
+      "load1": 7.11,
+      "probe_ms": 2.74,
+      "memo": {
+        "rollout_ms": 582,
+        "boss_sim_ms": 6149,
+        "hits": 8,
+        "stored": 34
+      }
+    },
+    "sl_attempt": 3,
+    "sl_reloads": 2,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:41:18.268Z",
+    "journal": {
+      "choice": "中和 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 生存者, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:44:47.185Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 1,
+    "label": "combat/plan-choice",
+    "decision_id": "ae06dc69-e378-4052-b27e-f845661d2e52",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:250:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:BACKFLIP:true|1:DEFEND_SILENT:true|2:DEFEND_SILENT:true|3:SURVIVOR:true|4:SLICE:true|5:STRIKE_SILENT:true|6:DEADLY_POISON:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"SPEED_POTION:true:true|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":1}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"后空翻, then 切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":19,\"enemies_after\":\"瀑布巨兽 231 HP, 中毒 6\",\"block_gained\":5,\"cards_drawn\":2,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":5,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 75.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~13; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~147, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 19; T2: hp -16 [16-16], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 22 [22-22], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 25 [12-41], alive 24/24, won 0/24; T5: hp -4.1 [0-17], dmg 22.1 [6-43], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 32% (vs the simulation's best line −7 ± 2 pts), HP lost when won median 70, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 69%); 1200 samples\",\"potion_cost\":\"fight HP loss 75.9; potions used 1 (later turns: SPEED_POTION in 23/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 75.9\"}",
+          "plan2": "{\"plays\":\"后空翻, then 切割 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":13,\"enemies_after\":\"瀑布巨兽 237 HP, 中毒 6\",\"block_gained\":5,\"cards_drawn\":2,\"energy_unused\":1,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":13,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":5,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~13.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~152, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 13; T2: hp -16 [16-16], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 22 [22-22], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 25.4 [12-41], alive 24/24, won 0/24; T5: hp -4.6 [0-13], dmg 22.9 [11-43], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 88% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 26% (vs the simulation's best line −13 ± 2 pts), HP lost when won median 70, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 74%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 0.9 (later turns: SPEED_POTION in 21/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}",
+          "plan3": "{\"plays\":\"后空翻, then 切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽, then potion 速度药水\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":19,\"enemies_after\":\"瀑布巨兽 231 HP, 中毒 6\",\"block_gained\":5,\"cards_drawn\":2,\"potion_no_effect\":\"速度药水: no effect in this line (this turn is the same as 后空翻, 切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽 without it)\",\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":5,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 75.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~13; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~147, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 19; T2: hp -16 [16-16], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 22 [22-22], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 25 [12-41], alive 24/24, won 0/24; T5: hp -4.1 [0-17], dmg 22.1 [6-43], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 16% (vs the simulation's best line −23 ± 2 pts), HP lost when won median 70, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 85%); 1200 samples\",\"potion_cost\":\"fight HP loss 75.9; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 75.9\"}",
+          "plan4": "{\"plays\":\"切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":19,\"enemies_after\":\"瀑布巨兽 231 HP, 中毒 6\",\"energy_unused\":1,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":16,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~143, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 19; T2: hp -7 [7-7], dmg 30 [30-30], alive 24/24, won 0/24; T3: hp -3 [3-3], dmg 15 [15-15], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 36.5 [33-41], alive 24/24, won 0/24; T5: hp -15.8 [0-23], dmg 21.9 [3-33], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 51, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 39% (the simulation's best line), HP lost when won median 68, ~14 turns to win (this one included); the losing samples die most often on T16 (dead in 62%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (later turns: SPEED_POTION in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan1": 0.07,
+          "plan2": 0.01,
+          "plan4": 0.91,
+          "plan3": 0.01
+        },
+        "confidence": 0.88,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.88,
+          "probabilities": {
+            "plan1": 0.07,
+            "plan2": 0.01,
+            "plan4": 0.91,
+            "plan3": 0.01
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 4,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SLICE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/4 (切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽) with confidence 0.88; code rank - (rollout's best line, added)",
+    "confidence": 0.88,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d41db77861abff9e1e7e42c0fd"
+    ],
+    "latency_ms": {
+      "plan": 19,
+      "jev": 567,
+      "action": 298,
+      "planner": 111,
+      "pre": 3
+    },
+    "usage": {
+      "input_tokens": 9339,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 4,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan4",
+      "best_added": true,
+      "saturated": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 14,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 46,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan4",
+        "plan1",
+        "plan2",
+        "plan3"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.315,
+          "cal": 0.315,
+          "d": -0.07,
+          "se": 0.019,
+          "loss": 73.61,
+          "won_loss": 70,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.259,
+          "cal": 0.259,
+          "d": -0.126,
+          "se": 0.019,
+          "loss": 74.15,
+          "won_loss": 70,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.155,
+          "cal": 0.155,
+          "d": -0.23,
+          "se": 0.017,
+          "loss": 74.95,
+          "won_loss": 70,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.385,
+          "cal": 0.385,
+          "d": 0,
+          "se": 0,
+          "loss": 72.26,
+          "won_loss": 67.5,
+          "order": null
+        }
+      },
+      "plan": "T5, T10, T12 the enemies hit hardest (incoming ~23, ~27, ~27); drink 速度药水 ~T2; the boss dies ~T14 (median of 462 winning samples)",
+      "rollout_own_best": "plan4",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽",
+        "original": "切割 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 致命毒药+ -> 瀑布巨兽",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 108,
+      "solve_ms": 36,
+      "mc_ms": 0,
+      "rollout_ms": 4,
+      "boss_sim_ms": 46,
+      "other_ms": 22,
+      "cpu_ms": 181,
+      "load1": 7.7,
+      "probe_ms": 2.7,
+      "memo": {
+        "rollout_ms": 905,
+        "boss_sim_ms": 12334,
+        "hits": 10,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:44:46.485Z",
+    "journal": {
+      "choice": "切割 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 致命毒药+ -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:44:54.911Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 2,
+    "label": "combat/plan-choice",
+    "decision_id": "275e62c7-c7ca-47a2-a3a7-5ca0c0b1e493",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\",\"use_potion\",\"discard_potion\"],\"combat\":true,\"enemies\":\"0:231:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:DEFEND_SILENT:true|1:DEFLECT:true|2:SKEWER:true|3:STRIKE_SILENT:true|4:STRIKE_SILENT:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\"SPEED_POTION:true:true|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"串刺 -> 瀑布巨兽, then potion 速度药水, then 偏折\",\"result\":\"survives with 69/76 HP before healing\",\"hp_lost\":7,\"damage_dealt\":30,\"enemies_after\":\"瀑布巨兽 201 HP, 中毒 5\",\"block_gained\":9,\"hp_after\":69,\"hp_after_pct\":91,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~122, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 30; T2: hp -3 [3-3], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 35.1 [33-40], alive 24/24, won 0/24; T4: hp -16.2 [4-23], dmg 21.9 [13-34], alive 24/24, won 0/24; T5: hp -6.2 [0-14], dmg 22.2 [8-36], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 61, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 27% (vs the simulation's best line −14 ± 2 pts), HP lost when won median 69, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 73%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 76\"}",
+          "plan2": "{\"plays\":\"potion 速度药水, then 防御, then 偏折, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":22,\"enemies_after\":\"瀑布巨兽 209 HP, 中毒 5\",\"block_gained\":19,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":3,\"potions_used\":\"速度药水\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 75.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~131, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 22; T2: hp -3 [3-3], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 37.1 [33-41], alive 24/24, won 0/24; T4: hp -15.5 [3-23], dmg 21.1 [13-36], alive 24/24, won 0/24; T5: hp -5.4 [0-14], dmg 20.1 [2-39], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 55, win 91% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 41% (the simulation's best line), HP lost when won median 68, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 59%); 1200 samples\",\"potion_cost\":\"fight HP loss 75.9; potions used 1 (this turn: SPEED_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 75.9\"}",
+          "plan3": "{\"plays\":\"偏折, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 64/76 HP before healing\",\"hp_lost\":12,\"damage_dealt\":30,\"enemies_after\":\"瀑布巨兽 201 HP, 中毒 5\",\"block_gained\":4,\"hp_after\":64,\"hp_after_pct\":84,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~123, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 12)\",\"rollout_turns\":\"T1 exact: hp -12, dmg 30; T2: hp -0 [0-0], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 35.7 [33-41], alive 24/24, won 0/24; T4: hp -15.7 [5-23], dmg 20.8 [10-37], alive 24/24, won 0/24; T5: hp -6.3 [0-14], dmg 21.7 [8-42], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 63, win 88% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 17% (vs the simulation's best line −24 ± 2 pts), HP lost when won median 71, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 83%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (later turns: SPEED_POTION in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}",
+          "plan4": "{\"plays\":\"防御, then 偏折, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 69/76 HP before healing\",\"hp_lost\":7,\"damage_dealt\":22,\"enemies_after\":\"瀑布巨兽 209 HP, 中毒 5\",\"block_gained\":9,\"hp_after\":69,\"hp_after_pct\":91,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":14,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~131, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 7)\",\"rollout_turns\":\"T1 exact: hp -7, dmg 22; T2: hp -0 [0-0], dmg 15 [15-15], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 37.3 [33-41], alive 24/24, won 0/24; T4: hp -15.8 [3-23], dmg 20.7 [10-33], alive 24/24, won 0/24; T5: hp -5.8 [0-14], dmg 19.8 [5-39], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 59, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 23% (vs the simulation's best line −18 ± 2 pts), HP lost when won median 69, ~13 turns to win (this one included); the losing samples die most often on T16 (dead in 77%); 1200 samples\",\"potion_cost\":\"fight HP loss 76; potions used 1 (later turns: SPEED_POTION in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 76\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan1": 0.31,
+          "plan2": 0.66,
+          "plan3": 0.01,
+          "plan4": 0.02
+        },
+        "confidence": 0.55,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.55,
+          "probabilities": {
+            "plan1": 0.31,
+            "plan2": 0.66,
+            "plan3": 0.01,
+            "plan4": 0.02
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "use_potion",
+      "option_index": 0
+    },
+    "expect": {
+      "potion": {
+        "id": "SPEED_POTION"
+      },
+      "turn": 2,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/4 (potion 速度药水, 防御, 偏折, 串刺 -> 瀑布巨兽) with confidence 0.55; code rank 2",
+    "confidence": 0.55,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d43be9731db780d10489439015"
+    ],
+    "latency_ms": {
+      "plan": 45,
+      "jev": 557,
+      "action": 838,
+      "planner": 84,
+      "pre": 5
+    },
+    "usage": {
+      "input_tokens": 9175,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 6,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 7,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "sl_retry": {
+      "known_draws": 9,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 46,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan1",
+        "plan4",
+        "plan3"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.266,
+          "cal": 0.266,
+          "d": -0.142,
+          "se": 0.017,
+          "loss": 73.79,
+          "won_loss": 69,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.408,
+          "cal": 0.408,
+          "d": 0,
+          "se": 0,
+          "loss": 72.19,
+          "won_loss": 68,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.168,
+          "cal": 0.168,
+          "d": -0.239,
+          "se": 0.017,
+          "loss": 74.91,
+          "won_loss": 71,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.226,
+          "cal": 0.226,
+          "d": -0.182,
+          "se": 0.017,
+          "loss": 74.15,
+          "won_loss": 69,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "potion 速度药水, 防御, 偏折, 串刺 -> 瀑布巨兽",
+        "original": "potion 速度药水, 防御, 偏折, 串刺 -> 瀑布巨兽",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 81,
+      "solve_ms": 8,
+      "mc_ms": 0,
+      "rollout_ms": 6,
+      "boss_sim_ms": 46,
+      "other_ms": 22,
+      "cpu_ms": 144,
+      "load1": 7.28,
+      "probe_ms": 2.77,
+      "memo": {
+        "rollout_ms": 706,
+        "boss_sim_ms": 8623,
+        "hits": 12,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:44:54.221Z",
+    "journal": {
+      "choice": "potion 速度药水, then 防御, then 偏折, then 串刺 -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:45:04.589Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 3,
+    "label": "combat/plan-choice",
+    "decision_id": "e8d28da0-18d2-45af-80ea-aa30ef52a25e",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:209:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:STRIKE_SILENT:true|1:STRIKE_SILENT:true|2:DEFEND_SILENT:true|3:DEFEND_SILENT:true|4:NEUTRALIZE:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"WEAK_POWER:1\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"打击 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 防御, then 中和 -> 瀑布巨兽\",\"result\":\"survives with 73/76 HP before healing\",\"hp_lost\":3,\"damage_dealt\":15,\"enemies_after\":\"瀑布巨兽 194 HP, Weak 1, 中毒 4\",\"block_gained\":5,\"hp_after\":73,\"hp_after_pct\":96,\"dmg\":15,\"lethal_now\":\"no\",\"enemy_threat_next\":3,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~108, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 3)\",\"rollout_turns\":\"T1 exact: hp -3, dmg 15; T2: hp -0 [0-0], dmg 36.5 [33-41], alive 24/24, won 0/24; T3: hp -15.8 [3-23], dmg 22.1 [9-40], alive 24/24, won 0/24; T4: hp -8.5 [0-14], dmg 23.9 [14-39], alive 24/24, won 0/24; T5: hp -7.4 [0-16], dmg 18.5 [7-32], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 61, win 89% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 34% (vs the simulation's best line −6 ± 1 pts), HP lost when won median 69, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 66%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"打击 -> 瀑布巨兽, then 防御, then 防御, then 中和 -> 瀑布巨兽\",\"result\":\"survives with 76/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":11,\"enemies_after\":\"瀑布巨兽 198 HP, Weak 1, 中毒 4\",\"block_gained\":10,\"hp_after\":76,\"hp_after_pct\":100,\"dmg\":11,\"lethal_now\":\"no\",\"enemy_threat_next\":3,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":2,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 76, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~113, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 11; T2: hp -0 [0-0], dmg 36.5 [33-41], alive 24/24, won 0/24; T3: hp -16.2 [3-23], dmg 22.6 [9-40], alive 24/24, won 0/24; T4: hp -7.5 [0-14], dmg 22.4 [9-39], alive 24/24, won 0/24; T5: hp -7.5 [0-16], dmg 18.5 [7-32], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 59, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 40% (the simulation's best line), HP lost when won median 68, ~12 turns to win (this one included); the losing samples die most often on T16 (dead in 60%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan2": 0.68,
+          "plan1": 0.32
+        },
+        "confidence": 0.36,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.36,
+          "probabilities": {
+            "plan2": 0.68,
+            "plan1": 0.32
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 3,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/2 (打击 -> 瀑布巨兽, 防御, 防御, 中和 -> 瀑布巨兽) with confidence 0.36; code rank 2",
+    "confidence": 0.36,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d461ab72509222133a8e4ec41e"
+    ],
+    "latency_ms": {
+      "plan": 37,
+      "jev": 571,
+      "action": 305,
+      "planner": 43,
+      "pre": 3
+    },
+    "usage": {
+      "input_tokens": 7192,
+      "output_tokens": 34
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 2,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "sl_retry": {
+      "known_draws": 4,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 24,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan1"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.339,
+          "cal": 0.339,
+          "d": -0.065,
+          "se": 0.015,
+          "loss": 73.06,
+          "won_loss": 69,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.404,
+          "cal": 0.404,
+          "d": 0,
+          "se": 0,
+          "loss": 72.19,
+          "won_loss": 68,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "打击 -> 瀑布巨兽, 防御, 防御, 中和 -> 瀑布巨兽",
+        "original": "打击 -> 瀑布巨兽, 防御, 防御, 中和 -> 瀑布巨兽",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 40,
+      "solve_ms": 1,
+      "mc_ms": 0,
+      "rollout_ms": 2,
+      "boss_sim_ms": 24,
+      "other_ms": 12,
+      "cpu_ms": 59,
+      "load1": 6.78,
+      "probe_ms": 2.69,
+      "memo": {
+        "rollout_ms": 526,
+        "boss_sim_ms": 3555,
+        "hits": 14,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:45:03.935Z",
+    "journal": {
+      "choice": "打击 -> 瀑布巨兽, then 防御, then 防御, then 中和 -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:45:24.341Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 5,
+    "label": "combat/plan-choice",
+    "decision_id": "f23d67b7-e446-41f2-96ca-8fceb8b81ad6",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:182:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:NEUTRALIZE:true|1:SKEWER:true|2:STRIKE_SILENT:true|3:SURVIVOR:true|4:DEFEND_SILENT:true\",\"hp\":76,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"中和 -> 瀑布巨兽, then 生存者, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 67/76 HP before healing\",\"hp_lost\":9,\"damage_dealt\":22,\"enemies_after\":\"瀑布巨兽 160 HP, Weak 1, 中毒 2\",\"block_gained\":8,\"hp_after\":67,\"hp_after_pct\":88,\"dmg\":22,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 74.4, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~47% (fights won in the samples, the others by the end-of-horizon estimate), value -95.6\",\"rollout_turns\":\"T1 exact: hp -9, dmg 22; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.5 [0-11], dmg 18.8 [11-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 31.6 [18-46], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 48, win 95% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 33% (vs the simulation's best line −6 ± 2 pts), HP lost when won median 68, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 67%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"中和 -> 瀑布巨兽, then 生存者, then 防御, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 72/76 HP before healing\",\"hp_lost\":4,\"damage_dealt\":14,\"enemies_after\":\"瀑布巨兽 168 HP, Weak 1, 中毒 2\",\"block_gained\":13,\"hp_after\":72,\"hp_after_pct\":95,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 74.1, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~48% (fights won in the samples, the others by the end-of-horizon estimate), value -95.1\",\"rollout_turns\":\"T1 exact: hp -4, dmg 14; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.8 [0-7], dmg 19.5 [11-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 32.2 [12-50], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 45, win 94% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 39% (the simulation's best line), HP lost when won median 67, ~11 turns to win (this one included); the losing samples die most often on T18 (dead in 61%); 1200 samples\"}",
+          "plan3": "{\"plays\":\"中和 -> 瀑布巨兽, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 59/76 HP before healing\",\"hp_lost\":17,\"damage_dealt\":30,\"enemies_after\":\"瀑布巨兽 152 HP, Weak 1, 中毒 2\",\"hp_after\":59,\"hp_after_pct\":78,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 75.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~36% (fights won in the samples, the others by the end-of-horizon estimate), value -101.2\",\"rollout_turns\":\"T1 exact: hp -17, dmg 30; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.3 [0-11], dmg 18.7 [11-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 35 [18-50], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 52, win 95% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 18% (vs the simulation's best line −20 ± 2 pts), HP lost when won median 71, ~10 turns to win (this one included); the losing samples die most often on T16 (dead in 82%); 1200 samples\"}",
+          "plan4": "{\"plays\":\"中和 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 生存者, then 防御\",\"result\":\"survives with 72/76 HP before healing\",\"hp_lost\":4,\"damage_dealt\":12,\"enemies_after\":\"瀑布巨兽 170 HP, Weak 1, 中毒 2\",\"block_gained\":13,\"hp_after\":72,\"hp_after_pct\":95,\"dmg\":12,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 73.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~11.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~49% (fights won in the samples, the others by the end-of-horizon estimate), value -93.8\",\"rollout_turns\":\"T1 exact: hp -4, dmg 12; T2: hp -3 [0-5], dmg 9.6 [8-15], alive 24/24, won 0/24; T3: hp -3.6 [1-7], dmg 12.2 [7-27], alive 24/24, won 0/24; T4: hp -2.1 [0-6], dmg 18.6 [9-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 32.5 [12-50], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 45, win 94% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 38% (vs the simulation's best line −0 ± 2 pts, tied on win rate), HP lost when won median 68, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 62%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan1": 0.02,
+          "plan2": 0.2,
+          "plan3": 0.01,
+          "plan4": 0.77
+        },
+        "confidence": 0.69,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.69,
+          "probabilities": {
+            "plan1": 0.02,
+            "plan2": 0.2,
+            "plan3": 0.01,
+            "plan4": 0.77
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "NEUTRALIZE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 5,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/4 (中和 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 生存者, 防御) with confidence 0.69; code rank - (rollout's best line, added)",
+    "confidence": 0.69,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d4aee67cb8b2a3459776654c26"
+    ],
+    "latency_ms": {
+      "plan": 41,
+      "jev": 555,
+      "action": 429,
+      "planner": 61,
+      "pre": 5
+    },
+    "usage": {
+      "input_tokens": 8325,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 5,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan4",
+      "best_added": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 32,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan4",
+        "plan1",
+        "plan3"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.326,
+          "cal": 0.326,
+          "d": -0.062,
+          "se": 0.016,
+          "loss": 72.99,
+          "won_loss": 68,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.388,
+          "cal": 0.388,
+          "d": 0,
+          "se": 0,
+          "loss": 71.95,
+          "won_loss": 67,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.184,
+          "cal": 0.184,
+          "d": -0.203,
+          "se": 0.016,
+          "loss": 74.82,
+          "won_loss": 71,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.383,
+          "cal": 0.383,
+          "d": -0.004,
+          "se": 0.016,
+          "loss": 72.2,
+          "won_loss": 68,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan4",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "中和 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 生存者, 防御",
+        "original": "中和 -> 瀑布巨兽, 打击 -> 瀑布巨兽, 生存者, 防御",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 58,
+      "solve_ms": 3,
+      "mc_ms": 0,
+      "rollout_ms": 5,
+      "boss_sim_ms": 32,
+      "other_ms": 19,
+      "cpu_ms": 84,
+      "load1": 5.99,
+      "probe_ms": 2.68,
+      "memo": {
+        "rollout_ms": 582,
+        "boss_sim_ms": 6149,
+        "hits": 16,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:45:23.679Z",
+    "journal": {
+      "choice": "中和 -> 瀑布巨兽, then 打击 -> 瀑布巨兽, then 生存者, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:45:36.926Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 6,
+    "label": "combat/plan-choice",
+    "decision_id": "816b9e8a-e9ee-4d02-9fe3-bcae851f611f",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:170:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:DEFEND_SILENT:true|1:BACKFLIP:true|2:DEFEND_SILENT:true|3:STRIKE_SILENT:true|4:STRIKE_SILENT:true\",\"hp\":72,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"防御, then 打击 -> 瀑布巨兽, then 打击 -> 瀑布巨兽\",\"result\":\"survives with 63/76 HP before healing\",\"hp_lost\":9,\"damage_dealt\":14,\"enemies_after\":\"瀑布巨兽 156 HP, 中毒 1\",\"block_gained\":5,\"hp_after\":63,\"hp_after_pct\":83,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~78, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 9)\",\"rollout_turns\":\"T1 exact: hp -9, dmg 14; T2: hp -10.2 [7-16], dmg 16.9 [13-20], alive 24/24, won 0/24; T3: hp -2.6 [0-11], dmg 19.4 [11-32], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 27.3 [12-50], alive 24/24, won 0/24; T5: hp -14.3 [3-23], dmg 29.7 [11-40], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 51, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 37% (the simulation's best line), HP lost when won median 64, ~10 turns to win (this one included); the losing samples die most often on T16 (dead in 63%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"防御, then 后空翻, then 打击 -> 瀑布巨兽\",\"result\":\"survives with 68/76 HP before healing\",\"hp_lost\":4,\"damage_dealt\":8,\"enemies_after\":\"瀑布巨兽 162 HP, 中毒 1\",\"block_gained\":10,\"cards_drawn\":2,\"hp_after\":68,\"hp_after_pct\":89,\"dmg\":8,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~83, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 4)\",\"rollout_turns\":\"T1 exact: hp -4, dmg 8; T2: hp -10.4 [7-16], dmg 19.8 [13-33], alive 24/24, won 0/24; T3: hp -3.2 [0-11], dmg 19 [6-34], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 28.5 [15-43], alive 24/24, won 0/24; T5: hp -14 [4-23], dmg 26.7 [16-39], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 49, win 91% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 30% (vs the simulation's best line −7 ± 2 pts), HP lost when won median 65, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 70%); 1200 samples\"}",
+          "plan3": "{\"plays\":\"后空翻, then 打击 -> 瀑布巨兽\",\"result\":\"survives with 63/76 HP before healing\",\"hp_lost\":9,\"damage_dealt\":8,\"enemies_after\":\"瀑布巨兽 162 HP, 中毒 1\",\"block_gained\":5,\"cards_drawn\":2,\"energy_unused\":1,\"hp_after\":63,\"hp_after_pct\":83,\"dmg\":8,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~84, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 9)\",\"rollout_turns\":\"T1 exact: hp -9, dmg 8; T2: hp -10.6 [7-16], dmg 20 [13-33], alive 24/24, won 0/24; T3: hp -2.6 [0-11], dmg 18.8 [6-34], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 27.5 [15-43], alive 24/24, won 0/24; T5: hp -12.8 [0-23], dmg 26.5 [9-48], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 53, win 88% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 18% (vs the simulation's best line −19 ± 2 pts), HP lost when won median 67, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 82%); 1200 samples\"}",
+          "plan4": "{\"plays\":\"防御, then 后空翻, then 防御\",\"result\":\"survives with 72/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":2,\"enemies_after\":\"瀑布巨兽 168 HP, 中毒 1\",\"block_gained\":15,\"cards_drawn\":2,\"hp_after\":72,\"hp_after_pct\":95,\"dmg\":2,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":1,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~89, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 2; T2: hp -9.8 [7-16], dmg 19 [13-33], alive 24/24, won 0/24; T3: hp -3 [0-11], dmg 18.8 [6-34], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 28.7 [9-43], alive 24/24, won 0/24; T5: hp -13.6 [4-23], dmg 27 [15-38], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 46, win 91% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 37% (vs the simulation's best line −0 ± 2 pts, tied on win rate), HP lost when won median 65, ~11 turns to win (this one included); the losing samples die most often on T18 (dead in 63%); 1200 samples\"}",
+          "plan5": "{\"plays\":\"防御, then 后空翻\",\"result\":\"survives with 68/76 HP before healing\",\"hp_lost\":4,\"damage_dealt\":2,\"enemies_after\":\"瀑布巨兽 168 HP, 中毒 1\",\"block_gained\":10,\"cards_drawn\":2,\"energy_unused\":1,\"hp_after\":68,\"hp_after_pct\":89,\"dmg\":2,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~89, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 4)\",\"rollout_turns\":\"T1 exact: hp -4, dmg 2; T2: hp -9.8 [7-16], dmg 19 [13-33], alive 24/24, won 0/24; T3: hp -3 [0-11], dmg 18.8 [6-34], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 28.7 [9-43], alive 24/24, won 0/24; T5: hp -13.6 [4-23], dmg 27 [15-38], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 49, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 26% (vs the simulation's best line −11 ± 2 pts), HP lost when won median 65, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 74%); 1200 samples\"}",
+          "plan6": "{\"plays\":\"打击 -> 瀑布巨兽, then 打击 -> 瀑布巨兽\",\"result\":\"survives with 58/76 HP before healing\",\"hp_lost\":14,\"damage_dealt\":14,\"enemies_after\":\"瀑布巨兽 156 HP, 中毒 1\",\"energy_unused\":1,\"hp_after\":58,\"hp_after_pct\":76,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~76, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 14)\",\"rollout_turns\":\"T1 exact: hp -14, dmg 14; T2: hp -10.2 [7-16], dmg 16.9 [13-20], alive 24/24, won 0/24; T3: hp -2.4 [0-11], dmg 19.2 [11-32], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 28 [13-50], alive 24/24, won 0/24; T5: hp -15.5 [8-23], dmg 31 [11-42], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 54, win 88% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 22% (vs the simulation's best line −16 ± 1 pts), HP lost when won median 66, ~10 turns to win (this one included); the losing samples die most often on T16 (dead in 78%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan4",
+        "probabilities": {
+          "plan4": 0.4,
+          "plan5": 0.02,
+          "plan2": 0.12,
+          "plan3": 0.01,
+          "plan6": 0.38,
+          "plan1": 0.07
+        },
+        "confidence": 0.28,
+        "raw": {
+          "type": "choice",
+          "choice": "plan4",
+          "confidence": 0.28,
+          "probabilities": {
+            "plan4": 0.4,
+            "plan5": 0.02,
+            "plan2": 0.12,
+            "plan3": 0.01,
+            "plan6": 0.38,
+            "plan1": 0.07
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "DEFEND_SILENT",
+        "upgraded": false
+      },
+      "turn": 6,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 4/6 (防御, 后空翻, 防御) with confidence 0.28; code rank 4",
+    "confidence": 0.28,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d4dff87f34ad4ecf51bdd617c4"
+    ],
+    "latency_ms": {
+      "plan": 32,
+      "jev": 674,
+      "action": 215,
+      "planner": 94,
+      "pre": 3
+    },
+    "usage": {
+      "input_tokens": 9875,
+      "output_tokens": 66
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 4,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 8,
+      "best": "plan6",
+      "best_added": true,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 67,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan1",
+        "plan4",
+        "plan2",
+        "plan5",
+        "plan6",
+        "plan3"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.374,
+          "cal": 0.374,
+          "d": 0,
+          "se": 0,
+          "loss": 68.68,
+          "won_loss": 64,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.304,
+          "cal": 0.304,
+          "d": -0.07,
+          "se": 0.019,
+          "loss": 69.33,
+          "won_loss": 65,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.181,
+          "cal": 0.181,
+          "d": -0.193,
+          "se": 0.018,
+          "loss": 70.74,
+          "won_loss": 67,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.37,
+          "cal": 0.37,
+          "d": -0.004,
+          "se": 0.02,
+          "loss": 68.57,
+          "won_loss": 64.5,
+          "order": null
+        },
+        "plan5": {
+          "win": 0.264,
+          "cal": 0.264,
+          "d": -0.11,
+          "se": 0.019,
+          "loss": 69.91,
+          "won_loss": 65,
+          "order": null
+        },
+        "plan6": {
+          "win": 0.218,
+          "cal": 0.218,
+          "d": -0.157,
+          "se": 0.015,
+          "loss": 70.46,
+          "won_loss": 66,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan6",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "防御, 后空翻, 防御",
+        "original": "防御, 后空翻, 防御",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 91,
+      "solve_ms": 2,
+      "mc_ms": 0,
+      "rollout_ms": 4,
+      "boss_sim_ms": 67,
+      "other_ms": 19,
+      "cpu_ms": 126,
+      "load1": 7.45,
+      "probe_ms": 2.82,
+      "memo": {
+        "rollout_ms": 781,
+        "boss_sim_ms": 8666,
+        "hits": 18,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:45:36.123Z",
+    "journal": {
+      "choice": "防御, then 后空翻, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:45:39.225Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 6,
+    "label": "combat/plan-choice",
+    "decision_id": "f93932d8-3cfb-4fee-be7c-751ddb7ded34",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:170:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:DEFEND_SILENT:true|1:STRIKE_SILENT:true|2:STRIKE_SILENT:true|3:DEFEND_SILENT:true|4:DEFEND_SILENT:true\",\"hp\":72,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:10:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"打击 -> 瀑布巨兽\",\"result\":\"survives with 68/76 HP before healing\",\"hp_lost\":4,\"damage_dealt\":8,\"enemies_after\":\"瀑布巨兽 162 HP, 中毒 1\",\"hp_after\":68,\"hp_after_pct\":89,\"dmg\":8,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~79, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 4)\",\"rollout_turns\":\"T1 exact: hp -4, dmg 8; T2: hp -11.8 [8-12], dmg 21.9 [20-33], alive 24/24, won 0/24; T3: hp -3 [0-11], dmg 19.8 [11-34], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 29.9 [14-49], alive 24/24, won 0/24; T5: hp -13.1 [4-23], dmg 26.7 [14-44], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 49, win 90% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 30% (vs the simulation's best line −7 ± 2 pts), HP lost when won median 65, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 70%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"防御\",\"result\":\"survives with 72/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":2,\"enemies_after\":\"瀑布巨兽 168 HP, 中毒 1\",\"block_gained\":5,\"hp_after\":72,\"hp_after_pct\":95,\"dmg\":2,\"lethal_now\":\"no\",\"enemy_threat_next\":18,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":1,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 72, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~85, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 2; T2: hp -11.8 [8-12], dmg 21.9 [20-33], alive 24/24, won 0/24; T3: hp -3.3 [0-11], dmg 20.2 [13-34], alive 24/24, won 0/24; T4: hp -0 [0-0], dmg 29.4 [15-49], alive 24/24, won 0/24; T5: hp -12.7 [2-23], dmg 26.2 [8-44], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 47, win 91% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 37% (the simulation's best line), HP lost when won median 65, ~11 turns to win (this one included); the losing samples die most often on T16 (dead in 63%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan2": 0.56,
+          "plan1": 0.44
+        },
+        "confidence": 0.12,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.12,
+          "probabilities": {
+            "plan2": 0.56,
+            "plan1": 0.44
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "DEFEND_SILENT",
+        "upgraded": false
+      },
+      "turn": 6,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/2 (防御) with confidence 0.12; code rank 2",
+    "confidence": 0.12,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d4e917729db11c69f3473e2dab"
+    ],
+    "latency_ms": {
+      "plan": 43,
+      "jev": 382,
+      "action": 232,
+      "planner": 43,
+      "pre": 3
+    },
+    "usage": {
+      "input_tokens": 6990,
+      "output_tokens": 34
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 2,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 3,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": false,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 784,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 22,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan1"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.302,
+          "cal": 0.302,
+          "d": -0.072,
+          "se": 0.016,
+          "loss": 69.48,
+          "won_loss": 65,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.374,
+          "cal": 0.374,
+          "d": 0,
+          "se": 0,
+          "loss": 68.77,
+          "won_loss": 65,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "防御",
+        "original": "防御",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 39,
+      "solve_ms": 1,
+      "mc_ms": 0,
+      "rollout_ms": 2,
+      "boss_sim_ms": 22,
+      "other_ms": 14,
+      "cpu_ms": 57,
+      "load1": 7.09,
+      "probe_ms": 2.67,
+      "memo": {
+        "rollout_ms": 290,
+        "boss_sim_ms": 2661,
+        "hits": 20,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:45:38.754Z",
+    "journal": {
+      "choice": "防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:46:02.707Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 9,
+    "label": "combat/plan-choice",
+    "decision_id": "0e8f373b-da8b-4822-a032-65c316e150b6",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:139:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:DAGGER_SPRAY:true|1:SUCKER_PUNCH:true|2:PRECISE_CUT:true|3:SKEWER:true|4:STRIKE_SILENT:true\",\"hp\":60,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":9}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"突然一拳 -> 瀑布巨兽, then 精确切击 -> 瀑布巨兽, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 60/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":35,\"enemies_after\":\"瀑布巨兽 104 HP, Weak 1, 中毒 5\",\"unmodelled_cards\":\"精确切击（此手牌数或伤害修正未验证）\",\"hp_after\":60,\"hp_after_pct\":79,\"dmg\":35,\"lethal_now\":\"no\",\"enemy_threat_next\":26,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~36, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 35; T2: hp -8 [8-8], dmg 11 [11-11], alive 24/24, won 0/24; T3: hp -6.8 [0-14], dmg 25.2 [10-44], alive 24/24, won 0/24; T4: hp -8.7 [0-16], dmg 27.8 [6-47], alive 24/24, won 0/24; T5: hp -3.8 [0-11], dmg 19.3 [12-40], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 39, win 96% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 18% (the simulation's best line), HP lost when won median 54, ~8 turns to win (this one included); the losing samples die most often on T18 (dead in 82%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"突然一拳 -> 瀑布巨兽, then 串刺 -> 瀑布巨兽\",\"result\":\"survives with 60/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":30,\"enemies_after\":\"瀑布巨兽 109 HP, Weak 1, 中毒 5\",\"hp_after\":60,\"hp_after_pct\":79,\"dmg\":30,\"lethal_now\":\"no\",\"enemy_threat_next\":26,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.1; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~42, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 30; T2: hp -8 [8-8], dmg 11 [11-11], alive 24/24, won 0/24; T3: hp -6.8 [0-14], dmg 26.2 [10-47], alive 24/24, won 0/24; T4: hp -9.5 [0-16], dmg 26.9 [6-47], alive 24/24, won 0/24; T5: hp -3.8 [0-11], dmg 17.5 [8-31], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 40, win 95% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 11% (vs the simulation's best line −7 ± 1 pts), HP lost when won median 54, ~8 turns to win (this one included); the losing samples die most often on T18 (dead in 89%); 1200 samples\"}",
+          "plan3": "{\"plays\":\"突然一拳 -> 瀑布巨兽, then 精确切击 -> 瀑布巨兽, then 打击 -> 瀑布巨兽\",\"result\":\"survives with 60/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":25,\"enemies_after\":\"瀑布巨兽 114 HP, Weak 1, 中毒 5\",\"energy_unused\":1,\"unmodelled_cards\":\"精确切击（此手牌数或伤害修正未验证）\",\"hp_after\":60,\"hp_after_pct\":79,\"dmg\":25,\"lethal_now\":\"no\",\"enemy_threat_next\":26,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~49, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 25; T2: hp -8 [8-8], dmg 11 [11-11], alive 24/24, won 0/24; T3: hp -7.3 [0-14], dmg 25.1 [10-38], alive 24/24, won 0/24; T4: hp -7.9 [0-16], dmg 25.1 [6-45], alive 24/24, won 0/24; T5: hp -4.1 [0-11], dmg 18.9 [6-33], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 41, win 94% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 9% (vs the simulation's best line −9 ± 1 pts), HP lost when won median 55, ~8 turns to win (this one included); the losing samples die most often on T18 (dead in 91%); 1200 samples\"}",
+          "plan4": "{\"plays\":\"突然一拳 -> 瀑布巨兽, then 精确切击 -> 瀑布巨兽\",\"result\":\"survives with 60/76 HP before healing\",\"hp_lost\":0,\"damage_dealt\":19,\"enemies_after\":\"瀑布巨兽 120 HP, Weak 1, 中毒 5\",\"energy_unused\":2,\"unmodelled_cards\":\"精确切击（此手牌数或伤害修正未验证）\",\"hp_after\":60,\"hp_after_pct\":79,\"dmg\":19,\"lethal_now\":\"no\",\"enemy_threat_next\":26,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~53, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)\",\"rollout_turns\":\"T1 exact: hp -0, dmg 19; T2: hp -8 [8-8], dmg 11 [11-11], alive 24/24, won 0/24; T3: hp -7.4 [0-14], dmg 26.1 [10-47], alive 24/24, won 0/24; T4: hp -8.4 [0-16], dmg 26.5 [6-47], alive 24/24, won 0/24; T5: hp -3.8 [0-11], dmg 18.2 [8-31], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 43, win 93% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 6% (vs the simulation's best line −12 ± 1 pts), HP lost when won median 55, ~8 turns to win (this one included); the losing samples die most often on T18 (dead in 94%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan1",
+        "probabilities": {
+          "plan3": 0.01,
+          "plan1": 0.82,
+          "plan4": 0.01,
+          "plan2": 0.16
+        },
+        "confidence": 0.76,
+        "raw": {
+          "type": "choice",
+          "choice": "plan1",
+          "confidence": 0.76,
+          "probabilities": {
+            "plan3": 0.01,
+            "plan1": 0.82,
+            "plan4": 0.01,
+            "plan2": 0.16
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SUCKER_PUNCH",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 9,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 1/4 (突然一拳 -> 瀑布巨兽, 精确切击 -> 瀑布巨兽, 串刺 -> 瀑布巨兽) with confidence 0.76; code rank 1",
+    "confidence": 0.76,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d544bb7e6c91b79195af741942"
+    ],
+    "latency_ms": {
+      "plan": 31,
+      "jev": 557,
+      "action": 435,
+      "planner": 73,
+      "pre": 6
+    },
+    "usage": {
+      "input_tokens": 8567,
+      "output_tokens": 50
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 3,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 8,
+      "best": "plan1",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 38,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.181,
+          "cal": 0.181,
+          "d": 0,
+          "se": 0,
+          "loss": 58.68,
+          "won_loss": 54,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.108,
+          "cal": 0.108,
+          "d": -0.073,
+          "se": 0.013,
+          "loss": 59.27,
+          "won_loss": 54,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.09,
+          "cal": 0.09,
+          "d": -0.091,
+          "se": 0.012,
+          "loss": 59.41,
+          "won_loss": 55,
+          "order": null
+        },
+        "plan4": {
+          "win": 0.064,
+          "cal": 0.064,
+          "d": -0.117,
+          "se": 0.011,
+          "loss": 59.62,
+          "won_loss": 55,
+          "order": null
+        }
+      },
+      "rollout_own_best": "plan1",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "replay": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "reference": 2,
+        "line": "突然一拳 -> 瀑布巨兽, 精确切击 -> 瀑布巨兽, 串刺 -> 瀑布巨兽",
+        "original": "突然一拳 -> 瀑布巨兽, 精确切击 -> 瀑布巨兽, 串刺 -> 瀑布巨兽",
+        "overridden": false,
+        "reason": "the answer is attempt 2's line"
+      }
+    },
+    "timing": {
+      "planner_ms": 70,
+      "solve_ms": 5,
+      "mc_ms": 0,
+      "rollout_ms": 3,
+      "boss_sim_ms": 38,
+      "other_ms": 24,
+      "cpu_ms": 104,
+      "load1": 6.28,
+      "probe_ms": 2.78,
+      "memo": {
+        "rollout_ms": 757,
+        "boss_sim_ms": 5639,
+        "hits": 22,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:46:02.040Z",
+    "journal": {
+      "choice": "突然一拳 -> 瀑布巨兽, then 精确切击 -> 瀑布巨兽, then 串刺 -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:46:11.554Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 10,
+    "label": "combat/plan-choice",
+    "decision_id": "8eb4ac66-e555-4e0d-878a-45ce76f7d97b",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:117:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:SLICE:true|1:BACKFLIP:true|2:DEFEND_SILENT:true|3:DEFEND_SILENT:true|4:DEFEND_SILENT:true\",\"hp\":60,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":10}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"切割 -> 瀑布巨兽, then 后空翻, then 防御, then 防御\",\"result\":\"survives with 47/76 HP before healing\",\"hp_lost\":13,\"damage_dealt\":11,\"enemies_after\":\"瀑布巨兽 106 HP, 中毒 4\",\"block_gained\":15,\"cards_drawn\":2,\"hp_after\":47,\"hp_after_pct\":62,\"dmg\":11,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.7; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~13, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 11; T2: hp -6.3 [0-14], dmg 23.8 [10-36], alive 24/24, won 0/24; T3: hp -8.5 [0-16], dmg 28.1 [15-45], alive 24/24, won 0/24; T4: hp -3 [0-11], dmg 18 [6-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 23.2 [4-51], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 43, win 96% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 11% (vs the simulation's best line −1 ± 1 pts, tied on win rate), HP lost when won median 55, ~7 turns to win (this one included); the losing samples die most often on T18 (dead in 89%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"切割 -> 瀑布巨兽, then 后空翻, then 防御\",\"result\":\"survives with 42/76 HP before healing\",\"hp_lost\":18,\"damage_dealt\":11,\"enemies_after\":\"瀑布巨兽 106 HP, 中毒 4\",\"block_gained\":10,\"cards_drawn\":2,\"energy_unused\":1,\"hp_after\":42,\"hp_after_pct\":55,\"dmg\":11,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.7; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~13, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 18)\",\"rollout_turns\":\"T1 exact: hp -18, dmg 11; T2: hp -6.1 [0-14], dmg 23.5 [10-36], alive 24/24, won 0/24; T3: hp -8.6 [0-16], dmg 28.1 [15-45], alive 24/24, won 0/24; T4: hp -2.4 [0-11], dmg 17.5 [6-30], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 24 [4-51], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 46, win 95% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 5% (vs the simulation's best line −7 ± 1 pts), HP lost when won median 56, ~7 turns to win (this one included); the losing samples die most often on T18 (dead in 95%); 1200 samples\"}",
+          "plan3": "{\"plays\":\"切割 -> 瀑布巨兽, then 防御, then 防御, then 防御\",\"result\":\"survives with 47/76 HP before healing\",\"hp_lost\":13,\"damage_dealt\":11,\"enemies_after\":\"瀑布巨兽 106 HP, 中毒 4\",\"block_gained\":15,\"hp_after\":47,\"hp_after_pct\":62,\"dmg\":11,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~11, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)\",\"rollout_turns\":\"T1 exact: hp -13, dmg 11; T2: hp -8.8 [0-14], dmg 24.7 [10-39], alive 24/24, won 0/24; T3: hp -6.7 [0-16], dmg 25.7 [10-51], alive 24/24, won 0/24; T4: hp -3.3 [0-11], dmg 18 [6-36], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 26.5 [14-41], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 43, win 96% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 12% (the simulation's best line), HP lost when won median 55, ~7 turns to win (this one included); the losing samples die most often on T18 (dead in 88%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan3",
+        "probabilities": {
+          "plan1": 0.11,
+          "plan2": 0.01,
+          "plan3": 0.88
+        },
+        "confidence": 0.81,
+        "raw": {
+          "type": "choice",
+          "choice": "plan3",
+          "confidence": 0.81,
+          "probabilities": {
+            "plan1": 0.11,
+            "plan2": 0.01,
+            "plan3": 0.88
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "SLICE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "WATERFALL_GIANT"
+      },
+      "turn": 10,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 3/3 (切割 -> 瀑布巨兽, 防御, 防御, 防御) with confidence 0.81; code rank - (rollout's best line, added); SL explore (T10, the 10th latest question before attempt 2's death on T21): playing 切割 -> 瀑布巨兽, 后空翻, 防御, 防御 instead of 切割 -> 瀑布巨兽, 防御, 防御, 防御, played on this board in attempt 2 (the best untried line by the question's ranking, among those the rollout does not see dying more often)",
+    "confidence": 0.81,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d5675c79018a589cabc3d0acde"
+    ],
+    "latency_ms": {
+      "plan": 14,
+      "jev": 535,
+      "action": 299,
+      "planner": 54,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 7844,
+      "output_tokens": 42
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 3,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan3",
+      "best_added": true,
+      "saturated": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 0,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 28,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan3",
+        "plan1",
+        "plan2"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.109,
+          "cal": 0.109,
+          "d": -0.009,
+          "se": 0.013,
+          "loss": 59.35,
+          "won_loss": 55,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.048,
+          "cal": 0.048,
+          "d": -0.071,
+          "se": 0.011,
+          "loss": 59.77,
+          "won_loss": 56,
+          "order": null
+        },
+        "plan3": {
+          "win": 0.118,
+          "cal": 0.118,
+          "d": 0,
+          "se": 0,
+          "loss": 59.31,
+          "won_loss": 55,
+          "order": null
+        }
+      },
+      "plan": "T15, T16 the enemies hit hardest (incoming ~54, ~57); the boss dies ~T16 (median of 142 winning samples)",
+      "rollout_own_best": "plan3",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "point": "T10, the 10th latest question before attempt 2's death on T21",
+      "original": "切割 -> 瀑布巨兽, 防御, 防御, 防御",
+      "replacement": "切割 -> 瀑布巨兽, 后空翻, 防御, 防御",
+      "reason": "the best untried line by the question's ranking, among those the rollout does not see dying more often",
+      "played_in": [
+        2
+      ],
+      "replayed": 18,
+      "numbers": {
+        "original": "rollout dead 0/24, further loss 60, win ~6%; whole-fight sim win 11.8%; this turn hp -13, dmg 11",
+        "replacement": "rollout dead 0/24, further loss 60, win ~8%; whole-fight sim win 10.9%; this turn hp -13, dmg 11"
+      },
+      "gate": "rollout",
+      "turn": "DEFEND_SILENT, DEFEND_SILENT, DEFEND_SILENT, SLICE>瀑布巨兽",
+      "turn_instead": "BACKFLIP, DEFEND_SILENT, DEFEND_SILENT, SLICE>瀑布巨兽"
+    },
+    "timing": {
+      "planner_ms": 51,
+      "solve_ms": 2,
+      "mc_ms": 0,
+      "rollout_ms": 3,
+      "boss_sim_ms": 28,
+      "other_ms": 18,
+      "cpu_ms": 64,
+      "load1": 6.25,
+      "probe_ms": 2.78,
+      "memo": {
+        "rollout_ms": 581,
+        "boss_sim_ms": 3113,
+        "hits": 24,
+        "stored": 64
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:46:10.951Z",
+    "journal": {
+      "choice": "切割 -> 瀑布巨兽, then 防御, then 防御, then 防御",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  },
+  {
+    "ts": "2026-10-08T04:46:18.369Z",
+    "mode": "play",
+    "screen": "COMBAT",
+    "session": "singleplayer/run",
+    "floor": 17,
+    "turn": 10,
+    "label": "combat/plan-choice",
+    "decision_id": "10084ad0-1317-43d7-a9b5-b7dd03bbf2f3",
+    "decider": "jev",
+    "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:111:0:true\",\"event\":\"\",\"gold\":269,\"hand\":\"0:DEFEND_SILENT:true|1:DEFEND_SILENT:true|2:DEFEND_SILENT:true|3:NEUTRALIZE:true|4:STRIKE_SILENT:true\",\"hp\":60,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"2:5:0\",\"potions\":\":false:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"G8NHLL09DLBX\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":10}",
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"防御, then 中和 -> 瀑布巨兽, then 打击 -> 瀑布巨兽\",\"result\":\"survives with 49/76 HP before healing\",\"hp_lost\":11,\"damage_dealt\":14,\"enemies_after\":\"瀑布巨兽 97 HP, Weak 1, 中毒 4\",\"block_gained\":5,\"hp_after\":49,\"hp_after_pct\":64,\"dmg\":14,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~3, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 11)\",\"rollout_turns\":\"T1 exact: hp -11, dmg 14; T2: hp -8.7 [0-14], dmg 29.1 [16-41], alive 24/24, won 0/24; T3: hp -10.3 [0-16], dmg 30.2 [15-47], alive 24/24, won 0/24; T4: hp -3.5 [0-11], dmg 21.9 [9-40], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 13 [2-25], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 44, win 96% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"whole_fight_sim\":\"low confidence: win 15% (vs the simulation's best line −8 ± 1 pts), HP lost when won median 56, ~7 turns to win (this one included); the losing samples die most often on T16 (dead in 85%); 1200 samples\"}",
+          "plan2": "{\"plays\":\"防御, then 防御, then 中和 -> 瀑布巨兽\",\"result\":\"survives with 54/76 HP before healing\",\"hp_lost\":6,\"damage_dealt\":8,\"enemies_after\":\"瀑布巨兽 103 HP, Weak 1, 中毒 4\",\"block_gained\":10,\"hp_after\":54,\"hp_after_pct\":71,\"dmg\":8,\"lethal_now\":\"no\",\"enemy_threat_next\":17,\"setup_turn\":false,\"scaling_gained\":\"none\",\"block_wasted\":0,\"potions_used\":\"none\",\"rollout\":\"5-turn rollout (24 samples): expected further HP loss 60, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~4, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 6)\",\"rollout_turns\":\"T1 exact: hp -6, dmg 8; T2: hp -8.7 [0-14], dmg 29.1 [16-41], alive 24/24, won 0/24; T3: hp -10.3 [0-16], dmg 30.2 [15-47], alive 24/24, won 0/24; T4: hp -3.9 [0-11], dmg 22.3 [13-40], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 17.8 [8-27], alive 24/24, won 0/24\",\"history_estimate\":\"further HP loss 41, win 97% (this encounter n=64; estimate from act-1 boss fights n=346, typical error ±9.9; few similar states for this encounter)\",\"rollout_best\":true,\"whole_fight_sim\":\"low confidence: win 23% (the simulation's best line), HP lost when won median 55, ~7 turns to win (this one included); the losing samples die most often on T16 (dead in 77%); 1200 samples\"}"
+        }
+      }
+    },
+    "answers": {
+      "plan": {
+        "type": "choice",
+        "choice": "plan2",
+        "probabilities": {
+          "plan2": 0.93,
+          "plan1": 0.07
+        },
+        "confidence": 0.86,
+        "raw": {
+          "type": "choice",
+          "choice": "plan2",
+          "confidence": 0.86,
+          "probabilities": {
+            "plan2": 0.93,
+            "plan1": 0.07
+          }
+        }
+      }
+    },
+    "chosen": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expect": {
+      "card": {
+        "id": "DEFEND_SILENT",
+        "upgraded": false
+      },
+      "turn": 10,
+      "from": "decision"
+    },
+    "rationale": "Jev chose plan 2/2 (防御, 防御, 中和 -> 瀑布巨兽) with confidence 0.86; code rank 2",
+    "confidence": 0.86,
+    "fallback": false,
+    "reasked": false,
+    "no_jev": false,
+    "reused_answer": false,
+    "request_ids": [
+      "req_01a119d5807a72d4ba9ebd6d9924d6da"
+    ],
+    "latency_ms": {
+      "plan": 48,
+      "jev": 934,
+      "action": 255,
+      "planner": 2800,
+      "pre": 0
+    },
+    "usage": {
+      "input_tokens": 7099,
+      "output_tokens": 34
+    },
+    "jev_context": "v1",
+    "jev_hints": [],
+    "rollout": {
+      "available": true,
+      "ms": 807,
+      "horizon": 5,
+      "samples": 24,
+      "degraded": [],
+      "lines": 6,
+      "best": "plan2",
+      "best_added": false,
+      "saturated": true
+    },
+    "rollout_best_chosen": true,
+    "sl_retry": {
+      "known_draws": 0,
+      "compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_spent_ms": 584,
+        "mc_samples": 36,
+        "boss_sim_samples": 1200
+      }
+    },
+    "boss_sim": {
+      "available": true,
+      "ms": 1938,
+      "samples": 1200,
+      "requested": 1200,
+      "timed_out": false,
+      "orders": 0,
+      "workers": 20,
+      "boss": "WATERFALL_GIANT",
+      "low_trust": true,
+      "best": null,
+      "tied": [],
+      "ranked": [
+        "plan2",
+        "plan1"
+      ],
+      "lines": {
+        "plan1": {
+          "win": 0.152,
+          "cal": 0.152,
+          "d": -0.08,
+          "se": 0.014,
+          "loss": 59.31,
+          "won_loss": 56,
+          "order": null
+        },
+        "plan2": {
+          "win": 0.232,
+          "cal": 0.232,
+          "d": 0,
+          "se": 0,
+          "loss": 58.48,
+          "won_loss": 55,
+          "order": null
+        }
+      },
+      "plan": "T15, T16 the enemies hit hardest (incoming ~57, ~59); the boss dies ~T16 (median of 278 winning samples)",
+      "rollout_own_best": "plan2",
+      "rollout_own_tied": []
+    },
+    "sl_explore": {
+      "avoid": {
+        "point": "T10, the 10th latest question before attempt 2's death on T21",
+        "original": "防御, 防御, 中和 -> 瀑布巨兽",
+        "replacement": null,
+        "reason": "the pick does not end the turn as a failed attempt's did through the deviation point: played as answered",
+        "played_in": [
+          2
+        ],
+        "turn": "BACKFLIP, DEFEND_SILENT, DEFEND_SILENT, NEUTRALIZE>瀑布巨兽, SLICE>瀑布巨兽",
+        "gate": null
+      }
+    },
+    "timing": {
+      "planner_ms": 2796,
+      "solve_ms": 1,
+      "mc_ms": 0,
+      "rollout_ms": 807,
+      "boss_sim_ms": 1938,
+      "other_ms": 50,
+      "cpu_ms": 43985,
+      "load1": 6.14,
+      "probe_ms": 2.95,
+      "boss_sim": {
+        "pairs": 2,
+        "sims_done": 2400,
+        "samples": 1200,
+        "workers": 20
+      },
+      "memo": {
+        "hits": 24,
+        "stored": 66
+      }
+    },
+    "sl_attempt": 4,
+    "sl_reloads": 3,
+    "run_id": "G8NHLL09DLBX",
+    "observed_ts": "2026-10-08T04:46:14.587Z",
+    "journal": {
+      "choice": "防御, then 防御, then 中和 -> 瀑布巨兽",
+      "reason": ""
+    },
+    "result": "completed: Action completed."
+  }
+]

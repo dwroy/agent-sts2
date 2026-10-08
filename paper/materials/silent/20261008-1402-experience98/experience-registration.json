@@ -1,0 +1,107 @@
+{
+  "recorded_at_cst": "2026-10-08 14:09",
+  "source": "9d833df6204882ece9f2583ef29a827bb2321ffe",
+  "actual_merge": "1a09acb6b414590e23a903c45f7b5ffc0720b722",
+  "publication": "a340c1ec3825bf5e7048b5ec700539c2b98602c6",
+  "unique_version": "S1.exp98",
+  "data_only": true,
+  "own_original_cli": 31,
+  "new_data_shipped_cli": 10,
+  "ledger_map": {
+    "silent-strength-weak-observation": [
+      "silent-0012"
+    ],
+    "silent-footwork-block": [
+      "silent-0005"
+    ],
+    "silent-bouncing-flask-poison": [
+      "silent-0007"
+    ],
+    "silent-deadly-poison-application": [
+      "silent-0007"
+    ],
+    "silent-poisoned-stab-components": [
+      "silent-0007"
+    ],
+    "silent-piercing-wail-temporary-strength": [
+      "silent-0046"
+    ],
+    "silent-speed-potion-temporary-dexterity": [
+      "silent-0253"
+    ],
+    "silent-giant-explosion-window": [
+      "silent-0017"
+    ],
+    "silent-act-transition-missing-hp-heal": [
+      "silent-0243"
+    ],
+    "silent-rest-buffer-observation": [
+      "silent-0020"
+    ],
+    "silent-route-hp-observation": [
+      "silent-0019"
+    ],
+    "silent-deck-burst-observation": [
+      "silent-0021"
+    ]
+  },
+  "changed_experience_entries": [
+    "silent-act-transition-missing-hp-heal",
+    "silent-bouncing-flask-poison",
+    "silent-deadly-poison-application",
+    "silent-deck-burst-observation",
+    "silent-footwork-block",
+    "silent-giant-explosion-window",
+    "silent-piercing-wail-temporary-strength",
+    "silent-poisoned-stab-components",
+    "silent-rest-buffer-observation",
+    "silent-route-hp-observation",
+    "silent-speed-potion-temporary-dexterity",
+    "silent-strength-weak-observation"
+  ],
+  "originals_preserved": 1254,
+  "prior_evidence_claim_support_repeat_history_preserved": true,
+  "no_code_proposals_marked_implemented": true,
+  "no_manual_dispatch": true,
+  "paper_refresh_not_needed_for_experience_only_event": true,
+  "code_equivalence": {
+    "checked_live_code_test_and_task_blobs_identical_to_actual": true,
+    "checked_pin": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+    "checked_pin_full_external": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 299,
+      "passed": 3416,
+      "skipped": 2
+    },
+    "source_code_test_task_blobs_identical_to_actual": false,
+    "source_code_differences_from_current_tested_live": [
+      "docs/codex-ops.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 248,
+      "cases": 2608,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "data_only": true,
+    "reason": "Only the learner-tested original experience data blob changes. All current executable sources, tests, tasks, generated knowledge and parallel records are retained. No whole-new-tree external pass is claimed; original-batch full continuation is separate."
+  },
+  "rollback": "Inverse the original experience data delta in an isolated current-live worktree, preserving newer evidence, generated knowledge and parallel code; record a separate rollback version. Do not reset production."
+}
