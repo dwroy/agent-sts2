@@ -284,3 +284,29 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 14:25 运维：LYBHQ1X230ZB复盘新纯bug silent-0296（逃脱计划固定抽牌遗漏、条件格挡误算）非阻塞，已按学习者原证据追加fix-queue-v4；两原提案0337a5f0/8e9beeee核注册及SHA后沿自动链，A0首证LRN0HPZ0FZS1/prior partly及12旧support保持，原repeat不当上线后重犯，不标实现或承诺获胜。回执paper/materials/silent/20261008-1421-postmortem。
 
 - 2026-10-08 14:39 运维：经验140852原23项并行记录冲突已兜底，仅集成学习者源47e9a436原experience.json；实际live b015111e067122f13fda492bde6ec3423170107d、发布7f0c04dd5114d2f8152da1fb8cb6c5f45e1c478e/唯一S1.exp99，main已同步。经验增0改16退0/176 active，16所属数据CLI shipped，四个代码提案已注册并沿自动链，0296纯bug保持未实现。源首轮248文件2608例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1432-experience99。
+
+- 2026-10-08 14:54 运维：经验140852/S1.exp99固定发布7f0c04dd、树9584d1ec完整外部tsc+vitest均exit0，302文件3426例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、16所属数据shipped保持，原failed/merged=null/23项冲突及1266原件SHA保留；四份代码提案沿原自动链。回执 paper/materials/silent/20261008-1450-events/manifest.json。
+
+- 2026-10-08 14:56 运维：H1T1F8ML9FUE复盘新非阻塞纯bug silent-0297（手空时漏读弃牌可见凋萎6伤，旧缓存3导致完整需损36低报为33）已按学习者原证据入fix-queue-v4；三原提案179fd62a/2ae74362/de26499e核注册及SHA后沿自动链，原0079/0117 repeat及10旧support保持，不标实现或承诺获胜。回执paper/materials/silent/20261008-1450-postmortem。
+
+## 2026-10-08T15:05:30+08:00 Codex 大脑缓存独立批次交付给 Roy
+
+实际结论：冻结A10 86局、2680 trace尝试、2669可核实模型调用、2666回答；已知输入339269444，cached180677504，真实53.2549%。旧cost.py漏读session camelCase缓存/推理/写入，把相同窗口算成1266176缓存（0.3732%）；不是把后端缓存从0.37%提高到53%。session真实59.8569%，最近100题60.2125%；14 trace尝试缺计数，其中11未发模型前检错误，另3发模型后缺usage，未知而非0。原329M口径无给定切点；新冻结窗口、原CSV333M/旧结果均保存。thread/revert存在实测非零反例，余下冷缓存原因unknown。
+
+旧/新规则逐项：旧成本只识别exec snake_case，新同时识别session camelCase并避免trace/brain重复调用及累计wall计费；旧trace只留system摘要，新加完整instructions/user/schema摘要、长度和首差异字节；生产传输内容/顺序/thread/revert/模型gpt-6.1-sol与high完全原样，知识仍按真实刷新更新，铁甲等价，不删题面、不冻结旧知识、不改策略。没有游戏机制账本，code_proposals=[]、implementation_domains=[]、游戏版本null。
+
+实际发布：source f602fa22ded02adf1ad32aac2d2f664c4ea286e4 → live bea18dc71a6f781e837644c7b98c385d0f62d066，fixed tree 9d0ca941472e43252060c7828d03c130ff903306；source/live原沙箱tsc0/vitest0，251文件2618例；main ca625c25eda018b794783729a48275b318c49ad5，刷新原SHA/合前后知识blob保持。source2 76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9 已固定原入口tsc0/vitest0、251文件2621例，撤原每题取消源码1红/原字节恢复1绿（另5仅过滤），但main并行索引占用及锁内真实report.py在途导致尚未合入，实际merged=null；保留两次blocked日志交运维兜底，勿将其记shipped。首批源码cherry-pick映射已测，源字面祖先登记锁busy未做；后续只在净源码匹配、固定树不变时登记。
+
+实际上线后一次取样：新进程9DAS5L8YM1CN（启动7f0c04dd，13源码blob匹配、CLI0.161.0、原gpt-6.1-sol/high），首4题511947输入/120704缓存/1368输出/931推理、命中23.5774%、每题输入127986.75、中位17.8315秒，3次零1次非零；仍在进行中/冷启动/不同题型，不能声称缓存或额度改善。费用/大脑额度速度unknown，共享背景没有分离；学习者/运维95%没有同口径对照。
+
+续办：运维按既有完成事件等待其并行索引释放后，只集成source2净3路径到main和live（先核无report/refresh/builders、锁内保存全部刷新/新文件、预检重叠、合后原入口自测），不修改原blocked记录；下一次wake重载最终白名单/固定SHA后，仅一次 `bash ops/codex-ops-do.sh codex-brain-cache-probe`。实际probe执行0，固定既有完整题面/知识/schema、原模型high，永久预约/2物理调用、每题10分钟、总20分钟、usage required/80%保护，无游戏动作/生产线程/config写入；已预约不得重跑，缺usage/额度是pending或unknown。另一个修复pair未实现。完整外部留正常调度器完成检查，不冒记已通过。
+
+后续已完成事件一次统计：`nice -n 19 python3 eval/codex_cache.py --logs /home/dw/Projects/agent-sts2/logs --after 2026-10-08T06:58:26.265Z --out /home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/production-after-completed.json`，并按正常归档用新cost.py更新成本表；核新进程/实际源码/cache_request/context，trace计数排除未发模型前检错误，不轮询等新局。报告/原字节切点与SHA/初期取样/红绿/原失败路径：/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/report.md、report.json、baseline.json、production-initial*.json、publication*.json；根报告 paper/materials/silent/codex-brain-cache-2026-10-08.md。预期影响是准确核算和可复验测量，性能/省额度仍待测。回退只逆向本批实际源码（后续source2若合先撤它），保留全部知识刷新、并行记录和证据；首批统计回退会恢复漏计。
+
+## 2026-10-08 15:28 运维核实 Codex 缓存批次及隔离实验续办
+
+已核实原统计修复bea18dc71a6f781e837644c7b98c385d0f62d066实际合live/main。同冻结86局339269444输入/180677504缓存，旧0.3732%纠正为53.2549%；修的是session camelCase漏计和重复计数，不能声称缓存性能从0.37%提高到53%。生产传输、角色隔离及gpt-6.1-sol/high保持。首4题23.5774%原报告保留；本轮一次取样20题2647437输入/1569920缓存、59.2996%，每题132371.85输入、中位17.232秒，20题usage均可核且无前检伪调用；进行中小样本/不同题型，费用和额度改善未知。
+
+probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，实际3119da5fc4960d9354e7550e5390864866fb05b1→祖先登记722518cdb9edfe808864da176f7e512bd820e170，固定树d25b1cc3835b19f8e50205b250c079ae060894f2，组合原入口tsc0/vitest0、251文件2621例；main f4fcd6c8e2dfd3f47d7293bb804445da980353d9/c970fefb13ff466cebe4b46d18a7cf2ab92643b0。锁内最新live cffd20db、知识刷新/并行代码/原回报保持；原source实际成为live祖先，原批完整外部learner-recheck只请求一次，正在执行，尚不冒报通过。
+
+一次获准同题双问在知识隔离前检被拒：实验使用全局Codex home，可能加载全局AGENTS.md；模型调用0、pending，原预约/失败原件保留，不重跑原pair。已写原高优先缓存独立续办请求，修实验home/启动检查后使用独立修复pair，最多再2次且保留原总授权4次上限；普通游戏修复不混入。冷缓存原因与受控比较仍未知，不移除全局指令、不绕过隔离、不改生产配置。预期影响是准确计量与可复验测量；回退只逆向本批实际源码（先撤probe实际3119da5f，再按需撤bea18dc7），保留刷新、并行功能及失败证据。无游戏版本/知识条目。回执paper/materials/silent/20261008-1507-cache；原报告paper/materials/silent/codex-brain-cache-2026-10-08.md。

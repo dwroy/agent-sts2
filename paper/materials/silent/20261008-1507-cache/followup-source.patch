@@ -1,0 +1,153 @@
+diff --git a/agent/tests/codex-cache-probe.test.ts b/agent/tests/codex-cache-probe.test.ts
+index a95f327d..550b50a3 100644
+--- a/agent/tests/codex-cache-probe.test.ts
++++ b/agent/tests/codex-cache-probe.test.ts
+@@ -1,6 +1,8 @@
+-import { readFileSync } from "node:fs";
+-import { describe, expect, it } from "vitest";
+-import { doubleQuestion, approvedFixture } from "../../ops/codex-brain-cache-probe.js";
++import { readFileSync, mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { describe, expect, it, vi } from "vitest";
++import { doubleQuestion, approvedFixture, probeUsageKnown, preserveProbeResult } from "../../ops/codex-brain-cache-probe.js";
+ import { validateRequest } from "../../ops/codex/lib.js";
+ import { pickSpec } from "../src/brain/specs.js";
+ import type { BrainAnswer, BrainRequest } from "../src/brain/types.js";
+@@ -10,6 +12,39 @@ const answer: BrainAnswer = { engine: "codex", model: "gpt-6.1-sol", effort: "hi
+   latencyMs: 10, usage: { inputTokens: 100, cacheHitTokens: 80, outputTokens: 10 }, toolCalls: [], raw: "{}", native: { mode: "session", reverted: true } };
+ 
+ describe("restricted Codex cache probe (offline)", () => {
++  it("keeps the original ten-minute per-call timeout and stops before a second call", async () => {
++    vi.useFakeTimers();
++    let calls = 0;
++    try {
++      const pending = doubleQuestion(request, { decide: async (_request, signal) => {
++        calls += 1;
++        return new Promise<BrainAnswer>((_resolve, reject) => signal.addEventListener("abort", () => reject(new Error("timed out")), { once: true }));
++      } }, new AbortController().signal);
++      const rejected = expect(pending).rejects.toThrow("timed out");
++      await vi.advanceTimersByTimeAsync(600_000);
++      await rejected;
++      expect(calls).toBe(1);
++      expect(vi.getTimerCount()).toBe(0);
++    } finally { vi.useRealTimers(); }
++  });
++  it("keeps the original result byte-for-byte while preserving every later attempt", () => {
++    const directory = mkdtempSync(join(tmpdir(), "probe-history-"));
++    try {
++      const first = preserveProbeResult(directory, { status: "completed", cached: 80 });
++      const original = readFileSync(first, "utf8");
++      const later = preserveProbeResult(directory, { status: "pending", error: "usage unavailable" });
++      expect(first).not.toBe(later);
++      expect(readFileSync(first, "utf8")).toBe(original);
++      expect(readFileSync(join(directory, "probe-result.json"), "utf8")).toBe(original);
++      expect(JSON.parse(readFileSync(later, "utf8"))).toEqual({ status: "pending", error: "usage unavailable" });
++    } finally { rmSync(directory, { recursive: true, force: true }); }
++  });
++  it("treats missing cache usage as unknown and accepts a real zero", () => {
++    const measured = { usage: { inputTokens: 100, cachedInputTokens: 80 } };
++    expect(probeUsageKnown([measured, { usage: { inputTokens: 100, cachedInputTokens: 0 } }])).toBe(true);
++    for (const missing of [{}, { usage: {} }, { usage: { inputTokens: 100 } }, { usage: { inputTokens: 100, cachedInputTokens: null } },
++      { usage: { inputTokens: 100, cachedInputTokens: 101 } }]) expect(probeUsageKnown([measured, missing])).toBe(false);
++  });
+   it("only permits the fixed no-argument action and rejects mutated fixtures", () => {
+     expect(validateRequest({ action: "codex-brain-cache-probe", args: [] }).ok).toBe(true);
+     for (const args of [["--model=other"], ["/tmp/request.json"], ["https://example.com"], ["high"]]) {
+diff --git a/ops/codex-brain-cache-probe.ts b/ops/codex-brain-cache-probe.ts
+index 13046d8e..5aa2e674 100644
+--- a/ops/codex-brain-cache-probe.ts
++++ b/ops/codex-brain-cache-probe.ts
+@@ -1,7 +1,8 @@
+ /** One authorized baseline pair. Fixed paths/settings; no game controller and no production state. */
+-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
++import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+ import { join } from "node:path";
+ import { pathToFileURL } from "node:url";
++import { randomUUID } from "node:crypto";
+ import { CodexEngine, codexKindSchema, codexSchema, redact } from "../agent/src/brain/engines/codex.js";
+ import { segmentDigest } from "../agent/src/brain/engines/codex-cache.js";
+ import { pickSpec } from "../agent/src/brain/specs.js";
+@@ -23,15 +24,43 @@ export async function doubleQuestion(request: BrainRequest, engine: { decide: (r
+   const results: BrainAnswer[] = [];
+   for (let i = 0; i < 2; i += 1) {
+     if (signal.aborted) throw new Error("probe cancelled");
+-    const result = await engine.decide({ ...request, questionId: `cache-probe-baseline-${i + 1}` }, signal);
++    const call = new AbortController();
++    const cancel = () => call.abort();
++    signal.addEventListener("abort", cancel, { once: true });
++    const timer = setTimeout(cancel, 600_000);
++    let result: BrainAnswer;
++    try {
++      result = await engine.decide({ ...request, questionId: `cache-probe-baseline-${i + 1}` }, call.signal);
++    } finally {
++      clearTimeout(timer);
++      signal.removeEventListener("abort", cancel);
++    }
+     results.push(result);
+     if (result.native?.["mode"] !== "session") throw new Error("probe did not use the approved session transport");
+   }
+   return results;
+ }
+ 
++export function probeUsageKnown(rows: Array<{ usage?: Record<string, unknown> }>): boolean {
++  return rows.length === 2 && rows.every(({ usage }) => {
++    const input = usage?.["inputTokens"], cached = usage?.["cachedInputTokens"];
++    return typeof input === "number" && Number.isFinite(input) && input > 0
++      && typeof cached === "number" && Number.isFinite(cached) && cached >= 0 && cached <= input;
++  });
++}
++
++export function preserveProbeResult(directory: string, output: Record<string, unknown>): string {
++  const resultFile = join(directory, `probe-attempt-${Date.now()}-${process.pid}-${randomUUID()}.json`);
++  const text = JSON.stringify(output, null, 2);
++  writeFileSync(resultFile, text, { flag: "wx" });
++  const canonical = join(directory, "probe-result.json");
++  if (!existsSync(canonical)) writeFileSync(canonical, text, { flag: "wx" });
++  return resultFile;
++}
++
+ async function main(): Promise<void> {
+   if (process.argv.length !== 2) throw new Error("codex-brain-cache-probe takes no arguments");
++  if (existsSync(join(PROBE_DIRECTORY, "probe-reserved.json"))) throw new Error("probe pair already reserved; preserve all existing results and traces");
+   setKnowledgeCharacter("silent");
+   const fixture = approvedFixture(readFileSync(join(PROBE_DIRECTORY, "probe-fixture.json"), "utf8"));
+   const config = loadConfig({ CHARACTER: "silent", BRAIN_CODEX_BIN: "/home/dw/.local/node/bin/codex", BRAIN_CODEX_HOME: "/home/dw/.codex",
+@@ -61,6 +90,11 @@ async function main(): Promise<void> {
+     writeFileSync(join(PROBE_DIRECTORY, "probe-reserved.json"), JSON.stringify({ fixture_sha256: PROBE_FIXTURE_SHA, max_physical_calls: 2 }), { flag: "wx" });
+     output["results"] = await doubleQuestion(request, engine, controller.signal);
+     output["limits_after"] = engine.limits();
++    const trace = readFileSync(join(PROBE_DIRECTORY, "probe-codex-calls.jsonl"), "utf8").trim().split('\n').map(line => JSON.parse(line));
++    const pair = trace.filter(row => row.mode === "session" && row.outcome === "answered"
++      && ["cache-probe-baseline-1", "cache-probe-baseline-2"].includes(row.question_id));
++    output["raw_usage"] = pair.map(row => row.usage ?? null);
++    if (!probeUsageKnown(pair)) throw new Error("probe answered but input/cache usage is missing or invalid; cache result remains unknown");
+     output["status"] = "completed";
+   } catch (error) {
+     output["error"] = redact(error instanceof Error ? error.message : String(error));
+@@ -68,8 +102,8 @@ async function main(): Promise<void> {
+   } finally {
+     clearTimeout(timeout);
+     await engine.close();
+-    writeFileSync(join(PROBE_DIRECTORY, "probe-result.json"), JSON.stringify(output, null, 2));
+-    console.log(JSON.stringify({ status: output["status"], result: join(PROBE_DIRECTORY, "probe-result.json"), error: output["error"] }));
++    const resultFile = preserveProbeResult(PROBE_DIRECTORY, output);
++    console.log(JSON.stringify({ status: output["status"], result: resultFile, error: output["error"] }));
+   }
+ }
+ 
+diff --git a/ops/codex-ops-actions.sh b/ops/codex-ops-actions.sh
+index 05ace0c6..c362e5de 100755
+--- a/ops/codex-ops-actions.sh
++++ b/ops/codex-ops-actions.sh
+@@ -59,8 +59,8 @@ case "$action" in
+     CACHE_WORKTREE="$ROOT/.worktrees/codex-brain-cache"
+     CACHE_RUN="$CACHE_WORKTREE/learner/runs/20261008-140043-codex-brain-cache"
+     CACHE_RUNNER="$CACHE_WORKTREE/ops/codex-brain-cache-probe.ts"
+-    CACHE_AGENT_TREE="de23a1d6b83f47426d493f0a417d10cd11de722b"
+-    CACHE_RUNNER_SHA="228df54acc2f6ae973aa8a2370389bdf55229010d82880e0a7090409e42df53f"
++    CACHE_AGENT_TREE="1f30b1faaf55e985640f30e08e64c1d5b8496313"
++    CACHE_RUNNER_SHA="f4010706221a81836775621518920fe3e43d6e00751e22e6fb0fe19d65bde20c"
+     [ "$(sha256sum "$CACHE_RUNNER" | cut -d ' ' -f1)" = "$CACHE_RUNNER_SHA" ] || { echo "probe runner differs from tested source"; exit 2; }
+     git -C "$CACHE_WORKTREE" diff --quiet "$CACHE_AGENT_TREE" HEAD:agent || { echo "probe agent tree differs from tested source"; exit 2; }
+     git -C "$CACHE_WORKTREE" diff --quiet HEAD -- agent/src || { echo "probe source is dirty"; exit 2; }
