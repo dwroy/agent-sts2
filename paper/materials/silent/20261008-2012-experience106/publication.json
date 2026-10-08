@@ -1,0 +1,81 @@
+{
+  "state": "published",
+  "batch": "20261008-193933-experience-update",
+  "source": "1c7822047848f708deeb5d9b29fd3cf726dec241",
+  "version": "S1.exp106",
+  "source_tests": {
+    "exit": 0,
+    "files": 251,
+    "cases": 2627,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-193934-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "5022b496c251a3c72647fd071334bb6d953a4e5d",
+  "parent_blob": "48ddf14543959c1c19a24deb479c6d503398a3df",
+  "actual_code": "b2921782dac1f17a52d1c8e75e39ff129d2111b4",
+  "publication": "ad489c8c43b20c83bba2cbc9379be2a2ee8ebe16",
+  "publication_tree": "43da6c43537e52312ebc68aa87762bc1bbe04c5d",
+  "version_entry": {
+    "name": "S1.exp106",
+    "family": "Silent",
+    "commit": "b2921782dac1f17a52d1c8e75e39ff129d2111b4",
+    "source": "decision-log 2026-10-08 20:17: 原193933经验17项记录冲突兜底；仅源1c782204 experience.json原blob，.22→.23/增3改23退0/183 active，QHK1XQ928TTM、UZ1T7AH49WMB、7BNC8QX746YP证据。源251文件2627例tsc/vitest0；两次数字核验失败原件保持，最终49项核验通过。当前全部代码与固定433144fb完整302文件3435例过2跳检查等价，数据免重复源码自测，新数据树完整外部待独立续验；三原提案沿自动链，不标代码实现。"
+  },
+  "main_code_sync": "22c63f07361129a89158b3623d908a9195c09356",
+  "main_record": "6129509876b7bfebb6d34583986718ccd29a7ad5",
+  "record_line": "- 2026-10-08 20:17 运维codex20:12经验兜底：原193933源1c7822047848f708deeb5d9b29fd3cf726dec241原17项并行记录冲突及merged-null历史保持；单次非阻塞锁内从livee838a975e31aa406481e953d9cdbd01ee2d11717仅集成已测experience.json原blob，实际b2921782dac1f17a52d1c8e75e39ff129d2111b4，原刷新e838a975、全部当前代码/知识数据及本次刷新783f7da86ee78ae57b5a1420f5029495e9c7683b和未提交backtest笔记逐字节保持，源真实祖先。经验.22→.23/增3改23退0/183 active，唯一S1.exp106；源251文件2627例tsc/vitest0、gitleaks0，两次数字核验失败原件保持，最终49项核验通过。当前源码/测试/任务与固定433144fb完整302文件3435例过2跳/tsc-vitest0逐blob等价，数据免重复源码自测，不冒报新数据树完整通过。三个原代码提案沿自动链不复派；main/原84CLI和28所属数据shipped随后机械登记，原批完整外部独立续验，exp100旧完整失败不关闭。回执paper/materials/silent/20261008-2012-experience106。\n",
+  "live_before": "e838a975e31aa406481e953d9cdbd01ee2d11717",
+  "preserved_refresh": "783f7da86ee78ae57b5a1420f5029495e9c7683b",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "c4733726657d206828c5230f72e98cd64dc6b78449b242b91d5bc3f1ae634724",
+    "knowledge/characters/silent/fight-value-gates.json": "de5e4e8fcb89dc4b4b5abe5088eca8ce998c086c7e2df82e972093b3bebba105",
+    "knowledge/characters/silent/fight-value.json": "c1623b86e38a8131c047397a9917ecabf223f4ecbd7f0fbd26cf059174546a26",
+    "knowledge/characters/silent/outcome-stats.json": "9c21fec1d783a41fd2523fb7150a6433735ae33c8139d7d9d000d1dd25028b16",
+    "knowledge/characters/silent/room-costs.json": "f66155e73bff6e0e0bc31670def828d548cb289e2c9ef7f9c08c42f11f80f73d",
+    "knowledge/common/card-upgrades.json": "1a4c88057bd9c3f4c583b95ad16b7ea1af8df8cc279d32a9f1163a812151300f",
+    "notes/fight-value-backtest-silent.md": "767ef846354e7d9c6eed5289d2b9a612a0b050c1c9e318526b5d31a73bb1f33a"
+  },
+  "kept_live_dirty": [
+    "notes/fight-value-backtest-silent.md"
+  ],
+  "code_equivalence": {
+    "data_only": true,
+    "current_code_test_task_blobs_identical": true,
+    "current_tested_pin": "433144fb8eaebbb11af7162c996733d4660a5dff",
+    "retained_complete_checks": {
+      "exit": 0,
+      "files": 302,
+      "cases": 3435,
+      "skipped": 2,
+      "tree": "f4154af3275e49348433845590c9d0ab4bbad1eb",
+      "logs": [
+        "ops/codex-ops/learner/20261008-183609-experience-update.fallback-f4154af3275e49348433845590c9d0ab4bbad1eb.checks.log"
+      ]
+    },
+    "post_data_merge_sandbox_repeated": false,
+    "new_data_tree_full_passed": false,
+    "previous_exp100_full_failure_preserved": true,
+    "source_code_differences_from_actual": [
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ]
+  },
+  "full_external_passed": false
+}
