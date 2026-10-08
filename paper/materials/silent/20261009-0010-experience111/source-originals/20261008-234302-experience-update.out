@@ -1,0 +1,30 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.27 → 2026-10-08.28；提交：2c782d78（分支 exp-silent）；合入：未合入，预检发现20处记录冲突；刷新提交59b3c970已保留。
+- 条数：新增0、更新8（加证据8、只改数字0）、退役0；active 186 → 186，总50734字符；A8适用173条／46345字符，A9适用174条／46629字符。
+- 机制推理：  
+  灵动步法 — 敏捷逐张增加牌挡 — 83支持／0反例 — M0GY0A4M2F7H  
+  力量与虚弱 — 逐击增伤、按当前轮核虚弱 — 142支持／0反例 — M0GY0A4M2F7H  
+  卡药兑现观察 — 取得不等于施放和收益 — 141支持／0反例 — M0GY0A4M2F7H  
+  滑溜 — 攻击与毒分别限伤减层 — 11支持，其中毒限伤8局／0反例 — M0GY0A4M2F7H  
+  钓鱼竿 — 每三场普通战随机升级 — 6支持／0反例 — M0GY0A4M2F7H
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0，未重跑。
+- 切片大小：中位减少16.5字，最大5055字。
+- 学习账本：新增无；改成proposed：silent-0005、silent-0012、silent-0019、silent-0020、silent-0021、silent-0224、silent-0227、silent-0079、silent-0170；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{"task":"experience-update","version":"2026-10-08.28","commit":"2c782d78c8175e26b7d8612b40b6939d22fdc3cf","merged":null,"added":0,"updated":8,"retired":0,"active":186,"mechanisms":["灵动步法/敏捷牌挡","力量与虚弱覆盖","能力及药牌取得与兑现观察","滑溜攻击/毒限伤与准备成长","钓鱼竿随机升级"],"tests":{"tsc":0,"vitest":0,"cases":2627},"ledger":{"added":[],"proposed":["silent-0005","silent-0012","silent-0019","silent-0020","silent-0021","silent-0224","silent-0227","silent-0079","silent-0170"],"retired":[],"check":0},"code_proposals":["silent-proposal-40167a3d9d4a7110","silent-proposal-78fce763f2bc9f73","silent-proposal-0277e542bf135198"],"implementation_domains":["combat","potion","sl","structure"],"report":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-234302-experience-update/report.md"}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11c2e-ae03-70e1-9ca9-30d4bf573a98
+轮数：1；工具调用：command_execution×59
+token：输入 203.7k、输出 44.9k（其中推理 17.4k）、cache 读 9053.1k、cache 写 0（命中 97.8%）
+成本：未提供
+耗时：1665.0 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 7.8 s、首次工具 11.5 s、末次工具结束 1629.6 s；工具内共 1521.7 s，其余（模型生成、推理、网络）140.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×61 wait×4；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T23-43-03-01a11c2e-ae03-70e1-9ca9-30d4bf573a98.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-234302-experience-update.jsonl

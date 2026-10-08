@@ -1,0 +1,6 @@
+计数核验 [('UACFSW4VDDLD', 7, 0, 2), ('2SU6XN2AEJRD', 4, 2, 1), ('2PVLGRBGUX9S', 5, 2, 1), ('XBD8Z9XLPCPN', 5, 3, 2), ('LS8035TB32P3', 5, 2, 2), ('VPW8YH7A4QFM', 5, 4, 2), ('UMVLWER4CD98', 9, 0, 2), ('YLYLZWHA0GKU', 4, 0, 1), ('01H1533KSS5C', 37, 0, 17), ('ULP4TN1GNHMK', 34, 6, 6), ('M0GY0A4M2F7H', 35, 1, 10)]
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-234302-experience-update/vantom-history.py", line 21, in <module>
+    print('计数核验',[(x['run'],len(x['attacks']),len(x['poison']),len(x['growth'])) for x in rows]);assert len(rows)==11 and sum(bool(r['poison']) for r in rows)==8
+                                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

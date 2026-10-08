@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-234302-experience-update/verify.py", line 28, in <module>
+    q=[x['state'] for x in groups[5] if x['state']['turn']==7];check('末T7牌挡20/现8血/来袭32',any(x['combat']['player']['block']==20 and x['run']['current_hp']==8 and sum(t.get('damage',0)*t.get('repeats',1) for t in x['combat']['enemies'][0]['intents'])==32 for x in q))
+                                                                                               ^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-234302-experience-update/verify.py", line 28, in <genexpr>
+    q=[x['state'] for x in groups[5] if x['state']['turn']==7];check('末T7牌挡20/现8血/来袭32',any(x['combat']['player']['block']==20 and x['run']['current_hp']==8 and sum(t.get('damage',0)*t.get('repeats',1) for t in x['combat']['enemies'][0]['intents'])==32 for x in q))
+                                                                                                                                                                        ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-234302-experience-update/verify.py", line 28, in <genexpr>
+    q=[x['state'] for x in groups[5] if x['state']['turn']==7];check('末T7牌挡20/现8血/来袭32',any(x['combat']['player']['block']==20 and x['run']['current_hp']==8 and sum(t.get('damage',0)*t.get('repeats',1) for t in x['combat']['enemies'][0]['intents'])==32 for x in q))
+                                                                                                                                                                            ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'int'
