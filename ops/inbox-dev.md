@@ -273,3 +273,5 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 13:32 运维：经验130539原19项并行记录冲突已兜底，仅集成学习者源3bda3841原experience.json；实际live cfe666e2b23f85fe37215c44846b68fb5f12f3fa、发布f4c35b907643239ac7169a739f4baa3934103bff/唯一S1.exp97，main已同步。经验增1改15退0/176 active，19所属数据CLI shipped，四个代码提案已注册并沿自动链，0293纯bug保持未实现。源首轮248文件2608例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1327-experience97。
 
 - 2026-10-08 13:44 运维：经验130539/S1.exp97固定发布f4c35b90、树924e0ecc完整外部tsc+vitest均exit0，299文件3416例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、19所属数据shipped保持，原failed/merged=null/19项冲突及1259原件SHA保留；四份代码提案沿原自动链。回执 paper/materials/silent/20261008-1342-events/manifest.json。
+
+- 2026-10-08 13:46 运维：G8NHLL09DLBX复盘新纯bug silent-0295（随机施毒伪确定斩杀）非阻塞，已按原证据追加fix-queue-v4；两原代码提案982c9908/aaefd918核注册及SHA后沿自动链，7旧support与原首证保持，不标实现或承诺修后获胜。回执paper/materials/silent/20261008-1342-postmortem。
