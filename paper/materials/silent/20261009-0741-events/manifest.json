@@ -1,0 +1,767 @@
+{
+  "timestamp": "2026-10-09 07:44",
+  "base_head": "afc8e167e3eca521894076c3a1a479bde2ff89a1",
+  "batch": "20261009-071301",
+  "runs": [
+    "CSLHFCBSC1UM"
+  ],
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/CSLHFCBSC1UM-resources.json": {
+      "bytes": 631005,
+      "sha256": "cc8377d48a0f2458804f2668ca0191b4912b610fb67120e958071f07ad56960f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/append-lesson.sh": {
+      "bytes": 19346,
+      "sha256": "0e6b266dd3d2c4b01e6af0915832dfffef0eec6fcfd909f0b01ef9192bdd4c6f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/audit.py": {
+      "bytes": 2479,
+      "sha256": "a7a05caedb45ec65e29158bceec32fe31e941c235fe6978abc8ee82581d4b136"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/audit.txt": {
+      "bytes": 47662,
+      "sha256": "ffafadfa3044a8cb46dee451cdbc739a50385e46ee09637fe23cca9b5acb87c8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/brain-summary.txt": {
+      "bytes": 71456,
+      "sha256": "9f3e0644ef86fa6d4123e1a0a1e40f6aa4606fdf5583ea9136ab6b99cf6ebe20"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/brain.jsonl": {
+      "bytes": 469275,
+      "sha256": "14cdaeecbb2d53895a2c098329354b31edd82978b2c542cbdc519437b6b01202"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/brain_extract.py": {
+      "bytes": 779,
+      "sha256": "33e1f937a1eaddc18e754f6eced29313bb2f2b25812d100f0e536206ce23a7c3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/brain_summary.py": {
+      "bytes": 699,
+      "sha256": "f8464c77924a148f1a1c0bc0cb869e007cf520ef335d6db34eb6848c98e9489b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/codex-calls.jsonl": {
+      "bytes": 68154,
+      "sha256": "7497a25ee3c550ac53829743b8d5f2214aa3f7b02117c8ba79aecc15ea9d20e5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/decisions.jsonl": {
+      "bytes": 1452390,
+      "sha256": "f37bcdd282ddd5dcd864b0592d51372caa84da2125200f0bf1f4ca86327add2c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/deepseek-reasoning.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/detail-failed.err": {
+      "bytes": 423,
+      "sha256": "40f635087e332b3159b855deea822f51e4508259129e071885231db023a6c7e7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/detail-failed.txt": {
+      "bytes": 18151,
+      "sha256": "f1bf72f459af0695f4a73230ac270bc9dade937f2bc94fb94f8ec8701eb7e12b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/detail.py": {
+      "bytes": 1106,
+      "sha256": "9455a9b4940d24b1f1100a03d52b464128cdc0c1ef05f0192b0e234e2fc5237f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/detail.txt": {
+      "bytes": 18151,
+      "sha256": "f1bf72f459af0695f4a73230ac270bc9dade937f2bc94fb94f8ec8701eb7e12b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/extra-verify.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/extra-verify.txt": {
+      "bytes": 2057,
+      "sha256": "c83c825823a67b68c6caacb9297bc3ce13654edd9ff1a16627bc43e222c93223"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/extra_verify.py": {
+      "bytes": 956,
+      "sha256": "43503428d2f61db07964a1a770511830b3ee93698ba456794da6693588d6285a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/extract.py": {
+      "bytes": 1168,
+      "sha256": "703ec8b20446b15178225591ecfd5051a503ca6a2c825d99f671fd34e1000f60"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/final-evidence.txt": {
+      "bytes": 4779,
+      "sha256": "5b24baae05df0bcf9e46d4400f02c43a83f5d8659fc683bc130c7556b00ba71a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/final_evidence.py": {
+      "bytes": 2191,
+      "sha256": "5ea738b87a95cd871850999b4f4bdb700925fbccb093cee8c5b660b5665cea70"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/inspection-errors.md": {
+      "bytes": 1233,
+      "sha256": "e3f331f790f2d27d616dfae569177abb51519b607646b6d1b3d5c718e7725803"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-12-search.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-boss-search.json": {
+      "bytes": 71410,
+      "sha256": "2fd9365985ff0a944f7e6980cca85f88d70b8a05e7c0be50b5e01865ed94084c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-check.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-check.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-check.out": {
+      "bytes": 94,
+      "sha256": "f584c78c56e761b82acea4fcf777a347a5527eba84be71a88b50dd2c028bd81d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-find-run.txt": {
+      "bytes": 3641,
+      "sha256": "861a5060ef6cf187c230888341cecda57669f9a2cec5dcc7f1a83fac0faecfab"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-heal-search.json": {
+      "bytes": 2610963,
+      "sha256": "87aaa152c3e104b860bede827cb3ceb35c7a1fd20c6e661888ad0f5b386ac330"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-plating-cn-search.json": {
+      "bytes": 1861207,
+      "sha256": "75c32f2bae277c070669aed500f1cc5e4da5b688ea0356f69629bea6147d60b3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-plating-search.json": {
+      "bytes": 105709,
+      "sha256": "d2b99a61690a705adb672f3113f01cdd13143383e1d72995b55ff211d3c11809"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-sl-search.json": {
+      "bytes": 1397368,
+      "sha256": "f206cda4a2dd28339c6fb6a299e03a79a15217b6b2065f50a512a0dfa7845c94"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-update.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-update.out": {
+      "bytes": 84,
+      "sha256": "b6d9a768bd236a73ef87f83698ad1de7b0ccf8f80e25fc828fc47a15598b2e15"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/ledger-updates.jsonl": {
+      "bytes": 4560,
+      "sha256": "947020a4559b0b23e49b1c152007e3ab7aabe76221438f0b623227e04df3ab60"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/lesson-draft-initial.md": {
+      "bytes": 19179,
+      "sha256": "1b0e94072d8a1c119ed3a6481cff57ecb3e9983654e288aa041657ea9fd0e68e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/lesson-draft.md": {
+      "bytes": 19269,
+      "sha256": "b05fc6c177fff0fa3135fc6644008318fa227b1690b5ec606bf0f14a2a929fca"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/lesson-key-numbers-grep.txt": {
+      "bytes": 9402,
+      "sha256": "97f49930223910e8743e8cfdc61e4fc3019f6ded6a2e2ce5040c2592ee64e86b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/lessons-before.json": {
+      "bytes": 96,
+      "sha256": "a2965d7c3e95ed6b3312612fc61e9491fc648814a3c4544bf1eb029fc8a2de89"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/numbers-checked.json": {
+      "bytes": 3599,
+      "sha256": "682cb301bf1837b08006ec1f72fd6659a13abc19aa88f6a0a16376af166f0a60"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/post-append-numbers-checked.json": {
+      "bytes": 6533,
+      "sha256": "475c6f5cf47fb866cc1b492ee3cc5da7dcedd00afdff3f95d1be5da4514167b2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/post_append_verify.py": {
+      "bytes": 1889,
+      "sha256": "a1c824f4fadc006fd9b249f998ff3df8240218897ed969ad2e75bf61fde1331f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-combat-terminal.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-combat-terminal.json": {
+      "bytes": 555,
+      "sha256": "8b99d443152814c7090e9e4226935b96e89522be75732cb36763dc75ec5ffeae"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-combat-terminal.md": {
+      "bytes": 3672,
+      "sha256": "55accd2b4a1853e506ecca18e2298f15c6f0a51e482eb9c85d439343978032ee"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-combat-terminal.out": {
+      "bytes": 33,
+      "sha256": "613e30561a2f3fe749ea9f3f43a6d62087438f0099f2a6a76f115e89fa640473"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-registration-checked.json": {
+      "bytes": 219,
+      "sha256": "8bd4cafac513fdeabdc2c1afd65668289dcbb39886db25a38b4bc0432a57161f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-sl-tradeoff.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-sl-tradeoff.json": {
+      "bytes": 509,
+      "sha256": "956ed638ab4758aa18723e6bae2ac41d4642c1e6619152bd05c9ca91ba57766a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-sl-tradeoff.md": {
+      "bytes": 3882,
+      "sha256": "ce22ad1b945a28eabaf0969b324a9dc69904eecd5e1f89ea9de9ba3d9283e1e1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-sl-tradeoff.out": {
+      "bytes": 33,
+      "sha256": "eb0ce78bb39c1f11366ca4e5b343e218a8a6e0e16f267365487e5ce3cd4ced48"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/report.json": {
+      "bytes": 637,
+      "sha256": "651b7d7a135536e12fce1c3181d276fbbdef6c28a8a1bb040b17e3ef24521dbd"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/report.md": {
+      "bytes": 1543,
+      "sha256": "6c53dcbb880370d32421847bbdb06ba81d0be600084eee9b9b52164098e08cf5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/run-config.jsonl": {
+      "bytes": 4603,
+      "sha256": "7fe206b527fb6bb7bec942a801d97c7054ae85cc955edaed12cf6fa734f09f71"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/run-plans.jsonl": {
+      "bytes": 3991,
+      "sha256": "afdc863db7ec8a3a34b670a5130b71a6aa4cbdf77f9f7843eb3d11ef33d3c55d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/runs.jsonl": {
+      "bytes": 449,
+      "sha256": "8d53c683dc32df1af3f7872c87f2cf57816a4d90b680523db5f8c617cebae5f5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/sl-attempts.jsonl": {
+      "bytes": 122043,
+      "sha256": "a661593ad21749f40df58393cfbace6457582285e578161faf6399f146998ca8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/states.jsonl": {
+      "bytes": 14818147,
+      "sha256": "6a46878b55123b767c337e0e870790ffd1be47be6b41dddb0e3aa8287cdbc8ad"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/states_extract.py": {
+      "bytes": 1195,
+      "sha256": "b9975b37cf0c0cbd9a02629646f94c367711ef608e4ce09736646f00f78c833e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/stats-failed.err": {
+      "bytes": 754,
+      "sha256": "f62fe7e6507c1032c3ab4391e17b4a15a9ec6461403f06b70eed432960fe5a5d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/stats-failed.txt": {
+      "bytes": 6877,
+      "sha256": "de585c4e706f02fc89b3b8cf1399f9f64d735906568a013810d227cebb50bd10"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/stats-v2.py": {
+      "bytes": 1646,
+      "sha256": "dcc3465b07d75cbb426a25cff58b6af5f14fdb543780cc7c8202aac4774dfd29"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/stats-v2.txt": {
+      "bytes": 11148,
+      "sha256": "5de99a02a5382bb9c47a2c4ff493e317bc2ad4db9f8669a3414e227d50f0aca7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/stats.py": {
+      "bytes": 3081,
+      "sha256": "be4f5f5c99b7fcfd708ad5147dec1389da764974e98506e64b76e30761c4f82c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/stats.txt": {
+      "bytes": 6877,
+      "sha256": "de585c4e706f02fc89b3b8cf1399f9f64d735906568a013810d227cebb50bd10"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/summaries.py": {
+      "bytes": 1373,
+      "sha256": "ae378654407de72a7a3ebcd2905b265ef34f1528b48abdbf3e63e8f59bcdbba1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/summaries.txt": {
+      "bytes": 58234,
+      "sha256": "1316d02f5fba854dcfb06bd4b74395775efd905351a2564b638804906d01b2d5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/tables.py": {
+      "bytes": 2992,
+      "sha256": "d6dd8f6c4c45651462abd36c47a3108857ac64303a8c05f0c0629431fa5c3dc8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/tables.txt": {
+      "bytes": 8745,
+      "sha256": "1de0330b0659fdaa6756deaa2c13a062ddff7206c4c42f50bca3a404ec62172c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/verify_numbers.py": {
+      "bytes": 3481,
+      "sha256": "1361214f17fbc4f45301abb3bfb6aa591d2e6bcef668ea02d756373f5329eadf"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/write_report.py": {
+      "bytes": 2727,
+      "sha256": "fafd6d98c86caefb8343c110e9c65261c8809fadb73db1ec119ba29747db7f4d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem.jsonl": {
+      "bytes": 1591163,
+      "sha256": "f184595d27a5282602de01d81b8a1d7978ea43fcb1322a9a6b1fbb1ec689772f"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-071301.out": {
+      "bytes": 2318,
+      "sha256": "90078521d79e6f902d84b0f032658fdb83d82456161532e12f35f1d8e43e9f80"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-071301.err": {
+      "bytes": 8693,
+      "sha256": "279b3a88fb9d7b5543d53c9b140af95381e8340ad485e81592e1a4585b21d7d1"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1009-0701-CSLHFCBSC1UM.md": {
+      "bytes": 5278,
+      "sha256": "e0c0d91241040f0bf3cff990d44a1ae056a25de87c0e940dfd6441912012ee59"
+    }
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "CSLHFCBSC1UM"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0030",
+        "silent-0079",
+        "silent-0020",
+        "silent-0021",
+        "silent-0200",
+        "silent-0235"
+      ],
+      "repeats": [
+        "silent-0079"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-7566591d4777f7fe",
+      "silent-proposal-dd783758e92b9169"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/report.md"
+  },
+  "owned_cli": 12,
+  "evidence_rows": 7,
+  "evidence_update_rows": 7,
+  "first_observation_add_rows": 0,
+  "support_evidence": 7,
+  "repeat_evidence": 1,
+  "repeat_ids": [
+    "silent-0079"
+  ],
+  "proposal_link_rows": 5,
+  "correction_rows": 0,
+  "new_pure_bugs": [],
+  "queue_append": false,
+  "lesson_append_bytes": 19269,
+  "lesson_errata_sections": 0,
+  "source_learner_verification": {
+    "前缀保持": true,
+    "原文一致": true,
+    "原日志seek核验": [
+      {
+        "原行": 315377,
+        "UTC": "2026-10-08T22:41:16.870Z",
+        "层": 2,
+        "回合": 1,
+        "HP": 56,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          49
+        ]
+      },
+      {
+        "原行": 315397,
+        "UTC": "2026-10-08T22:41:49.679Z",
+        "层": 2,
+        "回合": 4,
+        "HP": 55,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315402,
+        "UTC": "2026-10-08T22:42:04.897Z",
+        "层": 3,
+        "回合": 1,
+        "HP": 55,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          41
+        ]
+      },
+      {
+        "原行": 315414,
+        "UTC": "2026-10-08T22:42:28.052Z",
+        "层": 3,
+        "回合": 3,
+        "HP": 55,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315424,
+        "UTC": "2026-10-08T22:42:59.263Z",
+        "层": 5,
+        "回合": 1,
+        "HP": 55,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          24,
+          22
+        ]
+      },
+      {
+        "原行": 315433,
+        "UTC": "2026-10-08T22:43:13.245Z",
+        "层": 5,
+        "回合": 2,
+        "HP": 55,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315439,
+        "UTC": "2026-10-08T22:43:28.006Z",
+        "层": 6,
+        "回合": 1,
+        "HP": 55,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          53
+        ]
+      },
+      {
+        "原行": 315462,
+        "UTC": "2026-10-08T22:44:09.016Z",
+        "层": 6,
+        "回合": 4,
+        "HP": 39,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315470,
+        "UTC": "2026-10-08T22:44:46.588Z",
+        "层": 8,
+        "回合": 1,
+        "HP": 39,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          58
+        ]
+      },
+      {
+        "原行": 315490,
+        "UTC": "2026-10-08T22:45:26.727Z",
+        "层": 8,
+        "回合": 5,
+        "HP": 33,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315502,
+        "UTC": "2026-10-08T22:46:26.460Z",
+        "层": 11,
+        "回合": 1,
+        "HP": 54,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          150
+        ]
+      },
+      {
+        "原行": 315532,
+        "UTC": "2026-10-08T22:47:28.365Z",
+        "层": 11,
+        "回合": 7,
+        "HP": 41,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315538,
+        "UTC": "2026-10-08T22:47:44.080Z",
+        "层": 12,
+        "回合": 1,
+        "HP": 41,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          67
+        ]
+      },
+      {
+        "原行": 315563,
+        "UTC": "2026-10-08T22:48:35.063Z",
+        "层": 12,
+        "回合": 6,
+        "HP": 41,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315572,
+        "UTC": "2026-10-08T22:49:12.053Z",
+        "层": 14,
+        "回合": 1,
+        "HP": 62,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          28,
+          27,
+          29
+        ]
+      },
+      {
+        "原行": 315592,
+        "UTC": "2026-10-08T22:49:55.416Z",
+        "层": 14,
+        "回合": 4,
+        "HP": 62,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315597,
+        "UTC": "2026-10-08T22:50:09.733Z",
+        "层": 15,
+        "回合": 1,
+        "HP": 62,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          32,
+          31,
+          27,
+          28
+        ]
+      },
+      {
+        "原行": 315619,
+        "UTC": "2026-10-08T22:51:08.576Z",
+        "层": 15,
+        "回合": 5,
+        "HP": 43,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": []
+      },
+      {
+        "原行": 315628,
+        "UTC": "2026-10-08T22:51:49.137Z",
+        "层": 17,
+        "回合": 1,
+        "HP": 64,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          233
+        ]
+      },
+      {
+        "原行": 315665,
+        "UTC": "2026-10-08T22:53:27.851Z",
+        "层": 17,
+        "回合": 10,
+        "HP": 2,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          31
+        ]
+      },
+      {
+        "原行": 315666,
+        "UTC": "2026-10-08T22:53:35.740Z",
+        "层": 17,
+        "回合": 1,
+        "HP": 64,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          233
+        ]
+      },
+      {
+        "原行": 315698,
+        "UTC": "2026-10-08T22:55:00.042Z",
+        "层": 17,
+        "回合": 8,
+        "HP": 8,
+        "maxHP": 70,
+        "格挡": 3,
+        "敌HP": [
+          60
+        ]
+      },
+      {
+        "原行": 315699,
+        "UTC": "2026-10-08T22:55:07.872Z",
+        "层": 17,
+        "回合": 1,
+        "HP": 64,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          233
+        ]
+      },
+      {
+        "原行": 315731,
+        "UTC": "2026-10-08T22:56:21.308Z",
+        "层": 17,
+        "回合": 8,
+        "HP": 8,
+        "maxHP": 70,
+        "格挡": 3,
+        "敌HP": [
+          67
+        ]
+      },
+      {
+        "原行": 315732,
+        "UTC": "2026-10-08T22:56:29.051Z",
+        "层": 17,
+        "回合": 1,
+        "HP": 64,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          233
+        ]
+      },
+      {
+        "原行": 315770,
+        "UTC": "2026-10-08T22:58:08.151Z",
+        "层": 17,
+        "回合": 10,
+        "HP": 5,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          63
+        ]
+      },
+      {
+        "原行": 315771,
+        "UTC": "2026-10-08T22:58:15.743Z",
+        "层": 17,
+        "回合": 1,
+        "HP": 64,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          233
+        ]
+      },
+      {
+        "原行": 315809,
+        "UTC": "2026-10-08T22:59:45.232Z",
+        "层": 17,
+        "回合": 10,
+        "HP": 8,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          63
+        ]
+      },
+      {
+        "原行": 315810,
+        "UTC": "2026-10-08T22:59:52.971Z",
+        "层": 17,
+        "回合": 1,
+        "HP": 64,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          233
+        ]
+      },
+      {
+        "原行": 315848,
+        "UTC": "2026-10-08T23:01:27.878Z",
+        "层": 17,
+        "回合": 10,
+        "HP": 10,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          72
+        ]
+      },
+      {
+        "原行": 315852,
+        "UTC": "2026-10-08T23:01:31.293Z",
+        "层": 17,
+        "回合": 10,
+        "HP": 10,
+        "maxHP": 70,
+        "格挡": 6,
+        "敌HP": [
+          72
+        ]
+      },
+      {
+        "原行": 315853,
+        "UTC": "2026-10-08T23:01:33.472Z",
+        "层": 17,
+        "回合": 10,
+        "HP": 0,
+        "maxHP": 70,
+        "格挡": 0,
+        "敌HP": [
+          56
+        ]
+      }
+    ],
+    "勘误": []
+  },
+  "initial_verification_count": 23,
+  "postappend_frame_count": 32,
+  "report_variants_equal": true,
+  "failed_commands_preserved": [
+    {
+      "exit_code": 1,
+      "command_sha256": "9b1b4b27643877d025d58d873590d3fe0b53125fabeb8dc8ee49cbb3ec204268",
+      "output_excerpt": "总挡17→9、敌净扣血29→38、损血5→13，即多打9同时多损8；女王下一回合血292→298，聚合体110→95，不能只看聚合体推进。两条线的rollout都24/24死亡，日志换线理由是未见更常死亡；第4次T9以14血+21挡对36判死，第6次以6血+21挡对36实死，均未击杀任何敌人。与更早静默1NZ8FE5F34R9用防御换触媒（ACCELERANT）且死亡样本饱和的血价问题同类，追加重复证据；不把改线写成Jev主动选择，也不宣称不改就能通关。（之前学过：silent-0079，S1.exp11）\n\nVERSIONS_ASOF\nTraceback (most recent call last):\n  File \"<stdin>\", line 23, in <module>\nAttributeError: 'tuple' object has no attribute 'get'\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "21e683908de2f631361107356470c3e0dcb7cd42309b299ec19fbfa8eedd9fab",
+      "output_excerpt": "Traceback (most recent call last):\n  File \"<stdin>\", line 5, in <module>\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    }
+  ],
+  "append_prefix_verified": {
+    "size": 5751551,
+    "sha256": "e6e269a7864bf4814062b4b806884bb7e61e7f7c83d16ec546294f251942340a"
+  },
+  "proposal_registry_not_changed": true,
+  "no_manual_proposal_dispatch": true,
+  "no_ops_game_knowledge_added": true,
+  "physical_lessons_not_reappended": true,
+  "unowned_extra_rows_preserved": 132,
+  "ledger_problems": 0,
+  "no_checks_requested": true,
+  "no_merges": true,
+  "no_versions": true,
+  "no_process_mutations": true
+}

@@ -1,0 +1,53 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-7566591d4777f7fe",
+    "ts": "2026-10-09T07:28:38+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0030",
+      "silent-0021",
+      "silent-0200",
+      "silent-0235"
+    ],
+    "runs": [
+      "CSLHFCBSC1UM"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "terminal"
+    ],
+    "summary": "核对族母负力负敏、重放格挡及施毒与实际终局的一致性；固定原帧支持已有局部推演，未定位新bug，证据不足保留规则。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-combat-terminal.md",
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "55accd2b4a1853e506ecca18e2298f15c6f0a51e482eb9c85d439343978032ee",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-dd783758e92b9169",
+    "ts": "2026-10-09T07:28:38+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0079"
+    ],
+    "runs": [
+      "CSLHFCBSC1UM"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "sl",
+      "combat"
+    ],
+    "summary": "同板SL替线在模拟饱和时实多损5多扣9，末试反向省5少11；核验血价与实际执行追溯，单局无受控胜线、不拟新门槛，保留规则。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261009-071302-postmortem/proposal-sl-tradeoff.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "ce22ad1b945a28eabaf0969b324a9dc69904eecd5e1f89ea9de9ba3d9283e1e1",
+    "state": "pending"
+  }
+]
