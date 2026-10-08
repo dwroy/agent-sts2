@@ -1,0 +1,84 @@
+{
+ "id": "silent-0234",
+ "ts": "2026-10-07T15:29:01+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "DUZUBAJ3A8GP"
+  ],
+  "commits": [
+   "20b04517393708c73912326bb35d8448d1b3f77e",
+   "0d586e685f4f683ff7de4a7c3eee0717efa16a56",
+   "f9db52c1ed7af16d019e32528953e5ffcc8e08f0",
+   "eead35b986fdc9d040b4255ee14b84220add6831"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-173847-fix-batch/proposal-haze.md"
+  ]
+ },
+ "kind": "bug-infra",
+ "claim": "迷雾HAZE未进入card-model的施毒ID名单，已有全体目标施毒路径收不到它的PoisonPower。DUZUBAJ3A8GP F27 T4/T5原线分别预测2/7、实际结算8/13，各独立漏6毒伤，损血3/9均正确。当前live agent/src/reflex/card-model.ts:909及1063定位；与已修常规毒模型silent-0008及蛇咬漏毒silent-0219分账，不以此保证整场转胜。",
+ "evidence": [
+  {
+   "run": "T082DRCUHRRD",
+   "floor": 46,
+   "turn": 4,
+   "note": "最早静默在手HAZE+证据：原线毒雾/迷雾+/暴露预计0伤，实际迷雾使猫头鹰法官毒6→12、本体61不变，建立2虚弱。",
+   "role": "support",
+   "added": "2026-10-07T15:29:01+08:00"
+  },
+  {
+   "run": "DUZUBAJ3A8GP",
+   "floor": 27,
+   "turn": 4,
+   "note": "迷雾+→勒紧→防御预计扣2损3，实际毒2→8、扣8损3，独立漏6。",
+   "role": "support",
+   "added": "2026-10-07T15:29:01+08:00"
+  },
+  {
+   "run": "DUZUBAJ3A8GP",
+   "floor": 27,
+   "turn": 5,
+   "note": "生存者→防御→迷雾+预计扣7损9，实际毒7→13、扣13损9，再独立漏6。",
+   "role": "support",
+   "added": "2026-10-07T15:29:01+08:00"
+  }
+ ],
+ "first_run": "T082DRCUHRRD",
+ "prior": "no",
+ "prior_runs": [
+  "T082DRCUHRRD"
+ ],
+ "prior_note": "回查静默最早四局：前三局未见HAZE在手或出手，第四局初见的原线预计0伤却实际加6毒；未发现学前做对施毒预测的更早可比局。较早复盘识别常规毒模型，未单列HAZE名单遗漏。",
+ "asc": 0,
+ "history": [
+  {
+   "ts": "2026-10-07T15:29:01+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T18:57:06+08:00",
+   "by": "learner:fix-batch",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T19:40:31+08:00",
+   "by": "learner:fix-batch"
+  },
+  {
+   "ts": "2026-10-07T20:14:09+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.fix45",
+ "effect": null,
+ "notes": [
+  "代码提案 silent-proposal-461611b6b36e2d4c → task=strategy-proposal；Roy-2026-10-07-learning",
+  "20261007-1944事件实际发布与main逐blob同步核实；仅所属实现登记，原首证/先验/学习者claim及全部旧失败保持。原批完整外部tsc/vitest exit0，290文件3319过/2跳过。"
+ ],
+ "shipped_at": "2026-10-07T20:14:09+08:00"
+}

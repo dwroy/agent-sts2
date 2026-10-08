@@ -1,0 +1,352 @@
+[
+ {
+  "id": "silent-0172",
+  "ts": "2026-10-06T11:25:33+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "永冻冰晶PERMAFROST在首次能力牌施放后实际补7挡，但求解器没有该触发。本局族母第三次T4幻影之刃加两防御被报损7，实得遗物7加两张敏捷后7挡，共21抵21、零损；该遗漏使能力线即时血价偏高。只读当前live turn-solver.ts:1645及combat-plan.ts:2931无此遗物接线，队列未见同项。不据此声称修复会转胜。",
+  "evidence": [
+   {
+    "run": "25226ZFLNR1J",
+    "floor": 29,
+    "turn": 1,
+    "role": "support",
+    "note": "21:35:35.958Z灵动步法前0挡，21:35:37.391Z建2敏捷且得7挡；原选plan2只含该能力、药水及攻击，block_gained缺失。该局F26已取永冻，最早已核同类模型遗漏。",
+    "added": "2026-10-06T11:25:33+08:00"
+   },
+   {
+    "run": "PJ2LL9KU7FHD",
+    "floor": 17,
+    "turn": 4,
+    "role": "support",
+    "note": "第三次02:39:14.954Z至16.470Z幻影一步0→7挡，之后敏捷药水及两防御各7，共21，57血不变；原题plan1损7。首试同类plan1也报损7。",
+    "added": "2026-10-06T11:25:33+08:00"
+   },
+   {
+    "run": "PJ2LL9KU7FHD",
+    "floor": 12,
+    "turn": 3,
+    "role": "support",
+    "note": "首次幻影在02:29:39.436Z至41.210Z独立使0→7挡、建立9层能力；同局宝箱F10已取PERMAFROST。",
+    "added": "2026-10-06T11:25:33+08:00"
+   }
+  ],
+  "first_run": "25226ZFLNR1J",
+  "prior": "no",
+  "prior_runs": [
+   "25226ZFLNR1J"
+  ],
+  "prior_note": "更早静默复盘唯一检出的可比持有局为25226，回查F29原题未计首次能力7挡，而状态实际得7；此前没有本遗物学习条目，已核可比模型均漏算，不以正确派发能力冒充正确推演。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "PJ2LL9KU7FHD"
+   ],
+   "commits": [
+    "157d635cd9e9880d7396e76a15594c6e7f0b0253",
+    "da3250d3646a0530b0febe14e8a1a18766567e76",
+    "ebd920b46668fc63babae6a79359d926d3c620ad",
+    "175ee9ec55bcaf4e990c69e7f8bf1870cb18591c"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-06T11:25:33+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T02:00:13+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T02:14:54+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix39",
+  "effect": null,
+  "notes": [
+   "02:10 fix-done确认20261007-014302-fix-batch：源157d635c→实际live代码da3250d3→固定发布ebd920b4/唯一S1.fix39，机械同步main。0172永冻首次能力7挡遗漏沿学习者产出及25226ZFLNR1J/A10/F29 T1、PJ2LL9KU7FHD/A10/F17第三次T4固定18帧证据；跨帧/续行/日志回放/SL重置/跨回合首次状态沿源码，不完整历史/计数或跨未观察回合不给未验证奖励，重放触发列未知；铁甲与无遗物等价，不改策略，不声称重复触发或整场转胜。源及合后首轮沙箱tsc0/vitest0各211文件2266例，无超时重跑。原初稿类型导入/字段及抽牌夹具失败、第一版撤源5失败6通过/11例保留；最终撤六处接线及推演源码6失败6通过/12例后，恢复源码整套211文件2266通过含新12。相关3文件28例在01:54:42已通过，早于01:55:08最终撤源红；此前交接和登记的恢复相关28为独立验证摘要，此处按原时间戳明确顺序，不当撤源之后的单独28例重跑，不重复加12。所有原字节和指纹保留。合前0f256b60三项自动刷新保留、重叠0、live预合并无冲突，9个修复blob同已测发布；live后续七项未提交知识/notes刷新不覆盖，经验.2和铁甲保持，main同步时decision-log追加冲突保留双方原行。原proposed一行/127旧修复祖先/回报/红绿/自测/快照扫描归档，大证据/固定夹具/事件流留原址并记录指纹。CLI/by=ops只登记0172 shipped及关闭11:33永冻框；first_run=25226ZFLNR1J/A10/prior=no、claim/全部支持/repeat/历史保持，0173独立机制10GPK5XGHCK3/A3/prior=yes/S1.exp42及0197fix38/0198exp56完全不重置。并行14行复盘台账和lessons保留不纳本批，旧mod/缓存/性能/策略专项保持，无新Roy待定，完整外部待本批learner-checks，对局继续。"
+  ],
+  "shipped_at": "2026-10-07T02:14:54+08:00"
+ },
+ {
+  "id": "silent-0173",
+  "ts": "2026-10-06T11:25:33+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "永冻冰晶每战首次能力实补7挡；A3触媒/幻影、A10步法及本局幻影共三局局部支持。PJ2LL9KU7FHD族母第3次T4能力7加两防御各7合21抵21零损，首/末次T11无攻击时所得7挡下一轮归零。真实遗物机制与求解器漏算0172分账，未验证重复/重放或整战胜因。",
+  "evidence": [
+   {
+    "run": "25226ZFLNR1J",
+    "floor": 29,
+    "turn": 1,
+    "role": "support",
+    "note": "取得永冻后的首个已核战斗：灵动步法一步建立2敏捷、0→7挡；最早已核机制出现，普通牌动作已正确执行。",
+    "added": "2026-10-06T11:25:33+08:00"
+   },
+   {
+    "run": "PJ2LL9KU7FHD",
+    "floor": 17,
+    "turn": 4,
+    "role": "support",
+    "note": "第三次幻影0→7，药水建2敏捷，两防御再各7，总21覆盖21、零损。",
+    "added": "2026-10-06T11:25:33+08:00"
+   },
+   {
+    "run": "PJ2LL9KU7FHD",
+    "floor": 17,
+    "turn": 11,
+    "role": "support",
+    "note": "首试与末次首次幻影也各实补7，但当轮SOUL_SIPHON_MOVE无攻击，T12首帧格挡0。",
+    "added": "2026-10-06T11:25:33+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "role": "support",
+    "note": "静默第42节：原始日志核对局部机制、已兑现收益与整战观察边界；对应silent-permafrost-first-power-block",
+    "added": "2026-10-06T11:41:02+08:00"
+   },
+   {
+    "run": "CA5KE8GFJ9X2",
+    "floor": 13,
+    "turn": 1,
+    "note": "F9战后取得永冻冰晶；F11与F13首次打铁蒺藜的即时挡均0→7，荆棘3另计。F9 T6此前未持遗物，打同牌挡仍0；首次能力挡与能力反伤分账。",
+    "role": "support",
+    "added": "2026-10-07T13:55:45+08:00"
+   },
+   {
+    "run": "9R916WW0V65N",
+    "role": "support",
+    "note": "本批重新核实本角色日志，经验silent-permafrost-first-power-block；逐帧/血档/SL对照及限制见20261008-120901报告。",
+    "added": "2026-10-08T12:18:44+08:00"
+   },
+   {
+    "run": "SY0WMJNNVRLM",
+    "floor": 33,
+    "note": "六试T1后空翻+首次挡16，随后触媒首次能力由永冻冰晶再补7到23（末试s301787→788）；T4步法后来建立不重复补首次能力7挡。",
+    "role": "support",
+    "turn": 1,
+    "added": "2026-10-08T17:40:48+08:00"
+   },
+   {
+    "run": "HEMND3SMQYB8",
+    "floor": 49,
+    "turn": 1,
+    "role": "support",
+    "note": "末試s308990→308991首次能力步法当步0→7挡、另建2敏；F48毒雾首次同样实补7，不归敏捷或卡牌本体挡。",
+    "added": "2026-10-09T01:33:33+08:00"
+   }
+  ],
+  "first_run": "10GPK5XGHCK3",
+  "prior": "yes",
+  "prior_runs": [
+   "25226ZFLNR1J"
+  ],
+  "prior_note": "新增更早日志证据：A3 10GPK5XGHCK3 F13 T4首次触媒0→7、F17 T2首次幻影0→7。尚无本机制学习条目时已实际兑现，保持prior=yes；只判断执行、不声称模型已理解遗物。原first_run=25226ZFLNR1J留在追加历史中；更早持有局KAY522KT5NXR无已核首次能力可比帧。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "PJ2LL9KU7FHD",
+    "CA5KE8GFJ9X2",
+    "SY0WMJNNVRLM",
+    "HEMND3SMQYB8"
+   ],
+   "experience": [
+    "silent-permafrost-first-power-block"
+   ],
+   "commits": [
+    "d673c6a7e270ef770f19d9ced3d3edef79f24e31",
+    "8224bcc9ef8f825bbdca7ca6ec3b03535cf81725",
+    "b449544f0116b3f32cdf14582c61df0a7940e8bb",
+    "aea59901ae3cd7a79685e0e2dfe1679c865ab0e0",
+    "7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a",
+    "91d49f827f3d429955d63f0b11c5944731759264",
+    "586ff2db0de4a841555c2e838f3e7f17e8165307",
+    "79bee0fc11793a410218ae50ca43e41474eec19e",
+    "1bf53e5fe631e7a7836001f463f8561d1a875bc6",
+    "3958e5616ae5a13318da4e4397d2805ec1f919c9",
+    "64e82e9874e55823fd524491ecfbae2aa643e7ad",
+    "5925a43d773d5eecf4442ee4e3e60d39d98ec99d",
+    "e969eb007240e6c9d0a9bfd0f6799738b3d08b9a",
+    "ee6d95efd7fbb53115962231ee4ed08ea8e6c75b",
+    "4a73f63c4955beeacc39e14fed72cf302d307e82",
+    "c70efc8ca855a756c66ea43cd2dd44bef91a7882",
+    "eeb85b9f65ec15708ba37660cbe5d912095ceac3",
+    "4aca285e251f888ba5b8c75eb40047c0e0deaa6c",
+    "60c93049a61bf9fb0c0501a9f03d1b34b6206b3d",
+    "a7c2a4114c7404639da5ec190df56c6a6ef4e07f",
+    "cfb62ffa42c4e625e56ed3ad07e5a705ecf76698"
+   ],
+   "changelog": [
+    "2026-10-06 静默猎手 第四十二次增量：1 局 A10（version 2026-10-06.17，分支 exp-silent，d673c6a7）",
+    "2026-10-07 静默猎手 第七十四次增量：4 局 A10（version 2026-10-07.20，分支 exp-silent，7453c2cc）",
+    "## 2026-10-08 静默猎手 第九十六次增量：1 局 A10（version 2026-10-08.13，分支 exp-silent，3958e561）",
+    "## 2026-10-08 静默猎手 第一百零四次增量：1 局 A10（version 2026-10-08.21，分支 exp-silent，ee6d95ef）",
+    "2026-10-09 静默猎手 第一百一十四次增量：1 局 A10（version 2026-10-09.3，分支 exp-silent，4aca285e）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-permafrost-first-power-block.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-mechanisms-denominator-correction.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-171302-postmortem/proposal-scaling-realization.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/proposal-evidence-correction.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-014148-experience-update/proposal-mechanisms.md"
+   ]
+  },
+  "asc": 3,
+  "history": [
+   {
+    "ts": "2026-10-06T11:25:33+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T11:41:02+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T11:52:40+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T13:55:45+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T16:03:43+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T17:16:01+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T17:16:07+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T18:06:53+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T12:18:44+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T12:19:13+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T12:21:47+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T12:32:01+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T12:40:26+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T17:40:48+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T17:44:23+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T18:00:12+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:00:15+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:03:41+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:03:41+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:18:56+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T18:26:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-09T01:33:33+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T01:53:33+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T01:53:34+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-09T02:09:35+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-09T02:24:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp114",
+  "effect": null,
+  "notes": [
+   "静默经验2026-10-06.17，PJ2LL9KU7FHD A10及旧48静默局同口径复算；六次同场非六局、早建立非整战胜因、未取得毒不计输出。原用药分句保留；仅proposed，实际合入后交运维CLI登记shipped，不重置旧版本/重复历史。",
+   "11:50 experience-done第42批经验2026-10-06.17实际发布核实：源d673c6a7→live 8224bcc9→固定发布b449544f/唯一S1.exp42；来源PJ2LL9KU7FHD SILENT A10及旧本角色证据。源首轮tsc0/196文件2124例，合后首轮tsc0/199文件2172例，已测发布机械同步main。仅十项经CLI/by=ops登记shipped，0173首次证据沿学习者追加更正为10GPK5XGHCK3/A3、prior=yes与原25226记录保持；first_run/prior/claim/evidence/repeat及全部旧上线历史保持。0172纯bug和0166原repeat、其他修复状态保持，本局开局早于S1.fix28不倒算补丁生效。完整外部检查待本批learner-checks，不另设审核、不新增游戏规则。",
+   "第74次经验增量：保留原首证、先验、旧support/repeat与既往上线历史；新增支持仅来自本角色日志，子公式与整战胜因分账。",
+   "第74批补链：silent-permafrost-first-power-block；来源experience-update/20261007-153133；实现strategy-proposal；duplicate，不登记shipped。",
+   "代码提案 silent-proposal-d01ced1dfd3ce8a0 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "17:48机械经验兜底：原.21源91d49f827f3d429955d63f0b11c5944731759264及未独立发布的.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a已实际成为live586ff2db0de4a841555c2e838f3e7f17e8165307祖先，最终发布79bee0fc11793a410218ae50ca43e41474eec19e/唯一S1.exp75，main1bf53e5fe631e7a7836001f463f8561d1a875bc6经验原blob相等。仅对应经验数据已吸收，原第74批28提案11duplicate/17waiting及.21三pending保留、不当代码implemented；0237/0229等纯bug不在本经验shipment范围。源.21原沙箱tsc0/232文件2430例0，.20原230文件2422例0；本轮数据组合无新源码、不冒称最新整套已过，最终完整外部独立原批续验。旧源merged=null/failed/缺array/路径拒绝/冷却/测试历史保留，CLI只这些经验所属项追加shipped，claim/首证/prior/support/repeat/旧历史及并行未发布经验不改，本状态不宣称后续.22或策略源码上线。",
+   "提交前关联本批经验来源；保持首证/prior/claim/旧上线历史，提交后再登记proposed。",
+   "代码提案 silent-proposal-20b9df170d51b280 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-91cc7fd647077569 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本批经验已提交；首证/prior/claim和旧上线历史保持。经验数据发布与策略代码实现分账，由运维核实实际合入再登记shipped。",
+   "第96次经验原数据2026-10-08.12→.12/增2改17退0/175 active，源3958e561唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记18所属经验数据shipped。源首轮中断130原件保留、重试248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0290/0291纯bug保持原观察/提案状态，不标代码实现；0292首证LRN0HPZ0FZS1/A0及partly先验保持。",
+   "20261008-171302-postmortem已追加并核关键数字；只补support，不改旧claim/first_run/prior/status/version，不记新上线。",
+   "代码提案 silent-proposal-ca596a0c614d90c6 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第104批提交前经验/证据关联；保留首证/prior/claim及历史状态，提交后登记proposed。",
+   "代码提案 silent-proposal-4c28c13316c0d88e → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-edaea6fac5a803c1 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第104批四份初稿共同SL数字按原帧校正：首试只录22张，后两试26张同序/T4完整同盘；胜试敌20−毒5−荆棘3=12，退场索引重排。保留原提案历史，以补充提案silent-proposal-edaea6fac5a803c1及extra-numbers-checked为准，经验文字与建议不变。",
+   "第104批经验源提交完成；首证/prior/claim/旧状态/版本保持历史，实际shipped交运维核live；经验上线不等策略代码实现。",
+   "第一百零四次经验仅原数据.20→.21，源ee6d95ef增2改16退0/178 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp104。按原学习者ledger-map仅20所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，五combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/21冲突/out/err/失败历史保持。",
+   "第114批提案预关联；原claim/首证/prior/状态/版本/support/repeat历史保留。850决策/966帧与旧148局同口径复算；实际支付、抽弃、毒与血药逐层/轮见本任务scratch，提交后登记proposed。",
+   "代码提案 silent-proposal-a65ae6b794cf6cd2 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第114批经验已在本分支测试提交；支持/反例及首证/prior历史保持。实际live合入及shipped由运维完成事件核实，不把经验文字当提案源码实现。",
+   "第一百一十四次经验仅原数据2026-10-09.2→2026-10-09.3，源4aca285e增1改22退0/189 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp114。按原学习者ledger-map仅22所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0260/0297/0317仅原提案关联不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/17冲突/out/err/失败历史保持。"
+  ],
+  "shipped_at": "2026-10-09T02:24:32+08:00"
+ }
+]
