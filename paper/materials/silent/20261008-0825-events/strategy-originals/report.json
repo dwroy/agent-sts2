@@ -1,0 +1,99 @@
+{
+  "task": "strategy-proposal",
+  "base": "07ea18676886c0492c98dee8b1fb2e1862942dd3",
+  "runs": [
+    "DUZUBAJ3A8GP",
+    "5PM6JAQG6FNQ",
+    "CA5KE8GFJ9X2",
+    "8JRE1C4H4Z2W",
+    "YF0LXT1QSTGG",
+    "XP2SL33HT0D9"
+  ],
+  "fixes": [],
+  "skipped": [
+    {
+      "id": "silent-proposal-c65a44568c4d2975",
+      "reason": "六原帧及12固定用例支持有限跨轮胆小7修复，撤生产接线2红、恢复12绿；完整沙箱首轮未结束、一次有界重跑exit124，没有沙箱0，按提交门槛保留四文件待提交源码。live预检另有19并行记录冲突；无源码提交、无实际live祖先，待完成检查并处理合入。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 124,
+    "cases": 12
+  },
+  "code_proposals": [
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-246daedaa3021847",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9",
+    "silent-proposal-c65a44568c4d2975"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c20b5139dd0dff71",
+      "state": "waiting",
+      "reason": "仅观察火花3→6一次增长，缺第二次增长及周期隔离，不能拟合跨轮火花规则；技能的挡/毒收益和同资源少技能整战替线仍缺。"
+    },
+    {
+      "id": "silent-proposal-ae9e692d680e3819",
+      "state": "waiting",
+      "reason": "首试T4后玩家力量−4→0已核，但POSSESS_STRENGTH_POWER现场amount=1；不能将敌当前力量或玩家负力量直接当来源独立的被夺量。缺返敏、同轮击杀后续攻击及临时/多来源返还分账。"
+    },
+    {
+      "id": "silent-proposal-246daedaa3021847",
+      "state": "waiting",
+      "reason": "跨轮胆小7字段丢失有本批有限子提案修复；原宽项仍缺同敌同轮两次非致死失血的独立触发/消费边界及另一杀序整战结果，不将有限子项当整项完成。"
+    },
+    {
+      "id": "silent-proposal-52f1e1bd2e7db0ed",
+      "state": "waiting",
+      "reason": "现场加压两次各+4、覆甲9/9/8/7/6已核；缺逐来源减层条件隔离和加压/覆甲联合调用覆盖，不以显示层数推完整规则。"
+    },
+    {
+      "id": "silent-proposal-6dd8bbff876be528",
+      "state": "waiting",
+      "reason": "同爪牙力量2→4、攻击17→19已核；首次出现已力量2，缺出现前至首次成长连续帧，不能确定新实体首次成长/旧计数边界；先杀替线未执行。"
+    },
+    {
+      "id": "silent-proposal-578e415a259e6835",
+      "state": "waiting",
+      "reason": "同指纹实损3/15、扣10/17及0/24与5/24死亡可核；缺原答/护栏/SL/未执行续步/重规划统一生命周期和完整关联回归，规则参数另缺完整同资源胜线。"
+    },
+    {
+      "id": "silent-proposal-c0767768bf6a7ab1",
+      "state": "waiting",
+      "reason": "实损0/9、扣45/38不等于候选0/10、54/36；缺覆盖重放至实际最终派发/未执行续步的统一结构化关联，F33胜试反对全面禁止探索，缺受控整战胜线。"
+    },
+    {
+      "id": "silent-proposal-a46bdb7fe711d79a",
+      "state": "waiting",
+      "reason": "新阶段212无旧毒、零毒触媒及后来敏捷不追补23挡已核；缺持有/建立/派发的统一阶段候选覆盖，前五试已建能力仍败，不足拟合启动优先级。"
+    },
+    {
+      "id": "silent-proposal-1044224808015e5c",
+      "state": "waiting",
+      "reason": "同指纹T3实损9/14、扣24/27；T1实损2/10、扣25/34且替线确立力量1。缺重规划最终派发到成长兑现的全链及相同抽序完整胜线/独立后续验证，B2零差不证明安全。"
+    },
+    {
+      "id": "silent-proposal-7cbc6005db712ba9",
+      "state": "waiting",
+      "reason": "14挡、镣铐−9恢复、火箭57→38→28及末轮毒已核；缺这些事实到最终派发的联合调用覆盖，未观察船夹板额外来源/轮次，不扩写优先级。"
+    },
+    {
+      "id": "silent-proposal-c65a44568c4d2975",
+      "state": "waiting",
+      "reason": "六原帧及12固定用例支持有限跨轮胆小7修复，撤生产接线2红、恢复12绿；完整沙箱首轮未结束、一次有界重跑exit124，没有沙箱0，按提交门槛保留四文件待提交源码。live预检另有19并行记录冲突；无源码提交、无实际live祖先，待完成检查并处理合入。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-075540-strategy-proposal/report.md"
+}
