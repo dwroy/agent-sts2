@@ -1,0 +1,98 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.19 → 2026-10-08.20；提交：b6c4b534（分支 exp-silent）；合入：未合入，预检发现 21 项冲突；刷新提交 69a7b441 已保留，待运维接续。
+- 条数：新增 0、更新 22（加证据 22、只改数字 0）、退役 0；active 176 → 176。正文 48968 字符；A8 适用 164 条／44642 字符，A9 适用 165 条／44926 字符。
+- 机制推理（证据为支持／反例局数）：
+  - 力量／敏捷 — 逐击加伤、逐牌加挡 — 131／0 — Y5H4CFAQ2WTG
+  - 灵动步法 — 2 敏使复制防御共多 4 挡 — 76／0 — BJLTVSYXCSGS
+  - 脆弱 — 每张牌分别折减并取整 — 25／0 — Y5H4CFAQ2WTG
+  - 毒雾 — 实建后轮初补毒，制品可延迟启动 — 64／0 — BJLTVSYXCSGS
+  - 触媒 — 增加结毒次数 — 48／0 — BJLTVSYXCSGS
+  - 毒性爆发 — 即发毒与轮末毒分账 — 6／0 — BJLTVSYXCSGS
+  - 族母吸取 — 负力敏压缩攻防，已建毒仍兑现 — 16／0 — BJLTVSYXCSGS
+  - 构装体 — 剥制品、成长和存活攻击者分别核 — 11／0 — BJLTVSYXCSGS
+  - 暴露 — 清挡和易伤不算直接伤害 — 11／0 — BJLTVSYXCSGS
+  - 铁棒 — 第四张牌额外抽牌后须重算 — 3／0 — BJLTVSYXCSGS
+  - 抱抱先生 — 轮初自动伤与毒分账 — 6／0 — BJLTVSYXCSGS
+  - 敏捷药水 — 加 2 敏，不倒补已有挡 — 54／0 — Y5H4CFAQ2WTG
+  - 蜃景 — 23 毒给 23 挡，仍不足保命 — 16／0 — Y5H4CFAQ2WTG
+  - 尖啸 — 临时减力，下一轮恢复 — 62／0 — Y5H4CFAQ2WTG
+  - 沙虫 — 延长沙坑不等于挡住攻击 — 17／0 — Y5H4CFAQ2WTG
+  - 巨兽 — 本体结束后仍支付自爆血价 — 22／0 — Y5H4CFAQ2WTG
+  - 铜钹 — 本次五弃实扣 15，不外推随机分配 — 8／0 — Y5H4CFAQ2WTG
+  - 跨幕回复 — 已见缺失 HP 的 80% 向下取整 — 26／0 — BJLTVSYXCSGS
+  - 构筑观察 — 爆发、已建能力和后战资源分账 — 130／0 — Y5H4CFAQ2WTG
+  - 帝王蟹观察 — 模拟零胜不等于实盘必败 — 19／0 — BJLTVSYXCSGS
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 251 文件／2627 用例／退出码 0，首次通过。
+- 切片大小：整体中位 +40 字；配对增量中位 +13 字；最大 4776 字（原 4824）。
+- 学习账本：新增无；改成 proposed：silent-0012、0005、0011、0027、0037、0030、0025、0079、0208、0122、0162、0276、0010、0046、0018、0017、0284、0243、0020、0019、0021；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.20",
+  "commit": "b6c4b534a27f1bb95a518a524c49ff4c62d2b11b",
+  "merged": null,
+  "added": 0,
+  "updated": 22,
+  "retired": 0,
+  "active": 176,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-footwork-block",
+    "silent-frail-card-block",
+    "silent-noxious-fumes-growth",
+    "silent-accelerant-triggers",
+    "silent-outbreak-immediate-poison",
+    "silent-lagavulin-siphon-poison-sl",
+    "silent-construct-artifact-growth",
+    "silent-expose-vulnerable",
+    "silent-iron-club-four-card-draw",
+    "silent-mr-struggles-turn-start-damage",
+    "silent-dexterity-potion-card-block",
+    "silent-mirage-poison-card-block",
+    "silent-piercing-wail-temporary-strength",
+    "silent-insatiable-dual-clock",
+    "silent-giant-explosion-window",
+    "silent-tingsha-discard-damage",
+    "silent-act-transition-missing-hp-heal",
+    "silent-deck-burst-observation",
+    "silent-kaiser-crab-facing-sl"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0005", "silent-0011",
+      "silent-0027", "silent-0037", "silent-0030",
+      "silent-0025", "silent-0079", "silent-0208",
+      "silent-0122", "silent-0162", "silent-0276",
+      "silent-0010", "silent-0046", "silent-0018",
+      "silent-0017", "silent-0284", "silent-0243",
+      "silent-0020", "silent-0019", "silent-0021"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-00a6a10b15a62b38",
+    "silent-proposal-b643d5b644ec7c64",
+    "silent-proposal-dce02af8d115b477"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11ac6-86eb-79b2-abb0-bf8f4a3ee503
+轮数：1；工具调用：command_execution×54 file_change×10
+token：输入 214.1k、输出 44.0k（其中推理 11.9k）、cache 读 6606.2k、cache 写 0（命中 96.9%）
+成本：未提供
+耗时：2026.9 s（墙钟）
+时间：首个事件 2.9 s、模型首个输出 9.2 s、首次工具 13.9 s、末次工具结束 1883.5 s；工具内共 1262.7 s，其余（模型生成、推理、网络）761.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×48；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T17-09-40-01a11ac6-86eb-79b2-abb0-bf8f4a3ee503.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update.jsonl
