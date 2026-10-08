@@ -1,0 +1,188 @@
+[
+ {
+  "id": "silent-0221",
+  "ts": "2026-10-07T08:52:31+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "静默已观察咬人卷轴的纸伤难愈PAPER_CUTS_POWER为2时，每次未完全格挡的攻击使玩家生命上限减2，完全挡住的一击没有下降；多段按未挡住的击数分别体现。本局T2三敌合六击有五击漏伤，上限70→60；T3两次漏伤后60→56。只确认2层的这些实际结算，不外推其他层数。",
+  "evidence": [
+   {
+    "run": "9YBKCNBFP0X5",
+    "floor": 40,
+    "turn": 1,
+    "note": "更早首证：纸伤2、零挡，10单击后57/77→47/75，再5×2后37/71，上限分别降2、4。",
+    "role": "support",
+    "added": "2026-10-07T08:52:31+08:00"
+   },
+   {
+    "run": "YLYLZWHA0GKU",
+    "floor": 45,
+    "turn": 2,
+    "note": "第一只6×2对10挡仅一击漏2，41/70→39/68；后两只双击各降4上限，39/68→27/64→11/60。",
+    "role": "support",
+    "added": "2026-10-07T08:52:31+08:00"
+   },
+   {
+    "run": "YLYLZWHA0GKU",
+    "floor": 45,
+    "turn": 3,
+    "note": "8×2对14挡，仅第二击漏2，11/60→9/58；下一只16单击致死，死亡帧上限56。",
+    "role": "support",
+    "added": "2026-10-07T08:52:31+08:00"
+   },
+   {
+    "run": "K3676LU8B0UH",
+    "role": "support",
+    "note": "第68次增量：静默原日志核silent-scroll-paper-cuts-unblocked非药水证据，建立/结算/未来回血分账，不认定单卡整战胜因。",
+    "added": "2026-10-07T09:24:42+08:00"
+   },
+   {
+    "run": "9Z9H2EXKLF3T",
+    "floor": 35,
+    "turn": 1,
+    "note": "咬人卷轴SCROLL_OF_BITING战赢局66/77→30/69，PAPER_CUTS_POWER现场为2；上限逐帧77→75→73→71→69，states:287587/287588/287593/287605。8是最大HP损，不冒称额外8当前HP敌伤；同种敌身份歧义保留。",
+    "role": "support",
+    "added": "2026-10-08T04:36:49+08:00"
+   },
+   {
+    "run": "H1T1F8ML9FUE",
+    "floor": 35,
+    "turn": 2,
+    "role": "support",
+    "note": "卷轴纸伤难愈2，漏伤帧使max70→68→64，HP61→59→50；F46再赢同敌、HP33/max64均保持。s298470—471、298476—479、298623—639；净HP11不等于毛伤，后续休息只回19。",
+    "added": "2026-10-08T14:31:47+08:00"
+   }
+  ],
+  "first_run": "K3676LU8B0UH",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "全历史静默原始帧重核：A1 K367 F35已见纸伤2、14挡对10+5×2后上限77→73。更早静默局无该增益遭遇，prior=unknown保留；原A4首证判断追加更正，旧行留存。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "YLYLZWHA0GKU",
+    "9Z9H2EXKLF3T",
+    "H1T1F8ML9FUE"
+   ],
+   "experience": [
+    "silent-scroll-paper-cuts-unblocked"
+   ],
+   "commits": [
+    "9fad69d7bb23e0a2a0940048ec4a66e412dff40f",
+    "71ddbb8ea08c7af9aed6cd29826d2e3d4c495300",
+    "a0e4b5e2ed881ead45d0ed8dadb2c1520e2be727",
+    "b51af17aad3587f8c163004c01febc77b66bc897",
+    "0061f599c60537b86263bd783d274858c3876190",
+    "37af5ae0ce265b224d9af69710a78ce935a69139",
+    "54826c2602196192247228359493af5a29680879",
+    "1ede992e9fb4dda65d86eabe2aed9b66003638c6",
+    "b1714285e60ce5a02798bea8cd5d4aa3118a2512",
+    "7d2184190bcc6bf484af81ff71ec03be66017b84",
+    "196f1800b2c3b9bdc522c4d77632f1154662f8c9",
+    "10f0aeb37f8df7975cf823ac0e439f851d9ad07f",
+    "2b1a5f6d491f826ea1bac28f707716d109fb3e65",
+    "3d503d53ccb752d211d045cc3048397c8fdb209a"
+   ],
+   "changelog": [
+    "## 2026-10-07 静默猎手 第六十八次增量：1 局 A10（version 2026-10-07.14，分支 exp-silent，9fad69d7）",
+    "## 2026-10-07 静默猎手 第六十八次增量：1 局 A10（version 2026-10-07.14，分支 exp-silent，71ddbb8e）",
+    "2026-10-08 静默猎手 第八十八次增量：1 局 A10（version 2026-10-08.5，分支 exp-silent，54826c26）",
+    "2026-10-08 静默猎手 第一百次增量：1 局 A10（version 2026-10-08.17，分支 exp-silent，196f1800）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-044250-experience-update/proposal-combat.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-terminal-potion-chain.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-windows.md"
+   ]
+  },
+  "asc": 1,
+  "history": [
+   {
+    "ts": "2026-10-07T08:52:31+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T09:24:42+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T09:33:37+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T10:17:45+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T04:36:49+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T04:52:30+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T04:52:30+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T05:11:48+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T05:29:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T14:31:47+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T14:34:49+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T14:52:12+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T14:52:26+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T15:09:17+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T15:45:49+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp100",
+  "effect": null,
+  "notes": [
+   "首证由复盘初登记9YBK/A4更正到原日志最早K367/A1，既有claim/prior/支持和历史不删。只纳三局明确案例，其余历史遭遇和上限变化列核验附件。",
+   "首证由复盘初登记9YBK/A4更正到原日志最早K367/A1，既有claim/prior/支持和历史不删。只纳三局明确案例，其余历史遭遇和上限变化列核验附件。 初稿9fad69d7及其proposed原行保留；定稿补回触媒TU3旧局号，新where给最终提交及唯一第68节，旧草稿标题为初稿引用。",
+   "09:55完成通知运维机械核实：固定源71ddbb8ea08c7af9aed6cd29826d2e3d4c495300→实际livea0e4b5e2ed881ead45d0ed8dadb2c1520e2be727→发布b51af17aad3587f8c163004c01febc77b66bc897/树192b79ca71d2c99fd2a52c20e10b145c9e617b0f/唯一S1.exp68，main同步37af5ae0ce265b224d9af69710a78ce935a69139；固定记录发布在检查期间遇并行boss合入，锁内记录接入最新live 0061f599c60537b86263bd783d274858c3876190/树583ad9d15b1fc47ae586807bb45a669052d1860f，只改两个版本/决定记录，完整外部以broker锁内树为准。原merged=null、旧知识重叠/失败更正历史保持；锁内保存最新七项刷新、双方决定记录，源自测及固定合后代码补齐检查树data/logs链接后原入口沙箱tsc0/220文件2331例已过，最终发布完整外部另经本批learner-recheck，不提前冒称通过。仅此批所属条目shipped，首证/先验/证据/repeat及旧claim原行/历史保持；既有0216 S1.fix42及boss075131与Codex-only091118独立任务保持，对局继续。",
+   "第88批经验提案预关联，保留首证/prior/原claim/repeat及全部上线历史；局部机制与整战因果分账。",
+   "代码提案 silent-proposal-7a8e9ccb7e646538 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第88批经验已自测并提交；新证据/反例和旧repeat完整保持。是否实际合入由本批合入回执证明，运维据完成事件登记shipped，学习者不标accepted/shipped。",
+   "经验第88次原数据2026-10-08.4→.5/增1改14退0/160 active，源54826c26唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱245文件2586例tsc/vitest0，实际合后原入口245文件2586例tsc/vitest0/nice19/4workers。原首证/先验/claim及support/repeat/旧状态历史全部保持；两个combat/potion/SL/terminal提案沿原自动链，数据上线不等于代码已实现或旧0268/0272已修。原out/err/report/failed/20冲突不改，原批完整外部另续验。",
+   "代码提案 silent-proposal-de26499e8385f25b → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第100批提交前关联H1T1F8ML9FUE实帧及14:39勘误；保留首证/prior/claim/support/repeat及旧上线历史，提交后登记proposed。",
+   "代码提案 silent-proposal-b259f9956e08088a → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第100批经验源提交完成；首证/先验/claim/evidence/repeat及旧上线历史保持，实际shipped由运维核live，经验发布不当代码实现。",
+   "第一百次经验原数据2026-10-08.16→.17/增0改17退0/176 active，源196f1800唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记19所属经验数据shipped。源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，四个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0297纯bug保持原观察/提案状态，不标代码实现。"
+  ],
+  "shipped_at": "2026-10-08T15:45:49+08:00"
+ }
+]

@@ -1,0 +1,77 @@
+[
+ {
+  "id": "silent-0191",
+  "ts": "2026-10-06T19:30:18+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "单行动战斗题把已经含玩家虚弱的现场Damage当前值再乘0.75，低报攻击本体伤害。群蛇等逐牌附加伤害与本体偏差要分账；当前live combat.ts:128传玩家虚弱到damage.ts:82，handViews在narrow.ts:174已读现场当前值。只定位单行动题，不把整场死亡或求解器所有方案差额归此bug。",
+  "evidence": [
+   {
+    "run": "VLV17NUSFS61",
+    "floor": 37,
+    "turn": 5,
+    "role": "support",
+    "note": "A7第2次尝试15:17:50.653Z带毒刺击基础6、current_value与文本4，题面伤3，AXEBOT实际37→33、毒3→6；无群蛇增益，独立确认重复折减。",
+    "added": "2026-10-06T19:30:18+08:00"
+   },
+   {
+    "run": "5X2GHKJ89PN1",
+    "floor": 48,
+    "turn": 6,
+    "role": "support",
+    "note": "末次带毒刺击题面3、本体实4；两小刀题面各2、本体各实3，合低报3。刺击73→65含本体4加群蛇4；小刀使聚合体65→62→59且女王挡14→10→6，附加伤另计。",
+    "added": "2026-10-06T19:30:18+08:00"
+   }
+  ],
+  "first_run": "VLV17NUSFS61",
+  "prior": "no",
+  "prior_runs": [
+   "VLV17NUSFS61"
+  ],
+  "prior_note": "从已有60个静默复盘局号筛出此前52道带虚弱修饰的单行动题，最早VLV的实际刺击已证题面低报；账本及静默旧复盘未识别同项，学习前这一可比题已算错。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "5X2GHKJ89PN1"
+   ],
+   "commits": [
+    "c39102521f91e1e95b886935cf27cc8c23d0bf65",
+    "97d59449fabbd64af48c6eb911ade843298efa81",
+    "2be2e791a8aaf7d2bfe185e6cf7f31a3bf657c51",
+    "dabdcce1b534e7efb1f3be3d18c292997eee82c9"
+   ]
+  },
+  "note": "新识别纯bug，两份fix-queue无同项；不同于silent-0130重复扣格挡。本局code3599ab0a+dirty，引用当前只读live d4026dbb的agent/src/reflex/combat.ts:128、damage.ts:82、memory/narrow.ts:174。未修代码，未验证修复后的整场胜负。",
+  "asc": 7,
+  "history": [
+   {
+    "ts": "2026-10-06T19:30:18+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T19:54:08+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T19:59:11+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T20:05:40+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix34",
+  "effect": null,
+  "notes": [
+   "新识别纯bug，两份fix-queue无同项；不同于silent-0130重复扣格挡。本局code3599ab0a+dirty，引用当前只读live d4026dbb的agent/src/reflex/combat.ts:128、damage.ts:82、memory/narrow.ts:174。未修代码，未验证修复后的整场胜负。",
+   "20:00 fix-done机械确认20261006-194302-fix-batch：源c3910252→实际live97d59449→固定发布2be2e791/唯一S1.fix34，已同步main。单行动题重复折减现场虚弱伤害修复沿学习者产出，证据VLV17NUSFS61 SILENT A7 F37第2次T5、5X2GHKJ89PN1 SILENT A10 F48第6次T6；本体与附加伤分账，不声称可转胜。源与合后首轮tsc0/vitest0、206文件2221例，撤三处源码6失败2通过/恢复8通过，gitleaks0、无重跑；原回报/122项已修核查/两行proposed/红绿/自测记录按原字节保存。七份495c2fd0刷新保留，知识重叠为空，五个源码/测试及全部代码blob同固定发布；固定发布承接的664fda4f经验.24只机械同步原blob，版本/台账留其完成事件。CLI/by=ops仅登记本项shipped，first_run=VLV17NUSFS61/A7、prior=no、claim/两份证据/repeat/原history保持；永冻0172及其他条目不变。完整外部待本批learner-checks，无运维公式修改或重复live合入；后台notes/成本表与对局继续。"
+  ],
+  "shipped_at": "2026-10-06T20:05:40+08:00"
+ }
+]

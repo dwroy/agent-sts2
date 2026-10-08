@@ -361,3 +361,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 
 预期影响：提供真实血药链、已建敏捷/已结毒和完整持牌伤事实，支持构筑/路线/休息决策；观察不声称因果或胜率提升，不拟强喝/强制SL门槛。证据细节、限制、提案任务及账本见/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update/report.md；提案silent-proposal-67ee9ff5277558ff,silent-proposal-ac022f51b42a960f,silent-proposal-f10961933e0f7f14。
 回退：在live-merge锁内把knowledge/characters/silent/experience.json恢复为源提交父版2026-10-08.24的blob并单独提交/登记新版本，保留所有刷新数据、账本与提案历史；源码独立实现各自回退。
+
+- 2026-10-08 22:57 运维：R3AJCGQGGMR4复盘完成闭环。学习者新增非阻塞库存恢复预测bug silent-0311已追加notes/fix-queue-v4.md；两项原代码提案沿调度器自动策略链。原复盘/勘误及21所属CLI保留，论文--no-raw五校验通过、台账0问题；本轮只提交记录与生成数据。回执：paper/materials/silent/20261008-2246-events/paper-snapshot.json。
