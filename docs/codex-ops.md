@@ -56,6 +56,8 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 - 读不到：~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、~/.codex/auth.json、项目里所有 .env / *.env（glob + 磁盘上找到的每个的绝对路径）。
 - ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读。Dai 2026-10-05 08:37 授权运维和学习者修改调度器及 broker 文件，main e601de00 已去掉这些文件的只读规则；key、所有 .env 和 codex 登录令牌仍不可读。
 
+Roy 最高优先的 A10 回退排查使用专用模板 `learner/tasks/silent-a10-regression.md`、干净工作树 `.worktrees/silent-a10-regression` 和 `notes/silent-a10-regression-dispatch.json`。请求字段与上述校准相同，`task=silent-a10-regression`；调用既有 `fix-batch` 后据实际批号登记。它优先于其他待派专用请求，保留原任务去重、工作树保护、失败历史及退避，不占用普通修复或策略工作树；没有源码修改的调查不新建游戏版本或补测。
+
 实测（2026-10-04，`tsx ops/codex/main.ts probe <脚本>` 在 ops 配置下跑 shell）：key 文件和 live 的 .env 读不到；项目根、ops/、live 工作树可写，~ 不可写；git 在工作树里提交成功（加 .git 规则之前失败）；hooks、config、调度器文件写不了；tsc、vitest、python 读日志都能跑；gitleaks 在。沙箱有自己的 PID 命名空间（看不到外面的进程，kill 不到）、不联网（127.0.0.1:8080 也连不上，curl exit 7）、调不了 Windows 程序（cmd.exe 报 UtilBindVsockAnyPort）；嵌套的 codex（学习者）因为不联网也跑不了。
 
 所以沙箱外的事走**动作**：模型运行 `bash ops/codex-ops-do.sh <动作> [参数]`，它在 `ops/codex-ops/broker/` 放一个请求文件；叫醒进程（node，在沙箱外）里的 broker 每 0.5 秒看一次，按白名单校验（`ACTIONS`：动作名、参数个数、参数只能是 PID 或逗号分隔的局号），再运行 `ops/codex-ops-actions.sh <动作> [参数]`（每个动作自己再查一遍参数），把输出和退出码写回。broker 只在叫醒期间存在。

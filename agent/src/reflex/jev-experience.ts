@@ -376,9 +376,11 @@ export function jevExperience(input: JevExperienceInput): JevExperience {
   const plan = planTexts(input.runPlan, input.briefPlan);
   const clauses = plan ? planPotionClauses(plan.texts, at.potions) : [];
   const inBoss = input.kind === "boss";
+  // C48LLXBGKXQ9 F2 T1 / MGA0CZDDKC0P F2 T1: these legacy statistics belong to Ironclad.
+  const legacyData = str(asRecord(input.state.run?.raw)["character_id"]).toLowerCase() !== "silent";
   const potionBlock: Record<string, JsonValue> = {
     note: inBoss ? POTION_NOTE_BOSS : POTION_NOTE_HALLWAY,
-    ...(inBoss ? {} : { data: POTION_BOSS_DATA.map((data) => `[data: ${data.source}] ${data.text}`) }),
+    ...(inBoss || !legacyData ? {} : { data: POTION_BOSS_DATA.map((data) => `[data: ${data.source}] ${data.text}`) }),
     ...(clauses.length > 0 ? { run_plan_on_potions: `DeepSeek's run plan${plan?.floor != null ? ` (F${plan.floor})` : ""}, its words on potions: ${clauses.join(" | ")}` } : {}),
     ...(potion.length > 0 ? { lessons: potion.map((entry) => jevLessonLine(entry, at.asc)) } : {}),
   };
