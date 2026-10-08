@@ -253,3 +253,5 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 10:18 运维：A10独立排查批090447完整检查事件核实结案：固定8ef00878/ba9620d6，tsc/vitest均exit0、299文件3416过2跳。与10:16已登记回执及原日志SHA一致；main/live源码、唯一S1.a10-regression1及0285一次shipped保持。回执paper/materials/silent/20261008-1005-a10-regression/checks-event-1017.json。
 
 - 2026-10-08 10:55 运维：经验101301原21项并行记录冲突已兜底，仅集成学习者源eebcf429原experience.json；实际live 0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d、发布261af56e0022cc0012b80870bd3f52bd121d45c2/唯一S1.exp94，main已同步。经验增1改15退0/170 active，16所属数据CLI shipped，五个代码提案已注册并沿自动链。源自测247文件2604例和冻结经验定向1文件10例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1051-experience94。
+
+- 2026-10-08 11:08 运维：经验101301/S1.exp94固定发布261af56e、树b5f09dbb完整外部tsc+vitest均exit0，299文件3416例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、16所属数据shipped保持，原failed/merged=null/21项冲突及1434原件SHA保留；五份代码提案沿原自动链。回执 paper/materials/silent/20261008-1105-events/manifest.json。
