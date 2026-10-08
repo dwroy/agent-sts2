@@ -1,0 +1,8 @@
+date: 2026-10-08 16:13
+[main 986aca2f] ops: synchronize tested isolated Codex cache probe source
+
+Traceback (most recent call last):
+  File "/tmp/sts2-20261008-1607-cache-finish.py", line 43, in <module>
+    assert not git('diff','--name-only','HEAD','live','--','agent/src','agent/tests','agent/tools','ops','learner','eval',':(exclude)eval/versions.json',':(exclude)ops/inbox-dev.md').strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/agent
+
+ ❯ tests/codex-cache-engine.test.ts (5 tests | 1 failed | 4 skipped) 25ms
+   × persists a bounded probe claim before sending and refuses dispatch if the persistent ledger fails 24ms
+ ❯ tests/codex-cache-probe.test.ts (10 tests | 1 failed | 9 skipped) 14ms
+     × uses the established isolated brain home with the same full production model/effort/settings 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/codex-cache-engine.test.ts > persists a bounded probe claim before sending and refuses dispatch if the persistent ledger fails
+AssertionError: expected [] to deeply equal [ { mode: 'session', …(1) }, …(1) ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "mode": "session",
+-     "questionId": "cache-probe-repair-1",
+-   },
+-   {
+-     "mode": "session",
+-     "questionId": "cache-probe-repair-2",
+-   },
+- ]
++ []
+
+ ❯ tests/codex-cache-engine.test.ts:62:16
+     60|   await e.decide(request({ questionId: "cache-probe-repair-2" }));
+     61|   await expect(e.decide(request())).rejects.toThrow(/budget exhausted/…
+     62|   expect(seen).toEqual([{ mode: "session", questionId: "cache-probe-re…
+       |                ^
+     63|   const refused = engine(2, () => { throw new Error("persistent ledger…
+     64|   await expect(refused.decide(request())).rejects.toThrow(/ledger unav…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/codex-cache-probe.test.ts > restricted Codex cache probe (offline) > uses the established isolated brain home with the same full production model/effort/settings
+AssertionError: expected '/home/dw/.codex' to be '/home/dw/.codex-brain' // Object.is equality
+
+Expected: "/home/dw/.codex-brain"
+Received: "/home/dw/.codex"
+
+ ❯ tests/codex-cache-probe.test.ts:18:37
+     16|   it("uses the established isolated brain home with the same full prod…
+     17|     const config = probeConfig();
+     18|     expect(config.brain.codex.home).toBe("/home/dw/.codex-brain");
+       |                                     ^
+     19|     expect(PROBE_HOME).toBe(config.brain.codex.home);
+     20|     expect(config.brain.engines.codex).toMatchObject({ model: "gpt-6.1…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 13 skipped (15)
+   Start at  15:45:00
+   Duration  1.14s (transform 578ms, setup 361ms, import 480ms, tests 39ms, environment 0ms)
+
