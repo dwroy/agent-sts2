@@ -1,0 +1,88 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.17 → 2026-10-08.18；提交：f2ce61432a35dcfc96e9ea651f59712ca6a2021f（分支 exp-silent）；合入：未合入，锁内预检发现23项并行记录冲突，按要求停止。
+- 条数：新增0、更新17（加证据17、只改数字0）、退役0；active 176 → 176；正文49391字。A8适用164条／45065字，A9适用165条／45349字。
+- 机制推理：
+
+  - 力量与敏捷 — 逐击加伤、逐张加牌挡 — 128局／0反例 — AD3QSC3P41JU
+  - 蜃景 — 73毒经脆弱形成54挡 — 14局／0反例 — AD3QSC3P41JU
+  - 毒雾 — 建层、轮初施毒与实际扣血分开 — 63局／0反例 — AD3QSC3P41JU
+  - 臂甲 — 首张实际格挡翻倍，后续不重复 — 8局／0反例 — AD3QSC3P41JU
+  - 激怒与SL — 每技能加3力量；保血线多活一轮仍未胜 — 15局／0反例 — AD3QSC3P41JU
+  - 族母吸取 — 负力量、负敏捷不减已建毒层 — 15局／0反例 — AD3QSC3P41JU
+  - 尖啸 — 临时减力兑现后，次轮恢复 — 60局／0反例 — AD3QSC3P41JU
+  - 爆发 — 符合条件的技能各额外施放一次 — 13局／0反例 — AD3QSC3P41JU
+  - 波纹水盆 — 条件满足时末回合补4挡 — 7局／0反例 — AD3QSC3P41JU
+  - 女王 — 毒防实胜不证明固定击杀顺序 — 16局／0反例 — AD3QSC3P41JU
+  - 王室猛毒 — 本局新战开场各净扣4血 — 4局／0反例 — AD3QSC3P41JU
+  - 连续boss — 出口血药接续，可操作HP另扣开场血价 — 9局／0反例 — AD3QSC3P41JU
+  - 跨幕回复 — 已见A9/A10按缺血80%向下取整 — 23局／0反例 — AD3QSC3P41JU
+  - 敏捷药 — 实饮加2敏捷，已有挡不倒补 — 52局／0反例 — AD3QSC3P41JU
+  - 能力兑现 — 当前获胜与后场资源分账，不预支未来收益 — 127局／0反例 — AD3QSC3P41JU
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2621用例／退出0；首次通过。
+- 切片大小：中位减少30.5字；最大4810字。
+- 学习账本：新增无；改成proposed：silent-0012、0010、0011、0013、0028、0079、0030、0046、0115、0048、0069、0255、0228、0243、0276、0020、0019、0021；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。合入冲突、源提交和报告已保留，交调用方／运维兜底。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.18",
+  "commit": "f2ce61432a35dcfc96e9ea651f59712ca6a2021f",
+  "merged": null,
+  "added": 0,
+  "updated": 17,
+  "retired": 0,
+  "active": 176,
+  "mechanisms": [
+    "力量逐击加伤，敏捷逐张加牌挡，乘区与来源分账",
+    "蜃景按施放时存活敌毒总量给牌挡，后施毒不追补",
+    "毒雾普通/升级建立2/3层，后续玩家轮初补毒",
+    "臂甲翻倍战内首张实际格挡，不当每轮恒定翻倍",
+    "实验体按现场激怒层数计技能成本，换阶段重核敌状态",
+    "族母吸取压缩直接伤/牌挡，已建毒按现场层数结算",
+    "尖啸临时降力按攻击段兑现，次轮恢复重核",
+    "爆发本轮使普通下一张、升级下两张技能各额外打出一次，攻击不耗层、未用不跨轮",
+    "波纹水盆在已见无攻击回合末补4挡，敏捷/脆弱不改这4",
+    "观察：女王两种击杀序均有赢例，不定固定顺序或提前能力必胜",
+    "王室猛毒开场净血价按实际遗物组合核，出牌前失血须算可操作入口",
+    "观察：A10首Boss获胜后直接接续实际血药，开场失血另扣，能力换战重建",
+    "已见A9/A10跨幕按缺失HP的80%向下取整回复",
+    "敏捷药水实饮建2敏捷，已有挡不倒补",
+    "观察：能力、当前胜率与后场血药分账"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2621},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0010", "silent-0011", "silent-0013",
+      "silent-0028", "silent-0079", "silent-0030", "silent-0046",
+      "silent-0115", "silent-0048", "silent-0069", "silent-0255",
+      "silent-0228", "silent-0243", "silent-0276", "silent-0020",
+      "silent-0019", "silent-0021"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-cb23be067a5f04c1",
+    "silent-proposal-53ed69feeb9898fe",
+    "silent-proposal-1f34e9d37b21ba71"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11a6f-98e2-7c50-8d34-5b8d65928da4
+轮数：1；工具调用：command_execution×52 file_change×4
+token：输入 168.6k、输出 40.8k（其中推理 12.9k）、cache 读 7249.0k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：1677.3 s（墙钟）
+时间：首个事件 3.0 s、模型首个输出 8.9 s、首次工具 15.8 s、末次工具结束 1597.3 s；工具内共 1431.1 s，其余（模型生成、推理、网络）243.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×49 wait×8；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T15-34-43-01a11a6f-98e2-7c50-8d34-5b8d65928da4.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update.jsonl
