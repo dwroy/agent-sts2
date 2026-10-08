@@ -1,0 +1,85 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.4 → 2026-10-09.5；提交：f002a94f（分支 exp-silent）；合入：未合入，预检发现 17 个记录文件冲突。已保留 live 知识刷新 a31af89a，待运维兜底。
+- 条数：新增 0、更新 17（加证据 17、只改数字 0）、退役 0；active 190 → 190；总字符 51,240。A8 适用 177 条／47,594 字，A9 适用 178 条／47,878 字。
+- 机制推理：
+
+  - 力量／敏捷 — 逐段增伤、逐牌增挡，弱与易伤另核 — 147 支持／0 反例 — PBUBM0LRTEDD
+  - 步法 — 建立敏捷后由后续挡牌兑现 — 87／0 — PBUBM0LRTEDD
+  - 毒雾 — 建层不即时施毒，未来收益须存活兑现 — 74／0 — PBUBM0LRTEDD
+  - 神化 — 普通／升级实费 2／1，同手升级组合实得 22 挡 — 2／0，升级子集 1 局 — PBUBM0LRTEDD
+  - 融入暗影 — 只翻本轮后续新增挡 — 14／0 — PBUBM0LRTEDD
+  - 异蛇头骨 — 带毒刺击基础 4 毒实加 5 — 8／0 — PBUBM0LRTEDD
+  - 实验体激怒 — 技能逐张增敌力，能力不增 — 16／0 — PBUBM0LRTEDD
+  - 王室猛毒 — 开场血价按遗物组合分账，SL 不重复扣 — 5／0 — PBUBM0LRTEDD
+  - 加湿器 — 回血增 5 上限，满旧上限仍可触发；锻造不触发 — 5／0，满血边界 1 局 — PBUBM0LRTEDD
+  - 跨幕回复 — 已见缺失血量的 80% 向下取整，连续 boss 不适用 — 37／0 — PBUBM0LRTEDD
+  - 连王交接 — 接续实际剩血剩药，能力重建 — 12／0 — PBUBM0LRTEDD
+  - 敏捷药 — 实饮加 2 敏捷，不补已有挡 — 59／0 — PBUBM0LRTEDD
+  - 能力兑现 — 观察：持有、建立和已结收益须分核 — 146／0 — PBUBM0LRTEDD
+
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 251 文件／2,627 用例／退出码 0。SL 数字修订后完整重跑，两轮均通过；提案检查、gitleaks 均通过。
+- 切片大小：整体中位增加 2 字；最大 5,431 字。
+- 学习账本：新增无；改成 proposed：silent-0012、0019、0020、0021、0005、0011、0238、0323、0077、0087、0028、0079、0090、0198、0255、0204、0243、0228、0276；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.5",
+  "commit": "f002a94f4f199bd22b603811d5830be71a868859",
+  "merged": null,
+  "added": 0,
+  "updated": 17,
+  "retired": 0,
+  "active": 190,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-footwork-block",
+    "silent-noxious-fumes-growth",
+    "silent-apotheosis-combat-upgrades",
+    "silent-shadowmeld-new-block-double",
+    "silent-snecko-skull-poison-application",
+    "silent-test-subject-phase-reset",
+    "silent-royal-poison-blood-vial-opening-net",
+    "silent-stone-humidifier-rest-growth",
+    "silent-act-transition-missing-hp-heal",
+    "silent-double-boss-resource-handoff",
+    "silent-dexterity-potion-card-block",
+    "silent-deck-burst-observation"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0019", "silent-0020", "silent-0021",
+      "silent-0005", "silent-0011", "silent-0238", "silent-0323",
+      "silent-0077", "silent-0087", "silent-0028", "silent-0079",
+      "silent-0090", "silent-0198", "silent-0255", "silent-0204",
+      "silent-0243", "silent-0228", "silent-0276"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-f4709125bce8a5e4",
+    "silent-proposal-7d136552bfd11ffc",
+    "silent-proposal-99b8447ae6c785fc",
+    "silent-proposal-08b287bbc75faa7e"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-031302-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11cee-f0d4-7ee0-aa00-f822fe985bce
+轮数：1；工具调用：command_execution×58 file_change×8
+token：输入 275.1k、输出 65.8k（其中推理 31.9k）、cache 读 8765.1k、cache 写 0（命中 97.0%）
+成本：未提供
+耗时：2541.5 s（墙钟）
+时间：首个事件 3.3 s、模型首个输出 8.8 s、首次工具 13.2 s、末次工具结束 2410.2 s；工具内共 2411.8 s，其余（模型生成、推理、网络）126.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×54 wait×5；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T03-13-03-01a11cee-f0d4-7ee0-aa00-f822fe985bce.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-031302-experience-update.jsonl
