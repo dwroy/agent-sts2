@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-073010-experience-update/verify-extra.py", line 24, in <module>
+    check('重放挡与手动计数', [(player(n)['block'], S[n]['combat'].get('cards_played_this_turn')) for n in [315818, 315819]], [(0, 0), (10, 1)])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-073010-experience-update/verify-extra.py", line 8, in check
+    assert value == expected, (name, value, expected)
+           ^^^^^^^^^^^^^^^^^
+AssertionError: ('重放挡与手动计数', [(0, None), (10, None)], [(0, 0), (10, 1)])
