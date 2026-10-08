@@ -91,6 +91,8 @@ export interface CodexEngineOptions {
   now?: () => number;
   /** Physical turn/exec cap for an isolated, authorized probe; never set by production config. */
   physicalCallLimit?: number;
+  /** Persist a probe attempt before dispatch. A write failure prevents the call; never used by production. */
+  beforePhysicalCall?: (call: { mode: "session" | "exec"; questionId?: string }) => void;
 }
 
 /**
@@ -800,10 +802,11 @@ export class CodexEngine implements BrainEngine {
   private readonly cacheObserver = new CodexCacheObserver();
   private readonly physicalBudget: PhysicalCallBudget;
 
-  private notePhysicalCall(): void {
+  private notePhysicalCall(mode: "session" | "exec", req: BrainRequest): void {
     if (!this.physicalBudget.claim()) {
       throw new EngineFailure("isolated Codex probe physical-call budget exhausted", "quota");
     }
+    this.opts.beforePhysicalCall?.({ mode, ...(req.questionId ? { questionId: req.questionId } : {}) });
     this.usage.noteCall();
   }
 
@@ -811,6 +814,7 @@ export class CodexEngine implements BrainEngine {
   readonly usage: CodexUsageGuard;
 
   constructor(private readonly opts: CodexEngineOptions) {
+    if (opts.beforePhysicalCall && opts.physicalCallLimit === undefined) throw new Error("persistent call claims require an isolated probe limit");
     this.physicalBudget = new PhysicalCallBudget(opts.physicalCallLimit);
     const { bin, home } = opts.codex;
     const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
@@ -1069,7 +1073,7 @@ export class CodexEngine implements BrainEngine {
       const session = this.sessionFor(c);
       try {
         await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
-        this.notePhysicalCall();
+        this.notePhysicalCall("session", req);
         turn = await session.ask({ prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
       } catch (error) {
         if (!(error instanceof SessionError || error instanceof RpcError)) throw error;
@@ -1166,13 +1170,13 @@ export class CodexEngine implements BrainEngine {
       const stdin = promptWithReask(req);
       let attempt = 1;
       let spentMs = spentBeforeMs;
-      this.notePhysicalCall();
+      this.notePhysicalCall("exec", req);
       let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
       spentMs += outcome.ms;
       // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
       while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
         attempt += 1;
-        this.notePhysicalCall();
+        this.notePhysicalCall("exec", req);
         outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
         spentMs += outcome.ms;
       }
