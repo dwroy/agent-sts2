@@ -261,3 +261,5 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 11:43 运维：经验111006原20项并行记录冲突已兜底，仅集成学习者源fbf45077原experience.json；实际live 74387216c08496ddeb53bb674490f79a1eb2c06e、发布d61bf0ec98ea1c87c6a009c33530f8756b6d6ba4/唯一S1.exp95，main已同步。经验增3改20退0/173 active，25所属数据CLI shipped，五个代码提案已注册并沿自动链，0287纯bug保持未实现。源自测248文件2608例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1137-experience95。
 
 - 2026-10-08 11:55 运维：经验111006/S1.exp95固定发布d61bf0ec、树aa00cf79完整外部tsc+vitest均exit0，299文件3416例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、25所属数据shipped保持，原failed/merged=null/20项冲突及1268原件SHA保留；五份代码提案沿原自动链。回执 paper/materials/silent/20261008-1153-events/manifest.json。
+
+- 2026-10-08 12:11 运维：9R916WW0V65N复盘新增两项非阻塞纯bug silent-0290（card-model.ts:929，战斗专注新建禁抽未传播）和silent-0291（turn-solver.ts:2433，苦无新敏捷未进入后继格挡），已按学习者原证据入fix-queue-v4。三份独立提案68322129/8df61136/6353ffba原注册及SHA核实，沿调度器自动链、未实现或上线；首证LRN/A0与本局A10分账，保留出牌/药水勘误及未记录限制，不承诺修后转胜。原件见paper/materials/silent/20261008-1209-events。
