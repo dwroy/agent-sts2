@@ -21,7 +21,7 @@ def rows(path):
 previous = json.loads((HERE / 'previous-trust.json').read_text())
 parent = ROOT / 'experiments/boss-sim/silent' / previous['refresh']['artifact']
 fights = rows(HERE / 'dataset/fights.jsonl')
-keys = set(json.loads((HERE / 'new-keys.json').read_text()))
+keys = set(json.loads((HERE / 'validation-identifiers.json').read_text()))
 results = rows(HERE / 'new-results/results-0.jsonl')
 assert len(results) == 2 * len(keys) == 40
 assert {(r['key'], r['start']) for r in results} == {(k, start) for k in keys for start in ('t1', 'pre')}

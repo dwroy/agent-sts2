@@ -50,7 +50,7 @@ assert len(replayed) >= 4
 added = fights[len(prior):]
 assert len(added) == 20
 assert all(r['key'] not in previous['split']['tune'] for r in added)
-for name, value in [('new-keys.json', [r['key'] for r in added]), ('new-fights.json', added), ('model-changes.json', changed)]:
+for name, value in [('validation-identifiers.json', [r['key'] for r in added]), ('new-fights.json', added), ('model-changes.json', changed)]:
     (HERE / name).write_text(json.dumps(value, ensure_ascii=False, indent=1) + '\n')
 audit = {
     'previous_artifact': previous['refresh']['artifact'],

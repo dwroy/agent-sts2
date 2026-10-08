@@ -48,7 +48,7 @@ report.write_text(text + extras)
 (archive / 'published-report.md').write_bytes(report.read_bytes())
 names = ('previous-trust.json', 'result-reuse-audit.json', 'opening-source-integrity.json', 'opening-audit.json',
          'first-hit-audit-identifiers.json', 'model-input-audit.json', 'input-audit-summary.json', 'new-fights.json',
-         'new-keys.json', 'model-changes.json', 'idempotency-audit.json', 'refresh.log', 'refresh.exit',
+         'validation-identifiers.json', 'model-changes.json', 'idempotency-audit.json', 'refresh.log', 'refresh.exit',
          'initial-interruption.md', 'exploration-errors.md', 'prepare-refresh-v2.log', 'prepare-refresh.log',
          'prepare-refresh.py', 'audit-inputs.py', 'finish-refresh.py', 'prepare-records.py',
          'new-replay.log', 'new-replay.exit', 'source-python-fixed.log', 'source-python-fixed.exit',
