@@ -1,0 +1,58 @@
+## 复盘回报
+
+- 已追加：UZ1T7AH49WMB（A10，第25层，千足虫T3以6血13挡对34攻击阵亡）。
+- 已追加：7BNC8QX746YP（A10，第14层，旧日雕像T4以18血0挡对18攻击阵亡）；资源范围文字及勘误时间更正已追加。
+- 新的纯 bug：无。
+- 写成「未记录」的项：UZ1T7AH49WMB：完整dirty源码、部分死亡帧与毛伤、前三试最终结算、替代打法／路线／留药对照、后续资源、boss时钟及比值、Jev缓存和实际费用。
+- 写成「未记录」的项：7BNC8QX746YP：完整dirty源码、部分死亡帧与毛伤、原短方案整场结果、替代路线／休息／留药对照、后续资源、旧路线本次重算、boss时钟及比值、Jev缓存和实际费用。
+- 学习账本：UZ1T7AH49WMB：新增无；更新silent-0019、0021、0079、0011、0023、0012、0046；重犯无。
+- 学习账本：7BNC8QX746YP：新增silent-0307；更新silent-0019、0020、0239、0134、0242；重犯无。`ledger.py check`退出码0。
+- 代码提案（均关联独立strategy-proposal实现任务）：
+  - UZ1T7AH49WMB F25T1—T3／账本0011、0021、0079等／silent-proposal-aff843ee1f214dc9：启毒与SL执行对齐；缺替代顺序胜负对照。
+  - 两局药水资源链／账本0019、0020、0023、0239／silent-proposal-fa0b9651ab477055：获药、实饮、留奖及SL恢复分账；缺留药反事实，不改阈值或价格。
+  - 7BNC8QX746YP F13、F14T2—T4／账本0239、0307等／silent-proposal-59cda846fa8581cd：短方案续问与预测条件分列；缺原短线完整执行对照，不强制改变选择。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["UZ1T7AH49WMB", "7BNC8QX746YP"],
+  "skipped": [],
+  "bugs": [],
+  "ledger": {
+    "added": ["silent-0307"],
+    "updated": [
+      "silent-0011",
+      "silent-0012",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0023",
+      "silent-0046",
+      "silent-0079",
+      "silent-0134",
+      "silent-0239",
+      "silent-0242"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-aff843ee1f214dc9",
+    "silent-proposal-fa0b9651ab477055",
+    "silent-proposal-59cda846fa8581cd"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-191301-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11b37-7a32-7f60-bfcf-998ebbe5d417
+轮数：1；工具调用：command_execution×54
+token：输入 249.6k、输出 51.9k（其中推理 17.5k）、cache 读 5779.3k、cache 写 0（命中 95.9%）
+成本：未提供
+耗时：1589.5 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 7.7 s、首次工具 9.9 s、末次工具结束 1564.5 s；工具内共 61.7 s，其余（模型生成、推理、网络）1525.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×37；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T19-13-03-01a11b37-7a32-7f60-bfcf-998ebbe5d417.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-191301-postmortem.jsonl
