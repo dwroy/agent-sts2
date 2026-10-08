@@ -1,0 +1,53 @@
+```json
+{
+  "task": "fix-batch",
+  "base": "2e2b48aa6e954daf02aa7cfc6a82eddc58bcc5cf",
+  "fixes": [{
+    "item": "silent-a10-regression",
+    "commit": "693318efb3a72061c53ccdc06802c380ed3ff54a",
+    "test": "agent/tests/silent-potion-provenance.test.ts",
+    "fails_without_fix": true
+  }],
+  "merged": "0ccb002595cc5a1b2604d8b18427ab5e90aaafe3",
+  "release_commit": "8ef00878e539c8abf24d63254a9fa57eaf70c675",
+  "version": "S1.a10-regression1",
+  "conclusion": "原38/45分组对应早八小时的完局切点。实际Codex-only到F48为10/50→6/27，不能确认double导致下降或断言随机波动。只修已直接核实、早已存在的跨角色药水上下文污染；Roy双通知已追加。",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 248,
+    "cases": 2608,
+    "source_sandbox": 0,
+    "live_sandbox": 0,
+    "initial_sandbox": 1,
+    "withdrawn_fix": 1,
+    "restored_fix": 0,
+    "gitleaks": 0,
+    "full_outside_sandbox": null
+  },
+  "skipped": [{
+    "item": "double-boss/fix45/bullet-time/sloth/experience回退",
+    "reason": "未确认新增有害改动，保留行为及待证限制。"
+  }],
+  "code_proposals": ["silent-proposal-ce40c2c455bb12d5"],
+  "implementation_domains": ["structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/report.md",
+  "report_json": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/report.json",
+  "paper_report": "/home/dw/Projects/agent-sts2/paper/materials/silent/a10-regression-2026-10-08.md",
+  "fixed_tree": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/checked-tree.json",
+  "original_logs": "/home/dw/Projects/agent-sts2/logs",
+  "failure_inventory": "/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression/error-inventory.md",
+  "handoff": "提案已CLI登记implemented；运维核实silent-0285 shipped，调度器补跑完整外部检查。初合继承的六个派发变化已恢复，净差仅三文件，失败历史保留。"
+}
+```
+
+== 学习者 codex / silent-a10-regression ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1190a-aa1d-75b2-bb8c-ab7f1b6ff3c9
+轮数：1；工具调用：command_execution×159 file_change×15
+token：输入 419.2k、输出 106.3k（其中推理 40.8k）、cache 读 14563.6k、cache 写 0（命中 97.2%）
+成本：未提供
+耗时：3538.1 s（墙钟）
+时间：首个事件 3.3 s、模型首个输出 8.6 s、首次工具 13.4 s、末次工具结束 3507.4 s；工具内共 1307.2 s，其余（模型生成、推理、网络）2227.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression）；模型的工具调用 exec×118；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T09-04-51-01a1190a-aa1d-75b2-bb8c-ab7f1b6ff3c9.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/silent-a10-regression/learner/runs/20261008-090449-silent-a10-regression.jsonl
