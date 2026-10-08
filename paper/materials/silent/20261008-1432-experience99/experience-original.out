@@ -1,0 +1,84 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.15 → 2026-10-08.16；提交：47e9a436（分支 exp-silent）；合入：未合入，live 预检发现 23 项冲突，按要求停止；刷新数据已保留。
+- 条数：新增 0、更新 16（加证据 16、只改数字 0）、退役 0；active 176 → 176。正文 51425 → 50495 字符；A8 适用 164 条／46158 字符，A9 适用 165 条／46442 字符。
+- 机制推理（以下均无反例，典型案例均为 LYBHQ1X230ZB）：
+  - 力量／敏捷 — 逐段增伤、逐牌增挡，来源分账 — 126 局 — LYBHQ1X230ZB
+  - 步法 — 3 敏捷在后续挡牌兑现 — 75 局 — LYBHQ1X230ZB
+  - 臂甲 — 战内首次实际格挡翻倍 — 7 局 — LYBHQ1X230ZB
+  - 融入暗影 — 本轮后续两防御各 16，合 32 挡 — 12 局 — LYBHQ1X230ZB
+  - 胧光怪召唤 — 新增攻击者须合算来袭 — 13 局 — LYBHQ1X230ZB
+  - 金刚杵 — 四段攻击共多 4 直伤 — 12 局 — LYBHQ1X230ZB
+  - 爆发 — 重放迷雾，两次各加 6 毒 — 12 局 — LYBHQ1X230ZB
+  - 熟睡甲虫 — 醒后持续增力，虚弱不清成长 — 17 局 — LYBHQ1X230ZB
+  - 石碗虫 — 自身攻击被完整格挡后眩晕 — 35 局 — LYBHQ1X230ZB
+  - 柔嫩 — 逐牌削当前力敏，次轮恢复 — 18 局 — LYBHQ1X230ZB
+  - 迷雾 — 群毒与虚弱分账，结毒仍未击杀两敌 — 15 局 — LYBHQ1X230ZB
+  - 永恒羽毛 — 到火回 15，与锻造分账 — 9 局 — LYBHQ1X230ZB
+  - 跨幕回复 — 先古回 16，五轮书另回 20 — 21 局 — LYBHQ1X230ZB
+  - 综合观察 — 当前战预测获胜仍须核出口血药 — 125 局 — LYBHQ1X230ZB
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 248 文件／2608 用例／退出码 0，未重跑。
+- 切片大小：中位下降 472.5 字符（3024 → 2551.5）；最大 5172 字符（原 5221）。
+- 学习账本：新增无；改成 proposed：silent-0012、silent-0005、silent-0013、silent-0077、silent-0039、silent-0049、silent-0115、silent-0128、silent-0196、silent-0232、silent-0007、silent-0142、silent-0243、silent-0020、silent-0019、silent-0021；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。合入冲突待运维兜底；报告已保存，根目录变更记录已追加一节、未提交。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.16",
+  "commit": "47e9a4363d1497cbbdeb5f3df77e42f4402d7422",
+  "merged": null,
+  "added": 0,
+  "updated": 16,
+  "retired": 0,
+  "active": 176,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-footwork-block",
+    "silent-vambrace-opening-block",
+    "silent-shadowmeld-new-block-double",
+    "silent-obscura-summon-growth",
+    "silent-vajra-opening-strength",
+    "silent-burst-next-skills-replay",
+    "silent-slumbering-beetle-wake-growth",
+    "silent-bowlbug-rock-full-block-stun",
+    "silent-hunter-tender-card-attributes",
+    "silent-haze-group-poison-weak",
+    "silent-eternal-feather-rest-arrival-heal",
+    "silent-act-transition-missing-hp-heal",
+    "silent-deck-burst-observation"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2608},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0005", "silent-0013", "silent-0077",
+      "silent-0039", "silent-0049", "silent-0115", "silent-0128",
+      "silent-0196", "silent-0232", "silent-0007", "silent-0142",
+      "silent-0243", "silent-0020", "silent-0019", "silent-0021"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-ce75cb821e8f2610",
+    "silent-proposal-6ba977a3f01df016",
+    "silent-proposal-2097f02b69dacfff",
+    "silent-proposal-49bb659734d555e3"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11a21-0401-7813-a3c4-5fad63b2ae01
+轮数：1；工具调用：command_execution×50 file_change×6
+token：输入 158.3k、输出 33.7k（其中推理 7128）、cache 读 5136.6k、cache 写 0（命中 97.0%）
+成本：未提供
+耗时：1114.5 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 7.8 s、首次工具 10.8 s、末次工具结束 1084.1 s；工具内共 781.2 s，其余（模型生成、推理、网络）330.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×43 wait×3；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T14-08-53-01a11a21-0401-7813-a3c4-5fad63b2ae01.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update.jsonl
