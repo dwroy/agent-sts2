@@ -1,0 +1,345 @@
+{
+  "task": "fix-batch",
+  "learner_task": "silent-boss-calibration",
+  "character": "silent",
+  "runs": [],
+  "run_group": "feature:silent-calibration-1569a26463c981143de966b1",
+  "pid": 1188226,
+  "state": "done",
+  "reason": "calibration-refresh",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+  "feature_request": "silent-calibration-1569a26463c981143de966b1",
+  "proposal_policy": "Roy-2026-10-07-learning",
+  "pane": "wJ:p9R",
+  "finished": "2026-10-09 04:17",
+  "rc": 0,
+  "merged": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
+  "proposal_audit_errors": [],
+  "report": {
+    "task": "fix-batch",
+    "base": "2da41e70c79fc888031a3787576610e591d7cf8b",
+    "fixes": [
+      {
+        "item": "Roy 已授权新功能：静默 boss 模拟校准",
+        "commit": "010b22a63c2f05402b7ff027d59f8f94a6d69051",
+        "implementation_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+        "actual_merge": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
+        "publication": "3cadc990c75e21bc3d40bc4cba818bb4dd565a5f",
+        "publication_tree": "972425dea80a1291ab0f23fecd9869ccc2466081",
+        "version": "S1.boss-calibration7",
+        "ledger_id": "silent-0325",
+        "test": "源及锁内合后 sandbox tsc+vitest通过；Python固定12+44例、幂等及发布树核验通过",
+        "fails_without_fix": false,
+        "note": "新增20次真实结局触发授权校准刷新，复用已有实现；未修改策略阈值，非bug-infra。"
+      }
+    ],
+    "merged": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
+    "tests": {
+      "source_tsc": 0,
+      "source_vitest": 0,
+      "live_tsc": 0,
+      "vitest": 0,
+      "cases": 2627,
+      "files": 251,
+      "python_calibration_cases": 12,
+      "python_dispatch_cases": 44,
+      "idempotency": "同归档及不足触发重跑均跳过，不发布空版本",
+      "current_archive_gitleaks": 0,
+      "source_staged_gitleaks": 0,
+      "live_integration_gitleaks": 0,
+      "publication_gitleaks": 0,
+      "ledger_check": 0,
+      "full_external": "交调度器补跑，尚未声称通过"
+    },
+    "extraction": {
+      "character": "SILENT",
+      "finished_runs": 153,
+      "boss_rooms": 283,
+      "attempts_including_SL": 705,
+      "usable": 281,
+      "usable_won": 202,
+      "usable_died": 79,
+      "censored": 423,
+      "actual_outcome_missing_opening": 1,
+      "new_actual_events": 20,
+      "new_won": 14,
+      "new_died": 6
+    },
+    "split": {
+      "cutoff_utc": "2026-10-06T02:46:11.648000",
+      "fixed_tune_keys": 107,
+      "successful_tune_per_start": 106,
+      "validation_previous": 154,
+      "validation_now": 174,
+      "validation_used_for_fitting": false
+    },
+    "platt": {
+      "B2": {
+        "a": 2.0844,
+        "b": 0.4502,
+        "c": 0
+      },
+      "B3": {
+        "a": 2.2754,
+        "b": 0.5047,
+        "c": 0
+      }
+    },
+    "validation_brier": {
+      "B2": 0.1143,
+      "B3": 0.1143
+    },
+    "criteria": {
+      "validation_min": 10,
+      "brier_max": "整体×1.25",
+      "win_rate_gap_max": 0.15,
+      "leak_ratio": [
+        0.7,
+        1.3
+      ]
+    },
+    "boss_trust_table": {
+      "columns": [
+        "boss",
+        "验证场数",
+        "还差场数",
+        "B2失败指标",
+        "B3失败指标"
+      ],
+      "empty_failures_mean_trusted": true,
+      "rows": [
+        [
+          "AEONGLASS",
+          10,
+          0,
+          [
+            "brier",
+            "gap",
+            "leak"
+          ],
+          [
+            "brier",
+            "gap",
+            "leak"
+          ]
+        ],
+        [
+          "CEREMONIAL_BEAST",
+          18,
+          0,
+          [],
+          []
+        ],
+        [
+          "KAISER_CRAB",
+          16,
+          0,
+          [],
+          []
+        ],
+        [
+          "KNOWLEDGE_DEMON",
+          15,
+          0,
+          [],
+          []
+        ],
+        [
+          "LAGAVULIN_MATRIARCH",
+          18,
+          0,
+          [],
+          []
+        ],
+        [
+          "QUEEN",
+          11,
+          0,
+          [
+            "brier",
+            "gap"
+          ],
+          [
+            "brier",
+            "gap"
+          ]
+        ],
+        [
+          "SOUL_FYSH",
+          16,
+          0,
+          [],
+          []
+        ],
+        [
+          "TEST_SUBJECT",
+          9,
+          1,
+          [
+            "n",
+            "brier",
+            "gap",
+            "leak"
+          ],
+          [
+            "n",
+            "gap",
+            "leak"
+          ]
+        ],
+        [
+          "THE_INSATIABLE",
+          21,
+          0,
+          [
+            "brier",
+            "leak"
+          ],
+          [
+            "brier",
+            "leak"
+          ]
+        ],
+        [
+          "THE_KIN",
+          10,
+          0,
+          [
+            "brier",
+            "leak"
+          ],
+          [
+            "brier"
+          ]
+        ],
+        [
+          "VANTOM",
+          12,
+          0,
+          [
+            "brier",
+            "gap"
+          ],
+          [
+            "gap"
+          ]
+        ],
+        [
+          "WATERFALL_GIANT",
+          18,
+          0,
+          [],
+          []
+        ]
+      ],
+      "full_metrics": "paper/materials/silent/boss-sim-calibration.md"
+    },
+    "A10": {
+      "validation_n": 174,
+      "actual_win_rate": 0.69,
+      "B2": {
+        "predicted": 0.764,
+        "residual": 0.074,
+        "leak_ratio": 1.28
+      },
+      "B3": {
+        "predicted": 0.765,
+        "residual": 0.075,
+        "leak_ratio": 1.302
+      },
+      "limitation": "B3整体打穿比略超1.3；不声称所有范围可信。TEST_SUBJECT BIG_POUNCE仍沿既有A9估值。",
+      "F49": {
+        "actual_events": 12,
+        "usable_openings": 11,
+        "validation_n": 9,
+        "missing": 1,
+        "trusted": false,
+        "B2": {
+          "brier": 0.1678,
+          "predicted": 0.399,
+          "actual": 0,
+          "leak_ratio": 2.744
+        },
+        "B3": {
+          "brier": 0.1181,
+          "predicted": 0.34,
+          "actual": 0,
+          "leak_ratio": 3.007
+        },
+        "scope": "独立单战，不等同F48→F49联合通关率"
+      }
+    },
+    "refresh": {
+      "entry": "agent/tools/boss-sim/refresh-silent.py",
+      "scheduler": "ops/learner_jobs.py:calibration_job",
+      "when": "每小时:13/:43及学习批次完成事件",
+      "trigger": "升阶或新增20次真实boss结局",
+      "invariants": "固定切点与调参keys；新样本只延伸验证；仅同步静默；旧指纹目录不覆盖"
+    },
+    "skipped": [
+      {
+        "item": "A0–4、A5–9独立验证",
+        "reason": "固定切分下验证均0场；仅有38、52场调参残差，可靠性不足保留。"
+      },
+      {
+        "item": "F49可信准入",
+        "reason": "还差1场且误差、打穿比不达标。"
+      },
+      {
+        "item": "旧no solve及其他队列bug",
+        "reason": "原错误留存，不属于本批范围。"
+      }
+    ],
+    "all_commits": {
+      "implementation_reused": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+      "initial_source": "4b82145428abb718c39d7bf76fbbb28bccd8a8d5",
+      "final_source": "010b22a63c2f05402b7ff027d59f8f94a6d69051",
+      "live_before_and_saved_refresh": "5495da8a4fbe200b4ab5497cd80d720d3d74c8ad",
+      "actual_merge": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
+      "fixed_publication": "3cadc990c75e21bc3d40bc4cba818bb4dd565a5f"
+    },
+    "publication_tree": "972425dea80a1291ab0f23fecd9869ccc2466081",
+    "integrity": "69个授权路径合入；其他live blob保持；真实源码为发布祖先；66份审计文件散列及11份完成文件核验通过。",
+    "ledger": {
+      "id": "silent-0325",
+      "kind": "fight",
+      "status": "proposed",
+      "shipped": "由运维核实后登记"
+    },
+    "notifications": "已追加 notes/for-dai.md 与 ops/inbox-dev.md",
+    "preserved_checks": [
+      "初次全量回放主动中断exit130留存；核实旧261战数值等价后复用，20新战完整重放。",
+      "首轮扫描1为标识文件SHA256误报；未阻止初始提交的流程错误及原件保留。更名后完整归档与暂存扫描0，未放宽规则。",
+      "普通预检的并行记录冲突留存；最终合入逐项保留其他live内容。"
+    ],
+    "code_proposals": [],
+    "implementation_domains": [],
+    "archive": "experiments/boss-sim/silent/c2332ff110efe0b0c98de20828e177e168dc35b74a49884656c6beefda9cce31/",
+    "paper_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-033011-silent-boss-calibration/report.md",
+    "full_json": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261009-033011-silent-boss-calibration/final.json"
+  },
+  "checks_pending": false,
+  "fallback_checks": [
+    {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-033007-fix-batch.fallback-972425dea80a1291ab0f23fecd9869ccc2466081.checks.log",
+      "merged": "3cadc990c75e21bc3d40bc4cba818bb4dd565a5f",
+      "tree": "972425dea80a1291ab0f23fecd9869ccc2466081",
+      "commits": [
+        "010b22a63c2f05402b7ff027d59f8f94a6d69051",
+        "473a38a1a8d133f0a811f8a3c8ff454ae6363984"
+      ]
+    }
+  ],
+  "checks": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-033007-fix-batch.fallback-972425dea80a1291ab0f23fecd9869ccc2466081.checks.log",
+    "merged": "3cadc990c75e21bc3d40bc4cba818bb4dd565a5f",
+    "tree": "972425dea80a1291ab0f23fecd9869ccc2466081",
+    "commits": [
+      "010b22a63c2f05402b7ff027d59f8f94a6d69051",
+      "473a38a1a8d133f0a811f8a3c8ff454ae6363984"
+    ]
+  }
+}
