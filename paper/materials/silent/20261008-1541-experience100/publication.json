@@ -1,0 +1,93 @@
+{
+  "state": "published",
+  "batch": "20261008-144109-experience-update",
+  "source": "196f1800b2c3b9bdc522c4d77632f1154662f8c9",
+  "version": "S1.exp100",
+  "source_tests": {
+    "exit": 0,
+    "files": 251,
+    "cases": 2618,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/test-source.log"
+  },
+  "paths": [
+    "knowledge/characters/silent/experience.json"
+  ],
+  "source_blob": "b13164f986a9c3eae5a8694d38f969ce5611d708",
+  "parent_blob": "a905e28653356919d94a905ab17b11f9da37e805",
+  "main_code_sync": "3d503d53ccb752d211d045cc3048397c8fdb209a",
+  "main_record": "0f6d00bd09f2de8a1a7b8a799624db19e36a0e9f",
+  "full_external_passed": false,
+  "actual_code": "10f0aeb37f8df7975cf823ac0e439f851d9ad07f",
+  "live_before": "722518cdb9edfe808864da176f7e512bd820e170",
+  "combined": "412b0b8d4758a6eb1f10cacd2c57eb116e045a8c",
+  "preserved_refresh": "6a44a15fb3d73a7ac2a04f389fb9666085f852d0",
+  "refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "bf3907b288474057a9150a1d1393ff183dadde76c145fd9870c57956faf7f3c4",
+    "knowledge/characters/silent/fight-value-gates.json": "95695940a841cd9a895f2c99f58c9ac6e8ba05c3524b616b62cadec0bdaf5fba",
+    "knowledge/characters/silent/fight-value.json": "6daac85edf947b8ae9d0791cabdcd5abfaee5749f395f594ae4e19044404239e",
+    "knowledge/characters/silent/monster-records.json": "8c1d596f949c92bb2ec901b26f75bbc9138b4ee90840cfccefa2b8adc10d9b2e",
+    "knowledge/characters/silent/outcome-stats.json": "8118dff3d0dc302f2f04fc3334d0845d895d07830aef0b927ba17f0b7d269fb4",
+    "knowledge/characters/silent/room-costs.json": "4169aed6c2b83fdd9ca29bc650ac8f104bd5f1838d7acf4ac7963e8918850487",
+    "knowledge/common/card-upgrades.json": "2cdf5a8d7e87bb2c2c195490b7a104a98ee202bce01cb0050b5c8f079b16d131",
+    "knowledge/common/monster-db.json": "f02b5e513af54d1cac06df58db33697cde0f58b5a6139d54178dbd9f37b7243b",
+    "knowledge/common/move-model.json": "03b683e248617acc069904128f3e05fad346ca901e30d0efa9b9e0f07726db00",
+    "notes/fight-value-backtest-silent.md": "ddb9c33a787a0113d8c49d25057a596b20ce217b2491b3a051517329b1eddeda"
+  },
+  "lock_attempts": 1,
+  "all_other_tracked_blobs_preserved": true,
+  "code_equivalence": {
+    "current_live_code_test_and_task_blobs_identical_to_actual": true,
+    "preserved_parallel_code_pin": "722518cdb9edfe808864da176f7e512bd820e170",
+    "preserved_parallel_code_sandbox": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 302,
+      "passed": 3429,
+      "skipped": 2,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-140042-fix-batch.fallback-d25b1cc3835b19f8e50205b250c079ae060894f2.checks.log"
+    },
+    "parallel_sandbox_sha256": "c40f599ce46a52ab1fa820bf5066fdd5ca9ecf94b969561d0af6737445228026",
+    "whole_tree_external_passed": false,
+    "source_code_test_task_blobs_identical_to_actual": false,
+    "source_code_differences_from_current_live": [
+      "agent/tests/codex-cache-probe.test.ts",
+      "docs/codex-ops.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/silent-a10-regression.md",
+      "ops/codex-brain-cache-probe.ts",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-learner.sh",
+      "ops/learner_jobs.py",
+      "ops/tests/test_silent_calibration_dispatch.py"
+    ],
+    "paths_compared": [
+      "agent",
+      "learner",
+      "knowledge/builders",
+      "eval",
+      ":(exclude)eval/versions.json",
+      "ops",
+      ":(exclude)ops/inbox-dev.md",
+      "tools",
+      "docs"
+    ],
+    "source_sandbox": {
+      "exit": 0,
+      "files": 251,
+      "cases": 2618,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/test-source.log"
+    },
+    "post_merge_sandbox_repeated": false,
+    "data_only": true,
+    "reason": "Only the learner-tested original experience data blob changes. Current Codex cache measurement code, tests, tasks, generated knowledge and parallel records are retained byte-for-byte. Retained cache code was checked on its fixed external tree (302 files / 3429 passed and 2 skipped, exit 0); no new data-tree pass is claimed. Original-batch full continuation is separate."
+  },
+  "publication": "2b1a5f6d491f826ea1bac28f707716d109fb3e65",
+  "publication_tree": "bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7",
+  "version_entry": {
+    "name": "S1.exp100",
+    "family": "Silent",
+    "commit": "10f0aeb37f8df7975cf823ac0e439f851d9ad07f",
+    "source": "decision-log 2026-10-08 15:45: 原144109经验19项并行记录冲突兜底，仅源196f1800原experience.json，2026-10-08.16→.17/176 active/增0改17退0；H1T1F8ML9FUE及原历史局证据，四个combat/potion/SL/terminal代码提案沿原自动链。源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），data-only免重复沙箱，不冒报新树完整通过。"
+  },
+  "record_line": "- 2026-10-08 15:45 运维codex15:41经验兜底：原144109源196f1800b2c3b9bdc522c4d77632f1154662f8c919项并行记录冲突保持；单次空闲非阻塞锁内从最新live722518cdb9edfe808864da176f7e512bd820e170仅集成学习者已测experience.json原blob，实际合入10f0aeb37f8df7975cf823ac0e439f851d9ad07f，原基线cffd20db289a8bc003e6f5eaa99a7c1bf4ed3287及新增刷新6a44a15fb3d73a7ac2a04f389fb9666085f852d0、所有其他代码/知识数据逐blob保持，源真实祖先。经验2026-10-08.16→.17/增0改17退0/176 active；源首轮251文件2618例tsc/vitest0，当前源码/测试/任务与并行缓存计量合入722518cd逐blob等价（其固定完整外部302文件3429例通过/2跳过tsc/vitest0已核实），data-only免重复沙箱、不冒报新树通过。唯一S1.exp100，main与所属经验数据CLI随后机械登记；四个combat/potion/SL/terminal代码提案沿原自动链，完整外部原批另续验，原回报/失败历史保持。回执paper/materials/silent/20261008-1541-experience100。\n"
+}
