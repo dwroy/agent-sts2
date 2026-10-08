@@ -1,0 +1,7206 @@
+{
+  "counts": {
+    "deciders": {
+      "codex": 43,
+      "code": 418,
+      "jev": 175
+    },
+    "low_jev": 34,
+    "fallback": 0
+  },
+  "rollout": {
+    "count": 163,
+    "best": 147,
+    "not_logged": 0,
+    "by_floor": {
+      "2": {
+        "count": 4,
+        "best": 4
+      },
+      "3": {
+        "count": 3,
+        "best": 3
+      },
+      "4": {
+        "count": 7,
+        "best": 7
+      },
+      "6": {
+        "count": 14,
+        "best": 14
+      },
+      "9": {
+        "count": 22,
+        "best": 22
+      },
+      "14": {
+        "count": 3,
+        "best": 3
+      },
+      "17": {
+        "count": 7,
+        "best": 6
+      },
+      "19": {
+        "count": 4,
+        "best": 3
+      },
+      "20": {
+        "count": 5,
+        "best": 4
+      },
+      "21": {
+        "count": 9,
+        "best": 8
+      },
+      "30": {
+        "count": 7,
+        "best": 7
+      },
+      "31": {
+        "count": 4,
+        "best": 4
+      },
+      "33": {
+        "count": 74,
+        "best": 62
+      }
+    }
+  },
+  "hp_guard": [
+    {
+      "_line": 293969,
+      "floor": 9,
+      "turn": 2,
+      "sl_attempt": null,
+      "label": "combat/plan-choice+potion",
+      "rationale": "Jev chose plan 3/5 (防御, 打击 -> 异蛙寄生虫, 打击 -> 异蛙寄生虫) with confidence 0.93; code rank 3; HP guard: plan 3 (防御, 打击 -> 异蛙寄生虫, 打击 -> 异蛙寄生虫; hp -15) is more than 8 HP over the cheapest line, playing plan 1 (防御, 后空翻, 防御; hp -5) instead"
+    }
+  ],
+  "code_turns": {
+    "2": {
+      "total": 4,
+      "any_code": 4,
+      "primary_code": 4,
+      "all_code": 1
+    },
+    "3": {
+      "total": 4,
+      "any_code": 4,
+      "primary_code": 4,
+      "all_code": 1
+    },
+    "4": {
+      "total": 4,
+      "any_code": 4,
+      "primary_code": 1,
+      "all_code": 1
+    },
+    "6": {
+      "total": 7,
+      "any_code": 7,
+      "primary_code": 1,
+      "all_code": 1
+    },
+    "9": {
+      "total": 11,
+      "any_code": 8,
+      "primary_code": 1,
+      "all_code": 1
+    },
+    "14": {
+      "total": 2,
+      "any_code": 2,
+      "primary_code": 1,
+      "all_code": 0
+    },
+    "17": {
+      "total": 9,
+      "any_code": 9,
+      "primary_code": 9,
+      "all_code": 3
+    },
+    "19": {
+      "total": 4,
+      "any_code": 4,
+      "primary_code": 4,
+      "all_code": 1
+    },
+    "20": {
+      "total": 5,
+      "any_code": 5,
+      "primary_code": 5,
+      "all_code": 1
+    },
+    "21": {
+      "total": 13,
+      "any_code": 13,
+      "primary_code": 13,
+      "all_code": 5
+    },
+    "30": {
+      "total": 5,
+      "any_code": 5,
+      "primary_code": 5,
+      "all_code": 1
+    },
+    "31": {
+      "total": 3,
+      "any_code": 3,
+      "primary_code": 3,
+      "all_code": 0
+    },
+    "33": {
+      "total": 44,
+      "any_code": 43,
+      "primary_code": 25,
+      "all_code": 11
+    }
+  },
+  "potions": [
+    {
+      "_line": 293941,
+      "floor": 6,
+      "turn": 4,
+      "sl_attempt": null,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 1
+      },
+      "expect": {
+        "potion": {
+          "id": "SWIFT_POTION"
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 迅捷药水, then re-plan (confidence 0.95)"
+    },
+    {
+      "_line": 294023,
+      "floor": 13,
+      "turn": null,
+      "sl_attempt": null,
+      "chosen": {
+        "action": "discard_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "POISON_POTION"
+        },
+        "from": "decision"
+      },
+      "rationale": "Codex plan SY0WMJNNVRLM:F13:shop#4 step 2: discard 毒药水"
+    },
+    {
+      "_line": 294024,
+      "floor": 13,
+      "turn": null,
+      "sl_attempt": null,
+      "chosen": {
+        "action": "buy_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "option": {
+          "id": "HEART_OF_IRON"
+        },
+        "from": "decision"
+      },
+      "rationale": "Codex plan SY0WMJNNVRLM:F13:shop#4 step 3: buy 铁心药水 (75g)"
+    },
+    {
+      "_line": 294033,
+      "floor": 14,
+      "turn": 1,
+      "sl_attempt": null,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "HEART_OF_IRON"
+        },
+        "turn": 1,
+        "from": "line",
+        "hand": "POISONED_STAB,SURVIVOR",
+        "enemies": "0:INKLET|1:INKLET|2:INKLET"
+      },
+      "rationale": "continuing the Jev-chosen plan: potion 铁心药水"
+    },
+    {
+      "_line": 294064,
+      "floor": 17,
+      "turn": 3,
+      "sl_attempt": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 1
+      },
+      "expect": {
+        "potion": {
+          "id": "LIQUID_BRONZE"
+        },
+        "turn": 3,
+        "from": "line",
+        "hand": "STRIKE_SILENT",
+        "enemies": "0:VANTOM"
+      },
+      "rationale": "continuing the Jev-chosen plan: potion 流动铜液"
+    },
+    {
+      "_line": 294095,
+      "floor": 19,
+      "turn": 1,
+      "sl_attempt": null,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "CURE_ALL"
+        },
+        "turn": 1,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 痊愈药水, then re-plan (confidence 0.38)"
+    },
+    {
+      "_line": 294146,
+      "floor": 21,
+      "turn": 1,
+      "sl_attempt": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "SHACKLING_POTION"
+        },
+        "turn": 1,
+        "from": "decision"
+      },
+      "rationale": "Jev chose plan 1/3 (potion 镣铐药水) with confidence 0.98; code rank 1"
+    },
+    {
+      "_line": 294159,
+      "floor": 21,
+      "turn": 1,
+      "sl_attempt": 2,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "SHACKLING_POTION"
+        },
+        "turn": 1,
+        "from": "line",
+        "hand": "BACKFLIP,DEFEND_SILENT,DEFEND_SILENT,DEFEND_SILENT,STRIKE_SILENT",
+        "enemies": "0:MYTE|1:MYTE"
+      },
+      "rationale": "continuing the Jev-chosen plan: potion 镣铐药水"
+    },
+    {
+      "_line": 294182,
+      "floor": 21,
+      "turn": 1,
+      "sl_attempt": 3,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "SHACKLING_POTION"
+        },
+        "turn": 1,
+        "from": "line",
+        "hand": "BACKFLIP,DEFEND_SILENT,DEFEND_SILENT,DEFEND_SILENT,STRIKE_SILENT",
+        "enemies": "0:MYTE|1:MYTE"
+      },
+      "rationale": "continuing the Jev-chosen plan: potion 镣铐药水"
+    },
+    {
+      "_line": 294246,
+      "floor": 30,
+      "turn": 1,
+      "sl_attempt": null,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "REGEN_POTION"
+        },
+        "turn": 1,
+        "from": "decision"
+      },
+      "rationale": "Jev chose plan 1/3 (potion 再生药水) with confidence 0.92; code rank 1"
+    },
+    {
+      "_line": 294308,
+      "floor": 33,
+      "turn": 4,
+      "sl_attempt": 1,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "GHOST_IN_A_JAR"
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 罐装幽灵 (confidence 0.12)"
+    },
+    {
+      "_line": 294340,
+      "floor": 33,
+      "turn": 4,
+      "sl_attempt": 2,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "GHOST_IN_A_JAR"
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 罐装幽灵 (confidence 0.14)"
+    },
+    {
+      "_line": 294372,
+      "floor": 33,
+      "turn": 4,
+      "sl_attempt": 3,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "GHOST_IN_A_JAR"
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 罐装幽灵 (confidence 0.38)"
+    },
+    {
+      "_line": 294403,
+      "floor": 33,
+      "turn": 4,
+      "sl_attempt": 4,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "GHOST_IN_A_JAR"
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 罐装幽灵 (confidence 0.23)"
+    },
+    {
+      "_line": 294434,
+      "floor": 33,
+      "turn": 4,
+      "sl_attempt": 5,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "GHOST_IN_A_JAR"
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 罐装幽灵 (confidence 0.17)"
+    },
+    {
+      "_line": 294468,
+      "floor": 33,
+      "turn": 4,
+      "sl_attempt": 6,
+      "chosen": {
+        "action": "use_potion",
+        "option_index": 0
+      },
+      "expect": {
+        "potion": {
+          "id": "GHOST_IN_A_JAR"
+        },
+        "turn": 4,
+        "from": "decision"
+      },
+      "rationale": "Jev chose to drink 罐装幽灵 (confidence 0.16)"
+    }
+  ],
+  "usage": {
+    "jev": {
+      "calls": 175,
+      "input": 907321,
+      "output": 8900,
+      "cache": 0,
+      "engines": {
+        "null": 175
+      }
+    },
+    "codex": {
+      "calls": 43,
+      "input": 4854235,
+      "output": 9013,
+      "cache": 3230720,
+      "engines": {
+        "codex": 37,
+        "null": 6
+      }
+    }
+  },
+  "duration": {
+    "first_decision": "2026-10-08T08:31:21.932Z",
+    "last_decision": "2026-10-08T09:05:54.173Z",
+    "decision_seconds": 2072.241,
+    "first_observed": "2026-10-08T08:30:52.937Z",
+    "observed_seconds": 2101.236
+  },
+  "turns": [
+    {
+      "sequence": 1,
+      "floor": 2,
+      "turn": 1,
+      "lines": [
+        301124,
+        301129,
+        301130
+      ],
+      "hp_start": 56,
+      "hp_pre_end": 56,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "TWIG_SLIME_S",
+          12,
+          true
+        ],
+        [
+          "TWIG_SLIME_M",
+          29,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          16,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          26,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          16,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          "STICKY_SHOT_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "LEAF_SLIME_S",
+          "TACKLE_MOVE",
+          [
+            [
+              4,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 56,
+      "next_enemy": [
+        [
+          "TWIG_SLIME_M",
+          26,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          16,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 1,
+      "floor": 2,
+      "turn": 2,
+      "lines": [
+        301130,
+        301133,
+        301134
+      ],
+      "hp_start": 56,
+      "hp_pre_end": 56,
+      "block_pre_end": 10,
+      "enemy_start": [
+        [
+          "TWIG_SLIME_M",
+          26,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          16,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          26,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          10,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          "POKEY_POUNCE_MOVE",
+          [
+            [
+              12,
+              1
+            ]
+          ]
+        ],
+        [
+          "LEAF_SLIME_S",
+          "GOOP_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [
+        [
+          "TWIG_SLIME_M",
+          26,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          7,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 1,
+      "floor": 2,
+      "turn": 3,
+      "lines": [
+        301134,
+        301136,
+        301137
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "TWIG_SLIME_M",
+          26,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          7,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          26,
+          true
+        ],
+        [
+          "LEAF_SLIME_S",
+          1,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          "STICKY_SHOT_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "LEAF_SLIME_S",
+          "TACKLE_MOVE",
+          [
+            [
+              4,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [
+        [
+          "TWIG_SLIME_M",
+          19,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 1,
+      "floor": 2,
+      "turn": 4,
+      "lines": [
+        301137,
+        301140,
+        301141
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "TWIG_SLIME_M",
+          19,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          4,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "TWIG_SLIME_M",
+          "POKEY_POUNCE_MOVE",
+          [
+            [
+              9,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 2,
+      "floor": 3,
+      "turn": 1,
+      "lines": [
+        301146,
+        301148,
+        301149
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "SHRINKER_BEETLE",
+          42,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          42,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          "SHRINKER_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [
+        [
+          "SHRINKER_BEETLE",
+          35,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 2,
+      "floor": 3,
+      "turn": 2,
+      "lines": [
+        301149,
+        301153,
+        301154
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 8,
+      "enemy_start": [
+        [
+          "SHRINKER_BEETLE",
+          35,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          27,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          "CHOMP_MOVE",
+          [
+            [
+              8,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [
+        [
+          "SHRINKER_BEETLE",
+          21,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 2,
+      "floor": 3,
+      "turn": 3,
+      "lines": [
+        301154,
+        301158,
+        301159
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 10,
+      "enemy_start": [
+        [
+          "SHRINKER_BEETLE",
+          21,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          15,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          "STOMP_MOVE",
+          [
+            [
+              10,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [
+        [
+          "SHRINKER_BEETLE",
+          7,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 2,
+      "floor": 3,
+      "turn": 4,
+      "lines": [
+        301159,
+        301159,
+        301160
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "SHRINKER_BEETLE",
+          7,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          7,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "SHRINKER_BEETLE",
+          "CHOMP_MOVE",
+          [
+            [
+              8,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 3,
+      "floor": 4,
+      "turn": 1,
+      "lines": [
+        301166,
+        301171,
+        301172
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 8,
+      "enemy_start": [
+        [
+          "NIBBIT",
+          46,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "NIBBIT",
+          39,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "NIBBIT",
+          "BUTT_MOVE",
+          [
+            [
+              13,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 49,
+      "next_enemy": [
+        [
+          "NIBBIT",
+          36,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 3,
+      "floor": 4,
+      "turn": 2,
+      "lines": [
+        301172,
+        301175,
+        301176
+      ],
+      "hp_start": 49,
+      "hp_pre_end": 49,
+      "block_pre_end": 8,
+      "enemy_start": [
+        [
+          "NIBBIT",
+          36,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "NIBBIT",
+          30,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "NIBBIT",
+          "SLICE_MOVE",
+          [
+            [
+              7,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 49,
+      "next_enemy": [
+        [
+          "NIBBIT",
+          28,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 3,
+      "floor": 4,
+      "turn": 3,
+      "lines": [
+        301176,
+        301179,
+        301180
+      ],
+      "hp_start": 49,
+      "hp_pre_end": 49,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "NIBBIT",
+          28,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "NIBBIT",
+          25,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "NIBBIT",
+          "HISS_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 49,
+      "next_enemy": [
+        [
+          "NIBBIT",
+          17,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 3,
+      "floor": 4,
+      "turn": 4,
+      "lines": [
+        301180,
+        301182,
+        301183
+      ],
+      "hp_start": 49,
+      "hp_pre_end": 49,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "NIBBIT",
+          17,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "NIBBIT",
+          5,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "NIBBIT",
+          "BUTT_MOVE",
+          [
+            [
+              16,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 49,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 4,
+      "floor": 6,
+      "turn": 1,
+      "lines": [
+        301194,
+        301199,
+        301200
+      ],
+      "hp_start": 49,
+      "hp_pre_end": 49,
+      "block_pre_end": 8,
+      "enemy_start": [
+        [
+          "SNAPPING_JAXFRUIT",
+          36,
+          true
+        ],
+        [
+          "FLYCONID",
+          53,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "SNAPPING_JAXFRUIT",
+          22,
+          true
+        ],
+        [
+          "FLYCONID",
+          53,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "SNAPPING_JAXFRUIT",
+          "ENERGY_ORB_MOVE",
+          [
+            [
+              4,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "FLYCONID",
+          "SMASH_MOVE",
+          [
+            [
+              12,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 41,
+      "next_enemy": [
+        [
+          "SNAPPING_JAXFRUIT",
+          19,
+          true
+        ],
+        [
+          "FLYCONID",
+          53,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 4,
+      "floor": 6,
+      "turn": 2,
+      "lines": [
+        301200,
+        301204,
+        301205
+      ],
+      "hp_start": 41,
+      "hp_pre_end": 41,
+      "block_pre_end": 2,
+      "enemy_start": [
+        [
+          "SNAPPING_JAXFRUIT",
+          19,
+          true
+        ],
+        [
+          "FLYCONID",
+          53,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "SNAPPING_JAXFRUIT",
+          10,
+          true
+        ],
+        [
+          "FLYCONID",
+          50,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "SNAPPING_JAXFRUIT",
+          "ENERGY_ORB_MOVE",
+          [
+            [
+              4,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "FLYCONID",
+          "VULNERABLE_SPORES_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 39,
+      "next_enemy": [
+        [
+          "SNAPPING_JAXFRUIT",
+          4,
+          true
+        ],
+        [
+          "FLYCONID",
+          46,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 4,
+      "floor": 6,
+      "turn": 3,
+      "lines": [
+        301205,
+        301208,
+        301209
+      ],
+      "hp_start": 39,
+      "hp_pre_end": 39,
+      "block_pre_end": 15,
+      "enemy_start": [
+        [
+          "SNAPPING_JAXFRUIT",
+          4,
+          true
+        ],
+        [
+          "FLYCONID",
+          46,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "SNAPPING_JAXFRUIT",
+          4,
+          true
+        ],
+        [
+          "FLYCONID",
+          46,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "SNAPPING_JAXFRUIT",
+          "ENERGY_ORB_MOVE",
+          [
+            [
+              12,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "FLYCONID",
+          "SMASH_MOVE",
+          [
+            [
+              13,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 39,
+      "next_enemy": [
+        [
+          "FLYCONID",
+          43,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 4,
+      "floor": 6,
+      "turn": 4,
+      "lines": [
+        301209,
+        301215,
+        301216
+      ],
+      "hp_start": 39,
+      "hp_pre_end": 39,
+      "block_pre_end": 10,
+      "enemy_start": [
+        [
+          "FLYCONID",
+          43,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "FLYCONID",
+          34,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "FLYCONID",
+          "FRAIL_SPORES_MOVE",
+          [
+            [
+              10,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 39,
+      "next_enemy": [
+        [
+          "FLYCONID",
+          29,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 4,
+      "floor": 6,
+      "turn": 5,
+      "lines": [
+        301216,
+        301221,
+        301222
+      ],
+      "hp_start": 39,
+      "hp_pre_end": 39,
+      "block_pre_end": 12,
+      "enemy_start": [
+        [
+          "FLYCONID",
+          29,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "FLYCONID",
+          24,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "FLYCONID",
+          "SMASH_MOVE",
+          [
+            [
+              12,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 39,
+      "next_enemy": [
+        [
+          "FLYCONID",
+          20,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 4,
+      "floor": 6,
+      "turn": 6,
+      "lines": [
+        301222,
+        301224,
+        301225
+      ],
+      "hp_start": 39,
+      "hp_pre_end": 39,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "FLYCONID",
+          20,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "FLYCONID",
+          14,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "FLYCONID",
+          "VULNERABLE_SPORES_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 39,
+      "next_enemy": [
+        [
+          "FLYCONID",
+          4,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 4,
+      "floor": 6,
+      "turn": 7,
+      "lines": [
+        301225,
+        301225,
+        301226
+      ],
+      "hp_start": 39,
+      "hp_pre_end": 39,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "FLYCONID",
+          4,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "FLYCONID",
+          4,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "FLYCONID",
+          "SMASH_MOVE",
+          [
+            [
+              18,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 39,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 1,
+      "lines": [
+        301237,
+        301238,
+        301239
+      ],
+      "hp_start": 53,
+      "hp_pre_end": 53,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "PHROG_PARASITE",
+          67,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "PHROG_PARASITE",
+          67,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "PHROG_PARASITE",
+          "INFECT_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 53,
+      "next_enemy": [
+        [
+          "PHROG_PARASITE",
+          67,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 2,
+      "lines": [
+        301239,
+        301243,
+        301244
+      ],
+      "hp_start": 53,
+      "hp_pre_end": 53,
+      "block_pre_end": 10,
+      "enemy_start": [
+        [
+          "PHROG_PARASITE",
+          67,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "PHROG_PARASITE",
+          58,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "PHROG_PARASITE",
+          "LASH_MOVE",
+          [
+            [
+              3,
+              4
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 51,
+      "next_enemy": [
+        [
+          "PHROG_PARASITE",
+          55,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 3,
+      "lines": [
+        301244,
+        301246,
+        301247
+      ],
+      "hp_start": 51,
+      "hp_pre_end": 51,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "PHROG_PARASITE",
+          55,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "PHROG_PARASITE",
+          24,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "PHROG_PARASITE",
+          "INFECT_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 51,
+      "next_enemy": [
+        [
+          "PHROG_PARASITE",
+          22,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 4,
+      "lines": [
+        301247,
+        301250,
+        301251
+      ],
+      "hp_start": 51,
+      "hp_pre_end": 51,
+      "block_pre_end": 8,
+      "enemy_start": [
+        [
+          "PHROG_PARASITE",
+          22,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "PHROG_PARASITE",
+          13,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "PHROG_PARASITE",
+          "LASH_MOVE",
+          [
+            [
+              5,
+              4
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 36,
+      "next_enemy": [
+        [
+          "PHROG_PARASITE",
+          5,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 5,
+      "lines": [
+        301251,
+        301252,
+        301253
+      ],
+      "hp_start": 36,
+      "hp_pre_end": 36,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "PHROG_PARASITE",
+          5,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "WRIGGLER",
+          18,
+          true
+        ],
+        [
+          "WRIGGLER",
+          19,
+          true
+        ],
+        [
+          "WRIGGLER",
+          22,
+          true
+        ],
+        [
+          "WRIGGLER",
+          21,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "WRIGGLER",
+          "UNSET_MOVE",
+          []
+        ],
+        [
+          "WRIGGLER",
+          "UNSET_MOVE",
+          []
+        ],
+        [
+          "WRIGGLER",
+          "UNSET_MOVE",
+          []
+        ],
+        [
+          "WRIGGLER",
+          "UNSET_MOVE",
+          []
+        ]
+      ],
+      "next_hp": 36,
+      "next_enemy": [
+        [
+          "WRIGGLER",
+          18,
+          true
+        ],
+        [
+          "WRIGGLER",
+          19,
+          true
+        ],
+        [
+          "WRIGGLER",
+          22,
+          true
+        ],
+        [
+          "WRIGGLER",
+          21,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 6,
+      "lines": [
+        301253,
+        301257,
+        301258
+      ],
+      "hp_start": 36,
+      "hp_pre_end": 36,
+      "block_pre_end": 8,
+      "enemy_start": [
+        [
+          "WRIGGLER",
+          18,
+          true
+        ],
+        [
+          "WRIGGLER",
+          19,
+          true
+        ],
+        [
+          "WRIGGLER",
+          22,
+          true
+        ],
+        [
+          "WRIGGLER",
+          21,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "WRIGGLER",
+          4,
+          true
+        ],
+        [
+          "WRIGGLER",
+          19,
+          true
+        ],
+        [
+          "WRIGGLER",
+          22,
+          true
+        ],
+        [
+          "WRIGGLER",
+          21,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "WRIGGLER",
+          "SPAWNED_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "WRIGGLER",
+          "SPAWNED_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "WRIGGLER",
+          "SPAWNED_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "WRIGGLER",
+          "SPAWNED_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 36,
+      "next_enemy": [
+        [
+          "WRIGGLER",
+          4,
+          true
+        ],
+        [
+          "WRIGGLER",
+          19,
+          true
+        ],
+        [
+          "WRIGGLER",
+          22,
+          true
+        ],
+        [
+          "WRIGGLER",
+          21,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 7,
+      "lines": [
+        301258,
+        301260,
+        301261
+      ],
+      "hp_start": 36,
+      "hp_pre_end": 36,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "WRIGGLER",
+          4,
+          true
+        ],
+        [
+          "WRIGGLER",
+          19,
+          true
+        ],
+        [
+          "WRIGGLER",
+          22,
+          true
+        ],
+        [
+          "WRIGGLER",
+          21,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "WRIGGLER",
+          4,
+          true
+        ],
+        [
+          "WRIGGLER",
+          19,
+          true
+        ],
+        [
+          "WRIGGLER",
+          22,
+          true
+        ],
+        [
+          "WRIGGLER",
+          21,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "WRIGGLER",
+          "NASTY_BITE_MOVE",
+          [
+            [
+              5,
+              1
+            ]
+          ]
+        ],
+        [
+          "WRIGGLER",
+          "WRIGGLE_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "WRIGGLER",
+          "NASTY_BITE_MOVE",
+          [
+            [
+              5,
+              1
+            ]
+          ]
+        ],
+        [
+          "WRIGGLER",
+          "WRIGGLE_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 33,
+      "next_enemy": [
+        [
+          "WRIGGLER",
+          15,
+          true
+        ],
+        [
+          "WRIGGLER",
+          18,
+          true
+        ],
+        [
+          "WRIGGLER",
+          17,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 8,
+      "lines": [
+        301261,
+        301264,
+        301265
+      ],
+      "hp_start": 33,
+      "hp_pre_end": 33,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "WRIGGLER",
+          15,
+          true
+        ],
+        [
+          "WRIGGLER",
+          18,
+          true
+        ],
+        [
+          "WRIGGLER",
+          17,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "WRIGGLER",
+          18,
+          true
+        ],
+        [
+          "WRIGGLER",
+          14,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "WRIGGLER",
+          "WRIGGLE_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "WRIGGLER",
+          "NASTY_BITE_MOVE",
+          [
+            [
+              6,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 23,
+      "next_enemy": [
+        [
+          "WRIGGLER",
+          15,
+          true
+        ],
+        [
+          "WRIGGLER",
+          11,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 9,
+      "lines": [
+        301265,
+        301268,
+        301269
+      ],
+      "hp_start": 23,
+      "hp_pre_end": 23,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "WRIGGLER",
+          15,
+          true
+        ],
+        [
+          "WRIGGLER",
+          11,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "WRIGGLER",
+          15,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "WRIGGLER",
+          "NASTY_BITE_MOVE",
+          [
+            [
+              9,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 13,
+      "next_enemy": [
+        [
+          "WRIGGLER",
+          13,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 10,
+      "lines": [
+        301269,
+        301270,
+        301271
+      ],
+      "hp_start": 13,
+      "hp_pre_end": 13,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "WRIGGLER",
+          13,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "WRIGGLER",
+          13,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "WRIGGLER",
+          "WRIGGLE_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 12,
+      "next_enemy": [
+        [
+          "WRIGGLER",
+          12,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 5,
+      "floor": 9,
+      "turn": 11,
+      "lines": [
+        301271,
+        301272,
+        301273
+      ],
+      "hp_start": 12,
+      "hp_pre_end": 12,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "WRIGGLER",
+          12,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "WRIGGLER",
+          4,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "WRIGGLER",
+          "NASTY_BITE_MOVE",
+          [
+            [
+              8,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 12,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 6,
+      "floor": 14,
+      "turn": 1,
+      "lines": [
+        301299,
+        301306,
+        301307
+      ],
+      "hp_start": 33,
+      "hp_pre_end": 33,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "INKLET",
+          14,
+          true
+        ],
+        [
+          "INKLET",
+          15,
+          true
+        ],
+        [
+          "INKLET",
+          18,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "INKLET",
+          13,
+          true
+        ],
+        [
+          "INKLET",
+          2,
+          true
+        ],
+        [
+          "INKLET",
+          18,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "INKLET",
+          "JAB_MOVE",
+          [
+            [
+              3,
+              1
+            ]
+          ]
+        ],
+        [
+          "INKLET",
+          "WHIRLWIND_MOVE",
+          [
+            [
+              3,
+              3
+            ]
+          ]
+        ],
+        [
+          "INKLET",
+          "JAB_MOVE",
+          [
+            [
+              4,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 33,
+      "next_enemy": [
+        [
+          "INKLET",
+          10,
+          true
+        ],
+        [
+          "INKLET",
+          17,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 6,
+      "floor": 14,
+      "turn": 2,
+      "lines": [
+        301307,
+        301310,
+        301311
+      ],
+      "hp_start": 33,
+      "hp_pre_end": 33,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "INKLET",
+          10,
+          true
+        ],
+        [
+          "INKLET",
+          17,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "INKLET",
+          2,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "INKLET",
+          "WHIRLWIND_MOVE",
+          [
+            [
+              2,
+              3
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 33,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 1,
+      "lines": [
+        301322,
+        301328,
+        301329
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 10,
+      "enemy_start": [
+        [
+          "VANTOM",
+          183,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          181,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "INK_BLOT_MOVE",
+          [
+            [
+              6,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 54,
+      "next_enemy": [
+        [
+          "VANTOM",
+          179,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 2,
+      "lines": [
+        301329,
+        301332,
+        301333
+      ],
+      "hp_start": 54,
+      "hp_pre_end": 54,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "VANTOM",
+          179,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          177,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "INKY_LANCE_MOVE",
+          [
+            [
+              5,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 44,
+      "next_enemy": [
+        [
+          "VANTOM",
+          174,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 3,
+      "lines": [
+        301333,
+        301338,
+        301339
+      ],
+      "hp_start": 44,
+      "hp_pre_end": 44,
+      "block_pre_end": 14,
+      "enemy_start": [
+        [
+          "VANTOM",
+          174,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          163,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "DISMEMBER_MOVE",
+          [
+            [
+              22,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 36,
+      "next_enemy": [
+        [
+          "VANTOM",
+          155,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 4,
+      "lines": [
+        301339,
+        301341,
+        301342
+      ],
+      "hp_start": 36,
+      "hp_pre_end": 36,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "VANTOM",
+          155,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          149,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "PREPARE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 36,
+      "next_enemy": [
+        [
+          "VANTOM",
+          141,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 5,
+      "lines": [
+        301342,
+        301345,
+        301346
+      ],
+      "hp_start": 36,
+      "hp_pre_end": 36,
+      "block_pre_end": 14,
+      "enemy_start": [
+        [
+          "VANTOM",
+          141,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          133,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "INK_BLOT_MOVE",
+          [
+            [
+              10,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 36,
+      "next_enemy": [
+        [
+          "VANTOM",
+          120,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 6,
+      "lines": [
+        301346,
+        301350,
+        301351
+      ],
+      "hp_start": 36,
+      "hp_pre_end": 36,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "VANTOM",
+          120,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          98,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "INKY_LANCE_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 24,
+      "next_enemy": [
+        [
+          "VANTOM",
+          73,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 7,
+      "lines": [
+        301351,
+        301354,
+        301355
+      ],
+      "hp_start": 24,
+      "hp_pre_end": 24,
+      "block_pre_end": 14,
+      "enemy_start": [
+        [
+          "VANTOM",
+          73,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          59,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "DISMEMBER_MOVE",
+          [
+            [
+              24,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 14,
+      "next_enemy": [
+        [
+          "VANTOM",
+          38,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 8,
+      "lines": [
+        301355,
+        301357,
+        301358
+      ],
+      "hp_start": 14,
+      "hp_pre_end": 14,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "VANTOM",
+          38,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          32,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "PREPARE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 14,
+      "next_enemy": [
+        [
+          "VANTOM",
+          14,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 7,
+      "floor": 17,
+      "turn": 9,
+      "lines": [
+        301358,
+        301358,
+        301359
+      ],
+      "hp_start": 14,
+      "hp_pre_end": 14,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "VANTOM",
+          14,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "VANTOM",
+          14,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "VANTOM",
+          "INK_BLOT_MOVE",
+          [
+            [
+              12,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 14,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 8,
+      "floor": 19,
+      "turn": 1,
+      "lines": [
+        301368,
+        301375,
+        301376
+      ],
+      "hp_start": 58,
+      "hp_pre_end": 58,
+      "block_pre_end": 14,
+      "enemy_start": [
+        [
+          "EXOSKELETON",
+          28,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          27,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          30,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "EXOSKELETON",
+          28,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          27,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "EXOSKELETON",
+          "SKITTER_MOVE",
+          [
+            [
+              1,
+              4
+            ]
+          ]
+        ],
+        [
+          "EXOSKELETON",
+          "MANDIBLES_MOVE",
+          [
+            [
+              9,
+              1
+            ]
+          ]
+        ],
+        [
+          "EXOSKELETON",
+          "ENRAGE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 58,
+      "next_enemy": [
+        [
+          "EXOSKELETON",
+          16,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 8,
+      "floor": 19,
+      "turn": 2,
+      "lines": [
+        301376,
+        301379,
+        301380
+      ],
+      "hp_start": 58,
+      "hp_pre_end": 58,
+      "block_pre_end": 7,
+      "enemy_start": [
+        [
+          "EXOSKELETON",
+          16,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "EXOSKELETON",
+          16,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          10,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "EXOSKELETON",
+          "MANDIBLES_MOVE",
+          [
+            [
+              9,
+              1
+            ]
+          ]
+        ],
+        [
+          "EXOSKELETON",
+          "ENRAGE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "EXOSKELETON",
+          "MANDIBLES_MOVE",
+          [
+            [
+              8,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 48,
+      "next_enemy": [
+        [
+          "EXOSKELETON",
+          13,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          7,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 8,
+      "floor": 19,
+      "turn": 3,
+      "lines": [
+        301380,
+        301384,
+        301385
+      ],
+      "hp_start": 48,
+      "hp_pre_end": 48,
+      "block_pre_end": 7,
+      "enemy_start": [
+        [
+          "EXOSKELETON",
+          13,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          24,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          7,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "EXOSKELETON",
+          13,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          15,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          1,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "EXOSKELETON",
+          "ENRAGE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "EXOSKELETON",
+          "SKITTER_MOVE",
+          [
+            [
+              2,
+              4
+            ]
+          ]
+        ],
+        [
+          "EXOSKELETON",
+          "ENRAGE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [
+        [
+          "EXOSKELETON",
+          13,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          3,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 8,
+      "floor": 19,
+      "turn": 4,
+      "lines": [
+        301385,
+        301388,
+        301389
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 47,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "EXOSKELETON",
+          13,
+          true
+        ],
+        [
+          "EXOSKELETON",
+          3,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "EXOSKELETON",
+          1,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "EXOSKELETON",
+          "MANDIBLES_MOVE",
+          [
+            [
+              11,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 9,
+      "floor": 20,
+      "turn": 1,
+      "lines": [
+        301394,
+        301399,
+        301400
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 47,
+      "block_pre_end": 14,
+      "enemy_start": [
+        [
+          "BOWLBUG_ROCK",
+          46,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          36,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          45,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          36,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          "HEADBUTT_MOVE",
+          [
+            [
+              16,
+              1
+            ]
+          ]
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          "THRASH_MOVE",
+          [
+            [
+              3,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 42,
+      "next_enemy": [
+        [
+          "BOWLBUG_ROCK",
+          42,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          33,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 9,
+      "floor": 20,
+      "turn": 2,
+      "lines": [
+        301400,
+        301403,
+        301404
+      ],
+      "hp_start": 42,
+      "hp_pre_end": 42,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "BOWLBUG_ROCK",
+          42,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          33,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          24,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          33,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          "HEADBUTT_MOVE",
+          [
+            [
+              16,
+              1
+            ]
+          ]
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          "BUFF_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 26,
+      "next_enemy": [
+        [
+          "BOWLBUG_ROCK",
+          18,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          33,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 9,
+      "floor": 20,
+      "turn": 3,
+      "lines": [
+        301404,
+        301408,
+        301409
+      ],
+      "hp_start": 26,
+      "hp_pre_end": 26,
+      "block_pre_end": 21,
+      "enemy_start": [
+        [
+          "BOWLBUG_ROCK",
+          18,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          33,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          18,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          24,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          "HEADBUTT_MOVE",
+          [
+            [
+              16,
+              1
+            ]
+          ]
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          "THRASH2_MOVE",
+          [
+            [
+              14,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [
+        [
+          "BOWLBUG_ROCK",
+          13,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          21,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 9,
+      "floor": 20,
+      "turn": 4,
+      "lines": [
+        301409,
+        301410,
+        301411
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "BOWLBUG_ROCK",
+          13,
+          true
+        ],
+        [
+          "BOWLBUG_NECTAR",
+          21,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          13,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          "STUNNED",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [
+        [
+          "BOWLBUG_ROCK",
+          12,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 9,
+      "floor": 20,
+      "turn": 5,
+      "lines": [
+        301411,
+        301413,
+        301414
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "BOWLBUG_ROCK",
+          12,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          6,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_ROCK",
+          "HEADBUTT_MOVE",
+          [
+            [
+              16,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 10,
+      "floor": 21,
+      "turn": 1,
+      "lines": [
+        301420,
+        301424,
+        301425
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "SUCK_MOVE",
+          [
+            [
+              0,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          53,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 10,
+      "floor": 21,
+      "turn": 2,
+      "lines": [
+        301425,
+        301428,
+        301429
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          53,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          48,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "BITE_MOVE",
+          [
+            [
+              11,
+              1
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 1,
+      "next_enemy": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          34,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 10,
+      "floor": 21,
+      "turn": 3,
+      "lines": [
+        301429,
+        301433,
+        301434
+      ],
+      "hp_start": 1,
+      "hp_pre_end": 1,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          34,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          40,
+          true
+        ],
+        [
+          "MYTE",
+          17,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "SUCK_MOVE",
+          [
+            [
+              6,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "BITE_MOVE",
+          [
+            [
+              13,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 11,
+      "floor": 21,
+      "turn": 1,
+      "lines": [
+        301434,
+        301437,
+        301438
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "SUCK_MOVE",
+          [
+            [
+              0,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          53,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 11,
+      "floor": 21,
+      "turn": 2,
+      "lines": [
+        301438,
+        301442,
+        301443
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          53,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          48,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "BITE_MOVE",
+          [
+            [
+              11,
+              1
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 11,
+      "next_enemy": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          41,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 11,
+      "floor": 21,
+      "turn": 3,
+      "lines": [
+        301443,
+        301448,
+        301449
+      ],
+      "hp_start": 11,
+      "hp_pre_end": 11,
+      "block_pre_end": 17,
+      "enemy_start": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          41,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          32,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "SUCK_MOVE",
+          [
+            [
+              6,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "BITE_MOVE",
+          [
+            [
+              13,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 9,
+      "next_enemy": [
+        [
+          "MYTE",
+          39,
+          true
+        ],
+        [
+          "MYTE",
+          23,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 11,
+      "floor": 21,
+      "turn": 4,
+      "lines": [
+        301449,
+        301453,
+        301454
+      ],
+      "hp_start": 9,
+      "hp_pre_end": 9,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          39,
+          true
+        ],
+        [
+          "MYTE",
+          23,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          30,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 9,
+      "next_enemy": [
+        [
+          "MYTE",
+          22,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 11,
+      "floor": 21,
+      "turn": 5,
+      "lines": [
+        301454,
+        301456,
+        301457
+      ],
+      "hp_start": 9,
+      "hp_pre_end": 9,
+      "block_pre_end": 12,
+      "enemy_start": [
+        [
+          "MYTE",
+          22,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          22,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "BITE_MOVE",
+          [
+            [
+              13,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 12,
+      "floor": 21,
+      "turn": 1,
+      "lines": [
+        301457,
+        301460,
+        301461
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          66,
+          true
+        ],
+        [
+          "MYTE",
+          64,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "SUCK_MOVE",
+          [
+            [
+              0,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 17,
+      "next_enemy": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          53,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 12,
+      "floor": 21,
+      "turn": 2,
+      "lines": [
+        301461,
+        301465,
+        301466
+      ],
+      "hp_start": 17,
+      "hp_pre_end": 17,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          53,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          58,
+          true
+        ],
+        [
+          "MYTE",
+          48,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "BITE_MOVE",
+          [
+            [
+              11,
+              1
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 11,
+      "next_enemy": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          41,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 12,
+      "floor": 21,
+      "turn": 3,
+      "lines": [
+        301466,
+        301471,
+        301472
+      ],
+      "hp_start": 11,
+      "hp_pre_end": 11,
+      "block_pre_end": 17,
+      "enemy_start": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          41,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          48,
+          true
+        ],
+        [
+          "MYTE",
+          32,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "SUCK_MOVE",
+          [
+            [
+              6,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "BITE_MOVE",
+          [
+            [
+              13,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 9,
+      "next_enemy": [
+        [
+          "MYTE",
+          39,
+          true
+        ],
+        [
+          "MYTE",
+          23,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 12,
+      "floor": 21,
+      "turn": 4,
+      "lines": [
+        301472,
+        301476,
+        301477
+      ],
+      "hp_start": 9,
+      "hp_pre_end": 9,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          39,
+          true
+        ],
+        [
+          "MYTE",
+          23,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          6,
+          true
+        ],
+        [
+          "MYTE",
+          20,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "MYTE",
+          "SUCK_MOVE",
+          [
+            [
+              6,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 3,
+      "next_enemy": [
+        [
+          "MYTE",
+          12,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 12,
+      "floor": 21,
+      "turn": 5,
+      "lines": [
+        301477,
+        301478,
+        301479
+      ],
+      "hp_start": 3,
+      "hp_pre_end": 3,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "MYTE",
+          12,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "MYTE",
+          6,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "MYTE",
+          "TOXIC_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 3,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 13,
+      "floor": 30,
+      "turn": 1,
+      "lines": [
+        301519,
+        301525,
+        301526
+      ],
+      "hp_start": 64,
+      "hp_pre_end": 64,
+      "block_pre_end": 10,
+      "enemy_start": [
+        [
+          "BOWLBUG_ROCK",
+          48,
+          true
+        ],
+        [
+          "BOWLBUG_EGG",
+          23,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          44,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          23,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          44,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          "BITE_MOVE",
+          [
+            [
+              8,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "BOWLBUG_SILK",
+          "TOXIC_SPIT_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 69,
+      "next_enemy": [
+        [
+          "BOWLBUG_EGG",
+          20,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          44,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 13,
+      "floor": 30,
+      "turn": 2,
+      "lines": [
+        301526,
+        301529,
+        301530
+      ],
+      "hp_start": 69,
+      "hp_pre_end": 69,
+      "block_pre_end": 15,
+      "enemy_start": [
+        [
+          "BOWLBUG_EGG",
+          20,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          44,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          20,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          37,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          "BITE_MOVE",
+          [
+            [
+              8,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "BOWLBUG_SILK",
+          "THRASH_MOVE",
+          [
+            [
+              5,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 67,
+      "next_enemy": [
+        [
+          "BOWLBUG_EGG",
+          17,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          28,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 13,
+      "floor": 30,
+      "turn": 3,
+      "lines": [
+        301530,
+        301533,
+        301534
+      ],
+      "hp_start": 67,
+      "hp_pre_end": 67,
+      "block_pre_end": 8,
+      "enemy_start": [
+        [
+          "BOWLBUG_EGG",
+          17,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          28,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          17,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          28,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          "BITE_MOVE",
+          [
+            [
+              6,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "BOWLBUG_SILK",
+          "TOXIC_SPIT_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "BOWLBUG_EGG",
+          10,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          22,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 13,
+      "floor": 30,
+      "turn": 4,
+      "lines": [
+        301534,
+        301539,
+        301540
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 13,
+      "enemy_start": [
+        [
+          "BOWLBUG_EGG",
+          10,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          22,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          10,
+          true
+        ],
+        [
+          "BOWLBUG_SILK",
+          8,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          "BITE_MOVE",
+          [
+            [
+              8,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "BOWLBUG_SILK",
+          "THRASH_MOVE",
+          [
+            [
+              3,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "BOWLBUG_EGG",
+          4,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 13,
+      "floor": 30,
+      "turn": 5,
+      "lines": [
+        301540,
+        301540,
+        301541
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "BOWLBUG_EGG",
+          4,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          4,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "BOWLBUG_EGG",
+          "BITE_MOVE",
+          [
+            [
+              8,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 14,
+      "floor": 31,
+      "turn": 1,
+      "lines": [
+        301546,
+        301550,
+        301551
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          52,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          50,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          48,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          45,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          50,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          24,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          "CONSTRICT_MOVE",
+          [
+            [
+              6,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          "WRITHE_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          "BULK_MOVE",
+          [
+            [
+              6,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 46,
+      "next_enemy": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          42,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          44,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          21,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 14,
+      "floor": 31,
+      "turn": 2,
+      "lines": [
+        301551,
+        301554,
+        301555
+      ],
+      "hp_start": 46,
+      "hp_pre_end": 46,
+      "block_pre_end": 16,
+      "enemy_start": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          42,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          44,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          21,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          18,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          13,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          0,
+          false
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          "BULK_MOVE",
+          [
+            [
+              7,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          "CONSTRICT_MOVE",
+          [
+            [
+              9,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 46,
+      "next_enemy": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          15,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          7,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          0,
+          false
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 14,
+      "floor": 31,
+      "turn": 3,
+      "lines": [
+        301555,
+        301559,
+        301560
+      ],
+      "hp_start": 46,
+      "hp_pre_end": 46,
+      "block_pre_end": 11,
+      "enemy_start": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          15,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          7,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          0,
+          false
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          15,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          1,
+          true
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          0,
+          false
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          "WRITHE_MOVE",
+          [
+            [
+              8,
+              2
+            ]
+          ]
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          "BULK_MOVE",
+          [
+            [
+              7,
+              1
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 46,
+      "next_enemy": [
+        [
+          "DECIMILLIPEDE_SEGMENT_FRONT",
+          0,
+          false
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_MIDDLE",
+          0,
+          false
+        ],
+        [
+          "DECIMILLIPEDE_SEGMENT_BACK",
+          0,
+          false
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 15,
+      "floor": 33,
+      "turn": 1,
+      "lines": [
+        301570,
+        301578,
+        301579
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 23,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          316,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LIQUIFY_GROUND_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 15,
+      "floor": 33,
+      "turn": 2,
+      "lines": [
+        301579,
+        301585,
+        301586
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 66,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 66,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 15,
+      "floor": 33,
+      "turn": 3,
+      "lines": [
+        301586,
+        301590,
+        301591
+      ],
+      "hp_start": 66,
+      "hp_pre_end": 47,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              31,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 15,
+      "floor": 33,
+      "turn": 4,
+      "lines": [
+        301591,
+        301595,
+        301596
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 47,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          259,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "SALIVATE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          256,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 15,
+      "floor": 33,
+      "turn": 5,
+      "lines": [
+        301596,
+        301600,
+        301601
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 23,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          256,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          223,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE_2",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 23,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          223,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 15,
+      "floor": 33,
+      "turn": 6,
+      "lines": [
+        301601,
+        301606,
+        301607
+      ],
+      "hp_start": 23,
+      "hp_pre_end": 4,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          223,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          194,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 4,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          194,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 15,
+      "floor": 33,
+      "turn": 7,
+      "lines": [
+        301607,
+        301612,
+        301613
+      ],
+      "hp_start": 4,
+      "hp_pre_end": 4,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          194,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          186,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              25,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 16,
+      "floor": 33,
+      "turn": 1,
+      "lines": [
+        301613,
+        301620,
+        301621
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 23,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          316,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LIQUIFY_GROUND_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 16,
+      "floor": 33,
+      "turn": 2,
+      "lines": [
+        301621,
+        301627,
+        301628
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 66,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 66,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 16,
+      "floor": 33,
+      "turn": 3,
+      "lines": [
+        301628,
+        301632,
+        301633
+      ],
+      "hp_start": 66,
+      "hp_pre_end": 48,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              31,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 48,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 16,
+      "floor": 33,
+      "turn": 4,
+      "lines": [
+        301633,
+        301638,
+        301639
+      ],
+      "hp_start": 48,
+      "hp_pre_end": 48,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          267,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "SALIVATE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 48,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          264,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 16,
+      "floor": 33,
+      "turn": 5,
+      "lines": [
+        301639,
+        301643,
+        301644
+      ],
+      "hp_start": 48,
+      "hp_pre_end": 24,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          264,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          231,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE_2",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 24,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          231,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 16,
+      "floor": 33,
+      "turn": 6,
+      "lines": [
+        301644,
+        301649,
+        301650
+      ],
+      "hp_start": 24,
+      "hp_pre_end": 5,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          231,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          202,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 5,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          202,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 16,
+      "floor": 33,
+      "turn": 7,
+      "lines": [
+        301650,
+        301656,
+        301657
+      ],
+      "hp_start": 5,
+      "hp_pre_end": 5,
+      "block_pre_end": 19,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          202,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          197,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              34,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 17,
+      "floor": 33,
+      "turn": 1,
+      "lines": [
+        301657,
+        301664,
+        301665
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 23,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          316,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LIQUIFY_GROUND_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 17,
+      "floor": 33,
+      "turn": 2,
+      "lines": [
+        301665,
+        301671,
+        301672
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 66,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 66,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 17,
+      "floor": 33,
+      "turn": 3,
+      "lines": [
+        301672,
+        301676,
+        301677
+      ],
+      "hp_start": 66,
+      "hp_pre_end": 47,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              31,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 17,
+      "floor": 33,
+      "turn": 4,
+      "lines": [
+        301677,
+        301681,
+        301682
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 47,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          259,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "SALIVATE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          256,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 17,
+      "floor": 33,
+      "turn": 5,
+      "lines": [
+        301682,
+        301687,
+        301688
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 23,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          256,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          213,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE_2",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 23,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          213,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 17,
+      "floor": 33,
+      "turn": 6,
+      "lines": [
+        301688,
+        301693,
+        301694
+      ],
+      "hp_start": 23,
+      "hp_pre_end": 4,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          213,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          207,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 4,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          207,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 17,
+      "floor": 33,
+      "turn": 7,
+      "lines": [
+        301694,
+        301700,
+        301701
+      ],
+      "hp_start": 4,
+      "hp_pre_end": 4,
+      "block_pre_end": 14,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          207,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          201,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              34,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 18,
+      "floor": 33,
+      "turn": 1,
+      "lines": [
+        301701,
+        301708,
+        301709
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 23,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          316,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LIQUIFY_GROUND_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 18,
+      "floor": 33,
+      "turn": 2,
+      "lines": [
+        301709,
+        301715,
+        301716
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 66,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 66,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 18,
+      "floor": 33,
+      "turn": 3,
+      "lines": [
+        301716,
+        301720,
+        301721
+      ],
+      "hp_start": 66,
+      "hp_pre_end": 47,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              31,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 18,
+      "floor": 33,
+      "turn": 4,
+      "lines": [
+        301721,
+        301724,
+        301725
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 47,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          286,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          262,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "SALIVATE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 47,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          259,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 18,
+      "floor": 33,
+      "turn": 5,
+      "lines": [
+        301725,
+        301729,
+        301730
+      ],
+      "hp_start": 47,
+      "hp_pre_end": 23,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          259,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          226,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE_2",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 23,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          226,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 18,
+      "floor": 33,
+      "turn": 6,
+      "lines": [
+        301730,
+        301735,
+        301736
+      ],
+      "hp_start": 23,
+      "hp_pre_end": 4,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          226,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          197,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 4,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          197,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 18,
+      "floor": 33,
+      "turn": 7,
+      "lines": [
+        301736,
+        301741,
+        301742
+      ],
+      "hp_start": 4,
+      "hp_pre_end": 4,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          197,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          189,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              25,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 19,
+      "floor": 33,
+      "turn": 1,
+      "lines": [
+        301742,
+        301748,
+        301749
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 23,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          323,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LIQUIFY_GROUND_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          318,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 19,
+      "floor": 33,
+      "turn": 2,
+      "lines": [
+        301749,
+        301755,
+        301756
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 66,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          318,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          303,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 66,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          303,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 19,
+      "floor": 33,
+      "turn": 3,
+      "lines": [
+        301756,
+        301760,
+        301761
+      ],
+      "hp_start": 66,
+      "hp_pre_end": 48,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          303,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          293,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              31,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 48,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          293,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 19,
+      "floor": 33,
+      "turn": 4,
+      "lines": [
+        301761,
+        301766,
+        301767
+      ],
+      "hp_start": 48,
+      "hp_pre_end": 48,
+      "block_pre_end": 5,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          293,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          274,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "SALIVATE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 48,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          271,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 19,
+      "floor": 33,
+      "turn": 5,
+      "lines": [
+        301767,
+        301771,
+        301772
+      ],
+      "hp_start": 48,
+      "hp_pre_end": 24,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          271,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          238,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE_2",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 24,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          238,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 19,
+      "floor": 33,
+      "turn": 6,
+      "lines": [
+        301772,
+        301777,
+        301778
+      ],
+      "hp_start": 24,
+      "hp_pre_end": 5,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          238,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          209,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 5,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          209,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 19,
+      "floor": 33,
+      "turn": 7,
+      "lines": [
+        301778,
+        301784,
+        301785
+      ],
+      "hp_start": 5,
+      "hp_pre_end": 5,
+      "block_pre_end": 19,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          209,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          204,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              34,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "end": "restart_observed"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 1,
+      "lines": [
+        301785,
+        301792,
+        301793
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 70,
+      "block_pre_end": 23,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          341,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          316,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LIQUIFY_GROUND_MOVE",
+          [
+            [
+              null,
+              null
+            ],
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 70,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 2,
+      "lines": [
+        301793,
+        301799,
+        301800
+      ],
+      "hp_start": 70,
+      "hp_pre_end": 66,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          311,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              6,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 66,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 3,
+      "lines": [
+        301800,
+        301806,
+        301807
+      ],
+      "hp_start": 66,
+      "hp_pre_end": 58,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          296,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          290,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              31,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 58,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          290,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 4,
+      "lines": [
+        301807,
+        301811,
+        301812
+      ],
+      "hp_start": 58,
+      "hp_pre_end": 58,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          290,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          274,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "SALIVATE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 58,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          274,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 5,
+      "lines": [
+        301812,
+        301816,
+        301817
+      ],
+      "hp_start": 58,
+      "hp_pre_end": 34,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          274,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          255,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE_2",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 34,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          255,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 6,
+      "lines": [
+        301817,
+        301822,
+        301823
+      ],
+      "hp_start": 34,
+      "hp_pre_end": 24,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          255,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          240,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE",
+          [
+            [
+              12,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 24,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          240,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 7,
+      "lines": [
+        301823,
+        301827,
+        301828
+      ],
+      "hp_start": 24,
+      "hp_pre_end": 24,
+      "block_pre_end": 21,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          240,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          240,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "LUNGING_BITE_MOVE",
+          [
+            [
+              34,
+              1
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 11,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          232,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 8,
+      "lines": [
+        301828,
+        301833,
+        301834
+      ],
+      "hp_start": 11,
+      "hp_pre_end": 11,
+      "block_pre_end": 0,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          232,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          220,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "SALIVATE_MOVE",
+          [
+            [
+              null,
+              null
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 11,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          205,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    },
+    {
+      "sequence": 20,
+      "floor": 33,
+      "turn": 9,
+      "lines": [
+        301834,
+        301839,
+        301840
+      ],
+      "hp_start": 11,
+      "hp_pre_end": 11,
+      "block_pre_end": 7,
+      "enemy_start": [
+        [
+          "THE_INSATIABLE",
+          205,
+          true
+        ]
+      ],
+      "enemy_pre_end": [
+        [
+          "THE_INSATIABLE",
+          196,
+          true
+        ]
+      ],
+      "intent_pre_end": [
+        [
+          "THE_INSATIABLE",
+          "THRASH_MOVE_2",
+          [
+            [
+              15,
+              2
+            ]
+          ]
+        ]
+      ],
+      "next_hp": 0,
+      "next_enemy": [
+        [
+          "THE_INSATIABLE",
+          179,
+          true
+        ]
+      ],
+      "end": "observed_exit"
+    }
+  ]
+}

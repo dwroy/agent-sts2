@@ -1,0 +1,83 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.21 → 2026-10-08.22；提交：62d06feb（分支 exp-silent）；合入：未合入，锁内预检发现18个文件冲突，刷新提交72a20c8b已保留，待运维兜底。
+- 条数：新增2、更新14（加证据14、只改数字0）、退役0；active 178→180，正文49403字符；A8适用167条／44885字符，A9适用168条／45169字符。
+- 机制推理：以下均为支持局数，反例0；典型案例均为4XLZURXMD872。  
+  力量／敏捷 — 按攻击段、格挡牌兑现 — 133局 — 4XLZURXMD872  
+  毒雾 — 建立后下一轮补毒，未建立不预支 — 65局 — 4XLZURXMD872  
+  咕嘟冒泡 — 中毒条件下补毒，施放不即时伤害 — 16局 — 4XLZURXMD872  
+  族母吸取 — 降低直接伤害和牌挡，技能毒分账 — 17局 — 4XLZURXMD872  
+  尖啸 — 临时减力逐段生效，次轮恢复 — 63局 — 4XLZURXMD872  
+  爆发 — 技能重放逐次计算毒、减力和挡 — 15局 — 4XLZURXMD872  
+  速行者 — 实际抽牌额外造成伤害 — 5局 — 4XLZURXMD872  
+  毒素 — 留手伤不能省略 — 19局 — 4XLZURXMD872  
+  毒药水 — 加毒不即时扣血，SL恢复不算新瓶 — 34局 — 4XLZURXMD872  
+  跨幕回复 — 已见A9/A10按缺失HP的80%取整 — 28局 — 4XLZURXMD872  
+  能力兑现 — 持有能力不等于已经启动 — 132局 — 4XLZURXMD872  
+  沙虫双时钟 — 延长沙坑不抵挡攻击 — 19局 — 4XLZURXMD872  
+  可可观察 — 首轮额外能量不保证能力到手 — 20局 — 4XLZURXMD872  
+  蟾蜍SL观察 — 换手后实挡省11血，整战胜因未隔离 — 1局 — 4XLZURXMD872
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0。恢复默认测试环境后完整重跑一次；首轮39文件、134例失败日志保留。
+- 切片大小：整体中位增加21字符；最大4993字符；配对差中位−6字符。
+- 学习账本：新增silent-0304；改成proposed：silent-0012、silent-0011、silent-0010、silent-0030、silent-0046、silent-0115、silent-0045、silent-0214、silent-0278、silent-0243、silent-0019、silent-0020、silent-0021、silent-0018、silent-0304、silent-0239；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.22",
+  "commit": "62d06feb12c0dac69ec60df1da3647f5615304b7",
+  "merged": null,
+  "added": 2,
+  "updated": 14,
+  "retired": 0,
+  "active": 180,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-noxious-fumes-growth",
+    "silent-bubble-bubble-condition",
+    "silent-lagavulin-siphon-poison-sl",
+    "silent-piercing-wail-temporary-strength",
+    "silent-burst-next-skills-replay",
+    "silent-speedster-draw-damage",
+    "silent-toxic-paid-exhaust-end-turn-loss",
+    "silent-poison-potion-observed-application",
+    "silent-act-transition-missing-hp-heal",
+    "silent-deck-burst-observation",
+    "silent-insatiable-dual-clock",
+    "silent-very-hot-cocoa-opening-energy",
+    "silent-spiny-toad-draw-block-sl"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": ["silent-0304"],
+    "proposed": [
+      "silent-0012", "silent-0011", "silent-0010", "silent-0030",
+      "silent-0046", "silent-0115", "silent-0045", "silent-0214",
+      "silent-0278", "silent-0243", "silent-0019", "silent-0020",
+      "silent-0021", "silent-0018", "silent-0304", "silent-0239"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-387ea7c2d92d3856",
+    "silent-proposal-2b97abc88c159cb9",
+    "silent-proposal-e8f4f7afefd92d5c"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11b15-b897-78d1-b14c-1e2f16f883fd
+轮数：1；工具调用：command_execution×101 file_change×7
+token：输入 271.8k、输出 62.8k（其中推理 29.5k）、cache 读 8960.3k、cache 写 0（命中 97.1%）
+成本：未提供
+耗时：2837.8 s（墙钟）
+时间：首个事件 3.1 s、模型首个输出 8.7 s、首次工具 12.3 s、末次工具结束 2724.4 s；工具内共 2193.0 s，其余（模型生成、推理、网络）641.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×55 wait×2；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T18-36-10-01a11b15-b897-78d1-b14c-1e2f16f883fd.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-183609-experience-update.jsonl

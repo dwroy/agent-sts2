@@ -1,0 +1,580 @@
+{
+  "batch": "20261008-141302-fix-batch",
+  "source": "0471382514799baa3db44602f56ac35020f30ba6",
+  "merged": "465df69b196ff828dedf250538acba9917c120b5",
+  "published": "183e274b0279f711307046ed956214999296f050",
+  "published_tree": "54c9567f6dfce14a5b82b229276ec1349b4cf9a6",
+  "observed_live": "187c025aaf27a3d52db651849ac22ce2a83714bb",
+  "main_before": "7c8ab5954304d4f7daf83ebd85e51efdb75bcfb2",
+  "version": {
+    "name": "S1.boss-calibration5",
+    "family": "S1",
+    "commit": "465df69b196ff828dedf250538acba9917c120b5",
+    "source": "decision-log 2026-10-08 16:59:12 CST：Roy授权静默boss定期校准；源0471382514799baa3db44602f56ac35020f30ba6；21新实际结局/固定107调参与134验证；silent-0299；paper/materials/silent/boss-sim-calibration.md"
+  },
+  "source_paths": {
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/README.md": {
+      "sha256": "8d9d4406148d6a126208a65cc38b3d8d3920c7e1299dc3d55c8539f3996818b7",
+      "bytes": 851,
+      "source_blob": "80ad3d5f02a6f043bd9d538f7949f2b67414f2ae"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/audit-manifest.json": {
+      "sha256": "8b8e204558599d53d7202629a23a1c5e4932a91fecec37fed4372a1ef1119a37",
+      "bytes": 4901,
+      "source_blob": "d4689e9266923420d9053c41be7ccc75f5113a47"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/backtest.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/boss-trust.json": {
+      "sha256": "e3e3706bef4dfc780aed58923370188c81b1ea8d2457ae13b1d634f3f2eb1cd4",
+      "bytes": 64153,
+      "source_blob": "aa4720c9ae16f9f16a0c960e892a97e76bcd0a5b"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/completed.json": {
+      "sha256": "633cf07363c9dad83c807a286e75990bd2b576f25bb442bb1c63191a06464f47",
+      "bytes": 3043,
+      "source_blob": "636a9c1fe956d9e90d30fd038ac32de277e5b775"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/dispatch-fixed.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/dispatch-fixed.log": {
+      "sha256": "21fc75a05539dedab4f037d10d4147390ab9a9699b35d5979a1da0c6b989a9c6",
+      "bytes": 1530,
+      "source_blob": "546c63a4f073598efa1c797b82ef37287977041d"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/extraction.json": {
+      "sha256": "00ddf332699d486b95bfd992c6c2aa455a1bb95b56b353463808127b148fef99",
+      "bytes": 5803,
+      "source_blob": "b2276ee89f832dd27872285b9797b6409ce79dec"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/fights.jsonl": {
+      "sha256": "ebf5d831a06060265aabe6ee6161be2241d8422150bbd55560e9027a8dab519c",
+      "bytes": 10379061,
+      "source_blob": "df78a85182ccd651b30ebefbddd722f6aa49b051"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/first-hit-audit-identifiers.json": {
+      "sha256": "882d36c179571397b5288580a07c9efad3e0f350ff6cd731a62d622982afc202",
+      "bytes": 1092,
+      "source_blob": "830592a5055b96a308bd902ef4c3b5c36b64f41e"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/frozen-input-audit.json": {
+      "sha256": "da8a7e5a5dbbbdaf0503a3ba67b51b3490f4ec6f76fe7ace2c45aa726ec26811",
+      "bytes": 203,
+      "source_blob": "01a5be43ed447c160e73846c665f8e90fc93defc"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/game-data-input.json": {
+      "sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69",
+      "bytes": 626168,
+      "source_blob": "62fa3ce7f1f3f44e7cd397b17485fb09518fd0cd"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/idempotency-audit.json": {
+      "sha256": "173a9fe116842ae2e61127963f4096e19e8bc16b9adbb5f699d64d270c7ded63",
+      "bytes": 680,
+      "source_blob": "bfac7ce8f8e53b404a6aae476dc1ddda8197dc07"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/idempotency-completed-skip.log": {
+      "sha256": "8759c311c8f99ee9eecaf9dfd0fbca95223393fe80f45c43e03c56acb0be6e5f",
+      "bytes": 247,
+      "source_blob": "d1b43092ff28a7cb8c4380fcadd83063e09be94d"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/idempotency-threshold-skip.log": {
+      "sha256": "452b7c2d3f53c41d43293d1f01f7db1c43262a75dc32ad8d6ef387bf2ce56912",
+      "bytes": 47,
+      "source_blob": "e857ece0e72ecd2a886f11ae42f429f72fbb3b5f"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/input-audit-summary.json": {
+      "sha256": "06330d80ab5618e5595ad8712241a4e313a8e6252495a220c43b04dec3ef9b71",
+      "bytes": 938,
+      "source_blob": "ea3c6df8cc180c4a0b8e4873e6faf682a915c682"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/ledger-add.json": {
+      "sha256": "66541e81bfde214444ac20ddea893fc27396af88474c1b79141e8bf326bc3857",
+      "bytes": 7149,
+      "source_blob": "f29558cf9237ac15ead9b1176d336022cea2be26"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/ledger-add.log": {
+      "sha256": "5876940268f7db226e8ed2844deb2dd5c31d3756ed437c5e68b75b8de7d55047",
+      "bytes": 12,
+      "source_blob": "6944f62f48ce64d24a4c3990b1b7ae508e101966"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/model-changes.json": {
+      "sha256": "6db0da1fcb70f73cc11ee62c8686d8e987535424f4e3005d454f69629c57cb0d",
+      "bytes": 1163,
+      "source_blob": "02d3d5e4f01cfcbac7f3f8babd4e55d17d4f59fb"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/model-input-audit.json": {
+      "sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a",
+      "bytes": 69192,
+      "source_blob": "37c6405cf073cd56312bbab8323b24d5bb2b54cd"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/new-outcome-events.json": {
+      "sha256": "a7a1c418089ddfa8deacbb7c15ce284705563ff4eaecc36c3c440e154c53b537",
+      "bytes": 1011,
+      "source_blob": "6091793f04ceb7db0a7a9c66fdf36839e4890b61"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/opening-audit.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/opening-audit.json": {
+      "sha256": "8ba2a9adf036f506c65c688d8eb9129045a1acae8cb8d19b78a0b681ef320c82",
+      "bytes": 87569,
+      "source_blob": "80751fbf0138a2907965210da56e054875f0333c"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/opening-audit.log": {
+      "sha256": "184da1c511607961e88aaa711ade835f36d742520b6f49a4d516bd0c55c5045f",
+      "bytes": 67,
+      "source_blob": "e0e05d6d2a604eaf8a35c193ee87cb80404e167c"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/opening-source-integrity.json": {
+      "sha256": "30b088d76f74f8461284715953758f4f6da5634589ab734761e1706ea5b8abcb",
+      "bytes": 68688,
+      "source_blob": "a3a417e3fa86a852ceb71f36a72497054b9d2657"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/previous-trust.json": {
+      "sha256": "10ab4272ec2a5e0d74a926849ff08371efc6c5ae5db79e387012bf0c17bc35f5",
+      "bytes": 62061,
+      "source_blob": "c442d0f746ccad006b3ea18410d077a8ba14f312"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/provenance.json": {
+      "sha256": "825db642f37aad908a4d25b2dfcc6bb8e95ca45652d4a16a4055d58edb925ab4",
+      "bytes": 25068,
+      "source_blob": "f9b1904a74a7677ec585acb26744f4d7d12f6b10"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/published-report.md": {
+      "sha256": "5a7d82ae18a66f54c68f461d9814204d83e4b0b7c597e808cffee337766dd199",
+      "bytes": 100569,
+      "source_blob": "97b84ece0114730b1b5ea16d47e2f3c2a8399c40"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/refresh-completed.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/refresh-completed.log": {
+      "sha256": "cf05da78250a2886ea875f1370f93a0f318806d40af9fdfe268e0d2df0f01f50",
+      "bytes": 801,
+      "source_blob": "b129d241cd9e183bc6d1439a8edd163d73a55671"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/refresh-initial.exit": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2,
+      "source_blob": "d00491fd7e5bb6fa28c517a0bb32b8b506539d4d"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/refresh-initial.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/replay-model-integrity.json": {
+      "sha256": "fe1822e80ab51214b7f895a8a4d44d52aeac90554368fa6ed6c0c733619a53da",
+      "bytes": 478,
+      "source_blob": "bfff858506417b9d912679182cc72267b0c3b025"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/replay-transition.json": {
+      "sha256": "1bbb62cb546096298015eb8d9d74ba11a64b92965fd8c6fc832febe62497074f",
+      "bytes": 624,
+      "source_blob": "fa42d9ce53275aa7780784fcd9067b0fbec63268"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/report.md": {
+      "sha256": "f67b6ca4f117cfd09fb192039b9849d10ededb903e54b3855bedcfe7fcbb62d0",
+      "bytes": 96145,
+      "source_blob": "28f8cbd280cb9dd241ada7df38a5afbd142181c4"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/reproducible-input-audit.json": {
+      "sha256": "9ed70c7dd58015b484ceef9ee5c7b89ea537bdd258584c8d5dbe65eca77644d5",
+      "bytes": 4957,
+      "source_blob": "3382e8776ec10cecadcbc7f3bd428f7c6465df3c"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/results.jsonl": {
+      "sha256": "02a46b24f93caf1f0b04720b95887720ec845c8d01da373712a0e7fb6d4977c5",
+      "bytes": 2123787,
+      "source_blob": "aef5e8dbab8c916cce304d2e1ec433974891fcce"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/runs-snapshot.jsonl": {
+      "sha256": "15c51165ddfe5f91b3f51866a226bf414f0a8605cf4e7447ad5be2e9d935e3ba",
+      "bytes": 57445,
+      "source_blob": "a95fa96cc4ff38ce6509794e01f4279ea436f765"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/shard-0.log": {
+      "sha256": "e9f07742b07991a3be4bdb7c5d52c948616122c5925428b8784bd7f0bd9b0030",
+      "bytes": 248,
+      "source_blob": "ec0c50f98bbb2a120253b7b71bf89d61de283d42"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/shard-1.log": {
+      "sha256": "13d93d5ad8fe43ae6496a8dc38022b7f4b5ac91ccf50e9c143727ff83c0cd041",
+      "bytes": 248,
+      "source_blob": "d1d72fc6b5f4d55ea77c570137cd9c1ee511afdc"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/shard-exits.json": {
+      "sha256": "6257d2ffc12d7dbeaae7900b6e9cde6214b107bbaf97f934192b0cb3254f395f",
+      "bytes": 54,
+      "source_blob": "8ef177ccdb47cb21b1c9b9e8f90c2750a2814c8a"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/sl-snapshot.jsonl": {
+      "sha256": "ce5a474f584a3dc70467c9ee67aef2c3ccce0714765c4845a46ac075d690850f",
+      "bytes": 14937460,
+      "source_blob": "d3ee7cff5d5e5739fe78d5362572796ff62a3f54"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/source-checks.json": {
+      "sha256": "ca3512936bdbeaafe82236e07186d01f4dfe746616e6633985bf0a906e9f5b0c",
+      "bytes": 453,
+      "source_blob": "c13d9806d2a9d580153cb16c7eec004fb35ce6e9"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/source-python-fixed.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/source-python-fixed.log": {
+      "sha256": "9abfd62cd5311ed4df317e4ad2b5a588919b2b80e2b5d4c5d72c86a799bae7da",
+      "bytes": 3935,
+      "source_blob": "5a839d01b2b090c8ac41ae77a3b88c4beee9e52f"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/source-sandbox.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/source-sandbox.log": {
+      "sha256": "44d069bc6d4fcb23dd10d681eace4098cdf44756600f41505bd6f8ddb09f68d4",
+      "bytes": 530,
+      "source_blob": "e531a4eb490e6cfc66d53924a7eb5ecfd34f6b5d"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/sources.jsonl": {
+      "sha256": "a8e253817b31411f75b63864193c25d44be63f4a093619577ef3300dedfd6d40",
+      "bytes": 546347,
+      "source_blob": "c338880d675bde799d5405af9d053d2a44315d80"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/split.json": {
+      "sha256": "800b21a2286dbedb25b974a07e6acc78510982b666251991a19f30a898cdd8c1",
+      "bytes": 8425,
+      "source_blob": "46ce441e2daff1956f46aeca7b8d3342ffe7cf9f"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/tune-model-audit.json": {
+      "sha256": "8663a2306123459b46b8fe96b52b053d0b26f676f3411a3ef24bcd8f68e5976f",
+      "bytes": 5387,
+      "source_blob": "f9a543919d41ae3168fee898b57da4ca94f132d1"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/turns.jsonl": {
+      "sha256": "66370d9f17f929aee8395606b74be049e72b63abf3a4f6b06eee4367cd3023fb",
+      "bytes": 67703,
+      "source_blob": "b82f478e19f2b2e632e398bdb6e2f24b3de6d29d"
+    },
+    "experiments/boss-sim/silent/43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951/version-scope-audit.json": {
+      "sha256": "2c2e517f14cfa4dc2dccfe11b6b3ff35bb726b34034cd551cdfafd8e7981006c",
+      "bytes": 4537,
+      "source_blob": "d417d6b89251608e34fb4d215ec5ed40529261eb"
+    },
+    "knowledge/characters/silent/boss-trust.json": {
+      "sha256": "e3e3706bef4dfc780aed58923370188c81b1ea8d2457ae13b1d634f3f2eb1cd4",
+      "bytes": 64153,
+      "source_blob": "aa4720c9ae16f9f16a0c960e892a97e76bcd0a5b"
+    },
+    "paper/materials/silent/boss-sim-calibration.md": {
+      "sha256": "5a7d82ae18a66f54c68f461d9814204d83e4b0b7c597e808cffee337766dd199",
+      "bytes": 100569,
+      "source_blob": "97b84ece0114730b1b5ea16d47e2f3c2a8399c40"
+    }
+  },
+  "source_and_publication_are_live_ancestors": true,
+  "archive_checksums_valid": true,
+  "tests": {
+    "source-sandbox": {
+      "exit": 0,
+      "files": 248,
+      "cases": 2608,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-sandbox.log"
+    },
+    "live-sandbox": {
+      "exit": 0,
+      "files": 251,
+      "cases": 2627,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/live-sandbox.log"
+    },
+    "source-python-fixed": {
+      "exit": 0,
+      "cases": 12
+    },
+    "dispatch-fixed": {
+      "exit": 0,
+      "cases": 8
+    }
+  },
+  "external_checks_pending": true,
+  "originals": {
+    "originals/report.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/report.md",
+      "sha256": "3cd32b1af21203d39eda4f774e87d950cb74515185efe7e8606ebe7cad84da6c",
+      "bytes": 113058
+    },
+    "originals/report.initial.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/report.initial.md",
+      "sha256": "6646a26744a0c7474025a3494294d30e4c98f952ff2506584fae6de7e7bfbb3f",
+      "bytes": 2880
+    },
+    "originals/final.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/final.json",
+      "sha256": "98fb64f2754f15903bd3f153710a49be000b1ce31f92ec19e511db0dd6bb3245",
+      "bytes": 10757
+    },
+    "originals/fixed-release-audit.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/fixed-release-audit.json",
+      "sha256": "b9402ff6e4525a744b7a10e847490504d9197632fcc5c0cc6a74cf734dbe5db1",
+      "bytes": 664
+    },
+    "originals/source-git-archive-audit.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-git-archive-audit.json",
+      "sha256": "03d7ece50cd424cd376a44d9bedb4fe953bd03e35eed95581a999d62b454fc7f",
+      "bytes": 161
+    },
+    "originals/source-checks.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-checks.json",
+      "sha256": "ca3512936bdbeaafe82236e07186d01f4dfe746616e6633985bf0a906e9f5b0c",
+      "bytes": 453
+    },
+    "originals/live-release-state.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/live-release-state.json",
+      "sha256": "742002ab835013b6e0ca371d0248f613179935176117577bd86509a48ed4b24c",
+      "bytes": 7063
+    },
+    "originals/live-release.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/live-release.log",
+      "sha256": "239e81a83db12ba8fc27d0f76760487168a5c9fbcd884f39c41c46b7a9f38baf",
+      "bytes": 13648
+    },
+    "originals/live-preflight.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/live-preflight.log",
+      "sha256": "e7b0081c2d261dd80f4c6f78340767b18dd8e622900286c1e76f2b98b34fb803",
+      "bytes": 41
+    },
+    "originals/source-sandbox.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-sandbox.log",
+      "sha256": "44d069bc6d4fcb23dd10d681eace4098cdf44756600f41505bd6f8ddb09f68d4",
+      "bytes": 530
+    },
+    "originals/source-sandbox.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-sandbox.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/live-sandbox.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/live-sandbox.log",
+      "sha256": "e1e3fc2afd7ad94b58e3235b9a47c7d7042623ad3689a16b26d831e93459c6f7",
+      "bytes": 492
+    },
+    "originals/live-sandbox.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/live-sandbox.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/source-python-fixed.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-python-fixed.log",
+      "sha256": "9abfd62cd5311ed4df317e4ad2b5a588919b2b80e2b5d4c5d72c86a799bae7da",
+      "bytes": 3935
+    },
+    "originals/source-python-fixed.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-python-fixed.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/dispatch-fixed.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/dispatch-fixed.log",
+      "sha256": "21fc75a05539dedab4f037d10d4147390ab9a9699b35d5979a1da0c6b989a9c6",
+      "bytes": 1530
+    },
+    "originals/dispatch-fixed.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/dispatch-fixed.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/base-sandbox.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/base-sandbox.log",
+      "sha256": "5675ba064c37b03154e29505a5f5ac607af000373f7c17f6e7965ab3769c07f7",
+      "bytes": 86
+    },
+    "originals/base-sandbox-interruption.txt": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/base-sandbox-interruption.txt",
+      "sha256": "9e55d0ad245a50c10db84d751a3ba1d413c723b1f1a52a436c6df4af42a37fe2",
+      "bytes": 176
+    },
+    "originals/base-sandbox-retry.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/base-sandbox-retry.log",
+      "sha256": "ab15ab0ea0a93eae69834b04b56e7da63786622239a1c64f9a3e3c4e911d9eb1",
+      "bytes": 531
+    },
+    "originals/base-sandbox-retry.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/base-sandbox-retry.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/replay-transition.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/replay-transition.json",
+      "sha256": "1bbb62cb546096298015eb8d9d74ba11a64b92965fd8c6fc832febe62497074f",
+      "bytes": 624
+    },
+    "originals/refresh-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/refresh-initial.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "originals/refresh-initial.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/refresh-initial.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "originals/refresh-initial-assumed.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/refresh-initial-assumed.exit",
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "bytes": 4
+    },
+    "originals/refresh-completed.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/refresh-completed.log",
+      "sha256": "cf05da78250a2886ea875f1370f93a0f318806d40af9fdfe268e0d2df0f01f50",
+      "bytes": 801
+    },
+    "originals/refresh-completed.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/refresh-completed.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/base-gitleaks-evidence-audit-final.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/base-gitleaks-evidence-audit-final.json",
+      "sha256": "247afbcb80ca93b3628d2ee58c225be4a050406f56e281ccff39efc3aceba00d",
+      "bytes": 6196
+    },
+    "originals/base-gitleaks-verified.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/base-gitleaks-verified.log",
+      "sha256": "ced4e09508143d6932fda5f367d53cc334449c91f28e6a05100a8e90c7ccff31",
+      "bytes": 81
+    },
+    "originals/base-gitleaks-verified.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/base-gitleaks-verified.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/source-gitleaks.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-gitleaks.log",
+      "sha256": "032e656f1448f2b2c84f5a8c22bf30b9041294a3b8a7a04aab87f11c99665de5",
+      "bytes": 111
+    },
+    "originals/source-gitleaks.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-gitleaks.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/source-log-gitleaks.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-log-gitleaks.log",
+      "sha256": "8cf393bfcebcc9b78d87d0c649133fde6194a500e029b6b17b0fe8c98c761694",
+      "bytes": 106
+    },
+    "originals/source-log-gitleaks.exit": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/source-log-gitleaks.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "originals/ignored-log-recovery.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ignored-log-recovery.json",
+      "sha256": "a8c32c4e1149f187dd16bb55e4b3a933fdda15b00898c85eaf71fb6f6dfedbdf",
+      "bytes": 1618
+    },
+    "originals/raw-log-whitespace-original.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/raw-log-whitespace-original.log",
+      "sha256": "2621f806255beef70d5ce122aaafcf160e8158e3357b286f05299dc854803de3",
+      "bytes": 139
+    },
+    "originals/raw-log-whitespace-accepted.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/raw-log-whitespace-accepted.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "originals/ledger-add.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ledger-add.json",
+      "sha256": "66541e81bfde214444ac20ddea893fc27396af88474c1b79141e8bf326bc3857",
+      "bytes": 7149
+    },
+    "originals/ledger-add.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ledger-add.log",
+      "sha256": "5876940268f7db226e8ed2844deb2dd5c31d3756ed437c5e68b75b8de7d55047",
+      "bytes": 12
+    },
+    "originals/ledger-source-update.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ledger-source-update.json",
+      "sha256": "fad0cdf3ede2547233b35088afd431cd3fd450762e73ec2711677843f7581154",
+      "bytes": 495
+    },
+    "originals/ledger-source-update.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ledger-source-update.log",
+      "sha256": "5876940268f7db226e8ed2844deb2dd5c31d3756ed437c5e68b75b8de7d55047",
+      "bytes": 12
+    },
+    "originals/ledger-release-note.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ledger-release-note.json",
+      "sha256": "0aac79335b1c27686c5bc86e1069f7d84f9e94fb1edc9c07e85285746dca60ff",
+      "bytes": 539
+    },
+    "originals/ledger-release-note.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ledger-release-note.log",
+      "sha256": "5876940268f7db226e8ed2844deb2dd5c31d3756ed437c5e68b75b8de7d55047",
+      "bytes": 12
+    },
+    "originals/ledger-final.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/ledger-final.json",
+      "sha256": "bd143d4c790778a8d8b45a806059f98c1fcaab948072d1840eee38ed61fde694",
+      "bytes": 9607
+    },
+    "originals/release-date.txt": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/release-date.txt",
+      "sha256": "0b836df538ad4de33b68ea828fe019dc8552e5e13fa295f0d39ea80f617e3350",
+      "bytes": 24
+    },
+    "20261008-141302-fix-batch.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-141302-fix-batch.out",
+      "sha256": "0f70b90d3a514f5f8290711674b1b139c4b48825a25f57122bc6ad4e6eeb9716",
+      "bytes": 7330
+    },
+    "20261008-141302-fix-batch.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-141302-fix-batch.err",
+      "sha256": "65dd8684936f553b8f29ea3c2fb6829b71e5d8394d25cc6541347471e225dab0",
+      "bytes": 42101
+    }
+  },
+  "owned_original_rows": 3,
+  "new_shipped_rows": 1,
+  "ledger_check": "physical/index 0 problems",
+  "data_only": true,
+  "new_version_created": false,
+  "live_modified": false,
+  "paper_refreshed": false,
+  "notifications": {
+    "notes/for-dai.md": {
+      "sha256": "03d148f41ff3a191f6f98b9dc82063b36281d3dd45b1996287866bd6a2bd35e0",
+      "new_notification_appended": false
+    },
+    "ops/inbox-dev.md": {
+      "sha256": "03d148f41ff3a191f6f98b9dc82063b36281d3dd45b1996287866bd6a2bd35e0",
+      "new_notification_appended": false
+    }
+  },
+  "fixed_simulator_base": "a85b3c5d88a3c2bcd8053f1bad8f447310c1ccd9",
+  "new_actual_events": 21,
+  "tune_keys": 107,
+  "validation_keys": 134,
+  "f49_validation": 5,
+  "f49_missing": 5,
+  "joint_f48_f49_validated": false,
+  "old_exp100_failure_preserved": true,
+  "gitleaks": {
+    "default_rules": true,
+    "exit": 0,
+    "findings": 0,
+    "no_allowlist": true
+  }
+}

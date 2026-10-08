@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：Y5H4CFAQ2WTG（A10，第33层，无厌沙虫：T10以1血、28挡对30攻击阵亡，敌剩71血）
+- 新的纯 bug：
+  - Y5H4CFAQ2WTG：抽牌优先检查漏认计算下注的全弃重抽标记 — `.worktrees/live/agent/src/reflex/turn-solver.ts:3615`（新）
+- 写成「未记录」的项：完整dirty源码、逐击毛伤及恢复中间帧、同ID持久实例、实际重抽和替代策略的受控结果、护栏长期代价、三幕资源、boss时钟估计及比值、Jev缓存、实际账单费用。
+- 学习账本：新增 silent-0300；更新 silent-0300、0021、0019、0018、0006、0046、0276、0005、0284、0243、0017。较早L704现象补账，本局0300记repeat，其余support；`ledger.py check`退出码0。
+- 代码提案：
+  - 抽牌入口：F33T10及L704 F48T6／silent-0300／silent-proposal-1cb36e182078a20e／strategy-proposal；实际重抽胜负未记录。
+  - 毒防与药水：F33T1—T10、F31T3／silent-0021等／silent-proposal-fab06d987903ee52／strategy-proposal；缺整场配对，保留原权重与SL限制。
+  - 资源投影：F17—F33／silent-0019等／silent-proposal-54f7ee6b632cab26／strategy-proposal；替代路线与留药结果未知。均未实现、未上线。
+
+```json
+{"task":"postmortem","appended":["Y5H4CFAQ2WTG"],"skipped":[],"bugs":[{"run":"Y5H4CFAQ2WTG","where":"agent/src/reflex/turn-solver.ts:3615","what":"drawsCards遗漏计算下注的drawDiscardedHand，最少损选线没有把可打的零费全弃重抽纳入抽牌优先；较早L704现象补账，本局repeat。","new":true}],"ledger":{"added":["silent-0300"],"updated":["silent-0300","silent-0021","silent-0019","silent-0018","silent-0006","silent-0046","silent-0276","silent-0005","silent-0284","silent-0243","silent-0017"],"repeats":["silent-0300"],"check":0},"code_proposals":["silent-proposal-1cb36e182078a20e","silent-proposal-fab06d987903ee52","silent-proposal-54f7ee6b632cab26"],"implementation_domains":["combat","potion","sl","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-164302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11aae-2802-7d71-88d7-9ef0452d0294
+轮数：1；工具调用：command_execution×50
+token：输入 230.3k、输出 40.9k（其中推理 14.0k）、cache 读 6278.4k、cache 写 0（命中 96.5%）
+成本：未提供
+耗时：1594.5 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 8.4 s、首次工具 12.2 s、末次工具结束 1554.7 s；工具内共 64.0 s，其余（模型生成、推理、网络）1527.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×48；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T16-43-03-01a11aae-2802-7d71-88d7-9ef0452d0294.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-164302-postmortem.jsonl

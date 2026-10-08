@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Verified immutable dispatch evidence metadata SHA256, exact two files and exact value"
+condition = "AND"
+regexTarget = "secret"
+regexes = ["^5f73178b469f5f5abe6117d96f8df4a8d3c13b3201263c2413f5ce7f1e2d2267$"]
+paths = ['experiments/boss-sim/silent/99bff6635a8f502f58e11b0ae9de3c3775da20cb9f66c124040fc6def4b94d09/(evidence\.original|startup)\.json$']

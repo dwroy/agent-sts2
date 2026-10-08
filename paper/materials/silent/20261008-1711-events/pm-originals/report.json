@@ -1,0 +1,49 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "Y5H4CFAQ2WTG"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "Y5H4CFAQ2WTG",
+      "where": "agent/src/reflex/turn-solver.ts:3615",
+      "what": "drawsCards遗漏计算下注的drawDiscardedHand，最少损选线没有把可打的零费全弃重抽纳入抽牌优先；较早L704现象补账，本局repeat。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0300"
+    ],
+    "updated": [
+      "silent-0300",
+      "silent-0021",
+      "silent-0019",
+      "silent-0018",
+      "silent-0006",
+      "silent-0046",
+      "silent-0276",
+      "silent-0005",
+      "silent-0284",
+      "silent-0243",
+      "silent-0017"
+    ],
+    "repeats": [
+      "silent-0300"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-1cb36e182078a20e",
+    "silent-proposal-fab06d987903ee52",
+    "silent-proposal-54f7ee6b632cab26"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-164302-postmortem/report.md"
+}

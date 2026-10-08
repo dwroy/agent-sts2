@@ -1,0 +1,14 @@
+{
+  "first": {
+    "tsc": 0,
+    "vitest": 1,
+    "files": 250,
+    "cases": 2616,
+    "failed_files": 39,
+    "failed_cases": 134,
+    "reason": "错误地把整套固定测试的CHARACTER设为silent，默认角色固定数据读取受到影响；不是新增知识的独立代码反例。"
+  },
+  "retry": {
+    "reason": "恢复固定测试默认角色环境，unset CHARACTER；相同原沙箱入口、1worker与固定数据，未改代码/测试/排除名单。"
+  }
+}

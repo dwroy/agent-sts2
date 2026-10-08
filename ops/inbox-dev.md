@@ -278,3 +278,60 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 14:01 [运维codex] Roy高优先Codex大脑缓存排查与修复：已实际单独派发 20261008-140042-fix-batch，PID 107937，pane=wJ:p8D，任务和宿主进程已核实；独立codex-brain-cache工作树与模板，保留完整题面和现有模型/推理强度，要求查真实缓存原因、做已授权同题固定前缀对照，并给实际修前/修后命中率、token、耗时和额度对比。当前仅派发，尚无缓存原因或修复结论；后续按真实完成事件登记，回执paper/materials/silent/20261008-1342-cache-dispatch/dispatch-receipt.json。
 
 - 2026-10-08 14:10 运维：经验133301原19项并行记录冲突已兜底，仅集成学习者源9d833df6原experience.json；实际live 1a09acb6b414590e23a903c45f7b5ffc0720b722、发布a340c1ec3825bf5e7048b5ec700539c2b98602c6/唯一S1.exp98，main已同步。经验增0改12退0/176 active，10所属数据CLI shipped，四个代码提案已注册并沿自动链，0295纯bug保持未实现。源首轮248文件2608例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1402-experience98。
+
+- 2026-10-08 14:23 运维：经验133301/S1.exp98固定发布a340c1ec、树aba0ed33完整外部tsc+vitest均exit0，299文件3416例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、10所属数据shipped保持，原failed/merged=null/19项冲突及1254原件SHA保留；四份代码提案沿原自动链。回执 paper/materials/silent/20261008-1421-events/manifest.json。
+
+- 2026-10-08 14:25 运维：LYBHQ1X230ZB复盘新纯bug silent-0296（逃脱计划固定抽牌遗漏、条件格挡误算）非阻塞，已按学习者原证据追加fix-queue-v4；两原提案0337a5f0/8e9beeee核注册及SHA后沿自动链，A0首证LRN0HPZ0FZS1/prior partly及12旧support保持，原repeat不当上线后重犯，不标实现或承诺获胜。回执paper/materials/silent/20261008-1421-postmortem。
+
+- 2026-10-08 14:39 运维：经验140852原23项并行记录冲突已兜底，仅集成学习者源47e9a436原experience.json；实际live b015111e067122f13fda492bde6ec3423170107d、发布7f0c04dd5114d2f8152da1fb8cb6c5f45e1c478e/唯一S1.exp99，main已同步。经验增0改16退0/176 active，16所属数据CLI shipped，四个代码提案已注册并沿自动链，0296纯bug保持未实现。源首轮248文件2608例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1432-experience99。
+
+- 2026-10-08 14:54 运维：经验140852/S1.exp99固定发布7f0c04dd、树9584d1ec完整外部tsc+vitest均exit0，302文件3426例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、16所属数据shipped保持，原failed/merged=null/23项冲突及1266原件SHA保留；四份代码提案沿原自动链。回执 paper/materials/silent/20261008-1450-events/manifest.json。
+
+- 2026-10-08 14:56 运维：H1T1F8ML9FUE复盘新非阻塞纯bug silent-0297（手空时漏读弃牌可见凋萎6伤，旧缓存3导致完整需损36低报为33）已按学习者原证据入fix-queue-v4；三原提案179fd62a/2ae74362/de26499e核注册及SHA后沿自动链，原0079/0117 repeat及10旧support保持，不标实现或承诺获胜。回执paper/materials/silent/20261008-1450-postmortem。
+
+## 2026-10-08T15:05:30+08:00 Codex 大脑缓存独立批次交付给 Roy
+
+实际结论：冻结A10 86局、2680 trace尝试、2669可核实模型调用、2666回答；已知输入339269444，cached180677504，真实53.2549%。旧cost.py漏读session camelCase缓存/推理/写入，把相同窗口算成1266176缓存（0.3732%）；不是把后端缓存从0.37%提高到53%。session真实59.8569%，最近100题60.2125%；14 trace尝试缺计数，其中11未发模型前检错误，另3发模型后缺usage，未知而非0。原329M口径无给定切点；新冻结窗口、原CSV333M/旧结果均保存。thread/revert存在实测非零反例，余下冷缓存原因unknown。
+
+旧/新规则逐项：旧成本只识别exec snake_case，新同时识别session camelCase并避免trace/brain重复调用及累计wall计费；旧trace只留system摘要，新加完整instructions/user/schema摘要、长度和首差异字节；生产传输内容/顺序/thread/revert/模型gpt-6.1-sol与high完全原样，知识仍按真实刷新更新，铁甲等价，不删题面、不冻结旧知识、不改策略。没有游戏机制账本，code_proposals=[]、implementation_domains=[]、游戏版本null。
+
+实际发布：source f602fa22ded02adf1ad32aac2d2f664c4ea286e4 → live bea18dc71a6f781e837644c7b98c385d0f62d066，fixed tree 9d0ca941472e43252060c7828d03c130ff903306；source/live原沙箱tsc0/vitest0，251文件2618例；main ca625c25eda018b794783729a48275b318c49ad5，刷新原SHA/合前后知识blob保持。source2 76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9 已固定原入口tsc0/vitest0、251文件2621例，撤原每题取消源码1红/原字节恢复1绿（另5仅过滤），但main并行索引占用及锁内真实report.py在途导致尚未合入，实际merged=null；保留两次blocked日志交运维兜底，勿将其记shipped。首批源码cherry-pick映射已测，源字面祖先登记锁busy未做；后续只在净源码匹配、固定树不变时登记。
+
+实际上线后一次取样：新进程9DAS5L8YM1CN（启动7f0c04dd，13源码blob匹配、CLI0.161.0、原gpt-6.1-sol/high），首4题511947输入/120704缓存/1368输出/931推理、命中23.5774%、每题输入127986.75、中位17.8315秒，3次零1次非零；仍在进行中/冷启动/不同题型，不能声称缓存或额度改善。费用/大脑额度速度unknown，共享背景没有分离；学习者/运维95%没有同口径对照。
+
+续办：运维按既有完成事件等待其并行索引释放后，只集成source2净3路径到main和live（先核无report/refresh/builders、锁内保存全部刷新/新文件、预检重叠、合后原入口自测），不修改原blocked记录；下一次wake重载最终白名单/固定SHA后，仅一次 `bash ops/codex-ops-do.sh codex-brain-cache-probe`。实际probe执行0，固定既有完整题面/知识/schema、原模型high，永久预约/2物理调用、每题10分钟、总20分钟、usage required/80%保护，无游戏动作/生产线程/config写入；已预约不得重跑，缺usage/额度是pending或unknown。另一个修复pair未实现。完整外部留正常调度器完成检查，不冒记已通过。
+
+后续已完成事件一次统计：`nice -n 19 python3 eval/codex_cache.py --logs /home/dw/Projects/agent-sts2/logs --after 2026-10-08T06:58:26.265Z --out /home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/production-after-completed.json`，并按正常归档用新cost.py更新成本表；核新进程/实际源码/cache_request/context，trace计数排除未发模型前检错误，不轮询等新局。报告/原字节切点与SHA/初期取样/红绿/原失败路径：/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/report.md、report.json、baseline.json、production-initial*.json、publication*.json；根报告 paper/materials/silent/codex-brain-cache-2026-10-08.md。预期影响是准确核算和可复验测量，性能/省额度仍待测。回退只逆向本批实际源码（后续source2若合先撤它），保留全部知识刷新、并行记录和证据；首批统计回退会恢复漏计。
+
+## 2026-10-08 15:28 运维核实 Codex 缓存批次及隔离实验续办
+
+已核实原统计修复bea18dc71a6f781e837644c7b98c385d0f62d066实际合live/main。同冻结86局339269444输入/180677504缓存，旧0.3732%纠正为53.2549%；修的是session camelCase漏计和重复计数，不能声称缓存性能从0.37%提高到53%。生产传输、角色隔离及gpt-6.1-sol/high保持。首4题23.5774%原报告保留；本轮一次取样20题2647437输入/1569920缓存、59.2996%，每题132371.85输入、中位17.232秒，20题usage均可核且无前检伪调用；进行中小样本/不同题型，费用和额度改善未知。
+
+probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，实际3119da5fc4960d9354e7550e5390864866fb05b1→祖先登记722518cdb9edfe808864da176f7e512bd820e170，固定树d25b1cc3835b19f8e50205b250c079ae060894f2，组合原入口tsc0/vitest0、251文件2621例；main f4fcd6c8e2dfd3f47d7293bb804445da980353d9/c970fefb13ff466cebe4b46d18a7cf2ab92643b0。锁内最新live cffd20db、知识刷新/并行代码/原回报保持；原source实际成为live祖先，原批完整外部learner-recheck只请求一次，正在执行，尚不冒报通过。
+
+一次获准同题双问在知识隔离前检被拒：实验使用全局Codex home，可能加载全局AGENTS.md；模型调用0、pending，原预约/失败原件保留，不重跑原pair。已写原高优先缓存独立续办请求，修实验home/启动检查后使用独立修复pair，最多再2次且保留原总授权4次上限；普通游戏修复不混入。冷缓存原因与受控比较仍未知，不移除全局指令、不绕过隔离、不改生产配置。预期影响是准确计量与可复验测量；回退只逆向本批实际源码（先撤probe实际3119da5f，再按需撤bea18dc7），保留刷新、并行功能及失败证据。无游戏版本/知识条目。回执paper/materials/silent/20261008-1507-cache；原报告paper/materials/silent/codex-brain-cache-2026-10-08.md。
+
+- 2026-10-08 15:38 缓存批140042最终核实：固定live722518cd/树d25b1cc3，完整外部tsc/vitest0、302文件3429过2跳；原外部日志与84项原回报/失败SHA不变，不重复补测。隔离实验仍pending/模型调用0，原永久预约保留；首次续派请求在外部检查占用期间5秒超时且未被领取，原件保留，空闲后仅重试一次成功实际派独立codex-brain-cache续批20261008-153528-fix-batch/PID271862/引擎272108/pane wJ:p8M，host alive已核。原授权最多再2物理调用/总≤4，仅修实验home与前检并复用冻结调查，不改生产、不混普通游戏修复。临时662测试缓存已移出版本控制但本地原件保留；主记录6e427e00，实际终态回执paper/materials/silent/20261008-1507-cache/closure-final.json。
+
+- 2026-10-08 15:47 运维：经验144109原19项并行记录冲突已兜底，仅集成学习者源196f1800原experience.json；实际live 10f0aeb37f8df7975cf823ac0e439f851d9ad07f、发布2b1a5f6d491f826ea1bac28f707716d109fb3e65/唯一S1.exp100，main已同步。经验增0改17退0/176 active，19所属数据CLI shipped，四个代码提案已注册并沿自动链，0297纯bug保持未实现。源首轮251文件2618例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1541-experience100。
+- 2026-10-08 16:03 [运维 codex] 经验100固定2b1a5f6d完整检查tsc0/vitest1，仅rollout-live.test.ts:132最佳线路补入断言失败（3428过/1败/2跳过）。保留上线，普通修复队列已写固定输入与受控时钟核查，根因未定；保留原失败、不放宽断言或预算、不重复旧树整套。普通codex-dev有他人未提交改动，派发由broker保护，拒绝则pending等调度器续办。
+- 2026-10-08 16:05 [运维 codex] 上项派发回执：fix-batch仅一次exit1/dispatched=null，无新批号；codex-dev他人未提交改动完整保留，核查修复项pending，交后续tick空闲时派发。完整检查原失败不改写，不回滚S1.exp100，不停止对局。
+
+## 2026-10-08 16:23 — Codex缓存隔离探针修复已发布，真实双问待下一wake
+
+已测源548b53ca→actual live867ca72e38d01a6be452b23976270570ffce8ebe、祖先登记55cb69ff537ada4adbee3cdc92db853b77482d9c，main986aca2f5d5b38b37349cf4ab080558183006075。旧探针误用全局home；新探针沿原有隔离brain home，预约前检查隔离条件并在每次真实发送前持久登记两次上限。生产大脑请求、完整题面、知识、gpt-6.1-sol/high、thread/revert及80%额度保护保持；铁甲等价。原与合后沙箱均251文件2627例tsc/vitest0，Python48固定例及撤码2红恢复2绿原件保留，完整外部只请求一次待完成。
+
+原86局/2666题真实缓存53.2549%，旧0.3732%为成本漏计；不同20题窗口59.2996%不能证明性能提升。当前事件只取已有正常日志一次，不再调用模型做测量，冷缓存原因、耗时/费用/共享额度改善仍未知。旧预约两次永久保留，新修复pair尚未执行；下一wake重载固定动作后仅执行一次双问，最多新增2次、总分配≤4，拒绝保留原因。预期影响仅使隔离缓存能力测量可执行，不承诺缓存提升；回退只逆向本次六路径源码，保留所有知识刷新、原预约/失败/新claim，原成本字段修复保持。
+
+证据：原冻结86局号及完整原件见paper/materials/silent/20261008-1607-cache-integration/source-originals/report.md、baseline.json；本次工具发布不产生游戏经验或新版本。工作树固定agent树08dd9a59及runner摘要保持，勿随意同步main或删预约。
+
+## 2026-10-08 16:30 — 16:07批次闭环与待续验
+
+经验数据已兜底发布S1.exp101（源f2ce6143，实际bf4b1cef，发布650a6a84），只登记18所属数据shipped、原54条CLI，三代码提案沿自动链。缓存隔离工具已实际合入55cb69ff并同步main986aca2f，合后沙箱251文件2627例tsc/vitest0；真实双问留下一wake固定动作一次，未声称性能提升。两个原批完整续验各已请求一次，原失败/out/err/merged-null全部保留，等后续完成事件据实登记。
+
+9DAS5L8YM1CN复盘无新增纯bug；0256/0260已在原队列，回报“未列”误判仅记录去重，不改游戏知识。四提案由自动链续办，紧勒以f979修正版为准、ec2b初稿保留。原exp100完整rollout候选补入断言失败仍待普通工作树可用时核查，未因沙箱通过关闭。论文一次刷新、五校验通过；原文/台账/快照已纳入当前提交。证据：paper/materials/silent/20261008-1607-events/paper-snapshot.json。
+- 2026-10-08 16:51 [运维 codex] Roy缓存任务续办：隔离双问已通过固定broker完成，授权两次物理调用已用完（旧预约保留，总分配4）。同一thread/revert、完整题面/schema、gpt-6.1-sol/high均保持；首问146674入/缓存0，第二问146674入/缓存146432（99.835%），两问合计49.9175%，用时13.951/12.612秒。历史0.4%→53.2549%是漏计修正；本次仅验证重复请求缓存能力，生产前后因果改善、费用及额度消耗速度仍未知，quota前后均46%，80%保护保持。两个原批完整外部302文件3435过2跳已核实，旧失败原件不改、无新游戏版本/规则。证据：paper/materials/silent/20261008-1640-events/cache-probe-closure.json；不再重跑该双问。
+
+- 2026-10-08 17:05 运维 codex：160331 经验合入的32项并行记录冲突已兜底；仅原 experience.json .18→.19 实际上线 3e5637f6 / S1.exp102，主仓库同步。源自测 tsc/vitest0（251文件2621例），所属16项仅登记数据 shipped，四项代码提案仍 pending 走自动链；完整外部检查已请求一次，结果待事件，原报告和失败历史保持。回执 paper/materials/silent/20261008-1655-experience102/external-check-request.json。
+- 2026-10-08 17:21 [运维 codex] 17:11卡死事件已核实为两局交接：autoplay PID1746959及新对局Node PID429521均存活，游戏4XLZURXMD872/A10/F2/REWARD，独立stall-check为OK。循环已自动开下一局，无需人工点击或重启，未发送信号、未改配置。回执paper/materials/silent/20261008-1711-events/stall-closure.json。
+- 2026-10-08 16:59:12 CST Roy：已实际上线授权静默boss校准刷新 S1.boss-calibration5。旧规则/资料：上一校准120局/220开场/113验证；新规则/资料：131局/241开场/134验证，107调参keys与切点保持，原四项准入门槛保持；整体胜率映射逐起点旧→新{'t1': {'old': {'a': 2.0844, 'b': 0.4502, 'c': 0.0}, 'new': {'a': 2.0844, 'b': 0.4502, 'c': 0.0}}, 'pre': {'old': {'a': 2.2754, 'b': 0.5047, 'c': 0.0}, 'new': {'a': 2.2754, 'b': 0.5047, 'c': 0.0}}}；旧B2['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'WATERFALL_GIANT']→新B2['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'WATERFALL_GIANT']，旧B3['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'WATERFALL_GIANT']→新B3['KAISER_CRAB', 'CEREMONIAL_BEAST', 'KNOWLEDGE_DEMON', 'LAGAVULIN_MATRIARCH', 'SOUL_FYSH', 'WATERFALL_GIANT']；F49实际8/可模拟7/验证{'t1': 5, 'pre': 5}，仍低可信。证据['9R916WW0V65N', 'G8NHLL09DLBX', 'H1T1F8ML9FUE', 'K2JAGKVJAWZJ', 'L2TSFU62Z57Z', 'LYBHQ1X230ZB', 'NEWRFAYKTQHR', 'PD9AYQVMLQW6', 'T0DGVABPV60U', 'ZTRGYYMLR8SC']、silent-0299、任务20261008-141304-silent-boss-calibration；源0471382514799baa3db44602f56ac35020f30ba6→实际合入465df69b196ff828dedf250538acba9917c120b5→固定发布183e274b0279f711307046ed956214999296f050/树54c9567f6dfce14a5b82b229276ec1349b4cf9a6。预期影响：B2/B3读取本角色最新胜率映射与可信名单，无胜率提升因果结论；保留SL截断偏差与未验证范围。回退：仅把knowledge/characters/silent/boss-trust.json恢复到87bceeb23dd5531f89753f89b4dd1c6e188e706e中的旧blob，锁内自测/记录新版本，保留所有刷新和历史。源及合后沙箱通过，完整外部由调度器补；仅proposed，shipped请运维核实实际发布后经CLI登记。

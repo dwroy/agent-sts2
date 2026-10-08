@@ -1,0 +1,423 @@
+{
+  "task": "fix-batch",
+  "item": "codex-brain-cache",
+  "status": "pending-tests-and-publication",
+  "base": "a9e9586338be9c74842fc535bdc31c6478c9cb91",
+  "source": null,
+  "merged": null,
+  "version": null,
+  "code_proposals": [],
+  "implementation_domains": [],
+  "confirmed_cause": "eval/cost.py omits session cachedInputTokens/cacheWriteInputTokens/reasoningOutputTokens; incomplete trace fallback duplicates call/wall totals.",
+  "cache_transport_cause": "unknown; production session+revert has measured nonzero hits",
+  "metrics": {
+    "all": {
+      "calls": 2680,
+      "questions": 2666,
+      "runs": 86,
+      "outcomes": {
+        "error": 11,
+        "answered": 2666,
+        "stalled": 2,
+        "failed": 1
+      },
+      "models": {
+        "gpt-6.1-sol/high": 2680
+      },
+      "known_cache_calls": 2666,
+      "missing_cache_calls": 14,
+      "input_tokens": 339269444,
+      "cached_input_tokens": 180677504,
+      "cache_hit_ratio": 0.5325487078052334,
+      "zero_cache_calls": 1107,
+      "output_tokens": 747216,
+      "reasoning_tokens": 520896,
+      "input_per_known_call": 127257.855963991,
+      "wall_ms": 37892505,
+      "median_ms": 11702.0,
+      "p90_ms": 24810,
+      "first": "2026-10-05T20:55:02.804Z",
+      "last": "2026-10-08T06:02:35.600Z"
+    },
+    "by_mode": {
+      "exec": {
+        "calls": 314,
+        "questions": 314,
+        "runs": 10,
+        "outcomes": {
+          "answered": 314
+        },
+        "models": {
+          "gpt-6.1-sol/high": 314
+        },
+        "known_cache_calls": 314,
+        "missing_cache_calls": 0,
+        "input_tokens": 39535474,
+        "cached_input_tokens": 1266176,
+        "cache_hit_ratio": 0.03202632653398819,
+        "zero_cache_calls": 303,
+        "output_tokens": 84953,
+        "reasoning_tokens": 58758,
+        "input_per_known_call": 125909.15286624203,
+        "wall_ms": 4545115,
+        "median_ms": 12466.0,
+        "p90_ms": 22411,
+        "first": "2026-10-05T20:55:23.284Z",
+        "last": "2026-10-06T03:26:13.126Z"
+      },
+      "session": {
+        "calls": 2366,
+        "questions": 2363,
+        "runs": 86,
+        "outcomes": {
+          "error": 11,
+          "answered": 2352,
+          "stalled": 2,
+          "failed": 1
+        },
+        "models": {
+          "gpt-6.1-sol/high": 2366
+        },
+        "known_cache_calls": 2352,
+        "missing_cache_calls": 14,
+        "input_tokens": 299733970,
+        "cached_input_tokens": 179411328,
+        "cache_hit_ratio": 0.5985685506384212,
+        "zero_cache_calls": 804,
+        "output_tokens": 662263,
+        "reasoning_tokens": 462138,
+        "input_per_known_call": 127437.91241496599,
+        "wall_ms": 33347390,
+        "median_ms": 11601.5,
+        "p90_ms": 25078,
+        "first": "2026-10-05T20:55:02.804Z",
+        "last": "2026-10-08T06:02:35.600Z"
+      }
+    },
+    "latest_100": {
+      "calls": 100,
+      "questions": 100,
+      "runs": 4,
+      "outcomes": {
+        "answered": 100
+      },
+      "models": {
+        "gpt-6.1-sol/high": 100
+      },
+      "known_cache_calls": 100,
+      "missing_cache_calls": 0,
+      "input_tokens": 13309236,
+      "cached_input_tokens": 8013824,
+      "cache_hit_ratio": 0.6021250205496393,
+      "zero_cache_calls": 34,
+      "output_tokens": 25969,
+      "reasoning_tokens": 17427,
+      "input_per_known_call": 133092.36,
+      "wall_ms": 1398862,
+      "median_ms": 11516.0,
+      "p90_ms": 24377,
+      "first": "2026-10-08T04:02:26.041Z",
+      "last": "2026-10-08T06:02:35.600Z"
+    },
+    "transitions": {
+      "new_thread": {
+        "calls": 121,
+        "questions": 121,
+        "runs": 77,
+        "outcomes": {
+          "error": 1,
+          "answered": 120
+        },
+        "models": {
+          "gpt-6.1-sol/high": 121
+        },
+        "known_cache_calls": 120,
+        "missing_cache_calls": 1,
+        "input_tokens": 14815654,
+        "cached_input_tokens": 0,
+        "cache_hit_ratio": 0.0,
+        "zero_cache_calls": 120,
+        "output_tokens": 50810,
+        "reasoning_tokens": 31908,
+        "input_per_known_call": 123463.78333333334,
+        "wall_ms": 2488585,
+        "median_ms": 21545,
+        "p90_ms": 28908,
+        "first": "2026-10-05T20:55:02.804Z",
+        "last": "2026-10-08T05:31:56.429Z"
+      },
+      "changed_system_same_thread": {
+        "calls": 9,
+        "questions": 9,
+        "runs": 9,
+        "outcomes": {
+          "error": 9
+        },
+        "models": {
+          "gpt-6.1-sol/high": 9
+        },
+        "known_cache_calls": 0,
+        "missing_cache_calls": 9,
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "cache_hit_ratio": null,
+        "zero_cache_calls": 0,
+        "output_tokens": 0,
+        "reasoning_tokens": 0,
+        "input_per_known_call": null,
+        "wall_ms": 1792,
+        "median_ms": 200,
+        "p90_ms": 215,
+        "first": "2026-10-05T21:16:59.677Z",
+        "last": "2026-10-06T02:52:15.040Z"
+      },
+      "same_system_changed_label": {
+        "calls": 1787,
+        "questions": 1787,
+        "runs": 77,
+        "outcomes": {
+          "error": 1,
+          "answered": 1783,
+          "stalled": 2,
+          "failed": 1
+        },
+        "models": {
+          "gpt-6.1-sol/high": 1787
+        },
+        "known_cache_calls": 1783,
+        "missing_cache_calls": 4,
+        "input_tokens": 227988380,
+        "cached_input_tokens": 133805056,
+        "cache_hit_ratio": 0.586894191712753,
+        "zero_cache_calls": 628,
+        "output_tokens": 505138,
+        "reasoning_tokens": 355233,
+        "input_per_known_call": 127867.8519349411,
+        "wall_ms": 25096234,
+        "median_ms": 11509,
+        "p90_ms": 24956,
+        "first": "2026-10-05T23:14:14.653Z",
+        "last": "2026-10-08T06:02:35.600Z"
+      },
+      "same_system_same_label": {
+        "calls": 449,
+        "questions": 449,
+        "runs": 75,
+        "outcomes": {
+          "answered": 449
+        },
+        "models": {
+          "gpt-6.1-sol/high": 449
+        },
+        "known_cache_calls": 449,
+        "missing_cache_calls": 0,
+        "input_tokens": 56929936,
+        "cached_input_tokens": 45606272,
+        "cache_hit_ratio": 0.8010947351144044,
+        "zero_cache_calls": 56,
+        "output_tokens": 106315,
+        "reasoning_tokens": 74997,
+        "input_per_known_call": 126792.73051224944,
+        "wall_ms": 5760779,
+        "median_ms": 10943,
+        "p90_ms": 21677,
+        "first": "2026-10-06T06:47:40.104Z",
+        "last": "2026-10-08T05:58:35.307Z"
+      }
+    },
+    "original_parser": {
+      "input_tokens": 339269444,
+      "cached_input_tokens": 1266176,
+      "cache_hit_ratio": 0.0037320661273580534
+    },
+    "corrected_parser": {
+      "input_tokens": 339269444,
+      "cached_input_tokens": 180677504,
+      "cache_hit_ratio": 0.5325487078052334
+    },
+    "quota": [
+      {
+        "bucket": "codex/primary",
+        "window_minutes": 10080,
+        "resets_at": "2026-10-11T07:07:58.000Z",
+        "samples": 323,
+        "first": [
+          "2026-10-05T21:00:02.041Z",
+          61
+        ],
+        "last": [
+          "2026-10-06T23:50:01.937Z",
+          100
+        ],
+        "used_percent_change": 39,
+        "attribution": "shared background traffic; not a brain-only burn rate"
+      },
+      {
+        "bucket": "codex/primary",
+        "window_minutes": 10080,
+        "resets_at": "2026-10-13T23:50:54.000Z",
+        "samples": 43,
+        "first": [
+          "2026-10-06T23:55:02.144Z",
+          0
+        ],
+        "last": [
+          "2026-10-07T03:25:01.898Z",
+          7
+        ],
+        "used_percent_change": 7,
+        "attribution": "shared background traffic; not a brain-only burn rate"
+      },
+      {
+        "bucket": "codex/primary",
+        "window_minutes": 10080,
+        "resets_at": "2026-10-14T03:28:43.000Z",
+        "samples": 318,
+        "first": [
+          "2026-10-07T03:30:01.992Z",
+          0
+        ],
+        "last": [
+          "2026-10-08T06:00:02.100Z",
+          42
+        ],
+        "used_percent_change": 42,
+        "attribution": "shared background traffic; not a brain-only burn rate"
+      },
+      {
+        "bucket": "codex/primary",
+        "window_minutes": 10080,
+        "resets_at": "2026-10-14T03:28:44.000Z",
+        "samples": 1,
+        "first": [
+          "2026-10-07T13:50:02.172Z",
+          20
+        ],
+        "last": [
+          "2026-10-07T13:50:02.172Z",
+          20
+        ],
+        "used_percent_change": 0,
+        "attribution": "shared background traffic; not a brain-only burn rate"
+      }
+    ],
+    "duplicate_physical_identities": 0,
+    "comparison_limits": "No frozen same-model/CLI/window learner or ops sample; 95% is not used as a matched comparison.",
+    "isolated_experiment": {
+      "status": "pending",
+      "calls": 0,
+      "reason": "New broker action requires next wake allowlist reload and one operator trigger."
+    },
+    "after_production": {
+      "status": "pending",
+      "reason": "No transport change or new production window claimed. Instrumentation is observable only in new processes."
+    }
+  },
+  "raw_manifest": {
+    "codex-calls.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl",
+      "bytes": 15200121,
+      "complete_bytes": 15200121,
+      "sha256": "ef5adc5a0b249761924ad028a8f813388edea12881f1cb7638ea547eb257bf33",
+      "rows": 4977
+    },
+    "run-config.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "bytes": 889434,
+      "complete_bytes": 889434,
+      "sha256": "9bd59598d8dbbf22a50c0d249fdca1e844cad2173240aa7ff527d5f4f2b549ee",
+      "rows": 247
+    },
+    "brain.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "bytes": 294022397,
+      "complete_bytes": 294022397,
+      "sha256": "68b961d496e2d3d4e628c11138ada3e71e23ec4f7255d372312c23cef5ff688c",
+      "rows": 8871
+    },
+    "codex-usage.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/logs/codex-usage.jsonl",
+      "bytes": 290613,
+      "complete_bytes": 290613,
+      "sha256": "62a0b46b3c41d6896726e3c1d8be4585136f7c6138cf831623df78e5aa53412f",
+      "rows": 763
+    }
+  },
+  "artifacts_sha256": {
+    "targeted-engine.log": "a22ccd6df7dc3c2604569b724c1f14c23cf41169cbfb9a16a09b352ec0f76f84",
+    "frozen-quota.jsonl": "a4eb9b99494b8c98f92e161a3df121f7939e1ffc15c0c191f6618fbfbbd860d9",
+    "probe-freeze.log": "8f191178143ca85de621e1e3e08948d60cc11980309fc2073a36427105e67339",
+    "frozen-a10-calls.jsonl": "597215076be0088068603ae8d7e59a1cdfa311bdb75098627f94577c7f59eb80",
+    "protocol-generation.log": "d47a06d59aba2814c3fb7460049fc2ccbfc834196c956d6c6558e8be8b079e24",
+    "final-targeted.log": "2cae86bae4ee3fabcc9b687983fd1038ddc4434ef463f6386ca43b468da668f9",
+    "cost-withdrawn.log": "b70404a8c4d9d9e018fbb1244861ab7a647c050fdf82af985d98e0cd9f51d1ef",
+    "source-sandbox.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "freeze-probe.ts": "0aa383d704c6df1cb516b128c448648a4682cfd7d0b94d0108c4fb9ddfb015a3",
+    "report.md": "2c6c790207b0f6095c20930c52ef652a1c6d258727fafbd60f9af016737cda1f",
+    "broker-procs.log": "a96032335ca3c72d72a97baf729901f191cff38fc7e8ef3fe3368782a3dc2533",
+    "reconcile.py": "0e57b783a51d8c6807d217388935be1ea9a9c3c52b4de0f7612bc25253669369",
+    "targeted-fixed.log": "7294e2854f4b9200e1f78da80fc4b1cada7ae7b287d61995b1dc4fcc66aa7c48",
+    "cost-restored.log": "3d05864adaa7a067c6dd8f488b76741afad7cdf90e6cdbe6566339424de57b0f",
+    "frozen-question.json": "9960968d548f363f955d5b981a347f7322b1afbd233f7082f0823d00e71808b8",
+    "probe-fixture.json": "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98",
+    "gitleaks-staged.log": "5f2824649b832ce1fd66af3fdec96c84cd46e970572c631f707d9f1456c9e8e1",
+    "config-join-correction.json": "a8fca3bce1ce14f6ffe0c5199df57909af8aeadcf6682c7935da78751df23f66",
+    "reconciled.json": "1b5e13aa6138c9626eb667ce1140975013867e4f9f66ddb7e7dcc64b4c8f8dc6",
+    "final-source-sandbox.log": "181d4ee5be26dd8a0e9ffedb6e4d3a4b0c9a89c13c7bd1a6f98ce2524edbdbc8",
+    "baseline-output.json": "2b8b288b3e584bbed90f411fdcd4893a63686ac283aa9435557f25468ace8300",
+    "analyse.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "frozen-run-config.json": "df26dd5c4f6c45c84b2bd4945afecfe00754b6c542b47c95d81b01179e8268c2",
+    "python-final.log": "092f3ef0c082b5e2a61888b77b1f68ffbd0afb7284e19601ea6250cb7141c478",
+    "gitleaks-staged.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "analyse.py": "d273edd84fbf4d997c25f1eb39528e83b94c2ce302540cdb98905d32733e633e",
+    "cost-fixed.log": "274f6bac38cd9c543013527ca3004ec792d15edc09b5a81dc5a505bd86dbbc90",
+    "original-cost-a10.json": "bcffd6b8e36f111d39479c5d531178b449675bb075679429ea4a8b2fbe919413",
+    "reconcile-output.json": "3a79a800d69bac5e4051de6b2509359ec181b75b1ce35971140b1621e7136bf0",
+    "original-last-config-join.jsonl": "001ea116269a0ed92da08911b8b15a3782ed022cb5d114cc78e373e4e0e874f1",
+    "broker-procs.exit": "ca2ebdf97d7469496b1f4b78958f9dc8447efdcb623953fee7b6996b762f6fff",
+    "source-sandbox.log": "0416461259ce591b9976e852bdc9f3c978dc91deadc5cc68e26100effba4ce17",
+    "baseline.json": "1b5e63c4f844df65ed3f6cdc7e6dba3f0faf8c1e27fc212f54f6fb37b48ea33a"
+  },
+  "checks": {
+    "withdrawn_python": {
+      "exit": 1,
+      "failed": 2,
+      "cases": 8
+    },
+    "restored_python": {
+      "exit": 0,
+      "cases": 8
+    },
+    "final_python": {
+      "exit": 0,
+      "cases": 9
+    },
+    "targeted_engine": {
+      "exit": 0,
+      "files": 3,
+      "cases": 10
+    },
+    "first_sandbox": {
+      "tsc": 0,
+      "vitest": 1,
+      "files": 249,
+      "passed": 2601,
+      "failed": 3
+    },
+    "final_sandbox": null,
+    "live_sandbox": null,
+    "external_full": null
+  },
+  "pending": [
+    "Next-wake broker reload and one fixed baseline pair",
+    "No live merge until external in-flight refresh state can be verified",
+    "Post-publication snapshot on a completed event"
+  ],
+  "probe": {
+    "action": "codex-brain-cache-probe",
+    "executed_calls": 0,
+    "max_physical_calls": 2,
+    "fixture_sha256": "6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98"
+  },
+  "rollback": "Revert only this source commit; preserve all knowledge refreshes and reports."
+}

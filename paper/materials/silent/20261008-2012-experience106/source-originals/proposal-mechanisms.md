@@ -1,0 +1,16 @@
+# 静默猎手：核对彩虹三类触发、祭品直接血价、力敏/毒/新增挡的模型输入与实际兑现，不预支未执行效应。
+
+账本：silent-0012,silent-0005,silent-0013,silent-0011,silent-0027,silent-0023,silent-0071,silent-0077,silent-0010,silent-0046,silent-0242,silent-0134,silent-0253,silent-0276,silent-0278,silent-0305,silent-0306
+条目：silent-strength-weak-observation,silent-footwork-block,silent-frail-card-block,silent-noxious-fumes-growth,silent-accelerant-triggers,silent-afterimage-per-card-block,silent-sparkling-rouge-turn-three,silent-shadowmeld-new-block-double,silent-mirage-poison-card-block,silent-piercing-wail-temporary-strength,silent-horn-cleat-second-turn-block,silent-byrdonis-strength-multihit-observation,silent-speed-potion-temporary-dexterity,silent-dexterity-potion-card-block,silent-poison-potion-observed-application,silent-rainbow-ring-three-card-types,silent-offering-direct-hp-cost
+
+来源任务experience-update/20261008-193934；实现任务独立strategy-proposal。角色silent，本次新局QHK1XQ928TTM、UZ1T7AH49WMB、7BNC8QX746YP均A10，完整历史140静默完局；原全引擎观察不当纯Codex爬塔成绩。支持/反例局号、进阶、典型层回合及数字逐条见changes.json和historical-mechanism-summary.json；新三局0实际DeepSeek，实际Codex72请求。运行69a7b441/c70efc8c+dirty完整源码未记录，不把当前源码当对局dirty全树，不凭失败认定纯bug。
+
+旧行为与新行为：当前提供有限整场参考、血量护栏、SL探索和终态代价。本任务只改经验文字，下面是待核实代码差异；独立实现只能补实际可证缺口，证据不足保持原规则。彩虹/祭品/暗影、临时力敏/余像/毒必须从实际状态和逐步作用分源；不能由持有或能力建立预记后轮收益。QHK F33第3/6试T3同35血/手/179及204敌血，均扣47，朝向变化使当轮14→20损血、第5轮判死→第4轮实死；两线24/24死，差6未超现护栏8宽限，不能称违反护栏。拟比较全败后的实际即时血价/存活轮数，但不据这两败调宽限或统一杀序。UZ F25四试15/80，后试T1同扣38但损14→9，抽弃/目标等同变；末T3无毒、触媒2/毒雾3已建仍无兑现，13挡对34死。7BNC F14T2单牌带毒刺击候选1/8后又实打冲刺，原短线已不对应实际前缀；只有对完整相同状态/抽牌/动作证据能比较参考误差，不强制结束回合或预言必胜。
+
+资源与药水：QHK F24首T2祭品10→4虽增2能、抽3，后重问改防御不能仍报原23输出；重试改变T1无色/毒雾与后续抽弃且赢，不仅归省6血。末F33T4祭品/腐化撞击先15→9→7，16/22已有挡不抵，总自损8。毒药本批7饮/6恢复，饮当步加6不扣本体；139历史实饮逐项核，加毒不等已结伤害，未知题面不能由价格0推药效0。UZ T2速度药5敏在脆弱下三牌9→20多11挡、抵18零损，次轮撤；没有留药/早喝整场对照，不拟新持有价或时点阈值。QHK二幕三胜耗24/16/19、最后只38入boss；UZ跨幕67后两胜耗52、15入精英，未来F27营火未到。7BNC末火10→31实回21、boss投影24不代表精英31。新行为仅把这些实际资源边界传播到终态/后场，阈值和未执行反事实保持未知。
+
+拟合与样本切分：先用截至4XLZURXMD872旧137局发现/复算，保留本批三新局作时间留出验证；同局SL不拆独立局。自然重打只有局部相同底板，完整同抽牌/多轮单因素控制未齐；不得用同局试次划分拟合/验证来夸大样本。彩虹新增32触发/3局（最早XTSV），祭品16动作/2局（最早UMVL），雕像27局睡醒十力，支持/反例详列JSON；出现/持有不是全部语义支持。反例0也不代表普适胜因；后方值读当场，未死部件不预加蟹怒，缓慢公式没有隔离。
+
+验证与影响：独立实现先核当前live是否已有等价实现，已有则附实际live祖先源码commit，不重复实现；未知输入只能显式保留未知。用上述本角色固定帧测试逐步力敏、临时撤销、暗影/脆弱分源、直接HP支付、毒实结、执行前缀失效及全败局部血价。只有完整动作前缀一致才比较模型与实际；验证其他角色/未观察进阶等价，运行原沙箱/后续外部全量检查。预期改善数值和参考可追溯性，不承诺胜率或另一方案必胜。缺完整dirty源码、部分归零/召唤帧/同ID个体、护栏反事实、组件移除与改路线整场胜线、boss时钟/三幕数据。
+
+授权与回退：Roy-2026-10-07-learning允许证据充分的规则修改，授权不提供游戏事实。本经验任务不改打法源码、不登记implemented或shipped；待独立strategy-proposal核足证据后实现。规则上线只回退具体实现commit，保留刷新/并行记录；先date在根notes/for-dai与ops/inbox-dev双通知旧规则、新规则、证据/账本/任务、预期影响及回退。不改运维prompt、不运行play/模拟池，不联网。

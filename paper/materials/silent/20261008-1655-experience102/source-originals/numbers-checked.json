@@ -1,0 +1,773 @@
+{
+  "checks": [
+    {
+      "name": "角色/帧数/决策",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "独立seek重抽与复盘原帧逐帧一致",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "11战房首末血量",
+      "data": [
+        [
+          2,
+          56,
+          48
+        ],
+        [
+          3,
+          69,
+          17
+        ],
+        [
+          5,
+          17,
+          17
+        ],
+        [
+          6,
+          17,
+          17
+        ],
+        [
+          12,
+          53,
+          26
+        ],
+        [
+          14,
+          62,
+          48
+        ],
+        [
+          17,
+          70,
+          28
+        ],
+        [
+          19,
+          61,
+          38
+        ],
+        [
+          21,
+          38,
+          25
+        ],
+        [
+          22,
+          25,
+          2
+        ],
+        [
+          23,
+          2,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "十赢房净损202、末死损2与回复守恒",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "问号扭动虫单列",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "末战四试/前三判死/末死",
+      "data": [
+        {
+          "attempt": 1,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 2,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 3,
+          "result": "predicted_death"
+        },
+        {
+          "attempt": 4,
+          "result": "died"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "pending药实际消耗",
+      "data": {
+        "before": [
+          {
+            "index": 0,
+            "potion_id": "CUNNING_POTION",
+            "name": "狡诈药水",
+            "description": "将[blue]{Cards}[/blue]张[gold]小刀+[/gold]加入你的[gold]手牌[/gold]。",
+            "rarity": "Uncommon",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": "TOUCH_OF_INSANITY",
+            "name": "癫狂之触",
+            "description": "选择你[gold]手牌[/gold]中的一张牌，使其在本场战斗可以免费打出。",
+            "rarity": "Uncommon",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          }
+        ],
+        "after": [
+          {
+            "index": 0,
+            "potion_id": "CUNNING_POTION",
+            "name": "狡诈药水",
+            "description": "将[blue]{Cards}[/blue]张[gold]小刀+[/gold]加入你的[gold]手牌[/gold]。",
+            "rarity": "Uncommon",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "稳定血清建保留2、不回血",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "蛇咬实加7毒不即时扣血",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "狡诈四手添三升级刀",
+      "data": [
+        {
+          "index": 0,
+          "card_id": "ASCENDERS_BANE",
+          "name": "进阶之灾",
+          "upgraded": false,
+          "target_type": "None",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": -1,
+          "star_cost": 0,
+          "rules_text": "",
+          "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+          "dynamic_values": [],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "unplayable",
+          "unplayable_reason_raw": "HasUnplayableKeyword",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "BUBBLE_BUBBLE",
+          "name": "咕嘟冒泡",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "如果敌方拥有中毒，则给予{PoisonPower:diff()}层中毒。",
+          "resolved_rules_text": "如果敌方拥有中毒，则给予9层中毒。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 9,
+              "current_value": 9,
+              "enchanted_value": 9,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 2,
+          "card_id": "STRIKE_SILENT",
+          "name": "打击",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 3,
+          "card_id": "PIERCING_WAIL",
+          "name": "尖啸",
+          "upgraded": false,
+          "target_type": "AllEnemies",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "所有敌人在本回合失去{StrengthLoss:diff()}点力量。",
+          "resolved_rules_text": "所有敌人在本回合失去6点力量。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "StrengthLoss",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 4,
+          "card_id": "SHIV",
+          "name": "小刀+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 5,
+          "card_id": "SHIV",
+          "name": "小刀+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 6,
+          "card_id": "SHIV",
+          "name": "小刀+",
+          "upgraded": true,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0,
+            1
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "冒泡毒6到15且不即时扣血",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "第三技能开信刀两敌各扣5且石虫减6力",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "磨蚀真实付3建立1敏/4荆棘",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "磨蚀1敏兑现防御6",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "赤牛/易伤开场回响31 2026-10-08T07:17:53.301Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "速度药加5且不触发柔嫩 2026-10-08T07:17:58.901Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "手上技法按施放时5敏给12挡再柔嫩 2026-10-08T07:17:59.799Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "赤牛/易伤开场回响31 2026-10-08T07:18:11.707Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "速度药加5且不触发柔嫩 2026-10-08T07:18:17.331Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "手上技法按施放时5敏给12挡再柔嫩 2026-10-08T07:18:18.249Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "赤牛/易伤开场回响31 2026-10-08T07:18:30.123Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "速度药加5且不触发柔嫩 2026-10-08T07:18:35.710Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "手上技法按施放时5敏给12挡再柔嫩 2026-10-08T07:18:36.617Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "赤牛/易伤开场回响31 2026-10-08T07:18:48.572Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "速度药加5且不触发柔嫩 2026-10-08T07:18:54.181Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "手上技法按施放时5敏给12挡再柔嫩 2026-10-08T07:18:55.086Z",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "四试同首手",
+      "data": [
+        [
+          "BUBBLE_BUBBLE",
+          "ECHOING_SLASH",
+          "DEFEND_SILENT",
+          "DEFEND_SILENT",
+          "TORIC_TOUGHNESS",
+          "SURVIVOR",
+          "DEFEND_SILENT"
+        ],
+        [
+          "BUBBLE_BUBBLE",
+          "ECHOING_SLASH",
+          "DEFEND_SILENT",
+          "DEFEND_SILENT",
+          "TORIC_TOUGHNESS",
+          "SURVIVOR",
+          "DEFEND_SILENT"
+        ],
+        [
+          "BUBBLE_BUBBLE",
+          "ECHOING_SLASH",
+          "DEFEND_SILENT",
+          "DEFEND_SILENT",
+          "TORIC_TOUGHNESS",
+          "SURVIVOR",
+          "DEFEND_SILENT"
+        ],
+        [
+          "BUBBLE_BUBBLE",
+          "ECHOING_SLASH",
+          "DEFEND_SILENT",
+          "DEFEND_SILENT",
+          "TORIC_TOUGHNESS",
+          "SURVIVOR",
+          "DEFEND_SILENT"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "紧勒完成线逐步HP 21",
+      "data": [
+        84,
+        60,
+        58,
+        56
+      ],
+      "passed": true
+    },
+    {
+      "name": "紧勒完成线逐步HP 22",
+      "data": [
+        38,
+        32,
+        30,
+        26
+      ],
+      "passed": true
+    },
+    {
+      "name": "感染与攻击合计实损 T3",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "感染与攻击合计实损 T5",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "横冲跨160时清6力量/横冲、159剩血仍在",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "8饮与SL恢复药分开",
+      "data": null,
+      "passed": true
+    },
+    {
+      "name": "末完整需损2、严格存活差1、敌81血",
+      "data": {
+        "hp": 2,
+        "block": 12,
+        "enemy": {
+          "index": 0,
+          "enemy_id": "HUNTER_KILLER",
+          "name": "猎人杀手",
+          "current_hp": 81,
+          "max_hp": 126,
+          "base_max_hp": 126,
+          "block": 0,
+          "is_alive": true,
+          "is_hittable": true,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "WEAK_POWER",
+              "name": "虚弱",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "intent": "BITE_MOVE",
+          "move_id": "BITE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "Attack",
+              "label": "14",
+              "damage": 14,
+              "hits": 1,
+              "total_damage": 14,
+              "status_card_count": null
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "name": "末状态实际死",
+      "data": null,
+      "passed": true
+    }
+  ],
+  "actual_potions": [
+    {
+      "floor": 5,
+      "turn": 1,
+      "ts": "2026-10-08T07:02:57.444Z",
+      "id": "WEAK_POTION",
+      "result": "completed: Action completed.",
+      "before_powers": {},
+      "after_powers": {}
+    },
+    {
+      "floor": 12,
+      "turn": 3,
+      "ts": "2026-10-08T07:07:08.449Z",
+      "id": "TOUCH_OF_INSANITY",
+      "result": "pending (unstable): Action queued but state is still transitioning.",
+      "before_powers": {},
+      "after_powers": {}
+    },
+    {
+      "floor": 21,
+      "turn": 1,
+      "ts": "2026-10-08T07:14:58.845Z",
+      "id": "STABLE_SERUM",
+      "result": "completed: Action completed.",
+      "before_powers": {},
+      "after_powers": {
+        "RETAIN_HAND_POWER": 2
+      }
+    },
+    {
+      "floor": 22,
+      "turn": 3,
+      "ts": "2026-10-08T07:16:39.669Z",
+      "id": "CUNNING_POTION",
+      "result": "completed: Action completed.",
+      "before_powers": {},
+      "after_powers": {}
+    },
+    {
+      "floor": 23,
+      "turn": 2,
+      "ts": "2026-10-08T07:17:58.901Z",
+      "id": "SPEED_POTION",
+      "result": "completed: Action completed.",
+      "before_powers": {
+        "TENDER_POWER": 1
+      },
+      "after_powers": {
+        "TENDER_POWER": 1,
+        "DEXTERITY_POWER": 5,
+        "SPEED_POTION_POWER": 5
+      }
+    },
+    {
+      "floor": 23,
+      "turn": 2,
+      "ts": "2026-10-08T07:18:17.331Z",
+      "id": "SPEED_POTION",
+      "result": "completed: Action completed.",
+      "before_powers": {
+        "TENDER_POWER": 1
+      },
+      "after_powers": {
+        "TENDER_POWER": 1,
+        "DEXTERITY_POWER": 5,
+        "SPEED_POTION_POWER": 5
+      }
+    },
+    {
+      "floor": 23,
+      "turn": 2,
+      "ts": "2026-10-08T07:18:35.710Z",
+      "id": "SPEED_POTION",
+      "result": "completed: Action completed.",
+      "before_powers": {
+        "TENDER_POWER": 1
+      },
+      "after_powers": {
+        "TENDER_POWER": 1,
+        "DEXTERITY_POWER": 5,
+        "SPEED_POTION_POWER": 5
+      }
+    },
+    {
+      "floor": 23,
+      "turn": 2,
+      "ts": "2026-10-08T07:18:54.181Z",
+      "id": "SPEED_POTION",
+      "result": "completed: Action completed.",
+      "before_powers": {
+        "TENDER_POWER": 1
+      },
+      "after_powers": {
+        "TENDER_POWER": 1,
+        "DEXTERITY_POWER": 5,
+        "SPEED_POTION_POWER": 5
+      }
+    }
+  ],
+  "opening": [
+    [
+      "BUBBLE_BUBBLE",
+      "ECHOING_SLASH",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "TORIC_TOUGHNESS",
+      "SURVIVOR",
+      "DEFEND_SILENT"
+    ],
+    [
+      "BUBBLE_BUBBLE",
+      "ECHOING_SLASH",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "TORIC_TOUGHNESS",
+      "SURVIVOR",
+      "DEFEND_SILENT"
+    ],
+    [
+      "BUBBLE_BUBBLE",
+      "ECHOING_SLASH",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "TORIC_TOUGHNESS",
+      "SURVIVOR",
+      "DEFEND_SILENT"
+    ],
+    [
+      "BUBBLE_BUBBLE",
+      "ECHOING_SLASH",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "TORIC_TOUGHNESS",
+      "SURVIVOR",
+      "DEFEND_SILENT"
+    ]
+  ]
+}

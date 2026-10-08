@@ -1,0 +1,104 @@
+```json
+{
+  "task": "fix-batch",
+  "base": "a9e9586338be9c74842fc535bdc31c6478c9cb91",
+  "fixes": [{
+    "item": "codex-brain-cache",
+    "commit": "f602fa22ded02adf1ad32aac2d2f664c4ea286e4",
+    "test": "agent/tests/cost_accounting_test.py",
+    "fails_without_fix": true,
+    "merged": "bea18dc71a6f781e837644c7b98c385d0f62d066",
+    "结论": "旧成本统计漏读 session 缓存字段；统计修复及请求摘要测量已上线。生产传输内容、模型和推理强度保持原样。"
+  }],
+  "source_commits": [
+    {
+      "commit": "f602fa22ded02adf1ad32aac2d2f664c4ea286e4",
+      "撤源码": "2例失败，原字节恢复8例通过"
+    },
+    {
+      "commit": "76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9",
+      "内容": "probe 超时、缺字段和结果保留防护",
+      "撤源码": "超时回归1例失败，原字节恢复1例通过",
+      "merged": null
+    }
+  ],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 251,
+    "cases": 2621
+  },
+  "live_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 251,
+    "cases": 2618
+  },
+  "external_full_tests": null,
+  "merged": "bea18dc71a6f781e837644c7b98c385d0f62d066",
+  "release": {
+    "commit": "bea18dc71a6f781e837644c7b98c385d0f62d066",
+    "fixed_tree": "9d0ca941472e43252060c7828d03c130ff903306",
+    "version": null,
+    "说明": "纯统计、测量及 probe 工具，不创建游戏行为版本"
+  },
+  "results": {
+    "冻结历史窗口": {
+      "局数": 86,
+      "模型调用": 2669,
+      "已知输入": 339269444,
+      "已知缓存输入": 180677504,
+      "旧统计命中率": "0.3732%",
+      "正确命中率": "53.2549%"
+    },
+    "上线后首次固定取样": {
+      "局号": "9DAS5L8YM1CN",
+      "题数": 4,
+      "输入": 511947,
+      "缓存输入": 120704,
+      "命中率": "23.5774%",
+      "说明": "冷启动、进行中小样本，不能据此归因性能改善"
+    },
+    "真实隔离实验调用数": 0,
+    "剩余冷缓存原因": "unknown",
+    "费用或额度改善": "unknown"
+  },
+  "skipped": [
+    {
+      "item": "probe 防护补丁 main/live 合入",
+      "reason": "main 并行索引占用，锁内核实 report.py 在途；保留 blocked 原件，已交运维兜底"
+    },
+    {
+      "item": "受控同题双问",
+      "reason": "待最终固定入口集成及下一次 wake 重载白名单；报告已给出一次触发指令"
+    },
+    {
+      "item": "完整外部检查及后续完成窗口",
+      "reason": "由调度器和后续完成事件执行，本会话未执行"
+    }
+  ],
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/report.md",
+  "report_json": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/report.json",
+  "root_report": "/home/dw/Projects/agent-sts2/paper/materials/silent/codex-brain-cache-2026-10-08.md",
+  "original_log_paths": [
+    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl",
+    "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+    "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+    "/home/dw/Projects/agent-sts2/logs/codex-usage.jsonl"
+  ],
+  "通知": "已追加 Roy 双通知及 decision-log，核实原文全部保留"
+}
+```
+
+== 学习者 codex / codex-brain-cache ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11a19-8b1e-72a3-a91c-efaa916c705c
+轮数：1；工具调用：command_execution×121 file_change×35
+token：输入 485.3k、输出 105.4k（其中推理 52.6k）、cache 读 14311.7k、cache 写 0（命中 96.7%）
+成本：未提供
+耗时：3991.8 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 8.8 s、首次工具 13.7 s、末次工具结束 3944.0 s；工具内共 1753.1 s，其余（模型生成、推理、网络）2236.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache）；模型的工具调用 exec×103；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T14-00-44-01a11a19-8b1e-72a3-a91c-efaa916c705c.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache.jsonl

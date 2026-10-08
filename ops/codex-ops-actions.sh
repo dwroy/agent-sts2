@@ -54,6 +54,18 @@ hosting() {
 }
 
 case "$action" in
+  codex-brain-cache-probe)
+    [ "$#" -eq 1 ] || { echo "codex-brain-cache-probe takes no arguments"; exit 2; }
+    CACHE_WORKTREE="$ROOT/.worktrees/codex-brain-cache"
+    CACHE_RUN="$CACHE_WORKTREE/learner/runs/20261008-153529-codex-brain-cache"
+    CACHE_RUNNER="$CACHE_WORKTREE/ops/codex-brain-cache-probe.ts"
+    CACHE_AGENT_TREE="08dd9a59bb69317f447d770fe6207474b4c82c6f"
+    CACHE_RUNNER_SHA="094c940768dc1177166ec70bb138f4f86ced85c07865e14c4d3a13116a72e935"
+    [ "$(sha256sum "$CACHE_RUNNER" | cut -d ' ' -f1)" = "$CACHE_RUNNER_SHA" ] || { echo "probe runner differs from tested source"; exit 2; }
+    git -C "$CACHE_WORKTREE" diff --quiet "$CACHE_AGENT_TREE" HEAD:agent || { echo "probe agent tree differs from tested source"; exit 2; }
+    git -C "$CACHE_WORKTREE" diff --quiet HEAD -- agent/src || { echo "probe source is dirty"; exit 2; }
+    git -C "$CACHE_WORKTREE" diff --cached --quiet HEAD -- agent/src || { echo "probe source index is dirty"; exit 2; }
+    exec nice -n 19 node --import "$CACHE_WORKTREE/agent/node_modules/tsx/dist/loader.mjs" "$CACHE_RUNNER" ;;
   procs)
     ours || true
     [ -f "$DIR/autoplay.pid" ] && echo "autoplay.pid: $(cat "$DIR/autoplay.pid")"

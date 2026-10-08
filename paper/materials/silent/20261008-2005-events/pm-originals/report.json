@@ -1,0 +1,49 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "CNKR125PFHJ5"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "CNKR125PFHJ5",
+      "where": "agent/src/reflex/combat.ts:98",
+      "what": "单动作结束题面漏接沙坑截止，27血9挡被预测剩12而实际归零",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0308",
+      "silent-0309"
+    ],
+    "updated": [
+      "silent-0295",
+      "silent-0021",
+      "silent-0020",
+      "silent-0005",
+      "silent-0011",
+      "silent-0027",
+      "silent-0018",
+      "silent-0047",
+      "silent-0071",
+      "silent-0023"
+    ],
+    "repeats": [
+      "silent-0295"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-0ff91bb5da98a252",
+    "silent-proposal-7bcb766a47aed4bc",
+    "silent-proposal-910db627f14d4eba"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-194301-postmortem/report.md"
+}

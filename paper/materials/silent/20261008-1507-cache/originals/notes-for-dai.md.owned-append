@@ -1,0 +1,14 @@
+
+## 2026-10-08T15:05:30+08:00 Codex 大脑缓存独立批次交付给 Roy
+
+实际结论：冻结A10 86局、2680 trace尝试、2669可核实模型调用、2666回答；已知输入339269444，cached180677504，真实53.2549%。旧cost.py漏读session camelCase缓存/推理/写入，把相同窗口算成1266176缓存（0.3732%）；不是把后端缓存从0.37%提高到53%。session真实59.8569%，最近100题60.2125%；14 trace尝试缺计数，其中11未发模型前检错误，另3发模型后缺usage，未知而非0。原329M口径无给定切点；新冻结窗口、原CSV333M/旧结果均保存。thread/revert存在实测非零反例，余下冷缓存原因unknown。
+
+旧/新规则逐项：旧成本只识别exec snake_case，新同时识别session camelCase并避免trace/brain重复调用及累计wall计费；旧trace只留system摘要，新加完整instructions/user/schema摘要、长度和首差异字节；生产传输内容/顺序/thread/revert/模型gpt-6.1-sol与high完全原样，知识仍按真实刷新更新，铁甲等价，不删题面、不冻结旧知识、不改策略。没有游戏机制账本，code_proposals=[]、implementation_domains=[]、游戏版本null。
+
+实际发布：source f602fa22ded02adf1ad32aac2d2f664c4ea286e4 → live bea18dc71a6f781e837644c7b98c385d0f62d066，fixed tree 9d0ca941472e43252060c7828d03c130ff903306；source/live原沙箱tsc0/vitest0，251文件2618例；main ca625c25eda018b794783729a48275b318c49ad5，刷新原SHA/合前后知识blob保持。source2 76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9 已固定原入口tsc0/vitest0、251文件2621例，撤原每题取消源码1红/原字节恢复1绿（另5仅过滤），但main并行索引占用及锁内真实report.py在途导致尚未合入，实际merged=null；保留两次blocked日志交运维兜底，勿将其记shipped。首批源码cherry-pick映射已测，源字面祖先登记锁busy未做；后续只在净源码匹配、固定树不变时登记。
+
+实际上线后一次取样：新进程9DAS5L8YM1CN（启动7f0c04dd，13源码blob匹配、CLI0.161.0、原gpt-6.1-sol/high），首4题511947输入/120704缓存/1368输出/931推理、命中23.5774%、每题输入127986.75、中位17.8315秒，3次零1次非零；仍在进行中/冷启动/不同题型，不能声称缓存或额度改善。费用/大脑额度速度unknown，共享背景没有分离；学习者/运维95%没有同口径对照。
+
+续办：运维按既有完成事件等待其并行索引释放后，只集成source2净3路径到main和live（先核无report/refresh/builders、锁内保存全部刷新/新文件、预检重叠、合后原入口自测），不修改原blocked记录；下一次wake重载最终白名单/固定SHA后，仅一次 `bash ops/codex-ops-do.sh codex-brain-cache-probe`。实际probe执行0，固定既有完整题面/知识/schema、原模型high，永久预约/2物理调用、每题10分钟、总20分钟、usage required/80%保护，无游戏动作/生产线程/config写入；已预约不得重跑，缺usage/额度是pending或unknown。另一个修复pair未实现。完整外部留正常调度器完成检查，不冒记已通过。
+
+后续已完成事件一次统计：`nice -n 19 python3 eval/codex_cache.py --logs /home/dw/Projects/agent-sts2/logs --after 2026-10-08T06:58:26.265Z --out /home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/production-after-completed.json`，并按正常归档用新cost.py更新成本表；核新进程/实际源码/cache_request/context，trace计数排除未发模型前检错误，不轮询等新局。报告/原字节切点与SHA/初期取样/红绿/原失败路径：/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-140043-codex-brain-cache/report.md、report.json、baseline.json、production-initial*.json、publication*.json；根报告 paper/materials/silent/codex-brain-cache-2026-10-08.md。预期影响是准确核算和可复验测量，性能/省额度仍待测。回退只逆向本批实际源码（后续source2若合先撤它），保留全部知识刷新、并行记录和证据；首批统计回退会恢复漏计。

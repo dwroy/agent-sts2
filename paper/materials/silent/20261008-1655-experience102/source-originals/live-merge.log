@@ -1,0 +1,166 @@
+git rev-parse HEAD
+650a6a84c82351faef30462e87b82d7fbd0dae78
+git status --short
+ M knowledge/characters/silent/boss-damage.json
+ M knowledge/characters/silent/fight-value-gates.json
+ M knowledge/characters/silent/fight-value.json
+ M knowledge/characters/silent/monster-records.json
+ M knowledge/characters/silent/outcome-stats.json
+ M knowledge/characters/silent/room-costs.json
+ M knowledge/common/card-upgrades.json
+ M knowledge/common/monster-db.json
+ M knowledge/common/move-model.json
+ M notes/fight-value-backtest-silent.md
+git diff --cached --name-only
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+knowledge/characters/silent/boss-damage.json
+knowledge/characters/silent/fight-value-gates.json
+knowledge/characters/silent/fight-value.json
+knowledge/characters/silent/monster-records.json
+knowledge/characters/silent/outcome-stats.json
+knowledge/characters/silent/room-costs.json
+knowledge/common/card-upgrades.json
+knowledge/common/monster-db.json
+knowledge/common/move-model.json
+git add knowledge
+git add notes/fight-value-backtest.md
+git commit -m Refresh knowledge data -m Co-Authored-By: Codex GPT-6 <noreply@openai.com>
+[live 4fdb2b26] Refresh knowledge data
+ 9 files changed, 1864 insertions(+), 1774 deletions(-)
+git rev-parse HEAD
+4fdb2b265f1157dd4d3bfa2de0e59e630cce692b
+git rev-parse HEAD
+4fdb2b265f1157dd4d3bfa2de0e59e630cce692b
+git merge-base 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb
+f2ce61432a35dcfc96e9ea651f59712ca6a2021f
+git diff --name-only f2ce61432a35dcfc96e9ea651f59712ca6a2021f 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb -- knowledge
+knowledge/characters/silent/experience.json
+git merge-tree --write-tree 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb
+1aab3af9a31a6e3033a20cc4b3b65b19f6ef20a3
+100644 dd90cc50f896a8fa448a5d4ece16dd507d560d34 1	eval/versions.json
+100644 fbd4f8ce0a165039131a952347282a6c033691de 2	eval/versions.json
+100644 7ff013c0adab30c071e00e49fc660ddce9a2a6e5 3	eval/versions.json
+100644 1a041388d6104ad0ea4effaaa25a78e369fd0926 1	notes/codex-brain-cache-dispatch.json
+100644 2fac83be7f835d48fcb7e31a73026a2d2fb45872 3	notes/codex-brain-cache-dispatch.json
+100644 8e8a689af9dd6746b0a87e97b2ab02824900d9e7 1	notes/for-dai.md
+100644 14e8c75b124138872e3d864d8bf6247a1aa432d9 2	notes/for-dai.md
+100644 efd83edec020560a676b1755d6b753b6dffb79a1 3	notes/for-dai.md
+100644 d9d707fec8e3efda2e0565c350656b961c56c94d 1	notes/lessons.md
+100644 8555a1ca7d1fd0cd78eab2221d165ae261128066 2	notes/lessons.md
+100644 5a7b565109f12d318e9265ae2b906409bb659281 3	notes/lessons.md
+100644 e14647355207edf80eec40a1cfd3a50582bc876f 1	notes/ops-handoff.md
+100644 46441e63d5266b1ae851770ffe8f7f5fb597cbf7 2	notes/ops-handoff.md
+100644 c9eebdadf9c293dccc472e231410c8f66f2074eb 3	notes/ops-handoff.md
+100644 2b5695c3fd852bd5698dc8a6f367e07315de676c 1	ops/inbox-dev.md
+100644 c1d42393580703fdcf48b9389a5b5a6ac188d21c 2	ops/inbox-dev.md
+100644 7aac2fa23e4116bbf8a7135edae96b8085913df1 3	ops/inbox-dev.md
+100644 a55ceea45b38a1d9dd8d5195fc4cd4cb4ddce052 1	paper/data/README.md
+100644 4911c72f3aaa886962d01fd3d1a889dc032a3edb 2	paper/data/README.md
+100644 17d4608ec4e322d1490c41fefff1f34639809131 3	paper/data/README.md
+100644 a1876df75f33ec1c2ca68f3484ad5174c3a4533c 1	paper/data/commits.csv
+100644 b692a915b48f17082da2a39cc2d4091296794ddf 2	paper/data/commits.csv
+100644 b1baec42eab9c83871cf2f7793d6714782bc44bc 3	paper/data/commits.csv
+100644 f49ad23f779fa95ebea4816cd2f7c7a52f543c9b 1	paper/data/cost-curve-silent.csv
+100644 1b64a23d1e106c1e900ad31cdc011fab4ee67710 2	paper/data/cost-curve-silent.csv
+100644 4d632cd988f65216aa79990bbfc51732cec9b4cb 3	paper/data/cost-curve-silent.csv
+100644 1e1585f68b08190bb4e97d81e8ee2726cd928ac6 1	paper/data/cost-silent.csv
+100644 f0766aa7ce4c3a38350677cee74ec0b493035eb2 2	paper/data/cost-silent.csv
+100644 24dc3864285001b2bb4ece2f85ee082049acda41 3	paper/data/cost-silent.csv
+100644 d4fdf1493d4ae834b0d837f3c09dd39711c3b9e8 1	paper/data/cost-sources.json
+100644 d7c21e150d1f082947f4d4ba8f9265d0dacd1736 2	paper/data/cost-sources.json
+100644 11988e30f8bc619c1c1aebc71fc601ecc584a414 3	paper/data/cost-sources.json
+100644 45acec8bd398887723009b65ce2efd5945313fb8 1	paper/data/cost-unattributed.csv
+100644 453d13993e3569e47450affbd0ccc8ef8de35947 2	paper/data/cost-unattributed.csv
+100644 006237d3ab91face989449058299c786e1dd0f51 3	paper/data/cost-unattributed.csv
+100644 3d275b92a84ad34d61dd39913c9e42684b436ed9 1	paper/data/decisions_by_label.csv
+100644 6588b584e331b1f99be59eb541933e2677122028 2	paper/data/decisions_by_label.csv
+100644 71cfc100c98dc907542910c430e5fd8284a36343 3	paper/data/decisions_by_label.csv
+100644 b513e6d6c8d4137cbaedf2f78459be3e6b43a863 1	paper/data/learning-curve-silent.csv
+100644 b2c9f228651294f0a828bf293d017e42f10eb8c6 2	paper/data/learning-curve-silent.csv
+100644 0c321bbb52b59cdd3e2d616c710a4e0cc1c0d755 3	paper/data/learning-curve-silent.csv
+100644 3078ee213af83f755a5d6b3b64f22a062c495dab 1	paper/data/runs.csv
+100644 fb96cb07fa558714a89622703a7249341b51b4c8 2	paper/data/runs.csv
+100644 8172c0bc2d014eb0e419ba273538c5df6fb20d46 3	paper/data/runs.csv
+100644 3cd36869fb5d2aaab7ba2a3cb5e07d46c0636c77 1	paper/data/summary.json
+100644 5f4bc968ab5754e2d357564bae79ef66d7d68132 2	paper/data/summary.json
+100644 bbc7b20d51c1546edbe81083420632e9a3c6f53f 3	paper/data/summary.json
+100644 357122b56806e3869d8082bad6d4d9f400eb8587 1	paper/data/verification.json
+100644 004a36d0f4f52b8761ff3c98763e7c608570baff 2	paper/data/verification.json
+100644 fda5988d6925ef55f974581402cc0381e3a53fd1 3	paper/data/verification.json
+100644 9f8c51176d5dcc9e80aaa95d8e537aeb34436b4a 1	paper/materials/decision-log.md
+100644 4523be96a11d30b1681a6a567a5a44e36d2a5fa6 2	paper/materials/decision-log.md
+100644 82257b890c3a1fcd788bc7630fccd6640d0f6a45 3	paper/materials/decision-log.md
+100644 3a0dbe873f809d3fc3caf73a3e3274ce7b3e84ad 1	paper/materials/experience-changelog-silent.md
+100644 d30b13170a44f2cd04d7a82b18200fa69de09579 2	paper/materials/experience-changelog-silent.md
+100644 b50a45448a2aaabe6398362be24cb6e855f07111 3	paper/materials/experience-changelog-silent.md
+100644 b372ccb220197516b7cd8eab5550d7de0e864b79 1	paper/materials/learning/ledger.jsonl
+100644 964b609f88dc7988a61011d34b2cb6ed2c8d009b 2	paper/materials/learning/ledger.jsonl
+100644 e84dfd697b3a7e820fa1a0c81eb433b24264505b 3	paper/materials/learning/ledger.jsonl
+100644 ada012773bc08690a3c79ff910834362c869185e 1	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.jev-prompts.jsonl
+100644 cc8c3783a5e7bcfa64445f0f42417c663bda0309 3	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.jev-prompts.jsonl
+100644 e179192b04de58ca3c4cafafbc1d90c8b63bb213 1	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.states.jsonl
+100644 bf613937cae555ff3f4efab7b9b6b43f24e782ac 3	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.states.jsonl
+100644 8f6de43f5e179b2fa837d9d5115ea7a655fda90a 1	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.jev-prompts.jsonl
+100644 67b96b4ba9b6f3765caef02657435e43c065467d 3	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.jev-prompts.jsonl
+100644 5ce5b506302543355a7edeefdda0a99996a5d00d 1	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.run-config.jsonl
+100644 6c4094cb8efad86e1289f790d3e3c4aa4818fc7c 3	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.run-config.jsonl
+100644 b6ad79783fe58893a31ff7dc269e6a886e66dec3 1	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.states.jsonl
+100644 a68efd64873ee0bbd72508c3c11888cefb2b90a6 3	paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.states.jsonl
+100644 bfd1bbdcf5bdff9fde9b1e0dfc736d2a0644b71a 1	paper/materials/silent/codex-brain-cache-2026-10-08.md
+100644 fe75670bce10b9bd49e623ac17ae8c075de9d020 3	paper/materials/silent/codex-brain-cache-2026-10-08.md
+100644 5349d6862de8b5d377040604fb3317c11392284c 1	paper/materials/silent/cost.md
+100644 31cfa8f4115907b2de2bd08b300f9c16f5bf3bea 2	paper/materials/silent/cost.md
+100644 7a156912b6605b1576ad5e0b98604e8d4b590855 3	paper/materials/silent/cost.md
+
+Auto-merging eval/versions.json
+CONFLICT (content): Merge conflict in eval/versions.json
+CONFLICT (modify/delete): notes/codex-brain-cache-dispatch.json deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of notes/codex-brain-cache-dispatch.json left in tree.
+Auto-merging notes/for-dai.md
+CONFLICT (content): Merge conflict in notes/for-dai.md
+Auto-merging notes/lessons.md
+CONFLICT (content): Merge conflict in notes/lessons.md
+Auto-merging notes/ops-handoff.md
+CONFLICT (content): Merge conflict in notes/ops-handoff.md
+Auto-merging ops/inbox-dev.md
+CONFLICT (content): Merge conflict in ops/inbox-dev.md
+Auto-merging paper/data/README.md
+CONFLICT (content): Merge conflict in paper/data/README.md
+Auto-merging paper/data/commits.csv
+CONFLICT (content): Merge conflict in paper/data/commits.csv
+Auto-merging paper/data/cost-curve-silent.csv
+CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv
+Auto-merging paper/data/cost-silent.csv
+CONFLICT (content): Merge conflict in paper/data/cost-silent.csv
+Auto-merging paper/data/cost-sources.json
+CONFLICT (content): Merge conflict in paper/data/cost-sources.json
+Auto-merging paper/data/cost-unattributed.csv
+CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv
+Auto-merging paper/data/decisions_by_label.csv
+CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv
+Auto-merging paper/data/learning-curve-silent.csv
+CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv
+Auto-merging paper/data/runs.csv
+CONFLICT (content): Merge conflict in paper/data/runs.csv
+Auto-merging paper/data/summary.json
+CONFLICT (content): Merge conflict in paper/data/summary.json
+Auto-merging paper/data/verification.json
+CONFLICT (content): Merge conflict in paper/data/verification.json
+Auto-merging paper/materials/decision-log.md
+CONFLICT (content): Merge conflict in paper/materials/decision-log.md
+Auto-merging paper/materials/experience-changelog-silent.md
+CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md
+Auto-merging paper/materials/learning/ledger.jsonl
+CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl
+CONFLICT (rename/delete): paper/materials/silent/20261008-1507-cache/scratch/jev-sts2-settle-1791443945495-f6d796a1e7e4f.jev-prompts.jsonl renamed to paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.jev-prompts.jsonl in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb, but deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b.
+CONFLICT (modify/delete): paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.jev-prompts.jsonl deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.jev-prompts.jsonl left in tree.
+CONFLICT (rename/delete): paper/materials/silent/20261008-1507-cache/scratch/jev-sts2-settle-1791443945495-f6d796a1e7e4f.states.jsonl renamed to paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.states.jsonl in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb, but deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b.
+CONFLICT (modify/delete): paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.states.jsonl deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443293959-657741f94000f.states.jsonl left in tree.
+CONFLICT (rename/delete): paper/materials/silent/20261008-1507-cache/scratch/jev-sts2-settle-1791443945695-6879a1619437.jev-prompts.jsonl renamed to paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.jev-prompts.jsonl in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb, but deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b.
+CONFLICT (modify/delete): paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.jev-prompts.jsonl deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.jev-prompts.jsonl left in tree.
+CONFLICT (rename/delete): paper/materials/silent/20261008-1507-cache/scratch/jev-sts2-settle-1791443945495-f6d796a1e7e4f.run-config.jsonl renamed to paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.run-config.jsonl in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb, but deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b.
+CONFLICT (modify/delete): paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.run-config.jsonl deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.run-config.jsonl left in tree.
+CONFLICT (rename/delete): paper/materials/silent/20261008-1507-cache/scratch/jev-sts2-settle-1791443945695-6879a1619437.states.jsonl renamed to paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.states.jsonl in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb, but deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b.
+CONFLICT (modify/delete): paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.states.jsonl deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of paper/materials/silent/20261008-1541-experience100/experience-originals/jev-sts2-settle-1791443294127-842b9458dd16.states.jsonl left in tree.
+CONFLICT (modify/delete): paper/materials/silent/codex-brain-cache-2026-10-08.md deleted in 4fdb2b265f1157dd4d3bfa2de0e59e630cce692b and modified in 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb.  Version 7f51464c2c6610ee0a304c4c092a556b5b8ee4cb of paper/materials/silent/codex-brain-cache-2026-10-08.md left in tree.
+Auto-merging paper/materials/silent/cost.md
+CONFLICT (content): Merge conflict in paper/materials/silent/cost.md

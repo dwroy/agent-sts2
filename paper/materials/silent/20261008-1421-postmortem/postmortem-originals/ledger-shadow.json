@@ -1,0 +1,887 @@
+[
+ {
+  "id": "silent-0075",
+  "ts": "2026-10-05T08:57:47+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "同一出牌方案内融入暗影使后续获得格挡翻倍的效果漏建模。10GPK5XGHCK3 F42 T7预测生存者新增13挡，实际建立SHADOWMELD_POWER后新增26；T2预测8、实际16。已更新外部输入的牌面能读到翻倍，缺口是方案中新增该增益。定位live agent/src/reflex/card-model.ts:780、:844、:847，队列无此项。更早1HC F17已经给含融入暗影的方案未翻倍格挡，本次首次定位。",
+  "evidence": [
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 17,
+    "turn": 8,
+    "note": "首战候选融入暗影→生存者→防御预测13挡、明确unmodelled_cards=融入暗影。",
+    "role": "support",
+    "added": "2026-10-05T08:57:47+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 42,
+    "turn": 2,
+    "note": "所选融入暗影→生存者预测8挡，实际生存者0→16。",
+    "role": "support",
+    "added": "2026-10-05T08:57:47+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 42,
+    "turn": 7,
+    "note": "所选方案预测生存者13挡，实际文本13→26、格挡0→26。",
+    "role": "support",
+    "added": "2026-10-05T08:57:47+08:00"
+   }
+  ],
+  "first_run": "1HC609GTLGN3",
+  "prior": "no",
+  "prior_runs": [
+   "1HC609GTLGN3"
+  ],
+  "prior_note": "更早本角色1HC的候选均标未建模；F17首战T8含融入暗影的13挡仍未翻倍，未发现学习前正确建模的同类方案。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "10GPK5XGHCK3"
+   ],
+   "commits": [
+    "82c50cc0e41d4206ae272c76a97fbcbe783827a9",
+    "7efeed50d42453e3fa6a6c832214796a7f73b8dd"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T08:57:47+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T09:17:21+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T10:00:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix10",
+  "effect": null,
+  "notes": [
+   "运维根据20261005-084301-fix-batch完成及完整检查事件核实实际合入；外部tsc/vitest exit0，208文件2747通过、2跳过。此状态登记对应学习者源码修复及机制条目；经验.10的JSON增量仍未合入live，不能由本状态推断其上线。silent-0040本批修原跨SL回合/元数据问题，旧终帧子项历史保留；silent-0066旧REPLACE占位更正历史保留，不视为提交号。"
+  ],
+  "shipped_at": "2026-10-05T10:00:43+08:00"
+ },
+ {
+  "id": "silent-0077",
+  "ts": "2026-10-05T08:57:47+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "融入暗影建立SHADOWMELD_POWER 1，只将本回合后续新增格挡翻倍，已有格挡不因此增长。10GPK5XGHCK3 F42 T7生存者在5敏捷下13挡变26，实际0→26；T2为8→16。F37 T6施放前已有16挡、之后仍16；F48 T12没有获得格挡，整回合0挡，仍触发瓶中精灵。更早1HC F17施放后防御文本14已显示翻倍，但未实际打出防御。",
+  "evidence": [
+   {
+    "run": "1HC609GTLGN3",
+    "floor": 17,
+    "turn": 7,
+    "note": "第5次施放后防御文本14，后续同回合没有打出格挡牌，增益期间挡仍0。",
+    "role": "support",
+    "added": "2026-10-05T08:57:47+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 42,
+    "turn": 7,
+    "note": "5敏捷使生存者8→13，再由融入暗影翻倍为26并实际获得26。",
+    "role": "support",
+    "added": "2026-10-05T08:57:47+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 37,
+    "turn": 6,
+    "note": "16挡时施放，挡仍16，不能视为已有格挡翻倍。",
+    "role": "support",
+    "added": "2026-10-05T08:57:47+08:00"
+   },
+   {
+    "run": "10GPK5XGHCK3",
+    "floor": 48,
+    "turn": 12,
+    "note": "无后续格挡收入，增益仍留0挡，35攻击触发复活。",
+    "role": "support",
+    "added": "2026-10-05T08:57:47+08:00"
+   },
+   {
+    "run": "ZE8F192FKX24",
+    "role": "support",
+    "note": "静默复盘与重新抽取日志验证；具体机制、进阶、案例及因果限制见第十五次增量，对应支持局去重。",
+    "added": "2026-10-05T14:20:57+08:00"
+   },
+   {
+    "run": "2L1BNN9ZJEFU",
+    "floor": 48,
+    "turn": 8,
+    "note": "第6次融入暗影+现场0费、Power=1，建立时已有12挡不变；5敏捷下生存者13变26，末38。升级版同样只倍增后续新增挡；模型升级分支新定位另记，不改普通版修复历史。",
+    "role": "support",
+    "added": "2026-10-05T18:02:31+08:00"
+   },
+   {
+    "run": "2SU6XN2AEJRD",
+    "floor": 48,
+    "turn": 8,
+    "note": "已有14挡，普通融入暗影后防御在6敏捷下新增22＝11×2，合36；26攻击与9凋萎合35，实损0，已有14挡未翻倍。",
+    "role": "support",
+    "added": "2026-10-05T21:00:39+08:00"
+   },
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 48,
+    "turn": 6,
+    "note": "末次先建立融入暗影+，后扫腿+基础14在士兵另一次翻倍下实增56；暗影自己建立时挡仍0，T7重新0挡，不继承上一轮富余。双增益新组合另入账。",
+    "role": "support",
+    "added": "2026-10-05T22:02:25+08:00"
+   },
+   {
+    "run": "Z6CFLDR3N4SB",
+    "floor": 48,
+    "turn": 3,
+    "note": "第二次升级融入暗影在已有18挡后建立，已有挡仍18；T8在增益下后空翻基础5实得10，末10挡，对26攻击实损16。",
+    "role": "support",
+    "added": "2026-10-05T22:33:31+08:00"
+   },
+   {
+    "run": "JMH5C51RLN4E",
+    "floor": 48,
+    "turn": 12,
+    "note": "第5次融入暗影+建立时挡0仍0、敌95血不变；随后6敏捷下后空翻11实际增22、耸肩14实际增28，总50挡、当轮零损。翻倍的是之后新增格挡，势不可当触发次数未翻倍。",
+    "role": "support",
+    "added": "2026-10-06T08:26:58+08:00"
+   },
+   {
+    "run": "9TG1RP5LFAAK",
+    "floor": 48,
+    "turn": 3,
+    "role": "support",
+    "note": "首试2敏捷下偏折6／防御7，暗影后牌面12／14，实际挡0→12→40；第二步另含音叉14挡。",
+    "added": "2026-10-06T09:26:07+08:00"
+   },
+   {
+    "run": "9TG1RP5LFAAK",
+    "floor": 49,
+    "turn": 3,
+    "role": "support",
+    "note": "末次女王施暗影、滚石后没有获得任何格挡；喝空毒药水虽由腰带扣得2敏捷，最终仍3血0挡，对聚合体9×3激光死亡。没有换动作的受控获胜线，不把困境中施放本身标为可避repeat。",
+    "added": "2026-10-06T09:26:07+08:00"
+   },
+   {
+    "run": "9Z9H2EXKLF3T",
+    "floor": 48,
+    "turn": 8,
+    "note": "末次T8先SHADOWMELD后CLOAK_AND_DAGGER+，2敏捷下基础6+2，经暗影和待触发PAELS_LEGION实增32挡。后续未带入下一轮；18凋萎+36攻击仍触发精灵，不据此设固定暗影时点。",
+    "role": "support",
+    "added": "2026-10-08T04:36:49+08:00"
+   },
+   {
+    "run": "K2JAGKVJAWZJ",
+    "floor": 33,
+    "role": "support",
+    "note": "第94批静默原帧复核silent-shadowmeld-new-block-double，局部机制与整战因果分开；详见changes.json/historical-mechanisms.json/historical-rod.json/terminal-facts.json。",
+    "turn": 3,
+    "added": "2026-10-08T10:25:08+08:00"
+   }
+  ],
+  "first_run": "1HC609GTLGN3",
+  "prior": "no",
+  "prior_runs": [
+   "1HC609GTLGN3"
+  ],
+  "prior_note": "更早1HC实际施放融入暗影的回合都未在随后获得格挡，未兑现这一配合；本局F42才观察到实际增加16／26挡。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "10GPK5XGHCK3",
+    "2L1BNN9ZJEFU",
+    "2SU6XN2AEJRD",
+    "SADL3CGYTGSR",
+    "Z6CFLDR3N4SB",
+    "JMH5C51RLN4E",
+    "9TG1RP5LFAAK",
+    "9Z9H2EXKLF3T"
+   ],
+   "experience": [
+    "silent-shadowmeld-new-block-double"
+   ],
+   "commits": [
+    "c2ece69c8c6d342ab7d55e10d8aca6af1ace25bc",
+    "82c50cc0e41d4206ae272c76a97fbcbe783827a9",
+    "7efeed50d42453e3fa6a6c832214796a7f73b8dd",
+    "a1d6ccc2d40b744c4ae24fa107239a46d41fea55",
+    "536e37d9f86b19ffc7afcfa11d71a41803a7cc09",
+    "5503d1b3ae3719224305d579d9eda0550a93a24c",
+    "b30783318755f721938cbcb3c31d3bf97bff7007",
+    "25a408ef16313502ae378c36900236075ec3b262",
+    "f4d8e47d243cb8876a75fbe0be51e3810851494a",
+    "83d4e580adbc34810a64f7058812a9be32f835ea",
+    "f90ad2f1921f61466004217ed9a1b9698bd85491",
+    "0debd6bdd33d45046b2ee0131c84a930a68d63b3",
+    "df989e0920c4aa6ba49ae9ff27967f127cd4bd2d",
+    "aea750c95b48223254b28b5dc40f847aaaf48fb9",
+    "06a463ca80102dd86656b993b1bd81f020580e84",
+    "0071cc6a86f7674b91439d13ee99e5c117dc3f34",
+    "6c4a855811c5ded1ddf94e264855f85a0bae4522",
+    "256b0eee715750c1851f85274885a0770c85977f",
+    "c02c40a38f476991d68b3ad37a082d8ce30105d5",
+    "5bc320f7ba980bd4e46049ad4b1758975ef7b77f",
+    "0d0c4b690fb372fe0810c99b619c52e239a5c85b",
+    "65b1a45b0192b744b6c46f9e7174f3c2156f093c",
+    "28bdbfc6c9de5eb802724351a199e1a20c67b41c",
+    "3cbc6955b270538e452d19118bab91a949305ab3",
+    "4b97f1038ed7acb7073a03629925d297c0da075b",
+    "5f0c0515a9dc4de8696f1172af9da17000a79a65",
+    "f90ba577c3111a9cda7bf1cbfebc645c3d036a01",
+    "62b4caf85ded558e5d07ef840ae882d82bc7ae2c",
+    "ee3f13cdb7b79f9f315d596e1b4c90d77e30f344",
+    "54826c2602196192247228359493af5a29680879",
+    "1ede992e9fb4dda65d86eabe2aed9b66003638c6",
+    "b1714285e60ce5a02798bea8cd5d4aa3118a2512",
+    "7d2184190bcc6bf484af81ff71ec03be66017b84",
+    "eebcf4297065a97086ea4d430ae698a2b05c3dea",
+    "0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d",
+    "261af56e0022cc0012b80870bd3f52bd121d45c2",
+    "90f7e5a6f370622a99021ffddbc4cf03df08e350"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第十次增量：1 局 A3（version 2026-10-05.10，分支 exp-silent，c2ece69c）",
+    "2026-10-05 静默猎手 第十五次增量：3 局 A5/A6（version 2026-10-05.15，分支 exp-silent，5503d1b3）",
+    "2026-10-05 静默猎手 第十九次增量：1 局 A6（version 2026-10-05.19，分支 exp-silent，83d4e580）",
+    "2026-10-05 静默猎手 第二十二次增量：1 局 A6（version 2026-10-05.22，分支 exp-silent，df989e09）",
+    "2026-10-05 静默猎手 第二十三次增量：1 局 A7（version 2026-10-05.23，分支 exp-silent，0071cc6a）",
+    "2026-10-05 静默猎手 第二十四次增量：1 局 A7（version 2026-10-05.24，分支 exp-silent，c02c40a3）",
+    "## 2026-10-06 静默猎手 第三十七次增量：1 局 A10（version 2026-10-06.12，分支 exp-silent，65b1a45b）",
+    "2026-10-06 静默猎手 第三十八次增量：1 局 A10（version 2026-10-06.13，分支 exp-silent，5f0c0515）",
+    "2026-10-08 静默猎手 第八十八次增量：1 局 A10（version 2026-10-08.5，分支 exp-silent，54826c26）",
+    "## 2026-10-08 静默猎手 第九十四次增量：1 局 A10（version 2026-10-08.11，分支 exp-silent，eebcf429）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-041302-postmortem/proposal-sl-audit.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-044250-experience-update/proposal-combat.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/proposal-provenance-correction.md"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T08:57:47+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T09:14:08+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T10:00:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T10:20:34+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T14:20:57+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T14:38:03+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T18:02:31+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T19:04:38+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T19:19:22+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T21:00:39+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T21:35:05+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T22:01:50+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T22:02:25+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T22:30:45+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T22:33:31+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-05T23:03:33+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-05T23:08:04+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T23:44:31+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T08:26:58+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T08:43:31+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T08:52:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T09:26:07+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T09:47:04+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T09:59:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T04:36:49+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T04:39:16+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T04:52:30+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T04:52:30+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T05:11:48+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T05:29:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T10:25:08+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T10:25:09+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T10:38:28+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T10:46:37+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T10:55:07+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp94",
+  "effect": null,
+  "notes": [
+   "经验2026-10-05.10已提交exp-silent；只登记proposed，不登记accepted/shipped。公式与案例已核静默逐帧日志，整战单项胜因未隔离；实际合入后由运维据完成事件登记。",
+   "运维根据20261005-084301-fix-batch完成及完整检查事件核实实际合入；外部tsc/vitest exit0，208文件2747通过、2跳过。此状态登记对应学习者源码修复及机制条目；经验.10的JSON增量仍未合入live，不能由本状态推断其上线。silent-0040本批修原跨SL回合/元数据问题，旧终帧子项历史保留；silent-0066旧REPLACE占位更正历史保留，不视为提交号。",
+   "运维核实20261005-095918-experience-update已实际合入，live经验.9直接到.11，包含此前待上线的.10内容；按对应学习者批次登记经验状态，不虚构.10中间上线时刻，不将预判代码bug0078称为已修。合后固定沙箱通过；已保留七项最新刷新及旧模型/经验上线历史。",
+   "静默经验2026-10-05.15：本角色全部二十局重抽、旧十七局复算一致；固定沙箱tsc0/170文件1973例，新增证据范围与进阶见第十五次增量。只proposed，实际合入交运维按完成事件登记shipped；不登记0099模型bug已修。",
+   "14:35 experience-done确认经验2026-10-05.15实际live合入、S1.exp15唯一；源沙箱tsc0/170文件1973例，合后tsc0/172文件1982例，无重跑，七项知识刷新保留。仅经验条目上线，非机制模型修复；silent-0100的独立S1.strategy2阶段事实代码上线历史保留，0099模型提案未修。完整外部检查待调度器后续事件。",
+   "经验.19，旧25局明细与分阶统计复算一致；实际合入后交运维按完成事件登记shipped，不登记纯代码升级分支已修。",
+   "19:13 experience-done核实经验.19实际合入live、S1.exp19唯一；本批来源2L1BNN9ZJEFU SILENT A6，14经验补证更新/无新增退役，最终源及合后固定沙箱tsc0、174文件1997例。旧180500两次high/xhigh失败和候选备份保留；本次只因main基线变化复测一次，无本批失败重跑。七项刷新保留，独立完整外部检查待本批learner-checks；不混记0112/0113的独立S1.fix19模型修复，也不混入53FLQ68CETW0后续复盘。",
+   "静默经验.22：2SU6XN2AEJRD A6及旧28局逐行复算；机制/观察、施毒/同期被动/实伤、净损/实死分账，药水仅事实。仅proposed，实际合入交运维按完成事件核实登记shipped。",
+   "21:50 experience-done核实静默经验.22 df989e09→live aea750c9→发布06a463ca/S1.exp22、main已机械同步固定d5a4f6fc已测树；2SU6XN2AEJRD SILENT A6首战胜/无SL及旧28局逐行复算，新增2/补证更新13/退役0、active88，16账本项覆盖15经验。源两轮tsc0/176文件2006例均通过，因冒泡同期10伤和沙漏12尝试数据校正复测，无失败或负载重跑；合后177文件2010例。0119/0120复盘既有id不重复建账，0115模型修复归独立S1.fix21/代码链，0114不重置；不加药水规则或受控勝因。经验独立完整外部检查待learner-checks，不冒记本轮完整通过。",
+   "静默经验.23：SADL3CGYTGSR A7及旧29局重新抽取、逐行复算；机制/观察、理论需损/死亡截断、已结算毒/未结算层数分账。仅proposed，实际合入交运维按完成事件核实登记shipped；保留旧first_run/prior。",
+   "旧新增格挡翻倍规则补证；未隔离换顺序整场胜负，不登记重复策略错误。",
+   "22:40 experience-done实际上线兜底：经验.23源0071cc6a两轮177文件2012例/tsc0，七项在线知识刷新f72d687f保留、decision-log双方历史保留后实际合入6c4a8558，合后固定沙箱178文件2013例/tsc0无失败或重跑，发布256b0eee及main同步0f08dd3d。按已实际合入登记、不另设审核；完整外部learner-recheck 20261005-220458-experience-update已请求待后续事件，旧成本fix检查不冒记本批通过，原冲突/失败历史保留。只登记学习者已有映射，不添证据或重置0114/0115独立链。",
+   "静默经验.24：Z6CFLDR3N4SB A7与旧30静默局日志逐行复算，按22:31勘误；持有/建立/实际收益、净损/实死分账，机制与整战因果观察区分。不改旧first_run/prior，仅proposed，实际合入后由运维登记shipped。",
+   "23:37 manual exp-silent接力：经验.24原源c02c40a3已随后续.25实际源/合入5bc320f7、发布0d0c4b69生效，按实际S1.exp25登记继承的.24映射；.25源与合后固定沙箱均tsc0/179文件2030例通过，无重跑，main同步3547e8bc。此前.24自身79b415c0合后Inferno指纹断言失败/回退256b0eee及同树重跑锁占用历史保留，未发布独立S1.exp24，不用其失败树登记成功。仅登记学习者已有13项映射，不添证据/知识、不重置0114/0115或未纳入的0127/0128。.24独立完整外部learner-recheck 20261005-224301-experience-update已调用待后续learner-checks，原merged=null回报不改；.25本批8项原proposed/原节交其完成事件处理。",
+   "静默第37次经验增量2026-10-06.12，仅proposed，运维核实际合入后CLI登记shipped；保留first_run/prior/repeat及旧上线历史。新局JMH5C51RLN4E A10、旧43静默局基线复算一致，首轮接管/得挡触发/跨阶段与换战分账；药水使用原句不变，不作单项整战因果外推。",
+   "08:50 experience-done机械核实第37批经验2026-10-06.12已实际合入live并登记唯一S1.exp37；来源JMH5C51RLN4E SILENT A10及旧43本角色完局。源及合后tsc0/194文件2112例首过，七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原observed，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。",
+   "复盘按本局前已登记的S1.exp25标注；既有机制的兑现和未兑现对照，不修改先验或最新上线状态。",
+   "静默第38次增量2026-10-06.13；9TG1RP5LFAAK A10与旧44静默局逐行复算一致。只登记proposed，实际合入由运维据完成事件核实后CLI登记shipped；first_run/prior/repeat及旧上线历史保持。机制分支、可比帧、阶段/换战、SL与血档分母见变更记录。药水原句保持，无新用药规则，无单项整战胜因外推。",
+   "09:55 experience-done机械核实第38批经验2026-10-06.13已实际合入live并登记唯一S1.exp38；来源9TG1RP5LFAAK SILENT A10及旧44本角色完局。源及合后tsc0/195文件2118例（源草稿通过后最终复测、合后首过），七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原shipped/S1.fix27，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。",
+   "代码提案 silent-proposal-8f62129d7da70b94 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第88批经验提案预关联，保留首证/prior/原claim/repeat及全部上线历史；局部机制与整战因果分账。",
+   "代码提案 silent-proposal-7a8e9ccb7e646538 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第88批经验已自测并提交；新证据/反例和旧repeat完整保持。是否实际合入由本批合入回执证明，运维据完成事件登记shipped，学习者不标accepted/shipped。",
+   "经验第88次原数据2026-10-08.4→.5/增1改14退0/160 active，源54826c26唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱245文件2586例tsc/vitest0，实际合后原入口245文件2586例tsc/vitest0/nice19/4workers。原首证/先验/claim及support/repeat/旧状态历史全部保持；两个combat/potion/SL/terminal提案沿原自动链，数据上线不等于代码已实现或旧0268/0272已修。原out/err/report/failed/20冲突不改，原批完整外部另续验。",
+   "第94批经验提案预关联；保留原claim/first_run/prior/repeat及旧上线历史。钨合金棍0178复用原观察，新增更早支持不倒改原首证；提交后proposed，打法源码交独立strategy-proposal。",
+   "代码提案 silent-proposal-ff1d168227e369e0 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-650ea306e8627f9e → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第94批静默经验源提交已完成；全部16条数据来源/五提案原文及两勘误保留，首证/prior/claim/support/repeat和旧上线历史不改。未标accepted/shipped；打法源码交独立strategy-proposal，经验数据提交不表示implemented。",
+   "第94次经验原数据2026-10-08.10→.11/增1改15退0/170 active，源eebcf429唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记16所属经验数据shipped。源247文件2604例tsc/vitest0、最终冻结经验定向1文件10例0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/report/failed及21项记录冲突历史不改。"
+  ],
+  "shipped_at": "2026-10-08T10:55:07+08:00"
+ },
+ {
+  "id": "silent-0112",
+  "ts": "2026-10-05T18:02:31+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "普通版融入暗影的模型修复用!upgraded排除了融入暗影+，升级版在同一方案内建立的格挡翻倍仍缺失。2L1BNN9ZJEFU F48第6次T8的手上技法12挡后，升级暗影使生存者13实增26，末挡38、损4；least-loss仍按25挡、损17写预测剩血−6，差13挡。定位只读live8944c7a1的agent/src/reflex/card-model.ts:873、:966及turn-solver.ts:1832；旧0075/S1.fix10修普通版，升级分支是本次首次定位，不把差额等同整战胜因。",
+  "evidence": [
+   {
+    "run": "2L1BNN9ZJEFU",
+    "floor": 40,
+    "note": "火堆锻造融入暗影；升级现场0费、Power=1，文本仍是本回合格挡翻倍。",
+    "role": "support",
+    "added": "2026-10-05T18:02:31+08:00"
+   },
+   {
+    "run": "2L1BNN9ZJEFU",
+    "floor": 48,
+    "turn": 8,
+    "note": "第6次11血面对42，least-loss写−6；手上技法实12挡，升级暗影后生存者新增26，末38挡，T9剩7血，多兑现13挡。",
+    "role": "support",
+    "added": "2026-10-05T18:02:31+08:00"
+   }
+  ],
+  "first_run": "2L1BNN9ZJEFU",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按本角色更早复盘及账本查融入暗影+/SHADOWMELD+，没有升级版的可比实例；普通版0075/0077的证据与本局F39普通版配合不当作升级版已正确建模的先验。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "2L1BNN9ZJEFU"
+   ],
+   "commits": [
+    "2184caaab265ebf86c0627aaef39c2e7a170a990",
+    "850ac015818ef7633d5d6a028a9e56e7b8ead55a",
+    "65d99e74c24daf6dfbe746d9dc810832e199c979"
+   ]
+  },
+  "asc": 6,
+  "history": [
+   {
+    "ts": "2026-10-05T18:02:31+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T18:32:22+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T18:54:41+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix19",
+  "effect": null,
+  "notes": [
+   "18:47 fix-done核实学习者实际合入live及S1.fix19唯一。融入暗影+升级分支；2L1BNN9ZJEFU A6 F48第6次T8，38挡/损4，撤源码2失败/4通过、恢复6通过。旧普通版0075/S1.fix10及机制0077不重复登记。最终源及合后固定沙箱tsc0/174文件1997例；保留首次旧high契约失败和修正后检查历史。七项合前刷新保留，独立完整外部检查待调度器learner-checks。"
+  ],
+  "shipped_at": "2026-10-05T18:54:41+08:00"
+ },
+ {
+  "id": "silent-0123",
+  "ts": "2026-10-05T22:02:24+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "本局佩尔的士兵PAELS_LEGION与融入暗影SHADOWMELD可同时将后续卡牌格挡乘到4倍。沙漏末次T1防御基础5实增20；T6扫腿+基础14、当前56且实增56，比基础多42，当轮零损。T7从0挡开始；不将上一轮富余带过来。士兵原文另有休眠2轮，未做去掉任一增益的受控比较。",
+  "evidence": [
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 18,
+    "turn": 0,
+    "note": "event/act-plan选佩尔的士兵，文本：从一张牌所得格挡翻倍，随后休眠2回合。",
+    "role": "support",
+    "added": "2026-10-05T22:02:24+08:00"
+   },
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 48,
+    "turn": 1,
+    "note": "第6次先建立SHADOWMELD_POWER 1，随后普通防御使挡0→20，基础5；无玩家敏捷。",
+    "role": "support",
+    "added": "2026-10-05T22:02:24+08:00"
+   },
+   {
+    "run": "SADL3CGYTGSR",
+    "floor": 48,
+    "turn": 6,
+    "note": "13:21:52.996Z扫腿+动态Block.base_value14/current_value56，暗影已建立，下一帧0→56；T7起0挡，最后死亡。",
+    "role": "support",
+    "added": "2026-10-05T22:02:24+08:00"
+   },
+   {
+    "run": "JLN5SK17W4FQ",
+    "floor": 33,
+    "turn": 5,
+    "note": "本局没有融入暗影；3敏捷与脆弱下士兵只把第一张防御加12，后偏折加5；T8后空翻加16、T9四挡牌恢复8/7/11/7合33，符合遗物休眠2轮的文本，不把旧四倍组合套本局每张牌。",
+    "role": "support",
+    "added": "2026-10-06T07:31:46+08:00"
+   },
+   {
+    "run": "0NZXA12NLDMH",
+    "role": "support",
+    "note": "静默第44节原始日志核对：silent-paels-legion-card-block-double；支持按独立局、子公式及整战因果分开。涂毒普通逐击4局/升级逐击1局，士兵消费三局/四倍仅旧SADL例，不把综合n当每个子公式均验证。",
+    "added": "2026-10-06T16:23:30+08:00"
+   },
+   {
+    "run": "9Z9H2EXKLF3T",
+    "floor": 48,
+    "turn": 8,
+    "note": "末次T8现场SHADOWMELD与待触发PAELS_LEGION同时作用，CLOAK_AND_DAGGER+基础6加敏捷2后四倍实32；两张9凋萎与双击36超过32挡，11→0→精灵20。只观察共同触发，不伪造移除任一增益的胜率对照。",
+    "role": "support",
+    "added": "2026-10-08T04:36:49+08:00"
+   },
+   {
+    "run": "P74C04AEPL1F",
+    "role": "support",
+    "note": "本角色历史复盘与实帧重新核对支持silent-paels-legion-card-block-double；具体进阶、卡牌窗口/组合子分母和限制见本批mechanism-evidence.json。",
+    "added": "2026-10-08T04:52:30+08:00"
+   },
+   {
+    "run": "NEWRFAYKTQHR",
+    "role": "support",
+    "note": "经验更新重新核实本角色日志；条目silent-paels-legion-card-block-double，完整动作/血量/尝试见本批报告及审计。",
+    "added": "2026-10-08T11:23:31+08:00"
+   }
+  ],
+  "first_run": "SADL3CGYTGSR",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "静默账本及更早静默复盘按佩尔的士兵、PAELS_LEGION、双倍检索，没有该遗物与暗影同场的可比证据；0077只记暗影自身翻倍。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "SADL3CGYTGSR",
+    "JLN5SK17W4FQ",
+    "9Z9H2EXKLF3T"
+   ],
+   "experience": [
+    "silent-paels-legion-card-block-double"
+   ],
+   "commits": [
+    "0071cc6a86f7674b91439d13ee99e5c117dc3f34",
+    "6c4a855811c5ded1ddf94e264855f85a0bae4522",
+    "256b0eee715750c1851f85274885a0770c85977f",
+    "2d5846a2a309fd8b9e7231e96cef923cb07f1778",
+    "141df6140cada59c3ad4960fd69aebf0a0749eeb",
+    "5706f2664b8cd841d5c402cdade4a83bb05d794f",
+    "aad6faef5872395489abd80bdbeaa5d0934621b7",
+    "4ff1755188589da29114a6a3ffd3078ca790f89c",
+    "f09267bad642eb4dc2987b2b08ad8b2aff231bde",
+    "52e2451ad5a48cd5f614935dd76975881287d859",
+    "54826c2602196192247228359493af5a29680879",
+    "1ede992e9fb4dda65d86eabe2aed9b66003638c6",
+    "b1714285e60ce5a02798bea8cd5d4aa3118a2512",
+    "7d2184190bcc6bf484af81ff71ec03be66017b84",
+    "fbf45077466b57210ed1c5377a11896384bbeab0",
+    "74387216c08496ddeb53bb674490f79a1eb2c06e",
+    "d61bf0ec98ea1c87c6a009c33530f8756b6d6ba4",
+    "e51c4b2783ec7e33115d79657bb689a0b7216c08"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第二十三次增量：1 局 A7（version 2026-10-05.23，分支 exp-silent，0071cc6a）",
+    "2026-10-06 静默猎手 第三十六次增量：1 局 A10（version 2026-10-06.11，分支 exp-silent，2d5846a2）",
+    "2026-10-06 静默猎手 第四十四次增量：1 局 A10（version 2026-10-06.19，分支 exp-silent，aad6faef）",
+    "2026-10-08 静默猎手 第八十八次增量：1 局 A10（version 2026-10-08.5，分支 exp-silent，54826c26）",
+    "## 2026-10-08 静默猎手 第九十五次增量：2 局 A10（version 2026-10-08.12，分支 exp-silent，fbf45077）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-041302-postmortem/proposal-sl-audit.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-044250-experience-update/proposal-combat.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-111006-experience-update/proposal-mechanisms.md"
+   ]
+  },
+  "asc": 7,
+  "history": [
+   {
+    "ts": "2026-10-05T22:02:24+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T22:30:45+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T23:03:33+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T07:31:46+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T07:49:54+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T08:04:36+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T16:23:30+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T16:44:58+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T04:36:49+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T04:39:16+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T04:52:30+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T04:52:30+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T05:11:48+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T05:29:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T11:23:31+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T11:23:34+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T11:27:42+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T11:43:25+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp95",
+  "effect": null,
+  "notes": [
+   "静默经验.23：SADL3CGYTGSR A7及旧29局重新抽取、逐行复算；机制/观察、理论需损/死亡截断、已结算毒/未结算层数分账。仅proposed，实际合入交运维按完成事件核实登记shipped；保留旧first_run/prior。",
+   "22:40 experience-done实际上线兜底：经验.23源0071cc6a两轮177文件2012例/tsc0，七项在线知识刷新f72d687f保留、decision-log双方历史保留后实际合入6c4a8558，合后固定沙箱178文件2013例/tsc0无失败或重跑，发布256b0eee及main同步0f08dd3d。按已实际合入登记、不另设审核；完整外部learner-recheck 20261005-220458-experience-update已请求待后续事件，旧成本fix检查不冒记本批通过，原冲突/失败历史保留。只登记学习者已有映射，不添证据或重置0114/0115独立链。",
+   "静默第三十六次经验增量2026-10-06.11：仅proposed，交运维核实际合入后经CLI登记shipped；保留first_run/prior/repeat及历史。新局JLN5SK17W4FQ A10、旧42局汇总逐行复算；巨兽自爆减力仅一具体分支，单侧蟹增益和轮初自动伤有本角色旧帧；药水使用原文不变，不作整战因果外推。",
+   "08:00 experience-done机械核实第36批经验2026-10-06.11已实际合入live并登记唯一S1.exp36；来源JLN5SK17W4FQ SILENT A10及旧42本角色完局。草稿tsc0/193文件2105例，最终源码及合后tsc0/194文件2112例，原草稿和文字校正历史保留，合后首过。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，0159/S1.strategy6与0153/S1.fix26独立。完整外部补测留后续事件。",
+   "静默经验2026-10-06.19，来源0NZXA12NLDMH SILENT A10及本角色历史；旧55局七数组/分阶统计一致，56局899房46实死。按两段勘误核，末T8实际为碾碎爪15×2、火箭蓄力，24挡/6HP实死，纠正复盘敌方招式描述。保留首次局、先验、旧版本及repeat；仅proposed，实际合入交运维据experience-done登记shipped；0179纯bug仍observed，未修源码，不证明未选线/升级或固定击杀顺序必胜。",
+   "16:40 experience-done机械确认第44批2026-10-06.19已实际合入live并同步main，唯一S1.exp44；源aad6faef→实际live 4ff17551→固定发布f09267ba。来源0NZXA12NLDMH SILENT A10及学习者本角色历史，新增0更新9（全补证/纯数字0）退役0、active118。源首轮固定沙箱tsc0/201文件2182例，合后首轮tsc0/202文件2188例，原日志保持。仅本批12项经CLI/by=ops登记shipped，首次证据/先验/claim/evidence/repeat和全部旧上线历史保持；0179纯模型bug不由经验登记算实现，独立钨合金棍修复状态留其对应fix-done。已测合后代码与七项已提交自动刷新保持，按学习者handoff给0NZX末T8敌方招式追加勘误；生成900房与本批899房口径沿原审计保留，完整外部等本批learner-checks，不另设审核、不新增游戏规则。",
+   "代码提案 silent-proposal-8f62129d7da70b94 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第88批经验提案预关联，保留首证/prior/原claim/repeat及全部上线历史；局部机制与整战因果分账。",
+   "代码提案 silent-proposal-7a8e9ccb7e646538 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第88批经验已自测并提交；新证据/反例和旧repeat完整保持。是否实际合入由本批合入回执证明，运维据完成事件登记shipped，学习者不标accepted/shipped。",
+   "经验第88次原数据2026-10-08.4→.5/增1改14退0/160 active，源54826c26唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱245文件2586例tsc/vitest0，实际合后原入口245文件2586例tsc/vitest0/nice19/4workers。原首证/先验/claim及support/repeat/旧状态历史全部保持；两个combat/potion/SL/terminal提案沿原自动链，数据上线不等于代码已实现或旧0268/0272已修。原out/err/report/failed/20冲突不改，原批完整外部另续验。",
+   "代码提案 silent-proposal-7cfd0f9b6b0fbbda → task=strategy-proposal；Roy-2026-10-07-learning",
+   "本批经验源提交已完成；经验数据发布与独立策略源码实现分开，实际shipped由运维核验登记。",
+   "第95次经验原数据2026-10-08.11→.12/增3改20退0/173 active，源fbf45077唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记25所属经验数据shipped。源248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及20项记录冲突历史不改。0287纯bug保持原观察/提案状态，0289首证LLYSRQQ35AVW/A8不改为本批A10。"
+  ],
+  "shipped_at": "2026-10-08T11:43:25+08:00"
+ },
+ {
+  "id": "silent-0164",
+  "ts": "2026-10-06T08:26:30+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "低语耳环文本同时提供回合能量和瓦库接管第一回合，本局沙漏首轮结束题面不是Jev自主启动的结果。六次均8血8挡、0能量，手中疯狂科学/势不可当+/防御/触媒+费用1/2/1/1，没有可支付动作或药水，前五次判死读档、第六次26攻击需损18而死。接管顺序和耗能过程未记录，额外能量不能与首轮自由选择混记；无移去耳环的受控胜负。",
+  "evidence": [
+   {
+    "run": "JMH5C51RLN4E",
+    "floor": 34,
+    "turn": null,
+    "note": "Codex选择低语耳环，理由是额外能量支撑启动与双扫腿；遗物文本说明接管首轮。",
+    "role": "support",
+    "added": "2026-10-06T08:26:30+08:00"
+   },
+   {
+    "run": "JMH5C51RLN4E",
+    "floor": 49,
+    "turn": 1,
+    "note": "六次combat/least-loss及状态：四张1/2/1/1费牌、能量0、挡8、HP8，只有结束/读档动作，Jev零战斗调用；第五次后读档，第六次实死。具体接管动作没有决策日志。",
+    "role": "support",
+    "added": "2026-10-06T08:26:30+08:00"
+   },
+   {
+    "run": "R0HEV5E3QT6G",
+    "role": "support",
+    "note": "静默原始日志可比前后帧与复盘核验；进阶、数字及观察限制见第37节和silent-whispering-earring-first-turn-control",
+    "added": "2026-10-06T08:43:31+08:00"
+   },
+   {
+    "run": "XTSV1U9JD34T",
+    "floor": 49,
+    "turn": 1,
+    "role": "support",
+    "note": "decisions:280371 F34选择低语耳环；states:286897首试可操作帧只有不可打ASCENDERS_BANE、3E、16挡、SHADOWMELD1及敌临时−6力。接管具体动作缺失，不能算Jev/代码自主启动；F36大蘑菇49/77→69/97但开场少抽2，无移除遗物的受控胜线。",
+    "added": "2026-10-08T03:28:04+08:00"
+   }
+  ],
+  "first_run": "JMH5C51RLN4E",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "按低语耳环、WHISPERING_EARRING、瓦库检索静默账本和更早静默复盘均无条目或可比首轮接管记录。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "JMH5C51RLN4E",
+    "XTSV1U9JD34T"
+   ],
+   "experience": [
+    "silent-whispering-earring-first-turn-control"
+   ],
+   "commits": [
+    "65b1a45b0192b744b6c46f9e7174f3c2156f093c",
+    "28bdbfc6c9de5eb802724351a199e1a20c67b41c",
+    "3cbc6955b270538e452d19118bab91a949305ab3",
+    "4b97f1038ed7acb7073a03629925d297c0da075b",
+    "dbeb26835b1792befcfe28d713df4086d85d90c7",
+    "1c0c1b3ef518713db4a15ab3dafc102a1d62ca7c",
+    "ceb74207f90ed2e2f94f96570e70d00d84290081",
+    "4138806163a82d90ab9b482d01c2a442c865f912"
+   ],
+   "changelog": [
+    "## 2026-10-06 静默猎手 第三十七次增量：1 局 A10（version 2026-10-06.12，分支 exp-silent，65b1a45b）",
+    "2026-10-08 静默猎手 第八十七次增量：2 局 A10（version 2026-10-08.4，分支 exp-silent，dbeb2683）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-031301-postmortem/proposal-controlled-opening.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/proposal-replay.md"
+   ]
+  },
+  "asc": 10,
+  "history": [
+   {
+    "ts": "2026-10-06T08:26:30+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-06T08:43:31+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T08:52:43+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T03:28:04+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T03:30:19+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T03:41:39+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T03:41:39+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T03:59:11+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T04:24:25+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp87",
+  "effect": null,
+  "notes": [
+   "静默第37次经验增量2026-10-06.12，仅proposed，运维核实际合入后CLI登记shipped；保留first_run/prior/repeat及旧上线历史。新局JMH5C51RLN4E A10、旧43静默局基线复算一致，首轮接管/得挡触发/跨阶段与换战分账；药水使用原句不变，不作单项整战因果外推。",
+   "08:50 experience-done机械核实第37批经验2026-10-06.12已实际合入live并登记唯一S1.exp37；来源JMH5C51RLN4E SILENT A10及旧43本角色完局。源及合后tsc0/194文件2112例首过，七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原observed，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。",
+   "20261008-031301-postmortem本局补support；保留原claim、first_run、prior、状态、版本及历史，不新增shipped或已证策略repeat。",
+   "代码提案 silent-proposal-e5ea36df117ca9b7 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第87批经验提案预关联，保持首证/prior/原claim/repeat/全部上线历史；经验与独立源码实现分开。",
+   "代码提案 silent-proposal-0129c465c6f5bd79 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第87批经验已自测并提交；新证据/反例和旧repeat完整保持。是否实际合入由本批合入回执证明，运维据完成事件登记shipped，学习者不标accepted/shipped。",
+   "经验第87次原数据2026-10-08.3→.4/增0改21退0/159 active，源dbeb2683唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱244文件2568例tsc/vitest0，实际合后原入口244文件2568例tsc/vitest0/nice19/4workers。原首证/先验/claim及support/repeat/旧状态历史全部保持；三个combat/potion/SL/terminal提案沿原自动链，数据上线不等于代码已实现或旧0268已修。原out/err/report/failed/18冲突不改，原批完整外部另续验。"
+  ],
+  "shipped_at": "2026-10-08T04:24:25+08:00"
+ }
+]

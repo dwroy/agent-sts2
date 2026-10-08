@@ -1,0 +1,71 @@
+已修复 probe 误用全局 Codex home，源码提交 `548b53ca`。原沙箱通过：251 文件、2,627 用例；Python 48 例通过，撤源码 2 红、恢复 2 绿。
+
+live 锁占用阻塞发布；真实双问仍待续办。历史真实缓存率为 **53.25%**，原 0.37% 是统计漏计，不能据此声称性能改善。证据、Roy 双通知和续办步骤已保存至[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/report.md)。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "6e427e001bf72d14bb097a75986834276724c7eb",
+  "fixes": [{
+    "item": "codex-brain-cache",
+    "commit": "548b53ca211231ab5f1079a16fe9ad65f62b3c6c",
+    "test": [
+      "agent/tests/codex-cache-probe.test.ts",
+      "agent/tests/codex-cache-engine.test.ts",
+      "ops/tests/test_codex_cache_probe_broker.py"
+    ],
+    "fails_without_fix": true,
+    "status": "tested-source-committed; live/probe pending"
+  }],
+  "skipped": [
+    {
+      "item": "live-publication",
+      "reason": "Nonblocking live-merge.lock acquisition failed with EAGAIN; live unchanged."
+    },
+    {
+      "item": "controlled-probe",
+      "reason": "Pending source integration and next broker wake; zero new model calls."
+    }
+  ],
+  "merged": null,
+  "published": null,
+  "version": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 251,
+    "cases": 2627,
+    "python_exit": 0,
+    "python_cases": 48,
+    "withdrawn_failed_cases": 2,
+    "restored_passed_cases": 2,
+    "actual_merged_tree_tsc": null,
+    "actual_merged_tree_vitest": null,
+    "external_full_tsc": null,
+    "external_full_vitest": null
+  },
+  "source_commits": ["548b53ca211231ab5f1079a16fe9ad65f62b3c6c"],
+  "source_tree": "b713cfe9957519b07f1b6705f9dff0d8ab7375a8",
+  "source_agent_tree": "08dd9a59bb69317f447d770fe6207474b4c82c6f",
+  "fixed_live_tree": null,
+  "records_commit": "5460da22721ff3dcc23c08489b7f18bfb0bb4ae3",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/report.md",
+  "report_json": "/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache/report.json",
+  "original_logs": "/home/dw/Projects/agent-sts2/logs",
+  "cache_transport_cause": "unknown",
+  "controlled_probe_result": null
+}
+```
+
+== 学习者 codex / codex-brain-cache ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11a70-4ee5-7372-be20-f4d585895ab3
+轮数：1；工具调用：command_execution×58 file_change×8
+token：输入 179.4k、输出 44.7k（其中推理 16.4k）、cache 读 5651.5k、cache 写 0（命中 96.9%）
+成本：未提供
+耗时：1524.9 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 8.7 s、首次工具 13.3 s、末次工具结束 1486.4 s；工具内共 412.7 s，其余（模型生成、推理、网络）1109.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache）；模型的工具调用 exec×48；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T15-35-30-01a11a70-4ee5-7372-be20-f4d585895ab3.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-brain-cache/learner/runs/20261008-153529-codex-brain-cache.jsonl

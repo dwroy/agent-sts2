@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：4XLZURXMD872（A10，第33层，无厌沙虫 THE_INSATIABLE T3以23血0挡承受31攻击阵亡）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：4XLZURXMD872：完整dirty源码、部分退出／结算帧及毛伤、同ID敌人身份、整场反事实、boss时钟估值、Jev缓存和账单费用、三幕及F48→F49资源。
+- 学习账本：4XLZURXMD872：新增无；更新 silent-0019、silent-0021、silent-0239、silent-0030、silent-0011、silent-0045、silent-0115、silent-0214；全部为支持证据，老错无；`ledger.py check` 退出码0。
+- 代码提案：F31T2换手／推演边界关联silent-0239等，CLI `silent-proposal-f226dea0cac1e550`；F28—33资源／能力启动关联silent-0019、silent-0021等，CLI `silent-proposal-04f65d65595dabd6`。均关联 `strategy-proposal`，未实现；缺少同起点受控整场验证，保留现行规则。
+
+```json
+{"task":"postmortem","appended":["4XLZURXMD872"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0019","silent-0021","silent-0239","silent-0030","silent-0011","silent-0045","silent-0115","silent-0214"],"repeats":[],"check":0},"code_proposals":["silent-proposal-f226dea0cac1e550","silent-proposal-04f65d65595dabd6"],"implementation_domains":["combat","potion","sl"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-181302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11b00-8d81-7c50-bf00-0be4cc44fe4b
+轮数：1；工具调用：command_execution×60
+token：输入 224.8k、输出 41.6k（其中推理 11.0k）、cache 读 4964.4k、cache 写 0（命中 95.7%）
+成本：未提供
+耗时：1384.4 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 8.1 s、首次工具 12.5 s、末次工具结束 1363.7 s；工具内共 67.1 s，其余（模型生成、推理、网络）1314.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×37；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T18-13-03-01a11b00-8d81-7c50-bf00-0be4cc44fe4b.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-181302-postmortem.jsonl

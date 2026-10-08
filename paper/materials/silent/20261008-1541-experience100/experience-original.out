@@ -1,0 +1,60 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.16 → 2026-10-08.17；提交：`196f1800`（分支 exp-silent）；合入：未合入，预检有19处记录冲突，已保留刷新提交 `cffd20db`。
+- 条数：新增0、更新17（加证据17、只改数字0）、退役0；active 176→176，总字符50495→49864；A8适用164条/45527字，A9适用165条/45811字。
+- 机制推理（局数为支持/反例）：
+  - 力量与敏捷 — 逐击加伤、逐牌加挡 — 127/0 — H1T1F8ML9FUE
+  - 蜃景 — 按当前毒量给挡 — 13/0 — H1T1F8ML9FUE
+  - 迷雾 — 制品分别阻断毒与虚弱 — 16/0 — H1T1F8ML9FUE
+  - 凋萎 — 持牌伤与攻击合核 — 17/0 — H1T1F8ML9FUE
+  - 毒雾 — 建层后轮初补毒 — 62/0 — H1T1F8ML9FUE
+  - 触媒 — 增加毒结算次数 — 47/0 — H1T1F8ML9FUE
+  - 余像 — 实际出牌及重放补挡 — 28/0 — H1T1F8ML9FUE
+  - 群蛇形态 — 后续出牌触发随机伤害 — 7/0 — H1T1F8ML9FUE
+  - 尖啸 — 临时降力，可被制品阻断 — 59/0 — H1T1F8ML9FUE
+  - 咬人卷轴 — 未完全挡住的攻击降低生命上限 — 5/0 — H1T1F8ML9FUE
+  - 敏捷药水 — 实增2敏捷，已有挡不补 — 51/0 — H1T1F8ML9FUE
+  - 永世沙漏 — 换线收益须连同血价核算 — 17/0 — H1T1F8ML9FUE
+  - 无厌沙虫 — 沙坑与攻击分别核算 — 16/0 — H1T1F8ML9FUE
+  - 跨幕回复 — 缺失HP×80%向下取整 — 22/0 — H1T1F8ML9FUE
+  - 能力兑现与资源 — 未来能力输出不预支 — 126/0 — H1T1F8ML9FUE
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件/2618用例/退出0，首次通过。
+- 切片大小：整体中位减少130字；最大5172→4967字。
+- 学习账本：新增无；改成 proposed：silent-0012、0010、0007、0024、0011、0027、0023、0132、0046、0221、0276、0025、0079、0018、0117、0243、0020、0019、0021（均为 silent 前缀）；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.17",
+  "commit": "196f1800b2c3b9bdc522c4d77632f1154662f8c9",
+  "merged": null,
+  "added": 0,
+  "updated": 17,
+  "retired": 0,
+  "active": 176,
+  "mechanisms": ["力量与敏捷", "蜃景", "迷雾", "凋萎", "毒雾", "触媒", "余像", "群蛇形态", "尖啸", "咬人卷轴", "敏捷药水", "永世沙漏", "无厌沙虫", "跨幕回复", "能力兑现与资源"],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2618},
+  "ledger": {
+    "added": [],
+    "proposed": ["silent-0012", "silent-0010", "silent-0007", "silent-0024", "silent-0011", "silent-0027", "silent-0023", "silent-0132", "silent-0046", "silent-0221", "silent-0276", "silent-0025", "silent-0079", "silent-0018", "silent-0117", "silent-0243", "silent-0020", "silent-0019", "silent-0021"],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-c888545b80180da7", "silent-proposal-3b37b520b22f0eaf", "silent-proposal-b259f9956e08088a", "silent-proposal-34209e8b9f982e49"],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11a3e-950e-73d2-9a09-d486144c75fc
+轮数：1；工具调用：command_execution×72 file_change×5
+token：输入 235.2k、输出 49.8k（其中推理 17.5k）、cache 读 7853.7k、cache 写 0（命中 97.1%）
+成本：未提供
+耗时：1941.0 s（墙钟）
+时间：首个事件 3.2 s、模型首个输出 10.3 s、首次工具 14.3 s、末次工具结束 1851.4 s；工具内共 1473.1 s，其余（模型生成、推理、网络）464.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×56 wait×1；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T14-41-11-01a11a3e-950e-73d2-9a09-d486144c75fc.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update.jsonl

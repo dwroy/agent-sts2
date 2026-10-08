@@ -1,0 +1,140 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-c888545b80180da7",
+    "ts": "2026-10-08T14:52:25+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0012",
+      "silent-0010",
+      "silent-0023",
+      "silent-0132",
+      "silent-0046",
+      "silent-0276"
+    ],
+    "runs": [
+      "H1T1F8ML9FUE"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "核已观察敏捷/脆弱牌挡、余像重放、群蛇逐次盾/本体伤及临时力量撤回；零毒蜃景不预支未来毒。药水仅核已饮2敏及旧挡不补，不拟新喝留时点。已实现部分核实际live祖先，无证据交互保留现行为。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-modifiers.md",
+    "experience": [
+      "silent-strength-weak-observation",
+      "silent-mirage-poison-card-block",
+      "silent-afterimage-per-card-block",
+      "silent-serpent-form-per-card-damage",
+      "silent-piercing-wail-temporary-strength",
+      "silent-dexterity-potion-card-block"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "f21374d71f9755ecf1ad8152885addc042072383f05dbfb43cd6f7a948cff64f",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-3b37b520b22f0eaf",
+    "ts": "2026-10-08T14:52:26+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0007",
+      "silent-0011",
+      "silent-0027"
+    ],
+    "runs": [
+      "H1T1F8ML9FUE"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "核人工制品逐项消费减力/毒/弱，毒雾建层到轮初施毒及触媒实际结算次数。H1末T4建雾/触媒而0毒未到下轮，不能预支双结；按已观察帧补漏模，不把全败模拟当真必死。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-poison.md",
+    "experience": [
+      "silent-haze-group-poison-weak",
+      "silent-noxious-fumes-growth",
+      "silent-accelerant-triggers"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "5758686e45c9cadfe01b15163ad91ab1eb14078d40f0998c06b4db91267631d1",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-b259f9956e08088a",
+    "ts": "2026-10-08T14:52:26+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0024",
+      "silent-0025",
+      "silent-0079",
+      "silent-0018",
+      "silent-0117",
+      "silent-0221",
+      "silent-0297"
+    ],
+    "runs": [
+      "H1T1F8ML9FUE"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "核沙漏可见弃牌区已升级凋萎6伤而手空缓存仍3的silent-0297缺口；仅从本角色已显示文本同步、缺字保留未知。SL饱和换线并记零毒蜃景替防御多损3同伤12；沙虫强制弃牌保留仍需的逃离，临终毒与沙坑独立。纸伤难愈2只核未全挡逐击max变化，不改通用SL门槛或凭单局定胜率。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-windows.md",
+    "experience": [
+      "silent-wither-end-turn-loss",
+      "silent-aeonglass-artifact-growth-sl",
+      "silent-insatiable-dual-clock",
+      "silent-scroll-paper-cuts-unblocked"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "e283eaae2c13d78fb3f0cd59205434455d41afba6001b0b63a500b5a6e2a3761",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-34209e8b9f982e49",
+    "ts": "2026-10-08T14:52:26+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0243",
+      "silent-0020",
+      "silent-0019",
+      "silent-0021"
+    ],
+    "runs": [
+      "H1T1F8ML9FUE"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "summary": "核赢战出口HP/药水与下一房、实到营火和转幕回复的接续；路线预测随实际行动更新，弃药/事件交换/实饮/SL分账。F47休息到52后沙漏六试败，没有留药或替路线完整胜线；先保存候选与后场资源对照，证据不足保留药水持有价值、终局权重及SL门槛。",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-144110-experience-update/proposal-resources.md",
+    "experience": [
+      "silent-act-transition-missing-hp-heal",
+      "silent-rest-buffer-observation",
+      "silent-route-hp-observation",
+      "silent-deck-burst-observation"
+    ],
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "f5b3ac55faa17184117fd0a9c5fdd0608c6b0587e44e26e888574873b78024e4",
+    "state": "pending"
+  }
+]

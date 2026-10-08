@@ -1,0 +1,1 @@
+初次即席统计误把直接饮药题当成必有code rank，触发AttributeError；已按是否有rank分母统计。verify.py初稿将brain用量字段按snake_case读取为0；原metrics.json与verify.out保留，实际日志字段为inputTokens/cacheHitTokens/outputTokens，metrics-v2.json已同decisions及runs交叉校验。上述初稿未追加到lessons。

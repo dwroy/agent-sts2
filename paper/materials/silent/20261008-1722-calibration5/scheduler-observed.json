@@ -1,0 +1,555 @@
+{
+  "task": "fix-batch",
+  "learner_task": "silent-boss-calibration",
+  "character": "silent",
+  "runs": [],
+  "pid": 125715,
+  "state": "done",
+  "reason": "calibration-refresh",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+  "feature_request": "silent-calibration-7759ce050e2b9b1efa6aceac",
+  "proposal_policy": "Roy-2026-10-07-learning",
+  "pane": "wJ:p8G",
+  "finished": "2026-10-08 17:15",
+  "rc": 0,
+  "merged": "465df69b196ff828dedf250538acba9917c120b5",
+  "proposal_audit_errors": [],
+  "report": {
+    "task": "fix-batch",
+    "character": "silent",
+    "base": "a85b3c5d88a3c2bcd8053f1bad8f447310c1ccd9",
+    "fixes": [
+      {
+        "item": "Roy 已授权新功能：静默 boss 模拟校准",
+        "commit": "0471382514799baa3db44602f56ac35020f30ba6",
+        "implementation_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+        "implementation_reused": true,
+        "test": "Python校准12例；调度8例；B2/B3固定夹具；刷新幂等；源及合后test-sandbox.sh",
+        "fails_without_fix": false,
+        "note": "本批完成授权新功能的定期校准刷新，复用既有实现，不冒标bug。",
+        "ledger": "silent-0299",
+        "version": "S1.boss-calibration5"
+      }
+    ],
+    "merged": "465df69b196ff828dedf250538acba9917c120b5",
+    "publication": "183e274b0279f711307046ed956214999296f050",
+    "publication_tree": "54c9567f6dfce14a5b82b229276ec1349b4cf9a6",
+    "all_commits": {
+      "main_merge": "a85b3c5d88a3c2bcd8053f1bad8f447310c1ccd9",
+      "calibration_data": "ad8be837f6b637bce5bf4729e3ee32552adf3d4d",
+      "sealed_logs": "0471382514799baa3db44602f56ac35020f30ba6",
+      "preserved_live_refresh": "87bceeb23dd5531f89753f89b4dd1c6e188e706e",
+      "live_merge": "465df69b196ff828dedf250538acba9917c120b5",
+      "publication": "183e274b0279f711307046ed956214999296f050"
+    },
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 251,
+      "cases": 2627,
+      "source": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 248,
+        "cases": 2608
+      },
+      "python_calibration": {
+        "cases": 12,
+        "exit": 0
+      },
+      "python_dispatch": {
+        "cases": 8,
+        "exit": 0
+      },
+      "replay_shards": [
+        0,
+        0
+      ],
+      "idempotency": [
+        0,
+        0
+      ],
+      "gitleaks": 0,
+      "ledger_check": 0,
+      "external": "完整沙箱外检查交调度器，待回报"
+    },
+    "extraction": {
+      "finished_runs": 131,
+      "attempts": 604,
+      "usable_fights": 241,
+      "successful_simulations_per_start": 240,
+      "SL_censored": 362,
+      "actual_missing_opening": 1,
+      "new_actual_events": 21,
+      "new_won": 15,
+      "new_died": 6,
+      "tune_keys": 107,
+      "validation_keys": 134,
+      "cutoff_UTC": "2026-10-06T02:46:11.648000",
+      "split": "旧调参keys、切点及220条旧样本保持，新样本仅进入验证"
+    },
+    "metric_order": [
+      "B2/t1",
+      "B3/pre"
+    ],
+    "boss_table": [
+      {
+        "boss": "KAISER_CRAB",
+        "n": 14,
+        "missing": 0,
+        "trusted": [
+          true,
+          true
+        ],
+        "brier": [
+          0.1069,
+          0.1167
+        ],
+        "gap_pp": [
+          8.1,
+          8.3
+        ],
+        "leak": [
+          1.248,
+          1.242
+        ],
+        "failed": [
+          [],
+          []
+        ]
+      },
+      {
+        "boss": "CEREMONIAL_BEAST",
+        "n": 16,
+        "missing": 0,
+        "trusted": [
+          true,
+          true
+        ],
+        "brier": [
+          0.045,
+          0.0328
+        ],
+        "gap_pp": [
+          -2.2,
+          -2.1
+        ],
+        "leak": [
+          1.006,
+          1.052
+        ],
+        "failed": [
+          [],
+          []
+        ]
+      },
+      {
+        "boss": "KNOWLEDGE_DEMON",
+        "n": 15,
+        "missing": 0,
+        "trusted": [
+          true,
+          true
+        ],
+        "brier": [
+          0.0606,
+          0.0507
+        ],
+        "gap_pp": [
+          -4.4,
+          -4.6
+        ],
+        "leak": [
+          1.126,
+          1.188
+        ],
+        "failed": [
+          [],
+          []
+        ]
+      },
+      {
+        "boss": "LAGAVULIN_MATRIARCH",
+        "n": 13,
+        "missing": 0,
+        "trusted": [
+          true,
+          true
+        ],
+        "brier": [
+          0.0406,
+          0.0262
+        ],
+        "gap_pp": [
+          6.2,
+          4.0
+        ],
+        "leak": [
+          1.013,
+          1.153
+        ],
+        "failed": [
+          [],
+          []
+        ]
+      },
+      {
+        "boss": "SOUL_FYSH",
+        "n": 14,
+        "missing": 0,
+        "trusted": [
+          true,
+          true
+        ],
+        "brier": [
+          0.0774,
+          0.0873
+        ],
+        "gap_pp": [
+          6.5,
+          7.7
+        ],
+        "leak": [
+          0.853,
+          0.856
+        ],
+        "failed": [
+          [],
+          []
+        ]
+      },
+      {
+        "boss": "WATERFALL_GIANT",
+        "n": 13,
+        "missing": 0,
+        "trusted": [
+          true,
+          true
+        ],
+        "brier": [
+          0.0806,
+          0.0767
+        ],
+        "gap_pp": [
+          1.4,
+          2.7
+        ],
+        "leak": [
+          0.992,
+          0.975
+        ],
+        "failed": [
+          [],
+          []
+        ]
+      },
+      {
+        "boss": "THE_KIN",
+        "n": 7,
+        "missing": 3,
+        "trusted": [
+          false,
+          false
+        ],
+        "brier": [
+          0.2415,
+          0.2391
+        ],
+        "gap_pp": [
+          7.9,
+          12.2
+        ],
+        "leak": [
+          1.287,
+          1.263
+        ],
+        "failed": [
+          [
+            "n",
+            "brier"
+          ],
+          [
+            "n",
+            "brier"
+          ]
+        ]
+      },
+      {
+        "boss": "QUEEN",
+        "n": 7,
+        "missing": 3,
+        "trusted": [
+          false,
+          false
+        ],
+        "brier": [
+          0.2815,
+          0.2845
+        ],
+        "gap_pp": [
+          35.8,
+          32.8
+        ],
+        "leak": [
+          0.919,
+          1.036
+        ],
+        "failed": [
+          [
+            "n",
+            "brier",
+            "gap"
+          ],
+          [
+            "n",
+            "brier",
+            "gap"
+          ]
+        ]
+      },
+      {
+        "boss": "AEONGLASS",
+        "n": 8,
+        "missing": 2,
+        "trusted": [
+          false,
+          false
+        ],
+        "brier": [
+          0.2608,
+          0.2513
+        ],
+        "gap_pp": [
+          37.0,
+          36.0
+        ],
+        "leak": [
+          3.043,
+          3.18
+        ],
+        "failed": [
+          [
+            "n",
+            "brier",
+            "gap",
+            "leak"
+          ],
+          [
+            "n",
+            "brier",
+            "gap",
+            "leak"
+          ]
+        ]
+      },
+      {
+        "boss": "TEST_SUBJECT",
+        "n": 7,
+        "missing": 3,
+        "trusted": [
+          false,
+          false
+        ],
+        "brier": [
+          0.1658,
+          0.1541
+        ],
+        "gap_pp": [
+          20.8,
+          17.8
+        ],
+        "leak": [
+          3.752,
+          3.68
+        ],
+        "failed": [
+          [
+            "n",
+            "brier",
+            "gap",
+            "leak"
+          ],
+          [
+            "n",
+            "brier",
+            "gap",
+            "leak"
+          ]
+        ]
+      },
+      {
+        "boss": "THE_INSATIABLE",
+        "n": 11,
+        "missing": 0,
+        "trusted": [
+          false,
+          false
+        ],
+        "brier": [
+          0.1254,
+          0.1221
+        ],
+        "gap_pp": [
+          -10.5,
+          -10.9
+        ],
+        "leak": [
+          1.573,
+          1.645
+        ],
+        "failed": [
+          [
+            "leak"
+          ],
+          [
+            "leak"
+          ]
+        ]
+      },
+      {
+        "boss": "VANTOM",
+        "n": 9,
+        "missing": 1,
+        "trusted": [
+          false,
+          false
+        ],
+        "brier": [
+          0.1602,
+          0.172
+        ],
+        "gap_pp": [
+          16.3,
+          17.4
+        ],
+        "leak": [
+          1.043,
+          0.991
+        ],
+        "failed": [
+          [
+            "n",
+            "brier",
+            "gap"
+          ],
+          [
+            "n",
+            "brier",
+            "gap"
+          ]
+        ]
+      }
+    ],
+    "A10": {
+      "validation_n": 134,
+      "gap_pp": [
+        7.3,
+        7.2
+      ],
+      "brier": [
+        0.1158,
+        0.1129
+      ],
+      "leak": [
+        1.273,
+        1.304
+      ],
+      "scope": "B3整体打穿比超出1.3；可信按逐boss及F49范围报告。A0–4/A5–9独立验证各0场。",
+      "HP_parts_from_A10": 190,
+      "nearest_A9_estimate": {
+        "boss": "TEST_SUBJECT",
+        "move": "BIG_POUNCE",
+        "damage": 45,
+        "ratio": 1
+      },
+      "F49": {
+        "actual_outcomes": 8,
+        "usable_openings": 7,
+        "tune": 2,
+        "validation": 5,
+        "missing": 5,
+        "actual_win": 0,
+        "brier": [
+          0.1773,
+          0.1302
+        ],
+        "gap_pp": [
+          40.6,
+          35.5
+        ],
+        "leak": [
+          3.402,
+          3.461
+        ],
+        "failed": [
+          [
+            "n",
+            "brier",
+            "gap",
+            "leak"
+          ],
+          [
+            "n",
+            "gap",
+            "leak"
+          ]
+        ],
+        "trust": "low"
+      }
+    },
+    "refresh": {
+      "entry": "agent/tools/boss-sim/refresh-silent.py --previous knowledge/characters/silent/boss-trust.json",
+      "trigger": "升阶或新增20次已结束SILENT实际结局boss事件，SL截断不计",
+      "schedule": "每小时:13/:43及学习批次完成事件",
+      "idempotent": "阈值不足及相同完整产物均验证跳过，未重新拟合或发布空版本",
+      "artifact": "43d439bddf71df00fefea06e5b99fb7299c169699408ce5f2f6239054ebde951"
+    },
+    "skipped": [
+      {
+        "item": "K3676LU8B0UH F48 attempt2 t1/pre",
+        "reason": "旧board no solve，两条错误保留；各起点实际拟合106场。"
+      },
+      {
+        "item": "不达标boss及F49升级可信",
+        "reason": "原门槛保持，缺口及失败指标见表。"
+      },
+      {
+        "item": "silent-0213及其他队列bug",
+        "reason": "本批仅完成授权校准任务。"
+      }
+    ],
+    "ledger_ids": [
+      "silent-0299"
+    ],
+    "ledger_status": "proposed；shipped由运维核实实际发布后登记",
+    "code_proposals": [],
+    "implementation_domains": [],
+    "verification": "固定发布树51个清单文件哈希全部相符，旧目录不变，其他角色及并行live内容保留；Roy双通知已追加。",
+    "paper_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261008-141304-silent-boss-calibration/report.md"
+  },
+  "checks_pending": false,
+  "fallback_checks": [
+    {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-141302-fix-batch.fallback-827bc615ccaff66100580c9b4cdf985d03f92b1c.checks.log",
+      "merged": "187c025aaf27a3d52db651849ac22ce2a83714bb",
+      "tree": "827bc615ccaff66100580c9b4cdf985d03f92b1c",
+      "commits": [
+        "0471382514799baa3db44602f56ac35020f30ba6",
+        "465df69b196ff828dedf250538acba9917c120b5"
+      ]
+    }
+  ],
+  "checks": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-141302-fix-batch.fallback-827bc615ccaff66100580c9b4cdf985d03f92b1c.checks.log",
+    "merged": "187c025aaf27a3d52db651849ac22ce2a83714bb",
+    "tree": "827bc615ccaff66100580c9b4cdf985d03f92b1c",
+    "commits": [
+      "0471382514799baa3db44602f56ac35020f30ba6",
+      "465df69b196ff828dedf250538acba9917c120b5"
+    ]
+  },
+  "run_group": "feature:silent-calibration-7759ce050e2b9b1efa6aceac"
+}

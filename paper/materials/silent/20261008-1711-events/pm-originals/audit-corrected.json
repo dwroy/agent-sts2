@@ -1,0 +1,286 @@
+{
+  "focus": [
+    {
+      "d": 293415,
+      "floor": 6,
+      "turn": 1,
+      "candidates": [
+        [
+          "plan4",
+          "钙化邪教徒"
+        ],
+        [
+          "plan5",
+          "海洋混混"
+        ]
+      ],
+      "original_focus": "钙化邪教徒"
+    },
+    {
+      "d": 293421,
+      "floor": 6,
+      "turn": 2,
+      "candidates": [
+        [
+          "plan2",
+          "钙化邪教徒"
+        ],
+        [
+          "plan5",
+          "海洋混混"
+        ]
+      ],
+      "original_focus": "钙化邪教徒"
+    },
+    {
+      "d": 293689,
+      "floor": 25,
+      "turn": 2,
+      "candidates": [
+        [
+          "plan1",
+          "胧光怪"
+        ],
+        [
+          "plan3",
+          "寄生惧魔"
+        ]
+      ],
+      "original_focus": null
+    },
+    {
+      "d": 293693,
+      "floor": 25,
+      "turn": 3,
+      "candidates": [
+        [
+          "plan1",
+          "胧光怪"
+        ],
+        [
+          "plan9",
+          "寄生惧魔"
+        ]
+      ],
+      "original_focus": null
+    },
+    {
+      "d": 293697,
+      "floor": 25,
+      "turn": 4,
+      "candidates": [
+        [
+          "plan1",
+          "寄生惧魔, 胧光怪"
+        ]
+      ],
+      "original_focus": "寄生惧魔, 胧光怪"
+    }
+  ],
+  "guards": [
+    {
+      "d": 293693,
+      "floor": 25,
+      "turn": 3,
+      "original": {
+        "plays": "打击+ -> 胧光怪, then 后空翻, then 防御",
+        "result": "survives with 18/70 HP before healing",
+        "hp_lost": 24,
+        "damage_dealt": 11,
+        "enemies_after": "寄生惧魔 13 HP; 胧光怪 36 HP",
+        "block_gained": 10,
+        "cards_drawn": 2,
+        "hp_after": 18,
+        "hp_after_pct": 26,
+        "dmg": 11,
+        "lethal_now": "no",
+        "enemy_threat_next": 25,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout_best": true
+      },
+      "alternatives": {
+        "plan1": {
+          "plays": "打击+ -> 胧光怪, then 后空翻, then 尖啸",
+          "hp_lost": 17,
+          "damage_dealt": 11,
+          "block_gained": 5,
+          "cards_drawn": 2,
+          "scaling_gained": "none"
+        },
+        "plan2": {
+          "plays": "后空翻, then 防御, then 尖啸",
+          "hp_lost": 12,
+          "damage_dealt": 0,
+          "block_gained": 10,
+          "cards_drawn": 2,
+          "scaling_gained": "none"
+        },
+        "plan3": {
+          "plays": "后空翻, then 尖啸",
+          "hp_lost": 17,
+          "damage_dealt": 0,
+          "block_gained": 5,
+          "cards_drawn": 2,
+          "scaling_gained": "none"
+        },
+        "plan4": {
+          "plays": "羽化, then 尖啸",
+          "hp_lost": 22,
+          "damage_dealt": 0,
+          "scaling_gained": "lasting value 7"
+        },
+        "plan5": {
+          "plays": "打击+ -> 胧光怪, then 后空翻",
+          "hp_lost": 29,
+          "damage_dealt": 11,
+          "block_gained": 5,
+          "cards_drawn": 2,
+          "scaling_gained": "none"
+        },
+        "plan6": {
+          "plays": "打击+ -> 胧光怪, then 羽化",
+          "hp_lost": 34,
+          "damage_dealt": 11,
+          "scaling_gained": "lasting value 7"
+        },
+        "plan7": {
+          "plays": "后空翻, then 羽化",
+          "hp_lost": 29,
+          "damage_dealt": 0,
+          "block_gained": 5,
+          "cards_drawn": 2,
+          "scaling_gained": "lasting value 7"
+        },
+        "plan8": {
+          "plays": "羽化",
+          "hp_lost": 34,
+          "damage_dealt": 0,
+          "scaling_gained": "lasting value 7"
+        },
+        "plan9": {
+          "plays": "打击+ -> 寄生惧魔, then 后空翻, then 尖啸",
+          "hp_lost": 17,
+          "damage_dealt": 11,
+          "block_gained": 5,
+          "cards_drawn": 2,
+          "scaling_gained": "none"
+        },
+        "plan10": {
+          "plays": "打击+ -> 胧光怪, then 后空翻, then 防御",
+          "hp_lost": 24,
+          "damage_dealt": 11,
+          "block_gained": 10,
+          "cards_drawn": 2,
+          "scaling_gained": "none"
+        }
+      },
+      "rationale": "Jev chose plan 10/10 (打击+ -> 胧光怪, 后空翻, 防御) with confidence 0.78; code rank - (rollout's best line, added); HP guard: plan 10 (打击+ -> 胧光怪, 后空翻, 防御; hp -24) is more than 8 HP over the cheapest line, playing plan 1 (打击+ -> 胧光怪, 后空翻, 尖啸; hp -17) instead"
+    },
+    {
+      "d": 293738,
+      "floor": 30,
+      "turn": 2,
+      "original": {
+        "plays": "毒性爆发",
+        "result": "survives with 42/70 HP before healing",
+        "hp_lost": 16,
+        "damage_dealt": 17,
+        "enemies_after": "感染棱柱 77 HP, Vulnerable 1, 中毒 7",
+        "hp_after": 42,
+        "hp_after_pct": 60,
+        "dmg": 17,
+        "lethal_now": "no",
+        "enemy_threat_next": 18,
+        "setup_turn": false,
+        "scaling_gained": "none",
+        "block_wasted": 0,
+        "potions_used": "none",
+        "rollout_best": true
+      },
+      "alternatives": {
+        "plan1": {
+          "plays": "打击 -> 感染棱柱, then 突然一拳 -> 感染棱柱, then 防御+",
+          "hp_lost": 4,
+          "damage_dealt": 27,
+          "block_gained": 8,
+          "scaling_gained": "none"
+        },
+        "plan2": {
+          "plays": "突然一拳 -> 感染棱柱, then 防御+, then 防御",
+          "hp_lost": 1,
+          "damage_dealt": 15,
+          "block_gained": 13,
+          "scaling_gained": "none"
+        },
+        "plan3": {
+          "plays": "毒性爆发",
+          "hp_lost": 16,
+          "damage_dealt": 17,
+          "scaling_gained": "none"
+        }
+      },
+      "rationale": "Jev chose plan 3/3 (毒性爆发) with confidence 0.95; code rank 3; HP guard: plan 3 (毒性爆发; hp -16) is more than 8 HP over the cheapest line, playing plan 1 (打击 -> 感染棱柱, 突然一拳 -> 感染棱柱, 防御+; hp -4) instead"
+    }
+  ],
+  "usage": {
+    "brain": {
+      "input_tokens": 4199518,
+      "output_tokens": 7804,
+      "cache_hit_tokens": 2281984
+    },
+    "jev": {
+      "input_tokens": 307574,
+      "output_tokens": 3616,
+      "cache_hit_tokens": null
+    }
+  },
+  "duration_seconds": 1403.478,
+  "observed_duration_seconds": 1441.345,
+  "raw_deciders": {
+    "codex": 41,
+    "code": 381,
+    "jev": 74
+  },
+  "autonomous_decisions": 85,
+  "autonomous_rounds": 67,
+  "jev_plan_continues": 120,
+  "code_plan_continues": 29,
+  "low_confidence": [
+    [
+      293548,
+      15,
+      1,
+      0.2
+    ],
+    [
+      293552,
+      15,
+      1,
+      0.14
+    ],
+    [
+      293632,
+      19,
+      5,
+      0.19
+    ],
+    [
+      293811,
+      33,
+      2,
+      0.31
+    ],
+    [
+      293820,
+      33,
+      3,
+      0.25
+    ]
+  ],
+  "plan_count": 68,
+  "rollout_best_count": 60,
+  "fallback": 0
+}
