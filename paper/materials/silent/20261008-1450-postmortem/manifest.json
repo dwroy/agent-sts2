@@ -1,0 +1,355 @@
+{
+  "recorded_at_cst": "2026-10-08 14:56",
+  "base_head": "00e7bbe55941daaff1f657ded6c6df0a45793f40",
+  "batch": "20261008-141302",
+  "runs": [
+    "H1T1F8ML9FUE"
+  ],
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "H1T1F8ML9FUE"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "H1T1F8ML9FUE",
+        "where": "agent/src/reflex/fight-plays.ts:48",
+        "what": "手空时忽略可见弃牌区已升级凋萎伤害，缓存3而实际新生6，末试T4方案完整损血低报3。",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0297"
+      ],
+      "updated": [
+        "silent-0005",
+        "silent-0006",
+        "silent-0010",
+        "silent-0018",
+        "silent-0019",
+        "silent-0023",
+        "silent-0024",
+        "silent-0025",
+        "silent-0079",
+        "silent-0117",
+        "silent-0132",
+        "silent-0221"
+      ],
+      "repeats": [
+        "silent-0079",
+        "silent-0117"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-179fd62ad9b2f71b",
+      "silent-proposal-2ae7436286228166",
+      "silent-proposal-de26499e8385f25b"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/report.md"
+  },
+  "originals": {
+    "paper/materials/silent/20261008-1450-postmortem/20261008-141302.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-141302.out",
+      "bytes": 3032,
+      "sha256": "97f65515b719f77c1baad59b49bb2251f9f14c37ed0cf3fc4a977b53bc5a7cd1"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/20261008-141302.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-141302.err",
+      "bytes": 12103,
+      "sha256": "7a265f3c9e4d6030ccfc1db2776c1e662dd51e3f5c0e692ad91792d1619a6124"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-brain.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-brain.jsonl",
+      "bytes": 2051814,
+      "sha256": "2b58edcad67b441a0b8059297c0c2ccc262de452fc65b5142f4bd4c9ed5b71e8"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-codex-calls.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-codex-calls.jsonl",
+      "bytes": 179747,
+      "sha256": "993530e970ab7597eaa9cd60006ce629209aee78419230cd70f3cc15e5330414"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-decisions.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-decisions.jsonl",
+      "bytes": 3033347,
+      "sha256": "9dc79331a917f340733b7cdbfde8d9c5e008d81ad4ef3b4244d5f923f6de7822"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-jev-prompts.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-jev-prompts.jsonl",
+      "bytes": 2127650,
+      "sha256": "bad089e12350e6e7d250c822decb77853ec90a9692216e7e5569f75af7ebc5ac"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-resources.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-resources.json",
+      "bytes": 1064463,
+      "sha256": "34ca75c615199055f2e916fe520c300a20715dc2b080bdc643887e0073ea8d4a"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-run-config.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-run-config.jsonl",
+      "bytes": 4956,
+      "sha256": "b6da5a783e2cf9661ef9eddcbe9fcf96123cb0784fd5f17fe6189522e598035d"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-run-plans.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-run-plans.jsonl",
+      "bytes": 17962,
+      "sha256": "79b0b7523285943490dad50490e42d31cca80498d5e0d7220a2ef0d55b61ffbb"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-sl-attempts.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-sl-attempts.jsonl",
+      "bytes": 101105,
+      "sha256": "f50c8b3f57b442439efa18f090d66cc59aa884d4bb7743a477d82204e754eee6"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/H1T1F8ML9FUE-states.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/H1T1F8ML9FUE-states.jsonl",
+      "bytes": 36902079,
+      "sha256": "5f330262a1dc0811fd69ef34ea70c853a397f5f6f42a2a6e0caf1a5e1318a0fa"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/analyze.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/analyze.py",
+      "bytes": 3846,
+      "sha256": "5d84203f6b5d3f7c2822867b517413cdce07aeeae0655451204008fac0f1c4b5"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/appended-section.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/appended-section.md",
+      "bytes": 21421,
+      "sha256": "78b5c5b760c6d0f92d6bd08a30ea57023fa8abc94f126b8e887582ab9eb28d36"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/brain-compact.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/brain-compact.txt",
+      "bytes": 24603,
+      "sha256": "be807d272924b880f033e06f3f1c05a8eb3fd38e52a8cb56bb72c0f1f66d582c"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/decisions-compact.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/decisions-compact.txt",
+      "bytes": 145430,
+      "sha256": "bc08ccb0e100519b3c7cd9ca30534109ae4ed9a8ebe28e5e88faa27bf7222215"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/deepseek-tail-check.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/deepseek-tail-check.json",
+      "bytes": 73,
+      "sha256": "5e33b6ff2eea5c0b94cbd219cdc3f34513fe2d8c46696dd7ed6d506556bda391"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/extract.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/extract.py",
+      "bytes": 1084,
+      "sha256": "093df51d5c19185c5e4811f5031c05f913f2e39fcc1aa2544857928ef902bdb7"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/ledger-check-receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/ledger-check-receipt.json",
+      "bytes": 158,
+      "sha256": "c3d0863e38b98ae65803104eda82a9df7d3964842b4f4b312b3c789863c959ea"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/ledger-search.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/ledger-search.txt",
+      "bytes": 132786,
+      "sha256": "57432dcb88ed956da48ab3a758050e9b4b381649ebcf54e3d61b130ffebd7c78"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/numeric-verification.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/numeric-verification.json",
+      "bytes": 3874,
+      "sha256": "5a12e208c57df3613bab1e9ad71b57787c6b2937c7f220d75663b15d41d1da72"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/prior-lessons-search.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/prior-lessons-search.txt",
+      "bytes": 156809,
+      "sha256": "63c639d91c6edda678a55000e393ba58f80faeaf584eccb3fb5d2c72f18e4fe7"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/proposal-sl-visible-cost.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-sl-visible-cost.json",
+      "bytes": 561,
+      "sha256": "c91126909214fe9b152706febdb655031007396cc24f7a752e2145259e5cbf3d"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/proposal-sl-visible-cost.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-sl-visible-cost.md",
+      "bytes": 3601,
+      "sha256": "bb59ebf978544ec2dfccec7b9f809aabe758df3159a75d8197013a6c09f59ef2"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/proposal-terminal-potion-chain.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-terminal-potion-chain.json",
+      "bytes": 605,
+      "sha256": "976df0d0fdde46dcd82d812568470183b9a977497776a481b2e392507e810e23"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/proposal-terminal-potion-chain.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-terminal-potion-chain.md",
+      "bytes": 3452,
+      "sha256": "6a331e5962a9feea7542999766d9e0ac2c9595d3a225c68eee9d16b9efba8528"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/proposal-wither-visible-piles.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-wither-visible-piles.json",
+      "bytes": 573,
+      "sha256": "7f6caf6c4d9146eb4dc6cd3e0674b667552d6dccf95f51cd1367bfb7610707fb"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/proposal-wither-visible-piles.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/proposal-wither-visible-piles.md",
+      "bytes": 3116,
+      "sha256": "1021d43f3409546d5665c63257ac7dcf2f9cc4a351076226f17e8864cdd72405"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/report.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/report.json",
+      "bytes": 1091,
+      "sha256": "5a59b33948e83fe49bbb9f33e5d64b66cea77f0caed5ee09caf03015ec290a58"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/report.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/report.md",
+      "bytes": 2949,
+      "sha256": "56f7bfc7e879780d5304a46b3f2f016ce4931ed3a89a7d6e168d503d6a6718d9"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/resources-compact.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/resources-compact.txt",
+      "bytes": 14978,
+      "sha256": "d3007fb71324ca27cfdd586eb58fd485676a6cc989b709a4bcccc2897b08d210"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/rounds.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/rounds.py",
+      "bytes": 1600,
+      "sha256": "890fdea7cac180c443d018eb50e95073185c79424afd63a2dde37dddd8fd6eea"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/rounds.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/rounds.txt",
+      "bytes": 17726,
+      "sha256": "8a5798646ab3401be20183d665d176d84c4e59cb4f5b0cd93882da10678b41ae"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298412.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298412.json",
+      "bytes": 69471,
+      "sha256": "7965cfda86ce97472d7b32280e267ec15f5346c72820c21e3c0e95b46b8be603"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298453.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298453.json",
+      "bytes": 72368,
+      "sha256": "37a165186d9623fca57ad8f8cdc57c9c9288dc6db7cdcc2a8ffb23aa39b6d794"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298454.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298454.json",
+      "bytes": 71366,
+      "sha256": "77799300d7883f9673d523470b928f9d8f133738d3c4061ce1d96a549c5a7a6b"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298455.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298455.json",
+      "bytes": 48811,
+      "sha256": "ce13316b8d23b59b4720f1ea1c29b11f7e8bfc7e532926d0e288c035ed5f3996"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298726.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298726.json",
+      "bytes": 85131,
+      "sha256": "cb2dd0f36456de1313e1b66b323b3620706301ca83dc59d0e3f21d4b70ff9dcd"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298746.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298746.json",
+      "bytes": 86849,
+      "sha256": "28de9f6f5c4469eb19726b7e34a99ac299ca2579e6ffca66ceaf066de8c5cc85"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298747.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298747.json",
+      "bytes": 91261,
+      "sha256": "9b001e192f7f4bbad50cc60bbe52cb74f2c3cf0647366797b1fd40610561b45d"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298758.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298758.json",
+      "bytes": 86764,
+      "sha256": "f35809c6d69291de22c519aa51f83400ae1ad709dfdf1771b74ea4f215811157"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298760.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298760.json",
+      "bytes": 86730,
+      "sha256": "148290b0c008db25de020726f5526c17580c7e476325984d705fc88b554fae07"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298830.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298830.json",
+      "bytes": 86799,
+      "sha256": "7c3066a5fb5c196c0c0ee017d94be865a819f0d8581de6b66e80dda60113ae50"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298831.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298831.json",
+      "bytes": 85336,
+      "sha256": "ac906b80a92560bf3505f9a9cb9a81567eb7d4ef7fcdc65d24f1135c70b3685a"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298832.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298832.json",
+      "bytes": 86090,
+      "sha256": "135627a8a8e9d39d8abf9687f82cddda248cc5fc64df5b9c7cd1b9ff74933ff9"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298833.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298833.json",
+      "bytes": 84460,
+      "sha256": "d901da1d6a8bfb714b8f8c5856744aa38ceacad3a0b618d14884ba57c253071e"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/state-298834.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/state-298834.json",
+      "bytes": 80576,
+      "sha256": "96c05438b5dbf626a9e142004f8ff77c89155c0331a6774bc6009711c9862ad7"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/states-compact.txt.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/states-compact.txt",
+      "bytes": 403899,
+      "sha256": "f96f0cf2b3929ae01857a9932319c9c81c33dff181e6b5aaf36574e7b12e2535"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/states-extract.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/states-extract.py",
+      "bytes": 570,
+      "sha256": "9b5dd11102135cad67aac5a35a78a3ae86148c65762cde56cee90e7c8d7fa06f"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/verified-summary.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/verified-summary.json",
+      "bytes": 703,
+      "sha256": "d2ee2b57df54012c683aee386b94589399126057c4d7c192998fd3f6b9e63da5"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/verify.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/verify.py",
+      "bytes": 5676,
+      "sha256": "ed00f323c553a282e54adb4b96191fac65d197140bd92f90ec19d8aa44d6964f"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/wither-cache-audit.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/wither-cache-audit.json",
+      "bytes": 1607,
+      "sha256": "995b8b8cada89e3778e96eb3f51091f442dd16ee2090fc404749115732d7d189"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-originals/wither-cache-audit.mjs": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem/wither-cache-audit.mjs",
+      "bytes": 1419,
+      "sha256": "956fef58120a1444b57fd0ce2a377ea6ca5e3b2e24df4677941ed4ea5635bedb"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/postmortem-event-stream.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-141302-postmortem.jsonl",
+      "bytes": 1450184,
+      "sha256": "9f7bb1314fc95872d559bb5d67471d2c7cbcbf08b4298e62325f4bad4c665e5b"
+    },
+    "paper/materials/silent/20261008-1450-postmortem/H1T1F8ML9FUE-run-note.md": {
+      "path": "/home/dw/Projects/agent-sts2/notes/run-1008-1411-H1T1F8ML9FUE.md",
+      "bytes": 6383,
+      "sha256": "c36b2b3460ec47ca6e49ea6ac9a2b2ed17f332b39d77697043ba9358842c7688"
+    }
+  },
+  "owned_original_ledger_rows": 26,
+  "main_evidence_rows": 13,
+  "support_update_rows": 10,
+  "repeat_update_rows": 2,
+  "retrospective_repeat_evidence": 0,
+  "new_bug_rows": 1,
+  "new_mechanic_rows": 0,
+  "proposal_link_rows": 13,
+  "new_pure_bugs": [
+    {
+      "run": "H1T1F8ML9FUE",
+      "where": "agent/src/reflex/fight-plays.ts:48",
+      "what": "手空时忽略可见弃牌区已升级凋萎伤害，缓存3而实际新生6，末试T4方案完整损血低报3。",
+      "new": true
+    }
+  ],
+  "queue_entry_added": true,
+  "blocking": false,
+  "unowned_extra_rows_preserved": 150,
+  "lesson_physical_not_reappended": true,
+  "original_learner_verification_retained": true,
+  "proposal_registry_not_modified": true,
+  "manual_dispatch": false,
+  "record_only": true
+}
