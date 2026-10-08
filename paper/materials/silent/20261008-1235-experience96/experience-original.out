@@ -1,0 +1,92 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.12 → 2026-10-08.13；提交：3958e561（分支 exp-silent）；合入：未合入，预检发现19处并行记录冲突，待运维兜底；刷新提交79331bb4已保留。
+- 条数：新增2、更新17（加证据17、只改数字0）、退役0；active 173 → 175；总字符50115 → 52103。A8适用163条／47766字；A9适用164条／48050字。
+- 机制推理：
+  - 战斗专注 — 先抽牌再封锁后继抽牌 — 3局 — LRN0HPZ0FZS1、9R916WW0V65N
+  - 力量与虚弱 — 攻击逐击核算 — 123局 — 9R916WW0V65N
+  - 灵动步法 — 敏捷经后续挡牌兑现 — 72局 — 9R916WW0V65N
+  - 苦无 — 新增敏捷传给后继挡牌，旧挡不补 — 3局 — 9R916WW0V65N
+  - 脆弱 — 每张牌分别折减格挡 — 23局 — 9R916WW0V65N
+  - 余像 — 建立后逐牌补挡，换战重建 — 27局 — 9R916WW0V65N
+  - 滚石 — 按实际存活轮兑现成长 — 8局 — 9R916WW0V65N
+  - 精准 — 三刀各8、合24，其他伤害另计 — 7局 — 9R916WW0V65N
+  - 永冻冰晶 — 首次能力补7挡 — 5局 — 9R916WW0V65N
+  - 实验体 — 技能触发激怒，换阶段重核状态 — 13局 — 9R916WW0V65N
+  - 女王减益与魂缚 — 按现场逐牌核限制 — 15局 — 9R916WW0V65N
+  - 女王SL观察 — 本局六试零赢，换线胜因未知 — 6局 — 9R916WW0V65N
+  - 敏捷药水 — 建2敏捷，不倒补已有挡 — 49局 — 9R916WW0V65N
+  - 再生 — 回复15、失血28、净损13分账 — 14局 — 9R916WW0V65N
+  - 幕间回复 — 缺失HP的80%向下取整，连续Boss另算 — 18局 — 9R916WW0V65N
+  - 构筑观察 — 持牌与本战实际建立分开 — 122局 — 9R916WW0V65N
+  - 连续Boss观察 — 八局HP接续、后战均败，不拟合留药门槛 — 8局 — 9R916WW0V65N
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 248文件／2608用例／退出0。首轮无新增输出后中断130，完整入口重跑一次通过；gitleaks通过。
+- 切片大小：中位增加183字；配对差中位增加115字；最大5384字。
+- 学习账本：新增无；改成proposed：silent-0012、silent-0005、silent-0085、silent-0069、silent-0023、silent-0094、silent-0054、silent-0173、silent-0028、silent-0079、silent-0276、silent-0259、silent-0243、silent-0020、silent-0019、silent-0021、silent-0292、silent-0228；退役无；`ledger.py check`退出0。变更记录已仅追加第九十六节。
+- 需要Dai定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.13",
+  "commit": "3958e5616ae5a13318da4e4397d2805ec1f919c9",
+  "merged": null,
+  "added": 2,
+  "updated": 17,
+  "retired": 0,
+  "active": 175,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-footwork-block",
+    "silent-kunai-attack-count-dexterity",
+    "silent-frail-card-block",
+    "silent-afterimage-per-card-block",
+    "silent-rolling-boulder-start-growth",
+    "silent-accuracy-shiv-scaling",
+    "silent-permafrost-first-power-block",
+    "silent-test-subject-phase-reset",
+    "silent-queen-poison-main-target",
+    "silent-queen-poison-window-sl-observation",
+    "silent-dexterity-potion-card-block",
+    "silent-regen-potion-decay-heal",
+    "silent-act-transition-missing-hp-heal",
+    "silent-deck-burst-observation",
+    "silent-battle-trance-draw-lock",
+    "silent-double-boss-resource-handoff"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2608},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0005", "silent-0085", "silent-0069",
+      "silent-0023", "silent-0094", "silent-0054", "silent-0173",
+      "silent-0028", "silent-0079", "silent-0276", "silent-0259",
+      "silent-0243", "silent-0020", "silent-0019", "silent-0021",
+      "silent-0292", "silent-0228"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-35919516f2457a9f",
+    "silent-proposal-3ee015a5b3aa4ae8",
+    "silent-proposal-9e5d50fdd7bf1fbd",
+    "silent-proposal-20b9df170d51b280",
+    "silent-proposal-91cc7fd647077569"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a119b3-4865-7ea2-8b17-7bff9d08bad1
+轮数：1；工具调用：command_execution×80 file_change×11
+token：输入 205.8k、输出 52.2k（其中推理 21.2k）、cache 读 7354.5k、cache 写 0（命中 97.3%）
+成本：未提供
+耗时：1588.3 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 7.9 s、首次工具 11.6 s、末次工具结束 1513.0 s；工具内共 1143.7 s，其余（模型生成、推理、网络）441.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×53；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T12-09-02-01a119b3-4865-7ea2-8b17-7bff9d08bad1.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update.jsonl
