@@ -1,1 +1,0 @@
-GUIDE: fight the boss with block.

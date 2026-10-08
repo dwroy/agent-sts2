@@ -1,0 +1,21 @@
+import json,subprocess
+from pathlib import Path
+root=Path('/home/dw/Projects/agent-sts2');p=root/'learner/runs/20261008-151301-postmortem';run='AD3QSC3P41JU'
+items=[
+('silent-0228',48,11,'support','F46房间66→可操作62→退出26，两药实喝；F47休息26→62；F48王室猛毒后58血、能量药T3饮，T11赢后15空药；F49再次开场损4，可操作11血，末次T2阵亡。大脑F34/F37/F46已明确连续Boss，本项只印证资源接续，不作忘记备战的repeat或留药可赢反事实。'),
+('silent-0079',49,1,'repeat','六试T1首手同为11HP/敌102/同8牌。首试及第3—6试Jev防御→突然一拳→打击→切割实30伤、10挡、损8；第2试Jev仍选该线，由SL换突然一拳→切割→扫腿+实21伤、28挡、零损，T2保11血且T3才判死。题面两线五轮同8/8或24/24死；多9伤仍有8血价，没有任何获胜对照，不据此拟统一阈值。'),
+('silent-0028',49,2,'support','本局实验体第一阶段ENRAGE_POWER3。末试T1毒雾+不增敌力，防御使0→3；T2肾上腺素、两后空翻、防御+四技能使3→6→9→12→15，意图19→22→25→28→31，突然一拳虚弱后23；18挡与3血不足完整需损5，毒6结算后敌58/111。现有源码已有技能激怒路径，不定位新bug。'),
+('silent-0011',48,6,'support','女王T1建立两毒雾+合6，T3普通毒雾再加2为8；T6两敌毒32与41配蜃景实54挡。F49末试T2佩尔之眼换手前后毒3→6，敌血仍72；结束才实结算6毒，64→58，不把新增毒当即时已发生伤害。仅记录本局能力起始与实际结算的差别，不声称已核所有额外回合机制。'),
+('silent-0030',17,8,'support','族母T2/T3先后建立两毒雾+合6；T8已见玩家力量-2/敏捷-2、敌力量2，毒伤继续结算，T8—T10敌存量净降32/43/52，T11结束该战，玩家38→11。旧增益削减与毒制胜的又一次支持，不设通用先手规则。'),
+('silent-0048',48,10,'support','女王T9牌面13挡且无攻击，加水盆回合末4后抵30攻击，28→15实损13；T10爆发+复制尖啸后女王9攻击，防御6及水盆4保持15HP。F49第2试T2也以13牌面挡加水盆4抵16攻击零损；末试T2打攻击则无水盆，18挡对23攻击实死。只核本局已见组合。'),
+('silent-0069',48,6,'support','女王T3起99虚弱/易伤/脆弱与魂缚3持续；T6蜃景以两敌32+41=73毒计算，脆弱后实54挡，较73少19，对36攻击零损。T10爆发+复制尖啸把女王2力量变-10、显示9攻击，T11恢复2；没有把临时减益或卡牌开场预览用于下一场。'),
+('silent-0255',49,1,'support','取得王室猛毒且无小血瓶：F39、F45、F46、F48、F49首试各在首帧至首手开场失4，70→66/70→66/66→62/62→58/15→11。F49其余SL直接恢复已结算后的11血，不再额外扣4，不当回血；第二Boss仍可操作、最终死于攻击而非开场耗尽。')]
+results=[]
+for ident,f,t,role,note in items:
+ payload={'id':ident,'by':'learner:postmortem','evidence':[{'run':run,'floor':f,'turn':t,'role':role,'note':note}],'where':{'lessons':[run]},'note':'来源20261008-151301-postmortem；仅追加本角色实盘证据，保留首证、先验、旧claim、状态和历史上线版本。'}
+ subprocess.run(['date'],check=True)
+ result=subprocess.run(['python3',str(root/'learner/ledger.py'),'update'],input=json.dumps(payload,ensure_ascii=False),capture_output=True,text=True)
+ results.append({'id':ident,'role':role,'payload':payload,'exit':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
+ (p/'ledger-updates.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n')
+ print(ident,result.returncode,result.stdout.strip(),result.stderr.strip())
+ if result.returncode:raise SystemExit(result.returncode)

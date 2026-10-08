@@ -1,0 +1,1282 @@
+{
+  "recorded_at_cst": "2026-10-08 15:52",
+  "base_head": "d87d587b336a9f07c75a9e0ad20038be958b65b3",
+  "batch": "20261008-151301",
+  "runs": [
+    "AD3QSC3P41JU"
+  ],
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "AD3QSC3P41JU"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0228",
+        "silent-0079",
+        "silent-0028",
+        "silent-0011",
+        "silent-0030",
+        "silent-0048",
+        "silent-0069",
+        "silent-0255"
+      ],
+      "repeats": [
+        "silent-0079"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-015f25123c45671c",
+      "silent-proposal-01d7495835a3eb19"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/report.md"
+  },
+  "originals": {
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/AD3QSC3P41JU-resources.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/AD3QSC3P41JU-resources.json",
+      "bytes": 873543,
+      "sha256": "b19466c6ee8829bfbb53e86117d3dead52978f93655ebac0b5ba9a3061518927"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/after-append-source-check.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/after-append-source-check.json",
+      "bytes": 18796,
+      "sha256": "eee87347d50eaa7167858e4feabed648261a5de0162ea16e136e112546d2b731"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/analyse.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/analyse.py",
+      "bytes": 3262,
+      "sha256": "8893d5edef23ae0ea0ea8576c1b23c6708a4a4654824b1e0cb642602c2804b89"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/brain.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/brain.jsonl",
+      "bytes": 1718035,
+      "sha256": "1ba6117c7b2bb208f3095841c624d9d528a0eefae304d5573a8d9063650d70f7"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/decisions.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/decisions.jsonl",
+      "bytes": 2298464,
+      "sha256": "d97b3513061e422b8178857fc121423d36905389573d28db257ea03d48f66696"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/deepseek-reasoning.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/deepseek-reasoning.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/draft.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/draft.py",
+      "bytes": 16210,
+      "sha256": "6755e97ca10ec09ca4efdd182f5fd30f4c5e61a79639b5a498fff0a4b59e4248"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/extract.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/extract.py",
+      "bytes": 1568,
+      "sha256": "d1c640db962c355e168896774c3ad118f70592fa664c56248f6e902b099e1373"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/ledger-after-verification.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/ledger-after-verification.json",
+      "bytes": 4815,
+      "sha256": "4b04902929023873e7d2ed6e05a46ffa54300f2138099a6a5d627302ff27006e"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/ledger-check.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/ledger-check.txt",
+      "bytes": 107,
+      "sha256": "c21593840efa182acc2762658fa7466ffeb224f5fb22ec50d1fc6e336c0e73e5"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/ledger-updates.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/ledger-updates.json",
+      "bytes": 7372,
+      "sha256": "e65ad40cfdc22acb97881c1bf0e8ce12ffbb7e5128b053e38da5d5a73c3f8852"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/ledger-updates.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/ledger-updates.py",
+      "bytes": 3786,
+      "sha256": "d2d21e7dd03b0a65fd0d366f679bbe66514c03de59c692a0f1e23035c40932dd"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/numbers-check-first-failure.txt": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/numbers-check-first-failure.txt",
+      "bytes": 207,
+      "sha256": "bfe70fc3430bfebb688dcd25e39b317784be478befd3faebcd11009ab1445f61"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/numbers-checked.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/numbers-checked.json",
+      "bytes": 1064,
+      "sha256": "4f4bfe905162b2747c202d6dda21abfda31c24bd7cb0db458a15fe7beb80ba1f"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/proposal-cli-receipts.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-cli-receipts.json",
+      "bytes": 1783,
+      "sha256": "81cf6db4eae856cee60488ef4b55ff434abc10ddb622044b71ed192b52c5efb9"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/proposal-combat.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-combat.json",
+      "bytes": 629,
+      "sha256": "720292795ff4272759b25e80f463b37d82ab52cd66248e66fde503fa629e31cd"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/proposal-combat.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-combat.md",
+      "bytes": 5357,
+      "sha256": "9282fefa7c494597de6d0ddd65d725fb5e8f07abf9b538b9f46b001e78e3d93e"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/proposal-resources.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-resources.json",
+      "bytes": 627,
+      "sha256": "567700083414bae0bb376f3cc58907b95a64e41504423885d78db9cdc9100569"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/proposal-resources.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-resources.md",
+      "bytes": 4709,
+      "sha256": "a9826cae824dc9bc7b3df59449e00980bfa05ef01c326233624cdc2c6966e13c"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/recheck-source.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/recheck-source.py",
+      "bytes": 1168,
+      "sha256": "cdaf5336e7ce8fd41a1555408ffa8cfe186fd51be07cac4f27a384526f648319"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/report.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/report.json",
+      "bytes": 672,
+      "sha256": "1492c4a7c783a3936465504e2accb7e6339817ae1c1711d2f49adb0069ad9d7d"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/report.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/report.md",
+      "bytes": 1651,
+      "sha256": "8b9756140b7f0a2c842e52422a481a01b9c95b64ac7093686ddaecdd14457cbf"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/run-config.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/run-config.jsonl",
+      "bytes": 4919,
+      "sha256": "15ef6e964e113d57b1cc3e9a44a76cd4f9a601ef8f738cc8c0c99aac3b5e91e9"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/run-plans.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/run-plans.jsonl",
+      "bytes": 17926,
+      "sha256": "f23a4136cf30f05deb671d0d7fbb2c13c382e2a3bcfa555be5a1413b35a82484"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/runs.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/runs.jsonl",
+      "bytes": 448,
+      "sha256": "941a6d50323fa235696897ddc25fc3309b251e4b53b219c10303498d4ada7632"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/section.md": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/section.md",
+      "bytes": 18691,
+      "sha256": "3a46b4dc9e08b1b30f1a5967ebdd4d843dc8a56f0913a3b5aa99d62360e86b0e"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0011-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0011-before.json",
+      "bytes": 113740,
+      "sha256": "d464750461ee3c29557a046985b32b2ff4a1af33824c72afb8c3221f6fbeba7d"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0028-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0028-before.json",
+      "bytes": 31214,
+      "sha256": "e7399d2881ec9fc37063f1b4ad57bb8e5dc86ddca9c86b69a950468f0391b025"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0030-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0030-before.json",
+      "bytes": 55005,
+      "sha256": "144efb239b08cb0b34e12047932b3cf9908490c89a3f3f6ec2c40814b62104bd"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0048-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0048-before.json",
+      "bytes": 13405,
+      "sha256": "843e54517327e5980c19a8171c80a964826e30aa553b0fdde3abc55e10d4ff26"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0069-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0069-before.json",
+      "bytes": 25208,
+      "sha256": "95ab09c75de748266b66bd2176edf95447b51de6439ff97c469494783e8cb163"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0079-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0079-before.json",
+      "bytes": 106159,
+      "sha256": "8106595bcfe0fce49eba35d4b58bd4328e2740544b9f74022fce93effe3eacf1"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0228-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0228-before.json",
+      "bytes": 19395,
+      "sha256": "7b5bef3669568ce15b411f1dbfc8e7e0cfa5286be325c5d8cc124f93545f5e1b"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/silent-0255-before.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/silent-0255-before.json",
+      "bytes": 7807,
+      "sha256": "e9da63b773c0aea0039cacd1a347930d6d1d50dc66c43243ca3f7ced5bece180"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/sl-attempts.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/sl-attempts.jsonl",
+      "bytes": 87300,
+      "sha256": "370dd6c50b559840eb4b51ab8464ab55a42b4b6c2be50b56b7d88076a0b9ea11"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/states.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/states.jsonl",
+      "bytes": 25396788,
+      "sha256": "368caa8bee3a39d2362b81e82057b2e2ffef2f0c54395299c454eb6b21c73263"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/verification.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/verification.json",
+      "bytes": 639,
+      "sha256": "cffc704d1782f39c88430a99ffc4f26b35aceb40d79f01fc46514fc45cb46d87"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/verify.py": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/verify.py",
+      "bytes": 3136,
+      "sha256": "f7312552b68af35c6a8b5c00c1cabbbafe9229c14259301734b05f9dc5f6ec26"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/投影与时钟.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/投影与时钟.json",
+      "bytes": 126972,
+      "sha256": "8f1f8f450cf59835c1a565894560d4bf675485d8503bb87b61ea5a152be7f790"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/统计.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/统计.json",
+      "bytes": 29892,
+      "sha256": "16f77a99c93070d4657aa5bdb758845ae759f837617185c2c124c13d04252034"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/资源过渡.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/资源过渡.json",
+      "bytes": 43127,
+      "sha256": "76be5cd06e077ff3178dc05a35a06c162ace8ec1572bf380c274d9a352b81155"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/逐回合.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/逐回合.json",
+      "bytes": 143796,
+      "sha256": "11a0a8579c0c6aefe0fd5f37b9d1f1d3c0de58aac3c30659bda3edc4622bb3e6"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-originals/非战斗决定.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/非战斗决定.json",
+      "bytes": 40249,
+      "sha256": "c8f29f0ecc893712f2d987a50fa352e87496926322abe881e9d826204cb1eee5"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem-event-stream.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem.jsonl",
+      "bytes": 1090815,
+      "sha256": "33e5ff201eb7a46108908d276804313960db21a96a679ae70528f200faeb296b"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-151301.out",
+      "bytes": 2318,
+      "sha256": "069721675fac833fa3ea1aa2790012fc82ef08f940b96e3579f5eab2e5b0b18d"
+    },
+    "paper/materials/silent/20261008-1541-events/postmortem.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-151301.err",
+      "bytes": 9922,
+      "sha256": "9be473e451aaba5909a4793b25bef87bc477162483e0b4d9dc6e2a7a2e4dd997"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/acceptance.baseline.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.baseline.py",
+      "bytes": 10239,
+      "sha256": "130dd7d6f3ec718ccc6d193895155c35727ecb1d23aeb591736d88419235b81a"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/acceptance.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.coverage-path-initial.json",
+      "bytes": 1686,
+      "sha256": "b877713726aa46db0f31e211fd582fd5189956a604af096ecdfcb25fc0d12adf"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/acceptance.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.coverage-path-initial.log",
+      "bytes": 1614,
+      "sha256": "c32978b91648f1914b66610662f50a885d24bf0d29cf71ab14541a0215ab9d8a"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/acceptance.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.json",
+      "bytes": 1743,
+      "sha256": "c17a3931da3d14d6016c062c5c8d2978d0f23d9a539cafe1ad46f9330fd519e2"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/acceptance.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.log",
+      "bytes": 1669,
+      "sha256": "c96e91fd2b63f36af16c9e50a5c5d692451cd0a48b9f83661f0bbc5eb10690fd"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/acceptance.receipt.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.receipt.coverage-path-initial.json",
+      "bytes": 1262,
+      "sha256": "c10d2be441c9d6903fb5c79f3b89ef460c29667f95909e860c03ad685d062227"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/acceptance.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.receipt.json",
+      "bytes": 1381,
+      "sha256": "b2d6d833480b1d33a20a540ada195d71e39a29c00f2b10924179d95fb789b507"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-pre.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-pre.coverage-path-initial.json",
+      "bytes": 2232,
+      "sha256": "ebad8015be27535104cefdff67413ba76ff1a93eead182acdcc66ab8e629b1de"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-pre.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-pre.coverage-path-initial.log",
+      "bytes": 1104,
+      "sha256": "eaa301110958a1d77bbc25b4dff03875e851052457426de6f191fdcade8746f1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-pre.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-pre.json",
+      "bytes": 2232,
+      "sha256": "ebad8015be27535104cefdff67413ba76ff1a93eead182acdcc66ab8e629b1de"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-pre.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-pre.log",
+      "bytes": 1104,
+      "sha256": "eaa301110958a1d77bbc25b4dff03875e851052457426de6f191fdcade8746f1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-t1.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-t1.coverage-path-initial.json",
+      "bytes": 2234,
+      "sha256": "0ccaec1efcd8030cde541613e65629c815a111705c16806975e4d809b42c7203"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-t1.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-t1.coverage-path-initial.log",
+      "bytes": 1103,
+      "sha256": "963745df38c0e57e2613fd195e2b7ef43584f3fd69375f51d6cc596b22558244"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-t1.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-t1.json",
+      "bytes": 2234,
+      "sha256": "0ccaec1efcd8030cde541613e65629c815a111705c16806975e4d809b42c7203"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-tune-t1.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-tune-t1.log",
+      "bytes": 1103,
+      "sha256": "963745df38c0e57e2613fd195e2b7ef43584f3fd69375f51d6cc596b22558244"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-pre.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-pre.coverage-path-initial.json",
+      "bytes": 1862,
+      "sha256": "4a34ea9d1d71b762d93245e94338536c8d68216fe5460b5e4c1c3a4548f3b5de"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-pre.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-pre.coverage-path-initial.log",
+      "bytes": 943,
+      "sha256": "f4c64d4c5bc9fa51e8666c112b5363ca4d6c5c41fb9a71c2bb268542172aec4b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-pre.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-pre.json",
+      "bytes": 1862,
+      "sha256": "4a34ea9d1d71b762d93245e94338536c8d68216fe5460b5e4c1c3a4548f3b5de"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-pre.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-pre.log",
+      "bytes": 943,
+      "sha256": "f4c64d4c5bc9fa51e8666c112b5363ca4d6c5c41fb9a71c2bb268542172aec4b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-t1.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-t1.coverage-path-initial.json",
+      "bytes": 1861,
+      "sha256": "a6f62c3a19a2e65199bb28c1711a021236468a7de0acd321b500acc731ed8319"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-t1.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-t1.coverage-path-initial.log",
+      "bytes": 942,
+      "sha256": "464b0dd7eabd6f8987883c5900417e64c9a7240d507a9322b9d4c7e02c87b286"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-t1.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-t1.json",
+      "bytes": 1861,
+      "sha256": "a6f62c3a19a2e65199bb28c1711a021236468a7de0acd321b500acc731ed8319"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-per-turn-val-t1.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-per-turn-val-t1.log",
+      "bytes": 942,
+      "sha256": "464b0dd7eabd6f8987883c5900417e64c9a7240d507a9322b9d4c7e02c87b286"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-provenance.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-provenance.json",
+      "bytes": 22925,
+      "sha256": "c58fcf47303f858e6bed6f8767b8c1265874a3a14600cb04a7a7397b1419b90e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-queen-backtest.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-queen-backtest.log",
+      "bytes": 200,
+      "sha256": "f721081698eb90b5d4fc969b8197c557c0f77081ace784f177271006fafa2fd8"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-queen-replay.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-queen-replay.receipt.json",
+      "bytes": 249,
+      "sha256": "d15d855d1d107a244adced5f1e18731c0c6025faf3cab374bc45faabb2c050a1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-trust.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-trust.coverage-path-initial.json",
+      "bytes": 49523,
+      "sha256": "c551bdd42096f5fa2cd96edc8a45e0bcea9c4f7edf69e9fa59d7d195a4ba3587"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-trust.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-trust.coverage-path-initial.log",
+      "bytes": 274,
+      "sha256": "27a36855438fcd4310871a02d8aa3a9fbea00cb4fa1bde262112bf03a8c0c1f2"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-trust.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-trust.json",
+      "bytes": 49523,
+      "sha256": "c551bdd42096f5fa2cd96edc8a45e0bcea9c4f7edf69e9fa59d7d195a4ba3587"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-trust.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-trust.log",
+      "bytes": 274,
+      "sha256": "27a36855438fcd4310871a02d8aa3a9fbea00cb4fa1bde262112bf03a8c0c1f2"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-trust.rc.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-trust.rc.coverage-path-initial.json",
+      "bytes": 1161,
+      "sha256": "70c13e01402019be3fcd998086c0ec25a76c47dd9c06be52935a9999ac5012d7"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/after-trust.rc.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-trust.rc.json",
+      "bytes": 1161,
+      "sha256": "70c13e01402019be3fcd998086c0ec25a76c47dd9c06be52935a9999ac5012d7"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/archive-batch.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/archive-batch.py",
+      "bytes": 4197,
+      "sha256": "a1f3583f7485cbc30299b0635c78500d30f753b12e3119fa17a5c0e7459f62c6"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/archive-receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/archive-receipt.json",
+      "bytes": 390,
+      "sha256": "44951655b02c1e4c461efeb0e3e7cd9b6f95e91c04692f46de86cc22ab4a5442"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/assemble-partition.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/assemble-partition.py",
+      "bytes": 2083,
+      "sha256": "cc387e8fd1575e9f8b42216cdc464481ea1cba531aa1ed8f48813e06e12d0526"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/audit-queen.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/audit-queen.log",
+      "bytes": 90,
+      "sha256": "71877467e438dba68775c6c532aba3e22ce451f5be6ca1f7d80db66dae70af36"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/audit-queen.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/audit-queen.py",
+      "bytes": 5361,
+      "sha256": "9101c367406ed8adb0eb60ad40ac872ba9a112b0b0c5ea3c51b9e81b316135d2"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-assembly.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-assembly.log",
+      "bytes": 54,
+      "sha256": "726f6abbb7ce91aaa7eb9c8d8537ae40eb113102fe8e5eee32749e2db108e3ed"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-assembly.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-assembly.receipt.json",
+      "bytes": 275,
+      "sha256": "e18093f01d4505c75d8a8e5140186f0b6916204082cb15cb7b508fb909491cfa"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-backtest.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-backtest.log",
+      "bytes": 1053,
+      "sha256": "00001e82b542ce1b6898af37091fb7eb2634b85bc84a125ebaad232654c1b1f8"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-backtest.serial-original.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-backtest.serial-original.log",
+      "bytes": 196,
+      "sha256": "81097bb2aaf4bb53e12eae8fe8f30e1eea97f4e3b5b29f4a1fed73102ec8586c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-partition.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-partition.receipt.json",
+      "bytes": 482,
+      "sha256": "882abfcfba80ea5bea4541c0100db60bf9889f2df6a26057d9c833e0cd3ae22f"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-pre.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-pre.coverage-path-initial.json",
+      "bytes": 2232,
+      "sha256": "ebad8015be27535104cefdff67413ba76ff1a93eead182acdcc66ab8e629b1de"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-pre.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-pre.coverage-path-initial.log",
+      "bytes": 1104,
+      "sha256": "eaa301110958a1d77bbc25b4dff03875e851052457426de6f191fdcade8746f1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-pre.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-pre.json",
+      "bytes": 2232,
+      "sha256": "ebad8015be27535104cefdff67413ba76ff1a93eead182acdcc66ab8e629b1de"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-pre.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-pre.log",
+      "bytes": 1104,
+      "sha256": "eaa301110958a1d77bbc25b4dff03875e851052457426de6f191fdcade8746f1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-t1.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-t1.coverage-path-initial.json",
+      "bytes": 2234,
+      "sha256": "0ccaec1efcd8030cde541613e65629c815a111705c16806975e4d809b42c7203"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-t1.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-t1.coverage-path-initial.log",
+      "bytes": 1103,
+      "sha256": "963745df38c0e57e2613fd195e2b7ef43584f3fd69375f51d6cc596b22558244"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-t1.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-t1.json",
+      "bytes": 2234,
+      "sha256": "0ccaec1efcd8030cde541613e65629c815a111705c16806975e4d809b42c7203"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-tune-t1.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-tune-t1.log",
+      "bytes": 1103,
+      "sha256": "963745df38c0e57e2613fd195e2b7ef43584f3fd69375f51d6cc596b22558244"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-pre.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-pre.coverage-path-initial.json",
+      "bytes": 1862,
+      "sha256": "24fc0c906551a6ca8362cfb0539ddff71b592d95d7fa822aa0c50319b69c15bf"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-pre.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-pre.coverage-path-initial.log",
+      "bytes": 943,
+      "sha256": "9c28f63844d832c01dbc7de8f5b0e9f2e2dadfecf87f0c311308e069cba6d5fa"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-pre.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-pre.json",
+      "bytes": 1862,
+      "sha256": "4a34ea9d1d71b762d93245e94338536c8d68216fe5460b5e4c1c3a4548f3b5de"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-pre.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-pre.log",
+      "bytes": 943,
+      "sha256": "f4c64d4c5bc9fa51e8666c112b5363ca4d6c5c41fb9a71c2bb268542172aec4b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-t1.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-t1.coverage-path-initial.json",
+      "bytes": 1863,
+      "sha256": "5c0e433b7d040790455e0de96ccb464bbeb67ad4d7e13c5eb5ceba57f2424b2b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-t1.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-t1.coverage-path-initial.log",
+      "bytes": 942,
+      "sha256": "0cad42122a08ccd97908bae99dca8f2fd5d313463f2ddecf7e46ec71ec0ff393"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-t1.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-t1.json",
+      "bytes": 1861,
+      "sha256": "a6f62c3a19a2e65199bb28c1711a021236468a7de0acd321b500acc731ed8319"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-per-turn-val-t1.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-per-turn-val-t1.log",
+      "bytes": 942,
+      "sha256": "464b0dd7eabd6f8987883c5900417e64c9a7240d507a9322b9d4c7e02c87b286"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-prefix.frozen.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-prefix.frozen.jsonl",
+      "bytes": 979254,
+      "sha256": "d05db5a1bbe6c494044c245392351f3fc6ce622c23fa728a129f602c1625ac01"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-provenance.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-provenance.json",
+      "bytes": 22810,
+      "sha256": "d63c6e94a90a89a7ca4f7415cb2e8b945268da3b043a2f56b9d3956ffdc32d6c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-serial.original-asof.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-serial.original-asof.jsonl",
+      "bytes": 1609883,
+      "sha256": "2b6f75108ed5fbc0cc799647375639ae1ad4bea85dcc8635f80fffc77a9aadb9"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-serial.original-asof.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-serial.original-asof.receipt.json",
+      "bytes": 327,
+      "sha256": "8cf170f22a098962c4d347dede70ed0d014c075d7e60c3c7bd23b66ef18ab106"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-0-completion.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-0-completion.json",
+      "bytes": 399,
+      "sha256": "41ea13dfbc44fd50ebc986c2f37069d4b64c2aa0e1f2efb5496f78091a87d237"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-0.exit-collected.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-0.exit-collected.json",
+      "bytes": 250,
+      "sha256": "874f04d7f77a116b3b813f69d35f81f3ab2e95da9593a2d5ae91e6718ddc018a"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-0.keys.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-0.keys.json",
+      "bytes": 1537,
+      "sha256": "7de2c37b40650f456b3a79047fac8526522494e17a67a88e616ea16a2e0f7c77"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-0.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-0.log",
+      "bytes": 202,
+      "sha256": "896c3254e8eb2b77dffa0e8d1e0bcf4f5e77b625e20afb2c155b491585ee0dc3"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-1-completion.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-1-completion.json",
+      "bytes": 399,
+      "sha256": "968307ba6ca7d69f9775804638903c319e8324f5cbcbf994dcbd153cbe36ca47"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-1.exit-collected.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-1.exit-collected.json",
+      "bytes": 250,
+      "sha256": "e7b5652ffb2915bc7d37aee9925b39bceacc8509015f9c2336dbd8c2e7b4b94c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-1.keys.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-1.keys.json",
+      "bytes": 1505,
+      "sha256": "b65da049a8c743c32323efb3531ea3111f7d83995e70be8dff47645dfd4008d5"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-tail-1.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-tail-1.log",
+      "bytes": 202,
+      "sha256": "15c2decb5f6e2a5572ac99f615177b3cfbbd40659a3f74a873e2761dc32b1d1b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-trust.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-trust.coverage-path-initial.json",
+      "bytes": 49968,
+      "sha256": "c5e2aa6e86720a3cd363533ff389ca0379d72fb32f89d6bff17cc44bd314c262"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-trust.coverage-path-initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-trust.coverage-path-initial.log",
+      "bytes": 86,
+      "sha256": "aaf5cd7f21733d15a875640e074fa7f942d8889d187bdfff798d6e9fe68ee19d"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-trust.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-trust.json",
+      "bytes": 49405,
+      "sha256": "204ecf5e9553782a8675d977dfe699bae4e2d0e717c3f8caab2387c01daf3592"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-trust.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-trust.log",
+      "bytes": 274,
+      "sha256": "27a36855438fcd4310871a02d8aa3a9fbea00cb4fa1bde262112bf03a8c0c1f2"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-trust.rc.coverage-path-initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-trust.rc.coverage-path-initial.json",
+      "bytes": 1164,
+      "sha256": "28c1f0c739f1da8641cbd9dfa72ba06614f064d25951ffadd32a55d959f36097"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/before-trust.rc.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-trust.rc.json",
+      "bytes": 1178,
+      "sha256": "b20e22c4c3d70079f2d6a309c58dd5f482a60193eb22f0ea9c5643cddc569aa0"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/checkpoint.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/checkpoint.json",
+      "bytes": 1143,
+      "sha256": "6acf9f8b330bbcdf55f95c1a57cea3db74bcf8e666d5171f198404505e2f4b1c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/checks-summary.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/checks-summary.json",
+      "bytes": 730,
+      "sha256": "99ab47bd5cf18fe3c80dd8dd6399bd745396f162eba51ac3ad0d526701928842"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/commit-message.txt": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/commit-message.txt",
+      "bytes": 240,
+      "sha256": "bf967a70fd7d2fc5f347e468620643414a549d08d85cf8743176c178c73a63f5"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/completion-verification.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/completion-verification.json",
+      "bytes": 509,
+      "sha256": "262e4d85a44a163add1f69591385a2062103c3761d194f792b4163901e0fdcea"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/documentation-commit.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/documentation-commit.log",
+      "bytes": 26785,
+      "sha256": "9e89ed460278da997d66964b6baa768f3e7eb679e985ff1c11f96a0a05bcb6c6"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/documentation-commit.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/documentation-commit.receipt.json",
+      "bytes": 215,
+      "sha256": "91e5c9b940f7f85d38c56e227ae4591971ecdca1bf9a0cf957da2cb03113b69b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/evidence.original.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/evidence.original.json",
+      "bytes": 20644,
+      "sha256": "6661d598df1747524ca8eb5d65dfdb64f8078e9dcfd351f50ed36ce693f6c77f"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/existing-b4-ledger.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/existing-b4-ledger.json",
+      "bytes": 3601139,
+      "sha256": "07a3b71ac24dc7091fa8d0d39a4113c4f4ffb0a001d1c7020347485f9ca7120d"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/existing-queen-ledger.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/existing-queen-ledger.json",
+      "bytes": 2065184,
+      "sha256": "3042218c289712e9915bba3170f4dbdbafa7fc524be92906b5d284929a6f9afa"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/extract.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/extract.log",
+      "bytes": 4624,
+      "sha256": "d845ef466e48e81a5082b469f704c9e16388afa455cb25b87c4405c646c156ab"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/extraction-receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/extraction-receipt.json",
+      "bytes": 233,
+      "sha256": "d42c05b92a929257df8be62f2269d60544d535323250415612c573ffdc07cbd5"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/finalize-pair.coverage-path-initial.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/finalize-pair.coverage-path-initial.py",
+      "bytes": 5203,
+      "sha256": "8d8359abd3de7f0f4046e8a6e56a1baa0c463b6ca59c2d5422a496645fbc2eba"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/finalize-pair.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/finalize-pair.log",
+      "bytes": 114,
+      "sha256": "3030a8e90af070c0049367103842c750ae05fe14543811d914682897f4a98916"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/finalize-pair.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/finalize-pair.py",
+      "bytes": 5282,
+      "sha256": "67a9cb6b59d684431ae743c8a86a6da765c5bc1706c8aa3036db586ed17f8a96"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/finalize-pair.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/finalize-pair.receipt.json",
+      "bytes": 268,
+      "sha256": "cf7bf655595dcb5d119460dec0f5d806fe09b1161cd81e76f45b40e6bac0d641"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/finish-calculation.partitioned.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/finish-calculation.partitioned.py",
+      "bytes": 3467,
+      "sha256": "5a35c7c73bfcdb6ccfb0f37406a5d7539881fc3663012200812c44c72748b25e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/finish-calculation.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/finish-calculation.py",
+      "bytes": 3261,
+      "sha256": "bf967634e3d60419f80243269375fb3e38a1f3ac3a77d92b714cd3244e76b910"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/fixed-hit-mechanic-fixtures.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/fixed-hit-mechanic-fixtures.json",
+      "bytes": 31654,
+      "sha256": "8357c2c45cecf6fb7d24e3201207d2f202c16406f480e9891d5048065324c503"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/frozen-input-check.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/frozen-input-check.json",
+      "bytes": 24541,
+      "sha256": "d3fe13da62b211b59d48acb60b17ee4927b073d05dbd5baf9a8b96da0e4ecd8c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/game-data.frozen.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/game-data.frozen.json",
+      "bytes": 626168,
+      "sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks-scope.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks-scope.json",
+      "bytes": 24135,
+      "sha256": "1940859bd00e066fcc77680d831d18a3f31eb7431c9985797bf70bffee8467d1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.exact-evidence.toml": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.exact-evidence.toml",
+      "bytes": 408,
+      "sha256": "09f1ccbd75ee739281595d0202bff320e6ae906fe22b643eed0b3c58cb53d500"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.false-positive.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.false-positive.json",
+      "bytes": 336,
+      "sha256": "9be65540c8c375eb338a94dbe807ceb5a8c97dfcd9f2f420b9c941218b2ddda6"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.final.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.final.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.final.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.final.log",
+      "bytes": 81,
+      "sha256": "c50acbf96beabbd69f8fed16a97a3208c46d3baa0f099389ff6ba27e22479089"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.initial.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.initial.json",
+      "bytes": 1651,
+      "sha256": "a4163f4e09b487239e14c487c64a1ba8ed7d7fc09768ff71224a4a9f705bbb6f"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.initial.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.initial.log",
+      "bytes": 81,
+      "sha256": "d72f7510b93ee092e397a771a8df3baca91da23a9fdaf398655d35ab893a2228"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.log",
+      "bytes": 81,
+      "sha256": "f3e70bb69e2f57f364bc612a6dec9230a5d8d0cf415a903500ac367346ad816b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/gitleaks.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/gitleaks.receipt.json",
+      "bytes": 710,
+      "sha256": "e7c2de2aa68b410889069f096d645e3b174a9f11450e3a5f9223706648a45f56"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/history.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/history.json",
+      "bytes": 4233,
+      "sha256": "29c3d72b97ad59c3d44ff658f1a13f035cd4c416bdd862fff59fe269fe546fa5"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/jev-sts2-settle-1791434074695-07efc92a00ad2.jev-prompts.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/jev-sts2-settle-1791434074695-07efc92a00ad2.jev-prompts.jsonl",
+      "bytes": 9794,
+      "sha256": "c170d7c019165a9f39ee5e857b91b1946d1f1dc13a8fdef11a2e9e2088697ddc"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/jev-sts2-settle-1791434074695-07efc92a00ad2.run-config.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/jev-sts2-settle-1791434074695-07efc92a00ad2.run-config.jsonl",
+      "bytes": 3159,
+      "sha256": "4d04c45d3e6730c16d7ae8fb88377cfc6b5dd573f59b849b26dbedd4e447965b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/jev-sts2-settle-1791434074695-07efc92a00ad2.states.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/jev-sts2-settle-1791434074695-07efc92a00ad2.states.jsonl",
+      "bytes": 11798,
+      "sha256": "47572492190fecf4e4bfd47227a0f2c4902482fcf6ef8bcd7d77b21f7552c03e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/jev-sts2-settle-1791434074867-3f359a21c6169.jev-prompts.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/jev-sts2-settle-1791434074867-3f359a21c6169.jev-prompts.jsonl",
+      "bytes": 4717,
+      "sha256": "216ab47643d5f16b3e2235fe3f32fd3949dbae32340011e6aa2d008bfb637064"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/jev-sts2-settle-1791434074867-3f359a21c6169.run-config.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/jev-sts2-settle-1791434074867-3f359a21c6169.run-config.jsonl",
+      "bytes": 3159,
+      "sha256": "6e1377116c723eb10b6ce22c8a1dace353865cd8d9d20ed84688058c68b6d8bc"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/jev-sts2-settle-1791434074867-3f359a21c6169.states.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/jev-sts2-settle-1791434074867-3f359a21c6169.states.jsonl",
+      "bytes": 5571,
+      "sha256": "f1931b0cbb7eb9d6a0c5b5518459eed15fae7eef9a22abccb251f444dda663fd"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/jobs.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/jobs.json",
+      "bytes": 2615,
+      "sha256": "efa8036366e7980227a64bc2bcd4524fbb254c8ab22816bd9bd0f811b29aeefa"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/launch-provenance.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/launch-provenance.json",
+      "bytes": 444,
+      "sha256": "bb229e483e8f4d063a3f25813f75ad9b41fc8bedfc7f879387fd76ffcd2ef6c0"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ledger-add.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ledger-add.log",
+      "bytes": 12,
+      "sha256": "ca8b25e9acd7199d65fe337dd91fa1fde838d4b54f43a498040c626f96579c76"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ledger-item.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ledger-item.json",
+      "bytes": 4759,
+      "sha256": "a43b4e1a30cc8430572485c244c618bf36dc6b319bbe04ea84281322d9f3cbb0"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ledger-receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ledger-receipt.json",
+      "bytes": 292,
+      "sha256": "f8590e1a7abc3d199b1cd908ddba1b06215e450bfd6ed904afe6016e4fabf9ae"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ledger-request.draft.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ledger-request.draft.json",
+      "bytes": 1802,
+      "sha256": "ab43ff722acc762cce66e3bab54e8f06d6b1abee5b68becca8a5a9db5d640776"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ledger-request.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ledger-request.json",
+      "bytes": 3006,
+      "sha256": "8ad14a498e07e846053774de5274f1e5117f21f96b5f3c0b7f7982a39200460d"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/live-audit.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/live-audit.json",
+      "bytes": 87366,
+      "sha256": "e6667364f8cdb39a582ab6f852b11ea808917822e219e27ee5188ba95cb7c3a1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/live-audit.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/live-audit.log",
+      "bytes": 2582,
+      "sha256": "ec449b2bca678f42c6f19bdf93650b88b302725c59f74cdab7021b3c43d85365"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/live-audit.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/live-audit.py",
+      "bytes": 4406,
+      "sha256": "5eed4acb7ab46e4b502cd669b838dddf2360a48a4458afa003bbd8b0267cba95"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/obsolete-coordinator-cleanup.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/obsolete-coordinator-cleanup.json",
+      "bytes": 481,
+      "sha256": "d98206bcb5fe5abaa230bc060d3918bf77279e22ac3f7fb40cd119d7dda2e8b5"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/obsolete-coordinator-cleanup.resolved-cwd.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/obsolete-coordinator-cleanup.resolved-cwd.json",
+      "bytes": 339,
+      "sha256": "745ef7f6ebccbe3a4da1346e2f3e6962395ff33f650c1d5077aa4f4bdaf23ede"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/pair-integrity.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/pair-integrity.json",
+      "bytes": 70427,
+      "sha256": "7458ce78bcf0e618bc787eec3e262763a08dfaff615f9b8ba40d8fe1ec99cad7"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/previous-trust.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/previous-trust.json",
+      "bytes": 62061,
+      "sha256": "10ab4272ec2a5e0d74a926849ff08371efc6c5ae5db79e387012bf0c17bc35f5"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-boss-decisions.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-boss-decisions.json",
+      "bytes": 2635427,
+      "sha256": "3ca6210d66456d9a31978844b32695510aadd2af1ee319352444ddc159387514"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-censor-source-integrity.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-censor-source-integrity.json",
+      "bytes": 27927,
+      "sha256": "3023d6b7b6a9afab0dc4cf457679f5c1d6bc7c93fe719f6845b9daf23dd2f051"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-decisions.inventory.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-decisions.inventory.json",
+      "bytes": 146732,
+      "sha256": "dea48cb07e4f51bda2d96103ea486b3bc254534f6e60e52220cc9850d66e7240"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-outcome-coverage.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-outcome-coverage.json",
+      "bytes": 9371,
+      "sha256": "c7ab7d340dacbfcdb142ada4385135c32b716a4267b91b06e4e3527a780b359f"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-sl-byte-audit.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-sl-byte-audit.json",
+      "bytes": 1390601,
+      "sha256": "f52b61ab00896b699c640fffe2659cdf03d1d5a323bfa0447ed4caabf1613c1e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-states.compact.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-states.compact.json",
+      "bytes": 823668,
+      "sha256": "3bb004d1e92e4ceeee59ada735962157058f9c44268ff4b17ca37652fe874008"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-terminal-hp-audit.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-terminal-hp-audit.json",
+      "bytes": 2979,
+      "sha256": "d2afee33cd120e97e9402a7e293606a17f641508a0f8f6099e12316daf747392"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/queen-turn-boundaries.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/queen-turn-boundaries.json",
+      "bytes": 341111,
+      "sha256": "7ee6c7432d900e4bf6658445dcfca0ad9fa930b24bb3d3605dfe3c5464cf9b17"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-boards.generated.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-boards.generated.jsonl",
+      "bytes": 3011,
+      "sha256": "d140bc20a11a93b424f90d16fb9fd88e84b2041f91e194d79d07bb30cc7a601e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-boards.initial.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-boards.initial.jsonl",
+      "bytes": 3011,
+      "sha256": "d140bc20a11a93b424f90d16fb9fd88e84b2041f91e194d79d07bb30cc7a601e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-boards.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-boards.jsonl",
+      "bytes": 3011,
+      "sha256": "d140bc20a11a93b424f90d16fb9fd88e84b2041f91e194d79d07bb30cc7a601e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-dry.generated.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-dry.generated.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-dry.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-dry.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-inputs.initial-ts-filter.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-inputs.initial-ts-filter.json",
+      "bytes": 70143,
+      "sha256": "bdaa92516acfccebcaa5a9f7d1783add9c4e7a952a75cf900b0bfe53808091e9"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-inputs.json.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-inputs.json",
+      "bytes": 3664649,
+      "sha256": "26b81219e664bde6c4e9134c88be7597059e56725ab7783514f10206574d9969"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-replay.initial.mts": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-replay.initial.mts",
+      "bytes": 4182,
+      "sha256": "9dcd4b1fba3d349fab06235304016cf69c9ecc5246780f7dd4737a651beb496b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-replay.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-replay.log",
+      "bytes": 142,
+      "sha256": "1129c365edc1181e2472a83ddaf5572d36f666cb454ceb1a8c9c54c3ba6624ea"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-replay.mts": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-replay.mts",
+      "bytes": 4460,
+      "sha256": "95996651c6577302c24b78b530593f9e99172fc10bf01db78da35b5bfaabead6"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-replay.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-replay.receipt.json",
+      "bytes": 101,
+      "sha256": "5b2a04fc1d36a7caa3666da77b8c376630fdc09a7686885921e499d433c356d6"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-results.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-results.jsonl",
+      "bytes": 691166,
+      "sha256": "96ef2263f3bbef9657c8cb9658960c82749b0a627be46ef040154b3b2a7d016e"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/ranking-summary.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/ranking-summary.json",
+      "bytes": 1577,
+      "sha256": "7eb16a554e7b72aadcb497bc76677e65bc600dd6580f03f0d45f0b48a8c97fc9"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/replay-instructions.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/replay-instructions.md",
+      "bytes": 2755,
+      "sha256": "39412c7b79ed008b70ed8c8a41a318b9ad0dd21c3a935dd1929b67b1d53b1b80"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/report-draft.initial-failure.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/report-draft.initial-failure.log",
+      "bytes": 203,
+      "sha256": "2055b6d39ee1b05f98542f69937063eabd35bbd6c74c11e2edcc660e6193aedb"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/report.initial.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/report.initial.md",
+      "bytes": 3053,
+      "sha256": "b13e7ef15a01b8919906956df2d6cad5ad4b67b968e719ae7fd041a1d3bfcd74"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/report.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/report.json",
+      "bytes": 1494,
+      "sha256": "4dc97efce40f834698a5499dcc911b0681c9f1cb31d95e5e98aafa2d1d31dede"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/report.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/report.md",
+      "bytes": 12164,
+      "sha256": "a22a7b96348757370db4876f9ecc04375e395db8982a4aeaef24febe5ea20990"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/sandbox-launch.failure.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/sandbox-launch.failure.log",
+      "bytes": 418,
+      "sha256": "b9eb7e869ea1e623f7551635cd2b0f63c6f3c33ad23f5c0885e15af2caa2c4b5"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/split.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/split.json",
+      "bytes": 8153,
+      "sha256": "23e6edc1ec3e3539eade7d32454e2e1ac50762d877ef705ccaa4eb832070522c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/startup.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/startup.json",
+      "bytes": 23054,
+      "sha256": "81f515d2d48259cdc20fcd140b48dfd4a6e61b61af4f12f05bf2c0ec68405032"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/test-sandbox.original.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/test-sandbox.original.log",
+      "bytes": 558,
+      "sha256": "419934459f95b62e47e19cb8b323d207ae81cbab5fd2695b9b8b73855772aa5f"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/test-sandbox.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/test-sandbox.receipt.json",
+      "bytes": 365,
+      "sha256": "d1debf850deb4d66f7c7401b3ae5fceb8cca783f01810fbea6eb49ac9bc7787b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tool-failures.index.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tool-failures.index.json",
+      "bytes": 14358,
+      "sha256": "b7e73ccd4afd177a5812bccbfeb260e6f757727fa763529961a528753e5f1091"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tool-failures.original.jsonl": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tool-failures.original.jsonl",
+      "bytes": 13652,
+      "sha256": "59a9a37fa2b395e4dbeb6872b348f55b93a1a8a7f5cb0f9ed5deef0166156a33"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/trial-plan.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/trial-plan.json",
+      "bytes": 557,
+      "sha256": "21a8200bbf4a9d25c9aab5399d57861198d9ff060e6a7e757602b15da53c8ebe"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/trigger-audit.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/trigger-audit.json",
+      "bytes": 4384,
+      "sha256": "7e93af73020eb2a194db08fbdae1d29c30c87579406ddd077d889847663e32a2"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-ally-strength.adjusted.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-ally-strength.adjusted.json",
+      "bytes": 87564,
+      "sha256": "21540d688d88c83c4c9cd3b34233dd8a0dd576b7432073545b1dc3efd9659a2b"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-ally-strength.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-ally-strength.json",
+      "bytes": 86134,
+      "sha256": "5f290faeae5546da2a94367b7cc53438701aedda68e45a21066e331726368438"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-analysis.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-analysis.json",
+      "bytes": 41974,
+      "sha256": "8c31d45cd09ef4a49d0fe83203ff81817236a32425b4d13b230237d8ee8e9db1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-analysis.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-analysis.log",
+      "bytes": 402,
+      "sha256": "14a1e9906b27e5cd7f4ff03c5f8b98ed62e3637346dd6dc1746ad8b4e20bad3c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-analysis.preview.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-analysis.preview.json",
+      "bytes": 41974,
+      "sha256": "8c31d45cd09ef4a49d0fe83203ff81817236a32425b4d13b230237d8ee8e9db1"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-analysis.preview.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-analysis.preview.log",
+      "bytes": 402,
+      "sha256": "14a1e9906b27e5cd7f4ff03c5f8b98ed62e3637346dd6dc1746ad8b4e20bad3c"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-analysis.preview.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-analysis.preview.receipt.json",
+      "bytes": 259,
+      "sha256": "f2bb1a305572da6028c43e0c72d406de7326fffdec65e727543cc620130a64cd"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-analysis.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-analysis.py",
+      "bytes": 3561,
+      "sha256": "b21cfa66bfc6afcd7f003ed825aefa7bfe8ee61a1fe1dfb32be1609b4dbba33d"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-analysis.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-analysis.receipt.json",
+      "bytes": 268,
+      "sha256": "0dc349598b312ab3e6ef4337ac6a1a55c818e3c187e2a78426a2bb2c55635683"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-hit-inversion.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-hit-inversion.json",
+      "bytes": 23765,
+      "sha256": "d3d3e9c739a5e97358a4e44b9c949ef360dcf66185f32a1c366ba8470eb7ff91"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-keys.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-keys.json",
+      "bytes": 3425,
+      "sha256": "5a6395fa910981c7affd31f70ef5d53bb1f25212ddde81331db28be3a4bd03f3"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-threat1.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-threat1.log",
+      "bytes": 200,
+      "sha256": "cac907863f0618cac4b89e8d0ae3be2373c80d86d6958fa305dff191072d5198"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-threat1.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-threat1.receipt.json",
+      "bytes": 182,
+      "sha256": "b148ec3c0c2021a4fd9b5c1cde850ed1e8d58c215498dc17d05627d4e018e8ca"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-threat2.log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-threat2.log",
+      "bytes": 200,
+      "sha256": "9928ee08c081325b136b2556ade8aa96b617e0c33aeb08b6db467385b59b2084"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/tune-threat2.receipt.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/tune-threat2.receipt.json",
+      "bytes": 182,
+      "sha256": "b148ec3c0c2021a4fd9b5c1cde850ed1e8d58c215498dc17d05627d4e018e8ca"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-originals/write-final-reports.py": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/write-final-reports.py",
+      "bytes": 12470,
+      "sha256": "111e24538f53e12143670ba83eab6061b18a6c26f2152b6ad2eb7a430a2c0999"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-event-stream.jsonl.pointer.json": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch.jsonl",
+      "bytes": 2545400,
+      "sha256": "80b2b7bcd251a3cd48f84284cb93a006b55f6626929bb34d60fed82dff8e78ab"
+    },
+    "paper/materials/silent/20261008-1541-events/b5.out.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-112135-fix-batch.out",
+      "bytes": 2664,
+      "sha256": "b3a66f1e186ae779f46e71de8a8bf1378dbceeea6a4dc9f2e40035087f484f30"
+    },
+    "paper/materials/silent/20261008-1541-events/b5.err.txt": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-112135-fix-batch.err",
+      "bytes": 35907,
+      "sha256": "8e133fc666d15cedd42222cfb7c9ff4bdfe69c55519105461df075c6ddf29dd4"
+    },
+    "paper/materials/silent/20261008-1541-events/AD3QSC3P41JU-run-note.md": {
+      "path": "/home/dw/Projects/agent-sts2/notes/run-1008-1453-AD3QSC3P41JU.md",
+      "bytes": 7167,
+      "sha256": "38a179c67d454de6da993a6afed45b949b8680a4d21b255649b3dee447e960bf"
+    },
+    "paper/materials/silent/20261008-1541-events/b5-root-report-original.md": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/paper/materials/silent/boss-sim-b5-QUEEN-20261008-112135.md",
+      "bytes": 11785,
+      "sha256": "a382e744bdf6387791272a9c3dfad85716744757b9de3ab4528e751ff0ee9415"
+    }
+  },
+  "owned_original_ledger_rows": 16,
+  "main_evidence_rows": 8,
+  "support_update_rows": 7,
+  "repeat_update_rows": 1,
+  "proposal_link_rows": 8,
+  "new_bug_rows": 0,
+  "new_mechanic_rows": 0,
+  "new_pure_bugs": [],
+  "queue_entry_added": false,
+  "blocking": false,
+  "b5": {
+    "batch": "20261008-112135-fix-batch",
+    "state": "rejected",
+    "evidence": "5f73178b469f5f5abe6117d96f8df4a8d3c13b3201263c2413f5ce7f1e2d2267",
+    "record_source": "b3b3098b0f9b864ca3b72bcbc6eb62937147a24f",
+    "original_cli": 1,
+    "version": null,
+    "merged": null,
+    "queen_validation_n": 7,
+    "original_acceptance": {
+      "accepted": false,
+      "reasons": [
+        "B5 has not met original B2 trust admission",
+        "no bias entered/approached its fixed standard"
+      ],
+      "improved": [],
+      "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+      "isolation": {
+        "passed": true,
+        "base": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+        "head": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+        "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+        "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+        "shared_changes": [],
+        "runner": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance/source-261af56e0022cc0012b80870bd3f52bd121d45c2/agent/tools/boss-sim/isolation.ts",
+        "outputs": [
+          "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance/before.isolation.json",
+          "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance/after.isolation.json"
+        ]
+      },
+      "character": "silent",
+      "boss": "QUEEN",
+      "mode": "b5",
+      "inputs": {
+        "before": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/before-trust.json",
+          "sha256": "204ecf5e9553782a8675d977dfe699bae4e2d0e717c3f8caab2387c01daf3592"
+        },
+        "after": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/after-trust.json",
+          "sha256": "c551bdd42096f5fa2cd96edc8a45e0bcea9c4f7edf69e9fa59d7d195a4ba3587"
+        }
+      }
+    },
+    "source_tests": {
+      "rc": 0,
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 2608,
+      "files": 248,
+      "stage_cases": [
+        2597,
+        11
+      ],
+      "stage_files": [
+        247,
+        1
+      ],
+      "original_log": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/test-sandbox.original.log",
+      "original_receipt": {
+        "rc": 0,
+        "command": "nice -n 19 bash tools/test-sandbox.sh",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/agent",
+        "SANDBOX_WORKERS": 1,
+        "TMPDIR": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch",
+        "time": "2026-10-08T12:35:32.430771+08:00"
+      },
+      "exclusions_modified": false
+    }
+  },
+  "cache_checks_event_already_registered": "1b38fbf525d8c817293624983571cadfd009bc78",
+  "cache_checked_live": "722518cdb9edfe808864da176f7e512bd820e170",
+  "cache_checked_tree": "d25b1cc3835b19f8e50205b250c079ae060894f2",
+  "cache_full_check_rc": 0,
+  "no_repeat_recheck": true,
+  "unowned_extra_rows_preserved": 147,
+  "lesson_physical_not_reappended": true,
+  "original_learner_verification_retained": true,
+  "proposal_registry_not_modified": true,
+  "manual_dispatch": false,
+  "record_only": true
+}
