@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-193934-experience-update/verify.py", line 57, in <module>
+    check('双蟹同盘第'+str(att)+'试实际当轮47直伤',sum(e['hp'] for e in rows[0]['before']['enemies'])-sum(e['hp'] for e in end['before']['enemies'])==47)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-193934-experience-update/verify.py", line 13, in check
+    assert value, label
+           ^^^^^
+AssertionError: 双蟹同盘第3试实际当轮47直伤

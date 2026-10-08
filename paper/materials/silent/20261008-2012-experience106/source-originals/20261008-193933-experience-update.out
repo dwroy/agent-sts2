@@ -1,0 +1,106 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.22 → 2026-10-08.23；提交：`1c782204`（分支 exp-silent）；合入：未合入，预检发现17项并行记录冲突；刷新已保存为 `e838a975`。
+- 条数：新增3、更新23（加证据23、只改数字0）、退役0；active 180 → 183。正文49403 → 49620字；A8适用170条／45201字，A9适用171条／45485字。
+- 机制推理（以下支持局数均无已确认反例）：
+  - 力量／敏捷 — 逐击／逐牌兑现 — 136局 — 7BNC8QX746YP
+  - 灵动步法 — 敏捷须由实际挡牌兑现 — 78局 — QHK1XQ928TTM
+  - 脆弱 — 逐牌折减格挡 — 27局 — UZ1T7AH49WMB
+  - 毒雾 — 建立后下一轮施毒 — 67局 — UZ1T7AH49WMB
+  - 触媒 — 增加毒结算次数，没毒无收益 — 51局 — UZ1T7AH49WMB
+  - 余像 — 建立后逐牌补挡 — 29局 — UZ1T7AH49WMB
+  - 族母吸取 — 降玩家力敏、增加敌力 — 18局 — QHK1XQ928TTM
+  - 同族成长 — 临时减力不阻后轮仪式 — 8局 — UZ1T7AH49WMB
+  - 双蟹朝向 — 同输出仍可相差6点血价 — 20局 — QHK1XQ928TTM
+  - 千足虫重接 — 只计已发生复活 — 10局 — UZ1T7AH49WMB
+  - 闪亮口红 — 第三轮增加1力1敏 — 4局 — QHK1XQ928TTM
+  - 融入暗影 — 只翻倍本轮后续新增挡 — 13局 — QHK1XQ928TTM
+  - 蜃景 — 按当前毒量、敏捷及倍率给挡 — 17局 — QHK1XQ928TTM
+  - 尖啸 — 临时减力，次轮恢复 — 65局 — UZ1T7AH49WMB
+  - 船夹板 — 第二轮14挡不跨轮 — 6局 — 7BNC8QX746YP
+  - 异鸟力量 — 同招逐击增加威胁 — 9局 — 7BNC8QX746YP
+  - 速度药 — 临时5敏由本轮挡牌兑现 — 41局 — UZ1T7AH49WMB
+  - 敏捷药 — 增加2敏，不追补旧挡 — 55局 — QHK1XQ928TTM
+  - 毒药 — 饮用加毒，不即时扣敌血 — 35局 — QHK1XQ928TTM
+  - 跨幕回血 — A9／A10回复缺失血量的80%，向下取整 — 30局 — UZ1T7AH49WMB
+  - 能力兑现 — 取得、建立、结算分账 — 135局 — UZ1T7AH49WMB
+  - 彩虹戒指 — 同轮凑齐三类牌加1力1敏 — 3局 — QHK1XQ928TTM
+  - 祭品 — 实付6血，已有挡不抵扣 — 2局 — QHK1XQ928TTM
+  - 雕像苏醒 — 苏醒无攻，下一轮十力斩击 — 27局 — 7BNC8QX746YP
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0，无重跑；gitleaks退出0。
+- 切片大小：整体中位增加101字；最大4993 → 4915字。
+- 学习账本：新增无；改成 proposed：silent-0012、0005、0013、0011、0027、0023、0030、0009、0062、0065、0064、0071、0077、0010、0046、0242、0134、0253、0276、0278、0243、0019、0020、0021、0305、0306、0307、0239（均为 silent 前缀）；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。live冲突保留回执，待运维兜底；变更记录已只追加一节。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.23",
+  "commit": "1c7822047848f708deeb5d9b29fd3cf726dec241",
+  "merged": null,
+  "added": 3,
+  "updated": 23,
+  "retired": 0,
+  "active": 183,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-footwork-block",
+    "silent-frail-card-block",
+    "silent-noxious-fumes-growth",
+    "silent-accelerant-triggers",
+    "silent-afterimage-per-card-block",
+    "silent-lagavulin-siphon-poison-sl",
+    "silent-kin-poison-sl-observation",
+    "silent-kaiser-crab-facing-sl",
+    "silent-decimillipede-reattach-poison",
+    "silent-sparkling-rouge-turn-three",
+    "silent-shadowmeld-new-block-double",
+    "silent-mirage-poison-card-block",
+    "silent-piercing-wail-temporary-strength",
+    "silent-horn-cleat-second-turn-block",
+    "silent-byrdonis-strength-multihit-observation",
+    "silent-speed-potion-temporary-dexterity",
+    "silent-dexterity-potion-card-block",
+    "silent-poison-potion-observed-application",
+    "silent-act-transition-missing-hp-heal",
+    "silent-deck-burst-observation",
+    "silent-rainbow-ring-three-card-types",
+    "silent-offering-direct-hp-cost",
+    "silent-bygone-effigy-wake-strength"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0012", "silent-0005", "silent-0013", "silent-0011",
+      "silent-0027", "silent-0023", "silent-0030", "silent-0009",
+      "silent-0062", "silent-0065", "silent-0064", "silent-0071",
+      "silent-0077", "silent-0010", "silent-0046", "silent-0242",
+      "silent-0134", "silent-0253", "silent-0276", "silent-0278",
+      "silent-0243", "silent-0019", "silent-0020", "silent-0021",
+      "silent-0305", "silent-0306", "silent-0307", "silent-0239"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-bbf4688a5bb6ed68",
+    "silent-proposal-2be07d7a101fb78a",
+    "silent-proposal-3341a78d1a591abd"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-193934-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11b4f-c5ca-76e1-bb22-9345a647e4dd
+轮数：1；工具调用：command_execution×72 file_change×9
+token：输入 204.3k、输出 54.6k（其中推理 17.5k）、cache 读 9634.6k、cache 写 0（命中 97.9%）
+成本：未提供
+耗时：1991.3 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 8.0 s、首次工具 11.2 s、末次工具结束 1929.2 s；工具内共 1354.9 s，其余（模型生成、推理、网络）633.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×71；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T19-39-35-01a11b4f-c5ca-76e1-bb22-9345a647e4dd.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-193934-experience-update.jsonl
