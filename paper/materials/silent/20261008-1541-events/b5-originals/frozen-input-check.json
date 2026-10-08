@@ -1,0 +1,1419 @@
+{
+ "initial_live_head": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+ "base_head_equal_at_start": true,
+ "dispatch_base": "261af56e0022cc0012b80870bd3f52bd121d45c2",
+ "all_models_unchanged": true,
+ "fights": 233,
+ "starts": [
+  "t1",
+  "pre"
+ ],
+ "expected_result_rows": 466,
+ "queen_expected_rows": 30,
+ "tune_fights": 107,
+ "val_fights": 126,
+ "dataset_sha256": "6f1fec4aaff48d37f82ad491fce44359031e94771382f2f48bd5dd981cfe3482",
+ "sources_sha256": "4473d51a2ba21061f95098f52e32cc38e414b3bb6312ae88dc5c8ca148c548e3",
+ "turns_sha256": "49ee3b6a44ce6732cd7d2d92df38d2577dda70fcf3fe2a58bdec3f8a5e71cec5",
+ "no_role_or_run_leakage": true,
+ "row_seeds": [
+  {
+   "index": 0,
+   "key": "C48LLXBGKXQ9:17:2:6263075551",
+   "seed": 1,
+   "side": "tune"
+  },
+  {
+   "index": 1,
+   "key": "C48LLXBGKXQ9:33:6:6290069057",
+   "seed": 102,
+   "side": "tune"
+  },
+  {
+   "index": 2,
+   "key": "Y6GM2CHWJBEY:17:6:6307610159",
+   "seed": 203,
+   "side": "tune"
+  },
+  {
+   "index": 3,
+   "key": "LRN0HPZ0FZS1:17:2:6314849254",
+   "seed": 304,
+   "side": "tune"
+  },
+  {
+   "index": 4,
+   "key": "LRN0HPZ0FZS1:33:1:6321043589",
+   "seed": 405,
+   "side": "tune"
+  },
+  {
+   "index": 5,
+   "key": "LRN0HPZ0FZS1:48:1:6334569591",
+   "seed": 506,
+   "side": "tune"
+  },
+  {
+   "index": 6,
+   "key": "T082DRCUHRRD:17:1:6341775990",
+   "seed": 607,
+   "side": "tune"
+  },
+  {
+   "index": 7,
+   "key": "T082DRCUHRRD:33:1:6349692921",
+   "seed": 708,
+   "side": "tune"
+  },
+  {
+   "index": 8,
+   "key": "T082DRCUHRRD:48:6:6373274535",
+   "seed": 809,
+   "side": "tune"
+  },
+  {
+   "index": 9,
+   "key": "1HC609GTLGN3:17:6:6388166863",
+   "seed": 910,
+   "side": "tune"
+  },
+  {
+   "index": 10,
+   "key": "R0HEV5E3QT6G:17:1:6397481187",
+   "seed": 1011,
+   "side": "tune"
+  },
+  {
+   "index": 11,
+   "key": "R0HEV5E3QT6G:33:1:6408234063",
+   "seed": 1112,
+   "side": "tune"
+  },
+  {
+   "index": 12,
+   "key": "R0HEV5E3QT6G:48:3:6423738574",
+   "seed": 1213,
+   "side": "tune"
+  },
+  {
+   "index": 13,
+   "key": "KAY522KT5NXR:17:1:6430859488",
+   "seed": 1314,
+   "side": "tune"
+  },
+  {
+   "index": 14,
+   "key": "KAY522KT5NXR:33:1:6439505402",
+   "seed": 1415,
+   "side": "tune"
+  },
+  {
+   "index": 15,
+   "key": "KAY522KT5NXR:48:2:6452211365",
+   "seed": 1516,
+   "side": "tune"
+  },
+  {
+   "index": 16,
+   "key": "E6AVMMVCSRPC:17:6:6470459667",
+   "seed": 1617,
+   "side": "tune"
+  },
+  {
+   "index": 17,
+   "key": "XYYQYBRM2A01:17:1:6477191929",
+   "seed": 1718,
+   "side": "tune"
+  },
+  {
+   "index": 18,
+   "key": "XYYQYBRM2A01:33:6:6498907170",
+   "seed": 1819,
+   "side": "tune"
+  },
+  {
+   "index": 19,
+   "key": "K3676LU8B0UH:17:1:6507817530",
+   "seed": 1920,
+   "side": "tune"
+  },
+  {
+   "index": 20,
+   "key": "K3676LU8B0UH:33:1:6513768685",
+   "seed": 2021,
+   "side": "tune"
+  },
+  {
+   "index": 21,
+   "key": "K3676LU8B0UH:48:2:6525158984",
+   "seed": 2122,
+   "side": "tune"
+  },
+  {
+   "index": 22,
+   "key": "CSBR5CRDWQNB:17:1:6533613352",
+   "seed": 2223,
+   "side": "tune"
+  },
+  {
+   "index": 23,
+   "key": "CSBR5CRDWQNB:33:6:6545792336",
+   "seed": 2324,
+   "side": "tune"
+  },
+  {
+   "index": 24,
+   "key": "ZZMYZ5UBCG72:17:1:6551916676",
+   "seed": 2425,
+   "side": "tune"
+  },
+  {
+   "index": 25,
+   "key": "ZZMYZ5UBCG72:33:1:6563810567",
+   "seed": 2526,
+   "side": "tune"
+  },
+  {
+   "index": 26,
+   "key": "ZZMYZ5UBCG72:48:1:6575079429",
+   "seed": 2627,
+   "side": "tune"
+  },
+  {
+   "index": 27,
+   "key": "10GPK5XGHCK3:17:1:6583239676",
+   "seed": 2728,
+   "side": "tune"
+  },
+  {
+   "index": 28,
+   "key": "10GPK5XGHCK3:33:1:6592407972",
+   "seed": 2829,
+   "side": "tune"
+  },
+  {
+   "index": 29,
+   "key": "10GPK5XGHCK3:48:1:6609704779",
+   "seed": 2930,
+   "side": "tune"
+  },
+  {
+   "index": 30,
+   "key": "1NZ8FE5F34R9:17:1:6620634917",
+   "seed": 3031,
+   "side": "tune"
+  },
+  {
+   "index": 31,
+   "key": "F9PP859XZ3RJ:17:1:6633104385",
+   "seed": 3132,
+   "side": "tune"
+  },
+  {
+   "index": 32,
+   "key": "F9PP859XZ3RJ:33:1:6642097641",
+   "seed": 3233,
+   "side": "tune"
+  },
+  {
+   "index": 33,
+   "key": "9YBKCNBFP0X5:17:1:6652097629",
+   "seed": 3334,
+   "side": "tune"
+  },
+  {
+   "index": 34,
+   "key": "9YBKCNBFP0X5:33:1:6662582055",
+   "seed": 3435,
+   "side": "tune"
+  },
+  {
+   "index": 35,
+   "key": "9YBKCNBFP0X5:48:6:6686828976",
+   "seed": 3536,
+   "side": "tune"
+  },
+  {
+   "index": 36,
+   "key": "1LMBFGSMCWKU:17:1:6694795755",
+   "seed": 3637,
+   "side": "tune"
+  },
+  {
+   "index": 37,
+   "key": "1LMBFGSMCWKU:33:1:6701566816",
+   "seed": 3738,
+   "side": "tune"
+  },
+  {
+   "index": 38,
+   "key": "1LMBFGSMCWKU:48:1:6708335172",
+   "seed": 3839,
+   "side": "tune"
+  },
+  {
+   "index": 39,
+   "key": "ZE8F192FKX24:17:1:6716187206",
+   "seed": 3940,
+   "side": "tune"
+  },
+  {
+   "index": 40,
+   "key": "ZE8F192FKX24:33:1:6721949896",
+   "seed": 4041,
+   "side": "tune"
+  },
+  {
+   "index": 41,
+   "key": "ZE8F192FKX24:48:2:6734920041",
+   "seed": 4142,
+   "side": "tune"
+  },
+  {
+   "index": 42,
+   "key": "UACFSW4VDDLD:17:1:6746311618",
+   "seed": 4243,
+   "side": "tune"
+  },
+  {
+   "index": 43,
+   "key": "UACFSW4VDDLD:33:2:6754002948",
+   "seed": 4344,
+   "side": "tune"
+  },
+  {
+   "index": 44,
+   "key": "UACFSW4VDDLD:48:6:6784723635",
+   "seed": 4445,
+   "side": "tune"
+  },
+  {
+   "index": 45,
+   "key": "VN7RQJMJEFMX:17:1:6792771942",
+   "seed": 4546,
+   "side": "tune"
+  },
+  {
+   "index": 46,
+   "key": "VN7RQJMJEFMX:33:1:6800609516",
+   "seed": 4647,
+   "side": "tune"
+  },
+  {
+   "index": 47,
+   "key": "75X1BARMNZ03:17:1:6816716490",
+   "seed": 4748,
+   "side": "tune"
+  },
+  {
+   "index": 48,
+   "key": "ARKQLHG6RS4W:17:1:6827432175",
+   "seed": 4849,
+   "side": "tune"
+  },
+  {
+   "index": 49,
+   "key": "ARKQLHG6RS4W:33:6:6842648960",
+   "seed": 4950,
+   "side": "tune"
+  },
+  {
+   "index": 50,
+   "key": "6EV5V6PJJS9D:17:1:6849282819",
+   "seed": 5051,
+   "side": "tune"
+  },
+  {
+   "index": 51,
+   "key": "6EV5V6PJJS9D:33:1:6857178722",
+   "seed": 5152,
+   "side": "tune"
+  },
+  {
+   "index": 52,
+   "key": "8CFMW9SAGFWQ:17:1:6868409627",
+   "seed": 5253,
+   "side": "tune"
+  },
+  {
+   "index": 53,
+   "key": "2L1BNN9ZJEFU:17:1:6879319819",
+   "seed": 5354,
+   "side": "tune"
+  },
+  {
+   "index": 54,
+   "key": "2L1BNN9ZJEFU:33:1:6891440791",
+   "seed": 5455,
+   "side": "tune"
+  },
+  {
+   "index": 55,
+   "key": "2L1BNN9ZJEFU:48:6:6917804902",
+   "seed": 5556,
+   "side": "tune"
+  },
+  {
+   "index": 56,
+   "key": "53FLQ68CETW0:17:1:6928043908",
+   "seed": 5657,
+   "side": "tune"
+  },
+  {
+   "index": 57,
+   "key": "53FLQ68CETW0:33:1:6936742794",
+   "seed": 5758,
+   "side": "tune"
+  },
+  {
+   "index": 58,
+   "key": "53FLQ68CETW0:48:6:6967007106",
+   "seed": 5859,
+   "side": "tune"
+  },
+  {
+   "index": 59,
+   "key": "ENKYQMS9W4ZD:17:1:6976480396",
+   "seed": 5960,
+   "side": "tune"
+  },
+  {
+   "index": 60,
+   "key": "ENKYQMS9W4ZD:33:2:6989150587",
+   "seed": 6061,
+   "side": "tune"
+  },
+  {
+   "index": 61,
+   "key": "2SU6XN2AEJRD:17:1:7002690136",
+   "seed": 6162,
+   "side": "tune"
+  },
+  {
+   "index": 62,
+   "key": "2SU6XN2AEJRD:33:1:7012038091",
+   "seed": 6263,
+   "side": "tune"
+  },
+  {
+   "index": 63,
+   "key": "2SU6XN2AEJRD:48:1:7023049602",
+   "seed": 6364,
+   "side": "tune"
+  },
+  {
+   "index": 64,
+   "key": "SADL3CGYTGSR:17:1:7033201155",
+   "seed": 6465,
+   "side": "tune"
+  },
+  {
+   "index": 65,
+   "key": "SADL3CGYTGSR:33:1:7043554088",
+   "seed": 6566,
+   "side": "tune"
+  },
+  {
+   "index": 66,
+   "key": "SADL3CGYTGSR:48:6:7068870503",
+   "seed": 6667,
+   "side": "tune"
+  },
+  {
+   "index": 67,
+   "key": "Z6CFLDR3N4SB:17:1:7076333270",
+   "seed": 6768,
+   "side": "tune"
+  },
+  {
+   "index": 68,
+   "key": "Z6CFLDR3N4SB:33:1:7082249028",
+   "seed": 6869,
+   "side": "tune"
+  },
+  {
+   "index": 69,
+   "key": "Z6CFLDR3N4SB:48:2:7094379490",
+   "seed": 6970,
+   "side": "tune"
+  },
+  {
+   "index": 70,
+   "key": "3KME36ADUE4U:17:1:7105260096",
+   "seed": 7071,
+   "side": "tune"
+  },
+  {
+   "index": 71,
+   "key": "VLV17NUSFS61:17:1:7121374596",
+   "seed": 7172,
+   "side": "tune"
+  },
+  {
+   "index": 72,
+   "key": "VLV17NUSFS61:33:1:7130718935",
+   "seed": 7273,
+   "side": "tune"
+  },
+  {
+   "index": 73,
+   "key": "VLV17NUSFS61:48:6:7152831592",
+   "seed": 7374,
+   "side": "tune"
+  },
+  {
+   "index": 74,
+   "key": "9YT51CK8RC39:17:6:7168562885",
+   "seed": 7475,
+   "side": "tune"
+  },
+  {
+   "index": 75,
+   "key": "2PVLGRBGUX9S:17:1:7176516701",
+   "seed": 7576,
+   "side": "tune"
+  },
+  {
+   "index": 76,
+   "key": "2PVLGRBGUX9S:33:1:7184216884",
+   "seed": 7677,
+   "side": "tune"
+  },
+  {
+   "index": 77,
+   "key": "2PVLGRBGUX9S:48:6:7216074590",
+   "seed": 7778,
+   "side": "tune"
+  },
+  {
+   "index": 78,
+   "key": "4Y94N8RDPGPM:17:1:7225413438",
+   "seed": 7879,
+   "side": "tune"
+  },
+  {
+   "index": 79,
+   "key": "4Y94N8RDPGPM:33:1:7230442071",
+   "seed": 7980,
+   "side": "tune"
+  },
+  {
+   "index": 80,
+   "key": "4Y94N8RDPGPM:48:1:7239665258",
+   "seed": 8081,
+   "side": "tune"
+  },
+  {
+   "index": 81,
+   "key": "LLYSRQQ35AVW:17:1:7249055797",
+   "seed": 8182,
+   "side": "tune"
+  },
+  {
+   "index": 82,
+   "key": "LLYSRQQ35AVW:33:1:7256971352",
+   "seed": 8283,
+   "side": "tune"
+  },
+  {
+   "index": 83,
+   "key": "LLYSRQQ35AVW:48:1:7265109287",
+   "seed": 8384,
+   "side": "tune"
+  },
+  {
+   "index": 84,
+   "key": "HMVJKM56S4Q8:17:1:7273322692",
+   "seed": 8485,
+   "side": "tune"
+  },
+  {
+   "index": 85,
+   "key": "HMVJKM56S4Q8:33:6:7289031504",
+   "seed": 8586,
+   "side": "tune"
+  },
+  {
+   "index": 86,
+   "key": "F4QKG4J1AJJZ:17:1:7295500618",
+   "seed": 8687,
+   "side": "tune"
+  },
+  {
+   "index": 87,
+   "key": "F4QKG4J1AJJZ:33:2:7307462964",
+   "seed": 8788,
+   "side": "tune"
+  },
+  {
+   "index": 88,
+   "key": "G403VCZ3BH1B:17:1:7319796513",
+   "seed": 8889,
+   "side": "tune"
+  },
+  {
+   "index": 89,
+   "key": "G403VCZ3BH1B:33:1:7325903904",
+   "seed": 8990,
+   "side": "tune"
+  },
+  {
+   "index": 90,
+   "key": "G403VCZ3BH1B:48:2:7335648370",
+   "seed": 9091,
+   "side": "tune"
+  },
+  {
+   "index": 91,
+   "key": "MGA0CZDDKC0P:17:6:7351119664",
+   "seed": 9192,
+   "side": "tune"
+  },
+  {
+   "index": 92,
+   "key": "25226ZFLNR1J:17:1:7356626759",
+   "seed": 9293,
+   "side": "tune"
+  },
+  {
+   "index": 93,
+   "key": "25226ZFLNR1J:33:1:7364026607",
+   "seed": 9394,
+   "side": "tune"
+  },
+  {
+   "index": 94,
+   "key": "25226ZFLNR1J:48:6:7383186786",
+   "seed": 9495,
+   "side": "tune"
+  },
+  {
+   "index": 95,
+   "key": "JLN5SK17W4FQ:17:2:7393237878",
+   "seed": 9596,
+   "side": "tune"
+  },
+  {
+   "index": 96,
+   "key": "JLN5SK17W4FQ:33:6:7410641439",
+   "seed": 9697,
+   "side": "tune"
+  },
+  {
+   "index": 97,
+   "key": "JMH5C51RLN4E:17:1:7418282395",
+   "seed": 9798,
+   "side": "tune"
+  },
+  {
+   "index": 98,
+   "key": "JMH5C51RLN4E:33:1:7426655065",
+   "seed": 9899,
+   "side": "tune"
+  },
+  {
+   "index": 99,
+   "key": "JMH5C51RLN4E:48:5:7439906621",
+   "seed": 10000,
+   "side": "tune"
+  },
+  {
+   "index": 100,
+   "key": "JMH5C51RLN4E:49:6:7443707688",
+   "seed": 10101,
+   "side": "tune"
+  },
+  {
+   "index": 101,
+   "key": "9TG1RP5LFAAK:17:1:7448439700",
+   "seed": 10202,
+   "side": "tune"
+  },
+  {
+   "index": 102,
+   "key": "9TG1RP5LFAAK:33:1:7456072841",
+   "seed": 10303,
+   "side": "tune"
+  },
+  {
+   "index": 103,
+   "key": "9TG1RP5LFAAK:48:2:7469519196",
+   "seed": 10404,
+   "side": "tune"
+  },
+  {
+   "index": 104,
+   "key": "9TG1RP5LFAAK:49:6:7477685566",
+   "seed": 10505,
+   "side": "tune"
+  },
+  {
+   "index": 105,
+   "key": "JQPT83P8KDSZ:17:1:7484146537",
+   "seed": 10606,
+   "side": "tune"
+  },
+  {
+   "index": 106,
+   "key": "4D4J8USKCPAV:17:6:7508047857",
+   "seed": 10707,
+   "side": "tune"
+  },
+  {
+   "index": 107,
+   "key": "PJ2LL9KU7FHD:17:6:7536081671",
+   "seed": 10808,
+   "side": "val"
+  },
+  {
+   "index": 108,
+   "key": "S9UZAK0JP0C0:17:2:7544886716",
+   "seed": 10909,
+   "side": "val"
+  },
+  {
+   "index": 109,
+   "key": "S9UZAK0JP0C0:33:6:7565829072",
+   "seed": 11010,
+   "side": "val"
+  },
+  {
+   "index": 110,
+   "key": "UJ0K3G10609Y:17:1:7575665250",
+   "seed": 11111,
+   "side": "val"
+  },
+  {
+   "index": 111,
+   "key": "UJ0K3G10609Y:33:1:7584038660",
+   "seed": 11212,
+   "side": "val"
+  },
+  {
+   "index": 112,
+   "key": "UJ0K3G10609Y:48:6:7604962158",
+   "seed": 11313,
+   "side": "val"
+  },
+  {
+   "index": 113,
+   "key": "L9SGRBB5R698:17:6:7628996526",
+   "seed": 11414,
+   "side": "val"
+  },
+  {
+   "index": 114,
+   "key": "D4LJ9QMGFB8Q:17:1:7636313937",
+   "seed": 11515,
+   "side": "val"
+  },
+  {
+   "index": 115,
+   "key": "0NZXA12NLDMH:17:1:7647547918",
+   "seed": 11616,
+   "side": "val"
+  },
+  {
+   "index": 116,
+   "key": "0NZXA12NLDMH:33:6:7661117853",
+   "seed": 11717,
+   "side": "val"
+  },
+  {
+   "index": 117,
+   "key": "4ANT8D00TP72:17:1:7668239679",
+   "seed": 11818,
+   "side": "val"
+  },
+  {
+   "index": 118,
+   "key": "4ANT8D00TP72:33:3:7677948192",
+   "seed": 11919,
+   "side": "val"
+  },
+  {
+   "index": 119,
+   "key": "XBD8Z9XLPCPN:17:1:7690206718",
+   "seed": 12020,
+   "side": "val"
+  },
+  {
+   "index": 120,
+   "key": "XBD8Z9XLPCPN:33:6:7701123253",
+   "seed": 12121,
+   "side": "val"
+  },
+  {
+   "index": 121,
+   "key": "PU80F84P6HPN:17:5:7717872332",
+   "seed": 12222,
+   "side": "val"
+  },
+  {
+   "index": 122,
+   "key": "PU80F84P6HPN:33:1:7732766665",
+   "seed": 12323,
+   "side": "val"
+  },
+  {
+   "index": 123,
+   "key": "NB8KCF6HRGVF:17:1:7738199465",
+   "seed": 12424,
+   "side": "val"
+  },
+  {
+   "index": 124,
+   "key": "5X2GHKJ89PN1:17:1:7751646183",
+   "seed": 12525,
+   "side": "val"
+  },
+  {
+   "index": 125,
+   "key": "5X2GHKJ89PN1:33:1:7759085588",
+   "seed": 12626,
+   "side": "val"
+  },
+  {
+   "index": 126,
+   "key": "5X2GHKJ89PN1:48:6:7780832140",
+   "seed": 12727,
+   "side": "val"
+  },
+  {
+   "index": 127,
+   "key": "TCFAHJ9K19VY:17:6:7795572240",
+   "seed": 12828,
+   "side": "val"
+  },
+  {
+   "index": 128,
+   "key": "LS8035TB32P3:17:1:7802136888",
+   "seed": 12929,
+   "side": "val"
+  },
+  {
+   "index": 129,
+   "key": "LS8035TB32P3:33:1:7810665754",
+   "seed": 13030,
+   "side": "val"
+  },
+  {
+   "index": 130,
+   "key": "L704TLETMZBM:17:1:7831638217",
+   "seed": 13131,
+   "side": "val"
+  },
+  {
+   "index": 131,
+   "key": "L704TLETMZBM:33:1:7841807608",
+   "seed": 13232,
+   "side": "val"
+  },
+  {
+   "index": 132,
+   "key": "L704TLETMZBM:48:3:7859497262",
+   "seed": 13333,
+   "side": "val"
+  },
+  {
+   "index": 133,
+   "key": "KUZVERN40NGK:17:6:7871570497",
+   "seed": 13434,
+   "side": "val"
+  },
+  {
+   "index": 134,
+   "key": "BVF22RSFVBS9:17:1:7878255996",
+   "seed": 13535,
+   "side": "val"
+  },
+  {
+   "index": 135,
+   "key": "ZVYUL2YP3518:17:1:7889568906",
+   "seed": 13636,
+   "side": "val"
+  },
+  {
+   "index": 136,
+   "key": "ZVYUL2YP3518:33:1:7899360889",
+   "seed": 13737,
+   "side": "val"
+  },
+  {
+   "index": 137,
+   "key": "ZVYUL2YP3518:48:1:7914970153",
+   "seed": 13838,
+   "side": "val"
+  },
+  {
+   "index": 138,
+   "key": "ZVYUL2YP3518:49:6:7929427799",
+   "seed": 13939,
+   "side": "val"
+  },
+  {
+   "index": 139,
+   "key": "VPW8YH7A4QFM:17:1:7938785155",
+   "seed": 14040,
+   "side": "val"
+  },
+  {
+   "index": 140,
+   "key": "VPW8YH7A4QFM:33:1:7948558378",
+   "seed": 14141,
+   "side": "val"
+  },
+  {
+   "index": 141,
+   "key": "DPYF2BAA3DKT:17:1:7962612501",
+   "seed": 14242,
+   "side": "val"
+  },
+  {
+   "index": 142,
+   "key": "DPYF2BAA3DKT:33:1:7971160400",
+   "seed": 14343,
+   "side": "val"
+  },
+  {
+   "index": 143,
+   "key": "DPYF2BAA3DKT:48:6:7990606534",
+   "seed": 14444,
+   "side": "val"
+  },
+  {
+   "index": 144,
+   "key": "HUVEPWQAHWFU:17:1:8003033514",
+   "seed": 14545,
+   "side": "val"
+  },
+  {
+   "index": 145,
+   "key": "HUVEPWQAHWFU:33:2:8016054163",
+   "seed": 14646,
+   "side": "val"
+  },
+  {
+   "index": 146,
+   "key": "UMVLWER4CD98:17:1:8024979775",
+   "seed": 14747,
+   "side": "val"
+  },
+  {
+   "index": 147,
+   "key": "UMVLWER4CD98:33:1:8033242059",
+   "seed": 14848,
+   "side": "val"
+  },
+  {
+   "index": 148,
+   "key": "UMVLWER4CD98:48:6:8065418307",
+   "seed": 14949,
+   "side": "val"
+  },
+  {
+   "index": 149,
+   "key": "TU3XB4CAEDAW:17:1:8074426348",
+   "seed": 15050,
+   "side": "val"
+  },
+  {
+   "index": 150,
+   "key": "TU3XB4CAEDAW:33:1:8086409594",
+   "seed": 15151,
+   "side": "val"
+  },
+  {
+   "index": 151,
+   "key": "8R5CXD5C8PW8:17:2:8107759158",
+   "seed": 15252,
+   "side": "val"
+  },
+  {
+   "index": 152,
+   "key": "8R5CXD5C8PW8:33:2:8118999820",
+   "seed": 15353,
+   "side": "val"
+  },
+  {
+   "index": 153,
+   "key": "QNTW139MGECA:17:1:8130361671",
+   "seed": 15454,
+   "side": "val"
+  },
+  {
+   "index": 154,
+   "key": "HSX4HYATB4E2:17:1:8142382389",
+   "seed": 15555,
+   "side": "val"
+  },
+  {
+   "index": 155,
+   "key": "HSX4HYATB4E2:33:3:8153522974",
+   "seed": 15656,
+   "side": "val"
+  },
+  {
+   "index": 156,
+   "key": "HSX4HYATB4E2:48:6:8174743246",
+   "seed": 15757,
+   "side": "val"
+  },
+  {
+   "index": 157,
+   "key": "TKXQ6L4N9A6U:17:1:8193046353",
+   "seed": 15858,
+   "side": "val"
+  },
+  {
+   "index": 158,
+   "key": "P5HT1272P5SB:17:1:8211638892",
+   "seed": 15959,
+   "side": "val"
+  },
+  {
+   "index": 159,
+   "key": "KQQELQSZ382Z:17:6:8232767804",
+   "seed": 16060,
+   "side": "val"
+  },
+  {
+   "index": 160,
+   "key": "YLYLZWHA0GKU:17:1:8239396930",
+   "seed": 16161,
+   "side": "val"
+  },
+  {
+   "index": 161,
+   "key": "YLYLZWHA0GKU:33:1:8247591693",
+   "seed": 16262,
+   "side": "val"
+  },
+  {
+   "index": 162,
+   "key": "7ZUC4VPMDS41:17:6:8270461721",
+   "seed": 16363,
+   "side": "val"
+  },
+  {
+   "index": 163,
+   "key": "2Y27VAYZDA02:17:4:8284319532",
+   "seed": 16464,
+   "side": "val"
+  },
+  {
+   "index": 164,
+   "key": "TDLBRNA0R05B:17:1:8298211473",
+   "seed": 16565,
+   "side": "val"
+  },
+  {
+   "index": 165,
+   "key": "TDLBRNA0R05B:33:1:8303928499",
+   "seed": 16666,
+   "side": "val"
+  },
+  {
+   "index": 166,
+   "key": "TDLBRNA0R05B:48:4:8322829176",
+   "seed": 16767,
+   "side": "val"
+  },
+  {
+   "index": 167,
+   "key": "TDLBRNA0R05B:49:6:8329860845",
+   "seed": 16868,
+   "side": "val"
+  },
+  {
+   "index": 168,
+   "key": "MCT1GPTL8D35:17:1:8335412905",
+   "seed": 16969,
+   "side": "val"
+  },
+  {
+   "index": 169,
+   "key": "MCT1GPTL8D35:33:2:8343504348",
+   "seed": 17070,
+   "side": "val"
+  },
+  {
+   "index": 170,
+   "key": "W7BHM8U02RKG:17:6:8364715288",
+   "seed": 17171,
+   "side": "val"
+  },
+  {
+   "index": 171,
+   "key": "01H1533KSS5C:17:6:8379320263",
+   "seed": 17272,
+   "side": "val"
+  },
+  {
+   "index": 172,
+   "key": "2K4H3JEJHRSB:17:1:8385913153",
+   "seed": 17373,
+   "side": "val"
+  },
+  {
+   "index": 173,
+   "key": "ULP4TN1GNHMK:17:6:8402539892",
+   "seed": 17474,
+   "side": "val"
+  },
+  {
+   "index": 174,
+   "key": "61E2QS63Y9WU:17:1:8415662774",
+   "seed": 17575,
+   "side": "val"
+  },
+  {
+   "index": 175,
+   "key": "5PM6JAQG6FNQ:17:1:8430538566",
+   "seed": 17676,
+   "side": "val"
+  },
+  {
+   "index": 176,
+   "key": "5PM6JAQG6FNQ:33:1:8437487513",
+   "seed": 17777,
+   "side": "val"
+  },
+  {
+   "index": 177,
+   "key": "DUZUBAJ3A8GP:17:1:8452225082",
+   "seed": 17878,
+   "side": "val"
+  },
+  {
+   "index": 178,
+   "key": "VLZ6CCT8AQ0A:17:1:8472534992",
+   "seed": 17979,
+   "side": "val"
+  },
+  {
+   "index": 179,
+   "key": "VLZ6CCT8AQ0A:33:1:8481683753",
+   "seed": 18080,
+   "side": "val"
+  },
+  {
+   "index": 180,
+   "key": "8JRE1C4H4Z2W:17:1:8496173244",
+   "seed": 18181,
+   "side": "val"
+  },
+  {
+   "index": 181,
+   "key": "8JRE1C4H4Z2W:33:6:8513681143",
+   "seed": 18282,
+   "side": "val"
+  },
+  {
+   "index": 182,
+   "key": "YF0LXT1QSTGG:17:1:8522421830",
+   "seed": 18383,
+   "side": "val"
+  },
+  {
+   "index": 183,
+   "key": "YF0LXT1QSTGG:33:2:8535458972",
+   "seed": 18484,
+   "side": "val"
+  },
+  {
+   "index": 184,
+   "key": "YF0LXT1QSTGG:48:6:8555387592",
+   "seed": 18585,
+   "side": "val"
+  },
+  {
+   "index": 185,
+   "key": "XP2SL33HT0D9:17:1:8562943142",
+   "seed": 18686,
+   "side": "val"
+  },
+  {
+   "index": 186,
+   "key": "XP2SL33HT0D9:33:6:8581003029",
+   "seed": 18787,
+   "side": "val"
+  },
+  {
+   "index": 187,
+   "key": "751FN9QM9MHQ:17:6:8598047060",
+   "seed": 18888,
+   "side": "val"
+  },
+  {
+   "index": 188,
+   "key": "KV0JHNJCKXLS:17:1:8605348444",
+   "seed": 18989,
+   "side": "val"
+  },
+  {
+   "index": 189,
+   "key": "KV0JHNJCKXLS:33:6:8621879150",
+   "seed": 19090,
+   "side": "val"
+  },
+  {
+   "index": 190,
+   "key": "YQL8RZ8BWN1E:17:6:8639541937",
+   "seed": 19191,
+   "side": "val"
+  },
+  {
+   "index": 191,
+   "key": "KEN58SH9SLZ6:17:6:8654700902",
+   "seed": 19292,
+   "side": "val"
+  },
+  {
+   "index": 192,
+   "key": "TXZ6RVMQA09D:17:1:8662445561",
+   "seed": 19393,
+   "side": "val"
+  },
+  {
+   "index": 193,
+   "key": "TXZ6RVMQA09D:33:1:8670031763",
+   "seed": 19494,
+   "side": "val"
+  },
+  {
+   "index": 194,
+   "key": "TXZ6RVMQA09D:48:3:8682441467",
+   "seed": 19595,
+   "side": "val"
+  },
+  {
+   "index": 195,
+   "key": "WQZVENQ7DTRP:17:1:8691047247",
+   "seed": 19696,
+   "side": "val"
+  },
+  {
+   "index": 196,
+   "key": "WQZVENQ7DTRP:33:6:8710865169",
+   "seed": 19797,
+   "side": "val"
+  },
+  {
+   "index": 197,
+   "key": "1913SE84AXQF:17:1:8719404831",
+   "seed": 19898,
+   "side": "val"
+  },
+  {
+   "index": 198,
+   "key": "NHA2KW0RB7VP:17:1:8734311537",
+   "seed": 19999,
+   "side": "val"
+  },
+  {
+   "index": 199,
+   "key": "NHA2KW0RB7VP:33:6:8747677879",
+   "seed": 20100,
+   "side": "val"
+  },
+  {
+   "index": 200,
+   "key": "G33HU22H2543:17:1:8753843975",
+   "seed": 20201,
+   "side": "val"
+  },
+  {
+   "index": 201,
+   "key": "G33HU22H2543:33:1:8761698676",
+   "seed": 20302,
+   "side": "val"
+  },
+  {
+   "index": 202,
+   "key": "G33HU22H2543:48:6:8779164992",
+   "seed": 20403,
+   "side": "val"
+  },
+  {
+   "index": 203,
+   "key": "P74C04AEPL1F:17:1:8786559706",
+   "seed": 20504,
+   "side": "val"
+  },
+  {
+   "index": 204,
+   "key": "RC61MFQM63Y6:17:1:8798852401",
+   "seed": 20605,
+   "side": "val"
+  },
+  {
+   "index": 205,
+   "key": "RC61MFQM63Y6:33:6:8813669317",
+   "seed": 20706,
+   "side": "val"
+  },
+  {
+   "index": 206,
+   "key": "BTSRF7JL1W1Y:17:4:8827141743",
+   "seed": 20807,
+   "side": "val"
+  },
+  {
+   "index": 207,
+   "key": "XTSV1U9JD34T:17:1:8839954552",
+   "seed": 20908,
+   "side": "val"
+  },
+  {
+   "index": 208,
+   "key": "XTSV1U9JD34T:33:2:8849987472",
+   "seed": 21009,
+   "side": "val"
+  },
+  {
+   "index": 209,
+   "key": "XTSV1U9JD34T:48:1:8858009538",
+   "seed": 21110,
+   "side": "val"
+  },
+  {
+   "index": 210,
+   "key": "XTSV1U9JD34T:49:6:8864259540",
+   "seed": 21211,
+   "side": "val"
+  },
+  {
+   "index": 211,
+   "key": "9Z9H2EXKLF3T:17:1:8871152638",
+   "seed": 21312,
+   "side": "val"
+  },
+  {
+   "index": 212,
+   "key": "9Z9H2EXKLF3T:33:1:8881612114",
+   "seed": 21413,
+   "side": "val"
+  },
+  {
+   "index": 213,
+   "key": "9Z9H2EXKLF3T:48:3:8900455705",
+   "seed": 21514,
+   "side": "val"
+  },
+  {
+   "index": 214,
+   "key": "7X0W3U8TVA2A:17:1:8909821620",
+   "seed": 21615,
+   "side": "val"
+  },
+  {
+   "index": 215,
+   "key": "MTQ0EUBJ3R6T:17:1:8924782784",
+   "seed": 21716,
+   "side": "val"
+  },
+  {
+   "index": 216,
+   "key": "KFRDELW2TH2P:17:1:8938196611",
+   "seed": 21817,
+   "side": "val"
+  },
+  {
+   "index": 217,
+   "key": "KFRDELW2TH2P:33:6:8951273393",
+   "seed": 21918,
+   "side": "val"
+  },
+  {
+   "index": 218,
+   "key": "GXNKW8X1XYJP:17:2:8958846784",
+   "seed": 22019,
+   "side": "val"
+  },
+  {
+   "index": 219,
+   "key": "GXNKW8X1XYJP:33:1:8964839135",
+   "seed": 22120,
+   "side": "val"
+  },
+  {
+   "index": 220,
+   "key": "PD9AYQVMLQW6:17:1:8981915630",
+   "seed": 22221,
+   "side": "val"
+  },
+  {
+   "index": 221,
+   "key": "PD9AYQVMLQW6:33:1:8991358848",
+   "seed": 22322,
+   "side": "val"
+  },
+  {
+   "index": 222,
+   "key": "PD9AYQVMLQW6:48:1:9004136282",
+   "seed": 22423,
+   "side": "val"
+  },
+  {
+   "index": 223,
+   "key": "PD9AYQVMLQW6:49:6:9019941165",
+   "seed": 22524,
+   "side": "val"
+  },
+  {
+   "index": 224,
+   "key": "L2TSFU62Z57Z:17:6:9035319875",
+   "seed": 22625,
+   "side": "val"
+  },
+  {
+   "index": 225,
+   "key": "ZTRGYYMLR8SC:17:6:9052142730",
+   "seed": 22726,
+   "side": "val"
+  },
+  {
+   "index": 226,
+   "key": "K2JAGKVJAWZJ:17:1:9059315239",
+   "seed": 22827,
+   "side": "val"
+  },
+  {
+   "index": 227,
+   "key": "K2JAGKVJAWZJ:33:2:9070449650",
+   "seed": 22928,
+   "side": "val"
+  },
+  {
+   "index": 228,
+   "key": "NEWRFAYKTQHR:17:1:9095320228",
+   "seed": 23029,
+   "side": "val"
+  },
+  {
+   "index": 229,
+   "key": "9R916WW0V65N:17:1:9114019229",
+   "seed": 23130,
+   "side": "val"
+  },
+  {
+   "index": 230,
+   "key": "9R916WW0V65N:33:1:9126177646",
+   "seed": 23231,
+   "side": "val"
+  },
+  {
+   "index": 231,
+   "key": "9R916WW0V65N:48:3:9153405185",
+   "seed": 23332,
+   "side": "val"
+  },
+  {
+   "index": 232,
+   "key": "9R916WW0V65N:49:6:9165192844",
+   "seed": 23433,
+   "side": "val"
+  }
+ ]
+}

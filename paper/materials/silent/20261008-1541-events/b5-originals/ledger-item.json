@@ -1,0 +1,65 @@
+{
+ "id": "silent-0298",
+ "ts": "2026-10-08T15:03:30+08:00",
+ "by": "learner:fix-batch",
+ "character": "silent",
+ "kind": "fight",
+ "claim": "静默女王 B5 冻结覆盖 15 场实际结局，调参8场、验证7场（3胜4败），39次 SL predicted_death 只作截尾。原107调参keys和切点不变，新PD9AYQVMLQW6 F48胜与9R916WW0V65N F49败只进验证并同时重放两侧；验证仍差3场，不能准入B2，也不能由历史排序差声称实盘胜率改善。",
+ "first_run": "5X2GHKJ89PN1",
+ "prior": "unknown",
+ "prior_note": "这是本批固定数据和验收覆盖的发现；没有更早的同数据、同源配对校正证据。",
+ "status": "rejected",
+ "evidence": [
+  {
+   "run": "5X2GHKJ89PN1",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "验证侧首场实际结局；第6次实际 died，不把前5次 predicted_death 当额外败局。完整 byte offsets/SHA256 见 queen-outcome-coverage.json 与 queen-sl-byte-audit.json。",
+   "added": "2026-10-08T15:03:30+08:00"
+  },
+  {
+   "run": "G33HU22H2543",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "触发最近20局死因之一，第6次实际 died；原日志回合与模拟预测分别归档，不用单次概率证明机制因果。",
+   "added": "2026-10-08T15:03:30+08:00"
+  },
+  {
+   "run": "9R916WW0V65N",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "新增验证侧实际 died；F49独立战，沿固定切点只进val，前后来源相同。",
+   "added": "2026-10-08T15:03:30+08:00"
+  },
+  {
+   "run": "PD9AYQVMLQW6",
+   "floor": 48,
+   "turn": 1,
+   "role": "support",
+   "note": "新增验证侧实际 won；与新增败局同样进入两侧，不选择性补样本。",
+   "added": "2026-10-08T15:03:30+08:00"
+  }
+ ],
+ "where": {
+  "proposal": [
+   "paper/materials/silent/boss-sim-b5-QUEEN-20261008-112135.md"
+  ]
+ },
+ "note": "20261008-112135 B5 rejected；dispatch_base/source head=261af56e0022cc0012b80870bd3f52bd121d45c2，无源码候选，无live合入/版本。固定233场、t1/pre各200样本，配对同split/source/dataset/结局与逐回合覆盖；女王两側n=7，t1/pre Brier=.2812/.2843，预测=.787/.757，实际=.429，打穿比=.919/1.036、各30回合；整体验证126场Brier=.1182/.1155。原trust自然失败n/brier/gap，两项tune-only threat试验OOF Brier未改善；B2重构仅2/8完整且并列，证据不足。原acceptance rc=1，原实盘/五回合隔离通过；原沙箱tsc/vitest=0、2608例。初次临时trust路径错误导致覆盖不匹配的拒绝和所有失败均保留，修正临时路径后完整覆盖原验收仍自然拒绝。验收=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.json；检查=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/test-sandbox.original.log；报告=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/paper/materials/silent/boss-sim-b5-QUEEN-20261008-112135.md；分支boss-sim-silent-queen-20261008-112135；固定原字节、局回合与SL截尾见本批queen-outcome-coverage/queen-sl-byte-audit.json。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-08T15:03:30+08:00",
+   "by": "learner:fix-batch",
+   "status": "rejected"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "20261008-112135 B5 rejected；dispatch_base/source head=261af56e0022cc0012b80870bd3f52bd121d45c2，无源码候选，无live合入/版本。固定233场、t1/pre各200样本，配对同split/source/dataset/结局与逐回合覆盖；女王两側n=7，t1/pre Brier=.2812/.2843，预测=.787/.757，实际=.429，打穿比=.919/1.036、各30回合；整体验证126场Brier=.1182/.1155。原trust自然失败n/brier/gap，两项tune-only threat试验OOF Brier未改善；B2重构仅2/8完整且并列，证据不足。原acceptance rc=1，原实盘/五回合隔离通过；原沙箱tsc/vitest=0、2608例。初次临时trust路径错误导致覆盖不匹配的拒绝和所有失败均保留，修正临时路径后完整覆盖原验收仍自然拒绝。验收=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/acceptance.json；检查=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/learner/runs/20261008-112138-boss-sim-batch/test-sandbox.original.log；报告=/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-queen-20261008-112135/paper/materials/silent/boss-sim-b5-QUEEN-20261008-112135.md；分支boss-sim-silent-queen-20261008-112135；固定原字节、局回合与SL截尾见本批queen-outcome-coverage/queen-sl-byte-audit.json。"
+ ]
+}
