@@ -17,23 +17,11 @@ B2 用首回合起点；B3 用既有 pre/redeal 方法：实际首回合资源�
 
 A10 的 F48 胜只算该战胜利，不算整局通关；F49 是另一场独立 boss 战，以下列出本角色来源。怪物数值来源的 exact/nearest 及伤害估值在 results 的 bossSource 内，common 是用户准许复用的既有模型，校准参数不复用铁甲。
 
-## 本批独立核验与适用限制
-
-这是 Roy 已授权的新功能定期刷新。复用源码 cdf75af64fb5b118a5a808ecb3b05e2a05991c36 及其后继；本批没有新增游戏机制或修改策略阈值。
-相对上一发布，新增 21 次实际结局达到 20 场触发阈值；最大进阶仍为 A10。上一批 220 条可用战斗逐字等价，固定调参 107 keys 和切点不动，原验证 113 keys 保持前缀，新增 21 条仅延伸验证为 134。
-新增 21 场实际结局为战胜 15、死亡 6。调参 46 局/44 个局级版本标记，验证 72 局/69 个标记；验证 134 场全部 A10，A0–4/A5–9 验证各 0 场。验证帧全部 +dirty，局级版本不冒充当时完整源码，详见 version-scope-audit.json。
-107 个调参候选（各起点成功 106、原错误 1）在验证重放结束之前单独完成拟合并保存 tune-model-audit.json；最终发布的整体参数和进阶项选择与该文件完全相同，未用验证集调参。
-实际使用的 game-data.json 另封存为 game-data-input.json，SHA256=8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69；其余源代码/知识模型文件可按固定基线 Git 对象与 provenance 指纹复原，旧内容目录不覆盖。
-开场 241 帧均按来源 byte offset/len 重读日志并校验 SHA256、角色、进阶及整帧内容；证据见 opening-source-integrity.json。完整 482 对起点结果无重复；模型错误保留，成功数和失败指标按实列出。
-原串行协调器为切换两个离线分片主动中断（实际退出 1），日志及最初误记 130 后的更正留存；两个分片沿原行号 seed、起点、200 样本和全部模型输入重放，参数没有降低。模拟后重新核对模型输入指纹，见 replay-model-integrity.json。
-最初 main 合并发生 21 个记录冲突，原始三阶段及旧历史均留存；基线机械同步至固定 main bcf1b1a6fe642210dc6b9a75ac376b18d4ac18a1，基线合并 a85b3c5d88a3c2bcd8053f1bad8f447310c1ccd9 的树与它相等。本次发布只同步新增校准产物，保留 live 的并行代码、知识刷新和记录。
-原始 report.md/completed.json 保持封存；本 published-report.md 校正 F49 实际结局与可用开场口径并补独立输入审计，audit-manifest.json 保存各文件哈希。
-
 ## A10 数值与 F49 范围
 
-数值审计：`{"A10_fights": 150, "A10_opening_parts": 190, "A10_exact_hp_parts": 190, "A10_attack_definitions": 49, "A10_nearest_estimates": [{"enemy": "TEST_SUBJECT", "move": "BIG_POUNCE", "damage": {"perHit": 45, "hits": 1, "estimated": true, "from": 9, "ratio": 1, "logged": 45, "ratioN": 4, "ratioOwn": true, "ratioTo": 10}}], "all_simulated_opening_sources_match_audit": true, "all_successful_results_samples": 200, "result_pairs": 482, "successful_pairs": 480, "duplicate_pairs": 0, "normalized_first_hit_openings": 33, "F49_actual_outcomes": 8, "F49_usable_openings": 7, "F49_actual_missing_opening": ["TXZ6RVMQA09D:49:1:8685233301"], "errors": [{"key": "K3676LU8B0UH:48:2:6525158984", "start": "t1", "error": "board: Error: no solve"}, {"key": "K3676LU8B0UH:48:2:6525158984", "start": "pre", "error": "board: Error: no solve"}]}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
+数值审计：`{}`。完整开场及后续攻击定义的数值来源另见 opening-audit.json / model-input-audit.json，缺级沿既有 nearest/ratio 方法。
 
-F49 实际结局 8 场，可用开场 7 场（1 场缺首回合帧，未补造预测）；这个数量不足单独验证第二场 boss 的可靠性，仍只评估实际进入每战时的资源和单战胜败，没有评估 F48→F49 联合通关胜率。
+F49 实际结局 7 场；这个数量不足单独验证第二场 boss 的可靠性，仍只评估实际进入每战时的资源和单战胜败，没有评估 F48→F49 联合通关胜率。
 
 | 局号 | boss | 尝试 | 回合 | 结局 | 代码 |
 |---|---|---|---|---|---|
@@ -44,7 +32,6 @@ F49 实际结局 8 场，可用开场 7 场（1 场缺首回合帧，未补造�
 | XTSV1U9JD34T | QUEEN+TORCH_HEAD_AMALGAM | 6 | 4 | died | 03f4ffe0+dirty |
 | PD9AYQVMLQW6 | AEONGLASS | 6 | 10 | died | 7f6d5b4b+dirty |
 | 9R916WW0V65N | QUEEN+TORCH_HEAD_AMALGAM | 6 | 2 | died | 8ef00878+dirty |
-| TXZ6RVMQA09D | TEST_SUBJECT | 1 | 1 | died，no turn-1 decision with drawn hand（不模拟） | f17e15ca+dirty |
 
 ## B2 / t1
 
@@ -751,11 +738,3 @@ F49单独调参/验证指标（同一整体映射）：`{"F49": {"tune": {"n": 2
 | H1T1F8ML9FUE | AEONGLASS | 10 | 48 | 6 | 4 | 1a0adbaa+dirty | val | died |
 
 模拟失败原件：`[{"key": "K3676LU8B0UH:48:2:6525158984", "start": "t1", "error": "board: Error: no solve"}, {"key": "K3676LU8B0UH:48:2:6525158984", "start": "pre", "error": "board: Error: no solve"}]`。
-
-## 本批台账与复核
-
-学习账本经根目录 learner/ledger.py CLI 登记 silent-0299，kind=fight、status=proposed；21 个新增实际结局逐项关联来源。Roy 架构授权与静默实盘统计结论分开记录，未冒标 bug-infra 或 shipped；本批没有新增策略规则代码提案。
-
-A10 B3 整体打穿比 1.304 超出 1.3；范围按逐 boss 与 F49 报告，六个达标 boss 各自满足四门槛，终局整体和 F49 可靠性不能由六个名字外推。190 个 A10 开场怪物部件的 HP 数值来自 A10 的数据库观测；exact 指数值来源等级，不是每个实战实例 HP 均相同。49 个 A10 攻击定义中 TEST_SUBJECT/BIG_POUNCE=45 来源 A9 的最近级估计（ratio=1），没有当作本批从静默重新发现的机制。
-
-幂等实测：固定本批日志快照配新 previous 时 new=0、threshold not reached；配旧 previous 与同一来源/结果时 identical artifact already complete。两次 exit0，候选 trust/发布报告均逐字不变，未重新拟合或登记空版本；见 idempotency-audit.json 及两个跳过原日志。
