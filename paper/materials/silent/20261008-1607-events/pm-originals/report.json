@@ -1,0 +1,54 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "9DAS5L8YM1CN"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "9DAS5L8YM1CN",
+      "where": "agent/src/reflex/card-model.ts:1620",
+      "what": "狡诈药水确定生成升级小刀仍未进入方案模型；旧账本silent-0256，fix-queue未列",
+      "new": false
+    },
+    {
+      "run": "9DAS5L8YM1CN",
+      "where": "agent/src/reflex/turn-solver.ts:1747",
+      "what": "普通紧勒后续逐牌2伤仍漏算，两完整方案各少算4；旧账本silent-0260，fix-queue未列",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0019",
+      "silent-0044",
+      "silent-0133",
+      "silent-0232",
+      "silent-0243",
+      "silent-0253",
+      "silent-0256",
+      "silent-0258",
+      "silent-0260",
+      "silent-0261",
+      "silent-0286"
+    ],
+    "repeats": [
+      "silent-0256",
+      "silent-0260"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-756ddf20db14797f",
+    "silent-proposal-ec2b210f613d5e26",
+    "silent-proposal-f97980a3266f2665",
+    "silent-proposal-fc6618e0844f2007"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/report.md"
+}

@@ -1,0 +1,52 @@
+## 复盘回报
+
+- 已追加：9DAS5L8YM1CN（A10，第23层，猎人杀手 HUNTER_KILLER；末次T2以2血、12挡对14攻击阵亡，敌剩81/126血）
+- 新的纯 bug：无；复现旧账本 silent-0256、silent-0260，fix-queue未列。
+- 写成「未记录」的项：9DAS5L8YM1CN：前三次SL退出帧及完整净HP变化、精确退场末击、boss时钟输出／存活回合及比较、替代路线／出牌／药水的完整实打胜局。
+- 学习账本：9DAS5L8YM1CN：新增 无；更新 silent-0019、silent-0044、silent-0133、silent-0232、silent-0243、silent-0253、silent-0256、silent-0258、silent-0260、silent-0261、silent-0286（老错 silent-0256、silent-0260）；`ledger.py check` 退出码0。
+- 代码提案：均关联 postmortem→独立 strategy-proposal，状态pending，未实现／上线：
+  - F22T3／silent-0256、0258／silent-proposal-756ddf20db14797f：狡诈生成模型。
+  - F21T1、F22T4／silent-0260、0261／silent-proposal-ec2b210f613d5e26（初稿保留）、silent-proposal-f97980a3266f2665（层数笔误修正版，实现以此版为准）：紧勒漏伤。
+  - F19—F23／silent-0019、0232、0044／silent-proposal-fc6618e0844f2007：连续资源估值核验；缺替代整段胜线，保留现有规则。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["9DAS5L8YM1CN"],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "9DAS5L8YM1CN",
+      "where": "agent/src/reflex/card-model.ts:1620",
+      "what": "狡诈药水生成小刀仍未建模；旧账本silent-0256，fix-queue未列",
+      "new": false
+    },
+    {
+      "run": "9DAS5L8YM1CN",
+      "where": "agent/src/reflex/turn-solver.ts:1747",
+      "what": "紧勒逐牌触发仍漏算，两完整方案各少算4伤；旧账本silent-0260，fix-queue未列",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": ["silent-0019", "silent-0044", "silent-0133", "silent-0232", "silent-0243", "silent-0253", "silent-0256", "silent-0258", "silent-0260", "silent-0261", "silent-0286"],
+    "repeats": ["silent-0256", "silent-0260"],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-756ddf20db14797f", "silent-proposal-ec2b210f613d5e26", "silent-proposal-f97980a3266f2665", "silent-proposal-fc6618e0844f2007"],
+  "implementation_domains": ["combat", "potion", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11a77-39b0-78a3-93be-7a3904791707
+轮数：1；工具调用：command_execution×46
+token：输入 220.8k、输出 35.1k（其中推理 8277）、cache 读 4052.2k、cache 写 0（命中 94.8%）
+成本：未提供
+耗时：1226.5 s（墙钟）
+时间：首个事件 2.7 s、模型首个输出 8.9 s、首次工具 11.5 s、末次工具结束 1193.3 s；工具内共 60.2 s，其余（模型生成、推理、网络）1163.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×32；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T15-43-03-01a11a77-39b0-78a3-93be-7a3904791707.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem.jsonl
