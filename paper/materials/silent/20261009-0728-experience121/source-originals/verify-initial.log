@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-070200-experience-update/verify.py", line 40, in <module>
+    ok('末轮1血21挡30攻击12持牌伤',last['run']['current_hp']==1 and last['combat']['player']['block']==21 and sum(i.get('total_damage') or 0 for i in enemy(last)['intents'])==30 and len(withers)==1 and withers[0]['dynamic_values']['Damage']['base_value']==12)
+                                                                                                                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
