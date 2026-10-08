@@ -1,0 +1,36 @@
+{
+  "by": "learner:postmortem",
+  "character": "silent",
+  "status": "observed",
+  "where": {
+    "lessons": [
+      "LY83ZMTFVKJH"
+    ]
+  },
+  "kind": "card",
+  "claim": "本局偷窃草蜢携无休手斧+时，失牌使知识恶魔模拟剩血增加21.464±0.9731，但进场HP斜率为负，换算hp=null；题面及选择仍按loot cost 0处理，最终逃脱并永久缺牌。未知HP换算不等于没有已测构筑进度损失，宜保留卡进度、逃脱概率与未知血价分别验证，不能据此定固定HP价格或断言救牌后会赢。",
+  "first_run": "LY83ZMTFVKJH",
+  "prior": "unknown",
+  "prior_runs": [
+    "PU80F84P6HPN",
+    "NB8KCF6HRGVF",
+    "5X2GHKJ89PN1"
+  ],
+  "prior_note": "更早三场顺走的估值分别为卡进度负值且HP斜率正的worse_with、正常正血价、再次worse_with；未见同样的正卡进度且HP斜率负的flat案例，不能借一般偷牌或旧局胜负判断这种未知换算处理此前已做对。",
+  "evidence": [
+    {
+      "run": "LY83ZMTFVKJH",
+      "floor": 20,
+      "turn": 2,
+      "role": "support",
+      "note": "decisions:300426；1000样本，bossLeft.with336.507、card.value21.464/se0.9731，perHp.value−0.2843/se0.0417；hp=null/status=flat，选项loot cost 0，选plan3结束，另线预报12伤，各线均8/8逃脱。"
+    },
+    {
+      "run": "LY83ZMTFVKJH",
+      "floor": 20,
+      "turn": 5,
+      "role": "support",
+      "note": "states:307987—307994实际攻击50→44→38→30，逃脱后奖励；s307972已从永久牌组移除THRUMMING_HATCHET+，到s308053死亡仍未返还。"
+    }
+  ]
+}

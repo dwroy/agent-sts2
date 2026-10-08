@@ -1,0 +1,100 @@
+{
+ "id": "silent-0260",
+ "ts": "2026-10-07T23:13:00+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "普通紧勒STRANGLE附加的STRANGLE_POWER2及后续逐牌失血没有进入当前推演：Q6骇鳗T4相同紧勒→突然一拳→生存者完整方案报19而实23，少算两次2；更早Y6 F4 T1同线报27实29也少算后续中和触发2。当前live卡牌效果、敌方力量输入和逐牌收尾均缺接线；只定位预测缺口，不声称它导致本局死亡或修后能赢。",
+ "evidence": [
+  {
+   "run": "Y6GM2CHWJBEY",
+   "floor": 4,
+   "turn": 1,
+   "note": "decisions:206490报27；states:210432—210437缩小甲虫40→11，1力量下两打击7＋7、紧勒9、中和4＋紧勒触发2，实际29。",
+   "role": "support",
+   "added": "2026-10-07T23:13:00+08:00"
+  },
+  {
+   "run": "Q6M2Y34MWKRE",
+   "floor": 8,
+   "turn": 4,
+   "note": "decisions:276676报19；states:282887—282892骇鳗103→95→85→83→80，紧勒8＋突然一拳8＋两次紧勒2＋3毒=23；生存者完成弃牌后触发2，没有额外中和。",
+   "role": "support",
+   "added": "2026-10-07T23:13:00+08:00"
+  },
+  {
+   "run": "9DAS5L8YM1CN",
+   "floor": 21,
+   "turn": 1,
+   "role": "repeat",
+   "note": "decisions:292659护栏完整紧勒→生存者→尖啸报24伤/损5；states:299864—299871敌84→60→58→56、实28伤/损5，两次紧勒2未进模型。没有抽牌换线或未来毒结算。",
+   "added": "2026-10-08T15:57:39+08:00"
+  },
+  {
+   "run": "9DAS5L8YM1CN",
+   "floor": 22,
+   "turn": 4,
+   "role": "repeat",
+   "note": "decisions:292705完整紧勒→生存者→中和报8伤/零损，states:299913—299918丝虫38→32→30→26实12伤/零损，独立复现漏两次2。当前live card-model.ts:1036、combat-plan.ts:745、turn-solver.ts:1747均无普通STRANGLE_POWER接线，fix-queue未列。",
+   "added": "2026-10-08T15:57:39+08:00"
+  }
+ ],
+ "first_run": "Y6GM2CHWJBEY",
+ "prior": "no",
+ "prior_runs": [
+  "Y6GM2CHWJBEY"
+ ],
+ "prior_note": "向前追到普通紧勒最早静默实证Y6；F4 T1在本项学习前已漏2，旧复盘只记后续混合伤害偏差，账本及fix-queue未定位此接线bug。此前没有正确建模的可比日志；不把定制MAD_SCIENCE6等同普通2。",
+ "status": "observed",
+ "where": {
+  "lessons": [
+   "Q6M2Y34MWKRE",
+   "9DAS5L8YM1CN"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/proposal-strangle-bug.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-strangle.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-154302-postmortem/proposal-strangle-corrected.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-160331-experience-update/proposal-card-triggers.md"
+  ]
+ },
+ "note": "新增纯bug；当前live只读位置agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252；本次不改代码，独立strategy-proposal实现。",
+ "asc": 0,
+ "history": [
+  {
+   "ts": "2026-10-07T23:13:00+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-07T23:16:38+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T15:57:39+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T16:00:04+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T16:01:12+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T16:16:39+08:00",
+   "by": "learner:experience-update"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "新增纯bug；当前live只读位置agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252；本次不改代码，独立strategy-proposal实现。",
+  "代码提案 silent-proposal-1b9e29122364fa68 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "原observed/prior/first_run不变，只修可核预测缺口的提案另CLI登记，不声称修后赢整局。",
+  "代码提案 silent-proposal-ec2b210f613d5e26 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-f97980a3266f2665 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-438a0eb4516e7975 → task=strategy-proposal；Roy-2026-10-07-learning"
+ ]
+}

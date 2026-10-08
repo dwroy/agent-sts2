@@ -1,0 +1,51 @@
+## 复盘回报
+
+- 已追加：LY83ZMTFVKJH（A10，第21层，虱虫之祖 LOUSE_PROGENITOR：T12以1血9挡对33攻击阵亡，敌剩4血；含因果措辞勘误，数字不变）。
+- 新的纯 bug：
+  - 无；紧勒漏推演为旧bug silent-0260，fix-queue-v4已有。
+- 写成「未记录」的项：LY83ZMTFVKJH：完整dirty源码、部分毛伤及退场顺序、前两次SL退出帧和末轮攻击、实际最优线执行比例、部分推演差额来源、未到节点及boss资源、boss时钟需伤/估伤、Jev缓存命中、实际费用及选择结束回合的原因。
+- 学习账本：LY83ZMTFVKJH：新增silent-0314、silent-0315、silent-0316；更新silent-0260、silent-0209、silent-0019、silent-0261（老错silent-0260）；`ledger.py check`退出码0。
+- 代码提案（证据/账本/CLI id/实现任务，证据不足明确写限制）：
+  - F21 T7/T10紧勒漏伤 → silent-0260、silent-0261 → silent-proposal-04cbbf6b3a547aea → strategy-proposal；穿挡、升级、重放缺证，不声称修后必胜。
+  - F20 T2血价未知、T5携牌逃脱 → silent-0314、silent-0315 → silent-proposal-c3ef922a9a5f8285 → strategy-proposal；无救牌实盘对照，不设固定HP价格。
+  - F17集火、弃牌重算及F17→F21资源链 → silent-0209、silent-0019、silent-0316 → silent-proposal-a64db052a552608b → strategy-proposal；两试后续不同，不支持固定集火或SL阈值。三项仅登记，未实现或上线。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["LY83ZMTFVKJH"],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "LY83ZMTFVKJH",
+      "where": "agent/src/reflex/card-model.ts:1036",
+      "what": "普通紧勒后续逐牌失血漏推演，T7少2、T10少4；silent-0260及fix-queue-v4已有",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": ["silent-0314", "silent-0315", "silent-0316"],
+    "updated": ["silent-0260", "silent-0209", "silent-0019", "silent-0261"],
+    "repeats": ["silent-0260"],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-04cbbf6b3a547aea",
+    "silent-proposal-c3ef922a9a5f8285",
+    "silent-proposal-a64db052a552608b"
+  ],
+  "implementation_domains": ["combat", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-001302-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11c4a-297b-78e3-b82b-c148d32d7648
+轮数：1；工具调用：command_execution×87
+token：输入 360.1k、输出 63.0k（其中推理 20.4k）、cache 读 6347.5k、cache 写 0（命中 94.6%）
+成本：未提供
+耗时：2268.2 s（墙钟）
+时间：首个事件 4.5 s、模型首个输出 9.9 s、首次工具 15.6 s、末次工具结束 2245.5 s；工具内共 101.1 s，其余（模型生成、推理、网络）2162.7 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×53；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T00-13-04-01a11c4a-297b-78e3-b82b-c148d32d7648.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261009-001302-postmortem.jsonl

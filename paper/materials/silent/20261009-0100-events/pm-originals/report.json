@@ -1,0 +1,44 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "LY83ZMTFVKJH"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "LY83ZMTFVKJH",
+      "where": "agent/src/reflex/card-model.ts:1036",
+      "what": "普通紧勒后续逐牌失血漏推演，T7少2、T10少4；silent-0260及fix-queue-v4已有",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0314",
+      "silent-0315",
+      "silent-0316"
+    ],
+    "updated": [
+      "silent-0260",
+      "silent-0209",
+      "silent-0019",
+      "silent-0261"
+    ],
+    "repeats": [
+      "silent-0260"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-04cbbf6b3a547aea",
+    "silent-proposal-c3ef922a9a5f8285",
+    "silent-proposal-a64db052a552608b"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-001302-postmortem/report.md"
+}
