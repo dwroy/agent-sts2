@@ -1,0 +1,12 @@
+{
+ "initial_scanner_exit": 1,
+ "findings": 3,
+ "classification": "All three matches are the independently recomputed immutable dispatch evidence SHA256, not credentials. No key/.env files were read. Scanner config and assertions unchanged.",
+ "canonical_rule": "SHA256(json.dumps(evidence without key/dispatch_base, sort_keys=True, ensure_ascii=False).encode())",
+ "verified": true,
+ "fingerprints": [
+  "experiments/boss-sim/silent/821f62527709a338a801fde624bf149e661fb17cc0cccbcf800a28a2dde8b369/dispatch-audit.json:generic-api-key:2",
+  "experiments/boss-sim/silent/821f62527709a338a801fde624bf149e661fb17cc0cccbcf800a28a2dde8b369/dispatch-audit.json:generic-api-key:3",
+  "experiments/boss-sim/silent/821f62527709a338a801fde624bf149e661fb17cc0cccbcf800a28a2dde8b369/evidence.json:generic-api-key:582"
+ ]
+}
