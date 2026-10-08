@@ -1,0 +1,87 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.13 → 2026-10-08.14；提交：3bda3841（分支 exp-silent）；合入：未合入，预检发现19处记录冲突，刷新数据已保留，待运维兜底。
+- 条数：新增1、更新15（加证据15、只改数字0）、退役0；active 175 → 176；正文52103 → 51417字。A8适用164条/47080字，A9适用165条/47364字。
+- 机制推理：
+
+  - 力量/敏捷 — 逐击增伤、逐牌兑现挡 — 124局 — T0DGVABPV60U
+  - 灵动步法 — 建立2/3敏捷，无挡牌不兑现 — 73局 — T0DGVABPV60U
+  - 螺线飞镖 — 每刀本轮加1敏捷，次轮撤回 — 2局 — T0DGVABPV60U
+  - 滚石 — 轮初触发后成长，未触发层数不算伤害 — 9局 — T0DGVABPV60U
+  - 速行者 — 实际抽牌逐次触发伤害 — 4局 — T0DGVABPV60U
+  - 铁棒 — 累计4牌额外抽1，计数跨轮 — 2局 — T0DGVABPV60U
+  - 护喉甲 — 按实际剩余覆甲给挡 — 13局 — T0DGVABPV60U
+  - 钨合金棍 — 观察每次穿挡失血减1 — 4局 — T0DGVABPV60U
+  - 实验体 — 技能按激怒增力，阶段清敌力/毒 — 14局 — T0DGVABPV60U
+  - 敏捷药水 — 实饮加2敏捷，后继挡牌兑现 — 50局 — T0DGVABPV60U
+  - 再生药水 — 逐轮5/4/3/2/1回复，净损另算 — 15局 — T0DGVABPV60U
+  - 跨幕回复 — 已见A9/A10按缺失血80%向下取整 — 19局 — T0DGVABPV60U
+  - 能力启动 — 观察持有与实际建立分账 — 123局 — T0DGVABPV60U
+  - 炼制药水 — 实打补药，持有产物不等生存收益 — 5局 — T0DGVABPV60U
+
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 248文件/2608用例/退出0，首次通过。
+- 切片大小：整体中位减少56字；最大5226字。
+- 学习账本：新增 silent-0294；改成 proposed silent-0012、silent-0005、silent-0104、silent-0105、silent-0094、silent-0045、silent-0122、silent-0016、silent-0178、silent-0028、silent-0079、silent-0276、silent-0259、silent-0243、silent-0020、silent-0019、silent-0021、silent-0125、silent-0294；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.14",
+  "commit": "3bda3841756ba293f34b197542e6e9bee4dc1ed9",
+  "merged": null,
+  "added": 1,
+  "updated": 15,
+  "retired": 0,
+  "active": 176,
+  "mechanisms": [
+    "silent-strength-weak-observation",
+    "silent-footwork-block",
+    "silent-helical-dart-shiv-dexterity",
+    "silent-rolling-boulder-start-growth",
+    "silent-speedster-draw-damage",
+    "silent-iron-club-four-card-draw",
+    "silent-gorget-plating",
+    "silent-tungsten-rod-hp-loss-observation",
+    "silent-test-subject-phase-reset",
+    "silent-dexterity-potion-card-block",
+    "silent-regen-potion-decay-heal",
+    "silent-act-transition-missing-hp-heal",
+    "silent-deck-burst-observation",
+    "silent-alchemize-potion-resource-observation"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2608},
+  "ledger": {
+    "added": ["silent-0294"],
+    "proposed": [
+      "silent-0012", "silent-0005", "silent-0104", "silent-0105",
+      "silent-0094", "silent-0045", "silent-0122", "silent-0016",
+      "silent-0178", "silent-0028", "silent-0079", "silent-0276",
+      "silent-0259", "silent-0243", "silent-0020", "silent-0019",
+      "silent-0021", "silent-0125", "silent-0294"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-9e77e1e88c0cecd4",
+    "silent-proposal-e406c9312e1c329a",
+    "silent-proposal-6f660733c357cfe0",
+    "silent-proposal-e6559caa25d704e3"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a119e7-260d-7683-928b-9b9c57abdd78
+轮数：1；工具调用：command_execution×57 file_change×5
+token：输入 183.8k、输出 46.6k（其中推理 16.1k）、cache 读 6121.6k、cache 写 0（命中 97.1%）
+成本：未提供
+耗时：1319.1 s（墙钟）
+时间：首个事件 2.8 s、模型首个输出 7.2 s、首次工具 10.4 s、末次工具结束 1242.2 s；工具内共 649.8 s，其余（模型生成、推理、网络）666.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×51；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T13-05-41-01a119e7-260d-7683-928b-9b9c57abdd78.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update.jsonl
