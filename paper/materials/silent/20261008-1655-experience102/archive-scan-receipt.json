@@ -1,0 +1,13 @@
+{
+  "source": "ops/codex-ops/learn.json.batches.20261008-160331-experience-update",
+  "copy_pre_transform_sha256": "fc89e41b04dd89f1d096f05ddbf127ee8e4ab86a1bd6b8a51c529b516565c51b",
+  "copy_pre_transform_bytes": 2784,
+  "copy_field_renames": {
+    "key": "run_group"
+  },
+  "reason": "The original key value is the game run identifier also stored in runs, not a credential. Rename only this duplicate archived scheduler-copy field name to avoid a generic-api-key lexical false positive; actual scheduler state and all original learner reports remain unchanged.",
+  "raw_report_originals_unchanged": true,
+  "data_shipped_rows": 16,
+  "proposal_links_retained_without_bug_shipped": 2,
+  "full_external_passed": false
+}
