@@ -1,0 +1,30 @@
+{
+  "initial_scanner_exit": 1,
+  "initial_findings": 4,
+  "verified_findings": [
+    {
+      "fingerprint": ":generic-api-key:830",
+      "line_sha256": "ddf86368c63b851f8c73b51d075346189bd092e36be0c007fe0bc57d2e25ed03",
+      "classification": "independently recomputed immutable dispatch evidence SHA256"
+    },
+    {
+      "fingerprint": ":generic-api-key:955",
+      "line_sha256": "7a43cecf099ec7c2575c7e07be8170bb37997086bc7d6a92f249d2fa585d1516",
+      "classification": "independently recomputed immutable dispatch evidence SHA256"
+    },
+    {
+      "fingerprint": ":generic-api-key:1650",
+      "line_sha256": "4c072540d64d76b566160b6ffa5cca792fd362fcc11ecf877e63b4df08a784e5",
+      "classification": "independently recomputed immutable dispatch evidence SHA256"
+    },
+    {
+      "fingerprint": ":generic-api-key:3890",
+      "line_sha256": "33cff206b1531f812b334f7695d1b4f7f25beeee536d6eae59d5b99cd50a9bf5",
+      "classification": "independently recomputed immutable dispatch evidence SHA256"
+    }
+  ],
+  "canonical_rule": "SHA256(json.dumps(evidence without key/dispatch_base, sort_keys=True, ensure_ascii=False).encode())",
+  "credentials_found": false,
+  "generic_scanner_rules_unchanged": true,
+  "final_scan_policy": "Only exact fingerprints whose match spans contain the independently recomputed public evidence SHA256 may be excluded."
+}

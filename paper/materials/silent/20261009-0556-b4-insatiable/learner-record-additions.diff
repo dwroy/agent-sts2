@@ -1,0 +1,22 @@
+diff --git a/notes/silent-climb-report.md b/notes/silent-climb-report.md
+index feb9681e..16b6aa7f 100644
+--- a/notes/silent-climb-report.md
++++ b/notes/silent-climb-report.md
+@@ -1136,3 +1136,8 @@ S1.exp33已由学习者自测合入live，19项经CLI/by=ops登记shipped，0151
+ character,ascension,runs,wins,first_try_wins,sl_wins,mean_floor,mean_first_try_floor,first_run,last_run,started,ended,items_found,items_found_prior_yes,items_shipped,items_shipped_ids,repeats,repeats_after_ship
+ silent,9,3,1,0,1,39.67,38,HMVJKM56S4Q8,G403VCZ3BH1B,2026-10-05T18:45:41+00:00,2026-10-05T20:51:26+00:00,0,0,29,silent-0010 silent-0018 silent-0024 silent-0025 silent-0037 silent-0064 silent-0069 silent-0072 silent-0076 silent-0079 silent-0090 silent-0102 silent-0103 silent-0106 silent-0129 silent-0133 silent-0134 silent-0135 silent-0136 silent-0137 silent-0138 silent-0139 silent-0140 silent-0141 silent-0142 silent-0143 silent-0144 silent-0145 silent-0146,1,1
+ ```
++
++
++### 2026-10-09 05:48:15 CST 沙虫B4固定批次拒绝
++
++本批核实HEMND3SMQYB8 F33 T2/T3/T5打穿取帧偏差需扩到提取器，超限定fullFight范围，未形成源码候选；两份相同冻结数据原门槛自然拒绝，隔离与原沙箱通过。无live合入/版本，旧fight条目silent-0303追加rejected新回合证据。详见[本批报告](../paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261009-041301.md)，不倒算原升阶窗口。
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index e04c562a..7b969491 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -1628,3 +1628,4 @@
+ - 2026-10-09 02:23 运维codex02:19经验114兜底：源4aca285e251f888ba5b8c75eb40047c0e0deaa6c原17项记录/表冲突/merged-null保留；空闲非阻塞锁内从live2088d067eb5232c702444603de3c6510ac2e46d8只集成已测experience原blob，actual 60c93049a61bf9fb0c0501a9f03d1b34b6206b3d，既有2088d067刷新及本次保存3286066fe4f202a73304c2f4e2deb15d41aca30b保持。当前代码与固定8149e4ca/树3f7df7a0逐blob一致，原完整302文件3435例过2跳保持，不冒报新数据树完整通过。经验2026-10-09.2→2026-10-09.3/增1改22退0/189 active，唯一S1.exp114，源沙箱251文件2627例tsc/vitest0；四原提案沿自动链，main及22所属数据shipped随后机械登记，原批完整外部独立续验。旧exp100失败不关闭；回执paper/materials/silent/20261009-0219-experience114。
+ - 2026-10-09 03:18 运维codex03:12经验115兜底：源bdee78cd610fd897c75d3a453cbe671d924edcf9原18项记录/表冲突/merged-null保留；空闲非阻塞锁内从live58512d7e8bcb22edaf3aa8bbe0b37e7773d5aa07只集成已测experience原blob，actual 63dfc3219ed252457ee52342f6ab0736b817828f，既有58512d7e刷新及本次保存fa2e1f73f0c8608ff5e72e577456437f1210c1d0保持。当前代码与固定a7c2a411/树3be0daf4逐blob一致，原完整302文件3435例过2跳保持，不冒报新数据树完整通过。经验2026-10-09.3→2026-10-09.4/增1改14退0/190 active，唯一S1.exp115，源沙箱251文件2627例tsc/vitest0；四原提案沿自动链，main及17所属数据shipped随后机械登记，原批完整外部独立续验。旧exp100失败不关闭；回执paper/materials/silent/20261009-0312-experience115。
+ - 2026-10-09 03:57 运维codex03:55经验116兜底：源f002a94f4f199bd22b603811d5830be71a868859原17项记录/表冲突/merged-null保留；空闲非阻塞锁内从livea31af89a9411052eea0059fee14fa99d3b3dad88只集成已测experience原blob，actual 5853fdbf630fca6e9c022aa28c54fedd09fc2ecf，既有a31af89a刷新及本次保存477d577c472c50163c7c539aa5122a7ecf302b69保持。当前代码与固定20cec89a/树6d3900c8逐blob一致，原完整302文件3435例过2跳保持，不冒报新数据树完整通过。经验2026-10-09.4→2026-10-09.5/增0改17退0/190 active，唯一S1.exp116，源沙箱251文件2627例tsc/vitest0；四原提案沿自动链，main及19所属数据shipped随后机械登记，原批完整外部独立续验。旧exp100失败不关闭；回执paper/materials/silent/20261009-0355-experience116。
++- 2026-10-09 05:48 Codex学习者沙虫B4批次20261009-041301拒绝：silent/THE_INSATIABLE，base=473a38a1a8d133f0a811f8a3c8ff454ae6363984，281场/562起点200样本原行索引seed、107tune/174val；限定源无新可证实校正，取帧偏差需character_extract.py范围外修改，HEM F33 T2/T3/T5新证据追加既有fight silent-0303 rejected。基准验收exit1/['no bias entered/approached its fixed standard']、实盘/五回合逐字节隔离通过，原沙箱tsc0/vitest0/2627例；源码不改、merged=null、无版本，报告paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261009-041301.md，原失败及档案保持。

@@ -1,0 +1,27 @@
+1250649 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-041301-fix-batch /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-041301-fix-batch.pid 1 - /home/dw/Projects/agent-sts2/ops/
+1250650 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-041301-fix-batch  silent fix-batch /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301 boss-sim-batch /home/d
+1250659 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261009-041301/learner/run.ts --engine codex --task boss-sim-batch --character
+1250671 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1349628 npm exec tsx src/index.ts play --max-runs 1 --max-minutes 240
+1349699 sh -c tsx src/index.ts play --max-runs 1 --max-minutes 240
+1349700 node /home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx src/index.ts play --max-runs 1 --max-minutes 240
+1349711 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs src/index.ts play
+1364152 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+1364163 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1366811 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-054301-postmortem /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-054301-postmortem.pid 1 - /home/dw/Projects/agent-sts2/op
+1366813 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-054301 KSX97DF5H3NY silent
+1366822 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --task postmortem --character silent --cwd /home/dw/Projects/agent-sts2 --set runs=KSX97DF5
+1366834 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1367117 bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261009-054302-experience-update /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261009-054302-experience-update.pid 1 - /home/dw/Projects
+1367118 bash /home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh 20261009-054302-experience-update 0DJ6GFZZ0TG9 silent experience-update /home/dw/Projects/agent-sts2/.worktrees/exp
+1367127 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/.worktrees/exp/learner/run.ts --engine codex --task experience-update --character silent --cwd /home/dw/Projects/agent-st
+1367160 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+1746959 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh
+autoplay.pid: 1746959
+herdr panes:
+label                                      pane    alive  busy  foreground
+autoplay                                   wJ:p2   yes    no    
+learner-20261009-041301-fix-batch          wJ:p9V  yes    yes   1250649:bash 1250650:bash 1250658:tail 1250659:node 1250671:node 1250756:esbuild
+learner-20261009-054301-postmortem         wJ:p9Z  yes    yes   1366811:bash 1366813:bash 1366821:tail 1366822:node 1366834:node
+learner-20261009-054302-experience-update  wJ:p90  yes    yes   1367117:bash 1367118:bash 1367126:tail 1367127:node 1367160:node
+ops                                        wJ:p5   yes    yes   1753575:node 1753583:codex
