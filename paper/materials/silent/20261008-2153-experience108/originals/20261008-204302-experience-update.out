@@ -1,0 +1,75 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.24 → 2026-10-08.25；提交：f2bf509d（分支 exp-silent）；合入：11d759cf，已登记 S1.exp108。
+- 条数：新增1、更新15（加证据15、只改数字0）、退役0；active 184→185，共50213字符；A8适用172条/45825字符，A9适用173条/46109字符。
+- 机制推理：
+  - 力敏与步法 — 逐击加力、逐牌加敏，旧挡不补 — 步法80局/力敏138局 — PF90JTU0UZ5M。
+  - 毒牌与触媒 — 施毒非即时伤，普通触媒9＋8＝17 — 药瓶19局/毒药33局/触媒53局 — PF90JTU0UZ5M。
+  - 毒雾 — 建立2层，下一轮四敌各加2毒 — 69局 — PF90JTU0UZ5M。
+  - 毒素 — 两张10伤加19敌攻，1血27挡仍死 — 20局 — PF90JTU0UZ5M。
+  - 固化 — 已有格挡B→3B，两次5→15 — 16局 — PF90JTU0UZ5M。
+  - 毒药水 — 按条件加毒，饮用不即时扣敌血 — 36局 — PF90JTU0UZ5M。
+  - 南瓜蜡烛 — 正充能多1能，独立战后扣1 — 5局 — PF90JTU0UZ5M。
+  - 胆小 — 非致死攻击后补挡，净扣不等退场 — 24局 — PF90JTU0UZ5M。
+  - 巨兽自爆 — 本体结束后仍承爆，虚弱后30另核 — 23局 — PF90JTU0UZ5M。
+  - 能力兑现 — 实建、实结与整战胜因分开 — 137局 — PF90JTU0UZ5M。
+- 改了的手写知识：无。
+- 测试：开发树和live均tsc退出0；vitest 251文件/2627用例/退出0，均未重跑。
+- 切片大小：整体中位减少1字，配对差中位增加11字；最大5062字。
+- 学习账本：新增无；改成proposed：silent-0005、0012、0017、0019、0020、0021、0007、0011、0027、0185、0209、0211、0214、0079、0278、0225；退役无；`ledger.py check`退出0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.25",
+  "commit": "f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c",
+  "merged": "11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5",
+  "added": 1,
+  "updated": 15,
+  "retired": 0,
+  "active": 185,
+  "mechanisms": [
+    "力量敏捷与步法 — 逐击加力、逐牌加敏，旧挡不补；四敏三防御27，巨兽爆30仍损3 — 步法80/力敏138 — PF90JTU0UZ5M",
+    "毒牌与触媒 — 施毒非即时伤，普通触媒9＋8=17，限伤另核 — 药瓶19/毒药33/触媒53 — PF90JTU0UZ5M",
+    "毒雾 — 实建2层，下一轮四敌各加2毒，生成牌未入牌组 — 69 — PF90JTU0UZ5M",
+    "毒素持牌伤 — 两张10加敌攻19，共29，1血27挡完整需损2仍死 — 20 — PF90JTU0UZ5M",
+    "固化药水 — 当步已有B挡变3B；两次5→15，不沿用至自爆轮 — 16 — PF90JTU0UZ5M",
+    "毒药水 — 按条件加6/7或被制品阻；饮用不扣本体HP — 36 — PF90JTU0UZ5M",
+    "南瓜蜡烛 — 正充能轮初多1能，独立战后扣1，SL恢复不重计新战 — 5 — PF90JTU0UZ5M",
+    "胆小敌挡 — 非致死攻击后补7挡，当前净扣不等敌退场 — 24 — PF90JTU0UZ5M",
+    "巨兽自爆 — 本体结束后仍承爆，虚弱后30不当无弱基础 — 23 — PF90JTU0UZ5M",
+    "能力收益兑现 — 实建/实结与战果分核，末轮多敏仍不能覆盖持牌伤 — 137 — PF90JTU0UZ5M"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0005", "silent-0012", "silent-0017", "silent-0019",
+      "silent-0020", "silent-0021", "silent-0007", "silent-0011",
+      "silent-0027", "silent-0185", "silent-0209", "silent-0211",
+      "silent-0214", "silent-0079", "silent-0278", "silent-0225"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-67ee9ff5277558ff",
+    "silent-proposal-ac022f51b42a960f",
+    "silent-proposal-f10961933e0f7f14"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11b89-e40a-7c91-8295-322831d14596
+轮数：1；工具调用：command_execution×69 file_change×10
+token：输入 292.9k、输出 82.8k（其中推理 47.6k）、cache 读 12491.1k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：3892.7 s（墙钟）
+时间：首个事件 3.6 s、模型首个输出 11.4 s、首次工具 14.0 s、末次工具结束 3800.8 s；工具内共 2892.1 s，其余（模型生成、推理、网络）997.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×74 wait×8；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T20-43-04-01a11b89-e40a-7c91-8295-322831d14596.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-204302-experience-update.jsonl

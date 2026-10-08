@@ -1,0 +1,21 @@
+git rev-parse exp-silent
+f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c
+git rev-parse HEAD
+7345fa64f3ebfcc1dbaa6d887f6d607ec3f5aab4
+git status --short
+git diff --cached --name-only
+git diff --name-only -- knowledge notes/fight-value-backtest.md
+git rev-parse HEAD
+7345fa64f3ebfcc1dbaa6d887f6d607ec3f5aab4
+git merge-base 7345fa64f3ebfcc1dbaa6d887f6d607ec3f5aab4 f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c
+196a025b3ef4b9009974cbac5d8db326cc33ae7e
+git diff --name-only 196a025b3ef4b9009974cbac5d8db326cc33ae7e f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c -- knowledge
+knowledge/characters/silent/experience.json
+git merge-tree --write-tree 7345fa64f3ebfcc1dbaa6d887f6d607ec3f5aab4 f2bf509d79a8efbe41c92e8a563dccb5ae3e3b7c
+f28b2eac49764091937fd8504106354d19075337
+git merge --no-edit exp-silent
+Merge made by the 'ort' strategy.
+ knowledge/characters/silent/experience.json | 146 ++++++++++++++++++----------
+ 1 file changed, 97 insertions(+), 49 deletions(-)
+git rev-parse HEAD
+11d759cfe20c64e90c1d5ebf0dc930ae8b24ffc5
