@@ -1,0 +1,75 @@
+[
+ {
+  "id": "silent-0081",
+  "ts": "2026-10-05T10:26:12+08:00",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "计算下注CALCULATED_GAMBLE没有把全弃手牌和等量抽牌传入出牌模型，求解器仍在它之后排原手牌。本局末战原计划包含计算下注之后的生存者及毒雾，实际全弃后只有两张新牌，必须重算；不能将该虚构格挡与能力启动当作Jev已执行。",
+  "evidence": [
+   {
+    "run": "T082DRCUHRRD",
+    "floor": 27,
+    "turn": 1,
+    "note": "首次可核同类局面：计算下注后计划继续打三张原打击及致命毒药，实际换成毒雾、中和、防御、灵动步法。",
+    "role": "support",
+    "added": "2026-10-05T10:26:12+08:00"
+   },
+   {
+    "run": "F9PP859XZ3RJ",
+    "floor": 37,
+    "turn": 2,
+    "note": "预测计算下注之后还能打生存者与毒雾，15挡、0损；实际弃两牌抽羽化及打击，仅偏折7挡，损2；毒雾T6才建立。",
+    "role": "repeat",
+    "added": "2026-10-05T10:26:12+08:00"
+   }
+  ],
+  "first_run": "T082DRCUHRRD",
+  "prior": "no",
+  "prior_runs": [
+   "T082DRCUHRRD"
+  ],
+  "prior_note": "任何针对本牌的学习之前，A0最早可核方案已保留实际被全弃的牌；更早静默局未找到施放本牌的可比证据。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "F9PP859XZ3RJ"
+   ],
+   "commits": [
+    "3cd9fc6c6b6bfa378508f7bd5ca2219c1088ad39",
+    "991591d34d51695d834db1ddaea6b96a5165c1c6"
+   ]
+  },
+  "note": "新定位；两份fix-queue未列。当前只读live agent/src/reflex/card-model.ts:836/:960、turn-solver.ts:1542。本次未修代码，不与已修暗影步条目混同。",
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T10:26:12+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T10:49:14+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T11:42:24+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T12:09:58+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix12",
+  "effect": null,
+  "notes": [
+   "新定位；两份fix-queue未列。当前只读live agent/src/reflex/card-model.ts:836/:960、turn-solver.ts:1542。本次未修代码，不与已修暗影步条目混同。",
+   "运维处理20261005-112812-fix-batch完成事件：固定源及实际live发布已核实，源分支/合后沙箱自测通过；保留前两批失败回退历史，本次测试隔离修复保留原断言与药水代码。经验批次外部完整检查的固定树包含本批源码且exit0，分别归档其来源，不冒充尚未送达的fix-batch检查事件。机制证据条目不重复登记为新bug。"
+  ],
+  "shipped_at": "2026-10-05T12:09:58+08:00"
+ }
+]

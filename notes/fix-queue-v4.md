@@ -917,3 +917,9 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] **silent-0311**：仅转录学习者回报，`agent/src/reflex/rollout.ts:1690—1691` 恢复时仍令HP等于旧maxHp、只减库存，`:3196`按库存乘旧maxHp计剩余需求。R3AJCGQGGMR4/SILENT A10 F45T2/T6，s306415→306416、s306438→306439实见77→90→99，三台完整本体预算266、旧口径231，末场正常结束，非卡死。只读定位为live9949a5de；运行11d759cf+dirty，完整dirty源码未记录，不冒称还原运行树。
 - 沿已注册 `silent-proposal-d04933cbd408d85b` 自动strategy-proposal链，由学习者按原提案与固定帧核验、实现、自测及实际合入；先查共享租约，避免重复派发。保留本角色分阶段证据和未知恢复分布，不凭一次序列拟合固定倍率，不把所有预测差额归本项或承诺修后获胜；0312机制及e4263c03267cf4cf弃牌/SL提案由学习者处理，运维不补玩法。原稿、两段勘误、0312录入勘误、原失败预检和未记录限制见 `paper/materials/silent/20261008-2246-events`；不记代码实现、shipped或新版本。
+
+## 2026-10-09 01:46 — HEMND3SMQYB8复盘新增非阻塞纯bug（升级计算下注遗漏全弃重抽）
+
+- [ ] **silent-0317**：仅转录学习者回报，`agent/src/reflex/card-model.ts:920` 将 calculatedGamble 限于未升级牌，`:1108` 未为升级分支写入 discardsHand/drawDiscardedHand，`turn-solver.ts:1676` 因而保留已弃旧手牌。HEMND3SMQYB8/A10/F48T3 d301206、F49末试T1 d301332—301335（s308992→308993弃7抽7）后缀无法执行，实际执行器重读新手牌另选；原局正常结束，非阻塞。首证R0HEV5E3QT6G/A0/F25T3 d209753—209757、s213813→213814；UACFSW4VDDLD/F48T2为学习者历史repeat。保持原prior=no/首证/observed。普通版0081已修、0300抽牌入口漏认drawDiscardedHand为另外旧条目，本升级分支单列。
+- 沿已注册 `silent-proposal-2d2fa55483ceb71c`（0317/0318）自动strategy-proposal链，由学习者按原提案与固定帧实现、自测、实际合入；先查共享租约避免并发重复。范围仅本角色已观察升级文本，跨抽牌边界重算、未知新手牌不能按旧后缀确定计收益；保留未升级控制及其他角色等价。未执行的替代线和整场胜线未记录，不承诺修后转胜，不由运维修游戏机制。
+- 旧0297/0079 repeat及紧勒0260补证沿原队列；其他三提案463d1c44f5e7efa8/c154ecfdf3ad6f65/b1100cb810a53d18由自动链处理，不重复派发。0318机制保持学习者原记录，不登记代码实现、shipped或新版本。原报告、固定帧和未记录限制见 `paper/materials/silent/20261009-0141-events/pm-originals/report.md`。
