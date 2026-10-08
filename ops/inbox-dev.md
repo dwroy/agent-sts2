@@ -241,3 +241,5 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 09:28 给 Roy：静默boss定期校准第四版已实际发布 96aeaf636a2b806c435db89673590f8229b22b58（S1.boss-calibration4），源/合后沙箱自测通过；本批20新增实际结局只扩验证，沿原标准保留6个B2/B3可信boss。A10验证113场、残差8.7个百分点；F49仅3场验证（还差7场且其他指标未达标），联合通关率尚未验证。校准只对应冻结模型54d5f6f4，后续并行模型保留但不冒称已用此回放验证。主仓库同步及silent-0283 shipped已登记，完整外部检查等待调度器后续事件。回执 paper/materials/silent/20261008-0922-events/manifest.json。
 
 - 2026-10-08 09:32 给 Roy：静默boss校准第四版 S1.boss-calibration4（发布f8947651、固定树4a24dcd1）完整外部tsc+vitest均exit0，298文件3412例通过、2跳过，已结案。冻结模型及F49验证仅3场、还差7场且其他指标未达标的原范围限制保持。回执 paper/materials/silent/20261008-0930-events/manifest.json。
+
+- 2026-10-08 09:42 运维：经验085640原20项并行记录冲突已兜底，仅集成学习者源46d0d2a1原experience.json；实际live 73f2fda517bce478c95d4f64fa7cf309aa703f05、发布1894c55d36c5b1242d8868ee6ea0ae34de274f2f/唯一S1.exp93，main已同步。经验增1改9退0/169 active，10所属数据CLI shipped，两个代码提案已注册并沿自动链。源自测247文件2604例和冻结经验定向1文件10例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-0935-experience93。
