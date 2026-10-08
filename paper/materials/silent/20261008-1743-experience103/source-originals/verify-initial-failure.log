@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update/verify.py", line 28, in <module>
+    check('两局角色/状态/决策计数',len(B)==628 and len(BD)==594 and len(Y)==518 and len(YD)==496 and all(s['state']['run']['character_id'].lower()=='silent' for s in B+Y),[len(B),len(BD),len(Y),len(YD)])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-170939-experience-update/verify.py", line 10, in check
+    assert condition, (name, data)
+           ^^^^^^^^^
+AssertionError: ('两局角色/状态/决策计数', [628, 594, 517, 496])
