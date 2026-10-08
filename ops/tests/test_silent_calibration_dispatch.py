@@ -1,7 +1,9 @@
 """Fixed dispatch fixtures; no engines, Git mutations or network calls."""
 import importlib.util
 import json
+import os
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -156,6 +158,55 @@ class A10RegressionDispatch(CodexOnlyDispatch):
             self.assertEqual(start.call_args.args[0][-1], self.task)
             self.assertIsNone(self.launch(stamp="duplicate"))
             start.assert_called_once()
+
+
+class CodexBrainCacheDispatch(CodexOnlyDispatch):
+    task = "codex-brain-cache"
+    request_file = jobs.FEATURE_REQUESTS[task]
+
+    def test_cache_request_precedes_pending_a10_without_interrupting_it(self):
+        older = "silent-a10-regression"
+        Path(self.root, jobs.FEATURE_REQUESTS[older]).write_text(json.dumps({
+            **self.request, "task": older, "request_id": "older-a10-request"}))
+        self.state["batches"]["a10"] = {
+            "task": "fix-batch", "learner_task": older, "state": "running", "pid": 40,
+            "feature_request": "older-a10-request",
+            "worktree": str(Path(self.root, ".worktrees", older))}
+        with patch.object(jobs, "available_worktree", return_value=True), patch.object(jobs, "start_learner", return_value=(20, None)) as start:
+            self.assertEqual(self.launch(), ("first-fix-batch", 20))
+            self.assertEqual(start.call_args.args[0][-3:], [
+                "fix-batch", str(Path(self.root, ".worktrees/codex-brain-cache")), self.task])
+            self.assertEqual(self.state["batches"]["a10"]["pid"], 40)
+            self.assertIsNone(self.launch(stamp="duplicate"))
+            start.assert_called_once()
+
+    def test_busy_cache_tree_does_not_fall_back_to_a10_or_normal_fix(self):
+        older = "silent-a10-regression"
+        Path(self.root, jobs.FEATURE_REQUESTS[older]).write_text(json.dumps({
+            **self.request, "task": older, "request_id": "older-a10-request"}))
+        with patch.object(jobs, "available_worktree", return_value=False), patch.object(jobs, "start_learner") as start:
+            self.assertIsNone(self.launch())
+            start.assert_not_called()
+        self.assertEqual(set(self.state["batches"]), {"old-fix"})
+
+    def test_wrapper_accepts_only_authorized_cache_task_scope(self):
+        wrapper = Path(__file__).parents[1] / "codex-ops-learner.sh"
+        # Execute only the real argument guards: no learner, finish, filesystem or engine actions.
+        prefix = wrapper.read_text().split('mkdir -p "$DIR/learner"', 1)[0]
+        env = {**os.environ, "CODEX_OPS_ROOT": self.root}
+        for task, character, tree, transport, expected in (
+                (self.task, "silent", self.task, "fix-batch", 0),
+                (self.task, "ironclad", self.task, "fix-batch", 2),
+                (self.task, "silent", "codex-dev", "fix-batch", 2),
+                (self.task, "silent", self.task, "strategy-proposal", 2),
+                ("codex-brain-cache-extra", "silent", "codex-brain-cache-extra", "fix-batch", 2)):
+            with self.subTest(task=task, character=character, tree=tree, transport=transport):
+                result = subprocess.run([
+                    "bash", "-c", prefix + '\nprintf "guard-passed\\n"\n', str(wrapper),
+                    "fixed-batch", "", character, transport, str(Path(self.root, ".worktrees", tree)), task],
+                    env=env, capture_output=True, text=True, timeout=5)
+                self.assertEqual(result.returncode, expected, result.stderr)
+                self.assertEqual(result.stdout, "guard-passed\n" if expected == 0 else "")
 
 
 class NewFeatureDispatch(unittest.TestCase):

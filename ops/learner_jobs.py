@@ -61,8 +61,9 @@ def start_learner(argv, root, scripts, state_dir, label):
     return proc.pid, None
 WORKTREES = {"experience-update": "exp", "fix-batch": "codex-dev", "strategy-proposal": "codex-dev"}
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
-# Explicit, approved templates and paths only; Roy requested the A10 regression audit first.
+# Explicit, approved templates and paths only; Roy's latest cache request has manual priority.
 FEATURE_REQUESTS = {
+    "codex-brain-cache": "notes/codex-brain-cache-dispatch.json",
     "silent-a10-regression": "notes/silent-a10-regression-dispatch.json",
     "silent-double-boss": "notes/silent-double-boss-dispatch.json",
     "boss-sim-automation": "notes/boss-sim-automation-dispatch.json",

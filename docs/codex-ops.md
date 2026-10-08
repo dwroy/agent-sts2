@@ -56,7 +56,9 @@ bash ops/codex-ops.sh stop [--now]   # 去掉 cron 块 / 停循环；--now 再�
 - 读不到：~/.jev_api_keys、~/.deepseek_api_key、~/.sts2-jev-env*、~/.codex/auth.json、项目里所有 .env / *.env（glob + 磁盘上找到的每个的绝对路径）。
 - ops 额外的（ops/codex/lib.ts `opsExtraRules`）：主检出的 `.git` 可写（codex 默认把可写根里的 .git 设成只读，git 提交会报 index.lock Read-only file system）；`.git/hooks` 和 `.git/config` 只读。Dai 2026-10-05 08:37 授权运维和学习者修改调度器及 broker 文件，main e601de00 已去掉这些文件的只读规则；key、所有 .env 和 codex 登录令牌仍不可读。
 
-Roy 最高优先的 A10 回退排查使用专用模板 `learner/tasks/silent-a10-regression.md`、干净工作树 `.worktrees/silent-a10-regression` 和 `notes/silent-a10-regression-dispatch.json`。请求字段与上述校准相同，`task=silent-a10-regression`；调用既有 `fix-batch` 后据实际批号登记。它优先于其他待派专用请求，保留原任务去重、工作树保护、失败历史及退避，不占用普通修复或策略工作树；没有源码修改的调查不新建游戏版本或补测。
+Roy 的 Codex 大脑缓存排查使用专用模板 `learner/tasks/codex-brain-cache.md`、干净工作树 `.worktrees/codex-brain-cache` 和 `notes/codex-brain-cache-dispatch.json`。请求含 `state=pending`、`task=codex-brain-cache`、`character=silent`、`authorized_by=Roy` 及唯一 `request_id`；调用既有 `fix-batch` 后登记实际批号并将请求标为 `dispatched`。这项最新高优先手动请求排在其他待派专用请求前，不打断已运行任务；去重、忙/脏树拒绝、失败历史、退避及三次上限保持，shell 入口仅新增这个明确授权的任务名。完成沿 `fix-done` / `learner-checks` 通道；派发不改推理强度或题面，不造游戏台账/版本。学习者负责实际原因、修复与真实前后用量；Roy 本条已授权最多四次同题基线/修复实验；沙箱受限时只经固定自测的专用 broker 动作及下一次唤醒白名单执行，缺入口如实 pending，不另设审批。
+
+Roy 最高优先的 A10 回退排查使用专用模板 `learner/tasks/silent-a10-regression.md`、干净工作树 `.worktrees/silent-a10-regression` 和 `notes/silent-a10-regression-dispatch.json`。请求字段与上述校准相同，`task=silent-a10-regression`；调用既有 `fix-batch` 后据实际批号登记。它排在缓存排查后的其他待派专用请求前，保留原任务去重、工作树保护、失败历史及退避，不占用普通修复或策略工作树；没有源码修改的调查不新建游戏版本或补测。
 
 实测（2026-10-04，`tsx ops/codex/main.ts probe <脚本>` 在 ops 配置下跑 shell）：key 文件和 live 的 .env 读不到；项目根、ops/、live 工作树可写，~ 不可写；git 在工作树里提交成功（加 .git 规则之前失败）；hooks、config、调度器文件写不了；tsc、vitest、python 读日志都能跑；gitleaks 在。沙箱有自己的 PID 命名空间（看不到外面的进程，kill 不到）、不联网（127.0.0.1:8080 也连不上，curl exit 7）、调不了 Windows 程序（cmd.exe 报 UtilBindVsockAnyPort）；嵌套的 codex（学习者）因为不联网也跑不了。
 
