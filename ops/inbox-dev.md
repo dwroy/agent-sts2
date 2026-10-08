@@ -267,3 +267,5 @@ fix121034与经验72两次完整tsc0/vitest1均只失败一条旧等待提示reg
 - 2026-10-08 12:41 运维：经验120900原19项并行记录冲突已兜底，仅集成学习者源3958e561原experience.json；实际live 64e82e9874e55823fd524491ecfbae2aa643e7ad、发布5925a43d773d5eecf4442ee4e3e60d39d98ec99d/唯一S1.exp96，main已同步。经验增2改17退0/175 active，18所属数据CLI shipped，五个代码提案已注册并沿自动链，0290/0291纯bug保持未实现。源首轮中断130原件保留、重试248文件2608例通过；最新刷新和并行代码保留，原批完整外部检查单次请求当前running，尚未报新树完整通过。原回报、失败和证据全部保留。回执paper/materials/silent/20261008-1235-experience96。
 
 - 2026-10-08 12:51 运维：经验120900/S1.exp96固定发布5925a43d、树06bca07f完整外部tsc+vitest均exit0，299文件3416例通过、2跳过，已核实结案。main/live原经验blob与唯一版本、18所属数据shipped保持，原failed/merged=null/19项冲突及1257原件SHA保留；五份代码提案沿原自动链。回执 paper/materials/silent/20261008-1250-events/manifest.json。
+
+- 2026-10-08 13:08 运维：T0DGVABPV60U复盘新纯bug silent-0293（turn-solver.ts:2433同线小刀增敏／rollout.ts:1325跨轮临时量清除）属非阻塞，已依学习者原证据追加fix-queue-v4。三提案9c3554ff/f35a311b/4f7d4e42原注册及SHA已核，沿自动链；旧0079重复和0125支持据实保留，未标实现或上线、不承诺修后本局转胜。回执paper/materials/silent/20261008-1305-events。
