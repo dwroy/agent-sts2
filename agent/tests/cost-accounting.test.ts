@@ -17,5 +17,5 @@ it.each([true, false])("accounts fixed component data, subset tokens, resets and
     child.on("close", (code) => resolve({ code, output }));
   });
   expect(result.code, result.output).toBe(0);
-  expect(result.output).toContain("Ran 6 tests");
+  expect(result.output).toContain("Ran 9 tests");
 }, 15_000);
