@@ -10,6 +10,7 @@
 # learner-status, scheduler-status, experience-update <ids>, fix-batch, learner-merge <branch> (fallback event),
 # strategy-proposal <ids> (dispatches a learner proposal), learner-recheck <batch-id> (full checks after a fallback merge),
 # boss-sim-check (check B4/B5 triggers with the live scheduler),
+# codex-brain-cache-probe (one approved frozen double question; no arguments),
 # eval-metrics <character> <ascension> (writes a new Markdown report under paper/materials/<character>/).
 # The broker only runs while a wake runs: outside a wake this times out (exit 124).
 set -u
@@ -19,6 +20,7 @@ BROKER="$DIR/broker"
 default_wait=300
 [ "${1:-}" = eval-metrics ] && default_wait=660
 [ "${1:-}" = learner-recheck ] && default_wait=3760
+[ "${1:-}" = codex-brain-cache-probe ] && default_wait=1320
 WAIT="${CODEX_OPS_DO_WAIT:-$default_wait}"
 [ $# -ge 1 ] || { echo "usage: bash ops/codex-ops-do.sh <action> [arg]" >&2; exit 2; }
 for a in "$@"; do

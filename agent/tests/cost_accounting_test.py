@@ -10,6 +10,9 @@ REPO = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("cost", REPO / "eval/cost.py")
 cost = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cost)
+cache_spec = importlib.util.spec_from_file_location("codex_cache", REPO / "eval/codex_cache.py")
+cache = importlib.util.module_from_spec(cache_spec)
+cache_spec.loader.exec_module(cache)
 CONFIG = json.loads((REPO / "eval/cost-config.json").read_text())
 NOW = "2026-10-05T12:00:00Z"
 
@@ -21,6 +24,55 @@ def quota(reset="2026-10-10T12:00:00Z", percent=20):
 
 
 class Accounting(unittest.TestCase):
+    def test_cache_snapshot_deduplicates_physical_calls_and_excludes_unknown_from_ratio(self):
+        first = {"ts": NOW, "run_id": "A", "question_id": "Q", "thread_id": "T", "attempt": 1,
+                 "ms": 50, "call_ms": 50, "usage": {"inputTokens": 100, "cachedInputTokens": 80, "outputTokens": 30}}
+        second = {**first, "attempt": 2, "ms": 60, "call_ms": 110, "usage": {"inputTokens": 100, "cachedInputTokens": 0}}
+        unknown = {**first, "question_id": "unknown", "ms": 70, "usage": {"inputTokens": 100}}
+        result = cache.summarize([first, first, second, unknown])
+        self.assertEqual(result['physical_calls'], 3)
+        self.assertEqual(result['duplicate_rows'], 1)
+        self.assertEqual(result['cache_unknown_calls'], 1)
+        self.assertEqual(result['cache_hit_ratio_observed'], .4)
+        self.assertEqual(result['zero_cache_calls'], 1)
+        self.assertEqual(result['wall_ms'], 180)
+        self.assertIsNone(cache.summarize([unknown])['cache_hit_ratio_observed'])
+
+    def test_codex_session_usage_matches_exec_and_preserves_missing_cache(self):
+        session = {"inputTokens": 151051, "cachedInputTokens": 121728, "cacheWriteInputTokens": 0,
+                   "outputTokens": 519, "reasoningOutputTokens": 282}
+        expected = cost.tokens({"input_tokens": 151051, "cached_input_tokens": 121728,
+                                "output_tokens": 519, "reasoning_output_tokens": 282})
+        self.assertEqual(cost.tokens(session), expected)
+        self.assertEqual(cost.tokens(session)["total_tokens"], 151570)
+        self.assertTrue(cost.tokens(session)["cache_usage_recorded"])
+        for missing in [{}, {"inputTokens": 100}, {"inputTokens": 100, "cachedInputTokens": None}]:
+            self.assertFalse(cost.tokens(missing)["cache_usage_recorded"])
+        self.assertTrue(cost.tokens({"inputTokens": 100, "cachedInputTokens": 0})["cache_usage_recorded"])
+
+    def test_session_retries_duplicate_rows_and_brain_fallback_do_not_double_count(self):
+        with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as tmp:
+            root = Path(tmp)
+            (root / 'logs').mkdir()
+            def write(name, rows):
+                (root / 'logs' / name).write_text(''.join(json.dumps(r) + '\n' for r in rows))
+            usage = {"inputTokens": 100, "cachedInputTokens": 80, "outputTokens": 30, "reasoningOutputTokens": 20}
+            first = {"ts": NOW, "run_id": "A", "question_id": "Q", "attempt": 1, "thread_id": "T",
+                     "mode": "session", "outcome": "stalled", "ms": 50, "call_ms": 50, "usage": usage}
+            second = {**first, "attempt": 2, "outcome": "answered", "ms": 60, "call_ms": 110}
+            unknown = {"ts": NOW, "run_id": "A", "question_id": "OLD", "attempt": 1, "ms": 70}
+            write('codex-calls.jsonl', [first, first, second, unknown])
+            write('brain.jsonl', [{"ts": NOW, "run_id": "A", "question_id": q, "engine": "codex", "latency_ms": ms,
+                                  "usage": {"inputTokens": 100, "cacheHitTokens": 80, "outputTokens": 30}}
+                                 for q, ms in [('Q', 110), ('OLD', 70)]])
+            events, runs, sources, periods = cost.collect(root, CONFIG, root / 'claude', root / 'codex')
+            events = [e for e in events if e['component'] == 'brain:codex']
+            self.assertEqual(sum(e['calls'] for e in events), 3)
+            self.assertEqual(sum(e['latency_ms'] for e in events), 180)
+            self.assertEqual(sum(e['input_tokens'] for e in events), 300)
+            self.assertEqual(sum(e['cache_hit_tokens'] for e in events), 240)
+            self.assertEqual(sum(e['reasoning_tokens'] for e in events), 40)
+
     def test_cache_and_reasoning_are_subsets_not_extra_tokens(self):
         self.assertEqual(cost.tokens({"input_tokens": 100, "cached_input_tokens": 80, "output_tokens": 30, "reasoning_output_tokens": 20})["total_tokens"], 130)
         self.assertEqual(cost.tokens({"input": 20, "cacheRead": 80, "output": 30, "reasoning": 20}, exclusive=True)["total_tokens"], 130)
