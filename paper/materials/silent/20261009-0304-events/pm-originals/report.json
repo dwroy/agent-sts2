@@ -1,0 +1,45 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "PBUBM0LRTEDD"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "PBUBM0LRTEDD",
+      "where": "agent/src/reflex/card-model.ts:1144",
+      "what": "1费神化+未接同线升级，完整候选14挡而实22挡；普通版已修，升级分支新定位。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0322",
+      "silent-0323"
+    ],
+    "updated": [
+      "silent-0079",
+      "silent-0228",
+      "silent-0028",
+      "silent-0005",
+      "silent-0077",
+      "silent-0255"
+    ],
+    "repeats": [
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-53b3db220508b3d9",
+    "silent-proposal-84d4c469867ba70e",
+    "silent-proposal-46ebe0b559d993ce"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-024302-postmortem/report.md"
+}

@@ -1,0 +1,692 @@
+[
+ {
+  "id": "silent-0087",
+  "ts": "2026-10-05T11:27:03+08:00",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "异蛇头骨在三静默局已见毒雾和直接毒牌施毒额外加1：A4毒雾3实补4，JLN A10普通毒药5实6；9TG1RP5LFAAK A10实验体首T5升级毒药7实8、普通冒泡9实10，毒0→8→18且敌46血不变。女王末T3普通毒雾能力2、每敌实际补3；能力层数不增加、施毒与结算伤害分账，不外推未见阻挡或所有毒牌，不推出遗物独立整战胜因。",
+  "evidence": [
+   {
+    "run": "9YBKCNBFP0X5",
+    "floor": 25,
+    "note": "事件取得异蛇头骨SNECKO_SKULL。",
+    "role": "support",
+    "added": "2026-10-05T11:27:03+08:00"
+   },
+   {
+    "run": "9YBKCNBFP0X5",
+    "floor": 48,
+    "turn": 6,
+    "note": "第6次T5毒雾3层，T6两敌各4毒；T7—T9各7/10/13，末次69→56和288→275。",
+    "role": "support",
+    "added": "2026-10-05T11:27:03+08:00"
+   },
+   {
+    "run": "JLN5SK17W4FQ",
+    "role": "support",
+    "note": "静默日志可比前后帧复核；具体数字、进阶和观察限制见第三十六次增量及silent-snecko-skull-poison-application",
+    "added": "2026-10-06T07:49:54+08:00"
+   },
+   {
+    "run": "9TG1RP5LFAAK",
+    "floor": 49,
+    "turn": 3,
+    "role": "support",
+    "note": "末次持异蛇头骨、毒雾2层，T3开头聚合体从无毒变3毒；女王上一轮4毒结算减1后变6毒，符合补3。后用毒药水聚合体3→10毒，结束只实际结算10、女王实际结算6；没有暴露药水基础数值，不将观察到的加7外推其他牌或阻挡条件。",
+    "added": "2026-10-06T09:26:07+08:00"
+   },
+   {
+    "run": "DPYF2BAA3DKT",
+    "role": "support",
+    "note": "本批只用静默复盘与日志复核；公式、进阶、典型案例和观察限制见第57节对应经验。",
+    "added": "2026-10-07T02:42:49+08:00"
+   },
+   {
+    "run": "YF0LXT1QSTGG",
+    "role": "support",
+    "note": "本轮逐帧核实支持 silent-snecko-skull-poison-application；机制/观察成立，不表示独立整战胜因。",
+    "added": "2026-10-07T19:11:49+08:00"
+   },
+   {
+    "run": "7X0W3U8TVA2A",
+    "floor": 31,
+    "turn": 13,
+    "role": "support",
+    "note": "F29持有异蛇头骨；本局普通致命毒药基础5实加6、普通带毒刺击3实加4。末T13蛇咬7实加8，毒药水给零毒后段7，HP不变；各8/7毒实扣15仍残4/25/18。只补已见施毒/结算组合，不从单组合分离药水基础数值或外推所有交互，不称早喝必胜。281953/281960/282020/282021；288470→288471→288472。",
+    "added": "2026-10-08T04:58:11+08:00"
+   },
+   {
+    "run": "GXNKW8X1XYJP",
+    "floor": 45,
+    "turn": 3,
+    "role": "support",
+    "note": "毒雾能力2每敌实际补3、升级致命毒药一次8；末次毒药水连枷10→17为加7而非加6，末毒17/3/3一次结算成16/2/2。",
+    "added": "2026-10-08T07:06:47+08:00"
+   }
+  ],
+  "first_run": "9YBKCNBFP0X5",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "此前静默复盘及账本未记录异蛇头骨；已有毒雾本体的下一回合施毒观察，不等于此前验证过该遗物增量。",
+  "status": "shipped",
+  "by": "learner:postmortem",
+  "where": {
+   "lessons": [
+    "9YBKCNBFP0X5",
+    "9TG1RP5LFAAK",
+    "7X0W3U8TVA2A",
+    "GXNKW8X1XYJP"
+   ],
+   "experience": [
+    "silent-snecko-skull-poison-application"
+   ],
+   "commits": [
+    "8d420db5c12c1bb050b4b0cc7a6a9af51abca5f5",
+    "cea106c969309528bb0633138cd1ac93a8e98c61",
+    "72a6784f97c7feedcb6b305b79052dab2d5144cf",
+    "2d5846a2a309fd8b9e7231e96cef923cb07f1778",
+    "141df6140cada59c3ad4960fd69aebf0a0749eeb",
+    "5706f2664b8cd841d5c402cdade4a83bb05d794f",
+    "5f0c0515a9dc4de8696f1172af9da17000a79a65",
+    "f90ba577c3111a9cda7bf1cbfebc645c3d036a01",
+    "62b4caf85ded558e5d07ef840ae882d82bc7ae2c",
+    "ee3f13cdb7b79f9f315d596e1b4c90d77e30f344",
+    "532af94889f4f9fccf6112a16175b4fe742fb142",
+    "b98c24f042896e0a0505d3ba805346c6371882ee",
+    "30c527f8479cb91f8d735168fecfa6d388636bcc",
+    "931effaf030df3a30cb9493a08b9abee463157cb",
+    "ad20957345fa54777705dd00a75ab4d60d1d4b49",
+    "c10209e14d2a1a2f3463555fa088684ccdecf856",
+    "31914e4ba652d6e8466a4a99f04128005166ecf2",
+    "b1a9cbdd01f899373e097ad9fd53b54992f1b96a",
+    "21b5842d0804d4b7a9772f1a417cf2b6024eb7e5",
+    "7f6d5b4b6a1d1563ebf662db806eb9f3d18b6172",
+    "3967a731a828411afce7121b50b3861043c90ab3",
+    "1ac1b33b6f752ad5aa7e82429d85ebc20e2021a1",
+    "88afd5dc7fbda9e70dce2c78a572f959ca3d4d71",
+    "7ed2bb0a60e6631541b470d851964d6794b42db1",
+    "9a29582fbf9050353dceccc612aa09bdd940e49a"
+   ],
+   "changelog": [
+    "2026-10-05 静默猎手 第十三次增量：1 局 A4（version 2026-10-05.13，分支 exp-silent，8d420db5）",
+    "2026-10-06 静默猎手 第三十六次增量：1 局 A10（version 2026-10-06.11，分支 exp-silent，2d5846a2）",
+    "2026-10-06 静默猎手 第三十八次增量：1 局 A10（version 2026-10-06.13，分支 exp-silent，5f0c0515）",
+    "2026-10-07 静默猎手 第五十七次增量：2 局 A10（version 2026-10-07.3，分支 exp-silent，532af948）",
+    "2026-10-07 静默猎手 第七十七次增量：2 局 A10（version 2026-10-07.23，分支 exp-silent，ad209573）",
+    "## 2026-10-08 静默猎手 第八十九次增量：2 局 A10（version 2026-10-08.6，分支 exp-silent，b1a9cbdd）",
+    "## 2026-10-08 静默猎手 第九十一次增量：1 局 A10（version 2026-10-08.8，分支 exp-silent，1ac1b33b）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-184216-experience-update/proposal-mechanisms-sl-resources.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/proposal.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261008-010309-strategy-proposal/report.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-044302-postmortem/proposal-poison-potion.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-044302-postmortem/proposal-snakebite-skull.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-053105-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261008-064304-postmortem/proposal-resource-bloodprice.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-071205-experience-update/proposal-mechanisms.md"
+   ]
+  },
+  "asc": 4,
+  "history": [
+   {
+    "ts": "2026-10-05T11:27:03+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T11:43:39+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T12:03:00+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T07:49:54+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T08:04:36+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-06T09:26:07+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-06T09:47:05+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-06T09:59:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T02:42:49+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T03:02:17+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T18:57:26+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-07T19:11:49+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T20:51:44+08:00",
+    "by": "ops:codex",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T01:32:46+08:00",
+    "by": "learner:strategy-proposal",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T04:58:11+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T05:00:43+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T05:03:29+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T05:39:37+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T05:39:38+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T05:58:25+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T06:11:20+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T07:06:47+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T07:08:54+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-08T07:22:13+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T07:22:13+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T07:42:45+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T08:13:20+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.exp91",
+  "effect": null,
+  "notes": [
+   "经验2026-10-05.13固定沙箱自测提交；逐帧/分阶数据见第十三次增量。仅proposed，实际合入后交运维按experience-done登记shipped；不登记异蛇头骨模型bug0086已修。",
+   "运维处理20261005-112812-experience-update完成事件，核实固定源及实际live合入、S1.exp13；源分支及合后沙箱自测通过。保留live首次时序断言失败/回退和一次完整重跑通过历史；按本批经验范围登记，不将0086代码模型或0089新提案记作本批已修。",
+   "静默第三十六次经验增量2026-10-06.11：仅proposed，交运维核实际合入后经CLI登记shipped；保留first_run/prior/repeat及历史。新局JLN5SK17W4FQ A10、旧42局汇总逐行复算；巨兽自爆减力仅一具体分支，单侧蟹增益和轮初自动伤有本角色旧帧；药水使用原文不变，不作整战因果外推。",
+   "08:00 experience-done机械核实第36批经验2026-10-06.11已实际合入live并登记唯一S1.exp36；来源JLN5SK17W4FQ SILENT A10及旧42本角色完局。草稿tsc0/193文件2105例，最终源码及合后tsc0/194文件2112例，原草稿和文字校正历史保留，合后首过。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，0159/S1.strategy6与0153/S1.fix26独立。完整外部补测留后续事件。",
+   "静默第38次增量2026-10-06.13；9TG1RP5LFAAK A10与旧44静默局逐行复算一致。只登记proposed，实际合入由运维据完成事件核实后CLI登记shipped；first_run/prior/repeat及旧上线历史保持。机制分支、可比帧、阶段/换战、SL与血档分母见变更记录。药水原句保持，无新用药规则，无单项整战胜因外推。",
+   "09:55 experience-done机械核实第38批经验2026-10-06.13已实际合入live并登记唯一S1.exp38；来源9TG1RP5LFAAK SILENT A10及旧44本角色完局。源及合后tsc0/195文件2118例（源草稿通过后最终复测、合后首过），七份已提交自动刷新保持。保留学习者first_run/prior/claim/evidence及全部repeat；不倒算已结束局生效、不另设审核，连续Boss投影0163保持原shipped/S1.fix27，与0159/S1.strategy6和0153/S1.fix26独立。完整外部补测留后续事件。",
+   "静默经验2026-10-07.3：仅proposed；首证、先验、旧claim/版本/repeat保持，实际合入后由运维登记shipped。新证据仅非药水部分，无用药规则/替代整战因果。",
+   "02:55 experience-done机械确认20261007-021219-experience-update：源532af948→实际liveb98c24f0→固定发布30c527f8/唯一S1.exp57，main已同步经验2026-10-07.3。沿DPYF2BAA3DKT、CRK2HNYKSCZC SILENT A10及本角色历史，新增1更新19（15补证/1只数字/3压缩）退役0、active128/51683字，无新用药规则。前三轮旧稿各210文件2254例通过但不作定稿凭据，期间SL口径/元数据/步法全角括号n修正及冻结守卫历史保留；第四轮冻结源tsc0/vitest0、210文件2254例，合后首轮tsc0/vitest0、212文件2275例通过，差21例为live既有fix39+strategy9。refresh=[]、知识重叠/冲突0、其他知识保持，无源码/生成器/其他角色改动。临时草稿错误、修正、原第57节/22行proposed/四轮源与合后自测原件保存，非生产代码或最终自测失败。本批仅CLI/by=ops二十二项shipped，首证/先验/claim/全部证据/repeat与历史保持。新增机制映射既有0200，首证LRN0HPZ0FZS1/A0/prior=unknown保持；独立0199及并行0202不纳入或代登记，0201/strategy9、0172/fix39、0197/fix38及其他旧状态/版本保持。完整外部待本批learner-checks，无Roy待定，后台产出及对局继续。",
+   "代码提案 silent-proposal-c59f592f1427a67e → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第77批静默经验仅关联核实证据及源提交；保留claim、先验、旧repeat及历史版本，未登记implemented/shipped。各子公式独立分母，不把整战死亡当机制反例。",
+   "20:34兜底将经验.23/.24累计到.25原blob，真实合入后登记唯一S1.exp79；这里只登记该条经验数据的实际发布，出牌/药水/SL代码提案独立续办，未宣称实现；首证、先验、claim及所有旧历史保持。",
+   "本批20261008-010309逐项处置见proposal.md/report.md；仅懒惰额度有本地已测源码，其余9项具体缺口保留waiting。此行登记proposed和链接，不冒报live实现或shipped；保留原首证、先验、证据和既往上线历史。",
+   "代码提案 silent-proposal-292f6731bdb9b669 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-e09a3905a3922b95 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第89批经验提案预关联；保留原claim、首证、prior、repeat与旧上线历史，机制局部收益和整战因果分开。",
+   "代码提案 silent-proposal-763a4b9d9f17b815 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第89批经验源提交已完成；只登记本批经验与来源，保留原claim/首证/prior/repeat及全部旧上线历史，学习者不标accepted/shipped；三代码提案交独立strategy-proposal。",
+   "经验第89次原数据2026-10-08.5→.6/增1改20退0/161 active，源b1a9cbdd唯一experience.json净blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源原沙箱245文件2586例tsc/vitest0，源码/测试/任务与实际live逐blob等价，仅合原数据不重复沙箱检查，完整外部另续验。原首证/先验/claim及support/repeat/旧状态历史保持；三个combat/potion/SL/terminal/structure提案沿原自动链，数据上线不等于代码已实现。0125结构/护栏提案不在原经验map中，保留原proposed；原out/err/report/failed/17冲突不改。",
+   "20261008-064304-postmortem只补本局核实证据；保留首证/prior/claim/状态/版本与旧历史。本局在现S1.exp90刷新前结束，不算该新版上线后样本；未改代码或登记shipped。",
+   "代码提案 silent-proposal-5a95725089f53cd8 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第91批经验预关联；原claim、first_run、prior、repeat及旧上线历史保持，提交后proposed；源码交独立strategy-proposal。",
+   "代码提案 silent-proposal-29b7b36dffbcb017 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "静默第91批经验数据已提交；代码提案独立strategy-proposal。保留原首证/prior/claim/repeat与历史版本，未标accepted/shipped。",
+   "第91次经验原数据2026-10-08.7→.8/增2改12退0/167 active，源1ac1b33b唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记本所属经验数据shipped。源246文件2598例tsc/vitest0，当前源码/测试/任务与完整外部通过903a1efc逐blob等价，神化六路径及刷新保持。data-only不重复沙箱，不冒报新树通过，完整外部原批另续验。原首证/先验/claim/support/repeat/旧状态历史保持，三个combat/potion/SL/terminal/structure代码提案沿原自动链，数据上线不表示代码提案实现；0279纯bug不在本经验映射中保持原队列，原out/err/report/failed/六冲突不改。"
+  ],
+  "shipped_at": "2026-10-08T08:13:20+08:00"
+ },
+ {
+  "id": "silent-0219",
+  "ts": "2026-10-07T08:25:24+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "蛇咬SNAKEBITE的PoisonPower=7没有进入card-model施毒名单，整线只结算旧毒并把它列未建模。本局末次族母T7预测旧9毒，实际加7成16并结算16，独立少报7；T4另有已知攻击八折少2，不能混作同一根因。与silent-0008已修常规毒牌及silent-0216敌增益覆盖缺口分账，不据此保证修后整场转胜。",
+  "evidence": [
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 2,
+    "turn": 1,
+    "note": "最早已核对蛇咬→生存者候选：0伤、敌仍26/27血、没有毒且列未建模；不是模型已正确计7毒。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   },
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 14,
+    "turn": 1,
+    "note": "普通蛇咬该次实际0费，施放给地精佣兵7毒，回合末25→18、余6毒；免费来源未核定，不作基础费用证据。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   },
+   {
+    "run": "KQQELQSZ382Z",
+    "floor": 17,
+    "turn": 4,
+    "note": "第6次切割→防御→蛇咬完整执行：预测9伤/损16，实18/损16；蛇咬毒5→12新增7被漏掉，切割另被八折少2。当前live card-model.ts:904名单漏SNAKEBITE，:1054只输出非零poison。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   },
+   {
+    "run": "KQQELQSZ382Z",
+    "floor": 17,
+    "turn": 7,
+    "note": "第6次只出蛇咬，代码预测旧9毒；实9→16、结束扣16，独立少报7，无抽牌或药水改线。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "no",
+  "prior_runs": [
+   "KAY522KT5NXR"
+  ],
+  "prior_note": "最早持有蛇咬的静默KAY局F2 T1题面已漏施毒并标未知；只能确认所核对预测未做对，不把后续实际施放推成模型理解。该早期背景整体毒尚未建模，本次定位常规毒模型接入后仍遗漏的独立牌ID，不称旧已修分支回归。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "KQQELQSZ382Z"
+   ],
+   "commits": [
+    "06bb4617e92d4ea5cf75287186223a5b185e4ae3",
+    "36db32170f3c5962f2911ab991d65c3cbfba7c3d",
+    "b51af17aad3587f8c163004c01febc77b66bc897",
+    "0061f599c60537b86263bd783d274858c3876190",
+    "37af5ae0ce265b224d9af69710a78ce935a69139"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-07T08:25:24+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T09:48:26+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T10:17:45+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix43",
+  "effect": null,
+  "notes": [
+   "09:55完成通知运维机械核实：固定源06bb4617e92d4ea5cf75287186223a5b185e4ae3→实际live36db32170f3c5962f2911ab991d65c3cbfba7c3d→发布b51af17aad3587f8c163004c01febc77b66bc897/树192b79ca71d2c99fd2a52c20e10b145c9e617b0f/唯一S1.fix43，main同步37af5ae0ce265b224d9af69710a78ce935a69139；固定记录发布在检查期间遇并行boss合入，锁内记录接入最新live 0061f599c60537b86263bd783d274858c3876190/树583ad9d15b1fc47ae586807bb45a669052d1860f，只改两个版本/决定记录，完整外部以broker锁内树为准。原merged=null、旧知识重叠/失败更正历史保持；锁内保存最新七项刷新、双方决定记录，源自测及固定合后代码补齐检查树data/logs链接后原入口沙箱tsc0/220文件2331例已过，最终发布完整外部另经本批learner-recheck，不提前冒称通过。仅此批所属条目shipped，首证/先验/证据/repeat及旧claim原行/历史保持；既有0216 S1.fix42及boss075131与Codex-only091118独立任务保持，对局继续。"
+  ],
+  "shipped_at": "2026-10-07T10:17:45+08:00"
+ },
+ {
+  "id": "silent-0220",
+  "ts": "2026-10-07T08:25:24+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "mechanic",
+  "claim": "蛇咬保留，普通/升级实加7/10毒，施放不即时扣本体血；普通8局、升级2局共9局有重叠，玩家负力量不減施毒。普通实见2费，KAY早期0费来源未核不外推；毒按实际层数结算后减1、未结算毒不预支，族母六次零赢不证明早打必胜。",
+  "evidence": [
+   {
+    "run": "KAY522KT5NXR",
+    "floor": 14,
+    "turn": 1,
+    "note": "普通蛇咬显示保留/7毒；本次实际0费、施放前后能量0，地精佣兵新增7毒，25血即刻不变，回合末扣7成18且毒剩6。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   },
+   {
+    "run": "KQQELQSZ382Z",
+    "floor": 17,
+    "turn": 4,
+    "note": "末次普通蛇咬牌面2费，施放前5毒/221血、后12毒/221血，回合末209血、余11毒；同手保留与抽到时点核对。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   },
+   {
+    "run": "KQQELQSZ382Z",
+    "floor": 17,
+    "turn": 7,
+    "note": "末次花2能量给7毒，毒9→16，168血行动后不变、结束变152并余15毒。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   },
+   {
+    "run": "KQQELQSZ382Z",
+    "floor": 17,
+    "turn": 11,
+    "note": "首试已负2力量/敏捷，蛇咬仍使毒5→12、结束106→94；随后第二次吸取再降至负4。",
+    "role": "support",
+    "added": "2026-10-07T08:25:24+08:00"
+   },
+   {
+    "run": "VN7RQJMJEFMX",
+    "role": "support",
+    "note": "第67次增量：静默原日志核silent-snakebite-retained-poison非药水证据，实际施放/结算与计划、毒层、SL尝试分别计；支持机制或观察，不认定单卡整战胜因。",
+    "added": "2026-10-07T08:55:29+08:00"
+   },
+   {
+    "run": "8CFMW9SAGFWQ",
+    "role": "support",
+    "note": "第67次增量：静默原日志核silent-snakebite-retained-poison非药水证据，实际施放/结算与计划、毒层、SL尝试分别计；支持机制或观察，不认定单卡整战胜因。",
+    "added": "2026-10-07T08:55:29+08:00"
+   },
+   {
+    "run": "2SU6XN2AEJRD",
+    "role": "support",
+    "note": "第67次增量：静默原日志核silent-snakebite-retained-poison非药水证据，实际施放/结算与计划、毒层、SL尝试分别计；支持机制或观察，不认定单卡整战胜因。",
+    "added": "2026-10-07T08:55:29+08:00"
+   },
+   {
+    "run": "3KME36ADUE4U",
+    "role": "support",
+    "note": "第67次增量：静默原日志核silent-snakebite-retained-poison非药水证据，实际施放/结算与计划、毒层、SL尝试分别计；支持机制或观察，不认定单卡整战胜因。",
+    "added": "2026-10-07T08:55:29+08:00"
+   },
+   {
+    "run": "4Y94N8RDPGPM",
+    "role": "support",
+    "note": "第67次增量：静默原日志核silent-snakebite-retained-poison非药水证据，实际施放/结算与计划、毒层、SL尝试分别计；支持机制或观察，不认定单卡整战胜因。",
+    "added": "2026-10-07T08:55:29+08:00"
+   },
+   {
+    "run": "MGA0CZDDKC0P",
+    "role": "support",
+    "note": "第67次增量：静默原日志核silent-snakebite-retained-poison非药水证据，实际施放/结算与计划、毒层、SL尝试分别计；支持机制或观察，不认定单卡整战胜因。",
+    "added": "2026-10-07T08:55:29+08:00"
+   },
+   {
+    "run": "U8K28UUGYP3U",
+    "role": "support",
+    "note": "第67次增量：静默原日志核silent-snakebite-retained-poison非药水证据，实际施放/结算与计划、毒层、SL尝试分别计；支持机制或观察，不认定单卡整战胜因。",
+    "added": "2026-10-07T08:55:29+08:00"
+   },
+   {
+    "run": "W7BHM8U02RKG",
+    "floor": 17,
+    "turn": 9,
+    "role": "support",
+    "note": "末次T9玩家力量−2时普通蛇咬仍花2能量并加7毒，旧1→8，施放本身不扣本体，触媒1层结束时结算8+7；负力量只见打击6→4、中和3→1，不削这次施毒。",
+    "added": "2026-10-07T12:21:50+08:00"
+   },
+   {
+    "run": "9DAS5L8YM1CN",
+    "floor": 22,
+    "role": "support",
+    "note": "9DAS5L8YM1CN独立实帧支持silent-snakebite-retained-poison；完整数字及反事实限制见20261008-160331报告，不以局部收益冒称整场胜因。",
+    "turn": 2,
+    "added": "2026-10-08T16:15:53+08:00"
+   },
+   {
+    "run": "SY0WMJNNVRLM",
+    "role": "support",
+    "note": "第104批独立原帧/动作复算：silent-snakebite-retained-poison；numbers-checked及extra-numbers-checked记局层回合/数字，历史动作与支持列表分开，不认整场单因。",
+    "added": "2026-10-08T18:00:14+08:00"
+   },
+   {
+    "run": "P2M3DFJ4DEZ3",
+    "floor": 49,
+    "turn": 3,
+    "role": "support",
+    "note": "末试升级蛇咬实际毒2→12、132血不变，结束扣12到120、余11。T5普通蛇咬向女王0→7，410即时不变、末403；负力量不用于本局推断。机制已见与升级模型新缺口分账。",
+    "added": "2026-10-09T02:06:41+08:00"
+   }
+  ],
+  "first_run": "KAY522KT5NXR",
+  "prior": "unknown",
+  "prior_runs": [],
+  "prior_note": "更早静默复盘没有同牌施放的可比证据；KAY是最早持有并核定施放的局。只凭实际加毒不能判断大脑在任何学习前已理解费用、保留与负力量交互。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "KQQELQSZ382Z",
+    "W7BHM8U02RKG",
+    "P2M3DFJ4DEZ3"
+   ],
+   "experience": [
+    "silent-snakebite-retained-poison"
+   ],
+   "commits": [
+    "4c9607962ba442e9440fd2fc9a925df077d93a12",
+    "e0d16d1e8fe350151b8cd223184a2618eed136bd",
+    "dc899f95af670e66bd0735bc3c868aeff60d682e",
+    "a69e431b119c0809535c10413e3301f62f23040d",
+    "908a2ddd93fbce59f9add60bd1b17c2fc2f1a53f",
+    "03d50f0b2ae81f6f1b8800c6471c145580eb4668",
+    "f56da22bda53151e052bb64d0a3339139c4dd550",
+    "2c13137088f94465c027ca815f2ed9a32b1dd832",
+    "7f51464c2c6610ee0a304c4c092a556b5b8ee4cb",
+    "3e5637f6583e83c7348101623ac369b63dd1174b",
+    "187c025aaf27a3d52db651849ac22ce2a83714bb",
+    "a089f044a4bfd358b291943c34a251d46c1f1856",
+    "ee6d95efd7fbb53115962231ee4ed08ea8e6c75b",
+    "4a73f63c4955beeacc39e14fed72cf302d307e82",
+    "c70efc8ca855a756c66ea43cd2dd44bef91a7882",
+    "eeb85b9f65ec15708ba37660cbe5d912095ceac3"
+   ],
+   "changelog": [
+    "## 2026-10-07 静默猎手 第六十七次增量：1 局 A10（version 2026-10-07.13，分支 exp-silent，4c960796）",
+    "2026-10-07 静默猎手 第七十二次增量：1 局 A10（version 2026-10-07.18，分支 exp-silent，908a2ddd）",
+    "2026-10-08 静默猎手 第一百零二次增量：1 局 A10（version 2026-10-08.19，分支 exp-silent，7f51464c）",
+    "## 2026-10-08 静默猎手 第一百零四次增量：1 局 A10（version 2026-10-08.21，分支 exp-silent，ee6d95ef）"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-160331-experience-update/proposal-card-triggers.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/proposal-mechanisms.md",
+    "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/proposal-evidence-correction.md",
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-014301-postmortem/proposal-snakebite-upgrade.md"
+   ]
+  },
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-07T08:25:24+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-07T08:55:29+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T09:21:09+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-07T12:21:50+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-07T13:08:28+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-07T13:35:40+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T16:15:53+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T16:16:39+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T16:31:51+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T17:02:39+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-08T18:00:14+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:00:15+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:03:41+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:03:41+08:00",
+    "by": "learner:experience-update"
+   },
+   {
+    "ts": "2026-10-08T18:19:00+08:00",
+    "by": "learner:experience-update",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-08T18:26:32+08:00",
+    "by": "ops",
+    "status": "shipped"
+   },
+   {
+    "ts": "2026-10-09T02:06:41+08:00",
+    "by": "learner:postmortem"
+   },
+   {
+    "ts": "2026-10-09T02:09:16+08:00",
+    "by": "learner:postmortem"
+   }
+  ],
+  "version": "S1.exp104",
+  "effect": null,
+  "notes": [
+   "09:13完成通知运维机械核实：固定源4c9607962ba442e9440fd2fc9a925df077d93a12→实际livee0d16d1e8fe350151b8cd223184a2618eed136bd→发布dc899f95af670e66bd0735bc3c868aeff60d682e/树bd41fb41cf65daffbdb8fda203af091c21e6173b/唯一S1.exp67，main同步a69e431b119c0809535c10413e3301f62f23040d。原merged=null、旧知识重叠/失败更正历史保持；锁内保存最新七项刷新、双方决定记录，原自测已过，完整合后外部已请求经本批learner-recheck，不提前冒称通过。仅此批所属条目shipped，首证/先验/证据/repeat及旧claim原行/历史保持；0217—0219、boss075131与Codex-only091118独立任务保持，对局继续。",
+   "关联第72批已测静默经验、源提交与变更节；本局support在复盘时已登记，不重复添加。保留原claim、first_run、asc、prior、support/repeat及既往上线历史；仅proposed，实际合入由运维据完成事件核实后登记shipped。",
+   "13:15完成通知运维确认经验.18固定源908a2ddd93fbce59f9add60bd1b17c2fc2f1a53f→实际live03d50f0b2ae81f6f1b8800c6471c145580eb4668→发布f56da22bda53151e052bb64d0a3339139c4dd550/唯一S1.exp72，main机械同步2c13137088f94465c027ca815f2ed9a32b1dd832。原7知识刷新重叠停止未合入留史，锁内仅原已测experience blob保留Codex-only最终等待保护及全部刷新/notes；固定合后代码03d50f0b2ae81f6f1b8800c6471c145580eb4668/树74ce797d1b74e52aab3e7b5d45b738e9e23e9303原沙箱tsc0/vitest1（2000ms计时说明1失败、225文件2394例过），同树同断言单worker SL+paths 2文件22例0，分次覆盖227文件2406例，最终发布完整外部经经验72 broker请求待learner-checks，不冒称已过。仅CLI追加所属状态，首证/先验/claim/全部support/repeat及历史保持，Codex-only新架构没有游戏账本ID不伪造，live已保留ccd8bb8e历史helper日志note修复，独立修复完工后另按完成事件登记，对局继续。",
+   "第102批实帧补证关联；首证/prior/claim与原support/repeat和旧上线历史保留，提交后登记proposed。",
+   "代码提案 silent-proposal-438a0eb4516e7975 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第102批经验提交完成；首证/prior/claim及原证据和旧版本历史保持，实际shipped交运维核live，数据发布不等策略源码实现。",
+   "第一百零二次经验仅原数据.18→.19，源7f51464c增0改16退0/176 active，原251文件2621例tsc/vitest0；actual live/main唯一发布S1.exp102。按原学习者ledger-map仅16所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/32冲突/out/err/失败历史保持。",
+   "第104批提交前经验/证据关联；保留首证/prior/claim及历史状态，提交后登记proposed。",
+   "代码提案 silent-proposal-4c28c13316c0d88e → task=strategy-proposal；Roy-2026-10-07-learning",
+   "代码提案 silent-proposal-edaea6fac5a803c1 → task=strategy-proposal；Roy-2026-10-07-learning",
+   "第104批四份初稿共同SL数字按原帧校正：首试只录22张，后两试26张同序/T4完整同盘；胜试敌20−毒5−荆棘3=12，退场索引重排。保留原提案历史，以补充提案silent-proposal-edaea6fac5a803c1及extra-numbers-checked为准，经验文字与建议不变。",
+   "第104批经验源提交完成；首证/prior/claim/旧状态/版本保持历史，实际shipped交运维核live；经验上线不等策略代码实现。",
+   "第一百零四次经验仅原数据.20→.21，源ee6d95ef增2改16退0/178 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp104。按原学习者ledger-map仅20所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，五combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/21冲突/out/err/失败历史保持。",
+   "代码提案 silent-proposal-cbf5f609bb228ee5 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ],
+  "shipped_at": "2026-10-08T18:26:32+08:00"
+ },
+ {
+  "id": "silent-0319",
+  "ts": "2026-10-09T02:06:40+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "status": "observed",
+  "where": {
+   "lessons": [
+    "P2M3DFJ4DEZ3"
+   ],
+   "proposal": [
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-014301-postmortem/proposal-snakebite-upgrade.md"
+   ]
+  },
+  "kind": "bug-infra",
+  "claim": "升级蛇咬SNAKEBITE的10毒仍未进入同线卡牌模型，普通版7毒已修不表示升级分支覆盖。当前live card-model.ts:938限定未升级且PoisonPower=7，:942只据该布尔值输出毒；本局候选明确把蛇咬+列未建模，实盘同一施放将毒2→12。只定位升级分支，不将混合净清差或整局死亡都归此因。",
+  "first_run": "VN7RQJMJEFMX",
+  "prior": "no",
+  "prior_runs": [
+   "VN7RQJMJEFMX"
+  ],
+  "prior_note": "最早已核A6 F17T3 d220682排打击→蛇咬+仅预计9；s225086→225087实际毒6→16。该升级分支没有做对的更早可比证据，攻击另有1点偏差，不混成蛇咬10毒。旧复盘只记取得、账本0219仅定位普通版。",
+  "evidence": [
+   {
+    "run": "VN7RQJMJEFMX",
+    "floor": 17,
+    "turn": 3,
+    "role": "support",
+    "note": "升级PoisonPower10；s225085—225088毒6→16、179血即时不变、结算163；d220682原线报9，当前开局旧dirty源码未复原。",
+    "added": "2026-10-09T02:06:40+08:00"
+   },
+   {
+    "run": "P2M3DFJ4DEZ3",
+    "floor": 49,
+    "turn": 3,
+    "role": "support",
+    "note": "末试d302596候选15伤／损3、蛇咬+未建模；s310380→310381聚合体2→12毒、132血不变。后弃中和，实净清21／损12包含两种效果，不能都归漏毒。当前live card-model.ts:938／942，普通版0219已修，升级缺口两队列未列。",
+    "added": "2026-10-09T02:06:40+08:00"
+   }
+  ],
+  "asc": 6,
+  "history": [
+   {
+    "ts": "2026-10-09T02:06:40+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-09T02:09:16+08:00",
+    "by": "learner:postmortem"
+   }
+  ],
+  "version": null,
+  "effect": null,
+  "notes": [
+   "代码提案 silent-proposal-cbf5f609bb228ee5 → task=strategy-proposal；Roy-2026-10-07-learning"
+  ]
+ }
+]
