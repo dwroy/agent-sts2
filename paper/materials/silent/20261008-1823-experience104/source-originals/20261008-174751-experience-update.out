@@ -1,0 +1,90 @@
+## 经验库更新回报
+
+- 版本：2026-10-08.20 → 2026-10-08.21；提交：ee6d95ef（分支 exp-silent）；合入：未合入，live 预检出现 21 处并行记录冲突，已停止并保留现场，交运维兜底。
+- 条数：新增 2、更新 16（加证据 16、只改数字 0）、退役 0；active 176 → 178；总长 49,040 字。A8 适用 166 条／44,761 字；A9 适用 167 条／45,045 字。
+- 机制推理：
+  - 与我一战！+ — 玩家加4力、目标加1力，后续攻击兑现 — 1局 — SY0WMJNNVRLM
+  - 罐装幽灵 — 当轮建1无实体，下一轮撤 — 5局 — SY0WMJNNVRLM
+  - 灵动步法 — 敏捷逐张增加牌挡 — 77局 — SY0WMJNNVRLM
+  - 力量／敏捷 — 逐击加伤、逐牌加挡 — 132局 — SY0WMJNNVRLM
+  - 触媒 — 增加毒结算次数，每次减1层 — 49局 — SY0WMJNNVRLM
+  - 爆发 — 本轮额外施放后续技能 — 14局 — SY0WMJNNVRLM
+  - 铜质鳞片 — 按实际攻击次数反伤 — 13局 — SY0WMJNNVRLM
+  - 永冻冰晶 — 每战首次能力补7挡 — 6局 — SY0WMJNNVRLM
+  - 臂甲 — 翻倍战内首张实际牌挡 — 9局 — SY0WMJNNVRLM
+  - 再生 — 逐轮回复、衰减并受上限截断 — 18局 — SY0WMJNNVRLM
+  - 跨幕回血 — 已见A9/A10回复缺失HP的80%，向下取整 — 27局 — SY0WMJNNVRLM
+  - 构筑兑现观察 — 持有能力不等于实际建立 — 131局 — SY0WMJNNVRLM
+  - 沙虫 — 沙坑延长与HP生存分别核验 — 18局 — SY0WMJNNVRLM
+  - 异螨SL观察 — 同盘改目标后第三试获胜，不推固定顺序 — 2局 — SY0WMJNNVRLM
+  - 迷雾 — 群毒与虚弱分账 — 17局 — SY0WMJNNVRLM
+  - 蛇咬 — 施毒与结算、爆发重放分账 — 12局 — SY0WMJNNVRLM
+- 改了的手写知识：无。
+- 测试：tsc 退出码 0；vitest 251 文件／2,627 用例／退出码 0，首次通过，无重跑。
+- 切片大小：整体中位减少 64 字，最大 4,776 字；配对差中位 −16 字。
+- 学习账本：新增无；改成 proposed：silent-0302、0301、0005、0012、0006、0027、0115、0129、0173、0013、0259、0243、0020、0019、0021、0125、0018、0079、0235、0220；退役无；`ledger.py check` 退出码 0。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-08.21",
+  "commit": "ee6d95efd7fbb53115962231ee4ed08ea8e6c75b",
+  "merged": null,
+  "added": 2,
+  "updated": 16,
+  "retired": 0,
+  "active": 178,
+  "mechanisms": [
+    "silent-fight-me-upgraded-dual-strength",
+    "silent-ghost-in-a-jar-current-turn",
+    "silent-footwork-block",
+    "silent-strength-weak-observation",
+    "silent-accelerant-triggers",
+    "silent-burst-next-skills-replay",
+    "silent-bronze-scales-per-hit-thorns",
+    "silent-permafrost-first-power-block",
+    "silent-vambrace-opening-block",
+    "silent-regen-potion-decay-heal",
+    "silent-act-transition-missing-hp-heal",
+    "silent-deck-burst-observation",
+    "silent-insatiable-dual-clock",
+    "silent-myte-toxic-block-sl-observation",
+    "silent-haze-group-poison-weak",
+    "silent-snakebite-retained-poison"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0302", "silent-0301", "silent-0005", "silent-0012",
+      "silent-0006", "silent-0027", "silent-0115", "silent-0129",
+      "silent-0173", "silent-0013", "silent-0259", "silent-0243",
+      "silent-0020", "silent-0019", "silent-0021", "silent-0125",
+      "silent-0018", "silent-0079", "silent-0235", "silent-0220"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-2ea03873248ad65f",
+    "silent-proposal-4c28c13316c0d88e",
+    "silent-proposal-51d8fe5060c677e8",
+    "silent-proposal-4114571d6f0866e1",
+    "silent-proposal-edaea6fac5a803c1"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11ae9-81e8-7cb1-805a-b38d524fa448
+轮数：1；工具调用：command_execution×113 file_change×8
+token：输入 304.7k、输出 52.7k（其中推理 16.2k）、cache 读 9927.9k、cache 写 0（命中 97.0%）
+成本：未提供
+耗时：2136.3 s（墙钟）
+时间：首个事件 3.8 s、模型首个输出 9.8 s、首次工具 14.1 s、末次工具结束 2013.9 s；工具内共 1523.0 s，其余（模型生成、推理、网络）609.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×60；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T17-47-53-01a11ae9-81e8-7cb1-805a-b38d524fa448.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-174751-experience-update.jsonl
