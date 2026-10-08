@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：ZTRGYYMLR8SC（A10，第17层，同族神官T14以13攻击击穿6挡、4血，神官仍剩58血）
+- 新的纯 bug：
+  - 无
+- 写成「未记录」的项：ZTRGYYMLR8SC：完整dirty源码；前五次SL退出帧及末轮实际结算；校准boss时钟及实打／估值比；未执行路线、护栏原线、晚喝／留药的整场反事实。
+- 学习账本：ZTRGYYMLR8SC：新增无；更新 silent-0021、silent-0125、silent-0013、silent-0012、silent-0046、silent-0277（均support，repeat无）；`ledger.py check`退出码0。
+- 代码提案：
+  - 群伤与退场进度：F17T7／T14，账本0021／0012／0046；silent-proposal-43fe170707574455 → strategy-proposal。缺固定击杀顺序的受控胜线。
+  - 护栏与SL执行追踪：F11T3、F17T10／T13，账本0125；silent-proposal-3f5a665dca133a8c → strategy-proposal。原线整场反事实缺失，保留阈值。
+  - 药水与覆甲分源：F6T3、F17T2／T14，账本0013／0277；silent-proposal-0b8ef30de463f317 → strategy-proposal。晚喝与持有价证据不足，保留饮用规则。三项均pending，未实现／上线。
+
+```json
+{"task":"postmortem","appended":["ZTRGYYMLR8SC"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0021","silent-0125","silent-0013","silent-0012","silent-0046","silent-0277"],"repeats":[],"check":0},"code_proposals":["silent-proposal-43fe170707574455","silent-proposal-3f5a665dca133a8c","silent-proposal-0b8ef30de463f317"],"implementation_domains":["combat","potion","sl","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-084303-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a118f6-bc4a-7be3-884e-61681a62e67f
+轮数：1；工具调用：command_execution×43
+token：输入 194.4k、输出 33.8k（其中推理 8685）、cache 读 2798.3k、cache 写 0（命中 93.5%）
+成本：未提供
+耗时：813.6 s（墙钟）
+时间：首个事件 4.4 s、模型首个输出 9.2 s、首次工具 11.5 s、末次工具结束 784.3 s；工具内共 66.2 s，其余（模型生成、推理、网络）743.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×24；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T08-43-05-01a118f6-bc4a-7be3-884e-61681a62e67f.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-084303-postmortem.jsonl
