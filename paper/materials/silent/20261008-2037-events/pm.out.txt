@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：PF90JTU0UZ5M（A10，第22层，两异螨 MYTE：末次T3以1血27挡对19攻击及10毒素留手伤阵亡）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：PF90JTU0UZ5M：完整dirty源码、截断尝试的退出与结算、部分死亡帧及毛伤、内部结算顺序、幕间回血来源、替代打法与喝药时点的整场对照、药水持有价、后续节点资源、boss时钟需要／估计及比值、Jev缓存与实际费用。
+- 学习账本：PF90JTU0UZ5M：新增无；更新 silent-0019、0079、0214、0005、0020、0027、0011、0017、0209、0211、0278、0185、0225（老错 silent-0079，其余support）；`ledger.py check`退出码0。
+- 代码提案：silent-proposal-1a129a730c02e845（F22T1重放多损2血、多伤5；账本0079／0005）；silent-proposal-f6f3783ef2387b07（毒药水加6及完整持牌伤；账本0214／0278／0225）；silent-proposal-2b4575ca64988cfe（连续赢战资源与问号战统计；账本0019／0020／0209／0211／0185）。均关联strategy-proposal，尚未实现；缺少整场对照，保留原规则与限制。
+
+```json
+{"task":"postmortem","appended":["PF90JTU0UZ5M"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0019","silent-0079","silent-0214","silent-0005","silent-0020","silent-0027","silent-0011","silent-0017","silent-0209","silent-0211","silent-0278","silent-0185","silent-0225"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-1a129a730c02e845","silent-proposal-f6f3783ef2387b07","silent-proposal-2b4575ca64988cfe"],"implementation_domains":["combat","potion","sl","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261008-201302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11b6e-6c7f-71f2-abae-6834fefe60c7
+轮数：1；工具调用：command_execution×45
+token：输入 213.1k、输出 39.9k（其中推理 11.5k）、cache 读 4597.1k、cache 写 0（命中 95.6%）
+成本：未提供
+耗时：1435.0 s（墙钟）
+时间：首个事件 3.4 s、模型首个输出 8.5 s、首次工具 11.1 s、末次工具结束 1419.3 s；工具内共 60.8 s，其余（模型生成、推理、网络）1370.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×35；/home/dw/.codex-sts2/sessions/2026/10/08/rollout-2026-10-08T20-13-04-01a11b6e-6c7f-71f2-abae-6834fefe60c7.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261008-201302-postmortem.jsonl
