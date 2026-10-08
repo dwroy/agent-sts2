@@ -1,0 +1,86 @@
+[
+ {
+  "id": "silent-0026",
+  "ts": "2026-10-05T02:01:13+08:00",
+  "by": "learner:postmortem",
+  "character": "silent",
+  "kind": "bug-infra",
+  "claim": "灵动步法给予的敏捷没有在出牌方案内部生效，也未列入rollout持续能力表；已存在于输入状态的敏捷能读到。T082DRCUHRRD F23 T3同一段灵动步法后防御预测5、实际7；更早静默首局也预测10而实际12。需要把本局已经观察的2／3敏捷应用到后续格挡牌及后续回合，不能用默认8分能力价值代替。",
+  "evidence": [
+   {
+    "run": "C48LLXBGKXQ9",
+    "floor": 12,
+    "turn": 2,
+    "note": "所选灵动步法→速度药水→防御整条线预测10格挡；实际灵动步法建立2敏捷，速度药水再加5，共7敏捷，防御实际12。",
+    "role": "support",
+    "added": "2026-10-05T02:01:13+08:00"
+   },
+   {
+    "run": "T082DRCUHRRD",
+    "floor": 23,
+    "turn": 3,
+    "note": "棘刺蟾蜍SPINY_TOAD；打击→灵动步法→防御预测新增5格挡、损2；实际2敏捷使防御10→17，回合实损0。",
+    "role": "support",
+    "added": "2026-10-05T02:01:13+08:00"
+   },
+   {
+    "run": "T082DRCUHRRD",
+    "floor": 48,
+    "turn": 3,
+    "note": "第6次候选包含灵动步法+，但未来增益未模拟；实际到T10才建立3敏捷，T11防御加8、6血+26挡仍挡不住33，不认定提前建立必胜。",
+    "role": "support",
+    "added": "2026-10-05T02:01:13+08:00"
+   }
+  ],
+  "first_run": "C48LLXBGKXQ9",
+  "prior": "no",
+  "prior_runs": [
+   "C48LLXBGKXQ9"
+  ],
+  "prior_note": "首局尚无学习时，F12 T2已选出该能力和格挡方案，但模型始终漏掉新获得的2敏捷；更早复盘仅记录实际机制，未识别此模型缺口。",
+  "status": "shipped",
+  "where": {
+   "lessons": [
+    "T082DRCUHRRD"
+   ],
+   "commits": [
+    "COMMIT",
+    "d8a2b0090ba8145c0b6d20bcae700006f01e2c79",
+    "ccf1fcde1f456c92ab4542710a54338e4bcdcd5c",
+    "00fa8f79aefd590f3ab076090deee0a8e4346c73"
+   ]
+  },
+  "note": "新纯代码缺口；复盘时live agent/src/reflex/card-model.ts:749、816；agent/src/reflex/rollout.ts:992、1852。notes/fix-queue.md及fix-queue-v4.md均未列；原复盘SPINY_TOAD名称与F33即时毒数字已追加勘误。",
+  "asc": 0,
+  "history": [
+   {
+    "ts": "2026-10-05T02:01:13+08:00",
+    "by": "learner:postmortem",
+    "status": "observed"
+   },
+   {
+    "ts": "2026-10-05T04:25:10+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T04:25:53+08:00",
+    "by": "learner:fix-batch",
+    "status": "proposed"
+   },
+   {
+    "ts": "2026-10-05T05:22:46+08:00",
+    "by": "ops",
+    "status": "shipped"
+   }
+  ],
+  "version": "S1.fix3",
+  "effect": null,
+  "notes": [
+   "新纯代码缺口；复盘时live agent/src/reflex/card-model.ts:749、816；agent/src/reflex/rollout.ts:992、1852。notes/fix-queue.md及fix-queue-v4.md均未列；原复盘SPINY_TOAD名称与F33即时毒数字已追加勘误。",
+   "更正上一行的 where.commits 占位符 COMMIT：它不是提交号，应忽略；本次实际修复提交为 d8a2b0090ba8145c0b6d20bcae700006f01e2c79。",
+   "依据fix-done批次20261005-041302-fix-batch及live提交祖先关系确认实际上线；学习者自测后自行合入，运维登记，不另设审核。"
+  ],
+  "shipped_at": "2026-10-05T05:22:46+08:00"
+ }
+]
