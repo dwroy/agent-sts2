@@ -1,0 +1,49 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "LYBHQ1X230ZB"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "LYBHQ1X230ZB",
+      "where": "agent/src/reflex/card-model.ts:929",
+      "what": "普通逃脱计划的固定抽1遗漏，条件格挡未按抽入技能结算；首证回溯LRN0HPZ0FZS1。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0296"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0039",
+      "silent-0005",
+      "silent-0013",
+      "silent-0077",
+      "silent-0196",
+      "silent-0128",
+      "silent-0049",
+      "silent-0232",
+      "silent-0115",
+      "silent-0007",
+      "silent-0142"
+    ],
+    "repeats": [
+      "silent-0296"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-0337a5f076c49d02",
+    "silent-proposal-8e9beeee55eac364"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261008-134301-postmortem/report.md"
+}
