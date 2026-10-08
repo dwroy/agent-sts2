@@ -886,3 +886,11 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 普通队列沿原 silent-proposal-179fd62ad9b2f71b 自动策略链，不另占并发租约。原提案限定学习者已观察静默猎手/A10，按当前战斗可见牌堆文本同步有效凋萎伤害；SL恢复T1重建而不泄漏旧6伤，缺失或冲突文本保留未知边界，不从升级次数猜规则。固定帧298827(3)/298830(弃牌6手空)/298832(入手6)，候选需损33→36且弹射60保持，SL52HP/T1重置、原artifact顺序以及其他角色等价需由学习者验证，自测真实合入后登记实现。
 - 旧repeat silent-0079：F48第3/4试T3同进37HP、敌464HP、artifact2，两线输出同12，但旧线出37HP、SL线出34HP，新增凋萎3血价；24/24失败不证明某一线整场可赢。旧repeat silent-0117：F33T6强制生存者弃牌Jev0.55移走后翻；下一T7在沙坑1/28HP/15挡对28攻触发即死规则SL，第二试多处动作同时改变、T9脱困1→2并以28HP赢，不能把整场胜负仅归因弃牌。保留旧claim/权重及原证据。
 - 另两原提案 silent-proposal-2ae7436286228166（SL可见血价与弃牌）、silent-proposal-de26499e8385f25b（终局药水资源链）沿自动流程；缺受控整场对照不替改SL/药水/终局规则。运维只转录纯bug，不补游戏知识，不登记代码实现、版本或shipped；原报告、14:39勘误和未记录限制见 paper/materials/silent/20261008-1450-postmortem。
+
+### codex 大脑缓存几乎为零：隔离实验续办（2026-10-08 15:28，原 Roy 高优先独立任务）
+
+- 原批20261008-140042已查明并修复成本漏读session camelCase：同冻结86局真实53.2549%，旧统计0.3732%，非后端性能提升。原报告、blocked/merged-null及失败检查保持。source f602fa22→bea18dc7；probe防护76508f8→3119da5f→祖先登记722518cd，原沙箱组合251文件2621例tsc/vitest0，main f4fcd6c8/c970fefb，无游戏行为版本。
+- 新纯工具bug：固定broker动作codex-brain-cache-probe的runner硬编码全局BRAIN_CODEX_HOME=/home/dw/.codex，实际在codex.ts:1001—1002知识隔离检查拒绝全局AGENTS.md。本次exit1/status pending，尚未建立模型session/exec调用、未生成calls trace；原probe-reserved.json、probe-result、attempt/state全部保持，不能删除、重置或重跑原pair。对局不受影响，非卡死。
+- 仅原codex-brain-cache独立续批处理，普通fix/strategy不实现本节。继承Roy原授权，先核已有安全生产run-config/日志中的大脑home与隔离入口，修probe home/启动前检查；不读或复制登录令牌、key、.env，不改全局AGENTS/中央记忆/生产配置，不绕过知识隔离。保留冻结夹具SHA 6c84bfef4438bc164d75901fcf88d6e08aadc2efd9ad64dfbab1f1634257bc98、完整题面/schema、gpt-6.1-sol/high、额度/超时与固定源码门控。
+- 原pair永久预约保留。另建修复pair须独立结果/预约、可验证跨尝试物理调用账本，最多再2次、原总授权最多4次；超时、缺usage或历史不明不能无限重试。固定离线回归核全局home拒绝、安全入口、预约不重开、预算及失败保留；原入口自测合main/live后，下一次白名单加载经固定broker动作实际触发，不接受任意命令/路径/模型。
+- 复用原report/baseline/reconciled及本轮20题生产取样（59.2996%、原high；不同题型/进行中小样本，不作性能/额度因果对比），不重做全历史调查或重复论文/游戏知识台账。受控双问pending，冷缓存原因、费用/额度改善unknown。回执paper/materials/silent/20261008-1507-cache；新续办请求roy-20261008-1342-codex-brain-cache-probe-home，不复派原done请求。
