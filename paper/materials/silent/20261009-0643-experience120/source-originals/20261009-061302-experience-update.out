@@ -1,0 +1,83 @@
+## 经验库更新回报
+
+- 版本：2026-10-09.8 → 2026-10-09.9；提交：01ad28fa（分支 exp-silent）；合入：未合入，20处并行记录冲突，待调用方／运维兜底。刷新数据已保留。
+- 条数：新增0、更新12（加证据12、只改数字0）、退役0；active 192 → 192。正文51464字符；A8适用179条／47818字符，A9适用180条／48102字符。
+- 机制推理：
+  - 组件兑现 — 护栏省血伴随少伤，整战收益未受控 — 151支持／0反例 — KSX97DF5H3NY
+  - 力量与易伤 — 末轮实际攻击45，不能用死亡后标签倒推 — 152支持／0反例 — KSX97DF5H3NY
+  - 余像 — 建立后才补挡，末轮三牌补3 — 32支持／0反例 — KSX97DF5H3NY
+  - 覆甲 — 4／3／2／1／0，末轮不再补挡 — 14支持／0反例 — KSX97DF5H3NY
+  - 蜃景 — 总毒11实补11挡，母体分配另核 — 18支持／0反例 — KSX97DF5H3NY
+  - 直接施毒 — 5→10毒，6血敌结算只计6伤 — 34支持／0反例 — KSX97DF5H3NY
+  - 随机施毒 — 总毒相同不保证母体进度相同 — 20支持／0反例 — KSX97DF5H3NY
+  - 毒雾 — 持续补毒与直接施毒组合实收尾 — 76支持／0反例 — KSX97DF5H3NY
+  - 甲虫成长 — 同伴退场后仍持续加力 — 19支持／0反例 — KSX97DF5H3NY
+  - 跨幕回复 — 38／70实回25至63 — 41支持／0反例 — KSX97DF5H3NY
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 251文件／2627用例／退出0，未重跑；gitleaks退出0。
+- 切片大小：整体中位减少18.5字符；最大5657 → 5639字符。
+- 学习账本：新增无；改成 proposed：silent-0019、0020、0021、0125、0012、0023、0013、0010、0007、0011、0128、0243；退役无；`ledger.py check`退出0。0243层号已追加勘误。
+- 需要 Dai 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-09.9",
+  "commit": "01ad28fae45855f25beb284875de47290de6179b",
+  "merged": null,
+  "added": 0,
+  "updated": 12,
+  "retired": 0,
+  "active": 192,
+  "mechanisms": [
+    "组件兑现与护栏取舍（观察）",
+    "力量、敏捷与现场易伤",
+    "余像建立后的逐牌挡",
+    "护喉甲覆甲耗尽",
+    "蜃景毒总量与真实挡",
+    "直接施毒与剩血截断",
+    "随机施毒分配与母体进度",
+    "持续补毒与直接毒组合",
+    "甲虫醒后成长与同伴退场",
+    "跨幕缺血回复分源"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 2627},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0125",
+      "silent-0012",
+      "silent-0023",
+      "silent-0013",
+      "silent-0010",
+      "silent-0007",
+      "silent-0011",
+      "silent-0128",
+      "silent-0243"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-10edfa9a4c4ebc08",
+    "silent-proposal-5b9756af44ec0dad",
+    "silent-proposal-50fc8708a8026ba9"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal", "structure"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-061302-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a11d93-bc51-7a11-af0a-ab063cc081b7
+轮数：1；工具调用：command_execution×64 file_change×4
+token：输入 220.5k、输出 60.6k（其中推理 29.6k）、cache 读 12377.3k、cache 写 0（命中 98.2%）
+成本：未提供
+耗时：1826.9 s（墙钟）
+时间：首个事件 3.1 s、模型首个输出 9.8 s、首次工具 11.2 s、末次工具结束 1792.1 s；工具内共 1493.9 s，其余（模型生成、推理、网络）330.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×69 wait×12；/home/dw/.codex-sts2/sessions/2026/10/09/rollout-2026-10-09T06-13-03-01a11d93-bc51-7a11-af0a-ab063cc081b7.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-061302-experience-update.jsonl
