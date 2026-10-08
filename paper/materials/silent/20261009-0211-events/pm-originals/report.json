@@ -1,0 +1,54 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "P2M3DFJ4DEZ3"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "P2M3DFJ4DEZ3",
+      "where": "agent/src/reflex/card-model.ts:938",
+      "what": "升级蛇咬10毒未接入同线模型",
+      "new": true
+    },
+    {
+      "run": "P2M3DFJ4DEZ3",
+      "where": "agent/src/reflex/turn-solver.ts:1977",
+      "what": "同线新建坚定不移未翻倍首张卡牌格挡",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0319",
+      "silent-0320",
+      "silent-0321"
+    ],
+    "updated": [
+      "silent-0228",
+      "silent-0268",
+      "silent-0005",
+      "silent-0136",
+      "silent-0024",
+      "silent-0069",
+      "silent-0220",
+      "silent-0057"
+    ],
+    "repeats": [
+      "silent-0268"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-cbf5f609bb228ee5",
+    "silent-proposal-689c132e17b5c70f",
+    "silent-proposal-7932ec26ae1f0185",
+    "silent-proposal-f78e5877198eb14c"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-014301-postmortem/report.md"
+}

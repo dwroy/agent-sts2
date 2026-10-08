@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-014301-postmortem/verify.py", line 28, in <module>
+    assert enemy(310342,'TORCH_HEAD_AMALGAM')['current_hp']==2 and enemy(310348,'TORCH_HEAD_AMALGAM')['is_alive'] is False
+                                                                   ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/learner/runs/20261009-014301-postmortem/verify.py", line 13, in <lambda>
+    enemy=lambda n,id:next(e for e in combat(n)['enemies'] if e['enemy_id']==id)
+                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration

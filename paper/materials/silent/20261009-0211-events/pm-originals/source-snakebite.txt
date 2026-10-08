@@ -1,0 +1,13 @@
+   932	
+   933	  // The Bomb (1ZQJ: in hand four turns, never played, scored 0 as unmodelled): 40 to every enemy at
+   934	  // the end of the 3rd turn.
+   935	  const delayedDamage = cardId === "THE_BOMB" ? dyn(card, "BombDamage") ?? 40 : 0;
+   936	  // KQQELQSZ382Z F17 attempt 6 T7 / KAY522KT5NXR F14 T1, silent-0219: the observed plain card adds seven poison.
+   937	  const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
+   938	    !bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7;
+   939	  // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
+   940	  const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
+   941	    (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
+   942	  const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite || haze ? dyn(card, "PoisonPower") ?? 0 : 0;
+   943	  // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
+   944	  const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;

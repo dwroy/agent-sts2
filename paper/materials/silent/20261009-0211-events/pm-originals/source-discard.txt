@@ -1,0 +1,31 @@
+  1738	      if (serpent === 4 && plays === 1 && serpentTargets.length === 1 && !automatic && card.target !== "random" && card.serpentForm === undefined) {
+  1739	        const victim = serpentTargets[0]!;
+  1740	        if (victim.alive) hitEnemyRaw(next, victim, 4);
+  1741	      } else next.unknown = [...next.unknown, "群蛇形态（随机目标、自动出牌、重放或叠加未验证）"];
+  1742	    }
+  1743	    if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw) {
+  1744	      const id = bandagesDiscard(next, card.discards?.[play], player);
+  1745	      if (id !== null) discarded.push(id);
+  1746	    }
+  1747	    if (card.type === "Attack") attackRelics(next, player);
+  1748	    if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
+  1749	    if (card.type === "Power" && next.permafrostBlock > 0) {
+  1750	      gainBlock(next, next.permafrostBlock, player);
+  1751	      next.permafrostBlock = 0;
+  1752	      if (plays > 1) next.unknown = [...next.unknown, "永冻冰晶（能力重放触发未验证）"];
+  1753	    }
+  1754	    if (card.type === "Skill" && (player.letterOpener || player.tuningFork)) skillRelics(next, player);
+  1755	  }
+  1756	  // T082DRCUHRRD F27 T1 / F9PP859XZ3RJ F37 T2: the old hand is gone before the replacement draw.
+  1757	  // Use the hand at play time, including held/locked/unknown drawn cards, but excluding potion slots.
+  1758	  if (redraw > 0) drawExpected(next, redraw, player);
+  1759	  // After the card: Slow counts it from the next card on (4LGQ T9: counting it too made "Thrash" a
+  1760	  // kill that was 1 short), and Skittish block lands once the card that hit it is done.
+  1761	  if (card.type !== "Potion") next.played += 1;
+  1762	  // Tender: this card is done at full Strength/Dexterity; every later one this turn is N lower.
+  1763	  if (card.type !== "Potion" && (player.tender ?? 0) > 0) {
+  1764	    next.strength -= player.tender ?? 0;
+  1765	    next.tempDex -= player.tender ?? 0;
+  1766	  }
+  1767	  if (card.type === "Skill") next.skillsPlayed += 1;
+  1768	  if (card.type === "Attack") {
