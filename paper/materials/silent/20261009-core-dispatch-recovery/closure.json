@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-09T22:13:01.394123+08:00",
+  "authorized_by": "Roy",
+  "actor": "agent-sts2-watcher",
+  "code_repair": "complete, developer implementation, not delegated to learner",
+  "source_commit": "e04cffa915cfa0b2120f1e087efc0627dae9ad2e",
+  "main_source": "3db9b61ee",
+  "live_source": "27c261281",
+  "live_checked": "fd4c8659736828708789598b7bd1bb9049c6cf94",
+  "fixes": [
+    "registered all-history core learning/verified report completion/native notification",
+    "isolated per-batch fix and strategy worktrees/leases",
+    "preserved legacy candidate handoff removes original-owner-return dependency"
+  ],
+  "additional_blocking_bugs_fixed": [
+    "whole-rollout Node string limit",
+    "status writes lost inside PID namespace"
+  ],
+  "sandbox": {
+    "files": 252,
+    "tests": 2620,
+    "extra_guard_tests": 11,
+    "exit": 0
+  },
+  "host_full": {
+    "files": 304,
+    "passed": 3439,
+    "skipped": 2,
+    "exit": 0,
+    "receipt": "tests/host-full-1.json"
+  },
+  "legacy_candidate_physical_and_index_unchanged": true,
+  "core_learning": {
+    "state": "pending",
+    "dispatch_status": "failed_report_retry_pending",
+    "batches": [
+      {
+        "batch": "20261009-215814-fix-batch",
+        "state": "failed",
+        "pid": 2408026,
+        "rc": 3,
+        "pane": "wJ:pBG"
+      }
+    ],
+    "first_attempt_frozen_run_count": 180,
+    "failure": "watcher manual dispatch inherited codex1; preflight exit3 before model analysis",
+    "recovery": "single existing ops wake request queued; use existing codex-sts2 learner home, preserve failed batch and retire only recovered backoff",
+    "substantive_result_available": false
+  },
+  "ops_runtime": "22:00 herdr wake delivered events and subsequent broker actions succeeded; still processing queued events",
+  "gameplay_source_or_parameters_changed": false,
+  "ops_prompt_changed": false,
+  "existing_timers_changed": false,
+  "observer_scheduled_monitoring_enabled": false,
+  "push_or_play_run": false,
+  "history_policy": "Original failures and bytes retained; host acceptance is a separate record",
+  "draft_correction": "closure-draft-1.json had an invalid manually extended short commit label; canonical source_commit now resolved from git rev-parse; no historical failure changed"
+}

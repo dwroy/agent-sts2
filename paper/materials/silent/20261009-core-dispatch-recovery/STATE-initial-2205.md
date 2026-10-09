@@ -1,0 +1,15 @@
+# 当前状态（2026-10-09）
+
+更新时间：2026-10-09T22:05:09.014142+08:00
+
+本表以现行 docs/learning-protocol.md、docs/codex-ops.md 与近期原件为准；STATE-2026-10-04 是历史状态。完成与故障要结合进程、日志、实际合入/报告证据，不能仅看标签或 pane unknown/idle。
+
+- 角色：Roy 与 xdwin 的 agent-sts2-watcher（sts2-run / wJ:p1，codex1）直接对话。ops 保持既有运维和对局调度，learner 做知识经验学习。Roy 本轮明确授权 watcher 直接实施核心入口相关 bug/架构修复，不交 learner 重做。没有恢复 Claude/桌面观察者、没有新 heartbeat/cron；本 TUI 按 Roy 的消息观察。
+- 本轮纯基础设施修复已经合入：source e04cffa91，main 3db9b61ee，live source 27c261281，材料 live fd4c86597。全历史核心任务/冻结输入/报告完成验收/原生通知 broker 已注册；fix 与 strategy 改为逐批独立工作树和租约；status 查询不再改活批状态；大 Codex 会话的元数据按块读取，避免整串超过 Node 上限。没有游戏规则、知识、参数、模型强度或运维 prompt 变更。
+- 沙箱验收：252 文件/2620 例，另 11 专项例通过；ops TypeScript 检查及精确范围密钥扫描通过。原错误日志、失败完整检查与扫描误报逐项核定均保存。沙箱外完整 tsc+vitest 已后台 nice 启动，结果另立 tests/host-full-1.json，不把沙箱通过冒充外部完成。
+- 旧 20261008-075538-strategy-proposal 候选仍在原 codex-dev：四暂存文件物理/index 字节保持，失败与未上线身份不变。原件、patch、交接和部署后哈希另存。当前授权继任者可在隔离副本恢复，原拥有者返回或旧树清空不再是新任务前提；本轮未应用/上线此候选。
+- 核心组合请求 roy-20261009-historical-core-builds：第一次实际派发 20261009-215814-fix-batch 冻结 180 局，模型题前 exit3；watcher 调用未显式选择既有 learner home，继承 .codex1 全局 AGENTS 被前检拒绝。失败批与冻结180局原件保持，不能标学习完成。已通过标准 wake 要求 ops 在已有 .codex-sts2 环境去重恢复，当前以父请求/learn.json 最新回执为准。
+- ops 大日志原 23 次崩溃历史保留；22:00 新 wake 正常送出5事件，表明新读取路径恢复。首次手工派发还造成一次环境错误 wake（24次累计），不将其当新的大日志失败。后续看实际完成/当前进程与队列，不能据历史计数重复报警。
+- silent:A10 升阶审计已于10-09补验收 done、attempts=3；source batch 20261007-184216-ascension-audit。10-07三批failed原样保持，不重派。闭合回执 paper/materials/silent/20261009-silent-a10-closeout/closure.json，记录2c882bbf8bc2d6901fb41132380e4ec1e188f9c1；原报告未知范围仍未知。
+
+本轮源码、每次失败、部署与恢复证据：paper/materials/silent/20261009-core-dispatch-recovery/。其他正在运行的复盘、经验与boss学习沿原会话闭环；没有打断/重启pane或服务，没有play/push。核心结果须实际报告身份、全量覆盖和内容核实后才能通知Roy；入口上线不是学习结论。
