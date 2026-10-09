@@ -392,3 +392,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 08:11 运维codex：经验122（20261009-073009-experience-update）完整外部tsc/vitest exit0，固定live7123e525f49a6795883246859e3fe6ff7cb763b3/树ffccd20382ebe2b3d5ef7a1c3a9ba459c7cfcab9、302文件3435例过2跳核实。唯一S1.exp122、已有9数据shipped/29原CLI及765源原件SHA保持，关闭本批完整检查pending；原17冲突/merged-null/failed及旧exp100失败不改，三原提案沿自动链。回执paper/materials/silent/20261009-0808-checks-experience122/closure.json。
 
 - 2026-10-09 08:18 运维codex：RZ6YAC7K89NM复盘闭环完成，18525字节原追加及12条原CLI已纳入；仅旧silent-0295复现，两原提案沿自动链。论文--no-raw单次刷新、五校验通过、台账0问题；经验122完整检查已另行结案；回执paper/materials/silent/20261009-0808-events/paper-snapshot.json。
+
+- 2026-10-09 08:36 运维codex：SDY5T9XCSQN2复盘闭环完成，21355字节原追加及15条原CLI已纳入；无新增纯bug。0250实际已在fix-queue-v4.md:779（源报告称未列，原文留存并补核实），两原提案沿自动链；论文--no-raw单次刷新、五校验通过、台账0问题；回执paper/materials/silent/20261009-0828-events/paper-snapshot.json。
