@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/brain-codex.test.ts (32 tests | 1 failed) 16173ms
+     × runs codex exec with only our context: no user config, hooks, memories, plugins or tools; model and effort explicit 117ms
+ ❯ tests/run-config.test.ts (14 tests | 1 failed) 786ms
+     × records Codex's Fast tier with or without an explicit environment setting 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex.test.ts > codex engine > runs codex exec with only our context: no user config, hooks, memories, plugins or tools; model and effort explicit
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/brain-codex.test.ts:172:65
+    170|       'model_reasoning_effort="xhigh"', 'model_reasoning_summary="auto…
+    171|     ]));
+    172|     expect(settings.some((s) => s.startsWith("service_tier="))).toBe(f…
+       |                                                                 ^
+    173|     const disabled = argv.flatMap((arg, i) => (argv[i - 1] === "--disa…
+    174|     expect(disabled).toEqual([...CODEX_DISABLED_FEATURES]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/run-config.test.ts > the row > records Codex's Fast tier with or without an explicit environment setting
+AssertionError: expected '8959c1689d1d' to be '29541b679730' // Object.is equality
+
+Expected: "29541b679730"
+Received: "8959c1689d1d"
+
+ ❯ tests/run-config.test.ts:201:33
+    199|     const standard = logOf({ ...V4_ENV, BRAIN_ENGINE: "codex", BRAIN_E…
+    200|     expect(standard.brain.codex!.service_tier).toBe("priority");
+    201|     expect(standard.config_sha).toBe(row.config_sha);
+       |                                 ^
+    202|     // Not asked: no codex block.
+    203|     expect(logOf(V4_ENV).log.observe(state("RUNX00000013"))!.brain.cod…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 307 passed (309)
+      Tests  2 failed | 3460 passed | 2 skipped (3464)
+   Start at  23:36:57
+   Duration  729.06s (transform 7.97s, setup 16.34s, import 45.88s, tests 1355.41s, environment 33ms)
+
