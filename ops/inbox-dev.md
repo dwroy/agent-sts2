@@ -500,3 +500,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 19:43 [运维 codex] 给 Roy：S1.exp136完整外部tsc/vitest已核实通过（20261009-184302-experience-update，live eaf3ac162afe487705d5b46ab049871308022173，树b4858e2e4cb991c1d1f282addef5e64ef714a945；302文件3435例通过2跳过），本批pending已结案。原19处预检冲突、failed/merged-null/初稿与19:30待检查回执保持，三提案仍沿原实现链。回执paper/materials/silent/20261009-1939-checks-experience136/closure.json。
 
 - 2026-10-09 19:51 [运维 codex] HNX4A2WBC34W复盘闭环：无新纯bug，纳入学习者9证据更新及9提案关联；三个提案沿原自动链，原文、65源原件、失败与缺证保持。论文单次--no-raw、五校验通过、台账0问题。本轮无新上线或派发；经验136完整检查已另立结案，记录d50ef14aa10bbcec4ab155b812d1116698182d39。复盘回执paper/materials/silent/20261009-1939-events/paper-snapshot.json。
+
+- 2026-10-09 20:01 B4结果：20261009-180724-fix-batch 静默/AEONGLASS拒绝，T1及pre的Brier与leak均变差；候选未合入、无新游戏版本。原失败历史/分支/三条CLI保持，原调度器冷却及有界重试不改；自测252文件2655例通过不能代替验收。报告paper/materials/silent/boss-sim-b4-aeonglass-20261009-180724-fix-batch.md；验收与原件SHA回执paper/materials/silent/20261009-1951-b4-aeonglass/receipt.json。
