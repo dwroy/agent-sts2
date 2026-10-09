@@ -1,0 +1,119 @@
+low 39 Counter({48: 19, 49: 8, 45: 3, 12: 1, 15: 1, 17: 1, 27: 1, 30: 1, 36: 1, 38: 1, 43: 1, 46: 1})
+plan总 252 可解析 247 选best 204 有best题 215 选rank1 124 选best added 44 SL替换 16
+总代码 Counter({'combat/plan-continue': 281, 'combat/plan': 97, 'reward/claim': 52, 'map/route-follow': 43, 'combat/lethal': 32, 'reward/proceed': 21, 'combat/least-loss': 15, 'rest/proceed': 11, 'event/leave': 8, 'shop/open': 4, 'shop/leave': 4, 'chest/open': 4, 'chest/relic': 4, 'chest/proceed': 4, 'combat/end_turn': 2, 'map/route-only': 2, 'selection/take into my hand': 2, 'cards/close': 1, 'run/finalize': 1})
+自主与续步
+自主决策 146 Counter({'combat/plan': 97, 'combat/lethal': 32, 'combat/least-loss': 15, 'combat/end_turn': 2}) completed/pending Counter({'completed': 136, 'not dispatched': 9, 'pending (unstable)': 1})
+回合类别 153 Counter({'code,jev': 58, 'jev': 53, 'code': 42}) 执行 146 Counter({'code,jev': 58, 'jev': 53, 'code': 35})
+guard
+311918 48 10 1 combat/plan-choice Jev chose plan 1/4 (毒性爆发+, 斗篷与匕首) with confidence 0.20; code rank 1; HP guard: plan 1 (毒性爆发+, 斗篷与匕首; hp -27) is more than 8 HP over the cheapest line, playing plan 2 (防御, 究极打击 -> 永世沙漏, 打击 -> 永世沙漏, 斗篷与匕首; hp -16) instead
+311974 48 9 2 combat/plan-choice Jev chose plan 3/4 (致命毒药+ -> 永世沙漏, 蛇咬 -> 永世沙漏, 究极打击 -> 永世沙漏, 中和 -> 永世沙漏) with confidence 0.49; code rank 3; HP guard: plan 3 (致命毒药+ -> 永世沙漏, 蛇咬 -> 永世沙漏, 究极打击 -> 永世沙漏, 中和 -> 永世沙漏; hp -18) is more than 8 HP over the cheapest line, playing plan 1 (致命毒药+ -> 永世沙漏, 闪躲翻滚, 究极打击 -> 永世沙漏, 防御, 中和 -> 永世沙漏; hp -0) instead
+312042 48 9 3 combat/plan-choice Jev chose plan 8/10 (回响斩击, 精确切击 -> 永世沙漏, 毒雾+, 带毒刺击 -> 永世沙漏) with confidence 0.63; code rank 8; HP guard: plan 8 (回响斩击, 精确切击 -> 永世沙漏, 毒雾+, 带毒刺击 -> 永世沙漏; hp -9) is more than 8 HP over the cheapest line, playing plan 1 (毒雾+, 带毒刺击 -> 永世沙漏; hp -0) instead
+usage
+jev 319 usage {}
+input_tokens 1904503 deepseek 0
+output_tokens 19246 deepseek 0
+cache_hit_tokens 0 deepseek 0
+reasoning_tokens 0 deepseek 0
+codex 72 usage {}
+input_tokens 6417188 deepseek 6417188
+output_tokens 13363 deepseek 13363
+cache_hit_tokens 3971328 deepseek 3971328
+reasoning_tokens 9301 deepseek 9301
+calls with reason 47 latency 663037
+fallback 0 no_jev 0
+potions all actions
+311313 9 1 None {'action': 'use_potion', 'option_index': 0} Jev chose to drink 无色药水, then re-plan (confidence 0.92) pending (unstable): Action queued but state is still transitioning.
+311324 9 2 None {'action': 'use_potion', 'option_index': 1} continuing the Jev-chosen plan: potion 格挡药水 completed: Action completed.
+311379 15 1 None {'action': 'use_potion', 'option_index': 0, 'target_index': 0} continuing the Jev-chosen plan: potion 易伤药水 -> 化石追踪者 completed: Action completed.
+311483 22 1 None {'action': 'use_potion', 'option_index': 0, 'target_index': 0} continuing the Jev-chosen plan: potion 虚弱药水 -> 棘刺蟾蜍 completed: Action completed.
+311543 29 1 None {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 明耀酊剂 completed: Action completed.
+311581 30 2 None {'action': 'use_potion', 'option_index': 1} Jev chose to drink 技能药水, then re-plan (confidence 0.92) pending (unstable): Action queued but state is still transitioning.
+311611 33 2 1 {'action': 'use_potion', 'option_index': 1} Jev chose to drink 技能药水, then re-plan (confidence 0.97) pending (unstable): Action queued but state is still transitioning.
+311629 33 5 1 {'action': 'use_potion', 'option_index': 1} Jev chose plan 1/2 (potion 力量药水) with confidence 0.48; code rank 1 completed: Action completed.
+311672 36 1 1 {'action': 'use_potion', 'option_index': 1} Jev chose to drink 明晰提取物, then re-plan (confidence 0.27) completed: Action completed.
+311700 38 1 1 {'action': 'use_potion', 'option_index': 1} continuing the Jev-chosen plan: potion 能量药水 completed: Action completed.
+311735 39 2 1 {'action': 'use_potion', 'option_index': 1} continuing the Jev-chosen plan: potion 肌肉药水 completed: Action completed.
+311762 43 1 None {'action': 'use_potion', 'option_index': 1} continuing the Jev-chosen plan: potion 铁心药水 completed: Action completed.
+311784 45 1 None {'action': 'use_potion', 'option_index': 1} Jev chose to drink 技能药水, then re-plan (confidence 0.96) pending (unstable): Action queued but state is still transitioning.
+311845 46 2 None {'action': 'use_potion', 'option_index': 1} continuing the Jev-chosen plan: potion 格挡药水 completed: Action completed.
+311867 48 1 1 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} continuing the Jev-chosen plan: potion 火焰药水 -> 永世沙漏 completed: Action completed.
+311878 48 3 1 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} Jev chose plan 3/4 (potion 毒药水 -> 永世沙漏, potion 力量药水) with confidence 0.96; code rank 3 completed: Action completed.
+311879 48 3 1 {'action': 'use_potion', 'option_index': 1} continuing the Jev-chosen plan: potion 力量药水 completed: Action completed.
+311929 48 1 2 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} continuing the Jev-chosen plan: potion 毒药水 -> 永世沙漏 completed: Action completed.
+311930 48 1 2 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} continuing the Jev-chosen plan: potion 火焰药水 -> 永世沙漏 completed: Action completed.
+311966 48 7 2 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 力量药水 completed: Action completed.
+311994 48 1 3 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} Jev chose plan 1/3 (potion 火焰药水 -> 永世沙漏) with confidence 0.23; code rank 1 completed: Action completed.
+312008 48 3 3 {'action': 'use_potion', 'option_index': 1} Jev chose plan 3/8 (potion 力量药水, 究极打击 -> 永世沙漏, 中和 -> 永世沙漏, 精确切击 -> 永世沙漏) with confidence 0.62; code rank 3 completed: Action completed.
+312022 48 5 3 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} continuing the Jev-chosen plan: potion 毒药水 -> 永世沙漏 completed: Action completed.
+312059 48 1 4 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} Jev chose plan 1/3 (potion 火焰药水 -> 永世沙漏) with confidence 0.31; code rank 1 completed: Action completed.
+312073 48 4 4 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} Jev chose plan 1/2 (potion 毒药水 -> 永世沙漏) with confidence 0.08; code rank 1 completed: Action completed.
+312098 48 8 4 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 力量药水 completed: Action completed.
+312112 48 1 5 {'action': 'use_potion', 'option_index': 1, 'target_index': 0} Jev chose plan 1/3 (potion 火焰药水 -> 永世沙漏) with confidence 0.23; code rank 1 completed: Action completed.
+312129 48 3 5 {'action': 'use_potion', 'option_index': 0, 'target_index': 0} continuing the Jev-chosen plan: potion 毒药水 -> 永世沙漏 completed: Action completed.
+312130 48 3 5 {'action': 'use_potion', 'option_index': 1} Jev chose plan 1/2 (potion 力量药水) with confidence 0.88; code rank 1 completed: Action completed.
+312181 49 1 3 {'action': 'use_potion', 'option_index': 0} continuing the Jev-chosen plan: potion 敏捷药水 completed: Action completed.
+312190 49 1 4 {'action': 'use_potion', 'option_index': 0} Jev chose plan 2/6 (肾上腺素+, potion 敏捷药水, 打击 -> 实验体 #C68) with confidence 0.26; code rank 2; SL explore (the deviation's turn, T1): playing potion 敏捷药水 instead of 肾上腺素+, potion 敏捷药水, 打击 -> 实验体 #C68, which may end the turn after its draw with the plays attempts 1, 2, 3 had through the deviation point (the pick's turn may end as a failed attempt's after its draw (its plays up to the draw are within one); the best untried line by the question's ranking, among those the rollout does not see dying more often) completed: Action completed.
+312214 49 2 6 {'action': 'use_potion', 'option_index': 0} continuing the code-chosen plan: potion 敏捷药水 completed: Action completed.
+belt deltas
+None F 3 T 4 s319597→s319598 [] [[0, 'COLORLESS_POTION']] 重启 False 2026-10-09T02:39:06.069Z
+None F 7 T None s319619→s319620 [[0, 'COLORLESS_POTION']] [[0, 'COLORLESS_POTION'], [1, 'BLOCK_POTION']] 重启 False 2026-10-09T02:40:54.668Z
+3 F 9 T 1 s319627→s319628 [[0, 'COLORLESS_POTION'], [1, 'BLOCK_POTION']] [[1, 'BLOCK_POTION']] 重启 False 2026-10-09T02:41:24.691Z
+3 F 9 T 2 s319638→s319639 [[1, 'BLOCK_POTION']] [] 重启 False 2026-10-09T02:41:38.981Z
+None F 12 T 3 s319679→s319680 [] [[0, 'VULNERABLE_POTION']] 重启 False 2026-10-09T02:43:06.419Z
+5 F 15 T 1 s319695→s319696 [[0, 'VULNERABLE_POTION']] [] 重启 False 2026-10-09T02:44:15.918Z
+None F 20 T 2 s319790→s319791 [] [[0, 'WEAK_POTION']] 重启 False 2026-10-09T02:48:23.536Z
+9 F 22 T 1 s319804→s319805 [[0, 'WEAK_POTION']] [] 重启 False 2026-10-09T02:49:16.492Z
+None F 27 T 3 s319855→s319856 [] [[0, 'RADIANT_TINCTURE']] 重启 False 2026-10-09T02:51:52.157Z
+11 F 29 T 1 s319867→s319868 [[0, 'RADIANT_TINCTURE']] [] 重启 False 2026-10-09T02:52:55.023Z
+11 F 29 T 3 s319879→s319880 [] [[0, 'POISON_POTION']] 重启 False 2026-10-09T02:53:15.216Z
+None F 29 T 6 s319892→s319893 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'SKILL_POTION']] 重启 False 2026-10-09T02:53:41.736Z
+12 F 30 T 2 s319908→s319909 [[0, 'POISON_POTION'], [1, 'SKILL_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T02:54:26.730Z
+None F 30 T 4 s319918→s319919 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'SKILL_POTION']] 重启 False 2026-10-09T02:55:02.073Z
+13 F 33 T 2 s319939→s319940 [[0, 'POISON_POTION'], [1, 'SKILL_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T02:56:59.542Z
+13 F 33 T 5 s319953→s319954 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] 重启 False 2026-10-09T02:57:30.282Z
+13 F 33 T 5 s319958→s319959 [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T02:57:34.738Z
+None F 35 T 3 s319992→s319993 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'CLARITY']] 重启 False 2026-10-09T02:59:02.598Z
+15 F 36 T 1 s320003→s320004 [[0, 'POISON_POTION'], [1, 'CLARITY']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T02:59:37.997Z
+None F 37 T None s320020→s320021 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'ENERGY_POTION']] 重启 False 2026-10-09T03:01:23.805Z
+16 F 38 T 1 s320034→s320035 [[0, 'POISON_POTION'], [1, 'ENERGY_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:01:39.592Z
+17 F 39 T 1 s320058→s320059 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'FLEX_POTION']] 重启 False 2026-10-09T03:02:46.381Z
+17 F 39 T 2 s320073→s320074 [[0, 'POISON_POTION'], [1, 'FLEX_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:03:07.780Z
+None F 39 T 3 s320080→s320081 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'HEART_OF_IRON']] 重启 False 2026-10-09T03:03:21.320Z
+18 F 43 T 1 s320102→s320103 [[0, 'POISON_POTION'], [1, 'HEART_OF_IRON']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:05:07.939Z
+19 F 45 T 1 s320122→s320123 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'SKILL_POTION']] 重启 False 2026-10-09T03:06:22.014Z
+19 F 45 T 1 s320126→s320127 [[0, 'POISON_POTION'], [1, 'SKILL_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:06:26.282Z
+None F 45 T 11 s320173→s320174 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'BLOCK_POTION']] 重启 False 2026-10-09T03:08:07.339Z
+20 F 46 T 2 s320188→s320189 [[0, 'POISON_POTION'], [1, 'BLOCK_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:08:52.732Z
+20 F 46 T 3 s320194→s320195 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] 重启 False 2026-10-09T03:09:03.274Z
+21 F 48 T 1 s320213→s320214 [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:10:05.549Z
+21 F 48 T 3 s320226→s320227 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] 重启 False 2026-10-09T03:10:25.501Z
+21 F 48 T 3 s320228→s320229 [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] [[1, 'STRENGTH_POTION']] 重启 False 2026-10-09T03:10:27.739Z
+21 F 48 T 3 s320229→s320230 [[1, 'STRENGTH_POTION']] [] 重启 False 2026-10-09T03:10:28.926Z
+None F 48 T 1 s320282→s320283 [] [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] 重启 True 2026-10-09T03:12:02.823Z
+22 F 48 T 1 s320287→s320288 [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] [[1, 'FIRE_POTION']] 重启 False 2026-10-09T03:12:36.358Z
+22 F 48 T 1 s320288→s320289 [[1, 'FIRE_POTION']] [] 重启 False 2026-10-09T03:12:37.122Z
+22 F 48 T 6 s320321→s320322 [] [[0, 'STRENGTH_POTION']] 重启 False 2026-10-09T03:14:00.604Z
+22 F 48 T 7 s320330→s320331 [[0, 'STRENGTH_POTION']] [] 重启 False 2026-10-09T03:14:25.764Z
+None F 48 T 1 s320356→s320357 [] [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] 重启 True 2026-10-09T03:15:16.250Z
+23 F 48 T 1 s320362→s320363 [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:15:56.759Z
+23 F 48 T 3 s320378→s320379 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] 重启 False 2026-10-09T03:16:50.378Z
+23 F 48 T 3 s320381→s320382 [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:17:12.643Z
+23 F 48 T 5 s320397→s320398 [[0, 'POISON_POTION']] [] 重启 False 2026-10-09T03:17:52.869Z
+None F 48 T 1 s320435→s320436 [] [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] 重启 True 2026-10-09T03:19:14.441Z
+24 F 48 T 1 s320441→s320442 [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:19:55.127Z
+24 F 48 T 4 s320459→s320460 [[0, 'POISON_POTION']] [] 重启 False 2026-10-09T03:21:35.821Z
+24 F 48 T 8 s320484→s320485 [] [[0, 'STRENGTH_POTION']] 重启 False 2026-10-09T03:22:43.533Z
+24 F 48 T 8 s320490→s320491 [[0, 'STRENGTH_POTION']] [] 重启 False 2026-10-09T03:22:54.249Z
+None F 48 T 1 s320502→s320503 [] [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] 重启 True 2026-10-09T03:23:27.238Z
+25 F 48 T 1 s320508→s320509 [[0, 'POISON_POTION'], [1, 'FIRE_POTION']] [[0, 'POISON_POTION']] 重启 False 2026-10-09T03:24:08.551Z
+25 F 48 T 3 s320526→s320527 [[0, 'POISON_POTION']] [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] 重启 False 2026-10-09T03:25:27.409Z
+25 F 48 T 3 s320529→s320530 [[0, 'POISON_POTION'], [1, 'STRENGTH_POTION']] [[1, 'STRENGTH_POTION']] 重启 False 2026-10-09T03:25:30.262Z
+25 F 48 T 3 s320530→s320531 [[1, 'STRENGTH_POTION']] [] 重启 False 2026-10-09T03:25:31.031Z
+28 F 49 T 1 s320585→s320586 [] [[0, 'DEXTERITY_POTION']] 重启 False 2026-10-09T03:29:13.063Z
+28 F 49 T 1 s320590→s320591 [[0, 'DEXTERITY_POTION']] [] 重启 False 2026-10-09T03:29:22.174Z
+29 F 49 T 1 s320596→s320597 [] [[0, 'DEXTERITY_POTION']] 重启 False 2026-10-09T03:29:41.784Z
+29 F 49 T 1 s320600→s320601 [[0, 'DEXTERITY_POTION']] [] 重启 False 2026-10-09T03:29:49.932Z
+30 F 49 T 1 s320607→s320608 [] [[0, 'DEXTERITY_POTION']] 重启 False 2026-10-09T03:30:10.406Z
+None F 49 T 1 s320612→s320613 [[0, 'DEXTERITY_POTION']] [] 重启 True 2026-10-09T03:30:26.683Z
+31 F 49 T 1 s320619→s320620 [] [[0, 'DEXTERITY_POTION']] 重启 False 2026-10-09T03:30:36.494Z
+31 F 49 T 2 s320626→s320627 [[0, 'DEXTERITY_POTION']] [] 重启 False 2026-10-09T03:30:46.596Z

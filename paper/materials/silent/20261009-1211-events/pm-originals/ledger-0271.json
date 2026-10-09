@@ -1,0 +1,56 @@
+{
+ "id": "silent-0271",
+ "ts": "2026-10-08T03:27:26+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "静默A10首boss已可由回合末毒结束时，求解器visit在evaluate.winsFight处立即停止扩展，遗漏同轮仍可打的防御候选，连战HP估值无法比较未生成的方案。XTSV1U9JD34T F48T8自动空斩杀结束时，32血先被手中9伤凋萎扣至23再赢，23血无恢复进入F49。旧0213已经处理毒胜前持牌伤的存活判断，此项是存活情况下的保血候选搜索缺口；只定位当前live，不宣称修复可通关。",
+ "evidence": [
+  {
+   "run": "XTSV1U9JD34T",
+   "floor": 48,
+   "turn": 8,
+   "role": "support",
+   "note": "decisions:280547 combat/lethal为空并end_turn；states:286893为32HP/0挡/5E、54毒对132HP、9伤WITHER且防御/触不可及/手上技法可打，286894胜后23HP，286896 F49入场23HP。当前live turn-solver.ts:3764遇winsFight即return，combat-plan.ts:3293/:3296取无药胜线自动执行。",
+   "added": "2026-10-08T03:27:26+08:00"
+  }
+ ],
+ "first_run": "XTSV1U9JD34T",
+ "prior": "unknown",
+ "prior_runs": [],
+ "prior_note": "按剪枝、必胜、斩杀后、提前结束及斩杀/凋萎关键词检索silent账本、同角色早复盘及两份fix-queue，未找到同一已定位搜索早停且后续boss需资源的可比行为。已有silent-0213为毒胜前致死持牌伤结算，silent-0228为连战资源目标，均非本次早停根因；不借其他角色或未核动作推先验。",
+ "status": "observed",
+ "where": {
+  "lessons": [
+   "XTSV1U9JD34T"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-031301-postmortem/proposal-poison-win-search.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/proposal-replay.md"
+  ]
+ },
+ "note": "来源任务20261008-031301-postmortem；只读复盘，代码版本03f4ffe0+dirty，定位live 6c3d8187c205c6062ecd939cc93d09bbe34bafd6。新bug，两份fix-queue无此项；替代候选保血量及后场胜负等待独立strategy-proposal固定回放验证。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-08T03:27:26+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-08T03:30:19+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T03:41:39+08:00",
+   "by": "learner:experience-update"
+  }
+ ],
+ "version": null,
+ "effect": null,
+ "notes": [
+  "来源任务20261008-031301-postmortem；只读复盘，代码版本03f4ffe0+dirty，定位live 6c3d8187c205c6062ecd939cc93d09bbe34bafd6。新bug，两份fix-queue无此项；替代候选保血量及后场胜负等待独立strategy-proposal固定回放验证。",
+  "代码提案 silent-proposal-d60691b060dfc40a → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-0129c465c6f5bd79 → task=strategy-proposal；Roy-2026-10-07-learning"
+ ]
+}

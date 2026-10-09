@@ -1,0 +1,590 @@
+{
+  "timestamp": "2026-10-09 12:19",
+  "base_head": "2c20831c40a6664306c030ea299640744c24740c",
+  "batch": "20261009-114302",
+  "runs": [
+    "JBX9JLH46KVN"
+  ],
+  "originals": {
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/JBX9JLH46KVN-resources.json": {
+      "bytes": 1095691,
+      "sha256": "3cd7cc82a62afca671d7b7315f8f137a9cd8ff746ea6d41b1e8812d1705919e2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/analysis-failures.md": {
+      "bytes": 1288,
+      "sha256": "a011664763d43e7868fbb5d296316fdb9ce3db81ee40fdd9732bc832daf7e29b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/analyze.py": {
+      "bytes": 1078,
+      "sha256": "e6aa462c70eb77d654541291a43382f2567bb5092505a5c98d9b1ff212af9046"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/append.sh": {
+      "bytes": 32987,
+      "sha256": "a1cbf1c37831fea526b5f1376a0dad98ff1e27627af5bfbe4d5bef973efb987a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/brain-short.txt": {
+      "bytes": 130439,
+      "sha256": "d7ce4fca6ba70f2595bfef65ae98c1bae70afb5431d32c4da9168e133063097b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/brain.txt": {
+      "bytes": 134265,
+      "sha256": "24482076f3a560d6c61bdf5d1dc023ef8c135df778a1b1517dfbc006e44ceb25"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/build_tables.py": {
+      "bytes": 5153,
+      "sha256": "27c7932c6beaa1c9fc3cdac5d63b1b95247b3453472d0fbf1ef91ad8f697bcdc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/decisions.match": {
+      "bytes": 4392975,
+      "sha256": "a39ebbd7c9ee434e507c6706c2a8c33849ae34e9f5059ac503c304021e86a213"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/deepseek-window-audit.json": {
+      "bytes": 291,
+      "sha256": "87e2dd3fda431c40de2d614d9c47b51a746bee6d6862385eb3a31fc17a44fdb6"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/deepseek-window-complete-audit.json": {
+      "bytes": 390,
+      "sha256": "abd59da6872a4a7fd48ad4471c062b60a7d5fc9a54c0a2ccb0135c401a3a6b9b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/deepseek-window-complete.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/deepseek-window.jsonl": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/details-output.txt": {
+      "bytes": 22584,
+      "sha256": "3c97d204d8c8c6a6e466f61882179d501749c4baeebadbee0d6076d3053412b5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/details.py": {
+      "bytes": 2339,
+      "sha256": "2584ddddaeaedf8c5455e168ece1e94e66303d45251203742588ca74f7652b31"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/draft-v1.md": {
+      "bytes": 32644,
+      "sha256": "4ad9808f65ea6d1b8a585478ba2dc3dee06a5f536857d18db775cc3185b2e9f3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/draft-v2.md": {
+      "bytes": 32728,
+      "sha256": "fe61a8740acdfd68124c35d030693941918cef8ac12a6e8e732037d0d5576e00"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/key-states.txt": {
+      "bytes": 71034,
+      "sha256": "22b4adcf835eeae7ba86c72ab80b0daf68f9e3f3c70f4068fcaeccaf29b9d94c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-0028.json": {
+      "bytes": 36625,
+      "sha256": "92be15187b420162a76618d3c047491ca135d54d9f28b7f178a3f4141e329a68"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-0228.json": {
+      "bytes": 35244,
+      "sha256": "72aa95f3724ba3427d0cc35f5e1a3987eeebb46c9fc0bb850603357d7a3c56b5"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-0271.json": {
+      "bytes": 2942,
+      "sha256": "c76e472c28c39d929d11e257cf9d07644aa145835aca98a99189443725c80f05"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-check-exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-check-final.txt": {
+      "bytes": 94,
+      "sha256": "da4d51332b02548c545e049ef3c2cd017d713d667ed20e47b18b7e06308cea8e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-cli-results.txt": {
+      "bytes": 132,
+      "sha256": "92033be903bf6a448951d6f474613cd47d6a634035253f091b1579b956f9351b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-find-final.txt": {
+      "bytes": 4694,
+      "sha256": "afd9b668cc65a38888e101ab1949698f1ccb0f815979ca5bca719b27c7807014"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-ADAPTABLE.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-ENRAGE.json": {
+      "bytes": 195042,
+      "sha256": "f3c8a702ed29d4b0fc655127f5ad3027fdded08ac8db275befb759a851a1289d"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-lethal.json": {
+      "bytes": 1723837,
+      "sha256": "30d8ca8f1d53a4d946ab550a382a7c46d4f07e36adfa8742fe2446c91a46a2fe"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-mirage.json": {
+      "bytes": 60767,
+      "sha256": "7e443d474eb096977e4e430b3e4266e2469bee092ff1f7bf4704f0a01db30a47"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-stop.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-凋萎.json": {
+      "bytes": 2827023,
+      "sha256": "7cfec2696d787ef600a52323ef10c07ab249d16d40d86f0c92a32edf20efbd30"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-增强强度.json": {
+      "bytes": 189981,
+      "sha256": "36f3928928d646745ff693a264afcb76447877f767f0d8d4116f10d2c71a9506"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-护栏.json": {
+      "bytes": 2880059,
+      "sha256": "e57326fcf4f659f93419827bbe3090cddebdc35d584d5e2c1c3dafba37439bb4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-终局.json": {
+      "bytes": 2373765,
+      "sha256": "476e41e07ef07dd82120e571835eb1762b735465acf53ade86a5440b49d90ace"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-search-蜃景.json": {
+      "bytes": 1500827,
+      "sha256": "6edc80366e92d60e44230f72a9c3f51c5a120a494d8221c930a8d31f241113c4"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/ledger-update-ids.json": {
+      "bytes": 190,
+      "sha256": "cb657f11f24a65312b36282fe244b6bbb6e21084c794e4d21f92a2357e454126"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/lessons-before.json": {
+      "bytes": 103,
+      "sha256": "e8fd87d81d7bec592aad2dfa4d6b4672791b0d975aac2793fe44d8617ae9e45e"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/numbers-audit-v1.json": {
+      "bytes": 72721,
+      "sha256": "cdcc2f900df50b9e677dac9b0d1f36c0467c77cabef27f1180a57de072dff19a"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/numbers-post-append.txt": {
+      "bytes": 331,
+      "sha256": "c492d46c9618ce826b828291539e5a1ef89d48a7e29f0f906eb20a9730ed3bd7"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/overview.txt": {
+      "bytes": 383438,
+      "sha256": "f7884a09fc92bee008668cbe0ce97daf7f350677dd53adba43ae64954d997042"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/plans-short.txt": {
+      "bytes": 17986,
+      "sha256": "1b57640a7301ad386e0f440da987b22b5cddc12c591ffd5ba120f23d7ffe1ea2"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/post-append-audit.json": {
+      "bytes": 463,
+      "sha256": "929747d04a6fa7e05cccf8c927eaecc872fab42af0bcd3ab9a47e5df74fc01cc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/potion-table.md": {
+      "bytes": 4381,
+      "sha256": "f3f752561a1cece93c3c095efe28c510e7d7510a706befd152364a76c75e9452"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-poison-win-search-cli.json": {
+      "bytes": 33,
+      "sha256": "6288e1cf24262bf450f60cf9e2357c9ef0f373b4f5a4297d9f4aaaf3df52156b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-poison-win-search.json": {
+      "bytes": 563,
+      "sha256": "bf53f827cb285b322da1a1d6f02a3897fe4ea3c9750afc144b7e3476abebfe97"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-poison-win-search.md": {
+      "bytes": 3488,
+      "sha256": "1ce3802c985bc7b619703cf5dfd2edb12e1ac6001a5a60c87bfe563a34f21c33"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-skill-potion-continuation-cli.json": {
+      "bytes": 33,
+      "sha256": "e70d6c4b6e3b35b6b6f2d860e6bd95547a44b97e91e12e7fa6497afd7e326290"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-skill-potion-continuation.json": {
+      "bytes": 681,
+      "sha256": "f4de8840ae8fa305244d0b233da199e9f34f8fcbd16e652aa1f7c297de14e0bc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/proposal-skill-potion-continuation.md": {
+      "bytes": 4357,
+      "sha256": "2ef67a32946ccf9ede4485d7326b593b0db247e9221c688faa117d9caaaf0da1"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/report.json": {
+      "bytes": 975,
+      "sha256": "3cf0cf2f9b3dee59f0ddf1f9746849464b29b8b6c5af216213773cbc5c6f7c10"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/report.md": {
+      "bytes": 2103,
+      "sha256": "6f847844620f63c9949e910b956bb4fca0fde058f7e543805a4dd5616a52e145"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/resource-table.md": {
+      "bytes": 6931,
+      "sha256": "0c8527b058e6d6f76e2284d9d3db392e5e6367fb7bcdf00b6b6ea5dc880c98ee"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/run-plans.match": {
+      "bytes": 16929,
+      "sha256": "208f33c8af01b63e737ee5f0ec424c98afa7c3d2180e746f3ebc00390b3c2080"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/sl-attempts.match": {
+      "bytes": 340989,
+      "sha256": "f005559416b8c17f82f108bbe232b390ec76c708584e05d73ea0ea88735ad66b"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/sl-summary.json": {
+      "bytes": 8605,
+      "sha256": "71f6c39ea2064a34b8a7e0cf0eaecc3fde3114877950113f4296a7b50ca80d11"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/states.match": {
+      "bytes": 40986835,
+      "sha256": "b88115f4112b99e32e94fb553b7d1def4a2a0fc4d9a36c263efafeb1fb19a975"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/stats.py": {
+      "bytes": 3711,
+      "sha256": "1f85e727d6f69244bb5bd91d830aa2ba400bcf4b8b2cfecf1e42c67b587ac4e3"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/stats.txt": {
+      "bytes": 15828,
+      "sha256": "539219ab86cba12d85b7261f059b2ed0ac33267976c04b0a49199e4956b81ac8"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/turn-table.md": {
+      "bytes": 1669,
+      "sha256": "3086798295335d8cdd91814b1e018224100ba0d99d1db08174df802ed5be5a28"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0005.json": {
+      "bytes": 799,
+      "sha256": "9defe2b63fa2ddb6c605626dfdd687c21c558b4fbbe509d9d541fcb5d82ccfea"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0024.json": {
+      "bytes": 548,
+      "sha256": "338f6ffc0e59d0a54e374c1bae61cd97561a96b9b4c5afcfa79b000fa7b12f00"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0025.json": {
+      "bytes": 605,
+      "sha256": "daeb230544607f147df2ba6b8f31cab89b2a826692088edc5ac74fa15c53c834"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0027.json": {
+      "bytes": 571,
+      "sha256": "098e7b2747d52c0c90d9ac5c87a1b840e07bd93497731bcc85981ef60696e506"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0028.json": {
+      "bytes": 950,
+      "sha256": "a79da3c92ba07bb9e55417014fdbe2b4cbdb1f788efdb43430d15004f65723fc"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0059.json": {
+      "bytes": 564,
+      "sha256": "2955cceecaabcb7085534e028ef14a29b8ce0bc23254929bcddfa5c5cec69559"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0221.json": {
+      "bytes": 558,
+      "sha256": "47b314b3a816c3902bca1e43a5900744a1aaaa244f490b4b72be1d080a145f4c"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0228.json": {
+      "bytes": 968,
+      "sha256": "a9ad273de525e66e87ca3be206f8bbe0e1eb8dad1ed91424b3666ef02a75d63f"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0243.json": {
+      "bytes": 693,
+      "sha256": "55586e9bc6cc5b3eecf4a8d874af5263326ce6f01e3c1a89bdf3a4adf4d4efbb"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0271.json": {
+      "bytes": 768,
+      "sha256": "77b83c37e33ae92e9838de65b88d5c4f19490d71445ee15623ba3699cb087ce0"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/update-silent-0294.json": {
+      "bytes": 812,
+      "sha256": "045437e9d8d1898f564497e72752e6ccd1f7ab1a6f6f470d58320ab48c7b9f73"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/verify.py": {
+      "bytes": 3852,
+      "sha256": "2ce066686d8fa1a656cc39b1f4fd061a609c4fe0d67ed4f32a1e9fa56002e608"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/write_draft.py": {
+      "bytes": 20326,
+      "sha256": "aafd773ddffbcf23451c0f93ad101fe7fa0b5c2e361321a6843937fe9b488f07"
+    },
+    "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem.jsonl": {
+      "bytes": 1220720,
+      "sha256": "53466e5e7268392ae0b89c7cfc3c1689c3d9d2e22d928e03b9729ad162339f11"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-114302.out": {
+      "bytes": 2671,
+      "sha256": "9a6794fd8b4632f0a92bbbf90370cba94b30cde071e9ddf2e8c6f7e1cee1746f"
+    },
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261009-114302.err": {
+      "bytes": 10080,
+      "sha256": "8bb961ebc0d2ba6695b954c33ebb25890f9650ca6f5ad4639943fc171f7953a4"
+    },
+    "/home/dw/Projects/agent-sts2/notes/run-1009-1131-JBX9JLH46KVN.md": {
+      "bytes": 6933,
+      "sha256": "3918ba271c8fe02a2d75367b1b5edeecc67097b41d63660c052a0e75c139e517"
+    }
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "JBX9JLH46KVN"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "JBX9JLH46KVN",
+        "where": "agent/src/reflex/turn-solver.ts:3839",
+        "what": "毒胜前立即停止扩展，遗漏连战前仍可打的保血候选；silent-0271、fix-queue-v4已有",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0271",
+        "silent-0228",
+        "silent-0028",
+        "silent-0005",
+        "silent-0027",
+        "silent-0024",
+        "silent-0025",
+        "silent-0059",
+        "silent-0243",
+        "silent-0221",
+        "silent-0294"
+      ],
+      "repeats": [
+        "silent-0271"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-6e2d8244024b8090",
+      "silent-proposal-0dfe3fba65a366b0"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/report.md"
+  },
+  "out_report": {
+    "task": "postmortem",
+    "appended": [
+      "JBX9JLH46KVN"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "JBX9JLH46KVN",
+        "where": "agent/src/reflex/turn-solver.ts:3839",
+        "what": "毒胜前止搜遗漏连战保血候选；silent-0271、fix-queue-v4已有",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0271",
+        "silent-0228",
+        "silent-0028",
+        "silent-0005",
+        "silent-0027",
+        "silent-0024",
+        "silent-0025",
+        "silent-0059",
+        "silent-0243",
+        "silent-0221",
+        "silent-0294"
+      ],
+      "repeats": [
+        "silent-0271"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-6e2d8244024b8090",
+      "silent-proposal-0dfe3fba65a366b0"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/report.md"
+  },
+  "report_json_and_markdown_equal": true,
+  "report_variants_exact_equal": false,
+  "report_fields_except_bug_description_equal": true,
+  "bug_description_variants": [
+    "毒胜前立即停止扩展，遗漏连战前仍可打的保血候选；silent-0271、fix-queue-v4已有",
+    "毒胜前止搜遗漏连战保血候选；silent-0271、fix-queue-v4已有"
+  ],
+  "owned_cli": 21,
+  "evidence_update_rows": 11,
+  "first_observation_add_rows": 0,
+  "original_cli_evidence_update_order": [
+    "silent-0005",
+    "silent-0024",
+    "silent-0025",
+    "silent-0027",
+    "silent-0028",
+    "silent-0059",
+    "silent-0221",
+    "silent-0228",
+    "silent-0243",
+    "silent-0271",
+    "silent-0294"
+  ],
+  "report_update_order": [
+    "silent-0271",
+    "silent-0228",
+    "silent-0028",
+    "silent-0005",
+    "silent-0027",
+    "silent-0024",
+    "silent-0025",
+    "silent-0059",
+    "silent-0243",
+    "silent-0221",
+    "silent-0294"
+  ],
+  "ops_preflight_original_order_assumption_corrected_before_mutation": true,
+  "support_evidence": 15,
+  "repeat_evidence": 1,
+  "repeat_ids": [
+    "silent-0271"
+  ],
+  "proposal_link_rows": 10,
+  "correction_rows": 0,
+  "new_pure_bugs": [],
+  "existing_pure_bug_repeat": [
+    {
+      "run": "JBX9JLH46KVN",
+      "where": "agent/src/reflex/turn-solver.ts:3839",
+      "what": "毒胜前立即停止扩展，遗漏连战前仍可打的保血候选；silent-0271、fix-queue-v4已有",
+      "new": false
+    }
+  ],
+  "queue_append": false,
+  "blocking": false,
+  "queue_original_sha256": "2e14e9c1e2ba95a62a12efcc714aea6b4fba98bab6b1c76597205bc89305fe8c",
+  "lesson_append_bytes": 32728,
+  "lesson_append_sha256": "fe61a8740acdfd68124c35d030693941918cef8ac12a6e8e732037d0d5576e00",
+  "numeric_verification_count": 38,
+  "source_total_verification_count": 2121,
+  "numeric_checks": [
+    "决策979",
+    "状态1079",
+    "计划9",
+    "SL16",
+    "窗口31",
+    "低信心39",
+    "护栏3",
+    "饮药32",
+    "弃药0",
+    "9次重载",
+    "F48入口78和两药20",
+    "F48入口78和两药21",
+    "F48入口78和两药22",
+    "F48入口78和两药23",
+    "F48入口78和两药24",
+    "F49入口8空药25",
+    "F49入口8空药26",
+    "F49入口8空药27",
+    "F49入口8空药28",
+    "F49入口8空药29",
+    "F49入口8空药30",
+    "首boss胜出8空药",
+    "空斩杀结束",
+    "关键帧17血0挡4能量",
+    "关键帧62敌血26毒",
+    "关键帧可打防御两后空翻",
+    "关键帧9伤凋萎",
+    "终盘8血17挡86敌血25攻",
+    "终局HP0",
+    "Jev总token",
+    "大脑输入6417188",
+    "缓存3971328",
+    "关键逐轮损血6",
+    "关键逐轮损血13",
+    "关键逐轮损血25",
+    "关键逐轮损血31",
+    "资源表31行",
+    "药水表25行"
+  ],
+  "source_verify_invocations": 2,
+  "ops_raw_seek_reverification": true,
+  "raw_seek_count": 2083,
+  "raw_seek_counts": {
+    "decisions": 979,
+    "states": 1079,
+    "run-plans": 9,
+    "sl-attempts": 16
+  },
+  "raw_source_digests": {
+    "decisions": "fabc8c05b0de8c5b182b94659c4137027ca1a0c03c0590a63c29c9a798363512",
+    "states": "4d1e2d5c9c95e5aec4f2b57528b06bb6f96727593b8d7cc0426d8cf902dc1709",
+    "run-plans": "6fbdf63b0611a10bf2e13dded5e7d63e12556b0d66ab9fda66ed0a043107d70a",
+    "sl-attempts": "7f7fc8ed036d15ccab8cd125c36fdad84260cce10b9ac08ac1d37b39ec92052b"
+  },
+  "append_verification": {
+    "formal_equals_draft_v2": true,
+    "old_prefix_preserved": true,
+    "title_count": 1
+  },
+  "source_post_append_audit": {
+    "old_prefix_sha256": "f61bc96488e3c79f26613f9119b34b6838d8ae992c7f9c236d1fdbf8982b7f81",
+    "old_prefix_preserved": true,
+    "appended_exactly_once": true,
+    "appended_bytes": 32728,
+    "append_sha256": "fe61a8740acdfd68124c35d030693941918cef8ac12a6e8e732037d0d5576e00",
+    "key_numbers_regrepped": true,
+    "proposal_ids": [
+      "silent-proposal-6e2d8244024b8090",
+      "silent-proposal-0dfe3fba65a366b0"
+    ],
+    "proposal_sha_matches": true,
+    "ledger_check": 0
+  },
+  "append_prefix_verified": {
+    "bytes": 5914812,
+    "sha256": "f61bc96488e3c79f26613f9119b34b6838d8ae992c7f9c236d1fdbf8982b7f81"
+  },
+  "failed_commands_preserved": [
+    {
+      "exit_code": 1,
+      "command_sha256": "6686c87a9ba52426ea39e4eebee755f21aebd104854fa69ab0eb7d9574916c0b",
+      "output_excerpt": "Traceback (most recent call last):\n  File \"<stdin>\", line 3, in <module>\nAttributeError: 'str' object has no attribute 'keys'\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "702d15fc9292f5b5ad7b061d0ceb42376e060d94c8faf68773d9794f34a5cb18",
+      "output_excerpt": "2284/:2536—2541` 复用随机直伤的最高HP目标，`combat-plan.ts:3301` 自动走确定斩杀。证据G8NHLL09DLBX/SILENT A10 F24末试T5 d290345—290348、s297416—297420：母体29血20毒，普通弹跳药瓶实际三份3毒落在幼虫，母体不获新毒、结算后仍9血，玩家1血0挡死亡；原固定帧297418用当前live单步replaySteps核winsFight=true。核对为机制隔离，不冒称完整旧dirty源码重放或修后整场必胜；源运行d61bf0ec+dirty完整树未保存。首证本局A10/prior unknown，原数字30项复核及SL口径勘误保留。\nnotes/fix-queue-v4.md:929:- [ ] **silent-0319**：仅转录学习者回报，`agent/src/reflex/card-model.ts:938/:942` 蛇咬模型仍限未升级且PoisonPower=7，升级版10毒列未建模。P2M3DFJ4DEZ3/A10/F49末试T3 d302596、s310380→310381实毒2→12且132血即刻不变；首证VN7RQJMJEFMX/A6/F17T3 d220682、s225086→225087实毒6→16。普通版0219已修，本升级分支单列，保持首证VN7/prior=no/observed。该轮后续中和被弃另属0268，15预测与21实净清的混合差不全归漏毒。沿 `silent-proposal-cbf5f609bb228ee5`（0319/0220）自动链，由学习者按原提案固定帧实现、自测、合入；已核静默A6/A10与现场10毒文本匹配范围，其他输入保持原边界，不改毒即时结算或SL/药水规则，不承诺整场转胜。\nTraceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAttributeError: 'list' object has no attribute 'get'\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "c04353202e13300974e4bd5e100940a31bde992fddfdc922d637e70e29c6ba19",
+      "output_excerpt": " {\n.worktrees/live/agent/src/reflex/combat-plan.ts:2103:export function slAvoidFailedOf(decision: Decision, resolved: ResolvedAction): { line: string; reason: string } | undefined {\n.worktrees/live/agent/src/reflex/combat-plan.ts:2121:export function loggedLine(input: SolverInput, plays: readonly string[]): Plan | null {\n.worktrees/live/agent/src/reflex/combat-plan.ts:2224:export function slPointOf(decision: Decision, resolved: ResolvedAction): SlPointInfo | undefined {\n.worktrees/live/agent/src/reflex/combat-plan.ts:4549:export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput | null, dryBest: Plan | null, boardKey: string, opts: { samples?: number; budgetMs?: number } = {}): PotionMc[] {\n.worktrees/live/agent/src/reflex/rollout-live.ts:101:export const rolloutTap: { onRollout: ((input: RolloutInput, result: RolloutResult) => void) | null } = { onRollout: null };\n"
+    },
+    {
+      "exit_code": 1,
+      "command_sha256": "feead602918bc425a8925c46896109b1e35c80d07faa54f7e546d7ee4cfb6f7a",
+      "output_excerpt": "2026-10-09 12:05:49 CST\nTraceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\n  File \"/usr/lib/python3.14/json/__init__.py\", line 352, in loads\n    return _default_decoder.decode(s)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"/usr/lib/python3.14/json/decoder.py\", line 345, in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.14/json/decoder.py\", line 363, in raw_decode\n    raise JSONDecodeError(\"Expecting value\", s, err.value) from None\njson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)\n"
+    }
+  ],
+  "failed_inner_commands_outer_exit0_preserved": [
+    {
+      "outer_exit_code": 0,
+      "command_sha256": "310d60846ae01d2c24ba5633bcdc86f22b0dcdaa47427424d8b1829770b8860f",
+      "output_excerpt": "2026-10-09 11:46:22 CST\nTraceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/learner/runs/20261009-114302-postmortem/details.py\", line 20, in <module>\n    b=d['deepseek'];f.write(json.dumps({'d':d['_line'],'ts':d['ts'],'f':d['floor'],'label':d['label'],'chosen':d['chosen'],'rationale':d['rationale'],'brain':{k:v for k,v in b.items() if k not in ('usage','request','response','options','memory','prompt','question','reasoning')},'boss_sim':d.get('boss_sim'),'merge':d.get('run_plan_merge')},ensure_ascii=False)+'\\n')\n                                                                                                               ~^^^^^^^^^^\nKeyError: 'chosen'\n"
+    },
+    {
+      "outer_exit_code": 0,
+      "command_sha256": "33f2158817262a3b133e8b88102b8fc38252facd032d989ec6779ea800dbcb41",
+      "output_excerpt": "2026-10-09 12:07:17 CST\nTraceback (most recent call last):\n  File \"<stdin>\", line 11, in <module>\nAssertionError\ndecisions 979 fabc8c05b0de8c5b182b94659c4137027ca1a0c03c0590a63c29c9a798363512\nstates 1079 4d1e2d5c9c95e5aec4f2b57528b06bb6f96727593b8d7cc0426d8cf902dc1709\nrun-plans 9 6fbdf63b0611a10bf2e13dded5e7d63e12556b0d66ab9fda66ed0a043107d70a\nsl-attempts 16 7f7fc8ed036d15ccab8cd125c36fdad84260cce10b9ac08ac1d37b39ec92052b\n全部通过 2121\n  3837\t      return;\n  3838\t    }\n  3839\t    if (sim.enemies.every((enemy) => !enemy.alive) || plan.outcome.winsFight) return;\n  3840\t    if (ownDeathEnds && sim.hp <= 0) return;\n"
+    }
+  ],
+  "failed_analysis_logs_preserved": [
+    "analysis-failures.md",
+    "pm-event-stream.jsonl"
+  ],
+  "draft_corrections_before_append": true,
+  "current_live_observed": "10168ac71ecdbd5cf5209cc9e865fcd387e6d71e",
+  "proposal_registry_not_changed_by_ops": true,
+  "no_manual_proposal_dispatch": true,
+  "no_ops_game_knowledge_added": true,
+  "physical_lessons_not_reappended": true,
+  "unowned_extra_rows_preserved": 112,
+  "ledger_problems": 0,
+  "no_checks_requested": true,
+  "no_merges": true,
+  "no_versions": true,
+  "no_process_mutations": true
+}
