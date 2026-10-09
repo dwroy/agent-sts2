@@ -1,0 +1,78 @@
+{
+  "request_id": "watcher-20261009-sandbox-status-false-lost-144301",
+  "timestamp": "2026-10-09 15:03:25 CST",
+  "result": "restored_running",
+  "batch": "20261009-144301",
+  "run": "833ZM0MJGWHC",
+  "host_identity": {
+    "wrapper": 2020219,
+    "learner_shell": 2020220,
+    "runner": 2020230,
+    "pane": "wJ:pAV",
+    "pane_alive": true,
+    "pane_busy": true,
+    "codex_engine_pid_current_not_separately_observed": true
+  },
+  "host_procs_sha256": "1a666751cf503468a5d56e113066e6d7c2db0367064abea5691a26e78b73af71",
+  "before_sha256": "9ec417158ddc6c4f62cb7afa809362722d53cf49d2a2c875740cc24126486b8f",
+  "after_sha256": "4c61126f9ac0d8b6a8a1f8f9250704011da1d8d7ac6268fc2fb0a20ddb33cd5c",
+  "batch_before": {
+    "runs": [
+      "833ZM0MJGWHC"
+    ],
+    "pid": 2020219,
+    "started": "2026-10-09 14:43",
+    "state": "lost",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pAV"
+  },
+  "batch_after": {
+    "runs": [
+      "833ZM0MJGWHC"
+    ],
+    "pid": 2020219,
+    "started": "2026-10-09 14:43",
+    "state": "running",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pAV"
+  },
+  "run_before": {
+    "attempts": 1,
+    "batch": "20261009-144301",
+    "retry_at": 1791529011.0422804
+  },
+  "run_after": {
+    "attempts": 1,
+    "batch": "20261009-144301"
+  },
+  "changed_paths": [
+    "batches.20261009-144301.state",
+    "runs.833ZM0MJGWHC.retry_at removed"
+  ],
+  "unrelated_sections_exact_equal": true,
+  "previous_retry_at": "unknown; not reconstructed",
+  "retry_semantics": "active postmortem dispatch removes retry_at; remove only incident-written value under latest state lock",
+  "atomic_replace": true,
+  "short_nonblocking_existing_learn_lock": true,
+  "observer_originals": [
+    {
+      "original": "notes/watcher-20261009-baseline/incident.json",
+      "sha256": "4f245c177eebbac97204ccf24695ba7c6ce544c93409779df8ad05b04920ba8a"
+    },
+    {
+      "original": "notes/watcher-20261009-baseline/learn-after-sandbox-status.json",
+      "sha256": "9ec417158ddc6c4f62cb7afa809362722d53cf49d2a2c875740cc24126486b8f"
+    }
+  ],
+  "original_incident_and_finished_history_preserved": true,
+  "new_batches": 0,
+  "signals_or_restarts": 0,
+  "source_edits": 0,
+  "no_finish_or_check_jobs_called": true,
+  "state_snapshot_manifest": "paper/materials/silent/20261009-1501-status-recovery/state-snapshots.json",
+  "full_state_archives_retained_locally_without_git_tracking": true
+}

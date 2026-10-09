@@ -1,0 +1,54 @@
+{
+  "request_id": "watcher-20261009-sandbox-status-false-lost-144301",
+  "observer": "agent-sts2-watcher",
+  "recorded_at": "2026-10-09T14:59:58+08:00",
+  "host": "xdwin",
+  "cwd": "/home/dw/Projects/agent-sts2",
+  "CODEX_HOME": "/home/dw/.codex1",
+  "pane": "wJ:p1",
+  "incident": "Observer called bash ops/codex-ops.sh status inside the Codex PID namespace. cmd_status calls running_batch, marks a host-alive postmortem lost, sets retry_at, and saves learn.json. This status entrypoint is not read-only.",
+  "affected_batch": "20261009-144301",
+  "affected_run": "833ZM0MJGWHC",
+  "batch_after": {
+    "runs": [
+      "833ZM0MJGWHC"
+    ],
+    "pid": 2020219,
+    "started": "2026-10-09 14:43",
+    "state": "lost",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pAV"
+  },
+  "run_after": {
+    "attempts": 1,
+    "batch": "20261009-144301",
+    "retry_at": 1791529011.0422804
+  },
+  "initial_read_observed_at": "2026-10-09T14:56:50+08:00",
+  "initial_learn_mtime": "2026-10-09T14:43:02+08:00",
+  "initial_batch_object_not_preserved": true,
+  "preincident_run_retry_at": "unknown; do not backfill",
+  "host_process_evidence_at": "2026-10-09T14:58:13+08:00",
+  "host_alive_pids": {
+    "postmortem_wrapper": 2020219,
+    "postmortem_runner": 2020230,
+    "postmortem_codex": 2020514,
+    "experience_runner": 2015633,
+    "autoplay": 1746959,
+    "play": 2019652,
+    "brain": 2019995,
+    "ops_wake": 2022594
+  },
+  "learn_after_snapshot": "notes/watcher-20261009-baseline/learn-after-sandbox-status.json",
+  "learn_after_sha256": "9ec417158ddc6c4f62cb7afa809362722d53cf49d2a2c875740cc24126486b8f",
+  "recovery": "pending existing ops wake; observer does not edit learn.json or control panes",
+  "source_references": [
+    "ops/codex-ops-learn.py:145",
+    "ops/codex-ops-learn.py:464"
+  ],
+  "a10_audit": "done, attempts=3, source=20261007-184216-ascension-audit; do not redispatch",
+  "live_progress": "2026-10-09T06:58:47.428Z decision completed, run 64R0P0MTZWAX floor 21",
+  "exp131_checks": "fixed tree 1e231e8d716a5578a6dba0a68600b4943f86b1ac, full tsc/vitest exit0 event queued at 14:58:45, 3435 passed and 2 skipped; ops closure pending"
+}
