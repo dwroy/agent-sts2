@@ -1,0 +1,709 @@
+{
+  "silent-0106": [
+    {
+      "op": "add",
+      "id": "silent-0106",
+      "ts": "2026-10-05T15:23:17+08:00",
+      "by": "learner:experience-update",
+      "character": "silent",
+      "kind": "fight",
+      "claim": "观察：三骑士的首轮爆发和单轮减力不能代表后段击杀与生存时钟。A5/A6各1场，共2场1胜；A5满77进场净损74、仅剩3胜，A6以59/70进场实死。机制：各敌仍需伤与最终意图分别核对，暂减力恢复后不能沿用开场少伤；不据一败指定固定击杀顺序。搭配：毒的已结算输出、永久减力和当轮格挡分账，无另一目标顺序的受控结果。决定胜负的战斗：两局高血都需支付大血价，血量与胜负仅观察（n=2）。典型案例：VN7RQJMJEFMX F42初276，T1—T3扣104，T4尚172；T5连枷才死，T8还余31/24，20血+6挡对32攻击死亡。ZE8F192FKX24 A5 F42满77最后3胜，不能从高血判为轻松过关。",
+      "evidence": [
+        {
+          "run": "ZE8F192FKX24",
+          "role": "support",
+          "note": "本角色逐房日志核对；完整进阶/入场/净损、SL与因果限制见第十六次增量。"
+        },
+        {
+          "run": "VN7RQJMJEFMX",
+          "role": "support",
+          "note": "本角色逐房日志核对；完整进阶/入场/净损、SL与因果限制见第十六次增量。"
+        }
+      ],
+      "first_run": "ZE8F192FKX24",
+      "prior": "partly",
+      "prior_runs": [
+        "ZE8F192FKX24"
+      ],
+      "prior_note": "最早可比ZE8F192FKX24 A5已过三骑士，但满77损74只剩3；本A6又败，未有受控选线胜率或证据说先前已掌握长期生存判断。",
+      "status": "proposed",
+      "where": {
+        "experience": [
+          "silent-three-knights-output-buffer-observation"
+        ],
+        "commits": [
+          "a9ad012cd1c5ec56e4f1d7935dc0aca8fda088cb"
+        ],
+        "changelog": [
+          "2026-10-05 静默猎手 第十六次增量：2 局 A6（version 2026-10-05.16，分支 exp-silent，a9ad012c）"
+        ]
+      },
+      "asc": 5
+    },
+    {
+      "op": "update",
+      "id": "silent-0106",
+      "ts": "2026-10-05T15:41:26+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp16",
+      "where": {
+        "commits": [
+          "a9ad012cd1c5ec56e4f1d7935dc0aca8fda088cb",
+          "d668d7885f084d8d950e6e2c067a38740783c892",
+          "7c7f22e3a80f2addba1ba199eb1a18084ef78bba"
+        ]
+      },
+      "note": "15:26 experience-done兜底合入固定源，保留双方decision-log及七项刷新；经验2026-10-05.16实际上线S1.exp16。源首次时序失败、完整重跑一次通过历史保留，合后工具执行中断无退出结果，保留原日志后恢复同一暂存树检查tsc0、173文件1988例通过；仅经验文字，不混记幻影fix17或机制模型修复，独立完整外部检查经learner-recheck动作交调度器。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0106",
+      "ts": "2026-10-06T02:34:16+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp28",
+      "where": {
+        "commits": [
+          "825c94d558f24991e8766dfecee71a71c216e83b",
+          "363ff3037178c20342c36fc1ab474b5aed96a441",
+          "98f88e06ac849c29af6474c76121f37c2d8019ce",
+          "ae49bbec92df38c3d73ec3570560a76a39a408e2"
+        ]
+      },
+      "note": "02:26 experience-done机械核实静默经验2026-10-06.3实际合入live并唯一登记S1.exp28；2PVLGRBGUX9S SILENT A7及旧34静默局，源182文件2042例、合后183文件2048例/tsc0首过。仅登记已上线experience文字，first_run/prior/repeat/evidence和旧上线历史保持；科学模板各子分支/普通与升级分别计证据，0138追溯R0HEV5E3QT6G。不将经验上线冒记为推演模型覆盖或受控整场胜负；0136/0137模型覆盖缺口交学习者。完整外部经验checks_pending交后续learner-checks，不借策略3通过、不另审。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0106",
+      "ts": "2026-10-07T18:06:53+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp75",
+      "where": {
+        "commits": [
+          "91d49f827f3d429955d63f0b11c5944731759264",
+          "7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a",
+          "586ff2db0de4a841555c2e838f3e7f17e8165307",
+          "79bee0fc11793a410218ae50ca43e41474eec19e",
+          "1bf53e5fe631e7a7836001f463f8561d1a875bc6"
+        ]
+      },
+      "note": "17:48机械经验兜底：原.21源91d49f827f3d429955d63f0b11c5944731759264及未独立发布的.20源7453c2ccf67a132e17d2f6c9bfc7fb8f13b56d7a已实际成为live586ff2db0de4a841555c2e838f3e7f17e8165307祖先，最终发布79bee0fc11793a410218ae50ca43e41474eec19e/唯一S1.exp75，main1bf53e5fe631e7a7836001f463f8561d1a875bc6经验原blob相等。仅对应经验数据已吸收，原第74批28提案11duplicate/17waiting及.21三pending保留、不当代码implemented；0237/0229等纯bug不在本经验shipment范围。源.21原沙箱tsc0/232文件2430例0，.20原230文件2422例0；本轮数据组合无新源码、不冒称最新整套已过，最终完整外部独立原批续验。旧源merged=null/failed/缺array/路径拒绝/冷却/测试历史保留，CLI只这些经验所属项追加shipped，claim/首证/prior/support/repeat/旧历史及并行未发布经验不改，本状态不宣称后续.22或策略源码上线。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0106",
+      "ts": "2026-10-08T10:55:07+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp94",
+      "where": {
+        "experience": [
+          "silent-three-knights-output-buffer-observation"
+        ],
+        "commits": [
+          "eebcf4297065a97086ea4d430ae698a2b05c3dea",
+          "0e27b88ab6dacfc9aa42d8ca3820d2e741b1ce6d",
+          "261af56e0022cc0012b80870bd3f52bd121d45c2",
+          "90f7e5a6f370622a99021ffddbc4cf03df08e350"
+        ]
+      },
+      "note": "第94次经验原数据2026-10-08.10→.11/增1改15退0/170 active，源eebcf429唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记16所属经验数据shipped。源247文件2604例tsc/vitest0、最终冻结经验定向1文件10例0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/report/failed及21项记录冲突历史不改。"
+    }
+  ],
+  "silent-0125": [
+    {
+      "op": "add",
+      "id": "silent-0125",
+      "ts": "2026-10-05T22:32:23+08:00",
+      "by": "learner:postmortem",
+      "character": "silent",
+      "kind": "fight",
+      "claim": "本局沙漏同盘的两条全败推演之间，HP护栏替换省当轮9血，同时少39伤和1永久力量，也避免原线新增一张凋萎。Jev原选攻击线与护栏结束线的五轮推演均24/24死亡，整场模拟均无赢样本，实际结束线T11阵亡；这是保血、凋萎门槛和手里剑成长共同存在的取舍观察，既不证明原线必胜，也不把符合既定8点护栏的行为认定纯bug。",
+      "evidence": [
+        {
+          "run": "Z6CFLDR3N4SB",
+          "floor": 48,
+          "turn": 9,
+          "note": "第二次打MEMENTO_MORI后25血、敌193血；Jev信心0.09选SHIV→STRIKE_SILENT→FISTICUFFS→NEUTRALIZE，预计54伤/损9/+1力量/+1凋萎，护栏换结束预计15伤/损0；实际193→178、25血不变。",
+          "role": "support"
+        },
+        {
+          "run": "Z6CFLDR3N4SB",
+          "floor": 48,
+          "turn": 11,
+          "note": "替换后T10实损21至4，T11以14挡对34攻击和12凋萎死亡、敌134血；原线整场实战反事实未记录。",
+          "role": "support"
+        }
+      ],
+      "first_run": "Z6CFLDR3N4SB",
+      "prior": "unknown",
+      "prior_runs": [
+        "LRN0HPZ0FZS1",
+        "1HC609GTLGN3"
+      ],
+      "prior_note": "此前静默复盘已观察护栏交换伤害或延后灵动步法，故一般取舍并非首次；按护栏、保血、全败、手里剑等词未找到同盘两线全败且涉及凋萎门槛与手里剑成长的可比经验，无法判断学习前此具体局面是否处理得当。",
+      "status": "observed",
+      "where": {
+        "lessons": [
+          "Z6CFLDR3N4SB"
+        ]
+      },
+      "asc": 7
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-05T23:44:31+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp25",
+      "where": {
+        "experience": [
+          "silent-aeonglass-artifact-growth-sl"
+        ],
+        "commits": [
+          "c02c40a38f476991d68b3ad37a082d8ce30105d5",
+          "5bc320f7ba980bd4e46049ad4b1758975ef7b77f",
+          "0d0c4b690fb372fe0810c99b619c52e239a5c85b"
+        ]
+      },
+      "note": "23:37 manual exp-silent接力：经验.24原源c02c40a3已随后续.25实际源/合入5bc320f7、发布0d0c4b69生效，按实际S1.exp25登记继承的.24映射；.25源与合后固定沙箱均tsc0/179文件2030例通过，无重跑，main同步3547e8bc。此前.24自身79b415c0合后Inferno指纹断言失败/回退256b0eee及同树重跑锁占用历史保留，未发布独立S1.exp24，不用其失败树登记成功。仅登记学习者已有13项映射，不添证据/知识、不重置0114/0115或未纳入的0127/0128。.24独立完整外部learner-recheck 20261005-224301-experience-update已调用待后续learner-checks，原merged=null回报不改；.25本批8项原proposed/原节交其完成事件处理。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-06T06:04:45+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp33",
+      "where": {
+        "commits": [
+          "d8feeed3f9c3a66df935f58af92d7e500f40aff4",
+          "1b425cb743eeb3cc77c1c36ffeb9d0b1d9346495",
+          "f1d951ec442548711c671cb7f9855a4ade1dc412",
+          "70f6049276ab0c9cc7aab44212edb183985c9dfc"
+        ]
+      },
+      "note": "05:59 experience-done机械核实静默经验第33批2026-10-06.8已实际合入live，登记唯一S1.exp33；来源G403VCZ3BH1B SILENT A9及旧39本角色完局，源tsc0/190文件2094例、合后tsc0/191文件2095例。保留学习者first_run/prior/claim/evidence及全部repeat历史，不倒算在已结束局生效、不另设审核。0151机制文字与0150模型代码缺口分别记录，0150仍observed；A10新0153/0154/0155不纳入本经验批次。完整外部结果留后续事件。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T01:33:03+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp56",
+      "where": {
+        "commits": [
+          "63e53c86dd449289f8e1b68decb716c4bf1b3dd4",
+          "02b87e7c2365eaf48acc3fe46a0d83c33a80deb5",
+          "714cefc76dc84dbd8368d4702c5d220ece205cb4",
+          "3493092a4ced1e31972490b5ef15d25e1658f5b5"
+        ]
+      },
+      "note": "01:30 experience-done机械确认20261007-010232-experience-update：源63e53c86→实际live02b87e7c→固定发布714cefc7/唯一S1.exp56，main已同步经验2026-10-07.2及七份已测合前自动刷新。沿VPW8YH7A4QFM SILENT A10、01:01 F14勘误及本角色历史，新增1更新14（11补证/0只数字/3压缩）退役0、active127/56154字，无新用药规则。源压缩稿初轮、定稿重跑及合后首轮均tsc0/vitest0、209文件2245例，非失败/超时重跑；知识重叠/冲突0，其他知识保持。临时powers列表误当字典、开场净血取帧断言和收尾0197并行状态耦合失败原稿、修正、原第56节/15行proposed/全部自测保存，非生产代码失败。本批仅CLI/by=ops十五项shipped，首证/先验/claim/全部证据/repeat与历史保持。0198 VPW/A10/prior=unknown，0197 Y6GM/A0/prior=no及独立fix-batch状态不重置或代登记；0193/fix36、0195/fix37、0194/exp52、0196 LRN/A0/prior=yes/exp54和0172待修保持。完整外部待本批learner-checks，无Roy待定，后台产出及对局继续。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T03:02:17+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp57",
+      "where": {
+        "commits": [
+          "532af94889f4f9fccf6112a16175b4fe742fb142",
+          "b98c24f042896e0a0505d3ba805346c6371882ee",
+          "30c527f8479cb91f8d735168fecfa6d388636bcc",
+          "931effaf030df3a30cb9493a08b9abee463157cb"
+        ]
+      },
+      "note": "02:55 experience-done机械确认20261007-021219-experience-update：源532af948→实际liveb98c24f0→固定发布30c527f8/唯一S1.exp57，main已同步经验2026-10-07.3。沿DPYF2BAA3DKT、CRK2HNYKSCZC SILENT A10及本角色历史，新增1更新19（15补证/1只数字/3压缩）退役0、active128/51683字，无新用药规则。前三轮旧稿各210文件2254例通过但不作定稿凭据，期间SL口径/元数据/步法全角括号n修正及冻结守卫历史保留；第四轮冻结源tsc0/vitest0、210文件2254例，合后首轮tsc0/vitest0、212文件2275例通过，差21例为live既有fix39+strategy9。refresh=[]、知识重叠/冲突0、其他知识保持，无源码/生成器/其他角色改动。临时草稿错误、修正、原第57节/22行proposed/四轮源与合后自测原件保存，非生产代码或最终自测失败。本批仅CLI/by=ops二十二项shipped，首证/先验/claim/全部证据/repeat与历史保持。新增机制映射既有0200，首证LRN0HPZ0FZS1/A0/prior=unknown保持；独立0199及并行0202不纳入或代登记，0201/strategy9、0172/fix39、0197/fix38及其他旧状态/版本保持。完整外部待本批learner-checks，无Roy待定，后台产出及对局继续。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T03:45:38+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp58",
+      "where": {
+        "commits": [
+          "9fea0539467459ee040991c616fb9ca3afabc21a",
+          "e39f07ec6d2fe4591313eee5c2a02feda17699f9",
+          "3ac2445ace29411d2118191ecb924fd37864d7d0",
+          "d7475bb37a3f1b63d48d1dd54c5757ee6f93b2e4"
+        ]
+      },
+      "note": "03:38 experience-done机械确认20261007-031302-experience-update：源9fea0539→实际live e39f07ec→固定发布3ac2445a/唯一S1.exp58，main已同步经验2026-10-07.4与七项自动知识刷新保存点60ecfda8原blob。沿学习者HUVEPWQAHWFU SILENT A10及勘误、本角色历史，另核C48LLXBGKXQ9 A0羽化；新增1更新13（全部补证）退役0、active129/50536字，无新用药规则。首轮源及数值标签定稿重跑均tsc0/vitest0、212文件2275例，合后首轮tsc0/vitest0、214文件2289例通过，多14例为live既有fix40两文件。首轮已通过，澄清标签后的定稿重跑非失败重跑。初次锁内保存七项刷新后仅decision-log追加冲突停止（流程rc3/预检rc1），后保留双方有序原文并集并通过；final refresh=[]表示已保存，知识重叠/冲突0、未改知识保持，无源码/生成器/其他角色变更。临时守卫/证据草稿错误和勘误、两轮源/合后摘要及完整事件流原件保存；源经验blob与合入/固定发布一致。本批仅CLI/by=ops十五项shipped覆盖十四经验主题，既有0203首证C48/A0/prior=no及全部旧first_run/asc/prior/claim/support/repeat/历史保持；0199/0202独立fix40已shipped、0204并行observed、0200/exp57、0201/strategy9、0172/fix39、0197/fix38不重置。完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T04:10:29+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp59",
+      "where": {
+        "commits": [
+          "23080aa4018c2f093cea52a270ba2770a0934b1e",
+          "fcfc0bf95579ad7bc4aae49813b1914caf4413d6",
+          "e8a6fb714b9fde4ed85e5cc76e3fbb839e6b83c7",
+          "8c5d6a30d55f3b8f993c26337f4046944cca98c0"
+        ]
+      },
+      "note": "04:05 experience-done机械确认20261007-034302-experience-update：源23080aa4→实际live fcfc0bf9→固定发布e8a6fb71/唯一S1.exp59，main已同步经验2026-10-07.5与七项自动知识刷新保存点6635abf7原blob。沿学习者UMVLWER4CD98 SILENT A10及03:31:15路线勘误、本角色历史；新增1更新11（全部补证）退役0、active130/50696字，无新用药规则。源与合后首轮均tsc0/vitest0、214文件2289例通过，无失败或超时重跑。锁内保存七项自动刷新后git预检rc1仅decision-log追加冲突，保留双方有序原文并集；知识重叠/冲突0、其他知识逐blob保持，无源码/生成器/其他角色变更。离线取证初稿从敌方powers读TAINTED_POWER错误，改读实际玩家powers后最终断言通过；空initial-evidence.log、初稿说明/脚本及完整事件流保存，不当生产故障或冒称有独立完整失败日志。源经验blob与合入/固定发布一致。本批仅CLI/by=ops十三项shipped覆盖十二经验主题，既有0204首证UMVL/A10/prior=unknown及全部旧first_run/asc/prior/claim/support/repeat/历史保持；0199/0202独立fix40已shipped、0203/exp58、0200/exp57、0201/strategy9、0172/fix39、0197/fix38及0002旧proposed不重置。完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T05:17:29+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp61",
+      "where": {
+        "commits": [
+          "3da1a93c04efa46f73fc2522af56bb1e4aff726e",
+          "34daf93c3f7ed93de7469d58b59ca7811041ca6e",
+          "60808f9eafe12529e78645616874f23db8e3beb8",
+          "864f9d8aea218a235e7478312225a27ec6615493"
+        ]
+      },
+      "note": "05:15 experience-done机械确认20261007-045606-experience-update：源3da1a93c→实际live 34daf93c→固定发布60808f9e/唯一S1.exp61，main已同步经验2026-10-07.7与七项自动知识刷新保存点02d80d37原blob。沿学习者8R5CXD5C8PW8 SILENT A10及04:55:17有效勘误、本角色历史；新增1更新14（全部补证并压短重复叙述）退役0、active132/48258字，无新用药规则。源与合后首轮均tsc0/vitest0、214文件2289例通过，无失败或超时重跑。锁内保存七项自动刷新，live预检rc0无冲突；知识重叠/冲突0、其他知识逐blob保持，无源码/生成器/手写知识/其他角色变更。离线初稿character空值、clean整数、draw_pile字段、other-knowledge.json未生成错误及更正和HP差2口径说明、原错误日志/脚本/完整事件流保存，不当生产故障或自测失败。原约490字节摘要按原件保留，不冒称完整逐例日志。源经验blob与实际合入/固定发布一致。本批仅CLI/by=ops十八项shipped覆盖十五经验主题，既有0206首证8R5CXD5C8PW8/A10/prior=unknown及全部旧first_run/asc/prior/claim/support/repeat/历史保持；0199/0202独立fix40已shipped、0203/exp58、0204/exp59、0205/exp60、0200/exp57、0201/strategy9、0172/fix39、0197/fix38及0002旧proposed不重置。完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T05:58:43+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp62",
+      "where": {
+        "commits": [
+          "7846a6612dcdb8a7ccef7ef982ebbdb9fca5e486",
+          "9bf7de2c3b52c6c7ad2bdfb3c10734a91f88438f",
+          "e33ca6e0146fd5ddf9cc99d1d670135551922764",
+          "7be405f6b55ace5f39dd9c59aee11a17d8fa4fbe"
+        ]
+      },
+      "note": "05:55 experience-done机械确认20261007-052654-experience-update：初稿7846a661与定稿源及实际live 9bf7de2c→固定发布e33ca6e0/唯一S1.exp62，main已同步经验2026-10-07.8，无自动知识刷新、无代码改动。沿学习者QNTW139MGECA SILENT A10/F28及05:21勘误/05:24补记、本角色历史；新增1更新11全部补证退役0、active133/47737字，无新用药规则。初稿及定稿源与合后四次固定沙箱均tsc0/vitest0、214文件2289例通过；操作来源文字更正后复测，无测试失败/超时。两次锁内知识重叠/冲突0、live预检rc0，其他知识逐blob保持；全部源码/生成器/手写知识/其他角色保持。离线初稿三→七断言错误、初稿提交/经验/台账/测试及五攻击/一移盾/一直接伤害文字更正按原件保留，不当生产故障。原SL日志一行attempt1首试胜与复盘零行差额未定位，不增真正重打分母。源经验blob与实际合入/固定发布一致；原过滤摘要不冒称完整逐例日志。仅CLI/by=ops十五项shipped覆盖十二经验条目，0207首证沿学习者更正LRN0HPZ0FZS1/A0/prior=yes、原prior_runs/七份support/原首证及更正历史保持；其他旧first_run/asc/prior/claim/support/repeat不重置。0206 exp61、0205 exp60、0204 exp59、0203 exp58、0199/0202 fix40、0200 exp57、0201 strategy9、0172 fix39、0197 fix38及0002旧proposed保持。完整外部待本批learner-checks，无Roy待定，后台产出与对局继续。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T08:07:53+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp65",
+      "where": {
+        "commits": [
+          "3dea02331a006a4723a74ee90246c94c7e12ef9e",
+          "731266e2901d93a4f0377bf85cd97680bac2157f",
+          "8664bb08ac16aee0f8402805853be8bc38b85cc6",
+          "66147f0bf31277abf459221103f9eda896e151a0"
+        ]
+      },
+      "note": "07:55 experience-done机械确认第65批：源3dea0233→实际live731266e2→固定发布8664bb08/树cbdb1a05/唯一S1.exp65，main已同步经验.11及锁内七项知识刷新5f8b598d。新增0更新7全补证退役0，136条49822字；源/合后首轮沙箱tsc0/vitest0、215文件2299例，原过滤摘要/原第65节含收尾/8行proposed/事实取数KeyError初稿及更正按字节归档，完整流和大件留源指纹。仅本批8项经CLI/by=ops shipped，claim/首证/先验/evidence/repeat/版本历史保持；0216中毒已建模仍攻击折扣独立observed、首证K367/A1/prior=no，0213毒杀持牌伤及075131专用boss校准原任务不代改。main保留5项已测校准调度源码及并行记录，源码/生成器/其他角色不改，无新用药规则、不重建；本批固定外部learner-checks待调度器，不重复live合并/测试，原失败/更正历史保留，对局继续。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T19:10:00+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp76",
+      "where": {
+        "commits": [
+          "7077d238b77f7e64d26d6bfda2aa48cb63e2f1be",
+          "81a39018a2077bce45e7da5e4e9685f4a1ac6388",
+          "7ad25e1477cc6db9e40a26a05f8e5b5e0b343fd8",
+          "5ac145d45e176d3c203e67a9ea8558abee4061ae"
+        ]
+      },
+      "note": "18:50按18:38交接机械兜底：源7077d238b77f7e64d26d6bfda2aa48cb63e2f1be/.22已实际成为live81a39018a2077bce45e7da5e4e9685f4a1ac6388祖先，发布7ad25e1477cc6db9e40a26a05f8e5b5e0b343fd8/唯一S1.exp76，main5ac145d45e176d3c203e67a9ea8558abee4061ae原经验blob相等。只对应经验数据已吸收；silent-proposal-578e415a259e6835仍待独立策略实现，不冒标代码implemented。源原沙箱tsc0/vitest0、233文件2441例，实际合后原入口tsc0/vitest0、233文件2441例，完整外部沿原批独立续验。首证/prior/claim/support/repeat/全部旧历史及并行数据保持，旧merged=null/failed/冲突原件不改。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-07T23:10:21+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp81",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "e7552663cdcbfad33a1e348bdd13842fce7e3c41",
+          "26586d3d7bc61444970b6efad683d023ba92a356",
+          "4f5ca8cb07fd023433d59b52a34cde0144889e61",
+          "48ece2ea7e9b7ca87f800bf2cf66e2a61c33ae56"
+        ]
+      },
+      "note": "经验第81次原数据实际发布.27/155 active；仅按原ledger-map登记本所属经验数据shipped，源原沙箱239文件2511例、实际组合合后241文件2531例tsc/vitest0。首证/prior/claim/support/repeat及旧上线历史保持；三个combat/potion/SL代码提案仍独立策略链，数据发布不等于代码实现；完整外部原批续验另登记。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-08T09:41:38+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp93",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "46d0d2a19f5ab0830d9c32d2b8f64ae4286d7721",
+          "73f2fda517bce478c95d4f64fa7cf309aa703f05",
+          "1894c55d36c5b1242d8868ee6ea0ae34de274f2f",
+          "719a148eae4d4322906b5aee5ff88523ed5a53d8"
+        ]
+      },
+      "note": "第93次经验原数据2026-10-08.9→.10/增1改9退0/169 active，源46d0d2a1唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记10所属经验数据shipped。源247文件2604例tsc/vitest0、最终冻结经验定向1文件10例0，当前源码/测试/任务与固定完整通过f8947651逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，两个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/report/failed及20项记录冲突历史不改。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-08T13:32:09+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp97",
+      "where": {
+        "experience": [
+          "silent-alchemize-potion-resource-observation"
+        ],
+        "commits": [
+          "3bda3841756ba293f34b197542e6e9bee4dc1ed9",
+          "cfe666e2b23f85fe37215c44846b68fb5f12f3fa",
+          "f4c35b907643239ac7169a739f4baa3934103bff",
+          "be1408453ff2ae5facade7f2d78e2efeba40e641"
+        ]
+      },
+      "note": "第97次经验原数据2026-10-08.13→.14/增1改15退0/176 active，源3bda3841唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记19所属经验数据shipped。源首轮248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，四个combat/potion/SL/terminal代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0293纯bug保持原观察/提案状态，不标代码实现；0294首证ZE8F192FKX24/A5及unknown先验保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-08T18:26:32+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp104",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "ee6d95efd7fbb53115962231ee4ed08ea8e6c75b",
+          "4a73f63c4955beeacc39e14fed72cf302d307e82",
+          "c70efc8ca855a756c66ea43cd2dd44bef91a7882",
+          "eeb85b9f65ec15708ba37660cbe5d912095ceac3"
+        ]
+      },
+      "note": "第一百零四次经验仅原数据.20→.21，源ee6d95ef增2改16退0/178 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp104。按原学习者ledger-map仅20所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，五combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验，原exp100完整exit1和rollout修复队列不关闭，刷新/并行所有当前代码保持。原merged-null/21冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T00:50:34+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp112",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "3ae5a3c23f9a4aa6dba8a26629dfdc72e71931a4",
+          "38dfb55e377349c23435e46aa065de3d9542251f",
+          "dd07f4aa5ff392e474c575aa95c63b68e54a883a",
+          "4b1177d5a9d49ac9880c2e0fcfb524987d0fbd69"
+        ]
+      },
+      "note": "第一百一十二次经验仅原数据2026-10-08.28→2026-10-09.1，源3ae5a3c2增0改15退0/186 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp112。按原学习者ledger-map仅18所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，四combat/potion/SL/structure代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/16冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T05:44:22+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp118",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "832318eeb9b98a9e59773581ebbf9a67d689b441",
+          "abbb308ce3be824214f3e6a7d2397a3b83b30204",
+          "b740434894cc131fa7a4a7d030374e515bb23431",
+          "7f42091955351cb3f4bec183e2bb9c0e284b13f9"
+        ]
+      },
+      "note": "第一百一十八次经验仅原数据2026-10-09.6→2026-10-09.7，源832318ee增0改15退0/191 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp118。按原学习者ledger-map仅19所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0328重复观察保持observed，不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/18冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T06:15:26+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp119",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "d4c5065ead238a9ba6e5886181a16b1dfc96659b",
+          "9494b301594282bdab23b1c3df46c0691da5317b",
+          "244d9d6a326aab73c823f59dcbde80933bda6d6c",
+          "bbcb961b851bd615ff439aba70f7422447ac8c29"
+        ]
+      },
+      "note": "第一百一十九次经验仅原数据2026-10-09.7→2026-10-09.8，源d4c5065e增1改11退0/192 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp119。按原学习者ledger-map仅13所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0329纯bug保持原提案关联与状态，不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/17冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T06:47:02+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp120",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "01ad28fae45855f25beb284875de47290de6179b",
+          "09e8ac8b7b16ba7f7c4d977d30e8e2b807ced3ed",
+          "cfa8112dd55126722f4bd6f6edb05f152ccd1826",
+          "aad03fdf76ad3b8c610dc6a3af35d82039baf18f"
+        ]
+      },
+      "note": "第一百二十次经验仅原数据2026-10-09.8→2026-10-09.9，源01ad28fa增0改12退0/192 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp120。按原学习者ledger-map仅12所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0295纯bug保持原提案关联与状态，不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/20冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T07:30:51+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp121",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "7c1d9b204ce64c54933e45dde947bece909a0172",
+          "7972c8b7e732e17ae381dc9df5b61488a91e48ff",
+          "bb7285314f126e372ee61c6a331565a89e5418fa",
+          "f80795ed69be555b6768c489e7df204cd63ff37d"
+        ]
+      },
+      "note": "第一百二十一次经验仅原数据2026-10-09.9→2026-10-09.10，源7c1d9b20增0改12退0/192 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp121。按原学习者ledger-map仅13所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0319纯bug保持原提案关联与状态，不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/5冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T08:39:28+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp123",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "6c5a3f6122b05afffcec961e34399168e94736c4",
+          "d5c1fe3f0c3bf542260cd42765203e3561c96f88",
+          "5a5c1c0ebf252a42ef2123cb0d614ba2036f1322",
+          "88f43b0d99ffbb676158fbe0b208a1c1a97ee399"
+        ]
+      },
+      "note": "第一百二十三次经验仅原数据2026-10-09.11→2026-10-09.12，源6c5a3f61增1改9退0/193 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp123。按原学习者ledger-map仅12所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/17冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T09:14:59+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp124",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "7339da354b6708ef3d53648e5fc44715066caf53",
+          "afdb448cd650687ed28e4154ffa92b54c7286eeb",
+          "5ff4270dbf44cbd1a36dcb3df8df5565653ee59f",
+          "6e0aec1c2b1b1493666b816d3f50f168a0949de5"
+        ]
+      },
+      "note": "第一百二十四次经验仅原数据2026-10-09.12→2026-10-09.13，源7339da35增0改8退0/193 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp124。按原学习者ledger-map仅11所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal代码提案沿原自动链，不标代码实现。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/18冲突/out/err/失败历史保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T10:13:22+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp125",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "9f7cceaf6ef55cf45fba994d16464dc2f692d12f",
+          "074068c96c113f918fa6fec7df5bc3cbda177b38",
+          "d5f290f425fa1d84b0502e7d28ccc2b807b8d8a4",
+          "8f4a7a80213e005400eed5363af5466c97cf58ac"
+        ]
+      },
+      "note": "第一百二十五次经验仅原数据2026-10-09.13→2026-10-09.14，源9f7cceaf增0改16退0/193 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp125。仅18所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；三combat/potion/SL/terminal源码提案沿自动链，不标源码实现。原merged-null/5记录文件冲突及核验/登记初稿失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T10:54:38+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp126",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "06b30fc028f8a32ddf2e6e23faab26627f1719d6",
+          "f04518bfa4ae33c92cebc2e0ebf4b5a62ff2e0f5",
+          "e447200f356f2516fda4100024cfb990166c74db",
+          "60930431b57b662329d6c51186f4eb8b06db37f3"
+        ]
+      },
+      "note": "第一百二十六次经验仅原数据2026-10-09.14→2026-10-09.15，源06b30fc0增0改9退0/193 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp126。仅9所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；两combat/potion/terminal源码提案沿自动链，不标源码实现。原merged-null/19记录和论文表冲突及核验/登记初稿失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T11:20:07+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp127",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation",
+          "silent-knowledge-demon-healing-sl-observation"
+        ],
+        "commits": [
+          "0e7a9db45f68953aaf1dd2d180e9b6ab5c3ef514",
+          "5f809c22a7d2b8866c6971658a0904d202e11ac4",
+          "6519b89093213125f9a91714dd35dafcedd643d6",
+          "aa580dd2457b7e1319fd5f40e0ae089f8e587210"
+        ]
+      },
+      "note": "第一百二十七次经验仅原数据2026-10-09.15→2026-10-09.16，源0e7a9db4增1改15退0/194 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp127。仅17所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；四combat/potion/sl/terminal源码提案沿自动链，不标源码实现。原merged-null/3项运维记录冲突及核验/登记初稿失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T13:44:03+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp130",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "6e3ac6948f3c62a90c1077708f20012d5ebeb6f4",
+          "9f572a6d8c63b48af820743db615aa976279e9d5",
+          "57b661f07711e9aa80eee9fd375d2eb164921b2e",
+          "86fd84c7cbacc4876ae6691968389d388d148c88"
+        ]
+      },
+      "note": "第一百三十次经验仅原数据2026-10-09.18→2026-10-09.19，源6e3ac694增0改22退0/196 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp130。仅22所属经验数据shipped，旧首证/prior/claim/evidence/support/repeat及版本历史保持；四combat/potion/sl/terminal源码提案沿自动链，不标源码实现。原merged-null/5项记录冲突及探索核验失败原件保持，新树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T14:48:35+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp131",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "3a71746d3cd52f14d4df4c454f460b519d7eaf44",
+          "92dcf85e6be692fac9ad313d9de6dc10a0fb453b",
+          "c7e1e0ed360c72903c84fb3791cf66c193c369cd",
+          "4e3a124eb204a7fa160dc07928e267471be6e298"
+        ]
+      },
+      "note": "第一百三十一次经验仅原数据2026-10-09.19→2026-10-09.20，源3a71746d增0改23退0/196 active；源251文件2627例tsc/vitest0，actual live/main唯一发布S1.exp131。仅24所属经验数据shipped，旧claim/首证/prior/evidence/support/repeat及版本历史保持。四combat/potion/sl/terminal代码提案沿原自动链，不标源码实现。原19项记录/论文冲突、failed/merged-null/out/err和14:35 pending预检拒绝历史保持；本次空闲锁续办保存10项刷新，当前代码与固定57b661f0逐blob一致，新数据树完整外部待原批独立续验，exp100旧完整失败不关闭。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T16:14:00+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp132",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "6276c27246376faa0822b2ec1e7ae1bbddf0f161",
+          "2e126dc3383508b588fbf54e1b8150be0cf89466",
+          "2edf5043f5fdfa9ea07e67c11d00e0f2581a07b1",
+          "5ba3a9d386636bfaf91850c5770ef7a643d48ff0"
+        ]
+      },
+      "note": "第132次经验原数据2026-10-09.20→2026-10-09.21，源6276c272增0改16退0/196 active，源251文件2627例tsc/vitest0；actual live/main唯一S1.exp132发布。仅17所属经验数据shipped，旧claim/首证/prior/evidence/support/repeat/版本历史保持。三combat/potion/sl/terminal/structure代码提案沿原自动链，不标源码实现。原3项共享记录冲突、failed/merged-null/out/err、局部验证失败及15:19刷新占用拒绝历史保持；16:04空闲锁续办保存全部并行刷新与当前代码，新数据树完整外部待原批独立续验，exp100旧失败不关闭。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T16:29:29+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp133",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "a8bd4e4841b030df8038bbed8e38a893559a2cc7",
+          "dfb41f1826e29ed2763caf3127b7e0d4b4dea363",
+          "c308b61e13c15ee90d62798f732d800055313f65",
+          "5b4311127095b081176489c70c514ae13dffd122"
+        ]
+      },
+      "note": "第133次经验原数据2026-10-09.21→2026-10-09.22，源a8bd4e48增1改21退0/197 active，源251文件2627例tsc/vitest0；actual live/main唯一S1.exp133发布。仅24所属经验数据shipped，旧claim/首证/prior/证据/support/repeat及历史保持；四代码提案原自动链pending，不标源码实现，不标纯bug0339上线。原20项记录/论文冲突及failed/merged-null/out/err/local验证失败保留，本轮空闲锁只合已测数据保存全部当前代码与刷新。经验132固定2edf5043完整检查已通过；新数据树单次外部续验随后请求、结果待回报，exp100旧失败独立保持。"
+    },
+    {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-09T17:17:04+08:00",
+      "by": "ops",
+      "status": "shipped",
+      "version": "S1.exp134",
+      "where": {
+        "experience": [
+          "silent-deck-burst-observation"
+        ],
+        "commits": [
+          "26bd83afde20a0b5a90770a1ab21e6016b96dd95",
+          "4bf6f54fc0599d29282d7f5e31d07d55f8b606f2",
+          "5957f056390032639e701fde18f74e60b21536ce",
+          "103292d61ff7cf6ce1edd53ef5c46b6cbd31c365"
+        ]
+      },
+      "note": "第134次经验原数据2026-10-09.22→2026-10-09.23，源26bd83af增0改15退0/197 active，源251文件2627例tsc/vitest0；actual live/main唯一S1.exp134发布。仅18所属经验数据shipped，旧claim/首证/prior/证据/support/repeat及历史保持；四代码提案原自动链pending，不标源码实现。原18项记录/论文冲突及failed/merged-null/out/err/local验证失败保留，本轮空闲锁只合已测数据保存全部当前代码与刷新。经验133固定c308b61e完整检查已通过；新数据树单次外部续验随后请求、结果待回报，exp100旧失败独立保持。"
+    }
+  ]
+}

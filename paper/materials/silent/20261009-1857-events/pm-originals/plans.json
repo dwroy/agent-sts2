@@ -1,0 +1,638 @@
+[
+  {
+    "ts": "2026-10-09T08:58:41.117Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 1,
+    "trigger": "start",
+    "observed_ts": "2026-10-09T08:58:04.686Z",
+    "merged_into": "event/plan",
+    "decision_id": "769c9b8a-8bf0-4fdc-a6ca-f48d6f383bc9",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 1,
+      "floor": 1,
+      "hpPct": 0.8,
+      "trigger": "start",
+      "archetype": "Efficient attacks transitioning into poison scaling and dexterity defense",
+      "want": [
+        "POISONED_STAB",
+        "DAGGER_SPRAY",
+        "NOXIOUS_FUMES",
+        "ACCELERANT",
+        "FOOTWORK",
+        "LEG_SWEEP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Build reliable damage and poison scaling, upgrade key components, preserve HP and a defensive potion, and prepare weak plus substantial block for the post-kill explosion.",
+      "summary": "Take efficient damage early, then develop poison and dexterity-backed defense. Remove Strikes as better attacks arrive. Fight elites with adequate health and potions; prioritize surviving the giant’s final explosion."
+    },
+    "raw": {
+      "archetype": "Efficient attacks transitioning into poison scaling and dexterity defense",
+      "want": [
+        "POISONED_STAB",
+        "DAGGER_SPRAY",
+        "NOXIOUS_FUMES",
+        "ACCELERANT",
+        "FOOTWORK",
+        "LEG_SWEEP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Build reliable damage and poison scaling, upgrade key components, preserve HP and a defensive potion, and prepare weak plus substantial block for the post-kill explosion.",
+      "summary": "Take efficient damage early, then develop poison and dexterity-backed defense. Remove Strikes as better attacks arrive. Fight elites with adequate health and potions; prioritize surviving the giant’s final explosion."
+    },
+    "question": {
+      "label": "event/plan",
+      "latency_ms": 27902,
+      "input_tokens": 131334,
+      "output_tokens": 446,
+      "reasoning_tokens": 232,
+      "effort": ""
+    },
+    "memory_chars": 6095,
+    "_line": 2923,
+    "_offset": 6466718
+  },
+  {
+    "ts": "2026-10-09T09:06:23.483Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 11,
+    "trigger": "review",
+    "observed_ts": "2026-10-09T09:05:38.242Z",
+    "merged_into": "rest/plan",
+    "decision_id": "ddf4bb3d-84f5-4e57-b2bc-743e45193622",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 1,
+      "floor": 11,
+      "hpPct": 0.5857142857142857,
+      "trigger": "review",
+      "archetype": "Shiv-Panache damage with poison support and dexterity defense",
+      "want": [
+        "ACCURACY",
+        "AFTERIMAGE",
+        "BACKFLIP",
+        "LEG_SWEEP",
+        "ACCELERANT",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Improve damage scaling, secure a defensive potion, and enter healthy. Save Weak and substantial block for the explosion after defeating the body.",
+      "summary": "Skip the remaining elite. Upgrade Footwork now, improve shiv scaling and draw, and remove Strikes. At the final campfire, heal unless sufficiently healthy to upgrade safely."
+    },
+    "raw": {
+      "archetype": "Shiv-Panache damage with poison support and dexterity defense",
+      "want": [
+        "ACCURACY",
+        "AFTERIMAGE",
+        "BACKFLIP",
+        "LEG_SWEEP",
+        "ACCELERANT",
+        "NOXIOUS_FUMES"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE"
+      ],
+      "remove": [
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Improve damage scaling, secure a defensive potion, and enter healthy. Save Weak and substantial block for the explosion after defeating the body.",
+      "summary": "Skip the remaining elite. Upgrade Footwork now, improve shiv scaling and draw, and remove Strikes. At the final campfire, heal unless sufficiently healthy to upgrade safely."
+    },
+    "question": {
+      "label": "rest/plan",
+      "latency_ms": 33861,
+      "input_tokens": 141805,
+      "output_tokens": 675,
+      "reasoning_tokens": 438,
+      "effort": ""
+    },
+    "memory_chars": 10753,
+    "_line": 2924,
+    "_offset": 6468600
+  },
+  {
+    "ts": "2026-10-09T09:17:05.931Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 18,
+    "trigger": "act",
+    "observed_ts": "2026-10-09T09:16:11.392Z",
+    "merged_into": "event/act-plan",
+    "decision_id": "23ca3e50-97bd-4a91-9296-01ad1459fcec",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 2,
+      "floor": 18,
+      "hpPct": 0.8285714285714286,
+      "trigger": "act",
+      "archetype": "Poison scaling with Panache burst and dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "AFTERIMAGE",
+        "NOXIOUS_FUMES",
+        "BACKFLIP",
+        "ACCURACY",
+        "LEG_SWEEP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE",
+        "SNAKEBITE"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Enter healthy with defensive potions, poison scaling and dependable block. Damage both parts; face Rocket during lasers and account for the survivor’s death-triggered buffs.",
+      "summary": "Prioritize poison scaling and draw over more modest attacks. Take one late elite between campfires, then shop for missing components and potions. Upgrade Accelerant if acquired; heal whenever the next segment threatens survival."
+    },
+    "raw": {
+      "archetype": "Poison scaling with Panache burst and dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "AFTERIMAGE",
+        "NOXIOUS_FUMES",
+        "BACKFLIP",
+        "ACCURACY",
+        "LEG_SWEEP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE",
+        "SNAKEBITE"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "block_target": 8,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Enter healthy with defensive potions, poison scaling and dependable block. Damage both parts; face Rocket during lasers and account for the survivor’s death-triggered buffs.",
+      "summary": "Prioritize poison scaling and draw over more modest attacks. Take one late elite between campfires, then shop for missing components and potions. Upgrade Accelerant if acquired; heal whenever the next segment threatens survival."
+    },
+    "question": {
+      "label": "event/act-plan",
+      "latency_ms": 54055,
+      "input_tokens": 134990,
+      "output_tokens": 994,
+      "reasoning_tokens": 702,
+      "effort": ""
+    },
+    "memory_chars": 12326,
+    "_line": 2925,
+    "_offset": 6470336
+  },
+  {
+    "ts": "2026-10-09T09:18:56.968Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 20,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-09T09:18:22.018Z",
+    "merged_into": "event/choose",
+    "decision_id": "226e8b20-f6a2-47c0-be10-0d70cb6c431d",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 2,
+      "floor": 20,
+      "hpPct": 0.42857142857142855,
+      "trigger": "hp_drop",
+      "archetype": "Shiv burst and accelerated poison with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "BACKFLIP",
+        "ACCURACY",
+        "NOXIOUS_FUMES",
+        "AFTERIMAGE",
+        "LEG_SWEEP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE",
+        "SNAKEBITE",
+        "FOOTWORK"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 9,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Enter healthy with damage scaling, reliable draw, and defensive potions. Face Rocket during lasers; account for the surviving part’s Strength and 99 Block.",
+      "summary": "Keep the four-campfire route and heal early. Current boss simulations show no wins: prioritize scaling and draw, not more modest attacks. Remove Injury, buy useful potions, and reassess the late elite before entering."
+    },
+    "raw": {
+      "archetype": "Shiv burst and accelerated poison with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "BACKFLIP",
+        "ACCURACY",
+        "NOXIOUS_FUMES",
+        "AFTERIMAGE",
+        "LEG_SWEEP"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE",
+        "SNAKEBITE",
+        "FOOTWORK"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "block_target": 9,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Enter healthy with damage scaling, reliable draw, and defensive potions. Face Rocket during lasers; account for the surviving part’s Strength and 99 Block.",
+      "summary": "Keep the four-campfire route and heal early. Current boss simulations show no wins: prioritize scaling and draw, not more modest attacks. Remove Injury, buy useful potions, and reassess the late elite before entering."
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 27359,
+      "input_tokens": 136258,
+      "output_tokens": 596,
+      "reasoning_tokens": 354,
+      "effort": ""
+    },
+    "memory_chars": 12067,
+    "_line": 2926,
+    "_offset": 6472278
+  },
+  {
+    "ts": "2026-10-09T09:21:03.609Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 22,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-09T09:20:32.482Z",
+    "merged_into": "event/choose",
+    "decision_id": "c045fd33-ce0e-4ed0-a864-db6011d175bc",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 2,
+      "floor": 22,
+      "hpPct": 0.17142857142857143,
+      "trigger": "hp_drop",
+      "archetype": "Accelerated poison and shiv burst with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "ACCURACY",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "MALAISE",
+        "AFTERIMAGE"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE",
+        "SNAKEBITE",
+        "FOOTWORK"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 9,
+      "elites": "normal",
+      "rest": "auto",
+      "bossPrep": "Enter healthy with improved damage scaling, draw, and defensive potions. Face Rocket during lasers; surviving parts gain Strength and 99 Block.",
+      "summary": "Keep the four-campfire route and heal at the next campfires. Stop paying HP for rewards. Seek poison or shiv scaling and draw; remove Injury. Reassess the late elite before committing."
+    },
+    "raw": {
+      "archetype": "Accelerated poison and shiv burst with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "ACCURACY",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "MALAISE",
+        "AFTERIMAGE"
+      ],
+      "avoid": [
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER",
+        "SLICE",
+        "SNAKEBITE",
+        "FOOTWORK"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "block_target": 9,
+      "elites": "normal",
+      "rest": "auto",
+      "boss_prep": "Enter healthy with improved damage scaling, draw, and defensive potions. Face Rocket during lasers; surviving parts gain Strength and 99 Block.",
+      "summary": "Keep the four-campfire route and heal at the next campfires. Stop paying HP for rewards. Seek poison or shiv scaling and draw; remove Injury. Reassess the late elite before committing."
+    },
+    "question": {
+      "label": "event/choose",
+      "latency_ms": 24649,
+      "input_tokens": 136894,
+      "output_tokens": 550,
+      "reasoning_tokens": 317,
+      "effort": ""
+    },
+    "memory_chars": 13310,
+    "_line": 2927,
+    "_offset": 6474191
+  },
+  {
+    "ts": "2026-10-09T09:26:43.786Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 31,
+    "trigger": "review",
+    "observed_ts": "2026-10-09T09:26:03.671Z",
+    "merged_into": "shop/plan",
+    "decision_id": "cec4c459-c496-4add-9657-681689d954fb",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 2,
+      "floor": 31,
+      "hpPct": 0.32857142857142857,
+      "trigger": "review",
+      "archetype": "Poison scaling and shiv burst with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "MALAISE",
+        "ACCURACY",
+        "AFTERIMAGE"
+      ],
+      "avoid": [
+        "SLICE",
+        "FOOTWORK",
+        "SNAKEBITE",
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "blockTarget": 10,
+      "elites": "avoid",
+      "rest": "heal",
+      "bossPrep": "Heal before crab. Use Strength for sustained attack damage, establish Footwork, face Rocket during lasers, and maintain poison on both parts through the survivor’s shield.",
+      "summary": "Damage scaling and draw remain insufficiently developed; no calibrated damage gap is available. Heal before the boss, prioritize accelerated poison and cycling, remove Injury then Strikes, and avoid elites until recovery."
+    },
+    "raw": {
+      "archetype": "Poison scaling and shiv burst with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "BACKFLIP",
+        "NOXIOUS_FUMES",
+        "MALAISE",
+        "ACCURACY",
+        "AFTERIMAGE"
+      ],
+      "avoid": [
+        "SLICE",
+        "FOOTWORK",
+        "SNAKEBITE",
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT"
+      ],
+      "block_target": 10,
+      "elites": "avoid",
+      "rest": "heal",
+      "boss_prep": "Heal before crab. Use Strength for sustained attack damage, establish Footwork, face Rocket during lasers, and maintain poison on both parts through the survivor’s shield.",
+      "summary": "Damage scaling and draw remain insufficiently developed; no calibrated damage gap is available. Heal before the boss, prioritize accelerated poison and cycling, remove Injury then Strikes, and avoid elites until recovery."
+    },
+    "question": {
+      "label": "shop/plan",
+      "latency_ms": 28691,
+      "input_tokens": 138700,
+      "output_tokens": 614,
+      "reasoning_tokens": 362,
+      "effort": ""
+    },
+    "memory_chars": 20089,
+    "_line": 2928,
+    "_offset": 6476006
+  },
+  {
+    "ts": "2026-10-09T09:49:21.419Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 34,
+    "trigger": "act",
+    "observed_ts": "2026-10-09T09:48:47.655Z",
+    "merged_into": "event/act-plan",
+    "decision_id": "4ac04976-730f-4c2a-b98b-876167dc3ad9",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 3,
+      "floor": 34,
+      "hpPct": 0.8,
+      "trigger": "act",
+      "archetype": "Accelerated poison with dexterity defense and Panache burst",
+      "want": [
+        "ACCELERANT",
+        "NOXIOUS_FUMES",
+        "AFTERIMAGE",
+        "MALAISE",
+        "BACKFLIP",
+        "ACCURACY"
+      ],
+      "avoid": [
+        "FOOTWORK",
+        "SNAKEBITE",
+        "SLICE",
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT",
+        "SLICE"
+      ],
+      "blockTarget": 10,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Upgrade Accelerant if acquired. Establish dexterity and sustained poison quickly. Enter both bosses healthy; use replenishing potions to protect setup and accelerate kills.",
+      "summary": "Damage scaling remains insufficient; no calibrated gap is available. Seek accelerated poison and draw, remove dilution, exploit Meal Ticket shops, and take only the mandatory elite. Heal when threatened; prioritize core upgrades when safe."
+    },
+    "raw": {
+      "archetype": "Accelerated poison with dexterity defense and Panache burst",
+      "want": [
+        "ACCELERANT",
+        "NOXIOUS_FUMES",
+        "AFTERIMAGE",
+        "MALAISE",
+        "BACKFLIP",
+        "ACCURACY"
+      ],
+      "avoid": [
+        "FOOTWORK",
+        "SNAKEBITE",
+        "SLICE",
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT",
+        "SLICE"
+      ],
+      "block_target": 10,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Upgrade Accelerant if acquired. Establish dexterity and sustained poison quickly. Enter both bosses healthy; use replenishing potions to protect setup and accelerate kills.",
+      "summary": "Damage scaling remains insufficient; no calibrated gap is available. Seek accelerated poison and draw, remove dilution, exploit Meal Ticket shops, and take only the mandatory elite. Heal when threatened; prioritize core upgrades when safe."
+    },
+    "question": {
+      "label": "event/act-plan",
+      "latency_ms": 33347,
+      "input_tokens": 136914,
+      "output_tokens": 736,
+      "reasoning_tokens": 444,
+      "effort": ""
+    },
+    "memory_chars": 19087,
+    "_line": 2929,
+    "_offset": 6477939
+  },
+  {
+    "ts": "2026-10-09T09:51:16.559Z",
+    "run": "R6WDLYS19ZTY",
+    "floor": 36,
+    "trigger": "hp_drop",
+    "observed_ts": "2026-10-09T09:50:36.445Z",
+    "merged_into": "shop/plan",
+    "decision_id": "22a59cfd-9cf8-45fd-ac56-a12b04564b0d",
+    "plan": {
+      "runId": "R6WDLYS19ZTY",
+      "act": 3,
+      "floor": 36,
+      "hpPct": 0.6774193548387096,
+      "trigger": "hp_drop",
+      "archetype": "Poison burst and Panache cycling with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "NOXIOUS_FUMES",
+        "MALAISE",
+        "AFTERIMAGE",
+        "BACKFLIP",
+        "ACCURACY"
+      ],
+      "avoid": [
+        "FOOTWORK",
+        "SNAKEBITE",
+        "SLICE",
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT",
+        "SLICE"
+      ],
+      "blockTarget": 13,
+      "elites": "avoid",
+      "rest": "auto",
+      "bossPrep": "Upgrade Accelerant if found; establish Footwork and poison early. Preserve health for consecutive bosses, using replenishing potions to protect setup and accelerate kills.",
+      "summary": "Damage scaling remains incomplete; no calibrated gap is available. Seek poison scaling and efficient draw, remove dilution, exploit Meal Ticket shops, and minimize elite exposure. Heal when threatened; upgrade core scaling when safe."
+    },
+    "raw": {
+      "archetype": "Poison burst and Panache cycling with dexterity defense",
+      "want": [
+        "ACCELERANT",
+        "NOXIOUS_FUMES",
+        "MALAISE",
+        "AFTERIMAGE",
+        "BACKFLIP",
+        "ACCURACY"
+      ],
+      "avoid": [
+        "FOOTWORK",
+        "SNAKEBITE",
+        "SLICE",
+        "GRAND_FINALE",
+        "KNIFE_TRAP",
+        "FINISHER"
+      ],
+      "remove": [
+        "INJURY",
+        "STRIKE_SILENT",
+        "SLICE"
+      ],
+      "block_target": 13,
+      "elites": "avoid",
+      "rest": "auto",
+      "boss_prep": "Upgrade Accelerant if found; establish Footwork and poison early. Preserve health for consecutive bosses, using replenishing potions to protect setup and accelerate kills.",
+      "summary": "Damage scaling remains incomplete; no calibrated gap is available. Seek poison scaling and efficient draw, remove dilution, exploit Meal Ticket shops, and minimize elite exposure. Heal when threatened; upgrade core scaling when safe."
+    },
+    "question": {
+      "label": "shop/plan",
+      "latency_ms": 27627,
+      "input_tokens": 140744,
+      "output_tokens": 607,
+      "reasoning_tokens": 359,
+      "effort": ""
+    },
+    "memory_chars": 23189,
+    "_line": 2930,
+    "_offset": 6479924
+  }
+]
