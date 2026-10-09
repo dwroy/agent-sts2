@@ -414,3 +414,5 @@ probe防护source76508f8aed6fbcf3cd43e1cf2f2fda78d0c5eaa9兜底只合3路径，�
 - 2026-10-09 10:26 运维codex10:24经验125收件箱文字更正：10:25结案收件箱行“原18冲突”应为“原5记录文件冲突”，系旧模板转录笔误；原行保留，closure/manifest/decision-log/ops-handoff原核实均为5。完整tsc/vitest exit0、302文件3435例过2跳及唯一S1.exp125结案不变；本次只追加更正，无新合入、版本、台账或补测。回执paper/materials/silent/20261009-1024-checks-experience125/record-correction.json。
 
 - 2026-10-09 10:45 运维codex：E6DYYXRX7GVE复盘闭环完成，24546字节原追加及14条原CLI已纳入；无新增纯bug，两个原提案沿自动strategy-proposal链。源1472条原字节、28项数字、101个首帧及追加前修订/失败历史保留；论文--no-raw单次刷新、五校验通过、台账0问题；回执paper/materials/silent/20261009-1033-events/paper-snapshot.json。
+
+- 2026-10-09 10:55 运维10:46经验126：批次20261009-101302-experience-update原19处记录/论文表冲突已兜底，只合已测06b30fc0经验数据；actual f04518bfa4ae33c92cebc2e0ebf4b5a62ff2e0f5，唯一发布e447200f356f2516fda4100024cfb990166c74db/S1.exp126，main登记f2870f3b32e08ee2c2dc4e1125965679fee6819f。源tsc/vitest0、251文件2627例；27原CLI/48466字节原第126节及9所属数据shipped已登记，两代码提案沿原自动链。完整外部单次learner-recheck已启动，固定树458c199589a1ac249012c46ed059e600db7051ec，结果pending，后续learner-checks据实登记；原merged-null/19冲突/out/err留史，知识刷新与当前源码保持，exp100旧失败队列不关闭。无论文刷新或对局/调度/env操作。回执paper/materials/silent/20261009-1046-experience126/final-verification.json。
