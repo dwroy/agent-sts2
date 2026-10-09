@@ -1,0 +1,1 @@
+Waiting-only shell coordinator was interrupted through its own execution session (exit130) to keep this batch within the background-process cap. It had not started finishing or recording. Its original log/exit are retained; replay continues in its own recorded PID/session, and finishing will run sequentially after replay.

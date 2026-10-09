@@ -1,0 +1,44 @@
+{
+ "previous_artifact": "e918959162ed7c88e3f8d995163e1a65d77963b8533a7a26050fbfa222261491",
+ "previous_model_sha256": "aa7b3a32dc152cdc5d52922b2dcee7f24698f79ee84de623104e529ec69815ae",
+ "current_model_sha256": "a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a",
+ "changed_paths": [
+  "agent/src/brain/engines/codex-session.ts",
+  "agent/src/core/config.ts",
+  "agent/src/hand/screens/oneshot.ts",
+  "agent/src/hand/screens/selection.ts",
+  "agent/src/hand/screens/shop.ts",
+  "agent/src/memory/types.ts",
+  "agent/src/reflex/card-model.ts",
+  "agent/src/reflex/silent-apotheosis.ts",
+  "agent/src/reflex/turn-solver.ts",
+  "knowledge/characters/silent/experience.json"
+ ],
+ "historical_fights": 321,
+ "reused_fights": 309,
+ "replayed_fights": 34,
+ "new_validation_fights": 22,
+ "identical_historical_inputs_turns_order_and_seed_indices": true,
+ "checked_replays_except_ms": [
+  [
+   "C48LLXBGKXQ9:17:2:6263075551",
+   "t1"
+  ],
+  [
+   "C48LLXBGKXQ9:17:2:6263075551",
+   "pre"
+  ],
+  [
+   "C48LLXBGKXQ9:33:6:6290069057",
+   "t1"
+  ],
+  [
+   "C48LLXBGKXQ9:33:6:6290069057",
+   "pre"
+  ]
+ ],
+ "reason": "The only numerical changes add poisonExtraTriggers to an upgrade delta and certify the Accelerant Apotheosis upgrade. Every historical modeled card graph (hand, all piles, generated cards, potion pools) was recursively checked; all Apotheosis/Forge paths and board failures are replayed conservatively. In graphs without any such upgrade source, neither changed numerical path can execute. turn-solver only extracts an unchanged Orichalcum sum and adds a descriptive survival guard; no numerical expression, sorting weight, or policy changed. Other source changes concern brain service tier, noncombat screens, type fields, and experience text after the captured solve. All model data and game data are identical. New and affected fights use original full-dataset row indices, 200 samples and seeds.",
+ "initial_exit": 130,
+ "initial_partial_results_sha256": "f4008a050127486e3a0e131c1f4e00990d18e563d551da43b7f596597ce776d8",
+ "input_graph_audit_sha256": "e3288c7f8e7c0bbe9f29b10811938d9fcef2b89f30269233a9df5f70560d3f40"
+}
