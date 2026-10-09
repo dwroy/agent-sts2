@@ -15,6 +15,7 @@ import { createHash } from "node:crypto";
 import { closeSync, openSync, readFileSync, readSync, statSync, writeFileSync } from "node:fs";
 
 import { findRollout } from "../../learner/lib/summary.js";
+import { readRolloutMetadata } from "./rollout-file.js";
 
 /* ---- pure parts (tested) ------------------------------------------------------------------------------------- */
 
@@ -263,7 +264,7 @@ export async function herdrWake(o: HerdrWakeOptions): Promise<HerdrWakeResult> {
   const recorded = readState(o.stateFile);
   const rollout = findRollout(o.codexHome, o.session);
   if (!rollout) return { code: 1, reason: `session file of ${o.session} not found under ${o.codexHome}` };
-  const sessionOpen = (): string | undefined => openTurn(readFileSync(rollout, "utf8"));
+  const sessionOpen = (): string | undefined => readRolloutMetadata(rollout).openTurn;
 
   const screen = async (pane: string): Promise<ComposerState> => {
     const read = await h(["pane", "read", pane, "--source", "visible", "--format", "ansi", "--lines", "15"], 20_000);

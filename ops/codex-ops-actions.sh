@@ -188,6 +188,9 @@ for row in csv.reader(sys.stdin):
     exec python3 "$OPS/codex-ops-learn.py" write --task experience-update --runs "$arg" ;;
   fix-batch)
     exec python3 "$OPS/codex-ops-learn.py" write --task fix-batch ;;
+  core-build-notify)
+    [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9]{8}-[0-9]{6}-fix-batch$ ]] || exit 2
+    exec nice -n 19 python3 "$OPS/codex-ops-learn.py" core-notify --batch "$arg" ;;
   boss-sim-check)
     CODEX_OPS_ROOT="$ROOT" exec nice -n 19 python3 "$ROOT/.worktrees/live/ops/codex-ops-learn.py" boss-check ;;
   strategy-proposal)
