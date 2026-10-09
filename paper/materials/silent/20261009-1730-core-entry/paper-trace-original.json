@@ -1,0 +1,21 @@
+{
+  "request_id": "roy-20261009-historical-core-builds-paper-trace",
+  "parent_request_id": "roy-20261009-historical-core-builds",
+  "requested_at": "2026-10-09T16:35:31+08:00",
+  "requested_by": "Roy",
+  "recorded_by": "agent-sts2-watcher",
+  "roy_original": "同时别忘记记录论文需要材料，中途任何的变更都需要留痕哈",
+  "kind": "原学习请求的论文留痕补充；不新派第二学习任务",
+  "state": "recorded; ops notification pending",
+  "requirements": [
+    "时间/提出者/执行者/请求号与实际batch，任务范围、模板/执行方式及其每次变更、优先级/延期/重试/拒绝原因分别追加记录；人工架构要求与学习者得出的游戏知识分开标来源。",
+    "每次历史抽样冻结日志切点/字节偏移、完整局号、输入文件或原件SHA、角色/进阶/引擎/版本/首试与SL口径及缺帧范围；记录抽取/计算命令或脚本和退出码，保持能重算。原采样没记录的SHA或字段保持未知，不用当前值回填。",
+    "每个组合的候选提出、证据/反例、归并/退役、置信度与适用范围变更都留旧→新及理由；不要只保存最后胜出的组合，失败候选、证据不足和未观察boss也要保存。",
+    "代码/知识/任务/调度适配的实际修改保存diff/提交/分支/源任务和证据；测试失败、冲突、占用拒绝、自测与外部完整检查原日志原样保存。补验收及更正另立记录，不覆盖原失败或旧结论。",
+    "实际live合入SHA、唯一eval版本、开始生效局号或已知分界、知识消费者实际读取、策略采用及后续效果/重犯关联；不把请求、派发、条目生成或自测通过冒称生产生效。新增架构或任务纯工具变更照实记录，未改变对局行为不造游戏版本。",
+    "学习台账只经learner/ledger.py，代码提案只经learner/code_proposals.py；运维按最新协议核实实际上线后登记。decision-log追加决定及上线，规则上线按协议双通知。论文数据/学习曲线/会话转录走既有pipeline，刷新结果独立留痕不伪造历史。",
+    "保存Roy原话与观察者/ops/learner相关对话；归档先脱敏并扫描key，不读/复制key、.env或登录凭据。CODEX_HOME=/home/dw/.codex1的观察者转录覆盖需核实，不能以默认home的ops归档替代。"
+  ],
+  "existing_artifact_manifest": "paper/materials/silent/20261009-watcher-observation/manifest.json",
+  "constraints": "只补充父请求记录和验收，不重派、打断或改变已有任务，不修改运维prompt、对局参数、后台服务或安装新调度。"
+}

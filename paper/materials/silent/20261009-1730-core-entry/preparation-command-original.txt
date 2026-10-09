@@ -1,0 +1,115 @@
+import importlib.util,json,pathlib,hashlib,re,subprocess
+sp=importlib.util.spec_from_file_location('common','/tmp/sts2-0907-deploy-common.py');c=importlib.util.module_from_spec(sp);sp.loader.exec_module(c)
+R=c.ROOT
+A=R/'paper/materials/silent/20261009-1730-core-entry'
+C=R/'paper/materials/silent/20261009-1730-checks-experience134'
+assert not A.exists() and not C.exists()
+assert not c.git('diff','--cached','--name-only').strip()
+t=c.stamp()
+A.mkdir();C.mkdir()
+def sha(data):return hashlib.sha256(data).hexdigest()
+def digest(p):
+ h=hashlib.sha256()
+ with pathlib.Path(p).open('rb') as f:
+  for b in iter(lambda:f.read(1024*1024),b''):h.update(b)
+ return h.hexdigest()
+def dump(p,v):p.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+def snapshot(p,target):
+ data=p.read_bytes();target.write_bytes(data)
+ return {'original':str(p),'archive':str(target.relative_to(R)),'bytes':len(data),'sha256':sha(data)}
+s=json.loads((R/'ops/codex-ops/learn.json').read_bytes())
+parent_path=R/'notes/silent-historical-core-builds-dispatch.json'
+parent_raw=parent_path.read_bytes();parent=json.loads(parent_raw)
+assert c.git('show',':notes/silent-historical-core-builds-dispatch.json').encode()==parent_raw
+assert parent['state']=='pending' and parent['batch'] is None
+orig=[snapshot(parent_path,A/'parent-before-original.json')]
+for stem in ['request','paper-trace','result-notify']:
+ orig.append(snapshot(R/f'notes/watcher-20261009-core-build-{stem}.json',A/f'{stem}-original.json'))
+owner_id='20261008-075538-strategy-proposal'
+owner=s['batches'][owner_id]
+assert owner['state']=='failed' and owner['merged'] is None
+W=R/'.worktrees/codex-dev'
+status=c.git('status','--porcelain',cwd=W)
+paths=c.git('diff','--cached','--name-only',cwd=W).splitlines()
+expected=['agent/src/reflex/rollout-live.ts','agent/src/reflex/rollout.ts','agent/tests/silent-gardener-skittish-evidence.json','agent/tests/silent-gardener-skittish.test.ts']
+assert paths==expected and not c.git('diff','--name-only',cwd=W).strip()
+patch=c.git('diff','--cached','--binary',cwd=W).encode()
+(A/'owner-candidate-original.patch').write_bytes(patch)
+report=pathlib.Path(owner['report']['report'])
+orig.append(snapshot(report,A/'owner-report-original.md'))
+owner_receipt={'observed_at':t,'batch':owner_id,'worktree':str(W),'head':c.git('rev-parse','HEAD',cwd=W).strip(),'status_porcelain':status,'original_batch':{k:v for k,v in owner.items() if k!='key'},'candidate_patch_sha256':sha(patch),'paths':[{'path':p,'physical_sha256':digest(W/p),'index_blob':c.git('rev-parse',':'+p,cwd=W).strip()} for p in paths],'host_process_check':{'action':'bash ops/codex-ops-do.sh procs','observed_at':'2026-10-09 17:34','matching_codex_dev_learner':False,'active_postmortem_batch':'20261009-171301','active_calibration_batch':'20261009-171301-fix-batch','limitation':'Read-only host process evidence was returned through the broker; this file records the observation, not a separately saved raw response.'},'release_condition':'Original 20261008-075538-strategy-proposal owner must preserve/hand off the four staged candidate files and original failed checks; resume that existing candidate through its existing self-test/commit/integration path or provide an explicit preserved disposition. Only then can the ordinary fix worktree be synchronized to current main with a clean index and no host learner. No reset/clean, foreign source commit, unrelated feature lease reuse, or duplicate core-study launch.'}
+dump(A/'owner-before.json',owner_receipt)
+DRAFT='''# Roy 已授权的核心构筑入口与结果通知适配（待现有 learner 执行）
+
+父请求：roy-20261009-historical-core-builds。关联论文留痕补充 roy-20261009-historical-core-builds-paper-trace 和结果通知补充 roy-20261009-historical-core-builds-result-notify。这是入口/完成通道的机械适配准备，不是游戏知识，不是第二批核心构筑学习，也没有实际派发或安装通知 hook。
+
+## 任务范围及现有入口
+
+由现有普通 fix-batch learner 在其合法、干净且无人占用的工作树实现最小适配。读 notes/silent-historical-core-builds-dispatch.json 与本目录三个原始请求；本稿不允许清理或接管 codex-dev 的旧策略暂存代码。旧拥有者 20261008-075538-strategy-proposal 的四文件/测试超时/原回报保存在 owner-before.json、owner-candidate-original.patch、owner-report-original.md；必须先沿原候选链作保存及处置交接，不能把此稿当其游戏修复审核或上线授权。其他活任务继续。
+
+新增 learner/tasks/silent-historical-core-builds.md，使用现有任务格式及现有 Codex runner；在 ops/learner_jobs.py 的 FEATURE_REQUESTS/requested_feature 注册唯一父请求的 notes JSON，在 ops/codex-ops-learner.sh 注册明确模板、角色和专用工作树。沿现有短锁、工作树租约、标准 finish 与完整外部检查事件路径实现，不另建 cron/heartbeat，不修改运维 prompt、模型/推理强度、env、对局/hosting 参数，不复用其他功能的工作树或伪装另一个 feature。任务采用专用 .worktrees/silent-historical-core-builds，必须经已授权的功能工作树流程建立并核实无租约/dirty，不能忽略现有安全拒绝。当前此树尚不存在。
+
+父请求状态仍 pending/batch null，直到标准 broker 真正返回批号并核实 thread/宿主身份，才记录正式学习 batch。入口适配本身单独记录其 fix-batch 号和源/实际 live/检查，不把它填入核心学习 batch，不造游戏版本/ledger/shipped。若纯工具适配不改变对局行为，按纯工具记录；真正改变游戏行为的知识/实现由后续 learner 按原协议登记。
+
+## 全历史任务模板必须完整承载
+
+学习输入是 SILENT 全部已结束胜/负局，在实际派发时冻结日志切点、完整局号清单、输入 SHA、抽取命令与缺帧覆盖；不得受普通单局/十局增量截断，也不得声称现在已冻结。按进阶、代码版本、实际成功大脑来源分层，主战绩保持纯 Codex，首试/SL 最终分开；依据实际战斗前牌组/资源及成型时点分型，不能拿最终幸存牌组倒填早期。只用本角色证据，由 learner 自己提出具体组合、打法、阈值；运维不预定流派/牌表。
+
+首轮实质报告必须给候选核心运转/支持/完整反例及未知范围；真实伤害、生存、启动、战斗回合、HP/药水/SL 等资源消耗；逐候选/实际 boss/进阶到达数、独立局通过率与整局胜率，明确分母、区间和重复 SL 口径；实际可用的构筑目标、当前缺口、替代/过渡、转型/放弃条件及证据局/层/回合。和 arch-funnel-guard、arch-learning-priority、arch-unified-resource-value、inv-f33-regression 关联，保留前期漏斗。当前 A10 无胜局，低阶成功不能外推稳定通杀；证据不足也必须形成上述内容及限制的实质报告，不能用一个空数组/最终成功摘要通过验收。
+
+有证据的知识/代码沿既有 learner/ledger.py 与 learner/code_proposals.py CLI 登记，自测→实际 live→唯一版本（行为改变时）/所属账本/双收件箱→完整外部检查。核实大脑消费者实际读取与策略采用、已知生效局边界；报告/派发/自测不是上线。所有候选提出/修改/放弃、旧新 diff/提交、失败/冲突/拒绝/测试原日志及效果/重犯都原样留论文证据；更正独立保存。保持本目录原 pending 和旧失败。
+
+## 宿主完成与 Roy 通知
+
+在现有 runner 完成/ops 标准事件路径新增明确的报告验收与通知状态，不直接 enqueue 新任务。严格绑定父 request_id、实际 batch、角色 silent、learner_task、租约报告 realpath 与报告 SHA，核实候选/逐 boss 矩阵/伤害资源/构筑模板/证据限制。允许有实质分析的“尚无足够证据”；入口完成、派发成功、空报告、错误任务/批号/角色/路径、过期 SHA 均不得当组合有结果。
+
+ops 核实后在 notes/for-dai.md 和 ops/inbox-dev.md 写简洁候选/矩阵/可用模板或缺证限制摘要，关联 request+batch+报告路径/SHA。通过宿主现有完成路径调用 argv 形式 herdr notification show --body <TEXT> --sound done <TITLE>，不可 shell 拼接、不向 TUI 输入、不 resume watcher 会话。按唯一父请求+batch+报告 SHA 做持久去重；短事务保存通知领取/完成状态，命令后保存 success/failure/rc 和脱敏输出回执，失败原件保留，崩溃后不可无凭据重复通知，不长时间持 learn.lock。通知机制实际通过验收并成为 live 祖先前 notification_hook 必须 pending，不能承诺已开启。测试只用固定报告和 fake herdr，不实际给 Roy 发测试通知。
+
+## 固定验收与发布
+
+固定夹具覆盖父请求/补充去重、dirty/活租约拒绝、模板白名单与角色/路径绑定、完整历史不截十局、同一父请求仅一个活学习 batch；报告身份/realpath/SHA、不完整报告/入口完成不通知、实质缺证报告可通知、相同 request+batch+SHA 重入只一次、原 CLI 失败回执保留与并行完成事务无覆盖。现有业务测试仍通过，源撤销后对应真实断言红、原字节恢复绿，全部失败/超时原日志保留。按仓库要求 nice/最多四进程跑原沙箱入口（含 tsc/vitest）及针对性 Python 固定夹具，gitleaks 后提交、自行合入 live；运维核实实际源祖先、标准完整外部检查与记录。不能新写的测试只是模拟实现，不能冒报外部检查或生产通知。
+
+入口实际 live 核实后，用同一父请求通过标准 broker 一次正式派全历史学习，登记真实 batch/PID/工作树/输入切点及模板 SHA。不派第二核心学习；首轮报告回执与通知去重记录沿父项留痕。观察者 CODEX_HOME=/home/dw/.codex1 转录覆盖目前 pending；如需补既有归档选择入口，只走现有脱敏/key扫描流程，禁止读取/复制凭据/env，未核实仍写 pending，不新服务。
+'''
+(A/'entry-adaptation-task.md').write_text(DRAFT)
+notify='roy-20261009-historical-core-builds-result-notify'
+parent['linked_request_ids'].append(notify)
+parent['source_result_notify']='notes/watcher-20261009-core-build-result-notify.json'
+parent['source_result_notify_sha256']=orig[3]['sha256']
+parent['dispatch_status']='entry_adaptation_prepared_waiting_original_codex_dev_owner'
+parent['entry_adaptation']={'state':'queued_not_dispatched','authorized_at':'2026-10-09 17:30','accepted_at':t,'task':'fix-batch','batch':None,'work_spec':str((A/'entry-adaptation-task.md').relative_to(R)),'work_spec_sha256':digest(A/'entry-adaptation-task.md'),'queue':'notes/fix-queue-v4.md#core-builds-entry-adaptation','blocking_owner_batch':owner_id,'blocking_worktree':str(W),'blocking_paths':paths,'release_condition':owner_receipt['release_condition'],'prepared_acceptance':['full-history task template','FEATURE_REQUESTS explicit route','wrapper allowlist/isolated lease','standard finish/external checks','host substantive-report identity acceptance','Roy native notification with persistent request/batch/SHA dedup','parent paper trace preserved'],'dispatch_attempt':None}
+parent['result_notification']={'state':'pending_hook_not_installed','request_id':notify,'native_command':['herdr','notification','show','--body','<TEXT>','--sound','done','<TITLE>'],'dedup_identity':['parent_request_id','batch','report_sha256'],'trigger':'First substantive core-study report after ops identity/content verification, including honest insufficient evidence; adapter/dispatch is not a result.','successful_notifications':0,'attempts':[]}
+parent['next_step']='Preserve and resolve original failed 20261008-075538-strategy-proposal owner candidate through its original chain; once codex-dev is clean and unleased, existing fix-batch learner executes archived entry work spec, self-tests and integrates through standard events. After actual entry live acceptance, dispatch this same parent once and later notify Roy only for the substantive verified report.'
+parent['latest_receipt']=str((A/'preparation.json').relative_to(R))
+new=json.dumps(parent,ensure_ascii=False,indent=2)+'\n';parent_path.write_text(new);c.cache_update(str(parent_path.relative_to(R)),new)
+dump(A/'preparation.json',{'timestamp':t,'request_id':notify,'parent_request_id':parent['request_id'],'state':'prepared_waiting_safe_existing_learner','core_study_batch':None,'adapter_batch':None,'notification_hook_installed':False,'notification_sent':False,'source_originals':orig,'owner_receipt':'owner-before.json','work_spec':'entry-adaptation-task.md','work_spec_sha256':digest(A/'entry-adaptation-task.md'),'active_tasks_preserved':True,'old_owner_candidate_preserved':True,'game_knowledge_source_version_shipped_created':False,'parent_after_sha256':digest(parent_path),'next_action':'Commit own preparation/queue records, then attempt existing host broker fix-batch exactly once; record actual refusal/dispatch separately without waiting for external completion.'})
+# Independent complete-check acceptance, never rewrite the original completion object.
+M=R/'paper/materials/silent/20261009-1708-experience134'
+manifest=json.loads((M/'manifest.json').read_bytes());pub=json.loads((M/'publication.json').read_bytes());reg=json.loads((M/'experience-registration.json').read_bytes())
+batch='20261009-163854-experience-update';b=s['batches'][batch];f=b['fallback_checks'][-1]
+assert f['rc']==0 and f['merged']==pub['publication'] and f['tree']==pub['publication_tree'] and f['commits']==[pub['source']]
+assert c.git('rev-parse',pub['publication']+'^{tree}').strip()==f['tree']
+for commit in [pub['source'],pub['actual_code'],pub['publication']]:
+ for tree in [R,c.LIVE]:
+  assert c.run(['git','merge-base','--is-ancestor',commit,'HEAD'],cwd=tree,check=False).returncode==0
+for o in manifest['originals']:assert digest(o['original'])==o['sha256'],o['original']
+log=pathlib.Path(f['log']);raw=log.read_bytes();plain=re.sub(r'\x1b\[[0-9;]*m','',raw.decode())
+assert re.findall(r'Test Files\s+(\d+) passed',plain)==['302']
+assert re.findall(r'\bTests\s+(\d+) passed',plain)==['3435'] and '2 skipped' in plain
+assert b['state']=='failed' and b['rc']==0 and b['merged'] is None
+for tree in [R,c.LIVE]:
+ versions=json.loads((tree/'eval/versions.json').read_bytes())['versions']
+ assert [v for v in versions if v['name']==pub['version']]==[pub['version_entry']]
+assert reg['new_data_shipped']==18
+snapshot(log,C/'complete-checks-original.log')
+dump(C/'batch-observation.json',{k:v for k,v in b.items() if k!='key'})
+closure={'timestamp':t,'batch':batch,'source':pub['source'],'actual_data_merge':pub['actual_code'],'checked_live_commit':f['merged'],'checked_tree':f['tree'],'version':pub['version'],'data_shipped':18,'complete_tsc_vitest_exit':0,'files_passed':302,'tests_passed':3435,'tests_skipped':2,'original_log':str(log),'complete_log_sha256':sha(raw),'originals_preserved':len(manifest['originals']),'prior_manifest_sha256':digest(M/'manifest.json'),'source_and_publication_are_actual_main_live_ancestors':True,'original_batch_state':b['state'],'original_rc':b['rc'],'original_merged':b['merged'],'original_failed_conflicts_report_retry_preserved':True,'repeat_check_merge_version_support_shipped':0,'previous_exp100_failure_preserved':True,'completion_kind':'Independent 2026-10-09 full-check acceptance; original failed completion and earlier pending receipts remain unchanged.'}
+dump(C/'closure.json',closure)
+queue=f'''\n## {t} — Roy 高优先：全历史核心构筑入口与实质报告通知适配\n\n- **core-builds-entry-adaptation**：父请求 `roy-20261009-historical-core-builds`，17:30 补充 `roy-20261009-historical-core-builds-result-notify` 已授权现有 learner 做最小任务/调度适配，关联 paper-trace；任务稿与验收见 `paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md`。补独立全历史模板、FEATURE_REQUESTS 路由、wrapper 白名单/专用干净租约及标准完成/完整检查通道，并在首份身份/SHA/候选/boss矩阵/伤害资源/构筑模板/限制核实后的实质报告接宿主 herdr 原生通知，父 request+batch+报告SHA 只一次并留成功/失败回执。纯入口与通知不造游戏知识/版本，当前 hook pending、核心学习 batch null，不用单卡增量替代。准备已完成；普通 `codex-dev` 仍归旧 `20261008-075538-strategy-proposal` 的四项暂存候选，源完整沙箱重跑124及原报告保持。先由原候选拥有者沿其原测试/提交/处置链作保存交接，干净且无宿主写者才允许普通 fix learner 接此任务；禁止 reset/clean、混提交旧源码、抢其他功能树/活租约。现有 broker 将单次尝试，实际结果另记，不等待外部完成。\n'''
+c.append_owned('notes/fix-queue-v4.md',queue)
+line=f'- {t} 运维codex17:30事件：经验134原163854完整外部固定5957f056390032639e701fde18f74e60b21536ce/树0d202738b2e4a1f6e2281490a3bf8b7d69224ed0 tsc+vitest0、302文件3435例过2跳，785原件SHA/实际main-live祖先/唯一S1.exp134及18所属数据shipped核实；原failed/merged-null/retry/18冲突和exp100旧失败保持，独立回执paper/materials/silent/20261009-1730-checks-experience134/closure.json，不重复合入/登记/补测。Roy核心构筑result-notify补充关联唯一父项，已准备全历史模板/路由/wrapper租约/标准完成与实质报告herdr去重通知的完整工作稿和固定验收并加入既有fix队列；普通codex-dev因旧20261008-075538-strategy-proposal四暂存候选/沙箱124未交接而不安全，宿主无该树learner，现有复盘171301与calibration171301活任务保持，须原候选保存处置后干净无租约。父核心学习batch仍null、入口适配batch待单次broker实际返回，通知hook仍pending且未提醒；仅本项准备/证据/记录，不改源码/prompt/对局/env/服务，不造游戏知识/版本/账本/shipped；paper/materials/silent/20261009-1730-core-entry/preparation.json。\n'
+c.append_owned(c.LOG,line)
+notice=f'\n- {t}（17:30事件）经验134完整检查通过：固定5957f056/0d202738，302文件3435例过2跳；原失败历史保持，独立结案 `paper/materials/silent/20261009-1730-checks-experience134/closure.json`。核心构筑唯一父请求已关联Roy“有结果告诉我”补充，入口+通知实现稿/验收已加入普通fix队列，见 `paper/materials/silent/20261009-1730-core-entry/entry-adaptation-task.md`。安全派发当前阻塞是旧策略批20261008-075538在codex-dev的四项暂存候选及未完成沙箱检查；原拥有者保存处置交接后需干净、无活租约才能执行，未清树/抢树。核心学习batch null，通知hook pending；入口或派发不会冒充组合结果。单次broker结果另附。\n'
+for p in ['ops/inbox-dev.md','notes/for-dai.md','notes/ops-handoff.md']:c.append_owned(p,notice)
+for p in [A,C]:c.git('add','--',str(p.relative_to(R)))
+print(json.dumps({'core_preparation':str(A.relative_to(R)),'checks':closure,'staged':c.git('diff','--cached','--stat')},ensure_ascii=False),flush=True)
