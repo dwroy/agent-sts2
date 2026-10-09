@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-09T21:50:51+08:00",
+  "branch": "fix/core-builds-dispatch-recovery",
+  "base": "6dccdb1adf72f968045c895079b3aba414b89a0c",
+  "role": "Roy explicitly authorised watcher direct code fixes; do not delegate these fixes to learner.",
+  "implemented": [
+    "normal fix/strategy per-batch trees + leases",
+    "registered core study/frozen full history/report-only completion + native notify broker",
+    "legacy candidate original physical/index/patch/failure archived, old tree untouched",
+    "bounded rollout metadata (main/herdr) and readonly status"
+  ],
+  "checks": {
+    "target_1": "6 files/44 tests passed",
+    "python_core": "7 tests passed after final guard revision",
+    "ops_typecheck_2": "passed; initial TS5112 kept",
+    "sandbox_1": "CLI cache.dir deprecated, preserved",
+    "sandbox_2": "250 files/2618 tests passed, 2 failures: missing logdb-venv symlink and action doc missing; both fixed",
+    "sandbox_3": "running under exec session 8510, 2 workers, cache false",
+    "gitleaks_2": "exact 108 scheduler job-key false positives individually classified; scan uses task-local fingerprints, no global suppression"
+  },
+  "still_required": [
+    "confirm sandbox-3 success and final targeted checks",
+    "stage/scan/commit only this worktree changes; Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>",
+    "integrate source to main and live preserving root dirty records and live knowledge refresh; live ops mapping differs by older missing cache/regression entries so keep new main routes when resolving",
+    "record actual source/live SHAs and original failure evidence; no game version for pure infrastructure",
+    "close only core-entry ordinary fix queue item and supersede old-owner-must-return condition with preserved handoff",
+    "trigger existing dispatcher/wake, verify core learner started with pinned full manifest and host pid",
+    "verify ops wake recovers without stopping its TUI or existing game/learner",
+    "arrange full outside checks and preserve full results; no push or play"
+  ],
+  "sandbox_session": 8510,
+  "old_candidate_handoff": "legacy-candidate/handoff.json",
+  "core_parent_request": "notes/silent-historical-core-builds-dispatch.json",
+  "core_template": "learner/tasks/silent-historical-core-builds.md",
+  "timers_changed": false
+}

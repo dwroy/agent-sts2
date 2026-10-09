@@ -138,6 +138,14 @@ herdr 不可用时（`herdr-host.sh available` 失败）学习者和 autoplay �
 
 ## 收件箱
 
+Roy 2026-10-09 授权的全历史核心构筑学习使用 `silent-historical-core-builds`，唯一请求在 `notes/silent-historical-core-builds-dispatch.json`。原 `fix-batch` 事件通道承载任务派发，任务本身只学习知识并输出报告，不修架构或合入源码。调度器自动消费该请求，冻结全部已结束静默局及日志完整行字节切点，保存输入清单 SHA；不截最近十局。独立工作树 `.worktrees/silent-historical-core-builds` 由包装器创建并持租约。完成时单独校验请求、批号、冻结输入、完整局清单、报告 realpath/SHA、候选和限制章节，发送 `core-builds-done`，不以不存在的源码合入为失败。
+
+运维核对实质报告并双收件箱回报后，调用 `bash ops/codex-ops-do.sh core-build-notify <批次>`，在宿主使用原生 herdr 通知。按请求、批次及验收报告 SHA 持久去重；不完整报告、入口完成、报告验收后被改写都不能发成果通知。通知状态不明时保留 claimed/uncertain，不盲目重复。所有父请求状态变更在 `ops/codex-ops/core-request-history/` 保存旧字节与追加历史。
+
+普通 `fix-batch`、`strategy-proposal` 改用每批独立的 `codex-fix-<角色>-<时间>`、`codex-strategy-<角色>-<时间>` 工作树，各类同时一批，两类可并行；经验更新仍独占 exp。遗留 codex-dev 及失败树原样保留，供运维保存交接后接手续验，不要求原 agent 回来才能恢复，也不因一棵旧树有改动而阻塞其他批次。状态更新用 learn.lock、上线与完整检查用 live-merge.lock，ops 会话仍由 wake.lock 串行协调。
+
+长时间运行的 ops 会话日志以分块增量方式读取上下文与当前 turn；不再整份构造 JS 字符串，保留原日志。`status` 只读展示批次，不根据沙箱 PID 可见性写 lost。
+
 `ops/inbox-dev.md`：只追加，一行一件事，`- YYYY-MM-DD HH:MM [运维 codex | codex-ops 调度器] 内容`。开发会话盯着这个文件（Monitor 或它自己的定时任务），转告 Dai；需要 Dai 定的事运维会话同时写 notes/for-dai.md。
 
 ## 文件

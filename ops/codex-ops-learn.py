@@ -37,6 +37,7 @@ from learner_jobs import available_worktree, check_jobs, dispatch_write, pending
 import boss_sim_jobs  # noqa: E402
 import ascension_audit  # noqa: E402
 import proposal_dispatch  # noqa: E402
+import core_build_jobs  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
@@ -334,6 +335,13 @@ def cmd_finish(args):
     if batch is None:
         print(f"unknown batch {args.batch}")
         return 1
+    if batch.get("learner_task") == core_build_jobs.TASK:
+        if batch.get("state") in ("done", "failed") and "rc" in batch:
+            return 0
+        batch["finished"] = now_local()
+        core_build_jobs.finish(args.batch, batch, args.rc, ROOT, DIR, enqueue)
+        save_state(state)
+        return 0
     if batch.get("task") == "ascension-audit":
         ascension_audit.finish(state, args.batch, args.rc, ROOT, os.path.join(DIR,"learner"), enqueue, inbox,
                               proposal_check=lambda report, current: proposal_dispatch.links(report, current, ROOT, SCRIPTS))
@@ -426,7 +434,12 @@ def cmd_write(args):
 
 def cmd_request_merge(args):
     if args.branch not in ("codex-dev", "exp-silent"):
-        return 2
+        if not re.fullmatch(r"codex-(fix|strategy)-[a-z0-9_]+-[0-9]{8}-[0-9]{6}", args.branch):
+            return 2
+        registered = any(os.path.basename(batch.get("worktree", "")) == args.branch
+                         for batch in load_state()["batches"].values())
+        if not registered:
+            return 2
     enqueue("manual", f"学习者合入兜底请求：{args.branch}。仅在学习者提交或合入受阻时，按任务 live 流程合入；无须另设审核。")
     print("已发送合入兜底事件；运维会话执行 live 流程。")
     return 0
@@ -463,7 +476,9 @@ def cmd_recheck(args):
 
 def cmd_status(args):
     state = load_state()
-    busy = running_batch(state)
+    # A status read inside a PID namespace must not rewrite host-alive jobs as lost.
+    busy = next((ident for ident, batch in state["batches"].items()
+                 if batch.get("task", "postmortem") == "postmortem" and batch.get("state") == "running"), None)
     for batch_id, batch in sorted(state["batches"].items())[-8:]:
         print(f"{batch_id} {batch.get('state')} rc={batch.get('rc')} pid={batch.get('pid')} runs={','.join(batch['runs'])} missing={','.join(batch.get('missing', []))}")
     have = postmortem_ids()
@@ -471,7 +486,6 @@ def cmd_status(args):
     print(f"running batch: {busy or 'none'}; finished {args.character} runs without a post-mortem: {','.join(waiting) or 'none'}")
     print(f"ascension seen: {state['ascension']}")
     print("ascension audits: " + json.dumps(state.get("ascension_audits",{}),ensure_ascii=False))
-    save_state(state)
     return 0
 
 
@@ -485,9 +499,17 @@ def cmd_boss_check(args):
     return 0
 
 
+def cmd_core_notify(args):
+    with state_lock():
+        batch = load_state()["batches"].get(args.batch, {})
+    receipt = core_build_jobs.notify(args.batch, batch, ROOT, DIR)
+    print(json.dumps(receipt, ensure_ascii=False))
+    return 0 if receipt.get("state") == "sent" else 1
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check"])
+    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
     parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default="silent")
@@ -497,10 +519,11 @@ def main():
     args = parser.parse_args()
     args.character = character_key(args.character) or "silent"
     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
-               "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck, "boss-check": cmd_boss_check}[args.command]
+               "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck, "boss-check": cmd_boss_check,
+               "core-notify": cmd_core_notify}[args.command]
     os.makedirs(DIR, exist_ok=True)
     # A merge request only appends an event; full checks manage their own short state transactions.
-    if args.command in ("request-merge", "recheck"):
+    if args.command in ("request-merge", "recheck", "core-notify", "status"):
         return handler(args) or 0
     with state_lock():
         result = handler(args) or 0

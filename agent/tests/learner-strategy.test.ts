@@ -4,7 +4,7 @@ import { characterBuiltins, loadTask, renderTask } from "../../learner/lib/task.
 import { validateRequest } from "../../ops/codex/lib.js";
 
 describe("strategy learning dispatch", () => {
-  it("dispatches ten postmortems and an ascension change once, retaining a busy shared worktree trigger", () => {
+  it("dispatches ten postmortems and an ascension change once, retaining a busy strategy trigger", () => {
     const script = `
 import importlib.util,json
 from unittest.mock import patch
@@ -18,7 +18,7 @@ with patch.object(m,"available",return_value=True),patch.object(m.subprocess,"Po
  initial=check("initial")
  for i in range(10): state["batches"][str(i)]={"task":"postmortem","character":"silent","state":"done","runs":[f"SILENT{i:06}"]}
  state["batches"]["other"]={"character":"ironclad","state":"done","runs":["IRON00000001"]}
- state["batches"]["fix"]={"task":"fix-batch","state":"running","pid":99}
+ state["batches"]["fix"]={"task":"strategy-proposal","state":"running","pid":99}
  blocked=check("blocked")
  state["batches"]["fix"]["state"]="done"
  first=check("ten");duplicate=check("duplicate")
@@ -26,7 +26,7 @@ with patch.object(m,"available",return_value=True),patch.object(m.subprocess,"Po
  consumed=check("consumed")
  state["ascension"]["silent"]=3
  advanced=check("advanced")
- assert m.busy(state,"fix-batch",lambda pid:True)
+ assert not m.busy(state,"fix-batch",lambda pid:True)
 print(json.dumps(dict(initial=initial,blocked=blocked,first=first,duplicate=duplicate,consumed=consumed,advanced=advanced,calls=calls)))
 `;
     const result = spawnSync("python3", ["-B", "-c", script], { encoding: "utf8", timeout: 5000 });
@@ -36,7 +36,7 @@ print(json.dumps(dict(initial=initial,blocked=blocked,first=first,duplicate=dupl
     expect(data.first[0]).toBe("ten-strategy-proposal");
     expect(data.advanced[0]).toBe("advanced-strategy-proposal");
     expect(data.calls).toHaveLength(2);
-    expect(data.calls[0].slice(-2)).toEqual(["strategy-proposal", "/fixture/.worktrees/codex-dev"]);
+    expect(data.calls[0].slice(-2)).toEqual(["strategy-proposal", "/fixture/.worktrees/codex-strategy-silent-ten"]);
     expect(data.calls[0][3].split(",")).toHaveLength(10);
   });
 
